@@ -939,11 +939,11 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_START_SYMBOL_TOKEN_ERROR
 			a_name: STRING
-			line: INTEGER
+			a_line: INTEGER
 		do
 			a_name := start_symbol.first
-			line := start_symbol.second
-			!! an_error.make (filename, line, a_name)
+			a_line := start_symbol.second
+			!! an_error.make (filename, a_line, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure
@@ -957,11 +957,11 @@ feature {NONE} -- Error handling
 		local
 			an_error: PR_UNKNOWN_START_SYMBOL_ERROR
 			a_name: STRING
-			line: INTEGER
+			a_line: INTEGER
 		do
 			a_name := start_symbol.first
-			line := start_symbol.second
-			!! an_error.make (filename, line, a_name)
+			a_line := start_symbol.second
+			!! an_error.make (filename, a_line, a_name)
 			error_handler.report_error (an_error)
 			successful := False
 		ensure

@@ -42,6 +42,12 @@ feature {NONE} -- Initialization
 		do
 			yy_build_tables
 			yy_start_state := 1
+			yy_line := 1
+			yy_column := 1
+			yy_position := 1
+			line := 1
+			column := 1
+			position := 1
 		end
 
 feature -- Initialization
@@ -52,7 +58,14 @@ feature -- Initialization
 			-- another input buffer.)
 		do
 			yy_start_state := 1
+			yy_line := 1
+			yy_column := 1
+			yy_position := 1
+			line := 1
+			column := 1
+			position := 1
 			yy_more_flag := False
+			yy_more_len := 0
 				-- Backing-up information.
 			yy_last_accepting_state := 0
 			yy_last_accepting_cpos := 0
@@ -64,24 +77,17 @@ feature -- Access
 			-- Text of last token read
 			-- (Create a new string at each call.)
 		do
-			if yy_start_position < yy_position then
-				Result := STRING_BUFFER_.substring (yy_content,
-					yy_start_position, yy_position - 1)
+			if yy_start < yy_end then
+				Result := STRING_BUFFER_.substring (yy_content, yy_start, yy_end - 1)
 			else
 				!! Result.make (0)
 			end
 		end
 
-	text_count: INTEGER is
-			-- Length of last token read
-		do
-			Result := yy_position - yy_start_position
-		end
-
 	text_item (i: INTEGER): CHARACTER is
 			-- `i'-th character of last token read
 		do
-			Result := yy_content.item (yy_start_position + i - 1)
+			Result := yy_content.item (yy_start + i - 1)
 		end
 
 	text_substring (s, e: INTEGER): STRING is
@@ -95,7 +101,7 @@ feature -- Access
 				!! Result.make (0)
 			else
 				Result := STRING_BUFFER_.substring (yy_content,
-					yy_start_position + s - 1, yy_start_position + e - 1)
+					yy_start + s - 1, yy_start + e - 1)
 			end
 		end
 
@@ -104,6 +110,24 @@ feature -- Access
 		do
 			Result := (yy_start_state - 1) // 2
 		end
+
+feature -- Measurement
+
+	text_count: INTEGER is
+			-- Number of characters in last token read
+		do
+			Result := yy_end - yy_start
+		end
+
+	line: INTEGER
+			-- Line number of last token read
+
+	column: INTEGER
+			-- Column number of last token read
+
+	position: INTEGER
+			-- Position of last token read (i.e. number of characters
+			-- from the start of the input source)
 
 feature -- Setting
 
@@ -121,9 +145,9 @@ feature -- Element change
 			-- call to `text' and directly copies the characters
 			-- from the input buffer.)
 		do
-			if yy_start_position < yy_position then
+			if yy_start < yy_end then
 				STRING_BUFFER_.append_substring_to_string (yy_content,
-					yy_start_position, yy_position - 1, a_string)
+					yy_start, yy_end - 1, a_string)
 			end
 		end
 
@@ -135,7 +159,7 @@ feature -- Element change
 		do
 			if s <= e then
 				STRING_BUFFER_.append_substring_to_string (yy_content,
-					yy_start_position + s - 1, yy_start_position + e - 1, a_string)
+					yy_start + s - 1, yy_start + e - 1, a_string)
 			end
 		end
 
@@ -150,28 +174,51 @@ feature -- Element change
 	less (n: INTEGER) is
 			-- Return all but the first `n' matched
 			-- characters back to `input_buffer'.
+		local
+			removed: INTEGER
+			new_yy_end: INTEGER
+			old_yy_more_len: INTEGER
 		do
-			yy_position := yy_start_position + n
+			if yyLine_used then
+				new_yy_end := yy_start + n
+				removed := yy_end - new_yy_end
+				yy_end := new_yy_end
+				if removed < yy_column then
+					yy_column := yy_column - removed
+				else
+						-- New-lines have been removed.
+						-- We need to rescan the token.
+					old_yy_more_len := yy_more_len
+					yy_more_len := 0
+					yy_line := line
+					yy_column := column
+					yy_set_line_column
+					yy_more_len := old_yy_more_len
+				end
+			else
+				yy_end := yy_start + n
+			end
+			yy_position := position + n
 		end
 
 	unread_character (c: CHARACTER) is
 			-- Put `c' back to `input_buffer'. This will alter both
 			-- `text' and the content of `input_buffer'.
 		do
-			if yy_position <= input_buffer.lower then
+			if yy_end <= input_buffer.lower then
 					-- Need to shift characters up to make room.
-				input_buffer.set_position (yy_position)
+				input_buffer.set_index (yy_end)
 				input_buffer.compact_right
 					-- `input_buffer.content' may have been resized.
 					-- Therefore `content' has to be queried again.
 				yy_set_content (input_buffer.content)
-				yy_position := input_buffer.position - 1
+				yy_end := input_buffer.index - 1
 			else
-				yy_position := yy_position - 1
+				yy_end := yy_end - 1
 			end
-			yy_content.put (c, yy_position)
-				-- Alter `yy_start_position' to keep `text_count' meaningful.
-			yy_start_position := yy_position
+			yy_content.put (c, yy_end)
+				-- Alter `yy_start' to keep `text_count' meaningful.
+			yy_start := yy_end
 		end
 
 	read_character is
@@ -180,14 +227,14 @@ feature -- Element change
 		local
 			found: BOOLEAN
 		do
-			if yy_content.item (yy_position) = yyEnd_of_buffer_character then
-					-- `yy_position' now points to the character we want
+			if yy_content.item (yy_end) = yyEnd_of_buffer_character then
+					-- `yy_end' now points to the character we want
 					-- to return. If this occurs before the EOB characters,
 					-- then it's a valid NULL; if not, then we've hit the
 					-- end of the buffer.
-				if yy_position > input_buffer.upper then
+				if yy_end > input_buffer.upper then
 						-- EOB has been reached. Need more input.
-					yy_start_position := yy_position
+					yy_start := yy_end
 					yy_refill_input_buffer
 					if not input_buffer.filled then
 							-- The EOF has been reached.
@@ -204,10 +251,17 @@ feature -- Element change
 				end
 			end
 			if not found then
-				last_character := yy_content.item (yy_position)
+				last_character := yy_content.item (yy_end)
+				yy_end := yy_end + 1
 				yy_position := yy_position + 1
-				input_buffer.set_beginning_of_line
-					(last_character = yyNew_line_character)
+				if last_character = yyNew_line_character then
+					yy_line := yy_line + 1
+					yy_column := 1
+					input_buffer.set_beginning_of_line (True)
+				else
+					yy_column := yy_column + 1
+					input_buffer.set_beginning_of_line (False)
+				end
 			end
 		end
 
@@ -218,7 +272,8 @@ feature -- Input
 		do
 			if a_buffer /= input_buffer then
 					-- Flush out information for old buffer.
-				input_buffer.set_position (yy_position)
+				input_buffer.set_index (yy_end)
+				input_buffer.set_position (yy_position, yy_line, yy_column)
 				input_buffer := a_buffer
 				yy_load_input_buffer
 			end
@@ -238,30 +293,36 @@ feature {NONE} -- Implementation
 			-- Take `input_buffer' state into account.
 		do
 			yy_set_content (input_buffer.content)
+			yy_end := input_buffer.index
+			yy_start := yy_end
+			yy_line := input_buffer.line
+			yy_column := input_buffer.column
 			yy_position := input_buffer.position
-			yy_start_position := yy_position
 		ensure
 			yy_content_set: yy_content = input_buffer.content
-			yy_start_position_set: yy_start_position = input_buffer.position
+			yy_start_set: yy_start = input_buffer.index
+			yy_end_set: yy_end = input_buffer.index
+			yy_line_set: yy_line = input_buffer.line
+			yy_column_set: yy_column = input_buffer.column
 			yy_position_set: yy_position = input_buffer.position
 		end
 
 	yy_refill_input_buffer is
 			-- Refill `input_buffer'.
-			-- Update `yy_start_position' and `yy_position'.
+			-- Update `yy_start' and `yy_end'.
 		require
-			end_of_buffer_not_missed: yy_position <= (input_buffer.upper + 2)
+			end_of_buffer_not_missed: yy_end <= (input_buffer.upper + 2)
 		local
-			yy_new_position: INTEGER
+			yy_new_end: INTEGER
 		do
-			input_buffer.set_position (yy_start_position)
+			input_buffer.set_index (yy_start)
 			input_buffer.fill
 				-- `input_buffer.content' may have been resized.
 				-- Therefore `content' has to be queried again.
 			yy_set_content (input_buffer.content)
-			yy_new_position := input_buffer.position
-			yy_position := yy_position - yy_start_position + yy_new_position
-			yy_start_position := yy_new_position
+			yy_new_end := input_buffer.index
+			yy_end := yy_end - yy_start + yy_new_end
+			yy_start := yy_new_end
 		end
 
 	yy_set_content (a_content: like yy_content) is
@@ -334,9 +395,100 @@ feature {NONE} -- Implementation
 			-- Set `yy_at_beginning_of_line' according
 			-- to the current position in input source.
 		do
-			if yy_position > yy_start_position then
+			if yy_end > yy_start then
 				input_buffer.set_beginning_of_line
-					(yy_content.item (yy_position - 1) = '%N')
+					(yy_content.item (yy_end - 1) = yyNew_line_character)
+			end
+		end
+
+	yy_set_line (a_column: INTEGER) is
+			-- Set `yy_line' and `yy_column' knowing that there
+			-- are `a_column' characters in the last token
+			-- after the last new-line or from the beginning
+			-- of the token if it has no new-line character.
+		require
+			a_column_positive: a_column >= 0
+		local
+			i, nb: INTEGER
+			a_line: INTEGER
+		do
+			from
+				i := yy_end - a_column - 1
+				nb := yy_start + yy_more_len
+			until
+				i < nb
+			loop
+				if yy_content.item (i) = yyNew_line_character then
+					a_line := a_line + 1
+				end
+				i := i - 1
+			end
+			if a_line = 0 then
+				yy_column := yy_column + yy_end - nb
+			else
+				yy_line := yy_line + a_line
+				yy_column := a_column
+			end
+		end
+
+	yy_set_column (a_line: INTEGER) is
+			-- Set `yy_line' and `yy_column' knowing that there
+			-- are `a_line' new-line characters in last token.
+		require
+			a_line_positive: a_line > 0
+		local
+			i, nb: INTEGER
+			a_column: INTEGER
+		do
+			from
+				i := yy_end - 1
+				nb := yy_start + yy_more_len
+			until
+				i < nb
+			loop
+				if yy_content.item (i) /= yyNew_line_character then
+					a_column := a_column + 1
+					i := i - 1
+				else
+					yy_column := a_column + 1
+					i := nb - 1 -- Jump out of the loop
+				end
+			end
+			yy_line := yy_line + a_line
+		end
+
+	yy_set_line_column is
+			-- Set `yy_line' and `yy_column'.
+		local
+			i, nb: INTEGER
+			a_line, a_column: INTEGER
+			new_line_found: BOOLEAN
+		do
+			from
+				i := yy_end - 1
+				nb := yy_start + yy_more_len
+			until
+				i < nb or new_line_found
+			loop
+				if yy_content.item (i) = yyNew_line_character then
+					a_line := a_line + 1
+					new_line_found := True
+				else
+					a_column := a_column + 1
+				end
+				i := i - 1
+			end
+			from until i < nb loop
+				if yy_content.item (i) = yyNew_line_character then
+					a_line := a_line + 1
+				end
+				i := i - 1
+			end
+			if new_line_found then
+				yy_line := yy_line + a_line
+				yy_column := a_column + 1
+			else
+				yy_column := yy_column + a_column
 			end
 		end
 
@@ -357,11 +509,18 @@ feature {NONE} -- Implementation
 	yy_content: like STRING_BUFFER_TYPE
 			-- Characters in `input_buffer'
 
-	yy_position: INTEGER
-			-- Current position in `yy_content'
+	yy_end: INTEGER
+			-- Current index in `yy_content'
 
-	yy_start_position: INTEGER
-			-- Start position of the current token in `yy_content'
+	yy_start: INTEGER
+			-- Start index of current token in `yy_content'
+
+	yy_line, yy_column: INTEGER
+			-- Line and column numbers of next token to be read
+
+	yy_position: INTEGER
+			-- Position of next token to be read (i.e. number
+			-- of characters from the start of the input source)
 
 	yy_more_flag: BOOLEAN
 	yy_more_len: INTEGER
@@ -392,11 +551,20 @@ feature {NONE} -- Constants
 			-- Does current scanner back up?
 			-- (i.e. does it have non-accepting states)
 
+	yyLine_used: BOOLEAN is deferred end
+			-- Are line and column numbers used?
+
+	yyPosition_used: BOOLEAN is deferred end
+			-- Is `position' used?
+
 	yyNull_equiv_class: INTEGER is deferred end
 			-- Equivalence code for NULL character
 
 invariant
 
 	yy_content_not_void: yy_content /= Void
+	yy_line_positive: yy_line >= 1
+	yy_column_positive: yy_column >= 1
+	yy_position_positive: yy_position >= 1
 
 end -- class YY_SCANNER_SKELETON

@@ -122,39 +122,301 @@ feature -- Setting
 
 feature -- Status report
 
-	variable_trail_rule: BOOLEAN
-			-- Does the rule being parsed have a variable
-			-- trailing context?
-
-	variable_length: BOOLEAN
-			-- Does the regular expression being parsed
-			-- (either the head or trail of the rule)
-			-- have a variable length? (In other words,
-			-- may tokens recognized by that regexp have
-			-- different sizes?)
-
-	rule_length: INTEGER
-			-- Length of the tokens recognized by the
-			-- regexp being parsed when `variable_length'
-			-- is false; undefined otherwise
-
-	head_count: INTEGER
-			-- Length of the tokens recognized by the
-			-- the head part of the rule being parsed
-			-- when this rule has a triling context and
-			-- `variable_length' is false; 0 otherwise
-
-	trail_count: INTEGER
-			-- Length of the tokens recognized by the
-			-- the trail part of the rule being parsed
-			-- when this rule has a triling context and
-			-- `variable_length' is false; 0 otherwise
-
 	rule: LX_RULE
 			-- Rule being parsed
 
 	in_trail_context: BOOLEAN
 			-- Is a trailing context being parsed?
+
+	has_trail_context: BOOLEAN
+			-- Does the regexp being parsed a trailing context?
+
+feature {NONE} -- Measurement
+
+	process_singleton_char (a_char: INTEGER) is
+			-- Update `singleton_{line,column,count}'.
+			-- Singleton: a_char
+		do
+			singleton_count := 1
+			if a_char = New_line_code then
+				singleton_line := 1
+				singleton_column := 0
+			else
+				singleton_line := 0
+				singleton_column := 1
+			end
+		end
+
+	process_singleton_star is
+			-- Update `singleton_{line,column,count}'.
+			-- Singleton: Singleton '*'
+		do
+			singleton_count := Zero_or_more
+			if singleton_line /= 0 then
+				singleton_line := Zero_or_more
+			end
+			if singleton_column /= 0 then
+				singleton_column := Zero_or_more
+			end
+		end
+
+	process_singleton_plus is
+			-- Update `singleton_{line,column,count}'.
+			-- Singleton: Singleton '+'
+		do
+			singleton_count := Zero_or_more
+			if singleton_line = 0 then
+				if singleton_column /= 0 then
+					singleton_column := Zero_or_more
+				end
+			elseif singleton_line > 0 then
+				singleton_line := One_or_more
+			elseif singleton_line = Zero_or_more then
+				if singleton_column /= 0 then
+					singleton_column := Zero_or_more
+				end
+			end
+		end
+
+	process_singleton_optional is
+			-- Update `singleton_{line,column,count}'.
+			-- Singleton: Singleton '?'
+		do
+			singleton_count := Zero_or_more
+			if singleton_line /= 0 then
+				singleton_line := Zero_or_more
+			end
+			if singleton_column /= 0 then
+				singleton_column := Zero_or_more
+			end
+		end
+
+	process_singleton_fixed_iteration (i: INTEGER) is
+			-- Update `singleton_{line,column,count}'.
+			-- Singleton: Singleton '{' i '}'
+		do
+			if singleton_count >= 0 then
+				singleton_count := singleton_count * i
+			end
+			if singleton_line = 0 then
+				if singleton_column >= 0 then
+					singleton_column := singleton_column * i
+				end
+			elseif singleton_line > 0 then
+				singleton_line := singleton_line * i
+			elseif singleton_line = Zero_or_more then
+				if singleton_column /= 0 then
+					singleton_column := Zero_or_more
+				end
+			end
+		end
+
+	process_singleton_bounded_iteration (i, j: INTEGER) is
+			-- Update `singleton_{line,column,count}'.
+			-- Singleton: Singleton '{' i ',' j '}'
+		do
+			if i = j then
+				process_singleton_fixed_iteration (i)
+			elseif i = 0 then
+				process_singleton_star
+			else
+				process_singleton_plus
+			end
+		end
+
+	process_singleton_unbounded_iteration (i: INTEGER) is
+			-- Update `singleton_{line,column,count}'.
+			-- Singleton: Singleton '{' i ',' '}'
+		do
+			if i = 0 then
+				process_singleton_star
+			else
+				process_singleton_plus
+			end
+		end
+
+	process_singleton_dot is
+			-- Update `singleton_{line,column,count}'.
+			-- Singleton: '.'
+		do
+			singleton_count := 1
+			singleton_line := 0
+			singleton_column := 1
+		end
+
+	process_singleton_empty_string is
+			-- Update `singleton_{line,column,count}'.
+			-- String: -- Empty
+		do
+			singleton_count := 0
+			singleton_line := 0
+			singleton_column := 0
+		ensure
+			singleton_count_known: singleton_count = 0
+			singleton_line_known: singleton_line = 0
+			singleton_column_known: singleton_column = 0
+		end
+
+	process_singleton_string (a_char: INTEGER) is
+			-- Update `singleton_{line,column,count}'.
+			-- String: String a_char
+		require
+			singleton_count_known: singleton_count >= 0
+			singleton_line_known: singleton_line >= 0
+			singleton_column_known: singleton_column >= 0
+		do
+			singleton_count := singleton_count + 1
+			if a_char = New_line_code then
+				singleton_line := singleton_line + 1
+				singleton_column := 0
+			else
+				singleton_column := singleton_column + 1
+			end
+		ensure
+			singleton_count_known: singleton_count >= 0
+			singleton_line_known: singleton_line >= 0
+			singleton_column_known: singleton_column >= 0
+		end
+
+	process_singleton_symbol_class (a_symbol_class: LX_SYMBOL_CLASS) is
+			-- Update `singleton_{line,column,count}'.
+			-- Singleton: CCL_OP
+			-- Singleton: Full_CCl
+		require
+			a_symbol_class_not_void: a_symbol_class /= Void
+		do
+			singleton_count := 1
+			if a_symbol_class.has (New_line_code) then
+				if a_symbol_class.negated then
+					singleton_line := 0
+					singleton_column := 1
+				elseif a_symbol_class.count = 1 then
+					singleton_line := 1
+					singleton_column := 0
+				else
+					singleton_line := Zero_or_more
+					singleton_column := Zero_or_more
+				end
+			else
+				if a_symbol_class.negated then
+					singleton_line := Zero_or_more
+					singleton_column := Zero_or_more
+				else
+					singleton_line := 0
+					singleton_column := 1
+				end
+			end
+		end
+
+	process_series_singleton is
+			-- Update `series_{line,column,count}'.
+			-- Series: Series Singleton
+		do
+			if series_count >= 0 and singleton_count >= 0 then
+				series_count := series_count + singleton_count
+			else
+				series_count := Zero_or_more
+			end
+			if singleton_line = 0 then
+				if series_column >= 0 and singleton_column >= 0 then
+					series_column := series_column + singleton_column
+				else
+					series_column := Zero_or_more
+				end
+			elseif singleton_line > 0 then
+				series_column := singleton_column
+				if series_line >= 0 then
+					series_line := series_line + singleton_line
+				else
+					series_line := One_or_more
+				end
+			elseif singleton_line = One_or_more then
+				series_line := One_or_more
+				series_column := singleton_column
+			else
+				if series_line > 0 or series_line = One_or_more then
+					series_line := One_or_more
+				else
+					series_line := Zero_or_more
+				end
+				if series_column = 0 then
+					series_column := singleton_column
+				else
+					series_column := Zero_or_more
+				end
+			end
+		end
+
+	process_regexp_or_series is
+			-- Update `regexp_{line,column,count}'.
+			-- Regular_expression: Regular_expression '|' Series
+		do
+			if regexp_count /= series_count then
+				regexp_count := Zero_or_more
+			end
+			if regexp_line /= series_line then
+				if
+					(regexp_line = One_or_more or regexp_line > 0) and
+					(series_line = One_or_more or series_line > 0)
+				then
+					regexp_line := One_or_more
+				else
+					regexp_line := Zero_or_more
+				end
+			end
+			if regexp_column /= series_column then
+				regexp_column := Zero_or_more
+			end
+		end
+
+	singleton_line: INTEGER
+			-- Number of new-line characters in current Singleton
+
+	singleton_column: INTEGER
+			-- Number of characters after last new-line
+			-- in current Singleton
+
+	singleton_count: INTEGER
+			-- Number of characters in current Singleton
+
+	series_line: INTEGER
+			-- Number of new-line characters in current Series
+
+	series_column: INTEGER
+			-- Number of characters after last new-line in current Series
+
+	series_count: INTEGER
+			-- Number of characters in current Series
+
+	regexp_line: INTEGER
+			-- Number of new-line characters in current Regular_expression
+
+	regexp_column: INTEGER
+			-- Number of characters after last new-line
+			-- in current Regular_expression
+
+	regexp_count: INTEGER
+			-- Number of characters in current Regular_expression
+
+	head_line: INTEGER
+			-- Number of new-line characters in head part
+			-- of current Rule
+
+	head_column: INTEGER
+			-- Number of characters after last new-line
+			-- in head part of current Rule
+
+	head_count: INTEGER
+			-- Length of the tokens recognized by the
+			-- the head part of the rule being parsed
+
+	trail_count: INTEGER
+			-- Length of the tokens recognized by the
+			-- the trail part of the rule being parsed
+			-- when this rule has a trailing context
+
+	Zero_or_more: INTEGER is -1
+	One_or_more: INTEGER is -2
 
 feature {NONE} -- Factory
 
@@ -375,8 +637,12 @@ feature {NONE} -- Implementation
 			rules.force_last (rule)
 			pending_rules.force_last (rule)
 			rule.set_line_nb (rule_line_nb)
-			rule.set_trail_context (variable_trail_rule, head_count, trail_count)
-			if variable_trail_rule then
+			rule.set_trail_context (has_trail_context)
+			rule.set_head_count (head_count)
+			rule.set_trail_count (trail_count)
+			rule.set_line_count (head_line)
+			rule.set_column_count (head_column)
+			if has_trail_context and then not (head_count >= 0 or trail_count >= 0) then
 				variable_trail_context := True
 			end
 			if start_condition_stack.is_empty then
@@ -401,11 +667,15 @@ feature {NONE} -- Implementation
 			rules.force_last (rule)
 			pending_rules.force_last (rule)
 			rule.set_line_nb (rule_line_nb)
-			rule.set_trail_context (variable_trail_rule, head_count, trail_count)
-			bol_needed := True
-			if variable_trail_rule then
+			rule.set_trail_context (has_trail_context)
+			rule.set_head_count (head_count)
+			rule.set_trail_count (trail_count)
+			rule.set_line_count (head_line)
+			rule.set_column_count (head_column)
+			if has_trail_context and then not (head_count >= 0 or trail_count >= 0) then
 				variable_trail_context := True
 			end
+			bol_needed := True
 			if start_condition_stack.is_empty then
 					-- Add `a_nfa' to all non-exclusive start condition,
 					-- including the default (INITIAL) start condition.
@@ -480,7 +750,11 @@ feature {NONE} -- Implementation
 			rules.force_last (rule)
 			pending_rules.force_last (rule)
 			rule.set_line_nb (0)
-			rule.set_trail_context (False, 0, 0)
+			rule.set_trail_context (False)
+			rule.set_head_count (1)
+			rule.set_trail_count (0)
+			rule.set_line_count (Zero_or_more)
+			rule.set_column_count (Zero_or_more)
 			start_conditions.add_nfa_to_all (a_nfa)
 			if no_default_rule then
 				set_action ("last_token := yyError_token%N%
@@ -626,15 +900,11 @@ feature {NONE} -- Implementation
 			a_regexp_not_void: a_regexp /= Void
 		do
 			a_trail.set_beginning_as_normal
-			in_trail_context := False
-			if variable_length and head_count = 0 then
+			if not (head_count >= 0 or trail_count >= 0) then
 					-- Variable trailing context rule.
-				variable_trail_rule := True
 					-- Mark the first part of the rule as the accepting
 					-- "head" part of a trailing context rule.
 				a_regexp.set_accepted_rule (rule)
-			elseif not variable_length then
-				trail_count := rule_length
 			end
 			Result := a_regexp & a_trail
 		ensure
@@ -647,11 +917,6 @@ feature {NONE} -- Implementation
 		require
 			a_regexp_not_void: a_regexp /= Void
 		do
-			head_count := 0
-			trail_count := 1
-			rule_length := 1
-			variable_length := False
-			in_trail_context := True
 			Result := a_regexp & new_epsilon_nfa &
 					new_symbol_nfa (New_line_code)
 		ensure

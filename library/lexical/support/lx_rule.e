@@ -34,6 +34,10 @@ feature {NONE} -- Initialization
 			id := an_id
 			pattern := a_pattern
 			action := an_action
+			head_count := -1
+			trail_count := -1
+			line_count := -1
+			column_count := -1
 		ensure
 			id_set: id = an_id
 			pattern_set: pattern = a_pattern
@@ -46,6 +50,10 @@ feature {NONE} -- Initialization
 			id := an_id
 			pattern := Dummy_pattern
 			action := Dummy_action
+			head_count := -1
+			trail_count := -1
+			line_count := -1
+			column_count := -1
 		ensure
 			id_set: id = an_id
 		end
@@ -66,7 +74,15 @@ feature -- Access
 
 	head_count, trail_count: INTEGER
 			-- Size of the head and trailing context,
-			-- 0 when variable size
+			-- Negative when variable size
+
+	line_count: INTEGER
+			-- Number of new-line characters in the head part;
+			-- Negative if unknown
+
+	column_count: INTEGER
+			-- Number of characters after last new-line in
+			-- in the head part; Negative if unknown
 
 feature -- Status report
 
@@ -81,7 +97,7 @@ feature -- Status report
 			-- head and trail having variable size?
 		do
 			Result := has_trail_context and then
-				(head_count = 0 and trail_count = 0)
+				(head_count < 0 and trail_count < 0)
 		end
 
 feature -- Setting
@@ -130,23 +146,44 @@ feature -- Setting
 			is_useful: is_useful = b
 		end
 
-	set_trail_context (variable: BOOLEAN; h, t: INTEGER) is
-			-- If `variable' is true then current rule has trailing
-			-- context and both the head and trail have variable
-			-- size. Otherwise if `h' or `t' is non-zero then there
-			-- is a trailing context and `h' is the number of characters
-			-- in the matched part of the pattern (or zero if the
-			-- matched part has variable length) and `t' is the
-			-- number of characters in the trailing context (or zero
-			-- if the trailing context has variable size).
-		require
-			positive_h: h >= 0
-			positive_t: t >= 0
-			variable: variable implies (h = 0 and t = 0)
+	set_trail_context (b: BOOLEAN) is
+			-- Set `has_trail_context' to `b'.
 		do
-			has_trail_context := variable or h > 0 or t > 0
-			head_count := h
-			trail_count := t
+			has_trail_context := b
+		ensure
+			has_trail_context_set: has_trail_context = b
+		end
+
+	set_head_count (nb: INTEGER) is
+			-- Set `head_count' to `nb'.
+		do
+			head_count := nb
+		ensure
+			head_count_set: head_count = nb
+		end
+
+	set_trail_count (nb: INTEGER) is
+			-- Set `trail_count' to `nb'.
+		do
+			trail_count := nb
+		ensure
+			trail_count_set: trail_count = nb
+		end
+
+	set_line_count (nb: INTEGER) is
+			-- Set `line_count' to `nb'.
+		do
+			line_count := nb
+		ensure
+			line_count_set: line_count = nb
+		end
+
+	set_column_count (nb: INTEGER) is
+			-- Set `column_count' to `nb'.
+		do
+			column_count := nb
+		ensure
+			column_count_set: column_count = nb
 		end
 
 feature -- Comparison
@@ -179,7 +216,5 @@ invariant
 
 	action_not_void: action /= Void
 	pattern_not_void: pattern /= Void
-	positive_head_count: head_count >= 0
-	positive_trail_count: trail_count >= 0
 
 end -- class LX_RULE

@@ -52,6 +52,8 @@ feature -- Conversion
 			yyEnd_of_buffer := other.yyEnd_of_buffer
 			yyNb_rows := other.yyNb_rows
 			yyBacking_up := other.yyBacking_up
+			yyLine_used := other.yyLine_used
+			yyPosition_used := other.yyPosition_used
 		end
 
 	to_tables: LX_FULL_TABLES is

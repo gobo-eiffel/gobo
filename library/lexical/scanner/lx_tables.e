@@ -58,6 +58,12 @@ feature -- Constants
 	yyNull_equiv_class: INTEGER
 			-- Equivalence code for NULL character
 
+	yyLine_used: BOOLEAN
+			-- Are line and column numbers used?
+
+	yyPosition_used: BOOLEAN
+			-- Is `position' used?
+
 feature -- Conversion
 
 	from_tables (other: like to_tables) is
@@ -75,7 +81,7 @@ feature -- Conversion
 		ensure
 			tables_not_void: Result /= Void
 			-- set: forall attribute, Result.attribute = attribute
-		end	
+		end
 
 invariant
 

@@ -61,7 +61,10 @@ feature {NONE} -- Initialization
 			capacity := buff.count - 2
 			upper := capacity + (l - 1)
 			content := buff
-			position := l
+			index := l
+			line := 1
+			column := 1
+			position := 1
 			beginning_of_line := True
 		ensure
 			content_set: content = buff
@@ -89,16 +92,25 @@ feature -- Access
 			-- not including room for EOB characters
 
 	position: INTEGER
-			-- Current position in buffer
+			-- Position of last token read in current
+			-- buffer (i.e. number of characters from
+			-- the start of the input source)
+
+	line, column: INTEGER
+			-- Line and column number of last token
+			-- read in current buffer
+
+	index: INTEGER
+			-- Current index in `content'
 
 	lower: INTEGER is
-			-- Lower value for `position'
+			-- Lower value for `index'
 		once
 			Result := STRING_BUFFER_.lower
 		end
 
 	upper: INTEGER
-			-- Upper value for `position', not
+			-- Upper value for `index', not
 			-- including room for EOB characters
 
 	beginning_of_line: BOOLEAN
@@ -106,15 +118,32 @@ feature -- Access
 
 feature -- Setting
 
-	set_position (pos: INTEGER) is
-			-- Set `position' to `pos'.
+	set_position (p, l, c: INTEGER) is
+			-- Set `position' to `p', `line' to `l'
+			-- and `column' to `c'.
 		require
-			pos_small_enough: pos <= upper + 2
-			pos_large_enough: pos >= lower
+			p_positive: p >= 1
+			l_positive: l >= 1
+			c_positive: c >= 1
 		do
-			position := pos
+			position := p
+			line := l
+			column := c
 		ensure
-			position_set: position = pos
+			position_set: position = p
+			line_set: line = l
+			column_set: column = c
+		end
+
+	set_index (i: INTEGER) is
+			-- Set `index' to `i'.
+		require
+			i_small_enough: i <= upper + 2
+			i_large_enough: i >= lower
+		do
+			index := i
+		ensure
+			index_set: index = i
 		end
 
 	set_beginning_of_line (b: BOOLEAN) is
@@ -166,7 +195,10 @@ feature -- Element change
 			content.put (End_of_buffer_character, l)
 			content.put (End_of_buffer_character, l + 1)
 			upper := l - 1
-			position := l
+			index := l
+			line := 1
+			column := 1
+			position := 1
 			beginning_of_line := True
 			filled := True
 		ensure
@@ -179,23 +211,23 @@ feature -- Element change
 			-- and make sure there is still available space at
 			-- the end of buffer.
 		local
-			new_position: INTEGER
+			new_index: INTEGER
 			nb: INTEGER
 		do
-			nb := upper - position + 1
+			nb := upper - index + 1
 			if nb >= capacity then
 					-- Buffer is full. Resize it.
 				resize
 			end
-			new_position := lower
-			if position /= new_position then
+			new_index := lower
+			if index /= new_index then
 					-- Move the 2 EOB characters as well.
-				STRING_BUFFER_.move_left (content, position, new_position, nb + 2)
-				position := new_position
-				upper := new_position + nb - 1
+				STRING_BUFFER_.move_left (content, index, new_index, nb + 2)
+				index := new_index
+				upper := new_index + nb - 1
 			end
 		ensure
-			compacted_left: position = lower
+			compacted_left: index = lower
 			not_full: capacity > count
 		end
 
@@ -204,24 +236,24 @@ feature -- Element change
 			-- and make sure there is still available space at
 			-- the start of buffer.
 		local
-			new_position: INTEGER
+			new_index: INTEGER
 			nb: INTEGER
 		do
-			nb := upper - position + 1
+			nb := upper - index + 1
 			if nb >= capacity then
 					-- Buffer is full. Resize it.
 				resize
 			end
-			new_position := position + capacity - count
-			if position /= new_position then
+			new_index := index + capacity - count
+			if index /= new_index then
 					-- Move the 2 EOB characters as well.
-				STRING_BUFFER_.move_right (content, position, new_position, nb + 2)
-				position := new_position
-				upper := new_position + nb - 1
+				STRING_BUFFER_.move_right (content, index, new_index, nb + 2)
+				index := new_index
+				upper := new_index + nb - 1
 			end
 		ensure
 			compacted_right: count = capacity
-			not_full: position > lower
+			not_full: index > lower
 		end
 
 feature {NONE} -- Implementation
@@ -260,6 +292,9 @@ invariant
 	valid_count: count >= 0 and count <= capacity
 	end_of_buffer: content.item (upper + 1) = End_of_buffer_character and
 		content.item (upper + 2) = End_of_buffer_character
-	valid_position: position >= lower and position <= upper + 2
+	valid_index: index >= lower and index <= upper + 2
+	line_positive: line >= 1
+	column_positive: column >= 1
+	position_positive: position >= 1
 
 end -- class YY_BUFFER

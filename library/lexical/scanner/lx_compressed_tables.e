@@ -88,6 +88,8 @@ feature -- Conversion
 			yyVariable_trail_context := other.yyVariable_trail_context
 			yyNb_rules := other.yyNb_rules
 			yyEnd_of_buffer := other.yyEnd_of_buffer
+			yyLine_used := other.yyLine_used
+			yyPosition_used := other.yyPosition_used
 		end
 
 	to_tables: LX_COMPRESSED_TABLES is

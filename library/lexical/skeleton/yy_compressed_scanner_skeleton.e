@@ -28,6 +28,12 @@ feature {NONE} -- Initialization
 		do
 			yy_build_tables
 			yy_start_state := 1
+			yy_line := 1
+			yy_column := 1
+			yy_position := 1
+			line := 1
+			column := 1
+			position := 1
 			if yyReject_or_variable_trail_context then
 				yy_state_stack := FIXED_INTEGER_ARRAY_.make (input_buffer.content.count)
 			end
@@ -41,7 +47,14 @@ feature -- Initialization
 			-- another input buffer.)
 		do
 			yy_start_state := 1
+			yy_line := 1
+			yy_column := 1
+			yy_position := 1
+			line := 1
+			column := 1
+			position := 1
 			yy_more_flag := False
+			yy_more_len := 0
 				-- Backing-up information.
 			yy_last_accepting_state := 0
 			yy_last_accepting_cpos := 0
@@ -69,6 +82,9 @@ feature -- Scanning
 			yy_goto: INTEGER
 			yy_c: INTEGER
 			yy_found: BOOLEAN
+			yy_rejected_line: INTEGER
+			yy_rejected_column: INTEGER
+			yy_rejected_position: INTEGER
 		do
 				-- This routine is implemented with a loop whose body
 				-- is a big inspect instruction. This is a mere
@@ -93,12 +109,15 @@ feature -- Scanning
 				inspect yy_goto
 				when yyNext_token then
 					if yy_more_flag then
-						yy_more_len := text_count
+						yy_more_len := yy_end - yy_start
 						yy_more_flag := False
 					else
 						yy_more_len := 0
+						line := yy_line
+						column := yy_column
+						position := yy_position
 					end
-					yy_cp := yy_position
+					yy_cp := yy_end
 						-- `yy_bp' is the position of the first
 						-- character of the current token.
 					yy_bp := yy_cp
@@ -263,12 +282,15 @@ feature -- Scanning
 							yy_lp := yy_accept.item (yy_current_state)
 						end
 					end
+					yy_rejected_line := yy_line
+					yy_rejected_column := yy_column
+					yy_rejected_position := yy_position
 					yy_goto := yyDo_action
 				when yyDo_action then
 						-- Set up `text' before action.
 					yy_bp := yy_bp - yy_more_len
-					yy_start_position := yy_bp
-					yy_position := yy_cp
+					yy_start := yy_bp
+					yy_end := yy_cp
 					debug ("GELEX")
 					end
 					yy_goto := yyNext_token
@@ -291,16 +313,16 @@ feature -- Scanning
 							-- Amount of text matched not including
 							-- the EOB character.
 						yy_matched_count := yy_cp - yy_bp - 1
-							-- Note that here we test for `yy_position' "<="
+							-- Note that here we test for `yy_end' "<="
 							-- to the position of the first EOB in the buffer,
-							-- since `yy_position' will already have been 
+							-- since `yy_end' will already have been 
 							-- incremented past the NULL character (since all
 							-- states make transitions on EOB to the 
 							-- end-of-buffer state). Contrast this with the
 							-- test in `read_character'.
-						if yy_position <= input_buffer.upper + 1 then
+						if yy_end <= input_buffer.upper + 1 then
 								-- This was really a NULL character.
-							yy_position := yy_bp + yy_matched_count
+							yy_end := yy_bp + yy_matched_count
 							yy_current_state := yy_previous_state
 								-- We're now positioned to make the NULL
 								-- transition. We couldn't have
@@ -313,8 +335,8 @@ feature -- Scanning
 							yy_bp := yy_bp + yy_more_len
 							if yy_next_state /= 0 then
 									-- Consume the NULL character.
-								yy_cp := yy_position + 1
-								yy_position := yy_cp
+								yy_cp := yy_end + 1
+								yy_end := yy_cp
 								yy_current_state := yy_next_state
 								yy_goto := yyMatch
 							else
@@ -322,7 +344,7 @@ feature -- Scanning
 										-- Still need to initialize `yy_cp',
 										-- though `yy_current_state' was set
 										-- up by `yy_previous_state'.
-									yy_cp := yy_position
+									yy_cp := yy_end
 								else
 										-- Do the guaranteed-needed backing up
 										-- then figure out the match.
@@ -334,28 +356,28 @@ feature -- Scanning
 						else
 								-- Do not take the EOB character
 								-- into account.
-							yy_position := yy_position - 1
+							yy_end := yy_end - 1
 							yy_refill_input_buffer
 							if input_buffer.filled then
 								yy_current_state := yy_previous_state
-								yy_cp := yy_position
-								yy_bp := yy_start_position + yy_more_len
+								yy_cp := yy_end
+								yy_bp := yy_start + yy_more_len
 								yy_goto := yyMatch
 							elseif
-								yy_position - yy_start_position - yy_more_len /= 0
+								yy_end - yy_start - yy_more_len /= 0
 							then
 									-- Some text has been matched prior to
 									-- the EOB. First process it.
 								yy_current_state := yy_previous_state
-								yy_cp := yy_position
-								yy_bp := yy_start_position + yy_more_len
+								yy_cp := yy_end
+								yy_bp := yy_start + yy_more_len
 								yy_goto := yyFind_action
 							else
 									-- Only the EOB character has been matched, 
 									-- so treat this as a final EOF.
 								if wrap then
-									yy_bp := yy_start_position
-									yy_cp := yy_position
+									yy_bp := yy_start
+									yy_cp := yy_end
 									yy_execute_eof_action ((yy_start_state - 1) // 2)
 								end
 							end
@@ -364,6 +386,9 @@ feature -- Scanning
 						yy_execute_action (yy_act)
 						if yy_rejected then
 							yy_rejected := False
+							yy_line := yy_rejected_line
+							yy_column := yy_rejected_column
+							yy_position := yy_rejected_position
 								-- Restore position backed-over text.
 							yy_cp := yy_full_match
 							if yyVariable_trail_context then
@@ -468,8 +493,8 @@ feature {NONE} -- Implementation
 				yy_state_count := 1
 			end
 			from
-				yy_cp := yy_start_position + yy_more_len
-				yy_nb := yy_position
+				yy_cp := yy_start + yy_more_len
+				yy_nb := yy_end
 			until
 				yy_cp >= yy_nb
 			loop
@@ -531,7 +556,7 @@ feature {NONE} -- Implementation
 					-- a jam state.
 				if yy_accept.item (yy_current_state) /= 0 then
 					yy_last_accepting_state := yy_current_state
-					yy_last_accepting_cpos := yy_position
+					yy_last_accepting_cpos := yy_end
 				end
 			end
 			Result := yy_current_state
