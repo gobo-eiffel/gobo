@@ -22,7 +22,8 @@ inherit
 
 creation
 
-	make, make_equal, make_from_linear, make_default
+	make, make_equal, make_from_linear,
+	make_from_array, make_default
 
 feature {NONE} -- Initialization
 
@@ -74,6 +75,39 @@ feature {NONE} -- Initialization
 				end
 				last_cell := new_last
 				count := other.count
+			end
+		ensure
+			count_set: count = other.count
+			before: before
+		end
+
+	make_from_array (other: ARRAY [G]) is
+			-- Create a new list and fill it with items of `other'.
+			-- Use `=' as comparison criterion.
+		require
+			other_not_void: other /= Void
+		local
+			new_cell, new_last: like first_cell
+			i, nb: INTEGER
+		do
+			make
+			count := other.count
+			if count /= 0 then
+				from
+					i := other.lower
+					nb := other.upper
+					!! first_cell.make (other.item (i))
+					new_last := first_cell
+					i := i + 1
+				until
+					i > nb
+				loop
+					!! new_cell.make (other.item (i))
+					new_last.put_right (new_cell)
+					new_last := new_cell
+					i := i + 1
+				end
+				last_cell := new_last
 			end
 		ensure
 			count_set: count = other.count
@@ -1335,7 +1369,7 @@ feature {DS_LINKED_LIST_CURSOR} -- Cursor implementation
 			if a_cursor.after then
 				was_off := True
 				new_cell := last_cell
-			elseif is_first then
+			elseif a_cursor.is_first then
 				new_cell := Void
 			else
 				from
