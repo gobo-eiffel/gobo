@@ -125,7 +125,7 @@ feature -- Genealogy
 			end
 		end
 
-	set_ancestors (an_heir: ET_CLASS) is
+	set_ancestors_of (an_heir: ET_CLASS) is
 			-- Set proper ancestors of `an_heir'.
 		require
 			an_heir_not_void: an_heir /= Void
@@ -137,18 +137,16 @@ feature -- Genealogy
 			a_type: ET_CLASS_TYPE
 		do
 			!! anc.make_map (10)
-			an_heir.set_ancestors_error (False)
+			an_heir.set_ancestors (anc)
 			from a_parent := parents until a_parent = Void loop
 				a_type := a_parent.type
 				a_class := a_type.base_class
 				if a_class.has_ancestors_error then
-					!! anc.make_map (0)
-					an_heir.set_ancestors_error (True)
+					an_heir.set_ancestors_error
 					a_parent := Void -- Jump out of the loop.
 				else
 					a_parent.add_to_ancestors (an_heir, anc)
 					if an_heir.has_ancestors_error then
-						!! anc.make_map (0)
 						a_parent := Void -- Jump out of the loop.
 					else
 							-- Do not call ET_TYPE.check_parent_validity
@@ -168,7 +166,6 @@ feature -- Genealogy
 					end
 				end
 			end
-			an_heir.set_ancestors (anc)
 		ensure
 			heir_ancestors_searched: an_heir.ancestors_searched
 		end
@@ -178,17 +175,14 @@ feature -- Genealogy
 			-- parents (and recursively to their parents)
 			-- whose ancestors have not been searched yet.
 		local
-			anc: DS_HASH_TABLE [ET_CLASS_TYPE, INTEGER]
 			a_parent: ET_PARENT
 			a_class: ET_CLASS
 			grand_parents: ET_PARENTS
 		do
-			!! anc.make_map (0)
 			from a_parent := parents until a_parent = Void loop
 				a_class := a_parent.type.base_class
 				if not a_class.ancestors_searched then
-					a_class.set_ancestors_error (True)
-					a_class.set_ancestors (anc)
+					a_class.set_ancestors_error
 					grand_parents := a_class.parents
 					if grand_parents = Void then
 						grand_parents := a_class.universe.any_parents
@@ -199,19 +193,21 @@ feature -- Genealogy
 			end
 		end
 
-	first_unsearched_parent: ET_PARENT is
-			-- First parent whose ancestors have not been
-			-- searched yet; Void if no such parent
+	add_descendant (an_heir: ET_CLASS) is
+			-- Add `an_heir' to the list of descendant classes
+			-- of current parents.
+		require
+			an_heir_not_void: an_heir /= Void
+			ancestors_searched: an_heir.ancestors_searched
+			no_ancestors_error: not an_heir.has_ancestors_error
 		local
 			a_parent: ET_PARENT
+			a_class: ET_CLASS
 		do
 			from a_parent := parents until a_parent = Void loop
-				if not a_parent.type.base_class.ancestors_searched then
-					Result := a_parent
-					a_parent := Void -- Jump out of the loop.
-				else
-					a_parent := a_parent.next
-				end
+				a_class := a_parent.type.base_class
+				a_class.add_descendant (an_heir)
+				a_parent := a_parent.next
 			end
 		end
 

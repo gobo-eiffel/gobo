@@ -40,6 +40,17 @@ feature {NONE} -- Initialization
 			universe_set: universe = a_universe
 		end
 
+feature -- Status report
+
+	is_deferred: BOOLEAN
+			-- Is class deferred?
+
+	is_expanded: BOOLEAN
+			-- Is class expanded?
+
+	is_separate: BOOLEAN
+			-- Is class separate?
+
 feature -- Access
 
 	filename: STRING
@@ -47,45 +58,6 @@ feature -- Access
 
 	name: ET_IDENTIFIER
 			-- Class name
-
-	generic_parameters: ET_FORMAL_GENERIC_PARAMETERS
-			-- Formal generic parameters
-
-	generic_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_GENERIC_PARAMETER is
-			-- Generic parameter with name `a_name';
-			-- Void if no such generic parameter
-		require
-			a_name_not_void: a_name /= Void
-		do
-			if generic_parameters /= Void then
-				Result := generic_parameters.generic_parameter (a_name)
-			end
-		ensure
-			has_generic_parameter: has_generic_parameter (a_name) = (Result /= Void)
-			same_name: Result /= Void implies Result.name.same_identifier (a_name)
-		end
-
-	parents: ET_PARENTS
-			-- Parents
-
-	ancestors: DS_HASH_TABLE [ET_CLASS_TYPE, INTEGER]
-			-- Proper ancestors, indexed by base class ID
-
-	ancestor (a_type: ET_CLASS_TYPE): ET_CLASS_TYPE is
-			-- Ancestor of `a_type'
-		require
-			a_type_not_void: a_type /= Void
-			has_ancestor: has_ancestor (a_type.base_class)
-		local
-			a_class: ET_CLASS
-		do
-			a_class := a_type.base_class
-			if a_class = Current then
-				Result := a_type
-			else
-				Result := ancestors.item (a_class.id)
-			end
-		end
 
 	features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
@@ -116,24 +88,18 @@ feature -- Access
 			error_handler_not_void: Result /= Void
 		end
 
-feature -- Status report
-
-	is_deferred: BOOLEAN
-			-- Is class deferred?
-
-	is_expanded: BOOLEAN
-			-- Is class expanded?
-
-	is_separate: BOOLEAN
-			-- Is class separate?
+feature -- Genericity
 
 	is_generic: BOOLEAN is
-			-- Is class generic?
+			-- Is current class generic?
 		do
 			Result := generic_parameters /= Void
 		ensure
 			definition: Result = (generic_parameters /= Void)
 		end
+
+	generic_parameters: ET_FORMAL_GENERIC_PARAMETERS
+			-- Formal generic parameters
 
 	has_generic_parameter (a_name: ET_IDENTIFIER): BOOLEAN is
 			-- Is `a_name' a formal generic parameter?
@@ -146,6 +112,28 @@ feature -- Status report
 		ensure
 			is_generic: Result implies is_generic
 		end
+
+	generic_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_GENERIC_PARAMETER is
+			-- Generic parameter with name `a_name';
+			-- Void if no such generic parameter
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if generic_parameters /= Void then
+				Result := generic_parameters.generic_parameter (a_name)
+			end
+		ensure
+			has_generic_parameter: has_generic_parameter (a_name) = (Result /= Void)
+			same_name: Result /= Void implies Result.name.same_identifier (a_name)
+		end
+
+feature -- Genealogy
+
+	parents: ET_PARENTS
+			-- Parents
+
+	ancestors: DS_HASH_TABLE [ET_CLASS_TYPE, INTEGER]
+			-- Proper ancestors, indexed by base class ID
 
 	has_ancestor (a_class: ET_CLASS): BOOLEAN is
 			-- Is `a_class' an ancestor of current class?
@@ -163,7 +151,67 @@ feature -- Status report
 			end
 		end
 
-feature -- Parsing status
+	ancestor (a_type: ET_CLASS_TYPE): ET_CLASS_TYPE is
+			-- Ancestor of `a_type'
+		require
+			a_type_not_void: a_type /= Void
+			has_ancestor: has_ancestor (a_type.base_class)
+		local
+			a_class: ET_CLASS
+		do
+			a_class := a_type.base_class
+			if a_class = Current then
+				Result := a_type
+			else
+				Result := ancestors.item (a_class.id)
+			end
+		ensure
+			ancestor_not_void: Result /= Void
+		end
+
+	descendants: DS_ARRAYED_LIST [ET_CLASS]
+			-- Proper descendant classes
+
+	has_descendant (a_class: ET_CLASS): BOOLEAN is
+			-- Is `a_class' known to be a proper
+			-- descendant of current class?
+		require
+			a_class_not_void: a_class /= Void
+		do
+			if descendants /= Void then
+				Result := descendants.has (a_class)
+			end
+		end
+
+feature -- System
+
+	in_system: BOOLEAN
+			-- Is current class reachable from the
+			-- root class?
+
+	add_to_system is
+			-- Recursively add current class to system.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_FEATURE, ET_FEATURE_NAME]
+		do
+			if not in_system then
+				in_system := True
+				if parents /= Void then
+					parents.add_to_system
+				else
+					universe.any_class.add_to_system
+				end
+				a_cursor := features.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_cursor.item.add_to_system
+					a_cursor.forth
+				end
+			end
+		ensure
+			is_in_system: in_system
+		end
+
+feature -- Compilation: parsing status
 
 	is_parsed: BOOLEAN is
 			-- Has current class been parsed?
@@ -176,7 +224,7 @@ feature -- Parsing status
 	has_syntax_error: BOOLEAN
 			-- Has a fatal syntax error been detected?
 
-feature {ET_EIFFEL_SCANNER_SKELETON} -- Parsing
+feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 
 	set_filename (a_name: STRING) is
 			-- Set `filename' to `a_name'.
@@ -250,35 +298,7 @@ feature {ET_EIFFEL_SCANNER_SKELETON} -- Parsing
 			syntax_error_set: has_syntax_error = b
 		end
 
-feature -- System
-
-	in_system: BOOLEAN
-			-- Is current class reachable from the
-			-- root class?
-
-	add_to_system is
-			-- Recursively add current class to system.
-		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_FEATURE, ET_FEATURE_NAME]
-		do
-			if not in_system then
-				in_system := True
-				if parents /= Void then
-					parents.add_to_system
-				else
-					universe.any_class.add_to_system
-				end
-				a_cursor := features.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_cursor.item.add_to_system
-					a_cursor.forth
-				end
-			end
-		ensure
-			is_in_system: in_system
-		end
-
-feature -- Genealogy status
+feature -- Compilation: genealogy status
 
 	ancestors_searched: BOOLEAN is
 			-- Have `ancestors' been searched?
@@ -292,7 +312,7 @@ feature -- Genealogy status
 			-- Has a fatal error occurred during
 			-- ancestors searching?
 
-feature -- Genealogy
+feature -- Compilation: genealogy
 
 	search_ancestors is
 			-- Search ancestors of current class.
@@ -329,7 +349,7 @@ feature -- Genealogy
 						a_parents := any_parents
 					end
 					check sorted: a_parents.ancestors_searched end
-					a_parents.set_ancestors (a_class)
+					a_parents.set_ancestors_of (a_class)
 					i := i + 1
 				end
 				if a_sorter.has_cycle then
@@ -339,8 +359,7 @@ feature -- Genealogy
 						-- Make sure that all classes envolved in the
 						-- cycle and their descendants are marked
 						-- with `has_ancestors_error'.
-					!! ancestors.make_map (0)
-					set_ancestors_error (True)
+					set_ancestors_error
 					if parents /= Void then
 						parents.set_ancestors_error
 					else
@@ -354,24 +373,24 @@ feature -- Genealogy
 				nb := sorted_anc.count
 				from i := 1 until i > nb loop
 					a_class := sorted_anc.item (i)
-					a_parents := a_class.parents
-					if a_parents = Void then
-						a_parents := any_parents
-					end
-					has_error := a_parents.has_ancestors_error
-					if has_error then
-						a_class.set_ancestors_error (True)
-					else
-						if a_class.generic_parameters /= Void then
-							has_error := not a_class.generic_parameters.check_validity (a_class)
+					if not a_class.has_ancestors_error then
+						a_parents := a_class.parents
+						if a_parents = Void then
+							a_parents := any_parents
 						end
-						if has_error then
-							a_class.set_ancestors_error (True)
+						if a_parents.has_ancestors_error then
+							a_class.set_ancestors_error
 						else
-							if a_class.parents /= Void then
-								if not a_class.parents.check_generic_derivation (a_class) then
-									a_class.set_ancestors_error (True)
-								end
+							has_error := False
+							if a_class.generic_parameters /= Void then
+								has_error := not a_class.generic_parameters.check_validity (a_class)
+							end
+							if has_error then
+								a_class.set_ancestors_error
+							elseif not a_parents.check_generic_derivation (a_class) then
+								a_class.set_ancestors_error
+							else
+								a_parents.add_descendant (a_class)
 							end
 						end
 					end
@@ -380,7 +399,7 @@ feature -- Genealogy
 			end
 		end
 
-feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
+feature {ET_PARENTS, ET_CLASS} -- Compilation: genealogy
 
 	add_to_sorter (a_type: ET_CLASS_TYPE; an_heir: ET_CLASS;
 		a_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS]) is
@@ -444,6 +463,8 @@ feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
 			end
 		end
 
+feature {ET_PARENTS} -- Compilation: genealogy
+
 	set_ancestors (an_ancestors: like ancestors) is
 			-- Set `ancestors' to `an_ancestors'.
 		require
@@ -454,17 +475,48 @@ feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
 			ancestors_set: ancestors = an_ancestors
 		end
 
-feature {ET_PARENTS, ET_PARENT, ET_CLASS, ET_FORMAL_GENERIC_PARAMETERS} -- Genealogy
-
-	set_ancestors_error (b: BOOLEAN) is
-			-- Set `has_ancestors_error' to `b'.
+	add_descendant (a_class: ET_CLASS) is
+			-- Add `a_class' to the list of descendant classes
+		require
+			a_class_not_void: a_class /= Void
+			ancestors_searched: a_class.ancestors_searched
+			no_ancestors_error: not a_class.has_ancestors_error
+			not_descendant: not has_descendant (a_class)
 		do
-			has_ancestors_error := b
+			if descendants = Void then
+				!! descendants.make (10)
+			end
+			descendants.force_last (a_class)
 		ensure
-			has_ancestors_error_set: has_ancestors_error = b
+			inserted: has_descendant (a_class)
 		end
 
-feature -- Flattening status
+feature {ET_PARENTS, ET_PARENT, ET_CLASS, ET_FORMAL_GENERIC_PARAMETERS} -- Compilation: genealogy
+
+	set_ancestors_error is
+			-- Set `has_ancestors_error' to `True'.
+		local
+			i, nb: INTEGER
+			a_class: ET_CLASS
+		do
+			has_ancestors_error := True
+			!! ancestors.make_map (0)
+			if descendants /= Void then
+				nb := descendants.count
+				from i := 1 until i > nb loop
+					a_class := descendants.item (i)
+					if not a_class.has_ancestors_error then
+						a_class.set_ancestors_error
+					end
+					i := i + 1
+				end
+				descendants := Void
+			end
+		ensure
+			has_ancestors_error_set: has_ancestors_error
+		end
+
+feature -- Compilation: flattening status
 
 	is_flattened: BOOLEAN is
 			-- Have features been flattened?
@@ -478,7 +530,7 @@ feature -- Flattening status
 			-- Has a fatal error occurred during
 			-- feature flattening?
 
-feature -- Feature flattening
+feature -- Compilation: feature flattening
 
 	flatten is
 			-- Flatten feature table.
@@ -532,7 +584,7 @@ feature -- Feature flattening
 			flattened: is_flattened
 		end
 
-feature {ET_FEATURE_FLATTENER} -- Feature flattening
+feature {ET_FEATURE_FLATTENER} -- Compilation: feature flattening
 
 	set_seeds (a_seeds: like seeds) is
 			-- Set `seeds' to `a_seeds'.
