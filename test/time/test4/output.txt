@@ -1,0 +1,82 @@
+DT_DATE_TIME 1967/05/17 6:30:15.123:
+	year: 1967
+	month: 5
+	day: 17
+	hour: 6
+	minute: 30
+	second: 15
+	millisecond: 123
+	date: 1967/05/17
+	time: 06:30:15.123
+	out: 1967/05/17 06:30:15.123
+	precise_out: 1967/05/17 06:30:15.123
+	date_out: 1967/05/17
+	time_out: 06:30:15.123
+	precise_time_out: 06:30:15.123
+	append_to_string: 1967/05/17 06:30:15.123
+	append_precise_to_string: 1967/05/17 06:30:15.123
+	append_date_to_string: 1967/05/17
+	append_time_to_string: 06:30:15.123
+	append_precise_time_to_string: 06:30:15.123
+DT_DATE_TIME -156/08/16 23:12:03.002:
+	year: -156
+	month: 8
+	day: 16
+	hour: 23
+	minute: 12
+	second: 3
+	millisecond: 2
+	date: -156/08/16
+	time: 23:12:03.002
+	out: -156/08/16 23:12:03.002
+	precise_out: -156/08/16 23:12:03.002
+	date_out: -156/08/16
+	time_out: 23:12:03.002
+	precise_time_out: 23:12:03.002
+	append_to_string: -156/08/16 23:12:03.002
+	append_precise_to_string: -156/08/16 23:12:03.002
+	append_date_to_string: -156/08/16
+	append_time_to_string: 23:12:03.002
+	append_precise_time_to_string: 23:12:03.002
+DT_DATE_TIME_DURATION 3/-12/123 23:-3:12.-45:
+	year: 3
+	month: -12
+	day: 123
+	hour: 23
+	minute: -3
+	second: 12
+	millisecond: -45
+	date: 3/-12/123
+	time: 23:-3:12.-45
+	out: 3/-12/123 23:-3:12.-45
+	precise_out: 3/-12/123 23:-3:12.-45
+	date_out: 3/-12/123
+	time_out: 23:-3:12.-45
+	precise_time_out: 23:-3:12.-45
+	append_to_string: 3/-12/123 23:-3:12.-45
+	append_precise_to_string: 3/-12/123 23:-3:12.-45
+	append_date_to_string: 3/-12/123
+	append_time_to_string: 23:-3:12.-45
+	append_precise_time_to_string: 23:-3:12.-45
+DT_DATE_TIME_DURATION 0/3/2 0:4:3.456:
+	year: 0
+	month: 3
+	day: 2
+	hour: 0
+	minute: 4
+	second: 3
+	millisecond: 456
+	date: 0/3/2
+	time: 0:4:3.456
+	out: 0/3/2 0:4:3.456
+	precise_out: 0/3/2 0:4:3.456
+	date_out: 0/3/2
+	time_out: 0:4:3.456
+	precise_time_out: 0:4:3.456
+	append_to_string: 0/3/2 0:4:3.456
+	append_precise_to_string: 0/3/2 0:4:3.456
+	append_date_to_string: 0/3/2
+	append_time_to_string: 0:4:3.456
+	append_precise_time_to_string: 0:4:3.456
+
+End of Test

@@ -13,4 +13,4 @@ releases.
 2 October 1999
 
 . Add class DS_TREE to the Gobo Eiffel Structure Library.
-. Include Friedrich Dominicus (and Object Tools) formatter library.
+

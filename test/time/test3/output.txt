@@ -1,0 +1,106 @@
+DT_TIME 13:05:12.045:
+	hour: 13
+	minute: 5
+	second: 12
+	millisecond: 45
+	out: 13:05:12.045
+	precise_out: 13:05:12.045
+	time_out: 13:05:12.045
+	precise_time_out: 13:05:12.045
+	append_to_string: 13:05:12.045
+	append_precise_to_string: 13:05:12.045
+	append_time_to_string: 13:05:12.045
+	append_precise_time_to_string: 13:05:12.045
+DT_TIME 00:00:00.000:
+	hour: 0
+	minute: 0
+	second: 0
+	millisecond: 0
+	out: 00:00:00
+	precise_out: 00:00:00.000
+	time_out: 00:00:00
+	precise_time_out: 00:00:00.000
+	append_to_string: 00:00:00
+	append_precise_to_string: 00:00:00.000
+	append_time_to_string: 00:00:00
+	append_precise_time_to_string: 00:00:00.000
+DT_TIME_DURATION -1:0:5.-3:
+	hour: -1
+	minute: 0
+	second: 5
+	millisecond: -3
+	out: -1:0:5.-3
+	precise_out: -1:0:5.-3
+	time_out: -1:0:5.-3
+	precise_time_out: -1:0:5.-3
+	append_to_string: -1:0:5.-3
+	append_precise_to_string: -1:0:5.-3
+	append_time_to_string: -1:0:5.-3
+	append_precise_time_to_string: -1:0:5.-3
+DT_TIME_DURATION 4:5:5.234:
+	hour: 4
+	minute: 5
+	second: 5
+	millisecond: 234
+	out: 4:5:5.234
+	precise_out: 4:5:5.234
+	time_out: 4:5:5.234
+	precise_time_out: 4:5:5.234
+	append_to_string: 4:5:5.234
+	append_precise_to_string: 4:5:5.234
+	append_time_to_string: 4:5:5.234
+	append_precise_time_to_string: 4:5:5.234
+DT_DATE_TIME 1967/05/17 6:30:15.123:
+	hour: 6
+	minute: 30
+	second: 15
+	millisecond: 123
+	out: 1967/05/17 06:30:15.123
+	precise_out: 1967/05/17 06:30:15.123
+	time_out: 06:30:15.123
+	precise_time_out: 06:30:15.123
+	append_to_string: 1967/05/17 06:30:15.123
+	append_precise_to_string: 1967/05/17 06:30:15.123
+	append_time_to_string: 06:30:15.123
+	append_precise_time_to_string: 06:30:15.123
+DT_DATE_TIME -156/08/16 23:12:03.002:
+	hour: 23
+	minute: 12
+	second: 3
+	millisecond: 2
+	out: -156/08/16 23:12:03.002
+	precise_out: -156/08/16 23:12:03.002
+	time_out: 23:12:03.002
+	precise_time_out: 23:12:03.002
+	append_to_string: -156/08/16 23:12:03.002
+	append_precise_to_string: -156/08/16 23:12:03.002
+	append_time_to_string: 23:12:03.002
+	append_precise_time_to_string: 23:12:03.002
+DT_DATE_TIME_DURATION 3/-12/123 23:-3:12.-45:
+	hour: 23
+	minute: -3
+	second: 12
+	millisecond: -45
+	out: 3/-12/123 23:-3:12.-45
+	precise_out: 3/-12/123 23:-3:12.-45
+	time_out: 23:-3:12.-45
+	precise_time_out: 23:-3:12.-45
+	append_to_string: 3/-12/123 23:-3:12.-45
+	append_precise_to_string: 3/-12/123 23:-3:12.-45
+	append_time_to_string: 23:-3:12.-45
+	append_precise_time_to_string: 23:-3:12.-45
+DT_DATE_TIME_DURATION 0/3/2 0:4:3.456:
+	hour: 0
+	minute: 4
+	second: 3
+	millisecond: 456
+	out: 0/3/2 0:4:3.456
+	precise_out: 0/3/2 0:4:3.456
+	time_out: 0:4:3.456
+	precise_time_out: 0:4:3.456
+	append_to_string: 0/3/2 0:4:3.456
+	append_precise_to_string: 0/3/2 0:4:3.456
+	append_time_to_string: 0:4:3.456
+	append_precise_time_to_string: 0:4:3.456
+
+End of Test

@@ -1,0 +1,66 @@
+DT_DATE 2000/03/24:
+	year: 2000
+	month: 3
+	day: 24
+	out: 2000/03/24
+	date_out: 2000/03/24
+	append_to_string: 2000/03/24
+	append_date_to_string: 2000/03/24
+DT_DATE -50/12/04:
+	year: -50
+	month: 12
+	day: 4
+	out: -50/12/04
+	date_out: -50/12/04
+	append_to_string: -50/12/04
+	append_date_to_string: -50/12/04
+DT_DATE_DURATION 10/5/58:
+	year: 10
+	month: 5
+	day: 58
+	out: 10/5/58
+	date_out: 10/5/58
+	append_to_string: 10/5/58
+	append_date_to_string: 10/5/58
+DT_DATE_DURATION -2/40/-23:
+	year: -2
+	month: 40
+	day: -23
+	out: -2/40/-23
+	date_out: -2/40/-23
+	append_to_string: -2/40/-23
+	append_date_to_string: -2/40/-23
+DT_DATE_TIME 1967/05/17 6:30:15.123:
+	year: 1967
+	month: 5
+	day: 17
+	out: 1967/05/17 06:30:15.123
+	date_out: 1967/05/17
+	append_to_string: 1967/05/17 06:30:15.123
+	append_date_to_string: 1967/05/17
+DT_DATE_TIME -156/08/16 23:12:03.002:
+	year: -156
+	month: 8
+	day: 16
+	out: -156/08/16 23:12:03.002
+	date_out: -156/08/16
+	append_to_string: -156/08/16 23:12:03.002
+	append_date_to_string: -156/08/16
+DT_DATE_TIME_DURATION 3/-12/123 23:-3:12.-45:
+	year: 3
+	month: -12
+	day: 123
+	out: 3/-12/123 23:-3:12.-45
+	date_out: 3/-12/123
+	append_to_string: 3/-12/123 23:-3:12.-45
+	append_date_to_string: 3/-12/123
+DT_DATE_TIME_DURATION 0/3/2 0:4:3.456:
+	year: 0
+	month: 3
+	day: 2
+	out: 0/3/2 0:4:3.456
+	date_out: 0/3/2
+	append_to_string: 0/3/2 0:4:3.456
+	append_date_to_string: 0/3/2
+
+End of Test
