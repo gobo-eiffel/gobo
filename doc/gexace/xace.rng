@@ -35,6 +35,7 @@
 			<ref name="description"/>
 			<oneOrMore>
 				<choice>
+					<ref name="option"/>
 					<ref name="cluster"/>
 					<ref name="mount"/>
 				</choice>
@@ -48,12 +49,12 @@
 		<element name="system">
 			<attribute name="name"/>
 			<ref name="description"/>
-      <oneOrMore> <!-- use if/unless flags to enable/disable just one -->
-        <element name="root">
-          <attribute name="class"/>
-          <attribute name="creation"/>
-        </element>
-      </oneOrMore>
+			<oneOrMore> <!-- use if/unless flags to enable/disable just one -->
+				<element name="root">
+					<attribute name="class"/>
+					<attribute name="creation"/>
+				</element>
+			</oneOrMore>
 			<oneOrMore>
 				<choice>
 					<ref name="option"/>
