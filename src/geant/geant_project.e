@@ -227,6 +227,7 @@ feature -- Processing
 				a_parent_cursor := inherit_clause.parents.new_cursor
 				from a_parent_cursor.start until a_parent_cursor.after loop
 					a_parent := a_parent_cursor.item
+					check parents_parent_project_not_void: a_parent.parent_project /= Void end
 					a_parent.prepare_project
 					a_parent_cursor.forth
 				end
