@@ -130,6 +130,11 @@ feature -- Measurement
 	ds_count: INTEGER is
 			-- Number of items
 		do
+				-- Give a dummy value.
+				-- (Needs to be greater than 0 in order to 
+				-- preserve "empty_definition" invariant in
+				-- ISE's COUNTABLE_SEQUENCE class.)
+			Result := 1
 		end
 
 feature -- Status report
