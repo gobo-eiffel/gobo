@@ -6,7 +6,7 @@ indexing
 		"Scanners for 'gepp' preprocessors"
 
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -44,67 +44,81 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 	^"##".*			{
 						-- Comment.
 						set_start_condition (S_PREPROC)
+						if empty_lines then
+							output_file.put_new_line
+						end
 					}
 	^"#ifdef"		{
 						last_token := P_IFDEF
 						set_start_condition (S_PREPROC)
+						if empty_lines then
+							output_file.put_new_line
+						end
 					}
 	^"#ifndef"		{
 						last_token := P_IFNDEF
 						set_start_condition (S_PREPROC)
+						if empty_lines then
+							output_file.put_new_line
+						end
 					}
 	^"#else"		{
 						last_token := P_ELSE
 						set_start_condition (S_PREPROC)
+						if empty_lines then
+							output_file.put_new_line
+						end
 					}
 	^"#endif"		{
 						last_token := P_ENDIF
 						set_start_condition (S_PREPROC)
+						if empty_lines then
+							output_file.put_new_line
+						end
 					}
 	^"#include"		{
 						last_token := P_INCLUDE
 						set_start_condition (S_PREPROC)
+						if empty_lines then
+							output_file.put_new_line
+						end
 					}
 	^"#define"		{
 						last_token := P_DEFINE
 						set_start_condition (S_PREPROC)
+						if empty_lines then
+							output_file.put_new_line
+						end
 					}
 	^"#undef"		{
 						last_token := P_UNDEF
 						set_start_condition (S_PREPROC)
+						if empty_lines then
+							output_file.put_new_line
+						end
 					}
 	^"#"			{
-						if not ignored then
-							echo
-						end
+						echo
 						set_start_condition (S_READLINE)
 					}
 	^[^#\n].*\n		|
 	^\n				{
-						if not ignored then
-							echo
-						end
+						echo
 						line_nb := line_nb + 1
 					}
 	^[^#\n].*		{
-						if not ignored then
-							echo
-						end
+						echo
 					}
 }
 
 <S_READLINE>{
 	.*\n			{
-						if not ignored then
-							echo
-						end
+						echo
 						line_nb := line_nb + 1
 						set_start_condition (INITIAL)
 					}
 	.*				{
-						if not ignored then
-							echo
-						end
+						echo
 						set_start_condition (INITIAL)
 					}
 }
@@ -175,6 +189,20 @@ feature -- Status report
 		deferred
 		end
 
+	empty_lines: BOOLEAN
+			-- Should empty lines be generated when lines are
+			-- ignored in order to preserve line numbering?
+
+feature -- Status setting
+
+	set_empty_lines (b: BOOLEAN) is
+			-- Set `empty_lines' to `b'.
+		do
+			empty_lines := b
+		ensure
+			empty_lines_set: empty_lines = b
+		end
+
 feature -- Element change
 
 	wrap: BOOLEAN is
@@ -198,14 +226,14 @@ feature -- Element change
 
 feature -- Output
 
-	output_file: like OUTPUT_STREAM_TYPE
+	output_file: KI_TEXT_OUTPUT_STREAM
 			-- Output file
 
-	set_output_file (a_file: like OUTPUT_STREAM_TYPE) is
+	set_output_file (a_file: like output_file) is
 			-- Set `output_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			a_file_open_write: a_file.is_open_write
 		do
 			output_file := a_file
 		ensure
@@ -215,12 +243,16 @@ feature -- Output
 	output (a_text: like text) is
 			-- Output `a_text' to `output_file'.
 		do
-			output_file.put_string (a_text)
+			if not ignored then
+				output_file.put_string (a_text)
+			elseif empty_lines then
+				output_file.put_new_line
+			end
 		end
 
 invariant
 
 	output_not_void: output_file /= Void
-	output_open_write: OUTPUT_STREAM_.is_open_write (output_file)
+	output_open_write: output_file.is_open_write
 
 end -- class GEPP_SCANNER
