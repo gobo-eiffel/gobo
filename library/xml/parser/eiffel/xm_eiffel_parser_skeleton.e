@@ -426,7 +426,7 @@ feature {NONE} -- Entities
 		require
 			a_sys_not_void: a_sys /= Void
 		local
-			a_stream: XM_EIFFEL_UTF16_INPUT_STREAM
+			a_stream: XM_EIFFEL_INPUT_STREAM
 			i: INTEGER
 		do
 			entity_resolver.resolve (a_sys)

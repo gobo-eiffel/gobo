@@ -12,7 +12,7 @@ indexing
 
 	--xml_specific_lt: "Detection assuming first char is < is XML specific"
 
-class XM_EIFFEL_UTF16_INPUT_STREAM
+class XM_EIFFEL_INPUT_STREAM
 
 inherit
 

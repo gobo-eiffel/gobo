@@ -958,7 +958,7 @@ feature {NONE} -- Input
 	input_stream: KI_CHARACTER_INPUT_STREAM
 			-- Saved stream for closing on end of stream.
 			 
-	input_filter: XM_EIFFEL_UTF16_INPUT_STREAM
+	input_filter: XM_EIFFEL_INPUT_STREAM
 			-- Saved filter for encoding changes. 
 			 
 feature -- Encoding
