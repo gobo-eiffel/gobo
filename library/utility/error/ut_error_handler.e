@@ -119,7 +119,7 @@ feature -- Status report
 		do
 			Result := info_file /= null_output_stream
 		ensure
-			definition: Result = (info_file /= null_output_stream)
+			definition: Result implies (info_file /= null_output_stream)
 		end
 
 feature -- Setting
