@@ -27,7 +27,12 @@
 		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="$GOBO_XSLT_PROCESSOR"/>
 
 			<!-- Concepts: -->
-		<xslt input="introduction.xml" output="introduction.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<xslt
+			processor="${xslt_processor}"
+			input="introduction.xml"
+			output="introduction.html"
+			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
+		/>
 
 		<set name="input" value="introduction"/>
 		<set name="next" value="introduction"/>
