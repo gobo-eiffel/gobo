@@ -65,4 +65,17 @@ feature -- Test
 			assert_integers_equal ("log10 (10.0)", 1, r.log10 (10.0).truncated_to_integer)
 		end
 
+	test_floor is
+			-- Test feature `floor'.
+		local
+			r: KL_DOUBLE_ROUTINES
+		do
+			create r
+			assert_integers_equal ("positive", 123, r.floor_to_integer (123.183))
+			assert_integers_equal ("positive_exact", 123, r.floor_to_integer (123.0))
+			assert_integers_equal ("zero", 0, r.floor_to_integer (0.0))
+			assert_integers_equal ("negative", -47, r.floor_to_integer (-46.0001))
+			assert_integers_equal ("negative_exact", -47, r.floor_to_integer (-47.0))
+		end
+
 end
