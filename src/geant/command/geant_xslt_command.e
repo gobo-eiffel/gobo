@@ -385,12 +385,14 @@ feature -- Execution
 			end
 
 				-- Append stylesheet argument:
-			cmd.append_string (" --uri=")
-			cmd := STRING_.appended_string (cmd, stylesheet_filename)
+			cmd.append_string (" --file=")
+			a_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
+			cmd := STRING_.appended_string (cmd, a_filename)
 
 				-- Append source argument:
-			cmd.append_string (" --uri=")
-			cmd := STRING_.appended_string (cmd, input_filename)
+			cmd.append_string (" --file=")
+			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
+			cmd := STRING_.appended_string (cmd, a_filename)
 
 			project.trace (<<"  [xslt] ", cmd>>)
 			execute_shell (cmd)
