@@ -1,0 +1,3 @@
+TESTGEN/
+${GOBO}/test/kernel/
+${GOBO}/library/loadpath.se
