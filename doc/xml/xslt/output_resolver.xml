@@ -50,7 +50,7 @@
 	<term><featurename>output_destinations</featurename></term>
 	<listitem>
 	  <para>
-	    This is a map of output URIs to the <link linkend="xslt_transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>s
+	    This is a map of output URIs to the <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>s
 	    allocated to them. This is particularly useful when the principal output destination is to
 	    a <classname>STRING</classname> (selected by a <uri>string:</uri> URI), and the <xslt>href</xslt>
 	    attribute of <xslt>xsl:result-document</xslt> supplies a relative URL. In this case, the output resolver

@@ -67,7 +67,7 @@
 	</listitem>
 	<listitem>
 	  <para>
-	    Finally, <link linkend="accessing_result">Accessing the Transformation Result</link>.
+	    Finally, <link linkend="results">Accessing the Transformation Results</link>.
 	  </para>
 	</listitem>
       </itemizedlist>

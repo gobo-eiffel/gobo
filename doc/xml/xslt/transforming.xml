@@ -1,0 +1,120 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Executing the Transformation"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_transforming">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Sunday, October 31st, 2004</date>
+  </chapterinfo>
+  <title>Executing the Transformation</title>
+  <para>
+    To actually perform the transformation, you need to perform one or more
+    actions.
+  </para>
+  <section>
+    <title>Selecting XML source data</title>
+    <para>
+      This step is optional, but if you omit it, then you must name the initial template.
+    </para>
+    <para>
+      Create an <link linkend="transformation_source"><classname>XM_XSLT_URI_SOURCE</classname></link>, 
+      passing it the <exmlsyntax>SYSTEM</exmlsyntax> id of your XML text data, as an absolute URI.
+      (If your data source is not XML text, then you will have to create some other descendant of 
+      <link linkend="transformation_source"><classname>XM_XSLT_SOURCE</classname></link>).
+    </para>
+  </section>
+  <section>
+    <title>Naming the initial mode</title>
+    <para>
+      Normally the transformation will start executing in the default mode. If you wish to start
+      the transformation in some other mode, then pass the name of that mode 
+      (as an <exmlsyntax>expanded QName</exmlsyntax>, that is, an optional namespace-URI enclosed in curly braces, followed
+      by a local name with no intervening space) to 
+      <featurecall><featurename>set_initial_mode</featurename></featurecall>.
+    </para>
+  </section>
+  <section>
+    <title>Naming the initial template</title>
+    <para>
+      If you supply XML source data to the transformation, then the initial template will normally be found
+      by matching on the initial context item, that is, the document element of the source data, using the initial mode. 
+    </para>
+    <para>
+      If you do not supply any XML source data, or if you wish to override the normal choice for an initial template,
+      then pass the name of that template
+      (as an <exmlsyntax>expanded QName</exmlsyntax>, that is, an optional namespace-URI enclosed in curly braces, followed
+      by a local name with no intervening space) to 
+      <featurecall><featurename>set_initial_template</featurename></featurecall>.
+    </para>
+  </section>
+  <section>
+    <title>Setting Global Parameters</title>
+    <para>
+      If your stylesheet has any top-level <xslt>&lt;xsl:param&gt;</xslt>s, then
+      you may well wish to set values for them (if any of the parameters are required,
+      then this step is mandatory).
+    </para>
+    <para>
+      There are two features provided to set the value of a parameter. If, as is common, you
+      wish to supply a string value (type <xpath>xs:string</xpath>), then you can call
+      <featurecall><featurename>set_string_parameter</featurename></featurecall>. This takes two <classname>STRING</classname>s
+      as arguments. The first is the name of the parameter, and the second is the value you wish to set.
+    </para>
+    <para>
+      In the general case, you may pass an XPath expression as the value for a parameter. In this case you call
+      <featurecall><featurename>set_xpath_parameter</featurename></featurecall>. The arguments are the same as for 
+      <featurename>set_string_parameter</featurename>, but in this case the value is interpreted as an XPath expression, not a literal string value.
+    </para>
+    <para>
+      The XPath expression is parsed using the <xslt>xsl:stylesheet/xsl:transform</xslt> element of the principal stylesheet module 
+      for a static context (so if your XPath expression contains prefixed <exmlsyntax>QName</exmlsyntax>s, then the namespaces will
+      be resolved using the bindings in scope on that element).
+      <warning>
+	Hm. This means the executable stylesheet is not quite so reusable, as functions and variables might be bound. Not really a problem, I think,
+	but better clone the static context before parsing - TODO).
+      </warning>
+    </para>
+    <para>
+      The XPath expression is evaluated using a dynamic context based on the document element of the XML source data file. That means, if you
+      do not supply any XML source data (in which case you must have selected an initial template), then you may not set any XPath-valued
+      parameters (you may call <featurecall><featurename>set_xpath_parameter</featurename></featurecall>, but you will get an error
+      when attempting to execute the transformation). This makes perfect sense, as XPath expressions are navigations around an instance of the
+      XPath data model, and so are meaningless without one.
+    </para>
+  </section>
+  <section>
+    <title>Defining the output destination</title>
+    <para>
+      You <emphasis>must</emphasis> define the destination for the output from the transformation. To do this, create an 
+      <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>.      
+    </para>
+  </section>
+  <section>
+    <title>Running the transformation</title>
+    <para>
+      At this point, all that remains to be done is to call 
+      <featurecall><featurename>transform</featurename></featurecall>. You pass the <classname>XM_XSLT_SOURCE</classname>
+      representing the XML source data as the first parameter (or <featurename>Void</featurename> if you have not supplied any),
+      and the <classname>XM_XSLT_TRANSFORMATION_RESULT</classname> you defined for the output destination as the second parameter.
+    </para>
+  </section>
+</chapter>

@@ -32,6 +32,18 @@
 		<set name="next_chapter" value="output_resolver"/>
 		<geant target="xslt"/>
 
+		<set name="next_chapter" value="stylesheet"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="transformer"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="transforming"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="results"/>
+		<geant target="xslt"/>
+
 		<set name="next_chapter" value="error_listener"/>
 		<geant target="xslt"/>
 

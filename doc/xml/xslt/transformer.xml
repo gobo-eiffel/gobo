@@ -1,0 +1,43 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Creating a Transformer"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_transformer">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Sunday, October 31st, 2004</date>
+  </chapterinfo>
+  <title>Creating a Transformer</title>
+  <para>
+    Once you have an executable stylesheet, you need to create an <classname>XM_XSLT_TRANSFORMER</classname>
+    from it. This is accomplished by calling <featurecall><featurename>new_transformer</featurename></featurecall>
+    on the <classname>XM_XSLT_PREPARED_STYLESHEET</classname>.
+  </para>
+  <para>
+    The <classname>XM_XSLT_PREPARED_STYLESHEET</classname> is supposed to be serially reusable. That is, once
+    you have executed one transform with the transformer you obtained from it, you can create another transformer
+    from it. You do not have to re-compile the stylesheet.
+  </para>
+  <para>
+    However, you should <emphasis>not</emphasis> attempt to run two transformations at once (not even if they involve different stylesheets),
+    and you should <emphasis>not</emphasis> reuse a transformer - always create a new one for each transformation.
+  </para>
+</chapter>

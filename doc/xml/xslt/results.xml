@@ -1,0 +1,42 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Accessing the Transformation Results"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_transformer">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Sunday, October 31st, 2004</date>
+  </chapterinfo>
+  <title>Accessing the Transformation Results</title>
+  <para>
+    Once the transformation has run, check <featurename>is_error</featurename> to
+    see if it ran OK. If it did not, then your error listener 
+    (<link linkend="error_listener"><classname>XM_XSLT_ERROR_LISTENER</classname></link>) will
+    have been informed, and taken any appropriate actions you may have programmed into it.
+  </para>
+  <para>
+    In many cases, you will not be programatically interested in the results, other than whether an error has occurred.
+    However, in some cases you may need to access the results from your program (typically, when you have written them to a <classname>STRING</classname>,
+    or some other in-memory format). In these cases, refer to <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>
+    and  <link linkend="output_resolver"><classname>XM_XSLT_OUTPUT_URI_RESOLVER</classname></link>.
+  </para>
+</chapter>
+
