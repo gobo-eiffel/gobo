@@ -3038,7 +3038,7 @@ feature -- Default values
 	default_version: STRING is
 			-- Default value for 'version' option
 		once
-			Result := "1.0.3300.0"
+			Result := "1.0.5000.0"
 		end
 
 	default_visible_filename: STRING is
