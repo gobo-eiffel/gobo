@@ -194,6 +194,11 @@ feature -- Execution
 				trace ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
+			a_name := "preferences.wb"
+			if file_system.file_exists (a_name) then
+				trace ("  [ise] delete " + a_name + "%N")
+				file_system.delete_file (a_name)
+			end
 			if file_system.directory_exists ("EIFGEN") then
 				trace ("  [ise] delete EIFGEN%N")
 				file_system.recursive_delete_directory ("EIFGEN")
