@@ -4,19 +4,24 @@
 		<echo message="A if" if="$taska"/>
 		<echo message="A unless" unless="$taska"/>
 		<echo message="A if unless" if="$taska" unless="$taska"/>
-	
-		<gexace command="build" command_options="ise">
-			<define name="DEBUG" value="true" if="$DEBUG"/>
-		</gexace>
-	
 	</target>
 
 	<target name="testbreak" unless="${break}=true">
-		
 		<echo message="Hello"/>
 		<set name="break" value="true"/>
 		<echo message="world"/>
-		
+	</target>
+
+	<target name="gexace">
+		<gexace command="build" command_options="ise">
+			<define name="DEBUG" value="true" if="$DEBUG"/>
+		</gexace>
+	</target>
+
+	<target name="gepp">
+		<gepp input="${GOBO}/library/kernel/kl_array_routines.ge" output="kl_array_routines.e" lines="true">
+			<define name="HACT" if="$HACT"/>
+		</gepp>
 	</target>
 
 </project>
