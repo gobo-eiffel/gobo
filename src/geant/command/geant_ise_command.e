@@ -39,7 +39,7 @@ feature -- Status report
 			-- Can system be compiled?
 		do
 			Result := system_name /= Void and then system_name.count > 0
-		ensure then
+		ensure
 			system_name_not_void: Result implies system_name /= Void
 			system_name_not_empty: Result implies system_name.count > 0
 		end
