@@ -52,7 +52,7 @@ feature {ANY} -- Access
 			x.process_document (Current)
 		end
 
-feature {XM_PARSER}
+feature {XM_PARSER,XM_CALLBACKS}
 
 	set_root_element (a: XM_ELEMENT) is
 			-- Set root element.
