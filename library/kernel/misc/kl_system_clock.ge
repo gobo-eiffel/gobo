@@ -172,7 +172,7 @@ feature -- Setting
 			set_to_now
 #endif
 #ifdef HACT
-			c_utctime(c_time, $year, $month, $day, $hour, $minute, $second)
+			c_utctime (c_time, $year, $month, $day, $hour, $minute, $second)
 #endif
 #ifdef ISE
 			time_t := c_time
