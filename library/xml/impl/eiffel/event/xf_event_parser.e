@@ -43,6 +43,7 @@ feature {ANY}
 		do
 			!! a_filename.make_from_string (INPUT_STREAM_.name (a_stream))
 			!XM_DEFAULT_URI_SOURCE! source.make (a_filename)
+			reset
 			set_input_buffer (new_file_buffer (a_stream))
 			parse
 		end
@@ -146,8 +147,8 @@ feature -- Debug
 
 	handle_error (err: INTEGER) is
 		do
-			--	 last_error := err
-			--	 last_error_description := clone ("Unknown error occured")
+			--	last_error := err
+			--	last_error_description := clone ("Unknown error occured")
 		end
 
 end

@@ -23,7 +23,8 @@ inherit
 			on_content,
 			on_end_tag,
 			on_processing_instruction,
-			on_comment
+			on_comment,
+			parse_from_stream
 		end
 
 creation
@@ -32,12 +33,9 @@ creation
 feature {NONE} -- Initialisation
 
 	make_from_implementation (a_imp: XI_EVENT_PARSER) is
-		local
-			toe_document: XT_DOCUMENT
 		do
 			make_from_implementation_event (a_imp)
-			!! toe_document.make
-			!! document.make_from_implementation (toe_document)
+			reset
 		end
 
 feature {ANY} -- Access
@@ -63,6 +61,30 @@ feature {ANY} -- Basic Opertations
 		do
 			last_position_table := Void
 		end
+
+feature {ANY} 
+
+	reset is
+		local
+			toe_document: XT_DOCUMENT
+		do
+			!! toe_document.make
+			!! document.make_from_implementation (toe_document)
+			if is_position_table_enabled then
+				enable_position_table
+			end
+			current_node := Void
+			current_open_composite := Void
+		end
+
+	parse_from_stream (a_stream: like INPUT_STREAM_TYPE) is
+			-- Parse XML Document from GOBO input stream.
+		do
+			reset
+			Precursor (a_stream)
+		end
+
+
 
 feature {NONE} -- call backs
 	--FIXME: Set current_element to Current before first callback is
@@ -209,7 +231,7 @@ invariant
 end -- class XT_TREE_PARSER
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999  Andreas Leitner and others
+--| Copyright (C) 1999	Andreas Leitner and others
 --| See the file forum.txt included in this package for licensing info.
 --|
 --| Comments, Questions, Additions to this library? please contact:
