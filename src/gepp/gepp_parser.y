@@ -41,6 +41,7 @@ feature
 %left P_AND
 %right '!'
 
+%expect 15
 %start File
 
 %%
@@ -197,7 +198,7 @@ feature -- Processing
 			cannot_read: UT_CANNOT_READ_FILE_ERROR
 			too_many_includes: GEPP_TOO_MANY_INCLUDES_ERROR
 		do
-			if include_stack.count < Max_include_depth then
+			if not include_stack.is_full then
 				a_file := INPUT_STREAM_.make_file_open_read (a_filename)
 				if INPUT_STREAM_.is_open_read (a_file) then
 					include_stack.put (input_buffer)
@@ -205,12 +206,12 @@ feature -- Processing
 				else
 					!! cannot_read.make (a_filename)
 					error_handler.report_error (cannot_read)
-					arbort
+					abort
 				end
 			else
 				!! too_many_includes.make (include_stack.count + 1)
 				error_handler.report_error (too_many_includes)
-				arbort
+				abort
 			end
 		end
 
