@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		require
 			valid_id: id >= 0
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 			a_type_not_void: a_type /= Void
 		do
 			id := an_id
@@ -108,7 +108,7 @@ invariant
 
 	valid_id: id >= 0
 	name_not_void: name /= Void
-	name_long_enough: not name.empty
+	name_long_enough: name.count > 0
 	type_not_void: type /= Void
 
 end -- class PR_SYMBOL

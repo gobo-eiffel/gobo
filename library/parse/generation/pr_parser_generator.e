@@ -314,7 +314,7 @@ feature {NONE} -- Generation
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
 				an_action := a_rule.action.out
-				if not an_action.empty then
+				if an_action.count > 0 then
 					a_file.put_string ("when ")
 					a_file.put_integer (a_rule.id)
 					a_file.put_string (" then%N--|#line ")
@@ -368,7 +368,7 @@ feature {NONE} -- Generation
 				from i := 1 until i > nb loop
 					a_rule := rules.item (i)
 					an_action := a_rule.action.out
-					if not an_action.empty then
+					if an_action.count > 0 then
 						a_file.put_string ("when ")
 						a_file.put_integer (a_rule.id)
 						a_file.put_string (" then%N--|#line ")
@@ -414,7 +414,7 @@ feature {NONE} -- Generation
 					from until j > k loop
 						a_rule := rules.item (j)
 						an_action := a_rule.action.out
-						if not an_action.empty then
+						if an_action.count > 0 then
 							a_file.put_string ("when ")
 							a_file.put_integer (a_rule.id)
 							a_file.put_string (" then%N--|#line ")
@@ -435,7 +435,7 @@ feature {NONE} -- Generation
 			from i := 1 until i > nb loop
 				a_rule := rules.item (i)
 				an_action := a_rule.action.out
-				if not an_action.empty then
+				if an_action.count > 0 then
 					a_file.put_string ("%N%Tyy_do_action_")
 					a_file.put_integer (i)
 					a_file.put_string (" is%N%T%T%T--|#line ")

@@ -26,7 +26,11 @@ feature -- Initialization
 			-- if operation was successful.
 		require
 			a_filename_not_void: a_filename /= Void
+#ifdef SE
+			a_filename_not_empty: not a_filename.is_empty
+#else
 			a_filename_not_empty: not a_filename.empty
+#endif
 		local
 			rescued: BOOLEAN
 #ifdef ISE || HACT

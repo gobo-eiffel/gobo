@@ -129,7 +129,7 @@ feature {NONE} -- Factory
 			--   %token <a_type> a_name
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 			a_type_not_void: a_type /= Void
 		do
 			if is_nonterminal (a_name) then
@@ -171,7 +171,7 @@ feature {NONE} -- Factory
 			--   %left a_name
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 		do
 			if is_nonterminal (a_name) then
 				report_token_declared_as_variable_error (a_name)
@@ -209,7 +209,7 @@ feature {NONE} -- Factory
 			--   %right a_name
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 		do
 			if is_nonterminal (a_name) then
 				report_token_declared_as_variable_error (a_name)
@@ -247,7 +247,7 @@ feature {NONE} -- Factory
 			--   %nonassoc a_name
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 		do
 			if is_nonterminal (a_name) then
 				report_token_declared_as_variable_error (a_name)
@@ -285,7 +285,7 @@ feature {NONE} -- Factory
 			-- %type <a_type> a_name
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 			a_type_not_void: a_type /= Void
 		do
 			if is_terminal (a_name) then
@@ -310,7 +310,7 @@ feature {NONE} -- Factory
 			-- `last_grammar'.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 			is_terminal: not is_nonterminal (a_name)
 		local
 			lower_name: STRING
@@ -449,7 +449,7 @@ feature {NONE} -- Factory
 			-- of `last_grammar'.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 			is_nonterminal: not is_terminal (a_name)
 		local
 			lower_name: STRING
@@ -494,7 +494,7 @@ feature {NONE} -- Factory
 			-- the list of variables of `last_grammar'.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 		local
 			lower_name: STRING
 			a_variable: PR_VARIABLE
@@ -522,7 +522,7 @@ feature {NONE} -- Factory
 			-- it does not exist yet.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 		local
 			upper_name: STRING
 			an_id: INTEGER
@@ -547,7 +547,7 @@ feature {NONE} -- Factory
 			-- it does not exist yet.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 		local
 			upper_name: STRING
 			an_id: INTEGER
@@ -572,7 +572,7 @@ feature {NONE} -- Factory
 			-- Create a new type if it does not exist yet.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 			valid_generics: generics /= Void implies not generics.has (Void)
 		local
 			upper_name: STRING
@@ -602,7 +602,7 @@ feature {NONE} -- Factory
 			-- Create a new type if it does not exist yet.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_long_enough: not a_name.empty
+			a_name_long_enough: a_name.count > 0
 		local
 			lower_name: STRING
 			an_id: INTEGER
