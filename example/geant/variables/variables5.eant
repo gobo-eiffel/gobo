@@ -1,8 +1,15 @@
 <?xml version="1.0" ?>
 
-<project name="variables1" >
-	<target name="var" >
+<project name="variables1">
+	<target name="var">
 		<description>query a variable</description>
-		<echo message="Hello ${who}" />
+		<echo message="Hello ${who}"/>
 	</target>
+
+	<target name="setenv">
+		<description>demonstrates setting of environment variables</description>
+		<setenv name="MY_ENV" value="some_value"/>
+		<echo message="MY_ENV=${MY_ENV}"/>
+	</target>
+
 </project>
