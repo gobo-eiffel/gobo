@@ -134,7 +134,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	has (v: like item): BOOLEAN is
+	has (v: G): BOOLEAN is
 			-- Does structure include an occurrence of `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)

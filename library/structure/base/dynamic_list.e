@@ -54,7 +54,7 @@ feature -- Element change
 			new_index: index = old index + 1
 		end
 
-	put_right (v: like item) is
+	put_right (v: G) is
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		require
