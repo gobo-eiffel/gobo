@@ -61,7 +61,6 @@ feature {NONE} -- Initialization
 			make_scanner
 			make_parser
 				-- Parser state:
-			stand_alone := False
 			in_external_dtd := False
 				-- Callbacks forwarding
 			create {XM_CALLBACKS_NULL} callbacks.make
@@ -86,7 +85,6 @@ feature -- Initialization
 				scanners.remove
 			end
 			scanner.reset
-			stand_alone := False
 			in_external_dtd := False
 			entities.wipe_out
 			pe_entities.wipe_out
@@ -225,9 +223,6 @@ feature {NONE} -- Error reporting
 		end
 
 feature {NONE} -- State
-
-	stand_alone: BOOLEAN
-			-- From XML declaration
 
 	entities: DS_HASH_TABLE [XM_EIFFEL_ENTITY_DEF, STRING]
 			-- Defined entites

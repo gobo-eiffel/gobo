@@ -50,6 +50,9 @@ creation
 %type <DS_BILINKED_LIST [XM_DTD_ATTRIBUTE_CONTENT]> attlist_decl_trail
 %type <XM_DTD_ATTRIBUTE_CONTENT> att_def att_type att_tokenized_type enumerated_type default_decl
 %type <DS_BILINKED_LIST [STRING]> enumeration enumeration_trail
+%type <STRING> version_info encoding_decl
+%type <BOOLEAN> sd_decl
+%type <XM_EIFFEL_DECLARATION> xml_decl_opt
 
 %token <STRING> NAME NAME_UTF8
 %token <STRING> NMTOKEN NMTOKEN_UTF8
@@ -356,16 +359,35 @@ misc_trail: misc
 	;
 
 xml_decl:XMLDECLARATION_START version_info xml_decl_opt XMLDECLARATION_END
+		{ 
+			$3.set_version ($2)
+			$3.process (Current) -- event
+		}
 	| XMLDECLARATION_START error { force_error (Error_xml_declaration) }
 	;
 
 xml_decl_opt: maybe_space
+		{ create $$.make }
 	| req_space sd_decl maybe_space
+		{ 
+			create $$.make 
+			$$.set_stand_alone ($2)
+		}
 	| req_space encoding_decl maybe_space
+		{ 
+			create $$.make 
+			$$.set_encoding ($2) 
+		}
 	| req_space encoding_decl req_space sd_decl maybe_space
+		{ 
+			create $$.make;
+			$$.set_encoding ($2)
+			$$.set_stand_alone ($4) 
+		}
 	;
 
 version_info: XMLDECLARATION_VERSION
+		{ $$ := $1 }
 	;
 
 misc: comment
@@ -443,8 +465,8 @@ markup_decl: element_decl
 
 -- 2.9 Stand-alone document declaration
 
-sd_decl: XMLDECLARATION_STANDALONE_YES { stand_alone := True }
-	| XMLDECLARATION_STANDALONE_NO { stand_alone := False }
+sd_decl: XMLDECLARATION_STANDALONE_YES { $$ := True }
+	| XMLDECLARATION_STANDALONE_NO { $$ := False }
 	;
 
 -- 3. Element
