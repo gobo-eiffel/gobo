@@ -42,6 +42,8 @@ feature -- Conversion
 			create Result.make (a_name, arguments, obsolete_message, preconditions,
 				locals, compound, postconditions, rescue_clause, clients, implementation_class)
 			Result.set_implementation_feature (implementation_feature)
+			Result.set_first_precursor (first_precursor)
+			Result.set_other_precursors (other_precursors)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_version (version)

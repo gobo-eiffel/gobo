@@ -19,6 +19,8 @@ inherit
 			arguments,
 			preconditions,
 			postconditions,
+			reset_preconditions,
+			reset_postconditions,
 			obsolete_message
 		redefine
 			is_prefixable, is_infixable,
@@ -55,6 +57,7 @@ feature -- Conversion
 			create Result.make (a_name, arguments, declared_type, obsolete_message,
 				preconditions, postconditions, clients, implementation_class)
 			Result.set_implementation_feature (implementation_feature)
+			Result.set_first_precursor (Current)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)

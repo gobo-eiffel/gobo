@@ -83,6 +83,8 @@ feature -- Conversion
 		do
 			create Result.make (a_name, declared_type, clients, implementation_class)
 			Result.set_implementation_feature (implementation_feature)
+			Result.set_first_precursor (first_precursor)
+			Result.set_other_precursors (other_precursors)
 			Result.set_version (version)
 			Result.set_frozen_keyword (frozen_keyword)
 			Result.set_semicolon (semicolon)

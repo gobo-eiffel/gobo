@@ -88,6 +88,8 @@ feature -- Conversion
 			create Result.make (a_name, arguments, declared_type, obsolete_message,
 				preconditions, postconditions, clients, implementation_class)
 			Result.set_implementation_feature (implementation_feature)
+			Result.set_first_precursor (first_precursor)
+			Result.set_other_precursors (other_precursors)
 			Result.set_is_keyword (is_keyword)
 			Result.set_deferred_keyword (deferred_keyword)
 			Result.set_end_keyword (end_keyword)

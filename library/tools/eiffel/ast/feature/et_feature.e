@@ -83,18 +83,40 @@ feature -- Access
 			-- is only one seed (which is then accessible
 			-- through `first_seed')
 
+	first_precursor: ET_FEATURE
+			-- First precursor;
+			-- Void if the feature has no precursor.
+			-- Useful to build the flat preconditions and
+			-- postconditions of the feature.
+
+	other_precursors: ET_FEATURE_LIST
+			-- Other precursors (Features from which the current
+			-- feature gets parts of its preconditions and
+			-- postconditions from its parents. Note that because
+			-- of replication all the seeds of the precursors are not
+			-- necessarily a subset of the seeds of current feature.);
+			-- May be Void if there is only one precursor (which is
+			-- then accessible through `first_precursor') or no
+			-- precursor. There can be several precursors if the
+			-- current feature is the result of a merge or join of
+			-- several features in the inheritance clause.
+
 	implementation_class: ET_CLASS
 			-- Class where implementation of current feature
-			-- has been provided (Useful for interpreting
-			-- feature calls and type anchors (that might
-			-- be renamed in descendant classes) when feature
-			-- is inherited as-is.)
+			-- has been provided;
+			-- Useful for interpreting feature calls and type
+			-- anchors (that might be renamed in descendant classes)
+			-- when feature is inherited as-is.
+			-- Note that the signature has already been resolved
+			-- in the context of the current class.
 
 	implementation_feature: ET_FEATURE
-			-- Current feature in `implementation_class'
-			-- (Useful for interpreting feature calls and type
-			-- anchors (that might be renamed in descendant
-			-- classes) when feature is inherited as-is.)
+			-- Current feature in `implementation_class',
+			-- Useful for interpreting feature calls and type
+			-- anchors (that might be renamed in descendant classes)
+			-- when feature is inherited as-is.
+			-- Note that the signature has already been resolved
+			-- in the context of the current class.
 
 	name_item: ET_FEATURE_NAME_ITEM
 			-- Feature name (possibly followed by comma for synomyms)
@@ -216,9 +238,17 @@ feature -- Implementation checking status
 
 	implementation_checked: BOOLEAN
 			-- Has the implementation of current feature been checked?
+			-- (Check everything except assertions.)
 
 	has_implementation_error: BOOLEAN
 			-- Has a fatal error occurred during implementation checking?
+			-- (Check everything except assertions.)
+
+	assertions_checked: BOOLEAN
+			-- Has the implementation of assertions of current feature been checked?
+
+	has_assertions_error: BOOLEAN
+			-- Has a fatal error occurred during assertions implementation checking?
 
 	set_implementation_checked is
 			-- Set `implementation_checked' to True.
@@ -234,6 +264,22 @@ feature -- Implementation checking status
 			has_implementation_error := True
 		ensure
 			has_implementation_error: has_implementation_error
+		end
+
+	set_assertions_checked is
+			-- Set `assertions_checked' to True.
+		do
+			assertions_checked := True
+		ensure
+			assertions_checked: assertions_checked
+		end
+
+	set_assertions_error is
+			-- Set `has_assertions_error' to True.
+		do
+			has_assertions_error := True
+		ensure
+			has_assertions_error: has_assertions_error
 		end
 
 feature -- Export status
@@ -387,6 +433,22 @@ feature -- Setting
 			other_seeds_set: other_seeds = a_seeds
 		end
 
+	set_first_precursor (a_precursor: like first_precursor) is
+			-- Set `first_precursor' to `a_precursor'.
+		do
+			first_precursor := a_precursor
+		ensure
+			first_precursor_set: first_precursor = a_precursor
+		end
+
+	set_other_precursors (a_precursors: like other_precursors) is
+			-- Set `other_precursors' to `a_precursors'.
+		do
+			other_precursors := a_precursors
+		ensure
+			other_precursors_set: other_precursors = a_precursors
+		end
+
 	set_frozen_keyword (a_frozen: like frozen_keyword) is
 			-- Set `frozen_keyword' to `a_frozen'.
 		do
@@ -419,6 +481,20 @@ feature -- Setting
 			semicolon_set: semicolon = a_semicolon
 		end
 
+	reset_preconditions is
+			-- Set `preconditions' to Void.
+		do
+		ensure
+			preconditions_reset: preconditions = Void
+		end
+
+	reset_postconditions is
+			-- Set `postconditions' to Void.
+		do
+		ensure
+			postconditions_reset: postconditions = Void
+		end
+		
 feature -- Duplication
 
 	new_synonym (a_name: like name_item): like Current is
@@ -441,6 +517,8 @@ feature -- Conversion
 		ensure
 			renamed_feature_not_void: Result /= Void
 			name_set: Result.name = a_name
+			first_precursor_set: Result.first_precursor = first_precursor
+			other_precursors_set: Result.other_precursors = other_precursors
 		end
 
 	undefined_feature (a_name: like name): ET_DEFERRED_ROUTINE is
@@ -452,6 +530,8 @@ feature -- Conversion
 			undefined_feature_not_void: Result /= Void
 			name_set: Result.name = a_name
 			version_set: Result.version = Result.id
+			first_precursor_set: Result.first_precursor = Current
+			other_precursors_set: Result.other_precursors = Void
 		end
 
 feature -- Type processing

@@ -19,6 +19,8 @@ inherit
 			arguments,
 			preconditions,
 			postconditions,
+			reset_preconditions,
+			reset_postconditions,
 			obsolete_message
 		end
 
@@ -68,6 +70,18 @@ feature -- Setting
 			end_keyword := an_end
 		ensure
 			end_keyword_set: end_keyword = an_end
+		end
+
+	reset_preconditions is
+			-- Set `preconditions' to Void.
+		do
+			preconditions := Void
+		end
+
+	reset_postconditions is
+			-- Set `postconditions' to Void.
+		do
+			postconditions := Void
 		end
 
 invariant
