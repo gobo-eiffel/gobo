@@ -55,7 +55,7 @@ creation
 %type <DS_BILINKED_LIST [STRING]> enumeration enumeration_trail
 %type <STRING> version_info encoding_decl
 %type <BOOLEAN> sd_decl
-%type <XM_EIFFEL_DECLARATION> xml_decl_opt
+%type <XM_EIFFEL_DECLARATION> xml_decl xml_decl_opt xml_decl_misc
 
 %token <STRING> NAME NAME_UTF8
 %token <STRING> NMTOKEN NMTOKEN_UTF8
@@ -343,11 +343,22 @@ cdata_body: char_data
 -- 2.8 Prolog and DTD
 
 prolog: xml_decl_misc doctype_decl_misc
+		{			
+			if scanner.is_valid_encoding ($1.encoding) then
+				scanner.set_encoding ($1.encoding)
+			else
+				force_error (Error_unsupported_encoding)
+			end
+			$1.process (Current) -- event
+ 		}
 	;
 
 xml_decl_misc: misc_maybe
+		{ create $$.make }
 	| xml_decl
+		{ $$ := $1 }
 	| xml_decl misc_trail
+		{ $$ := $1 }
 	;
 
 doctype_decl_misc: -- Empty
@@ -366,12 +377,7 @@ misc_trail: misc
 xml_decl:XMLDECLARATION_START version_info xml_decl_opt XMLDECLARATION_END
 		{ 
 			$3.set_version ($2)
-			if scanner.is_valid_encoding ($3.encoding) then
-				scanner.set_encoding ($3.encoding)
-			else
-				force_error (Error_unsupported_encoding)
-			end
-			$3.process (Current) -- event
+			$$ := $3
 		}
 	| XMLDECLARATION_START error { force_error (Error_xml_declaration) }
 	;

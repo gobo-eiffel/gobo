@@ -106,13 +106,8 @@ feature -- Encoding
 		local
 			lower_encoding: STRING
 		do
-			if an_encoding /= Void then
-				lower_encoding := STRING_.as_lower (an_encoding)
-				Result := lower_encoding.is_equal (Encoding_latin_1)
-					or lower_encoding.is_equal (Encoding_us_ascii)
-					or lower_encoding.is_equal (Encoding_utf_8) 
-					or lower_encoding.is_equal (Encoding_utf_16)
-			end
+			check filter_set: input_filter /= Void end
+			Result := input_filter.is_valid_encoding (an_encoding)
 		end
 		
 	set_encoding (an_encoding: STRING) is
@@ -121,9 +116,7 @@ feature -- Encoding
 			valid_encoding: is_valid_encoding (an_encoding)
 		do
 			check filter_set: input_filter /= Void end
-			if STRING_.as_lower (an_encoding).is_equal (Encoding_latin_1) then
-				input_filter.set_latin_1
-			end
+			input_filter.set_encoding (an_encoding)
 		end
 
 feature {NONE} -- Encodings

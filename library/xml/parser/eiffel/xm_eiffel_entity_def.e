@@ -132,6 +132,8 @@ feature -- Scanner: set input buffer
 
 	apply_input_buffer is
 			-- Set input buffer.
+		local
+			str_stream: KL_STRING_INPUT_STREAM
 		do
 			if in_use then
 				fatal_error (Error_recursive_entity)
@@ -141,7 +143,8 @@ feature -- Scanner: set input buffer
 				-- the value we get may be UC_STRING, so it must be
 				-- converted back to UTF8 for the scanner which operates 
 				-- on UTF8-in-STRING input
-				set_input_buffer (new_string_buffer (utf8.to_utf8(value)))
+				create str_stream.make (utf8.to_utf8 (value))
+				set_input_stream (str_stream)
 			else
 					-- External entity in a file.
 				reset

@@ -63,23 +63,74 @@ feature {NONE} -- Initialization
 			impl_set: impl = a_stream
 		end
 
-feature -- Set latin1
+feature -- Encoding
 
-	set_latin_1 is
-			-- Set latin1 character encoding input mode.
-		require
-			compatible_encoding: is_latin_1_compatible
+	is_valid_encoding (an_encoding: STRING): BOOLEAN is
+			-- Is this encoding known?
+		local
+			lower_encoding: STRING
 		do
-			encoding := Latin_1
+			if an_encoding /= Void then
+				lower_encoding := STRING_.as_lower (an_encoding)
+				Result := lower_encoding.is_equal (Encoding_latin_1)
+					or lower_encoding.is_equal (Encoding_us_ascii)
+					or lower_encoding.is_equal (Encoding_utf_8) 
+					or lower_encoding.is_equal (Encoding_utf_16)
+			end
 		end
 		
-	is_latin_1_compatible: BOOLEAN is
-			-- Can the current encoding be switched to latin-1?
+	is_applicable_encoding (an_encoding: STRING): BOOLEAN is
+			-- Can the current encoding be switched to `an_encoding'?
+		require
+			valid: is_valid_encoding (an_encoding)
+		local
+			lower_encoding: STRING
 		do
-			Result := encoding = Utf_8
-		ensure
-			undetected: (encoding = Undetected) implies (not Result)
+			if encoding = Undetected then
+				Result := True
+			else
+				lower_encoding := STRING_.as_lower (an_encoding)
+				if lower_encoding.is_equal (Encoding_latin_1) 
+					or lower_encoding.is_equal (Encoding_us_ascii)
+				then
+					Result := encoding = Utf_8_or_compatible 
+						or encoding = Utf_8 or encoding = Latin_1
+				elseif lower_encoding.is_equal (Encoding_utf_8) then
+					Result := encoding = Utf_8_or_compatible 
+						or encoding = Utf_8
+				elseif lower_encoding.is_equal (Encoding_utf_16) then
+					Result := encoding = Utf16_msb_first or encoding = Utf16_msb_last
+				end
+			end
 		end
+		
+	set_encoding (an_encoding: STRING) is
+			-- Set encoding.
+		require
+			valid_encoding: is_valid_encoding (an_encoding)
+			applicable_encoding: is_applicable_encoding (an_encoding)
+		do
+			debug ("xml_input_stream")
+				io.put_string ("set_encoding to ")
+				io.put_string (an_encoding)
+				io.put_new_line
+			end 
+			if STRING_.as_lower (an_encoding).is_equal (Encoding_latin_1) then
+				encoding := Latin_1
+			elseif STRING_.as_lower (an_encoding).is_equal (Encoding_utf_16) then
+				check encoding_ok: encoding = Utf16_msb_first or encoding = Utf16_msb_last end
+			else
+				-- FIXME: own mode for us-ascii?
+				encoding := Utf_8
+			end
+		end
+
+feature {NONE} -- Encodings
+
+	Encoding_us_ascii: STRING is "us-ascii"
+	Encoding_latin_1: STRING is "iso-8859-1" 
+	Encoding_utf_8: STRING is "utf-8"
+	Encoding_utf_16: STRING is "utf-16"
 		
 feature -- Input
 
@@ -111,6 +162,13 @@ feature -- Input
 					noqueue_read_character
 				end
 			end
+
+			debug ("xml_input_stream")
+				if not end_of_input then
+					io.put_string ("read_character: "+last_character.code.out+" "+last_character.out)
+					io.put_new_line
+				end
+			end 
 		end
 
 	read_string (nb: INTEGER) is
@@ -144,15 +202,11 @@ feature -- Input
 			-- at most `nb' characters read from input stream.
 			-- Return the number of characters actually read.
 		do
-			if encoding = Undetected then
-				read_character
-				if not end_of_input then
-					a_string.put (last_character, pos)
-					Result := 1
-				else
-					Result := 0
-				end
-			elseif utf_queue.count > 0 then
+			if encoding = Undetected or encoding = Utf_8_or_compatible or else utf_queue.count > 0 then
+				-- read one by one, 
+				-- if Undetected because detection operates on the first few characters,
+				-- if Utf_8_or_compatible because the actual encoding may be set soon 
+				-- and we should not read too much with the wrong encoding.
 				read_character
 				if not end_of_input then
 					a_string.put (last_character, pos)
@@ -163,8 +217,12 @@ feature -- Input
 			elseif encoding = Utf_8 then
 				Result := impl.read_to_string (a_string, pos, nb)
 			else
-				Result := precursor (a_string, pos, nb)
+				Result := Precursor (a_string, pos, nb)
 			end
+			debug ("xml_input_stream")
+				io.put_string ("read_to_string: "+Result.out+" chars read")
+				io.put_new_line
+			end 
 		end
 
 	unread_character (an_item: CHARACTER) is
@@ -217,8 +275,9 @@ feature {NONE} -- State
 	encoding: INTEGER
 			-- Input encoding, one of:
 
-	Utf_8, Latin_1, Utf16_msb_first, Utf16_msb_last, Undetected: INTEGER is unique
-			-- Utf_8: input already in UTF-8
+	Utf_8, Utf_8_or_compatible, Latin_1, Utf16_msb_first, Utf16_msb_last, Undetected: INTEGER is unique
+			-- Utf_8_or_compatible: probably UTF-8 but charset may be changed
+			-- Utf_8: input already in UTF-8, will remain so
 			-- Latin_1: input in ISO 8859-1 (Latin-1)
 			-- Utf16_msb_first: UTF-16 with most significant byte first.
 			-- Utf16_msb_last: UTF-16 with least significant byte first.
@@ -241,7 +300,7 @@ feature {NONE} -- Input
 			detected: encoding /= Undetected
 			queue_empty: utf_queue.count = 0
 		do
-			if encoding = Utf_8 then
+			if encoding = Utf_8 or encoding = Utf_8_or_compatible then
 				impl.read_character
 			elseif encoding = Latin_1 then
 				latin1_read_character
@@ -264,7 +323,7 @@ feature {NONE} -- UTF16 implementation
 		local
 			first_char, second_char: CHARACTER
 		do
-			encoding := Utf_8
+			encoding := Utf_8_or_compatible
 			impl.read_character
 			if not impl.end_of_input then
 				first_char := impl.last_character
