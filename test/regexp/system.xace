@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE system SYSTEM "../../../doc/gexace/xace.dtd">
 
-<system name="example">
+<system name="rx_test">
 	<description>
 		system:      "Regexp test"
 		author:      "Harald Erdbrügger [he@he-me.de]"
