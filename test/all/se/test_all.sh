@@ -1,5 +1,13 @@
 #!/local/bin/bash
 
+echo "Testing precomp..."
+$GOBO/test/all/se/test_precomp.sh $1
+
+echo ""
+echo "Testing Gobo Eiffel Structure Library..."
+$GOBO/test/all/se/test_structure.sh $1
+
+echo ""
 echo "Testing geyacc..."
 $GOBO/test/all/se/test_geyacc.sh $1
 

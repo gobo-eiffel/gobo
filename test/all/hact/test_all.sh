@@ -1,5 +1,9 @@
 #!/local/bin/bash
 
+echo "Testing Gobo Eiffel Structure Library..."
+$GOBO/test/all/hact/test_structure.sh $1
+
+echo ""
 echo "Testing geyacc..."
 $GOBO/test/all/hact/test_geyacc.sh $1
 
