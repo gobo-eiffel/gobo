@@ -13,10 +13,12 @@ Version 2.0 -
 	* Added class DS_TOPOLOGICAL_SORTER to sort partially
 	  ordered items.
 	* Added DS_SET and descendant classes such as DS_HASH_SET.
-	* Added creation routine `make_map' to DS_HASH_TABLE in
+	* DS_HASH_TABLE: added creation routine `make_map' in
 	  order to compare keys with '=' instead of `equal'.
-	* Fixed bug in DS_LINKED_LIST.delete (reported by
-	  Emmanuel Bouyer).
+	* DS_HASH_TABLE: added features `remove_found_item' and
+	  `found_key'.
+	* Fixed bug in DS_LINKED_LIST.delete (reported by Emmanuel
+	  Bouyer).
 	* Fixed bug in QUEUE.{force, put, extend}: removed erroneous
 	  postcondition "item_pushed" (reported by Emmanuel Bouyer).
 	* Moved $GOBO/library/structure/base to $GOBO/library/
