@@ -1,0 +1,144 @@
+<html>
+    <head>
+        <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <title>Using the XML parser</title>
+    </head>
+    <body bgcolor="#FFFFFF">
+        <table border="0" width="100%">
+            <tr>
+                <td><font size="6"><b>Using the XML parser</b></font></td><td align="right"><img src="../image/previous.gif" alt="Previous" border="0"><img src="../image/next.gif" alt="Next" border="0"></td>
+            </tr>
+        </table>
+        <hr size="1">
+        <a name="xml_event_interfaces"></a>
+<h2>Event interfaces</h2>
+
+<p>
+Event interfaces are the lowest level of communication with an XML parser. An event interface is a deferred class containing callback calls. Sources of events, like a parser, have routines to attach a descendant of the event interface.
+</p>
+
+<p>
+For each event interface, there is a purely deferred class with the callbacks, of which clients inherit, and a 'source' class, which events sources, like the parser, inherit. For the main XML content events, the event interface is <font color="#008080"><i><tt>XM_CALLBACKS</tt></i></font>, and the source is <font color="#008080"><i><tt>XM_CALLBACKS_SOURCE</tt></i></font>. It provides a <font color="#008080"><i><tt>set_callbacks</tt></i></font> feature, and the parser inherits from it.
+</p>
+
+<p>
+DTD events are covered separately, for parsers that support them, using <font color="#008080"><i><tt>XM_DTD_CALLBACKS</tt></i></font> and <font color="#008080"><i><tt>XM_DTD_CALLBACKS_SOURCE</tt></i></font> (with <font color="#008080"><i><tt>set_dtd_callbacks</tt></i></font>).
+</p>
+<a name="xml_parsers"></a>
+<h2>XML parser</h2>
+
+<p>
+The public interface of XML parsers is represented in the deferred class <font color="#008080"><i><tt>XM_PARSER</tt></i></font>. Parsers are event sources, inheriting from the event sources classes to provide <font color="#008080"><i><tt>set_callbacks</tt></i></font> and <font color="#008080"><i><tt>set_dtd_callbacks</tt></i></font>. The input document is set using <font color="#008080"><i><tt>parse_from_stream</tt></i></font> and similar features. Incremental parsing routines are available to parse a document a chunk at a time, if the parser supports it, which can be checked with <font color="#008080"><i><tt>is_incremental</tt></i></font>. 
+</p>
+
+<p>
+Errors can be collected but are also forwarded to the event interface. Because an event filter stream as described below can produce its own errors, not reflected in the event source that is the parser, it may be more sensible in most cases to collect errors downstream.
+</p>
+
+<p>
+Several concrete parsers are available, which are descendants of this interface. The pure Eiffel parser is <font color="#008080"><i><tt>XM_EIFFEL_PARSER</tt></i></font>. The parser making use of the Expat C library is <font color="#008080"><i><tt>XM_EXPAT_PARSER</tt></i></font>. These classes can be created directly.
+</p>
+
+<p>
+Because Expat introduces external dependencies in the library, a factory class is available: <font color="#008080"><i><tt>XM_EXPAT_PARSER_FACTORY</tt></i></font>. The value of <font color="#008080"><i><tt>is_expat_available</tt></i></font> depends on whether Expat has been compiled in or not, and code may portably act accordingly, for instance falling back to the Eiffel parser.
+</p>
+
+<a name="xml_event_filters"></a>
+<h2>Event filters and streams</h2>
+
+<p>
+On top of the event interface, the XML library provides a set of filters and a framework for using filters. The filters are arranged in a stream, in a manner similar to the Unix command shell.
+</p>
+
+<p>
+Each component of a filter pipe is a descendant of a filter base class, <font color="#008080"><i><tt>XM_CALLBACKS_FILTER</tt></i></font> for content events, which has a <font color="#008080"><i><tt>next</tt></i></font> attribute. The default implementation of each event is simply to forward the event to the next filter. A filter that uses only a few events can redefine only the required routines. Redefinition of routines are expected to do their processing and then forward the event to the next filter, for instance using <font color="#008080"><i><tt>Precursor</tt></i></font>. The class provides two routines that can be used as creation procedures: <font color="#008080"><i><tt>make_null</tt></i></font> sets <font color="#008080"><i><tt>next</tt></i></font> to a filter that does nothing on each event. This null filter, <font color="#008080"><i><tt>XM_CALLBACKS_NULL</tt></i></font> for content events, allows each component of a pipe to be used at any position in the pipe, including at the end, and the next filter to be set when convenient, while maintaining an invariant that <font color="#008080"><i><tt>next</tt></i></font> is not Void. The feature <font color="#008080"><i><tt>set_next</tt></i></font> can also be used as a creation procedure.
+</p>
+
+<p>
+From an Eiffel typing viewpoint, the whole stream has the same type: each filter can be at any position in the pipe. It maybe that some filters have extra dependencies (one must be before the other) that are not captured by the static type system. This seems acceptable given the flexibility of the system, and that many practical filters can indeed be placed anywhere on a pipe. A good point for encapsulation is that each filter is a small component with a clear interface, providing much better encapsulation than some other event filter patterns (like each stage inheriting from the previous one, with high coupling between each component).
+</p>
+
+
+<h2>Content events</h2>
+
+<p>
+The content events are the core of the XML parser interface. They cover elements and attributes, in addition to less fundamental feature like comments and processing instructions. There are also events called on startup and at the end of parsing.
+</p>
+
+<p>
+All events of <font color="#008080"><i><tt>XM_CALLBACKS</tt></i></font> that take names of tags or attributes, follow the same convention. The signature includes the namespace (a string representing the namespace URI), name prefix and local part. The parser is not expected to provide to resolve namespaces, with a filter introduced below resolving the namespaces and replacing the non-resolved namespaces (Void) downstream of the filter pipe. Whether a namespace is set can be checked with <font color="#008080"><i><tt>has_namespace</tt></i></font>.
+</p>
+
+<p>
+To make the interface consistently simple, it has only atomic events whose parameters are only strings and not data structures. Data structures are build downstream, or as intermediary internal structures of a specific filter. In particular, this means there is one event per attribute.
+</p>
+
+
+<h2>Content event filters</h2>
+
+<p>
+A set of standard content event filters is available in the library. There is a factory class <font color="#008080"><i><tt>XM_CALLBACKS_FILTER_FACTORY</tt></i></font> with creation routines and convenience routines to build pipes and bind the filters to each other. The filters can be created directly, the factory is only there for convenience.
+</p>
+
+<p>
+<font color="#008080"><i><tt>XM_PRETTY_PRINT_FILTER</tt></i></font> is a filter that prints out the event stream as an XML document, to the standard output, or a string. It can be placed anywhere in the stream, which may be convenient for debugging.
+</p>
+
+<p>
+Validation and namespace resolving filters will be in most standard pipes: <font color="#008080"><i><tt>XM_END_TAG_CHECKER</tt></i></font> generates an error event if an end tag does not match the start tag, and <font color="#008080"><i><tt>XM_NAMESPACE_RESOLVER</tt></i></font> reads XML namespace declaration attributes (these events are not forwarded downstream) and adds a resolved namespace URI to all outgoing names.
+</p>
+
+<p>
+Without <font color="#008080"><i><tt>XM_STOP_ON_ERROR_FILTER</tt></i></font> the event flow may continue after an error. This filter stops all event forwarding from the first error, which it remembers for later use (<font color="#008080"><i><tt>has_error</tt></i></font> and <font color="#008080"><i><tt>last_error</tt></i></font>). It is useful for most standard pipes, indeed an error condition is better collected here, including errors within the preceding filters, than in the parser itself.
+</p>
+
+<p>
+To produce the output in a tree structure (descendants from <font color="#008080"><i><tt>XM_NODE</tt></i></font>), the filter <font color="#008080"><i><tt>XM_CALLBACKS_TO_TREE_FILTER</tt></i></font> is used. It expects resolved namespaces.
+</p>
+
+<p>
+<font color="#008080"><i><tt>XM_SHARED_STRINGS_FILTER</tt></i></font> saves memory and possibly comparison time by making all equal strings point to a single instance. The downstream events must then consider strings immutable. This sharing is across event categories (if a content happens to be the same as an element name, it will be the same string for instance).
+</p>
+
+<p>
+To finish this section, here is an example of a filter pipe, using the factory class convenience routines <font color="#008080"><i><tt>callbacks_pipe</tt></i></font> that simply binds the next pipe of each filter in an array and returns the first element:
+</p>
+
+<pre>
+...
+inherit
+	XM_CALLBACKS_FILTER_FACTORY
+...
+
+a_parser: XM_PARSER
+...
+
+a_parser.set_callbacks (callabacks_pipe (
+		&lt;&lt;	new_end_tag_checker,
+			new_namespace_resolver,
+			new_stop_on_error,
+			new_tree_builder &gt;&gt;)
+...
+</pre>
+
+<p>
+In a real program, references may be kept to individual filters, to recover the result or check their state after processing. <font color="#008080"><i><tt>XM_TREE_CALLBACKS_PIPE</tt></i></font> provides a standard pipe with attributes for the interesting component filters.
+</p>
+
+<hr size="1">
+        <table border="0" width="100%">
+            <tr>
+                <td>
+                    <address>
+                        <font size="2">
+                            <br>
+                            <br>
+                            <b>http:</b><a href="http://www.gobosoft.com">//www.gobosoft.com</a>
+                            <br>
+                        </font>
+                    </address>
+                </td><td align="right" valign="top"><a href="http://www.gobosoft.com"><img src="../image/home.gif" alt="Home" border="0"></a><img src="../image/toc.gif" alt="Toc" border="0"><img src="../image/previous.gif" alt="Previous" border="0"><img src="../image/next.gif" alt="Next" border="0"></td>
+            </tr>
+        </table>
+    </body>
+</html>
