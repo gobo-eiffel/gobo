@@ -1,5 +1,5 @@
 -- system:     "Gobo Eiffel Yacc: syntactical analyzer generator"
--- compiler:   "Visual Eiffel 2.5"
+-- compiler:   "Visual Eiffel 3.0"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 -- copyright:  "Copyright (c) 1998, Eric Bezault"
 -- date:       "$Date$"
