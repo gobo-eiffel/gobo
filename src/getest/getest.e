@@ -43,7 +43,13 @@ feature -- Processing
 			read_command_line
 			a_file := INPUT_STREAM_.make_file_open_read (config_filename)
 			if INPUT_STREAM_.is_open_read (a_file) then
-				std.output.put_string ("Preparing Test Cases%N")
+				if must_generate then
+					std.output.put_string ("Preparing Test Cases%N")
+				elseif must_compile then
+					std.output.put_string ("Compiling Test Cases%N")
+				elseif must_execute then
+					std.output.put_string ("Running Test Cases%N%N")
+				end
 				!! config_parser.make (error_handler)
 				config_parser.parse (a_file)
 				INPUT_STREAM_.close (a_file)
@@ -96,6 +102,12 @@ feature -- Processing
 					else
 						config_filename := VE_config_filename
 					end
+				elseif arg.is_equal ("-g") then
+					must_generate := True
+				elseif arg.is_equal ("-c") then
+					must_compile := True
+				elseif arg.is_equal ("-e") then
+					must_execute := True
 				elseif i = nb then
 					if config_filename /= Void then
 						report_usage_error
@@ -113,6 +125,11 @@ feature -- Processing
 					report_undefined_environment_variable_error (Getest_config_variable)
 				end
 			end
+			if not (must_generate or must_compile or must_execute) then
+				must_generate := True
+				must_compile := True
+				must_execute := True
+			end
 		ensure
 			config_filename_not_void: config_filename /= Void
 		end
@@ -122,12 +139,18 @@ feature -- Processing
 		require
 			a_config_not_void: a_config /= Void
 		do
-			generate_test (a_config)
-			compile_test (a_config)
-			run_test (a_config)
+			if must_generate then
+				generate_test (a_config, False)
+			end
+			if must_compile then
+				compile_test (a_config, must_generate)
+			end
+			if must_execute then
+				run_test (a_config, must_generate or must_compile)
+			end
 		end
 
-	generate_test (a_config: TS_CONFIG) is
+	generate_test (a_config: TS_CONFIG; need_header: BOOLEAN) is
 			-- Generate Eiffel classes.
 		require
 			a_config_not_void: a_config /= Void
@@ -135,6 +158,9 @@ feature -- Processing
 			testcases: TS_TESTCASES
 		do
 			if not error_handler.error_reported then
+				if need_header then
+					std.output.put_string ("Preparing Test Cases%N")
+				end
 				!! testcases.make (a_config.testgen, error_handler)
 				a_config.process (testcases, error_handler)
 				testcases.generate_test_classes
@@ -142,7 +168,7 @@ feature -- Processing
 			end
 		end
 
-	compile_test (a_config: TS_CONFIG) is
+	compile_test (a_config: TS_CONFIG; need_header: BOOLEAN) is
 			-- Compile generated testcases.
 		require
 			a_config_not_void: a_config /= Void
@@ -151,7 +177,9 @@ feature -- Processing
 			a_command_name: STRING
 		do
 			if not error_handler.error_reported then
-				std.output.put_string ("Compiling Test Cases%N")
+				if need_header then
+					std.output.put_string ("Compiling Test Cases%N")
+				end
 				a_command_name := a_config.compile
 				if a_command_name.count > 0 then
 					OUTPUT_STREAM_.flush (std.output)
@@ -161,7 +189,7 @@ feature -- Processing
 			end
 		end
 
-	run_test (a_config: TS_CONFIG) is
+	run_test (a_config: TS_CONFIG; need_header: BOOLEAN) is
 			-- Execute generated testcases.
 		require
 			a_config_not_void: a_config /= Void
@@ -170,7 +198,9 @@ feature -- Processing
 			a_command_name: STRING
 		do
 			if not error_handler.error_reported then
-				std.output.put_string ("Running Test Cases%N%N")
+				if need_header then
+					std.output.put_string ("Running Test Cases%N%N")
+				end
 				a_command_name := a_config.execute
 				if a_command_name.count > 0 then
 					OUTPUT_STREAM_.flush (std.output)
@@ -187,6 +217,17 @@ feature -- Access
 
 	error_handler: TS_ERROR_HANDLER
 			-- Error handler
+
+feature -- Status report
+
+	must_generate: BOOLEAN
+			-- Should the Eiffel classes be generated?
+
+	must_compile: BOOLEAN
+			-- Should the testcases be compiled?
+
+	must_execute: BOOLEAN
+			-- Should the testcases be executed?
 
 feature {NONE} -- Error handling
 
@@ -231,7 +272,7 @@ feature {NONE} -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Getest usage message
 		once
-			!! Result.make ("[-hV?][--help][--version][--se|--ise|--hact|--ve|filename]")
+			!! Result.make ("[-ceghV?][--help][--version][--se|--ise|--hact|--ve|filename]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end

@@ -7,6 +7,12 @@ Version 2.1 - ?
 	  reusing the same input buffer for subsequent scanning.
 	  (suggested by Emmanuel Stapf)
 
+	getest:
+
+	* Added command-line options: -g for testcase generation
+	  only, -c for testcase compilation only, and -e for
+	  testcase execution only.
+
 	Gobo Eiffel Structure Library:
 
 	* Fixed bug in feature `force_last' of DS_SPARSE_SET and
