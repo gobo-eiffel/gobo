@@ -1,6 +1,6 @@
 Note: Some parts of this file are rather old (especially the
 beginning of the file) and might be out of date. Information
-found in the file options.txt is more uptodate even if it
+found in the file options.txt is more up-to-date even if it
 only covers the <option> elements.
 
 ==========================================================
@@ -15,7 +15,7 @@ There are two XACE documents "system" documents and "cluster" documents. A "syst
 
 **) Typical application
 
-A library ships with an "cluster" document. People using this library no longer need to copy&paste the ACE file from the examples of the library over and over again. Taking care of changes in the cluster structure and other details. In their applications "system" document they simply refere to the libraries "cluster" document.
+A library ships with an "cluster" document. People using this library no longer need to copy&paste the ACE file from the examples of the library over and over again. Taking care of changes in the cluster structure and other details. In their applications "system" document they simply refer to the libraries "cluster" document.
 
 **) Syntax
 
@@ -27,19 +27,19 @@ A cluster can be seen as a tree structure containing further clusters, classes, 
 ****) Attribute "name" (optional)
 Assigns a name to a cluster (or library).
 ****) Attribute "location" (optional)
-Assigns a directory to a cluster. Any Eiffel source files found in this directory are said to be contained in this cluster. If the attribute is omitted the cluster does not contain classes directly. It still may contain other clusters thus contain classes indirectly. Only clusters found directly in the specified are contained in the cluster. Subdirectories and their classes are not.
-****) "cluster" element (occurence: >=0)
+Assigns a directory to a cluster. Any Eiffel source files found in this directory are said to be contained in this cluster. If the attribute is omitted the cluster does not contain classes directly. It still may contain other clusters thus contain classes indirectly. Only clusters found directly in the specified directory are contained in the cluster. Subdirectories and their classes are not.
+****) "cluster" element (occurrence: >=0)
 Nests another clusters one in another. The outer cluster is called the parent cluster and the inner cluster sub-cluster.
-****) "mount" element (occurence: >=0)
-Specifies a cluster defined in another "cluster" document. The specified cluster and all it's sub-clusters are "mounted" into the outer cluster. 
+****) "mount" element (occurrence: >=0)
+Specifies a cluster defined in another "cluster" document. The specified cluster and all its sub-clusters are "mounted" into the outer cluster. 
 *****) Attribute "location" (required)
 Specifies the external "cluster" document
 *****) Attribute "cluster" (optional)
-Selects a certain cluster (and it's sub-clusters) in the "cluster" document to be included instead of the root cluster of the document. For a syntax description of the "cluster" value see section "Qualified Cluster Names"
-****) "description" element (occurence: >=0)
+Selects a certain cluster (and its sub-clusters) in the "cluster" document to be included instead of the root cluster of the document. For a syntax description of the "cluster" value see section "Qualified Cluster Names"
+****) "description" element (occurrence: >=0)
 used for plain text description of cluster. this element may change in the future.
 ****) "options" element
-"option" elements in nested clusters overide their grand siblings.
+"option" elements in nested clusters override their grand siblings.
 *****) "require" element
 ******) Attribute "enable" (optional)
 Maybe "True" or "False". Defaults to "True"
@@ -65,43 +65,43 @@ If ommitted all debug instructions are turned on.
 ***) "system" element
 A "system" element describes the elements of an application and how to put them together.
 ****) Attribute "name" (required)
-Specifies the name of theb executable to build.
-****) "root" element (occurences: =1)
-Specfies the root class name and creation procedure name of the executable.
+Specifies the name of the executable to build.
+****) "root" element (occurrences: =1)
+Specifies the root class name and creation procedure name of the executable.
 *****) Attribute "class" (required)
 Specifies the root class name
 *****) Attribute "creation" (required)
 Specifies the creation procedure name of the root class
-****) "cluster" element (occurences: >=1)
+****) "cluster" element (occurrences: >=1)
 See description above.
 
 **) Attribute Value expansion
 "name" and "location" attribute values may contain variables of the form "${VAR_NAME}". If they are defined they will be expanded, otherwise they will be left untouched.
 
-**) Directory Seperators
-Only slashes ("/") are allowed to sperate directories. On platforms where this is not the native seperator the path will be converted to the native standards in all output files. Windows drive letter constructs are prohibited.
+**) Directory Separators
+Only slashes ("/") are allowed to separate directories. On platforms where this is not the native separator the path will be converted to the native standards in all output files. Windows drive letter constructs are prohibited.
 
 
 **) Qualified Cluster Names
-To address cluster in a nested cluster structer qualified cluster name are used. To address a given cluster prepend it's name with the name of it's parents seperated by a dot (".") followed by the name of the cluster to address. A qualified cluster name may contain variables. 
+To address cluster in a nested cluster structure qualified cluster name are used. To address a given cluster prepend its name with the name of its parents separated by a dot (".") followed by the name of the cluster to address. A qualified cluster name may contain variables. 
 
 
 **) Parent Reference 
-If you leave out the "location" attribute of a cluster element, but provide a "name" attribute, the path name of the cluster will be the concatenation of the parents cluster a slash and the current cluster name.
+If you leave out the "location" attribute of a cluster element, but provide a "name" attribute, the path name of the cluster will be the concatenation of the parents cluster, a slash and the current cluster name.
 
 **) Variables
 
-The XACE tool can be given a set of variable->value pairs. Variable names can be used in qualfied cluster names to dynamically change the cluster tree at tool invocation time.
+The XACE tool can be given a set of variable->value pairs. Variable names can be used in qualified cluster names to dynamically change the cluster tree at tool invocation time.
 
 **) Syntax Outlook
 
-Future versions are likely to make certain attributes (like "creation") optional and assume sensible defaults. It is also likely that that new attributes will be introduced to allow finer control over what get's included (like "recursive" for "cluster" and "ref").
+Future versions are likely to make certain attributes (like "creation") optional and assume sensible defaults. It is also likely that new attributes will be introduced to allow finer control over what get's included (like "recursive" for "cluster" and "ref").
 
-Additionally there it will be allowed to nest "external" and "option" elements in "cluster" elements to specify external C dependencies and and Eiffel and C compile options.
+Additionally it will be allowed to nest "external" and "option" elements in "cluster" elements to specify external C dependencies and Eiffel and C compile options.
 
 **) Good style in writing XACE files
 
-With packages like GOBO and eXML it is of advantage to include all Eiffel source dirs in the main XACE file. They can be referenced from the examples system documents like this:
+With packages like GOBO and eXML it is of advantage to include all Eiffel source dirs in the main XACE file. They can be referenced from the example system documents like this:
 --
 <mount location="..." cluster="example.tree.formatter"/> 
 --
@@ -109,12 +109,12 @@ This means that the root cluster of such cluster documents should nest "example"
 --
 <mount location="..." cluster="library/xml"/>
 --
-The advantage of this approach comes with the possiblities XACE offer. Image a tool that renames a class (say hey-ho to refaturing tools): 
+The advantage of this approach comes with the possiblities XACE offer. Imagine a tool that renames a class (say hey-ho to refacturing tools): 
 --
 gexace --rename-class --from="DS_LIFT" --to="DS_LIST" gobo.xace
 --
 
-This command would do everything you would otherwise need to do by hand. It would rename the file "ds_lift.e" to "ds_list.e" and change in all classes "DS_LIFT" to "DS_LIST". If the examples clusters are not contained in the library's cluster document, you would need to run the command for each example again.
+This command would do everything you would otherwise need to do by hand. It would rename the file "ds_lift.e" to "ds_list.e" and change in all classes "DS_LIFT" to "DS_LIST". If the example clusters are not contained in the library's cluster document, you would need to run the command for each example again.
 
 The same can be done for feature renaming, which will in practice probably occur more often, but will be a little bit trickier to implement (search&replace more difficult)
 
@@ -129,11 +129,11 @@ Typical use of "condition": release and debug builds.
 ***) "assertions"
 
 SE supports only a global level ("boost", "require", "check", ...)
-ISE supports assertion checking to differ in clusters. It supports selective "check"s and IIRC selective checking of preconditions, postconditions, ... is comming down the pipe.
+ISE supports assertion checking to differ in clusters. It supports selective "check"s and IIRC selective checking of preconditions, postconditions, ... is coming down the pipe.
 VE supports ???
 What can we do? Find the highest common denominator? Bad idea. If we support a finer grade control, compilers who do not understand these details can be given the highest debug level found in the XACE file.
 
-We should go for the finest control. Compilers that do not support that level, the highest level will be used. The reason is that it is vert likely that in the future all compilers support fine grain control.
+We should go for the finest control. Compilers that do not support that level, the highest level will be used. The reason is that it is very likely that in the future all compilers support fine grain control.
 
 --
 <require enable="True|False"/>
@@ -229,12 +229,12 @@ Example:
 		The Eiffel XML Parser Framework
 
 		Please note that you cannot include the root ("exml") cluster
-		and all it's sub-clusters, because there are class name clashes
+		and all its sub-clusters, because there are class name clashes
 		due to the factory in use.
-		You have to select "exml.interface" recursivly and then
+		You have to select "exml.interface" recursively and then
 		from the "exml.impl" cluster the parsers you wish to compile in.
 		You can choose all, but if you decide to leave out a certain parser 
-		you must select it's counterpart from "exml.no_impl" to keep the 
+		you must select its counterpart from "exml.no_impl" to keep the 
 		factory happy.
 	</description>
 
@@ -324,7 +324,7 @@ Example:
 
 *) xace tool todo:
 **) Feature completeness
-***) refacture element "options"
+***) refactor element "options"
 ****) How can we select to (not) override options in mounted cluster?
 ****) How can we override default options for certain classes?
 ****) How does overriding options in nested clusters work exactly?
@@ -332,24 +332,24 @@ Example:
 ***) introduce conditionals to support:
 ****) multiple builds (release, debug) look into "option"
 ****) multiple platforms/external dependencies look into "external"
-***) reaname "xace" tool to "gexace"
+***) rename "xace" tool to "gexace"
 ***) add hact generation
 ***) finish ve generation
 ***) rework cli
 ****) switch from '--build --se' to '--build="se"'
-****) assue standard xace file name "system.xace"
+****) assure standard xace file name "system.xace"
 ***) (post 1.0) add "recursive" attribute to "cluster" and "mount"
 ***) (post 1.0) add "abstract" attribute to "cluster"
-***) (post 1.0) variable declraration
+***) (post 1.0) variable declaration
 ****) (post 1.0) a variable used in an XACE file must be declared first. 
-****) (post 1.0) Additional meta data about it's use should be given
-****) (post 1.0) declare whether it must be a env var, a define or whether it can be both
+****) (post 1.0) Additional meta data about its use should be given
+****) (post 1.0) declare whether it must be an env var, a define or whether it can be both
 ****) (post 1.0) declare it as a fixed enum (like EIF_COMPILER may be "ise", "se", "ve", "hact")
 ****) (post 1.0) add command or tool to generate etags file
 
 
 **) Quality Assurance
-***) refacture gobo related classes and try to push them into gobo
+***) refactor gobo related classes and try to push them into gobo
 ***) move xml error classes into eXML
 ***) add feature documentation
 ***) add indexing clauses
@@ -381,7 +381,7 @@ What's new?
 . Files 'cluster.xace' have been renamed as 'library.xace'.
 . The top element in 'library.xace' is <library> instead
   of <cluster>.
-. The element <library> has a compulsary attribute "name".
+. The element <library> has a compulsory attribute "name".
 . Elements <cluster> and <mount> (and possibly <option>
   and <external>) are possible subelements of <library>.
 . There is no empty <cluster> element in <system> anymore.
@@ -402,7 +402,7 @@ What's new?
 >      -- Note that even though the pathname is not relative
 >      -- to the parent cluster's pathname, this pathname is
 >      -- not necessarily an absolute pathname in the underlying
->      -- filesystem.
+>      -- file system.
 >
 >   <cluster name="foo" location="bar" relative="true"/>
 >      -- cluster named "foo" with pathname "bar" which is
@@ -451,13 +451,13 @@ What's new?
 
      $GOBO/library/src/gexace/system.xace
 
-  where there is not need to declare these prefixes individually
+  where there is no need to declare these prefixes individually
   again.
-  If there is still a prefix name clash, there 'gexace' emits
+  If there is still a prefix name clash, then 'gexace' emits
   an error message.
 . In the generated Ace file, the cluster names are those declared
   in the Xace files with the possible prefixes specified in <mount>.
-  There is no cluster name concatenation anymorw behind the scene
+  There is no cluster name concatenation anymore behind the scene
   in 'gexace'.
 . The command-line option --cluster in 'gexace' has been renamed
   as --library and the corresponding default input filename is
@@ -523,11 +523,11 @@ Eric Bezault wrote:
 > is much simplier now. I also added an attribute "prefix" to
 > <library> to provide a default prefix value to be overwritten
 > by the "prefix" attribute of <mount>. Here again the Xace files
-> are simplier because there is no need to repeat a possible prefix
+> are simpler because there is no need to repeat a possible prefix
 > in <mount> in many Xace files when the default value provided
 > in <library> is OK.
 
-The attribute "prefix" in <cluster> and <library> are now
+The attributes "prefix" in <cluster> and <library> are now
 available in CVS. You need to run the bootstrap to take
 advantage of it.
 
@@ -712,7 +712,7 @@ counterpart of "exclude").
 
 I have also added more options at different levels. To have
 details/explanations about the new options, please have a look
-at $GOBO/doc/gexace/options.txt. This file have been updated
+at $GOBO/doc/gexace/options.txt. This file has been updated
 with new options, and it also has two new sections: CLASS
 OPTIONS and FEATURE OPTIONS.
 
