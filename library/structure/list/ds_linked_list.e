@@ -1124,6 +1124,11 @@ feature {NONE} -- Implementation
 			last_cell_set: last_cell = a_cell
 		end
 
+feature {NONE} -- Implementation
+
+	internal_cursor: like new_cursor
+			-- Internal cursor
+
 feature {NONE} -- Cursor movement
 
 	move_last_cursors_after is
