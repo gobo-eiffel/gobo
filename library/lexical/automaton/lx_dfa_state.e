@@ -18,20 +18,10 @@ inherit
 		undefine
 			copy
 		redefine
-#ifdef SE
-			hash_code,
-#endif
 			is_equal
 		select
 			is_equal
 		end
-
-#ifndef SE
-	HASHABLE
-		undefine
-			copy, is_equal
-		end
-#endif
 
 	DS_ARRAYED_LIST [LX_NFA_STATE]
 		rename
@@ -40,10 +30,6 @@ inherit
 		export
 			{ANY} item, count
 			{NONE} all
-#ifdef SE
-		redefine
-			hash_code
-#endif
 		end
 
 creation
@@ -79,7 +65,7 @@ feature {NONE} -- Initialization
 					epsilon_transition ?= state.transition
 					if epsilon_transition = Void then
 						force_last (state)
-						hash_code := hash_code + state.id
+						code := code + state.id
 					else
 						nfa_state := epsilon_transition.target
 						if not nfa_states.has (nfa_state) then
@@ -103,7 +89,7 @@ feature {NONE} -- Initialization
 					end
 					if is_empty or else last /= state then
 						force_last (state)
-						hash_code := hash_code + state.id
+						code := code + state.id
 					end
 				end
 				i := i + 1
@@ -129,9 +115,6 @@ feature -- Access
 
 	id: INTEGER
 			-- State id
-
-	hash_code: INTEGER
-			-- Hash code value
 
 	accepted_rules: DS_ARRAYED_LIST [LX_RULE]
 			-- Accepted rule set
@@ -214,7 +197,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Are current state and `other' equal?
 		do
-			if hash_code = other.hash_code then
+			if code = other.code then
 				Result := arrayed_list_is_equal (other)
 			end
 		end
@@ -282,6 +265,12 @@ feature {NONE} -- Sort
 		ensure
 			sorter_not_void: Result /= Void
 		end
+
+feature {LX_DFA_STATE} -- Implementation
+
+	code: INTEGER
+			-- Hash code value
+			-- (Used to speed up equality test.)
 
 invariant
 
