@@ -114,8 +114,8 @@ feature -- Element
 						on_error (Undeclared_namespace_error)
 					end
 				else
-					-- Attributes don't have a default name space.
-					a_namespace := Void
+					-- Attributes have their element's namespace
+					a_namespace := an_element_namespace
 				end
 				next.on_attribute (a_namespace,
 					attributes_prefix.item, attributes_local_part.item,
