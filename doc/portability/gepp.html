@@ -38,7 +38,8 @@ standard. But this standard is not perfect yet.</p>
 <p>The other problem encountered when writing portable code is
 incompatibility between the different language dialects provided
 by the Eiffel compilers. The definition of the Eiffel language is
-controlled by the Language Committee of <font size="2">NICE</font>,
+controlled by the <a href="http://www.ecma-international.org/memento/TC39-TG4.htm"><font size="2">ECMA TC39-TG4</font></a> 
+committee for the standardization of the Eiffel Language,
 after the specification given in <a
 href="http://www.prenhall.com/books/ptr_0132479257.html"><em>Eiffel:
 The Language</em></a>, second printing. However no Eiffel
@@ -79,7 +80,7 @@ color="#800000">-</font>]</pre>
 </blockquote>
 
 <p>where the first <font color="#800000"><em><tt>filename</tt></em></font>
-is the name of the input file or the second <font color="#800000"><em><tt>filename</tt></em></font>
+is the name of the input file and the second <font color="#800000"><em><tt>filename</tt></em></font>
 is the name of the output file. If the input filename is missing,
 or if<font color="#800000" size="2" face="Courier New"> </font><font
 color="#800000"><tt>-</tt></font><font color="#800000" size="2"
@@ -335,7 +336,7 @@ color="#800080">VE</font><font color="#008080">
 
     <em>...</em>
 
-<em><strong>end</strong></em> -- class FOO</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>The names used for each supported Eiffel compiler are, in
@@ -358,7 +359,11 @@ alphabetical order:</p>
     </table>
 </blockquote>
 
-<p>and <em>gepp</em> should then be invoked as follows:</p>
+<p>(Note that <font color="#800080"><tt>ISE</tt></font>, 
+<font color="#800080"><tt>SE</tt></font>, <font color="#800080"><tt>VE</tt></font> 
+should be all in uppercase because <em>gepp</em> is case-sensitive.)</p>
+
+<p><em>gepp</em> should then be invoked as follows:</p>
 
 <blockquote>
     <table border="0">
@@ -407,9 +412,7 @@ such as:</p>
 color="#800080">VE</font><font color="#008080">
             <em>Result</em>.<em>from_integer</em> (<em>an_int</em>)
 </font><font color="#0000FF">#else
-#ifdef</font><font color="#008080"> </font><font color="#800080">ISE</font><font
-color="#008080">
-color="#008080">
+#ifdef</font><font color="#008080"> </font><font color="#800080">ISE</font><font color="#008080">
             <em>Result</em> := <em>'%U'</em> + <em>an_int</em>
 </font><font color="#0000FF">#else</font><font color="#008080">
             <em>Result</em> := <em>an_int</em>.<em>to_character</em>
@@ -419,7 +422,7 @@ color="#008080">
             <em>valid_character_code</em>: <em>Result</em>.<em>code</em> = <em>an_int</em>
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class KL_INTEGER_ROUTINES</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>The corresponding class <font color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>
@@ -451,7 +454,7 @@ for Visual Eiffel, generated with the following command-line:</p>
             <em>valid_character_code</em>: <em>Result</em>.<em>code</em> = <em>an_int</em>
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class KL_INTEGER_ROUTINES</font></pre>
+<em><strong>end</strong></em></font></pre>
 </blockquote>
 
 <p>Finally, preprocessing can also be used even when no
@@ -482,7 +485,7 @@ where no other solutions were satisfactory.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998-2001</b></font><font
+            <font size="2"><b>Copyright © 1998-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -492,7 +495,7 @@ where no other solutions were satisfactory.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 25 October 2001</font><br>
+            <strong>Last Updated:</strong> 11 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
