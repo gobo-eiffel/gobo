@@ -12,7 +12,6 @@
 
 	<cluster name="xml" location="${GOBO}/library/xml">
 		<option name="abstract" value="true"/>
-		<cluster name="factory"/>
 		<cluster name="position"/>
 		<cluster name="source"/>
 		<cluster name="general"/>
