@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="multiple commands" default="ls" basedir=".">
+<project name="multiple commands" default="ls">
 
 	<target name="windows" if="$WINDIR">
 		<set name="copy" value="copy"/>

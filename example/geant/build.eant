@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="geant-examples">
+<project name="geant-example" default="all">
 
 	<target name="all">
 		<description>execute all examples</description>
@@ -20,41 +20,45 @@
 	</target>
 	
 	<target name="hello" dir="hello">
-		<description>execute hello examples</description>
-		<geant file="build.eant"/>
+		<description>execute hello example</description>
+		<geant file="build.eant" target="hi"/>
 	</target>
 
 	<target name="variables" dir="variables">
-		<description>execute variables example</description>
-		<geant file="variables1.eant"/>
+		<description>execute variables examples</description>
+		<geant file="variables1.eant" target="var"/>
 		
-		<geant file="variables2.eant"/>
-		<geant file="variables3.eant"/>
-		<geant file="variables4.eant"/>
+		<geant file="variables2.eant" target="var"/>
+		<geant file="variables3.eant" target="var"/>
+		<geant file="variables4.eant" target="var"/>
 		
 		<set name="who" value="Bart"/>
-		<geant file="variables5.eant" reuse_variables="true"/>
+		<geant file="variables5.eant" reuse_variables="true" target="var"/>
 		<unset name="who"/>
-		<geant file="variables5.eant" reuse_variables="true"/>
+		<geant file="variables5.eant" reuse_variables="true" target="var"/>
 
 		<geant file="variables5.eant" target="setenv"/>
-	<geant file="variables5.eant" target="cwd"/>
+		<geant file="variables5.eant" target="cwd"/>
 	
 	</target>
 
 	<target name="filesystem" dir="filesystem">
 		<description>execute filesystem examples</description>
-		<geant file="build.eant" target="info"/>
-		<geant file="build.eant" target="mkdir"/>
-		<geant file="build.eant" target="deldir"/>
-		<geant file="build.eant" target="copyfile"/>
-		<geant file="build.eant" target="movefile"/>
-		<geant file="build.eant" target="delfile"/>
-		<geant file="build.eant" target="cpfs1"/>
+		<geant file="build.eant" target="copy_file1"/>
+		<geant file="build.eant" target="copy_file2"/>
+		<geant file="build.eant" target="copy_file3"/>
+		<geant file="build.eant" target="copy_fs1a"/>
+		<geant file="build.eant" target="copy_fs1b"/>
+		<geant file="build.eant" target="copy_fs2a"/>
+		<geant file="build.eant" target="copy_fs2b"/>
+		<geant file="build.eant" target="copy_fs3a"/>
+		<geant file="build.eant" target="move_file1"/>
+		<geant file="build.eant" target="move_file2"/>
+		<geant file="build.eant" target="delete_file1"/>
 	</target>
 
 	<target name="exec" dir="exec">
-		<description>execute exec examples</description>
+		<description>execute exec example</description>
 		
 		<!-- problem: -->
 		<!-- <geant file="exec1.eant"/> -->
@@ -65,9 +69,9 @@
 		<description>execute depend examples</description>
 		
 		<geant file="depends1.eant" target="A"/>
-		<geant file="depends1.eant"/>
-		<geant file="depends2.eant"/>
-		<geant file="depends3.eant"/>
+		<geant file="depends1.eant" target="C"/>
+		<geant file="depends2.eant" target="D"/>
+		<geant file="depends3.eant" target="A"/>
 		<geant file="depends3.eant" target="D"/>
 		
 	</target>
@@ -86,14 +90,14 @@
 		<unset name="runb"/>
 		<geant file="if1.eant" target="C" reuse_variables="true"/>
 
-		<geant file="if2.eant"/>
-		<geant file="if3.eant"/>
-		<geant file="if4.eant"/>
+		<geant file="if2.eant" target="list"/>
+		<geant file="if3.eant" target="list"/>
+		<geant file="if4.eant" target="info"/>
 		
-		<geant file="if5.eant" reuse_variables="true"/>
+		<geant file="if5.eant" reuse_variables="true" target="A"/>
 		
 		<set name="taska" value="dummy"/>
-		<geant file="if5.eant" reuse_variables="true"/>
+		<geant file="if5.eant" reuse_variables="true" target="A"/>
 	
 		<geant file="if5.eant" target="testbreak"/>
 
@@ -107,13 +111,13 @@
 
 	<target name="geant" dir="geant">
 		<description>execute geant examples</description>
-		<geant file="geant1.eant"/>
-		<geant file="geant2.eant"/>
+		<geant file="geant1.eant" target="one"/>
+		<geant file="geant2.eant" target="one"/>
 	</target>
 
 	<target name="gexace" dir="gexace">
 		<description>execute gexace examples</description>
-		<geant file="build.eant" dir="hello"/>
+		<geant file="build.eant" dir="hello" target="compile"/>
 		<geant file="build.eant" target="run" dir="hello"/>
 		<geant file="build.eant" target="clean" dir="hello"/>
 	</target>
@@ -126,7 +130,7 @@
 
 	<target name="misc" dir="misc">
 		<description>execute misc examples</description>
-		<geant file="outofdate.eant"/>
+		<geant file="outofdate.eant" target="ood1"/>
 	</target>
 
 </project>

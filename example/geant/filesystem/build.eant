@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="filesystem_examples" default="setup">
+<project name="filesystem_example" default="copy_file1">
 
 	<description>demonstrates filesystem functionality</description>
 
@@ -11,7 +11,7 @@
 
 		<set name="cp" value="copy" if="${is_windows}"/>
 		<set name="cp" value="cp" unless="${is_windows}"/>
-		<mkdir directory="${GOBO}/examples/geant/tmp"/>
+		<mkdir directory="${GOBO}/example/geant/tmp"/>
 	</target>
 
 	<!-- ----------------------- copy ------------------------------------------- -->	

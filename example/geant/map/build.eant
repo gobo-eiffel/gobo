@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="t">
+<project name="map" default="cp">
 
 	<target name="cp">
 		<copy file="build.eant" to_directory="out"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="gepp">
+<project name="gepp" default="gepp1">
 
 	<target name="prepare">
 		<set name="gendir_deep" value="spec_deep"/>

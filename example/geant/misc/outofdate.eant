@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="geant_outofdate">
+<project name="geant_outofdate" default="ood1">
 	
 	<target name="init">
 		<set name="gepp_in_dir" value="${GOBO}/library/kernel/io"/>

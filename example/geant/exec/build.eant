@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="exec">
+<project name="exec" default="fs_variables">
 
 	<target name="init">
 		<set name="short_dir" value="short"/>

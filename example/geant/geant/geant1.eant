@@ -1,4 +1,4 @@
-<project name="geant">
+<project name="geant" default="one">
 
 	<target name="one">
 		<description>calls other ant files</description>
@@ -8,11 +8,11 @@
 
 		<echo message="------------------------"/>
 		<echo message="before call of ${buildfile}"/>
-		<geant file="${buildfile}"/>
+		<geant file="${buildfile}" target="var"/>
 		<echo message="after call of ${buildfile}"/>
 		<echo message="-------" />
 		<echo message="before call of ${buildfile}"/>
-		<geant file="${buildfile}" reuse_variables="true"/> 
+		<geant file="${buildfile}" reuse_variables="true" target="var"/> 
 		<echo message="after call of ${buildfile}"/>
 	</target>
 

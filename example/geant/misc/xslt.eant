@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="xslt">
+<project name="xslt" default="xslt">
 
 	<target name="xslt">
 		<xslt

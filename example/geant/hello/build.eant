@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="hello">
+<project name="hello" default="hi">
 
 	<target name="hi">
 		<echo message="Hello world"/>

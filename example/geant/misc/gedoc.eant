@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<project name="gedoc">
+<project name="gedoc" default="gedoc">
 
 	<target name="gedoc">
 		<echo message="Not implemented yet."/>
