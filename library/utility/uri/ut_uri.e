@@ -183,6 +183,15 @@ feature -- Most generic URI components
 	full_reference: STRING
 			-- The entire URI.
 
+	has_valid_scheme: BOOLEAN is
+			-- Is scheme set and containing valid characters?
+		do
+			Result := scheme /= Void and then uri_encoding.is_valid_scheme (scheme)
+		ensure
+			valid_scheme_not_void: Result implies scheme /= Void
+			valid_scheme_characters: Result implies uri_encoding.is_valid_scheme (scheme)
+		end
+	
 	scheme: STRING
 			-- Scheme used, like "http" or "ftp", anything before the ':'.
 
@@ -592,12 +601,9 @@ feature {NONE} -- URI parsing
 			valid_stop: stop >= 1 and stop < full_reference.count
 		do
 			if stop >= start then
-				scheme := full_reference.substring (start, stop-1)
-				if not uri_encoding.is_valid_scheme (scheme) then
-					scheme := Void
-				end
+				scheme := full_reference.substring (start, stop - 1)
 			end
-			scheme_specific_part := full_reference.substring (stop, full_reference.count)
+			scheme_specific_part := full_reference.substring (stop + 1, full_reference.count)
 		end
 
 	stop_authority (start, stop: INTEGER) is
@@ -760,7 +766,6 @@ feature {NONE} -- Resolve a relative-path reference
 invariant
 
 	scheme_void_or_not_empty: scheme = Void or else not scheme.is_empty
-	scheme_is_valid: scheme /= Void implies uri_encoding.is_valid_scheme (scheme)
 
 	either_absolute_or_relative: is_absolute xor is_relative
 	full_reference_not_empty: full_reference /= Void and then not full_reference.is_empty
