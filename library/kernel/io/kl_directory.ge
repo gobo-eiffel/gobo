@@ -215,23 +215,25 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
+				if name.count > 0 then
 #ifdef ISE || HACT
-				if exists and then is_readable then
-					ise_open_read
-					if directory_pointer = default_pointer then
-						mode := Close_directory
-					else
-						lastentry := Dummy_entry
+					if exists and then is_readable then
+						ise_open_read
+						if directory_pointer = default_pointer then
+							mode := Close_directory
+						else
+							lastentry := Dummy_entry
+						end
 					end
-				end
 #endif
 #ifdef SE
-				basic_directory.connect_to (name)
+					basic_directory.connect_to (name)
 #endif
 #ifdef VE
-				is_exhausted := False
-				ve_make (directory)
+					is_exhausted := False
+					ve_make (directory)
 #endif
+				end
 			elseif not is_closed then
 				close
 			end
@@ -275,17 +277,19 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
+				if name.count > 0 then
 #ifdef SE
-				file_system.create_directory (name)
+					file_system.create_directory (name)
 #endif
 #ifdef ISE || HACT
-				if not exists then
-					create_dir
-				end
+					if not exists then
+						create_dir
+					end
 #endif
 #ifdef VE
-				directory.originate
+					directory.originate
 #endif
+				end
 			end
 		rescue
 			if not rescued then
@@ -303,21 +307,23 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
+				if name.count > 0 then
 #ifdef SE
-				file_system.delete_directory (name)
+					file_system.delete_directory (name)
 #endif
 #ifdef VE
-				directory.delete
+					directory.delete
 #endif
 #ifdef ISE || HACT
 #ifdef ISE
-				if exists and then is_empty then
+					if exists and then is_empty then
 #else
-				if exists and then empty then
+					if exists and then empty then
 #endif
-					do_delete
+						do_delete
+					end
+#endif
 				end
-#endif
 			end
 		rescue
 			if not rescued then
@@ -340,31 +346,33 @@ feature -- Basic operations
 #endif
 		do
 			if not rescued then
+				if name.count > 0 then
 #ifdef VE || SE
-				open_read
-				if is_open_read then
-					from read_entry until end_of_input loop
-						a_name := last_entry
-						if not (a_name.is_equal (".") or a_name.is_equal ("..")) then
-							a_pathname := name + "/" + a_name
-							if file_system.is_file_readable (a_pathname) then
-								file_system.delete_file (a_pathname)
-							else
-								!! a_dir.make (a_pathname)
-								a_dir.recursive_delete
+					open_read
+					if is_open_read then
+						from read_entry until end_of_input loop
+							a_name := last_entry
+							if not (a_name.is_equal (".") or a_name.is_equal ("..")) then
+								a_pathname := name + "/" + a_name
+								if file_system.is_file_readable (a_pathname) then
+									file_system.delete_file (a_pathname)
+								else
+									!! a_dir.make (a_pathname)
+									a_dir.recursive_delete
+								end
 							end
+							read_entry
 						end
-						read_entry
+						close
 					end
-					close
-				end
-				delete
+					delete
 #endif
 #ifdef ISE || HACT
-				if exists then
-					do_recursive_delete
-				end
+					if exists then
+						do_recursive_delete
+					end
 #endif
+				end
 			end
 		rescue
 			if not rescued then

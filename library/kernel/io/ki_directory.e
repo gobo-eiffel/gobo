@@ -18,7 +18,6 @@ feature {NONE} -- Initialization
 			-- Create a new directory object.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
 		deferred
 		ensure
 			name_set: name = a_name
@@ -31,7 +30,6 @@ feature -- Access
 		deferred
 		ensure
 			name_not_void: Result /= Void
-			name_not_empty: Result.count > 0
 		end
 
 	last_entry: STRING is
