@@ -162,7 +162,7 @@ feature -- Output
 			a_rule: PR_RULE
 		do
 			a_file.put_string (name)
-			a_file.put_string (" (")
+			a_file.put_string (" (token ")
 			a_file.put_integer (token_id)
 			a_file.put_character (')')
 			rules := a_grammar.rules

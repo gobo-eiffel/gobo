@@ -72,8 +72,10 @@ feature -- Output
 			a_file.put_string (" between rule ")
 			a_file.put_integer (rule.id)
 			a_file.put_string (" and token ")
-			a_file.put_integer (token.id)
-			a_file.put_string (" resolved as ")
+			a_file.put_integer (token.token_id)
+			a_file.put_string (" (")
+			a_file.put_string (token.name)
+			a_file.put_string (") resolved as ")
 			a_file.put_string (resolution)
 			a_file.put_string (".%N")
 		end

@@ -194,7 +194,7 @@ feature -- Output
 			end
 			a_file.put_string ("%NTerminals, with rules where they appear%N%N")
 				-- EOF token.
-			a_file.put_string ("$ (0)%N")
+			a_file.put_string ("$ (token 0)%N")
 			nb := tokens.count
 			from i := 1 until i > nb loop
 				tokens.item (i).print_token (Current, a_file)
