@@ -38,6 +38,9 @@ feature -- Access
 	config_filename: STRING
 			-- Config filename
 
+	compile: STRING
+			-- Compilation command-line
+
 feature -- Setting
 
 	set_config_filename (a_filename: STRING) is
@@ -51,6 +54,16 @@ feature -- Setting
 			config_filename_set: config_filename = a_filename
 		end
 
+	set_compile (a_compile: like compile) is
+			-- Set `compile' to `a_compile'.
+		require
+			a_compile_not_void: a_compile /= Void
+		do
+			compile := a_compile
+		ensure
+			compile_set: compile = a_compile
+		end
+
 feature -- Execution
 
 	execute is
@@ -59,6 +72,11 @@ feature -- Execution
 			cmd: STRING
 		do
 			cmd := clone ("getest ")
+			if compile /= Void then
+				cmd.append_string ("--compile=%"")
+				cmd.append_string (compile)
+				cmd.append_string ("%" ")
+			end
 			cmd.append_string (config_filename)
 			log("  [getest] " + cmd + "%N")
 			execute_shell (cmd)
