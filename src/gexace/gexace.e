@@ -141,7 +141,7 @@ feature {NONE} -- Command-line processing
 
 	process_compilers (a_command: GEXACE_BUILD_COMMAND) is
 			-- Process compilers to output code for.
-			-- Possible option is: "--ise", "--se", "--ve" or "--hact".
+			-- Possible option is: "--ise", "--se", "--ve", "--hact" or "--xml".
 			-- One and only one compiler must be given.
 			-- A variable with the upper case option name
 			-- will automatically be defined.
@@ -169,6 +169,10 @@ feature {NONE} -- Command-line processing
 				elseif match_long_option ("hact") then
 					variables.define_value ("GOBO_EIFFEL", "hact")
 					!ET_XACE_HACT_GENERATOR! g.make (error_handler)
+					a_command.generators.force_last (g)
+					consume_option
+				elseif match_long_option ("xml") then
+					!ET_XACE_XML_GENERATOR! g.make (error_handler)
 					a_command.generators.force_last (g)
 					consume_option
 				end
@@ -226,7 +230,7 @@ feature {NONE} -- Usage message
 			!! Result.make ("[variable-definitions] [options] command [xace-file]%N%
 				%%Tvariable-definitions:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 				%%Toptions:  --verbose%N%
-				%%Tcommand:  --build (--se|--ise|--ve|--hact)%N%
+				%%Tcommand:  --build (--se|--ise|--ve|--hact|--xml)%N%
 				%%Tcommand:  --validate")
 		ensure
 			usage_message_not_void: Result /= Void
