@@ -23,21 +23,21 @@ feature
 			-- Test feature `valid_utf16' when valid.
 		do
 			assert ("empty", utf16.valid_utf16 (""))
-			assert ("valid big endian", utf16.valid_utf16 (Big_endian+null+"a%/216/b%/223/c"+null+"d"))
-			assert ("valid little endian", utf16.valid_utf16 (Little_endian+"a"+null+"b%/217/c%/223/d"+null))
+			assert ("valid big endian", utf16.valid_utf16 (Big_endian + null + "a%/216/b%/223/c" + null + "d"))
+			assert ("valid little endian", utf16.valid_utf16 (Little_endian + "a" + null + "b%/217/c%/223/d" + null))
 		end
 
 	test_invalid is
 			-- Test feature `valid_utf16' when invalid.
 		do
-			assert ("odd", not utf16.valid_utf16 (Big_endian+"a"))
-			assert ("surrogate high high", not utf16.valid_utf16 (Big_endian+null+"a%/216/b%/219/c"+null+"d"))
-			assert ("surrogate low low", not utf16.valid_utf16 (Big_endian+null+"a%/220/b%/223/c"+null+"d"))
-			assert ("surrogate low high", not utf16.valid_utf16 (Big_endian+null+"a%/222/b%/218/c"+null+"d"))
-			assert ("surrogate high alone", not utf16.valid_utf16 (Big_endian+null+"a%/217/b"+null+"c"))
-			assert ("surrogate low alone", not utf16.valid_utf16 (Big_endian+null+"a%/221/b"+null+"c"))
-			assert ("surrogate high at end", not utf16.valid_utf16 (Big_endian+null+"a%/217/a"))
-			assert ("surrogate low at end", not utf16.valid_utf16 (Big_endian+null+"a%/221/a"))
+			assert ("odd", not utf16.valid_utf16 (Big_endian + "a"))
+			assert ("surrogate high high", not utf16.valid_utf16 (Big_endian + null + "a%/216/b%/219/c" + null + "d"))
+			assert ("surrogate low low", not utf16.valid_utf16 (Big_endian + null + "a%/220/b%/223/c" + null + "d"))
+			assert ("surrogate low high", not utf16.valid_utf16 (Big_endian + null + "a%/222/b%/218/c" + null + "d"))
+			assert ("surrogate high alone", not utf16.valid_utf16 (Big_endian + null + "a%/217/b" + null + "c"))
+			assert ("surrogate low alone", not utf16.valid_utf16 (Big_endian + null + "a%/221/b" + null + "c"))
+			assert ("surrogate high at end", not utf16.valid_utf16 (Big_endian + null + "a%/217/a"))
+			assert ("surrogate low at end", not utf16.valid_utf16 (Big_endian + null + "a%/221/a"))
 		end
 
 	test_is_endian_detection_character is
