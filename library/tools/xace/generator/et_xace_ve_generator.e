@@ -458,12 +458,14 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("map off")
 			end
-			if an_option.multithreaded then
-				print_indentation (indent, a_file)
-				a_file.put_line ("multithreading on")
-			else
-				print_indentation (indent, a_file)
-				a_file.put_line ("multithreading off")
+			if an_option.is_multithreaded_declared then
+				if an_option.multithreaded then
+					print_indentation (indent, a_file)
+					a_file.put_line ("multithreading on")
+				else
+					print_indentation (indent, a_file)
+					a_file.put_line ("multithreading off")
+				end
 			end
 			if an_option.no_default_lib then
 				print_indentation (indent, a_file)
