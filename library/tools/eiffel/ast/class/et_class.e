@@ -254,40 +254,64 @@ feature -- Parsing status
 
 feature -- Class header
 
+	is_deferred: BOOLEAN is
+			-- Is current class deferred?
+			-- A class is deferred if it has been marked as
+			-- deferred or if is has deferred features. If
+			-- it has deferred features but has not been marked
+			-- as deferred then VCCH-1 is violated; if it is
+			-- marked as deferred but has no deferred features
+			-- then VCCH-2 is violated, although this latter
+			-- validity rule has been relaxed in ETL3.
+		do
+			Result := has_deferred_mark or has_deferred_features
+		end
+
 	is_expanded: BOOLEAN is
-			-- Is class expanded?
+			-- Is current class expanded?
 		do
 			Result := has_expanded_mark
 		end
 
 	is_separate: BOOLEAN is
-			-- Is class separate?
+			-- Is current class separate?
 		do
 			Result := has_separate_mark
 		end
+
+	has_deferred_features: BOOLEAN
+			-- Does current class contain deferred features?
 
 	has_deferred_mark: BOOLEAN is
 			-- Has class been declared as deferred?
 		do
 			Result := (class_mark /= Void and then class_mark.is_deferred)
+		ensure
+			definition: Result = (class_mark /= Void and then class_mark.is_deferred)
 		end
 
 	has_expanded_mark: BOOLEAN is
 			-- Has class been declared as expanded?
 		do
 			Result := (class_mark /= Void and then class_mark.is_expanded)
+		ensure
+			definition: Result = (class_mark /= Void and then class_mark.is_expanded)
 		end
 
 	has_reference_mark: BOOLEAN is
 			-- Has class been declared as reference?
 		do
 			Result := (class_mark /= Void and then class_mark.is_reference)
+		ensure
+			definition: Result = (class_mark /= Void and then class_mark.is_reference)
 		end
 
 	has_separate_mark: BOOLEAN is
 			-- Has class been declared as separate?
 		do
 			Result := (class_mark /= Void and then class_mark.is_separate)
+		ensure
+			definition: Result = (class_mark /= Void and then class_mark.is_separate)
 		end
 
 	class_mark: ET_KEYWORD
@@ -299,6 +323,14 @@ feature -- Class header
 			class_mark := a_mark
 		ensure
 			class_mark_set: class_mark = a_mark
+		end
+
+	set_has_deferred_features (b: BOOLEAN) is
+			-- Set `has_deferred_features' to `b'.
+		do
+			has_deferred_features := b
+		ensure
+			has_deferred_features: has_deferred_features = b
 		end
 
 feature -- Genericity
