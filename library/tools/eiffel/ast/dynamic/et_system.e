@@ -170,6 +170,8 @@ feature -- Types
 			l_item_type: ET_DYNAMIC_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_return_type: ET_DYNAMIC_TYPE
+			l_return_type_set: ET_DYNAMIC_TYPE_SET
 			l_base_type: ET_BASE_TYPE
 			l_base_class: ET_CLASS
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -268,6 +270,8 @@ feature -- Types
 								l_any := universe.any_class
 								l_actual_parameters := l_base_type.actual_parameters
 								if l_actual_parameters /= Void and then l_actual_parameters.count = 3 then
+									l_return_type := dynamic_type (l_actual_parameters.type (3), l_any)
+									l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
 									l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
 									l_actual_parameters := l_item_type.base_type.actual_parameters
 									if l_actual_parameters /= Void then
@@ -286,9 +290,7 @@ feature -- Types
 									else
 										l_item_type_sets := empty_dynamic_type_sets
 									end
-									l_item_type := dynamic_type (l_actual_parameters.type (3), l_any)
-									l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-									create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets, l_item_type_set)
+									create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets, l_return_type_set)
 								else
 									create Result.make (l_base_type, l_base_class)
 								end
@@ -385,6 +387,8 @@ feature -- Types
 					l_any := universe.any_class
 					l_actual_parameters := l_base_type.actual_parameters
 					if l_actual_parameters /= Void and then l_actual_parameters.count = 3 then
+						l_return_type := dynamic_type (l_actual_parameters.type (3), l_any)
+						l_return_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_return_type)
 						l_item_type := dynamic_type (l_actual_parameters.type (2), l_any)
 						l_actual_parameters := l_item_type.base_type.actual_parameters
 						if l_actual_parameters /= Void then
@@ -403,9 +407,7 @@ feature -- Types
 						else
 							l_item_type_sets := empty_dynamic_type_sets
 						end
-						l_item_type := dynamic_type (l_actual_parameters.type (3), l_any)
-						l_item_type_set := dynamic_type_set_builder.new_dynamic_type_set (l_item_type)
-						create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets, l_item_type_set)
+						create {ET_DYNAMIC_FUNCTION_TYPE} Result.make (l_base_type, l_base_class, l_item_type_sets, l_return_type_set)
 					else
 						create Result.make (l_base_type, l_base_class)
 					end
