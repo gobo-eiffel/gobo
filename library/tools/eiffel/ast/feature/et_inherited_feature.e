@@ -16,7 +16,7 @@ inherit
 
 	ET_ADAPTED_FEATURE
 		redefine
-			name, is_deferred, is_redeclared,
+			name, is_deferred,
 			new_name, undefine_name, redefine_name,
 			select_name, inherited_feature,
 			merged_feature, is_other_seeds_shared,

@@ -16,7 +16,7 @@ inherit
 
 	ET_ADAPTED_FEATURE
 		redefine
-			is_redeclared, redeclared_feature,
+			redeclared_feature,
 			is_other_seeds_shared, adapted_feature
 		end
 
