@@ -2,10 +2,14 @@ indexing
 
 	description:
 
-		"xml node that may hold child nodes"
+		"Objects that represent xml nodes that can contain other xml nodes"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
+	library:	"Gobo Eiffel XML Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 deferred class XI_COMPOSITE
 
@@ -182,18 +186,4 @@ feature -- Removal
 
 end -- class XI_COMPOSITE
 
---|-------------------------------------------------------------------------
---| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999  Andreas Leitner and others
---| See the file forum.txt included in this package for licensing info.
---|
---| Comments, Questions, Additions to this library? please contact:
---|
---| Andreas Leitner
---| Arndtgasse 1/3/5
---| 8010 Graz
---| Austria
---| email: andreas.leitner@chello.at
---| www: http://exml.dhs.org
---|-------------------------------------------------------------------------
 

@@ -2,10 +2,14 @@ indexing
 
 	description:
 
-		"Objects representing a XML-attribute"
+		"Objects that represent XML attribute nodes"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
+	library:	"Gobo Eiffel XML Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 deferred class XI_ATTRIBUTE
 
@@ -16,7 +20,7 @@ inherit
 feature {ANY} -- Access
 
 	value: UC_STRING is
-			-- the value of the attribute.
+			-- The value of this attribute.
 		deferred
 		end
 
@@ -36,19 +40,4 @@ invariant
 	value_not_void: value /= Void
 
 end -- class XI_ATTRIBUTE
-
---|-------------------------------------------------------------------------
---| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999  Andreas Leitner and others
---| See the file forum.txt included in this package for licensing info.
---|
---| Comments, Questions, Additions to this library? please contact:
---|
---| Andreas Leitner
---| Arndtgasse 1/3/5
---| 8010 Graz
---| Austria
---| email: andreas.leitner@chello.at
---| www: http://exml.dhs.org
---|-------------------------------------------------------------------------
 

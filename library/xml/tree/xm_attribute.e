@@ -27,13 +27,13 @@ creation
 feature {ANY} -- Access
 
 	value: UC_STRING is
-			-- the value of the attribute.
+			-- The value of this attribute.
 		do
 			Result := implementation.value
 		end
 
 	is_namespace_declaration: BOOLEAN is
-			-- is this attribute a namespace declaration ?
+			-- Is this attribute a namespace declaration ?
 		do
 			if (has_prefix and then (equal (ns_prefix, uc_xmlns))) or equal (name, uc_xmlns) then
 				Result := True
@@ -41,6 +41,8 @@ feature {ANY} -- Access
 		end
 
 	namespace_declaration: XM_NAMESPACE is
+			-- If this attribute is a namespace declaration, create 
+			-- and return an object representing this declaration.
 		require
 			is_namespace_declaration: is_namespace_declaration
 		local
@@ -61,12 +63,13 @@ feature {ANY} -- Access
 feature {ANY} -- Basic routines
 
 	process (x: XM_NODE_PROCESSOR) is
+			-- Processing procedure for Visitor Pattern.
 		do
 			x.process_attribute (Current)
 		end
 
 	set_value (a_value: UC_STRING) is
-			-- Set `foo' to `a_foo'.
+			-- Set `a_value' to `value'.
 		require
 			a_value_not_void: a_value /= Void
 		do
@@ -79,7 +82,7 @@ feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
 
 	implementation: XI_ATTRIBUTE
 
-feature {NONE}
+feature {NONE} -- Constants
 
 	uc_xmlns: UC_STRING is
 		once
@@ -91,18 +94,4 @@ invariant
 	value_not_void: value /= Void
 
 end -- class XM_ATTRIBUTE
---|-------------------------------------------------------------------------
---| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999	Andreas Leitner and others
---| See the file forum.txt included in this package for licensing info.
---|
---| Comments, Questions, Additions to this library? please contact:
---|
---| Andreas Leitner
---| Arndtgasse 1/3/5
---| 8010 Graz
---| Austria
---| email: andreas.leitner@chello.at
---| www: http://exml.dhs.org
---|-------------------------------------------------------------------------
 

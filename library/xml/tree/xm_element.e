@@ -111,6 +111,7 @@ feature {ANY} -- Access
 		end
 
 	attributes: DS_BILINEAR [XM_ATTRIBUTE] is
+			-- List of all attributes in this element.
 		local
 			cs: like new_cursor
 			att: XM_ATTRIBUTE
@@ -170,13 +171,15 @@ feature {ANY} -- Removal
 		end
 
 	remove_namespace_declarations_from_attributes_recursive is
+			-- Removes the namespace declarations from the attributes 
+			-- in this element and all child-elements recursivly.
 		do
 			remove_namespace_declarations_from_attributes
 			precursor
 		end
 
 	remove_namespace_declarations_from_attributes is
-			-- remove all attributes that start with "xmlns:" permanently
+			-- Remove all attributes that start with "xmlns:" permanently.
 		local
 			cs: like new_cursor
 			att: XM_ATTRIBUTE
@@ -200,6 +203,7 @@ feature {ANY} -- Removal
 feature {ANY} -- Basic operations
 
 	process (x: XM_NODE_PROCESSOR) is
+			-- Processing procedure for Visitor Pattern.
 		do
 			x.process_element (Current)
 		end
@@ -268,19 +272,4 @@ feature {NONE} -- Implementation
 	implementation: XI_ELEMENT
 
 end -- class XM_ELEMENT
-
---|-------------------------------------------------------------------------
---| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999	Andreas Leitner and others
---| See the file forum.txt included in this package for licensing info.
---|
---| Comments, Questions, Additions to this library? please contact:
---|
---| Andreas Leitner
---| Arndtgasse 1/3/5
---| 8010 Graz
---| Austria
---| email: andreas.leitner@chello.at
---| www: http://exml.dhs.org
---|-------------------------------------------------------------------------
 

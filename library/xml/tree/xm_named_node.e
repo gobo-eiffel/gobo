@@ -23,7 +23,7 @@ inherit
 feature {ANY} -- Access
 
 	name: UC_STRING is
-			-- name of node
+			-- Name of this node.
 		do
 			Result := implementation.name
 		ensure
@@ -31,22 +31,27 @@ feature {ANY} -- Access
 		end
 
 	ns_prefix: UC_STRING is
+			-- Namespace prefix used to declare the namespace of the 
+			-- name of this node.
 		do
 			Result := implementation.ns_prefix
 		end
 
 	namespace: UC_STRING is
+			-- Namespace of the name of this node.
 		do
 			Result := implementation.namespace
 		end
 
 	has_namespace: BOOLEAN is
-			-- does this node have a namespace defined
+			-- Has the name of this node been defined with namespace?
 		do
 			Result := namespace /= Void
 		end
 
 	has_prefix: BOOLEAN is
+			-- Has a prefix been used to define the namespace (It 
+			-- could also be that the used namespace was the default namespace)
 		do
 			Result := ns_prefix /= Void and then
 				not ns_prefix.empty
@@ -55,6 +60,7 @@ feature {ANY} -- Access
 feature {ANY} -- Element change
 
 	set_name (n: UC_STRING) is
+			-- Set `n' to be the name of this node.
 		require
 			n_not_void: n /= Void
 		do
@@ -62,17 +68,19 @@ feature {ANY} -- Element change
 		end
 
 	set_namespace (n: UC_STRING) is
+			-- Set `n' to be the namespace of the name of this node.
 		do
 			implementation.set_namespace (n)
 		end
 
 	set_prefix (n: UC_STRING) is
+			-- Set `n' to be the prefix for the namespace of the name of this node
 		do
 			implementation.set_prefix (n)
 		end
 
 	apply_namespace_declarations (decls: XM_NAMESPACE_TABLE) is
-			-- Apply namespace declaration.
+			-- Apply the namespace declaration `decls'.
 			-- This means the following:
 			-- 1) Name has no prfix -> done
 			-- 2) Name has prefix:
@@ -100,18 +108,3 @@ invariant
 	name_not_void: name /= Void
 
 end -- class XM_NAMED_NODE
-
---|-------------------------------------------------------------------------
---| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999	Andreas Leitner and others
---| See the file forum.txt included in this package for licensing info.
---|
---| Comments, Questions, Additions to this library? please contact:
---|
---| Andreas Leitner
---| Arndtgasse 1/3/5
---| 8010 Graz
---| Austria
---| email: andreas.leitner@chello.at
---| www: http://exml.dhs.org
---|-------------------------------------------------------------------------

@@ -2,10 +2,14 @@ indexing
 
 	description:
 
-		"Root object for a XML Document"
+		"Objects that represent XML documents"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
+	library:	"Gobo Eiffel XML Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 deferred class XI_DOCUMENT
 
@@ -14,12 +18,14 @@ inherit
 	XI_COMPOSITE
 
 feature {ANY} -- Access
-		-- document_type: XM_DOCUMENT_TYPE
+	
+	-- document_type: XM_DOCUMENT_TYPE
 		-- TODO: Implement!
 
 	root_element: XM_ELEMENT is
+			-- Root element of this document.
 		do
-				-- Since a document must only have one child element it is
+				-- Since a document must havee exactly one child element it is
 				-- safe to take the first one.
 			Result := first_element
 		end
@@ -27,6 +33,8 @@ feature {ANY} -- Access
 feature {NONE} -- Implementation
 
 	first_element: XM_ELEMENT is
+			-- First (and only) element.
+			-- But there may be PIs etc.
 		local
 			cs: like new_cursor
 		do
@@ -42,18 +50,3 @@ feature {NONE} -- Implementation
 		end
 
 end -- class XI_DOCUMENT
-
---|-------------------------------------------------------------------------
---| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999  Andreas Leitner and others
---| See the file forum.txt included in this package for licensing info.
---|
---| Comments, Questions, Additions to this library? please contact:
---|
---| Andreas Leitner
---| Arndtgasse 1/3/5
---| 8010 Graz
---| Austria
---| email: andreas.leitner@chello.at
---| www: http://exml.dhs.org
---|-------------------------------------------------------------------------

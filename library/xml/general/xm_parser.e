@@ -39,8 +39,8 @@ feature {ANY} -- Access
 		end
 
 	source: XM_SOURCE is
-			-- source of the xml document beeing parserd.
-			-- if void the source is unkown.
+			-- Source of the XML document beeing parserd.
+			-- If `Void' the source is unkown.
 		do
 			Result := implementation.source
 		end
@@ -48,7 +48,7 @@ feature {ANY} -- Access
 feature {ANY} -- Element change
 
 	set_source (a_source: XM_SOURCE) is
-			-- set the source of the xml document to parse.
+			-- Make `a_source' the source of the XML document to parse.
 		do
 			implementation.set_source (a_source)
 		end
@@ -57,7 +57,7 @@ feature {ANY} -- Parsing
 
 	parse_from_file_name (a_file_name: UC_STRING) is
 			-- Parse XML Document from file
-			-- `source' will be automatically set
+			-- `source' will be automatically set.
 		require
 			a_file_name_not_void: a_file_name /= Void
 			-- file must exist and be readable (how to check that on a
@@ -76,7 +76,7 @@ feature {ANY} -- Parsing
 
 	parse_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
 			-- Parse XML Document from GOBO string buffer. This is
-			-- faster that parsing from a regular STRING on some systems.
+			-- faster that parsing from a ordinary STRING on some systems.
 		require
 			a_buffer_not_void: a_buffer /= Void
 		do
@@ -84,7 +84,7 @@ feature {ANY} -- Parsing
 		end
 
 	parse_from_string (data: STRING) is
-			-- Parse 'data'.
+			-- Parse `data'.
 		require
 			data_not_void: data /= Void
 		do
@@ -129,9 +129,8 @@ feature {ANY} -- Incremental parsing
 		end
 
 	set_end_of_document is
-			-- Call this routine to
-			-- tell the parser that the document has been
-			-- completly parsed and no input is comming anymore.
+			-- Call this routine to tell the parser that the document 
+			-- has been completly parsed and no input is comming anymore.
 		require
 			is_incremental: is_incremental
 		do
@@ -141,14 +140,13 @@ feature {ANY} -- Incremental parsing
 feature -- Status
 
 	last_error: INTEGER is
-			-- see XM_PARSE_ERROR_CODES
+			-- See XM_PARSE_ERROR_CODES.
 		do
 			Result := implementation.last_error
 		end
 
 	is_correct: BOOLEAN is
-			-- returns False if an error was detected
-			-- by the parser
+			-- Returns False if an error was detected during parsing
 		do
 				-- TODO: Either we use the same error codes for all parsers
 				-- than this feature can be implemented in the interface
@@ -162,15 +160,14 @@ feature -- Status
 		end
 
 	last_error_description: STRING is
-			-- gives a text that explain what the error reported by
-			-- 'last_error' was all about.
+			-- Returns a text that explain what the error reported by
+			-- `last_error' was all about.
 		do
 			Result := implementation.last_error_description
 		end
 
 	last_error_extended_description: STRING is
-			-- extends `last_error_description' with information about
-			-- where the error occured.
+			-- Same as `last_error_description', but more verbose.
 		do
 			!! Result.make (0)
 			Result.append_string (last_error_description)
@@ -180,7 +177,7 @@ feature -- Status
 		end
 
 	position: XM_POSITION is
-			-- current position
+			-- Current position in the source of the XML document.
 		do
 			Result := implementation.position
 		end

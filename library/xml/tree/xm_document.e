@@ -37,12 +37,13 @@ feature {ANY} -- Access
 		-- TODO: Implement!
 
 	root_element: XM_ELEMENT is
-			-- root element of document.
+			-- Root element of this document.
 		do
 			Result := implementation.root_element
 		end
 
 	process (x: XM_NODE_PROCESSOR) is
+			-- Processing procedure for visitor pattern.
 		do
 			x.process_document (Current)
 		end
@@ -52,18 +53,3 @@ feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
 	implementation: XI_DOCUMENT
 
 end -- class XM_DOCUMENT
-
---|-------------------------------------------------------------------------
---| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999	Andreas Leitner and others
---| See the file forum.txt included in this package for licensing info.
---|
---| Comments, Questions, Additions to this library? please contact:
---|
---| Andreas Leitner
---| Arndtgasse 1/3/5
---| 8010 Graz
---| Austria
---| email: andreas.leitner@chello.at
---| www: http://exml.dhs.org
---|-------------------------------------------------------------------------

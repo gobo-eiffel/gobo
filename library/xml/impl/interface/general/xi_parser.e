@@ -2,13 +2,14 @@ indexing
 
 	description:
 
-		"A tree based XML Parser"
+		"Abstract definition of a XML parser"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
-	note:    "Although it is not DOM (Level 1) conforming, it has %
-			 %been writen with DOM in mind. I prefer to have this %
-			 %parser follow the Eiffel design guide lines"
+	library:	"Gobo Eiffel XML Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 deferred class XI_PARSER
 
@@ -32,28 +33,30 @@ feature {ANY} -- Access
 		end
 
 	source: XM_SOURCE is
-			-- source of the xml document beeing parserd.
-			-- if void the source is unkown.
+			-- Source of the XML document beeing parserd.
+			-- If `Void' the source is unkown.
 		deferred
 		end
 
 feature {ANY} -- Element change
 
 	set_source (a_source: XM_SOURCE) is
-			-- set the source of the xml document to parse.
+			-- Make `a_source' the source of the XML document to parse.
 		deferred
 		end
 
 feature {ANY} -- Parsing
 
 	parse_from_file_name (a_file_name: UC_STRING) is
+			-- Parse XML Document from file
+			-- `source' will be automatically set.
 		require
 			a_file_name_not_void: a_file_name /= Void
 		deferred
 		end
 
 	parse_from_stream (a_stream: like INPUT_STREAM_TYPE) is
-			-- parse XML Document from GOBO input stream.
+			-- Parse XML Document from GOBO input stream.
 		require
 			a_stream_not_void: a_stream /= Void
 		deferred
@@ -61,14 +64,14 @@ feature {ANY} -- Parsing
 
 	parse_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
 			-- Parse XML Document from GOBO string buffer. This is
-			-- faster that parsing from a regular STRING on some systems.
+			-- faster that parsing from a ordinary STRING on some systems.
 		require
 			a_buffer_not_void: a_buffer /= Void
 		deferred
 		end
 
 	parse_from_string (data: STRING) is
-			-- Parse 'data'.
+			-- Parse `data'.
 		require
 			data_not_void: data /= Void
 		deferred
@@ -107,43 +110,27 @@ feature {ANY} -- Incremental parsing
 		end
 
 	set_end_of_document is
-			-- Call this routine to
-			-- tell the parser that the document has been
-			-- completly parsed and no input is comming anymore.
+			-- Call this routine to tell the parser that the document 
+			-- has been completly parsed and no input is comming anymore.
 		deferred
 		end
 
 feature -- Status
 
 	last_error: INTEGER is
-			-- see XM_PARSE_ERROR_CODES
+			-- See XM_PARSE_ERROR_CODES.
 		deferred
 		end
 
 	last_error_description: STRING is
-			-- gives a text that explain what the error reported by
-			-- 'last_error' was all about.
+			-- Returns a text that explain what the error reported by
+			-- `last_error' was all about.
 		deferred
 		end
 
 	position: XM_POSITION is
-			-- current position
+			-- Current position in the source of XML document.
 		deferred
 		end
 
 end -- class XI_PARSER
---|-------------------------------------------------------------------------
---| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999  Andreas Leitner and others
---| See the file forum.txt included in this package for licensing info.
---|
---| Comments, Questions, Additions to this library? please contact:
---|
---| Andreas Leitner
---| Arndtgasse 1/3/5
---| 8010 Graz
---| Austria
---| email: andreas.leitner@chello.at
---| www: http://exml.dhs.org
---|-------------------------------------------------------------------------
-

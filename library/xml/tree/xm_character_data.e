@@ -27,7 +27,7 @@ creation
 feature {ANY} -- Access
 
 	content: UC_STRING is
-			-- the actual character data of this node.
+			-- Actual character data of this node.
 		do
 			Result := implementation.content
 		end
@@ -35,6 +35,7 @@ feature {ANY} -- Access
 feature {ANY} -- Basic routines
 
 	process (x: XM_NODE_PROCESSOR) is
+			-- Processing procedure for visitor pattern.
 		do
 			x.process_character_data (Current)
 		end
@@ -42,8 +43,8 @@ feature {ANY} -- Basic routines
 feature {ANY} -- Element change
 
 	append_content (other: like Current) is
-			-- append the content of 'other' to
-			-- the content of Current
+			-- Append the content of 'other' to
+			-- the content of Current.
 		require
 			other /= Void
 		do

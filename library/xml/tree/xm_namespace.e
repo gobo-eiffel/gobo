@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent a XML namespace declration"
+		"Objects that represent a XML namespace declaration"
 
 	library:	"Gobo Eiffel XML Library"
 	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
@@ -30,12 +30,13 @@ feature {NONE} -- Initialisation
 feature {ANY} -- Access
 
 	ns_prefix: UC_STRING
-			-- prefix
+			-- Prefix of this namespace
 
 	uri: UC_STRING
-			-- uri
+			-- Namespace URI
 
 	is_default: BOOLEAN is
+			-- Is this a default namespace declaration?
 		do
 			Result := ns_prefix = Void or else
 				ns_prefix.empty

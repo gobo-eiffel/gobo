@@ -2,10 +2,14 @@ indexing
 
 	description:
 
-		"common anchestor for xml-nodes"
+		"Common anchestor for all XML node classes"
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
+	library:	"Gobo Eiffel XML Library"
+	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
+	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:		"$Date$"
+	revision:	"$Revision$"
 
 deferred class XI_NODE
 
@@ -35,19 +39,4 @@ feature {ANY} -- Element change
 		end
 
 end -- class XI_NODE
-
---|-------------------------------------------------------------------------
---| eXML, Eiffel XML Parser Toolkit
---| Copyright (C) 1999  Andreas Leitner and others
---| See the file forum.txt included in this package for licensing info.
---|
---| Comments, Questions, Additions to this library? please contact:
---|
---| Andreas Leitner
---| Arndtgasse 1/3/5
---| 8010 Graz
---| Austria
---| email: andreas.leitner@chello.at
---| www: http://exml.dhs.org
---|-------------------------------------------------------------------------
 
