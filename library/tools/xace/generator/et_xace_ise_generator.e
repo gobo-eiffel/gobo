@@ -66,15 +66,12 @@ feature {NONE} -- Output
 			a_clusters: ET_XACE_CLUSTERS
 			an_external: ET_XACE_EXTERNALS
 		do
-			a_file.put_string ("system")
-			a_file.put_new_line
+			a_file.put_line ("system")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_string (a_system.system_name)
+			a_file.put_line (a_system.system_name)
 			a_file.put_new_line
-			a_file.put_new_line
-			a_file.put_string ("root")
-			a_file.put_new_line
+			a_file.put_line ("root")
 			a_file.put_new_line
 			print_indentation (1, a_file)
 			a_file.put_string (a_system.root_class_name)
@@ -83,19 +80,16 @@ feature {NONE} -- Output
 			a_file.put_character ('%"')
 			a_file.put_new_line
 			a_file.put_new_line
-			a_file.put_string ("default")
-			a_file.put_new_line
+			a_file.put_line ("default")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_string ("console_application (yes)")
-			a_file.put_new_line
+			a_file.put_line ("console_application (yes)")
 			an_option := a_system.options
 			if an_option /= Void then
 				print_options (an_option, 1, a_file)
 			end
 			a_file.put_new_line
-			a_file.put_string ("cluster")
-			a_file.put_new_line
+			a_file.put_line ("cluster")
 			a_file.put_new_line
 			a_clusters := a_system.clusters
 			if a_clusters /= Void then
@@ -107,14 +101,12 @@ feature {NONE} -- Output
 				an_external /= Void and then
 				(an_external.has_include_directories or an_external.has_link_libraries)
 			then
-				a_file.put_string ("external")
-				a_file.put_new_line
+				a_file.put_line ("external")
 				a_file.put_new_line
 				print_include_directories (an_external.include_directories, a_file)
 				print_link_libraries (an_external.link_libraries, a_file)
 			end
-			a_file.put_string ("end")
-			a_file.put_new_line
+			a_file.put_line ("end")
 		end
 
 	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -129,58 +121,50 @@ feature {NONE} -- Output
 		do
 			if an_option.has_optimize.is_true then
 				print_indentation (indent, a_file)
-				a_file.put_string ("assertion (no)")
-				a_file.put_new_line
+				a_file.put_line ("assertion (no)")
 			elseif an_option.has_optimize.is_false then
 				print_indentation (indent, a_file)
-				a_file.put_string ("assertion (all)")
-				a_file.put_new_line
+				a_file.put_line ("assertion (all)")
 			else
 				no_assertion := True
 				if an_option.has_check.is_true then
 					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (check)")
-					a_file.put_new_line
+					a_file.put_line ("assertion (check)")
 					no_assertion := False
 				elseif an_option.has_check.is_undefined then
 					no_assertion := False
 				end
 				if an_option.has_loop.is_true then
 					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (loop)")
-					a_file.put_new_line
+					a_file.put_line ("assertion (loop)")
 					no_assertion := False
 				elseif an_option.has_loop.is_undefined then
 					no_assertion := False
 				end
 				if an_option.has_invariant.is_true then
 					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (invariant)")
-					a_file.put_new_line
+					a_file.put_line ("assertion (invariant)")
 					no_assertion := False
 				elseif an_option.has_invariant.is_undefined then
 					no_assertion := False
 				end
 				if an_option.has_ensure.is_true then
 					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (ensure)")
-					a_file.put_new_line
+					a_file.put_line ("assertion (ensure)")
 					no_assertion := False
 				elseif an_option.has_ensure.is_undefined then
 					no_assertion := False
 				end
 				if an_option.has_require.is_true then
 					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (require)")
-					a_file.put_new_line
+					a_file.put_line ("assertion (require)")
 					no_assertion := False
 				elseif an_option.has_require.is_undefined then
 					no_assertion := False
 				end
 				if no_assertion then
 					print_indentation (indent, a_file)
-					a_file.put_string ("assertion (no)")
-					a_file.put_new_line
+					a_file.put_line ("assertion (no)")
 				end
 			end
 		end
@@ -262,8 +246,7 @@ feature {NONE} -- Output
 				an_option := a_cluster.options
 				if an_option /= Void then
 					print_indentation (2, a_file)
-					a_file.put_string ("default")
-					a_file.put_new_line
+					a_file.put_line ("default")
 					print_options (an_option, 3, a_file)
 					a_file.put_new_line
 					need_end_keyword := True
@@ -271,8 +254,7 @@ feature {NONE} -- Output
 				an_externals := a_cluster.externals
 				if an_externals /= Void and then not an_externals.exported_classes.is_empty then
 					print_indentation (2, a_file)
-					a_file.put_string ("visible")
-					a_file.put_new_line
+					a_file.put_line ("visible")
 					a_cursor := an_externals.exported_classes.new_cursor
 					from a_cursor.start until a_cursor.after loop
 						print_exported_class (a_cursor.item, 3, a_file)
@@ -282,8 +264,7 @@ feature {NONE} -- Output
 				end
 				if need_end_keyword then
 					print_indentation (2, a_file)
-					a_file.put_string ("end")
-					a_file.put_new_line
+					a_file.put_line ("end")
 				end
 			end
 			subclusters := a_cluster.subclusters
@@ -307,8 +288,7 @@ feature {NONE} -- Output
 			a_file.put_new_line
 			if not a_class.features.is_empty then
 				print_indentation (indent + 1, a_file)
-				a_file.put_string ("export")
-				a_file.put_new_line
+				a_file.put_line ("export")
 				a_cursor := a_class.features.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (indent + 2, a_file)
@@ -321,8 +301,7 @@ feature {NONE} -- Output
 				end
 			end
 			print_indentation (indent + 1, a_file)
-			a_file.put_string ("end")
-			a_file.put_new_line
+			a_file.put_line ("end")
 		end
 
 	print_include_directories (a_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -337,19 +316,17 @@ feature {NONE} -- Output
 		do
 			if not a_directories.is_empty then
 				print_indentation (1, a_file)
-				a_file.put_string ("include_path:")
-				a_file.put_new_line
+				a_file.put_line ("include_path:")
 				a_cursor := a_directories.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (2, a_file)
 					a_file.put_character ('%"')
 					a_file.put_string (a_cursor.item)
 					if a_cursor.is_last then
-						a_file.put_string ("%";")
+						a_file.put_line ("%";")
 					else
-						a_file.put_string ("%",")
+						a_file.put_line ("%",")
 					end
-					a_file.put_new_line
 					a_cursor.forth
 				end
 				a_file.put_new_line
@@ -368,19 +345,17 @@ feature {NONE} -- Output
 		do
 			if not a_libraries.is_empty then
 				print_indentation (1, a_file)
-				a_file.put_string ("object:")
-				a_file.put_new_line
+				a_file.put_line ("object:")
 				a_cursor := a_libraries.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (2, a_file)
 					a_file.put_character ('%"')
 					a_file.put_string (a_cursor.item)
 					if a_cursor.is_last then
-						a_file.put_string ("%";")
+						a_file.put_line ("%";")
 					else
-						a_file.put_string ("%",")
+						a_file.put_line ("%",")
 					end
-					a_file.put_new_line
 					a_cursor.forth
 				end
 				a_file.put_new_line
