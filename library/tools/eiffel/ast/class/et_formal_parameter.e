@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,15 @@ class ET_FORMAL_PARAMETER
 inherit
 
 	ET_FORMAL_PARAMETER_ITEM
+
+	ET_FORMAL_PARAMETER_TYPE
+		rename
+			make as make_type
+		undefine
+			type
+		redefine
+			process
+		end
 
 	HASHABLE
 
@@ -37,9 +46,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: ET_IDENTIFIER
-			-- Name
-
 	constraint: ET_TYPE is
 			-- Generic constraint
 		do
@@ -52,8 +58,16 @@ feature -- Access
 			-- Result := Void
 		end
 
-	index: INTEGER
-			-- Position in list of generic parameters
+	constraint_base_type: ET_BASE_TYPE is
+			-- Base type of constraint;
+			-- Void means that there is no explicit constraint
+			-- (i.e. the implicit constraint is "ANY"), or there
+			-- is a cycle of the form "A [G -> H, H -> G]" in
+			-- the constraints (i.e. the base type is also considered
+			-- to be "ANY" in that case)
+		do
+			-- Result := Void
+		end
 
 	hash_code: INTEGER is
 			-- Hash code value
@@ -65,19 +79,6 @@ feature -- Access
 			-- Formal generic parameter in comma-separated list
 		do
 			Result := Current
-		end
-
-	position: ET_POSITION is
-			-- Position of first character of
-			-- current node in source code
-		do
-			Result := name.position
-		end
-
-	break: ET_BREAK is
-			-- Break which appears just after current node
-		do
-			Result := name.break
 		end
 
 feature -- Setting
@@ -92,12 +93,16 @@ feature -- Setting
 			index_set: index = an_index
 		end
 
-feature -- System
-
-	add_to_system is
-			-- Recursively add to system classes that
-			-- appear in the constraints.
+	set_constraint_base_type (a_type: like constraint_base_type) is
+			-- Set `constraint_base_type' to `a_type'.
+		require
+			constrained: constraint /= Void
+			a_type_not_void: a_type /= Void
+			a_type_named: a_type.is_named_type
 		do
+			check not_constrained: constraint = Void end
+		ensure
+			constraint_base_type_set: constraint_base_type = a_type
 		end
 
 feature -- Processing
@@ -110,7 +115,6 @@ feature -- Processing
 
 invariant
 
-	name_not_void: name /= Void
-	index_positive: index >= 1
+	constraint_base_type_named: constraint_base_type /= Void implies constraint_base_type.is_named_type
 
 end

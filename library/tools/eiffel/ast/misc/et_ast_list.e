@@ -12,10 +12,6 @@ indexing
 
 deferred class ET_AST_LIST [G]
 
-inherit
-
-	KL_IMPORTED_FIXED_ARRAY_TYPE [G]
-
 feature {NONE} -- Initialization
 
 	make is
@@ -57,7 +53,7 @@ feature -- Access
 			item_not_void: Result /= Void
 		end
 
-	first: G is
+	first: like item is
 			-- First item
 		require
 			not_empty: not is_empty
@@ -68,7 +64,7 @@ feature -- Access
 			definition: Result = item (1)
 		end
 
-	last: G is
+	last: like item is
 			-- Last item
 		require
 			not_empty: not is_empty
@@ -117,12 +113,48 @@ feature -- Element change
 			first_set: first = an_item
 		end
 
+	put (an_item: like item; i: INTEGER) is
+			-- Put `an_item' at index `i' in list.
+		require
+			an_item_not_void: an_item /= Void
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+		do
+			storage.put (an_item, count - i)
+		ensure
+			same_count: count = old count
+			inserted: item (i) = an_item
+		end
+
+feature -- Removal
+
+	remove (i: INTEGER) is
+			-- Remove item at index `i'.
+		require
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
+		local
+			j, nb: INTEGER
+			dead_item: like item
+		do
+			j := count - i
+			nb := count - 2
+			from until j > nb loop
+				storage.put (storage.item (j + 1), j)
+				j := j + 1
+			end
+			storage.put (dead_item, j)
+			count := count - 1
+		ensure
+			one_less: count = old count - 1
+		end
+
 feature {NONE} -- Implementation
 
-	storage: like FIXED_ARRAY_TYPE
+	storage: SPECIAL [like item]
 			-- Internal storage
 
-	fixed_array: KL_FIXED_ARRAY_ROUTINES [G] is
+	fixed_array: KL_SPECIAL_ROUTINES [G] is
 			-- Fixed array routines
 		deferred
 		ensure

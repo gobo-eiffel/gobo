@@ -5,7 +5,7 @@ indexing
 		"Eiffel class types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,12 +14,12 @@ class ET_CLASS_TYPE
 
 inherit
 
-	ET_TYPE
+	ET_BASE_TYPE
 		redefine
-			add_to_system,
-			syntactically_conforms_to,
-			resolved_formal_parameters,
-			resolved_named_types
+			same_syntactical_class_type,
+			conforms_from_class_type,
+			is_named_type, is_base_type,
+			resolved_formal_parameters
 		end
 
 creation
@@ -28,31 +28,67 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_type_mark: like type_mark; a_name: like class_name; a_class: like base_class) is
+	make (a_type_mark: like type_mark; a_name: like name; a_class: like eiffel_class) is
 			-- Create a new class type.
 		require
 			a_name_not_void: a_name /= Void
 			a_class_not_void: a_class /= Void
 		do
 			type_mark := a_type_mark
-			class_name := a_name
-			base_class := a_class
+			name := a_name
+			eiffel_class := a_class
 		ensure
 			type_mark_set: type_mark = a_type_mark
-			class_name_set: class_name = a_name
-			base_class_set: base_class = a_class
+			name_set: name = a_name
+			eiffel_class_set: eiffel_class = a_class
 		end
 
 feature -- Access
 
-	class_name: ET_CLASS_NAME
-			-- Name of type
-
-	base_class: ET_CLASS
-			-- Base class
-
 	type_mark: ET_KEYWORD
 			-- 'expanded', 'reference' or 'separate' keyword
+
+	direct_base_class (a_universe: ET_UNIVERSE): ET_CLASS is
+			-- Class on which current type is directly based
+			-- (e.g. a Class_type, a Tuple_type or a Bit_type);
+			-- Return Void if not directly based on a class
+			-- (e.g. Anchored_type). `a_universe' is the
+			-- surrounding universe holding all classes.
+		do
+			Result := eiffel_class
+		end
+
+	base_class (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS is
+			-- Base class of current type when it appears in `a_context'
+			-- in `a_universe' (Definition of base class in ETL2 page 198).
+			-- Return "*UNKNOWN*" class if unresolved identifier type,
+			-- anchored type involved in a cycle, or unmatched formal
+			-- generic parameter.
+		do
+			Result := eiffel_class
+		end
+
+	base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', only made up of class names and generic
+			-- formal parameters when the root type of `a_context' is a
+			-- generic type not fully derived (Definition of base type in
+			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
+			-- type, anchored type involved in a cycle, or unmatched formal
+			-- generic parameter if this parameter is current type.
+		local
+			an_actual_parameters: like actual_parameters
+			a_named_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			Result := Current
+			an_actual_parameters := actual_parameters
+			if an_actual_parameters /= Void then
+				a_named_parameters := an_actual_parameters.named_types (a_context, a_universe)
+				if a_named_parameters /= an_actual_parameters then
+					create {ET_GENERIC_CLASS_TYPE} Result.make (type_mark, name, a_named_parameters, eiffel_class)
+				end
+			end
+		end
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -61,22 +97,34 @@ feature -- Access
 			if type_mark /= Void then
 				Result := type_mark.position
 			else
-				Result := class_name.position
+				Result := name.position
 			end
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
+		local
+			a_parameters: like actual_parameters
 		do
-			Result := class_name.break
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				Result := a_parameters.break
+			else
+				Result := name.break
+			end
 		end
 
 feature -- Status report
 
 	is_generic: BOOLEAN is
 			-- Is current class type generic?
+		local
+			a_parameters: like actual_parameters
 		do
-			Result := False
+			a_parameters := actual_parameters
+			Result := a_parameters /= Void and then not a_parameters.is_empty
+		ensure
+			definition: Result = (actual_parameters /= Void and then not actual_parameters.is_empty)
 		end
 
 	is_expanded: BOOLEAN is
@@ -85,7 +133,7 @@ feature -- Status report
 			if type_mark /= Void then
 				Result := type_mark.is_expanded
 			else
-				Result := base_class.is_expanded
+				Result := eiffel_class.is_expanded
 			end
 		end
 
@@ -95,181 +143,211 @@ feature -- Status report
 			if type_mark /= Void then
 				Result := type_mark.is_separate
 			else
-				Result := base_class.is_separate
+				Result := eiffel_class.is_separate
 			end
 		end
 
-	same_syntactical_type (other: ET_TYPE): BOOLEAN is
-			-- Are current type and `other' syntactically
-			-- the same type (e.g. do not try to resolve
-			-- anchored types)?
+	is_named_type: BOOLEAN is
+			-- Is current type only made up of named types?
 		local
-			a_class_type: ET_CLASS_TYPE
+			a_parameters: like actual_parameters
+			i, nb: INTEGER
 		do
-			if other = Current then
+			Result := True
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				nb := a_parameters.count
+				from i := 1 until i > nb loop
+					if not a_parameters.type (i).is_named_type then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	is_base_type: BOOLEAN is
+			-- Is current type only made up of base types?
+		local
+			a_parameters: like actual_parameters
+			i, nb: INTEGER
+		do
+			Result := True
+			a_parameters := actual_parameters
+			if a_parameters /= Void then
+				nb := a_parameters.count
+				from i := 1 until i > nb loop
+					if not a_parameters.type (i).is_base_type then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end
+		end
+
+feature -- Comparison
+
+	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+		do
+			if other = a_universe.unknown_class then
+					-- "*UNKNOWN*" is equal to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
-				a_class_type ?= other
-				if a_class_type /= Void then
-					if base_class = a_class_type.base_class then
-						Result := not a_class_type.is_generic and
-							is_expanded = a_class_type.is_expanded and
-							is_separate = a_class_type.is_separate
+				Result := other.same_syntactical_class_type (Current, a_context, other_context, a_universe)
+			end
+		end
+
+feature {ET_TYPE} -- Comparison
+
+	same_syntactical_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+		local
+			other_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			if other = a_universe.unknown_class then
+					-- "*UNKNOWN*" is equal to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
+				Result := True
+			elseif
+				eiffel_class = other.direct_base_class (a_universe) and
+				is_expanded = other.is_expanded and
+				is_separate = other.is_separate
+			then
+				if not other.is_generic then
+					Result := not is_generic
+				elseif not is_generic then
+					-- Result := False
+				else
+					other_parameters := other.actual_parameters
+					check
+						is_generic: actual_parameters /= Void
+						other_is_generic: other_parameters /= Void
 					end
+					Result := actual_parameters.same_syntactical_types (other_parameters, other_context, a_context, a_universe)
 				end
 			end
 		end
 
-	syntactically_conforms_to (other: ET_TYPE; a_class: ET_CLASS): BOOLEAN is
-			-- Does current type syntactically conforms
-			-- to `other' when it appears in `a_class'
-			-- (e.g. do not try to resolve anchored types)?
-		local
-			a_class_type, an_ancestor: ET_CLASS_TYPE
+feature -- Conformance
+
+	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does current type appearing in `a_context' conform
+			-- to `other' type appearing in `other_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
 		do
-			if other = Current then
+			if other = a_processor.universe.unknown_class then
+					-- "*UNKNOWN*" conforms to no type, not even itself.
+				Result := False
+			elseif other = Current and then other_context = a_context then
 				Result := True
 			else
-				a_class_type ?= other
-				if a_class_type /= Void then
-					if a_class_type.is_expanded then
-						Result := base_class = a_class_type.base_class and not a_class_type.is_generic
-					elseif base_class = a_class_type.base_class then
-						Result := not a_class_type.is_generic
-					elseif base_class.has_ancestor (a_class_type.base_class) then
-						an_ancestor := base_class.ancestor (a_class_type)
-						Result := an_ancestor.syntactically_conforms_to (other, a_class)
-					end
-				end
+				Result := other.conforms_from_class_type (Current, a_context, other_context, a_processor)
 			end
 		end
 
-feature -- Validity
+feature {ET_TYPE} -- Conformance
 
-	check_parent_validity (an_heir: ET_CLASS): BOOLEAN is
-			-- Check whether current type is valid when
-			-- it appears in parent clause of `an_heir'.
-			-- Report errors if not valid.
+	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform
+			-- to current type appearing in `a_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
 		local
-			formals: ET_FORMAL_PARAMETER_LIST
+			other_base_class: ET_CLASS
+			an_ancestor: ET_BASE_TYPE
+			other_parameters: ET_ACTUAL_PARAMETER_LIST
+			a_universe: ET_UNIVERSE
 		do
-			if not base_class.is_preparsed then
-				base_class.universe.preparse
-			end
-			if not base_class.is_preparsed then
+			if other = a_processor.universe.unknown_class then
+					-- "*UNKNOWN*" conforms to no type, not even itself.
 				Result := False
-				an_heir.error_handler.report_vtct_error (an_heir, Current)
+			elseif other = Current and other_context = a_context then
+				Result := True
 			else
-				if not base_class.is_parsed then
-					base_class.parse
-				end
-				if not base_class.is_parsed then
-					Result := False
-					an_heir.error_handler.report_vtct_error (an_heir, Current)
-				elseif base_class.has_syntax_error then
-						-- Error should already have been
-						-- reported somewhere else.
-					Result := False
-				else
-					formals := base_class.generic_parameters
-					if formals = Void or else formals.is_empty then
+				a_universe := a_processor.universe
+				other_base_class := other.direct_base_class (a_universe)
+				if eiffel_class = other_base_class then
+					if not other.is_generic then
+						Result := not is_generic
+					elseif not is_generic then
+						-- Result := False
+					else
+						other_parameters := other.actual_parameters
+						check
+							is_generic: actual_parameters /= Void
+							other_is_generic: other_parameters /= Void
+						end
+						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_processor)
+					end
+				elseif not is_expanded then
+					if other_base_class = a_universe.none_class then
+							-- "NONE" conforms to any class type that is not expanded.
 						Result := True
 					else
-						Result := False
-						an_heir.error_handler.report_vtug2_error (an_heir, Current)
+						other_base_class.process (a_processor)
+							-- If there was an error building the ancestors of
+							-- `other_base_class', this error has already been
+							-- reported, so we assume here that everything went
+							-- fine in order to catch other possible errors. Of
+							-- course we might catch errors which are not errors
+							-- but just consequences of the error which occurred
+							-- when building the ancestors, but this is OK.
+						an_ancestor := other_base_class.ancestor (Current, a_universe)
+						if an_ancestor /= Void then
+							other_parameters := other.actual_parameters
+							if other_parameters /= Void then
+								an_ancestor := an_ancestor.resolved_formal_parameters (other_parameters)
+							end
+							Result := an_ancestor.conforms_to_type (Current, a_context, other_context, a_processor)
+						end
 					end
 				end
 			end
-		end
-
-	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
-			-- Check whether current type is valid when it
-			-- appears in a constraint of the formal generic
-			-- parameter `a_formal' in class `a_class'.
-			-- `a_sorter' is used to find possible cycle in
-			-- formal generic parameter declaration.
-			-- Report errors if not valid.
-		local
-			formals: ET_FORMAL_PARAMETER_LIST
-		do
-			if not base_class.is_preparsed then
-				base_class.universe.preparse
-			end
-			if not base_class.is_preparsed then
-				Result := False
-				a_class.error_handler.report_vtct_error (a_class, Current)
-			else
-				if not base_class.is_parsed then
-					base_class.parse
-				end
-				if not base_class.is_parsed then
-					Result := False
-					a_class.error_handler.report_vtct_error (a_class, Current)
-				elseif base_class.has_syntax_error then
-						-- Error should already have been
-						-- reported somewhere else.
-					Result := False
-				else
-					formals := base_class.generic_parameters
-					if formals = Void or else formals.is_empty then
-						Result := True
-					else
-						Result := False
-						a_class.error_handler.report_vtug2_error (a_class, Current)
-					end
-				end
-			end
-		end
-
-feature -- System
-
-	add_to_system is
-			-- Recursively add to system classes that
-			-- appear in current type.
-		do
-			base_class.add_to_system
 		end
 
 feature -- Type processing
 
-	resolved_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): ET_CLASS_TYPE is
-			-- Replace in current type the formal generic parameter
-			-- types by those of `actual_parameters' when the 
-			-- corresponding actual parameter is different from
-			-- the formal parameter. (Warning: this is a side-effect
-			-- function.)
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_CLASS_TYPE is
+			-- Version of current type where the formal generic
+			-- parameter types have been replaced by their actual
+			-- counterparts in `a_parameters'
+		local
+			an_actual_parameters: like actual_parameters
+			a_resolved_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
 			Result := Current
-		end
-
-	resolved_named_types (a_class: ET_CLASS; ast_factory: ET_AST_FACTORY): ET_TYPE is
-			-- Replace in current type unresolved named types
-			-- by corresponding class types or formal generic
-			-- parameter names. `a_class' is the class where
-			-- current type appears in the source code.
-			-- (Warning: this is a side-effect function.)
-		do
-			Result := Current
-		end
-
-feature -- Conversion
-
-	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_type',
-			-- only made up of class names and generic formal parameters
-			-- when `a_type' in a generic type not fully derived
-			-- (Definition of base type in ETL2 p.198)
-		do
-			Result := Current
-		end
-
-feature -- Duplication
-
-	deep_cloned_type: like Current is
-			-- Recursively cloned type
-		do
-			Result := Current
+			an_actual_parameters := actual_parameters
+			if an_actual_parameters /= Void then
+				a_resolved_parameters := an_actual_parameters.resolved_formal_parameters (a_parameters)
+				if a_resolved_parameters /= an_actual_parameters then
+					create {ET_GENERIC_CLASS_TYPE} Result.make (type_mark, name, a_resolved_parameters, eiffel_class)
+				end
+			end
 		end
 
 feature -- Output
@@ -277,13 +355,25 @@ feature -- Output
 	append_to_string (a_string: STRING) is
 			-- Append textual representation of
 			-- current type to `a_string'.
+		local
+			a_parameters: like actual_parameters
 		do
 			if type_mark /= Void then
 				a_string.append_string (type_mark.text)
 				a_string.append_character (' ')
 			end
-			a_string.append_string (class_name.name)
+			a_string.append_string (name.name)
+			a_parameters := actual_parameters
+			if a_parameters /= Void and then not a_parameters.is_empty then
+				a_string.append_character (' ')
+				a_parameters.append_to_string (a_string)
+			end
 		end
+
+feature {NONE} -- Implementation
+
+	eiffel_class: ET_CLASS
+			-- Base class
 
 feature -- Processing
 
@@ -295,7 +385,6 @@ feature -- Processing
 
 invariant
 
-	class_name_not_void: class_name /= Void
-	base_class_not_void: base_class /= Void
+	eiffel_class_not_void: eiffel_class /= Void
 
 end

@@ -15,6 +15,9 @@ deferred class ET_ROUTINE
 inherit
 
 	ET_FEATURE
+		redefine
+			arguments
+		end
 
 feature -- Access
 

@@ -102,7 +102,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_AGENT_ACTUAL_ARGUMENT_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_AGENT_ACTUAL_ARGUMENT_ITEM] is
 			-- Fixed array routines
 		once
 			create Result

@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			infix_keyword := tokens.infix_keyword
 			operator_name := an_operator
 			code := tokens.infix_freeop_code
+			cached_hash_code := -1
 		ensure
 			operator_name_set: operator_name = an_operator
 		end

@@ -53,7 +53,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_WHEN_PART] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_WHEN_PART] is
 			-- Fixed array routines
 		once
 			create Result

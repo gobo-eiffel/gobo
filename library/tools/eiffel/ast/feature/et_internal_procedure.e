@@ -15,9 +15,6 @@ deferred class ET_INTERNAL_PROCEDURE
 inherit
 
 	ET_PROCEDURE
-		redefine
-			add_to_system
-		end
 
 	ET_INTERNAL_ROUTINE
 
@@ -27,7 +24,7 @@ feature {NONE} -- Initialization
 		a_preconditions: like preconditions; a_locals: like locals;
 		a_compound: like compound; a_postconditions: like postconditions;
 		a_rescue: like rescue_clause; a_clients: like clients;
-		a_class: like current_class) is
+		a_class: like implementation_class) is
 			-- Create a new internal procedure.
 		require
 			a_name_not_void: a_name /= Void
@@ -45,7 +42,6 @@ feature {NONE} -- Initialization
 			rescue_clause := a_rescue
 			end_keyword := tokens.end_keyword
 			clients := a_clients
-			current_class := a_class
 			implementation_class := a_class
 		ensure
 			name_item_set: name_item = a_name
@@ -57,25 +53,7 @@ feature {NONE} -- Initialization
 			postconditions_set: postconditions = a_postconditions
 			rescue_clause_set: rescue_clause = a_rescue
 			clients_set: clients = a_clients
-			current_class_set: current_class = a_class
 			implementation_class_set: implementation_class = a_class
-		end
-
-feature -- System
-
-	add_to_system is
-			-- Recursively add to system classes that
-			-- appear in current feature.
-		do
-			if arguments /= Void then
-				arguments.add_to_system
-			end
-			if locals /= Void then
-				locals.add_to_system
-			end
-			if compound /= Void then
-				compound.add_to_system
-			end
 		end
 
 end

@@ -5,7 +5,7 @@ indexing
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,78 +14,68 @@ class ET_CLASS
 
 inherit
 
-	ET_AST_NODE
+	ET_CLASS_TYPE
+		rename
+			make as make_type,
+			type_mark as class_mark,
+			actual_parameters as formal_parameters
+		redefine
+			class_mark, process,
+			formal_parameters,
+			is_expanded, is_separate,
+			position, break, append_to_string,
+			is_named_type, is_valid_context
+		end
+
 	HASHABLE
 
 creation
 
-	make
+	make, make_unknown
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; an_id: INTEGER; a_universe: like universe) is
+	make (a_name: like name; an_id: INTEGER) is
 			-- Create a new class.
 		require
 			a_name_not_void: a_name /= Void
 			an_id_positive: an_id > 0
-			a_universe_not_void: a_universe /= Void
 		do
 			name := a_name
 			id := an_id
-			universe := a_universe
+			ancestors := tokens.empty_ancestors
+			features := tokens.empty_features
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
+			eiffel_class := Current
 		ensure
 			name_set: name = a_name
 			id_set: id = an_id
-			universe_set: universe = a_universe
+		end
+
+	make_unknown (a_name: like name) is
+			-- Create a new "*UNKNOWN*" class.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			name := a_name
+			id := 0
+			ancestors := tokens.empty_ancestors
+			features := tokens.empty_features
+			class_keyword := tokens.class_keyword
+			end_keyword := tokens.end_keyword
+			eiffel_class := Current
+		ensure
+			name_set: name = a_name
+			id_set: id = 0
 		end
 
 feature -- Status report
 
-	is_expanded: BOOLEAN is
-			-- Is class expanded?
-		do
-			Result := has_expanded_mark
-		end
-
-	is_separate: BOOLEAN is
-			-- Is class separate?
-		do
-			Result := has_separate_mark
-		end
-
-	has_deferred_mark: BOOLEAN is
-			-- Has class been declared as deferred?
-		do
-			Result := (class_mark /= Void and then class_mark.is_deferred)
-		end
-
-	has_expanded_mark: BOOLEAN is
-			-- Has class been declared as expanded?
-		do
-			Result := (class_mark /= Void and then class_mark.is_expanded)
-		end
-
-	has_reference_mark: BOOLEAN is
-			-- Has class been declared as reference?
-		do
-			Result := (class_mark /= Void and then class_mark.is_reference)
-		end
-
-	has_separate_mark: BOOLEAN is
-			-- Has class been declared as separate?
-		do
-			Result := (class_mark /= Void and then class_mark.is_separate)
-		end
+	is_named_type: BOOLEAN is True
+			-- Is current type only made up of named types?
 
 feature -- Access
-
-	filename: STRING
-			-- Filename
-
-	name: ET_CLASS_NAME
-			-- Class name
 
 	obsolete_message: ET_OBSOLETE
 			-- Obsolete message
@@ -96,17 +86,11 @@ feature -- Access
 	second_indexing: ET_INDEXING_LIST
 			-- Indexing clause at the end of the class
 
-	invariants: ET_INVARIANTS
-			-- Invariants
-
 	class_keyword: ET_KEYWORD
 			-- 'class' keyword
 
 	end_keyword: ET_KEYWORD
 			-- 'end' keyword
-
-	class_mark: ET_KEYWORD
-			-- 'deferred', 'expanded', 'reference' or 'separate' keyword
 
 	id: INTEGER
 			-- Class ID
@@ -115,20 +99,6 @@ feature -- Access
 			-- Hash code value
 		do
 			Result := id
-		end
-
-	cluster: ET_CLUSTER
-			-- Cluster to which current class belongs
-
-	universe: ET_UNIVERSE
-			-- Universe to which current class belongs
-
-	error_handler: ET_ERROR_HANDLER is
-			-- Error handler
-		do
-			Result := universe.error_handler
-		ensure
-			error_handler_not_void: Result /= Void
 		end
 
 	position: ET_POSITION is
@@ -154,328 +124,7 @@ feature -- Access
 			Result := end_keyword.break
 		end
 
-feature -- Genericity
-
-	is_generic: BOOLEAN is
-			-- Is current class generic?
-		do
-			Result := generic_parameters /= Void
-		ensure
-			definition: Result = (generic_parameters /= Void)
-		end
-
-	generic_parameters: ET_FORMAL_PARAMETER_LIST
-			-- Formal generic parameters
-
-	has_generic_parameter (a_name: ET_IDENTIFIER): BOOLEAN is
-			-- Is `a_name' a formal generic parameter?
-		require
-			a_name_not_void: a_name /= Void
-		do
-			if generic_parameters /= Void then
-				Result := generic_parameters.has_formal_parameter (a_name)
-			end
-		ensure
-			is_generic: Result implies is_generic
-		end
-
-	generic_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER is
-			-- Generic parameter with name `a_name';
-			-- Void if no such generic parameter
-		require
-			a_name_not_void: a_name /= Void
-		do
-			if generic_parameters /= Void then
-				Result := generic_parameters.formal_parameter_by_name (a_name)
-			end
-		ensure
-			has_generic_parameter: has_generic_parameter (a_name) = (Result /= Void)
-			same_name: Result /= Void implies Result.name.same_identifier (a_name)
-		end
-
-feature -- Creation
-
-	creators: ET_CREATOR_LIST
-			-- Creation clauses
-
-	set_creators (a_creators: like creators) is
-			-- Set `creators' to `a_creators'.
-		do
-			creators := a_creators
-		ensure
-			creators_set: creators = a_creators
-		end
-
-	is_creation_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN is
-			-- Is feature name listed in current creation clauses
-			-- and is it exported to `a_class'?
-		require
-			a_name_not_void: a_name /= Void
-			a_class_not_void: a_class /= Void
-		do
-			if creators /= Void then
-				Result := creators.is_exported_to (a_name, a_class)
-			end
-		end
-
-	is_creation_directly_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN is
-			-- Is feature name listed in current creation clauses
-			-- and is it directly exported to `a_class'?
-			-- This is different from `is_creation_exported_to' where `a_class'
-			-- can be a descendant of a class appearing in the list of clients.
-			-- Note: The use of 'direct' in the name of this feature has not
-			-- the same meaning as 'direct and indirect client' in ETL2 p.91.
-		require
-			a_name_not_void: a_name /= Void
-			a_class_not_void: a_class /= Void
-		do
-			if creators /= Void then
-				Result := creators.is_directly_exported_to (a_name, a_class)
-			end
-		end
-
-feature -- Genealogy
-
-	parents: ET_PARENT_LIST
-			-- Parents
-
-	ancestors: DS_HASH_TABLE [ET_CLASS_TYPE, INTEGER]
-			-- Proper ancestors, indexed by base class ID
-
-	has_ancestor (a_class: ET_CLASS): BOOLEAN is
-			-- Is `a_class' an ancestor of current class?
-			-- Detect possible inheritance graph cycles.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if a_class = Current then
-				Result := True
-			else
-				if not is_preparsed then
-					universe.preparse
-				end
-				if is_preparsed then
-					if not is_parsed then
-						parse
-					end
-					if is_parsed and then not has_syntax_error then
-						search_ancestors
-						if not has_ancestors_error then
-							Result := ancestors.has (a_class.id)
-						end
-					end
-				end
-			end
-		end
-
-	ancestor (a_type: ET_CLASS_TYPE): ET_CLASS_TYPE is
-			-- Ancestor of current class with same
-			-- base class as `a_type'
-		require
-			a_type_not_void: a_type /= Void
-			has_ancestor: has_ancestor (a_type.base_class)
-		local
-			a_class: ET_CLASS
-		do
-			a_class := a_type.base_class
-			if a_class = Current then
-				Result := a_type
-			else
-				if not is_preparsed then
-					universe.preparse
-				end
-				if is_preparsed then
-					if not is_parsed then
-						parse
-					end
-					if is_parsed and then not has_syntax_error then
-						search_ancestors
-						if not has_ancestors_error then
-							Result := ancestors.item (a_class.id)
-						end
-					end
-				end
-			end
-		ensure
-			ancestor_not_void: Result /= Void
-		end
-
-	descendants: DS_ARRAYED_LIST [ET_CLASS] is
-			-- Proper descendant classes
-		do
-			if has_descendants then
-				Result := universe.descendants (Current)
-			else
-				create Result.make (0)
-			end
-		ensure
-			descendants_not_void: Result /= Void
-			no_void_descendant: not Result.has (Void)
-		end
-
-	has_descendants: BOOLEAN
-			-- Does current class have proper descendants?
-
-feature -- Feature clauses
-
-	feature_clauses: ET_FEATURE_CLAUSE_LIST
-			-- Feature clauses
-
-	set_feature_clauses (a_feature_clauses: like feature_clauses) is
-			-- Set `feature_clauses' to `a_feature_clauses'.
-		do
-			feature_clauses := a_feature_clauses
-		ensure
-			feature_clauses_set: feature_clauses = a_feature_clauses
-		end
-
-feature -- Features
-
-	named_feature (a_name: ET_FEATURE_NAME): ET_FEATURE is
-			-- Feature named `a_name';
-			-- Void if no such feature
-		require
-			a_name_not_void: a_name /= Void
-		do
-			if named_features /= Void then
-				named_features.search (a_name)
-				if named_features.found then
-					Result := named_features.found_item
-				end
-			end
-		ensure
-			registered: Result /= Void implies Result.is_registered
-		end
-
-	named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
-			-- Features indexed by name
-
-	seeded_feature (a_seed: INTEGER): ET_FEATURE is
-			-- Feature with seed `a_seed';
-			-- Void if no such feature
-		do
-			if seeded_features /= Void then
-				seeded_features.search (a_seed)
-				if seeded_features.found then
-					Result := seeded_features.found_item
-				end
-			end
-		ensure
-			registered: Result /= Void implies Result.is_registered
-		end
-
-	seeded_features: DS_HASH_TABLE [ET_FEATURE, INTEGER]
-			-- Features indexed by seed ID
-
-feature -- System
-
-	in_system: BOOLEAN
-			-- Is current class reachable from the
-			-- root class?
-
-	add_to_system is
-			-- Recursively add current class to system.
-		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_FEATURE, ET_FEATURE_NAME]
-		do
-			if not in_system then
-				in_system := True
-				if parents /= Void then
-					parents.add_to_system
-				else
-					universe.any_class.add_to_system
-				end
-				if named_features /= Void then
-					a_cursor := named_features.new_cursor
-					from a_cursor.start until a_cursor.after loop
-						a_cursor.item.add_to_system
-						a_cursor.forth
-					end
-				end
-			end
-		ensure
-			is_in_system: in_system
-		end
-
-feature -- Compilation: parsing status
-
-	is_preparsed: BOOLEAN is
-			-- Has current class been preparsed (i.e. its filename
-			-- and cluster are already known but the class has not
-			-- necessarily been parsed yet)?
-		do
-			Result := (filename /= Void and cluster /= Void)
-		ensure
-			definition: Result = (filename /= Void and cluster /= Void)
-			true_if_parsed: is_parsed implies is_preparsed
-		end
-
-	is_parsed: BOOLEAN
-			-- Has current class been parsed?
-
-	has_syntax_error: BOOLEAN
-			-- Has a fatal syntax error been detected?
-
-feature -- Compilation: parsing
-
-	parse is
-			-- Parse current class.
-			-- The class may end up not being parsed if `filename'
-			-- didn't contain this class after all (i.e. if the
-			-- preparsing phase gave errouneous result).
-		require
-			is_preparsed: is_preparsed
-			no_parsed: not is_parsed
-		local
-			a_file: KL_TEXT_INPUT_FILE
-		do
-			create a_file.make (filename)
-			a_file.open_read
-			if a_file.is_open_read then
-				universe.parse_file (a_file, filename, cluster)
-				a_file.close
-			else
-				-- TODO:
-			end
-		end
-
-	set_filename (a_name: STRING) is
-			-- Set `filename' to `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-		do
-			filename := a_name
-		ensure
-			filename_set: filename = a_name
-		end
-
-	set_cluster (a_cluster: like cluster) is
-			-- Set `cluster' to `a_cluster'.
-		require
-			a_cluster_not_void: a_cluster /= Void
-		do
-			cluster := a_cluster
-		ensure
-			cluster_set: cluster = a_cluster
-		end
-
-	set_parsed is
-			-- Set `is_parsed' to True.
-		require
-			is_preparsed: is_preparsed
-		do
-			is_parsed := True
-		ensure
-			is_parsed: is_parsed
-		end
-
-	set_class_mark (a_mark: like class_mark) is
-			-- Set `class_mark' to `a_mark'.
-		do
-			class_mark := a_mark
-		ensure
-			class_mark_set: class_mark = a_mark
-		end
+feature -- Setting
 
 	set_name (a_name: like name) is
 			-- Set `name' to `a_name'.
@@ -488,36 +137,12 @@ feature -- Compilation: parsing
 			name_set: name = a_name
 		end
 
-	set_generic_parameters (a_generic_parameters: like generic_parameters) is
-			-- Set `generic_parameters' to `a_generic_parameters'.
-		do
-			generic_parameters := a_generic_parameters
-		ensure
-			generic_parameters_set: generic_parameters = a_generic_parameters
-		end
-
 	set_obsolete_message (an_obsolete_message: like obsolete_message) is
 			-- Set `obsolete_message' to `an_obsolete_message'.
 		do
 			obsolete_message := an_obsolete_message
 		ensure
 			obsolete_message_set: obsolete_message = an_obsolete_message
-		end
-
-	set_parents (a_parents: like parents) is
-			-- Set `parents' to `a_parents'.
-		do
-			parents := a_parents
-		ensure
-			parents_set: parents = a_parents
-		end
-
-	set_invariants (an_invariants: like invariants) is
-			-- Set `invariants' to `an_invariants'.
-		do
-			invariants := an_invariants
-		ensure
-			invariants_set: invariants = an_invariants
 		end
 
 	set_first_indexing (an_indexing: like first_indexing) is
@@ -564,376 +189,467 @@ feature -- Compilation: parsing
 			leading_break_set: leading_break = a_break
 		end
 
-	set_named_features (a_features: like named_features) is
-			-- Set `named_features' to `a_features'.
+feature -- Parsing
+
+	filename: STRING
+			-- Filename
+
+	cluster: ET_CLUSTER
+			-- Cluster to which current class belongs
+
+	set_filename (a_name: STRING) is
+			-- Set `filename' to `a_name'.
 		require
-			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
-			-- a_features_registered: forall f in a_features, f.is_registered
+			a_name_not_void: a_name /= Void
 		do
-			named_features := a_features
+			filename := a_name
 		ensure
-			named_features_set: named_features = a_features
+			filename_set: filename = a_name
 		end
 
-	set_syntax_error (b: BOOLEAN) is
-			-- Set `has_syntax_error' to `b'.
-		do
-			has_syntax_error := b
-		ensure
-			syntax_error_set: has_syntax_error = b
-		end
-
-feature -- Compilation: genealogy status
-
-	ancestors_searched: BOOLEAN is
-			-- Have `ancestors' been searched?
-		do
-			Result := has_ancestors_error or (ancestors /= Void)
-		ensure
-			ancestors_not_void: (Result and not has_ancestors_error)
-				implies (ancestors /= Void)
-		end
-
-	has_ancestors_error: BOOLEAN
-			-- Has a fatal error occurred during
-			-- ancestors searching?
-
-feature -- Compilation: genealogy
-
-	search_ancestors is
-			-- Search ancestors of current class.
-			-- Detect possible inheritance graph cycles.
+	set_cluster (a_cluster: like cluster) is
+			-- Set `cluster' to `a_cluster'.
 		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			cluster := a_cluster
+		ensure
+			cluster_set: cluster = a_cluster
+		end
+
+feature -- Parsing status
+
+	is_preparsed: BOOLEAN is
+			-- Has current class been preparsed (i.e. its filename
+			-- and cluster are already known but the class has not
+			-- necessarily been parsed yet)?
+		do
+			Result := (filename /= Void and cluster /= Void)
+		ensure
+			filename_not_void: Result implies filename /= Void
+			cluster_not_void: Result implies cluster /= Void
+		end
+
+	is_parsed: BOOLEAN
+			-- Has current class been parsed?
+
+	has_syntax_error: BOOLEAN
+			-- Has a fatal syntax error been detected?
+
+	set_parsed is
+			-- Set `is_parsed' to True.
+		do
+			is_parsed := True
+			has_syntax_error := False
+		ensure
 			is_parsed: is_parsed
 			no_syntax_error: not has_syntax_error
-		local
-			a_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS]
-			sorted_anc: DS_ARRAYED_LIST [ET_CLASS]
-			a_parents, any_parents: like parents
-			a_cycle: DS_ARRAYED_LIST [ET_CLASS]
-			a_class: ET_CLASS
-			i, nb: INTEGER
-			has_error: BOOLEAN
+		end
+
+	set_syntax_error is
+			-- Set `has_syntax_error' to True.
 		do
-			if not ancestors_searched then
-				a_sorter := universe.class_sorter
-				a_sorter.wipe_out
-					-- Give dummy values to the first two arguments of
-					-- `add_to_sorter'. These two arguments are only
-					-- used for error reporting and there will not be
-					-- any error here thanks to the preconditions
-					-- "is_parsed" and "no_syntax_error".
-				add_to_sorter (universe.any_type, Current, a_sorter)
-				a_sorter.sort
-				sorted_anc := a_sorter.sorted_items
-				any_parents := universe.any_parents
-				nb := sorted_anc.count
-				from i := 1 until i > nb loop
-					a_class := sorted_anc.item (i)
-					a_parents := a_class.parents
-					if a_parents = Void or else a_parents.is_empty then
-						a_parents := any_parents
-					end
-					check sorted: a_parents.ancestors_searched end
-					a_parents.set_ancestors_of (a_class)
-					i := i + 1
-				end
-				if a_sorter.has_cycle then
-						-- There is a cycle in the inheritance graph.
-					a_cycle := a_sorter.cycle
-					a_sorter.wipe_out
-						-- Make sure that all classes envolved in the
-						-- cycle and their descendants are marked
-						-- with `has_ancestors_error'.
-					set_ancestors_error
-					if parents /= Void and then not parents.is_empty then
-						parents.set_ancestors_error
-					else
-						any_parents.set_ancestors_error
-					end
-						-- Report the validity error VHPR-1.
-					error_handler.report_vhpr1_error (a_cycle.first, a_cycle)
-				else
-					a_sorter.wipe_out
-				end
-				nb := sorted_anc.count
-				from i := 1 until i > nb loop
-					a_class := sorted_anc.item (i)
-					if not a_class.has_ancestors_error then
-						a_parents := a_class.parents
-						if a_parents = Void or else a_parents.is_empty then
-							a_parents := any_parents
-						end
-						if a_parents.has_ancestors_error then
-							a_class.set_ancestors_error
-						else
-							has_error := False
-							if a_class.generic_parameters /= Void then
-								has_error := not a_class.generic_parameters.check_validity (a_class)
-							end
-							if has_error then
-								a_class.set_ancestors_error
-							elseif not a_parents.check_generic_derivation (a_class) then
-								a_class.set_ancestors_error
-							else
-								a_parents.add_descendant (a_class)
-							end
-						end
-					end
-					i := i + 1
-				end
+			has_syntax_error := True
+		ensure
+			syntax_error_set: has_syntax_error
+		end
+
+feature -- Class header
+
+	is_expanded: BOOLEAN is
+			-- Is class expanded?
+		do
+			Result := has_expanded_mark
+		end
+
+	is_separate: BOOLEAN is
+			-- Is class separate?
+		do
+			Result := has_separate_mark
+		end
+
+	has_deferred_mark: BOOLEAN is
+			-- Has class been declared as deferred?
+		do
+			Result := (class_mark /= Void and then class_mark.is_deferred)
+		end
+
+	has_expanded_mark: BOOLEAN is
+			-- Has class been declared as expanded?
+		do
+			Result := (class_mark /= Void and then class_mark.is_expanded)
+		end
+
+	has_reference_mark: BOOLEAN is
+			-- Has class been declared as reference?
+		do
+			Result := (class_mark /= Void and then class_mark.is_reference)
+		end
+
+	has_separate_mark: BOOLEAN is
+			-- Has class been declared as separate?
+		do
+			Result := (class_mark /= Void and then class_mark.is_separate)
+		end
+
+	class_mark: ET_KEYWORD
+			-- 'deferred', 'expanded', 'reference' or 'separate' keyword
+
+	set_class_mark (a_mark: like class_mark) is
+			-- Set `class_mark' to `a_mark'.
+		do
+			class_mark := a_mark
+		ensure
+			class_mark_set: class_mark = a_mark
+		end
+
+feature -- Genericity
+
+	formal_parameters: ET_FORMAL_PARAMETER_LIST
+			-- Formal generic parameters
+
+	set_formal_parameters (a_parameters: like formal_parameters) is
+			-- Set `formal_parameters' to `a_parameters'.
+		do
+			formal_parameters := a_parameters
+		ensure
+			formal_parameters_set: formal_parameters = a_parameters
+		end
+
+	has_formal_parameter (a_name: ET_IDENTIFIER): BOOLEAN is
+			-- Is `a_name' a formal generic parameter?
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if formal_parameters /= Void then
+				Result := formal_parameters.has_formal_parameter (a_name)
+			end
+		ensure
+			is_generic: Result implies is_generic
+		end
+
+	formal_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER is
+			-- Formal generic parameter with name `a_name';
+			-- Void if no such formal generic parameter
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if formal_parameters /= Void then
+				Result := formal_parameters.formal_parameter_by_name (a_name)
+			end
+		ensure
+			has_formal_parameter: has_formal_parameter (a_name) = (Result /= Void)
+			same_name: Result /= Void implies Result.name.same_identifier (a_name)
+		end
+
+feature -- Ancestors
+
+	has_ancestor (a_class: ET_CLASS; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Is `a_class' an ancestor of current class in `a_universe'?
+			-- (Note: you have to make sure that the ancestors have correctly
+			-- been built first in order to get the correct answer.)
+		require
+			a_class_not_void: a_class /= Void
+			a_universe_not_void: a_universe /= Void
+		do
+			if Current = a_universe.unknown_class then
+					-- Class *UNKNOWN* has no ancestors.
+				Result := False
+			elseif a_class = Current then
+				Result := True
+			elseif Current = a_universe.none_class then
+					-- NONE is a descendant of all classes.
+				Result := True
+			else
+				Result := ancestors.has_class (a_class, a_universe)
 			end
 		end
 
-feature {ET_PARENT_LIST, ET_CLASS} -- Compilation: genealogy
-
-	add_to_sorter (a_type: ET_CLASS_TYPE; an_heir: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS]) is
-			-- Add current class and recursively its ancestors
-			-- to `a_sorter' if not already done and if `ancestors'
-			-- have not been searched yet. `an_heir' is the class
-			-- where `a_type', whose base class is current class,
-			-- appears as a parent. (`a_type' and `an_heir' are
-			-- only needed for error reporting and may have dummy
-			-- values starting the ancestors search process (call
-			-- to feature `search_ancestors').)
+	ancestor (a_type: ET_BASE_TYPE; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Ancestor of current class with same base class
+			-- as `a_type' in `a_universe'; Void if no such ancestor.
+			-- (Note: you have to make sure that the ancestors have correctly
+			-- been built first in order to get the correct answer.)
 		require
 			a_type_not_void: a_type /= Void
-			an_heir_not_void: an_heir /= Void
-			a_sorter_not_void: a_sorter /= Void
+			a_universe_not_void: a_universe /= Void
 		local
-			any_class: ET_CLASS
+			a_class: ET_CLASS
 		do
-			if not ancestors_searched then
-				has_ancestors_error := False
-				if not is_preparsed then
-					universe.preparse
-				end
-				if not is_preparsed then
-						-- Error: class not in universe
-						-- (VTCT, ETL2 p.199).
-					error_handler.report_vtct_error (an_heir, a_type)
-					set_ancestors_error
-				else
-					if not is_parsed then
-						parse
-					end
-					if not is_parsed then
-							-- Error: class not in universe
-							-- (VTCT, ETL2 p.199).
-						error_handler.report_vtct_error (an_heir, a_type)
-						set_ancestors_error
-					elseif has_syntax_error then
-							-- This error has already been reported
-							-- somewhere else.
-						set_ancestors_error
-					elseif parents = Void or else parents.is_empty then
-						if Current = universe.general_class then
-							create ancestors.make_map (0)
-						elseif Current = universe.any_class then
-								-- ISE Eiffel has no GENERAL class anymore.
-								-- Use ANY has class root now.
-							create ancestors.make_map (0)
-						elseif not a_sorter.has (Current) then
-							any_class := universe.any_class
-							if not any_class.is_preparsed then
-								universe.preparse
-							end
-							if not any_class.is_preparsed then
-									-- Error: class ANY not in universe
-									-- (VTCT, ETL2 p.199).
-								error_handler.report_vtct_any_error (Current)
-								set_ancestors_error
-							else
-								if not any_class.is_parsed then
-									any_class.parse
-								end
-								if not any_class.is_parsed then
-										-- Error: class ANY not in universe
-										-- (VTCT, ETL2 p.199).
-									error_handler.report_vtct_any_error (Current)
-									set_ancestors_error
-								elseif any_class.has_syntax_error then
-										-- This error has already been reported
-										-- somewhere else.
-									set_ancestors_error
-								else
-									a_sorter.force (Current)
-									universe.any_parents.add_to_sorter (Current, a_sorter)
-								end
-							end
-						end
-					elseif not a_sorter.has (Current) then
-						a_sorter.force (Current)
-						parents.add_to_sorter (Current, a_sorter)
-					end
-				end
+			a_class := a_type.direct_base_class (a_universe)
+			if Current = a_universe.unknown_class then
+					-- Class *UNKNOWN* has no ancestors.
+				Result := Void
+			elseif a_class = Current then
+				Result := a_type
+			elseif Current = a_universe.none_class then
+					-- NONE is a descendant of all classes.
+				Result := a_type
+			else
+				Result := ancestors.base_type (a_class, a_universe)
 			end
 		end
 
-feature {ET_PARENT_LIST} -- Compilation: genealogy
+	descendants (a_universe: ET_UNIVERSE): DS_ARRAYED_LIST [ET_CLASS] is
+			-- Proper descendant classes in `a_universe'
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			other_class: ET_CLASS
+		do
+			if Current = a_universe.unknown_class then
+					-- Class *UNKNOWN* has no descendants.
+				create Result.make (0)
+			elseif Current = a_universe.none_class then
+					-- Class NONE has no descendants.
+				create Result.make (0)
+			else
+				if Current = a_universe.any_class or Current = a_universe.general_class then
+					create Result.make (a_universe.classes.count)
+				else
+					create Result.make (initial_descendants_capacity)
+				end
+				a_cursor := a_universe.classes.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					other_class := a_cursor.item
+					if other_class /= Current then
+						if other_class.ancestors_built then
+							if other_class.has_ancestor (Current, a_universe) then
+								Result.force_last (other_class)
+							end
+						end
+					end
+					a_cursor.forth
+				end
+			end
+		ensure
+			descendants_not_void: Result /= Void
+			no_void_descendant: not Result.has (Void)
+		end
+
+	parents: ET_PARENT_LIST
+			-- Parents
+
+	ancestors: ET_BASE_TYPE_LIST
+			-- Proper ancestors
+
+	set_parents (a_parents: like parents) is
+			-- Set `parents' to `a_parents'.
+		do
+			parents := a_parents
+		ensure
+			parents_set: parents = a_parents
+		end
 
 	set_ancestors (some_ancestors: like ancestors) is
 			-- Set `ancestors' to `some_ancestors'.
 		require
 			some_ancestors_not_void: some_ancestors /= Void
-			no_void_ancestor: not some_ancestors.has_item (Void)
 		do
 			ancestors := some_ancestors
 		ensure
 			ancestors_set: ancestors = some_ancestors
 		end
 
-	add_descendant (a_class: ET_CLASS) is
-			-- Add `a_class' to the list of descendant classes
-		require
-			a_class_not_void: a_class /= Void
-			ancestors_searched: a_class.ancestors_searched
-			no_ancestors_error: not a_class.has_ancestors_error
-		do
-			has_descendants := True
-		ensure
-			inserted: has_descendants
-		end
+feature -- Ancestor building status
 
-feature {ET_PARENT_LIST, ET_PARENT, ET_CLASS, ET_FORMAL_PARAMETER_LIST} -- Compilation: genealogy
+	ancestors_built: BOOLEAN
+			-- Have `ancestors' been built?
+
+	has_ancestors_error: BOOLEAN
+			-- Has a fatal error occurred when building `ancestors'?
+
+	set_ancestors_built is
+			-- Set `ancestors_built' to True.
+		do
+			ancestors_built := True
+		ensure
+			ancestors_built: ancestors_built
+		end
 
 	set_ancestors_error is
-			-- Set `has_ancestors_error' to `True'.
-		local
-			i, nb: INTEGER
-			a_class: ET_CLASS
-			desc: like descendants
+			-- Set `has_ancestors_error' to True.
 		do
 			has_ancestors_error := True
-			ancestors := Void
-			if has_descendants then
-				desc := descendants
-				nb := desc.count
-				from i := 1 until i > nb loop
-					a_class := desc.item (i)
-					if not a_class.has_ancestors_error then
-						a_class.set_ancestors_error
-					end
-					i := i + 1
-				end
-			end
 		ensure
-			ancestors_searched: ancestors_searched
-			has_ancestors_error_set: has_ancestors_error
+			has_ancestors_error: has_ancestors_error
 		end
 
-feature -- Compilation: flattening status
+feature -- Creation
 
-	is_flattened: BOOLEAN is
-			-- Have features been flattened?
-		do
-			Result := has_flatten_error or (seeded_features /= Void)
-		ensure
-			seeded_features_not_void: (Result and not has_flatten_error)
-				implies (seeded_features /= Void)
-		end
-
-	has_flatten_error: BOOLEAN
-			-- Has a fatal error occurred during
-			-- feature flattening?
-
-feature -- Compilation: feature flattening
-
-	flatten is
-			-- Flatten feature table.
+	is_creation_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Is feature name listed in current creation clauses
+			-- and is it exported to `a_client'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for descendants.)
 		require
-			is_parsed: is_parsed
-			no_syntax_error: not has_syntax_error
-		local
-			a_flattener: ET_FEATURE_FLATTENER
-			any_parents: ET_PARENT_LIST
+			a_name_not_void: a_name /= Void
+			a_client_not_void: a_client /= Void
+			a_processor_not_void: a_processor /= Void
 		do
-				-- Search ancestors even if `is_flattened' is True
-				-- because `has_flatten_error' could have been set
-				-- during the parsing by ET_CLASS.put_feature and
-				-- we want to search the ancestors (if not already
-				-- done) anyway (see postcondition).
-			search_ancestors
-			if not is_flattened then
-				if not has_ancestors_error then
-					a_flattener := universe.feature_flattener
-					if parents = Void or else parents.is_empty then
-						if Current = universe.general_class then
-							a_flattener.set_current_class (Current)
-							a_flattener.flatten
-						elseif Current = universe.any_class then
-								-- ISE Eiffel has no GENERAL class anymore.
-								-- Use ANY has class root now.
-							a_flattener.set_current_class (Current)
-							a_flattener.flatten
-						else
-							any_parents := universe.any_parents
-							any_parents.flatten
-							if any_parents.has_flatten_error then
-								set_flatten_error
-							else
-								a_flattener.set_current_class (Current)
-								any_parents.add_inherited_features (a_flattener)
-								a_flattener.flatten
-							end
-						end
-					else
-						parents.flatten
-						if parents.has_flatten_error then
-							set_flatten_error
-						else
-							a_flattener.set_current_class (Current)
-							parents.add_inherited_features (a_flattener)
-							a_flattener.flatten
-						end
-					end
-				else
-					set_flatten_error
-				end
+			if creators /= Void then
+				Result := creators.is_exported_to (a_name, a_client, a_processor)
 			end
-		ensure
-			ancestors_searched: ancestors_searched
-			flattened: is_flattened
 		end
 
-	remove_features is
-			-- Wipe out all features of current class.
-			-- (Might be useful in order to free some memory
-			-- space when the class is still needed for
-			-- conformance test purposes but its features
-			-- are not used anymore.)
+	is_creation_directly_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS): BOOLEAN is
+			-- Is feature name listed in current creation clauses
+			-- and is it directly exported to `a_client'?
+			-- This is different from `is_creation_exported_to' where `a_client'
+			-- can be a descendant of a class appearing in the list of clients.
+			-- Note: The use of 'direct' in the name of this feature has not
+			-- the same meaning as 'direct and indirect client' in ETL2 p.91.
+		require
+			a_name_not_void: a_name /= Void
+			a_client_not_void: a_client /= Void
 		do
-			set_flatten_error
-			named_features := Void
-		ensure
-			is_flattened: is_flattened
-			has_flatten_error: has_flatten_error
-			named_features_wiped_out: named_features = Void
-			seeded_features_wiped_out: seeded_features = Void
+			if creators /= Void then
+				Result := creators.is_directly_exported_to (a_name, a_client)
+			end
 		end
 
-	set_flatten_error is
-			-- Set `has_flatten_error' to True.
+	creators: ET_CREATOR_LIST
+			-- Creation clauses
+
+	set_creators (a_creators: like creators) is
+			-- Set `creators' to `a_creators'.
 		do
-			has_flatten_error := True
-			seeded_features := Void
+			creators := a_creators
 		ensure
-			is_flattened: is_flattened
-			has_flatten_error: has_flatten_error
+			creators_set: creators = a_creators
 		end
 
-	set_seeded_features (a_features: like seeded_features) is
-			-- Set `seeded_features' to `a_features'.
+feature -- Feature clauses
+
+	feature_clauses: ET_FEATURE_CLAUSE_LIST
+			-- Feature clauses
+
+	set_feature_clauses (a_feature_clauses: like feature_clauses) is
+			-- Set `feature_clauses' to `a_feature_clauses'.
+		do
+			feature_clauses := a_feature_clauses
+		ensure
+			feature_clauses_set: feature_clauses = a_feature_clauses
+		end
+
+feature -- Features
+
+	named_feature (a_name: ET_FEATURE_NAME): ET_FEATURE is
+			-- Feature named `a_name';
+			-- Void if no such feature
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := features.named_feature (a_name)
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
+
+	seeded_feature (a_seed: INTEGER): ET_FEATURE is
+			-- Feature with seed `a_seed';
+			-- Void if no such feature
+		do
+			Result := features.seeded_feature (a_seed)
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
+
+	features: ET_FEATURE_LIST
+			-- Features
+
+	set_features (a_features: like features) is
+			-- Set `features' to `a_features'.
 		require
 			a_features_not_void: a_features /= Void
-			no_void_feature: not a_features.has_item (Void)
 			-- a_features_registered: forall f in a_features, f.is_registered
 		do
-			seeded_features := a_features
+			features := a_features
 		ensure
-			seeded_features_set: seeded_features = a_features
+			features_set: features = a_features
+		end
+
+feature -- Feature flattening status
+
+	features_flattened: BOOLEAN
+			-- Have features been flattened?
+
+	has_flattening_error: BOOLEAN
+			-- Has a fatal error occurred during feature flattening?
+
+	set_features_flattened is
+			-- Set `features_flattened' to True.
+		do
+			features_flattened := True
+		ensure
+			features_flattened: features_flattened
+		end
+
+	set_flattening_error is
+			-- Set `has_flattening_error' to True.
+		do
+			has_flattening_error := True
+		ensure
+			has_flattening_error: has_flattening_error
+		end
+
+feature -- Invariant
+
+	invariants: ET_INVARIANTS
+			-- Invariants
+
+	set_invariants (an_invariants: like invariants) is
+			-- Set `invariants' to `an_invariants'.
+		do
+			invariants := an_invariants
+		ensure
+			invariants_set: invariants = an_invariants
+		end
+
+feature -- System
+
+	in_system: BOOLEAN
+			-- Is current class reachable from the root class?
+
+	set_in_system (b: BOOLEAN) is
+			-- Set `in_system' to `b'.
+		do
+			in_system := b
+		ensure
+			in_system_set: in_system = b
+		end
+
+feature -- Type context
+
+	is_valid_context: BOOLEAN is
+			-- A context is valid if the `type' of its `root_context'
+			-- is only made up of class names and formal generic
+			-- parameter names, and if the actual parameters of these
+			-- formal parameters are themselves in current context
+		do
+			Result := True
+		end
+
+feature -- Output
+
+	append_to_string (a_string: STRING) is
+			-- Append textual representation of
+			-- current type to `a_string'.
+		local
+			a_parameters: like formal_parameters
+		do
+			if class_mark /= Void then
+				if not class_mark.is_deferred then
+					a_string.append_string (class_mark.text)
+					a_string.append_character (' ')
+				end
+			end
+			a_string.append_string (name.name)
+			a_parameters := formal_parameters
+			if a_parameters /= Void and then not a_parameters.is_empty then
+				a_string.append_character (' ')
+				a_parameters.append_to_string (a_string)
+			end
 		end
 
 feature -- Processing
@@ -944,17 +660,25 @@ feature -- Processing
 			a_processor.process_class (Current)
 		end
 
+feature {NONE} -- Constants
+
+	initial_descendants_capacity: INTEGER is
+			-- Initial capacity for `descendants'
+		once
+			Result := 20
+		ensure
+			capacity_positive: Result > 0
+		end
+
 invariant
 
-	name_not_void: name /= Void
-	id_positive: id > 0
-	universe_not_void: universe /= Void
-	no_void_named_feature: named_features /= Void implies not named_features.has_item (Void)
-	-- named_features_registered: named_features /= Void implies forall f in named_features, f.is_registered
-	no_void_seeded_feature: seeded_features /= Void implies not seeded_features.has_item (Void)
-	-- seeded_features_registered: seeded_features /= Void implies forall f in seeded_features, f.is_registered
-	no_void_ancestor: ancestors /= Void implies not ancestors.has_item (Void)
+	id_positive: id >= 0
+	ancestors_not_void: ancestors /= Void
+	features_not_void: features /= Void
+	-- features_registered: forall f in features, f.is_registered
 	class_keyword_not_void: class_keyword /= Void
 	end_keyword_not_void: end_keyword /= Void
+	named_type: is_named_type
+	valid_context: is_valid_context
 
 end

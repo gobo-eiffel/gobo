@@ -24,18 +24,21 @@ creation
 
 feature -- Status report
 
-	is_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN is
+	is_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS; a_processor: ET_AST_PROCESSOR): BOOLEAN is
 			-- Is feature name listed in current creation clauses
-			-- and is it exported to `a_class'?
+			-- and is it exported to `a_client'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for descendants.)
 		require
 			a_name_not_void: a_name /= Void
-			a_class_not_void: a_class /= Void
+			a_client_not_void: a_client /= Void
+			a_processor_not_void: a_processor /= Void
 		local
 			i, nb: INTEGER
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				if item (i).is_exported_to (a_name, a_class) then
+				if item (i).is_exported_to (a_name, a_client, a_processor) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -44,22 +47,22 @@ feature -- Status report
 			end
 		end
 
-	is_directly_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN is
+	is_directly_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS): BOOLEAN is
 			-- Is feature name listed in current creation clauses
-			-- and is it directly_exported to `a_class'?
-			-- This is different from `is_exported_to' where `a_class' can
+			-- and is it directly_exported to `a_client'?
+			-- This is different from `is_exported_to' where `a_client' can
 			-- be a descendant of a class appearing in the list of clients.
 			-- Note: The use of 'direct' in the name of this feature has not
 			-- the same meaning as 'direct and indirect client' in ETL2 p.91.
 		require
 			a_name_not_void: a_name /= Void
-			a_class_not_void: a_class /= Void
+			a_client_not_void: a_client /= Void
 		local
 			i, nb: INTEGER
 		do
 			nb := count
 			from i := 1 until i > nb loop
-				if item (i).is_directly_exported_to (a_name, a_class) then
+				if item (i).is_directly_exported_to (a_name, a_client) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -99,7 +102,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_CREATOR] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_CREATOR] is
 			-- Fixed array routines
 		once
 			create Result

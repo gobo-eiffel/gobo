@@ -89,21 +89,6 @@ feature -- Setting
 			local_keyword_set: local_keyword = a_local
 		end
 
-feature -- System
-
-	add_to_system is
-			-- Recursively add to system classes that
-			-- appear in current local declarations.
-		local
-			i, nb: INTEGER
-		do
-			nb := count
-			from i := 1 until i > nb loop
-				local_variable (i).type.add_to_system
-				i := i + 1
-			end
-		end
-
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
@@ -114,7 +99,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_LOCAL_VARIABLE_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_LOCAL_VARIABLE_ITEM] is
 			-- Fixed array routines
 		once
 			create Result

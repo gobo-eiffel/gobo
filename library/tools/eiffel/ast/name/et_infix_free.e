@@ -43,7 +43,11 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := STRING_.case_insensitive_hash_code (free_operator_name)
+			Result := cached_hash_code
+			if Result = -1 then
+				Result := STRING_.case_insensitive_hash_code (free_operator_name)
+				cached_hash_code := Result
+			end
 		end
 
 feature -- Comparison
@@ -59,10 +63,19 @@ feature -- Comparison
 			elseif other.is_infix_freeop then
 				op ?= other
 				if op /= Void then
-					Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)
+					if op.free_operator_name = free_operator_name then
+						Result := True
+					else
+						Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)
+					end
 				end
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	cached_hash_code: INTEGER
+			-- Cached hash code
 
 feature {NONE} -- Constants
 

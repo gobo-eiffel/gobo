@@ -15,27 +15,17 @@ deferred class ET_FUNCTION
 inherit
 
 	ET_QUERY
+		undefine
+			arguments
 		redefine
 			is_prefixable, is_infixable,
-			signature, undefined_feature,
-			has_formal_parameters,
-			resolve_formal_parameters,
-			resolve_identifier_types,
-			add_to_system
+			undefined_feature,
+			resolve_inherited_signature
 		end
 
 	ET_ROUTINE
 		undefine
-			is_prefixable, is_infixable
-		end
-
-feature -- Access
-
-	signature: ET_SIGNATURE is
-			-- Signature of current function
-			-- (Create a new object at each call.)
-		do
-			create Result.make (arguments, type)
+			type, is_prefixable, is_infixable
 		end
 
 feature -- Status report
@@ -60,82 +50,33 @@ feature -- Conversion
 			-- Undefined version of current feature
 		do
 			create Result.make (a_name, arguments, declared_type, obsolete_message,
-				preconditions, postconditions, clients, current_class)
+				preconditions, postconditions, clients, implementation_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
-			Result.set_implementation_class (implementation_class)
-			if seeds /= Void then
-				Result.set_seeds (seeds)
-			else
-				Result.set_first_seed (first_seed)
-			end
-			if precursors /= Void then
-				Result.set_precursors (precursors)
-			else
-				Result.set_first_precursor (first_precursor)
-			end
-		end
-
-feature -- System
-
-	add_to_system is
-			-- Recursively add to system classes that
-			-- appear in current feature.
-		do
-			type.add_to_system
-			if arguments /= Void then
-				arguments.add_to_system
-			end
+			Result.set_first_seed (first_seed)
+			Result.set_other_seeds (other_seeds)
 		end
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): BOOLEAN is
-			-- Does current feature contain formal generic parameter
-			-- types whose corresponding actual parameter in
-			-- `actual_parameters' is different from the formal
-			-- parameter?
+	resolve_inherited_signature (a_parent: ET_PARENT) is
+			-- Resolve arguments and type inherited from `a_parent'.
+			-- Resolve any formal generic parameters of declared types
+			-- with the corresponding actual parameters in `a_parent',
+			-- and duplicate identifier anchored types (and clear their
+			-- base types).
+		local
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			Result := type.has_formal_parameters (actual_parameters)
-			if not Result then
+			a_parameters := a_parent.actual_parameters
+			if a_parameters /= Void then
+				declared_type := declared_type.resolved_formal_parameters (a_parameters)
 				if arguments /= Void then
-					Result := arguments.has_formal_parameters (actual_parameters)
+					arguments := arguments.resolved_formal_parameters (a_parameters)
 				end
 			end
-		end
-
-	resolve_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST) is
-			-- Replace in current feature the formal generic parameter
-			-- types by those of `actual_parameters' when the 
-			-- corresponding actual parameter is different from
-			-- the formal parameter.
-		do
-			if type.has_formal_parameters (actual_parameters) then
-				declared_type := declared_type.deep_cloned_type
-				declared_type := declared_type.resolved_formal_parameters (actual_parameters)
-			end
-			if arguments /= Void then
-				if arguments.has_formal_parameters (actual_parameters) then
-					arguments := arguments.cloned_arguments
-					arguments.resolve_formal_parameters (actual_parameters)
-				end
-			end
-		end
-
-	resolve_identifier_types (a_class: ET_CLASS) is
-			-- Replace any 'like identifier' types that appear in the
-			-- implementation of current feature in class `a_class' by
-			-- the corresponding 'like feature' or 'like argument'.
-			-- Also resolve 'BIT identifier' types and check validity
-			-- of arguments' name. Set `a_class.has_flatten_error' to
-			-- true if an error occurs.
-		do
-			if arguments /= Void then
-				arguments.resolve_identifier_types (Current, a_class)
-			end
-			declared_type := declared_type.resolved_identifier_types (Current, arguments, a_class)
 		end
 
 end

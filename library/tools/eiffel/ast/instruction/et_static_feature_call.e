@@ -45,7 +45,7 @@ feature -- Access
 	feature_keyword: ET_KEYWORD
 			-- 'feature' keyword
 
-	static_type: ET_STATIC_TYPE
+	static_type: ET_TARGET_TYPE
 			-- Declared static type surrounded by braces
 
 	type: ET_TYPE is

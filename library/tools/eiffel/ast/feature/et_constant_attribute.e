@@ -27,7 +27,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_name: like name_item; a_type: like declared_type; a_constant: like constant;
-		a_clients: like clients; a_class: like current_class) is
+		a_clients: like clients; a_class: like implementation_class) is
 			-- Create a new constant attribute.
 		require
 			a_name_not_void: a_name /= Void
@@ -41,14 +41,12 @@ feature {NONE} -- Initialization
 			is_keyword := tokens.is_keyword
 			constant := a_constant
 			clients := a_clients
-			current_class := a_class
 			implementation_class := a_class
 		ensure
 			name_item_set: name_item = a_name
 			declared_type_set: declared_type = a_type
 			constant_set: constant = a_constant
 			clients_set: clients = a_clients
-			current_class_set: current_class = a_class
 			implementation_class_set: implementation_class = a_class
 		end
 
@@ -92,7 +90,7 @@ feature -- Duplication
 	new_synonym (a_name: like name_item): like Current is
 			-- Synonym feature
 		do
-			create Result.make (a_name, declared_type, constant, clients, current_class)
+			create Result.make (a_name, declared_type, constant, clients, implementation_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
@@ -104,23 +102,14 @@ feature -- Conversion
 	renamed_feature (a_name: like name): like Current is
 			-- Renamed version of current feature
 		do
-			create Result.make (a_name, declared_type, constant, clients, current_class)
+			create Result.make (a_name, declared_type, constant, clients, implementation_class)
 			Result.set_is_keyword (is_keyword)
-			Result.set_implementation_class (implementation_class)
 			Result.set_version (version)
 			Result.set_frozen_keyword (frozen_keyword)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
-			if seeds /= Void then
-				Result.set_seeds (seeds)
-			else
-				Result.set_first_seed (first_seed)
-			end
-			if precursors /= Void then
-				Result.set_precursors (precursors)
-			else
-				Result.set_first_precursor (first_precursor)
-			end
+			Result.set_first_seed (first_seed)
+			Result.set_other_seeds (other_seeds)
 		end
 
 feature -- Processing
@@ -135,5 +124,6 @@ invariant
 
 	is_keyword_not_void: is_keyword /= Void
 	constant_not_void: constant /= Void
+	is_constant_attribute: arguments = Void
 
 end

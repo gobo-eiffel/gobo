@@ -5,41 +5,27 @@ indexing
 		"Eiffel 'BIT N' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_BIT_TYPE
+deferred class ET_BIT_TYPE
 
 inherit
 
-	ET_TYPE
+	ET_BASE_TYPE
+		rename
+			name as bit_keyword
 		redefine
-			syntactically_conforms_to
-		end
-
-creation
-
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_constant: like constant) is
-			-- Create a new 'BIT N' type.
-		require
-			a_constant_not_void: a_constant /= Void
-		do
-			bit_keyword := tokens.bit_keyword
-			constant := a_constant
-			size := No_size
-		ensure
-			constant_set: constant = a_constant
+			bit_keyword,
+			same_syntactical_bit_type,
+			conforms_from_bit_type
 		end
 
 feature -- Access
 
-	bit_keyword: ET_TOKEN
+	bit_keyword: ET_IDENTIFIER
 			-- 'BIT' keyword
 
 	constant: ET_INTEGER_CONSTANT
@@ -48,20 +34,41 @@ feature -- Access
 	size: INTEGER
 			-- Size of current bit type
 
-	position: ET_POSITION is
-			-- Position of first character of
-			-- current node in source code
+	direct_base_class (a_universe: ET_UNIVERSE): ET_CLASS is
+			-- Class on which current type is directly based
+			-- (e.g. a Class_type, a Tuple_type or a Bit_type);
+			-- Return Void if not directly based on a class
+			-- (e.g. Anchored_type). `a_universe' is the
+			-- surrounding universe holding all classes.
 		do
-			Result := bit_keyword.position
-			if Result.is_null then
-				Result := constant.position
-			end
+			Result := a_universe.bit_class
 		end
 
-	break: ET_BREAK is
-			-- Break which appears just after current node
+	base_class (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS is
+			-- Base class of current type when it appears in `a_context'
+			-- in `a_universe' (Definition of base class in ETL2 page 198).
+			-- Return "*UNKNOWN*" class if unresolved identifier type,
+			-- anchored type involved in a cycle, or unmatched formal
+			-- generic parameter.
 		do
-			Result := constant.break
+			Result := a_universe.bit_class
+		end
+
+	base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', only made up of class names and generic
+			-- formal parameters when the root type of `a_context' is a
+			-- generic type not fully derived (Definition of base type in
+			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
+			-- type, anchored type involved in a cycle, or unmatched formal
+			-- generic parameter if this parameter is current type.
+		do
+			if constant /= Void then
+				Result := Current
+			else
+					-- Resolved "BIT name".
+				Result := a_universe.unknown_class
+			end
 		end
 
 feature -- Setting
@@ -76,215 +83,123 @@ feature -- Setting
 			bit_keyword_set: bit_keyword = a_bit
 		end
 
-feature {ET_BIT_TYPE} -- Setting
+feature -- Size
 
-	set_size (a_size: INTEGER) is
-			-- Set `size' to `a_size'.
+	size_computed: BOOLEAN is
+			-- Has `size' already been computed?
 		do
-			size := a_size
-		ensure
-			size_set: size = a_size
+			Result := (size /= No_size)
 		end
 
-feature -- Status report
-
-	same_syntactical_type (other: ET_TYPE): BOOLEAN is
-			-- Are current type and `other' syntactically
-			-- the same type (e.g. do not try to resolve
-			-- anchored types)?
-		local
-			a_bit: ET_BIT_TYPE
-			other_constant: like constant
-			s1, s2: INTEGER
-			has_s1: BOOLEAN
+	has_size_error: BOOLEAN is
+			-- Has an error occurred when computing `size'?
 		do
-			a_bit ?= other
-			if a_bit /= Void then
-				if size = a_bit.size and then size /= No_size then
-					Result := True
-				else
-					other_constant := a_bit.constant
-					if other_constant.literal.is_equal (constant.literal) then
-						Result := (other_constant.is_negative = constant.is_negative)
-					else
-							-- Compare directly their sizes.
-						s1 := size
-						if s1 /= No_size then
-							has_s1 := True
-						else
-							constant.compute_value
-							if not constant.has_value_error then
-								size := constant.value
-								s1 := size
-								has_s1 := True
-							end
-						end
-						if has_s1 then
-							s2 := a_bit.size
-							if s2 /= No_size then
-								Result := (s1 = s2)
-							else
-								other_constant.compute_value
-								if not other_constant.has_value_error then
-									s2 := other_constant.value
-									a_bit.set_size (s2)
-									Result := (s1 = s2)
-								end
-							end
-						end
-					end
-				end
-			end
+			Result := (size = Invalid_size)
 		end
 
-	syntactically_conforms_to (other: ET_TYPE; a_class: ET_CLASS): BOOLEAN is
-			-- Does current type syntactically conforms
-			-- to `other' when it appears in `a_class'
-			-- (e.g. do not try to resolve anchored types)?
-		local
-			a_bit: ET_BIT_TYPE
-			any_type: ET_CLASS_TYPE
-			s1, s2: INTEGER
-			has_s1: BOOLEAN
-			other_constant: like constant
+	compute_size is
+			-- Compute `size'.
 		do
-			a_bit ?= other
-			if a_bit /= Void then
-					-- See VNCB-2 (ETL2 p.229).
-				s1 := size
-				if s1 /= No_size then
-					has_s1 := (s1 >= 0)
-				else
+			if size = No_size then
+				if constant /= Void then
 					constant.compute_value
-					if not constant.has_value_error then
-						size := constant.value
-						s1 := size
-						has_s1 := (s1 >= 0)
-					end
-				end
-				if has_s1 then
-					s2 := a_bit.size
-					if s2 /= No_size then
-						Result := (s1 <= s2)
+					if constant.has_value_error then
+						size := Invalid_size
 					else
-						other_constant := a_bit.constant
-						other_constant.compute_value
-						if not other_constant.has_value_error then
-							s2 := other_constant.value
-							a_bit.set_size (s2)
-							Result := (s1 <= s2)
+						size := constant.value
+						if size < 0 then
+							size := Invalid_size
 						end
 					end
+				else
+					size := Invalid_size
 				end
+			end
+		ensure
+			size_computed: size_computed
+		end
+
+feature -- Comparison
+
+	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+		do
+			if other = Current then
+				Result := True
 			else
-					-- See VNCB-1 (ETL2 p.229).
-				any_type := a_class.universe.any_type
-				Result := any_type.syntactically_conforms_to (other, a_class)
+				Result := other.same_syntactical_bit_type (Current, a_context, other_context, a_universe)
 			end
 		end
 
-feature -- Validity
+feature {ET_TYPE} -- Comparison
 
-	check_parent_validity (an_heir: ET_CLASS): BOOLEAN is
-			-- Check whether current type is valid when
-			-- it appears in parent clause of `an_heir'.
-			-- Report errors if not valid.
+	same_syntactical_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
 		do
-			Result := True
-			if size = No_size then
-				constant.compute_value
-				if constant.has_value_error then
-					Result := False
-					an_heir.error_handler.report_vtbt_error (an_heir, Current)
-				else
-					size := constant.value
-				end
-			end
-			if Result then
-				if size < 0 then
-					Result := False
-					an_heir.error_handler.report_vtbt_error (an_heir, Current)
-				elseif size = 0 and constant.is_negative then
-					Result := True
-					an_heir.error_handler.report_vtbt_minus_zero_error (an_heir, Current)
-				else
-					Result := True
-					an_heir.error_handler.report_vhpr3_bit_n_error (an_heir, Current)
+			if other = Current then
+				Result := True
+			else
+				compute_size
+				if not has_size_error then
+					other.compute_size
+					if not other.has_size_error then
+						Result := (other.size = size)
+					end
 				end
 			end
 		end
 
-	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
-			-- Check whether current type is valid when it
-			-- appears in a constraint of the formal generic
-			-- parameter `a_formal' in class `a_class'.
-			-- `a_sorter' is used to find possible cycle in
-			-- formal generic parameter declaration.
-			-- Report errors if not valid.
+feature -- Conformance
+
+	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does current type appearing in `a_context' conform
+			-- to `other' type appearing in `other_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
 		do
-			Result := True
-			if size = No_size then
-				constant.compute_value
-				if constant.has_value_error then
-					Result := False
-					a_class.error_handler.report_vtbt_error (a_class, Current)
-				else
-					size := constant.value
+			if other = Current then
+				Result := True
+			else
+				Result := other.conforms_from_bit_type (Current, a_context, other_context, a_processor)
+			end
+		end
+
+feature {NONE} -- Conformance
+
+	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform
+			-- to current type appearing in `a_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
+		do
+			if other = Current then
+				Result := True
+			else
+					-- See VNCB-2 (ETL2 p.229).
+				compute_size
+				if not has_size_error then
+					other.compute_size
+					if not other.has_size_error then
+						Result := (other.size <= size)
+					end
 				end
 			end
-			if Result then
-				if size < 0 then
-					Result := False
-					a_class.error_handler.report_vtbt_error (a_class, Current)
-				elseif size = 0 and constant.is_negative then
-					Result := True
-					a_class.error_handler.report_vtbt_minus_zero_error (a_class, Current)
-				else
-					Result := True
-					a_class.error_handler.report_vcfg3_bit_n_error (a_class, Current)
-				end
-			end
-		end
-
-feature -- Conversion
-
-	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_type',
-			-- only made up of class names and generic formal parameters
-			-- when `a_type' in a generic type not fully derived
-			-- (Definition of base type in ETL2 p. 198)
-		do
-			Result := Current
-		end
-
-feature -- Duplication
-
-	deep_cloned_type: like Current is
-			-- Recursively cloned type
-		do
-			Result := Current
-		end
-
-feature -- Output
-
-	append_to_string (a_string: STRING) is
-			-- Append textual representation of
-			-- current type to `a_string'.
-		do
-			a_string.append_string (bit_space)
-			if constant.is_negative then
-				a_string.append_character ('-')
-			end
-			a_string.append_string (constant.literal)
-		end
-
-feature -- Processing
-
-	process (a_processor: ET_AST_PROCESSOR) is
-			-- Process current node.
-		do
-			a_processor.process_bit_type (Current)
 		end
 
 feature {NONE} -- Constants
@@ -293,13 +208,13 @@ feature {NONE} -- Constants
 			-- Eiffel keywords
 
 	No_size: INTEGER is -1
-			-- Marker which says that `size' has not
-			-- been computed yet, or has the invalid
-			-- value -1
+			-- Marker which says that `size' has not been computed yet
+
+	Invalid_size: INTEGER is -2
+			-- Marker which says that `size' has an invalid value
 
 invariant
 
-	bit_keyword_not_void: bit_keyword /= Void
-	constant_not_void: constant /= Void
+	named_type: is_named_type
 
 end

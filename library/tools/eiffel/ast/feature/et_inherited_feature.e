@@ -5,12 +5,27 @@ indexing
 		"Eiffel inherited features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class ET_INHERITED_FEATURE
+
+inherit
+
+	ET_FEATURE
+		redefine
+			name, is_deferred, is_inherited,
+			precursor_feature, type, arguments,
+			new_name, undefine_name, redefine_name,
+			select_name, inherited_feature,
+			merged_feature, selected_feature,
+			seeded_feature, flattened_feature,
+			is_selected, replicated_seeds,
+			is_other_seeds_shared, is_feature_shared,
+			is_redeclared
+		end
 
 creation
 
@@ -18,32 +33,29 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (f: like inherited_feature; p: like parent) is
+	make (a_feature: like precursor_feature; a_parent: like parent) is
 			-- Create a new inherited feature.
 		require
-			f_not_void: f /= Void
-			p_not_void: p /= Void
-		local
-			a_generic_class_type: ET_GENERIC_CLASS_TYPE
-			generics: like actual_parameters
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_redeclared: not a_feature.is_redeclared
+			a_parent_not_void: a_parent /= Void
 		do
-			parent := p
-			inherited_feature := f
-			signature := f.signature
-			signature.duplicate_types
-				-- Update the formal generic parameters
-				-- that appear in inherited signature.
-			a_generic_class_type ?= parent.type
-			if a_generic_class_type /= Void then
-				generics := a_generic_class_type.generic_parameters
-				if generics /= Void and then generics.has_derived_parameters then
-					actual_parameters := generics
-					signature.resolve_formal_parameters (actual_parameters)
-				end
-			end
+			parent := a_parent
+			precursor_feature := a_feature
+			flattened_feature := a_feature
+			inherited_flattened_feature := Current
+			id := a_feature.id
+			name_item := a_feature.name_item
+			version := a_feature.version
+			clients := a_feature.clients
+			implementation_class := a_feature.implementation_class
+			first_seed := a_feature.first_seed
+			other_seeds := a_feature.other_seeds
+			frozen_keyword := a_feature.frozen_keyword
 		ensure
-			inherited_feature_set: inherited_feature = f
-			parent_set: parent = p
+			parent_set: parent = a_parent
+			precursor_feature_set: precursor_feature = a_feature
+			registered: id = a_feature.id
 		end
 
 feature -- Access
@@ -54,52 +66,22 @@ feature -- Access
 			if new_name /= Void then
 				Result := new_name.new_name
 			else
-				Result := inherited_feature.name
+				Result := name_item.feature_name
 			end
-		ensure
-			name_not_void: Result /= Void
 		end
 
-	inherited_feature: ET_FEATURE
-			-- Feature inherited from `parent'
-
-	signature: ET_SIGNATURE
-			-- Feature signature
-
-	parent: ET_PARENT
-			-- Parent from which feature is inherited
-
-	actual_parameters: ET_ACTUAL_PARAMETER_LIST
-			-- Actual generic parameters of `parent';
-			-- Void if the parent class is not generic
-			-- or if the actual parameters are not
-			-- different from their corresponding formal
-			-- parameters
-
-	first_seed: INTEGER is
-			-- First seed
+	type: ET_TYPE is
+			-- Return type;
+			-- Void for procedures
 		do
-			Result := inherited_feature.first_seed
-		ensure
-			first_seed_positive: Result > 0
-			first_seed_definition: seeds /= Void implies Result = seeds.first
+			Result := flattened_feature.type
 		end
 
-	seeds: ET_FEATURE_IDS is
-			-- Seeds (feature IDs of first declarations
-			-- of `inherited_feature'); May be Void if there
-			-- is only one seed (which is then accessible
-			-- through `first_seed')
+	arguments: ET_FORMAL_ARGUMENT_LIST is
+			-- Formal arguments;
+			-- Void if not a routine or a routine with no arguments
 		do
-			Result := inherited_feature.seeds
-		end
-
-	id: INTEGER is
-			-- Feature ID
-		do
-			Result := inherited_feature.id
-		ensure
-			id_positive: Result > 0
+			Result := flattened_feature.arguments
 		end
 
 	new_name: ET_RENAME
@@ -117,194 +99,73 @@ feature -- Access
 			-- Name listed in select clause
 			-- when feature is selected
 
-feature -- Conversion
-
-	adapted_feature (a_class: ET_CLASS): ET_FEATURE is
-			-- Inherited feature after feature adaptation
-			-- in class `a_class'
-		require
-			a_class_not_void: a_class /= Void
-		do
-			if is_undefined then
-				Result := inherited_feature.undefined_feature (name)
-			else
-				Result := inherited_feature.renamed_feature (name)
-			end
-			a_class.universe.register_feature (Result)
-			Result.set_current_class (a_class)
-			Result.set_version (Result.id)
-			if actual_parameters /= Void then
-				Result.resolve_formal_parameters (actual_parameters)
-			end
-		ensure
-			adapted_feature_not_void: Result /= Void
-			adapted_feature_registered: Result.is_registered
-			version_set: Result.version = Result.id
-		end
-
-feature -- Status report
-
-	is_renamed: BOOLEAN is
-			-- Is feature being renamed?
-		do
-			Result := new_name /= Void
-		ensure
-			definition: Result = (new_name /= Void)
-		end
-
-	is_redefined: BOOLEAN is
-			-- Is feature being redefined?
-		do
-			Result := redefine_name /= Void
-		ensure
-			definition: Result = (redefine_name /= Void)
-		end
-
-	is_undefined: BOOLEAN is
-			-- Is feature being undefined?
-		do
-			Result := undefine_name /= Void
-		ensure
-			definition: Result = (undefine_name /= Void)
-		end
-
-	is_selected: BOOLEAN is
-			-- Has feature been selected?
-		do
-			Result := select_name /= Void
-		ensure
-			definition: Result = (select_name /= Void)
-		end
-
-	is_deferred: BOOLEAN is
-			-- Is feature inherited as deferred?
-		do
-			Result := inherited_feature.is_deferred or is_undefined
-		ensure
-			definition: Result = (inherited_feature.is_deferred or is_undefined)
-		end
-
-	has_seed (a_seed: INTEGER): BOOLEAN is
-			-- Does inherited feature have `a_seed'?
-		do
-			if first_seed = a_seed then
-				Result := True
-			elseif seeds /= Void then
-				Result := seeds.has (a_seed)
-			end
-		ensure
-			definition: Result = (first_seed = a_seed or
-				(seeds /= Void and then seeds.has (a_seed)))
-		end
-
-feature -- Exports
-
-	add_clients_to (a_clients_list: DS_ARRAYED_LIST [ET_CLASS_NAME_LIST]) is
-			-- Add client clauses relevant to current feature to
-			-- `a_clients_list'. Try to avoid adding client clauses
-			-- when overridden by other client clauses in the list.
-		require
-			a_clients_list_not_void: a_clients_list /= Void
-			no_void_clients: not a_clients_list.has (Void)
+	selected_feature: ET_FEATURE is
+			-- Either current feature or one of its merged or
+			-- joined features that appears in a Select clause?
 		local
-			nb: INTEGER
+			a_feature: ET_FEATURE
 		do
-			nb := a_clients_list.count
-			parent.add_clients_to (name, a_clients_list)
-			if a_clients_list.count = nb then
-				a_clients_list.force_last (inherited_feature.clients)
+			from
+				a_feature := Current
+			until
+				a_feature = Void
+			loop
+				if a_feature.has_select then
+					Result := a_feature
+					a_feature := Void -- Jump out of the loop.
+				else
+					a_feature := a_feature.merged_feature
+				end
 			end
-		ensure
-			not_empty: not a_clients_list.is_empty
 		end
 
-feature -- Comparison
+	precursor_feature: ET_FEATURE
+			-- Feature inherited from `parent'
 
-	same_version (other: ET_INHERITED_FEATURE): BOOLEAN is
-			-- Do current feature and `other'
-			-- have the same version?
-		require
-			other_not_void: other /= Void
+	inherited_feature: ET_INHERITED_FEATURE is
+			-- Current feature viewed as an inherited feature
 		do
-			Result := inherited_feature.same_version (other.inherited_feature)
-		ensure
-			definition: Result = inherited_feature.same_version (other.inherited_feature)
+			Result := Current
+		ensure then
+			definition: Result = Current
 		end
 
-feature -- Validity
+	merged_feature: ET_FEATURE
+			-- Inherited feature being merged or joined
+			-- with current inherited feature
 
-	check_rename_clause (a_class: ET_CLASS): BOOLEAN is
-			-- Check validity of rename clause.
-			-- Report errors if not valid.
-		require
-			a_class_not_void: a_class /= Void
+	seeded_feature (a_seed: INTEGER): ET_FEATURE is
+			-- Either current feature or one of its merged or joined
+			-- features whose precursor feature has `a_seed' as seed
 		local
-			a_name: ET_FEATURE_NAME
+			a_feature: ET_FEATURE
 		do
-			Result := True
-			if is_renamed then
-				a_name := new_name.new_name
-				if a_name.is_infix then
-					if not inherited_feature.is_infixable then
-						Result := False
-						a_class.error_handler.report_vhrc5_error (a_class, parent, new_name, inherited_feature)
-					end
-				elseif a_name.is_prefix then
-					if not inherited_feature.is_prefixable then
-						Result := False
-						a_class.error_handler.report_vhrc4_error (a_class, parent, new_name, inherited_feature)
-					end
+			from
+				a_feature := Current
+			until
+				Result /= Void
+			loop
+				if a_feature.precursor_feature.has_seed (a_seed) then
+					Result := a_feature
+				else
+					a_feature := a_feature.merged_feature
 				end
 			end
 		end
 
-	check_undefine_clause (a_class: ET_CLASS): BOOLEAN is
-			-- Check validity of undefine clause.
-			-- Report errors if not valid.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			Result := True
-			if is_undefined then
-				if inherited_feature.is_deferred then
-						-- This is not a fatal error for gelint.
-					a_class.error_handler.report_vdus3_error (a_class, parent, undefine_name)
-				end
-				if inherited_feature.is_frozen then
-					Result := False
-					a_class.error_handler.report_vdus2a_error (a_class, parent, undefine_name)
-				end
-				if
-					inherited_feature.is_attribute or
-					inherited_feature.is_unique_attribute or
-					inherited_feature.is_constant_attribute
-				then
-					Result := False
-					a_class.error_handler.report_vdus2b_error (a_class, parent, undefine_name)
-				end
-			end
-		end
+	flattened_feature: ET_FEATURE
+			-- Feature resulting from feature adaptation
 
-	check_redefine_clause (a_class: ET_CLASS): BOOLEAN is
-			-- Check validity of redefine clause.
-			-- Report errors if not valid.
-		require
-			a_class_not_void: a_class /= Void
+	inherited_flattened_feature: ET_FEATURE
+			-- Inherited feature from which `flattened_feature' is resulting
+
+	replicated_seeds: ET_FEATURE_IDS
+			-- Seeds involved when current feature has been replicated
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
 		do
-			Result := True
-			if is_redefined then
-				if inherited_feature.is_frozen then
-					Result := False
-					a_class.error_handler.report_vdrs2a_error (a_class, parent, redefine_name)
-				end
-				if
-					inherited_feature.is_unique_attribute or
-					inherited_feature.is_constant_attribute
-				then
-					Result := False
-					a_class.error_handler.report_vdrs2b_error (a_class, parent, redefine_name)
-				end
-			end
+			Result := precursor_feature.break
 		end
 
 feature -- Setting
@@ -341,10 +202,209 @@ feature -- Setting
 			select_name_set: select_name = a_name
 		end
 
+	set_flattened_feature (a_feature: like flattened_feature) is
+			-- Set `flattened_feature' to `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			flattened_feature := a_feature
+		ensure
+			flattened_feature_set: flattened_feature = a_feature
+		end
+
+	set_inherited_flattened_feature (a_feature: like inherited_flattened_feature) is
+			-- Set `inherited_flattened_feature' to `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_inherited: a_feature.is_inherited
+			a_feature_not_redeclared: not a_feature.is_redeclared
+		do
+			inherited_flattened_feature := a_feature
+		ensure
+			inherited_flattened_feature_set: inherited_flattened_feature = a_feature
+		end
+
+feature -- Status report
+
+	is_inherited: BOOLEAN is True
+			-- Is current feature being inherited?
+
+	is_redeclared: BOOLEAN is False
+			-- Is current feature being redeclared?
+
+	is_deferred: BOOLEAN is
+			-- Is feature inherited as deferred?
+		do
+			Result := precursor_feature.is_deferred or has_undefine
+		ensure then
+			definition: Result = (precursor_feature.is_deferred or has_undefine)
+		end
+
+	is_selected: BOOLEAN
+			-- Has an inherited feature been selected
+			-- to solve a replication conflict?
+
+	is_feature_shared: BOOLEAN is False
+			-- Is current feature object shared with `parent'?
+			-- (If shared, then we need to duplicate this feature
+			-- before modifying it in current heir.)
+
+	is_other_seeds_shared: BOOLEAN is
+			-- Is `other_seeds' object shared with one of
+			-- the precursors? (If shared, then we need to
+			-- clone it before modifying it.)
+		do
+			Result := (other_seeds = precursor_feature.other_seeds)
+		end
+
+feature -- Status setting
+
+	set_replicated (a_seed: INTEGER) is
+			-- Set `is_replicated' to True.
+			-- `a_seed' is the seed which needs replication.
+		require
+			has_seed: has_seed (a_seed)
+		do
+			if replicated_seeds = Void then
+				create replicated_seeds.make (a_seed)
+			elseif not replicated_seeds.has (a_seed) then
+				replicated_seeds.put (a_seed)
+			end
+		ensure
+			is_replicated: is_replicated
+		end
+
+	set_selected is
+			-- Set `is_selected' to True.
+		do
+			is_selected := True
+		ensure
+			is_selected: is_selected
+		end
+
+feature -- Duplication
+
+	new_synonym (a_name: like name_item): like Current is
+			-- Synonym feature
+		do
+			create Result.make (flattened_feature.new_synonym (a_name), parent)
+		end
+
+feature -- Conversion
+
+	renamed_feature (a_name: like name): like Current is
+			-- Renamed version of current feature
+		do
+			create Result.make (flattened_feature.renamed_feature (a_name), parent)
+		end
+
+	undefined_feature (a_name: like name): ET_DEFERRED_ROUTINE is
+			-- Undefined version of current feature
+		do
+			Result := flattened_feature.undefined_feature (a_name)
+		end
+
+feature -- Type processing
+
+	resolve_inherited_signature (a_parent: ET_PARENT) is
+			-- Resolve arguments and type inherited from `a_parent'.
+			-- Resolve any formal generic parameters of declared types
+			-- with the corresponding actual parameters in `a_parent',
+			-- and duplicate identifier anchored types (and clear their
+			-- base types).
+		do
+			precursor_feature.resolve_inherited_signature (a_parent)
+		end
+
+feature -- Element change
+
+	put_inherited_feature (a_feature: ET_FEATURE) is
+			-- Add `a_feature' to the merged/joined features.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_inherited: a_feature.is_inherited
+			a_feature_not_redeclared: not a_feature.is_redeclared
+			a_feature_not_merged: a_feature.merged_feature = Void
+			same_name: a_feature.name.same_feature_name (name)
+		local
+			an_inherited_feature: ET_INHERITED_FEATURE
+			a_seeds: like other_seeds
+			a_seed: INTEGER
+			i, nb: INTEGER
+			need_twin: BOOLEAN
+		do
+			if merged_feature /= Void then
+				an_inherited_feature := a_feature.inherited_feature
+				an_inherited_feature.set_merged_feature (merged_feature)
+				merged_feature := an_inherited_feature
+			else
+				merged_feature := a_feature
+			end
+			need_twin := is_other_seeds_shared
+			a_seed := a_feature.first_seed
+			if not has_seed (a_seed) then
+				if other_seeds = Void then
+					create other_seeds.make (a_seed)
+					need_twin := False
+				else
+					if need_twin then
+						other_seeds := clone (other_seeds)
+						need_twin := False
+					end
+					other_seeds.put (a_seed)
+				end
+			end
+			a_seeds := a_feature.other_seeds
+			if a_seeds /= Void then
+				nb := a_seeds.count
+				from i := 1 until i > nb loop
+					a_seed := a_seeds.item (i)
+					if not has_seed (a_seed) then
+						if other_seeds = Void then
+							create other_seeds.make (a_seed)
+							need_twin := False
+						else
+							if need_twin then
+								other_seeds := clone (other_seeds)
+								need_twin := False
+							end
+							other_seeds.put (a_seed)
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
+
+feature {ET_INHERITED_FEATURE} -- Setting
+
+	set_merged_feature (a_feature: like merged_feature) is
+			-- Set `merged_feature' to `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_inherited: a_feature.is_inherited
+			a_feature_not_redeclared: not a_feature.is_redeclared
+		do
+			merged_feature := a_feature
+		ensure
+			merged_feature_set: merged_feature = a_feature
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			flattened_feature.process (a_processor)
+		end
+
 invariant
 
-	inherited_feature_not_void: inherited_feature /= Void
-	parent_not_void: parent /= Void
-	signature_not_void: signature /= Void
+	is_inherited: is_inherited
+	not_redeclared: not is_redeclared
+	not_feature_shared: not is_feature_shared
+	inherited_flattened_feature_not_void: inherited_flattened_feature /= Void
+	inherited_flattened_feature_inherited: inherited_flattened_feature.is_inherited
+	inherited_flattened_feature_not_redeclared: not inherited_flattened_feature.is_redeclared
 
 end

@@ -5,7 +5,7 @@ indexing
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,6 +40,23 @@ feature -- Status report
 			is_hact := True
 			is_se := True
 			is_gelint := True
+		end
+
+feature -- Compilation report
+
+	report_compilation_status (a_processor: ET_CLASS_PROCESSOR) is
+			-- Report that `a_processor' is currently
+			-- processing a class.
+		require
+			a_processor_not_void: a_processor /= Void
+		do
+--			if is_verbose then
+--				print ("Degree ")
+--				print (a_processor.degree)
+--				print (" class ")
+--				print (a_processor.current_class.name.name)
+--				print ("%N")
+--			end
 		end
 
 feature -- Syntax errors
@@ -220,7 +237,8 @@ feature -- Syntax errors
 		require
 			p_not_void: p /= Void
 		do
-			report_syntax_error (p)
+--Disabled for AXA.
+--			report_syntax_error (p)
 		end
 
 	report_SSSC_error (p: ET_POSITION) is
@@ -234,7 +252,7 @@ feature -- Syntax errors
 
 feature -- Validity errors
 
-	report_gagp_error (where: ET_CLASS; anc1, anc2: ET_CLASS_TYPE) is
+	report_gagp_error (where: ET_CLASS; anc1, anc2: ET_BASE_TYPE) is
 			-- Report GAGP error (Ancestor Generic Parameter mismatch):
 			-- `anc1' and `anc2' are two ancestors of `where' with
 			-- different generic parameters.
@@ -244,7 +262,7 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			anc1_not_void: anc1 /= Void
 			anc2_not_void: anc2 /= Void
-			same_base: anc1.base_class = anc2.base_class
+			-- same_base: anc1.direct_base_class (universe) = anc2.direct_base_class (universe)
 		do
 			if reportable_gagp_error (where) then
 				print ("[GAGP] Class ")
@@ -313,32 +331,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vcfg3_error (where: ET_CLASS; a_type: ET_TYPE) is
-			-- Report VCFG-3 error (ETR p.16): invalid
-			-- type `a_type' in constraint of formal
-			-- generic parameter of class `where'.
-		require
-			where_not_void: where /= Void
-			where_parsed: where.is_parsed
-			no_syntax_error: not where.has_syntax_error
-			a_type_not_void: a_type /= Void
-		do
-			if reportable_vcfg3_error (where) then
-				print_compiler (is_ise, No_tag, is_hact, No_tag,
-					is_se, Bang_tag, False, No_tag)
-				print ("[VCFG-3] Class ")
-				print (where.name.name)
-				print (" (")
-				print (a_type.position.line)
-				print (",")
-				print (a_type.position.column)
-				print ("): invalid type '")
-				print (a_type.to_text)
-				print ("' in constraint of formal generic parameter.%N")
-			end
-		end
-
-	report_vcfg3_bit_name_error (where: ET_CLASS; a_type: ET_TYPE) is
+	report_vcfg3_bit_name_error (where: ET_CLASS; a_type: ET_BIT_FEATURE) is
 			-- Report VCFG-3 error (ETR p.16): invalid
 			-- type `a_type' in constraint of formal
 			-- generic parameter of class `where'.
@@ -385,6 +378,31 @@ feature -- Validity errors
 					print (a_type.to_text)
 					print ("' in constraint of formal generic parameter.%N")
 				end
+			end
+		end
+
+	report_vcfg3_like_error (where: ET_CLASS; a_type: ET_LIKE_TYPE) is
+			-- Report VCFG-3 error (ETR p.16): invalid
+			-- type `a_type' in constraint of formal
+			-- generic parameter of class `where'.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_type_not_void: a_type /= Void
+		do
+			if reportable_vcfg3_error (where) then
+				print_compiler (is_ise, No_tag, is_hact, No_tag,
+					is_se, Bang_tag, False, No_tag)
+				print ("[VCFG-3] Class ")
+				print (where.name.name)
+				print (" (")
+				print (a_type.position.line)
+				print (",")
+				print (a_type.position.column)
+				print ("): invalid type '")
+				print (a_type.to_text)
+				print ("' in constraint of formal generic parameter.%N")
 			end
 		end
 
@@ -634,8 +652,266 @@ feature -- Validity errors
 			end
 		end
 
-	report_vdrd4a_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE;
-		a_redefined_feature: ET_FEATURE) is
+	report_vdjr0a_error (where: ET_CLASS; a_joined_feature, an_inherited_feature: ET_INHERITED_FEATURE) is
+			-- Report VDJR error (ETL2 p.165): Features `a_joined_feature'
+			-- and `an_inherited_feature' don't have the same number of
+			-- arguments when joining these two deferred features in class
+			-- `where'.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_joined_feature_not_void: a_joined_feature /= Void
+			an_inherited_feature_not_void: an_inherited_feature /= Void
+		local
+			a_name: ET_FEATURE_NAME
+		do
+			if reportable_vdjr_error (where) then
+-- TODO: check compilers
+--				print_compiler (is_ise, No_tag, is_hact, No_tag,
+--					is_se, No_tag, False, No_tag)
+				print ("[VDJR] Class ")
+				print (where.name.name)
+				print (": Joined deferred features `")
+				a_name := a_joined_feature.name
+				print (a_name.name)
+				print ("' inherited from ")
+				-- print (a_joined_feature.parent.type.eiffel_class.name.name)
+				print (a_joined_feature.parent.type.to_text)
+				print (" and ")
+				-- print (an_inherited_feature.parent.type.eiffel_class.name.name)
+				print (an_inherited_feature.parent.type.to_text)
+				print (" don't have the same signature. Different number of arguments.%N")
+			end
+		end
+
+	report_vdjr0b_error (where: ET_CLASS; a_joined_feature, an_inherited_feature: ET_INHERITED_FEATURE; arg: INTEGER) is
+			-- Report VDJR error (ETL2 p.165): the type of the `arg'-th
+			-- argument is not identical in `a_joined_feature' and
+			-- `an_inherited_feature' when joining these two deferred
+			-- features in class `where'.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_joined_feature_not_void: a_joined_feature /= Void
+			an_inherited_feature_not_void: an_inherited_feature /= Void
+		local
+			a_name: ET_FEATURE_NAME
+		do
+			if reportable_vdjr_error (where) then
+-- TODO: check compilers
+--				print_compiler (is_ise, No_tag, is_hact, No_tag,
+--					is_se, No_tag, False, No_tag)
+				print ("[VDJR] Class ")
+				print (where.name.name)
+				print (": Joined deferred features `")
+				a_name := a_joined_feature.name
+				print (a_name.name)
+				print ("' inherited from ")
+				-- print (a_joined_feature.parent.type.eiffel_class.name.name)
+				print (a_joined_feature.parent.type.to_text)
+				print (" and ")
+				-- print (an_inherited_feature.parent.type.eiffel_class.name.name)
+				print (an_inherited_feature.parent.type.to_text)
+				print (" don't have the same signature. Type of argument number ")
+				print (arg)
+				print (" differs.%N")
+			end
+		end
+
+	report_vdjr0c_error (where: ET_CLASS; a_joined_feature, an_inherited_feature: ET_INHERITED_FEATURE) is
+			-- Report VDJR error (ETL2 p.165): the type of the result
+			-- is not identical in `a_joined_feature' and `an_inherited_feature'
+			-- when joining these two deferred features in class `where'.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_joined_feature_not_void: a_joined_feature /= Void
+			an_inherited_feature_not_void: an_inherited_feature /= Void
+		local
+			a_name: ET_FEATURE_NAME
+		do
+			if reportable_vdjr_error (where) then
+-- TODO: check compilers
+--				print_compiler (is_ise, No_tag, is_hact, No_tag,
+--					is_se, No_tag, False, No_tag)
+				print ("[VDJR] Class ")
+				print (where.name.name)
+				print (": Joined deferred features `")
+				a_name := a_joined_feature.name
+				print (a_name.name)
+				print ("' inherited from ")
+				-- print (a_joined_feature.parent.type.eiffel_class.name.name)
+				print (a_joined_feature.parent.type.to_text)
+				print (" and ")
+				-- print (an_inherited_feature.parent.type.eiffel_class.name.name)
+				print (an_inherited_feature.parent.type.to_text)
+				print (" don't have the same signature. Type of result differs.%N")
+			end
+		end
+
+	report_vdrd2a_error (where: ET_CLASS; a_feature: ET_FEATURE;
+		an_inherited_feature: ET_INHERITED_FEATURE; a_universe: ET_UNIVERSE) is
+			-- Report VDRD-2 error (ETL2 p.163, ETR p.39): the feature
+			-- `an_inherited_feature' is redeclared as `a_feature'
+			-- in class `where', but the signature of `a_feature'
+			-- in class `where' does not conform to the signature of
+			-- `an_inherited_feature' in its parent class.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_feature_not_void: a_feature /= Void
+			an_inherited_feature_not_void: an_inherited_feature /= Void
+		local
+			a_name: ET_FEATURE_NAME
+			args: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+			a_type: ET_TYPE
+		do
+			if reportable_vdrd2_error (where) then
+				print ("[VDRD-2] Class ")
+				print (where.name.name)
+				print (" (")
+				a_name := a_feature.name
+				print (a_name.position.line)
+				print (",")
+				print (a_name.position.column)
+				print ("): signature of feature `")
+				print (a_name.name)
+				print ("' does not conform to the signature of redeclared feature `")
+				print (an_inherited_feature.precursor_feature.name.name)
+				print ("' in parent ")
+				print (an_inherited_feature.parent.type.to_text)
+				print (".%N")
+
+if a_universe /= Void then
+				print ("%T[")
+				args := a_feature.arguments
+				if args /= Void then
+					nb := args.count
+					from i := 1 until i > nb loop
+						a_type := args.formal_argument (i).type
+						print (a_type.base_type (where, a_universe).to_text)
+						if i /= nb then
+							print (", ")
+						end
+						i := i + 1
+					end
+				end
+				print ("], [")
+				a_type := a_feature.type
+				if a_type /= Void then
+					print (a_type.base_type (where, a_universe).to_text)
+				end
+				print ("]%N")
+
+				print ("%T[")
+				args := an_inherited_feature.arguments
+				if args /= Void then
+					nb := args.count
+					from i := 1 until i > nb loop
+						a_type := args.formal_argument (i).type
+						print (a_type.base_type (an_inherited_feature.parent.type, a_universe).to_text)
+						if i /= nb then
+							print (", ")
+						end
+						i := i + 1
+					end
+				end
+				print ("], [")
+				a_type := an_inherited_feature.type
+				if a_type /= Void then
+					print (a_type.base_type (an_inherited_feature.parent.type, a_universe).to_text)
+				end
+				print ("]%N")
+end
+			end
+		end
+
+	report_vdrd2b_error (where: ET_CLASS; a_feature, an_inherited_feature: ET_INHERITED_FEATURE; a_universe: ET_UNIVERSE) is
+			-- Report VDRD-2 error (ETL2 p.163, ETR p.39): the feature
+			-- `an_inherited_feature' is redeclared by being merged to
+			-- `a_feature' in class `where', but the signature of
+			-- `a_feature' in class `where' does not conform to the
+			-- signature of `an_inherited_feature' in its parent class.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_feature_not_void: a_feature /= Void
+			an_inherited_feature_not_void: an_inherited_feature /= Void
+		local
+			a_parent: ET_PARENT
+			args: ET_FORMAL_ARGUMENT_LIST
+			i, nb: INTEGER
+			a_type: ET_TYPE
+		do
+			if reportable_vdrd2_error (where) then
+				print ("[VDRD-2] Class ")
+				print (where.name.name)
+				print (" (")
+				a_parent := a_feature.parent
+				print (a_parent.position.line)
+				print (",")
+				print (a_parent.position.column)
+				print ("): signature of feature `")
+				print (a_feature.name.name)
+				print ("' inherited from ")
+				print (a_parent.type.to_text)
+				print (" does not conform to the signature of redeclared feature `")
+				print (an_inherited_feature.precursor_feature.name.name)
+				print ("' in parent ")
+				print (an_inherited_feature.parent.type.to_text)
+				print (".%N")
+
+if a_universe /= Void then
+				print ("%T[")
+				args := a_feature.flattened_feature.arguments
+				if args /= Void then
+					nb := args.count
+					from i := 1 until i > nb loop
+						a_type := args.formal_argument (i).type
+						print (a_type.base_type (where, a_universe).to_text)
+						if i /= nb then
+							print (", ")
+						end
+						i := i + 1
+					end
+				end
+				print ("], [")
+				a_type := a_feature.flattened_feature.type
+				if a_type /= Void then
+					print (a_type.base_type (where, a_universe).to_text)
+				end
+				print ("]%N")
+
+				print ("%T[")
+				args := an_inherited_feature.arguments
+				if args /= Void then
+					nb := args.count
+					from i := 1 until i > nb loop
+						a_type := args.formal_argument (i).type
+						print (a_type.base_type (an_inherited_feature.parent.type, a_universe).to_text)
+						if i /= nb then
+							print (", ")
+						end
+						i := i + 1
+					end
+				end
+				print ("], [")
+				a_type := an_inherited_feature.type
+				if a_type /= Void then
+					print (a_type.base_type (an_inherited_feature.parent.type, a_universe).to_text)
+				end
+				print ("]%N")
+			end
+end
+		end
+
+	report_vdrd4a_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE; a_redefined_feature: ET_FEATURE) is
 			-- Report VDRD-4 error (ETL2 p.163, ETR p.39): the
 			-- deferred feature `an_inherited_feature' is redefined
 			-- into the deferred feature `a_redefined_feature' in
@@ -647,7 +923,7 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			an_inherited_feature_not_void: an_inherited_feature /= Void
 			an_inherited_feature_deferred: an_inherited_feature.is_deferred
-			an_inherited_feature_not_redefined: not an_inherited_feature.is_redefined
+			an_inherited_feature_not_redefined: not an_inherited_feature.has_redefine
 			a_redefined_feature_not_void: a_redefined_feature /= Void
 			a_redefined_feature_deferred: a_redefined_feature.is_deferred
 		local
@@ -663,16 +939,15 @@ feature -- Validity errors
 					print (",")
 					print (a_name.position.column)
 					print ("): deferred feature ")
-					print (an_inherited_feature.parent.type.class_name.name)
+					print (an_inherited_feature.parent.type.name.name)
 					print (".")
-					print (an_inherited_feature.inherited_feature.name.name)
+					print (an_inherited_feature.precursor_feature.name.name)
 					print (" is redefined but is not listed in the Redefine subclause.%N")
 				end
 			end
 		end
 
-	report_vdrd4b_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE;
-		a_redefined_feature: ET_FEATURE) is
+	report_vdrd4b_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE; a_redefined_feature: ET_FEATURE) is
 			-- Report VDRD-4 error (ETL2 p.163, ETR p.39): the
 			-- effective feature `an_inherited_feature' is redefined
 			-- into the effective feature `a_redefined_feature' in
@@ -684,7 +959,7 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			an_inherited_feature_not_void: an_inherited_feature /= Void
 			an_inherited_feature_effective: not an_inherited_feature.is_deferred
-			an_inherited_feature_not_redefined: not an_inherited_feature.is_redefined
+			an_inherited_feature_not_redefined: not an_inherited_feature.has_redefine
 			a_redefined_feature_not_void: a_redefined_feature /= Void
 			a_redefined_feature_effective: not a_redefined_feature.is_deferred
 		local
@@ -702,16 +977,15 @@ feature -- Validity errors
 					print (",")
 					print (a_name.position.column)
 					print ("): effective feature ")
-					print (an_inherited_feature.parent.type.class_name.name)
+					print (an_inherited_feature.parent.type.name.name)
 					print (".")
-					print (an_inherited_feature.inherited_feature.name.name)
+					print (an_inherited_feature.precursor_feature.name.name)
 					print (" is redefined but is not listed in the Redefine subclause.%N")
 				end
 			end
 		end
 
-	report_vdrd4c_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE;
-		a_redefined_feature: ET_FEATURE) is
+	report_vdrd4c_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE; a_redefined_feature: ET_FEATURE) is
 			-- Report VDRD-4 error (ETL2 p.163, ETR p.39): the
 			-- effective feature `an_inherited_feature' is redefined
 			-- into the deferred feature `a_redefined_feature' in
@@ -723,7 +997,7 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			an_inherited_feature_not_void: an_inherited_feature /= Void
 			an_inherited_feature_effective: not an_inherited_feature.is_deferred
-			an_inherited_feature_not_redefined: not an_inherited_feature.is_redefined
+			an_inherited_feature_not_redefined: not an_inherited_feature.has_redefine
 			a_redefined_feature_not_void: a_redefined_feature /= Void
 			a_redefined_feature_deferred: a_redefined_feature.is_deferred
 		local
@@ -741,16 +1015,15 @@ feature -- Validity errors
 					print (",")
 					print (a_name.position.column)
 					print ("): effective feature ")
-					print (an_inherited_feature.parent.type.class_name.name)
+					print (an_inherited_feature.parent.type.name.name)
 					print (".")
-					print (an_inherited_feature.inherited_feature.name.name)
+					print (an_inherited_feature.precursor_feature.name.name)
 					print (" is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses.%N")
 				end
 			end
 		end
 
-	report_vdrd5_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE;
-		a_redefined_feature: ET_FEATURE) is
+	report_vdrd5_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE; a_redefined_feature: ET_FEATURE) is
 			-- Report VDRD-5 error (ETL2 p.163, ETR p.39): the
 			-- effective feature `an_inherited_feature' is
 			-- redefined into the deferred feature
@@ -761,7 +1034,7 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			an_inherited_feature_not_void: an_inherited_feature /= Void
 			an_inherited_feature_effective: not an_inherited_feature.is_deferred
-			an_inherited_feature_redefined: an_inherited_feature.is_redefined
+			an_inherited_feature_redefined: an_inherited_feature.has_redefine
 			a_redefined_feature_not_void: a_redefined_feature /= Void
 			a_redefined_feature_deferred: a_redefined_feature.is_deferred
 		local
@@ -779,9 +1052,9 @@ feature -- Validity errors
 					print (",")
 					print (a_name.position.column)
 					print ("): effective feature ")
-					print (an_inherited_feature.parent.type.class_name.name)
+					print (an_inherited_feature.parent.type.name.name)
 					print (".")
-					print (an_inherited_feature.inherited_feature.name.name)
+					print (an_inherited_feature.precursor_feature.name.name)
 					print (" is redefined into a deferred one.%N")
 				end
 			end
@@ -811,7 +1084,7 @@ feature -- Validity errors
 				print ("): `")
 				print (f.name)
 				print ("' is not the final name of a feature in ")
-				print (a_parent.type.class_name.name)
+				print (a_parent.type.name.name)
 				print (".%N")
 			end
 		end
@@ -894,7 +1167,7 @@ feature -- Validity errors
 				print ("): feature name `")
 				print (f2.name)
 				print ("' appears twice in the Redefine subclause of parent ")
-				print (a_parent.type.class_name.name)
+				print (a_parent.type.name.name)
 				print (".%N")
 			end
 		end
@@ -909,7 +1182,7 @@ feature -- Validity errors
 			where_parsed: where.is_parsed
 			no_syntax_error: not where.has_syntax_error
 			an_inherited_feature_not_void: an_inherited_feature /= Void
-			an_inherited_feature_redefined: an_inherited_feature.is_redefined
+			an_inherited_feature_redefined: an_inherited_feature.has_redefine
 		local
 			a_name: ET_FEATURE_NAME
 		do
@@ -924,15 +1197,14 @@ feature -- Validity errors
 				print (",")
 				print (a_name.position.column)
 				print ("): Redefine subclause of ")
-				print (an_inherited_feature.parent.type.class_name.name)
+				print (an_inherited_feature.parent.type.name.name)
 				print (" lists feature `")
-				print (an_inherited_feature.inherited_feature.name.name)
+				print (an_inherited_feature.precursor_feature.name.name)
 				print ("' but it is not redefined.%N")
 			end
 		end
 
-	report_vdrs4b_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE;
-		a_redefined_feature: ET_FEATURE) is
+	report_vdrs4b_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE; a_redefined_feature: ET_FEATURE) is
 			-- Report VDRS-4 error (ETL2 p.159, ETR p.37): the
 			-- deferred feature `an_inherited_feature' should not
 			-- be listed in the Redefine subclause when being
@@ -943,7 +1215,7 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			an_inherited_feature_not_void: an_inherited_feature /= Void
 			an_inherited_feature_deferred: an_inherited_feature.is_deferred
-			an_inherited_feature_redefined: an_inherited_feature.is_redefined
+			an_inherited_feature_redefined: an_inherited_feature.has_redefine
 			a_redefined_feature_not_void: a_redefined_feature /= Void
 			a_redefined_feature_effective: not a_redefined_feature.is_deferred
 		local
@@ -959,9 +1231,9 @@ feature -- Validity errors
 					print (",")
 					print (a_name.position.column)
 					print ("): redeclaration of feature ")
-					print (an_inherited_feature.parent.type.class_name.name)
+					print (an_inherited_feature.parent.type.name.name)
 					print (".")
-					print (an_inherited_feature.inherited_feature.name.name)
+					print (an_inherited_feature.precursor_feature.name.name)
 					print (" is an effecting and should not appear in the Redefine subclause.%N")
 				end
 			end
@@ -991,7 +1263,7 @@ feature -- Validity errors
 				print ("): `")
 				print (f.name)
 				print ("' is not the final name of a feature in ")
-				print (a_parent.type.class_name.name)
+				print (a_parent.type.name.name)
 				print (".%N")
 			end
 		end
@@ -1103,7 +1375,7 @@ feature -- Validity errors
 				print ("): feature name `")
 				print (f2.name)
 				print ("' appears twice in the Undefine subclause of parent ")
-				print (a_parent.type.class_name.name)
+				print (a_parent.type.name.name)
 				print (".%N")
 			end
 		end
@@ -1140,31 +1412,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhpr3_error (where: ET_CLASS; a_type: ET_TYPE) is
-			-- Report VHPR-3 error: invalid type `a_type'
-			-- in parent clause of class `where'.
-		require
-			where_not_void: where /= Void
-			where_parsed: where.is_parsed
-			no_syntax_error: not where.has_syntax_error
-			a_type_not_void: a_type /= Void
-		do
-			if reportable_vhpr3_error (where) then
-				print_compiler (is_ise, No_tag, is_hact, No_tag,
-					is_se, Bang_tag, False, No_tag)
-				print ("[VHPR-3] Class ")
-				print (where.name.name)
-				print (" (")
-				print (a_type.position.line)
-				print (",")
-				print (a_type.position.column)
-				print ("): invalid type '")
-				print (a_type.to_text)
-				print ("' in parent clause.%N")
-			end
-		end
-
-	report_vhpr3_bit_name_error (where: ET_CLASS; a_type: ET_TYPE) is
+	report_vhpr3_bit_name_error (where: ET_CLASS; a_type: ET_BIT_FEATURE) is
 			-- Report VHPR-3 error: invalid type `a_type'
 			-- in parent clause of class `where'.
 		require
@@ -1212,8 +1460,31 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhrc1_error (where: ET_CLASS; a_parent: ET_PARENT;
-		a_rename: ET_RENAME) is
+	report_vhpr3_like_error (where: ET_CLASS; a_type: ET_LIKE_TYPE) is
+			-- Report VHPR-3 error: invalid type `a_type'
+			-- in parent clause of class `where'.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_type_not_void: a_type /= Void
+		do
+			if reportable_vhpr3_error (where) then
+				print_compiler (is_ise, No_tag, is_hact, No_tag,
+					is_se, Bang_tag, False, No_tag)
+				print ("[VHPR-3] Class ")
+				print (where.name.name)
+				print (" (")
+				print (a_type.position.line)
+				print (",")
+				print (a_type.position.column)
+				print ("): invalid type '")
+				print (a_type.to_text)
+				print ("' in parent clause.%N")
+			end
+		end
+
+	report_vhrc1_error (where: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME) is
 			-- Report VHRC-1 error (ETL2 p.81, ETR p.23): the feature
 			-- name appearing as first element of the Rename_pair
 			-- `a_rename' in Parent clause `a_parent' in class `where'
@@ -1240,13 +1511,12 @@ feature -- Validity errors
 				print ("): `")
 				print (a_name.name)
 				print ("' is not the final name of a feature in ")
-				print (a_parent.type.class_name.name)
+				print (a_parent.type.name.name)
 				print (".%N")
 			end
 		end
 
-	report_vhrc2_error (where: ET_CLASS; a_parent: ET_PARENT;
-		a_rename1, a_rename2: ET_RENAME) is
+	report_vhrc2_error (where: ET_CLASS; a_parent: ET_PARENT; a_rename1, a_rename2: ET_RENAME) is
 			-- Report VHRC-2 error (ETL2 p.81, ETR p.23): a feature
 			-- name appears more than once (e.g. also in `a_rename1')
 			-- as first element of the Rename_pair `a_rename2' in
@@ -1277,8 +1547,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vhrc4_error (where: ET_CLASS; a_parent: ET_PARENT;
-		a_rename: ET_RENAME; f: ET_FEATURE) is
+	report_vhrc4_error (where: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
 			-- Report VHRC-4 error (ETR p.23): the Rename_pair
 			-- `a_rename' has a new_name of the Prefix form,
 			-- but the corresponding feature `f' is not an
@@ -1303,15 +1572,14 @@ feature -- Validity errors
 				print ("): `")
 				print (a_rename.new_name.name)
 				print ("' is of the Prefix form but ")
-				print (a_parent.type.class_name.name)
+				print (a_parent.type.name.name)
 				print (".")
 				print (f.name.name)
 				print (" is not an attribute nor a function with no argument.%N")
 			end
 		end
 
-	report_vhrc5_error (where: ET_CLASS; a_parent: ET_PARENT;
-		a_rename: ET_RENAME; f: ET_FEATURE) is
+	report_vhrc5_error (where: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
 			-- Report VHRC-5 error (ETR p.23): the Rename_pair
 			-- `a_rename' has a new_name of the Infix form,
 			-- but the corresponding feature `f' is not a
@@ -1336,7 +1604,7 @@ feature -- Validity errors
 				print ("): `")
 				print (a_rename.new_name.name)
 				print ("' is of the Infix form but ")
-				print (a_parent.type.class_name.name)
+				print (a_parent.type.name.name)
 				print (".")
 				print (f.name.name)
 				print (" is not a function with one argument.%N")
@@ -1372,8 +1640,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vmfnb_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE;
-		a_feature: ET_FEATURE) is
+	report_vmfnb_error (where: ET_CLASS; an_inherited_feature: ET_INHERITED_FEATURE; a_feature: ET_FEATURE) is
 			-- Report VMFN error (ETL2 p.188, ETR p.42): class `where'
 			-- introduces feature `a_feature' but `an_inherited_feature'
 			-- has the same name.
@@ -1383,7 +1650,7 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			an_inherited_feature_not_void: an_inherited_feature /= Void
 			an_inherited_feature_effective: not an_inherited_feature.is_deferred
-			an_inherited_feature_not_redefined: not an_inherited_feature.is_redefined
+			an_inherited_feature_not_redefined: not an_inherited_feature.has_redefine
 			a_feature_not_void: a_feature /= Void
 		local
 			a_name: ET_FEATURE_NAME
@@ -1402,9 +1669,9 @@ feature -- Validity errors
 					print ("): two features with the same name `")
 					print (a_name.name)
 					print ("' and ")
-					print (an_inherited_feature.parent.type.class_name.name)
+					print (an_inherited_feature.parent.type.name.name)
 					print (".")
-					print (an_inherited_feature.inherited_feature.name.name)
+					print (an_inherited_feature.precursor_feature.name.name)
 					print (".%N")
 				end
 			end
@@ -1420,10 +1687,10 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			f1_not_void: f1 /= Void
 			f1_effective: not f1.is_deferred
-			f1_not_redefined: not f1.is_redefined
+			f1_not_redefined: not f1.has_redefine
 			f2_not_void: f2 /= Void
 			f2_effective: not f2.is_deferred
-			f2_not_redefined: not f2.is_redefined
+			f2_not_redefined: not f2.has_redefine
 		local
 			a_parent: ET_PARENT
 		do
@@ -1438,13 +1705,13 @@ feature -- Validity errors
 				print (",")
 				print (a_parent.type.position.column)
 				print ("): two features with the same name ")
-				print (f1.parent.type.class_name.name)
+				print (f1.parent.type.name.name)
 				print (".")
-				print (f1.inherited_feature.name.name)
+				print (f1.precursor_feature.name.name)
 				print (" and ")
-				print (f2.parent.type.class_name.name)
+				print (f2.parent.type.name.name)
 				print (".")
-				print (f2.inherited_feature.name.name)
+				print (f2.precursor_feature.name.name)
 				print (".%N")
 			end
 		end
@@ -1472,15 +1739,15 @@ feature -- Validity errors
 				print (where.name.name)
 				print (" (")
 				a_feature := replicated_features.first
-				print (a_feature.parent.type.class_name.position.line)
+				print (a_feature.parent.type.name.position.line)
 				print (",")
-				print (a_feature.parent.type.class_name.position.column)
+				print (a_feature.parent.type.name.position.column)
 				print ("): replicated features ")
 				a_cursor := replicated_features.new_cursor
 				from
 					a_cursor.start
 					a_feature := a_cursor.item
-					print (a_feature.parent.type.class_name.name)
+					print (a_feature.parent.type.name.name)
 					print (".")
 					print (a_feature.name.name)
 					a_cursor.forth
@@ -1489,7 +1756,7 @@ feature -- Validity errors
 				loop
 					print (", ")
 					a_feature := a_cursor.item
-					print (a_feature.parent.type.class_name.name)
+					print (a_feature.parent.type.name.name)
 					print (".")
 					print (a_feature.name.name)
 					a_cursor.forth
@@ -1509,7 +1776,7 @@ feature -- Validity errors
 			no_syntax_error: not where.has_syntax_error
 			replicated_features_not_void: replicated_features /= Void
 			no_void_feature: not replicated_features.has (Void)
-			-- all_selected: forall f in replicated_features, f.is_selected
+			-- all_selected: forall f in replicated_features, f.has_select
 			replicated: replicated_features.count >= 2
 		local
 			a_cursor: DS_LIST_CURSOR [ET_INHERITED_FEATURE]
@@ -1530,7 +1797,7 @@ feature -- Validity errors
 				from
 					a_cursor.start
 					a_feature := a_cursor.item
-					print (a_feature.parent.type.class_name.name)
+					print (a_feature.parent.type.name.name)
 					print (".")
 					print (a_feature.name.name)
 					a_cursor.forth
@@ -1539,7 +1806,7 @@ feature -- Validity errors
 				loop
 					print (", ")
 					a_feature := a_cursor.item
-					print (a_feature.parent.type.class_name.name)
+					print (a_feature.parent.type.name.name)
 					print (".")
 					print (a_feature.name.name)
 					a_cursor.forth
@@ -1572,7 +1839,7 @@ feature -- Validity errors
 				print ("): `")
 				print (f.name)
 				print ("' is not the final name of a feature in ")
-				print (a_parent.type.class_name.name)
+				print (a_parent.type.name.name)
 				print (".%N")
 			end
 		end
@@ -1601,21 +1868,21 @@ feature -- Validity errors
 				print ("): feature name `")
 				print (f2.name)
 				print ("' appears twice in the Select subclause of parent ")
-				print (a_parent.type.class_name.name)
+				print (a_parent.type.name.name)
 				print (".%N")
 			end
 		end
 
-	report_vmss3_error (where: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
+	report_vmss3_error (where: ET_CLASS; a_feature: ET_INHERITED_FEATURE) is
 			-- Report VMSS-3 error (ETL2 p.192, ETR p.44): the
-			-- Select subclause of parent `a_parent' in class
-			-- `where' lists `f' which is not replicated.
+			-- Select subclause of a parent of class `where' lists
+			-- `a_feature' which is not replicated.
 		require
 			where_not_void: where /= Void
 			where_parsed: where.is_parsed
 			no_syntax_error: not where.has_syntax_error
-			a_parent_not_void: a_parent /= Void
-			f_not_void: f /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_selected: a_feature.has_select
 		do
 			if reportable_vmss3_error (where) then
 				if is_ise or is_hact or is_gelint then
@@ -1624,19 +1891,129 @@ feature -- Validity errors
 					print ("[VMSS-3] Class ")
 					print (where.name.name)
 					print (" (")
-					print (f.position.line)
+					print (a_feature.select_name.position.line)
 					print (",")
-					print (f.position.column)
+					print (a_feature.select_name.position.column)
 					print ("): `")
-					print (f.name)
+					print (a_feature.select_name.name)
 					print ("' is not a replicated feature.%N")
 				end
 			end
 		end
 
+	report_vtat0a_error (where: ET_CLASS; a_type: ET_LIKE_FEATURE) is
+			-- Report VTAT error (ETL2 p.214): the anchor in the
+			-- Anchored_type must be the final name of a query
+			-- in class `where'.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_type_not_void: a_type /= Void
+		do
+			if reportable_vtat_error (where) then
+--				print_compiler (is_ise, Question_tag, is_hact, Question_tag,
+--					is_se, No_tag, False, No_tag)
+				print ("[VTAT] Class ")
+				print (where.name.name)
+				print (" (")
+				print (a_type.position.line)
+				print (",")
+				print (a_type.position.column)
+				print ("): invalid type '")
+				print (a_type.to_text)
+				print ("': the anchor `")
+				print (a_type.name.name)
+				print ("' must be the final name of a query.%N")
+			end
+		end
+
+	report_vtat0b_error (where: ET_CLASS; a_feature: ET_FEATURE; a_type: ET_LIKE_FEATURE) is
+			-- Report VTAT error (ETL2 p.214): the anchor in the
+			-- Anchored_type must be the final name of a query
+			-- in class `where' or an argument of `a_feature'.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_feature_not_void: a_feature /= Void
+			a_type_not_void: a_type /= Void
+		do
+			if reportable_vtat_error (where) then
+--				print_compiler (is_ise, Question_tag, is_hact, Question_tag,
+--					is_se, No_tag, False, No_tag)
+				print ("[VTAT] Class ")
+				print (where.name.name)
+				print (" (")
+				print (a_type.position.line)
+				print (",")
+				print (a_type.position.column)
+				print ("): invalid type '")
+				print (a_type.to_text)
+				print ("': the anchor `")
+				print (a_type.name.name)
+				print ("' must be the final name of a query, or an argument of routine `")
+				print (a_feature.name.name)
+				print ("'.%N")
+			end
+		end
+
+	report_vtbt0a_error (where: ET_CLASS; a_type: ET_BIT_FEATURE) is
+			-- Report VTBT error (ETL2 p.210): the identifier
+			-- in Bit_type must be the final name of a constant
+			-- attribute of type INTEGER.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_type_not_void: a_type /= Void
+		do
+			if reportable_vtbt_error (where) then
+--				print_compiler (is_ise, Question_tag, is_hact, Question_tag,
+--					is_se, No_tag, False, No_tag)
+				print ("[VTBT] Class ")
+				print (where.name.name)
+				print (" (")
+				print (a_type.position.line)
+				print (",")
+				print (a_type.position.column)
+				print ("): invalid type '")
+				print (a_type.to_text)
+				print ("': `")
+				print (a_type.name.name) 
+				print ("' is not the final name of a constant attribute of type INTEGER.%N")
+			end
+		end
+
+	report_vtbt0b_error (where: ET_CLASS; a_type: ET_BIT_FEATURE) is
+			-- Report VTBT error (ETL2 p.210): the identifier
+			-- in Bit_type must be the final name of a feature.
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+			a_type_not_void: a_type /= Void
+		do
+			if reportable_vtbt_error (where) then
+--				print_compiler (is_ise, Question_tag, is_hact, Question_tag,
+--					is_se, No_tag, False, No_tag)
+				print ("[VTBT] Class ")
+				print (where.name.name)
+				print (" (")
+				print (a_type.position.line)
+				print (",")
+				print (a_type.position.column)
+				print ("): invalid type '")
+				print (a_type.to_text)
+				print ("': `")
+				print (a_type.name.name) 
+				print ("' is not the final name of a feature.%N")
+			end
+		end
+
 	report_vtbt_error (where: ET_CLASS; a_type: ET_BIT_TYPE) is
 			-- Report VTBT error (ETL2 p.210, ETR p.47): size
-			-- for Bit_type must be a positive integer constant
+			-- for Bit_type must be a positive integer constant.
 		require
 			where_not_void: where /= Void
 			where_parsed: where.is_parsed
@@ -1713,7 +2090,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtct_error (where: ET_CLASS; a_type: ET_CLASS_TYPE) is
+	report_vtct_error (where: ET_CLASS; a_type: ET_BASE_TYPE) is
 			-- Report VTCT error (ETL2 p.199, ETR p.45): `a_type'
 			-- based on unknown class in class `where'.
 		require
@@ -1730,7 +2107,7 @@ feature -- Validity errors
 				print ("[VTCT] Class ")
 				print (where.name.name)
 				print (" (")
-				a_name := a_type.class_name
+				a_name := a_type.name
 				print (a_name.position.line)
 				print (",")
 				print (a_name.position.column)
@@ -1740,7 +2117,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vtct_constraint_error (where: ET_CLASS; a_type: ET_NAMED_TYPE) is
+	report_vtct_constraint_error (where: ET_CLASS; a_type: ET_FORMAL_PARAMETER_TYPE) is
 			-- Report VTCT error (ETL2 p.199, ETR p.45): `a_type'
 			-- based on unknown class in class `where'.
 		require
@@ -1803,7 +2180,7 @@ feature -- Validity errors
 				print ("[VTUG-1] Class ")
 				print (where.name.name)
 				print (" (")
-				a_name := a_type.class_name
+				a_name := a_type.name
 				print (a_name.position.line)
 				print (",")
 				print (a_name.position.column)
@@ -1833,7 +2210,7 @@ feature -- Validity errors
 				print ("[VTUG-2] Class ")
 				print (where.name.name)
 				print (" (")
-				a_name := a_type.class_name
+				a_name := a_type.name
 				print (a_name.position.line)
 				print (",")
 				print (a_name.position.column)
@@ -1880,6 +2257,28 @@ feature -- Validity status report
 
 	reportable_vcfg3_error (where: ET_CLASS): BOOLEAN is
 			-- Can a VCFG-3 error be reported when it
+			-- appears in class `where'?
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+		do
+			Result := in_system (where.name.name)
+		end
+
+	reportable_vdjr_error (where: ET_CLASS): BOOLEAN is
+			-- Can a VDJR error be reported when it
+			-- appears in class `where'?
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+		do
+			Result := in_system (where.name.name)
+		end
+
+	reportable_vdrd2_error (where: ET_CLASS): BOOLEAN is
+			-- Can a VDRD-2 error be reported when it
 			-- appears in class `where'?
 		require
 			where_not_void: where /= Void
@@ -2111,6 +2510,17 @@ feature -- Validity status report
 
 	reportable_vmss3_error (where: ET_CLASS): BOOLEAN is
 			-- Can a VMSS-3 error be reported when it
+			-- appears in class `where'?
+		require
+			where_not_void: where /= Void
+			where_parsed: where.is_parsed
+			no_syntax_error: not where.has_syntax_error
+		do
+			Result := in_system (where.name.name)
+		end
+
+	reportable_vtat_error (where: ET_CLASS): BOOLEAN is
+			-- Can a VTAT error be reported when it
 			-- appears in class `where'?
 		require
 			where_not_void: where /= Void

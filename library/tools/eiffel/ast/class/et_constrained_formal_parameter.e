@@ -18,8 +18,8 @@ inherit
 		rename
 			make as make_unconstrained
 		redefine
-			constraint, creation_procedures,
-			add_to_system, break, process
+			constraint, creation_procedures, break, process,
+			constraint_base_type, set_constraint_base_type
 		end
 
 creation
@@ -55,6 +55,14 @@ feature -- Access
 	creation_procedures: ET_CONSTRAINT_CREATOR
 			-- Creation procedures expected in `constraint'
 
+	constraint_base_type: ET_BASE_TYPE
+			-- Base type of constraint;
+			-- Void means that there is no explicit constraint
+			-- (i.e. the implicit constraint is "ANY"), or there
+			-- is a cycle of the form "A [G -> H, H -> G]" in
+			-- the constraints (i.e. the base type is also considered
+			-- to be "ANY" in that case)
+
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
@@ -77,6 +85,12 @@ feature -- Setting
 			constraint_set: constraint = a_constraint
 		end
 
+	set_constraint_base_type (a_type: like constraint_base_type) is
+			-- Set `constraint_base_type' to `a_type'.
+		do
+			constraint_base_type := a_type
+		end
+
 	set_arrow_symbol (an_arrow: like arrow_symbol) is
 			-- Set `arrow_symbol' to `an_arrow'.
 		require
@@ -85,15 +99,6 @@ feature -- Setting
 			arrow_symbol := an_arrow
 		ensure
 			arrow_symbol_set: arrow_symbol = an_arrow
-		end
-
-feature -- System
-
-	add_to_system is
-			-- Recursively add to system classes that
-			-- appear in the constraints.
-		do
-			constraint.add_to_system
 		end
 
 feature -- Processing

@@ -28,10 +28,23 @@ feature -- Access
 			name_not_empty: Result.count > 0
 		end
 
+	seed: INTEGER
+			-- One of the seeds of feature in enclosing class
+
 	feature_name: ET_FEATURE_NAME is
 			-- Feature name
 		do
 			Result := Current
+		end
+
+feature -- Setting
+
+	set_seed (a_seed: INTEGER) is
+			-- Set `seed' to `a_seed'.
+		do
+			seed := a_seed
+		ensure
+			seed_set: seed = a_seed
 		end
 
 feature -- Status report

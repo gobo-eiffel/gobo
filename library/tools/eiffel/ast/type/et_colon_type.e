@@ -5,7 +5,7 @@ indexing
 		"Eiffel types preceded by a colon"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -58,49 +58,14 @@ feature -- Access
 
 feature -- Type processing
 
-	resolved_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): ET_COLON_TYPE is
-			-- Replace in current type the formal generic parameter
-			-- types by those of `actual_parameters' when the 
-			-- corresponding actual parameter is different from
-			-- the formal parameter. (Warning: this is a side-effect
-			-- function.)
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_COLON_TYPE is
+			-- Version of current type where the formal generic
+			-- parameter types have been replaced by their actual
+			-- counterparts in `a_parameters'
 		local
 			a_type: ET_TYPE
 		do
-			a_type := type.resolved_formal_parameters (actual_parameters)
-			if a_type /= type then
-				create Result.make (colon, a_type)
-			else
-				Result := Current
-			end
-		end
-
-	resolved_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENT_LIST; a_class: ET_CLASS): ET_COLON_TYPE is
-			-- Replace any 'like identifier' types that appear in the
-			-- implementation of `a_feature in class `a_class' by
-			-- the corresponding 'like feature' or 'like argument'.
-			-- Also resolve 'BIT identifier' types. Set
-			-- `a_class.has_flatten_error' to true if an error occurs.
-			-- (Warning: this is a side-effect function.)
-		local
-			a_type: ET_TYPE
-		do
-			a_type := type.resolved_identifier_types (a_feature, args, a_class)
-			if a_type /= type then
-				create Result.make (colon, a_type)
-			else
-				Result := Current
-			end
-		end
-
-feature -- Duplication
-
-	deep_cloned_type: like Current is
-			-- Recursively cloned type
-		local
-			a_type: ET_TYPE
-		do
-			a_type := type.deep_cloned_type
+			a_type := type.resolved_formal_parameters (a_parameters)
 			if a_type /= type then
 				create Result.make (colon, a_type)
 			else

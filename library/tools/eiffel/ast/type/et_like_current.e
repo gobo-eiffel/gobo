@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'like Current' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,14 @@ class ET_LIKE_CURRENT
 
 inherit
 
-	ET_TYPE
+	ET_LIKE_TYPE
+		redefine
+			same_syntactical_like_current,
+			conforms_from_bit_type,
+			conforms_from_class_type,
+			conforms_from_formal_parameter_type,
+			conforms_from_tuple_type
+		end
 
 creation
 
@@ -36,6 +43,38 @@ feature -- Access
 
 	current_keyword: ET_CURRENT
 			-- 'current' keyword
+
+	base_class (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS is
+			-- Base class of current type when it appears in `a_context'
+			-- in `a_universe' (Definition of base class in ETL2 page 198).
+			-- Return "*UNKNOWN*" class if unresolved identifier type,
+			-- anchored type involved in a cycle, or unmatched formal
+			-- generic parameter.
+		do
+			Result := a_context.type.direct_base_class (a_universe)
+		end
+
+	base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', only made up of class names and generic
+			-- formal parameters when the root type of `a_context' is a
+			-- generic type not fully derived (Definition of base type in
+			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
+			-- type, anchored type involved in a cycle, or unmatched formal
+			-- generic parameter if this parameter is current type.
+		do
+			if a_context.is_root_context then
+				Result := a_context.type
+			else
+				Result := a_context.type.base_type (a_context.context, a_universe)
+			end
+		end
+
+	hash_code: INTEGER is
+			-- Hash code
+		do
+			Result := 1
+		end
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -75,63 +114,98 @@ feature -- Setting
 			current_keyword_set: current_keyword = a_current
 		end
 
-feature -- Status report
+feature -- Comparison
 
-	same_syntactical_type (other: ET_TYPE): BOOLEAN is
-			-- Are current type and `other' syntactically
-			-- the same type (e.g. do not try to resolve
-			-- anchored types)?
-		local
-			a_current: ET_LIKE_CURRENT
+	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
 		do
-			a_current ?= other
-			Result := a_current /= Void
+			if other = Current then
+				Result := True
+			else
+				Result := other.same_syntactical_like_current (Current, a_context, other_context, a_universe)
+			end
 		end
 
-feature -- Validity
+feature {ET_TYPE} -- Comparison
 
-	check_parent_validity (an_heir: ET_CLASS): BOOLEAN is
-			-- Check whether current type is valid when
-			-- it appears in parent clause of `an_heir'.
-			-- Report errors if not valid.
+	same_syntactical_like_current (other: ET_LIKE_CURRENT;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
 		do
-			Result := False
-			an_heir.error_handler.report_vhpr3_error (an_heir, Current)
+			Result := True
 		end
 
-	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
-			-- Check whether current type is valid when it
-			-- appears in a constraint of the formal generic
-			-- parameter `a_formal' in class `a_class'.
-			-- `a_sorter' is used to find possible cycle in
-			-- formal generic parameter declaration.
-			-- Report errors if not valid.
+feature -- Conformance
+
+	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does current type appearing in `a_context' conform
+			-- to `other' type appearing in `other_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
 		do
-			Result := False
-			a_class.error_handler.report_vcfg3_error (a_class, Current)
+			if other = Current and then other_context = a_context then
+				Result := True
+			else
+				Result := a_context.type.conforms_to_type (other, other_context, a_context.context, a_processor)
+			end
 		end
 
-feature -- Conversion
+feature {ET_TYPE} -- Conformance
 
-	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_type',
-			-- only made up of class names and generic formal parameters
-			-- when `a_type' in a generic type not fully derived
-			-- (Definition of base type in ETL2 p. 198)
+	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform
+			-- to current type appearing in `a_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
 		do
-				-- `a_type.base_class' has been flattened and no
-				-- error occurred, so there is no loop in
-				-- anchored types.
-			Result := a_type.base_type (a_feature, a_type)
+			Result := a_context.type.conforms_from_bit_type (other, other_context, a_context.context, a_processor)
 		end
 
-feature -- Duplication
-
-	deep_cloned_type: like Current is
-			-- Recursively cloned type
+	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform
+			-- to current type appearing in `a_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
 		do
-			Result := Current
+			Result := a_context.type.conforms_from_class_type (other, other_context, a_context.context, a_processor)
+		end
+
+	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform
+			-- to current type appearing in `a_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
+		do
+			Result := a_context.type.conforms_from_formal_parameter_type (other, other_context, a_context.context, a_processor)
+		end
+
+	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform
+			-- to current type appearing in `a_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
+		do
+			Result := a_context.type.conforms_from_tuple_type (other, other_context, a_context.type, a_processor)
 		end
 
 feature -- Output
@@ -158,7 +232,6 @@ feature {NONE} -- Constants
 
 invariant
 
-	like_keyword_not_void: like_keyword /= Void
 	current_keyword_not_void: current_keyword /= Void
 
 end

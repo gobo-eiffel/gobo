@@ -18,7 +18,7 @@ inherit
 
 	ET_EXTERNAL_ROUTINE
 		undefine
-			is_prefixable, is_infixable
+			type, is_prefixable, is_infixable
 		end
 
 creation
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		an_obsolete: like obsolete_message; a_preconditions: like preconditions;
 		a_language: like language; an_alias: like alias_clause;
 		a_postconditions: like postconditions; a_clients: like clients;
-		a_class: like current_class) is
+		a_class: like implementation_class) is
 			-- Create a new external function.
 		require
 			a_name_not_void: a_name /= Void
@@ -51,7 +51,6 @@ feature {NONE} -- Initialization
 			postconditions := a_postconditions
 			end_keyword := tokens.end_keyword
 			clients := a_clients
-			current_class := a_class
 			implementation_class := a_class
 		ensure
 			name_item_set: name_item = a_name
@@ -63,7 +62,6 @@ feature {NONE} -- Initialization
 			alias_clause_set: alias_clause = an_alias
 			postconditions_set: postconditions = a_postconditions
 			clients_set: clients = a_clients
-			current_class_set: current_class = a_class
 			implementation_class_set: implementation_class = a_class
 		end
 
@@ -74,7 +72,7 @@ feature -- Duplication
 		do
 			create Result.make (a_name, arguments, declared_type, obsolete_message,
 				preconditions, language, alias_clause, postconditions, clients,
-				current_class)
+				implementation_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
@@ -89,24 +87,15 @@ feature -- Conversion
 		do
 			create Result.make (a_name, arguments, declared_type, obsolete_message,
 				preconditions, language, alias_clause, postconditions, clients,
-				current_class)
+				implementation_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
-			Result.set_implementation_class (implementation_class)
 			Result.set_version (version)
 			Result.set_frozen_keyword (frozen_keyword)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
-			if seeds /= Void then
-				Result.set_seeds (seeds)
-			else
-				Result.set_first_seed (first_seed)
-			end
-			if precursors /= Void then
-				Result.set_precursors (precursors)
-			else
-				Result.set_first_precursor (first_precursor)
-			end
+			Result.set_first_seed (first_seed)
+			Result.set_other_seeds (other_seeds)
 		end
 
 feature -- Processing

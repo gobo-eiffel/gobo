@@ -6,7 +6,7 @@ indexing
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,6 +42,7 @@ creation
 %token <ET_KEYWORD> E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
 %token <ET_KEYWORD> E_WHEN E_PRECURSOR
 %token <ET_KEYWORD> E_DEFERRED E_EXPANDED E_REFERENCE E_SEPARATE
+%token <ET_KEYWORD> E_ATTRIBUTE E_CONVERT E_RECAST
 
 %token <ET_SYMBOL> E_ARROW E_DOTDOT E_LARRAY E_RARRAY
 %token <ET_SYMBOL> E_ASSIGN E_REVERSE
@@ -53,7 +54,7 @@ creation
 %token <ET_CHARACTER_CONSTANT> E_CHARACTER
 %token <ET_CURRENT> E_CURRENT
 %token <ET_FREE_OPERATOR> E_FREEOP
-%token <ET_IDENTIFIER> E_IDENTIFIER E_BITTYPE
+%token <ET_IDENTIFIER> E_IDENTIFIER E_BITTYPE E_TUPLE
 %token <ET_INTEGER_CONSTANT> E_INTEGER
 %token <ET_KEYWORD_OPERATOR> E_AND E_OR E_XOR E_NOT E_IMPLIES
 %token <ET_MANIFEST_STRING> E_STRPLUS E_STRMINUS E_STRSTAR E_STRSLASH E_STRDIV
@@ -89,15 +90,12 @@ creation
 
 %type <ET_ACTUAL_ARGUMENT_LIST> Actuals_opt Actuals_expression_list
 %type <ET_ACTUAL_PARAMETER_LIST> Actual_parameters_opt Type_list Actual_parameters
-%type <ET_ACTUAL_PARAMETER_LIST> Constraint_actual_parameters_opt Constraint_type_list
 %type <ET_AGENT_ACTUAL_ARGUMENT> Agent_actual
 %type <ET_AGENT_ACTUAL_ARGUMENT_ITEM> Agent_actual_comma
 %type <ET_AGENT_ACTUAL_ARGUMENT_LIST> Agent_actuals_opt Agent_actual_list
 %type <ET_AGENT_TARGET> Agent_target
-%type <ET_AST_LEAF> Agent_keyword
 %type <ET_BOOLEAN_CONSTANT> Boolean_constant
-%type <ET_BREAK> Break_opt
-%type <ET_CALL_AGENT> Call_agent
+%type <ET_CALL_AGENT> Call_agent Tilde_call_agent
 %type <ET_CALL_EXPRESSION> Call_expression
 %type <ET_CHARACTER_CONSTANT> Character_constant
 %type <ET_CHOICE> Choice
@@ -110,7 +108,10 @@ creation
 %type <ET_COMPOUND> Compound Rescue_opt Do_compound Once_compound Then_compound
 %type <ET_COMPOUND> Else_compound Rescue_compound From_compound Loop_compound
 %type <ET_CONSTANT> Manifest_constant
+%type <ET_CONSTRAINT_ACTUAL_PARAMETER_LIST> Constraint_actual_parameters_opt Constraint_type_list
 %type <ET_CONSTRAINT_CREATOR> Constraint_create Constraint_create_procedure_list
+%type <ET_CONSTRAINT_TYPE> Constraint_type
+%type <ET_CONSTRAINT_TYPE_ITEM> Constraint_type_comma
 %type <ET_CREATOR> Creation_clause Creation_procedure_list
 %type <ET_CREATOR_LIST> Creators Creators_opt
 %type <ET_DEBUG_INSTRUCTION> Debug_instruction
@@ -147,6 +148,7 @@ creation
 %type <ET_INVARIANTS> Invariant_clause Invariant_clause_opt
 %type <ET_KEYWORD_FEATURE_NAME_LIST> Keyword_feature_name_list Select_clause Select_clause_opt
 %type <ET_KEYWORD_FEATURE_NAME_LIST> Undefine_clause Undefine_clause_opt Redefine_clause Redefine_clause_opt
+%type <ET_LIKE_TYPE> Anchored_type
 %type <ET_LOCAL_VARIABLE> Local_name Local_name_comma
 %type <ET_LOCAL_VARIABLE_ITEM> Local_variable Local_variable_semicolon
 %type <ET_LOCAL_VARIABLE_LIST> Local_declarations_opt Local_variable_list
@@ -164,26 +166,28 @@ creation
 %type <ET_PRECURSOR_EXPRESSION> Qualified_precursor_expression
 %type <ET_PRECURSOR_INSTRUCTION> Qualified_precursor_instruction
 %type <ET_PRECONDITIONS> Precondition_opt
+%type <ET_QUALIFIED_TYPE> Qualified_type
 %type <ET_REAL_CONSTANT> Real_constant
 %type <ET_RENAME_ITEM> Rename Rename_comma
 %type <ET_RENAME_LIST> Rename_clause Rename_list
 %type <ET_SEMICOLON_SYMBOL> Semicolon_opt
 %type <ET_STATIC_CALL_EXPRESSION> Static_call_expression
 %type <ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
-%type <ET_TYPE> Type Constraint_type
-%type <ET_TYPE_ITEM> Type_comma Constraint_type_comma
+%type <ET_TYPE> Type
+%type <ET_TYPE_ITEM> Type_comma
 %type <ET_VARIANT> Variant_clause_opt
 %type <ET_WHEN_PART> When_part
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 38
+%expect 67
 %start Class_declarations
 
 %%
 ------------------------------------------------------------------------------------
 
-Class_declarations: Break_opt Class_declaration
+Class_declarations: Class_declaration
+	| E_BREAK Class_declaration
 		{ $2.set_leading_break ($1) }
 	;
 
@@ -421,12 +425,14 @@ Class_header: E_CLASS Identifier
 ------------------------------------------------------------------------------------
 
 Formal_parameters_opt: -- Empty
-		-- { $$ := Void }
+		{
+			set_formal_parameters (Void)
+		}
 	| '[' ']'
 		-- Warning!
 		{
 			$$ := ast_factory.new_formal_parameters ($1, $2, 0)
-			set_formal_generic_parameters ($$)
+			set_formal_parameters ($$)
 		}
 	| '['
 		{
@@ -436,7 +442,7 @@ Formal_parameters_opt: -- Empty
 	  Formal_parameter_list
 		{
 			$$ := $3
-			set_formal_generic_parameters ($$)
+			set_formal_parameters ($$)
 			remove_symbol
 			remove_counter
 		}
@@ -472,11 +478,26 @@ Formal_parameter_comma: Formal_parameter ','
 	;
 
 Formal_parameter: Identifier
-		{ $$ := ast_factory.new_formal_parameter ($1) }
+		{
+			$$ := ast_factory.new_formal_parameter ($1)
+			if $$ /= Void then
+				register_constraint (Void)
+			end
+		}
 	| Identifier E_ARROW Constraint_type
-		{ $$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, Void) }
+		{
+			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, dummy_constraint ($3), Void)
+			if $$ /= Void then
+				register_constraint ($3)
+			end
+		}
 	| Identifier E_ARROW Constraint_type Constraint_create
-		{ $$ := ast_factory.new_constrained_formal_parameter ($1, $2, $3, $4) }
+		{
+			$$ := ast_factory.new_constrained_formal_parameter ($1, $2, dummy_constraint ($3), $4)
+			if $$ /= Void then
+				register_constraint ($3)
+			end
+		}
 	;
 
 Constraint_create: E_CREATE E_END
@@ -530,21 +551,21 @@ Constraint_type: Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
 	| E_REFERENCE Class_name Constraint_actual_parameters_opt
 		{ $$ := new_constraint_named_type ($1, $2, $3) }
-	| E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current ($1, $2) }
-	| E_LIKE Identifier
-		{ $$ := ast_factory.new_like_identifier ($1, $2) }
+	| Anchored_type
+		{ $$ := $1 }
 	| E_BITTYPE Integer_constant
-		{ $$ := ast_factory.new_bit_type ($1, $2) }
+		{ $$ := new_bit_n ($1, $2) }
 	| E_BITTYPE Identifier
-		{ $$ := ast_factory.new_bit_identifier ($1, $2)  }
+		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
+	| E_TUPLE Constraint_actual_parameters_opt
+		{ $$ := new_constraint_named_type (Void, $1, $2) }
 	;
 
 Constraint_actual_parameters_opt: -- Empty
 		-- { $$ := Void }
 	| '[' ']'
 		-- Warning:
-		{ $$ := ast_factory.new_actual_parameters ($1, $2, 0) }
+		{ $$ := ast_factory.new_constraint_actual_parameters ($1, $2, 0) }
 	| '['
 		{
 			add_symbol ($1)
@@ -561,12 +582,12 @@ Constraint_actual_parameters_opt: -- Empty
 Constraint_type_list: Constraint_type ']'
 		{
 			if $1 /= Void then
-				$$ := ast_factory.new_actual_parameters (last_symbol, $2, counter_value + 1)
+				$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $2, counter_value + 1)
 				if $$ /= Void then
 					$$.put_first ($1)
 				end
 			else
-				$$ := ast_factory.new_actual_parameters (last_symbol, $2, counter_value)
+				$$ := ast_factory.new_constraint_actual_parameters (last_symbol, $2, counter_value)
 			end
 		}
 	| Constraint_type_comma Constraint_type_list
@@ -580,7 +601,7 @@ Constraint_type_list: Constraint_type ']'
 
 Constraint_type_comma: Constraint_type ','
 		{
-			$$ := ast_factory.new_type_comma ($1, $2)
+			$$ := ast_factory.new_constraint_type_comma ($1, $2)
 			if $$ /= Void then
 				increment_counter
 			end
@@ -1220,7 +1241,7 @@ Creation_procedure_comma: Identifier ','
 Features_opt: -- Empty
 		{
 			-- $$ := Void
-			set_named_features
+			set_class_features
 		}
 	| Features
 		{ $$ := $1 }
@@ -1229,7 +1250,7 @@ Features_opt: -- Empty
 Features: Add_counter Feature_clause_list
 		{
 			$$ := $2
-			set_named_features
+			set_class_features
 			remove_counter
 		}
 	;
@@ -1774,14 +1795,14 @@ Type: Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
 	| E_REFERENCE Class_name Actual_parameters_opt
 		{ $$ := new_named_type ($1, $2, $3) }
-	| E_LIKE E_CURRENT
-		{ $$ := ast_factory.new_like_current ($1, $2) }
-	| E_LIKE Identifier
-		{ $$ := ast_factory.new_like_identifier ($1, $2) }
+	| Anchored_type
+		{ $$ := $1 }
 	| E_BITTYPE Integer_constant
-		{ $$ := ast_factory.new_bit_type ($1, $2) }
+		{ $$ := new_bit_n ($1, $2) }
 	| E_BITTYPE Identifier
-		{ $$ := ast_factory.new_bit_identifier ($1, $2)  }
+		{ $$ := ast_factory.new_bit_feature ($1, $2)  }
+	| E_TUPLE Actual_parameters_opt
+		{ $$ := new_tuple_type ($1, $2) }
 	;
 
 Class_name: E_IDENTIFIER
@@ -1837,6 +1858,24 @@ Type_comma: Type ','
 				increment_counter
 			end
 		}
+	;
+
+Anchored_type: E_LIKE Identifier
+		{ $$ := ast_factory.new_like_feature ($1, $2) }
+	| E_LIKE E_CURRENT
+		{ $$ := ast_factory.new_like_current ($1, $2) }
+	| Qualified_type
+		{ $$ := $1 }
+	;
+
+Qualified_type: E_LIKE Identifier '.' Identifier
+		{ $$ := ast_factory.new_qualified_like_feature (ast_factory.new_like_feature ($1, $2), ast_factory.new_dot_feature_name ($3, $4)) }
+	| E_LIKE E_CURRENT '.' Identifier
+		{ $$ := ast_factory.new_qualified_like_current (ast_factory.new_like_current ($1, $2), ast_factory.new_dot_feature_name ($3, $4)) }
+	| E_LIKE '{' Type '}' '.' Identifier
+		{ $$ := ast_factory.new_qualified_braced_type ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6)) }
+	| Qualified_type '.' Identifier
+		{ $$ := ast_factory.new_qualified_like_type ($1, ast_factory.new_dot_feature_name ($2, $3)) }
 	;
 
 ------------------------------------------------------------------------------------
@@ -1980,9 +2019,9 @@ Creation_instruction: '!' Type '!' Writable
 	;
 
 Create_instruction: E_CREATE '{' Type '}' Writable
-		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_creation_type ($2, $3, $4), $5, Void) }
+		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($2, $3, $4), $5, Void) }
 	| E_CREATE '{' Type '}' Writable '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_creation_type ($2, $3, $4), $5, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($6, $7), $8)) }
+		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($2, $3, $4), $5, ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($6, $7), $8)) }
 	| E_CREATE Writable
 		{ $$ := ast_factory.new_create_instruction ($1, Void, $2, Void) }
 	| E_CREATE Writable '.' Identifier Actuals_opt
@@ -1990,9 +2029,9 @@ Create_instruction: E_CREATE '{' Type '}' Writable
 	;
 
 Create_expression: E_CREATE '{' Type '}' 
-		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_creation_type ($2, $3, $4), Void) }
+		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($2, $3, $4), Void) }
 	| E_CREATE '{' Type '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_creation_type ($2, $3, $4), ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($5, $6), $7)) }
+		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_qualified_call (ast_factory.new_dot_feature_name ($5, $6), $7)) }
 	;
 
 ------------------------------------------------------------------------------------
@@ -2219,7 +2258,7 @@ Call_instruction: Identifier Actuals_opt
 	| Qualified_precursor_instruction
 		{ $$ := $1 }
 	| E_FEATURE '{' Type '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_static_call_instruction ($1, ast_factory.new_static_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6), $7) }
+		{ $$ := ast_factory.new_static_call_instruction ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6), $7) }
 	;
 
 Qualified_precursor_instruction: E_PRECURSOR '{' Class_name '}' Actuals_opt
@@ -2235,7 +2274,7 @@ Call_expression: Identifier Actuals_opt
 	;
 
 Static_call_expression: E_FEATURE '{' Type '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_static_call_expression ($1, ast_factory.new_static_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6), $7) }
+		{ $$ := ast_factory.new_static_call_expression ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6), $7) }
 	;
 
 Precursor_expression: E_PRECURSOR Actuals_opt
@@ -2609,26 +2648,54 @@ Manifest_constant: Boolean_constant
 
 ------------------------------------------------------------------------------------
 
-Call_agent: Agent_keyword Feature_name Agent_actuals_opt
+Call_agent: E_AGENT Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($1, Void, $2, $3) }
-	| Agent_keyword Agent_target '.' Feature_name Agent_actuals_opt
+	| E_AGENT Agent_target '.' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($1, $2, ast_factory.new_dot_feature_name ($3, $4), $5) }
+	| Tilde_call_agent
+		{ $$ := $1 }
 	;
 
-Agent_keyword: E_AGENT
-		{ $$ := $1 }
-	| '~'
-		{ $$ := $1 }
+Tilde_call_agent: '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($1, Void, $2, $3) }
+	| Identifier '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
+	| Parenthesized_expression '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
+	| E_RESULT '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
+	| E_CURRENT '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
+	| '{' Class_name '}' '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_target_type ($1, new_named_type (Void, $2, Void), $3), $5, $6) }
+	| '{' Class_name Actual_parameters '}' '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_target_type ($1, new_named_type (Void, $2, $3), $4), $6, $7) }
+	| '{' E_EXPANDED Class_name Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
+	| '{' E_SEPARATE Class_name Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
+	| '{' E_REFERENCE Class_name Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($6, ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5), $7, $8) }
+	| '{' Anchored_type '}' '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_target_type ($1, $2, $3), $5, $6) }
+	| '{' E_BITTYPE Integer_constant '}' '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_target_type ($1, new_bit_n ($2, $3), $4), $6, $7) }
+	| '{' E_BITTYPE Identifier '}' '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_target_type ($1, ast_factory.new_bit_feature ($2, $3), $4), $6, $7) }
+	| '{' E_TUPLE Actual_parameters_opt '}' '~' Feature_name Agent_actuals_opt
+		{ $$ := ast_factory.new_call_agent ($5, ast_factory.new_target_type ($1, new_tuple_type ($2, $3), $4), $6, $7) }
 	;
 
 Agent_target: Identifier
+		{ $$ := $1 }
+	| Parenthesized_expression
 		{ $$ := $1 }
 	| E_RESULT
 		{ $$ := $1 }
 	| E_CURRENT
 		{ $$ := $1 }
 	| '{' Type '}'
-		{ $$ := ast_factory.new_agent_type ($1, $2, $3) }
+		{ $$ := ast_factory.new_target_type ($1, $2, $3) }
 	;
 
 Agent_actuals_opt: -- Empty
@@ -2704,23 +2771,23 @@ Agent_actual: Expression
 	| '?'
 		{ $$ := $1 }
 	| '{' Class_name '}'
-		{ $$ := ast_factory.new_agent_type ($1, new_named_type (Void, $2, Void), $3) }
+		{ $$ := ast_factory.new_target_type ($1, new_named_type (Void, $2, Void), $3) }
 	| '{' Class_name Actual_parameters '}'
-		{ $$ := ast_factory.new_agent_type ($1, new_named_type (Void, $2, $3), $4) }
+		{ $$ := ast_factory.new_target_type ($1, new_named_type (Void, $2, $3), $4) }
 	| '{' E_EXPANDED Class_name Actual_parameters_opt '}'
-		{ $$ := ast_factory.new_agent_type ($1, new_named_type ($2, $3, $4), $5) }
+		{ $$ := ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5) }
 	| '{' E_SEPARATE Class_name Actual_parameters_opt '}'
-		{ $$ := ast_factory.new_agent_type ($1, new_named_type ($2, $3, $4), $5) }
+		{ $$ := ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5) }
 	| '{' E_REFERENCE Class_name Actual_parameters_opt '}'
-		{ $$ := ast_factory.new_agent_type ($1, new_named_type ($2, $3, $4), $5) }
-	| '{' E_LIKE E_CURRENT '}'
-		{ $$ := ast_factory.new_agent_type ($1, ast_factory.new_like_current ($2, $3), $4) }
-	| '{' E_LIKE Identifier '}'
-		{ $$ := ast_factory.new_agent_type ($1, ast_factory.new_like_identifier ($2, $3), $4) }
+		{ $$ := ast_factory.new_target_type ($1, new_named_type ($2, $3, $4), $5) }
+	| '{' Anchored_type '}'
+		{ $$ := ast_factory.new_target_type ($1, $2, $3) }
 	| '{' E_BITTYPE Integer_constant '}'
-		{ $$ := ast_factory.new_agent_type ($1, ast_factory.new_bit_type ($2, $3), $4) }
+		{ $$ := ast_factory.new_target_type ($1, new_bit_n ($2, $3), $4) }
 	| '{' E_BITTYPE Identifier '}'
-		{ $$ := ast_factory.new_agent_type ($1, ast_factory.new_bit_identifier ($2, $3), $4)  }
+		{ $$ := ast_factory.new_target_type ($1, ast_factory.new_bit_feature ($2, $3), $4)  }
+	| '{' E_TUPLE Actual_parameters_opt '}'
+		{ $$ := ast_factory.new_target_type ($1, new_tuple_type ($2, $3), $4) }
 	;
 
 ------------------------------------------------------------------------------------
@@ -2811,17 +2878,13 @@ Real_constant: E_REAL
 
 Identifier: E_IDENTIFIER
 		{ $$ := $1 }
+	| E_TUPLE
+		{ $$ := $1 }
 	| E_BITTYPE
 		{
 				-- TO DO: reserved word `BIT'
 			$$ := $1
 		}
-	;
-
-Break_opt: -- Empty
-		-- { $$ := Void }
-	| E_BREAK
-		{ $$ := $1 }
 	;
 
 ------------------------------------------------------------------------------------

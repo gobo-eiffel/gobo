@@ -34,6 +34,38 @@ feature -- Class names
 			none_class_name_not_void: Result /= Void
 		end
 
+	general_class_name: ET_CLASS_NAME is
+			-- "GENERAL" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("GENERAL")
+		ensure
+			general_class_name_not_void: Result /= Void
+		end
+
+	tuple_class_name: ET_CLASS_NAME is
+			-- "TUPLE" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("TUPLE")
+		ensure
+			tuple_class_name_not_void: Result /= Void
+		end
+
+	bit_class_name: ET_CLASS_NAME is
+			-- "BIT" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("BIT")
+		ensure
+			bit_class_name_not_void: Result /= Void
+		end
+
+	unknown_class_name: ET_CLASS_NAME is
+			-- "*UNKNOWN*" class name
+		once
+			create {ET_IDENTIFIER} Result.make ("*UNKNOWN*")
+		ensure
+			unknown_class_name_not_void: Result /= Void
+		end
+
 feature -- Symbols
 
 	symbol: ET_SYMBOL is
@@ -206,6 +238,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	attribute_keyword: ET_KEYWORD is
+			-- 'attribute' keyword
+		once
+			create Result.make_attribute
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	bit_keyword: ET_IDENTIFIER is
 			-- 'BIT' keyword
 		once
@@ -226,6 +266,14 @@ feature -- Keywords
 			-- 'class' keyword
 		once
 			create Result.make_class
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	convert_keyword: ET_KEYWORD is
+			-- 'convert' keyword
+		once
+			create Result.make_convert
 		ensure
 			keyword_not_void: Result /= Void
 		end
@@ -430,6 +478,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	recast_keyword: ET_KEYWORD is
+			-- 'recast' keyword
+		once
+			create Result.make_recast
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	redefine_keyword: ET_KEYWORD is
 			-- 'redefine' keyword
 		once
@@ -486,6 +542,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	tuple_keyword: ET_IDENTIFIER is
+			-- 'TUPLE' keyword
+		once
+			create Result.make (capitalized_tuple_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	unique_keyword: ET_KEYWORD is
 			-- 'unique' keyword
 		once
@@ -518,6 +582,7 @@ feature -- Keyword and symbol names
 	capitalized_precursor_keyword_name: STRING is "Precursor"
 	capitalized_result_keyword_name: STRING is "Result"
 	capitalized_true_keyword_name: STRING is "True"
+	capitalized_tuple_keyword_name: STRING is "TUPLE"
 	capitalized_unique_keyword_name: STRING is "Unique"
 			-- Eiffel keyword names with first letter in upper-case
 
@@ -526,8 +591,10 @@ feature -- Keyword and symbol names
 	all_keyword_name: STRING is "all"
 	and_keyword_name: STRING is "and"
 	as_keyword_name: STRING is "as"
+	attribute_keyword_name: STRING is "attribute"
 	check_keyword_name: STRING is "check"
 	class_keyword_name: STRING is "class"
+	convert_keyword_name: STRING is "convert"
 	create_keyword_name: STRING is "create"
 	creation_keyword_name: STRING is "creation"
 	current_keyword_name: STRING is "current"
@@ -564,6 +631,7 @@ feature -- Keyword and symbol names
 	precursor_keyword_name: STRING is "precursor"
 	prefix_keyword_name: STRING is "prefix"
 	redefine_keyword_name: STRING is "redefine"
+	recast_keyword_name: STRING is "recast"
 	reference_keyword_name: STRING is "reference"
 	rename_keyword_name: STRING is "rename"
 	require_keyword_name: STRING is "require"
@@ -656,6 +724,28 @@ feature -- Position
 		ensure
 			position_not_void: Result /= Void
 			position_is_null: Result.is_null
+		end
+
+feature -- Ancestors
+
+	empty_ancestors: ET_BASE_TYPE_LIST is
+			-- Shared empty ancestors
+		once
+			create Result.make_with_capacity (0)
+		ensure
+			ancestors_not_void: Result /= Void
+			ancestors_empty: Result.is_empty
+		end
+
+feature -- Features
+
+	empty_features: ET_FEATURE_LIST is
+			-- Shared empty features
+		once
+			create Result.make_with_capacity (0)
+		ensure
+			features_not_void: Result /= Void
+			features_empty: Result.is_empty
 		end
 
 end

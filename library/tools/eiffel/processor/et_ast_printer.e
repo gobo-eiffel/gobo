@@ -5,7 +5,7 @@ indexing
 		"Eiffel AST printers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,12 @@ class ET_AST_PRINTER
 inherit
 
 	ET_AST_PROCESSOR
+		rename
+			make as make_null
+		redefine
+			make_null
+		end
+
 	KL_SHARED_STREAMS
 
 creation
@@ -23,22 +29,26 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_file: like file) is
+	make (a_file: like file; a_universe: like universe) is
 			-- Create a new AST printer, using `a_file' as output file.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_is_open_write: a_file.is_open_write
+			a_universe_not_void: a_universe /= Void
 		do
 			file := a_file
+			universe := a_universe
 		ensure
 			file_set: file = a_file
+			universe_set: universe = a_universe
 		end
 
-	make_null is
+	make_null (a_universe: like universe) is
 			-- Create a new AST printer, initialized with a null output stream.
 		do
 			file := null_output_stream
-		ensure
+			universe := a_universe
+		ensure then
 			file_set: file = null_output_stream
 		end
 
@@ -68,7 +78,7 @@ feature -- Setting
 			file_set: file = null_output_stream
 		end
 
-feature -- Processing
+feature {ET_AST_NODE} -- Processing
 
 	process_actual_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST) is
 			-- Process `a_list'.
@@ -213,14 +223,7 @@ feature -- Processing
 			a_type.name.process (Current)
 		end
 
-	process_bit_identifier (a_type: ET_BIT_IDENTIFIER) is
-			-- Process `a_type'.
-		do
-			a_type.bit_keyword.process (Current)
-			a_type.name.process (Current)
-		end
-
-	process_bit_type (a_type: ET_BIT_TYPE) is
+	process_bit_n (a_type: ET_BIT_N) is
 			-- Process `a_type'.
 		do
 			a_type.bit_keyword.process (Current)
@@ -288,10 +291,15 @@ feature -- Processing
 			a_target: ET_AGENT_TARGET
 			an_arguments: ET_AGENT_ACTUAL_ARGUMENT_LIST
 		do
-			an_expression.agent_keyword.process (Current)
 			a_target := an_expression.target
-			if a_target /= Void then
+			if a_target /= Void and an_expression.use_tilde then
 				a_target.process (Current)
+				an_expression.agent_keyword.process (Current)
+			else
+				an_expression.agent_keyword.process (Current)
+				if a_target /= Void then
+					a_target.process (Current)
+				end
 			end
 			an_expression.qualified_name.process (Current)
 			an_arguments := an_expression.arguments
@@ -381,7 +389,7 @@ feature -- Processing
 		local
 			an_indexing: ET_INDEXING_LIST
 			a_class_mark: ET_KEYWORD
-			a_generic_parameters: ET_FORMAL_PARAMETER_LIST
+			a_formal_parameters: ET_FORMAL_PARAMETER_LIST
 			an_obsolete_message: ET_OBSOLETE
 			a_parents: ET_PARENT_LIST
 			a_creators: ET_CREATOR_LIST
@@ -398,9 +406,9 @@ feature -- Processing
 			end
 			a_class.class_keyword.process (Current)
 			a_class.name.process (Current)
-			a_generic_parameters := a_class.generic_parameters
-			if a_generic_parameters /= Void then
-				a_generic_parameters.process (Current)
+			a_formal_parameters := a_class.formal_parameters
+			if a_formal_parameters /= Void then
+				a_formal_parameters.process (Current)
 			end
 			an_obsolete_message := a_class.obsolete_message
 			if an_obsolete_message /= Void then
@@ -442,7 +450,7 @@ feature -- Processing
 			if a_type_mark /= Void then
 				a_type_mark.process (Current)
 			end
-			a_type.class_name.process (Current)
+			a_type.name.process (Current)
 		end
 
 	process_clients (a_list: ET_CLIENTS) is
@@ -556,7 +564,7 @@ feature -- Processing
 	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
-			a_type: ET_CREATION_TYPE
+			a_type: ET_TARGET_TYPE
 			a_call: ET_QUALIFIED_CALL
 		do
 			an_instruction.create_keyword.process (Current)
@@ -1126,33 +1134,33 @@ feature -- Processing
 		local
 			a_feature_clauses: ET_FEATURE_CLAUSE_LIST
 			a_feature_clause: ET_FEATURE_CLAUSE
-			a_named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_FEATURE, ET_FEATURE_NAME]
+			a_features: ET_FEATURE_LIST
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 			a_feature_clauses := a_class.feature_clauses
 			if a_feature_clauses /= Void then
-				a_named_features := a_class.named_features
-				if a_named_features /= Void then
-					a_cursor := a_named_features.new_cursor
-					a_cursor.start
+				a_features := a_class.features
+				if a_features /= Void then
+					j := 1
+					nb2 := a_features.count
 					nb := a_feature_clauses.count
 					from i := 1 until i > nb loop
 						a_feature_clause := a_feature_clauses.item (i)
 						a_feature_clause.process (Current)
 						from
 						until
-							a_cursor.after or else
-							a_cursor.item.feature_clause /= a_feature_clause
+							j > nb2 or else
+							a_features.item (j).feature_clause /= a_feature_clause
 						loop
-							a_cursor.item.process (Current)
+							a_features.item (j).process (Current)
 							from
 							until
-								a_cursor.item.synonym = Void
+								a_features.item (j).synonym = Void
 							loop
-								a_cursor.forth
+								j := j + 1
 							end
-							a_cursor.forth
+							j := j + 1
 						end
 						i := i + 1
 					end
@@ -1225,13 +1233,7 @@ feature -- Processing
 
 	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE) is
 			-- Process `a_type'.
-		local
-			a_type_mark: ET_KEYWORD
 		do
-			a_type_mark := a_type.type_mark
-			if a_type_mark /= Void then
-				a_type_mark.process (Current)
-			end
 			a_type.name.process (Current)
 		end
 
@@ -1245,14 +1247,7 @@ feature -- Processing
 			-- Process `a_type'.
 		do
 			process_class_type (a_type)
-			a_type.generic_parameters.process (Current)
-		end
-
-	process_generic_named_type (a_type: ET_GENERIC_NAMED_TYPE) is
-			-- Process `a_type'.
-		do
-			process_named_type (a_type)
-			a_type.generic_parameters.process (Current)
+			a_type.actual_parameters.process (Current)
 		end
 
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
@@ -1460,13 +1455,6 @@ feature -- Processing
 			process_keyword (a_keyword)
 		end
 
-	process_like_argument (a_type: ET_LIKE_ARGUMENT) is
-			-- Process `a_type'.
-		do
-			a_type.like_keyword.process (Current)
-			a_type.name.process (Current)
-		end
-
 	process_like_current (a_type: ET_LIKE_CURRENT) is
 			-- Process `a_type'.
 		do
@@ -1475,13 +1463,6 @@ feature -- Processing
 		end
 
 	process_like_feature (a_type: ET_LIKE_FEATURE) is
-			-- Process `a_type'.
-		do
-			a_type.like_keyword.process (Current)
-			a_type.name.process (Current)
-		end
-
-	process_like_identifier (a_type: ET_LIKE_IDENTIFIER) is
 			-- Process `a_type'.
 		do
 			a_type.like_keyword.process (Current)
@@ -1595,18 +1576,6 @@ feature -- Processing
 				i := i + 1
 			end
 			an_expression.right_symbol.process (Current)
-		end
-
-	process_named_type (a_type: ET_NAMED_TYPE) is
-			-- Process `a_type'.
-		local
-			a_type_mark: ET_KEYWORD
-		do
-			a_type_mark := a_type.type_mark
-			if a_type_mark /= Void then
-				a_type_mark.process (Current)
-			end
-			a_type.name.process (Current)
 		end
 
 	process_none_clients (a_list: ET_NONE_CLIENTS) is
@@ -1928,6 +1897,14 @@ feature -- Processing
 			a_name.operator_name.process (Current)
 		end
 
+	process_qualified_braced_type (a_type: ET_QUALIFIED_BRACED_TYPE) is
+			-- Process `a_type'.
+		do
+			a_type.like_keyword.process (Current)
+			a_type.braced_type.process (Current)
+			a_type.qualified_name.process (Current)
+		end
+
 	process_qualified_call (a_call: ET_QUALIFIED_CALL) is
 			-- Process `a_call'.
 		local
@@ -1938,6 +1915,27 @@ feature -- Processing
 			if an_arguments /= Void then
 				an_arguments.process (Current)
 			end
+		end
+
+	process_qualified_like_current (a_type: ET_QUALIFIED_LIKE_CURRENT) is
+			-- Process `a_type'.
+		do
+			a_type.target_type.process (Current)
+			a_type.qualified_name.process (Current)
+		end
+
+	process_qualified_like_feature (a_type: ET_QUALIFIED_LIKE_FEATURE) is
+			-- Process `a_type'.
+		do
+			a_type.target_type.process (Current)
+			a_type.qualified_name.process (Current)
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		do
+			a_type.target_type.process (Current)
+			a_type.qualified_name.process (Current)
 		end
 
 	process_question_mark_symbol (a_symbol: ET_QUESTION_MARK_SYMBOL) is
@@ -2131,6 +2129,18 @@ feature -- Processing
 			-- Process `a_constant'.
 		do
 			process_token (a_constant)
+		end
+
+	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+			-- Process `a_type'.
+		local
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
+		do
+			a_type.tuple_keyword.process (Current)
+			a_parameters := a_type.actual_parameters
+			if a_parameters /= Void then
+				a_parameters.process (Current)
+			end
 		end
 
 	process_type_comma (a_type: ET_TYPE_COMMA) is

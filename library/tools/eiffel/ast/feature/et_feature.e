@@ -5,7 +5,7 @@ indexing
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ deferred class ET_FEATURE
 inherit
 
 	ET_AST_NODE
+
+	ET_REPLICABLE_FEATURE
 
 	HASHABLE
 
@@ -28,26 +30,20 @@ feature -- Access
 			name_not_void: Result /= Void
 		end
 
-	current_class: ET_CLASS
-			-- Class to which current feature belongs
-
-	clients: ET_CLASS_NAME_LIST
-			-- Clients to which feature is exported
-
 	type: ET_TYPE is
 			-- Return type;
 			-- Void for procedures
-		deferred
+		do
+		end
+
+	arguments: ET_FORMAL_ARGUMENT_LIST is
+			-- Formal arguments;
+			-- Void if not a routine or a routine with no arguments
+		do
 		end
 
 	id: INTEGER
 			-- Feature ID
-
-	hash_code: INTEGER is
-			-- Hash code value
-		do
-			Result := name.hash_code
-		end
 
 	version: INTEGER
 			-- Version (feature ID of last declaration
@@ -56,23 +52,11 @@ feature -- Access
 	first_seed: INTEGER
 			-- First seed
 
-	seeds: ET_FEATURE_IDS
-			-- Seeds (feature IDs of first declarations
+	other_seeds: ET_FEATURE_IDS
+			-- Other seeds (feature IDs of first declarations
 			-- of current feature); May be Void if there
 			-- is only one seed (which is then accessible
 			-- through `first_seed')
-
-	first_precursor: INTEGER
-			-- First precursor; 0 if current feature is
-			-- immediate (i.e. not inherited nor redeclared)
-
-	precursors: ET_FEATURE_IDS
-			-- Precursors (feature IDs of corresponding
-			-- to current feature in parents); Void if
-			-- current feature is immediate (i.e. not
-			-- inherited nor redeclared); May also be
-			-- Void if there is only one precursor (which
-			-- is then accessible through `first_precursor')
 
 	implementation_class: ET_CLASS
 			-- Class where implementation of current feature
@@ -80,30 +64,6 @@ feature -- Access
 			-- feature calls and type anchors (that might
 			-- be renamed in descendant classes) when feature
 			-- is inherited as-is.)
-
-	signature: ET_SIGNATURE is
-			-- Signature of current feature
-			-- (Create a new object at each call.)
-		deferred
-		ensure
-			signature_not_void: Result /= Void
-		end
-
-	universe: ET_UNIVERSE is
-			-- Universe to which current feature belongs
-		do
-			Result := current_class.universe
-		ensure
-			universe_not_void: Result /= Void
-		end
-
-	error_handler: ET_ERROR_HANDLER is
-			-- Error handler
-		do
-			Result := universe.error_handler
-		ensure
-			error_handler_not_void: Result /= Void
-		end
 
 	name_item: ET_FEATURE_NAME_ITEM
 			-- Feature name (possibly followed by comma for synomyms)
@@ -119,6 +79,12 @@ feature -- Access
 
 	synonym: ET_FEATURE
 			-- Next synonym if any
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := name.hash_code
+		end
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -186,53 +152,87 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_exported_to (a_class: ET_CLASS): BOOLEAN is
-			-- Is current feature exported to `a_class'?
-		require
-			a_class_not_void: a_class /= Void
+	has_seed (a_seed: INTEGER): BOOLEAN is
+			-- Does current feature have `a_seed'?
 		do
-			Result := clients.has_descendant (a_class)
+			if first_seed = a_seed then
+				Result := True
+			elseif other_seeds /= Void then
+				Result := other_seeds.has (a_seed)
+			end
+		ensure
+			definition: Result = (first_seed = a_seed or (other_seeds /= Void and then other_seeds.has (a_seed)))
 		end
 
-	is_creation_exported_to (a_class: ET_CLASS): BOOLEAN is
-			-- Is current feature listed in the creation clauses
-			-- of `current_class' and exported to `a_class'?
+feature -- Export status
+
+	is_exported_to (a_client: ET_CLASS; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Is current feature exported to `a_client'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for descendants.)
 		require
-			a_class_not_void: a_class /= Void
+			a_client_not_void: a_client /= Void
+			a_processor_not_void: a_processor /= Void
 		do
-			Result := current_class.is_creation_exported_to (name, a_class)
+			Result := clients.has_descendant (a_client, a_processor)
 		end
 
-	is_directly_exported_to (a_class: ET_CLASS): BOOLEAN is
-			-- Does `a_class' appear in the list of clients of current feature?
-			-- This is different from `is_exported_to' where `a_class' can
+	is_directly_exported_to (a_client: ET_CLASS): BOOLEAN is
+			-- Does `a_client' appear in the list of clients of current feature?
+			-- (This is different from `is_exported_to' where `a_client' can
 			-- be a descendant of a class appearing in the list of clients.
 			-- Note: The use of 'direct' in the name of this feature has not
-			-- the same meaning as 'direct and indirect client' in ETL2 p.91.
+			-- the same meaning as 'direct and indirect client' in ETL2 p.91.)
 		require
-			a_class_not_void: a_class /= Void
+			a_client_not_void: a_client /= Void
 		do
-			Result := clients.has (a_class)
+			Result := clients.has_class (a_client)
 		end
 
-	is_creation_directly_exported_to (a_class: ET_CLASS): BOOLEAN is
+	is_creation_exported_to (a_client, a_class: ET_CLASS; a_processor: ET_AST_PROCESSOR): BOOLEAN is
 			-- Is current feature listed in the creation clauses
-			-- of `current_class' and directly exported to `a_class'?
-			-- This is different from `is_creation_exported_to' where `a_class'
+			-- of `a_class' and exported to `a_client'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for descendants.)
+		require
+			a_client_not_void: a_client /= Void
+			a_class_not_void: a_class /= Void
+			a_processor_not_void: a_processor /= Void
+		do
+			Result := a_class.is_creation_exported_to (name, a_client, a_processor)
+		end
+
+	is_creation_directly_exported_to (a_client, a_class: ET_CLASS): BOOLEAN is
+			-- Is current feature listed in the creation clauses
+			-- of `a_class' and directly exported to `a_client'?
+			-- (This is different from `is_creation_exported_to' where `a_client'
 			-- can be a descendant of a class appearing in the list of clients.
 			-- Note: The use of 'direct' in the name of this feature has not
-			-- the same meaning as 'direct and indirect client' in ETL2 p.91.
+			-- the same meaning as 'direct and indirect client' in ETL2 p.91.)
 		require
+			a_client_not_void: a_client /= Void
 			a_class_not_void: a_class /= Void
 		do
-			Result := current_class.is_creation_directly_exported_to (name, a_class)
+			Result := a_class.is_creation_directly_exported_to (name, a_client)
+		end
+
+	clients: ET_CLASS_NAME_LIST
+			-- Clients to which feature is exported
+
+	set_clients (a_clients: like clients) is
+			-- Set `clients' to `a_clients'.
+		require
+			a_clients_not_void: a_clients /= Void
+		do
+			clients := a_clients
+		ensure
+			clients_set: clients = a_clients
 		end
 
 feature -- Comparison
 
 	same_version (other: ET_FEATURE): BOOLEAN is
-			-- Do current feature and `other' have
-			-- the same version?
+			-- Do current feature and `other' have the same version?
 		require
 			other_not_void: other /= Void
 		do
@@ -259,32 +259,12 @@ feature -- Setting
 			id_set: id = an_id
 		end
 
-	set_current_class (a_class: like current_class) is
-			-- Set `current_class' to `a_class'.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			current_class := a_class
-		ensure
-			current_class_set: current_class = a_class
-		end
-
 	set_feature_clause (a_feature_clause: like feature_clause) is
 			-- Set `feature_clause' to `a_feature_clause'.
 		do
 			feature_clause := a_feature_clause
 		ensure
 			feature_clause_set: feature_clause = a_feature_clause
-		end
-
-	set_clients (a_clients: like clients) is
-			-- Set `clients' to `a_clients'.
-		require
-			a_clients_not_void: a_clients /= Void
-		do
-			clients := a_clients
-		ensure
-			clients_set: clients = a_clients
 		end
 
 	set_version (a_version: INTEGER) is
@@ -312,45 +292,17 @@ feature -- Setting
 		require
 			a_seed_positive: a_seed > 0
 		do
-			seeds := Void
 			first_seed := a_seed
 		ensure
 			first_seed_set: first_seed = a_seed
-			only_one_seed: seeds = Void
 		end
 
-	set_seeds (a_seeds: like seeds) is
-			-- Set `seeds' to `a_seeds'.
-		require
-			a_seeds_not_void: a_seeds /= Void
+	set_other_seeds (a_seeds: like other_seeds) is
+			-- Set `other_seeds' to `a_seeds'.
 		do
-			first_seed := a_seeds.first
-			seeds := a_seeds
+			other_seeds := a_seeds
 		ensure
-			seeds_set: seeds = a_seeds
-		end
-
-	set_first_precursor (a_precursor: INTEGER) is
-			-- Set `first_precursor' to `a_precursor'.
-		do
-			precursors := Void
-			first_precursor := a_precursor
-		ensure
-			first_precursor_set: first_precursor = a_precursor
-			only_one_precursor: precursors = Void
-		end
-
-	set_precursors (a_precursors: like precursors) is
-			-- Set `precursors' to `a_precursors'.
-		do
-			if a_precursors /= Void then
-				first_precursor := a_precursors.first
-			else
-				first_precursor := 0
-			end
-			precursors := a_precursors
-		ensure
-			precursors_set: precursors = a_precursors
+			other_seeds_set: other_seeds = a_seeds
 		end
 
 	set_frozen_keyword (a_frozen: like frozen_keyword) is
@@ -412,57 +364,314 @@ feature -- Conversion
 			version_set: Result.version = Result.id
 		end
 
-feature -- System
-
-	add_to_system is
-			-- Recursively add to system classes that
-			-- appear in current feature.
-		deferred
-		end
-
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): BOOLEAN is
-			-- Does current feature contain formal generic parameter
-			-- types whose corresponding actual parameter in
-			-- `actual_parameters' is different from the formal
-			-- parameter?
+	resolve_inherited_signature (a_parent: ET_PARENT) is
+			-- Resolve arguments and type inherited from `a_parent'.
+			-- Resolve any formal generic parameters of declared types
+			-- with the corresponding actual parameters in `a_parent',
+			-- and duplicate identifier anchored types (and clear their
+			-- base types).
 		require
-			actual_parameters_not_void: actual_parameters /= Void
+			a_parent_not_void: a_parent /= Void
 		deferred
 		end
 
-	resolve_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST) is
-			-- Replace in current feature the formal generic parameter
-			-- types by those of `actual_parameters' when the 
-			-- corresponding actual parameter is different from
-			-- the formal parameter.
-		require
-			actual_parameters_not_void: actual_parameters /= Void
-		deferred
+feature -- Inheritance / Feature adaptation
+
+	is_inherited: BOOLEAN is
+			-- Is current feature being inherited?
+		do
+			Result := parent /= Void
+		ensure
+			definition: Result = (parent /= Void)
 		end
 
-	resolve_identifier_types (a_class: ET_CLASS) is
-			-- Replace any 'like identifier' types that appear in the
-			-- implementation of current feature in class `a_class' by
-			-- the corresponding 'like feature' or 'like argument'.
-			-- Also resolve 'BIT identifier' types and check validity
-			-- of arguments' name. Set `a_class.has_flatten_error' to
-			-- true if an error occurs.
+	is_redeclared: BOOLEAN is
+			-- Is current feature being redeclared?
+		do
+			-- Result := False
+		ensure
+			is_inherited: Result implies is_inherited
+		end
+
+	is_feature_shared: BOOLEAN is
+			-- Is current feature object shared with `parent'?
+			-- (If shared, then we need to duplicate this feature
+			-- before modifying it in current heir.)
 		require
-			a_class_not_void: a_class /= Void
-			immediate_or_redeclared: implementation_class = a_class
-		deferred
+			is_inherited: is_inherited
+		do
+			Result := True
+		end
+
+	has_rename: BOOLEAN is
+			-- Does current feature appear in a Rename clause?
+		require
+			is_inherited: is_inherited
+			not_redeclared: not is_redeclared
+		do
+			Result := new_name /= Void
+		ensure
+			definition: Result = (new_name /= Void)
+		end
+
+	has_redefine: BOOLEAN is
+			-- Does current feature appear in a Redefine clause?
+		require
+			is_inherited: is_inherited
+			not_redeclared: not is_redeclared
+		do
+			Result := redefine_name /= Void
+		ensure
+			definition: Result = (redefine_name /= Void)
+		end
+
+	has_undefine: BOOLEAN is
+			-- Does current feature appear in an Undefine clause?
+		require
+			is_inherited: is_inherited
+			not_redeclared: not is_redeclared
+		do
+			Result := undefine_name /= Void
+		ensure
+			definition: Result = (undefine_name /= Void)
+		end
+
+	has_select: BOOLEAN is
+			-- Does current feature appear in a Select clause?
+		require
+			is_inherited: is_inherited
+			not_redeclared: not is_redeclared
+		do
+			Result := select_name /= Void
+		ensure
+			definition: Result = (select_name /= Void)
+		end
+
+	has_selected_feature: BOOLEAN is
+			-- Does current inherited feature or one of its merged
+			-- or joined features appear in a Select clause?
+		require
+			is_inherited: is_inherited
+		do
+			Result := selected_feature /= Void
+		ensure
+			definition: Result = (selected_feature /= Void)
+		end
+
+	is_other_seeds_shared: BOOLEAN is
+			-- Is `other_seeds' object shared with one of
+			-- the precursors? (If shared, then we need to
+			-- clone it before modifying it.)
+		require
+			is_inherited: is_inherited
+		do
+			Result := True
+		end
+
+	new_name: ET_RENAME is
+			-- New name when feature is renamed
+		require
+			is_inherited: is_inherited
+			not_redeclared: not is_redeclared
+		do
+			-- Result := Void
+		end
+
+	undefine_name: ET_FEATURE_NAME is
+			-- Name listed in undefine clause
+			-- when feature is undefined
+		require
+			is_inherited: is_inherited
+			not_redeclared: not is_redeclared
+		do
+			-- Result := Void
+		end
+
+	redefine_name: ET_FEATURE_NAME is
+			-- Name listed in redefine clause
+			-- when feature is redefined
+		require
+			is_inherited: is_inherited
+			not_redeclared: not is_redeclared
+		do
+			-- Result := Void
+		end
+
+	select_name: ET_FEATURE_NAME is
+			-- Name listed in select clause
+			-- when feature is selected
+		require
+			is_inherited: is_inherited
+			not_redeclared: not is_redeclared
+		do
+			-- Result := Void
+		end
+
+	selected_feature: ET_FEATURE is
+			-- Either current inherited feature or one of its merged
+			-- or joined features that appears in a Select clause?
+		require
+			is_inherited: is_inherited
+		do
+			-- Result := Void
+		ensure
+			is_inherited: Result /= Void implies Result.is_inherited
+			not_redeclared: Result /= Void implies not Result.is_redeclared
+			has_select: Result /= Void implies Result.has_select
+		end
+
+	precursor_feature: ET_FEATURE is
+			-- Feature inherited from `parent'
+		require
+			is_inherited: is_inherited
+		do
+			Result := Current
+		ensure
+			precursor_feature_not_void: Result /= Void
+			precursor_feature_not_redeclared: not Result.is_redeclared
+		end
+
+	inherited_feature: ET_INHERITED_FEATURE is
+			-- Current feature viewed as an inherited feature
+		require
+			is_inherited: is_inherited
+			not_redeclared: not is_redeclared
+		do
+			create Result.make (Current, parent)
+		ensure
+			inherited_feature_not_void: Result /= Void
+			same_precursor_feature: Result.precursor_feature = precursor_feature
+			same_parent: Result.parent = parent
+		end
+
+	redeclared_feature: ET_REDECLARED_FEATURE is
+			-- Current feature viewed as a redeclared feature
+		require
+			is_redeclared: is_redeclared
+		do
+			check not_redeclared: not is_redeclared end
+		ensure
+			definition: Result = Current
+		end
+
+	merged_feature: ET_FEATURE is
+			-- Inherited feature being merged or joined
+			-- with current inherited feature
+		require
+			is_inherited: is_inherited
+			not_redeclared: not is_redeclared
+		do
+			-- Result := Void
+		ensure
+			void_if_shared: is_feature_shared implies Result = Void
+			is_inherited: Result /= Void implies Result.is_inherited
+			not_redeclared: Result /= Void implies not Result.is_redeclared
+		end
+
+	seeded_feature (a_seed: INTEGER): ET_FEATURE is
+			-- Either current inherited feature or one of its merged or
+			-- joined features whose precursor feature has `a_seed' as seed
+		require
+			is_inherited: is_inherited
+			has_seed: has_seed (a_seed)
+		do
+			Result := Current
+		ensure
+			seeded_feature_not_void: Result /= Void
+			seeded_feature_inherited: Result.is_inherited
+			seeded_feature_not_redeclared: not Result.is_redeclared
+			has_seed: Result.precursor_feature.has_seed (a_seed)
+		end
+
+	flattened_feature: ET_FEATURE is
+			-- Feature resulting from feature adaptation
+		do
+			Result := Current
+		ensure
+			flattened_feature_not_void: Result /= Void
+			flattened_feature_not_redeclared: not Result.is_redeclared
+			immediate: not is_inherited implies Result = Current
+		end
+
+	parent: ET_PARENT
+			-- Parent from which current feature is being inherited
+
+	set_parent (a_parent: like parent) is
+			-- Set `parent' to `a_parent'.
+		require
+			not_inherited: not is_inherited
+			a_parent_not_void: a_parent /= Void
+		do
+			parent := a_parent
+		ensure
+			parent_set: parent = a_parent
+		end
+
+	unset_parent is
+			-- Unset `parent'.
+		require
+			is_inherited: is_inherited
+			is_feature_shared: is_feature_shared
+		do
+			parent := Void
+		ensure
+			parent_unset: parent = Void
+		end
+
+feature -- Replication
+
+	is_selected: BOOLEAN is
+			-- Has an inherited feature been selected
+			-- to solve a replication conflict?
+		require
+			is_inherited: is_inherited
+		do
+			-- Result := False
+		end
+
+	is_replicated: BOOLEAN is
+			-- Has current feature been replicated?
+		require
+			is_inherited: is_inherited
+		do
+			Result := replicated_seeds /= Void
+		ensure
+			definition: Result = (replicated_seeds /= Void)
+		end
+
+	first_feature: ET_FEATURE is
+			-- First feature with a given seed
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
+		end
+
+	selected_count: INTEGER is
+			-- Number of selected features
+		do
+			if is_inherited and then has_selected_feature then
+				Result := 1
+			end
+		end
+
+	replicated_seeds: ET_FEATURE_IDS is
+			-- Seeds involved when current feature has been replicated
+		require
+			is_inherited: is_inherited
+		do
+			-- Result := Void
 		end
 
 invariant
 
 	name_item_not_void: name_item /= Void
-	current_class_not_void: current_class /= Void
 	clients_not_void: clients /= Void
 	first_seed_positive: is_registered implies first_seed > 0
-	first_seed_definition: seeds /= Void implies first_seed = seeds.first
-	first_precursor_definition: precursors /= Void implies first_precursor = precursors.first
 	implementation_class_not_void: implementation_class /= Void
+	-- replicated_seeds: is_inherited and then replicated_seeds /= Void implies
+	-- 	forall a_seed in replicated_seeds, has_seed (a_seed)
 
 end

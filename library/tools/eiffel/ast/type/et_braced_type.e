@@ -14,11 +14,7 @@ class ET_BRACED_TYPE
 
 inherit
 
-	ET_CREATION_TYPE
-
-	ET_STATIC_TYPE
-
-	ET_AGENT_TYPE
+	ET_TARGET_TYPE
 
 creation
 

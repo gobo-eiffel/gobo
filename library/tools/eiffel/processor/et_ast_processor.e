@@ -5,14 +5,31 @@ indexing
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class ET_AST_PROCESSOR
 
-feature -- Processing
+feature {NONE} -- Initialization
+
+	make (a_universe: like universe) is
+			-- Create a new AST processor.
+		require
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+		ensure
+			universe_set: universe = a_universe
+		end
+
+feature -- Access
+
+	universe: ET_UNIVERSE
+			-- Surrounding universe
+
+feature {ET_AST_NODE} -- Processing
 
 	process_actual_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST) is
 			-- Process `a_list'.
@@ -98,14 +115,7 @@ feature -- Processing
 		deferred
 		end
 
-	process_bit_identifier (a_type: ET_BIT_IDENTIFIER) is
-			-- Process `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-		deferred
-		end
-
-	process_bit_type (a_type: ET_BIT_TYPE) is
+	process_bit_n (a_type: ET_BIT_N) is
 			-- Process `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -511,13 +521,6 @@ feature -- Processing
 		deferred
 		end
 
-	process_generic_named_type (a_type: ET_GENERIC_NAMED_TYPE) is
-			-- Process `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-		deferred
-		end
-
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		require
@@ -672,13 +675,6 @@ feature -- Processing
 		deferred
 		end
 
-	process_like_argument (a_type: ET_LIKE_ARGUMENT) is
-			-- Process `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-		deferred
-		end
-
 	process_like_current (a_type: ET_LIKE_CURRENT) is
 			-- Process `a_type'.
 		require
@@ -687,13 +683,6 @@ feature -- Processing
 		end
 
 	process_like_feature (a_type: ET_LIKE_FEATURE) is
-			-- Process `a_type'.
-		require
-			a_type_not_void: a_type /= Void
-		deferred
-		end
-
-	process_like_identifier (a_type: ET_LIKE_IDENTIFIER) is
 			-- Process `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -760,13 +749,6 @@ feature -- Processing
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
-		deferred
-		end
-
-	process_named_type (a_type: ET_NAMED_TYPE) is
-			-- Process `a_type'.
-		require
-			a_type_not_void: a_type /= Void
 		deferred
 		end
 
@@ -882,10 +864,38 @@ feature -- Processing
 		deferred
 		end
 
+	process_qualified_braced_type (a_type: ET_QUALIFIED_BRACED_TYPE) is
+			-- Process `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		deferred
+		end
+
 	process_qualified_call (a_call: ET_QUALIFIED_CALL) is
 			-- Process `a_call'.
 		require
 			a_call_not_void: a_call /= Void
+		deferred
+		end
+
+	process_qualified_like_current (a_type: ET_QUALIFIED_LIKE_CURRENT) is
+			-- Process `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		deferred
+		end
+
+	process_qualified_like_feature (a_type: ET_QUALIFIED_LIKE_FEATURE) is
+			-- Process `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		deferred
+		end
+
+	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
+			-- Process `a_type'.
+		require
+			a_type_not_void: a_type /= Void
 		deferred
 		end
 
@@ -1029,6 +1039,13 @@ feature -- Processing
 		deferred
 		end
 
+	process_tuple_type (a_type: ET_TUPLE_TYPE) is
+			-- Process `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		deferred
+		end
+
 	process_type_comma (a_type: ET_TYPE_COMMA) is
 			-- Process `a_type'.
 		require
@@ -1084,5 +1101,9 @@ feature -- Processing
 			a_list_not_void: a_list /= Void
 		deferred
 		end
+
+invariant
+
+	universe_not_void: universe /= Void
 
 end

@@ -25,8 +25,10 @@ creation
 	make_alias,
 	make_all,
 	make_as,
+	make_attribute,
 	make_check,
 	make_class,
+	make_convert,
 	make_create,
 	make_creation,
 	make_debug,
@@ -57,6 +59,7 @@ creation
 	make_once,
 	make_precursor,
 	make_prefix,
+	make_recast,
 	make_redefine,
 	make_reference,
 	make_rename,
@@ -129,6 +132,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_attribute is
+			-- Create a new 'attribute' keyword.
+		do
+			code := tokens.attribute_keyword_code
+			make_token (tokens.attribute_keyword_name)
+		ensure
+			is_attribute: is_attribute
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_check is
 			-- Create a new 'check' keyword.
 		do
@@ -147,6 +161,17 @@ feature {NONE} -- Initialization
 			make_token (tokens.class_keyword_name)
 		ensure
 			is_class: is_class
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
+	make_convert is
+			-- Create a new 'convert' keyword.
+		do
+			code := tokens.convert_keyword_code
+			make_token (tokens.convert_keyword_name)
+		ensure
+			is_convert: is_convert
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -536,6 +561,17 @@ feature {NONE} -- Initialization
 			column_set: column = no_column
 		end
 
+	make_recast is
+			-- Create a new 'recast' keyword.
+		do
+			code := tokens.recast_keyword_code
+			make_token (tokens.recast_keyword_name)
+		ensure
+			is_recast: is_recast
+			line_set: line = no_line
+			column_set: column = no_column
+		end
+
 	make_redefine is
 			-- Create a new 'redefine' keyword.
 		do
@@ -766,6 +802,12 @@ feature -- Status report
 			Result := (code = tokens.as_keyword_code)
 		end
 
+	is_attribute: BOOLEAN is
+			-- Is current keyword 'attribute'?
+		do
+			Result := (code = tokens.attribute_keyword_code)
+		end
+
 	is_check: BOOLEAN is
 			-- Is current keyword 'check'?
 		do
@@ -776,6 +818,12 @@ feature -- Status report
 			-- Is current keyword 'class'?
 		do
 			Result := (code = tokens.class_keyword_code)
+		end
+
+	is_convert: BOOLEAN is
+			-- Is current keyword 'convert'?
+		do
+			Result := (code = tokens.convert_keyword_code)
 		end
 
 	is_create: BOOLEAN is
@@ -986,6 +1034,12 @@ feature -- Status report
 			-- Is current keyword 'prefix'?
 		do
 			Result := (code = tokens.prefix_keyword_code)
+		end
+
+	is_recast: BOOLEAN is
+			-- Is current keyword 'recast'?
+		do
+			Result := (code = tokens.recast_keyword_code)
 		end
 
 	is_redefine: BOOLEAN is

@@ -63,7 +63,11 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := agent_keyword.position
+			if target /= Void and use_tilde then
+				Result := target.position
+			else
+				Result := agent_keyword.position
+			end
 		end
 
 	break: ET_BREAK is
@@ -74,6 +78,17 @@ feature -- Access
 			else
 				Result := qualified_name.break
 			end
+		end
+
+feature -- Status report
+
+	use_tilde: BOOLEAN is
+			-- Is the old syntax with '~' used?
+		local
+			a_symbol: ET_SYMBOL
+		do
+			a_symbol ?= agent_keyword
+			Result := a_symbol /= Void
 		end
 
 feature -- Setting

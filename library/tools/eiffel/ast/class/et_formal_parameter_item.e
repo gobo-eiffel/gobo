@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal generic parameters in comma-separated list of parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,15 +14,24 @@ deferred class ET_FORMAL_PARAMETER_ITEM
 
 inherit
 
-	ET_AST_NODE
+	ET_TYPE_ITEM
 
 feature -- Access
 
 	formal_parameter: ET_FORMAL_PARAMETER is
 			-- Formal generic parameter in comma-separated list
 		deferred
-		ensure
-			formal_parameter_not_void: Result /= Void
 		end
 
+	type: ET_FORMAL_PARAMETER is
+			-- Type in comma-separated list
+			-- (Note: SE 1.0 does not like to have `type'
+			-- be renamed as `formal_parameter'. So we end
+			-- up having two features here.)
+		do
+			Result := formal_parameter
+		ensure then
+			definition: Result = formal_parameter
+		end
+	
 end

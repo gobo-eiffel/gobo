@@ -5,7 +5,7 @@ indexing
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -59,6 +59,8 @@ inherit
 			text as name
 		undefine
 			is_equal
+		redefine
+			make
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -70,12 +72,25 @@ creation
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_name: like name) is
+			-- Create a new identifier.
+		do
+			cached_hash_code := -1
+			precursor (a_name)
+		end
+
 feature -- Access
 
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := STRING_.case_insensitive_hash_code (name)
+			Result := cached_hash_code
+			if Result = -1 then
+				Result := STRING_.case_insensitive_hash_code (name)
+				cached_hash_code := Result
+			end
 		end
 
 	identifier: ET_IDENTIFIER is
@@ -95,14 +110,14 @@ feature -- Comparison
 			-- Are feature name and `other' the same feature name?
 			-- (case insensitive)
 		local
-			id: ET_IDENTIFIER
+			an_id: ET_IDENTIFIER
 		do
 			if other = Current then
 				Result := True
 			elseif other.is_identifier then
-				id ?= other
-				if id /= Void then
-					Result := same_identifier (id)
+				an_id ?= other
+				if an_id /= Void then
+					Result := same_identifier (an_id)
 				end
 			end
 		end
@@ -111,14 +126,14 @@ feature -- Comparison
 			-- Are class name and `other' the same class name?
 			-- (case insensitive)
 		local
-			id: ET_IDENTIFIER
+			an_id: ET_IDENTIFIER
 		do
 			if other = Current then
 				Result := True
 			elseif other.is_identifier then
-				id ?= other
-				if id /= Void then
-					Result := same_identifier (id)
+				an_id ?= other
+				if an_id /= Void then
+					Result := same_identifier (an_id)
 				end
 			end
 		end
@@ -130,6 +145,8 @@ feature -- Comparison
 			other_not_void: other /= Void
 		do
 			if other = Current then
+				Result := True
+			elseif other.name = name then
 				Result := True
 			else
 				Result := STRING_.same_case_insensitive (name, other.name)
@@ -151,5 +168,10 @@ feature -- Processing
 		do
 			a_processor.process_identifier (Current)
 		end
+
+feature {NONE} -- Implementation
+
+	cached_hash_code: INTEGER
+			-- Cached hash code
 
 end

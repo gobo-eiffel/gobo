@@ -42,7 +42,7 @@ feature -- Access
 	create_keyword: ET_KEYWORD
 			-- 'create' keyword
 
-	creation_type: ET_CREATION_TYPE
+	creation_type: ET_TARGET_TYPE
 			-- Creation type surrounded by braces
 
 	type: ET_TYPE is

@@ -21,8 +21,10 @@ inherit
 			new_all_keyword,
 			new_and_keyword,
 			new_as_keyword,
+			new_attribute_keyword,
 			new_check_keyword,
 			new_class_keyword,
+			new_convert_keyword,
 			new_create_keyword,
 			new_creation_keyword,
 			new_current_keyword,
@@ -58,6 +60,7 @@ inherit
 			new_or_keyword,
 			new_precursor_keyword,
 			new_prefix_keyword,
+			new_recast_keyword,
 			new_redefine_keyword,
 			new_reference_keyword,
 			new_rename_keyword,
@@ -129,7 +132,6 @@ inherit
 			new_actual_parameters,
 			new_agent_actual_argument_comma,
 			new_agent_actual_arguments,
-			new_agent_type,
 			new_all_export,
 			new_argument_name_comma,
 			new_assertion_semicolon,
@@ -137,8 +139,8 @@ inherit
 			new_assignment_attempt,
 			new_attribute,
 			new_bang_instruction,
-			new_bit_identifier,
-			new_bit_type,
+			new_bit_feature,
+			new_bit_n,
 			new_check_instruction,
 			new_choice_comma,
 			new_choice_list,
@@ -150,10 +152,11 @@ inherit
 			new_conditional,
 			new_constant_attribute,
 			new_constrained_formal_parameter,
+			new_constraint_actual_parameters,
 			new_constraint_creator,
+			new_constraint_type_comma,
 			new_create_expression,
 			new_create_instruction,
-			new_creation_type,
 			new_creator,
 			new_current_address,
 			new_debug_compound,
@@ -210,7 +213,7 @@ inherit
 			new_invariants,
 			new_keyword_feature_name_list,
 			new_like_current,
-			new_like_identifier,
+			new_like_feature,
 			new_local_name_comma,
 			new_local_variable_semicolon,
 			new_local_variables,
@@ -248,10 +251,10 @@ inherit
 			new_result_address,
 			new_static_call_expression,
 			new_static_call_instruction,
-			new_static_type,
 			new_strip_expression,
 			new_tag,
 			new_tagged_indexing,
+			new_target_type,
 			new_then_compound,
 			new_type_comma,
 			new_unique_attribute,
@@ -332,6 +335,15 @@ feature -- Eiffel keywords
 			Result.set_break (last_break (False, a_scanner))
 		end
 
+	new_attribute_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+			-- New 'attribute' keyword
+		do
+			create Result.make_attribute
+			Result.set_text (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
 	new_check_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
 			-- New 'check' keyword
 		do
@@ -345,6 +357,15 @@ feature -- Eiffel keywords
 			-- New 'class' keyword
 		do
 			create Result.make_class
+			Result.set_text (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_convert_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+			-- New 'convert' keyword
+		do
+			create Result.make_convert
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -660,6 +681,15 @@ feature -- Eiffel keywords
 			-- New 'prefix' keyword
 		do
 			create Result.make_prefix
+			Result.set_text (a_scanner.last_literal)
+			Result.set_position (a_scanner.line, a_scanner.column)
+			Result.set_break (last_break (False, a_scanner))
+		end
+
+	new_recast_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_KEYWORD is
+			-- New 'recast' keyword
+		do
+			create Result.make_recast
 			Result.set_text (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
@@ -1267,23 +1297,6 @@ feature -- AST nodes
 			end
 		end
 
-	new_agent_type (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_AGENT_TYPE is
-			-- New type descriptor in agent surrounded by braces
-		local
-			a_braced_type: ET_BRACED_TYPE
-		do
-			if a_type /= Void then
-				create a_braced_type.make (a_type)
-				if l /= Void then
-					a_braced_type.set_left_brace (l)
-				end
-				if r /= Void then
-					a_braced_type.set_right_brace (r)
-				end
-				Result := a_braced_type
-			end
-		end
-
 	new_all_export (a_clients: ET_CLIENTS; an_all: ET_KEYWORD): ET_ALL_EXPORT is
 			-- New 'all' export clause
 		do
@@ -1363,7 +1376,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_bit_identifier (a_bit: ET_TOKEN; an_id: ET_IDENTIFIER): ET_BIT_IDENTIFIER is
+	new_bit_feature (a_bit: ET_IDENTIFIER; an_id: ET_IDENTIFIER): ET_BIT_FEATURE is
 			-- New 'BIT Identifier' type
 		do
 			if an_id /= Void then
@@ -1374,7 +1387,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_bit_type (a_bit: ET_TOKEN; an_int: ET_INTEGER_CONSTANT): ET_BIT_TYPE is
+	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT): ET_BIT_N is
 			-- New 'BIT N' type
 		do
 			if an_int /= Void then
@@ -1503,6 +1516,18 @@ feature -- AST nodes
 			end
 		end
 
+	new_constraint_actual_parameters (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_CONSTRAINT_ACTUAL_PARAMETER_LIST is
+			-- New constraint actual generic parameter list with given capacity
+		do
+			create Result.make_with_capacity (nb)
+			if a_left /= Void then
+				Result.set_left_bracket (a_left)
+			end
+			if a_right /= Void then
+				Result.set_right_bracket (a_right)
+			end
+		end
+
 	new_constraint_creator (a_create: ET_KEYWORD; an_end: ET_KEYWORD; nb: INTEGER): ET_CONSTRAINT_CREATOR is
 			-- New constraint creation clause with given capacity
 		do
@@ -1515,7 +1540,17 @@ feature -- AST nodes
 			end
 		end
 
-	new_create_expression (a_create: ET_KEYWORD; a_type: ET_CREATION_TYPE; a_call: ET_QUALIFIED_CALL): ET_CREATE_EXPRESSION is
+	new_constraint_type_comma (a_type: ET_CONSTRAINT_TYPE; a_comma: ET_SYMBOL): ET_CONSTRAINT_TYPE_ITEM is
+			-- New constraint_type-comma
+		do
+			if a_comma = Void then
+				Result := a_type
+			elseif a_type /= Void then
+				create {ET_CONSTRAINT_TYPE_COMMA} Result.make (a_type, a_comma)
+			end
+		end
+
+	new_create_expression (a_create: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_call: ET_QUALIFIED_CALL): ET_CREATE_EXPRESSION is
 			-- New create expression
 		do
 			if a_type /= Void then
@@ -1526,7 +1561,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_create_instruction (a_create: ET_KEYWORD; a_type: ET_CREATION_TYPE; a_target: ET_WRITABLE; a_call: ET_QUALIFIED_CALL): ET_CREATE_INSTRUCTION is
+	new_create_instruction (a_create: ET_KEYWORD; a_type: ET_TARGET_TYPE; a_target: ET_WRITABLE; a_call: ET_QUALIFIED_CALL): ET_CREATE_INSTRUCTION is
 			-- New create instruction
 		do
 			if a_target /= Void then
@@ -1534,23 +1569,6 @@ feature -- AST nodes
 				if a_create /= Void then
 					Result.set_create_keyword (a_create)
 				end
-			end
-		end
-
-	new_creation_type (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_CREATION_TYPE is
-			-- New creation type surrounded by braces
-		local
-			a_braced_type: ET_BRACED_TYPE
-		do
-			if a_type /= Void then
-				create a_braced_type.make (a_type)
-				if l /= Void then
-					a_braced_type.set_left_brace (l)
-				end
-				if r /= Void then
-					a_braced_type.set_right_brace (r)
-				end
-				Result := a_braced_type
 			end
 		end
 
@@ -2234,8 +2252,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_like_identifier (a_like: ET_KEYWORD; a_name: ET_IDENTIFIER): ET_LIKE_IDENTIFIER is
-			-- New 'like Identifier' type
+	new_like_feature (a_like: ET_KEYWORD; a_name: ET_FEATURE_NAME): ET_LIKE_FEATURE is
+			-- New 'like name' type
 		do
 			if a_name /= Void then
 				create Result.make (a_name)
@@ -2665,7 +2683,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_static_call_expression (a_feature: ET_KEYWORD; a_type: ET_STATIC_TYPE;
+	new_static_call_expression (a_feature: ET_KEYWORD; a_type: ET_TARGET_TYPE;
 		a_name: ET_QUALIFIED_FEATURE_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_STATIC_CALL_EXPRESSION is
 			-- New static call expression
 		do
@@ -2677,7 +2695,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_static_call_instruction (a_feature: ET_KEYWORD; a_type: ET_STATIC_TYPE;
+	new_static_call_instruction (a_feature: ET_KEYWORD; a_type: ET_TARGET_TYPE;
 		a_name: ET_QUALIFIED_FEATURE_NAME; args: ET_ACTUAL_ARGUMENT_LIST): ET_STATIC_CALL_INSTRUCTION is
 			-- New static call instruction
 		do
@@ -2686,23 +2704,6 @@ feature -- AST nodes
 				if a_feature /= Void then
 					Result.set_feature_keyword (a_feature)
 				end
-			end
-		end
-
-	new_static_type (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_STATIC_TYPE is
-			-- New static type surrounded by braces
-		local
-			a_braced_type: ET_BRACED_TYPE
-		do
-			if a_type /= Void then
-				create a_braced_type.make (a_type)
-				if l /= Void then
-					a_braced_type.set_left_brace (l)
-				end
-				if r /= Void then
-					a_braced_type.set_right_brace (r)
-				end
-				Result := a_braced_type
 			end
 		end
 
@@ -2736,6 +2737,23 @@ feature -- AST nodes
 		do
 			if a_tag /= Void and a_terms /= Void then
 				create Result.make (a_tag, a_terms)
+			end
+		end
+
+	new_target_type (l: ET_SYMBOL; a_type: ET_TYPE; r: ET_SYMBOL): ET_TARGET_TYPE is
+			-- New type surrounded by braces
+		local
+			a_braced_type: ET_BRACED_TYPE
+		do
+			if a_type /= Void then
+				create a_braced_type.make (a_type)
+				if l /= Void then
+					a_braced_type.set_left_brace (l)
+				end
+				if r /= Void then
+					a_braced_type.set_right_brace (r)
+				end
+				Result := a_braced_type
 			end
 		end
 

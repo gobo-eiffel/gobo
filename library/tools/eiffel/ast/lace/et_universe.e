@@ -5,7 +5,7 @@ indexing
 		"Eiffel class universes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,6 +51,11 @@ feature {NONE} -- Initialization
 			create features.make (100000)
 			error_handler := an_error_handler
 			ast_factory := a_factory
+			set_use_attribute_keyword (True)
+			set_use_convert_keyword (True)
+			set_use_create_keyword (True)
+			set_use_recast_keyword (True)
+			set_use_reference_keyword (True)
 			make_basic_classes
 		ensure
 			clusters_set: clusters = a_clusters
@@ -61,15 +66,17 @@ feature {NONE} -- Initialization
 	make_basic_classes is
 			-- Create basic classes.
 		local
-			a_name: ET_IDENTIFIER
 			any_parent: ET_PARENT
 		do
-			create a_name.make ("ANY")
-			any_class := eiffel_class (a_name)
-			create a_name.make ("GENERAL")
-			general_class := eiffel_class (a_name)
-			create a_name.make ("NONE")
-			none_class := eiffel_class (a_name)
+			any_class := eiffel_class (tokens.any_class_name)
+			any_class.set_in_system (True)
+			general_class := eiffel_class (tokens.general_class_name)
+			none_class := eiffel_class (tokens.none_class_name)
+			tuple_class := eiffel_class (tokens.tuple_class_name)
+			tuple_class.set_in_system (True)
+			bit_class := eiffel_class (tokens.bit_class_name)
+			bit_class.set_in_system (True)
+			create unknown_class.make_unknown (tokens.unknown_class_name)
 			create any_type.make (Void, any_class.name, any_class)
 			create any_parent.make (any_type, Void, Void, Void, Void, Void)
 			create any_parents.make_with_capacity (1)
@@ -99,7 +106,7 @@ feature -- Status report
 		end
 
 	is_preparsed: BOOLEAN
-			-- Has current universe already been preparsed?
+			-- Has the whole universe already been preparsed?
 
 feature -- Access
 
@@ -112,9 +119,6 @@ feature -- Access
 	classes: DS_HASH_TABLE [ET_CLASS, ET_CLASS_NAME]
 			-- Classes in universe
 
-	features: DS_ARRAYED_LIST [ET_FEATURE]
-			-- Features in universe, indexed by feature IDs
-
 	eiffel_class (a_name: ET_CLASS_NAME): ET_CLASS is
 			-- Class named `a_name' in universe
 		require
@@ -124,47 +128,11 @@ feature -- Access
 			if classes.found then
 				Result := classes.found_item
 			else
-				Result := ast_factory.new_class (a_name, classes.count + 1, Current)
+				Result := ast_factory.new_class (a_name, classes.count + 1)
 				classes.force_last (Result, a_name)
 			end
 		ensure
 			class_not_void: Result /= Void
-		end
-
-	descendants (a_class: ET_CLASS): DS_ARRAYED_LIST [ET_CLASS] is
-			-- Proper descendant classes of `a_class'
-		require
-			a_class_not_void: a_class /= Void
-		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			other_class: ET_CLASS
-		do
-			if a_class = any_class or a_class = general_class then
-				create Result.make (classes.count)
-			else
-				create Result.make (10)
-			end
-			a_cursor := classes.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				other_class := a_cursor.item
-				if other_class.ancestors_searched and not other_class.has_ancestors_error then
-					if other_class.has_ancestor (a_class) then
-						Result.force_last (other_class)
-					end
-				end
-				a_cursor.forth
-			end
-		ensure
-			descendants_not_void: Result /= Void
-			no_void_descendant: not Result.has (Void)
-		end
-
-	eiffel_parser: ET_EIFFEL_PARSER is
-			-- Eiffel parser
-		once
-			create Result.make_with_factory (Current, ast_factory, error_handler)
-		ensure
-			eiffel_parser_not_void: Result /= Void
 		end
 
 	error_handler: ET_ERROR_HANDLER
@@ -181,11 +149,39 @@ feature -- Basic classes
 	none_class: ET_CLASS
 			-- Class NONE
 
+	tuple_class: ET_CLASS
+			-- Class TUPLE
+
+	bit_class: ET_CLASS
+			-- Class BIT
+
+	unknown_class: ET_CLASS
+			-- Class *UNKNOWN*
+			-- This class is equal to no other classes, not even itself;
+			-- it does conform to no type, not even itself, and no type
+			-- conforms to it
+
 	any_type: ET_CLASS_TYPE
 			-- Class type ANY
 
 	any_parents: ET_PARENT_LIST
 			-- Default parents
+
+feature -- Features
+
+	register_feature (a_feature: ET_FEATURE) is
+			-- Register `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			features.force_last (a_feature)
+			a_feature.set_id (features.count)
+		ensure
+			registered: a_feature.is_registered
+		end
+
+	features: DS_ARRAYED_LIST [ET_FEATURE]
+			-- Features in universe, indexed by feature IDs
 
 feature -- Measurement
 
@@ -213,6 +209,7 @@ feature -- Setting
 			a_name_not_void: a_name /= Void
 		do
 			root_class := eiffel_class (a_name)
+			root_class.set_in_system (True)
 		ensure
 			root_class_not_void: root_class /= Void
 			root_class_set: root_class.name.same_class_name (a_name)
@@ -224,6 +221,70 @@ feature -- Setting
 			clusters := a_clusters
 		ensure
 			clusters_set: clusters = a_clusters
+		end
+
+feature -- Parser status report
+
+	use_attribute_keyword: BOOLEAN
+			-- Should 'attribute' be considered as
+			-- a keyword (otherwise identifier)?
+
+	use_convert_keyword: BOOLEAN
+			-- Should 'convert' be considered as
+			-- a keyword (otherwise identifier)?
+
+	use_create_keyword: BOOLEAN
+			-- Should 'create' be considered as
+			-- a keyword (otherwise identifier)?
+
+	use_recast_keyword: BOOLEAN
+			-- Should 'recast' be considered as
+			-- a keyword (otherwise identifier)?
+
+	use_reference_keyword: BOOLEAN
+			-- Should 'reference' be considered as
+			-- a keyword (otherwise identifier)?
+
+feature -- Parser setting
+
+	set_use_attribute_keyword (b: BOOLEAN) is
+			-- Set `use_attribute_keyword' to `b'.
+		do
+			use_attribute_keyword := b
+		ensure
+			use_attribute_keyword_set: use_attribute_keyword = b
+		end
+
+	set_use_convert_keyword (b: BOOLEAN) is
+			-- Set `use_convert_keyword' to `b'.
+		do
+			use_convert_keyword := b
+		ensure
+			use_convert_keyword_set: use_convert_keyword = b
+		end
+
+	set_use_create_keyword (b: BOOLEAN) is
+			-- Set `use_create_keyword' to `b'.
+		do
+			use_create_keyword := b
+		ensure
+			use_create_keyword_set: use_create_keyword = b
+		end
+
+	set_use_recast_keyword (b: BOOLEAN) is
+			-- Set `use_recast_keyword' to `b'.
+		do
+			use_recast_keyword := b
+		ensure
+			use_recast_keyword_set: use_recast_keyword = b
+		end
+
+	set_use_reference_keyword (b: BOOLEAN) is
+			-- Set `use_reference_keyword' to `b'.
+		do
+			use_reference_keyword := b
+		ensure
+			use_reference_keyword_set: use_reference_keyword = b
 		end
 
 feature -- Parsing
@@ -318,6 +379,7 @@ feature -- Parsing
 			if clusters /= Void then
 				clusters.parse_all (Current)
 			end
+			is_preparsed := True
 		end
 
 	parse_system is
@@ -326,30 +388,26 @@ feature -- Parsing
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 			not_done: BOOLEAN
+			a_parser: like eiffel_parser
 		do
 			if root_class /= Void then
-				if not root_class.is_preparsed then
-					preparse
-				end
+				a_parser := eiffel_parser
+				root_class.process (a_parser)
 				if not root_class.is_preparsed then
 						-- TODO:
 					print ("Class ")
 					print (root_class.name.name)
 					print (" not found.%N")
 				else
-					root_class.add_to_system
-					root_class.parse
-					a_cursor := classes.new_cursor
 					not_done := True
+					a_cursor := classes.new_cursor
 					from until not not_done loop
 						not_done := False
 						from a_cursor.start until a_cursor.after loop
 							a_class := a_cursor.item
 							if a_class.in_system and then not a_class.is_parsed then
-								if a_class.is_preparsed then
-									a_class.parse
-									not_done := True
-								end
+								a_class.process (a_parser)
+								not_done := True
 							end
 							a_cursor.forth
 						end
@@ -367,92 +425,179 @@ feature -- Parsing
 			a_filename_not_void: a_filename /= Void
 			a_cluster_not_void: a_cluster /= Void
 		do
-			eiffel_parser.set_universe (Current)
-			eiffel_parser.set_ast_factory (ast_factory)
-			eiffel_parser.set_error_handler (error_handler)
 			eiffel_parser.parse (a_file, a_filename, a_cluster)
 		end
 
 feature -- Compilation
 
-	register_feature (a_feature: ET_FEATURE) is
-			-- Register `a_feature'.
-		require
-			a_feature_not_void: a_feature /= Void
+	compile is
+			-- Compile universe.
 		do
-			features.force_last (a_feature)
-			a_feature.set_id (features.count)
-		ensure
-			registered: a_feature.is_registered
+			if root_class = Void or root_class = none_class then
+				compile_all
+			else
+				compile_system
+			end
 		end
 
-	compute_ancestors is
+	compile_all is
+			-- Compile all classes in the universe.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 			nb: INTEGER
 		do
---			if root_class /= Void then
---				root_class.add_to_system
---			end
+			parse_all
+debug ("ericb")
+	print ("Parsed ")
+	print (classes.count)
+	print (" classes%N")
+	print (features.count)
+	print (" features%N")
+	io.read_line
+end
 			a_cursor := classes.new_cursor
+				-- Build ancestors.
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
---				if a_class.in_system then
-					nb := nb + 1
-					if a_class.is_parsed and then not a_class.has_syntax_error then
-						a_class.flatten
---						a_class.search_ancestors
-					end
---				end
+				if a_class.is_parsed then
+					a_class.process (ancestor_builder)
+				end
 				a_cursor.forth
 			end
-			print ("Flattened ")
-			print (nb)
-			print (" classes%N")
+				-- Flatten features.
+			from a_cursor.start until a_cursor.after loop
+				a_class := a_cursor.item
+				if a_class.ancestors_built then
+					nb := nb + 1
+					a_class.process (feature_flattener)
+				end
+				a_cursor.forth
+			end
+debug ("ericb")
+	print ("Flattened ")
+	print (nb)
+	print (" classes%N")
+	print ("Done.%N")
+	print (features.count)
+	print (" features%N")
+end
 		end
 
-feature {NONE} -- Implementation
+	compile_system is
+			-- Compile all classes in the system.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class: ET_CLASS
+			nb: INTEGER
+		do
+			-- preparse_single
+			preparse_shallow
+			parse_system
+debug ("ericb")
+	print ("Preparsed ")
+	print (classes.count)
+	print (" classes%N")
+	print ("Parsed ")
+	print (parsed_classes_count)
+	print (" classes%N")
+	print (features.count)
+	print (" features%N")
+	io.read_line
+end
+			a_cursor := classes.new_cursor
+				-- Build ancestors.
+			from a_cursor.start until a_cursor.after loop
+				a_class := a_cursor.item
+				if a_class.is_parsed then
+					a_class.process (ancestor_builder)
+				end
+				a_cursor.forth
+			end
+				-- Flatten features.
+			from a_cursor.start until a_cursor.after loop
+				a_class := a_cursor.item
+				if a_class.ancestors_built then
+					nb := nb + 1
+					a_class.process (feature_flattener)
+				end
+				a_cursor.forth
+			end
+debug ("ericb")
+	print ("Flattened ")
+	print (nb)
+	print (" classes%N")
+	print ("Done.%N")
+	print (features.count)
+	print (" features%N")
+end
+		end
+
+feature -- Processors
 
 	eiffel_preparser: ET_EIFFEL_PREPARSER is
 			-- Eiffel preparser
-		once
-			create Result.make_with_factory (Current, ast_factory, error_handler)
-			Result.set_use_create_keyword (True)
+		do
+			Result := internal_eiffel_preparser
+			if Result = Void then
+				create Result.make_with_factory (Current, ast_factory, error_handler)
+				internal_eiffel_preparser := Result
+			end
+			Result.set_use_attribute_keyword (use_attribute_keyword)
+			Result.set_use_convert_keyword (use_convert_keyword)
+			Result.set_use_create_keyword (use_create_keyword)
+			Result.set_use_recast_keyword (use_recast_keyword)
+			Result.set_use_reference_keyword (use_reference_keyword)
 		ensure
 			eiffel_preparser_not_void: Result /= Void
 		end
 
-	ast_factory: ET_AST_FACTORY
-			-- Abstract Syntax Tree factory
-
-feature {ET_CLASS} -- Implementation
-
-	class_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS] is
-			-- Class sorter
-		once
-			create {DS_HASH_TOPOLOGICAL_SORTER [ET_CLASS]} Result.make_default
+	eiffel_parser: ET_EIFFEL_PARSER is
+			-- Eiffel parser
+		do
+			Result := internal_eiffel_parser
+			if Result = Void then
+				create Result.make_with_factory (Current, ast_factory, error_handler)
+				internal_eiffel_parser := Result
+			end
+			Result.set_universe (Current)
+			Result.set_ast_factory (ast_factory)
+			Result.set_error_handler (error_handler)
+			Result.set_use_attribute_keyword (use_attribute_keyword)
+			Result.set_use_convert_keyword (use_convert_keyword)
+			Result.set_use_create_keyword (use_create_keyword)
+			Result.set_use_recast_keyword (use_recast_keyword)
+			Result.set_use_reference_keyword (use_reference_keyword)
 		ensure
-			class_sorter_not_void: class_sorter /= Void
+			eiffel_parser_not_void: Result /= Void
+		end
+
+	ancestor_builder: ET_ANCESTOR_BUILDER is
+			-- Ancestor builder
+		once
+			create Result.make (Current)
+		ensure
+			ancestor_builder_not_void: Result /= Void
 		end
 
 	feature_flattener: ET_FEATURE_FLATTENER is
 			-- Feature flattener
 		once
-			create Result.make (any_class)
+			create Result.make (Current)
 		ensure
 			feature_flattener_not_void: Result /= Void
 		end
 
-feature {ET_FORMAL_PARAMETER_LIST, ET_FORMAL_PARAMETER_TYPE} -- Implementation
+feature {NONE} -- Implementation
 
-	formal_parameter_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER] is
-			-- Formal generic parameter sorter
-		once
-			create {DS_HASH_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]} Result.make_default
-		ensure
-			formal_parameter_sorter_not_void: Result /= Void
-		end
+	ast_factory: ET_AST_FACTORY
+			-- Abstract Syntax Tree factory
+
+	internal_eiffel_preparser: ET_EIFFEL_PREPARSER
+			-- Eiffel preparser
+
+	internal_eiffel_parser: ET_EIFFEL_PARSER
+			-- Eiffel parser
 
 invariant
 
@@ -465,6 +610,9 @@ invariant
 	any_class_not_void: any_class /= Void
 	general_class_not_void: general_class /= Void
 	none_class_not_void: none_class /= Void
+	tuple_class_not_void: tuple_class /= Void
+	bit_class_not_void: bit_class /= Void
+	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void
 	any_parents_not_void: any_parents /= Void
 

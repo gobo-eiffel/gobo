@@ -141,7 +141,7 @@ feature -- Access
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			a_class: ET_CLASS
 		do
-			create Result.make (Initial_classes_capacity)
+			create Result.make (initial_classes_capacity)
 			a_cursor := a_universe.classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
@@ -495,11 +495,16 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Initial_classes_capacity: INTEGER is 20
-			-- Initial capacity for `classes'
-
 	dot_directory_name: STRING is "."
 	dot_dot_directory_name: STRING is ".."
 			-- Directory names
+
+	initial_classes_capacity: INTEGER is
+			-- Initial capacity for `classes'
+		once
+			Result := 20
+		ensure
+			capacity_positive: Result > 0
+		end
 
 end

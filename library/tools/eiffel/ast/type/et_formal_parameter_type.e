@@ -5,7 +5,7 @@ indexing
 		"Eiffel formal generic parameter types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,18 +15,15 @@ class ET_FORMAL_PARAMETER_TYPE
 inherit
 
 	ET_NAMED_TYPE
-		rename
-			make as make_named_type
 		redefine
-			same_syntactical_type,
-			syntactically_conforms_to,
-			check_parent_validity,
-			check_constraint_validity,
-			has_formal_parameters,
+			name, named_type,
+			same_syntactical_formal_parameter_type,
+			conforms_from_bit_type,
+			conforms_from_class_type,
+			conforms_from_formal_parameter_type,
+			conforms_from_tuple_type,
 			resolved_formal_parameters,
-			resolved_named_types,
-			base_type, deep_cloned_type,
-			process
+			is_valid_context_type
 		end
 
 creation
@@ -50,126 +47,490 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	name: ET_IDENTIFIER
+			-- Name of type
+
 	index: INTEGER
 			-- Position in list of generic parameters
 
-feature -- Status report
-
-	same_syntactical_type (other: ET_TYPE): BOOLEAN is
-			-- Are current type and `other' syntactically
-			-- the same type (e.g. do not try to resolve
-			-- anchored types)?
-		local
-			a_formal: ET_FORMAL_PARAMETER_TYPE
+	direct_base_class (a_universe: ET_UNIVERSE): ET_CLASS is
+			-- Class on which current type is directly based
+			-- (e.g. a Class_type, a Tuple_type or a Bit_type);
+			-- Return Void if not directly based on a class
+			-- (e.g. Anchored_type). `a_universe' is the
+			-- surrounding universe holding all classes.
 		do
-			a_formal ?= other
-			if a_formal /= Void then
-				Result := a_formal.index = index
-			end
+			-- Result := Void
+		ensure then
+			no_direct_base_type: Result = Void
 		end
 
-	syntactically_conforms_to (other: ET_TYPE; a_class: ET_CLASS): BOOLEAN is
-			-- Does current type syntactically conforms
-			-- to `other' when it appears in `a_class'
-			-- (e.g. do not try to resolve anchored types)?
+	base_class (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_CLASS is
+			-- Base class of current type when it appears in `a_context'
+			-- in `a_universe' (Definition of base class in ETL2 page 198).
+			-- Return "*UNKNOWN*" class if unresolved identifier type,
+			-- anchored type involved in a cycle, or unmatched formal
+			-- generic parameter.
 		local
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			an_actual: ET_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-			formal_parameters: ET_FORMAL_PARAMETER_LIST
+			a_class: ET_CLASS
+			a_formals: ET_FORMAL_PARAMETER_LIST
 			a_formal: ET_FORMAL_PARAMETER
-			a_type, any_type: ET_TYPE
+			a_base_type: ET_BASE_TYPE
+			a_context_type: ET_BASE_TYPE
 		do
-			a_formal_type ?= other
-			if a_formal_type /= Void then
-				Result := a_formal_type.index = index
-			end
-			if not Result then
-				formal_parameters := a_class.generic_parameters
-				if formal_parameters /= Void then
-					if index <= formal_parameters.count then
-						a_formal := formal_parameters.formal_parameter (index)
-						a_type := a_formal.constraint
-						if a_type = Void then
-							any_type := a_class.universe.any_type
-							a_type := any_type
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals /= Void and then index <= an_actuals.count then
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+					a_class := a_context_type.direct_base_class (a_universe)
+					a_formals := a_class.formal_parameters
+					if a_formals /= Void and then index <= a_formals.count then
+						a_formal := a_formals.formal_parameter (index)
+						a_base_type := a_formal.constraint_base_type
+						if a_base_type /= Void then
+							Result := a_base_type.direct_base_class (a_universe)
+						else
+								-- This formal parameter has either no constraint
+								-- or a cyclic constraint of the form "[G -> H,
+								-- H -> G]". The base class is considered to be
+								-- "ANY" in these two cases.
+							Result := a_universe.any_class
 						end
-						Result := a_type.syntactically_conforms_to (other, a_class)
+					else
+							-- Error: formal parameter not matched.
+						Result := a_universe.unknown_class
 					end
+				else
+					Result := an_actual.base_class (a_context.context, a_universe)
 				end
-			end
-		end
-
-feature -- Validity
-
-	check_parent_validity (an_heir: ET_CLASS): BOOLEAN is
-			-- Check whether current type is valid when
-			-- it appears in parent clause of `an_heir'.
-			-- Report errors if not valid.
-		do
-			Result := True
-		end
-
-	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
-			-- Check whether current type is valid when it
-			-- appears in a constraint of the formal generic
-			-- parameter `a_formal' in class `a_class'.
-			-- `a_sorter' is used to find possible cycle in
-			-- formal generic parameter declaration.
-			-- Report errors if not valid.
-		local
-			an_index: INTEGER
-			formals: ET_FORMAL_PARAMETER_LIST
-			other_formal: ET_FORMAL_PARAMETER
-		do
-			an_index := a_formal.index
-			if an_index = index then
-				a_class.error_handler.report_vcfg3e_error (a_class, a_formal, Current)
 			else
-				if index > an_index then
-					a_class.error_handler.report_vcfg3f_error (a_class, a_formal, Current)
-				end
-				if a_class.error_handler.is_se then
-					formals := a_class.generic_parameters
-					if formals /= Void and then index <= formals.count then
-						other_formal := formals.formal_parameter (index)
-						a_sorter.force_relation (other_formal, a_formal)
+					-- Error: formal parameter not matched.
+				Result := a_universe.unknown_class
+			end
+		end
+
+	base_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_BASE_TYPE is
+			-- Base type of current type, when it appears in `a_context'
+			-- in `a_universe', only made up of class names and generic
+			-- formal parameters when the root type of `a_context' is a
+			-- generic type not fully derived (Definition of base type in
+			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
+			-- type, anchored type involved in a cycle, or unmatched formal
+			-- generic parameter if this parameter is current type.
+		local
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			an_actual: ET_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_class: ET_CLASS
+			a_formals: ET_FORMAL_PARAMETER_LIST
+			a_formal: ET_FORMAL_PARAMETER
+			a_base_type: ET_BASE_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals /= Void and then index <= an_actuals.count then
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+					a_class := a_context_type.direct_base_class (a_universe)
+					a_formals := a_class.formal_parameters
+					if a_formals /= Void and then index <= a_formals.count then
+						a_formal := a_formals.formal_parameter (index)
+						a_base_type := a_formal.constraint_base_type
+						if a_base_type /= Void then
+							Result := a_base_type
+						else
+								-- This formal parameter has either no constraint
+								-- or a cyclic constraint of the form "[G -> H,
+								-- H -> G]". The base type is considered to be
+								-- "ANY" in these two cases.
+							Result := a_universe.any_type
+						end
+					else
+							-- Error: formal parameter not matched.
+						Result := a_universe.unknown_class
 					end
+				else
+					Result := an_actual.base_type (a_context.context, a_universe)
+				end
+			else
+					-- Error: formal parameter not matched.
+				Result := a_universe.unknown_class
+			end
+		end
+
+	named_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_NAMED_TYPE is
+			-- Same as `base_type' except when current type is still
+			-- a formal generic parameter after having been replaced
+			-- by its actual counterpart in `a_context'. Return this
+			-- new formal type in that case instead of the base
+			-- type of its constraint.
+		local
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			an_actual: ET_TYPE
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals /= Void and then index <= an_actuals.count then
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+					Result := a_formal_type
+				else
+					Result := an_actual.base_type (a_context.context, a_universe)
+				end
+			else
+					-- Error: formal parameter not matched.
+				Result := a_universe.unknown_class
+			end
+		end
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := name.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := name.break
+		end
+
+feature -- Comparison
+
+	same_syntactical_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := other.same_syntactical_formal_parameter_type (a_formal_type, a_context, other_context, a_universe)
+				else
+					Result := an_actual.same_syntactical_type (other, other_context, a_context.context, a_universe)
 				end
 			end
-			Result := True
+		end
+
+feature {ET_TYPE} -- Comparison
+
+	same_syntactical_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current type appearing in `a_context' and `other'
+			-- type appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := a_formal_type.index = other.index
+				else
+					Result := an_actual.same_syntactical_formal_parameter_type (other, other_context, a_context.context, a_universe)
+				end
+			end
+		end
+
+feature -- Conformance
+
+	conforms_to_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does current type appearing in `a_context' conform
+			-- to `other' type appearing in `other_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					Result := other.conforms_from_formal_parameter_type (a_formal_type, a_context, other_context, a_processor)
+				else
+					Result := an_actual.conforms_to_type (other, other_context, a_context.context, a_processor)
+				end
+			end
+		end
+
+feature {ET_TYPE} -- Conformance
+
+	conforms_from_bit_type (other: ET_BIT_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform
+			-- to current type appearing in `a_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- No type other than itself conforms to
+						-- a formal generic type.
+					Result := False
+				else
+					Result := an_actual.conforms_from_bit_type (other, other_context, a_context.context, a_processor)
+				end
+			end
+		end
+
+	conforms_from_class_type (other: ET_CLASS_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform
+			-- to current type appearing in `a_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- No type other than itself conforms to
+						-- a formal generic type.
+					Result := False
+				else
+					Result := an_actual.conforms_from_class_type (other, other_context, a_context.context, a_processor)
+				end
+			end
+		end
+
+	conforms_from_formal_parameter_type (other: ET_FORMAL_PARAMETER_TYPE;
+		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT;
+		a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform
+			-- to current type appearing in `a_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+			an_index, other_index: INTEGER
+			a_class: ET_CLASS
+			a_formals: ET_FORMAL_PARAMETER_LIST
+			a_formal: ET_FORMAL_PARAMETER
+			a_constraint: ET_TYPE
+			a_base_type: ET_BASE_TYPE
+			visited: ARRAY [BOOLEAN]
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- The actual parameter associated with current
+						-- type is itself a formal generic parameter.
+					an_index := a_formal_type.index
+					other_index := other.index
+					if an_index = an_index then
+						Result := True
+					else
+							-- Check for constraints of the form "[G -> H,
+							-- H -> K, K]" where "G" conforms to "K".
+							-- (Note that since `a_context' and `other_context'
+							-- are both root contexts, and knowing that their
+							-- root contexts are the same, it does not matter
+							-- whether we operate in `a_context' or `other_context'
+							-- from now on.)
+						a_class := a_context_type.direct_base_class (a_processor.universe)
+						a_formals := a_class.formal_parameters
+						if a_formals /= Void and then other_index <= a_formals.count then
+							a_formal := a_formals.formal_parameter (other_index)
+							a_constraint := a_formal.constraint
+							if a_constraint /= Void then
+									-- We know that there is a constraint.
+								a_base_type := a_formal.constraint_base_type
+								if a_base_type /= Void then
+										-- There is no cycle of the form
+										-- "[G -> G]" or "[G -> H, H -> G]".
+									Result := a_constraint.conforms_to_type (Current, a_context, other_context, a_processor)
+								else
+										-- There is a cycle. If `other' is "G" and current
+										-- type is "K", we still want to return True when
+										-- "[G -> H, H -> K, K -> G]" but False (and
+										-- without entering an infinite loop) when
+										-- "[G -> H, H -> G, K]".
+									a_formal_type ?= a_constraint
+									if a_formal_type /= Void then
+										from
+											create visited.make (1, a_formals.count)
+											visited.put (True, other_index)
+											other_index := a_formal_type.index
+											Result := an_index = other_index
+										until
+											Result or visited.item (other_index)
+										loop
+											visited.put (True, other_index)
+											if other_index <= a_formals.count then
+												a_formal := a_formals.formal_parameter (other_index)
+												a_formal_type ?= a_formal.constraint
+												if a_formal_type /= Void then
+													other_index := a_formal_type.index
+													Result := an_index = other_index
+												else
+														-- Internal error: we know that there is a cycle
+														-- of the form "[G -> H, H -> G]", so the constraint
+														-- has to be a formal parameter.
+													Result := False
+												end
+											else
+													-- Internal error: does `other' type really
+													-- appear in `other_context'?
+												Result := False
+											end
+										end
+									else
+											-- Internal error: we know that there is a cycle
+											-- of the form "[G -> H, H -> G]", so the constraint
+											-- has to be a formal parameter.
+										Result := False
+									end
+								end
+							end
+						else
+								-- Internal error: does `other' type really
+								-- appear in `other_context'?
+							Result := False
+						end
+					end
+				else
+					Result := an_actual.conforms_from_formal_parameter_type (other, other_context, a_context.context, a_processor)
+				end
+			end
+		end
+
+	conforms_from_tuple_type (other: ET_TUPLE_TYPE; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does `other' type appearing in `other_context' conform
+			-- to current type appearing in `a_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
+		local
+			an_actual: ET_TYPE
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_formal_type: ET_FORMAL_PARAMETER_TYPE
+			a_context_type: ET_BASE_TYPE
+		do
+			a_context_type := a_context.type
+			an_actuals := a_context_type.actual_parameters
+			if an_actuals = Void or else index > an_actuals.count then
+					-- Internal error: does current type really
+					-- appear in `a_context'?
+				Result := False
+			else
+				an_actual := an_actuals.type (index)
+				a_formal_type ?= an_actual
+				if a_formal_type /= Void and a_context.is_root_context then
+						-- No type other than itself conforms to
+						-- a formal generic type.
+					Result := False
+				else
+					Result := an_actual.conforms_from_tuple_type (other, other_context, a_context.context, a_processor)
+				end
+			end
 		end
 
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): BOOLEAN is
-			-- Does current type contain formal generic parameter
-			-- types whose corresponding actual parameter in
-			-- `actual_parameters' is different from the formal
-			-- parameter?
-		local
-			a_formal: ET_FORMAL_PARAMETER_TYPE
-		do
-			if index <= actual_parameters.count then
-				a_formal ?= actual_parameters.type (index)
-				if a_formal = Void or else a_formal.index /= index then
-					Result := True
-				end
-			end
-		end
-
-	resolved_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TYPE is
-			-- Replace in current type the formal generic parameter
-			-- types by those of `actual_parameters' when the 
-			-- corresponding actual parameter is different from
-			-- the formal parameter. (Warning: this is a side-effect
-			-- function.)
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TYPE is
+			-- Version of current type where the formal generic
+			-- parameter types have been replaced by their actual
+			-- counterparts in `a_parameters'
 		local
 			a_type: ET_TYPE
 			a_formal: ET_FORMAL_PARAMETER_TYPE
 		do
 			Result := Current
-			if index <= actual_parameters.count then
-				a_type := actual_parameters.type (index)
+			if index <= a_parameters.count then
+				a_type := a_parameters.type (index)
 				a_formal ?= a_type
 				if a_formal = Void or else a_formal.index /= index then
 					Result := a_type
@@ -177,60 +538,31 @@ feature -- Type processing
 			end
 		end
 
-	resolved_named_types (a_class: ET_CLASS; ast_factory: ET_AST_FACTORY): ET_TYPE is
-			-- Replace in current type unresolved named types
-			-- by corresponding class types or formal generic
-			-- parameter names. `a_class' is the class where
-			-- current type appears in the source code.
-			-- (Warning: this is a side-effect function.)
-		do
-			Result := Current
-		end
+feature -- Type context
 
-feature -- Conversion
-
-	base_type (a_feature: ET_FEATURE; a_type: ET_CLASS_TYPE): ET_TYPE is
-			-- Type, in the context of `a_feature' in `a_type',
-			-- only made up of class names and generic formal parameters
-			-- when `a_type' in a generic type not fully derived
-			-- (Definition of base type in ETL2 p. 198)
+	is_valid_context_type (a_context: ET_TYPE_CONTEXT): BOOLEAN is
+			-- Is current type only made up of class names and
+			-- formal generic parameter names, and are the actual
+			-- parameters of these formal parameters themselves
+			-- in `a_context'?
 		local
-			a_generic_class_type: ET_GENERIC_CLASS_TYPE
-			parameters: ET_ACTUAL_PARAMETER_LIST
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
 			a_formal: ET_FORMAL_PARAMETER_TYPE
 		do
-			a_generic_class_type ?= a_type
-			if a_generic_class_type /= Void then
-				parameters := a_generic_class_type.generic_parameters
-			end
-			if parameters = Void or else index > parameters.count then
--- TODO:
--- Error already reported elsewhere.
-print (a_type.base_class.name.name)
-print (": unknown formal type #")
-print (index)
-print ("'%N")
-				Result := Current
-			else
-				Result := parameters.type (index)
-				a_formal ?= Result
-				if a_formal /= Void and then a_formal.index = index then
-					Result := Current
-				else
-						-- `a_type' has been flattened and no
-						-- error occurred, so there is no loop in
-						-- anchored types.
-					Result := Result.base_type (a_feature, a_type)
-				end
+			a_parameters := a_context.type.actual_parameters
+			if a_parameters /= Void and then index <= a_parameters.count then
+				a_formal ?= a_parameters.type (index)
+				Result := a_formal /= Void and then a_formal.index = index
 			end
 		end
 
-feature -- Duplication
+feature -- Output
 
-	deep_cloned_type: like Current is
-			-- Recursively cloned type
+	append_to_string (a_string: STRING) is
+			-- Append textual representation of
+			-- current type to `a_string'.
 		do
-			create Result.make (name, index)
+			a_string.append_string (name.name)
 		end
 
 feature -- Processing

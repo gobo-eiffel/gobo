@@ -5,7 +5,7 @@ indexing
 		"Eiffel free operators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,12 +16,15 @@ inherit
 
 	ET_INFIX_FREE
 		redefine
-			name, same_feature_name
+			name, same_feature_name,
+			cached_hash_code
 		end
 
 	ET_PREFIX_FREE
 		undefine
 			name, same_feature_name, hash_code
+		redefine
+			cached_hash_code
 		end
 
 	ET_TOKEN
@@ -41,6 +44,7 @@ feature {NONE} -- Initialization
 			-- Create a new infix free operator.
 		do
 			code := tokens.infix_freeop_code
+			cached_hash_code := -1
 			make_token (a_free_op)
 		ensure
 			is_infix_freeop: is_infix_freeop
@@ -50,6 +54,7 @@ feature {NONE} -- Initialization
 			-- Create a new prefix free operator.
 		do
 			code := tokens.prefix_freeop_code
+			cached_hash_code := -1
 			make_token (a_free_op)
 		ensure
 			is_prefix_freeop: is_prefix_freeop
@@ -104,14 +109,22 @@ feature -- Comparison
 				if other.is_infix_freeop then
 					an_infix_op ?= other
 					if an_infix_op /= Void then
-						Result := STRING_.same_case_insensitive (free_operator_name, an_infix_op.free_operator_name)
+						if an_infix_op.free_operator_name = free_operator_name then
+							Result := True
+						else
+							Result := STRING_.same_case_insensitive (free_operator_name, an_infix_op.free_operator_name)
+						end
 					end
 				end
 			else
 				if other.is_prefix_freeop then
 					a_prefix_op ?= other
 					if a_prefix_op /= Void then
-						Result := STRING_.same_case_insensitive (free_operator_name, a_prefix_op.free_operator_name)
+						if a_prefix_op.free_operator_name = free_operator_name then
+							Result := True
+						else
+							Result := STRING_.same_case_insensitive (free_operator_name, a_prefix_op.free_operator_name)
+						end
 					end
 				end
 			end
@@ -124,6 +137,11 @@ feature -- Processing
 		do
 			a_processor.process_free_operator (Current)
 		end
+
+feature {NONE} -- Implementation
+
+	cached_hash_code: INTEGER
+			-- Cached hash code
 
 feature {NONE} -- Implementation
 

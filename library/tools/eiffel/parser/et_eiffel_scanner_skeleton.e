@@ -23,6 +23,17 @@ inherit
 			reset
 		end
 
+	ET_CLASS_PROCESSOR
+		rename
+			make as make_class_processor,
+			process_identifier as process_ast_identifier,
+			process_c1_character_constant as process_ast_c1_character_constant,
+			process_c2_character_constant as process_ast_c2_character_constant,
+			process_regular_manifest_string as process_ast_regular_manifest_string
+		redefine
+			error_handler
+		end
+
 	ET_EIFFEL_TOKENS
 		export {NONE} all end
 
@@ -36,38 +47,47 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING; an_error_handler: like error_handler) is
+	make (a_filename: STRING; a_universe: like universe; an_error_handler: like error_handler) is
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
 			a_factory: ET_AST_FACTORY
 		do
 			create a_factory.make
-			make_with_factory (a_filename, a_factory, an_error_handler)
+			make_with_factory (a_filename, a_universe, a_factory, an_error_handler)
 		ensure
 			filename_set: filename = a_filename
+			universe_set: universe = a_universe
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_factory (a_filename: STRING; a_factory: like ast_factory; an_error_handler: like error_handler) is
+	make_with_factory (a_filename: STRING; a_universe: like universe;
+		a_factory: like ast_factory; an_error_handler: like error_handler) is
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
 			a_factory_not_void: a_factory /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			make_with_buffer (Empty_buffer)
+			make_class_processor (a_universe)
 			last_text_count := 1
 			last_literal_start := 1
 			filename := a_filename
 			ast_factory := a_factory
 			error_handler := an_error_handler
+			set_use_attribute_keyword (True)
+			set_use_convert_keyword (True)
 			set_use_create_keyword (True)
+			set_use_recast_keyword (True)
 			set_use_reference_keyword (True)
 		ensure
 			filename_set: filename = a_filename
+			universe_set: universe = a_universe
 			ast_factory_set: ast_factory = a_factory
 			error_handler_set: error_handler = an_error_handler
 		end
@@ -102,20 +122,60 @@ feature -- Access
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
 
-	error_handler: ET_ERROR_HANDLER
-			-- Error handler
+	degree: STRING is "5"
+			-- ISE's style degree of current processor
+
+feature -- Setting
+
+	set_universe (a_universe: like universe) is
+			-- Set `universe' to `a_universe'.
+		require
+			a_universe_not_void: a_universe /= Void
+		do
+			universe := a_universe
+		ensure
+			universe_set: universe = a_universe
+		end
 
 feature -- Status report
 
+	use_attribute_keyword: BOOLEAN
+			-- Should 'attribute' be considered as
+			-- a keyword (otherwise identifier)?
+
+	use_convert_keyword: BOOLEAN
+			-- Should 'convert' be considered as
+			-- a keyword (otherwise identifier)?
+
 	use_create_keyword: BOOLEAN
-			-- Should `create' be considered as
+			-- Should 'create' be considered as
+			-- a keyword (otherwise identifier)?
+
+	use_recast_keyword: BOOLEAN
+			-- Should 'recast' be considered as
 			-- a keyword (otherwise identifier)?
 
 	use_reference_keyword: BOOLEAN
-			-- Should `reference' be considered as
+			-- Should 'reference' be considered as
 			-- a keyword (otherwise identifier)?
 
 feature -- Statut setting
+
+	set_use_attribute_keyword (b: BOOLEAN) is
+			-- Set `use_attribute_keyword' to `b'.
+		do
+			use_attribute_keyword := b
+		ensure
+			use_attribute_keyword_set: use_attribute_keyword = b
+		end
+
+	set_use_convert_keyword (b: BOOLEAN) is
+			-- Set `use_convert_keyword' to `b'.
+		do
+			use_convert_keyword := b
+		ensure
+			use_convert_keyword_set: use_convert_keyword = b
+		end
 
 	set_use_create_keyword (b: BOOLEAN) is
 			-- Set `use_create_keyword' to `b'.
@@ -125,12 +185,80 @@ feature -- Statut setting
 			use_create_keyword_set: use_create_keyword = b
 		end
 
+	set_use_recast_keyword (b: BOOLEAN) is
+			-- Set `use_recast_keyword' to `b'.
+		do
+			use_recast_keyword := b
+		ensure
+			use_recast_keyword_set: use_recast_keyword = b
+		end
+
 	set_use_reference_keyword (b: BOOLEAN) is
 			-- Set `use_reference_keyword' to `b'.
 		do
 			use_reference_keyword := b
 		ensure
 			use_reference_keyword_set: use_reference_keyword = b
+		end
+
+feature -- Error handling
+
+	error_handler: ET_ERROR_HANDLER
+			-- Error handler
+
+	set_fatal_error (a_class: ET_CLASS) is
+			-- Report a fatal error to `a_class'.
+		do
+			a_class.set_parsed
+			a_class.set_syntax_error
+		ensure then
+			is_parsed: a_class.is_parsed
+			has_syntax_error: a_class.has_syntax_error
+		end
+
+feature -- AST processing
+
+	process_class (a_class: ET_CLASS) is
+			-- Parse `a_class'.
+			-- The class may end up with a syntax error status its
+			-- `filename' didn't contain this class after all (i.e.
+			-- if the preparsing phase gave errouneous result).
+		local
+			a_filename: STRING
+			a_cluster: ET_CLUSTER
+			a_file: KL_TEXT_INPUT_FILE
+		do
+			if a_class = none_class then
+				a_class.set_parsed
+			elseif current_class /= unknown_class then
+						-- TODO: Internal error (recursive call)
+print ("INTERNAL ERROR%N")
+				set_fatal_error (a_class)
+			elseif a_class /= unknown_class then
+				current_class := a_class
+				if not current_class.is_parsed then
+					current_class.set_parsed
+					current_class.set_syntax_error
+					if not current_class.is_preparsed then
+						universe.preparse
+					end
+					if current_class.is_preparsed then
+						a_filename := current_class.filename
+						create a_file.make (a_filename)
+						a_file.open_read
+						if a_file.is_open_read then
+							a_cluster := current_class.cluster
+							universe.parse_file (a_file, a_filename, a_cluster)
+							a_file.close
+						else
+							-- TODO: report error
+						end
+					end
+				end
+				current_class := unknown_class
+			end
+		ensure then
+			is_parsed: a_class.is_parsed
 		end
 
 feature -- Tokens
@@ -824,6 +952,29 @@ feature {NONE} -- Processing
 					else
 						-- Do nothing.
 					end
+				when 't', 'T' then
+					inspect text_item (2)
+					when 'u', 'U' then
+						inspect text_item (3)
+						when 'p', 'P' then
+							inspect text_item (4)
+							when 'l', 'L' then
+								inspect text_item (5)
+								when 'e', 'E' then
+									last_token := E_TUPLE
+									last_et_identifier_value := ast_factory.new_identifier (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
 				when 'u', 'U' then
 					inspect text_item (2)
 					when 'n', 'N' then
@@ -1016,6 +1167,26 @@ feature {NONE} -- Processing
 					inspect text_item (2)
 					when 'e', 'E' then
 						inspect text_item (3)
+						when 'c', 'C' then
+							inspect text_item (4)
+							when 'a', 'A' then
+								inspect text_item (5)
+								when 's', 'S' then
+									inspect text_item (6)
+									when 't', 'T' then
+										if use_recast_keyword then
+											last_token := E_RECAST
+											last_et_keyword_value := ast_factory.new_recast_keyword (Current)
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
 						when 'n', 'N' then
 							inspect text_item (4)
 							when 'a', 'A' then
@@ -1147,6 +1318,36 @@ feature {NONE} -- Processing
 										when 't', 'T' then
 											last_token := E_CURRENT
 											last_et_current_value := ast_factory.new_current_keyword (Current)
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					when 'o', 'O' then
+						inspect text_item (3)
+						when 'n', 'N' then
+							inspect text_item (4)
+							when 'v', 'V' then
+								inspect text_item (5)
+								when 'e', 'E' then
+									inspect text_item (6)
+									when 'r', 'R' then
+										inspect text_item (7)
+										when 't', 'T' then
+											if use_convert_keyword then
+												last_token := E_CONVERT
+												last_et_keyword_value := ast_factory.new_convert_keyword (Current)
+											end
 										else
 											-- Do nothing.
 										end
@@ -1690,6 +1891,51 @@ feature {NONE} -- Processing
 				end
 			when 9 then
 				inspect text_item (1)
+				when 'a', 'A' then
+					inspect text_item (2)
+					when 't', 'T' then
+						inspect text_item (3)
+						when 't', 'T' then
+							inspect text_item (4)
+							when 'r', 'R' then
+								inspect text_item (5)
+								when 'i', 'I' then
+									inspect text_item (6)
+									when 'b', 'B' then
+										inspect text_item (7)
+										when 'u', 'U' then
+											inspect text_item (8)
+											when 't', 'T' then
+												inspect text_item (9)
+												when 'e', 'E' then
+													if use_attribute_keyword then
+														last_token := E_ATTRIBUTE
+														last_et_keyword_value := ast_factory.new_attribute_keyword (Current)
+													end
+												else
+													-- Do nothing.
+												end
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
 				when 'i', 'I' then
 					inspect text_item (2)
 					when 'n', 'N' then
@@ -2470,6 +2716,7 @@ feature {NONE} -- Processing
 invariant
 
 	filename_not_void: filename /= Void
+	universe_not_void: universe /= Void
 	ast_factory_not_void: ast_factory /= Void
 	error_handler_not_void: error_handler /= Void
 	last_text_count_positive: last_text_count >= 0

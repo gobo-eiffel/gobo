@@ -122,118 +122,51 @@ feature -- Setting
 			right_parenthesis_set: right_parenthesis = a_right
 		end
 
-feature -- System
-
-	add_to_system is
-			-- Recursively add to system classes that
-			-- appear in current formal arguments.
-		local
-			i, nb: INTEGER
-		do
-			nb := count
-			from i := 1 until i > nb loop
-				formal_argument (i).type.add_to_system
-				i := i + 1
-			end
-		end
-
 feature -- Type processing
 
-	has_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): BOOLEAN is
-			-- Do types of current arguments contain formal
-			-- generic parameter types whose corresponding
-			-- actual parameter in `actual_parameters' is
-			-- different from the formal parameter?
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): like Current is
+			-- Version of current arguments where the formal generic
+			-- parameter types of the declared types have been replaced
+			-- by their actual counterparts in `a_parameters'
 		require
-			actual_parameters_not_void: actual_parameters /= Void
+			a_parameters_not_void: a_parameters /= Void
 		local
-			i, nb: INTEGER
-		do
-			nb := count
-			from i := 1 until i > nb loop
-				if formal_argument (i).type.has_formal_parameters (actual_parameters) then
-					Result := True
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
-				end
-			end
-		end
-
-	resolve_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST) is
-			-- Replace in types of current arguments the formal
-			-- generic parameter types by those of `actual_parameters'
-			-- when the corresponding actual parameter is different
-			-- from the formal parameter.
-		require
-			actual_parameters_not_void: actual_parameters /= Void
-		local
-			i: INTEGER
-			arg: ET_FORMAL_ARGUMENT
+			i, j: INTEGER
+			arg, new_arg: ET_FORMAL_ARGUMENT
 			a_type, new_type: ET_DECLARED_TYPE
 		do
-			i := count
-			from until i < 1 loop
+			Result := Current
+			from i := count until i < 1 loop
 				arg := formal_argument (i)
 				if arg.declared_type = a_type then
 						-- This argument shares the same
 						-- type as the previous argument.
-					arg.set_declared_type (new_type)
 				else
 					a_type := arg.declared_type
-					if a_type.type.has_formal_parameters (actual_parameters) then
-						new_type := a_type.deep_cloned_type
-						new_type := new_type.resolved_formal_parameters (actual_parameters)
-						arg.set_declared_type (new_type)
-					else
-						new_type := a_type
+					new_type := a_type.resolved_formal_parameters (a_parameters)
+				end
+				if a_type /= new_type then
+					new_arg := arg.cloned_argument
+					new_arg.set_declared_type (new_type)
+				else
+					new_arg := arg
+				end
+				if Result /= Current then
+					Result.put_first (new_arg)
+				elseif arg /= new_arg then
+					create Result.make_with_capacity (count)
+					Result.set_left_parenthesis (left_parenthesis)
+					Result.set_right_parenthesis (right_parenthesis)
+					from j := count until j <= i loop
+						Result.put_first (item (j))
+						j := j - 1
 					end
+					Result.put_first (new_arg)
 				end
 				i := i - 1
 			end
-		end
-
-	resolve_identifier_types (a_feature: ET_FEATURE; a_class: ET_CLASS) is
-			-- Replace any 'like identifier' types that appear in the
-			-- implementation of `a_feature' in class `a_class' by
-			-- the corresponding 'like feature' or 'like argument'.
-			-- Also resolve 'BIT identifier' types and check validity
-			-- of arguments' name. Set `a_class.has_flatten_error' to
-			-- true if an error occurs.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_class_not_void: a_class /= Void
-			immediate_or_redeclared: a_feature.implementation_class = a_class
-		local
-			i, nb: INTEGER
-		do
--- TODO: check arguments' names.
-			nb := count
-			from i := 1 until i > nb loop
-				formal_argument (i).resolve_identifier_types (a_feature, Current, a_class)
-				i := i + 1
-			end
--- TODO: check cycles in 'like argument'.
-		end
-
-feature -- Duplication
-
-	cloned_arguments: like Current is
-			-- Cloned formal arguments;
-			-- Do not recursively clone the types
-		local
-			i: INTEGER
-		do
-			i := count
-			create Result.make_with_capacity (i)
-			Result.set_left_parenthesis (left_parenthesis)
-			Result.set_right_parenthesis (right_parenthesis)
-			from until i < 1 loop
-				Result.put_first (item (i).cloned_argument)
-				i := i - 1
-			end
 		ensure
-			arguments_not_void: Result /= Void
+			inherited_arguments_not_void: Result /= Void
 		end
 
 feature -- Processing
@@ -246,7 +179,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_FORMAL_ARGUMENT_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_FORMAL_ARGUMENT_ITEM] is
 			-- Fixed array routines
 		once
 			create Result

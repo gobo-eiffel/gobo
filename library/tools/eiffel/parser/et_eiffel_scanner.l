@@ -40,11 +40,17 @@ creation
 				last_comment_end := 0
 				process_one_char_symbol (text_item (1))
 			}
-[-+*/^=><.;,:!?(){}[\]$~]([ \t\r\n]|"--".*)+	{
+[+*/^=><.;,:!?(){}[\]$~]([ \t\r\n]|"--".*)+	{
 				last_text_count := 1
 				last_break_end := 0
 				last_comment_end := text_count
 				process_one_char_symbol (text_item (1))
+			}
+"-"[ \t\r\n]([ \t\r\n]|"--".*)+	{
+				last_text_count := 1
+				last_break_end := 0
+				last_comment_end := text_count
+				process_one_char_symbol ('-')
 			}
 ("//"|"\\\\"|"/="|">="|"<="|"->"|".."|"<<"|">>"|":="|"?=")	{
 				last_break_end := 0
@@ -664,7 +670,7 @@ _(_*[0-9_]+_*)+	{
 				more
 				set_start_condition (BREAK)
 			}
-0x[0-9a-fA-F]+	{
+0[xX][0-9a-fA-F]+	{
 				last_token := E_INTEGER
 				last_literal_start := 1
 				last_literal_end := text_count
@@ -672,7 +678,7 @@ _(_*[0-9_]+_*)+	{
 				last_comment_end := 0
 				last_et_integer_constant_value := ast_factory.new_hexadecimal_integer_constant (Current)
 			}
-0x[0-9a-fA-F]+/([ \t\r\n]|"--")	{
+0[xX][0-9a-fA-F]+/([ \t\r\n]|"--")	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count

@@ -105,15 +105,18 @@ feature -- Access
 
 feature -- Status report
 
-	is_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS): BOOLEAN is
+	is_exported_to (a_name: ET_FEATURE_NAME; a_class: ET_CLASS; a_processor: ET_AST_PROCESSOR): BOOLEAN is
 			-- Is feature name listed in current creation clause
 			-- and is it exported to `a_class'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for descendants.)
 		require
 			a_name_not_void: a_name /= Void
 			a_class_not_void: a_class /= Void
+			a_processor_not_void: a_processor /= Void
 		do
 			if not is_empty then
-				if clients.has_descendant (a_class) then
+				if clients.has_descendant (a_class, a_processor) then
 					Result := has_feature_name (a_name)
 				end
 			end
@@ -131,7 +134,7 @@ feature -- Status report
 			a_class_not_void: a_class /= Void
 		do
 			if not is_empty then
-				if clients.has (a_class) then
+				if clients.has_class (a_class) then
 					Result := has_feature_name (a_name)
 				end
 			end

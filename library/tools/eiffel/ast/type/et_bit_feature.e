@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'BIT feature' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,15 +15,6 @@ class ET_BIT_FEATURE
 inherit
 
 	ET_BIT_TYPE
-		rename
-			make as make_bit_type
-		redefine
-			check_parent_validity,
-			check_constraint_validity,
-			deep_cloned_type,
-			append_to_string,
-			break, process
-		end
 
 creation
 
@@ -31,22 +22,16 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_constant: like constant; a_name: like name; a_feature_id: INTEGER) is
+	make (a_name: like name) is
 			-- Create a new 'BIT feature' type.
 		require
-			a_constant_not_void: a_constant /= Void
 			a_name_not_void: a_name /= Void
-			a_feature_id_positive: a_feature_id > 0
 		do
 			bit_keyword := tokens.bit_keyword
-			constant := a_constant
 			name := a_name
-			feature_id := a_feature_id
 			size := No_size
 		ensure
-			constant_set: constant = a_constant
 			name_set: name = a_name
-			feature_id_set: feature_id = a_feature_id
 		end
 
 feature -- Access
@@ -56,9 +41,25 @@ feature -- Access
 			-- current type and which is supposed
 			-- to be an integer constant attribute
 
-	feature_id: INTEGER
+	seed: INTEGER is
 			-- Feature ID of one of the seeds of the
-			-- feature associated with current type
+			-- feature associated with current type;
+			-- 0 if not resolved yet
+		do
+			Result := name.seed
+		ensure
+			seed_positive: Result >= 0
+		end
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := bit_keyword.position
+			if Result.is_null then
+				Result := name.position
+			end
+		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
@@ -66,36 +67,19 @@ feature -- Access
 			Result := name.break
 		end
 
-feature -- Validity
+feature -- Resolving
 
-	check_parent_validity (an_heir: ET_CLASS): BOOLEAN is
-			-- Check whether current type is valid when
-			-- it appears in parent clause of `an_heir'.
-			-- Report errors if not valid.
+	resolve_identifier_type (a_seed: INTEGER; a_constant: like constant) is
+			-- Resolve current type with `a_seed' and `a_constant'.
+		require
+			a_seed_positive: a_seed > 0
+			a_constant_not_void: a_constant /= Void
 		do
-			Result := False
-			an_heir.error_handler.report_vhpr3_bit_name_error (an_heir, Current)
-		end
-
-	check_constraint_validity (a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
-			-- Check whether current type is valid when it
-			-- appears in a constraint of the formal generic
-			-- parameter `a_formal' in class `a_class'.
-			-- `a_sorter' is used to find possible cycle in
-			-- formal generic parameter declaration.
-			-- Report errors if not valid.
-		do
-			Result := False
-			a_class.error_handler.report_vcfg3_bit_name_error (a_class, Current)
-		end
-
-feature -- Duplication
-
-	deep_cloned_type: like Current is
-			-- Recursively cloned type
-		do
-			Result := Current
+			name.set_seed (a_seed)
+			constant := a_constant
+		ensure
+			seed_set: seed = a_seed
+			constant_set: constant = a_constant
 		end
 
 feature -- Output
@@ -119,6 +103,5 @@ feature -- Processing
 invariant
 
 	name_not_void: name /= Void
-	feature_id_positive: feature_id > 0
 
 end

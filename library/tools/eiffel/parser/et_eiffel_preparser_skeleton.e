@@ -50,8 +50,7 @@ feature {NONE} -- Initialization
 			a_factory_not_void: a_factory /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
-			universe := a_universe
-			make_eiffel_scanner_with_factory ("unknown file", a_factory, an_error_handler)
+			make_eiffel_scanner_with_factory ("unknown file", a_universe, a_factory, an_error_handler)
 		ensure
 			universe_set: universe = a_universe
 			ast_factory_set: ast_factory = a_factory
@@ -77,9 +76,6 @@ feature -- Access
 
 	last_classname: ET_CLASS_NAME
 			-- Last classname found
-
-	universe: ET_UNIVERSE
-			-- Eiffel class universe
 
 feature -- Parsing
 
@@ -163,9 +159,5 @@ feature -- Error handling
 		do
 			error_handler.report_syntax_error (current_position)
 		end
-
-invariant
-
-	universe_not_void: universe /= Void
 
 end

@@ -60,13 +60,13 @@ feature {NONE} -- Initialization
 			a_factory_not_void: a_factory /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
-			universe := a_universe
 			create counters.make (Initial_counters_capacity)
 			create last_keywords.make (Initial_last_keywords_capacity)
 			create last_symbols.make (Initial_last_symbols_capacity)
 			create assertions.make (Initial_assertions_capacity)
 			create features.make (Initial_features_capacity)
-			make_eiffel_scanner_with_factory ("unknown file", a_factory, an_error_handler)
+			create constraints.make (Initial_constraints_capacity)
+			make_eiffel_scanner_with_factory ("unknown file", a_universe, a_factory, an_error_handler)
 			make_parser_skeleton
 		ensure
 			universe_set: universe = a_universe
@@ -85,6 +85,7 @@ feature -- Initialization
 			last_symbols.wipe_out
 			assertions.wipe_out
 			features.wipe_out
+			constraints.wipe_out
 			last_class := Void
 			last_clients := Void
 			last_export_clients := Void
@@ -94,23 +95,10 @@ feature -- Initialization
 
 feature -- Access
 
-	universe: ET_UNIVERSE
-			-- Eiffel class universe
-
 	cluster: ET_CLUSTER
 			-- Cluster containing the class being parsed
 
 feature -- Setting
-
-	set_universe (a_universe: like universe) is
-			-- Set `universe' to `a_universe'.
-		require
-			a_universe_not_void: a_universe /= Void
-		do
-			universe := a_universe
-		ensure
-			universe_set: universe = a_universe
-		end
 
 	set_ast_factory (a_factory: like ast_factory) is
 			-- Set `ast_factory' to `a_factory'.
@@ -143,7 +131,7 @@ feature -- Parsing
 			a_cluster_not_void: a_cluster /= Void
 		do
 			debug ("GELINT")
-				std.error.put_string ("Parse file '")
+				std.error.put_string ("Parsing file '")
 				std.error.put_string (a_filename)
 				std.error.put_line ("%'")
 			end
@@ -178,53 +166,86 @@ feature {NONE} -- Basic operations
 				if features.before then
 					features.forth
 				end
-				features.put_left (a_feature)
+				features.force_left (a_feature)
 				features.back
 			end
 		end
 
-	set_formal_generic_parameters (a_generics: ET_FORMAL_PARAMETER_LIST) is
-			-- Set formal generic parameters of `last_class'.
-		require
-			a_generics_not_void: a_generics /= Void
-		local
-			a_class: like last_class
+	register_constraint (a_constraint: ET_CONSTRAINT_TYPE) is
+			-- Register generic constraint
 		do
-			a_class := last_class
-			if a_class /= Void then
-				a_class.set_generic_parameters (a_generics)
-				a_generics.resolve_named_types (a_class, ast_factory)
-			end
+			constraints.force_last (a_constraint)
+		ensure
+			one_more: constraints.count = old constraints.count + 1
+			registered: constraints.last = a_constraint
 		end
 
-	set_named_features is
-			-- Set named features of `last_class'.
+	dummy_constraint (a_constraint: ET_CONSTRAINT_TYPE): ET_TYPE is
+			-- Dummy type, or Void if `a_constraint' is Void
+		do
+			if a_constraint /= Void then
+				Result := dummy_type
+			end
+		ensure
+			void_type: a_constraint = Void implies Result = Void
+			non_void_type: a_constraint /= Void implies Result /= Void
+		end
+
+	set_formal_parameters (a_parameters: ET_FORMAL_PARAMETER_LIST) is
+			-- Set formal generic parameters of `last_class'.
+		require
+			no_constraint: a_parameters = Void implies constraints.is_empty
+			same_count: a_parameters /= Void implies constraints.count = a_parameters.count
 		local
 			a_class: like last_class
-			named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
-			a_feature, other_feature: ET_FEATURE
-			a_name: ET_FEATURE_NAME
+			a_constrained_formal: ET_CONSTRAINED_FORMAL_PARAMETER
+			a_constraint: ET_CONSTRAINT_TYPE
+			a_type: ET_TYPE
+			i, nb: INTEGER
+		do
+			if a_parameters /= Void then
+				a_class := last_class
+				if a_class /= Void then
+					a_class.set_formal_parameters (a_parameters)
+					nb := a_parameters.count
+					from i := nb until i < 1 loop
+						a_constrained_formal ?= a_parameters.formal_parameter (i)
+						if a_constrained_formal /= Void then
+							a_constraint := constraints.item (i)
+							if a_constraint /= Void then
+								a_type := a_constraint.resolved_syntactical_constraint (a_parameters, Current)
+								if a_type /= Void then
+									a_constrained_formal.set_constraint (a_type)
+								else
+									a_parameters.remove (i)
+								end
+							else
+								a_parameters.remove (i)
+							end
+						end
+						i := i - 1
+					end
+				end
+			end
+			constraints.wipe_out
+		end
+
+	set_class_features is
+			-- Set features of `last_class'.
+		local
+			a_class: like last_class
+			class_features: ET_FEATURE_LIST
 			i, nb: INTEGER
 		do
 			a_class := last_class
 			if a_class /= Void then
 				nb := features.count
-				create named_features.make_map (nb)
-				named_features.set_key_equality_tester (feature_name_tester)
-				from i := 1 until i > nb loop
-					a_feature := features.item (i)
-					a_name := a_feature.name
-					named_features.search (a_name)
-					if not named_features.found then
-						named_features.put_last (a_feature, a_name)
-					else
-						other_feature := named_features.found_item
-						error_handler.report_vmfna_error (a_class, other_feature, a_feature)
-						a_class.set_flatten_error
-					end
-					i := i + 1
+				create class_features.make_with_capacity (nb)
+				from i := nb until i < 1 loop
+					class_features.put_first (features.item (i))
+					i := i - 1
 				end
-				a_class.set_named_features (named_features)
+				a_class.set_features (class_features)
 			end
 			features.wipe_out
 		end
@@ -234,15 +255,8 @@ feature {NONE} -- Basic operations
 		an_invariants: ET_INVARIANTS; a_second_indexing: ET_INDEXING_LIST;
 		an_end: ET_KEYWORD) is
 			-- Set various elements to `a_class'.
-		local
-			named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 		do
 			if a_class /= Void then
-				if a_class.named_features = Void then
-					create named_features.make_map (0)
-					named_features.set_key_equality_tester (feature_name_tester)
-					a_class.set_named_features (named_features)
-				end
 				a_class.set_obsolete_message (an_obsolete)
 				a_class.set_parents (a_parents)
 				a_class.set_creators (a_creators)
@@ -340,6 +354,30 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- AST factory
 
+	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT): ET_BIT_N is
+			-- New 'BIT N' type
+		do
+			Result := ast_factory.new_bit_n (a_bit, an_int)
+			if Result /= Void then
+				Result.compute_size
+				if Result.has_size_error then
+					if last_class /= Void then
+						last_class.set_syntax_error
+						error_handler.report_vtbt_error (last_class, Result)
+					else
+						error_handler.report_syntax_error (Result.constant.position)
+					end
+				elseif Result.size = 0 and Result.constant.is_negative then
+						-- Not considered as a fatal error by gelint.
+					if last_class /= Void then
+						error_handler.report_vtbt_minus_zero_error (last_class, Result)
+					else
+						error_handler.report_syntax_error (Result.constant.position)
+					end
+				end
+			end
+		end
+
 	new_check_instruction (a_check: ET_KEYWORD; an_end: ET_KEYWORD): ET_CHECK_INSTRUCTION is
 			-- New check instruction
 		local
@@ -361,14 +399,14 @@ feature {NONE} -- AST factory
 		end
 
 	new_constraint_named_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER;
-		a_generics: ET_ACTUAL_PARAMETER_LIST): ET_NAMED_TYPE is
+		a_parameters: ET_CONSTRAINT_ACTUAL_PARAMETER_LIST): ET_CONSTRAINT_NAMED_TYPE is
 			-- New Eiffel class type or formal generic paramater
 			-- appearing in a generic constraint
 		do
-			if a_generics /= Void then
-				Result := ast_factory.new_generic_named_type (a_type_mark, a_name, a_generics)
+			if a_parameters /= Void then
+				Result := ast_factory.new_constraint_generic_named_type (a_type_mark, a_name, a_parameters)
 			else
-				Result := ast_factory.new_named_type (a_type_mark, a_name)
+				Result := ast_factory.new_constraint_named_type (a_type_mark, a_name)
 			end
 		end
 
@@ -432,7 +470,7 @@ feature {NONE} -- AST factory
 		do
 			a_last_class := last_class
 			if a_last_class /= Void and a_name /= Void then
-				a_parameter := a_last_class.generic_parameter (a_name)
+				a_parameter := a_last_class.formal_parameter (a_name)
 				if a_parameter /= Void then
 					if a_generics /= Void then
 						-- Error
@@ -443,9 +481,7 @@ feature {NONE} -- AST factory
 					Result := ast_factory.new_formal_parameter_type (a_name, a_parameter.index)
 				else
 					a_class := universe.eiffel_class (a_name)
-					if a_last_class.in_system then
-						a_class.add_to_system
-					end
+					a_class.set_in_system (True)
 					if a_generics /= Void then
 						Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_generics, a_class)
 					else
@@ -466,13 +502,11 @@ feature {NONE} -- AST factory
 		do
 			a_last_class := last_class
 			if a_last_class /= Void and a_name /= Void then
-				if a_last_class.has_generic_parameter (a_name) then
+				if a_last_class.has_formal_parameter (a_name) then
 					-- Error
 				end
 				a_class := universe.eiffel_class (a_name)
-				if a_last_class.in_system then
-					a_class.add_to_system
-				end
+				a_class.set_in_system (True)
 				if a_generic_parameters /= Void then
 					a_type := ast_factory.new_generic_class_type (Void, a_name, a_generic_parameters, a_class)
 				else
@@ -540,6 +574,12 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_tuple_type (a_name: ET_IDENTIFIER; a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_TUPLE_TYPE is
+			-- New TUPLE class type
+		do
+			Result := ast_factory.new_tuple_type (a_name, a_parameters)
+		end
+
 
 
 
@@ -551,19 +591,20 @@ feature {NONE} -- AST factory
 		require
 			a_name_not_void: a_name /= Void
 			cluster_not_void: cluster /= Void
+		local
+			old_class: ET_CLASS
 		do
 			Result := universe.eiffel_class (a_name)
 			Result.set_filename (filename)
 			Result.set_cluster (cluster)
 			Result.set_name (a_name)
 			Result.set_parsed
+			Result.set_in_system (True)
+			old_class := current_class
+			current_class := Result
+			error_handler.report_compilation_status (Current)
+			current_class := old_class
 			features.wipe_out
-
-			debug ("GELINT")
-				std.error.put_string ("Parse class '")
-				std.error.put_string (a_name.name)
-				std.error.put_line ("%'")
-			end
 		ensure
 			class_not_void: Result /= Void
 		end
@@ -584,9 +625,17 @@ feature -- Error handling
 	report_error (a_message: STRING) is
 			-- Print error message.
 		do
-			error_handler.report_syntax_error (current_position)
+			report_syntax_error (current_position)
+		end
+
+	report_syntax_error (a_position: ET_POSITION) is
+			-- Report a syntax error at position `a_position'.
+		require
+			a_position_not_void: a_position /= Void
+		do
+			error_handler.report_syntax_error (a_position)
 			if last_class /= Void then
-				last_class.set_syntax_error (True)
+				last_class.set_syntax_error
 			end
 		end
 
@@ -740,6 +789,12 @@ feature {NONE} -- Constants
 	Initial_features_capacity: INTEGER is 100
 			-- Initial capacity for `features'
 
+	constraints: DS_ARRAYED_LIST [ET_CONSTRAINT_TYPE]
+			-- List of generic constraints currently being parsed
+
+	Initial_constraints_capacity: INTEGER is 10
+			-- Initial capacity for `constraints'
+
 	dummy_type: ET_TYPE is
 			-- Dummy type
 		once
@@ -750,7 +805,6 @@ feature {NONE} -- Constants
 
 invariant
 
-	universe_not_void: universe /= Void
 	counters_not_void: counters /= Void
 	last_keywords_not_void: last_keywords /= Void
 	last_symbols_not_void: last_symbols /= Void
@@ -759,5 +813,6 @@ invariant
 	features_not_void: features /= Void
 	no_void_feature: not features.has (Void)
 	-- features_registered: forall f in features, f.is_registered
+	constraints_not_void: constraints /= Void
 
 end

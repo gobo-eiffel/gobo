@@ -5,7 +5,7 @@ indexing
 		"Eiffel lists of actual generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -62,6 +62,46 @@ feature -- Access
 			type_not_void: Result /= Void
 		end
 
+	named_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_ACTUAL_PARAMETER_LIST is
+			-- Base types of current types, when they appear in `a_context'
+			-- in `a_universe', only made up of class names and generic
+			-- formal parameters when the root type of `a_context' is a
+			-- generic type not fully derived (Definition of base type in
+			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
+			-- type, anchored type involved in a cycle.
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			a_universe_not_void: a_universe /= Void
+		local
+			i, j: INTEGER
+			a_type: ET_TYPE
+			a_named_type: ET_NAMED_TYPE
+		do
+			Result := Current
+			from i := count until i < 1 loop
+				a_type := type (i)
+				a_named_type := a_type.named_type (a_context, a_universe)
+				if Result /= Current then
+					Result.put_first (a_named_type)
+				elseif a_type /= a_named_type then
+					create Result.make_with_capacity (count)
+					Result.set_left_bracket (left_bracket)
+					Result.set_right_bracket (right_bracket)
+					from j := count until j <= i loop
+						Result.put_first (item (j))
+						j := j - 1
+					end
+					Result.put_first (a_named_type)
+				end
+				i := i - 1
+			end
+		ensure
+			named_types_not_void: Result /= Void
+			same_count: Result.count = count
+			-- types_named: forall i in 1..count, Result.type (i).is_named_type
+		end
+
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
@@ -78,57 +118,38 @@ feature -- Access
 			Result := right_bracket.break
 		end
 
-feature -- Status report
+feature -- Comparison
 
-	same_syntactical_types (other: like Current): BOOLEAN is
-			-- Are current types and those of `other'
-			-- syntactically the same types (e.g. do
-			-- not try to resolve anchored types)?
+	same_syntactical_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Are current types appearing in `a_context' and `other'
+			-- types appearing in `other_context' the same type?
+			-- (Note: We are NOT comparing the basic types here!
+			-- Therefore anchored types are considered the same
+			-- only if they have the same anchor. An anchor type
+			-- is not considered the same as any other type even
+			-- if they have the same base type.)
 		require
 			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_universe_not_void: a_universe /= Void
 		local
 			i, nb: INTEGER
 		do
-			if other = Current then
-				Result := True
-			elseif other.count = count then
-				nb := count
-				Result := True
-				from i := 1 until i > nb loop
-					if not type (i).same_syntactical_type (other.type (i)) then
-						Result := False
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
-				end
-			end
-		end
-
-	syntactically_conforms_to (other: like Current; a_class: ET_CLASS): BOOLEAN is
-			-- Do current types syntactically conform to
-			-- those of `other' when they appears in `a_class'
-			-- (e.g. do not try to resolve anchored types)?
-		require
-			other_not_void: other /= Void
-			a_class_not_void: a_class /= Void
-		local
-			i, nb: INTEGER
-			a_type, other_type: ET_TYPE
-		do
-			if other = Current then
+			if other = Current and then other_context = a_context then
 				Result := True
 			elseif other.count /= count then
-					-- Error VTUG-2 has already been reported
-					-- in ET_CLASS_TYPE.check_*_validity.
+					-- Validity error VTUG-2.
 				Result := False
 			else
-				nb := count
 				Result := True
+				nb := count
 				from i := 1 until i > nb loop
-					a_type := type (i)
-					other_type := other.type (i)
-					if not a_type.syntactically_conforms_to (other_type, a_class) then
+					if not type (i).same_syntactical_type (other.type (i), other_context, a_context, a_universe) then
 						Result := False
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -138,118 +159,41 @@ feature -- Status report
 			end
 		end
 
-feature -- Validity
+feature -- Conformance
 
-	check_parent_validity (formals: ET_FORMAL_PARAMETER_LIST;
-		formal_class, an_heir: ET_CLASS): BOOLEAN is
-			-- Check whether current actual generic parameters
-			-- are a valid generic derivation of `formals' when
-			-- they appear in a constraint of a formal generic
-			-- parameter of class `a_class'. `formal_class' is
-			-- the class where `formals' are declared.
-			-- Report errors if not valid.
+	conforms_to_types (other: ET_ACTUAL_PARAMETER_LIST; other_context: ET_TYPE_CONTEXT;
+		a_context: ET_TYPE_CONTEXT; a_processor: ET_AST_PROCESSOR): BOOLEAN is
+			-- Does current types appearing in `a_context' conform
+			-- to `other' types appearing in `other_context'?
+			-- (Note: Use `a_processor' on the classes whose ancestors
+			-- need to be built in order to check for conformance.)
 		require
-			formals_not_void: formals /= Void
-			same_count: formals.count = count
-			formal_class_not_void: formal_class /= Void
-			ancestors_searched: formal_class.ancestors_searched
-			no_ancestors_error: not formal_class.has_ancestors_error
-			an_heir_not_void: an_heir /= Void
+			other_not_void: other /= Void
+			other_context_not_void: other_context /= Void
+			other_context_valid: other_context.is_valid_context
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			same_root_context: other_context.same_root_context (a_context)
+			a_processor_not_void: a_processor /= Void
 		local
 			i, nb: INTEGER
-			a_formal: ET_FORMAL_PARAMETER
-			an_actual, a_constraint: ET_TYPE
 		do
-			nb := count
-			Result := True
-			from i := 1 until i > nb loop
-				a_formal := formals.formal_parameter (i)
-				an_actual := type (i)
-				if not an_actual.check_parent_validity (an_heir) then
-						-- The error has already been reported
-						-- in `check_parent_validity'.
-					Result := False
-				else
-					a_constraint := a_formal.constraint
-					if a_constraint /= Void then
-						if has_derived_parameters then
-							if a_constraint.has_formal_parameters (Current) then
-								a_constraint := a_constraint.deep_cloned_type
-								a_constraint := a_constraint.resolved_formal_parameters (Current)
-							end
-						end
-						if not an_actual.syntactically_conforms_to (a_constraint, an_heir) then
-							Result := False
-							an_heir.error_handler.report_vtcg_error (an_heir, an_actual, a_constraint)
-						end
+			if other = Current and then other_context = a_context then
+				Result := True
+			elseif other.count /= count then
+					-- Validity error VTUG-2.
+				Result := False
+			else
+				Result := True
+				nb := count
+				from i := 1 until i > nb loop
+					if not type (i).conforms_to_type (other.type (i), other_context, a_context, a_processor) then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
 					end
 				end
-				i := i + 1
-			end
-		end
-
-	check_constraint_validity (formals: ET_FORMAL_PARAMETER_LIST;
-		formal_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_class: ET_CLASS;
-		a_sorter: DS_TOPOLOGICAL_SORTER [ET_FORMAL_PARAMETER]): BOOLEAN is
-			-- Check whether current actual generic parameters are
-			-- a valid generic derivation of `formals' when they
-			-- appear in a constraint of the formal generic parameter
-			-- `a_formal' in class `a_class'. `formal_class' is the
-			-- class where `formals' are declared. `a_sorter' is used
-			-- to find possible cycle in formal generic parameter
-			-- declaration. Report errors if not valid.
-		require
-			formals_not_void: formals /= Void
-			same_count: formals.count = count
-			formal_class_not_void: formal_class /= Void
-			ancestors_searched: formal_class.ancestors_searched
-			no_ancestors_error: not formal_class.has_ancestors_error
-			a_formal_not_void: a_formal /= Void
-			a_class_not_void: a_class /= Void
-			a_sorter_not_void: a_sorter /= Void
-		local
-			i, nb: INTEGER
-			an_actual, a_constraint: ET_TYPE
-		do
-			nb := count
-			Result := True
-			from i := 1 until i > nb loop
-				an_actual := type (i)
-				if not an_actual.check_constraint_validity (a_formal, a_class, a_sorter) then
-						-- The error has already been reported
-						-- in `check_constraint_validity'.
-					Result := False
-				else
-					a_constraint := formals.formal_parameter (i).constraint
-					if a_constraint /= Void then
-						if has_derived_parameters then
-							if a_constraint.has_formal_parameters (Current) then
-								a_constraint := a_constraint.deep_cloned_type
-								a_constraint := a_constraint.resolved_formal_parameters (Current)
-							end
-						end
-						if not an_actual.syntactically_conforms_to (a_constraint, a_class) then
-							Result := False
-							a_class.error_handler.report_vtcg_error (a_class, an_actual, a_constraint)
-						end
-					end
-				end
-				i := i + 1
-			end
-		end
-
-feature -- System
-
-	add_to_system is
-			-- Recursively add to system classes that
-			-- appear in current types.
-		local
-			i, nb: INTEGER
-		do
-			nb := count
-			from i := 1 until i > nb loop
-				type (i).add_to_system
-				i := i + 1
 			end
 		end
 
@@ -275,82 +219,37 @@ feature -- Type processing
 			end
 		end
 
-	has_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST): BOOLEAN is
-			-- Does current types contain formal generic parameter
-			-- types whose corresponding actual parameter in
-			-- `actual_parameters' is different from the formal
-			-- parameter?
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_ACTUAL_PARAMETER_LIST is
+			-- Version of current types where the formal generic
+			-- parameter types have been replaced by their actual
+			-- counterparts in `a_parameters'
 		require
-			actual_parameters_not_void: actual_parameters /= Void
+			a_parameters_not_void: a_parameters /= Void
 		local
-			i, nb: INTEGER
-			a_type: ET_TYPE
+			i, j: INTEGER
+			a_type, a_resolved_type: ET_TYPE_ITEM
 		do
-			nb := count
-			from i := 1 until i > nb loop
-				a_type := type (i)
-				if a_type.has_formal_parameters (actual_parameters) then
-					Result := True
-					i := nb + 1 -- Jump out of the loop.
-				else
-					i := i + 1
+			Result := Current
+			from i := count until i < 1 loop
+				a_type := item (i)
+				a_resolved_type := a_type.resolved_formal_parameters (a_parameters)
+				if Result /= Current then
+					Result.put_first (a_resolved_type)
+				elseif a_type /= a_resolved_type then
+					create Result.make_with_capacity (count)
+					Result.set_left_bracket (left_bracket)
+					Result.set_right_bracket (right_bracket)
+					from j := count until j <= i loop
+						Result.put_first (item (j))
+						j := j - 1
+					end
+					Result.put_first (a_resolved_type)
 				end
+				i := i - 1
 			end
-		end
-
-	resolve_formal_parameters (actual_parameters: ET_ACTUAL_PARAMETER_LIST) is
-			-- Replace in current types the formal generic parameter
-			-- types by those of `actual_parameters' when the 
-			-- corresponding actual parameter is different from
-			-- the formal parameter.
-		require
-			actual_parameters_not_void: actual_parameters /= Void
-		local
-			i, nb: INTEGER
-		do
-			nb := count
-			from i := 1 until i > nb loop
-				put (item (i).resolved_formal_parameters (actual_parameters), i)
-				i := i + 1
-			end
-		end
-
-	resolve_identifier_types (a_feature: ET_FEATURE; args: ET_FORMAL_ARGUMENT_LIST; a_class: ET_CLASS) is
-			-- Replace any 'like identifier' types that appear in the
-			-- implementation of `a_feature in class `a_class' by
-			-- the corresponding 'like feature' or 'like argument'.
-			-- Also resolve 'BIT identifier' types. Set
-			-- `a_class.has_flatten_error' to true if an error occurs.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_class_not_void: a_class /= Void
-			immediate_or_redeclared: a_feature.implementation_class = a_class
-		local
-			i, nb: INTEGER
-		do
-			nb := count
-			from i := 1 until i > nb loop
-				put (item (i).resolved_identifier_types (a_feature, args, a_class), i)
-				i := i + 1
-			end
-		end
-
-	resolve_named_types (a_class: ET_CLASS; ast_factory: ET_AST_FACTORY) is
-			-- Replace in current types unresolved named types
-			-- by corresponding class types or formal generic
-			-- parameter names. `a_class' is the class where
-			-- current types appear in the source code.
-		require
-			a_class_not_void: a_class /= Void
-			ast_factory_not_void: ast_factory /= Void
-		local
-			i, nb: INTEGER
-		do
-			nb := count
-			from i := 1 until i > nb loop
-				put (item (i).resolved_named_types (a_class, ast_factory), i)
-				i := i + 1
-			end
+		ensure
+			resolved_parameters_not_void: Result /= Void
+			same_count: Result.count = count
 		end
 
 feature -- Setting
@@ -375,42 +274,28 @@ feature -- Setting
 			right_bracket_set: right_bracket = r
 		end
 
-feature -- Element change
+feature -- Output
 
-	put (an_item: like item; i: INTEGER) is
-			-- Put `an_item' at index `i' in list.
+	append_to_string (a_string: STRING) is
+			-- Append textual representation of
+			-- current type to `a_string'.
 		require
-			an_item_not_void: an_item /= Void
-			i_large_enough: i >= 1
-			i_small_enough: i <= count
-		do
-			storage.put (an_item, count - i)
-		ensure
-			same_count: count = old count
-			inserted: item (i) = an_item
-		end
-
-feature -- Duplication
-
-	deep_cloned_actuals: like Current is
-			-- Duplicate recursively actual generic parameter types
+			a_string_not_void: a_string /= Void
 		local
-			i: INTEGER
+			i, nb: INTEGER
+			a_type: ET_TYPE
 		do
-			i := count
-			if i /= 0 then
-				create Result.make_with_capacity (i)
-				Result.set_left_bracket (left_bracket)
-				Result.set_right_bracket (right_bracket)
-				from until i < 1 loop
-					Result.put_first (item (i).deep_cloned_type)
-					i := i - 1
-				end
-			else
-				Result := Current
+			nb := count
+			a_string.append_character ('[')
+			a_type := type (1)
+			a_type.append_to_string (a_string)
+			from i := 2 until i > nb loop
+				a_string.append_string (", ")
+				a_type := type (i)
+				a_type.append_to_string (a_string)
+				i := i + 1
 			end
-		ensure
-			deep_cloned_not_void: Result /= Void
+			a_string.append_character (']')
 		end
 
 feature -- Processing
@@ -423,7 +308,7 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_TYPE_ITEM] is
+	fixed_array: KL_SPECIAL_ROUTINES [ET_TYPE_ITEM] is
 			-- Fixed array routines
 		once
 			create Result

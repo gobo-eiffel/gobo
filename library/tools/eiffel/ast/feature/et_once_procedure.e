@@ -26,7 +26,7 @@ feature -- Duplication
 			-- Synonym feature
 		do
 			create Result.make (a_name, arguments, obsolete_message, preconditions,
-				locals, compound, postconditions, rescue_clause, clients, current_class)
+				locals, compound, postconditions, rescue_clause, clients, implementation_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
@@ -40,24 +40,15 @@ feature -- Conversion
 			-- Renamed version of current feature
 		do
 			create Result.make (a_name, arguments, obsolete_message, preconditions,
-				locals, compound, postconditions, rescue_clause, clients, current_class)
+				locals, compound, postconditions, rescue_clause, clients, implementation_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
-			Result.set_implementation_class (implementation_class)
 			Result.set_version (version)
 			Result.set_frozen_keyword (frozen_keyword)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
-			if seeds /= Void then
-				Result.set_seeds (seeds)
-			else
-				Result.set_first_seed (first_seed)
-			end
-			if precursors /= Void then
-				Result.set_precursors (precursors)
-			else
-				Result.set_first_precursor (first_precursor)
-			end
+			Result.set_first_seed (first_seed)
+			Result.set_other_seeds (other_seeds)
 		end
 
 feature -- Processing
