@@ -33,7 +33,40 @@
 		</cluster>
 	</cluster>
 
-	<cluster name="hact" abstract="true" if="${GOBO_EIFFEL}=hact"/>
+	<cluster name="hact" abstract="true" if="${GOBO_EIFFEL}=hact">
+		<cluster name="base" abstract="true" unless="${GOBO_ISS_BASELIB}">
+			<option name="component" value="${ISS_BASE}/spec/${PLATFORM}/component/base.cl"/>
+		</cluster>
+		<cluster name="base" location="${ISS_BASE}/library/base" abstract="true" if="${GOBO_ISS_BASELIB}">
+			<cluster name="command"/>
+			<cluster name="event"/>
+			<cluster name="formatters"/>
+			<cluster name="kernel"/>
+			<cluster name="matching"/>
+			<cluster name="misc">
+				<cluster name="spec" location="${ISS_BASE}/spec/${PLATFORM}/library/base/misc"/>
+			</cluster>
+			<cluster name="msgsystem"/>
+			<cluster name="process"/>
+			<cluster name="resource"/>
+			<cluster name="time"/>
+			<cluster name="structures" abstract="true">
+				<cluster name="access"/>
+				<cluster name="cursors"/>
+				<cluster name="cursor_tree"/>
+				<cluster name="dispenser"/>
+				<cluster name="iteration"/>
+				<cluster name="list"/>
+				<cluster name="set"/>
+				<cluster name="sort"/>
+				<cluster name="storage"/>
+				<cluster name="table"/>
+				<cluster name="traversing"/>
+				<cluster name="tree"/>
+			</cluster>
+			<cluster name="internal" location="${ISS_BASE}/library/internal"/>
+		</cluster>
+	</cluster>
 
 	<cluster name="se" location="${SmallEiffelDirectory}/lib" abstract="true" if="${GOBO_EIFFEL}=se">
 		<cluster name="base"/>
