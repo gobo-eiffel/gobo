@@ -110,7 +110,7 @@ return the total number of seconds and milliseconds making up the
 duration.</p>
 
 <p>Although the fields of a time duration can have arbitrary
-values, there is one specifal form called canonical where all
+values, there is one special form called canonical where all
 fields have the same sign and where the absolute value of the
 number of minutes is between 0 and 59 and absolute value of the
 number of seconds is between 0 and 59. One can check whether a
@@ -230,7 +230,7 @@ the conversion.</p>
 <p>As for time duration, canonical forms are also available for
 date duration. A date duration is canonical when its fields have
 all the same sign and when the absolute value of the number of
-days is smaller as possible and the absolute value of the number
+days is the smallest possible one and the absolute value of the number
 of months is between 0 and 11. Here again, because of the
 irregularities in the Gregorian calendar, the canonical form
 depends on the date to which the duration is to be added. For
@@ -286,8 +286,8 @@ days</em> yields <em>3 years, 19 months and 23 days</em>.</p>
 <p>Since a month is not always equivalent to the same number of
 days, the comparison of date durations is a partial order
 relationship. For example it is impossible to say whether <em>1
-month</em> is less than, equal to or greater to <em>30 days</em>.
-It depends of the date that we use as origin for the operations
+month</em> is less than, equal to or greater than <em>30 days</em>.
+It depends on the date that we use as origin for the operations
 with these durations. Therefore <font color="#008080"><em><tt>DT_DATE_DURATION</tt></em></font>
 is not a descendant of <font color="#008080"><em><tt>COMPARABLE</tt></em></font>
 but inherits from <font color="#008080"><em><tt>KL_PART_COMPARABLE</tt></em></font>
@@ -385,9 +385,9 @@ which is used as origin in order to make the duration
 deterministic before the conversion.</p>
 
 <p>Although the fields of a date/time duration can have arbitrary
-values, there is one specifal form called canonical where all
+values, there is one special form called canonical where all
 fields have the same sign and where the absolute value of the
-number of days is smaller as possible, the absolute value of the
+number of days is the smallest possible one, the absolute value of the
 number of months is between 0 and 11, the absolute value of the
 number of hours is between 0 and 23, the absolute value of the
 number of minutes is between 0 and 59 and absolute value of the
@@ -514,8 +514,8 @@ months, 23 days, 23 hours and 12 minutes </em>yields <em>3 years,
 <p>Since a month is not always equivalent to the same number of
 days, the comparison of date/time durations is a partial order
 relationship. For example it is impossible to say whether <em>1
-month and 2 hours </em>is less than, equal to or greater to <em>30
-days and 2 hours</em>. It depends of the date/time that we use as
+month and 2 hours </em>is less than, equal to or greater than <em>30
+days and 2 hours</em>. It depends on the date/time that we use as
 origin for the operations with these durations. Therefore <font
 color="#008080"><em><tt>DT_DATE_TIME_DURATION</tt></em></font> is
 not a descendant of <font color="#008080"><em><tt>COMPARABLE</tt></em></font>
@@ -544,7 +544,7 @@ have no choice but return false in all comparison routines.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2000</b></font><font
+            <font size="2"><b>Copyright © 2000-2005</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -554,7 +554,7 @@ have no choice but return false in all comparison routines.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 14 June 2000</font><br>
+            <strong>Last Updated:</strong> 21 February 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
