@@ -1,0 +1,44 @@
+indexing
+
+	description:
+
+		"Routines that ought to be in class INTEGER";
+
+	library:    "Gobo Eiffel Utility Library";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
+	copyright:  "Copyright (c) 1997, Eric Bezault";
+	date:       "$Date$";
+	revision:   "$Revision$"
+
+class UT_INTEGER_ROUTINES
+
+inherit
+
+	PLATFORM
+
+feature -- Convertion
+
+	integer_to_character (an_int: INTEGER): CHARACTER is
+			-- Character whose ASCII code is `an_int'
+		require
+			a_int_large_enough: an_int >= Minimum_character_code
+			a_int_small_enough: an_int <= Maximum_character_code
+		do
+#ifdef VE
+			Result.from_integer (an_int)
+#else
+			Result := '%U' + an_int
+#endif
+		ensure
+			valid_character_code: Result.code = an_int
+		end
+
+#ifdef ISE || HACT
+feature -- Constants
+
+	Minimum_character_code: INTEGER is 0
+	Maximum_character_code: INTEGER is 255
+			-- Smallest and largest supported codes for CHARACTER values
+
+#endif
+end -- class UT_INTEGER_ROUTINES
