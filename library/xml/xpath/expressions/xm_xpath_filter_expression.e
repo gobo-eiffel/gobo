@@ -23,6 +23,8 @@ inherit
 	
 	XM_XPATH_EXPRESSION_FACTORY
 
+	XM_XPATH_SHARED_FUNCTION_FACTORY
+
 creation
 
 	make
@@ -322,7 +324,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions
 		local
-			an_expr: XM_XPATH_EXPRESSION
+			an_expression, another_expression, a_third_expression: XM_XPATH_EXPRESSION
 			a_result_expression, a_filter, another_filter: XM_XPATH_FILTER_EXPRESSION
 			an_integer: XM_XPATH_INTEGER_VALUE
 			a_position_range: XM_XPATH_POSITION_RANGE
@@ -379,22 +381,24 @@ feature -- Optimization
 							
 							a_boolean_filter ?= a_result_expression.filter
 							if filter_is_positional and then a_boolean_filter /= Void and then a_boolean_filter.operator = And_token then
-								if is_positional_filter (a_boolean_filter.operands.item (1))
-									and then a_boolean_filter.operands.item (1).item_type = Boolean_type
-									and then not is_positional_filter (a_boolean_filter.operands.item (2)) then
-									create a_filter.make (base_expression, a_boolean_filter.operands.item (1))
-									create another_filter.make (a_filter, a_boolean_filter.operands.item (2))
+								if is_explicitly_positional_filter (a_boolean_filter.operands.item (1))
+									and then not is_explicitly_positional_filter (a_boolean_filter.operands.item (2)) then
+									another_expression := force_to_boolean (a_boolean_filter.operands.item (1))
+									a_third_expression := force_to_boolean (a_boolean_filter.operands.item (2))
+									create a_filter.make (base_expression, another_expression)
+									create another_filter.make (a_filter, a_third_expression)
 									Result := another_filter.analyze (a_context)
 									finished := True
 									if another_filter.is_static_type_error then
 										is_static_type_error := True
 										set_last_static_type_error (another_filter.last_static_type_error)
 									end
-								elseif is_positional_filter (a_boolean_filter.operands.item (2))
-									and then a_boolean_filter.operands.item (2).item_type = Boolean_type
-									and then not is_positional_filter (a_boolean_filter.operands.item (1)) then
-									create a_filter.make (base_expression, a_boolean_filter.operands.item (2))
-									create another_filter.make (a_filter, a_boolean_filter.operands.item (1))
+								elseif is_explicitly_positional_filter (a_boolean_filter.operands.item (2))
+									and then not is_explicitly_positional_filter (a_boolean_filter.operands.item (1)) then
+									another_expression := force_to_boolean (a_boolean_filter.operands.item (1))
+									a_third_expression := force_to_boolean (a_boolean_filter.operands.item (2))
+									create a_filter.make (base_expression, a_third_expression)
+									create another_filter.make (a_filter, another_expression)
 									Result := another_filter.analyze (a_context)
 									finished := True
 									if another_filter.is_static_type_error then
@@ -413,12 +417,12 @@ feature -- Optimization
 								a_result_expression.set_filter (a_result_expression.filter.promote (an_offer))
 								a_let_expression ?= an_offer.containing_expression
 								if a_let_expression /= Void then
-									an_expr := a_let_expression.analyze (a_context)
+									an_expression := a_let_expression.analyze (a_context)
 									if a_let_expression.is_static_type_error then
 										is_static_type_error := True
 										set_last_static_type_error (a_let_expression.last_static_type_error)
 									else
-										an_offer.set_containing_expression (an_expr)
+										an_offer.set_containing_expression (an_expression)
 									end
 								end
 								Result := an_offer.containing_expression
@@ -494,20 +498,47 @@ feature {NONE} -- Implementation
 	filter_dependencies: ARRAY [BOOLEAN]
 			-- Dependencies of the original (but simplifed) filter
 
-	is_positional_filter (an_expr: XM_XPATH_EXPRESSION): BOOLEAN is
-			-- Is `an_expr', when used as a filter, positional?
+	is_positional_filter (an_expression: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Is `an_expression', when used as a filter, positional?
 		require
-			expression_not_void: an_expr /= Void
+			expression_not_void: an_expression /= Void
 		local
 			type: INTEGER
 		do
-			type := an_expr.item_type
+			type := an_expression.item_type
 			Result := type = Atomic_type or else type = Any_item
 				or else is_sub_type (type, Number_type)
-				or else an_expr.depends_upon_position
-				or else an_expr.depends_upon_last
+				or else is_explicitly_positional_filter (an_expression)
 		end
 
+	is_explicitly_positional_filter (an_expression: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Is `an_expression', explicitly dependant on position() or last()?
+		require
+			expression_not_void: an_expression /= Void
+		do
+			Result := an_expression.depends_upon_position
+				or else an_expression.depends_upon_last
+		end
+
+	force_to_boolean (an_expression: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
+			-- A warpping of the boolean() function around `an_expression'.
+			require
+			expression_not_void: an_expression /= Void
+		local
+			a_function_call: XM_XPATH_FUNCTION_CALL
+			args: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+		do
+			create args.make (1)
+			args.put (an_expression, 1)
+			a_function_call := Function_factory.make_system_function ("boolean")
+				check
+					function_call_not_void: a_function_call /= Void
+					-- as boolean must exist
+				end
+			a_function_call.set_arguments (args)
+			Result := a_function_call
+		end
+	
 	compute_special_properties is
 			-- Compute special properties.
 		do

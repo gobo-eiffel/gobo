@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 			controller_not_void: a_controller /= Void
 		do
 			controller := a_controller
+			cached_last := -1
 			-- TODO more code
 		ensure
 			controller_set: controller = a_controller
@@ -41,6 +42,24 @@ feature -- Access
 				Result := Void
 			else
 				Result := current_iterator.item_for_iteration
+			end
+		end
+
+	context_position: INTEGER is
+			-- Context position;
+			-- (the position of the context node in the context node list)
+		do
+			-- TODO
+		end
+
+	last: INTEGER is
+			-- Context size;
+			-- (the position of the last item in the current node list)
+		do
+			if cached_last > 0 then
+				Result := cached_last
+			else
+				-- TODO
 			end
 		end
 
@@ -68,6 +87,9 @@ feature {NONE} -- Implementation
 
 	controller: XM_XPATH_CONTROLLER
 			-- XPATH controller
+
+	cached_last: INTEGER
+			-- Used by `last'
 
 invariant
 

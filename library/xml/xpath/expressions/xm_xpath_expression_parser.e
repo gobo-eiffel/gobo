@@ -1605,6 +1605,14 @@ feature {NONE} -- Implementation
 						environment.bind_function (a_function_name, arguments)
 						if environment.was_last_function_bound then
 							internal_last_parsed_expression := environment.last_bound_function
+							debug ("XPath Expression Parser")
+								std.error.put_string ("Bound a function%N")
+							end
+						else
+							debug ("XPath Expression Parser")
+								std.error.put_string ("Failed to bind a function%N")
+							end
+							report_parse_error (environment.last_function_binding_failure_message)
 						end
 					end
 				end

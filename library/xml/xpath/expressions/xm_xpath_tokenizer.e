@@ -104,7 +104,7 @@ feature -- Access
 			if an_index < 34 then
 				Result := input.substring (1, an_index)
 			else
-				create normalizer
+				create normalizer.make
 				s := "..."
 				s := STRING_.appended_string (s, input.substring (an_index - 30, an_index))
 				Result := normalizer.normalize (s)

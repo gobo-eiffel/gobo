@@ -63,6 +63,19 @@ feature -- Status report
 			end
 		end
 
+feature -- Status setting
+
+	set_arguments (args: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
+			-- Set all arguments.
+		require
+			arguments_not_void: args /= Void
+		do
+			arguments := args
+			arguments.set_equality_tester (expression_tester)
+		ensure
+			arguments_set: arguments = args
+		end
+	
 feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
@@ -173,18 +186,6 @@ feature -- Evaluation
 			evaluated: Result /= Void
 		end
 
-feature {XM_XPATH_FUNCTION_CALL, XM_XPATH_EXPRESSION_PARSER} -- Restricted
-
-	set_arguments (args: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
-			-- Set all arguments.
-		require
-			arguments_not_void: args /= Void
-		do
-			arguments := args
-		ensure
-			arguments_set: arguments = args
-		end
-
 feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -208,7 +209,7 @@ feature {NONE} -- Implementation
 			result_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 		do
 			from
-				result_arguments := clone (arguments)
+				create result_arguments.make_from_linear (arguments)
 				result_arguments.start
 			variant
 				result_arguments.count + 1 - result_arguments.index
@@ -227,7 +228,7 @@ feature {NONE} -- Implementation
 			-- Check number of arguments
 		require
 			positive_minimum_count: a_minimum_count >= 0
-			positive_maximum_count: a_maximum_count >= 0
+			nearly_positive_maximum_count: a_maximum_count >= -1
 		local
 			a_message: STRING
 		do
@@ -246,7 +247,7 @@ feature {NONE} -- Implementation
 				a_message := STRING_.appended_string (a_message, a_minimum_count.out)
 				a_message := STRING_.appended_string (a_message, plural_arguments_text (a_minimum_count))
 				set_last_static_type_error (a_message)
-			elseif Result > a_maximum_count then
+			elseif a_maximum_count > -1 and Result > a_maximum_count then
 				a_message := STRING_.appended_string ("Function ", name)
 				a_message := STRING_.appended_string (a_message, " must have at most")
 				a_message := STRING_.appended_string (a_message, a_maximum_count.out)

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath last() function"
+		"Objects that mplement the XPath position() function"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,25 +10,25 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_LAST
+class XM_XPATH_POSITION
 
 inherit
-
+	
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, evaluate_item, compute_intrinsic_dependencies
+		pre_evaluate, evaluate_item, compute_intrinsic_dependencies
 		end
 
-creation
+	creation
 
 	make
 
 feature {NONE} -- Initialization
 
 	make is
-			-- Establish invariant
+			-- Establish invariant.
 		do
-			name := "last"
+			name := "position"
 			minimum_argument_count := 0
 			maximum_argument_count := 0
 			create arguments.make (0)
@@ -62,7 +62,7 @@ feature -- Status setting
 		do
 			create intrinsic_dependencies.make (1, 6)
 			-- Now all are `False'
-			intrinsic_dependencies.put (True, 4) -- Depends_upon_last
+			intrinsic_dependencies.put (True, 3) -- Depends_upon_position
 			are_intrinsic_dependencies_computed := True
 		end
 
@@ -71,7 +71,7 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate as a single item
 		do
-			create {XM_XPATH_INTEGER_VALUE} Result.make (a_context.last)
+			create {XM_XPATH_INTEGER_VALUE} Result.make (a_context.context_position)
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
@@ -87,6 +87,6 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		do
 			set_cardinality_exactly_one
 		end
-
+		
 end
-	
+

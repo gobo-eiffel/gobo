@@ -16,6 +16,10 @@ inherit
 
 	XM_UNICODE_CHARACTERS_1_1
 
+	KL_IMPORTED_STRING_ROUTINES
+
+	KL_SHARED_STANDARD_FILES
+
 	-- A StaticContext contains the information needed while an expression or pattern is being parsed;
 	-- The information is also sometimes needed at run-time.
 
@@ -44,6 +48,16 @@ feature -- Access
 			function_not_void: Result /= Void
 		end
 
+	last_function_binding_failure_message: STRING is
+			-- Error message from `bind_function'
+		require
+			function_not_bound: not was_last_function_bound
+		do
+			Result := internal_last_function_binding_failure_message
+		ensure
+			last_function_binding_failure_message_not_void: Result /= Void
+		end
+		
 	default_element_namespace: INTEGER is
 			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'
 		deferred
@@ -76,6 +90,34 @@ feature -- Status report
 	was_last_function_bound: BOOLEAN
 			-- Did last call to `bind_function' succeed?
 
+	is_backwards_compatible_mode: BOOLEAN is
+			-- Is Backwards Compatible Mode used?
+		deferred
+		end
+
+feature -- Status setting
+
+	set_bind_function_failure_message (a_message: STRING) is
+			-- Set failure message from `bind_function'.
+		require
+			message_not_void: a_message /= Void
+			function_not_bound: not was_last_function_bound
+		do
+			internal_last_function_binding_failure_message := a_message
+		ensure
+			message_set: STRING_.same_string (last_function_binding_failure_message, a_message)
+		end
+
+	set_last_bound_function (an_expression: XM_XPATH_EXPRESSION) is
+			-- Set `last_bound_function'.
+		require
+			expression_not_void: an_expression /= Void
+		do
+			internal_last_bound_function := an_expression
+		ensure
+			set: last_bound_function = an_expression
+		end
+		
 feature -- Element change
 	
 	bind_variable (a_fingerprint: INTEGER) is
@@ -102,6 +144,9 @@ feature {NONE} -- Implementation
 
 	internal_last_bound_function: XM_XPATH_EXPRESSION
 			-- Result of last sucessfull call to  `bind_function'
+
+	internal_last_function_binding_failure_message: STRING
+			-- Failure message from `bind_function'
 
 invariant
 
