@@ -14,7 +14,7 @@ class XM_CHARACTER_DATA
 
 inherit
 
-	XM_NODE
+	XM_ELEMENT_NODE
 
 	KL_IMPORTED_STRING_ROUTINES
 
@@ -44,6 +44,17 @@ feature -- Access
 
 feature -- Element change
 
+	set_content (a_content: STRING) is
+			-- Set content.
+		require
+			a_content_not_void: a_content /= Void
+		do
+			content := a_content
+		ensure
+			set: content = a_content
+			same_string: STRING_.same_string (content, a_content)
+		end
+		
 	append_content (other: like Current) is
 			-- Append the content of 'other' to
 			-- the content of `Current'.
@@ -51,6 +62,10 @@ feature -- Element change
 			other_not_void: other /= Void
 		do
 			content := STRING_.appended_string (content, other.content)
+		ensure
+			appended_count: content.count = other.count + old (content.count)
+			appended: STRING_.same_string (other,
+					content.substring (content.count - other.count + 1, content.count))
 		end
 
 feature -- Processing

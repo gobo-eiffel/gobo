@@ -33,7 +33,7 @@ inherit
 			copy, is_equal
 		end
 
-	DS_LINKED_LIST [XM_NODE]
+	DS_LINKED_LIST [XM_ELEMENT_NODE]
 		rename
 			make as make_list,
 			is_first as list_is_first,
@@ -53,10 +53,10 @@ feature {NONE} -- Initialization
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
 		do
+			parent := a_parent
 			name := a_name
 			namespace := a_ns
 			make_list
-			parent := a_parent
 		ensure
 			name_set: name = a_name
 			ns_prefix_set: namespace = a_ns

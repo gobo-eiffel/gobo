@@ -16,6 +16,8 @@ inherit
 
 	XM_DOCUMENT_NODE
 
+	XM_ELEMENT_NODE
+	
 creation
 
 	make
@@ -40,6 +42,18 @@ feature -- Access
 	data: STRING
 			-- Comment's character data
 
+feature -- Setting
+
+	set_data (a_data: STRING) is
+			-- Set comment's data.
+		require
+			a_data_not_void: a_data /= Void
+		do
+			data := a_data
+		ensure
+			set: data = a_data
+		end
+		
 feature -- Processing
 
 	process (a_processor: XM_NODE_PROCESSOR) is

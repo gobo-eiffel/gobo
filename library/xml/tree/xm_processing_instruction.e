@@ -15,6 +15,8 @@ class XM_PROCESSING_INSTRUCTION
 inherit
 
 	XM_DOCUMENT_NODE
+	
+	XM_ELEMENT_NODE
 
 creation
 
@@ -48,6 +50,28 @@ feature -- Access
 			-- This is from the first non white space character after
 			-- the target to the character immediately preceding the ?>.
 
+feature -- Setting
+
+	set_target (a_target: STRING) is
+			-- Set target.
+		require
+			a_target_not_void: a_target /= Void
+		do
+			target := a_target
+		ensure
+			set: target = a_target
+		end
+		
+	set_data (a_data: STRING) is
+			-- Set data.
+		require
+			a_data_not_void: a_data /= Void
+		do
+			data := a_data
+		ensure
+			set: data = a_data
+		end
+		
 feature -- Processing
 
 	process (a_processor: XM_NODE_PROCESSOR) is
