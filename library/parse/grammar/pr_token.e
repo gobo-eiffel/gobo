@@ -82,6 +82,11 @@ feature -- Access
 			-- Precedence level
 			-- (0 means that no `precedence' has been assigned.)
 
+	literal_string: STRING
+			-- Literal string that can be used instead
+			-- of curren token's name in rules
+			-- (Void if no sucg string.)
+
 feature -- Setting
 
 	set_token_id (i: INTEGER) is
@@ -100,6 +105,14 @@ feature -- Setting
 			precedence := p
 		ensure
 			precedence_set: precedence = p
+		end
+
+	set_literal_string (a_string: STRING) is
+			-- Set `literal_string' to `a_string'.
+		do
+			literal_string := a_string
+		ensure
+			literal_string_set: literal_string = a_string
 		end
 
 feature -- Status setting

@@ -105,6 +105,13 @@ ESC					\\(.|[0-7]{1,3}|x[0-9a-f]{1,2})
 						last_token := T_CHAR
 						last_value := text
 					}
+	\"[^"\n]*\"		{
+						last_token := T_STR
+						last_value := text
+						if text_count < 4 then
+							report_invalid_string_token_error (text)
+						end
+					}
 }
 
 <SECTION2>{

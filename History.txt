@@ -1,3 +1,11 @@
+Version 1.6 -
+
+	geyacc:
+
+	* One can now use manifest strings (e.g. "<=" or "..")
+	  in place of identifiers (e.g. LE or DOTDOT) in grammar
+	  rules (suggested by Berend de Boer).
+
 Version 1.5 - 2 October 1999
 
 	geyacc:

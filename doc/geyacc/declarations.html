@@ -96,6 +96,23 @@ color="#FF0000">NAME</font><font color="#008080"> of type <em>STRING</em></font>
 <p>All tokens specified in the same <font color="#0000FF"><tt>%token
 </tt></font>declaration will have the same value type.</p>
 
+<p>A <a href="symbols.html#string_token">literal string token</a>
+can be associated with a token type name by writing the literal
+string at the end of a <font color="#0000FF"><tt>%token </tt></font>declaration
+which declares the name. For example:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%token</font> <font
+color="#FF0000">LE  &quot;&lt;=&quot;
+</font><font color="#0000FF">%token</font> <font color="#0000FF">&lt;</font><font
+color="#008080"><em>OPERATOR</em></font><font color="#0000FF">&gt;</font><font
+color="#FF0000"> ASSIGN </font><font color="#008080">310 </font><font
+color="#FF0000">&quot;:=&quot;</font></pre>
+</blockquote>
+
+<p>Once the literal string has been associated with the token
+name, you can use them interchangeably in the grammar rules.</p>
+
 <h2><a name="precedence">Operator Precedence</a></h2>
 
 <p>Use the <font color="#0000FF"><tt>%left</tt></font>, <font

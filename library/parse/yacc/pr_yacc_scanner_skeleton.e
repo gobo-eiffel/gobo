@@ -202,6 +202,21 @@ feature {NONE} -- Error handling
 			not_successful: not successful
 		end
 
+	report_invalid_string_token_error (a_string: STRING) is
+			-- Report that a literal string token must 
+			-- have at least two characters.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			an_error: PR_INVALID_STRING_TOKEN_ERROR
+		do
+			!! an_error.make (filename, line_nb, a_string)
+			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
 	report_dangerous_dollar_n_warning (n: INTEGER) is
 			-- Report that $`n' has been used in a semantic
 			-- action but `n' is not a valid index for the
