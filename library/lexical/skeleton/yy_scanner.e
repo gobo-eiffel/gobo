@@ -114,7 +114,8 @@ feature -- Setting
 
 	set_last_token (a_token: INTEGER) is
 			-- Set `last_token' to `a_token'.
-		deferred
+		do
+			last_token := a_token
 		ensure
 			last_token_set: last_token = a_token
 		end

@@ -15,7 +15,7 @@ class LX_LEX_PARSER
 
 inherit
 
-	YY_PARSER [ANY]
+	YY_PARSER_SKELETON [ANY]
 		rename
 			reset as reset_parser_skeleton
 		end
@@ -1130,12 +1130,21 @@ feature {NONE} -- Constants
 	Initial_max_transitions: INTEGER is 1000
 			-- Maximum number of symbol transitions
 
--- invariant
---
---	pending_rules_not_void: pending_rules /= Void
---	no_void_pending_rule: not pending_rules.has (Void)
---	start_condition_stack_not_void: start_condition_stack /= Void
---	transitions_not_void: equiv_classes /= Void implies transitions /= Void
---	action_factory_not_void: action_factory /= Void
---
--- end -- class LX_LEX_PARSER
+feature {NONE} -- Implementation
+
+	clear_input is
+			-- Set current input to undefined value.
+		do
+			last_token := Token_undefined
+			last_value := void_value
+		end
+
+ invariant
+
+	pending_rules_not_void: pending_rules /= Void
+	no_void_pending_rule: not pending_rules.has (Void)
+	start_condition_stack_not_void: start_condition_stack /= Void
+	transitions_not_void: equiv_classes /= Void implies transitions /= Void
+	action_factory_not_void: action_factory /= Void
+
+end -- class LX_LEX_PARSER

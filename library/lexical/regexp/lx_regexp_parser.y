@@ -15,11 +15,9 @@ class LX_REGEXP_PARSER
 
 inherit
 
-	YY_PARSER [ANY]
+	YY_PARSER_SKELETON [ANY]
 		rename
 			reset as reset_parser_skeleton
-		redefine
-			last_value, last_token
 		end
 
 	LX_REGEXP_SCANNER
@@ -27,8 +25,6 @@ inherit
 			make as make_regexp_scanner,
 			make_from_description as make_regexp_scanner_from_description,
 			reset as reset_regexp_scanner
-		redefine
-			last_value, last_token
 		end
 
 	KL_SHARED_INPUT_STREAM_ROUTINES
@@ -329,12 +325,6 @@ feature -- Parsing
 		end
 
 feature -- Access
-
-	last_token: INTEGER
-			-- Code of last token read
-
-	last_value: ANY
-			-- Last value read by `read_token'
 
 	transitions: DS_ARRAYED_LIST [LX_SYMBOL_TRANSITION [LX_NFA_STATE]]
 			-- Symbol transitions kept for later renumbering
@@ -949,8 +939,17 @@ feature {NONE} -- Constants
 	Initial_max_transitions: INTEGER is 1000
 			-- Maximum number of symbol transitions
 
--- invariant
---
---	transitions_not_void: equiv_classes /= Void implies transitions /= Void
---
--- end -- class LX_REGEXP_PARSER
+feature {NONE} -- Implementation
+
+	clear_input is
+			-- Set current input to undefined value.
+		do
+			last_token := Token_undefined
+			last_value := void_value
+		end
+
+invariant
+
+	transitions_not_void: equiv_classes /= Void implies transitions /= Void
+
+end -- class LX_REGEXP_PARSER

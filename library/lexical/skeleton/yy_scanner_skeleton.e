@@ -101,12 +101,6 @@ feature -- Access
 
 feature -- Setting
 
-	set_last_token (a_token: like last_token) is
-			-- Set `last_token' to `a_token'.
-		do
-			last_token := a_token
-		end
-
 	set_start_condition (a_start_condition: INTEGER) is
 			-- Set `start_condition' to `a_start_condition'.
 		do

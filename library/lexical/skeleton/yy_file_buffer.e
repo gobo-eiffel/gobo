@@ -87,22 +87,6 @@ feature -- Setting
 			beginning_of_line: beginning_of_line
 		end
 
-feature -- Status report
-
-	interactive: BOOLEAN
-			-- Is the input source interactive?
-			-- If so, we will have to read characters one by one.
-
-feature -- Status setting
-
-	set_interactive (b: BOOLEAN) is
-			-- Set `interactive' to `b'.
-		do
-			interactive := b
-		ensure
-			interactive_set: interactive = b
-		end
-
 feature -- Element change
 
 	fill is

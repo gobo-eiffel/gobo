@@ -3,21 +3,19 @@
 --
 %{
 -- a simple calculator
-class CALC_PARSER inherit
+deferred class CALC_PARSER inherit
 
 	LALR1_PARSER[INTEGER]
 		redefine
 			print_item
 	end
 
-creation
-	make
-
 feature {ANY}
 
 %}
 %start	calculate
 %token	NUMBER
+%token	EOL
 %left	'+' '-'
 %left	'*' '/'
 %right	UMINUS
@@ -32,13 +30,13 @@ calculate
 	;
 
 expr_eol
-	: expr '#'
+	: expr EOL
 	  {	io.putint($1)
 		io.new_line
 	  }
-	| error '#'
+	| error EOL
 	  {	clear_error }
-	| '#'
+	| EOL
 	  {	set_accepted }
 	;
 
@@ -70,3 +68,5 @@ expr
 			reset
 			parse
 		end -- make
+
+end -- CALC_PARSER

@@ -2,11 +2,11 @@ indexing
 
 	description:
 
-		"Scanners for a simple calculator";
+		"Scanners for a simple calculator"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class CALC_SCANNER
@@ -17,12 +17,16 @@ inherit
 		rename
 			make as make_interactive_scanner_skeleton,
 			reset as reset_interactive_scanner_skeleton
+		redefine
+			last_token
 		end
 
 	CALC_PARSER
 		rename
 			make as make_parser,
 			reset as reset_parser
+		redefine
+			last_token
 		end
 
 creation
@@ -46,28 +50,32 @@ feature {NONE} -- Implementation
 	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		do
-			inspect yy_act
-when 1 then
---|#line 41
+if yy_act <= 3 then
+if yy_act <= 2 then
+if yy_act = 1 then
+--|#line 45
 -- Ignore whitespaces.
-when 2 then
---|#line 42
--- Ignore newlines.
-when 3 then
---|#line 43
+else
+--|#line 46
+last_token := Token_EOL
+end
+else
+--|#line 48
 
 			last_value := text.to_integer
-			last_token := Token_digit
+			last_token := Token_NUMBER
 		
-when 4 then
---|#line 48
-last_token := text_item (1).code
-when 5 then
---|#line 50
+end
+else
+if yy_act = 4 then
+--|#line 53
+	last_token := text_item (1).code
+		
+else
+--|#line 56
 fatal_error ("scanner jammed")
-			else
-				fatal_error ("fatal scanner internal error: no action found")
-			end
+end
+end
 		end
 
 	yy_execute_eof_action (yy_sc: INTEGER) is
@@ -83,35 +91,35 @@ feature {NONE} -- Tables
 
 	yy_nxt_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,    4,    5,    6,    7,    9,    8,   10,    3,   10,
 			   10,   10,   10>>, 0)
 		end
 
 	yy_chk_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,    1,    1,    1,    1,   12,   11,    3,   10,   10,
 			   10,   10,   10>>, 0)
 		end
 
 	yy_base_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,    0,    0,    7,    8,    0,    8,    0,    0,    0,
 			    8,    4,    2>>, 0)
 		end
 
 	yy_def_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,   10,    1,   10,   10,   11,   10,   12,   11,   12,
 			    0,   10,   10>>, 0)
 		end
 
 	yy_ec_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
 			    3,    1,    1,    2,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -144,13 +152,13 @@ feature {NONE} -- Tables
 
 	yy_meta_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,    1,    2,    1,    3>>, 0)
 		end
 
 	yy_accept_: ARRAY [INTEGER] is
 		once
-			!YY_ARRAY [INTEGER]! Result.make_from_array (<<
+			Result := integer_array_.make_from_array (<<
 			    0,    0,    0,    6,    4,    1,    2,    3,    1,    3,
 			    0>>, 0)
 		end
@@ -208,5 +216,10 @@ feature -- Initialization
 			reset_interactive_scanner_skeleton
 			reset_parser
 		end
+
+feature -- Access
+
+	last_token: INTEGER
+		-- Last token read by the scanner
 
 end -- class CALC_SCANNER

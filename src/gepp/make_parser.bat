@@ -1,2 +1,2 @@
 
-ibyacc -ogepp_parser.ge gepp_parser.y
+ibyacc -ogepp_parser.e gepp_parser.y

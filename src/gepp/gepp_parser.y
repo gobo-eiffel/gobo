@@ -14,19 +14,15 @@ class GEPP_PARSER
 
 inherit
 
-	YY_PARSER [ANY]
+	YY_PARSER_SKELETON [ANY]
 		rename
 			reset as reset_parser_skeleton
-		redefine
-			last_value, last_token
 		end
 
 	GEPP_SCANNER
 		rename
 			make as make_gepp_scanner,
 			reset as reset_gepp_scanner
-		redefine
-			last_value, last_token
 		end
 
 creation
@@ -184,14 +180,6 @@ feature -- Parsing
 			parse
 		end
 
-feature -- Access
-
-	last_token: INTEGER
-			-- Code of last token read
-
-	last_value: ANY
-			-- Last value read by `read_token'
-
 feature -- Status report
 
 	ignored: BOOLEAN is
@@ -259,9 +247,18 @@ feature {NONE} -- Implementation
 			-- that subsequent lines should be ignored;
 			-- 0 if lines should not be ignored
 
---invariant
---
---	defined_values_not_void: defined_values /= Void
---	no_void_defined_value: not defined_values.has_item (Void)
---
---end -- class GE2E_PARSER
+feature {NONE} -- Implementation
+
+	clear_input is
+			-- Set current input to undefined value.
+		do
+			last_token := Token_undefined
+			last_value := void_value
+		end
+
+invariant
+
+	defined_values_not_void: defined_values /= Void
+	no_void_defined_value: not defined_values.has_item (Void)
+
+end -- class GE2E_PARSER
