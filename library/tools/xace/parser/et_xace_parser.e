@@ -81,7 +81,6 @@ feature -- Parsing
 			a_root_name: UC_STRING
 			a_system: ET_XACE_UNIVERSE
 			a_cluster: ET_XACE_CLUSTER
-			a_parser_factory: XM_PARSER_FACTORY
 		do
 			if xml_parser /= Void then
 				xml_parser.parse_from_stream (a_file)

@@ -28,8 +28,6 @@ feature -- Parsing
 
 	parse_file (a_file: like INPUT_STREAM_TYPE) is
 			-- Parse Xace file `a_file'.
-		local
-			a_parser_factory: XM_PARSER_FACTORY
 		do
 			last_universe := Void
 			if xml_parser /= Void then
