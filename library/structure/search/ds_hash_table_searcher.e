@@ -2,15 +2,19 @@ indexing
 
 	description:
 
-		"Hash table searchers";
+		"Hash table searchers"
 
-	library:    "Gobo Eiffel Structure Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
+#ifdef SE
+deferred class DS_HASH_TABLE_SEARCHER [G, K]
+#else
 deferred class DS_HASH_TABLE_SEARCHER [G, K -> HASHABLE]
+#endif
 
 inherit
 
@@ -31,9 +35,11 @@ feature -- Search
 			dead_found, stop: BOOLEAN
 			i, nb, index: INTEGER
 			dead_cell, current_cell: DS_PAIR [G, K]
+			storage: ARRAY [DS_PAIR [G, K]]
 		do
 			Result := a_container.position
-			current_cell := a_container.array_item (Result)
+			storage := a_container.storage
+			current_cell := storage.item (Result)
 			if
 				not a_container.valid_cell (current_cell) or else
 				not k.is_equal (current_cell.second)
@@ -46,7 +52,7 @@ feature -- Search
 				until
 					stop or i > nb
 				loop
-					current_cell := a_container.array_item (index)
+					current_cell := storage.item (index)
 					if current_cell = Void then
 						if not dead_found then
 							Result := index
