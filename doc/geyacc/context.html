@@ -140,8 +140,12 @@ appears in that context. Here is how you can do it:</p>
 <blockquote>
     <pre><font color="#800080">expr</font><font color="#0000FF">: </font><font
 color="#FF0000">IDENTIFIER</font><font color="#0000FF">
+        { </font><font color="#008080">...</font><font
+color="#0000FF"> }
     | </font><font color="#800080">constant</font><font
 color="#0000FF">
+        { </font><font color="#008080">...</font><font
+color="#0000FF"> }
     | </font><font color="#FF0000">HEX '('</font><font
 color="#0000FF">
         { </font><font color="#008080"><em>hexflag </em>:=<em> True</em></font><font
@@ -164,8 +168,12 @@ color="#0000FF"> }
 
 </font><font color="#800080">constant</font><font color="#0000FF">: </font><font
 color="#FF0000">INTEGER</font><font color="#0000FF">
+        { </font><font color="#008080">...</font><font
+color="#0000FF"> }
     | </font><font color="#FF0000">STRING</font><font
 color="#0000FF">
+        { </font><font color="#008080">...</font><font
+color="#0000FF"> }
     ;
 </font><em>...</em><font color="#0000FF">
 %%
@@ -192,10 +200,13 @@ then start a new statement, like this:</p>
     <pre><font color="#800080">stmt</font><font color="#0000FF">: </font><font
 color="#800080">expr</font><font color="#0000FF"> </font><font
 color="#FF0000">';'</font><font color="#0000FF">
+        { </font><font color="#008080">...</font><font
+color="#0000FF"> }
     | </font><font color="#FF0000">IF '(' </font><font
 color="#800080">expr</font><font color="#FF0000"> ')'</font><font
 color="#0000FF"> </font><font color="#800080">stmt</font><font
-color="#0000FF"> { </font><font color="#008080">...</font><font
+color="#0000FF">
+        { </font><font color="#008080">...</font><font
 color="#0000FF"> }
     </font>...<font color="#0000FF">
     | error</font><font color="#FF0000"> ';'</font><font
