@@ -103,15 +103,15 @@ feature -- Access/XML attribute values
 			a_string_interpreter: GEANT_STRING_INTERPRETER
 		do
 			Result := xml_element.attribute_by_name (an_attr_name).value
-
-				-- Search variable in arguments:
-			create a_string_interpreter.make
-			a_string_interpreter.set_source_string (Result)
-			a_string_interpreter.set_variables (target_arguments_stack.item)
-			Result := a_string_interpreter.interpreted_source_string
-
-				-- Search variable in project variables:
-			Result := project.variables.interpreted_string (Result)
+			if Result.count > 0 then
+					-- Search variable in arguments:
+				create a_string_interpreter.make
+				a_string_interpreter.set_source_string (Result)
+				a_string_interpreter.set_variables (target_arguments_stack.item)
+				Result := a_string_interpreter.interpreted_source_string
+					-- Search variable in project variables:
+				Result := project.variables.interpreted_string (Result)
+			end
 		end
 
 	attribute_value_or_default (an_attr_name: STRING; a_default_value: STRING): STRING is

@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 				-- Create dummy arguments for first call:
 			create a_arguments.make
-			target_arguments_stack.put (a_arguments)
+			target_arguments_stack.force (a_arguments)
 
 				-- Create project options:
 			create a_project_options.make

@@ -426,7 +426,7 @@ feature -- Processing
 				if a_execute_target.project /= Current then
 					a_execute_target.project.execute_target (a_execute_target, a_arguments, a_force, a_polymorph)
 				else
-					target_arguments_stack.put (a_arguments)
+					target_arguments_stack.force (a_arguments)
 					a_execute_target.execute
 					target_arguments_stack.remove
 				end

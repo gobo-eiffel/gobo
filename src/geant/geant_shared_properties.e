@@ -58,14 +58,13 @@ feature {GEANT_INTERPRETING_ELEMENT} -- Access
 	target_arguments_stack: DS_STACK [GEANT_VARIABLES] is
 			-- Arguments stack
 		local
-			a_tester: UC_STRING_EQUALITY_TESTER
 			a_target_arguments_stack: DS_ARRAYED_STACK [GEANT_VARIABLES]
 		once
 				-- Create target arguments stack:
 			create a_target_arguments_stack.make (10)
 			Result := a_target_arguments_stack
 		ensure
-			target_arguments_stack_not_void: target_arguments_stack /= Void
+			target_arguments_stack_not_void: Result /= Void
 		end
 
 feature -- Status report
