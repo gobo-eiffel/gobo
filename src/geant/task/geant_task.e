@@ -77,6 +77,7 @@ feature -- Execution
 			a_old_task_cwd: STRING
 			a_new_task_cwd: STRING
 		do
+			a_old_task_cwd := file_system.current_working_directory
 				-- change to task directory if "dir" attribute is provided:
 			if xml_element.has_attribute (Dir_attribute_name) then
 				a_new_task_cwd := project.variables.interpreted_string (
@@ -84,19 +85,18 @@ feature -- Execution
 				debug ("geant")
 					print (" changing to directory: '" + a_new_task_cwd + "'%N")
 				end
-				a_old_task_cwd := file_system.current_working_directory
 				file_system.set_current_working_directory (a_new_task_cwd)
 			end
 
 			command.execute
 
-				-- change back to previous directory if "dir" attribute is provided:
-			if xml_element.has_attribute (Dir_attribute_name) then
-				debug ("geant")
-					print (" changing to directory: '" + a_old_task_cwd + "'%N")
-				end
-				file_system.set_current_working_directory (a_old_task_cwd)
+				-- change back to previous directory even if "dir" attribute
+				-- was not provided since the command itself might have changed
+				-- the current working directory:
+			debug ("geant")
+				print (" changing to directory: '" + a_old_task_cwd + "'%N")
 			end
+			file_system.set_current_working_directory (a_old_task_cwd)
 		end
 
 end -- class GEANT_TASK
