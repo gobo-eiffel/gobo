@@ -18,7 +18,7 @@ inherit
 		undefine
 			reset
 		redefine
-			yy_accept, yy_ec, -- yy_null_trans,
+			yy_accept, yy_ec,
 			yy_initialize
 		end
 
@@ -28,7 +28,7 @@ inherit
 			make_with_file as make_scanner_with_file_skeleton,
 			make_with_buffer as make_scanner_with_buffer_skeleton
 		redefine
-			yy_accept, yy_ec, -- yy_null_trans,
+			yy_accept, yy_ec,
 			yy_nxt, yy_chk, yy_base, yy_def,
 			yy_acclist, yy_meta,
 			yy_initialize
@@ -39,7 +39,7 @@ inherit
 			{LX_COMPRESSED_TABLES} all
 			{ANY} to_tables, from_tables
 		redefine
-			yy_accept, yy_ec, -- yy_null_trans,
+			yy_accept, yy_ec,
 			yy_nxt, yy_chk, yy_base, yy_def,
 			yy_acclist, yy_meta
 		end
@@ -91,10 +91,6 @@ feature {LX_COMPRESSED_TABLES} -- Tables
 
 	yy_accept: ARRAY [INTEGER]
 			-- Accepting ids indexed by state ids
-
---	yy_null_trans: ARRAY [INTEGER]
---			-- Null transition table
---			--| Note: this table is not used in the current implementation.
 
 feature {NONE} -- Constants
 

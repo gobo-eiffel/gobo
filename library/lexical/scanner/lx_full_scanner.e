@@ -18,7 +18,7 @@ inherit
 		undefine
 			reset
 		redefine
-			yy_accept, yy_ec --, yy_null_trans
+			yy_accept, yy_ec
 		end
 
 	YY_FULL_SCANNER_SKELETON
@@ -27,7 +27,7 @@ inherit
 			make_with_file as make_scanner_with_file_skeleton,
 			make_with_buffer as make_scanner_with_buffer_skeleton
 		redefine
-			yy_accept, yy_ec, -- yy_null_trans,
+			yy_accept, yy_ec,
 			yy_nxt
 		end
 
@@ -36,7 +36,7 @@ inherit
 			{LX_FULL_TABLES} all;
 			{ANY} to_tables, from_tables
 		redefine
-			yy_accept, yy_ec, -- yy_null_trans,
+			yy_accept, yy_ec,
 			yy_nxt
 		end
 
@@ -56,9 +56,5 @@ feature {LX_FULL_TABLES} -- Tables
 
 	yy_accept: ARRAY [INTEGER]
 			-- Accepting ids indexed by state ids
-
---	yy_null_trans: ARRAY [INTEGER]
---			-- Null transition table
---			--| Note: this table is not used in the current implementation.
 
 end -- class LX_FULL_SCANNER

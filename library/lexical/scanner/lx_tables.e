@@ -33,10 +33,6 @@ feature -- Tables
 	yy_accept: ARRAY [INTEGER]
 			-- Accepting ids indexed by state ids
 
---	yy_null_trans: ARRAY [INTEGER]
---			-- Null transitions indexed by state ids
---			--| Note: this table is not used in the current implementation.
-
 	yy_ec: ARRAY [INTEGER]
 			-- Equivalence classes;
 			-- Void if equivalence classes are not used

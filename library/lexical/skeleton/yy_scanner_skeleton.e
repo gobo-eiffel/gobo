@@ -225,10 +225,6 @@ feature {NONE} -- Tables
 	yy_accept: ARRAY [INTEGER]
 			-- Accepting ids indexed by state ids
 
---	yy_null_trans: ARRAY [INTEGER]
---			-- Null transition table
---			--| Note: this table is not used in the current implementation.
-
 feature {NONE} -- Implementation
 
 	yy_load_input_buffer is

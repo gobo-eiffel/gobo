@@ -78,7 +78,6 @@ feature -- Conversion
 			yy_meta := other.yy_meta
 			yy_rules := other.yy_rules
 			yy_eof_rules := other.yy_eof_rules
---			yy_null_trans := other.yy_null_trans
 			yy_start_conditions := other.yy_start_conditions
 			yyJam_state := other.yyJam_state
 			yyJam_base := other.yyJam_base

@@ -449,60 +449,41 @@ feature {NONE} -- Implementation
 				yy_cp >= yy_nb
 			loop
 					-- Find the next state.
---				if yy_null_trans /= Void then
---					if yy_ec /= Void then
---						yy_c := yy_ec.item (yy_content.item (yy_cp).code)
---					else
---						yy_c := yy_content.item (yy_cp).code
---					end
---					if yy_accept.item (Result) /= 0 then
---						yy_last_accepting_state := Result
---						yy_last_accepting_cpos := yy_cp
---					end
---				else
-					yy_c := yy_content.item (yy_cp).code
-					if yy_c = 0 then
-						yy_c := yyNull_equiv_class
-					elseif yy_ec /= Void then
-						yy_c := yy_ec.item (yy_c)
+				yy_c := yy_content.item (yy_cp).code
+				if yy_c = 0 then
+					yy_c := yyNull_equiv_class
+				elseif yy_ec /= Void then
+					yy_c := yy_ec.item (yy_c)
+				end
+				if not yyReject_or_variable_trail_context then
+						-- Save the backing-up info before computing the 
+						-- next state because we always compute one more
+						-- state than needed - we always proceed until
+						-- we reach a jam state.
+					if yy_accept.item (Result) /= 0 then
+						yy_last_accepting_state := Result
+						yy_last_accepting_cpos := yy_cp
 					end
---				end
---				if
---					yy_null_trans = Void or else
---					yy_content.item (yy_cp) /= '%U'
---				then
-					if not yyReject_or_variable_trail_context then
-							-- Save the backing-up info before computing the 
-							-- next state because we always compute one more
-							-- state than needed - we always proceed until
-							-- we reach a jam state.
-						if yy_accept.item (Result) /= 0 then
-							yy_last_accepting_state := Result
-							yy_last_accepting_cpos := yy_cp
-						end
+				end
+				from until
+					yy_chk.item (yy_base.item (Result) + yy_c) = Result
+				loop
+					Result := yy_def.item (Result)
+					if
+						yy_meta /= Void and then
+						Result >= yyTemplate_mark
+					then
+							-- We've arranged it so that templates are
+							-- never chained to one another. This means
+							-- we can afford to make a very simple test
+							-- to see if we need to convert to `yy_c''s
+							-- meta-equivalence class without worrying
+							-- about erroneously looking up the meta
+							-- equivalence class twice.
+						yy_c := yy_meta.item (yy_c)
 					end
-					from until
-						yy_chk.item (yy_base.item (Result) + yy_c) = Result
-					loop
-						Result := yy_def.item (Result)
-						if
-							yy_meta /= Void and then
-							Result >= yyTemplate_mark
-						then
-								-- We've arranged it so that templates are
-								-- never chained to one another. This means
-								-- we can afford to make a very simple test
-								-- to see if we need to convert to `yy_c''s
-								-- meta-equivalence class without worrying
-								-- about erroneously looking up the meta
-								-- equivalence class twice.
-							yy_c := yy_meta.item (yy_c)
-						end
-					end
-					Result := yy_nxt.item (yy_base.item (Result) + yy_c)
---				elseif null_trans /= Void then
---					Result := yy_null_trans.item (Result)
---				end
+				end
+				Result := yy_nxt.item (yy_base.item (Result) + yy_c)
 				if yyReject_or_variable_trail_context then
 					yy_state_count := yy_state_count + 1
 					yy_state_stack.put (Result, yy_state_count)
@@ -518,46 +499,41 @@ feature {NONE} -- Implementation
 			yy_c: INTEGER
 			yy_is_jam: BOOLEAN
 		do
---			if yy_null_trans /= Void then
---				Result := yy_null_trans.item (yy_current_state)
---				yy_is_jam := (Result = 0)
---			else
-				if not yyReject_or_variable_trail_context then
-						-- Save the backing-up info before computing the next
-						-- state because we always compute one more state than
-						-- needed - we always proceed until we reach
-						-- a jam state.
-					if yy_accept.item (yy_current_state) /= 0 then
-						yy_last_accepting_state := yy_current_state
-						yy_last_accepting_cpos := yy_position
-					end
+			if not yyReject_or_variable_trail_context then
+					-- Save the backing-up info before computing the next
+					-- state because we always compute one more state than
+					-- needed - we always proceed until we reach
+					-- a jam state.
+				if yy_accept.item (yy_current_state) /= 0 then
+					yy_last_accepting_state := yy_current_state
+					yy_last_accepting_cpos := yy_position
 				end
-				Result := yy_current_state
-				yy_c := yyNull_equiv_class
-				from until
-					yy_chk.item (yy_base.item (Result) + yy_c) = Result
-				loop
-					Result := yy_def.item (Result)
-					if
-						yy_meta /= Void and then
-						Result >= yyTemplate_mark
-					then
-							-- We've arranged it so that templates are never
-							-- chained to one another. This means we can
-							-- afford to make a very simple test to see if
-							-- we need to convert to `yy_c''s meta-equivalence
-							-- class without worrying about erroneously
-							-- looking up the meta-equivalence class twice.
-						yy_c := yy_meta.item (yy_c)
-					end
+			end
+			Result := yy_current_state
+			yy_c := yyNull_equiv_class
+			from until
+				yy_chk.item (yy_base.item (Result) + yy_c) = Result
+			loop
+				Result := yy_def.item (Result)
+				if
+					yy_meta /= Void and then
+					Result >= yyTemplate_mark
+				then
+						-- We've arranged it so that templates are never
+						-- chained to one another. This means we can
+						-- afford to make a very simple test to see if
+						-- we need to convert to `yy_c''s meta-equivalence
+						-- class without worrying about erroneously
+						-- looking up the meta-equivalence class twice.
+					yy_c := yy_meta.item (yy_c)
 				end
-				Result := yy_nxt.item (yy_base.item (Result) + yy_c)
-				if yyReject_or_variable_trail_context then
-					yy_state_count := yy_state_count + 1
-					yy_state_stack.put (Result, yy_state_count)
-				end
-				yy_is_jam := (Result = yyJam_state)
---			end
+			end
+			Result := yy_nxt.item (yy_base.item (Result) + yy_c)
+			if yyReject_or_variable_trail_context then
+				yy_state_count := yy_state_count + 1
+				yy_state_stack.put (Result, yy_state_count)
+			end
+			yy_is_jam := (Result = yyJam_state)
 			if yy_is_jam then
 				Result := 0
 			end

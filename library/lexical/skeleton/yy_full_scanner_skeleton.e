@@ -211,26 +211,13 @@ feature {NONE} -- Implementation
 				yy_cp >= yy_nb
 			loop
 					-- Find the next state.
---				if yy_null_trans /= Void then
---					if yy_ec /= Void then
---						yy_c := yy_ec.item (yy_content.item (yy_cp).code)
---					else
---						yy_c := yy_content.item (yy_cp).code
---					end
---					if yy_content.item (yy_cp) /= '%U' then
---						Result := yy_nxt.item (Result * yyNb_rows + yy_c)
---					else
---						Result := yy_null_trans.item (Result)
---					end
---				else
-					yy_c := yy_content.item (yy_cp).code
-					if yy_c = 0 then
-						yy_c := yyNull_equiv_class
-					elseif yy_ec /= Void then
-						yy_c := yy_ec.item (yy_c)
-					end
-					Result := yy_nxt.item (Result * yyNb_rows + yy_c)
---				end
+				yy_c := yy_content.item (yy_cp).code
+				if yy_c = 0 then
+					yy_c := yyNull_equiv_class
+				elseif yy_ec /= Void then
+					yy_c := yy_ec.item (yy_c)
+				end
+				Result := yy_nxt.item (Result * yyNb_rows + yy_c)
 				if yyBacking_up and then yy_accept.item (Result) /= 0 then
 					yy_last_accepting_state := Result
 					yy_last_accepting_cpos := yy_cp
@@ -246,14 +233,9 @@ feature {NONE} -- Implementation
 			yy_c: INTEGER
 			yy_is_jam: BOOLEAN
 		do
---			if yy_null_trans /= Void then
---				Result := yy_null_trans.item (yy_current_state)
---				yy_is_jam := (Result = 0)
---			else
-				Result := yy_nxt.item
-					(yy_current_state * yyNb_rows + yyNull_equiv_class)
-				yy_is_jam := (Result <= 0)
---			end
+			Result := yy_nxt.item
+				(yy_current_state * yyNb_rows + yyNull_equiv_class)
+			yy_is_jam := (Result <= 0)
 			if yy_is_jam then
 				Result := 0
 			elseif yyBacking_up and then yy_accept.item (Result) /= 0 then

@@ -45,7 +45,6 @@ feature -- Conversion
 			yy_ec := other.yy_ec
 			yy_rules := other.yy_rules
 			yy_eof_rules := other.yy_eof_rules
---			yy_null_trans := other.yy_null_trans
 			yy_start_conditions := other.yy_start_conditions
 			yyNull_equiv_class := other.yyNull_equiv_class
 			yyEnd_of_buffer := other.yyEnd_of_buffer

@@ -140,41 +140,20 @@ feature -- Building
 		local
 			i: INTEGER
 			a_state: LX_DFA_STATE
---			null_code: INTEGER
---			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 		do
 			backing_up_count := 0
---			null_code := yyNull_equiv_class
 			!! partitions.make (minimum_symbol, maximum_symbol)
 			from i := 1 until i > start_states_count loop
 				a_state := item (i)
 				build_transitions (a_state)
---				if yy_null_trans /= Void then
---					transitions := a_state.transitions
---					yy_null_trans.put
---						(transitions.target (null_code).id, a_state.id)
---					transitions.remove (null_code)
---				end
 				i := i + 1
 			end
 				-- Process end-of-buffer state.
 			a_state := item (i)
 			build_transitions (a_state)
---			if yy_null_trans /= Void then
---				transitions := a_state.transitions
---				yy_null_trans.put
---					(transitions.target (null_code).id, a_state.id)
---				transitions.remove (null_code)
---			end
 			from i := i + 1 until i > count loop
 				a_state := item (i)
 				build_transitions (a_state)
---				if yy_null_trans /= Void then
---					transitions := a_state.transitions
---					yy_null_trans.put
---						(transitions.target (null_code).id, a_state.id)
---					transitions.remove (null_code)
---				end
 				if not a_state.is_accepting then
 					backing_up_count := backing_up_count + 1
 				end
