@@ -92,7 +92,7 @@ feature -- Access
 			i_small_enough: i <= base_type_actual_count (a_context, a_universe)
 		deferred
 		ensure
-			base_type_actualnot_void: Result /= Void
+			base_type_actual_not_void: Result /= Void
 			definition: Result.same_named_type (base_type (a_context, a_universe).actual_parameters.type (i), a_context.root_context, a_context.root_context, a_universe)
 			actual_parameter_type: Result.same_named_type (base_type_actual_parameter (i, a_context, a_universe).type, a_context.root_context, a_context.root_context, a_universe)
 			named_type_named: Result.is_named_type
