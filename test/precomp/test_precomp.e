@@ -149,6 +149,7 @@ feature {NONE} -- Precompilation
 			-- Test precompilation with SmartEiffel.
 		local
 			a_file: KL_TEXT_INPUT_FILE
+			a_line: STRING
 			a_dir: KL_DIRECTORY
 			a_dirname, a_filename: STRING
 			se_2_0: STRING
@@ -159,7 +160,11 @@ feature {NONE} -- Precompilation
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
 				-- Generate loadpath file.
-			assert_execute ("gexace --library=se " + xace_filename + output_log)
+			if se_2_0 /= Void and then se_2_0.count > 0 then
+				assert_execute ("gexace --define=SE_2_0 --library=se " + xace_filename + output_log)
+			else
+				assert_execute ("gexace --library=se " + xace_filename + output_log)
+			end
 				-- Eiffel precompilation.
 			create a_file.make ("loadpath.se")
 			a_file.open_read
@@ -169,32 +174,35 @@ feature {NONE} -- Precompilation
 				until
 					a_file.end_of_file
 				loop
-					a_dirname := file_system.pathname_from_file_system (a_file.last_string, unix_file_system)
-					a_dirname := Execution_environment.interpreted_string (a_dirname)
-					create a_dir.make (a_dirname)
-					a_dir.open_read
-					if a_dir.is_open_read then
-						from
-							a_dir.read_entry
-						until
-							a_dir.end_of_input
-						loop
-							a_filename := a_dir.last_entry
-							if file_system.has_extension (a_filename, ".e") then
-								a_filename := file_system.pathname (a_dirname, a_filename)
-								if se_2_0 /= Void and then se_2_0.count > 0 then
-									assert_execute ("class_check -no_style_warning -no_warning -loadpath loadpath.se " + a_filename + output_log)
-								else
-									assert_execute ("short -plain -no_style_warning -no_warning " + a_filename + output_log)
+					a_line := a_file.last_string
+					if a_line.has_substring ("GOBO") then
+						a_dirname := file_system.pathname_from_file_system (a_line, unix_file_system)
+						a_dirname := Execution_environment.interpreted_string (a_dirname)
+						create a_dir.make (a_dirname)
+						a_dir.open_read
+						if a_dir.is_open_read then
+							from
+								a_dir.read_entry
+							until
+								a_dir.end_of_input
+							loop
+								a_filename := a_dir.last_entry
+								if file_system.has_extension (a_filename, ".e") then
+									a_filename := file_system.pathname (a_dirname, a_filename)
+									if se_2_0 /= Void and then se_2_0.count > 0 then
+										assert_execute ("class_check -no_style_warning -no_warning -loadpath loadpath.se " + a_filename + output_log)
+									else
+										assert_execute ("short -plain -no_style_warning -no_warning " + a_filename + output_log)
+									end
+									assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 								end
-								assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
+								a_dir.read_entry
 							end
-							a_dir.read_entry
+							a_dir.close
+						else
+							-- assert (a_dirname + "_open_read", False)
+							std.error.put_line ("Cannot read %"" + a_dirname + "%"")
 						end
-						a_dir.close
-					else
-						-- assert (a_dirname + "_open_read", False)
-						std.error.put_line ("Cannot read %"" + a_dirname + "%"")
 					end
 					a_file.read_line
 				end
