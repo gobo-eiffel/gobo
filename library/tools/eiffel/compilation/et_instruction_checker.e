@@ -594,31 +594,152 @@ feature {NONE} -- Instruction validity
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
-			a_conditional: ET_EXPRESSION
+			an_expression: ET_EXPRESSION
 			a_when_parts: ET_WHEN_PART_LIST
 			a_when_part: ET_WHEN_PART
 			a_compound: ET_COMPOUND
 			i, nb: INTEGER
 			had_error: BOOLEAN
-			a_context: ET_NESTED_TYPE_CONTEXT
+			a_value_context: ET_NESTED_TYPE_CONTEXT
+			a_value_type: ET_TYPE
 			any_type: ET_CLASS_TYPE
+			a_value_named_type: ET_NAMED_TYPE
+			a_class_impl: ET_CLASS
+			a_choices: ET_CHOICE_LIST
+			a_choice: ET_CHOICE
+			a_choice_constant: ET_CHOICE_CONSTANT
+			a_choice_context: ET_NESTED_TYPE_CONTEXT
+			a_choice_named_type: ET_NAMED_TYPE
+			j, nb2: INTEGER
+			a_value_class: ET_CLASS
+			a_choice_class: ET_CLASS
 		do
 			any_type := universe.any_type
-			a_context := new_type_context (current_class)
-			a_conditional := an_instruction.conditional.expression
-			expression_checker.check_expression_validity (a_conditional, a_context, any_type, current_feature, current_class)
+			a_value_context := new_type_context (current_class)
+			an_expression := an_instruction.conditional.expression
+			expression_checker.check_expression_validity (an_expression, a_value_context, any_type, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				had_error := True
 			else
--- TODO: check that it is an integer or character expression
+				if a_value_context.same_named_type (universe.character_class, current_class, universe) then
+					-- OK.
+				elseif a_value_context.same_named_type (universe.integer_class, current_class, universe) then
+					-- OK.
+				elseif a_value_context.same_named_type (universe.integer_8_class, current_class, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
+				elseif a_value_context.same_named_type (universe.integer_16_class, current_class, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
+				elseif a_value_context.same_named_type (universe.integer_64_class, current_class, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
+				else
+					had_error := True
+					a_value_named_type := a_value_context.named_type (universe)
+					a_class_impl := current_feature.implementation_class
+					if current_class = a_class_impl then
+						error_handler.report_vomb1a_error (current_class, an_expression, a_value_named_type)
+					else
+						error_handler.report_vomb1b_error (current_class, a_class_impl, an_expression, a_value_named_type)
+					end
+				end
 			end
-			recycle_type_context (a_context)
+			a_choice_context := new_type_context (current_class)
+			a_value_type := tokens.like_current
 			a_when_parts := an_instruction.when_parts
 			if a_when_parts /= Void then
 				nb := a_when_parts.count
 				from i := 1 until i > nb loop
 					a_when_part := a_when_parts.item (i)
--- TODO: check choices.
+					a_choices := a_when_part.choices
+					nb2 := a_choices.count
+					from j := 1 until j > nb2 loop
+						a_choice := a_choices.choice (j)
+						a_choice_constant := a_choice.lower
+						an_expression := a_choice_constant.expression
+						expression_checker.check_expression_validity (an_expression, a_choice_context, a_value_context, current_feature, current_class)
+						if expression_checker.has_fatal_error then
+							had_error := True
+						elseif a_choice_context.same_named_type (a_value_type, a_value_context, universe) then
+							-- OK.
+						else
+							a_value_class := a_value_context.base_class (universe)
+							a_choice_class := a_choice_context.base_class (universe)
+							if
+								a_value_class = universe.integer_16_class and then
+								a_choice_class = universe.integer_8_class
+							then
+								-- Valid with ISE Eiffel. To be checked with other compilers.
+							elseif
+								a_value_class = universe.integer_class and then
+								(a_choice_class = universe.integer_8_class or
+								a_choice_class = universe.integer_16_class)
+							then
+								-- Valid with ISE Eiffel. To be checked with other compilers.
+							elseif
+								a_value_class = universe.integer_64_class and then
+								(a_choice_class = universe.integer_8_class or
+								a_choice_class = universe.integer_16_class or
+								a_choice_class = universe.integer_class)
+							then
+								-- Valid with ISE Eiffel. To be checked with other compilers.
+							else
+								had_error := True
+								a_value_named_type := a_value_context.named_type (universe)
+								a_choice_named_type := a_choice_context.named_type (universe)
+								a_class_impl := current_feature.implementation_class
+								if current_class = a_class_impl then
+									error_handler.report_vomb2a_error (current_class, a_choice_constant, a_choice_named_type, a_value_named_type)
+								else
+									error_handler.report_vomb2b_error (current_class, a_class_impl, a_choice_constant, a_choice_named_type, a_value_named_type)
+								end
+							end
+						end
+						a_choice_context.wipe_out
+						if a_choice.is_range then
+							a_choice_constant := a_choice.upper
+							an_expression := a_choice_constant.expression
+							expression_checker.check_expression_validity (an_expression, a_choice_context, a_value_context, current_feature, current_class)
+							if expression_checker.has_fatal_error then
+								had_error := True
+							elseif a_choice_context.same_named_type (a_value_type, a_value_context, universe) then
+								-- OK.
+							else
+								a_value_class := a_value_context.base_class (universe)
+								a_choice_class := a_choice_context.base_class (universe)
+								if
+									a_value_class = universe.integer_16_class and then
+									a_choice_class = universe.integer_8_class
+								then
+									-- Valid with ISE Eiffel. To be checked with other compilers.
+								elseif
+									a_value_class = universe.integer_class and then
+									(a_choice_class = universe.integer_8_class or
+									a_choice_class = universe.integer_16_class)
+								then
+									-- Valid with ISE Eiffel. To be checked with other compilers.
+								elseif
+									a_value_class = universe.integer_64_class and then
+									(a_choice_class = universe.integer_8_class or
+									a_choice_class = universe.integer_16_class or
+									a_choice_class = universe.integer_class)
+								then
+									-- Valid with ISE Eiffel. To be checked with other compilers.
+								else
+									had_error := True
+									a_value_named_type := a_value_context.named_type (universe)
+									a_choice_named_type := a_choice_context.named_type (universe)
+									a_class_impl := current_feature.implementation_class
+									if current_class = a_class_impl then
+										error_handler.report_vomb2a_error (current_class, a_choice_constant, a_choice_named_type, a_value_named_type)
+									else
+										error_handler.report_vomb2b_error (current_class, a_class_impl, a_choice_constant, a_choice_named_type, a_value_named_type)
+									end
+								end
+							end
+							a_choice_context.wipe_out
+						end
+						j := j + 1
+-- TODO: check Unique and Constants and choice unicity.
+					end
 					a_compound := a_when_part.then_compound
 					if a_compound /= Void then
 						check_instructions_validity (a_compound, current_feature, current_class)
@@ -629,6 +750,8 @@ feature {NONE} -- Instruction validity
 					i := i + 1
 				end
 			end
+			recycle_type_context (a_value_context)
+			recycle_type_context (a_choice_context)
 			a_compound := an_instruction.else_compound
 			if a_compound /= Void then
 				check_instructions_validity (a_compound, current_feature, current_class)
@@ -646,13 +769,17 @@ feature {NONE} -- Instruction validity
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
-			a_conditional: ET_EXPRESSION
+			an_expression: ET_EXPRESSION
 			a_compound: ET_COMPOUND
 			had_error: BOOLEAN
 			a_context: ET_NESTED_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
 			a_named_type: ET_NAMED_TYPE
 			boolean_type: ET_CLASS_TYPE
+			a_variant: ET_VARIANT
+			integer_type: ET_CLASS_TYPE
+			an_invariant: ET_INVARIANTS
+			i, nb: INTEGER
 		do
 			a_compound := an_instruction.from_compound
 			if a_compound /= Void then
@@ -663,9 +790,56 @@ feature {NONE} -- Instruction validity
 			end
 			boolean_type := universe.boolean_class
 			a_context := new_type_context (current_class)
--- TODO: check invariant and variant
-			a_conditional := an_instruction.until_conditional.expression
-			expression_checker.check_expression_validity (a_conditional, a_context, boolean_type, current_feature, current_class)
+			an_invariant := an_instruction.invariant_part
+			if an_invariant /= Void then
+				nb := an_invariant.count
+				from i := 1 until i > nb loop
+					an_expression := an_invariant.assertion (i).expression
+					expression_checker.check_expression_validity (an_expression, a_context, boolean_type, current_feature, current_class)
+					if expression_checker.has_fatal_error then
+						had_error := True
+					else
+						if not a_context.same_named_type (boolean_type, current_class, universe) then
+							had_error := True
+							a_named_type := a_context.named_type (universe)
+							if current_class = a_class_impl then
+								error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
+							else
+								error_handler.report_vwbe0b_error (current_class, a_class_impl, an_expression, a_named_type)
+							end
+						end
+					end
+					a_context.wipe_out
+					i := i + 1
+				end
+			end
+			a_variant := an_instruction.variant_part
+			if a_variant /= Void then
+				an_expression := a_variant.expression
+				if an_expression /= Void then
+					integer_type := universe.integer_class
+					expression_checker.check_expression_validity (an_expression, a_context, integer_type, current_feature, current_class)
+					if expression_checker.has_fatal_error then
+						had_error := True
+					else
+						if not a_context.same_named_type (integer_type, current_class, universe) then
+							had_error := True
+							a_named_type := a_context.named_type (universe)
+							a_class_impl := current_feature.implementation_class
+							if current_class = a_class_impl then
+								error_handler.report_vave0a_error (current_class, an_expression, a_named_type)
+							else
+								error_handler.report_vave0b_error (current_class, a_class_impl, an_expression, a_named_type)
+							end
+						end
+					end
+					a_context.wipe_out
+				else
+-- TODO: syntax error.
+				end
+			end
+			an_expression := an_instruction.until_conditional.expression
+			expression_checker.check_expression_validity (an_expression, a_context, boolean_type, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				had_error := True
 			else
@@ -674,9 +848,9 @@ feature {NONE} -- Instruction validity
 					a_named_type := a_context.named_type (universe)
 					a_class_impl := current_feature.implementation_class
 					if current_class = a_class_impl then
-						error_handler.report_vwbe0a_error (current_class, a_conditional, a_named_type)
+						error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
 					else
-						error_handler.report_vwbe0b_error (current_class, a_class_impl, a_conditional, a_named_type)
+						error_handler.report_vwbe0b_error (current_class, a_class_impl, an_expression, a_named_type)
 					end
 				end
 			end
