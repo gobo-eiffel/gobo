@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Variables commands"
+		"Set commands"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -12,7 +12,7 @@ indexing
 	revision:   "$Revision$"
 
 
-class GEANT_VAR_COMMAND
+class GEANT_SET_COMMAND
 
 inherit
 
@@ -74,4 +74,4 @@ feature -- Execution
 --			log ("  [var] " + name + "=" + value + ", " + project.variables.variable_value (name) + "%N")
 		end
 
-end -- class GEANT_VAR_COMMAND
+end -- class GEANT_SET_COMMAND

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Var tasks"
+		"Set tasks"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
@@ -12,7 +12,7 @@ indexing
 	revision:   "$Revision$"
 
 
-class GEANT_VAR_TASK
+class GEANT_SET_TASK
 
 inherit
 
@@ -21,7 +21,7 @@ inherit
 			make_from_element
 		end
 
-	GEANT_VAR_COMMAND
+	GEANT_SET_COMMAND
 
 creation
 
@@ -60,4 +60,4 @@ feature {NONE} -- Constants
 			atribute_name_not_empty: not Result.empty
 		end
 
-end -- class GEANT_VAR_TASK
+end -- class GEANT_SET_TASK

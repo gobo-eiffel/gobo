@@ -16,6 +16,7 @@ deferred class GEANT_COMMAND
 
 inherit
 
+	ANY
 	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
 
