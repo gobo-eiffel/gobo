@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 				yy_column := yy_column + yy_end - nb
 			else
 				yy_line := yy_line + a_line
-				yy_column := a_column
+				yy_column := a_column + 1
 			end
 		end
 

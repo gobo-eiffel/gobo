@@ -442,6 +442,7 @@ feature {NONE} -- Generation
 						a_file.put_string ("%Tyy_line := yy_line + ")
 						a_file.put_integer (line_count)
 						a_file.put_character ('%N')
+						a_file.put_string ("%Tyy_column := 1%N")
 					elseif column_count > 0 then
 						a_file.put_string ("%Tyy_line := yy_line + ")
 						a_file.put_integer (line_count)
