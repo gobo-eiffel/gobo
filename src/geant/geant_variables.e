@@ -10,7 +10,6 @@ indexing
 	date: "$Date$"
 	revision:"$Revision$"
 
-
 class GEANT_VARIABLES
 
 inherit
