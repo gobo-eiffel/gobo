@@ -12,6 +12,15 @@ indexing
 
 class ET_CLUSTERS
 
+inherit
+
+	ANY
+
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
+	KL_IMPORTED_ARRAY_ROUTINES
+
 creation
 
 	make, make_empty
@@ -73,6 +82,79 @@ feature -- Access
 			Result := clusters.item (i)
 		ensure
 			cluster_not_void: Result /= Void
+		end
+
+	cluster_by_name (a_name: STRING): ET_CLUSTER is
+			-- Cluster with name `a_name';
+			-- Void if not such cluster
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		local
+			i, nb: INTEGER
+			l_cluster: ET_CLUSTER
+		do
+			nb := clusters.count
+			from i := nb until i < 1 loop
+				l_cluster := clusters.item (i)
+				if STRING_.same_case_insensitive (l_cluster.name, a_name) then
+					Result := l_cluster
+					i := 0
+				else
+					i := i - 1
+				end
+			end
+		end
+
+	subcluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER is
+			-- Subcluster (recursively) named `a_names' in current clusters;
+			-- Add missing implicit subclusters if needed;
+			-- Void if not such cluster
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not STRING_ARRAY_.has (a_names, Void)
+			-- no_empty_name: forall n in a_names, n.count > 0
+		local
+			l_name: STRING
+			i, nb: INTEGER
+			l_clusters: ET_CLUSTERS
+			l_parent_cluster: ET_CLUSTER
+		do
+			l_clusters := Current
+			i := a_names.lower
+			nb := a_names.upper
+			from until i > nb loop
+				if l_clusters /= Void then
+					l_name := a_names.item (i)
+					Result := l_clusters.cluster_by_name (l_name)
+				else
+					Result := Void
+				end
+				if Result /= Void then
+					l_parent_cluster := Result
+					l_clusters := Result.subclusters
+					i := i + 1
+				elseif l_parent_cluster /= Void and then l_parent_cluster.is_recursive then
+					from until i > nb loop
+						l_name := a_names.item (i)
+						l_parent_cluster.add_recursive_cluster (l_name)
+						l_clusters := l_parent_cluster.subclusters
+						if l_clusters /= Void then
+							Result := l_clusters.cluster_by_name (l_name)
+						else
+							Result := Void
+						end
+						if Result /= Void then
+							l_parent_cluster := Result
+							i := i + 1
+						else
+							i := nb + 1 -- Jump out of the loop.
+						end
+					end
+				else
+					i := nb + 1 -- Jump out of the loop.
+				end
+			end
 		end
 
 	clusters: DS_ARRAYED_LIST [like cluster]

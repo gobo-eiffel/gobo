@@ -5,7 +5,7 @@ indexing
 		"Eiffel class universes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,7 @@ class ET_UNIVERSE
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
+	KL_IMPORTED_ARRAY_ROUTINES
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_FILE_SYSTEM
 	KL_SHARED_EXECUTION_ENVIRONMENT
@@ -415,6 +416,20 @@ feature -- Access
 					l_class := l_class.overridden_class
 				end
 				l_cursor.forth
+			end
+		end
+
+	cluster_by_name (a_names: ARRAY [STRING]): ET_CLUSTER is
+			-- Cluster named `a_names' in universe;
+			-- Added missing implicit subclusters if needed;
+			-- Void if not such cluster
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not STRING_ARRAY_.has (a_names, Void)
+			-- no_empty_name: forall n in a_names, n.count > 0
+		do
+			if clusters /= Void then
+				Result := clusters.subcluster_by_name (a_names)
 			end
 		end
 
