@@ -41,22 +41,22 @@ feature -- Output
 		end
 
 	debug_print (a_string: STRING) is
-			-- Print `a_string pus it's item codes.
+			-- Print `a_string' plus it's item codes.
 		local
 			i: INTEGER
 		do
-			io.put_string(a_string)
-			io.put_new_line
+			std.output.put_string(a_string)
+			std.output.put_new_line
 			from
 				i := 1
 			until
 				i > a_string.count
 			loop
-				io.put_string (a_string.item_code (i).out)
-				io.put_string (",")
+				std.output.put_string (a_string.item_code (i).out)
+				std.output.put_string (",")
 				i := i+ 1
 			end
-			io.put_new_line
+			std.output.put_new_line
 		end
 
 feature {NONE} -- Implementation
