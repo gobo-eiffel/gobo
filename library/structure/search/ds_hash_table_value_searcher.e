@@ -10,7 +10,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class DS_HASH_TABLE_VALUE_SEARCHER [G, K]
+class DS_HASH_TABLE_VALUE_SEARCHER [G, K -> HASHABLE]
 
 inherit
 

@@ -12,7 +12,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class DS_HASH_TABLE [G, K]
+class DS_HASH_TABLE [G, K -> HASHABLE]
 
 inherit
 
