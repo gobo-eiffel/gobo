@@ -25,7 +25,6 @@ cluster
 
 		-- Gobo Eiffel Lexical Library
 	lx_skeleton:		"$GOBO\library\lexical\skeleton";
-	lx_skeleton_spec:	"$GOBO\library\lexical\skeleton\spec\ise";
 
 		-- Gobo Eiffel Parse Library
 	pr_skeleton:		"$GOBO\library\parse\skeleton";

@@ -29,7 +29,6 @@ cluster
 	[lx_generation		"$GOBO\library\lexical\generation"] end
 	[lx_scanner			"$GOBO\library\lexical\scanner"] end
 	[lx_skeleton		"$GOBO\library\lexical\skeleton"] end
-	[lx_skeleton_spec	"$GOBO\library\lexical\skeleton\spec\ve"] end
 	[lx_support			"$GOBO\library\lexical\support"] end
 
 		-- Gobo Eiffel Parse Library

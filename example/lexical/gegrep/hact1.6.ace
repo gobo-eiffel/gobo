@@ -31,7 +31,6 @@ cluster
 	lx_regexp:			"$GOBO\library\lexical\regexp";
 	lx_scanner:			"$GOBO\library\lexical\scanner";
 	lx_skeleton:		"$GOBO\library\lexical\skeleton";
-	lx_skeleton_spec:	"$GOBO\library\lexical\skeleton\spec\hact";
 	lx_support:			"$GOBO\library\lexical\support";
 
 		-- Gobo Eiffel Parse Library
