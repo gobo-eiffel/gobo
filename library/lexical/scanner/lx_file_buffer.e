@@ -63,7 +63,7 @@ feature -- Element change
 				end_of_file := True
 				content := ""
 			end
-			position := 1
+			index := 1
 		end
 
 invariant

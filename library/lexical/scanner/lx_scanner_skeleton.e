@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		do
 			input_buffer := new_string_buffer ("")
 			yy_content := input_buffer.content
-			yy_position := input_buffer.position
+			yy_index := input_buffer.index
 			yy_count := yy_content.count
 			last_character := EOF
 		end
@@ -103,18 +103,18 @@ feature -- Element change
 			-- Read next character in `input_buffer'.
 			-- Make result available in `last_character'.
 		do
-			yy_position := yy_position + 1
-			if yy_position > yy_count then
+			yy_index := yy_index + 1
+			if yy_index > yy_count then
 				if last_character /= EOF then
 					yy_refill_input_buffer
-					if yy_position > yy_count then
+					if yy_index > yy_count then
 						last_character := EOF
 					else
-						last_character := yy_content.item (yy_position)
+						last_character := yy_content.item (yy_index)
 					end
 				end
 			else
-				last_character := yy_content.item (yy_position)
+				last_character := yy_content.item (yy_index)
 			end
 		end
 
@@ -132,15 +132,15 @@ feature -- Input
 			a_buffer_not_void: a_buffer /= Void
 		do
 			if input_buffer /= a_buffer then
-				input_buffer.set_position (yy_position)
+				input_buffer.set_index (yy_index)
 				input_buffer := a_buffer
 				yy_content := a_buffer.content
-				yy_position := a_buffer.position
+				yy_index := a_buffer.index
 				yy_count := yy_content.count
-				if yy_position > yy_count then
+				if yy_index > yy_count then
 					last_character := EOF
 				else
-					last_character := yy_content.item (yy_position)
+					last_character := yy_content.item (yy_index)
 				end
 			end
 		ensure
@@ -173,8 +173,8 @@ feature {NONE} -- Implementation
 	yy_content: STRING
 			-- Characters in `input_buffer'
 
-	yy_position: INTEGER
-			-- Position of `last_character' in `yy_content'
+	yy_index: INTEGER
+			-- Index of `last_character' in `yy_content'
 
 	yy_count: INTEGER
 			-- Number of characters in `yy_content'
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 		do
 			input_buffer.refill
 			yy_content := input_buffer.content
-			yy_position := input_buffer.position
+			yy_index := input_buffer.index
 			yy_count := yy_content.count
 		end
 
@@ -199,6 +199,6 @@ invariant
 	input_buffer_not_void: input_buffer /= Void
 	yy_content_definition: yy_content = input_buffer.content
 	yy_count_definition: yy_count = yy_content.count
-	valid_yy_position: yy_position >= 1
+	valid_yy_index: yy_index >= 1
 
 end -- class LX_SCANNER_SKELETON

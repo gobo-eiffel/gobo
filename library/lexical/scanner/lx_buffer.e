@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			a_string_not_void: a_string /= Void
 		do
 			content := a_string
-			position := 1
+			index := 1
 		ensure
 			content_set: content = a_string
 		end
@@ -35,19 +35,19 @@ feature -- Access
 	content: STRING
 			-- Input buffer characters
 
-	position: INTEGER
-			-- Current position in buffer
+	index: INTEGER
+			-- Current index in `content'
 
 feature -- Setting
 
-	set_position (pos: INTEGER) is
-			-- Set `position' to `pos'.
+	set_index (i: INTEGER) is
+			-- Set `index' to `i'.
 		require
-			pos_large_enough: pos >= 1
+			i_large_enough: i >= 1
 		do
-			position := pos
+			index := i
 		ensure
-			position_set: position = pos
+			index_set: index = i
 		end
 
 feature -- Element change
@@ -55,12 +55,12 @@ feature -- Element change
 	refill is
 			-- Refill buffer.
 		do
-			position := content.count + 1
+			index := content.count + 1
 		end
 
 invariant
 
 	content_not_void: content /= Void
-	valid_position: position >= 1
+	valid_index: index >= 1
 
 end -- class LX_BUFFER
