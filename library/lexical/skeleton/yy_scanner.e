@@ -77,13 +77,6 @@ feature -- Access
 			correct_count: Result.count = text_count
 		end
 
-	text_count: INTEGER is
-			-- Length of last token read
-		deferred
-		ensure
-			positive_count: Result >= 0
-		end
-
 	text_item (i: INTEGER): CHARACTER is
 			-- `i'-th character of last token read
 		require
@@ -114,6 +107,37 @@ feature -- Access
 	start_condition: INTEGER is
 			-- Start condition
 		deferred
+		end
+
+feature -- Measurement
+
+	text_count: INTEGER is
+			-- Number of characters in last token read
+		deferred
+		ensure
+			positive_count: Result >= 0
+		end
+
+	line: INTEGER is
+			-- Line number of last token read
+		deferred
+		ensure
+			line_positive: Result >= 1
+		end
+
+	column: INTEGER is
+			-- Column number of last token read
+		deferred
+		ensure
+			column_positive: Result >= 1
+		end
+
+	position: INTEGER is
+			-- Position of last token read (i.e. number of characters
+			-- from the start of the input source)
+		deferred
+		ensure
+			position_positive: Result >= 1
 		end
 
 feature -- Status report
@@ -334,8 +358,44 @@ feature -- Output
 			output (text)
 		end
 
+feature -- Action
+
+	pre_action is
+			-- Action executed before every semantic action
+			-- when %option pre-action has been specified.
+			-- (Note: this routine can be redefined in descendant
+			-- classes. Default: do nothing.)
+		do
+		end
+
+	post_action is
+			-- Action executed after every semantic action
+			-- when %option post-action has been specified.
+			-- (Note: this routine can be redefined in descendant
+			-- classes. Default: do nothing.)
+		do
+		end
+
+	pre_eof_action is
+			-- Action executed before every end-of-file semantic action
+			-- (i.e. <<EOF>>) when %option pre-eof-action has been specified.
+			-- (Note: this routine can be redefined in descendant classes.
+			-- Default: do nothing.)
+		do
+		end
+
+	post_eof_action is
+			-- Action executed after every end-of-file semantic action
+			-- (i.e. <<EOF>>) when %option post-eof-action has been specified.
+			-- (Note: this routine can be redefined in descendant classes.
+			-- Default: do nothing.)
+		do
+		end
+
 	default_action is
 			-- Action executed when default rule is matched.
+			-- (Note: this routine can be redefined in descendant classes.
+			-- Default: print last character read to standard output.)
 		do
 			echo
 		end

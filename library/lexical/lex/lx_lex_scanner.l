@@ -127,8 +127,18 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	nometa-ecs		meta_equiv_classes_used := False
 	reject			reject_used := True
 	noreject		reject_used := False
-	user-action		user_action_used := True
-	nouser-action	user_action_used := False
+	line			line_used := True
+	noline			line_used := False
+	position		position_used := True
+	noposition		position_used := False
+	pre-action		pre_action_used := True
+	nopre-action	pre_action_used := False
+	post-action		post_action_used := True
+	nopost-action	post_action_used := False
+	pre-eof-action		pre_eof_action_used := True
+	nopre-eof-action	pre_eof_action_used := False
+	post-eof-action		post_eof_action_used := True
+	nopost-eof-action	post_eof_action_used := False
 	warn		{
 					no_warning := False
 				}

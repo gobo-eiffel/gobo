@@ -79,14 +79,18 @@ feature {NONE} -- Implementation
 			-- Execute semantic action.
 		local
 			yy_rule: LX_RULE
+			line_count, column_count, head_count: INTEGER
 		do
 			if yy_rules.valid_index (yy_act) then
 				yy_rule := yy_rules.item (yy_act)
 				if yy_rule.has_trail_context then
-					if yy_rule.trail_count > 0 then
-						yy_position := yy_position - yy_rule.trail_count
-					elseif yy_rule.head_count > 0 then
-						yy_position := yy_position + yy_rule.head_count
+						-- `yy_rule' has trailing context.
+					if yy_rule.trail_count >= 0 then
+							-- The trail has a fixed size.
+						yy_end := yy_end - yy_rule.trail_count
+					elseif yy_rule.head_count >= 0 then
+							-- The head has a fixed size.
+						yy_end := yy_start + yy_more_len + yy_rule.head_count
 					else
 							-- The rule has trailing context and both
 							-- the head and trail have variable size.
@@ -95,14 +99,54 @@ feature {NONE} -- Implementation
 							-- performance degradation.)
 					end
 				end
-				if yy_position > yy_start_position then
-					input_buffer.set_beginning_of_line
-						(yy_content.item (yy_position - 1) = '%N')
+				if yyLine_used then
+					line_count := yy_rule.line_count
+					column_count := yy_rule.column_count
+					if line_count = 0 then
+						if column_count > 0 then
+							yy_column := yy_column + column_count
+						elseif column_count /= 0 then
+								-- yy_column := yy_column + text_count
+							yy_column := yy_column + yy_end - yy_start - yy_more_len
+						end
+					elseif line_count > 0 then
+						if column_count = 0 then
+							yy_line := yy_line + line_count
+						elseif column_count > 0 then
+							yy_line := yy_line + line_count
+							yy_column := column_count + 1
+						else
+							yy_set_column (line_count)
+						end
+					else
+						if column_count >= 0 then
+							yy_set_line (column_count)
+						else
+							yy_set_line_column
+						end
+					end
 				end
+				if yyPosition_used then
+					head_count := yy_rule.head_count
+					if head_count > 0 then
+						yy_position := yy_position + head_count
+					elseif head_count /= 0 then
+							-- yy_position := yy_position + text_count
+						yy_position := yy_position + yy_end - yy_start - yy_more_len
+					end
+				end
+				pre_action
 				yy_rule.action.execute
+				post_action
+				if yy_end > yy_start then
+					input_buffer.set_beginning_of_line
+						(yy_content.item (yy_end - 1) = yyNew_line_character)
+				end
 			else
+				pre_action
 				last_token := yyError_token
 				fatal_error ("fatal scanner internal error: no action found")
+				post_action
 			end
 		end
 
@@ -111,6 +155,7 @@ feature {NONE} -- Implementation
 		local
 			yy_rule: LX_RULE
 		do
+			pre_eof_action
 			if yy_eof_rules.valid_index (yy_sc) then
 				yy_rule := yy_eof_rules.item (yy_sc)
 				if yy_rule /= Void then
@@ -121,6 +166,7 @@ feature {NONE} -- Implementation
 			else
 				terminate
 			end
+			post_eof_action
 		end
 
 end -- class LX_SCANNER

@@ -59,11 +59,6 @@ Init_pattern: -- Empty
 				!! equiv_classes.make (1, characters_count)
 			end
 				-- Initialize for a parse of one pattern.
-			variable_trail_rule := False
-			variable_length := False
-			trail_count := 0
-			head_count := 0
-			rule_length := 0
 			in_trail_context := False
 			!! rule.make_default (1)
 		}
@@ -85,32 +80,52 @@ Pattern: '^' Rule
 
 Rule: Regular_expression2 Regular_expression
 		{
+			has_trail_context := True
+			trail_count := regexp_count
 			$$ := append_trail_context_to_regexp ($2, $1)
 		}
 	| Regular_expression '$'
 		{
+			has_trail_context := True
+			head_count := regexp_count
+			head_line := regexp_line
+			head_column := regexp_column
+			trail_count := 1
 			$$ := append_eol_to_regexp ($1)
 		}
 	| Regular_expression
 		{
 			$$ := $1
+			has_trail_context := False
+			head_count := regexp_count
+			head_line := regexp_line
+			head_column := regexp_column
 		}
 	| Regular_expression2 Regular_expression2
 		{
 			report_trailing_context_used_twice_error
+			has_trail_context := True
+			trail_count := regexp_count
 		}
 	| Regular_expression2 Regular_expression '$'
 		{
 			report_trailing_context_used_twice_error
+			has_trail_context := True
+			trail_count := regexp_count
 		}
 	;
 
 Regular_expression: Series
-		{ $$ := $1 }
+		{
+			$$ := $1
+			regexp_count := series_count
+			regexp_line := series_line
+			regexp_column := series_column
+		}
 	| Regular_expression '|' Series
 		{
-			variable_length := True
 			$$ := $1 | $3
+			process_regexp_or_series
 		}
 	;
 
@@ -119,77 +134,76 @@ Regular_expression2: Regular_expression '/'
 			$$ := $1
 				-- This rule is written separately so the reduction
 				-- will occur before the trailing series is parsed.
-			if variable_length then
-					-- We hope the trailing context is fixed-length.
-				variable_length := False
-			else
-				head_count := rule_length
-			end
-			rule_length := 0
+			head_count := regexp_count
+			head_line := regexp_line
+			head_column := regexp_column
 			in_trail_context := True
 		}
 	;
 
 Series: Singleton
-		{ $$ := $1 }
+		{
+			$$ := $1
+			series_count := singleton_count
+			series_line := singleton_line
+			series_column := singleton_column
+		}
 	| Series Singleton
 		{
 			$$ := $1 & $2
+			process_series_singleton
 		}
 	;
 
 Singleton: CHAR
 		{
-			rule_length := rule_length + 1
 			$$ := new_nfa_from_character ($1)
+			process_singleton_char ($1)
 		}
 	| Singleton '*'
 		{
-			variable_length := True
 			$$ := |*| $1
+			process_singleton_star
 		}
 	| Singleton '+'
 		{
-			variable_length := True
 			$$ := |+| $1
+			process_singleton_plus
 		}
 	| Singleton '?'
 		{
-			variable_length := True
 			$$ := |?| $1
+			process_singleton_optional
 		}
 	| Singleton '{' NUMBER ',' NUMBER '}'
 		{
-			variable_length := True
 			$$ := new_bounded_iteration_nfa ($1, $3, $5)
+			process_singleton_bounded_iteration ($3, $5)
 		}
 	| Singleton '{' NUMBER ',' '}'
 		{
-			variable_length := True
 			$$ := new_unbounded_iteration_nfa ($1, $3)
+			process_singleton_unbounded_iteration ($3)
 		}
 	| Singleton '{' NUMBER '}'
 		{
-				-- The singleton could be something like "(foo)",
-				-- in which case we have no idea what its length
-				-- is, so we punt here.
-			variable_length := True
 			$$ := new_iteration_nfa ($1, $3)
+			process_singleton_fixed_iteration ($3)
 		}
 	| '.'
 		{
-			rule_length := rule_length + 1
 			$$ := new_symbol_class_nfa (dot_character_class)
+			process_singleton_dot
 		}
 	| CCL_OP
 		{
-			rule_length := rule_length + 1
 			$$ := new_symbol_class_nfa ($1)
+			process_singleton_symbol_class ($1)
 		}
 	| Full_CCl
 		{
-			rule_length := rule_length + 1
 			$$ := new_nfa_from_character_class ($1)
+			process_singleton_symbol_class ($1)
 		}
 	| '"' String '"'
 		{
@@ -198,6 +212,9 @@ Singleton: CHAR
 	| '(' Regular_expression ')'
 		{
 			$$ := $2
+			singleton_count := regexp_count
+			singleton_line := regexp_line
+			singleton_column := regexp_column
 		}
 	;
 
@@ -236,11 +253,12 @@ CCl: CHAR
 String: -- Empty
 		{
 			$$ := new_epsilon_nfa
+			process_singleton_empty_string
 		}
 	| String CHAR
 		{
-			rule_length := rule_length + 1
 			$$ := append_character_to_string ($2, $1)
+			process_singleton_string ($2)
 		}
 	;
 

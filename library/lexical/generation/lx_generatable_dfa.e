@@ -68,7 +68,10 @@ feature {NONE} -- Initialization
 			eiffel_code := a_description.eiffel_code
 			eiffel_header := a_description.eiffel_header
 			bol_needed := a_description.bol_needed
-			user_action_used := a_description.user_action_used
+			pre_action_used := a_description.pre_action_used
+			post_action_used := a_description.post_action_used
+			pre_eof_action_used := a_description.pre_eof_action_used
+			post_eof_action_used := a_description.post_eof_action_used
 			yy_start_conditions := a_description.start_conditions.names
 			build_rules (a_description.rules)
 			build_eof_rules
@@ -84,6 +87,8 @@ feature {NONE} -- Initialization
 			end
 			yyNb_rules := yy_rules.upper
 			yyEnd_of_buffer := yyNb_rules + 1
+			yyLine_used := a_description.line_used
+			yyPosition_used := a_description.position_used
 				-- Symbols start at 1 and NULL transitions
 				-- are indexed by `maximum_symbol'.
 			initialize_dfa (a_description.start_conditions, 1, max)
@@ -241,6 +246,9 @@ feature {NONE} -- Generation
 				print_binary_search_actions
 					(a_file, yy_rules.lower, yy_rules.upper)
 			end
+			if post_action_used then
+				a_file.put_string ("%T%T%Tpost_action%N")
+			end
 			if bol_needed then
 				a_file.put_string ("%T%T%Tyy_set_beginning_of_line%N")
 			end
@@ -308,8 +316,11 @@ feature {NONE} -- Generation
 				a_file.put_string (" then%N")
 				print_action_call (a_file, rule)
 			end
-			a_file.put_string ("%T%T%Telse%N%
-				%%T%T%T%Tlast_token := yyError_token%N%
+			a_file.put_string ("%T%T%Telse%N")
+			if pre_action_used then
+				a_file.put_string ("%T%T%T%Tpre_action%N")
+			end
+			a_file.put_string ("%T%T%T%Tlast_token := yyError_token%N%
 				%%T%T%T%Tfatal_error (%"fatal scanner internal error: no action found%")%N%
 				%%T%T%Tend%N")
 		end
@@ -390,18 +401,20 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 			a_rule_not_void: a_rule /= Void
+		local
+			line_count, column_count, head_count: INTEGER
 		do
 			if a_rule.has_trail_context then
-						-- `rule' has trailing context.
-				if a_rule.trail_count > 0 then
+					-- `rule' has trailing context.
+				if a_rule.trail_count >= 0 then
 						-- The trail has a fixed size.
-					a_file.put_string ("%Tyy_position := yy_position - ")
+					a_file.put_string ("%Tyy_end := yy_end - ")
 					a_file.put_integer (a_rule.trail_count)
 					a_file.put_character ('%N')
-				elseif a_rule.head_count > 0 then
+				elseif a_rule.head_count >= 0 then
 						-- The head has a fixed size.
 					a_file.put_string
-						("%Tyy_position := yy_start_position + ")
+						("%Tyy_end := yy_start + yy_more_len + ")
 					a_file.put_integer (a_rule.head_count)
 					a_file.put_character ('%N')
 				else
@@ -412,8 +425,58 @@ feature {NONE} -- Generation
 					-- (report performance degradation)
 				end
 			end
-			if user_action_used then
-				a_file.put_string ("%Tuser_action%N")
+			if yyLine_used then
+				line_count := a_rule.line_count
+				column_count := a_rule.column_count
+				if line_count = 0 then
+					if column_count > 0 then
+						a_file.put_string ("%Tyy_column := yy_column + ")
+						a_file.put_integer (column_count)
+						a_file.put_character ('%N')
+					elseif column_count /= 0 then
+							-- yy_column := yy_column + text_count
+						a_file.put_string ("%Tyy_column := yy_column + yy_end - yy_start - yy_more_len%N")
+					end
+				elseif line_count > 0 then
+					if column_count = 0 then
+						a_file.put_string ("%Tyy_line := yy_line + ")
+						a_file.put_integer (line_count)
+						a_file.put_character ('%N')
+					elseif column_count > 0 then
+						a_file.put_string ("%Tyy_line := yy_line + ")
+						a_file.put_integer (line_count)
+						a_file.put_character ('%N')
+						a_file.put_string ("%Tyy_column := ")
+						a_file.put_integer (column_count)
+						a_file.put_string (" + 1%N")
+					else
+						a_file.put_string ("yy_set_column (")
+						a_file.put_integer (line_count)
+						a_file.put_string (")%N")
+					end
+				else
+					if column_count >= 0 then
+						a_file.put_string ("yy_set_line (")
+						a_file.put_integer (column_count)
+						a_file.put_string (")%N")
+					else
+						a_file.put_string ("yy_set_line_column%N")
+					end
+				end
+			end
+			if yyPosition_used then
+				head_count := a_rule.head_count
+				if head_count > 0 then
+					a_file.put_string ("%Tyy_position := yy_position + ")
+					a_file.put_integer (head_count)
+					a_file.put_character ('%N')
+				elseif head_count /= 0 then
+						-- yy_position := yy_position + text_count
+					a_file.put_string ("%Tyy_position := yy_position + yy_end - yy_start - yy_more_len%N")
+				end
+			end
+			if pre_action_used then
+				a_file.put_string ("pre_action%N")
 			end
 			a_file.put_string ("--|#line ")
 			a_file.put_integer (a_rule.line_nb)
@@ -438,9 +501,11 @@ feature {NONE} -- Generation
 			rule_cursor: DS_LINKED_LIST_CURSOR [LX_RULE]
 		do
 			a_file.put_string ("%Tyy_execute_eof_action (yy_sc: INTEGER) is%N%
-				%%T%T%T-- Execute EOF semantic action.%N%
-				%%T%Tdo%N%
-				%%T%T%Tinspect yy_sc%N")
+				%%T%T%T-- Execute EOF semantic action.%N%T%Tdo%N")
+			if pre_eof_action_used then
+				a_file.put_string ("%T%T%Tpre_eof_action%N")
+			end
+			a_file.put_string ("%T%T%Tinspect yy_sc%N")
 			from
 				i := yy_eof_rules.lower
 				nb := yy_eof_rules.upper
@@ -501,8 +566,11 @@ feature {NONE} -- Generation
 			end
 			a_file.put_string ("%T%T%Telse%N%
 				%%T%T%T%Tterminate%N%
-				%%T%T%Tend%N%
-				%%T%Tend%N")
+				%%T%T%Tend%N")
+			if post_eof_action_used then
+				a_file.put_string ("%T%T%Tpost_eof_action%N")
+			end
+			a_file.put_string ("%T%Tend%N")
 		end
 
 	print_eiffel_tables (a_file: like OUTPUT_STREAM_TYPE) is
@@ -526,7 +594,13 @@ feature {NONE} -- Generation
 			a_file.put_string ("%N%T%T%T-- Number of rules%N%N%
 					%%TyyEnd_of_buffer: INTEGER is ")
 			a_file.put_integer (yyEnd_of_buffer)
-			a_file.put_string ("%N%T%T%T-- End of buffer rule code%N%N")
+			a_file.put_string ("%N%T%T%T-- End of buffer rule code%N%N%
+					%%TyyLine_used: BOOLEAN is ")
+			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyLine_used)
+			a_file.put_string ("%N%T%T%T-- Are line and column numbers used?%N%N%
+					%%TyyPosition_used: BOOLEAN is ")
+			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyPosition_used)
+			a_file.put_string ("%N%T%T%T-- Is `position' used?%N%N")
 			nb := yy_start_conditions.upper
 			from i := yy_start_conditions.lower until i > nb loop
 				a_file.put_character ('%T')
@@ -877,9 +951,21 @@ feature {NONE} -- Access
 			-- Does the generated scanners need
 			-- "beginning of line" recognition?
 
-	user_action_used: BOOLEAN
-			-- Should routine `user_action' be called before
+	pre_action_used: BOOLEAN
+			-- Should routine `pre_action' be called before
 			-- each semantic action?
+
+	post_action_used: BOOLEAN
+			-- Should routine `post_action' be called after
+			-- each semantic action?
+
+	pre_eof_action_used: BOOLEAN
+			-- Should routine `pre_eof_action' be called before
+			-- each end-of-file semantic action?
+
+	post_eof_action_used: BOOLEAN
+			-- Should routine `post_eof_action' be called after
+			-- each end-of-file semantic action?
 
 	characters_count: INTEGER
 			-- Number of characters in character set
