@@ -897,6 +897,7 @@ feature {NONE} -- AST factory
 					if a_seed /= 0 then
 						a_name.set_seed (a_seed)
 						a_name.set_argument (True)
+						last_formal_arguments.formal_argument (a_seed).set_used (True)
 					end
 				end
 				if a_seed = 0 and then last_local_variables /= Void then
@@ -904,6 +905,7 @@ feature {NONE} -- AST factory
 					if a_seed /= 0 then
 						a_name.set_seed (a_seed)
 						a_name.set_local (True)
+						last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
 			end

@@ -76,6 +76,11 @@ feature -- Access
 			Result := declared_type.break
 		end
 
+feature -- Status report
+
+	is_used: BOOLEAN
+			-- Is current formal argument used?
+
 feature -- Setting
 
 	set_declared_type (a_type: like declared_type) is
@@ -86,6 +91,16 @@ feature -- Setting
 			declared_type := a_type
 		ensure
 			declared_type_set: declared_type = a_type
+		end
+
+feature -- Status setting
+
+	set_used (b: BOOLEAN) is
+			-- Set `is_used' to `b'.
+		do
+			is_used := b
+		ensure
+			used_set: is_used = b
 		end
 
 feature -- Duplication
