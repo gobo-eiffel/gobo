@@ -41,7 +41,7 @@ feature -- Access
 			-- Search order: commandline variables, project variables, environment variables
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.empty
+			a_name_not_empty: a_name.count > 0
 		local
 			value: STRING
 		do

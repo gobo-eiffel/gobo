@@ -354,6 +354,11 @@ cluster
 			assertion (no)
 		option
 	;
+	gobo_kernel_spec_windows: "${GOBO}/library/kernel/spec/windows"
+		default
+			assertion (no)
+		option
+	;
 	gobo_kernel_unicode: "${GOBO}/library/kernel/unicode"
 		default
 			assertion (no)

@@ -94,10 +94,13 @@ feature -- Execution
 
 	execute is
 			-- Execute command.
+		local
+			a_directory: KL_DIRECTORY
 		do
 			if directory /= Void then
 				log ("  [delete] " + directory + "%N")
-				file_system.delete_directory (directory)
+				!! a_directory.make (directory)
+				a_directory.recursive_delete
 			else
 				log ("  [delete] " + file + "%N")
 				file_system.delete_file (file)
