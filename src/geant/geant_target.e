@@ -158,25 +158,37 @@ feature -- Status report
 	is_exported_to_any: BOOLEAN is
 			-- Is this target exported to any project?
 		do
-			Result := exports.has (Project_name_any)
+			if exports /= Void then
+				Result := exports.has (Project_name_any)
+			end
 		ensure
-			definition: Result implies exports.has (Project_name_any)
+			definition: Result implies (exports /= Void and then exports.has (Project_name_any))
 		end
 
 	is_exported_to_project (a_project: GEANT_PROJECT): BOOLEAN is
 			-- Is this target exported to project named `a_project_name'?
 		require
-			a_project_not_void: a_project_name /= Void
+			a_project_not_void: a_project /= Void
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			a_project_name: STRING
+			an_export: STRING
 		do
-			from i := 1 until Result or else i > exports.count loop
-				a_project_name := exports.item (i)
-				Result := a_project.name.is_equal (a_project_name) or else
-					a_project.has_parent_with_name (a_project_name)
-
-				i := i + 1
+			if exports /= Void then
+				a_project_name := a_project.name
+				nb := exports.count
+				from i := 1 until i > nb loop
+					an_export := exports.item (i)
+					if STRING_.same_string (a_project_name, an_export) then
+						Result := True
+						i := nb + 1 -- Jump out of the loop.
+					elseif a_project.has_parent_with_name (an_export) then
+						Result := True
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
 			end
 		end
 
@@ -565,5 +577,9 @@ feature {NONE} -- Constants
 			Project_name_any_not_void: Result /= Void
 			Project_name_any_not_empty: Result.count > 0
 		end
+
+invariant
+
+	no_void_export: exports /= Void implies not exports.has (Void)
 
 end
