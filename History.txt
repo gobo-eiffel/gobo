@@ -49,6 +49,8 @@ Version 2.1 - ?
 	  and `time' in DATE_TIME and DATE_TIME_DURATION (reported
 	  by Emmanuel Bouyer).
 	* Added feature `set_storage' to DT_DATE and DT_TIME.
+	* Fixed bug in feature `add_minutes' of DT_DATE_TIME
+	  (reported by Glenn Maughan).
 
 Version 2.0 - 29 April 2001
 
