@@ -277,12 +277,12 @@ feature {NONE} -- Output
 						end
 						an_output_file.put_integer (i)
 						an_output_file.put_string (": ")
-						if a_regexp.start_of_portion (i) = 0 then
-							an_output_file.put_line ("<unset>")
-						else
+						if a_regexp.is_portion_defined (i) then
 							s := a_regexp.matched_portion (i)
 							print_substring (s, 1, s.count, False, an_output_file)
 							an_output_file.put_new_line
+						else
+							an_output_file.put_line ("<unset>")
 						end
 					end
 					if is_show_rest then
@@ -606,7 +606,7 @@ feature {NONE} -- Input
 				when 'S' then
 					is_show_start_bits := True
 				when 'X' then
-					a_regexp.set_more_strict (True)
+					a_regexp.set_strict (True)
 --				when 'L' then
 					-- set locale.
 				when 'P' then
