@@ -591,6 +591,31 @@ feature -- Feature flattening status
 			has_flattening_error: has_flattening_error
 		end
 
+feature -- Qualified signature resolving status
+
+	qualified_signatures_resolved: BOOLEAN
+			-- Have the qualified anchored types in the signatures of
+			-- features of current class been resolved?
+
+	has_qualified_signatures_error: BOOLEAN
+			-- Has a fatal error occurred during qualified signature resolving?
+
+	set_qualified_signatures_resolved is
+			-- Set `qualified_signatures_resolved' to True.
+		do
+			qualified_signatures_resolved := True
+		ensure
+			qualified_signatures_resolved: qualified_signatures_resolved
+		end
+
+	set_qualified_signatures_error is
+			-- Set `has_qualified_signatures_error' to True.
+		do
+			has_qualified_signatures_error := True
+		ensure
+			has_qualified_signatures_error: has_qualified_signatures_error
+		end
+
 feature -- Interface checking status
 
 	interface_checked: BOOLEAN
