@@ -61,7 +61,8 @@ inherit
 
 creation
 
-	make, make_precise, make_from_date_time, make_from_date
+	make, make_precise, make_from_date_time,
+	make_from_date, make_from_epoch
 
 creation {DT_DATE_TIME_HANDLER}
 
@@ -156,6 +157,29 @@ feature {NONE} -- Initialization
 			minute_set: minute = 0
 			second_set: second = 0
 			millisecond_set: millisecond = 0
+		end
+
+	make_from_epoch (s: INTEGER) is
+			-- Create a new date time from the number of
+			-- seconds since epoch (1 Jan 1970 at 00:00:00).
+		local
+			d: INTEGER
+			ss: INTEGER
+		do
+			if s < 0 then
+				ss := -s
+				d :=  - (ss // Seconds_in_day)
+				ss := ss \\ Seconds_in_day
+				if ss > 0 then
+					ss := Seconds_in_day - ss
+					d := d - 1
+				end
+			else
+				d := s // Seconds_in_day
+				ss := s \\ Seconds_in_day
+			end
+			make_date_from_day_count (d)
+			make_time_from_second_count (ss)
 		end
 
 	make_from_storage (a_date_storage, a_time_storage: INTEGER) is
