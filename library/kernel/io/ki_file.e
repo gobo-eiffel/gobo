@@ -92,4 +92,21 @@ feature -- Basic operations
 		deferred
 		end
 
+	concat (a_filename: STRING) is
+			-- Copy content of file `a_filename' to the end of current file.
+			-- Do nothing if file `a_filename' does not exist. Create
+			-- current file if it does not exist yet. If file `a_filename'
+			-- is physically the same as current file, then a copy of
+			-- the file is appended to itself. Do nothing if current
+			-- file could not be open in append mode or if file `a_filename'
+			-- could not be opened in read mode.
+			-- (`a_filename' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_filename_not_void: a_filename /= Void
+			is_closed: is_closed
+		deferred
+		end
+
 end
