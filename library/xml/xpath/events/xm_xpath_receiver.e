@@ -53,7 +53,7 @@ feature -- Events
 		deferred
 		end
 
-	set_unparsed_entity (name: UC_UTF8_STRING; system_id: UC_UTF8_STRING; public_id: STRING) is
+	set_unparsed_entity (name: STRING; system_id: STRING; public_id: STRING) is
 			-- Notify an unparsed entity URI
 		require
 			name_not_void: name /= Void
@@ -102,7 +102,7 @@ feature -- Events
 		deferred
 		end
 
-	characters (chars: UC_UTF8_STRING; properties: INTEGER) is
+	characters (chars: STRING; properties: INTEGER) is
 			-- Notify character data;
 			-- Note that some receivers may require the character data to be
 			--  sent in a single event, but in general this is not a requirement.
@@ -111,7 +111,7 @@ feature -- Events
 		deferred
 		end
 
-	processing_instruction (name: UC_UTF8_STRING; data:UC_UTF8_STRING; properties: INTEGER) is
+	processing_instruction (name: STRING; data: STRING; properties: INTEGER) is
 			-- Notify a processing instruction
 		require
 			name_not_void: name /= Void
@@ -119,7 +119,7 @@ feature -- Events
 		deferred
 		end
 	
-	comment (content: UC_UTF8_STRING; properties: INTEGER) is
+	comment (content: STRING; properties: INTEGER) is
 			-- Notify a comment;
 			-- Comments are only notified if they are outside the DTD.
 		require

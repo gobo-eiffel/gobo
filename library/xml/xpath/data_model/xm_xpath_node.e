@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Access
 
-	base_uri: UC_UTF8_STRING is
+	base_uri: STRING is
 			-- Base URI
 		deferred
 		ensure

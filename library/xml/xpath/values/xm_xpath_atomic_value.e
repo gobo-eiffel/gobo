@@ -68,7 +68,7 @@ feature -- Evaluation
 		end
 
 	
-	evaluate_as_string (context: XM_XPATH_CONTEXT): UC_UTF8_STRING is
+	evaluate_as_string (context: XM_XPATH_CONTEXT): STRING is
 			-- Evaluate an expression as a String
 			-- This function must only be called in contexts where it is known
 			-- that the expression will return a single string (or where an empty sequence

@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	string_value: UC_UTF8_STRING is
+	string_value: STRING is
 			--Value of the item as a string
 		deferred
 		ensure

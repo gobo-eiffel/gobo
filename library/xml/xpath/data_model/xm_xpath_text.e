@@ -42,7 +42,7 @@ feature -- Access
 			Result := Untyped_atomic_type
 		end
 
-	string_value: UC_UTF8_STRING is
+	string_value: STRING is
 			-- String-value
 		do
 			Result := clone (content_property)
@@ -50,7 +50,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	content_property: UC_UTF8_STRING
+	content_property: STRING
 			-- Content property from the infoset
 
 invariant

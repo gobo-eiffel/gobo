@@ -180,12 +180,12 @@ feature -- Access
 			-- TODO
 		end
 	
---	generate_id: UC_UTF8_STRING is
+--	generate_id: STRING is
 --			-- Generate a unique id for this node
 --		deferred
 --		end
 
---	system_id: UC_UTF8_STRING is
+--	system_id: STRING is
 --			-- SYSTEM id for this node's containing entity
 --		deferred
 --		end

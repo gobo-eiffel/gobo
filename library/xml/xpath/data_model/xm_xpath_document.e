@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	base_uri: UC_UTF8_STRING is
+	base_uri: STRING is
 			-- Base URI
 		do
 			Result := base_uri_property
@@ -52,7 +52,7 @@ feature -- Access
 			parent_is_void: Result = Void
 		end
 
-	string_value: UC_UTF8_STRING is
+	string_value: STRING is
 			-- String-value
 		do
 			-- Return the concatentation of the string value of all it's

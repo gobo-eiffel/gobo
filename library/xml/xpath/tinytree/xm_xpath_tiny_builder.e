@@ -68,7 +68,7 @@ feature -- Events
 			document.set_name_pool (name_pool)
 		end
 
-	set_unparsed_entity (a_name: UC_UTF8_STRING; a_system_id: UC_UTF8_STRING; a_public_id: STRING) is
+	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
 			-- Notify an unparsed entity URI
 		do
 			-- TODO document.set_unparsed_entity (a_name, a_system_id, a_public_id)
@@ -134,7 +134,7 @@ feature -- Events
 			current_depth := current_depth - 1			
 		end
 
-	characters (chars: UC_UTF8_STRING; properties: INTEGER) is
+	characters (chars: STRING; properties: INTEGER) is
 			-- Notify character data
 		local
 			buffer_start, previous_sibling: INTEGER
@@ -153,7 +153,7 @@ feature -- Events
 		end
 
 	
-	processing_instruction (target: UC_UTF8_STRING; data: UC_UTF8_STRING; properties: INTEGER) is
+	processing_instruction (target: STRING; data: STRING; properties: INTEGER) is
 			-- Notify a processing instruction
 		local
 			name_code, previous_sibling: INTEGER
@@ -176,7 +176,7 @@ feature -- Events
 			previously_at_depth.force (node_number, current_depth)		
 		end
 
-	comment (content: UC_UTF8_STRING; properties: INTEGER) is
+	comment (content: STRING; properties: INTEGER) is
 			-- Notify a comment;
 			-- Comments are only notified if they are outside the DTD.
 		local

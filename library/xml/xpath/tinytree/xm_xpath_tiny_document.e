@@ -31,7 +31,9 @@ inherit
 	XM_XPATH_STANDARD_NAMESPACES
 
 	XM_XPATH_TYPE
-	
+
+	XM_STRING_MODE
+
 	HASHABLE
 	
 creation
@@ -65,7 +67,11 @@ feature -- Initialization
 			create namespace_parent.make (estimated_namespace_count)
 			create namespace_code.make (estimated_namespace_count)
 
-			create character_buffer.make (estimated_character_count)
+			if is_string_mode_ascii then
+				create character_buffer.make (estimated_character_count)
+			else
+				create {UC_UTF8_STRING} character_buffer.make (estimated_character_count)
+			end
 		end
 
 	make_with_defaults is
@@ -219,7 +225,7 @@ feature -- Element change
 		local
 			counter: INTEGER
 		do
-			character_buffer.append_string (characters)
+			character_buffer := STRING_.appended_string (character_buffer, characters)
 		end
 
 	add_namespace (the_parent: INTEGER; ns_code: INTEGER) is
@@ -240,15 +246,19 @@ feature -- Element change
 			-- TODO check ID values
 		end
 
-	store_comment (data: UC_UTF8_STRING) is
+	store_comment (data: STRING) is
 			-- Store comment or processing instruction test
 		require
 			data_not_void: data /= Void
 		do
 			if comment_buffer = Void then
-				create comment_buffer.make (data.count)
+				if is_string_mode_ascii then
+					create comment_buffer.make (data.count)
+				else
+					create {UC_UTF8_STRING} comment_buffer.make (data.count)
+				end
 			end
-			comment_buffer.append_string (data)
+			comment_buffer := STRING_.appended_string (comment_buffer, data)
 		ensure
 			comment_buffer_created: comment_buffer /= Void
 		end
@@ -295,12 +305,10 @@ feature {NONE} -- Implementation
 	root_node: INTEGER
 			-- The actual root of the tree. Normally 1.
 
-	character_buffer: UC_UTF8_STRING
+	character_buffer: STRING
 			-- The document contents
-			--  should this really be CHARACTER, or Unicode character?
-			--  From the parser's point of view, it should be CHARACTER
 	
-	comment_buffer: UC_UTF8_STRING
+	comment_buffer: STRING
 			-- Buffer for comments, created when needed
 
 	number_of_nodes: INTEGER

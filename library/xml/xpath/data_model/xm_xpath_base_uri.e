@@ -14,7 +14,7 @@ class XM_XPATH_BASE_URI
 
 feature {NONE} -- Access
 
-	base_uri_property: UC_UTF8_STRING
+	base_uri_property: STRING
 			-- Base-uri property from the infoset
 
 end

@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	base_uri: UC_UTF8_STRING is
+	base_uri: STRING is
 			-- Base URI
 		do
 			Result := Void
@@ -48,7 +48,7 @@ feature -- Access
 			node_name_not_void: Result /= Void
 		end
 
-	string_value: UC_UTF8_STRING is
+	string_value: STRING is
 			-- String-value
 		do
 			Result := clone (uri_property)
@@ -63,10 +63,10 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	prefix_property: UC_UTF8_STRING
+	prefix_property: STRING
 			-- Prefix property from the infoset.
 
-	uri_property: UC_UTF8_STRING
+	uri_property: STRING
 			-- Namespace name property from the infoset.
 
 invariant

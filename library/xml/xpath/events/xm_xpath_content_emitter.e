@@ -120,18 +120,12 @@ feature -- Document type definition callbacks
 	on_entity_declaration (entity_name: STRING; is_parameter: BOOLEAN; value: STRING;
 		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
 			-- Entity declaration.
-		local
-			uri, public_id, utf8_name: UC_UTF8_STRING
 		do
 			if an_id /= Void and then notation_name /= Void then
 					check
 						not_a_parameter_declaration: is_parameter = False
 					end
-				-- TODO - create uri from an_id.system_id and an_id.base(?)
-				create uri.make_from_utf8 (an_id.system_id)
-				create public_id.make_from_utf8 (an_id.public_id)
-				create utf8_name.make_from_utf8 (entity_name)
-				receiver.set_unparsed_entity (utf8_name, uri, public_id)
+				receiver.set_unparsed_entity (entity_name, an_id.system_id, an_id.public_id)
 			end
 		end
 
@@ -192,36 +186,17 @@ feature -- Meta
 
 	on_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Processing instruction.
-		local
-			utf8_name, utf8_content: UC_UTF8_STRING			
 		do
 			if before_dtd and STRING_.same_string (a_name, "xml-stylesheet") then
 				-- TODO `a_content' names the stylesheet to use in the href pseudo-attribute
 			end
-			if a_name.same_type ("") then
-				create utf8_name.make_from_utf8 (a_name)
-			else
-				utf8_name ?= a_name
-			end
-			if a_content.same_type ("") then
-				create utf8_content.make_from_utf8 (a_content)
-			else
-				utf8_content ?= a_content
-			end
-			receiver.processing_instruction (utf8_name, utf8_content, 0)
+			receiver.processing_instruction (a_name, a_content, 0)
 		end
 
 	on_comment (a_content: STRING) is
 			-- Processing a comment.
-		local
-			utf8_content: UC_UTF8_STRING			
 		do
-			if a_content.same_type ("") then
-				create utf8_content.make_from_utf8 (a_content)
-			else
-					utf8_content ?= a_content
-			end
-			receiver.comment (utf8_content, 0)
+			receiver.comment (a_content, 0)
 		end
 
 feature -- Tag
@@ -363,15 +338,8 @@ feature -- Content
 			-- XM_CONTENT_CONCATENATOR is assumed to be present
 			--  earlier in the event chain, so this event is
 			--  atomic
-		local
-			utf8_content: UC_UTF8_STRING
 		do
-			if a_content.same_type ("") then
-				create utf8_content.make_from_utf8 (a_content)
-			else
-					utf8_content ?= a_content
-			end
-			receiver.characters (utf8_content, 0)
+			receiver.characters (a_content, 0)
 		end
 
 feature {NONE} -- Implementation

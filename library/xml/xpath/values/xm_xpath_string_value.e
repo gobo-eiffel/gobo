@@ -22,7 +22,7 @@ creation
 
 feature -- Initialization
 
-	make (val: UC_UTF8_STRING) is
+	make (val: STRING) is
 			-- Establish invariant
 		require
 			value_not_void: val /= Void
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Access
 
-	string_value: UC_UTF8_STRING is
+	string_value: STRING is
 			--Value of the item as a string
 		do
 			Result := value
@@ -77,7 +77,7 @@ feature -- Conversions
 
 feature {NONE} -- Implementation
 
-	value: UC_UTF8_STRING
+	value: STRING
 			-- The actual string-value
 
 invariant

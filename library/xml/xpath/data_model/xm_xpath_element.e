@@ -36,7 +36,7 @@ feature -- Access
 			node_kind_is_element: STRING_.same_string (Result, "element")
 		end
 
-	string_value: UC_UTF8_STRING is
+	string_value: STRING is
 			-- String-value
 		do
 			-- Return the concatentation of the string value of all it's

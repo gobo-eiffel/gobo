@@ -20,7 +20,7 @@ inherit
 	
 feature -- Access
 
-	base_uri: UC_UTF8_STRING is
+	base_uri: STRING is
 			-- Base URI
 			-- Algorithm:
 			-- Use the base_uri_property if it is not Void.
