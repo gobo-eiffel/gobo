@@ -9,7 +9,7 @@ default
 	prefix ("X")
 	testgen ("TESTGEN")
 	compile ("bash -c %"make hact-debug > tmp_compile.txt 2>&1%"")
-	execute ("bash -c %"cd xtime_gen/W_code ; ./xtime%"")
+	execute ("bash -c %"./xtime%"")
 
 cluster
 
