@@ -1,0 +1,83 @@
+indexing
+
+	description:
+
+		"Eiffel compiler used to compile this program"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_EIFFEL_COMPILER
+
+feature -- Access
+
+	vendor: STRING is
+			-- Vendor of Eiffel compiler used to compiled this program
+		once
+#ifdef ISE
+			Result := ise_vendor
+#endif
+#ifdef HACT
+			Result := hact_vendor
+#endif
+#ifdef SE
+			Result := se_vendor
+#endif
+#ifdef VE
+			Result := ve_vendor
+#endif
+		ensure
+			vendor_not_void: Result /= Void
+		end
+
+	ise_vendor: STRING is "ise"
+			-- ISE Eiffel vendor
+
+	hact_vendor: STRING is "hact"
+			-- Halstenbach vendor
+
+	se_vendor: STRING is "se"
+			-- SmallEiffel vendor
+
+	ve_vendor: STRING is "ve"
+			-- Visual Eiffel vendor
+
+feature -- Status report
+
+	is_ise: BOOLEAN is
+			-- Has this program been compiled with ISE Eiffel?
+		once
+			Result := (vendor = ise_vendor)
+		ensure
+			definition: Result = (vendor = ise_vendor)
+		end
+
+	is_hact: BOOLEAN is
+			-- Has this program been compiled with Halstenbach?
+		once
+			Result := (vendor = hact_vendor)
+		ensure
+			definition: Result = (vendor = hact_vendor)
+		end
+
+	is_se: BOOLEAN is
+			-- Has this program been compiled with SmallEiffel?
+		once
+			Result := (vendor = se_vendor)
+		ensure
+			definition: Result = (vendor = se_vendor)
+		end
+
+	is_ve: BOOLEAN is
+			-- Has this program been compiled with Visual Eiffel?
+		once
+			Result := (vendor = ve_vendor)
+		ensure
+			definition: Result = (vendor = ve_vendor)
+		end
+
+end -- class KL_EIFFEL_COMPILER
