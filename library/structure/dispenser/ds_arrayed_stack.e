@@ -52,9 +52,7 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			!! FIXED_ARRAY_
-			storage := FIXED_ARRAY_.make (n + 1)
-			capacity := n
+			make (n)
 			!! equality_tester
 		ensure
 			empty: is_empty
@@ -161,7 +159,7 @@ feature -- Duplication
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-			-- Is stack equal to `other'?
+			-- Is current stack equal to `other'?
 		local
 			i, nb: INTEGER
 			other_storage: like storage
@@ -211,6 +209,7 @@ feature -- Element change
 
 	extend (other: DS_LINEAR [G]) is
 			-- Add items of `other' to stack.
+			-- Add `other.first' first, etc.
 		local
 			i: INTEGER
 			other_cursor: DS_LINEAR_CURSOR [G]
@@ -227,6 +226,7 @@ feature -- Element change
 
 	append (other: DS_LINEAR [G]) is
 			-- Add items of `other' to stack.
+			-- Add `other.first' first, etc.
 			-- Resize stack if needed.
 		local
 			nb: INTEGER
