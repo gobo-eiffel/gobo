@@ -555,6 +555,7 @@ feature {NONE} -- Feature flattening
 		local
 			class_features: ET_FEATURE_LIST
 			a_feature: ET_FEATURE
+			a_deferred_feature: ET_FEATURE
 			i, nb: INTEGER
 		do
 			process_replication
@@ -569,23 +570,28 @@ feature {NONE} -- Feature flattening
 					named_features.back
 				end
 				nb := new_features_count
-				new_features_count := 0
-				named_features.wipe_out
 				from i := 1 until i > nb loop
 					a_feature := class_features.item (i)
-						-- Resolve identifier types in signature
-						-- of features written in `current_class'.
-						-- Those features inherited without being
-						-- redeclared in `current_class' have already
-						-- had their signature resolved when processing
-						-- the parents of `current_class'.
-					resolve_identifier_type_signature (a_feature.flattened_feature)
+						-- Resolve identifier types and check argument
+						-- names in signature of features written in
+						-- `current_class'. Those features inherited
+						-- without being redeclared in `current_class'
+						-- have already had their signature resolved
+						-- when processing the parents of `current_class'.
+					resolve_identifier_signature (a_feature.flattened_feature)
 					i := i + 1
 				end
+				new_features_count := 0
+				named_features.wipe_out
 				check_anchored_signatures
 				nb := class_features.count
 				from i := 1 until i > nb loop
 					a_feature := class_features.item (i)
+					if a_deferred_feature = Void then
+						if a_feature.flattened_feature.is_deferred then
+							a_deferred_feature := a_feature
+						end
+					end
 					has_qualified_type := False
 					check_signature_validity (a_feature)
 					if has_qualified_type and not current_class.has_flattening_error then
@@ -602,13 +608,37 @@ feature {NONE} -- Feature flattening
 							class_features.put (a_feature.adapted_feature, i)
 						else
 							-- If the feature is not inherited, then it
-							-- is alread flattened (see postcondition of
+							-- is already flattened (see postcondition of
 							-- ET_FEATURE.is_flattened).
 						end
 					else
 						class_features.put (a_feature.flattened_feature, i)
 					end
 					i := i + 1
+				end
+				if a_deferred_feature /= Void then
+					current_class.set_has_deferred_features (True)
+					if not current_class.has_deferred_mark then
+							-- `current_class' has deferred features
+							-- but is not marked as deferred. This is
+							-- not considered as a fatal error here.
+							-- We just consider the class as deferred
+							-- from now on.
+						if a_deferred_feature.is_inherited and not a_deferred_feature.is_redeclared then
+							error_handler.report_vcch1b_error (current_class, a_deferred_feature.inherited_feature)
+						else
+							error_handler.report_vcch1a_error (current_class, a_deferred_feature.flattened_feature)
+						end
+					end
+				else
+					current_class.set_has_deferred_features (False)
+					if current_class.has_deferred_mark then
+							-- `current_class' is marked as deferred but
+							-- has no deferred feature. This is not
+							-- considered as a fatal error here. We just
+							-- consider the class as deferred from now on.
+						error_handler.report_vcch2a_error (current_class)
+					end
 				end
 			else
 				new_features_count := 0
@@ -1352,21 +1382,26 @@ feature {NONE} -- Feature adaptation validity
 
 feature {NONE} -- Signature resolving
 
-	resolve_identifier_type_signature (a_feature: ET_FLATTENED_FEATURE) is
+	resolve_identifier_signature (a_feature: ET_FLATTENED_FEATURE) is
 			-- Resolve identifier types (e.g. "like identifier"
 			-- or "BIT identifier") in signature of `a_feature'
 			-- in `current_class'. Do not try to resolve qualified
 			-- anchored types other than those of the form
 			-- 'like Current.b'. This is done after the features
 			-- of the corresponding classes have been flattened.
+			-- Also check whether an argument name does not appear
+			-- twice and whether none of the argument names are
+			-- the final name of a feature in `current_class'.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_feature_registered: a_feature.is_registered
 		local
-			a_type: ET_TYPE
+			a_type, previous_type: ET_TYPE
 			args: ET_FORMAL_ARGUMENT_LIST
-			an_arg: ET_FORMAL_ARGUMENT
-			i, nb: INTEGER
+			an_arg, other_arg: ET_FORMAL_ARGUMENT
+			other_feature: ET_FLATTENED_FEATURE
+			a_name: ET_IDENTIFIER
+			i, j, nb: INTEGER
 		do
 			identifier_type_resolver.set_current_feature (a_feature)
 			a_type := a_feature.type
@@ -1378,7 +1413,34 @@ feature {NONE} -- Signature resolving
 				nb := args.count
 				from i := 1 until i > nb loop
 					an_arg := args.formal_argument (i)
-					identifier_type_resolver.resolve_type (an_arg.type)
+					a_type := an_arg.type
+					if a_type /= previous_type then
+							-- Not resolved yet.
+						identifier_type_resolver.resolve_type (a_type)
+						previous_type := a_type
+					end
+					a_name := an_arg.name
+						-- A negative seed upto -arguments.count means
+						-- that it is an argument, below that it is a
+						-- local variable. Positive seeds are for feature
+						-- names.
+					a_name.set_seed (-i)
+					from j := 1 until j >= i loop
+						other_arg := args.formal_argument (j)
+						if other_arg.name.same_identifier (a_name) then
+								-- Two arguments with the same name.
+							set_fatal_error (current_class)
+							error_handler.report_vreg0a_error (current_class, other_arg, an_arg, a_feature)
+						end
+						j := j + 1
+					end
+					if named_features.has (a_name) then
+							-- This argument has the same name as the
+							-- final name of a feature in `current_class'.
+						other_feature := named_features.item (a_name).flattened_feature
+						set_fatal_error (current_class)
+						error_handler.report_vrfa0a_error (current_class, an_arg, a_feature, other_feature)
+					end
 					i := i + 1
 				end
 			end
