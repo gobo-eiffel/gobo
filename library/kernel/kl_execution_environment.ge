@@ -201,7 +201,7 @@ feature -- Conversion
 						end
 						str := variable_value (str)
 						if str /= Void then
-							Result := Result.append_string (str)
+							Result.append_string (str)
 						end
 					end
 				end
@@ -215,14 +215,14 @@ feature {NONE} -- Externals
 
 	c_getenv (s: POINTER): POINTER is
 		external
-			"C [macro <eif_eiffel.h>]"
+			"C (char *): EIF_POINTER"
 		alias
 			"getenv"
 		end
 
 	c_putenv (s: POINTER): INTEGER is
 		external
-			"C [macro <eif_eiffel.h>]"
+			"C (char *): EIF_INTEGER"
 		alias
 			"putenv"
 		end
