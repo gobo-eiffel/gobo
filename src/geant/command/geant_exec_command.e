@@ -60,6 +60,9 @@ feature -- Access
 	command_line: STRING
 			-- Command-line
 
+	accept_errors: BOOLEAN
+			-- Should return codes from the `executable' other than zero be accepted?
+
 	fileset: GEANT_FILESET
 		-- Fileset for current command
 
@@ -74,6 +77,14 @@ feature -- Setting
 			command_line := a_command_line
 		ensure
 			command_list_set: command_line = a_command_line
+		end
+
+	set_accept_errors (b: BOOLEAN) is
+			-- Set `accept_errors' to `b'.
+		do
+			accept_errors := b
+		ensure
+			accept_errors_set: accept_errors = b
 		end
 
 	set_fileset (a_fileset: like fileset) is
@@ -98,6 +109,9 @@ feature -- Execution
 			if is_commandline_executable then
 				project.trace ("  [exec] " + command_line + "%N")
 				execute_shell (command_line)
+				if accept_errors then
+					exit_code := 0
+				end
 			else
 				check is_fileset_executable: is_fileset_executable end
 
@@ -116,6 +130,9 @@ feature -- Execution
 						s := project.variables.interpreted_string (command_line)
 						project.trace ("  [exec] " + s + "%N")
 						execute_shell (s)
+						if accept_errors then
+							exit_code := 0
+						end
 	
 						fileset.forth
 					end
