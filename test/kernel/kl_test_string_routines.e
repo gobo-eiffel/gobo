@@ -448,6 +448,62 @@ feature -- Test
 			assert_equal ("upper2", "BAR", uc_string2.out)
 		end
 
+	test_left_adjust is
+			-- Test feature `left_adjust'.
+		local
+			a_string: STRING
+			uc_string: UC_UTF8_STRING
+		do
+			a_string := clone ("foobar")
+			STRING_.left_adjust (a_string)
+			assert_equal ("left_adjust1", "foobar", a_string) 
+			a_string.put (' ', 1)
+			a_string.put ('%T', 2)
+			a_string.put ('%N', 3)
+			a_string.put ('%R', 4)
+			STRING_.left_adjust (a_string)
+			assert_equal ("left_adjust2", "ar", a_string) 
+			create uc_string.make_from_string ("foobar")
+			uc_string.put_code (567, 1)
+			uc_string.put_code (432, 6)
+			STRING_.left_adjust (uc_string)
+			assert_equal ("left_adjust3", "%%/567/ooba%%/432/", uc_string.out) 
+			uc_string.put (' ', 1)
+			uc_string.put ('%T', 2)
+			uc_string.put ('%N', 3)
+			uc_string.put ('%R', 4)
+			STRING_.left_adjust (uc_string)
+			assert_equal ("left_adjust4", "a%%/432/", uc_string.out) 
+		end
+
+	test_right_adjust is
+			-- Test feature `right_adjust'.
+		local
+			a_string: STRING
+			uc_string: UC_UTF8_STRING
+		do
+			a_string := clone ("foobar")
+			STRING_.right_adjust (a_string)
+			assert_equal ("right_adjust1", "foobar", a_string) 
+			a_string.put (' ', 3)
+			a_string.put ('%T', 4)
+			a_string.put ('%N', 5)
+			a_string.put ('%R', 6)
+			STRING_.right_adjust (a_string)
+			assert_equal ("right_adjust2", "fo", a_string) 
+			create uc_string.make_from_string ("foobar")
+			uc_string.put_code (567, 1)
+			uc_string.put_code (432, 6)
+			STRING_.right_adjust (uc_string)
+			assert_equal ("right_adjust3", "%%/567/ooba%%/432/", uc_string.out) 
+			uc_string.put (' ', 3)
+			uc_string.put ('%T', 4)
+			uc_string.put ('%N', 5)
+			uc_string.put ('%R', 6)
+			STRING_.right_adjust (uc_string)
+			assert_equal ("right_adjust4", "%%/567/o", uc_string.out) 
+		end
+
 	test_keep_head is
 			-- Test feature `keep_head'.
 		local

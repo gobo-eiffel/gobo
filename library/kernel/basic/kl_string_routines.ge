@@ -1106,6 +1106,66 @@ feature -- Conversion
 
 feature -- Removal
 
+	left_adjust (a_string: STRING) is
+			-- Remove leading whitespace from `a_string'.
+			-- (Not in ELKS 2001 STRING)
+			-- Note: SE 1.1 removes the following characters: ' ';
+			-- ISE 5.4 removes the following characters: ' ', '%T', '%R', '%N';
+			-- VE 4.1 removes the characters <= ' '. 
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := a_string.count
+			from i := 1 until i > nb loop
+				inspect a_string.item (i)
+				when ' ', '%T', '%R', '%N' then
+					i := i + 1
+				else
+						-- Jump out of the loop.
+					nb := 0
+				end
+			end
+			remove_head (a_string, i - 1)
+		ensure
+			left_adjusted: (a_string.count /= 0) implies
+				((a_string.item_code (1) /= (' ').code) and
+				(a_string.item_code (1) /= ('%T').code) and
+				(a_string.item_code (1) /= ('%R').code) and
+				(a_string.item_code (1) /= ('%N').code))
+		end
+
+	right_adjust (a_string: STRING) is
+			-- Remove trailing whitespace from `a_string'.
+			-- (Not in ELKS 2001 STRING)
+			-- Note: SE 1.1 removes the following characters: ' ';
+			-- ISE 5.4 removes the following characters: ' ', '%T', '%R', '%N';
+			-- VE 4.1 removes the characters <= ' '. 
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := a_string.count
+			from i := 1 until i > nb loop
+				inspect a_string.item (nb)
+				when ' ', '%T', '%R', '%N' then
+					nb := nb - 1
+				else
+						-- Jump out of the loop.
+					i := nb + 1
+				end
+			end
+			keep_head (a_string, nb)
+		ensure
+			right_adjusted: (a_string.count /= 0) implies
+				((a_string.item_code (a_string.count) /= (' ').code) and
+				(a_string.item_code (a_string.count) /= ('%T').code) and
+				(a_string.item_code (a_string.count) /= ('%R').code) and
+				(a_string.item_code (a_string.count) /= ('%N').code))
+		end
+
 	keep_head (a_string: STRING; n: INTEGER) is
 			-- Remove all the characters of `a_string' except for the first `n';
 			-- if `n' > `a_string.count', do nothing.
