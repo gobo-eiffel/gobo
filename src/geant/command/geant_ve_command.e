@@ -40,8 +40,8 @@ feature -- Status report
 		do
 			Result := esd_filename /= Void and then esd_filename.count > 0
 		ensure
-			esd_filename_not_void: esd_filename /= Void
-			esd_filename_not_empty: esd_filename.count > 0
+			esd_filename_not_void: Result implies esd_filename /= Void
+			esd_filename_not_empty: Result implies esd_filename.count > 0
 		end
 
 	is_cleanable: BOOLEAN is
@@ -61,6 +61,10 @@ feature -- Access
 	clean: STRING
 			-- Name of system to be cleaned
 
+	recursive_clean: BOOLEAN
+			-- Should clean be run recursively on
+			-- subdirectories?
+
 feature -- Setting
 
 	set_esd_filename (a_filename: like esd_filename) is
@@ -79,6 +83,14 @@ feature -- Setting
 			clean_set: clean = a_clean
 		end
 
+	set_recursive_clean (b: BOOLEAN) is
+			-- Set `recursive_clean' to `b'.
+		do
+			recursive_clean := b
+		ensure
+			recursive_clean_set: recursive_clean = b
+		end
+
 feature -- Execution
 
 	execute is
@@ -93,14 +105,64 @@ feature -- Execution
 				execute_shell (cmd)
 			else
 				check is_cleanable: is_cleanable end
-				if file_system.is_directory_readable ("eCluster") then
-						-- Execute the command only if the Visual Eiffel
-						-- compiler has been used to compile this system.
-					cmd := clone ("vec -eu -y -no")
+				execute_clean
+			end
+		end
+
+	execute_clean is
+			-- Clean system.
+		require
+			is_cleanable: is_cleanable
+		local
+			cmd: STRING
+			old_pwd: STRING
+			a_name: STRING
+			a_dir: KL_DIRECTORY
+		do
+			old_pwd := file_system.pwd
+			if file_system.is_directory_readable ("eCluster") then
+					-- Execute the command only if the Visual Eiffel
+					-- compiler has been used to compile this system.
+				cmd := clone ("vec -dc -y -no")
+				if recursive_clean then
+					log ("  [ve] [" + old_pwd + "] " + cmd + "%N")
+				else
 					log ("  [ve] " + cmd + "%N")
-					execute_shell (cmd)
+				end
+				execute_shell (cmd)
+			end
+			if file_system.is_file_readable ("Result.out") then
+				if recursive_clean then
+					log ("  [ve] delete " + old_pwd + "/Result.out%N")
+				else
 					log ("  [ve] delete Result.out%N")
-					file_system.delete_file ("Result.out")
+				end
+				file_system.delete_file ("Result.out")
+			end
+			if file_system.is_file_readable ("vec.xcp") then
+				if recursive_clean then
+					log ("  [ve] delete " + old_pwd + "/vec.xcp%N")
+				else
+					log ("  [ve] delete vec.xcp%N")
+				end
+				file_system.delete_file ("vec.xcp")
+			end
+			if recursive_clean then
+				!! a_dir.make (old_pwd)
+				a_dir.open_read
+				if a_dir.is_open_read then
+					from a_dir.read_entry until a_dir.end_of_input loop
+						a_name := a_dir.last_entry
+						if not a_name.is_equal (".") and not a_name.is_equal ("..") then
+							if file_system.is_directory_readable (a_name) then
+								file_system.cd (a_name)
+								execute_clean
+								file_system.cd (old_pwd)
+							end
+						end
+						a_dir.read_entry
+					end
+					a_dir.close
 				end
 			end
 		end
