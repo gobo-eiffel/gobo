@@ -1,73 +1,60 @@
-class
-   
-   GEXACE_VALIDATE_COMMAND
-   
-inherit
-   
-   GEXACE_COMMAND
-      rename
-	 make as make_command
-      end
+indexing
 
-   UT_STRING_ROUTINES
-   
-   XA_ELEMENT_CONSTANTS
+	description:
+
+		"'validate' commands for 'gexace'"
+
+	system:     "Gobo Eiffel Xace"
+	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class GEXACE_VALIDATE_COMMAND
+ 
+inherit
+
+	GEXACE_COMMAND
+
+	KL_IMPORTED_INPUT_STREAM_ROUTINES
 
 creation
-   
-   make
 
-feature   
-   
-   make is
-      do
-	 make_command
-      end
+	make
 
-feature
-   
-   execute is
-      local
-	 parser: expanded XA_PARSER
-	 validator: expanded XA_VALIDATOR
-	 tree_parser: XM_TREE_PARSER
-	 uc: UC_STRING
-      do
-	 if
-	    not parser.is_parser_available
-	  then
-	    error_handler.report_other_error ("toe or eiffel xml-parser not compiled in%N")
-	 else
-	    if
-	       not parser.is_file_readable (system_file_name)
-	     then
-	       error_handler.report_cannot_read_file_error (system_file_name)
-	    else
-	       tree_parser := parser.new_tree_parser
-	       !! uc.make_from_string (system_file_name)
-	       tree_parser.parse_from_file_name (uc)
-	       if
-		  tree_parser.is_correct
-		then
-		  check
-		     position_table_enabled: tree_parser.is_position_table_enabled
-		  end
-		  if
-		     tree_parser.document.root_element.name.is_equal (uc_system)
-		   then
-		     validator.validate_system_doc (tree_parser.document, tree_parser.last_position_table)
-		  elseif
-		     tree_parser.document.root_element.name.is_equal (uc_cluster)
-		   then
-		     validator.validate_cluster_doc (tree_parser.document, tree_parser.last_position_table)
-		  else
-		     error_handler.report_other_error (array_to_string (<<system_file_name, " does not seem to be a XACE file">>))
-		  end
-	       else
-		  error_handler.report_other_error (array_to_string (<<tree_parser.last_error_extended_description>>))
-	       end
-	    end
-	 end
-      end
-   
-end
+feature -- Access
+
+	variables: ET_XACE_VARIABLES
+			-- Defined variables
+
+feature -- Setting
+
+	set_variables (a_variables: like variables) is
+			-- Set `variables' to `a_variables'.
+		do
+			variables := a_variables
+		ensure
+			variables_set: variables = a_variables
+		end
+
+feature -- Execution
+ 
+	execute is
+			-- Execute 'validate' command.
+		local
+			a_parser: ET_XACE_PARSER
+			a_file: like INPUT_STREAM_TYPE
+		do
+			!! a_parser.make (error_handler)
+			a_parser.set_variables (variables)
+			a_file := INPUT_STREAM_.make_file_open_read (system_filename)
+			if INPUT_STREAM_.is_open_read (a_file) then
+				a_parser.parse_file (a_file)
+				INPUT_STREAM_.close (a_file)
+			else
+				error_handler.report_cannot_read_file_error (system_filename)
+			end
+		end
+
+end -- class GEXACE_VALIDATE_COMMAND

@@ -1,114 +1,145 @@
-class
-   
-   GEXACE_COMMAND_LINE_PARSER
-   
+indexing
+
+	description:
+
+		"Command-line parsers for 'gexace'"
+
+	system:     "Gobo Eiffel Xace"
+	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
+	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class GEXACE_COMMAND_LINE_PARSER
+
 inherit
-   
-   KL_SHARED_ARGUMENTS
-   
-   UT_STRING_ROUTINES
-   
-feature {ANY} -- Operations
-   
-   reset is
-	 -- reset internal option position to first option
-	 -- must be called before first use.
-      do
-	 next_option_position := 1
-      end
-   
-   consume_option is
-	 -- move `next_token_position' to the next token position
-      do
-	 next_option_position := next_option_position + 1
-      end
-   
-feature {ANY} -- Status
-   
-   has_next_option: BOOLEAN is
-	 -- is there an unconsumed token left ?
-      do
-	 Result := is_valid_option_position (next_option_position)
-      end
-   
-   is_next_option_long_option: BOOLEAN is
-	 -- is the next option a long option (with or without a value)
-      do
-	 Result := next_option.substring (1, 2).is_equal ("--")
-      end
-   
-   has_next_option_value: BOOLEAN is
-	 -- has the next option a value ?
-      require
-	 has_next_option: has_next_option
-	 next_option_is_long_option: is_next_option_long_option
-      do
-	 Result := next_option.occurrences ('=') > 0 and then next_option.index_of ('=', 1) < next_option.count
-      end
-   
+
+	KL_SHARED_ARGUMENTS
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new command-line parser.
+		do
+			reset
+		end
+
+feature -- Operations
+
+	reset is
+			-- Reset internal option position to first option
+			-- must be called before first use.
+		do
+			next_option_position := 1
+		end
+
+	consume_option is
+			-- Move `next_token_position' to the next token position.
+		do
+			next_option_position := next_option_position + 1
+		end
+
+feature -- Status report
+
+	has_next_option: BOOLEAN is
+			-- Is there an unconsumed token left?
+		do
+			Result := is_valid_option_position (next_option_position)
+		end
+
+	is_next_option_long_option: BOOLEAN is
+			-- Is the next option a long option (with or without a value)?
+		local
+			arg: STRING
+		do
+			if has_next_option then
+				arg := next_option
+				Result := arg.count >= 2 and then arg.substring (1, 2).is_equal ("--")
+			end
+		end
+
+	has_next_option_value: BOOLEAN is
+			-- Has the next option a value?
+		require
+			has_next_option: has_next_option
+			next_option_is_long_option: is_next_option_long_option
+		local
+			i: INTEGER
+			arg: STRING
+		do
+			arg := next_option
+			i := arg.index_of ('=', 1)
+			Result := (i >= 1 and i < arg.count)
+		end
+
 feature -- Access
-   
-   next_option: STRING is
-	 -- returns the next option
-      require
-	 has_next_option: has_next_option
-      do
-	 Result := Arguments.argument (next_option_position)
-      ensure
-	 result_not_void: Result /= Void
-      end
-   
-   next_option_value: STRING is
-	 -- returns the value of the next option
-      require
-	 next_option_is_long_option: is_next_option_long_option
-	 has_next_option_value: has_next_option_value
-      local
-	 pair: DS_PAIR [STRING, STRING]
-      do
-	 pair := split_on_first (next_option, '=')
-	 Result := pair.second
-      ensure
-	 result_not_void: Result /= Void
-      end
+
+	next_option: STRING is
+			-- Next option on command-line
+		require
+			has_next_option: has_next_option
+		do
+			Result := Arguments.argument (next_option_position)
+		ensure
+			next_option_not_void: Result /= Void
+		end
+
+	next_option_value: STRING is
+			-- Value of next option
+		require
+			next_option_is_long_option: is_next_option_long_option
+			has_next_option_value: has_next_option_value
+		local
+			i: INTEGER
+			arg: STRING
+		do
+			arg := next_option
+			i := arg.index_of ('=', 1)
+			Result := arg.substring (i + 1, arg.count)
+		ensure
+			next_option_value_not_void: Result /= Void
+		end
 
 feature -- Matching
-   
-   match_long_option (option_name: STRING): BOOLEAN is
-	 -- returns `True' if the next token is a long options (with or
-	 -- without a value).
-	 -- `option_name' must be only the pure option name (without the "--" prefix).
-      require
-	 option_name_not_void: option_name /= Void
-      local
-	 full_option_name: STRING
-	 str: STRING
-      do
-	 full_option_name := clone ("--")
-	 full_option_name.append_string (option_name)
-	 if
-	    has_next_option
-	  then
-	    str := next_option
-	    if
-	       str.count >= full_option_name.count and then 
-	       str.substring (1, full_option_name.count).is_equal (full_option_name)
-	     then
-	       -- TODO: check if next char is a seperator (WS,'=')
-	       Result := True
-	    end
-	 end
-      end
+
+	match_long_option (an_option_name: STRING): BOOLEAN is
+			-- Is there a next option on the command-line and
+			-- is this option a long option whose name is
+			-- `an_option_name' (note that `an_option_name'
+			-- does not contain the leading '--' characters)?
+		require
+			an_option_name_not_void: an_option_name /= Void
+		local
+			arg: STRING
+			nb: INTEGER
+		do
+			if has_next_option then
+				arg := next_option
+				nb := an_option_name.count + 2
+				if
+					arg.count >= nb and then
+					(arg.item (1) = '-' and arg.item (2) = '-') and
+					arg.substring (3, nb).is_equal (an_option_name)
+				then
+					Result := (arg.count = nb or else arg.item (nb + 1) = '=')
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 
-   next_option_position: INTEGER
-	 -- index of next option
+	next_option_position: INTEGER
+			-- Index of next option
 
-   is_valid_option_position (i: INTEGER): BOOLEAN is
-	 -- Is `i' a valid token position ?
-      do
-	 Result := i >= 1 and i <= Arguments.argument_count
-      end
+	is_valid_option_position (i: INTEGER): BOOLEAN is
+			-- Is `i' a valid token position?
+		do
+			Result := (i >= 1 and i <= Arguments.argument_count)
+		end
 
-end
+end -- GEXACE_COMMAND_LINE_PARSER
