@@ -72,7 +72,7 @@ feature -- Test
 			l_as := <<"1", "2", "3", "4">>
 			assert_arrays_equal ("as_initialized", <<"1", "2", "3", "4">>, l_as)
 			l_as.clear_all
-			create void_as.make (1,4)
+			create void_as.make (1, 4)
 			assert_arrays_same ("as_all_cleared", void_as, l_as)
 				-- Empty array.
 			create l_as.make (3, 2)
