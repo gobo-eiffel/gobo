@@ -5,12 +5,16 @@ indexing
 		"Xace option names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class ET_XACE_OPTION_NAMES
+
+inherit
+
+	UC_SHARED_STRING_EQUALITY_TESTER
 
 feature -- Option names
 
@@ -20,6 +24,7 @@ feature -- Option names
 	array_optimization_name: STRING is "array_optimization"
 	assembly_name: STRING is "assembly"
 	assertion_name: STRING is "assertion"
+	callback_name: STRING is "callback"
 	case_insensitive_name: STRING is "case_insensitive"
 	check_vape_name: STRING is "check_vape"
 	clean_name: STRING is "clean"
@@ -96,6 +101,7 @@ feature -- Option codes
 	array_optimization_code: INTEGER is unique
 	assembly_code: INTEGER is unique
 	assertion_code: INTEGER is unique
+	callback_code: INTEGER is unique
 	case_insensitive_code: INTEGER is unique
 	check_vape_code: INTEGER is unique
 	clean_code: INTEGER is unique
@@ -166,18 +172,16 @@ feature -- Option codes
 
 	option_codes: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Mapping option names -> option codes
-		local
-			a_tester: UC_EQUALITY_TESTER
 		once
-			create Result.make (73)
-			create a_tester
-			Result.set_key_equality_tester (a_tester)
+			create Result.make (74)
+			Result.set_key_equality_tester (string_equality_tester)
 			Result.put_new (abstract_code, abstract_name)
 			Result.put_new (address_expression_code, address_expression_name)
 			Result.put_new (arguments_code, arguments_name)
 			Result.put_new (array_optimization_code, array_optimization_name)
 			Result.put_new (assembly_code, assembly_name)
 			Result.put_new (assertion_code, assertion_name)
+			Result.put_new (callback_code, callback_name)
 			Result.put_new (case_insensitive_code, case_insensitive_name)
 			Result.put_new (check_vape_code, check_vape_name)
 			Result.put_new (clean_code, clean_name)
@@ -278,5 +282,6 @@ feature -- Option values
 	require_value: STRING is "require"
 	sequential_value: STRING is "sequential"
 	style_value: STRING is "style"
+	winapi_value: STRING is "winapi"
 
 end

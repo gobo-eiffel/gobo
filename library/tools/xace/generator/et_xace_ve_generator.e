@@ -5,7 +5,7 @@ indexing
 		"Ace file generators for Visual Eiffel"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,6 +17,8 @@ inherit
 	ET_XACE_GENERATOR
 
 	KL_IMPORTED_ARRAY_ROUTINES
+
+	UC_SHARED_STRING_EQUALITY_TESTER
 
 	UT_STRING_ROUTINES
 		export {NONE} all end
@@ -121,6 +123,7 @@ feature {NONE} -- Output
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
 				print_interface_classes (a_clusters, a_file)
+				print_callbacks (a_clusters, a_file)
 			end
 			create an_external.make
 			a_system.merge_externals (an_external)
@@ -164,6 +167,7 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
+				print_callbacks (a_clusters, a_file)
 			end
 			create an_external.make
 			a_library.merge_externals (an_external)
@@ -178,8 +182,8 @@ feature {NONE} -- Output
 				a_file.put_line ("option")
 				a_file.put_new_line
 				print_options (an_option, 1, a_file)
+				a_file.put_new_line
 			end
-			a_file.put_new_line
 			a_file.put_line ("end")
 		end
 
@@ -575,7 +579,8 @@ feature {NONE} -- Output
 			interface_classes: DS_HASH_SET [STRING]
 			an_interface_cursor: DS_SET_CURSOR [STRING]
 		do
-			create interface_classes.make_equal (0)
+			create interface_classes.make_default
+			interface_classes.set_equality_tester (string_equality_tester)
 			merge_interface_classes (interface_classes, a_clusters)
 			if interface_classes.count > 0 then
 				a_file.put_line ("interface")
@@ -622,7 +627,7 @@ feature {NONE} -- Output
 							a_class_options := a_class_cursor.item
 							a_class_name := a_class_options.class_name
 							an_option := a_class_options.options
-							if an_option.layout.is_equal (options.sequential_value) then
+							if STRING_.same_string (an_option.layout, options.sequential_value) then
 								interface_classes.force (a_class_name)
 							end
 							a_class_cursor.forth
@@ -637,6 +642,122 @@ feature {NONE} -- Output
 			end
 		ensure
 			no_void_interface_class: not interface_classes.has (Void)
+		end
+
+	print_callbacks (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print callbacks specified in `a_clusters' and their subclusters to `a_file'.
+		require
+			a_clusters_not_void: a_clusters /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			callbacks: DS_HASH_TABLE [DS_HASH_SET [STRING], STRING]
+			a_callbacks_cursor: DS_HASH_TABLE_CURSOR [DS_HASH_SET [STRING], STRING]
+			a_feature_cursor: DS_HASH_SET_CURSOR [STRING]
+		do
+				-- Callbacks are grouped by class:
+				--    CLASS_1
+				--       feature_1
+				--       ...
+				--       feature_N
+				--    ...
+				--    CLASS_K
+				--    ...
+			create callbacks.make_default
+			callbacks.set_key_equality_tester (string_equality_tester)
+			merge_callbacks (callbacks, a_clusters)
+			if callbacks.count > 0 then
+				a_file.put_line ("callback")
+				a_file.put_new_line
+				a_callbacks_cursor := callbacks.new_cursor
+				from a_callbacks_cursor.start until a_callbacks_cursor.after loop
+					print_indentation (1, a_file)
+					a_file.put_string ("class ")
+					print_escaped_name (a_callbacks_cursor.key, a_file)
+					a_file.put_new_line
+					check feature_set_not_void: a_callbacks_cursor.item /= Void end
+					a_feature_cursor := a_callbacks_cursor.item.new_cursor
+					from a_feature_cursor.start until a_feature_cursor.after loop
+						print_indentation (2, a_file)
+						print_escaped_name (a_feature_cursor.item, a_file)
+						a_file.put_new_line
+						a_feature_cursor.forth
+					end
+					print_indentation (1, a_file)
+					a_file.put_line ("end")
+					a_callbacks_cursor.forth
+				end
+				a_file.put_new_line
+			end
+		end
+	
+	merge_callbacks (callbacks: DS_HASH_TABLE [DS_HASH_SET [STRING], STRING]; a_clusters: ET_XACE_CLUSTERS) is
+			-- Merge callbacks specified in `a_clusters' and
+			-- their subclusters to 'callbacks'.
+		require
+			callbacks_not_void: callbacks /= Void
+			no_void_callback: not callbacks.has (Void)
+			a_clusters_not_void: a_clusters /= Void
+		local
+			i, nb: INTEGER
+			cluster_list: DS_ARRAYED_LIST [ET_XACE_CLUSTER]
+			a_cluster: ET_XACE_CLUSTER
+			a_class_list: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
+			a_class_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_CLASS_OPTIONS]
+			a_class_options: ET_XACE_CLASS_OPTIONS
+			a_class_name: STRING
+			a_feature_list: DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]
+			a_feature_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_FEATURE_OPTIONS]
+			a_feature_options: ET_XACE_FEATURE_OPTIONS
+			an_option: ET_XACE_OPTIONS
+			a_feature_names: DS_HASH_SET [STRING]
+			subclusters: ET_XACE_CLUSTERS
+		do
+			cluster_list := a_clusters.clusters
+			nb := cluster_list.count
+			from i := 1 until i > nb loop
+				a_cluster := cluster_list.item (i)
+				if not a_cluster.is_implicit then
+						-- This cluster has been explicitly declared.
+					a_class_list := a_cluster.class_options
+					if a_class_list /= Void then
+						a_class_cursor := a_class_list.new_cursor
+						from a_class_cursor.start until a_class_cursor.after loop
+							a_class_options := a_class_cursor.item
+							a_class_name := a_class_options.class_name
+							a_feature_list := a_class_options.feature_options
+							if a_feature_list /= Void then
+								a_feature_cursor := a_feature_list.new_cursor
+								from a_feature_cursor.start until a_feature_cursor.after loop
+									a_feature_options := a_feature_cursor.item
+									an_option := a_feature_options.options
+									if an_option.callback /= Void and then STRING_.same_string (an_option.callback, options.winapi_value) then
+										if callbacks.has (a_class_name) then
+											a_feature_names := callbacks.item (a_class_name)
+										else
+											create a_feature_names.make_default
+											a_feature_names.set_equality_tester (string_equality_tester)
+										end
+										check a_feature_names_not_void: a_feature_names /= Void end
+										a_feature_names.force (a_feature_options.feature_name)
+										check no_void_feature_name: not a_feature_names.has (Void) end
+										callbacks.force (a_feature_names, a_class_name)
+									end
+									a_feature_cursor.forth
+								end
+							end
+							a_class_cursor.forth
+						end
+					end
+					subclusters := a_cluster.subclusters
+					if subclusters /= Void then
+						merge_callbacks (callbacks, subclusters)
+					end
+				end
+				i := i + 1
+			end
+		ensure
+			no_void_callback: not callbacks.has (Void)
 		end
 
 	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
