@@ -29,10 +29,8 @@
 			<optimize enable="False"/>
 		</option>
 
-		<cluster name="xconcat2" location="${GOBO}/example/test/concat2">
-			<cluster name="TESTGEN"/>
-		</cluster>
-
+		<cluster name="xconcat2" location="${GOBO}/example/test/concat2"/>
+		<cluster name="TESTGEN"/>
 		<mount location="${GOBO}/library/test/cluster.xace"/>
 		<mount location="${GOBO}/library/kernel/cluster.xace"/>
 		<mount location="${GOBO}/library/structure/cluster.xace"/>
