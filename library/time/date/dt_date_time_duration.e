@@ -68,7 +68,7 @@ creation
 	make_from_date_duration,
 	make_from_date_time_duration
 
-creation {DT_DATE_TIME}
+creation {DT_DATE, DT_DATE_TIME}
 
 	make_canonical_from_dates
 
