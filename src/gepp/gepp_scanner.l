@@ -242,9 +242,26 @@ feature -- Output
 
 	output (a_text: like text) is
 			-- Output `a_text' to `output_file'.
+		local
+			nb: INTEGER
 		do
 			if not ignored then
-				output_file.put_string (a_text)
+				nb := a_text.count
+				if nb > 0 then
+					if a_text.item (nb) = '%N' then
+						nb := nb - 1
+						if nb > 0 and then a_text.item (nb) = '%R' then
+							nb := nb - 1
+						end
+						if nb > 0 then
+							output_file.put_line (a_text.substring (1, nb))
+						else
+							output_file.put_new_line
+						end
+					else
+						output_file.put_string (a_text)
+					end
+				end
 			elseif empty_lines then
 				output_file.put_new_line
 			end
