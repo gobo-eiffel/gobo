@@ -12,7 +12,7 @@
 	<root class="PRINT" creation="make"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
-		<option name="garbage_collector" value="none"/>
+		<option name="garbage_collector" value="internal"/>
 		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
 	</option>
 	<option if="${DEBUG}">
