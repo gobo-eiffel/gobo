@@ -8,7 +8,7 @@
 		<echo message="B" />
 	</target>
 
-	<target name="C" depends="A,B" >
+	<target name="C" depend="A,B" >
 		<echo message="C" />
 	</target>
 

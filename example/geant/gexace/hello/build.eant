@@ -4,7 +4,7 @@
 		<var name="system" value="hello" />
 	</target>
 
-	<target name="compile" depends="init">
+	<target name="compile" depend="init">
 		<description>compiles HELLO</description>
 		<gexace
 			command="build"
@@ -14,12 +14,12 @@
 		/>
 	</target>
 
-	<target name="run" depends="init">
+	<target name="run" depend="init">
 		<description>executes example</description>
 		<exec executable="${system}" />
 	</target>
 
-	<target name="clean" depends="init">
+	<target name="clean" depend="init">
 		<description>deletes generated files</description>
 		<exec executable="clean ${system}" />
 		<exec executable="del ${system}.exe se.ace cecil.se *.bak" />

@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 
 <project name="multiple commands" default="ls" basedir="." >
-	<target name="windows" if="env.windir" >
+	<target name="windows" if="WINDIR" >
 		<var name="copy" value="copy" />
 		<var name="del" value="del" />
 		<var name="dir" value="dir" />
@@ -9,7 +9,7 @@
 		<var name="pathsep" value="\" />
 	</target>
 
-	<target name="unix" unless="env.windir" >
+	<target name="unix" unless="WINDIR" >
 		<var name="cp" value="cp" />
 		<var name="del" value="rm" />
 		<var name="dir" value="ls -l" />
@@ -17,10 +17,10 @@
 		<var name="pathsep" value="/" />
 	</target>
 
-	<target name="init" depends="windows,unix" >
+	<target name="init" depend="windows,unix" >
 	</target>
 
-	<target name="ls" depends="init">
+	<target name="ls" depend="init">
 		<description>print content of current directory</description>
 		<var name="from_dir" value="exec" />
 		<var name="to_dir" value=".." />

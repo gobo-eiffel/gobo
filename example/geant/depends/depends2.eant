@@ -12,7 +12,7 @@
 		<echo message="C" />
 	</target>
 
-	<target name="D" depends="A,B,C" >
+	<target name="D" depend="A,B,C" >
 		<echo message="D" />
 	</target>
 

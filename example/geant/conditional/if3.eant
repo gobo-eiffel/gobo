@@ -1,26 +1,26 @@
 <project name="if_demo" default="list" >
 
-	<target name="windows" if="env.windir" >
+	<target name="windows" if="WINDIR" >
 		<var name="os.windows" value="true" />
 	</target>
 
-	<target name="unix" unless="env.windir" >
+	<target name="unix" unless="WINDIR" >
 		<var name="os.unix" value="true" />
 	</target>
 
-	<target name="init" depends="windows,unix" >
+	<target name="init" depend="windows,unix" >
 	</target>
 
 
-	<target name="list_for_windows" depends="init" if="os.windows" >
+	<target name="list_for_windows" depend="init" if="os.windows" >
 		<exec executable="dir" />
 	</target>
 
-	<target name="list_for_unix" depends="init"  if="os.unix" >
+	<target name="list_for_unix" depend="init"  if="os.unix" >
 		<exec executable="ls -l" />
 	</target>
 
-	<target name="list" depends="list_for_windows,list_for_unix" >
+	<target name="list" depend="list_for_windows,list_for_unix" >
 	</target>
 
 </project>

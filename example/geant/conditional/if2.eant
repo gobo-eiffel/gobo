@@ -1,14 +1,14 @@
 <project name="if_demo" default="list" >
 
-	<target name="list_for_windows" if="env.windir" >
+	<target name="list_for_windows" if="WINDIR" >
 		<exec executable="dir" />
 	</target>
 
-	<target name="list_for_unix" unless="env.windir" >
+	<target name="list_for_unix" unless="WINDIR" >
 		<exec executable="ls -l" />
 	</target>
 
-	<target name="list" depends="list_for_windows,list_for_unix" >
+	<target name="list" depend="list_for_windows,list_for_unix" >
 	</target>
 
 </project>

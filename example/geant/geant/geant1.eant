@@ -3,13 +3,15 @@
 		<description>calls other ant files</description>
 		<var name="who" value="Bart" />
 
+		<var name="buildfile" value="../variables/variables5.eant" />
+
 		<echo message="------------------------" />
-		<echo message="before call of ../variables/variables1.eant" />
-		<geant file="../variables/variables1.eant" />
-		<echo message="after call of ../variables/variables1.eant" />
+		<echo message="before call of ${buildfile}" />
+		<geant file="${buildfile}" />
+		<echo message="after call of ${buildfile}" />
 		<echo message="-------" />
-		<echo message="before call of ../variables/variables1.eant" />
-		<geant file="../variables/variables1.eant" reuse_variables="true"/> 
-		<echo message="after call of ../variables/variables1.eant" />
+		<echo message="before call of ${buildfile}" />
+		<geant file="${buildfile}" reuse_variables="true"/> 
+		<echo message="after call of ${buildfile}" />
 	</target>
 </project>
