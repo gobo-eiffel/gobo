@@ -16,6 +16,9 @@ inherit
 
 	GEANT_COMMAND
 
+	KL_IMPORTED_BOOLEAN_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -51,15 +54,11 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result :=
-				(is_file_executable and not is_directory_executable and not is_fileset_executable) or
-				(not is_file_executable and is_directory_executable and not is_fileset_executable) or
-				(not is_file_executable and not is_directory_executable and is_fileset_executable)
+			Result := BOOLEAN_.nxor (<<is_file_executable,
+				is_directory_executable, is_fileset_executable>>)
 		ensure then
-			file_xor_directory: Result implies (
-				(is_file_executable and not is_directory_executable and not is_fileset_executable) or
-				(not is_file_executable and is_directory_executable and not is_fileset_executable) or
-				(not is_file_executable and not is_directory_executable and is_fileset_executable))
+			exclusive: Result implies BOOLEAN_.nxor (<<is_file_executable,
+				is_directory_executable, is_fileset_executable>>)
 		end
 
 feature -- Access
