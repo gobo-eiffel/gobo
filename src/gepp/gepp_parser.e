@@ -5,7 +5,7 @@ indexing
 		"Parsers for 'gepp' preprocessors"
 
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	copyright:  "Copyright (c) 1998, Eric Bezault"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -16,6 +16,8 @@ inherit
 	YY_PARSER_SKELETON [ANY]
 		rename
 			make as make_parser_skeleton
+		redefine
+			report_error
 		end
 
 	GEPP_SCANNER
@@ -23,8 +25,6 @@ inherit
 			make as make_gepp_scanner,
 			reset as reset_gepp_scanner
 		end
-
-	KL_SHARED_EXCEPTIONS
 
 creation
 
@@ -59,7 +59,7 @@ feature {NONE} -- Tables
 
 	yytranslate_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -91,21 +91,21 @@ feature {NONE} -- Tables
 
 	yyr1_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
     19,    20,    20,    20,    21,    21,    21,    21,    21,    22,
     22,    23,    23,    23,    23,    23,    24,    25>>, 0)
 		end
 
 	yyr2_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<0,
+			Result := INTEGER_ARRAY_.make_from_array (<<0,
      1,     0,     1,     2,     3,     5,     3,     3,     3,     3,
      3,     1,     3,     3,     3,     2,     2,     2>>, 0)
 		end
 
 	yydefact_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<     2,
+			Result := INTEGER_ARRAY_.make_from_array (<<     2,
      0,     0,     0,     0,     0,     1,     3,     2,    12,     0,
      0,     0,     0,     0,     0,     0,     4,     0,    16,     0,
     10,     0,     0,    11,     9,     7,     8,     0,     0,     5,
@@ -115,13 +115,13 @@ feature {NONE} -- Tables
 
 	yydefgoto_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<    39,
+			Result := INTEGER_ARRAY_.make_from_array (<<    39,
      6,     7,     8,    12,    30,    31>>, 0)
 		end
 
 	yypact_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<    12,
+			Result := INTEGER_ARRAY_.make_from_array (<<    12,
     -3,    -3,    -5,    -2,     1,    12,-32768,    12,-32768,    -3,
     -3,    29,    33,     8,     9,    18,-32768,    22,-32768,   -11,
 -32768,    -3,    -3,-32768,-32768,-32768,-32768,    27,    28,-32768,
@@ -131,7 +131,7 @@ feature {NONE} -- Tables
 
 	yypgoto_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<-32768,
+			Result := INTEGER_ARRAY_.make_from_array (<<-32768,
     -7,    -6,-32768,     0,    14,-32768>>, 0)
 		end
 
@@ -139,7 +139,7 @@ feature {NONE} -- Tables
 
 	yytable_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<    17,
+			Result := INTEGER_ARRAY_.make_from_array (<<    17,
     18,    13,    22,    23,     9,    15,    32,    14,    16,    19,
     20,    17,    10,    11,     1,     2,     3,     4,     5,    25,
     26,    33,    34,    37,     1,     2,     3,     4,     5,    27,
@@ -150,7 +150,7 @@ feature {NONE} -- Tables
 
 	yycheck_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<     6,
+			Result := INTEGER_ARRAY_.make_from_array (<<     6,
      8,     2,    14,    15,     8,     8,    18,    13,     8,    10,
     11,    18,    16,    17,     3,     4,     5,     6,     7,    12,
     12,    22,    23,    31,     3,     4,     5,     6,     7,    12,
@@ -265,13 +265,18 @@ when 18 then
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_handler: like error_handler) is
 			-- Create a new parser.
+		require
+			a_handler_not_void: a_handler /= Void
 		do
 			make_gepp_scanner
 			make_parser_skeleton
+			error_handler := a_handler
 			!! defined_values.make (10)
 			!! include_stack.make (Max_include_depth)
+		ensure
+			error_handler_set: error_handler = a_handler
 		end
 
 feature -- Initialization
@@ -292,7 +297,7 @@ feature -- Parsing
 			-- Parse scanner description from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: input_stream_.is_open_read (a_file)
+			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
 		do
 			set_input_buffer (new_file_buffer (a_file))
 			parse
@@ -317,24 +322,46 @@ feature -- Processing
 			a_filename_not_empty: not a_filename.empty
 		local
 			a_file: like INPUT_STREAM_TYPE
+			cannot_read: UT_CANNOT_READ_FILE_ERROR
+			too_many_includes: GEPP_TOO_MANY_INCLUDES_ERROR
 		do
 			if include_stack.count < Max_include_depth then
-				a_file := input_stream_.make_file_open_read (a_filename)
-				if input_stream_.is_open_read (a_file) then
+				a_file := INPUT_STREAM_.make_file_open_read (a_filename)
+				if INPUT_STREAM_.is_open_read (a_file) then
 					include_stack.put (input_buffer)
 					set_input_buffer (new_file_buffer (a_file))
 				else
-					std.error.put_string ("gepp: cannot open %'")
-					std.error.put_string (a_filename)
-					std.error.put_string ("%'%N")
-					exceptions_.die (1)
+					!! cannot_read.make (a_filename)
+					error_handler.report_error (cannot_read)
+					arbort
 				end
 			else
-				std.error.put_string ("gepp: too many (i.e. ")
-				std.error.put_integer (include_stack.count + 1)
-				std.error.put_string (") nested include files")
-				exceptions_.die (1)
+				!! too_many_includes.make (include_stack.count + 1)
+				error_handler.report_error (too_many_includes)
+				arbort
 			end
+		end
+
+feature -- Error handling
+
+	error_handler: UT_ERROR_HANDLER
+			-- Error handler
+
+	report_error (a_message: STRING) is
+			-- Report a syntax error.
+		local
+			an_error: UT_SYNTAX_ERROR
+			file_buffer: YY_FILE_BUFFER
+			filename: STRING
+		do
+			file_buffer ?= input_buffer
+			if file_buffer /= Void then
+				filename := INPUT_STREAM_.name (file_buffer.file)
+			else
+				filename := "string"
+			end
+			!! an_error.make (filename, line_nb)
+			error_handler.report_error (an_error)
 		end
 
 feature -- Status report
@@ -412,6 +439,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+	error_handler_not_void: error_handler /= Void
 	defined_values_not_void: defined_values /= Void
 	no_void_defined_value: not defined_values.has_item (Void)
 
