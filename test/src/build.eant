@@ -173,12 +173,16 @@
 			in all subdirectories.
 		</description>
 
+		<geant file="build.eant" target="${target}" dir="geant"/>
+		<geant file="build.eant" target="clean" dir="geant" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="gelex"/>
 		<geant file="build.eant" target="clean" dir="gelex" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="gepp"/>
 		<geant file="build.eant" target="clean" dir="gepp" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="getest"/>
 		<geant file="build.eant" target="clean" dir="getest" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="gexace"/>
+		<geant file="build.eant" target="clean" dir="gexace" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="geyacc"/>
 		<geant file="build.eant" target="clean" dir="geyacc" if="${do_clean}"/>
 	</target>
