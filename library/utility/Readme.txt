@@ -16,6 +16,10 @@ formatter
     Formatter classes for IO operations or string handling.
 support
     Miscellaneous classes.
+transcoder
+    Base64 encoding and decoding.
+uri
+    URI classes.
 
 A more detailed documentation for this library will be provided in
 future releases.

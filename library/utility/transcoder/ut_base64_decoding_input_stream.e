@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Input streams that decode an base64-encoded stream"
+		"Input streams that decode a base64-encoded stream"
 
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
@@ -13,7 +13,7 @@ indexing
 class UT_BASE64_DECODING_INPUT_STREAM
 
 inherit
-	
+
 	KL_PROXY_CHARACTER_INPUT_STREAM
 		redefine
 			make, end_of_input, read_string,
@@ -31,10 +31,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_underlying_stream: like base_stream) is
-			-- Establish invariant.
+	make (a_stream: like base_stream) is
+			-- Create a new base64 decoding stream.
 		do
-			Precursor (an_underlying_stream)
+			Precursor (a_stream)
 			create codes.make (1, 4)
 			create decoded_triplet.make_filled (' ', 3)
 			triplet_position := 4
@@ -88,7 +88,7 @@ feature -- Input
 			-- This item will be read first by the next
 			-- call to a read routine.
 		do
-			-- Not supported
+			-- Not supported: too difficult to implement.
 		end
 
 feature -- Access
@@ -107,19 +107,17 @@ feature -- Status report
 	valid_unread_character (a_character: CHARACTER): BOOLEAN is
 			-- Can `a_character' be put back in input stream?
 		do
-
-			-- I'm not going to attempt this, as it's hard!
-
+				-- Not supported: too difficult to implement.
 			Result := False
 		end
 
 feature {NONE} -- Implementation
 
 	decoded_triplet: STRING
-			-- Characters decoded by `decode_24_bits'.
+			-- Characters decoded by `read_24_bits'
 
 	triplet_position: INTEGER
-			-- Position in `decoded_triplet'.
+			-- Position in `decoded_triplet'
 
 	codes: ARRAY [INTEGER]
 			-- Array of 4 6-bit codes
@@ -130,12 +128,12 @@ feature {NONE} -- Implementation
 			Result := decoded_character (c) >= 0
 		end
 
-	decoded_character (ch: CHARACTER): INTEGER is
+	decoded_character (c: CHARACTER): INTEGER is
 			-- Decoded character;
-			-- Returns -1 if `ch' is an ignorable character.
-			-- Returns -2 if `ch' is an invalid character.
+			-- Returns -1 if `c' is an ignorable character.
+			-- Returns -2 if `c' is an invalid character.
 		do
-			inspect ch
+			inspect c
 			when 'A' then Result := 0
 			when 'B' then Result := 1
 			when 'C' then Result := 2
@@ -206,32 +204,27 @@ feature {NONE} -- Implementation
 				Result := -2
 			end
 		ensure
-			valid_result: Result >= -2 and Result < 64
+			valid_decoded_character: Result >= -2 and Result < 64
 		end
-
-	shift_2_bits: INTEGER is 4
-	shift_4_bits: INTEGER is 16
-	shift_6_bits: INTEGER is 64
 
 	read_24_bits is
 			-- Read the next four characters, decode them, and make the
 			-- decoded characters available in `decoded_triplet'.
-			-- Sets `end_of_input' if premature end of input reached.
-			-- Sets `triplet_position' to the first character.
-			-- It ignores invalid characters.
+			-- Set `end_of_input' if premature end of input reached.
+			-- Set `triplet_position' to the first character.
+			-- Ignore invalid characters.
 		local
 			c: CHARACTER
 			i: INTEGER
 			a_code: INTEGER
 		do
-			-- Fill `codes' with four 6-bit values.
+				-- Fill `codes' with four 6-bit values.
 			triplet_position := 1
 			from
 				i := 1
 				base_stream.read_character
 			until
-				base_stream.end_of_input or else
-				i > 4
+				i > 4 or base_stream.end_of_input
 			loop
 				c := base_stream.last_character
 				if c = '=' then
@@ -240,9 +233,9 @@ feature {NONE} -- Implementation
 				a_code := decoded_character (c)
 				inspect a_code
 				when -1 then
-					-- white space, ignore
+					-- White space, ignore.
 				when -2 then
-					-- bad base64 stream
+					-- Bad base64 stream.
 				else
 					codes.put (a_code, i)
 					i := i + 1
@@ -251,9 +244,8 @@ feature {NONE} -- Implementation
 					base_stream.read_character
 				end
 			end
-
-			-- Bit-shift `codes' into 3 characters
-			if i = 5 and then triplet_position <= 3 then
+				-- Bit-shift `codes' into 3 characters.
+			if i > 4 and triplet_position <= 3 then
 				a_code := (codes.item (1) * shift_2_bits) + (codes.item (2) // shift_4_bits)
 				decoded_triplet.put (INTEGER_.to_character (a_code), triplet_position)
 				if triplet_position < 3 then
@@ -271,10 +263,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Constants
+
+	shift_2_bits: INTEGER is 4
+	shift_4_bits: INTEGER is 16
+	shift_6_bits: INTEGER is 64
+
 invariant
 
-	decoded_triplet_has_three_characters: decoded_triplet /= Void and then decoded_triplet.count = 3
+	decoded_triplet_not_void: decoded_triplet /= Void
+	decoded_triplet_count: decoded_triplet.count = 3
 	valid_triplet_position: triplet_position >= 1 and triplet_position <= 4
 
 end
-	

@@ -13,7 +13,7 @@ indexing
 class UT_BASE64_ENCODING_OUTPUT_STREAM
 
 inherit
-	
+
 	KL_PROXY_CHARACTER_OUTPUT_STREAM
 		rename
 			make as make_base
@@ -27,17 +27,17 @@ creation
 	make
 
 feature {NONE} -- Initialization
-	
-	make (an_underlying_stream: like base_stream; output_line_breaks: BOOLEAN) is
-			-- Establish invariant.
+
+	make (a_stream: like base_stream; output_line_breaks: BOOLEAN) is
+			-- Create a new base64 encoding stream.
 		do
-			make_base (an_underlying_stream)
+			make_base (a_stream)
 			is_line_breaking := output_line_breaks
 			create triplet.make (1, 3)
 			triplet_position := 1
 		ensure
 			line_breaking: is_line_breaking = output_line_breaks
-			base_stream_set: base_stream = an_underlying_stream
+			base_stream_set: base_stream = a_stream
 		end
 
 feature -- Status report
@@ -81,17 +81,12 @@ feature -- Output
 	put_string (a_string: STRING) is
 			-- Write `a_string' to output stream.
 		local
-			an_index: INTEGER
+			i, nb: INTEGER
 		do
-			from
-				an_index := 1
-			variant
-				a_string.count + 1 - an_index
-			until
-				an_index > a_string.count
-			loop
-				put_character (a_string.item (an_index))
-				an_index := an_index + 1
+			nb := a_string.count
+			from i := 1 until i > nb loop
+				put_character (a_string.item (i))
+				i := i + 1
 			end
 		end
 
@@ -100,7 +95,7 @@ feature -- Basic operations
 	flush is
 			-- Flush buffered data to disk.
 		do
-			-- no-op as we might not have a full quartet ready for output
+			-- No-op as we might not have a full quartet ready for output.
 		end
 
 	close is
@@ -108,7 +103,8 @@ feature -- Basic operations
 			-- `is_open_write' to false if operation was successful.
 		do
 			if triplet_position /= 1 then
-				write_quartet -- padding will take place
+					-- Padding will take place.
+				write_quartet
 			end
 			if base_stream.is_closable then
 				base_stream.close
@@ -116,16 +112,6 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
-
-	Full_line_count: INTEGER is 76
-			-- Maximum line length
-
-	shift_2_bits: INTEGER is 4
-	shift_4_bits: INTEGER is 16
-	shift_6_bits: INTEGER is 64
-
-	padding: INTEGER is 64
-			-- Pad character ('=')
 
 	line_count: INTEGER
 			-- Number of characters output in current line
@@ -143,7 +129,7 @@ feature {NONE} -- Implementation
 			-- Write `c' to `triplet'.
 		do
 			triplet.put (c, triplet_position)
-			triplet_position := 1 + triplet_position
+			triplet_position := triplet_position + 1
 			if triplet_position = 4 then
 				triplet_position := 1
 				write_quartet
@@ -153,7 +139,7 @@ feature {NONE} -- Implementation
 	write_quartet is
 			-- Write a quartet (padded, if necessary) to `base_stream'.
 		require
-			stream_is_open: is_open_write
+			is_open_write: is_open_write
 		local
 			a_code, another_code, a_remainder: INTEGER
 		do
@@ -195,15 +181,27 @@ feature {NONE} -- Implementation
 			base_stream.put_character (base64_alphabet.item (c))
 			if is_line_breaking then
 				line_count := line_count + 1
-				if line_count = Full_line_count then
+				if line_count = full_line_count then
 					line_count := 0
 					base_stream.put_character ('%N')
 				end
 			end
 		end
 
+feature -- Constants
+
+	full_line_count: INTEGER is 76
+			-- Maximum line length
+
+	shift_2_bits: INTEGER is 4
+	shift_4_bits: INTEGER is 16
+	shift_6_bits: INTEGER is 64
+
+	padding: INTEGER is 64
+			-- Pad character ('=')
+
 	base64_alphabet: ARRAY [CHARACTER] is
-			-- base64 alphabet
+			-- Base64 alphabet
 		once
 			create Result.make (0, 64)
 			Result.put ('A', 0)
@@ -275,8 +273,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	triplet_is_three_characters: triplet /= Void and then triplet.count = 3
+	triplet_not_void: triplet /= Void
+	triplet_count: triplet.count = 3
 	triplet_position_in_range: triplet_position >= 1 and then triplet_position <= 3
 
 end
-	

@@ -10,7 +10,7 @@ indexing
 		% Lower_a_code: INTEGER is 97 %
 		%rather than once functions such as %
 		% Lower_a_code is once Result := ('a').code end %
-		%This is due to the fact that these character codes need to be%
+		%This is due to the fact that these character codes need to be %
 		%integer constants in order to appear in multi-branch instructions."
 
 	library: "Gobo Eiffel Utility Library"

@@ -150,8 +150,8 @@
 		</description>
 
 		<geant file="build.eant" target="${target}" dir="uri"/>
-		<geant file="build.eant" target="${target}" dir="transcoder"/>
 		<geant file="build.eant" target="clean" dir="uri" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="transcoder"/>
 		<geant file="build.eant" target="clean" dir="transcoder" if="${do_clean}"/>
 	</target>
 
