@@ -46,7 +46,7 @@ creation
 %type <STRING> value_reference entity_value_reference
 %type <STRING> comment_content comment_content_item pi_content_first pi_content_trail pi_content_item
 %type <STRING> cdata_body content_text
-%type <XM_DTD_EXTERNAL_ID> external_id public_id
+%type <XM_DTD_EXTERNAL_ID> external_id public_id doctype_decl_external_name
 %type <STRING> ndata_decl doctype_name_space
 %type <XM_DTD_ELEMENT_CONTENT> content_spec children cp choice choice_trail seq seq_trail mixed mixed_trail
 %type <STRING> repetition 
@@ -422,18 +422,29 @@ doctype_decl: doctype_decl_internal
 	| doctype_decl_external doctype_decl_dtd
 	;
 
-doctype_decl_internal: DOCTYPE_START req_space doctype_name maybe_space doctype_decl_declaration DOCTYPE_END
-	{ on_doctype ($3, Void, True) }
+doctype_decl_internal_name: doctype_name maybe_space 
+		{ on_doctype ($1, Void, True) }
+	;
+	
+doctype_decl_internal: DOCTYPE_START req_space doctype_decl_internal_name doctype_decl_declaration DOCTYPE_END
+		{ on_dtd_end }
 	;
 
-doctype_decl_external: DOCTYPE_START req_space doctype_name req_space external_id maybe_space doctype_decl_declaration DOCTYPE_END
+doctype_decl_external_name: doctype_name req_space external_id maybe_space
+		{ 
+			on_doctype ($1, $3, False) 
+			$$ := $3
+		}
+	;
+	
+doctype_decl_external: DOCTYPE_START req_space doctype_decl_external_name doctype_decl_declaration DOCTYPE_END
 		{
-			on_doctype ($3, $5, False)
 			debug ("xml_parser")
 				std.error.put_string ("[dtd: in]")
 			end
 			in_external_dtd := True
-			when_external_dtd ($5) 
+			when_external_dtd ($3) 
+			on_dtd_end
 		}
 	;
 
