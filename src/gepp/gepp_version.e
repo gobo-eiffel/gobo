@@ -14,6 +14,6 @@ class GEPP_VERSION
 
 feature -- Constants
 
-	Version_number: STRING is "1.5"
+	Version_number: STRING is "1.6"
 
 end -- class GEPP_VERSION
