@@ -196,6 +196,11 @@ feature -- Execution
 				trace ("  [ise] delete " + a_name + "%N")
 				file_system.delete_file (a_name)
 			end
+			a_name := "exception_trace.log"
+			if file_system.is_file_readable (a_name) then
+				trace ("  [ise] delete " + a_name + "%N")
+				file_system.delete_file (a_name)
+			end
 			if file_system.is_directory_readable ("EIFGEN") then
 				!! a_dir.make ("EIFGEN")
 				trace ("  [ise] delete EIFGEN%N")
