@@ -384,6 +384,9 @@ feature -- Processing
 			elseif STRING_.same_string (a_xml_element.name, Precursor_task_name) then
 					-- precursor
 				!GEANT_PRECURSOR_TASK! a_task.make (project, a_xml_element)
+			elseif STRING_.same_string (a_xml_element.name, Available_task_name) then
+					-- available
+				!GEANT_AVAILABLE_TASK! a_task.make (project, a_xml_element)
 			else
 					-- Default:
 				a_task := Void

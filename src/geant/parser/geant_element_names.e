@@ -259,4 +259,13 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
+	Available_task_name: STRING is
+			-- "available" task name
+		once
+			Result := "available"
+		ensure
+			task_name_not_void: Result /= Void
+			task_name_not_empty: Result.count > 0
+		end
+
 end
