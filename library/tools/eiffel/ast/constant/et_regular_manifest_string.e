@@ -53,20 +53,6 @@ feature -- Access
 			create {ET_COMPRESSED_POSITION} Result.make (line, column + value.count + 1)
 		end
 
-feature -- Status report
-
-	computed: BOOLEAN is True
-			-- Has manifest string been succesfully computed?
-
-feature -- Compilation
-
-	compute (error_handler: ET_ERROR_HANDLER) is
-			-- Compute manifest string, expand special characters.
-			-- Make result available in `value'.
-		do
-			-- Do nothing.
-		end
-
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
@@ -78,6 +64,5 @@ feature -- Processing
 invariant
 
 	-- valid_literal: ([^"%\n]*).recognizes (literal)
-	value_not_void: value /= Void
 
 end

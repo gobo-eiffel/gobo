@@ -5,7 +5,7 @@ indexing
 		"Eiffel character constants of the form '%%/code/'"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,16 +22,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_literal: like literal) is
+	make (a_literal: like literal; a_value: CHARACTER) is
 			-- Create a new character constant.
 		require
 			a_literal_not_void: a_literal /= Void
-			-- valid_literal: ([0-9]+).recognizes (a_literal)
+			-- valid_literal: ([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]).recognizes (a_literal)
 		do
 			literal := a_literal
+			value := a_value
 			make_leaf
 		ensure
 			literal_set: literal = a_literal
+			value_set: value = a_value
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -58,6 +60,6 @@ feature -- Processing
 invariant
 
 	literal_not_void: literal /= Void
-	-- valid_literal: ([0-9]+).recognizes (literal)
+	-- valid_literal: ([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]).recognizes (literal)
 
 end

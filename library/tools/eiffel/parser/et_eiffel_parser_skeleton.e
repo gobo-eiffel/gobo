@@ -959,13 +959,10 @@ feature {NONE} -- AST factory
 			-- New infix free feature name
 		do
 			if an_operator /= Void then
-				an_operator.compute (error_handler)
-				if an_operator.computed then
-					if an_operator.value.count > 0 then
-						Result := ast_factory.new_infix_free_name (a_prefix, an_operator)
-					else
-						-- TODO: error.
-					end
+				if an_operator.value.count > 0 then
+					Result := ast_factory.new_infix_free_name (a_prefix, an_operator)
+				else
+					-- TODO: error.
 				end
 			else
 				Result := ast_factory.new_infix_free_name (a_prefix, an_operator)
@@ -1121,13 +1118,10 @@ feature {NONE} -- AST factory
 			-- New prefix free feature name
 		do
 			if an_operator /= Void then
-				an_operator.compute (error_handler)
-				if an_operator.computed then
-					if an_operator.value.count > 0 then
-						Result := ast_factory.new_prefix_free_name (a_prefix, an_operator)
-					else
-						-- TODO: error.
-					end
+				if an_operator.value.count > 0 then
+					Result := ast_factory.new_prefix_free_name (a_prefix, an_operator)
+				else
+					-- TODO: error.
 				end
 			else
 				Result := ast_factory.new_prefix_free_name (a_prefix, an_operator)

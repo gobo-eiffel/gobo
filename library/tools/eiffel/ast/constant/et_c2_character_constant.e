@@ -35,9 +35,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: CHARACTER
-			-- Character value
-
 	literal: CHARACTER is
 			-- Character A such as '%A' is current character
 		do

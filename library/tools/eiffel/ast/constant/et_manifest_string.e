@@ -75,27 +75,9 @@ feature -- Status report
 	is_string_constant: BOOLEAN is True
 			-- Is current constant a STRING constant?
 
-	computed: BOOLEAN is
-			-- Has manifest string been succesfully computed?
-		deferred
-		ensure
-			definition: Result = (value /= Void)
-		end
-
-feature -- Compilation
-
-	compute (error_handler: ET_ERROR_HANDLER) is
-			-- Compute manifest string, expand special characters.
-			-- Make result available in `value'.
-		require
-			error_handler_not_void: error_handler /= Void
-		deferred
-		ensure
-			computed: computed
-		end
-
 invariant
 
 	literal_not_void: literal /= Void
+	value_not_void: value /= Void
 
 end

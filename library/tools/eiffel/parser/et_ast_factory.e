@@ -16,6 +16,12 @@ inherit
 
 	ET_SHARED_TOKEN_CONSTANTS
 
+	UT_CHARACTER_CODES
+		export {NONE} all end
+
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -961,12 +967,26 @@ feature -- AST leaves
 		end
 
 	new_c3_character_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C3_CHARACTER_CONSTANT is
-			-- New character constant of the form '%/code/`'
+			-- New character constant of the form '%/code/'
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ([0-9]+).recognizes (a_scanner.last_literal)
+			-- valid_literal: ([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]).recognizes (a_scanner.last_literal)
+		local
+			l_literal: STRING
+			l_value: CHARACTER
+			i, nb: INTEGER
+			c: CHARACTER
+			l_code: INTEGER
 		do
-			create Result.make (a_scanner.last_literal)
+			l_literal := a_scanner.last_literal
+			nb := l_literal.count
+			from i := 1 until i > nb loop
+				c := l_literal.item (i)
+				l_code := l_code * 10 + c.code - Zero_code
+				i := i + 1
+			end
+			l_value := INTEGER_.to_character (l_code)
+			create Result.make (l_literal, l_value)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1043,9 +1063,122 @@ feature -- AST leaves
 			-- New manifest string with special characters
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (a_scanner.last_literal)
+			-- valid_literal: (([^"%\n]|%([^\n]|\/([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (a_scanner.last_literal)
+		local
+			l_literal, l_value: STRING
+			i, nb: INTEGER
+			c: CHARACTER
+			l_code: INTEGER
 		do
-			create Result.make (a_scanner.last_literal)
+			l_literal := a_scanner.last_literal
+			nb := l_literal.count
+			create l_value.make (nb)
+			from i := 1 until i > nb loop
+				c := l_literal.item (i)
+				if c = '%%' then
+					i := i + 1
+					c := l_literal.item (i)
+					inspect c
+					when 'N' then
+						l_value.append_character ('%N')
+					when 'T' then
+						l_value.append_character ('%T')
+					when 'U' then
+						l_value.append_character ('%U')
+					when 'R' then
+						l_value.append_character ('%R')
+					when 'A' then
+						l_value.append_character ('%A')
+					when 'B' then
+						l_value.append_character ('%B')
+					when 'C' then
+						l_value.append_character ('%C')
+					when 'D' then
+						l_value.append_character ('%D')
+					when 'F' then
+						l_value.append_character ('%F')
+					when 'H' then
+						l_value.append_character ('%H')
+					when 'L' then
+						l_value.append_character ('%L')
+					when 'Q' then
+						l_value.append_character ('%Q')
+					when 'S' then
+						l_value.append_character ('%S')
+					when 'V' then
+						l_value.append_character ('%V')
+					when '%%' then
+						l_value.append_character ('%%')
+					when '%'' then
+						l_value.append_character ('%'')
+					when '%"' then
+						l_value.append_character ('%"')
+					when '(' then
+						l_value.append_character ('%(')
+					when ')' then
+						l_value.append_character ('%)')
+					when '<' then
+						l_value.append_character ('%<')
+					when '>' then
+						l_value.append_character ('%>')
+					when '/' then
+						from
+							i := i + 1
+							c := l_literal.item (i)
+						until 
+							c = '/'
+						loop
+							l_code := l_code * 10 + c.code - Zero_code
+							i := i + 1
+							c := l_literal.item (i)
+						end
+						l_value.append_character (INTEGER_.to_character (l_code))
+					when '%N', '%R', ' ', '%T'  then
+						from
+							i := i + 1
+						until 
+							l_literal.item (i) = '%%'
+						loop
+							i := i + 1
+						end
+					when 'n' then
+						l_value.append_character ('%N')
+					when 't' then
+						l_value.append_character ('%T')
+					when 'u' then
+						l_value.append_character ('%U')
+					when 'r' then
+						l_value.append_character ('%R')
+					when 'a' then
+						l_value.append_character ('%A')
+					when 'b' then
+						l_value.append_character ('%B')
+					when 'c' then
+						l_value.append_character ('%C')
+					when 'd' then
+						l_value.append_character ('%D')
+					when 'f' then
+						l_value.append_character ('%F')
+					when 'h' then
+						l_value.append_character ('%H')
+					when 'l' then
+						l_value.append_character ('%L')
+					when 'q' then
+						l_value.append_character ('%Q')
+					when 's' then
+						l_value.append_character ('%S')
+					when 'v' then
+						l_value.append_character ('%V')
+					else
+						l_value.append_character (c)
+					end
+					i := i + 1
+				else
+					l_value.append_character (c)
+					i := i + 1
+				end
+			end
+			create Result.make (l_literal, l_value)
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1983,7 +2116,7 @@ feature -- AST nodes
 	new_infix_free_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME is
 			-- New infix free feature name
 		require
-			an_operator_computed: an_operator /= Void implies (an_operator.computed and then an_operator.value.count > 0)
+			an_operator_computed: an_operator /= Void implies an_operator.value.count > 0
 		do
 			if an_operator /= Void then
 				create Result.make (an_operator)
@@ -2520,7 +2653,7 @@ feature -- AST nodes
 	new_prefix_free_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_PREFIX_FREE_NAME is
 			-- New prefix free feature name
 		require
-			an_operator_computed: an_operator /= Void implies (an_operator.computed and then an_operator.value.count > 0)
+			an_operator_computed: an_operator /= Void implies an_operator.value.count > 0
 		do
 			if an_operator /= Void then
 				create Result.make (an_operator)

@@ -44,4 +44,9 @@ feature -- Status report
 	is_character_constant: BOOLEAN is True
 			-- Is current constant a CHARACTER constant?
 
+feature -- Access
+
+	value: CHARACTER
+			-- Character value
+
 end

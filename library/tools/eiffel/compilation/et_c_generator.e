@@ -711,16 +711,10 @@ feature {NONE} -- Feature generation
 			end
 			l_language := a_feature.language
 			l_language_value := l_language.manifest_string
-			if not l_language_value.computed then
-				l_language_value.compute (error_handler)
-			end
 			if STRING_.same_case_insensitive (l_language_value.value, e_inline) then
 				l_alias := a_feature.alias_clause
 				if l_alias /= Void then
 					l_alias_value := l_alias.manifest_string
-					if not l_alias_value.computed then
-						l_alias_value.compute (error_handler)
-					end
 					l_c_code := l_alias_value.value
 					l_formal_arguments := a_feature.arguments
 					if l_formal_arguments /= Void then
@@ -1728,20 +1722,12 @@ feature {NONE} -- Expression generation
 -- TODO.
 		end
 
-	print_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
-			-- Print `a_constant'.
-		require
-			a_constant_not_void: a_constant /= Void
-		local
-			c: CHARACTER
+	print_character (a_character: CHARACTER) is
+			-- Print `a_character'.
 		do
-			print_type_cast (current_system.character_type)
-			current_file.put_character ('(')
-			current_file.put_character ('%'')
-			c := a_constant.value
-			inspect c
+			inspect a_character
 			when ' ', '!', '#', '$', '&', '('..'[', ']'..'~' then
-				current_file.put_character (c)
+				current_file.put_character (a_character)
 			when '%N' then
 				current_file.put_character ('\')
 				current_file.put_character ('n')
@@ -1762,53 +1748,11 @@ feature {NONE} -- Expression generation
 				current_file.put_character ('%"')
 			else
 				current_file.put_character ('\')
-				INTEGER_FORMATTER_.put_octal_integer (current_file, c.code)
+				INTEGER_FORMATTER_.put_octal_integer (current_file, a_character.code)
 			end
-			current_file.put_character ('%'')
-			current_file.put_character (')')
 		end
 
-	print_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
-			-- Print `a_constant'.
-		require
-			a_constant_not_void: a_constant /= Void
-		local
-			c: CHARACTER
-		do
-			print_type_cast (current_system.character_type)
-			current_file.put_character ('(')
-			current_file.put_character ('%'')
-			c := a_constant.value
-			inspect c
-			when ' ', '!', '#', '$', '&', '('..'[', ']'..'~' then
-				current_file.put_character (c)
-			when '%N' then
-				current_file.put_character ('\')
-				current_file.put_character ('n')
-			when '%R' then
-				current_file.put_character ('\')
-				current_file.put_character ('r')
-			when '%T' then
-				current_file.put_character ('\')
-				current_file.put_character ('t')
-			when '\' then
-				current_file.put_character ('\')
-				current_file.put_character ('\')
-			when '%'' then
-				current_file.put_character ('\')
-				current_file.put_character ('%'')
-			when '%"' then
-				current_file.put_character ('\')
-				current_file.put_character ('%"')
-			else
-				current_file.put_character ('\')
-				INTEGER_FORMATTER_.put_octal_integer (current_file, c.code)
-			end
-			current_file.put_character ('%'')
-			current_file.put_character (')')
-		end
-
-	print_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
+	print_character_constant (a_constant: ET_CHARACTER_CONSTANT) is
 			-- Print `a_constant'.
 		require
 			a_constant_not_void: a_constant /= Void
@@ -1816,9 +1760,7 @@ feature {NONE} -- Expression generation
 			print_type_cast (current_system.character_type)
 			current_file.put_character ('(')
 			current_file.put_character ('%'')
-			current_file.put_character ('\')
--- TODO
-			INTEGER_FORMATTER_.put_octal_integer (current_file, a_constant.literal.to_integer)
+			print_character (a_constant.value)
 			current_file.put_character ('%'')
 			current_file.put_character (')')
 		end
@@ -3669,19 +3611,19 @@ feature {ET_AST_NODE} -- Processing
 	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			print_c1_character_constant (a_constant)
+			print_character_constant (a_constant)
 		end
 
 	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			print_c2_character_constant (a_constant)
+			print_character_constant (a_constant)
 		end
 
 	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			print_c3_character_constant (a_constant)
+			print_character_constant (a_constant)
 		end
 
 	process_call_agent (an_expression: ET_CALL_AGENT) is

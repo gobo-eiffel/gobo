@@ -2688,33 +2688,10 @@ feature {NONE} -- Expression validity
 		require
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
-		local
-			a_literal: STRING
-			a_code: INTEGER
-			a_value: CHARACTER
 		do
 			has_fatal_error := False
-			a_literal := a_constant.literal
-			if not a_literal.is_integer then
-				report_character_constant (a_constant)
--- TODO: error
---				set_fatal_error
-			else
-				a_code := a_literal.to_integer
-				if a_code < Platform.Minimum_character_code then
-					report_character_constant (a_constant)
--- TODO: error
---					set_fatal_error
-				elseif a_code > Platform.Maximum_character_code then
-					report_character_constant (a_constant)
--- TODO: error
---					set_fatal_error
-				else
-					a_value := INTEGER_.to_character (a_code)
-					report_character_constant (a_constant)
-				end
-			end
 			a_context.force_last (universe.character_class)
+			report_character_constant (a_constant)
 		end
 
 	check_call_expression_validity (an_expression: ET_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is

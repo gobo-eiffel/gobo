@@ -6,7 +6,7 @@ indexing
 		"Scanners for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,6 +24,8 @@ creation
 
 	make, make_with_factory
 %}
+
+CHAR_CODE (0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))
 
 %x BREAK MS MSN MSN1 VS1 VS2 VS3
 %option nodefault line outfile="et_eiffel_scanner.e"
@@ -203,7 +205,7 @@ creation
 				process_c2_character_constant (text_item (3))
 			}
 
-\'%\/[0-9]+\/\'	{
+\'%\/{CHAR_CODE}\/\'	{
 				last_token := E_CHARACTER
 				last_literal_start := 4
 				last_literal_end := text_count - 2
@@ -211,7 +213,7 @@ creation
 				last_comment_end := 0
 				last_et_character_constant_value := ast_factory.new_c3_character_constant (Current)
 			}
-\'%\/[0-9]+\/\'/[ \t\r\n]	{
+\'%\/{CHAR_CODE}\/\'/[ \t\r\n]	{
 				last_text_count := text_count
 				last_literal_start := 4
 				last_literal_end := last_text_count - 2
@@ -220,6 +222,15 @@ creation
 				set_start_condition (BREAK)
 			}
 
+\'%\/[0-9]+\/\'	{
+					-- Syntax error: invalid character code (too big)
+					-- in special character specification %/code/.
+				column := column + text_count
+				error_handler.report_SCAO_error (filename, current_position)
+				last_et_position_value := current_position
+				column := column - text_count
+				last_token := E_CHARERR
+			}
 \'%\/[0-9]+	{
 					-- Syntax error: missing character / at end
 					-- of special character specification %/code/.
@@ -399,7 +410,7 @@ creation
 			}
 }
 
-\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/[0-9]+\/))*\"	{
+\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
 					-- Manifest string with special characters.
 				last_token := E_STRING
 				last_literal_start := 2
@@ -408,7 +419,7 @@ creation
 				last_comment_end := 0
 				last_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 			}
-\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/[0-9]+\/))*\"/([ \t\r\n]|"--")	{
+\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/([ \t\r\n]|"--")	{
 					-- Manifest string with special characters.
 				last_text_count := text_count
 				last_literal_start := 2
@@ -417,7 +428,7 @@ creation
 				more
 				set_start_condition (BREAK)
 			}
-\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/[0-9]+\/))*	{
+\"([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*	{
 					-- Manifest string with special characters which may be made
 					-- up of several lines or may include invalid characters.
 					-- Keep track of current line and column.
@@ -446,8 +457,20 @@ creation
 				more
 				set_start_condition (MSN1)
 			}
-	%\/[0-9]+\/	{
+	%\/{CHAR_CODE}\/	{
 				more
+			}
+	%\/[0-9]+\/	{
+					-- Syntax error: invalid character code (too big) in special
+					-- character specification %/code/ in manifest string.
+				column := yy_column
+				line := yy_line
+				error_handler.report_SSAO_error (filename, current_position)
+				last_et_position_value := current_position
+				column := ms_column
+				line := ms_line
+				last_token := E_STRERR
+				set_start_condition (INITIAL)
 			}
 	%\/[0-9]+	{
 					-- Syntax error: missing character / at end of special
@@ -455,9 +478,11 @@ creation
 				column := yy_column
 				line := yy_line
 				error_handler.report_SSAS_error (filename, current_position)
+				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
-				more
+				last_token := E_STRERR
+				set_start_condition (INITIAL)
 			}
 	%\/		{
 					-- Syntax error: missing ASCII code in special character
@@ -465,9 +490,11 @@ creation
 				column := yy_column
 				line := yy_line
 				error_handler.report_SSAC_error (filename, current_position)
+				last_et_position_value := current_position
 				column := ms_column
 				line := ms_line
-				more
+				last_token := E_STRERR
+				set_start_condition (INITIAL)
 			}
 	%[abcdfhlnqrstuv]	{
 					-- Syntax error: special character specification
@@ -480,10 +507,10 @@ creation
 				line := ms_line
 				more
 			}
-	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/[0-9]+\/))+	{
+	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))+	{
 				more
 			}
-	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/[0-9]+\/))*\"	{
+	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"	{
 				last_token := E_STRING
 				last_literal_start := 2
 				last_literal_end := text_count - 1
@@ -492,7 +519,7 @@ creation
 				last_et_manifest_string_value := ast_factory.new_special_manifest_string (Current)
 				set_start_condition (INITIAL)
 			}
-	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/[0-9]+\/))*\"/([ \t\r\n]|"--")	{
+	([^%\n"]|%([ABCDFHLNQRSTUV%'"()<>]|\/{CHAR_CODE}\/))*\"/([ \t\r\n]|"--")	{
 				last_text_count := text_count
 				last_literal_start := 2
 				last_literal_end := last_text_count - 1

@@ -35,9 +35,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: CHARACTER
-			-- Character value
-
 	last_position: ET_POSITION is
 			-- Position of last character of current node in source code
 		do

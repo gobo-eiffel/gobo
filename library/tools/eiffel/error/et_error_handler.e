@@ -181,6 +181,17 @@ feature -- Syntax errors
 			report_syntax_error (a_filename, p)
 		end
 
+	report_SCAO_error (a_filename: STRING; p: ET_POSITION) is
+			-- ASCII code too big in special character
+			-- specification %/code/ in character constant.
+			-- (SCAO: Syntax Character Ascii-code Overflow)
+		require
+			a_filename_not_void: a_filename /= Void
+			p_not_void: p /= Void
+		do
+			report_syntax_error (a_filename, p)
+		end
+
 	report_SCAS_error (a_filename: STRING; p: ET_POSITION) is
 			-- Missing character / at end of special character
 			-- specification %/code/ in character constant.
@@ -271,6 +282,17 @@ feature -- Syntax errors
 			-- Missing ASCII code in special character
 			-- specification %/code/ in manifest string.
 			-- (SSAC: Syntax String Ascii Code)
+		require
+			a_filename_not_void: a_filename /= Void
+			p_not_void: p /= Void
+		do
+			report_syntax_error (a_filename, p)
+		end
+
+	report_SSAO_error (a_filename: STRING; p: ET_POSITION) is
+			-- ASCII code too big in special character
+			-- specification %/code/ in manifest string.
+			-- (SSAO: Syntax String Ascii-code Overflow)
 		require
 			a_filename_not_void: a_filename /= Void
 			p_not_void: p /= Void

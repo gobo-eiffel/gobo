@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			-- Create a new 'prefix "<free-operator>"' feature name.
 		require
 			an_operator_not_void: an_operator /= Void
-			an_operator_computed: an_operator.computed
 			an_operator_not_empty: an_operator.value.count > 0
 		do
 			prefix_keyword := tokens.prefix_keyword
@@ -66,7 +65,6 @@ feature -- Processing
 invariant
 
 	is_prefix_freeop: is_prefix_freeop
-	operator_name_computed: operator_name.computed
 	operator_name_not_empty: operator_name.value.count > 0
 
 end

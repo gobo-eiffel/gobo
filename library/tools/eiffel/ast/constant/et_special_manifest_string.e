@@ -22,16 +22,19 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_literal: like literal) is
+	make (a_literal: like literal; a_value: STRING) is
 			-- Create a new manifest string.
 		require
 			a_literal_not_void: a_literal /= Void
-			-- valid_literal: (([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (a_literal)
+			-- valid_literal: (([^"%\n]|%([^\n]|\/([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (a_literal)
+			a_valid_not_void: a_value /= Void
 		do
 			literal := a_literal
+			value := a_value
 			make_leaf
 		ensure
 			literal_set: literal = a_literal
+			value_set: value = a_value
 			line_set: line = no_line
 			column_set: column = no_column
 		end
@@ -68,24 +71,6 @@ feature -- Access
 			end
 		end
 
-feature -- Status report
-
-	computed: BOOLEAN is
-			-- Has manifest string been succesfully computed?
-		do
-			Result := value /= Void
-		end
-
-feature -- Compilation
-
-	compute (error_handler: ET_ERROR_HANDLER) is
-			-- Compute manifest string, expand special characters.
-			-- Make result available in `value'.
-		do
-			-- TODO.
-			value := ""
-		end
-
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
@@ -96,6 +81,6 @@ feature -- Processing
 
 invariant
 
-	-- valid_literal: (([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (literal)
+	-- valid_literal: (([^"%\n]|%([^\n]|\/([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (literal)
 
 end

@@ -1187,9 +1187,10 @@ feature -- AST leaves
 	new_c3_character_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_C3_CHARACTER_CONSTANT is
 			-- New character constant of the form '%/code/`'
 		do
-			create Result.make (a_scanner.last_literal)
-			Result.set_position (a_scanner.line, a_scanner.column)
-			Result.set_break (last_break (True, a_scanner))
+			Result := precursor (a_scanner)
+			if Result /= Void then
+				Result.set_break (last_break (True, a_scanner))
+			end
 		end
 
 	new_comment (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_COMMENT is
@@ -1249,9 +1250,10 @@ feature -- AST leaves
 	new_special_manifest_string (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SPECIAL_MANIFEST_STRING is
 			-- New manifest string with special characters
 		do
-			create Result.make (a_scanner.last_literal)
-			Result.set_position (a_scanner.line, a_scanner.column)
-			Result.set_break (last_break (True, a_scanner))
+			Result := precursor (a_scanner)
+			if Result /= Void then
+				Result.set_break (last_break (True, a_scanner))
+			end
 		end
 
 	new_underscored_integer_constant (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_UNDERSCORED_INTEGER_CONSTANT is
@@ -2182,7 +2184,7 @@ feature -- AST nodes
 			-- New infix free feature name
 		do
 			if an_operator /= Void then
-				if an_operator.computed and then an_operator.value.count > 0 then
+				if an_operator.value.count > 0 then
 					create Result.make (an_operator)
 					if an_infix /= Void then
 						Result.set_infix_keyword (an_infix)
@@ -2725,7 +2727,7 @@ feature -- AST nodes
 			-- New prefix free feature name
 		do
 			if an_operator /= Void then
-				if an_operator.computed and then an_operator.value.count > 0 then
+				if an_operator.value.count > 0 then
 					create Result.make (an_operator)
 					if a_prefix /= Void then
 						Result.set_prefix_keyword (a_prefix)
