@@ -72,20 +72,20 @@ feature -- Setting
 		local
 			environment: expanded ENVIRONMENT
 		do
-			Result := environment.env_put (a_variable, a_value)
+			environment.env_put (a_variable, a_value)
 #else
 #ifdef HACT
 		local
 			environment: expanded EXECUTION_ENVIRONMENT
 		do
-			Result := environment.put (a_value, a_variable)
+			environment.put (a_value, a_variable)
 #else
 #ifdef TOWER
 		local
 			env_vars: expanded ENV_VARS
 		do
 			if env_vars.put_supported then
-				Result := env_vars.put (a_variable, a_value)
+				env_vars.put (a_variable, a_value)
 			end
 #else
 #ifdef ISE
