@@ -34,7 +34,7 @@ feature {NONE} -- Creation
 			create schemes.make_default
 		end
 		
-	make_with_base (a_uri: XM_URI) is
+	make_with_base (a_uri: UT_URI) is
 			-- Create resolver with specified base URI.
 		require
 			a_uri_not_void: a_uri /= Void
