@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2000, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -23,18 +23,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_clusters: like clusters; an_error_handler: ET_ERROR_HANDLER) is
+	make (a_clusters: like clusters; a_factory: ET_AST_FACTORY;
+		an_error_handler: ET_ERROR_HANDLER) is
 			-- Create a new class universe.
 		require
 			an_error_handler_not_void: an_error_handler /= Void
+			a_factory_not_void: a_factory /= Void
 		do
 			clusters := a_clusters
 			!! classes.make (3000)
 			error_handler := an_error_handler
-			!! eiffel_parser.make (Current, an_error_handler)
+			ast_factory := a_factory
+			!! eiffel_parser.make_with_factory (Current, a_factory, an_error_handler)
 			make_basic_classes
 		ensure
 			clusters_set: clusters = a_clusters
+			ast_factory_set: ast_factory = a_factory
 		end
 
 	make_basic_classes is
@@ -76,7 +80,7 @@ feature -- Access
 			if classes.has (a_name) then
 				Result := classes.item (a_name)
 			else
-				!! Result.make (a_name, classes.count, Current)
+				Result := ast_factory.new_class (a_name, classes.count, Current)
 				classes.force (Result, a_name)
 			end
 		ensure
@@ -85,6 +89,14 @@ feature -- Access
 
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
+
+	next_feature_id: INTEGER is
+		do
+			feature_counter := feature_counter + 1
+			Result := feature_counter
+		end
+
+	feature_counter: INTEGER
 
 feature -- Basic classes
 
@@ -142,12 +154,16 @@ feature {NONE} -- Implementation
 	eiffel_parser: ET_EIFFEL_PARSER
 			-- Eiffel parser
 
+	ast_factory: ET_AST_FACTORY
+			-- Abstract Syntax Tree factory
+
 invariant
 
 	classes_not_void: classes /= Void
 	no_void_class: not classes.has_item (Void)
 	error_handler_not_void: error_handler /= Void
 	eiffel_parser_not_void: eiffel_parser /= Void
+	ast_factory_not_void: ast_factory /= Void
 	any_class_not_void: any_class /= Void
 	general_class_not_void: general_class /= Void
 	none_class_not_void: none_class /= Void
