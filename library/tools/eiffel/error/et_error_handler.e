@@ -8407,5 +8407,7 @@ feature -- Internal errors
 --						error_handler.report_gibep_error
 --					error_handler.report_gibcq_error
 --						error_handler.report_gibch_error
+--						error_handler.report_gibbm_error
+--						error_handler.report_gibbn_error
 
 end

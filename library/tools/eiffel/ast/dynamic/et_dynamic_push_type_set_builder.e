@@ -55,7 +55,11 @@ feature -- Factory
 	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET is
 			-- New dynamic type set
 		do
-			create {ET_DYNAMIC_PUSH_TYPE_SET} Result.make (a_type)
+			if a_type.is_expanded then
+				Result := a_type
+			else
+				create {ET_DYNAMIC_PUSH_TYPE_SET} Result.make (a_type)
+			end
 		end
 
 feature -- Generation
@@ -806,13 +810,13 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.string_type
-				if a_string.index = 0 and string_index /= 0 then
-					a_string.set_index (string_index)
+				if a_string.index = 0 and string_index.item /= 0 then
+					a_string.set_index (string_index.item)
 				end
 				l_type.set_alive
 				set_dynamic_type_set (l_type, a_string)
-				if string_index = 0 then
-					string_index := a_string.index
+				if string_index.item = 0 then
+					string_index.put (a_string.index)
 				end
 					-- Make sure that type SPECIAL[CHARACTER] (used in
 					-- feature 'area') is marked as alive.

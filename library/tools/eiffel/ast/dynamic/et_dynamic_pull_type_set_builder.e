@@ -55,7 +55,11 @@ feature -- Factory
 	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET is
 			-- New dynamic type set
 		do
-			create {ET_DYNAMIC_PULL_TYPE_SET} Result.make (a_type)
+			if a_type.is_expanded then
+				Result := a_type
+			else
+				create {ET_DYNAMIC_PULL_TYPE_SET} Result.make (a_type)
+			end
 		end
 
 feature -- Generation
@@ -170,7 +174,7 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
 		do
 			l_result_type_set := an_item_feature.result_type_set
-			if l_result_type_set /= Void then
+			if l_result_type_set /= Void and then not l_result_type_set.is_expanded then
 				l_item_type_sets := a_tuple_type.item_type_sets
 				nb := l_item_type_sets.count
 				from i := 1 until i > nb loop
@@ -188,6 +192,7 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_BUILTIN_ATTACHMENT
 		do
 			l_argument_type_sets := a_put_feature.dynamic_type_sets
@@ -196,8 +201,11 @@ feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
 				l_item_type_sets := a_tuple_type.item_type_sets
 				nb := l_item_type_sets.count
 				from i := 1 until i > nb loop
-					create l_attachment.make (l_argument_type_set, a_put_feature, a_tuple_type)
-					l_item_type_sets.item (i).put_source (l_attachment, current_system)
+					l_item_type_set := l_item_type_sets.item (i)
+					if not l_item_type_set.is_expanded then
+						create l_attachment.make (l_argument_type_set, a_put_feature, a_tuple_type)
+						l_item_type_set.put_source (l_attachment, current_system)
+					end
 					i := i + 1
 				end
 			end
@@ -308,9 +316,11 @@ feature {NONE} -- Generation
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_target_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_call_result_type_set: ET_DYNAMIC_TYPE_SET
 			i, nb: INTEGER
 			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
 			l_result_attachment: ET_DYNAMIC_NULL_ATTACHMENT
@@ -358,8 +368,11 @@ feature {NONE} -- Generation
 									set_fatal_error
 									error_handler.report_gibdw_error
 								else
-									create l_attachment.make (l_source_argument_type_set, l_actual, l_current_feature, l_current_type)
-									l_target_argument_type_sets.item (i).put_source (l_attachment, current_system)
+									l_target_argument_type_set := l_target_argument_type_sets.item (i)
+									if not l_target_argument_type_set.is_expanded then
+										create l_attachment.make (l_source_argument_type_set, l_actual, l_current_feature, l_current_type)
+										l_target_argument_type_set.put_source (l_attachment, current_system)
+									end
 								end
 								i := i + 1
 							end
@@ -367,15 +380,16 @@ feature {NONE} -- Generation
 					end
 				end
 				l_result_type_set := l_dynamic_feature.result_type_set
-				if a_call.result_type_set /= Void then
+				l_call_result_type_set := a_call.result_type_set
+				if l_call_result_type_set /= Void then
 					if l_result_type_set = Void then
 							-- Internal error: it has already been checked somewhere else
 							-- that the redeclaration of a query should be a query.
 						set_fatal_error
 						error_handler.report_gibbw_error
-					else
+					elseif not l_call_result_type_set.is_expanded then
 						create l_result_attachment.make (l_result_type_set, l_current_feature, l_current_type)
-						a_call.result_type_set.put_source (l_result_attachment, current_system)
+						l_call_result_type_set.put_source (l_result_attachment, current_system)
 					end
 				elseif l_result_type_set /= Void then
 						-- Internal error: it has already been checked somewhere else
@@ -800,7 +814,7 @@ feature {NONE} -- Event handling
 						-- and the target should be known at this stage.
 					set_fatal_error
 					error_handler.report_gibaa_error
-				else
+				elseif not l_target_type_set.is_expanded then
 					create l_attachment.make (l_source_type_set, an_instruction, current_dynamic_feature, current_dynamic_type)
 					l_target_type_set.put_source (l_attachment, current_system)
 				end
@@ -822,7 +836,7 @@ feature {NONE} -- Event handling
 						-- and the target should be known at this stage.
 					set_fatal_error
 					error_handler.report_gibab_error
-				else
+				elseif not l_target_type_set.is_expanded then
 					create l_assignment_attempt.make (l_source_type_set, an_instruction, current_dynamic_feature, current_dynamic_type)
 					l_target_type_set.put_source (l_assignment_attempt, current_system)
 				end
@@ -835,6 +849,7 @@ feature {NONE} -- Event handling
 		local
 			i, nb: INTEGER
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
@@ -868,8 +883,11 @@ feature {NONE} -- Event handling
 								set_fatal_error
 								error_handler.report_gibad_error
 							else
-								create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
-								l_argument_type_sets.item (i).put_source (l_attachment, current_system)
+								l_argument_type_set := l_argument_type_sets.item (i)
+								if not l_argument_type_set.is_expanded then
+									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+									l_argument_type_set.put_source (l_attachment, current_system)
+								end
 							end
 							i := i + 1
 						end
@@ -885,6 +903,7 @@ feature {NONE} -- Event handling
 			i, nb: INTEGER
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
@@ -921,8 +940,11 @@ feature {NONE} -- Event handling
 								set_fatal_error
 								error_handler.report_gibaf_error
 							else
-								create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
-								l_argument_type_sets.item (i).put_source (l_attachment, current_system)
+								l_argument_type_set := l_argument_type_sets.item (i)
+								if not l_argument_type_set.is_expanded then
+									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+									l_argument_type_set.put_source (l_attachment, current_system)
+								end
 							end
 							i := i + 1
 						end
@@ -934,7 +956,7 @@ feature {NONE} -- Event handling
 						-- target should be known at this stage.
 					set_fatal_error
 					error_handler.report_gibah_error
-				else
+				elseif not l_target_type_set.is_expanded then
 					create l_creation.make (l_dynamic_creation_type, an_instruction, current_dynamic_feature, current_dynamic_type)
 					l_target_type_set.put_source (l_creation, current_system)
 				end
@@ -978,23 +1000,27 @@ feature {NONE} -- Event handling
 							set_fatal_error
 						else
 							l_special_type.set_alive
-							create l_area_attachment.make (l_special_type, an_expression, current_dynamic_feature, current_dynamic_type)
-							l_area_type_set.put_source (l_area_attachment, current_system)
+							if not l_area_type_set.is_expanded then
+								create l_area_attachment.make (l_special_type, an_expression, current_dynamic_feature, current_dynamic_type)
+								l_area_type_set.put_source (l_area_attachment, current_system)
+							end
 							l_item_type_set := l_special_type.item_type_set
-							nb := an_expression.count
-							from i := 1 until i > nb loop
-								l_expression := an_expression.expression (i)
-								l_dynamic_type_set := dynamic_type_set (l_expression)
-								if l_dynamic_type_set = Void then
-										-- Internal error: the dynamic type set of the expressions
-										-- in the manifest array should be known at this stage.
-									set_fatal_error
-									error_handler.report_gibcf_error
-								else
-									create l_item_attachment.make (l_dynamic_type_set, l_expression, current_dynamic_feature, current_dynamic_type)
-									l_item_type_set.put_source (l_item_attachment, current_system)
+							if not l_item_type_set.is_expanded then
+								nb := an_expression.count
+								from i := 1 until i > nb loop
+									l_expression := an_expression.expression (i)
+									l_dynamic_type_set := dynamic_type_set (l_expression)
+									if l_dynamic_type_set = Void then
+											-- Internal error: the dynamic type set of the expressions
+											-- in the manifest array should be known at this stage.
+										set_fatal_error
+										error_handler.report_gibcf_error
+									else
+										create l_item_attachment.make (l_dynamic_type_set, l_expression, current_dynamic_feature, current_dynamic_type)
+										l_item_type_set.put_source (l_item_attachment, current_system)
+									end
+									i := i + 1
 								end
-								i := i + 1
 							end
 						end
 					end
@@ -1012,6 +1038,7 @@ feature {NONE} -- Event handling
 			l_tuple_type: ET_DYNAMIC_TUPLE_TYPE
 			i, nb: INTEGER
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_expression: ET_EXPRESSION
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_MANIFEST_TUPLE_ITEM
@@ -1043,8 +1070,11 @@ feature {NONE} -- Event handling
 								set_fatal_error
 								error_handler.report_gibex_error
 							else
-								create l_attachment.make (l_dynamic_type_set, l_expression, current_dynamic_feature, current_dynamic_type)
-								l_item_type_sets.item (i).put_source (l_attachment, current_system)
+								l_item_type_set := l_item_type_sets.item (i)
+								if not l_item_type_set.is_expanded then
+									create l_attachment.make (l_dynamic_type_set, l_expression, current_dynamic_feature, current_dynamic_type)
+									l_item_type_set.put_source (l_attachment, current_system)
+								end
 							end
 							i := i + 1
 						end
@@ -1062,6 +1092,7 @@ feature {NONE} -- Event handling
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_parent_type: ET_DYNAMIC_TYPE
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
@@ -1093,8 +1124,11 @@ feature {NONE} -- Event handling
 								set_fatal_error
 								error_handler.report_gibas_error
 							else
-								create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
-								l_argument_type_sets.item (i).put_source (l_attachment, current_system)
+								l_argument_type_set := l_argument_type_sets.item (i)
+								if not l_argument_type_set.is_expanded then
+									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+									l_argument_type_set.put_source (l_attachment, current_system)
+								end
 							end
 							i := i + 1
 						end
@@ -1120,6 +1154,7 @@ feature {NONE} -- Event handling
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_parent_type: ET_DYNAMIC_TYPE
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
@@ -1151,8 +1186,11 @@ feature {NONE} -- Event handling
 								set_fatal_error
 								error_handler.report_gibav_error
 							else
-								create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
-								l_argument_type_sets.item (i).put_source (l_attachment, current_system)
+								l_argument_type_set := l_argument_type_sets.item (i)
+								if not l_argument_type_set.is_expanded then
+									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+									l_argument_type_set.put_source (l_attachment, current_system)
+								end
 							end
 							i := i + 1
 						end
@@ -1181,6 +1219,7 @@ feature {NONE} -- Event handling
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
@@ -1214,8 +1253,11 @@ feature {NONE} -- Event handling
 								set_fatal_error
 								error_handler.report_gibbh_error
 							else
-								create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
-								l_argument_type_sets.item (i).put_source (l_attachment, current_system)
+								l_argument_type_set := l_argument_type_sets.item (i)
+								if not l_argument_type_set.is_expanded then
+									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+									l_argument_type_set.put_source (l_attachment, current_system)
+								end
 							end
 							i := i + 1
 						end
@@ -1239,6 +1281,7 @@ feature {NONE} -- Event handling
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
@@ -1272,8 +1315,11 @@ feature {NONE} -- Event handling
 								set_fatal_error
 								error_handler.report_gibbk_error
 							else
-								create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
-								l_argument_type_sets.item (i).put_source (l_attachment, current_system)
+								l_argument_type_set := l_argument_type_sets.item (i)
+								if not l_argument_type_set.is_expanded then
+									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+									l_argument_type_set.put_source (l_attachment, current_system)
+								end
 							end
 							i := i + 1
 						end
@@ -1293,13 +1339,13 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.string_type
-				if a_string.index = 0 and string_index /= 0 then
-					a_string.set_index (string_index)
+				if a_string.index = 0 and string_index.item /= 0 then
+					a_string.set_index (string_index.item)
 				end
 				l_type.set_alive
 				set_dynamic_type_set (l_type, a_string)
-				if string_index = 0 then
-					string_index := a_string.index
+				if string_index.item = 0 then
+					string_index.put (a_string.index)
 				end
 					-- Make sure that type SPECIAL[CHARACTER] (used in
 					-- feature 'area') is marked as alive.
@@ -1315,7 +1361,7 @@ feature {NONE} -- Event handling
 					if l_area_type_set = Void then
 							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 						set_fatal_error
-					else
+					elseif not l_area_type_set.is_expanded then
 						create l_attachment.make (l_special_type, a_string, current_dynamic_feature, current_dynamic_type)
 						l_area_type_set.put_source (l_attachment, current_system)
 					end
@@ -1350,6 +1396,7 @@ feature {NONE} -- Event handling
 		local
 			i, nb: INTEGER
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
@@ -1382,8 +1429,11 @@ feature {NONE} -- Event handling
 								set_fatal_error
 								error_handler.report_gibbo_error
 							else
-								create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
-								l_argument_type_sets.item (i).put_source (l_attachment, current_system)
+								l_argument_type_set := l_argument_type_sets.item (i)
+								if not l_argument_type_set.is_expanded then
+									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+									l_argument_type_set.put_source (l_attachment, current_system)
+								end
 							end
 							i := i + 1
 						end
@@ -1405,6 +1455,7 @@ feature {NONE} -- Event handling
 		local
 			i, nb: INTEGER
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_attachment: ET_DYNAMIC_ACTUAL_ARGUMENT
@@ -1437,8 +1488,11 @@ feature {NONE} -- Event handling
 								set_fatal_error
 								error_handler.report_gibbr_error
 							else
-								create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
-								l_argument_type_sets.item (i).put_source (l_attachment, current_system)
+								l_argument_type_set := l_argument_type_sets.item (i)
+								if not l_argument_type_set.is_expanded then
+									create l_attachment.make (l_dynamic_type_set, l_actual, current_dynamic_feature, current_dynamic_type)
+									l_argument_type_set.put_source (l_attachment, current_system)
+								end
 							end
 							i := i + 1
 						end

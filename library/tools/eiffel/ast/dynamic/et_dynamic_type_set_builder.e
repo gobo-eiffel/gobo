@@ -91,6 +91,18 @@ feature {NONE} -- Initialization
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make_with_capacity (1000)
 			create dynamic_calls.make (100000)
+			create current_index.make (0)
+			create result_index.make (0)
+			create character_index.make (0)
+			create boolean_index.make (0)
+			create double_index.make (0)
+			create integer_index.make (0)
+			create integer_8_index.make (0)
+			create integer_16_index.make (0)
+			create integer_64_index.make (0)
+			create pointer_index.make (0)
+			create none_index.make (0)
+			create string_index.make (0)
 		ensure
 			current_system_set: current_system = a_system
 		end
@@ -345,18 +357,18 @@ feature {NONE} -- Generation
 			end
 			a_feature.set_dynamic_type_sets (l_dynamic_type_sets)
 			a_feature.set_built (True)
-			current_index := 0
-			result_index := 0
-			character_index := 0
-			boolean_index := 0
-			double_index := 0
-			integer_index := 0
-			integer_8_index := 0
-			integer_16_index := 0
-			integer_64_index := 0
-			pointer_index := 0
-			none_index := 0
-			string_index := 0
+			current_index.put (0)
+			result_index.put (0)
+			character_index.put (0)
+			boolean_index.put (0)
+			double_index.put (0)
+			integer_index.put (0)
+			integer_8_index.put (0)
+			integer_16_index.put (0)
+			integer_64_index.put (0)
+			pointer_index.put (0)
+			none_index.put (0)
+			string_index.put (0)
 			dynamic_type_sets.wipe_out
 			current_dynamic_feature := old_feature
 			current_dynamic_type := old_type
@@ -723,12 +735,12 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.boolean_type
 				l_type.set_alive
-				if a_constant.index = 0 and boolean_index /= 0 then
-					a_constant.set_index (boolean_index)
+				if a_constant.index = 0 and boolean_index.item /= 0 then
+					a_constant.set_index (boolean_index.item)
 				end
 				set_dynamic_type_set (l_type, a_constant)
-				if boolean_index = 0 then
-					boolean_index := a_constant.index
+				if boolean_index.item = 0 then
+					boolean_index.put (a_constant.index)
 				end
 			end
 		end
@@ -741,12 +753,12 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.character_type
 				l_type.set_alive
-				if a_constant.index = 0 and character_index /= 0 then
-					a_constant.set_index (character_index)
+				if a_constant.index = 0 and character_index.item /= 0 then
+					a_constant.set_index (character_index.item)
 				end
 				set_dynamic_type_set (l_type, a_constant)
-				if character_index = 0 then
-					character_index := a_constant.index
+				if character_index.item = 0 then
+					character_index.put (a_constant.index)
 				end
 			end
 		end
@@ -820,12 +832,12 @@ feature {NONE} -- Event handling
 			-- Report that the current entity has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
-				if an_expression.index = 0 and current_index /= 0 then
-					an_expression.set_index (current_index)
+				if an_expression.index = 0 and current_index.item /= 0 then
+					an_expression.set_index (current_index.item)
 				end
 				set_dynamic_type_set (current_dynamic_type, an_expression)
-				if current_index = 0 then
-					current_index := an_expression.index
+				if current_index.item = 0 then
+					current_index.put (an_expression.index)
 				end
 			end
 		end
@@ -838,12 +850,12 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.double_type
 				l_type.set_alive
-				if a_constant.index = 0 and double_index /= 0 then
-					a_constant.set_index (double_index)
+				if a_constant.index = 0 and double_index.item /= 0 then
+					a_constant.set_index (double_index.item)
 				end
 				set_dynamic_type_set (l_type, a_constant)
-				if double_index = 0 then
-					double_index := a_constant.index
+				if double_index.item = 0 then
+					double_index.put (a_constant.index)
 				end
 			end
 		end
@@ -856,12 +868,12 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.boolean_type
 				l_type.set_alive
-				if an_expression.index = 0 and boolean_index /= 0 then
-					an_expression.set_index (boolean_index)
+				if an_expression.index = 0 and boolean_index.item /= 0 then
+					an_expression.set_index (boolean_index.item)
 				end
 				set_dynamic_type_set (l_type, an_expression)
-				if boolean_index = 0 then
-					boolean_index := an_expression.index
+				if boolean_index.item = 0 then
+					boolean_index.put (an_expression.index)
 				end
 			end
 		end
@@ -882,12 +894,12 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.integer_type
 				l_type.set_alive
-				if a_constant.index = 0 and integer_index /= 0 then
-					a_constant.set_index (integer_index)
+				if a_constant.index = 0 and integer_index.item /= 0 then
+					a_constant.set_index (integer_index.item)
 				end
 				set_dynamic_type_set (l_type, a_constant)
-				if integer_index = 0 then
-					integer_index := a_constant.index
+				if integer_index.item = 0 then
+					integer_index.put (a_constant.index)
 				end
 			end
 		end
@@ -900,12 +912,12 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.integer_8_type
 				l_type.set_alive
-				if a_constant.index = 0 and integer_8_index /= 0 then
-					a_constant.set_index (integer_8_index)
+				if a_constant.index = 0 and integer_8_index.item /= 0 then
+					a_constant.set_index (integer_8_index.item)
 				end
 				set_dynamic_type_set (l_type, a_constant)
-				if integer_8_index = 0 then
-					integer_8_index := a_constant.index
+				if integer_8_index.item = 0 then
+					integer_8_index.put (a_constant.index)
 				end
 			end
 		end
@@ -918,12 +930,12 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.integer_16_type
 				l_type.set_alive
-				if a_constant.index = 0 and integer_16_index /= 0 then
-					a_constant.set_index (integer_16_index)
+				if a_constant.index = 0 and integer_16_index.item /= 0 then
+					a_constant.set_index (integer_16_index.item)
 				end
 				set_dynamic_type_set (l_type, a_constant)
-				if integer_16_index = 0 then
-					integer_16_index := a_constant.index
+				if integer_16_index.item = 0 then
+					integer_16_index.put (a_constant.index)
 				end
 			end
 		end
@@ -936,12 +948,12 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.integer_64_type
 				l_type.set_alive
-				if a_constant.index = 0 and integer_64_index /= 0 then
-					a_constant.set_index (integer_64_index)
+				if a_constant.index = 0 and integer_64_index.item /= 0 then
+					a_constant.set_index (integer_64_index.item)
 				end
 				set_dynamic_type_set (l_type, a_constant)
-				if integer_64_index = 0 then
-					integer_64_index := a_constant.index
+				if integer_64_index.item = 0 then
+					integer_64_index.put (a_constant.index)
 				end
 			end
 		end
@@ -1038,12 +1050,12 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.pointer_type
 				l_type.set_alive
-				if an_expression.index = 0 and pointer_index /= 0 then
-					an_expression.set_index (pointer_index)
+				if an_expression.index = 0 and pointer_index.item /= 0 then
+					an_expression.set_index (pointer_index.item)
 				end
 				set_dynamic_type_set (l_type, an_expression)
-				if pointer_index = 0 then
-					pointer_index := an_expression.index
+				if pointer_index.item = 0 then
+					pointer_index.put (an_expression.index)
 				end
 			end
 		end
@@ -1245,12 +1257,12 @@ feature {NONE} -- Event handling
 					set_fatal_error
 					error_handler.report_gibbf_error
 				else
-					if an_expression.index = 0 and result_index /= 0 then
-						an_expression.set_index (result_index)
+					if an_expression.index = 0 and result_index.item /= 0 then
+						an_expression.set_index (result_index.item)
 					end
 					set_dynamic_type_set (l_dynamic_type_set, an_expression)
-					if result_index = 0 then
-						result_index := an_expression.index
+					if result_index.item = 0 then
+						result_index.put (an_expression.index)
 					end
 				end
 			end
@@ -1269,12 +1281,12 @@ feature {NONE} -- Event handling
 					set_fatal_error
 					error_handler.report_gibbg_error
 				else
-					if a_result.index = 0 and result_index /= 0 then
-						a_result.set_index (result_index)
+					if a_result.index = 0 and result_index.item /= 0 then
+						a_result.set_index (result_index.item)
 					end
 					set_dynamic_type_set (l_dynamic_type_set, a_result)
-					if result_index = 0 then
-						result_index := a_result.index
+					if result_index.item = 0 then
+						result_index.put (a_result.index)
 					end
 				end
 			end
@@ -1324,13 +1336,13 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.string_type
-				if a_string.index = 0 and string_index /= 0 then
-					a_string.set_index (string_index)
+				if a_string.index = 0 and string_index.item /= 0 then
+					a_string.set_index (string_index.item)
 				end
 				l_type.set_alive
 				set_dynamic_type_set (l_type, a_string)
-				if string_index = 0 then
-					string_index := a_string.index
+				if string_index.item = 0 then
+					string_index.put (a_string.index)
 				end
 					-- Make sure that type SPECIAL[CHARACTER] (used in
 					-- feature 'area') is marked as alive.
@@ -1373,56 +1385,30 @@ feature {NONE} -- Event handling
 			-- Report that an unqualified call (to `a_feature') agent
 			-- of type `a_type' in `a_context' has been processed.
 		local
---			i, nb: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
---			l_argument_types: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
---			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
---			l_actuals: ET_AGENT_ACTUAL_ARGUMENT_LIST
---			l_attachment: ET_DYNAMIC_AGENT_ACTUAL_ARGUMENT
---			l_implicit: ET_DYNAMIC_AGENT_IMPLICIT_ACTUAL_ARGUMENT
+--			l_dynamic_agent: ET_DYNAMIC_UNQUALIFIED_AGENT
+--			l_set_operands_feature: ET_FEATURE
+--			l_set_operands_dynamic_feature: ET_DYNAMIC_FEATURE
+--			l_open_operand_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_feature := current_dynamic_type.dynamic_feature (a_feature, current_system)
 				l_dynamic_feature.set_regular (True)
--- TODO
---				l_argument_types := l_dynamic_feature.argument_types
---				if l_argument_types /= Void then
---					l_actuals := an_expression.arguments
---					nb := l_argument_types.count
---					if dynamic_type_set_stack.count < nb then
---							-- Internal error: the stack of dynamic type sets should 
---							-- at least contain the items for the arguments of the
---							-- unqualified call.
---						set_fatal_error
---						error_handler.report_gibbm_error
---					elseif l_actuals = Void then
---							-- Agent's operands are store in the stack in reverse order.
---						from i := 1 until i > nb loop
---							l_dynamic_type_set := dynamic_type_set_stack.item
---							dynamic_type_set_stack.remove
---							create l_implicit.make (l_dynamic_type_set, an_expression.name, current_feature, current_type)
---							l_argument_types.item (i).put_source (l_implicit, current_system)
---							i := i + 1
---						end
---					elseif l_actuals.count /= nb then
---							-- Internal error: it has already been checked somewhere else
---							-- that there was the same number of actual and formal arguments.
---						set_fatal_error
---						error_handler.report_gibbn_error
---					else
---							-- Agent's operands are store in the stack in reverse order.
---						from i := 1 until i > nb loop
---							l_dynamic_type_set := dynamic_type_set_stack.item
---							dynamic_type_set_stack.remove
---							create l_attachment.make (l_dynamic_type_set, l_actuals.actual_argument (i), current_feature, current_type)
---							l_argument_types.item (i).put_source (l_attachment, current_system)
---							i := i + 1
---						end
---					end
---				end
 				l_dynamic_type := current_system.dynamic_type (a_type, a_context)
 				l_dynamic_type.set_alive
+--				l_set_operands_feature := l_dynamic_type.base_class.named_feature (tokens.set_operands_feature_name)
+--				if l_set_operands_feature /= Void then
+--					l_set_operands_dynamic_feature := l_dynamic_type.dynamic_feature (l_set_operands_feature, current_system)
+--					if l_set_operands_dynamic_feature.dynamic_type_sets.count > 0 then
+--						l_open_operand_type_set := l_set_operands_dynamic_feature.dynamic_type_sets.item (1)
+--						create l_dynamic_agent.make (an_expression, l_open_operand_type_set, l_dynamic_feature, current_dynamic_feature, current_dynamic_type)
+--					else
+-- TODO
+--					end
+--				else
+-- TODO
+--				end
 				set_dynamic_type_set (l_dynamic_type, an_expression)
 			end
 		end
@@ -1465,12 +1451,12 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_system.none_type
-				if an_expression.index = 0 and none_index /= 0 then
-					an_expression.set_index (none_index)
+				if an_expression.index = 0 and none_index.item /= 0 then
+					an_expression.set_index (none_index.item)
 				end
 				set_dynamic_type_set (l_type, an_expression)
-				if none_index = 0 then
-					none_index := an_expression.index
+				if none_index.item = 0 then
+					none_index.put (an_expression.index)
 				end
 			end
 		end
@@ -1483,40 +1469,40 @@ feature {ET_FEATURE_CHECKER} -- Access
 	current_dynamic_feature: ET_DYNAMIC_FEATURE
 			-- Feature whose dynamic type sets are being built
 
-	current_index: INTEGER
+	current_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of "Current" in `dynamic_type_sets'
 
-	result_index: INTEGER
+	result_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of "Result" in `dynamic_type_sets'
 
-	character_index: INTEGER
+	character_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of character expressions in `dynamic_type_sets'
 
-	boolean_index: INTEGER
+	boolean_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of boolean expressions in `dynamic_type_sets'
 
-	double_index: INTEGER
+	double_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of double expressions in `dynamic_type_sets'
 
-	integer_index: INTEGER
+	integer_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of integer expressions in `dynamic_type_sets'
 
-	integer_8_index: INTEGER
+	integer_8_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of integer_8 expressions in `dynamic_type_sets'
 
-	integer_16_index: INTEGER
+	integer_16_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of integer_16 expressions in `dynamic_type_sets'
 
-	integer_64_index: INTEGER
+	integer_64_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of integer_64 expressions in `dynamic_type_sets'
 
-	pointer_index: INTEGER
+	pointer_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of pointer expressions in `dynamic_type_sets'
 
-	none_index: INTEGER
+	none_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of none expressions in `dynamic_type_sets'
 
-	string_index: INTEGER
+	string_index: DS_CELL [INTEGER]
 			-- Index of dynamic type set of string expressions in `dynamic_type_sets'
 
 feature {ET_FEATURE_CHECKER} -- Status report
@@ -1529,33 +1515,9 @@ feature {ET_FEATURE_CHECKER} -- Status report
 			current_dynamic_feature := other.current_dynamic_feature
 			no_debug := other.no_debug
 			no_assertion := other.no_assertion
-			current_index := other.current_index
-			result_index := other.result_index
-			character_index := other.character_index
-			boolean_index := other.boolean_index
-			double_index := other.double_index
-			integer_index := other.integer_index
-			integer_8_index := other.integer_8_index
-			integer_16_index := other.integer_16_index
-			integer_64_index := other.integer_64_index
-			pointer_index := other.pointer_index
-			none_index := other.none_index
-			string_index := other.string_index
 		ensure then
 			current_dynamic_type_set: current_dynamic_type = other.current_dynamic_type
 			current_dynamic_feature_set: current_dynamic_feature = other.current_dynamic_feature
-			current_index_set: current_index = other.current_index
-			result_index_set: result_index = other.result_index
-			character_index_set: character_index = other.character_index
-			boolean_index_set: boolean_index = other.boolean_index
-			double_index_set: double_index = other.double_index
-			integer_index_set: integer_index = other.integer_index
-			integer_8_index_set: integer_8_index = other.integer_8_index
-			integer_16_index_set: integer_16_index = other.integer_16_index
-			integer_64_index_set: integer_64_index = other.integer_64_index
-			pointer_index_set: pointer_index = other.pointer_index
-			none_index_set: none_index = other.none_index
-			string_index_set: string_index = other.string_index
 		end
 
 feature {NONE} -- Implementation
@@ -1635,5 +1597,17 @@ invariant
 	current_dynamic_type_not_void: current_dynamic_type /= Void
 	current_dynamic_feature_not_void: current_dynamic_feature /= Void
 	current_system_not_void: current_system /= Void
+	current_index_not_void: current_index /= Void
+	result_index_not_void: result_index /= Void
+	character_index_not_void: character_index /= Void
+	boolean_index_not_void: boolean_index /= Void
+	double_index_not_void: double_index /= Void
+	integer_index_not_void: integer_index /= Void
+	integer_8_index_not_void: integer_8_index /= Void
+	integer_16_index_not_void: integer_16_index /= Void
+	integer_64_index_not_void: integer_64_index /= Void
+	pointer_index_not_void: pointer_index /= Void
+	none_index_not_void: none_index /= Void
+	string_index_not_void: string_index /= Void
 
 end
