@@ -16,7 +16,7 @@ inherit
 
 	DS_ARRAYED_LIST [LX_START_CONDITION]
 
-	UT_STRING_HANDLER
+	KL_STRING_ROUTINES
 		export
 			{NONE} all
 		undefine
@@ -62,11 +62,12 @@ feature -- Status report
 			from
 				i := 1
 				nb := count
-				a_lower_name := lower_name (a_name)
+				a_lower_name := string__to_lower (a_name)
 			until
 				Result or i > nb
 			loop
-				Result := a_lower_name.is_equal (lower_name (item (i).name))
+				Result :=
+					a_lower_name.is_equal (string__to_lower (item (i).name))
 				i := i + 1
 			end
 		end
@@ -86,12 +87,14 @@ feature -- Access
 			from
 				i := 1
 				nb := count
-				a_lower_name := lower_name (a_name)
+				a_lower_name := string__to_lower (a_name)
 			until
 				Result /= Void or i > nb
 			loop
 				Result := item (i)
-				if not a_lower_name.is_equal (lower_name (Result.name)) then
+				if
+					not a_lower_name.is_equal (string__to_lower (Result.name))
+				then
 					Result := Void
 					i := i + 1
 				end
