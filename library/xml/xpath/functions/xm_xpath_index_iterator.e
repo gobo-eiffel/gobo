@@ -1,0 +1,124 @@
+indexing
+
+	description:
+
+		"Objects that support implementation of the XPath index-of() function"
+
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class XM_XPATH_INDEX_ITERATOR
+
+inherit
+
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+
+	XM_XPATH_STANDARD_NAMESPACES
+
+	XM_XPATH_ERROR_TYPES
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_base_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_search_value: XM_XPATH_ATOMIC_VALUE; an_atomic_comparer: XM_XPATH_ATOMIC_COMPARER) is
+			-- Establish invariant.
+		require
+			base_sequence_not_void: a_base_sequence /= Void
+			-- TODO: XPath static typing assures us above will actually return all XM_XPATH_ATOMIC_VALUEs; (see XM_XPATH_INDEX_OF)
+			-- How can we reflect this in Eiffel typing, so as to eliminate spurious CATCALL warnings?
+			search_value_not_void: a_search_value /= Void
+			atomic_comparer_not_void: an_atomic_comparer /= Void
+		do
+			base_sequence := a_base_sequence
+			search_value := a_search_value
+			atomic_comparer := an_atomic_comparer
+		ensure
+			base_sequence_set: base_sequence = a_base_sequence
+			search_value_set: search_value = a_search_value
+			comparer_set: atomic_comparer = an_atomic_comparer
+		end
+
+feature -- Access
+
+	item: XM_XPATH_ITEM
+			-- Value or node at the current position
+
+feature -- Status report
+
+	after: BOOLEAN is
+			-- Are there any more items in the sequence?
+		do
+			Result := base_sequence.after or else item = Void
+		end
+feature -- Cursor movement
+
+	forth is
+			-- Move to next position
+		local
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+		do
+			index := index + 1
+			if base_sequence.before then
+				base_sequence.start
+			else
+				base_sequence.forth -- can't be after - see `after'
+			end
+			item := Void
+			from
+			until
+				base_sequence.after or else item /= Void
+			loop
+				last_position := last_position + 1
+				an_atomic_value ?= base_sequence.item
+				check
+					item_is_atomic: an_atomic_value /= Void
+					-- as `base_sequence' is really XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
+				end
+				if not atomic_comparer.are_comparable (an_atomic_value, search_value) then
+					create {XM_XPATH_INVALID_ITEM} item.make_from_string ("Items are not comparable", Xpath_errors_uri, "FOTY0012", Dynamic_error)
+				elseif atomic_comparer.three_way_comparison (an_atomic_value, search_value) = 0 then
+					create {XM_XPATH_INTEGER_VALUE} item.make_from_integer (last_position)
+				else
+					if not base_sequence.after then
+						base_sequence.forth
+					end
+				end
+			end
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original;
+		do
+			create Result.make (base_sequence.another, search_value, atomic_comparer)
+		end
+
+feature {NONE} -- Implementation
+
+	base_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			-- Sequence of atomic values to be searched
+
+	search_value: XM_XPATH_ATOMIC_VALUE
+			-- Search value
+
+	atomic_comparer: XM_XPATH_ATOMIC_COMPARER
+			-- Atomic comparer
+
+	last_position: INTEGER
+			-- Position within `base_sequence' of currently matched value
+
+invariant
+
+	base_sequence_not_void: base_sequence /= Void
+	search_value_not_void: search_value /= Void
+	atomic_comparer_not_void: atomic_comparer /= Void
+
+end
+	
