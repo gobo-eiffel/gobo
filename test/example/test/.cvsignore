@@ -5,6 +5,7 @@
 TESTGEN
 xtest*
 xtest*.*
+libxtest*.dll
 EIFGEN
 preferences.wb
 vec*.xcp
