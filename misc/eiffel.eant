@@ -70,18 +70,18 @@
 		<geant target="xace"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
-		<ise ace="compile_ise.ace" system="${system}" finalize="true" finish_freezing="true" unless="${debug}"/>
-		<move file="EIFGEN/F_code/${system}${exe}" to_directory="." unless="${debug}"/>
-		<move to_directory="." unless="${debug}">
-			<fileset directory="EIFGEN/F_code" include="@(lib${system}.dll)"/>
+		<set name="finalize" value="true"/>
+		<set name="finalize" value="false" if="${debug}"/>
+		<set name="finalize" value="false" if="${GOBO_DOTNET}"/>
+		<ise ace="compile_ise.ace" system="${system}" finalize="${finalize}" finish_freezing="true"/>
+		<set name="codedir" value="W_code" if="${finalize}=false"/>
+		<set name="codedir" value="F_code" if="${finalize}=true"/>
+		<move file="EIFGEN/${codedir}/${system}${exe}" to_directory="."/>
+		<move to_directory=".">
+			<fileset directory="EIFGEN/${codedir}" include="@(lib${system}.dll)"/>
 		</move>
-		<ise ace="compile_ise.ace" system="${system}" finalize="false" finish_freezing="true" if="${debug}"/>
-		<move file="EIFGEN/W_code/${system}${exe}" to_directory="." if="${debug}"/>
-		<move to_directory="." if="${debug}">
-			<fileset directory="EIFGEN/W_code" include="@(${system}.melted)"/>
-		</move>
-		<move to_directory="." if="${debug}">
-			<fileset directory="EIFGEN/W_code" include="@(lib${system}.dll)"/>
+		<move to_directory=".">
+			<fileset directory="EIFGEN/${codedir}" include="@(${system}.melted)"/>
 		</move>
 	</target>
 
@@ -213,6 +213,7 @@
 		<delete file="ve.esd"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
+		<delete file="lib${system}.dll"/>
 		<delete file="${system}.h2o"/>
 		<geant target="other_clobber"/>
 	</target>

@@ -20,6 +20,10 @@
 		<option name="garbage_collector" value="none"/>
 		<option name="finalize" value="false"/>
 	</option>
+	<option if="${GOBO_DOTNET}">
+		<option name="msil_generation" value="true"/>
+		<option name="line_generation" value="true"/>
+	</option>
 
 	<mount location="${GOBO}/src/geant/library.xace"/>
 	<mount location="${GOBO}/library/library.xace"/>

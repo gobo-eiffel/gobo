@@ -25,6 +25,10 @@
 			-->
 		<option name="split" value="true"/>
 	</option>
+	<option if="${GOBO_DOTNET}">
+		<option name="msil_generation" value="true"/>
+		<option name="line_generation" value="true"/>
+	</option>
 
 	<cluster name="getest" location="${GOBO}/src/getest"/>
 

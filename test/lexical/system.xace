@@ -20,6 +20,10 @@
 		<option name="garbage_collector" value="internal"/>
 		<option name="finalize" value="false"/>
 	</option>
+	<option if="${GOBO_DOTNET}">
+		<option name="msil_generation" value="true"/>
+		<option name="line_generation" value="true"/>
+	</option>
 
 	<cluster name="lx_tester" location="${GOBO}/test/lexical"/>
 	<cluster name="lx_testgen" location="TESTGEN"/>

@@ -168,6 +168,7 @@
 		<delete file="compile_ve.esd"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
+		<delete file="lib${system}.dll"/>
 		<delete file="${system}.h2o"/>
 		<delete directory="TESTGEN"/>
 		<delete file="xcompile.log"/>
