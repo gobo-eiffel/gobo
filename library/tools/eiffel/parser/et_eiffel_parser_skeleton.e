@@ -284,8 +284,9 @@ feature -- Parsing
 			end
 		end
 
-	reparse_cluster (a_cluster: ET_CLUSTER) is
+	reparse_cluster (a_cluster: ET_CLUSTER; a_override: BOOLEAN) is
 			-- Parse all classes in `a_cluster' (recursively) again.
+			-- `a_override' means that only override clusters are taken into account.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -306,7 +307,7 @@ feature -- Parsing
 					std.error.put_string (a_cluster.full_pathname)
 					std.error.put_line ("%'")
 				end
-				if not a_cluster.is_abstract then
+				if (a_override implies a_cluster.is_override) and then not a_cluster.is_abstract then
 					dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
 					dir := tmp_directory
 					dir.reset (dir_name)
@@ -363,13 +364,14 @@ feature -- Parsing
 				end
 				l_subclusters := a_cluster.subclusters
 				if l_subclusters /= Void then
-					reparse_clusters (l_subclusters)
+					reparse_clusters (l_subclusters, a_override)
 				end
 			end
 		end
 
-	reparse_clusters (a_clusters: ET_CLUSTERS) is
+	reparse_clusters (a_clusters: ET_CLUSTERS; a_override: BOOLEAN) is
 			-- Parse all classes in `a_clusters' (recursively) again.
+			-- `a_override' means that only override clusters are taken into account.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
@@ -383,17 +385,17 @@ feature -- Parsing
 				nb := l_clusters.count
 				from i := 1 until i > nb loop
 					l_cluster := l_clusters.item (i)
-					if l_cluster.is_implicit then
+					if l_cluster.is_implicit and then (a_override implies l_cluster.is_override) then
 						dir_name := Execution_environment.interpreted_string (l_cluster.full_pathname)
 						if not file_system.directory_exists (dir_name) then
 							l_clusters.remove (i)
 							nb := nb - 1
 						else
-							reparse_cluster (l_cluster)
+							reparse_cluster (l_cluster, a_override)
 							i := i + 1
 						end
 					else
-						reparse_cluster (l_cluster)
+						reparse_cluster (l_cluster, a_override)
 						i := i + 1
 					end
 				end

@@ -67,6 +67,22 @@ feature -- Measurement
 				Result := Result + clusters.item (i).count
 				i := i + 1
 			end
+		ensure
+			count_non_negavite: Result >= 0
+		end
+
+	override_count: INTEGER is
+			-- Number (recursively) of non-abstract override clusters
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				Result := Result + clusters.item (i).override_count
+				i := i + 1
+			end
+		ensure
+			override_count_non_negavite: Result >= 0
 		end
 
 feature {ET_CLUSTER} -- Setting

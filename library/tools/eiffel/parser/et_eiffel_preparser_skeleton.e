@@ -195,11 +195,12 @@ feature -- Parsing
 			end
 		end
 
-	repreparse_cluster_shallow (a_cluster: ET_CLUSTER) is
+	repreparse_cluster_shallow (a_cluster: ET_CLUSTER; a_override: BOOLEAN) is
 			-- Traverse `a_cluster' (recursively) again and rebuild a mapping
 			-- between class names and filenames. Classes are added to
 			-- `universe.classes', but are not parsed. Filenames are
 			-- supposed to be of the form 'classname.e'.
+			-- `a_override' means that only override clusters are taken into account.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -214,7 +215,7 @@ feature -- Parsing
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 			i, nb: INTEGER
 		do
-			if not a_cluster.is_abstract then
+			if (a_override implies a_cluster.is_override) and then not a_cluster.is_abstract then
 				error_handler.report_preparsing_status (a_cluster)
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
 				dir := tmp_directory
@@ -300,15 +301,16 @@ feature -- Parsing
 			end
 			l_subclusters := a_cluster.subclusters
 			if l_subclusters /= Void then
-				repreparse_clusters_shallow (l_subclusters)
+				repreparse_clusters_shallow (l_subclusters, a_override)
 			end
 		end
 
-	repreparse_clusters_shallow (a_clusters: ET_CLUSTERS) is
+	repreparse_clusters_shallow (a_clusters: ET_CLUSTERS; a_override: BOOLEAN) is
 			-- Traverse `a_clusters' (recursively) again and rebuild a mapping
 			-- between class names and filenames in each cluster. Classes
 			-- are added to `universe.classes', but are not parsed.
 			-- Filenames are supposed to be of the form 'classname.e'.
+			-- `a_override' means that only override clusters are taken into account.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
@@ -321,17 +323,17 @@ feature -- Parsing
 			nb := l_clusters.count
 			from i := 1 until i > nb loop
 				l_cluster := l_clusters.item (i)
-				if l_cluster.is_implicit then
+				if l_cluster.is_implicit and then (a_override implies l_cluster.is_override) then
 					dir_name := Execution_environment.interpreted_string (l_cluster.full_pathname)
 					if not file_system.directory_exists (dir_name) then
 						l_clusters.remove (i)
 						nb := nb - 1
 					else
-						repreparse_cluster_shallow (l_cluster)
+						repreparse_cluster_shallow (l_cluster, a_override)
 						i := i + 1
 					end
 				else
-					repreparse_cluster_shallow (l_cluster)
+					repreparse_cluster_shallow (l_cluster, a_override)
 					i := i + 1
 				end
 			end
@@ -493,11 +495,11 @@ feature -- Parsing
 			end
 		end
 
-	repreparse_cluster_single (a_cluster: ET_CLUSTER) is
+	repreparse_cluster_single (a_cluster: ET_CLUSTER; a_override: BOOLEAN) is
 			-- Traverse `a_cluster' (recursively) again and rebuild a mapping between
 			-- class names and filenames. Classes are added to `universe.classes', but
-			-- are not parsed. Each Eiffel file is supposed to contain exactly
-			-- one class.
+			-- are not parsed. Each Eiffel file is supposed to contain exactly one class.
+			-- `a_override' means that only override clusters are taken into account.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -512,7 +514,7 @@ feature -- Parsing
 			l_class: ET_CLASS
 			i, nb: INTEGER
 		do
-			if not a_cluster.is_abstract then
+			if (a_override implies a_cluster.is_override) and then not a_cluster.is_abstract then
 				error_handler.report_preparsing_status (a_cluster)
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
 				dir := tmp_directory
@@ -570,15 +572,16 @@ feature -- Parsing
 			end
 			l_subclusters := a_cluster.subclusters
 			if l_subclusters /= Void then
-				repreparse_clusters_single (l_subclusters)
+				repreparse_clusters_single (l_subclusters, a_override)
 			end
 		end
 
-	repreparse_clusters_single (a_clusters: ET_CLUSTERS) is
+	repreparse_clusters_single (a_clusters: ET_CLUSTERS; a_override: BOOLEAN) is
 			-- Traverse `a_clusters' (recursively) again and rebuild a mapping between
 			-- class names and filenames in each cluster. Classes are added to
 			-- `universe.classes', but are not parsed. Each Eiffel file is supposed
 			-- to contain exactly one class.
+			-- `a_override' means that only override clusters are taken into account.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
@@ -591,17 +594,17 @@ feature -- Parsing
 			nb := l_clusters.count
 			from i := 1 until i > nb loop
 				l_cluster := l_clusters.item (i)
-				if l_cluster.is_implicit then
+				if l_cluster.is_implicit and then (a_override implies l_cluster.is_override) then
 					dir_name := Execution_environment.interpreted_string (l_cluster.full_pathname)
 					if not file_system.directory_exists (dir_name) then
 						l_clusters.remove (i)
 						nb := nb - 1
 					else
-						repreparse_cluster_single (l_cluster)
+						repreparse_cluster_single (l_cluster, a_override)
 						i := i + 1
 					end
 				else
-					repreparse_cluster_single (l_cluster)
+					repreparse_cluster_single (l_cluster, a_override)
 					i := i + 1
 				end
 			end
@@ -769,10 +772,11 @@ feature -- Parsing
 			end
 		end
 
-	repreparse_cluster_multiple (a_cluster: ET_CLUSTER) is
+	repreparse_cluster_multiple (a_cluster: ET_CLUSTER; a_override: BOOLEAN) is
 			-- Traverse `a_cluster' (recursively) again and rebuild a mapping between
 			-- class names and filenames. Classes are added to `universe.classes', but
 			-- are not parsed. Each Eiffel file can contain more than one class.
+			-- `a_override' means that only override clusters are taken into account.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -787,7 +791,7 @@ feature -- Parsing
 			l_class: ET_CLASS
 			i, nb: INTEGER
 		do
-			if not a_cluster.is_abstract then
+			if (a_override implies a_cluster.is_override) and then not a_cluster.is_abstract then
 				error_handler.report_preparsing_status (a_cluster)
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
 				dir := tmp_directory
@@ -845,15 +849,16 @@ feature -- Parsing
 			end
 			l_subclusters := a_cluster.subclusters
 			if l_subclusters /= Void then
-				repreparse_clusters_multiple (l_subclusters)
+				repreparse_clusters_multiple (l_subclusters, a_override)
 			end
 		end
 
-	repreparse_clusters_multiple (a_clusters: ET_CLUSTERS) is
+	repreparse_clusters_multiple (a_clusters: ET_CLUSTERS; a_override: BOOLEAN) is
 			-- Traverse `a_clusters' (recursively) again and rebuild a mapping between
 			-- class names and filenames in each cluster. Classes are added to
 			-- `universe.classes', but are not parsed. Each Eiffel file can
 			-- contain more than one class.
+			-- `a_override' means that only override clusters are taken into account.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
@@ -866,17 +871,17 @@ feature -- Parsing
 			nb := l_clusters.count
 			from i := 1 until i > nb loop
 				l_cluster := l_clusters.item (i)
-				if l_cluster.is_implicit then
+				if l_cluster.is_implicit and then (a_override implies l_cluster.is_override) then
 					dir_name := Execution_environment.interpreted_string (l_cluster.full_pathname)
 					if not file_system.directory_exists (dir_name) then
 						l_clusters.remove (i)
 						nb := nb - 1
 					else
-						repreparse_cluster_multiple (l_cluster)
+						repreparse_cluster_multiple (l_cluster, a_override)
 						i := i + 1
 					end
 				else
-					repreparse_cluster_multiple (l_cluster)
+					repreparse_cluster_multiple (l_cluster, a_override)
 					i := i + 1
 				end
 			end

@@ -191,6 +191,22 @@ feature -- Measurement
 			if subclusters /= Void then
 				Result := Result + subclusters.count
 			end
+		ensure
+			count_non_negavite: Result >= 0
+		end
+
+	override_count: INTEGER is
+			-- Number (recursively) of non-abstract override clusters,
+			-- including current cursor
+		do
+			if not is_abstract and is_override then
+				Result := 1
+			end
+			if subclusters /= Void then
+				Result := Result + subclusters.override_count
+			end
+		ensure
+			override_count_non_negavite: Result >= 0
 		end
 
 feature -- Status setting

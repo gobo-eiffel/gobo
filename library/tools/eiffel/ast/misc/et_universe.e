@@ -561,6 +561,16 @@ feature -- Measurement
 			cluster_count_non_negavite: Result >= 0
 		end
 
+	override_cluster_count: INTEGER is
+			-- Number (recursively) of non-abstract override clusters
+		do
+			if clusters /= Void then
+				Result := clusters.override_count
+			end
+		ensure
+			override_cluster_count_non_negavite: Result >= 0
+		end
+
 feature -- Setting
 
 	set_root_class (a_name: ET_CLASS_NAME) is
@@ -934,7 +944,7 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_shallow (clusters)
+				eiffel_preparser.repreparse_clusters_shallow (clusters, False)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1022,7 +1032,7 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_single (clusters)
+				eiffel_preparser.repreparse_clusters_single (clusters, False)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1113,7 +1123,254 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_multiple (clusters)
+				eiffel_preparser.repreparse_clusters_multiple (clusters, False)
+			end
+		ensure
+			preparsed: is_preparsed
+		end
+
+	repreparse_override_shallow is
+			-- Traverse all override clusters again and rebuild the mapping between class
+			-- names and filenames in each cluster. Modified classes are reset and left
+			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Filenames are supposed to be of the form 'classname.e'.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class, a_class1, a_class2: ET_CLASS
+			a_modified: BOOLEAN
+			a_time_stamp: INTEGER
+		do
+			if not is_preparsed then
+				preparse_shallow
+			elseif clusters /= Void then
+					-- Take care of possibly removed classes (either their old files do not exist anymore).
+				a_cursor := classes.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					from
+						a_class1 := a_class
+						a_class2 := a_class1.overridden_class
+					until
+						a_class2 = Void
+					loop
+						if a_class2.is_preparsed and then a_class2.cluster.is_override then
+							if a_class2.cluster.is_abstract then
+								a_class2 := a_class2.overridden_class
+								a_class1.set_overridden_class (a_class2)
+							elseif a_class2.is_parsed then
+								a_time_stamp := a_class2.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								else
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								end
+							elseif not file_system.file_exists (a_class2.filename) then
+								a_class2 := a_class2.overridden_class
+								a_class1.set_overridden_class (a_class2)
+							else
+								a_class1 := a_class2
+								a_class2 := a_class1.overridden_class
+							end
+						else
+							a_class1 := a_class2
+							a_class2 := a_class1.overridden_class
+						end
+					end
+					if a_class.is_preparsed and then a_class.cluster.is_override then
+						if a_class.cluster.is_abstract then
+							a_modified := True
+							a_class2 := a_class.overridden_class
+							if a_class2 /= Void then
+								a_class.copy (a_class2)
+							else
+								a_class.reset_all
+							end
+						elseif a_class.is_parsed then
+							a_time_stamp := a_class.time_stamp
+							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+								a_modified := True
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset_all
+								end
+							end
+						elseif not file_system.file_exists (a_class.filename) then
+							a_modified := True
+							a_class2 := a_class.overridden_class
+							if a_class2 /= Void then
+								a_class.copy (a_class2)
+							else
+								a_class.reset_all
+							end
+						end
+					end
+					a_cursor.forth
+				end
+				if a_modified then
+					reset_classes
+				end
+				eiffel_preparser.repreparse_clusters_shallow (clusters, True)
+			end
+		ensure
+			preparsed: is_preparsed
+		end
+
+	repreparse_override_single is
+			-- Traverse all override clusters again and rebuild the mapping between class
+			-- names and filenames in each cluster. Modified classes are reset and left
+			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Each Eiffel file is supposed to contain exactly one class.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class, a_class1, a_class2: ET_CLASS
+			a_time_stamp: INTEGER
+			a_modified: BOOLEAN
+		do
+			if not is_preparsed then
+				preparse_single
+			elseif clusters /= Void then
+					-- Take care of possibly removed classes (either their old files do not exist
+					-- anymore, or they have been modified and may contain another class).
+				a_cursor := classes.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					from
+						a_class1 := a_class
+						a_class2 := a_class1.overridden_class
+					until
+						a_class2 = Void
+					loop
+						if a_class2.is_preparsed and then a_class2.cluster.is_override then
+							if a_class2.cluster.is_abstract then
+								a_class2 := a_class2.overridden_class
+								a_class1.set_overridden_class (a_class2)
+							else
+								a_time_stamp := a_class2.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								else
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								end
+							end
+						else
+							a_class1 := a_class2
+							a_class2 := a_class1.overridden_class
+						end
+					end
+					if a_class.is_preparsed and then a_class.cluster.is_override then
+						if a_class.cluster.is_abstract then
+							a_modified := True
+							a_class2 := a_class.overridden_class
+							if a_class2 /= Void then
+								a_class.copy (a_class2)
+							else
+								a_class.reset_all
+							end
+						else
+							a_time_stamp := a_class.time_stamp
+							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+								a_modified := True
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset_all
+								end
+							end
+						end
+					end
+					a_cursor.forth
+				end
+				if a_modified then
+					reset_classes
+				end
+				eiffel_preparser.repreparse_clusters_single (clusters, True)
+			end
+		ensure
+			preparsed: is_preparsed
+		end
+
+	repreparse_override_multiple is
+			-- Traverse all override clusters again and rebuild the mapping between class
+			-- names and filenames in each cluster. Modified classes are reset and left
+			-- unparsed. New classes are added to `classes', but are not parsed.
+			-- Each Eiffel file can contain more than one class.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class, a_class1, a_class2: ET_CLASS
+			a_time_stamp: INTEGER
+			a_modified: BOOLEAN
+		do
+			if not is_preparsed then
+				preparse_single
+			elseif clusters /= Void then
+					-- Take care of possibly removed classes (either their old files do not exist
+					-- anymore, or they have been modified and may contain another class).
+					-- Note that if a file contains two classes and is modified between the
+					-- time we check the first class and the second class then the preparse
+					-- will give inconsistent results and will need to be rerun again.
+				a_cursor := classes.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					from
+						a_class1 := a_class
+						a_class2 := a_class1.overridden_class
+					until
+						a_class2 = Void
+					loop
+						if a_class2.is_preparsed and then a_class2.cluster.is_override then
+							if a_class2.cluster.is_abstract then
+								a_class2 := a_class2.overridden_class
+								a_class1.set_overridden_class (a_class2)
+							else
+								a_time_stamp := a_class2.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								else
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								end
+							end
+						else
+							a_class1 := a_class2
+							a_class2 := a_class1.overridden_class
+						end
+					end
+					if a_class.is_preparsed and then a_class.cluster.is_override then
+						if a_class.cluster.is_abstract then
+							a_modified := True
+							a_class2 := a_class.overridden_class
+							if a_class2 /= Void then
+								a_class.copy (a_class2)
+							else
+								a_class.reset_all
+							end
+						else
+							a_time_stamp := a_class.time_stamp
+							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+								a_modified := True
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset_all
+								end
+							end
+						end
+					end
+					a_cursor.forth
+				end
+				if a_modified then
+					reset_classes
+				end
+				eiffel_preparser.repreparse_clusters_multiple (clusters, True)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1215,7 +1472,87 @@ feature -- Parsing
 				if a_modified then
 					reset_classes
 				end
-				eiffel_parser.reparse_clusters (clusters)
+				eiffel_parser.reparse_clusters (clusters, False)
+			end
+		ensure
+			preparsed: is_preparsed
+		end
+
+	reparse_override_all is
+			-- Parse all classes in override clusters again.
+			-- There is not need to call one of the preparse routines
+			-- beforehand since the current routine will traverse all
+			-- clusters and parse all Eiffel files anyway.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class, a_class1, a_class2: ET_CLASS
+			a_time_stamp: INTEGER
+			a_modified: BOOLEAN
+		do
+			if not is_preparsed then
+				parse_all
+			elseif clusters /= Void then
+					-- Take care of possibly removed classes (either their old files do not exist
+					-- anymore, or they have been modified and may contain another class).
+					-- Note that if a file contains two classes and is modified between the
+					-- time we check the first class and the second class then the preparse
+					-- will give inconsistent results and will need to be rerun again.
+				a_cursor := classes.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					from
+						a_class1 := a_class
+						a_class2 := a_class1.overridden_class
+					until
+						a_class2 = Void
+					loop
+						if a_class2.is_preparsed and a_class2.is_parsed and then a_class2.cluster.is_override then
+							if a_class2.cluster.is_abstract then
+								a_class2 := a_class2.overridden_class
+								a_class1.set_overridden_class (a_class2)
+							else
+								a_time_stamp := a_class2.time_stamp
+								if a_time_stamp < 0 or else file_system.file_time_stamp (a_class2.filename) /= a_time_stamp then
+									a_class2 := a_class2.overridden_class
+									a_class1.set_overridden_class (a_class2)
+								else
+									a_class1 := a_class2
+									a_class2 := a_class1.overridden_class
+								end
+							end
+						else
+							a_class1 := a_class2
+							a_class2 := a_class1.overridden_class
+						end
+					end
+					if a_class.is_preparsed and a_class.is_parsed and then a_class.cluster.is_override then
+						if a_class.cluster.is_abstract then
+							a_modified := True
+							a_class2 := a_class.overridden_class
+							if a_class2 /= Void then
+								a_class.copy (a_class2)
+							else
+								a_class.reset_all
+							end
+						else
+							a_time_stamp := a_class.time_stamp
+							if a_time_stamp < 0 or else file_system.file_time_stamp (a_class.filename) /= a_time_stamp then
+								a_modified := True
+								a_class2 := a_class.overridden_class
+								if a_class2 /= Void then
+									a_class.copy (a_class2)
+								else
+									a_class.reset_all
+								end
+							end
+						end
+					end
+					a_cursor.forth
+				end
+				if a_modified then
+					reset_classes
+				end
+				eiffel_parser.reparse_clusters (clusters, True)
 			end
 		ensure
 			preparsed: is_preparsed
