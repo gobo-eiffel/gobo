@@ -73,12 +73,14 @@ feature -- Test
 			name_sorter: DS_QUICK_SORTER [STRING]
 			name_comparator: DS_COMPARABLE_COMPARATOR [STRING]
 			expected_entries: ARRAY [STRING]
+			cvs_dir: STRING
 		do
 			a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel/data")
 			!! a_directory.make (a_name)
 			a_directory.open_read
 			if a_directory.is_open_read then
 				assert ("not_eof", not a_directory.end_of_input)
+				cvs_dir := "CVS"
 				from
 					!! filenames.make (10)
 				until
@@ -86,7 +88,9 @@ feature -- Test
 				loop
 					a_directory.read_entry
 					if not a_directory.end_of_input then
-						filenames.force_last (a_directory.last_entry)
+						if not a_directory.last_entry.is_equal (cvs_dir) then
+							filenames.force_last (a_directory.last_entry)
+						end
 					end
 				end
 				!! name_comparator.make
@@ -109,6 +113,7 @@ feature -- Test
 			filenames: DS_ARRAYED_LIST [STRING]
 			name_sorter: DS_QUICK_SORTER [STRING]
 			name_comparator: DS_COMPARABLE_COMPARATOR [STRING]
+			cvs_dir: STRING
 		do
 			a_name := "gobo3001"
 			assert ("not_readable1", not file_system.is_directory_readable (a_name))
@@ -118,6 +123,7 @@ feature -- Test
 			a_directory.open_read
 			if a_directory.is_open_read then
 				assert ("not_eof", not a_directory.end_of_input)
+				cvs_dir := "CVS"
 				from
 					!! filenames.make (10)
 				until
@@ -125,7 +131,9 @@ feature -- Test
 				loop
 					a_directory.read_entry
 					if not a_directory.end_of_input then
-						filenames.force_last (a_directory.last_entry)
+						if not a_directory.last_entry.is_equal (cvs_dir) then
+							filenames.force_last (a_directory.last_entry)
+						end
 					end
 				end
 				!! name_comparator.make
