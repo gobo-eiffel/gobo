@@ -86,7 +86,7 @@ feature -- Status report
 				formal_parameters := a_class.generic_parameters
 				if formal_parameters /= Void then
 					if index <= formal_parameters.count then
-						a_formal := formal_parameters.item (index)
+						a_formal := formal_parameters.formal_generic_parameter (index)
 						a_type := a_formal.constraint
 						if a_type = Void then
 							any_type := a_class.universe.any_type
@@ -131,7 +131,7 @@ feature -- Validity
 				if a_class.error_handler.is_se then
 					formals := a_class.generic_parameters
 					if formals /= Void and then index <= formals.count then
-						other_formal := formals.item (index)
+						other_formal := formals.formal_generic_parameter (index)
 						a_sorter.force_relation (other_formal, a_formal)
 					end
 				end
@@ -150,7 +150,7 @@ feature -- Type processing
 			a_formal: ET_FORMAL_GENERIC_TYPE
 		do
 			if index <= actual_parameters.count then
-				a_formal ?= actual_parameters.item (index)
+				a_formal ?= actual_parameters.type (index)
 				if a_formal = Void or else a_formal.index /= index then
 					Result := True
 				end

@@ -178,7 +178,7 @@ feature -- Validity
 			nb := count
 			Result := True
 			from i := 1 until i > nb loop
-				a_formal := formals.item (i)
+				a_formal := formals.formal_generic_parameter (i)
 				an_actual := type (i)
 				if not an_actual.check_parent_validity (an_heir) then
 						-- The error has already been reported
@@ -235,7 +235,7 @@ feature -- Validity
 						-- in `check_constraint_validity'.
 					Result := False
 				else
-					a_constraint := formals.item (i).constraint
+					a_constraint := formals.formal_generic_parameter (i).constraint
 					if a_constraint /= Void then
 						if has_derived_parameters then
 							if a_constraint.has_formal_parameters (Current) then
