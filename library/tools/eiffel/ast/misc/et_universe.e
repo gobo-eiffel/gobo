@@ -230,8 +230,25 @@ feature -- Access
 	classes: DS_HASH_TABLE [ET_CLASS, ET_CLASS_NAME]
 			-- Classes in universe
 
+	class_by_name (a_name: STRING): ET_CLASS is
+			-- Class named `a_name' in universe;
+			-- Void if not such class
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		local
+			a_class_name: ET_IDENTIFIER
+		do
+			create a_class_name.make (a_name)
+			classes.search (a_class_name)
+			if classes.found then
+				Result := classes.found_item
+			end
+		end
+
 	eiffel_class (a_name: ET_CLASS_NAME): ET_CLASS is
-			-- Class named `a_name' in universe
+			-- Class named `a_name' in universe;
+			-- add this class to universe if not found
 		require
 			a_name_not_void: a_name /= Void
 		do
@@ -243,7 +260,7 @@ feature -- Access
 				classes.force_last (Result, a_name)
 			end
 		ensure
-			class_not_void: Result /= Void
+			eiffel_class_not_void: Result /= Void
 		end
 
 	error_handler: ET_ERROR_HANDLER
