@@ -411,7 +411,8 @@ feature -- Element change
 
 	reject is
 			-- Direct scanner to proceed on the second best rule
-			-- which matched the input.
+			-- which matched the input (when '%option reject'
+			-- has been specified).
 		do
 			if yyReject_used then
 				yy_rejected := True

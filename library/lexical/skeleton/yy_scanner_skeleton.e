@@ -120,14 +120,17 @@ feature -- Measurement
 		end
 
 	line: INTEGER
-			-- Line number of last token read
+			-- Line number of last token read when
+			-- '%option line' has been specified
 
 	column: INTEGER
-			-- Column number of last token read
+			-- Column number of last token read when
+			-- '%option line' has been specified
 
 	position: INTEGER
-			-- Position of last token read (i.e. number of characters
-			-- from the start of the input source)
+			-- Position of last token read (i.e. number of
+			-- characters from the start of the input source)
+			-- when '%option position' has been specified
 
 feature -- Setting
 
@@ -313,16 +316,16 @@ feature {NONE} -- Implementation
 		require
 			end_of_buffer_not_missed: yy_end <= (input_buffer.upper + 2)
 		local
-			yy_new_end: INTEGER
+			yy_new_start: INTEGER
 		do
 			input_buffer.set_index (yy_start)
 			input_buffer.fill
 				-- `input_buffer.content' may have been resized.
 				-- Therefore `content' has to be queried again.
 			yy_set_content (input_buffer.content)
-			yy_new_end := input_buffer.index
-			yy_end := yy_end - yy_start + yy_new_end
-			yy_start := yy_new_end
+			yy_new_start := input_buffer.index
+			yy_end := yy_end - yy_start + yy_new_start
+			yy_start := yy_new_start
 		end
 
 	yy_set_content (a_content: like yy_content) is
