@@ -37,6 +37,7 @@ feature
 			assert ("parsed", parser.is_correct)
 			assert_equal ("balanced resolver", 0, string_resolver.depth)
 		
+				-- Second time to check resolver left in a good state.
 			parser.parse_from_system ("doc")
 			assert ("parsed second time", parser.is_correct)
 			assert_equal ("balanced second time",  0, string_resolver.depth)
@@ -48,10 +49,29 @@ feature
 			create parser.make
 			parser.set_resolver (new_file_resolver_current_directory)
 			
-			parser.parse_from_system ("data/relative.xml")
+			parser.parse_from_system (Relative_data)
 			assert ("parsed", parser.is_correct)
 		
-			parser.parse_from_system ("data/relative.xml")
+				-- Second time to check resolver left in a good state.
+			parser.parse_from_system (Relative_data)
+			assert ("parsed second time", parser.is_correct)
+		end
+	
+	test_stream is
+			-- Test parse_from_stream and resolver interaction.
+		local
+			a_stream: KL_STRING_INPUT_STREAM
+		do
+			create parser.make
+			parser.set_resolver (new_file_resolver_current_directory)
+
+			create a_stream.make (Relative_xml)
+			parser.parse_from_stream (a_stream)
+			assert ("parsed", parser.is_correct)
+			
+				-- Second time to check resolver left in a good state.
+			create a_stream.make (Relative_xml)
+			parser.parse_from_stream (a_stream)
 			assert ("parsed second time", parser.is_correct)
 		end
 		
@@ -60,4 +80,8 @@ feature {NONE} -- Implementation
 	parser: XM_EIFFEL_PARSER
 			-- Test parser.
 
+	Relative_xml: STRING is "<!DOCTYPE doc [ <!ELEMENT doc (child*)> <!ELEMENT child EMPTY> <!ENTITY e SYSTEM 'data/relative2.xml'> ]><doc>&e;</doc>"
+			-- Top level doc for stream test.
+
+	Relative_data: STRING is "data/relative.xml"
 end
