@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+
+<project name="A">
+	
+	<target name="f1">
+		<echo message="A.f1"/>
+		<set name="var1" value="default_value1"/>
+	</target>
+
+	<target name="f2" depend="f1">
+		<echo message="A.f2"/>
+		<echo message="var1: ${var1}"/>
+	</target>
+
+</project>
+

@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<project name="B" inherit="a.eant">
+	
+	<target name="f1-">
+		<echo message="B.f1"/>
+		<set name="var1" value="value1"/>
+	</target>
+
+	<target name="f2-" depend="f1">
+		<echo message="B.f2"/>
+	</target>
+
+	<target name="f3">
+		<echo message="B.f3"/>
+	</target>
+
+</project>
+
