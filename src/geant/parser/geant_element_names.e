@@ -112,6 +112,11 @@ feature
 			!!Result.make_from_string("getest")
 		end
 
+	Echo_task_name : UC_STRING is
+		once
+			!!Result.make_from_string("echo")
+		end
+
 
 
 end

@@ -41,10 +41,14 @@ feature
 			s := get_attribute_value(a_el, Attribute_name_value.out)
 
 			-- support for environment variables
-			if s.item(1) = '$' then
-				s := s.substring(2, s.count)
-				s := Execution_environment.variable_value(s)
-			end
+--			if s.item(1) = '$' and then s.count > 1 then
+--				s := s.substring(2, s.count)
+--				s := Execution_environment.variable_value(s)
+--			end
+
+--			if s = Void then
+--				s := ""
+--			end
 
 			set_value(s)
 

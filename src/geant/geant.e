@@ -87,6 +87,10 @@ feature
 						elseif task_el.name.is_equal(Getest_task_name) then
 							!GEANT_GETEST_TASK!task.load_from_element(task_el)
 
+						-- echo --
+						elseif task_el.name.is_equal(Echo_task_name) then
+							!GEANT_ECHO_TASK!task.load_from_element(task_el)
+
 
 						-- DEFAULT --
 						else
