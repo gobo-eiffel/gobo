@@ -91,8 +91,8 @@ feature -- Execution
 		do
 			exit_code := 0
 			if is_directory_executable then
-				trace ("  [delete] " + directory + "%N")
 				a_name := file_system.pathname_from_file_system (directory, unix_file_system)
+				trace ("  [delete] " + a_name + "%N")
 				file_system.recursive_delete_directory (a_name)
 				if file_system.directory_exists (a_name) then
 					log ("  [delete] error: cannot delete directory '" + directory + "'%N")
@@ -100,8 +100,8 @@ feature -- Execution
 				end
 			else
 				check is_file_executable: is_file_executable end
-				trace ("  [delete] " + file + "%N")
 				a_name := file_system.pathname_from_file_system (file, unix_file_system)
+				trace ("  [delete] " + a_name + "%N")
 				file_system.delete_file (a_name)
 				if file_system.file_exists (a_name) then
 					log ("geant error: cannot delete file '" + file + "'%N")

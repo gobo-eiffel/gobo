@@ -133,7 +133,7 @@ feature -- Execution
 				a_name := file_system.pathname_from_file_system (source_filenames.item (i), unix_file_system)
 				a_source_time := file_system.file_time_stamp (a_name)
 				if a_source_time = -1 then
-					log ("  [outofdate] error: '" + source_filenames.item (i) + "'  not accessible.%N")
+					log ("  [outofdate] error: '" + a_name + "'  not accessible.%N")
 					exit_code := 1
 					i := nb + 1 -- Jump out of the loop.
 				elseif a_target_time < a_source_time then
