@@ -105,11 +105,11 @@ feature {NONE} -- Command-line processing
 			-- Process command.
 			-- One and only one command must be specified.
 		do
-			if match_long_option ("build") then
-				consume_option
-				process_build
+			if match_long_option ("system") then
+				process_system
+			elseif match_long_option ("cluster") then
+				process_cluster
 			elseif match_long_option ("validate") then
-				consume_option
 				process_validate
 			else
 					-- No command has been specified.
@@ -118,68 +118,98 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
-	process_build is
-			-- Process 'build' command.
+	process_system is
+			-- Process 'system' command.
+		require
+			is_system: match_long_option ("system")
 		local
-			a_command: GEXACE_BUILD_COMMAND
+			a_command: GEXACE_SYSTEM_COMMAND
+			a_compiler: STRING
 		do
 			!! a_command.make (variables, error_handler)
 			commands.force_last (a_command)
-			process_compilers (a_command)
-			process_output (a_command)
-			process_system_file (a_command)
+			if is_next_option_long_option and then has_next_option_value then
+				a_compiler := next_option_value
+				consume_option
+				process_compilers (a_command, a_compiler)
+				process_output (a_command)
+				process_xace_file (a_command)
+			else
+					-- No compiler specified.
+				report_usage_error
+				Exceptions.die (1)
+			end
+		end
+
+	process_cluster is
+			-- Process 'cluster' command.
+		require
+			is_cluster: match_long_option ("cluster")
+		local
+			a_command: GEXACE_CLUSTER_COMMAND
+			a_compiler: STRING
+		do
+			!! a_command.make (variables, error_handler)
+			commands.force_last (a_command)
+			if is_next_option_long_option and then has_next_option_value then
+				a_compiler := next_option_value
+				consume_option
+				process_compilers (a_command, a_compiler)
+				process_output (a_command)
+				process_xace_file (a_command)
+			else
+					-- No compiler specified.
+				report_usage_error
+				Exceptions.die (1)
+			end
 		end
 
 	process_validate is
 			-- Process 'validate' command.
+		require
+			is_validate: match_long_option ("validate")
 		local
 			a_command: GEXACE_VALIDATE_COMMAND
 		do
 			!! a_command.make (variables, error_handler)
 			commands.force_last (a_command)
-			process_system_file (a_command)
+			consume_option
+			process_xace_file (a_command)
 		end
 
-	process_compilers (a_command: GEXACE_BUILD_COMMAND) is
-			-- Process compilers to output code for.
-			-- Possible option is: "--ise", "--se", "--ve", "--hact" or "--xml".
-			-- One and only one compiler must be given.
-			-- A variable with the upper case option name
-			-- will automatically be defined.
+	process_compilers (a_command: GEXACE_BUILD_COMMAND; a_compiler: STRING) is
+			-- Process compiler name.
+			-- Possible values are: "ise", "se", "ve", "hact" or "xml".
+			-- The variable GOBO_EIFFEL will automatically be defined
+			-- for the four first cases.
 		require
 			a_command_not_void: a_command /= Void
+			a_compiler_not_void: a_compiler /= Void
 		local
 			g: ET_XACE_GENERATOR
 		do
-			if has_next_option then
-				if match_long_option ("se") then
-					variables.define_value ("GOBO_EIFFEL", "se")
-					!ET_XACE_SE_GENERATOR! g.make (error_handler)
-					a_command.generators.force_last (g)
-					consume_option
-				elseif match_long_option ("ise") then
-					variables.define_value ("GOBO_EIFFEL", "ise")
-					!ET_XACE_ISE_GENERATOR! g.make (error_handler)
-					a_command.generators.force_last (g)
-					consume_option
-				elseif match_long_option ("ve") then
-					variables.define_value ("GOBO_EIFFEL", "ve")
-					!ET_XACE_VE_GENERATOR! g.make (error_handler)
-					a_command.generators.force_last (g)
-					consume_option
-				elseif match_long_option ("hact") then
-					variables.define_value ("GOBO_EIFFEL", "hact")
-					!ET_XACE_HACT_GENERATOR! g.make (error_handler)
-					a_command.generators.force_last (g)
-					consume_option
-				elseif match_long_option ("xml") then
-					!ET_XACE_XML_GENERATOR! g.make (error_handler)
-					a_command.generators.force_last (g)
-					consume_option
-				end
+			if a_compiler.is_equal ("se") then
+				variables.define_value ("GOBO_EIFFEL", "se")
+				!ET_XACE_SE_GENERATOR! g.make (error_handler)
+				a_command.generators.force_last (g)
+			elseif a_compiler.is_equal ("ise") then
+				variables.define_value ("GOBO_EIFFEL", "ise")
+				!ET_XACE_ISE_GENERATOR! g.make (error_handler)
+				a_command.generators.force_last (g)
+			elseif a_compiler.is_equal ("ve") then
+				variables.define_value ("GOBO_EIFFEL", "ve")
+				!ET_XACE_VE_GENERATOR! g.make (error_handler)
+				a_command.generators.force_last (g)
+			elseif a_compiler.is_equal ("hact") then
+				variables.define_value ("GOBO_EIFFEL", "hact")
+				!ET_XACE_HACT_GENERATOR! g.make (error_handler)
+				a_command.generators.force_last (g)
+			elseif a_compiler.is_equal ("xml") then
+				!ET_XACE_XML_GENERATOR! g.make (error_handler)
+				a_command.generators.force_last (g)
 			end
 			if a_command.generators.is_empty then
-					-- No compiler has been specified.
+					-- Invalid compiler has been specified.
 				report_usage_error
 				Exceptions.die (1)
 			end
@@ -204,7 +234,7 @@ feature {NONE} -- Command-line processing
 						a_cursor.forth
 					end
 				else
-						-- No variable specified.
+						-- No filename specified.
 					report_usage_error
 					Exceptions.die (1)
 				end
@@ -232,13 +262,13 @@ feature {NONE} -- Command-line processing
 			end
 		end
 
-	process_system_file (a_command: GEXACE_COMMAND) is
+	process_xace_file (a_command: GEXACE_COMMAND) is
 			-- Process xace filename.
 		require
 			a_command_not_void: a_command /= Void
 		do
 			if has_next_option then
-				a_command.set_system_filename (next_option)
+				a_command.set_xace_filename (next_option)
 				consume_option
 			end
 		end
@@ -254,10 +284,11 @@ feature {NONE} -- Usage message
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gexace usage message
 		once
-			!! Result.make ("[variable-definitions][options] command [xace-file]%N%
-				%%Tvariable-definitions:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
+			!! Result.make ("[defines][options] command [xace-file]%N%
+				%%Tdefines:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 				%%Toptions:  --verbose%N%
-				%%Tcommand:  --build [--se|--ise|--ve|--hact|--xml][--output=<filename>]%N%
+				%%Tcommand:  --system=(se|ise|ve|hact|xml) [--output=<filename>]%N%
+				%%Tcommand:  --cluster=(se|ise|ve|hact|xml) [--output=<filename>]%N%
 				%%Tcommand:  --validate")
 		ensure
 			usage_message_not_void: Result /= Void

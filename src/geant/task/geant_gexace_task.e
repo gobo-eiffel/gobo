@@ -17,16 +17,13 @@ class GEANT_GEXACE_TASK
 inherit
 
 	GEANT_TASK
-		rename
-			make as task_make
+		undefine
+			make
 		redefine
 			make_from_element
 		end
 
 	GEANT_GEXACE_COMMAND
-		select
-			make
-		end
 
 creation
 
@@ -45,21 +42,26 @@ feature {NONE} -- Initialization
 			define_element: GEANT_ELEMENT
 		do
 			precursor (a_project, an_element)
-				-- options (optional):
-			a_value := attribute_value_or_default (an_element, Options_attribute_name.out, "")
-			set_options (a_value)
-				-- command:
-			if has_uc_attribute (an_element, Command_attribute_name) then
-				a_value := uc_attribute_value (an_element, Command_attribute_name).out
+				-- verbose (optional):
+			if has_uc_attribute (an_element, Verbose_attribute_name) then
+				set_verbose (uc_boolean_value (an_element, Verbose_attribute_name))
+			end
+				-- validate:
+			if has_uc_attribute (an_element, Validate_attribute_name) then
+				set_validate_command (uc_boolean_value (an_element, Validate_attribute_name))
+			end
+				-- system:
+			if has_uc_attribute (an_element, System_attribute_name) then
+				a_value := uc_attribute_value (an_element, System_attribute_name).out
 				if a_value.count > 0 then
-					set_command (a_value)
+					set_system_command (a_value)
 				end
 			end
-				-- command_options (optional):
-			if has_uc_attribute (an_element, Command_options_attribute_name) then
-				a_value := uc_attribute_value (an_element, Command_options_attribute_name).out
+				-- cluster:
+			if has_uc_attribute (an_element, Cluster_attribute_name) then
+				a_value := uc_attribute_value (an_element, Cluster_attribute_name).out
 				if a_value.count > 0 then
-					set_command_options (a_value)
+					set_cluster_command (a_value)
 				end
 			end
 				-- xace_filename:
@@ -99,28 +101,37 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Constants
 
-	Options_attribute_name: UC_STRING is
-			-- Name of xml attribute for options
+	Verbose_attribute_name: UC_STRING is
+			-- Name of xml attribute for 'verbose'
 		once
-			!! Result.make_from_string ("options")
+			!! Result.make_from_string ("verbose")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
 		end
 
-	Command_attribute_name: UC_STRING is
-			-- Name of xml attribute for command
+	Validate_attribute_name: UC_STRING is
+			-- Name of xml attribute for 'validate'
 		once
-			!! Result.make_from_string ("command")
+			!! Result.make_from_string ("validate")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty
 		end
 
-	Command_options_attribute_name: UC_STRING is
-			-- Name of xml attribute for command_options
+	System_attribute_name: UC_STRING is
+			-- Name of xml attribute for 'system'
 		once
-			!! Result.make_from_string ("command_options")
+			!! Result.make_from_string ("system")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: not Result.empty
+		end
+
+	Cluster_attribute_name: UC_STRING is
+			-- Name of xml attribute for 'cluster'
+		once
+			!! Result.make_from_string ("cluster")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: not Result.empty

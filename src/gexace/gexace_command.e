@@ -13,29 +13,17 @@ indexing
 
 deferred class GEXACE_COMMAND
 
-feature {NONE} -- Initialization
+inherit
 
-	make (a_variables: like variables; an_error_handler: like error_handler) is
-			-- Create a new command.
-		require
-			a_variables_not_void: a_variables /= Void
-			an_error_handler_not_void: an_error_handler /= Void
-		do
-			variables := a_variables
-			error_handler := an_error_handler
-			system_filename := default_system_filename
-		ensure
-			error_handler_set: error_handler = an_error_handler
-			system_filename_set: system_filename = default_system_filename
-		end
+	ANY
+
+	KL_IMPORTED_INPUT_STREAM_ROUTINES
+		export {NONE} all end
 
 feature -- Access
 
-	system_filename: STRING
+	xace_filename: STRING
 			-- Name of Xace file
-
-	default_system_filename: STRING is "system.xace"
-			-- Default name of Xace file
 
 	variables: ET_XACE_VARIABLES
 			-- Dollar variables defined
@@ -45,15 +33,15 @@ feature -- Access
 
 feature -- Setting
 
-	set_system_filename (a_name: like system_filename) is
-			-- Set `system_filename' to `a_name'.
+	set_xace_filename (a_name: like xace_filename) is
+			-- Set `xace_filename' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: a_name.count > 0
 		do
-			system_filename := a_name
+			xace_filename := a_name
 		ensure
-			system_filename_set: system_filename = a_name
+			xace_filename_set: xace_filename = a_name
 		end
 
 feature -- Execution
@@ -63,10 +51,18 @@ feature -- Execution
 		deferred
 		end
 
+feature {NONE} -- Constants
+
+	default_system_filename: STRING is "system.xace"
+			-- Default name of system Xace file
+
+	default_cluster_filename: STRING is "cluster.xace"
+			-- Default name of cluster Xace file
+
 invariant
 
-	system_filename_not_void: system_filename /= Void
-	system_filename_not_empty: system_filename.count > 0
+	xace_filename_not_void: xace_filename /= Void
+	xace_filename_not_empty: xace_filename.count > 0
 	variables_not_void: variables /= Void
 	error_handler_not_void: error_handler /= Void
 

@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			-- Create a new 'gexace' command.
 		do
 			precursor (a_project)
-			options := ""
 			!! defines.make (10)
 		end
 
@@ -40,23 +39,60 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can command be executed?
 		do
-			Result := (command /= Void and then command.count > 0) and
-				(command_options /= Void and then command_options.count > 0)
+			Result := (is_validate_executable or is_system_executable or is_cluster_executable)
 		ensure then
-			command_not_void: Result implies command /= Void
-			command_not_empty: Result implies command.count > 0
-			command_options_not_void: Result implies command_options /= Void
-			command_options_not_empty: Result implies command_options.count > 0
+			definition: Result = (is_validate_executable or is_system_executable or is_cluster_executable)
+		end
+
+	is_validate_executable: BOOLEAN is
+			-- Can 'validate' command be execute?
+		do
+			Result := (validate_command and output_filename = Void) and
+				(system_command = Void and cluster_command = Void)
+		ensure
+			validate_command: Result implies validate_command
+			output_filename_void: Result implies output_filename = Void
+			not_system_command: Result implies not is_system_executable
+			not_cluster_command: Result implies not is_cluster_executable
+		end
+
+	is_system_executable: BOOLEAN is
+			-- Can 'system' command be executed?
+		do
+			Result := (system_command /= Void and then system_command.count > 0) and
+				(not validate_command and cluster_command = Void)
+		ensure
+			system_command_not_void: Result implies system_command /= Void
+			system_command_not_empty: Result implies system_command.count > 0
+			not_validate_command: Result implies not is_validate_executable
+			not_cluster_command: Result implies not is_cluster_executable
+		end
+
+	is_cluster_executable: BOOLEAN is
+			-- Can 'cluster' command be executed?
+		do
+			Result := (cluster_command /= Void and then cluster_command.count > 0) and
+				(not validate_command and system_command = Void)
+		ensure
+			cluster_command_not_void: Result implies cluster_command /= Void
+			cluster_command_not_empty: Result implies cluster_command.count > 0
+			not_validate_command: Result implies not is_validate_executable
+			not_system_command: Result implies not is_system_executable
 		end
 
 feature -- Access
 
-	options: STRING
-			-- Gexace command-line options
+	verbose: BOOLEAN
+			-- Gexace '--verbose' command-line options
 
-	command: STRING
+	system_command: STRING
+			-- System command compiler name
 
-	command_options: STRING
+	cluster_command: STRING
+			-- Cluster command compiler name
+
+	validate_command: BOOLEAN
+			-- Validate command
 
 	xace_filename: STRING
 			-- xace filename
@@ -65,40 +101,46 @@ feature -- Access
 			-- Output filename
 
 	defines: DS_HASH_TABLE [STRING, STRING]
-			-- Defined values from the commandline (--define option)
+			-- Defined values from the command-line (--define option)
 
 feature -- Setting
 
-	set_options (an_options: like options) is
-			-- Set `options' to `an_options'.
-		require
-			an_options_not_void: an_options /= Void
+	set_verbose (b: BOOLEAN) is
+			-- Set `verbose' to `an_options'.
 		do
-			options := an_options
+			verbose := b
 		ensure
-			options_set: options = an_options
+			verbose_set: verbose = b
 		end
 
-	set_command (a_command: like command) is
-			-- Set `command' to `a_command'.
+	set_validate_command (b: BOOLEAN) is
+			-- Set `validate_command' to `b'.
+		do
+			validate_command := b
+		ensure
+			validate_command_set: validate_command = b
+		end
+
+	set_system_command (a_command: like system_command) is
+			-- Set `system_command' to `a_command'.
 		require
 			a_command_not_void: a_command /= Void
 			a_command_not_empty: a_command.count > 0
 		do
-			command := a_command
+			system_command := a_command
 		ensure
-			command_set: command = a_command
+			system_command_set: system_command = a_command
 		end
 
-	set_command_options (a_command_options: like command_options) is
-			-- Set `command_options' to `a_command_options'.
+	set_cluster_command (a_command: like cluster_command) is
+			-- Set `cluster_command' to `a_command'.
 		require
-			a_command_options_not_void: a_command_options /= Void
-			a_command_options_not_empty: a_command_options.count > 0
+			a_command_not_void: a_command /= Void
+			a_command_not_empty: a_command.count > 0
 		do
-			command_options := a_command_options
+			cluster_command := a_command
 		ensure
-			command_options_set: command_options = a_command_options
+			cluster_command_set: cluster_command = a_command
 		end
 
 	set_xace_filename (a_filename: like xace_filename) is
@@ -129,41 +171,46 @@ feature -- Execution
 			-- Execute command.
 		local
 			cmd: STRING
-			nb: INTEGER
+			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			a_filename: STRING
 		do
 			cmd := clone ("gexace ")
-
 				-- Add defines if they exist:
-			nb := defines.count
-			if nb > 0 then
+			if defines.count > 0 then
 				cmd.append_string ("--define=%"")
-				from
-					defines.start
-				until
-					defines.after
-				loop
-					cmd.append_string (defines.key_for_iteration)
+				a_cursor := defines.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					cmd.append_string (a_cursor.key)
 					cmd.append_string ("=")
-					cmd.append_string (defines.item_for_iteration)
-
-					defines.forth
-					if not defines.after then
+					cmd.append_string (a_cursor.item)
+					a_cursor.forth
+					if not a_cursor.after then
 						cmd.append_string (" ")
 					end
 				end
 				cmd.append_string ("%"")
 			end
-
-			cmd.append_string (options)
-			cmd.append_string (" --" + command)
-			cmd.append_string (" --" + command_options)
-			if output_filename /= Void then
-				cmd.append_string (" --output=%"")
-				cmd.append_string (output_filename)
-				cmd.append_string ("%"")
+			if verbose then
+				cmd.append_string (" --verbose")
+			end
+			if is_validate_executable then
+				cmd.append_string (" --validate")
+			else
+				if is_system_executable then
+					cmd.append_string (" --system=%"" + system_command + "%"")
+				elseif is_cluster_executable then
+					cmd.append_string (" --cluster=%"" + cluster_command + "%"")
+				end
+				if output_filename /= Void then
+					cmd.append_string (" --output=%"")
+					a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
+					cmd.append_string (a_filename)
+					cmd.append_string ("%"")
+				end
 			end
 			if xace_filename /= Void then
-				cmd.append_string (" " + xace_filename)
+				a_filename := file_system.pathname_from_file_system (xace_filename, unix_file_system)
+				cmd.append_string (" " + a_filename)
 			end
 			trace ("  [gexace] " + cmd + "%N")
 			execute_shell (cmd)
@@ -172,6 +219,7 @@ feature -- Execution
 invariant
 
 	defines_not_void: defines /= Void
-	no_void_define: not defines.has (Void)
+	no_void_define_name: not defines.has (Void)
+	no_void_define_value: not defines.has_item (Void)
 
 end -- class GEANT_GEXACE_COMMAND
