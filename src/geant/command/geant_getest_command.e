@@ -17,10 +17,22 @@ class GEANT_GETEST_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			make
+		end
 
 creation
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_project: GEANT_PROJECT) is
+			-- Create a new 'getest' command.
+		do
+			precursor (a_project)
+			!! defines.make (10)
+		end
 
 feature -- Status report
 
@@ -40,6 +52,9 @@ feature -- Access
 
 	compile: STRING
 			-- Compilation command-line
+
+	defines: DS_HASH_TABLE [STRING, STRING]
+			-- Defined values from the command-line (--define option)
 
 feature -- Setting
 
@@ -70,16 +85,36 @@ feature -- Execution
 			-- Execute command.
 		local
 			cmd: STRING
+			a_filename: STRING
+			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
 			cmd := clone ("getest ")
+			if defines.count > 0 then
+				a_cursor := defines.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					cmd.append_string ("--define=%"")
+					cmd.append_string (a_cursor.key)
+					cmd.append_character ('=')
+					cmd.append_string (a_cursor.item)
+					cmd.append_string ("%" ")
+					a_cursor.forth
+				end
+			end
 			if compile /= Void then
 				cmd.append_string ("--compile=%"")
 				cmd.append_string (compile)
 				cmd.append_string ("%" ")
 			end
-			cmd.append_string (config_filename)
+			a_filename := file_system.pathname_from_file_system (config_filename, unix_file_system)
+			cmd.append_string (a_filename)
 			trace ("  [getest] " + cmd + "%N")
 			execute_shell (cmd)
 		end
+
+invariant
+
+	defines_not_void: defines /= Void
+	no_void_define_name: not defines.has (Void)
+	no_void_define_value: not defines.has_item (Void)
 
 end -- class GEANT_GETEST_COMMAND
