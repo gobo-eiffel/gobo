@@ -133,6 +133,7 @@ feature {NONE} -- Implementation
 				a_type := rhs.item (n).type
 			end
 			a_type.append_dollar_n_to_string (n, nb_rhs, action_buffer)
+			a_type.set_used (True)
 		end
 
 	process_dollar_dollar (a_rule: PR_RULE) is

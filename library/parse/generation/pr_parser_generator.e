@@ -518,6 +518,7 @@ feature {NONE} -- Generation
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		local
 			types: DS_ARRAYED_LIST [PR_TYPE]
+			a_type: PR_TYPE
 			i, nb: INTEGER
 		do
 			types := machine.grammar.types
@@ -525,8 +526,11 @@ feature {NONE} -- Generation
 				a_file.put_string ("%Nfeature {NONE} -- Conversion%N%N")
 				nb := types.count
 				from i := 1 until i > nb loop
-					types.item (i).print_conversion_routine (a_file)
-					a_file.put_character ('%N')
+					a_type := types.item (i)
+					if a_type.is_used then
+						a_type.print_conversion_routine (a_file)
+						a_file.put_character ('%N')
+					end
 					i := i + 1
 				end
 			end

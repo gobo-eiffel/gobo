@@ -16,6 +16,11 @@ Version 2.1 - ?
 	  of the file where the tokens class will be written
 	  (reported by Sven Ehrke).
 	* Do not generate unused local variables anymore.
+	* Do not generate unused $N type conversion routines, nor
+	  conversion routines for the generic parameters of these
+	  types. This caused Eiffel compilation errors when the
+	  generic parameter was a formal generic parameter
+	  (reported by Zoran Simic).
 
 	getest:
 

@@ -89,6 +89,11 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 		end
 
+feature -- Status report
+
+	is_used: BOOLEAN
+			-- Should a conversion routine ANY->`name' be generated?
+
 feature -- Access
 
 	name: STRING
@@ -101,6 +106,16 @@ feature -- Access
 			-- Hash value
 		do
 			Result := id
+		end
+
+feature -- Status setting
+
+	set_used (b: BOOLEAN) is
+			-- Set `is_used' to `b'.
+		do
+			is_used := b
+		ensure
+			used_set: is_used = b
 		end
 
 feature -- Output
