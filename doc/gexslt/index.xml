@@ -29,8 +29,14 @@
   <para>Gobo Eiffel XSLT is a command-line processor for the XSLT 2.0 language. 
   It is very much still under development at the moment, and does not even implement the whole
   of XSLT 1.0 as yet, but it is capable of useful work. In fact, it is used to produce the XHTML pages
-  for all of the Gobo documentation.
+  for all of the Gobo documentation that is written in accordance with <filename class="schema">$GOBO/doc/gobodoc.rng</filename>.
   </para> 
+  <sect1>
+    <title>Using gexslt</title>
+    <para>
+      <link linkend="options">Command line options</link>
+    </para>
+  </sect1>
   <sect1>
     <title>Credits</title>
     <para>The architecture and algorithms of the Gobo Eiffel XSLT library, upon which Gobo Eiffel XSLT is built,

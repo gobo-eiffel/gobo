@@ -280,6 +280,16 @@ feature -- Element change
 		ensure
 			stripper_rules_set: stripper_rules = a_stripper_rules_set
 		end
+
+	ensure_stripper_rules is
+			-- Ensure strip/preserve whitespace rules exist
+		do
+			if stripper_rules = Void then
+				create stripper_rules.make
+			end
+		ensure
+			stripper_rules_not_void: stripper_rules /= Void
+		end
 		
 	register_module (a_system_id: STRING) is
 			-- Register `a_system_id' as a stylesheet module.

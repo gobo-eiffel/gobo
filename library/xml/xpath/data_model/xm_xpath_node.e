@@ -166,6 +166,20 @@ feature -- Access
 		end
 
 
+		uri: STRING is
+			-- URI part of the name of this node;
+			-- This is the URI corresponding to the prefix,
+			--  or the URI of the default namespace if appropriate.
+		do
+			if name_code = -1 then
+				Result := ""
+			else
+				Result := shared_name_pool.namespace_uri_from_name_code (name_code)
+			end
+		ensure
+			uri_not_void: Result /= Void
+		end
+
 	document_root: XM_XPATH_DOCUMENT is
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void

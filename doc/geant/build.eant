@@ -23,15 +23,16 @@
 			Install the Gobo Eiffel Ant Documentation.
 		</description>
 
-		<set name="xslt_processor" value="xsltproc" unless="$GOBO_XSLT_PROCESSOR"/>
-		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="$GOBO_XSLT_PROCESSOR"/>
+		<set name="xslt_processor" value="gexslt" />
+		<!-- <set name="xslt_processor" value="xsltproc" unless="$GOBO_XSLT_PROCESSOR"/>
+		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="$GOBO_XSLT_PROCESSOR"/> -->
 
 			<!-- Concepts: -->
 		<xslt
 			processor="${xslt_processor}"
 			input="overview.xml"
 			output="overview.html"
-			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
+			stylesheet="${GOBO}/doc/misc/gobo2html2.xsl"
 		/>
 
 		<set name="input" value="overview"/>
@@ -207,7 +208,7 @@
 			processor="${xslt_processor}"
 			input="${input}.xml"
 			output="${input}.html"
-			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
+			stylesheet="${GOBO}/doc/misc/gobo2html2.xsl"
 		>
 			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
 			<parameter name="next" value="&quot;'${next}.html'&quot;"/>

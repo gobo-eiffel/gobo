@@ -110,50 +110,53 @@ feature -- Access
 			Result := attribute_collection.attribute_value_by_name (a_uri, a_local_name)
 		end
 
-	uri_code_for_prefix (an_xml_prefix: STRING): INTEGER is
-			-- URI code for `an_xml_prefix'
-		require
-			prefix_not_void: an_xml_prefix /= Void
-		local
-			a_prefix_code: INTEGER
-		do
-			a_prefix_code := shared_name_pool.code_for_prefix (an_xml_prefix)
-			if a_prefix_code = -1 then
-				Result := -1
-			else
-				Result := 	uri_code_for_prefix_code (a_prefix_code)
-			end
-		ensure
-			nearly_positive_result: Result > -2
-		end
-
 	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER is
 			-- URI code for `a_prefix_code'
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_namespace_code: INTEGER
+			an_element: XM_XPATH_ELEMENT
 		do
 			Result := -1 -- not found
-			from
-				a_cursor := namespace_code_list.new_cursor
-				a_cursor.start
-			variant
-				namespace_code_list.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				a_namespace_code := a_cursor.item
-				if prefix_code_from_namespace_code (a_namespace_code) = a_prefix_code then
-					Result := uri_code_from_namespace_code (a_namespace_code)
-					a_cursor.go_after
-				else
-					a_cursor.forth
+			if a_prefix_code = Xml_prefix_index - 1 then
+				Result := Xml_uri_code
+			else
+				from
+					a_cursor := namespace_code_list.new_cursor
+					a_cursor.start
+				variant
+					namespace_code_list.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					a_namespace_code := a_cursor.item
+					if prefix_code_from_namespace_code (a_namespace_code) = a_prefix_code then
+						Result := uri_code_from_namespace_code (a_namespace_code)
+						a_cursor.go_after
+					else
+						a_cursor.forth
+					end
 				end
 			end
-		ensure
-			nearly_positive_result: Result > -2
+			
+			-- If we have got so far, without finding `a_prefix_code',
+			--  then we must look at the parent element
+			
+			if Result = -1 then
+				an_element ?= parent
+				if an_element = Void then
+					
+					-- Document node
+					
+					if a_prefix_code = 0 then
+						Result := Default_uri_code
+					end
+				else
+					Result := an_element.uri_code_for_prefix_code (a_prefix_code)
+				end
+			end
 		end
-	
+
 	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
 			-- Output all namespace nodes associated with this element.
 		local
@@ -187,8 +190,6 @@ feature -- Access
 
 	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
 			-- Namespace codes in scope for `Current'
-		require
-			namespaces_accumulated: accumulated_namespace_nodes /= Void
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NAMESPACE]
 		do
@@ -204,7 +205,7 @@ feature -- Access
 				a_cursor.forth
 			end
 		end
-		
+
 feature -- Measurement
 
 	number_of_attributes: INTEGER is
@@ -224,6 +225,13 @@ feature -- Status setting
 		end
 
 feature -- Element change
+
+	ensure_namespace_nodes is
+			-- Ensure `namespace_codes_in_scope' may be called.
+		do
+			create accumulated_namespace_nodes.make_default
+			accumulate_namespace_nodes (Current, accumulated_namespace_nodes, True)
+		end
 
 	accumulate_namespace_nodes (an_owner: XM_XPATH_TREE_ELEMENT; an_accumulation_list: DS_ARRAYED_LIST [XM_XPATH_TREE_NAMESPACE]; add_xml: BOOLEAN) is
 			-- Accumulate namespace nodes in scope.
@@ -287,7 +295,11 @@ feature -- Element change
 			if add_xml then
 				a_namespace_code := created_namespace_code (Xml_uri_code, Xml_prefix_index - 1)
 				create a_namespace.make (an_owner.document, an_owner, a_namespace_code, an_accumulation_list.count + 1)
+				an_accumulation_list.force_last (a_namespace)
 			end
+			are_namespaces_accumulated := True
+		ensure
+			namespace_nodes_accumulated: are_namespaces_accumulated
 		end
 
 	add_namespace (a_namespace_code: INTEGER) is

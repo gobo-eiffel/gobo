@@ -83,11 +83,72 @@ feature -- Access
 			Result := type_factory.untyped_type.fingerprint
 		end
 
+	uri_code_for_prefix (an_xml_prefix: STRING): INTEGER is
+			-- URI code for `an_xml_prefix'
+		require
+			prefix_not_void: an_xml_prefix /= Void
+		local
+			a_prefix_code: INTEGER
+		do
+			a_prefix_code := shared_name_pool.code_for_prefix (an_xml_prefix)
+			if a_prefix_code = -1 then
+				Result := -1
+			else
+				Result := uri_code_for_prefix_code (a_prefix_code)
+			end
+		ensure
+			nearly_positive_result: Result > -2
+		end
+
+	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER is
+			-- URI code for `a_prefix_code'
+		deferred
+		ensure
+			nearly_positive_result: Result > -2
+		end
+
 	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
 			-- Output all namespace nodes associated with this element.
 		require
 			receiver_not_void: a_receiver /= Void
 		deferred
+		end
+
+	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
+			-- List of namespace codes in scope
+		require
+			namespace_nodes_accumulated: are_namespaces_accumulated
+		deferred
+		ensure
+			namespace_codes_in_scope_not_void: Result /= Void
+		end
+
+	prefixes_in_scope: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_STRING_VALUE] is
+			-- Namespace prefixes in scope
+		local
+			a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_prefix_list: DS_ARRAYED_LIST [XM_XPATH_STRING_VALUE]
+			an_xml_prefix: STRING
+			a_string_value: XM_XPATH_STRING_VALUE
+		do
+			a_namespace_code_list := namespace_codes_in_scope
+			create a_prefix_list.make (a_namespace_code_list.count)
+			from
+				a_cursor := a_namespace_code_list.new_cursor; a_cursor.start
+			variant
+				a_namespace_code_list.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				an_xml_prefix := shared_name_pool.prefix_from_namespace_code (a_cursor.item)
+				create a_string_value.make (an_xml_prefix)
+				a_prefix_list.put_last (a_string_value)
+				a_cursor.forth
+			end
+			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_STRING_VALUE]} Result.make (a_prefix_list)
+		ensure
+			iterator_not_void_nor_in_error: Result /= Void and then not Result.is_error
 		end
 
 feature -- Status report
@@ -96,7 +157,10 @@ feature -- Status report
 			-- Is current node "nilled"? (i.e. xsi: nill="true")
 		do
 			Result := nilled_property
-		end	
+		end
+	
+	are_namespaces_accumulated: BOOLEAN
+			-- Have namspace codes been accumulated for iteration?
 
 feature -- Status setting
 
@@ -106,6 +170,15 @@ feature -- Status setting
 		require
 			valid_name_code: a_name_code >= -1
 		deferred
+		end
+
+feature -- Element change
+
+	ensure_namespace_nodes is
+			-- Ensure `namespace_codes_in_scope' may be called.
+		deferred
+		ensure
+			namespace_nodes_accumulated: are_namespaces_accumulated
 		end
 
 feature {NONE} -- Access

@@ -70,7 +70,8 @@ feature -- Events
 			if is_line_numbering then
 				tiny_document.set_line_numbering
 			end
-			tiny_document.add_node (Document_node, current_depth, -1, -1, -1)
+			tiny_document.add_node (Document_node, current_depth, 0, 0, -1)
+			node_number := tiny_document.last_node_added
 			create previously_at_depth.make (1, 100)
 			previously_at_depth.put(1, 1) -- i.e. depth one is node 1 - the document node
 			previously_at_depth.put (0, 2) 
@@ -90,7 +91,7 @@ feature -- Events
 			an_owner_node, a_previous_sibling: INTEGER
 			a_new_type_code: like a_type_code
 		do
-			tiny_document.add_node (Element_node, current_depth, -1, -1, a_name_code)
+			tiny_document.add_node (Element_node, current_depth, 0, 0, a_name_code)
 			node_number := tiny_document.last_node_added
 			if conformance.basic_xslt_processor then
 				a_new_type_code := Untyped_type_code

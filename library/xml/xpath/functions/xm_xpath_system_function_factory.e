@@ -42,11 +42,19 @@ feature -- Creation
 			elseif STRING_.same_string (a_function_name, "false") then
 				create {XM_XPATH_FALSE} Result.make
 			elseif STRING_.same_string (a_function_name, "id") then
-				create {XM_XPATH_ID} Result.make				
+				create {XM_XPATH_ID} Result.make
+			elseif STRING_.same_string (a_function_name, "in-scope-prefixes") then
+				create {XM_XPATH_IN_SCOPE_PREFIXES} Result.make								
 			elseif STRING_.same_string (a_function_name, "last") then
 				create {XM_XPATH_LAST} Result.make
+			elseif STRING_.same_string (a_function_name, "local-name") then
+				create {XM_XPATH_LOCAL_NAME} Result.make				
 			elseif STRING_.same_string (a_function_name, "name") then
 				create {XM_XPATH_NAME} Result.make
+			elseif STRING_.same_string (a_function_name, "namespace-uri") then
+				create {XM_XPATH_NAMESPACE_URI} Result.make				
+			elseif STRING_.same_string (a_function_name, "namespace-uri-for-prefix") then
+				create {XM_XPATH_NAMESPACE_URI_FOR_PREFIX} Result.make				
 			elseif STRING_.same_string (a_function_name, "normalize-space") then
 				create {XM_XPATH_NORMALIZE_SPACE} Result.make
 			elseif STRING_.same_string (a_function_name, "not") then

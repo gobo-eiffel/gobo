@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			create document_pool.make
 			initial_mode := -1
 			recovery_policy := Recover_with_warnings
+			create parser_factory
 		ensure
 			configuration_set: configuration = a_configuration
 			prepared_stylesheet_set: prepared_stylesheet = a_prepared_stylesheet
@@ -235,17 +236,17 @@ feature -- Creation
 			stripper_not_void: Result /= Void
 		end	
 
-	new_parser: XM_EIFFEL_PARSER is
+	new_parser: XM_PARSER is
 			-- XML Parser
 		do
-			create Result.make
+			Result := parser_factory.new_eiffel_parser
 			Result.set_resolver (configuration.entity_resolver)
 			Result.copy_string_mode (configuration)
 		ensure
 			parser_not_void: Result /= Void
 		end
 
-	new_builder (a_parser: XM_EIFFEL_PARSER): XM_XPATH_BUILDER is
+	new_builder (a_parser: XM_PARSER): XM_XPATH_BUILDER is
 			-- Builder for XML source.
 		require
 			parser_not_void: a_parser /= Void
@@ -466,7 +467,7 @@ feature -- Transformation
 		local
 			a_start_node: XM_XPATH_NODE
 			a_builder: XM_XPATH_BUILDER
-			a_parser: XM_EIFFEL_PARSER
+			a_parser: XM_PARSER
 			a_document: XM_XPATH_DOCUMENT
 		do
 
@@ -624,6 +625,9 @@ feature -- Transformation
 
 feature -- Implementation
 
+	parser_factory: XM_EIFFEL_PARSER_FACTORY
+			-- parser factory
+
 	principal_source_document: XM_XPATH_DOCUMENT
 			-- Principal document to be transformed
 
@@ -765,6 +769,7 @@ feature -- Implementation
 
 invariant
 
+	parser_factory_not_void: parser_factory /= Void
 	configuration_not_void: configuration /= Void
 	stylesheet_not_void: prepared_stylesheet /= Void
 	document_pool_not_void: document_pool /= Void

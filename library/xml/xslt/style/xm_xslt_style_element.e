@@ -767,6 +767,7 @@ feature -- Creation
 			a_leading_character, a_left_curly_brace, a_right_curly_brace, a_behaviour: INTEGER
 			a_left_double_curly_brace, a_right_double_curly_brace: BOOLEAN
 			a_parser: XM_XSLT_PATTERN_PARSER
+			a_concat_function: XM_XPATH_CONCAT
 		do
 			create components.make (5)
 			components.set_equality_tester (expression_tester)
@@ -827,7 +828,9 @@ feature -- Creation
 			elseif a_static_context.is_backwards_compatible_mode then
 				last_generated_expression := components.item (1)
 			else
-				todo ("generate_attribute_value_template - concatenated components", True)
+				create a_concat_function.make
+				a_concat_function.set_arguments (components)
+				last_generated_expression := a_concat_function
 			end
 		ensure
 			attribute_value_template_not_void: last_generated_expression /= Void

@@ -31,16 +31,19 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER; a_local_name: STRING) is
+	make (a_node_type: INTEGER; a_local_name, an_original_text: STRING) is
 		require
 			valid_node_type: is_node_type (a_node_type)
 			valid_local_name: a_local_name /= Void and then is_ncname (a_local_name)
+			original_text_not_void: an_original_text /= Void
 		do
 			node_kind := a_node_type
 			local_name := a_local_name
+			original_text := an_original_text
 		ensure
 			node_kind_set: node_kind = a_node_type
 			local_name_set: local_name = a_local_name
+			original_text_set: original_text = an_original_text
 		end
 
 feature -- Access

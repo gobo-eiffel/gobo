@@ -11,6 +11,7 @@
   <xsl:param name="previous"/>
   <xsl:param name="next"/>
   <xsl:param name="toc"/>
+  <xsl:param name="images" select="'../image/'" />
 
   <xsl:output
    method="xhtml"
@@ -88,13 +89,12 @@
 </xsl:template>
 
 <xsl:template match="chapter">
-	<html lang="en" xml:lang="en">
-	<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-		<title>
-			<xsl:value-of select="title"/>
-		</title>
-    <style type="text/css">
+  <html lang="en" xml:lang="en">
+    <head>
+      <title>
+	<xsl:value-of select="title"/>
+      </title>
+      <style type="text/css">
 body {
   background-color: white;
   color: black;
@@ -189,11 +189,11 @@ table.header tbody tr td {
 						<xsl:attribute name="href">
 							<xsl:value-of select="$previous"/>
 						</xsl:attribute>
-						<img src="../image/previous.gif" alt="Previous"/>
+						<img src="{$images}previous.gif" alt="Previous"/>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="../image/previous.gif" alt="Previous"/>
+					<img src="{$images}previous.gif" alt="Previous"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:choose>
@@ -202,11 +202,11 @@ table.header tbody tr td {
 						<xsl:attribute name="href">
 							<xsl:value-of select="$next"/>
 						</xsl:attribute>
-						<img src="../image/next.gif" alt="Next"/>
+						<img src="{$images}next.gif" alt="Next"/>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="../image/next.gif" alt="Next"/>
+					<img src="{$images}next.gif" alt="Next"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</td>
@@ -232,7 +232,7 @@ table.header tbody tr td {
 		</td>
 		<td align="right" valign="top">
 			<a href="http://www.gobosoft.com">
-				<img src="../image/home.gif" alt="Home"/>
+				<img src="{$images}home.gif" alt="Home"/>
 			</a>
 			<xsl:choose>
 				<xsl:when test="$toc!=''">
@@ -240,11 +240,11 @@ table.header tbody tr td {
 						<xsl:attribute name="href">
 							<xsl:value-of select="$toc"/>
 						</xsl:attribute>
-						<img src="../image/toc.gif" alt="Toc"/>
+						<img src="{$images}toc.gif" alt="Toc"/>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="../image/toc.gif" alt="Toc"/>
+					<img src="{$images}toc.gif" alt="Toc"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:choose>
@@ -253,11 +253,11 @@ table.header tbody tr td {
 						<xsl:attribute name="href">
 							<xsl:value-of select="$previous"/>
 						</xsl:attribute>
-						<img src="../image/previous.gif" alt="Previous"/>
+						<img src="{$images}previous.gif" alt="Previous"/>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="../image/previous.gif" alt="Previous"/>
+					<img src="{$images}previous.gif" alt="Previous"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:choose>
@@ -266,11 +266,11 @@ table.header tbody tr td {
 						<xsl:attribute name="href">
 							<xsl:value-of select="$next"/>
 						</xsl:attribute>
-						<img src="../image/next.gif" alt="Next"/>
+						<img src="{$images}next.gif" alt="Next"/>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="../image/next.gif" alt="Next"/>
+					<img src="{$images}next.gif" alt="Next"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</td>

@@ -27,7 +27,6 @@ creation
 
 	make, make_from_string, make_from_integer
 
-		-- TODO The whole class needs re-working to use some kind of decimal arithmetic type
 
 feature {NONE} -- Initialization
 

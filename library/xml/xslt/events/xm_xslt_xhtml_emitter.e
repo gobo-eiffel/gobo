@@ -45,7 +45,7 @@ feature -- Events
 				if output_properties.include_content_type then
 					if is_open_start_tag then close_start_tag ("head", False) end
 					output_ignoring_error ("%N      <meta http-equiv=%"Content-Type%" content=%"" +
-												  output_properties.media_type + "; charset=" + output_properties.encoding + "%">%N   ") 
+												  output_properties.media_type + "; charset=" + output_properties.encoding + "%"/>%N   ") 
 				end
 			end
 		end

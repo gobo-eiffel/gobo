@@ -142,6 +142,14 @@ feature -- Setting
 			processor_set_to_xsltproc: processor = Processor_xsltproc
 		end
 
+	set_processor_gexslt is
+			-- Set `processor' to `Processor_gexslt'
+		do
+			set_processor (Processor_gexslt)
+		ensure
+			processor_set_to_gexslt: processor = Processor_gexslt
+		end
+
 	set_format (a_format: like format) is
 			-- Set `format' to `a_format'.
 		require
@@ -192,7 +200,7 @@ feature -- Setting / Implementation
 	set_processor (a_processor: INTEGER) is
 			-- Set `processor' to `a_processor'.
 		require
-			a_processor_valid : a_processor = Processor_xalan_cpp or a_processor = Processor_xalan_java or a_processor = Processor_xsltproc
+			a_processor_valid : a_processor = Processor_xalan_cpp or a_processor = Processor_xalan_java or a_processor = Processor_xsltproc or a_processor = Processor_gexslt
 		do
 			processor := a_processor
 		ensure
@@ -210,6 +218,8 @@ feature -- Execution
 				execute_xalan_java
 			elseif processor = Processor_xsltproc then
 				execute_xsltproc
+			elseif processor = Processor_gexslt then
+				execute_gexslt
 			else
 				project.log (<<"  [xslt]: unknown processor">>)
 				exit_code := 1
@@ -349,6 +359,43 @@ feature -- Execution
 			execute_shell (cmd)
 		end
 
+
+	execute_gexslt is
+			-- Execute command using Gobo Eiffel xslt processor.
+		local
+			cmd: STRING
+			i, nb: INTEGER
+			a_filename: STRING
+		do
+			cmd := clone ("gexslt ")
+
+				-- Append option for outputfile:
+			cmd.append_string (" --output=")
+			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
+			cmd := STRING_.appended_string (cmd, a_filename)
+
+				-- Add parameters:
+			nb := parameters.count
+			from i := 1 until i > nb loop
+				cmd.append_string (" --param=")
+				cmd := STRING_.appended_string (cmd, parameters.item (i).first)
+				cmd.append_string ("=")
+				cmd := STRING_.appended_string (cmd, parameters.item (i).second)
+				i := i + 1
+			end
+
+				-- Append stylesheet argument:
+			cmd.append_string (" --uri=")
+			cmd := STRING_.appended_string (cmd, stylesheet_filename)
+
+				-- Append source argument:
+			cmd.append_string (" --uri=")
+			cmd := STRING_.appended_string (cmd, input_filename)
+
+			project.trace (<<"  [xslt] ", cmd>>)
+			execute_shell (cmd)
+		end
+
 feature -- Constants
 
 	Processor_xalan_cpp: INTEGER is unique
@@ -359,5 +406,8 @@ feature -- Constants
 
 	Processor_xsltproc: INTEGER is unique
 			-- Identifier for libxslt processor
+
+	Processor_gexslt: INTEGER is unique
+			-- Identifier for Gobo Eiffel xslt processor
 
 end

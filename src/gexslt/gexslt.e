@@ -31,6 +31,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	MEMORY
+
 creation
 
 	execute
@@ -61,14 +63,12 @@ feature -- Execution
 				elseif arg.is_equal ("-h") or else arg.is_equal ("-?") or else arg.is_equal ("--help") then
 					report_usage_message
 					Exceptions.die (0)
-				elseif arg.is_equal ("--") then
-					are_options_disallowed := True
-				elseif arg.substring_index ("--", 1) = 1 and then not are_options_disallowed then
+				elseif arg.substring_index ("--", 1) = 1 then
 					process_option (arg.substring (3, arg.count))
-				elseif arg.index_of ('=', 2) > 0  and not are_parameters_disallowed then
+				elseif arg.index_of ('=', 2) > 0 then
 					set_string_parameter (arg)
 				else
-					uris.put_last (arg)
+					process_file_or_uri (arg)
 				end
 				i := i + 1
 			end
@@ -98,90 +98,6 @@ feature -- Execution
 			process_uris
 		end
 
-	process_option (an_option: STRING) is
-			-- Process `an_option'.
-		require
-			plausible_option: an_option /= Void and then an_option.count > 0
-			options_allowed: not are_options_disallowed
-		do
-			if an_option.is_equal ("no-line-numbers") then
-				is_line_numbering := False
-			elseif an_option.is_equal ("tiny-tree") then
-				is_tiny_tree_model := True
-			elseif an_option.substring_index ("output-destination", 1) = 1 then
-				report_not_yet_implemented ("Output destination")
-			elseif an_option.substring_index ("use-xml-stylesheet-processing-instruction", 1) = 1 then
-				report_not_yet_implemented ("Xml-stylesheet processing instruction")					
-			elseif an_option.is_equal ("equals-in-uris") then
-				are_parameters_disallowed := True
-			elseif an_option.substring_index ("define-xpath-param=", 1) = 1 then
-					report_not_yet_implemented ("XPath expressions in parameters")
-			elseif an_option.substring_index ("define-param=", 1) = 1 and then an_option.count > 13 then
-					set_string_parameter (an_option.substring (14, an_option.count))
-			elseif an_option.substring_index ("--", 1) = 1 then
-				report_unknown_option (an_option)
-				report_usage_message
-				Exceptions.die (1)
-			end
-		end
-
-	process_uris is
-			-- Read `uris' and perform transform(s).
-		require
-			uri_list_valid: uris /= Void
-				and then uris.count = 2 -- for now
-			xml_stylesheet_pi_not_yet_supported: not use_processing_instruction
-			output_destination_uri_not_yet_supported: True
-			parameters_not_yet_supported: True
-		local
-			a_stylesheet_uri, a_source_uri: XM_XSLT_URI_SOURCE
-			a_destination: XM_OUTPUT
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_stylesheet: XM_XSLT_PREPARED_STYLESHEET
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
-		do
-			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.use_tiny_tree_model (is_tiny_tree_model)
-			a_configuration.set_line_numbering (is_line_numbering)
-			create a_stylesheet_uri.make (uris.item (1))
-			create a_stylesheet.make (a_configuration)
-			a_stylesheet.prepare (a_stylesheet_uri)
-			if a_stylesheet.load_stylesheet_module_failed then
-				report_processing_error ("Could not compile stylesheet", a_stylesheet.load_stylesheet_module_error)
-			else
-				a_transformer := a_stylesheet.new_transformer
-				process_parameters (a_transformer)
-				create a_source_uri.make (uris.item (2))
-				create a_destination -- To standard output
-				create a_result.make (a_destination)
-				a_transformer.transform (a_source_uri, a_result)
-				if a_transformer.is_error then
-					-- do nothing for now - the error listener has already reported the error.
-				end
-			end
-		end
-
-	process_parameters (a_transformer: XM_XSLT_TRANSFORMER) is
-			-- Set any parameters onto the transformer.
-		require
-			transformer_not_void: a_transformer /= Void
-		local
-			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
-		do
-			if parameters /= Void then
-				from
-					a_cursor := parameters.new_cursor; a_cursor.start
-				until
-					a_cursor.after
-				loop
-					a_transformer.set_string_parameter (a_cursor.item, a_cursor.key)
-					a_cursor.forth
-				end
-			end
-		end
-
 feature -- Status report
 
 	use_processing_instruction: BOOLEAN
@@ -192,12 +108,6 @@ feature -- Status report
 
 	is_line_numbering: BOOLEAN
 			-- Will diagnostics include line numbers?
-
-	are_options_disallowed: BOOLEAN
-			-- Are option flags disallowed on the rest of the command line?
-	
-	are_parameters_disallowed: BOOLEAN
-			-- Are name=value parameters disallowed on the rest of the command line?
 
 feature -- Setting
 
@@ -229,7 +139,7 @@ feature -- Setting
 			if a_parameter_value.count > 1 and then
 				(a_parameter_value.item (1) = '"' or else a_parameter_value.item (1) = '%'') and then
 				a_parameter_value.item (a_parameter_value.count) = a_parameter_value.item (1) then
-				a_parameter_value := a_parameter_value.substring (2, a_parameter_value.count)
+				a_parameter_value := a_parameter_value.substring (2, a_parameter_value.count - 1)
 			end
 
 			if parameters = Void then
@@ -253,6 +163,9 @@ feature -- Access
 
 	parameters: DS_HASH_TABLE [STRING, STRING]
 			-- String parameter values indexed by expanded name
+
+	output_destination: STRING
+			-- Output destination URL (if `Void' use standard output)
 
 feature -- Error handling
 
@@ -314,7 +227,7 @@ feature -- Error handling
 			a_message_string: STRING
 		do
 			a_message_string := STRING_.concat ("Bad syntax for string parameter: ", a_string_parameter_option)
-			a_message_string := STRING_.appended_string (a_message_string, ".%NSyntax is [--][{namespace-uri}]local-name=[%"|']value[%"|']%N")
+			a_message_string := STRING_.appended_string (a_message_string, ".%NSyntax is [--][{namespace-uri}]local-name=[']value[']%N")
 			create an_error.make (a_message_string)
 			error_handler.report_error (an_error)
 		end
@@ -365,21 +278,174 @@ feature -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gexslt usage message.
 		once
-			create Result.make ("stylesheet-URI source-document-URI [parameter-name=value]* %N" +
-									  " or    gexslt --use-xml-stylesheet-processing-instruction source-document-URI [parameter-name=value]* %N" +
+			create Result.make ("[--file=|--uri=]stylesheet-URI [--file=|--uri=]source-document-URI [option]* [parameter-name=value]* %N" +
 									  " or    gexslt --version%N" +
 									  " or    gexslt --help%N" +
-									  "      Options can appear anywhere before -- .%N" +
-									  "       -- %N" +
-									  "       --output-destination=URI%N" +
-									  "       --equals-in-uris%N" +
+									  "       --output=local-file-name%N" +
 									  "       --no-line-numbers%N" +
+									  "       --no-gc%N" +
 									  "       --tiny-tree%N" +
-									  "       --define-param=name=string-value%N" +
-									  "       --define-xpath-param=name=xpath-expression%N")
+									  "       --param=name=string-value%N" +
+									  "       --xpath-param=name=xpath-expression%N")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
+
+feature {NONE} -- Implementation
+
+	process_option (an_option: STRING) is
+			-- Process `an_option'.
+		require
+			plausible_option: an_option /= Void and then an_option.count > 0
+		do
+			if an_option.is_equal ("no-line-numbers") then
+				is_line_numbering := False
+			elseif an_option.is_equal ("tiny-tree") then
+				is_tiny_tree_model := True
+			elseif an_option.substring_index ("output=", 1) = 1 then
+				if an_option.count > 7 then
+					output_destination := an_option.substring (8, an_option.count)
+				else
+					report_usage_message
+					Exceptions.die (1)
+				end
+			elseif an_option.substring_index ("use-pi", 1) = 1 then
+				report_not_yet_implemented ("Xml-stylesheet processing instruction")					
+			elseif an_option.substring_index ("template", 1) = 1 then
+				report_not_yet_implemented ("Initial template")					
+			elseif an_option.substring_index ("mode", 1) = 1 then
+				report_not_yet_implemented ("Initial mode")					
+			elseif an_option.is_equal ("no-gc") then
+				collection_off
+			elseif an_option.substring_index ("xpath-param=", 1) = 1 then
+					report_not_yet_implemented ("XPath expressions in parameters")
+			elseif an_option.substring_index ("param=", 1) = 1 and then an_option.count > 6 then
+					set_string_parameter (an_option.substring (7, an_option.count))
+			elseif an_option.substring_index ("file=", 1) = 1 and then an_option.count > 5 then
+					process_file (an_option.substring (6, an_option.count))
+			elseif an_option.substring_index ("uri=", 1) = 1 and then an_option.count > 4 then
+					process_uri (an_option.substring (5, an_option.count))
+			else
+				report_unknown_option (an_option)
+				report_usage_message
+				Exceptions.die (1)
+			end
+		end
+
+	process_file (a_file: STRING) is
+			-- Convert `a_file' to a URI and add it to `uris'.
+		require
+			at_least_one_character: a_file /= Void and then a_file.count > 0
+		local
+			a_uri: STRING
+		do
+			a_uri := unix_file_system.pathname_from_file_system (a_file, file_system)
+			uris.put_last (a_uri)
+		end
+	
+	process_uri (a_uri: STRING) is
+			-- Add a URI-valued argument to `uris'.
+		require
+			at_least_one_character: a_uri /= Void and then a_uri.count > 0
+		do
+			uris.put_last (a_uri)
+		end
+
+	process_file_or_uri (a_file_or_uri: STRING) is
+			-- Process `a_file_or_uri' as a file name or a URI.
+		require
+			at_least_one_character: a_file_or_uri /= Void and then a_file_or_uri.count > 0
+		local
+			is_file: BOOLEAN
+		do
+			if a_file_or_uri.index_of ('\', 1) > 0 then
+				is_file := True
+			else
+				if a_file_or_uri.index_of (':', 1) = 2 then
+					is_file := True
+				end
+			end
+			if is_file then
+				process_file (a_file_or_uri)
+			else
+				process_uri (a_file_or_uri)
+			end
+		end
+
+	process_uris is
+			-- Read `uris' and perform transform(s).
+		require
+			uri_list_valid: uris /= Void
+				and then uris.count = 2 -- for now
+			xml_stylesheet_pi_not_yet_supported: not use_processing_instruction
+			output_destination_uri_not_yet_supported: True
+			parameters_not_yet_supported: True
+		local
+			a_stylesheet_uri, a_source_uri: XM_XSLT_URI_SOURCE
+			a_destination: XM_OUTPUT
+			a_configuration: XM_XSLT_CONFIGURATION
+			a_stylesheet: XM_XSLT_PREPARED_STYLESHEET
+			a_transformer: XM_XSLT_TRANSFORMER
+			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			a_stream: KL_TEXT_OUTPUT_FILE
+		do
+			conformance.set_basic_xslt_processor
+			create a_configuration.make_with_defaults
+			a_configuration.use_tiny_tree_model (is_tiny_tree_model)
+			a_configuration.set_line_numbering (is_line_numbering)
+			create a_stylesheet_uri.make (uris.item (1))
+			create a_stylesheet.make (a_configuration)
+			a_stylesheet.prepare (a_stylesheet_uri)
+			if a_stylesheet.load_stylesheet_module_failed then
+				report_processing_error ("Could not compile stylesheet", a_stylesheet.load_stylesheet_module_error)
+			else
+				a_transformer := a_stylesheet.new_transformer
+				process_parameters (a_transformer)
+				create a_source_uri.make (uris.item (2))
+				create a_destination -- To standard output
+				if output_destination /= Void then
+					create a_stream.make (output_destination)
+					a_stream.open_write
+					a_destination.set_output_stream (a_stream)
+				end
+				create a_result.make (a_destination)
+				a_transformer.transform (a_source_uri, a_result)
+				if a_stream /= Void then
+					a_stream.close
+				end
+				if a_transformer.is_error then
+					-- do nothing for now - the error listener has already reported the error.
+				end
+			end
+		end
+
+	process_parameters (a_transformer: XM_XSLT_TRANSFORMER) is
+			-- Set any parameters onto the transformer.
+		require
+			transformer_not_void: a_transformer /= Void
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+			a_string: STRING
+		do
+			if parameters /= Void then
+				from
+					a_cursor := parameters.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					a_string := a_cursor.item
+					if a_string.count > 1 and then a_string.index_of ('%'', 1) = 1 and then a_string.index_of ('%'', a_string.count) > 0 then
+
+						-- Strip off surrounding single quotes
+
+						a_string := a_string.substring (1, a_string.count - 1)
+					end
+					a_transformer.set_string_parameter (a_string, a_cursor.key)
+					a_cursor.forth
+				end
+			end
+		end
+
 
 invariant
 

@@ -1,0 +1,163 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Gobo Eiffel XSLT options"
+
+	library: "Gobo Eiffel XSLT"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="gexslt_options">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Sunday, September 5th, 2004</date>
+  </chapterinfo>
+  <title>Gobo Eiffel XSLT Command-line usage and options</title>
+  <sect1>
+    <title>How to invoke gexslt</title>
+    <para>
+      Geant is invoked from the command line. The general form is:
+    <itemizedlist>
+      <listitem><para>gexslt --help</para></listitem>
+      <listitem><para>gexslt --version</para></listitem>
+      <listitem><para>gexslt [--file=|--uri=]stylesheet [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
+      <listitem><para>gexslt --use-pi [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
+      <listitem><para>gexslt stylesheet --template=template-name (--options)* (string-parameter)*</para></listitem>
+    </itemizedlist>
+    <warning>These last two forms are not yet supported.</warning>
+    </para>
+  </sect1>
+  <sect1>
+    <title>Stylesheet and source documents</title>
+    <para>
+      The stylesheet and source documents can be written either as URIs or as names in the local file system.
+      Gexslt will attempt to convert a local file name into a URI, if it detects such a name is not already a URI. 
+    </para>
+    <para>
+      If you want to use a file name that starts with --, or includes = as a character in the name, or might look 
+      to the system like a URI (e.g. if http://foo/bar is a valid file name on your system), then you can
+      force gexslt to interpret it as a file name by writing it as --file=my/file.name.
+    </para>
+    <para>
+      If you want to ensure that gexslt treats a name as a URI (necessary if it starts with -- or includes =), then you can write
+      it as --uri=my:strange=uri.
+    </para>
+  </sect1>
+  <sect1>
+    <title>Parameters</title>
+    <para>
+      To set a global parameter on a stylesheet (as defined by a top-level xsl:param declaration),
+      you may set it via an option. However, gexslt provides a more convenient syntax for the most common usage pattern, 
+      string-valued parameters:
+      <itemizedlist>
+	<listitem><para>name=value</para></listitem>
+	<listitem><para>name='value with embedded blanks'</para></listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      Note that single quotes are only needed to avoid mis-interpretation by the command shell.
+    </para>
+    <para>
+      These string parameters may, in principle, appear anywhere within the command line,
+      although it is conventional to put them at the end.
+    </para>
+    <para>
+      If you wish to pass general XPath expressions to the stylesheet, you have to use the --xpath-param option.
+      <warning>XPath expression parameters are not yet implemented.</warning>
+    </para>
+  </sect1>
+  <sect1>
+    <title>Options</title>
+    <para>The following is a list of the options that can be given on the command-line:
+    <variablelist>
+      <varlistentry>
+	<term>--use-pi</term>
+	<listitem>
+	  <para>
+	    Interpret the first file or URI argument as a source document, rather than a stylesheet.
+	    Search for an xml-stylesheet processing instruction within that source document, and use that to find
+	    the stylesheet.
+	    <warning>Use of the xml-stylesheet processing instruction is not yet implemented</warning>
+	  </para>
+	  <para>
+	    Gexslt has to parse the source document twice. Once to find the processing instructiuon, and again, 
+	    after the stylesheet has been compiled (as it may contain xsl:preserve-space or xsl:strip-space commands).
+	    Although the first parse is quick (as the processing instruction must occur in the prolog of the XML document), 
+	    this does mean that a stream that can only be read once may not be used with this option.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--output=&lt;local-file-name&gt;</term>
+	<listitem>
+	  <para>
+	    Names the destination for the transformation results. If omitted, the results are written
+	    to the standard output stream.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--no-line-numbers</term>
+	<listitem>
+	  <para>
+	    By default, diagnostics will include the line number where the
+	    error was detected. This option turns off this facility.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--no-gc</term>
+	<listitem>
+	  <para>
+	    Disables garbage collection.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--tiny-tree</term>
+	<listitem>
+	  <para>
+	    The source document is built using the tiny-tree model, rather than
+	    the standard tree model. This saves on memory, but will usually result
+	    in slower execution, except for very simple tranformations, such as the 
+	    identity transform, where it may actually improve execution speed.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--param=&lt;name&gt;=&lt;string-value&gt;</term>
+	<listitem>
+	  <para>
+	    Sets a string-valued global parameter on the stylesheet.
+	    Enclose the value in single quotes if it includes embedded blanks.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--xpath-param=&lt;name&gt;=&lt;XPath expression&gt;</term>
+	<listitem>
+	  <para>
+	    Sets a global parameter on the stylesheet, passing an XPath expression
+	    as the value.
+	    Enclose the value in single quotes if it includes embedded blanks.
+	    <warning>XPath expression parameters are not yet implemented.</warning>
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    </para>
+  </sect1>
+</chapter>

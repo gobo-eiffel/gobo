@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<project name="gexslt_documentation" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel XSLT Documentation"
+		system: "Gobo Eiffel XSLT Documentation"
+		copyright: "Copyright (c) 2004, Coli Adams and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Install the Gobo Eiffel XSLT Documentation.
+		</description>
+
+		<set name="xslt_processor" value="gexslt" />
+
+
+		<set name="next" value="index"/>
+		<set name="next_chapter" value="options"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="index"/>
+		<geant target="xslt"/>
+
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+			<!-- Concepts: -->
+		<delete>
+		  <fileset dir="." include="@(*.html)" />
+		</delete>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="xslt">
+		<description>
+			Execute XSL Transformation for argument ${input}, ${previous} and ${next} using processor ${xslt_processor}.
+		</description>
+
+		<set name="previous" value="${input}"/>
+		<set name="input" value="${next}"/>
+		<set name="next" value="${next_chapter}"/>
+
+		<xslt
+			processor="${xslt_processor}"
+			input="${input}.xml"
+			output="${input}.html"
+			stylesheet="${GOBO}/doc/misc/gobo2html2.xsl"
+		>
+			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
+			<parameter name="next" value="&quot;'${next}.html'&quot;"/>
+			<parameter name="toc" value="&quot;'index.html'&quot;"/>
+		</xslt>
+	</target>
+
+
+</project>

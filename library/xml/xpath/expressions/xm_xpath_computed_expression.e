@@ -281,7 +281,7 @@ feature -- Evaluation
 				end
 			evaluate_item (a_context)
 			if last_evaluated_item = Void then
-				Result := empty_abstract_item_iterator
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 			elseif last_evaluated_item.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} Result.make (last_evaluated_item.error_value) 
 			else
@@ -320,14 +320,6 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			initialize_special_properties
 		ensure
 			computed: are_special_properties_computed and then special_properties /= Void
-		end
-	
-feature {NONE} -- Implementation
-	
-	empty_abstract_item_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM] is
-			-- shared empty iterator
-		once
-			create Result.make
 		end
 
 end

@@ -230,7 +230,7 @@ feature -- Access
 	beta_value (a_node_number: INTEGER): INTEGER is
 			-- Beta value for the node
 		require
-			node_number_is_valid: is_node_number_valid (a_node_number)
+			node_number_is_valid: is_node_number_valid (a_node_number - 1) or else is_namespace_number_valid (a_node_number)
 		do
 			Result := beta.item (a_node_number)
 		end
@@ -647,8 +647,8 @@ feature -- Element change
 			valid_node_type: a_new_node_type = Document_node or a_new_node_type = Element_node or
 				a_new_node_type = Text_node or a_new_node_type = Comment_node or a_new_node_type = Processing_instruction_node
 			strictly_positive_depth: a_depth_value > 0
-			valid_alpha: an_alpha_value >= -1
-			valid_beta: a_beta_value >= -1
+			valid_alpha: an_alpha_value >= 0
+			valid_beta: a_beta_value >= 0
 			valid_name_code: a_new_name_code = -1 or else shared_name_pool.is_valid_name_code (a_new_name_code)
 		local
 			a_new_size: INTEGER
@@ -664,8 +664,8 @@ feature -- Element change
 			end
 			node_kinds.put (a_new_node_type, number_of_nodes)
 			depth.put (a_depth_value, number_of_nodes)
-			alpha.put (an_alpha_value, number_of_nodes)
-			beta.put (a_beta_value, number_of_nodes)
+			if an_alpha_value /= 0 then alpha.put (an_alpha_value, number_of_nodes) end
+			if a_beta_value /= 0 then beta.put (a_beta_value, number_of_nodes) end
 			name_codes.put (a_new_name_code, number_of_nodes) 
 			set_next_sibling (-1, number_of_nodes) -- safety precaution
 			last_node_added := number_of_nodes
@@ -680,8 +680,6 @@ feature -- Element change
 			one_more_node: number_of_nodes = old number_of_nodes + 1 and last_node_added = number_of_nodes
 			correct_node_kinds: node_kinds.item (number_of_nodes) = a_new_node_type
 			correct_depth: depth.item (number_of_nodes) = a_depth_value
-			correct_alpha: alpha.item (number_of_nodes) = an_alpha_value
-			correct_beta: beta.item (number_of_nodes) = a_beta_value
 			correct_name_codes: name_codes.item (number_of_nodes) = a_new_name_code
 			no_next_sibling: next_sibling_indices.item (number_of_nodes) = -1
 		end
@@ -784,18 +782,21 @@ feature -- Element change
 				namespace_codes.resize (a_new_size)
 			end
 			namespace_parents.put_last (a_parent)
-				check
-					namespace_codes_not_full: not	namespace_codes.is_full
-					-- same size as parent
-				end
+			check
+				namespace_codes_not_full: not	namespace_codes.is_full
+				-- same size as parent
+			end
 			namespace_codes.put_last (a_namespace_code)
+			if beta_value (a_parent) = 0 then
+				beta.put (number_of_namespaces, a_parent)
+			end
 			debug ("XPath tiny document")
 				std.error.put_string ("Namespace added: ")
 				std.error.put_string (shared_name_pool.uri_from_namespace_code (a_namespace_code))
 				std.error.put_string (" for parent:")
 				std.error.put_string (a_parent.out)
 				std.error.put_new_line
-			end			
+			end
 		end
 
 	add_attribute (a_parent: INTEGER; a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING) is
@@ -854,7 +855,7 @@ feature -- Element change
 				attribute_type_codes.put (another_type_code, attribute_parents.count)
 			end
 			
-			if alpha.item (a_parent) = -1 then alpha.put (attribute_values.count, a_parent) end
+			if alpha.item (a_parent) = 0 then alpha.put (attribute_values.count, a_parent) end
 
 			if a_type_code = Id_type_code then
 				-- The attribute is marked as being an ID. But we don't trust it - it
@@ -989,7 +990,7 @@ feature {NONE} -- Implementation
 			-- For text nodes, it is the offset into the text buffer
 			-- For comments and processing instructions, it is the
 			--  offset into the comment buffer
-			-- For elements, it is the index of the first attribute node, or -1
+			-- For elements, it is the index of the first attribute node, or 0
 			--  if this element has no attributes.
 
 	beta: ARRAY [INTEGER]
@@ -998,7 +999,7 @@ feature {NONE} -- Implementation
 			-- For comments and processing instructions, it is
 			-- the length of the text
 			-- For elements, it is the index of the first namespace node,
-			-- or -1 if this element has no namespaces
+			-- or 0 if this element has no namespaces
 
 	name_codes: ARRAY [INTEGER]
 			-- Name of the node, as an index into the name pool;

@@ -67,6 +67,7 @@ feature -- Access
 				end
 				a_node ?= a_node.next_node_in_document_order (Current)
 			end
+			if Result = Void then Result := "" end
 		end
 
 	first_child: XM_XPATH_NODE is

@@ -192,7 +192,7 @@ feature -- Creation
 			if not is_ncname (a_local_name) then
 				report_parse_error (STRING_.appended_string (a_local_name, " is not a valid XML NCName"), 3)
 			else
-				create Result.make (a_node_type, a_local_name)
+				create Result.make (a_node_type, a_local_name, STRING_.concat ("*:", a_local_name))
 			end
 		ensure
 			Name_test_not_void_unless_parse_error: not is_parse_error implies Result /= Void

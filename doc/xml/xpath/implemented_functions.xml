@@ -211,7 +211,7 @@
 	 <row>
 	   <entry>fn:translate</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>Incidentally</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -222,8 +222,8 @@
 	 </row>	
 	 <row>
 	   <entry>fn:contains</entry>
-	   <entry>yes</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Incidentallly</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -241,13 +241,13 @@
 	 <row>
 	   <entry>fn:substring-before</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>Incidentally</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:substring-after</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>Incidentally</entry>
 	   <entry>No</entry>
 	 </row>	
        <row>
@@ -287,79 +287,79 @@
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-years-from-yearMonthDuration</entry>
+	   <entry>fn:years-from-yearMonthDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-months-from-yearMonthDuration</entry>
+	   <entry>fn:months-from-yearMonthDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-days-from-dayTimeDuration</entry>
+	   <entry>fn:days-from-dayTimeDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-hours-from-dayTimeDuration</entry>
+	   <entry>fn:hours-from-dayTimeDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-minutes-from-dayTimeDuration</entry>
+	   <entry>fn:minutes-from-dayTimeDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-seconds-from-dayTimeDuration</entry>
+	   <entry>fn:seconds-from-dayTimeDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-year-from-dateTime</entry>
+	   <entry>fn:year-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-month-from-dateTime</entry>
+	   <entry>fn:month-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-day-from-dateTime</entry>
+	   <entry>fn:day-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-hours-from-dateTime</entry>
+	   <entry>fn:hours-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-minutes-from-dateTime</entry>
+	   <entry>fn:minutes-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-seconds-from-dateTime</entry>
+	   <entry>fn:seconds-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-timezone-from-dateTime</entry>
+	   <entry>fn:timezone-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
@@ -407,27 +407,27 @@
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-local-name-from-QName</entry>
+	   <entry>fn:local-name-from-QName</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-namespace-uri-from-QName</entry>
+	   <entry>fn:namespace-uri-from-QName</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-namespace-uri-for-prefix</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>fn:namespace-uri-for-prefix</entry>
+	   <entry>Yes</entry>
+	   <entry>Incidentally</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:get-in-scope-prefixes</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>fn:in-scope-prefixes</entry>
+	   <entry>Yes</entry>
+	   <entry>Incidentally</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -444,14 +444,14 @@
 	 </row>	
 	 <row>
 	   <entry>fn:local-name</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Incidentally</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:namespace-uri</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Incidentally</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>

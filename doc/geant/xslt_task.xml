@@ -32,7 +32,7 @@
 					<para><emphasis>Description: </emphasis>Name XSLT processor</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>xalan_cpp|xalan_java|xsltproc</para>
+					<para><emphasis>Domain: </emphasis>xalan_cpp|xalan_java|xsltproc|gexslt</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>xalan_cpp</para>
@@ -116,7 +116,7 @@
         </attribute>
       </optional>
       <optional>
-        <attribute name="indent"/> <!-- if attribute 'processor' equals 'xalan_java' or 'xalan_cpp'-->
+        <attribute name="indent"/> <!-- if attribute 'processor' equals 'xalan_java' or 'xalan_cpp'--><-- TODO - implement for gexslt -->
       </optional>
       <optional>
         <attribute name="format"/> <!-- if attribute 'processor' equals 'xalan_java' -->
@@ -146,6 +146,14 @@
     <para>
       Note that string parameters must be surrounded by a single quote
       ('), else they will be interpreted as a number.
+    </para>
+    <para>
+      For gexslt, all parameters are string values, so the single quotes are
+      not needed, unless they contain embedded blanks, which might confuse the shell.
+    </para>
+    <para>
+      Gexslt can take any XPath expression as a parameter value, but this
+      is not yet implemented.
     </para>
 
 	<programlisting><![CDATA[

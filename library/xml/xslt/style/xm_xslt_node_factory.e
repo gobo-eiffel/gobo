@@ -133,8 +133,10 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_COPY_OF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_decimal_format_type_code then
 				create {XM_XSLT_DECIMAL_FORMAT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_element_type_code then
+				create {XM_XSLT_ELEMENT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_for_each_type_code then
-				create {XM_XSLT_FOR_EACH} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+				create {XM_XSLT_FOR_EACH} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_for_each_group_type_code then
 				create {XM_XSLT_FOR_EACH_GROUP} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_if_type_code then
@@ -149,6 +151,8 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_OUTPUT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_param_type_code then
 				create {XM_XSLT_PARAM} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_preserve_space_type_code, Xslt_strip_space_type_code then
+				create {XM_XSLT_PRESERVE_SPACE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_sort_type_code then
 				create {XM_XSLT_SORT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_transform_type_code, Xslt_stylesheet_type_code then

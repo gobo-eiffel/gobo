@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			a_is_xalan_cpp_processor: BOOLEAN
 			a_is_xalan_java_processor: BOOLEAN
 			a_is_xsltproc_processor: BOOLEAN
+			a_is_gexslt_processor: BOOLEAN
 		do
 			create command.make (a_project)
 			task_make (command, an_xml_element)
@@ -55,6 +56,9 @@ feature {NONE} -- Initialization
 				elseif STRING_.same_string (a_value, Processor_attribute_value_xsltproc) then
 					a_is_xsltproc_processor := True
 					command.set_processor_xsltproc
+				elseif STRING_.same_string (a_value, Processor_attribute_value_gexslt) then
+					a_is_gexslt_processor := True
+					command.set_processor_gexslt
 				end
 			end
 
@@ -84,6 +88,7 @@ feature {NONE} -- Initialization
 				end
 			end
 			if a_is_xalan_java_processor or a_is_xalan_cpp_processor then
+				-- TODO: add support for gexslt when it supports this
 				if has_attribute (Indent_attribute_name) then
 					a_value := attribute_value (Indent_attribute_name)
 					if STRING_.is_integer (a_value) then
@@ -198,6 +203,15 @@ feature {NONE} -- Constants
 			-- value of xml attribute for xsltproc processor
 		once
 			Result := "xsltproc"
+		ensure
+			attribute_value_not_void: Result /= Void
+			atribute_value_not_empty: Result.count > 0
+		end
+
+	Processor_attribute_value_gexslt: STRING is
+			-- value of xml attribute for gexslt processor
+		once
+			Result := "gexslt"
 		ensure
 			attribute_value_not_void: Result /= Void
 			atribute_value_not_empty: Result.count > 0

@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			document := a_document
 			node_number := a_node_number
 			node_type := Element_node
+			are_namespaces_accumulated := True
 		ensure
 			document_set: document = a_document
 			node_number_set: node_number = a_node_number
@@ -62,7 +63,7 @@ feature -- Access
 			finished: BOOLEAN
 		do
 			an_alpha_value := document.alpha_value (node_number)
-			if an_alpha_value < 0 then
+			if an_alpha_value = 0 then
 				Result := Void
 			else
 				from
@@ -83,20 +84,64 @@ feature -- Access
 			end
 		end
 
+	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER is
+			-- URI code for `a_prefix_code'
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_namespace_node, a_namespace_code: INTEGER
+			an_element: XM_XPATH_ELEMENT
+		do
+			Result := -1 -- not found
+			if a_prefix_code = Xml_prefix_index - 1 then
+				Result := Xml_uri_code
+			else
+				a_namespace_node := document.beta_value (node_number)
+				if a_namespace_node > 0 then
+					from
+					until
+						Result > -1 or else a_namespace_node > document.number_of_namespaces or else document.namespace_parent (a_namespace_node) /= node_number
+					loop
+						a_namespace_code := document.namespace_code_for_node (a_namespace_node)
+						if a_prefix_code = prefix_code_from_namespace_code (a_namespace_code) then
+							Result := uri_code_from_namespace_code (a_namespace_code)
+						end
+						a_namespace_node := a_namespace_node + 1
+					end
+				end
+			end
+			
+			-- If we have got so far, without finding `a_prefix_code',
+			--  then we must look at the parent element
+
+			if Result = -1 then
+				an_element ?= parent
+				if an_element = Void then
+					
+					-- Document node
+					
+					if a_prefix_code = 0 then
+						Result := Default_uri_code
+					end
+				else
+					Result := an_element.uri_code_for_prefix_code (a_prefix_code)
+				end
+			end
+		end
+
 	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
 			-- Output all namespace nodes associated with this element.
 		local
-			a_namespace: INTEGER
+			a_namespace_node: INTEGER
 			a_parent: XM_XPATH_ELEMENT
 		do
-			a_namespace := document.beta_value (node_number)
-			if a_namespace > 0 then
+			a_namespace_node := document.beta_value (node_number)
+			if a_namespace_node > 0 then
 				from
 				until
-					a_namespace >= document.number_of_namespaces or else document.namespace_parent (a_namespace) = node_number
+					a_namespace_node > document.number_of_namespaces or else document.namespace_parent (a_namespace_node) /= node_number
 				loop
-					a_receiver.notify_namespace (document.namespace_code_for_node (a_namespace), 0)
-					a_namespace := a_namespace + 1
+					a_receiver.notify_namespace (document.namespace_code_for_node (a_namespace_node), 0)
+					a_namespace_node := a_namespace_node + 1
 				end
 			end
 
@@ -109,6 +154,33 @@ feature -- Access
 					a_parent.output_namespace_nodes (a_receiver, true)
 				end
 			end
+		end
+
+	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
+			-- Namespace codes in scope for `Current'
+		local
+			a_namespace_node: INTEGER
+			a_parent: XM_XPATH_TINY_ELEMENT
+		do
+			create Result.make (0)
+			a_namespace_node := document.beta_value (node_number)
+			if a_namespace_node > 0 then
+				from
+				until
+					a_namespace_node > document.number_of_namespaces or else document.namespace_parent (a_namespace_node) /= node_number
+				loop
+					Result.force_last (document.namespace_code_for_node (a_namespace_node))
+					a_namespace_node := a_namespace_node + 1
+				end
+			end
+			a_parent ?= parent
+			if a_parent /= Void then
+				a_parent.accumulate_namespace_codes (Result)
+			end
+
+			-- Now add the xml namespace
+
+			Result.force_last (created_namespace_code (Xml_uri_code, Xml_prefix_index - 1))
 		end
 
 feature -- Status report
@@ -128,6 +200,46 @@ feature -- Status setting
 			document.set_name_code_for_node (a_name_code, node_number)
 		ensure then
 			name_code_set: document.name_code_for_node (node_number) = a_name_code
+		end
+
+feature -- Element change
+
+	ensure_namespace_nodes is
+			-- Ensure `namespace_codes_in_scope' may be called.
+		do
+			-- do_nothing
+		end
+
+	accumulate_namespace_codes (a_list: DS_ARRAYED_LIST [INTEGER]) is
+			-- Accumulate further namespaces in scope, avoiding already-declared prefixes.
+		require
+			accumulation_list_not_void: a_list /= Void
+		local
+			a_namespace_node, a_namespace_code: INTEGER
+			a_prefix_code: INTEGER -- _16
+			a_prefix_code_list: DS_ARRAYED_LIST [INTEGER] -- _16
+			a_parent: XM_XPATH_TINY_ELEMENT
+			a_cursor, a_parent_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+		do
+			a_namespace_node := document.beta_value (node_number)
+			if a_namespace_node > 0 then
+				a_prefix_code_list := prefix_codes_from_namespace_codes (a_list)
+				from
+				until
+					a_namespace_node > document.number_of_namespaces or else document.namespace_parent (a_namespace_node) /= node_number
+				loop
+					a_namespace_code := document.namespace_code_for_node (a_namespace_node)
+					a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
+					if not is_in_list (a_prefix_code, a_prefix_code_list) then
+						a_list.force_last (a_namespace_code)
+					end
+					a_namespace_node := a_namespace_node + 1
+				end
+			end
+			a_parent ?= parent
+			if a_parent /= Void then
+				a_parent.accumulate_namespace_codes (a_list)
+			end
 		end
 
 feature -- Duplication
@@ -262,6 +374,51 @@ feature {NONE} -- Implementation
 			end
 
 			a_receiver.start_content
+		end
+
+	prefix_codes_from_namespace_codes (a_list: DS_ARRAYED_LIST [INTEGER]): DS_ARRAYED_LIST [INTEGER] is -- _16
+			-- List of prefix codes from `a_list' of namespace codes
+		require
+			namespace_code_list_not_void: a_list /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+		do
+			create Result.make (a_list.count)
+			from
+				a_cursor := a_list.new_cursor; a_cursor.start
+			variant
+				a_list.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				Result.put_last (prefix_code_from_namespace_code (a_cursor.item))
+				a_cursor.forth
+			end
+		ensure
+			same_count: Result /= Void and then Result.count = a_list.count
+		end
+	
+	is_in_list (a_prefix_code: INTEGER; a_list: DS_ARRAYED_LIST [INTEGER]): BOOLEAN is
+			-- Is `a_prefix_code' on `a_list'?
+		require
+			list_not_void:  a_list /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+		do
+			from
+				a_cursor := a_list.new_cursor; a_cursor.start
+			variant
+				a_list.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				Result :=  a_prefix_code = a_cursor.item
+				if Result then
+					a_cursor.go_after
+				else
+					a_cursor.forth
+				end
+			end				
 		end
 
 end

@@ -19,6 +19,8 @@ inherit
 			effective_boolean_value
 		end
 
+	XM_XPATH_SHARED_ANY_ITEM_TYPE
+
 	KL_IMPORTED_STRING_ROUTINES
 
 creation
@@ -130,8 +132,8 @@ feature -- Status report
 				if a_string.index_of ('e', 1) > 0 or else a_string.index_of ('E', 1) > 0 then
 					Result := a_string.is_double
 				elseif  a_string.index_of ('.', 1) > 0 then
-					Result := a_string.is_double -- TODO
-					todo ("is-convertible", True)
+					Result := True -- but you may get NaN TODO
+					todo ("is-convertible (to decimal)", True)
 				else
 					Result := a_string.is_integer
 				end
@@ -140,8 +142,8 @@ feature -- Status report
 			elseif a_required_type = type_factory.integer_type then
 				Result := a_string.is_integer
 			elseif a_required_type = type_factory.decimal_type then
-				Result := a_string.is_double	-- TODO
-				todo ("is-convertible", True)
+				Result := True -- but you may get NaN TODO
+				todo ("is-convertible (to decimal)", True)
 			elseif a_required_type = type_factory.untyped_atomic_type
 				or else a_required_type = type_factory.string_type
 				or else a_required_type = type_factory.any_atomic_type
@@ -165,9 +167,38 @@ feature -- Conversion
 
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `a_required_type'
+		local
+			a_value: STRING
 		do
-			-- TODO
-			todo ("convert-to-type" ,False)
+			a_value := clone (value)
+			STRING_.left_adjust (a_value)
+			STRING_.right_adjust (a_value)
+			if a_required_type = type_factory.boolean_type then
+				if STRING_.same_string (a_value, "0") or else STRING_.same_string (a_value, "false") then
+					create {XM_XPATH_BOOLEAN_VALUE} Result.make (False)
+				else
+					check
+						STRING_.same_string (a_value, "1") or else STRING_.same_string (a_value, "true")
+						-- from pre-condition
+					end
+					create {XM_XPATH_BOOLEAN_VALUE} Result.make (True)
+				end
+			elseif a_required_type = type_factory.numeric_type then
+				todo ("convert-to-type (numeric)" ,True)
+			elseif a_required_type = type_factory.double_type then
+				create {XM_XPATH_DOUBLE_VALUE} Result.make_from_string (a_value)
+			elseif a_required_type = type_factory.integer_type then
+				create {XM_XPATH_INTEGER_VALUE} Result.make_from_string (a_value)
+			elseif a_required_type = type_factory.decimal_type then
+				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_string (a_value)
+			elseif a_required_type = type_factory.string_type or else
+				a_required_type = type_factory.any_atomic_type or else
+				a_required_type = any_item then
+				Result := Current
+			else
+				-- TODO
+				todo ("convert-to-type" ,True)				
+			end
 		end
 
 feature {NONE} -- Implementation
