@@ -5,8 +5,9 @@ indexing
 		"Parser generators"
 
 	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -467,6 +468,7 @@ feature {NONE} -- Building
 			count, width, lowzero: INTEGER
 			a_portion, prev: PR_PORTION
 			i, j, k, nb: INTEGER
+			ii, nb2: INTEGER
 			state_id: INTEGER
 			pos, loc: INTEGER
 			found: BOOLEAN
@@ -505,8 +507,13 @@ feature {NONE} -- Building
 				i := i - 1
 			end
 
-			!! yytable.make (0, Initial_max_table_size)
-			!! yycheck.make (0, Initial_max_table_size)
+			ii := Initial_max_table_size
+			!! yytable.make (0, ii)
+			!! yycheck.make (0, ii)
+			from until ii < 0 loop
+				yycheck.put (-1, ii)
+				ii := ii - 1
+			end
 			yyLast := -1
 				-- Process big chunks first since they are
 				-- the most difficult to fit in the tables.
@@ -538,10 +545,16 @@ feature {NONE} -- Building
 					until found loop
 						found := True
 						from k := 1 until k > count loop
-							loc := j +  froms.item (k)
+							loc := j + froms.item (k)
 							if loc > yytable.upper then
-								yytable.resize (0, loc + Max_table_size_increment)
-								yycheck.resize (0, loc + Max_table_size_increment)
+								ii := yycheck.upper + 1
+								nb2 := loc + Max_table_size_increment
+								yytable.resize (0, nb2)
+								yycheck.resize (0, nb2)
+								from until ii > nb2 loop
+									yycheck.put (-1, ii)
+									ii := ii + 1
+								end
 							end
 							if yytable.item (loc) /= 0 then
 								found := False
@@ -560,11 +573,6 @@ feature {NONE} -- Building
 								end
 							end
 							if found then
-								loc := j + froms.first
-								from k := yyLast + 1 until k >= loc loop
-									yycheck.put (-1, k)
-									k := k + 1
-								end
 								from k := 1 until k > count loop
 									loc := j + froms.item (k)
 									yytable.put (tos.item (k), loc)
