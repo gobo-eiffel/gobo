@@ -66,8 +66,12 @@ feature
 				-- Parse broken file
 			parser.parse_from_system (Brokensub_data)
 			assert ("not parsed", not parser.is_correct)
-
-				-- Parse correct file
+			assert_equal ("position count", 2, parser.positions.count)
+			assert_position ("top", parser.position, 1, 8)
+			assert_position ("parent ", parser.positions.item (2), 6, 1)
+			
+				-- Parse correct file after error
+				-- to check resolver left in a good state.
 			parser.parse_from_system (Relative_data)
 			assert ("ok", parser.is_correct)
 		end
@@ -90,6 +94,18 @@ feature
 			assert ("parsed second time", parser.is_correct)
 		end
 
+feature {NONE} -- Implementation
+
+	assert_position (a_prefix: STRING; a_position: XM_POSITION; a_row: INTEGER; a_column: INTEGER) is
+			-- Test position.
+		require
+			a_prefix_not_void: a_prefix /= Void
+			a_position_not_void: a_position /= Void
+		do
+			assert_equal (a_prefix + " row", a_row, a_position.row)
+			assert_equal (a_prefix + " column", a_column, a_position.column)
+		end
+		
 feature {NONE} -- Implementation
 
 	parser: XM_EIFFEL_PARSER
