@@ -1,0 +1,45 @@
+# exml.lib - Makefile for lcc-win32
+#
+# SmallEiffel specific
+
+
+# *******************
+# USER SETTINGS BELOW
+# *******************
+
+AR=lcclib
+
+# Which Eiffel vendor?
+VENDOR=SE
+
+# Where is expat?
+EXPAT=m:\src\expat
+
+# If you are using SmallEiffel, where is its root directory?
+SEDIR=m:\elj-win32\SmallEiffel
+CFLAGS=-DSE -I$(SEDIR) -I$(EXPAT)\lib
+
+# ********************
+# END OF USER SETTINGS
+# ********************
+
+
+all: libexml.lib
+
+libexml.lib: exml_expat.obj exml_helper.obj
+	if exist $@ del $@
+	$(AR) /OUT:$@ exml_expat.obj exml_helper.obj
+
+exml_expat.o: exml_expat.c exml_expat.h
+
+exml_helper.o: exml_helper.c exml_helper.h
+
+
+install:
+	echo where?
+
+
+clean:
+	del exml_expat.obj
+	del exml_helper.obj
+	del libexml.lib

@@ -1,0 +1,890 @@
+indexing
+
+   description: "Class that makes the complete Expat 1.95 API available."
+
+   see_also: "Call-backs are made available through EP_CALLBACK."
+
+   unconverted:
+   "1. XM_Encoding struct."
+
+   status: "See notice at end of class."
+   author: "Andreas Leitner, Berend de Boer"
+
+
+class
+
+   XP_API
+
+inherit
+   KL_IMPORTED_STRING_BUFFER_ROUTINES
+
+feature {NONE} -- creating and destroying parsers
+   
+   exml_XML_ParserCreate (encoding: POINTER): POINTER is
+         -- Constructs a new parser; encoding is the encoding
+         -- specified by the external protocol or null if there is
+         -- none specified.
+      external "C"
+      alias "exml_XML_ParserCreate"
+      end
+   
+   exml_XML_ParserCreateNS (encoding: POINTER; namespace_separator: CHARACTER): POINTER is
+         -- Constructs a new parser and namespace processor.  Element
+         -- type names and attribute names that belong to a namespace
+         -- will be expanded; unprefixed attribute names are never
+         -- expanded; unprefixed element type names are expanded only
+         -- if there is a default namespace. The expanded name is the
+         -- concatenation of the namespace URI, the namespace
+         -- separator character, and the local part of the name.  If
+         -- the namespace separator is '\0' then the namespace URI and
+         -- the local part will be concatenated without any separator.
+         -- When a namespace is not declared, the name and prefix will
+         -- be passed through without expansion.
+      external "C"
+      alias "exml_XML_ParserCreateNS"
+      end
+      
+   exml_XML_ParserCreate_MM (encoding, memsuite: POINTER; namespace_separator: POINTER): POINTER is
+         -- Constructs a new parser using the memory management suit
+         -- referred to by memsuite. If memsuite is NULL, then use the
+         -- standard library memory suite. If namespaceSeparator is
+         -- non-NULL it creates a parser with namespace processing as
+         -- described above. The character pointed at will serve as
+         -- the namespace separator.  
+         -- All further memory operations used for the created parser
+         -- will come from the given suite.
+      external "C"
+      alias "exml_XML_ParserCreate_MM"
+      end
+
+   
+   exml_XML_ExternalEntityParserCreate (parser_handle: POINTER; context: POINTER; encoding: POINTER): POINTER is
+         -- Creates an XM_Parser object that can parse an external general 
+         -- entity;
+         -- context is a '\0'-terminated string specifying the parse context;
+         -- encoding is a '\0'-terminated string giving the name of
+         -- the externally specified encoding, or null if there is no
+         -- externally specified encoding.
+         -- The context string consists of a sequence of tokens
+         -- separated by formfeeds (\f); a token consisting of a name
+         -- specifies that the general entity of the name is open; a
+         -- token of the form prefix=uri specifies the namespace for a
+         -- particular prefix; a token of the form =uri specifies the
+         -- default namespace.
+         -- This can be called at any point after the first call to an
+         -- ExternalEntityRefHandler so longer as the parser has not
+         -- yet been freed.
+         -- The new parser is completely independent and may safely be
+         -- used in a separate thread.
+         -- The handlers and userData are initialized from the parser 
+         -- argument.
+         -- Returns 0 if out of memory.  Otherwise returns a new XM_Parser 
+         -- object.
+      external "C"
+      alias "exml_XML_ExternalEntityParserCreate"
+      end
+
+   exml_XML_ParserFree (parser_handle: POINTER)  is
+         -- Frees memory used by the parser.
+         -- If an Eiffel callback has been specified, make sure you 
+         -- have called `exml_XM_SetUserData' with a Void argument, 
+         -- else your callback is never available for the gc again.
+      external "C"
+      alias "exml_XML_ParserFree"
+      end
+      
+
+feature {NONE} -- parsing      
+   
+--     exml_XML_GetSpecifiedAttributeCount (parser_handle: POINTER): INTEGER is
+--           -- Returns the number of the attribute/value pairs passed in
+--           -- last call to the `XM_StartElementHandler' that were
+--           -- specified in the start-tag rather than defaulted. Each
+--           -- attribute/value pair counts as 2; thus this corresponds
+--           -- to an index into the atts array passed to the
+--           -- `XML_StartElementHandler'.
+--        external "C"
+--        end
+
+--     exml_XML_GetIdAttributeIndex (parser_handle: POINTER): INTEGER  is
+--           -- Returns the index of the ID attribute passed in the last call 
+--           -- to XM_StartElementHandler, or -1 if there is no ID attribute.  
+--           -- Each attribute/value pair counts as 2; thus this corresponds to an 
+--           -- index into the atts array passed to the XML_StartElementHandler.
+--        external "C"
+--        end
+
+   exml_XML_Parse_string (parser_handle: POINTER; str: STRING; is_final: BOOLEAN): INTEGER  is
+         -- Parses some input. Returns 0 if a fatal error is 
+         -- detected. The last call to XML_Parse must have isFinal 
+         -- true; `str' may be empty
+      require
+	 str_not_void: str /= Void
+	 parser_handle_not_null: parser_handle /= default_pointer
+#ifdef ISE
+      local
+	 c_str: ANY
+#endif
+      do
+#ifdef ISE
+	 c_str := str.to_c
+	 Result := ext_exml_XML_Parse (parser_handle, $c_str, str.count, is_final)
+#endif
+#ifdef SE
+	Result := ext_exml_XML_Parse (parser_handle, str.to_external, str.count, is_final)
+#endif
+      ensure
+	 result_ge_zero: Result >= 0
+      end
+
+   exml_XML_Parse_string_buffer (parser_handle: POINTER; a_buffer: like STRING_BUFFER_TYPE; is_final: BOOLEAN): INTEGER  is
+         -- Parses some input. Returns 0 if a fatal error is 
+         -- detected. The last call to XML_Parse must have isFinal 
+         -- true; `a_buffer' may be empty
+      require
+	 a_buffer_not_void: a_buffer /= Void
+	 parser_handle_not_null: parser_handle /= default_pointer
+      local
+#ifdef ISE
+	 c_str: ANY
+	 count: INTEGER
+#endif
+      do
+#ifdef ISE
+	 count := STRING_BUFFER_.upper (a_buffer) - STRING_BUFFER_.lower
+	 c_str := $a_buffer
+	 Result := ext_exml_XML_Parse (parser_handle, $c_str, count, is_final)
+#endif
+#ifdef SE
+	Result := ext_exml_XML_Parse (parser_handle, a_buffer.to_external, a_buffer.count, is_final)
+#endif
+      ensure
+	 result_ge_zero: Result >= 0
+      end
+
+   ext_exml_XML_Parse (parser_handle: POINTER; s: POINTER; len: INTEGER; is_final: BOOLEAN): INTEGER  is
+         -- Parses some input. Returns 0 if a fatal error is 
+         -- detected. The last call to XML_Parse must have isFinal 
+         -- true; len may be zero for this call (or any other).
+      external "C"
+      alias "exml_XML_Parse"
+      end
+
+--     exml_XML_GetBuffer (parser_handle: POINTER; len: INTEGER): POINTER  is      
+--        external "C"
+--        end
+   
+--     exml_XML_ParseBuffer (parser_handle: POINTER; len: INTEGER; is_final: BOOLEAN)  is
+--        external "C"
+--        end
+
+
+feature {NONE} -- error reporting
+   
+   exml_XML_GetErrorCode (parser_handle: POINTER): INTEGER  is
+         -- If XML_Parse or XML_ParseBuffer have returned 0, then 
+         -- XML_GetErrorCode returns information about the error.
+      require
+         valid_handle: parser_handle /= default_pointer
+      external "C"
+      alias "exml_XML_GetErrorCode"
+      end
+
+   exml_XML_ErrorString (code: INTEGER): POINTER is
+         -- Returns a string describing the error.
+      external "C"
+      alias "exml_XML_ErrorString"
+      end
+
+   
+feature {NONE} -- parse state reporting
+   
+   -- These functions return information about the current parse
+   -- location. They may be called when XM_Parse or XML_ParseBuffer
+   -- return 0; in this case the location is the location of the
+   -- character at which the error was detected.
+   
+   -- They may also be called from any other callback called to 
+   -- report some parse event; in this the location is the location of the 
+   -- first of the sequence of characters that generated the event.
+   
+   exml_XML_GetCurrentLineNumber (parser_handle: POINTER): INTEGER  is
+      external "C"
+      alias "exml_XML_GetCurrentLineNumber"
+      end
+   
+   exml_XML_GetCurrentColumnNumber (parser_handle: POINTER): INTEGER  is
+      external "C"
+      alias "exml_XML_GetCurrentColumnNumber"
+      end
+   
+   exml_XML_GetCurrentByteIndex (parser_handle: POINTER): INTEGER  is
+      external "C"
+      alias "exml_XML_GetCurrentByteIndex"
+      end
+
+   
+feature {NONE} -- various
+   
+--     exml_XML_DefaultCurrent (parser_handle: POINTER) is
+--           -- This can be called within a handler for a start element,
+--           -- end element, processing instruction or character data.  It
+--           -- causes the corresponding markup to be passed to the
+--           -- default handler.
+--        external "C"
+--        end
+   
+--     exml_XML_SetReturnNSTriplet (parser_handle: POINTER; do_nst: INTEGER) is
+--           --  If do_nst is non-zero, and namespace processing is in
+--           --  effect, and a name has a prefix (i.e. an explicit
+--           --  namespace qualifier) then that name is returned as a
+--           --  triplet in a single string separated by the separator
+--           --  character specified when the parser was created: URI +
+--           --  sep + local_name + sep + prefix.
+--           --  If do_nst is zero, then namespace information is returned
+--           --  in the default manner (URI + sep + local_name) whether or
+--           --  not the names has a prefix.
+--        external "C"
+--        end
+      
+   exml_XML_SetUserData (parser_handle: POINTER; callback: XP_CALLBACK) is
+         -- This value is passed as the userData argument to 
+         -- callbacks.
+         -- For Eiffel reasons this is a class, it will also be 
+         -- protected against a moving gc if applicable. Pass Void to 
+         -- make the callback available to the gc
+      require
+         valid_handle: parser_handle /= Void
+      external "C"
+      alias "exml_XML_SetUserData"
+      end
+   
+   exml_XML_GetUserData (parser_handle: POINTER): XP_CALLBACK is
+         -- Returns the last value set by XM_SetUserData or null.
+      require
+         valid_handle: parser_handle /= Void
+      external "C"
+      alias "exml_XML_GetUserData"
+      end
+   
+--     exml_XML_SetEncoding (parser_handle: POINTER; encoding: POINTER) is
+--           -- This is equivalent to supplying an encoding argument to
+--           -- XM_ParserCreate. It must not be called after XML_Parse or
+--           -- XM_ParseBuffer.
+--        external "C"
+--        end
+
+--     exml_XML_UseParserAsHandlerArg (parser_handle: POINTER) is
+--           -- If this function is called, then the parser will be passed
+--           -- as the first argument to callbacks instead of
+--           -- userData. The userData will still be accessible using
+--           -- XM_GetUserData.
+--        external "C"
+--        end
+   
+   exml_XML_SetBase_string (parser_handle: POINTER; base: STRING): BOOLEAN is
+         -- Sets the base to be used for resolving relative URIs in
+         -- system identifiers in declarations.  Resolving relative
+         -- identifiers is left to the application: this value will be
+         -- passed through as the base argument to the
+         -- XM_ExternalEntityRefHandler, XML_NotationDeclHandler and
+         -- XM_UnparsedEntityDeclHandler. The base argument will be
+         -- copied.
+         -- Returns zero if out of memory, non-zero otherwise.
+      require
+         parser_handle_not_null: parser_handle /= default_pointer
+         base_not_void: base /= Void
+#ifdef ISE
+      local
+	 c_str: ANY
+#endif
+      do
+#ifdef ISE
+	 c_str := str.to_c
+	 Result := ext_exml_XML_SetBase (parser_handle, $c_str)
+#endif
+#ifdef SE
+	Result := ext_exml_XML_SetBase (parser_handle, str.to_external)
+#endif
+
+   ext_exml_XML_SetBase (parser_handle: POINTER; base: POINTER): BOOLEAN is
+         -- Sets the base to be used for resolving relative URIs in
+         -- system identifiers in declarations.  Resolving relative
+         -- identifiers is left to the application: this value will be
+         -- passed through as the base argument to the
+         -- XM_ExternalEntityRefHandler, XML_NotationDeclHandler and
+         -- XM_UnparsedEntityDeclHandler. The base argument will be
+         -- copied.
+         -- Returns zero if out of memory, non-zero otherwise.
+      external "C"
+      alias "exml_XML_SetBase"
+      end
+
+   exml_XML_GetBase (parser_handle: POINTER): POINTER is
+      external "C"
+      alias "exml_XML_GetBase"
+      end
+   
+   exml_XML_SetParamEntityParsing (parser_handle: POINTER; parsing: INTEGER): BOOLEAN is
+         -- Controls parsing of parameter entities (including the
+         -- external DTD subset). If parsing of parameter entities is
+         -- enabled, then references to external parameter entities
+         -- (including the external DTD subset) will be passed to the
+         -- handler set with `XML_SetExternalEntityRefHandler'.  The
+         -- context passed will be 0. Unlike external general
+         -- entities, external parameter entities can only be parsed
+         -- synchronously.  If the external parameter entity is to be
+         -- parsed, it must be parsed during the call to the external
+         -- entity ref handler: the complete sequence of
+         -- `XML_ExternalEntityParserCreate', `XML_Parse'/`XML_ParseBuffer'
+         -- and `XML_ParserFree' calls must be made during this call.
+         -- After `XML_ExternalEntityParserCreate' has been called to
+         -- create the parser for the external parameter entity
+         -- (context must be 0 for this call), it is illegal to make
+         -- any calls on the old parser until `XML_ParserFree' has been
+         -- called on the newly created parser.  If the library has
+         -- been compiled without support for parameter entity parsing
+         -- (ie without XM_DTD being defined), then
+         -- `XML_SetParamEntityParsing' will return 0 if parsing of
+         -- parameter entities is requested; otherwise it will return
+         -- non-zero.
+      external "C"
+      alias "exml_XML_SetParamEntityParsing"
+      end
+
+--     exml_XML_GetCurrentByteCount (parser_handle: POINTER): INTEGER  is
+--           -- Return the number of bytes in the current event.
+--           -- Returns 0 if the event is in an internal entity.
+--        external "C"
+--        end
+
+--     exml_XML_GetInputContext (parser_handle: POINTER; a_offset, a_size: INTEGER)  is
+--           -- If XML_CONTEXT_BYTES is defined, returns the input buffer,
+--           -- sets the integer pointed to by offset to the offset within
+--           -- this buffer of the current parse position, and sets the
+--           -- integer pointed to by size to the size of this buffer (the
+--           -- number of input bytes). Otherwise returns a null
+--           -- pointer. Also returns a null pointer if a parse isn't
+--           -- active.
+--           -- NOTE: The character pointer returned should not be used
+--           -- outside the handler that makes the call.
+--        external "C"
+--        end
+
+   exml_XML_ExpatVersion: POINTER  is
+         -- Return a string containing the version number of this expat
+      external "C"
+      alias "exml_XML_ExpatVersion"
+      end
+
+   
+feature {NONE} -- register handlers
+   
+   exml_register_XML_SetElementDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetElementDeclHandler"
+      end
+
+   exml_register_XML_SetAttlistDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetAttlistDeclHandler"         
+      end
+   
+   exml_register_XML_SetXmlDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetXmlDeclHandler"
+      end
+
+   exml_register_XML_SetEntityDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetEntityDeclHandler"
+      end
+
+   exml_register_XML_SetElementHandler (parser_handle: POINTER) is
+      require
+         valid_handle: parser_handle /= default_pointer
+      external "C"
+      alias "exml_register_XML_SetElementHandler"
+      end
+
+   exml_register_XML_SetStartElementHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetStartElementHandler"
+      end
+   
+   exml_register_XML_SetEndElementHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetEndElementHandler"
+      end
+   
+   exml_register_XML_SetCharacterDataHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetCharacterDataHandler"
+      end
+   
+   exml_register_XML_SetProcessingInstructionHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetProcessingInstructionHandler"
+      end
+   
+   exml_register_XML_SetCommentHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetCommentHandler"
+      end
+   
+   exml_register_XML_SetCdataSectionHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetCdataSectionHandler"
+      end
+   
+   exml_register_XML_SetStartCdataSectionHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetStartCdataSectionHandler"
+      end
+   
+   exml_register_XML_SetEndCdataSectionHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetEndCdataSectionHandler"
+      end
+   
+   exml_register_XML_SetDefaultHandler (parser_handle: POINTER) is
+         -- This sets the default handler and also inhibits expansion
+         -- of internal entities.
+         -- The entity reference will be passed to the default handler.
+      external "C"
+      alias "exml_register_XML_SetDefaultHandler"
+      end
+   
+   exml_register_XML_SetDefaultHandlerExpand (parser_handle: POINTER) is
+         -- This sets the default handler but does not inhibit
+         -- expansion of internal entities.
+         -- The entity reference will not be passed to the default handler.
+      external "C"
+      alias "exml_register_XML_SetDefaultHandlerExpand"
+      end
+   
+   exml_register_XML_SetDoctypeDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetDoctypeDeclHandler"
+      end
+   
+   exml_register_XML_SetStartDoctypeDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetStartDoctypeDeclHandler"
+      end
+   
+   exml_register_XML_SetEndDoctypeDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetEndDoctypeDeclHandler"
+      end
+   
+   exml_register_XML_SetNotationDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetNotationDeclHandler"
+      end
+   
+   exml_register_XML_SetNamespaceDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetNamespaceDeclHandler"
+      end
+   
+   exml_register_XML_SetStartNamespaceDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetStartNamespaceDeclHandler"
+      end
+   
+   exml_register_XML_SetEndNamespaceDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetEndNamespaceDeclHandler"
+      end
+   
+   exml_register_XML_SetNotStandaloneHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetNotStandaloneHandler"
+      end
+   
+   exml_register_XML_SetExternalEntityRefHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_register_XML_SetExternalEntityRefHandler"
+      end
+   
+   exml_register_XML_SetUnknownEncodingHandler (parser_handle: POINTER; encoding_callback: XP_ENCODING_CALLBACK) is
+      external "C"
+      alias "exml_register_XML_SetUnknownEncodingHandler"
+      end
+   
+   
+feature {NONE} -- unregister handlers
+   
+   exml_unregister_XML_SetElementDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetElementDeclHandler"
+      end
+
+   exml_unregister_XML_SetAttlistDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetAttlistDeclHandler"         
+      end
+   
+   exml_unregister_XML_SetXmlDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetXmlDeclHandler"
+      end
+
+   exml_unregister_XML_SetEntityDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetEntityDeclHandler"
+      end
+
+   exml_unregister_XML_SetElementHandler (parser_handle: POINTER) is
+      require
+         valid_handle: parser_handle /= default_pointer
+      external "C"
+      alias "exml_unregister_XML_SetElementHandler"
+      end
+
+   exml_unregister_XML_SetStartElementHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetStartElementHandler"
+      end
+   
+   exml_unregister_XML_SetEndElementHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetEndElementHandler"
+      end
+   
+   exml_unregister_XML_SetCharacterDataHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetCharacterDataHandler"
+      end
+   
+   exml_unregister_XML_SetProcessingInstructionHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetProcessingInstructionHandler"
+      end
+   
+   exml_unregister_XML_SetCommentHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetCommentHandler"
+      end
+   
+   exml_unregister_XML_SetCdataSectionHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetCdataSectionHandler"
+      end
+   
+   exml_unregister_XML_SetStartCdataSectionHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetStartCdataSectionHandler"
+      end
+   
+   exml_unregister_XML_SetEndCdataSectionHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetEndCdataSectionHandler"
+      end
+   
+   exml_unregister_XML_SetDefaultHandler (parser_handle: POINTER) is
+         -- This sets the default handler and also inhibits expansion
+         -- of internal entities.
+         -- The entity reference will be passed to the default handler.
+      external "C"
+      alias "exml_unregister_XML_SetDefaultHandler"
+      end
+   
+   exml_unregister_XML_SetDefaultHandlerExpand (parser_handle: POINTER) is
+         -- This sets the default handler but does not inhibit
+         -- expansion of internal entities.
+         -- The entity reference will not be passed to the default handler.
+      external "C"
+      alias "exml_unregister_XML_SetDefaultHandlerExpand"
+      end
+   
+   exml_unregister_XML_SetDoctypeDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetDoctypeDeclHandler"
+      end
+   
+   exml_unregister_XML_SetStartDoctypeDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetStartDoctypeDeclHandler"
+      end
+   
+   exml_unregister_XML_SetEndDoctypeDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetEndDoctypeDeclHandler"
+      end
+   
+   exml_unregister_XML_SetNotationDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetNotationDeclHandler"
+      end
+   
+   exml_unregister_XML_SetNamespaceDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetNamespaceDeclHandler"
+      end
+   
+   exml_unregister_XML_SetStartNamespaceDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetStartNamespaceDeclHandler"
+      end
+   
+   exml_unregister_XML_SetEndNamespaceDeclHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetEndNamespaceDeclHandler"
+      end
+   
+   exml_unregister_XML_SetNotStandaloneHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetNotStandaloneHandler"
+      end
+   
+   exml_unregister_XML_SetExternalEntityRefHandler (parser_handle: POINTER) is
+      external "C"
+      alias "exml_unregister_XML_SetExternalEntityRefHandler"
+      end
+   
+   exml_unregister_XML_SetUnknownEncodingHandler (parser_handle: POINTER; encoding_callback: XP_ENCODING_CALLBACK) is
+      external "C"
+      alias "exml_unregister_XML_SetUnknownEncodingHandler"
+      end
+   
+
+feature {NONE} -- XM_Content_Type enum
+   
+   XML_CTYPE_EMPTY: INTEGER is
+      external "C"
+      alias "exml_xml_ctype_empty"
+      end
+
+   XML_CTYPE_ANY: INTEGER is
+      external "C"
+      alias "exml_xml_ctype_any"
+      end
+
+   XML_CTYPE_MIXED: INTEGER is
+      external "C"
+      alias "exml_xml_ctype_mixed"
+      end
+
+   XML_CTYPE_NAME: INTEGER is
+      external "C"
+      alias "exml_xml_ctype_name"
+      end
+
+   XML_CTYPE_CHOICE: INTEGER is
+      external "C"
+      alias "exml_xml_ctype_choice"
+      end
+
+   XML_CTYPE_SEQ: INTEGER is
+      external "C"
+      alias "exml_xml_ctype_seq"
+      end
+   
+   
+feature {NONE} -- XML_Content_Quant enum
+   
+   XML_CQUANT_NONE: INTEGER is
+      external "C"
+      alias "exml_xml_cquant_none"
+      end
+
+   XML_CQUANT_OPT: INTEGER is
+      external "C"
+      alias "exml_xml_cquant_opt"
+      end
+
+   XML_CQUANT_REP: INTEGER is
+      external "C"
+      alias "exml_xml_cquant_rep"
+      end
+
+   XML_CQUANT_PLUS: INTEGER is
+      external "C"
+      alias "exml_xml_cquant_plus"
+      end
+
+
+feature {NONE} -- XML_cp members
+
+   exml_xml_cp_size: INTEGER is
+      external "C"
+      end
+
+   exml_xml_cp_type (a_xml_cp: POINTER): INTEGER is
+      external "C"
+      end
+
+   exml_xml_cp_quant (a_xml_cp: POINTER): INTEGER is
+      external "C"
+      end
+
+   exml_xml_cp_name (a_xml_cp: POINTER): POINTER is
+      external "C"
+      end
+
+   exml_xml_cp_numchildren (a_xml_cp: POINTER): INTEGER is
+      external "C"
+      end
+
+   exml_xml_cp_children (a_xml_cp: POINTER; index: INTEGER): POINTER is
+      require
+         valid_index: index >= 0 and index < exml_xml_cp_numchildren (a_xml_cp)
+      external "C"
+      end
+
+
+feature {NONE} -- XML_ParamEntityParsing enum   
+   
+   XML_PARAM_ENTITY_PARSING_NEVER: INTEGER is
+      external "C"
+      alias "exml_xml_param_entity_parsing_never"
+      end
+
+   XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE: INTEGER is
+      external "C"
+      alias "exml_xml_param_entity_parsing_unless_standalone"
+      end
+
+   XML_PARAM_ENTITY_PARSING_ALWAYS: INTEGER is
+      external "C"
+      alias "exml_xml_param_entity_parsing_always"
+      end
+   
+
+feature {NONE} -- XML_Error enum
+   
+   XML_ERROR_NONE: INTEGER is
+      external "C"
+      alias "exml_xml_error_none"
+      end
+
+   XML_ERROR_NO_MEMORY: INTEGER is
+      external "C"
+      alias "exml_xml_error_no_memory"
+      end
+
+   XML_ERROR_SYNTAX: INTEGER is
+      external "C"
+      alias "exml_xml_error_syntax"
+      end
+
+   XML_ERROR_NO_ELEMENTS: INTEGER is
+      external "C"
+      alias "exml_xml_error_no_elements"
+      end
+
+   XML_ERROR_INVALID_TOKEN: INTEGER is
+      external "C"
+      alias "exml_xml_error_invalid_token"
+      end
+
+   XML_ERROR_UNCLOSED_TOKEN: INTEGER is
+      external "C"
+      alias "exml_xml_error_unclosed_token"
+      end
+
+   XML_ERROR_PARTIAL_CHAR: INTEGER is
+      external "C"
+      alias "exml_xml_error_partial_char"
+      end
+
+   XML_ERROR_TAG_MISMATCH: INTEGER is
+      external "C"
+      alias "exml_xml_error_tag_mismatch"
+      end
+
+   XML_ERROR_DUPLICATE_ATTRIBUTE: INTEGER is
+      external "C"
+      alias "exml_xml_error_duplicate_attribute"
+      end
+
+   XML_ERROR_JUNK_AFTER_DOC_ELEMENT: INTEGER is
+      external "C"
+      alias "exml_xml_error_junk_after_doc_element"
+      end
+
+   XML_ERROR_PARAM_ENTITY_REF: INTEGER is
+      external "C"
+      alias "exml_xml_error_param_entity_ref"
+      end
+
+   XML_ERROR_UNDEFINED_ENTITY: INTEGER is
+      external "C"
+      alias "exml_xml_error_undefined_entity"
+      end
+
+   XML_ERROR_RECURSIVE_ENTITY_REF: INTEGER is
+      external "C"
+      alias "exml_xml_error_recursive_entity_ref"
+      end
+
+   XML_ERROR_ASYNC_ENTITY: INTEGER is
+      external "C"
+      alias "exml_xml_error_async_entity"
+      end
+
+   XML_ERROR_BAD_CHAR_REF: INTEGER is
+      external "C"
+      alias "exml_xml_error_bad_char_ref"
+      end
+
+   XML_ERROR_BINARY_ENTITY_REF: INTEGER is
+      external "C"
+      alias "exml_xml_error_binary_entity_ref"
+      end
+
+   XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF: INTEGER is
+      external "C"
+      alias "exml_xml_error_attribute_external_entity_ref"
+      end
+
+   XML_ERROR_MISPLACED_XML_PI: INTEGER is
+      external "C"
+      alias "exml_xml_error_misplaced_xml_pi"
+      end
+
+   XML_ERROR_UNKNOWN_ENCODING: INTEGER is
+      external "C"
+      alias "exml_xml_error_unknown_encoding"
+      end
+
+   XML_ERROR_INCORRECT_ENCODING: INTEGER is
+      external "C"
+      alias "exml_xml_error_incorrect_encoding"
+      end
+
+   XML_ERROR_UNCLOSED_CDATA_SECTION: INTEGER is
+      external "C"
+      alias "exml_xml_error_unclosed_cdata_section"
+      end
+
+   XML_ERROR_EXTERNAL_ENTITY_HANDLING: INTEGER is
+      external "C"
+      alias "exml_xml_error_external_entity_handling"
+      end
+
+   XML_ERROR_NOT_STANDALONE: INTEGER is
+      external "C"
+      alias "exml_xml_error_not_standalone"
+      end
+
+   XML_ERROR_UNEXPECTED_STATE: INTEGER is
+      external "C"
+      alias "exml_xml_error_unexpected_state"
+      end
+
+feature {NONE}
+   ptr_contents (ptr: POINTER): POINTER is
+         -- returns the contents of a pointer given 'ptr' is of the C-type void**
+      external "C"
+      end
+
+   ptr_move (ptr: POINTER; pos: INTEGER): POINTER is
+         -- moves 'ptr' 'pos' characters further
+      external "C"
+      end
+
+   
+end -- class XP_API
