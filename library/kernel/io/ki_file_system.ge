@@ -136,6 +136,24 @@ feature -- File handling
 		deferred
 		end
 
+	concat_files (a_target_filename, a_source_filename: STRING) is
+			-- Copy content of file `a_source_filename' to the end of file
+			-- `a_target_filename'. Do nothing if file `a_source_filename'
+			-- does not exist. Create file `a_target_filename' if it does
+			-- not exist yet. If file `a_source_filename' is physically the
+			-- same as file `a_target_filename', then a copy of the file is
+			-- appended to itself. Do nothing if file `a_target_filename'
+			-- could not be open in append mode or if file `a_source_filename'
+			-- could not be opened in read mode.
+			-- (`a_source_filename' and `a_target_filename' should follow
+			-- the pathname convention of the underlying platform. For pathname
+			-- conversion use KI_FILE_SYSTEM.pathname_from_file_system.)
+		require
+			a_target_filename_not_void: a_target_filename /= Void
+			a_source_filename_not_void: a_source_filename /= Void
+		deferred
+		end
+
 	delete_file (a_filename: STRING) is
 			-- Delete file named `a_filename'.
 			-- Do nothing if the file could not be
