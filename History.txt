@@ -59,6 +59,7 @@ Version 3.2 - ?
 
 	Gobo Eiffel XML Library:
 
+    * Eiffel parser now accepts 'iso-8859-1' encoding.
 	* Tree formatter now produces valid XML.
 	* Tree node parent not void (when not the root node) implemented
 	  where missing and creation procedures updated accordingly. Also
