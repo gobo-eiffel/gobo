@@ -1,0 +1,9 @@
+<project name="print">
+
+	<target name="print">
+		<description>Print value of variable ${some_filename}</description>
+
+		<echo message="some_filename: ${some_filename}"/>
+	</target>
+
+</project>

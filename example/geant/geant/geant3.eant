@@ -1,0 +1,58 @@
+<project name="geant3" default="one">
+
+	<target name="one">
+		<description>Demonstrate fileset support of geant task: Invoke target 'print_fs_filename' for each entry in fileset</description>
+
+		<geant target="print_fs_filename">
+			<fileset
+				dir="${GOBO}/library/kernel"
+				include="@(**/*.ge)"
+				filename_directory="${GOBO}/library/kernel"
+			/>
+		</geant>
+
+	</target>
+
+	<target name="two">
+		<description>Demonstrate fileset support of geant task</description>
+
+		<set name="my_filenames" value=""/>
+		<geant target="append_fs_filename">
+			<fileset
+				dir="${GOBO}/library/kernel"
+				include="@(**/*.ge)"
+				filename_directory="${GOBO}/library/kernel"
+			/>
+		</geant>
+		<echo message="my_filenames: ${my_filenames}"/>
+
+	</target>
+
+	<target name="three">
+		<description>Demonstrate fileset support of geant task</description>
+
+		<geant file="print.eant" target="print" reuse_variables="true">
+			<fileset
+				dir="${GOBO}/library/kernel"
+				include="@(**/*.ge)"
+				filename_variable="some_filename"
+				filename_directory="${GOBO}/library/kernel"
+			/>
+		</geant>
+
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="print_fs_filename" export="NONE">
+		<description>print value in ${fs.filename}</description>
+		<echo message="Fileset's filename: ${fs.filename}"/>
+	</target>
+
+	<target name="append_fs_filename" export="NONE">
+		<description>append value of ${fs.filename} to ${my_filenames}</description>
+		<set name="my_filenames" value="${my_filenames} '${fs.filename}'"/>
+	</target>
+
+</project>
