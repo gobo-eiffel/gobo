@@ -64,4 +64,13 @@ feature -- Syntax errors
 			report_error (an_error)
 		end
 
+	report_eiffel_compilation_error is
+			-- Report that an Eiffel compilation error occurred.
+		local
+			an_error: TS_EIFFEL_COMPILATION_ERROR
+		do
+			!! an_error.make
+			report_error (an_error)
+		end
+
 end -- class TS_ERROR_HANDLER
