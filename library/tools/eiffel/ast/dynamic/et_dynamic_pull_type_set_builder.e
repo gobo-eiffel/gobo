@@ -1161,8 +1161,6 @@ feature {NONE} -- Event handling
 			l_result_attachment: ET_DYNAMIC_AGENT_RESULT_ATTACHMENT
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_feature := current_dynamic_type.dynamic_feature (a_feature, current_system)
-				l_dynamic_feature.set_regular (True)
 				l_dynamic_type := current_system.dynamic_type (a_type, a_context)
 				l_dynamic_type.set_alive
 				set_dynamic_type_set (l_dynamic_type, an_expression)
@@ -1187,52 +1185,54 @@ feature {NONE} -- Event handling
 							set_dynamic_type_set (l_target_type_set, l_target)
 						end
 					end
-						-- Set dynamic type sets of open operands.
-						-- Dynamic type sets for arguments are stored first in `dynamic_type_sets'.
-					l_argument_type_sets := l_dynamic_feature.dynamic_type_sets
-					l_actuals := an_expression.arguments
-					if l_actuals /= Void then
-						nb := l_actuals.count
-						if nb = 0 then
-							-- Do nothing.
-						elseif l_argument_type_sets.count < nb then
-								-- Internal error: it has already been checked somewhere else
-								-- that there was the same number of actual and formal arguments.
-							set_fatal_error
-							error_handler.report_gibgj_error
-						else
-							from i := 1 until i > nb loop
-								l_actual := l_actuals.actual_argument (i)
-								l_actual_expression ?= l_actual
-								if l_actual_expression /= Void then
-									-- Do nothing.
-								else
-										-- Open operand.
-									j := j + 1
-									if j > nb2 then
-											-- Internal error: missing open operands.
-										set_fatal_error
-										error_handler.report_gibgk_error
-									else
-										l_dynamic_type_set := l_open_operand_type_sets.item (j)
-										set_dynamic_type_set (l_dynamic_type_set, l_actual)
-									end
-								end
-								i := i + 1
-							end
-							if j < nb2 then
-									-- Internal error: too many open operands.
-								set_fatal_error
-								error_handler.report_gibgm_error
-							end
-						end
-					end
 					if l_target_type_set = Void then
 							-- Internal error: the dynamic type sets of the
 							-- target should be known at this stage.
 						set_fatal_error
 						error_handler.report_gibgn_error
 					else
+						l_dynamic_feature := l_target_type_set.static_type.dynamic_feature (a_feature, current_system)
+						l_dynamic_feature.set_regular (True)
+							-- Set dynamic type sets of open operands.
+							-- Dynamic type sets for arguments are stored first in `dynamic_type_sets'.
+						l_argument_type_sets := l_dynamic_feature.dynamic_type_sets
+						l_actuals := an_expression.arguments
+						if l_actuals /= Void then
+							nb := l_actuals.count
+							if nb = 0 then
+								-- Do nothing.
+							elseif l_argument_type_sets.count < nb then
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of actual and formal arguments.
+								set_fatal_error
+								error_handler.report_gibgj_error
+							else
+								from i := 1 until i > nb loop
+									l_actual := l_actuals.actual_argument (i)
+									l_actual_expression ?= l_actual
+									if l_actual_expression /= Void then
+										-- Do nothing.
+									else
+											-- Open operand.
+										j := j + 1
+										if j > nb2 then
+												-- Internal error: missing open operands.
+											set_fatal_error
+											error_handler.report_gibgk_error
+										else
+											l_dynamic_type_set := l_open_operand_type_sets.item (j)
+											set_dynamic_type_set (l_dynamic_type_set, l_actual)
+										end
+									end
+									i := i + 1
+								end
+								if j < nb2 then
+										-- Internal error: too many open operands.
+									set_fatal_error
+									error_handler.report_gibgm_error
+								end
+							end
+						end
 						create l_dynamic_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
 						l_result_type_set := l_agent_type.result_type_set
 						if l_result_type_set /= Void then
