@@ -35,6 +35,7 @@
 	<cluster name="parser" abstract="True">
 		<cluster name="eiffel"/>
 		<cluster name="expat" if="${GOBO_XML_EXPAT}"/>
+		<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 	</cluster>
 	<cluster name="impl" abstract="True">
 		<cluster name="interface" abstract="True">
