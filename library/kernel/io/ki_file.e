@@ -79,6 +79,7 @@ feature -- Basic operations
 		end
 
 	copy_file (new_name: STRING) is
+			-- Copy current file to `new_name'.
 			-- Do nothing if the file could not be copied, if it
 			-- did not exist or if `new_name' is physically
 			-- the same file as current file. Overwrite `new_name'
