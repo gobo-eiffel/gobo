@@ -39,12 +39,21 @@ feature -- Access
 
 	error_count: INTEGER is
 			-- Number of errors detected during last parsing
-			-- (`error_count' can be positive even though
+			-- (`error_count' can be non-zero even though
 			-- `syntax_error' is false. This can happen when
 			-- error recovery occurred.)
 		deferred
 		ensure
 			error_count_non_negative: Result >= 0
+		end
+
+feature -- Element change
+
+	clear_all is
+			-- Clear temporary objects so that they can be collected
+			-- by the garbage collector. (This routine is called by
+			-- `parse' before exiting. It can be redefined in descendants.)
+		do
 		end
 
 feature {YY_PARSER_ACTION} -- Status report
@@ -96,13 +105,6 @@ feature {YY_PARSER_ACTION} -- Basic operations
 			-- Clear the previous lookahead token.
 			-- Used in error-recovery rule actions.
 		deferred
-		end
-
-	clear_all is
-			-- Clear temporary objects so that they can be collected
-			-- by the garbage collector. (This routine is called by
-			-- `parse' before exiting. It can be redefined in descendants.)
-		do
 		end
 
 feature {YY_PARSER_ACTION} -- Scanning
