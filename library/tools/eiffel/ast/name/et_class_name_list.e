@@ -14,7 +14,7 @@ class ET_CLASS_NAME_LIST
 
 inherit
 
-	ET_AST_LIST [ET_CLASS_NAME_ITEM]
+	ET_HEAD_LIST [ET_CLASS_NAME_ITEM]
 		export
 			{ET_CLASS_NAME_LIST} storage
 		end

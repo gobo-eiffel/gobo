@@ -16,7 +16,7 @@ inherit
 
 	ET_AST_NODE
 
-	ET_AST_LIST [ET_EXPRESSION_ITEM]
+	ET_HEAD_LIST [ET_EXPRESSION_ITEM]
 
 feature -- Initialization
 

@@ -16,7 +16,7 @@ inherit
 
 	ET_AST_NODE
 
-	ET_AST_LIST [ET_LOCAL_VARIABLE_ITEM]
+	ET_HEAD_LIST [ET_LOCAL_VARIABLE_ITEM]
 		redefine
 			make, make_with_capacity
 		end

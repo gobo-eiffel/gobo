@@ -16,7 +16,7 @@ inherit
 
 	ET_AST_NODE
 
-	ET_AST_LIST [ET_MANIFEST_STRING_ITEM]
+	ET_HEAD_LIST [ET_MANIFEST_STRING_ITEM]
 		redefine
 			make, make_with_capacity
 		end

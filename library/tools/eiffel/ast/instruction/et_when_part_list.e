@@ -16,7 +16,7 @@ inherit
 
 	ET_AST_NODE
 
-	ET_AST_LIST [ET_WHEN_PART]
+	ET_HEAD_LIST [ET_WHEN_PART]
 
 creation
 

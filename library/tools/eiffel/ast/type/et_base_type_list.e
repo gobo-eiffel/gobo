@@ -14,7 +14,7 @@ class ET_BASE_TYPE_LIST
 
 inherit
 
-	ET_AST_LIST [ET_BASE_TYPE]
+	ET_HEAD_LIST [ET_BASE_TYPE]
 
 creation
 

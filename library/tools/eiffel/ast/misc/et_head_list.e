@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Eiffel AST lists"
+		"Eiffel AST lists where insertions to and removals from the head are optimized"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_AST_LIST [G]
+deferred class ET_HEAD_LIST [G]
 
 feature {NONE} -- Initialization
 

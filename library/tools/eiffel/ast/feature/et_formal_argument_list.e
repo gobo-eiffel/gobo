@@ -16,7 +16,7 @@ inherit
 
 	ET_AST_NODE
 
-	ET_AST_LIST [ET_FORMAL_ARGUMENT_ITEM]
+	ET_HEAD_LIST [ET_FORMAL_ARGUMENT_ITEM]
 		redefine
 			make, make_with_capacity
 		end

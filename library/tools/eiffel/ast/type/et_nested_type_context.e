@@ -16,7 +16,7 @@ inherit
 
 	ET_TYPE_CONTEXT
 
-	ET_AST_LIST [ET_TYPE]
+	ET_HEAD_LIST [ET_TYPE]
 		rename
 			make as make_ast_list,
 			make_with_capacity as make_ast_list_with_capacity

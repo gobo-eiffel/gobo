@@ -14,7 +14,7 @@ class ET_FEATURE_LIST
 
 inherit
 
-	ET_AST_LIST [ET_FEATURE]
+	ET_HEAD_LIST [ET_FEATURE]
 
 creation
 
