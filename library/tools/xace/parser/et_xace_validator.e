@@ -257,6 +257,8 @@ feature {NONE} -- Validation
 							if has_name then
 								has_error := True
 								error_handler.report_unknown_element_error (an_option, a_child, a_position_table.item (a_child))
+							elseif a_child_name.is_equal (uc_option) then
+								validate_option (a_child, a_position_table)
 							end
 						else
 							has_error := True
