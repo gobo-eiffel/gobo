@@ -1,8 +1,8 @@
 indexing
 
    description:
-   
-   "Sequence of UC_CHARACTERs, accessible through integer indices in a contigous range."; 
+
+   "Sequence of UC_CHARACTERs, accessible through integer indices in a contigous range.";
 
    library:    "Gobo Eiffel Unicode Library"
    author:     "michael kretschmar <majkel.kretschmar@epost.de>"
@@ -15,14 +15,14 @@ class UC_STRING
 
 inherit
    COMPARABLE
-      redefine infix "<=", infix ">", infix ">=", is_equal, 
+      redefine infix "<=", infix ">", infix ">=", is_equal,
 	 three_way_comparison, out, copy
       end
    HASHABLE
       redefine is_equal, out, copy
       end
 
-creation 
+creation
    make, make_from_string, make_from_utf8
 
 feature -- Creation
@@ -52,7 +52,7 @@ feature -- Creation
       end
 
    make_from_utf8 (other: STRING) is
-	 -- Initialize from the characters of `other' which are 
+	 -- Initialize from the characters of `other' which are
 	 -- stored in UFT8-Format
       require
 	 string_exists: other /= Void
@@ -161,7 +161,7 @@ feature -- Access
 	 from
 	    i := start
 	 until
-	    Result /= 0 or else i > count - other.count + 1 
+	    Result /= 0 or else i > count - other.count + 1
 	 loop
 	    from
 	       j := 1
@@ -179,8 +179,8 @@ feature -- Access
 	 end
       ensure
 	 non_negative_result: Result >= 0; -- mk
-         at_this_position: Result > 0 implies 
-			   substring(Result, 
+         at_this_position: Result > 0 implies
+			   substring(Result,
 				     Result+other.count-1).is_equal(other);--mk
       end
 
@@ -355,7 +355,7 @@ feature -- Element change
       do
          append_uc_character(c)
       end
-      
+
    append_uc_character (c: UC_CHARACTER) is
 	 -- Append `c' at end.
       do
@@ -365,14 +365,14 @@ feature -- Element change
 	 one_more_occurrence: occurrences (c) = old (occurrences (c)) + 1
 	 -- item_inserted: has (c)
       end
-   
+
    append_ucstring (s: UC_STRING) is
 	 -- Append a copy of `s', if not void, at end.
       obsolete "Use `append_uc_string' instead."
       do
          append_uc_string(s)
       end
-   
+
    append_uc_string (s: UC_STRING) is
 	 -- Append a copy of `s', if not void, at end.
       do
@@ -429,13 +429,13 @@ feature -- Element change
       ensure
 	 new_count: count = old count + s.count
       end
-   
+
    insert_ucchar (c: UC_CHARACTER; i: INTEGER) is
       obsolete "Use `insert_uc_character' instead"
       do
          insert_uc_character(c, i)
       end
-   
+
    insert_uc_character (c: UC_CHARACTER; i: INTEGER) is
 	 -- Add `c' to the left of position `i'.
       do
@@ -614,7 +614,7 @@ feature -- Conversion
          -- state = 4 : error state.
       do
 	 -- taken from SmallEiffel
-	 
+
          from
 	    i := 1
          until
@@ -672,7 +672,7 @@ feature -- Conversion
          if sign then
             last_integer := - last_integer;
          end;
-         
+
          Result := last_integer
       end
 
@@ -768,8 +768,8 @@ feature -- Duplication
 
    copy (other: like Current) is
       do
-	 -- we can't wipe_out representation, if available, for it is 
-	 -- the same as other.i_reprresentation for VE. have to 
+	 -- we can't wipe_out representation, if available, for it is
+	 -- the same as other.i_reprresentation for VE. have to
 	 -- reread the clone semantics
 
 	 i_representation := i_settings.create_representation
@@ -809,7 +809,7 @@ feature -- Output
 
    out: STRING is
 	 --| characters with code >= 256 will be represented as
-	 --| "\uxxxx;", where "xxxx" is the hexadecimal 
+	 --| "\uxxxx;", where "xxxx" is the hexadecimal
 	 --| representation of code.
       local
 	 i: INTEGER
