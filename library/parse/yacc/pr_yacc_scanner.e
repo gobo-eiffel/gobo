@@ -5,8 +5,9 @@ indexing
 		"Scanners for parser generators such as 'geyacc'"
 
 	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -51,32 +52,32 @@ if yy_act <= 7 then
 if yy_act <= 4 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 38
+--|#line 39
 last_token := T_TOKEN
 else
---|#line 39
+--|#line 40
 last_token := T_LEFT
 end
 else
 if yy_act = 3 then
---|#line 40
+--|#line 41
 last_token := T_RIGHT
 else
---|#line 41
+--|#line 42
 last_token := T_NONASSOC
 end
 end
 else
 if yy_act <= 6 then
 if yy_act = 5 then
---|#line 42
+--|#line 43
 last_token := T_TYPE
 else
---|#line 43
+--|#line 44
 last_token := T_START
 end
 else
---|#line 44
+--|#line 45
 last_token := T_EXPECT
 end
 end
@@ -84,35 +85,35 @@ else
 if yy_act <= 11 then
 if yy_act <= 9 then
 if yy_act = 8 then
---|#line 45
+--|#line 46
 last_token := Comma_code
 else
---|#line 46
+--|#line 47
 last_token := Less_than_code
 end
 else
 if yy_act = 10 then
---|#line 47
+--|#line 48
 last_token := Greater_than_code
 else
---|#line 48
+--|#line 49
 last_token := Left_bracket_code
 end
 end
 else
 if yy_act <= 13 then
 if yy_act = 12 then
---|#line 49
+--|#line 50
 last_token := Right_bracket_code
 else
---|#line 50
+--|#line 51
 
 						line_nb := line_nb + 1
 						set_start_condition (EIFFEL_CODE)
 					
 end
 else
---|#line 54
+--|#line 55
 
 						set_start_condition (EIFFEL_CODE)
 					
@@ -124,41 +125,41 @@ if yy_act <= 21 then
 if yy_act <= 18 then
 if yy_act <= 16 then
 if yy_act = 15 then
---|#line 57
+--|#line 58
 
 						last_token := T_2PERCENTS
 						set_start_condition (SECTION2)
 					
 else
---|#line 61
+--|#line 62
 last_token := T_UNKNOWN
 end
 else
 if yy_act = 17 then
---|#line 65
+--|#line 66
 -- Separator or comment.
 else
---|#line 66
+--|#line 67
 line_nb := line_nb + 1
 end
 end
 else
 if yy_act <= 20 then
 if yy_act = 19 then
---|#line 68
+--|#line 69
 
 						last_token := T_INTEGER
 						last_value := text
 					
 else
---|#line 72
+--|#line 73
 
 						last_token := T_BOOLEAN
 						last_value := text
 					
 end
 else
---|#line 76
+--|#line 77
 
 						last_token := T_REAL
 						last_value := text
@@ -169,13 +170,13 @@ else
 if yy_act <= 25 then
 if yy_act <= 23 then
 if yy_act = 22 then
---|#line 80
+--|#line 81
 
 						last_token := T_DOUBLE
 						last_value := text
 					
 else
---|#line 84
+--|#line 85
 
 						last_token := T_CHARACTER
 						last_value := text
@@ -183,13 +184,13 @@ else
 end
 else
 if yy_act = 24 then
---|#line 88
+--|#line 89
 
 						last_token := T_POINTER
 						last_value := text
 					
 else
---|#line 92
+--|#line 93
 
 						last_token := T_IDENTIFIER
 						last_value := text
@@ -199,7 +200,7 @@ end
 else
 if yy_act <= 27 then
 if yy_act = 26 then
---|#line 96
+--|#line 97
 
 						last_token := T_NUMBER
 						last_value := text.to_integer
@@ -208,14 +209,14 @@ if yy_act = 26 then
 						end
 					
 else
---|#line 103
+--|#line 104
 
 						last_token := T_CHAR
 						last_value := text
 					
 end
 else
---|#line 110
+--|#line 111
 last_token := T_PREC
 end
 end
@@ -227,13 +228,13 @@ if yy_act <= 35 then
 if yy_act <= 32 then
 if yy_act <= 30 then
 if yy_act = 29 then
---|#line 111
+--|#line 112
 
 						last_token := Colon_code
 						last_value := line_nb
 					
 else
---|#line 115
+--|#line 116
 
 						last_token := Bar_code
 						last_value := line_nb
@@ -241,10 +242,10 @@ else
 end
 else
 if yy_act = 31 then
---|#line 119
+--|#line 120
 last_token := Semicolon_code
 else
---|#line 120
+--|#line 121
 
 						line_nb := line_nb + 1
 						set_start_condition (EIFFEL_ACTION)
@@ -254,19 +255,19 @@ end
 else
 if yy_act <= 34 then
 if yy_act = 33 then
---|#line 124
+--|#line 125
 
 						set_start_condition (EIFFEL_ACTION)
 					
 else
---|#line 127
+--|#line 128
 
 						last_token := T_2PERCENTS
 						set_start_condition (SECTION3)
 					
 end
 else
---|#line 134
+--|#line 135
 
 						last_token := T_USER_CODE
 						last_value := text
@@ -277,35 +278,35 @@ else
 if yy_act <= 39 then
 if yy_act <= 37 then
 if yy_act = 36 then
---|#line 141
+--|#line 142
 more
 else
---|#line 142
+--|#line 143
 more
 end
 else
 if yy_act = 38 then
---|#line 143
+--|#line 144
 more
 else
---|#line 144
+--|#line 145
 more
 end
 end
 else
 if yy_act <= 41 then
 if yy_act = 40 then
---|#line 145
+--|#line 146
 more
 else
---|#line 146
+--|#line 147
 
 					line_nb := line_nb + 1
 					more
 				
 end
 else
---|#line 150
+--|#line 151
 
 					last_token := T_EIFFEL
 					last_value := text_substring (1, text_count - 2)
@@ -319,24 +320,24 @@ if yy_act <= 49 then
 if yy_act <= 46 then
 if yy_act <= 44 then
 if yy_act = 43 then
---|#line 164
+--|#line 165
 
 					action_buffer.append_string (text)
 				
 else
---|#line 165
+--|#line 166
 
 					action_buffer.append_string (text)
 				
 end
 else
 if yy_act = 45 then
---|#line 166
+--|#line 167
 
 					action_buffer.append_string (text)
 				
 else
---|#line 167
+--|#line 168
 
 					action_buffer.append_string (text)
 				
@@ -345,19 +346,19 @@ end
 else
 if yy_act <= 48 then
 if yy_act = 47 then
---|#line 168
+--|#line 169
 
 					action_buffer.append_string (text)
 				
 else
---|#line 171
+--|#line 172
 
 					line_nb := line_nb + text_count
 					action_buffer.append_string (text)
 				
 end
 else
---|#line 175
+--|#line 176
 
 					process_dollar_dollar (rule)
 				
@@ -367,20 +368,20 @@ else
 if yy_act <= 52 then
 if yy_act <= 51 then
 if yy_act = 50 then
---|#line 178
+--|#line 179
 
 					check is_integer: STRING_.is_integer (text_substring (2, text_count)) end
 					process_dollar_n (text_substring (2, text_count).to_integer, rule)
 				
 else
---|#line 182
+--|#line 183
 
 					check is_integer: STRING_.is_integer (text_substring (3, text_count)) end
 					process_dollar_n (- text_substring (3, text_count).to_integer, rule)
 				
 end
 else
---|#line 186
+--|#line 187
 
 					action_buffer.append_character ('{')
 					nb_open_brackets := nb_open_brackets + 1
@@ -389,7 +390,7 @@ end
 else
 if yy_act <= 54 then
 if yy_act = 53 then
---|#line 190
+--|#line 191
 
 					if nb_open_brackets = 0 then
 						last_token := T_ACTION
@@ -402,7 +403,7 @@ if yy_act = 53 then
 					end
 				
 else
---|#line 210
+--|#line 211
 
 					last_token := text_item (1).code
 				

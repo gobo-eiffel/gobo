@@ -5,8 +5,9 @@ indexing
 		"Parsers for parser generators such as 'geyacc'"
 
 	library:    "Gobo Eiffel Parse Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1998, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -56,7 +57,7 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 1 then
---|#line 50
+--|#line 51
 			yyval := yyval_default;
 			if successful then
 				set_start_symbol
@@ -65,55 +66,55 @@ when 1 then
 		
 
 when 2 then
---|#line 50
+--|#line 51
 			yyval := yyval_default;
 			initialize_grammar
 		
 
 when 3 then
---|#line 63
+--|#line 64
 			yyval := yyval_default;
 			precedence := 1
 		
 
 when 5 then
---|#line 70
+--|#line 71
 			yyval := yyval_default;
 			last_grammar.eiffel_header.force_last (yytype1 (yyvs.item (yyvsp)))
 		
 
 when 6 then
---|#line 74
+--|#line 75
 			yyval := yyval_default;
 			type := Void
 		
 
 when 7 then
---|#line 78
+--|#line 79
 			yyval := yyval_default;
 			type := Void
 		
 
 when 8 then
---|#line 82
+--|#line 83
 			yyval := yyval_default;
 			precedence := precedence + 1
 		
 
 when 9 then
---|#line 86
+--|#line 87
 			yyval := yyval_default;
 			precedence := precedence + 1
 		
 
 when 10 then
---|#line 90
+--|#line 91
 			yyval := yyval_default;
 			precedence := precedence + 1
 		
 
 when 11 then
---|#line 94
+--|#line 95
 			yyval := yyval_default;
 			if start_symbol /= Void then
 				report_multiple_start_declarations_error
@@ -123,183 +124,183 @@ when 11 then
 		
 
 when 12 then
---|#line 102
+--|#line 103
 			yyval := yyval_default;
 			last_grammar.set_expected_conflicts (yytype2 (yyvs.item (yyvsp)))
 		
 
 when 13 then
---|#line 108
+--|#line 109
 			yyval := yyval_default;
 			type := No_type
 		
 
 when 14 then
---|#line 112
+--|#line 113
 			yyval := yyval_default;
 			type := yytype4 (yyvs.item (yyvsp - 1))
 		
 
 when 15 then
---|#line 118
+--|#line 119
 
 			yyval4 := new_type (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 16 then
---|#line 122
+--|#line 123
 
 			yyval4 := new_basic_type (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 17 then
---|#line 126
+--|#line 127
 
 			yyval4 := new_basic_type (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 18 then
---|#line 130
+--|#line 131
 
 			yyval4 := new_basic_type (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 19 then
---|#line 134
+--|#line 135
 
 			yyval4 := new_basic_type (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 20 then
---|#line 138
+--|#line 139
 
 			yyval4 := new_basic_type (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 21 then
---|#line 142
+--|#line 143
 
 			yyval4 := new_basic_type (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 22 then
---|#line 146
+--|#line 147
 
 			yyval4 := new_generic_type (yytype1 (yyvs.item (yyvsp - 1)), yytype5 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 23 then
---|#line 152
+--|#line 153
 
 			yyval5 := yytype5 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval5
 when 24 then
---|#line 158
+--|#line 159
 
 			yyval5 := Void
 		
 			yyval := yyval5
 when 25 then
---|#line 162
+--|#line 163
 
 			!! yyval5.make (5)
 			yyval5.force_last (yytype4 (yyvs.item (yyvsp)))
 		
 			yyval := yyval5
 when 26 then
---|#line 167
+--|#line 168
 
 			yyval5 := yytype5 (yyvs.item (yyvsp - 2))
 			yyval5.force_last (yytype4 (yyvs.item (yyvsp)))
 		
 			yyval := yyval5
 when 31 then
---|#line 180
+--|#line 181
 			yyval := yyval_default;
 			(yytype3 (yyvs.item (yyvsp - 1))).set_token_id (yytype2 (yyvs.item (yyvsp)))
 		
 
 when 32 then
---|#line 186
+--|#line 187
 
 			yyval3 := new_terminal (yytype1 (yyvs.item (yyvsp)), type)
 		
 			yyval := yyval3
 when 33 then
---|#line 190
+--|#line 191
 
 			yyval3 := new_char_terminal (yytype1 (yyvs.item (yyvsp)), type)
 		
 			yyval := yyval3
 when 38 then
---|#line 202
+--|#line 203
 			yyval := yyval_default;
 			(yytype3 (yyvs.item (yyvsp - 1))).set_token_id (yytype2 (yyvs.item (yyvsp)))
 		
 
 when 39 then
---|#line 208
+--|#line 209
 
 			yyval3 := new_left_terminal (yytype1 (yyvs.item (yyvsp)), precedence)
 		
 			yyval := yyval3
 when 40 then
---|#line 212
+--|#line 213
 
 			yyval3 := new_left_char_terminal (yytype1 (yyvs.item (yyvsp)), precedence)
 		
 			yyval := yyval3
 when 45 then
---|#line 224
+--|#line 225
 			yyval := yyval_default;
 			(yytype3 (yyvs.item (yyvsp - 1))).set_token_id (yytype2 (yyvs.item (yyvsp)))
 		
 
 when 46 then
---|#line 230
+--|#line 231
 
 			yyval3 := new_right_terminal (yytype1 (yyvs.item (yyvsp)), precedence)
 		
 			yyval := yyval3
 when 47 then
---|#line 234
+--|#line 235
 
 			yyval3 := new_right_char_terminal (yytype1 (yyvs.item (yyvsp)), precedence)
 		
 			yyval := yyval3
 when 52 then
---|#line 246
+--|#line 247
 			yyval := yyval_default;
 			(yytype3 (yyvs.item (yyvsp - 1))).set_token_id (yytype2 (yyvs.item (yyvsp)))
 		
 
 when 53 then
---|#line 252
+--|#line 253
 
 			yyval3 := new_nonassoc_terminal (yytype1 (yyvs.item (yyvsp)), precedence)
 		
 			yyval := yyval3
 when 54 then
---|#line 256
+--|#line 257
 
 			yyval3 := new_nonassoc_char_terminal (yytype1 (yyvs.item (yyvsp)), precedence)
 		
 			yyval := yyval3
 when 58 then
---|#line 267
+--|#line 268
 			yyval := yyval_default;
 			yyval := new_nonterminal (yytype1 (yyvs.item (yyvsp)), type)
 		
 
 when 59 then
---|#line 273
+--|#line 274
 			yyval := yyval_default;
 			report_no_rules_error
 		
 
 when 62 then
---|#line 281
+--|#line 282
 			yyval := yyval_default;
 			process_rule (rule)
 			rule := Void
@@ -307,7 +308,7 @@ when 62 then
 		
 
 when 63 then
---|#line 289
+--|#line 290
 			yyval := yyval_default;
 			if is_terminal (yytype1 (yyvs.item (yyvsp))) then
 				report_lhs_symbol_token_error (yytype1 (yyvs.item (yyvsp)))
@@ -323,31 +324,31 @@ when 63 then
 		
 
 when 64 then
---|#line 305
+--|#line 306
 			yyval := yyval_default;
 			rule.set_line_nb (yytype2 (yyvs.item (yyvsp)))
 		
 
 when 68 then
---|#line 316
+--|#line 317
 			yyval := yyval_default;
 			put_symbol (new_symbol (yytype1 (yyvs.item (yyvsp))), rule)
 		
 
 when 69 then
---|#line 320
+--|#line 321
 			yyval := yyval_default;
 			put_symbol (new_char_token (yytype1 (yyvs.item (yyvsp))), rule)
 		
 
 when 70 then
---|#line 324
+--|#line 325
 			yyval := yyval_default;
 			put_action (new_action (yytype1 (yyvs.item (yyvsp))), rule)
 		
 
 when 71 then
---|#line 328
+--|#line 329
 			yyval := yyval_default;
 			if precedence_token /= Void then
 				report_prec_specified_twice_error
@@ -357,7 +358,7 @@ when 71 then
 		
 
 when 72 then
---|#line 338
+--|#line 339
 
 			if is_terminal (yytype1 (yyvs.item (yyvsp))) then
 				yyval3 := new_token (yytype1 (yyvs.item (yyvsp)))
@@ -368,13 +369,13 @@ when 72 then
 		
 			yyval := yyval3
 when 73 then
---|#line 347
+--|#line 348
 
 			yyval3 := new_char_token (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval3
 when 74 then
---|#line 353
+--|#line 354
 			yyval := yyval_default;
 			process_rule (rule)
 			rule := new_rule (rule.lhs)
@@ -384,43 +385,43 @@ when 74 then
 		
 
 when 77 then
---|#line 365
+--|#line 366
 			yyval := yyval_default;
 			last_grammar.set_eiffel_code (yytype1 (yyvs.item (yyvsp)))
 		
 
 when 78 then
---|#line 371
+--|#line 372
 
 yyval1 := yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 79 then
---|#line 373
+--|#line 374
 
 yyval1 := yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 80 then
---|#line 375
+--|#line 376
 
 yyval1 := yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 81 then
---|#line 377
+--|#line 378
 
 yyval1 := yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 82 then
---|#line 379
+--|#line 380
 
 yyval1 := yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 83 then
---|#line 381
+--|#line 382
 
 yyval1 := yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
 when 84 then
---|#line 383
+--|#line 384
 
 yyval1 := yytype1 (yyvs.item (yyvsp)) 
 			yyval := yyval1
@@ -601,25 +602,25 @@ feature {NONE} -- Table templates
 			   22,   23,    0,    0,   24,   24,   24,   24,   29,   31,
 			   16,   14,   28,   29,   30,   18,   19,   20,   21,   22,
 			   23,   28,   26,   84,   98,   25,   27,   21,   31,   45,
-			   46,   24,   32,   68,   46,   51,   51,   77,   11,    0,
-			   56,    0,   56,    0,    0,   61,    0,    0,   64,    0,
-			   14,    0,   68,   17,   18,   19,   20,   21,   22,   23,
-			    0,   77,    3,    4,    5,    6,    7,   31,    9,   10,
-			   11,   87,   13,    0,    0,    0,   14,    0,   94,   17,
-			   18,   19,   20,   21,   22,   23,    0,    0,    0,    0,
+			   46,   24,   32,   68,   46,   51,   51,   77,   11,   -1,
+			   56,   -1,   56,   -1,   -1,   61,   -1,   -1,   64,   -1,
+			   14,   -1,   68,   17,   18,   19,   20,   21,   22,   23,
+			   -1,   77,    3,    4,    5,    6,    7,   31,    9,   10,
+			   11,   87,   13,   -1,   -1,   -1,   14,   -1,   94,   17,
+			   18,   19,   20,   21,   22,   23,   -1,   -1,   -1,   -1,
 
-			    0,   14,    0,   31,   17,   18,   19,   20,   21,   22,
-			   23,    0,    0,    8,    0,    0,    0,    0,   31,   14,
-			   15,    0,   17,   18,   19,   20,   21,   22,   23,   11,
-			    0,    0,   14,    0,    0,    0,   18,   19,   20,   21,
-			   22,   23,   14,    0,    0,   17,   18,   19,   20,   21,
-			   22,   23,   14,    0,    0,   17,   18,   19,   20,   21,
-			   22,   23,   14,    0,    0,   17,   18,   19,   20,   21,
-			   22,   23,   14,    0,    0,   17,   18,   19,   20,   21,
-			   22,   23,   14,    0,    0,   17,   18,   19,   20,   21,
-			   22,   23,   14,    0,    0,    0,   18,   19,   20,   21,
+			   -1,   14,   -1,   31,   17,   18,   19,   20,   21,   22,
+			   23,   -1,   -1,    8,   -1,   -1,   -1,   -1,   31,   14,
+			   15,   -1,   17,   18,   19,   20,   21,   22,   23,   11,
+			   -1,   -1,   14,   -1,   -1,   -1,   18,   19,   20,   21,
+			   22,   23,   14,   -1,   -1,   17,   18,   19,   20,   21,
+			   22,   23,   14,   -1,   -1,   17,   18,   19,   20,   21,
+			   22,   23,   14,   -1,   -1,   17,   18,   19,   20,   21,
+			   22,   23,   14,   -1,   -1,   17,   18,   19,   20,   21,
+			   22,   23,   14,   -1,   -1,   17,   18,   19,   20,   21,
+			   22,   23,   14,   -1,   -1,   -1,   18,   19,   20,   21,
 
-			   22,   23,   14,    0,    0,    0,   18,   19,   20,   21,
+			   22,   23,   14,   -1,   -1,   -1,   18,   19,   20,   21,
 			   22,   23>>)
 		end
 
