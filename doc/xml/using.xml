@@ -126,5 +126,21 @@ In a real program, references may be kept to individual filters, to recover the 
 
 </sect1>
 <!-- sect1 DTD events -->
+<sect1>
+<title>Resolution of external entities</title>
+
+<para>
+By default, the parsers do not resolve external entities and produce an error if an external entity or a DTD is used. To use entities, an external resolver must be set, using the parser's <featurename>set_resolver</featurename> routine. This one sets a single resolver for use both for external DTDs and entities, there are routines to set each of these separately.
+</para>
+
+<para>
+A resolver is a class that opens a <classname>KI_CHARACTER_INPUT_STREAM</classname> given a system identifier (a string). An error is produced if no corresponding stream can be found. It is the responsability of the client to close the stream.
+</para>
+
+<para>
+Default concrete resolvers are provided: <classname>XM_FILE_EXTERNAL_RESOLVER</classname> for using system identifiers as local file names, and <classname>XM_STRING_EXTERNAL_RESOLVER</classname> for resolving in memory using a hash table of strings. Therse is also a null resolver, which the default resolver of a parser.
+</para>
+
+</sect1>
 
 </chapter>
