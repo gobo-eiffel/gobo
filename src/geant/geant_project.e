@@ -110,6 +110,9 @@ feature -- Access
 	debug_mode: BOOLEAN
 		-- Print additional, internal information during build process?
 
+	no_exec: BOOLEAN
+			-- Do not execute commands (only show what they would do)?
+
 	parent_project: like Current
 		-- Parent project if set by xml attribute 'inherit';
 		-- Void otherwise
@@ -176,6 +179,14 @@ feature -- Setting
 			debug_mode := a_debug_mode
 		ensure
 			debug_mode_set: debug_mode = a_debug_mode
+		end
+
+	set_no_exec (a_no_exec: BOOLEAN) is
+			-- Set `no_exec' to `a_no_exec'
+		do
+			no_exec := a_no_exec
+		ensure
+			no_exec_set: no_exec = a_no_exec
 		end
 
 	set_description (a_description: STRING) is
@@ -263,6 +274,7 @@ feature -- Processing
 						!! parent_project.make_with_filename (a_parent_project_filename, variables, Current)
 						parent_project.set_verbose (verbose)
 						parent_project.set_debug_mode (debug_mode)
+						parent_project.set_no_exec (no_exec)
 						parent_project.load (Void)
 					end
 				end
