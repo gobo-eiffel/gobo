@@ -73,6 +73,18 @@ color="#800000" size="3">$GOBO\library\parse\skeleton
         as well as any other classes in your system.</li>
 </ol>
 
+<p>Note that contrary to false assumptions, there is no need to
+include in your system all libraries that come with <em>Gobo
+Eiffel</em> in order to take advantage of the facilities provided
+by <em>geyacc</em>. During the design of the parser skeleton,
+care has been taken to only use Kernel classes such as <font
+color="#008080"><em><tt>ARRAY</tt></em></font> or <font
+color="#008080"><em><tt>STRING</tt></em></font>, and therefore
+avoiding the unnecessary overhead of other library classes. As a
+consequence, only the three clusters listed above are required:
+the parser skeleton cluster and Kernel adaptation clusters
+allowing portability across various Eiffel compilers.</p>
+
 <hr size="1">
 
 <table border="0" width="100%">
@@ -82,13 +94,13 @@ color="#800000" size="3">$GOBO\library\parse\skeleton
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
-            </font><a href="mailto:ericb@gobo.demon.co.uk"><font
-            size="2">ericb@gobo.demon.co.uk</font></a><font
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
             size="2"> <br>
-            </font><a href="http://www.gobo.demon.co.uk"><font
-            size="2">http://www.gobo.demon.co.uk</font></a><font
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 21 May 1998</font><br>
+            <strong>Last Updated:</strong> 4 August 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
