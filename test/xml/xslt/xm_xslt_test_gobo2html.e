@@ -18,10 +18,11 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_IMPORTED_INTEGER_ROUTINES
+
 	XM_XPATH_SHARED_CONFORMANCE
 
 	XM_XPATH_SHARED_NAME_POOL
-
 
 	XM_RESOLVER_FACTORY
 	
@@ -116,6 +117,10 @@ feature
 				a_test_string := STRING_.appended_string (a_test_string, a_test_file.last_string)
 			end
 			a_test_file.close
+			print ("Test file is:%N")
+			print (hexadecimal_string (a_test_string))
+			print ("%NResults are:%N")
+			print (hexadecimal_string (an_output.last_output))
 			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output.last_output))
 		end
 
@@ -162,7 +167,36 @@ feature
 				a_test_string := STRING_.appended_string (a_test_string, a_test_file.last_string)
 			end
 			a_test_file.close
+			print ("Test file is:%N")
+			print (hexadecimal_string (a_test_string))
+			print ("%NResults are:%N")
+			print (hexadecimal_string (an_output.last_output))
 			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output.last_output))
+		end
+
+feature {NONE} -- Debug
+
+	hexadecimal_string (a_string: STRING): STRING is
+			-- Version of `a_string' where every character is converted to it's code's hex representation
+		require
+			string_not_void: a_string /= Void
+		local
+			an_index, a_code_point: INTEGER
+		do
+			from
+				Result := ""
+				an_index := 1
+			variant
+				a_string.count + 1 - an_index
+			until
+				an_index > a_string.count
+			loop
+				a_code_point := a_string.item_code (an_index)
+				Result.append_string (INTEGER_.to_hexadecimal (a_code_point, True))
+				an_index := an_index + 1
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 end
