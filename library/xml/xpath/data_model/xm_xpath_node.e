@@ -14,7 +14,7 @@ deferred class XM_XPATH_NODE
 
 feature -- Access
 
-	base_uri:  DS_ARRAYED_LIST [ANY_URI] is
+	base_uri: DS_ARRAYED_LIST [ANY_URI] is
 			-- Base URI.
 		deferred
 		ensure
@@ -42,7 +42,7 @@ feature -- Access
 		end
 	
 	parent: DS_ARRAYED_LIST [XM_XPATH_NODE] is
-			-- Parent of current node;
+			-- Parent of current node
 			-- Empty if current node is root,
 			-- or for orphan nodes.
 		deferred
@@ -73,7 +73,7 @@ feature -- Access
 			not_more_than_one_type: not Result.is_empty implies Result.count = 1
 		end
 
-	children:  DS_ARRAYED_LIST [XM_XPATH_NODE]
+	children: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			-- Children.
 
 	attributes: DS_ARRAYED_LIST [XM_XPATH_ATTRIBUTE]
@@ -95,8 +95,8 @@ feature -- Status report
 
 feature {XM_XPATH_NODE} -- Access
 
-	identity: INTEGER
-			-- Globally unique identifier.
+	identity: INTEGER -- _64 if allowed
+			-- Unique identifier within the document.
 			-- Increases with document order.
 	
 	is_possible_child: BOOLEAN is
@@ -110,4 +110,4 @@ invariant
 	attribute_list~_not_void: attributes /= Void
 	namespaces_not_void: namespaces /= Void
 	
-end -- class XM_XPATH_NODE
+end

@@ -76,4 +76,4 @@ invariant
 	attributes_have_distinct_names: -- All attributes must have distinct QNames.
 	parent_attribute_relationship: -- attributes.for_all (agent (parent.is_equal (Current)))
 	
-end -- class XM_XPATH_ELEMENT
+end

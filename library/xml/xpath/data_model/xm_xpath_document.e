@@ -31,7 +31,7 @@ feature -- Access
 	base_uri: DS_ARRAYED_LIST [ANY_URI] is
 			-- Base URI.
 		do
-         create Result.make (1)
+create Result.make (1)
 			if base_uri_property /= Void and then base_uri_property.count > 0 then
 				Result.put_first (base_uri_property)
 			end
@@ -48,7 +48,7 @@ feature -- Access
 		end
 
 	parent: DS_ARRAYED_LIST [XM_XPATH_NODE] is
-			-- Parent of current node;
+			-- Parent of current node
 		do
 			create Result.make (0)
 		ensure then
@@ -84,4 +84,4 @@ feature -- Access
 			document_uri_not_void: Result /= Void
 		end
 	
-end -- class XM_XPATH_DOCUMENT
+end

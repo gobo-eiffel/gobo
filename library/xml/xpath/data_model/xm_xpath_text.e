@@ -52,7 +52,7 @@ feature -- Access
 	type: DS_ARRAYED_LIST [XM_EXPANDED_QNAME] is
 			-- Type.
 		do
-         create Result.make (1)
+			create Result.make (1)
 			--	      untyped atomic
 		ensure then
 			type: not Result.is_empty
@@ -64,4 +64,4 @@ feature {NONE} -- Access
 	content_property: STRING
 			-- Content property from the infoset.
 	
-end -- class XM_XPATH_TEXT
+end

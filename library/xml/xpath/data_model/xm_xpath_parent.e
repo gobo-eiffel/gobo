@@ -17,8 +17,8 @@ feature -- Access
 	parent: DS_ARRAYED_LIST [XM_XPATH_NODE] is
 			-- Parent.
 		do
-			create Result.make (1)
-	      Result.put_first (parent_property)
+create Result.make (1)
+	Result.put_first (parent_property)
 		ensure then
 			parent: not Result.is_empty
 		end
@@ -28,4 +28,4 @@ feature {NONE} -- Access
 	parent_property: XM_XPATH_NODE
 			-- Parent property from the infoset.
 			
-end -- class XM_XPATH_PARENT
+end

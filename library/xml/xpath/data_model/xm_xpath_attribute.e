@@ -53,7 +53,7 @@ feature -- Access
 	type: DS_ARRAYED_LIST [XM_EXPANDED_QNAME] is
 			-- Type.
 		do
-         create Result.make (1)
+			create Result.make (1)
 			-- TODO
 		ensure then
 			type: not Result.is_empty
@@ -64,4 +64,4 @@ feature {NONE} -- Access
 	attribute_type_property: STRING
 			-- Attribute-type property from the infoset.
 			
-end -- class XM_XPATH_ATTRIBUTE
+end

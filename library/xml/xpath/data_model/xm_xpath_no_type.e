@@ -17,8 +17,8 @@ feature -- Access
 	type: DS_ARRAYED_LIST [XM_EXPANDED_QNAME] is
 			-- Type.
 		do
-         create Result.make (0)
+create Result.make (0)
 		ensure
 			no_type: Result.is_empty
 		end		
-end -- class XM_XPATH_NO_TYPE
+end

@@ -57,4 +57,4 @@ feature {NONE} -- Access
 	content_property: STRING
 			-- Content property from the infoset.
 	
-end -- class XM_XPATH_COMMENT
+end

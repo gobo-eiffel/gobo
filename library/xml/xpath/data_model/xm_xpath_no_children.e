@@ -16,4 +16,4 @@ invariant
 
 	children_are_empty: children.is_empty
 	
-end -- class XM_XPATH_NO_CHILDREN
+end

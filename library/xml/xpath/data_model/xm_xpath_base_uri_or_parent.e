@@ -18,7 +18,7 @@ inherit
 	
 feature -- Access
 
-	base_uri:  DS_ARRAYED_LIST [ANY_URI] is
+	base_uri: DS_ARRAYED_LIST [ANY_URI] is
 			-- Base URI.
 			-- Algorithm:
 			-- Use the base_uri_property if it is not Void.
@@ -27,13 +27,13 @@ feature -- Access
 			-- Otherwise return an empty list.
 		do
 			if base_uri_property /= Void then
-            create Result.make (1)
-				Result.put_first (base_uri_property)
+create Result.make (1)
+	Result.put_first (base_uri_property)
 			elseif not parent.is_empty then
 				Result := parent.first.base_uri
 			else
-				create Result.make (0)
+create Result.make (0)
 			end
 		end
 	
-end -- class XM_XPATH_BASE_URI_OR_PARENT
+end

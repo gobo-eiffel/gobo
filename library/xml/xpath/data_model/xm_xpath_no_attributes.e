@@ -29,4 +29,4 @@ invariant
 	attributes_are_empty: attributes.is_empty
 	namespaces_are_empty: namespaces.is_empty
 	
-end -- class XM_XPATH_NO_ATTRIBUTES
+end

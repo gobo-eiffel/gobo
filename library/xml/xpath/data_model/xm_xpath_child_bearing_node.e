@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE
 
-	-- DS_SORTER [INTEGER]
+		-- DS_SORTER [INTEGER]
 
 invariant
 
@@ -28,4 +28,4 @@ invariant
 	parent_relationship: -- children.for_all (agent (parent.is_equal (Current)))
 	no_duplicates: -- children.for_all (--all nodes are distinct)
 	
-end -- class XM_XPATH_CHILD_BEARING_NODE
+end

@@ -26,10 +26,10 @@ inherit
 	
 feature -- Access
 
-	base_uri:  DS_ARRAYED_LIST [ANY_URI] is
+	base_uri: DS_ARRAYED_LIST [ANY_URI] is
 			-- Base URI.
 		do
-			create Result.make (0)
+create Result.make (0)
 		ensure
 			empty_uri: Result.is_empty
 		end
@@ -75,4 +75,4 @@ feature {NONE} -- Access
 	uri_property: STRING
 			-- Namespace name property from the infoset.
 	
-end -- class XM_XPATH_NAMESPACE
+end
