@@ -110,16 +110,21 @@ feature -- Conversion
 			namespace_uri_not_void: Result /= void
 		end
 
+	prefix_index_from_name_code (a_name_code: INTEGER): INTEGER is -- should be INTEGER_8
+		do
+			Result := a_name_code // bits_20
+		end
+
 	prefix_code_from_namespace_code (a_namespace_code: INTEGER): INTEGER is -- should return INTEGER_16
 			-- Extracted prefix code from `a_namespace_code'
 		do
-			Result := (a_namespace_code // bits_16) * bits_16
+			Result := a_namespace_code // bits_16
 		end
 
 	uri_code_from_namespace_code (a_namespace_code: INTEGER): INTEGER is -- should return INTEGER_16
 			-- Extracted prefix code from `a_namespace_code'
 		do
-			Result := a_namespace_code - 	prefix_code_from_namespace_code (a_namespace_code)
+			Result := a_namespace_code - 	(prefix_code_from_namespace_code (a_namespace_code) * bits_16)
 		end
 
 end

@@ -66,7 +66,10 @@ feature -- Access
 	collator (a_collation_name: STRING): ST_COLLATOR is
 			-- Collation named `a_collation_name'
 		do
-			todo ("collator", False)
+			-- TODO - need a proper implementation
+			if STRING_.same_string (a_collation_name, default_collation_name) then
+				Result := code_point_collator
+			end
 		end
 
 	uri_for_prefix (an_xml_prefix: STRING): STRING is
@@ -201,6 +204,12 @@ feature -- Output
 
 feature {NONE} -- Implementation
 	
+	code_point_collator: ST_COLLATOR is
+			-- Unicode code-point collator
+		once
+			create Result
+		end
+
 	bind_system_function (a_name: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
 			-- Identify a system function appearing in an expression.
 		require

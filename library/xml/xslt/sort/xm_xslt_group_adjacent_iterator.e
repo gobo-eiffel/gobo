@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XSLT evaluation context"
+		"TBA"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,19 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_CONTEXT
+class	XM_XSLT_GROUP_ADJACENT_ITERATOR
 
-inherit
+--inherit
 
-	XM_XPATH_CONTEXT
-
-feature -- Access
-
-	transformer: XM_XSLT_TRANSFORMER
-			-- Transformer
-
-invariant
-
-	transformer_not_void: transformer /= Void
+	--XM_XSLT_GROUP_ITERATOR
 
 end
+	

@@ -62,6 +62,14 @@ feature -- Access
 			Result := document.system_id_for_node (node_number)
 		end
 
+feature -- Duplication
+
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+			-- Copy `Current' to `a_receiver'.
+		do
+			a_receiver.notify_processing_instruction (node_name, string_value, 0)
+		end
+
 feature {XM_XPATH_NODE} -- Restricted
 
 	is_possible_child: BOOLEAN is

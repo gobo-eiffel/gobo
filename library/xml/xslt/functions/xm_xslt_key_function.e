@@ -19,7 +19,7 @@ inherit
 			simplified_expression, compute_special_properties, iterator, pre_evaluate, check_arguments
 		end
 
-	XM_XPATH_MAPPING_FUNCTION
+	XM_XPATH_NODE_MAPPING_FUNCTION
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
 
@@ -88,8 +88,66 @@ feature -- Evaluation
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
+		local
+			a_transformer: XM_XSLT_TRANSFORMER
+			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			a_context_document: XM_XPATH_DOCUMENT
+			a_fingerprint: INTEGER
+			a_given_key_name, a_message: STRING
+			an_expression: XM_XPATH_EXPRESSION
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			a_key_context_information: XM_XSLT_KEY_CONTEXT_INFORMATION
+			a_key_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			all_values_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
+			a_local_order_comparer: XM_XPATH_LOCAL_ORDER_COMPARER
 		do
-			todo ("iterator", False)
+			an_evaluation_context ?= a_context
+			check
+				evaluation_context_not_void: an_evaluation_context /= Void
+				-- as this is an XSLT function
+			end
+			a_transformer := an_evaluation_context.transformer
+			arguments.item (3).evaluate_item (an_evaluation_context)
+			a_context_document ?= arguments.item (3).last_evaluated_item
+			if a_context_document = Void then
+				a_transformer.report_fatal_error ("In the key() function, the context node must be in a tree whose root is a document node", Void)
+			else
+				a_fingerprint := key_fingerprint
+				if a_fingerprint = -1 then
+					arguments.item (1).evaluate_item (an_evaluation_context)
+					a_given_key_name := arguments.item (1).last_evaluated_item.string_value
+					a_fingerprint := namespace_context.fingerprint (a_given_key_name, False, a_transformer.name_pool)
+					if a_fingerprint = -1 then
+						a_message := STRING_.concat ("Key '", a_given_key_name)
+						a_message := STRING_.appended_string (a_message, "' has not been defined")
+						a_transformer.report_fatal_error (a_message, Void)
+					end
+				end
+				if not a_transformer.is_error then
+
+					-- If the second argument is a singleton, we evaluate the function  directly;
+					-- otherwise we recurse to evaluate it once for each item in the sequence.
+
+					an_expression := arguments.item (2)
+					if not an_expression.cardinality_allows_many then
+						an_expression.evaluate_item (an_evaluation_context)
+						an_atomic_value ?= an_expression.last_evaluated_item
+						if an_atomic_value /= Void then
+							Result := a_transformer.key_manager.select_by_key (a_fingerprint, a_context_document, an_atomic_value, a_transformer)
+						else
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+						end
+					else
+						create a_key_context_information.make (a_context_document, a_transformer, a_fingerprint)
+						a_key_iterator := an_expression.iterator (a_context)
+						create all_values_iterator.make (a_key_iterator, Current, Void, a_key_context_information)
+						create a_local_order_comparer
+						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (all_values_iterator, a_local_order_comparer)
+					end
+				else
+					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Non-recoverable error already reported", 0, Dynamic_error)
+				end
+			end
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -98,7 +156,7 @@ feature -- Evaluation
 			set_replacement (Current)
 		end
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+	map (an_item: XM_XPATH_NODE; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_NODE is
 			-- Map `an_item' to a sequence
 		do
 			todo ("map", False)

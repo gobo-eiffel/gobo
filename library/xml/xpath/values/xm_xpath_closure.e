@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 				create new_singleton_iterator.make (saved_xpath_context.current_iterator.item)
 				saved_xpath_context.set_current_iterator (new_singleton_iterator)
 			end
+			create reservoir.make_default
 		ensure
 			base_expression_set: base_expression = an_expression
 		end
@@ -137,8 +138,22 @@ feature -- Evaluation
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- An iterator over the values of a sequence
 		do
-			-- TODO
-			todo ("iterator" ,False)
+			if reservoir.count > 0 then
+				if input_iterator /= Void and then input_iterator.after then
+					state := All_read_state
+				end
+			end
+			inspect
+				state
+			when Unread_state then
+				state := Maybe_more_state
+				input_iterator := base_expression.iterator (saved_xpath_context)
+				create {XM_XPATH_PROGRESSIVE_ITERATOR} Result.make (reservoir, input_iterator) 
+			when Maybe_more_state then
+				create {XM_XPATH_PROGRESSIVE_ITERATOR} Result.make (reservoir, input_iterator) 
+			when All_read_state then
+				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (reservoir)
+			end
 		end
 
 feature  -- Conversion
@@ -161,12 +176,19 @@ feature {XM_XPATH_CLOSURE} -- Local
 	state: INTEGER
 			-- Information on items read
 
-	Unread_state, Maybe_more_state, More_to_come_state, All_read_state: INTEGER is unique
+	Unread_state, Maybe_more_state, All_read_state: INTEGER is unique
+
+	input_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			-- Underlying iterator 
 	
+	reservoir: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+			-- List of items already read
+
 invariant
 
 	base_expression_not_void: base_expression /= Void
 	saved_xpath_context_not_void: saved_xpath_context /= Void
 	state: Unread_state <= state and state <= All_read_state
+	reservoir_not_void: reservoir /= Void
 
 end

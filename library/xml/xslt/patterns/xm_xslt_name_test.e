@@ -29,10 +29,10 @@ creation
 
 feature -- Access
 
-		frozen default_priority: DOUBLE is
+		frozen default_priority: MA_DECIMAL is
 			--  Determine the default priority to use if this pattern appears as a match pattern for a template with no explicit priority attribute.
 		do
-			Result := 0.0
+				create Result.make_zero
 		end
 
 end

@@ -32,10 +32,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	typed_value: XM_XPATH_VALUE is
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		do
-			Result := Current
+			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} Result.make (Current)
+		end
+
+	type_name: STRING is
+			-- Type name for diagnostic purposes
+		do
+			Result := item_type.conventional_name
 		end
 
 feature -- Comparison

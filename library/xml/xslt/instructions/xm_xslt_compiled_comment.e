@@ -27,13 +27,16 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Establish invariant.
 		do
+			executable := an_executable
 			instruction_name := "comment"
 			create children.make (0)
 			make_expression_instruction
 			set_cardinality_exactly_one
+		ensure
+			executable_set: executable = an_executable
 		end
 
 feature -- Access
@@ -79,10 +82,35 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_CONTEXT) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			a_transformer: XM_XSLT_TRANSFORMER
+			a_comment, a_string: STRING
+			a_comment_marker_index: INTEGER
 		do
-			todo ("process_leaving_tail", False)
+			a_transformer := a_context.transformer
+			a_comment := expanded_string_value (a_context)
+			from
+				a_comment_marker_index := 1
+			until
+				a_comment_marker_index = 0
+			loop
+				a_comment_marker_index := a_comment.substring_index ("--", 1)
+				if a_comment_marker_index /= 0 then
+					report_recoverable_error (Current, "Invalid characters (--) in comment", a_transformer)
+					a_string := STRING_.concat (a_comment.substring (1, a_comment_marker_index), " ")
+					a_comment := STRING_.appended_string (a_string, a_comment.substring (a_comment_marker_index + 1, a_comment.count))
+				end
+			end
+			if a_comment.count > 0 and then a_comment.item (a_comment.count).is_equal ('-') then
+				report_recoverable_error (Current, "Invalid character (-) at end of comment", a_transformer)
+				a_comment := STRING_.appended_string (a_comment, " ")
+			end
+			if not a_transformer.is_error then
+				a_transformer.current_receiver.notify_comment (a_comment, 0)
+			end
+			last_tail_call := Void
 		end
 
 end

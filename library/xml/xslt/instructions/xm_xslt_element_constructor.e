@@ -31,6 +31,16 @@ feature -- Access
 			Result := element_node_kind_test
 		end
 
+	validation_action: INTEGER
+			-- Validation action
+
+	name_code (a_context: XM_XSLT_EVALUATION_CONTEXT): INTEGER is
+			-- Name code
+		require
+			context_not_void: a_context /= Void
+		deferred
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -38,29 +48,6 @@ feature -- Comparison
 		do
 			Result := False
 			todo ("same_expression", True)
-		end
-
-feature -- Status report
-
-	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
-			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string, another_string: STRING
-		do
-			a_string := STRING_.appended_string (indentation (a_level), "element ")
-			std.error.put_string (a_string)
-			std.error.put_new_line
-			a_string := STRING_.appended_string (indentation (a_level + 1), "name ")
-			a_string := STRING_.appended_string (a_string, a_pool.display_name_from_name_code (name_code))
-			std.error.put_string (a_string)
-			std.error.put_new_line			
-			if children.count = 0 then
-				a_string := STRING_.appended_string (indentation (a_level + 1), "empty content")
-				std.error.put_string (a_string)
-				std.error.put_new_line
-			else
-				display_children (a_level + 1, a_pool)
-			end
 		end
 
 feature -- Optimization
@@ -85,10 +72,83 @@ feature -- Evaluation
 			todo ("evaluate_item", False)
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_CONTEXT) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			a_name_code: INTEGER
+			a_transformer: XM_XSLT_TRANSFORMER
+			a_receiver, a_saved_receiver: XM_XSLT_SEQUENCE_RECEIVER
+			a_validator: XM_XPATH_RECEIVER
 		do
-			todo ("process_leaving_tail", False)
+			a_name_code := name_code (a_context)
+			if a_name_code = -1 then
+
+				-- XSLT recovery action when the computed name is invalid
+
+				skip_element (a_context)
+				last_tail_call := Void
+			else
+				a_transformer := a_context.transformer
+				a_receiver := a_transformer.current_receiver
+				a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action, Void, a_transformer.name_pool)
+				if a_validator /= a_receiver then
+					check
+						schema_aware: False
+						-- Only Basic XSLT processor is supported now
+					end
+				end
+				a_receiver.start_element (a_name_code, -1, 0)
+
+				-- Output the required namespace nodes via a call-bac
+
+				output_namespace_nodes (a_context, a_validator)
+				if not a_transformer.is_error then
+
+					-- Apply the content of any attribute sets mentioned in use-attribute-sets.
+					todo ("process_leaving_tail - use-attribute-sets", True)
+					
+					process_children (a_context)
+
+					if not a_transformer.is_error then
+						
+						-- Output the element end tag (which will fail if validation fails)
+
+						a_validator.end_element
+					end
+				end
+				if a_saved_receiver /= void then
+					todo ("process_leaving_tail - saved receiver", True)
+				end
+			end
+			last_tail_call := Void
+		end
+
+	skip_element (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Take recovery action when the element name is invalid.
+			-- We need to tell the receiver about this,
+			--  so that it can ignore attributes in the content
+		require
+			context_not_void: a_context /= Void
+		do
+
+			-- Sending a namecode of -1 to the receiver is a special signal to ignore
+			--  this element and the attributes that follow it
+
+			a_context.transformer.current_receiver.start_element (-1, 0, 0)
+			process_children (a_context)
+
+			-- Note, we don't bother with an end_element call.
+			
+		end
+
+feature {XM_XSLT_ELEMENT_CREATOR} -- Local
+
+	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER) is
+			-- Output namespace nodes for the new element.
+		require
+			context_not_void: a_context /= Void
+			receiver_not_void: a_receiver /= Void
+		deferred
 		end
 
 feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
@@ -101,12 +161,6 @@ feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
 		end
 
 feature {NONE} -- Implementation
-
-	name_code: INTEGER
-			-- Name code
-
-	validation_action: INTEGER
-			-- Validation action
 
 	type: XM_XPATH_SCHEMA_TYPE
 

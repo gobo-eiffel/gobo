@@ -25,9 +25,13 @@ inherit
 
 	XM_XPATH_NAME_UTILITIES
 
+	XM_XPATH_LOCATOR
+
 	XM_XPATH_STANDARD_NAMESPACES
 
 	KL_IMPORTED_STRING_ROUTINES
+
+	XM_XPATH_DEBUGGING_ROUTINES
 
 		-- This class represents a node in gexslt's object model.
 		-- It combines the features of the XPath data model, 
@@ -35,18 +39,6 @@ inherit
 		--  along with additional features to make life easier.
 
 feature -- Access
-
-	system_id: STRING is
-			-- SYSTEM id of `Current', or `Void' if not known
-		deferred
-		ensure
-			system_id_not_void: Result /= Void
-		end
-
-	line_number: INTEGER is
-			-- Line number of node in original source document, or -1 if not known
-		deferred
-		end
 
 	document: XM_XPATH_DOCUMENT is
 			-- Document that owns this node
@@ -260,22 +252,53 @@ feature -- Access
 			end
 		end
 	
-	typed_value: XM_XPATH_VALUE is
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		local
 			a_type: INTEGER
 			a_string_value: XM_XPATH_STRING_VALUE
+			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
 		do
 			a_type := type_annotation
 			if a_type = type_factory.untyped_atomic_type.fingerprint then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				create  an_untyped_atomic_value.make (string_value)
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_UNTYPED_ATOMIC_VALUE]} Result.make (an_untyped_atomic_value)
 			elseif a_type = type_factory.untyped_type.fingerprint then
-				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+				create an_untyped_atomic_value.make (string_value)
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_UNTYPED_ATOMIC_VALUE]} Result.make (an_untyped_atomic_value)
 			else
 				-- TODO complex types should be dealt with properly
-				create a_string_value.make (string_value)
-				-- This is wrong, as convert requires and yields an atomic type
-				-- Result := a_string_value.convert (a_type)
+				todo ("typed_value", True)
+			end
+		end
+
+	
+	type_name: STRING is
+			-- Type name for diagnostic purposes
+		do
+			inspect
+				node_type
+			when Document_node then
+				Result := "document-node()"
+			when Element_node then
+				Result := STRING_.concat ("element(", node_name)
+				Result := STRING_.appended_string (Result, ", ")
+				if type_annotation = type_factory.untyped_atomic_type.fingerprint then
+					Result := STRING_.appended_string (Result, "xdt:untyped)")
+				else
+					todo ("type_name", True)
+				end
+			when Attribute_node then
+				Result := STRING_.concat ("attribute(", node_name)
+				Result := STRING_.appended_string (Result, ")") -- TODO add type annotatio
+			when Text_node then
+				Result := "text()"
+			when Comment_node then
+				Result := "comment()"
+			when Processing_instruction_node then
+				Result := "processing-instruction()"
+			when Namespace_node then
+				Result := "namespace()"
 			end
 		end
 
@@ -382,6 +405,17 @@ feature -- Conversion
 			-- Convert to a value
 		do
 			create {XM_XPATH_SINGLETON_NODE} Result.make (Current)
+		end
+
+feature -- Duplication
+
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+			-- Copy `Current' to `a_receiver'.
+		require
+			receiver_not_void: a_receiver /= Void
+			which_namespaces: which_namespaces = No_namespaces
+				or else which_namespaces = Local_namespaces or else  which_namespaces = All_namespaces 
+		deferred
 		end
 
 feature {XM_XPATH_NODE} -- Local

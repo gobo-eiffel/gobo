@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 			-- to construct and return a document node.
 
 			if has_child_nodes and then as_type = Void then
-				create a_document.make (is_text_only, constant_text, base_uri)
+				create a_document.make (an_executable, is_text_only, constant_text, base_uri)
 				compile_children (an_executable, a_document)
 				a_variable.set_selector (a_document)
 			else

@@ -27,16 +27,25 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (text_only: BOOLEAN;  a_constant_text: STRING; a_base_uri: STRING) is
+	make (an_executable: XM_XSLT_EXECUTABLE; text_only: BOOLEAN;  a_constant_text: STRING; a_base_uri: STRING) is
 			-- Establish invariant.
 		require
-			constant_text: text_only implies a_constant_text /= Void
+			executable_not_void: an_executable /= Void
 			base_uri: a_base_uri /= Void
 		do
+			executable := an_executable
 			instruction_name := "document"
 			create children.make (0)
 			make_expression_instruction
 			set_cardinality_exactly_one
+			is_text_only := text_only
+			constant_text := a_constant_text
+			base_uri := a_base_uri
+		ensure
+			executable_set: executable = an_executable
+			is_text_only: is_text_only = text_only
+			constant_text_set: constant_text = a_constant_text
+			base_uri_set: base_uri = a_base_uri
 		end
 
 feature -- Access
@@ -60,6 +69,15 @@ feature -- Comparison
 		end
 
 feature -- Status report
+
+	is_text_only: BOOLEAN
+			-- Is content only constant text?
+
+	constant_text: STRING
+			-- Constant text content
+
+	base_uri: STRING
+			-- Base URI
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
@@ -151,6 +169,9 @@ feature -- Evaluation
 		local
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 			a_transformer: XM_XSLT_TRANSFORMER
+			a_root: XM_XPATH_DOCUMENT
+			a_text_value: STRING
+			a_saved_receiver: XM_XSLT_SEQUENCE_RECEIVER
 		do
 			an_evaluation_context ?= a_context
 			check
@@ -158,10 +179,24 @@ feature -- Evaluation
 				-- as it is the only supported form of dynamicx context for XSLT in the library
 			end
 			a_transformer := an_evaluation_context.transformer
-			todo ("evaluae_item", true)
+			if is_text_only then
+				if constant_text /= Void then
+					a_text_value := constant_text
+				else
+					a_saved_receiver := a_transformer.current_receiver
+					create a_text_value.make (80) -- arbitrary intial size - TODO?
+					a_transformer.change_to_text_output_destination (a_text_value)
+					process_children (an_evaluation_context)
+					a_transformer.reset_output_destination (a_saved_receiver)
+				end
+				create {XM_XPATH_TEXT_FRAGMENT_VALUE} a_root.make (a_text_value, base_uri, a_transformer.name_pool)
+			else
+				todo ("evaluate_item", true)
+			end
+			last_evaluated_item := a_root
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_CONTEXT) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			todo ("process_leaving_tail", False)
@@ -178,5 +213,9 @@ feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
 			Result.set_equality_tester (expression_tester)
 		end
 
+invariant
+
+	base_uri: base_uri /= Void
+	
 end
 

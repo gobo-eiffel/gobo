@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-		frozen default_priority: DOUBLE is
+		frozen default_priority: MA_DECIMAL is
 			--  Determine the default priority to use if this pattern appears as a match pattern for a template with no explicit priority attribute.
 		do
-			Result := -0.5
+				create Result.make_from_string ("-0.5")
 		end
 	
 end

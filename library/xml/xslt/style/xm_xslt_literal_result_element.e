@@ -161,7 +161,7 @@ feature -- Element change
 				last_generated_instruction := Void
 			else
 				--translate (result_name_code)
-				create a_fixed_element.make (result_name_code, namespace_codes, Void, Void, validation)
+				create a_fixed_element.make (an_executable, result_name_code, namespace_codes, Void, Void, validation)
 				compile_children (an_executable, a_fixed_element) 
 				direct_children := last_generated_instruction_list
 				if attribute_name_codes.count > 0 then
@@ -175,7 +175,7 @@ feature -- Element change
 					until
 						a_cursor.after
 					loop
-						create a_fixed_attribute.make (a_cursor.item, Validation_strip, Void, -1)
+						create a_fixed_attribute.make (an_executable, a_cursor.item, Validation_strip, Void, -1)
 						a_fixed_attribute.set_select_expression (attribute_values.item (a_cursor.index))
 						a_fixed_attribute.set_executable (an_executable)
 						check

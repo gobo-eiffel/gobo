@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	priority: DOUBLE
+	priority: MA_DECIMAL
 			-- Priority of this template
 
 	match: XM_XSLT_PATTERN
@@ -199,7 +199,7 @@ feature -- Element change
 			a_name_code: INTEGER
 			a_rule_value: XM_XSLT_RULE_VALUE
 		do
-			create a_sequence_instruction.make (Void, required_type)
+			create a_sequence_instruction.make (an_executable, Void, required_type)
 			compile_children (an_executable, a_sequence_instruction)
 			is_stack_frame_needed := number_of_variables > 0
 			compiled_template.initialize (a_sequence_instruction, is_stack_frame_needed, precedence, minimum_import_precedence, system_id, line_number)
@@ -351,14 +351,17 @@ feature {NONE} -- Implementation
 			-- Prepare priority attribute
 		local
 			a_message: STRING
+			a_decimal_parser: MA_DECIMAL_TEXT_PARSER
 		do
 			if a_priority_attribute /= Void then
 				is_priority_specified := True
 				if is_match_attribute_void then
 					report_compile_error ("The priority attribute must be absent if the match attribute is absent")
 				else
-					if a_priority_attribute.is_double then
-						priority := a_priority_attribute.to_double
+					create a_decimal_parser
+					a_decimal_parser.parse (a_priority_attribute)
+					if not a_decimal_parser.error then
+						priority := a_decimal_parser.last_decimal
 					else
 						a_message := STRING_.appended_string ("Invalid numeric value for priority (", a_priority_attribute)
 						a_message := STRING_.appended_string (a_message, ")")

@@ -27,17 +27,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_select_expression: XM_XPATH_EXPRESSION) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION) is
 			-- Establish invariant.
 		require
+			executable_not_void: an_executable /= Void
 			select_expression_not_void: a_select_expression /= Void
 		do
+			executable := an_executable
 			instruction_name := "value-of"
 			create children.make (0)
 			make_expression_instruction
 			set_cardinality_exactly_one
 			select_expression := a_select_expression
 		ensure
+			executable_set: executable = an_executable
 			select_set: select_expression = a_select_expression
 		end
 
@@ -98,10 +101,11 @@ feature -- Evaluation
 			todo ("evaluate_item", False)	
 		end
 
-	process_leaving_tail (a_context: XM_XSLT_CONTEXT) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			todo ("process_leaving_tail", False)
+			a_context.transformer.current_receiver.notify_characters (expanded_string_value (a_context), 0)
+			last_tail_call := Void
 		end
 
 end

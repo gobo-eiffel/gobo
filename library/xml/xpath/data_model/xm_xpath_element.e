@@ -82,7 +82,14 @@ feature -- Access
 		do
 			Result := type_factory.untyped_type.fingerprint
 		end
-	
+
+	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
+			-- Output all namespace nodes associated with this element.
+		require
+			receiver_not_void: a_receiver /= Void
+		deferred
+		end
+
 feature -- Status report
 
 	is_nilled: BOOLEAN is

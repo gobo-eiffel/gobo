@@ -61,10 +61,16 @@ feature -- Access
 			do_nothing -- pre-condition cannot be met
 		end
 	
-	typed_value: XM_XPATH_VALUE is
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		do
 			do_nothing -- pre-condition cannot be met
+		end
+
+		type_name: STRING is
+			-- Type name for diagnostic purposes
+		do
+			Result := "Item in error"
 		end
 
 feature -- Status report

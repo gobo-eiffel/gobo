@@ -32,7 +32,8 @@
       <p>A basic XSLT processor must support xs:decimal, xs:integer and xs:double. The first two
       require at least 18 digits of precision (but should be unlimited. The latter is the IEEE double-precision type. DOUBLE should support
       this, though the compilers lack routines such as is_nan, for instance.</p>
-      <p>EDA is coming into gobo.</p>
+      <p>Need is_nan() for DOUBLE</p>
+      <p>LAST_POSTION_FINDER, LAST(), COUNT() etc. all use INTEGER right now. Change to MA_DECIMAL</p>
     </div>
     <div>
       <h2>Exception policy</h2>
@@ -89,7 +90,7 @@
 	<li>Implement and use SHARED_EMPTY_ITERATOR</li>
 	<li>Review assignment attempts</li>
 	<li>Compacting the tree/tiny tree</li>
-	<li>System-id map - implement and check it works for PI/Elements via parent.</li>
+	<li>Need to implement a LOCATOR for COMPUTED_EXPRESSIONs</li>
 	<li>Review numerics after next working draft issued (i.e. now!).</li>
       </ul>
     </div>

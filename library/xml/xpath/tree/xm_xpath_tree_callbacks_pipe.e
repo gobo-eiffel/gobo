@@ -41,10 +41,13 @@ feature {NONE} -- Initialization
 		local
 			a_namespace_resolver: XM_NAMESPACE_RESOLVER
 			a_node_factory: XM_XPATH_NODE_FACTORY
+			a_locator: XM_XPATH_RESOLVER_LOCATOR
 		do
 			shared_pool := default_pool.default_pool
 			create a_node_factory
-			create tree.make (a_parser, shared_pool, a_node_factory)
+			create tree.make (shared_pool, a_node_factory)
+			create a_locator.make (a_parser)
+			tree.set_document_locator (a_locator)
 			tree.set_line_numbering (is_line_numbering)
 			create emitter.make (tree, shared_pool)
 			create a_namespace_resolver.set_next (emitter)

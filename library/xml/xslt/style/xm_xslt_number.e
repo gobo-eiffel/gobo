@@ -172,7 +172,7 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			create {XM_XSLT_COMPILED_NUMBER} last_generated_instruction.make (select_expression,
+			create {XM_XSLT_COMPILED_NUMBER} last_generated_instruction.make (an_executable, select_expression,
 																									level, count_pattern,
 																									from_pattern,
 																									value_expression, format,
@@ -192,9 +192,6 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 		end
 
 feature {NONE} -- Implementation
-
-	Single_level, Multiple_levels, Any_level, Simple_numbering: INTEGER is unique
-			-- Level-numbering values
 
 	level: INTEGER
 			-- Level

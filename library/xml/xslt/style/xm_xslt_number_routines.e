@@ -18,6 +18,9 @@ inherit
 
 feature -- Access
 
+	Single_level, Multiple_levels, Any_level, Simple_numbering: INTEGER is unique
+			-- Level-numbering values
+
 	selected_numberer (a_language: STRING): XM_XSLT_NUMBERER is
 			-- Numberer corresponding to `a_language'
 		require

@@ -148,18 +148,20 @@ feature -- Optimization
 
 			if parent_pattern /= Void then
 				parent_pattern.type_check (a_context)
+				if parent_pattern.is_error then set_error_value (parent_pattern.error_value) end
 			elseif ancestor_pattern /= Void then
 				ancestor_pattern.type_check (a_context)
+				if ancestor_pattern.is_error then set_error_value (ancestor_pattern.error_value) end
 			end
 
-			if filters /= Void then
+			if not is_error and then filters /= Void then
 				from
 					a_cursor := filters.new_cursor
 					a_cursor.start
 				variant
 					filters.count + 1 - a_cursor.index
 				until
-					a_cursor.after
+					is_error or else a_cursor.after
 				loop
 					a_cursor.item.analyze (a_context)
 					if a_cursor.item.was_expression_replaced then
@@ -167,61 +169,72 @@ feature -- Optimization
 					else
 						a_filter_expression := a_cursor.item
 					end
-					
-					-- If the last filter is constant true, remove it.
-					
-					a_boolean ?= a_filter_expression
-					if a_boolean /= Void and then a_boolean.value then
-						do_nothing
-					else
-						a_cursor.replace (a_filter_expression)
+					if a_filter_expression.is_error then
+						set_error_value (a_filter_expression.error_value)
 					end
-					an_expression_context ?= a_context
+					if not is_error then
+
+						-- If the last filter is constant true, remove it.
+					
+						a_boolean ?= a_filter_expression
+						if a_boolean /= Void and then a_boolean.value then
+							do_nothing
+						else
+							a_cursor.replace (a_filter_expression)
+						end
+						an_expression_context ?= a_context
 						check
 							an_expression_context_not_void: an_expression_context /= Void
 						end
-					an_expression_context.style_element.allocate_slots (a_filter_expression)
-					
+						an_expression_context.style_element.allocate_slots (a_filter_expression)
+					end
 					a_cursor.forth
 				end
 			end
 
-			-- See if it's an element pattern with a single positional predicate of [1]
+			if not is_error then
+				
+				-- See if it's an element pattern with a single positional predicate of [1]
 
-			if node_test.node_kind = Element_node and then filters.count = 1 then
-				a_filter_expression := filters.item (1)
-				an_integer ?= a_filter_expression
-				a_position_range ?= a_filter_expression
-				if (an_integer /= Void and then an_integer.value.is_equal (one))
-					or else (a_position_range /= Void and then
-								a_position_range.minimum_position = 1 and a_position_range.maximum_position = 1) then
-					set_first_element_pattern (True)
-					set_special_filter (True)
-					set_filters (Void)
+				if node_test.node_kind = Element_node and then filters.count = 1 then
+					a_filter_expression := filters.item (1)
+					an_integer ?= a_filter_expression
+					a_position_range ?= a_filter_expression
+					if (an_integer /= Void and then an_integer.value.is_equal (one))
+						or else (a_position_range /= Void and then
+									a_position_range.minimum_position = 1 and a_position_range.maximum_position = 1) then
+						set_first_element_pattern (True)
+						set_special_filter (True)
+						set_filters (Void)
+					end
 				end
-			end
 
-			-- See if it's an element pattern with a single positional predicate
-			-- of [position()=last()]
-
-			if not is_first_element_pattern and then node_test.node_kind = Element_node and then filters.count = 1 then
-				is_last_expression ?= filters.item (1)
-				if is_last_expression /= Void and then is_last_expression.condition then
-					set_last_element_pattern (True)
-					set_special_filter (True)
-					set_filters (Void)
+				-- See if it's an element pattern with a single positional predicate
+				-- of [position()=last()]
+				
+				if not is_first_element_pattern and then node_test.node_kind = Element_node and then filters.count = 1 then
+					is_last_expression ?= filters.item (1)
+					if is_last_expression /= Void and then is_last_expression.condition then
+						set_last_element_pattern (True)
+						set_special_filter (True)
+						set_filters (Void)
+					end
 				end
-			end
-
-			if is_positional then
-				an_expression := make_equivalent_expression
-				an_expression.analyze (a_context)
-				if an_expression.was_expression_replaced then
-					set_equivalent_expression (an_expression.replacement_expression)
-				else
-					set_equivalent_expression (an_expression)
+				
+				if is_positional then
+					an_expression := make_equivalent_expression
+					an_expression.analyze (a_context)
+					if an_expression.was_expression_replaced then
+						set_equivalent_expression (an_expression.replacement_expression)
+					else
+						set_equivalent_expression (an_expression)
+					end
+					if equivalent_expression.is_error then
+						set_error_value (equivalent_expression.error_value)
+					else
+						set_special_filter (True)
+					end
 				end
-				set_special_filter (True)
 			end
 		end
 

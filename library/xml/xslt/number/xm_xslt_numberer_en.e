@@ -14,15 +14,25 @@ inherit
 
 	XM_XSLT_NUMBERER
 
+	MA_DECIMAL_MATH
+
 	XM_XPATH_DEBUGGING_ROUTINES
 	
 feature -- Access
 
-	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER;
-		a_group_separator, a_letter_value, an_ordinal: STRING): STRING is
+	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: MA_DECIMAL;
+		a_group_separator, a_letter, an_ordinal: STRING): STRING is
 			-- Formated number string
 		do
-			todo ("formatted_string", False)
+			if a_number < zero then
+				Result := a_number.to_scientific_string 
+			elseif a_picture.count = 0 then
+				Result := a_number.to_scientific_string 
+			else
+				create Result.make (0)
+				
+				todo ("formatted_string", True)				
+			end
 		end
 
 	month_name (a_month, a_minimum_width, a_maximum_width: INTEGER): STRING is

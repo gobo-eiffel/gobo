@@ -20,6 +20,8 @@ inherit
 	
 feature -- Access
 
+	No_namespaces, Local_namespaces, All_namespaces: INTEGER is unique
+
 	Null_prefix_index: INTEGER is 1
 			-- The numeric code representing the null namespace
 

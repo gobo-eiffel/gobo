@@ -21,6 +21,45 @@ inherit
 
 	XM_XPATH_ROLE
 
+feature -- Access
+
+	expanded_string_value (a_context: XM_XSLT_EVALUATION_CONTEXT): STRING is
+			-- String value of subordinates
+		require
+			context_not_void: a_context /= Void
+			no_error: not a_context.transformer.is_error
+		local
+			a_separator: STRING
+			a_string_value: XM_XPATH_STRING_VALUE
+			a_transformer: XM_XSLT_TRANSFORMER
+			a_sequence_receiver: XM_XSLT_SEQUENCE_RECEIVER
+			a_sequence_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
+		do
+			a_separator := " "
+			if separator_expression /= Void then
+				separator_expression.evaluate_as_string (a_context)
+				a_separator := separator_expression.last_evaluated_string.string_value
+			end
+			a_transformer := a_context.transformer
+			if select_expression /= Void then
+				a_string_value ?= select_expression
+				if a_string_value /= Void then
+					Result := a_string_value.string_value
+				else
+					Result := flattened_sequence (select_expression.iterator (a_context), a_separator, a_transformer)
+				end
+			else
+				a_sequence_receiver := a_transformer.current_receiver
+				create a_sequence_outputter.make (a_transformer.name_pool)
+				a_transformer.change_to_sequence_output_destination (a_sequence_outputter)
+				process_children (a_context)
+				a_transformer.reset_output_destination (a_sequence_receiver)
+				Result := flattened_sequence (a_sequence_outputter.sequence.iterator (a_context), a_separator, a_transformer)
+			end
+		ensure
+			string_value_not_void: Result /= Void
+		end
+
 feature -- Status report
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
@@ -184,6 +223,38 @@ feature {NONE} -- Implementation
 
 	separator_expression: XM_XPATH_EXPRESSION
 			-- Seperator expression
+
+	flattened_sequence (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_separator: STRING; a_transformer: XM_XSLT_TRANSFORMER): STRING is
+			-- Flattened sequence
+		require
+			iterator_not_void: an_iterator /= Void
+			separator_not_void: a_separator /= Void
+			transformer_not_void: a_transformer /= Void
+		local
+			first: BOOLEAN
+		do
+			create Result.make (0)
+			if not an_iterator.is_error then
+				from
+					an_iterator.start
+				until
+					an_iterator.is_error or else an_iterator.after
+				loop
+					if first then
+						first := False
+					else
+						Result := STRING_.appended_string (Result, a_separator)
+					end
+					Result := STRING_.appended_string (Result, an_iterator.item.string_value)
+					an_iterator.forth
+				end
+			end
+			if an_iterator.is_error and then not a_transformer.is_error then
+				a_transformer.report_fatal_error (an_iterator.error_value.error_message, Current)
+			end
+		ensure
+			flattened_sequence_not_void: Result /= Void
+		end
 
 end
 	

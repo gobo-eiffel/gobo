@@ -107,7 +107,7 @@ feature -- Optimization
 						if an_instruction /= Void then
 							a_cursor.replace (an_instruction)
 						else
-							create a_sequence_instruction.make (an_expression, Void)
+							create a_sequence_instruction.make (an_instruction.executable, an_expression, Void)
 							a_cursor.replace (a_sequence_instruction)
 						end
 					end
@@ -143,7 +143,7 @@ feature -- Optimization
 					if an_instruction /= Void then
 						a_cursor.replace (an_instruction)
 					else
-						create a_sequence_instruction.make (an_expression, Void)
+						create a_sequence_instruction.make (an_instruction.executable, an_expression, Void)
 						a_cursor.replace (a_sequence_instruction)
 					end
 				end

@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			string_value := a_string_value
 			name_code := a_name_code
 			line_number := -1
+			system_id := ""
 		ensure
 			string_value_set: string_value = a_string_value
 			name_code_set: name_code = a_name_code
@@ -77,6 +78,14 @@ feature -- Status setting
 		ensure
 			system_id_set: system_id = a_system_id
 			line_number_set: line_number = a_line_number
+		end
+
+feature -- Duplication
+
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+			-- Copy `Current' to `a_receiver'.
+		do
+			a_receiver.notify_processing_instruction (node_name, string_value, 0)
 		end
 		
 feature {XM_XPATH_NODE} -- Restricted

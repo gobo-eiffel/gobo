@@ -12,6 +12,10 @@ indexing
 
 deferred class XM_XPATH_RECEIVER
 
+inherit
+
+	XM_XPATH_RECEIVER_OPTIONS
+
 	-- This is an interface to receive XML events.
 	-- It is based on XM_CALLBACKS, XM_DTD_CALLBACKS and XM_DTD_ATTRIBUTE_CONTENT,
 	-- but has additional events, and work with XM_XPATH_NAME_POOL.
@@ -122,23 +126,20 @@ feature -- Events
 
 feature -- Element change
 
---	set_name_pool (a_name_pool: XM_XPATH_NAME_POOL) is
---			-- Set the name pool in which all name codes can be found.
---		require
---			name_pool_not_void: a_name_pool /= Void
---		do
---			name_pool := a_name_pool
---		ensure
---			name_pool_set: name_pool = a_name_pool
---		end
+	set_system_id (a_system_id: STRING) is
+			-- Set the system-id of the destination tree.
+		require
+			system_id_not_void: a_system_id /= Void
+		deferred
+		end
 
---	set_system_id (a_system_id: STRING) is
---			-- Set the system-id of the destination tree.
---		require
---			system_id_not_void: a_system_id /= Void
---		deferred
---		end
-	
+	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
+			-- Set the locator.
+		require
+			locator_not_void: a_locator /= Void
+		deferred
+		end
+
 end
 
 

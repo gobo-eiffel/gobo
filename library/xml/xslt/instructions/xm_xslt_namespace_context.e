@@ -74,10 +74,7 @@ feature -- Access
 				-- There remains the possibility that a default namespace has not been declared,
 				--  in which case we use the default default namespace - ""
 
-				if STRING_.same_string (a_prefix, "") then
-					check
-						use_default_namespace: use_default_namespace
-					end
+				if STRING_.same_string (a_prefix, "") and then use_default_namespace then
 					Result := ""
 				end
 			end

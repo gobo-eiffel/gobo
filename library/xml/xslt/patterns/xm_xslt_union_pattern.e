@@ -83,7 +83,14 @@ feature -- Analysis
 			-- variable references or function calls.
 		do
 			left_hand_side.type_check (a_context)
-			right_hand_side.type_check (a_context)
+			if left_hand_side.is_error then
+				set_error_value (left_hand_side.error_value)
+			else
+				right_hand_side.type_check (a_context)
+				if right_hand_side.is_error then
+					set_error_value (right_hand_side.error_value)
+				end
+			end
 		end
 
 feature -- Matching

@@ -26,6 +26,8 @@ inherit
 			local_part, name_code, sequence_number, is_same_node
 		end
 
+	XM_XPATH_RECEIVER_OPTIONS
+
 creation
 
 	make
@@ -106,6 +108,14 @@ feature -- Comparison
 					node_number = another_namespace.node_number
 				end
 			end
+		end
+
+feature -- Duplication
+
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+			-- Copy `Current' to `a_receiver'.
+		do
+			a_receiver.notify_namespace (namespace_code, Reject_duplicates)
 		end
 
 feature {XM_XPATH_NODE} -- Restricted

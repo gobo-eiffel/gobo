@@ -26,6 +26,8 @@ inherit
 			string_value, is_same_node, name_code, local_part, previous_node_in_document_order, next_node_in_document_order
 		end
 
+	XM_XPATH_RECEIVER_OPTIONS
+
 creation
 
 	make
@@ -97,6 +99,14 @@ feature -- Comparison
 			-- String-value
 		do
 			Result := document.name_pool.uri_from_namespace_code (namespace_code)
+		end
+
+feature -- Duplication
+
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+			-- Copy `Current' to `a_receiver'.
+		do
+			a_receiver.notify_namespace (namespace_code, Reject_duplicates)
 		end
 
 feature {XM_XPATH_NODE} -- Restricted

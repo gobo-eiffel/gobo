@@ -47,6 +47,8 @@ feature {NONE} -- Initialization
 			-- create NaN.
 		do
 			todo ("make-NaN", False)
+		ensure
+			not_a_number: is_nan
 		end
 
 feature -- Access
@@ -144,7 +146,9 @@ feature -- Status report
 	is_nan: BOOLEAN is
 			-- Is value Not-a-number?
 		do
-			todo ("is-nan", False)
+			if not is_zero and then value = 2.0 * value then
+				Result := True
+			end
 		end
 
 	is_zero: BOOLEAN is
@@ -182,6 +186,22 @@ feature -- Conversion
 				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_string (value.out)
 			elseif  a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
+			end
+		end
+
+	rounded_value: like Current is
+			-- `a_numeric_value' rounded towards the nearest whole number (0.5 rounded up)
+		do
+			if is_nan then
+				Result := Current
+			elseif is_infinite then
+				Result := Current
+			elseif is_zero then
+				Result := Current
+			elseif value > -0.5 and then value < 0.0 then
+				create Result.make (-0.0)
+			else
+				todo ("rounded_value", True)
 			end
 		end
 

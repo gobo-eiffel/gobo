@@ -188,7 +188,7 @@ feature -- Element change
 			a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 		do
 			a_target := template.compiled_template
-			create a_call.make (a_target, with_param_instructions (an_executable, False), with_param_instructions (an_executable, True), use_tail_recursion)
+			create a_call.make (an_executable, a_target, with_param_instructions (an_executable, False), with_param_instructions (an_executable, True), use_tail_recursion)
 			last_generated_instruction := a_call
 		end
 	

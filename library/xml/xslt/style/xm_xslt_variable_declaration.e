@@ -125,6 +125,9 @@ feature -- Element change
 					end
 				end
 			end
+			check
+				strictly_positive_slot_number: not is_redundant_variable and then not is_error implies slot_number > 0
+			end
 			validated := True
 		end
 

@@ -101,7 +101,7 @@ feature -- Element change
 			if a_sort_key_list.count > 0 then
 				create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
 			end			
-			create {XM_XSLT_COMPILED_FOR_EACH} last_generated_instruction.make (a_sorted_sequence)
+			create {XM_XSLT_COMPILED_FOR_EACH} last_generated_instruction.make (an_executable, a_sorted_sequence)
 			compile_children (an_executable, last_generated_instruction)
 		end
 

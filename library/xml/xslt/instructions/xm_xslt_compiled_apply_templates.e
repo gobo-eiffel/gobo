@@ -13,6 +13,9 @@ class XM_XSLT_COMPILED_APPLY_TEMPLATES
 inherit
 	
 	XM_XSLT_INSTRUCTION
+		redefine
+			process
+		end
 
 creation
 
@@ -20,15 +23,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_select_expression: XM_XPATH_EXPRESSION; some_actual_parameters, some_tunnel_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM];
+	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; some_actual_parameters, some_tunnel_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM];
 			use_current_mode, use_tail_recusrion: BOOLEAN; a_mode: XM_XSLT_MODE) is
 			-- Establish invariant.
 		require
+			executable_not_void: an_executable /= Void
 			select_expression_not_void: a_select_expression /= Void
 			actual_parameters_not_void: some_actual_parameters /= Void
 			tunnel_parameters_not_void: some_tunnel_parameters /= Void
 			current_mode: not use_current_mode implies a_mode /= Void
 		do
+			executable := an_executable
 			select_expression := a_select_expression
 			mode := a_mode
 			is_current_mode_used := use_current_mode
@@ -38,6 +43,7 @@ feature {NONE} -- Initialization
 			instruction_name := "apply-templates"
 			create children.make (0)
 		ensure
+			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
 			mode_set: mode = a_mode
 			current_mode_set: is_current_mode_used = use_current_mode
@@ -53,10 +59,16 @@ feature -- Access
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_CONTEXT) is
+		process (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		do
+			apply (a_context, False)
+		end
+
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			todo ("process_leaving_tail", False)
+			apply (a_context, is_tail_recursion_used)
 		end
 
 feature {NONE} -- Implementation
@@ -78,6 +90,62 @@ feature {NONE} -- Implementation
 	
 	mode: XM_XSLT_MODE
 			-- Mode to use
+
+	apply (a_context: XM_XSLT_EVALUATION_CONTEXT; returns_tail_call: BOOLEAN) is
+			-- Apply `Current'.
+		require
+			context_not_void: a_context /= void
+		local
+			a_mode: XM_XSLT_MODE
+			a_transformer: XM_XSLT_TRANSFORMER
+			some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
+		do
+			a_transformer := a_context.transformer
+			if is_current_mode_used then
+				a_mode := a_transformer.current_mode
+			else
+				a_mode := mode
+			end
+
+			-- handle any parameters
+
+			some_parameters := assembled_parameters (a_context, actual_parameters)
+			some_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameters)
+
+			if returns_tail_call then
+				select_expression.lazily_evaluate (a_context)
+				create {XM_XSLT_APPLY_TEMPLATES_PACKAGE} last_tail_call.make ( select_expression.last_evaluation,
+																									a_mode, some_parameters,
+																									some_tunnel_parameters,
+																									a_transformer.saved_context
+																								  )
+			else
+
+				-- Get an iterator to iterate through the selected nodes in original order.
+
+				an_iterator := select_expression.iterator (a_context)
+
+				-- quick exit if the iterator is empty
+
+				an_empty_iterator ?= an_iterator
+				if an_empty_iterator = Void then
+
+					-- Process the selected nodes now.
+
+					from
+						a_transformer.apply_templates (an_iterator, a_mode, some_parameters,	some_tunnel_parameters)
+						last_tail_call := a_transformer.last_tail_call
+					until
+						last_tail_call = Void
+					loop
+						last_tail_call.process_leaving_tail (a_transformer)
+						last_tail_call := last_tail_call.last_tail_call
+					end
+				end
+			end
+		end
 
 invariant
 

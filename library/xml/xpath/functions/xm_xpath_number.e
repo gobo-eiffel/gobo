@@ -19,6 +19,8 @@ inherit
 			simplified_expression, evaluate_item
 		end
 
+	XM_XPATH_NUMERIC_ROUTINES
+
 creation
 
 	make
@@ -81,8 +83,8 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		do
-			-- TODO
-			todo ("evaluate-item", False)
+			arguments.item (1).evaluate_item (a_context)
+			last_evaluated_item := item_to_double (arguments.item (1).last_evaluated_item)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

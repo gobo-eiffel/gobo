@@ -1,0 +1,104 @@
+indexing
+
+	description:
+
+	"Objects that iterate over a sequence consisting of a reservoir%
+% of items that have already been read, and an base iterator, "
+
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class XM_XPATH_PROGRESSIVE_ITERATOR
+
+inherit
+	
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_reservoir: DS_ARRAYED_LIST [XM_XPATH_ITEM]; a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+			-- Establish invariant.
+		require
+			reservoir_not_void: a_reservoir /= Void
+			base_iterator_not_void: a_base_iterator /= Void
+		do
+			reservoir := a_reservoir
+			base_iterator := a_base_iterator
+		ensure
+			reservoir_set: reservoir = a_reservoir
+			base_iterator_set: base_iterator = a_base_iterator
+		end
+
+feature -- Access
+
+	item: XM_XPATH_ITEM is
+			-- Value or node at the current position
+		do
+			Result := reservoir.item (index)
+		end
+
+feature -- Status report
+
+	after: BOOLEAN is
+			-- Are there any more items in the sequence?
+		do
+			if not base_iterator.is_error then
+				Result := base_iterator.after
+			else
+				set_last_error (base_iterator.error_value)
+			end
+		end
+
+feature -- Cursor movement
+
+	forth is
+			-- Move to next position
+		do
+			index := index + 1
+			if index > reservoir.count then
+				if base_iterator.is_error then
+					set_last_error (base_iterator.error_value)
+				else
+					if base_iterator.before then
+						base_iterator.start
+					elseif not base_iterator.after then
+						base_iterator.forth
+					end
+				end
+				if not base_iterator.is_error and then not base_iterator.after then
+					reservoir.force_last (base_iterator.item)
+				end
+			end
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Another iterator that iterates over the same items as the original;
+			-- The new iterator will be repositioned at the start of the sequence
+		do
+			create Result.make (reservoir, base_iterator)
+		end
+	
+feature {NONE} -- Implementation
+
+	reservoir: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+			-- Reservoir of items already read
+
+	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			-- Source of unread items
+
+invariant
+
+	reservoir_not_void: reservoir /= Void
+	base_iterator_not_void: base_iterator /= Void
+
+end
+	

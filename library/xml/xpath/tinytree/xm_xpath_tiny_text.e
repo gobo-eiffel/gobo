@@ -52,6 +52,17 @@ feature -- Access
 			Result := document.character_buffer.substring (start + 1, start + length)
 		end
 
+feature -- Duplication
+
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+			-- Copy `Current' to `a_receiver'.
+		local
+			a_start_index: INTEGER
+		do
+			a_start_index := document.alpha_value (node_number)
+			a_receiver.notify_characters (document.character_buffer.substring (a_start_index, a_start_index + document.beta_value (node_number)), 0)
+		end
+
 feature {XM_XPATH_NODE} -- Restricted
 
 	is_possible_child: BOOLEAN is

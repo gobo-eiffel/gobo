@@ -153,4 +153,12 @@ feature -- Basic operations
 		deferred
 		end
 
+feature -- Conversions
+
+	rounded_value: like current is
+			-- `a_numeric_value' rounded towards the nearest whole number (0.5 rounded up);
+			-- Implements Xpath round().
+		deferred
+		end
+
 end

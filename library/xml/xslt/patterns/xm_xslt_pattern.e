@@ -41,10 +41,10 @@ feature -- Access
 			Result := -1 -- Means can match multiple fingerprints
 		end
 
-	default_priority: DOUBLE is
+	default_priority: MA_DECIMAL is
 			--  Determine the default priority to use if this pattern appears as a match pattern for a template with no explicit priority attribute.
 		do
-			Result := 0.5
+			create Result.make_from_string ("0.5")
 		end
 	
 feature -- Status report
@@ -57,6 +57,12 @@ feature -- Status report
 
 	line_number: INTEGER
 			-- Line number where pattern occured
+
+	is_error: BOOLEAN
+			-- Is the pattern in error (as a result of `type_check')?
+
+	error_value: XM_XPATH_ERROR_VALUE
+			-- Error value
 
 feature -- Status setting
 
@@ -87,7 +93,18 @@ feature -- Status setting
 		ensure
 			line_number_set: line_number = a_number
 		end
-			
+
+	set_error_value (an_error_value: XM_XPATH_ERROR_VALUE)  is
+			-- Set `error_value'
+		require
+			error_value_not_void: an_error_value /= Void
+		do
+			error_value := an_error_value
+			is_error := True
+		ensure
+			error_value_set: error_value = an_error_value
+		end
+
 feature -- Optimization
 
 	simplified_pattern: XM_XSLT_PATTERN is
@@ -134,5 +151,11 @@ feature {XM_XSLT_PATTERN} -- Local
 		do
 			Result := matches (a_node, a_transformer)
 		end
+
+invariant
+
+	error: is_error implies error_value /= Void
+	no_error: not is_error implies error_value = Void
+
 end
 	

@@ -564,6 +564,7 @@ feature -- Setting cardinality
 			end
 			cardinalities.put (True, 1)
 			cardinalities.put (True, 2)
+			cardinalities.put (False, 3)
 		ensure
 			cardinalities_computed: are_cardinalities_computed
 		end
@@ -589,6 +590,7 @@ feature -- Setting cardinality
 				create cardinalities.make (1,3)
 				are_cardinalities_computed := True
 			end
+			cardinalities.put (False, 1)
 			cardinalities.put (True, 2)
 			cardinalities.put (True, 3)
 		ensure
@@ -602,7 +604,9 @@ feature -- Setting cardinality
 				create cardinalities.make (1,3)
 				are_cardinalities_computed := True
 			end
+			cardinalities.put (False, 1)
 			cardinalities.put (True, 2)
+			cardinalities.put (False, 3)
 		ensure
 			cardinalities_computed: are_cardinalities_computed
 		end

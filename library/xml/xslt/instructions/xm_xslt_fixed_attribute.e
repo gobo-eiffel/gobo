@@ -16,8 +16,11 @@ inherit
 
 	XM_XSLT_TEXT_CONSTRUCTOR
 
+	XM_XPATH_RECEIVER_OPTIONS
 		
 	XM_XPATH_SHARED_NODE_KIND_TESTS
+
+	XM_XSLT_VALIDATION
 
 creation
 
@@ -25,11 +28,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_code: INTEGER; a_validation_action: INTEGER; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_type_annotation: INTEGER) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_validation_action: INTEGER; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_type_annotation: INTEGER) is
 			-- Establish invariant.
 		require
-			no_requirements: True
+			executable_not_void: an_executable /= Void
+			validation: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
 		do
+			executable := an_executable
 			instruction_name := "attribute"
 			create children.make (0)
 			make_expression_instruction
@@ -38,11 +43,14 @@ feature {NONE} -- Initialization
 			validation_action := a_validation_action
 			type := a_simple_type
 			type_annotation := a_type_annotation
+			options := 0
 		ensure
+			executable_set: executable = an_executable
 			name_code_set: name_code = a_name_code
 			validation_action_set: validation_action = a_validation_action
 			type_set: type = a_simple_type
 			type_annotation_set: type_annotation = a_type_annotation
+			no_options_set: options = 0
 		end
 
 feature -- Access
@@ -68,11 +76,13 @@ feature -- Comparison
 feature -- Status_setting
 
 	set_no_special_characters is
-			-- Cretify free of special characters.
+			-- Certify free of special characters.
 		do
-			no_special_characters := True
+			if not are_no_special_characters (options) then
+				options := options + No_special_characters
+			end
 		ensure
-			no_special_characters: no_special_characters
+			no_special_characters: are_no_special_characters (options)
 		end
 
 feature -- Optimization
@@ -85,10 +95,31 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_CONTEXT) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			a_transformer: XM_XSLT_TRANSFORMER
+			a_receiver: XM_XPATH_RECEIVER
+			some_receiver_options, an_annotation: INTEGER
+			a_value: STRING
 		do
-			todo ("process_leaving_tail", False)
+			a_transformer := a_context.transformer
+			a_receiver := a_transformer.current_receiver
+			some_receiver_options := options
+			an_annotation := type_annotation
+
+			-- We may need to change the namespace prefix if the one we chose is
+			--  already in use with a different namespace URI. 
+			-- This is done behind the scenes by the Outputter
+
+			a_value := expanded_string_value (a_context)
+			if type /= Void then
+				todo ("process_leaving_tail", True)
+			elseif validation_action = Validation_strict or else validation_action = Validation_lax then
+				todo ("process_leaving_tail", True)
+			end
+			a_receiver.notify_attribute (name_code, an_annotation, a_value, some_receiver_options)
+			last_tail_call := Void
 		end
 
 feature {NONE} -- Implementation
@@ -105,8 +136,12 @@ feature {NONE} -- Implementation
 	type: XM_XPATH_SCHEMA_TYPE
 			--Type
 
-	no_special_characters: BOOLEAN
-			-- Is `Current' certified free of special characters?
+	options: INTEGER
+			-- Receiver options
+
+invariant
+
+	validation: validation_action >= Validation_strict  and then Validation_strip <= validation_action
 
 end
 	

@@ -133,7 +133,8 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
-			a_mapped_item: XM_XPATH_MAPPED_ITEM
+			a_node: XM_XPATH_NODE
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
 		do
 			base_expression.evaluate_item (a_context)
 			if base_expression.last_evaluated_item = Void then
@@ -141,14 +142,13 @@ feature -- Evaluation
 			elseif base_expression.last_evaluated_item.is_error then
 				last_evaluated_item := base_expression.last_evaluated_item
 			else
-				a_mapped_item := map (base_expression.last_evaluated_item, a_context, Void)
-				if a_mapped_item = Void then
-					last_evaluated_item := Void
-				elseif a_mapped_item.is_sequence then
-					a_mapped_item.sequence.start
-					last_evaluated_item := a_mapped_item.sequence.item
+				a_node ?= base_expression.last_evaluated_item
+				if a_node = Void then
+					last_evaluated_item := base_expression.last_evaluated_item
 				else
-					last_evaluated_item := a_mapped_item.item
+					an_iterator := a_node.typed_value
+					an_iterator.start
+					last_evaluated_item :=  an_iterator.item
 				end
 			end
 		end
@@ -175,20 +175,7 @@ feature -- Evaluation
 		do
 			a_node ?= an_item
 			if a_node /= Void then
-				an_atomic_value ?= a_node.typed_value
-				if an_atomic_value /= Void then
-					create Result.make_item (an_atomic_value)
-				else
-					a_sequence_value ?= a_node.typed_value
-					if a_sequence_value /= void then
-						create Result.make_sequence (a_sequence_value.iterator (a_context))
-					else
-						Result := Void -- but I don't think this can happen, so
-							check
-								result_not_void: Result /= Void
-							end
-					end
-				end
+				create Result.make_sequence (a_node.typed_value)
 			else
 				create Result.make_item (an_item)
 			end

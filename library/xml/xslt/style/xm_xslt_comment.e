@@ -80,7 +80,7 @@ feature -- Element change
 			a_comment: XM_XSLT_COMPILED_COMMENT
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
-			create a_comment.make
+			create a_comment.make (an_executable)
 			compile_content (an_executable, a_comment)
 			if select_expression = Void then
 				create a_string_value.make ("")

@@ -26,66 +26,94 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Create a general-purpose block.
+		require
+			executable_not_void: an_executable /= Void				
 		do
+			executable := an_executable			
 			instruction_type := General_purpose_block
 			create children.make (0)
 		ensure
+			executable_set: executable = an_executable
 			general_purpose_block: instruction_type = General_purpose_block
 		end
 
-	make_otherwise is
+	make_otherwise (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Create an xsl:otherwise block.
+		require
+			executable_not_void: an_executable /= Void				
 		do
+			executable := an_executable
 			instruction_type := Otherwise_block
 			create children.make (0)
 		ensure
+			executable_set: executable = an_executable
 			otherwise_block: instruction_type = Otherwise_block
 		end
 
-	make_fallback is
+	make_fallback (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Create an xsl:fallback block.
+		require
+			executable_not_void: an_executable /= Void				
 		do
+			executable := an_executable
 			instruction_type := Fallback_block
 			create children.make (0)
 		ensure
+			executable_set: executable = an_executable
 			fallback_block: instruction_type = Fallback_block
 		end
 
-	make_matching_substring is
+	make_matching_substring (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Create an xsl:matching_substring block.
+		require
+			executable_not_void: an_executable /= Void				
 		do
+			executable := an_executable
 			instruction_type := Matching_substring_block
 			create children.make (0)
 		ensure
+			executable_set: executable = an_executable
 			matching_substring_block: instruction_type = Matching_substring_block
 		end
 
-	make_non_matching_substring is
+	make_non_matching_substring (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Create an xsl:non_matching_substring block.
+		require
+			executable_not_void: an_executable /= Void				
 		do
+			executable := an_executable
 			instruction_type := Non_matching_substring_block
 			create children.make (0)
 		ensure
+			executable_set: executable = an_executable
 			non_matching_substring_block: instruction_type = Non_matching_substring_block
 		end
 
-	make_if is
+	make_if (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Create an xsl:if block.
+		require
+			executable_not_void: an_executable /= Void				
 		do
+			executable := an_executable
 			instruction_type := If_block
 			create children.make (0)
 		ensure
+			executable_set: executable = an_executable
 			if_block: instruction_type = If_block
 		end
 
-	make_when is
+	make_when (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Create an xsl:when block.
+		require
+			executable_not_void: an_executable /= Void		
 		do
+			executable := an_executable
 			instruction_type := When_block
 			create children.make (0)
 		ensure
+			executable_set: executable = an_executable
 			when_block: instruction_type = When_block
 		end
 
@@ -115,7 +143,7 @@ feature -- Access
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_CONTEXT) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			todo ("process_leaving_tail", False)

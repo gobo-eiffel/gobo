@@ -122,7 +122,7 @@ feature -- Element change
 					create {XM_XPATH_STRING_VALUE} seperator_expression.make (" ")
 				end
 			end
-			create a_value_of.make (select_expression)
+			create a_value_of.make (an_executable, select_expression)
 			compile_content (an_executable, a_value_of)
 			a_value_of.set_separator_expression (seperator_expression)
 			last_generated_instruction := a_value_of

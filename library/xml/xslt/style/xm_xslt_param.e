@@ -157,6 +157,9 @@ feature -- Element change
             --  the general-purpose XM_XSLT_COMPILED_PARAM object
 				todo ("compile", True)
 			else
+				check
+					strictly_positive_slot_number: slot_number > 0
+				end
 				a_slot_number := slot_number
 				if as_type /= Void then
 					create a_type_checker
@@ -172,7 +175,7 @@ feature -- Element change
 				if is_error then
 					report_compile_error (error_value.error_message)
 				else
-					create a_param.make (variable_name, a_slot_number)
+					create a_param.make (an_executable, variable_name, a_slot_number)
 					initialize_instruction (an_executable, a_param)
 					a_param.set_required_type (required_type)
 					a_param.set_conversion (a_conversion)

@@ -277,6 +277,23 @@ feature -- Element change
 			document_element_not_void: document_element /= Void
 		end
 
+feature -- Duplication
+
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+			-- Copy `Current' to `a_receiver'.
+		local
+			a_node: XM_XPATH_NODE
+		do
+			from
+				a_node := first_child
+			until
+				a_node = Void
+			loop
+				a_node.copy_node (a_receiver, which_namespaces, copy_annotations)
+				a_node := a_node.next_sibling
+			end
+		end
+
 feature {XM_XPATH_NODE} -- Restricted
 
 	is_possible_child: BOOLEAN is

@@ -83,9 +83,9 @@ feature
 			a_base_uri := STRING_.appended_string (a_base_uri, "/")
 			a_base_uri := STRING_.appended_string (a_base_uri, "data/books2.xml")
 			if is_tiny then
-					assert ("SYSTEM ID for document", STRING_.same_string (a_base_uri, tiny_document.system_id))
-				else
-					assert ("SYSTEM ID for document", STRING_.same_string (a_base_uri, document.system_id))
+				assert ("SYSTEM ID for document", STRING_.same_string (a_base_uri, tiny_document.system_id))
+			else
+				assert ("SYSTEM ID for document", STRING_.same_string (a_base_uri, document.system_id))
 			end
 
 			-- Test document_element

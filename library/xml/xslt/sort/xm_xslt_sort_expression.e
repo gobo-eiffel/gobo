@@ -133,8 +133,40 @@ feature -- Evaluation
 	
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
+		local
+			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			reduced_sort_keys: DS_ARRAYED_LIST [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
+			a_sort_key: XM_XSLT_SORT_KEY_DEFINITION
 		do
-			todo ("iterator", False)
+			a_sequence_iterator := select_expression.iterator (a_context)
+			an_evaluation_context ?= a_context.new_context
+			check
+				evaluation_context_not_void: an_evaluation_context /= Void
+				-- as this is XSLT
+			end
+
+			if fixed_sort_key_list /= Void then
+				reduced_sort_keys := fixed_sort_key_list
+			else
+				from
+					create reduced_sort_keys.make (sort_key_list.count)
+					a_cursor := sort_key_list.new_cursor; a_cursor.start
+				variant
+					sort_key_list.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					a_sort_key := a_cursor.item
+					if not a_sort_key.is_reducible then
+						a_sort_key.evaluate_expressions (an_evaluation_context)
+					end
+					reduced_sort_keys.put_last (a_sort_key.reduced_definition (an_evaluation_context))
+					a_cursor.forth
+				end
+			end
+			create {XM_XSLT_SORTED_ITERATOR} Result.make (an_evaluation_context, a_sequence_iterator, reduced_sort_keys)
 		end
 
 feature {XM_XSLT_SORT_EXPRESSION} -- Local

@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_TREE_ELEMENT
 
+	XM_XPATH_LOCATOR
+
 	XM_XSLT_VALIDATION
 
 	XM_XSLT_STRING_ROUTINES
@@ -551,7 +553,7 @@ feature -- Status setting
 		require
 			validation_message_not_void: a_message /= Void
 		do
-			error_listener.error (a_message)
+			error_listener.error (a_message, Current)
 			any_compile_errors := True
 		ensure
 			compile_errors: any_compile_errors
@@ -562,7 +564,7 @@ feature -- Status setting
 		require
 			validation_message_not_void: a_message /= Void
 		do
-			error_listener.warning (a_message)
+			error_listener.warning (a_message, Current)
 		end
 
 	mark_tail_calls is
@@ -708,7 +710,9 @@ feature -- Status setting
 			valid_name: a_name /= Void and then a_name.count > 0
 		do
 			a_pattern.type_check (static_context)
-			todo ("type_check_pattern - error reporting", True)
+			if a_pattern.is_error then
+				report_compile_error (a_pattern.error_value.error_message)
+			end
 		end
 
 	check_within_template is
@@ -1350,7 +1354,7 @@ feature -- Element change
 			loop
 				a_node := an_iterator.item
 				if a_node.node_type = Text_node then
-					create a_text_instruction.make
+					create a_text_instruction.make (an_executable)
 					create a_string_value.make (a_node.string_value)
 					a_text_instruction.set_select_expression (a_string_value)
 					check
@@ -1420,7 +1424,7 @@ feature -- Element change
 					check
 						module_registered: a_stylesheet.is_module_registered (a_fallback.system_id)
 					end
-					create a_block.make_fallback
+					create a_block.make_fallback (an_executable)
 					a_block.set_source_location (a_stylesheet.module_number (a_fallback.system_id), a_fallback.line_number)
 					a_fallback.compile_children (an_executable, a_block)
 					an_instruction_list.put_last (a_block)
@@ -1428,7 +1432,7 @@ feature -- Element change
 				an_iterator.forth
 			end
 			if not found_fallback then
-				create a_deferred_error.make (a_style_element.validation_error_message, a_style_element.node_name)
+				create a_deferred_error.make (an_executable, a_style_element.validation_error_message, a_style_element.node_name)
 			end
 		end
 		

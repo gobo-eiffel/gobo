@@ -15,15 +15,22 @@ class XM_XPATH_SEQUENCE_EXTENT
 inherit
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
+		undefine
+			copy, is_equal
+		end
 
 	XM_XPATH_SEQUENCE_VALUE
+		undefine
+			copy, is_equal
 		redefine
 			item_type, effective_boolean_value
 		end
 
+	DS_SORTABLE [XM_XPATH_ITEM]
+
 creation
 
-	make, make_as_view
+	make, make_as_view, make_from_list, make_default
 
 feature {NONE} -- Initialization
 
@@ -76,6 +83,32 @@ feature {NONE} -- Initialization
 			-- TODO
 		do
 			todo ("make-as-view" ,False)
+		end
+
+	make_from_list (a_list: DS_LIST [XM_XPATH_ITEM]) is
+			-- Create from a list of items.
+		require
+			list_not_void: a_list /= Void
+		local
+			a_cursor: DS_LIST_CURSOR [XM_XPATH_ITEM]
+		do
+			create value.make (1, a_list.count)
+			from
+				a_cursor := a_list.new_cursor; a_cursor.start
+			variant
+				a_list.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				value.put (a_cursor.item, a_cursor.index)
+				a_cursor.forth
+			end
+		end
+
+	make_default is
+        -- Create an empty container.
+		do
+			create value.make (1, 1)
 		end
 
 feature -- Access
@@ -134,7 +167,11 @@ feature -- Access
 					counter := counter + 1
 				end
 			end
-			create {XM_XPATH_ARRAY_ITERATOR [XM_XPATH_ITEM]} Result.make (value, 1, value.count)
+			if value.count = 0 then
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+			else
+				create {XM_XPATH_ARRAY_ITERATOR [XM_XPATH_ITEM]} Result.make (value, 1, value.count)
+			end
 		end
 
 	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
@@ -155,6 +192,12 @@ feature -- Measurement
 		end
 
 feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is current container equal to other?
+		do
+			Result := same_expression (other)
+		end
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
@@ -213,7 +256,23 @@ feature -- Evaluation
 			todo ("effective-boolean-value" ,False)
 		end
 
-feature {NONE} -- Implementation
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Copy other to current container.
+		do
+			value.copy (other.value)
+		end
+
+feature -- Removal
+
+	wipe_out is
+			-- Remove all items from container
+		do
+			value.clear_all
+		end
+
+feature {XM_XPATH_SEQUENCE_EXTENT} -- Implementation
 
 	Estimated_item_count: INTEGER is 20
 			-- Guess at number of items in sequence

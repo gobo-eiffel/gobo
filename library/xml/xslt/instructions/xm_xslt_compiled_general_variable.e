@@ -87,7 +87,76 @@ feature -- Status setting
 		ensure
 			set: contains_local_variables = any_locals
 		end
-	
+
+feature -- Evaluation
+
+	value (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XPATH_VALUE is
+			-- Value
+		require
+			context_not_void: a_context /= Void
+		local
+			a_transformer: XM_XSLT_TRANSFORMER
+			a_saved_receiver, a_sequence_receiver: XM_XSLT_SEQUENCE_RECEIVER
+			a_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
+			a_sequence_checker: XM_XSLT_SEQUENCE_CHECKER
+			a_bindery: XM_XSLT_BINDERY
+			an_empty_parameter_set: XM_XSLT_PARAMETER_SET
+		do
+			a_transformer := a_context.transformer
+			if select_expression = Void then
+				a_saved_receiver := a_transformer.current_receiver
+				create a_receiver.make (a_transformer.name_pool)
+				a_sequence_receiver := a_receiver
+				a_transformer.change_to_sequence_output_destination (a_receiver)
+				if required_type /= Void then
+					create a_sequence_checker.make (required_type, a_receiver)
+					a_sequence_receiver := a_sequence_checker
+					a_transformer.set_receiver (a_sequence_checker)
+				end
+				if is_global_variable and then contains_local_variables then
+					a_bindery := a_transformer.bindery
+					create an_empty_parameter_set.make_empty
+					a_bindery.open_stack_frame (an_empty_parameter_set, Void)
+					process_children (a_transformer.new_xpath_context)
+					a_bindery.close_stack_frame
+				else
+					process_children (a_transformer.new_xpath_context)
+				end
+				a_transformer.reset_output_destination (a_saved_receiver)
+				if required_type /= Void then
+					a_sequence_checker.final_check
+				end
+				Result := a_receiver.sequence
+			else
+
+				-- There is a select attribute: do a lazy evaluation of the expression,
+            --   which will already contain any code to force conversion to the required type.
+
+            --  But with global variables, we have already delayed evaluating the expression
+            --   until the first reference to the variable is encountered, and there's not
+            --  much point delaying it any further.
+
+				if is_global_variable then
+					if contains_local_variables then
+						a_bindery := a_transformer.bindery
+						create an_empty_parameter_set.make_empty
+						a_bindery.open_stack_frame (an_empty_parameter_set, Void)
+						select_expression.eagerly_evaluate (a_transformer.new_xpath_context)
+						Result := select_expression.last_evaluation
+						a_bindery.close_stack_frame
+					else
+						select_expression.eagerly_evaluate (a_transformer.new_xpath_context)
+						Result := select_expression.last_evaluation
+					end
+				else
+						select_expression.lazily_evaluate (a_transformer.new_xpath_context)
+						Result := select_expression.last_evaluation
+				end
+			end
+		ensure
+			variable_value_not_void: Result /= Void
+		end
+
 feature -- Element change
 
 	initialize (a_select_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE; a_fingerprint: INTEGER) is

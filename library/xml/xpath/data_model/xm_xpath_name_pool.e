@@ -587,6 +587,17 @@ feature -- Status report
 			end
 		end
 
+	is_namespace_code_allocated_for_name_code (a_name_code: INTEGER): BOOLEAN is
+			-- Has a namespace code been allocated corresponding to `a_name_code'?
+		require
+			valid_name_code: is_valid_name_code (a_name_code)
+		local
+			a_prefix: STRING
+		do
+			a_prefix := prefix_from_name_code (a_name_code)
+			Result := is_code_for_prefix_allocated (a_prefix)
+		end
+		
 	is_name_code_allocated (an_xml_prefix: STRING; a_uri: STRING; a_local_name: STRING): BOOLEAN is
 			-- Has a name code been allocated for `an_xml_prefix' with `a_uri' and `a_local_name'?
 		require
@@ -941,6 +952,19 @@ feature -- Element change
 			namespace_code_allocated: is_namespace_code_allocated (an_xml_prefix, a_uri)
 		end
 
+	allocate_namespace_code_for_name_code (a_name_code: INTEGER) is
+			-- Allocate a namesapce code for a given name code.
+		require
+			namespace_code_not_allocated: not is_namespace_code_allocated_for_name_code (a_name_code)
+		local
+			a_prefix: STRING
+		do
+			a_prefix := prefix_from_name_code (a_name_code)
+			allocate_code_for_prefix (a_prefix)
+		ensure
+			namespace_code_allocated: is_namespace_code_allocated_for_name_code (a_name_code)
+		end
+		
 	allocate_code_for_uri (a_uri: STRING) is
 			-- Allocate the uri code for a given URI;
 			-- WARNING - this code is not thread safe
@@ -1103,6 +1127,18 @@ feature -- Element change
 		end
 		
 feature -- Conversion
+
+	namespace_code_from_name_code (a_name_code: INTEGER): INTEGER is
+			-- Namespace code, given its name code
+		require
+			valid_name_code: is_valid_name_code (a_name_code)
+		local
+			a_uri_code, a_prefix_code: INTEGER --_16
+		do
+			a_uri_code := uri_code_from_name_code (a_name_code)
+			a_prefix_code := code_for_prefix (prefix_from_name_code (a_name_code))
+			Result := (a_prefix_code * bits_16) + a_uri_code
+		end
 
 	namespace_uri_from_name_code (a_name_code: INTEGER): STRING is
 			-- Namespace-URI of a name, given its name code or fingerprint

@@ -22,7 +22,7 @@ inherit
 		-- TODO: add reporting policies (e.g. should warnings count as errors),
 		--  and maybe selection of the error stream (?)
 
-creation {XM_XSLT_PREPARED_STYLESHEET}
+creation
 
 	make
 
@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 	make is
 		-- Establish invariant.
 		do
+			is_impure := True
 			error_stream := std.error
 		end
 
@@ -47,9 +48,14 @@ feature -- Access
 			Result := warnings + errors + fatal_errors
 		end
 
+feature -- Status report
+
+	recovered: BOOLEAN
+			-- Did `Current' recover from the last recoverable error?
+	
 feature -- Events
 
-	warning (a_message: STRING) is
+	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
 			-- Receive notification of a warning.
 		do
 			-- TODO
@@ -57,20 +63,29 @@ feature -- Events
 			warnings := warnings + 1
 		end
 
-	error (a_message: STRING) is
+	error (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
 			-- Receive notification of a recoverable error.
 		do
+			recovered := True -- TODO
 			error_stream.put_line (a_message)
 			errors := errors + 1
 		end
 
-	fatal_error (a_message: STRING) is
+	fatal_error (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
 			-- Receive notification of a non-recoverable error.
 		do
 			error_stream.put_line (a_message)
 			fatal_errors := fatal_errors + 1
 		end
 
+feature -- Duplication
+
+	new_instance: like Current is
+			-- Pristine instance of `Current'
+		do
+			create Result.make
+		end
+	
 invariant
 
 end

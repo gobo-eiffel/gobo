@@ -60,9 +60,35 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_count: INTEGER -- TODO - MA_DECIMAL
+			a_last_position_finder: XM_XPATH_LAST_POSITION_FINDER [XM_XPATH_ITEM]
+			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer: INTEGER
 		do
-			-- TODO count the number of items in the sole argument sequence
-			todo ("evaluate-item", False)
+			an_iterator := arguments.item (1).iterator (a_context)
+			a_last_position_finder ?= an_iterator
+			if a_last_position_finder /= Void then
+				create an_integer_value.make_from_integer (a_last_position_finder.last_position)
+				last_evaluated_item := an_integer_value
+			else
+				from
+					an_integer := 0
+					if not an_iterator.is_error then	an_iterator.start end
+				until
+					an_iterator.is_error or else an_iterator.after
+				loop
+					an_integer := an_integer + 1
+					an_iterator.forth
+				end
+				if not an_iterator.is_error then
+					create an_integer_value.make_from_integer (an_integer)
+					last_evaluated_item := an_integer_value
+				else
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				end
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

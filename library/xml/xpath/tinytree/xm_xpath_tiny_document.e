@@ -128,6 +128,10 @@ feature -- Access
 	root_node: INTEGER
 			-- The actual root of the tree. Normally 1.
 
+	number_of_nodes: INTEGER
+			-- Number of nodes excluding attributes and namespaces
+
+
 	node_kind: STRING is
 			-- Kind of node
 		do
@@ -246,6 +250,14 @@ feature -- Access
 			Result := prior.item (a_node_number)
 		end
 
+	namespace_parent (an_index: INTEGER): INTEGER is
+			-- Index of parent element
+		require
+			index_is_valid: is_namespace_number_valid ( an_index )
+		do
+			Result := namespace_parents.item (an_index)
+		end
+
 	attribute_parent (an_index: INTEGER): INTEGER is
 			-- Index of parent element
 		require
@@ -330,6 +342,14 @@ feature -- Access
 			node_number_is_valid: is_node_number_valid (a_node_number)
 		do
 			Result := next_sibling_indices.item (a_node_number)
+		end
+
+	retrieve_name_code (a_node_number: INTEGER): INTEGER is
+			-- Name code of `a_node_number'
+		require
+			node_number_is_valid: is_node_number_valid (a_node_number)
+		do
+			Result := name_codes.item (a_node_number)
 		end
 
 	retrieve_node (a_node_number: INTEGER): XM_XPATH_TINY_NODE is
@@ -673,6 +693,16 @@ feature -- Element change
 			no_next_sibling: next_sibling_indices.item (number_of_nodes) = -1
 		end
 
+	set_root_node (a_node: XM_XPATH_TINY_NODE) is
+			-- Set the root node.
+			-- Parentless elements are implemented using a full tree structure
+			--  containing a document node, but the document node is not regarded as part of the tree
+		require
+			node_not_void: a_node /= Void
+		do
+			root_node := a_node.node_number
+		end
+
 	set_system_id (a_system_id: STRING) is
 			-- Set the SYSTEM ID.
 		require
@@ -882,6 +912,27 @@ feature -- Conversion
 			Result := attribute_codes.item (a_node_number)
 		end
 
+feature -- Duplication
+
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+			-- Copy `Current' to `a_receiver'.
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+		do
+
+			-- output the children
+			-- TODO: this is wrong. In XSLT 2.0, copying a document node should not simply copy the children
+
+			from
+				an_iterator := new_axis_iterator (Child_axis); an_iterator.start
+			until
+				an_iterator.after
+			loop
+				an_iterator.item.copy_node (a_receiver, which_namespaces, copy_annotations)
+				an_iterator.forth
+			end
+		end
+
 feature {XM_XPATH_NODE} -- Restricted
 
 	is_possible_child: BOOLEAN is
@@ -906,9 +957,6 @@ feature {NONE} -- Implementation
 
 	element_type_map: DS_HASH_TABLE [INTEGER, INTEGER]
 			-- Maps Element types to node numbers
-
-	number_of_nodes: INTEGER
-			-- Number of nodes excluding attributes and namespaces
 
 			-- The following arrays contain one entry for each node other than attribute
 			-- and namespace nodes, arranged in document order

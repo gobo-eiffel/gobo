@@ -180,7 +180,7 @@ feature -- Element change
 				use_tail_recursion := False
 				create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
 			end
-			create {XM_XSLT_COMPILED_APPLY_TEMPLATES} last_generated_instruction.make (a_sorted_sequence,
+			create {XM_XSLT_COMPILED_APPLY_TEMPLATES} last_generated_instruction.make (an_executable, a_sorted_sequence,
 																												with_param_instructions (an_executable, False),
 																												with_param_instructions (an_executable, True),
 																												use_current_mode, use_tail_recursion, mode)

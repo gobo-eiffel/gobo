@@ -30,15 +30,19 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_expression: XM_XPATH_EXPRESSION; a_sequence_type: XM_XPATH_SEQUENCE_TYPE) is
+	make (an_executable: XM_XSLT_EXECUTABLE; an_expression: XM_XPATH_EXPRESSION; a_sequence_type: XM_XPATH_SEQUENCE_TYPE) is
 			-- Establish invariant.
+		require
+			executable_not_void: an_executable /= Void
 		do
+			executable := an_executable
 			select_expression := an_expression
 			required_type := a_sequence_type
 			instruction_name := "sequence"
 			create children.make (0)
 			make_expression_instruction			
 		ensure
+			executable_set: executable = an_executable
 			select_expression_set: select_expression = an_expression
 			required_type_set: required_type = a_sequence_type
 		end
@@ -215,10 +219,64 @@ feature -- Optimization
 	
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_CONTEXT) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			a_receiver: XM_XSLT_SEQUENCE_RECEIVER
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_item: XM_XPATH_ITEM
+			a_sequence_checker: XM_XSLT_SEQUENCE_CHECKER
+			a_transformer: XM_XSLT_TRANSFORMER
 		do
-			todo ("process_leaving_tail", False)
+			last_tail_call := Void
+			a_transformer := a_context.transformer
+			a_receiver := a_transformer.current_receiver
+			if select_expression	/= Void then
+				from
+					an_iterator := select_expression.iterator (a_context); an_iterator.start
+				until
+					an_iterator.after
+				loop
+					an_item := an_iterator.item
+					append_item (an_item, a_context, a_receiver)
+					an_iterator.forth
+				end
+				if close_text_node then
+					a_receiver.notify_characters ("", 0)
+				end
+			elseif required_type = Void then
+
+				-- No type-check necessary, so write the values directly to the current output destination
+
+				if children /= Void then
+					process_children_leaving_tail (a_context)
+				end
+			else
+
+				-- Type check requested, so we need to create a type-checking filter
+
+				create a_sequence_checker.make (required_type, a_receiver)
+				a_transformer.set_receiver (a_sequence_checker)
+				if select_expression /= Void then
+					from
+						an_iterator := select_expression.iterator (a_context); an_iterator.start
+					until
+						an_iterator.after
+					loop
+						an_item := an_iterator.item
+						append_item (an_item, a_context, a_receiver)
+						an_iterator.forth
+					end
+					if close_text_node then
+						a_receiver.notify_characters ("", 0)
+					end
+				end
+				if children /= Void then
+					process_children (a_context)
+				end
+				a_sequence_checker.final_check
+				a_transformer.set_receiver (a_receiver)
+			end
 		end
 
 feature -- Element change
@@ -272,6 +330,29 @@ feature {NONE} -- Implementation
 
 	required_type: XM_XPATH_SEQUENCE_TYPE
 			-- Optional required type
+
+	close_text_node: BOOLEAN
+			-- Should we emit an empty character string? -- TODO - check what this is for
+
+	append_item (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; a_receiver: XM_XSLT_SEQUENCE_RECEIVER) is
+			-- If this call to xsl:sequence is in a template (rather than a function) it may
+			--  be marked as a tail call; in this situation we need to evaluate the returned
+			--  function call package. Doing so may return further function call packages, which also need
+			--  to be processed. This has to be iterative rather than recursive to avoid consuming stack space.
+		require
+			item_not_void: an_item /= Void
+			context_not_void: a_context /= Void
+			receiver_not_void: a_receiver /= Void
+		local
+			an_object_value: XM_XPATH_OBJECT_VALUE
+		do
+			an_object_value ?= an_item
+			if an_object_value /= Void then
+				todo ("append_item", True)
+			else
+				a_receiver.append_item (an_item)
+			end
+		end
 
 invariant
 

@@ -39,6 +39,7 @@ feature
 			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			a_builder: XM_XPATH_BUILDER
+			a_parser: XM_EIFFEL_PARSER
 			a_document: XM_XPATH_DOCUMENT
 
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
@@ -57,13 +58,15 @@ feature
 			assert ("transformer", a_transformer /= Void)
 			a_configuration.set_entity_resolver (new_file_resolver_current_directory) -- bodge
 			create another_uri_source.make ("../xpath/data/books.xml")
-			a_builder := a_transformer.new_builder
-			another_uri_source.send (a_builder.parser, a_transformer.new_stripper (a_builder), a_configuration.name_pool, False)
+			a_parser := a_transformer.new_parser
+			a_builder := a_transformer.new_builder (a_parser)
+			another_uri_source.send (a_parser, a_transformer.new_stripper (a_builder), a_configuration.name_pool, False)
 			a_document := a_builder.document
 			assert ("No error", not a_builder.has_error)
 			assert ("Document", a_document /= Void)
-			a_transformer.register_document (a_document, another_uri_source.system_id)
+			-- a_transformer.register_document (a_document, another_uri_source.system_id)
 			a_transformer.create_new_context (a_document)
+			a_transformer.perform_transformation (a_document)
 		end
 
 end

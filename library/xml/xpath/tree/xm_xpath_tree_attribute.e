@@ -98,6 +98,21 @@ feature -- Comparison
 			end
 		end
 
+feature -- Duplication
+
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+			-- Copy `Current' to `a_receiver'.
+		local
+			a_type_code: INTEGER
+		do
+			if copy_annotations then
+				a_type_code := type_annotation
+			else
+				a_type_code := -1
+			end
+			a_receiver.notify_attribute (name_code, a_type_code, string_value, 0)
+		end
+
 feature {XM_XPATH_TREE_NODE} -- Restricted
 
 	previous_node_in_document_order: XM_XPATH_TREE_NODE is

@@ -101,7 +101,10 @@ feature -- Element change
 				principal_stylesheet.allocate_local_slots (number_of_variables)
 			end
 			if not is_redundant_variable then
-				create a_variable.make (variable_name, slot_number)
+				check
+					strictly_positive_slot_number: slot_number > 0
+				end
+				create a_variable.make (an_executable, variable_name, slot_number)
 				initialize_instruction (an_executable, a_variable)
 				a_variable.set_required_type (required_type)
 				fixup_binding (a_variable)

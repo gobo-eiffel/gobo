@@ -12,6 +12,10 @@ indexing
 
 deferred class	XM_XPATH_NODE_ORDER_COMPARER
 
+inherit
+
+	DS_COMPARATOR [XM_XPATH_NODE]
+
 feature -- Comparison
 
 		three_way_comparison (a_node, another_node: XM_XPATH_NODE): INTEGER is
@@ -24,5 +28,12 @@ feature -- Comparison
 		ensure
 			valid_result: -1 <= Result and then Result <= 1
 		end
+
+	less_than (u, v: XM_XPATH_NODE): BOOLEAN is
+        -- Is u considered less than v?
+		do
+			Result := three_way_comparison (u, v) = -1
+		end
+
 end
 	

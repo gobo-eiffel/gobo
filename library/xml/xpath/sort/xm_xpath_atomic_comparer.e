@@ -14,6 +14,8 @@ class XM_XPATH_ATOMIC_COMPARER
 
 inherit
 
+	KL_COMPARATOR  [XM_XPATH_ATOMIC_VALUE]
+	
 	KL_SHARED_EXCEPTIONS
 
 creation
@@ -79,6 +81,12 @@ feature -- Comparison
 			end
 		ensure
 			three_way_comparison: Result >= -1 and Result <= 1
+		end
+
+	less_than (u, v: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+			-- Is `u' considered less than `v'?
+		do
+			Result := three_way_comparison (u, v) = -1
 		end
 
 feature -- Status report

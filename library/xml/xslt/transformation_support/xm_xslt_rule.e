@@ -18,7 +18,7 @@ creation
 
 feature {NONE} -- Implementation
 
-	make (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_precedence: INTEGER; a_priority: DOUBLE; a_sequence_number: INTEGER) is
+	make (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_precedence: INTEGER; a_priority: MA_DECIMAL; a_sequence_number: INTEGER) is
 			-- Establish invariant.
 		require
 			pattern_not_void: a_pattern /= Void
@@ -64,7 +64,7 @@ feature -- Access
 	precedence: INTEGER
 			-- Precedence
 
-	priority: DOUBLE
+	priority: MA_DECIMAL
 			-- priority
 
 	sequence_number: INTEGER

@@ -44,6 +44,14 @@ feature -- Access
 	string_value: STRING
 			--Value of the item as a string
 
+feature -- Duplication
+
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+			-- Copy `Current' to `a_receiver'.
+		do
+			a_receiver.notify_comment (string_value, 0)
+		end
+
 feature {XM_XPATH_NODE} -- Resricted
 
 	is_possible_child: BOOLEAN is

@@ -13,7 +13,11 @@ indexing
 class XM_XSLT_COMPILED_TEMPLATE
 
 inherit
-	
+
+	XM_XSLT_TAIL_CALL
+
+	XM_XPATH_DEBUGGING_ROUTINES
+
 creation
 
 	make
@@ -33,7 +37,6 @@ feature -- Initialization
 			-- Initialize.
 		require
 			not_yet_initialized: not initialized
-			body_not_void: a_sequence_instruction /= Void
 		do
 			body := a_sequence_instruction
 			is_stack_frame_needed := stack_frame_needed
@@ -73,14 +76,46 @@ feature -- Status report
 
 	is_stack_frame_needed: BOOLEAN
 			-- Does `Current' need a stack frame?
-	
+
+feature -- Evaluation
+
+	process_leaving_tail (a_transformer: XM_XSLT_TRANSFORMER) is
+			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			saved_template: XM_XSLT_COMPILED_TEMPLATE
+		do
+			last_tail_call := Void
+			if body /= Void then
+				saved_template := a_transformer.current_template
+				a_transformer.set_current_template (Current)
+				if a_transformer.is_tracing then
+					todo ("process_leaving_tail", True)
+				else
+					body.process_leaving_tail (a_transformer.new_xpath_context)
+					last_tail_call := body.last_tail_call
+				end
+			end
+			a_transformer.set_current_template (saved_template)
+		end
+
+	expand (a_transformer: XM_XSLT_TRANSFORMER) is
+			-- Expand the template.
+			-- Called when the template is invoked using xsl:call-template.
+			-- Invoking a template by this method does not change the current template.
+		require
+			transformer_not_void: a_transformer /= Void
+		do
+			last_tail_call := Void
+			if body /= Void then
+				body.process_leaving_tail (a_transformer.new_xpath_context)
+				last_tail_call := body.last_tail_call
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	body: XM_XSLT_SEQUENCE_INSTRUCTION
-			-- Template body
+			-- Optional template body
 
-invariant
-
-	body_not_void: initialized implies body /= Void
 
 end

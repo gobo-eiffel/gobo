@@ -213,6 +213,12 @@ feature -- Conversions
 			end
 		end
 
+	rounded_value: like Current is
+			-- `a_numeric_value' rounded towards the nearest whole number (0.5 rounded up)
+		do
+			Result := Current
+		end
+
 feature -- Basic operations
 
 	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is

@@ -59,6 +59,9 @@ feature -- Optimization
 			if key_expression.was_expression_replaced then
 				key_expression := key_expression.replacement_expression
 			end
+			if key_expression.is_error then
+				set_error_value (key_expression.error_value)
+			end
 		end
 
 feature -- Matching

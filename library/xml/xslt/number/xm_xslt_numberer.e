@@ -12,12 +12,19 @@ deferred class XM_XSLT_NUMBERER
 
 feature -- Access
 
-	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER;
-		a_group_separator, a_letter_value, an_ordinal: STRING): STRING is
+	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: MA_DECIMAL;
+		a_group_separator, a_letter, an_ordinal: STRING): STRING is
 			-- Formated number string
 		require
-			-- TODO
+			number_not_void: a_number /= Void
+			picture_not_void: a_picture /= Void
+			group_size_not_void: a_group_size /= Void
+			group_separator_not_void: a_group_separator /= Void
+			letter_not_void: a_letter /= Void
+			ordinal_not_void: an_ordinal /= Void
 		deferred
+		ensure
+			formatted_string_not_void: Result /= Void
 		end
 
 	month_name (a_month, a_minimum_width, a_maximum_width: INTEGER): STRING is

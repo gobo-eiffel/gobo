@@ -240,6 +240,16 @@ feature -- Conversion
 			end
 		end
 
+	rounded_value: like Current is
+			-- `a_numeric_value' rounded towards the nearest whole number (0.5 rounded up)
+		local
+			a_decimal: MA_DECIMAL
+		do
+			create a_decimal.make_copy (value)
+			a_decimal := a_decimal.round_to_integer (shared_round_context)
+			create Result.make (a_decimal)
+		end
+
 feature -- Basic operations
 
 	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
@@ -283,4 +293,13 @@ feature -- Basic operations
 				end
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	shared_round_context: MA_DECIMAL_CONTEXT is
+			-- Decimal context for use by round
+		once
+			create Result.make (shared_decimal_context.digits, Round_ceiling)
+		end
+
 end

@@ -54,6 +54,26 @@ feature -- Access
 			mode_not_void: Result /= Void
 		end
 
+	template_rule (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_transformer: XM_XSLT_TRANSFORMER): XM_XSLT_COMPILED_TEMPLATE is
+			-- Template rule registered for a particular node in a specific mode.
+		require
+			node_not_void: a_node /= Void
+			transformer_not_in_error: a_transformer /= Void and then not a_transformer.is_error
+		local
+			mode_to_use: XM_XSLT_MODE
+			a_rule_value: XM_XSLT_RULE_VALUE
+		do
+			if a_mode = Void then
+				mode_to_use := mode_for_default_mode
+			else
+				mode_to_use := a_mode
+			end
+			a_rule_value := mode_to_use.rule (a_node, a_transformer)
+			if a_rule_value /= Void and then a_rule_value.is_template then
+				Result := a_rule_value.as_template
+			end
+		end
+
 feature -- Status report
 	
 	is_mode_registered (a_mode_name_code: INTEGER): BOOLEAN is
@@ -122,7 +142,7 @@ feature -- Element change
 			end
 		end
 				
-	set_handler (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_mode: XM_XSLT_MODE; a_precedence: INTEGER; a_priority: DOUBLE) is
+	set_handler (a_pattern: XM_XSLT_PATTERN; a_handler: XM_XSLT_RULE_VALUE; a_mode: XM_XSLT_MODE; a_precedence: INTEGER; a_priority: MA_DECIMAL) is
 			-- Set handler for `a_pattern'.
 		require
 			pattern_not_void: a_pattern /= Void
@@ -164,7 +184,7 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	mode_for_default_mode: XM_XSLT_MODE
-			-- Mode for ode handlers with default mode
+			-- Mode for node handlers with default mode
 
 	omni_mode: XM_XSLT_MODE
 			-- Mode for node handlers that specify mode="all"

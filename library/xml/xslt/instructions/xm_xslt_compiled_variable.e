@@ -22,26 +22,39 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_slot_number: INTEGER) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name: STRING; a_slot_number: INTEGER) is
 			-- Establish invariant.
 		require
+			executable_not_void: an_executable /= Void
 			valid_name: a_name /= Void and then a_name.count > 0
 		do
+			executable := an_executable
 			variable_name := a_name
 			slot_number := a_slot_number
 			instruction_name := "variable"
 			create children.make (0)
 		ensure
+			executable_set: executable = an_executable
 			name_set: variable_name = a_name
 			slot_number: slot_number = a_slot_number
 		end
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_CONTEXT) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			a_bindery: XM_XSLT_BINDERY
 		do
-			todo ("process_leaving_tail", False)
+			a_bindery := a_context.transformer.bindery
+			if is_global_variable then
+				if not a_bindery.is_evaluated (slot_number) then -- don't evaluate a global variable twice
+					a_bindery.define_global_variable (slot_number, value (a_context))
+				end
+			else
+				a_bindery.set_local_variable (slot_number, value (a_context))
+			end
+			last_tail_call := Void
 		end
 
 invariant

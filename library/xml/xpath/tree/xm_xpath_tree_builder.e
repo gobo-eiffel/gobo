@@ -29,21 +29,19 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_parser: XM_PARSER; a_name_pool: XM_XPATH_NAME_POOL; a_node_factory: XM_XPATH_NODE_FACTORY) is
+	make (a_name_pool: XM_XPATH_NAME_POOL; a_node_factory: XM_XPATH_NODE_FACTORY) is
 			-- Set name pool and node factory..
 		require
 			name_pool_not_void: a_name_pool /= Void
 			node_factory_not_void: a_node_factory /= Void
-			parser_not_void: a_parser /= Void
 		do
 			name_pool := a_name_pool
 			node_factory := a_node_factory
-			parser := a_parser
-			resolver ?= parser.entity_resolver
+			system_id := ""
+			create {XM_XPATH_DEFAULT_LOCATOR} locator
 		ensure
 			name_pool_set: name_pool = a_name_pool
 			node_factory_set: node_factory = a_node_factory
-			parser_set: parser = a_parser
 		end
 
 feature -- Access
@@ -51,9 +49,6 @@ feature -- Access
 	tree_document: XM_XPATH_TREE_DOCUMENT
 			-- Created ocument
 
-	resolver: XM_URI_EXTERNAL_RESOLVER
-			-- Entity resolver
-	
 feature -- Events
 
 	on_error (a_message: STRING) is
@@ -71,7 +66,7 @@ feature -- Events
 
 			-- TODO add timing information
 
-			system_id := resolver.uri.full_reference
+			if system_id.count = 0 then system_id := locator.system_id end
 			create tree_document.make (name_pool, system_id)
 			document := tree_document
 			current_depth := 1
@@ -149,9 +144,9 @@ feature -- Events
 					has_error := True
 					last_error := an_element.error_value.error_message
 				else
-					tree_document.set_system_id_for_node (next_node_number, resolver.uri.full_reference)
+					tree_document.set_system_id_for_node (next_node_number, locator.system_id)
 					if is_line_numbering then
-						tree_document.set_line_number_for_node (next_node_number, parser.position.row)
+						tree_document.set_line_number_for_node (next_node_number, locator.line_number)
 					end
 					next_node_number := next_node_number + 1
 					current_depth := current_depth + 1
@@ -206,7 +201,7 @@ feature -- Events
 				create a_processing_instruction.make (tree_document, a_name_code, a_data_string)
 				current_composite_node.add_child (a_processing_instruction)
 
-				a_processing_instruction.set_location (resolver.uri.full_reference, parser.position.row)
+				a_processing_instruction.set_location (locator.system_id, locator.line_number)
 			end
 		end
 
@@ -260,8 +255,6 @@ feature {NONE} -- Implementation
 invariant
 
 	last_error_not_void: has_error implies last_error /= Void
-	parser_not_void: parser /= Void
-	resolver_not_void: resolver /= Void
 
 end
 	

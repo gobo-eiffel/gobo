@@ -71,7 +71,7 @@ feature -- Element change
 				if last_generated_name_code = -1 then
 					report_compile_error (error_message)
 				else
-					key_fingerprint :=  last_generated_name_code // bits_20
+					key_fingerprint :=  fingerprint_from_name_code (last_generated_name_code)
 					if a_match_attribute = Void then
 						report_absence ("match")
 					else

@@ -150,7 +150,7 @@ feature -- Element change
 					compiled_actions_count := compiled_actions_count + 1
 					create {XM_XPATH_BOOLEAN_VALUE} a_condition.make (True)
 					compiled_conditions.put_last (a_condition)
-					create a_block.make_otherwise
+					create a_block.make_otherwise (an_executable)
 					check
 						module_registered: top_stylesheet.is_module_registered (an_otherwise.system_id)
 						-- TODO: Why? Maybe this isn't so - review
@@ -185,10 +185,10 @@ feature -- Element change
 						last_generated_instruction := Void
 					end
 				else
-					create {XM_XSLT_COMPILED_CHOOSE} last_generated_instruction.make (compiled_conditions, compiled_actions)
+					create {XM_XSLT_COMPILED_CHOOSE} last_generated_instruction.make (an_executable, compiled_conditions, compiled_actions)
 				end
 			else
-				create {XM_XSLT_COMPILED_CHOOSE} last_generated_instruction.make (compiled_conditions, compiled_actions)
+				create {XM_XSLT_COMPILED_CHOOSE} last_generated_instruction.make (an_executable, compiled_conditions, compiled_actions)
 			end
 		end
 	
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			a_condition := a_when.condition
-			create a_block.make_when
+			create a_block.make_when (an_executable)
 			check
 				module_registered: top_stylesheet.is_module_registered (a_when.system_id)
 				-- TODO: Why? Maybe this isn't so - review

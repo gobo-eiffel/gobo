@@ -38,7 +38,11 @@ feature -- Access
 
 			-- default implementation for child nodes
 
-			Result := parent.system_id
+			if parent = Void then
+				Result := ""
+			else
+				Result := parent.system_id
+			end
 		end
 
 	line_number: INTEGER is

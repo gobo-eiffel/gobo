@@ -14,7 +14,9 @@ class XM_XPATH_CONTEXT
 
 inherit
 
-	KL_SHARED_STANDARD_FILES -- TODO - remove when all todo routines are removed
+	KL_IMPORTED_STRING_ROUTINES
+
+	XM_XPATH_DEBUGGING_ROUTINES -- TODO - remove when all todo routines are removed
 
 creation
 
@@ -43,7 +45,7 @@ feature -- Access
 	current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Current iterator
 
-	local_variable_frame: ARRAY [XM_XPATH_VALUE]
+	local_variable_frame: ARRAY [XM_XSLT_STACK_FRAME_ENTRY]
 			-- Local variables in scope
 
 	reserved_slot_count: INTEGER
@@ -53,6 +55,7 @@ feature -- Access
 			-- The context item (".")
 		do
 			if current_iterator /= Void and then not current_iterator.is_error then
+				if current_iterator.before then current_iterator.start end
 				Result := current_iterator.item
 			end
 		end
@@ -80,6 +83,23 @@ feature -- Access
 			end
 		end
 
+	default_collation: ST_COLLATOR is
+			-- Default collator
+		do
+			Result := unicode_codepoint_collator
+		end
+
+	collation (a_collation_name: STRING): ST_COLLATOR is
+			-- Named collation
+		require
+			collation_name_not_void: a_collation_name /= Void
+		do
+			-- TODO - do this properly
+			if STRING_.same_string (a_collation_name, unicode_codepoint_collation_name) then
+				Result := unicode_codepoint_collator
+			end
+		end
+
 feature -- Status report
 
 	is_context_position_set: BOOLEAN is
@@ -96,7 +116,7 @@ feature -- Status report
 	
 feature -- Creation
 
-	new_context: XM_XPATH_CONTEXT is
+	new_context: like Current is
 			-- Create a copy of `Current'
 		do
 			Result := clone (Current)
@@ -108,8 +128,13 @@ feature -- Evaluation
 			-- Value of a local variable, identified by its slot number
 		require
 			valid_local_variable: is_valid_local_variable (a_slot_number)
+		local
+			a_stack_entry: XM_XSLT_STACK_FRAME_ENTRY
 		do
-			Result := local_variable_frame.item (a_slot_number + reserved_slot_count)
+			a_stack_entry := local_variable_frame.item (a_slot_number + reserved_slot_count)
+			if a_stack_entry /= Void then
+				Result := a_stack_entry.value
+			end
 		end
 	
 feature 	-- Element change
@@ -124,11 +149,14 @@ feature 	-- Element change
 
 	set_local_variable (a_slot_number: INTEGER; a_value: XM_XPATH_VALUE) is
 			-- Set the value of a local variable.
+		local
+			a_stack_entry: XM_XSLT_STACK_FRAME_ENTRY
 		do
 			if local_variable_frame.count < a_slot_number + reserved_slot_count then
 				local_variable_frame.resize (1, 2 * local_variable_frame.count)
 			end
-			local_variable_frame.put (a_value, a_slot_number + reserved_slot_count)
+			create a_stack_entry.make (a_value)
+			local_variable_frame.put (a_stack_entry, a_slot_number + reserved_slot_count)
 		end
 
 feature {NONE} -- Implementation
@@ -136,21 +164,13 @@ feature {NONE} -- Implementation
 	cached_last: INTEGER
 			-- Used by `last'
 
-	todo (a_routine_name: STRING; is_partially_done: BOOLEAN) is
-			-- Write a TODO message.
-		require
-			routine_name_not_void: a_routine_name /= Void and then a_routine_name.count > 2
-		do
-			std.error.put_string ("{")
-			std.error.put_string (generating_type)
-			std.error.put_string ("}.")
-			std.error.put_string (a_routine_name)
-			if is_partially_done then
-				std.error.put_string (" is only partly written")
-			else
-				std.error.put_string (" needs to be written")
-			end
-			std.error.put_new_line
+	unicode_codepoint_collation_name: STRING is "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
+			-- Unicode code-point collator name
+	
+	unicode_codepoint_collator: ST_COLLATOR is
+			-- Unicode code-point collator
+		once
+			create Result
 		end
 
 invariant

@@ -516,7 +516,7 @@ feature -- Element change
 			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			another_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_TEMPLATE, INTEGER]
 		do
-			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager, default_collation_name, collation_map, stripper_rules, strips_whitespace)
+			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager, default_collation_name, collation_map, stripper_rules, strips_whitespace, module_list)
 
 			-- Call compile method for each top-level object in the stylesheet
 
@@ -539,7 +539,7 @@ feature -- Element change
 				end
 				a_cursor.forth
 			end
-			-- TODO: last_compiled_executable.set_slot_space (?, largest_stack_frame)
+			last_compiled_executable.set_slot_space (number_of_variables, largest_stack_frame)
 
 			create a_compiled_templates_index.make (named_templates_index.count)
 			from
@@ -607,6 +607,24 @@ feature {NONE} -- Implementation
 
 	stylesheet_module_map: DS_HASH_TABLE [INTEGER, STRING]
 			-- Map of SYSTEM IDs to module numbers
+
+	module_list: DS_ARRAYED_LIST [STRING] is
+			-- List of stylesheet modules indexed by module number
+		local
+			an_index: INTEGER
+		once
+			from
+				create Result.make (stylesheet_module_map.count)
+				stylesheet_module_map.start
+			until
+				stylesheet_module_map.after
+			loop
+				Result.put (stylesheet_module_map.key_for_iteration, stylesheet_module_map.item_for_iteration)
+				stylesheet_module_map.forth
+			end
+		ensure
+			module_list_not_void: Result /= Void
+		end
 
 	build_indices is
 			-- Build indices from selected top-level declarations.

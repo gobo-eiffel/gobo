@@ -30,26 +30,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_parser: XM_PARSER; a_name_pool: XM_XPATH_NAME_POOL) is
+	make (a_name_pool: XM_XPATH_NAME_POOL) is
 			-- Set the name pool in which all name codes can be found
 		require
 			name_pool_not_void: a_name_pool /= Void
 		do
 			name_pool := a_name_pool
-			parser := a_parser
-			resolver ?= parser.entity_resolver
+			system_id := ""
+			create {XM_XPATH_DEFAULT_LOCATOR} locator
 		ensure
 			name_pool_set: name_pool = a_name_pool
-			parser_set: parser = a_parser
 		end
 	
 feature -- Access
 
 	tiny_document: XM_XPATH_TINY_DOCUMENT
 			-- Created document
-
-	resolver: XM_URI_EXTERNAL_RESOLVER
-			-- Entity resolver
 
 feature -- Events
 
@@ -68,7 +64,7 @@ feature -- Events
 
 			-- TODO add timing information
 
-			system_id := resolver.uri.full_reference
+			if system_id.count = 0 then system_id := locator.system_id end
 			if defaults_overridden then
 				create tiny_document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count, name_pool, system_id)
 			else
@@ -128,9 +124,9 @@ feature -- Events
 			end
 			previously_at_depth.put (-1, current_depth) -- no previous sibling
 
-			tiny_document.set_system_id_for_node (node_number, resolver.uri.full_reference)
+			tiny_document.set_system_id_for_node (node_number, locator.system_id)
 			if is_line_numbering then
-				tiny_document.set_line_number_for_node (node_number, parser.position.row)
+				tiny_document.set_line_number_for_node (node_number, locator.line_number)
 			end
 		end
 
@@ -212,9 +208,9 @@ feature -- Events
 			tiny_document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 
-			tiny_document.set_system_id_for_node (node_number, resolver.uri.full_reference)
+			tiny_document.set_system_id_for_node (node_number, locator.system_id)
 			if is_line_numbering then
-				tiny_document.set_line_number_for_node (node_number, parser.position.row)
+				tiny_document.set_line_number_for_node (node_number, locator.line_number)
 			end
 		end
 
@@ -307,7 +303,5 @@ feature {NONE} -- Implementation
 invariant
 	positive_depth: current_depth >= 0
 	name_pool_not_void: name_pool /= Void
-	parser_not_void: parser /= Void
-	resolver_not_void: resolver /= Void
 
 end

@@ -96,12 +96,13 @@ feature -- Compilation
 			source_not_void: a_source /= Void
 			configuration_not_void: a_configuration /= Void
 			name_pool_not_void: a_name_pool /= Void
-			-- TODO - a_node_factory
+			node_factory_not_void: a_node_factory /= Void
 		local
 			a_stylesheet_stripper: XM_XSLT_STYLESHEET_STRIPPER
 			a_comment_stripper: XM_XSLT_COMMENT_STRIPPER
 			a_tree_builder: XM_XPATH_TREE_BUILDER
 			a_parser: XM_EIFFEL_PARSER
+			a_locator: XM_XPATH_RESOLVER_LOCATOR
 		do
 			load_stylesheet_module_failed := False
 			load_stylesheet_module_error := Void
@@ -110,7 +111,9 @@ feature -- Compilation
 			a_parser.set_resolver (a_configuration.entity_resolver)
 			a_parser.copy_string_mode (a_configuration)
 
-			create a_tree_builder.make (a_parser, a_name_pool, a_node_factory)
+			create a_tree_builder.make (a_name_pool, a_node_factory)
+			create a_locator.make (a_parser)
+			a_tree_builder.set_document_locator (a_locator)
 			a_tree_builder.set_line_numbering (a_configuration.is_line_numbering)
 			create a_stylesheet_stripper.make (a_name_pool, a_tree_builder)
 			create a_comment_stripper.make (a_stylesheet_stripper)

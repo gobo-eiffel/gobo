@@ -33,7 +33,7 @@ feature -- Access
 			string_value_not_void: Result /= Void
 		end
 
-	typed_value: XM_XPATH_VALUE is
+	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		require
 			item_not_in_error: not is_error
@@ -48,7 +48,14 @@ feature -- Access
 		ensure
 			item_type_not_void: Result /= Void
 		end
-		
+
+	type_name: STRING is
+			-- Type name for diagnostic purposes
+		deferred
+		ensure
+			type_name_not_void: Result /= Void
+		end
+
 feature -- Status report
 
 	is_error: BOOLEAN is

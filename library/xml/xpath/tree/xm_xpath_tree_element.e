@@ -240,6 +240,33 @@ feature -- Access
         result_not_void: Result /= Void
 		end
 
+																																	
+	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
+			-- Output all namespace nodes associated with this element.
+		local
+			a_parent: XM_XPATH_ELEMENT
+         a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+		do
+			from
+				a_cursor := namespace_code_list.new_cursor; a_cursor.start
+			until
+					a_cursor.after
+			loop
+					a_receiver.notify_namespace (a_cursor.item, 0)
+					a_cursor.forth
+			end
+
+			-- Now add the namespaces defined on the ancestor nodes.
+			-- We rely on the receiver to eliminate multiple declarations of the same prefix.
+
+			if include_ancestors then
+				a_parent ?= parent
+				if a_parent /= Void then
+					a_parent.output_namespace_nodes (a_receiver, true)
+				end
+			end
+		end
+																																	
 feature -- Measurement
 
 	number_of_attributes: INTEGER is
@@ -292,6 +319,63 @@ feature -- Element change
 			attribute_collection_set: attribute_collection = an_attribute_collection
 		end
 
+
+feature -- Duplication
+																																	
+	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
+				-- Copy `Current' to `a_receiver'.
+		local																													
+			a_type_code, an_index, child_namespaces: INTEGER
+			a_node: XM_XPATH_NODE																														
+		do
+			if copy_annotations then
+				a_type_code := type_annotation
+			end																													
+			a_receiver.start_element (name_code, a_type_code, 0)
+
+			-- output namespaces
+
+
+			if which_namespaces /= No_namespaces then
+				output_namespace_nodes (a_receiver, which_namespaces = All_namespaces)
+			end
+
+         -- output attributes																																	
+
+			from
+            an_index := 1
+			until
+            an_index > attribute_collection.number_of_attributes
+			loop
+            if copy_annotations then
+				   a_type_code := type_annotation
+				else
+				   a_type_code := 0																																	
+				end																																	
+            a_receiver.notify_attribute (attribute_collection.attribute_name_code (an_index), a_type_code,attribute_collection.attribute_value_by_index (an_index), 0)
+            an_index := an_index + 1																																	
+			end
+
+        	-- output children																																
+
+			if which_namespaces /= No_namespaces then
+            child_namespaces := Local_namespaces																																	
+			else
+            child_namespaces := No_namespaces
+			end
+			from
+            a_node := first_child
+			until
+            a_node = Void
+			loop
+            a_node.copy_node (a_receiver, child_namespaces, copy_annotations)
+            a_node := a_node.next_sibling
+			end
+
+         a_receiver.end_element																																	
+		end
+																																	
+																																	
 feature {XM_XPATH_NODE} -- Restricted
 
 	is_possible_child: BOOLEAN is

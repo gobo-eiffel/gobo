@@ -22,16 +22,21 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Establish invariant.
+		require
+			executable_not_void: an_executable /= Void
 		do
+			executable := an_executable
 			instruction_name := "with-param"
 			create children.make (0)
+		ensure
+			executable_set: executable = an_executable
 		end
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_CONTEXT) is
+	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			todo ("process_leaving_tail", False)

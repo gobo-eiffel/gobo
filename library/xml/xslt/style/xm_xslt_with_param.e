@@ -78,7 +78,7 @@ feature -- Element change
 		local
 			a_with_param: XM_XSLT_COMPILED_WITH_PARAM
 		do
-			create a_with_param.make
+			create a_with_param.make (an_executable)
 			initialize_instruction (an_executable, a_with_param)
 			last_generated_instruction := a_with_param
 		end

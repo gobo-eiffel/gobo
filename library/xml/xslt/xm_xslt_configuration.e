@@ -20,32 +20,39 @@ inherit
 
 	XM_XPATH_SHARED_NAME_POOL
 
+	XM_XSLT_CONFIGURATION_CONSTANTS
+
+	XM_XSLT_VALIDATION
+
 creation
 
 	make, make_with_defaults
 
 feature {NONE} -- Initialization
 
-	make (an_entity_resolver: XM_URI_EXTERNAL_RESOLVER) is
+	make (an_entity_resolver: XM_URI_EXTERNAL_RESOLVER; an_error_listener: XM_XSLT_ERROR_LISTENER) is
 			-- Establish invariant.
 		require
 			entity_resolver_not_void: an_entity_resolver /= Void
+			error_listener_not_void: an_error_listener /= Void
 		do
 			set_string_mode_mixed
 			entity_resolver := an_entity_resolver
 			name_pool := default_pool.default_pool
+			recovery_policy := Recover_with_warnings
+			error_listener := an_error_listener
 		ensure
 			entity_resolver_set: entity_resolver = an_entity_resolver
+			error_listener_set: error_listener = an_error_listener
 		end
 
 	make_with_defaults is
 			-- Establish invariant using defaults.
 		local
-			an_entity_resolver: XM_URI_EXTERNAL_RESOLVER
+			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 		do
-			set_string_mode_mixed
-			entity_resolver := new_file_resolver_current_directory
-			name_pool := default_pool.default_pool
+			create an_error_listener.make
+			make (new_file_resolver_current_directory, an_error_listener)
 		end
 
 feature -- Access
@@ -70,6 +77,29 @@ feature -- Access
 
 	is_tiny_tree_model: BOOLEAN
 			-- Should the tiny tree model be used for XML source?
+
+	recovery_policy: INTEGER
+			-- Recovery policy when warnings or errors are encountered
+
+	element_validator (a_receiver: XM_XPATH_RECEIVER; a_name_code: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;
+							 a_validation_action: INTEGER; a_validation_context: ANY; a_name_pool: XM_XPATH_NAME_POOL): XM_XPATH_RECEIVER is
+			-- A receiver that can be used to validate an element,
+			--  and that passes the validated element on to a target receiver.
+			-- If validation is not supported, the returned receiver
+			--  will be the target receiver.
+		require
+			current_receiver_not_void: a_receiver /= Void
+			name_pool_not_void: a_name_pool /= Void
+			validation_action: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
+			-- Not sure about the others - anyway, they are not used yet
+		do
+
+			-- Basix XSLT processor version
+
+			Result := a_receiver
+		ensure
+			element_validator_not_void: Result /= Void
+		end
 
 feature -- Element change
 	
@@ -110,5 +140,6 @@ feature -- Element change
 invariant
 
 	entity_resolver_not_void: entity_resolver /= Void
+	error_listener_not_void: error_listener /= Void
 
 end
