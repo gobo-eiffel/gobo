@@ -607,7 +607,7 @@ feature {NONE} -- URI parsing
 			-- Start is inclusive, stop is exclusive.
 		require
 			valid_start: start = 1
-			valid_stop: stop >= 1 and stop < full_reference.count
+			valid_stop: stop >= 1 and stop <= full_reference.count
 		do
 			if stop >= start then
 				scheme := full_reference.substring (start, stop - 1)
