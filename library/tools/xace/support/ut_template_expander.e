@@ -217,7 +217,7 @@ feature
 		   then
 		     str := a_variables.item (str)
 		  elseif
-		     str.is_empty
+		     str.count = 0
 		   then
 		     str := "$"
 		  else
