@@ -67,14 +67,14 @@ feature -- Processing
 					Exceptions.die (1)
 				end
 			end
+			if parser.syntax_error then
+				Exceptions.die (1)
+			end
 			if
 				out_file /= Void and then
 				not OUTPUT_STREAM_.is_closed (out_file)
 			then
 				OUTPUT_STREAM_.close (out_file)
-			end
-			if parser.syntax_error then
-				Exceptions.die (1)
 			end
 		end
 
