@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			make_atomic_value
 			set_value_from_string (a_value)
 		ensure
-			value_set: value = a_value.to_double
+			value_set: a_value.is_double implies value = a_value.to_double
 		end
 
 	make_nan is
