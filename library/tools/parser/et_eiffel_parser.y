@@ -76,6 +76,7 @@ creation
 %type <ET_ASSERTIONS>          Assertion_list Invariant_opt
 %type <ET_BOOLEAN_CONSTANT>    Boolean_constant
 %type <ET_CHARACTER_CONSTANT>  Character_constant
+%type <ET_CLASS>               Class_header
 %type <ET_CLIENTS>             Clients Clients_opt Client_list
 %type <ET_COMPOUND>            Compound Non_empty_compound Else_part Rescue_opt
 %type <ET_EXPRESSION>          Expression Call_expression Qualified_call_chain
@@ -99,7 +100,7 @@ creation
 %type <ET_LOCAL_VARIABLES>     Local_declarations_opt Local_variable_list
 %type <ET_MANIFEST_STRING>     Obsolete_opt Manifest_string External_name_opt
 %type <ET_NAMED_TYPE>          Named_type Constraint_named_type
-%type <ET_PARENTS>             Parent_list_to_end
+%type <ET_PARENTS>             Parent_list_to_end Inheritance_to_end
 %type <ET_POSTCONDITIONS>      Postcondition_list Postcondition_opt
 %type <ET_PRECONDITIONS>       Precondition_list Precondition_opt
 %type <ET_REAL_CONSTANT>       Real_constant
@@ -112,25 +113,39 @@ creation
                                  Redefine Redefine_opt
 %type <like new_rename_list>     Rename Rename_list
 
-%expect 15
+%expect 20
 %start Class_declarations
 
 %%
 --------------------------------------------------------------------------------
 
 Class_declarations: Class_declaration
-	| Class_declarations Class_declaration
 	;
 
-Class_declaration: Indexing_opt Class_header Formal_generics_opt Obsolete_opt
-		Creators_opt Features_opt Invariant_opt E_END
-	| Indexing_opt Class_header Formal_generics_opt Obsolete_opt Inheritance_to_end
+Class_declaration: Indexing_opt Class_to_end
+	;
+
+Class_declaration_opt: -- Empty
+	| Class_declaration
+	;
+
+Class_to_end: Class_header Formal_generics_opt Obsolete_opt
+		Creators_opt Features_opt Invariant_opt Indexing_opt E_END Class_declaration_opt
+	| Class_header Formal_generics_opt Obsolete_opt Inheritance_to_end
+		{ $1.set_parents ($4) }
+	;
+
+Class_to_end_opt: -- Empty
+	| Class_to_end
 	;
 
 Creators_features_invariant_opt: Creators_opt Features_opt Invariant_opt
 	;
 
 --------------------------------------------------------------------------------
+
+Indexing: E_INDEXING Index_list
+	;
 
 Indexing_opt: -- Empty
 	| E_INDEXING Index_list
@@ -176,13 +191,13 @@ Index_value: Identifier
 --------------------------------------------------------------------------------
 
 Class_header: E_CLASS Identifier
-		{ last_class := new_class ($2) }
+		{ last_class := new_class ($2); $$ := last_class }
 	| E_DEFERRED E_CLASS Identifier
-		{ last_class := new_deferred_class ($3) }
+		{ last_class := new_deferred_class ($3); $$ := last_class }
 	| E_EXPANDED E_CLASS Identifier
-		{ last_class := new_expanded_class ($3) }
+		{ last_class := new_expanded_class ($3); $$ := last_class }
 	| E_SEPARATE E_CLASS Identifier
-		{ last_class := new_separate_class ($3) }
+		{ last_class := new_separate_class ($3); $$ := last_class }
 	;
 
 --------------------------------------------------------------------------------
@@ -209,8 +224,12 @@ Formal_generic_list: Formal_generic
 
 Formal_generic: Identifier
 		{ $$ := new_formal_generic ($1, Void) }
-	| Identifier E_ARROW Constraint_named_type
+	| Identifier E_ARROW Constraint_type Constraint_create_opt
 		{ $$ := new_formal_generic ($1, $3) }
+	;
+
+Constraint_create_opt: -- Empty
+	| E_CREATE Procedure_list E_END
 	;
 
 Constraint_type: Constraint_named_type
@@ -263,35 +282,38 @@ Obsolete_opt: -- Empty
 
 --------------------------------------------------------------------------------
 
-Inheritance_to_end: E_INHERIT Creators_features_invariant_opt E_END
+Inheritance_to_end: E_INHERIT Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
+		-- { $$ := Void }
 	| E_INHERIT Parent_list_to_end
-		{ last_class.set_parents ($2) }
+		{ $$ := $2 }
 	;
 
 Parent_list_to_end: E_IDENTIFIER Actual_generics_opt
 	  Rename New_exports_opt Undefine_opt Redefine_opt Select_opt E_END
-	  Parent_terminator Creators_features_invariant_opt E_END
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, $3, $4, $5, $6, $7)) }
 	| E_IDENTIFIER Actual_generics_opt
 	  New_exports Undefine_opt Redefine_opt Select_opt E_END
-	  Parent_terminator Creators_features_invariant_opt E_END
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, $3, $4, $5, $6)) }
 	| E_IDENTIFIER Actual_generics_opt Undefine Redefine_opt Select_opt E_END
-	  Parent_terminator Creators_features_invariant_opt E_END
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, $3, $4, $5)) }
 	| E_IDENTIFIER Actual_generics_opt Redefine Select_opt E_END
-	  Parent_terminator Creators_features_invariant_opt E_END
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, $3, $4)) }
 	| E_IDENTIFIER Actual_generics_opt Select E_END
-	  Parent_terminator Creators_features_invariant_opt E_END
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, $3)) }
 	| E_IDENTIFIER Actual_generics_opt E_END
-	  Parent_terminator Creators_features_invariant_opt E_END
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
 	| E_IDENTIFIER Actual_generics_opt
-	  Parent_terminator Creators_features_invariant_opt E_END
+	  Parent_terminator Creators_features_invariant_opt Indexing_opt E_END Class_declaration_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
-	| E_IDENTIFIER Actual_generics_opt E_END
+	| E_IDENTIFIER Actual_generics_opt E_END Indexing E_END Class_declaration_opt
+		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
+	| E_IDENTIFIER Actual_generics_opt E_END Indexing_opt Class_to_end_opt
 		{ $$ := new_parents (new_parent ($1, $2, Void, Void, Void, Void, Void)) }
 
 	| E_IDENTIFIER Actual_generics_opt
@@ -1059,6 +1081,8 @@ Call_instruction: Identifier Actuals_opt
 		{ $$ := new_call_instruction ($1, $2, $3) }
 	| E_PRECURSOR Actuals_opt
 		{ $$ := new_precursor_instruction (Void, $2) }
+	| E_PRECURSOR '{' Identifier '}' Actuals_opt
+		{ $$ := new_precursor_instruction ($3, $5) }
 	| '{' Identifier '}' E_PRECURSOR Actuals_opt
 		{ $$ := new_precursor_instruction ($2, $5) }
 	;
@@ -1069,6 +1093,8 @@ Call_expression: Identifier Actuals_opt
 		{ $$ := new_call_expression ($1, $2, $3) }
 	| E_PRECURSOR Actuals_opt
 		{ $$ := new_precursor_expression (Void, $2) }
+	| E_PRECURSOR '{' Identifier '}' Actuals_opt
+		{ $$ := new_precursor_expression ($3, $5) }
 	| '{' Identifier '}' E_PRECURSOR Actuals_opt
 		{ $$ := new_precursor_expression ($2, $5) }
 	;
@@ -1083,6 +1109,8 @@ Qualified_call_chain: Identifier Actuals_opt '.'
 		{ $$ := $2 }
 	| E_PRECURSOR Actuals_opt '.'
 		{ $$ := new_precursor_expression (Void, $2) }
+	| E_PRECURSOR '{' Identifier '}' Actuals_opt '.'
+		{ $$ := new_precursor_expression ($3, $5) }
 	| '{' Identifier '}' E_PRECURSOR Actuals_opt '.'
 		{ $$ := new_precursor_expression ($2, $5) }
 	| Qualified_call_chain Identifier Actuals_opt '.'
@@ -1150,6 +1178,9 @@ Expression: Call_expression
 		{ $$ := $1 }
 	| E_LARRAY Expression_list E_RARRAY
 		{ $$ := new_manifest_array }
+	| '[' Expression_list ']'
+-- TODO
+		{  }
 	| '+' Expression %prec E_NOT
 		{ $$ := new_prefix_plus_expression ($2, $1) }
 	| '-' Expression %prec E_NOT
