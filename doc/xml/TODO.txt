@@ -12,7 +12,7 @@ EIFFEL:
 
 - xml declaration for entities event and parsing (rm special scanner?)
 - Check that stand alone handling makes some sense
-- Parse ":" name in pedantic XML 1.0 mode for tests
+- enhancement: strings mode to default to STRING-only latin1
 - enhancement: Do CRLF normalisation before parser instead of downstream mess?
 - enhancement: review XM_EIFFEL_PARSER_NAME
 
@@ -41,5 +41,6 @@ TESTS:
 
 DOC:
 
-- start with simple code example
-- all
+- unicode
+- tree
+- document design decisions
