@@ -49,10 +49,7 @@
 		<delete file="impl/eiffel/event/xf_scanner.e"/>
 		<delete file="impl/eiffel/event/xf_parser.e"/>
 		<delete file="impl/eiffel/event/xf_tokens.e"/>
-		<delete directory="impl/expat/spec/hact"/>
-		<delete directory="impl/expat/spec/ise"/>
-		<delete directory="impl/expat/spec/se"/>
-		<delete directory="impl/expat/spec/ve"/>
+		<delete directory="impl/expat/spec"/>
 	</target>
 
 
