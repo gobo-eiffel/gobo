@@ -17,7 +17,10 @@ class XM_EIFFEL_INPUT_STREAM
 inherit
 
 	KI_CHARACTER_INPUT_STREAM
-	
+		redefine
+			read_to_string
+		end
+
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
 		
@@ -94,7 +97,7 @@ feature -- Input
 				-- contains only the byte order character.
 				if utf_queue.count = 0 and not impl.end_of_input then
 					noqueue_read_character
-				end	
+				end
 			else
 				if utf_queue.count > 0 then
 					-- Last character was read from queue, remove it.
@@ -107,33 +110,8 @@ feature -- Input
 					-- Straightforward case.
 					noqueue_read_character
 				end
-			end				
+			end
 		end
-		
-feature {NONE} -- Input
-
-	noqueue_read_character is
-			-- Read character after detection and when detection queue has 
-			-- been flushed..
-		require
-			open_read: is_open_read
-			not_end: not end_of_input
-			detected: encoding /= Undetected
-			queue_empty: utf_queue.count = 0
-		do
-			if encoding = Utf_8 then
-				impl.read_character
-			elseif encoding = Latin_1 then
-				latin1_read_character
-			else
-				check
-					utf_16: encoding = Utf16_msb_first or encoding = Utf16_msb_last
-				end
-				utf16_read_character
-			end	
-		end
-		
-feature -- Input
 
 	read_string (nb: INTEGER) is
 			-- Read at most `nb' characters from input stream.
@@ -158,6 +136,34 @@ feature -- Input
 				last_string.append_character (last_character)
 				read_character
 				i := i - 1
+			end
+		end
+
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+			-- Fill `a_string', starting at position `pos', with
+			-- at most `nb' characters read from input stream.
+			-- Return the number of characters actually read.
+		do
+			if encoding = Undetected then
+				read_character
+				if not end_of_input then
+					a_string.put (last_character, pos)
+					Result := 1
+				else
+					Result := 0
+				end
+			elseif utf_queue.count > 0 then
+				read_character
+				if not end_of_input then
+					a_string.put (last_character, pos)
+					Result := 1
+				else
+					Result := 0
+				end
+			elseif encoding = Utf_8 then
+				Result := impl.read_to_string (a_string, pos, nb)
+			else
+				Result := precursor (a_string, pos, nb)
 			end
 		end
 
@@ -224,6 +230,29 @@ feature {NONE} -- State
 	impl: KI_CHARACTER_INPUT_STREAM
 			-- Internal stream
 
+feature {NONE} -- Input
+
+	noqueue_read_character is
+			-- Read character after detection and when detection queue has 
+			-- been flushed..
+		require
+			open_read: is_open_read
+			not_end: not end_of_input
+			detected: encoding /= Undetected
+			queue_empty: utf_queue.count = 0
+		do
+			if encoding = Utf_8 then
+				impl.read_character
+			elseif encoding = Latin_1 then
+				latin1_read_character
+			else
+				check
+					utf_16: encoding = Utf16_msb_first or encoding = Utf16_msb_last
+				end
+				utf16_read_character
+			end	
+		end
+		
 feature {NONE} -- UTF16 implementation
 
 	utf16_detect_read_character is
