@@ -17,43 +17,49 @@ class GEANT_VE_TASK
 inherit
 
 	GEANT_TASK
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_VE_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_project, an_element)
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
 				-- ESD:
-			if has_uc_attribute (an_element, Esd_attribute_name) then
-				a_value := attribute_value_or_default (an_element, Esd_attribute_name.out, "")
+			if has_uc_attribute (Esd_attribute_name) then
+				a_value := attribute_value_or_default (Esd_attribute_name.out, "")
 				if a_value.count > 0 then
-					set_esd_filename (a_value)
+					command.set_esd_filename (a_value)
 				end
 			end
 				-- clean:
-			if has_uc_attribute (an_element, Clean_attribute_name) then
-				a_value := attribute_value_or_default (an_element, Clean_attribute_name.out, "")
+			if has_uc_attribute (Clean_attribute_name) then
+				a_value := attribute_value_or_default (Clean_attribute_name.out, "")
 				if a_value.count > 0 then
-					set_clean (a_value)
+					command.set_clean (a_value)
 				end
 					-- recursive:
-				if has_uc_attribute (an_element, Recursive_attribute_name) then
-					set_recursive_clean (uc_boolean_value (an_element, Recursive_attribute_name))
+				if has_uc_attribute (Recursive_attribute_name) then
+					command.set_recursive_clean (uc_boolean_value (Recursive_attribute_name))
 				end
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_VE_COMMAND
+			-- Compilation commands for Visual Eiffel
 
 feature {NONE} -- Constants
 

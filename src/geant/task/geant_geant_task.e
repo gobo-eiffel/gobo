@@ -16,43 +16,49 @@ class GEANT_GEANT_TASK
 inherit
 
 	GEANT_TASK
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_GEANT_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_project, an_element)
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
 				-- filename:
-			if an_element.has_attribute (Filename_attribute_name) then
-				a_value := attribute_value (an_element, Filename_attribute_name.out)
+			if has_uc_attribute (Filename_attribute_name) then
+				a_value := attribute_value (Filename_attribute_name.out)
 				if a_value.count > 0 then
-					set_filename (a_value.out)
+					command.set_filename (a_value.out)
 				end
 			end
 				-- start target:
-			if an_element.has_attribute (Start_target_attribute_name) then
-				a_value := attribute_value (an_element, Start_target_attribute_name.out)
+			if has_uc_attribute (Start_target_attribute_name) then
+				a_value := attribute_value (Start_target_attribute_name.out)
 				if a_value.count > 0 then
-					set_start_target_name (a_value.out)
+					command.set_start_target_name (a_value.out)
 				end
 			end
 				-- reuse_variables:
-			if has_uc_attribute (an_element, Reuse_variables_attribute_name) then
-				set_reuse_variables (uc_boolean_value(an_element, Reuse_variables_attribute_name))
+			if has_uc_attribute (Reuse_variables_attribute_name) then
+				command.set_reuse_variables (uc_boolean_value(Reuse_variables_attribute_name))
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_GEANT_COMMAND
+			-- Getest commands
 
 feature {NONE} -- Constants
 

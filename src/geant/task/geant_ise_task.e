@@ -17,54 +17,60 @@ class GEANT_ISE_TASK
 inherit
 
 	GEANT_TASK
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_ISE_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_project, an_element)
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
 				-- ace:
-			if has_uc_attribute (an_element, Ace_attribute_name) then
-				a_value := attribute_value_or_default (an_element, Ace_attribute_name.out, "")
+			if has_uc_attribute (Ace_attribute_name) then
+				a_value := attribute_value_or_default (Ace_attribute_name.out, "")
 				if a_value.count > 0 then
-					set_ace_filename (a_value)
+					command.set_ace_filename (a_value)
 				end
 			end
 				-- system:
-			if has_uc_attribute (an_element, System_attribute_name) then
-				a_value := attribute_value_or_default (an_element, System_attribute_name.out, "")
+			if has_uc_attribute (System_attribute_name) then
+				a_value := attribute_value_or_default (System_attribute_name.out, "")
 				if a_value.count > 0 then
-					set_system_name (a_value)
+					command.set_system_name (a_value)
 				end
 			end
 				-- clean:
-			if has_uc_attribute (an_element, Clean_attribute_name) then
-				a_value := attribute_value_or_default (an_element, Clean_attribute_name.out, "")
+			if has_uc_attribute (Clean_attribute_name) then
+				a_value := attribute_value_or_default (Clean_attribute_name.out, "")
 				if a_value.count > 0 then
-					set_clean (a_value)
+					command.set_clean (a_value)
 				end
 			end
 				-- finalize:
-			if has_uc_attribute (an_element, Finalize_attribute_name) then
-				set_finalize (uc_boolean_value (an_element, Finalize_attribute_name))
+			if has_uc_attribute (Finalize_attribute_name) then
+				command.set_finalize (uc_boolean_value (Finalize_attribute_name))
 			end
 				-- finish_freezing:
-			if has_uc_attribute (an_element, Finish_freezing_attribute_name) then
-				set_finish_freezing (uc_boolean_value (an_element, Finish_freezing_attribute_name))
+			if has_uc_attribute (Finish_freezing_attribute_name) then
+				command.set_finish_freezing (uc_boolean_value (Finish_freezing_attribute_name))
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_ISE_COMMAND
+			-- Compilation commands for ISE Eiffel
 
 feature {NONE} -- Constants
 

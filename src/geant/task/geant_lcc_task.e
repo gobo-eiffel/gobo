@@ -16,39 +16,45 @@ class GEANT_LCC_TASK
 inherit
 
 	GEANT_TASK
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_LCC_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_project, an_element)
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
 				-- -Fo:
-			if has_uc_attribute (an_element, Executable_attribute_name) then
-				a_value := uc_attribute_value (an_element, Executable_attribute_name).out
+			if has_uc_attribute (Executable_attribute_name) then
+				a_value := uc_attribute_value (Executable_attribute_name).out
 				if a_value.count > 0 then
-					set_executable (a_value)
+					command.set_executable (a_value)
 				end
 			end
 				-- source_filename
-			if has_uc_attribute (an_element, Source_filename_attribute_name) then
-				a_value := uc_attribute_value (an_element, Source_filename_attribute_name).out
+			if has_uc_attribute (Source_filename_attribute_name) then
+				a_value := uc_attribute_value (Source_filename_attribute_name).out
 				if a_value.count > 0 then
-					set_source_filename (a_value)
+					command.set_source_filename (a_value)
 				end
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_LCC_COMMAND
+			-- Lcc C-compiler commands
 
 feature {NONE} -- Constants
 

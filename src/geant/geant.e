@@ -23,11 +23,6 @@ inherit
 			{NONE} all
 		end
 
-	GEANT_ELEMENT_NAMES
-		export
-			{NONE} all
-		end
-
 	KL_SHARED_ARGUMENTS
 		export
 			{NONE} all

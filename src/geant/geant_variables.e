@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new variables object.
 		do
-			!! variables.make (10)
+			!! variables.make_equal (10)
 			
 				-- Create built-in variables $GOBO_OS, $is_windows/$is_unix, $exe
 			if operating_system.is_windows then
@@ -192,8 +192,8 @@ feature -- Access
 			a_name_not_empty: a_name.count > 0
 		do
 			variables.remove (a_name)
---!!	ensure
-			--!! variable_removed: not variables.has (a_name) --!! equality check required
+		ensure
+			variable_removed: not variables.has (a_name)
 		end
 
 	interpreted_string (a_string: STRING): STRING is

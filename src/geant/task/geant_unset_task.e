@@ -17,31 +17,48 @@ class GEANT_UNSET_TASK
 inherit
 
 	GEANT_TASK
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_UNSET_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_project, an_element)
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
 				-- name:
-			if has_uc_attribute (an_element, Name_attribute_name) then
-				a_value := uc_attribute_value (an_element, Name_attribute_name).out
+			if has_uc_attribute (Name_attribute_name) then
+				a_value := uc_attribute_value (Name_attribute_name).out
 				if a_value.count > 0 then
-					set_name (a_value)
+					command.set_name (a_value)
 				end
 			end
+		end
+
+feature -- Access
+
+	command: GEANT_UNSET_COMMAND
+			-- Unset commands
+
+feature {NONE} -- Constants
+
+	Name_attribute_name: UC_STRING is
+			-- "name" attribute name
+		once
+			!! Result.make_from_string ("name")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
 		end
 
 end -- class GEANT_UNSET_TASK

@@ -17,29 +17,35 @@ class GEANT_ECHO_TASK
 inherit
 
 	GEANT_TASK
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_ECHO_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_project, an_element)
-			if an_element.has_attribute (Message_attribute_name) then
-				a_value := attribute_value (an_element, Message_attribute_name.out)
-				set_message (a_value)
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
+			if has_uc_attribute (Message_attribute_name) then
+				a_value := attribute_value (Message_attribute_name.out)
+				command.set_message (a_value)
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_ECHO_COMMAND
+			-- Echo commands
 
 feature {NONE} -- Constants
 

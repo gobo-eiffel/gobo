@@ -16,9 +16,17 @@ class GEANT_TARGET
 
 inherit
 
+	GEANT_ELEMENT
+		redefine
+			make
+		end
+
 	KL_SHARED_EXCEPTIONS
+		export
+			{NONE} all
+		end
+
 	KL_SHARED_FILE_SYSTEM
-	GEANT_ELEMENT_NAMES
 		export
 			{NONE} all
 		end
@@ -28,6 +36,10 @@ inherit
 			{NONE} all
 		end
 
+	GEANT_ELEMENT_NAMES
+		export
+			{NONE} all
+		end
 
 creation
 
@@ -35,56 +47,31 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_project: GEANT_PROJECT; a_target_element: GEANT_ELEMENT)is
+	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new target
-		require
-			project_not_void: a_project /= Void
-			target_element_not_void: a_target_element /= Void
-			target_element_has_name: a_target_element.has_attribute (Name_attribute_name)
-		local
-			children: DS_ARRAYED_LIST [GEANT_ELEMENT]
-			an_element: GEANT_ELEMENT
+--!!		require
+--!!			a_xml_element_has_name: a_xml_element.has_attribute (Name_attribute_name)
 		do
-			project := a_project
-			target_element := a_target_element
-			set_name (target_element.attribute_value_by_name (Name_attribute_name).out)
-
-				-- determine description if available:
-			children := target_element.children
-			if children.count > 0 then
-				an_element := children.item (1)
-				if an_element.name.is_equal (Description_element_name) then
-					set_description (an_element.content.out)
-				end
-			end
-
-		ensure
-			project_set: project = a_project
-			target_element_set: target_element = a_target_element
+			precursor (a_project, a_xml_element)
+			set_name (xml_element.attribute_value_by_name (Name_attribute_name).out)
 		end
 
 feature -- Access
 
-	description: STRING
-		-- description of what target is responsible for
-
 	has_dependencies: BOOLEAN is
 			-- Has current target dependent on other targets?
 		do
-			Result := target_element.has_attribute (Depend_attribute_name)
+			Result := xml_element.has_attribute (Depend_attribute_name)
 		end
 
 	dependencies: UC_STRING is
 			-- UC_STRING representation of dependencies
 		do
-			Result := target_element.attribute_value_by_name (Depend_attribute_name)
+			Result := xml_element.attribute_value_by_name (Depend_attribute_name)
 		end
 
 	name: STRING
 			-- Name of target
-
-	project: GEANT_PROJECT
-			-- Project to which this target belongs
 
 	is_executed: BOOLEAN
 			-- Was this target executed already?
@@ -102,18 +89,6 @@ feature -- Setting
 			name_set: name = a_name
 		end
 
-	set_description (a_description: STRING) is
-			-- Set `description' to `a_description'.
-		require
-			a_description_not_void: a_description /= Void
-			a_description_not_empty: a_description.count > 0
-		do
-			description := a_description
-		ensure
-			description_set: description = a_description
-		end
-
-
 	set_executed (a_is_executed: BOOLEAN) is
 			-- Set `is_executed' to `a_is_executed'.
 		do
@@ -127,22 +102,22 @@ feature -- Processing
 	execute  is
 			-- Execute all tasks of `a_target' in sequential order
 		local
-			children: DS_ARRAYED_LIST [GEANT_ELEMENT]
+			children: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
 			i, nb: INTEGER
-			an_element: GEANT_ELEMENT
+			a_xml_element: GEANT_XML_ELEMENT
 			a_task: GEANT_TASK
 			a_old_target_cwd: STRING
 			a_new_target_cwd: STRING
 			a_old_task_cwd: STRING
 			a_new_task_cwd: STRING
 		do
-			children := target_element.children
+			children := xml_element.children
 			nb := children.count
-			if is_element_enabled (project, target_element) then
+			if is_enabled then
 					-- change to the specified directory if "dir" attribue is provided:
-				if target_element.has_attribute (Dir_attribute_name) then
+				if xml_element.has_attribute (Dir_attribute_name) then
 					a_new_target_cwd := project.variables.interpreted_string (
-						target_element.attribute_value_by_name (Dir_attribute_name).out)
+						xml_element.attribute_value_by_name (Dir_attribute_name).out)
 					debug ("geant")
 						print (" changing to directory: '" + a_new_target_cwd + "'%N")
 					end
@@ -151,97 +126,97 @@ feature -- Processing
 				end
 
 				from
-					if description /= Void then
+					if has_description then
 						i := 2
 					else
 						i := 1
 					end
 				until
-					i > nb or not is_element_enabled (project, target_element)
+					i > nb or not is_enabled
 				loop
-					an_element := children.item (i)
+					a_xml_element := children.item (i)
 						-- Dispatch tasks:
-					if an_element.name.is_equal (Se_task_name) then
+					if a_xml_element.name.is_equal (Se_task_name) then
 							-- se: SmallEiffel compilation
-						!GEANT_SE_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Ise_task_name) then
+						!GEANT_SE_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Ise_task_name) then
 							-- ise: ISE Eiffel compilation
-						!GEANT_ISE_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Hact_task_name) then
+						!GEANT_ISE_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Hact_task_name) then
 							-- hact: Halstenbach Eiffel compilation
-						!GEANT_HACT_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Ve_task_name) then
+						!GEANT_HACT_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Ve_task_name) then
 							-- ve: Visual Eiffel compilation
-						!GEANT_VE_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Exec_task_name) then
+						!GEANT_VE_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Exec_task_name) then
 							-- exec
-						!GEANT_EXEC_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Lcc_task_name) then
+						!GEANT_EXEC_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Lcc_task_name) then
 							-- lcc
-						!GEANT_LCC_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Set_task_name) then
+						!GEANT_LCC_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Set_task_name) then
 							-- set
-						!GEANT_SET_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Unset_task_name) then
+						!GEANT_SET_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Unset_task_name) then
 							-- unset
-						!GEANT_UNSET_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Gexace_task_name) then
+						!GEANT_UNSET_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Gexace_task_name) then
 							-- gexace
-						!GEANT_GEXACE_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Gelex_task_name) then
+						!GEANT_GEXACE_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Gelex_task_name) then
 							-- gelex
-						!GEANT_GELEX_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Geyacc_task_name) then
+						!GEANT_GELEX_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Geyacc_task_name) then
 							-- geyacc
-						!GEANT_GEYACC_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Gepp_task_name) then
+						!GEANT_GEYACC_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Gepp_task_name) then
 							-- gepp
-						!GEANT_GEPP_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Getest_task_name) then
+						!GEANT_GEPP_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Getest_task_name) then
 							-- getest
-						!GEANT_GETEST_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Geant_task_name) then
+						!GEANT_GETEST_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Geant_task_name) then
 							-- geant
-						!GEANT_GEANT_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Echo_task_name) then
+						!GEANT_GEANT_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Echo_task_name) then
 							-- echo
-						!GEANT_ECHO_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Mkdir_task_name) then
+						!GEANT_ECHO_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Mkdir_task_name) then
 							-- mkdir
-						!GEANT_MKDIR_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Delete_task_name) then
+						!GEANT_MKDIR_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Delete_task_name) then
 							-- delete
-						!GEANT_DELETE_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Copy_task_name) then
+						!GEANT_DELETE_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Copy_task_name) then
 							-- copy
-						!GEANT_COPY_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Move_task_name) then
+						!GEANT_COPY_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Move_task_name) then
 							-- move
-						!GEANT_MOVE_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Setenv_task_name) then
+						!GEANT_MOVE_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Setenv_task_name) then
 							-- setenv
-						!GEANT_SETENV_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Xslt_task_name) then
+						!GEANT_SETENV_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Xslt_task_name) then
 							-- xslt
-						!GEANT_XSLT_TASK! a_task.make_from_element (project, an_element)
-					elseif an_element.name.is_equal (Outofdate_task_name) then
+						!GEANT_XSLT_TASK! a_task.make (project, a_xml_element)
+					elseif a_xml_element.name.is_equal (Outofdate_task_name) then
 							-- outofdate
-						!GEANT_OUTOFDATE_TASK! a_task.make_from_element (project, an_element)
+						!GEANT_OUTOFDATE_TASK! a_task.make (project, a_xml_element)
 					else
 							-- Default:
 						a_task := Void
 					end
 						-- Execute task:
 					if a_task = Void then
-						print ("WARNING: unknown task : " + an_element.name.out + "%N")
+						print ("WARNING: unknown task : " + a_xml_element.name.out + "%N")
 					elseif not a_task.is_executable then
-						print ("WARNING: cannot execute task : " + an_element.name.out + "%N")
+						print ("WARNING: cannot execute task : " + a_xml_element.name.out + "%N")
 					else
-						if is_element_enabled (project, a_task.element) then
+						if a_task.is_enabled then
 								-- change to task directory if "dir" attribute is provided:
-							if a_task.element.has_attribute (a_task.Dir_attribute_name) then
+							if a_task.xml_element.has_attribute (Dir_attribute_name) then
 								a_new_task_cwd := project.variables.interpreted_string (
-									a_task.element.attribute_value_by_name (a_task.Dir_attribute_name).out)
+									a_task.xml_element.attribute_value_by_name (Dir_attribute_name).out)
 								debug ("geant")
 									print (" changing to directory: '" + a_new_task_cwd + "'%N")
 								end
@@ -255,20 +230,22 @@ feature -- Processing
 							end
 
 								-- change back to previous directory if "dir" attribute is provided:
-							if a_task.element.has_attribute (a_task.Dir_attribute_name) then
+							if a_task.xml_element.has_attribute (Dir_attribute_name) then
 								debug ("geant")
 									print (" changing to directory: '" + a_old_task_cwd + "'%N")
 								end
 								file_system.set_current_working_directory (a_old_task_cwd)
 							end
 						else
---!!						print ("task is disabled%N")
+							debug ("geant")
+								print ("task is disabled%N")
+							end
 						end
 					end
 					i := i + 1
 				end -- from
 
-				if target_element.has_attribute (Dir_attribute_name) then
+				if has_uc_attribute (Dir_attribute_name) then
 					debug ("geant")
 						print (" changing to directory: '" + a_old_target_cwd + "'%N")
 					end
@@ -328,12 +305,16 @@ feature -- Processing
 		end
 
 
-feature {NONE} -- Implementation
-
-	target_element : GEANT_ELEMENT
-		-- Xml element defining this target
-
 feature {NONE} -- Constants
+
+	Name_attribute_name: UC_STRING is
+			-- "name" attribute name
+		once
+			!! Result.make_from_string ("name")
+		ensure
+			attribute_name_not_void: Result /= Void
+			attribute_name_not_empty: not Result.empty
+		end
 
 	Depend_attribute_name: UC_STRING is
 			-- "depend" attribute name
@@ -344,15 +325,4 @@ feature {NONE} -- Constants
 			attribute_name_not_empty: not Result.empty
 		end
 
-	Dir_attribute_name: UC_STRING is
-			-- "dir" attribute name
-		once
-			!! Result.make_from_string ("dir")
-		ensure
-			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
-		end
-
-invariant
-	target_element_not_void: target_element /= Void
 end -- class GEANT_TARGET

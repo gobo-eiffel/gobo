@@ -17,45 +17,51 @@ class GEANT_MOVE_TASK
 inherit
 
 	GEANT_TASK
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_MOVE_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_project, an_element)
-			if an_element.has_attribute (File_attribute_name) then
-				a_value := attribute_value (an_element, File_attribute_name.out)
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
+			if has_uc_attribute (File_attribute_name) then
+				a_value := attribute_value (File_attribute_name.out)
 				if a_value.count > 0 then
-					set_file (a_value.out)
+					command.set_file (a_value.out)
 				end
 			end
 
-			if an_element.has_attribute (To_file_attribute_name) then
-				a_value := attribute_value (an_element, To_file_attribute_name.out)
+			if has_uc_attribute (To_file_attribute_name) then
+				a_value := attribute_value (To_file_attribute_name.out)
 				if a_value.count > 0 then
-					set_to_file (a_value.out)
+					command.set_to_file (a_value.out)
 				end
 			end
 
-			if an_element.has_attribute (To_directory_attribute_name) then
-				a_value := attribute_value (an_element, To_directory_attribute_name.out)
+			if has_uc_attribute (To_directory_attribute_name) then
+				a_value := attribute_value (To_directory_attribute_name.out)
 				if a_value.count > 0 then
-					set_to_directory (a_value.out)
+					command.set_to_directory (a_value.out)
 				end
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_MOVE_COMMAND
+			-- Move commands
 
 feature {NONE} -- Constants
 

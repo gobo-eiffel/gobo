@@ -17,7 +17,6 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_EXCEPTIONS
-	GEANT_ELEMENT_NAMES
 
 feature -- Access
 
@@ -117,44 +116,11 @@ feature -- Processing
 			string_tokens_not_void: Result /= Void
 		end
 
-	is_element_enabled (a_project: GEANT_PROJECT; a_element: GEANT_ELEMENT): BOOLEAN is
-			-- Do conditions enable this `a_element'?
-			-- conditions is the boolean expression
-			-- "(xml attribute 'if') and not
-			-- (xml attribute 'unless')"
-			-- if xml attribute 'if' is missing it is assumed to be `True'
-			-- if xml attribute 'unless' is missing it is assumed to be `False'
-		require
-			project_not_void: a_project /= Void
-			element_not_void: a_element /= Void
-		local
-			if_condition: BOOLEAN
-			unless_condition: BOOLEAN
-			ucs: UC_STRING
-		do
-				-- Set default execution conditions:
-			if_condition := true
-			unless_condition := false
-
-				-- Look for an 'if' XML attribute
-			if a_element.has_attribute (If_attribute_name) then
-				ucs := a_element.attribute_value_by_name (If_attribute_name)
-				if_condition := a_project.variables.boolean_condition_value (ucs.out)
-				debug ("geant")
-					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
-				end
-			end
-
-				-- Look for an 'unless' XML attribute
-			if a_element.has_attribute (Unless_attribute_name) then
-				ucs := a_element.attribute_value_by_name (Unless_attribute_name)
-				unless_condition := a_project.variables.boolean_condition_value (ucs.out)
-				debug ("geant")
-					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
-				end
-			end
-
-			Result := if_condition and not unless_condition
-		end
-
 end -- class GEANT_SHARED_PROPERTIES
+
+
+
+
+
+
+

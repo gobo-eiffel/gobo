@@ -17,68 +17,74 @@ class GEANT_SE_TASK
 inherit
 
 	GEANT_TASK
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_SE_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_project, an_element)
-			if has_uc_attribute (an_element, Ace_attribute_name) then
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
+			if has_uc_attribute (Ace_attribute_name) then
 					-- ace_filename (optional)
-				a_value := attribute_value_or_default (an_element, Ace_attribute_name.out, "")
+				a_value := attribute_value_or_default (Ace_attribute_name.out, "")
 				if a_value.count > 0 then
-					set_ace_filename (a_value)
+					command.set_ace_filename (a_value)
 				end
-			elseif has_uc_attribute (an_element, Clean_attribute_name) then
+			elseif has_uc_attribute (Clean_attribute_name) then
 					-- clean:
-				a_value := attribute_value_or_default (an_element, Clean_attribute_name.out, "")
+				a_value := attribute_value_or_default (Clean_attribute_name.out, "")
 				if a_value.count > 0 then
-					set_clean (a_value)
+					command.set_clean (a_value)
 				end
 			else
 					-- root_class:
-				if has_uc_attribute (an_element, Root_class_attribute_name) then
-					a_value := attribute_value (an_element, Root_class_attribute_name.out)
+				if has_uc_attribute (Root_class_attribute_name) then
+					a_value := attribute_value (Root_class_attribute_name.out)
 					if a_value.count > 0 then
-						set_root_class (a_value)
+						command.set_root_class (a_value)
 					end
 				end
 					-- creation_procedure:
-				if has_uc_attribute (an_element, Creation_procedure_attribute_name) then
-					a_value := attribute_value (an_element, Creation_procedure_attribute_name.out)
+				if has_uc_attribute (Creation_procedure_attribute_name) then
+					a_value := attribute_value (Creation_procedure_attribute_name.out)
 					if a_value.count > 0 then
-						set_creation_procedure (a_value)
+						command.set_creation_procedure (a_value)
 					end
 				end
 					-- executable:
-				if has_uc_attribute (an_element, Executable_attribute_name) then
-					a_value := attribute_value (an_element, Executable_attribute_name.out)
+				if has_uc_attribute (Executable_attribute_name) then
+					a_value := attribute_value (Executable_attribute_name.out)
 					if a_value.count > 0 then
-						set_executable (a_value)
+						command.set_executable (a_value)
 					end
 				end
 					-- case_insensitive:
-				if has_uc_attribute (an_element, Case_insensitive_attribute_name) then
-					set_case_insensitive (uc_boolean_value (an_element, Case_insensitive_attribute_name))
+				if has_uc_attribute (Case_insensitive_attribute_name) then
+					command.set_case_insensitive (uc_boolean_value (Case_insensitive_attribute_name))
 				end
 					-- no_style_warning:
-				if has_uc_attribute (an_element, No_style_warning_attribute_name) then
-					set_no_style_warning (uc_boolean_value (an_element, No_style_warning_attribute_name))
+				if has_uc_attribute (No_style_warning_attribute_name) then
+					command.set_no_style_warning (uc_boolean_value (No_style_warning_attribute_name))
 				end
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_SE_COMMAND
+			-- Compilation commands for SmallEiffel
 
 feature {NONE} -- Constants
 

@@ -15,22 +15,21 @@ class GEANT_OUTOFDATE_TASK
 
 inherit
 
+	GEANT_SHARED_PROPERTIES
 	GEANT_TASK
-		undefine
-			make
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_OUTOFDATE_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
@@ -38,49 +37,55 @@ feature {NONE} -- Initialization
 			ucs: UC_STRING
 			a_source_filenames: DS_ARRAYED_LIST [UC_STRING]
 		do
-			precursor (a_project, an_element)
-			if has_uc_attribute (an_element, Source_attribute_name) then
-				ucs := uc_attribute_value (an_element, Source_attribute_name)
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
+			if has_uc_attribute (Source_attribute_name) then
+				ucs := uc_attribute_value (Source_attribute_name)
 				a_source_filenames := string_tokens (ucs, ',')
 				from i := 1 until i > a_source_filenames.count loop
 					a_value := a_source_filenames.item (i).out
 					if a_value.count > 0 then
-						source_filenames.force_last (a_value)
+						command.source_filenames.force_last (a_value)
 					end
 
 					i := i + 1
 				end
 
 			end
-			if has_uc_attribute (an_element, Target_attribute_name) then
-				a_value := uc_attribute_value (an_element, Target_attribute_name).out
+			if has_uc_attribute (Target_attribute_name) then
+				a_value := uc_attribute_value (Target_attribute_name).out
 				if a_value.count > 0 then
-					set_target_filename (a_value)
+					command.set_target_filename (a_value)
 				end
 			end
-			set_true_value ("true")
-			if has_uc_attribute (an_element, True_value_attribute_name) then
-				a_value := uc_attribute_value (an_element, True_value_attribute_name).out
+			command.set_true_value ("true")
+			if has_uc_attribute (True_value_attribute_name) then
+				a_value := uc_attribute_value (True_value_attribute_name).out
 				if a_value.count > 0 then
-					set_true_value (a_value)
-				end
-			end
-
-			set_false_value ("false")
-			if has_uc_attribute (an_element, False_value_attribute_name) then
-				a_value := uc_attribute_value (an_element, False_value_attribute_name).out
-				if a_value.count > 0 then
-					set_false_value (a_value)
+					command.set_true_value (a_value)
 				end
 			end
 
-			if has_uc_attribute (an_element, Variable_attribute_name) then
-				a_value := uc_attribute_value (an_element, Variable_attribute_name).out
+			command.set_false_value ("false")
+			if has_uc_attribute (False_value_attribute_name) then
+				a_value := uc_attribute_value (False_value_attribute_name).out
 				if a_value.count > 0 then
-					set_variable_name (a_value)
+					command.set_false_value (a_value)
+				end
+			end
+
+			if has_uc_attribute (Variable_attribute_name) then
+				a_value := uc_attribute_value (Variable_attribute_name).out
+				if a_value.count > 0 then
+					command.set_variable_name (a_value)
 				end
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_OUTOFDATE_COMMAND
+			-- Out of date commands
 
 feature {NONE} -- Constants
 

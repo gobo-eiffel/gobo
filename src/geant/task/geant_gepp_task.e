@@ -17,58 +17,63 @@ class GEANT_GEPP_TASK
 inherit
 
 	GEANT_TASK
-		undefine
-			make
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_GEPP_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 			a_bool: BOOLEAN
-			define_elements: DS_ARRAYED_LIST [GEANT_ELEMENT]
-			define_element: GEANT_ELEMENT
+			define_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			define_element: GEANT_DEFINE_ELEMENT
 			i, nb: INTEGER
 		do
-			precursor (a_project, an_element)
-			if has_uc_attribute (an_element, Input_filename_attribute_name) then
-				a_value := uc_attribute_value (an_element, Input_filename_attribute_name).out
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
+			if has_uc_attribute (Input_filename_attribute_name) then
+				a_value := uc_attribute_value (Input_filename_attribute_name).out
 				if a_value.count > 0 then
-					set_input_filename (a_value)
+					command.set_input_filename (a_value)
 				end
 			end
-			if has_uc_attribute (an_element, Output_filename_attribute_name) then
-				a_value := uc_attribute_value (an_element, Output_filename_attribute_name).out
+			if has_uc_attribute (Output_filename_attribute_name) then
+				a_value := uc_attribute_value (Output_filename_attribute_name).out
 				if a_value.count > 0 then
-					set_output_filename (a_value)
+					command.set_output_filename (a_value)
 				end
 			end
-			if has_uc_attribute (an_element, Lines_attribute_name) then
-				a_bool := uc_boolean_value (an_element, Lines_attribute_name)
-				set_empty_lines (a_bool)
+			if has_uc_attribute (Lines_attribute_name) then
+				a_bool := uc_boolean_value (Lines_attribute_name)
+				command.set_empty_lines (a_bool)
 			end
-			define_elements := an_element.children_by_name (Define_element_name)
+			define_elements := xml_element.children_by_name (Define_element_name)
 			nb := define_elements.count
 			from i := 1 until i > nb loop
-				define_element := define_elements.item (i)
-				if is_element_enabled (project, define_element) and then
-					has_uc_attribute (define_element, Name_attribute_name) then
-					a_value := uc_attribute_value (define_element, Name_attribute_name).out
-					defines.force_last (a_value)
+				!! define_element.make (project, define_elements.item (i))
+				if define_element.is_enabled and then define_element.has_name and then
+					define_element.name.count > 0 then
+
+					command.defines.force_last (define_element.name)
 				end
+
 				i := i + 1
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_GEPP_COMMAND
+			-- Gepp commands
 
 feature {NONE} -- Constants
 

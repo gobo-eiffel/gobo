@@ -17,57 +17,60 @@ class GEANT_GETEST_TASK
 inherit
 
 	GEANT_TASK
-		undefine
-			make
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_GETEST_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_name, a_value: STRING
 			i, nb: INTEGER
-			define_elements: DS_ARRAYED_LIST [GEANT_ELEMENT]
-			define_element: GEANT_ELEMENT
+			define_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			define_element: GEANT_DEFINE_ELEMENT
 		do
-			precursor (a_project, an_element)
-			if has_uc_attribute (an_element, Config_filename_attribute_name) then
-				a_value := uc_attribute_value (an_element, Config_filename_attribute_name).out
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
+			if has_uc_attribute (Config_filename_attribute_name) then
+				a_value := uc_attribute_value (Config_filename_attribute_name).out
 				if a_value.count > 0 then
-					set_config_filename (a_value)
+					command.set_config_filename (a_value)
 				end
 			end
-			if has_uc_attribute (an_element, Compile_attribute_name) then
-				a_value := uc_attribute_value (an_element, Compile_attribute_name).out
-				set_compile (a_value)
+			if has_uc_attribute (Compile_attribute_name) then
+				a_value := uc_attribute_value (Compile_attribute_name).out
+				command.set_compile (a_value)
 			end
 				-- define:
-			define_elements := an_element.children_by_name (Define_element_name)
+			define_elements := xml_element.children_by_name (Define_element_name)
 			nb := define_elements.count
 			from i := 1 until i > nb loop
-				define_element := define_elements.item (i)
-				if is_element_enabled (project, define_element) and then
-					has_uc_attribute (define_element, Name_attribute_name) and then
-					has_uc_attribute (define_element, Value_attribute_name)
+				!! define_element.make (project, define_elements.item (i))
+				if define_element.is_enabled and then
+					define_element.has_name and then define_element.has_value
 				then
-					a_name := uc_attribute_value (define_element, Name_attribute_name).out
-					a_value := uc_attribute_value (define_element, Value_attribute_name).out
+					a_name := define_element.name
+					a_value := define_element.value
 					if a_name.count > 0 then
-						defines.force (a_value, a_name)
+						command.defines.force (a_value, a_name)
 					end
 				end
 				i := i + 1
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_GETEST_COMMAND
+			-- Getest commands
 
 feature {NONE} -- Constants
 

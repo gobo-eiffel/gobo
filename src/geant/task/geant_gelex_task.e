@@ -17,82 +17,86 @@ class GEANT_GELEX_TASK
 inherit
 
 	GEANT_TASK
-		undefine
-			make
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_GELEX_COMMAND
 
 	KL_IMPORTED_STRING_ROUTINES
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_value: STRING
 		do
-			precursor (a_project, an_element)
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
 				-- size:
-			if has_uc_attribute (an_element, Size_attribute_name) then
-				a_value := uc_attribute_value (an_element, Size_attribute_name).out
+			if has_uc_attribute (Size_attribute_name) then
+				a_value := uc_attribute_value (Size_attribute_name).out
 				if STRING_.is_integer (a_value) then
-					set_size (a_value)
+					command.set_size (a_value)
 				end
 			end
 				-- backup:
-			if has_uc_attribute (an_element, Backup_attribute_name) then
-				set_backup (uc_boolean_value (an_element, Backup_attribute_name))
+			if has_uc_attribute (Backup_attribute_name) then
+				command.set_backup (uc_boolean_value (Backup_attribute_name))
 			end
 				-- ecs:
-			if has_uc_attribute (an_element, Ecs_attribute_name) then
-				set_ecs (uc_boolean_value (an_element, Ecs_attribute_name))
+			if has_uc_attribute (Ecs_attribute_name) then
+				command.set_ecs (uc_boolean_value (Ecs_attribute_name))
 			end
 				-- full:
-			if has_uc_attribute (an_element, Full_attribute_name) then
-				set_full (uc_boolean_value (an_element, Full_attribute_name))
+			if has_uc_attribute (Full_attribute_name) then
+				command.set_full (uc_boolean_value (Full_attribute_name))
 			end
 				-- case_insensitive:
-			if has_uc_attribute (an_element, Case_insensitive_attribute_name) then
-				set_case_insensitive (uc_boolean_value (an_element, Case_insensitive_attribute_name))
+			if has_uc_attribute (Case_insensitive_attribute_name) then
+				command.set_case_insensitive (uc_boolean_value (Case_insensitive_attribute_name))
 			end
 				-- meta_ecs:
-			if has_uc_attribute (an_element, Meta_ecs_attribute_name) then
-				set_meta_ecs (uc_boolean_value (an_element, Meta_ecs_attribute_name))
+			if has_uc_attribute (Meta_ecs_attribute_name) then
+				command.set_meta_ecs (uc_boolean_value (Meta_ecs_attribute_name))
 			end
 				-- no_default:
-			if has_uc_attribute (an_element, No_default_attribute_name) then
-				set_no_default (uc_boolean_value (an_element, No_default_attribute_name))
+			if has_uc_attribute (No_default_attribute_name) then
+				command.set_no_default (uc_boolean_value (No_default_attribute_name))
 			end
 				-- no_warn:
-			if has_uc_attribute (an_element, No_warn_attribute_name) then
-				set_no_warn (uc_boolean_value (an_element, No_warn_attribute_name))
+			if has_uc_attribute (No_warn_attribute_name) then
+				command.set_no_warn (uc_boolean_value (No_warn_attribute_name))
 			end
 				-- separate_actions:
-			if has_uc_attribute (an_element, Separate_actions_attribute_name) then
-				set_separate_actions (uc_boolean_value(an_element, Separate_actions_attribute_name))
+			if has_uc_attribute (Separate_actions_attribute_name) then
+				command.set_separate_actions (uc_boolean_value(Separate_actions_attribute_name))
 			end
 				-- output_filename:
-			if has_uc_attribute (an_element, Output_filename_attribute_name) then
-				a_value := uc_attribute_value (an_element, Output_filename_attribute_name).out
+			if has_uc_attribute (Output_filename_attribute_name) then
+				a_value := uc_attribute_value (Output_filename_attribute_name).out
 				if a_value.count > 0 then
-					set_output_filename (a_value)
+					command.set_output_filename (a_value)
 				end
 			end
 				-- input_filename:
-			if has_uc_attribute (an_element, Input_filename_attribute_name) then
-				a_value := uc_attribute_value (an_element, Input_filename_attribute_name).out
+			if has_uc_attribute (Input_filename_attribute_name) then
+				a_value := uc_attribute_value (Input_filename_attribute_name).out
 				if a_value.count > 0 then
-					set_input_filename (a_value)
+					command.set_input_filename (a_value)
 				end
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_GELEX_COMMAND
+			-- Gelex commands
 
 feature {NONE} -- Constants
 

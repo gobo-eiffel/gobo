@@ -17,87 +17,89 @@ class GEANT_GEXACE_TASK
 inherit
 
 	GEANT_TASK
-		undefine
-			make
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_GEXACE_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
-			a_name: STRING
-			a_value: STRING
 			i: INTEGER
 			nb: INTEGER
-			define_elements: DS_ARRAYED_LIST [GEANT_ELEMENT]
-			define_element: GEANT_ELEMENT
+			a_name: STRING
+			a_value: STRING
+			define_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			define_element: GEANT_DEFINE_ELEMENT
 		do
-			precursor (a_project, an_element)
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
 				-- verbose (optional):
-			if has_uc_attribute (an_element, Verbose_attribute_name) then
-				set_verbose (uc_boolean_value (an_element, Verbose_attribute_name))
+			if has_uc_attribute (Verbose_attribute_name) then
+				command.set_verbose (uc_boolean_value (Verbose_attribute_name))
 			end
 				-- validate:
-			if has_uc_attribute (an_element, Validate_attribute_name) then
-				set_validate_command (uc_boolean_value (an_element, Validate_attribute_name))
+			if has_uc_attribute (Validate_attribute_name) then
+				command.set_validate_command (uc_boolean_value (Validate_attribute_name))
 			end
 				-- system:
-			if has_uc_attribute (an_element, System_attribute_name) then
-				a_value := uc_attribute_value (an_element, System_attribute_name).out
+			if has_uc_attribute (System_attribute_name) then
+				a_value := uc_attribute_value (System_attribute_name).out
 				if a_value.count > 0 then
-					set_system_command (a_value)
+					command.set_system_command (a_value)
 				end
 			end
 				-- cluster:
-			if has_uc_attribute (an_element, Cluster_attribute_name) then
-				a_value := uc_attribute_value (an_element, Cluster_attribute_name).out
+			if has_uc_attribute (Cluster_attribute_name) then
+				a_value := uc_attribute_value (Cluster_attribute_name).out
 				if a_value.count > 0 then
-					set_cluster_command (a_value)
+					command.set_cluster_command (a_value)
 				end
 			end
 				-- xace_filename:
-			if has_uc_attribute (an_element, Xace_filename_attribute_name) then
-				a_value := uc_attribute_value (an_element, Xace_filename_attribute_name).out
+			if has_uc_attribute (Xace_filename_attribute_name) then
+				a_value := uc_attribute_value (Xace_filename_attribute_name).out
 				if a_value.count > 0 then
-					set_xace_filename (a_value)
+					command.set_xace_filename (a_value)
 				end
 			end
 				-- output_filename:
-			if has_uc_attribute (an_element, Output_filename_attribute_name) then
-				a_value := uc_attribute_value (an_element, Output_filename_attribute_name).out
+			if has_uc_attribute (Output_filename_attribute_name) then
+				a_value := uc_attribute_value (Output_filename_attribute_name).out
 				if a_value.count > 0 then
-					set_output_filename (a_value)
+					command.set_output_filename (a_value)
 				end
 			end
 				-- define:
-			define_elements := an_element.children_by_name (Define_element_name)
+			define_elements := xml_element.children_by_name (Define_element_name)
 			nb := define_elements.count
 			from i := 1 until i > nb loop
-				define_element := define_elements.item (i)
-				if is_element_enabled (project, define_element) and then
-					has_uc_attribute (define_element, Name_attribute_name) and then
-					has_uc_attribute (define_element, Value_attribute_name)
+				!! define_element.make (project, define_elements.item (i))
+				if define_element.is_enabled and then
+					define_element.has_name and then define_element.has_value
 				then
-					a_name := uc_attribute_value (define_element, Name_attribute_name).out
-					a_value := uc_attribute_value (define_element, Value_attribute_name).out
-
+					a_name := define_element.name
+					a_value := define_element.value
 					if a_name.count > 0 then
-						defines.force (a_value, a_name)
+						command.defines.force (a_value, a_name)
 					end
 
 				end
 				i := i + 1
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_GEXACE_COMMAND
+			-- Gexace commands
 
 feature {NONE} -- Constants
 

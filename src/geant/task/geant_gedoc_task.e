@@ -17,64 +17,68 @@ class GEANT_GEDOC_TASK
 inherit
 
 	GEANT_TASK
-		undefine
-			make
+		rename
+			make as task_make
 		redefine
-			make_from_element
+			command
 		end
-
-	GEANT_GEDOC_COMMAND
 
 creation
 
-	make_from_element
+	make
 
 feature {NONE} -- Initialization
 
-	make_from_element (a_project: GEANT_PROJECT; an_element: GEANT_ELEMENT) is
+	make (a_project: GEANT_PROJECT; an_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new task with information held in `an_element'.
 		local
 			a_name: STRING
 			a_value: STRING
-			parameter_elements: DS_ARRAYED_LIST [GEANT_ELEMENT]
-			parameter_element: GEANT_ELEMENT
+			parameter_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			parameter_element: GEANT_DEFINE_ELEMENT
 			i, nb: INTEGER
 			a_pair: DS_PAIR [STRING, STRING]
 		do
-			precursor (a_project, an_element)
-			if has_uc_attribute (an_element, Input_filename_attribute_name) then
-				a_value := uc_attribute_value (an_element, Input_filename_attribute_name).out
+			!! command.make (a_project)
+			task_make (command, an_xml_element)
+			if has_uc_attribute (Input_filename_attribute_name) then
+				a_value := uc_attribute_value (Input_filename_attribute_name).out
 				if a_value.count > 0 then
-					set_input_filename (a_value)
+					command.set_input_filename (a_value)
 				end
 			end
-			if has_uc_attribute (an_element, Output_filename_attribute_name) then
-				a_value := uc_attribute_value (an_element, Output_filename_attribute_name).out
+			if has_uc_attribute (Output_filename_attribute_name) then
+				a_value := uc_attribute_value (Output_filename_attribute_name).out
 				if a_value.count > 0 then
-					set_output_filename (a_value)
+					command.set_output_filename (a_value)
 				end
 			end
-			if has_uc_attribute (an_element, Stylesheet_filename_attribute_name) then
-				a_value := uc_attribute_value (an_element, Stylesheet_filename_attribute_name).out
+			if has_uc_attribute (Stylesheet_filename_attribute_name) then
+				a_value := uc_attribute_value (Stylesheet_filename_attribute_name).out
 				if a_value.count > 0 then
-					set_stylesheet_filename (a_value)
+					command.set_stylesheet_filename (a_value)
 				end
 			end
-			parameter_elements := an_element.children_by_name (Parameter_element_name)
+			parameter_elements := xml_element.children_by_name (Parameter_element_name)
 			nb := parameter_elements.count
 			from i := 1 until i > nb loop
-				parameter_element := parameter_elements.item (i)
-				if has_uc_attribute (parameter_element, Name_attribute_name) and
-					has_uc_attribute (parameter_element, Value_attribute_name)
+				!! parameter_element.make (project, parameter_elements.item (i))
+				if parameter_element.is_enabled and then
+					paramter_element.has_name and then paramter_element.has_value
 				then
-					a_name:= uc_attribute_value (parameter_element, Name_attribute_name).out
-					a_value := uc_attribute_value (parameter_element, Value_attribute_name).out
+					a_name := parameter_element.name
+					a_value := parameter_element.value
 					!! a_pair.make (a_name, a_value)
-					parameters.force_last (a_pair)
+					command.parameters.force_last (a_pair)
 				end
 				i := i + 1
 			end
 		end
+
+feature -- Access
+
+	command: GEANT_GEDOC_COMMAND
+			-- Gedoc commands
 
 feature {NONE} -- Constants
 

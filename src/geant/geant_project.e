@@ -17,11 +17,6 @@ class GEANT_PROJECT
 inherit
 
 	ANY
-	GEANT_ELEMENT_NAMES
-		export
-			{NONE} all
-		end
-
 	KL_SHARED_ARGUMENTS
 		export
 			{NONE} all
@@ -145,6 +140,9 @@ feature -- Access
 					nb := a_project.targets.count
 					from i := 1 until i > nb or Result /= Void loop
 						a_target := a_project.targets.item (i)
+						debug ("geant")
+							print ("*** checking target name: '" + a_target.name + "'%N")
+						end
 						if a_target.name.is_equal (a_name.out) then
 							Result := a_target
 						end
@@ -208,9 +206,7 @@ feature -- Processing
 			xml_parser: GEANT_PROJECT_PARSER
 			ucs: UC_STRING
 			tmp_start_target_name: UC_STRING
-			children: DS_ARRAYED_LIST [GEANT_ELEMENT]
-			target_elements: DS_ARRAYED_LIST [GEANT_ELEMENT]
-			an_element: GEANT_ELEMENT
+			target_elements: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
 			a_target: GEANT_TARGET
 			i: INTEGER
 			a_parent_project_filename: UC_STRING
@@ -224,27 +220,23 @@ feature -- Processing
 				-- Create xml parser:
 			!! xml_parser.make_from_implementation (Parser_factory.new_eiffel_event_parser_imp)
 			xml_parser.parse_from_file_name (build_filename)
+
 				-- Setup project's root element:
-			root_element := xml_parser.root_element
-			if root_element /= Void then
+			if xml_parser.root_element /= Void then
+				!! project_element.make (Current, xml_parser.root_element)
+
 					-- determine description if available:
-				children := root_element.children
-				if children.count > 0 then
-					an_element := children.item (1)
-					if an_element.name.is_equal (Description_element_name) then
-						set_description (an_element.content.out)
-					end
+				if project_element.has_description then
+					set_description (project_element.description)
 				end
 					-- handle project name if present:
-				if root_element.has_attribute (Name_attribute_name) then
-					ucs := root_element.attribute_value_by_name (Name_attribute_name)
-					set_name (ucs.out)
+				if project_element.has_name then
+					set_name (project_element.name)
 				end
 
 					-- handle parent project if present:
-				if root_element.has_attribute (Inherit_attribute_name) then
-					a_parent_project_filename := root_element.attribute_value_by_name (Inherit_attribute_name)
-					!! a_parent_project_filename.make_from_string (variables.interpreted_string (a_parent_project_filename.out))
+				if project_element.has_parent then
+					!! a_parent_project_filename.make_from_string (variables.interpreted_string (project_element.parent))
 					debug ("geant")
 						print ("inheriting from: " + a_parent_project_filename.out + "%N")
 					end
@@ -256,7 +248,7 @@ feature -- Processing
 				end
 
 					-- Find all target elements of current project:
-				target_elements := root_element.children_by_name (Target_element_name)
+				target_elements := project_element.xml_target_elements
 
 					-- Create real GEANT_TARGETs from the GEANT_ELEMENTs:
 				!! targets.make (target_elements.count)
@@ -272,16 +264,20 @@ feature -- Processing
 					if target_with_name (ucs) /= Void then
 						tmp_start_target_name := ucs
 					else
-						exit_application (1, "geant error: unknown target: " + a_start_target_name.out + "%N")
+						exit_application (1, "geant error: unknown target: '" + a_start_target_name.out + "'%N")
 					end
 				end
 
 					-- Find start target:
 				if tmp_start_target_name = Void or else tmp_start_target_name.count = 0 then
-					if root_element.has_attribute (Default_attribute_name) then
-						ucs := root_element.attribute_value_by_name (Default_attribute_name)
+					if project_element.has_default_target_name then
+						!! ucs.make_from_string (project_element.default_target_name)
 						if target_with_name (ucs) /= Void then
 							tmp_start_target_name := ucs
+						else
+							debug ("geant")
+								print ("*** default target NOT found: " + project_element.default_target_name + "%N")
+							end
 						end
 					else
 							-- Use first target in project file for start_target_name:
@@ -403,7 +399,7 @@ feature -- Processing
 	reset is
 			-- Reset current state of project.
 		do
-			root_element := Void
+			project_element := Void
 			targets := Void
 			build_successful := True
 		end
@@ -416,8 +412,8 @@ feature {GEANT_COMMAND} -- Access GEANT_COMMAND
 
 feature {NONE} -- Implementation
 
-	root_element: GEANT_ELEMENT
-			-- Root element of project
+	project_element: GEANT_PROJECT_ELEMENT
+			-- Project element of build script
 
 	Parser_factory: XM_PARSER_FACTORY is
 			-- Factory to create xml parsers
@@ -429,13 +425,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Inherit_attribute_name: UC_STRING is
-			-- "inherit" attribute name
+	Default_build_filename: UC_STRING is
+			-- Default Name of build file
 		once
-			!! Result.make_from_string ("inherit")
+			!! Result.make_from_string ("build.eant")
 		ensure
-			attribute_name_not_void: Result /= Void
-			attribute_name_not_empty: not Result.empty
+			filename_not_void: Result /= Void
+			filename_not_empty: not Result.empty
 		end
 
 invariant
