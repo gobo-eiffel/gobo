@@ -108,6 +108,10 @@ creation
 
 ----------/** Reserved words **/------------------------------------------------
 
+agent		{
+			}
+[aA][gG][eE][nN][tT]	{
+			}
 alias		{
 			}
 [aA][lL][iI][aA][sS]	{

@@ -697,6 +697,7 @@ feature {NONE} -- Constants
 	capitalized_true_keyword: STRING is "True"
 			-- Eiffel keywords with first letter in upper-case
 
+	agent_keyword: STRING is "agent"
 	alias_keyword: STRING is "alias"
 	all_keyword: STRING is "all"
 	and_keyword: STRING is "and"

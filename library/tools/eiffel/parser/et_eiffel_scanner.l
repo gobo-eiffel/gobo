@@ -80,6 +80,7 @@ creation
 ","				process_one_character_symbol (Comma_code)
 ":"				process_one_character_symbol (Colon_code)
 "!"				process_one_character_symbol (Exclamation_code)
+"?"				process_one_character_symbol (Question_mark_code)
 "("				process_one_character_symbol (Left_parenthesis_code)
 ")"				process_one_character_symbol (Right_parenthesis_code)
 "{"				process_one_character_symbol (Left_brace_code)
@@ -118,6 +119,14 @@ creation
 
 ----------/** Reserved words **/------------------------------------------------
 
+agent		{
+				last_token := E_AGENT
+				last_value := new_token (agent_keyword)
+			}
+[aA][gG][eE][nN][tT]	{
+				last_token := E_AGENT
+				last_value := new_token (text)
+			}
 alias		{
 				last_token := E_ALIAS
 				last_value := new_token (alias_keyword)
