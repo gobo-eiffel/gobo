@@ -111,7 +111,9 @@ creation
 	make_giadm,
 	make_giadn,
 	make_giado,
-	make_giadp
+	make_giadp,
+	make_giadq,
+	make_giadr
 
 feature {NONE} -- Initialization
 
@@ -1337,6 +1339,32 @@ feature {NONE} -- Initialization
 			-- dollar1: $1 = ETL code
 		end
 
+	make_giadq is
+			-- Create a new GIADQ error.
+		do
+			code := giadq_template_code
+			etl_code := giadq_etl_code
+			default_template := giadq_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_giadr is
+			-- Create a new GIADR error.
+		do
+			code := giadr_template_code
+			etl_code := giadr_etl_code
+			default_template := giadr_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
 feature {NONE} -- Implementation
 
 	giaaa_default_template: STRING is "[$1] internal error."
@@ -1433,6 +1461,8 @@ feature {NONE} -- Implementation
 	giadn_default_template: STRING is "[$1] internal error."
 	giado_default_template: STRING is "[$1] internal error."
 	giadp_default_template: STRING is "[$1] internal error."
+	giadq_default_template: STRING is "[$1] internal error."
+	giadr_default_template: STRING is "[$1] internal error."
 			-- Default templates
 
 	giaaa_etl_code: STRING is "GIAAA"
@@ -1529,6 +1559,8 @@ feature {NONE} -- Implementation
 	giadn_etl_code: STRING is "GIADN"
 	giado_etl_code: STRING is "GIADO"
 	giadp_etl_code: STRING is "GIADP"
+	giadq_etl_code: STRING is "GIADQ"
+	giadr_etl_code: STRING is "GIADR"
 			-- ETL validity codes
 
 	giaaa_template_code: STRING is "giaaa"
@@ -1625,6 +1657,8 @@ feature {NONE} -- Implementation
 	giadn_template_code: STRING is "giadn"
 	giado_template_code: STRING is "giado"
 	giadp_template_code: STRING is "giadp"
+	giadq_template_code: STRING is "giadq"
+	giadr_template_code: STRING is "giadr"
 			-- Template error codes
 
 end
