@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 
 	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
 			-- Create new fileset element with information held in `a_xml_element'.
+			-- Create `fileset' using parameter `a_convert_to_filesystem'.
 		local
 			a_value: STRING
 			a_xml_subelement: GEANT_XML_ELEMENT
@@ -56,6 +57,14 @@ feature {NONE} -- Initialization
 				if a_value.count > 0 then
 					fileset.set_exclude_wc_string (a_value)
 				end
+			end
+
+			if has_uc_attribute (Force_attribute_name) then
+				fileset.set_force (uc_boolean_value (Force_attribute_name))
+			end
+
+			if has_uc_attribute (Concat_attribute_name) then
+				fileset.set_concat (uc_boolean_value (Concat_attribute_name))
 			end
 
 			a_xml_subelement := xml_element.child_by_name (Map_element_name)
@@ -95,6 +104,24 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for exclude
 		once
 			Result := new_unicode_string ("exclude")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Force_attribute_name: UC_STRING is
+			-- Name of xml attribute for force
+		once
+			Result := new_unicode_string ("force")
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Concat_attribute_name: UC_STRING is
+			-- Name of xml attribute for concat
+		once
+			Result := new_unicode_string ("concat")
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
