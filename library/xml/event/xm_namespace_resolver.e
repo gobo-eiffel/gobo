@@ -107,13 +107,15 @@ feature -- Element
 				attributes_is_empty
 			loop
 				if has_prefix (attributes_prefix.item) then
+					-- Resolve the attribute's prefix if it has any.
 					if context.has (attributes_prefix.item) then
 						a_namespace := context.resolve (attributes_prefix.item)
 					else
 						on_error (Undeclared_namespace_error)
 					end
 				else
-					a_namespace := an_element_namespace
+					-- Attributes don't have a default name space.
+					a_namespace := Void
 				end
 				next.on_attribute (a_namespace,
 					attributes_prefix.item, attributes_local_part.item,
