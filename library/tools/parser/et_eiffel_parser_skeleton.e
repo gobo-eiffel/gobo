@@ -128,7 +128,7 @@ feature -- AST factory
 			actual_arguments_not_void: Result /= Void
 		end
 
-	new_actual_generics (a_type: ET_TYPE): ET_ACTUAL_GENERIC_TYPES is
+	new_actual_generics (a_type: ET_TYPE): ET_ACTUAL_GENERIC_PARAMETERS is
 			-- New actual generic parameter list with initially
 			-- one actual generic parameter `a_type'
 		require
@@ -197,22 +197,24 @@ feature -- AST factory
 			attribute_not_void: Result /= Void
 		end
 
-	new_bit_identifier (an_id: ET_IDENTIFIER): ET_TYPE is
+	new_bit_identifier (an_id: ET_IDENTIFIER; p: ET_POSITION): ET_BIT_IDENTIFIER is
 			-- New 'BIT Identifier' type
 		require
 			an_id_not_void: an_id /= Void
+			p_not_void: p /= Void
 		do
-			Result := ast_factory.new_bit_identifier (an_id)
+			Result := ast_factory.new_bit_identifier (an_id, p)
 		ensure
 			type_not_void: Result /= Void
 		end
 
-	new_bit_type (an_int: ET_INTEGER_CONSTANT): ET_TYPE is
-			-- New 'BIT n' type
+	new_bit_type (an_int: ET_INTEGER_CONSTANT; p: ET_POSITION): ET_BIT_TYPE is
+			-- New 'BIT N' type
 		require
 			an_int_not_void: an_int /= Void
+			p_not_void: p /= Void
 		do
-			Result := ast_factory.new_bit_type (an_int)
+			Result := ast_factory.new_bit_type (an_int, p)
 		ensure
 			type_not_void: Result /= Void
 		end
@@ -270,13 +272,15 @@ feature -- AST factory
 			a_name_not_void: a_name /= Void
 			last_class_not_void: last_class /= Void
 		local
+			a_parameter: ET_FORMAL_GENERIC_PARAMETER
 			a_class: ET_CLASS
 		do
-			Result := last_class.generic_parameter (a_name)
-			if Result /= Void then
+			a_parameter := last_class.generic_parameter (a_name)
+			if a_parameter /= Void then
 				if a_generics /= Void then
 					-- Error
 				end
+				Result := ast_factory.new_formal_generic_type (a_name, a_parameter.index)
 			else
 				a_class := universe.eiffel_class (a_name)
 				Result := ast_factory.new_class_type (a_name, a_generics, a_class)
@@ -595,7 +599,7 @@ feature -- AST factory
 			formal_arguments_not_void: Result /= Void
 		end
 
-	new_formal_generic (a_name: ET_IDENTIFIER; a_constraint: ET_TYPE): ET_FORMAL_GENERIC_TYPE is
+	new_formal_generic (a_name: ET_IDENTIFIER; a_constraint: ET_TYPE): ET_FORMAL_GENERIC_PARAMETER is
 			-- New formal generic parameter
 		require
 			a_name_not_void: a_name /= Void
@@ -605,13 +609,13 @@ feature -- AST factory
 			formal_generic_not_void: Result /= Void
 		end
 
-	new_formal_generics (a_type: ET_FORMAL_GENERIC_TYPE): ET_FORMAL_GENERIC_TYPES is
+	new_formal_generics (a_parameter: ET_FORMAL_GENERIC_PARAMETER): ET_FORMAL_GENERIC_PARAMETERS is
 			-- New formal generic parameter list with initially
-			-- one formal generic parameter `a_type'
+			-- one formal generic parameter `a_parameter'
 		require
-			a_type_not_void: a_type /= Void
+			a_parameter_not_void: a_parameter /= Void
 		do
-			Result := ast_factory.new_formal_generics (a_type)
+			Result := ast_factory.new_formal_generics (a_parameter)
 		ensure
 			formal_generics_not_void: Result /= Void
 		end
@@ -1120,12 +1124,13 @@ feature -- AST factory
 			type_not_void: Result /= Void
 		end
 
-	new_like_identifier (an_id: ET_IDENTIFIER): ET_LIKE_IDENTIFIER is
+	new_like_identifier (an_id: ET_IDENTIFIER; p: ET_POSITION): ET_LIKE_IDENTIFIER is
 			-- New 'like Identifier' type
 		require
 			an_id_not_void: an_id /= Void
+			p_not_void: p /= Void
 		do
-			Result := ast_factory.new_like_identifier (an_id)
+			Result := ast_factory.new_like_identifier (an_id, p)
 		ensure
 			type_not_void: Result /= Void
 		end
