@@ -1,4 +1,4 @@
-Gobo Eiffel, version 1.3
+Gobo Eiffel, version 1.4
 
 One of the main concerns of Gobo Eiffel is to provide you with Eiffel
 libraries and tools that are portable across various Eiffel compilers
@@ -20,9 +20,9 @@ This package consists of five Eiffel libraries:
 
 and three utilities:
 
-    . Gobo Eiffel Lex, version 1.3 (gelex)
-    . Gobo Eiffel Yacc, version 1.2 (geyacc)
-    . Gobo Eiffel Preprocessor, version 1.1 (gepp)
+    . Gobo Eiffel Lex, version 1.4 (gelex)
+    . Gobo Eiffel Yacc, version 1.4 (geyacc)
+    . Gobo Eiffel Preprocessor, version 1.4 (gepp)
 
 The originality of this software compared to other already existing lex
 and yacc programs for Eiffel, apart from its portability on many Eiffel
@@ -50,15 +50,13 @@ known as the distribution directory. Also put the directory $GOBO\bin
 in your PATH.
 
 The supported Eiffel compilers, in alphabetical order, are:
-Halstenbach 2.0CL1, ISE Eiffel 4.2F, SmallEiffel -0.80, Visual Eiffel
-2.5. An effort has been made to port this package to TowerEiffel 2.0,
-however this compiler is not supported yet because of problems with
-manifest arrays (which are extensively used in gelex and geyacc). For
-more details about the supported Eiffel compilers, please see the file
-"Release_notes.txt". This software might work with other Eiffel compilers
-and/or other compiler versions, however no test has been made. To have
-a better understanding of the way this software has been designed and
-implemented, you can also have a look at "$GOBO\doc\portability".
+Halstenbach 3.0Beta 3, ISE Eiffel 4.3-020, SmallEiffel -0.78beta#2,
+Visual Eiffel 3.0 Beta. For more details about the supported Eiffel
+compilers, please see the file "Release_notes.txt". This software might
+work with other Eiffel compilers and/or other compiler versions, however
+no test has been made. To have a better understanding of the way this
+software has been designed and implemented, you can also have a look at
+"$GOBO\doc\portability".
 
 In this distribution:
 
@@ -74,6 +72,7 @@ In this distribution:
     example\lexical\gegrep      grep-like program
     example\parse\calc          infix notation calculator (see geyacc doc)
     example\parse\eiffel        simple parser for Eiffel
+    example\parse\mcalc         calculator with memory (see geyacc doc)
     example\parse\rpcalc        reverse polish notation calc (see geyacc doc)
     library\kernel              compiler-dependent kernel class adapters
     library\lexical             Gobo Eiffel Lexical Library classes
@@ -85,7 +84,7 @@ In this distribution:
     src\gepp                    gepp source code
     src\geyacc                  geyacc source code
 
-Each of the above directories is equipped with a Readme file providing
+Each of the above directories comes with a Readme file providing
 some basic information. Documentation is also available on the Web
 at "http://www.gobo.demon.co.uk". Check it out regularly for updates,
 bug fixes, workarounds and new releases.
@@ -98,7 +97,7 @@ your projects and how easy (or difficult) it was to adapt this software
 for your specific needs. Thank you in advance.
 
 --
-Copyright (c) 1998, Eric Bezault
+Copyright (c) 1999, Eric Bezault
 mailto:ericb@gobo.demon.co.uk
 http://www.gobo.demon.co.uk
-15 August 1998
+29 March 1999
