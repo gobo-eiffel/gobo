@@ -12,10 +12,6 @@ indexing
 
 class XM_XSLT_SORT_KEY_DEFINITION
 
-inherit
-
-	XM_XPATH_DEBUGGING_ROUTINES
-
 	-- Note that most attributes defining the sort key can be attribute value templates,
 	-- and can therefore vary from one invocation to another. We hold them as expressions. As
 	-- soon as they are all known (which in general is only at run-time), the XM_XSLT_SORT_KEY_DEFINITION

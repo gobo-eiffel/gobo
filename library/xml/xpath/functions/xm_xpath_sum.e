@@ -19,6 +19,8 @@ inherit
 			evaluate_item
 		end
 
+	XM_XPATH_TOKENS
+
 creation
 
 	make
@@ -66,9 +68,73 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_sum: XM_XPATH_ATOMIC_VALUE
+			an_untyped_atomic: XM_XPATH_UNTYPED_ATOMIC_VALUE
+			a_numeric_value, another_numeric_value: XM_XPATH_NUMERIC_VALUE
+			finished: BOOLEAN
 		do
-			-- TODO count the number of items in the sole argument sequence
-			todo ("evaluate-item", False)
+			last_evaluated_item := Void
+			an_iterator := arguments.item (1).iterator (a_context)
+			if an_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+			else
+				an_iterator.start
+				if an_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				elseif an_iterator.after then
+					if arguments.count = 1 then
+						create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (0)
+					else
+						arguments.item (2).evaluate_item (a_context)
+						last_evaluated_item := arguments.item (2).last_evaluated_item
+					end
+				else
+					a_sum ?= an_iterator.item
+					check
+						sum_not_void: a_sum /= Void
+						-- static typing
+					end
+					an_untyped_atomic ?= a_sum
+					if an_untyped_atomic /= Void then
+						a_sum := an_untyped_atomic.convert_to_type (type_factory.double_type)
+					end
+					a_numeric_value ?= a_sum
+					if a_numeric_value /= Void then
+						if not a_numeric_value.is_nan then
+							from
+								an_iterator.forth
+							until
+								finished or else an_iterator.is_error or else an_iterator.after
+							loop
+								a_sum ?= an_iterator.item
+								an_untyped_atomic ?= a_sum
+								if an_untyped_atomic /= Void then
+									a_sum := an_untyped_atomic.convert_to_type (type_factory.double_type)
+								end
+								another_numeric_value ?= a_sum
+								if another_numeric_value /= Void then
+									a_numeric_value := a_numeric_value.arithmetic (Plus_token, another_numeric_value)
+								else
+									create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains a mix of numeric and non-numeric values",
+																																"", "FORG0006", Dynamic_error)
+								end
+								an_iterator.forth
+							end
+							if an_iterator.is_error then
+								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+							end
+						end
+						if last_evaluated_item = Void then
+							last_evaluated_item := a_numeric_value
+						end
+					else
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains a value that is not numeric (durations not supported yet)",
+																													"", "FORG0006", Dynamic_error)
+					end
+				end
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate
+			validate, may_contain_sequence_constructor
 		end
 
 	XM_XPATH_ROLE
@@ -29,6 +29,12 @@ feature -- Access
 
 	sort_key_definition: XM_XSLT_SORT_KEY_DEFINITION
 			-- Sort key
+
+	may_contain_sequence_constructor: BOOLEAN is
+			-- Is `Current' allowed to contain a sequence constructor?
+		do
+			Result := True
+		end
 
 feature -- Element change
 
@@ -241,16 +247,18 @@ feature {NONE} -- Implementation
 					data_type := data_type.replacement_expression
 				end
 			end
-			create a_role.make (Instruction_role, "xsl:sort/select", 1)
-			create a_type_checker
-			create an_atomic_sequence.make_atomic_sequence
-			a_type_checker.static_type_check (static_context, select_expression, an_atomic_sequence, False, a_role)
-			if a_type_checker.is_static_type_check_error	then
-				create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
-				report_compile_error (an_error)
-			else
-				select_expression := a_type_checker.checked_expression
-				create sort_key_definition.make (select_expression, order, case_order, language, data_type, collation_name)
+			if select_expression /= Void then
+				create a_role.make (Instruction_role, "xsl:sort/select", 1)
+				create a_type_checker
+				create an_atomic_sequence.make_atomic_sequence
+				a_type_checker.static_type_check (static_context, select_expression, an_atomic_sequence, False, a_role)
+				if a_type_checker.is_static_type_check_error	then
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					report_compile_error (an_error)
+				else
+					select_expression := a_type_checker.checked_expression
+					create sort_key_definition.make (select_expression, order, case_order, language, data_type, collation_name)
+				end
 			end
 		end
 

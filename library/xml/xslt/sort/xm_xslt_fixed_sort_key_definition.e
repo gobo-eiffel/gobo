@@ -33,6 +33,8 @@ inherit
 
 	XM_XPATH_CARDINALITY
 
+	XM_XPATH_DEBUGGING_ROUTINES
+
 creation
 
 	make

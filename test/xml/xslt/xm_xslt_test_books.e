@@ -54,6 +54,10 @@ feature
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
+			-- No check on the output, as it includes the formatted current date-time, and the time zone
+			-- may differ, so we can't even check the length.
+			-- Anyway, this was just a development-driving-forward mechanism, not a true regression test, so it
+			-- doesn't matter.
 		end
 
 end

@@ -58,7 +58,7 @@ feature -- Status report
 			inspect
 				argument_number
 			when 1 then
-				create Result.make_single_double
+				create Result.make_optional_number
 			when 2 then
 				create Result.make_single_string
 			when 3 then
@@ -71,21 +71,111 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			todo ("evaluate_item", False)
-			--evaluate_as_string (a_context)
-			--last_evaluated_item := last_evaluated_string
+			evaluate_as_string (a_context)
+			last_evaluated_item := last_evaluated_string
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a String
+		local
+			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			a_dfm: XM_XSLT_DECIMAL_FORMAT_MANAGER
+			a_number: XM_XPATH_NUMERIC_VALUE
+			a_qname, a_format_name, a_uri, a_local_name: STRING
+			a_splitter: ST_SPLITTER
+			some_qname_parts: DS_LIST [STRING]
+			in_error: BOOLEAN
+			a_fingerprint: INTEGER
 		do
-			todo ("evaluate_as_string", False)
+			arguments.item (1).evaluate_item (a_context)
+			if arguments.item (1).last_evaluated_item = Void then
+				create {XM_XPATH_DOUBLE_VALUE} a_number.make_nan
+			elseif arguments.item (1).last_evaluated_item.is_error then
+				create last_evaluated_string.make ("")
+				last_evaluated_string.set_last_error (arguments.item (1).last_evaluated_item.error_value)
+				in_error := True
+			else
+				a_number ?= arguments.item (1).last_evaluated_item
+				check
+					numeric: a_number /= Void -- static typing
+				end
+			end
+			if not in_error then
+				if decimal_format = Void then
+					if is_fixup_required then
+						create last_evaluated_string.make ("")
+						last_evaluated_string.set_last_error_from_string ("Unknown decimal format name",  "", "XT1280", Dynamic_error)
+						in_error := True
+					else
+						an_evaluation_context ?= a_context
+						check
+							evaluation_context_not_void: an_evaluation_context /= Void
+							-- as this is an XSLT function
+						end
+						a_dfm := an_evaluation_context.transformer.decimal_format_manager
+						if arguments.count = 2 then
+							decimal_format := a_dfm.default_decimal_format
+						else
+							arguments.item (3).evaluate_item (a_context)
+							if arguments.item (3).last_evaluated_item.is_error then
+								create last_evaluated_string.make ("")
+								last_evaluated_string.set_last_error_from_string ("Invalid decimal format name", "", "XT1280", Dynamic_error)
+								in_error := True
+							else
+								a_qname := arguments.item (3).last_evaluated_item.string_value
+								create a_splitter.make
+								a_splitter.set_separators (":")
+								some_qname_parts := a_splitter.split (a_qname)
+								if some_qname_parts.count = 2 then
+									a_uri := namespace_resolver.uri_for_defaulted_prefix (some_qname_parts.item (1), False)
+									if a_uri = Void then
+										create last_evaluated_string.make ("")
+										last_evaluated_string.set_last_error_from_string ("Prefix for decimal format name has not been declared", "", "XT1280", Dynamic_error)
+										in_error := True
+									end
+									a_local_name := some_qname_parts.item (2)
+								else
+									a_uri := Null_uri
+									a_local_name := some_qname_parts.item (1)
+								end
+								if not in_error then
+									a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+									if a_dfm.has_named_format (a_fingerprint) then
+										decimal_format := a_dfm.named_format (a_fingerprint)
+									else
+										create last_evaluated_string.make ("")
+										last_evaluated_string.set_last_error_from_string ("Named decimal format has not been declared", "", "XT1280", Dynamic_error)
+										in_error := True
+									end
+								end
+							end
+						end
+					end
+				end
+				if not in_error then
+					if sub_pictures = Void then
+						arguments.item (2).evaluate_item (a_context)
+						if arguments.item (2).last_evaluated_item.is_error then
+							create last_evaluated_string.make ("")
+							last_evaluated_string.set_last_error (last_evaluated_item.error_value)
+						else
+							picture := arguments.item (2).last_evaluated_item.string_value
+							sub_pictures := analyzed_sub_pictures (picture, decimal_format)
+						end
+					end
+					if sub_pictures /= Void then
+						create last_evaluated_string.make (formatted_number (a_number))
+					else
+						create last_evaluated_string.make ("")
+						last_evaluated_string.set_last_error (error_value)
+					end
+				end
+			end
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			--			set_replacement (Current)
 		end
 
 feature -- Element change
@@ -114,9 +204,12 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
 			a_string_value: XM_XPATH_STRING_VALUE
-			a_qname: STRING
+			a_qname, a_uri, an_xml_prefix, a_local_name: STRING
 			a_dfm: XM_XSLT_DECIMAL_FORMAT_MANAGER
 			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
+			a_fingerprint: INTEGER
+			a_splitter: ST_SPLITTER
+			some_qname_parts: DS_LIST [STRING]
 		do
 			Precursor (a_context)
 			a_string_value ?= arguments.item (2)
@@ -140,8 +233,22 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 					if is_qname (a_qname) then
 						a_dfm := an_expression_context.style_sheet.decimal_format_manager
 						is_fixup_required := True
-						
-						todo ("check_arguments (fixup)", True)
+						create a_splitter.make
+						a_splitter.set_separators (":")
+						some_qname_parts := a_splitter.split (a_qname)
+						if some_qname_parts.count = 2 then
+							if a_context.is_prefix_declared (some_qname_parts.item (1)) then
+								a_uri := a_context.uri_for_prefix (some_qname_parts.item (1))
+								a_local_name := some_qname_parts.item (2)
+							else
+								set_last_error_from_string ("Prefix of decimal-format-name has not been declared",  "", "XT1280", Static_error)
+							end
+						else
+							a_uri := Null_uri
+							a_local_name := some_qname_parts.item (1)
+						end
+						a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+						a_dfm.register_usage (a_fingerprint, Current)
 					else
 						set_last_error_from_string (STRING_.appended_string (a_qname, " is not a lexical QName"), "", "XT1280", Static_error)
 					end
@@ -149,7 +256,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 					
 					-- we need to save the namespace context
 
-					todo ("check_arguments (save namespace context)", True)
+					namespace_resolver := a_context.namespace_resolver
 				end
 			else
 
@@ -170,6 +277,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
+	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
+			-- Namespace resolver, for when the decimal format name is not known statically
 
 	decimal_format: XM_XSLT_DECIMAL_FORMAT_ENTRY
 			-- Decimal format
@@ -220,6 +329,35 @@ feature {NONE} -- Implementation
 		ensure
 			error: is_error implies Result = Void
 			no_error: not is_error implies Result /= Void
+		end
+
+	formatted_number (a_number: XM_XPATH_NUMERIC_VALUE): STRING is
+			-- Formatted version of `a_number'
+		require
+			number_not_in_error: a_number /= Void and then not a_number.is_error
+			two_sub_pictures: sub_pictures /= Void and then sub_pictures.count = 2
+			decimal_format_not_void: decimal_format /= Void
+		local
+			an_absolute_number: XM_XPATH_NUMERIC_VALUE
+			a_sub_picture: XM_XSLT_SUB_PICTURE
+			a_minus_sign: STRING
+		do
+			an_absolute_number := a_number
+			a_minus_sign := ""
+			if a_number.is_negative then
+				an_absolute_number := a_number.negated_value
+				if sub_pictures.item (2) = Void then
+					a_sub_picture:= sub_pictures.item (1)
+					a_minus_sign := decimal_format.minus_sign
+				else
+					a_sub_picture:= sub_pictures.item (2)
+				end
+			else
+				a_sub_picture:= sub_pictures.item (1)
+			end
+			Result := a_sub_picture.formatted_number (an_absolute_number, decimal_format, a_minus_sign) 
+		ensure
+			may_be_in_error: Result /= Void
 		end
 
 end

@@ -15,17 +15,18 @@ library =
     attribute name { text },
     attribute prefix { text }?,
     description,
-    (cluster | mount)+
+    (option | cluster | mount)+
   }
 # Definition for <system/> follows
 system =
   element system {
     attribute name { text },
     description,
+    # use if/unless flags to enable/disable just one
     element root {
       attribute class { text },
       attribute creation { text }
-    },
+    }+,
     (option | cluster | mount)+
   }
 # Elements used in both libraries and systems
