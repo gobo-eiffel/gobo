@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			handler_not_void: handler /= Void
 		do
 			make_description
-			make_compressed_scanner_skeleton
+			make_with_buffer (Empty_buffer)
 			error_handler := handler
 			!! name_definitions.make (Initial_max_nb_names)
 			!! character_classes.make (Initial_max_character_classes)
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			handler_not_void: handler /= Void
 		do
 			from_description (a_description)
-			make_compressed_scanner_skeleton
+			make_with_buffer (Empty_buffer)
 			error_handler := handler
 			!! name_definitions.make (Initial_max_nb_names)
 			!! character_classes.make (Initial_max_character_classes)
