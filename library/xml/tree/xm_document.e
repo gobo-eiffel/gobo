@@ -20,7 +20,7 @@ inherit
 			root_node
 		end
 
-	DS_LINKED_LIST [XM_DOCUMENT_NODE]
+	XM_LINKED_LIST [XM_DOCUMENT_NODE]
 		rename
 			make as make_list,
 			is_first as list_is_first,
@@ -52,6 +52,45 @@ feature -- List
 
 	equality_tester: KL_EQUALITY_TESTER [XM_DOCUMENT_NODE]
 	
+feature {NONE} -- Parent processing
+
+	before_addition (a_node: XM_DOCUMENT_NODE) is
+			-- Remove node from original parent if not us.
+		do
+			if a_node /= Void and then a_node.parent /= Current then
+					-- Remove from previous parent.
+				a_node.parent.equality_delete (a_node)
+				a_node.set_parent (Current)
+			end
+		ensure then
+			parent_accepted: a_node.parent = Current
+		end
+		
+feature {XM_NODE} -- Removal
+
+	equality_delete (v: XM_NODE) is
+			-- Call `delete' with Void equality tester.
+		local
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+		do
+			-- we do DS_LIST.delete by hand, because 
+			-- it takes a descendant type, while we don't 
+			-- really need to know the subtype for object
+			-- equality.
+			from
+				a_cursor := new_cursor
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
+				if a_cursor.item = v then
+					a_cursor.remove
+				else
+					a_cursor.forth
+				end
+			end
+		end
+		
 feature -- Access
 
 	root_element: XM_ELEMENT

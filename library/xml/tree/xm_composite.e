@@ -159,6 +159,14 @@ feature -- Namespaces
 			end
 		end
 
+feature {XM_NODE} -- Removal
+
+	equality_delete (v: XM_NODE) is
+			-- Delete node if it is in current node, using 
+			-- object identity.
+		deferred
+		end
+		
 feature -- Processing
 
 	process_children (a_processor: XM_NODE_PROCESSOR) is

@@ -34,7 +34,7 @@ inherit
 			copy, is_equal
 		end
 
-	DS_LINKED_LIST [XM_ELEMENT_NODE]
+	XM_LINKED_LIST [XM_ELEMENT_NODE]
 		rename
 			make as make_list,
 			is_first as list_is_first,
@@ -80,7 +80,46 @@ feature {NONE} -- Initialization
 feature -- List
 
 	equality_tester: KL_EQUALITY_TESTER [XM_ELEMENT_NODE]
-	
+
+feature {NONE} -- Parent processing
+
+	before_addition (a_node: XM_ELEMENT_NODE) is
+			-- Remove node from original parent if not us.
+		do
+			if a_node /= Void and then a_node.parent /= Current then
+					-- Remove from previous parent.
+				a_node.parent.equality_delete (a_node)
+				a_node.set_parent (Current)
+			end
+		ensure then
+			parent_accepted: a_node.parent = Current
+		end
+		
+feature {XM_NODE} -- Removal
+
+	equality_delete (v: XM_NODE) is
+			-- Call `delete' with Void equality tester.
+		local
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+		do
+			-- we do DS_LIST.delete by hand, because 
+			-- it takes a descendant type, while we don't 
+			-- really need to know the subtype for object
+			-- equality.
+			from
+				a_cursor := new_cursor
+				a_cursor.start
+			until
+				a_cursor.after
+			loop
+				if a_cursor.item = v then
+					a_cursor.remove
+				else
+					a_cursor.forth
+				end
+			end
+		end
+		
 feature -- Status report
 
 	has_attribute_by_qualified_name (a_uri: STRING; a_name: STRING): BOOLEAN is
@@ -400,6 +439,30 @@ feature -- Removal
 			end
 		end
 
+	remove_attribute_by_qualified_name (a_uri: STRING; a_name: STRING) is
+			-- Remove attribute named `a_name' from current element.
+		require
+			a_uri_not_void: a_uri /= Void
+			a_name_not_void: a_name /= Void
+			has_attribute: has_attribute_by_qualified_name (a_uri, a_name)
+		local
+			a_cursor: like new_cursor
+			typer: XM_NODE_TYPER
+		do
+			create typer
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (typer)
+				if typer.is_attribute and then 
+					typer.attribute.has_qualified_name (a_uri, a_name)
+				then
+					remove_at_cursor (a_cursor)
+				else
+					a_cursor.forth
+				end
+			end
+		end
+		
 	join_text_nodes is
 			-- Join sequences of text nodes.
 		local
