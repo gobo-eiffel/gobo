@@ -122,6 +122,8 @@ feature -- Generation
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		do
 			print_eiffel_header (a_file)
+			a_file.put_string ("%Nfeature -- Status report%N%N")
+			print_status_report_routines (a_file)
 			a_file.put_string ("%Nfeature {NONE} -- Implementation%N%N")
 			print_build_tables (a_file)
 			a_file.put_character ('%N')
@@ -184,6 +186,33 @@ feature {NONE} -- Generation
 					i := i + 1
 				end
 			end
+		end
+
+	print_status_report_routines (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print code for `valid_start_condition' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		do
+			a_file.put_string ("%Tvalid_start_condition (sc: INTEGER): BOOLEAN is%N%
+				%%T%T%T-- Is `sc' a valid start condition?%N%
+				%%T%Tdo%N%
+				%%T%T%TResult := ")
+			inspect yy_start_conditions.count
+			when 0 then
+				a_file.put_string ("False")
+			when 1 then
+				a_file.put_string ("(sc = ")
+				a_file.put_string (yy_start_conditions.item (yy_start_conditions.lower))
+				a_file.put_character (')')
+			else
+				a_file.put_character ('(')
+				a_file.put_string (yy_start_conditions.item (yy_start_conditions.lower))
+				a_file.put_string (" <= sc and sc <= ")
+				a_file.put_string (yy_start_conditions.item (yy_start_conditions.upper))
+				a_file.put_character (')')
+			end
+			a_file.put_string ("%N%T%Tend%N")
 		end
 
 	print_build_tables (a_file: like OUTPUT_STREAM_TYPE) is
@@ -278,8 +307,9 @@ feature {NONE} -- Generation
 				a_file.put_string (" then%N")
 				print_action_call (a_file, rule)
 			end
-			a_file.put_string ("%T%T%Telse%N%T%T%T%Tfatal_error %
-				%(%"fatal scanner internal error: no action found%")%N%
+			a_file.put_string ("%T%T%Telse%N%
+				%%T%T%T%Tlast_token := yyError_token%N%
+				%%T%T%T%Tfatal_error (%"fatal scanner internal error: no action found%")%N%
 				%%T%T%Tend%N")
 		end
 
