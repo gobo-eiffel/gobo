@@ -441,19 +441,19 @@ feature {NONE} -- Messages
 		do
 			Result := STRING_.make (50)
 			Result.append_string (a_tag)
-			Result.append_string (" (expected: ")
+			Result.append_string ("%N   expected: ")
 			if expected = Void then
 				Result.append_string ("Void")
 			else
 				Result.append_string (expected.out)
 			end
-			Result.append_string (" but got: ")
+			Result.append_string ("%N   but got : ")
 			if actual = Void then
 				Result.append_string ("Void")
 			else
 				Result.append_string (actual.out)
 			end
-			Result.append_character (')')
+			Result.append_character ('%N')
 		ensure
 			message_not_void: Result /= Void
 		end
