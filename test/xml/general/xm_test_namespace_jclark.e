@@ -19,7 +19,6 @@ inherit
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
 		
-	
 feature
 
 	test_cars is
@@ -92,10 +91,14 @@ feature
 				"</{urn:com:books-r-us}section>")
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	assert_namespace (a_name: STRING; a_xml: STRING; a_parsed: STRING) is
 			-- Test resolved namespaces and pretty printed as expected.
+		require
+			a_name_not_void: a_name /= Void
+			a_xml_not_void: a_xml /= Void
+			a_parser_not_void: a_parsed /= Void
 		local
 			a_parser: XM_EIFFEL_PARSER
 			a_printer: XM_NAMESPACE_PRETTY_PRINT_FILTER
@@ -110,7 +113,6 @@ feature {NONE}
 			assert ("parsing ok for "+a_name, a_parser.is_correct)
 			assert_equal (a_name, a_parsed, a_printer.last_output)
 		end
-		
+
 end
 
-	
