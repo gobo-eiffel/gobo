@@ -14,7 +14,7 @@ class ET_DYNAMIC_PUSH_TYPE_SET_BUILDER
 
 inherit
 
-	ET_DYNAMIC_TYPE_SET_BUILDER
+	ET_DYNAMIC_TYPE_BUILDER
 		redefine
 			new_dynamic_type_set,
 			build_dynamic_type_sets,

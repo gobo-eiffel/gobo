@@ -14,7 +14,7 @@ class ET_DYNAMIC_PULL_TYPE_SET_BUILDER
 
 inherit
 
-	ET_DYNAMIC_TYPE_SET_BUILDER
+	ET_DYNAMIC_TYPE_BUILDER
 		rename
 			report_catcall_error as old_report_catcall_error
 		redefine
