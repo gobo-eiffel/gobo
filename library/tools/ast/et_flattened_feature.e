@@ -63,6 +63,10 @@ feature -- Access
 	seeds: ET_FEATURE_SEEDS
 			-- Seeds
 
+	signature: ET_SIGNATURE
+			-- Signature of flattened feature;
+			-- Void if not yet computed
+
 	current_class: ET_CLASS
 			-- Class where current feature is flattened
 
@@ -70,6 +74,33 @@ feature -- Access
 			-- Feature resulting from current feature adaptation;
 			-- Void if not computed yet or if an error occurred
 			-- during compilation
+
+	integer_constant: ET_INTEGER_CONSTANT is
+			-- Constant value if current feature is an
+			-- integer constant attribute, void otherwise
+		local
+			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
+			a_cursor: DS_LINKED_LIST_CURSOR [ET_INHERITED_FEATURE]
+		do
+			a_constant_attribute ?= current_feature
+			if a_constant_attribute /= Void then
+				Result ?= a_constant_attribute.constant
+			end
+			if Result = Void then
+				a_cursor := inherited_features.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_constant_attribute ?= a_cursor.item.inherited_feature
+					if a_constant_attribute /= Void then
+						Result ?= a_constant_attribute.constant
+					end
+					if Result /= Void then
+						a_cursor.go_after -- Jump out of the loop.
+					else
+						a_cursor.forth
+					end
+				end
+			end
+		end
 
 feature -- Status report
 
@@ -150,143 +181,187 @@ feature -- Element change
 
 feature -- Compilation
 
-	process_flattened_feature is
+	process_flattened_feature (a_flattener: ET_FEATURE_FLATTENER) is
 			-- Process current feature adaptation and
 			-- put the result in `flattened_feature'.
+		require
+			a_flattener_not_void: a_flattener /= Void
 		do
 			if inherited_features.is_empty then
-				process_immediate_feature
+				process_immediate_feature (a_flattener)
 			elseif current_feature = Void then
-				process_inherited_feature
+				process_inherited_feature (a_flattener)
 			else
-				process_redeclared_feature
+				process_redeclared_feature (a_flattener)
 			end
 		end
 
 feature {NONE} -- Compilation
 
-	process_immediate_feature is
+	process_immediate_feature (a_flattener: ET_FEATURE_FLATTENER) is
 			-- Process feature that aas been introduced
 			-- in `current_class' (ETL2, p. 56).
 		require
 			immediate_feature: inherited_features.is_empty
+			a_flattener_not_void: a_flattener /= Void
 		do
+			current_feature.resolve_identifier_types (a_flattener)
 			flattened_feature := current_feature
+			signature := current_feature.signature
 		end
 
-	process_redeclared_feature is
+	process_redeclared_feature (a_flattener: ET_FEATURE_FLATTENER) is
 			-- Process an inherited feature which has been
 			-- given a new declaration in `current_class'.
 		require
 			inherited_feature: not inherited_features.is_empty
 			redeclared_feature: current_feature /= Void
+			a_flattener_not_void: a_flattener /= Void
 		local
-			inherited_feature, effective: ET_INHERITED_FEATURE
-			is_deferred: BOOLEAN
+			a_feature: ET_INHERITED_FEATURE
+			is_deferred, has_redefined: BOOLEAN
 		do
-			is_deferred := current_feature.is_deferred
+			current_feature.resolve_identifier_types (a_flattener)
+			flattened_feature := current_feature
+			flattened_feature.set_seeds (seeds)
+			signature := current_feature.signature
+				-- Check redeclaration.
 			from inherited_features.start until inherited_features.after loop
-				inherited_feature := inherited_features.item_for_iteration
-				inherited_feature.check_undefine_clause (current_class)
-				inherited_feature.check_redefine_clause (current_class)
-				if inherited_feature.is_redefined then
-					if is_deferred /= inherited_feature.is_deferred then
-						if is_deferred then
-							-- Error
-						else
-							-- Error
-						end
+				a_feature := inherited_features.item_for_iteration
+				a_feature.check_undefine_clause (current_class)
+				a_feature.check_redefine_clause (current_class)
+				if a_feature.is_redefined then
+					if has_redefined then
+						-- Warning: two redefines.
 					end
-				elseif is_deferred then
-					if inherited_feature.is_deferred then
-						-- Error
-					else
-						-- Error
-					end
-				elseif not inherited_feature.is_deferred then
-					-- Error
-				end
-				if not inherited_feature.is_deferred then
-					if effective = Void then
-						effective := inherited_feature
-					elseif not effective.same_version (inherited_feature) then
-							-- Error.
-					end
-				end
-				if not current_feature.signature_conforms_to (inherited_feature.inherited_feature) then
-					-- Error
+					has_redefined := True
 				end
 				inherited_features.forth
 			end
-			flattened_feature := current_feature
-			flattened_feature.set_seeds (seeds)
+			is_deferred := current_feature.is_deferred
+			from inherited_features.start until inherited_features.after loop
+				a_feature := inherited_features.item_for_iteration
+				if a_feature.is_redefined then
+					if is_deferred /= a_feature.is_deferred then
+						if is_deferred then
+							-- Error: Used 'redefine' instead of 'undefine'.
+							-- Need to use 'undefine' to redeclare an
+							-- effective feature to a deferred feature.
+						else
+							-- Error: No need to 'redefine' to redeclare
+							-- a deferred feature to an effective feature.
+						end
+					end
+				elseif is_deferred then
+					if a_feature.is_deferred then
+						if not has_redefined then
+							-- Error: Need 'redefine' to redeclare a
+							-- deferred feature to a deferred feature.
+						end
+					else
+						-- Error: need 'undefine' to redeclare an
+						-- effective feature to a deferred feature.
+					end
+				elseif not a_feature.is_deferred then
+					-- Error: need 'redefine' to redeclare an effective
+					-- feature to an effective feature.
+				end
+				inherited_features.forth
+			end
 		end
 
-	process_inherited_feature is
+	process_inherited_feature (a_flattener: ET_FEATURE_FLATTENER) is
 			-- Process an inherited feature which has not been
 			-- given a new declaration in `current_class'.
 		require
 			inherited_feature: current_feature = Void
+			a_flattener_not_void: a_flattener /= Void
 		local
-			inherited_feature, a_feature: ET_INHERITED_FEATURE
-			same_version: BOOLEAN
-			is_deferred: BOOLEAN
+			a_feature, effective, a_deferred: ET_INHERITED_FEATURE
+			same_version, duplication_needed: BOOLEAN
 		do
-			same_version := True
+				-- Check redeclaration.
 			from inherited_features.start until inherited_features.after loop
-				inherited_feature := inherited_features.item_for_iteration
-				inherited_feature.check_undefine_clause (current_class)
-				inherited_feature.check_redefine_clause (current_class)
-				if inherited_feature.is_redefined then
-					-- Error
+				a_feature := inherited_features.item_for_iteration
+				a_feature.check_undefine_clause (current_class)
+				a_feature.check_redefine_clause (current_class)
+				if a_feature.is_redefined then
+					-- Error: Not a redefinition.
 				end
-				if a_feature = Void then
-					a_feature := inherited_feature
-				elseif a_feature.same_version (inherited_feature) then
-						-- Sharing.
-						-- Trying to choose one which is not renamed
-						-- to avoid duplication.
-					if a_feature.is_renamed then
-						a_feature := inherited_feature
+				if not a_feature.is_deferred then
+					if effective = Void then
+						effective := a_feature
+					else
+						if not a_feature.same_version (effective) then
+								-- Error: two effective features which
+								-- are not shared.
+						end
+						if effective.is_renamed then
+								-- Trying to choose one which is not renamed
+								-- to avoid duplication.
+							effective := a_feature
+						end
 					end
-				elseif inherited_feature.is_deferred then
-					same_version := False
-					if a_feature.is_deferred and not a_feature.signature_conforms_to (inherited_feature) then
-						a_feature := inherited_feature
-					end
-				elseif a_feature.is_deferred then
-					same_version := False
-					a_feature := inherited_feature
-				else
-						-- Error.
-					same_version := False
-					a_feature := inherited_feature
 				end
 				inherited_features.forth
+			end
+			if effective /= Void then
+				from inherited_features.start until inherited_features.after loop
+					a_feature := inherited_features.item_for_iteration
+					if a_feature.is_deferred then
+						duplication_needed := False
+						-- TODO
+					end
+					inherited_features.forth
+				end
+				a_feature := effective
+				same_version := True
+			else
+				same_version := True
+				from inherited_features.start until inherited_features.after loop
+					a_feature := inherited_features.item_for_iteration
+					if a_deferred = Void then
+						a_deferred := a_feature
+					elseif a_feature.same_version (a_deferred) then
+							-- Sharing.
+						if a_deferred.is_renamed then
+								-- Trying to choose one which is not renamed
+								-- to avoid duplication.
+							a_deferred := a_feature
+						end
+					elseif a_feature.same_syntactical_signature (a_deferred) then
+						same_version := False
+						if a_deferred.is_renamed then
+								-- Trying to choose one which is not renamed
+								-- to avoid duplication.
+							a_deferred := a_feature
+						end
+					else
+						same_version := False
+print ("PROBLEM with DEFERRED%N")
+						-- TODO
+					end
+					inherited_features.forth
+				end
+				a_feature := a_deferred
+				duplication_needed := not same_version
 			end
 			if is_replicated then
 				flattened_feature := a_feature.replicated_feature (feature_id, current_class)
 			else
-				flattened_feature := a_feature.adapted_feature (not same_version, current_class)
-			end
-			flattened_feature.set_seeds (seeds)
-			if not same_version then
-				is_deferred := a_feature.is_deferred
-				from inherited_features.start until inherited_features.after loop
-					inherited_feature := inherited_features.item_for_iteration
-					if is_deferred then
-						if not a_feature.same_signature (inherited_feature) then
-								-- Error
-							if not a_feature.signature_conforms_to (inherited_feature) then
-								-- Error
-							end
-						end
-					elseif not a_feature.signature_conforms_to (inherited_feature) then
-							-- Error
-					end
-					inherited_features.forth
+				if not duplication_needed then
+						-- Force duplication when there is a
+						-- sharing of features but the seeds
+						-- have been extended.
+					duplication_needed := not a_feature.seeds.is_equal (seeds)
+				end
+				flattened_feature := a_feature.adapted_feature (duplication_needed, current_class)
+				if same_version then
+					flattened_feature.set_version (a_feature.inherited_feature.version)
 				end
 			end
+			flattened_feature.set_seeds (seeds)
+			signature := a_feature.signature
 		end
 
 feature {ET_REPLICABLE_FEATURE} -- Replication
