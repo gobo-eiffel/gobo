@@ -171,7 +171,7 @@ feature {NONE} -- Formatting implementation
 			looked_at_all_arguments: is_correct implies args.is_after
 		end
 
-	do_format ( in: STRING; fmt_el: ST_TYPECHAR_FORMATTER; asterisk_allowed: BOOLEAN): STRING is
+	do_format (in: STRING; fmt_el: ST_TYPECHAR_FORMATTER; asterisk_allowed: BOOLEAN): STRING is
 			-- Current argument(s) formatted according to format string
 			-- `in' using formatter `fmt_el';
 			-- Format specification syntax: [?][flags][width][.precision]
@@ -181,14 +181,13 @@ feature {NONE} -- Formatting implementation
 			not_after: not args.is_after
 		local
 			i, j, k, width, precision: INTEGER
-			int_ref: INTEGER_REF
+			int_cell: DS_CELL [INTEGER]
 			substr, parsed_flags, set_flags: STRING
 			found, was_flags, was_width, was_precision: BOOLEAN
-			i_double_ref: DOUBLE_REF
-			i_real_ref: REAL_REF
-			integer_ref: INTEGER_REF
+			i_double_cell: DS_CELL [DOUBLE]
+			i_real_cell: DS_CELL [REAL]
+			a_current_item: ANY
 		do
-
 			-- skip default_escape (if presents)
 			if in.count > 0 and then in @ 1 = default_escape then
 				k := 2
@@ -235,10 +234,10 @@ feature {NONE} -- Formatting implementation
 					substr.count = 1 then
 					-- take width from arguments list
 
-					int_ref ?= args.current_item
+					int_cell ?= args.current_item
 					args.go_forth
-					if int_ref /= Void then
-						width := int_ref.item
+					if int_cell /= Void then
+						width := int_cell.item
 					else
 						set_error ("Width must conform to INTEGER")
 					end
@@ -270,10 +269,10 @@ feature {NONE} -- Formatting implementation
 
 						if substr @ 1 = Asterisk and then substr.count = 1 then
 							-- take precision from arguments list
-							int_ref ?= args.current_item
+							int_cell ?= args.current_item
 							args.go_forth
-							if int_ref /= Void then
-								precision := int_ref.item
+							if int_cell /= Void then
+								precision := int_cell.item
 							else
 								set_error ("Precision must conform to INTEGER")
 							end
@@ -306,31 +305,25 @@ feature {NONE} -- Formatting implementation
 				-- HACK! `DOUBLE' does not conform to `REAL', but we want to
 				-- use the same formatting facilities therefore we treat it as
 				-- special case (1999-07-14, frido).
-				-- However, SmartEiffel 1.1 thinks REAL_REF conforms to
-				-- INTEGER_REF, detect and avoid that pitfall (2003-12-10, berend).
+				
+				-- However, SmartEiffel 1 thinks DS_CELL [REAL] conforms to
+				-- DS_CELL [INTEGER], detect and avoid that pitfall (2003-12-10, berend).
 
-				-- SmartEiffel will core dump here if args.current_item is an
-				-- expanded item...
-				integer_ref ?= args.current_item
-				if integer_ref = Void then
-					i_real_ref ?= args.current_item
+				int_cell ?= args.current_item
+				if int_cell = Void then
+					i_real_cell ?= args.current_item
 				end
-				if i_real_ref /= Void then
+				if i_real_cell /= Void then
 					-- promote REAL to DOUBLE
-					create i_double_ref
-					i_double_ref.set_item (i_real_ref.item)
-					fmt_el.fmt.set_value (i_double_ref)
-					if False then
-							-- Bug workaround: forces SE 1.0 to generate C code
-							-- for routine 'set_item' from 'reference REAL'.
-						i_real_ref.set_item (i_real_ref.item)
-					end
+					create i_double_cell.make (i_real_cell.item)
+					a_current_item := i_double_cell
 				else
-					if args.current_item.conforms_to (fmt_el.fmt.anchor) then
-						fmt_el.fmt.set_value (args.current_item) -- initialize format object
-					else
-						set_error ("Argument '" + args.current_item.out + "' does not conform to format specification " + default_escape.out + fmt_el.typechar.out + ". Really, it does not.")
-					end
+					a_current_item := args.current_item
+				end
+				if fmt_el.fmt.is_value (a_current_item) then
+					fmt_el.fmt.set_value (a_current_item) -- initialize format object
+				else
+					set_error ("Argument '" + a_current_item.out + "' does not conform to format specification " + default_escape.out + fmt_el.typechar.out + ". Really, it does not.")
 				end
 			end
 
