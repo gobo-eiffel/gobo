@@ -42,7 +42,7 @@ cluster
 
 		-- Gobo Eiffel Kernel Library
 	kl_kernel:			"$GOBO\library\kernel";
-	kl_kernel_spec:		"$GOBO\library\kernel\spec";
+	kl_kernel_spec:		"$GOBO\library\kernel\spec\ise";
 
 		-- Gobo Eiffel Structure Library
 	ds_container:		"$GOBO\library\structure\container";
