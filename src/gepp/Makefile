@@ -19,7 +19,7 @@ scanner: gepp_scanner.e
 
 gepp_parser.e: gepp_parser.y
 	$(GEYACC) --version
-	$(GEYACC) -t GEPP_TOKENS -o gepp_parser.y gepp_parser.y
+	$(GEYACC) -t GEPP_TOKENS -o gepp_parser.e gepp_parser.y
 
 gepp_scanner.e: gepp_scanner.l
 	$(GELEX) --version

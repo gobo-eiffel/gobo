@@ -22,7 +22,7 @@ default
 	assertion (all);
 #else
 	--assertion (all);
-#emdif
+#endif
 	--precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster

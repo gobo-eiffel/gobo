@@ -32,7 +32,7 @@ cluster
 
 #include "$GOBO/library/tools/ise.ace"
 
-#include "$GOBO/library/lexcial/ise.ace"
+#include "$GOBO/library/lexical/ise.ace"
 
 #include "$GOBO/library/parse/ise-skl.ace"
 
