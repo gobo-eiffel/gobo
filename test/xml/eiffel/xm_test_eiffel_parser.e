@@ -44,4 +44,13 @@ feature -- Test
 			assert_equal ("byte_index_correct", 7, a_position.byte_index)
 		end
 
+	test_end_tag is
+			-- Test end tag checking is enabled.
+		local
+			a_parser: XM_EIFFEL_PARSER
+		do
+			create a_parser.make
+			a_parser.parse_from_string ("<a></b>")
+			assert ("not_correct", not a_parser.is_correct)
+		end
 end
