@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
+	copyright:  "Copyright (c) 2001-2002, Andreas Leitner and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -16,6 +16,9 @@ class ET_XACE_ISE_GENERATOR
 inherit
 
 	ET_XACE_GENERATOR
+
+	UT_STRING_ROUTINES
+		export {NONE} all end
 
 creation
 
@@ -387,6 +390,7 @@ feature {NONE} -- Output
 			a_file_open_write: a_file.is_open_write
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
+			a_pathname: STRING
 		do
 			if not a_directories.is_empty then
 				print_indentation (1, a_file)
@@ -395,7 +399,12 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (2, a_file)
 					a_file.put_character ('%"')
-					a_file.put_string (a_cursor.item)
+					a_pathname := a_cursor.item
+					if is_windows then
+						a_pathname := replace_all_characters (a_pathname, '{', '(')
+						a_pathname := replace_all_characters (a_pathname, '}', ')')
+					end
+					a_file.put_string (a_pathname)
 					if a_cursor.is_last then
 						a_file.put_line ("%";")
 					else
@@ -419,6 +428,7 @@ feature {NONE} -- Output
 			a_file_open_write: a_file.is_open_write
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
+			a_pathname: STRING
 			may_close_statement: BOOLEAN
 			lib_contains_path,
 			has_dot_lib_extension,
@@ -433,20 +443,25 @@ feature {NONE} -- Output
 				may_close_statement := link_libraries_directories.is_empty
 				a_cursor := link_libraries.new_cursor
 				from a_cursor.start until a_cursor.after loop
+					a_pathname := a_cursor.item
 					print_indentation (2, a_file)
-					lib_contains_path := a_cursor.item.has ('/') or a_cursor.item.has ('\')
+					lib_contains_path := a_pathname.has ('/') or a_pathname.has ('\')
 					if lib_contains_path then
 						lib_needs_option := False
 					else
-						has_dot_lib_extension := a_cursor.item.count > 4 and then a_cursor.item.substring (a_cursor.item.count - 3, a_cursor.item.count).is_equal (".lib")
+						has_dot_lib_extension := a_pathname.count > 4 and then a_pathname.substring (a_pathname.count - 3, a_pathname.count).is_equal (".lib")
 						lib_needs_option := not has_dot_lib_extension
 					end
 					if lib_needs_option then
 						a_file.put_string ("%"-l")
 					else
 						a_file.put_character ('%"')
+						if is_windows then
+							a_pathname := replace_all_characters (a_pathname, '{', '(')
+							a_pathname := replace_all_characters (a_pathname, '}', ')')
+						end
 					end
-					a_file.put_string (a_cursor.item)
+					a_file.put_string (a_pathname)
 					if a_cursor.is_last and may_close_statement then
 						a_file.put_line ("%";")
 					else
@@ -461,7 +476,12 @@ feature {NONE} -- Output
 				from a_cursor.start until a_cursor.after loop
 					print_indentation (2, a_file)
 					a_file.put_string ("%"-L")
-					a_file.put_string (a_cursor.item)
+					a_pathname := a_cursor.item
+					if is_windows then
+						a_pathname := replace_all_characters (a_pathname, '{', '(')
+						a_pathname := replace_all_characters (a_pathname, '}', ')')
+					end
+					a_file.put_string (a_pathname)
 					if a_cursor.is_last then
 						a_file.put_line ("%";")
 					else
