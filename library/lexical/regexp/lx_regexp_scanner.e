@@ -23,7 +23,7 @@ inherit
 	LX_DESCRIPTION
 		rename
 			make as make_description,
-			make_from_description as make_descrition_from_description,
+			make_from_description as make_description_from_description,
 			reset as reset_description
 		end
 		
@@ -32,7 +32,7 @@ inherit
 			{NONE} all
 		end
 
-	DP_CHARACTER_CODES
+	UT_CHARACTER_CODES
 		export
 			{NONE} all
 		end
@@ -441,7 +441,7 @@ feature -- User-defined features
 feature {NONE} -- Initialization
 
 	make (handler: like error_handler) is
-			-- Create a new scanner description scanner.
+			-- Create a new regular expression scanner.
 		require
 			handler_not_void: handler /= Void
 		do
@@ -456,7 +456,7 @@ feature {NONE} -- Initialization
 
 	make_from_description
 		(a_description: LX_DESCRIPTION; handler: like error_handler) is
-			-- Create a new scanner description scanner and
+			-- Create a new regular expression scanner and
 			-- initialize it with `a_description'.
 		require
 			a_description_not_void: a_description /= Void
@@ -484,7 +484,7 @@ feature -- Initialization
 
 feature -- Access
 
-	error_handler: LEX_ERROR_HANDLER
+	error_handler: LX_LEX_ERROR_HANDLER
 			-- Error handler
 
 	line_nb: INTEGER

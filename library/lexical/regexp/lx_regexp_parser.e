@@ -14,7 +14,7 @@ class LX_REGEXP_PARSER
 
 inherit
 
-	LALR1_PARSER [ANY]
+	YY_PARSER [ANY]
 		rename
 			reset as reset_parser_skeleton
 		redefine
@@ -50,10 +50,9 @@ feature
 
 feature {NONE} -- Initialization
 
-	make (a_description: LX_DESCRIPTION; handler: like error_handler) is
-			-- Create a new scanner description parser.
+	make (handler: like error_handler) is
+			-- Create a new regular expression parser.
 		require
-			a_description_not_void: a_description /= Void
 			handler_not_void: handler /= Void
 		do
 			make_regexp_scanner (handler)
@@ -64,7 +63,7 @@ feature {NONE} -- Initialization
 
 	make_from_description
 		(a_description: LX_DESCRIPTION; handler: like error_handler) is
-			-- Create a new scanner description parser
+			-- Create a new regular expression parser
 			-- and initialize it with `a_description'.
 		require
 			a_description_not_void: a_description /= Void
@@ -95,8 +94,12 @@ feature -- Initialization
 
 feature -- Parsing
 
+#ifdef ISE || HACT
+	parse_file (a_file: IO_MEDIUM) is
+#else
 	parse_file (a_file: FILE) is
-			-- Parse scanner description from `a_file'.
+#endif
+			-- Parse regular expression from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -106,7 +109,7 @@ feature -- Parsing
 		end
 
 	parse_string (a_string: STRING) is
-			-- Parse scanner description from `a_string'.
+			-- Parse regular expression from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		do
