@@ -27,8 +27,12 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create a new defined variables.
+		local
+			a_tester: UC_EQUALITY_TESTER
 		do
-			!! defined_values.make (Initial_defined_values_capacity)
+			!! defined_values.make_map (Initial_defined_values_capacity)
+			!! a_tester
+			defined_values.set_key_equality_tester (a_tester)
 		end
 
 feature -- Status report

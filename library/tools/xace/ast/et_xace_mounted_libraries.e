@@ -12,6 +12,10 @@ indexing
 
 class ET_XACE_MOUNTED_LIBRARIES
 
+inherit
+
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
 	make, make_empty
@@ -53,7 +57,7 @@ feature -- Access
 			nb := libraries.count
 			from i := 1 until i > nb loop
 				a_library := libraries.item (i)
-				if a_library.pathname.is_equal (a_pathname) then
+				if STRING_.same_string (a_library.pathname, a_pathname) then
 					Result := a_library
 					i := nb + 1 -- Jump out of the loop.
 				else
@@ -61,7 +65,7 @@ feature -- Access
 				end
 			end
 		ensure
-			same_pathname: Result /= Void implies Result.pathname.is_equal (a_pathname)
+			same_pathname: Result /= Void implies STRING_.same_string (Result.pathname, a_pathname)
 		end
 
 	libraries: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
@@ -142,8 +146,18 @@ feature -- Basic operations
 				a_library := libraries.item (i)
 				other_library := a_libraries.item (a_library.pathname)
 				if other_library /= Void then
-					if not other_library.is_root and not equal (other_library.library_prefix, a_library.library_prefix) then
-						an_error_handler.report_multiple_library_prefix_error (a_library, other_library)
+					if not other_library.is_root then
+						if other_library.library_prefix /= Void then
+							if a_library.library_prefix /= Void then
+								if not STRING_.same_string (other_library.library_prefix, a_library.library_prefix) then
+									an_error_handler.report_multiple_library_prefix_error (a_library, other_library)
+								end
+							else
+								an_error_handler.report_multiple_library_prefix_error (a_library, other_library)
+							end
+						elseif a_library.library_prefix /= Void then
+							an_error_handler.report_multiple_library_prefix_error (a_library, other_library)
+						end
 					end
 				else
 					if a_library.is_root then

@@ -58,26 +58,23 @@ feature -- Access
 		do
 			if library_prefix.count > 0 then
 				if cluster_prefix.count > 0 then
-					Result := STRING_.make (library_prefix.count + cluster_prefix.count + name.count)
+					Result := STRING_.new_empty_string (library_prefix, library_prefix.count + cluster_prefix.count + name.count)
 					Result.append_string (library_prefix)
-					Result.append_string (cluster_prefix)
-					Result.append_string (name)
+					Result := STRING_.appended_string (Result, cluster_prefix)
+					Result := STRING_.appended_string (Result, name)
 				else
-					Result := STRING_.make (library_prefix.count + name.count)
-					Result.append_string (library_prefix)
-					Result.append_string (name)
+					Result := STRING_.concat (library_prefix, name)
 				end
 			else
 				if cluster_prefix.count > 0 then
-					Result := STRING_.make (cluster_prefix.count + name.count)
-					Result.append_string (cluster_prefix)
-					Result.append_string (name)
+					Result := STRING_.concat (cluster_prefix, name)
 				else
 					Result := name
 				end
 			end
 		ensure then
-			definition: Result.is_equal (library_prefix + cluster_prefix + name)
+			-- TODO:
+			--definition: STRING_.same_string (Result, STRING_.concat_n (<<library_prefix, cluster_prefix, name>>))
 		end
 
 	library_prefix: STRING

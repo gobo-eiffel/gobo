@@ -59,7 +59,7 @@ feature -- Validation
 			a_position_table_not_void: a_position_table /= Void
 		do
 			has_error := False
-			if a_doc.root_element.name.is_equal (uc_system) then
+			if STRING_.same_string (a_doc.root_element.name, uc_system) then
 				validate_system (a_doc.root_element, a_position_table)
 			else
 				has_error := True
@@ -75,7 +75,7 @@ feature -- Validation
 			a_position_table_not_void: a_position_table /= Void
 		do
 			has_error := False
-			if a_doc.root_element.name.is_equal (uc_cluster) then
+			if STRING_.same_string (a_doc.root_element.name, uc_cluster) then
 				validate_named_cluster (a_doc.root_element, a_position_table)
 			else
 				has_error := True
@@ -91,9 +91,9 @@ feature -- Validation
 			a_position_table_not_void: a_position_table /= Void
 		do
 			has_error := False
-			if a_doc.root_element.name.is_equal (uc_library) then
+			if STRING_.same_string (a_doc.root_element.name, uc_library) then
 				validate_library (a_doc.root_element, a_position_table)
-			elseif a_doc.root_element.name.is_equal (uc_cluster) then
+			elseif STRING_.same_string (a_doc.root_element.name, uc_cluster) then
 				validate_named_cluster (a_doc.root_element, a_position_table)
 			else
 				has_error := True
@@ -108,7 +108,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			a_system_not_void: a_system /= Void
-			a_system_is_system: a_system.name.is_equal (uc_system)
+			a_system_is_system: STRING_.same_string (a_system.name, uc_system)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -130,26 +130,26 @@ feature {NONE} -- Validation
 				a_child ?= a_cursor.item
 				if a_child = Void then
 						-- Not an element. Ignore.
-				elseif a_child.name.is_equal (uc_description) then
+				elseif STRING_.same_string (a_child.name, uc_description) then
 						-- OK.
-				elseif a_child.name.is_equal (uc_root) then
+				elseif STRING_.same_string (a_child.name, uc_root) then
 						-- OK.
-				elseif a_child.name.is_equal (uc_cluster) then
+				elseif STRING_.same_string (a_child.name, uc_cluster) then
 					if a_child.has_attribute_by_name (uc_name) then
 						validate_named_cluster (a_child, a_position_table)
 					else
 							-- Old syntax.
-						!! a_warning.make ("Warning: <cluster> is obsolete. Specify options, clusters and mounts directly under <system> instead%N" + a_position_table.item (a_child).out)
+						!! a_warning.make (STRING_.concat ("Warning: <cluster> is obsolete. Specify options, clusters and mounts directly under <system> instead%N", a_position_table.item (a_child).out))
 						error_handler.report_warning (a_warning)
 						validate_cluster (a_child, a_position_table)
 					end
-				elseif a_child.name.is_equal (uc_mount) then
+				elseif STRING_.same_string (a_child.name, uc_mount) then
 					validate_mount (a_child, a_position_table)
-				elseif a_child.name.is_equal (uc_option) then
+				elseif STRING_.same_string (a_child.name, uc_option) then
 					validate_option (a_child, a_position_table)
-				elseif a_child.name.is_equal (uc_external) then
+				elseif STRING_.same_string (a_child.name, uc_external) then
 						-- Old syntax.
-					!! a_warning.make ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N" + a_position_table.item (a_child).out)
+					!! a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
 					error_handler.report_warning (a_warning)
 					validate_external (a_child, a_position_table)
 				else
@@ -165,7 +165,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			a_library_not_void: a_library /= Void
-			a_library_is_library: a_library.name.is_equal (uc_library)
+			a_library_is_library: STRING_.same_string (a_library.name, uc_library)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -181,17 +181,17 @@ feature {NONE} -- Validation
 				a_child ?= a_cursor.item
 				if a_child = Void then
 						-- Not an element. Ignore.
-				elseif a_child.name.is_equal (uc_description) then
+				elseif STRING_.same_string (a_child.name, uc_description) then
 						-- OK.
-				elseif a_child.name.is_equal (uc_cluster) then
+				elseif STRING_.same_string (a_child.name, uc_cluster) then
 					validate_named_cluster (a_child, a_position_table)
-				elseif a_child.name.is_equal (uc_mount) then
+				elseif STRING_.same_string (a_child.name, uc_mount) then
 					validate_mount (a_child, a_position_table)
-				elseif a_child.name.is_equal (uc_option) then
+				elseif STRING_.same_string (a_child.name, uc_option) then
 					validate_option (a_child, a_position_table)
-				elseif a_child.name.is_equal (uc_external) then
+				elseif STRING_.same_string (a_child.name, uc_external) then
 						-- Old syntax.
-					!! a_warning.make ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N" + a_position_table.item (a_child).out)
+					!! a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
 					error_handler.report_warning (a_warning)
 					validate_external (a_child, a_position_table)
 				else
@@ -207,7 +207,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			a_root_not_void: a_root /= Void
-			a_root_is_root: a_root.name.is_equal (uc_root)
+			a_root_is_root: STRING_.same_string (a_root.name, uc_root)
 			a_position_table_not_void: a_position_table /= Void
 		do
 			if not a_root.has_attribute_by_name (uc_class) then
@@ -225,7 +225,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			a_cluster_not_void: a_cluster /= Void
-			a_cluster_is_cluster: a_cluster.name.is_equal (uc_cluster)
+			a_cluster_is_cluster: STRING_.same_string (a_cluster.name, uc_cluster)
 			a_position_table_not_void: a_position_table /= Void
 		do
 			if not a_cluster.has_attribute_by_name (uc_name) then
@@ -240,7 +240,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			a_cluster_not_void: a_cluster /= Void
-			a_cluster_is_cluster: a_cluster.name.is_equal (uc_cluster)
+			a_cluster_is_cluster: STRING_.same_string (a_cluster.name, uc_cluster)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -252,19 +252,19 @@ feature {NONE} -- Validation
 				a_child ?= a_cursor.item
 				if a_child = Void then
 						-- Not an element. Ignore.
-				elseif a_child.name.is_equal (uc_description) then
+				elseif STRING_.same_string (a_child.name, uc_description) then
 						-- OK.
-				elseif a_child.name.is_equal (uc_cluster) then
+				elseif STRING_.same_string (a_child.name, uc_cluster) then
 					validate_named_cluster (a_child, a_position_table)
-				elseif a_child.name.is_equal (uc_mount) then
+				elseif STRING_.same_string (a_child.name, uc_mount) then
 					validate_mount (a_child, a_position_table)
-				elseif a_child.name.is_equal (uc_option) then
+				elseif STRING_.same_string (a_child.name, uc_option) then
 					validate_option (a_child, a_position_table)
-				elseif a_child.name.is_equal (uc_class) then
+				elseif STRING_.same_string (a_child.name, uc_class) then
 					validate_class (a_child, a_position_table)
-				elseif a_child.name.is_equal (uc_external) then
+				elseif STRING_.same_string (a_child.name, uc_external) then
 						-- Old syntax.
-					!! a_warning.make ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N" + a_position_table.item (a_child).out)
+					!! a_warning.make (STRING_.concat ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N", a_position_table.item (a_child).out))
 					error_handler.report_warning (a_warning)
 					validate_external (a_child, a_position_table)
 				else
@@ -280,7 +280,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			a_class_not_void: a_class /= Void
-			a_class_is_class: a_class.name.is_equal (uc_class)
+			a_class_is_class: STRING_.same_string (a_class.name, uc_class)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -295,9 +295,9 @@ feature {NONE} -- Validation
 				a_child ?= a_cursor.item
 				if a_child = Void then
 						-- Not an element. Ignore.
-				elseif a_child.name.is_equal (uc_option) then
+				elseif STRING_.same_string (a_child.name, uc_option) then
 					validate_option (a_child, a_position_table)
-				elseif a_child.name.is_equal (uc_feature) then
+				elseif STRING_.same_string (a_child.name, uc_feature) then
 					validate_feature (a_child, a_position_table)
 				else
 					has_error := True
@@ -312,7 +312,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			a_feature_not_void: a_feature /= Void
-			a_feature_is_feature: a_feature.name.is_equal (uc_feature)
+			a_feature_is_feature: STRING_.same_string (a_feature.name, uc_feature)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -327,7 +327,7 @@ feature {NONE} -- Validation
 				a_child ?= a_cursor.item
 				if a_child = Void then
 						-- Not an element. Ignore.
-				elseif a_child.name.is_equal (uc_option) then
+				elseif STRING_.same_string (a_child.name, uc_option) then
 					validate_option (a_child, a_position_table)
 				else
 					has_error := True
@@ -342,7 +342,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			a_mount_not_void: a_mount /= Void
-			a_mount_is_cluster: a_mount.name.is_equal (uc_mount)
+			a_mount_is_cluster: STRING_.same_string (a_mount.name, uc_mount)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -358,8 +358,8 @@ feature {NONE} -- Validation
 				a_child ?= a_cursor.item
 				if a_child = Void then
 						-- Not an element. Ignore.
-				elseif a_child.name.is_equal (uc_exclude) then
-					!! a_warning.make ("Warning: <exclude> is obsolete, use if/unless attributes instead%N" + a_position_table.item (a_child).out)
+				elseif STRING_.same_string (a_child.name, uc_exclude) then
+					!! a_warning.make (STRING_.concat ("Warning: <exclude> is obsolete, use if/unless attributes instead%N", a_position_table.item (a_child).out))
 					error_handler.report_warning (a_warning)
 					validate_exclude (a_child, a_position_table)
 				else
@@ -375,7 +375,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			an_option_not_void: an_option /= Void
-			an_option_is_cluster: an_option.name.is_equal (uc_option)
+			an_option_is_cluster: STRING_.same_string (an_option.name, uc_option)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			has_name: BOOLEAN
@@ -410,19 +410,19 @@ feature {NONE} -- Validation
 					else
 						a_child_name := a_child.name
 						if
-							STRING_.same_unicode_string (a_child_name, uc_option) or
-							STRING_.same_unicode_string (a_child_name, uc_require) or
-							STRING_.same_unicode_string (a_child_name, uc_ensure) or
-							STRING_.same_unicode_string (a_child_name, uc_invariant) or
-							STRING_.same_unicode_string (a_child_name, uc_loop) or
-							STRING_.same_unicode_string (a_child_name, uc_check) or
-							STRING_.same_unicode_string (a_child_name, uc_debug) or
-							STRING_.same_unicode_string (a_child_name, uc_optimize)
+							STRING_.same_string (a_child_name, uc_option) or
+							STRING_.same_string (a_child_name, uc_require) or
+							STRING_.same_string (a_child_name, uc_ensure) or
+							STRING_.same_string (a_child_name, uc_invariant) or
+							STRING_.same_string (a_child_name, uc_loop) or
+							STRING_.same_string (a_child_name, uc_check) or
+							STRING_.same_string (a_child_name, uc_debug) or
+							STRING_.same_string (a_child_name, uc_optimize)
 						then
 							if has_name then
 								has_error := True
 								error_handler.report_unknown_element_error (an_option, a_child, a_position_table.item (a_child))
-							elseif STRING_.same_unicode_string (a_child_name, uc_option) then
+							elseif STRING_.same_string (a_child_name, uc_option) then
 								validate_option (a_child, a_position_table)
 							end
 						else
@@ -440,7 +440,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			an_external_not_void: an_external /= Void
-			an_external_is_cluster: an_external.name.is_equal (uc_external)
+			an_external_is_cluster: STRING_.same_string (an_external.name, uc_external)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -451,17 +451,17 @@ feature {NONE} -- Validation
 				a_child ?= a_cursor.item
 				if a_child = Void then
 						-- Not an element. Ignore.
-				elseif a_child.name.is_equal (uc_include_dir) then
+				elseif STRING_.same_string (a_child.name, uc_include_dir) then
 					if not a_child.has_attribute_by_name (uc_location) then
 						has_error := True
 						error_handler.report_missing_attribute_error (a_child, uc_location, a_position_table.item (a_child))
 					end
-				elseif a_child.name.is_equal (uc_link_library) then
+				elseif STRING_.same_string (a_child.name, uc_link_library) then
 					if not a_child.has_attribute_by_name (uc_location) then
 						has_error := True
 						error_handler.report_missing_attribute_error (a_child, uc_location, a_position_table.item (a_child))
 					end
-				elseif a_child.name.is_equal (uc_export) then
+				elseif STRING_.same_string (a_child.name, uc_export) then
 					validate_export (a_child, a_position_table)
 				else
 					has_error := True
@@ -476,7 +476,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			an_exclude_not_void: an_exclude /= Void
-			an_exclude_is_cluster: an_exclude.name.is_equal (uc_exclude)
+			an_exclude_is_cluster: STRING_.same_string (an_exclude.name, uc_exclude)
 			a_position_table_not_void: a_position_table /= Void
 		do
 			if not an_exclude.has_attribute_by_name (uc_cluster) then
@@ -490,7 +490,7 @@ feature {NONE} -- Validation
 			-- Set `has_error' to True if not.
 		require
 			an_export_not_void: an_export /= Void
-			an_export_is_cluster: an_export.name.is_equal (uc_export)
+			an_export_is_cluster: STRING_.same_string (an_export.name, uc_export)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -504,7 +504,7 @@ feature {NONE} -- Validation
 				a_child ?= a_cursor.item
 				if a_child = Void then
 						-- Not an element. Ignore.
-				elseif a_child.name.is_equal (uc_feature) then
+				elseif STRING_.same_string (a_child.name, uc_feature) then
 					if not a_child.has_attribute_by_name (uc_name) then
 						has_error := True
 						error_handler.report_missing_attribute_error (a_child, uc_name, a_position_table.item (a_child))

@@ -5,19 +5,12 @@ indexing
 		"Xace XML element names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class ET_XACE_ELEMENT_NAMES
-
-inherit
-
-	ANY
-
-	UC_UNICODE_FACTORY
-		export {NONE} all end
 
 feature -- Constants
 

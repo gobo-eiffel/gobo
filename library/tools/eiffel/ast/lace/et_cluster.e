@@ -90,10 +90,10 @@ feature -- Access
 			if parent /= Void then
 				parent_name := parent.full_name (a_separator)
 				a_basename := name
-				Result := STRING_.make (parent_name.count + a_basename.count + 1)
+				Result := STRING_.new_empty_string (parent_name, parent_name.count + a_basename.count + 1)
 				Result.append_string (parent_name)
 				Result.append_character (a_separator)
-				Result.append_string (a_basename)
+				Result := STRING_.appended_string (Result, a_basename)
 			else
 				Result := name
 			end
@@ -117,10 +117,10 @@ feature -- Access
 				else
 					a_basename := name
 				end
-				Result := STRING_.make (parent_pathname.count + a_basename.count + 1)
+				Result := STRING_.new_empty_string (parent_pathname, parent_pathname.count + a_basename.count + 1)
 				Result.append_string (parent_pathname)
 				Result.append_character ('/')
-				Result.append_string (a_basename)
+				Result := STRING_.appended_string (Result, a_basename)
 			elseif a_pathname /= Void and then a_pathname.count > 0 then
 				Result := a_pathname
 			else
@@ -258,7 +258,7 @@ feature -- Parsing
 							else
 								a_filename := clone (dir_name)
 								a_filename.append_character ('/')
-								a_filename.append_string (s)
+								a_filename := STRING_.appended_string (a_filename, s)
 								a_class.set_filename (a_filename)
 								a_class.set_cluster (Current)
 							end
@@ -304,7 +304,7 @@ feature -- Parsing
 						if is_valid_eiffel_filename (s) then
 							a_filename := clone (dir_name)
 							a_filename.append_character ('/')
-							a_filename.append_string (s)
+							a_filename := STRING_.appended_string (a_filename, s)
 							!! a_file.make (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
@@ -354,7 +354,7 @@ feature -- Parsing
 						if is_valid_eiffel_filename (s) then
 							a_filename := clone (dir_name)
 							a_filename.append_character ('/')
-							a_filename.append_string (s)
+							a_filename := STRING_.appended_string (a_filename, s)
 							!! a_file.make (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then
@@ -401,7 +401,7 @@ feature -- Parsing
 						if is_valid_eiffel_filename (s) then
 							a_filename := clone (dir_name)
 							a_filename.append_character ('/')
-							a_filename.append_string (s)
+							a_filename := STRING_.appended_string (a_filename, s)
 							!! a_file.make (a_filename)
 							a_file.open_read
 							if a_file.is_open_read then

@@ -142,8 +142,12 @@ feature -- Option codes
 
 	option_codes: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Mapping option names -> option codes
+		local
+			a_tester: UC_EQUALITY_TESTER
 		once
-			!! Result.make_equal (61)
+			!! Result.make (61)
+			!! a_tester
+			Result.set_key_equality_tester (a_tester)
 			Result.put_new (abstract_code, abstract_name)
 			Result.put_new (address_expression_code, address_expression_name)
 			Result.put_new (arguments_code, arguments_name)

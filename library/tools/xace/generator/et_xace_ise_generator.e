@@ -932,7 +932,7 @@ feature {NONE} -- Implementation
 			i := a_keywords.lower
 			nb := a_keywords.upper
 			from until i > nb loop
-				if a_keywords.item (i).is_equal (a_name) then
+				if STRING_.same_string (a_keywords.item (i), a_name) then
 					Result := True
 					i := nb + 1 -- Jump out of the loop.
 				else

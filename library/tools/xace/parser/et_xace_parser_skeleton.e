@@ -85,7 +85,7 @@ feature {NONE} -- AST factory
 			-- New Xace system build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
-			is_system: an_element.name.is_equal (uc_system)
+			is_system: STRING_.same_string (an_element.name, uc_system)
 			a_position_table_not_void: a_position_table /= Void
 		do
 			Result := ast_factory.new_system (Void)
@@ -97,7 +97,7 @@ feature {NONE} -- AST factory
 			-- New class universe build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
-			is_system: an_element.name.is_equal (uc_system)
+			is_system: STRING_.same_string (an_element.name, uc_system)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			an_error_handler: ET_ERROR_HANDLER
@@ -114,8 +114,8 @@ feature {NONE} -- AST factory
 			-- New library build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
-			is_library: an_element.name.is_equal (uc_library) or
-				an_element.name.is_equal (uc_cluster)
+			is_library: STRING_.same_string (an_element.name, uc_library) or
+				STRING_.same_string (an_element.name, uc_cluster)
 			a_position_table_not_void: a_position_table /= Void
 		do
 			Result := ast_factory.new_library
@@ -127,7 +127,7 @@ feature {NONE} -- AST factory
 			-- New cluster build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
-			is_cluster: an_element.name.is_equal (uc_cluster)
+			is_cluster: STRING_.same_string (an_element.name, uc_cluster)
 			a_parent_prefix_not_void: a_parent_prefix /= Void
 			a_position_table_not_void: a_position_table /= Void
 		local
@@ -155,7 +155,7 @@ feature {NONE} -- AST factory
 					end
 					Result := ast_factory.new_cluster (a_name, a_pathname)
 					if an_element.has_attribute_by_name (uc_abstract) then
-						!! a_warning.make ("Warning: attribute 'abstract' is obsolete, use <option name=%"abstract%" value=%"true/false%"/> instead%N" + a_position_table.item (an_element).out)
+						!! a_warning.make (STRING_.concat ("Warning: attribute 'abstract' is obsolete, use <option name=%"abstract%" value=%"true/false%"/> instead%N", a_position_table.item (an_element).out))
 						error_handler.report_warning (a_warning)
 						a_bool := an_element.attribute_by_name (uc_abstract).value
 						if a_bool /= Void then
@@ -191,7 +191,7 @@ feature {NONE} -- AST factory
 					from a_cursor.start until a_cursor.after loop
 						a_child ?= a_cursor.item
 						if a_child /= Void then
-							if a_child.name.is_equal (uc_cluster) then
+							if STRING_.same_string (a_child.name, uc_cluster) then
 								a_cluster := new_cluster (a_child, a_prefix, a_position_table)
 								if a_cluster /= Void then
 									if subclusters = Void then
@@ -200,7 +200,7 @@ feature {NONE} -- AST factory
 										subclusters.put_last (a_cluster)
 									end
 								end
-							elseif a_child.name.is_equal (uc_mount) then
+							elseif STRING_.same_string (a_child.name, uc_mount) then
 								a_mount := new_mount (a_child, a_position_table)
 								if a_mount /= Void then
 									if a_mounts = Void then
@@ -208,18 +208,18 @@ feature {NONE} -- AST factory
 									end
 									a_mounts.put_last (a_mount)
 								end
-							elseif a_child.name.is_equal (uc_option) then
+							elseif STRING_.same_string (a_child.name, uc_option) then
 								if an_option /= Void then
 									fill_options (an_option, a_child, a_position_table)
 								else
 									an_option := new_options (a_child, a_position_table)
 								end
-							elseif a_child.name.is_equal (uc_class) then
+							elseif STRING_.same_string (a_child.name, uc_class) then
 								a_class := new_class (a_child, a_position_table)
 								if a_class /= Void then
 									Result.put_class_option (a_class)
 								end
-							elseif a_child.name.is_equal (uc_external) then
+							elseif STRING_.same_string (a_child.name, uc_external) then
 								if an_option = Void then
 									an_option := ast_factory.new_options
 								end
@@ -247,7 +247,7 @@ feature {NONE} -- AST factory
 			-- New class options build from `an_element'.
 		require
 			an_element_not_void: an_element /= Void
-			is_class: an_element.name.is_equal (uc_class)
+			is_class: STRING_.same_string (an_element.name, uc_class)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_class_name: STRING
@@ -266,9 +266,9 @@ feature {NONE} -- AST factory
 						from a_cursor.start until a_cursor.after loop
 							a_child ?= a_cursor.item
 							if a_child /= Void then
-								if a_child.name.is_equal (uc_option) then
+								if STRING_.same_string (a_child.name, uc_option) then
 									fill_options (an_option, a_child, a_position_table)
-								elseif a_child.name.is_equal (uc_feature) then
+								elseif STRING_.same_string (a_child.name, uc_feature) then
 									a_feature := new_feature (a_child, a_position_table)
 									if a_feature /= Void then
 										Result.put_feature_option (a_feature)
@@ -286,7 +286,7 @@ feature {NONE} -- AST factory
 			-- New feature options build from `an_element'.
 		require
 			an_element_not_void: an_element /= Void
-			is_feature: an_element.name.is_equal (uc_feature)
+			is_feature: STRING_.same_string (an_element.name, uc_feature)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_feature_name: STRING
@@ -304,7 +304,7 @@ feature {NONE} -- AST factory
 						from a_cursor.start until a_cursor.after loop
 							a_child ?= a_cursor.item
 							if a_child /= Void then
-								if a_child.name.is_equal (uc_option) then
+								if STRING_.same_string (a_child.name, uc_option) then
 									fill_options (an_option, a_child, a_position_table)
 								end
 							end
@@ -319,7 +319,7 @@ feature {NONE} -- AST factory
 			-- New mounted library build from `an_element'.
 		require
 			an_element_not_void: an_element /= Void
-			is_mount: an_element.name.is_equal (uc_mount)
+			is_mount: STRING_.same_string (an_element.name, uc_mount)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_pathname: STRING
@@ -362,7 +362,7 @@ feature {NONE} -- AST factory
 			-- New option clause build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
-			is_option: an_element.name.is_equal (uc_option)
+			is_option: STRING_.same_string (an_element.name, uc_option)
 			a_position_table_not_void: a_position_table /= Void
 		do
 			Result := ast_factory.new_options
@@ -375,7 +375,7 @@ feature {NONE} -- AST factory
 			-- New export clause build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
-			is_export: an_element.name.is_equal (uc_export)
+			is_export: STRING_.same_string (an_element.name, uc_export)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_name: STRING
@@ -393,7 +393,7 @@ feature {NONE} -- AST factory
 						a_cursor := an_element.new_cursor
 						from a_cursor.start until a_cursor.after loop
 							a_child ?= a_cursor.item
-							if a_child /= Void and then a_child.name.is_equal (uc_feature) then
+							if a_child /= Void and then STRING_.same_string (a_child.name, uc_feature) then
 								a_feature := new_exported_feature (a_child, a_position_table)
 								if a_feature /= Void then
 									Result.put_feature_option (a_feature)
@@ -413,7 +413,7 @@ feature {NONE} -- AST factory
 			-- New exported feature build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
-			is_feature: an_element.name.is_equal (uc_feature)
+			is_feature: STRING_.same_string (an_element.name, uc_feature)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_name: STRING
@@ -447,7 +447,7 @@ feature {NONE} -- Element change
 		require
 			a_system_not_void: a_system /= Void
 			an_element_not_void: an_element /= Void
-			is_system: an_element.name.is_equal (uc_system)
+			is_system: STRING_.same_string (an_element.name, uc_system)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_name: STRING
@@ -480,7 +480,7 @@ feature {NONE} -- Element change
 			from a_cursor.start until a_cursor.after loop
 				a_child ?= a_cursor.item
 				if a_child /= Void then
-					if a_child.name.is_equal (uc_cluster) then
+					if STRING_.same_string (a_child.name, uc_cluster) then
 						if a_child.has_attribute_by_name (uc_name) then
 							a_cluster := new_cluster (a_child, empty_prefix, a_position_table)
 							if a_cluster /= Void then
@@ -496,7 +496,7 @@ feature {NONE} -- Element change
 							from old_cursor.start until old_cursor.after loop
 								a_child ?= old_cursor.item
 								if a_child /= Void then
-									if a_child.name.is_equal (uc_cluster) then
+									if STRING_.same_string (a_child.name, uc_cluster) then
 										a_cluster := new_cluster (a_child, empty_prefix, a_position_table)
 										if a_cluster /= Void then
 											if a_clusters = Void then
@@ -505,7 +505,7 @@ feature {NONE} -- Element change
 												a_clusters.put_last (a_cluster)
 											end
 										end
-									elseif a_child.name.is_equal (uc_mount) then
+									elseif STRING_.same_string (a_child.name, uc_mount) then
 										a_mount := new_mount (a_child, a_position_table)
 										if a_mount /= Void then
 											if a_mounts = Void then
@@ -513,13 +513,13 @@ feature {NONE} -- Element change
 											end
 											a_mounts.put_last (a_mount)
 										end
-									elseif a_child.name.is_equal (uc_option) then
+									elseif STRING_.same_string (a_child.name, uc_option) then
 										if an_option /= Void then
 											fill_options (an_option, a_child, a_position_table)
 										else
 											an_option := new_options (a_child, a_position_table)
 										end
-									elseif a_child.name.is_equal (uc_external) then
+									elseif STRING_.same_string (a_child.name, uc_external) then
 										if an_option = Void then
 											an_option := ast_factory.new_options
 										end
@@ -529,7 +529,7 @@ feature {NONE} -- Element change
 								old_cursor.forth
 							end
 						end
-					elseif a_child.name.is_equal (uc_mount) then
+					elseif STRING_.same_string (a_child.name, uc_mount) then
 						a_mount := new_mount (a_child, a_position_table)
 						if a_mount /= Void then
 							if a_mounts = Void then
@@ -537,13 +537,13 @@ feature {NONE} -- Element change
 							end
 							a_mounts.put_last (a_mount)
 						end
-					elseif a_child.name.is_equal (uc_option) then
+					elseif STRING_.same_string (a_child.name, uc_option) then
 						if an_option /= Void then
 							fill_options (an_option, a_child, a_position_table)
 						else
 							an_option := new_options (a_child, a_position_table)
 						end
-					elseif a_child.name.is_equal (uc_external) then
+					elseif STRING_.same_string (a_child.name, uc_external) then
 						if an_option = Void then
 							an_option := ast_factory.new_options
 						end
@@ -584,8 +584,8 @@ feature {NONE} -- Element change
 		require
 			a_library_not_void: a_library /= Void
 			an_element_not_void: an_element /= Void
-			is_library: an_element.name.is_equal (uc_library) or
-				an_element.name.is_equal (uc_cluster)
+			is_library: STRING_.same_string (an_element.name, uc_library) or
+				STRING_.same_string (an_element.name, uc_cluster)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_name: STRING
@@ -611,7 +611,7 @@ feature {NONE} -- Element change
 				end
 			end
 			if an_element.name.is_equal (uc_cluster) then
-				!! a_warning.make ("Warning: <cluster> is obsolete, use <library> instead%N" + a_position_table.item (an_element).out)
+				!! a_warning.make (STRING_.concat ("Warning: <cluster> is obsolete, use <library> instead%N", a_position_table.item (an_element).out))
 				error_handler.report_warning (a_warning)
 				a_cluster := new_cluster (an_element, empty_prefix, a_position_table)
 				a_library.set_name (a_cluster.name)
@@ -635,7 +635,7 @@ feature {NONE} -- Element change
 				from a_cursor.start until a_cursor.after loop
 					a_child ?= a_cursor.item
 					if a_child /= Void then
-						if a_child.name.is_equal (uc_cluster) then
+						if STRING_.same_string (a_child.name, uc_cluster) then
 							a_cluster := new_cluster (a_child, empty_prefix, a_position_table)
 							if a_cluster /= Void then
 								if a_clusters = Void then
@@ -644,7 +644,7 @@ feature {NONE} -- Element change
 									a_clusters.put_last (a_cluster)
 								end
 							end
-						elseif a_child.name.is_equal (uc_mount) then
+						elseif STRING_.same_string (a_child.name, uc_mount) then
 							a_mount := new_mount (a_child, a_position_table)
 							if a_mount /= Void then
 								if a_mounts = Void then
@@ -652,7 +652,7 @@ feature {NONE} -- Element change
 								end
 								a_mounts.put_last (a_mount)
 							end
-						elseif a_child.name.is_equal (uc_option) then
+						elseif STRING_.same_string (a_child.name, uc_option) then
 							if an_option /= Void then
 								fill_options (an_option, a_child, a_position_table)
 							else
@@ -693,7 +693,7 @@ feature {NONE} -- Element change
 		require
 			an_option_not_void: an_option /= Void
 			an_element_not_void: an_element /= Void
-			is_option: an_element.name.is_equal (uc_option)
+			is_option: STRING_.same_string (an_element.name, uc_option)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			is_enclosing_option: BOOLEAN
@@ -1133,10 +1133,10 @@ feature {NONE} -- Element change
 				if a_child /= Void then
 					if not is_enclosing_option then
 						-- Error already reported by the validator.
-					elseif a_child.name.is_equal (uc_option) then
+					elseif STRING_.same_string (a_child.name, uc_option) then
 						fill_options (an_option, a_child, a_position_table)
-					elseif a_child.name.is_equal (uc_require) then
-						!! a_warning.make ("Warning: <require> is obsolete, use <option name=%"assertion%" value=%"require%"/> instead%N" + a_position_table.item (a_child).out)
+					elseif STRING_.same_string (a_child.name, uc_require) then
+						!! a_warning.make (STRING_.concat ("Warning: <require> is obsolete, use <option name=%"assertion%" value=%"require%"/> instead%N", a_position_table.item (a_child).out))
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
@@ -1148,8 +1148,8 @@ feature {NONE} -- Element change
 						else
 							an_option.set_assertion (require_value)
 						end
-					elseif a_child.name.is_equal (uc_ensure) then
-						!! a_warning.make ("Warning: <ensure> is obsolete, use <option name=%"assertion%" value=%"ensure%"/> instead%N" + a_position_table.item (a_child).out)
+					elseif STRING_.same_string (a_child.name, uc_ensure) then
+						!! a_warning.make (STRING_.concat ("Warning: <ensure> is obsolete, use <option name=%"assertion%" value=%"ensure%"/> instead%N", a_position_table.item (a_child).out))
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
@@ -1161,8 +1161,8 @@ feature {NONE} -- Element change
 						else
 							an_option.set_assertion (ensure_value)
 						end
-					elseif a_child.name.is_equal (uc_invariant) then
-						!! a_warning.make ("Warning: <invariant> is obsolete, use <option name=%"assertion%" value=%"invariant%"/> instead%N" + a_position_table.item (a_child).out)
+					elseif STRING_.same_string (a_child.name, uc_invariant) then
+						!! a_warning.make (STRING_.concat ("Warning: <invariant> is obsolete, use <option name=%"assertion%" value=%"invariant%"/> instead%N", a_position_table.item (a_child).out))
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
@@ -1174,8 +1174,8 @@ feature {NONE} -- Element change
 						else
 							an_option.set_assertion (invariant_value)
 						end
-					elseif a_child.name.is_equal (uc_loop) then
-						!! a_warning.make ("Warning: <loop> is obsolete, use <option name=%"assertion%" value=%"loop_[in]variant%"/> instead%N" + a_position_table.item (a_child).out)
+					elseif STRING_.same_string (a_child.name, uc_loop) then
+						!! a_warning.make (STRING_.concat ("Warning: <loop> is obsolete, use <option name=%"assertion%" value=%"loop_[in]variant%"/> instead%N", a_position_table.item (a_child).out))
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
@@ -1189,8 +1189,8 @@ feature {NONE} -- Element change
 							an_option.set_assertion (loop_invariant_value)
 							an_option.set_assertion (loop_variant_value)
 						end
-					elseif a_child.name.is_equal (uc_check) then
-						!! a_warning.make ("Warning: <check> is obsolete, use <option name=%"assertion%" value=%"check%"/> instead%N" + a_position_table.item (a_child).out)
+					elseif STRING_.same_string (a_child.name, uc_check) then
+						!! a_warning.make (STRING_.concat ("Warning: <check> is obsolete, use <option name=%"assertion%" value=%"check%"/> instead%N", a_position_table.item (a_child).out))
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
@@ -1202,8 +1202,8 @@ feature {NONE} -- Element change
 						else
 							an_option.set_assertion (check_value)
 						end
-					elseif a_child.name.is_equal (uc_optimize) then
-						!! a_warning.make ("Warning: <optimize> is obsolete, use <option name=%"finalize%" value=%"true%"/> instead%N" + a_position_table.item (a_child).out)
+					elseif STRING_.same_string (a_child.name, uc_optimize) then
+						!! a_warning.make (STRING_.concat ("Warning: <optimize> is obsolete, use <option name=%"finalize%" value=%"true%"/> instead%N", a_position_table.item (a_child).out))
 						error_handler.report_warning (a_warning)
 						if a_child.has_attribute_by_name (uc_enable) then
 							a_bool := a_child.attribute_by_name (uc_enable).value
@@ -1215,11 +1215,11 @@ feature {NONE} -- Element change
 						else
 							an_option.set_finalize (True)
 						end
-					elseif a_child.name.is_equal (uc_debug) then
+					elseif STRING_.same_string (a_child.name, uc_debug) then
 						if a_child.has_attribute_by_name (uc_name) then
 							a_key := a_child.attribute_by_name (uc_name).value
 							if a_key /= Void then
-								!! a_warning.make ("Warning: <debug> is obsolete, use <option name=%"debug_tag%" value=%"" + a_key + "%"/> instead%N" + a_position_table.item (a_child).out)
+								!! a_warning.make (STRING_.concat (STRING_.concat ("Warning: <debug> is obsolete, use <option name=%"debug_tag%" value=%"", a_key) + "%"/> instead%N", a_position_table.item (a_child).out))
 								error_handler.report_warning (a_warning)
 								if a_child.has_attribute_by_name (uc_enable) then
 									a_bool := a_child.attribute_by_name (uc_enable).value
@@ -1237,20 +1237,20 @@ feature {NONE} -- Element change
 								a_bool := a_child.attribute_by_name (uc_enable).value
 								if a_bool /= Void then
 									if is_true (a_bool) then
-										!! a_warning.make ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"true%"/> instead%N" + a_position_table.item (a_child).out)
+										!! a_warning.make (STRING_.concat ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"true%"/> instead%N", a_position_table.item (a_child).out))
 										error_handler.report_warning (a_warning)
 										an_option.set_debug_option (True)
 									elseif is_false (a_bool) then
-										!! a_warning.make ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"false%"/> instead%N" + a_position_table.item (a_child).out)
+										!! a_warning.make (STRING_.concat ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"false%"/> instead%N", a_position_table.item (a_child).out))
 										error_handler.report_warning (a_warning)
 										an_option.set_debug_option (False)
 									else
-										!! a_warning.make ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"true/false%"/> instead%N" + a_position_table.item (a_child).out)
+										!! a_warning.make (STRING_.concat ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"true/false%"/> instead%N", a_position_table.item (a_child).out))
 										error_handler.report_warning (a_warning)
 									end
 								end
 							else
-								!! a_warning.make ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"true%"/> instead%N" + a_position_table.item (a_child).out)
+								!! a_warning.make (STRING_.concat ("Warning: <debug> is obsolete, use <option name=%"debug%" value=%"true%"/> instead%N", a_position_table.item (a_child).out))
 								error_handler.report_warning (a_warning)
 								an_option.set_debug_option (True)
 							end
@@ -1266,7 +1266,7 @@ feature {NONE} -- Element change
 		require
 			an_option_not_void: an_option /= Void
 			an_element_not_void: an_element /= Void
-			is_external: an_element.name.is_equal (uc_external)
+			is_external: STRING_.same_string (an_element.name, uc_external)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
@@ -1278,21 +1278,21 @@ feature {NONE} -- Element change
 			from a_cursor.start until a_cursor.after loop
 				a_child ?= a_cursor.item
 				if a_child /= Void then
-					if a_child.name.is_equal (uc_link_library) then
+					if STRING_.same_string (a_child.name, uc_link_library) then
 						if a_child.has_attribute_by_name (uc_location) then
 							a_value := a_child.attribute_by_name (uc_location).value
 							if a_value /= Void then
 								an_option.set_link (a_value)
 							end
 						end
-					elseif a_child.name.is_equal (uc_include_dir) then
+					elseif STRING_.same_string (a_child.name, uc_include_dir) then
 						if a_child.has_attribute_by_name (uc_location) then
 							a_value := a_child.attribute_by_name (uc_location).value
 							if a_value /= Void then
 								an_option.set_header (a_value)
 							end
 						end
-					elseif a_child.name.is_equal (uc_export) then
+					elseif STRING_.same_string (a_child.name, uc_export) then
 						if a_cluster /= Void then
 							an_export := new_export (a_child, a_position_table)
 							if an_export /= Void then

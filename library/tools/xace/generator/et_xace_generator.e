@@ -17,6 +17,7 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_OPERATING_SYSTEM
 	ET_SHARED_XACE_OPTION_NAMES
+	KL_IMPORTED_STRING_ROUTINES
 
 feature {NONE} -- Initialization
 
@@ -118,11 +119,11 @@ feature {NONE} -- Implementation
 			gobo_os_variable := "GOBO_OS"
 			gobo_os_value := "windows"
 			if variables.is_defined (gobo_os_variable) then
-				Result := variables.value (gobo_os_variable).is_equal (gobo_os_value)
+				Result := STRING_.same_string (variables.value (gobo_os_variable), gobo_os_value)
 			else
 				a_value := Execution_environment.variable_value (gobo_os_variable)
 				if a_value /= Void and then a_value.count > 0 then
-					Result := a_value.is_equal (gobo_os_value)
+					Result := STRING_.same_string (a_value, gobo_os_value)
 				else
 					Result := operating_system.is_windows
 				end

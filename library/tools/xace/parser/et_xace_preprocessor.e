@@ -68,27 +68,17 @@ feature -- Preprocessing
 		do
 			expand_attribute_variables (a_composite)
 			a_cursor := a_composite.new_cursor
-			from
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
+			from a_cursor.start until a_cursor.after loop
 				should_remove := False
 				a_child_element ?= a_cursor.item
-				if
-					a_child_element /= Void
-				then
-					if
-						should_strip_element (a_child_element, a_position_table)
-					then
+				if a_child_element /= Void then
+					if should_strip_element (a_child_element, a_position_table) then
 						should_remove := True
 					else
 						preprocess_composite (a_child_element, a_position_table)
 					end
 				end
-				if
-					should_remove
-				then
+				if should_remove then
 					a_composite.remove_at_cursor (a_cursor)
 				else
 					a_cursor.forth
@@ -108,20 +98,15 @@ feature {NONE} -- Implementation
 			an_expression: STRING
 			is_if: BOOLEAN
 		do
-			if
-				an_element.has_attribute_by_name (uc_if)
-			then
+			if an_element.has_attribute_by_name (uc_if) then
 				an_expression := an_element.attribute_by_name (uc_if).value
 				is_if := True
-			elseif
-				an_element.has_attribute_by_name (uc_unless)
-			then
+			elseif an_element.has_attribute_by_name (uc_unless) then
 				an_expression := an_element.attribute_by_name (uc_unless).value
 			end
 
 			if an_expression /= Void then
-				if is_valid_expression (an_expression)
-				then
+				if is_valid_expression (an_expression) then
 					Result := is_expression_true (an_expression)
 					if is_if then
 						Result := not Result
@@ -142,28 +127,16 @@ feature {NONE} -- Implementation
 		do
 			Result := True
 			an_equal_occurences := a_string.occurrences ('=')
-			if
-				an_equal_occurences = 1
-			then
+			if an_equal_occurences = 1 then
 				-- expression is a comparsion of two constants or variables
-			elseif
-				an_equal_occurences = 0
-			then
+			elseif an_equal_occurences = 0 then
 				-- expression is a variable
-				if
-					a_string.count > 1 and then
-					a_string.item (1) = '$'
-				then
+				if a_string.count > 1 and then a_string.item (1) = '$' then
 					if a_string.item (2) = '{' then
-						if
-							a_string.count > 3 and then
-							a_string.item (a_string.count) = '}'
-						then
-						else
+						if not (a_string.count > 3 and then a_string.item (a_string.count) = '}') then
 							-- missing closing curly brace
 							Result := False
 						end
-					else
 					end
 				else
 					-- non-comparing expression must be variable name
@@ -188,29 +161,25 @@ feature {NONE} -- Implementation
 			a_variable_name: STRING
 			equal_index: INTEGER
 		do
-			if
-				a_string.occurrences ('=') > 0
-			then
+			if a_string.occurrences ('=') > 0 then
 				-- expression is a comparsion of two constants or variables
 				equal_index := a_string.index_of ('=', 1)
-				a_left_side := variables.expanded_variables (a_string.substring (1, equal_index - 1))
+				if equal_index = 1 then
+					a_left_side := STRING_.new_empty_string (a_string, 0)
+				else
+					a_left_side := variables.expanded_variables (a_string.substring (1, equal_index - 1))
+				end
 				if a_string.count > equal_index then
 					a_right_side := variables.expanded_variables (a_string.substring (equal_index + 1, a_string.count))
 				else
-					a_right_side := clone ("")
+					a_right_side := STRING_.new_empty_string (a_string, 0)
 				end
-				Result := STRING_.same_unicode_string (a_right_side, a_left_side)
+				Result := STRING_.same_string (a_right_side, a_left_side)
 			else
 				-- expression is a variable
-				if
-					a_string.count > 1 and then
-					a_string.item (1) = '$'
-				then
+				if a_string.count > 1 and then a_string.item (1) = '$' then
 					if a_string.item (2) = '{' then
-						if
-							a_string.count > 3 and then
-							a_string.item (a_string.count) = '}'
-						then
+						if a_string.count > 3 and then a_string.item (a_string.count) = '}' then
 							-- variable is of the form: ${FOO}
 							a_variable_name := a_string.substring (3, a_string.count - 1)
 						end
@@ -239,15 +208,9 @@ feature {NONE} -- Implementation
 			a_string: STRING
 		do
 			a_cursor := a_composite.new_cursor
-			from
-				a_cursor.start
-			until
-				a_cursor.after
-			loop
+			from a_cursor.start until a_cursor.after loop
 				an_attribute ?= a_cursor.item
-				if
-					an_attribute /= Void
-				then
+				if an_attribute /= Void then
 					a_string := variables.expanded_variables (an_attribute.value)
 					an_attribute.set_value (a_string)
 				end

@@ -1212,7 +1212,8 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_arguments = Void then
-				!! declared_arguments.make_equal (10)
+				!! declared_arguments.make (10)
+				declared_arguments.set_equality_tester (string_equality_tester)
 			end
 			declared_arguments.force_last (a_value)
 		ensure
@@ -1242,7 +1243,8 @@ feature -- Status setting
 			a_value_valid: valid_assertion.has (a_value)
 		do
 			if declared_assertion = Void then
-				!! declared_assertion.make_equal (valid_assertion.count)
+				!! declared_assertion.make (valid_assertion.count)
+				declared_assertion.set_equality_tester (string_equality_tester)
 			end
 			declared_assertion.force_last (a_value)
 		ensure
@@ -1348,7 +1350,8 @@ feature -- Status setting
 			a_value_valid: valid_dead_code_removal.has (a_value)
 		do
 			if declared_dead_code_removal = Void then
-				!! declared_dead_code_removal.make_equal (valid_dead_code_removal.count)
+				!! declared_dead_code_removal.make (valid_dead_code_removal.count)
+				declared_dead_code_removal.set_equality_tester (string_equality_tester)
 			end
 			declared_dead_code_removal.force_last (a_value)
 		ensure
@@ -1378,7 +1381,8 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_debug_tag = Void then
-				!! declared_debug_tag.make_equal (10)
+				!! declared_debug_tag.make (10)
+				declared_debug_tag.set_equality_tester (string_equality_tester)
 			end
 			declared_debug_tag.force_last (a_value)
 		ensure
@@ -1451,7 +1455,8 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_exclude = Void then
-				!! declared_exclude.make_equal (10)
+				!! declared_exclude.make (10)
+				declared_exclude.set_equality_tester (string_equality_tester)
 			end
 			declared_exclude.force_last (a_value)
 		ensure
@@ -1573,7 +1578,8 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_header = Void then
-				!! declared_header.make_equal (10)
+				!! declared_header.make (10)
+				declared_header.set_equality_tester (string_equality_tester)
 			end
 			declared_header.force_last (a_value)
 		ensure
@@ -1603,7 +1609,8 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_include = Void then
-				!! declared_include.make_equal (10)
+				!! declared_include.make (10)
+				declared_include.set_equality_tester (string_equality_tester)
 			end
 			declared_include.force_last (a_value)
 		ensure
@@ -1617,7 +1624,8 @@ feature -- Status setting
 			a_value_valid: valid_inlining.has (a_value)
 		do
 			if declared_inlining = Void then
-				!! declared_inlining.make_equal (valid_inlining.count)
+				!! declared_inlining.make (valid_inlining.count)
+				declared_inlining.set_equality_tester (string_equality_tester)
 			end
 			declared_inlining.force_last (a_value)
 		ensure
@@ -1706,7 +1714,8 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 		do
 			if declared_link = Void then
-				!! declared_link.make_equal (10)
+				!! declared_link.make (10)
+				declared_link.set_equality_tester (string_equality_tester)
 			end
 			declared_link.force_last (a_value)
 		ensure
@@ -2058,7 +2067,8 @@ feature -- Valid values
 	valid_assertion: DS_HASH_SET [STRING] is
 			-- Valid values for 'assertion' option
 		once
-			!! Result.make_equal (8)
+			!! Result.make (8)
+			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
 			Result.put_last (options.require_value)
 			Result.put_last (options.ensure_value)
@@ -2077,7 +2087,8 @@ feature -- Valid values
 	valid_dead_code_removal: DS_HASH_SET [STRING] is
 			-- Valid values for 'dead_code_removal' option
 		once
-			!! Result.make_equal (5)
+			!! Result.make (5)
+			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
 			Result.put_last (options.low_level_value)
 			Result.put_last (options.feature_value)
@@ -2093,7 +2104,8 @@ feature -- Valid values
 	valid_garbage_collector: DS_HASH_SET [STRING] is
 			-- Valid values for 'garbage_collector' option
 		once
-			!! Result.make_equal (3)
+			!! Result.make (3)
+			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
 			Result.put_last (options.internal_value)
 			Result.put_last (options.boehm_value)
@@ -2107,7 +2119,8 @@ feature -- Valid values
 	valid_inlining: DS_HASH_SET [STRING] is
 			-- Valid values for 'inlining' option
 		once
-			!! Result.make_equal (5)
+			!! Result.make (5)
+			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
 			Result.put_last (options.array_value)
 			Result.put_last (options.constant_value)
@@ -2123,7 +2136,8 @@ feature -- Valid values
 	valid_linker: DS_HASH_SET [STRING] is
 			-- Valid values for 'linker' option
 		once
-			!! Result.make_equal (2)
+			!! Result.make (2)
+			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.default_value)
 			Result.put_last (options.microsoft_value)
 		ensure
@@ -2136,7 +2150,8 @@ feature -- Valid values
 	valid_target: DS_HASH_SET [STRING] is
 			-- Valid values for 'target' option
 		once
-			!! Result.make_equal (4)
+			!! Result.make (4)
+			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.exe_value)
 			Result.put_last (options.dll_value)
 			Result.put_last (options.com_value)
@@ -2151,7 +2166,8 @@ feature -- Valid values
 	valid_warning: DS_HASH_SET [STRING] is
 			-- Valid values for 'warning' option
 		once
-			!! Result.make_equal (4)
+			!! Result.make (4)
+			Result.set_equality_tester (string_equality_tester)
 			Result.put_last (options.none_value)
 			Result.put_last (options.style_value)
 			Result.put_last (options.default_value)
@@ -2359,7 +2375,8 @@ feature -- Default values
 	default_arguments: DS_HASH_SET [STRING] is
 			-- Default value for 'arguments' option
 		once
-			!! Result.make_equal (0)
+			!! Result.make (0)
+			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_arguments_not_void: Result /= Void
 			no_void_argument: not Result.has (Void)
@@ -2371,7 +2388,8 @@ feature -- Default values
 	default_assertion: DS_HASH_SET [STRING] is
 			-- Default value for 'assertion' option
 		once
-			!! Result.make_equal (1)
+			!! Result.make (1)
+			Result.set_equality_tester (string_equality_tester)
 			Result.put_new (options.require_value)
 		ensure
 			default_assertion_not_void: Result /= Void
@@ -2402,7 +2420,8 @@ feature -- Default values
 	default_dead_code_removal: DS_HASH_SET [STRING] is
 			-- Default value for 'dead_code_removal' option
 		once
-			!! Result.make_equal (1)
+			!! Result.make (1)
+			Result.set_equality_tester (string_equality_tester)
 			Result.put_new (options.all_value)
 		ensure
 			default_dead_code_removal_not_void: Result /= Void
@@ -2415,7 +2434,8 @@ feature -- Default values
 	default_debug_tag: DS_HASH_SET [STRING] is
 			-- Default value for 'debug_tag' option
 		once
-			!! Result.make_equal (0)
+			!! Result.make (0)
+			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_debug_tag_not_void: Result /= Void
 			no_void_debug_tag: not Result.has (Void)
@@ -2439,7 +2459,8 @@ feature -- Default values
 	default_exclude: DS_HASH_SET [STRING] is
 			-- Default value for 'exclude' option
 		once
-			!! Result.make_equal (0)
+			!! Result.make (0)
+			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_exclude_not_void: Result /= Void
 			no_void_exclude: not Result.has (Void)
@@ -2480,7 +2501,8 @@ feature -- Default values
 	default_header: DS_HASH_SET [STRING] is
 			-- Default value for 'header' option
 		once
-			!! Result.make_equal (0)
+			!! Result.make (0)
+			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_header_not_void: Result /= Void
 			no_void_header: not Result.has (Void)
@@ -2492,7 +2514,8 @@ feature -- Default values
 	default_include: DS_HASH_SET [STRING] is
 			-- Default value for 'include' option
 		once
-			!! Result.make_equal (0)
+			!! Result.make (0)
+			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_include_not_void: Result /= Void
 			no_void_include: not Result.has (Void)
@@ -2501,7 +2524,8 @@ feature -- Default values
 	default_inlining: DS_HASH_SET [STRING] is
 			-- Default value for 'inlining' option
 		once
-			!! Result.make_equal (1)
+			!! Result.make (1)
+			Result.set_equality_tester (string_equality_tester)
 			Result.put_new (options.none_value)
 		ensure
 			default_inlining_not_void: Result /= Void
@@ -2526,7 +2550,8 @@ feature -- Default values
 	default_link: DS_HASH_SET [STRING] is
 			-- Default value for 'link' option
 		once
-			!! Result.make_equal (0)
+			!! Result.make (0)
+			Result.set_equality_tester (string_equality_tester)
 		ensure
 			default_link_not_void: Result /= Void
 			no_void_link: not Result.has (Void)
@@ -2633,5 +2658,15 @@ feature -- Default values
 
 	default_wedit: BOOLEAN is False
 			-- Default value for 'wedit' option
+
+feature {NONE} -- Implementation
+
+	string_equality_tester: UC_EQUALITY_TESTER is
+			-- String equality tester (works with UC_STRING as well)
+		once
+			!! Result
+		ensure
+			tester_not_void: Result /= Void
+		end
 
 end

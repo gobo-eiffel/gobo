@@ -50,14 +50,14 @@ feature {NONE} -- Initialization
 				a_cursor.start
 				a_string := STRING_.make (50)
 				a_string.append_character ('%'')
-				a_string.append_string (a_cursor.item)
+				a_string := STRING_.appended_string (a_string, a_cursor.item)
 				a_string.append_character ('%'')
 				a_cursor.forth
 			until
 				a_cursor.after
 			loop
 				a_string.append_string (", %'")
-				a_string.append_string (a_cursor.item)
+				a_string := STRING_.appended_string (a_string, a_cursor.item)
 				a_string.append_character ('%'')
 				a_cursor.forth
 			end
