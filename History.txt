@@ -5,22 +5,41 @@ Version 3.1 - ?
 	* Feature YY_BUFFER.content is now of type KI_CHARACTER_BUFFER
 	  instead of KL_CHARACTER_BUFFER (Berend de Boer).
 
+	geant:
+
+	* The task <ise> now takes advantage of ISE Eiffel incremental
+	  compiler.
+
 	Gobo Eiffel Kernel Library:
 
 	* Moved feature `close' up to KI_INPUT_STREAM and
 	  KI_OUTPUT_STREAM and added feature `is_closable'
 	  (suggested by Franck Arnaud).
-	  
-	Gobo XML Library:
+
+	Gobo Eiffel Lexical Library:
+
+	* LX_NFA: Renamed `infix "|{n,}|"' as `infix "|{ni}|" because the
+	  former free operator is not valid in ETL3 anymore (and SE 1.0b6
+	  already supports the new syntax).
+
+	Gobo Eiffel Time Library:
+
+	* DT_DATE: Renamed `infix "&d"' as `infix "&d|" because the former
+	  free operator is not valid in ETL3 anymore (and SE 1.0b6 already
+	  supports the new syntax).
+	* DT_TIME: Renamed `infix "&t"' as `infix "&t|" because the former
+	  free operator is not valid in ETL3 anymore (and SE 1.0b6 already
+	  supports the new syntax).
+
+	Gobo Eiffel XML Library:
 
 	* Tree: `namespace' in named nodes is now an object, which 
 	  contains URI and prefix. It may be shared.
-	* Tree: `*_by_name' routines check the namespace is the
-	  same.
+	* Tree: `*_by_name' routines check the namespace is the same.
 	* Tree: `is_first' and `is_last' in XM_COMPOSITE for 
 	  checking position within parent.
 	* Tree: added `elements' to XM_COMPOSITE.
-	
+
 Version 3.0 - 1 September 2002
 
 	gelex:
