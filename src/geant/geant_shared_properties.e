@@ -47,7 +47,7 @@ feature -- Processing
 				print (a_message)
 			end
 			print ("%NBUILD FAILED!%N")
-			file_system.set_current_working_directory (startup_working_directory)
+			-- file_system.set_current_working_directory (startup_working_directory)
 			Exceptions.die (1)
 		end
 
