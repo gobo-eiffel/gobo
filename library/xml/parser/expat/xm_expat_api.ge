@@ -1995,7 +1995,7 @@ feature {NONE} -- Implementation
 		require
 			ptr_not_null: ptr /= default_pointer
 		external
-			"C [macro <eif_eiffel.h>]"
+			"C [macro <eif_eiffel.h>] (EIF_REFERENCE)"
 		alias
 			"eif_unfreeze"
 		end
