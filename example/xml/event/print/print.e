@@ -4,8 +4,11 @@ indexing
 
 		"Print sample"
 
-	status:	 "See notice at end of class."
-	author:	 "Andreas Leitner"
+	library: "Gobo Eiffel XML Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class PRINT
 
@@ -22,15 +25,13 @@ creation
 feature {NONE} -- Initialization
 
 	make is
+			-- Run.
 		do
-			check_parsers
+			process_arguments
 			if not has_error then
-				process_arguments
+				check_file_readable
 				if not has_error then
-					check_file_readable
-					if not has_error then
-						process_data_file
-					end
+					process_data_file
 				end
 			end
 		end
@@ -38,6 +39,7 @@ feature {NONE} -- Initialization
 feature
 
 	process_data_file is
+			-- Parse file.
 		require
 			file_name_not_void: file_name /= Void
 			event_parser_not_void: event_parser /= Void
@@ -45,7 +47,7 @@ feature
 			a_file: KL_TEXT_INPUT_FILE
 			a_parser: XM_PARSER
 		do
-			io.put_string ("1) parsing data...%N")
+			io.put_string ("parsing data...%N")
 
 			!! a_file.make (file_name)
 			a_file.open_read
@@ -67,9 +69,8 @@ feature
 			io.put_string ("exiting...%N")
 		end
 
-feature
-
 	process_arguments is
+			-- Parse command line.
 		local
 			parser_switch: STRING
 		do
@@ -82,7 +83,8 @@ feature
 				if parser_switch.is_equal ("--expat") then
 					if not fact.is_expat_available then
 						io.put_string ("expat is not availabe, please choose %
-							%other parser backend%N")
+							%other parser backend")
+						io.put_new_line
 						has_error := True
 					else
 						io.put_string ("Using expat parser%N")
@@ -98,14 +100,10 @@ feature
 			end
 		ensure
 			file_name_not_void: (not has_error) implies file_name /= Void
-			--event_parser_not_void: event_parser /= Void
+			event_parser_not_void: (not has_error) implies event_parser /= Void
 		end
 
 feature -- Checks we have to do before we can run
-
-	check_parsers is
-		do
-		end
 
 	check_file_readable is
 			-- check if file_name is readable
@@ -124,9 +122,10 @@ feature -- Checks we have to do before we can run
 			end
 		end
 
-feature
+feature -- Parser
 
 	fact: XM_EXPAT_PARSER_FACTORY is
+			-- Expat factory.
 		once
 			!! Result
 		ensure
@@ -134,12 +133,20 @@ feature
 		end
 
 	event_parser: XM_PARSER
+			-- Parser.
 
-feature
+feature -- Access
 
 	has_error: BOOLEAN
+			-- Has error occurred?
 	
+	file_name: STRING
+			-- Name of file to read.
+
+feature {NONE} -- Implementation
+
 	usage_string: STRING is
+			-- Command line usage.
 		once
 			Result := clone ("usage: print ")
 			if fact.is_expat_available then
@@ -148,9 +155,5 @@ feature
 			Result.append_string ("--eiffel")
 			Result.append_string (" <input-file>%N")
 		end
-
-feature
-
-	file_name: STRING
 
 end
