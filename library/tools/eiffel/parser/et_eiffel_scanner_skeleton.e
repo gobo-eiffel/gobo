@@ -361,7 +361,7 @@ feature {NONE} -- String handler
 			-- Insert basic strings in `strings'.
 		local
 			a_strings: like strings
-		do
+		once
 			a_strings := strings
 			a_strings.force_new (-1, tokens.capitalized_any_name)
 			a_strings.force_new (-1, tokens.capitalized_array_name)
