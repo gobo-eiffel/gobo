@@ -18,11 +18,11 @@
 				<option name="abstract" value="true"/>
 				<cluster name="assertion"/>
 				<cluster name="class"/>
+				<cluster name="cluster"/>
 				<cluster name="constant"/>
 				<cluster name="expression"/>
 				<cluster name="feature"/>
 				<cluster name="instruction"/>
-				<cluster name="lace"/>
 				<cluster name="misc"/>
 				<cluster name="name"/>
 				<cluster name="type"/>
@@ -45,6 +45,7 @@
 			<cluster name="generator"/>
 			<cluster name="parser"/>
 			<cluster name="support"/>
+			<cluster name="universe"/>
 		</cluster>
 	</cluster>
 </library>
