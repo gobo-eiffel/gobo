@@ -55,30 +55,54 @@ feature -- Input
 
 	read_character is
 			-- Read the next item in input stream.
-			-- Make the result available in `last_item'.
+			-- Make the result available in `last_character'.
 		do
+			-- see 'last_character': it chooses from impl or the queue
+			
 			if not is_detected then
 				utf16_detect_read_character
 				is_detected := True
-					-- Detection may eat characters so we do a normal
-					-- read afterwards, fill queue for normal read.
-			elseif utf_queue.count > 0 then
-					-- Last character was read from queue.
-				utf_queue.remove
-			end
-				-- If `utf_queue' still contains something,
-				-- this is the next character, so do nothing.
-			if utf_queue.count = 0 then
-					-- Otherwise we read via our routine if we 
-					-- are in a UTF16 file otherwise leave it to
-					-- parent.
-				if is_utf16 then
-					utf16_read_character
+				
+				-- If detection has not put back read character in queue, 
+				-- read from upstream, which may be empty if the stream 
+				-- contains only the byte order character.
+				if utf_queue.count = 0 and not impl.end_of_input then
+					noqueue_read_character
+				end	
+			else
+				if utf_queue.count > 0 then
+					-- Last character was read from queue, remove it.
+					utf_queue.remove
+					-- Next character may or may not be from queue.
+					if utf_queue.count = 0 and not impl.end_of_input then
+						noqueue_read_character
+					end
 				else
-					impl.read_character
+					-- Straightforward case.
+					noqueue_read_character
 				end
-			end
+			end				
 		end
+		
+feature {NONE} -- Input
+
+	noqueue_read_character is
+			-- Read character after detection and when detection queue has 
+			-- been flushed..
+		require
+			open_read: is_open_read
+			not_end: not end_of_input
+			detected: is_detected
+			queue_empty: utf_queue.count = 0
+		do
+			if is_utf16 then
+				utf16_read_character
+			else
+				impl.read_character
+			end	
+		end
+		
+feature -- Input
 
 	read_string (nb: INTEGER) is
 			-- Read at most `nb' characters from input stream.
@@ -95,8 +119,8 @@ feature -- Input
 			-- to duplicate some of the detection handling.
 			from
 				last_string.wipe_out
-				i := nb
 				read_character
+				i := nb
 			until
 				i = 0 or end_of_input
 			loop
@@ -207,6 +231,8 @@ feature {NONE} -- Implementation
 						utf_queue.force (first_char)
 						utf_queue.force (second_char)
 					end
+				else
+					utf_queue.force (first_char)
 				end
 			end
 		end
@@ -280,9 +306,9 @@ feature {NONE} -- Implementation
 			a_buffer: STRING
 		do
 			debug ("xml_parser")
-				std.output.put_string ("[")
-				std.output.put_string (a_char.out)
-				std.output.put_string ("]")
+				std.error.put_string ("[")
+				std.error.put_string (a_char.out)
+				std.error.put_string ("]")
 			end
 				-- Convert to UTF8
 			a_buffer := utf8_buffer
