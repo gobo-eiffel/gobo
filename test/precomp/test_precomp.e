@@ -152,16 +152,16 @@ feature {NONE} -- Precompilation
 			a_line: STRING
 			a_dir: KL_DIRECTORY
 			a_dirname, a_filename: STRING
-			se_2_0: STRING
+			se_1_0: STRING
 		do
-			se_2_0 := Execution_environment.variable_value ("SE_2_0")
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
 				-- Generate loadpath file.
-			if se_2_0 /= Void and then se_2_0.count > 0 then
-				assert_execute ("gexace --define=SE_2_0 --library=se " + xace_filename + output_log)
+			se_1_0 := Execution_environment.variable_value ("SE_1_0")
+			if se_1_0 /= Void and then se_1_0.count > 0 then
+				assert_execute ("gexace --define=SE_1_0 --library=se " + xace_filename + output_log)
 			else
 				assert_execute ("gexace --library=se " + xace_filename + output_log)
 			end
@@ -189,10 +189,10 @@ feature {NONE} -- Precompilation
 								a_filename := a_dir.last_entry
 								if file_system.has_extension (a_filename, ".e") then
 									a_filename := file_system.pathname (a_dirname, a_filename)
-									if se_2_0 /= Void and then se_2_0.count > 0 then
-										assert_execute ("class_check -no_style_warning -no_warning -loadpath loadpath.se " + a_filename + output_log)
-									else
+									if se_1_0 /= Void and then se_1_0.count > 0 then
 										assert_execute ("short -plain -no_style_warning -no_warning " + a_filename + output_log)
+									else
+										assert_execute ("class_check -no_style_warning -no_warning -loadpath loadpath.se " + a_filename + output_log)
 									end
 									assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
 								end
@@ -200,8 +200,7 @@ feature {NONE} -- Precompilation
 							end
 							a_dir.close
 						else
-							-- assert (a_dirname + "_open_read", False)
-							std.error.put_line ("Cannot read %"" + a_dirname + "%"")
+							assert (a_dirname + "_open_read", False)
 						end
 					end
 					a_file.read_line

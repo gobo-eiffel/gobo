@@ -60,27 +60,27 @@
 		<option name="abstract" value="true"/>
 		<cluster name="se" location="${SmartEiffelDirectory}/lib">
 			<option name="abstract" value="true"/>
-			<cluster name="abilities" if="${SE_2_0}"/>
+			<cluster name="abilities" unless="${SE_1_0}"/>
 			<cluster name="base"/>
 			<cluster name="io">
-				<cluster name="filter" if="${SE_2_0}"/>
-				<cluster name="low_level" if="${SE_2_0}"/>
-				<cluster name="terminal" if="${SE_2_0}"/>
+				<cluster name="filter" unless="${SE_1_0}"/>
+				<cluster name="low_level" unless="${SE_1_0}"/>
+				<cluster name="terminal" unless="${SE_1_0}"/>
 			</cluster>
 			<cluster name="iterator">
-				<cluster name="internal" if="${SE_2_0}"/>
+				<cluster name="internal" unless="${SE_1_0}"/>
 			</cluster>
 			<cluster name="kernel"/>
 			<cluster name="misc"/>
-			<cluster name="number" unless="${SE_2_0}"/>
-			<cluster name="numeric" if="${SE_2_0}">
+			<cluster name="number" if="${SE_1_0}"/>
+			<cluster name="numeric" unless="${SE_1_0}">
 				<cluster name="internal"/>
 			</cluster>
 			<cluster name="random"/>
-			<cluster name="sequencer" if="${SE_2_0}"/>
-			<cluster name="signal" if="${SE_2_0}"/>
+			<cluster name="sequencer" unless="${SE_1_0}"/>
+			<cluster name="signal" unless="${SE_1_0}"/>
 			<cluster name="sorting"/>
-			<cluster name="storage" if="${SE_2_0}">
+			<cluster name="storage" unless="${SE_1_0}">
 				<cluster name="collection"/>
 				<cluster name="collection2"/>
 				<cluster name="collection3"/>
@@ -89,14 +89,14 @@
 				<cluster name="low_level"/>
 				<cluster name="set"/>
 			</cluster>
-			<cluster name="string" if="${SE_2_0}">
+			<cluster name="string" unless="${SE_1_0}">
 				<cluster name="internal"/>
 				<cluster name="low_level"/>
 			</cluster>
 			<cluster name="time">
-				<cluster name="formatter" if="${SE_2_0}"/>
+				<cluster name="formatter" unless="${SE_1_0}"/>
 			</cluster>
-			<cluster name="unicode" if="${SE_2_0}"/>
+			<cluster name="unicode" unless="${SE_1_0}"/>
 		</cluster>
 	</cluster>
 

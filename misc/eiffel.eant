@@ -242,7 +242,7 @@
 			Pass $GOBO_CC value to 'gexace' if defined.
 			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
 			Pass $GOBO_DOTNET option to 'gexace' if defined.
-			Pass $SE_2_0 option to 'gexace' if defined.
+			Pass $SE_1_0 option to 'gexace' if defined.
 			Pass $VE_4_1 option to 'gexace' if defined.
 			To be redefined in descendant if additional options are
 			necessary.
@@ -252,10 +252,6 @@
 		<set name="l_gexace_output" value="${gexace_output}" if="${gexace_output}"/>
 		<set name="l_gexace_system" value="${eiffel}" unless="${gexace_system}"/>
 		<set name="l_gexace_system" value="${gexace_system}" if="${gexace_system}"/>
-<!--
-		<set name="l_ve_os_default" value="Win32" if="${GOBO_OS}=windows"/>
-		<set name="l_ve_os_default" value="Linux" unless="${GOBO_OS}=windows"/>
--->
 		<gexace system="${l_gexace_system}" output="${l_gexace_output}" xace="${system_dir}/system.xace">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
 			<define name="BOOTSTRAP" value="${bootstrap}" if="${bootstrap}"/>
@@ -264,12 +260,8 @@
 			<define name="GOBO_CC" value="${GOBO_CC}" if="${GOBO_CC}"/>
 			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
 			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
-			<define name="SE_2_0" value="true" if="${SE_2_0}"/>
+			<define name="SE_1_0" value="true" if="${SE_1_0}"/>
 			<define name="VE_4_1" value="true" if="${VE_4_1}"/>
-<!--
-			<define name="VE_OS" value="${VE_OS}" if="${VE_OS}"/>
-			<define name="VE_OS" value="${l_ve_os_default}" unless="${VE_OS}"/>
--->
 		</gexace>
 	</target>
 
