@@ -98,10 +98,10 @@ feature {NONE} -- Generation
 			a_file.put_string ("yy_nxt := yy_nxt_%N")
 			if yy_ec /= Void then
 				a_file.put_string (Indentation)
-				a_file.put_string ("yy_ec_ := yy_ec_%N")
+				a_file.put_string ("yy_ec := yy_ec_%N")
 			end
 			a_file.put_string (Indentation)
-			a_file.put_string ("yy_accept_ := yy_accept_%N")
+			a_file.put_string ("yy_accept := yy_accept_%N")
 			a_file.put_string ("%T%Tend%N")
 		end
 
@@ -125,7 +125,11 @@ feature {NONE} -- Generation
 			a_file.put_string ("%N%T%T%T-- Equivalence code for NULL character%
 				%%N%N%TyyNb_rows: INTEGER is ")
 			a_file.put_integer (yyNb_rows)
-			a_file.put_string ("%N%T%T%T-- Number of rows in `yy_nxt'%N%N")
+			a_file.put_string ("%N%T%T%T-- Number of rows in `yy_nxt'%N%N%
+				%%TyyBacking_up: BOOLEAN is ")
+			a_file.put_boolean (yyBacking_up)
+			a_file.put_string ("%N%T%T%T-- Does current scanner back up?%N%
+				%%T%T%T-- (i.e. does it have non-accepting states)%N%N")
 			generatable_dfa_print_constants (a_file)
 		end
 
