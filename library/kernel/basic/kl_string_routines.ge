@@ -768,6 +768,105 @@ feature -- Comparison
 			-- greater_positive: (Result = 1) = (a_string is greater than other)
 		end
 
+	three_way_case_insensitive_comparison (a_string, other: STRING): INTEGER is
+			-- If `a_string' equal to `other', 0; if smaller, -1; if greater, 1
+			-- (case insensitive comparison)
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+		local
+			i, nb, nb1, nb2: INTEGER
+			c1, c2: CHARACTER
+			d1, d2: INTEGER
+			found: BOOLEAN
+		do
+			if other = a_string then
+				Result := 0
+			elseif a_string.same_type (dummy_string) and other.same_string (dummy_string) then
+				nb1 := a_string.count
+				nb2 := other.count
+				if nb1 < nb2 then
+					nb := nb1
+				else
+					nb := nb2
+				end
+				from i := 1 until i > nb loop
+					c1 := a_string.item (i)
+					c2 := other.item (i)
+					if c1 = c2 then
+						i := i + 1
+					else
+#ifdef ISE || HACT
+						c1 := c1.lower
+						c2 := c2.lower
+#endif
+#ifdef SE
+						c1 := c1.to_lower
+						c2 := c2.to_lower
+#endif
+#ifdef VE
+						c1 := c1.as_lower
+						c2 := c2.as_lower
+#endif
+						if c1 = c2 then
+							i := i + 1
+						elseif c1 < c2 then
+							found := True
+							Result := -1
+							i := nb + 1 -- Jump out of the loop.
+						else
+							found := True
+							Result := 1
+							i := nb + 1 -- Jump out of the loop.
+						end
+					end
+				end
+				if not found then
+					if nb1 < nb2 then
+						Result := -1
+					elseif nb1 /= nb2 then
+						Result := 1
+					end
+				end
+			else
+				nb1 := a_string.count
+				nb2 := other.count
+				if nb1 < nb2 then
+					nb := nb1
+				else
+					nb := nb2
+				end
+				from i := 1 until i > nb loop
+					d1 := a_string.item_code (i)
+					d2 := other.item_code (i)
+					if d1 = d2 then
+						i := i + 1
+					else
+						d1 := unicode.lower_code (d1)
+						d2 := unicode.lower_code (d2)
+						if d1 = d2 then
+							i := i + 1
+						elseif d1 < d2 then
+							found := True
+							Result := -1
+							i := nb + 1 -- Jump out of the loop.
+						else
+							found := True
+							Result := 1
+							i := nb + 1 -- Jump out of the loop.
+						end
+					end
+				end
+				if not found then
+					if nb1 < nb2 then
+						Result := -1
+					elseif nb1 /= nb2 then
+						Result := 1
+					end
+				end
+			end
+		end
+
 feature -- Element change
 
 	appended_string (a_string, other: STRING): STRING is
