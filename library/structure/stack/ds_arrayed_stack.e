@@ -15,11 +15,6 @@ class DS_ARRAYED_STACK [G]
 inherit
 
 	DS_STACK [G]
-#ifdef ISE || HACT
-		undefine
-			consistent, setup
-		end
-#endif
 
 	DS_ARRAYED_LIST [G]
 		rename

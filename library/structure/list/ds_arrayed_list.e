@@ -15,39 +15,11 @@ class DS_ARRAYED_LIST [G]
 inherit
 
 	DS_LIST [G]
-#ifdef ISE || HACT
-		undefine
-			consistent, setup
-#endif
 		redefine
 			searcher
 		end
 
 	DS_RESIZABLE [G]
-#ifdef ISE || HACT
-		undefine
-			consistent, setup
-		end
-#endif
-
-	DS_ARRAYED [G]
-		rename
-			make as make_array,
-			count as capacity,
-			resize as array_resize,
-			put as replace,
-			force as array_force,
-			valid_index as array_valid_index
-		export
-#ifndef SE
-			{NONE} all
-#else
---| SmallEiffel -0.90 bug (960905a)
---|			{NONE} all
-#endif
-		redefine
-			is_equal
-		end
 
 creation
 
@@ -64,7 +36,7 @@ feature {NONE} -- Initialization
 		local
 			ref_searcher: DS_ARRAYED_LIST_REFERENCE_SEARCHER [G]
 		do
-			make_array (1, n)
+			!! storage.make (1, n)
 			!! ref_searcher
 			searcher := ref_searcher
 		ensure
@@ -81,7 +53,7 @@ feature {NONE} -- Initialization
 		local
 			value_searcher: DS_ARRAYED_LIST_VALUE_SEARCHER [G]
 		do
-			make_array (1, n)
+			!! storage.make (1, n)
 			!! value_searcher
 			searcher := value_searcher
 		ensure
@@ -109,7 +81,7 @@ feature {NONE} -- Initialization
 			until
 				i > nb
 			loop
-				replace (other_cursor.item, i)
+				storage.put (other_cursor.item, i)
 				other_cursor.forth
 				i := i + 1
 			end
@@ -120,16 +92,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	infix "@", item (i: INTEGER): G is
+			-- Item at index `i'
+		do
+			Result := storage.item (i)
+		end
+
 	first: G is
 			-- First item in list
 		do
-			Result := item (1)
+			Result := storage.item (1)
 		end
 
 	last: G is
 			-- Last item in list
 		do
-			Result := item (count)
+			Result := storage.item (count)
 		end
 
 	new_cursor: DS_ARRAYED_LIST_CURSOR [G] is
@@ -146,6 +124,12 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of items in list
 
+	capacity: INTEGER is
+			-- Maximum number of items in list
+		do
+			Result := storage.count
+		end
+
 feature -- Status report
 
 	extendible (nb: INTEGER): BOOLEAN is
@@ -154,6 +138,15 @@ feature -- Status report
 			Result := capacity >= count + nb
 		ensure then
 			enough_space: Result implies capacity >= count + nb
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Copy `other' to current list.
+		do
+			standard_copy (other)
+			storage := clone (storage)
 		end
 
 feature -- Comparison
@@ -171,7 +164,7 @@ feature -- Comparison
 				until
 					not Result or i > nb
 				loop
-					Result := item (i) = other.item (i)
+					Result := storage.item (i) = other.item (i)
 					i := i + 1
 				end
 			end
@@ -179,25 +172,31 @@ feature -- Comparison
 
 feature -- Element change
 
+	replace (v: G; i: INTEGER) is
+			-- Replace item at index `i' by `v'.
+		do
+			storage.put (v, i)
+		end
+
 	put_first (v: G) is
 			-- Add `v' to beginning of list.
 		do
 			move_right (1, 1)
-			replace (v, 1)
+			storage.put (v, 1)
 		end
 
 	put_last (v: G) is
 			-- Add `v' to end of list.
 		do
 			count := count + 1
-			replace (v, count)
+			storage.put (v, count)
 		end
 
 	put (v: G; i: INTEGER) is
 			-- Add `v' at `i'-th position.
 		do
 			move_right (i, 1)
-			replace (v, i)
+			storage.put (v, i)
 		end
 
 	put_left (v: G; a_cursor: like new_cursor) is
@@ -207,7 +206,7 @@ feature -- Element change
 		do
 			i := a_cursor.index
 			move_right (i, 1)
-			replace (v, i)
+			storage.put (v, i)
 			a_cursor.forth
 		end
 
@@ -218,7 +217,7 @@ feature -- Element change
 		do
 			i := a_cursor.index + 1
 			move_right (i, 1)
-			replace (v, i)
+			storage.put (v, i)
 		end
 
 	force_first (v: G) is
@@ -229,7 +228,7 @@ feature -- Element change
 				resize (capacity + 1)
 			end
 			move_right (1, 1)
-			replace (v, 1)
+			storage.put (v, 1)
 		end
 
 	force_last (v: G) is
@@ -240,7 +239,7 @@ feature -- Element change
 				resize (capacity + 1)
 			end
 			count := count + 1
-			replace (v, count)
+			storage.put (v, count)
 		end
 
 	force (v: G; i: INTEGER) is
@@ -251,7 +250,7 @@ feature -- Element change
 				resize (capacity + 1)
 			end
 			move_right (i, 1)
-			replace (v, i)
+			storage.put (v, i)
 		end
 
 	force_left (v: G; a_cursor: like new_cursor) is
@@ -265,7 +264,7 @@ feature -- Element change
 			end
 			i := a_cursor.index
 			move_right (i, 1)
-			replace (v, i)
+			storage.put (v, i)
 			a_cursor.forth
 		end
 
@@ -280,7 +279,7 @@ feature -- Element change
 			end
 			i := a_cursor.index + 1
 			move_right (i, 1)
-			replace (v, i)
+			storage.put (v, i)
 		end
 
 	extend_first (other: DS_LINEAR [G]) is
@@ -299,7 +298,7 @@ feature -- Element change
 			count := count + other.count
 			other_cursor := other.new_cursor
 			from other_cursor.start until other_cursor.after loop
-				replace (other_cursor.item, i)
+				storage.put (other_cursor.item, i)
 				i := i + 1
 				other_cursor.forth
 			end
@@ -315,7 +314,7 @@ feature -- Element change
 			k := i
 			other_cursor := other.new_cursor
 			from other_cursor.start until other_cursor.after loop
-				replace (other_cursor.item, k)
+				storage.put (other_cursor.item, k)
 				k := k + 1
 				other_cursor.forth
 			end
@@ -504,10 +503,13 @@ feature -- Resizing
 			-- Resize structure so that it can contain
 			-- at least `n' items. Do not lose any item.
 		do
-			array_resize (1, n)
+			storage.resize (1, n)
 		end
 
 feature {NONE} -- Implementation
+
+	storage: ARRAY [G]
+			-- Storage for items of the list
 
 	move_right (index, offset: INTEGER) is
 			-- Move items at and after `index' position
@@ -525,7 +527,7 @@ feature {NONE} -- Implementation
 			until
 				i < index
 			loop
-				replace (item (i), i + offset)
+				storage.put (storage.item (i), i + offset)
 				i := i - 1
 			end
 		ensure
@@ -548,7 +550,7 @@ feature {NONE} -- Implementation
 			until
 				i > nb
 			loop
-				replace (item (i), i - offset)
+				storage.put (storage.item (i), i - offset)
 				i := i + 1
 			end
 			count := count - offset
@@ -558,6 +560,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	lower_definition: lower = 1
+	storage_not_void: storage /= Void
+	storage_lower: storage.lower = 1
 
 end -- class DS_ARRAYED_LIST
