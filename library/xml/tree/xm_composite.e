@@ -23,7 +23,9 @@ inherit
 
 	DS_LINKED_LIST [XM_NODE]
 		rename
-			make as make_list
+			make as make_list,
+			is_first as list_is_first,
+			is_last as list_is_last
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -36,7 +38,6 @@ feature {NONE} -- Initialization
 	make_composite is
 			-- Initialization specific to current node.
 		do
-			!! namespaces.make
 			make_list
 		end
 
@@ -61,13 +62,16 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 		local
 			a_cursor: like new_cursor
-			e: XM_ELEMENT
+			typer: XM_NODE_TYPER
 		do
+			!! typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
-				e ?= a_cursor.item
-				if e /= Void and then same_string (e.name, a_name) then
-					Result := e
+				a_cursor.item.process (typer)
+				if typer.is_element and then 
+					named_same_name (typer.element, a_name)
+				then
+					Result := typer.element
 					a_cursor.go_after -- Jump out of the loop.
 				else
 					a_cursor.forth
@@ -75,27 +79,45 @@ feature -- Access
 			end
 		ensure
 			element_not_void: has_element_by_name (a_name) = (Result /= Void)
+			--namespace: Result /= Void implies same_namespace (Result)
 		end
 
-	namespaces: XM_NAMESPACE_TABLE
-			-- Namespaces
+	elements: DS_LIST [XM_ELEMENT] is
+			-- List of all attributes in current element
+			-- (Create a new list at each call.)
+		local
+			a_cursor: like new_cursor
+			typer: XM_NODE_TYPER
+		do
+			!! typer
+			!DS_BILINKED_LIST [XM_ELEMENT]! Result.make
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (typer)
+				if typer.is_element then
+					Result.force_last (typer.element)
+				end
+				a_cursor.forth
+			end
+		end
 
 	text: STRING is
 			-- Concatenation of all texts directly found in
 			-- current element; Void if no text found
 			-- (Return a new string at each call.)
 		local
-			text_node: XM_CHARACTER_DATA
+			typer: XM_NODE_TYPER
 			a_cursor: like new_cursor
 		do
+			!! typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
-				text_node ?= a_cursor.item
-				if text_node /= Void then
+				a_cursor.item.process (typer)
+				if typer.is_character_data then
 					if Result = Void then
-						Result := clone (text_node.content)
+						Result := clone (typer.character_data.content)
 					else
-						Result := STRING_.appended_string (Result, text_node.content)
+						Result := STRING_.appended_string (Result, typer.character_data.content)
 					end
 				end
 				a_cursor.forth
@@ -111,12 +133,15 @@ feature -- Status report
 			a_name_not_void: a_name /= Void
 		local
 			a_cursor: like new_cursor
-			e: XM_ELEMENT
+			typer: XM_NODE_TYPER
 		do
+			!! typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
-				e ?= a_cursor.item
-				if e /= Void and then same_string (e.name, a_name) then
+				a_cursor.item.process (typer)
+				if typer.is_element and then 
+					named_same_name (typer.element, a_name)
+				then
 					Result := True
 					a_cursor.go_after -- Jump out of the loop.
 				else
@@ -125,6 +150,17 @@ feature -- Status report
 			end
 		end
 
+feature {NONE} -- Name comparison with namespace.
+
+	named_same_name (a_named: XM_NAMED_NODE; a_name: STRING): BOOLEAN is
+			-- Has 'a_named' same name as 'a_name' and 
+			-- same namespace as current node?
+		require
+			a_named_not_void: a_named /= Void
+			a_name_not_void: a_name /= Void
+		deferred
+		end
+		
 feature -- Element change
 
 	join_text_nodes is
@@ -133,11 +169,14 @@ feature -- Element change
 			text_node: XM_CHARACTER_DATA
 			joint_text_node: XM_CHARACTER_DATA
 			a_cursor: like new_cursor
+			typer: XM_NODE_TYPER
 		do
+			!! typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
-				text_node ?= a_cursor.item
-				if text_node /= Void then
+				a_cursor.item.process (typer)
+				if typer.is_character_data then
+					text_node := typer.character_data
 						-- Found a text node.
 						-- Now join all text-nodes that are following it
 						-- until there is a node that is no text-node.
@@ -147,10 +186,10 @@ feature -- Element change
 					until
 						a_cursor.after or text_node = Void
 					loop
-						text_node ?= a_cursor.item
-						if text_node /= Void then
+						a_cursor.item.process (typer)
+						if typer.is_character_data then
 								-- Found another text-node -> join.
-							joint_text_node.append_content (text_node)
+							joint_text_node.append_content (typer.character_data)
 							remove_at_cursor (a_cursor)
 						else
 							a_cursor.forth
@@ -165,79 +204,21 @@ feature -- Element change
 
 feature -- Namespaces
 
-	resolve_namespaces is
-			-- Check for "xmlns" attributes and set the corresponding namespace
-			-- and namespace_declaration features in elements and attributes.
-			-- Additionally the prefixes are removed from the attribute names
-			-- (except for "xmlns", see `remove_namespace_declaration_from_attributes'
-			-- to remove those as well).
-		local
-			decls: XM_NAMESPACE_TABLE
-		do
-			!! decls.make
-			resolve_namespaces_impl (decls)
-		end
-
 	remove_namespace_declarations_from_attributes is
 			-- Remove all attributes that are namespace declarations.
 			-- That is any attribute whose name starts with "xmlns".
 		local
-			element: XM_COMPOSITE
+			typer: XM_NODE_TYPER
 			a_cursor: like new_cursor
 		do
+			!! typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
-				element ?= a_cursor.item
-				if element /= Void then
+				a_cursor.item.process (typer)
+				if typer.is_composite then
 						-- Found an element, now let's check if it has "xmlns"
 						-- attributes defined.
-					element.remove_namespace_declarations_from_attributes
-				end
-				a_cursor.forth
-			end
-		end
-
-feature -- Obsolete
-
-	resolve_namespaces_start is
-			-- Check for "xmlns" attributes and set the corresponding namespace
-			-- and namespace_declaration features in elements and attributes.
-			-- Additionally the prefixes are removed from the attribute names
-			-- (except for "xmlns", see `remove_namespace_declaration_from_attributes'
-			-- to remove those as well).
-		obsolete
-			"[020811] Use `resolve_namespaces' instead."
-		do
-			resolve_namespaces
-		end
-
-feature {XM_COMPOSITE} -- Namespaces
-
-	resolve_namespaces_impl (decls: XM_NAMESPACE_TABLE) is
-			-- Check for "xmlns" attributes and set the corresponding namespace
-			-- and namespace_declaration features in elements and attributes.
-			-- Additionally the prefixes are removed from the attribute names
-			-- (except for "xmlns", see `remove_namespace_declaration_from_attributes'
-			-- to remove those as well).
-		require
-			decls_not_void: decls /= Void
-		local
-			element: XM_ELEMENT
-			comp: XM_COMPOSITE
-			a_cursor: like new_cursor
-		do
-			a_cursor := new_cursor
-			from a_cursor.start until a_cursor.after loop
-				element ?= a_cursor.item
-				if element /= Void then
-						-- Found an element, now let's check if it has "xmlns"
-						-- attributes defined.
-					decls.override_with_list (element.namespace_declarations)
-					element.apply_namespace_declarations (decls)
-				end
-				comp ?= a_cursor.item
-				if comp /= Void then
-					comp.resolve_namespaces_impl (decls)
+					typer.composite.remove_namespace_declarations_from_attributes
 				end
 				a_cursor.forth
 			end
@@ -265,21 +246,18 @@ feature -- Processing
 			processor_not_void: a_processor /= Void
 		local
 			a_cursor: like new_cursor
-			e: XM_COMPOSITE
+			typer: XM_NODE_TYPER
 		do
+			!! typer
 			a_cursor := new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_cursor.item.process (a_processor)
-				e ?= a_cursor.item
-				if e /= Void then
-					e.process_children_recursive (a_processor)
+				a_cursor.item.process (typer)
+				if typer.is_composite then
+					typer.composite.process_children_recursive (a_processor)
 				end
 				a_cursor.forth
 			end
 		end
-
-invariant
-
-	namespaces_not_void: namespaces /= Void
 
 end
