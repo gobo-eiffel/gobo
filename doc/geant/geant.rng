@@ -75,6 +75,7 @@
 	<define name="tasks">
 		<zeroOrMore>
 			<choice>
+				<ref name="available"/>
 				<ref name="copy"/>
 				<ref name="echo"/>
 				<ref name="delete"/>
@@ -104,6 +105,20 @@
 	</define>
 
 <!-- tasks -->
+
+	<define name="available">
+		<element name="available">
+			<ref name="dir_if_unless"/>
+			<attribute name="resource"/>
+			<attribute name="variable"/>
+			<optional>
+				<attribute name="true_value"/>
+			</optional>
+			<optional>
+				<attribute name="false_value"/>
+			</optional>
+		</element>
+	</define>
 
 	<define name="copy">
 		<element name="copy">

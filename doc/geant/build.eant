@@ -38,16 +38,22 @@
 		<set name="next_chapter" value="hello_world"/>
 		<geant target="xslt"/>
 
-		<set name="next_chapter" value="copy_task"/>
+		<set name="next_chapter" value="fileset_element"/>
 		<geant target="xslt"/>
 
 			<!-- Elements: -->
 <!-- TODO: finish the following:
-		<xslt input="fileset_element.xml" output="fileset_element.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
-		<xslt input="map_element.xml" output="map_element.html" stylesheet="${GOBO}/doc/misc/gobo2html.xsl"/>
+		<set name="next_chapter" value="map_element"/>
+		<geant target="xslt"/>
 -->
 
 			<!-- Tasks: -->
+		<set name="next_chapter" value="available_task"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="copy_task"/>
+		<geant target="xslt"/>
+
 		<set name="next_chapter" value="delete_task"/>
 		<geant target="xslt"/>
 
