@@ -859,48 +859,48 @@ feature -- Test
 			assert_equal ("copy4", "fo%%/692/bar", a_string.out) 
 		end
 
-	test_append_unicode1 is
-			-- Test feature `append_unicode'.
+	test_append_unicode_character1 is
+			-- Test feature `append_unicode_character'.
 		local
 			a_string: UC_UTF8_STRING
 			c: UC_CHARACTER
 		do
 			!! a_string.make_from_string ("bar")
 			!! c.make_from_character ('f')
-			a_string.append_unicode (c)
-			assert_equal ("append_unicode1", "barf", a_string.out) 
+			a_string.append_unicode_character (c)
+			assert_equal ("append_unicode_character1", "barf", a_string.out) 
 			!! c.make_from_code (68457)
-			a_string.append_unicode (c)
-			assert_equal ("append_unicode2", "barf%%/68457/", a_string.out) 
+			a_string.append_unicode_character (c)
+			assert_equal ("append_unicode_character2", "barf%%/68457/", a_string.out) 
 			!! a_string.make_from_string ("")
 			!! c.make_from_code (462)
-			a_string.append_unicode (c)
-			assert_equal ("append_unicode3", "%%/462/", a_string.out) 
+			a_string.append_unicode_character (c)
+			assert_equal ("append_unicode_character3", "%%/462/", a_string.out) 
 			!! c.make_from_character ('z')
-			a_string.append_unicode (c)
-			assert_equal ("append_unicode4", "%%/462/z", a_string.out) 
+			a_string.append_unicode_character (c)
+			assert_equal ("append_unicode_character4", "%%/462/z", a_string.out) 
 		end
 
-	test_append_unicode2 is
-			-- Test feature `append_unicode'.
+	test_append_unicode_character2 is
+			-- Test feature `append_unicode_character'.
 		local
 			a_string: UC_STRING
 			c: UC_CHARACTER
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
 			!! c.make_from_character ('f')
-			a_string.append_unicode (c)
-			assert_equal ("append_unicode1", "barf", a_string.out) 
+			a_string.append_unicode_character (c)
+			assert_equal ("append_unicode_character1", "barf", a_string.out) 
 			!! c.make_from_code (68457)
-			a_string.append_unicode (c)
-			assert_equal ("append_unicode2", "barf%%/68457/", a_string.out) 
+			a_string.append_unicode_character (c)
+			assert_equal ("append_unicode_character2", "barf%%/68457/", a_string.out) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
 			!! c.make_from_code (462)
-			a_string.append_unicode (c)
-			assert_equal ("append_unicode3", "%%/462/", a_string.out) 
+			a_string.append_unicode_character (c)
+			assert_equal ("append_unicode_character3", "%%/462/", a_string.out) 
 			!! c.make_from_character ('z')
-			a_string.append_unicode (c)
-			assert_equal ("append_unicode4", "%%/462/z", a_string.out) 
+			a_string.append_unicode_character (c)
+			assert_equal ("append_unicode_character4", "%%/462/z", a_string.out) 
 		end
 
 	test_append_character1 is
@@ -2717,47 +2717,47 @@ feature -- Test
 			assert_equal ("replaced6", "foototobar", a_string.out) 
 		end
 
-	test_insert_unicode1 is
-			-- Test feature `insert_unicode'.
+	test_insert_unicode_character1 is
+			-- Test feature `insert_unicode_character'.
 		local
 			a_string: UC_UTF8_STRING
 			c: UC_CHARACTER
 		do
 			!! a_string.make_from_string ("bar")
 			!! c.make_from_character ('f')
-			a_string.insert_unicode (c, 4)
+			a_string.insert_unicode_character (c, 4)
 			assert_equal ("inserted1", "barf", a_string.out) 
 			!! c.make_from_code (68457)
-			a_string.insert_unicode (c, 2)
+			a_string.insert_unicode_character (c, 2)
 			assert_equal ("inserted2", "b%%/68457/arf", a_string.out) 
 			!! a_string.make_from_string ("")
 			!! c.make_from_code (462)
-			a_string.insert_unicode (c, 1)
+			a_string.insert_unicode_character (c, 1)
 			assert_equal ("inserted3", "%%/462/", a_string.out) 
 			!! c.make_from_character ('z')
-			a_string.insert_unicode (c, 1)
+			a_string.insert_unicode_character (c, 1)
 			assert_equal ("inserted4", "z%%/462/", a_string.out) 
 		end
 
-	test_insert_unicode2 is
-			-- Test feature `insert_unicode'.
+	test_insert_unicode_character2 is
+			-- Test feature `insert_unicode_character'.
 		local
 			a_string: UC_STRING
 			c: UC_CHARACTER
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
 			!! c.make_from_character ('f')
-			a_string.insert_unicode (c, 4)
+			a_string.insert_unicode_character (c, 4)
 			assert_equal ("inserted1", "barf", a_string.out) 
 			!! c.make_from_code (68457)
-			a_string.insert_unicode (c, 2)
+			a_string.insert_unicode_character (c, 2)
 			assert_equal ("inserted2", "b%%/68457/arf", a_string.out) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
 			!! c.make_from_code (462)
-			a_string.insert_unicode (c, 1)
+			a_string.insert_unicode_character (c, 1)
 			assert_equal ("inserted3", "%%/462/", a_string.out) 
 			!! c.make_from_character ('z')
-			a_string.insert_unicode (c, 1)
+			a_string.insert_unicode_character (c, 1)
 			assert_equal ("inserted4", "z%%/462/", a_string.out) 
 		end
 
