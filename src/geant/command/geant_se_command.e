@@ -4,13 +4,12 @@ indexing
 
 		"Compilation commands for SmallEiffel"
 
-	library:		"Gobo Eiffel Ant"
-	author:		"Sven Ehrke <sven.ehrke@sven-ehrke.de>"
-	copyright:	"Copyright (c) 2001, Sven Ehrke and others"
-	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:			"$Date$"
-	revision:	"$Revision$"
-
+	library:    "Gobo Eiffel Ant"
+	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 class GEANT_SE_COMMAND
 
@@ -163,7 +162,7 @@ feature -- Execution
 				if file_system.file_exists (a_name) then
 						-- Execute the command only if the SmallEiffel
 						-- compiler has been used to compile this system.
-					project.trace ("	[se] " + cmd + "%N")
+					project.trace ("  [se] " + cmd + "%N")
 					execute_shell (cmd)
 					exit_code := 0
 				end
@@ -173,7 +172,7 @@ feature -- Execution
 				else
 					cmd := new_traditional_cmdline
 				end
-				project.trace ("	[se] " + cmd + "%N")
+				project.trace ("  [se] " + cmd + "%N")
 				execute_shell (cmd)
 			end
 		end
