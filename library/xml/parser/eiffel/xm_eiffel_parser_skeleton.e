@@ -517,12 +517,12 @@ feature {NONE} -- DTD
 
 feature {NONE} -- Entities
 
-	new_literal_entity (a_value: STRING): XM_EIFFEL_ENTITY_DEF is
+	new_literal_entity (a_name, a_value: STRING): XM_EIFFEL_ENTITY_DEF is
 			-- New literal entity definition
 		require
 			a_value_not_void: a_value /= Void
 		do
-			create Result.make_literal (a_value)
+			create Result.make_literal (a_name, a_value)
 		ensure
 			entity_not_void: Result /= Void
 		end

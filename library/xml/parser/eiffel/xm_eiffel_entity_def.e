@@ -42,11 +42,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_literal (a_value: STRING) is
+	make_literal (a_name: STRING; a_value: STRING) is
 			-- Create a new literal entity definition from `a_value'.
 		require
+			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
 		do
+			literal_name := a_name
 			value := a_value
 			make_scanner
 			create {XM_NULL_EXTERNAL_RESOLVER} resolver
@@ -62,12 +64,11 @@ feature {NONE} -- Initialization
 			an_id_not_void: an_id /= Void
 		do
 			resolver := a_resolver
-			value := Void
 			external_id := an_id
 			make_scanner
 		ensure
 			is_external: is_external
-			value_set: value = Void
+			value_set: value = Void and literal_name = Void
 			external_id_set: external_id = an_id
 			resolver_set: resolver = a_resolver
 		end
@@ -80,7 +81,7 @@ feature {NONE} -- Initialization
 			if other.is_external then
 				make_external (other.resolver, other.external_id)
 			else
-				make_literal (other.value)
+				make_literal (other.literal_name, other.value)
 			end
 		ensure
 			is_external: is_external = other.is_external
@@ -110,8 +111,10 @@ feature -- Status report
 
 feature -- Access
 
+	literal_name: STRING
+			-- Literal entity name
 	value: STRING
-			-- Value
+			-- Literal entity value
 
 	external_id: XM_DTD_EXTERNAL_ID
 			-- Resolve external value.
@@ -120,9 +123,10 @@ feature -- Access
 			-- Hash code value
 			-- (on the entity name aspect)
 		do
-			Result := value.hash_code // 2
-			if is_external then
-				Result := Result + 1
+			if value /= Void then
+				Result := value.hash_code
+			elseif is_external then
+				Result := external_id.hash_code
 			end
 		end
 
@@ -143,6 +147,7 @@ feature -- Scanner: set input buffer
 				-- on UTF8-in-STRING input
 				create str_stream.make (utf8.to_utf8 (value))
 				set_input_stream (str_stream)
+				input_name := literal_name
 			else
 					-- External entity in a file.
 				reset
@@ -260,6 +265,7 @@ feature -- Scanner: initialization
 invariant
 
 	value_not_void: value /= Void or external_id /= Void
+	value_name_void_consistent: (value = Void) = (literal_name = Void)
 	resolver_not_void: resolver /= Void
 	type: is_literal xor is_external
 

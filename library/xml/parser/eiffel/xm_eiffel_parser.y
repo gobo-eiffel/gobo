@@ -884,7 +884,7 @@ entity_decl: ge_decl
 ge_decl: DOCTYPE_ENTITY req_space doctype_name req_space entity_value maybe_space DOCTYPE_END
 		{
 				-- Internal entity.
-			when_entity_declared ($3, new_literal_entity ($5))
+			when_entity_declared ($3, new_literal_entity ($3, $5))
 			on_entity_declaration ($3, False, $5, Void, Void)
 		}
 	| DOCTYPE_ENTITY req_space doctype_name req_space external_id maybe_space DOCTYPE_END
@@ -903,7 +903,7 @@ ge_decl: DOCTYPE_ENTITY req_space doctype_name req_space entity_value maybe_spac
 pe_decl: DOCTYPE_ENTITY req_space DOCTYPE_PERCENT req_space doctype_name req_space entity_value maybe_space DOCTYPE_END
 		{
 				-- Internal PE entity.
-			when_pe_entity_declared ($5, new_literal_entity ($7))
+			when_pe_entity_declared ($5, new_literal_entity ($5, $7))
 			on_entity_declaration ($5, True, $7, Void, Void) 
 		}
 	| DOCTYPE_ENTITY req_space DOCTYPE_PERCENT req_space doctype_name req_space external_id maybe_space DOCTYPE_END
