@@ -1,0 +1,669 @@
+From - Tue May 29 13:54:59 2001
+From: Eric Bezault <ericb@gobosoft.com>
+To: gobo-eiffel-develop@lists.sourceforge.net
+Subject: [gobo-eiffel-develop] Developer Guidelines (first draft)
+Date: Tue, 29 May 2001 13:28:13 +0200
+
+This is a multi-part message in MIME format.
+--------------42AF2694BEDD47AE5B76CEE1
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+The mailing list archive seems to have been fixed now.
+So for the record here is again the first draft of the
+developer guidelines. Since I first sent it to the list
+we agreed on Berend's suggestions to follow more strictly
+OOSC2 guidelines, and to state clearly that 'gepp' should
+almost never be used (only for generating the classes in
+spec/[ise|se|ve|hact] for example) and that using deferred
+classes was a preferred solution.
+
+-- 
+Eric Bezault
+mailto:ericb@gobosoft.com
+http://www.gobosoft.com
+--------------42AF2694BEDD47AE5B76CEE1
+Content-Type: message/rfc822
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+From: Eric Bezault <ericb@gobosoft.com>
+To: gobo-eiffel-develop@lists.sourceforge.net
+Subject: [gobo-eiffel-develop] Developer Guidelines (first draft)
+Date: Sun, 27 May 2001 21:02:39 +0200
+
+This is a multi-part message in MIME format.
+--------------4FC04EB7735165DD9C05447C
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+Eric Bezault wrote:
+> 
+> What I suggest is that I start writing a first draft of
+> the developer guidelines this weekend and then make it
+> available to this mailing list as a starting point for
+> discussion.
+
+As promised here is a first draft of the developer guidelines.
+Of course I didn't have that much time to work on it, so it
+is far from complete. More sections should be added and 
+some existing sections need some more work. But there are
+already enough material for you to review.
+
+Note that I wrote it in ASCII form since it is better to 
+quote it in e-mail messages and I didn't have time to
+experiement with DocBook yet.
+
+PS: Unfortunately the mailing list archive still doesn't
+work. I hope it will be fixed early next week when the folks
+from SourceForge come back from the weekend.
+
+-- 
+Eric Bezault
+mailto:ericb@gobosoft.com
+http://www.gobosoft.com
+--------------4FC04EB7735165DD9C05447C
+Content-Type: text/plain; charset=us-ascii;
+ name="guidelines.txt"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="guidelines.txt"
+
+EIFFEL LANGUAGE
+
+The classes provided in the Gobo Eiffel package should compile
+and work without any change on the four currently maintained
+Eiffel compilers: Halstenbach, ISE Eiffel, SmallEiffel and
+Visual Eiffel. In order to make things easier, only the latest
+public release of each compiler will be supported. This latest
+release can be a beta version provided that it is deemed stable
+enough, as it is often the case for SmallEiffel for example.
+
+In order to achieve Eiffel compiler interoperability, it is
+not necessarily required to strictly follow the Eiffel standard.
+Some compilers indeed have bugs, do not interpret the standard
+in the same way as others (be it because of ambiguities in the
+standard itself or not), or have implementation limitations.
+Therefore the Eiffel dialect used in Gobo Eiffel is likely
+to be a subset of the official Eiffel standard.
+
+On the contrary, constructs which have not been officially adopted
+by NICE yet but which are already supported by all Eiffel compilers
+can be used in Gobo Eiffel. This is for example the case for the
+'Precursor' construct. However it is clear that an Eiffel extension
+can be used in Gobo Eiffel only if it is supported by all Eiffel
+compilers. Therefore the 'agent' construct introduced in ISE
+Eiffel should not be used at the moment.
+
+Differences between the various Eiffel compilers which have
+been already noticed, along with workarounds when available,
+will be listed on-line in order to help others to avoid making
+the same mistakes by using these non-portable Eiffel constructs.
+
+
+NAMING CONVENTIONS
+
+All names appearing in the software, comments, directory names,
+documentations, etc. should be written in American English.
+
+
+Class Names
+
+In order to avoid class name clashes between different libraries,
+some Eiffel compilers support class renaming in the Ace file or
+equivalent. But some don't. Therefore the name of the classes should
+systematically be prefixed with a two-letter library code followed
+by an underscore. For example the classes from the Gobo Eiffel
+Structure Library have been prefixed by DS (which stands for Data
+Structures), as in DS_CONTAINER, whereas classes from the Gobo
+Eiffel Lexical Library have been prefixed by LX, as in LX_SCANNER.
+Some libraries may use several prefixes, provided that they are
+not already used by other libraries. The list of already used
+prefixes per library will be available on-line.
+
+Class names should usually be singular nouns, such as DS_STACK.
+If the noun is qualified, words should be separated by underscores,
+as in DS_LINKED_LIST. Class names in Eiffel are written in upper-case
+letters and it is considered bad style to use letter-case difference
+to concatenate words such as LinkedList for example. The name of
+deferred classes can also be adjective when they describe a property,
+such as DS_SORTABLE. It is suspicious to have verbs as class names
+since classes should describe objects rather that actions.
+
+Classes containing only constants can have the suffix _CONSTANTS
+and those containing only facility routines can have the suffix
+_ROUTINES. Some classes are used as a means to share objects using
+once functions. These classes can have the word SHARED just after
+the prefix of the class. For example the class used to share a
+singleton object of type KL_ARGUMENTS is called KL_SHARED_ARGUMENTS.
+An alternative is to use IMPORTED instead of SHARED when the
+purpose of the class is not to give access to an object but rather
+to routines or constants without the inconvenience of polluting
+the feature name space with mixin classes. Have a look at
+KL_IMPORTED_STRING_ROUTINES as an example.
+
+In Eiffel it is considered bad practice to use abbreviations in
+class and feature names. However this can be accepted when the
+abbreviation is commonly used in the domain of expertise such
+as LX_DFA for example, which stands for Deterministic Finite
+state Automaton and is used for compiling regular expressions.
+
+
+Filenames
+
+Visual Eiffel allows to have several classes in the same file,
+but the other Eiffel compilers don't. So each file should contain
+only one class.
+
+Likewise, SmallEiffel expects by default to have a one-to-one
+relation between the name of the class and the name of the
+enclosing file. Therefore the name of the file should be the
+name of the class followed by the extension .e, all in lower
+case. For example file 'ds_list.e' contains class DS_LIST.
+
+
+Cluster Names
+
+Library classes should be organized in clusters in $GOBO/
+library/<library-name>. Likewise the source code of tools
+should be put in $GOBO/src/<tool-name>.
+
+Cluster names should be in lower-case and words should
+be separated by underscores. Abbreviations should be
+avoided unless well accepted and understood in the domain
+of expertise of the underlying library. Exceptions to
+this rule are 'spec' for Eiffel compiler dependent clusters
+and 'impl' which stands for "implementation". For the
+cluster 'spec', compiler-dependent classes should have
+the same name and put into the four following clusters:
+
+  spec/hact       -- Implementation for Halstenbach
+  spec/ise        -- Implementation for ISE Eiffel
+  spec/se         -- Implementation for SmallEiffel
+  spec/ve         -- Implementation for Visual Eiffel
+
+Only one of these clusters will be included in the Ace
+file, loadpath file or ESD file of the application depending
+on the Eiffel compiler used. These clusters can be
+automatically generated with the tool 'gepp' if the 
+different implementations are put in a single file whose
+extension is .ge instead of the Eiffel extension .e. I
+usually find it easier for development and maintenance
+to have these .ge files.
+
+For 'impl' cluster, it can be used to provide several
+implementations of a common interface. For example:
+
+  interface
+  impl/c
+  impl/dotnet
+  impl/eiffel
+  impl/jvm
+  impl/posix
+
+Here again the names of the classes in the different 
+subclusters of 'impl' will be the same, and only
+one of these subclusters will be included in the Ace
+file or equivalent in order to provide a concrete
+implementation of the deferred classes in cluster
+'interface'.
+
+Cluster 'impl' can also be used with the bridge pattern.
+In that case the cluster structure will look like this:
+
+  foo
+  bar
+  impl/interface/foo
+  impl/interface/bar
+  impl/gtk/foo
+  impl/gtk/bar
+  impl/motif/foo
+  impl/motif/bar
+
+The classes in 'gtk' and 'motif' implement the deferred
+classes in 'interface', and in the Ace file or equivalent
+the clusters with 'gtk' or with 'motif' will be included 
+depending on the fact that GTK+ or Motif has been chosen
+to build the graphical interface for example.
+
+
+Feature Names
+
+Feature names should be in lower-case and words should be
+separated by underscores. Abbreviations should be avoided
+unless well accepted and understood in the domain of
+expertise of the class. Names of constants can possibly
+have upper-case letters, but in that case please make sure
+that all calls to this constant use the same letter-case
+in order to be compilable by SmallEiffel without requiring
+the -no_case_sensitive command-line option.
+
+Names of procedures should be verbs as they describe actions
+or commands. On the other hand names of functions or attributes
+should be nouns, possibly qualified, as they describe entities.
+The names of boolean queries should have an interrogative
+form as in `is_empty', `is_closed' or `has_error'. They can
+also be simple adjectives such as `closable', or past
+participles as in `found'.
+
+Names of creation procedures usually start with `make' in
+Eiffel, for example `make' or `make_from_string'.
+
+Names of factory functions can have the prefix `new_*', as
+in the following example:
+
+_   new_foo (a_string: STRING): FOO is
+_   _   _   -- Foo made up fo characters of `a_string'
+_   _   _   -- (Create a new objet at each call.)
+_   _   require
+_   _   _   a_string_not_void: a_string /= Void
+_   _   do
+_   _   _   !! Result.make_from_string (a_string)
+_   _   ensure
+_   _   _   new_foo_not_void: Result /= Void
+_   _   end
+
+
+Feature Category Names
+
+All feature clauses should be equipped with a comment, as
+in the following example:
+
+feature -- Access
+feature {NONE} -- Initialization
+
+Here are some examples of feature category names, taken
+from the Gobo Eiffel Structure Library documentation:
+
+  -- Initialization 
+       Creation procedures. 
+  -- Access 
+       Queries used to get elements or properties
+       about the container. 
+  -- Measurement 
+       Queries concerning the number of elements
+       and size of the container. 
+  -- Status report 
+       Queries used to determine general boolean
+       properties of the container. 
+  -- Comparison 
+       Equality tests between containers. 
+  -- Duplication 
+       Features which produce copies of the container. 
+  -- Setting 
+       Procedures which change the general properties
+       of the container. 
+  -- Cursor movement 
+       Procedures that change the cursor position. 
+  -- Element change 
+       Commands which add or change items in the
+       container. 
+  -- Removal 
+       Commands which remove items from the container. 
+  -- Resizing 
+       Commands which change the size of the container. 
+  -- Implementation 
+       Secret features used for implementation purposes. 
+
+
+CLASS LAYOUT
+
+Indentations
+
+Indentations from the left margin should be made up of tabs.
+Please to not use space characters as mixing spaces and tabs
+gives ugly results when people use different sizes for tabs.
+Throughout this documentation tabs will be represented by
+an underscore followed by three spaces in order to make them
+clearly visible on the page. Here is a example:
+
+_   set_foo (a_foo: like foo) is
+_   _   _   -- Set `foo' to `a_foo'.
+_   _   require
+_   _   _   a_foo_not_void: a_foo /= Void
+_   _   do
+_   _   _   foo := a_foo
+_   _   ensure
+_   _   _   foo_set: foo = a_foo
+_   _   end
+
+Some text editors provide a means similiar to the one described
+above in order to make tabs visible. It is recommended that
+you enable such facility if you use one of those editors.
+
+
+General Layout
+
+Here is how a class text should look like:
+
+indexing
+
+_   description:
+
+_   _   "Short description of the class"
+
+_   library:    "Gobo Eiffel Lexical Library"
+_   author:     "Eric Bezault <ericb@gobosoft.com>"
+_   copyright:  "Copyright (c) 2000, Eric Bezault and others"
+_   license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+_   date:       "$Date$"
+_   revision:   "$Revision$"
+
+class BAR [G -> TOTO]
+
+inherit
+
+_   BAZ
+_   _   rename
+_   _   _   oof as foo,
+_   _   _   f as g
+_   _   redefine
+_   _   _   foo, bar
+_   _   end
+
+creation
+
+_   make, make_from_string
+
+feature {NONE} -- Initialization
+
+_   make (a_foo: FOO) is
+_   _   _   -- Create a new bar.
+_   _   require
+_   _   _   a_foo_not_void: a_foo /= Void
+_   _   do
+_   _   _   set_foo (a_foo)
+_   _   ensure
+_   _   _   foo_set: foo = a_foo
+_   _   end
+
+_   make_from_string (a_string: STRING) is
+_   _   _   -- Create a new bar from `a_string'.
+_   _   require
+_   _   _   a_string_not_void: a_string /= Void
+_   _   do
+_   _   _   !! foo.make_from_string (a_string)
+_   _   end
+
+feature -- Access
+
+_   foo: FOO
+_   _   _   -- Foo
+
+feature -- Setting
+
+_   set_foo (a_foo: like foo) is
+_   _   _   -- Set `foo' to `a_foo'.
+_   _   require
+_   _   _   a_foo_not_void: a_foo /= Void
+_   _   do
+_   _   _   foo := a_foo
+_   _   ensure
+_   _   _   foo_set: foo = a_foo
+_   _   end
+
+invariant
+
+_   foo_not_void: foo /= Void
+
+end -- class BAR
+
+Apart from the indentation, please notice that there is
+one and only one empty line between each top-level
+construct of the class, and also between features in
+feature clauses.
+
+(Borrow the guidelines from OOSC2 section 26.5 page 891.
+Note that contrary to the guidelines in OOSC2, the
+recommended layout for Gobo Eiffel classes in to put
+the class name on the same line as the 'class' keyword
+-- see class BAR above.)
+
+
+PROGRAMMING STYLE
+
+Assertions
+
+Routines should be properly equipped with pre- and postconditions
+and classes with invariants. This is useful as documentation in
+addition to the header comments to make sure that the routines
+and class instances are correctly used. These assertions can also
+be enabled when running the test suite in $GOBO/test/<library-name>
+in order to check the correctness of the library classes.
+
+All assertions should have a tag, as in the following example:
+
+_   foo_not_void: foo /= Void
+
+Note that in the example above the tag 'foo_not_void' is preferred
+to 'foo_exists' as it may cause confusion when `exists' is a feature
+of the class of `foo'. So using systematically '*_not_void' is a
+good way to avoid such possible confusion.
+
+
+Indexing Clause
+
+Each class should have an indexing clause at the top of the file
+which looks like that:
+
+indexing
+
+_   description:
+
+_   _   "Short description of the class"
+
+_   library:    "Gobo Eiffel Lexical Library"
+_   author:     "Eric Bezault <ericb@gobosoft.com>"
+_   copyright:  "Copyright (c) 2000, Eric Bezault and others"
+_   license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+_   date:       "$Date$"
+_   revision:   "$Revision$"
+
+Put a short description of the class in the 'description' field.
+Replace "Lexical" in the 'library' field by the name of your
+library. Replace "Eric Bezault" by your name in the 'author' and
+'copyright' fields and put your e-mail address in the 'auhtor' field.
+The fields 'date' and 'revision' are automatically expanded by CVS.
+
+
+Header Comments
+
+Every feature and feature clause should have a header comment
+such as:
+
+feature -- Access
+
+_   title: STRING
+_   _   _   -- Title displayed in the title bar
+
+feature -- Setting
+
+_   set_title (a_title: like title) is
+_   _   _   -- Set `title' to `a_title'.
+_   _   require
+_   _   _   a_title_not_void: a_title /= Void
+_   _   do
+_   _   _   title := a_title
+_   _   ensure
+_   _   _   title_set: title = a_title
+_   _   end
+
+(Borrow guidelines to write good header comments from
+OOSC2 section 26.4 page 886-888.)
+
+
+Free Comments
+
+They should give useful information and not just paraphrase
+the software text. They should appear on the line before
+the instruction(s) to be explained and should have one
+more indentation level to the right than the instruction(s).
+
+
+Semicolons
+
+Semicolons are optional in Eiffel. For consistency reason,
+they should not be used in the Gobo Eiffel classes. The
+only places where they are used are:
+
+  * to separate formal arguments of routines:
+
+       f (a_foo: FOO; a_bar: BAR) is
+
+  * to separate several instructions on the same line,
+    although this programming style is not recommended:
+
+       print ("Hello "); print (you.name)
+
+  * to remove parsing ambiguity:
+
+       foo.bar;
+       (baz).do_something
+
+  * SmallEiffel emits a warning when semicolons are missing
+    in the Export subclause of the Feature_adaptation clause.
+    Semicolons can be added here in order to keep SmallEiffel
+    quiet.
+
+
+Exceptions
+
+Exceptions should only be raised when an unexpected behavior
+occurs. Reading an integer from the standard input when the
+user actually typed "hello", or trying to open a file in read
+mode when the file does not exist (it could just have been
+deleted) are not considered as unexpected behaviors in my
+point of view.
+
+Also raising exceptions in the creation routine should be
+avoided since it is not clear (unless I'm proven otherwise)
+that ETL describes precisely what should happen in that
+particular case. It is preferred to properly create the
+objects and then call the routines which may raise the
+exception.
+
+Routines which may raise exceptions should make it clear
+in their header comment. (There is no need to report the
+fact that a No_more_memory exception can be raised in each
+routine creating objects though ;-))
+
+
+DOCUMENTATION
+
+Each Eiffel library or tool should come with some documentation
+to be placed in $GOBO/doc/<library-or-tool-name>. Documentation
+should be written in American English. It is possible to provide
+the documentation in other languages (French, Spanish, Dutch,
+German, ...), but it should at least be available in American
+English.
+
+Documentation format: DocBook XML DTD?
+...
+
+Graphviz could probably be used to generate class inheritance
+graphs. Graphiz is an open source graph drawing software.
+Have a loo at:
+
+  http://www.research.att.com/sw/tools/graphviz/ 
+
+For example, with the following 'list.dot' file:
+
+digraph G {
+	edge [dir=back, color=maroon];
+	node [height=0.35, fontsize=8, style=filled, color=paleturquoise3];
+
+	ds_list [label="DS_LIST*"];
+	ds_linked_list [label="DS_LINKED_LIST"];
+	ds_bilinked_list [label="DS_BILINKED_LIST"];
+	ds_arrayed_list [label="DS_ARRAYED_LIST"];
+
+	ds_list -> ds_linked_list -> ds_bilinked_list;
+	ds_list -> ds_arrayed_list;
+}
+
+I managed to generate a 'list.gif' file similar to
+those used in the existing Gobo Eiffel documentation
+with the command-line:
+
+  dot -Tgif -o list.gif list.dot
+
+I don't know yet how to simulate the client relationship
+double-arrow with graphviz though.
+
+(Thank you to Franck Arnaud for letting me know about this
+graphviz tool.)
+
+
+EXAMPLES
+
+Eiffel libraries or tools may be provided with a set of
+examples. These examples should be put in $GOBO/example/
+<library-or-tool-name>.
+
+
+TEST SUITE
+
+Each Eiffel library should come with a test suite runnable
+with 'getest'. The test case classes should be placed in
+$GOBO/test/<library-name> along with the Ace files, loadpath
+files, ESD files and the 'getest' configuration files to run
+the tests.
+
+The purpose of these tests is to make sure that the library
+classes work as expected (i.e. as specified by the assertions)
+and also to make sure that they compile correctly with compilers
+such as SmallEiffel which compiles only alive code.
+
+These tests are also useful for library maintainers who have
+not access to all supported Eiffel compilers or to some
+operating systems. That way the maintainers can ask others
+from the Gobo development team to run the tests on other
+platforms or with other compilers for them.
+
+Finally the $GOBO/test/<library-name> directory is used as
+regression test to make sure that no new bugs have been
+introduced between two releases.
+
+Note: 'getest' is based on Jim Weirich's 'eunit' tool but
+has the advantage to work with all Eiffel compilers supported
+by the Gobo Eiffel project.
+
+
+CVS REPOSITORY
+
+The CVS repository should not include generated files. These
+files should be generated either when building the package
+or when running the installation procedure.
+
+
+INSTALLATION PROCEDURE
+
+A Gobo Eiffel Make tool?
+Something similar to Java's Ant?
+Andreas' XACE?
+...
+
+
+LICENSE
+
+The files in the Gobo Eiffel package are released under
+the Eiffel Forum Freeware License.
+
+--------------4FC04EB7735165DD9C05447C--
+
+
+
+_______________________________________________
+gobo-eiffel-develop mailing list
+gobo-eiffel-develop@lists.sourceforge.net
+http://lists.sourceforge.net/lists/listinfo/gobo-eiffel-develop
+
+
+--------------42AF2694BEDD47AE5B76CEE1--
+
+
+
+_______________________________________________
+gobo-eiffel-develop mailing list
+gobo-eiffel-develop@lists.sourceforge.net
+http://lists.sourceforge.net/lists/listinfo/gobo-eiffel-develop
