@@ -6,6 +6,7 @@ Bindings=Gobo.Bindings
 
 [Gobo.Sources]
 Gobo.Sources.kernel=
+Gobo.Sources.kernel.unicode=
 Gobo.Sources.kernel.VE=
 Gobo.Sources.lexical=
 Gobo.Sources.parse=
@@ -23,6 +24,9 @@ Gobo.Sources.utility.support=
 Gobo.Sources.utility.VE=
 
 [Gobo.Sources.kernel]
+Mask=kernel/*.e
+
+[Gobo.Sources.kernel.unicode]
 Mask=kernel/*.e
 
 [Gobo.Sources.kernel.VE]
