@@ -481,7 +481,7 @@ feature {NONE} -- Output
 				if an_option /= Void then
 					print_indentation (2, a_file)
 					a_file.put_line ("default")
-					print_options (an_option, 3, a_file)
+					print_cluster_options (an_option, 3, a_file)
 					need_end_keyword := True
 				end
 				an_externals := a_cluster.externals
@@ -503,6 +503,65 @@ feature {NONE} -- Output
 			subclusters := a_cluster.subclusters
 			if subclusters /= Void then
 				print_clusters (subclusters, a_file)
+			end
+		end
+
+	print_cluster_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print cluster options `an_option' to `a_file'.
+		require
+			an_option_not_void: an_option /= Void
+			indent_positive: indent >= 0
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			an_assertion: DS_HASH_SET [STRING]
+			a_debug_tag_cursor: DS_HASH_SET_CURSOR [STRING]
+		do
+			an_assertion := an_option.assertion
+			if an_assertion.has (options.require_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (require)")
+			end
+			if an_assertion.has (options.ensure_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (ensure)")
+			end
+			if an_assertion.has (options.invariant_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (invariant)")
+			end
+			if an_assertion.has (options.loop_invariant_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (loop)")
+			end
+			if an_assertion.has (options.loop_variant_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (loop)")
+			end
+			if an_assertion.has (options.check_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (check)")
+			end
+			if an_assertion.has (options.all_value) then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertion (all)")
+			end
+			if an_option.is_debug_option_declared then
+				if an_option.debug_option then
+					print_indentation (indent, a_file)
+					a_file.put_line ("debug (yes)")
+				else
+					print_indentation (indent, a_file)
+					a_file.put_line ("debug (no)")
+				end
+			end
+			a_debug_tag_cursor := an_option.debug_tag.new_cursor
+			from a_debug_tag_cursor.start until a_debug_tag_cursor.after loop
+				print_indentation (indent, a_file)
+				a_file.put_string ("debug (%"")
+				a_file.put_string (a_debug_tag_cursor.item)
+				a_file.put_line ("%")")
+				a_debug_tag_cursor.forth
 			end
 		end
 
