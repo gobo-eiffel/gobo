@@ -566,12 +566,17 @@ feature {NONE} -- Output
 		end
 
 	print_interface_classes (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print interface classes specified in `a_clusters' and their subclusters to `a_file'.
+		require
+			a_clusters_not_void: a_clusters /= Void
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
 		local
 			interface_classes: DS_HASH_SET [STRING]
 			an_interface_cursor: DS_SET_CURSOR [STRING]
 		do
 			create interface_classes.make_equal (0)
-			merge_interface_classes (interface_classes, a_clusters, a_file)
+			merge_interface_classes (interface_classes, a_clusters)
 			if interface_classes.count > 0 then
 				a_file.put_line ("interface")
 				a_file.put_new_line
@@ -586,13 +591,13 @@ feature {NONE} -- Output
 			end
 		end
 	
-	merge_interface_classes (interface_classes: DS_HASH_SET [STRING]; a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print class options specified in `a_cluster' to `a_file'.
+	merge_interface_classes (interface_classes: DS_HASH_SET [STRING]; a_clusters: ET_XACE_CLUSTERS) is
+			-- Merge interface classes specified in `a_clusters' and
+			-- their subclusters to 'interface_classes'.
 		require
 			interface_classes_not_void: interface_classes /= Void
+			no_void_interface_class: not interface_classes.has (Void)
 			a_clusters_not_void: a_clusters /= Void
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
 		local
 			i, nb: INTEGER
 			cluster_list: DS_ARRAYED_LIST [ET_XACE_CLUSTER]
@@ -625,11 +630,13 @@ feature {NONE} -- Output
 					end
 					subclusters := a_cluster.subclusters
 					if subclusters /= Void then
-						merge_interface_classes (interface_classes, subclusters, a_file)
+						merge_interface_classes (interface_classes, subclusters)
 					end
 				end
 				i := i + 1
 			end
+		ensure
+			no_void_interface_class: not interface_classes.has (Void)
 		end
 
 	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is
