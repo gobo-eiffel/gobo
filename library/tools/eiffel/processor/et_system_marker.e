@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel system markers"
+		"Eiffel system class markers"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -95,11 +95,37 @@ creation
 
 feature -- Processing
 
-	build_system (a_class: ET_CLASS) is
-			-- Identify the classes that `a_class' depends on (see definition
-			-- in ETL page 35) and mark them as being part of the system.
+	mark_system (a_class: ET_CLASS) is
+			-- Identify the classes that `a_class' recursively depends on
+			-- (see definition in ETL page 35) and mark them as being part
+			-- of the system. Mark `a_class' as well.
 		require
 			a_class_not_void: a_class /= Void
+		do
+			unmark_all
+			is_recursive := True
+			a_class.set_in_system (True)
+			process_class (a_class)
+		ensure
+			a_class_in_system: a_class.in_system
+		end
+
+	mark_shallow (a_class: ET_CLASS) is
+			-- Identify the classes that `a_class' directly depends on
+			-- (see definition in ETL page 35) and mark them as being part
+			-- of the system. Do not mark `a_class' if it does not
+			-- directly depend on itself.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			unmark_all
+			is_recursive := False
+			process_class (a_class)
+		end
+
+	unmark_all is
+			-- Unmark all classes of universe as if none of them
+			-- was in the system.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 		do
@@ -108,9 +134,6 @@ feature -- Processing
 				a_cursor.item.set_in_system (False)
 				a_cursor.forth
 			end
-			process_class (a_class)
-		ensure
-			a_class_in_system: a_class.in_system
 		end
 
 feature {ET_AST_NODE} -- Processing
@@ -287,7 +310,6 @@ feature {ET_AST_NODE} -- Processing
 			a_convert_features: ET_CONVERT_FEATURE_LIST
 			an_invariants: ET_INVARIANTS
 		do
-			a_class.set_in_system (True)
 			a_formal_parameters := a_class.formal_parameters
 			if a_formal_parameters /= Void then
 				process_formal_parameter_list (a_formal_parameters)
@@ -314,7 +336,10 @@ feature {ET_AST_NODE} -- Processing
 		do
 			a_class := a_type.direct_base_class (universe)
 			if not a_class.in_system then
-				process_class (a_class)
+				a_class.set_in_system (True)
+				if is_recursive then
+					process_class (a_class)
+				end
 			end
 		end
 
@@ -1010,7 +1035,10 @@ feature {ET_AST_NODE} -- Processing
 		do
 			a_class := a_type.direct_base_class (universe)
 			if not a_class.in_system then
-				process_class (a_class)
+				a_class.set_in_system (True)
+				if is_recursive then
+					process_class (a_class)
+				end
 			end
 			a_parameters := a_type.actual_parameters
 			if a_parameters /= Void then
@@ -1057,5 +1085,10 @@ feature {ET_AST_NODE} -- Processing
 				i := i + 1
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	is_recursive: BOOLEAN
+			-- Is the processing recursive?
 
 end
