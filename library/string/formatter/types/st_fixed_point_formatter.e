@@ -53,11 +53,20 @@ feature -- Set defaults
 
 feature {ST_SCIENTIFIC_FORMAT} -- Type that can be formatted
 
-	anchor: DOUBLE_REF is
+	anchor: DS_CELL [DOUBLE] is
 		once
-			create Result
+			create Result.make (0.0)
 		end
 
+	is_value (a_value: ANY): BOOLEAN is
+			-- Is `a_value' a DOUBLE cell?
+		local
+			a_cell: DS_CELL [DOUBLE]
+		do
+			a_cell ?= a_value
+			Result := a_cell /= Void
+		end
+		
 feature -- Output
 
 	output: STRING is
@@ -71,7 +80,7 @@ feature -- Output
 			fractional_part := fa - integer_part
 			Result := make_fract_part
 			integer_formatter.reset_options
-			integer_formatter.set_value (integer_part)
+			integer_formatter.set_integer_value (integer_part)
 			-- make integer part and finish alignment
 			inspect alignment
 			when align_left then
@@ -145,12 +154,12 @@ feature {ST_ABSTRACT_FORMATTER} -- Output implementation
 			until
 				i <= decimal_digit_count - 1
 			loop
-				fff := fp * (10^decimal_digit_count) -- .truncated_to_real
+				fff := fp * (10.0^decimal_digit_count) -- .truncated_to_real
 				Result.append_string (produce_piece (fff.floor, decimal_digit_count))
 				fp := fff - fff.floor
 				i := i - decimal_digit_count
 			end
-			Result.append_string (produce_piece (((fp*10^i)+0.5).floor, i))
+			Result.append_string (produce_piece (((fp*10.0^i)+0.5).floor, i))
 				check
 					Result.count = precision or else Result.count = precision + 1
 				end
@@ -180,13 +189,26 @@ feature {ST_ABSTRACT_FORMATTER} -- Output implementation
 			f_f: ST_UNSIGNED_DECIMAL_INTEGER_FORMATTER
 		do
 			create f_f.make
-			f_f.set_value (i)
+			f_f.set_integer_value (i)
 			f_f.set_precision (p)
 			f_f.set_align_left
 			f_f.set_align_char ('0')
 			Result := f_f.output
 		ensure
 			not_void: Result /= Void
+		end
+
+feature -- Value
+
+	set_double_value (a_double: DOUBLE) is
+			-- Set the typed value to be formatted.
+		local
+			a_value: DS_CELL [DOUBLE]
+		do
+			create a_value.make (a_double)
+			set_value (a_value)
+		ensure
+			value_set: value.item = a_double
 		end
 
 feature {NONE} -- Implementation
