@@ -271,6 +271,7 @@ feature {NONE} -- AST factory
 		do
 			Result := ast_factory.new_class_name_list_with_capacity (1)
 			!! a_name.make_with_position (universe.any_class.name.name, a_position.line, a_position.column)
+			Result.put_first (a_name)
 			last_clients := Result
 		ensure
 			any_clients_not_void: Result /= Void
