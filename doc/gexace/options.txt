@@ -303,6 +303,26 @@ VE:
 SE:
   N/A
 -------------------------------------------------------------
+NAME: c_compiler_options
+
+VALUES: <options>
+DEFAULT: no default
+DESCRIPTION: Specifies options to be passed to the c compiler,
+  which is responsibe for compiling the C code that has been
+  generated from the Eiffel system.
+NOTE: There can be several of these options.
+  Makes only sense for Eiffel compilers, which generate c 
+  code.
+
+ISE:
+  <options> -> include_path: "some123/fake432/path567 <options>"
+HACT:
+  <options> -> include_path: "some123/fake432/path567 <options>"
+VE:
+  N/A
+SE:
+  <options> -> c_compiler_options: "<options>"
+-------------------------------------------------------------
 NAME: dead_code_removal
 
 VALUES: none | low_level | feature | class | all
@@ -654,26 +674,6 @@ VE:
   N/A
 SE:
   <pathname> -> external_header_path: "<pathname>"
--------------------------------------------------------------
-NAME: c_compiler_options
-
-VALUES: <options>
-DEFAULT: no default
-DESCRIPTION: Specifies options to be passed to the c compiler,
-  which is responsibe for compiling the C code that has been
-  generated from the Eiffel system.
-NOTE: There can be several of these options.
-  Makes only sense for Eiffel compilers, which generate c 
-  code.
-
-ISE:
-  <options> -> include_path: "some123/fake432/path567 <options>"
-HACT:
-  <options> -> include_path: "some123/fake432/path567 <options>"
-VE:
-  N/A
-SE:
-  <options> -> c_compiler_options: "<options>"
 -------------------------------------------------------------
 NAME: heap_size
 
