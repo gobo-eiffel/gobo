@@ -1,9 +1,9 @@
 indexing
-	
+
 	description:
-	
+
 		"Prefix map and context for xmlns declaration generation filter"
-	
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -15,7 +15,7 @@ class XM_XMLNS_GENERATOR_CONTEXT
 inherit
 
 	ANY
-	
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -37,12 +37,12 @@ feature {NONE} -- Creation
 			create default_namespaces.make_default
 			default_namespaces.force (Default_namespace)
 		end
-		
+
 feature {NONE} -- Default context
 	
 	default_namespaces: DS_LINKED_STACK [STRING]
 			-- Default namespace URI strack.
-		
+
 feature -- Default
 
 	is_default (a_namespace: STRING): BOOLEAN is
@@ -63,15 +63,15 @@ feature -- Default
 		ensure
 			set: STRING_.same_string (a_namespace, default_namespaces.item)
 		end
-		
+
 feature {NONE} -- Prefixed context
 
 	prefixes: DS_BILINKED_LIST [DS_HASH_TABLE [STRING, STRING]]
 			-- Prefixes by namespace
-			
+
 	element_prefixes: DS_HASH_SET [STRING]
 			-- Prefixes in use (not only declared) in top element.
-			
+
 	last_item: STRING
 			-- Cache for lookup
 
@@ -100,7 +100,7 @@ feature -- Status
 				end
 			end
 		end
-	
+
 	item (a_namespace: STRING): STRING is
 			-- Find prefix for namespace
 		require
@@ -138,7 +138,7 @@ feature -- Setting
 			has: has (a_namespace)
 			item: item (a_namespace) = a_prefix
 		end
-	
+
 feature -- Status
 
 	element_has_prefix (a_prefix: STRING): BOOLEAN is
@@ -149,7 +149,7 @@ feature -- Status
 		do
 			Result := element_prefixes.has (a_prefix)
 		end
-		
+
 	element_prefix (a_prefix: STRING) is
 			-- Declare prefix in use in top element.
 		require
@@ -160,7 +160,7 @@ feature -- Status
 		ensure
 			has: element_has_prefix (a_prefix)
 		end
-		
+
 feature -- Elements
 
 	on_start_element is
@@ -170,26 +170,25 @@ feature -- Elements
 		do
 			create a_table.make_default
 			prefixes.force_last (a_table)
-			
+
 			element_prefixes.wipe_out
-			
+
 			default_namespaces.force (default_namespaces.item)
 		end
-		
+
 	on_end_element is
 			-- Pop context.
 		do
 			check prefixes.count > 0 end
 			prefixes.remove_last
-			
+
 			default_namespaces.remove
 		end
-		
-	
+
 invariant
 
 	prefixes_not_void: prefixes /= Void
 	element_prefixes_not_void: element_prefixes /= Void
-	default_namespace_not_void: default_namespace /= Void
-	
+	default_namespaces_not_void: default_namespaces /= Void
+
 end
