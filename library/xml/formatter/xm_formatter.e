@@ -95,7 +95,7 @@ feature {NONE} -- Namespaces
 	namespaces: XM_UNIQUE_NAMESPACE_PREFIXES
 			-- Prefixes collection.
 			
-feature -- Standard processor routines
+feature -- Tree processor routines
 
 	process_element (el: XM_ELEMENT) is
 			-- Process element `el'.
