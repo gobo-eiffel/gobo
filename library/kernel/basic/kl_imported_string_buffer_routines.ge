@@ -14,6 +14,10 @@ indexing
 
 class KL_IMPORTED_STRING_BUFFER_ROUTINES
 
+obsolete
+
+	"[020717] Use descendants of KI_CHARACTER_BUFFER instead."
+
 feature -- Access
 
 	STRING_BUFFER_: KL_STRING_BUFFER_ROUTINES is
@@ -26,7 +30,7 @@ feature -- Access
 
 feature -- Type anchors
 
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 	STRING_BUFFER_TYPE: SPECIAL [CHARACTER] is do end
 #else
 	STRING_BUFFER_TYPE: STRING is do end

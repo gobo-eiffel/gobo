@@ -145,16 +145,23 @@ feature -- Resizing
 			valid_fixed_array: valid_fixed_array (an_array)
 			n_large_enough: n >= an_array.count
 		do
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 			Result := c_arycpy ($an_array, n, 0, an_array.count)
-#else
+#endif
+#ifdef (ISE && ! ISE_5_1)
+			if n > an_array.count then
+				Result := an_array.resized_area (n)
+			else
+				Result := an_array
+			end
+#endif
 #ifdef SE
 			Result := an_array
 			Result.resize (n)
-#else
+#endif
+#ifdef HACT || VE
 			Result := an_array
 			Result.resize (0, n - 1)
-#endif
 #endif
 		ensure
 			fixed_array_not_void: Result /= Void
@@ -169,20 +176,21 @@ feature -- Removal
 		require
 			an_array_not_void: an_array /= Void
 			valid_fixed_array: valid_fixed_array (an_array)
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 		do
 			c_spclearall ($an_array)
-#else
-#ifdef HACT || TOWER
+#endif
+#ifdef HACT || (ISE && ! ISE_5_1)
 		do
 			an_array.clear_all
-#else
+#endif
 #ifdef SE
 		local
 			v: G
 		do
 			an_array.set_all_with (v)
-#else
+#endif
+#ifdef VE
 		local
 			i, nb: INTEGER
 			v: G
@@ -193,15 +201,13 @@ feature -- Removal
 				i := i + 1
 			end
 #endif
-#endif
-#endif
 		ensure
 			-- all_cleared: forall i in 0..(an_array.count - 1),
 			--		an_array.item (i) = Void or else
 			--		an_array.item (i) = an_array.item (i).default
 		end
 
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 feature {NONE} -- Externals
 
 	c_arycpy (old_area: POINTER; newsize, s, n: INTEGER): SPECIAL [G] is

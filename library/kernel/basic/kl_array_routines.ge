@@ -43,10 +43,14 @@ feature -- Status report
 				i := an_array.lower
 				nb := an_array.upper
 			until
-				Result or i > nb
+				i > nb
 			loop
-				Result := an_array.item (i) = v
-				i := i + 1
+				if an_array.item (i) = v then
+					Result := True
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
 			end
 #else
 		do
@@ -120,7 +124,7 @@ feature -- Removal
 			-- Reset all items to default values.
 		require
 			an_array_not_void: an_array /= Void
-#ifndef ISE || HACT || TOWER
+#ifndef (ISE && ISE_5_1) || HACT
 		local
 			i, nb: INTEGER
 			v: G

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Routines that ought to be in class STRING_BUFFER. %
+		"Routines that ought to be in a class STRING_BUFFER. %
 		%A string buffer is a sequence of characters equipped %
 		%with features `put', `item' and `count'."
 
@@ -14,10 +14,17 @@ indexing
 
 class KL_STRING_BUFFER_ROUTINES
 
+obsolete
+
+	"[020717] Use descendants of KI_CHARACTER_BUFFER instead."
+
 inherit
 
 	KL_IMPORTED_STRING_BUFFER_ROUTINES
 	KL_IMPORTED_INPUT_STREAM_ROUTINES
+#ifdef ISE
+	STRING_HANDLER
+#endif
 
 feature -- Initialization
 
@@ -26,32 +33,30 @@ feature -- Initialization
 			-- to contain `n' characters.
 		require
 			non_negative_n: n >= 0
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 		local
 			to_special: TO_SPECIAL [CHARACTER]
 		do
 			!! to_special.make_area (n)
 			Result := to_special.area
-#else
+#endif
+#ifdef (ISE && ! ISE_5_1)
 		do
-#ifdef VE
-			!! Result.make_filled ('%U', n)
-#else
-#ifdef SE
-			!! Result.blank (n)
-#else
 			!! Result.make (n)
-#ifdef TOWER
 			Result.set_count (n)
-#else
+#endif
+#ifdef VE
+		do
+			!! Result.make_filled ('%U', n)
+#endif
+#ifdef SE
+		do
+			!! Result.blank (n)
+#endif
 #ifdef HACT
+		do
+			!! Result.make (n)
 			Result.fill_blank
-#else
-			Result.fill ('#')
-#endif
-#endif
-#endif
-#endif
 #endif
 		ensure
 			string_buffer_not_void: Result /= Void
@@ -62,6 +67,7 @@ feature -- Initialization
 			-- Create a new string buffer with characters from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
+			is_string: a_string.same_type ("")
 		do
 			Result := make (a_string.count)
 			copy_from_string (Result, lower, a_string)
@@ -79,8 +85,9 @@ feature -- Conversion
 			-- data. Use `make_from_string' if this is a concern.
 		require
 			a_string_not_void: a_string /= Void
+			is_string: a_string.same_type ("")
 		do
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 			Result := a_string.area
 #else
 			Result := a_string
@@ -101,7 +108,7 @@ feature -- Access
 			s_large_enough: s >= lower
 			e_small_enough: e <= upper (a_buffer)
 			valid_interval: s <= e + 1
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 		local
 			a: ANY
 			nb: INTEGER
@@ -116,25 +123,26 @@ feature -- Access
 				!! Result.make (0)
 #endif
 			else
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 				nb := e - s + 1
 				!! Result.make (nb)
 				a := Result.area
 				p := c_rtid ($a)
 				p.memory_copy (c_rtid ($a_buffer) + s, nb)
-				c_str_set_count ($Result, nb)
+				Result.set_count (nb)
 #else
 				Result := a_buffer.substring (s, e)
 #endif
 			end
 		ensure
 			substring_not_void: Result /= Void
+			is_string: Result.same_type ("")
 			count_set: Result.count = e - s + 1
 		end
 
 feature -- Measurement
 
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 	lower: INTEGER is 0
 #else
 	lower: INTEGER is 1
@@ -160,11 +168,12 @@ feature -- Element change
 		require
 			a_buffer_not_void: a_buffer /= Void
 			a_string_not_void: a_string /= Void
+			is_string: a_string.same_type ("")
 			not_same: to_string_buffer (a_string) /= a_buffer
 			s_large_enough: s >= lower
 			e_small_enough: e <= upper (a_buffer)
 			valid_interval: s <= e + 1
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 		local
 			nb, old_count, new_count: INTEGER
 			a: ANY
@@ -172,7 +181,7 @@ feature -- Element change
 #endif
 		do
 			if s <= e then
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 				nb := e - s + 1
 				old_count := a_string.count
 				new_count := old_count + nb
@@ -182,7 +191,7 @@ feature -- Element change
 				a := a_string.area
 				p := c_rtid ($a) + old_count
 				p.memory_move (c_rtid ($a_buffer) + s, nb)
-				c_str_set_count ($a_string, new_count)
+				a_string.set_count (new_count)
 #else
 				a_string.append_string (a_buffer.substring (s, e))
 #endif
@@ -198,12 +207,13 @@ feature -- Element change
 		require
 			a_buffer_not_void: a_buffer /= Void
 			a_string_not_void: a_string /= Void
+			is_string: a_string.same_type ("")
 			not_same: to_string_buffer (a_string) /= a_buffer
 			pos_large_enough: pos >= lower
 			enough_space: (pos + a_string.count - 1) <= upper (a_buffer)
 		local
 			nb: INTEGER
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 			a: ANY
 			p: POINTER
 #else
@@ -212,7 +222,7 @@ feature -- Element change
 		do
 			nb := a_string.count
 			if nb > 0 then
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 				a := a_string.area
 				p := c_rtid ($a_buffer) + pos
 				p.memory_copy ($a, nb)
@@ -241,7 +251,7 @@ feature -- Element change
 			a_stream_open_read: INPUT_STREAM_.is_open_read (a_stream)
 			nb_char_large_enough: nb_char >= 0
 			enough_space: (pos + nb_char - 1) <= upper (a_buffer)
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 		local
 			a_file: FILE
 			a_string: STRING
@@ -281,13 +291,13 @@ feature -- Element change
 			new_pos_large_enough: new_pos >= lower
 			enough_space: (new_pos + nb - 1) <= upper (a_buffer)
 			move_left: old_pos > new_pos
-#ifndef ISE
+#ifndef (ISE && ISE_5_1)
 		local
 			i, j, nb2: INTEGER
 #endif
 		do
 			if nb > 0 then
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 				(c_rtid ($a_buffer) + new_pos).memory_move (c_rtid ($a_buffer) + old_pos, nb)
 #else
 				j := new_pos
@@ -312,13 +322,13 @@ feature -- Element change
 			new_pos_large_enough: new_pos >= lower
 			enough_space: (new_pos + nb - 1) <= upper (a_buffer)
 			move_right: old_pos < new_pos
-#ifndef ISE
+#ifndef (ISE && ISE_5_1)
 		local
 			i, j: INTEGER
 #endif
 		do
 			if nb > 0 then
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 				(c_rtid ($a_buffer) + new_pos).memory_move (c_rtid ($a_buffer) + old_pos, nb)
 #else
 				j := new_pos + nb - 1
@@ -342,17 +352,23 @@ feature -- Resizing
 		require
 			a_buffer_not_void: a_buffer /= Void
 			n_large_enough: n >= a_buffer.count
-#ifndef VE || ISE || TOWER
+#ifdef SE || HACT
 		local
 			i: INTEGER
 #endif
 		do
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 			Result := c_str_resize ($a_buffer, n)
-#else
+#endif
+#ifdef (ISE && ! ISE_5_1)
+			a_buffer.resize (n)
+			a_buffer.set_count (n)
+			Result := a_buffer
+#endif
 #ifdef VE
 			a_buffer.resize (n)
-#else
+			Result := a_buffer
+#endif
 #ifdef SE
 			from
 				i := n - a_buffer.count
@@ -362,11 +378,9 @@ feature -- Resizing
 				a_buffer.append_character ('#')
 				i := i - 1
 			end
-#else
-#ifdef TOWER
-			a_buffer.resize (n)
-			a_buffer.set_count (n)
-#else
+			Result := a_buffer
+#endif
+#ifdef HACT
 			from
 				i := n - a_buffer.count
 				a_buffer.resize (n)
@@ -376,9 +390,6 @@ feature -- Resizing
 				a_buffer.append_character ('#')
 				i := i - 1
 			end
-#endif
-#endif
-#endif
 			Result := a_buffer
 #endif
 		ensure
@@ -386,7 +397,7 @@ feature -- Resizing
 			count_set: Result.count = n
 		end
 
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 feature {NONE} -- Externals
 
 	c_str_resize (a: POINTER; newsize: INTEGER): SPECIAL [CHARACTER] is
@@ -412,14 +423,6 @@ feature {NONE} -- Externals
 			"C (FILE *, char *, EIF_INTEGER): EIF_INTEGER"
 		alias
 			"console_readstream"
-		end
-
-	c_str_set_count (a_string: POINTER; n: INTEGER) is
-			-- Call `set_count' from STRING
-		external
-			"C [macro <eif_project.h>]"
-		alias
-			"(egc_strset)"
 		end
 
 	c_rtid (p: POINTER): POINTER is

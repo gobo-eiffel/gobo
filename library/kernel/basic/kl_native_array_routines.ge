@@ -75,32 +75,39 @@ feature -- Resizing
 			old_size_positive: old_size >= 0
 			new_size_large_enough: new_size > old_size
 		do
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 			if new_size > an_array.count then
 				Result := c_arycpy ($an_array, new_size, 0, an_array.count)
 			else
 				Result := an_array
 			end
-#else
+#endif
+#ifdef (ISE && ! ISE_5_1)
+			if new_size > an_array.count then
+				Result := an_array.resized_area (new_size)
+			else
+				Result := an_array
+			end
+#endif
 #ifdef SE
 			if old_size > 0 then
 				Result := an_array.realloc (old_size, new_size)
 			else
 				Result := Result.calloc (new_size)
 			end
-#else
+#endif
+#ifdef HACT || VE
 			Result := an_array
 			if new_size > an_array.count then
 				Result.resize (0, new_size - 1)
 			end
-#endif
 #endif
 		ensure
 			native_array_not_void: Result /= Void
 			valid_native_array: valid_native_array (Result)
 		end
 
-#ifdef ISE
+#ifdef (ISE && ISE_5_1)
 feature {NONE} -- Externals
 
 	c_arycpy (old_area: POINTER; newsize, s, n: INTEGER): SPECIAL [G] is
