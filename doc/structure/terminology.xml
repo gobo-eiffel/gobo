@@ -114,9 +114,9 @@ class <classname>STACK</classname> had operations
 <argument>i</argument></arguments></featurecall>, and
 <featurecall><featurename>entry</featurename><arguments><argument>i</argument></arguments></featurecall>
 for an integer <argument>i</argument>; class <classname>HASH_TABLE</classname> had
-<featurecall><featurename>add</featurename><arguments><argument>x</argument>,
-<argument>k</argument>)</arguments></featurecall>, and
-<featurecall><featurename>value</featurename><arguments><argument>k</argument>)</arguments></featurecall>
+<featurecall><featurename>add</featurename><arguments><argument>x</argument>
+<argument>k</argument></arguments></featurecall>, and
+<featurecall><featurename>value</featurename><arguments><argument>k</argument></arguments></featurecall>
 for a key <argument>k</argument>. Using
 such well-accepted names, each well-adapted to each kind of
 structure, emphasized specificity rather than generality.
