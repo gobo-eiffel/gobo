@@ -15,7 +15,7 @@ class GEXACE
 
 inherit
 
-GEXACE_COMMAND_LINE_PARSER
+	GEXACE_COMMAND_LINE_PARSER
 		rename
 			make as make_command_line_parser
 		export
@@ -240,4 +240,3 @@ invariant
 	error_handler_not_void: error_handler /= Void
 
 end -- class GEXACE
-

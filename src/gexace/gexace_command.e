@@ -71,4 +71,3 @@ invariant
 	error_handler_not_void: error_handler /= Void
 
 end -- class GEXACE_COMMAND
-

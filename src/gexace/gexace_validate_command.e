@@ -29,7 +29,7 @@ feature -- Execution
 			-- Execute 'validate' command.
 		local
 			a_parser: ET_XACE_PARSER
-			a_file: like input_stream_type
+			a_file: like INPUT_STREAM_TYPE
 		do
 			!! a_parser.make_with_variables (variables, error_handler)
 			a_file := INPUT_STREAM_.make_file_open_read (system_filename)
@@ -42,4 +42,3 @@ feature -- Execution
 		end
 
 end -- class GEXACE_VALIDATE_COMMAND
-
