@@ -31,6 +31,14 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	is_current_file_system: BOOLEAN is
+			-- Is file system the file system of the 
+			-- underlying platform?
+		deferred
+		end
+
+feature -- File handling
+
 	is_file_readable (a_filename: STRING): BOOLEAN is
 			-- Can file named `a_filename' be opened
 			-- in read mode?
@@ -39,32 +47,34 @@ feature -- Status report
 		deferred
 		end
 
-	is_directory_readable (a_dirname: STRING): BOOLEAN is
-			-- Can directory named `a_dirname' be opened
-			-- in read mode?
+	rename_file (old_name, new_name: STRING) is
+			-- Rename file named `old_name' as `new_name'.
+			-- Do nothing if the file could not be renamed, if
+			-- it did not exist or if `new_name' already existed.
 		require
-			a_dirname_not_void: a_dirname /= Void
+			old_name_not_void: old_name /= Void
+			new_name_not_void: new_name /= Void
 		deferred
 		end
 
-feature -- Access
-
-	eol: STRING is
-			-- Line separator in current file system
+	copy_file (old_name, new_name: STRING) is
+			-- Copy file named `old_name' to `new_name'.
+			-- Do nothing if the file could not be copied, if it
+			-- did not exist or if `new_name' already existed.
+		require
+			old_name_not_void: old_name /= Void
+			new_name_not_void: new_name /= Void
 		deferred
-		ensure
-			eol_not_void: Result /= Void
-			eol_not_empty: Result.count > 0
 		end
 
-	exe_file_extension: STRING is
-			-- Executable file extension in current file system
+	delete_file (a_filename: STRING) is
+			-- Delete file named `a_filename'.
+			-- Do nothing if the file could not be
+			-- deleted or if it did not exist.
+		require
+			a_filename_not_void: a_filename /= Void
 		deferred
-		ensure
-			exe_file_extension_not_void: Result /= Void
 		end
-
-feature -- File factory
 
 	new_input_file (a_name: STRING): KI_INPUT_FILE is
 			-- New input text file in current file system
@@ -88,40 +98,23 @@ feature -- File factory
 			is_closed: Result.is_closed
 		end
 
-feature -- File operations
-
-	rename_file (old_name, new_name: STRING) is
-			-- Rename file named `old_name' as `new_name'.
-			-- Do nothing if the file could not be renamed
-			-- or if it did not exist. Overwrite file
-			-- `new_name' if it existed.
-		require
-			old_name_not_void: old_name /= Void
-			new_name_not_void: new_name /= Void
+	eol: STRING is
+			-- Line separator in current file system
 		deferred
+		ensure
+			eol_not_void: Result /= Void
+			eol_not_empty: Result.count > 0
 		end
 
-	copy_file (old_name, new_name: STRING) is
-			-- Copy file named `old_name' to `new_name'.
-			-- Do nothing if the file could not be copied
-			-- or if it did not exist. Overwrite file
-			-- `new_name' if it existed.
+feature -- Directory handling
+
+	is_directory_readable (a_dirname: STRING): BOOLEAN is
+			-- Can directory named `a_dirname' be opened
+			-- in read mode?
 		require
-			old_name_not_void: old_name /= Void
-			new_name_not_void: new_name /= Void
+			a_dirname_not_void: a_dirname /= Void
 		deferred
 		end
-
-	delete_file (a_filename: STRING) is
-			-- Delete file named `a_filename'.
-			-- Do nothing if the file could not be
-			-- deleted or if it did not exist.
-		require
-			a_filename_not_void: a_filename /= Void
-		deferred
-		end
-
-feature -- Directory operations
 
 	create_directory (a_dirname: STRING) is
 			-- Create a new directory named `a_dirname'.
@@ -144,24 +137,18 @@ feature -- Directory operations
 		deferred
 		end
 
-	parent_directory (a_dirname: STRING): STRING is
-			-- Parent directory of `a_dirname';
-			-- Return Void if directory `a_dirname'
-			-- does not exist or if it is the root
-		require
-			a_dirname_not_void: a_dirname /= Void
-		deferred
-		end
-
 feature -- Working directory
 
-	pwd, current_working_directory: STRING is
+	cwd, current_working_directory: STRING is
 			-- Name of current working directory;
-			-- Return absolute pathname or an empty
-			-- string if it could not be computed
+			-- Return absolute pathname with the naming 
+			-- convention of the underlying file system
+		require
+			is_current_file_system: is_current_file_system
 		deferred
 		ensure
 			current_working_directory_not_void: Result /= Void
+			is_absolute: is_absolute_pathname (Result)
 		end
 
 	cd, set_current_working_directory (a_dirname: STRING) is
@@ -171,7 +158,210 @@ feature -- Working directory
 			-- `a_dirname' did not exist.
 		require
 			a_dirname_not_void: a_dirname /= Void
+			is_current_file_system: is_current_file_system
 		deferred
+		end
+
+feature -- Pathname handling
+
+	is_absolute_pathname (a_pathname: STRING): BOOLEAN is
+			-- Is `a_pathname' an absolute pathname?
+		require
+			a_pathname_not_void: a_pathname /= Void
+		deferred
+		ensure
+			not_relative: Result implies not is_relative_pathname (a_pathname)
+		end
+
+	is_relative_pathname (a_pathname: STRING): BOOLEAN is
+			-- Is `a_pathname' a relative pathname (relative
+			-- to the current working directory)?
+		require
+			a_pathname_not_void: a_pathname /= Void
+		deferred
+		ensure
+			not_absolute: Result implies not is_absolute_pathname (a_pathname)
+		end
+
+	is_root_directory (a_dirname: STRING): BOOLEAN is
+			-- Is `a_dirname' a root directory (i.e. it
+			-- has no parent directory)?
+		require
+			a_dirname_not_void: a_dirname /= Void
+		deferred
+		end
+
+	basename (a_pathname: STRING): STRING is
+			-- Pathname with any leading directory components removed
+		require
+			a_pathname_not_void: a_pathname /= Void
+		deferred
+		ensure
+			basename_not_void: Result /= Void
+			is_relative: not is_root_directory (a_pathname) implies is_relative_pathname (Result)
+		end
+
+	dirname (a_pathname: STRING): STRING is
+			-- Pathname containing only the leading directory components so
+			-- that 'pathname (dirname (a_pathname), basename (a_pathname))'
+			-- is equivalent to `a_pathname; Return `relative_current_directory'
+			-- when there is no leading directory components in `a_pathname';
+			-- Return a root directory when `a_pathname' is a root directory
+		require
+			a_pathname_not_void: a_pathname /= Void
+		deferred
+		ensure
+			dirname_not_void: Result /= Void
+			same_relative: is_relative_pathname (Result) = is_relative_pathname (a_pathname)
+			same_absolute: is_absolute_pathname (Result) = is_absolute_pathname (a_pathname)
+		end
+
+	pathname (a_dirname, a_pathname: STRING): STRING is
+			-- Pathname made up of relative pathname
+			-- `a_pathname' in directory `a_dirname'
+		require
+			a_dirname_not_void: a_dirname /= Void
+			a_pathname_not_void: a_pathname /= Void
+			a_pathname_relative: is_relative_pathname (a_pathname)
+		deferred
+		ensure
+			pathname_not_void: Result /= Void
+			same_relative: is_relative_pathname (Result) = is_relative_pathname (a_dirname)
+			same_absolute: is_absolute_pathname (Result) = is_absolute_pathname (a_dirname)
+		end
+
+	canonical_pathname (a_pathname: STRING): STRING is
+			-- Canonical form of `a_pathname'
+		require
+			a_pathname_not_void: a_pathname /= Void
+		local
+			p: KI_PATHNAME
+		do
+			p := string_to_pathname (a_pathname)
+			p.set_canonical
+			Result := pathname_to_string (p)
+		ensure
+			canonical_pathname_not_void: Result /= Void
+		end
+
+	relative_current_directory: STRING is
+			-- Relative pathname of current directory
+		deferred
+		ensure
+			relative_current_directory_not_void: Result /= Void
+			is_relative: is_relative_pathname (Result)
+		end
+
+	relative_parent_directory: STRING is
+			-- Relative pathname of current parent directory
+		deferred
+		ensure
+			relative_parent_directory_not_void: Result /= Void
+			is_relative: is_relative_pathname (Result)
+		end
+
+	root_directory: STRING is
+			-- Pathname of current root directory
+		deferred
+		ensure
+			root_directory_not_void: Result /= Void
+			is_root: is_root_directory (Result)
+			not_relative: not is_relative_pathname (Result)
+		end
+
+	absolute_pathname (a_pathname: STRING): STRING is
+			-- Absolute pathname of `a_pathname'
+		require
+			a_pathname_not_void: a_pathname /= Void
+			is_current_file_system: is_current_file_system
+		deferred
+		ensure
+			absolute_pathname_not_void: Result /= Void
+			is_absolute: is_absolute_pathname (Result)
+		end
+
+	absolute_parent_directory (a_dirname: STRING): STRING is
+			-- Absolute pathname of parent directory of `a_dirname';
+			-- Return `absolute_root_directory' if `a_dirname'
+			-- is a root directory (i.e. has no parent)
+		require
+			a_dirname_not_void: a_dirname /= Void
+			is_current_file_system: is_current_file_system
+		deferred
+		ensure
+			absolute_parent_directory_not_void: Result /= Void
+			is_absolute: is_absolute_pathname (Result)
+		end
+
+	absolute_root_directory: STRING is
+			-- Absolute pathname of current root directory
+		require
+			is_current_file_system: is_current_file_system
+		deferred
+		ensure
+			absolute_root_directory_not_void: Result /= Void
+			is_root: is_root_directory (Result)
+			is_absolute: is_absolute_pathname (Result)
+		end
+
+	string_to_pathname (a_pathname: STRING): KI_PATHNAME is
+			-- Convert string to pathname
+		require
+			a_pathname_not_void: a_pathname /= Void
+		deferred
+		ensure
+			string_to_pathname_not_void: Result /= Void
+		end
+
+	pathname_to_string (a_pathname: KI_PATHNAME): STRING is
+			-- Convert pathname to string
+		require
+			a_pathname_not_void: a_pathname /= Void
+		deferred
+		ensure
+			pathname_to_string_not_void: Result /= Void
+		end
+
+	pathname_from (a_pathname: STRING; a_file_system: KI_FILE_SYSTEM): STRING is
+			-- Pathname representation in current file system
+			-- of pathname `a_pathname' which is represented
+			-- using `a_file_system''s pathname convention
+		require
+			a_pathname_not_void: a_pathname /= Void
+			a_file_system_not_void: a_file_system /= Void
+		do
+			if same_type (a_file_system) then
+				Result := a_pathname
+			else
+				Result := pathname_to_string (a_file_system.string_to_pathname (a_pathname))
+			end
+		ensure
+			pathname_from_not_void: Result /= Void
+		end
+
+	has_extension (a_filename, an_extension: STRING): BOOLEAN is
+			-- Is `an_extension' a file extension of `a_filename'?
+		require
+			a_filename_not_void: a_filename /= Void
+			an_extension_not_void: an_extension /= Void
+		deferred
+		end
+
+	extension (a_filename: STRING): STRING is
+			-- File extension of `a_filename'
+			-- (include the leading '.')
+		require
+			a_filename_not_void: a_filename /= Void
+		deferred
+		ensure
+			extension_not_void: Result /= Void
+		end
+
+	exe_extension: STRING is
+			-- Executable file extension
+		deferred
+		ensure
+			exe_extension_not_void: Result /= Void
 		end
 
 end -- class KI_FILE_SYSTEM
