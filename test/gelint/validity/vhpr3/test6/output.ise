@@ -1,0 +1,27 @@
+Eiffel compilation manager
+Processing options
+Freezing system
+System recompiled.
+You must now run "finish_freezing" in:
+
+aa: system execution failed.
+Following is the set of recorded exceptions:
+
+-------------------------------------------------------------------------------
+Class / Object      Routine                Nature of exception           Effect
+-------------------------------------------------------------------------------
+BB                  f @1                   object allocation:           
+<>                                 No more memory.               Fail
+-------------------------------------------------------------------------------
+BB                  f @1                                                
+<>                                 Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  make @2                                             
+<>                                 Routine failure.              Fail
+-------------------------------------------------------------------------------
+AA                  root's creation                                     
+<>                                 Routine failure.              Exit
+-------------------------------------------------------------------------------
+
+
+aa: PANIC: caught signal #11 (Segmentation violation) -- Giving up...

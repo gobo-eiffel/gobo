@@ -1,0 +1,5 @@
+****** Fatal Error : Cannot rename inexistant feature (VHRC.1).
+Line 7 column 4 in BB (b.e) :
+			g as h
+			^
+------

@@ -1,0 +1,5 @@
+****** Fatal Error : Cannot select non-existent feature (VMSS).
+Line 7 column 7 in BB (b.e) :
+			f, h
+			   ^
+------

@@ -1,0 +1,13 @@
+****** Error : Double definition of feature f.
+Line 5 column 2 in BB (b.e) :
+	f is
+	^
+Line 9 column 2 in BB (b.e) :
+	f is
+	^
+------
+****** Fatal Error : Bad instruction (when interpreted in AA).
+Line 14 column 6 in AA (a.e) :
+			b.f
+			  ^
+------

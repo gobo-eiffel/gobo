@@ -1,0 +1,23 @@
+-- system:     "VDRD-4 test #3"
+-- library:    "Gobo Eiffel Tools Library"
+-- compiler:   "gelint"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 2001, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	aa
+
+root
+
+	AA: "make"
+
+cluster
+
+	test3:	"$GOBO/test/gelint/validity/vdrd4/test3"
+	kernel:	"$GOBO/test/gelint/kernel"
+
+end
