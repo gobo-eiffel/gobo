@@ -7,8 +7,8 @@ EXPAT:
 
 EIFFEL:
 
-- Accept at least ISO latin 1
-- Generate xml declaration event
+- Test ISO latin 1
+- xml declaration for entities event and parsing (rm special scanner?)
 - Better error message when failing to resolve DTD
 - Check that stand alone handling makes some sense
 - Parse ":" name in pedantic XML 1.0 mode for tests
@@ -19,11 +19,10 @@ EIFFEL:
 GENERAL:
 
 - Tree pipe to include concatenation and comment filters
-- XM_FORMATTER uses streams
+- check XM_FORMATTER handling of namespaces
 - DTD model should contain attribute enumeration decls
 - Add some generic DTD filters, eg pretty print
 - Q: cache queries by name in tree?
-- Q: tree equality?
 - Q: where does the end tag checker belong (filter or parser)?
 
 TESTS:
