@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		""
+		"Print sample"
 
 	status:	 "See notice at end of class."
 	author:	 "Andreas Leitner"
@@ -13,23 +13,26 @@ inherit
 
 	KL_SHARED_ARGUMENTS
 
-	KL_SHARED_EXCEPTIONS
-
-	UC_UNICODE_FACTORY
-		export {NONE} all end
-
+	XM_CALLBACKS_FILTER_FACTORY
+	
 creation
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 		do
 			check_parsers
-			process_arguments
-			check_file_readable
-			process_data_file
+			if not has_error then
+				process_arguments
+				if not has_error then
+					check_file_readable
+					if not has_error then
+						process_data_file
+					end
+				end
+			end
 		end
 
 feature
@@ -38,18 +41,29 @@ feature
 		require
 			file_name_not_void: file_name /= Void
 			event_parser_not_void: event_parser /= Void
+		local
+			a_file: KL_TEXT_INPUT_FILE
+			a_parser: XM_PARSER
 		do
 			io.put_string ("1) parsing data...%N")
 
-			event_parser.parse_from_file_name (file_name)
+			!! a_file.make (file_name)
+			a_file.open_read
+			
+			a_parser := event_parser
 
-			if not event_parser.is_correct then
-				io.put_string (event_parser.last_error_extended_description)
+			a_parser.set_callbacks (
+					standard_callbacks_pipe (<<new_pretty_print>>))
+			a_parser.parse_from_stream (a_file)
+			
+			if not a_parser.is_correct then
+				io.put_string (a_parser.last_error_extended_description)
 				io.put_new_line
 			else
 				io.put_string ("parsing ok.%N")
 			end
 
+			a_file.close
 			io.put_string ("exiting...%N")
 		end
 
@@ -61,44 +75,36 @@ feature
 		do
 			if Arguments.argument_count /= 2 then
 				io.put_string (usage_string)
-				Exceptions.die (1)
-			end
-
-			parser_switch := Arguments.argument (1)
-			if parser_switch.is_equal ("--expat") then
-				if not fact.is_expat_event_available then
-					io.put_string ("expat is not availabe, please choose %
-						%other parser backend%N")
-					Exceptions.die (1)
-				end
-				!! event_parser.make_from_implementation (fact.new_expat_event_parser_imp)
-			elseif parser_switch.is_equal ("--eiffel") then
-				if not fact.is_eiffel_event_available then
-					io.put_string ("expat is not availabe, please choose %
-						%other parser backend%N")
-					Exceptions.die (1)
-				end
-				!! event_parser.make_from_implementation (fact.new_eiffel_event_parser_imp)
+				has_error := True
 			else
-				io.put_string (usage_string)
-				Exceptions.die (1)
+				parser_switch := Arguments.argument (1)
+				file_name := Arguments.argument (2)
+				if parser_switch.is_equal ("--expat") then
+					if not fact.is_expat_available then
+						io.put_string ("expat is not availabe, please choose %
+							%other parser backend%N")
+						has_error := True
+					else
+						io.put_string ("Using expat parser%N")
+						event_parser := fact.new_expat_parser
+					end
+				elseif parser_switch.is_equal ("--eiffel") then
+					io.put_string ("Using eiffel parser%N")
+					!XM_EIFFEL_PARSER! event_parser.make
+				else
+					io.put_string (usage_string)
+					has_error := True
+				end
 			end
-			file_name := new_unicode_string (Arguments.argument (2))
 		ensure
-			file_name_not_void: file_name /= Void
-			event_parser_not_void: event_parser /= Void
+			file_name_not_void: (not has_error) implies file_name /= Void
+			--event_parser_not_void: event_parser /= Void
 		end
 
 feature -- Checks we have to do before we can run
 
 	check_parsers is
 		do
-				-- toe must be one or both of [expat,eiffel]
-			if not fact.is_expat_event_available and not fact.is_eiffel_event_available then
-				io.put_string ("No XML parser backends available, please %
-					%recompile application%N")
-				Exceptions.die (1)
-			end
 		end
 
 	check_file_readable is
@@ -106,13 +112,13 @@ feature -- Checks we have to do before we can run
 		local
 			s: KL_TEXT_INPUT_FILE
 		do
-			!! s.make (file_name.to_utf8)
+			!! s.make (file_name)
 			s.open_read
 			if not s.is_open_read then
 				io.put_string ("Unable to open input file:")
-				io.put_string (file_name.to_utf8)
+				io.put_string (file_name)
 				io.put_string ("%N")
-				Exceptions.die (1)
+				has_error := True
 			else
 				s.close
 			end
@@ -120,35 +126,32 @@ feature -- Checks we have to do before we can run
 
 feature
 
-	fact: XM_PARSER_FACTORY is
+	fact: XM_EXPAT_PARSER_FACTORY is
 		once
-			!! Result.make
+			!! Result
 		ensure
 			factory_not_void: Result /= Void
 		end
 
-	event_parser: PRINT_EVENT_PARSER
+	event_parser: XM_PARSER
 
 feature
 
+	has_error: BOOLEAN
+	
 	usage_string: STRING is
 		once
 			Result := clone ("usage: print ")
-			if fact.is_expat_event_available then
-				Result.append_string ("--expat")
-				if fact.is_eiffel_event_available then
-					Result.append_string ("|")
-				end
+			if fact.is_expat_available then
+				Result.append_string ("--expat|")
 			end
-			if fact.is_eiffel_event_available then
-				Result.append_string ("--eiffel")
-			end
+			Result.append_string ("--eiffel")
 			Result.append_string (" <input-file>%N")
 		end
 
 feature
 
-	file_name: UC_STRING
+	file_name: STRING
 
 end -- class PRINT
 
