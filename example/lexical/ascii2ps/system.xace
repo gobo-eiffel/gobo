@@ -24,6 +24,9 @@
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
 	</option>
+	<option if="${GOBO_EIFFEL}=se">
+		<option name="warning" value="none"/>
+	</option>
 
 	<cluster name="ascii2ps" location="${GOBO}/example/lexical/ascii2ps"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>

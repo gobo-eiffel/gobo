@@ -27,6 +27,9 @@
 	<option if="${GOBO_EIFFEL}=ve">
 		<option name="linker" value="microsoft" if="${GOBO_OS}=windows"/>
 	</option>
+	<option if="${GOBO_EIFFEL}=se">
+		<option name="warning" value="none"/>
+	</option>
 
 	<cluster name="expat_tester" location="${GOBO}/test/xml/expat"/>
 	<cluster name="expat_testgen" location="TESTGEN"/>

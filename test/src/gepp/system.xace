@@ -24,6 +24,9 @@
 		<option name="msil_generation" value="true"/>
 		<option name="line_generation" value="true"/>
 	</option>
+	<option if="${GOBO_EIFFEL}=se">
+		<option name="warning" value="none"/>
+	</option>
 
 	<cluster name="gepp_tester" location="${GOBO}/test/src" prefix="src_">
 		<option name="abstract" value="true"/>

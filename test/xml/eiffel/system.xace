@@ -27,6 +27,9 @@
 	<option if="${GOBO_EIFFEL}=ve">
 		<option name="linker" value="microsoft" if="${GOBO_OS}=windows"/>
 	</option>
+	<option if="${GOBO_EIFFEL}=se">
+		<option name="warning" value="none"/>
+	</option>
 
 	<cluster name="eiffel_tester" location="${GOBO}/test/xml/eiffel"/>
 	<cluster name="eiffel_testgen" location="TESTGEN"/>
