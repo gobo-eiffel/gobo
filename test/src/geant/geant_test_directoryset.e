@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test features of class GEANT_DIRECTORYSET"
+		"Test features of class GEANT_DIRECTORYSET."
 
 	library: "Gobo Eiffel Ant"
 	copyright: "Copyright (c) 2002, Sven Ehrke and others"
@@ -22,68 +22,69 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 		export {NONE} all end
 
+	KL_SHARED_STREAMS
+		export {NONE} all end
+
 feature -- Test
 
 	test_initialization is
 			-- Test feature `glob_prefix'.
 		do
 			assert ("not_executable_1", not ds.is_executable)
-			ds.set_directory_name(Execution_environment.interpreted_string ("${GOBO}"))
+			ds.set_directory_name (Execution_environment.interpreted_string ("${GOBO}"))
 			assert ("executable_1", ds.is_executable)
 			ds.execute
 			assert ("empty_1", ds.is_empty)
 		end
 
 	test_execute1 is
-			-- Test feature `execute' with `set_include_wx_string' applied.
+			-- Test feature `execute' with `set_include_wc_string' applied.
 		local
 			a_entries: DS_ARRAYED_LIST [STRING]
-			s: STRING
 		do
-			ds.set_directory_name(Execution_environment.interpreted_string ("${GOBO}"))
+			ds.set_directory_name (Execution_environment.interpreted_string ("${GOBO}"))
 			ds.set_include_wc_string ("**/library/**/*")
 			ds.execute
 			assert ("not_empty_1", not ds.is_empty)
 
-			create a_entries.make (250)
+			create a_entries.make_equal (250)
 			from ds.start until ds.after loop
 				a_entries.force_last (ds.item_directory_name)
 				ds.forth
 			end
-			assert_equal ("test_execute1_0", 199, a_entries.count)
-			assert_equal ("test_execute1_1", "library/CVS", a_entries.item (1))
-			assert_equal ("test_execute1_2", "library/kernel", a_entries.item (2))
-			assert_equal ("test_execute1_3", "library/kernel/basic", a_entries.item (3))
-			assert_equal ("test_execute1_4", "library/kernel/basic/CVS", a_entries.item (4))
-			assert_equal ("test_execute1_5", "library/kernel/CVS", a_entries.item (5))
-			assert_equal ("test_execute1_188", "library/tools/xace/generator", a_entries.item (155))
+			assert ("has_library_kernel", a_entries.has ("library/kernel"))
+			assert ("has_library_kernel_basic", a_entries.has ("library/kernel/basic"))
+			assert ("has_library_tools_xace_generator", a_entries.has ("library/tools/xace/generator"))
+			assert ("not_has_test_kernel", not a_entries.has ("test/kernel"))
+			assert ("not_has_library", not a_entries.has ("library"))
 		end
 
 	test_execute2 is
-			-- Test feature `execute' with `set_include_wx_string'and  `set_exclude_wx_string' applied
+			-- Test feature `execute' with `set_include_wc_string' and `set_exclude_wc_string' applied.
 		local
 			a_entries: DS_ARRAYED_LIST [STRING]
-			s: STRING
 		do
-			ds.set_directory_name(Execution_environment.interpreted_string ("${GOBO}"))
+			ds.set_directory_name (Execution_environment.interpreted_string ("${GOBO}"))
 			ds.set_include_wc_string ("**/library/**/*")
-			ds.set_exclude_wc_string ("@(**/spec/**/*|**/CVS)")
+			ds.set_exclude_wc_string ("@(**/spec/**/*|**/kernel/**/*|**/CVS)")
 --			project.options.set_debug_mode (True)
 			ds.execute
 			assert ("not_empty_1", not ds.is_empty)
 
-			create a_entries.make (250)
+			create a_entries.make_equal (250)
 			from ds.start until ds.after loop
 				a_entries.force_last (ds.item_directory_name)
 				ds.forth
 			end
-			assert_equal ("test_execute2_0", 96, a_entries.count)
-			assert_equal ("test_execute2_1", "library/kernel", a_entries.item (1))
-			assert_equal ("test_execute2_2", "library/kernel/basic", a_entries.item (2))
-			assert_equal ("test_execute2_3", "library/kernel/elks", a_entries.item (3))
-			assert_equal ("test_execute2_4", "library/kernel/io", a_entries.item (4))
-			assert_equal ("test_execute2_5", "library/kernel/misc", a_entries.item (5))
-			assert_equal ("test_execute2_96", "library/xml/tree", a_entries.item (96))
+			assert ("has_library_kernel", a_entries.has ("library/kernel"))
+			assert ("not_has_library_kernel_basic", not a_entries.has ("library/kernel/basic"))
+			assert ("not_has_library_kernel_elks", not a_entries.has ("library/kernel/elks"))
+			assert ("not_has_library_kernel_io", not a_entries.has ("library/kernel/io"))
+			assert ("not_has_library_kernel_misc", not a_entries.has ("library/kernel/misc"))
+			assert ("has_library_xml_tree", a_entries.has ("library/xml/tree"))
+			assert ("has_library_tools_xace_generator", a_entries.has ("library/tools/xace/generator"))
+			assert ("not_has_test_time", not a_entries.has ("test/time"))
+			assert ("not_has_library", not a_entries.has ("library"))
 		end
 
 feature -- Execution
@@ -98,6 +99,7 @@ feature -- Execution
 			create an_options.make
 --			an_options.set_debug_mode (True)
 			create project.make (a_variables, an_options)
+			project.set_output_file (null_output_stream)
 			create ds.make (project)
 		end
 
@@ -110,7 +112,7 @@ feature -- Execution
 feature {NONE} -- Implementation
 
 	project: GEANT_PROJECT
-		-- Dummy project for test
+			-- Dummy project for test
 
 	ds: GEANT_DIRECTORYSET
 			-- Object under test
