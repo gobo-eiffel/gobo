@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Error: Dangerous variable trailing context in rule"
+		"Warning: Dangerous variable trailing context in rule"
 
 	library:    "Gobo Eiffel Lexical Library"
 	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
