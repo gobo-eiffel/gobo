@@ -44,7 +44,6 @@ cluster
 external
 
 	include_path:
-		"$GOBO/library/kernel/include",
 		"$GOBO/library/time/include"
 
 end

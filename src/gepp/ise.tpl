@@ -45,8 +45,4 @@ cluster
 			"desc"; "table_eiffel3"
 		end
 
-external
-
-	include_path: "$GOBO/library/kernel/include"
-
 end

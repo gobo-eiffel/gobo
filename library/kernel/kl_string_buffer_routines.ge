@@ -8,7 +8,7 @@ indexing
 
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -106,6 +106,7 @@ feature -- Access
 		local
 			a: ANY
 			nb: INTEGER
+			p: POINTER
 #endif
 		do
 			if e < s then
@@ -116,7 +117,8 @@ feature -- Access
 				nb := e - s + 1
 				!! Result.make (nb)
 				a := Result.area
-				c_memcpy ($a, c_offset_pointer ($a_buffer, s), nb)
+				p := c_rtid ($a)
+				p.memory_copy (c_rtid ($a_buffer) + s, nb)
 				c_str_set_count ($Result, nb)
 #else
 				Result := a_buffer.substring (s, e)
@@ -163,6 +165,7 @@ feature -- Element change
 		local
 			nb, old_count, new_count: INTEGER
 			a: ANY
+			p: POINTER
 #endif
 		do
 			if s <= e then
@@ -174,7 +177,8 @@ feature -- Element change
 					a_string.resize (new_count + a_string.additional_space)
 				end
 				a := a_string.area
-				c_memmove (c_offset_pointer ($a, old_count), c_offset_pointer ($a_buffer, s), nb)
+				p := c_rtid ($a) + old_count
+				p.memory_move (c_rtid ($a_buffer) + s, nb)
 				c_str_set_count ($a_string, new_count)
 #else
 				a_string.append_string (a_buffer.substring (s, e))
@@ -198,6 +202,7 @@ feature -- Element change
 			nb: INTEGER
 #ifdef ISE
 			a: ANY
+			p: POINTER
 #else
 			i, j: INTEGER
 #endif
@@ -206,7 +211,8 @@ feature -- Element change
 			if nb > 0 then
 #ifdef ISE
 				a := a_string.area
-				c_memcpy (c_offset_pointer ($a_buffer, pos), $a, nb)
+				p := c_rtid ($a_buffer) + pos
+				p.memory_copy ($a, nb)
 #else
 				j := pos
 				from i := 1 until i > nb loop
@@ -242,9 +248,9 @@ feature -- Element change
 			if a_file /= Void then
 				a_console ?= a_file
 				if a_console /= Void then
-					Result := c_console_readstream (a_console.file_pointer, c_offset_pointer ($a_buffer, pos), nb_char)
+					Result := c_console_readstream (a_console.file_pointer, c_rtid ($a_buffer) + pos, nb_char)
 				else
-					Result := c_file_gss (a_file.file_pointer, c_offset_pointer ($a_buffer, pos), nb_char)
+					Result := c_file_gss (a_file.file_pointer, c_rtid ($a_buffer) + pos, nb_char)
 				end
 			else
 				a_stream.read_stream (nb_char)
@@ -279,7 +285,7 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				c_memmove (c_offset_pointer ($a_buffer, new_pos), c_offset_pointer ($a_buffer, old_pos), nb)
+				(c_rtid ($a_buffer) + new_pos).memory_move (c_rtid ($a_buffer) + old_pos, nb)
 #else
 				j := new_pos
 				nb2 := old_pos + nb - 1
@@ -310,7 +316,7 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				c_memmove (c_offset_pointer ($a_buffer, new_pos), c_offset_pointer ($a_buffer, old_pos), nb)
+				(c_rtid ($a_buffer) + new_pos).memory_move (c_rtid ($a_buffer) + old_pos, nb)
 #else
 				j := new_pos + nb - 1
 				from i := old_pos + nb - 1 until i < old_pos loop
@@ -405,37 +411,20 @@ feature {NONE} -- Externals
 			"console_readstream"
 		end
 
-	c_memcpy (target, source: POINTER; size: INTEGER) is
-			-- Copy `size' characters from `source' to `target'.
-			-- `source' and `target' should not overlap.
-		external
-			"C (void *, void *, size_t) | <string.h>"
-		alias
-			"memcpy"
-		end
-
-	c_memmove (target, source: POINTER; size: INTEGER) is
-			-- Copy `size' characters from `source' to `target'.
-			-- `source' and `target' can overlap.
-		external
-			"C (void *, void *, size_t) | <string.h>"
-		alias
-			"memmove"
-		end
-
-	c_offset_pointer (p: POINTER; offset: INTEGER): POINTER is
-		external
-			"C [macro <ise_gobo.h>]"
-		alias
-			"STRING_OFFSET_POINTER"
-		end
-
 	c_str_set_count (a_string: POINTER; n: INTEGER) is
 			-- Call `set_count' from STRING
 		external
 			"C [macro <eif_project.h>]"
 		alias
 			"(egc_strset)"
+		end
+
+	c_rtid (p: POINTER): POINTER is
+			-- Return `p'
+		external
+			"C [macro <eif_macros.h>]"
+		alias
+			"/**/"
 		end
 
 #endif
