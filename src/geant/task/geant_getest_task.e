@@ -37,6 +37,10 @@ feature {NONE} -- Initialization
 		do
 			create command.make (a_project)
 			task_make (command, an_xml_element)
+				-- verbose (optional):
+			if has_attribute (Verbose_attribute_name) then
+				command.set_verbose (boolean_value (Verbose_attribute_name))
+			end
 			if has_attribute (Config_filename_attribute_name) then
 				a_value := attribute_value (Config_filename_attribute_name)
 				if a_value.count > 0 then
@@ -93,6 +97,15 @@ feature -- Access
 			-- Getest commands
 
 feature {NONE} -- Constants
+
+	Verbose_attribute_name: STRING is
+			-- Name of xml attribute for 'verbose'
+		once
+			Result := "verbose"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
 
 	Config_filename_attribute_name: STRING is
 			-- Name of xml attribute for getest config_filename

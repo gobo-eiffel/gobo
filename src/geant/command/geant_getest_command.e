@@ -53,6 +53,9 @@ feature -- Status report
 
 feature -- Access
 
+	verbose: BOOLEAN
+			-- Getest '--verbose' command-line options
+
 	config_filename: STRING
 			-- Config filename
 
@@ -81,6 +84,14 @@ feature -- Access
 			-- Defined values from the command-line (--define option)
 
 feature -- Setting
+
+	set_verbose (b: BOOLEAN) is
+			-- Set `verbose' to `an_options'.
+		do
+			verbose := b
+		ensure
+			verbose_set: verbose = b
+		end
 
 	set_config_filename (a_filename: STRING) is
 			-- Set `config_filename' to `a_filename'
@@ -169,6 +180,9 @@ feature -- Execution
 				project.trace (<<"  [getest] ", "no generation, no compilation, no execution">>)
 			else
 				cmd := clone ("getest ")
+				if verbose then
+					cmd.append_string ("--verbose ")
+				end
 				if not generation then
 					if not compilation then
 						cmd.append_string ("-e ")

@@ -131,10 +131,23 @@
 					<para><emphasis>Description: </emphasis>TBD</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>TBD</para>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Default: </emphasis>TBD</para>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+
+			<varlistentry>
+				<term>verbose</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>verbose</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>flase</para>
 				</listitem>
 			</varlistentry>
 
@@ -169,6 +182,9 @@
       </optional>
       <optional>
         <attribute name="abort"/>
+      </optional>
+      <optional>
+        <attribute name="verbose"/>
       </optional>
       <zeroOrMore>
         <ref name="define"/>

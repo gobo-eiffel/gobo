@@ -99,6 +99,7 @@ feature -- Processing
 			a_config_not_void: a_config /= Void
 		local
 			testcases: TS_TESTCASES
+			nb: INTEGER
 		do
 			if not error_handler.error_reported then
 				if need_header then
@@ -106,12 +107,18 @@ feature -- Processing
 				end
 				create testcases.make (a_config.testgen, error_handler)
 				a_config.process (testcases, error_handler)
-				if testcases.has_testcases then
-					testcases.generate_test_classes
-				else
-					std.error.put_line ("No Test Cases found!")
-				end
+				testcases.generate_test_classes
 				testcases.generate_root_class (a_config.root_class)
+				if is_verbose then
+					nb := testcases.count
+					std.output.put_string ("Generated ")
+					std.output.put_integer (nb)
+					std.output.put_string (" Test Case")
+					if nb > 1 then
+						std.output.put_character ('s')
+						std.output.put_new_line
+					end
+				end
 			end
 		end
 
@@ -189,6 +196,9 @@ feature -- Access
 
 feature -- Status report
 
+	is_verbose: BOOLEAN
+			-- Should getest run in verbose mode?
+
 	must_generate: BOOLEAN
 			-- Should the Eiffel classes be generated?
 
@@ -236,6 +246,8 @@ feature {NONE} -- Command line
 					report_version_number
 				elseif arg.is_equal ("--help") or arg.is_equal ("-h") or arg.is_equal ("-?") then
 					report_usage_message
+				elseif arg.is_equal ("--verbose") or arg.is_equal ("-v") then
+					is_verbose := True
 				elseif arg.is_equal ("--se") then
 					if compiler_specified then
 						report_usage_error
