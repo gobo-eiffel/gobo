@@ -38,6 +38,58 @@ feature -- Access
 	value: CHARACTER
 			-- Character value
 
+	literal: CHARACTER is
+			-- Character A such as '%A' is current character
+		do
+			inspect value
+			when '%A' then
+				Result := 'A'
+			when '%B' then
+				Result := 'B'
+			when '%C' then
+				Result := 'C'
+			when '%D' then
+				Result := 'D'
+			when '%F' then
+				Result := 'F'
+			when '%H' then
+				Result := 'H'
+			when '%L' then
+				Result := 'L'
+			when '%N' then
+				Result := 'N'
+			when '%Q' then
+				Result := 'Q'
+			when '%R' then
+				Result := 'R'
+			when '%S' then
+				Result := 'S'
+			when '%T' then
+				Result := 'T'
+			when '%U' then
+				Result := 'U'
+			when '%V' then
+				Result := 'V'
+			when '%%' then
+				Result := '%%'
+			when '%'' then
+				Result := '%''
+			when '%"' then
+				Result := '%"'
+			when '%(' then
+				Result := '('
+			when '%)' then
+				Result := ')'
+			when '%<' then
+				Result := '<'
+			when '%>' then
+				Result := '>'
+			else
+					-- Should never happen.
+				Result := value
+			end
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
