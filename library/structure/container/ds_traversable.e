@@ -59,8 +59,6 @@ feature -- Status report
 			a_cursor_not_void: a_cursor /= Void
 		do
 			Result := a_cursor.container = Current
-		ensure
-			definition: Result = (a_cursor.container = Current)
 		end
 
 feature -- Cursor movement
@@ -78,8 +76,10 @@ feature -- Cursor movement
 
 feature {NONE} -- Implementation
 
-	internal_cursor: like new_cursor
+	internal_cursor: like new_cursor is
 			-- Internal cursor
+		deferred
+		end
 
 feature {DS_CURSOR} -- Implementation
 
