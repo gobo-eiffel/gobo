@@ -129,25 +129,30 @@ feature {NONE} -- Implementation
 		local
 			a_candidate_namespace: XM_NAMESPACE
 		do
-			if not namespaces.has (a_namespace.uri) then
-				-- The namespace is not known, we need
-				-- to register it.
-				if a_namespace.has_prefix
-					and then not prefixes.has (a_namespace.ns_prefix)
-				then
-					register_namespace (a_namespace)
-				else
-					-- The namespace may be without prefix (a default
-					-- declaration) or the prefix is already used.
-					-- Use an alternative prefix.
-					create a_candidate_namespace.make (unique_prefix, a_namespace.uri)
-					register_namespace (a_candidate_namespace)
-				end
+			if a_namespace.uri.is_empty then
+				-- not a defined namespace
 			else
-				check has: namespaces.has (a_namespace.uri) end
-				-- The namespace is known, this may be with another
-				-- prefix, in which case the first prefix will be
-				-- used everywhere.
+				-- the namespace is a defined URI
+				if not namespaces.has (a_namespace.uri) then
+					-- The namespace is not known, we need
+					-- to register it.
+					if a_namespace.has_prefix
+						and then not prefixes.has (a_namespace.ns_prefix)
+					then
+						register_namespace (a_namespace)
+					else
+						-- The namespace may be without prefix (a default
+						-- declaration) or the prefix is already used.
+						-- Use an alternative prefix.
+						create a_candidate_namespace.make (unique_prefix, a_namespace.uri)
+						register_namespace (a_candidate_namespace)
+					end
+				else
+					check has: namespaces.has (a_namespace.uri) end
+					-- The namespace is known, this may be with another
+					-- prefix, in which case the first prefix will be
+					-- used everywhere.
+				end
 			end
 		end
 
