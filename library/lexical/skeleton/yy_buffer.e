@@ -252,14 +252,19 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	new_default_buffer (a_number_of_bytes: INTEGER): like content is
-			-- Create a new buffer that is like `content'.
+	new_default_buffer (nb: INTEGER): like content is
+			-- New buffer that can contain `nb' characters;
+			-- `nb' should be large enough to make room for
+			-- the two end-of-buffer characters
+			-- (Note: create a new object at each call.)
 		require
-			number_of_bytes_has_room_for_EOB_characters: a_number_of_bytes >= 2
+			nb_large_enough: nb >= 2
 		do
-			!KL_CHARACTER_BUFFER! Result.make (a_number_of_bytes)
+			!KL_CHARACTER_BUFFER! Result.make (nb)
 		ensure
-			buffer_returned: Result /= Void
+			buffer_not_void: Result /= Void
+			buffer_count_set: Result.count = nb
+			buffer_count_large_enough: Result.count >= 2
 		end
 
 	resize is
