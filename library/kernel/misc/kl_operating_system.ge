@@ -36,18 +36,4 @@ feature -- Access
 #endif
 			-- Is underlying operating system Linux-like?
 
-#ifdef MACOS
-	is_macos: BOOLEAN is True
-#else
-	is_macos: BOOLEAN is False
-#endif
-			-- Is underlying operating system MacOS-like?
-
-#ifdef VMS
-	is_vms: BOOLEAN is True
-#else
-	is_vms: BOOLEAN is False
-#endif
-			-- Is underlying operating system VMS-like?
-
 end -- class KL_OPERATING_SYSTEM
