@@ -10,11 +10,18 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ET_ERROR
+class ET_ERROR
 
 inherit
 
 	UT_ERROR
+
+creation
+
+	-- This class should be declared as deferred,
+	-- but it has no deferred feature. The workaround
+	-- to avoid VCCH-2 is to add this empty creation
+	-- clause.
 
 feature -- Access
 
