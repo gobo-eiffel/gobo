@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			-- strings.
 		do
 			precursor
-			offset_vector := SPECIAL_INTEGER_.make (64)
+			offset_vector := FIXED_INTEGER_ARRAY_.make (64)
 			offset_vector_count := 0
 			brastart_capacity := 8
 			brastart_vector := SPECIAL_INTEGER_.make (brastart_capacity)
