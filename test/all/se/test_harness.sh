@@ -58,25 +58,23 @@ if [ "$getest" = "--getest" ]; then
 	mkdir $exename
 	cd $exename
 	mkdir TESTGEN
+	cp $dirname/Makefile .
 	if [ "$finalize" = "--finalize" ]; then
-		cp $dirname/getest.se .
-		cp $dirname/loadpath.se .
+		sed "s/se-debug/se/g" $dirname/getest.se > getest.se
 	else
-		sed "s/-boost/-all_check/g" $dirname/getest.se > getest.se
-		cp $dirname/loadpath.se .
+		cp $dirname/getest.se .
 	fi
 	getest --se
 else
 	echo "Preparing Test Cases"
 	mkdir $exename
 	cd $exename
-	if [ "$finalize" = "--finalize" ]; then
-		cp $dirname/se.sh .
-	else
-		sed "s/-boost/-all_check/g" $dirname/se.sh > se.sh
-	fi
+	cp $dirname/Makefile .
 	echo "Compiling Test Cases"
-	chmod a+x ./se.sh
-	./se.sh > tmp_compile.txt 2>&1
+	if [ "$finalize" = "--finalize" ]; then
+		make se > tmp_compile.txt 2>&1
+	else
+		make se-debug > tmp_compile.txt 2>&1
+	fi
 	$GOBO/test/all/common/test_exe.sh $version se $exename
 fi

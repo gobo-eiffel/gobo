@@ -58,16 +58,23 @@ if [ "$getest" = "--getest" ]; then
 	mkdir $exename
 	cd $exename
 	mkdir TESTGEN
-	cp $dirname/ve.esd .
-	cp $dirname/getest.ve .
+	cp $dirname/Makefile .
+	if [ "$finalize" = "--finalize" ]; then
+		sed "s/ve-debug/ve/g" $dirname/getest.ve > getest.ve
+	else
+		cp $dirname/getest.ve .
+	fi
 	getest --ve
 else
 	echo "Preparing Test Cases"
 	mkdir $exename
 	cd $exename
-	cp $dirname/ve.esd .
+	cp $dirname/Makefile .
 	echo "Compiling Test Cases"
-	vec -a:ve.esd -no > tmp_compile.txt 2>&1
-	vec -eu -y -no >> tmp_compile.txt 2>&1
+	if [ "$finalize" = "--finalize" ]; then
+		make ve > tmp_compile.txt 2>&1
+	else
+		make ve-debug > tmp_compile.txt 2>&1
+	fi
 	$GOBO/test/all/common/test_exe.sh $version ve $exename
 fi

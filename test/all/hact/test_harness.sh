@@ -58,32 +58,23 @@ if [ "$getest" = "--getest" ]; then
 	mkdir $exename
 	cd $exename
 	mkdir TESTGEN
+	cp $dirname/Makefile .
 	if [ "$finalize" = "--finalize" ]; then
-		cp $dirname/hact.ace .
-		sed "s/-executable/-executable -finalize/g" $dirname/getest.hact | sed "s/W_code/F_code/g" > getest.hact
+		sed "s/hact-debug/hact/g" $dirname/getest.hact | sed "s/W_code/F_code/g" > getest.hact
 	else
-		sed "s/--assertion (all)/assertion (all)/g" $dirname/hact.ace > hact.ace
-		cp $dirname/getest.hact getest.hact
+		cp $dirname/getest.hact .
 	fi
 	getest --hact
 else
 	echo "Preparing Test Cases"
 	mkdir $exename
 	cd $exename
+	cp $dirname/Makefile .
+	echo "Compiling Test Cases"
 	if [ "$finalize" = "--finalize" ]; then
-		cp $dirname/hact.ace Ace.ace
-		echo "Compiling Test Cases"
-		echo q | ibcomp -executable -finalize -new -project $exename.eif > tmp_compile.txt 2>&1
-		mv tmp_compile.txt ${exename}_gen/F_code
-		cd ${exename}_gen/F_code
-		fish >> tmp_compile.txt 2>&1
+		make hact > tmp_compile.txt 2>&1
 	else
-		sed "s/--assertion (all)/assertion (all)/g" $dirname/hact.ace > Ace.ace
-		echo "Compiling Test Cases"
-		echo q | ibcomp -executable -new -project $exename.eif > tmp_compile.txt 2>&1
-		mv tmp_compile.txt ${exename}_gen/W_code
-		cd ${exename}_gen/W_code
-		fish >> tmp_compile.txt 2>&1
+		make hact-debug > tmp_compile.txt 2>&1
 	fi
 	$GOBO/test/all/common/test_exe.sh $version hact $exename
 fi

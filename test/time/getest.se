@@ -8,7 +8,7 @@ default
 	feature ("test_[a-z0-9_]*")
 	prefix ("X")
 	testgen ("TESTGEN")
-	compile ("bash -c %"( compile -boost -no_split -no_style_warning -no_gc -o xtime XTIME make ) > tmp_compile.txt 2>&1%"")
+	compile ("bash -c %"make se-debug > tmp_compile.txt 2>&1%"")
 	execute ("bash -c %"./xtime%"")
 
 cluster

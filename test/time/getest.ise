@@ -8,7 +8,7 @@ default
 	feature ("test_[a-z0-9_]*")
 	prefix ("X")
 	testgen ("TESTGEN")
-	compile ("bash -c %" ( ( echo q | es4 -ace ise.ace ) ; cd EIFGEN/W_code ; finish_freezing -silent ) > tmp_compile.txt 2>&1%"")
+	compile ("bash -c %"make ise-debug > tmp_compile.txt 2>&1%"")
 	execute ("bash -c %"cd EIFGEN/W_code ; ./xtime%"")
 
 cluster

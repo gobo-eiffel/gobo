@@ -58,32 +58,23 @@ if [ "$getest" = "--getest" ]; then
 	mkdir $exename
 	cd $exename
 	mkdir TESTGEN
+	cp $dirname/Makefile .
 	if [ "$finalize" = "--finalize" ]; then
-		cp $dirname/ise.ace .
-		sed "s/es4/es4 -finalize/g" $dirname/getest.ise | sed "s/W_code/F_code/g" > getest.ise
+		sed "s/ise-debug/ise/g" $dirname/getest.ise > getest.ise
 	else
-		sed "s/--assertion (all)/assertion (all)/g" $dirname/ise.ace > ise.ace
-		cp $dirname/getest.ise getest.ise
+		cp $dirname/getest.ise .
 	fi
 	getest --ise
 else
 	echo "Preparing Test Cases"
 	mkdir $exename
 	cd $exename
+	cp $dirname/Makefile .
+	echo "Compiling Test Cases"
 	if [ "$finalize" = "--finalize" ]; then
-		cp $dirname/ise.ace Ace.ace
-		echo "Compiling Test Cases"
-		echo q | es4 -finalize > tmp_compile.txt 2>&1
-		mv tmp_compile.txt EIFGEN/F_code
-		cd EIFGEN/F_code
-		finish_freezing -silent >> tmp_compile.txt 2>&1
+		make ise > tmp_compile.txt 2>&1
 	else
-		sed "s/--assertion (all)/assertion (all)/g" $dirname/ise.ace > Ace.ace
-		echo "Compiling Test Cases"
-		echo q | es4  > tmp_compile.txt 2>&1
-		mv tmp_compile.txt EIFGEN/W_code
-		cd EIFGEN/W_code
-		finish_freezing -silent >> tmp_compile.txt 2>&1
+		make ise-debug > tmp_compile.txt 2>&1
 	fi
 	$GOBO/test/all/common/test_exe.sh $version ise $exename
 fi

@@ -1,5 +1,4 @@
--- system:     "Gobo Eiffel Time Library Tester"
--- library:    "Gobo Eiffel Time Library"
+-- system:     "Gobo Eiffel Structure Library Tester"
 -- compiler:   "ISE Eiffel 4.5"
 -- author:     "Eric Bezault <ericb@gobosoft.com>"
 -- copyright:  "Copyright (c) 2000, Eric Bezault and others"
@@ -9,49 +8,35 @@
 
 system
 
-	xtime
+	xstructure
 
 root
 
-	XTIME: "make"
+	XSTRUCTURE: "make"
 
 default
 
 	console_application (yes);
 	--debug (yes);
+#ifdef ASSERTION
+	assertion (all);
+#else
 	--assertion (all);
+#endif
 	--precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
 
-	dt_testgen:			"TESTGEN";
-	dt_tester:			"$GOBO/test/time";
+	ds_testgen:			"TESTGEN";
+	ds_tester:			"$GOBO/test/structure";
 
-		-- Gobo Eiffel Kernel Library
-	kl_kernel:			"$GOBO/library/kernel";
-	kl_kernel_spec:		"$GOBO/library/kernel/spec/ise";
+#include "$GOBO/library/structure/ise.ace"
 
-		-- Gobo Eiffel Time Library
-	dt_date:			"$GOBO/library/time/date";
+#include "$GOBO/library/test/ise-skl.ace"
 
-		-- Gobo Eiffel Test Library
-	ts_harness:			"$GOBO/library/test/harness";
+#include "$GOBO/library/kernel/ise.ace"
 
-		-- Gobo Eiffel Structure Library
-	ds_container:		"$GOBO/library/structure/container";
-	ds_cursor:			"$GOBO/library/structure/cursor";
-	ds_dispenser:		"$GOBO/library/structure/dispenser";
-	ds_list:			"$GOBO/library/structure/list";
-	ds_sort:			"$GOBO/library/structure/sort";
-	ds_support:			"$GOBO/library/structure/support";
-	ds_table:			"$GOBO/library/structure/table";
-
-		-- Gobo Eiffel Utility Library
-	ut_command:			"$GOBO/library/utility/command";
-	ut_error:			"$GOBO/library/utility/error";
-	ut_formatter:		"$GOBO/library/utility/formatter";
-	ut_support:			"$GOBO/library/utility/support";
-	ut_spec:			"$GOBO/library/utility/spec/ise";
+#include "$GOBO/library/utility/ise.ace"
 
 		-- EiffelBase
 	kernel:				"$EIFFEL4/library/base/kernel";
