@@ -30,15 +30,6 @@ feature -- Filters
 			pretty_print_not_void: Result /= Void
 		end
 
-	new_pretty_print_string (an_output: STRING): XM_PRETTY_PRINT_FILTER is
-			-- New pretty printer output to string
-		do
-			Result := new_pretty_print
-			Result.set_output_string (an_output)
-		ensure
-			pretty_print_not_void: Result /= Void
-		end
-
 	new_canonical_pretty_print: XM_CANONICAL_PRETTY_PRINT_FILTER is
 			-- James Clark' canonical XML output
 		do
