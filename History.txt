@@ -1,4 +1,4 @@
-Version 3.1 - ?
+Version 3.1 - 18 December 2002
 
 	gelex:
 
@@ -20,6 +20,8 @@ Version 3.1 - ?
 	* Moved feature `close' up to KI_INPUT_STREAM and
 	  KI_OUTPUT_STREAM and added feature `is_closable'
 	  (suggested by Franck Arnaud).
+	* Made sure that `hash_code' in UC_STRING returns the same value
+	  when `same_string' returns true.
 
 	Gobo Eiffel Lexical Library:
 
