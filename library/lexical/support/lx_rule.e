@@ -120,9 +120,9 @@ feature {NONE} -- Implementation
 
 	Default_action: UT_COMMAND is
 			-- Default action
-			-- (Default: Do nothing command)
+			-- (Default: empty action)
 		once
-			!UT_DO_NOTHING_COMMAND! Result.make
+			!LX_ACTION! Result.make ("")
 		ensure
 			default_action_not_void: Result /= Void
 		end

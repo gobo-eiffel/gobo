@@ -350,7 +350,7 @@ feature {NONE} -- Initialization
 			make_parser_skeleton
 			!! pending_rules.make (Initial_max_pending_rules)
 			!! start_condition_stack.make (Initial_max_start_conditions)
-			!UT_PRINTABLE_COMMAND_FACTORY! action_factory.make
+			!! action_factory.make
 		ensure
 			error_handler_set: error_handler = handler
 		end
@@ -367,7 +367,7 @@ feature {NONE} -- Initialization
 			make_parser_skeleton
 			!! pending_rules.make (Initial_max_pending_rules)
 			!! start_condition_stack.make (Initial_max_start_conditions)
-			!UT_PRINTABLE_COMMAND_FACTORY! action_factory.make
+			!! action_factory.make
 		ensure
 			error_handler_set: error_handler = handler
 		end
@@ -429,7 +429,7 @@ feature -- Access
 			-- Symbol transitions kept for later renumbering
 			-- using equivalence classes
 
-	action_factory: UT_COMMAND_FACTORY
+	action_factory: LX_ACTION_FACTORY
 			-- Semantic action factory
 
 feature -- Setting
@@ -1059,24 +1059,22 @@ feature {NONE} -- Implementation
 			dot_character_class_not_void: Result /= Void
 		end
 
-	set_action (a_string: STRING) is
-			-- Set pending rules' action using `a_string'.
+	set_action (a_text: STRING) is
+			-- Set pending rules' action using `a_text'.
+		require
+			a_text_not_void: a_text /= Void
 		local
 			i, nb: INTEGER
 			action: UT_COMMAND
 		do
-			if action_factory.valid_argument (a_string) then
-				action := action_factory.new_command (a_string)
-				nb := pending_rules.count
-				from i := 1 until i > nb loop
-					pending_rules.item (i).set_action (action)
-					i := i + 1
-				end
-				pending_rules.wipe_out
-				rule.set_action (action)
-			else
--- TO DO GOBO (Warning)
+			action := action_factory.new_action (a_text)
+			nb := pending_rules.count
+			from i := 1 until i > nb loop
+				pending_rules.item (i).set_action (action)
+				i := i + 1
 			end
+			pending_rules.wipe_out
+			rule.set_action (action)
 		end
 
 	build_equiv_classes is

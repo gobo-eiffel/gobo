@@ -83,7 +83,6 @@ feature {NONE} -- Implementation
 			-- Execute semantic action.
 		local
 			yy_rule: LX_RULE
-			yy_action: UT_COMMAND
 		do
 			if yy_rules.valid_index (yy_act) then
 				yy_rule := yy_rules.item (yy_act)
@@ -104,12 +103,7 @@ feature {NONE} -- Implementation
 					input_buffer.set_beginning_of_line
 						(yy_content.item (yy_position - 1) = '%N')
 				end
-				yy_action := yy_rule.action
-				if yy_action.executable (Void) then
-					yy_rule.action.execute (Void)
-				else
-					fatal_error ("fatal scanner error: cannot execute action")
-				end
+				yy_rule.action.execute
 			else
 				fatal_error ("fatal scanner internal error: no action found")
 			end
@@ -119,18 +113,11 @@ feature {NONE} -- Implementation
 			-- Execute EOF semantic action.
 		local
 			yy_rule: LX_RULE
-			yy_action: UT_COMMAND
 		do
 			if yy_eof_rules.valid_index (yy_sc) then
 				yy_rule := yy_eof_rules.item (yy_sc)
 				if yy_rule /= Void then
-					yy_action := yy_rule.action
-					if yy_action.executable (Void) then
-						yy_rule.action.execute (Void)
-					else
-						fatal_error
-							("fatal scanner error: cannot execute action")
-					end
+					yy_rule.action.execute
 				else
 					terminate
 				end

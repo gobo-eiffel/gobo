@@ -216,7 +216,6 @@ feature {NONE} -- Generation
 		local
 			i, nb: INTEGER
 			rule, next_rule: LX_RULE
-			action: UT_PRINTABLE_COMMAND
 			not_shared: BOOLEAN
 		do
 			a_file.put_string ("%T%T%Tinspect yy_act%N")
@@ -290,9 +289,8 @@ feature {NONE} -- Generation
 				a_file.put_string ("--|#line ")
 				a_file.put_integer (rule.line_nb)
 				a_file.put_character ('%N')
-				action ?= rule.action
-				if action /= Void then
-					action.print_to_file (a_file)
+				if rule.action /= Void then
+					a_file.put_string (rule.action.out)
 					a_file.put_character ('%N')
 				end
 			end
@@ -343,8 +341,6 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: output_stream_.is_open_write (a_file)
 			a_rule_not_void: a_rule /= Void
-		local
-			action: UT_PRINTABLE_COMMAND
 		do
 			if a_rule.has_trail_context then
 						-- `rule' has trailing context.
@@ -380,9 +376,8 @@ feature {NONE} -- Generation
 			a_file.put_string ("--|#line ")
 			a_file.put_integer (a_rule.line_nb)
 			a_file.put_character ('%N')
-			action ?= a_rule.action
-			if action /= Void then
-				action.print_to_file (a_file)
+			if a_rule.action /= Void then
+				a_file.put_string (a_rule.action.out)
 				a_file.put_character ('%N')
 			end
 		end
@@ -395,7 +390,6 @@ feature {NONE} -- Generation
 		local
 			i, nb: INTEGER
 			rule: LX_RULE
-			printable_action: UT_PRINTABLE_COMMAND
 			actions: DS_ARRAYED_LIST
 				[DS_PAIR [UT_COMMAND, DS_LINKED_LIST [LX_RULE]]]
 			action: UT_COMMAND
@@ -462,9 +456,8 @@ feature {NONE} -- Generation
 				a_file.put_string ("--|#line ")
 				a_file.put_integer (rule.line_nb)
 				a_file.put_character ('%N')
-				printable_action ?= rule.action
-				if printable_action /= Void then
-					printable_action.print_to_file (a_file)
+				if rule.action /= Void then
+					a_file.put_string (rule.action.out)
 					a_file.put_character ('%N')
 				end
 				j := j + 1
