@@ -62,36 +62,45 @@ feature {NONE} -- Implementation
 	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		do
-			inspect yy_act
-when 1 then
+if yy_act <= 14 then
+if yy_act <= 7 then
+if yy_act <= 4 then
+if yy_act <= 2 then
+if yy_act = 1 then
 --|#line 63
 
 					last_token := Caret_code
 					set_start_condition (REGEXP)
 				
-when 2 then
+else
 --|#line 67
 
 					less (0)
 					set_start_condition (REGEXP)
 				
-when 3 then
+end
+else
+if yy_act = 3 then
 --|#line 74
 
 					last_token := Double_quote_code
 					set_start_condition (QUOTE)
 				
-when 4 then
+else
 	yy_position := yy_position - 1
 --|#line 78
 last_token := Dollar_code
-when 5 then
+end
+end
+else
+if yy_act <= 6 then
+if yy_act = 5 then
 --|#line 79
 
 					last_token := Left_brace_code
 					set_start_condition (NUM)
 				
-when 6 then
+else
 --|#line 83
 
 					last_string := text
@@ -106,42 +115,55 @@ when 6 then
 					end
 					last_string := Void
 				
-when 7 then
+end
+else
 --|#line 96
 last_token := text_item (1).code
-when 8 then
+end
+end
+else
+if yy_act <= 11 then
+if yy_act <= 9 then
+if yy_act = 8 then
 --|#line 97
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 				
-when 9 then
+else
 --|#line 104
 -- Separator.
-when 10 then
+end
+else
+if yy_act = 10 then
 --|#line 105
 
 					last_token := NUMBER
 					check is_integer: string_.is_integer (text) end
 					last_value := text.to_integer
 				
-when 11 then
+else
 --|#line 110
 last_token := Comma_code
-when 12 then
+end
+end
+else
+if yy_act <= 13 then
+if yy_act = 12 then
 --|#line 111
 
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				
-when 13 then
+else
 --|#line 115
 
 					error_handler.bad_character_in_brackets (filename, line_nb)
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				
-when 14 then
+end
+else
 --|#line 120
 
 					error_handler.missing_bracket (filename, line_nb)
@@ -149,19 +171,28 @@ when 14 then
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				
-when 15 then
+end
+end
+end
+else
+if yy_act <= 21 then
+if yy_act <= 18 then
+if yy_act <= 16 then
+if yy_act = 15 then
 --|#line 129
 
 					process_character (text_item (1).code)
 					last_token := CHAR
 				
-when 16 then
+else
 --|#line 133
 
 					last_token := Double_quote_code
 					set_start_condition (REGEXP)
 				
-when 17 then
+end
+else
+if yy_act = 17 then
 --|#line 137
 
 					error_handler.missing_quote (filename, line_nb)
@@ -169,7 +200,7 @@ when 17 then
 					last_token := Double_quote_code
 					set_start_condition (REGEXP)
 				
-when 18 then
+else
 --|#line 145
 
 					last_token := CHAR
@@ -178,25 +209,35 @@ when 18 then
 						set_start_condition (CCL)
 					end
 				
-when 19 then
+end
+end
+else
+if yy_act <= 20 then
+if yy_act = 19 then
 	yy_position := yy_position - 1
 --|#line 154
 
 					set_start_condition (CCL)
 					last_token := Caret_code
 				
-when 20 then
+else
 	yy_position := yy_position - 1
 --|#line 158
 last_token := Caret_code
-when 21 then
+end
+else
 --|#line 159
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 					set_start_condition (CCL)
 				
-when 22 then
+end
+end
+else
+if yy_act <= 25 then
+if yy_act <= 23 then
+if yy_act = 22 then
 --|#line 164
 
 					error_handler.bad_character_class (filename, line_nb)
@@ -204,23 +245,29 @@ when 22 then
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
 				
-when 23 then
+else
 	yy_position := yy_position - 1
 --|#line 173
 last_token := Minus_code
-when 24 then
+end
+else
+if yy_act = 24 then
 --|#line 174
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 				
-when 25 then
+else
 --|#line 178
 
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
 				
-when 26 then
+end
+end
+else
+if yy_act <= 27 then
+if yy_act = 26 then
 --|#line 182
 
 					error_handler.bad_character_class (filename, line_nb)
@@ -228,7 +275,7 @@ when 26 then
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
 				
-when 27 then
+else
 --|#line 190
 
 					if text_item (1) = '%N' then
@@ -238,12 +285,14 @@ when 27 then
 						error_handler.bad_character (text, filename, line_nb)
 					end
 				
-when 28 then
+end
+else
 --|#line 199
 fatal_error ("scanner jammed")
-			else
-				fatal_error ("fatal scanner internal error: no action found")
-			end
+end
+end
+end
+end
 		end
 
 	yy_execute_eof_action (yy_sc: INTEGER) is
