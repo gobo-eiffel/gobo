@@ -71,9 +71,9 @@ feature -- Execution
 			-- Execute Ace file generators.
 		require
 			a_system_not_void: a_system /= Void
-			system_name_not_void: system_name /= Void
-			root_class_name_not_void: root_class_name /= Void
-			creation_procedure_name_not_void: creation_procedure_name /= Void
+			system_name_not_void: a_system.system_name /= Void
+			root_class_name_not_void: a_system.root_class_name /= Void
+			creation_procedure_name_not_void: a_system.creation_procedure_name /= Void
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_GENERATOR]
 		do
