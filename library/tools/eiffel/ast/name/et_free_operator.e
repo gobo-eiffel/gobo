@@ -16,15 +16,12 @@ inherit
 
 	ET_INFIX_FREE
 		redefine
-			name, same_feature_name,
-			cached_hash_code
+			name, same_feature_name
 		end
 
 	ET_PREFIX_FREE
 		undefine
-			name, same_feature_name, hash_code
-		redefine
-			cached_hash_code
+			name, same_feature_name
 		end
 
 	ET_TOKEN
@@ -44,8 +41,8 @@ feature {NONE} -- Initialization
 			-- Create a new infix free operator.
 		do
 			code := tokens.infix_freeop_code
-			cached_hash_code := -1
 			make_token (a_free_op)
+			hash_code := STRING_.case_insensitive_hash_code (a_free_op)
 		ensure
 			is_infix_freeop: is_infix_freeop
 		end
@@ -54,8 +51,8 @@ feature {NONE} -- Initialization
 			-- Create a new prefix free operator.
 		do
 			code := tokens.prefix_freeop_code
-			cached_hash_code := -1
 			make_token (a_free_op)
+			hash_code := STRING_.case_insensitive_hash_code (a_free_op)
 		ensure
 			is_prefix_freeop: is_prefix_freeop
 		end
@@ -75,6 +72,9 @@ feature -- Access
 			Result.append_string (free_operator_name)
 			Result.append_character ('%"')
 		end
+
+	hash_code: INTEGER
+			-- Hash code value
 
 feature -- Status setting
 
@@ -137,11 +137,6 @@ feature -- Processing
 		do
 			a_processor.process_free_operator (Current)
 		end
-
-feature {NONE} -- Implementation
-
-	cached_hash_code: INTEGER
-			-- Cached hash code
 
 feature {NONE} -- Implementation
 

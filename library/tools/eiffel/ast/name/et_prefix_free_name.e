@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			prefix_keyword := tokens.prefix_keyword
 			operator_name := an_operator
 			code := tokens.prefix_freeop_code
-			cached_hash_code := -1
+			hash_code := STRING_.case_insensitive_hash_code (free_operator_name)
 		ensure
 			operator_name_set: operator_name = an_operator
 		end
@@ -51,6 +51,9 @@ feature -- Access
 		do
 			Result := operator_name.value
 		end
+
+	hash_code: INTEGER
+			-- Hash code value
 
 feature -- Processing
 

@@ -15,8 +15,10 @@ deferred class ET_PREFIX_FREE
 inherit
 
 	ET_OPERATOR
+		undefine
+			hash_code
 		redefine
-			name, hash_code, same_feature_name
+			name, same_feature_name
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -40,16 +42,6 @@ feature -- Access
 			free_operator_name_not_empty: Result.count > 0
 		end
 
-	hash_code: INTEGER is
-			-- Hash code value
-		do
-			Result := cached_hash_code
-			if Result = -1 then
-				Result := STRING_.case_insensitive_hash_code (free_operator_name)
-				cached_hash_code := Result
-			end
-		end
-
 feature -- Comparison
 
 	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
@@ -71,11 +63,6 @@ feature -- Comparison
 				end
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	cached_hash_code: INTEGER
-			-- Cached hash code
 
 feature {NONE} -- Constants
 
