@@ -102,244 +102,260 @@ when 10 then
 --|#line 91
 			yyval := yyval_default;
 				-- Initialize for a parse of one rule.
-			variable_trail_rule := False
-			variable_length := False
-			trail_count := 0
-			head_count := 0
-			rule_length := 0
 			in_trail_context := False
 			!! rule.make_default (rules.count + 1)
 		
 
 when 11 then
---|#line 104
+--|#line 99
 
 			yyval2 := start_condition_stack.count
 		
 			yyval := yyval2
 when 12 then
---|#line 108
+--|#line 103
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 2))
 			start_condition_stack.append_start_conditions (start_conditions)
 		
 			yyval := yyval2
 when 13 then
---|#line 113
+--|#line 108
 
 yyval2 := yytype2 (yyvs.item (yyvsp - 2)) 
 			yyval := yyval2
 when 14 then
---|#line 117
+--|#line 112
 
 			yyval2 := start_condition_stack.count
 		
 			yyval := yyval2
 when 15 then
---|#line 123
+--|#line 118
 			yyval := yyval_default;
 			push_start_condition (yytype1 (yyvs.item (yyvsp)), start_condition_stack)
 		
 
 when 16 then
---|#line 127
+--|#line 122
 			yyval := yyval_default;
 			push_start_condition (yytype1 (yyvs.item (yyvsp)), start_condition_stack)
 		
 
 when 17 then
---|#line 131
+--|#line 126
 			yyval := yyval_default;
 			report_bad_start_condition_list_error
 		
 
 when 18 then
---|#line 137
+--|#line 132
 			yyval := yyval_default;
 			process_bol_rule (yytype4 (yyvs.item (yyvsp)))
 		
 
 when 19 then
---|#line 141
+--|#line 136
 			yyval := yyval_default;
 			process_rule (yytype4 (yyvs.item (yyvsp)))
 		
 
 when 20 then
---|#line 145
+--|#line 140
 			yyval := yyval_default;
 			process_eof_rule
 		
 
 when 21 then
---|#line 149
+--|#line 144
 			yyval := yyval_default;
 			report_unrecognized_rule_error
 		
 
 when 22 then
---|#line 155
+--|#line 150
 
+			has_trail_context := True
+			trail_count := regexp_count
 			yyval4 := append_trail_context_to_regexp (yytype4 (yyvs.item (yyvsp)), yytype4 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval4
 when 23 then
---|#line 159
+--|#line 156
 
+			has_trail_context := True
+			head_count := regexp_count
+			head_line := regexp_line
+			head_column := regexp_column
+			trail_count := 1
 			yyval4 := append_eol_to_regexp (yytype4 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval4
 when 24 then
---|#line 163
+--|#line 165
 
 			yyval4 := yytype4 (yyvs.item (yyvsp))
+			has_trail_context := False
+			head_count := regexp_count
+			head_line := regexp_line
+			head_column := regexp_column
 		
 			yyval := yyval4
 when 25 then
---|#line 167
+--|#line 173
 
 			report_trailing_context_used_twice_error
+			has_trail_context := True
+			trail_count := regexp_count
 		
 			yyval := yyval4
 when 26 then
---|#line 171
+--|#line 179
 
 			report_trailing_context_used_twice_error
+			has_trail_context := True
+			trail_count := regexp_count
 		
 			yyval := yyval4
 when 27 then
---|#line 177
+--|#line 187
 
-yyval4 := yytype4 (yyvs.item (yyvsp)) 
+			yyval4 := yytype4 (yyvs.item (yyvsp))
+			regexp_count := series_count
+			regexp_line := series_line
+			regexp_column := series_column
+		
 			yyval := yyval4
 when 28 then
---|#line 179
+--|#line 194
 
-			variable_length := True
 			yyval4 := yytype4 (yyvs.item (yyvsp - 2)) | yytype4 (yyvs.item (yyvsp))
+			process_regexp_or_series
 		
 			yyval := yyval4
 when 29 then
---|#line 186
+--|#line 201
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1))
 				-- This rule is written separately so the reduction
 				-- will occur before the trailing series is parsed.
-			if variable_length then
-					-- We hope the trailing context is fixed-length.
-				variable_length := False
-			else
-				head_count := rule_length
-			end
-			rule_length := 0
+			head_count := regexp_count
+			head_line := regexp_line
+			head_column := regexp_column
 			in_trail_context := True
 		
 			yyval := yyval4
 when 30 then
---|#line 202
+--|#line 213
 
-yyval4 := yytype4 (yyvs.item (yyvsp)) 
+			yyval4 := yytype4 (yyvs.item (yyvsp))
+			series_count := singleton_count
+			series_line := singleton_line
+			series_column := singleton_column
+		
 			yyval := yyval4
 when 31 then
---|#line 204
+--|#line 220
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1)) & yytype4 (yyvs.item (yyvsp))
+			process_series_singleton
 		
 			yyval := yyval4
 when 32 then
---|#line 210
+--|#line 227
 
-			rule_length := rule_length + 1
 			yyval4 := new_nfa_from_character (yytype2 (yyvs.item (yyvsp)))
+			process_singleton_char (yytype2 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 33 then
---|#line 215
+--|#line 232
 
-			variable_length := True
 			yyval4 := |*| yytype4 (yyvs.item (yyvsp - 1))
+			process_singleton_star
 		
 			yyval := yyval4
 when 34 then
---|#line 220
+--|#line 237
 
-			variable_length := True
 			yyval4 := |+| yytype4 (yyvs.item (yyvsp - 1))
+			process_singleton_plus
 		
 			yyval := yyval4
 when 35 then
---|#line 225
+--|#line 242
 
-			variable_length := True
 			yyval4 := |?| yytype4 (yyvs.item (yyvsp - 1))
+			process_singleton_optional
 		
 			yyval := yyval4
 when 36 then
---|#line 230
+--|#line 247
 
-			variable_length := True
 			yyval4 := new_bounded_iteration_nfa (yytype4 (yyvs.item (yyvsp - 5)), yytype2 (yyvs.item (yyvsp - 3)), yytype2 (yyvs.item (yyvsp - 1)))
+			process_singleton_bounded_iteration (yytype2 (yyvs.item (yyvsp - 3)), yytype2 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval4
 when 37 then
---|#line 235
+--|#line 252
 
-			variable_length := True
 			yyval4 := new_unbounded_iteration_nfa (yytype4 (yyvs.item (yyvsp - 4)), yytype2 (yyvs.item (yyvsp - 2)))
+			process_singleton_unbounded_iteration (yytype2 (yyvs.item (yyvsp - 2)))
 		
 			yyval := yyval4
 when 38 then
---|#line 240
+--|#line 257
 
-				-- The singleton could be something like "(foo)",
-				-- in which case we have no idea what its length
-				-- is, so we punt here.
-			variable_length := True
 			yyval4 := new_iteration_nfa (yytype4 (yyvs.item (yyvsp - 3)), yytype2 (yyvs.item (yyvsp - 1)))
+			process_singleton_fixed_iteration (yytype2 (yyvs.item (yyvsp - 1)))
+
 		
 			yyval := yyval4
 when 39 then
---|#line 248
+--|#line 263
 
-			rule_length := rule_length + 1
 			yyval4 := new_symbol_class_nfa (dot_character_class)
+			process_singleton_dot
 		
 			yyval := yyval4
 when 40 then
---|#line 253
+--|#line 268
 
-			rule_length := rule_length + 1
 			yyval4 := new_symbol_class_nfa (yytype3 (yyvs.item (yyvsp)))
+			process_singleton_symbol_class (yytype3 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 41 then
---|#line 258
+--|#line 273
 
-			rule_length := rule_length + 1
 			yyval4 := new_nfa_from_character_class (yytype3 (yyvs.item (yyvsp)))
+			process_singleton_symbol_class (yytype3 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 42 then
---|#line 263
+--|#line 278
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval4
 when 43 then
---|#line 267
+--|#line 282
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1))
+			singleton_count := regexp_count
+			singleton_line := regexp_line
+			singleton_column := regexp_column
 		
 			yyval := yyval4
 when 44 then
---|#line 273
+--|#line 291
 
 			yyval3 := yytype3 (yyvs.item (yyvsp - 1))
 			character_classes.force (yyval3, yytype1 (yyvs.item (yyvsp - 2)))
 		
 			yyval := yyval3
 when 45 then
---|#line 278
+--|#line 296
 
 			yyval3 := yytype3 (yyvs.item (yyvsp - 1))
 			yyval3.set_negated (True)
@@ -347,45 +363,46 @@ when 45 then
 		
 			yyval := yyval3
 when 46 then
---|#line 286
+--|#line 304
 
 			yyval3 := append_character_to_character_class (yytype2 (yyvs.item (yyvsp)), new_character_class)
 		
 			yyval := yyval3
 when 47 then
---|#line 290
+--|#line 308
 
 			yyval3 := append_character_to_character_class (yytype2 (yyvs.item (yyvsp)), yytype3 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval3
 when 48 then
---|#line 294
+--|#line 312
 
 			yyval3 := append_character_set_to_character_class
 				(yytype2 (yyvs.item (yyvsp - 2)), yytype2 (yyvs.item (yyvsp)), new_character_class)
 		
 			yyval := yyval3
 when 49 then
---|#line 299
+--|#line 317
 
 			yyval3 := append_character_set_to_character_class (yytype2 (yyvs.item (yyvsp - 2)), yytype2 (yyvs.item (yyvsp)), yytype3 (yyvs.item (yyvsp - 3)))
 		
 			yyval := yyval3
 when 50 then
---|#line 305
+--|#line 323
 
 			yyval4 := new_epsilon_nfa
+			process_singleton_empty_string
 		
 			yyval := yyval4
 when 51 then
---|#line 309
+--|#line 328
 
-			rule_length := rule_length + 1
 			yyval4 := append_character_to_string (yytype2 (yyvs.item (yyvsp)), yytype4 (yyvs.item (yyvsp - 1)))
+			process_singleton_string (yytype2 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 54 then
---|#line 318
+--|#line 337
 			yyval := yyval_default;
 			eiffel_code := yytype1 (yyvs.item (yyvsp))
 		

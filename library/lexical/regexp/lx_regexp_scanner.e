@@ -76,7 +76,7 @@ if yy_act = 3 then
 					set_start_condition (QUOTE)
 				
 else
-	yy_position := yy_position - 1
+	yy_end := yy_end - 1
 --|#line 59
 last_token := Dollar_code
 end
@@ -203,14 +203,14 @@ end
 else
 if yy_act <= 20 then
 if yy_act = 19 then
-	yy_position := yy_position - 1
+	yy_end := yy_end - 1
 --|#line 135
 
 					set_start_condition (CCL)
 					last_token := Caret_code
 				
 else
-	yy_position := yy_position - 1
+	yy_end := yy_end - 1
 --|#line 139
 last_token := Caret_code
 end
@@ -235,7 +235,7 @@ if yy_act = 22 then
 					set_start_condition (REGEXP)
 				
 else
-	yy_position := yy_position - 1
+	yy_end := yy_end - 1
 --|#line 154
 last_token := Minus_code
 end
@@ -483,6 +483,12 @@ feature {NONE} -- Constants
 
 	yyEnd_of_buffer: INTEGER is 29
 			-- End of buffer rule code
+
+	yyLine_used: BOOLEAN is false
+			-- Are line and column numbers used?
+
+	yyPosition_used: BOOLEAN is false
+			-- Is `position' used?
 
 	INITIAL: INTEGER is 0
 	NUM: INTEGER is 1

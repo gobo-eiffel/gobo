@@ -1487,7 +1487,7 @@ end
 else
 if yy_act <= 183 then
 if yy_act = 182 then
-	yy_position := yy_position - 1
+	yy_end := yy_end - 1
 --|#line 823
 
 				last_token := E_REAL
@@ -1515,7 +1515,7 @@ else
 if yy_act <= 187 then
 if yy_act <= 186 then
 if yy_act = 185 then
-	yy_position := yy_position - 1
+	yy_end := yy_end - 1
 --|#line 830
 
 				last_token := E_REAL
@@ -2225,6 +2225,12 @@ feature {NONE} -- Constants
 
 	yyEnd_of_buffer: INTEGER is 190
 			-- End of buffer rule code
+
+	yyLine_used: BOOLEAN is false
+			-- Are line and column numbers used?
+
+	yyPosition_used: BOOLEAN is false
+			-- Is `position' used?
 
 	INITIAL: INTEGER is 0
 	MS: INTEGER is 1

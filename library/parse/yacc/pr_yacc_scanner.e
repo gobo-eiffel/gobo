@@ -768,6 +768,12 @@ feature {NONE} -- Constants
 	yyEnd_of_buffer: INTEGER is 58
 			-- End of buffer rule code
 
+	yyLine_used: BOOLEAN is false
+			-- Are line and column numbers used?
+
+	yyPosition_used: BOOLEAN is false
+			-- Is `position' used?
+
 	INITIAL: INTEGER is 0
 	SECTION2: INTEGER is 1
 	SECTION3: INTEGER is 2
