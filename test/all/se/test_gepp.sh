@@ -5,7 +5,7 @@ cd gepp
 if [ "$1" = "-boost" ]; then
 	cp $GOBO/src/gepp/se.sh .
 else
-	sed "s/-boost/-ensure_check/g" $GOBO/src/gepp/se.sh > se.sh
+	sed "s/-boost/-all_check/g" $GOBO/src/gepp/se.sh > se.sh
 fi
 ./se.sh | grep -v "warning \(C4049\|C4761\)"
 

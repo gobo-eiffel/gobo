@@ -5,7 +5,7 @@ cd rpcalc
 if [ "$1" = "-boost" ]; then
 	cp $GOBO/example/parse/rpcalc/se.sh .
 else
-	sed "s/-boost/-ensure_check/g" $GOBO/example/parse/rpcalc/se.sh > se.sh
+	sed "s/-boost/-all_check/g" $GOBO/example/parse/rpcalc/se.sh > se.sh
 fi
 ./se.sh > tmp11.txt 2>&1
 cat tmp11.txt | grep -v "warning \(C4049\|C4761\|D4002\)"
