@@ -1,4 +1,5 @@
-# system:     ""
+# system:     "Makefile to run all tests, examples and tools"
+# compiler:   "Halstenbach ISS-BASE"
 # author:     "Eric Bezault <ericb@gobosoft.com>"
 # copyright:  "Copyright (c) 2000, Eric Bezault and others"
 # license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
@@ -6,7 +7,7 @@
 # revision:   "$Revision$"
 
 
-COMPILER=hact
+ECOMPILER=hact
 
 include ${GOBO}/misc/platform.mk
 include ${GOBO}/test/all/common/test_all.mk
@@ -24,5 +25,5 @@ test-calculator:
 	${MKDIR} calculator-lexical
 	${CP} -f ${GOBO}/example/lexical/calculator/Makefile calculator-lexical
 	${ECHO} 'Compiling Test Cases'
-	cd calculator-lexical ; ${MAKE} ${COMPILER}${DEBUG} > tmp_compile.txt 2>&1
-	cd calculator-lexical ; ${GOBO}/test/all/common/test_exe.sh ${COMPILER} calculator
+	cd calculator-lexical ; ${MAKE} ${ECOMPILER}${DEBUG} > tmp_compile.txt 2>&1
+	cd calculator-lexical ; ${GOBO}/test/all/common/test_exe.sh ${ECOMPILER} calculator

@@ -1,4 +1,4 @@
-# system:     ""
+# system:     "Makefile template for tests run by getest"
 # author:     "Eric Bezault <ericb@gobosoft.com>"
 # copyright:  "Copyright (c) 2000, Eric Bezault and others"
 # license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
@@ -7,32 +7,32 @@
 
 
 test-se:
-	${MAKE} test-${TARGET} 'COMPILER=se'
+	${MAKE} test-${TARGET} 'ECOMPILER=se'
 
 test-se-debug:
-	${MAKE} test-${TARGET} 'COMPILER=se-debug'
+	${MAKE} test-${TARGET} 'ECOMPILER=se-debug'
 
 test-ise:
-	${MAKE} test-${TARGET} 'COMPILER=ise'
+	${MAKE} test-${TARGET} 'ECOMPILER=ise'
 
 test-ise-debug:
-	${MAKE} test-${TARGET} 'COMPILER=ise-debug'
+	${MAKE} test-${TARGET} 'ECOMPILER=ise-debug'
 
 test-hact:
-	${MAKE} test-${TARGET} 'COMPILER=hact'
+	${MAKE} test-${TARGET} 'ECOMPILER=hact'
 
 test-hact-debug:
-	${MAKE} test-${TARGET} 'COMPILER=hact-debug'
+	${MAKE} test-${TARGET} 'ECOMPILER=hact-debug'
 
 test-ve:
-	${MAKE} test-${TARGET} 'COMPILER=ve'
+	${MAKE} test-${TARGET} 'ECOMPILER=ve'
 
 test-ve-debug:
-	${MAKE} test-${TARGET} 'COMPILER=ve-debug'
+	${MAKE} test-${TARGET} 'ECOMPILER=ve-debug'
 
-test-${TARGET}: getest.${COMPILER}
+test-${TARGET}: getest.${ECOMPILER}
 	${MKDIR} TESTGEN
-	${GETEST} getest.${COMPILER}
+	${GETEST} getest.${ECOMPILER}
 
 getest.se: ${ROOT_DIR}/getest.se
 	${SED} 's/se-debug/se/g' ${ROOT_DIR}/getest.se > getest.se
