@@ -60,6 +60,8 @@
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_character_routines"/>
 		<geant target="ge2e"/>
+		<set name="gepp_file" value="kl_double_routines"/>
+		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_fixed_array_routines"/>
 		<geant target="ge2e"/>
 		<set name="gepp_file" value="kl_imported_fixed_array_routines"/>

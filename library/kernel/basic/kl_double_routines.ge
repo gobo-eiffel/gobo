@@ -1,0 +1,40 @@
+indexing
+
+	description:
+
+		"Routines that ought to be in class DOUBLE"
+
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class KL_DOUBLE_ROUTINES
+
+#ifdef ISE || HACT || VE
+inherit
+	DOUBLE_MATH
+		export
+			{NONE} all;
+			{ANY} log, log10
+		end
+#endif
+
+feature -- Logarithms
+
+#ifdef SE
+	log (d: DOUBLE): DOUBLE is
+			-- Natural logarithm of `d'.
+		do
+			Result := d.log
+		end
+
+	log10 (d: DOUBLE): DOUBLE is
+			-- Base 10 logarithm of `d'.
+		do
+			Result := d.log10
+		end
+#endif
+
+end
