@@ -63,7 +63,7 @@ feature -- Filters
 			unicode_validation_not_void: Result /= Void
 		end
 
-	new_namespace_resolver: XM_END_TAG_CHECKER is
+	new_namespace_resolver: XM_NAMESPACE_RESOLVER is
 			-- New namespace resolver
 		do
 			!! Result.make_null
