@@ -28,15 +28,10 @@ feature -- Output
 			-- Set output to new string.
 		do
 			last_output := STRING_.make_empty
+			output_stream := Void
 		ensure
 			last_output_not_void: last_output /= Void
 			last_output_empty: last_output.count = 0
-		end
-
-	set_output_standard is
-			-- Set output to standard output (Default).
-		do
-			last_output := Void
 		end
 
 	set_output_string (a_string: like last_output) is
@@ -45,13 +40,34 @@ feature -- Output
 			a_string_not_void: a_string /= Void
 		do
 			last_output := a_string
+			output_stream := Void
 		ensure
 			definition: last_output = a_string
 		end
 
+	set_output_stream (a_stream: like output_stream) is
+			-- Set output to stream.
+		require
+			a_stream_not_void: a_stream /= Void
+		do
+			output_stream := a_stream
+			last_output := Void
+		end
+		
+	set_output_standard is
+			-- Set output to standard output (Default).
+		do
+			output_stream := std.output
+			last_output := Void
+		end
+
 	last_output: STRING
 			-- Last output;
-			-- May be void if standard output used.
+			-- May be void if standard output or stream is used.
+
+feature {NONE} -- Output stream
+
+	output_stream: KI_CHARACTER_OUTPUT_STREAM
 
 feature -- Output, interface to descendants
 
@@ -65,7 +81,8 @@ feature -- Output, interface to descendants
 			if last_output /= Void then
 				last_output := STRING_.appended_string (last_output, a_string)
 			else
-				std.output.put_string (a_string)
+				check output_stream_not_void: output_stream /= Void end
+				output_stream.put_string (a_string)
 			end
 		end
 
