@@ -23,12 +23,12 @@ content="text/html; charset=iso-8859-1">
 
 <hr size="1">
 
-<p>First some simple examples to get the flavor of how one uses
-geyacc: a reverse polish notation calculator, and an algebraic
-(infix) notation calculator. Each produces a usable, though
-limited, interactive desk-top calculator. These examples are
-simple, but <em>geyacc</em> grammars for real programming
-languages are written the same way. </p>
+<p>First some simple examples to get the flavor of how one uses <em>geyacc</em>:
+a reverse polish notation calculator, an algebraic (infix)
+notation calculator and a calculator with memory. Each produces a
+usable, though limited, interactive desk-top calculator. These
+examples are simple, but <em>geyacc</em> grammars for real
+programming languages are written the same way. </p>
 
 <h2>Reverse Polish Notation Calculator</h2>
 
@@ -44,7 +44,7 @@ grammar file is named <font color="#800000"><tt>rpcalc.y</tt></font>.
 The `<font color="#800000"><tt>.y</tt></font>' extension is a
 convention used for <em>geyacc</em> input files. </p>
 
-<h3>Declarations for 'rpcalc'</h3>
+<h3>Declarations for <tt>rpcalc</tt></h3>
 
 <p>Here are the Eiffel and <em>geyacc</em> declarations for the
 reverse polish notation calculator. Comments follow Eiffel style
@@ -80,8 +80,9 @@ parser class. This class is called <font color="#008080"><em><tt>RPCALC</tt></em
 and inherits its parsing engine from <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font>.
 Since the generic parameter of class <font color="#008080"><em><tt>YY_PARSER_SKELETON</tt></em></font><font
 color="#008080" size="2" face="Courier New"><em> </em></font>is <font
-color="#008080"><em><tt>DOUBLE</tt></em></font>, the values
-handled by the calculator are double precision real numbers.</p>
+color="#008080"><em><tt>DOUBLE</tt></em></font>, the semantic
+values handled by the calculator are double precision real
+numbers.</p>
 
 <p>The second subsection, <a href="declarations.html"><em>geyacc</em>
 declarations</a>, provides information to <em>geyacc</em> about
@@ -93,14 +94,14 @@ literals, so the only terminal symbol that needs to be declared
 is <font color="#FF0000"><tt>NUM</tt></font>, the token type for
 numeric constants.</p>
 
-<h3>Grammar Rules for 'rpcalc'</h3>
+<h3>Grammar Rules for <tt>rpcalc</tt></h3>
 
 <p>Here are the grammar rules for the reverse polish notation
 calculator:</p>
 
 <blockquote>
     <pre><font color="#800080">input</font><font color="#0000FF">: </font><font
-color="#008080">-- /* empty */</font><font color="#0000FF">
+color="#008080">-- Empty</font><font color="#0000FF">
     | </font><font color="#800080">input line</font><font
 color="#0000FF">
     ;
@@ -115,7 +116,8 @@ color="#0000FF"> }
     ;
 
 </font><font color="#800080">exp</font><font color="#0000FF">: </font><font
-color="#FF0000">NUM</font><font color="#0000FF">
+color="#FF0000">NUM          </font><font color="#0000FF">{ $$ </font><font
+color="#008080">:=</font><font color="#0000FF"> $1 }
     | </font><font color="#800080">exp exp</font><font
 color="#0000FF"> </font><font color="#FF0000">'+'</font><font
 color="#0000FF"> { $$ </font><font color="#008080">:=</font><font
@@ -138,18 +140,19 @@ color="#0000FF"> $2 }
 color="#0000FF">
     | </font><font color="#800080">exp</font><font
 color="#0000FF"> </font><font color="#FF0000">'n'</font><font
-color="#0000FF"> { $$ </font><font color="#008080">:= -</font><font
+color="#0000FF">     { $$ </font><font color="#008080">:= -</font><font
 color="#0000FF">$1 }
     ;
 %%</font></pre>
 </blockquote>
 
-<p>The groupings of the rpcalc &quot;language&quot; defined here
-are the expression (given the name <font color="#800080"><tt>exp</tt></font>),
-the line of input (<font color="#800080"><tt>line</tt></font>),
-and the complete input transcript (<font color="#800080"><tt>input</tt></font>).
-Each of these nonterminal symbols has several alternate rules,
-joined by the<font color="#0000FF" size="2" face="Courier New"> </font><font
+<p>The groupings of the <tt>rpcalc</tt> &quot;language&quot;
+defined here are the expression (given the name <font
+color="#800080"><tt>exp</tt></font>), the line of input (<font
+color="#800080"><tt>line</tt></font>), and the complete input
+transcript (<font color="#800080"><tt>input</tt></font>). Each of
+these nonterminal symbols has several alternate rules, joined by
+the<font color="#0000FF" size="2" face="Courier New"> </font><font
 color="#0000FF"><tt>|</tt></font> punctuator which is read as
 &quot;or&quot;. The following sections explain what these rules
 mean.</p>
@@ -168,13 +171,13 @@ of most actions. The semantic values of the components of the
 rule are referred to as <font color="#0000FF"><tt>$1</tt></font>,
 <font color="#0000FF"><tt>$2</tt></font>, and so on.</p>
 
-<h4>Explanation of 'input'</h4>
+<h4>Explanation of <tt>input</tt></h4>
 
 <p>Consider the definition of <font color="#800080"><tt>input</tt></font>:</p>
 
 <blockquote>
     <pre><font color="#800080">input</font><font color="#0000FF">: </font><font
-color="#008080">-- /* empty */</font><font color="#0000FF">
+color="#008080">-- Empty</font><font color="#0000FF">
     | </font><font color="#800080">input line</font><font
 color="#0000FF">
     ;</font></pre>
@@ -195,7 +198,7 @@ match an empty string of input (no tokens). We write the rules
 this way because it is legitimate to type `Ctrl-d' right after
 you start the calculator. It's conventional to put an empty
 alternative first and write the comment <font color="#008080"><tt>--
-/* empty */</tt></font> in it.</p>
+Empty </tt></font>in it.</p>
 
 <p>The second alternate rule (<font color="#800080"><tt>input
 line</tt></font>) handles all nontrivial input. It means,
@@ -209,7 +212,7 @@ continues to process input until a grammatical error is seen or
 the lexical analyzer says there are no more input tokens; we will
 arrange for the latter to happen at end of file.</p>
 
-<h4>Explanation of 'line'</h4>
+<h4>Explanation of <tt>line</tt></h4>
 
 <p>Now consider the definition of <font color="#800080"><tt>line</tt></font>:</p>
 
@@ -225,10 +228,10 @@ color="#0000FF"> }
 </blockquote>
 
 <p>The first alternative is a token which is a newline character;
-this means that rpcalc accepts a blank line (and ignores it,
-since there is no action). The second alternative is an
+this means that <tt>rpcalc </tt>accepts a blank line (and ignores
+it, since there is no action). The second alternative is an
 expression followed by a newline. This is the alternative that
-makes rpcalc useful. The semantic value of the <font
+makes <tt>rpcalc</tt> useful. The semantic value of the <font
 color="#800080"><tt>exp</tt></font> grouping is the value of <font
 color="#0000FF"><tt>$1</tt></font> because the <font
 color="#800080"><tt>exp</tt></font> in question is the first
@@ -238,12 +241,12 @@ the result of the computation the user asked for.</p>
 <p>This action is unusual because it does not assign a value to <font
 color="#0000FF"><tt>$$</tt></font>. As a consequence, the
 semantic value associated with the <font color="#800080"><tt>line</tt></font>
-is uninitialized (its value will be unpredictable). This would be
-a bug if that value were ever used, but we don't use it: once
-rpcalc has printed the value of the user's input line, that value
-is no longer needed.</p>
+is initialized to its default value. This would be a bug if that
+value were ever used, but we don't use it: once <tt>rpcalc</tt>
+has printed the value of the user's input line, that value is no
+longer needed.</p>
 
-<h4>Explanation of 'expr'</h4>
+<h4>Explanation of <tt>expr</tt></h4>
 
 <p>The <font color="#800080"><tt>exp</tt></font> grouping has
 several rules, one for each kind of expression. The first rule
@@ -254,7 +257,8 @@ subtraction, and so on.</p>
 
 <blockquote>
     <pre><font color="#800080">exp</font><font color="#0000FF">: </font><font
-color="#FF0000">NUM</font><font color="#0000FF">
+color="#FF0000">NUM          </font><font color="#0000FF">{ $$ </font><font
+color="#008080">:=</font><font color="#0000FF"> $1 }
     | </font><font color="#800080">exp exp</font><font
 color="#0000FF"> </font><font color="#FF0000">'+'</font><font
 color="#0000FF"> { $$ </font><font color="#008080">:=</font><font
@@ -275,7 +279,8 @@ we could equally well have written them separately:</p>
 
 <blockquote>
     <pre><font color="#800080">exp</font><font color="#0000FF">: </font><font
-color="#FF0000">NUM</font><font color="#0000FF"> ;
+color="#FF0000">NUM         </font><font color="#0000FF">{ $$ </font><font
+color="#008080">:=</font><font color="#0000FF"> $1 } ;
 </font><font color="#800080">exp</font><font color="#0000FF">: </font><font
 color="#800080">exp exp</font><font color="#0000FF"> </font><font
 color="#FF0000">'+'</font><font color="#0000FF"> { $$ </font><font
@@ -302,19 +307,14 @@ recognizes a sum expression using this rule, the sum of the two
 subexpressions' values is produced as the value of the entire
 expression.</p>
 
-<p>You don't have to give an action for every rule. When a rule
-has no action, <em>geyacc</em> by default copies the value of <font
-color="#0000FF"><tt>$1</tt></font> into <font color="#0000FF"><tt>$$</tt></font>.
-This is what happens in the first rule (the one that uses <font
-color="#FF0000"><tt>NUM</tt></font>).</p>
-
 <p>The formatting shown here is the recommended convention, but <em>geyacc</em>
 does not require it. You can add or change whitespace as much as
 you wish. For example, this:</p>
 
 <blockquote>
     <pre><font color="#800080">exp</font><font color="#0000FF"> : </font><font
-color="#FF0000">NUM</font><font color="#0000FF"> | </font><font
+color="#FF0000">NUM </font><font color="#0000FF">{ $$ </font><font
+color="#008080">:=</font><font color="#0000FF"> $1 } | </font><font
 color="#800080">exp exp</font><font color="#0000FF"> </font><font
 color="#FF0000">'+'</font><font color="#0000FF"> {$$</font><font
 color="#008080"> :=</font><font color="#0000FF"> $1 </font><font
@@ -325,7 +325,8 @@ color="#008080">+</font><font color="#0000FF"> $2 } |</font> ...</pre>
 
 <blockquote>
     <pre><font color="#800080">exp</font><font color="#0000FF">: </font><font
-color="#FF0000">NUM</font><font color="#0000FF">
+color="#FF0000">NUM          </font><font color="#0000FF">{ $$ </font><font
+color="#008080">:=</font><font color="#0000FF"> $1 }
     | </font><font color="#800080">exp exp</font><font
 color="#0000FF"> </font><font color="#FF0000">'+'</font><font
 color="#0000FF"> { $$</font><font color="#008080"> :=</font><font
@@ -336,7 +337,7 @@ color="#0000FF"> $2 }
 
 <p>The latter, however, is much more readable.</p>
 
-<h4>The 'rpcalc' Lexical Analyzer</h4>
+<h3>The <tt>rpcalc</tt> Lexical Analyzer</h3>
 
 <p>The <a href="parser.html#lexical_analyzer">lexical analyzer</a>'s
 job is low-level parsing: converting characters or sequences of
@@ -373,7 +374,7 @@ which is where the <em>geyacc</em> parser will look for it.</p>
 
 <p>A token type code of zero is returned if the end-of-file is
 encountered. (<em>Geyacc</em> recognizes any nonpositive value as
-indicating the end of the input.)</p>
+indicating that an error occurred in the lexical analysis.)</p>
 
 <p>Here is the code for the lexical analyzer routine:</p>
 
@@ -392,7 +393,7 @@ indicating the end of the input.)</p>
             if </strong></em><em>has_pending_character</em><em><strong> then
                 </strong></em><em>c </em>:=<em><strong> </strong></em><em>pending_character</em><em><strong>
                 </strong></em><em>has_pending_character</em><em><strong> </strong></em>:=<em><strong> </strong></em><em>False</em><em><strong>
-            else</strong></em><em>
+            elseif not </strong></em><em>io.end_of_file</em><em><strong> then</strong></em><em>
                 io</em>.<em>read_character
                 c </em>:=<em> io</em>.<em>last_character
             </em><em><strong>end</strong></em><em>
@@ -435,7 +436,7 @@ indicating the end of the input.)</p>
                     io.read_character
                     c </em>:=<em> io.last_character
                 </em><em><strong>end</strong></em><em>
-            end
+            </em><em><strong>end</strong></em><em>
             </em><em><strong>if</strong></em><em> </em><em><strong>not</strong></em><em> io.end_of_file </em><em><strong>then</strong></em><em>
                 pending_character </em>:=<em> c
                 has_pending_character </em>:=<em> True
@@ -448,7 +449,7 @@ indicating the end of the input.)</p>
     </em><em><strong>end</strong></em></font></pre>
 </blockquote>
 
-<h4>The Error Reporting Routine</h4>
+<h3>The Error Reporting Routine</h3>
 
 <p>When <font color="#008080"><em><tt>parse</tt></em></font>
 detects a syntax error, it calls the error reporting routine <font
@@ -468,15 +469,16 @@ input will cause the calculator program to exit. This is not
 clean behavior for a real calculator, but it is adequate in the
 first example.</p>
 
-<h2>Infix Notation Calculator: 'calc'</h2>
+<h2>Infix Notation Calculator: <tt>calc</tt></h2>
 
-<p>We now modify rpcalc to handle infix operators instead of
-postfix. Infix notation involves the concept of operator
-precedence and the need for parentheses nested to arbitrary
-depth. Here is the <em>geyacc</em> code for<font color="#800000"
-size="2" face="Courier New"> </font><font color="#800000"><tt>calc.y</tt></font>,
-an infix desk-top calculator (the source code for this calculator
-can be found in <font color="#800000"><tt>$GOBO\example\parse\calc</tt></font>).</p>
+<p>We now modify <tt>rpcalc</tt> to handle infix operators
+instead of postfix. Infix notation involves the concept of
+operator precedence and the need for parentheses nested to
+arbitrary depth. Here is the <em>geyacc</em> code for<font
+color="#800000" size="2" face="Courier New"> </font><font
+color="#800000"><tt>calc.y</tt></font>, an infix desk-top
+calculator (the source code for this calculator can be found in <font
+color="#800000"><tt>$GOBO\example\parse\calc</tt></font>).</p>
 
 <blockquote>
     <pre><font color="#0000FF">%{
@@ -514,7 +516,7 @@ color="#0000FF">
 color="#0000FF">
 %%
 </font><font color="#800080">input</font><font color="#0000FF">: </font><font
-color="#008080">-- /* empty */</font><font color="#0000FF">
+color="#008080">-- Empty</font><font color="#0000FF">
     | </font><font color="#800080">input line</font><font
 color="#0000FF">
     ;
@@ -529,7 +531,8 @@ color="#0000FF"> }
     ;
 
 </font><font color="#800080">exp</font><font color="#0000FF">: </font><font
-color="#FF0000">NUM</font><font color="#0000FF">
+color="#FF0000">NUM          </font><font color="#0000FF">{ $$ </font><font
+color="#008080">:=</font><font color="#0000FF"> $1 }
     | </font><font color="#800080">exp </font><font
 color="#FF0000">'+'</font><font color="#800080"> exp</font><font
 color="#0000FF"> { $$ </font><font color="#008080">:=</font><font
@@ -629,7 +632,7 @@ added to one of the alternatives for <font color="#800080"><tt>line</tt></font>:
 color="#FF0000">'\n'</font><font color="#0000FF">
     | </font><font color="#800080">exp</font><font
 color="#0000FF"> </font><font color="#FF0000">'\n'</font><font
-color="#0000FF"> { </font><font color="#008080"><em>print</em> (</font><font
+color="#0000FF">   { </font><font color="#008080"><em>print</em> (</font><font
 color="#0000FF">$1</font><font color="#008080">); <em>print</em> (<em>'%N'</em>)</font><font
 color="#0000FF"> }
     | error </font><font color="#FF0000">'\n'</font><font
@@ -655,12 +658,378 @@ program must handle this kind exception in a rescue clause and
 resume parsing input lines; it would also have to discard the
 rest of the current line of input.</p>
 
+<h2>Calculator with Memory: <tt>mcalc</tt></h2>
+
+<p>Now that the basics of <em>geyacc</em> have been discussed, it
+is time to move on to a more advanced problem. The above
+calculators provided only five functions: <tt>+</tt>, <tt>-</tt>,
+<tt>*</tt> , <tt>/</tt> and unary minus. It would be nice to add
+memory to the calculator, by allowing you to create named
+variables, store values in them, and use them later. Here is a
+sample session with the calculator:</p>
+
+<blockquote>
+    <pre><font color="#808000">% mcalc
+pi := 3.141592
+3.141592
+2 * pi
+6.283184
+gobo := 2 + 3
+5
+gobo := gobo * 4
+20
+gobo
+20
+%</font></pre>
+</blockquote>
+
+<p>The source code for this calculator can be found in <font
+color="#800000"><tt>$GOBO\example\parse\mcalc</tt></font>. The <em>geyacc</em>
+grammar file is named <font color="#800000"><tt>mcalc.y</tt></font>.
+</p>
+
+<h3>Declarations for <tt>mcalc</tt></h3>
+
+<p>Here are the Eiffel and <em>geyacc</em> declarations for the
+calculator with memory.</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%{
+</font><font color="#008080"><em><strong>indexing</strong></em><em>
+
+    description</em>:<em> &quot;Calculator with memory&quot;
+
+</em><em><strong>class</strong></em><em> MCALC
+
+</em><em><strong>inherit</strong></em><em>
+
+    YY_PARSER_SKELETON </em>[<em>ANY</em>]<em>
+        </em><em><strong>rename</strong></em><em>
+            make </em><em><strong>as</strong></em><em> make_parser_skeleton
+        </em><em><strong>end</strong></em><em>
+
+</em><em><strong>creation</strong></em><em>
+
+    make
+</em></font><font color="#0000FF">
+%}</font>
+
+    <font color="#008080">-- geyacc declarations.</font>
+<font color="#0000FF">%token &lt;</font><font color="#008080"><em>DOUBLE</em></font><font
+color="#0000FF">&gt; </font><font color="#FF0000">NUM</font><font
+color="#0000FF">  </font><font color="#008080">-- Double precision number</font><font
+color="#0000FF">
+%token &lt;</font><font color="#008080"><em>STRING</em></font><font
+color="#0000FF">&gt; </font><font color="#FF0000">VAR</font><font
+color="#008080">  -- Memory name</font><font color="#0000FF">
+%type &lt;</font><font color="#008080"><em>DOUBLE</em></font><font
+color="#0000FF">&gt; </font><font color="#800080">exp</font><font
+color="#0000FF">
+
+%right </font><font color="#FF0000">ASSIGN</font><font
+color="#0000FF">        </font><font color="#008080">-- Assignment sign `:=</font><font
+color="#0000FF">'
+%left </font><font color="#FF0000">'-' '+'</font><font
+color="#0000FF">
+%left </font><font color="#FF0000">'*' '/'</font><font
+color="#0000FF">
+%left </font><font color="#FF0000">NEG</font><font
+color="#0000FF">            </font><font color="#008080">-- negation--unary minus</font><font
+color="#0000FF">
+%right </font><font color="#FF0000">'^'</font><font
+color="#0000FF"> </font><font color="#008080">          -- exponentiation</font><font
+color="#0000FF">
+
+    </font><font color="#008080">-- Grammar follows.</font><font
+color="#0000FF">
+%%</font></pre>
+</blockquote>
+
+<p>The above grammar introduces only one new feature of the <em>geyacc</em>
+language. This feature allows semantic values to have various
+types.</p>
+
+<p>Instead of using <font color="#008080"><em><tt>DOUBLE</tt></em></font>
+as generic parameter of the skeleton class, we now use <font
+color="#008080"><em><tt>ANY</tt></em></font>, which is a common
+ancestor of all possible types. These allowable types are now <font
+color="#008080"><em><tt>DOUBLE</tt></em></font> (for <font
+color="#800080"><tt>exp</tt></font> and <font color="#FF0000"><tt>NUM</tt></font>)
+and <font color="#008080"><em><tt>STRING</tt></em></font> (for
+memory names <font color="#FF0000"><tt>VAR</tt></font>).</p>
+
+<p>Since values can now have various types, it is necessary to
+associate a type with each grammar symbol whose semantic value is
+used. These symbols are <font color="#FF0000"><tt>NUM</tt></font>,
+<font color="#FF0000"><tt>VAR</tt></font>, and <font
+color="#800080"><tt>exp</tt></font>. Their declarations are
+augmented with information about their Eiffel type (placed
+between angle brackets).</p>
+
+<p>The <em>geyacc</em> construct <font color="#0000FF"><tt>%type</tt></font>
+is used for declaring nonterminal symbols, just as <font
+color="#0000FF"><tt>%token</tt></font> is used for declaring
+tokens. We have not used <font color="#0000FF"><tt>%type</tt></font>
+before because nonterminal symbols are normally declared
+implicitly by the rules that define them. But <font
+color="#800080"><tt>exp</tt></font> must be declared explicitly
+so we can specify its value type. </p>
+
+<h3>Grammar Rules for <tt>mcalc</tt></h3>
+
+<p>Here are the grammar rules for the calculator. Most of them
+are copied directly from <tt>calc</tt>; two rules, those which
+mention <font color="#FF0000"><tt>VAR</tt></font>, are new.</p>
+
+<blockquote>
+    <pre><font color="#800080">input</font><font color="#0000FF">: </font><font
+color="#008080">-- Empty</font><font color="#0000FF">
+    | </font><font color="#800080">input line</font><font
+color="#0000FF">
+    ;
+
+</font><font color="#800080">line</font><font color="#0000FF">: </font><font
+color="#FF0000">'\n'</font><font color="#0000FF">
+    | </font><font color="#800080">exp</font><font
+color="#0000FF"> </font><font color="#FF0000">'\n'</font><font
+color="#0000FF">   { </font><font color="#008080"><em>print</em> (</font><font
+color="#0000FF">$1</font><font color="#008080">); <em>print</em> (<em>'%N'</em>)</font><font
+color="#0000FF"> }
+    | error </font><font color="#FF0000">'\n'</font><font
+color="#0000FF"> { </font><font color="#008080"><em>recover</em></font><font
+color="#0000FF"> }
+    ;
+
+</font><font color="#800080">exp</font><font color="#0000FF">: </font><font
+color="#FF0000">NUM </font><font color="#0000FF">            { $$ </font><font
+color="#008080">:=</font><font color="#0000FF"> $1 }
+    | </font><font color="#FF0000">VAR</font><font
+color="#0000FF">            { $$ </font><font color="#008080">:= <em>memory_value</em> (</font><font
+color="#0000FF">$1</font><font color="#008080">)</font><font
+color="#0000FF"> }
+    | </font><font color="#FF0000">VAR</font><font
+color="#0000FF"> </font><font color="#FF0000">ASSIGN</font><font
+color="#0000FF"> </font><font color="#800080">exp</font><font
+color="#0000FF"> { $$ </font><font color="#008080">:= </font><font
+color="#0000FF">$3</font><font color="#008080">; <em>set_memory_value</em> (</font><font
+color="#0000FF">$$</font><font color="#008080">,</font><font
+color="#0000FF"> $1</font><font color="#008080">)</font><font
+color="#0000FF"> }
+    | </font><font color="#800080">exp </font><font
+color="#FF0000">'+'</font><font color="#800080"> exp</font><font
+color="#0000FF">    { $$ </font><font color="#008080">:=</font><font
+color="#0000FF"> $1 </font><font color="#008080">+</font><font
+color="#0000FF"> $3 }
+    | </font><font color="#800080">exp </font><font
+color="#FF0000">'-' </font><font color="#800080">exp</font><font
+color="#0000FF">    { $$ </font><font color="#008080">:=</font><font
+color="#0000FF"> $1 </font><font color="#008080">-</font><font
+color="#0000FF"> $3 }
+    | </font><font color="#800080">exp</font><font
+color="#0000FF"> </font><font color="#FF0000">'*'</font><font
+color="#0000FF"> </font><font color="#800080">exp</font><font
+color="#0000FF">    { $$ </font><font color="#008080">:=</font><font
+color="#0000FF"> $1 </font><font color="#008080">*</font><font
+color="#0000FF"> $3 }
+    | </font><font color="#800080">exp</font><font
+color="#0000FF"> </font><font color="#FF0000">'/'</font><font
+color="#0000FF"> </font><font color="#800080">exp</font><font
+color="#0000FF">    { $$ </font><font color="#008080">:=</font><font
+color="#0000FF"> $1 </font><font color="#008080">/</font><font
+color="#0000FF"> $3 }
+    | </font><font color="#FF0000">'-'</font><font
+color="#0000FF"> </font><font color="#800080">exp</font><font
+color="#0000FF"> %prec </font><font color="#FF0000">NEG</font><font
+color="#0000FF"> { $$ </font><font color="#008080">:= -</font><font
+color="#0000FF">$2 }
+    | </font><font color="#FF0000">'(' </font><font
+color="#800080">exp</font><font color="#FF0000"> ')'</font><font
+color="#0000FF">    { $$ </font><font color="#008080">:=</font><font
+color="#0000FF"> $2 }
+    ;
+%%</font></pre>
+</blockquote>
+
+<h3>The <tt>mcalc</tt> Lexical Analyzer</h3>
+
+<p>The lexical analyzer must now recognize memory variables,
+numeric values and arithmetic operators. Memory variables are
+strings of alphanumeric characters with a leading nondigit
+character.</p>
+
+<blockquote>
+    <pre><font color="#008080"><em>read_token </em><em><strong>is</strong></em><em>
+        </em>-- Lexical analyzer returns a double floating point
+        -- number on the stack and the token NUM, a STRING and
+        -- and the token VAR, a token ASSIGN, or the ASCII 
+        -- character read if not a number. Skips all blanks
+        -- and tabs, returns 0 for EOF.<em>
+    </em><em><strong>local</strong></em><em>
+        c</em>:<em> CHARACTER
+        buffer</em>:<em> STRING
+    </em><em><strong>do</strong></em><em>
+            </em>-- Skip white space<em>
+        </em><em><strong>from
+            if </strong></em><em>has_pending_character</em><em><strong> then
+                </strong></em><em>c </em>:=<em><strong> </strong></em><em>pending_character</em><em><strong>
+                </strong></em><em>has_pending_character</em><em><strong> </strong></em>:=<em><strong> </strong></em><em>False</em><em><strong>
+            elseif not </strong></em><em>io.end_of_file</em><em><strong> then</strong></em><em>
+                io</em>.<em>read_character
+                c </em>:=<em> io</em>.<em>last_character
+            </em><em><strong>end</strong></em><em>
+        </em><em><strong>until</strong></em><em>
+            io.end_of_file </em><em><strong>or else</strong></em><em>
+            </em>(<em>c </em>/=<em> ' ' </em><em><strong>and</strong></em><em> c </em>/=<em> '%T'</em>)<em>
+        </em><em><strong>loop</strong></em><em>
+            io.read_character
+            c </em>:=<em> io.last_character
+        </em><em><strong>end</strong></em><em>
+        </em><em><strong>if</strong></em><em> io.end_of_file </em><em><strong>then</strong></em><em>
+                </em>-- Return end-of-file<em>
+            last_token </em>:=<em> 0
+        </em><em><strong>else</strong></em><em>
+            </em><em><strong>inspect</strong></em><em> c
+            </em><em><strong>when</strong></em><em> '0'..'9' </em><em><strong>then</strong></em><em>
+        </em><em><strong>            </strong></em>-- Process numbers<em>
+                last_token </em>:=<em> NUM
+                </em><em><strong>from</strong></em><em>
+                    </em>!!<em> buffer.make </em>(<em>10</em>)<em>
+                    buffer.append_character </em>(<em>c</em>)<em>
+                    io.read_character
+                    c </em>:= <em>io.last_character
+                </em><em><strong>until</strong></em><em>
+                    io.end_of_file </em><em><strong>or else</strong></em><em>
+                    </em>(<em>c </em>&lt;<em> '0' </em><em><strong>or</strong></em><em> c </em>&gt;<em> '9'</em>)<em>
+            </em><em><strong>    loop</strong></em><em>
+                    buffer.append_character </em>(<em>c</em>)<em>
+                    io.read_character
+                    c </em>:=<em> io.last_character
+                </em><em><strong>end</strong></em><em>
+                </em><em><strong>if not</strong></em><em> io.end_of_file </em><em><strong>and then</strong></em><em> c = '.' </em><em><strong>then</strong></em><em>
+		    </em><em><strong>from</strong></em><em>
+                        buffer.append_character </em>(<em>'.'</em>)<em>
+                        io.read_character
+                        c </em>:= <em>io.last_character
+                    </em><em><strong>until</strong></em><em>
+                        io.end_of_file </em><em><strong>or else</strong></em><em>
+                        </em>(<em>c </em>&lt;<em> '0' </em><em><strong>or</strong></em><em> c </em>&gt;<em> '9'</em>)<em>
+                    </em><em><strong>loop</strong></em><em>
+                        buffer.append_character </em>(<em>c</em>)<em>
+                        io.read_character
+                        c </em>:=<em> io.last_character
+                </em><em><strong>    end</strong></em><em>
+                </em><em><strong>end</strong></em><em>
+                </em><em><strong>if</strong></em><em> </em><em><strong>not</strong></em><em> io.end_of_file </em><em><strong>then</strong></em><em>
+                    pending_character </em>:=<em> c
+                    has_pending_character </em>:=<em> True
+                </em><em><strong>end</strong></em><em>
+                last_value </em>:=<em> buffer.to_double
+            </em><em><strong>when</strong></em><em> 'a'..'z', 'A'..'Z' </em><em><strong>then</strong></em><em>
+                    </em>-- Process variables.<em>
+                last_token </em>:=<em> VAR
+                </em><em><strong>from</strong></em><em>
+                    </em>!!<em> buffer.make </em>(<em>10</em>)<em>
+                    buffer.append_character </em>(<em>c</em>)<em>
+                    io.read_character
+                    c </em>:= <em>io.last_character
+                </em><em><strong>until</strong></em><em>
+                    io.end_of_file </em><em><strong>or else</strong></em><em>
+                    </em><em><strong>not</strong></em> ((<em>'a' </em>&lt;=<em> c </em><em><strong>and</strong></em><em> c </em>&lt;= <em>'z'</em>)<em> </em><em><strong>or</strong></em>
+                         (<em>'A'</em> &lt;= <em>c</em> <em><strong>and</strong></em> <em>c</em> &lt;= <em>'Z'</em>) <em><strong>or</strong></em>
+                         (<em>'0'</em> &lt;= <em>c</em> <em><strong>and</strong></em> <em>c</em> &lt;= <em>'9'</em>))<em>
+            </em><em><strong>    loop</strong></em><em>
+                    buffer.append_character </em>(<em>c</em>)<em>
+                    io.read_character
+                    c </em>:=<em> io.last_character
+                </em><em><strong>end</strong></em><em>
+                </em><em><strong>if</strong></em><em> </em><em><strong>not</strong></em><em> io.end_of_file </em><em><strong>then</strong></em><em>
+                    pending_character </em>:=<em> c
+                    has_pending_character </em>:=<em> True
+                </em><em><strong>end</strong></em><em>
+                last_value </em>:=<em> buffer
+            </em><em><strong>when </strong></em><em>':'</em><em><strong> then
+                </strong></em><em>io.read_character
+                c </em>:= <em>io.last_character
+                </em><em><strong>if not</strong></em><em> io.end_of_file </em><em><strong>then</strong></em><em>
+                    </em><em><strong>if</strong></em><em> c </em>=<em> '=' </em><em><strong>then</strong></em><em>
+                            </em>-- Found &quot;:=&quot;<em>
+                        last_token </em>:=<em> ASSIGN
+                    </em><em><strong>else</strong></em><em>
+                        </em>    -- Return single character<em>
+                        last_token </em>:= (<em>':'</em>)<em>.code
+                        pending_character </em>:=<em> c
+                        has_pending_character </em>:=<em> True
+                    </em><em><strong>end</strong></em><em>
+                </em><em><strong>else</strong></em><em>
+                    </em>    -- Return single character<em>
+                    last_token </em>:= (<em>':'</em>)<em>.code 
+                </em><em><strong>end
+            else</strong></em><em>
+                    </em>-- Return single character<em>
+                last_token </em>:= <em>c.code
+            </em><em><strong>end</strong></em><em>
+        </em><em><strong>end</strong></em><em>
+    </em><em><strong>end</strong></em></font></pre>
+</blockquote>
+
+<h3>Memory management of <tt>mcalc</tt></h3>
+
+<p>Following is some remaining source code taking care of the
+memory management of <tt>mcalc</tt>.</p>
+
+<blockquote>
+    <pre><font color="#008080"><em><strong>feature </strong></em>{<em>NONE</em>} -- Initialization<em>
+
+    make </em><em><strong>is</strong></em><em>
+            </em>-- Create a new calculator with memory.<em>
+        </em><em><strong>do</strong></em><em>
+            make_parser_skeleton
+            </em>!!<em> memory_values.make </em>(<em>10</em>)<em>
+        </em><em><strong>end
+
+feature</strong></em><em> </em>-- Memory management<em>
+
+    memory_value </em>(<em>a_name</em>:<em> STRING</em>):<em> DOUBLE </em><em><strong>is</strong></em><em>
+            </em>-- Value associated with memory <em>a_name</em>;
+            -- 0.0 if no value has been stored in <em>a_name</em> yet<em>
+        </em><em><strong>require</strong></em><em>
+            a_name_not_void</em>:<em> a_name </em>/=<em> Void
+        </em><em><strong>do</strong></em><em>
+            </em><em><strong>if</strong></em><em> memory_values.has </em>(<em>a_name</em>)<em> </em><em><strong>then</strong></em><em>
+                Result </em>:=<em> memory_values.item </em>(<em>a_name</em>)<em>
+            </em><em><strong>else</strong></em><em>
+                 Result </em>:=<em> 0.0
+            </em><em><strong>end
+        end</strong></em><em>
+
+    set_memory_value </em>(<em>a_value</em>:<em> DOUBLE</em>;<em> a_name</em>:<em> STRING</em>)<em> </em><em><strong>is</strong></em><em>
+            </em>-- Store <em>a_value</em> into <em>a_name</em>.<em>
+        </em><em><strong>require</strong></em><em>
+            a_name_not_void</em>:<em> a_name </em>/=<em> Void
+        </em><em><strong>do</strong></em><em>
+            memory_values.force </em>(<em>a_value</em>,<em> a_name</em>)<em>
+        </em><em><strong>ensure</strong></em><em>
+            memory_value_set</em>:<em> memory_value </em>(<em>a_name</em>) =<em> a_value
+        </em><em><strong>end</strong></em><em>
+
+</em><em><strong>feature</strong></em><em> </em>{<em>NONE</em>} -- Implementation<em>
+
+    memory_values</em>:<em> DS_HASH_TABLE </em>[<em>DOUBLE, STRING</em>]<em>
+            </em>-- Values already stored so far<em>
+
+</em><em><strong>invariant</strong></em><em>
+
+    memory_values_not_void</em>:<em> memory_values </em>/= <em>Void
+</em>
+<em><strong>end</strong></em> -- class MCALC</font></pre>
+</blockquote>
+
 <hr size="1">
 
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1998</b></font><font
+            <font size="2"><b>Copyright © 1999</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -670,7 +1039,7 @@ rest of the current line of input.</p>
             <strong>http:</strong></font><a
             href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 8 August 1998</font><br>
+            <strong>Last Updated:</strong> 25 March 1999</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
