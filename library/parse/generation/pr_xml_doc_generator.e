@@ -25,7 +25,7 @@ feature {NONE} -- Generation
 	print_grammar_header (a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print grammar documentation header to `a_file'.
 		do
-			a_file.put_line ("<?xml version=%"1.0%"?>")
+			a_file.put_line ("<?xml version=%"1.0%" encoding=%"iso-8859-1%"?>")
 			a_file.put_line ("<grammar>")
 		end
 

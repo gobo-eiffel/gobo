@@ -216,8 +216,12 @@ feature {NONE} -- Generation
 					a_file.put_string ("&gt;")
 				when '&' then
 					a_file.put_string ("&amp;")
-				else
+				when 'A'..'Z','a'..'z','0'..'9','_' then
 					a_file.put_character (c)
+				else
+					a_file.put_string ("&#")
+					a_file.put_string (c.code.out)
+					a_file.put_character (';')
 				end
 				i := i + 1
 			end
