@@ -13,11 +13,12 @@ indexing
 
 deferred class UT_COMMAND
 
-feature -- Execution
+obsolete
 
-	execute is
-			-- Execute current command.
-		deferred
-		end
+	"[011010] Use DP_COMMAND instead."
+
+inherit
+
+	DB_COMMAND
 
 end -- class UT_COMMAND

@@ -13,27 +13,17 @@ indexing
 
 class UT_DO_NOTHING_COMMAND
 
+obsolete
+
+	"[011010] Use DP_DO_NOTHING_COMMAND instead."
+
 inherit
 
 	UT_COMMAND
+	DP_DO_NOTHING_COMMAND
 
 creation
 
 	make
-
-feature {NONE} -- Initialization
-
-	make is
-			-- Create a new command.
-		do
-		end
-
-feature -- Execution
-
-	execute is
-			-- Execute current command.
-		do
-			-- Do nothing.
-		end
 
 end -- class UT_DO_NOTHING_COMMAND
