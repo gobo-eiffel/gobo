@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			id := an_id
 			universe := a_universe
-			!! features.make (100)
+			!! named_features.make (100)
 		ensure
 			name_set: name = a_name
 			id_set: id = an_id
@@ -58,12 +58,6 @@ feature -- Access
 
 	name: ET_IDENTIFIER
 			-- Class name
-
-	features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
-			-- Features indexed by name
-
-	seeds: DS_HASH_TABLE [ET_FEATURE, INTEGER]
-			-- Features indexed by seed ID
 
 	invariants: ET_ASSERTIONS
 			-- Invariants
@@ -169,19 +163,29 @@ feature -- Genealogy
 			ancestor_not_void: Result /= Void
 		end
 
-	descendants: DS_ARRAYED_LIST [ET_CLASS]
+	descendants: DS_ARRAYED_LIST [ET_CLASS] is
 			-- Proper descendant classes
-
-	has_descendant (a_class: ET_CLASS): BOOLEAN is
-			-- Is `a_class' known to be a proper
-			-- descendant of current class?
-		require
-			a_class_not_void: a_class /= Void
 		do
-			if descendants /= Void then
-				Result := descendants.has (a_class)
+			if has_descendants then
+				Result := universe.descendants (Current)
+			else
+				!! Result.make (0)
 			end
+		ensure
+			descendants_not_void: Result /= Void
+			no_void_descendant: not Result.has (Void)
 		end
+
+	has_descendants: BOOLEAN
+			-- Does current class have proper descendants?
+
+feature -- Features
+
+	named_features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
+			-- Features indexed by name
+
+	seeded_features: DS_HASH_TABLE [ET_FEATURE, INTEGER]
+			-- Features indexed by seed ID
 
 feature -- System
 
@@ -201,7 +205,7 @@ feature -- System
 				else
 					universe.any_class.add_to_system
 				end
-				a_cursor := features.new_cursor
+				a_cursor := named_features.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_cursor.item.add_to_system
 					a_cursor.forth
@@ -277,16 +281,21 @@ feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 		end
 
 	put_feature (a_feature: ET_FEATURE) is
-			-- Add `a_feature' to `features'.
+			-- Add `a_feature' to `named_features'.
 		require
 			a_feature_not_void: a_feature /= Void
 		local
 			a_name: ET_FEATURE_NAME
+			other_feature: ET_FEATURE
 		do
 			a_name := a_feature.name
-			if not features.has (a_name) then
-				features.force (a_feature, a_name)
+			named_features.search (a_name)
+			if not named_features.found then
+				named_features.force_new (a_feature, a_name)
 			else
+				other_feature := named_features.found_item
+				error_handler.report_vmfna_error (Current, other_feature, a_feature)
+				set_flatten_error
 			end
 		end
 
@@ -303,9 +312,10 @@ feature -- Compilation: genealogy status
 	ancestors_searched: BOOLEAN is
 			-- Have `ancestors' been searched?
 		do
-			Result := ancestors /= Void
+			Result := has_ancestors_error or (ancestors /= Void)
 		ensure
-			definition: Result = (ancestors /= Void)
+			ancestors_not_void: (Result and not has_ancestors_error)
+				implies (ancestors /= Void)
 		end
 
 	has_ancestors_error: BOOLEAN
@@ -322,7 +332,7 @@ feature -- Compilation: genealogy
 			no_syntax_error: not has_syntax_error
 		local
 			a_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS]
-			sorted_anc, anc: DS_ARRAYED_LIST [ET_CLASS]
+			sorted_anc: DS_ARRAYED_LIST [ET_CLASS]
 			a_parents, any_parents: like parents
 			a_cycle: DS_ARRAYED_LIST [ET_CLASS]
 			a_class: ET_CLASS
@@ -424,13 +434,11 @@ feature {ET_PARENTS, ET_CLASS} -- Compilation: genealogy
 						-- Error: class not in universe
 						-- (VTCT, ETL2 p.199).
 					error_handler.report_vtct_error (an_heir, a_type)
-					!! ancestors.make_map (0)
-					has_ancestors_error := True
+					set_ancestors_error
 				elseif has_syntax_error then
 						-- This error has already been reported
 						-- somewhere else.
-					!! ancestors.make_map (0)
-					has_ancestors_error := True
+					set_ancestors_error
 				elseif parents = Void then
 					if Current = universe.general_class then
 						!! ancestors.make_map (0)
@@ -444,13 +452,11 @@ feature {ET_PARENTS, ET_CLASS} -- Compilation: genealogy
 								-- Error: class ANY not in universe
 								-- (VTCT, ETL2 p.199).
 							error_handler.report_vtct_any_error (Current)
-							!! ancestors.make_map (0)
-							has_ancestors_error := True
+							set_ancestors_error
 						elseif any_class.has_syntax_error then
 								-- This error has already been reported
 								-- somewhere else.
-							!! ancestors.make_map (0)
-							has_ancestors_error := True
+							set_ancestors_error
 						else
 							a_sorter.force (Current)
 							universe.any_parents.add_to_sorter (Current, a_sorter)
@@ -465,14 +471,15 @@ feature {ET_PARENTS, ET_CLASS} -- Compilation: genealogy
 
 feature {ET_PARENTS} -- Compilation: genealogy
 
-	set_ancestors (an_ancestors: like ancestors) is
-			-- Set `ancestors' to `an_ancestors'.
+	set_ancestors (some_ancestors: like ancestors) is
+			-- Set `ancestors' to `some_ancestors'.
 		require
-			an_ancestors_not_void: an_ancestors /= Void
+			some_ancestors_not_void: some_ancestors /= Void
+			no_void_ancestor: not some_ancestors.has_item (Void)
 		do
-			ancestors := an_ancestors
+			ancestors := some_ancestors
 		ensure
-			ancestors_set: ancestors = an_ancestors
+			ancestors_set: ancestors = some_ancestors
 		end
 
 	add_descendant (a_class: ET_CLASS) is
@@ -481,14 +488,10 @@ feature {ET_PARENTS} -- Compilation: genealogy
 			a_class_not_void: a_class /= Void
 			ancestors_searched: a_class.ancestors_searched
 			no_ancestors_error: not a_class.has_ancestors_error
-			not_descendant: not has_descendant (a_class)
 		do
-			if descendants = Void then
-				!! descendants.make (10)
-			end
-			descendants.force_last (a_class)
+			has_descendants := True
 		ensure
-			inserted: has_descendant (a_class)
+			inserted: has_descendants
 		end
 
 feature {ET_PARENTS, ET_PARENT, ET_CLASS, ET_FORMAL_GENERIC_PARAMETERS} -- Compilation: genealogy
@@ -498,21 +501,23 @@ feature {ET_PARENTS, ET_PARENT, ET_CLASS, ET_FORMAL_GENERIC_PARAMETERS} -- Compi
 		local
 			i, nb: INTEGER
 			a_class: ET_CLASS
+			desc: like descendants
 		do
 			has_ancestors_error := True
-			!! ancestors.make_map (0)
-			if descendants /= Void then
-				nb := descendants.count
+			ancestors := Void
+			if has_descendants then
+				desc := descendants
+				nb := desc.count
 				from i := 1 until i > nb loop
-					a_class := descendants.item (i)
+					a_class := desc.item (i)
 					if not a_class.has_ancestors_error then
 						a_class.set_ancestors_error
 					end
 					i := i + 1
 				end
-				descendants := Void
 			end
 		ensure
+			ancestors_searched: ancestors_searched
 			has_ancestors_error_set: has_ancestors_error
 		end
 
@@ -521,9 +526,10 @@ feature -- Compilation: flattening status
 	is_flattened: BOOLEAN is
 			-- Have features been flattened?
 		do
-			Result := seeds /= Void
+			Result := has_flatten_error or (seeded_features /= Void)
 		ensure
-			definition: Result = (seeds /= Void)
+			seeded_features_not_void: (Result and not has_flatten_error)
+				implies (seeded_features /= Void)
 		end
 
 	has_flatten_error: BOOLEAN
@@ -541,70 +547,77 @@ feature -- Compilation: feature flattening
 			a_flattener: ET_FEATURE_FLATTENER
 			any_parents: ET_PARENTS
 		do
+				-- Search ancestors even if `is_flattened' is True
+				-- because `has_flatten_error' could have been set
+				-- during the parsing by ET_CLASS.put_feature and
+				-- we want to search the ancestors (if not already
+				-- done) anyway (see postcondition).
+			search_ancestors
 			if not is_flattened then
-				search_ancestors
 				if not has_ancestors_error then
-					a_flattener := Shared_feature_flattener
+					a_flattener := universe.feature_flattener
 					if parents = Void then
 						if Current = universe.general_class then
 							a_flattener.set_current_class (Current)
+							a_flattener.flatten
 						elseif Current = universe.any_class then
 								-- ISE Eiffel has no GENERAL class anymore.
 								-- Use ANY has class root now.
 							a_flattener.set_current_class (Current)
+							a_flattener.flatten
 						else
 							any_parents := universe.any_parents
 							any_parents.flatten
 							if any_parents.has_flatten_error then
-								!! seeds.make (0)
-								has_flatten_error := True
+								set_flatten_error
 							else
 								a_flattener.set_current_class (Current)
 								any_parents.add_inherited_features (a_flattener)
+								a_flattener.flatten
 							end
 						end
 					else
 						parents.flatten
 						if parents.has_flatten_error then
-							!! seeds.make (0)
-							has_flatten_error := True
+							set_flatten_error
 						else
 							a_flattener.set_current_class (Current)
 							parents.add_inherited_features (a_flattener)
+							a_flattener.flatten
 						end
 					end
-					a_flattener.flatten
 				else
-					!! seeds.make (0)
-					has_flatten_error := True
+					set_flatten_error
 				end
 			end
 		ensure
-			ancestors_not_void: ancestors /= Void
+			ancestors_searched: ancestors_searched
 			flattened: is_flattened
 		end
 
 feature {ET_FEATURE_FLATTENER} -- Compilation: feature flattening
 
-	set_seeds (a_seeds: like seeds) is
-			-- Set `seeds' to `a_seeds'.
-		require
-			a_seeds_not_void: a_seeds /= Void
-			no_void_feature: not a_seeds.has_item (Void)
+	set_flatten_error is
+			-- Set `has_flatten_error' to True.
 		do
-			seeds := a_seeds
+			has_flatten_error := True
+			seeded_features := Void
 		ensure
-			seeds_set: seeds = a_seeds
+			is_flattened: is_flattened
+			has_flatten_error: has_flatten_error
 		end
 
-feature {NONE} -- Implementation
+feature {ET_FEATURE_FLATTENER} -- Compilation: feature flattening
 
-	Shared_feature_flattener: ET_FEATURE_FLATTENER is
-			-- Shared feature flattener
-		once
-			!! Result.make (Current)
+	set_seeded_features (some_features: like seeded_features) is
+			-- Set `seeded_features' to `a_features'.
+		require
+			some_features_not_void: some_features /= Void
+			no_void_feature: not some_features.has_item (Void)
+		do
+			seeded_features := some_features
 		ensure
-			feature_flattener_not_void: Result /= Void
+			seeded_features_set: seeded_features = some_features
 		end
 
 invariant
@@ -612,9 +625,9 @@ invariant
 	name_not_void: name /= Void
 	id_positive: id >= 0
 	universe_not_void: universe /= Void
-	features_not_void: features /= Void
-	no_void_feature: not features.has_item (Void)
-	no_void_seeded_feature: seeds /= Void implies not seeds.has_item (Void)
+	named_features_not_void: named_features /= Void
+	no_void_feature: not named_features.has_item (Void)
+	no_void_seeded_feature: seeded_features /= Void implies not seeded_features.has_item (Void)
 	no_void_ancestor: ancestors /= Void implies not ancestors.has_item (Void)
 
 end -- class ET_CLASS
