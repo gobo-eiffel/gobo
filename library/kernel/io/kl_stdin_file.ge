@@ -468,6 +468,7 @@ feature {NONE} -- GC
 	dispose is
 			-- Do not close standard input file.
 		do
+			handle := INVALID_HANDLE_VALUE
 		end
 
 #endif
