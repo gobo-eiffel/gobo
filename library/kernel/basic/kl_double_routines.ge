@@ -16,8 +16,9 @@ class KL_DOUBLE_ROUTINES
 inherit
 	DOUBLE_MATH
 		rename
-			log as org_log,
-			log10 as org_log10
+			exp,
+			log as old_log,
+			log10 as old_log10
 		export
 			{NONE} all
 		end
@@ -27,7 +28,8 @@ inherit
 inherit
 	MATH
 		rename
-			log as org_log
+			epx,
+			log as old_log
 		export
 			{NONE} all
 		end
@@ -83,14 +85,14 @@ feature -- Exponent
 		end
 #endif
 
-	nth_root (d, other: DOUBLE): DOUBLE is
-			-- Take the nth root.
+	nth_root (d, nth: DOUBLE): DOUBLE is
+			-- `nth' root of `d'.
 		do
 #ifdef ISE || VE
-			Result := d ^ (1 / other)
+			Result := d ^ (1 / nth)
 #endif
 #ifdef SE
-			Result := d.pow (1 / other)
+			Result := d.pow (1 / nth)
 #endif
 		end
 
