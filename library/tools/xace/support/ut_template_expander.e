@@ -1,11 +1,14 @@
 indexing
 
-   description:
+	description:
 
-   "expands special tokens in a template with given parameters"
+		"Expands special tokens in a template with given parameters"
 
-   author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-   license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
    UT_TEMPLATE_EXPANDER

@@ -4,12 +4,11 @@ indexing
 
 		"Xace XML preprocessor"
 
-	library:   "Gobo Eiffel Tools Library"
-	author:    "Andreas Leitner <nozone@sbox.tugraz.at>"
+	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
-	license:   "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:      "$Date$"
-	revision:  "$Revision$"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_XACE_PREPROCESSOR
 

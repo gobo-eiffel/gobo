@@ -4,12 +4,11 @@ indexing
 
 		"Error: Undefined environment variable"
 
-	library:    "Gobo Eiffel Utility Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Utility Library"
+	copyright: "Copyright (c) 2000, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class UT_UNDEFINED_ENVIRONMENT_VARIABLE_ERROR
 

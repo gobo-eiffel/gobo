@@ -1,21 +1,20 @@
 <?xml version="1.0"?>
 
-<cluster name="kernel" abstract="True">
+<cluster name="kernel" abstract="true">
 
 	<description>
 		description: "Xace file for the Eiffel compilers' kernel libraries"
-		author:      "Eric Bezault [ericb@gobosoft.com]"
-		copyright:   "Copyright (c) 2001, Eric Bezault and others"
-		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
-		date:        "$Date$"
-		revision:    "$Revision$"
+		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
-	<cluster name="ise" location="${ISE_EIFFEL}/library" abstract="True" if="${GOBO_EIFFEL}=ise">
-		<cluster name="base" abstract="True">
+	<cluster name="ise" location="${ISE_EIFFEL}/library" abstract="true" if="${GOBO_EIFFEL}=ise">
+		<cluster name="base" abstract="true">
 			<cluster name="kernel"/>
 			<cluster name="support"/>
-			<cluster name="structures" abstract="True">
+			<cluster name="structures" abstract="true">
 				<cluster name="access"/>
 				<cluster name="cursors"/>
 				<cluster name="cursor_tree"/>
@@ -34,9 +33,9 @@
 		</cluster>
 	</cluster>
 
-	<cluster name="hact" abstract="True" if="${GOBO_EIFFEL}=hact"/>
+	<cluster name="hact" abstract="true" if="${GOBO_EIFFEL}=hact"/>
 
-	<cluster name="se" location="${SmallEiffelDirectory}/lib" abstract="True" if="${GOBO_EIFFEL}=se">
+	<cluster name="se" location="${SmallEiffelDirectory}/lib" abstract="true" if="${GOBO_EIFFEL}=se">
 		<cluster name="base"/>
 		<cluster name="io"/>
 		<cluster name="iterator"/>
@@ -47,12 +46,12 @@
 		<cluster name="time"/>
 	</cluster>
 
-	<cluster name="ve" location="${VE_Lib}" abstract="True" if="${GOBO_EIFFEL}=ve">
+	<cluster name="ve" location="${VE_Lib}" abstract="true" if="${GOBO_EIFFEL}=ve">
 		<cluster name="Kernel"/>
-		<cluster name="Misc" abstract="True">
+		<cluster name="Misc" abstract="true">
 			<cluster name="Pool"/>
 		</cluster>
-		<cluster name="Tools" abstract="True">
+		<cluster name="Tools" abstract="true">
 			<cluster name="gArgs"/>
 		</cluster>
 		<cluster name="TimeDate"/>

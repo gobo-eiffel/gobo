@@ -4,12 +4,11 @@ indexing
 
 		"Eiffel 'like Identifier' types"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_LIKE_IDENTIFIER
 
@@ -121,6 +120,7 @@ feature -- Type processing
 				end
 			end
 			if Result = Void then
+-- TODO:
 print (a_class.name.name)
 print (".")
 print (a_feature.name.name)
@@ -139,6 +139,7 @@ feature -- Conversion
 			-- when `a_type' in a generic type not fully derived
 			-- (Definition of base type in ETL2 p. 198)
 		do
+-- TODO:
 -- Error already reported by `resolved_identifier_types'.
 print (a_type.base_class.name.name)
 print (": unknown identifier in 'like ")

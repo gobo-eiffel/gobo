@@ -4,12 +4,11 @@ indexing
 
 		"Eiffel 'like feature' types"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_LIKE_FEATURE
 
@@ -127,10 +126,12 @@ feature -- Conversion
 						-- anchored types.
 					Result := a_query.type.base_type (a_feature, a_type)
 				else
+-- TODO:
 -- ERROR
 					Result := Current
 				end
 			else
+-- TODO:
 -- ERROR
 				Result := Current
 			end

@@ -5,12 +5,11 @@ indexing
 		"Named Eiffel types (either the name of a class or %
 		%the name of a formal generic parameter)"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_NAMED_TYPE
 
@@ -113,6 +112,7 @@ feature -- Type processing
 			a_parameter := a_class.generic_parameter (name)
 			if a_parameter /= Void then
 				if type_mark /= Void then
+					-- TODO:
 					-- ERROR
 				end
 				Result := ast_factory.new_formal_generic_type (name, a_parameter.index)

@@ -4,12 +4,11 @@ indexing
 
 		"Error: Missing child attribute in element error"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_XACE_MISSING_ATTRIBUTE_ERROR
 

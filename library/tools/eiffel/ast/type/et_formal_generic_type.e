@@ -4,12 +4,11 @@ indexing
 
 		"Eiffel formal generic parameter types"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_FORMAL_GENERIC_TYPE
 
@@ -204,6 +203,7 @@ feature -- Conversion
 				parameters := a_generic_class_type.generic_parameters
 			end
 			if parameters = Void or else index > parameters.count then
+-- TODO:
 -- Error already reported elsewhere.
 print (a_type.base_class.name.name)
 print (": unknown formal type #")

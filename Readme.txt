@@ -12,8 +12,8 @@ Eiffel compiler while taking advantage of the goodies included in
 this package.
 
 The software included in this package is copyrighted freeware distributed
-under the terms and conditions of the Eiffel Forum Freeware License as 
-specified in file License.txt.
+under the terms and conditions of the Eiffel Forum License as specified
+in file License.txt.
 
 This package consists of seven Eiffel libraries:
 
@@ -112,7 +112,5 @@ your projects and how easy (or difficult) it was to adapt this software
 for your specific needs. Thank you in advance.
 
 --
-Copyright (c) 1997-2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 1997-2002, Eric Bezault and others
 29 April 2001

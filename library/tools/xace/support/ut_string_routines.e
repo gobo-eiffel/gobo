@@ -1,3 +1,15 @@
+indexing
+
+	description:
+
+		""
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2001, Andreas Leitner and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
 	
 	UT_STRING_ROUTINES
@@ -153,6 +165,3 @@ feature
 		end
 
 end
-
-
-

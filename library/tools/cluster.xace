@@ -1,19 +1,18 @@
 <?xml version="1.0"?>
 
-<cluster name="tools" location="${GOBO}/library/tools" abstract="True">
+<cluster name="tools" location="${GOBO}/library/tools" abstract="true">
 
 	<description>
 		description: "Xace file for the Gobo Eiffel Tools Library"
-		library:     "Gobo Eiffel Tools Library"
-		author:      "Eric Bezault [ericb@gobosoft.com]"
-		copyright:   "Copyright (c) 2001, Eric Bezault and others"
-		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
-		date:        "$Date$"
-		revision:    "$Revision$"
+		library: "Gobo Eiffel Tools Library"
+		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
-	<cluster name="eiffel" abstract="True">
-		<cluster name="ast" abstract="True">
+	<cluster name="eiffel" abstract="true">
+		<cluster name="ast" abstract="true">
 			<cluster name="assertion"/>
 			<cluster name="class"/>
 			<cluster name="constant"/>
@@ -28,12 +27,12 @@
 		<cluster name="error"/>
 		<cluster name="parser"/>
 	</cluster>
-	<cluster name="lace" abstract="True">
+	<cluster name="lace" abstract="true">
 		<cluster name="ast"/>
 		<cluster name="error"/>
 		<cluster name="parser"/>
 	</cluster>
-	<cluster name="xace" abstract="True">
+	<cluster name="xace" abstract="true">
 		<cluster name="ast"/>
 		<cluster name="error"/>
 		<cluster name="generator"/>

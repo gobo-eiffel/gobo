@@ -14,9 +14,6 @@ error
     Error messages and error handling cluster.
 formatter
     Formatter classes for IO operations or string handling.
-spec
-    Eiffel compiler dependent classes (filenames suffixed by
-    ".ge" instead of ".e" in other clusters).
 support
     Miscellaneous classes.
 
@@ -24,6 +21,4 @@ A more detailed documentation for this library will be provided in
 future releases.
 
 --
-Copyright (c) 1997-2001, Eric Bezault
-mailto:ericb@gobosoft.com
-http://www.gobosoft.com
+Copyright (c) 1997-2001, Eric Bezault and others

@@ -4,12 +4,11 @@ indexing
 
 		"Eiffel 'like argument' types"
 
-	library:    "Gobo Eiffel Tools Library"
-	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2001-2002, Eric Bezault and others"
-	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ET_LIKE_ARGUMENT
 
@@ -119,6 +118,7 @@ feature -- Conversion
 			if a_routine /= Void then
 				args := a_routine.arguments
 				if args = Void or else index > args.count then
+-- TODO:
 -- ERROR
 					Result := Current
 				else
@@ -128,6 +128,7 @@ feature -- Conversion
 					Result := args.item (index).type.base_type (a_feature, a_type)
 				end
 			else
+-- TODO:
 -- ERROR
 				Result := Current
 			end

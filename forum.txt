@@ -1,22 +1,19 @@
-Eiffel Forum Freeware License, version 1
+Eiffel Forum License, version 1
 
-Permission is hereby granted, without written agreement and without
-license or royalty fees, to use, copy, modify and/or distribute this
-package, provided that:
+Permission is hereby granted to use, copy, modify and/or distribute
+this package, provided that:
 
   - copyright notices are retained unchanged
 
   - any distribution of this package, whether modified or not,
     includes this file
 
-Permission is hereby also granted, without written agreement and
-without license or royalty fees, to distribute binary programs which
+Permission is hereby also granted to distribute binary programs which
 depend on this package, provided that:
 
   - if the binary program depends on a modified version of this
     package, you must publicly release the modified version of this
-    package - for example by submitting it to the Eiffel Forum archive
-    (http://www.eiffel-forum.org/archive/)
+    package
 
 THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT WARRANTY. ANY EXPRESS OR
 IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
