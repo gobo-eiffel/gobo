@@ -130,8 +130,7 @@ feature -- Processing
 			-- Process `an_assertion'.
 		do
 			an_assertion.assertion.process (Current)
-			file.put_character (';')
-			process_break (an_assertion.semicolon.break)
+			an_assertion.semicolon.process (Current)
 		end
 
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
@@ -231,21 +230,17 @@ feature -- Processing
 	process_braced_class_name (a_name: ET_BRACED_CLASS_NAME) is
 			-- Process `a_name'.
 		do
-			file.put_character ('{')
-			process_break (a_name.left_brace.break)
+			a_name.left_brace.process (Current)
 			a_name.class_name.process (Current)
-			file.put_character ('}')
-			process_break (a_name.right_brace.break)
+			a_name.right_brace.process (Current)
 		end
 
 	process_braced_type (a_type: ET_BRACED_TYPE) is
 			-- Process `a_type'.
 		do
-			file.put_character ('{')
-			process_break (a_type.left_brace.break)
+			a_type.left_brace.process (Current)
 			a_type.type.process (Current)
-			file.put_character ('}')
-			process_break (a_type.right_brace.break)
+			a_type.right_brace.process (Current)
 		end
 
 	process_break (a_break: ET_BREAK) is
@@ -332,8 +327,20 @@ feature -- Processing
 
 	process_call_agent (an_expression: ET_CALL_AGENT) is
 			-- Process `an_expression'.
+		local
+			a_target: ET_AGENT_TARGET
+			an_arguments: ET_AGENT_ACTUAL_ARGUMENT_LIST
 		do
 			an_expression.agent_keyword.process (Current)
+			a_target := an_expression.target
+			if a_target /= Void then
+				a_target.process (Current)
+			end
+			an_expression.qualified_name.process (Current)
+			an_arguments := an_expression.arguments
+			if an_arguments /= Void then
+				an_arguments.process (Current)
+			end
 		end
 
 	process_call_expression (an_expression: ET_CALL_EXPRESSION) is
@@ -388,8 +395,7 @@ feature -- Processing
 			-- Process `a_choice'.
 		do
 			a_choice.choice.process (Current)
-			file.put_character (',')
-			process_break (a_choice.comma.break)
+			a_choice.comma.process (Current)
 		end
 
 	process_choice_list (a_list: ET_CHOICE_LIST) is
@@ -467,8 +473,7 @@ feature -- Processing
 			-- Process `a_name'.
 		do
 			a_name.class_name.process (Current)
-			file.put_character (',')
-			process_break (a_name.comma.break)
+			a_name.comma.process (Current)
 		end
 
 	process_class_type (a_type: ET_CLASS_TYPE) is
@@ -500,8 +505,7 @@ feature -- Processing
 	process_colon_type (a_type: ET_COLON_TYPE) is
 			-- Process `a_type'.
 		do
-			file.put_character (':')
-			process_break (a_type.colon.break)
+			a_type.colon.process (Current)
 			a_type.type.process (Current)
 		end
 
@@ -557,8 +561,7 @@ feature -- Processing
 			a_creation_procedures: ET_CONSTRAINT_CREATOR
 		do
 			a_parameter.name.process (Current)
-			file.put_string ("->")
-			process_break (a_parameter.arrow_symbol.break)
+			a_parameter.arrow_symbol.process (Current)
 			a_parameter.constraint.process (Current)
 			a_creation_procedures := a_parameter.creation_procedures
 			if a_creation_procedures /= Void then
@@ -922,8 +925,7 @@ feature -- Processing
 	process_dot_feature_name (a_name: ET_DOT_FEATURE_NAME) is
 			-- Process `a_name'.
 		do
-			file.put_character ('.')
-			process_break (a_name.dot.break)
+			a_name.dot.process (Current)
 			a_name.feature_name.process (Current)
 		end
 
@@ -1214,8 +1216,7 @@ feature -- Processing
 			-- Process `an_argument'.
 		do
 			an_argument.formal_argument.process (Current)
-			file.put_character (';')
-			process_break (an_argument.semicolon.break)
+			an_argument.semicolon.process (Current)
 		end
 
 	process_formal_argument_list (a_list: ET_FORMAL_ARGUMENT_LIST) is
@@ -1223,15 +1224,13 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 		do
-			file.put_character ('(')
-			process_break (a_list.left_parenthesis.break)
+			a_list.left_parenthesis.process (Current)
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
 				i := i + 1
 			end
-			file.put_character (')')
-			process_break (a_list.right_parenthesis.break)
+			a_list.right_parenthesis.process (Current)
 		end
 
 	process_formal_comma_argument (an_argument: ET_FORMAL_COMMA_ARGUMENT) is
@@ -1250,8 +1249,7 @@ feature -- Processing
 			-- Process `a_parameter'.
 		do
 			a_parameter.formal_parameter.process (Current)
-			file.put_character (',')
-			process_break (a_parameter.comma.break)
+			a_parameter.comma.process (Current)
 		end
 
 	process_formal_parameter_list (a_list: ET_FORMAL_PARAMETER_LIST) is
@@ -1259,15 +1257,13 @@ feature -- Processing
 		local
 			i, nb: INTEGER
 		do
-			file.put_character ('[')
-			process_break (a_list.left_bracket.break)
+			a_list.left_bracket.process (Current)
 			nb := a_list.count
 			from i := 1 until i > nb loop
 				a_list.item (i).process (Current)
 				i := i + 1
 			end
-			file.put_character (']')
-			process_break (a_list.right_bracket.break)
+			a_list.right_bracket.process (Current)
 		end
 
 	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE) is
@@ -1325,16 +1321,14 @@ feature -- Processing
 			-- Process `an_identifier'.
 		do
 			an_identifier.identifier.process (Current)
-			file.put_character (':')
-			process_break (an_identifier.colon.break)
+			an_identifier.colon.process (Current)
 		end
 
 	process_identifier_comma (an_identifier: ET_IDENTIFIER_COMMA) is
 			-- Process `an_identifier'.
 		do
 			an_identifier.identifier.process (Current)
-			file.put_character (',')
-			process_break (an_identifier.comma.break)
+			an_identifier.comma.process (Current)
 		end
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION) is
@@ -1369,16 +1363,14 @@ feature -- Processing
 			-- Process `an_indexing'.
 		do
 			an_indexing.indexing_item.process (Current)
-			file.put_character (';')
-			process_break (an_indexing.semicolon.break)
+			an_indexing.semicolon.process (Current)
 		end
 
 	process_indexing_term_comma (an_indexing_term: ET_INDEXING_TERM_COMMA) is
 			-- Process `an_indexing_term'.
 		do
 			an_indexing_term.indexing_term.process (Current)
-			file.put_character (',')
-			process_break (an_indexing_term.comma.break)
+			an_indexing_term.comma.process (Current)
 		end
 
 	process_indexing_term_list (a_list: ET_INDEXING_TERM_LIST) is
@@ -1543,8 +1535,7 @@ feature -- Processing
 			-- Process `an_argument'.
 		do
 			a_local.local_variable.process (Current)
-			file.put_character (';')
-			process_break (a_local.semicolon.break)
+			a_local.semicolon.process (Current)
 		end
 
 	process_local_comma_variable (a_local: ET_LOCAL_COMMA_VARIABLE) is
@@ -1856,8 +1847,7 @@ feature -- Processing
 			-- Process `a_parent'.
 		do
 			a_parent.parent.process (Current)
-			file.put_character (';')
-			process_break (a_parent.semicolon.break)
+			a_parent.semicolon.process (Current)
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
@@ -2190,8 +2180,7 @@ feature -- Processing
 			-- Process `a_type'.
 		do
 			a_type.type.process (Current)
-			file.put_character (',')
-			process_break (a_type.comma.break)
+			a_type.comma.process (Current)
 		end
 
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
