@@ -15,8 +15,7 @@ deferred class KL_TEST_STDERR_FILE
 
 inherit
 
-	TS_TEST_CASE
-
+	KL_TEST_CASE
 	KL_SHARED_STANDARD_FILES
 
 feature -- Status report
@@ -36,6 +35,15 @@ feature -- Test
 			assert ("a_file_not_void", a_file /= Void)
 			assert_equal ("name_set", "stderr", a_file.name)
 			assert ("is_open", a_file.is_open_write)
+		end
+
+	test_eol is
+			-- Test feature `eol'.
+		local
+			a_file: KL_STDERR_FILE
+		do
+			!! a_file.make
+			assert_equal ("eol", "%N", a_file.eol)
 		end
 
 	test_put_character is
@@ -131,6 +139,31 @@ feature -- Test
 				a_file.put_boolean (True)
 				a_file.put_new_line
 				a_file.put_boolean (False)
+				a_file.put_new_line
+				a_file.flush
+			end
+		end
+
+	test_put_line is
+			-- Test feature `put_line'.
+		local
+			a_file: KL_STDERR_FILE
+		do
+			if write_to_console then
+				std.output.put_string ("Expected:")
+				std.output.put_new_line
+				std.output.put_string ("This is the first line,")
+				std.output.put_new_line
+				std.output.put_string ("this is the second line.")
+				std.output.put_new_line
+				std.output.put_character ('#')
+				std.output.put_new_line
+				std.output.put_string ("Got:")
+				std.output.put_new_line
+				!! a_file.make
+				a_file.put_line ("This is the first line,")
+				a_file.put_line ("this is the second line.")
+				a_file.put_character ('#')
 				a_file.put_new_line
 				a_file.flush
 			end

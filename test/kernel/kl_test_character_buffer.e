@@ -15,8 +15,7 @@ deferred class KL_TEST_CHARACTER_BUFFER
 
 inherit
 
-	TS_TEST_CASE
-
+	KL_TEST_CASE
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
 feature -- Test
@@ -137,7 +136,7 @@ feature -- Test
 			nb: INTEGER
 		do
 			!! a_buffer.make (11)
-			a_name := Execution_environment.interpreted_string ("$GOBO/test/kernel/data/gobo.txt")
+			a_name := Execution_environment.interpreted_string (gobo_filename)
 			!! a_file.make (a_name)
 			a_file.open_read
 			if a_file.is_open_read then

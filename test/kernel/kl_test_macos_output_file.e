@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test features of class KL_OUTPUT_FILE"
+		"Test features of class KL_MACOS_OUTPUT_FILE"
 
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class KL_TEST_OUTPUT_FILE
+deferred class KL_TEST_MACOS_OUTPUT_FILE
 
 inherit
 
@@ -22,7 +22,7 @@ feature -- Test
 	test_make is
 			-- Test feature `make'.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -35,18 +35,18 @@ feature -- Test
 	test_eol is
 			-- Test feature `eol'.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
 			!! a_file.make (a_name)
-			assert_equal ("eol", "%N", a_file.eol)
+			assert_equal ("eol", "%R", a_file.eol)
 		end
 
 	test_open_write is
 			-- Test feature `open_write'.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -63,7 +63,7 @@ feature -- Test
 	test_put_character is
 			-- Test feature `put_character'.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -92,7 +92,7 @@ feature -- Test
 	test_put_string is
 			-- Test feature `put_string'.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -114,7 +114,7 @@ feature -- Test
 	test_put_line is
 			-- Test feature `put_line'.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -136,7 +136,7 @@ feature -- Test
 	test_put_new_line is
 			-- Test feature `put_new_line'.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -160,7 +160,7 @@ feature -- Test
 	test_put_integer is
 			-- Test feature `put_integer'.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -185,7 +185,7 @@ feature -- Test
 	test_put_boolean is
 			-- Test feature `put_boolean'.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -208,7 +208,7 @@ feature -- Test
 	test_flush is
 			-- Test feature `flush'.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -234,7 +234,7 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file exists and new file does not exist.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			old_name := new_filename ("gobo", ".tmp")
@@ -263,7 +263,7 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file and new file do not exist.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			old_name := new_filename ("gobo", ".tmp")
@@ -281,9 +281,9 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file does not exist and new file exists.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			old_name, new_name: STRING
-			new_file: KL_OUTPUT_FILE
+			new_file: KL_MACOS_OUTPUT_FILE
 		do
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
@@ -312,8 +312,8 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file and new file exist.
 		local
-			a_file: KL_OUTPUT_FILE
-			new_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
+			new_file: KL_MACOS_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			old_name := new_filename ("gobo", ".tmp")
@@ -358,7 +358,7 @@ feature -- Test
 	test_delete_file is
 			-- Test feature `delete_file'.
 		local
-			a_file: KL_OUTPUT_FILE
+			a_file: KL_MACOS_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -377,4 +377,39 @@ feature -- Test
 			end
 		end
 
-end -- class KL_TEST_OUTPUT_FILE
+	test_macos is
+			-- Test that file is a MacOS file.
+		local
+			a_file: KL_MACOS_OUTPUT_FILE
+			in_file: KL_BINARY_INPUT_FILE
+			a_name: STRING
+		do
+			a_name := new_filename ("gobo", ".tmp")
+			!! a_file.make (a_name)
+			a_file.open_write
+			if a_file.is_open_write then
+				a_file.put_new_line
+				a_file.close
+				assert ("is_closed1", a_file.is_closed)
+				assert ("readable1", file_system.is_file_readable (a_name))
+				!! in_file.make (a_name)
+				in_file.open_read
+				if in_file.is_open_read then
+					in_file.read_character
+					assert ("not_eof1", not in_file.end_of_file)
+					assert_equal ("carriage_return", '%R', in_file.last_character)
+					in_file.read_character
+					assert ("eof1", in_file.end_of_file)
+					in_file.close
+					assert ("is_closed2", in_file.is_closed)
+				else
+					assert ("is_opened2", False)
+				end
+				a_file.delete
+				assert ("not_readable1", not file_system.is_file_readable (a_name))
+			else
+				assert ("is_opened1", False)
+			end
+		end
+
+end -- class KL_TEST_MACOS_OUTPUT_FILE

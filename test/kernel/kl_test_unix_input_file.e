@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test features of class KL_INPUT_FILE"
+		"Test features of class KL_UNIX_INPUT_FILE"
 
 	library:    "Gobo Eiffel Kernel Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class KL_TEST_INPUT_FILE
+deferred class KL_TEST_UNIX_INPUT_FILE
 
 inherit
 
@@ -23,7 +23,7 @@ feature -- Test
 	test_make is
 			-- Test feature `make'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -36,7 +36,7 @@ feature -- Test
 	test_eol is
 			-- Test feature `eol'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -47,7 +47,7 @@ feature -- Test
 	test_open_read is
 			-- Test feature `open_read'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 		do
 				-- Existing filename:
@@ -69,7 +69,7 @@ feature -- Test
 	test_read_character is
 			-- Test feature `read_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
@@ -96,7 +96,7 @@ feature -- Test
 	test_unread_character1 is
 			-- Test feature `unread_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
@@ -127,7 +127,7 @@ feature -- Test
 	test_unread_character2 is
 			-- Test feature `unread_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
@@ -150,7 +150,7 @@ feature -- Test
 				a_file.unread_character ('g')
 				assert ("not_eof6", not a_file.end_of_file)
 				assert_equal ("read5", 'g', a_file.last_character)
-				a_file.read_line
+				a_file.read_string (26)
 				assert ("not_eof7", not a_file.end_of_file)
 				assert_equal ("read6", "gobohis is the first line,", a_file.last_string)
 				a_file.close
@@ -163,7 +163,7 @@ feature -- Test
 	test_unread_character3 is
 			-- Test feature `unread_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (empty_filename)
@@ -197,7 +197,7 @@ feature -- Test
 	test_read_string is
 			-- Test feature `read_string'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 			last_string, last_string2: STRING
 		do
@@ -229,37 +229,39 @@ feature -- Test
 			-- Test feature `read_line'.
 			-- The last line has no line-separator.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 			last_string, last_string2: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
 			!! a_file.make (a_name)
-			a_file.open_read
-			if a_file.is_open_read then
-				assert ("not_eof", not a_file.end_of_file)
-				a_file.read_line
-				assert ("not_eof2", not a_file.end_of_file)
-				last_string := a_file.last_string
-				assert_equal ("read1", "This is the first line,", last_string)
-				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("read2", "This is the first line,", a_file.last_string)
-				assert ("not_eof4", not a_file.end_of_file)
-				a_file.read_line
-				last_string2 := a_file.last_string
-				assert ("not_eof5", not a_file.end_of_file)
-				assert_equal ("read3", "this is the second line.", last_string2)
-				assert_same ("same_last_string", last_string, last_string2)
-				a_file.read_line
-				assert ("not_eof6", not a_file.end_of_file)
-				last_string := a_file.last_string
-				assert_equal ("read4", "#", last_string)
-				a_file.read_line
-				assert ("eof1", a_file.end_of_file)
-				a_file.close
-				assert ("is_closed", a_file.is_closed)
-			else
-				assert ("is_opened", False)
+			if a_file.eol.is_equal (file_system.eol) then
+				a_file.open_read
+				if a_file.is_open_read then
+					assert ("not_eof", not a_file.end_of_file)
+					a_file.read_line
+					assert ("not_eof2", not a_file.end_of_file)
+					last_string := a_file.last_string
+					assert_equal ("read1", "This is the first line,", last_string)
+					assert ("not_eof3", not a_file.end_of_file)
+					assert_equal ("read2", "This is the first line,", a_file.last_string)
+					assert ("not_eof4", not a_file.end_of_file)
+					a_file.read_line
+					last_string2 := a_file.last_string
+					assert ("not_eof5", not a_file.end_of_file)
+					assert_equal ("read3", "this is the second line.", last_string2)
+					assert_same ("same_last_string", last_string, last_string2)
+					a_file.read_line
+					assert ("not_eof6", not a_file.end_of_file)
+					last_string := a_file.last_string
+					assert_equal ("read4", "#", last_string)
+					a_file.read_line
+					assert ("eof1", a_file.end_of_file)
+					a_file.close
+					assert ("is_closed", a_file.is_closed)
+				else
+					assert ("is_opened", False)
+				end
 			end
 		end
 
@@ -267,33 +269,35 @@ feature -- Test
 			-- Test feature `read_line'.
 			-- The last line has a line-separator.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 			last_string, last_string2: STRING
 		do
 			a_name := Execution_environment.interpreted_string (booleans_filename)
 			!! a_file.make (a_name)
-			a_file.open_read
-			if a_file.is_open_read then
-				assert ("not_eof", not a_file.end_of_file)
-				a_file.read_line
-				assert ("not_eof2", not a_file.end_of_file)
-				last_string := a_file.last_string
-				assert_equal ("read1", "True", last_string)
-				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("read2", "True", a_file.last_string)
-				assert ("not_eof4", not a_file.end_of_file)
-				a_file.read_line
-				last_string2 := a_file.last_string
-				assert ("not_eof5", not a_file.end_of_file)
-				assert_equal ("read3", "False", last_string2)
-				assert_same ("same_last_string", last_string, last_string2)
-				a_file.read_line
-				assert ("eof1", a_file.end_of_file)
-				a_file.close
-				assert ("is_closed", a_file.is_closed)
-			else
-				assert ("is_opened", False)
+			if a_file.eol.is_equal (file_system.eol) then
+				a_file.open_read
+				if a_file.is_open_read then
+					assert ("not_eof", not a_file.end_of_file)
+					a_file.read_line
+					assert ("not_eof2", not a_file.end_of_file)
+					last_string := a_file.last_string
+					assert_equal ("read1", "True", last_string)
+					assert ("not_eof3", not a_file.end_of_file)
+					assert_equal ("read2", "True", a_file.last_string)
+					assert ("not_eof4", not a_file.end_of_file)
+					a_file.read_line
+					last_string2 := a_file.last_string
+					assert ("not_eof5", not a_file.end_of_file)
+					assert_equal ("read3", "False", last_string2)
+					assert_same ("same_last_string", last_string, last_string2)
+					a_file.read_line
+					assert ("eof1", a_file.end_of_file)
+					a_file.close
+					assert ("is_closed", a_file.is_closed)
+				else
+					assert ("is_opened", False)
+				end
 			end
 		end
 
@@ -301,59 +305,63 @@ feature -- Test
 			-- Test feature `read_line'.
 			-- Empty file.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (empty_filename)
 			!! a_file.make (a_name)
-			a_file.open_read
-			if a_file.is_open_read then
-				assert ("not_eof1", not a_file.end_of_file)
-				a_file.read_line
-				assert ("eof", a_file.end_of_file)
-				a_file.close
-				assert ("is_closed", a_file.is_closed)
-			else
-				assert ("is_opened", False)
+			if a_file.eol.is_equal (file_system.eol) then
+				a_file.open_read
+				if a_file.is_open_read then
+					assert ("not_eof1", not a_file.end_of_file)
+					a_file.read_line
+					assert ("eof", a_file.end_of_file)
+					a_file.close
+					assert ("is_closed", a_file.is_closed)
+				else
+					assert ("is_opened", False)
+				end
 			end
 		end
 
 	test_read_new_line is
 			-- Test feature `read_new_line'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 			last_string: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
 			!! a_file.make (a_name)
-			a_file.open_read
-			if a_file.is_open_read then
-				assert ("not_eof", not a_file.end_of_file)
-				a_file.read_string (23)
-				assert ("not_eof2", not a_file.end_of_file)
-				last_string := a_file.last_string
-				assert_equal ("read1", "This is the first line,", last_string)
-				a_file.read_new_line
-				assert ("not_eof3", not a_file.end_of_file)
-				assert_equal ("read2", a_file.eol, a_file.last_string)
-				a_file.read_character
-				assert ("not_eof4", not a_file.end_of_file)
-				assert_equal ("read3", 't', a_file.last_character)
-				a_file.read_new_line
-				assert ("not_eof5", not a_file.end_of_file)
-				assert_equal ("not_read1", "", a_file.last_string)
-				a_file.close
-				assert ("is_closed", a_file.is_closed)
-			else
-				assert ("is_opened", False)
+			if a_file.eol.is_equal (file_system.eol) then
+				a_file.open_read
+				if a_file.is_open_read then
+					assert ("not_eof", not a_file.end_of_file)
+					a_file.read_string (23)
+					assert ("not_eof2", not a_file.end_of_file)
+					last_string := a_file.last_string
+					assert_equal ("read1", "This is the first line,", last_string)
+					a_file.read_new_line
+					assert ("not_eof3", not a_file.end_of_file)
+					assert_equal ("read2", a_file.eol, a_file.last_string)
+					a_file.read_character
+					assert ("not_eof4", not a_file.end_of_file)
+					assert_equal ("read3", 't', a_file.last_character)
+					a_file.read_new_line
+					assert ("not_eof5", not a_file.end_of_file)
+					assert_equal ("not_read1", "", a_file.last_string)
+					a_file.close
+					assert ("is_closed", a_file.is_closed)
+				else
+					assert ("is_opened", False)
+				end
 			end
 		end
 
 	test_read_to_string is
 			-- Test feature `read_to_string'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 			a_string: STRING
 			nb: INTEGER
@@ -382,7 +390,7 @@ feature -- Test
 	test_read_to_buffer is
 			-- Test feature `read_to_buffer'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 			a_buffer: KL_CHARACTER_BUFFER
 			nb: INTEGER
@@ -411,7 +419,7 @@ feature -- Test
 	test_end_of_file is
 			-- Test feature `end_of_file' with `read_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (gobo_filename)
@@ -440,7 +448,7 @@ feature -- Test
 	test_end_of_file2 is
 			-- Test feature `end_of_file' with `read_string'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 			last_string: STRING
 		do
@@ -469,7 +477,7 @@ feature -- Test
 	test_empty_end_of_file is
 			-- Test feature `end_of_file' on empty file with `read_character'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (empty_filename)
@@ -489,7 +497,7 @@ feature -- Test
 	test_empty_end_of_file2 is
 			-- Test feature `end_of_file' on empty file with `read_string'.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			a_name: STRING
 		do
 			a_name := Execution_environment.interpreted_string (empty_filename)
@@ -510,8 +518,8 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file exists and new file does not exist.
 		local
-			a_file: KL_INPUT_FILE
-			old_file: KL_OUTPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
+			old_file: KL_UNIX_OUTPUT_FILE
 			old_name, new_name: STRING
 		do
 			old_name := new_filename ("gobo", ".tmp")
@@ -541,7 +549,7 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file and new file do not exist.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			old_name, new_name: STRING
 		do
 			old_name := new_filename ("gobo", ".tmp")
@@ -559,9 +567,9 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file does not exist and new file exists.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			old_name, new_name: STRING
-			new_file: KL_OUTPUT_FILE
+			new_file: KL_UNIX_OUTPUT_FILE
 		do
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
@@ -590,9 +598,9 @@ feature -- Test
 			-- Test feature `rename_file'.
 			-- Old file and new file exist.
 		local
-			a_file: KL_INPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
 			old_name, new_name: STRING
-			out_file: KL_OUTPUT_FILE
+			out_file: KL_UNIX_OUTPUT_FILE
 		do
 			old_name := new_filename ("gobo", ".tmp")
 			new_name := new_filename ("gobo", ".tmp")
@@ -637,8 +645,8 @@ feature -- Test
 	test_delete_file is
 			-- Test feature `delete_file'.
 		local
-			a_file: KL_INPUT_FILE
-			out_file: KL_OUTPUT_FILE
+			a_file: KL_UNIX_INPUT_FILE
+			out_file: KL_UNIX_OUTPUT_FILE
 			a_name: STRING
 		do
 			a_name := new_filename ("gobo", ".tmp")
@@ -658,4 +666,39 @@ feature -- Test
 			end
 		end
 
-end -- class KL_TEST_INPUT_FILE
+	test_unix is
+			-- Test that file is a unix file.
+		local
+			a_file: KL_UNIX_INPUT_FILE
+			out_file: KL_BINARY_OUTPUT_FILE
+			a_name: STRING
+		do
+			a_name := new_filename ("gobo", ".tmp")
+			!! out_file.make (a_name)
+			out_file.open_write
+			if out_file.is_open_write then
+				out_file.put_character ('%N')
+				out_file.close
+				assert ("is_closed1", out_file.is_closed)
+				assert ("readable1", file_system.is_file_readable (a_name))
+				!! a_file.make (a_name)
+				a_file.open_read
+				if a_file.is_open_read then
+					a_file.read_new_line
+					assert ("not_eof1", not a_file.end_of_file)
+					assert_equal ("new_line", "%N", a_file.last_string)
+					a_file.read_character
+					assert ("eof1", a_file.end_of_file)
+					a_file.close
+					assert ("is_closed2", a_file.is_closed)
+				else
+					assert ("is_opened2", False)
+				end
+				out_file.delete
+				assert ("not_readable1", not file_system.is_file_readable (a_name))
+			else
+				assert ("is_opened1", False)
+			end
+		end
+
+end -- class KL_TEST_UNIX_INPUT_FILE

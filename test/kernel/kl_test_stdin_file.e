@@ -15,8 +15,7 @@ deferred class KL_TEST_STDIN_FILE
 
 inherit
 
-	TS_TEST_CASE
-
+	KL_TEST_CASE
 	KL_SHARED_STANDARD_FILES
 
 feature -- Status report
@@ -37,6 +36,15 @@ feature -- Test
 			assert_equal ("name_set", "stdin", a_file.name)
 			assert ("is_open", a_file.is_open_read)
 			assert ("not_eof", not a_file.end_of_file)
+		end
+
+	test_eol is
+			-- Test feature `eol'.
+		local
+			a_file: KL_STDIN_FILE
+		do
+			!! a_file.make
+			assert_equal ("eol", "%N", a_file.eol)
 		end
 
 	test_read_character is
@@ -60,7 +68,68 @@ feature -- Test
 				assert ("not_eof5", not a_file.end_of_file)
 				assert_equal ("read3", 'h', a_file.last_character)
 					-- Read new-line.
+				a_file.read_new_line
+			end
+		end
+
+	test_unread_character1 is
+			-- Test feature `unread_character'.
+		local
+			a_file: KL_STDIN_FILE
+		do
+			if read_from_console then
+				!! a_file.make
+				assert ("is_open", a_file.is_open_read)
+				assert ("not_eof", not a_file.end_of_file)
+				std.output.put_string ("Type 'Th': ")
+				std.output.flush
 				a_file.read_character
+				assert ("not_eof2", not a_file.end_of_file)
+				assert_equal ("read1", 'T', a_file.last_character)
+				a_file.unread_character ('G')
+				assert ("not_eof3", not a_file.end_of_file)
+				assert_equal ("read2", 'G', a_file.last_character)
+				assert ("not_eof4", not a_file.end_of_file)
+				a_file.read_character
+				assert ("not_eof5", not a_file.end_of_file)
+				assert_equal ("read3", 'G', a_file.last_character)
+				a_file.read_character
+				assert ("not_eof6", not a_file.end_of_file)
+				assert_equal ("read4", 'h', a_file.last_character)
+					-- Read new-line.
+				a_file.read_new_line
+			end
+		end
+
+	test_unread_character2 is
+			-- Test feature `unread_character'.
+		local
+			a_file: KL_STDIN_FILE
+		do
+			if read_from_console then
+				!! a_file.make
+				assert ("is_open", a_file.is_open_read)
+				assert ("not_eof", not a_file.end_of_file)
+				std.output.put_string ("Type 'This': ")
+				std.output.flush
+				a_file.read_character
+				assert ("not_eof2", not a_file.end_of_file)
+				assert_equal ("read1", 'T', a_file.last_character)
+				a_file.unread_character ('o')
+				assert ("not_eof3", not a_file.end_of_file)
+				assert_equal ("read2", 'o', a_file.last_character)
+				a_file.unread_character ('b')
+				assert ("not_eof4", not a_file.end_of_file)
+				assert_equal ("read3", 'b', a_file.last_character)
+				a_file.unread_character ('o')
+				assert ("not_eof5", not a_file.end_of_file)
+				assert_equal ("read4", 'o', a_file.last_character)
+				a_file.unread_character ('g')
+				assert ("not_eof6", not a_file.end_of_file)
+				assert_equal ("read5", 'g', a_file.last_character)
+				a_file.read_line
+				assert ("not_eof7", not a_file.end_of_file)
+				assert_equal ("read6", "gobohis", a_file.last_string)
 			end
 		end
 
@@ -89,7 +158,7 @@ feature -- Test
 				assert_equal ("read3", "is the", last_string2)
 				assert_same ("same_last_string", last_string, last_string2)
 					-- Read new-line.
-				a_file.read_character
+				a_file.read_new_line
 			end
 		end
 
@@ -122,6 +191,40 @@ feature -- Test
 			end
 		end
 
+	test_read_new_line is
+			-- Test feature `read_new_line'.
+		local
+			a_file: KL_STDIN_FILE
+			last_string: STRING
+		do
+			if read_from_console then
+				!! a_file.make
+				assert ("is_open", a_file.is_open_read)
+				assert ("not_eof", not a_file.end_of_file)
+				std.output.put_string ("Type 'gobo': ")
+				std.output.flush
+				a_file.read_string (4)
+				assert ("not_eof2", not a_file.end_of_file)
+				last_string := a_file.last_string
+				assert_equal ("read1", "gobo", last_string)
+				a_file.read_new_line
+				assert ("not_eof3", not a_file.end_of_file)
+				assert_equal ("read2", a_file.eol, a_file.last_string)
+				assert ("not_eof4", not a_file.end_of_file)
+				std.output.put_string ("Type 'foobar': ")
+				std.output.flush
+				a_file.read_character
+				assert ("not_eof5", not a_file.end_of_file)
+				assert_equal ("read3", 'f', a_file.last_character)
+				a_file.read_new_line
+				assert ("not_eof6", not a_file.end_of_file)
+				assert_equal ("not_read1", "", a_file.last_string)
+				a_file.read_line
+				assert ("not_eof7", not a_file.end_of_file)
+				assert_equal ("read4", "oobar", a_file.last_string)
+			end
+		end
+
 	test_read_to_string is
 			-- Test feature `read_to_string'.
 		local
@@ -145,7 +248,7 @@ feature -- Test
 				assert_equal ("nb_char2", 2, nb)
 				assert_equal ("read2", "Th t is", a_string)
 					-- Read new-line.
-				a_file.read_character
+				a_file.read_new_line
 			end
 		end
 
@@ -172,7 +275,7 @@ feature -- Test
 				assert_equal ("nb_char2", 2, nb)
 				assert_equal ("read2", "Thth is ", a_buffer.to_string)
 					-- Read new-line.
-				a_file.read_character
+				a_file.read_new_line
 			end
 		end
 
@@ -191,7 +294,7 @@ feature -- Test
 				assert ("not_eof2", not a_file.end_of_file)
 				assert_equal ("read", '#', a_file.last_character)
 					-- Read new-line.
-				a_file.read_character
+				a_file.read_new_line
 			end
 		end
 
@@ -210,7 +313,7 @@ feature -- Test
 				assert ("not_eof2", not a_file.end_of_file)
 				assert_equal ("read", "gobo", a_file.last_string)
 					-- Read new-line.
-				a_file.read_character
+				a_file.read_new_line
 			end
 		end
 
