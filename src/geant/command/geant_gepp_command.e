@@ -88,6 +88,11 @@ feature -- Access
 	fileset: GEANT_FILESET
 		-- Fileset for current command
 
+	force: BOOLEAN
+		-- Should target files be regenerated,
+		-- provided the target files exist, even when target files
+		-- are newer than their corresponding source files?
+
 feature -- Setting
 
 	set_input_filename (a_filename: like input_filename) is
@@ -141,6 +146,14 @@ feature -- Setting
 			fileset_set: fileset = a_fileset
 		end
 
+	set_force (b: BOOLEAN) is
+			-- Set `force' to `b'.
+		do
+			force := b
+		ensure
+			force_set: force = b
+		end
+
 feature -- Execution
 
 	execute is
@@ -148,7 +161,6 @@ feature -- Execution
 		local
 			a_from_file: STRING
 			a_to_file: STRING
-			a_filename: STRING
 			cmd_template: STRING
 			cmd: STRING
 			i, nb: INTEGER
@@ -172,63 +184,73 @@ feature -- Execution
 				cmd := clone (cmd_template)
 				cmd.append_string (" ")
 				a_from_file := file_system.pathname_from_file_system (input_filename, unix_file_system)
-				cmd.append_string (a_from_file)
-				cmd.append_string (" ")
-				if to_directory /= Void and then to_directory.count > 0 then
-					a_to_file := unix_file_system.pathname (to_directory, output_filename)
-				else
-					a_to_file := output_filename
+				if not file_system.file_exists (a_from_file) then
+					project.log ("  [gepp] error: cannot find input file '" + a_from_file + "'%N")
+					exit_code := 1
 				end
-				a_to_file := file_system.pathname_from_file_system (a_to_file, unix_file_system)
-				if is_file_outofdate (a_from_file, a_to_file) then
-					cmd.append_string (a_to_file)
-					
-					project.trace ("  [gepp] " + cmd + "%N")
-					execute_shell (cmd)
+
+				if exit_code = 0 then
+					cmd.append_string (a_from_file)
+					cmd.append_string (" ")
+					if to_directory /= Void and then to_directory.count > 0 then
+						a_to_file := unix_file_system.pathname (to_directory, output_filename)
+					else
+						a_to_file := output_filename
+					end
+					a_to_file := file_system.pathname_from_file_system (a_to_file, unix_file_system)
+					if force or else is_file_outofdate (a_from_file, a_to_file) then
+						cmd.append_string (a_to_file)
+						
+						project.trace ("  [gepp] " + cmd + "%N")
+						execute_shell (cmd)
+					end
 				end
 			else
 				check is_fileset_executable: is_fileset_executable end
 
-				fileset.execute
-				from
-					fileset.filenames.start
-				until
-					fileset.filenames.after or else exit_code /= 0
-				loop
-					a_filename := fileset.filenames.item_for_iteration
-					a_from_file := unix_file_system.pathname (fileset.directory_name, a_filename)
-					if fileset.map /= Void then
-						if fileset.map.is_executable then
-							a_to_file := fileset.map.mapped_filename (a_filename)
+				if not fileset.is_executable then
+					project.log ("  [gepp] error: fileset definition wrong%N")
+					exit_code := 1
+				end
+				if exit_code = 0 then
+					fileset.execute
+					from
+						fileset.start
+					until
+						fileset.after or else exit_code /= 0
+					loop
+						a_from_file := unix_file_system.pathname (fileset.directory_name, fileset.item_filename)
+						if fileset.has_map then
+							a_to_file := fileset.item_mapped_filename
 							if to_directory /= Void and then to_directory.count > 0 then
 								a_to_file := unix_file_system.pathname (to_directory, a_to_file)
 							end
-						else
-							project.log ("  [gepp] error: map definition wrong'%N")
+						end
+						a_from_file := file_system.pathname_from_file_system (a_from_file, unix_file_system)
+						if not file_system.file_exists (a_from_file) then
+							project.log ("  [gepp] error: cannot find input file '" + a_from_file + "'%N")
 							exit_code := 1
 						end
-					else
-						project.trace_debug ("  map is Void%N")
-					end
-					if exit_code = 0 then
-						a_from_file := file_system.pathname_from_file_system (a_from_file, unix_file_system)
-						a_to_file := file_system.pathname_from_file_system (a_to_file, unix_file_system)
-						if is_file_outofdate (a_from_file, a_to_file) then
-							cmd := clone (cmd_template)
-							cmd.append_string (" ")
-							cmd.append_string (a_from_file)
-							cmd.append_string (" ")
-							cmd.append_string (a_to_file)
-							
-							project.trace ("  [gepp] " + cmd + "%N")
-							execute_shell (cmd)
+						if exit_code = 0 then
+							a_to_file := file_system.pathname_from_file_system (a_to_file, unix_file_system)
+							if force or else is_file_outofdate (a_from_file, a_to_file) then
+								cmd := clone (cmd_template)
+								cmd.append_string (" ")
+								cmd.append_string (a_from_file)
+								cmd.append_string (" ")
+								cmd.append_string (a_to_file)
+								
+								project.trace ("  [gepp] " + cmd + "%N")
+								execute_shell (cmd)
+							end
 						end
 					end
+
 					if exit_code /= 0 then
 						project.log ("  [gepp] error: cannot gepp%N")
 					end
 
-					fileset.filenames.forth
+					fileset.forth
 				end
 			end
 		end
