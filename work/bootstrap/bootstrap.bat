@@ -1,11 +1,10 @@
 @echo off
 
 rem description: "Bootstrap Gobo Eiffel package"
-rem author:      "Eric Bezault <ericb@gobosoft.com>"
-rem copyright:   "Copyright (c) 2001-2002, Eric Bezault and others"
-rem license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
-rem date:        "$Date$"
-rem revision:    "$Revision$"
+rem copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+rem license: "Eiffel Forum License v1 (see forum.txt)"
+rem date: "$Date$"
+rem revision: "$Revision$"
 
 
 rem usage: bootstrap.bat [-v] <c_compiler> <eiffel_compiler>

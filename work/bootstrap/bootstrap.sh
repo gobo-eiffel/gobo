@@ -1,11 +1,10 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel package"
-# author:      "Eric Bezault <ericb@gobosoft.com>"
-# copyright:   "Copyright (c) 2001-2002, Eric Bezault and others"
-# license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
-# date:        "$Date$"
-# revision:    "$Revision$"
+# copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+# license: "Eiffel Forum License v1 (see forum.txt)"
+# date: "$Date$"
+# revision: "$Revision$"
 
 
 # usage: bootstrap.sh [-v] <c_compiler> <eiffel_compiler>
