@@ -141,6 +141,21 @@ feature -- Equality
 			end
 		end
 
+	assert_characters_equal (a_tag: STRING; expected, actual: CHARACTER) is
+			-- Assert that `expected = actual'
+		require
+			a_tag_not_void: a_tag /= Void
+		local
+			a_message: STRING
+		do
+			Assertions.add_assertion
+			if expected /= actual then
+				a_message := assert_strings_equal_message (a_tag, expected.out, actual.out)
+				Assertions.set_error_message (a_message)
+				Exceptions.raise (Assertion_failure)
+			end
+		end
+
 feature -- Files
 
 	assert_files_equal (a_tag: STRING; a_filename1, a_filename2: STRING) is
