@@ -360,6 +360,12 @@ feature {NONE} -- Output
 					a_cursor.forth
 				end
 			end
+			if an_option.is_export_option_declared then
+				print_indentation (indent, a_file)
+				a_file.put_string ("<option name=%"export%" value=%"")
+				a_file.put_string (an_option.export_option)
+				a_file.put_line ("%"/>")
+			end
 			if an_option.is_finalize_option_declared then
 				print_indentation (indent, a_file)
 				if an_option.finalize_option then
