@@ -36,7 +36,7 @@ inherit
 
 	EXCEPTIONS
 		export {NONE} all end
-	
+
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
 
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			init_api
 		end
 
-feature {NONE} -- Gc
+feature {NONE} -- GC
 
 	dispose is
 		do
@@ -494,7 +494,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			end
 
 			-- type
-			if same_string (string_att_type,"CDATA") then
+			if same_string (att_type,"CDATA") then
 				a_model.set_data
 			elseif same_string (att_type, "ID") then
 				a_model.set_id
@@ -524,8 +524,8 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 
 	frozen on_xml_declaration_procedure (version_ptr, encoding_ptr: POINTER; standalone: INTEGER) is
 		do
-			on_xml_declaration (new_uc_string_from_c_utf8_zero_terminated_string (version_ptr), 
-					new_uc_string_from_c_utf8_zero_terminated_string_safe (encoding_ptr), 
+			on_xml_declaration (new_uc_string_from_c_utf8_zero_terminated_string (version_ptr),
+					new_uc_string_from_c_utf8_zero_terminated_string_safe (encoding_ptr),
 					standalone = 1)
 		end
 
@@ -543,10 +543,10 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			if an_id.base = Void and an_id.system_id = Void and an_id.public_id = Void then
 				an_id := Void
 			end
-			on_entity_declaration (new_uc_string_from_c_utf8_zero_terminated_string (entity_name_ptr), 
+			on_entity_declaration (new_uc_string_from_c_utf8_zero_terminated_string (entity_name_ptr),
 					is_parameter_entity,
-					new_uc_string_from_c_utf8_zero_terminated_string_safe (value_ptr), 
-					an_id, 
+					new_uc_string_from_c_utf8_zero_terminated_string_safe (value_ptr),
+					an_id,
 					new_uc_string_from_c_utf8_zero_terminated_string_safe (notation_name_ptr))
 		end
 
@@ -654,7 +654,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			!! an_id.make
 			an_id.set_system (new_uc_string_from_c_utf8_zero_terminated_string_safe (sysid_ptr))
 			an_id.set_public (new_uc_string_from_c_utf8_zero_terminated_string_safe (pubid_ptr))
-			on_doctype (new_uc_string_from_c_utf8_zero_terminated_string (doctype_name_ptr), 
+			on_doctype (new_uc_string_from_c_utf8_zero_terminated_string (doctype_name_ptr),
 					an_id, has_internal_subset)
 		end
 
