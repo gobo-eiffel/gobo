@@ -36,4 +36,6 @@ A more detailed documentation for this library will be provided in
 future releases.
 
 --
-Eric Bezault <ericb@gobo.demon.co.uk>
+Copyright (c) 1998, Eric Bezault
+mailto:ericb@gobo.demon.co.uk
+http://www.gobo.demon.co.uk
