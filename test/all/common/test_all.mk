@@ -21,6 +21,7 @@ all-debug:
 	@${MAKE} -s test-all 'DEBUG=-debug' 2> tmp_make.txt
 
 test-all:
+	${MAKE} precomp
 	${MAKE} ${GOBO_LIBS}
 	${MAKE} ${GOBO_SRCS}
 	${MAKE} ${GOBO_LEXICAL_EXAMPLES} 'EXAMPLE_DIR=lexical'
@@ -28,12 +29,22 @@ test-all:
 	${MAKE} ${GOBO_TIME_EXAMPLES} 'EXAMPLE_DIR=time'
 	${MAKE} ${GOBO_TEST_EXAMPLES} 'EXAMPLE_DIR=test'
 
+precomp:
+	${ECHO} ''
+	${ECHO} 'Testing Gobo Eiffel Libraries precomp...'
+	${ECHO} 'Preparing Test Cases'
+	${MKDIR} $@
+	${CP} -f ${GOBO}/test/$@/Makefile $@
+	${ECHO} 'Compiling Test Cases'
+	cd $@ ; ${MAKE} ${ECOMPILER}-precomp > tmp_compile.txt 2>&1
+	cd $@ ; ${GOBO}/test/all/common/test_harness.sh --getest ${ECOMPILER} $@
+
 ${GOBO_LIBS}:
 	${ECHO} ''
 	${ECHO} 'Testing Gobo Eiffel $@ Library...'
 	${MKDIR} $@
 	${CP} -f ${GOBO}/test/$@/Makefile $@
-	cd $@ ; ${MAKE} test-${COMPILER}${DEBUG}
+	cd $@ ; ${MAKE} test-${ECOMPILER}${DEBUG}
 
 ${GOBO_SRCS}:
 	${ECHO} ''
@@ -42,8 +53,8 @@ ${GOBO_SRCS}:
 	${MKDIR} $@
 	${CP} -f ${GOBO}/src/$@/Makefile $@
 	${ECHO} 'Compiling Test Cases'
-	cd $@ ; ${MAKE} ${COMPILER}${DEBUG} > tmp_compile.txt 2>&1
-	cd $@ ; ${GOBO}/test/all/common/test_harness.sh --version ${COMPILER} $@
+	cd $@ ; ${MAKE} ${ECOMPILER}${DEBUG} > tmp_compile.txt 2>&1
+	cd $@ ; ${GOBO}/test/all/common/test_harness.sh --version ${ECOMPILER} $@
 
 ${GOBO_EXAMPLES}:
 	${ECHO} ''
@@ -52,13 +63,13 @@ ${GOBO_EXAMPLES}:
 	${MKDIR} $@-${EXAMPLE_DIR}
 	${CP} -f ${GOBO}/example/${EXAMPLE_DIR}/$@/Makefile $@-${EXAMPLE_DIR}
 	${ECHO} 'Compiling Test Cases'
-	cd $@-${EXAMPLE_DIR} ; ${MAKE} ${COMPILER}${DEBUG} > tmp_compile.txt 2>&1
-	cd $@-${EXAMPLE_DIR} ; ${GOBO}/test/all/common/test_harness.sh ${COMPILER} $@
+	cd $@-${EXAMPLE_DIR} ; ${MAKE} ${ECOMPILER}${DEBUG} > tmp_compile.txt 2>&1
+	cd $@-${EXAMPLE_DIR} ; ${GOBO}/test/all/common/test_harness.sh ${ECOMPILER} $@
 
 ${GOBO_TEST_EXAMPLES}:
 	${ECHO} ''
 	${ECHO} 'Testing Example ${EXAMPLE_DIR}/$@...'
 	${ECHO} 'Preparing Test Cases'
 	${MKDIR} $@-${EXAMPLE_DIR}
-	${CP} -f ${GOBO}/example/${EXAMPLE_DIR}/$@/Makefile $@-${EXAMPLE_DIR}
-	cd $@-${EXAMPLE_DIR} ; ${GOBO}/test/all/common/test_harness.sh --getest ${COMPILER} $@
+	${CP} -f ${GOBO}/example/${EXAMPLE_DIR}/$@/* $@-${EXAMPLE_DIR}
+	cd $@-${EXAMPLE_DIR} ; ${GOBO}/test/all/common/test_harness.sh --getest ${ECOMPILER} $@
