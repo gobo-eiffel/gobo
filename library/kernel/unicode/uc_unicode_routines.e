@@ -5,7 +5,7 @@ indexing
 		"Unicode routines"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class UC_UNICODE_ROUTINES
 
 inherit
 
-	ANY
+	UC_UNICODE_CONSTANTS
 
 	UC_CTYPE_UPPERCASE
 		export {NONE} all end
@@ -58,7 +58,7 @@ feature -- Status report
 			else
 				Result := True
 				from i := a_string.count until i < 1 loop
-					if maximum_ascii_character < a_string.item (i) then
+					if maximum_ascii_character_code < a_string.item_code (i) then
 						Result := False
 						i := 0 -- Jump out of the loop.
 					else
@@ -95,19 +95,5 @@ feature -- Access
 		ensure
 			valid_lower_code: valid_code (Result)
 		end
-
-feature -- Constants
-
-	minimum_unicode_character_code: INTEGER is 0
-	maximum_unicode_character_code: INTEGER is 2147483647 -- 2^31 - 1
-			-- Smallest and largest codes for unicode characters
-
-	minimum_ascii_character_code: INTEGER is 0
-	maximum_ascii_character_code: INTEGER is 127 -- 2^7 - 1
-			-- Smallest and largest codes for ASCII characters
-
-	minimum_ascii_character: CHARACTER is '%/0/'
-	maximum_ascii_character: CHARACTER is '%/127/'
-			-- Smallest and largest ASCII characters
 
 end
