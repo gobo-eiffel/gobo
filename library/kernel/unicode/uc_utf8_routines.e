@@ -23,6 +23,7 @@ feature -- Status report
 			-- Are the bytes in `a_string' a valid UTF-8 encoding?
 		require
 			a_string_not_void: a_string /= Void
+			a_string_is_string: a_string.same_type ("")
 		local
 			i, nb, nb2: INTEGER
 			bc, a_code: INTEGER
