@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="gobo">
+<cluster name="gobo" abstract="True">
 	<mount location="${GOBO}/library/kernel/cluster.xace"/>
 	<mount location="${GOBO}/library/lexical/cluster.xace"/>
 	<mount location="${GOBO}/library/parse/cluster.xace"/>

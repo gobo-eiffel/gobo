@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
-<cluster name="utility" location="${GOBO}/library/utility">
-	<cluster name="error" />
-	<cluster name="formatter" />
-	<cluster name="command" />
-	<cluster name="support" />
-	<cluster name="spec" >
-		<cluster name="${EIF_COMPILER}"/>
+<cluster name="utility" location="${GOBO}/library/utility" abstract="True">
+	<cluster name="error"/>
+	<cluster name="formatter"/>
+	<cluster name="command"/>
+	<cluster name="support"/>
+	<cluster name="spec" abstract="True">
+		<cluster name="compiler" location="${GOBO}/library/utility/spec/${GOBO_EIFFEL}"/>
 	</cluster>
 </cluster>

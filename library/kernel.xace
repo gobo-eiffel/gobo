@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
-<cluster name="kernel">
-	<mount location="${GOBO}/library/${EIF_COMPILER}_kernel.xace" />
+
+<cluster name="kernel" abstract="True">
+	<mount location="${GOBO}/library/${GOBO_EIFFEL}_kernel.xace" />
 </cluster>

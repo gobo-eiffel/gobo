@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
-<cluster name="structure" location="${GOBO}/library/structure">
-	<cluster name="container" />
-	<cluster name="dispenser" />
-	<cluster name="list" />
-	<cluster name="set" />
-	<cluster name="sort" />
-	<cluster name="support" />
-	<cluster name="table" />
+<cluster name="structure" location="${GOBO}/library/structure" abstract="True">
+	<cluster name="container"/>
+	<cluster name="dispenser"/>
+	<cluster name="list"/>
+	<cluster name="set"/>
+	<cluster name="sort"/>
+	<cluster name="support"/>
+	<cluster name="table"/>
 </cluster>

@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 
-<cluster name="lexical" location="${GOBO}/library/lexical">
-	<cluster name="automaton" />
-	<cluster name="error" />
-	<cluster name="generation" />
-	<cluster name="lex" />
-	<cluster name="regexp" />
-	<cluster name="scanner" />
-	<cluster name="skeleton" />
-	<cluster name="support" />
+<cluster name="lexical" location="${GOBO}/library/lexical" abstract="True">
+	<cluster name="automaton"/>
+	<cluster name="error"/>
+	<cluster name="generation"/>
+	<cluster name="lex"/>
+	<cluster name="regexp"/>
+	<cluster name="scanner"/>
+	<cluster name="skeleton"/>
+	<cluster name="support"/>
 </cluster>

@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 
 <cluster name="kernel" location="${GOBO}/library/kernel">
-	<cluster name="io" />
-	<cluster name="unicode" />
-	<cluster name="spec">
-		<cluster name="${EIF_COMPILER}"/>
+	<cluster name="io"/>
+	<cluster name="misc"/>
+	<cluster name="unicode"/>
+	<cluster name="spec" abstract="True">
+		<cluster name="compiler" location="${GOBO}/library/kernel/spec/${GOBO_EIFFEL}"/>
+		<cluster name="os" location="${GOBO}/library/kernel/spec/${GOBO_OS}"/>
 	</cluster>
 </cluster>

@@ -1,4 +1,3 @@
 <?xml version="1.0"?>
-<cluster name="se_kernel">
-	<cluster name="se" location="${SmallEiffelDirectory}/lib_std" />
-</cluster>
+
+<cluster name="se_kernel" location="${SmallEiffelDirectory}/lib_std"/>

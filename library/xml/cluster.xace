@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="xml" location="${GOBO}/library/xml">
+<cluster name="xml" location="${GOBO}/library/xml" abstract="True">
 
 	<description>
 		The Eiffel XML Parser Framework
@@ -15,24 +15,24 @@
 		factory happy.
 	</description>
 
-	<cluster name="factory" />
-	<cluster name="position" />
-	<cluster name="source" />
-	<cluster name="general" />
-	<cluster name="event" />
-	<cluster name="tree" />
-	<cluster name="formatter" />
-	<cluster name="impl" >
-		<cluster name="interface"  >
-			<cluster name="general" />
-			<cluster name="event" />
-			<cluster name="tree" />
+	<cluster name="factory"/>
+	<cluster name="position"/>
+	<cluster name="source"/>
+	<cluster name="general"/>
+	<cluster name="event"/>
+	<cluster name="tree"/>
+	<cluster name="formatter"/>
+	<cluster name="impl" abstract="True">
+		<cluster name="interface" abstract="True">
+			<cluster name="general"/>
+			<cluster name="event"/>
+			<cluster name="tree"/>
 		</cluster>
 
-		<cluster name="expat" >
-			<cluster name="api" />
-			<cluster name="general" />
-			<cluster name="event" >
+		<cluster name="expat" abstract="True">
+			<cluster name="api"/>
+			<cluster name="general"/>
+			<cluster name="event">
 				<external>
 					<export class="XP_EVENT_PARSER">
 						<feature name="on_element_declaration_procedure" alias="eif_exml_on_element_declaration_proc" />
@@ -59,30 +59,29 @@
 					</export>
 				</external>
 			</cluster>
-			<cluster name="spec" >
-				<cluster name="${EIF_COMPILER}" />
+			<cluster name="spec" abstract="True">
+				<cluster name="compiler" location="${GOBO}/library/xml/impl/expat/spec/${GOBO_EIFFEL}"/>
 			</cluster>
 			<external>
 				<include_dir location="${GOBO}/library/xml/impl/expat/spec/c"/>
-				<link_library location="${GOBO}/library/xml/impl/expat/spec/c/libexml-expat-${EIF_COMPILER}.a"/>
+				<link_library location="${GOBO}/library/xml/impl/expat/spec/c/libexml-expat-${GOBO_EIFFEL}.a"/>
 				<link_library location="-lexpat"/>
 			</external>
 		</cluster>
-		<cluster name="eiffel" >
-			<cluster name="event" />
+		<cluster name="eiffel" abstract="True">
+			<cluster name="event"/>
 		</cluster>
-		<cluster name="tree_on_event" >
-			<cluster name="tree" />
+		<cluster name="tree_on_event" abstract="True">
+			<cluster name="tree"/>
 		</cluster>
-		<cluster name="no_expat" >
-			<cluster name="event" />
+		<cluster name="no_expat" abstract="True">
+			<cluster name="event"/>
 		</cluster>
-		<cluster name="no_eiffel" >
-			<cluster name="event" />
+		<cluster name="no_eiffel" abstract="True">
+			<cluster name="event"/>
 		</cluster>
-		<cluster name="no_tree_on_event" >
-			<cluster name="tree" />
+		<cluster name="no_tree_on_event" abstract="True">
+			<cluster name="tree"/>
 		</cluster>
 	</cluster>
-
 </cluster>
