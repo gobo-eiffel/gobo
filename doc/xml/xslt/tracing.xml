@@ -1,0 +1,65 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Tracing stylesheet execution"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_transformer">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Monday, November 1st, 2004</date>
+  </chapterinfo>
+  <title>Tracing stylesheet execution</title>
+  <para>
+    As an aid to stylesheet design and performance analysis, the library includes an execution trace facility.
+    To enable tracing, call <featurecall><featurename>set_trace_listener (a_trace_listener: XM_XSLT_TRACE_LISTENER)</featurename></featurecall>
+    on your <classname>XM_XSLT_CONFIGURATION</classname>.
+  </para>
+  <section>
+    <title>The default trace listener</title>
+    <para>
+      The library provides one descendant of <classname>XM_XSLT_TRACE_LISTENER</classname>, namely 
+      <classname>XM_XSLT_DEFAULT_TRACE_LISTENER</classname>. This class writes trace records as
+      XML text, optionally with timing information added, to the <featurename>info_file: KI_TEXT_OUTPUT_STREAM</featurename> of an <classname>UT_ERROR_HANDLER</classname>.
+      A suitable <classname>UT_ERROR_HANDLER</classname> is available in <classname>XM_XSLT_CONFIGURATION</classname> as
+      <featurename>error_reporter</featurename>.
+    </para>
+    <para>
+      <warning>This trace listener generates a large quantity of data for long-running transforms.</warning>
+    </para>
+  </section>
+  <section>
+    <title>Writing your own trace listener</title>
+    <para>
+      If you wish to write your own trace listener, then you need to look at <classname>XM_XSLT_TRACE_DETAILS</classname>.
+      In particular the feature <featurename>properties</featurename>. To find out what properties can be present in the 
+      trace details, you can search the library source code, and inspect <classname>XM_XSLT_DEFAULT_TRACE_LISTENER</classname>.
+      <warning>TODO: document these properties.</warning>
+    </para>
+  </section>
+  <section>
+    <title>Suspending tracing</title>
+    <para>
+      It may be desirable to trace only parts of the execution path. In which case a mecahnism is needed to
+      turn tracing on and off. No such mechanism is available right now. One possibility is to use XPath
+      extension functions to pause and resume tracing (this is what Saxon does). Another possibility would be to 
+      use extension attributes, or extension instructions.
+    </para>
+  </section>
+</chapter>

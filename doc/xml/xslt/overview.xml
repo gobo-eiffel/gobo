@@ -113,4 +113,10 @@
       </itemizedlist>
     </para>
   </section>
+  <section>
+    <title>Extensions</title>
+    <para>
+      <warning>TODO: document gexslt extensions.</warning>
+    </para>
+  </section>
 </chapter>
