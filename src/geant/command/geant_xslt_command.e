@@ -134,6 +134,14 @@ feature -- Setting
 			processor_set_to_xalan_cpp: processor = Processor_xalan_cpp
 		end
 
+	set_processor_xsltproc is
+			-- Set `processor' to `Processor_xsltproc'
+		do
+			set_processor (Processor_xsltproc)
+		ensure
+			processor_set_to_xsltproc: processor = Processor_xsltproc
+		end
+
 	set_format (a_format: like format) is
 			-- Set `format' to `a_format'.
 		require
@@ -200,6 +208,8 @@ feature -- Execution
 				execute_xalan_cpp
 			elseif processor = Processor_xalan_java then
 				execute_xalan_java
+			elseif processor = Processor_xsltproc then
+				execute_xsltproc
 			else
 				project.log (<<"  [xslt]: unknown processor">>)
 				exit_code := 1
@@ -301,6 +311,44 @@ feature -- Execution
 			execute_shell (cmd)
 		end
 
+	execute_xsltproc is
+			-- Execute command using libxslt processor.
+		local
+			cmd: STRING
+			i, nb: INTEGER
+			a_filename: STRING
+		do
+			cmd := clone ("xsltproc ")
+
+				-- Append option for outputfile:
+			cmd.append_string (" -o ")
+			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
+			cmd := STRING_.appended_string (cmd, a_filename)
+
+				-- Add parameters:
+			nb := parameters.count
+			from i := 1 until i > nb loop
+				cmd.append_string (" -stringparam ")
+				cmd := STRING_.appended_string (cmd, parameters.item (i).first)
+				cmd.append_string (" ")
+				cmd := STRING_.appended_string (cmd, parameters.item (i).second)
+				i := i + 1
+			end
+
+				-- Append stylesheet argument:
+			cmd.append_string (" ")
+			a_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
+			cmd := STRING_.appended_string (cmd, a_filename)
+
+				-- Append source argument:
+			cmd.append_string (" ")
+			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
+			cmd := STRING_.appended_string (cmd, a_filename)
+
+			project.trace (<<"  [xslt] ", cmd>>)
+			execute_shell (cmd)
+		end
+
 feature -- Constants
 
 	Processor_xalan_cpp: INTEGER is unique
@@ -308,5 +356,8 @@ feature -- Constants
 
 	Processor_xalan_java: INTEGER is unique
 			-- Identifier for Xalan Java processor
+
+	Processor_xsltproc: INTEGER is unique
+			-- Identifier for libxslt processor
 
 end

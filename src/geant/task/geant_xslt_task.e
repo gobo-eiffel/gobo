@@ -38,21 +38,27 @@ feature {NONE} -- Initialization
 			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			parameter_element: GEANT_DEFINE_ELEMENT
 			a_pair: DS_PAIR [STRING, STRING]
-			a_is_xalan_java: BOOLEAN
+			a_is_xalan_cpp_processor: BOOLEAN
+			a_is_xalan_java_processor: BOOLEAN
+			a_is_xsltproc_processor: BOOLEAN
 		do
 			!! command.make (a_project)
 			task_make (command, an_xml_element)
 			if has_attribute (Processor_attribute_name) then
 				a_value := attribute_value (Processor_attribute_name)
 				if a_value.is_equal (Processor_attribute_value_xalan_cpp) then
+					a_is_xalan_cpp_processor := True
 					command.set_processor_xalan_cpp
 				elseif a_value.is_equal (Processor_attribute_value_xalan_java) then
-					a_is_xalan_java := True
+					a_is_xalan_java_processor := True
 					command.set_processor_xalan_java
+				elseif a_value.is_equal (Processor_attribute_value_xsltproc) then
+					a_is_xsltproc_processor := True
+					command.set_processor_xsltproc
 				end
 			end
 
-				-- Handle attributes common to Xalan-CPP and Xalan-J:
+				-- Handle common attributes:
 			if has_attribute (Input_filename_attribute_name) then
 				a_value := attribute_value (Input_filename_attribute_name)
 				if a_value.count > 0 then
@@ -71,10 +77,12 @@ feature {NONE} -- Initialization
 					command.set_stylesheet_filename (a_value)
 				end
 			end
-			if has_attribute (Indent_attribute_name) then
-				a_value := attribute_value (Indent_attribute_name)
-				if STRING_.is_integer (a_value) then
-					command.set_indent (a_value)
+			if a_is_xalan_java_processor or a_is_xalan_cpp_processor then
+				if has_attribute (Indent_attribute_name) then
+					a_value := attribute_value (Indent_attribute_name)
+					if STRING_.is_integer (a_value) then
+						command.set_indent (a_value)
+					end
 				end
 			end
 
@@ -96,7 +104,7 @@ feature {NONE} -- Initialization
 			end
 
 				-- Handle attributes supported only by Xalan-J:
-			if a_is_xalan_java then
+			if a_is_xalan_java_processor then
 				if has_attribute (Format_attribute_name) then
 					a_value := attribute_value (Format_attribute_name)
 					if a_value.count > 0 then
@@ -163,7 +171,7 @@ feature {NONE} -- Constants
 		end
 
 	Processor_attribute_value_xalan_cpp: STRING is
-			-- value of xml attribute for processor
+			-- value of xml attribute for xalan cpp processor
 		once
 			Result := "xalan_cpp"
 		ensure
@@ -172,9 +180,18 @@ feature {NONE} -- Constants
 		end
 
 	Processor_attribute_value_xalan_java: STRING is
-			-- value of xml attribute for processor
+			-- value of xml attribute for xalan java processor
 		once
 			Result := "xalan_java"
+		ensure
+			attribute_value_not_void: Result /= Void
+			atribute_value_not_empty: Result.count > 0
+		end
+
+	Processor_attribute_value_xsltproc: STRING is
+			-- value of xml attribute for xsltproc processor
+		once
+			Result := "xsltproc"
 		ensure
 			attribute_value_not_void: Result /= Void
 			atribute_value_not_empty: Result.count > 0

@@ -532,12 +532,13 @@
 					<choice>
 						<value>xalan_cpp</value>
 						<value>xalan_java</value>
+						<value>xsltproc</value>
 					</choice>
 					-->
 				</attribute>
 			</optional>
 			<optional>
-				<attribute name="indent"/> <!-- default: '4' -->
+				<attribute name="indent"/> <!-- if attribute 'processor' equals 'xalan_java' or 'xalan_cpp'-->
 			</optional>
 			<optional>
 				<attribute name="format"/> <!-- if attribute 'processor' equals 'xalan_java' -->

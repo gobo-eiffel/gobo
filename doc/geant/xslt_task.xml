@@ -32,7 +32,7 @@
 					<para><emphasis>Description: </emphasis>Name XSLT processor</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>xalan_cpp|xalan_java</para>
+					<para><emphasis>Domain: </emphasis>xalan_cpp|xalan_java|xsltproc</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>xalan_cpp</para>
@@ -110,12 +110,13 @@
           <choice>
             <value>xalan_cpp</value>
             <value>xalan_java</value>
+            <value>xsltproc</value>
           </choice>
           -->
         </attribute>
       </optional>
       <optional>
-        <attribute name="indent"/> <!-- default: '4' -->
+        <attribute name="indent"/> <!-- if attribute 'processor' equals 'xalan_java' or 'xalan_cpp'-->
       </optional>
       <optional>
         <attribute name="format"/> <!-- if attribute 'processor' equals 'xalan_java' -->
