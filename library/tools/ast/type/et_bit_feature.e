@@ -71,7 +71,7 @@ feature -- Validity
 			-- Report errors if not valid.
 		do
 			Result := False
-			an_heir.error_handler.report_vhpr3_error (an_heir, Current)
+			an_heir.error_handler.report_vhpr3_bit_name_error (an_heir, Current)
 		end
 
 	check_constraint_validity (a_formal: ET_FORMAL_GENERIC_PARAMETER; a_class: ET_CLASS;
@@ -84,7 +84,7 @@ feature -- Validity
 			-- Report errors if not valid.
 		do
 			Result := False
-			a_class.error_handler.report_vcfg3_error (a_class, Current)
+			a_class.error_handler.report_vcfg3_bit_name_error (a_class, Current)
 		end
 
 feature -- Duplication
@@ -92,7 +92,7 @@ feature -- Duplication
 	deep_cloned_type: like Current is
 			-- Recursively cloned type
 		do
-			!! Result.make (constant, name, feature_id, position)
+			Result := Current
 		end
 
 feature -- Output
@@ -101,8 +101,7 @@ feature -- Output
 			-- Append textual representation of
 			-- current type to `a_string'.
 		do
-			a_string.append_string (bit_keyword)
-			a_string.append_character (' ')
+			a_string.append_string (bit_space)
 			a_string.append_string (name.name)
 		end
 
