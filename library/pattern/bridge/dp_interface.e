@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			implementation_set: implementation = an_implementation
 		end
 
-feature {DP_IMPLEMENTATION} -- Implementation
+feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
 
 	implementation: DP_IMPLEMENTATION
 			-- Implementation
