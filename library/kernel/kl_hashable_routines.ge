@@ -27,36 +27,24 @@ feature -- Access
 			-- Hash code value
 		require
 			an_any_not_void: an_any /= Void
-#ifdef SE
-		local
-			a_string: STRING
-		do
-			a_string ?= an_any
-			if a_string /= Void then
-				Result := a_string.hash_code
-			end
-#else
-#ifdef HACT || ISE || VE
+#ifndef TOWER
 		local
 			hashable: HASHABLE
 #endif
 		do
-#ifdef HACT || ISE || VE
+#ifdef TOWER
+			Result := an_any.hash_value
+#else
 			hashable ?= an_any
 			if hashable /= Void then
 				Result := hashable.hash_code
 			else
-#ifdef VE
+#ifdef VE || SE
 				Result := generating_type.hash_code
 #else
 				Result := generator.hash_code
 #endif
 			end
-#else
-#ifdef TOWER
-			Result := an_any.hash_value
-#endif
-#endif
 #endif
 		ensure
 			hash_value_positive: Result >= 0
