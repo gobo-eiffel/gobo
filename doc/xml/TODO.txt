@@ -9,6 +9,7 @@ EIFFEL:
 
 - Accept at least ISO latin 1
 - Generate xml declaration event
+- Better error message when failing to resolve DTD
 - Check that stand alone handling makes some sense
 - Parse ":" name in pedantic XML 1.0 mode for tests
 - Q: Do CRLF normalisation before parser instead of 
