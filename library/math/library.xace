@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<library name="math">
+	<description>
+		description: "Xace file for the Gobo Eiffel Math Library"
+		library: "Gobo Eiffel Math Library"
+		copyright: "Copyright (c) 2004, Eric Bezault and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<mount location="${GOBO}/library/math/decimal/library.xace"/>
+</library>
