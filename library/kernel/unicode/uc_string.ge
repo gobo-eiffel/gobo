@@ -150,6 +150,7 @@ inherit
 			substring_index,
 #endif
 #ifdef ISE
+			count,
 			old_clear_all,
 #endif
 #ifdef HACT
@@ -215,7 +216,7 @@ inherit
 			index_of, has, occurrences, head, tail,
 			hash_code, remove, to_lower, to_upper,
 			three_way_comparison, item_code,
-			byte_capacity,
+			byte_capacity, count,
 #ifdef (ISE && ! ISE_5_1)
 			has_substring, insert_character,
 			string, same_string, insert_string,
@@ -339,6 +340,11 @@ feature -- Initialization
 			count := 0
 #endif
 			old_make (suggested_capacity)
+#endif
+#ifdef ISE
+			set_count (byte_capacity)
+			old_set_count (byte_capacity)
+			set_count (0)
 #endif
 			byte_count := 0
 		ensure then
@@ -1100,6 +1106,12 @@ feature -- Measurement
 			end
 		end
 
+#ifdef ISE
+	count: INTEGER
+			-- Number of characters
+			-- (ELKS 2001 STRING)
+
+#endif
 	byte_count: INTEGER
 			-- Number of bytes in internal storage
 
@@ -2174,7 +2186,7 @@ feature -- Conversion
 			valid_utf8: utf8.valid_utf8 (Result)
 		end
 
-	to_string: STRING is
+	as_string: STRING is
 			-- STRING version of current string;
 			-- Return the UTF8 representation if it is encoded
 			-- with UTF8, the UTF16 representation if it is
@@ -2182,7 +2194,7 @@ feature -- Conversion
 		do
 			Result := to_utf8
 		ensure
-			to_string_not_void: Result /= Void
+			as_string_not_void: Result /= Void
 			string_type: Result.same_type ("")
 		end
 
@@ -2496,6 +2508,10 @@ feature {UC_STRING_HANDLER} -- Implementation
 			-- Do not lose previously stored bytes.
 		require
 			n_large_enough: n >= byte_capacity
+#ifdef ISE
+		local
+			old_count: INTEGER
+#endif
 		do
 			if n > byte_capacity then
 #ifdef HACT
@@ -2503,6 +2519,10 @@ feature {UC_STRING_HANDLER} -- Implementation
 #endif
 #ifdef ISE
 				resize (n)
+				old_count := count
+				set_count (n)
+				old_set_count (n)
+				set_count (old_count)
 #endif
 #ifdef SE
 				if byte_capacity = 0 then
@@ -2660,10 +2680,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 				ve_keep_head (nb)
 			end
 #endif
-#ifdef ISE
-			old_set_count (nb)
-#endif
-#ifdef SE || HACT
+#ifdef SE || HACT || ISE
 			count := nb
 #endif
 		ensure
