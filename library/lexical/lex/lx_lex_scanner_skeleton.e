@@ -83,6 +83,7 @@ feature -- Initialization
 			character_classes.wipe_out
 			successful := True
 			line_nb := 1
+			nb_open_brackets := 0
 			last_string := Void
 		end
 
@@ -127,6 +128,10 @@ feature {NONE} -- Access
 
 	name_definitions: DS_HASH_TABLE [STRING, STRING]
 			-- Name definition table
+
+	nb_open_brackets: INTEGER
+			-- Number of characters { not-yet-balanced
+			-- in semantic actions
 
 	last_string: STRING
 			-- Last string which has been read
