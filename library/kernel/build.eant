@@ -146,12 +146,9 @@
 		</gepp>
 	</target>
 
-	<target name="spec_os" depend="spec_linux,spec_macos,spec_unix,spec_windows">
+	<target name="spec_os" depend="spec_linux,spec_unix,spec_windows">
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/linux/${gepp_file}.e">
 			<define name="LINUX"/>
-		</gepp>
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/macos/${gepp_file}.e">
-			<define name="MACOS"/>
 		</gepp>
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="spec/unix/${gepp_file}.e">
 			<define name="UNIX"/>
@@ -183,10 +180,6 @@
 
 	<target name="spec_linux" depend="spec">
 		<mkdir directory="spec/linux"/>
-	</target>
-
-	<target name="spec_macos" depend="spec">
-		<mkdir directory="spec/macos"/>
 	</target>
 
 	<target name="spec_unix" depend="spec">
