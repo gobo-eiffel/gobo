@@ -18,6 +18,11 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_EXCEPTIONS
 
+	KL_SHARED_STANDARD_FILES
+		export
+			{NONE} all
+		end
+
 	UC_UNICODE_FACTORY
 		export
 			{NONE} all
@@ -34,6 +39,67 @@ feature -- Access
 			Commandline_variables_not_void: Result /= Void
 		end
 
+	system_parents: DS_ARRAYED_LIST [GEANT_PARENT] is
+			-- Projects of system
+		once
+			create Result.make (5)
+		end
+
+feature -- Status report
+
+-- TODO: find a way to detect that two project with the same name come from different files
+--	has_system_parent (a_parent: GEANT_PARENT): BOOLEAN is
+--			-- Does `system_parents' contain a parent having the same name as `a_parent'
+--			-- and the same location as `a_parent'?
+--		require
+--			a_parent_not_void: a_parent /= Void
+--		local
+--			i: INTEGER
+--			a_parent_project: GEANT_PROJECT
+--		do
+--			from
+--				i := 1 
+--			until
+--				i > system_parents.count or else Result
+--			loop
+--				a_parent_project := system_parents.item (i).project
+--				if False then
+--				print ("has_system_parent: checking item%N  " +
+--					a_parent_project.name + " (" + a_parent_project.build_filename.out + ")%N" +
+--					"  against " + a_parent.project.name + " (" + a_parent.project.build_filename.out + ")%N"
+--					)
+--				end
+--				if a_parent_project.name.is_equal (a_parent.project.name) and then
+--					a_parent_project.build_filename.is_equal (a_parent.project.build_filename) then
+--					Result := True
+--				end
+--				i := i + 1
+--			end
+--		end
+
+--	has_system_parent_with_different_location (a_parent: GEANT_PARENT): BOOLEAN is
+--			-- Does `system_parents' contain a parent having the same name as `a_parent'
+--			-- but a different location than `a_parent'?
+--		require
+--			a_parent_not_void: a_parent /= Void
+--		local
+--			i: INTEGER
+--			a_parent_project: GEANT_PROJECT
+--		do
+--			from
+--				i := 1 
+--			until
+--				i > system_parents.count or else Result
+--			loop
+--				a_parent_project := system_parents.item (i).project
+--				if a_parent_project.name.is_equal (a_parent.project.name) and then
+--					not a_parent_project.build_filename.is_equal (a_parent.project.build_filename) then
+--					Result := True
+--				end
+--				i := i + 1
+--			end
+--		end
+
 feature -- Processing
 
 	exit_application (a_code: INTEGER; a_message: STRING) is
@@ -41,10 +107,10 @@ feature -- Processing
 			-- if a_message /= Void log it.
 		do
 			if a_message /= Void then
-				print (a_message)
+				std.error.put_string (a_message)
 			end
 			if a_code /= 0 then
-				print ("%NBUILD FAILED!%N")
+				std.error.put_string ("%NBUILD FAILED!%N")
 			end
 			Exceptions.die (a_code)
 		end
