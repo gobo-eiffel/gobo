@@ -4,8 +4,8 @@ indexing
 
 		""
 
-	status:  "See notice at end of class."
-	author:  "Andreas Leitner"
+	status:	 "See notice at end of class."
+	author:	 "Andreas Leitner"
 
 class PRINT
 
@@ -122,7 +122,7 @@ feature
 
 	fact: XM_PARSER_FACTORY is
 		once
-			!! Result
+			!! Result.make
 		ensure
 			factory_not_void: Result /= Void
 		end
