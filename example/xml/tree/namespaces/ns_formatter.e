@@ -104,11 +104,11 @@ feature -- Standard processing
 					append ("%Tprefix: [default]%N")
 				else
 					append ("%Tprefix: ")
-					append (cs.item.ns_prefix)
+					append (cs.item.namespace.ns_prefix)
 					append ("%N")
 				end
 				append ("%Turi: ")
-				append (cs.item.uri)
+				append (cs.item.namespace.uri)
 				append ("%N")
 				cs.forth
 			end
@@ -187,13 +187,13 @@ feature -- Non-standard processing
 			append (n.name)
 			append (" prefix=")
 			if n.has_prefix then
-				append (n.ns_prefix)
+				append (n.namespace.ns_prefix)
 			else
 				append ("[no prefix]")
 			end
 			append (" uri=")
 			if n.has_namespace then
-				append (n.namespace)
+				append (n.namespace.uri)
 			else
 				append ("[no uri]")
 			end
