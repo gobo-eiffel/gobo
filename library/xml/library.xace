@@ -48,6 +48,7 @@
 		  <cluster name="events"/>
 		  <cluster name="functions"/>
 		  <cluster name="sort"/>
+		  <cluster name="node_tests"/>
 		</cluster>
 		<cluster name="xslt">
 		  <cluster name="patterns"/>
