@@ -793,8 +793,13 @@ feature {NONE} -- Validity checking
 									--    class A [G, H -> LIST [G]] ...
 									--    class X feature foo: A [ANY, LIST [STRING]] ...
 									-- we need to check that "LIST[STRING]" conforms to
-									-- "LIST[ANY]", not just "LIST[G]". Hence the necessary
-									-- resolving of formal parameters in the constraint.
+									-- "LIST[ANY]", not just "LIST[G]".
+									-- Likewise if we have:
+									--    class A [G -> LIST [G]] ...
+									--    class X feature foo: A [LIST [FOO]] ...
+									-- we need to check that "LIST[FOO]" conforms to
+									-- "LIST[LIST[FOO]]", not just "LIST[G]".
+									-- Hence the necessary resolving of formal parameters in the constraint.
 								a_constraint := a_constraint.resolved_formal_parameters (an_actuals)
 							else
 								a_constraint := universe.any_type
