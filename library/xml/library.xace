@@ -45,6 +45,7 @@
 			<cluster name="tinytree"/>
 			<cluster name="values"/>
 			<cluster name="expressions"/>
+			<cluster name="events"/>
 		</cluster>
 	</cluster>
 </library>
