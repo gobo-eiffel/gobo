@@ -2325,7 +2325,7 @@ feature {NONE} -- Character classes
 									-- on the fact that the class table starts
 									-- with alpha, lower, upper as the first
 									-- 3 entries.
-									posix_class := 0
+									posix_class := 1
 								end
 								class_set.add_set (class_sets.item(posix_class), local_negate)
 								pattern_index := tmp_pat_index + 1
