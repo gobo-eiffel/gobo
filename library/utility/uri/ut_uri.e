@@ -55,6 +55,7 @@ feature -- Initialization.
 		do
 			full_reference := a_reference
 			parse_reference
+			
 			-- See steps in RFC 2396, section 5.2
 			-- Step 1:
 
@@ -96,27 +97,8 @@ feature -- Initialization.
 					end
 				end
 
-				-- Build `reference' from parsed components
-				create full_reference.make_empty
-				full_reference := STRING_.appended_string (full_reference, scheme)
-				full_reference.append_character (':')
-				if authority /= Void then
-					full_reference := STRING_.appended_string (full_reference, "//")
-					full_reference := STRING_.appended_string (full_reference, authority)
-				end
-				if path /= Void then
-					-- path is void for relative //g
-					full_reference := STRING_.appended_string (full_reference, path)
-				end
-				if query /= Void then
-					full_reference.append_character ('?')
-					full_reference := STRING_.appended_string (full_reference, query)
-				end
-				if fragment /= Void then
-					full_reference.append_character ('#')
-					full_reference := STRING_.appended_string (full_reference, fragment)
-				end
-
+					-- Build `reference' from parsed components
+				full_reference := new_full_reference
 			end
 		ensure
 			must_be_absolute: is_absolute
@@ -134,7 +116,7 @@ feature -- Status
 		do
 			Result := scheme /= Void
 		ensure
-			consistent: Result implies not is_relative
+			consistent: Result = not is_relative
 		end
 
 	is_path_resolved: BOOLEAN is
@@ -154,7 +136,7 @@ feature -- Status
 		do
 			Result := scheme = Void
 		ensure
-			consistent: Result implies not is_absolute
+			consistent: Result = not is_absolute
 		end
 
 	has_absolute_path: BOOLEAN is
@@ -165,24 +147,29 @@ feature -- Status
 				path.item (1) = '/'
 		end
 
-
-feature -- Encoding
-
-	uri_encoding: UT_URL_ENCODING is
-			-- Encoding/decoding routines and tests,
-			-- exported for contract checking.
-		once
-			create Result
-		ensure
-			uri_encoding_not_void: Result /= Void
-		end
-
-
-feature -- Most generic URI components
+feature -- Access
 
 	full_reference: STRING
 			-- The entire URI.
 
+feature -- Access
+
+	scheme: STRING
+			-- Scheme used, like "http" or "ftp", anything before the ':'.
+
+	scheme_specific_part: STRING is
+			-- Interpretation depends on scheme, everything after the ':'.
+		do
+			if is_relative then
+				Result := full_reference
+			else
+				Result := full_reference.substring (scheme.count + 2, full_reference.count)
+			end
+		ensure
+			result_not_void: Result /= Void
+			relative_is_full: is_relative implies STRING_.same_string (Result, full_reference)
+		end
+	
 	has_valid_scheme: BOOLEAN is
 			-- Is scheme set and containing valid characters?
 		do
@@ -194,13 +181,6 @@ feature -- Most generic URI components
 			valid_scheme_not_empty: Result implies not scheme.is_empty
 			valid_scheme_characters: Result implies uri_encoding.is_valid_scheme (scheme)
 		end
-	
-	scheme: STRING
-			-- Scheme used, like "http" or "ftp", anything before the ':'.
-
-	scheme_specific_part: STRING
-			-- Interpretation depends on scheme, everything after the ':'
-			-- and before the '?'
 
 feature -- Access
 
@@ -343,8 +323,7 @@ feature -- If authority is <userinfo>@<host>:<port>
 			host_occurs_in_authority: host /= Void implies STRING_.substring_index (authority, host, 1) /= 0
 		end
 
-
-feature -- Set url components
+feature -- Setting
 
 	add_key_value (key, value: STRING) is
 			-- Add a key=value pair to `query'. `value' is adding in
@@ -363,7 +342,7 @@ feature -- Set url components
 			if value /= Void and then not value.is_empty then
 				query := STRING_.appended_string (query, uri_encoding.escape_string (value))
 			end
-			set_full_reference
+			full_reference := new_full_reference
 		end
 
 	set_path (a_path: STRING) is
@@ -373,7 +352,7 @@ feature -- Set url components
 			no_invalid_characters: not uri_encoding.has_excluded_characters (a_path)
 		do
 			path := a_path
-			set_full_reference
+			full_reference := new_full_reference
 		ensure
 			path_set: path = a_path or else STRING_.same_string (path, a_path)
 		end
@@ -386,7 +365,7 @@ feature -- Set url components
 			no_invalid_characters: not uri_encoding.has_excluded_characters (a_query)
 		do
 			query := a_query
-			set_full_reference
+			full_reference := new_full_reference
 		ensure
 			query_set: query = a_query or else STRING_.same_string (query, a_query)
 		end
@@ -405,37 +384,36 @@ feature -- Set url components
 			end
 		end
 
-
 feature {NONE} -- Update cached attributes
 
-	set_full_reference is
-			-- Reconstruct `full_reference' and `scheme_specific_part'
-			-- from individual components.
+	new_full_reference: STRING is
+			-- Reconstruct full URI from components.
 		do
-			create full_reference.make (32)
-			create scheme_specific_part.make (32)
-			if scheme /= Void then
-				full_reference := STRING_.appended_string (full_reference, scheme)
-				full_reference.append_character (':')
+			create Result.make_empty
+			if is_absolute then
+				Result := STRING_.appended_string (Result, scheme)
+				Result.append_character (':')
 			end
-			if authority /= Void then
-				scheme_specific_part := STRING_.appended_string (scheme_specific_part, authority)
+			if has_authority then
+				Result.append_character ('/')
+				Result.append_character ('/')
+				Result := STRING_.appended_string (Result, authority)
 			end
 			if path /= Void then
-				scheme_specific_part := STRING_.appended_string (scheme_specific_part, path)
+				Result := STRING_.appended_string (Result, path)
 			end
-			if query /= Void then
-				scheme_specific_part.append_character ('?')
-				scheme_specific_part := STRING_.appended_string (scheme_specific_part, query)
+			if has_query then
+				Result.append_character ('?')
+				Result := STRING_.appended_string (Result, query)
 			end
-			if fragment /= Void then
-				scheme_specific_part.append_character ('#')
-				scheme_specific_part := STRING_.appended_string (scheme_specific_part, fragment)
+			if has_fragment then
+				Result.append_character ('#')
+				Result := STRING_.appended_string (Result, fragment)
 			end
-			full_reference := STRING_.appended_string (full_reference, scheme_specific_part)
+		ensure
+			result_not_void: Result /= Void
 		end
-
-
+		
 feature {NONE} -- URI parsing
 
 	State_scheme: INTEGER is 1
@@ -512,26 +490,20 @@ feature {NONE} -- URI parsing
 					end
 				when '?' then
 					inspect state
-					when State_scheme, State_authority_prefix then
+					when State_scheme, State_authority_prefix, State_path then
 						stop_path (start, i)
 					when State_authority then
 						stop_authority (start, i)
-					when State_path then
-						if i > start then
-							stop_path (start, i)
-						end
 					when State_query, State_fragment then
 					end
 					start := i
 					state := State_query
 				when '#' then
 					inspect state
-					when State_scheme, State_authority_prefix then
+					when State_scheme, State_authority_prefix, State_path then
 						stop_path (start, i)
 					when State_authority then
 						stop_authority (start, i)
-					when State_path then
-						stop_path (start, i)
 					when State_query then
 						stop_query (start, i)
 					when State_fragment then
@@ -575,7 +547,6 @@ feature {NONE} -- URI parsing
 			if stop >= start then
 				scheme := full_reference.substring (start, stop - 1)
 			end
-			scheme_specific_part := full_reference.substring (stop + 1, full_reference.count)
 		end
 
 	stop_authority (start, stop: INTEGER) is
@@ -613,11 +584,11 @@ feature {NONE} -- URI parsing
 			valid_start: full_reference.valid_index (start)
 			valid_query: full_reference.item (start) = '?'
 			valid_stop: full_reference.valid_index (stop - 1)
-			full_reference_contains_query: start + 1 <= stop - 1
+			full_reference_contains_query: start + 1 <= stop
 		do
-			query := full_reference.substring (start + 1, stop-1)
+			query := full_reference.substring (start + 1, stop - 1)
 		ensure
-			query_set: query /= Void and then not query.is_empty
+			query_set: query /= Void
 		end
 
 	stop_fragment (start, stop: INTEGER) is
@@ -626,11 +597,11 @@ feature {NONE} -- URI parsing
 			valid_start: full_reference.valid_index (start)
 			valid_fragment: full_reference.item (start) = '#'
 			valid_stop: full_reference.valid_index (stop - 1)
-			full_reference_contains_fragment: start + 1 <= stop - 1
+			full_reference_contains_fragment: start + 1 <= stop
 		do
-			fragment := full_reference.substring (start + 1, stop-1)
+			fragment := full_reference.substring (start + 1, stop - 1)
 		ensure
-			fragment_set: fragment /= Void and then not fragment.is_empty
+			fragment_set: fragment /= Void
 		end
 
 
@@ -735,23 +706,32 @@ feature {NONE} -- Resolve a relative-path reference
 			definition: Result = STRING_.same_string (a_string, "..")
 		end
 
+feature -- Encoding
+
+	uri_encoding: UT_URL_ENCODING is
+			-- Encoding/decoding routines and tests,
+			-- exported for contract checking.
+		once
+			create Result
+		ensure
+			uri_encoding_not_void: Result /= Void
+		end
+
+
 invariant
 
 	either_absolute_or_relative: is_absolute xor is_relative
 	full_reference_not_empty: full_reference /= Void and then not full_reference.is_empty
 	full_reference_is_valid: not uri_encoding.has_excluded_characters (full_reference)
 
--- I'm really unsure if these constraints hold for deliberate garbage...
-
-	-- Constraints on elements of a parsed URI.
+		-- Constraints on elements of a parsed URI.
 	path_void_or_not_empty: path = Void or else not path.is_empty
-	valid_path: path /= Void implies not (path.has ('?') or path.has ('#'))
-	query_void_or_not_empty: query = Void or else not query.is_empty
-	valid_query: query = Void or else not query.has ('#')
-	fragment_void_or_not_empty: fragment = Void or else not fragment.is_empty
-	vaid_fragment: fragment = Void or else not fragment.has ('#')
+	valid_authority: authority /= Void implies (not authority.has ('/') and not authority.has ('?') and not authority.has ('#'))
+	valid_path: path /= Void implies (not path.has ('?') and not path.has ('#'))
+	valid_query: query /= Void implies not query.has ('#')
+	vaid_fragment: fragment /= Void implies not fragment.has ('#')
 
-	-- Contraints on parsed `authority'
+		-- Contraints on parsed `authority'
 	user_info_occurs_in_authority: user_info /= Void implies STRING_.substring_index (authority, user_info, 1) /= 0
 	host_occurs_in_authority: host /= Void implies STRING_.substring_index (authority, host, 1) /= 0
 	valid_port: port >= 0 and port <= 65535
