@@ -549,6 +549,8 @@ feature -- Removal
 			-- Remove all the characters except for the first `n';
 			-- if `n' > `count', do nothing.
 			-- (Named `keep_head' in ELKS 2001 STRING)
+			-- Note: This routine is marked as obsolete in SmallEiffel -0.74b20.
+			-- Use KL_STRING_ROUTINES.keep_head instead.
 		require
 			n_non_negative: n >= 0
 		deferred
@@ -575,6 +577,8 @@ feature -- Removal
 			-- Remove all the characters except for the last `n';
 			-- if `n' > `count', do nothing.
 			-- (Named `keep_tail' in ELKS 2001 STRING)
+			-- Note: This routine is marked as obsolete in SmallEiffel -0.74b20.
+			-- Use KL_STRING_ROUTINES.keep_tail instead.
 		require
 			n_non_negative: n >= 0
 		deferred
