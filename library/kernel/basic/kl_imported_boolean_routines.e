@@ -1,0 +1,25 @@
+indexing
+
+	description:
+
+		"Imported routines that ought to be in class BOOLEAN"
+
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	license: "Eiffel Forum License v1 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class KL_IMPORTED_BOOLEAN_ROUTINES
+
+feature -- Access
+
+	BOOLEAN_: KL_BOOLEAN_ROUTINES is
+			-- Routines that ought to be in class BOOLEAN
+		once
+			!! Result
+		ensure
+			boolean_routines_not_void: Result /= Void
+		end
+
+end

@@ -12,6 +12,10 @@ indexing
 
 class XM_STRING_MODE
 
+inherit
+
+	KL_IMPORTED_BOOLEAN_ROUTINES
+
 feature -- Status report
 
 	is_string_mode_ascii: BOOLEAN is
@@ -71,5 +75,9 @@ feature {NONE} -- Implementation
 	String_mode_unicode: INTEGER is 1
 	String_mode_mixed: INTEGER is 2
 			-- Values
+
+invariant
+
+	mode_set: BOOLEAN_.nxor (<<is_string_mode_ascii, is_string_mode_mixed, is_string_mode_unicode>>)
 
 end

@@ -33,6 +33,11 @@ inherit
 			out
 		end
 
+	KL_IMPORTED_BOOLEAN_ROUTINES
+		undefine
+			out
+		end
+
 creation
 
 	make
@@ -332,7 +337,7 @@ feature -- Tokenized content type
 
 invariant
 
-	exclusive: is_token xor is_entity xor is_id_ref xor is_id xor is_data xor is_notation xor is_enumeration
+	exclusive: BOOLEAN_.nxor (<<is_token, is_entity, is_id_ref, is_id, is_data, is_notation, is_enumeration>>)
 	list_ok: is_list_type implies (is_token or is_entity or is_id_ref)
 	impl_type_enumeration: ("CIRETNU").has (type)
 	impl_default_enumeration: ("DRIF").has (value)
