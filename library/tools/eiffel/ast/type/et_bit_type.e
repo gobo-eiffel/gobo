@@ -25,6 +25,14 @@ inherit
 			conforms_from_bit_type
 		end
 
+feature -- Status report
+
+	is_expanded: BOOLEAN is
+			-- Is current type expanded?
+		do
+			Result := True
+		end
+
 feature -- Access
 
 	bit_keyword: ET_IDENTIFIER

@@ -168,6 +168,12 @@ feature -- Status report
 			end
 		end
 
+	is_expanded: BOOLEAN is
+			-- Is current type expanded?
+		do
+			Result := False
+		end
+
 	has_qualified_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Is current type a qualified anchored type (other than of
 			-- the form 'like Current.b') when viewed from `a_context',
