@@ -57,7 +57,7 @@ feature -- Processing
 					error_handler.report_error_message (tree_pipe.last_error)
 					has_error := True
 				else
-					tree_pipe.document.root_element.resolve_namespaces_start
+					tree_pipe.document.root_element.resolve_namespaces
 					tree_pipe.document.root_element.remove_namespace_declarations_from_attributes
 					error_handler.report_info_message ("printing document...")
 					!! formatter.make
@@ -80,7 +80,7 @@ feature -- Processing
 			else
 				parser_switch := Arguments.argument (1)
 				if parser_switch.is_equal ("--expat") then
-					if not fact.is_expat_available then
+					if not fact.is_expat_parser_available then
 						error_handler.report_error_message ("expat is not availabe, please choose other parser backend")
 						has_error := True
 					else
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			a_message: STRING
 		once
 			a_message := clone ("(")
-			if fact.is_expat_available then
+			if fact.is_expat_parser_available then
 				a_message.append_string ("--expat|")
 			end
 			a_message.append_string ("--eiffel) <input-file>")
