@@ -1,4 +1,3 @@
-
 indexing
 	
 	description: 
@@ -55,15 +54,15 @@ feature -- Tag
 	on_start_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
 			-- Start of start tag.
 		require
-			unresolved_namespace_is_void: -- a_namespace may be void
+			--unresolved_namespace_is_void: a_namespace may be void
 			local_part: is_local_part (a_local_part)  
 		deferred
 		end
 		
 	on_attribute (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING; a_value: UC_STRING) is
-			-- Start of start tag.
+			-- Start of attribute.
 		require
-			unresolved_namespace_is_void: -- a_namespace may be void
+			--unresolved_namespace_is_void: a_namespace may be void
 			local_part: is_local_part (a_local_part) 
 		deferred
 		end
@@ -76,7 +75,7 @@ feature -- Tag
 	on_end_tag (a_namespace: UC_STRING; a_prefix: UC_STRING; a_local_part: UC_STRING) is
 			-- End tag.
 		require
-			unresolved_namespace_is_void: -- a_namespace may be void
+			--unresolved_namespace_is_void: a_namespace may be void
 			local_part: is_local_part (a_local_part)
 		deferred
 		end
