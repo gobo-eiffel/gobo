@@ -31,7 +31,31 @@ content="text/html; charset=iso-8859-1">
 
 <p>where <font color="#800000"><tt>filename</tt></font> is the <a
 href="configuration.html">configuration file</a> used to run the
-test. There are also some shorthands such as:</p>
+test. If <em>getest</em> is invoked with no filename but the file
+<font color="#800000"><tt>getest.cfg</tt></font> exists, then:</p>
+
+<blockquote>
+    <pre><font color="#800000">getest</font></pre>
+</blockquote>
+
+<p>is equivalent to:</p>
+
+<blockquote>
+    <pre><font color="#800000">getest getest.cfg</font></pre>
+</blockquote>
+
+<p>Alternatively the configuration filename can be specified by
+the environment variable <font color="#800000"><tt>$GETEST_CONFIG</tt></font>:</p>
+
+<blockquote>
+    <pre><font color="#800000">setenv GETEST_CONFIG filename
+getest</font></pre>
+</blockquote>
+
+<p>(<font color="#800000"><tt>setenv</tt></font> is the way to
+set environment variables with C-shell, please use the command
+provided by your favorite shell or operating system.) There are
+also some shorthands such as:</p>
 
 <blockquote>
     <pre><font color="#800000">getest --hact
@@ -49,9 +73,35 @@ getest getest.se
 getest getest.ve</font></pre>
 </blockquote>
 
-<p>When no configuration file has been specified on the
-command-line then <em>getest</em> uses the filename provided by
-the environment variable <font color="#800000"><tt>$GETEST_CONFIG</tt></font>.</p>
+<p>provided that the corresponding files exit.</p>
+
+<p>Following is the order used by <em>getest</em> to determine
+which configuration file to use:</p>
+
+<ol>
+    <li>If a filename has been specified on the command-line,
+        then use it.</li>
+    <li>If either <font color="#800000"><tt>--</tt></font><a
+        href="#ise"><font color="#800000"><tt>ise</tt></font></a>,
+        <font color="#800000"><tt>--</tt></font><a href="#hact"><font
+        color="#800000"><tt>hact</tt></font></a>, <font
+        color="#800000"><tt>--</tt></font><a href="#se"><font
+        color="#800000"><tt>se</tt></font></a> or <font
+        color="#800000"><tt>--</tt></font><a href="#ve"><font
+        color="#800000"><tt>ve</tt></font></a><font
+        color="#800000"><tt> </tt></font>has been specified on
+        the command-line and the corresponding file <font
+        color="#800000"><tt>getest.ise</tt></font>, <font
+        color="#800000"><tt>getest.hact</tt></font>, <font
+        color="#800000"><tt>getest.se</tt></font> or <font
+        color="#800000"><tt>getest.ve</tt></font> exists, then
+        use this file.</li>
+    <li>If the file <font color="#800000"><tt>getest.cfg</tt></font>
+        exists, then use it.</li>
+    <li>If the environment variable <font color="#800000"><tt>$GETEST_CONFIG</tt></font>
+        has been defined, then use its value as configuration
+        filename.</li>
+</ol>
 
 <p>Here is the list of options that can be used with <em>getest</em>:</p>
 
@@ -64,26 +114,66 @@ the environment variable <font color="#800000"><tt>$GETEST_CONFIG</tt></font>.</
     <dt><font color="#800000"><tt>-V<br>
         --version</tt></font></dt>
     <dd>Print the version number of <em>getest</em> and exit.</dd>
-    <dt><font color="#800000"><tt>--hact</tt></font></dt>
+    <dt><font color="#800000"><tt>--</tt></font><a name="hact"><font
+        color="#800000"><tt>hact</tt></font></a></dt>
     <dd>Run <em>getest</em> with the configuration file <font
-        color="#800000"><tt>getest.hact</tt></font>. This
-        configuration file is supposed to contain instructions to
-        run the test with the Halstenbach Eiffel compiler.</dd>
-    <dt><font color="#800000"><tt>--ise</tt></font></dt>
+        color="#800000"><tt>getest.hact</tt></font> if it exists.
+        This configuration file is supposed to contain
+        instructions to run the test with the Halstenbach Eiffel
+        compiler. Also the default value for the <a
+        href="configuration.html#compile"><font color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
+        color="#000080"><em><strong><tt> </tt></strong></em></font>field
+        of the configuration file is set to <font color="#800000"><tt>&quot;geant
+        compile_hact&quot;</tt></font>.</dd>
+    <dt><font color="#800000"><tt>--</tt></font><a name="ise"><font
+        color="#800000"><tt>ise</tt></font></a></dt>
     <dd>Run <em>getest</em> with the configuration file <font
-        color="#800000"><tt>getest.ise</tt></font>. This
-        configuration file is supposed to contain instructions to
-        run the test with the ISE Eiffel compiler.</dd>
-    <dt><font color="#800000"><tt>--se</tt></font></dt>
+        color="#800000"><tt>getest.ise</tt></font> if it exists.
+        This configuration file is supposed to contain
+        instructions to run the test with the ISE Eiffel
+        compiler. Also the default value for the <a
+        href="configuration.html#compile"><font color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
+        color="#000080"><em><strong><tt> </tt></strong></em></font>field
+        of the configuration file is set to <font color="#800000"><tt>&quot;geant
+        compile_ise&quot;</tt></font>.</dd>
+    <dt><font color="#800000"><tt>--</tt></font><a name="se"><font
+        color="#800000"><tt>se</tt></font></a></dt>
     <dd>Run <em>getest</em> with the configuration file <font
-        color="#800000"><tt>getest.se</tt></font>. This
-        configuration file is supposed to contain instructions to
-        run the test with the SmallEiffel compiler.</dd>
-    <dt><font color="#800000"><tt>--ve</tt></font></dt>
+        color="#800000"><tt>getest.se</tt></font> if it exists.
+        This configuration file is supposed to contain
+        instructions to run the test with the SmallEiffel
+        compiler. Also the default value for the <a
+        href="configuration.html#compile"><font color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
+        color="#000080"><em><strong><tt> </tt></strong></em></font>field
+        of the configuration file is set to <font color="#800000"><tt>&quot;geant
+        compile_se&quot;</tt></font>.</dd>
+    <dt><font color="#800000"><tt>--</tt></font><a name="ve"><font
+        color="#800000"><tt>ve</tt></font></a></dt>
     <dd>Run <em>getest</em> with the configuration file <font
-        color="#800000"><tt>getest.ve</tt></font>. This
-        configuration file is supposed to contain instructions to
-        run the test with the Visual Eiffel compiler.</dd>
+        color="#800000"><tt>getest.ve</tt></font> if it exists.
+        This configuration file is supposed to contain
+        instructions to run the test with the Visual Eiffel
+        compiler. Also the default value for the <a
+        href="configuration.html#compile"><font color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
+        color="#000080"><em><strong><tt> </tt></strong></em></font>field
+        of the configuration file is set to <font color="#800000"><tt>&quot;geant
+        compile_ve&quot;</tt></font>.</dd>
+    <dt><font color="#800000"><tt>--</tt></font><a name="compile"><font
+        color="#800000"><tt>compile</tt></font></a><font
+        color="#800000"><tt>=&lt;command&gt;</tt></font></dt>
+    <dd>Override the <a href="configuration.html#compile"><font
+        color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
+        color="#000080"><em><strong><tt> </tt></strong></em></font>field
+        of the configuration file.</dd>
+    <dt><font color="#800000"><tt>-g</tt></font></dt>
+    <dd>Testcase generation only. Do not compile nor run the
+        generated test.</dd>
+    <dt><font color="#800000"><tt>-c</tt></font></dt>
+    <dd>Testcase compilation only. Do not generate nor run the
+        test.</dd>
+    <dt><font color="#800000"><tt>-e</tt></font></dt>
+    <dd>Testcase execution only. Do not generate nor compile the
+        test.</dd>
 </dl>
 
 <hr size="1">
@@ -101,7 +191,7 @@ the environment variable <font color="#800000"><tt>$GETEST_CONFIG</tt></font>.</
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 14 April 2001</font><br>
+            <strong>Last Updated:</strong> 25 October 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

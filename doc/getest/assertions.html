@@ -61,7 +61,7 @@ color="#008000"> = </font><em>actual</em><font color="#008000">.</font><em>
     </em><font color="#000080"><em><strong>require</strong></em></font><em>
         a_tag_not_void</em>:<em> a_tag </em>/=<em> </em><font
 color="#008080"><em>Void</em></font></pre>
-    <pre><em>assert_array </em>(<em>a_tag</em>:<em> STRING</em>;<em> expected</em>,<em> actual</em>:<em> ARRAY </em>[<em>ANY</em>])<em>
+    <pre><em>assert_arrays_same </em>(<em>a_tag</em>:<em> STRING</em>;<em> expected</em>,<em> actual</em>:<em> ARRAY </em>[<em>ANY</em>])<em>
 </em><font color="#008000">        -- Assert that </font><em>expected</em><font
 color="#008000"> and </font><em>actual</em><font color="#008000"> have the same items
         -- in the same order (use '=' for item comparison).</font><em>
@@ -72,7 +72,19 @@ color="#008080"><em>Void</em></font><em>
 color="#008080"><em>Void</em></font><em>
         actual_not_void</em>:<em> actual </em>/=<em> </em><font
 color="#008080"><em>Void</em></font></pre>
-    <pre><em>assert_iarray </em>(<em>a_tag</em>:<em> STRING</em>;<em> expected</em>,<em> actual</em>:<em> ARRAY </em>[<em>INTEGER</em>])<em>
+    <pre><em>assert_arrays_equal </em>(<em>a_tag</em>:<em> STRING</em>;<em> expected</em>,<em> actual</em>:<em> ARRAY </em>[<em>ANY</em>])<em>
+</em><font color="#008000">        -- Assert that </font><em>expected</em><font
+color="#008000"> and </font><em>actual</em><font color="#008000"> have the same items
+        -- in the same order (use </font><em>equal</em><font
+color="#008000"> for item comparison).</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        a_tag_not_void</em>:<em> a_tag </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        expected_not_void</em>:<em> expected </em>/=<em> </em><font
+color="#008080"><em>Void</em></font><em>
+        actual_not_void</em>:<em> actual </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><em>assert_iarrays_same </em>(<em>a_tag</em>:<em> STRING</em>;<em> expected</em>,<em> actual</em>:<em> ARRAY </em>[<em>INTEGER</em>])<em>
 </em><font color="#008000">        -- Assert that </font><em>expected</em><font
 color="#008000"> and </font><em>actual</em><font color="#008000"> have the same items
         -- in the same order (use '=' for item comparison).</font><em>
@@ -176,11 +188,12 @@ color="#008000">-- class TEST_DATABASE</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 16 April 2001</font><br>
+            <strong>Last Updated:</strong> 25 October 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+            --> 
         </address>
         </td>
         <td align="right" valign="top"><a
