@@ -7498,8 +7498,435 @@ feature -- Internal errors
 			report_internal_error (an_error)
 		end
 
--- Codes not used anymore:
---				error_handler.report_giadl_error
---				error_handler.report_giadu_error
+	report_gibcf_error is
+			-- Report GIBCF internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcf
+			report_internal_error (an_error)
+		end
+
+	report_gibcg_error is
+			-- Report GIBCG internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcg
+			report_internal_error (an_error)
+		end
+
+	report_gibch_error is
+			-- Report GIBCH internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibch
+			report_internal_error (an_error)
+		end
+
+	report_gibci_error is
+			-- Report GIBCI internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibci
+			report_internal_error (an_error)
+		end
+
+	report_gibcj_error is
+			-- Report GIBCJ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcj
+			report_internal_error (an_error)
+		end
+
+	report_gibck_error is
+			-- Report GIBCK internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibck
+			report_internal_error (an_error)
+		end
+
+	report_gibcl_error is
+			-- Report GIBCL internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcl
+			report_internal_error (an_error)
+		end
+
+	report_gibcm_error is
+			-- Report GIBCM internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcm
+			report_internal_error (an_error)
+		end
+
+	report_gibcn_error is
+			-- Report GIBCN internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcn
+			report_internal_error (an_error)
+		end
+
+	report_gibco_error is
+			-- Report GIBCO internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibco
+			report_internal_error (an_error)
+		end
+
+	report_gibcp_error is
+			-- Report GIBCP internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcp
+			report_internal_error (an_error)
+		end
+
+	report_gibcq_error is
+			-- Report GIBCQ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcq
+			report_internal_error (an_error)
+		end
+
+	report_gibcr_error is
+			-- Report GIBCR internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcr
+			report_internal_error (an_error)
+		end
+
+	report_gibcs_error is
+			-- Report GIBCS internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcs
+			report_internal_error (an_error)
+		end
+
+	report_gibct_error is
+			-- Report GIBCT internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibct
+			report_internal_error (an_error)
+		end
+
+	report_gibcu_error is
+			-- Report GIBCU internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcu
+			report_internal_error (an_error)
+		end
+
+	report_gibcv_error is
+			-- Report GIBCV internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcv
+			report_internal_error (an_error)
+		end
+
+	report_gibcw_error is
+			-- Report GIBCW internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcw
+			report_internal_error (an_error)
+		end
+
+	report_gibcx_error is
+			-- Report GIBCX internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcx
+			report_internal_error (an_error)
+		end
+
+	report_gibcy_error is
+			-- Report GIBCY internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcy
+			report_internal_error (an_error)
+		end
+
+	report_gibcz_error is
+			-- Report GIBCZ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibcz
+			report_internal_error (an_error)
+		end
+
+	report_gibda_error is
+			-- Report GIBDA internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibda
+			report_internal_error (an_error)
+		end
+
+	report_gibdb_error is
+			-- Report GIBDB internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdb
+			report_internal_error (an_error)
+		end
+
+	report_gibdc_error is
+			-- Report GIBDC internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdc
+			report_internal_error (an_error)
+		end
+
+	report_gibdd_error is
+			-- Report GIBDD internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdd
+			report_internal_error (an_error)
+		end
+
+	report_gibde_error is
+			-- Report GIBDE internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibde
+			report_internal_error (an_error)
+		end
+
+	report_gibdf_error is
+			-- Report GIBDF internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdf
+			report_internal_error (an_error)
+		end
+
+	report_gibdg_error is
+			-- Report GIBDG internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdg
+			report_internal_error (an_error)
+		end
+
+	report_gibdh_error is
+			-- Report GIBDH internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdh
+			report_internal_error (an_error)
+		end
+
+	report_gibdi_error is
+			-- Report GIBDI internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdi
+			report_internal_error (an_error)
+		end
+
+	report_gibdj_error is
+			-- Report GIBDJ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdj
+			report_internal_error (an_error)
+		end
+
+	report_gibdk_error is
+			-- Report GIBDK internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdk
+			report_internal_error (an_error)
+		end
+
+	report_gibdl_error is
+			-- Report GIBDL internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdl
+			report_internal_error (an_error)
+		end
+
+	report_gibdm_error is
+			-- Report GIBDM internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdm
+			report_internal_error (an_error)
+		end
+
+	report_gibdn_error is
+			-- Report GIBDN internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdn
+			report_internal_error (an_error)
+		end
+
+	report_gibdo_error is
+			-- Report GIBDO internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdo
+			report_internal_error (an_error)
+		end
+
+	report_gibdp_error is
+			-- Report GIBDP internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdp
+			report_internal_error (an_error)
+		end
+
+	report_gibdq_error is
+			-- Report GIBDQ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdq
+			report_internal_error (an_error)
+		end
+
+	report_gibdr_error is
+			-- Report GIBDR internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdr
+			report_internal_error (an_error)
+		end
+
+	report_gibds_error is
+			-- Report GIBDS internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibds
+			report_internal_error (an_error)
+		end
+
+	report_gibdt_error is
+			-- Report GIBDT internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdt
+			report_internal_error (an_error)
+		end
+
+	report_gibdu_error is
+			-- Report GIBDU internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdu
+			report_internal_error (an_error)
+		end
+
+	report_gibdv_error is
+			-- Report GIBDV internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdv
+			report_internal_error (an_error)
+		end
+
+	report_gibdw_error is
+			-- Report GIBDW internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdw
+			report_internal_error (an_error)
+		end
+
+	report_gibdx_error is
+			-- Report GIBDX internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdx
+			report_internal_error (an_error)
+		end
+
+	report_gibdy_error is
+			-- Report GIBDY internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdy
+			report_internal_error (an_error)
+		end
+
+	report_gibdz_error is
+			-- Report GIBDZ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_gibdz
+			report_internal_error (an_error)
+		end
+
+--Error codes not used:
+
+-- report_gibdw_error
+-- report_gibdx_error
+-- report_gibdy_error
+-- report_gibdz_error
+
 
 end
