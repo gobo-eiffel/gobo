@@ -40,21 +40,25 @@ feature {NONE} -- Document type definition callbacks
 	on_doctype (name: STRING; an_id: XM_DTD_EXTERNAL_ID; has_internal_subset: BOOLEAN) is
 			-- Document type declaration.
 		do
-			check_void
+			if dtd_callbacks = Void then
+				create {XM_DTD_CALLBACKS_NULL} dtd_callbacks.make
+			end
 			dtd_callbacks.on_doctype (name, an_id, has_internal_subset)
+		ensure then
+			dtd_callbacks_not_void: dtd_callbacks /= Void
 		end
 
 	on_element_declaration (a_name: STRING; a_model: XM_DTD_ELEMENT_CONTENT) is
 			-- Element declaration.
 		do
-			check_void
+			check dtd_callbacks_not_void: dtd_callbacks /= Void end
 			dtd_callbacks.on_element_declaration (a_name, a_model)
 		end
 
 	on_attribute_declaration (an_element_name, a_name: STRING; a_model: XM_DTD_ATTRIBUTE_CONTENT) is
 			-- Attribute declaration, one event per attribute.
 		do
-			check_void
+			check dtd_callbacks_not_void: dtd_callbacks /= Void end
 			dtd_callbacks.on_attribute_declaration (an_element_name, a_name, a_model)
 		end
 
@@ -62,34 +66,36 @@ feature {NONE} -- Document type definition callbacks
 		an_id: XM_DTD_EXTERNAL_ID; notation_name: STRING) is
 			-- Entity declaration.
 		do
-			check_void
+			check dtd_callbacks_not_void: dtd_callbacks /= Void end
 			dtd_callbacks.on_entity_declaration (entity_name, is_parameter, value, an_id, notation_name)
 		end
 
 	on_notation_declaration (notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
 			-- Notation declaration.
 		do
-			check_void
+			check dtd_callbacks_not_void: dtd_callbacks /= Void end
 			dtd_callbacks.on_notation_declaration (notation_name, an_id)
 		end
 		
+	on_dtd_processing_instruction (a_name, a_content: STRING) is
+			-- Forward PI.
+		do
+			check dtd_callbacks_not_void: dtd_callbacks /= Void end
+			dtd_callbacks.on_dtd_processing_instruction (a_name, a_content)
+		end
+
+	on_dtd_comment (a_content: STRING) is
+			-- Forward comment.
+		do
+			check dtd_callbacks_not_void: dtd_callbacks /= Void end
+			dtd_callbacks.on_dtd_comment (a_content)
+		end
+
 	on_dtd_end is
 			-- End of DTD.
 		do
-			check_void
+			check dtd_callbacks_not_void: dtd_callbacks /= Void end
 			dtd_callbacks.on_dtd_end
-		end
-
-feature {NONE} -- Implementation
-
-	check_void is
-			-- Initialise with DTD callbacks if no handler.
-		do
-			if dtd_callbacks = Void then
-				create {XM_DTD_CALLBACKS_NULL} dtd_callbacks.make
-			end
-		ensure
-			dtd_callbacks_not_void: dtd_callbacks /= Void
 		end
 
 end

@@ -55,6 +55,16 @@ feature -- Document type definuition callbacks
 		do
 		end
 
+	on_dtd_processing_instruction (a_name, a_content: STRING) is
+			-- PI.
+		do
+		end
+
+	on_dtd_comment (a_content: STRING) is
+			-- Comment.
+		do
+		end
+
 	on_dtd_end is
 			-- End of DTD.
 		do
