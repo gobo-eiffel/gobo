@@ -71,7 +71,6 @@ feature -- Compilation
 
 invariant
 
-	value_not_void: value /= Void
 	literal_not_void: literal /= Void
 
 end
