@@ -1425,7 +1425,8 @@ feature -- Element change
 							report_compile_error (an_expression.error_value)
 						else
 							create a_dynamic_context.make_restricted (a_static_context, principal_stylesheet.collation_map)
-							a_boolean_value := an_expression.effective_boolean_value (a_dynamic_context)
+							an_expression.calculate_effective_boolean_value (a_dynamic_context)
+							a_boolean_value := an_expression.last_boolean_value
 							if a_boolean_value.is_error then
 								report_compile_error (a_boolean_value.error_value)
 							else

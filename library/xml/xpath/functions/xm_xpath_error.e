@@ -129,7 +129,8 @@ feature -- Evaluation
 				end
 			end
 			if arguments.count = 3 then
-				an_iterator := arguments.item (3).iterator (a_context)
+				arguments.item (3).create_iterator (a_context)
+				an_iterator := arguments.item (3).last_iterator
 				create {XM_XPATH_SEQUENCE_EXTENT} an_error_sequence.make (an_iterator)
 			end
 			create an_error_value.make (a_description, a_namespace_uri, an_error_code, an_error_sequence, Dynamic_error)

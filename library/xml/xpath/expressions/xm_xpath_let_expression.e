@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			promote, iterator, evaluate_item, compute_special_properties,
+			promote, create_iterator, evaluate_item, compute_special_properties,
 			mark_tail_function_calls, action
 		end
 
@@ -250,7 +250,7 @@ feature -- Evaluation
 			action.evaluate_item (a_context)
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			a_value: XM_XPATH_VALUE
@@ -261,7 +261,8 @@ feature -- Evaluation
 				set_slot_number (a_context.next_available_slot)
 			end
 			a_context.set_local_variable (a_value, slot_number)
-			Result := action.iterator (a_context)
+			action.create_iterator (a_context)
+			last_iterator := action.last_iterator
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, evaluate_item, iterator, compute_intrinsic_dependencies
+			pre_evaluate, evaluate_item, create_iterator, compute_intrinsic_dependencies
 		end
 
 creation
@@ -66,7 +66,7 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			a_group_iterator: XM_XSLT_GROUP_ITERATOR
@@ -79,9 +79,9 @@ feature -- Evaluation
 			end
 			a_group_iterator := an_evaluation_context.current_group_iterator
 			if a_group_iterator = Void then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
 			else
-				Result := a_group_iterator.current_group_iterator
+				last_iterator := a_group_iterator.current_group_iterator
 			end
 		end
 

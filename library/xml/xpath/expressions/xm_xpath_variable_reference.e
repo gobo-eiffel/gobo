@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			same_expression, promote, iterator, evaluate_item, lazily_evaluate,
+			same_expression, promote, create_iterator, evaluate_item, lazily_evaluate,
 			native_implementations, compute_special_properties, compute_intrinsic_dependencies
 		end
 
@@ -157,14 +157,15 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence
 		do
 			evaluate_variable (a_context)
 			if last_evaluated_binding.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} Result.make (last_evaluated_binding.error_value)
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_binding.error_value)
 			else
-				Result := last_evaluated_binding.iterator (a_context)
+				last_evaluated_binding.create_iterator (a_context)
+				last_iterator := last_evaluated_binding.last_iterator
 			end
 		end
 
@@ -233,7 +234,7 @@ feature {NONE} -- Implementation
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines
 		do
-				Result := INTEGER_.bit_or (Supports_process, INTEGER_.bit_or (Supports_evaluate_item, Supports_iterator))
+				Result := Supports_process + Supports_evaluate_item + Supports_iterator
 		end
 
 	compute_cardinality is

@@ -217,7 +217,8 @@ feature {NONE} -- Implementation
 
 				-- Get an iterator to iterate through the selected nodes in original order.
 
-				an_iterator := select_expression.iterator (a_context)
+				select_expression.create_iterator (a_context)
+				an_iterator := select_expression.last_iterator
 
 				-- quick exit if the iterator is empty
 

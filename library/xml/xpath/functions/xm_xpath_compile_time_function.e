@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, evaluate_item, iterator
+			pre_evaluate, evaluate_item, create_iterator
 		end
 
 feature -- Evaluation
@@ -36,13 +36,13 @@ feature -- Evaluation
 			--	do_nothing
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			a_message: STRING
 		do
 			a_message := "Internal error: function " + name + " should have been resolved at compile-time"
-			create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string (a_message, Gexslt_eiffel_type_uri, "INTERNAL_ERROR", Dynamic_error)
+			create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string (a_message, Gexslt_eiffel_type_uri, "INTERNAL_ERROR", Dynamic_error)
 		end
 
 end

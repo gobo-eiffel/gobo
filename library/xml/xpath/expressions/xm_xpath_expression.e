@@ -140,6 +140,12 @@ feature -- Status report
 	last_evaluated_string: XM_XPATH_STRING_VALUE
 			-- Value from last call to `evaluate_as_string'
 
+	last_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			-- Value from last call to `calculate_effective_boolean_value'
+
+	last_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			-- Result from last call to `create_iterator'
+
 	last_slot_number: INTEGER
 			-- Last allocated variable slot number
 
@@ -275,10 +281,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	-- TODO: Problem: many of the implementations call evaluate_item or iterator
-	--        and so violate CQS
-
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value;
 			-- The result has value `False' if the value is the empty sequence,
 			--  a zero-length string, a number equal to zero, or the boolean `False'.
@@ -289,7 +292,7 @@ feature -- Evaluation
 			not_replaced: not was_expression_replaced
 		deferred
 		ensure
-			value_not_void_but_may_be_in_error: Result /= Void
+			value_not_void_but_may_be_in_error: last_boolean_value /= Void
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
@@ -325,19 +328,16 @@ feature -- Evaluation
 			string_not_void_but_may_be_in_error: last_evaluated_string /= Void
 		end
 
-	-- TODO: Problem: many of the implementations call evaluate_item or evaluate_variable,
-	--        and so violate CQS
-
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- An iterator over the values of a sequence
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Create an iterator over the values of a sequence
 		require
 			not_in_error: not is_error
 			context_may_be_void: True
 			not_replaced: not was_expression_replaced
 		deferred
 		ensure
-			iterator_not_void_but_may_be_error: Result /= Void -- and then (Result.is_error or else not Result.is_error)
-			iterator_before: not Result.is_error implies Result.before
+			iterator_not_void_but_may_be_error: last_iterator /= Void
+			iterator_before: not last_iterator.is_error implies last_iterator.before
 		end
 	
 	process (a_context: XM_XPATH_CONTEXT) is
@@ -379,7 +379,8 @@ feature -- Evaluation
 					a_variable_reference.evaluate_variable (a_context)
 					a_closure ?= a_variable_reference.last_evaluated_binding
 					if a_closure /= Void then
-						create an_extent.make (a_closure.iterator (Void))
+						a_closure.create_iterator (Void)
+						create an_extent.make (a_closure.last_iterator)
 						last_evaluation := an_extent
 					else
 						a_result_value ?= a_variable_reference.last_evaluated_binding
@@ -391,13 +392,13 @@ feature -- Evaluation
 				end
 				if last_evaluation = Void then
 					if is_iterator_supported then
-						an_iterator := iterator (a_context)
-						if not an_iterator.is_error then
-							an_empty_iterator ?= an_iterator
+						create_iterator (a_context)
+						if not last_iterator.is_error then
+							an_empty_iterator ?= last_iterator
 							if an_empty_iterator /= Void then
 								create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
 							else
-								a_singleton_iterator ?= an_iterator
+								a_singleton_iterator ?= last_iterator
 								if a_singleton_iterator /= Void then
 									a_singleton_iterator.forth
 									if not a_singleton_iterator.off then an_item := a_singleton_iterator.item end
@@ -409,7 +410,7 @@ feature -- Evaluation
 										last_evaluation := an_item.as_value -- May still be `Void'
 									end
 								else
-									create an_extent.make (an_iterator)
+									create an_extent.make (last_iterator)
 									a_length := an_extent.count
 									if a_length = 0 then
 										create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
@@ -426,7 +427,7 @@ feature -- Evaluation
 								end
 							end
 						else
-							create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_iterator.error_value)
+							create {XM_XPATH_INVALID_VALUE} last_evaluation.make (last_iterator.error_value)
 						end
 					elseif is_evaluate_item_supported then
 						evaluate_item (a_context)

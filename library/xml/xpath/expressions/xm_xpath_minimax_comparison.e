@@ -20,7 +20,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, evaluate_item, effective_boolean_value
+			analyze, evaluate_item, calculate_effective_boolean_value
 		end
 
 creation
@@ -56,7 +56,8 @@ feature -- Optimization
 
 				a_value ?= first_operand
 				if a_value /= Void then
-					a_range :=  computed_range (a_value.iterator (Void))
+					a_value.create_iterator (Void)
+					a_range :=  computed_range (a_value.last_iterator)
 					if a_range = Void then
 						set_replacement (false_value)
 					elseif operator = Less_than_token or else operator = Less_equal_token then
@@ -68,7 +69,8 @@ feature -- Optimization
 				if not was_expression_replaced then
 					a_value ?= second_operand
 					if a_value /= Void then
-						a_range :=  computed_range (a_value.iterator (Void))
+						a_value.create_iterator (Void)
+						a_range :=  computed_range (a_value.last_iterator)
 						if a_range = Void then
 							set_replacement (false_value)
 						elseif operator = Greater_than_token or else operator = Greater_equal_token then
@@ -83,15 +85,17 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			first_range, second_range: ARRAY [XM_XPATH_NUMERIC_VALUE]
 		do
-			first_range := computed_range (first_operand.iterator (a_context))
-			second_range := computed_range (second_operand.iterator (a_context))
+			first_operand.create_iterator (a_context)
+			first_range := computed_range (first_operand.last_iterator)
+			second_operand.create_iterator (a_context)
+			second_range := computed_range (second_operand.last_iterator)
 			if first_range = Void or else second_range = Void then
-				Result := false_value
+				last_boolean_value := false_value
 			else
 
 				-- Now test how the min of one sequence compares to the max of the other
@@ -99,13 +103,13 @@ feature -- Evaluation
 				inspect
 					operator
 				when Less_than_token then
-					create Result.make (first_range.item (1).three_way_comparison (second_range.item (2)) = -1)
+					create last_boolean_value.make (first_range.item (1).three_way_comparison (second_range.item (2)) = -1)
 				when Less_equal_token then
-					create Result.make (first_range.item (1).three_way_comparison (second_range.item (2)) <= 0)
+					create last_boolean_value.make (first_range.item (1).three_way_comparison (second_range.item (2)) <= 0)
 				when Greater_than_token then
-					create Result.make (first_range.item (2).three_way_comparison (second_range.item (1)) = 1)
+					create last_boolean_value.make (first_range.item (2).three_way_comparison (second_range.item (1)) = 1)
 				when Greater_equal_token then
-					create Result.make (first_range.item (2).three_way_comparison (second_range.item (1)) >= 0)
+					create last_boolean_value.make (first_range.item (2).three_way_comparison (second_range.item (1)) >= 0)
 				end
 			end
 		end
@@ -113,7 +117,8 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			last_evaluated_item := effective_boolean_value (a_context)
+			calculate_effective_boolean_value (a_context)
+			last_evaluated_item := last_boolean_value
 		end
 
 feature {NONE} -- Implementation

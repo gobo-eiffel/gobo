@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			evaluate_item, iterator
+			evaluate_item, create_iterator
 		end
 
 creation
@@ -66,10 +66,11 @@ feature -- Evaluation
 			last_evaluated_item := arguments.item (1).last_evaluated_item
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		do
-			Result := arguments.item (1).iterator (a_context)
+			arguments.item (1).create_iterator (a_context)
+			last_iterator := arguments.item (1).last_iterator
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

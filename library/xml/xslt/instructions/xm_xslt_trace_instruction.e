@@ -17,7 +17,7 @@ inherit
 	XM_XSLT_INSTRUCTION
 		redefine
 			system_id, compute_cardinality,
-			evaluate_item, iterator, item_type, compute_dependencies,
+			evaluate_item, create_iterator, item_type, compute_dependencies,
 			creates_new_nodes, sub_expressions
 		end
 
@@ -153,7 +153,7 @@ feature -- Evaluation
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
@@ -169,7 +169,8 @@ feature -- Evaluation
 				if details = Void then generate_details end
 				a_transformer.trace_listener.trace_instruction_entry (details)
 			end
-			Result := child.iterator (a_context)
+			child.create_iterator (a_context)
+			last_iterator := child.last_iterator
 			last_evaluated_item := child.last_evaluated_item
 			if a_transformer.is_tracing then
 				a_transformer.trace_listener.trace_instruction_exit (details)

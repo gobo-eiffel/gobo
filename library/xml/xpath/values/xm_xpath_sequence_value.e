@@ -33,18 +33,17 @@ feature -- Access
 		require
 			position_strictly_positive: p > 0
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
 			a_counter: INTEGER
 		do
 			from
-				an_iterator := iterator (Void)
+				create_iterator (Void)
 				a_counter := 1
 			until
-				a_counter > p or else an_iterator.after
+				a_counter > p or else last_iterator.after
 			loop
-				an_iterator.forth
-				an_item := an_iterator.item
+				last_iterator.forth
+				an_item := last_iterator.item
 				if a_counter = p then
 					Result := an_item
 				else
@@ -59,16 +58,14 @@ feature -- Status report
 
 	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
 			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := iterator (a_context)
-			an_iterator.start
-			if an_iterator.after then
+			create_iterator (a_context)
+			last_iterator.start
+			if last_iterator.after then
 				Result := False
 			else
-				an_iterator.forth
-				if an_iterator.after then
+				last_iterator.forth
+				if last_iterator.after then
 					Result := False
 				else
 					Result := True
@@ -80,7 +77,6 @@ feature -- Status report
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "sequence of ")
 			a_string := STRING_.appended_string (a_string, item_type.conventional_name)
@@ -89,18 +85,18 @@ feature -- Status report
 			else
 				a_string := STRING_.appended_string (a_string, " (")
 				from
-					an_iterator := iterator (Void)
+					create_iterator (Void)
 						check
-							before: an_iterator.before
+							before: last_iterator.before
 						end
-					an_iterator.forth
+					last_iterator.forth
 				until
-					an_iterator.after
+					last_iterator.after
 				loop
 					std.error.put_string (indentation (a_level + 1))
-					std.error.put_string (an_iterator.item.string_value)
+					std.error.put_string (last_iterator.item.string_value)
 					std.error.put_new_line
-					an_iterator.forth				
+					last_iterator.forth				
 				end
 				a_string := STRING_.appended_string (a_string, ")")
 				std.error.put_string (a_string)
@@ -110,55 +106,53 @@ feature -- Status report
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
 			a_node: XM_XPATH_NODE
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			a_string_value: XM_XPATH_STRING_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
-			print ("EBV of a sequence value%N")
-			an_iterator := iterator (a_context)
-			an_iterator.start
-			if an_iterator.after then
-				create Result.make (False)
+			create_iterator (a_context)
+			last_iterator.start
+			if last_iterator.after then
+				create last_boolean_value.make (False)
 			else
-				an_item := an_iterator.item
+				an_item := last_iterator.item
 				a_node ?= an_item
 				if a_node /= Void then
-					create Result.make (True)
+					create last_boolean_value.make (True)
 				else
 					a_boolean_value ?= an_item
 					if a_boolean_value /= Void then
 						if a_boolean_value.value then
-							Result := a_boolean_value
+							last_boolean_value := a_boolean_value
 						else
-							an_iterator.forth
-							create Result.make (not an_iterator.after)
+							last_iterator.forth
+							create last_boolean_value.make (not last_iterator.after)
 						end
 					else
 						a_string_value ?= an_item
 						if a_string_value /= Void then
 							if a_string_value.string_value.count > 0 then
-								create Result.make (True)
+								create last_boolean_value.make (True)
 							else
-								an_iterator.forth
-								create Result.make (not an_iterator.after)
+								last_iterator.forth
+								create last_boolean_value.make (not last_iterator.after)
 							end
 						else
 							a_numeric_value ?= an_item
 							if a_numeric_value /= Void then
-								an_iterator.forth
-								if not an_iterator.after then
-									create Result.make (True)
+								last_iterator.forth
+								if not last_iterator.after then
+									create last_boolean_value.make (True)
 								else
-									create Result.make ((not a_numeric_value.is_zero ) and then (not a_numeric_value.is_nan))
+									create last_boolean_value.make ((not a_numeric_value.is_zero ) and then (not a_numeric_value.is_nan))
 								end
 							else
-								create Result.make (True)
+								create last_boolean_value.make (True)
 							end
 						end
 					end
@@ -168,16 +162,14 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate an expression as a single item
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := iterator (a_context)
-			if an_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+			create_iterator (a_context)
+			if last_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
 			else
-				an_iterator.start
-				if not an_iterator.after then
-					last_evaluated_item := an_iterator.item
+				last_iterator.start
+				if not last_iterator.after then
+					last_evaluated_item := last_iterator.item
 				end
 			end
 		end
@@ -200,24 +192,17 @@ feature  -- Conversion
 
 	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Convert to an item
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := iterator (a_context)
-			if not an_iterator.is_error then
-				an_iterator.start
-				if an_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.error_value)
+			create_iterator (a_context)
+			if not last_iterator.is_error then
+				last_iterator.start
+				if last_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} Result.make (last_iterator.error_value)
 				else
-				--	an_iterator.forth
-				--	if not an_iterator.is_error then
-						Result := an_iterator.item
-				--	else
-				--		create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.error_value)
-				--	end
+					Result := last_iterator.item
 				end
 			else
-				create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.error_value)
+				create {XM_XPATH_INVALID_ITEM} Result.make (last_iterator.error_value)
 			end		
 		end
 

@@ -15,7 +15,7 @@ inherit
 	XM_XSLT_INSTRUCTION
 		redefine
 			item_type, compute_dependencies, creates_new_nodes, promote_instruction,
-			sub_expressions, iterator
+			sub_expressions, create_iterator
 		end
 
 	XM_XSLT_FOR_EACH_GROUP_CONSTANTS
@@ -319,7 +319,8 @@ feature -- Evaluation
 			a_trace_listener: XM_XSLT_TRACE_LISTENER
 		do
 			a_transformer := a_context.transformer
-			a_group_iterator := group_iterator (a_context)
+			create_group_iterator (a_context)
+			a_group_iterator := last_group_iterator
 			a_new_context := a_context.new_context
 			a_new_context.set_current_template (Void)
 			a_new_context.set_current_iterator (a_group_iterator)
@@ -344,7 +345,7 @@ feature -- Evaluation
 			last_tail_call := Void
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence
 		local
 			a_group_iterator: XM_XSLT_GROUP_ITERATOR
@@ -355,19 +356,21 @@ feature -- Evaluation
 				an_evaluation_context /= Void
 				-- This is XSLT
 			end
-			a_group_iterator := group_iterator (an_evaluation_context)
+			create_group_iterator (an_evaluation_context)
+			a_group_iterator := last_group_iterator
 			a_new_context := an_evaluation_context.new_context
 			a_new_context.set_current_template (Void)
 			a_new_context.set_current_iterator (a_group_iterator)
 			a_new_context.set_current_group_iterator (a_group_iterator)
-			create {XM_XPATH_MAPPING_ITERATOR} Result.make (a_group_iterator, Current, a_new_context, Void)
+			create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_group_iterator, Current, a_new_context, Void)
 			
 		end
 	
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
 			-- Map `an_item' to a sequence
 		do
-			create Result.make_sequence (action.iterator (a_context))
+			action.create_iterator (a_context)
+			create last_mapped_item.make_sequence (action.last_iterator)
 		end
 
 feature {NONE} -- Implementation
@@ -400,6 +403,9 @@ feature {NONE} -- Implementation
 
 	cached_collator: ST_COLLATOR
 			-- Caced result from `collator'
+
+	last_group_iterator: XM_XSLT_GROUP_ITERATOR
+			-- Result from `create_group_iterator'
 	
 	collator (a_context: XM_XSLT_EVALUATION_CONTEXT): ST_COLLATOR is
 			-- Collator (memo function)
@@ -423,7 +429,7 @@ feature {NONE} -- Implementation
 			cached_collator := Result
 		end
 
-	group_iterator (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_GROUP_ITERATOR is
+	create_group_iterator (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Group iterator
 		require
 			context_not_void: a_context /= Void
@@ -435,7 +441,8 @@ feature {NONE} -- Implementation
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 			a_group_iterator: XM_XSLT_GROUP_ITERATOR
 		do
-			a_population := select_expression.iterator (a_context)
+			select_expression.create_iterator (a_context)
+			a_population := select_expression.last_iterator
 						
 			-- Obtain am iterator over the groups in order of first appearance
 
@@ -476,12 +483,12 @@ feature {NONE} -- Implementation
 					reduced_sort_keys.put_last (a_fixed_sort_key)
 					a_cursor.forth
 				end
-				create {XM_XSLT_SORTED_GROUP_ITERATOR} Result.make (a_new_context, a_group_iterator, reduced_sort_keys)
+				create {XM_XSLT_SORTED_GROUP_ITERATOR} last_group_iterator.make (a_new_context, a_group_iterator, reduced_sort_keys)
 			else
-				Result := a_group_iterator
+				last_group_iterator := a_group_iterator
 			end
 		ensure
-			result_not_void: Result /= Void
+			result_not_void: last_group_iterator /= Void
 		end
 
 

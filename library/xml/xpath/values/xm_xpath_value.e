@@ -88,18 +88,17 @@ feature -- Evaluation
 	process (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 		do
-			an_iterator := iterator (a_context)
+			create_iterator (a_context)
 			a_receiver := a_context.current_receiver
 			from
-				an_iterator.start
+				last_iterator.start
 			until
-				an_iterator.after
+				last_iterator.after
 			loop
-				a_receiver.append_item (an_iterator.item)
-				an_iterator.forth
+				a_receiver.append_item (last_iterator.item)
+				last_iterator.forth
 			end
 		end
 

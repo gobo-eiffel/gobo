@@ -123,8 +123,9 @@ feature -- Element change
 
 				-- Condition known statically, so we only need compile the code if true.
             -- This can happen with expressions such as test="function-available('abc')".
-				
-				a_boolean_value := a_value.effective_boolean_value (Void)
+
+				a_value.calculate_effective_boolean_value (Void)
+				a_boolean_value := a_value.last_boolean_value
 				if a_boolean_value.is_error then
 					report_compile_error (a_boolean_value.error_value)
 				else

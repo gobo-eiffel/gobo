@@ -18,7 +18,7 @@ inherit
 		redefine
 			creates_new_nodes, native_implementations, item_type,
 			compute_cardinality, compute_dependencies, promote_instruction,
-			sub_expressions, iterator
+			sub_expressions, create_iterator
 		end
 			
 	XM_XSLT_VALIDATION
@@ -129,7 +129,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			a_new_context: XM_XPATH_CONTEXT
@@ -139,7 +139,8 @@ feature -- Evaluation
 			create a_receiver.make
 			a_new_context.set_current_receiver (a_receiver)
 			process (a_new_context)
-			Result := a_receiver.sequence.iterator (Void)
+			a_receiver.sequence.create_iterator (Void)
+			last_iterator := a_receiver.sequence.last_iterator
 		end
 
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
@@ -159,7 +160,8 @@ feature -- Evaluation
 				which_namespaces := No_namespaces
 			end
 			from
-				a_sequence_iterator := select_expression.iterator (a_context)
+				select_expression.create_iterator (a_context)
+				a_sequence_iterator := select_expression.last_iterator
 				if a_sequence_iterator.is_error then
 					a_receiver.on_error (a_sequence_iterator.error_value.error_message)
 				else

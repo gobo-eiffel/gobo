@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
 			simplify, pre_evaluate, check_arguments,
-			compute_special_properties, iterator
+			compute_special_properties, create_iterator
 		end
 
 	XM_XPATH_NODE_MAPPING_FUNCTION
@@ -83,7 +83,7 @@ feature -- Optimization
 feature -- Evaluation
 
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			a_node: XM_XPATH_NODE
@@ -113,18 +113,19 @@ feature -- Evaluation
 						if an_idref_list.count > 1 then
 							todo ("iterator (multiple IDREFS/string)", True)
 						else
-							create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (a_document.selected_id (idrefs))
+							create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} last_iterator.make (a_document.selected_id (idrefs))
 						end
 					else
-						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
 					end
 				else
 					create a_local_order_comparer
-					create a_mapping_iterator.make (arguments.item (1).iterator (a_context), Current, Void, a_document)
-					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (a_mapping_iterator, a_local_order_comparer) 
+					arguments.item (1).create_iterator (a_context)
+					create a_mapping_iterator.make (arguments.item (1).last_iterator, Current, Void, a_document)
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (a_mapping_iterator, a_local_order_comparer) 
 				end
 			else
-				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("In the id() function," +
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("In the id() function," +
 													 " the tree being searched must be one whose root is a document node", Xpath_errors_uri, "FODC0001", Dynamic_error)
 			end
 		end

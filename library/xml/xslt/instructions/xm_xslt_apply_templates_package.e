@@ -70,7 +70,8 @@ feature -- Evaluation
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
 			last_tail_call := Void
-			apply_templates (selected_nodes.iterator (Void),
+			selected_nodes.create_iterator (Void)
+			apply_templates (selected_nodes.last_iterator,
 								  mode,
 								  actual_parameters,
 								  tunnel_parameters,

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			analyze, iterator
+			analyze, create_iterator
 		end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
@@ -77,7 +77,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -86,12 +86,13 @@ feature -- Evaluation
 			a_double_value: XM_XPATH_DOUBLE_VALUE
 			a_starting_location, a_final_position, a_length: INTEGER
 		do
-			an_iterator := arguments.item (1).iterator (a_context)
+			arguments.item (1).create_iterator (a_context)
+			an_iterator := arguments.item (1).last_iterator
 			an_empty_iterator ?= an_iterator
 			if an_iterator.is_error then
-				Result := an_iterator
+				last_iterator := an_iterator
 			elseif an_empty_iterator /= Void then
-				Result := an_empty_iterator
+				last_iterator := an_empty_iterator
 			else
 				arguments.item (2).evaluate_item (a_context)
 				an_item := arguments.item (2).last_evaluated_item
@@ -100,7 +101,7 @@ feature -- Evaluation
 					-- static typing
 				end
 				if an_item.is_error then
-					create {XM_XPATH_INVALID_ITERATOR} Result.make (an_item.error_value)
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 				else
 					a_double_value ?= an_item
 					check
@@ -111,9 +112,9 @@ feature -- Evaluation
 					a_starting_location := a_double_value.as_integer
 					if arguments.count = 2 then
 						if a_starting_location <= 1 then
-							Result := an_iterator
+							last_iterator := an_iterator
 						else
-							create {XM_XPATH_TAIL_ITERATOR} Result.make (an_iterator, a_starting_location)
+							create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (an_iterator, a_starting_location)
 						end
 					else
 						arguments.item (3).evaluate_item (a_context)
@@ -123,7 +124,7 @@ feature -- Evaluation
 							-- static typing
 						end
 						if an_item.is_error then
-							create {XM_XPATH_INVALID_ITERATOR} Result.make (an_item.error_value)
+							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 						else
 							a_double_value ?= an_item
 							check
@@ -134,7 +135,7 @@ feature -- Evaluation
 							a_length := a_double_value.as_integer
 							a_final_position := a_length + a_starting_location - 1
 							if a_starting_location <= 1 then a_starting_location := 1 end
-							create {XM_XPATH_POSITION_ITERATOR} Result.make (an_iterator, a_starting_location, a_final_position)
+							create {XM_XPATH_POSITION_ITERATOR} last_iterator.make (an_iterator, a_starting_location, a_final_position)
 						end
 					end
 				end

@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
 			simplify, item_type, analyze, same_expression, evaluate_item,
-			effective_boolean_value, compute_cardinality, compute_special_properties
+			calculate_effective_boolean_value, compute_cardinality, compute_special_properties
 		end
 
 	XM_XPATH_TYPE
@@ -91,7 +91,8 @@ feature -- Optimization
 			end
 			a_value ?= base_expression
 			if a_value /= Void then
-				set_replacement (effective_boolean_value (Void))
+				calculate_effective_boolean_value (Void)
+				set_replacement (last_boolean_value)
 			end
 		end
 
@@ -128,7 +129,8 @@ feature -- Optimization
 				end
 				an_atomic_value ?= base_expression
 				if an_atomic_value /= Void then
-					set_replacement (effective_boolean_value (Void))
+					calculate_effective_boolean_value (Void)
+					set_replacement (last_boolean_value)
 				end
 			end
 		end
@@ -138,11 +140,12 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			last_evaluated_item := effective_boolean_value (a_context)
+			calculate_effective_boolean_value (a_context)
+			last_evaluated_item := last_boolean_value
 		end
 
 	
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
@@ -150,9 +153,9 @@ feature -- Evaluation
 			base_expression.evaluate_item (a_context)
 			an_atomic_value ?= base_expression.last_evaluated_item
 			if an_atomic_value = Void then
-				create Result.make (is_empty_allowed)
+				create last_boolean_value.make (is_empty_allowed)
 			else
-				create Result.make (an_atomic_value.is_convertible (target_type))
+				create last_boolean_value.make (an_atomic_value.is_convertible (target_type))
 			end
 		end
 

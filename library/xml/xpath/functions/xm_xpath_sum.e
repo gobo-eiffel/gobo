@@ -76,7 +76,8 @@ feature -- Evaluation
 			finished: BOOLEAN
 		do
 			last_evaluated_item := Void
-			an_iterator := arguments.item (1).iterator (a_context)
+			arguments.item (1).create_iterator (a_context)
+			an_iterator := arguments.item (1).last_iterator
 			if an_iterator.is_error then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 			else

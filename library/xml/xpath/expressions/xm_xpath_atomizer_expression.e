@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, simplify, analyze, iterator, evaluate_item, compute_cardinality, compute_special_properties
+			item_type, simplify, analyze, create_iterator, evaluate_item, compute_cardinality, compute_special_properties
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -78,7 +78,8 @@ feature -- Optimization
 				a_value ?= base_expression
 				if a_value /= Void then
 					from
-						an_iterator := base_expression.iterator (Void)
+						base_expression.create_iterator (Void)
+						an_iterator := base_expression.last_iterator
 						if an_iterator.is_error then
 							finished := True
 							set_last_error (an_iterator.error_value)
@@ -148,29 +149,30 @@ feature -- Evaluation
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := base_expression.iterator (a_context)
+			base_expression.create_iterator (a_context)
+			an_iterator := base_expression.last_iterator
 			if an_iterator.is_error then
-				Result := an_iterator
+				last_iterator := an_iterator
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void, Void)
 			end
 		end
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
 			-- Map `an_item' to a sequence
 		local
 			a_node: XM_XPATH_NODE
 		do
 			a_node ?= an_item
 			if a_node /= Void then
-				create Result.make_sequence (a_node.typed_value)
+				create last_mapped_item.make_sequence (a_node.typed_value)
 			else
-				create Result.make_item (an_item)
+				create last_mapped_item.make_item (an_item)
 			end
 		end
 

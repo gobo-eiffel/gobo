@@ -13,14 +13,14 @@ indexing
 deferred class XM_XPATH_COMPUTED_EXPRESSION
 
 	-- There are two principal routines for evaluating an expression:
-	--  `iterator', which yields an iterator over the result of the expression
+	--  `create_iterator', which yields an iterator over the result of the expression
 	--  as a sequence, and `evaluate_item', which sets an XM_XPATH_ITEM.
 	-- Both routines take an XM_XPATH_CONTEXT object to supply the evaluation context;
 	--  for an expression that is a Value, this argument is ignored and may be `Void'.
-	-- This base class provides an implementation of iterator in terms of evaluate_item
+	-- This base class provides an implementation of `create_iterator' in terms of evaluate_item
 	--  that works only for singleton expressions, and an implementation
-	--  of evaluate_item in terms of iterator that works only for non-singleton expressions.
-	-- Sub-classes of expression must therefore provide either iterator or evaluate_item:
+	--  of evaluate_item in terms of `create_iterator' that works only for non-singleton expressions.
+	-- Sub-classes of expression must therefore provide either `create_iterator' or evaluate_item:
 	--  they do not have to provide both.
 
 inherit
@@ -180,82 +180,80 @@ feature -- Optimization
 	
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
 			a_node: XM_XPATH_NODE
 			a_boolean: XM_XPATH_BOOLEAN_VALUE
 			a_string: XM_XPATH_STRING_VALUE
 			a_number: XM_XPATH_NUMERIC_VALUE
 		do
-			an_iterator := iterator (a_context)
-			if not an_iterator.is_error then
-				an_iterator.start
-				if not an_iterator.after then
-					an_item := an_iterator.item
+			create_iterator (a_context)
+			if not last_iterator.is_error then
+				last_iterator.start
+				if not last_iterator.after then
+					an_item := last_iterator.item
 					a_node ?= an_item
 					if a_node /= Void then
-						create Result.make (True)
+						create last_boolean_value.make (True)
 					else
 						a_boolean ?= an_item
 						if a_boolean /= Void then
-							an_iterator.forth
-							if an_iterator.after then
-								create Result.make (a_boolean.value)
+							last_iterator.forth
+							if last_iterator.after then
+								create last_boolean_value.make (a_boolean.value)
 							else
-								Result := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
+								last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 							end
 						else
 							a_string ?= an_item
 							if a_string /= Void then
-								an_iterator.forth
-								if an_iterator.after then
-									create Result.make (a_string.string_value.count /= 0)
+								last_iterator.forth
+								if last_iterator.after then
+									create last_boolean_value.make (a_string.string_value.count /= 0)
 								else
-									Result := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
+									last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 								end
 							else
 								a_number ?= an_item
 								if a_number /= Void then
-									an_iterator.forth
-									if an_iterator.after then
-										Result := a_number.effective_boolean_value (a_context)
+									last_iterator.forth
+									if last_iterator.after then
+										a_number.calculate_effective_boolean_value (a_context)
+										last_boolean_value := a_number.last_boolean_value
 									else
-										Result := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
+										last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 									end
 								else
-									Result := effective_boolean_value_in_error ("sequence starting with an atomic value other than a boolean, number, or string")
+									last_boolean_value := effective_boolean_value_in_error ("sequence starting with an atomic value other than a boolean, number, or string")
 								end
 							end
 						end
 					end
 				end
-				if Result = Void then create Result.make (False) end			
+				if last_boolean_value = Void then create last_boolean_value.make (False) end			
 			else
-				create Result.make (False)
-				Result.set_last_error (an_iterator.error_value)
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (last_iterator.error_value)
 			end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			last_evaluated_item := Void
-			an_iterator := iterator (a_context)
-			if an_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+			create_iterator (a_context)
+			if last_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
 			else
-				an_iterator.start
-				if an_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
-				elseif an_iterator.after then
+				last_iterator.start
+				if last_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
+				elseif last_iterator.after then
 					last_evaluated_item := Void -- Empty sequence
 				else
-					last_evaluated_item := an_iterator.item
+					last_evaluated_item := last_iterator.item
 				end
 			end
 		end
@@ -280,7 +278,7 @@ feature -- Evaluation
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		do
 			
@@ -295,18 +293,16 @@ feature -- Evaluation
 				end
 			evaluate_item (a_context)
 			if last_evaluated_item = Void then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
 			elseif last_evaluated_item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} Result.make (last_evaluated_item.error_value) 
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value) 
 			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (last_evaluated_item) 
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item) 
 			end
 		end
 
 	process (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			if is_evaluate_item_supported then
 				evaluate_item (a_context)
@@ -314,20 +310,20 @@ feature -- Evaluation
 					a_context.current_receiver.append_item (last_evaluated_item)
 				end
 			elseif is_iterator_supported then
-				an_iterator := iterator (a_context)
-				if an_iterator.is_error then
-					a_context.report_fatal_error (an_iterator.error_value)
+				create_iterator (a_context)
+				if last_iterator.is_error then
+					a_context.report_fatal_error (last_iterator.error_value)
 				else
 					from
-						an_iterator.start
+						last_iterator.start
 					until
-						an_iterator.is_error or else an_iterator.after
+						last_iterator.is_error or else last_iterator.after
 					loop
-						a_context.current_receiver.append_item (an_iterator.item)
-						an_iterator.forth
+						a_context.current_receiver.append_item (last_iterator.item)
+						last_iterator.forth
 					end
-					if an_iterator.is_error then
-						a_context.report_fatal_error (an_iterator.error_value)
+					if last_iterator.is_error then
+						a_context.report_fatal_error (last_iterator.error_value)
 					end
 				end
 			else
@@ -430,7 +426,7 @@ feature {NONE} -- Implementation
 			-- Containing parent
 
 	effective_boolean_value_in_error (a_reason: STRING): XM_XPATH_BOOLEAN_VALUE is
-			-- Type error for `effective_boolean_value'
+			-- Type error for `calculate_effective_boolean_value'
 		require
 			reason_not_empty: a_reason /= Void and then a_reason.count > 0
 		do

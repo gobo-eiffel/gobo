@@ -165,7 +165,8 @@ feature {NONE} -- Implementation
 			loop
 				an_item := population.item
 				from
-					a_keys_iterator := key_expression.iterator (a_context); a_keys_iterator.start
+					key_expression.create_iterator (a_context)
+					a_keys_iterator := key_expression.last_iterator; a_keys_iterator.start
 					first_key := True
 				until
 					a_keys_iterator.after

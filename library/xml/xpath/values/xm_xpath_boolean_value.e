@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ATOMIC_VALUE
 		redefine
-			effective_boolean_value
+			calculate_effective_boolean_value
 		end
 
 creation
@@ -136,10 +136,10 @@ feature -- Status report
 
 feature -- Evaluation
 	
-	effective_boolean_value (context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value of the expression
 		do
-			Result := Current
+			last_boolean_value := Current
 		end
 
 feature -- Conversions

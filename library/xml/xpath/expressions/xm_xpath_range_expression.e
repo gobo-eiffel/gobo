@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, compute_cardinality, iterator
+			analyze, compute_cardinality, create_iterator
 		end
 
 	XM_XPATH_ROLE
@@ -100,30 +100,30 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			an_integer_value, another_integer_value: XM_XPATH_INTEGER_VALUE 
 		do
 			first_operand.evaluate_item (a_context)
 			if first_operand.last_evaluated_item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} Result.make (first_operand.last_evaluated_item.error_value)
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (first_operand.last_evaluated_item.error_value)
 			else
 				an_integer_value ?= first_operand.last_evaluated_item
 				if an_integer_value = Void then
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
 				else
 					second_operand.evaluate_item (a_context)
 					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_error then
-						create {XM_XPATH_INVALID_ITERATOR} Result.make (second_operand.last_evaluated_item.error_value)
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (second_operand.last_evaluated_item.error_value)
 					else
 						another_integer_value ?= second_operand.last_evaluated_item
 						if another_integer_value = Void then
-							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
 						elseif an_integer_value.value > another_integer_value.value then
-							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
 						elseif an_integer_value.is_platform_integer and then another_integer_value.is_platform_integer then
-							create {XM_XPATH_RANGE_ITERATOR} Result.make (an_integer_value.as_integer, another_integer_value.as_integer)
+							create {XM_XPATH_RANGE_ITERATOR} last_iterator.make (an_integer_value.as_integer, another_integer_value.as_integer)
 						else
 							todo ("iterator - large integers", True)
 						end

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplify, compute_special_properties, iterator, pre_evaluate, check_arguments
+			simplify, compute_special_properties, create_iterator, pre_evaluate, check_arguments
 		end
 
 	XM_XPATH_NODE_MAPPING_FUNCTION
@@ -95,7 +95,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 			-- N.B. This function is not 100% pure, as it may cause
 			--  an index to be built for a key, but this is only a 
@@ -150,22 +150,23 @@ feature -- Evaluation
 						if an_atomic_value /= Void then
 							a_transformer.key_manager.generate_keyed_sequence (a_fingerprint, a_context_document, an_atomic_value, an_evaluation_context)
 							if a_transformer.is_error then
-								create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
+								create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
 							else
-								Result := a_transformer.key_manager.last_key_sequence
+								last_iterator := a_transformer.key_manager.last_key_sequence
 							end
 						else
-							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
 						end
 					else
 						create a_key_context_information.make (a_context_document, an_evaluation_context, a_fingerprint)
-						a_key_iterator := an_expression.iterator (a_context)
+						an_expression.create_iterator (a_context)
+						a_key_iterator := an_expression.last_iterator
 						create all_values_iterator.make (a_key_iterator, Current, Void, a_key_context_information)
 						create a_local_order_comparer
-						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (all_values_iterator, a_local_order_comparer)
+						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (all_values_iterator, a_local_order_comparer)
 					end
 				else
-					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
 				end
 			end
 		end

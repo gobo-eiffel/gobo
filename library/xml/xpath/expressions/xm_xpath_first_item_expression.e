@@ -80,7 +80,8 @@ feature -- Evaluation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := base_expression.iterator (a_context)
+			base_expression.create_iterator (a_context)
+			an_iterator := base_expression.last_iterator
 			an_iterator.start
 			if not an_iterator.after then
 				last_evaluated_item := an_iterator.item

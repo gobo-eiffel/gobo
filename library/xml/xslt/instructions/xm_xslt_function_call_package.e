@@ -86,27 +86,28 @@ feature -- Evaluation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := iterator (a_context); an_iterator.start
-			if an_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
-			elseif not an_iterator.after then
-				last_evaluated_item := an_iterator.item
+			create_iterator (a_context); last_iterator.start
+			if last_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
+			elseif not last_iterator.after then
+				last_evaluated_item := last_iterator.item
 			end
 		end
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value of the expression
 		do
 			evaluate_item (a_context)
-			create Result.make (last_evaluated_item /= Void)
-			-- TODO - refine this, but it's not really important, as it won't ever be called
+			create last_boolean_value.make (last_evaluated_item /= Void)
+			-- Refine this, but it's not really important, as it won't ever be called
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		do
 			call
-			Result := last_called_value.iterator (a_context)
+			last_called_value.create_iterator (a_context)
+			last_iterator := last_called_value.last_iterator
 		end
 
 	call is

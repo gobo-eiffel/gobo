@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, evaluate_item, effective_boolean_value
+			analyze, evaluate_item, calculate_effective_boolean_value
 		end
 
 	XM_XPATH_ROLE
@@ -88,36 +88,36 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			a_node, another_node: XM_XPATH_NODE
 		do
 			first_operand.evaluate_item (a_context)
 			if first_operand.last_evaluated_item.is_error then
-				create Result.make (False)
-				Result.set_last_error (first_operand.last_evaluated_item.error_value)
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (first_operand.last_evaluated_item.error_value)
 			else
 				a_node ?= first_operand.last_evaluated_item
 				if a_node = Void then
 					if generate_id_emulation_mode then
 						second_operand.evaluate_item (a_context)
 						a_node ?= second_operand.last_evaluated_item
-						create Result.make (a_node = Void)
+						create last_boolean_value.make (a_node = Void)
 					else
-						create Result.make (False)
+						create last_boolean_value.make (False)
 					end
 				else
 					second_operand.evaluate_item (a_context)
 					if second_operand.last_evaluated_item.is_error then
-						create Result.make (False)
-						Result.set_last_error (second_operand.last_evaluated_item.error_value)
+						create last_boolean_value.make (False)
+						last_boolean_value.set_last_error (second_operand.last_evaluated_item.error_value)
 					else
 						another_node ?= second_operand.last_evaluated_item
 						if another_node = Void then
-							create Result.make (False)
+							create last_boolean_value.make (False)
 						else
-							create Result.make (identity_comparison (a_node, another_node))
+							create last_boolean_value.make (identity_comparison (a_node, another_node))
 						end
 					end
 				end

@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, analyze, iterator, evaluate_item, item_type, same_expression
+			simplify, analyze, create_iterator, evaluate_item, item_type, same_expression
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -135,24 +135,25 @@ feature -- Evaluation
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a base_expression
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := base_expression.iterator (a_context)
+			base_expression.create_iterator (a_context)
+			an_iterator := base_expression.last_iterator
 			if an_iterator.is_error then
-				Result := an_iterator
+				last_iterator := an_iterator
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void, Void)
 			end
 		end
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
 			-- Map `an_item' to a sequence
 		do
 			if not an_item.is_error then test_conformance (an_item) end
-			create Result.make_item (an_item)
+			create last_mapped_item.make_item (an_item)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

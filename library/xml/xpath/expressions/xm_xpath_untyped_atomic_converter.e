@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, analyze, evaluate_item, iterator, compute_special_properties
+			item_type, analyze, evaluate_item, create_iterator, compute_special_properties
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -64,7 +64,6 @@ feature -- Optimization
 		local
 			a_type: XM_XPATH_ITEM_TYPE
 			a_value: XM_XPATH_VALUE
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			mark_unreplaced
@@ -77,11 +76,11 @@ feature -- Optimization
 			else
 				a_value ?= base_expression
 				if a_value /= Void then
-					an_iterator := iterator (Void)
-					if an_iterator.is_error then
-						set_last_error (an_iterator.error_value)
+					create_iterator (Void)
+					if last_iterator.is_error then
+						set_last_error (last_iterator.error_value)
 					else
-						create an_extent.make (an_iterator)
+						create an_extent.make (last_iterator)
 						set_replacement (an_extent)
 					end
 				else
@@ -121,29 +120,30 @@ feature -- Evaluation
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := base_expression.iterator (a_context)
+			base_expression.create_iterator (a_context)
+			an_iterator := base_expression.last_iterator
 			if an_iterator.is_error then
-				Result := an_iterator
+				last_iterator := an_iterator
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void, Void)
 			end
 		end
 	
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
 			-- Map `an_item' to a sequence
 		local
 			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
 		do
 			an_untyped_atomic_value ?= an_item
 			if an_untyped_atomic_value /= Void then
-				create Result.make_item (an_untyped_atomic_value.convert_to_type (target_type))
+				create last_mapped_item.make_item (an_untyped_atomic_value.convert_to_type (target_type))
 			else
-				create Result.make_item (an_item)
+				create last_mapped_item.make_item (an_item)
 			end
 		end
 

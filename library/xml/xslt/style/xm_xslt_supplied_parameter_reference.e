@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			iterator
+			create_iterator
 		end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
@@ -70,10 +70,14 @@ feature -- Optimization
 
 feature -- Evaluation
 	
-		iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
+		local
+			a_value: XM_XPATH_VALUE
 		do
-			Result := a_context.evaluated_local_variable (slot_number).iterator (a_context)
+			a_value := a_context.evaluated_local_variable (slot_number)
+			a_value.create_iterator (a_context)
+			last_iterator := a_value.last_iterator
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

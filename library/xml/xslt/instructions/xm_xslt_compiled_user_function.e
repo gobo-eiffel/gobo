@@ -195,7 +195,8 @@ feature {NONE} -- Implementation
 		end
 
 	combined_key (some_actual_arguments: ARRAY [XM_XPATH_VALUE]): STRING is
-			-- Representation of all argument values
+			-- Representation of all argument values;
+			-- Not 100% pure as it creates an iterator on each actual argument.
 		require
 			arguments_not_void: some_actual_arguments /= Void
 		local
@@ -215,7 +216,8 @@ feature {NONE} -- Implementation
 			loop
 				a_value := some_actual_arguments.item (an_index)
 				from
-					an_iterator := a_value.iterator (Void);an_iterator.start
+					a_value.create_iterator (Void)
+					an_iterator := a_value.last_iterator; an_iterator.start
 				until
 					an_iterator.after
 				loop

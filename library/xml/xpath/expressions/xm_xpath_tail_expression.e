@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			promote, compute_special_properties, sub_expressions, same_expression, iterator
+			promote, compute_special_properties, sub_expressions, same_expression, create_iterator
 		end
 
 	KL_SHARED_PLATFORM
@@ -126,22 +126,23 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence
 		local
 			an_array_iterator: XM_XPATH_ARRAY_ITERATOR [XM_XPATH_ITEM]
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := base_expression.iterator (a_context)
+			base_expression.create_iterator (a_context)
+			an_iterator := base_expression.last_iterator
 			an_array_iterator ?= an_iterator
 			if an_array_iterator /= Void then
 
 				-- Hm. This is theoretically insufficient, but it practice memory will get
 				--  exhausted before the problem manifests itself
 
-				Result := an_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+				last_iterator := an_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
 			else
-				create {XM_XPATH_TAIL_ITERATOR} Result.make (an_iterator, start)
+				create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (an_iterator, start)
 			end
 		end
 	

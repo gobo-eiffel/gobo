@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			iterator
+			create_iterator
 		end
 
 creation
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			an_element: XM_XPATH_ELEMENT
@@ -70,9 +70,9 @@ feature -- Evaluation
 			an_element ?= arguments.item (1).last_evaluated_item
 			if an_element /= Void then
 				an_element.ensure_namespace_nodes
-				Result := an_element.prefixes_in_scope
+				last_iterator := an_element.prefixes_in_scope
 			else
-				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("First argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("First argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)
 			end
 		end
 		

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			item_type, display, evaluate_as_string, effective_boolean_value, is_convertible_to_item
+			item_type, display, evaluate_as_string, calculate_effective_boolean_value, is_convertible_to_item
 		end
 
 creation
@@ -46,10 +46,10 @@ feature -- Access
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Yields an iterator to iterate over the values of a sequence
 		do
-			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
 		end
 
 feature -- Comparison
@@ -84,10 +84,10 @@ feature -- Status report
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value of the expression
 		do
-			create Result.make (False)
+			create last_boolean_value.make (False)
 		end
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is

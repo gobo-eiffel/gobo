@@ -59,7 +59,10 @@ feature -- Status report
 		do
 			Result := not current_iterator.before and then current_iterator.after
 			if Result and then current_iterator = base_iterator then
-				current_iterator := second_expression.iterator (context)
+
+				-- TODO: the following is a SEVERE violation of CQS - I can't think what to do about it
+				second_expression.create_iterator (context)
+				current_iterator := second_expression.last_iterator
 				current_iterator.start
 				if current_iterator.is_error then
 					set_last_error (current_iterator.error_value)
@@ -77,7 +80,8 @@ feature -- Cursor movement
 		do
 			index := index + 1
 			if current_iterator = base_iterator and then not current_iterator.before and then current_iterator.after then
-				current_iterator := second_expression.iterator (context)
+				second_expression.create_iterator (context)
+				current_iterator := second_expression.last_iterator
 			end
 			if current_iterator.is_error then
 				set_last_error (current_iterator.error_value)

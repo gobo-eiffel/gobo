@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, iterator, compute_intrinsic_dependencies, same_expression, compute_special_properties
+			simplify, create_iterator, compute_intrinsic_dependencies, same_expression, compute_special_properties
 		end
 
 	XM_XPATH_AXIS
@@ -156,7 +156,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			a_node: XM_XPATH_NODE
@@ -164,15 +164,15 @@ feature -- Evaluation
 		do
 			an_item := a_context.context_item
 			if an_item = Void then
-				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("The context item for an axis step is not set.", Xpath_errors_uri, "XP0002", Dynamic_error)
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item for an axis step is not set.", Xpath_errors_uri, "XP0002", Dynamic_error)
 			else
 				a_node ?= an_item
 				if a_node = Void then
-					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("The context item for an axis is not a node.", Xpath_errors_uri, "XP0020", Type_error)
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item for an axis is not a node.", Xpath_errors_uri, "XP0020", Type_error)
 				elseif node_test = Void then
-					Result := a_node.new_axis_iterator (axis)
+					last_iterator := a_node.new_axis_iterator (axis)
 				else
-					Result := a_node.new_axis_iterator_with_node_test (axis, node_test)
+					last_iterator := a_node.new_axis_iterator_with_node_test (axis, node_test)
 				end
 			end
 		end

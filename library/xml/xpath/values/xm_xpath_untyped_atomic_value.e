@@ -16,11 +16,11 @@ inherit
 
 	XM_XPATH_STRING_VALUE
 		redefine
-			display, convert_to_type, item_type, effective_boolean_value, is_comparable
+			display, convert_to_type, item_type, is_comparable
 		end
 
 	-- N.B. Inheritance from XM_XPATH_STRING_VALUE is an implementation convenience;
-	-- xdt:untypedAtomic is NOT a sub-type of xs:integer
+	-- xdt:untypedAtomic is NOT a sub-type of xs:string
 	-- TODO - factor out the common implementation (all of string-value??) to tremove the sub-typing relationship
 	
 creation
@@ -99,15 +99,6 @@ feature -- Status report
 			else
 				std.error.put_new_line
 			end
-		end
-
-
-feature -- Evaluation
-
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
-			-- Effective boolean value
-		do
-			create Result.make (True)
 		end
 	
 feature -- Conversion

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, analyze, compute_special_properties, promote, iterator, effective_boolean_value
+			simplify, analyze, compute_special_properties, promote, create_iterator, calculate_effective_boolean_value
 		end
 
 creation
@@ -92,31 +92,33 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := base_expression.iterator (a_context)
+			base_expression.create_iterator (a_context)
+			an_iterator := base_expression.last_iterator
 			a_node_iterator ?= an_iterator
 			if a_node_iterator /= Void then
-				create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (a_node_iterator, comparer)
+				create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (a_node_iterator, comparer)
 			else
 				an_empty_iterator ?= an_iterator
 				if an_empty_iterator /= Void then
-					Result := an_empty_iterator
+					last_iterator := an_empty_iterator
 				else
-					create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Unexpected sequence", Gexslt_eiffel_type_uri, "NNON_NODE_SEQUENCE", Dynamic_error)
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Unexpected sequence", Gexslt_eiffel_type_uri, "NNON_NODE_SEQUENCE", Dynamic_error)
 				end
 			end
 		end
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		do
-			Result := base_expression.effective_boolean_value (a_context)
+			base_expression.calculate_effective_boolean_value (a_context)
+			last_boolean_value := base_expression.last_boolean_value
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

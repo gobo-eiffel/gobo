@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, effective_boolean_value, evaluate_item
+			analyze, calculate_effective_boolean_value, evaluate_item
 		end
 	
 	XM_XPATH_TOKENS
@@ -62,28 +62,31 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			a_boolean_value := first_operand.effective_boolean_value (a_context)
+			first_operand.calculate_effective_boolean_value (a_context)
+			a_boolean_value := first_operand.last_boolean_value
 			if a_boolean_value.is_error then
-				Result := a_boolean_value
+				last_boolean_value := a_boolean_value
 			else
 				inspect
 					operator
 				when And_token then
 					if a_boolean_value.value then
-						Result := second_operand.effective_boolean_value (a_context)
+						second_operand.calculate_effective_boolean_value (a_context)
+						last_boolean_value := second_operand.last_boolean_value
 					else
-						Result := a_boolean_value
+						last_boolean_value := a_boolean_value
 					end
 				when Or_token then
 					if a_boolean_value.value then
-						Result := a_boolean_value
+						last_boolean_value := a_boolean_value
 					else
-						Result := second_operand.effective_boolean_value (a_context)
+						second_operand.calculate_effective_boolean_value (a_context)
+						last_boolean_value := second_operand.last_boolean_value
 					end
 				end
 			end
@@ -92,7 +95,8 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			last_evaluated_item := effective_boolean_value (a_context)
+			calculate_effective_boolean_value (a_context)
+			last_evaluated_item := last_boolean_value
 		end
 
 end

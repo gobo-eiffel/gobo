@@ -14,7 +14,7 @@ inherit
 	
 	XM_XSLT_INSTRUCTION
 		redefine
-			item_type, creates_new_nodes, sub_expressions, evaluate_item, iterator,
+			item_type, creates_new_nodes, sub_expressions, evaluate_item, create_iterator,
 			native_implementations, promote_instruction
 		end
 
@@ -245,7 +245,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -264,19 +264,21 @@ feature -- Evaluation
 			until
 				a_cursor.after
 			loop
-				a_boolean_value := a_cursor.item.effective_boolean_value (a_context)
+				a_cursor.item.calculate_effective_boolean_value (a_context)
+				a_boolean_value := a_cursor.item.last_boolean_value
 				if a_boolean_value.is_error then
 					a_new_context.transformer.report_fatal_error (a_boolean_value.error_value, Current)
-					create {XM_XPATH_INVALID_ITERATOR} Result.make (a_boolean_value.error_value)
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (a_boolean_value.error_value)
 					a_cursor.go_after
 				elseif a_boolean_value.value then
-					Result := actions.item (a_cursor.index).iterator (a_context)
+					actions.item (a_cursor.index).create_iterator (a_context)
+					last_iterator := actions.item (a_cursor.index).last_iterator
 					a_cursor.go_after
 				else
 					a_cursor.forth
 				end
 			end
-			if Result = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make end
+			if last_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
@@ -300,7 +302,8 @@ feature -- Evaluation
 			until
 				a_cursor.after
 			loop
-				a_boolean_value := a_cursor.item.effective_boolean_value (a_context)
+				a_cursor.item.calculate_effective_boolean_value (a_context)
+				a_boolean_value := a_cursor.item.last_boolean_value
 				if a_boolean_value.is_error then
 					a_new_context.transformer.report_fatal_error (a_boolean_value.error_value, Current)
 					last_evaluated_item := a_boolean_value
@@ -332,7 +335,8 @@ feature -- Evaluation
 			until
 				a_cursor.after
 			loop
-				a_boolean_value := a_cursor.item.effective_boolean_value (a_context)
+				a_cursor.item.calculate_effective_boolean_value (a_context)
+				a_boolean_value := a_cursor.item.last_boolean_value
 				if a_boolean_value.is_error then
 					a_context.transformer.report_fatal_error (a_boolean_value.error_value, Current)
 					a_cursor.go_after

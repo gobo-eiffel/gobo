@@ -153,7 +153,8 @@ feature -- Evaluation
 				else
 					a_text_value := ""
 					from
-						an_iterator := content.iterator (a_context); an_iterator.start
+						content.create_iterator (a_context)
+						an_iterator := content.last_iterator; an_iterator.start
 					until
 						an_iterator.after
 					loop

@@ -116,23 +116,22 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := iterator (a_context); an_iterator.start
-			if not an_iterator.after then
-				last_evaluated_item := an_iterator.item
+			create_iterator (a_context); last_iterator.start
+			if not last_iterator.after then
+				last_evaluated_item := last_iterator.item
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		do
 			if input_iterator = Void then
-				input_iterator := base_expression.iterator (saved_xpath_context)
-				Result := input_iterator
+				base_expression.create_iterator (saved_xpath_context)
+				input_iterator := base_expression.last_iterator
+				last_iterator := input_iterator
 			else
-				Result := input_iterator.another
+				last_iterator := input_iterator.another
 			end
 		end
 

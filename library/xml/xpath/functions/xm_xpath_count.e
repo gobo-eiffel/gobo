@@ -66,7 +66,8 @@ feature -- Evaluation
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			an_integer: INTEGER
 		do
-			an_iterator := arguments.item (1).iterator (a_context)
+			arguments.item (1).create_iterator (a_context)
+			an_iterator := arguments.item (1).last_iterator
 			a_last_position_finder ?= an_iterator
 			if a_last_position_finder /= Void then
 				create an_integer_value.make_from_integer (a_last_position_finder.last_position)

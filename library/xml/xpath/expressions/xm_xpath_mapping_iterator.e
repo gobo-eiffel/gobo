@@ -40,7 +40,6 @@ feature {NONE} -- Initialization
 		require
 			base_iterator_not_void: a_base_iterator /= Void
 			mapping_function_not_void: a_mapping_function /= void
---			context_item: a_context /= Void implies a_base_iterator = a_context.current_iterator
 		do
 			base_iterator := a_base_iterator
 			mapping_function := a_mapping_function
@@ -155,7 +154,8 @@ feature {NONE} -- Implementation
 
 						-- Call the supplied mapping function
 
-						a_mapped_item := mapping_function.map (next_source, context, information_object)
+						mapping_function.map (next_source, context, information_object)
+						a_mapped_item := mapping_function.last_mapped_item
 
 						if a_mapped_item /= Void then
 							if not a_mapped_item.is_sequence then

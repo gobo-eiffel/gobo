@@ -18,7 +18,7 @@ inherit
 		redefine
 			sub_expressions, item_type, compute_cardinality,
 			promote_instruction,
-			native_implementations, iterator, creates_new_nodes
+			native_implementations, create_iterator, creates_new_nodes
 		end
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
@@ -293,15 +293,16 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence
 		do
 			if children.count = 0 then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
 			elseif children.count = 1 then
-				Result := children.item (1).iterator (a_context)
+				children.item (1).create_iterator (a_context)
+				last_iterator := children.item (1).last_iterator
 			else
-				create {XM_XSLT_BLOCK_ITERATOR} Result.make (children, a_context)
+				create {XM_XSLT_BLOCK_ITERATOR} last_iterator.make (children, a_context)
 			end
 		end
 

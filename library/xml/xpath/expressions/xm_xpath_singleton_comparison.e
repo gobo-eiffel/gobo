@@ -21,7 +21,7 @@ inherit
 		rename
 			make as make_binary_expression
 		redefine
-			analyze, evaluate_item, effective_boolean_value, display_operator
+			analyze, evaluate_item, calculate_effective_boolean_value, display_operator
 		end
 
 	XM_XPATH_COMPARISON_ROUTINES
@@ -72,7 +72,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
@@ -80,29 +80,29 @@ feature -- Evaluation
 		do
 			first_operand.evaluate_item (a_context)
 			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
-				create Result.make (False)
-				Result.set_last_error (first_operand.last_evaluated_item.error_value)
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (first_operand.last_evaluated_item.error_value)
 			else
 				an_atomic_value ?= first_operand.last_evaluated_item
 				if an_atomic_value = Void then
-					create Result.make (False)
+					create last_boolean_value.make (False)
 				else
 					second_operand.evaluate_item (a_context)
 					if second_operand.last_evaluated_item.is_error then
-						create Result.make (False)
-						Result.set_last_error (second_operand.last_evaluated_item.error_value)
+						create last_boolean_value.make (False)
+						last_boolean_value.set_last_error (second_operand.last_evaluated_item.error_value)
 					else
 						another_atomic_value ?= second_operand.last_evaluated_item
 						if another_atomic_value = Void then
-							create Result.make (False)
+							create last_boolean_value.make (False)
 						else
 							create a_comparison_checker
 							a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_value_operator (operator), atomic_comparer, another_atomic_value, is_backwards_compatible_mode)
 							if a_comparison_checker.is_comparison_type_error then
 								set_last_error (a_comparison_checker.last_type_error)
-								create Result.make (False)
+								create last_boolean_value.make (False)
 							else
-								create Result.make (a_comparison_checker.last_check_result)
+								create last_boolean_value.make (a_comparison_checker.last_check_result)
 							end
 						end
 					end
@@ -113,7 +113,8 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			last_evaluated_item := effective_boolean_value (a_context)
+			calculate_effective_boolean_value (a_context)
+			last_evaluated_item := last_boolean_value
 		end
 	
 feature {NONE} -- Implementation

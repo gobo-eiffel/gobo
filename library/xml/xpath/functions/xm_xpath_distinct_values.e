@@ -18,12 +18,12 @@ inherit
 		undefine
 			pre_evaluate, analyze
 		redefine
-			iterator
+			create_iterator
 		end
 
 	XM_XPATH_COLLATING_FUNCTION
 		undefine
-			iterator
+			create_iterator
 		end
 
 creation
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			an_atomic_comparer: XM_XPATH_ATOMIC_SORT_COMPARER
@@ -79,13 +79,14 @@ feature -- Evaluation
 		do
 			an_atomic_comparer := atomic_sort_comparer (2, a_context)
 			if an_atomic_comparer = Void then
-				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
 			else
-				a_sequence := arguments.item (1).iterator (a_context)
+				arguments.item (1).create_iterator (a_context)
+				a_sequence := arguments.item (1).last_iterator
 				if a_sequence.is_error then
-					Result := a_sequence
+					last_iterator := a_sequence
 				else
-					create {XM_XPATH_DISTINCT_ITERATOR} Result.make (a_sequence, an_atomic_comparer)
+					create {XM_XPATH_DISTINCT_ITERATOR} last_iterator.make (a_sequence, an_atomic_comparer)
 				end
 			end
 		end

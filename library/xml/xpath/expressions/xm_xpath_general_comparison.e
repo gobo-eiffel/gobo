@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_binary_expression
 		redefine
-			display_operator, evaluate_item, analyze, effective_boolean_value
+			display_operator, evaluate_item, analyze, calculate_effective_boolean_value
 		end
 
 	XM_XPATH_CARDINALITY
@@ -110,7 +110,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			an_iterator, another_iterator, a_third_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -121,17 +121,19 @@ feature -- Evaluation
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			if is_backwards_compatible_mode then
-				Result := effective_boolean_value_xpath_1 (a_context)
+				calculate_effective_boolean_value_xpath_1 (a_context)
 			else
-				an_iterator := first_operand.iterator (a_context)
+				first_operand.create_iterator (a_context)
+				an_iterator := first_operand.last_iterator
 				if an_iterator.is_error then
-					create Result.make (False)
-					Result.set_last_error (an_iterator.error_value)
+					create last_boolean_value.make (False)
+					last_boolean_value.set_last_error (an_iterator.error_value)
 				else
-					another_iterator := second_operand.iterator (a_context)
+					second_operand.create_iterator (a_context)
+					another_iterator := second_operand.last_iterator
 					if another_iterator.is_error then
-						create Result.make (False)
-						Result.set_last_error (another_iterator.error_value)
+						create last_boolean_value.make (False)
+						last_boolean_value.set_last_error (another_iterator.error_value)
 					else
 						
 						-- The second operand is more likely to be a singleton than the first so:
@@ -139,9 +141,9 @@ feature -- Evaluation
 						create a_sequence_extent.make (another_iterator)
 						a_count := a_sequence_extent.count
 						if a_count = 0 then
-							create Result.make (False)
+							create last_boolean_value.make (False)
 						elseif a_count = 1 then
-							Result := effective_boolean_value_with_second_operand_singleton (a_context, a_sequence_extent.item_at (1), an_iterator)
+							calculate_effective_boolean_value_with_second_operand_singleton (a_context, a_sequence_extent.item_at (1), an_iterator)
 						else -- a_count > 1 - so nested loop comparison
 							from
 								an_iterator.start
@@ -154,7 +156,8 @@ feature -- Evaluation
 									finished := True
 								else
 									from
-										a_third_iterator := a_sequence_extent.iterator (Void)
+										a_sequence_extent.create_iterator (Void)
+										a_third_iterator := a_sequence_extent.last_iterator
 										a_third_iterator.start
 									until
 										finished or else a_third_iterator.after
@@ -170,7 +173,7 @@ feature -- Evaluation
 												set_last_error (a_comparison_checker.last_type_error)
 												finished := True
 											elseif a_comparison_checker.last_check_result then
-												create Result.make (True)
+												create last_boolean_value.make (True)
 												finished := True
 											end
 										end
@@ -180,7 +183,7 @@ feature -- Evaluation
 								an_iterator.forth
 							end
 						end
-						if Result = Void then create Result.make (False) end
+						if last_boolean_value = Void then create last_boolean_value.make (False) end
 					end
 				end
 			end
@@ -189,7 +192,8 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			last_evaluated_item := effective_boolean_value (a_context)
+			calculate_effective_boolean_value (a_context)
+			last_evaluated_item := last_boolean_value
 		end
 
 feature {NONE} -- Implementation
@@ -227,37 +231,45 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	effective_boolean_value_with_second_operand_singleton (a_context: XM_XPATH_CONTEXT; an_item: XM_XPATH_ITEM; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value_with_second_operand_singleton (a_context: XM_XPATH_CONTEXT; an_item: XM_XPATH_ITEM; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Effective boolean value
 		local
 			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
 			finished: BOOLEAN
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
+			last_boolean_value := Void
 			another_atomic_value ?= an_item
 			if another_atomic_value = Void then
-				set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XP0006", Type_error)
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XP0006", Type_error)
 			end
 			from
 				an_iterator.forth
 			until
-				finished or else is_error or else an_iterator.after
+				finished or else an_iterator.after
 			loop
 				an_atomic_value ?= an_iterator.item
 				if an_atomic_value = Void then
-					set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XP0006", Type_error)
+					create last_boolean_value.make (False)
+					last_boolean_value.set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XP0006", Type_error)
+					finished := True
 				else
 					create a_comparison_checker
 					a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_value_operator (operator), atomic_comparer, another_atomic_value, is_backwards_compatible_mode)
 					if a_comparison_checker.is_comparison_type_error then
-						set_last_error (a_comparison_checker.last_type_error)
+						create last_boolean_value.make (False)
+						last_boolean_value.set_last_error (a_comparison_checker.last_type_error)
 					elseif a_comparison_checker.last_check_result then
-						create Result.make (True)
+						create last_boolean_value.make (True)
 						finished := True
 					end
 				end
 				an_iterator.forth
 			end
+			if last_boolean_value = Void then create last_boolean_value.make (False) end
+		ensure
+			last_boolean_value_not_void: last_boolean_value /= Void			
 		end
 
 	analyze_two_singletons_two_point_zero (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE) is
@@ -590,12 +602,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	effective_boolean_value_xpath_1 (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value_xpath_1 (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value for XPath 1.0 compatibility
 		require
 			backwards_compatible_mode: is_backwards_compatible_mode		
 		do
-			todo ("effective_boolean_value (1.0 compatibility)", True)
+			todo ("calculate_effective_boolean_value (1.0 compatibility)", True)
+		ensure
+			last_boolean_value_not_void: last_boolean_value /= Void
 		end
 
 invariant

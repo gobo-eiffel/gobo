@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			same_expression, analyze, effective_boolean_value, evaluate_item,
+			same_expression, analyze, calculate_effective_boolean_value, evaluate_item,
 			compute_cardinality, item_type, display
 		end
 
@@ -132,7 +132,7 @@ feature -- Optimization
 	
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -140,10 +140,11 @@ feature -- Evaluation
 			counter: INTEGER
 			finished: BOOLEAN
 		do
-			an_iterator := base_expression.iterator (a_context)
+			base_expression.create_iterator (a_context)
+			an_iterator := base_expression.last_iterator
 			if an_iterator.is_error then
-				create Result.make (False)
-				Result.set_last_error (an_iterator.error_value)
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (an_iterator.error_value)
 			else
 				from
 					counter := 0; finished := False
@@ -154,17 +155,17 @@ feature -- Evaluation
 					an_item := an_iterator.item
 					counter := counter + 1
 					if not is_sub_type (an_item.item_type, target_type.primary_type) then
-						create Result.make (False); finished := True
+						create last_boolean_value.make (False); finished := True
 					elseif counter = 2 and then not target_type.cardinality_allows_many then
-						create Result.make (False)
+						create last_boolean_value.make (False)
 					end
 					an_iterator.forth
 				end
-				if Result = Void then
+				if last_boolean_value = Void then
 					if counter = 0 and then not target_type.cardinality_allows_zero then
-						create Result.make (False)
+						create last_boolean_value.make (False)
 					else
-						create Result.make (True)
+						create last_boolean_value.make (True)
 					end
 				end
 			end
@@ -173,7 +174,8 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			last_evaluated_item := effective_boolean_value (a_context)
+			calculate_effective_boolean_value (a_context)
+			last_evaluated_item := last_boolean_value
 		end
 
 feature {NONE} -- Implementation

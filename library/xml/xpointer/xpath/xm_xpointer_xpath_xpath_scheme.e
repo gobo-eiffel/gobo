@@ -132,7 +132,8 @@ feature {NONE} -- Implementation
 			a_document_pool.add (a_document, Void, a_document.base_uri) -- N.B. We can safely ignore the media type
 			create a_context.make (a_document, a_document_pool, function_library)
 			a_context.set_string_mode_mixed
-			a_sequence_iterator := an_expression.iterator (a_context)			
+			an_expression.create_iterator (a_context)			
+			a_sequence_iterator := an_expression.last_iterator
 			if a_sequence_iterator.is_error then
 				is_error := True
 				create {XM_XPATH_INVALID_VALUE} value.make (a_sequence_iterator.error_value)

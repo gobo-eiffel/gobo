@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			iterator, is_repeated_sub_expression, native_implementations
+			create_iterator, is_repeated_sub_expression, native_implementations
 		end
 
 	XM_XPATH_ROLE
@@ -143,7 +143,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -152,10 +152,11 @@ feature -- Evaluation
 			
 			-- First create an iteration of the base sequence.
 
-			a_base_iterator := sequence.iterator (a_context)
+			sequence.create_iterator (a_context)
+			a_base_iterator := sequence.last_iterator
 
 			if a_base_iterator.is_error then
-				Result := a_base_iterator
+				last_iterator := a_base_iterator
 			else
 				
 				-- Then create a mapping iterator which applies a mapping function to each
@@ -164,7 +165,7 @@ feature -- Evaluation
 				--  setting the range variable at each step. TODO: mapping_action?
 
 				create a_mapping_function.make (a_context, slot_number, action)
-				create {XM_XPATH_MAPPING_ITERATOR} Result.make (a_base_iterator,a_mapping_function , Void, Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_base_iterator,a_mapping_function , Void, Void)
 			end
 		end
 

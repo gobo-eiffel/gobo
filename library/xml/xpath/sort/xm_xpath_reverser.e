@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			compute_special_properties, promote, iterator, effective_boolean_value
+			compute_special_properties, promote, create_iterator, calculate_effective_boolean_value
 		end
 
 creation
@@ -56,27 +56,29 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_reversible_iterator: XM_XPATH_REVERSIBLE_ITERATOR [XM_XPATH_ITEM]
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
-			an_iterator := base_expression.iterator (a_context)
+			base_expression.create_iterator (a_context)
+			an_iterator := base_expression.last_iterator
 			a_reversible_iterator ?= an_iterator
 			if a_reversible_iterator /= Void then
-				Result := a_reversible_iterator.reverse_iterator
+				last_iterator := a_reversible_iterator.reverse_iterator
 			else
 				create a_sequence_extent.make (an_iterator)
-				Result := a_sequence_extent.reverse_iterator
+				last_iterator := a_sequence_extent.reverse_iterator
 			end
 		end
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		do
-			Result := base_expression.effective_boolean_value (a_context)
+			base_expression.calculate_effective_boolean_value (a_context)
+			last_boolean_value := base_expression.last_boolean_value
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

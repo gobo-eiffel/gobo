@@ -20,7 +20,7 @@ inherit
 	
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			check_arguments, compute_special_properties, pre_evaluate, iterator
+			check_arguments, compute_special_properties, pre_evaluate, create_iterator
 		end
 
 	XM_UNICODE_CHARACTERS_1_1
@@ -70,7 +70,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			an_href_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -82,13 +82,14 @@ feature -- Evaluation
 			a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER
 			an_xslt_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			an_href_iterator := arguments.item (1).iterator (a_context)
+			arguments.item (1).create_iterator (a_context)
+			an_href_iterator := arguments.item (1).last_iterator
 			if not an_href_iterator.is_error then
 				if supplied_argument_count = 2 then
 					arguments.item (2).evaluate_item (a_context)
 					an_item := arguments.item (2).last_evaluated_item
 					if an_item.is_error then
-						create {XM_XPATH_INVALID_ITERATOR} Result.make (an_item.error_value)
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 					else
 						a_base_node ?= an_item
 						check
@@ -98,7 +99,7 @@ feature -- Evaluation
 						create a_base_uri.make (a_base_node.base_uri)
 					end
 				end
-				if Result = Void then -- no error yet
+				if last_iterator = Void then -- no error yet
 					if transformer = Void then
 						an_xslt_context ?= a_context
 						check
@@ -110,10 +111,10 @@ feature -- Evaluation
 					create a_map_object.make (a_base_uri, stylesheet_base_uri)
 					create a_mapping_iterator.make (an_href_iterator, Current, a_context, a_map_object)
 					create a_comparer
-					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (a_mapping_iterator, a_comparer) -- to eliminate duplicates if two hrefs are the same
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (a_mapping_iterator, a_comparer) -- to eliminate duplicates if two hrefs are the same
 				end
 			else
-				Result := an_href_iterator
+				last_iterator := an_href_iterator
 			end
 		end
 

@@ -279,7 +279,8 @@ feature {NONE} -- Implementation
 			create a_context.make (context_item, a_document_pool, function_library)
 			a_context.copy_string_mode (Current)
 			a_context.open_stack_frame (a_slot_manager)
-			a_sequence_iterator := an_expression.iterator (a_context)
+			an_expression.create_iterator (a_context)
+			a_sequence_iterator := an_expression.last_iterator
 			
 			if a_sequence_iterator.is_error then
 				is_error := True

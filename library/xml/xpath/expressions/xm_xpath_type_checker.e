@@ -450,7 +450,8 @@ feature {NONE} -- Implementation
 				create {XM_XPATH_UNTYPED_ATOMIC_CONVERTER} checked_expression.make (an_expression, required_item_type)
 				a_value ?= an_expression
 				if a_value /= Void then
-					an_iterator := checked_expression.iterator (Void)
+					checked_expression.create_iterator (Void)
+					an_iterator := checked_expression.last_iterator
 					if an_iterator.is_error then
 						checked_expression.set_last_error (an_iterator.error_value)
 					else

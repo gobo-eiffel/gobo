@@ -58,10 +58,10 @@ feature -- Access
 	node: XM_XPATH_NODE
 			-- Optional node
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		do
-			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (node)
+			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (node)
 		end
 
 feature -- Comparison
@@ -106,10 +106,10 @@ feature -- Status report
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value;
 		do
-			create Result.make (node /= Void)
+			create last_boolean_value.make (node /= Void)
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is

@@ -155,7 +155,8 @@ feature {NONE} -- Implementation
 		do
 			last_match_test := False
 			if non_numeric then
-				a_boolean_value := filter.effective_boolean_value (filter_context)
+				filter.calculate_effective_boolean_value (filter_context)
+				a_boolean_value := filter.last_boolean_value
 				if a_boolean_value.is_error then
 					set_last_error (a_boolean_value.error_value)
 				else
@@ -165,8 +166,9 @@ feature {NONE} -- Implementation
 
 				-- This code is carefully designed to avoid reading more items from the
 				-- iteration of the filter expression than are absolutely essential.
-			
-				an_iterator := filter.iterator (filter_context)
+
+				filter.create_iterator (filter_context)
+				an_iterator := filter.last_iterator
 				if not an_iterator.is_error then
 					an_iterator.start
 					if not an_iterator.after then

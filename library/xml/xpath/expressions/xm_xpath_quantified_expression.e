@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			evaluate_item, effective_boolean_value, is_repeated_sub_expression, compute_special_properties
+			evaluate_item, calculate_effective_boolean_value, is_repeated_sub_expression, compute_special_properties
 		end
 
 	XM_XPATH_PROMOTION_ACTIONS
@@ -165,7 +165,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -178,10 +178,11 @@ feature -- Evaluation
 
 			-- First create an iteration of the base sequence.
 
-			a_base_iterator := sequence.iterator (a_context)
+			sequence.create_iterator (a_context)
+			a_base_iterator := sequence.last_iterator
 			if a_base_iterator.is_error then
-				create Result.make (False)
-				Result.set_last_error (a_base_iterator.error_value)
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (a_base_iterator.error_value)
 			else
 			
 				-- Now test to see if some or all of the tests are true. The same
@@ -198,23 +199,24 @@ feature -- Evaluation
 					if an_item = Void then
 						finished := True
 					elseif an_item.is_error then
-						create Result.make (False)
-						Result.set_last_error (an_item.error_value)
+						create last_boolean_value.make (False)
+						last_boolean_value.set_last_error (an_item.error_value)
 						finished := True
 					else
 						a_value ?= an_item.as_value
-							check
-								value_not_void: a_value /= Void
-								-- From post-condition of `as_value'.
-							end
+						check
+							value_not_void: a_value /= Void
+							-- From post-condition of `as_value'.
+						end
 						a_context.set_local_variable (a_value, slot_number)
-						a_boolean_value := action.effective_boolean_value (a_context)
+						action.calculate_effective_boolean_value (a_context)
+						a_boolean_value := action.last_boolean_value
 						if a_boolean_value.is_error then
-							Result := a_boolean_value
+							last_boolean_value := a_boolean_value
 							finished := True
 						else
 							if some = a_boolean_value.value then
-								create Result.make (some); found_a_match := True
+								create last_boolean_value.make (some); found_a_match := True
 							end
 						end
 						
@@ -222,14 +224,15 @@ feature -- Evaluation
 					end
 				end
 					
-				if not (finished or else found_a_match) then create Result.make (not some) end
+				if not (finished or else found_a_match) then create last_boolean_value.make (not some) end
 			end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		do
-			last_evaluated_item := effective_boolean_value (a_context)
+			calculate_effective_boolean_value (a_context)
+			last_evaluated_item := last_boolean_value
 		end
 
 feature {NONE} -- Implementation

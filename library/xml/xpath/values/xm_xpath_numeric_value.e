@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ATOMIC_VALUE
 		redefine
-			effective_boolean_value
+			calculate_effective_boolean_value
 		end
 
 	XM_XPATH_TOKENS
@@ -153,10 +153,10 @@ feature -- Status_report
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		do
-			create Result.make (not (is_nan or else is_zero))
+			create last_boolean_value.make (not (is_nan or else is_zero))
 		end
 	
 feature -- Basic operations

@@ -18,7 +18,7 @@ inherit
 		undefine
 			simplify
 		redefine
-			promote, native_implementations, evaluate_item, iterator, compute_special_properties,
+			promote, native_implementations, evaluate_item, create_iterator, compute_special_properties,
 			processed_eager_evaluation, process
 		end
 
@@ -197,12 +197,12 @@ feature -- Evaluation
 				emulation: not is_evaluate_item_supported
 			end
 			if is_iterator_supported then
-				an_iterator := iterator (a_context)
-				an_iterator.start
-				if an_iterator.after then
+				create_iterator (a_context)
+				last_iterator.start
+				if last_iterator.after then
 					last_evaluated_item := Void
 				else
-					last_evaluated_item := an_iterator.item
+					last_evaluated_item := last_iterator.item
 				end
 			else
 				another_context ?= a_context.new_minor_context
@@ -218,7 +218,7 @@ feature -- Evaluation
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			a_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
@@ -230,11 +230,11 @@ feature -- Evaluation
 			if is_evaluate_item_supported then
 				evaluate_item (a_context)
 				if last_evaluated_item = Void then
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
 				elseif last_evaluated_item.is_error then
-					create {XM_XPATH_INVALID_ITERATOR} Result.make (last_evaluated_item.error_value)
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
 				else
-					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (last_evaluated_item)
+					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item)
 				end
 			else
 				another_context ?= a_context.new_minor_context
@@ -246,7 +246,7 @@ feature -- Evaluation
 				another_context.change_to_sequence_output_destination (a_receiver)
 				process (another_context)
 				a_receiver.end_document
-				Result := a_receiver.iterator (a_context)
+				last_iterator := a_receiver.iterator (a_context)
 			end
 		end
 

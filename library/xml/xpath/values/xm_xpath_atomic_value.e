@@ -94,14 +94,14 @@ feature -- Status report
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			a_message: STRING
 		do
-			create Result.make (False)
+			create last_boolean_value.make (False)
 			a_message := STRING_.concat ("Effective boolean value is not defined for an atomic value of type ", item_type.conventional_name)
-			Result.set_last_error_from_string (a_message, "", "XP0004", Type_error)
+			last_boolean_value.set_last_error_from_string (a_message, "", "XP0004", Type_error)
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
@@ -117,10 +117,10 @@ feature -- Evaluation
 			create last_evaluated_string.make (string_value)
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		do
-			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
+			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (Current)
 		end
 
 	process (a_context: XM_XPATH_CONTEXT) is

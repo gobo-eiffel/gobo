@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, analyze, item_type, evaluate_item, iterator, compute_special_properties
+			simplify, analyze, item_type, evaluate_item, create_iterator, compute_special_properties
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -63,7 +63,6 @@ feature -- Optimization
 		local
 			a_value: XM_XPATH_VALUE
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.simplify
 			if base_expression.is_error then
@@ -73,11 +72,11 @@ feature -- Optimization
 			end
 			a_value ?= base_expression
 			if a_value /= Void then
-				an_iterator := iterator (Void)
-				if an_iterator.is_error then
-					set_last_error (an_iterator.error_value)
+				create_iterator (Void)
+				if last_iterator.is_error then
+					set_last_error (last_iterator.error_value)
 				else
-					create a_sequence_extent.make (an_iterator)
+					create a_sequence_extent.make (last_iterator)
 					set_replacement (a_sequence_extent)
 				end
 			end
@@ -128,20 +127,21 @@ feature -- Evaluation
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a base_expression
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_iterator := base_expression.iterator (a_context)
+			base_expression.create_iterator (a_context)
+			an_iterator := base_expression.last_iterator
 			if an_iterator.is_error then
-				Result := an_iterator
+				last_iterator := an_iterator
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void, Void)
 			end
 		end
 	
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
 			-- Map `an_item' to a base_expression
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
@@ -150,7 +150,7 @@ feature -- Evaluation
 			check
 				atomic_value: an_atomic_value /= Void
 			end
-			create Result.make_item (an_atomic_value.convert_to_type (required_type))
+			create last_mapped_item.make_item (an_atomic_value.convert_to_type (required_type))
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

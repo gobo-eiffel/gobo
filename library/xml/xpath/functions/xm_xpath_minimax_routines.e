@@ -64,7 +64,8 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
 			else
 				if is_max then create {XM_XPATH_DESCENDING_COMPARER} a_comparer.make (a_comparer) end
-				an_iterator := arguments.item (1).iterator (a_context)
+				arguments.item (1).create_iterator (a_context)
+				an_iterator := arguments.item (1).last_iterator
 				an_iterator.start
 				if not an_iterator.after then
 					last_evaluated_item := Void

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_FUNCTION_CALL
 		redefine
-			pre_evaluate, evaluate_item, iterator, display, mark_tail_function_calls
+			pre_evaluate, evaluate_item, create_iterator, display, mark_tail_function_calls
 		end
 
 	XM_XPATH_ROLE
@@ -112,7 +112,7 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			an_execution_context: XM_XSLT_EVALUATION_CONTEXT
@@ -124,9 +124,10 @@ feature -- Evaluation
 			end
 			call (an_execution_context)
 			if last_called_value.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} Result.make (last_called_value.error_value)
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_called_value.error_value)
 			else
-				Result := last_called_value.iterator (a_context)
+				last_called_value.create_iterator (a_context)
+				last_iterator := last_called_value.last_iterator
 			end
 		end
 	
@@ -146,7 +147,8 @@ feature -- Evaluation
 			an_atomic_value ?= last_called_value
 			last_evaluated_item := an_atomic_value
 			if an_atomic_value = Void then
-				an_iterator := last_called_value.iterator (a_context)
+				last_called_value.create_iterator (a_context)
+				an_iterator := last_called_value.last_iterator
 				an_iterator.start
 				if not an_iterator.after then
 					last_evaluated_item := an_iterator.item

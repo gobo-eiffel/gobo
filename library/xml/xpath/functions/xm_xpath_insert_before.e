@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			iterator
+			create_iterator
 		end
 	
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			a_base_iterator, an_insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -76,13 +76,15 @@ feature -- Evaluation
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			an_item: XM_XPATH_ITEM
 		do
-			a_base_iterator := arguments.item (1).iterator (a_context)
+			arguments.item (1).create_iterator (a_context)
+			a_base_iterator := arguments.item (1).last_iterator
 			if a_base_iterator.is_error then
-				Result := a_base_iterator
+				last_iterator := a_base_iterator
 			else
-				an_insertion_iterator := arguments.item (3).iterator (a_context)
+				arguments.item (3).create_iterator (a_context)
+				an_insertion_iterator := arguments.item (3).last_iterator
 				if an_insertion_iterator.is_error then
-					Result := an_insertion_iterator
+					last_iterator := an_insertion_iterator
 				else
 					arguments.item (2).evaluate_item (a_context)
 					an_item := arguments.item (2).last_evaluated_item
@@ -91,7 +93,7 @@ feature -- Evaluation
 						-- static typing
 					end
 					if an_item.is_error then
-						create {XM_XPATH_INVALID_ITERATOR} Result.make (an_item.error_value)
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 					else
 						an_integer_value ?= an_item
 						check
@@ -100,9 +102,9 @@ feature -- Evaluation
 						end
 						if an_integer_value.is_platform_integer then
 							an_insert_position := an_integer_value.as_integer
-							create {XM_XPATH_INSERT_ITERATOR} Result.make (a_base_iterator, an_insertion_iterator, an_insert_position)
+							create {XM_XPATH_INSERT_ITERATOR} last_iterator.make (a_base_iterator, an_insertion_iterator, an_insert_position)
 						else
-							create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Position exceeds maximum platform integer", Gexslt_eiffel_type_uri, "MAX-INTEGER", Dynamic_error)
+							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Position exceeds maximum platform integer", Gexslt_eiffel_type_uri, "MAX-INTEGER", Dynamic_error)
 						end
 					end
 				end

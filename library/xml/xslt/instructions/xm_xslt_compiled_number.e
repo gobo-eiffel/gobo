@@ -488,7 +488,8 @@ feature {NONE} -- Implementation
 
 			if value_expression /= Void then
 				from
-					a_sequence_iterator := value_expression.iterator (a_context); a_sequence_iterator.start
+					value_expression.create_iterator (a_context)
+					a_sequence_iterator := value_expression.last_iterator; a_sequence_iterator.start
 					create integer_vector.make_default
 				until
 					finished or else a_sequence_iterator.after

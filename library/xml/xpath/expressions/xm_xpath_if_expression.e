@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, evaluate_item, promote, iterator,
+			simplify, evaluate_item, promote, create_iterator,
 			sub_expressions, mark_tail_function_calls, compute_special_properties
 		end
 
@@ -124,7 +124,8 @@ feature -- Optimization
 				end
 				a_value ?= condition
 				if a_value /= Void then
-					a_boolean_value := condition.effective_boolean_value (Void)
+					condition.calculate_effective_boolean_value (Void)
+					a_boolean_value := condition.last_boolean_value
 					if not a_boolean_value.is_error and then a_boolean_value.value then
 						then_expression.simplify
 						if then_expression.is_error then
@@ -214,7 +215,8 @@ feature -- Evaluation
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			last_evaluated_item := Void
-			a_boolean_value := condition.effective_boolean_value (a_context)
+			condition.calculate_effective_boolean_value (a_context)
+			a_boolean_value := condition.last_boolean_value
 			if a_boolean_value.is_error then
 				last_evaluated_item := a_boolean_value
 			elseif a_boolean_value.value then
@@ -226,18 +228,21 @@ feature -- Evaluation
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterates over the values of a sequence
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			a_boolean_value := condition.effective_boolean_value (a_context)
+			condition.calculate_effective_boolean_value (a_context)
+			a_boolean_value := condition.last_boolean_value
 			if a_boolean_value.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} Result.make (a_boolean_value.error_value)
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (a_boolean_value.error_value)
 			elseif a_boolean_value.value then
-				Result := then_expression.iterator (a_context)
+				then_expression.create_iterator (a_context)
+				last_iterator := then_expression.last_iterator
 			else
-				Result := else_expression.iterator (a_context)
+				else_expression.create_iterator (a_context)
+				last_iterator := else_expression.last_iterator
 			end
 		end
 

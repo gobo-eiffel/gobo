@@ -351,7 +351,8 @@ feature {NONE} -- Implementation
 			-- Evaluate the "use" expression against this context node
 
 			from
-				an_iterator := use.iterator (a_context); an_iterator.start
+				use.create_iterator (a_context)
+				an_iterator := use.last_iterator; an_iterator.start
 			until
 				an_iterator.after
 			loop

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplify, iterator
+			simplify, create_iterator
 		end
 
 	XM_XPATH_REGEXP_ROUTINES
@@ -81,7 +81,7 @@ feature -- Optimization
 		
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
@@ -122,16 +122,16 @@ feature -- Evaluation
 					end
 					if not a_regexp_cache_entry.is_error then
 						if a_regexp_cache_entry.regexp.matches ("") then
-							create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Dynamic_error)
+							create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Regular expression matches zero-length string", Xpath_errors_uri, "FORX0003", Dynamic_error)
 						else
-							create {XM_XPATH_TOKEN_ITERATOR} Result.make (an_input_string, a_regexp_cache_entry)
+							create {XM_XPATH_TOKEN_ITERATOR} last_iterator.make (an_input_string, a_regexp_cache_entry)
 						end
 					else
-						create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Invalid regular expression", Xpath_errors_uri, "FORX0002", Dynamic_error)
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Invalid regular expression", Xpath_errors_uri, "FORX0002", Dynamic_error)
 					end
 				end
 			else
-				create {XM_XPATH_TOKEN_ITERATOR} Result.make (an_input_string, regexp_cache_entry)
+				create {XM_XPATH_TOKEN_ITERATOR} last_iterator.make (an_input_string, regexp_cache_entry)
 			end
 		end
 

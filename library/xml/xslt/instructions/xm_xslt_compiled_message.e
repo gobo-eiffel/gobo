@@ -160,7 +160,8 @@ feature -- Evaluation
 			a_new_context := a_context.new_minor_context
 			create a_result.make_receiver (a_tree_receiver)
 			a_new_context.change_output_destination (some_output_properties, a_result, False, Validation_strip, Void)
-			an_iterator := select_expression.iterator (a_context)
+			select_expression.create_iterator (a_context)
+			an_iterator := select_expression.last_iterator
 			if not an_iterator.is_error then
 				from
 					an_iterator.start

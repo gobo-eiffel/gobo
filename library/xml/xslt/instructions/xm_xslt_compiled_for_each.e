@@ -15,7 +15,7 @@ inherit
 	XM_XSLT_INSTRUCTION
 		redefine
 			item_type, creates_new_nodes, compute_dependencies, promote_instruction,
-			sub_expressions, native_implementations, iterator
+			sub_expressions, native_implementations, create_iterator
 		end
 
 	XM_XPATH_PROMOTION_ACTIONS
@@ -211,7 +211,8 @@ feature -- Evaluation
 			a_trace_listener: XM_XSLT_TRACE_LISTENER
 		do
 			a_transformer := a_context.transformer
-			an_iterator := select_expression.iterator (a_context)
+			select_expression.create_iterator (a_context)
+			an_iterator := select_expression.last_iterator
 			an_inner_context := a_context.new_context
 			an_inner_context.set_current_iterator (an_iterator)
 			if a_transformer.is_tracing then
@@ -233,26 +234,28 @@ feature -- Evaluation
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence
 		local
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			Result := select_expression.iterator (a_context)
+			select_expression.create_iterator (a_context)
+			last_iterator := select_expression.last_iterator
 			a_new_context ?= a_context.new_context
 			check
 				evaluation_context: a_new_context /= Void
 				-- This is XSLT
 			end
 			a_new_context.set_current_template (Void)
-			a_new_context.set_current_iterator (Result)
-			create {XM_XPATH_MAPPING_ITERATOR} Result.make (Result, Current, a_new_context, Void)
+			a_new_context.set_current_iterator (last_iterator)
+			create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (last_iterator, Current, a_new_context, Void)
 		end
 	
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
 			-- Map `an_item' to a sequence
 		do
-			create Result.make_sequence (action.iterator (a_context))
+			action.create_iterator (a_context)
+			create last_mapped_item.make_sequence (action.last_iterator)
 		end
 
 feature {NONE} -- Implementation

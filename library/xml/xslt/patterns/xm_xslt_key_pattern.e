@@ -92,6 +92,7 @@ feature -- Matching
 			-- N.B. This function is not 100% pure, as it may cause
 			--  an index to be built for a key, but this is only a 
 			--  performance-affecting side effect.
+			-- In addition, an iterator is created over `key_expression'.
 		local
 			a_doc: XM_XPATH_DOCUMENT
 			a_key_value: XM_XPATH_STRING_VALUE
@@ -106,7 +107,8 @@ feature -- Matching
 				Result := False
 			else
 				a_km := a_context.transformer.key_manager
-				an_iter := key_expression.iterator (a_context)
+				key_expression.create_iterator (a_context)
+				an_iter := key_expression.last_iterator
 				from
 					check
 						before: an_iter.before

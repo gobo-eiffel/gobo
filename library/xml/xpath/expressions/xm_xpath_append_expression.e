@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			compute_cardinality, simplify, iterator
+			compute_cardinality, simplify, create_iterator
 		end
 
 	XM_XPATH_TOKENS
@@ -77,7 +77,8 @@ feature -- Optimization
 						-- For lists consisting entirely of constant atomic values, build a sequence extent at compile time
 
 						if is_atomic_sequence then
-							create a_sequence_extent.make (iterator (Void))
+							create_iterator (Void)
+							create a_sequence_extent.make (last_iterator)
 							set_replacement (a_sequence_extent)
 						else
 
@@ -116,10 +117,11 @@ feature -- Optimization
 
 feature -- Evaluation
 
-		iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		do
-			create {XM_XPATH_APPEND_ITERATOR} Result.make (first_operand.iterator (a_context), second_operand, a_context)
+			first_operand.create_iterator (a_context)
+			create {XM_XPATH_APPEND_ITERATOR} last_iterator.make (first_operand.last_iterator, second_operand, a_context)
 		end
 
 feature {NONE} -- Implementation

@@ -135,7 +135,8 @@ feature -- Evaluation
 		local
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			a_sequence_iterator := base_expression.iterator (a_context)
+			base_expression.create_iterator (a_context)
+			a_sequence_iterator := base_expression.last_iterator
 			if a_sequence_iterator.is_error then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (a_sequence_iterator.error_value)
 			else

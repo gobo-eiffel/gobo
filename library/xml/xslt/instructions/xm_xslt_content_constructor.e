@@ -150,7 +150,8 @@ feature -- Evaluation
 					end
 				end
 			else
-				an_iterator := select_expression.iterator (a_context)
+				select_expression.create_iterator (a_context)
+				an_iterator := select_expression.last_iterator
 				evaluate_sequence (a_context, an_iterator)
 			end
 		end

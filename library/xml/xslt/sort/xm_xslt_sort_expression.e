@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, iterator, compute_special_properties, is_repeated_sub_expression 
+			simplify, create_iterator, compute_special_properties, is_repeated_sub_expression 
 		end
 
 creation
@@ -156,7 +156,7 @@ feature -- Optimization
 
 feature -- Evaluation
 	
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -165,7 +165,8 @@ feature -- Evaluation
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
 			a_sort_key: XM_XSLT_SORT_KEY_DEFINITION
 		do
-			a_sequence_iterator := select_expression.iterator (a_context)
+			select_expression.create_iterator (a_context)
+			a_sequence_iterator := select_expression.last_iterator
 			an_evaluation_context ?= a_context.new_context
 			check
 				evaluation_context_not_void: an_evaluation_context /= Void
@@ -191,7 +192,7 @@ feature -- Evaluation
 					a_cursor.forth
 				end
 			end
-			create {XM_XSLT_SORTED_ITERATOR} Result.make (an_evaluation_context, a_sequence_iterator, reduced_sort_keys)
+			create {XM_XSLT_SORTED_ITERATOR} last_iterator.make (an_evaluation_context, a_sequence_iterator, reduced_sort_keys)
 		end
 
 feature {XM_XSLT_SORT_EXPRESSION} -- Local

@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_binary
 		redefine
-			compute_cardinality, compute_special_properties, simplify, analyze, iterator, effective_boolean_value
+			compute_cardinality, compute_special_properties, simplify, analyze, create_iterator, calculate_effective_boolean_value
 		end
 
 	XM_XPATH_SHARED_GLOBAL_ORDER_COMPARER
@@ -138,32 +138,35 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			if operator = Union_token then
-				a_boolean_value := first_operand.effective_boolean_value (a_context)
+				first_operand.calculate_effective_boolean_value (a_context)
+				a_boolean_value := first_operand.last_boolean_value
 				if a_boolean_value.value then
-					Result := a_boolean_value
+					last_boolean_value := a_boolean_value
 				else
-					Result := second_operand.effective_boolean_value (a_context)
+					second_operand.calculate_effective_boolean_value (a_context)
+					last_boolean_value := second_operand.last_boolean_value
 				end
 			else
-				Result := Precursor (a_context)
+				Precursor (a_context)
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence
 		local
 			an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			an_iterator := first_operand.iterator (a_context)
+			first_operand.create_iterator (a_context)
+			an_iterator := first_operand.last_iterator
 			if an_iterator.is_error then
-				Result := an_iterator
+				last_iterator := an_iterator
 			else
 				if not first_operand.ordered_nodeset then
 					a_node_iterator ?= an_iterator
@@ -173,9 +176,10 @@ feature -- Evaluation
 						do_nothing -- must be an empty iterator, but we won't bother to check this
 					end
 				end
-				another_iterator := second_operand.iterator (a_context)
+				second_operand.create_iterator (a_context)
+				another_iterator := second_operand.last_iterator
 				if another_iterator.is_error then
-					Result := another_iterator
+					last_iterator := another_iterator
 				else
 					if not second_operand.ordered_nodeset then
 						a_node_iterator ?= an_iterator
@@ -188,11 +192,11 @@ feature -- Evaluation
 					inspect
 						operator
 					when Union_token then
-						create {XM_XPATH_UNION_ENUMERATION} Result.make (an_iterator, another_iterator, global_order_comparer)
+						create {XM_XPATH_UNION_ENUMERATION} last_iterator.make (an_iterator, another_iterator, global_order_comparer)
 					when Intersect_token then
-						create {XM_XPATH_INTERSECTION_ENUMERATION} Result.make (an_iterator, another_iterator, global_order_comparer)
+						create {XM_XPATH_INTERSECTION_ENUMERATION} last_iterator.make (an_iterator, another_iterator, global_order_comparer)
 					when Except_token then
-						create {XM_XPATH_DIFFERENCE_ENUMERATION} Result.make (an_iterator, another_iterator, global_order_comparer)
+						create {XM_XPATH_DIFFERENCE_ENUMERATION} last_iterator.make (an_iterator, another_iterator, global_order_comparer)
 					end
 				end
 			end

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			iterator, simplify
+			create_iterator, simplify
 		end
 
 creation
@@ -87,7 +87,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			a_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -95,14 +95,15 @@ feature -- Evaluation
 			an_item: XM_XPATH_ITEM
 			a_count: INTEGER
 		do
-			a_sequence := arguments.item (1).iterator (a_context)
+			arguments.item (1).create_iterator (a_context)
+			a_sequence := arguments.item (1).last_iterator
 			if a_sequence.is_error then
-				Result := a_sequence
+				last_iterator := a_sequence
 			else
 				arguments.item (2).evaluate_item (a_context)
 				an_item := arguments.item (2).last_evaluated_item
 				if an_item.is_error then
-					create {XM_XPATH_INVALID_ITERATOR} Result.make (an_item.error_value)
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 				else
 					an_integer_value ?= an_item
 					check
@@ -111,9 +112,9 @@ feature -- Evaluation
 					end
 					if an_integer_value.is_platform_integer then
 						a_count := an_integer_value.as_integer
-						create {XM_XPATH_REMOVE_ITERATOR} Result.make (a_sequence, a_count)
+						create {XM_XPATH_REMOVE_ITERATOR} last_iterator.make (a_sequence, a_count)
 					else
-						create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Position exceeds implementation limit", Gexslt_eiffel_type_uri, "SEQUENCE_TOO_LONG", Dynamic_error)
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Position exceeds implementation limit", Gexslt_eiffel_type_uri, "SEQUENCE_TOO_LONG", Dynamic_error)
 					end
 				end
 			end

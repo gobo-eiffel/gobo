@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			simplify, promote, compute_dependencies, compute_special_properties, sub_expressions,
-			same_expression, iterator, is_repeated_sub_expression
+			same_expression, create_iterator, is_repeated_sub_expression
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -345,7 +345,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence;
 			-- Delivers the result of the path expression in unsorted order,
 			--  without removal of duplicates.
@@ -355,32 +355,34 @@ feature -- Evaluation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			another_context: XM_XPATH_CONTEXT
 		do
-			an_iterator := start.iterator (a_context)
+			start.create_iterator (a_context)
+			an_iterator := start.last_iterator
 			if an_iterator.is_error then
-				Result := an_iterator
+				last_iterator := an_iterator
 			else
 				another_context := a_context.new_context
 				another_context.set_current_iterator (an_iterator)
 
-				create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, another_context, Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, another_context, Void)
 			end
 		end
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
 			-- Map `an_item' to a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_invalid_item: XM_XPATH_INVALID_ITEM
 		do
-			an_iterator := step.iterator (a_context)
+			step.create_iterator (a_context)
+			an_iterator := step.last_iterator
 			if an_iterator.is_error then
 								
 				-- Error occured
 
 				create an_invalid_item.make (an_iterator.error_value)
-				create Result.make_item (an_invalid_item)
+				create last_mapped_item.make_item (an_invalid_item)
 			else
-				create Result.make_sequence (an_iterator)
+				create last_mapped_item.make_sequence (an_iterator)
 			end
 		end
 	

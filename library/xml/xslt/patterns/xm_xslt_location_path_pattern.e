@@ -285,6 +285,7 @@ feature -- Matching
 
 	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
+			-- Not 100% pure, as it changes the current iterator.
 		local
 			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
 		do
@@ -536,7 +537,8 @@ feature {XM_XSLT_PATTERN} -- Implementation
 							until
 								Result = False or else a_cursor.after
 							loop
-								Result := a_cursor.item.effective_boolean_value (a_context).value
+								a_cursor.item.calculate_effective_boolean_value (a_context)
+								Result := a_cursor.item.last_boolean_value.value
 								a_cursor.forth
 							end
 						end

@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_binary_expression
 		redefine
-			analyze, evaluate_item, effective_boolean_value
+			analyze, evaluate_item, calculate_effective_boolean_value
 		end
 
 	XM_XPATH_COMPARISON_ROUTINES
@@ -130,7 +130,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
@@ -143,35 +143,35 @@ feature -- Evaluation
 
 				-- empty sequence
 
-				create Result.make (False)
+				create last_boolean_value.make (False)
 			elseif an_item.is_error then
-				create Result.make (False)
-				Result.set_last_error (an_item.error_value)
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (an_item.error_value)
 			else
 				second_operand.evaluate_item (a_context)
 				another_item := second_operand.last_evaluated_item
 				if another_item.is_error then
-				create Result.make (False)
-				Result.set_last_error (another_item.error_value)
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (another_item.error_value)
 				else
 					an_atomic_value ?= an_item
 					another_atomic_value ?= another_item
 					if an_atomic_value = Void then
-						create Result.make (False)
-						Result.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XP0006", Type_error)
+						create last_boolean_value.make (False)
+						last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XP0006", Type_error)
 					elseif another_atomic_value = Void then
-						create Result.make (False)
-						Result.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XP0006", Type_error)
+						create last_boolean_value.make (False)
+						last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XP0006", Type_error)
 					else
 						create a_comparison_checker
 						a_comparison_checker.check_correct_value_relation (an_atomic_value, operator, atomic_comparer, another_atomic_value)
 						if a_comparison_checker.is_comparison_type_error then
-							create Result.make (False)
-							Result.set_last_error (a_comparison_checker.last_type_error)
+							create last_boolean_value.make (False)
+							last_boolean_value.set_last_error (a_comparison_checker.last_type_error)
 						elseif a_comparison_checker.last_check_result then
-							create Result.make (True)
+							create last_boolean_value.make (True)
 						else
-							create Result.make (False)
+							create last_boolean_value.make (False)
 						end
 					end
 				end
@@ -181,7 +181,8 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			last_evaluated_item := effective_boolean_value (a_context)
+			calculate_effective_boolean_value (a_context)
+			last_evaluated_item := last_boolean_value
 		end
 
 feature {NONE} -- Implementation

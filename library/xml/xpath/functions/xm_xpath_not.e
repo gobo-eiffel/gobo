@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			check_arguments, evaluate_item, effective_boolean_value
+			check_arguments, evaluate_item, calculate_effective_boolean_value
 		end
 
 creation
@@ -58,23 +58,25 @@ feature -- Status report
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			a_boolean_value := arguments.item (1).effective_boolean_value (a_context)
+			arguments.item (1).calculate_effective_boolean_value (a_context)
+			a_boolean_value := arguments.item (1).last_boolean_value
 			if a_boolean_value.is_error then
-				Result := a_boolean_value
+				last_boolean_value := a_boolean_value
 			else
-				create Result.make (not a_boolean_value.value)
+				create last_boolean_value.make (not a_boolean_value.value)
 			end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		do
-			last_evaluated_item := effective_boolean_value (a_context)
+			calculate_effective_boolean_value (a_context)
+			last_evaluated_item := last_boolean_value
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

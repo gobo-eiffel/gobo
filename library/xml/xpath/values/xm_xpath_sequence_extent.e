@@ -23,7 +23,7 @@ inherit
 		undefine
 			copy, is_equal, item
 		redefine
-			item_type, effective_boolean_value
+			item_type, calculate_effective_boolean_value
 		end
 
 	DS_ARRAYED_LIST [XM_XPATH_ITEM]
@@ -231,14 +231,14 @@ feature -- Status report
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		do
 			-- TODO
 			todo ("effective-boolean-value" ,False)
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
 			counter: INTEGER
@@ -260,9 +260,9 @@ feature -- Evaluation
 				end
 			end
 			if count = 0 then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
 			else
-				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
+				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (Current)
 			end
 		end
 

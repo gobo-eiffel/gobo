@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_CLOSURE
 		redefine
-			make, iterator, same_expression, process
+			make, create_iterator, same_expression, process
 		end
 
 creation {XM_XPATH_EXPRESSION_FACTORY}
@@ -80,7 +80,7 @@ feature -- Comparison
 
 feature -- Evaluation
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		do
 			if reservoir.count > 0 then
@@ -92,15 +92,16 @@ feature -- Evaluation
 				state
 			when Unread_state then
 				state := Busy_state
-				input_iterator := base_expression.iterator (saved_xpath_context)
+				base_expression.create_iterator (saved_xpath_context)
+				input_iterator := base_expression.last_iterator
 				state := Maybe_more_state
-				create {XM_XPATH_PROGRESSIVE_ITERATOR} Result.make (reservoir, input_iterator) 
+				create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (reservoir, input_iterator) 
 			when Maybe_more_state then
-				create {XM_XPATH_PROGRESSIVE_ITERATOR} Result.make (reservoir, input_iterator)
+				create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (reservoir, input_iterator)
 			when All_read_state then
-				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (reservoir)
+				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (reservoir)
 			when Busy_state then
-				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Attempt to access a lazily-evaluated variable while it is being evaluated",
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Attempt to access a lazily-evaluated variable while it is being evaluated",
 																								Gexslt_eiffel_type_uri, "BUSY_CLOSURE", Dynamic_error)
 			end
 		end

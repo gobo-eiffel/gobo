@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			iterator, evaluate_item, effective_boolean_value, compute_intrinsic_dependencies, compute_special_properties
+			create_iterator, evaluate_item, calculate_effective_boolean_value, compute_intrinsic_dependencies, compute_special_properties
 		end
 
 	-- N.B. This class is supposed to have intrinsic dependency on the context item
@@ -68,14 +68,14 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		do
 			if is_valid_context_for_node (a_context) then
-				create Result.make (node (a_context) /= Void)
+				create last_boolean_value.make (node (a_context) /= Void)
 			else
-				create Result.make (False)
-				Result.set_last_error (dynamic_error_value (a_context))
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (dynamic_error_value (a_context))
 			end
 		end
 
@@ -89,13 +89,13 @@ feature -- Evaluation
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		do
 			if is_valid_context_for_node (a_context) then
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (node (a_context))
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (node (a_context))
 			else
-				create {XM_XPATH_INVALID_ITERATOR} Result.make (dynamic_error_value (a_context))
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (dynamic_error_value (a_context))
 			end
 		end
 
