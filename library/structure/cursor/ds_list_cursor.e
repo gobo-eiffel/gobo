@@ -21,8 +21,14 @@ inherit
 		end
 
 	DS_DYNAMIC_CURSOR [G]
+		redefine
+			container
+		end
 
 	DS_INDEXED_CURSOR [G]
+		redefine
+			container
+		end
 
 feature -- Access
 
