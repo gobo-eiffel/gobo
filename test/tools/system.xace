@@ -16,7 +16,9 @@
 		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
 	</option>
 	<option if="${DEBUG}">
-		<option name="assertion" value="all"/>
+			<!-- Last too long when compiled with all assertions with Visual Eiffel -->
+		<option name="assertion" value="all" unless="${GOBO_EIFFEL}=ve"/>
+		<option name="assertion" value="require" if="${GOBO_EIFFEL}=ve"/>
 		<option name="garbage_collector" value="internal"/>
 		<option name="finalize" value="false"/>
 	</option>
