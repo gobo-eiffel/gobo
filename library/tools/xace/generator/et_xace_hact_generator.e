@@ -506,11 +506,11 @@ feature {NONE} -- Output
 					if an_option.is_storable_declared then
 						all_storable := an_option.storable
 					end
-					need_end_keyword := need_end_keyword or print_cluster_options (an_option, indent + 1, a_file)
+					need_end_keyword := print_cluster_options (an_option, indent + 1, a_file) or need_end_keyword
 				end
 				a_class_options := a_cluster.class_options
 				if a_class_options /= Void then
-					need_end_keyword := need_end_keyword or print_class_options (a_class_options, all_storable, indent + 1, a_file)
+					need_end_keyword := print_class_options (a_class_options, all_storable, indent + 1, a_file) or need_end_keyword
 				elseif all_storable then
 					a_file.put_new_line
 					print_indentation (indent + 1, a_file)

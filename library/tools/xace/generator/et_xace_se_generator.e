@@ -372,11 +372,11 @@ feature {NONE} -- Output
 				a_file.put_new_line
 				an_option := a_cluster.options
 				if an_option /= Void then
-					need_end_keyword := need_end_keyword or print_cluster_options (an_option, 2, a_file)
+					need_end_keyword := print_cluster_options (an_option, 2, a_file) or need_end_keyword
 				end
 				a_class_options := a_cluster.class_options
 				if a_class_options /= Void then
-					need_end_keyword := need_end_keyword or print_class_options (a_class_options, 2, a_file)
+					need_end_keyword := print_class_options (a_class_options, 2, a_file) or need_end_keyword
 				end
 				if need_end_keyword then
 					print_indentation (2, a_file)
