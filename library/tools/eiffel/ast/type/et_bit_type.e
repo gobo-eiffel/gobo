@@ -68,7 +68,7 @@ feature -- Access
 			if constant /= Void then
 				Result := Current
 			else
-					-- Resolved "BIT name".
+					-- Unresolved "BIT name".
 				Result := a_universe.unknown_class
 			end
 		end
