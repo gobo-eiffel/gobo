@@ -16,10 +16,10 @@ inherit
 	
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			evaluate_item, display, item_type
+			evaluate_item, display, item_type, is_convertible_to_item, as_item
 		end
 
-creation
+creation {XM_XPATH_EXPRESSION_FACTORY}
 
 	make
 
@@ -82,13 +82,6 @@ feature -- Access
 			Result := base_expression.item_type
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- An iterator over the values of a sequence
-		do
-			-- TODO
-			todo ("iterator" ,False)
-		end
-
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -105,6 +98,12 @@ feature -- Comparison
 		end
 
 feature -- Status report
+
+	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
+		do
+			Result := True
+		end
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
@@ -124,6 +123,22 @@ feature -- Evaluation
 			todo ("evaluate-item", False)
 		end
 
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- An iterator over the values of a sequence
+		do
+			-- TODO
+			todo ("iterator" ,False)
+		end
+
+feature  -- Conversion
+
+	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+			-- Convert to an item
+		do
+			evaluate_item (a_context)
+			Result := last_evaluated_item 
+		end
+	
 feature {XM_XPATH_CLOSURE} -- Local
 
 	base_expression: XM_XPATH_EXPRESSION

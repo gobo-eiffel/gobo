@@ -43,6 +43,13 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 		end
 
+feature -- Status report
+
+	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
+		deferred
+		end
+
 feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
@@ -63,7 +70,16 @@ feature -- Optimization
 			Result := Current
 		end
 
-feature {NONE} -- Initialization
+feature -- Conversion
+
+	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+			-- Convert to an item
+		require
+			is_convertible_to_item (a_context)
+		deferred
+		end
+	
+feature {NONE} -- Implementation
 
 		trim_white_space (a_string: STRING): STRING is
 			-- Remove all leading and trailing characters below character code 33;

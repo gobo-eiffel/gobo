@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NUMERIC_VALUE
 		redefine
-			three_way_comparison
+			three_way_comparison, effective_boolean_value
 		end
 
 creation
@@ -64,11 +64,6 @@ feature -- Access
 			Result := Double_type -- ?? TODO
 		end
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
-			-- Effective boolean value
-		do
-			create Result.make (value /= 0.0)
-		end
 
 	string_value: STRING is
 			--Value of the item as a string
@@ -137,6 +132,14 @@ feature -- Status report
 			else
 				Result := False
 			end
+		end
+
+feature -- Evaluation
+
+		effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value
+		do
+			create Result.make (value /= 0.0)
 		end
 
 feature -- Conversion

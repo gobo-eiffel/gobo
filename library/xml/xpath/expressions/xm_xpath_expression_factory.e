@@ -62,7 +62,7 @@ feature -- Creation
 					end					
 				end
 			else
-				create error_value.make_from_string (a_parser.last_parse_error, 3, Static_error)
+				create error_value.make_from_string (a_parser.first_parse_error, a_parser.first_parse_error_code, Static_error)
 			end
 		ensure
 			error_or_expression: Result = Void implies error_value /= Void

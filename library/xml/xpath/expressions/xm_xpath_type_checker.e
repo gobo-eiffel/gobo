@@ -65,6 +65,7 @@ feature -- Optimization
 			new_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			a_value: XM_XPATH_VALUE
 		do
+			is_static_type_check_error := False
 			an_expression := a_supplied_expression
 			a_required_item_type := a_required_type.primary_type
 			allows_many := a_required_type.cardinality_allows_many
@@ -204,6 +205,7 @@ feature -- Optimization
 						static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, "; supplied value has type ")
 						static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, type_name (a_supplied_item_type))
 						-- TODO add location info
+						Result := Void
 					end
 				end
 
@@ -221,9 +223,10 @@ feature -- Optimization
 					end
 				end
 			end
-			if Result = Void then Result := an_expression end
+			if not is_static_type_check_error and then Result = Void then Result := an_expression end
 		ensure
-			static_error_or_non_void_result: not is_static_type_check_error implies Result /= Void
+			no_static_error_implies_non_void_result: not is_static_type_check_error implies Result /= Void
+			static_error_implies_void_result: is_static_type_check_error implies Result = Void
 		end	
 
 invariant

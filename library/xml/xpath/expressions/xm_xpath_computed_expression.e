@@ -150,13 +150,9 @@ feature -- Evaluation
 			a_double: XM_XPATH_DOUBLE_VALUE
 		do
 			an_iterator := iterator (a_context)
-			if an_iterator.after then
-				create Result.make (False)
-			else
-					check
-						before: an_iterator.before
-					end
-				an_iterator.forth
+
+			if an_iterator /= Void then
+				an_iterator.start
 				an_item := an_iterator.item
 					check
 						item_not_void: an_item /= Void
@@ -185,8 +181,8 @@ feature -- Evaluation
 										end
 									if a_double.value = 0.0 then
 										create Result.make (False)
-										else
-											create Result.make (a_number.is_nan)
+									else
+										create Result.make (a_number.is_nan)
 									end
 								end
 							else
@@ -195,11 +191,18 @@ feature -- Evaluation
 						end
 					end
 				end
+				if Result = Void then create Result.make (False) end			
+			else
+
+				-- We are in error - mark the result as in error both as an expression and as an item
+
+				create Result.make (False)
+				Result.set_last_error (last_error)
+				Result.set_evaluation_error (last_error)
 			end
-			if Result = Void then create Result.make (False) end			
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+		evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]

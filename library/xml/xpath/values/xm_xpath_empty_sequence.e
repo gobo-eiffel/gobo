@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			item_type, display, evaluate_as_string, effective_boolean_value
+			item_type, display, evaluate_as_string, effective_boolean_value, is_convertible_to_item
 		end
 
 creation
@@ -27,7 +27,8 @@ feature {NONE} -- Initialization
 
 	make is
 		do
-			do_nothing
+			make_value
+			cardinalities.put (True, 1) -- Allows empty
 		end
 
 feature -- Access
@@ -56,6 +57,12 @@ feature -- Comparison
 		end
 
 feature -- Status report
+
+	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
+		do
+			Result := True
+		end
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'

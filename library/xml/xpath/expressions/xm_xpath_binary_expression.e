@@ -138,18 +138,14 @@ feature -- Optimization
 		local
 			a_value, another_value: XM_XPATH_VALUE
 		do
-				check
-					first_operand_not_analyzed: not first_operand.analyzed
-					second_operand_not_analyzed: not second_operand.analyzed
-				end
-			first_operand.analyze (a_context)
+			if first_operand.may_analyze then first_operand.analyze (a_context) end
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.last_error)
 			else
-				second_operand.analyze (a_context)
+				if second_operand.may_analyze then second_operand.analyze (a_context) end
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -161,13 +157,14 @@ feature -- Optimization
 
 					a_value ?= first_operand; another_value ?= second_operand
 					if a_value /= Void and then another_value /= Void then
+						set_analyzed
 						eagerly_evaluate (Void)
 						was_expression_replaced := True
 						replacement_expression := last_evaluation
 					end
 				end
 			end
-			set_analyzed
+			if not analyzed then set_analyzed end
 		end
 	
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is

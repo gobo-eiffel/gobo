@@ -76,6 +76,12 @@ feature -- Comparison
 
 feature -- Status report
 
+	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
+		do
+			Result := True
+		end
+
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
@@ -113,6 +119,12 @@ feature -- Evaluation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature -- Conversion
+
+	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+			-- Convert to an item
+		do
+			Result := node
+		end
 	
 end

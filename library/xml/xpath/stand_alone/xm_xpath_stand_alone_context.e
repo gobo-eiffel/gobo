@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 		do
 			name_pool := a_name_pool
 			create collations.make (10)
+			create variables.make (10)
 			create a_code_point_collator
 			declare_collation ("http://www.w3.org/2003/11/xpath-functions/collation/codepoint", a_code_point_collator, True)
 			clear_namespaces
@@ -92,10 +93,27 @@ feature -- Access
 
 feature -- Status report
 
-	is_declared_prefix (an_xml_prefix: STRING): BOOLEAN is
+	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is
 			-- Is `an_xml_prefix' allocated to a namespace?
 		do
 			Result := namespaces.has (an_xml_prefix)
+		end
+
+	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
+			-- Does `a_fingerprint' represent a variable declared in the static context?
+		do
+			Result := variables.has (a_fingerprint)
+		end
+
+	is_qname_variable_declared (a_qname: STRING): BOOLEAN is
+			-- Does `a_qname' represent a variable declared in the static context?
+		require
+			valid_name: a_qname /= Void and then is_qname (a_qname)
+		local
+			a_fingerprint: INTEGER
+		do
+			a_fingerprint := qname_to_fingerprint (a_qname)
+			Result := is_variable_declared (a_fingerprint)
 		end
 
 feature -- Element change
@@ -133,6 +151,24 @@ feature -- Element change
 			set: namespaces.has (an_xml_prefix) and then STRING_.same_string (a_uri, namespaces.item (an_xml_prefix))
 		end
 
+	declare_variable (a_qname: STRING; an_initial_value: XM_XPATH_VALUE) is
+			-- Declare `a_qname' as a variable.
+		require
+			valid_name: a_qname /= Void and then is_qname (a_qname)
+			variable_not_declared: not is_qname_variable_declared (a_qname)
+			-- N.B. if `a_qname' is a qualified name, then the prefix
+			--  must have been declared using `declare_namespace'.
+		local
+			a_variable: XM_XPATH_VARIABLE
+			a_fingerprint: INTEGER
+		do
+			a_fingerprint := qname_to_fingerprint (a_qname)
+			create a_variable.make (a_qname, an_initial_value)
+			variables.put (a_variable, a_fingerprint)
+		ensure
+			variable_declared: is_qname_variable_declared (a_qname)
+		end
+
 	clear_namespaces is
 			-- Clear all the declared namespaces, except for the standard ones.
 		do
@@ -149,11 +185,9 @@ feature -- Element change
 			var: XM_XPATH_VARIABLE
 		do
 			var := variables.item (a_fingerprint)
-			if var /= Void then
-				was_last_variable_bound := True
-				internal_last_bound_variable := var
-				-- TODO add option to return boolean false value if not found
-			end
+			internal_last_bound_variable := var
+			-- An option to return boolean false value if not found can be provided by re-defing this routine
+			--  along with `is_variable_declared' in a descendant class.
 		end
 
 	bind_function (a_qname: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
@@ -183,7 +217,7 @@ feature -- Element change
 					end
 				an_xml_prefix := name_parts.item (1)
 				a_local_name := name_parts.item (2)
-				if is_declared_prefix (an_xml_prefix) then
+				if is_prefix_declared (an_xml_prefix) then
 					a_uri := uri_for_prefix (an_xml_prefix)
 					if name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
 						a_name_code := name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
@@ -257,10 +291,43 @@ feature {NONE} -- Implementation
 	bits_20: INTEGER is 1048576 
 			-- 0x0fffff
 
+	qname_to_fingerprint (a_qname: STRING): INTEGER is
+		require
+			valid_name: a_qname /= Void and then is_qname (a_qname)
+		local
+			an_xml_prefix, a_local_name, a_uri: STRING
+			a_splitter: ST_SPLITTER
+			parts: DS_LIST [STRING]
+			a_name_code: INTEGER
+		do
+			create a_splitter.make
+			a_splitter.set_separators (":")
+			parts := a_splitter.split (a_qname)
+			if parts.count = 1 then
+				an_xml_prefix := ""
+				a_uri := ""
+				a_local_name := parts.item (1)
+			else
+				an_xml_prefix := parts.item (1)
+				a_local_name := parts.item (2)
+				a_uri := uri_for_prefix (an_xml_prefix)
+			end
+			if name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+				a_name_code := name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+			else
+				name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+				a_name_code := name_pool.last_name_code
+			end
+			Result := a_name_code \\ bits_20
+		ensure
+			positive_fingerprint: Result >= 0
+		end
+	
 invariant
 
 	namespaces /= Void
 	default_collation_name: default_collation_name /= Void
 	collations: collations /= Void
+	variables: variables /= Void
 
 end

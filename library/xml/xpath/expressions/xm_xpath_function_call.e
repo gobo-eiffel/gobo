@@ -124,21 +124,25 @@ feature -- Optimization
 			variant
 				arguments.count + 1 - arguments_cursor.index
 			until
-				arguments_cursor.after
+				is_error or else arguments_cursor.after
 			loop
 				if arguments_cursor.item.may_analyze then
 					arguments_cursor.item.analyze (a_context)
-					if arguments_cursor.item.was_expression_replaced then
-						arguments_cursor.replace (arguments_cursor.item.replacement_expression)
+					if arguments_cursor.item.is_error then
+						set_last_error (arguments_cursor.item.last_error)
+					else
+						if arguments_cursor.item.was_expression_replaced then
+							arguments_cursor.replace (arguments_cursor.item.replacement_expression)
+						end
+						
+						a_value ?= arguments_cursor.item
+						if a_value = Void then fixed_values := False end
 					end
-
-					a_value ?= arguments_cursor.item
-					if a_value = Void then fixed_values := False end
 					arguments_cursor.forth
 				end
 
-				check_arguments (a_context)
-
+				if not is_error then check_arguments (a_context) end
+					
 				-- Now, if any of the arguments has a static type error,
 				--  then `Current' as a whole has too.
 			
@@ -233,7 +237,7 @@ feature {NONE} -- Implementation
 				arguments_cursor := arguments.new_cursor
 				arguments_cursor.start
 			variant
-				result_arguments.count + 1 - arguments_cursor.index
+				arguments.count + 1 - arguments_cursor.index
 			until
 				in_error or else arguments_cursor.after
 			loop
@@ -283,7 +287,7 @@ feature {NONE} -- Implementation
 				a_message := STRING_.appended_string (a_message, plural_arguments_text (a_maximum_count))
 			end
 			if is_type_error then
-				set_last_error_from_string (a_message, 17, Type_error)
+				set_last_error_from_string (a_message, 17, Static_error)
 			end
 		ensure
 			Correct_number_or_error: True

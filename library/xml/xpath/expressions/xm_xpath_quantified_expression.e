@@ -15,6 +15,13 @@ class XM_XPATH_QUANTIFIED_EXPRESSION
 inherit
 
 	XM_XPATH_ASSIGNATION
+		redefine
+			evaluate_item, effective_boolean_value
+		end
+
+	XM_XPATH_PROMOTION_ACTIONS
+
+	XM_XPATH_ROLE
 
 creation
 
@@ -31,7 +38,7 @@ feature {NONE} -- Initialization
 			action_not_void: an_action /= Void
 		do
 			operator := an_operator
-			declaration := a_range_variable
+			set_declaration (a_range_variable)
 			sequence := a_sequence_expression
 			action := an_action
 			compute_static_properties
@@ -87,6 +94,11 @@ feature -- Optimization
 		local
 			a_declaration_type, a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			an_expression: XM_XPATH_EXPRESSION
+			a_role: XM_XPATH_ROLE_LOCATOR
+			a_type_checker: XM_XPATH_TYPE_CHECKER
+			actual_item_type: INTEGER
+			an_offer: XM_XPATH_PROMOTION_OFFER
+			a_let_expression: XM_XPATH_LET_EXPRESSION
 		do
 			
 			-- The order of events is critical here. First we ensure that the type of the
@@ -109,13 +121,91 @@ feature -- Optimization
 				set_sequence (sequence.unsorted (False))
 				a_declaration_type := declaration.required_type
 				create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
+				create a_role.make (Variable_role, declaration.name, 1)
+				create a_type_checker
+				an_expression := a_type_checker.static_type_check (sequence, declaration.required_type, False, a_role)
+				if an_expression = Void then
+						check
+							static_type_error: a_type_checker.is_static_type_check_error
+						end
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+				else
+					set_sequence (an_expression)
+					actual_item_type := sequence.item_type
+					declaration.refine_type_information (actual_item_type, sequence.cardinalities, Void, sequence.dependencies, sequence.special_properties)
+					set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again. Also sets analyzed to `True'
+					if	action.may_analyze then
+						action.analyze (a_context)
+					end
+					if action.was_expression_replaced then set_action (action.replacement_expression) end
+					if action.is_error then
+						set_last_error (action.last_error)
+					end
 
-				-- TODO - more code to write
-				todo ("quantified-expression", True)
-			
+					--create an_offer.make (Range_independent, Current, Current, False, False)
+					--action := action.promote (an_offer)
+					--a_let_expression ?= an_offer.containing_expression
+					--if a_let_expression /= Void then
+					--		check
+					--			let_expression_not_analyzed: a_let_expression.may_analyze
+					--		end
+					--	a_let_expression.analyze (a_context)
+					--	if a_let_expression.is_error then
+					--		set_last_error (a_let_expression.last_error)
+					--	else
+					--		was_expression_replaced := True
+					--		if a_let_expression.was_expression_replaced then
+					--			replacement_expression := a_let_expression.replacement_expression
+					--		else
+					--			replacement_expression := a_let_expression
+					--		end
+					--	end
+					--end
+				end
 			end
-			
-			set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again. Also sets analyzed to `True'
+		end
+
+feature -- Evaluation
+
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value
+		local
+			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_value: XM_XPATH_ATOMIC_VALUE
+			some: BOOLEAN
+			found_a_match: BOOLEAN
+		do
+
+			-- First create an iteration of the base sequence.
+
+			a_base_iterator := sequence.iterator (a_context)
+
+			-- Now test to see if some or all of the tests are true. The same
+			-- logic is used for the SOME and EVERY operators
+
+			some := operator = Some_token
+
+			from
+				a_base_iterator.start
+			until
+				a_base_iterator.after
+			loop
+				a_value ?= a_base_iterator.item.as_value
+				-- set_local_variable omitted, as slot_number can only be -1
+				if some = action.effective_boolean_value (a_context).value then
+					create Result.make (some); found_a_match := True
+				end
+
+				a_base_iterator.forth
+			end
+
+			if not found_a_match then create Result.make (not some) end
+		end
+
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item
+		do
+			last_evaluated_item := effective_boolean_value (a_context)
 		end
 
 feature {NONE} -- Implementation
@@ -123,8 +213,7 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			create cardinalities.make (1, 3)
-			cardinalities.put (True, 2) -- Allow exactly one
+			set_cardinality_exactly_one
 		end
 
 invariant

@@ -22,13 +22,20 @@ feature -- Access
 	name: STRING
 			-- name of variable
 
+feature -- Status report
+
+	last_evaluated_binding: XM_XPATH_VALUE
+			-- Value from calling evaluated_binding
+
 feature -- Evaluation
 
-	evaluated_binding (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	evaluate_variable (a_context: XM_XPATH_CONTEXT) is 
 			-- Evaluate variable
 		require
 			context_not_void: a_context /= Void
 		deferred
+		ensure
+			evaluation: last_evaluated_binding /= void
 		end
 
 invariant

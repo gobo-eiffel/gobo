@@ -109,6 +109,26 @@ feature {NONE} -- Implementation
 	filter_context: XM_XPATH_CONTEXT
 			-- Evaluation context for the filter
 
+	is_error: BOOLEAN
+			-- Did an error occur?
+
+	last_error: XM_XPATH_ERROR_VALUE
+			-- Last error value
+	
+	set_error (an_error_value: XM_XPATH_ERROR_VALUE) is
+			-- Set error value.
+		require
+			not_in_error: not is_error
+			error_value_not_void: an_error_value /= Void
+		do
+			is_error := True
+			last_error := an_error_value
+			is_error := True
+		ensure
+			is_error: is_error
+			error_value_set: last_error = an_error_value
+		end
+	
 	advance is
 			-- Move to next matching node.
 		local
@@ -118,7 +138,7 @@ feature {NONE} -- Implementation
 			from
 				if base_iterator.before then base_iterator.start end
 			until
-				matched or else base_iterator.after
+				is_error or matched or else base_iterator.after
 			loop
 				next_item := base_iterator.item
 				matched := matches
@@ -126,7 +146,10 @@ feature {NONE} -- Implementation
 				base_iterator.forth
 			end
 
-			if matched then
+			if is_error then
+				create {XM_XPATH_BOOLEAN_VALUE} current_item.make (False) -- we need SOMETHING to set an error upon!
+				current_item.set_evaluation_error (last_error)
+			elseif matched then
 				current_item := next_item
 			else
 				current_item := Void
@@ -147,14 +170,19 @@ feature {NONE} -- Implementation
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			if non_numeric then
-				Result := filter.effective_boolean_value (filter_context).value
+				a_boolean_value := filter.effective_boolean_value (filter_context)
+				if a_boolean_value.is_error then
+					set_error (a_boolean_value.last_error)
+				else
+					Result := a_boolean_value.value
+				end
 			else
 
 				-- This code is carefully designed to avoid reading more items from the
 				-- iteration of the filter expression than are absolutely essential.
 			
 				an_iterator := filter.iterator (filter_context)
-				if not filter.is_error then
+				if an_iterator /= Void then
 					an_iterator.start
 					if not an_iterator.after then
 						an_item := an_iterator.item
@@ -188,6 +216,12 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
+				else
+
+					-- We are in error
+
+					Result := False
+					set_error (filter.last_error)
 				end
 			end
 		end

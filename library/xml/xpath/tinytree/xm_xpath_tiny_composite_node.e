@@ -48,8 +48,8 @@ feature -- Access
 			loop
 				if document.retrieve_node_kind (a_next_node) = Text_node then
 					if a_buffer = Void then
-						-- create {UC_UTF8_STRING} a_buffer.make_empty
-						create {STRING} a_buffer.make_empty
+						-- TODO - examine string mode
+						create {UC_UTF8_STRING} a_buffer.make_empty
 					end
 					a_length := document.beta_value (a_next_node)
 					a_start_position := document.alpha_value (a_next_node)

@@ -53,6 +53,25 @@ feature -- Access
 
 feature -- Status report
 
+	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			an_iterator := iterator (a_context)
+			an_iterator.start
+			if an_iterator.after then
+				Result := True
+			else
+				an_iterator.forth
+				if an_iterator.after then
+					Result := False
+				else
+					Result := True
+				end
+			end
+		end
+
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
@@ -114,4 +133,22 @@ feature -- Evaluation
 				last_evaluated_string := a_value
 			end
 		end
+
+feature  -- Conversion
+
+	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+			-- Convert to an item
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			an_iterator := iterator (a_context)
+			an_iterator.start
+			if an_iterator.after then
+				Result := Void
+			else
+				an_iterator.forth
+				Result := an_iterator.item
+			end		
+		end
+
 end

@@ -61,21 +61,17 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
-				check
-					first_operand_may_be_analyzed: first_operand.may_analyze
-					second_operand_may_be_analyzed: second_operand.may_analyze
-				end
 
 			-- Analysis proceeds top-down through the sub-expressions
 
-			first_operand.analyze (a_context)
+			if first_operand.may_analyze then first_operand.analyze (a_context) end
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.last_error)
 			else
-				second_operand.analyze (a_context)
+				if second_operand.may_analyze then second_operand.analyze (a_context) end
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end

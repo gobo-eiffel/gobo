@@ -42,6 +42,9 @@ feature -- Access
 
 	local_variable_frame: ARRAY [XM_XPATH_VALUE]
 			-- Local variables in scope
+
+	reserved_slot_count: INTEGER
+			-- Slots reserved by host language
 	
 	context_item: XM_XPATH_ITEM is
 			-- The context item (".")
@@ -56,9 +59,12 @@ feature -- Access
 	context_position: INTEGER is
 			-- Context position;
 			-- (the position of the context node in the context node list)
+		require
+			context_position_set: is_context_position_set
 		do
-			todo ("context-position", False)
-			-- TODO
+			Result := current_iterator.index
+		ensure
+			strictly_positive_result: Result > 0
 		end
 
 	last: INTEGER is
@@ -73,14 +79,20 @@ feature -- Access
 			end
 		end
 
-feature -- Status setting
+feature -- Status report
 
-	set_local_variable (a_slot_number: INTEGER; a_value: XM_XPATH_VALUE) is
-			-- TODO
+	is_context_position_set: BOOLEAN is
+			-- Is the context position available?
 		do
-			todo ("set-local-variable", False)
+			Result := current_iterator /= Void
 		end
 
+	is_valid_local_variable (a_slot_number: INTEGER): BOOLEAN is
+			-- Is a_slot_number a valid local variable index?
+		do
+			Result := a_slot_number > 0 and then a_slot_number <= local_variable_frame.count - reserved_slot_count
+		end
+	
 feature -- Creation
 
 	new_context: XM_XPATH_CONTEXT is
@@ -94,10 +106,9 @@ feature -- Evaluation
 	evaluated_local_variable (a_slot_number: INTEGER): XM_XPATH_VALUE is
 			-- Value of a local variable, identified by its slot number
 		require
-			strictly_positive_slot_number: a_slot_number > 0
+			valid_local_variable: is_valid_local_variable (a_slot_number)
 		do
-			todo ("evaluated-local-variable", False)
-			-- TODO
+			Result := local_variable_frame.item (a_slot_number + reserved_slot_count)
 		end
 	
 feature 	-- Element change
@@ -108,6 +119,12 @@ feature 	-- Element change
 			current_iterator := an_iterator
 		ensure
 			set: current_iterator = an_iterator
+		end
+
+	set_local_variable (a_slot_number: INTEGER; a_value: XM_XPATH_VALUE) is
+			-- TODO
+		do
+			todo ("set-local-variable", False)
 		end
 
 feature {NONE} -- Implementation
@@ -138,6 +155,8 @@ feature {NONE} -- Implementation
 invariant
 
 	controller_not_void: controller /= Void
+	reserved_slots: reserved_slot_count >= 0
+	local_variables_frame: local_variable_frame /= Void and then local_variable_frame.count - reserved_slot_count >= 0
 
 end
 

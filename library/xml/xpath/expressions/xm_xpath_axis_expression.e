@@ -18,7 +18,7 @@ inherit
 		redefine
 			simplify, iterator, compute_intrinsic_dependencies, same_expression, compute_special_properties
 		end
-	
+
 	XM_XPATH_AXIS
 
 creation

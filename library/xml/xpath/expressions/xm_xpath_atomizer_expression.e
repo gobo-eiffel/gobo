@@ -68,34 +68,34 @@ feature -- Status report
 			base_expression.display (a_level + 1, a_pool)
 		end
 
-feature -- Optimization
+feature -- Optimization	
 
 	simplify: XM_XPATH_EXPRESSION is
-			-- Simplify `Current';
-			-- This default implementation does nothing.
+			-- Simplify (perform context-independent optimizations)
+		local
+			a_result_expression: XM_XPATH_ATOMIZER_EXPRESSION
 		do
-			-- TODO
-			todo ("simplify", False)
+			a_result_expression := clone (Current)
+			a_result_expression.set_base_expression (base_expression.simplify)
+			Result := a_result_expression
 		end
-
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
-			if base_expression.may_analyze then
-				base_expression.analyze (a_context)
-				if base_expression.is_error then
-					set_last_error (base_expression.last_error)
-				else
-					if base_expression.was_expression_replaced then
-						base_expression := base_expression.replacement_expression
-					end
-					if is_sub_type (base_expression.item_type, Atomic_type) then
-						was_expression_replaced := True
-						replacement_expression := base_expression
-					end
+			if base_expression.may_analyze then	base_expression.analyze (a_context) end
+			if base_expression.is_error then
+				set_last_error (base_expression.last_error)
+			else
+				if base_expression.was_expression_replaced then
+					base_expression := base_expression.replacement_expression
+				end
+				if is_sub_type (base_expression.item_type, Atomic_type) then
+					was_expression_replaced := True
+					replacement_expression := base_expression
 				end
 			end
+			set_analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -115,9 +115,26 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
+		local
+			a_mapped_item: XM_XPATH_MAPPED_ITEM
 		do
-			-- TODO
-			todo ("evaluate_item", False)
+				check
+					not_a_sequence: cardinality_allows_zero_or_one
+				end
+			base_expression.evaluate_item (a_context)
+			if base_expression.last_evaluated_item = Void then
+				last_evaluated_item := Void
+			else
+				a_mapped_item := map (base_expression.last_evaluated_item, a_context, Void)
+				if a_mapped_item = Void then
+					last_evaluated_item := Void
+				elseif a_mapped_item.is_sequence then
+					a_mapped_item.sequence.start
+					last_evaluated_item := a_mapped_item.sequence.item
+				else
+					last_evaluated_item := a_mapped_item.item
+				end
+			end
 		end
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
@@ -169,7 +186,7 @@ feature -- Element change
 			base_expression_set: base_expression = a_base_expression
 		end
 
-feature {NONE} -- Implementation
+feature {XM_XPATH_EXPRESSION} -- Restricted
 	
 	compute_cardinality is
 			-- Compute cardinality.

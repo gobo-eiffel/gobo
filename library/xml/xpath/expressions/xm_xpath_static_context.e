@@ -30,8 +30,6 @@ feature -- Access
 
 	last_bound_variable: XM_XPATH_VARIABLE_DECLARATION is
 			-- The last variable bound by `bind_variable'
-		require
-			bind_variable_suceeeded: was_last_variable_bound
 		do
 			Result := internal_last_bound_variable
 		ensure
@@ -83,23 +81,30 @@ feature -- Access
 			-- URI for a namespace prefix;
 			-- The default namespace is NOT used when the prefix is empty.
 		require
-			valid_prefix: 	an_xml_prefix /= Void and then is_ncname (an_xml_prefix) and then is_declared_prefix (an_xml_prefix)
+			valid_prefix: 	an_xml_prefix /= Void and then is_ncname (an_xml_prefix) and then is_prefix_declared (an_xml_prefix)
 		deferred
 		ensure
 			uri_not_void: Result /= Void
 		end
 
+	bound_variables_count: INTEGER
+			-- Number of variables bound in this context
+
 feature -- Status report
 
-	is_declared_prefix (an_xml_prefix: STRING): BOOLEAN is
+	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is
 			-- Is `an_xml_prefix' allocated to a namespace?
 		require
 			valid_prefix: an_xml_prefix /= Void and then is_ncname (an_xml_prefix)
 		deferred
 		end
 
-	was_last_variable_bound: BOOLEAN
-			-- Did last call to `bind_variable' succeed?
+	is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
+			-- Does `a_fingerprint' represent a variable declared in the static context?
+		require
+			positive_fingerprint: a_fingerprint >= 0
+		deferred
+		end
 
 	was_last_function_bound: BOOLEAN
 			-- Did last call to `bind_function' succeed?
@@ -136,9 +141,11 @@ feature -- Element change
 	
 	bind_variable (a_fingerprint: INTEGER) is
 			-- Bind variable to it's declaration.
+		require
+			variable_declared: is_variable_declared (a_fingerprint)
 		deferred
 		ensure
-			variable_bound: was_last_variable_bound implies last_bound_variable /= Void
+			variable_bound: last_bound_variable /= Void
 		end
 
 	bind_function (a_qname: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is

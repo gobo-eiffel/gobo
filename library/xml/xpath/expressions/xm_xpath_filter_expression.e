@@ -216,7 +216,10 @@ feature -- Optimization
 						
 						if a_value /= Void and then a_number = Void then
 							a_boolean_value := a_result_expression.filter.effective_boolean_value (Void)
-							if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
+							if a_boolean_value.is_item_in_error then
+								Result := a_result_expression
+								Result.set_last_error (a_boolean_value.last_error)
+							elseif  a_boolean_value.value then
 								Result := a_result_expression.base_expression
 							else
 								create {XM_XPATH_EMPTY_SEQUENCE} Result.make
@@ -459,7 +462,10 @@ feature -- Evaluation
 							-- Filter is a constant that we can treat as boolean
 
 							a_boolean_value := filter.effective_boolean_value (a_context)
-							if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
+							if a_boolean_value.is_item_in_error then
+								Result := Void
+								set_last_error (a_boolean_value.last_error)
+							elseif a_boolean_value.value then
 								Result := a_base_iterator
 							else
 								create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make

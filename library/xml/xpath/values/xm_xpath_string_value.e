@@ -15,6 +15,9 @@ class XM_XPATH_STRING_VALUE
 inherit
 
 	XM_XPATH_ATOMIC_VALUE
+		redefine
+			effective_boolean_value
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
 

@@ -89,11 +89,13 @@
 	<li>TINY_BUILDER throws exceptions to report errors. Re-design.</li>
 	<li>EXPRESSION.display should check the error status</li>
 	<li>Document procedures such as analyze, that cause side effects on the context.</li>
-	<li>Promotion in path and filter expressions commented out as it causes an infinite recursion inside let-action analyze</li>
-	<li>Need to test all returns from {XM_XPATH_EXPRESSION}.iterator for Void, or equivalently for a Dynamic or Type Error.</li>
+	<li>Promotion in path and filter expressions commented out as it causes an infinite recursion inside let-action analyze - this may now be fixed - try again.</li>
+	<li>
+	  <p><em>Change all returns from {XM_XPATH_EXPRESSION}.iterator of Void to an iterator in error. Test all such
+	  returns. Strengthen EXPRESSION, VALUE and node routines like ITEM, so they cannot be used when in the error state.</em></p>
+	</li>
 	<li>Review sequence iterators. Look at Saxon 7.9.1.</li>
-	<li>Break up large analyze routines into more manageable chunks.</li>
-	<li>Review assignment attempts</li>
+	<li>Break up large analyze (etc.) routines into more manageable chunks.</li>
 	<li>Make use of UT_URI for base URI etc.</li>
       </ul>
     </div>
@@ -102,7 +104,11 @@
       <p>This section should be ignored. It consists solely of my notes
       with which to form the comments for the next cvs check-in operation.</p>
       <pre>
-
+	Made setting string mode external to the library.
+	Added tests for errors XP0003, XP0004. XP0008, XP0017, XP0020
+	Completed ROLE_LOCATOR, APPEND_EXPRESSION, work on many others, including QUANTIFIED_EXPRESSION.
+	Fixes to expression parser.
+	Fix to LET_EXPRESSION.analyze..
       </pre>
     </div>
     <div >

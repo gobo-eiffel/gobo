@@ -51,10 +51,16 @@ feature -- Access
 
 feature -- Status report
 
-	is_declared_prefix (an_xml_prefix: STRING): BOOLEAN is
+	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is
 			-- Is `an_xml_prefix' allocated to a namespace?
 		do
-			todo ("is-declared-prefix", False)
+			todo ("is-prefix-declared", False)
+		end
+
+		is_variable_declared (a_fingerprint: INTEGER): BOOLEAN is
+			-- Does `a_fingerprint' represent a variable declared in the static context?
+		do
+			todo ("is-variable-declared", False)
 		end
 
 feature -- Element change

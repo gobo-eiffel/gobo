@@ -15,6 +15,9 @@ class XM_XPATH_BOOLEAN_VALUE
 inherit
 
 	XM_XPATH_ATOMIC_VALUE
+		redefine
+			effective_boolean_value
+		end
 
 creation
 

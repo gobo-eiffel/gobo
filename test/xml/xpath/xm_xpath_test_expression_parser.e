@@ -186,6 +186,23 @@ feature -- Test
 			assert ("Last function", a_last_function /= Void)
 		end
 
+	test_parse_error is
+			-- Test detection of parse errors
+		local
+			a_system_function_factory: XM_XPATH_SYSTEM_FUNCTION_FACTORY
+			a_context: XM_XPATH_STAND_ALONE_CONTEXT
+			a_string: STRING
+			an_expression: XM_XPATH_EXPRESSION
+		do
+			create a_system_function_factory
+			Function_factory.register_system_function_factory (a_system_function_factory)
+			a_string := "//fred[position()) = last()]"
+			create a_context.make (default_pool, True, False)
+			an_expression := Expression_factory.make_expression (a_string, a_context)
+			assert ("Parse failed", an_expression = Void)
+			assert ("Error text length", Expression_factory.error_value.error_message.count = 74)
+		end
+
 feature -- Setting
 
 	set_up is

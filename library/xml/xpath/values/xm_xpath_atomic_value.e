@@ -48,6 +48,12 @@ feature -- Comparison
 
 feature -- Status report
 
+	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
+		do
+			Result := True
+		end
+
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
 		require
@@ -63,6 +69,12 @@ feature -- Status report
 		end
 
 feature -- Evaluation
+
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value
+		do
+			create Result.make (True)
+		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
@@ -91,6 +103,12 @@ feature -- Conversion
 			required_type_is_atomic: is_atomic_type (a_required_type)
 			convertiable: is_convertible (a_required_type)
 		deferred
+		end
+
+	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+			-- Convert to an item
+		do
+			Result := Current
 		end
 
 end

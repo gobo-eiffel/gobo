@@ -15,6 +15,9 @@ class XM_XPATH_DOUBLE_VALUE
 inherit
 
 	XM_XPATH_NUMERIC_VALUE
+		redefine
+			effective_boolean_value
+		end
 
 creation
 

@@ -105,10 +105,13 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluated_binding (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	evaluate_variable (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate variable
 		do
-			 Result := a_context.evaluated_local_variable (slot_number)
+				check
+					valid_slot_number: a_context.is_valid_local_variable (slot_number)
+				end
+			last_evaluated_binding := a_context.evaluated_local_variable (slot_number)
 		end
 
 feature -- Element change
@@ -157,6 +160,16 @@ feature -- Element change
 		ensure
 			declaration_void: declaration = Void
 			analyzed: analyzed
+		end
+
+	set_slot_number (a_slot_number: INTEGER) is
+			-- Set `slot_number.
+		require
+			strictly_positive_slot_number: a_slot_number > 0
+		do
+			slot_number := a_slot_number
+		ensure
+			slot_number_set: slot_number = a_slot_number
 		end
 
 feature {XM_XPATH_ASSIGNATION} -- Local

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NUMERIC_VALUE
 		redefine
-			three_way_comparison
+			three_way_comparison, effective_boolean_value
 		end
 
 creation

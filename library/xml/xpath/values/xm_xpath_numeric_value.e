@@ -31,9 +31,18 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
+		local
+			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
-			-- TODO - awaiting final decision on numeric structure
-			todo ("same-expression" ,False)
+			a_numeric_value ?= other
+			if a_numeric_value = Void then
+				Result := False
+			else
+				Result := as_double.is_equal (a_numeric_value.as_double)
+				-- TODO is this comparison good enough - i.e. is 1.5 / 2 = 4.5 / 6 ?
+				-- TODO check to see if both are integers or bothe decimals
+				todo ("same-expression", True)
+			end
 		end
 
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is

@@ -125,6 +125,7 @@ feature -- Optimization
 					-- Now set the static type of the binding reference, more accurately:
 					
 					declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
+					set_declaration_void -- also sets `analyzed' to `True'
 
 					if	action.may_analyze then
 						action.analyze (a_context)
@@ -135,7 +136,6 @@ feature -- Optimization
 					end
 				end
 			end
-			set_declaration_void -- also sets `analyzed' to `True'
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -190,7 +190,7 @@ feature -- Evaluation
 		do
 			sequence.lazily_evaluate (a_context)
 			a_value := last_evaluation
-			a_context.set_local_variable (slot_number, a_value)
+			--a_context.set_local_variable (slot_number, a_value)
 			action.evaluate_item (a_context)
 		end
 
@@ -202,7 +202,7 @@ feature -- Evaluation
 			sequence.lazily_evaluate (a_context)
 			a_value ?= sequence.last_evaluation
 			
-			a_context.set_local_variable (slot_number, a_value)
+			--a_context.set_local_variable (slot_number, a_value)
 			Result := action.iterator (a_context)
 			end
 

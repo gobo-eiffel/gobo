@@ -214,8 +214,9 @@ feature -- Evaluation
 			-- it should not be called if the expression may return a sequence. There is no guarantee that
 			-- this condition will be detected.
 		require
-			context_not_void: a_context /= Void
-			analyzed_without_errors: analyzed and then not is_error
+			context_may_be_void: True
+			expression_not_in_error: not is_error
+			-- can't be enforced, because of ITEM_CHECKER analyzed_without_errors: analyzed and then not is_error
 		deferred
 		ensure
 			item_evaluated_but_may_be_void: True
@@ -231,7 +232,8 @@ feature -- Evaluation
 		require
 			-- TODO - check the above and turn it into pre-conditions.if possible
 			context_not_void: a_context /= Void
-			analyzed_without_errors: analyzed and then not is_error
+			expression_not_in_error: not is_error
+			-- analyzed_without_errors: analyzed and then not is_error
 		deferred
 		ensure
 			string_not_void_but_may_be_in_error: last_evaluated_string /= Void
@@ -250,7 +252,8 @@ feature -- Evaluation
 	eagerly_evaluate (a_context: XM_XPATH_CONTEXT) is
 			-- Eager evaluation of `Current'		
 		require
-			analyzed_without_errors: analyzed and then not is_error
+			expression_not_in_error: not is_error
+			--analyzed_without_errors: analyzed and then not is_error
 		local
 			a_length: INTEGER
 			an_item: XM_XPATH_ITEM
@@ -306,7 +309,8 @@ feature -- Evaluation
 			-- This will set a value, which may optionally be an XM_XPATH_CLOSURE,
 			--  which is a wrapper around an iterator over the value of the expression.
 		require
-			analyzed_without_errors: analyzed and then not is_error
+			expression_not_in_error: not is_error
+			--			analyzed_without_errors: analyzed and then not is_error
 		local
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 		do

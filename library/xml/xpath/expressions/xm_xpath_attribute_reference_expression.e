@@ -49,7 +49,9 @@ feature -- Access
 			an_element: XM_XPATH_ELEMENT
 		do
 			an_element := find_element_node (a_context)
-			Result := find_attribute_node (an_element)
+			if an_element /= Void then
+				Result := find_attribute_node (an_element)
+			end
 		end
 
 	fingerprint: INTEGER

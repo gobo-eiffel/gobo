@@ -229,7 +229,7 @@ feature -- Access
 			s: INTEGER
 		do
 			s := super_type (a_type)
-			if s = Atomic_type then
+			if s = Atomic_type or else s = a_type then
 				Result := a_type
 			else
 				Result := primitive_type (s)
@@ -718,7 +718,11 @@ feature {NONE} -- Implementation
 		require
 			valid_sub_type: is_valid_type (a_sub_type)
 		do
-			Result := hierarchy.item (a_sub_type)
+			if not hierarchy.has (a_sub_type) then
+				Result := a_sub_type
+			else
+				Result := hierarchy.item (a_sub_type)
+			end
 		ensure
 			in_range: is_valid_type (Result)
 		end

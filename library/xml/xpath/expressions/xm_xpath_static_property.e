@@ -203,8 +203,7 @@ feature -- Cardinality
 
 	cardinality_allows_zero_or_one: BOOLEAN is
 		do
-			Result := cardinality_allows_one
-				and then cardinality_allows_zero
+			Result := (cardinality_allows_one or else cardinality_allows_zero)
 				and then not cardinality_allows_many
 		end
 

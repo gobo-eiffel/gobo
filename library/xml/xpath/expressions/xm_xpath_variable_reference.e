@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			may_analyze, same_expression
+			may_analyze, same_expression, promote, iterator, evaluate_item
 		end
 
 	XM_XPATH_BINDING_REFERENCE
@@ -69,16 +69,25 @@ feature -- Comparison
 			-- Are `Current' and `other' the same expression?
 			-- (Note, we only compare expressions that
 			--  have the same static and dynamic context).
+			-- I'm not entirely happy with this, as if
+			--  binding is `Void', then we cannot know
+			--  if the two references are to the same
+			--  binding or not.
+			-- But it is necessary to return `Trure' to avoid
+			--  {DS_ARRAYED_LIST}.put from failing it's post-condition.
 		local
 			other_reference: XM_XPATH_VARIABLE_REFERENCE
 		do
 			other_reference ?= other
-			if other_reference /= Void and then binding.is_equal (other_reference.binding) then
-				Result := binding /= Void
+			if other_reference /= Void then 
+				Result := binding = other_reference.binding
 			end
 		end
 
 feature -- Status report
+
+	last_evaluated_binding: XM_XPATH_VALUE
+			-- Value from calling evaluated_binding
 
 	may_analyze: BOOLEAN is
 			-- OK to call `analyze'?
@@ -112,7 +121,7 @@ feature -- Status report
 
 feature -- Optimization
 
-		analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions;		
 		do
 			if constant_value /= Void then
@@ -120,6 +129,51 @@ feature -- Optimization
 				was_expression_replaced := True
 			end
 			set_analyzed
+		end
+
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+			-- Offer promotion for this subexpression
+		local
+			a_result_expression: XM_XPATH_FILTER_EXPRESSION
+		do
+			if an_offer.action = Inline_variable_references then
+				a_result_expression ?= an_offer.accept (Current)
+				if a_result_expression /= Void then
+					Result := a_result_expression
+				else
+					Result := Current
+				end
+			else
+				Result := Current
+			end
+		end
+
+feature -- Evaluation
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterate over the values of a sequence
+		do
+			evaluate_variable (a_context)
+			Result := last_evaluated_binding.iterator (a_context)
+		end
+
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate `Current' as a single item
+		do
+			evaluate_variable (a_context)
+				check
+					is_convertible_to_item: last_evaluated_binding.is_convertible_to_item (a_context)
+				end
+				last_evaluated_item := last_evaluated_binding.as_item (a_context)
+		end
+
+	evaluate_variable (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate variable
+		require
+			binding_not_void: binding /= Void
+		do
+			binding.evaluate_variable (a_context)
+			last_evaluated_binding := binding.last_evaluated_binding
 		end
 
 feature -- Element change

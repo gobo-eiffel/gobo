@@ -20,6 +20,8 @@ inherit
 	XM_XPATH_BINARY_EXPRESSION
 		rename
 			make as make_binary_expression
+		redefine
+			analyze, evaluate_item, effective_boolean_value, display_operator
 		end
 
 	XM_XPATH_COMPARISON_ROUTINES
@@ -50,14 +52,67 @@ feature -- Access
 		item_type: INTEGER is
 			--Determine the data type of the expression, if possible
 		do
-			todo ("item-type", False)
-			-- TODO
+			Result := Boolean_type
 		end
 
+feature -- Optimization	
+
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static analysis of an expression and its subexpressions
+		do
+			is_backwards_compatible_mode := a_context.is_backwards_compatible_mode
+			Precursor (a_context)
+		end
+
+feature -- Evaluation
+
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value
+		local
+			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
+			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
+		do
+			first_operand.evaluate_item (a_context)
+			an_atomic_value ?= last_evaluated_item
+			if an_atomic_value = Void then
+				create Result.make (False)
+			else
+				second_operand.evaluate_item (a_context)
+				another_atomic_value ?= last_evaluated_item
+				if another_atomic_value = Void then
+					create Result.make (False)
+				else
+					create a_comparison_checker
+					a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_value_operator (operator), atomic_comparer, another_atomic_value, is_backwards_compatible_mode)
+					if a_comparison_checker.is_comparison_type_error then
+						set_last_error (a_comparison_checker.last_type_error)
+						create Result.make (False)
+					else
+						create Result.make (a_comparison_checker.last_check_result)
+					end
+				end
+			end
+		end
+
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate `Current' as a single item
+		do
+			last_evaluated_item := effective_boolean_value (a_context)
+		end
+	
 feature {NONE} -- Implementation
 
 	atomic_comparer: XM_XPATH_ATOMIC_COMPARER
 			-- Comparer for atomic values
 
+	is_backwards_compatible_mode: BOOLEAN
+			-- Are we running in XPath 1.0 backwards-compatible mode?
+
+	display_operator: STRING is
+			-- Format `operator' for display
+		do
+			Result := STRING_.appended_string ("singleton ", Precursor)
+		end
+	
 end
 	

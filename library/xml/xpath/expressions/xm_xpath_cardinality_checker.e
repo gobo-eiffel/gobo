@@ -161,30 +161,60 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_stopper: XM_XPATH_OBJECT_VALUE
 		do
 			an_iterator := sequence.iterator (a_context)
-			an_iterator.start
-			if an_iterator.after then
+			if not sequence.is_error then
 				if not is_cardinality_allows_zero (required_cardinality) then
-					Result := Void
-					set_last_error_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ", role_locator.message), 6, Type_error)
-				end
-			end
-			if not is_error then
-				if not is_cardinality_allows_zero (required_cardinality) then
-					todo ("iterator", True)
-					-- TODO need mapping iterator for this
+
+					-- To check for an empty sequence, we add a special item to the base
+					-- iteration, to ensure that the mapping function gets called at least
+					-- once. This item will cause an error if it is the first in the sequence,
+					-- and will be ignored otherwise.
+			
+					create a_stopper.make (Current)
+					create {XM_XPATH_APPEND_ITERATOR} an_iterator.make (an_iterator, a_stopper, a_context)
+
+					create {XM_XPATH_MAPPING_ITERATOR} Result.make (an_iterator, Current, Void, an_iterator)
 				else
-					Result := an_iterator
+					set_last_error (sequence.last_error)
+					Result := an_iterator 
 				end
 			end
 		end
 
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
 			-- Map `an_item' to a sequence
+		local
+			an_append_iterator: XM_XPATH_APPEND_ITERATOR
+			a_stopper: XM_XPATH_OBJECT_VALUE
+			a_position: INTEGER
 		do
-			-- TODO
-			todo ("map", False)
+				check
+					information_object_not_void: an_information_object /= Void
+				end
+			an_append_iterator ?= an_information_object
+				check
+					append_iterator_not_void: an_append_iterator /= Void
+				end
+			a_position := an_append_iterator.index
+			a_stopper ?= an_item
+			if a_stopper /= Void then
+				if a_position = 1 then
+					set_last_error_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ", role_locator.message), 6, Type_error)
+				end
+
+				-- We don't include the stopper in the result
+				
+					Result := Void
+			else -- no stopper
+				if a_position = 2 and then not cardinality_allows_many then
+					Result := Void
+					set_last_error_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ", role_locator.message), 6, Type_error)
+				else
+					create Result.make_item (an_item)
+				end
+			end
 		end
 
 feature {XM_XPATH_CARDINALITY_CHECKER} -- Local

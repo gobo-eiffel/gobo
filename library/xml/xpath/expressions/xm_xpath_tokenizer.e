@@ -97,10 +97,10 @@ feature -- Access
 			an_index: INTEGER
 			s: STRING
 		do
-			if input_index < input.count then
+			if input_index > input.count then
 				an_index := input.count
 			else
-				an_index := input_index - 1
+				an_index := input_index
 			end
 
 			if an_index < 34 then
@@ -292,23 +292,28 @@ feature --Element change
 							end
 							
 						when Dollar_token then
-							if current_token_value = "for" then
+							debug ("XPath tokens")
+								std.error.put_string ("Next token is dollar_token, current_token value is ")
+								std.error.put_string (current_token_value)
+								std.error.put_new_line
+							end
+							if STRING_.same_string (current_token_value, "for") then
 								current_token := For_token
-							elseif current_token_value = "some" then
+							elseif STRING_.same_string (current_token_value, "some") then
 								current_token := Some_token
-							elseif current_token_value = "every" then
+							elseif STRING_.same_string (current_token_value, "every") then
 								current_token := Every_token
-							elseif current_token_value = "let" then
+							elseif STRING_.same_string (current_token_value, "let") then
 								current_token := Let_token
 							end
 
 						when Name_token then
 							candidate := -1
-							if current_token_value = "element" then
+							if STRING_.same_string (current_token_value, "element") then
 								candidate := Element_qname_token
-							elseif current_token_value = "attribute" then
+							elseif STRING_.same_string (current_token_value, "attribute") then
 								candidate := Attribute_qname_token
-							elseif current_token_value = "pi" then
+							elseif STRING_.same_string (current_token_value, "pi") then
 								candidate := Pi_qname_token
 							end
 

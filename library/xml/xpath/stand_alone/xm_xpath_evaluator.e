@@ -16,15 +16,17 @@ inherit
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 
+	XM_XPATH_SHARED_FUNCTION_FACTORY
+	
 	-- TODO: need to add a white-space stripper
 
 feature -- Access
 
-	static_context: XM_XPATH_STATIC_CONTEXT
+	static_context: XM_XPATH_STAND_ALONE_CONTEXT
 			-- Static context
 
-	context_node: XM_XPATH_NODE
-			-- Initial context node
+	context_item: XM_XPATH_ITEM
+			-- Initial context item, normally a node
 
 	evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			-- Results from `evaluate'
@@ -59,12 +61,14 @@ feature -- Status report
 
 feature -- Element change
 	
-	build_static_context (a_source_uri: STRING; warnings, xpath_one_compatibility: BOOLEAN) is
+	build_static_context (a_source_uri: STRING; xpath_one_compatibility, warnings: BOOLEAN) is
 			-- Create a new static_context by parsing `a_source_uri'
 		require
 			valid_uri: a_source_uri /= Void -- and then ... for now - is a relative file uri - TODO
+			warnings: warnings implies xpath_one_compatibility
 		local
 			input_stream: KL_TEXT_INPUT_FILE
+			a_context_node: XM_XPATH_NODE
 		do
 			create input_stream.make (a_source_uri)
 			input_stream.open_read
@@ -75,8 +79,13 @@ feature -- Element change
 					was_build_error := True
 					internal_error_message := tree_pipe.error.last_error
 				else
-					context_node := tree_pipe.document
-					document := context_node.document_root
+					context_item := tree_pipe.document
+					a_context_node ?= context_item
+						check
+							context_item_is_node: a_context_node /= Void
+							-- because tree_pipe.document is a document node
+						end
+					document := a_context_node.document_root
 					create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (document.name_pool, warnings, xpath_one_compatibility)
 				end
 			else
@@ -84,10 +93,10 @@ feature -- Element change
 				internal_error_message := "Failed to open input source"
 			end
 		ensure
-			built: not was_build_error implies static_context /= Void and then document /= Void and then context_node /= Void
+			built: not was_build_error implies static_context /= Void and then document /= Void and then context_item /= Void
 		end
 
-	set_static_context (a_static_context: XM_XPATH_STATIC_CONTEXT) is
+	set_static_context (a_static_context: XM_XPATH_STAND_ALONE_CONTEXT) is
 			-- Set the static context for compiling XPath expressions.
 			-- This provides control over the environment in which the expression is compiled.
 			-- For example it allows namespace prefixes to be declared,
@@ -102,22 +111,34 @@ feature -- Element change
 			static_context_set: static_context = a_static_context
 		end
 
-	-- TODO: set_context_node
+	set_context_item (an_item: XM_XPATH_ITEM) is
+			-- Set the context item.
+		require
+			item_not_void: an_item /= void
+		do
+			context_item := an_item
+		ensure
+			context_item_set: context_item = an_item
+		end
 
 feature -- Evaluation
 
 	evaluate (an_expression_text: STRING) is
-			-- Evaluate `an_expression' against `context_node'.
+			-- Evaluate `an_expression' against `context_item'.
 		require
 			expression_not_void: an_expression_text /= Void
 			static_context_not_void: static_context /= Void
-			context_node_not_void: context_node /= Void
+			context_item_not_void: context_item /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			a_controller: XM_XPATH_CONTROLLER
 			a_context: XM_XPATH_CONTEXT
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_system_function_factory: XM_XPATH_SYSTEM_FUNCTION_FACTORY
+			an_item: XM_XPATH_ITEM
 		do
+			create a_system_function_factory
+			Function_factory.register_system_function_factory (a_system_function_factory)
 			an_expression := Expression_factory.make_expression (an_expression_text, static_context)
 			if an_expression = Void then
 				is_evaluation_in_error := True
@@ -130,11 +151,11 @@ feature -- Evaluation
 				else
 					if an_expression.was_expression_replaced then an_expression := an_expression.replacement_expression end
 					if not an_expression.is_error then
-						create a_controller.make (context_node)
+						create a_controller.make (context_item, static_context)
 						a_context := a_controller.new_xpath_context
 						a_context.set_current_iterator (a_controller.current_iterator)
 							check
-								context_set: a_context.context_item /= Void
+								context_set: a_context.context_item = context_item
 							end
 						debug ("XPath evaluator")
 							an_expression.display (1, static_context.name_pool)
@@ -159,8 +180,14 @@ feature -- Evaluation
 										item_not_void: a_sequence_iterator.item /= Void
 										-- Because start ensures not before and until clause ensures not after
 									end
-								evaluated_items.put_last (a_sequence_iterator.item)
-								-- TODO - what about error?
+								an_item := a_sequence_iterator.item
+								if an_item.is_item_in_error then
+									is_evaluation_in_error := True
+									internal_error_value := an_item.evaluation_error_value
+								else
+									evaluated_items.put_last (an_item)
+								end
+
 								a_sequence_iterator.forth
 							end
 						end
@@ -192,7 +219,6 @@ feature {NONE} -- Implementation
 			create tree_pipe.make
 			parser.set_callbacks (tree_pipe.start)
 			parser.set_dtd_callbacks (tree_pipe.emitter)
-			parser.set_string_mode_mixed -- do we want to make this a parameter?
 		end
 
 	internal_error_message: STRING

@@ -92,14 +92,14 @@ feature {NONE} -- Implementation
 			create a_role_locator.make (Function_role, name, argument_number)
 			an_argument := a_type_checker.static_type_check (arguments.item (argument_number), required_type (argument_number), a_context.is_backwards_compatible_mode, a_role_locator)
 			if a_type_checker.is_static_type_check_error then
-				set_last_error_from_string (a_type_checker.static_type_check_error_message, 17, Type_error)
+				set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 			else
 					check
 						argument_not_void: an_argument /= Void
 					end
 				an_argument := an_argument.simplify
 				if an_argument.is_error then
-					set_last_error_from_string (an_argument.last_error.error_message, 17, Type_error)
+					set_last_error_from_string (an_argument.last_error.error_message, 4, Type_error)
 				else
 					arguments.replace (an_argument, argument_number)
 				end

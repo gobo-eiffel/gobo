@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			counter, another_counter: INTEGER
 			a_value: like value
 		do
+			make_value
 			create a_value.make (1, Estimated_item_count)
 			from
 				counter := 1
@@ -145,9 +146,50 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
+		local
+			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
+			counter: INTEGER
+			an_item: XM_XPATH_ITEM
+			a_node, another_node: XM_XPATH_NODE
+			a_value, another_value: XM_XPATH_ATOMIC_VALUE
 		do
-			-- TODO
-			todo ("same-expression" ,False)
+			a_sequence_extent ?= other
+			if a_sequence_extent /= Void then
+				if count = a_sequence_extent.count then
+					from
+						Result := True
+						counter := 1
+					variant
+						count + 1 - counter
+					until
+						Result = False or else counter > count
+					loop
+						an_item := item_at (counter)
+						a_node ?= an_item
+						if a_node /= Void then
+							another_node ?= a_sequence_extent.item_at (counter)
+							if another_node = Void then
+								Result := False
+							else
+								Result := a_node.is_same_node (another_node)
+							end
+						else
+							a_value ?= an_item
+								check
+									item_is_atomic_value: a_value /= Void
+								end
+							another_value ?= a_sequence_extent.item_at (counter)
+							if another_value = Void then
+								Result := False
+							else
+								Result := a_value.same_expression (another_value)
+							end
+						end
+
+						counter := counter + 1
+					end
+				end
+			end
 		end
 
 feature -- Evaluation
