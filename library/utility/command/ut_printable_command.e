@@ -20,9 +20,7 @@ inherit
 			out
 		end
 
-	KL_FILE_ROUTINES
-		export
-			{NONE} all
+	KL_SHARED_OUTPUT_STREAM_ROUTINES
 		redefine
 			out
 		end
@@ -45,19 +43,19 @@ feature {NONE} -- Initialization
 
 feature -- Print
 
-	print_to_file (a_file: like FILE_type) is
+	print_to_file (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print current command textual representation
 			-- (i.e. `out') to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
+			a_file_open_write: output_stream_.is_open_write (a_file)
 		do
 			a_file.put_string (out)
 		end
 
 feature -- Execution
 
-	execute (a_file: like FILE_type) is
+	execute (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Execute current command.
 		do
 			print_to_file (a_file)
@@ -68,10 +66,12 @@ feature -- Status report
 	executable (arg: ANY): BOOLEAN is
 			-- Can current command be executed with `arg'?
 		local
-			a_file: like FILE_type
+			--a_file: like FILE_type
+			--a_file: FILE
 		do
-			a_file ?= arg
-			Result := a_file /= Void and then a_file.is_open_read
+			--a_file ?= arg
+			--Result := a_file /= Void and then a_file.is_open_read
+			Result := True
 		end
 
 feature -- Access
