@@ -39,9 +39,27 @@
 				</listitem>
 			</varlistentry>
 			<varlistentry>
+				<term>exit_code_variable</term>
+				<listitem>
+					<para><emphasis>Description: </emphasis>Name of variable holding the process's return code after it's run
+						NOTE: This attribute can only be used when no fileset is used as nested argument
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Intgeger (usually 0 for OK, and any other number for not OK)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>`Void' (no variable is set if attribute is not specified)</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
 				<term>accept_errors</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>Should executable return codes different from zero be accepted?</para>
+					<para><emphasis>Description: </emphasis>Should executable return codes different from zero be accepted?
+						NOTE: Use this attribute only if a nested fileset is specified. Usage without one is still supported
+						but obsolete. Use attribute 'exit_code_variable' instead and set it to a dummy value if you are not
+						interested in the return code.
+					</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Domain: </emphasis>true|false</para>
@@ -170,6 +188,29 @@
   </exec>
 ]]>
 	</programlisting>
+	
+	</sect1>
+
+	<sect1 id="exec_with_fileset">
+		<title>Using exec with return codes</title>
+		<para>
+			It is possible to catch the return code of a called process and continue
+			the build process. This way it is possible to check the value of the return code
+			and decide for each specific situation if the build process should be terminated or
+			not:
+		</para>
+		<programlisting><![CDATA[
+  <exec executable="..." exit_code_variable="return_code"/>
+  <echo message="return_code: ${return_code}"/>
+  <echo message="run OK" if="${return_code}=0"/>
+  <echo message="run not OK" unless="${return_code}=0"/>
+  <exit code="1" unless="${return_code}=0"/>
+
+]]>
+		</programlisting>
+
+	<para>
+	</para>
 	
 	</sect1>
 
