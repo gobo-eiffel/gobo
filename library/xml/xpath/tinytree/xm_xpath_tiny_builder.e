@@ -47,7 +47,6 @@ feature -- Document
 			else
 				create document.make_with_defaults
 			end
-			current_element := Void
 			current_depth := 0
 			unused_node_number := document.add_node (document.Document_node, 0, 0, 0, 0)
 				check
@@ -149,9 +148,6 @@ feature {NONE} -- Implementation
 	defaults_overridden: BOOLEAN
 			-- `True' only if `set_defaults' has been called more recently than `reset_defaults'
 	
-	current_element: XM_XPATH_TINY_ELEMENT
-			-- Current element
-
 	current_depth: INTEGER
 			-- Depth within the tree;
 			-- The document node is level 0;
