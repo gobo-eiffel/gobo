@@ -290,9 +290,8 @@ feature {NONE} -- Output
 					from i := 1 until i > nb loop
 						a_child := a_cluster_list.item (i)
 						if a_child.parent = a_cluster and a_child.pathname = Void then
-								-- (Note that the parent from `a_child'
-								-- can be different from `a_cluster'
-								-- if it has been mounted.)
+								-- (Note that the parent from `a_child' can be different
+								-- from `a_cluster' if it has been mounted.)
 							needed := True
 							i := nb + 1 -- Jump out of the loop.
 						else
@@ -305,13 +304,14 @@ feature {NONE} -- Output
 				print_indentation (1, a_file)
 				a_file.put_string (a_cluster.full_name ('_'))
 				a_parent := a_cluster.parent
-				if a_parent /= Void then
+					-- TODO: Note: there is a bug in ISE 5.1 with the
+					-- $ notation in the nested cluster. But using full
+					-- pathname instead does not work when it starts with
+					-- an environment variable.
+				if a_parent /= Void and a_cluster.pathname = Void then
 					a_file.put_string (" (")
 					a_file.put_string (a_parent.full_name ('_'))
-						-- TODO: Note: there is a bug in ISE 5.1 with the
-						-- $ notation. Use full pathname instead.
-					-- if a_cluster.pathname = Void then
-					if False then
+					if a_cluster.pathname = Void then
 						a_file.put_string ("): %"$/")
 						a_file.put_string (a_cluster.name)
 					else
