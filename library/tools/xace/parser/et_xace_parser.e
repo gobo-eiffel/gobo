@@ -73,7 +73,6 @@ feature -- Parsing
 			a_root_name: UC_STRING
 			a_system: ET_XACE_UNIVERSE
 			a_cluster: ET_XACE_CLUSTER
-			a_clusters: ET_XACE_CLUSTERS
 		do
 			if xml_parser /= Void then
 				xml_parser.parse_from_stream (a_file)
