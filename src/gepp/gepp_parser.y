@@ -16,7 +16,7 @@ inherit
 
 	YY_PARSER_SKELETON [ANY]
 		rename
-			reset as reset_parser_skeleton
+			make as make_parser_skeleton
 		end
 
 	GEPP_SCANNER
@@ -141,19 +141,12 @@ feature {NONE} -- Initialization
 			!! defined_values.make (10)
 		end
 
-	make_parser_skeleton is
-			-- Create a new parser skeleton.
-		do
-			reset_parser_skeleton
-		end
-
 feature -- Initialization
 
 	reset is
 			-- Reset parser before parsing next input.
 		do
 			reset_gepp_scanner
-			reset_parser_skeleton
 			if_level := 0
 			ignored_level := 0
 			defined_values.wipe_out
@@ -246,15 +239,6 @@ feature {NONE} -- Implementation
 			-- Level of #ifdef or #ifndef which specified
 			-- that subsequent lines should be ignored;
 			-- 0 if lines should not be ignored
-
-feature {NONE} -- Implementation
-
-	clear_input is
-			-- Set current input to undefined value.
-		do
-			last_token := Token_undefined
-			last_value := void_value
-		end
 
 invariant
 
