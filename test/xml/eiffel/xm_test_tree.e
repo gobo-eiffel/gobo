@@ -220,11 +220,28 @@ feature {NONE} -- Walk assertions
 		require
 			a_named_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
+		local
+			an_attribute: XM_ATTRIBUTE
 		do
 			node.process (typer)
 			assert ("attribute expected", typer.is_attribute)
-			assert_equal ("attribute name", a_name, typer.attribute.name)
-			assert_equal ("attribute value", a_value, typer.attribute.value)
+			an_attribute := typer.attribute
+			assert_equal ("attribute name", a_name, an_attribute.name)
+			assert_equal ("attribute value", a_value, an_attribute.value)
+			
+			assert_attribute_element (an_attribute)
+		end
+		
+	assert_attribute_element (an_attribute: XM_ATTRIBUTE) is
+			-- Checks on attributes parent element.
+		do
+			an_attribute.parent.process (typer)
+			assert ("parent element", typer.is_element)
+			if an_attribute.namespace.is_default_namespace then
+				assert ("unprefixed by name", typer.element.has_attribute_by_name (an_attribute.name))
+			else
+				assert ("prefixed not by name", not typer.element.has_attribute_by_name (an_attribute.name))
+			end
 		end
 		
 	assert_ns_attribute (a_ns: STRING; a_name: STRING; a_value: STRING) is
