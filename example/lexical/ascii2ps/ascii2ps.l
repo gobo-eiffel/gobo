@@ -50,7 +50,6 @@ creation
 					output (") printword%N")
 				}
 
-
 %%
 
 feature {NONE} -- Initialization

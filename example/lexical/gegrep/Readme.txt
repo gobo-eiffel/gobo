@@ -23,7 +23,7 @@ To compile this example:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
+   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
    to launch the compilation:
    
        geant compile_<compiler>
@@ -51,4 +51,4 @@ When several filenames are given as argument, the matched lines are
 prefixed by their enclosing filename, just as 'grep' does.
 
 --
-Copyright (c) 1997-2001, Eric Bezault and others
+Copyright (c) 1997-2005, Eric Bezault and others

@@ -11,7 +11,7 @@ To compile this example:
 
 2. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
+   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
    to launch the compilation:
    
        geant compile_<compiler>
@@ -49,9 +49,11 @@ To compile this example:
 Note: The options '-d' and '-t' are typically used to provide
 the current date and time. It would have been more user-friendly
 for user of 'ascii2ps' if the date and time were internally computed
-by the program. However there is no portable Date and Time Eiffel
+by the program. However there was no portable Date and Time Eiffel
 library available at the time of writing and the solution adopted
-was deemed satisfactory for the purpose of this example. 
+was deemed satisfactory for the purpose of this example. Now that
+we have the Gobo Eiffel Time Library it would be a good exercise
+to use it here.
 
 --
-Copyright (c) 1997-2001, Eric Bezault and others
+Copyright (c) 1997-2005, Eric Bezault and others

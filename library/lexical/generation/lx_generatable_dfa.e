@@ -26,10 +26,7 @@ inherit
 		end
 
 	UT_CHARACTER_CODES
-		export
-			-- TODO: Bug in SE -0.81: Unable to load class NONE!
-			-- {NONE} all
-		end
+		export {NONE} all end
 
 	KL_IMPORTED_INTEGER_ROUTINES
 

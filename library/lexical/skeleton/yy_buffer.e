@@ -73,10 +73,11 @@ feature -- Access
 	name: STRING is
 			-- Name of buffer
 		do
-				-- TODO: this routine should be a once-function but
-				-- there is a bug in SE -0.74b22 in the generated C
-				-- code of the postcondition "name_not_void" in the
-				-- redefined routine YY_FILE_BUFFER.name.
+				-- Note: this routine should be a once-function but
+				-- there is a bug in SE -0.74b22 (and still in SE 1.0)
+				-- in the generated C code of the postcondition
+				-- "name_not_void" in the redefined routine
+				-- YY_FILE_BUFFER.name.
 			Result := Name_constant
 		ensure
 			name_not_void: Result /= Void

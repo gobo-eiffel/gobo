@@ -9,7 +9,8 @@ up of a number 'nb' followed by a filename. It creates a scanner and scans
 
 Note: This Eiffel scanner is just a simple example. It is not intended
 to be perfect or to follow any Eiffel syntax standard. Moreover, it does
-not generate any output.
+not generate any output. A full-fledged Eiffel scanner is provided in
+the Gobo Eiffel Tools Library in $Gobo/library/tools/eiffel/parser/.
 
 To compile this example:
 
@@ -18,11 +19,11 @@ To compile this example:
 
 2. Choose either `execute' or `benchmark' as the creation procedure of
    the root class EIFFEL_SCANNER in your Ace file (ISE Eiffel: ise.ace,
-   SmartEiffel: se.ace) or your ESD file (Visual Eiffel: ve.esd).
+   SmartEiffel: se.ace) or your Xace file (Visual Eiffel: ve.xace).
 
 3. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, SmartEiffel: se.ace) or
-   ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
+   Xace file (Visual Eiffel: ve.xace). Alternatively you can use 'geant'
    to launch the compilation:
    
        geant compile_<compiler>
@@ -41,4 +42,4 @@ To compile this example:
    filenames containing Eiffel classes and `nb' is an integer.
 
 --
-Copyright (c) 1997-2001, Eric Bezault and others
+Copyright (c) 1997-2005, Eric Bezault and others
