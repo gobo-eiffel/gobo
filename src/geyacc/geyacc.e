@@ -233,7 +233,7 @@ feature {NONE} -- Error handling
 		end
 
 	Usage_message: UT_USAGE_MESSAGE is
-			-- Gelex usage message
+			-- Geyacc usage message
 		once
 			!! Result.make ("[-hxV?][-t classname][-v filename][-o filename] filename")
 		ensure
