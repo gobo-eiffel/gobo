@@ -4,7 +4,7 @@
 <system name="rx_test">
 	<description>
 		system: "Regexp test"
-		copyright: "Copyright (c) 2002, Harald Erdbrügger and others"
+		copyright: "Copyright (c) 2002, Harald Erdbruegger and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -13,23 +13,17 @@
 	<root class="RX_TEST" creation="make"/>
 	<cluster>
 		<option unless="${DEBUG}">
-			<require enable="true"/>
-			<ensure enable="true"/>
-			<invariant enable="true"/>
-			<loop enable="true"/>
-			<check enable="true"/>
-			<optimize enable="true"/>
+			<option name="assertion" value="none"/>
+			<option name="garbage_collector" value="none"/>
+			<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
 		</option>
 		<option if="${DEBUG}">
-			<require enable="true"/>
-			<ensure enable="true"/>
-			<invariant enable="true"/>
-			<loop enable="true"/>
-			<check enable="true"/>
-			<optimize enable="false"/>
+			<option name="assertion" value="all"/>
+			<option name="garbage_collector" value="none"/>
+			<option name="finalize" value="false"/>
 		</option>
 
-    <cluster name="regexp_test" location="${GOBO}/test/regexp"/>
+		<cluster name="regexp_test" location="${GOBO}/test/regexp"/>
 
 		<mount location="${GOBO}/library/regexp/cluster.xace"/>
 		<mount location="${GOBO}/library/kernel/cluster.xace"/>

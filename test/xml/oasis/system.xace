@@ -1,21 +1,25 @@
+<?xml version="1.0"?>
+
 <system name="xmloasis">
+	<description>
+		system: "Gobo Eiffel XML Library Tester: OASIS test suite"
+		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
 	<root class="XMLOASIS" creation="make"/>
 	<cluster>
 		<option unless="${DEBUG}">
-			<require enable="false"/>
-			<ensure enable="false"/>
-			<invariant enable="false"/>
-			<loop enable="false"/>
-			<check enable="false"/>
-			<optimize enable="true"/>
+			<option name="assertion" value="none"/>
+			<option name="garbage_collector" value="none"/>
+			<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
 		</option>
 		<option if="${DEBUG}">
-			<require enable="true"/>
-			<ensure enable="true"/>
-			<invariant enable="true"/>
-			<loop enable="true"/>
-			<check enable="true"/>
-			<optimize enable="false"/>
+			<option name="assertion" value="all"/>
+			<option name="garbage_collector" value="none"/>
+			<option name="finalize" value="false"/>
 		</option>
 
 		<cluster name="xmloasis" location="${GOBO}/test/xml/oasis">
