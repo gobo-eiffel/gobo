@@ -352,6 +352,7 @@ feature -- Basic operations
 #endif
 #ifdef VE
 					if old_exists then
+						eof := False
 #endif
 						old_open_read
 #ifdef ISE || HACT || VE
