@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Overview of the Gobo Eiffel Formatter library"
+
+	library: "Gobo Eiffel Formatter"
+	copyright: "Copyright (c) 2004, Berend de Boer and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="overview">
+	<title>Overview</title>
+
+  <para>
+    The Gobo Formatter library gives Eiffel programmers access to the
+    functionality of the Standard C library sprintf. This library is
+    fully implemented in Eiffel. It does not use the C function.
+  </para>
+
+  <para>
+    The correctnes of the formats can not be evaluated at compile
+    time. In fact no format can be checked completely at compile time
+    as the final appearence on paper or on the screen must be verifyed
+    by a human in each case.
+  </para>
+
+  <para>
+    In each case it it possible to control at runtime with
+    preconditions:
+  </para>
+  <orderedlist>
+    <listitem><para>the syntactical correctness of the format
+    string.</para></listitem>
+    <listitem><para>the relation between the format string and the other
+    parameters.</para></listitem>
+  </orderedlist>
+
+  <para>
+    So the approach is not completely unsave. Part of the class
+    declaration is a set of routines checking the properness of
+    format string and parameters.
+  </para>
+
+  <sect1>
+    <title>History</title>
+
+    <para>
+      The Formatter library was originally developed by SIG Computer
+      GmbH as part of Eiffel/S. This company was renamed to Object
+      Tools. This company put this library in the public domain by
+      licensing it under the Eiffel Forum License, version 1. It was
+      ported by Friedrich Dominicus to other Eiffel compilers. This
+      code is based on Friedrich Dominicus work.
+    </para>
+
+  </sect1>
+</chapter>
