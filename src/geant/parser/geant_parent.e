@@ -126,6 +126,8 @@ feature -- Processing
 
 	prepare_project is
 			-- Prepare current parent for inheritance into `project'.
+		require
+			parent_project_not_void: parent_project /= Void
 		do
 			project.trace_debug (<<"Project '", project.name, "': --> preparing parent '",
 				parent_project.name, "' for inheritance:">>)
@@ -145,6 +147,8 @@ feature {NONE} -- Processing
 
 	apply_renames is
 			-- Apply rename clauses.
+		require
+			parent_project_not_void: parent_project /= Void
 		local
 			a_rename_cursor: DS_HASH_TABLE_CURSOR [GEANT_RENAME, STRING]
 			a_rename: GEANT_RENAME
@@ -179,6 +183,8 @@ feature {NONE} -- Processing
 
 	apply_redefines is
 			-- Apply redefine clauses to `project'.
+		require
+			parent_project_not_void: parent_project /= Void
 		local
 			a_redefine_cursor: DS_LINEAR_CURSOR [GEANT_REDEFINE]
 			a_redefine: GEANT_REDEFINE
