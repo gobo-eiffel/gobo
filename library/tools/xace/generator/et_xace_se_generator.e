@@ -703,6 +703,7 @@ feature {NONE} -- Output
 				a_file.put_new_line
 				a_file.put_string ("-- The features called from C:")
 				a_file.put_new_line
+				a_cursor := an_exported_features.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					a_feature := a_cursor.item
 					a_file.put_string (a_feature.external_name)
