@@ -51,7 +51,10 @@ creation
 ----------/** Reserved words **/------------------------------------------------
 
 [aA][bB][sS][tT][rR][aA][cC][tT]	last_token := L_ABSTRACT
-[aA][lL][lL]						last_token := L_ALL
+[aA][lL][lL]						{
+										last_token := L_ALL
+										last_et_identifier_value := new_identifier (text)
+									}
 [cC][lL][uU][sS][tT][eE][rR]		last_token := L_CLUSTER
 [dD][eE][fF][aA][uU][lL][tT]		last_token := L_DEFAULT
 [eE][nN][dD]						last_token := L_END

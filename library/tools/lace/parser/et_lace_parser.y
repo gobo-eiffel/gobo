@@ -28,10 +28,10 @@ creation
 
 %}
 
-%token <ET_IDENTIFIER> L_IDENTIFIER L_STRING
+%token <ET_IDENTIFIER> L_IDENTIFIER L_STRING L_ALL
 %token L_SYSTEM L_ROOT L_END L_CLUSTER
 %token L_DEFAULT L_EXTERNAL L_GENERATE L_OPTION
-%token L_ABSTRACT L_ALL L_EXCLUDE L_LIBRARY
+%token L_ABSTRACT L_EXCLUDE L_LIBRARY
 %token L_STRERR
 
 %type <ET_LACE_CLUSTER> Cluster Nested_cluster Recursive_cluster Subcluster Qualified_subcluster
@@ -79,6 +79,8 @@ Default_list: Default Default_terminator
 	;
 
 Default: Identifier '(' Identifier ')'
+		{ $$ := new_default_value ($1, $3) }
+	| Identifier '(' L_ALL ')'
 		{ $$ := new_default_value ($1, $3) }
 	;
 
@@ -229,6 +231,7 @@ Option_list: Option Option_terminator
 	;
 
 Option: Identifier '(' Identifier ')' ':' Class_list
+	| Identifier '(' L_ALL ')' ':' Class_list
 --TODO: | Identifier ':' Class_list
 	;
 
@@ -255,6 +258,7 @@ External_list: External External_terminator
 
 External: Identifier ':' External_items
 	| Identifier '(' Identifier ')'
+	| Identifier '(' L_ALL ')'
 	;
 
 External_items: Identifier
