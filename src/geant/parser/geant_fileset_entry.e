@@ -2,11 +2,11 @@ indexing
 
 	description:
 
-		"Fileset Entry"
+		"Fileset entries"
 
 	library:    "Gobo Eiffel Ant"
 	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
-	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	copyright:  "Copyright (c) 2002, Sven Ehrke and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -14,14 +14,6 @@ indexing
 class GEANT_FILESET_ENTRY
 
 inherit
-
-	DS_PAIR [STRING, STRING]
-		rename
-			first as filename,
-			second as mapped_filename,
-			put_first as set_filename,
-			put_second as set_mapped_filename
-		end
 
 	HASHABLE
 
@@ -34,20 +26,46 @@ creation
 
 	make
 
+feature -- Initialization
+
+	make (a_filename, a_mapped_filename: STRING) is
+			-- Initialize fileset entry by setting `filename' to `a_filename'
+			-- and `mapped_filename' to `a_mapped_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+			a_mapped_filename_not_void: a_mapped_filename /= Void
+			a_mapped_filename_not_empty: a_mapped_filename.count > 0
+		do
+			filename := a_filename
+			mapped_filename := a_mapped_filename
+		ensure
+			filename_set: filename.is_equal (a_filename)
+			mapped_filename_set: mapped_filename.is_equal (a_mapped_filename)
+		end
+
 feature -- Access
+
+	filename: STRING
+			-- Name of file for current entry
+
+	mapped_filename: STRING
+			-- Mapped name for `filename'
 
 	filename_converted: STRING is
 			-- `filename' converted to current filesystem
 		do
-			Result := clone (filename)
-			Result := file_system.pathname_from_file_system (Result, unix_file_system)
+			Result := file_system.pathname_from_file_system (filename, unix_file_system)
+		ensure
+			filename_converted_not_void: Result /= Void
 		end
 
 	mapped_filename_converted: STRING is
 			-- `mapped_filename' converted to current filesystem
 		do
-			Result := clone (mapped_filename)
-			Result := file_system.pathname_from_file_system (Result, unix_file_system)
+			Result := file_system.pathname_from_file_system (mapped_filename, unix_file_system)
+		ensure
+			mapped_filename_converted_not_void: Result /= Void
 		end
 
 	hash_code: INTEGER is
@@ -55,6 +73,37 @@ feature -- Access
 		do
 			Result := filename.hash_code
 		end
+
+feature -- Setting
+
+	set_filename (a_filename: like filename) is
+			-- Set `filename' to `a_filename'.
+		require
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+		do
+			filename := a_filename
+		ensure
+			filename_set: filename = a_filename
+		end
+
+	set_mapped_filename (a_mapped_filename: like mapped_filename) is
+			-- Set `mapped_filename' to `a_mapped_filename'.
+		require
+			a_mapped_filename_not_void: a_mapped_filename /= Void
+			a_mapped_filename_not_empty: a_mapped_filename.count > 0
+		do
+			mapped_filename := a_mapped_filename
+		ensure
+			mapped_filename_set: mapped_filename = a_mapped_filename
+		end
+
+invariant
+
+	filename_not_void: filename /= Void
+	filename_not_empty: filename.count > 0
+	mapped_filename_not_void: mapped_filename /= Void
+	mapped_filename_not_empty: mapped_filename.count > 0
 
 end -- class GEANT_FILESET_ENTRY
 
