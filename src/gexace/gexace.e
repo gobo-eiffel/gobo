@@ -31,6 +31,8 @@ inherit
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
+	KL_SHARED_FILE_SYSTEM
+
 creation
 
 	make
@@ -290,21 +292,23 @@ feature {NONE} -- Command-line processing
 feature {NONE} -- Determine which C compiler is used (only correct for Windows)
 
 	hact_c_compiler: STRING is "msc"
+			-- Default value for $GOBO_CC when generating
+			-- Ace files for HACT
 
 	ise_c_compiler: STRING is
+			-- Default value for $GOBO_CC when generating
+			-- Ace files for ISE
 		local
-			env_ise_c_compiler,
-			env_eif_borland: STRING
-			ise_c_compiler_defined,
-			eif_borland_defined: BOOLEAN
-		do
+			env_ise_c_compiler, env_eif_borland: STRING
+			ise_c_compiler_defined, eif_borland_defined: BOOLEAN
+		once
 			env_ise_c_compiler := Execution_environment.variable_value ("ISE_C_COMPILER")
-			ise_c_compiler_defined := env_ise_c_compiler /= Void and then not ise_c_compiler.is_empty
+			ise_c_compiler_defined := env_ise_c_compiler /= Void and then env_ise_c_compiler.count > 0
 			if ise_c_compiler_defined then
-				Result := ise_c_compiler
+				Result := env_ise_c_compiler
 			else
 				env_eif_borland := Execution_environment.variable_value ("EIF_BORLAND")
-				eif_borland_defined := env_eif_borland /= Void and then not env_eif_borland.is_empty
+				eif_borland_defined := env_eif_borland /= Void and then env_eif_borland.count > 0
 				if eif_borland_defined then
 					Result := "bcc"
 				else
@@ -312,62 +316,71 @@ feature {NONE} -- Determine which C compiler is used (only correct for Windows)
 					Result := "msc"
 				end
 			end
+		ensure
+			ise_c_compiler_not_void: Result /= Void
 		end
 
 	se_c_compiler: STRING is
-		require
-			smalleiffel_environment_variable_set: not Execution_environment.interpreted_string ("${SmallEiffel}").is_empty
+			-- Default value for $GOBO_CC when generating
+			-- Ace files for SE
 		local
 			system_se: STRING
-			compiler_se: KL_TEXT_INPUT_FILE
 			se_sys_dir: STRING
-			i: INTEGER
+			a_file: KL_TEXT_INPUT_FILE
+			compiler_se: STRING
+			i, nb: INTEGER
 		once
-			system_se := Execution_environment.interpreted_string ("${SmallEiffel}")
-			se_sys_dir := clone (system_se)
-			from
-				i := se_sys_dir.count
-			until
-				se_sys_dir.item (i) = '/' or else
-				se_sys_dir.item (i) = '\' or else
-				i < 1
-			loop
-				i := i - 1
-			end
-			se_sys_dir.head (i)
-			create compiler_se.make (se_sys_dir + "compiler.se")
-			compiler_se.open_read
-			compiler_se.read_string (128)
-			-- chop string
-			if compiler_se.last_string.item (compiler_se.last_string.count) = '%N' then
-				compiler_se.last_string.remove (compiler_se.last_string.count)
-			end
-			if compiler_se.last_string.item (compiler_se.last_string.count) = '%R' then
-				compiler_se.last_string.remove (compiler_se.last_string.count)
-			end
-			-- remove trailing spaces
-			from
-				i := compiler_se.last_string.count
-			until
-				(compiler_se.last_string.item (i) /= ' ' and
-				compiler_se.last_string.item (i) /= '%T') or else
-				i < 1
-			loop
-				i := i - 1
-			end
-			compiler_se.last_string.head (i)
-			if compiler_se.last_string.is_equal ("bcc32") then
-				Result := "bcc"
-			elseif compiler_se.last_string.is_equal ("cl") then
+			system_se := Execution_environment.variable_value ("SmallEiffel")
+			if system_se = Void then
 				Result := "msc"
-			elseif compiler_se.last_string.is_equal ("lcc-win32") then
-				Result := "lcc"
 			else
-				Result := compiler_se.last_string
+				se_sys_dir := file_system.dirname (system_se)
+				create a_file.make (file_system.pathname (se_sys_dir, "compiler.se"))
+				a_file.open_read
+				if not a_file.is_open_read then
+					Result := "msc"
+				else
+					a_file.read_line
+					compiler_se := clone (a_file.last_string)
+					a_file.close
+					nb := compiler_se.count
+					if nb >= 5 and then compiler_se.substring (1, 5).is_equal ("bcc32") then
+						Result := "bcc"
+					elseif nb >= 2 and then compiler_se.substring (1, 2).is_equal ("cl") then
+						Result := "msc"
+					elseif nb >= 9 and then compiler_se.substring (1, 9).is_equal ("lcc-win32") then
+						Result := "lcc"
+					else
+						from
+							i := 1
+						until
+							Result /= Void
+						loop
+							if i > nb then
+								Result := compiler_se
+							else
+								inspect compiler_se.item (i)
+								when ' ', '%T', '%N', '%R', '%F' then
+									if i > 1 then
+										Result := compiler_se.substring (1, i - 1)
+									else
+										Result := "msc"
+									end
+								else
+									i := i + 1
+								end
+							end
+						end
+					end
+				end
 			end
+		ensure
+			se_c_compiler_not_void: Result /= Void
 		end
 
 	ve_c_compiler: STRING is "msc"
+			-- Default value for $GOBO_CC when generating
+			-- ESD files for VE
 
 feature {NONE} -- Usage message
 
