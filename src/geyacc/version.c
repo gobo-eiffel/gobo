@@ -1,1 +1,1 @@
-char *version_string = "GNU Bison version 1.25\n";
+char *version_string = "geyacc version 1.0\n";

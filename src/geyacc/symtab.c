@@ -85,14 +85,27 @@ char *key;
   register int hashval;
   register bucket *bp;
   register int found;
+  char *lower_key, *lower_tag;
 
-  hashval = hash(key);
+	lower_key = copys(key);
+	strlwr(lower_key);
+
+  hashval = hash(lower_key);
   bp = symtab[hashval];
 
   found = 0;
   while (bp != NULL && found == 0)
     {
-      if (strcmp(key, bp->tag) == 0)
+		if (isalpha(*lower_key)) {
+			lower_tag = copys(bp->tag);
+			strlwr(lower_tag);
+			if (strcmp(lower_key, lower_tag) == 0) {
+				found = 1;
+			} else
+				bp = bp->link;
+			FREE(lower_tag);
+		}
+      else if (strcmp(key, bp->tag) == 0)
 	found = 1;
       else
 	bp = bp->link;
@@ -121,6 +134,8 @@ char *key;
 
       symtab[hashval] = bp;
     }
+
+	FREE(lower_key);
 
   return (bp);
 }

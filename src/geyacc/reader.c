@@ -74,6 +74,9 @@ extern int skip_white_space();
 extern int parse_percent_token();
 extern int lex();
 
+extern char* spec_token_class_name;
+extern char* copys();
+
 void reader_output_yylsp();
 void read_declarations();
 void copy_definition();
@@ -193,13 +196,15 @@ reader()
   getsym("$undefined.")->class = STOKEN;
   /* Read the declaration section.  Copy %{ ... %} groups to ftable and fdefines file.
      Also notice any %token, %left, etc. found there.  */
+/* GOBO
   if (noparserflag) 
     fprintf(ftable, "\n/*  Bison-generated parse tables, made from %s\n",
 		infile);
   else
     fprintf(ftable, "\n/*  A Bison parser, made from %s\n", infile);
-  fprintf(ftable, " by  %s  */\n\n", version_string);
-  fprintf(ftable, "#define YYBISON 1  /* Identify Bison output.  */\n\n");
+  fprintf(ftable, " by  %s  * /\n\n", version_string);
+  fprintf(ftable, "#define YYBISON 1  /* Identify Bison output.  * /\n\n");
+*/
   read_declarations();
   /* start writing the guard and action files, if they are needed.  */
   output_headers();
@@ -341,12 +346,20 @@ copy_definition ()
   register int after_percent;  /* -1 while reading a character if prev char was % */
   int cplus_comment;
 
+/*
   if (!nolinesflag)
     fprintf(fattrs, "#line %d \"%s\"\n", lineno, infile);
+*/
 
   after_percent = 0;
 
   c = getc(finput);
+	if (c=='\r')
+		c = getc(finput);
+	if (c=='\n') {
+		lineno++;
+		c = getc(finput);
+	}
 
   for (;;)
     {
@@ -381,7 +394,7 @@ copy_definition ()
 
 	      putc(c, fattrs);
 	      
-	      if (c == '\\')
+	      if (c == '%')
 		{
 		  c = getc(finput);
 		  if (c == EOF)
@@ -397,13 +410,13 @@ copy_definition ()
 	  putc(c, fattrs);
 	  break;
 
-	case '/':
+	case '-':
 	  putc(c, fattrs);
 	  c = getc(finput);
-	  if (c != '*' && c != '/')
+	  if (c != '-')
 	    continue;
 
-	  cplus_comment = (c == '/');
+	  cplus_comment = (c == '-');
 	  putc(c, fattrs);
 	  c = getc(finput);
 
@@ -818,16 +831,16 @@ parse_union_decl()
 	  lineno++;
 	  break;
 
-	case '/':
+	case '-':
 	  c = getc(finput);
-	  if (c != '*' && c != '/')
+	  if (c != '-')
 	    ungetc(c, finput);
 	  else
 	    {
 	      putc(c, fattrs);
 	      if (fdefines)
 		putc(c, fdefines);
-	      cplus_comment = (c == '/');
+	      cplus_comment = (c == '-');
 	      in_comment = 1;
 	      c = getc(finput);
 	      while (in_comment)
@@ -982,10 +995,9 @@ int stack_offset;
   /* offset is always 0 if parser has already popped the stack pointer */
   if (semantic_parser) stack_offset = 0;
 
-  fprintf(fguard, "\ncase %d:\n", nrules);
+  fprintf(fguard, "\nwhen %d then\n", nrules);
   if (!nolinesflag)
-    fprintf(fguard, "#line %d \"%s\"\n", lineno, infile);
-  putc('{', fguard);
+    fprintf(fguard, "--#line %d \"%s\"\n", lineno, infile);
 
   count = 0;
   c = getc(finput);
@@ -1036,7 +1048,7 @@ int stack_offset;
 
 	      putc(c, fguard);
 	      
-	      if (c == '\\')
+	      if (c == '%')
 		{
 		  c = getc(finput);
 		  if (c == EOF)
@@ -1052,13 +1064,13 @@ int stack_offset;
 	  putc(c, fguard);
 	  break;
 
-	case '/':
+	case '-':
 	  putc(c, fguard);
 	  c = getc(finput);
-	  if (c != '*' && c != '/')
+	  if (c != '-')
 	    continue;
 
-	  cplus_comment = (c == '/');
+	  cplus_comment = (c == '-');
 	  putc(c, fguard);
 	  c = getc(finput);
 
@@ -1103,6 +1115,7 @@ int stack_offset;
 	  c = getc(finput);
 	  type_name = NULL;
 
+/* GOBO
 	  if (c == '<')
 	    {
 	      register char *cp = token_buffer;
@@ -1114,15 +1127,18 @@ int stack_offset;
 
 	      c = getc(finput);
 	    }
+*/
 
 	  if (c == '$')
 	    {
 	      fprintf(fguard, "yyval");
 	      if (!type_name) type_name = rule->sym->type_name;
+/* GOBO
 	      if (type_name)
 		fprintf(fguard, ".%s", type_name);
 	      if(!type_name && typed)
 		warns("$$ of `%s' has no declared type", rule->sym->tag);
+*/
 	    }
 
 	  else if (isdigit(c) || c == '-')
@@ -1134,11 +1150,16 @@ int stack_offset;
 	      if (!type_name && n > 0)
 		type_name = get_type_name(n, rule);
 
-	      fprintf(fguard, "yyvsp[%d]", n - stack_offset);
+		if ((stack_offset - n) == 0)
+	      fprintf(fguard, "yyvs.item (yyvsp)");
+		else
+	      fprintf(fguard, "yyvs.item (yyvsp - %d)", stack_offset - n);
+/* GOBO
 	      if (type_name)
 		fprintf(fguard, ".%s", type_name);
 	      if(!type_name && typed)
 		warnss("$%s of `%s' has no declared type", int_to_string(n), rule->sym->tag);
+*/
 	      continue;
 	    }
 	  else
@@ -1146,6 +1167,7 @@ int stack_offset;
 
 	  break;
 
+/* GOBO
 	case '@':
 	  c = getc(finput);
 	  if (isdigit(c) || c == '-')
@@ -1164,7 +1186,7 @@ int stack_offset;
 	  yylsp_needed = 1;
 
 	  continue;
-
+*/
 	case EOF:
 	  fatal("unterminated %%guard clause");
 
@@ -1178,7 +1200,9 @@ int stack_offset;
 
   c = skip_white_space();
 
+/* GOBO
   fprintf(fguard, ";\n    break;}");
+*/
   if (c == '{')
     copy_action(rule, stack_offset);
   else if (c == '=')
@@ -1214,10 +1238,10 @@ int stack_offset;
   /* offset is always 0 if parser has already popped the stack pointer */
   if (semantic_parser) stack_offset = 0;
 
-  fprintf(faction, "\ncase %d:\n", nrules);
+  fprintf(faction, "\nwhen %d then\n", nrules);
   if (!nolinesflag)
-    fprintf(faction, "#line %d \"%s\"\n", lineno, infile);
-  putc('{', faction);
+    fprintf(faction, "--#line %d \"%s\"\n", lineno, infile);
+  /* GOBO putc('{', faction); */
 
   count = 1;
   c = getc(finput);
@@ -1258,7 +1282,7 @@ int stack_offset;
 
 		  putc(c, faction);
 
-		  if (c == '\\')
+		  if (c == '%')
 		    {
 		      c = getc(finput);
 		      if (c == EOF)
@@ -1274,13 +1298,13 @@ int stack_offset;
 	      putc(c, faction);
 	      break;
 
-	    case '/':
+	    case '-':
 	      putc(c, faction);
 	      c = getc(finput);
-	      if (c != '*' && c != '/')
+	      if (c != '-')
 		continue;
 
-	      cplus_comment = (c == '/');
+	      cplus_comment = (c == '-');
 	      putc(c, faction);
 	      c = getc(finput);
 
@@ -1325,6 +1349,7 @@ int stack_offset;
 	      c = getc(finput);
 	      type_name = NULL;
 
+/* GOBO
 	      if (c == '<')
 		{
 		  register char *cp = token_buffer;
@@ -1337,14 +1362,17 @@ int stack_offset;
 
 		  c = getc(finput);
 		}
+*/
 	      if (c == '$')
 		{
 		  fprintf(faction, "yyval");
 		  if (!type_name) type_name = get_type_name(0, rule);
+/* GOBO
 		  if (type_name)
 		    fprintf(faction, ".%s", type_name);
 		  if(!type_name && typed)	
 		    warns("$$ of `%s' has no declared type", rule->sym->tag);
+*/
 		}
 	      else if (isdigit(c) || c == '-')
 		{
@@ -1355,12 +1383,17 @@ int stack_offset;
 		  if (!type_name && n > 0)
 		    type_name = get_type_name(n, rule);
 
-		  fprintf(faction, "yyvsp[%d]", n - stack_offset);
+			if ((stack_offset - n) == 0)
+				fprintf(faction, "yyvs.item (yyvsp)");
+			else
+				fprintf(faction, "yyvs.item (yyvsp - %d)", stack_offset - n);
+/* GOBO
 		  if (type_name)
 		    fprintf(faction, ".%s", type_name);
 		  if(!type_name && typed)	
 		    warnss("$%s of `%s' has no declared type", 
 				int_to_string(n), rule->sym->tag);
+*/
 		  continue;
 		}
 	      else
@@ -1368,6 +1401,7 @@ int stack_offset;
 
 	      break;
 
+/* GOBO
 	    case '@':
 	      c = getc(finput);
 	      if (isdigit(c) || c == '-')
@@ -1386,7 +1420,7 @@ int stack_offset;
 	      yylsp_needed = 1;
 
 	      continue;
-
+*/
 	    case EOF:
 	      fatal("unmatched `{'");
 
@@ -1406,7 +1440,7 @@ int stack_offset;
 	}
     }
 
-  fprintf(faction, ";\n    break;}");
+  fprintf(faction, "\n");
 }
 
 
@@ -1707,9 +1741,11 @@ readgram()
       /* We used to use `unsigned long' as YYSTYPE on MSDOS,
 	 but it seems better to be consistent.
 	 Most programs should declare their own type anyway.  */
+/* GOBO
       fprintf(fattrs, "#ifndef YYSTYPE\n#define YYSTYPE int\n#endif\n");
       if (fdefines)
 	fprintf(fdefines, "#ifndef YYSTYPE\n#define YYSTYPE int\n#endif\n");
+*/
     }
 
   /* Report any undefined symbols and consider them nonterminals.  */
@@ -1900,8 +1936,11 @@ packsymbols()
 
   error_token_number = errtoken->value;
 
-  if (! noparserflag)
-    output_token_defines(ftable);
+	/*if (! noparserflag) {*/
+  if (!definesflag) {
+		fprintf(faction,"feature {NONE} -- Token codes\n\n");
+		output_token_defines(faction);
+	}
 
   if (startval->class == SUNKNOWN)
     fatals("the start symbol %s is undefined", startval->tag);
@@ -1912,14 +1951,25 @@ packsymbols()
 
   if (definesflag)
     {
-      output_token_defines(fdefines);
+		char *class_name;
+		class_name = copys(spec_token_class_name);
+		strupr(class_name);
+		fprintf(fdefines, "\
+indexing\n\n\tdescription: \"Parser token codes\"\n\
+\tgenerator:   \"geyacc version 1.0\"\n\n\
+class %s\n\nfeature -- Token codes\n\n", class_name);
+		output_token_defines(fdefines);
+		fprintf(fdefines, "\nend -- class %s\n", class_name);
+		FREE(class_name);
 
       if (!pure_parser)
 	{
+/* GOBO
 	  if (spec_name_prefix)
 	    fprintf(fdefines, "\nextern YYSTYPE %slval;\n", spec_name_prefix);
 	  else
 	    fprintf(fdefines, "\nextern YYSTYPE yylval;\n");
+*/
 	}
 
       if (semantic_parser)
@@ -1971,15 +2021,20 @@ FILE *file;
       while ((c = *cp++) && c != '.');
       if (c != '\0')  continue;
 
-      fprintf(file, "#define\t%s\t%d\n", symbol,
+if (file)
+      fprintf(file, "\t%s: INTEGER is %d\n", symbol,
 		((translations && ! rawtoknumflag) 
 			? bp->user_token_number 
 			: bp->value));
+/* GOBO
       if (semantic_parser)
         fprintf(file, "#define\tT%s\t%d\n", symbol, bp->value);
+*/
     }
 
+/* GOBO
   putc('\n', file);
+*/
 }
 
 

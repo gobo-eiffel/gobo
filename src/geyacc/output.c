@@ -149,6 +149,7 @@ void output_base();
 void output_table();
 void output_check();
 void output_parser();
+void output_do_action();
 void output_program();
 void free_itemset();
 void free_shifts();
@@ -199,46 +200,15 @@ register YYLTYPE *yylsp;\n{\n  switch (n)\n{"
 void
 output_headers()
 {
-  if (semantic_parser)
-    fprintf(fguard, GUARDSTR, attrsfile);
-
-  if (noparserflag)
-	return;
-
-  fprintf(faction, (semantic_parser ? ACTSTR : ACTSTR_SIMPLE), attrsfile);
-/*  if (semantic_parser)	JF moved this below
-    fprintf(ftable, "#include \"%s\"\n", attrsfile);
-  fprintf(ftable, "#include <stdio.h>\n\n");
-*/
-
-  /* Rename certain symbols if -p was specified.  */
-  if (spec_name_prefix)
-    {
-      fprintf(ftable, "#define yyparse %sparse\n", spec_name_prefix);
-      fprintf(ftable, "#define yylex %slex\n", spec_name_prefix);
-      fprintf(ftable, "#define yyerror %serror\n", spec_name_prefix);
-      fprintf(ftable, "#define yylval %slval\n", spec_name_prefix);
-      fprintf(ftable, "#define yychar %schar\n", spec_name_prefix);
-      fprintf(ftable, "#define yydebug %sdebug\n", spec_name_prefix);
-      fprintf(ftable, "#define yynerrs %snerrs\n", spec_name_prefix);
-    }
+	fprintf(faction, "feature {NONE} -- Semantic actions\n\n");
+	fprintf(faction, "\tyy_do_action (yy_act: INTEGER) is\n\t\tdo\n\t\t\tinspect yy_act\n");
 }
 
 
 void
 output_trailers()
 {
-  if (semantic_parser)
-      fprintf(fguard, "\n    }\n}\n");
-
-  fprintf(faction, "\n");
-  
-  if (noparserflag) 
-      return;
-
-  if (semantic_parser)
-      fprintf(faction, "    }\n");
-  fprintf(faction, "}\n");
+	fprintf(faction, "\n\t\t\telse\n\t\t\t\t-- No action\n\t\t\tend\n\t\tend\n\n");
 }
 
 
@@ -254,33 +224,32 @@ output()
       while ((c=getc(fattrs))!=EOF)
         putc(c,ftable);
     }
+  fprintf(ftable, "\nfeature {NONE} -- Tables\n\n\
+\tyy_build_parser_tables is\n\
+\t\t\t-- Build parser tables.\n\
+\t\tdo\n\
+\t\t\tyytranslate := yytranslate_\n\
+\t\t\tyyr1 := yyr1_\n\
+\t\t\tyyr2 := yyr2_\n\
+\t\t\tyydefact := yydefact_\n\
+\t\t\tyydefgoto := yydefgoto_\n\
+\t\t\tyypact := yypact_\n\
+\t\t\tyypgoto := yypgoto_\n\
+\t\t\tyytable := yytable_\n\
+\t\t\tyycheck := yycheck_\n\
+\t\tend\n\n");
+
   reader_output_yylsp(ftable);
-  if (debugflag)
-    fprintf(ftable, "#ifndef YYDEBUG\n#define YYDEBUG %d\n#endif\n\n",
-	    !!debugflag);
-
-  if (semantic_parser)
-    fprintf(ftable, "#include \"%s\"\n", attrsfile);
-
-  if (! noparserflag)
-    fprintf(ftable, "#include <stdio.h>\n\n");
-
-  /* Make "const" do nothing if not in ANSI C.  */
-  fprintf (ftable, "#ifndef __cplusplus\n#ifndef __STDC__\n#define const\n#endif\n#endif\n\n");
-
   free_itemsets();
   output_defines();
   output_token_translations();
 /*   if (semantic_parser) */
   /* This is now unconditional because debugging printouts can use it.  */
-  output_gram();
+/* GOBO :  output_gram();*/
   FREE(ritem);
-  if (semantic_parser)
-    output_stos();
   output_rule_data();
   output_actions();
-  if (! noparserflag)
-    output_parser();
+  output_do_action();
   output_program();
 }
 
@@ -293,15 +262,13 @@ output_token_translations()
 
   if (translations)
     {
-      fprintf(ftable,
-	      "\n#define YYTRANSLATE(x) ((unsigned)(x) <= %d ? yytranslate[x] : %d)\n",
-	      max_user_token_number, nsyms);
-    
-      if (ntokens < 127)  /* play it very safe; check maximum element value.  */
-        fprintf(ftable, "\nstatic const char yytranslate[] = {     0");
-      else
-	fprintf(ftable, "\nstatic const short yytranslate[] = {     0");
-    
+	fprintf(ftable,
+		"\tyyMax_token: INTEGER is %d\n\
+\tyyNsyms: INTEGER is %d\n\n", max_user_token_number, nsyms);
+	fprintf(ftable,
+		"\tyytranslate_: ARRAY [INTEGER] is\n\
+\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<0");
+
       j = 10;
       for (i = 1; i <= max_user_token_number; i++)
 	{
@@ -320,11 +287,13 @@ output_token_translations()
 	  fprintf(ftable, "%6d", token_translations[i]);
 	}
     
-      fprintf(ftable, "\n};\n");
+	fprintf(ftable, ">>, 0)\n\t\tend\n\n");
     }
-  else
+else
     {
-      fprintf(ftable, "\n#define YYTRANSLATE(x) (x)\n");
+	fprintf(ftable,
+		"\tyytranslate (i: INTEGER): INTEGER is\n\
+\t\tdo\n\t\t\tResult := i\n\t\tend\n\n");
     } 
 }
 
@@ -332,6 +301,7 @@ output_token_translations()
 void
 output_gram()
 {
+/* GOBO : Not called */
   register int i;
   register int j;
   register short *sp;
@@ -397,6 +367,7 @@ output_gram()
 void
 output_stos()
 {
+/* GOBO : not called */
   register int i;
   register int j;
 
@@ -430,125 +401,10 @@ output_rule_data()
   register int i;
   register int j;
 
-  fprintf(ftable, "\n#if YYDEBUG != 0\n");
-  fprintf(ftable, "static const short yyrline[] = { 0");
+/* GOBO: alot of DEBUG removed */
 
-  j = 10;
-  for (i = 1; i <= nrules; i++)
-    {
-      putc(',', ftable);
-
-      if (j >= 10)
-	{
-	  putc('\n', ftable);
-	  j = 1;
-	}
-      else
-	{
-	  j++;
-	}
-
-      fprintf(ftable, "%6d", rline[i]);
-    }
-  fprintf(ftable, "\n};\n#endif\n\n");
-
-  if (toknumflag || noparserflag)
-    {
-      fprintf(ftable, "#define YYNTOKENS %d\n", ntokens);
-      fprintf(ftable, "#define YYNNTS %d\n", nvars);
-      fprintf(ftable, "#define YYNRULES %d\n", nrules);
-      fprintf(ftable, "#define YYNSTATES %d\n", nstates);
-      fprintf(ftable, "#define YYMAXUTOK %d\n\n", max_user_token_number);
-    }
-
-  if (! toknumflag  && ! noparserflag)
-    fprintf(ftable, "\n#if YYDEBUG != 0 || defined (YYERROR_VERBOSE)\n\n");
-
-  /* Output the table of symbol names.  */
-
-  fprintf(ftable,
-          "static const char * const yytname[] = {   \"%s\"",
-          tags[0]);
-
-  j = strlen (tags[0]) + 44;
-  for (i = 1; i < nsyms; i++)
-		/* this used to be i<=nsyms, but that output a final "" symbol
-			almost by accident */
-    {
-      register char *p;
-      putc(',', ftable);
-      j++;
-
-      if (j > 75)
-	{
-	  putc('\n', ftable);
-	  j = 0;
-	}
-
-      putc ('\"', ftable);
-      j++;
-
-      for (p = tags[i]; p && *p; p++)
-	{
-	  if (*p == '"' || *p == '\\')
-	    {
-	      fprintf(ftable, "\\%c", *p);
-	      j += 2;
-	    }
-	  else if (*p == '\n')
-	    {
-	      fprintf(ftable, "\\n");
-	      j += 2;
-	    }
-	  else if (*p == '\t')
-	    {
-	      fprintf(ftable, "\\t");
-	      j += 2;
-	    }
-	  else if (*p == '\b')
-	    {
-	      fprintf(ftable, "\\b");
-	      j += 2;
-	    }
-	  else if (*p < 040 || *p >= 0177)
-	    {
-	      fprintf(ftable, "\\%03o", *p);
-	      j += 4;
-	    }
-	  else
-	    {
-	      putc(*p, ftable);
-	      j++;
-	    }
-	}
-
-      putc ('\"', ftable);
-      j++;
-    }
-    fprintf(ftable, ", NULL\n};\n");	/* add a NULL entry to list of tokens */
-
-  if (! toknumflag  && ! noparserflag)
-    fprintf(ftable, "#endif\n\n");
-
-  if (toknumflag) 
-    {
-      fprintf(ftable, "static const short yytoknum[] = { 0");
-      j = 10;
-      for (i = 1; i <= ntokens; i++) {
-          putc(',', ftable);
-          if (j >= 10) 
-            {
-              putc('\n', ftable);
-              j = 1;
-            }
-          else
-            j++;
-          fprintf(ftable, "%6d", user_toknums[i]);
-      }
-      fprintf(ftable, "\n};\n\n");
-    }
-
-  fprintf(ftable, "static const short yyr1[] = {     0");
+  fprintf(ftable, "\tyyr1_: ARRAY [INTEGER] is\n\
+\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<0");
 
   j = 10;
   for (i = 1; i <= nrules; i++)
@@ -570,7 +426,8 @@ output_rule_data()
 
   FREE(rlhs + 1);
 
-  fprintf(ftable, "\n};\n\nstatic const short yyr2[] = {     0");
+  fprintf(ftable, ">>, 0)\n\t\tend\n\n\tyyr2_: ARRAY [INTEGER] is\n\
+\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<0");
 
   j = 10;
   for (i = 1; i < nrules; i++)
@@ -594,7 +451,7 @@ output_rule_data()
   if (j >= 10)
     putc('\n', ftable);
 
-  fprintf(ftable, "%6d\n};\n", nitems - rrhs[nrules] - 1);
+  fprintf(ftable, "%6d>>, 0)\n\t\tend\n\n", nitems - rrhs[nrules] - 1);
   FREE(rrhs + 1);
 }
 
@@ -602,9 +459,9 @@ output_rule_data()
 void
 output_defines()
 {
-  fprintf(ftable, "\n\n#define\tYYFINAL\t\t%d\n", final_state);
-  fprintf(ftable, "#define\tYYFLAG\t\t%d\n", MINSHORT);
-  fprintf(ftable, "#define\tYYNTBASE\t%d\n", ntokens);
+  fprintf(ftable, "\tyyFinal: INTEGER is %d\n\n", final_state);
+  fprintf(ftable, "\tyyFlag: INTEGER is %d\n\n", MINSHORT);
+  fprintf(ftable, "\tyyNtbase: INTEGER is %d\n\n", ntokens);
 }
 
 
@@ -658,7 +515,8 @@ token_actions()
   actrow = NEW2(ntokens, short);
 
   k = action_row(0);
-  fprintf(ftable, "\nstatic const short yydefact[] = {%6d", k);
+  fprintf(ftable, "\tyydefact_: ARRAY [INTEGER] is\n\
+\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", k);
   save_row(0);
 
   j = 10;
@@ -681,7 +539,7 @@ token_actions()
       save_row(i);
     }
 
-  fprintf(ftable, "\n};\n");
+  fprintf(ftable, ">>, 0)\n\t\tend\n\n");
   FREE(actrow);
 }
 
@@ -917,7 +775,8 @@ goto_actions()
   state_count = NEW2(nstates, short);
 
   k = default_goto(ntokens);
-  fprintf(ftable, "\nstatic const short yydefgoto[] = {%6d", k);
+  fprintf(ftable, "\tyydefgoto_: ARRAY [INTEGER] is\n\
+\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", k);
   save_column(ntokens, k);
 
   j = 10;
@@ -940,7 +799,7 @@ goto_actions()
       save_column(i, k);
     }
 
-  fprintf(ftable, "\n};\n");
+  fprintf(ftable, ">>, 0)\n\t\tend\n\n");
   FREE(state_count);
 }
 
@@ -1236,7 +1095,8 @@ output_base()
   register int i;
   register int j;
 
-  fprintf(ftable, "\nstatic const short yypact[] = {%6d", base[0]);
+  fprintf(ftable, "\tyypact_: ARRAY [INTEGER] is\n\
+\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", base[0]);
 
   j = 10;
   for (i = 1; i < nstates; i++)
@@ -1256,7 +1116,8 @@ output_base()
       fprintf(ftable, "%6d", base[i]);
     }
 
-  fprintf(ftable, "\n};\n\nstatic const short yypgoto[] = {%6d", base[nstates]);
+  fprintf(ftable, ">>, 0)\n\t\tend\n\n\tyypgoto_: ARRAY [INTEGER] is\n\
+\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", base[nstates]);
 
   j = 10;
   for (i = nstates + 1; i < nvectors; i++)
@@ -1276,7 +1137,7 @@ output_base()
       fprintf(ftable, "%6d", base[i]);
     }
 
-  fprintf(ftable, "\n};\n");
+  fprintf(ftable, ">>, 0)\n\t\tend\n\n");
   FREE(base);
 }
 
@@ -1287,8 +1148,9 @@ output_table()
   register int i;
   register int j;
 
-  fprintf(ftable, "\n\n#define\tYYLAST\t\t%d\n\n", high);
-  fprintf(ftable, "\nstatic const short yytable[] = {%6d", table[0]);
+  fprintf(ftable, "\tyyLast: INTEGER is %d\n\n", high);
+  fprintf(ftable, "\tyytable_: ARRAY [INTEGER] is\n\
+\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", table[0]);
 
   j = 10;
   for (i = 1; i <= high; i++)
@@ -1308,7 +1170,7 @@ output_table()
       fprintf(ftable, "%6d", table[i]);
     }
 
-  fprintf(ftable, "\n};\n");
+  fprintf(ftable, ">>, 0)\n\t\tend\n\n");
   FREE(table);
 }
 
@@ -1319,7 +1181,8 @@ output_check()
   register int i;
   register int j;
 
-  fprintf(ftable, "\nstatic const short yycheck[] = {%6d", check[0]);
+  fprintf(ftable, "\tyycheck_: ARRAY [INTEGER] is\n\
+\t\tonce\n\t\t\tResult := integer_array_.make_from_array (<<%6d", check[0]);
 
   j = 10;
   for (i = 1; i <= high; i++)
@@ -1339,7 +1202,7 @@ output_check()
       fprintf(ftable, "%6d", check[i]);
     }
 
-  fprintf(ftable, "\n};\n");
+  fprintf(ftable, ">>, 0)\n\t\tend\n\n");
   FREE(check);
 }
 
@@ -1425,13 +1288,29 @@ output_parser()
 }
 
 void
+output_do_action()
+{
+	/* GOBO: new function */
+
+  register int c;
+
+	      /* `$' in the parser file indicates where to put the actions.
+		 Copy them in at this point.  */
+	      rewind(faction);
+	      for(c=getc(faction);c!=EOF;c=getc(faction))
+		putc(c,ftable);
+}
+
+void
 output_program()
 {
   register int c;
   extern int lineno;
 
+/* GOBO
   if (!nolinesflag)
-    fprintf(ftable, "#line %d \"%s\"\n", lineno, infile);
+    fprintf(ftable, "--#line %d \"%s\"\n", lineno, infile);
+*/
 
   c = getc(finput);
   while (c != EOF)

@@ -33,6 +33,7 @@ int rawtoknumflag = 0;
 char *spec_name_prefix; /* for -p.  */
 char *spec_file_prefix; /* for -b. */
 extern int fixed_outfiles;/* for -y */
+char *spec_token_class_name;
   
 extern char *program_name;
 extern char *version_string;
@@ -41,21 +42,29 @@ extern void warns();	/* main.c */
 
 struct option longopts[] =
 {
+#if 0
   {"debug", 0, &debugflag, 1},
   {"defines", 0, &definesflag, 1},
   {"file-prefix", 1, 0, 'b'},
   {"fixed-output-files", 0, &fixed_outfiles, 1},
+#endif
   {"help", 0, 0, 'h'},
+#if 0
   {"name-prefix", 1, 0, 'p'}, /* was 'a';  apparently unused -wjh */
   {"no-lines", 0, &nolinesflag, 1},
   {"no-parser", 0, &noparserflag, 1},
+#endif
   {"output", 1, 0, 'o'},
   {"output-file", 1, 0, 'o'},
+#if 0
   {"raw", 0, &rawtoknumflag, 1},
   {"token-table", 0, &toknumflag, 1},
+#endif
   {"verbose", 0, &verboseflag, 1},
   {"version", 0, 0, 'V'},
+#if 0
   {"yacc", 0, &fixed_outfiles, 1},
+#endif
   {0, 0, 0, 0}
 };
 
@@ -64,6 +73,12 @@ usage (stream)
      FILE *stream;
 {
   fprintf (stream, "\
+Usage: %s [-hvV] [-d class-name] [-o outfile]\n\
+       [--verbose] [--version] [--help]\n\
+       [--output=outfile] grammar-file\n",
+	   "geyacc");
+/*
+  fprintf (stream, "\
 Usage: %s [-dhklntvyV] [-b file-prefix] [-o outfile] [-p name-prefix]\n\
        [--debug] [--defines] [--fixed-output-files] [--no-lines]\n\
        [--verbose] [--version] [--help] [--yacc]\n\
@@ -71,6 +86,7 @@ Usage: %s [-dhklntvyV] [-b file-prefix] [-o outfile] [-p name-prefix]\n\
        [--file-prefix=prefix] [--name-prefix=prefix]\n\
        [--output=outfile] grammar-file\n",
 	   program_name);
+*/
 }
 
 void
@@ -88,7 +104,8 @@ getargs(argc, argv)
   toknumflag = 0;
   fixed_outfiles = 0;
 
-  while ((c = getopt_long (argc, argv, "yvdhrltknVo:b:p:", longopts, (int *)0))
+  /*while ((c = getopt_long (argc, argv, "yvdhrltknVo:b:p:", longopts, (int *)0))*/
+  while ((c = getopt_long (argc, argv, "vhVo:d:", longopts, (int *)0))
 	 != EOF)
     {
       switch (c)
@@ -97,9 +114,11 @@ getargs(argc, argv)
 	  /* Certain long options cause getopt_long to return 0.  */
 	  break;
 
+/*
 	case 'y':
 	  fixed_outfiles = 1;
 	  break;
+*/
 	  
 	case 'h':
 	  usage (stdout);
@@ -115,8 +134,9 @@ getargs(argc, argv)
 	  
 	case 'd':
 	  definesflag = 1;
+	  spec_token_class_name = optarg;
 	  break;
-	  
+/*	  
 	case 'l':
 	  nolinesflag = 1;
 	  break;
@@ -137,10 +157,11 @@ getargs(argc, argv)
 	  debugflag = 1;
 	  break;
 	  
+*/	  
 	case 'o':
 	  spec_outfile = optarg;
 	  break;
-	  
+/*	  
 	case 'b':
 	  spec_file_prefix = optarg;
 	  break;
@@ -148,7 +169,7 @@ getargs(argc, argv)
 	case 'p':
 	  spec_name_prefix = optarg;
 	  break;
-	  
+*/	  
 	default:
 	  usage (stderr);
 	  exit (1);

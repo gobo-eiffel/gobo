@@ -35,6 +35,8 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include "new.h"
 #include "gram.h"
 
+extern char *spec_token_class_name;
+
 FILE *finput = NULL;
 FILE *foutput = NULL;
 FILE *fdefines = NULL;
@@ -124,6 +126,7 @@ openfiles()
   strlwr (infile);
 #endif /* MSDOS */
 
+	tmp_base = "";
   tmp_len = strlen (tmp_base);
 
   if (spec_outfile)
@@ -136,14 +139,16 @@ openfiles()
 #endif /* MSDOS */
       /* BASE_LENGTH includes ".tab" but not ".c".  */
       base_length = strlen (name_base);
-      if (!strcmp (name_base + base_length - 2, ".c"))
+      if (!strcmp (name_base + base_length - 2, ".e"))
 	base_length -= 2;
       /* SHORT_BASE_LENGTH includes neither ".tab" nor ".c".  */
       short_base_length = base_length;
+/* GOBO
       if (!strncmp (name_base + short_base_length - 4, ".tab", 4))
 	short_base_length -= 4;
       else if (!strncmp (name_base + short_base_length - 4, "_tab", 4))
 	short_base_length -= 4;
+*/
     }
   else if (spec_file_prefix)
     {
@@ -151,15 +156,17 @@ openfiles()
       /* SHORT_BASE_LENGTH includes neither ".tab" nor ".c".  */
       short_base_length = strlen (spec_file_prefix);
       /* Count room for `.tab'.  */
-      base_length = short_base_length + 4;
+      base_length = short_base_length;
       name_base = (char *) xmalloc (base_length + 1);
       /* Append `.tab'.  */
       strcpy (name_base, spec_file_prefix);
+/* GOBO
 #ifdef VMS
       strcat (name_base, "_tab");
 #else
       strcat (name_base, ".tab");
 #endif
+*/
 #ifdef MSDOS
       strlwr (name_base);
 #endif /* MSDOS */
@@ -177,7 +184,7 @@ openfiles()
       if (!strcmp (name_base + base_length - 2, ".y"))
 	base_length -= 2;
       short_base_length = base_length;
-
+/* GOBO
 #ifdef VMS
       name_base = stringappend(name_base, short_base_length, "_tab");
 #else
@@ -185,9 +192,11 @@ openfiles()
       name_base = stringappend(name_base, short_base_length, "_tab");
 #else
       name_base = stringappend(name_base, short_base_length, ".tab");
-#endif /* not MSDOS */
+#endif /* not MSDOS * /
 #endif
       base_length = short_base_length + 4;
+*/
+      name_base = stringappend(name_base, short_base_length, "");
     }
 
   finput = tryopen(infile, "r");
@@ -207,7 +216,9 @@ openfiles()
           strcpy(cp, PFILE);
         }
 #endif /* MSDOS */
+ /* GOBO
       fparser = tryopen(filename ? filename : PFILE, "r");
+  */
     }
 
   if (verboseflag)
@@ -250,7 +261,8 @@ openfiles()
 
   if (definesflag)
     {
-      defsfile = stringappend(name_base, base_length, ".h");
+      defsfile = stringappend(spec_token_class_name, strlen(spec_token_class_name), ".e");
+	  strlwr(defsfile);
       fdefines = tryopen(tmpdefsfile, "w+");
     }
 
@@ -266,7 +278,7 @@ openfiles()
   if (spec_outfile)
     tabfile = spec_outfile;
   else
-    tabfile = stringappend(name_base, base_length, ".c");
+    tabfile = stringappend(name_base, base_length, ".e");
 
 #ifdef VMS
   attrsfile = stringappend(name_base, short_base_length, "_stype.h");
@@ -403,12 +415,12 @@ int k;
   if (k==0) sys$exit(SS$_NORMAL);
   sys$exit(SS$_ABORT);
 #else
-#ifdef MSDOS
+/*#ifdef MSDOS */
   if (actfile && ! noparserflag) unlink(actfile);
   if (tmpattrsfile) unlink(tmpattrsfile);
   if (tmptabfile) unlink(tmptabfile);
   if (tmpdefsfile) unlink(tmpdefsfile);
-#endif /* MSDOS */
+/*#endif /* MSDOS */
   exit(k);
 #endif /* not VMS, or __VMS_POSIX */
 }

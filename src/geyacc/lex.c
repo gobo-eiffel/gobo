@@ -105,14 +105,14 @@ skip_white_space()
 
       switch (c)
 	{
-	case '/':
+	case '-':
 	  c = getc(finput);
-	  if (c != '*' && c != '/') 
+	  if (c != '-') 
 	    {
-	      warn("unexpected `/' found and ignored");
+	      warn("unexpected `-' found and ignored");
 	      break;
 	    }
-	  cplus_comment = (c == '/');
+	  cplus_comment = (c == '-');
 
 	  c = getc(finput);
 
@@ -337,9 +337,11 @@ lex()
     case 'p':  case 'q':  case 'r':  case 's':  case 't':
     case 'u':  case 'v':  case 'w':  case 'x':  case 'y':
     case 'z':
+/* GOBO
     case '.':  case '_':
+*/
       p = token_buffer;
-      while (isalnum(c) || c == '_' || c == '.')
+      while (isalnum(c) || c == '_')
 	{
 	  if (p == token_buffer + maxtoken)
 	    p = grow_token_buffer(p);
@@ -457,6 +459,7 @@ lex()
 	  return(ILLEGAL);
 	}
 
+/* GOBO
     case '<':
       p = token_buffer;
       c = getc(finput);
@@ -480,6 +483,7 @@ lex()
       *p = 0;
       return (TYPENAME);
 	    
+*/
 
     case '%':
       return (parse_percent_token());
@@ -502,9 +506,9 @@ struct percent_table_struct {
   {"token", NULL, TOKEN},
   {"term", NULL, TOKEN},
   {"nterm", NULL, NTERM},
-  {"type", NULL, TYPE},
+/*  {"type", NULL, TYPE},*/
   {"guard", NULL, GUARD},
-  {"union", NULL, UNION},
+  /*{"union", NULL, UNION},*/
   {"expect", NULL, EXPECT},
   {"thong", NULL, THONG},
   {"start", NULL, START},
@@ -512,13 +516,13 @@ struct percent_table_struct {
   {"right", NULL, RIGHT},
   {"nonassoc", NULL, NONASSOC},
   {"binary", NULL, NONASSOC},
-  {"semantic_parser", NULL, SEMANTIC_PARSER},
-  {"pure_parser", NULL, PURE_PARSER},
+  /*{"semantic_parser", NULL, SEMANTIC_PARSER},*/
+  /*{"pure_parser", NULL, PURE_PARSER},*/
   {"prec", NULL, PREC},
 
-  {"no_lines", &nolinesflag, NOOP}, /* -l */
-  {"raw", &rawtoknumflag, NOOP}, /* -r */
-  {"token_table", &toknumflag, NOOP}, /* -k */
+  /*{"no_lines", &nolinesflag, NOOP}, /* -l */
+  /*{"raw", &rawtoknumflag, NOOP}, /* -r */
+  /*{"token_table", &toknumflag, NOOP}, /* -k */
 
 #if 0
   /* These can be utilized after main is reoganized so
