@@ -142,13 +142,14 @@ feature -- Status report
 	is_executable: BOOLEAN is
 			-- Can element be executed?
 		do
-			if is_in_gobo_32_format then
-				Result := (directory_name /= Void and then directory_name.count > 0)
-				if not Result then
-					project.log (<<"  [fileset] error: attribute 'directory' is mandatory">>)
+			Result := is_in_gobo_31_format or else is_in_gobo_32_format
+			if Result then
+				if is_in_gobo_31_format then
+					Result := (directory_name /= Void and then directory_name.count > 0)
+					if not Result then
+						project.log (<<"  [fileset] error: attribute 'directory' is mandatory">>)
+					end
 				end
-			else
-				Result := True
 			end
 			if Result then
 				Result := include_wildcard = Void or else include_wildcard.is_compiled
@@ -169,15 +170,16 @@ feature -- Status report
 				end
 			end
 		ensure
-			directory_name_not_void: (Result and is_in_gobo_32_format) implies directory_name /= Void
-			directory_name_not_empty: (Result and is_in_gobo_32_format) implies directory_name.count > 0
+			directory_name_not_void: (Result and is_in_gobo_31_format) implies directory_name /= Void
+			directory_name_not_empty: (Result and is_in_gobo_31_format) implies directory_name.count > 0
 			include_wildcard_compiled: Result implies (include_wildcard = Void or else include_wildcard.is_compiled)
 			exclude_wildcard_compiled: Result implies (exclude_wildcard = Void or else exclude_wildcard.is_compiled)
 			map_executable: Result implies (map = Void or else map.is_executable)
+			correct_format: Result implies is_in_gobo_31_format or else is_in_gobo_32_format
 		end
 
-	is_in_gobo_32_format: BOOLEAN is
-			-- Is fileset setup for obsolete GOBO 3.2 format?
+	is_in_gobo_31_format: BOOLEAN is
+			-- Is fileset setup for obsolete GOBO 3.1 format?
 		do
 			Result := directory_name /= Void and then filename_directory_name = Void and then
 				mapped_filename_directory_name = Void and then dir_name = Void
@@ -187,8 +189,8 @@ feature -- Status report
 				dir_name = Void
 		end
 
-	is_in_gobo_33_format: BOOLEAN is
-			-- Is fileset setup for GOBO 3.3 format?
+	is_in_gobo_32_format: BOOLEAN is
+			-- Is fileset setup for GOBO 3.2 format?
 		do
 			Result := directory_name = Void and then not concat
 		ensure
@@ -545,8 +547,8 @@ feature -- Execution
 feature {NONE} -- Implementation/Access
 
 	filenames: DS_SET [GEANT_FILESET_ENTRY]
-			-- Files underneath directory named `directory_name' (if `is_in_gobo_32_format')
-			-- Files underneath current working directory (if `is_in_gobo_33_format')
+			-- Files underneath directory named `directory_name' (if `is_in_gobo_31_format')
+			-- Files underneath current working directory (if `is_in_gobo_32_format')
 			-- matching expressions in `include_wc_string' and not matching
 			-- expressions in `exclude_wc_string' with their corresponding
 			-- mapped filename if `has_map';
@@ -586,7 +588,7 @@ feature {NONE} -- Implementation/Processing
 						else
 								-- Handle files:
 --!!							project.trace_debug (<<"filename: ", s, "%N">>)
-							if is_in_gobo_32_format then
+							if is_in_gobo_31_format then
 								smatch := s.substring (directory_name.count + 2, s.count)	-- 2 because of '/'
 							else
 								smatch := s.substring (3, s.count)	-- 3 because of './'
@@ -657,6 +659,5 @@ invariant
 	filename_variable_name_not_empty: filename_variable_name.count > 0
 	mapped_filename_variable_name_not_void: mapped_filename_variable_name /= Void
 	mapped_filename_variable_name_not_empty: mapped_filename_variable_name.count > 0
-	correct_format: is_in_gobo_32_format or else is_in_gobo_33_format
 
 end
