@@ -47,6 +47,11 @@ feature -- Access
 	pathname: STRING
 			-- Directory pathname (May be Void)
 
+feature -- Status report
+
+	is_mounted: BOOLEAN
+			-- Has cluster been mounted?
+
 feature -- Nested
 
 	parent: ET_XACE_CLUSTER
@@ -112,12 +117,16 @@ feature {ET_XACE_MOUNTED_CLUSTER} -- Mount
 			a_subclusters: like subclusters
 		do
 			mounted_parent := a_parent
+			is_mounted := True
 			a_subclusters := a_parent.subclusters
 			if a_subclusters = Void then
 				!! a_subclusters.make_empty
 				a_parent.set_subclusters (a_subclusters)
 			end
 			a_subclusters.put_last (Current)
+		ensure
+			mounted: is_mounted
+			mounted_parent_set: mounted_parent = a_parent
 		end
 
 	mount_root (a_universe: ET_XACE_UNIVERSE) is
@@ -128,6 +137,7 @@ feature {ET_XACE_MOUNTED_CLUSTER} -- Mount
 			a_clusters: like subclusters
 		do
 			mounted_parent := Void
+			is_mounted := True
 			a_clusters := a_universe.clusters
 			if a_clusters = Void then
 				!! a_clusters.make (Current)
@@ -135,6 +145,9 @@ feature {ET_XACE_MOUNTED_CLUSTER} -- Mount
 			else
 				a_clusters.put_last (Current)
 			end
+		ensure
+			mounted: is_mounted
+			mounted_parent_set: mounted_parent = Void
 		end
 
 	unmount is
@@ -152,6 +165,10 @@ feature {ET_XACE_MOUNTED_CLUSTER} -- Mount
 				end
 				mounted_parent := Void
 			end
+			is_mounted := False
+		ensure
+			unmounted: not is_mounted
+			mounted_parent_unset: mounted_parent = Void
 		end
 
 	unmount_root (a_universe: ET_XACE_UNIVERSE) is
@@ -169,6 +186,10 @@ feature {ET_XACE_MOUNTED_CLUSTER} -- Mount
 				end
 			end
 			mounted_parent := Void
+			is_mounted := False
+		ensure
+			unmounted: not is_mounted
+			mounted_parent_unset: mounted_parent = Void
 		end
 
 feature -- Removal
