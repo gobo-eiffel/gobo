@@ -35,153 +35,299 @@ cluster
 
 
 
-	exml: "${EXML}/library"
+	xml: "${GOBO}/library/xml"
 		default
 			assertion (no)
 		option
 	;
-	exml_factory: "${EXML}/library/factory"
-		default
-			assertion (no)
-		option
-	;
-
-	exml_position: "${EXML}/library/position"
+	xml_factory: "${GOBO}/library/xml/factory"
 		default
 			assertion (no)
 		option
 	;
 
-	exml_source: "${EXML}/library/source"
+	xml_position: "${GOBO}/library/xml/position"
 		default
 			assertion (no)
 		option
 	;
 
-	exml_general: "${EXML}/library/general"
+	xml_source: "${GOBO}/library/xml/source"
 		default
 			assertion (no)
 		option
 	;
 
-	exml_event: "${EXML}/library/event"
+	xml_general: "${GOBO}/library/xml/general"
 		default
 			assertion (no)
 		option
 	;
 
-	exml_tree: "${EXML}/library/tree"
+	xml_event: "${GOBO}/library/xml/event"
 		default
 			assertion (no)
 		option
 	;
 
-	exml_formatter: "${EXML}/library/formatter"
+	xml_tree: "${GOBO}/library/xml/tree"
 		default
 			assertion (no)
 		option
 	;
 
-	exml_xace: "${EXML}/library/xace"
-		default
-			assertion (no)
-		option
-	;
-	exml_xace_support: "${EXML}/library/xace/support"
+	xml_formatter: "${GOBO}/library/xml/formatter"
 		default
 			assertion (no)
 		option
 	;
 
-	exml_xace_ast: "${EXML}/library/xace/ast"
+	xml_impl: "${GOBO}/library/xml/impl"
+		default
+			assertion (no)
+		option
+	;
+	xml_impl_interface: "${GOBO}/library/xml/impl/interface"
+		default
+			assertion (no)
+		option
+	;
+	xml_impl_interface_general: "${GOBO}/library/xml/impl/interface/general"
 		default
 			assertion (no)
 		option
 	;
 
-	exml_xace_generator: "${EXML}/library/xace/generator"
+	xml_impl_interface_event: "${GOBO}/library/xml/impl/interface/event"
 		default
 			assertion (no)
 		option
 	;
 
-	exml_xace_parse: "${EXML}/library/xace/parse"
-		default
-			assertion (no)
-		option
-	;
-
-	exml_xace_error: "${EXML}/library/xace/error"
+	xml_impl_interface_tree: "${GOBO}/library/xml/impl/interface/tree"
 		default
 			assertion (no)
 		option
 	;
 
 
-	exml_impl: "${EXML}/library/impl"
+	xml_impl_expat: "${GOBO}/library/xml/impl/expat"
 		default
 			assertion (no)
 		option
 	;
-	exml_impl_interface: "${EXML}/library/impl/interface"
-		default
-			assertion (no)
-		option
-	;
-	exml_impl_interface_general: "${EXML}/library/impl/interface/general"
+	xml_impl_expat_api: "${GOBO}/library/xml/impl/expat/api"
 		default
 			assertion (no)
 		option
 	;
 
-	exml_impl_interface_event: "${EXML}/library/impl/interface/event"
+	xml_impl_expat_general: "${GOBO}/library/xml/impl/expat/general"
 		default
 			assertion (no)
 		option
 	;
 
-	exml_impl_interface_tree: "${EXML}/library/impl/interface/tree"
+	xml_impl_expat_event: "${GOBO}/library/xml/impl/expat/event"
 		default
 			assertion (no)
 		option
 	;
 
-
-	exml_impl_eiffel: "${EXML}/library/impl/eiffel"
+	xml_impl_expat_spec: "${GOBO}/library/xml/impl/expat/spec"
 		default
 			assertion (no)
 		option
 	;
-	exml_impl_eiffel_event: "${EXML}/library/impl/eiffel/event"
+	xml_impl_expat_spec_se: "${GOBO}/library/xml/impl/expat/spec/se"
 		default
 			assertion (no)
 		option
 	;
 
 
-	exml_impl_tree_on_event: "${EXML}/library/impl/tree_on_event"
+
+	xml_impl_eiffel: "${GOBO}/library/xml/impl/eiffel"
 		default
 			assertion (no)
 		option
 	;
-	exml_impl_tree_on_event_tree: "${EXML}/library/impl/tree_on_event/tree"
+	xml_impl_eiffel_event: "${GOBO}/library/xml/impl/eiffel/event"
 		default
 			assertion (no)
 		option
 	;
 
 
-	exml_impl_no_expat: "${EXML}/library/impl/no_expat"
+	xml_impl_tree_on_event: "${GOBO}/library/xml/impl/tree_on_event"
 		default
 			assertion (no)
 		option
 	;
-	exml_impl_no_expat_event: "${EXML}/library/impl/no_expat/event"
+	xml_impl_tree_on_event_tree: "${GOBO}/library/xml/impl/tree_on_event/tree"
 		default
 			assertion (no)
 		option
 	;
 
+
+	xml_impl_no_expat: "${GOBO}/library/xml/impl/no_expat"
+		default
+			assertion (no)
+		option
+	;
+	xml_impl_no_expat_event: "${GOBO}/library/xml/impl/no_expat/event"
+		default
+			assertion (no)
+		option
+	;
+
+
+	xml_impl_no_eiffel: "${GOBO}/library/xml/impl/no_eiffel"
+		default
+			assertion (no)
+		option
+	;
+	xml_impl_no_eiffel_event: "${GOBO}/library/xml/impl/no_eiffel/event"
+		default
+			assertion (no)
+		option
+	;
+
+
+	xml_impl_no_tree_on_event: "${GOBO}/library/xml/impl/no_tree_on_event"
+		default
+			assertion (no)
+		option
+	;
+	xml_impl_no_tree_on_event_tree: "${GOBO}/library/xml/impl/no_tree_on_event/tree"
+		default
+			assertion (no)
+		option
+	;
+
+
+
+
+
+	se_kernel_se: "${SmallEiffelDirectory}/lib_std"
+		default
+			assertion (no)
+		option
+	;
+
+
+
+	xml: "${GOBO}/library/xml"
+		default
+			assertion (no)
+		option
+	;
+	xml_factory: "${GOBO}/library/xml/factory"
+		default
+			assertion (no)
+		option
+	;
+
+	xml_position: "${GOBO}/library/xml/position"
+		default
+			assertion (no)
+		option
+	;
+
+	xml_source: "${GOBO}/library/xml/source"
+		default
+			assertion (no)
+		option
+	;
+
+	xml_general: "${GOBO}/library/xml/general"
+		default
+			assertion (no)
+		option
+	;
+
+	xml_event: "${GOBO}/library/xml/event"
+		default
+			assertion (no)
+		option
+	;
+
+	xml_tree: "${GOBO}/library/xml/tree"
+		default
+			assertion (no)
+		option
+	;
+
+	xml_formatter: "${GOBO}/library/xml/formatter"
+		default
+			assertion (no)
+		option
+	;
+
+	xml_impl: "${GOBO}/library/xml/impl"
+		default
+			assertion (no)
+		option
+	;
+	xml_impl_interface: "${GOBO}/library/xml/impl/interface"
+		default
+			assertion (no)
+		option
+	;
+	xml_impl_interface_general: "${GOBO}/library/xml/impl/interface/general"
+		default
+			assertion (no)
+		option
+	;
+
+	xml_impl_interface_event: "${GOBO}/library/xml/impl/interface/event"
+		default
+			assertion (no)
+		option
+	;
+
+	xml_impl_interface_tree: "${GOBO}/library/xml/impl/interface/tree"
+		default
+			assertion (no)
+		option
+	;
+
+
+	xml_impl_eiffel: "${GOBO}/library/xml/impl/eiffel"
+		default
+			assertion (no)
+		option
+	;
+	xml_impl_eiffel_event: "${GOBO}/library/xml/impl/eiffel/event"
+		default
+			assertion (no)
+		option
+	;
+
+
+	xml_impl_tree_on_event: "${GOBO}/library/xml/impl/tree_on_event"
+		default
+			assertion (no)
+		option
+	;
+	xml_impl_tree_on_event_tree: "${GOBO}/library/xml/impl/tree_on_event/tree"
+		default
+			assertion (no)
+		option
+	;
+
+
+	xml_impl_no_expat: "${GOBO}/library/xml/impl/no_expat"
+		default
+			assertion (no)
+		option
+	;
+	xml_impl_no_expat_event: "${GOBO}/library/xml/impl/no_expat/event"
+		default
+			assertion (no)
+		option
+	;
 
 	gobo: "${GOBO}/library"
 		default
