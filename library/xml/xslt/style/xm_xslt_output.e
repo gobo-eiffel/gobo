@@ -19,6 +19,8 @@ inherit
 			validate
 		end
 
+	XM_XSLT_OUTPUT_ROUTINES
+
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
@@ -82,8 +84,8 @@ feature -- Element change
 					character_representation := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (character_representation); STRING_.right_adjust (character_representation)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_indent_spaces_attribute) then
 					indent_spaces := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (indent_spaces); STRING_.right_adjust (indent_spaces)
-				elseif STRING_.same_string (an_expanded_name, Gexslt_byte_order_mark_attribute) then
-					encoding := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (encoding); STRING_.right_adjust (encoding)
+				elseif STRING_.same_string (an_expanded_name, Byte_order_mark_attribute) then
+					byte_order_mark := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (byte_order_mark); STRING_.right_adjust (byte_order_mark)
 				else
 					-- TODO - confine this check to xslt and gexslt namespaces,
 					--  and allow other namespaces for use with QName methods
@@ -142,7 +144,10 @@ feature -- Element change
 				end
 			end
 			if cdata_section_elements /= Void then
-				validate_cdata_sections
+				validate_cdata_sections (cdata_section_elements, static_context.namespace_resolver)
+				if cdata_validation_error_message /= Void then
+					report_compile_error (cdata_validation_error_message)
+				end
 			end
 			if undeclare_namespaces /= Void then
 				if STRING_.same_string (undeclare_namespaces, "yes") or else STRING_.same_string (undeclare_namespaces, "no") then
@@ -172,7 +177,7 @@ feature -- Element change
 				if STRING_.same_string (byte_order_mark, "yes") or else STRING_.same_string (byte_order_mark, "no") then
 					-- OK
 				else
-					report_compile_error ("undeclare-namespaces must be 'yes' or 'no'")
+					report_compile_error ("byte-order-mark must be 'yes' or 'no'")
 				end
 			end			
 			validated := True
@@ -319,12 +324,16 @@ feature -- Element change
 				report_compile_error ("Character maps are not supported yet")
 			end
 			if character_representation /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Gexslt_character_representation_attribute) then
-					a_property_set.set_character_representation (character_representation, an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Gexslt_character_representation_attribute) and then
-					not STRING_.same_string (character_representation, a_property_set.character_representation) then
-					a_property_set.set_duplication_error (Gexslt_character_representation_attribute)
-				end	
+				if a_property_set.is_valid_character_representation (character_representation) then
+					if a_property_set.is_higher_precedence (an_import_precedence, Gexslt_character_representation_attribute) then
+						a_property_set.set_character_representation (character_representation, an_import_precedence)
+					elseif not a_property_set.is_lower_precedence (an_import_precedence, Gexslt_character_representation_attribute) and then
+						not STRING_.same_string (character_representation, a_property_set.character_representation) then
+						a_property_set.set_duplication_error (Gexslt_character_representation_attribute)
+					end
+				else
+					a_property_set.set_general_error (STRING_.concat (character_representation, " is not a valid value for gexslt:character-representation"))
+				end
 			end			
 			if include_content_type /= Void and then not a_property_set.is_error then
 				if a_property_set.is_higher_precedence (an_import_precedence, Include_content_type_attribute) then
@@ -347,12 +356,12 @@ feature -- Element change
 				end					
 			end
 			if byte_order_mark /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Gexslt_byte_order_mark_attribute) then
+				if a_property_set.is_higher_precedence (an_import_precedence, Byte_order_mark_attribute) then
 					a_property_set.set_byte_order_mark_required (STRING_.same_string (byte_order_mark, "yes"), an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Gexslt_byte_order_mark_attribute) then
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, Byte_order_mark_attribute) then
 					if STRING_.same_string (byte_order_mark, "yes") and then not a_property_set.byte_order_mark_required or else
 						STRING_.same_string (byte_order_mark, "no") and then a_property_set.byte_order_mark_required then
-						a_property_set.set_duplication_error (Gexslt_byte_order_mark_attribute)
+						a_property_set.set_duplication_error (Byte_order_mark_attribute)
 					end
 				end
 			end
@@ -381,9 +390,6 @@ feature {NONE} -- Implementation
 	cdata_section_elements: STRING
 			-- cdata-section-elements value
 
-	cdata_section_expanded_names: DS_ARRAYED_LIST [STRING]
-			-- Expanded names of elements whose text children are to be output as CDATA sections
-
 	indent: STRING
 			-- indent value
 
@@ -409,57 +415,7 @@ feature {NONE} -- Implementation
 			-- Extension attribute - number of spaces to use when indent="yes"
 
 	byte_order_mark: STRING
-			-- Extension attribute - do we write a byte order mark?
-
-	validate_cdata_sections is
-			-- Validate cdata-section-elements attribute.
-		require
-			cdata_section_elements_not_void: cdata_section_elements /= Void	
-		local
-			a_string_splitter, another_string_splitter: ST_SPLITTER
-			a_cdata_name_list, qname_parts: DS_LIST [STRING]
-			a_cursor: DS_LIST_CURSOR [STRING]
-			a_qname, a_local_name, an_xml_prefix, a_uri, an_expanded_name: STRING
-		do
-			create a_string_splitter.make
-			a_cdata_name_list := a_string_splitter.split (cdata_section_elements)
-			from
-				a_cursor := a_cdata_name_list.new_cursor; a_cursor.start
-				create cdata_section_expanded_names.make (a_cdata_name_list.count)
-			variant
-				a_cdata_name_list.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				a_qname := a_cursor.item
-				if not is_qname (a_qname) then
-					report_compile_error (STRING_.concat ("Invalid CDATA element name. ", a_qname))
-					a_cursor.go_after
-				else
-					create another_string_splitter.make
-					another_string_splitter.set_separators (":")
-					qname_parts := another_string_splitter.split (a_qname)
-					if qname_parts.count = 1 then
-						a_local_name := qname_parts.item (1)
-						an_xml_prefix := ""
-					else
-						a_local_name := qname_parts.item (2)
-						an_xml_prefix := qname_parts.item (1)
-					end
-					a_uri := uri_for_prefix (an_xml_prefix, True)
-					if a_uri = Void then
-						report_compile_error (STRING_.concat ("Invalid CDATA element prefix. ", an_xml_prefix))
-						a_cursor.go_after
-					else
-						an_expanded_name := STRING_.concat ("{", a_uri)
-						an_expanded_name := STRING_.appended_string (an_expanded_name, "}")
-						an_expanded_name := STRING_.appended_string (an_expanded_name, a_local_name)
-						cdata_section_expanded_names.put_last (an_expanded_name)
-					end
-				end
-				a_cursor.forth
-			end
-		end
+			-- Do we write a byte order mark?
 
 end
 

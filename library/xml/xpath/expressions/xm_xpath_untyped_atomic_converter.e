@@ -123,14 +123,12 @@ feature -- Optimization
 			end
 		end
 
-
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		do
 			sequence.promote (an_offer)
 			if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
 		end
-
 
 feature -- Evaluation
 

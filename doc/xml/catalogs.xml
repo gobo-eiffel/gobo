@@ -1,7 +1,7 @@
-<chapter id="xml_catalogs">
+<chapter  xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xml_catalogs">
   <title>XML catalogs and the Catalog Resolver</title>
 
-  <sect1 id="about_catalogs">
+  <section id="about_catalogs">
     <title>About OASIS ERTC XML Catalogs</title>
 
     <para>
@@ -13,9 +13,9 @@
 
     <para>
       The moment you start to think beyond the local machine, this approach has limitations. 
-      For instance, if a <featurename>SYSTEM</featurename> id refers to a network resource, 
+      For instance, if a <exmlsyntax>SYSTEM</exmlsyntax> id refers to a network resource, 
       you don't have many options. If you have a local copy of the resource, you could edit
-      the source document and change the <featurename>SYSTEM</featurename> id. But you may
+      the source document and change the <exmlsyntax>SYSTEM</exmlsyntax> id. But you may
       have to do a lot of editing, and if you want to distribute the document, it gets complicated.
       Alternatively, you might have a resolver available that handles the http protocol, but
       if you lose your network connection, or the remote server goes down, you are in trouble.
@@ -26,9 +26,9 @@
       in code, a dedicated class is not very flexible. A good answer to these problems is the catalog resolver.
     </para>
 
-  </sect1>
+  </section>
 
-  <sect1>
+  <section>
     <title>The Catalog Resolver</title>
 
     <para>
@@ -36,14 +36,14 @@
       resolution process. In the first stage, it uses XML catalogs (as defined by the
       <link linkend="http://www.oasis-open.org/committees/download.php/4952/wd-entity-xml-catalogs-1.0_2e.html">
 	OASIS Entity Resolution Technical Committee's January 2004 working draft</link>) to look up
-	a <featurename>SYSTEM</featurename> or <featurename>PUBLIC</featurename> id. or a 
-	<featurename>URI reference</featurename> from the source document, and fetches another <featurename>URI reference</featurename>
+	a <exmlsyntax>SYSTEM</exmlsyntax> or <exmlsyntax>PUBLIC</exmlsyntax> id. or a 
+	URI reference from the source document, and fetches another URI reference
 	to feed into the second stage.
     </para>
 
     <para>
       In the second stage, an <classname>XM_URI_EXTERNAL_RESOLVER</classname> is used to open a stream
-      to the mapped <featurename>URI reference</featurename>.
+      to the mapped URI reference.
     </para>
 
     <para>
@@ -51,9 +51,9 @@
       Read the working draft to understand the full power of these catalogs.
     </para>
 
-  </sect1>
+  </section>
 
-  <sect1>
+  <section>
     <title>Configuring the Catalog Resolver</title>
 
     <para>
@@ -66,10 +66,10 @@
 	  <listitem>
 	    <para>
 	      The initial list of system catalogs searched by the resolver is taken from
-	      the environament variable <featurename>XML_CATALOG_FILES</featurename>, which
+	      the environment variable <envar>XML_CATALOG_FILES</envar>, which
 	      must be a list of file names separated by colons or semi-colons. If this list
 	      is empty, then the file <filename class="catalog">/etc/xml/catalog</filename>
-	      is used, unless <featurename>suppress_default_system_catalog_file</featurename>
+	      is used, unless <featurecall><featurename>suppress_default_system_catalog_file</featurename></featurecall>
 	      is called on <classname>XM_SHARED_CATALOG_MANAGER</classname>.
 	    </para>
 	  </listitem>
@@ -80,7 +80,7 @@
 	  <listitem>
 	    <para>
 	      Additional catalogs are searched for particular documents if one or more
-	      <featurename>oasis-xml-catalog</featurename> processing instructions appear
+	      <exmlsyntax>oasis-xml-catalog</exmlsyntax> processing instructions appear
 	      within that documents (see <link linkend="http://www.oasis-open.org/committees/download.php/4952/wd-entity-xml-catalogs-1.0_2e.html#oasis-er-tc-abc">
 	      the working draft for restrictions</link>).
 	      This behaviour can be suppressed by calling <featurename>suppress_processing_instructions</featurename>.
@@ -92,9 +92,9 @@
 	  <term>Public/System preference</term>
 	  <listitem>
 	    <para>
-	      If the <featurename>prefer</featurename> attribute is not coded for a particular catalog,
-	      then the default is <featurename>prefer="public"</featurename>. This can be changed to
-	      <featurename>prefer="system"</featurename> by calling <featurename>set_prefer_system</featurename>.
+	      If the <exmlsyntax>prefer</exmlsyntax> attribute is not coded for a particular catalog,
+	      then the default is <exmlsyntax>prefer="public"</exmlsyntax>. This can be changed to
+	      <exmlsyntax>prefer="system"</exmlsyntax> by calling <featurecall><featurename>set_prefer_system</featurename></featurecall>.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -117,7 +117,7 @@
 
     </para>
 
-  <sect2>
+  <section>
     <title>Debug level settings</title>
 
     <para>
@@ -190,9 +190,9 @@
 
     </orderedlist>
 
-  </sect2>
+  </section>
 
-  </sect1>
+  </section>
 
 
 </chapter>

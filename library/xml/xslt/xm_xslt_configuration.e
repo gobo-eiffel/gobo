@@ -38,61 +38,62 @@ feature {NONE} -- Initialization
 
 	make (an_entity_resolver: like entity_resolver;
 			a_uri_resolver: like uri_resolver;
+			an_output_resolver: like output_resolver;
 			an_error_listener: like error_listener;
-			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY;
 			an_encoder_factory: like encoder_factory) is
 			-- Establish invariant.
 		require
 			entity_resolver_not_void: an_entity_resolver /= Void
 			uri_resolver_not_void: a_uri_resolver /= Void
+			output_resolver_not_void: an_output_resolver /= Void
 			error_listener_not_void: an_error_listener /= Void
-			system_function_factory: a_system_function_factory /= Void
 			encoder_factory_not_void: 	an_encoder_factory /= Void
+		local
+			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY
 		do
+			create a_system_function_factory
 			function_factory.register_system_function_factory (a_system_function_factory)
 			encoder_factory := an_encoder_factory
 			set_string_mode_mixed
 			recovery_policy := Recover_with_warnings
 			entity_resolver := an_entity_resolver
 			uri_resolver := a_uri_resolver
-			error_listener := an_error_listener
-			if error_listener.is_impure then
-				error_listener.set_recovery_policy (Recover_with_warnings)
+			output_resolver := an_output_resolver
+			pristine_error_listener := an_error_listener
+			if pristine_error_listener.is_impure then
+				pristine_error_listener.set_recovery_policy (Recover_with_warnings)
 			end
 			shared_decimal_context.set_digits (18)
 		ensure
 			entity_resolver_set: entity_resolver = an_entity_resolver
 			uri_resolver_set: uri_resolver = a_uri_resolver
-			error_listener_set: error_listener = an_error_listener
+			output_resolver_set: output_resolver = an_output_resolver
+			error_listener_set: pristine_error_listener = an_error_listener
 			encoder_factory_set: encoder_factory = an_encoder_factory
 		end
 
 	make_with_defaults is
 			-- Establish invariant using defaults.
 		local
-			a_system_function_factory: XM_XSLT_SYSTEM_FUNCTION_FACTORY
 			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			an_encoder_factory: XM_XSLT_ENCODER_FACTORY
 			a_catalog_resolver: XM_CATALOG_RESOLVER
+			an_output_resolver: XM_XSLT_DEFAULT_OUTPUT_URI_RESOLVER
+			a_security_manager: XM_XSLT_DEFAULT_SECURITY_MANAGER
 		do
 			create a_catalog_resolver
 			create an_encoder_factory
-			create a_system_function_factory
 			create error_reporter.make_standard
 			create an_error_listener.make (Recover_with_warnings, error_reporter)
-			make (a_catalog_resolver, a_catalog_resolver, an_error_listener, a_system_function_factory, an_encoder_factory)
+			create a_security_manager.make
+			create an_output_resolver.make (a_security_manager)
+			make (a_catalog_resolver, a_catalog_resolver, an_output_resolver, an_error_listener, an_encoder_factory)
 		end
 
 feature -- Access
 
-	are_external_functions_allowed: BOOLEAN
-			-- Are extension functions allowed?
-
 	trace_listener: XM_XSLT_TRACE_LISTENER
 			-- Trace listener
-
-	error_listener: XM_XSLT_ERROR_LISTENER
-			-- Error listener
 
 	error_reporter: UT_ERROR_HANDLER
 			-- Error reporter for standard error and trace listeners
@@ -103,21 +104,18 @@ feature -- Access
 	uri_resolver: XM_URI_REFERENCE_RESOLVER
 			-- URI resolver
 
+	output_resolver: XM_XSLT_OUTPUT_URI_RESOLVER
+			-- Output URI resolver
+
 	encoder_factory: XM_XSLT_ENCODER_FACTORY
 			-- Encoder factory
 
 	is_line_numbering: BOOLEAN
 			-- Is line-numbering turned on?
 
-	is_strip_all_white_space: BOOLEAN
-			-- Is all white space to be stripped from source documents?
-
 	is_tiny_tree_model: BOOLEAN
 			-- Should the tiny tree model be used for XML source?
 
-	is_trace_external_functions: BOOLEAN
-			-- Is tracing of external functions turned on?
-	
 	recovery_policy: INTEGER
 			-- Recovery policy when warnings or errors are encountered
 
@@ -127,38 +125,16 @@ feature -- Access
 			Result := trace_listener /= Void
 		end
 
-	element_validator (a_receiver: XM_XPATH_RECEIVER; a_name_code: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;
-							 a_validation_action: INTEGER; a_validation_context: ANY): XM_XPATH_RECEIVER is
-			-- A receiver that can be used to validate an element,
-			--  and that passes the validated element on to a target receiver.
-			-- If validation is not supported, the returned receiver
-			--  will be the target receiver.
-		require
-			current_receiver_not_void: a_receiver /= Void
-			validation_action: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
-			-- Not sure about the others - anyway, they are not used yet
+	error_listener: XM_XSLT_ERROR_LISTENER is
+			-- Error listener
 		do
-
-			-- Basic XSLT processor version
-
-			Result := a_receiver
+			if pristine_error_listener.is_impure then
+				Result := pristine_error_listener.another
+			else
+				Result := pristine_error_listener
+			end
 		ensure
-			element_validator_not_void: Result /= Void
-		end
-
-	document_validator (a_receiver: XM_XPATH_RECEIVER; a_system_id: STRING; a_validation_action: INTEGER): XM_XPATH_RECEIVER is
-		-- A receiver that can be used to validate a document,
-			--  and that passes the validated element on to a target receiver.
-			-- If validation is not supported, the returned receiver
-			--  will be the target receiver.
-		require
-			current_receiver_not_void: a_receiver /= Void
-			validation_action: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
-			system_id_not_void: a_system_id /= Void
-		do
-			Result := a_receiver
-		ensure
-			document_validator_not_void: Result /= Void
+			error_listener_not_void: Result /= Void
 		end
 
 feature -- Element change
@@ -209,12 +185,14 @@ feature -- Element change
 			entity_resolver_set: entity_resolver = an_entity_resolver
 		end
 
-	set_strip_all_white_space (strip_all_white_space: BOOLEAN) is
-			-- Set `is_strip_all_white_space'.
+	set_uri_resolver (a_uri_resolver: like uri_resolver) is
+			-- Set `uri_resolver'.
+		require
+			uri_resolver_not_void: a_uri_resolver /= Void
 		do
-			is_strip_all_white_space := strip_all_white_space
+			uri_resolver := a_uri_resolver
 		ensure
-			set: is_strip_all_white_space = strip_all_white_space
+			uri_resolver_set: uri_resolver = a_uri_resolver
 		end
 
 	set_recovery_policy (a_recovery_policy: INTEGER) is
@@ -223,8 +201,8 @@ feature -- Element change
 			valid_recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
 		do
 			recovery_policy := a_recovery_policy
-			if error_listener.is_impure then
-				error_listener.set_recovery_policy (recovery_policy)
+			if pristine_error_listener.is_impure then
+				pristine_error_listener.set_recovery_policy (recovery_policy)
 			end
 		ensure
 			recovery_policy_set: recovery_policy = a_recovery_policy
@@ -238,10 +216,62 @@ feature -- Element change
 			set: is_tiny_tree_model = true_or_false
 		end
 
+feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation
+
+	element_validator (a_receiver: XM_XPATH_RECEIVER; a_name_code: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;
+							 a_validation_action: INTEGER; a_validation_context: ANY): XM_XPATH_RECEIVER is
+			-- A receiver that can be used to validate an element,
+			--  and that passes the validated element on to a target receiver.
+			-- If validation is not supported, the returned receiver
+			--  will be the target receiver.
+		require
+			current_receiver_not_void: a_receiver /= Void
+			validation_action: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
+			-- Not sure about the others - anyway, they are not used yet
+		do
+
+			-- Basic XSLT processor version
+
+			Result := a_receiver
+		ensure
+			element_validator_not_void: Result /= Void
+		end
+
+	document_validator (a_receiver: XM_XPATH_RECEIVER; a_system_id: STRING; a_validation_action: INTEGER): XM_XPATH_RECEIVER is
+		-- A receiver that can be used to validate a document,
+			--  and that passes the validated element on to a target receiver.
+			-- If validation is not supported, the returned receiver
+			--  will be the target receiver.
+		require
+			current_receiver_not_void: a_receiver /= Void
+			validation_action: a_validation_action >= Validation_strict  and then Validation_strip <= a_validation_action
+			system_id_not_void: a_system_id /= Void
+		do
+			Result := a_receiver
+		ensure
+			document_validator_not_void: Result /= Void
+		end
+
+feature {XM_XSLT_PREPARED_STYLESHEET, XM_XSLT_MODULE} -- Compliation
+	
+	are_external_functions_allowed: BOOLEAN
+			-- Are extension functions allowed?
+
+feature {XM_XSLT_EXPRESSION_CONTEXT} -- Debugging
+
+	is_trace_external_functions: BOOLEAN
+			-- Is tracing of external functions turned on?
+	
+feature {NONE} -- Implementation
+
+		pristine_error_listener: XM_XSLT_ERROR_LISTENER
+			-- Error listener
+	
 invariant
 
 	entity_resolver_not_void: entity_resolver /= Void
-	error_listener_not_void: error_listener /= Void
+	output_resolver_not_void: output_resolver /= Void
+	error_listener_not_void: pristine_error_listener /= Void
 	error_reporter_not_void: error_reporter /= Void
 	encoder_factory_not_void: 	encoder_factory /= Void
 	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover

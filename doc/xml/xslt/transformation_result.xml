@@ -1,0 +1,68 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Transformation Result"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_error_listener">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Wednesday, October 20th, 2004</date>
+  </chapterinfo>
+  <title>Transformation Result</title>    
+  <para>
+    This class is a wrapper for the various classes which might receive
+    a result document from a transformation.
+  </para>
+  <section>
+    <title>Creation Procedures</title>
+    <para>
+      The creation procedure <featurename>make_secondary_stream</featurename> is only used for
+      creating secondary stream, that is, those created by an <xslt>xsl:result-document</xslt>. 
+      Accordingly, it is of no concern to the users of the library.
+    </para>
+    <para>
+      The other creation procedures are for creating the primary result. Since the Eiffel programmer
+      <emphasis>must</emphasis> use one of these when invoking <featurecall><featurename>transform</featurename></featurecall>,
+      it is worth going into them in some detail.
+    </para>
+    <variablelist>
+      <varlistentry>
+	<term><featurename>(a_stream: XM_OUTPUT; a_system_id:STRING)</featurename></term>
+	<listitem>
+	  <para>
+	    This will be the one you normally want to use. You create <featurename>a_stream</featurename>
+	    using whichever creation procedure of <classname>XM_OUTPUT</classname> you find appropriate, and
+	    you couple a <exmlsyntax>SYSTEM</exmlsyntax> id with it.
+	    <warning>
+		This should be an absolute URI, especially if you use any <xslt>xsl:result-document</xslt>s
+		with relative URIs for their <xslt>href</xslt> attribute, as they will be resolved realative
+		to the one you supply.
+	    </warning>
+	    <warning>
+	      If you use any <xslt>xsl:result-document</xslt>s with relative URIs for their <xslt>href</xslt> 
+	      attribute, then make sure that your URI scheme is one that 
+	      <link linkend="output_resolver">your output resolver</link> can cope with.
+	    </warning>
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>    
+  </section>
+</chapter>

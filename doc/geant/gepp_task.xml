@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="gepp_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation"  id="gepp_task">
 	<title>gepp</title>
 
-	<sect1 id="gepp_description">
+	<section id="gepp_description">
 		<title>Description</title>
 		<para>
 			Execute gepp.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="gepp_parameters">
+	<section id="gepp_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -79,9 +79,9 @@
 			</varlistentry>
 
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="gepp_specification">
+	<section id="gepp_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -114,9 +114,9 @@
 ]]>
 	</programlisting>
 
-	</sect1>
+	</section>
 
-	<sect1 id="gepp_examples">
+	<section id="gepp_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <gepp
@@ -129,6 +129,6 @@
 
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

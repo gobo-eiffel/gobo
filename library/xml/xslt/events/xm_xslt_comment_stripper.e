@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			underlying_receiver_not_void: an_underlying_receiver /= Void
 		do
 			base_receiver := an_underlying_receiver
+			system_id := an_underlying_receiver.system_id
 		ensure
 			base_receiver_set: base_receiver = an_underlying_receiver
 		end

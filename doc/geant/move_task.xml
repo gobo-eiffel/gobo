@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="move_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="move_task">
 	<title>move</title>
 
-	<sect1 id="move_description">
+	<section id="move_description">
 		<title>Description</title>
 		<para>
 			Move a file or fileset to a new file or directory.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="move_parameters">
+	<section id="move_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -65,9 +65,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="move_specification">
+	<section id="move_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -92,9 +92,9 @@
   </define>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="move_examples">
+	<section id="move_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <move file="readme.txt" to_file="readme1.txt"/>
@@ -106,6 +106,6 @@
   </move>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

@@ -12,10 +12,10 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="target">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="target">
 	<title>Target</title>
 
-	<sect1 id="target_description">
+	<section id="target_description">
 		<title>Description</title>
 		<para>
 			A build file's target is comparable to a method of class in an object oriented
@@ -27,9 +27,9 @@
   geant t1
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="target_parameters">
+	<section id="target_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -122,9 +122,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="fileset_nested_parameters">
+	<section id="fileset_nested_parameters">
 		<title>Parameters specified as nested elements</title>
 
 		<variablelist>
@@ -181,9 +181,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="target_specification">
+	<section id="target_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -244,9 +244,9 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="target_examples">
+	<section id="target_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
@@ -255,5 +255,5 @@
   </target>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 </chapter>

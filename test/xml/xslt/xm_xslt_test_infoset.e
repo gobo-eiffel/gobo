@@ -54,7 +54,7 @@ feature
 			create an_output
 			create an_output_string.make (0)
 			an_output.set_output_string (an_output_string)
-			create a_result.make (an_output)
+			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			a_configuration.use_tiny_tree_model (True)
@@ -64,7 +64,7 @@ feature
 			create an_output
 			create another_output_string.make (0)
 			an_output.set_output_string (another_output_string)
-			create a_result.make (an_output)
+			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			assert ("Files are canonically the same", STRING_.same_string (an_output_string, another_output_string))

@@ -87,6 +87,10 @@ feature -- Optimization
 			else
 				add_context_document_argument (2, "key+")
 			end
+			if arguments.item (3).context_document_nodeset then
+				set_context_document_nodeset
+			end
+			merge_dependencies (arguments.item (3).dependencies)
 		end
 
 feature -- Evaluation
@@ -197,23 +201,26 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 			a_string_value: XM_XPATH_STRING_VALUE
 			an_xslt_context: XM_XSLT_EXPRESSION_CONTEXT
 		do
-			Precursor (a_context)
-			arguments.item (2).set_unsorted (False)
-			a_string_value ?= arguments.item (1)
-			an_xslt_context ?= a_context
-			check
-				static_context_is_xslt_context: an_xslt_context /= Void
-			end
-			if a_string_value /= Void then
-
-				-- Common case, key name is supplied as a constant
-
-				key_fingerprint := an_xslt_context.fingerprint (a_string_value.string_value, False)
-				if key_fingerprint = -1 then
-					todo ("check_arguments - issue a dynamic error", True)
+			if not arguments_checked then
+				arguments_checked := True
+				Precursor (a_context)
+				arguments.item (2).set_unsorted (False)
+				a_string_value ?= arguments.item (1)
+				an_xslt_context ?= a_context
+				check
+					static_context_is_xslt_context: an_xslt_context /= Void
 				end
-			else
-				namespace_context := an_xslt_context.namespace_context
+				if a_string_value /= Void then
+					
+					-- Common case, key name is supplied as a constant
+					
+					key_fingerprint := an_xslt_context.fingerprint (a_string_value.string_value, False)
+					if key_fingerprint = -1 then
+						todo ("check_arguments - issue a dynamic error", True)
+					end
+				else
+					namespace_context := an_xslt_context.namespace_context
+				end
 			end
 		end
 
@@ -229,8 +236,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			-- Compute special properties.
 		do
 			initialize_special_properties
-			set_context_document_nodeset
 			set_ordered_nodeset
+			set_context_document_nodeset
 		end
 
 feature {NONE} -- Implementation
@@ -240,6 +247,9 @@ feature {NONE} -- Implementation
 
 	namespace_context: XM_XPATH_NAMESPACE_RESOLVER
 			-- Namespace context
+
+	arguments_checked: BOOLEAN
+			-- Have arguments been cheked yet?
 
 end
 	

@@ -12,7 +12,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="gexslt_introduction">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_introduction">
   <chapterinfo>
     <copyright>
       <year>2004</year>
@@ -29,20 +29,20 @@
   <para>Gobo Eiffel XSLT is a command-line processor for the XSLT 2.0 language. 
   It is very much still under development at the moment, and does not even implement the whole
   of XSLT 1.0 as yet, but it is capable of useful work. In fact, it is used to produce the XHTML pages
-  for all of the Gobo documentation that is written in accordance with <filename class="schema">$GOBO/doc/gobodoc.rng</filename>.
+  for all of the Gobo documentation that is written in accordance with <filename class="schema">$GOBO/doc/misc/gobo.rng</filename>.
   </para> 
-  <sect1>
+  <section>
     <title>Using gexslt</title>
     <para>
       <link linkend="options">Command line options</link>
     </para>
-  </sect1>
-  <sect1>
+  </section>
+  <section>
     <title>Credits</title>
     <para>The architecture and algorithms of the Gobo Eiffel XSLT library, upon which Gobo Eiffel XSLT is built,
     are derived from <ulink url="http://www.saxonica.com/index.html">Saxon</ulink>, an open source XSLT Processor written in Java, by Michael Kay. 
     I am very grateful to Michael for making the source code available for study, and for
     answering all  my questions.
     </para>
-  </sect1>
+  </section>
 </chapter>

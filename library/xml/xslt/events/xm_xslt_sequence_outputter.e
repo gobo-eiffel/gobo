@@ -47,12 +47,10 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		do
 			create output_list.make_default
+			system_id := ""
 		end
 
 feature -- Access
-
-	system_id: STRING
-			-- SYSTEM ID of output sequence
 
 	sequence: XM_XPATH_VALUE is
 			-- Built sequence
@@ -91,7 +89,7 @@ feature -- Events
 	start_document is
 			-- New document
 		do
-			do_nothing
+			is_document_started := True
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is

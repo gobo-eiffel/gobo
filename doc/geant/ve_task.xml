@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="ve_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="ve_task">
 	<title>ve</title>
 
-	<sect1 id="ve_description">
+	<section id="ve_description">
 		<title>Description</title>
 		<para>
 			Invoke Object Tools's Visual Eiffel Compiler.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="ve_parameters">
+	<section id="ve_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -113,9 +113,9 @@
 			subdirectory recursively. In mode tune the Eiffel System is tuned with Visual Eiffel's tuner.
 		</para>
 
-	</sect1>
+	</section>
 
-	<sect1 id="ve_specification">
+	<section id="ve_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -148,9 +148,9 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="ve_examples">
+	<section id="ve_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
@@ -161,6 +161,6 @@
   <ve tune="${system}${exe}" level="${vetuner}" if="${vetuner}"/>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

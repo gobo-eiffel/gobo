@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			specials.put (shared_name_pool.fingerprint (Xslt_uri, "transform"), 10)
 			base_receiver := an_underlying_receiver
 			create strip_stack.make (100)
+			system_id := an_underlying_receiver.system_id
 		ensure
 			base_receiver_set: base_receiver = an_underlying_receiver
 		end

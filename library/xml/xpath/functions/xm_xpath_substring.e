@@ -53,10 +53,10 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			if argument_number < 3 then
+			if argument_number = 1 then
 				create Result.make_optional_string
 			else
-				create Result.make_single_string
+				create Result.make_single_number
 			end
 		end
 
@@ -64,8 +64,68 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
+		local
+			a_string: STRING
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			a_double_value: XM_XPATH_DOUBLE_VALUE
+			a_starting_position, an_ending_position, a_count: INTEGER
 		do
-			todo ("evaluate-item", False)
+			last_evaluated_item := Void
+			arguments.item (1).evaluate_item (a_context)
+			if arguments.item (1).last_evaluated_item = Void then
+				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+			else
+				a_string := arguments.item (1).last_evaluated_item.string_value
+				arguments.item (2).evaluate_item (a_context)
+				if arguments.item (2).last_evaluated_item.is_error then
+					last_evaluated_item := arguments.item (2).last_evaluated_item
+				else
+					an_atomic_value ?= arguments.item (2).last_evaluated_item
+					check
+						second_argument_convertible_to_double: an_atomic_value /= Void and then	an_atomic_value.is_convertible (type_factory.double_type)
+						-- static typing
+					end
+					a_double_value ?= an_atomic_value.convert_to_type (type_factory.double_type)
+					check
+						second_argument_is_double: a_double_value /= Void
+					end
+					a_starting_position := a_double_value.value.rounded
+					if arguments.count = 3 then
+						arguments.item (3).evaluate_item (a_context)
+						if arguments.item (3).last_evaluated_item.is_error then
+							last_evaluated_item := arguments.item (3).last_evaluated_item
+						else
+							an_atomic_value ?= arguments.item (3).last_evaluated_item
+							check
+								third_argument_convertible_to_double:	an_atomic_value /= Void and then	an_atomic_value.is_convertible (type_factory.double_type)
+								-- static typing
+							end
+							a_double_value ?= an_atomic_value.convert_to_type (type_factory.double_type)
+							check
+								third_argument_is_double: a_double_value /= Void
+							end
+							a_count := a_double_value.value.rounded
+							if a_count < 1 then
+								a_count := 0
+							end
+							an_ending_position := a_count + a_starting_position - 1
+							if an_ending_position > a_string.count then
+								an_ending_position := a_string.count
+							end
+						end
+					else
+						an_ending_position := a_string.count
+					end
+				end
+			end
+			if last_evaluated_item = Void then
+				if a_starting_position < 1 then a_starting_position := 1 end
+				if an_ending_position < a_starting_position then
+					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+				else
+					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_string.substring (a_starting_position, an_ending_position))
+				end
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

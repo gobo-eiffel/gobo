@@ -168,6 +168,8 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_PRESERVE_SPACE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_processing_instruction_type_code then
 				create {XM_XSLT_PROCESSING_INSTRUCTION} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+			when Xslt_result_document_type_code then
+				create {XM_XSLT_RESULT_DOCUMENT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_sequence_type_code then
 				create {XM_XSLT_SEQUENCE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_sort_type_code then

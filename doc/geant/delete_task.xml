@@ -12,19 +12,19 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="delete_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="delete_task">
 	<title>delete</title>
 
-	<sect1 id="delete_description">
+	<section id="delete_description">
 		<title>Description</title>
 		<para>
 			Delete either a single file, all files in a specified directory and its sub-directories, or
 			a set of files specified by one or more nested <link linkend="fileset_element">fileset</link>
 			elements.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="delete_parameters">
+	<section id="delete_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -54,9 +54,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="delete_specification">
+	<section id="delete_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -72,9 +72,9 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="copy_examples">
+	<section id="copy_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
@@ -88,6 +88,6 @@
 ]]>
 		</programlisting>
 
-	</sect1>
+	</section>
 
 </chapter>

@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="outofdate_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="outofdate_task">
 	<title>outofdate</title>
 
-	<sect1 id="outofdate_description">
+	<section id="outofdate_description">
 		<title>Description</title>
 		<para>
 			Compare timestamps of files and set the value of a variable depending on the result.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="outofdate_parameters">
+	<section id="outofdate_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -92,9 +92,9 @@
 			</varlistentry>
 
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="outofdate_specification">
+	<section id="outofdate_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -119,9 +119,9 @@
   </define>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="outofdate_examples">
+	<section id="outofdate_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <outofdate
@@ -157,6 +157,6 @@
   </outofdate>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

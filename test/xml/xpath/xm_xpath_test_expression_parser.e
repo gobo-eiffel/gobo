@@ -43,7 +43,6 @@ feature -- Test
 			tokenizer: XM_XPATH_TOKENIZER
 			a_string: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
-			an_attribute_reference: XM_XPATH_ATTRIBUTE_REFERENCE_EXPRESSION
 		do
 			a_string := "//fred[@son='Jim']"
 			create a_context.make (True, True)
@@ -95,9 +94,9 @@ feature -- Test
 			assert ("Sub-expression 4", sub_exprs_4 /= Void)
 			assert ("Two sub-expressions 4", sub_exprs_4.count = 2)
 			an_expression := sub_exprs_4.item (1)
-			an_attribute_reference ?= an_expression
-			assert ("Attribute reference not void", an_attribute_reference /= Void) -- attribute::son
-			assert ("Attribute reference is to attribute::son", STRING_.same_string (shared_name_pool.display_name_from_name_code (an_attribute_reference.fingerprint), "son"))
+			an_axis ?= an_expression
+			assert ("Axis expression2 not void", an_axis /= Void)
+			assert ("Attribute axis", an_axis.axis = Attribute_axis)
 			an_expression := sub_exprs_4.item (2)
 			a_string_value ?= an_expression
 			assert ("String-value is Jim", a_string_value /= Void and then STRING_.same_string (a_string_value.string_value, "Jim"))

@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="ise_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="ise_task">
 	<title>ise</title>
 
-	<sect1 id="ise_description">
+	<section id="ise_description">
 		<title>Description</title>
 		<para>
 			Invoke ISE's Eiffel Compiler.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="ise_parameters">
+	<section id="ise_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -106,9 +106,9 @@
 			</varlistentry>
 
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="ise_specification">
+	<section id="ise_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -134,9 +134,9 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="ise_examples">
+	<section id="ise_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
@@ -145,6 +145,6 @@
   <ise clean="${system}"/>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

@@ -1,0 +1,92 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Overview of the XSLT library"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_overview">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Monday, October 18th, 2004</date>
+  </chapterinfo>
+  <title>Overview of the XSLT library</title>
+  <para>
+    This chapter gives Eiffel programmers an introduction to the Gobo Eiffel XSLT library, which
+    implements the World Wide Web Consortium's 
+    <ulink url="http://www.w3.org/TR/xslt20/">XSLT 2.0 tranformation language</ulink>.
+  </para>
+  <section>
+    <title>Invoking XSLT</title>
+    <para>
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    The first step involved in using the XSLT library, is to set the 
+	    <ulink url="http://www.w3.org/TR/xslt20/#conformance">conformance</ulink> level.
+	    At present, only Basic XSLT Processor is supported. In the future, we hope to add support 
+	    for Schema-Aware XSLT Processor, so the first step is to inherit from
+	    <classname>XM_XPATH_SHARED_CONFORMANCE</classname> and call <featurecall><featurename>conformance.set_basic_xslt_processor</featurename></featurecall>.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    The next step is to configure the processor, by creating an
+	    <link linkend="configuration"><classname>XM_XSLT_CONFIGURATION</classname></link>.
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+  </section>
+  <section>
+    <title>Customizable interfaces</title>
+    <para>
+      The following is a list of XSLT interfaces that the Eiffel programmer
+      may need to implement. In all cases, the library provides at least one
+      concrete implementation.
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <link linkend="output_resolver"><classname>XM_XSLT_OUTPUT_URI_RESOLVER</classname></link>
+	  </para>
+	</listitem>
+      </itemizedlist>
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <link linkend="error_listener"><classname>XM_XSLT_ERROR_LISTENER</classname></link>
+	  </para>
+	</listitem>
+      </itemizedlist>
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <link linkend="trace_listener"><classname>XM_XSLT_TRACE_LISTENER</classname></link>
+	  </para>
+	</listitem>
+      </itemizedlist>
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <link linkend="transformation_result"><classname>XM_XSLT_TRANSFORMATION_RESULT</classname></link>
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+  </section>
+</chapter>

@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="echo_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="echo_task">
 	<title>echo</title>
 
-	<sect1 id="echo_description">
+	<section id="echo_description">
 		<title>Description</title>
 		<para>
 			Echo a message to stdout.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="echo_parameters">
+	<section id="echo_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -39,9 +39,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="echo_specification">
+	<section id="echo_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -53,15 +53,15 @@
 </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="echo_examples">
+	<section id="echo_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
   <echo message="Hello world!"/>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

@@ -1,8 +1,8 @@
 
-<chapter id="fileset_element">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="fileset_element">
 <title>Fileset</title>
 
-<sect1 id="fileset_description">
+<section id="fileset_description">
 <title>Description</title>
 <para>
 A fileset is a group of files. The files included in the fileset are
@@ -13,9 +13,9 @@ As a fileset is not a task but a general element it cannot be used
 on its own. It can only be used by tasks supporting filesets as
 nested element.
 </para>
-</sect1>
+</section>
 
-<sect1 id="fileset_detailes">
+<section id="fileset_detailes">
 <title>Details</title>
 <para>
 	By default all files with names matching the inclusion criteria
@@ -86,9 +86,9 @@ nested element.
 	filename pair ['filename', 'mapped_filename'] is added to the fileset.
 </para>
 
-</sect1>
+</section>
 
-	<sect1 id="fileset_parameters">
+	<section id="fileset_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -168,9 +168,9 @@ nested element.
 			</varlistentry>
 
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="fileset_nested_parameters">
+	<section id="fileset_nested_parameters">
 		<title>Parameters specified as nested elements</title>
 
 		<variablelist>
@@ -215,9 +215,9 @@ nested element.
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="fileset_specification">
+	<section id="fileset_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -262,9 +262,9 @@ nested element.
 		        ]]>
 
 	</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="fileset_examples">
+	<section id="fileset_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <fileset include="@(**/*.ge|**/*.?ace)"/>
@@ -284,9 +284,9 @@ nested element.
   </fileset>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="lx_dfa_wildcard">
+	<section id="lx_dfa_wildcard">
 		<title>LX DFA Wildcards</title>
 		<para>
 			To specify the attributes `include' and `exclude' you have to use special
@@ -327,17 +327,17 @@ nested element.
                      where pattern-list is a list of one or more
                      patterns separated by a '|'.
 	</programlisting>
-	</sect1>
+	</section>
 
-<sect1 id="obsolete_fileset_element">
+<section id="obsolete_fileset_element">
 <title>Obsolete (GOBO 3.1) Fileset format</title>
 <para>
 To alleviate the migration of the former fileset format to the current one the
 following list describes the old format.
 </para>
-</sect1>
+</section>
 
-	<sect1 id="fileset_parameters">
+	<section id="fileset_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -413,9 +413,9 @@ following list describes the old format.
 			</varlistentry>
 
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="fileset_nested_parameters">
+	<section id="fileset_nested_parameters">
 		<title>Parameters specified as nested elements</title>
 
 		<variablelist>
@@ -460,9 +460,9 @@ following list describes the old format.
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="fileset_specification">
+	<section id="fileset_specification">
 		<title>Obsolete (GOBO 3.1) RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -507,7 +507,7 @@ following list describes the old format.
 		        ]]>
 
 	</programlisting>
-	</sect1>
+	</section>
 </chapter>
 
 

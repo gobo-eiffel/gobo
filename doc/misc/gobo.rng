@@ -10,7 +10,9 @@
 -->
 
 <grammar
-	xmlns="http://relaxng.org/ns/structure/1.0">
+	xmlns="http://relaxng.org/ns/structure/1.0"
+	 ns="http://www.gobosoft.com/eiffel/gobo/documentation"
+>
 
 <start>
 	<choice>
@@ -22,7 +24,7 @@
 <!-- Document structure -->
 
 <define name="book">
-	<element name="book">
+	<element name="book" >
 		<ref name="title"/>
 		<!-- bookinfo? -->
 		<oneOrMore>
@@ -38,21 +40,22 @@
 		<ref name="title"/>
 		<ref name="paras"/>
 		<zeroOrMore>
-			<element name="sect1">
-				<optional>
-					<attribute name="id"/>
-				</optional>
-				<ref name="title"/>
-				<ref name="paras"/>
-				<zeroOrMore>
-					<element name="sect2">
-						<ref name="title"/>
-						<ref name="paras"/>
-					</element>
-				</zeroOrMore>
-			</element>
+		  <ref name="section"/>
 		</zeroOrMore>
 	</element>
+</define>
+
+<define name="section">
+  <element name="section">
+    <optional>
+      <attribute name="id"/>
+    </optional>
+    <ref name="title"/>
+    <ref name="paras"/>
+    <zeroOrMore>
+      <ref name="section"/>
+    </zeroOrMore>
+  </element>
 </define>
 
 <define name="title">
@@ -250,6 +253,21 @@
 		<element name="ulink">
 			<attribute name="url"/>
 			<ref name="inline_content"/>
+		</element>
+		<element name="exmlsyntax">
+		  <text/>
+		</element>
+		<element name="envar">
+		  <text/>
+		</element>
+		<element name="xpath">
+		  <text/>
+		</element>
+		<element name="uri">
+		  <text/>
+		</element>
+		<element name="xslt">
+		  <text/>
 		</element>
 		<element name="informalexample">
 			<ref name="programlisting"/>

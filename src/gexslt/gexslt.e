@@ -175,7 +175,7 @@ feature -- Setting
 				report_duplicate_parameter_name (a_parameter_name)
 				Exceptions.die (1)
 			else
-				parameters.put (a_parameter_value, a_parameter_name)
+				parameters.force (a_parameter_value, a_parameter_name)
 			end
 		end
 
@@ -232,6 +232,9 @@ feature -- Access
 
 	output_destination: STRING
 			-- Output destination URL (if `Void' use standard output)
+
+	highly_secure: BOOLEAN
+			-- Is high security wanted?
 
 feature -- Error handling
 
@@ -379,6 +382,7 @@ feature -- Error handling
 									  "       --warning-threshold=number%N" +
 									  "       --error-threshold=number%N" +									  
 									  "       --treat-warnings-as-errors%N" +
+									  "       --secure%N" +
 									  "       --recover-silently%N" +
 									  "       --do-not-recover%N" +
 									  "       --no-line-numbers%N" +
@@ -434,6 +438,8 @@ feature {NONE} -- Implementation
 				initial_mode_name := an_option.substring (6, an_option.count)
 			elseif an_option.is_equal ("no-gc") then
 				collection_off
+			elseif an_option.is_equal ("secure") then
+				highly_secure := True
 			elseif an_option.is_equal ("treat-warnings-as-errors") then
 				error_listener.treat_warnings_as_recoverable_errors
 			elseif an_option.is_equal ("do-not-recover") then
@@ -560,8 +566,6 @@ feature {NONE} -- Implementation
 			uri_list_valid: uris /= Void
 				and then uris.count = 2 -- for now
 			xml_stylesheet_pi_not_yet_supported: not use_processing_instruction
-			output_destination_uri_not_yet_supported: True
-			parameters_not_yet_supported: True
 		local
 			a_stylesheet_uri, a_source_uri: XM_XSLT_URI_SOURCE
 			a_destination: XM_OUTPUT
@@ -569,11 +573,17 @@ feature {NONE} -- Implementation
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_stream: KL_TEXT_OUTPUT_FILE
+			a_uri: UT_URI
+			a_cwd: STRING
+			a_pathname: KI_PATHNAME
+			a_drive, a_string: STRING
+			a_destination_system_id: STRING
 		do
 			conformance.set_basic_xslt_processor
 			configuration.use_tiny_tree_model (is_tiny_tree_model)
 			configuration.set_line_numbering (is_line_numbering)
 			if is_tracing then set_trace_handler end
+			if highly_secure then configuration.output_resolver.security_manager.set_high_security (True) end
 			create a_stylesheet_uri.make (uris.item (1))
 			create a_stylesheet.make (configuration)
 			a_stylesheet.prepare (a_stylesheet_uri)
@@ -597,8 +607,24 @@ feature {NONE} -- Implementation
 					create a_stream.make (output_destination)
 					a_stream.open_write
 					a_destination.set_output_stream (a_stream)
+					a_cwd := file_system.current_working_directory
+					if file_system /= unix_file_system then
+						a_pathname := file_system.string_to_pathname (a_cwd)
+						a_cwd := unix_file_system.pathname_to_string (a_pathname)
+						a_drive := a_pathname.drive
+						if a_drive /= Void then
+							a_cwd := STRING_.concat (a_drive, a_cwd)
+							a_cwd := STRING_.concat ("/", a_cwd)
+						end
+					end
+					a_string := STRING_.concat ("file://", a_cwd)
+					create a_uri.make (STRING_.concat (a_string, "/"))
+					create a_uri.make_resolve (a_uri, output_destination)
+					a_destination_system_id := a_uri.full_reference
+				else
+					a_destination_system_id := "stdout:"
 				end
-				create a_result.make (a_destination)
+				create a_result.make (a_destination, a_destination_system_id)
 				if not a_transformer.is_error then
 					a_transformer.transform (a_source_uri, a_result)
 				end

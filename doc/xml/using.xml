@@ -1,7 +1,7 @@
-<chapter id="using_xml_parser">
+<chapter  xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="using_xml_parser">
 <title>Using the XML parser</title>
 
-<sect1 id="first_xml_example">
+<section id="first_xml_example">
 <title>A first example: counting tags</title>
 
 <para>
@@ -89,10 +89,10 @@ and starts the parser, and prints the result:
 The full example is available at <filename class="directory">example/xml/event/tagcount</filename>.
 </para>
 
-</sect1>
+</section>
 
 
-<sect1 id="xml_event_interfaces">
+<section id="xml_event_interfaces">
 <title>Event interfaces</title>
 
 <para>
@@ -106,9 +106,9 @@ For each event interface, there is a purely deferred class with the callbacks, o
 <para>
 DTD events are covered separately, for parsers that support them, using <classname>XM_DTD_CALLBACKS</classname> and <classname>XM_DTD_CALLBACKS_SOURCE</classname> (with <featurename>set_dtd_callbacks</featurename>).
 </para>
-</sect1>
+</section>
 
-<sect1 id="xml_parsers">
+<section id="xml_parsers">
 <title>The XML parser interface</title>
 
 <para>
@@ -139,9 +139,9 @@ As this potential polymorphism puts a burden of care on the client, and could le
 Another setting a parser user may want to change from the default relates to external references, described below.
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="concrete_xml_parsers">
+<section id="concrete_xml_parsers">
 <title>Concrete parsers</title>
 
 <para>
@@ -152,9 +152,9 @@ Several concrete parsers are available, which are descendants of this interface.
 Because Expat introduces external dependencies in the library, a factory class is available to allow the same client code to work independently of whether or not the Expat parser is compiled in: <classname>XM_EXPAT_PARSER_FACTORY</classname>. The value of <featurename>is_expat_available</featurename> depends on whether Expat is available, and code may portably act accordingly, for instance falling back to the Eiffel parser.
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="xml_event_filters">
+<section id="xml_event_filters">
 <title>Event filters and streams</title>
 
 <para>
@@ -169,9 +169,9 @@ Each component of a filter pipe is a descendant of a filter base class, <classna
 From an Eiffel typing viewpoint, the whole stream has the same type: each filter can be at any position in the pipe. It maybe that some filters have extra dependencies (one must be before the other) that are not captured by the static type system. This seems acceptable given the flexibility of the system, and that many practical filters can indeed be placed anywhere on a pipe. A good point for encapsulation is that each filter is a small component with a clear interface, providing much better encapsulation than some other event filter patterns (like each stage inheriting from the previous one, with high coupling between each component).
 </para>
 
-</sect1>
+</section>
 
-<sect1>
+<section>
 <title>Content events</title>
 
 <para>
@@ -186,9 +186,9 @@ All events of <classname>XM_CALLBACKS</classname> that take names of tags or att
 To make the interface consistently simple, it has only atomic events whose parameters are only strings and not data structures. Data structures are built downstream, or as intermediary internal structures of a specific filter. In particular, this means there is one event per attribute.
 </para>
 
-</sect1>
+</section>
 
-<sect1>
+<section>
 <title>Content event filters</title>
 
 <para>
@@ -247,8 +247,8 @@ a_parser.set_callbacks (callbacks_pipe (
 In a real program, references may be kept to individual filters, to recover the result or check their state after processing. <classname>XM_TREE_CALLBACKS_PIPE</classname> provides a standard pipe for tree creation with attributes for the interesting component filters.
 </para>
 
-</sect1>
-<!-- sect1 DTD events -->
+</section>
+<!-- section DTD events -->
 
 <!-- summary! -->
 

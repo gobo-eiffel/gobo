@@ -50,6 +50,8 @@ feature {NONE} -- Initialization
 			create a_code_point_collator
 			declare_collation (default_collation_name, a_code_point_collator)
 			create stylesheet_module_map.make_with_equality_testers (5, Void, string_equality_tester)
+			create module_list.make_default
+			module_list.set_equality_tester (string_equality_tester)
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		end
 
@@ -156,7 +158,8 @@ feature -- Access
 			-- Accumulated output properties for format named by `a_fingerprint' (-1 = unnamed format)
 		require
 			nearly_positive_fingerprint: a_fingerprint > -2
-			output_properties_defined_somewhere: a_fingerprint > -1 implies True -- Can't actually test this easily (?)
+			post_validated: post_validated
+			output_properties_defined_somewhere: a_fingerprint > -1 implies is_named_output_property_defined (a_fingerprint)
 		local
 			found: BOOLEAN
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
@@ -200,6 +203,30 @@ feature -- Status report
 
 	indices_built: BOOLEAN
 			-- Have the indices been built?
+
+	is_named_output_property_defined (a_fingerprint: INTEGER): BOOLEAN is
+			-- Is there an xsl:output statement for `a_fingerprint'?
+		require
+			nearly_positive_fingerprint: a_fingerprint > -2
+			post_validated: post_validated
+		local
+			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			an_output: XM_XSLT_OUTPUT
+		do
+			from
+				a_cursor := top_level_elements.new_cursor; a_cursor.finish
+			variant
+				a_cursor.index
+			until
+				Result or else a_cursor.before
+			loop
+				an_output ?= a_cursor.item
+				if an_output /= Void and then an_output.output_fingerprint = a_fingerprint then
+					Result := True
+				end
+				a_cursor.back
+			end
+		end
 
 	is_module_registered (a_system_id: STRING): BOOLEAN is
 			-- Is `a_system_id' registered as a module?
@@ -341,6 +368,7 @@ feature -- Element change
 				stylesheet_module_map.resize (2 * stylesheet_module_map.count)
 			end
 			stylesheet_module_map.put (stylesheet_module_map.count + 1, a_system_id)
+			module_list.force_last (a_system_id)
 		ensure
 			module_registered: is_module_registered (a_system_id)
 		end
@@ -628,13 +656,14 @@ feature -- Element change
 		require
 			configuration_not_void: a_configuration /= Void
 			no_compile_errors_so_far: not any_compile_errors
+			post_validate: post_validated
 		local
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			an_instruction: XM_XSLT_INSTRUCTION
 			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			another_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_TEMPLATE, INTEGER]
 			a_property_set: XM_XSLT_OUTPUT_PROPERTIES
-			a_message: STRING
+			a_message, a_system_id: STRING
 		do
 			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager, default_collation_name, collation_map, stripper_rules, strips_whitespace, module_list)
 
@@ -651,7 +680,9 @@ feature -- Element change
 				a_cursor.item.compile (last_compiled_executable)
 				an_instruction := a_cursor.item.last_generated_instruction						
 				if an_instruction /= Void then
-					an_instruction.set_source_location (module_number (a_cursor.item.system_id), a_cursor.item.line_number)
+					a_system_id := a_cursor.item.system_id
+					if not is_module_registered (a_system_id) then register_module (a_system_id) end
+					an_instruction.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
 				end
 				a_cursor.forth
 			end
@@ -660,9 +691,13 @@ feature -- Element change
 				last_compiled_executable.set_slot_space (number_of_variables, largest_stack_frame)
 				a_property_set := gathered_output_properties (-1)
 				if a_property_set.is_error then
-					a_message := STRING_.concat ("XT1560: Two xsl:output statements specify conflicting values for attribute '", a_property_set.duplicate_attribute_name)
-					a_message := STRING_.appended_string (a_message, "', in the unnamed output definition.")
-					report_compile_error (a_message)
+					if a_property_set.is_duplication_error then
+						a_message := STRING_.concat ("XT1560: Two xsl:output statements specify conflicting values for attribute '", a_property_set.duplicate_attribute_name)
+						a_message := STRING_.appended_string (a_message, "', in the unnamed output definition.")
+						report_compile_error (a_message)
+					else
+						report_compile_error (a_property_set.error_message)
+					end
 				else
 					last_compiled_executable.set_default_output_properties (a_property_set)
 					create a_compiled_templates_index.make_map (named_templates_index.count)
@@ -733,24 +768,8 @@ feature {NONE} -- Implementation
 	stylesheet_module_map: DS_HASH_TABLE [INTEGER, STRING]
 			-- Map of SYSTEM IDs to module numbers
 
-	module_list: DS_ARRAYED_LIST [STRING] is
+	module_list: DS_ARRAYED_LIST [STRING]
 			-- List of stylesheet modules indexed by module number
-		local
-			an_index: INTEGER
-		once
-			from
-				create Result.make (stylesheet_module_map.count)
-				Result.set_equality_tester (string_equality_tester)
-				stylesheet_module_map.start
-			until
-				stylesheet_module_map.after
-			loop
-				Result.put (stylesheet_module_map.key_for_iteration, stylesheet_module_map.item_for_iteration)
-				stylesheet_module_map.forth
-			end
-		ensure
-			module_list_not_void: Result /= Void
-		end
 
 	build_indices is
 			-- Build indices from selected top-level declarations.
@@ -997,5 +1016,6 @@ invariant
 	key_manager_not_void: key_manager /= Void
 	decimal_format_manager_not_void: decimal_format_manager /= Void
 	stylesheet_module_map_not_void: stylesheet_module_map /= Void
-
+	module_list_not_void: module_list /= Void
+	
 end

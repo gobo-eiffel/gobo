@@ -102,7 +102,7 @@ feature -- Matching
 								more_than_zero_ids: strings.count > 0
 							end
 						if strings.count = 1 then
-							an_element := a_doc.select_id (ids)
+							an_element := a_doc.selected_id (ids)
 							if an_element = Void then
 								Result := False
 							else
@@ -118,7 +118,7 @@ feature -- Matching
 								a_cursor.after
 							loop
 								an_id := a_cursor.item
-								an_element := a_doc.select_id (an_id)
+								an_element := a_doc.selected_id (an_id)
 								if an_element /= Void and then an_element.is_same_node (a_node) then
 									Result := True
 									a_cursor.go_after

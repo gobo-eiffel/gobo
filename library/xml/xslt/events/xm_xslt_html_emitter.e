@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 				Result := Hexadecimal_representation
 			elseif STRING_.same_string (a_representation, "native") and then not for_excluded then
 				Result := Native_representation
-			elseif STRING_.same_string (a_representation, "entity") and then not for_excluded then
+			elseif STRING_.same_string (a_representation, "entity") then
 				Result := Entity_representation
 			else
 				on_error ("Illegal value for gexslt:character-representation: " + a_representation)

@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="gelex_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gelex_task">
 	<title>gelex</title>
 
-	<sect1 id="gelex_description">
+	<section id="gelex_description">
 		<title>Description</title>
 		<para>
 			Execute gelex.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="gelex_parameters">
+	<section id="gelex_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -170,9 +170,9 @@
 			</varlistentry>
 
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="gelex_specification">
+	<section id="gelex_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -222,14 +222,14 @@
 		must not be set.
 	</para>
 
-	</sect1>
+	</section>
 
-	<sect1 id="gelex_examples">
+	<section id="gelex_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <gelex input="ascii2ps.l"/>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

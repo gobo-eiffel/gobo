@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			emitter ?= base_receiver
 			indent_spaces := some_output_properties.indent_spaces
 			is_after_formatted := True
+			system_id := a_receiver.system_id
 		end
 
 feature -- Events

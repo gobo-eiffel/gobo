@@ -1,7 +1,7 @@
-<chapter id="xml_resolvers">
+<chapter  xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xml_resolvers">
   <title>External entity and URI reference resolvers</title>
 
-  <sect1 id="external_resolvers">
+  <section id="external_resolvers">
     <title>Resolution of external entities</title>
 
     <para>
@@ -17,8 +17,8 @@
     </para>
 
     <para>
-      An external resolver is a class that opens a <classname>KI_CHARACTER_INPUT_STREAM</classname> given a <featurename>SYSTEM</featurename> identifier (a string) or 
-      a <featurename>PUBLIC</featurename> identifier (another string - but not a URI). 
+      An external resolver is a class that opens a <classname>KI_CHARACTER_INPUT_STREAM</classname> given a <exmlsyntax>SYSTEM</exmlsyntax> identifier (a string) or 
+      a <exmlsyntax>PUBLIC</exmlsyntax> identifier (another string - but not a URI). 
       An error is produced if no corresponding stream can be found. It is the responsibility of the client to close the stream.
     </para>
 
@@ -26,26 +26,26 @@
       All external entity resolvers are descendants of <classname>XM_EXTERNAL_RESOLVER</classname>.
     </para>
 
-  </sect1>
+  </section>
 
-  <sect1 id="uri_reference_resolvers">
+  <section id="uri_reference_resolvers">
     <title>Resolution of URI references</title>    
 
     <para>
       As well as external entities, xml applications (but <emphasis>not</emphasis> the parser), may
-      encounter other <featurename>URI reference</featurename>s that they need to process. A typical example is the <featurename>document()</featurename>
-      function in XPath/XSLT. The contents of this is a <featurename>URI reference</featurename>. This too, will need to be opened for processing.
+      encounter other URI references that they need to process. A typical example is the <xpath>document()</xpath>
+      function in XPath/XSLT. The contents of this is a URI reference. This too, will need to be opened for processing.
     </para>
     
     <para>
-      All <featurename>URI reference</featurename> resolvers are descendants of <classname>XM_URI_REFERENCE_RESOLVER</classname>. To resolve a URI
+      All URI reference resolvers are descendants of <classname>XM_URI_REFERENCE_RESOLVER</classname>. To resolve a URI
       reference, create such a resolver then call it's <featurename>resolve_uri</featurename> routine, passing
-      it the name of the <featurename>URI reference</featurename> to open. You will get back a <classname>KI_CHARACTER_INPUT_STREAM</classname>.
+      it the name of the URI reference to open. You will get back a <classname>KI_CHARACTER_INPUT_STREAM</classname>.
     </para>
 
-  </sect1>
+  </section>
 
-  <sect1 id="concrete_resolvers">
+  <section id="concrete_resolvers">
     <title>Concrete resolvers</title>
 
     <para>
@@ -68,7 +68,7 @@
 	  <term><classname>XM_FILE_EXTERNAL_RESOLVER</classname></term>
 	  <listitem>
 	    <para>
-	      This resolver takes the supplied <featurename>SYSTEM</featurename> id, and treats it as a file in the
+	      This resolver takes the supplied <exmlsyntax>SYSTEM</exmlsyntax> id, and treats it as a file in the
 	      current working directory. It is therefore of only extremely limited use, and
 	      should be considered obsolete. Use <classname>XM_URI_EXTERNAL_RESOLVER</classname> instead.
 	    </para>
@@ -79,8 +79,8 @@
 	  <term><classname>XM_STRING_EXTERNAL_RESOLVER</classname></term>
 	  <listitem>
 	    <para>
-	      This resolver resolves by mapping <featurename>SYSTEM</featurename> ids to in-memory strings. It must
-	      be configured by the programmer for every single <featurename>SYSTEM</featurename> id that will be
+	      This resolver resolves by mapping <exmlsyntax>SYSTEM</exmlsyntax> ids to in-memory strings. It must
+	      be configured by the programmer for every single <exmlsyntax>SYSTEM</exmlsyntax> id that will be
 	      encountered.
 	    </para>
 	  </listitem>
@@ -90,7 +90,7 @@
 	  <term><classname>XM_URI_EXTERNAL_RESOLVER</classname></term>
 	  <listitem>
 	    <para>
-	      This resolver handles any <featurename>SYSTEM</featurename> id by examining it's URI scheme, and
+	      This resolver handles any <exmlsyntax>SYSTEM</exmlsyntax> id by examining it's URI scheme, and
 	      delegating it to a descendant of <classname>XM_URI_RESOLVER</classname>,
 	      whose purpose is to open URIs for that particular scheme.
 	    </para>
@@ -111,7 +111,7 @@
 	    <para>
 	      This resolver combines the features of <classname>XM_STRING_EXTERNAL_RESOLVER</classname>
 	      and <classname>XM_URI_EXTERNAL_RESOLVER</classname>, and extends them further, in as much
-	      as it deals with resolution of <featurename>PUBLIC</featurename> ids and <featurename>URI reference</featurename>s also.
+	      as it deals with resolution of <exmlsyntax>PUBLIC</exmlsyntax> ids and URI references also.
 	    </para>
 
 	    <para>
@@ -119,8 +119,8 @@
 	      OASIS ETRC XML Catalog files. Hence it's name - it is designed for use by 
 	      <classname>XM_CATALOG__RESOLVER</classname> so that it has a way of resolving references within 
 	      the catalog files that it uses to carry out the resolution process. But you can configure it to
-	      handle additional <featurename>SYSTEM</featurename> and <featurename>PUBLIC</featurename> ids,
-	      and <featurename>URI reference</featurename>s (there are separate lists for each type).
+	      handle additional <exmlsyntax>SYSTEM</exmlsyntax> and <exmlsyntax>PUBLIC</exmlsyntax> ids,
+	      and URI references (there are separate lists for each type).
 	    </para>
 
 	  </listitem>
@@ -131,10 +131,10 @@
     </para>
 
     <para>
-      Briefly mentioned in passing was <link linkend="catalogs"><classname>XM_CATALOG__RESOLVER</classname></link>. This is such a powerful
+      Briefly mentioned in passing was <link linkend="catalogs"><classname>XM_CATALOG_RESOLVER</classname></link>. This is such a powerful
       and complex resolver, that it gets a chapter all of it's own.
     </para>
 
-  </sect1>
+  </section>
 
 </chapter>

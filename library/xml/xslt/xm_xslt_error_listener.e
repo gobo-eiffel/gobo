@@ -18,8 +18,12 @@ inherit
 	
 feature -- Access
 
-	recovery_policy: INTEGER
+	recovery_policy: INTEGER is
 		-- Recovery policy when warnings or errors are encountered
+		deferred
+		ensure
+			in_range: Result >= Recover_silently and then Result <= Do_not_recover
+		end
 
 feature -- Status report
 
@@ -32,12 +36,10 @@ feature -- Status report
 		end
 
 	warning_threshold: INTEGER
-			-- Limit on number of warnings to be displayed;
-			-- Descendants may choose to ignore this.
+			-- Limit on number of warnings to be displayed
 
 	recoverable_error_threshold: INTEGER
-			-- Limit on number of recoverable errors to be displayed;
-			-- Descendants may choose to ignore this.
+			-- Limit on number of recoverable errors to be displayed
 	
 feature -- Events
 
@@ -101,7 +103,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	new_instance: like Current is
+	another: like Current is
 			-- Pristine instance of `Current'
 		require
 			impure_handler: is_impure
@@ -109,10 +111,6 @@ feature -- Duplication
 		ensure
 			instance_not_void: Result /= Void
 		end
-
-invariant
-
-	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
 
 end
 	

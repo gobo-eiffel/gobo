@@ -12,7 +12,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="xpath_implemented_functions">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xpath_implemented_functions">
   <chapterinfo>
     <copyright>
       <year>2004</year>
@@ -43,7 +43,7 @@
   </para>
   <para>The final column gives a link to the W3C draft or recommendation against which the tests have been checked, or &quot;None&quot;, if this has not been done. </para>
   
-  <sect1>
+  <section>
       <title>Implemented XPath 2.0 core Functions</title>
     <table>
       <title>Table of functions</title>
@@ -180,8 +180,8 @@
 	 </row>	
 	 <row>
 	   <entry>fn:substring</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Incidentally</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -655,5 +655,5 @@
 	</tbody>
       </tgroup>
     </table>
-  </sect1>
+  </section>
 </chapter>

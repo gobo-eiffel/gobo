@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="getest_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="getest_task">
 	<title>getest</title>
 
-	<sect1 id="getest_description">
+	<section id="getest_description">
 		<title>Description</title>
 		<para>
 			Execute getest.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="getest_parameters">
+	<section id="getest_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -139,9 +139,9 @@
 			</varlistentry>
 
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="getest_specification">
+	<section id="getest_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -178,9 +178,9 @@
 ]]>
 	</programlisting>
 
-	</sect1>
+	</section>
 
-	<sect1 id="getest_examples">
+	<section id="getest_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <getest
@@ -192,6 +192,6 @@
 
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

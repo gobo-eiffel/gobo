@@ -43,6 +43,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	recovery_policy: INTEGER
+			-- Recovery policy when warnings or errors are encountered
+
 	warnings, errors, fatal_errors: INTEGER
 			-- Error counts
 
@@ -138,7 +141,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	new_instance: like Current is
+	another: like Current is
 			-- Pristine instance of `Current'
 		do
 			create Result.make (recovery_policy, error_reporter)

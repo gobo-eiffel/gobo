@@ -19,9 +19,6 @@ inherit
 
 feature -- Access
 
-	system_id: STRING
-			-- SYSTEM ID of the resulting document
-
 	document: XM_XPATH_DOCUMENT
 			-- Resulting document
 
@@ -73,7 +70,6 @@ feature {NONE} -- Implementation
 invariant
 
 	locator_not_void: locator /= Void
-	system_id_not_void: system_id /= Void
 
 end
 

@@ -26,6 +26,7 @@ feature -- Events
 	start_document is
 			-- New document
 		do
+			is_document_started := True
 			previous_atomic := False
 		end
 

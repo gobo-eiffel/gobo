@@ -134,10 +134,10 @@ feature -- Evaluation
 			context_not_void: a_context /= Void
 		do
 
-			-- Sending a namecode of -1 to the receiver is a special signal to ignore
+			-- Sending a namecode of -10 to the receiver is a special signal to ignore
 			--  this element and the attributes that follow it
 
-			a_context.transformer.current_receiver.start_element (-1, 0, 0)
+			a_context.transformer.current_receiver.start_element (-10, 0, 0)
 			process_children (a_context)
 
 			-- Note, we don't bother with an end_element call.

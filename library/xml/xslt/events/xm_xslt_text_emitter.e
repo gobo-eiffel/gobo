@@ -30,6 +30,7 @@ feature -- Events
 	start_document is
 			-- New document
 		do
+			is_document_started := True
 
 			-- Prevent `open_document' from writing an XML declaration.
 

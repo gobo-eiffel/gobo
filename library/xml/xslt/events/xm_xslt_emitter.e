@@ -20,9 +20,6 @@ inherit
 
 feature -- Access
 
-	system_id: STRING
-			-- SYSTEM-id of the document
-
 	outputter: XM_XSLT_OUTPUT_ENCODER
 			-- Outputter which writes to the destination stream
 

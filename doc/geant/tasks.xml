@@ -12,7 +12,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="geant_tasks">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_tasks">
 	<title>Geant's Tasks</title>
 
 	<para>

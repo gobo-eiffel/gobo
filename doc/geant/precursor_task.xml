@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="precursor_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="precursor_task">
 	<title>precursor</title>
 
-	<sect1 id="precursor_description">
+	<section id="precursor_description">
 		<title>Description</title>
 		<para>
 			Execute precursor of current target.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="precursor_parameters">
+	<section id="precursor_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -56,9 +56,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="geant_nested_parameters">
+	<section id="geant_nested_parameters">
 		<title>Parameters specified as nested elements</title>
 
 		<variablelist>
@@ -80,9 +80,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="precursor_specification">
+	<section id="precursor_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -93,15 +93,15 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="precursor_examples">
+	<section id="precursor_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
   <precursor/>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

@@ -34,8 +34,8 @@ feature -- Access
 		require
 			string_not_void: a_string /= Void
 		do
-			if STRING_.same_string (a_string, "strict") then
-				Result := Validation_strict
+			if STRING_.same_string (a_string, "strip") then
+				Result := Validation_strip
 			elseif STRING_.same_string (a_string, "lax") then
 				Result := Validation_lax
 			elseif STRING_.same_string (a_string, "preserve") then
@@ -47,7 +47,7 @@ feature -- Access
 			end
 		ensure
 			validation_code_in_range: Result = Validation_invalid or else 
-			(Result >= Validation_strict  and then Validation_strip <= Result)
+			(Result >= Validation_strict  and then Validation_strip >= Result)
 		end
 
 end

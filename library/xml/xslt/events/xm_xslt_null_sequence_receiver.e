@@ -33,7 +33,7 @@ feature -- Events
 	start_document is
 			-- New document
 		do
-			do_nothing
+			is_document_started := True
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is

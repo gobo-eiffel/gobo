@@ -407,7 +407,7 @@ feature -- Cardinality
 		end
 
 	cardinality_exactly_one: BOOLEAN is
-			-- `True' if a single value is allowed
+			-- `True' iff a single value is allowed
 		require
 			cardinalities_computed: are_cardinalities_computed
 		do
@@ -463,12 +463,12 @@ feature -- Cardinality
 	occurence_indicator: STRING is
 			-- Text of the occurence-indicator
 		do
-			if cardinality_allows_zero and then cardinality_allows_one then
+			if cardinality_allows_zero_or_more then
+				Result := "*"
+			elseif cardinality_allows_zero and then cardinality_allows_one then
 				Result := "?"
 			elseif cardinality_exactly_one then
 				Result := ""
-			elseif cardinality_allows_zero_or_more then
-				Result := "*"
 			else
 					check
 						one_or_more: cardinality_allows_one_or_more

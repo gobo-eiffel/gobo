@@ -23,7 +23,6 @@ creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 
-
 feature {NONE} -- Initialization
 	
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;  a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;

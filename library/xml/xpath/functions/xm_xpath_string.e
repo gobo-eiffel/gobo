@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Optimization
 
-		simplify is
+	simplify is
 			-- Perform context-independent static optimizations.
 		do
 			use_context_item_as_default

@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="exit_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="exit_task">
 	<title>exit</title>
 
-	<sect1 id="exit_description">
+	<section id="exit_description">
 		<title>Description</title>
 		<para>
 			Exit build process with specified exit code.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="exit_parameters">
+	<section id="exit_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -39,9 +39,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="exit_specification">
+	<section id="exit_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -55,15 +55,15 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="exit_examples">
+	<section id="exit_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
   <exit code="1"/>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="setenv_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="setenv_task">
 	<title>setenv</title>
 
-	<sect1 id="setenv_description">
+	<section id="setenv_description">
 		<title>Description</title>
 		<para>
 			Set an environment variable's value (for the current geant process).
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="setenv_parameters">
+	<section id="setenv_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -54,9 +54,9 @@
 
 		</variablelist>
 
-	</sect1>
+	</section>
 
-	<sect1 id="setenv_specification">
+	<section id="setenv_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -69,15 +69,15 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="setenv_examples">
+	<section id="setenv_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
   <setenv name="MY_ENV" value="some_value"/>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

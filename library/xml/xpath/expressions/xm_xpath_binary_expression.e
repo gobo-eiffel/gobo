@@ -221,10 +221,12 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			create cardinalities.make (1, 3) -- All False
-			cardinalities.put (True, 1)
-			cardinalities.put (True, 2)
-			are_cardinalities_computed := True
+			if first_operand.cardinality_allows_zero and then
+				second_operand.cardinality_allows_zero then
+				set_cardinality_optional
+			else
+				set_cardinality_exactly_one
+			end
 		end
 
 	display_operator: STRING is

@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="mkdir_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="mkdir_task">
 	<title>mkdir</title>
 
-	<sect1 id="mkdir_description">
+	<section id="mkdir_description">
 		<title>Description</title>
 		<para>
 			Create a directory.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="mkdir_parameters">
+	<section id="mkdir_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -39,9 +39,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="mkdir_specification">
+	<section id="mkdir_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -53,9 +53,9 @@
   </define>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="mkdir_examples">
+	<section id="mkdir_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <mkdir directory="out"/>
@@ -63,6 +63,6 @@
   <mkdir directory="some/new/directory"/>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

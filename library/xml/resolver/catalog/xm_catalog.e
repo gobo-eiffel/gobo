@@ -155,7 +155,7 @@ feature -- Access
 					shared_catalog_manager.debug_message (9, "Next rewrite rule matches", a_rewrite_rule.start_string)
 					if a_system_id.substring_index (a_rewrite_rule.start_string, 1) = 1 then
 						Result := clone (a_system_id)
-						Result.replace_substring (a_rewrite_rule.target, 1, a_rewrite_rule.count)
+						Result := STRING_.replaced_substring (Result, a_rewrite_rule.target, 1, a_rewrite_rule.count)
 						shared_catalog_manager.debug_message (5, "Rewrite rule resolved to", Result)
 						another_cursor.go_after
 					else
@@ -226,7 +226,7 @@ feature -- Access
 					shared_catalog_manager.debug_message (9, "Next rewrite rule matches", a_rewrite_rule.start_string)
 					if a_uri_reference.substring_index (a_rewrite_rule.start_string, 1) = 1 then
 						Result := clone (a_uri_reference)
-						Result.replace_substring (a_rewrite_rule.target, 1, a_rewrite_rule.count)
+						Result := STRING_.replaced_substring (Result, a_rewrite_rule.target, 1, a_rewrite_rule.count)
 						shared_catalog_manager.debug_message (5, "Rewrite rule resolved to", Result)
 						another_cursor.go_after
 					else

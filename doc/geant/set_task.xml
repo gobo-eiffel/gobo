@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="set_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="set_task">
 	<title>set</title>
 
-	<sect1 id="set_description">
+	<section id="set_description">
 		<title>Description</title>
 		<para>
 			Set a variable's value.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="set_parameters">
+	<section id="set_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -54,9 +54,9 @@
 
 		</variablelist>
 
-	</sect1>
+	</section>
 
-	<sect1 id="set_specification">
+	<section id="set_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -69,15 +69,15 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="set_examples">
+	<section id="set_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
   <set name="directory" value="tmp"/>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

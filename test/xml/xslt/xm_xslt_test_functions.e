@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Teststylesheet functions and extenstion functions"
+		"Test stylesheet functions and extenstion functions"
 
 	library: "Gobo Eiffel XSLT test suite"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -65,7 +65,7 @@ feature -- Test
 			a_transformer.set_initial_template ("first")
 			assert ("Initial template set", a_transformer.initial_template /= Void)
 			an_output.set_output_string (an_output_string)
-			create a_result.make (an_output)
+			create a_result.make (an_output, "string:")
 			a_transformer.transform (Void, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			assert ("Correct result", STRING_.same_string (an_output_string, Reversed_output_string))
@@ -105,7 +105,7 @@ feature -- Test
 			a_transformer.set_initial_template ("first")
 			assert ("Initial template set", a_transformer.initial_template /= Void)
 			an_output.set_output_string (an_output_string)
-			create a_result.make (an_output)
+			create a_result.make (an_output, "string:")
 			a_transformer.transform (Void, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			assert ("Correct result", STRING_.same_string (an_output_string, Reversed_output_string))

@@ -164,14 +164,10 @@ feature {NONE} -- Implementation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			if an_element = Void then
-				Result := Void
-			else
-				an_iterator := an_element.new_axis_iterator_with_node_test (Attribute_axis, name_test)
-				if not an_iterator.is_error then
-					an_iterator.start
-					if not an_iterator.is_error and then not an_iterator.after then Result ?= an_iterator.item end
-				end
+			an_iterator := an_element.new_axis_iterator_with_node_test (Attribute_axis, name_test)
+			if not an_iterator.is_error then
+				an_iterator.start
+				if not an_iterator.is_error and then not an_iterator.after then Result ?= an_iterator.item end
 			end
 		end
 

@@ -12,14 +12,14 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="geant_overview">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_overview">
 	<title>Overview of Geant</title>
 
 	<para>
 		Geant is a build tool specifically tailored for the Eiffel programming language.
 	</para>
 
-	<sect1 id="introduction">
+	<section id="introduction">
 		<title>Why Geant?</title>
 
 		<para>
@@ -59,9 +59,9 @@
 			from other build scripts.
 		</para>
 
-	</sect1>
+	</section>
 
-	<sect1>
+	<section>
 		<title>How to invoke Geant</title>
 		<para>
 			Like other build tools geant is invoked on the commandline
@@ -83,9 +83,9 @@
 			syntax is very similar.
 		</para>
 
-	</sect1>
+	</section>
 
-	<sect1>
+	<section>
 		<title>Diving into geant</title>
 		<para>
 			<link linkend="introduction">Introduction to geant</link>
@@ -99,5 +99,5 @@
 		<para>
 			<link linkend="builtin_variables">Built-in variables</link>
 		</para>
-	</sect1>
+	</section>
 </chapter>

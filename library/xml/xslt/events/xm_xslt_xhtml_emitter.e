@@ -31,6 +31,7 @@ feature -- Events
 	start_document is
 			-- New document
 		do
+			is_document_started := True
 			escape_uri_attributes := output_properties.escape_uri_attributes
 			make_url_attributes
 		end

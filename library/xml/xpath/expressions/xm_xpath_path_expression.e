@@ -653,21 +653,21 @@ feature {NONE} -- Implementation
 			step_special_properties_computed: step.are_special_properties_computed
 		local
 			an_axis: XM_XPATH_AXIS_EXPRESSION
-			an_attribute_reference: XM_XPATH_ATTRIBUTE_REFERENCE_EXPRESSION
+			--an_attribute_reference: XM_XPATH_ATTRIBUTE_REFERENCE_EXPRESSION
 		do
 			an_axis ?= step
 			if not start.cardinality_allows_many and then an_axis /= Void then
 				Result := not is_forward_axis (an_axis.axis)
-			else
-				an_axis ?= start
-				if an_axis /= Void then
-					if is_forward_axis (an_axis.axis) then
-						Result := False
-					else
-						an_attribute_reference ?= step
-						Result := an_attribute_reference /= Void
-					end
-				end
+			--else
+			--	an_axis ?= start
+			--	if an_axis /= Void then
+			--		if is_forward_axis (an_axis.axis) then
+			--			Result := False
+			--		else
+			--			an_attribute_reference ?= step
+			--			Result := an_attribute_reference /= Void
+			--		end
+			--	end
 			end
 		end
 

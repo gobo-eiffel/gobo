@@ -185,7 +185,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 	Duration_multiplication_action: INTEGER is 6
 			-- Arithmetic action need on operands
 	
-		analyze_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT) is
+	analyze_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		local
 			a_type, another_type: XM_XPATH_ITEM_TYPE

@@ -1,12 +1,12 @@
 
-<chapter id="map_element">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="map_element">
 <title>Map</title>
 
-<sect1 id="map_description">
+<section id="map_description">
 <title>Description</title>
 <para>
 Map... TBD
 </para>
-</sect1>
+</section>
 
 </chapter>

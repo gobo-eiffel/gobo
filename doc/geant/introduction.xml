@@ -12,11 +12,11 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="geant_introduction">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_introduction">
 	<title>Introduction to geant</title>
 
 
-	<sect1 id="hello_world">
+	<section id="hello_world">
 		<title>Hello World</title>
 		<para>
 			To find out whether a tool or library is appropriate for my needs
@@ -45,6 +45,6 @@
 			The message <emphasis>Hello world</emphasis> will be output.
 		</para>
 
-	</sect1>
+	</section>
 
 </chapter>

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<project name="xslt" default="help">
+
+	<description>
+		description: "Eiffel Ant file for Gobo Eiffel XSLT Library Doc"
+		library: "Gobo Eiffel XSLT Library"
+		copyright: "Copyright (c) 2004, Colin Adams and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Install the Gobo Eiffel XSLT Library Documentation.
+		</description>
+
+		<set name="xslt_processor" value="gexslt" />
+
+		<set name="next" value="overview"/>
+		<set name="next_chapter" value="configuration"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="output_resolver"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="error_listener"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="transformation_result"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="overview"/>
+		<geant target="xslt"/>
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<!-- do nothing -->
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<delete file="overview.html"/>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="xslt">
+		<description>
+			Execute XSL Transformation for argument ${input}, ${previous} and ${next} using processor ${xslt_processor}.
+		</description>
+
+		<set name="previous" value="${input}"/>
+		<set name="input" value="${next}"/>
+		<set name="next" value="${next_chapter}"/>
+
+		<xslt
+			processor="${xslt_processor}"
+			input="${input}.xml"
+			output="${input}.html"
+			stylesheet="${GOBO}/doc/misc/gobo2html2.xsl"
+		>
+			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
+			<parameter name="next" value="&quot;'${next}.html'&quot;"/>
+			<parameter name="toc" value="&quot;'overview.html'&quot;"/>
+			<parameter name="images" value="'../../image/'"/>
+		</xslt>
+	</target>
+
+</project>

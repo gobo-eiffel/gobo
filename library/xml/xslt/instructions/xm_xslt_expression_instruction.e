@@ -41,7 +41,9 @@ feature {NONE} -- Initialization
 				a_cursor.after
 			loop
 				a_sub_expression := a_cursor.item
-				merge_dependencies (a_sub_expression.dependencies)
+				if a_sub_expression /= Void then
+					merge_dependencies (a_sub_expression.dependencies)
+				end
 				a_cursor.forth
 			end
 		end

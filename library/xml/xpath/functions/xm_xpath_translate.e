@@ -69,11 +69,14 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			a_string_value, a_source_map, a_target_map: XM_XPATH_STRING_VALUE
+			an_item: XM_XPATH_ITEM
+			a_string: STRING
+			a_source_map, a_target_map: XM_XPATH_STRING_VALUE
 		do
 			arguments.item (1).evaluate_item (a_context)
-			a_string_value ?= arguments.item (1).last_evaluated_item
-			if a_string_value = Void then
+			an_item := arguments.item (1).last_evaluated_item
+			if an_item /= Void then a_string := an_item.string_value end
+			if a_string = Void then
 				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 			else
 				arguments.item (2).evaluate_item (a_context)
@@ -88,7 +91,7 @@ feature -- Evaluation
 					target_map_not_void: a_target_map /= Void
 					-- static typing
 				end				
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (translated_string (a_string_value.string_value, a_source_map.string_value, a_target_map.string_value))
+				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (translated_string (a_string, a_source_map.string_value, a_target_map.string_value))
 			end
 		end
 
@@ -105,11 +108,12 @@ feature {NONE} -- Implementation
 	translated_string (a_value, a_source_map, a_target_map: STRING): STRING is
 			-- Translated version of `a_value'
 		require
-			valid_value: a_value /= Void and then a_value.count > 0
+			valid_value: a_value /= Void
 			source_map_not_void: a_source_map /= Void
 			target_map_not_void: a_target_map /= Void
 		local
 			an_index, a_count: INTEGER
+			a_char, a_string: STRING
 		do
 			from
 				Result := ""
@@ -118,9 +122,12 @@ feature {NONE} -- Implementation
 			until
 				an_index > a_count
 			loop
-				Result := STRING_.appended_string (Result, 
-															  translated_character (a_value.substring (an_index,an_index), 
-																							a_source_map, a_target_map))
+				a_char := a_value.substring (an_index,an_index)
+				a_string := translated_character (a_char, a_source_map, a_target_map)
+				if a_string = Void then
+					a_string := a_char
+				end
+				Result := STRING_.appended_string (Result, a_string)												  
 				an_index := an_index + 1
 			end
 		ensure
@@ -145,11 +152,10 @@ feature {NONE} -- Implementation
 					Result := ""
 				end
 			else
-				Result := ""
+				Result := Void
 			end
 		ensure
-			result_not_void: Result /= Void
-			result_single: Result.count = 1 or else Result.count = 0
+			result_single: Result /= Void implies Result.count = 1 or else Result.count = 0
 		end
 
 end

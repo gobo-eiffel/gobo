@@ -91,9 +91,12 @@ feature -- Access
 			Result := style_element.uri_for_prefix (an_xml_prefix, False)
 		end
 
-	is_backwards_compatible_mode: BOOLEAN
+	is_backwards_compatible_mode: BOOLEAN is
 			-- Is Backwards Compatible Mode used?
-
+		do
+			Result := style_element.is_backwards_compatible_processing_enabled
+		end
+		
 	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
 			-- Fingerprint for `a_qname', using this as the context for namespace resolution
 		local

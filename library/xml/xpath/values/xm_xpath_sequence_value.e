@@ -160,12 +160,12 @@ feature  -- Conversion
 				if an_iterator.is_error or else an_iterator.after then
 					create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.error_value)
 				else
-					an_iterator.forth
-					if not an_iterator.is_error then
+				--	an_iterator.forth
+				--	if not an_iterator.is_error then
 						Result := an_iterator.item
-					else
-						create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.error_value)
-					end
+				--	else
+				--		create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.error_value)
+				--	end
 				end
 			else
 				create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.error_value)

@@ -435,7 +435,8 @@ feature {XM_XSLT_LOCATION_PATH_PATTERN} -- Local
 					a_filter_expression := a_cursor.item
 					type := a_filter_expression.item_type.primitive_type
 					if type = type_factory.double_type.fingerprint or else type = type_factory.decimal_type.fingerprint
-						or else type = type_factory.integer_type.fingerprint or else type = type_factory.float_type.fingerprint
+						or else type = type_factory.integer_type.fingerprint
+						or else (type_factory.float_type /= Void and then type = type_factory.float_type.fingerprint)
 						or else type = type_factory.any_atomic_type.fingerprint then
 						Result := True
 					elseif a_filter_expression.depends_upon_position or else a_filter_expression.depends_upon_last then
@@ -472,12 +473,16 @@ feature {XM_XSLT_PATTERN} -- Implementation
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			if node_test.matches_node (a_node.node_type, a_node.fingerprint, a_node.type_annotation) then
-				if parent_pattern /= void then
+				is_candidate_match := True
+				if parent_pattern /= Void then
 					another_node := a_node.parent
 					if another_node /= Void then
 						is_candidate_match := parent_pattern.internal_matches (another_node, a_transformer)
+					else
+						is_candidate_match := False
 					end
 				elseif ancestor_pattern /= Void then
+					is_candidate_match := False
 					from
 						another_node := a_node.parent
 					until

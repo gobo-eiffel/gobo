@@ -20,9 +20,6 @@ inherit
 
 feature -- Access
 
-	system_id: STRING
-			-- SYSTEM-id of the document
-
 	base_receiver: XM_XPATH_RECEIVER
 
 feature -- Events
@@ -36,6 +33,7 @@ feature -- Events
 	start_document is
 			-- New document
 		do
+			is_document_started := True
 			base_receiver.start_document
 		end
 

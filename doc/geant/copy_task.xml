@@ -12,18 +12,18 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="copy_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="copy_task">
 	<title>copy</title>
 
-	<sect1 id="copy_description">
+	<section id="copy_description">
 		<title>Description</title>
 		<para>
 			Copy a file or fileset to a new file or directory. Files are only copied if the source file
 			is newer than the destination file, or when the destination file does not exist.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="copy_parameters">
+	<section id="copy_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -82,9 +82,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="copy_specification">
+	<section id="copy_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -119,9 +119,9 @@
   </define>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="copy_examples">
+	<section id="copy_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <copy file="readme.txt" to_file="readme1.txt"/>
@@ -133,6 +133,6 @@
   </copy>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

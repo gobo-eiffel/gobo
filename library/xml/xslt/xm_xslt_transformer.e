@@ -47,10 +47,8 @@ feature {NONE} -- Initialization
 			stylesheet_not_void: a_prepared_stylesheet /= Void
 		do
 			configuration := a_configuration
+			output_resolver := a_configuration.output_resolver
 			error_listener := configuration.error_listener
-			if error_listener.is_impure then
-				error_listener := error_listener.new_instance
-			end
 			prepared_stylesheet := a_prepared_stylesheet
 			executable := prepared_stylesheet.executable
 			rule_manager := executable.rule_manager
@@ -87,7 +85,7 @@ feature -- Access
 		end
 
 	current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			--Current iterator
+			-- Current iterator
 
 	current_mode: XM_XSLT_MODE
 			-- Current mode
@@ -97,6 +95,15 @@ feature -- Access
 
 	initial_template: XM_XSLT_COMPILED_TEMPLATE
 			-- Initial template
+
+	output_resolver: XM_XSLT_OUTPUT_URI_RESOLVER
+			-- Output URI resolver
+
+	principal_result: XM_XSLT_TRANSFORMATION_RESULT
+			-- Unamed output definition
+
+	principal_result_uri: STRING
+		-- System id of unamed output definition
 
 	current_item: XM_XPATH_ITEM is
 			-- Current item
@@ -200,6 +207,14 @@ feature -- Status report
 
 feature -- Status setting
 
+	report_warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
+			-- Report a warning.
+		require
+			message_not_void: a_message /= Void
+		do
+			error_listener.warning (a_message, a_locator)
+		end
+
 	report_recoverable_error (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
 			-- Report a recoverable error.
 		require
@@ -262,12 +277,7 @@ feature -- Creation
 		local
 			a_stripper_mode: XM_XSLT_MODE
 		do
-			if configuration.is_strip_all_white_space then
-				todo ("new_stripper", true)
-				-- create {XM_XSLT_ALL_ELEMENT_STRIPPER} Result.make (Current, a_builder)
-			else
-				Result := executable.new_stripper (Current, a_builder)
-			end
+			Result := executable.new_stripper (Current, a_builder)
 		ensure
 			stripper_not_void: Result /= Void
 		end	
@@ -634,6 +644,8 @@ feature -- Transformation
 		local
 			properties: XM_XSLT_OUTPUT_PROPERTIES
 		do
+			principal_result := a_result
+			principal_result_uri := a_result.system_id
 			initialize_transformer (a_start_node)
 			properties := executable.default_output_properties
 
@@ -665,17 +677,19 @@ feature -- Transformation
 		local
 			a_sequence_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 			finished: BOOLEAN
+			a_last_tail_call: like last_tail_call
 		do
 			if not is_error then
 				create a_sequence_iterator.make (a_start_node)
 				from
 					apply_templates (a_sequence_iterator, rule_manager.mode (initial_mode), Void, Void)
+					a_last_tail_call := last_tail_call
 				until
 					is_error or else finished
 				loop
-					if last_tail_call /= Void then
-						last_tail_call.process_leaving_tail (Current)
-						last_tail_call := last_tail_call.last_tail_call
+					if a_last_tail_call /= Void then
+						a_last_tail_call.process_leaving_tail (Current)
+						a_last_tail_call := a_last_tail_call.last_tail_call
 					else
 						finished := True
 					end
@@ -693,10 +707,10 @@ feature -- Transformation
 			saved_mode: XM_XSLT_MODE
 			a_node: XM_XPATH_NODE
 			a_node_handler: XM_XSLT_COMPILED_TEMPLATE
+			a_last_tail_call: like last_tail_call
 		do
 			saved_iterator := current_iterator
 			saved_mode := current_mode
-			last_tail_call := Void
 			set_current_iterator (a_sequence_iterator)
 			set_current_mode (a_mode)
 			from
@@ -709,10 +723,10 @@ feature -- Transformation
 
 				from
 				until
-					is_error or else last_tail_call = Void
+					is_error or else a_last_tail_call = Void
 				loop
-					last_tail_call.process_leaving_tail (Current)
-					last_tail_call := last_tail_call.last_tail_call
+					a_last_tail_call.process_leaving_tail (Current)
+					a_last_tail_call := a_last_tail_call.last_tail_call
 				end
 				if not is_error then
 					a_node ?= a_sequence_iterator.item
@@ -738,7 +752,7 @@ feature -- Transformation
 									trace_listener.trace_current_item_start (a_node)
 								end
 								a_node_handler.process_leaving_tail (Current)
-								last_tail_call := a_node_handler.last_tail_call
+								a_last_tail_call := a_node_handler.last_tail_call
 								if is_tracing then
 									trace_listener.trace_current_item_finish (a_node)
 								end
@@ -748,7 +762,7 @@ feature -- Transformation
 									trace_listener.trace_current_item_start (a_node)
 								end
 								a_node_handler.process_leaving_tail (Current)
-								last_tail_call := a_node_handler.last_tail_call
+								a_last_tail_call := a_node_handler.last_tail_call
 								if is_tracing then
 									trace_listener.trace_current_item_finish (a_node)
 								end
@@ -760,6 +774,7 @@ feature -- Transformation
 			end
 			set_current_mode (saved_mode)
 			set_current_iterator (saved_iterator)
+			last_tail_call := a_last_tail_call
 		end
 
 feature -- Implementation
@@ -794,6 +809,7 @@ feature -- Implementation
 			node_not_void: a_node /= Void
 		local
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			a_last_tail_call: like last_tail_call
 		do
 			inspect
 				a_node.node_type
@@ -801,11 +817,12 @@ feature -- Implementation
 				a_sequence_iterator := a_node.new_axis_iterator (Child_axis)
 				from
 					apply_templates (a_sequence_iterator, current_mode, some_parameters, some_tunnel_parameters)
+					a_last_tail_call := last_tail_call
 				until
-					last_tail_call = Void
+					a_last_tail_call = Void
 				loop
-					last_tail_call.process_leaving_tail (Current)
-					last_tail_call := last_tail_call.last_tail_call
+					a_last_tail_call.process_leaving_tail (Current)
+					a_last_tail_call := a_last_tail_call.last_tail_call
 				end
 			when Text_node, Attribute_node then
 				current_receiver.notify_characters (a_node.string_value, 0)
@@ -892,13 +909,15 @@ feature -- Implementation
 					todo ("selected_receiver - QName method", True)
 				end
 				Result := a_target
+				a_result.set_principal_receiver (Result)
 			end
 		ensure
-			selected_receiver_not_void: Result /= Void			
+			selected_receiver_not_void: Result /= Void
+			principal_receiver_set: a_result.principal_receiver /= Void
 		end
 
 	initialize_transformer (a_start_node: XM_XPATH_NODE) is
-			-- Initialize inpreparation for a transformation.
+			-- Initialize in preparation for a transformation.
 		require
 			executable_not_void: executable /= Void
 		do
@@ -906,6 +925,7 @@ feature -- Implementation
 			if is_tracing then
 				trace_listener.start_tracing
 			end
+			output_resolver.output_destinations.wipe_out
 
 			-- Create a new bindery, to clear out any variables from previous runs
 			

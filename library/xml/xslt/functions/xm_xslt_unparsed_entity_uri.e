@@ -71,6 +71,7 @@ feature -- Optimization
 				end
 			else
 				add_context_document_argument (1, "unparsed-entity-uri+")
+				merge_dependencies (arguments.item (3).dependencies)
 			end
 		end
 

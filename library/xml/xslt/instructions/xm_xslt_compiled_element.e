@@ -61,8 +61,79 @@ feature -- Access
 
 	name_code (a_context: XM_XSLT_EVALUATION_CONTEXT): INTEGER is
 			-- Name code
+		local
+			a_name_value: XM_XPATH_ITEM
+			a_qname_value: XM_XPATH_QNAME_VALUE
+			a_string_value: XM_XPATH_STRING_VALUE
+			a_uri, an_xml_prefix, a_local_name: STRING
+			a_splitter: ST_SPLITTER
+			qname_parts: DS_LIST [STRING]
 		do
-			todo ("name_code", False)
+			element_name.evaluate_item (a_context)
+			a_name_value := element_name.last_evaluated_item
+			if a_name_value = Void or else a_name_value.is_error then -- empty sequence
+				a_context.transformer.report_recoverable_error ("XT0820: xsl:element has no 'name'", Current)
+				Result := -1
+			else
+				a_string_value ?= a_name_value
+				if a_string_value /= Void then
+					create a_splitter.make
+					a_splitter.set_separators (":")
+					qname_parts := a_splitter.split (a_string_value.string_value)
+					if qname_parts.count = 0 or else qname_parts.count > 2 then
+						a_context.transformer.report_recoverable_error ("XT0820: 'name' attribute of xsl:element does not evaluate to a lexical QName.", Current)
+						Result := -1
+					elseif qname_parts.count = 1 then
+						a_local_name := qname_parts.item (1)
+						an_xml_prefix := ""
+					else
+						a_local_name := qname_parts.item (2)
+						an_xml_prefix := qname_parts.item (1)
+					end
+				else
+					a_qname_value ?= a_name_value
+					if a_qname_value /= Void then
+						a_context.transformer.report_recoverable_error ("XT0820: xsl:element 'name' has a QName value - I don't think this is supposed to happenin XSLT, so it's a BUG.", Current)
+						Result := -1
+					else
+						a_context.transformer.report_recoverable_error ("XT0820: xsl:element 'name' has an unexpected value. This is a BUG.", Current)
+						Result := -1
+					end
+				end
+			end
+			if Result /= -1 then
+				if namespace = Void then
+					a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, True)
+					if a_uri = Void then
+						a_context.transformer.report_recoverable_error (STRING_.concat ("XT0830: 'name' attribute of xsl:element has an undeclared prefix: ", an_xml_prefix), Current)
+						Result := -1
+						check False end
+					end
+				else
+					namespace.evaluate_as_string (a_context)
+					if namespace.last_evaluated_string.is_error then
+						a_context.transformer.report_warning ("'namespace' attribute of xsl:element failed evaluation - using null namespace", Current)
+						a_uri := ""
+					else
+						a_uri := namespace.last_evaluated_string.string_value
+					end
+					if a_uri.count = 0 then
+						an_xml_prefix := ""
+					end
+					if STRING_.same_string (an_xml_prefix, "xmlns") then
+						-- not legal, so:
+						an_xml_prefix := "x-xmlns"
+					end
+				end
+				if Result /= -1 then
+					if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+						Result := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+					else
+						shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+						Result := shared_name_pool.last_name_code
+					end
+				end
+			end
 		end
 
 feature -- Status report
@@ -124,7 +195,16 @@ feature {XM_XSLT_EXPRESSION_INSTRUCTION} -- Local
 	xpath_expressions (an_instruction_list: DS_ARRAYED_LIST [XM_XSLT_EXPRESSION_INSTRUCTION]): DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- All the XPath expressions associated with this instruction
 		do
-			todo ("xpath_expressions", False)
+			if namespace /= Void then
+				create Result.make (2)
+			else
+				create Result.make (1)
+			end
+			Result.put_last (element_name)
+			if namespace /= Void then
+				Result.put_last (namespace)
+			end
+			Result.set_equality_tester (expression_tester)
 		end
 
 feature {NONE} -- Implementation

@@ -17,7 +17,7 @@ inherit
 
 	XM_XSLT_OUTPUTTER	
 		redefine
-			start_document
+			start_document, is_name_code_ok_for_start_element
 		end
 
 	XM_XPATH_NAME_UTILITIES
@@ -48,20 +48,23 @@ feature {NONE} -- Initialization
 		do
 			next_receiver := an_underlying_receiver
 			pending_start_tag := -1
+			system_id := an_underlying_receiver.system_id
 		ensure
 			next_receiver_set: next_receiver = an_underlying_receiver
 			no_pending_start_tag: pending_start_tag = -1
 		end
-		
-feature -- Access
 
-
-	system_id: STRING is
-			-- SYSTEM ID of output sequence
+feature -- Events
+	
+	is_name_code_ok_for_start_element (a_name_code: INTEGER): BOOLEAN is
+			-- Is `a_name_code' valid for `start_element'?
 		do
-			Result := Void
-		end
 
+			-- This is redefined by receivers capable of skipping an element
+
+			Result := a_name_code = -10 or else a_name_code >= 0
+		end
+	
 feature -- Events
 
 	on_error (a_message: STRING) is
@@ -73,6 +76,7 @@ feature -- Events
 	start_document is
 			-- New document
 		do
+			is_document_started := True
 			next_receiver.start_document
 			previous_atomic := False
 		end
@@ -80,7 +84,7 @@ feature -- Events
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element.
 		do
-			if a_name_code = -1 then
+			if a_name_code = -10 then
 
 				-- This is used on error recovery when there is a bad element name. It is needed so that
             --  the outputter can suppress any subsequent namespace and attribute nodes

@@ -27,6 +27,25 @@ inherit
 	-- XM_XPATH_CONTENT_EMITTER is available to mediate between XM_CALLBACKS etc.,
 	-- and implementations of this class.
 
+feature -- Access
+
+	system_id: STRING
+			-- SYSTEM-id of the document
+
+feature -- Ststus report
+
+	is_document_started: BOOLEAN
+			-- Has `start_document' been called yet?
+
+	is_name_code_ok_for_start_element (a_name_code: INTEGER): BOOLEAN is
+			-- Is `a_name_code' valid for `start_element'?
+		do
+
+			-- This is redefined by receivers capable of skipping an element
+
+			Result := a_name_code >= 0
+		end
+
 feature -- Events
 
 	on_error (a_message: STRING) is
@@ -38,7 +57,11 @@ feature -- Events
 
 	start_document is
 			-- New document
+		require
+			not_previously_started: not is_document_started
 		deferred
+		ensure
+			document_started: is_document_started
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
@@ -53,7 +76,7 @@ feature -- Events
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element.
 		require
-			positive_name_code: a_name_code >= 0
+			valid_name_code: is_name_code_ok_for_start_element (a_name_code)
 		deferred
 		end
 
@@ -138,6 +161,10 @@ feature -- Element change
 			locator_not_void: a_locator /= Void
 		deferred
 		end
+
+invariant
+
+	system_id_not_void: system_id /= Void
 
 end
 

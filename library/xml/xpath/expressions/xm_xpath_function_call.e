@@ -186,14 +186,14 @@ feature -- Optimization
 				variant
 					arguments.count + 1 - a_cursor.index
 				until
-						arguments.after
+						a_cursor.after
 				loop
 					a_cursor.item.promote (an_offer)
 					if a_cursor.item.was_expression_replaced then
 						a_cursor.replace (a_cursor.item.replacement_expression)
 						a_cursor.item.mark_unreplaced
-						a_cursor.forth
 					end
+					a_cursor.forth
 				end
 			end
 		end	

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="xml" default="help">
+<project name="xpath" default="help">
 
 	<description>
 		description: "Eiffel Ant file for Gobo Eiffel XPath Library Doc"
@@ -33,7 +33,7 @@
 		<set name="next_chapter" value="implemented_functions"/>
 		<geant target="xslt"/>
 
-		<set name="next_chapter" value="invloking"/>
+		<set name="next_chapter" value="invoking"/>
 		<geant target="xslt"/>
 
 	</target>
@@ -51,7 +51,9 @@
 			Remove all generated files.
 		</description>
 
-		<delete file="using.html"/>
+		<delete file="invoking.html"/>
+		<delete file="evaluation_process.html"/>
+		<delete file="implemented_functions.html"/>
 	</target>
 
 <!-- Implementation -->
@@ -73,7 +75,8 @@
 		>
 			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
 			<parameter name="next" value="&quot;'${next}.html'&quot;"/>
-			<parameter name="toc" value="&quot;'using.html'&quot;"/>
+			<parameter name="toc" value="&quot;'invoking.html'&quot;"/>
+			<parameter name="images" value="'../../image/'"/>
 		</xslt>
 	</target>
 

@@ -12,7 +12,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="gexslt_options">
+<chapter  xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_options">
   <chapterinfo>
     <copyright>
       <year>2004</year>
@@ -26,7 +26,7 @@
     <date>Sunday, September 5th, 2004</date>
   </chapterinfo>
   <title>Gobo Eiffel XSLT Command-line usage and options</title>
-  <sect1>
+  <section>
     <title>How to invoke gexslt</title>
     <para>
       Gexslt is invoked from the command line. The general form is:
@@ -39,8 +39,8 @@
     </itemizedlist>
     <warning>The last form is not yet supported.</warning>
     </para>
-  </sect1>
-  <sect1>
+  </section>
+  <section>
     <title>Stylesheet and source documents</title>
     <para>
       The stylesheet and source documents can be written either as URIs or as names in the local file system.
@@ -55,8 +55,8 @@
       If you want to ensure that gexslt treats a name as a URI (necessary if it starts with -- or includes =), then you can write
       it as --uri=my:strange=uri.
     </para>
-  </sect1>
-  <sect1>
+  </section>
+  <section>
     <title>Parameters</title>
     <para>
       To set a global parameter on a stylesheet (as defined by a top-level xsl:param declaration),
@@ -77,11 +77,11 @@
     <para>
       If you wish to pass general XPath expressions to the stylesheet, you have to use the --xpath-param option.
     </para>
-  </sect1>
-  <sect1>
+  </section>
+  <section>
     <title>Options</title>
     <para>The following is a list of the options that can be given on the command-line:</para>
-    <sect2>
+    <section>
       <title>Stylesheet control</title>
       <para>The following options control stylesheet execution:
       <variablelist>
@@ -162,8 +162,8 @@
 	</varlistentry>
       </variablelist>
       </para>
-    </sect2>
-    <sect2>
+    </section>
+    <section>
       <title>Tracing</title>
       <para>The following options control stylesheet execution tracing:
       <variablelist>
@@ -197,11 +197,21 @@
 	</varlistentry>      
       </variablelist>
       </para>
-    </sect2>
-    <sect2>
+    </section>
+    <section>
       <title>Errors and warnings</title>
       <para>The following options control issuing of error and warning messages:
       <variablelist>
+	<varlistentry>
+	  <term>--secure</term>
+	  <listitem>
+	    <para>
+	      Operate in secure mode. Any attempt by an xsl:document instruction
+	      to write to any destination other than the standard output stream
+	      or an in-memory string will result in a fatal error.
+	    </para>
+	  </listitem>
+	</varlistentry>
 	<varlistentry>
 	  <term>--warnings=[&lt;warning-file&gt;]</term>
 	  <listitem>
@@ -308,8 +318,8 @@
 	</varlistentry>
       </variablelist>
       </para>
-    </sect2>
-    <sect2>
+    </section>
+    <section>
       <title>OASIS Entity Resolution Technical Committee XML catalogs</title>
       <para>The following options control the use of OASIS ETRC XML catalogs
       <variablelist>
@@ -329,8 +339,8 @@
 	      Do not use the system default catalog.
 	    </para>
 	    <para>
-	      In this case, only catalogs specified in <featurename>XM_CATALOG_FILES</featurename>,
-	      plus any per-document-catalogs named in <featurename>oasis-xml-catalog</featurename> 
+	      In this case, only catalogs specified in <envar>XM_CATALOG_FILES</envar>,
+	      plus any per-document-catalogs named in <exmlsyntax>oasis-xml-catalog</exmlsyntax>
 	      processing instructions, are searched.
 	    </para>
 	  </listitem>
@@ -339,22 +349,22 @@
 	  <term>--prefer-system</term>
 	  <listitem>
 	    <para>
-	      Prefer <featurename>SYSTEM</featurename> ids to <featurename>PUBLIC</featurename> ids when both are given.
-	      The catalog resolver only attempts to match on <featurename>PUBLIC</featurename> ids
-	      when there is either no <featurename>SYSTEM</featurename> id given, or else the catalog resolver
-	      fails to find a match for the <featurename>SYSTEM</featurename> id.
+	      Prefer <exmlsyntax>SYSTEM</exmlsyntax> ids to <exmlsyntax>PUBLIC</exmlsyntax> ids when both are given.
+	      The catalog resolver only attempts to match on <exmlsyntax>PUBLIC</exmlsyntax> ids
+	      when there is either no <exmlsyntax>SYSTEM</exmlsyntax> id given, or else the catalog resolver
+	      fails to find a match for the <exmlsyntax>SYSTEM</exmlsyntax> id.
 	    </para>
 	    <para>
 	      In the latter case, when this option is given,
-	      <featurename>PUBLIC</featurename> entries are only considered for a match if
-	      they were defined when <featurename>prefer="system"</featurename> was in effect.
+	      <exmlsyntax>PUBLIC</exmlsyntax> entries are only considered for a match if
+	      they were defined when <exmlsyntax>prefer="system"</exmlsyntax> was in effect.
 	    </para>
 	    <para>
-	      The default is to always consider <featurename>PUBLIC</featurename> ids, when no
-	      match is found for the <featurename>SYSTEM</featurename> id.
+	      The default is to always consider <exmlsyntax>PUBLIC</exmlsyntax> ids, when no
+	      match is found for the <exmlsyntax>SYSTEM</exmlsyntax> id.
 	    </para>
 	    <para>
-	      If no <featurename>SYSTEM</featurename> id is given, then this option has no effect.
+	      If no <exmlsyntax>SYSTEM</exmlsyntax> id is given, then this option has no effect.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -362,7 +372,7 @@
 	  <term>--no-catalog-pi</term>
 	  <listitem>
 	    <para>
-	      Ignore any <featurename>oasis-xml-catalog</featurename> processing instructions in source
+	      Ignore any <exmlsyntax>oasis-xml-catalog</exmlsyntax> processing instructions in source
 	      documents and stylesheets.
 	    </para>
 	  </listitem>
@@ -378,8 +388,8 @@
 	</varlistentry>
       </variablelist>
       </para>
-    </sect2>
-    <sect2>
+    </section>
+    <section>
       <title>Performance</title>
       <para>The following options are available for performance tuning:
       <variablelist>
@@ -409,6 +419,6 @@
 	</varlistentry>
       </variablelist>
       </para>
-    </sect2>
-  </sect1>
+    </section>
+  </section>
 </chapter>

@@ -117,10 +117,12 @@ feature -- Evaluation
 					a_bindery := a_transformer.bindery
 					create an_empty_parameter_set.make_empty
 					a_bindery.open_stack_frame (an_empty_parameter_set, Void)
-					process_children (a_transformer.new_xpath_context)
+					--		process_children (a_transformer.new_xpath_context)
+					process_children (a_context)
 					a_bindery.close_stack_frame
 				else
-					process_children (a_transformer.new_xpath_context)
+					--process_children (a_transformer.new_xpath_context)
+					process_children (a_context)
 				end
 				a_transformer.reset_output_destination (a_saved_receiver)
 				if required_type /= Void then
@@ -145,11 +147,13 @@ feature -- Evaluation
 						Result := select_expression.last_evaluation
 						a_bindery.close_stack_frame
 					else
-						select_expression.eagerly_evaluate (a_transformer.new_xpath_context)
+						--select_expression.eagerly_evaluate (a_transformer.new_xpath_context)
+						select_expression.eagerly_evaluate (a_context)
 						Result := select_expression.last_evaluation
 					end
 				else
-						select_expression.lazily_evaluate (a_transformer.new_xpath_context)
+					--select_expression.lazily_evaluate (a_transformer.new_xpath_context)
+					select_expression.lazily_evaluate (a_context)
 						Result := select_expression.last_evaluation
 				end
 			end

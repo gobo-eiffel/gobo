@@ -66,7 +66,7 @@ feature -- Access
 					end
 				end
 			end
-			if Result /= Void then
+			if Result = Void then
 
 				-- There remains the possibility that a default namespace has not been declared,
 				--  in which case we use the default default namespace - ""

@@ -623,7 +623,7 @@ feature {NONE} -- Implementation
 			filter.promote (an_offer)
 			if filter.was_expression_replaced then set_filter(filter.replacement_expression) end
 			a_let_expression ?= an_offer.containing_expression; if a_let_expression /= Void then
-			a_let_expression.analyze (a_context)
+				a_let_expression.analyze (a_context)
 				if a_let_expression.is_error then
 					set_last_error (a_let_expression.error_value)
 				elseif a_let_expression.was_expression_replaced then

@@ -88,7 +88,11 @@ feature -- Creation
 			elseif STRING_.same_string (a_function_name, "translate") then
 				create {XM_XPATH_TRANSLATE} Result.make				
 			elseif STRING_.same_string (a_function_name, "true") then
-				create {XM_XPATH_TRUE} Result.make				
+				create {XM_XPATH_TRUE} Result.make
+			elseif STRING_.same_string (a_function_name, "upper-case") then
+				create {XM_XPATH_UPPER_CASE} Result.make
+			elseif STRING_.same_string (a_function_name, "lower-case") then
+				create {XM_XPATH_LOWER_CASE} Result.make								
 			end
 		ensure
 			Void_or_correct_function: Result /= Void implies STRING_.same_string (Result.name, a_function_name)

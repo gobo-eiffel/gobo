@@ -47,7 +47,7 @@ feature -- Access
 	line_number: INTEGER
 			-- Line number
 	
-	select_id (an_id: STRING): XM_XPATH_ELEMENT is
+	selected_id (an_id: STRING): XM_XPATH_ELEMENT is
 			-- Element with ID value of `id'
 		do
 			Result := Void

@@ -165,14 +165,23 @@ feature -- Element change
 	open_stack_frame (some_local_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
 			-- Start a new stack frame.
 		require
-			parameters_not_void: some_local_parameters /= Void
-			tunnel_parameters_not_void: some_tunnel_parameters /= Void
 		local
+			a_parameter_set, another_parameter_set: XM_XSLT_PARAMETER_SET
 			a_stack_entry, another_stack_entry: XM_XSLT_STACK_FRAME_ENTRY
 		do
 			allocate_stack_frame
-			create a_stack_entry.make_parameter_set (some_local_parameters)
-			create another_stack_entry.make_parameter_set (some_tunnel_parameters)
+			if some_local_parameters = Void then
+				create a_parameter_set.make_empty
+			else
+				a_parameter_set := some_local_parameters
+			end
+			if some_tunnel_parameters = Void then
+				create another_parameter_set.make_empty
+			else
+				another_parameter_set := some_tunnel_parameters
+			end			
+			create a_stack_entry.make_parameter_set (a_parameter_set)
+			create another_stack_entry.make_parameter_set (another_parameter_set)
 			current_stack_frame.put (a_stack_entry, Frame_parameters_slot)
 			current_stack_frame.put (another_stack_entry, Frame_tunnel_parameters_slot)
 		ensure

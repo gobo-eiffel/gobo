@@ -1,0 +1,161 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Error Listener"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_error_listener">
+  <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Tuesday, October 19th, 2004</date>
+  </chapterinfo>
+  <title>The Error Listener</title>    
+  <para>
+    The Error Listener receives notification of all warnings and errors (whether recoverable or not)
+    generated when compiling the stylesheet, or produced by the <link linkend="xslt_transformer"><classname>XM_XSLT_TRANSFORMER</classname></link>.
+  </para>
+  <para>
+    XSLT defines some errors as recoverable (and specifies optional recovery options), and others
+    as non-recoverable. Conditions not defined by XSLT are raised by the library as warnings.
+  </para>
+  <section>
+    <title>Features</title>
+    <para>
+      The following features may be of interest to the Eiffel programmer:
+    </para>
+    <para>
+      <variablelist>
+	<varlistentry>
+	  <term><featurename>recovery_policy: INTEGER / set_recovery_policy (a_recovery_policy: like recovery_policy)</featurename></term>
+	  <listitem>
+	    <para>
+	      The recovery policy is an instruction to the <featurename>error</featurename> routine
+	      as to how to handle recoverable errors. If it evaluates to <featurename>Recover_silently</featurename>,
+	      then <featurename>error</featurename> is supposed to set <featurename>recovered</featurename> to
+	      <featurename>True</featurename>, and not issue any message (although it may choose to log the error).
+	    </para>
+	    <para>
+	      If it evaluates to <featurename>Recover_with_warnings</featurename>, then it should additionally
+	      inform the user of the recovered condition, provided <featurename>recoverable_error_threshold</featurename>
+	      has not been exceeded (although it is not obliged to honour this threshold).
+	    </para>
+	    <para>
+	      If, however, it evaluates to <featurename>Do_not_recover</featurename>, then it should inform the user
+	      of the error condition, and set <featurename>recovered</featurename> to <featurename>False</featurename>.
+	    </para>
+	    <para>
+	      <featurename>set_recovery_policy</featurename> may only be called upon impure error listeners.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><featurename>is_impure: BOOLEAN</featurename></term>
+	  <listitem>
+	    <para>
+	      If the error listener needs to maintain state, such as error counts, or a configurable
+	      recovery policy, then it must set <featurename>is_impure</featurename> to <featurename>True</featurename>.
+	      In that case, the configuation will provide a fresh copy of the error listener whenever it is requested.
+	      This means that each stylesheet compilation, and each transformation, will have it's own copy of the error
+	      listener. This is important if your error listener maintains error counts, for instance, as the counters will
+	      effectively be reset each time.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><featurename>warning_threshold: INTEGER / set_warning_threshold (a_warning_threshold: like warning_threshold)</featurename></term>
+	  <listitem>
+	    <para>
+	      This threshold is available to request the <featurename>warning</featurename> routine
+	      not to issue an informatory message once this number of warning messages have been issued.
+	    </para>
+	    <para>
+	      <featurename>set_warning_threshold</featurename> may only be called upon impure error listeners.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><featurename>recoverable_error_threshold: INTEGER / set_recoverable_error_threshold (a_recoverable_error_threshold: like recoverable_error_threshold)</featurename></term>
+	  <listitem>
+	    <para>
+	      This threshold is available to request the <featurename>error</featurename> routine
+	      not to issue an informatory message once this number of recoverable errors have been seen.
+	    </para>
+	    <para>
+	      <featurename>set_recovery_error_threshold</featurename> may only be called upon impure error listeners.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><featurename>warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR)</featurename></term>
+	  <listitem>
+	    <para>
+	      This routine is called by the library to warn of problematic conditions which are not defined as errors
+	      by XSLT. It should inform the user (in some unspecified way) about the condition, provided that
+	      <featurename>warning_threshold</featurename> has not been exceeded (but there is no obligation to
+	      maintain a count of warning messages, so a pure error listener may well ignore this threshold).
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><featurename>error (a_message: STRING; a_locator: XM_XPATH_LOCATOR)</featurename></term>
+	  <listitem>
+	    <para>
+	      This routine is called by the library to inform the user (in some unspecified way) about a recoverable
+	      error, provided that <featurename>recoverable_error_threshold</featurename> has not been exceeded (but there is no obligation to
+	      maintain a count of error messages, so a pure error listener may well ignore this threshold)
+	      and perhaps recover from the error (both actions depend upon the current setting of <featurename>recovery_policy</featurename>).
+	    </para>
+	    <para>
+	      This routine <emphasis>must</emphasis> set <featurename>recovered</featurename> to <featurename>True</featurename>
+	      if it recovers from an error, so that the transformer can take the defined recovery action. (This probably means
+	      that a pure error listener will only implement a policy of<featurename>Do_not_recover</featurename>.)
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><featurename>fatal_error (a_message: STRING; a_locator: XM_XPATH_LOCATOR)</featurename></term>
+	  <listitem>
+	    <para>
+	      This routine is called by the library to inform the user (in some unspecified way) about a
+	      non-recoverable error.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term><featurename>treat_warnings_as_recoverable_errors</featurename></term>
+	  <listitem>
+	    <para>
+	      This routine may be called by the programmer on an impure error listener, 
+	      to request the <featurename>warning</featurename>
+	      routine to behave identically to the <featurename>error</featurename> routine.
+	    </para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+    </para>
+  </section>
+  <section>
+    <title>The default error listener: <classname>XM_XSLT_DEFAULT_ERROR_LISTENER</classname></title>
+    <para>
+      This is the only concrete error listener provided by the library. It is impure, and maintains error 
+      counts. The recovery policy is passed as an argument to the creation routine, as also is
+      a <classname>UT_ERROR_HANDLER</classname> to receive the warning and error messages.
+    </para>
+  </section>
+</chapter>

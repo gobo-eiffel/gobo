@@ -54,6 +54,7 @@ feature -- Events
 	start_document is
 			-- Notify the start of the document
 		do
+			is_document_started := True
 			has_error := False
 			last_error := Void
 

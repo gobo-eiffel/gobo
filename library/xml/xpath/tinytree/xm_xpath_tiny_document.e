@@ -135,7 +135,7 @@ feature -- Access
 			end
 		end		
 
-	select_id (an_id: STRING): XM_XPATH_ELEMENT is
+	selected_id (an_id: STRING): XM_XPATH_ELEMENT is
 			-- Element with ID value of `id'
 		do
 			if id_table = Void then

@@ -215,7 +215,7 @@ feature -- Evaluation
 				create a_node_factory
 				create a_builder.make (a_node_factory)
 				a_builder.set_system_id (base_uri)
-				a_builder.start_document
+				--a_builder.start_document
 				create a_result.make_receiver (a_builder)
 				a_transformer.change_output_destination (Void, a_result, False, Validation_strip, Void)
 				process_children (an_evaluation_context)

@@ -164,22 +164,21 @@ feature -- Element change
 						shared_name_pool.allocate_name (xml_prefix, namespace_uri, local_name)
 						a_name_code := shared_name_pool.last_name_code
 					end
-					compile_fixed_element (an_executable, a_name_code)
-				end
-			else
-				a_string_value ?= namespace
-				if a_string_value /= Void then
-					namespace_uri := a_string_value.string_value
-					if namespace_uri.count = 0 then
-						xml_prefix := ""
+				else
+					a_string_value ?= namespace
+					if a_string_value /= Void then
+						namespace_uri := a_string_value.string_value
+						if namespace_uri.count = 0 then
+							xml_prefix := ""
+						end
+						if shared_name_pool.is_name_code_allocated (xml_prefix, namespace_uri, local_name) then
+							a_name_code := shared_name_pool.name_code (xml_prefix, namespace_uri, local_name)
+						else
+							shared_name_pool.allocate_name (xml_prefix, namespace_uri, local_name)
+							a_name_code := shared_name_pool.last_name_code
+						end
+						compile_fixed_element (an_executable, a_name_code)
 					end
-					if shared_name_pool.is_name_code_allocated (xml_prefix, namespace_uri, local_name) then
-						a_name_code := shared_name_pool.name_code (xml_prefix, namespace_uri, local_name)
-					else
-						shared_name_pool.allocate_name (xml_prefix, namespace_uri, local_name)
-						a_name_code := shared_name_pool.last_name_code
-					end
-					compile_fixed_element (an_executable, a_name_code)
 				end
 			end
 			

@@ -60,7 +60,8 @@ feature -- Events
 	start_document is
 			-- New document
 		do
-			--  Nothing is done at this stage: the opening of the output
+			is_document_started := True
+			--  The opening of the output
 			--  file is deferred until some content is written to it.
 		end
 

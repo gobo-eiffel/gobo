@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Properties of the output"
+		"Output definitions"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -14,9 +14,13 @@ class XM_XSLT_OUTPUT_PROPERTIES
 
 inherit
 
+	XM_XSLT_OUTPUT_ROUTINES
+
 	UC_SHARED_STRING_EQUALITY_TESTER
 
 	XM_XPATH_STANDARD_NAMESPACES
+
+	XM_XPATH_SHARED_NAME_POOL
 
 creation
 
@@ -118,6 +122,18 @@ feature -- Access
 
 	method: STRING
 			-- Output method: "xml", "html", "xhtml", "text" or a QName
+
+	is_valid_method_name (an_expanded_name: STRING): BOOLEAN is
+			-- Is `an_expanded_name' a valid method name for `Current'?
+			-- Descendants MUST override this routine.
+		require
+			name_not_void: an_expanded_name /= Void
+		do
+			Result := STRING_.same_string (an_expanded_name, "xml")
+				or else STRING_.same_string (an_expanded_name, "html")
+				or else STRING_.same_string (an_expanded_name, "xhtml")
+				or else STRING_.same_string (an_expanded_name, "text")
+		end
 
 	version: STRING is
 			-- Text of version attribute on xml declaration
@@ -221,12 +237,70 @@ feature -- Access
 			end
 		ensure
 			character_representation_not_void: Result /= Void
+			valid_character_representation: is_valid_character_representation (Result)
+		end
+
+	is_valid_character_representation (a_character_representation: STRING): BOOLEAN is
+			-- Is `a_character_representation' valid for `character_representation'? 
+		require
+			character_representation_not_void: a_character_representation /= Void
+		local
+			a_splitter: ST_SPLITTER
+			representations: DS_LIST [STRING]
+			a_non_ascii_representation, an_excluded_representation: STRING
+		do
+			create a_splitter.make
+			a_splitter.set_separators (";")
+			representations := a_splitter.split (a_character_representation)
+			if representations.count = 0 then
+				set_general_error ("gexslt:character-representation must not be a zero-length string.")
+			elseif representations.count > 2 then
+				set_general_error ("gexslt:character-representation may not contain more than one semi-colon.")
+			else
+				if representations.count = 1 then
+					a_non_ascii_representation := representations.item (1)
+					an_excluded_representation := representations.item (1)
+				elseif representations.count = 2 then
+					a_non_ascii_representation := representations.item (1)
+					an_excluded_representation := representations.item (2)
+				end
+				STRING_.left_adjust (a_non_ascii_representation)
+				STRING_.right_adjust (a_non_ascii_representation)
+				STRING_.left_adjust (an_excluded_representation)
+				STRING_.right_adjust (an_excluded_representation)
+				if STRING_.same_string (method, "xml") then
+					Result := STRING_.same_string (a_non_ascii_representation, "hex")
+						or else STRING_.same_string (a_non_ascii_representation, "decimal")
+					if not Result then
+						set_general_error ("gexslt:character-representation must be 'hex' or 'decimal' for method='xml'.")
+					end
+				elseif STRING_.same_string (method, "text") then
+					Result := True
+				else
+					Result := (STRING_.same_string (a_non_ascii_representation, "hex")
+								  or else STRING_.same_string (a_non_ascii_representation, "decimal")
+								  or else STRING_.same_string (a_non_ascii_representation, "native")
+								  or else STRING_.same_string (a_non_ascii_representation, "entity"))
+						and then (STRING_.same_string (an_excluded_representation, "hex")
+									 or else STRING_.same_string (a_non_ascii_representation, "decimal")
+									 or else STRING_.same_string (a_non_ascii_representation, "entity"))
+					if not Result then
+						set_general_error ("Invalid value(s) for gexslt:character-representation.")
+					end	
+				end
+			end
 		end
 
 feature -- Status report
 
 	is_error: BOOLEAN
-			-- Has a duplication error been reported?
+			-- Has an error been reported?
+
+	is_duplication_error: BOOLEAN
+			-- Is the error a duplication error?
+
+	error_message: STRING
+			-- Error message from `set_property'
 
 	duplicate_attribute_name: STRING
 			-- Name of attribute that caused a duplication error
@@ -237,14 +311,29 @@ feature -- Status setting
 			-- Indicate `an_attribute_name' is invalidly specified twice.
 		require
 			attribute_name_not_void: an_attribute_name /= Void and then an_attribute_name.count > 0
+			no_previous_error: not is_error
 		do
 			duplicate_attribute_name := an_attribute_name
 			is_error := True
+			is_duplication_error := True
 		ensure
-			in_error: is_error
+			in_error: is_error and then is_duplication_error
 			name_set: STRING_.same_string (duplicate_attribute_name, an_attribute_name)
 		end
-		
+
+	set_general_error (an_error_message: STRING) is
+			-- Set a general error, other than a duplication error.
+		require
+			error_message_not_void: an_error_message /= Void
+			no_previous_error: not is_error
+		do
+			error_message := an_error_message
+			is_error := True
+		ensure
+			in_error: is_error and then not is_duplication_error
+			error_text_set: STRING_.same_string (error_message, an_error_message)
+		end
+
 feature -- Element change
 
 	set_xml_defaults (an_import_precedence: INTEGER) is
@@ -252,8 +341,7 @@ feature -- Element change
 		require
 			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)
 		do
-			method := "xml"
-			precedence_property_map.force (an_import_precedence, Method_attribute)
+			set_method ("xml", an_import_precedence)
 			default_indent := False
 			default_version := "1.0"
 			default_media_type := "text/xml"
@@ -272,8 +360,7 @@ feature -- Element change
 		require
 			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)		
 		do
-			precedence_property_map.force (an_import_precedence, Method_attribute)
-			method := "html"
+			set_method ("html", an_import_precedence)
 			default_indent := True
 			default_version := "4.01"
 			default_media_type := "text/html"
@@ -293,7 +380,7 @@ feature -- Element change
 			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)		
 		do
 			set_html_defaults (an_import_precedence)
-			method := "xhtml"
+			set_method ("xhtml", an_import_precedence)
 			default_version := "1.0"
 		ensure
 			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
@@ -309,13 +396,26 @@ feature -- Element change
 		require
 			higher_precedence: is_higher_precedence (an_import_precedence, Method_attribute)		
 		do
-			precedence_property_map.force (an_import_precedence, Method_attribute)
-			method := "text"
+			set_method ("text", an_import_precedence)
 			default_media_type := "text/plain"
 		ensure
 			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
 			method_is_text: STRING_.same_string (method, "text")
 			text_plain: STRING_.same_string (default_media_type, "text/plain")
+		end
+
+	set_method (an_expanded_name: STRING ; an_import_precedence: INTEGER) is
+			-- Set `method'.
+		require
+			higher_precedence: is_higher_precedence (an_import_precedence, Version_attribute)
+			name_not_void: an_expanded_name /= Void
+			is_valid_method_name: is_valid_method_name (an_expanded_name)
+		do
+			precedence_property_map.force (an_import_precedence, Method_attribute)
+			method := an_expanded_name
+		ensure
+			import_precedence_set: precedence_property_map.has (Method_attribute) and then precedence_property_map.item (Method_attribute) = an_import_precedence
+			method_sett: STRING_.same_string (method, an_expanded_name)
 		end
 
 	set_version (a_version: STRING; an_import_precedence: INTEGER) is
@@ -387,10 +487,13 @@ feature -- Element change
 			higher_precedence: is_higher_precedence (an_import_precedence, Encoding_attribute)
 		do
 			precedence_property_map.force (an_import_precedence, Encoding_attribute)
-			encoding := an_encoding
+			encoding := STRING_.to_upper (an_encoding)
+			if STRING_.same_string (encoding, "UTF-16") and then not precedence_property_map.has (Byte_order_mark_attribute) then
+				byte_order_mark_required := True
+			end
 		ensure
 			import_precedence_set: precedence_property_map.has (Encoding_attribute) and then precedence_property_map.item (Encoding_attribute) = an_import_precedence
-			encoding_set: encoding = an_encoding
+			encoding_set: STRING_.same_string (encoding, STRING_.to_upper (an_encoding))
 		end
 
 	set_media_type (a_media_type: STRING; an_import_precedence: INTEGER) is
@@ -434,23 +537,23 @@ feature -- Element change
 			doctype_public_set: STRING_.same_string (a_public_id, doctype_public)
 		end
 
-	set_cdata_sections (cdata_section_expanded_names:  DS_ARRAYED_LIST [STRING]) is
-			-- Set `cdata_section_elements' by merger form `cdata_section_expanded_names'.
+	set_cdata_sections (some_cdata_section_expanded_names:  DS_ARRAYED_LIST [STRING]) is
+			-- Set `cdata_section_elements' by merger form `some_cdata_section_expanded_names'.
 		require
-			cdata_section_expanded_names_not_void: cdata_section_expanded_names /= Void
+			cdata_section_expanded_names_not_void: some_cdata_section_expanded_names /= Void
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
 			an_expanded_name: STRING
 		do
 			from
-				a_cursor := cdata_section_expanded_names.new_cursor
+				a_cursor := some_cdata_section_expanded_names.new_cursor
 			variant
-				cdata_section_expanded_names.count + 1 - a_cursor.index
+				some_cdata_section_expanded_names.count + 1 - a_cursor.index
 			until
 				a_cursor.after
 			loop
 				an_expanded_name := a_cursor.item
-				if cdata_section_elements.has (an_expanded_name) then
+				if not cdata_section_elements.has (an_expanded_name) then
 					cdata_section_elements.force (an_expanded_name)
 				end
 				a_cursor.forth
@@ -474,6 +577,7 @@ feature -- Element change
 		require
 			higher_precedence: is_higher_precedence (an_import_precedence, Gexslt_character_representation_attribute)
 			character_representation_not_void: a_character_representation /= Void
+			valid_character_representation: is_valid_character_representation (a_character_representation)
 		do
 			precedence_property_map.force (an_import_precedence, Gexslt_character_representation_attribute)
 			if not string_property_map.has (Gexslt_character_representation_attribute) then
@@ -481,7 +585,7 @@ feature -- Element change
 			end
 		ensure
 			import_precedence_set: precedence_property_map.has (Gexslt_character_representation_attribute) and then precedence_property_map.item (Gexslt_character_representation_attribute) = an_import_precedence
-			media_type_set: STRING_.same_string (character_representation , a_character_representation)			
+			character_representation_set: STRING_.same_string (character_representation , a_character_representation)			
 		end
 
 	set_include_content_type (an_include_content_type_value: BOOLEAN; an_import_precedence: INTEGER) is
@@ -511,15 +615,164 @@ feature -- Element change
 	set_byte_order_mark_required (an_byte_order_mark_required_value: BOOLEAN; an_import_precedence: INTEGER) is
 			-- Set `byte_order_mark_required'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Gexslt_byte_order_mark_attribute)			
+			higher_precedence: is_higher_precedence (an_import_precedence, Byte_order_mark_attribute)			
 		do
-			precedence_property_map.force (an_import_precedence, Gexslt_byte_order_mark_attribute)
+			precedence_property_map.force (an_import_precedence, Byte_order_mark_attribute)
 			byte_order_mark_required := an_byte_order_mark_required_value
 		ensure
-			import_precedence_set: precedence_property_map.has ( Gexslt_byte_order_mark_attribute) and then precedence_property_map.item ( Gexslt_byte_order_mark_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Byte_order_mark_attribute) and then precedence_property_map.item (Byte_order_mark_attribute) = an_import_precedence
 			byte_order_mark_required_set: byte_order_mark_required = an_byte_order_mark_required_value
 		end
-								
+
+	set_property (a_fingerprint: INTEGER; a_value: STRING; a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER) is
+			-- Set any property identified by `a_fingerprint'.
+			-- This is used by xsl:result-document to override an output definition.
+		require
+			positive_fingerprint: a_fingerprint > 0
+			value_not_void: a_value /= Void
+			namespace_resolver_not_void: a_namespace_resolver /= Void
+			no_previous_error: not is_error
+		local
+			a_uri, a_local_name: STRING
+		do
+			a_uri := shared_name_pool.namespace_uri_from_name_code (a_fingerprint)
+			a_local_name := shared_name_pool.local_name_from_name_code (a_fingerprint)
+			if a_uri.count = 0 then
+				set_standard_property (a_local_name, a_value, a_namespace_resolver)
+			elseif STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
+				set_gexslt_property (a_local_name, a_value)
+			elseif is_valid_extension_namespace (a_uri) then
+				set_extension_property (a_uri, a_local_name, a_value, a_namespace_resolver)
+			else
+				-- silently ignore other namespaces
+			end
+		ensure
+			error_message_set: is_error implies error_message /= Void
+		end
+
+feature -- Duplication
+
+	another: like Current is
+			-- Deep clone of `Current'
+		do
+			Result := clone (Current)
+			Result.clone_string_property_map (string_property_map)
+			Result.clone_boolean_property_map (boolean_property_map)
+			Result.clone_precedence_property_map (precedence_property_map)
+			Result.clone_cdata_section_elements (cdata_section_elements)
+			Result.clone_used_character_maps (used_character_maps)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
+	
+	clone_cdata_section_elements (some_cdata_section_elements: like cdata_section_elements) is
+			-- Deeply clone `cdata_section_elements'.
+		local
+			a_cursor: DS_HASH_SET_CURSOR [STRING]
+		do
+			create cdata_section_elements.make (some_cdata_section_elements.count)
+			cdata_section_elements.set_equality_tester (string_equality_tester)
+			from
+				a_cursor := some_cdata_section_elements.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				cdata_section_elements.put (clone (a_cursor.item))
+				a_cursor.forth
+			end
+		end	
+
+	clone_used_character_maps (some_used_character_maps: like used_character_maps) is
+			-- Deeply clone `used_character_maps'.
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [STRING]
+		do
+			create used_character_maps.make (some_used_character_maps.count)
+			used_character_maps.set_equality_tester (string_equality_tester)
+			from
+				a_cursor := some_used_character_maps.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				used_character_maps.put_last (clone (a_cursor.item))
+				a_cursor.forth
+			end
+		end
+
+	clone_string_property_map (a_string_property_map: like string_property_map) is
+			-- Deeply clone `string_property_map'.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
+		do
+			create string_property_map.make_with_equality_testers (a_string_property_map.count, string_equality_tester, string_equality_tester)
+			from
+				a_cursor := a_string_property_map.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				string_property_map.put (clone (a_cursor.item), clone (a_cursor.key))
+				a_cursor.forth
+			end
+		end
+
+	clone_boolean_property_map (a_boolean_property_map: like boolean_property_map) is
+			-- Deeply clone `boolean_property_map'.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [BOOLEAN, STRING]
+		do
+			create boolean_property_map.make_with_equality_testers (a_boolean_property_map.count, Void, string_equality_tester)
+			from
+				a_cursor := a_boolean_property_map.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				boolean_property_map.put (a_cursor.item, clone (a_cursor.key))
+				a_cursor.forth
+			end
+		end
+	
+	clone_precedence_property_map (a_precedence_property_map: like precedence_property_map) is
+			-- Deeply clone `precedence_property_map'.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [INTEGER, STRING]
+		do
+			create precedence_property_map.make_with_equality_testers (a_precedence_property_map.count, Void, string_equality_tester)
+			from
+				a_cursor := a_precedence_property_map.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				precedence_property_map.put (a_cursor.item, clone (a_cursor.key))
+				a_cursor.forth
+			end
+		end
+	
+	is_valid_extension_namespace (a_uri: STRING): BOOLEAN is
+			-- Does `Current' know about `a_uri'?
+		require
+			namespace_not_void: a_uri /= Void
+		do
+			-- overriden by descendants for QName output methods
+		end
+			
+	set_extension_property (a_uri, a_local_name, a_value: STRING; a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER) is
+			-- Set any property identified by `a_fingerprint'.
+			-- This is used by xsl:result-document to override an output definition.
+		require
+			namespace_not_void: a_uri /= Void
+			valid_extension_namespace: is_valid_extension_namespace (a_uri)
+			local_name_not_void: a_local_name /= Void
+			value_not_void: a_value /= Void
+			namespace_resolver_not_void: a_namespace_resolver /= Void
+			no_previous_error: not is_error
+		do
+			-- overriden by descendants for QName output methods
+		ensure
+			error_message_set: is_error implies error_message /= Void			
+		end
+
 feature {NONE} -- Implementation
 
 	string_property_map: DS_HASH_TABLE [STRING, STRING]
@@ -545,6 +798,121 @@ feature {NONE} -- Implementation
 	default_character_representation: STRING
 			-- How should characters be represented (a gexslt extension)?
 
+	set_standard_property (a_local_name, a_value: STRING; a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER) is
+			-- Set the standard XSLT property `a_local_name'.
+		require
+			local_name_not_void: a_local_name /= Void
+			value_not_void: a_value /= Void
+			namespace_resolver_not_void: a_namespace_resolver /= Void
+			no_previous_error: not is_error
+		do
+			if STRING_.same_string (a_local_name, Method_attribute) then
+				if is_valid_method_name (a_local_name) then
+					set_method (a_local_name, 1000000)
+				else
+					set_general_error (STRING_.concat (a_local_name, " is not a valid method for xsl:result-document."))
+				end
+			elseif STRING_.same_string (a_local_name, Version_attribute) then
+				set_version (a_value, 1000000)
+			elseif STRING_.same_string (a_local_name, Indent_attribute) then
+				set_yes_no_property (Indent_attribute, a_value)
+				if not is_error then set_indent (last_yes_no_value, 1000000) end
+			elseif STRING_.same_string (a_local_name, Encoding_attribute) then
+				set_encoding (a_value, 1000000)
+			elseif STRING_.same_string (a_local_name, Media_type_attribute) then
+				set_media_type (a_value, 1000000)
+			elseif STRING_.same_string (a_local_name, Doctype_system_attribute) then
+				set_doctype_system (a_value, 1000000)
+			elseif STRING_.same_string (a_local_name, Doctype_public_attribute) then
+				set_doctype_public (a_value, 1000000)
+			elseif STRING_.same_string (a_local_name, Byte_order_mark_attribute) then
+				set_yes_no_property (Byte_order_mark_attribute, a_value)
+				if not is_error then set_byte_order_mark_required (last_yes_no_value, 1000000) end
+			elseif STRING_.same_string (a_local_name, Omit_xml_declaration_attribute) then
+				set_yes_no_property (Omit_xml_declaration_attribute, a_value)
+				if not is_error then set_omit_xml_declaration (last_yes_no_value, 1000000) end
+			elseif STRING_.same_string (a_local_name, Standalone_attribute) then
+				if STRING_.same_string (a_value, "yes") or else
+					STRING_.same_string (a_value, "no") or else
+					STRING_.same_string (a_value, "omit") then
+					set_standalone (a_value, 1000000)
+				else
+					set_general_error (STRING_.concat ("Value for standalone attribute on xsl:result-document must be 'yes' or 'no' or 'omit'. Found: ", a_value))
+				end
+			elseif STRING_.same_string (a_local_name, Cdata_section_elements_attribute) then
+				validate_cdata_sections (a_value, a_namespace_resolver)
+				if cdata_validation_error_message /= Void then
+					set_general_error (cdata_validation_error_message)
+				else
+					set_cdata_sections (cdata_section_expanded_names)
+				end
+			elseif STRING_.same_string (a_local_name, Undeclare_namespaces_attribute) then
+				set_yes_no_property (Undeclare_namespaces_attribute, a_value)
+				if not is_error then set_undeclare_namespaces (last_yes_no_value, 1000000) end
+			elseif STRING_.same_string (a_local_name, Include_content_type_attribute) then
+				set_yes_no_property (Include_content_type_attribute, a_value)
+				if not is_error then set_include_content_type (last_yes_no_value, 1000000) end
+			elseif STRING_.same_string (a_local_name, Escape_uri_attributes_attribute) then
+				set_yes_no_property (Escape_uri_attributes_attribute, a_value)
+				if not is_error then set_include_content_type (last_yes_no_value, 1000000) end					
+			end
+		ensure
+			error_message_set: is_error implies error_message /= Void
+		end
+
+	set_gexslt_property (a_local_name, a_value: STRING) is
+			-- Set the gexslt extension property `a_local_name'.
+		require
+			local_name_not_void: a_local_name /= Void
+			value_not_void: a_value /= Void
+			no_previous_error: not is_error
+		local
+			a_boolean: BOOLEAN
+		do
+			if STRING_.same_string (a_local_name, Gexslt_character_representation_name) then
+				if is_valid_character_representation (a_value) then
+					set_character_representation (a_value, 1000000)
+				else
+					set_general_error (STRING_.concat (a_value, " is not a valid value for gexslt:character-representation"))
+				end
+			elseif STRING_.same_string (a_local_name, Gexslt_indent_spaces_name) then
+				if a_value.is_integer then
+					set_indent_spaces (a_value.to_integer, 1000000)
+				else
+					set_general_error ("gexslt:indent-spaces must be a 32-bit positive integer.")
+				end
+			else
+				set_general_error (STRING_.concat (a_value, " is not a recognized gexslt extension attribute for xsl:result-document"))
+			end
+		ensure
+			error_message_set: is_error implies error_message /= Void			
+		end
+
+	last_yes_no_value: BOOLEAN
+			-- Last value set by `set_yes_no_property'
+	
+	set_yes_no_property (a_name, a_value: STRING) is
+			-- Interpret `a_value' as a boolean then set `a_name'.
+		require
+			name_not_void: a_name /= Void
+			value_not_void: a_value /= Void
+			no_previous_error: not is_error
+		local
+			a_message: STRING
+		do
+			if STRING_.same_string (a_value, "yes") then
+				last_yes_no_value	 := True
+			elseif STRING_.same_string (a_value, "no") then
+				last_yes_no_value	:= False
+			else
+				a_message := STRING_.concat ("Value for ", a_name)
+				a_message := STRING_.appended_string (a_message, " must be 'yes' or 'no'. Found: ")
+				set_general_error (STRING_.appended_string (a_message, a_value))
+			end
+		ensure
+			value_set_or_error: not is_error implies True -- `last_yes_no_value' correctly set
+		end
+			
 invariant
 
 	cdata_section_elements_not_void: cdata_section_elements /= Void
@@ -554,11 +922,14 @@ invariant
 	default_version_not_void: default_version /= Void
 	encoding_not_void: encoding /= Void
 	default_character_representation: default_character_representation /= Void
-	method_not_void: method /= Void
+	valid_method_not_void: method /= Void and then (method.count = 0 or else is_valid_method_name (method))
 	string_property_map_not_void: string_property_map /= Void
 	boolean_property_map_not_void: boolean_property_map /= Void
 	precedence_property_map_not_void: precedence_property_map /= Void
 	unique_property_names: True -- forall (a) string_property_map.has (a) implies not boolean_property_map.has (a) and vice-versa
+	duplication_error: is_duplication_error implies is_error and then duplicate_attribute_name /= Void and then error_message = Void
+	other_error: is_error and not is_duplication_error implies duplicate_attribute_name = Void and then error_message /= Void
+	no_error: not is_error implies duplicate_attribute_name = Void and then error_message = Void
 
 end
 

@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="geyacc_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geyacc_task">
 	<title>geyacc</title>
 
-	<sect1 id="geyacc_description">
+	<section id="geyacc_description">
 		<title>Description</title>
 		<para>
 			Execute geyacc.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="geyacc_parameters">
+	<section id="geyacc_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -92,9 +92,9 @@
 			</varlistentry>
 
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="geyacc_specification">
+	<section id="geyacc_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -119,9 +119,9 @@
 ]]>
 	</programlisting>
 
-	</sect1>
+	</section>
 
-	<sect1 id="geyacc_examples">
+	<section id="geyacc_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <geyacc input="calc.y" output="calc.e"/>
@@ -129,6 +129,6 @@
   <geyacc input="eiffel_parser.y" tokens="EIFFEL_TOKENS" output="eiffel_parser.e"/>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="exec_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="exec_task">
 	<title>exec</title>
 
-	<sect1 id="exec_description">
+	<section id="exec_description">
 		<title>Description</title>
 		<para>
 			Execute system command.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="exec_parameters">
+	<section id="exec_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -46,7 +46,7 @@
 					</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Intgeger (usually 0 for OK, and any other number for not OK)</para>
+					<para><emphasis>Domain: </emphasis>Integer (usually 0 for OK, and any other number for not OK)</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>`Void' (no variable is set if attribute is not specified)</para>
@@ -69,9 +69,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="exec_specification">
+	<section id="exec_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -96,9 +96,9 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="exec_examples">
+	<section id="exec_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
@@ -115,9 +115,9 @@
   </exec>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="exec_with_fileset">
+	<section id="exec_with_fileset">
 		<title>Using exec with a fileset</title>
 		<para>
 			It is possible to provide a nested <link linkend="fileset_element">fileset</link>
@@ -189,9 +189,9 @@
 ]]>
 	</programlisting>
 
-	</sect1>
+	</section>
 
-	<sect1 id="exec_with_fileset">
+	<section id="exec_with_fileset">
 		<title>Using exec with return codes</title>
 		<para>
 			It is possible to catch the return code of a called process and continue
@@ -212,6 +212,6 @@
 	<para>
 	</para>
 
-	</sect1>
+	</section>
 
 </chapter>

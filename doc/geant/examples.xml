@@ -12,7 +12,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="geant_examples">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_examples">
 	<title>Geant examples</title>
 
 	<para>
@@ -23,7 +23,7 @@
 	<para>Here ist the commandline syntax of geant:</para>
 	<programlisting>geant [-V][-v|--verbose][-b|--buildfile &lt;buildfile>] [-D&lt;varname>=&lt;varvalue>]* [target]</programlisting>
 
-	<sect1 id="introduction">
+	<section id="introduction">
 		<title>Getting started</title>
 
 		<para>
@@ -82,7 +82,7 @@ Loading Project's configuration from build.eant
 			tasks.
 		</para>
 		<para>
-			The only task wich our 'hi' target contains is &lt;echo>. &lt;echo> has a
+			The only task which our 'hi' target contains is &lt;echo>. &lt;echo> has a
 			single attribute called 'message' and this message is printed to
 			stdout. This is the reason why you see 'Hello world' on your screen.
 		</para>
@@ -91,9 +91,9 @@ Loading Project's configuration from build.eant
 			do not use 'build.eant' as filename for the examples since we have
 			mostly more than one build file in a directory.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1>
+	<section>
 		<title>Variables</title>
 		<para>The following example shows how to set and query the value variables.
 		cd to examples/variables and open the buildfile 'variable1.eant'
@@ -147,9 +147,9 @@ Loading Project's configuration from build.eant
     [echo]
   Hello Eiffel
 		</para>
-	</sect1>
+	</section>
 
-	<sect1>
+	<section>
 		<title>Cascading Variables</title>
 		<para>cd to examples/variables and open buildfile 'variables2.eant':</para>
 		<programlisting><![CDATA[
@@ -177,9 +177,9 @@ Hello Bart Simpson
         	]]></programlisting>
 
 		<para>This examples demonstrates how variables can be constructed from other variables.</para>
-	</sect1>
+	</section>
 
-	<sect1>
+	<section>
 		<title>exec</title>
 		<para>cd to examples/exec and open the buildfile 'dir.eant' (for Windows only):</para>
 		<programlisting><![CDATA[
@@ -227,9 +227,9 @@ dir.dir:
 		<para>On Unix call: 'geant -b ls.eant' which produces the same output as a 'ls -l'
 		command on the commandline would show.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1>
+	<section>
 		<title>geant</title>
 		<para>cd to examples/geant and open buildfile 'geant1.eant':</para>
 		<programlisting><![CDATA[
@@ -303,8 +303,8 @@ after call of ../variables/variables5.eant
 			In the future &lt;geant> will be able to take arguments which can be passed
 			to the called build project exactly like you can do it on the commandline already.
 		</para>
-	</sect1>
-	<sect1>
+	</section>
+	<section>
 		<title>depend</title>
 		<para>
 			Demonstrates the attribute 'depend' of targets. cd to examples/depends and
@@ -366,8 +366,8 @@ C
 			then target 'C'.
 		</para>
 
-	</sect1>
-	<sect1>
+	</section>
+	<section>
 		<title>gexace</title>
 		<para>
 			Demonstrates how to generate a compiler specific ace/esd file from a
@@ -421,9 +421,9 @@ geant.run:
   [exec] hello
 Hello World
         	]]></programlisting>
-	</sect1>
-	<sect1>
-		<title>condidional/if,unless</title>
+	</section>
+	<section>
+		<title>conditional/if,unless</title>
 		<para>
 			Demonstrates the optional 'if' and 'unless' XML attributes of targets.
 		</para>
@@ -511,9 +511,9 @@ C
 			The file unless1.eant contains the same examples but the if's have
 			been replaced with unless's.
 		</para>
-	</sect1>
-	<sect1>
-		<title>condidional/if2</title>
+	</section>
+	<section>
+		<title>conditional/if2</title>
 		<para>
 			Demonstrates how we can use 'if' and 'unless' to create a os
 			independent buildfile. cd to examples/conditional and open buildfile 'if2.eant':
@@ -603,5 +603,5 @@ if_demo2.list:
         	]]></programlisting>
 		<para>
 		</para>
-	</sect1>
+	</section>
 </chapter>

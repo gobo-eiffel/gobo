@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="se_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="se_task">
 	<title>se</title>
 
-	<sect1 id="se_description">
+	<section id="se_description">
 		<title>Description</title>
 		<para>
 			Invoke SmartEiffel Compiler.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="se_parameters">
+	<section id="se_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -124,7 +124,7 @@
 					</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>Intgeger (usually 0 for OK, and any other number for not OK)</para>
+					<para><emphasis>Domain: </emphasis>Integer (usually 0 for OK, and any other number for not OK)</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>`Void' (no variable is set if attribute is not specified)</para>
@@ -132,9 +132,9 @@
 			</varlistentry>
 
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="se_specification">
+	<section id="se_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -162,9 +162,9 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="se_examples">
+	<section id="se_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
@@ -175,6 +175,6 @@
   <se clean="${system}"/>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

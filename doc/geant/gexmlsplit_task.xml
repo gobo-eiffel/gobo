@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="gexmlsplit_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexmlsplit_task">
 	<title>gexmlsplit</title>
 
-	<sect1 id="gexmlsplit_description">
+	<section id="gexmlsplit_description">
 		<title>Description</title>
 		<para>
 			Run gexmlsplit.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="gexmlsplit_parameters">
+	<section id="gexmlsplit_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -39,9 +39,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="gexmlsplit_specification">
+	<section id="gexmlsplit_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -53,15 +53,15 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="gexmlsplit_examples">
+	<section id="gexmlsplit_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
   <gexmlsplit input="input.xml"/>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

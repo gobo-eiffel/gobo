@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="gexace_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexace_task">
 	<title>gexace</title>
 
-	<sect1 id="gexace_description">
+	<section id="gexace_description">
 		<title>Description</title>
 		<para>
 			Execute gexace.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="gexace_parameters">
+	<section id="gexace_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -118,9 +118,9 @@
 			</varlistentry>
 
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="gexace_specification">
+	<section id="gexace_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -167,9 +167,9 @@
 ]]>
 	</programlisting>
 
-	</sect1>
+	</section>
 
-	<sect1 id="gexace_examples">
+	<section id="gexace_examples">
 		<title>Examples</title>
 	<programlisting><![CDATA[
   <gexace system="se" xace="${system}.xace"/>
@@ -181,6 +181,6 @@
   </gexace>
 ]]>
 	</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

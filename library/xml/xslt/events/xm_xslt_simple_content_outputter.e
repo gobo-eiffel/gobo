@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			buffer := a_buffer
 			transformer := a_transformer
+			system_id := ""
 		ensure
 			buffer_set: buffer = a_buffer
 			transformer_set: transformer = a_transformer

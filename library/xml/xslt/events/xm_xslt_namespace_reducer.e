@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			create count_stack.make (50)
 			xml_namespace_code := shared_name_pool.namespace_code ("xml", Xml_uri)
 			null_namespace_code := shared_name_pool.namespace_code ("", Null_uri)
-
+			system_id := ""
 		ensure
 			base_receiver_set: base_receiver = an_underlying_receiver
 		end

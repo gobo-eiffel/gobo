@@ -16,8 +16,10 @@ inherit
 
 	XM_XPATH_SINGLE_NODE_EXPRESSION
 		redefine
-			same_expression, compute_cardinality
+			same_expression, compute_cardinality, item_type
 		end
+
+	XM_XPATH_SHARED_NODE_KIND_TESTS
 
 creation
 
@@ -37,6 +39,16 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+	
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Determine the data type of the expression, if possible
+		do
+			Result := document_node_kind_test
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
+		end
 
 	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE is
 			-- The single node

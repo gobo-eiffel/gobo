@@ -253,6 +253,7 @@ feature -- Access
 			-- XSLT Attribute names
 
 	As_attribute: STRING is "as"
+	Byte_order_mark_attribute: STRING is "byte-order-mark"
 	Case_order_attribute: STRING is "case-order"
 	Cdata_section_elements_attribute: STRING is "cdata-section-elements"
 	Collation_attribute: STRING is "collation"
@@ -320,27 +321,41 @@ feature -- Access
 	Xpath_default_namespace_attribute: STRING is "xpath-default-namespace"
 	Zero_digit_attribute: STRING is "zero-digit"	
 	
-	
+
+	Xslt_expanded_namespace: STRING is
+		once
+			Result := "{" + Xslt_uri + "}"
+		end
+
 	Xslt_extension_element_prefixes_attribute: STRING is
 		once
 			Result := "{" + Xslt_uri + "}" + Extension_element_prefixes_attribute
 		end
+
 	Xslt_exclude_result_prefixes_attribute: STRING is
 		once
 			Result := "{" + Xslt_uri + "}" + Exclude_result_prefixes_attribute
 		end
+
 	Xslt_version_attribute: STRING is
 		once
 			Result := "{" + Xslt_uri + "}" + Version_attribute
 		end
+
 	Xslt_xpath_default_namespace_attribute: STRING is
 		once
 			Result := "{" + Xslt_uri + "}" + Xpath_default_namespace_attribute
 		end
 
+	Gexslt_expanded_namespace: STRING is
+		once
+				Result := "{" + Gexslt_eiffel_type_uri + "}"
+		end
+
+	Gexslt_character_representation_name: STRING is "character-representation"
 	Gexslt_character_representation_attribute: STRING is
 		once
-				Result := "{" + Gexslt_eiffel_type_uri + "}character-representation"
+				Result := "{" + Gexslt_eiffel_type_uri + "}" + Gexslt_character_representation_name
 		end
 
 	Gexslt_explain_attribute: STRING is
@@ -348,14 +363,10 @@ feature -- Access
 			Result := "{" + Gexslt_eiffel_type_uri + "}explain"
 		end
 
+	Gexslt_indent_spaces_name: STRING is "indent-spaces"
 	Gexslt_indent_spaces_attribute: STRING is
 		once
-			Result := "{" + Gexslt_eiffel_type_uri + "}indent-spaces"
-		end
-
-	Gexslt_byte_order_mark_attribute: STRING is
-		once
-			Result := "{" + Gexslt_eiffel_type_uri + "}byte-order-mark"
+			Result := "{" + Gexslt_eiffel_type_uri + "}" + Gexslt_indent_spaces_name
 		end
 
 feature -- Status report

@@ -270,7 +270,11 @@ feature {NONE} -- Implementation
 							a_pattern := last_parsed_pattern_step
 						end
 					when Node_kind_token then
-						parse_pattern_step (Element_node)
+						if STRING_.same_string (tokenizer.last_token_value, "attribute") then
+							parse_pattern_step (Attribute_node)
+						else
+							parse_pattern_step (Element_node)
+						end
 						if is_parse_error then
 							finished := True
 						else

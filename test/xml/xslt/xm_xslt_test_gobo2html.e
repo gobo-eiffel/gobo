@@ -57,7 +57,7 @@ feature
 			create an_output
 			create an_output_string.make (0)
 			an_output.set_output_string (an_output_string)
-			create a_result.make (an_output)
+			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			create a_test_file.make ("./data/from-saxon.html")
@@ -107,7 +107,7 @@ feature
 			create an_output
 			create an_output_string.make (0)
 			an_output.set_output_string (an_output_string)
-			create a_result.make (an_output)
+			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			create a_test_file.make ("./data/from-saxon.xml")
@@ -157,7 +157,7 @@ feature
 			create an_output
 			create an_output_string.make (0)
 			an_output.set_output_string (an_output_string)
-			create a_result.make (an_output)
+			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			create a_test_file.make ("./data/structure-index.xhtml")

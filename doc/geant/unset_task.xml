@@ -12,17 +12,17 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="unset_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="unset_task">
 	<title>unset</title>
 
-	<sect1 id="unset_description">
+	<section id="unset_description">
 		<title>Description</title>
 		<para>
 			Remove a variable from the current project.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="unset_parameters">
+	<section id="unset_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -41,9 +41,9 @@
 
 		</variablelist>
 
-	</sect1>
+	</section>
 
-	<sect1 id="unset_specification">
+	<section id="unset_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -55,15 +55,15 @@
   </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="unset_examples">
+	<section id="unset_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
   <unset name="directory"/>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
 </chapter>

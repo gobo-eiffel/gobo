@@ -20,7 +20,7 @@ inherit
 			compute_special_properties, iterator
 		end
 
-	XM_XPATH_MAPPING_FUNCTION
+	XM_XPATH_NODE_MAPPING_FUNCTION
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 
@@ -74,6 +74,7 @@ feature -- Optimization
 		do
 			Precursor
 			add_context_document_argument (1, "id+")
+			merge_dependencies (arguments.item (2).dependencies)
 		end
 
 feature -- Evaluation
@@ -88,6 +89,8 @@ feature -- Evaluation
 			a_splitter: ST_SPLITTER
 			an_idref_list: DS_LIST [STRING]
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			a_mapping_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
+			a_local_order_comparer: XM_XPATH_LOCAL_ORDER_COMPARER
 		do
 			arguments.item (2).evaluate_item (a_context)
 			a_node ?= arguments.item (2).last_evaluated_item
@@ -107,13 +110,15 @@ feature -- Evaluation
 						if an_idref_list.count > 1 then
 							todo ("iterator (multiple IDREFS/string)", True)
 						else
-							create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (a_document.select_id (idrefs))
+							create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (a_document.selected_id (idrefs))
 						end
 					else
 						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 					end
 				else
-					todo ("iterator (multiple strings)", True)
+					create a_local_order_comparer
+					create a_mapping_iterator.make (arguments.item (1).iterator (a_context), Current, Void, a_document)
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (a_mapping_iterator, a_local_order_comparer) 
 				end
 			else
 				create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("In the id() function," +
@@ -127,10 +132,27 @@ feature -- Evaluation
 			-- set_replacement (Current)
 		end
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_MAPPED_ITEM is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Map `an_item' to a sequence
+		local
+			a_splitter: ST_SPLITTER
+			some_idrefs: DS_LIST [STRING]
+			a_document: XM_XPATH_DOCUMENT
+			an_element: XM_XPATH_ELEMENT
 		do
-			todo ("map", False)
+			create a_splitter.make
+			some_idrefs := a_splitter.split (an_item.string_value)
+			if some_idrefs.count = 1 then
+				a_document ?= an_information_object
+				check
+					document_not_void: a_document /= Void
+					-- as `iterator' pass one to the mapping iterator
+				end
+				an_element := a_document.selected_id (some_idrefs.item (1))
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (an_element)
+			else
+				todo ("map", True)
+			end
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local

@@ -63,6 +63,7 @@ feature {NONE} -- Initialization
 			an_atomic_type ?= item_type
 			if an_atomic_type /= Void then atomize := True end
 			if item_type = any_item or else item_type = any_node_test then allow_any_node := True end
+			system_id := an_underlying_receiver.system_id
 		ensure
 			base_receiver_set: base_receiver = an_underlying_receiver
 			item_type_set: item_type = a_required_type.primary_type

@@ -56,6 +56,7 @@ feature -- Events
 	start_document is
 			-- New document
 		do
+			is_document_started := True
 		ensure then
 			not_yet_committed: not committed
 		end

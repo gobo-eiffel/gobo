@@ -12,10 +12,10 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="geant_task">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="geant_task">
 	<title>geant</title>
 
-	<sect1 id="geant_description">
+	<section id="geant_description">
 		<title>Description</title>
 		<para>
 			Sometimes when projects get large it is useful to make build scripts more
@@ -23,9 +23,9 @@
 			and it would be useful to use more than one build script since the build script usually
 			grows with the size of the project. With the geant task you can accomplish this.
 		</para>
-	</sect1>
+	</section>
 
-	<sect1 id="geant_parameters">
+	<section id="geant_parameters">
 		<title>Parameters</title>
 
 		<variablelist>
@@ -95,9 +95,9 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
-	<sect1 id="geant_nested_parameters">
+	<section id="geant_nested_parameters">
 		<title>Parameters specified as nested elements</title>
 
 		<variablelist>
@@ -119,10 +119,10 @@
 				</listitem>
 			</varlistentry>
 		</variablelist>
-	</sect1>
+	</section>
 
 
-	<sect1 id="geant_specification">
+	<section id="geant_specification">
 		<title>RNG Specification</title>
 
 		<programlisting><![CDATA[
@@ -181,9 +181,9 @@
 </define>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
-	<sect1 id="geant_examples">
+	<section id="geant_examples">
 		<title>Examples</title>
 
 		<programlisting><![CDATA[
@@ -196,7 +196,7 @@
   <geant target="compile"/>
 ]]>
 		</programlisting>
-	</sect1>
+	</section>
 
 
 </chapter>

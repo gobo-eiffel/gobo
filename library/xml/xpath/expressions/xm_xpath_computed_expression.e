@@ -102,6 +102,7 @@ feature -- Status setting
 		do
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
 			dependencies := clone (intrinsic_dependencies)
+			are_dependencies_computed := True
 			from
 				a_cursor := sub_expressions.new_cursor
 				a_cursor.start
@@ -110,23 +111,9 @@ feature -- Status setting
 			until
 				a_cursor.after
 			loop
-				from
-					an_index := 1
-				variant
-					7 - an_index
-				until
-					an_index > 6
-				loop
-					if not dependencies.item (an_index) and then a_cursor.item.dependencies .item (an_index) then
-						dependencies.put (True, an_index)
-					end
-					an_index := an_index + 1
-				end
-
+				merge_dependencies (a_cursor.item.dependencies)
 				a_cursor.forth
-			end
-			
-			are_dependencies_computed := True
+			end			
 		ensure
 			intrinsic_computed: are_intrinsic_dependencies_computed and then intrinsic_dependencies /= Void
 			computed: are_dependencies_computed and then dependencies /= Void
@@ -226,9 +213,6 @@ feature -- Evaluation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-				check
-					singleton_expression: not cardinality_allows_many
-				end
 			last_evaluated_item := Void
 			an_iterator := iterator (a_context)
 			if an_iterator.is_error then
@@ -239,6 +223,8 @@ feature -- Evaluation
 				an_iterator.start
 				if an_iterator.is_error then
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				elseif an_iterator.after then
+					last_evaluated_item := Void -- Empty sequence
 				else
 					last_evaluated_item := an_iterator.item
 				end

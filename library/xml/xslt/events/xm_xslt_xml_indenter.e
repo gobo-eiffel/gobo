@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 			is_after_tag := True
 			is_allwhite := True
 			suppressed_at_level := -1
+			system_id := a_receiver.system_id
 		end
 
 feature -- Events

@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			end
 			create orphan.make (Element_node, "")
 			base_receiver := an_underlying_receiver
+			system_id := an_underlying_receiver.system_id
 		ensure
 			transformer_set: transformer = a_transformer
 			mode_set: stripper_mode = a_stripper_mode

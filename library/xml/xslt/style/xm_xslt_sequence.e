@@ -102,8 +102,6 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-		local
-			an_xsl_choose: XM_XSLT_CHOOSE
 		do
 			check_within_template
 			if has_child_nodes then

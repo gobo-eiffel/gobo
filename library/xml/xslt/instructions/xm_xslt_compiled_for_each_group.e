@@ -116,15 +116,12 @@ feature -- Evaluation
 				end
 				--				create {XM_XSLT_GROUP_ADJACENT_ITERATOR} a_group_iterator.make (a_population, key_expression, a_new_context, collator)
 			when Group_starting_with_algorithm then
-				check
-					group_starting_with_NYI: False
-				end
-				--create {XM_XSLT_GROUP_STARTING_WITH_ITERATOR} a_group_iterator.make (a_population, key_expression, a_transformer)
+				create {XM_XSLT_GROUP_STARTING_WITH_ITERATOR} a_group_iterator.make (a_population, key_pattern, a_transformer, Current)
 			when Group_ending_with_algorithm then
 				check
 					group_ending_with_NYI: False
 				end
-				--create {XM_XSLT_GROUP_ENDING_WITH_ITERATOR} a_group_iterator.make (a_population, key_expression, a_transformer)
+				--create {XM_XSLT_GROUP_ENDING_WITH_ITERATOR} a_group_iterator.make (a_population, key_pattern, a_transformer)
 			end
 
 			-- Now iterate over the leading nodes of the groups.
