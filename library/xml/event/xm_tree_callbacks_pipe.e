@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		local
 			a_dummy: XM_CALLBACKS
 		do
-			start := new_end_tag_checker
+			start := new_namespace_resolver
 			error := new_stop_on_error
 			tree := new_tree_builder
 			last := tree
@@ -38,7 +38,6 @@ feature {NONE} -- Initialization
 				-- a variable of a descendant type
 			a_dummy := callbacks_pipe (<<
 				start,
-				new_namespace_resolver,
 				-- new_shared_strings,
 				-- -- check this is valuable?
 				error,
