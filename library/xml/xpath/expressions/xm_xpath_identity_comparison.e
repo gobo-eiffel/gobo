@@ -51,14 +51,14 @@ feature -- Optimization
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
-				set_last_error (first_operand.last_error)
+				set_last_error (first_operand.error_value)
 			else
 				if second_operand.may_analyze then second_operand.analyze (a_context) end
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
 				if second_operand.is_error then
-					set_last_error (second_operand.last_error)
+					set_last_error (second_operand.error_value)
 				else
 					create a_role.make (Binary_expression_role, token_name (operator), 1)
 					create a_type_checker
@@ -89,9 +89,9 @@ feature -- Evaluation
 			a_node, another_node: XM_XPATH_NODE
 		do
 			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item.is_item_in_error then
+			if first_operand.last_evaluated_item.is_error then
 				create Result.make (False)
-				Result.set_last_error (first_operand.last_evaluated_item.evaluation_error_value)
+				Result.set_last_error (first_operand.last_evaluated_item.error_value)
 			else
 				a_node ?= first_operand.last_evaluated_item
 				if a_node = Void then
@@ -101,9 +101,9 @@ feature -- Evaluation
 					create Result.make (False)
 				else
 					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item.is_item_in_error then
+					if second_operand.last_evaluated_item.is_error then
 						create Result.make (False)
-						Result.set_last_error (second_operand.last_evaluated_item.evaluation_error_value)
+						Result.set_last_error (second_operand.last_evaluated_item.error_value)
 					else
 						another_node ?= second_operand.last_evaluated_item
 						if another_node = Void then
@@ -122,7 +122,7 @@ feature -- Evaluation
 			a_node, another_node: XM_XPATH_NODE
 		do
 			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item.is_item_in_error then
+			if first_operand.last_evaluated_item.is_error then
 				last_evaluated_item := first_operand.last_evaluated_item
 			else
 				a_node ?= first_operand.last_evaluated_item
@@ -133,7 +133,7 @@ feature -- Evaluation
 					last_evaluated_item := Void
 				else
 					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item.is_item_in_error then
+					if second_operand.last_evaluated_item.is_error then
 						last_evaluated_item := second_operand.last_evaluated_item
 					else
 						another_node ?= second_operand.last_evaluated_item

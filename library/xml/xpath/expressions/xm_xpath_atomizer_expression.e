@@ -65,8 +65,12 @@ feature -- Status report
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string (STRING_.appended_string (indentation (a_level), "atomize"))
-			std.error.put_new_line
-			base_expression.display (a_level + 1, a_pool)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				base_expression.display (a_level + 1, a_pool)
+			end
 		end
 
 feature -- Optimization	
@@ -92,7 +96,7 @@ feature -- Optimization
 		do
 			if base_expression.may_analyze then	base_expression.analyze (a_context) end
 			if base_expression.is_error then
-				set_last_error (base_expression.last_error)
+				set_last_error (base_expression.error_value)
 			else
 				if base_expression.was_expression_replaced then
 					base_expression := base_expression.replacement_expression
@@ -132,7 +136,7 @@ feature -- Evaluation
 			base_expression.evaluate_item (a_context)
 			if base_expression.last_evaluated_item = Void then
 				last_evaluated_item := Void
-			elseif base_expression.last_evaluated_item.is_item_in_error then
+			elseif base_expression.last_evaluated_item.is_error then
 				last_evaluated_item := base_expression.last_evaluated_item
 			else
 				a_mapped_item := map (base_expression.last_evaluated_item, a_context, Void)

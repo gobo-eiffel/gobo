@@ -72,8 +72,12 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "convert untyped atomic items to ")
 			a_string := STRING_.appended_string (a_string, type_name (target_type))
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			sequence.display (a_level + 1, a_pool)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				sequence.display (a_level + 1, a_pool)
+			end
 		end
 
 feature -- Optimization	
@@ -86,7 +90,7 @@ feature -- Optimization
 			a_result_expression := clone (Current)
 			a_result_expression.set_sequence (sequence.simplified_expression)
 			if a_result_expression.sequence.is_error then
-				a_result_expression.set_last_error (a_result_expression.sequence.last_error)
+				a_result_expression.set_last_error (a_result_expression.sequence.error_value)
 			end
 			Result := a_result_expression
 		end
@@ -104,7 +108,7 @@ feature -- Optimization
 				end
 			end
 			if sequence.is_error then
-				set_last_error (sequence.last_error)
+				set_last_error (sequence.error_value)
 			else
 				a_type := sequence.item_type
 				if not is_sub_type (a_type, Any_node) then
@@ -141,7 +145,7 @@ feature -- Evaluation
 			sequence.evaluate_item (a_context)
 			if sequence.last_evaluated_item = Void then
 				last_evaluated_item := Void
-			elseif sequence.last_evaluated_item.is_item_in_error then
+			elseif sequence.last_evaluated_item.is_error then
 				last_evaluated_item := sequence.last_evaluated_item
 			else
 				an_untyped_atomic_value ?= sequence.last_evaluated_item

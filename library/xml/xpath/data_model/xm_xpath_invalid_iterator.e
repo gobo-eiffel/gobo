@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			set_last_error (an_error)
 		ensure
-			error_set: last_error = an_error
+			error_set: error_value = an_error
 		end
 
 	make_from_string (a_string: STRING; an_error_code, an_error_type: INTEGER) is
@@ -44,12 +44,12 @@ feature {NONE} -- Initialization
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
 			string_not_void: a_string /= Void and then a_string.count > 0
 		do
-			create last_error.make_from_string (a_string, an_error_code, an_error_type)
+			create error_value.make_from_string (a_string, an_error_code, an_error_type)
 			is_error := True
 		ensure
-			item_set: last_error.item /= Void and then STRING_.same_string (last_error.item.string_value, a_string)
-			code_set: last_error.code = an_error_code
-			type_set: last_error.type = an_error_type
+			item_set: error_value.item /= Void and then STRING_.same_string (error_value.item.string_value, a_string)
+			code_set: error_value.code = an_error_code
+			type_set: error_value.type = an_error_type
 		end
 
 feature -- Access

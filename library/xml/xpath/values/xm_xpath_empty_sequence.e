@@ -68,7 +68,11 @@ feature -- Status report
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string (STRING_.appended_string (indentation (a_level), "()"))
-			std.error.put_new_line
+			if is_error then
+				std.error.put_string (" in error%N")
+			else			
+				std.error.put_new_line
+			end
 		end
 
 feature -- Evaluation

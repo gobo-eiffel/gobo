@@ -193,15 +193,8 @@ feature -- Evaluation
 				end
 				if Result = Void then create Result.make (False) end			
 			else
-
-				-- Mark the result as in error both as an expression and as an item
-				-- TODO - this is clearly inefficient. If this is necessary
-				--  then the two errors and their status reports should
-				--  be merged as one for ATOMIC_VALUE. Review!
-
 				create Result.make (False)
-				Result.set_last_error (an_iterator.last_error)
-				Result.set_evaluation_error (an_iterator.last_error)
+				Result.set_last_error (an_iterator.error_value)
 			end
 		end
 
@@ -216,13 +209,13 @@ feature -- Evaluation
 			last_evaluated_item := Void
 			an_iterator := iterator (a_context)
 			if an_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.last_error) 
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value) 
 			elseif an_iterator.after then
 				last_evaluated_item := Void
 			else
 				an_iterator.start
 				if an_iterator.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.last_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 				else
 					last_evaluated_item := an_iterator.item
 				end
@@ -237,7 +230,7 @@ feature -- Evaluation
 			evaluate_item (a_context)
 			if last_evaluated_item = Void then
 				create last_evaluated_string.make ("")
-			elseif last_evaluated_item.is_item_in_error then
+			elseif last_evaluated_item.is_error then
 				Exceptions.raise ("Logic error in {XM_XPATH_COMPUTED_EXPRESSION}.evaluate_as_string")
 			else
 				a_string ?= last_evaluated_item
@@ -266,8 +259,8 @@ feature -- Evaluation
 			evaluate_item (a_context)
 			if last_evaluated_item = Void then
 				Result := empty_abstract_item_iterator
-			elseif last_evaluated_item.is_item_in_error then
-				create {XM_XPATH_INVALID_ITERATOR} Result.make (last_evaluated_item.evaluation_error_value) 
+			elseif last_evaluated_item.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} Result.make (last_evaluated_item.error_value) 
 			else
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (last_evaluated_item) 
 			end

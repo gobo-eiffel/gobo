@@ -53,8 +53,12 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "Sort into Reverse Order")
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			base_expression.display (a_level + 1, a_pool)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				base_expression.display (a_level + 1, a_pool)
+			end
 		end
 
 feature -- Optimization

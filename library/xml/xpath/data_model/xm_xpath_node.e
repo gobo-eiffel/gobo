@@ -38,7 +38,7 @@ feature -- Access
 	base_uri: STRING is
 			-- Base URI
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		deferred
 		ensure
 			base_uri_may_be_void: True
@@ -51,7 +51,7 @@ feature -- Access
 			-- "namespace", "processing-instruction",
 			-- "comment", or "text".
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		deferred
 		ensure
 			node_kind_not_void: Result /= Void
@@ -60,7 +60,7 @@ feature -- Access
 	node_name: STRING is
 			-- Qualified name
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		deferred
 		ensure
 			node_name_may_be_void: True
@@ -73,7 +73,7 @@ feature -- Access
 			-- `Void' if current node is root,
 			-- or for orphan nodes.
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		deferred
 		ensure
 			parent_may_be_void: True
@@ -83,7 +83,7 @@ feature -- Access
 			-- The root node for `Current';
 			-- This is not necessarily a Document node.
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		local
 			a_parent_node: XM_XPATH_NODE
 		do
@@ -103,7 +103,7 @@ feature -- Access
 	type_annotation: INTEGER is
 			--Type annotation of this node, if any
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		do
 			if item_type = Element_node then
 				Result := Untyped_type
@@ -115,14 +115,14 @@ feature -- Access
 	fingerprint: INTEGER is
 			-- Fingerprint of this node - used in matching names
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		deferred
 		end
 	
 	name_code: INTEGER is
 			-- Name code this node - used in displaying names
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		deferred
 		end
 	
@@ -130,7 +130,7 @@ feature -- Access
 			-- The document node for `Current';
 			-- If `Current' is in a document fragment, then return Void
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		local
 			a_root: XM_XPATH_DOCUMENT
 		do
@@ -155,7 +155,7 @@ feature -- Access
 			-- The first child of this node;
 			-- If there are no children, return `Void'
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
@@ -168,7 +168,7 @@ feature -- Access
 			-- The last child of this node;
 			-- If there are no children, return `Void'
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
@@ -191,7 +191,7 @@ feature -- Access
 			-- The previous sibling of this node;
 			-- If there is no such node, return `Void'
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
@@ -204,7 +204,7 @@ feature -- Access
 			-- The next sibling of this node;
 			-- If there is no such node, return `Void'
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
@@ -219,19 +219,19 @@ feature -- Access
 			-- (i.e. it is a document fragment), then
 			-- return the last element child of the document root.
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		local
 			a_root: XM_XPATH_DOCUMENT
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			an_element_node_test: XM_XPATH_NODE_KIND_TEST
 		do
 			a_root := document_root
-			if a_root = Void or else a_root.is_item_in_error then
+			if a_root = Void or else a_root.is_error then
 				debug ("XPath abstract node")
 					if a_root = Void then
 						std.error.put_string ("Document root is void%N")
 					else
-						std.error.put_string (a_root.evaluation_error_value.error_message)
+						std.error.put_string (a_root.error_value.error_message)
 						std.error.put_new_line
 					end
 				end
@@ -271,7 +271,7 @@ feature -- Access
 	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 			valid_axis: is_axis_valid (an_axis_type)
 		deferred
 		ensure
@@ -282,7 +282,7 @@ feature -- Access
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 			node_test_not_void: a_node_test /= Void
 			valid_axis: is_axis_valid (an_axis_type)
 		deferred
@@ -295,7 +295,7 @@ feature -- Comparison
 	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
 			-- Does `Current' represent the same node in the tree as `other'?
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 			other_node_not_void: other /= Void
 		deferred
 		end
@@ -312,18 +312,40 @@ feature -- Comparison
 
 feature -- Status report
 
+	is_error: BOOLEAN
+			-- Has item failed evaluation?
+
+	error_value: XM_XPATH_ERROR_VALUE
+			-- Error value
+
 	is_nilled: BOOLEAN is
 			-- Is current node "nilled"? (i.e. xsi: nill="true")
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		deferred
 		end
 
 	has_child_nodes: BOOLEAN is
 			-- Does `Current' have any children?
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		deferred
+		end
+
+feature -- Status setting
+
+	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
+			-- Set `error_value'.
+		do
+			is_error := True
+			error_value := an_error_value
+		end
+
+	set_last_error_from_string (a_message: STRING; a_code, an_error_type: INTEGER) is
+			-- Set `error_value'.
+		do
+			is_error := True
+			create error_value.make_from_string (a_message, a_code, an_error_type)
 		end
 
 feature {XM_XPATH_NODE} -- Local
@@ -335,7 +357,7 @@ feature {XM_XPATH_NODE} -- Local
 	is_possible_child: BOOLEAN is
 			-- Can this node be a child of a document or element node?
 		require
-			not_in_error: not is_item_in_error
+			not_in_error: not is_error
 		deferred
 		end
 

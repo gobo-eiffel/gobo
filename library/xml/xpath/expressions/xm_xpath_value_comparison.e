@@ -74,12 +74,12 @@ feature -- Optimization
 			if	first_operand.may_analyze then
 				first_operand.analyze (a_context)
 				if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
-				if first_operand.is_error then set_last_error (first_operand.last_error) end
+				if first_operand.is_error then set_last_error (first_operand.error_value) end
 			end
 			if not is_error and then second_operand.may_analyze then
 				second_operand.analyze (a_context)
 				if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
-				if second_operand.is_error then set_last_error (second_operand.last_error)	end
+				if second_operand.is_error then set_last_error (second_operand.error_value)	end
 			end
 			if not is_error then
 				create an_atomic_type.make (Atomic_type, Required_cardinality_exactly_one)
@@ -133,15 +133,15 @@ feature -- Evaluation
 				-- empty sequence
 
 				create Result.make (False)
-			elseif an_item.is_item_in_error then
+			elseif an_item.is_error then
 				create Result.make (False)
-				Result.set_evaluation_error (an_item.evaluation_error_value)
+				Result.set_last_error (an_item.error_value)
 			else
 				second_operand.evaluate_item (a_context)
 				another_item := second_operand.last_evaluated_item
-				if another_item.is_item_in_error then
+				if another_item.is_error then
 				create Result.make (False)
-				Result.set_evaluation_error (another_item.evaluation_error_value)
+				Result.set_last_error (another_item.error_value)
 				else
 					an_atomic_value ?= an_item
 					another_atomic_value ?= another_item

@@ -66,10 +66,10 @@ feature -- Status report
 	is_error: BOOLEAN is
 			-- Is `Current' in error?
 		do
-			Result := last_error /= Void
+			Result := error_value /= Void
 		end
 	
-	last_error: XM_XPATH_ERROR_VALUE
+	error_value: XM_XPATH_ERROR_VALUE
 			-- Last error value
 
 	analyzed: BOOLEAN
@@ -117,29 +117,29 @@ feature -- Status setting
 		end
 
 	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
-			-- Set result of `last_error'.
+			-- Set `error_value'.
 		require
 			not_in_error: not is_error		
 			error_value_not_void: an_error_value /= Void
 		do
-			last_error := an_error_value
+			error_value := an_error_value
 		ensure
-			set: last_error = an_error_value
+			set: error_value = an_error_value
 			in_error: is_error
 		end
 	
 	set_last_error_from_string (a_message: STRING; a_code, an_error_type: INTEGER) is
-			-- Set result of `last_error'.
+			-- Set `error_value'.
 		require
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
 			message_not_void: a_message /= Void and then a_message.count > 0
 			valid_code: is_valid_error_code (a_code)
 			not_in_error: not is_error			
 		do
-			create last_error.make_from_string (a_message, a_code, an_error_type)
+			create error_value.make_from_string (a_message, a_code, an_error_type)
 		ensure
-			valid_error: last_error /= Void and then STRING_.same_string (last_error.error_message, a_message)
-				and then last_error.code = a_code
+			valid_error: error_value /= Void and then STRING_.same_string (error_value.error_message, a_message)
+				and then error_value.code = a_code
 			in_error: is_error
 		end
 
@@ -291,6 +291,8 @@ feature -- Evaluation
 							end
 						end
 					end
+				else
+					create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_iterator.error_value)
 				end
 			end
 			if last_evaluation = Void then

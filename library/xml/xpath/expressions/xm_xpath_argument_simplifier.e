@@ -49,7 +49,7 @@ feature -- Optimization
 				an_argument := arguments_cursor.item.simplified_expression
 				if an_argument.is_error then
 					is_error := True
-					error_value := an_argument.last_error
+					error_value := an_argument.error_value
 				else
 					simplified_arguments.put_last (an_argument)
 				end

@@ -99,11 +99,22 @@ feature -- Access
 			error_message_not_void: Result /= Void
 		end
 
+
+feature -- Comparison
+
+	same_error (other: XM_XPATH_ERROR_VALUE): BOOLEAN is
+			-- Are `Current' and `other' the same error?
+		require
+			other_not_void: other /= Void
+		do
+			Result := code = other.code and then type=other.type
+				and then STRING_.same_string (error_message, other.error_message)
+		end
+
 invariant
 
 	item_or_empty_sequence: item = Void xor empty_sequence = Void
 	valid_error_code: is_valid_error_code (code)
-	no_error_code_for_values: code = 0 implies empty_sequence /= Void
 	error_type: type = Static_error or type = Type_error or type = Dynamic_error
 
 end

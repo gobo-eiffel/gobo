@@ -52,12 +52,16 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "castable")
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			source.display (a_level + 1, a_pool)
-			a_string := STRING_.appended_string (indentation (a_level + 1), "as")
-			a_string := STRING_.appended_string (a_string, type_name (target_type))
-			std.error.put_string (a_string)
-			std.error.put_new_line			
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				source.display (a_level + 1, a_pool)
+				a_string := STRING_.appended_string (indentation (a_level + 1), "as")
+				a_string := STRING_.appended_string (a_string, type_name (target_type))
+				std.error.put_string (a_string)
+				std.error.put_new_line
+			end
 		end
 
 feature -- Optimization	

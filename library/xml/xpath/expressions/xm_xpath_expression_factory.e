@@ -67,7 +67,7 @@ feature -- Creation
 				internal_parsed_expression := internal_parsed_expression.simplified_expression
 				if internal_parsed_expression.is_error then
 					is_parse_error := True
-					parsed_error_value := internal_parsed_expression.last_error
+					parsed_error_value := internal_parsed_expression.error_value
 					internal_parsed_expression := Void
 					debug ("XPath expression factory")
 						std.error.put_string ("Simplification failed!%N")

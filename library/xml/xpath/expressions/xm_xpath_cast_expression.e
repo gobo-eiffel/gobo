@@ -76,12 +76,11 @@ feature -- Status report
 			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "cast as ")
-			if is_error then
-				std.error.put_string (a_string)
-				std.error.put_string ("In error%N")
-			else
 				a_string := STRING_.appended_string (a_string, type_name (target_type))
 				std.error.put_string (a_string)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
 				std.error.put_new_line
 				source.display (a_level + 1, a_pool)
 			end
@@ -126,7 +125,7 @@ feature -- Optimization
 				set_source (source.replacement_expression)
 			end
 			if source.is_error then
-				set_last_error (source.last_error)
+				set_last_error (source.error_value)
 			else
 				create a_sequence_type.make (Atomic_type, cardinality)
 				create a_role.make (Type_operation_role, "cast as", 1)
@@ -143,7 +142,7 @@ feature -- Optimization
 						create a_qname_cast.make (an_expression)
 						a_qname_cast.analyze (a_context)
 						if a_qname_cast.is_error then
-							set_last_error (a_qname_cast.last_error)
+							set_last_error (a_qname_cast.error_value)
 						else
 							was_expression_replaced := True
 							replacement_expression := a_qname_cast
@@ -184,7 +183,7 @@ feature -- Evaluation
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			source.evaluate_item (a_context)
-			if source.last_evaluated_item.is_item_in_error then
+			if source.last_evaluated_item.is_error then
 				last_evaluated_item := source.last_evaluated_item
 			else
 				an_atomic_value ?= source.last_evaluated_item

@@ -80,24 +80,28 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "sequence of ")
 			a_string := STRING_.appended_string (a_string, type_name (item_type))
-			a_string := STRING_.appended_string (a_string, " (")
-			from
-				an_iterator := iterator (Void)
-					check
-						before: an_iterator.before
-					end
-				an_iterator.forth
-			until
-				an_iterator.after
-			loop
-				std.error.put_string (indentation (a_level + 1))
-				std.error.put_string (an_iterator.item.string_value)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				a_string := STRING_.appended_string (a_string, " (")
+				from
+					an_iterator := iterator (Void)
+						check
+							before: an_iterator.before
+						end
+					an_iterator.forth
+				until
+					an_iterator.after
+				loop
+					std.error.put_string (indentation (a_level + 1))
+					std.error.put_string (an_iterator.item.string_value)
+					std.error.put_new_line
+					an_iterator.forth				
+				end
+				a_string := STRING_.appended_string (a_string, ")")
+				std.error.put_string (a_string)
 				std.error.put_new_line
-				an_iterator.forth				
 			end
-			a_string := STRING_.appended_string (a_string, ")")
-			std.error.put_string (a_string)
-			std.error.put_new_line
 		end
 
 feature -- Evaluation
@@ -116,7 +120,7 @@ feature -- Evaluation
 		do
 			an_iterator := iterator (a_context)
 			if an_iterator.is_error then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.last_error)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 			else
 				an_iterator.start
 				if not an_iterator.after then
@@ -150,17 +154,17 @@ feature  -- Conversion
 			if not an_iterator.is_error then
 				an_iterator.start
 				if an_iterator.is_error or else an_iterator.after then
-					create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.last_error)
+					create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.error_value)
 				else
 					an_iterator.forth
 					if not an_iterator.is_error then
 						Result := an_iterator.item
 					else
-						create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.last_error)
+						create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.error_value)
 					end
 				end
 			else
-				create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.last_error)
+				create {XM_XPATH_INVALID_ITEM} Result.make (an_iterator.error_value)
 			end		
 		end
 

@@ -91,7 +91,11 @@ feature -- Status report
 				std.error.put_string ("Node ")
 				-- TODO add navigator stuff
 			end
-			std.error.put_new_line
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+			end
 		end
 
 feature -- Evaluation

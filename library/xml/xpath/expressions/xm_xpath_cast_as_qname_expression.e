@@ -63,11 +63,10 @@ feature -- Status report
 			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "cast as QName")
+				std.error.put_string (a_string)
 			if is_error then
-				std.error.put_string (a_string)
-				std.error.put_string ("In error%N")
+				std.error.put_string (" in error%N")
 			else
-				std.error.put_string (a_string)
 				std.error.put_new_line
 				source.display (a_level + 1, a_pool)
 			end

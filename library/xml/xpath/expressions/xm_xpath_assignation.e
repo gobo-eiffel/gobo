@@ -70,12 +70,12 @@ feature -- Optimization
 			an_expression := sequence.simplified_expression
 			a_simplified_assignation.set_sequence (an_expression)
 			if an_expression.is_error then
-				a_simplified_assignation.set_last_error (an_expression.last_error)
+				a_simplified_assignation.set_last_error (an_expression.error_value)
 			else
 				an_expression := action.simplified_expression
 				a_simplified_assignation.set_action (an_expression)
 				if an_expression.is_error then
-					a_simplified_assignation.set_last_error (an_expression.last_error)
+					a_simplified_assignation.set_last_error (an_expression.error_value)
 				end
 			end
 			Result := a_simplified_assignation

@@ -46,13 +46,13 @@ feature -- Optimization
 			an_append_expression := clone (Current)
 			an_append_expression.set_first_operand (first_operand.simplified_expression)
 			if an_append_expression.first_operand.is_error then
-				an_append_expression.set_last_error (an_append_expression.first_operand.last_error)
+				an_append_expression.set_last_error (an_append_expression.first_operand.error_value)
 			end
 
 			if not an_append_expression.is_error then
 				an_append_expression.set_second_operand (second_operand.simplified_expression)
 				if an_append_expression.second_operand.is_error then
-					an_append_expression.set_last_error (an_append_expression.second_operand.last_error)
+					an_append_expression.set_last_error (an_append_expression.second_operand.error_value)
 				end
 			end
 

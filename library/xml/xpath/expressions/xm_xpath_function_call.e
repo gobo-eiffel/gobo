@@ -55,17 +55,21 @@ feature -- Status report
 			std.error.put_string (indentation (a_level))
 			std.error.put_string ("function ")
 			std.error.put_string (name)
-			std.error.put_new_line
-			a_cursor := arguments.new_cursor
-			from
-				a_cursor.start
-			variant
-				arguments.count + 1 - a_cursor.index				
-			until
-				a_cursor.after
-			loop
-				a_cursor.item.display (a_level + 1, a_pool)
-				a_cursor.forth
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				a_cursor := arguments.new_cursor
+				from
+					a_cursor.start
+				variant
+					arguments.count + 1 - a_cursor.index				
+				until
+					a_cursor.after
+				loop
+					a_cursor.item.display (a_level + 1, a_pool)
+					a_cursor.forth
+				end
 			end
 		end
 
@@ -127,7 +131,7 @@ feature -- Optimization
 				if arguments_cursor.item.may_analyze then
 					arguments_cursor.item.analyze (a_context)
 					if arguments_cursor.item.is_error then
-						set_last_error (arguments_cursor.item.last_error)
+						set_last_error (arguments_cursor.item.error_value)
 					else
 						if arguments_cursor.item.was_expression_replaced then
 							arguments_cursor.replace (arguments_cursor.item.replacement_expression)

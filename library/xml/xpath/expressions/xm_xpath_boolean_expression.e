@@ -37,22 +37,59 @@ feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
+		local
+			a_boolean_expression: XM_XPATH_BOOLEAN_EXPRESSION
 		do
-			todo ("analyze", False)
+			Precursor (a_context)
+			if was_expression_replaced then
+				a_boolean_expression ?= replacement_expression
+			else
+				a_boolean_expression := Current
+			end
+			if a_boolean_expression /= Void and then not a_boolean_expression.is_error then
+				set_first_operand (first_operand.unsorted (False))
+				set_second_operand (second_operand.unsorted (False))
+				a_boolean_expression.set_analyzed
+				replacement_expression := a_boolean_expression
+				was_expression_replaced := True
+			else
+				set_analyzed
+			end
 		end
 
 feature -- Evaluation
 
 	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value
+		local
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			todo ("effective-boolean-value", False)
+			a_boolean_value := first_operand.effective_boolean_value (a_context)
+			if a_boolean_value.is_error then
+				Result := a_boolean_value
+			else
+				inspect
+					operator
+				when And_token then
+					if not a_boolean_value.value then
+						Result := second_operand.effective_boolean_value (a_context)
+					else
+						Result := a_boolean_value
+					end
+				when Or_token then
+					if a_boolean_value.value then
+						Result := a_boolean_value
+					else
+						Result := second_operand.effective_boolean_value (a_context)
+					end
+				end
+			end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			todo ("evaluate-item", False)
+			last_evaluated_item := effective_boolean_value (a_context)
 		end
 
 end

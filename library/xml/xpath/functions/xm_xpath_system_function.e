@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			else
 				an_argument := a_type_checker.checked_expression.simplified_expression
 				if an_argument.is_error then
-					set_last_error_from_string (an_argument.last_error.error_message, 4, Type_error)
+					set_last_error_from_string (an_argument.error_value.error_message, 4, Type_error)
 				else
 					arguments.replace (an_argument, argument_number)
 				end

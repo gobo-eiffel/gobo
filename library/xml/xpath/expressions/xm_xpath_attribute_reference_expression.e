@@ -83,8 +83,12 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "@")
 			a_string := STRING_.appended_string (a_string, a_pool.display_name_from_name_code (fingerprint))
-			std.error.put_string (a_string)
-			std.error.put_new_line
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_string (a_string)
+				std.error.put_new_line
+			end
 		end
 
 feature -- Evaluation

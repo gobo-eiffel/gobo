@@ -142,9 +142,13 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "filter []")
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			base_expression.display (a_level + 1, a_pool)
-			filter.display (a_level + 1, a_pool)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				base_expression.display (a_level + 1, a_pool)
+				filter.display (a_level + 1, a_pool)
+			end
 		end
 
 
@@ -197,12 +201,12 @@ feature -- Optimization
 			an_expression := base_expression.simplified_expression
 			a_result_expression.set_base_expression (an_expression)
 			if an_expression.is_error then
-				a_result_expression.set_last_error (an_expression.last_error)
+				a_result_expression.set_last_error (an_expression.error_value)
 			else
 				an_expression := filter.simplified_expression
 				a_result_expression.set_filter (an_expression)
 				if an_expression.is_error then
-					a_result_expression.set_last_error (an_expression.last_error)
+					a_result_expression.set_last_error (an_expression.error_value)
 				else
 					-- Ignore the filter if `base_expression' is an empty sequence.
 					
@@ -218,9 +222,9 @@ feature -- Optimization
 						
 						if a_value /= Void and then a_number = Void then
 							a_boolean_value := a_result_expression.filter.effective_boolean_value (Void)
-							if a_boolean_value.is_item_in_error then
+							if a_boolean_value.is_error then
 								Result := a_result_expression
-								Result.set_last_error (a_boolean_value.last_error)
+								Result.set_last_error (a_boolean_value.error_value)
 							elseif  a_boolean_value.value then
 								Result := a_result_expression.base_expression
 							else
@@ -254,7 +258,7 @@ feature -- Optimization
 				end
 			end
 			if base_expression.is_error then
-					set_last_error (base_expression.last_error)
+					set_last_error (base_expression.error_value)
 			else
 				if filter.may_analyze then
 					filter.analyze (a_context)
@@ -264,7 +268,7 @@ feature -- Optimization
 				end
 				
 				if filter.is_error then
-					set_last_error (filter.last_error)
+					set_last_error (filter.error_value)
 				else
 					optimize (a_context)
 				end
@@ -508,8 +512,8 @@ feature {NONE} -- Implementation
 				-- Filter is a constant that we can treat as boolean
 				
 				a_boolean_value := filter.effective_boolean_value (a_context)
-				if a_boolean_value.is_item_in_error then
-					create {XM_XPATH_INVALID_ITERATOR} Result.make (a_boolean_value.evaluation_error_value)
+				if a_boolean_value.is_error then
+					create {XM_XPATH_INVALID_ITERATOR} Result.make (a_boolean_value.error_value)
 				elseif a_boolean_value.value then
 					Result := a_base_iterator
 				else
@@ -623,7 +627,7 @@ feature {NONE} -- Implementation
 			--										a_let_expression.analyze (a_context)
 			--									end
 			--									if a_let_expression.is_error then
-			--										set_last_error (a_let_expression.last_error)
+			--										set_last_error (a_let_expression.error_value)
 			--										an_expression := a_let_expression
 			--									elseif a_let_expression.was_expression_replaced then
 			--										an_expression := a_let_expression.replacement_expression

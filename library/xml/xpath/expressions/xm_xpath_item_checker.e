@@ -89,8 +89,12 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "treat as ")
 			a_string := STRING_.appended_string (a_string, type_name (required_item_type))
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			sequence.display (a_level + 1, a_pool)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				sequence.display (a_level + 1, a_pool)
+			end
 		end
 
 feature -- Optimization
@@ -122,7 +126,7 @@ feature -- Optimization
 				sequence.set_analyzed
 			end
 			if sequence.is_error then
-				set_last_error (sequence.last_error)
+				set_last_error (sequence.error_value)
 			else
 				if required_content_type = Any_item and then is_sub_type (sequence.item_type, required_item_type) then
 					was_expression_replaced := True
@@ -150,7 +154,7 @@ feature -- Evaluation
 			last_evaluated_item := sequence.last_evaluated_item
 			if last_evaluated_item = Void then
 				do_nothing  -- can this occur?
-			elseif last_evaluated_item.is_item_in_error then
+			elseif last_evaluated_item.is_error then
 				do_nothing
 			else
 				test_conformance (last_evaluated_item)
@@ -221,7 +225,7 @@ feature {NONE} -- Implementation
 				a_message := STRING_.appended_string (a_message, type_name (required_item_type))
 				a_message := STRING_.appended_string (a_message, "; supplied value is ")
 				a_message := STRING_.appended_string (a_message, type_name (a_type))
-				an_item.set_evaluation_error_from_string (a_message, 6, Type_error)
+				an_item.set_last_error_from_string (a_message, 6, Type_error)
 			elseif required_content_type /= Any_item then
 				--a_content_type := a_node.type_annotation
 				-- this is only needed for Schema-aware processors, so for now:

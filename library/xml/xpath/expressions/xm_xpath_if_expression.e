@@ -85,17 +85,21 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "if (")
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			condition.display (a_level + 1, a_pool)
-			a_string := STRING_.appended_string (indentation (a_level), "then")
-			std.error.put_string (a_string)
-			std.error.put_new_line
-			then_expression.display (a_level + 1, a_pool)
-			a_string := STRING_.appended_string (indentation (a_level), "else")
-			std.error.put_string (a_string)
-			std.error.put_new_line
-			else_expression.display (a_level + 1, a_pool)				
-		end
+				if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				condition.display (a_level + 1, a_pool)
+				a_string := STRING_.appended_string (indentation (a_level), "then")
+				std.error.put_string (a_string)
+				std.error.put_new_line
+				then_expression.display (a_level + 1, a_pool)
+					a_string := STRING_.appended_string (indentation (a_level), "else")
+					std.error.put_string (a_string)
+					std.error.put_new_line
+					else_expression.display (a_level + 1, a_pool)				
+				end
+			end
 
 feature -- Optimization
 
@@ -111,22 +115,22 @@ feature -- Optimization
 			an_expression := condition.simplified_expression
 			an_if_expression.set_condition (an_expression)
 			if an_expression.is_error then
-				an_if_expression.set_last_error (an_expression.last_error)
+				an_if_expression.set_last_error (an_expression.error_value)
 			else
 				a_value ?= condition
 				if a_value /= Void then
 					a_boolean_value := condition.effective_boolean_value (Void)
-					if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
+					if not a_boolean_value.is_error and then a_boolean_value.value then
 						an_expression := then_expression.simplified_expression
 						an_if_expression.set_then_expression (an_expression)
 						if an_expression.is_error then
-							an_if_expression.set_last_error (an_expression.last_error)
+							an_if_expression.set_last_error (an_expression.error_value)
 						end
 					else
 						an_expression := else_expression.simplified_expression
 						an_if_expression.set_else_expression (an_expression)
 						if an_expression.is_error then
-							an_if_expression.set_last_error (an_expression.last_error)
+							an_if_expression.set_last_error (an_expression.error_value)
 						end						
 					end
 				else
@@ -149,7 +153,7 @@ feature -- Optimization
 				condition.set_analyzed
 			end
 			if condition.is_error then
-				set_last_error (condition.last_error)
+				set_last_error (condition.error_value)
 			else
 					check
 						then_expression.may_analyze
@@ -160,7 +164,7 @@ feature -- Optimization
 					then_expression.set_analyzed
 				end
 				if then_expression.is_error then
-					set_last_error (then_expression.last_error)
+					set_last_error (then_expression.error_value)
 				else
 						check
 							else_expression.may_analyze
@@ -171,7 +175,7 @@ feature -- Optimization
 						else_expression.set_analyzed
 					end
 					if else_expression.is_error then
-						set_last_error (else_expression.last_error)
+						set_last_error (else_expression.error_value)
 					end
 				end
 				if not is_error then
@@ -213,7 +217,7 @@ feature -- Evaluation
 		do
 			last_evaluated_item := Void
 			a_boolean_value := condition.effective_boolean_value (a_context)
-			if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
+			if not a_boolean_value.is_error and then a_boolean_value.value then
 				then_expression.evaluate_item (a_context)
 			else
 				else_expression.evaluate_item (a_context)
@@ -226,7 +230,7 @@ feature -- Evaluation
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			a_boolean_value := condition.effective_boolean_value (a_context)
-			if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
+			if not a_boolean_value.is_error and then a_boolean_value.value then
 				Result := then_expression.iterator (a_context)
 			else
 				Result := else_expression.iterator (a_context)

@@ -70,14 +70,14 @@ feature -- Optimization
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
-				set_last_error (first_operand.last_error)
+				set_last_error (first_operand.error_value)
 			else
 				if second_operand.may_analyze then second_operand.analyze (a_context) end
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
 				if second_operand.is_error then
-					set_last_error (second_operand.last_error)
+					set_last_error (second_operand.error_value)
 				end
 				if not is_error then
 					set_first_operand (first_operand.unsorted (False))
@@ -103,12 +103,12 @@ feature -- Evaluation
 			an_iterator := first_operand.iterator (a_context)
 			if an_iterator.is_error then
 				create Result.make (False)
-				Result.set_last_error (an_iterator.last_error)
+				Result.set_last_error (an_iterator.error_value)
 			else
 				another_iterator := second_operand.iterator (a_context)
 				if another_iterator.is_error then
 					create Result.make (False)
-					Result.set_last_error (another_iterator.last_error)
+					Result.set_last_error (another_iterator.error_value)
 				else
 					
 					-- The second operand is more likely to be a singleton than the first so:
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 					a_type := first_operand.item_type
 					another_type := second_operand.item_type
 					if not is_backwards_compatible_mode then
-						if not (a_type = Atomic_type or else a_type = Untyped_atomic_type or else another_type = Atomic_type or else another_type = Untyped_atomic_type) then
+						if not is_error and then not (a_type = Atomic_type or else a_type = Untyped_atomic_type or else another_type = Atomic_type or else another_type = Untyped_atomic_type) then
 							if primitive_type (a_type) /= primitive_type (another_type) then
 								a_message := STRING_.appended_string ("Cannot compare ", type_name (a_type))
 								a_message := STRING_.appended_string (a_message, " with ")

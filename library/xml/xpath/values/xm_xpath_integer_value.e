@@ -112,7 +112,11 @@ feature -- Status report
 			a_string := STRING_.appended_string (a_string, string_value)
 			a_string := STRING_.appended_string (a_string, ")")
 			std.error.put_string (a_string)
-			std.error.put_new_line
+			if is_error then
+				std.error.put_string (" in error%N")
+			else			
+				std.error.put_new_line
+			end
 		end
 	
 	is_convertible (a_required_type: INTEGER): BOOLEAN is
@@ -198,7 +202,7 @@ feature -- Basic operations
 
 			-- TODO handle overflow
 
-			todo ("arithmetic - overflow not handled", True)
+			todo ("arithmetic (overflow not handled)", True)
 
 			an_integer_value ?= other
 			if other /= void then
@@ -211,10 +215,12 @@ feature -- Basic operations
 				when Multiply_token then
 					create {XM_XPATH_INTEGER_VALUE} Result.make (value * an_integer_value.value)
 				when Integer_division_token then
-
-					-- TODO: handle division by zero
-
-					create {XM_XPATH_INTEGER_VALUE} Result.make (value // an_integer_value.value)
+					if an_integer_value.value = 0 then
+						create {XM_XPATH_INTEGER_VALUE} Result.make (0)
+						Result.set_last_error_from_string ("Division by zero", 0, Dynamic_error)
+					else
+						create {XM_XPATH_INTEGER_VALUE} Result.make (value // an_integer_value.value)
+					end
 				when Division_token then
 
 					-- The result of dividing two integers is a decimal; but if

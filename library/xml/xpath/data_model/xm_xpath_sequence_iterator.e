@@ -56,7 +56,7 @@ feature -- Status report
 	is_error: BOOLEAN
 			-- Is `Current' in error?
 
-	last_error: XM_XPATH_ERROR_VALUE
+	error_value: XM_XPATH_ERROR_VALUE
 			-- Last error
 
 feature -- Status_setting
@@ -67,10 +67,10 @@ feature -- Status_setting
 			error_value_not_void: an_error /= void
 		do
 			is_error := True
-			last_error := an_error
+			error_value := an_error
 		ensure
 			in_error: is_error
-			error_set: last_error = an_error
+			error_set: error_value = an_error
 		end
 
 feature -- Cursor movement
@@ -108,8 +108,8 @@ feature -- Duplication
 
 invariant
 
-	last_error_not_void_if_error: is_error implies last_error /= Void
-	last_error_void_if_not_error: not is_error implies last_error = Void
+	error_value_not_void_if_error: is_error implies error_value /= Void
+	error_value_void_if_not_error: not is_error implies error_value = Void
 	positive_index: index >= 0
 	off_or_valid_item: not is_error and then not off implies item /= Void
 

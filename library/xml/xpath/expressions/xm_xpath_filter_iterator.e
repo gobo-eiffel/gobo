@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 
 			if is_error then
 				create {XM_XPATH_BOOLEAN_VALUE} current_item.make (False) -- we need SOMETHING to set an error upon!
-				current_item.set_evaluation_error (last_error)
+				current_item.set_last_error (error_value)
 			elseif matched then
 				current_item := next_item
 			else
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			if non_numeric then
 				a_boolean_value := filter.effective_boolean_value (filter_context)
 				if a_boolean_value.is_error then
-					set_last_error (a_boolean_value.last_error)
+					set_last_error (a_boolean_value.error_value)
 				else
 					Result := a_boolean_value.value
 				end
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 					-- We are in error
 
 					Result := False
-					set_last_error (an_iterator.last_error)
+					set_last_error (an_iterator.error_value)
 				end
 			end
 		end

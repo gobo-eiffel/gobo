@@ -34,7 +34,7 @@ feature -- Evaluation
 		do
 			if operator = Integer_division_token then
 				first_operand.evaluate_item (a_context)
-				if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_item_in_error then
+				if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
 					last_evaluated_item := first_operand.last_evaluated_item
 				else
 					an_atomic_value ?= first_operand.last_evaluated_item
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			a_double_value, another_double_value: XM_XPATH_DOUBLE_VALUE
 		do
 			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_item_in_error then
+			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
 				last_evaluated_item := first_operand.last_evaluated_item
 			else
 				an_atomic_value ?= first_operand.last_evaluated_item
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 						create a_double_value.make_nan
 					end
 					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_item_in_error then
+					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_error then
 						last_evaluated_item := second_operand.last_evaluated_item
 					else
 						another_atomic_value ?= second_operand.last_evaluated_item

@@ -48,13 +48,13 @@ feature -- Status report
 			error_message_not_void: Result /= Void
 		end
 
-	is_evaluation_in_error: BOOLEAN
+	is_error: BOOLEAN
 			-- Did last call to `evaluate' end in error?
 
 	error_value: XM_XPATH_ERROR_VALUE is
 			-- Error result from last call to `evaluate'
 		require
-			evaluation_error: is_evaluation_in_error
+			evaluation_error: is_error
 		do
 			Result := internal_error_value
 		ensure
@@ -139,14 +139,17 @@ feature -- Evaluation
 			Function_factory.register_system_function_factory (a_system_function_factory)
 			Expression_factory.make_expression (an_expression_text, static_context)
 			if Expression_factory.is_parse_error then
-				is_evaluation_in_error := True
+				is_error := True
 				internal_error_value := Expression_factory.parsed_error_value
 			else
 				an_expression := Expression_factory.parsed_expression
 				an_expression.analyze (static_context)
+				debug ("XPath evaluator")
+					an_expression.display (1, static_context.name_pool)
+				end				
 				if an_expression.is_error then
-					is_evaluation_in_error := True
-					internal_error_value := an_expression.last_error
+					is_error := True
+					internal_error_value := an_expression.error_value
 				else
 					if not an_expression.is_error then
 						if an_expression.was_expression_replaced then
@@ -160,13 +163,13 @@ feature -- Evaluation
 						end
 						evaluate_post_analysis (an_expression)
 					else
-						is_evaluation_in_error := True
-						internal_error_value := an_expression.last_error
+						is_error := True
+						internal_error_value := an_expression.error_value
 					end
 				end
 			end
 		ensure
-			error_or_item_list: not is_evaluation_in_error implies evaluated_items /= Void
+			error_or_item_list: not is_error implies evaluated_items /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -217,46 +220,43 @@ feature {NONE} -- Implementation
 				check
 					context_set: a_context.context_item = context_item
 				end
-			debug ("XPath evaluator")
-				an_expression.display (1, static_context.name_pool)
-			end
 			a_sequence_iterator := an_expression.iterator (a_context)
 			
 			if a_sequence_iterator.is_error then
-				is_evaluation_in_error := True
-				internal_error_value := a_sequence_iterator.last_error
+				is_error := True
+				internal_error_value := a_sequence_iterator.error_value
 			else
 				from
 					a_sequence_iterator.start
 					if a_sequence_iterator.is_error then -- can happen due to mapping iterators
-						is_evaluation_in_error := True
-						internal_error_value := a_sequence_iterator.last_error
+						is_error := True
+						internal_error_value := a_sequence_iterator.error_value
 					end
 					create evaluated_items.make
 				until
-					is_evaluation_in_error or else a_sequence_iterator.is_error or else a_sequence_iterator.after
+					is_error or else a_sequence_iterator.is_error or else a_sequence_iterator.after
 				loop
 						check
 							item_not_void: a_sequence_iterator.item /= Void
 							-- Because start ensures not before and until clause ensures not after
 						end
 					an_item := a_sequence_iterator.item
-					if an_item.is_item_in_error then
-						is_evaluation_in_error := True
-						internal_error_value := an_item.evaluation_error_value
+					if an_item.is_error then
+						is_error := True
+						internal_error_value := an_item.error_value
 					else
 						evaluated_items.put_last (an_item)
 					end
 					
 					a_sequence_iterator.forth
 					if a_sequence_iterator.is_error then -- can happen due to mapping iterators
-						is_evaluation_in_error := True
-						internal_error_value := a_sequence_iterator.last_error
+						is_error := True
+						internal_error_value := a_sequence_iterator.error_value
 					end
 				end
 			end
 		ensure
-			error_or_item_list: not is_evaluation_in_error implies evaluated_items /= Void
+			error_or_item_list: not is_error implies evaluated_items /= Void
 		end
 				
 invariant

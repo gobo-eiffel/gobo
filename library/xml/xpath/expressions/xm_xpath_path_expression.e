@@ -117,9 +117,13 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "path /")
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			start.display (a_level + 1, a_pool)
-			step.display (a_level + 1, a_pool)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				start.display (a_level + 1, a_pool)
+				step.display (a_level + 1, a_pool)
+			end
 		end
 
 feature -- Status setting
@@ -193,10 +197,10 @@ feature -- Optimization
 						if Result = Void then Result := a_result_expression end
 					end
 				else
-					a_result_expression.set_last_error (an_expression.last_error)
+					a_result_expression.set_last_error (an_expression.error_value)
 				end
 			else
-				a_result_expression.set_last_error (an_expression.last_error)
+				a_result_expression.set_last_error (an_expression.error_value)
 			end
 		end
 
@@ -251,10 +255,10 @@ feature -- Optimization
 						end
 					end
 				else
-					set_last_error (step.last_error)
+					set_last_error (step.error_value)
 				end
 			else
-				set_last_error (start.last_error)
+				set_last_error (start.error_value)
 			end
 		end
 
@@ -316,7 +320,7 @@ feature -- Evaluation
 								
 				-- Error occured
 
-				create an_invalid_item.make (step.last_error)
+				create an_invalid_item.make (step.error_value)
 				create Result.make_item (an_invalid_item)
 			else
 				create Result.make_sequence (an_iterator)
@@ -702,7 +706,7 @@ end
 -- 											another_expression.analyzed
 -- 										end
 -- 									if another_expression.is_error then
--- 										a_result_expression.set_last_error (another_expression.last_error)
+-- 										a_result_expression.set_last_error (another_expression.error_value)
 -- 									else
 -- 										an_offer.set_containing_expression (another_expression)
 -- 									end

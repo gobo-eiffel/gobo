@@ -84,8 +84,12 @@ feature -- Status report
 			a_string := STRING_.appended_string (a_string, required_cardinality.out)
 			a_string := STRING_.appended_string (a_string, ")")
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			sequence.display (a_level + 1, a_pool)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				sequence.display (a_level + 1, a_pool)
+			end
 		end
 
 feature -- Optimization
@@ -118,7 +122,7 @@ feature -- Optimization
 				set_sequence (sequence.replacement_expression)
 			end
 			if sequence.is_error then
-				set_last_error (sequence.last_error)
+				set_last_error (sequence.error_value)
 			else
 				if required_cardinality = Required_cardinality_zero_or_more then
 					was_expression_replaced := True
@@ -182,10 +186,10 @@ feature -- Evaluation
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ", role_locator.message), 6, Type_error)
 					end
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.last_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 				end
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.last_error)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 			end
 		end
 

@@ -108,9 +108,13 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "operator ")
 			a_string := STRING_.appended_string (a_string, display_operator)
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			first_operand.display (a_level + 1, a_pool)
-			second_operand.display (a_level + 1, a_pool)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				first_operand.display (a_level + 1, a_pool)
+				second_operand.display (a_level + 1, a_pool)
+			end
 		end
 
 feature -- Optimization	
@@ -123,13 +127,13 @@ feature -- Optimization
 			a_binary_expression := clone (Current)
 			a_binary_expression.set_first_operand (first_operand.simplified_expression)
 			if a_binary_expression.first_operand.is_error then
-				a_binary_expression.set_last_error (a_binary_expression.first_operand.last_error)
+				a_binary_expression.set_last_error (a_binary_expression.first_operand.error_value)
 			end
 
 			if not a_binary_expression.is_error then
 				a_binary_expression.set_second_operand (second_operand.simplified_expression)
 				if a_binary_expression.second_operand.is_error then
-					a_binary_expression.set_last_error (a_binary_expression.second_operand.last_error)
+					a_binary_expression.set_last_error (a_binary_expression.second_operand.error_value)
 				end
 			end
 			Result := a_binary_expression
@@ -145,14 +149,14 @@ feature -- Optimization
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
-				set_last_error (first_operand.last_error)
+				set_last_error (first_operand.error_value)
 			else
 				if second_operand.may_analyze then second_operand.analyze (a_context) end
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
 				if second_operand.is_error then
-					set_last_error (second_operand.last_error)
+					set_last_error (second_operand.error_value)
 				else
 
 					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression

@@ -81,12 +81,16 @@ feature -- Status report
 			a_string := STRING_.appended_string (a_string, declaration.name)
 			a_string := STRING_.appended_string (a_string, " in")
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			sequence.display (a_level + 1, a_pool)
-			a_string := STRING_.appended_string (indentation (a_level), "satisfies")
-			std.error.put_string (a_string)
-			std.error.put_new_line
-			action.display (a_level + 1, a_pool)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				sequence.display (a_level + 1, a_pool)
+				a_string := STRING_.appended_string (indentation (a_level), "satisfies")
+				std.error.put_string (a_string)
+				std.error.put_new_line
+				action.display (a_level + 1, a_pool)
+			end
 		end
 
 feature -- Optimization
@@ -115,7 +119,7 @@ feature -- Optimization
 				sequence.set_analyzed
 			end
 			if sequence.is_error then
-				set_last_error (sequence.last_error)
+				set_last_error (sequence.error_value)
 			end
 
 			if not is_error then
@@ -143,7 +147,7 @@ feature -- Optimization
 						action.set_analyzed
 					end
 					if action.is_error then
-						set_last_error (action.last_error)
+						set_last_error (action.error_value)
 					end
 					-- TODO debug and reinstate promotion code at end of file
 				end
@@ -167,7 +171,7 @@ feature -- Evaluation
 			a_base_iterator := sequence.iterator (a_context)
 			if a_base_iterator.is_error then
 				create Result.make (False)
-				Result.set_last_error (a_base_iterator.last_error)
+				Result.set_last_error (a_base_iterator.error_value)
 			else
 			
 				-- Now test to see if some or all of the tests are true. The same
@@ -228,7 +232,7 @@ end
 					--		end
 					--	a_let_expression.analyze (a_context)
 					--	if a_let_expression.is_error then
-					--		set_last_error (a_let_expression.last_error)
+					--		set_last_error (a_let_expression.error_value)
 					--	else
 					--		was_expression_replaced := True
 					--		if a_let_expression.was_expression_replaced then

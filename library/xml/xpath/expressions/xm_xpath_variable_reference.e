@@ -105,13 +105,20 @@ feature -- Status report
 			if display_name = Void then
 				a_string := STRING_.appended_string (indentation (a_level), "$(unbound variable)")
 				std.error.put_string (a_string)
-				std.error.put_new_line
+				if is_error then
+					std.error.put_string (" in error%N")
+				else
+					std.error.put_new_line
+				end
 			else
 				a_string := STRING_.appended_string (indentation (a_level), "$")
 				a_string := STRING_.appended_string (a_string, display_name)				
 				std.error.put_string (a_string)
-				std.error.put_new_line
-				
+				if is_error then
+					std.error.put_string (" in error%N")
+				else
+					std.error.put_new_line
+				end
 			end
 		end
 

@@ -23,7 +23,7 @@ feature -- Access
 	string_value: STRING is
 			--Value of the item as a string
 		require
-			item_not_in_error: not is_item_in_error
+			item_not_in_error: not is_error
 		deferred
 		ensure
 			string_value_not_void: Result /= Void
@@ -33,7 +33,7 @@ feature -- Access
 			-- Type;
 			-- This will be a value such as Element_node or Integer_type
 		require
-			item_not_in_error: not is_item_in_error
+			item_not_in_error: not is_error
 		deferred
 		ensure
 			Result > 0 implies is_valid_type (Result)
@@ -42,7 +42,7 @@ feature -- Access
 	typed_value: XM_XPATH_VALUE is
 			-- Typed value
 		require
-			item_not_in_error: not is_item_in_error
+			item_not_in_error: not is_error
 		deferred
 		ensure
 			typed_value_not_void: Result /= Void
@@ -50,41 +50,41 @@ feature -- Access
 
 feature -- Status report
 
-	is_item_in_error: BOOLEAN
+	is_error: BOOLEAN is
 			-- Has item failed evaluation?
-
-	evaluation_error_value: XM_XPATH_ERROR_VALUE
+		deferred
+		end
+	
+	error_value: XM_XPATH_ERROR_VALUE is
 			-- Error value
+		deferred
+		end
 
 feature -- Status setting
 
-	set_evaluation_error (an_error_value: XM_XPATH_ERROR_VALUE) is
-			-- Set `evaluation_error_value'.
+	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
+			-- Set `error_value'.
 		require
-			item_not_in_error: not is_item_in_error
+			item_not_in_error: not is_error
 			error_value_not_void: an_error_value /= Void and then an_error_value.type /= Static_error
-		do
-			is_item_in_error := True
-			evaluation_error_value := an_error_value
+		deferred
 		ensure
-			item_in_error: is_item_in_error
-			value_set: evaluation_error_value = an_error_value
+			item_in_error: is_error
+			value_set: error_value = an_error_value
 		end
 
-	set_evaluation_error_from_string (a_message: STRING; a_code, an_error_type: INTEGER) is
-			-- Set `evaluation_error_value'.
+	set_last_error_from_string (a_message: STRING; a_code, an_error_type: INTEGER) is
+			-- Set `error_value'.
 		require
-			item_not_in_error: not is_item_in_error
+			item_not_in_error: not is_error
 			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
 			message_not_void: a_message /= Void and then a_message.count > 0
 			valid_code: is_valid_error_code (a_code)
-		do
-			is_item_in_error := True
-			create evaluation_error_value.make_from_string (a_message, a_code, an_error_type)
+		deferred
 		ensure
-			item_in_error: is_item_in_error
-			valid_error: evaluation_error_value /= Void and then STRING_.same_string (evaluation_error_value.error_message, a_message)
-				and then evaluation_error_value.code = a_code
+			item_in_error: is_error
+			valid_error: error_value /= Void and then STRING_.same_string (error_value.error_message, a_message)
+				and then error_value.code = a_code
 		end
 
 feature -- Conversion
@@ -92,7 +92,7 @@ feature -- Conversion
 	as_value: XM_XPATH_VALUE is
 			-- Convert to a value
 		require
-			item_not_in_error: not is_item_in_error
+			item_not_in_error: not is_error
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			a_node: XM_XPATH_NODE
@@ -110,9 +110,9 @@ feature -- Conversion
 
 invariant
 
-	no_error_value_without_error: not is_item_in_error implies evaluation_error_value = Void
-	item_in_error: is_item_in_error implies evaluation_error_value /= Void
-	no_static_errors: evaluation_error_value /= Void implies evaluation_error_value.type /= Static_error
+	no_error_value_without_error: not is_error implies error_value = Void
+	item_in_error: is_error implies error_value /= Void
+	no_static_errors: error_value /= Void implies error_value.type /= Static_error
 
 end
 	

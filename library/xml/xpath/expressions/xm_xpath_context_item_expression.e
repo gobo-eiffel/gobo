@@ -61,7 +61,11 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), ".")
 			std.error.put_string (a_string)
-			std.error.put_new_line
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+			end
 		end
 
 feature -- Status setting

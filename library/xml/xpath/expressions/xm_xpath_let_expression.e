@@ -73,12 +73,16 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "let $")
 			a_string := STRING_.appended_string (a_string, declaration.name)
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			sequence.display (a_level + 1, a_pool)
-			a_string := STRING_.appended_string (indentation (a_level), "return")
-			std.error.put_string (a_string)
-			std.error.put_new_line
-			action.display (a_level + 1, a_pool)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				sequence.display (a_level + 1, a_pool)
+				a_string := STRING_.appended_string (indentation (a_level), "return")
+				std.error.put_string (a_string)
+				std.error.put_new_line
+				action.display (a_level + 1, a_pool)
+			end
 		end
 
 feature -- Optimization
@@ -104,7 +108,7 @@ feature -- Optimization
 				sequence.analyze (a_context)
 			end	
 			if sequence.is_error then
-				set_last_error (sequence.last_error)
+				set_last_error (sequence.error_value)
 			else
 				if sequence.was_expression_replaced then
 					an_expression := sequence.replacement_expression
@@ -136,7 +140,7 @@ feature -- Optimization
 						action.set_analyzed
 					end
 					if action.is_error then
-						set_last_error (action.last_error)
+						set_last_error (action.error_value)
 					end
 				end
 			end

@@ -77,7 +77,11 @@ feature -- Status report
 			-- TODO
 			todo ("display", True)
 			std.error.put_string (a_string)
-			std.error.put_new_line
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+			end
 		end
 
 feature -- Optimization

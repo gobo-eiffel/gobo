@@ -74,8 +74,12 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "Sort into Document Order")
 			std.error.put_string (a_string)
-			std.error.put_new_line
-			base_expression.display (a_level + 1, a_pool)
+			if is_error then
+				std.error.put_string (" in error%N")
+			else
+				std.error.put_new_line
+				base_expression.display (a_level + 1, a_pool)
+			end
 		end
 
 feature -- Optimization
@@ -91,7 +95,7 @@ feature -- Optimization
 			if not an_expression.is_error then
 				a_result_expression.set_base_expression (an_expression)
 			else
-				a_result_expression.set_last_error (an_expression.last_error)
+				a_result_expression.set_last_error (an_expression.error_value)
 			end			
 			
 			Result := a_result_expression
@@ -110,7 +114,7 @@ feature -- Optimization
 					set_base_expression (base_expression.replacement_expression)
 				end
 				if base_expression.is_error then
-					set_last_error (base_expression.last_error)
+					set_last_error (base_expression.error_value)
 				end
 			set_analyzed
 		end

@@ -87,9 +87,9 @@ feature -- Evaluation
 				end
 			end
 		ensure then
-			possible_dynamic_error: last_evaluated_item.is_item_in_error implies
-				last_evaluated_item.evaluation_error_value.code = 2 and then
-				last_evaluated_item.evaluation_error_value.type = Dynamic_error
+			possible_dynamic_error: last_evaluated_item.is_error implies
+				last_evaluated_item.error_value.code = 2 and then
+				last_evaluated_item.error_value.type = Dynamic_error
 		end
 
 

@@ -74,18 +74,18 @@ feature -- Evaluation
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_item_in_error then
+			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
 				create Result.make (False)
-				Result.set_last_error (first_operand.last_evaluated_item.evaluation_error_value)
+				Result.set_last_error (first_operand.last_evaluated_item.error_value)
 			else
 				an_atomic_value ?= first_operand.last_evaluated_item
 				if an_atomic_value = Void then
 					create Result.make (False)
 				else
 					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item.is_item_in_error then
+					if second_operand.last_evaluated_item.is_error then
 						create Result.make (False)
-						Result.set_last_error (second_operand.last_evaluated_item.evaluation_error_value)
+						Result.set_last_error (second_operand.last_evaluated_item.error_value)
 					else
 						another_atomic_value ?= second_operand.last_evaluated_item
 						if another_atomic_value = Void then
