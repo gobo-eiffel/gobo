@@ -36,7 +36,19 @@
 
 	<cluster name="hact" abstract="True" if="${GOBO_EIFFEL}=hact"/>
 
-	<cluster name="se" location="${SmallEiffelDirectory}/lib_std" if="${GOBO_EIFFEL}=se"/>
+	<cluster name="se" location="${SmallEiffelDirectory}/lib" abstract="True" if="${GOBO_EIFFEL}=se">
+		<cluster name="base"/>
+		<cluster name="io"/>
+		<cluster name="iterator"/>
+		<cluster name="kernel"/>
+		<cluster name="number"/>
+		<cluster name="random"/>
+		<cluster name="sorting"/>
+		<cluster name="time"/>
+
+		<!-- This las cluster is for compatibility with SmallEiffel prior to -0.74b10 -->
+		<cluster name="lib_std" location="${SmallEiffelDirectory}/lib_std"/>
+	</cluster>
 
 	<cluster name="ve" location="${VE_Lib}" abstract="True" if="${GOBO_EIFFEL}=ve">
 		<cluster name="Kernel"/>
