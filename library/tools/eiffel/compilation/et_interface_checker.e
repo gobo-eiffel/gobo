@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_universe)
 			create parent_context.make (a_universe.any_class, a_universe.any_class)
+			create parent_checker.make (a_universe)
 		end
 
 feature -- Processing
@@ -114,12 +115,9 @@ feature {NONE} -- Processing
 					end
 					if not current_class.has_interface_error then
 						error_handler.report_compilation_status (Current, current_class)
-							-- Check validity rules of the parents and of formal
-							-- generic parameters of `current_class'.
-						--check_formal_parameters_validity
-						--check_parents_validity
 						check_constraint_creations_validity
 						check_signatures_validity
+						check_parents_validity
 					end
 				else
 					set_fatal_error (current_class)
@@ -497,8 +495,31 @@ feature {NONE} -- Signature validity
 	parent_context: ET_NESTED_TYPE_CONTEXT
 			-- Parent context for type conformance checking
 
+feature {NONE} -- Parents validity
+
+	check_parents_validity is
+			-- Check validity of parents of `current_class'.
+		local
+			old_class: ET_CLASS
+		do
+				-- There might be controlled recursive calls
+				-- to `process', hence the following precaution
+				-- with `current_class'.
+			old_class := current_class
+			current_class := unknown_class
+			parent_checker.check_parents_validity (old_class)
+			current_class := old_class
+			if parent_checker.has_fatal_error then
+				set_fatal_error (current_class)
+			end
+		end
+
+	parent_checker: ET_PARENT_CHECKER3
+			-- Parent validity checker
+
 invariant
 
 	parent_context_not_void: parent_context /= Void
+	parent_checker_not_void: parent_checker /= Void
 
 end

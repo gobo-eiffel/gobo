@@ -5043,4 +5043,22 @@ feature -- Internal errors
 			report_internal_error (an_error)
 		end
 
+	report_giabt_error is
+			-- Report GIABT internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabt
+			report_internal_error (an_error)
+		end
+
+	report_giabu_error is
+			-- Report GIABU internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabu
+			report_internal_error (an_error)
+		end
+
 end

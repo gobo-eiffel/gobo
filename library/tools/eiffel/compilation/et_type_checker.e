@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	has_fatal_error: BOOLEAN
-			-- Has a fatal error occurred when resolving last type?
+			-- Has a fatal error occurred?
 
 feature -- Validity checking
 
@@ -59,6 +59,7 @@ feature -- Validity checking
 			-- Check validity of `a_type' when it appears in `a_feature' viewed
 			-- from `a_class'. Resolve identifiers (such as 'like identifier'
 			-- and 'BIT identifier') in type `a_type' if not already done.
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_feature_not_void: a_feature /= Void
@@ -83,7 +84,8 @@ feature -- Validity checking
 			-- Check validity of `a_type' as base type of a creation type
 			-- appearing in `a_feature' and viewed from `a_class'. Note that
 			-- `a_type' should already be a valid type by itself (call
-			-- `check_type_validity' for that).
+			-- `check_type_validity' for that). Set `has_fatal_error' if
+			-- an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_type_base_type: a_type.is_base_type
@@ -115,8 +117,11 @@ feature -- Validity checking
 		do
 			has_fatal_error := False
 			an_actuals := a_type.actual_parameters
-			if an_actuals /= Void and then not an_actuals.is_empty then
-				a_type_class := a_type.direct_base_class (universe)
+			a_type_class := a_type.direct_base_class (universe)
+			a_type_class.process (universe.interface_checker)
+			if a_type_class.has_interface_error then
+				set_fatal_error
+			elseif an_actuals /= Void and then not an_actuals.is_empty then
 				a_formals := a_type_class.formal_parameters
 				nb := an_actuals.count
 				if a_formals = Void or else a_formals.count /= nb then
@@ -231,6 +236,7 @@ feature -- Validity checking
 			-- Replace formal generic parameters in `a_type' by their
 			-- corresponding actual parameters if the class where
 			-- `a_type' appears is generic and is not `a_class'.
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_feature_not_void: a_feature /= Void
@@ -394,7 +400,7 @@ feature {NONE} -- Validity checking
 					end
 				end
 			else
-				a_class.process (universe.eiffel_parser)
+				a_class.process (universe.interface_checker)
 				if not a_class.is_preparsed then
 					set_fatal_error
 					if current_class = a_class_impl then
@@ -403,7 +409,7 @@ feature {NONE} -- Validity checking
 -- TODO
 						error_handler.report_vtct0a_error (a_class_impl, a_type)
 					end
-				elseif a_class.has_syntax_error then
+				elseif a_class.has_interface_error then
 						-- Error should already have been
 						-- reported somewhere else.
 					set_fatal_error
@@ -463,7 +469,7 @@ feature {NONE} -- Validity checking
 							if not an_actual.conforms_to_type (a_constraint, current_class, current_class, universe) then
 									-- The actual parameter does not conform to the
 									-- constraint of its corresponding formal parameter.
-								current_class.set_fatal_error
+								set_fatal_error
 								if current_class = a_class_impl then
 									error_handler.report_vtcg3a_error (current_class, an_actual, a_constraint)
 								else
@@ -583,7 +589,9 @@ feature {NONE} -- Validity checking
 		require
 			a_type_not_void: a_type /= Void
 		do
-			check_type_validity (a_type.target_type, current_feature, current_class)
+			internal_call := True
+			a_type.target_type.process (Current)
+			internal_call := False
 		end
 
 	check_tuple_type_validity (a_type: ET_TUPLE_TYPE) is

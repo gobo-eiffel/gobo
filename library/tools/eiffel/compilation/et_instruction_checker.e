@@ -1233,7 +1233,7 @@ feature {NONE} -- Type checking
 			if a_creation_type /= Void then
 				a_position := a_creation_type.position
 			else
-				a_position := a_creation.position
+				a_position := a_creation.target.position
 			end
 			type_checker.check_creation_type_validity (a_type, current_feature, current_class, a_position)
 			if type_checker.has_fatal_error then
