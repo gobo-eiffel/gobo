@@ -76,6 +76,7 @@ feature -- Incremental parsing
 		end
 
 	set_end_of_document is
+			-- Old name for `finish_incremental'.
 		obsolete "Use finish_incremental instead."
 		do
 			finish_incremental
@@ -88,7 +89,7 @@ feature -- Status report
 			-- the parser with a document in several steps. You must use
 			-- the special parsing routines (the ones that contain
 			-- "incremental" in their name) to do this and call
-			-- `set_end_of_document' after the last part has been fed.
+			-- `finish_incremental' after the last part has been fed.
 		deferred
 		end
 
