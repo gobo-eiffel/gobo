@@ -17,8 +17,8 @@ Version 1.6 -
 	* DS_SEARCHABLE: added features `same_items' and
 	  `same_equality_tester'.
 	* DS_ARRAYED_LIST, DS_ARRAYED_STACK: get rid of garbage
-	  (i.e. old items at indexes count+1..capacity) when
-	  removing items.
+	  (i.e. old items at indexes count+1..capacity) in
+	  removal features.
 	* DS_SPARSE_TABLE: added feature `key'; optimization
 	  of feature `force' (avoid unnecessary resizing).
 	* DS_HASH_TABLE: fixed precondition in `hash_code'.
