@@ -31,6 +31,9 @@ inherit
 			reset_options
 		end
 
+	KL_IMPORTED_DOUBLE_ROUTINES
+		export {NONE} all end
+
 creation
 
 	make
@@ -76,7 +79,7 @@ feature -- Output
 		do
 			fa := value.item.abs
 			fsign := double_sign (value.item)
-			integer_part := fa.floor
+			integer_part := DOUBLE_.floor_to_integer (fa)
 			fractional_part := fa - integer_part
 			Result := make_fract_part
 			integer_formatter.reset_options
@@ -155,11 +158,11 @@ feature {ST_ABSTRACT_FORMATTER} -- Output implementation
 				i <= decimal_digit_count - 1
 			loop
 				fff := fp * (10.0^decimal_digit_count) -- .truncated_to_real
-				Result.append_string (produce_piece (fff.floor, decimal_digit_count))
+				Result.append_string (produce_piece (DOUBLE_.floor_to_integer (fff), decimal_digit_count))
 				fp := fff - fff.floor
 				i := i - decimal_digit_count
 			end
-			Result.append_string (produce_piece (((fp*10.0^i)+0.5).floor, i))
+			Result.append_string (produce_piece (DOUBLE_.floor_to_integer ((fp*10.0^i)+0.5), i))
 				check
 					Result.count = precision or else Result.count = precision + 1
 				end

@@ -33,7 +33,7 @@ inherit
 			set_precision
 		end
 
-	KL_DOUBLE_ROUTINES
+	KL_IMPORTED_DOUBLE_ROUTINES
 		export {NONE} all end
 
 creation
@@ -96,7 +96,7 @@ feature -- Output
 			fa := value.item.abs
 			fsign := e_formatter.double_sign (value.item)
 			if value.item /= 0 then
-				exponent := fsign * (log10 (fa)).floor
+				exponent := fsign * DOUBLE_.floor_to_integer (DOUBLE_.log10 (fa))
 			else
 				exponent := 0
 			end

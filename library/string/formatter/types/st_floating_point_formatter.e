@@ -33,9 +33,6 @@ inherit
 			output
 		end
 
-	KL_DOUBLE_ROUTINES
-		export {NONE} all end
-
 creation
 
 	make
@@ -75,14 +72,14 @@ feature -- Output
 			fa := value.item.abs
 			fsign := double_sign (value.item)
 			if value.item /= 0 then
-				exponent := (log10 (fa)).floor
+				exponent := DOUBLE_.floor_to_integer (DOUBLE_.log10 (fa))
 			else
 				exponent := 0
 			end
 			mantissa := fa / ten_power (exponent)
 			fixed_part := fsign * mantissa
 			fa := fixed_part.abs
-			integer_part := fa.floor
+			integer_part := DOUBLE_.floor_to_integer (fa)
 			fractional_part := fa - integer_part
 
 			dot_and_after_dot := make_fract_part
