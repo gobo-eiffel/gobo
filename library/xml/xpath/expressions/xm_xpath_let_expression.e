@@ -46,7 +46,23 @@ feature -- Access
 			create Result.make (sequence.item_type, sequence.cardinality)
 		end
 
-feature -- Analysis
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (level), "let $")
+			a_string := STRING_.appended_string (a_string, declaration.name)
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			sequence.display (level + 1, pool)
+			a_string := STRING_.appended_string (indent (level), "return")
+			action.display (level + 1, pool)
+		end
+
+feature -- Optimization
 
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions;		

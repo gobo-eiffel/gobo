@@ -31,6 +31,21 @@ feature {NONE} -- Initialization
 			valid_node_type: is_node_type (node_type)
 		do
 			kind := node_type
+			inspect
+				kind
+			when Document_node then
+				original_text := "/"
+			when Element_node, Attribute_node then
+				original_text := "*"
+			when Comment_node then
+				original_text := "comment()"
+			when Text_node then
+				original_text := "text()"
+			when Namespace_node then
+				original_text := "namespace()"
+			when Processing_instruction_node then
+				original_text := "processing-instruction()"
+			end
 		ensure
 			kind_set: kind = node_type
 		end

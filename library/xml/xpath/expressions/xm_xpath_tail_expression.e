@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Expressions that reverse a sequence of nodes"
+		"Objects that represent a filter of the form EXPR[position() > n]"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_REVERSER
+class XM_XPATH_TAIL_EXPRESSION
 
 inherit
 
@@ -22,26 +22,32 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_expression: XM_XPATH_EXPRESSION) is
+	make (a_base_expression: XM_XPATH_EXPRESSION; a_start: INTEGER) is
 			-- Establish invariant.
 		require
-			base_expression_not_void: an_expression /= Void
+			base_expression_not_void: a_base_expression /= Void
+			strictly_positive_start: a_start > 0
 		do
-			base_expression := an_expression
+			base_expression := a_base_expression
+			start := a_start
 		ensure
-			base_expression_set: base_expression = an_expression
+			base_expression_set: base_expression = a_base_expression
+			start_set: start = a_start
 		end
-
+		
 feature -- Access
-
-	base_expression: XM_XPATH_EXPRESSION
-			-- Base expression
-
+	
 	item_type: INTEGER is
 			--Determine the data type of the expression, if possible
 		do
 			-- TODO
 		end
+
+	base_expression: XM_XPATH_EXPRESSION
+			-- Base expression to be filtered
+
+	start: INTEGER
+			--  Offset of first item within `base_expression' to be included
 
 feature -- Status report
 
@@ -50,7 +56,8 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (level), "Sort into Reverse Order")
+			a_string := STRING_.appended_string (indent (level), "tail ")
+			a_string := STRING_.appended_string (a_string, start.out)
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			base_expression.display (level + 1, pool)
@@ -74,7 +81,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+	strictly_positive_start: start > 0
 	base_expression_not_void: base_expression /= Void
 
 end
-	

@@ -59,7 +59,7 @@ feature -- Status setting
 			do_nothing -- (Pre-condition cannot be True)
 		end
 	
-feature -- Analysis
+feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
 			-- Simplify an expression;

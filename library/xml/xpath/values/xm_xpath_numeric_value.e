@@ -16,6 +16,13 @@ inherit
 
 	XM_XPATH_ATOMIC_VALUE
 
+feature -- Access
+
+	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
+		do
+			-- TODO
+		end
+
 feature -- Status_report
 
 	is_nan: BOOLEAN is
@@ -23,7 +30,13 @@ feature -- Status_report
 		do
 			Result := False
 		end
-	
+
+	is_whole_number: BOOLEAN is
+			-- Is value integral?
+		do
+			-- TODO
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is

@@ -114,6 +114,41 @@ feature -- Dependencies
 				or else Depends_upon_last
 		end
 
+feature -- Setting dependencies
+
+	set_dependencies (dep: ARRAY [BOOLEAN]) is
+		require
+			dependencies_not_void: dep /= Void
+		do
+			dependencies := dep
+		ensure
+			set: dependencies = dep
+		end
+
+	set_depends_upon_current_item is
+			-- Set expression to depend upon current item.
+		do
+			if not are_dependencies_computed then
+				are_dependencies_computed := True
+				create dependencies.make (1,6)
+			end
+			dependencies.put (True, 1)
+		ensure
+			dependencies_computed: are_dependencies_computed
+		end
+
+	set_depends_upon_current_group is
+			-- Set expression to depend upon current-group() and/or current-grouping-key() and/or regex-group().
+		do
+			if not are_dependencies_computed then
+				are_dependencies_computed := True
+				create dependencies.make (1,6)
+			end
+			dependencies.put (True, 6)
+		ensure
+			dependencies_computed: are_dependencies_computed
+		end
+
 feature -- Cardinality
 
 	cardinalities: ARRAY [BOOLEAN]
@@ -157,6 +192,13 @@ feature -- Cardinality
 			cardinalities_computed: are_cardinalities_computed
 		do
 			Result := cardinalities.item (2)
+		end
+
+	cardinality_allows_zero_or_one: BOOLEAN is
+		do
+			Result := cardinality_allows_one
+				and then cardinality_allows_zero
+				and then not cardinality_allows_many
 		end
 
 	cardinality_exactly_one: BOOLEAN is
@@ -210,6 +252,23 @@ feature -- Cardinality
 				Result := cardinality_allows_one and then cardinality_allows_many
 			when Required_cardinality_zero_or_more then
 				Result := cardinality_allows_zero_or_more
+			end
+		end
+
+	occurence_indicator: STRING is
+			-- Text of the occurence-indicator
+		do
+			if cardinality_allows_zero_or_one then
+				Result := "?"
+			elseif cardinality_exactly_one then
+				Result := ""
+			elseif cardinality_allows_zero_or_more then
+				Result := "*"
+			else
+					check
+						one_or_more: cardinality_allows_one_or_more
+					end
+				Result := "+"
 			end
 		end
 
@@ -368,6 +427,16 @@ feature -- Special properties
 		end
 
 feature -- Setting special properties
+
+	set_special_properties (properties: ARRAY [BOOLEAN]) is
+		require
+			properties_not_void: properties /= Void
+		do
+			special_properties := properties
+			are_special_properties_computed := True
+		ensure
+			computed: are_special_properties_computed and then special_properties = properties
+		end
 
 	set_context_document_nodeset is
 			-- Guarentee nodes in the result are all to be in the same document as the context node.

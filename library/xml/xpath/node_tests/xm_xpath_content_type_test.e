@@ -27,11 +27,20 @@ feature {NONE} -- Initialization
 
 	make (a_node_type: INTEGER; a_type_code: INTEGER) is
 		require
-			valid_node_type: is_node_type (a_node_type)
+			valid_node_type: a_node_type = Element_node or else a_node_type = Attribute_node
 			valid_code: is_valid_type (a_type_code)
 		do
 			item_type := a_node_type
-			content_type := a_type_code			
+			content_type := a_type_code
+			inspect
+				item_type
+			when Element_node then
+				original_text := STRING_.appended_string ("element(*,", type_name (content_type))
+				original_text := STRING_.appended_string (original_text, ")")
+			when Attribute_node then
+				original_text := STRING_.appended_string ("attribute(*,", type_name (content_type))
+				original_text := STRING_.appended_string (original_text, ")")
+			end
 		ensure
 			item_type_set: item_type = a_node_type
 			content_type_set: content_type = a_type_code

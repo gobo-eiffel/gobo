@@ -47,7 +47,26 @@ feature -- Access
 	node_test: XM_XPATH_NODE_TEST
 			-- Node test
 
-feature -- Analysis
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string, test_string: STRING
+		do
+			if node_test = Void then
+				test_string := "node()"
+			else
+				test_string := node_test.original_text
+			end
+			a_string := STRING_.appended_string (indent (level), axis_name (axis))
+			a_string := STRING_.appended_string (a_string, "::")
+			a_string := STRING_.appended_string (a_string, test_string)
+			std.error.put_string (a_string)
+			std.error.put_new_line
+		end
+
+feature -- Optimization
 
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions

@@ -22,6 +22,10 @@ inherit
 	
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 
+	KL_SHARED_STANDARD_FILES
+
+	KL_IMPORTED_STRING_ROUTINES
+
 feature -- Access
 	
 	item_type: INTEGER is
@@ -76,6 +80,33 @@ feature -- Status report
 			Result := True
 		end
 
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		require
+			name_pool_not_void: pool /= Void
+		deferred
+		end
+
+	indent (level: INTEGER): STRING is
+			-- Construct indent string, for diagnostic output
+		require
+			strictly_positive_level: level > 0
+		local
+			counter: INTEGER
+		do
+			Result := ""
+			from
+				counter := 1
+			variant
+				level + 1 - counter
+			until
+				counter > level
+			loop
+				Result := STRING_.appended_string (Result, " ")
+				counter := counter + 1
+			end
+		end
+
 feature -- Status setting
 
 	set_last_static_type_error (msg: STRING) is
@@ -97,14 +128,7 @@ feature -- Comparison
 		deferred
 		end
 
---	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
---			-- Diagnostic print of expression structure to `std.error'
---		require
---			name_pool_not_void: pool /= Void
---		deferred
---		end
-	
-feature -- Analysis
+feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
 			-- Simplify an expression;

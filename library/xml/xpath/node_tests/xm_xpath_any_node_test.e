@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 	make is
 		do
-			do_nothing
+			original_text := "node()"
 		end
 	
 feature -- Status report

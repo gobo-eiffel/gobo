@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			item_type
+			item_type, display
 		end
 
 creation
@@ -61,6 +61,15 @@ feature -- Evaluation
 			-- evaluate expressions produced by compiling an attribute value template.
 		do
 			Result := ""
+		end
+
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		do
+			std.error.put_string (STRING_.appended_string (indent (level), "()"))
+			std.error.put_new_line
 		end
 
 feature -- Comparison

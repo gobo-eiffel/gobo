@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_SINGLE_NODE_EXPRESSION
+deferred class XM_XPATH_SINGLE_NODE_EXPRESSION
 
 inherit
 
@@ -21,7 +21,7 @@ feature -- Access
 	item_type: INTEGER is
 			--Determine the data type of the expression, if possible
 		do
-			-- TODO
+			Result := Any_node
 		end
 
 feature -- Analysis
@@ -29,6 +29,7 @@ feature -- Analysis
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions
 		do
+			Result := Current
 		end
 
 feature {NONE} -- Implementation
@@ -38,5 +39,6 @@ feature {NONE} -- Implementation
 		do
 			-- TODO
 		end
-	
+
+	-- set_intrinsic_dependencies et. al.
 end

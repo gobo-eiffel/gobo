@@ -47,7 +47,7 @@ feature -- Status_report
 	static_type_check_error_message: STRING
 			-- Error message from `static_type_check'
 
-feature -- Analysis
+feature -- Optimization
 
 	static_type_check (supplied: XM_XPATH_EXPRESSION; required: XM_XPATH_SEQUENCE_TYPE; backwards_compatible: BOOLEAN; role: XM_XPATH_ROLE_LOCATOR): XM_XPATH_EXPRESSION is
 			-- Check an expression against a required type, modifying it if necessary

@@ -65,7 +65,7 @@ feature -- Evaluation
 		end
 
 	
-feature -- Analysis
+feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
 			-- Simplify an expression;

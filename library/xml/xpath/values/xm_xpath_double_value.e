@@ -72,6 +72,20 @@ feature -- Access
 		do
 			Result := value.out
 		end
+
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (level), "number (")
+			a_string := STRING_.appended_string (a_string, string_value)
+			a_string := STRING_.appended_string (a_string, ")")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+		end
 	
 feature -- Conversions
 	

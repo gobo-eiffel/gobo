@@ -61,7 +61,6 @@ feature -- Access
 			-- Binding for variable;
 			-- will be `Void' until `fix_up' is called.
 
-	
 feature -- Status report
 
 	may_analyze: BOOLEAN is
@@ -69,7 +68,25 @@ feature -- Status report
 		do
 			Result := constant_value /= Void or else static_type /= Void
 		end
-	
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			if display_name = Void then
+				a_string := STRING_.appended_string (indent (level), "$(unbound variable)")
+				std.error.put_string (a_string)
+				std.error.put_new_line
+			else
+				a_string := STRING_.appended_string (indent (level), "$")
+				a_string := STRING_.appended_string (a_string, display_name)				
+				std.error.put_string (a_string)
+				std.error.put_new_line
+				
+			end
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -85,7 +102,7 @@ feature -- Comparison
 			end
 		end
 
-feature -- Analysis
+feature -- Optimization
 
 		analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions;		

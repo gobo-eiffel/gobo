@@ -193,6 +193,7 @@ feature -- Helper routines
 		do
 			name_code := make_name_code (a_qname, use_default_namespace)
 			create Result.make (a_node_type, name_code)
+			Result.set_original_text (a_qname)
 		end
 
 	make_local_name_test (a_node_type: INTEGER; a_local_name: STRING): XM_XPATH_LOCAL_NAME_TEST is
@@ -217,6 +218,7 @@ feature -- Helper routines
 			valid_prefix: xml_prefix /= Void and then is_ncname (xml_prefix)
 		do
 			create Result.make (environment.name_pool, a_node_type, environment.uri_for_prefix (xml_prefix))
+			Result.set_original_text (STRING_.appended_string (xml_prefix, ":*"))
 		ensure
 			namespace_test_not_void: Result /= Void
 		end

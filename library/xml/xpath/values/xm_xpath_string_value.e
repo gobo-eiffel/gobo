@@ -70,7 +70,21 @@ feature -- Access
 			Result := value.count > 0
 		end
 
-		
+
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (level), "string (%"")
+			a_string := STRING_.appended_string (a_string, string_value)
+			a_string := STRING_.appended_string (a_string, "%")")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+		end
+			
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is

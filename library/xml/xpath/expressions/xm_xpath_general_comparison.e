@@ -15,7 +15,10 @@ class XM_XPATH_GENERAL_COMPARISON
 inherit
 
 	XM_XPATH_BINARY_EXPRESSION
-	
+		redefine
+			display_operator
+		end
+
 creation
 
 	make
@@ -27,5 +30,14 @@ feature -- Access
 		do
 			-- TODO
 		end
+
+feature {NONE} -- Implementation
+
+	display_operator: STRING is
+			-- Format `operator' for display
+		do
+			Result := STRING_.appended_string ("many-to-many ", Precursor)
+		end
+	
 end
 	

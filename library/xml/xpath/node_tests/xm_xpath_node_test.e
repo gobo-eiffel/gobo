@@ -43,6 +43,21 @@ feature -- Status report
 		deferred
 		end
 
+	original_text: STRING
+			-- Original text of the node-test, for use in diagnostics
+
+feature -- Status setting
+
+	set_original_text (text: STRING) is
+			-- Set original text of the node-test.
+		require
+			original_text_not_void: text /= Void
+		do
+			original_text := clone (text)
+		ensure
+			original_text_set: original_text /= Void and then STRING_.same_string (original_text, text)
+		end
+
 feature -- Matching
 
 	matches_node (a_node_kind: INTEGER; a_fingerprint: INTEGER; a_node_type: INTEGER): BOOLEAN is

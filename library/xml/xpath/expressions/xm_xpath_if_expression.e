@@ -82,7 +82,28 @@ feature -- Access
 			end
 		end
 
-feature -- Analysis
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (level), "if (")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			condition.display (level + 1, pool)
+			a_string := STRING_.appended_string (indent (level), "then")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			then_expression.display (level + 1, pool)
+			a_string := STRING_.appended_string (indent (level), "else")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			else_expression.display (level + 1, pool)				
+		end
+
+feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
 			-- Simplify an expression;

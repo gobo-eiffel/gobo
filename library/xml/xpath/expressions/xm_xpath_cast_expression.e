@@ -41,11 +41,26 @@ feature -- Access
 			-- TODO
 		end
 
-feature -- Analysis
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (level), "cast as ")
+			a_string := STRING_.appended_string (a_string, type_name (target_type))
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			source.display (level + 1, pool)
+		end
+
+feature -- Optimization	
 
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions
 		do
+			-- TODO
 		end
 
 feature {NONE} -- Implementation
@@ -55,5 +70,11 @@ feature {NONE} -- Implementation
 		do
 			-- TODO
 		end
+
+	source: XM_XPATH_EXPRESSION
+			-- Castable expression 
+	
+	target_type: INTEGER
+			-- Target type 
 
 end

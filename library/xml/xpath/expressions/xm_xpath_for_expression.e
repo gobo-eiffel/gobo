@@ -51,13 +51,30 @@ feature -- Access
 			Result := action.item_type
 		end
 
+	variable_name: STRING
+			-- TODO
+
 	required_type: XM_XPATH_SEQUENCE_TYPE is
 			-- Static type of variable
 		do
 			create result.make_single_integer
 		end
 	
-feature -- Analysis
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (level), "for $")
+			a_string := STRING_.appended_string (a_string, variable_name)
+			-- TODO
+			std.error.put_string (a_string)
+			std.error.put_new_line
+		end
+
+feature -- Optimization
 
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions;		

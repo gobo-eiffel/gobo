@@ -27,4 +27,22 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (level), "@")
+			a_string := STRING_.appended_string (a_string, fingerprint.out)
+			std.error.put_string (a_string)
+			std.error.put_new_line
+		end
+
+feature {NONE} -- Implementation
+
+	fingerprint: INTEGER
+			-- TODO
+
 end

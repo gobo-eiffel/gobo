@@ -15,7 +15,12 @@ deferred class XM_XPATH_TEST_EXPRESSION_PARSER
 inherit
 
 	TS_TEST_CASE
-	
+		redefine
+			set_up
+		end
+
+	XM_XPATH_EXPRESSION_FACTORY
+
 feature -- Access
 
 	shared_pool: XM_XPATH_SHARED_NAME_POOL is
@@ -24,11 +29,13 @@ feature -- Access
 			create Result.make
 		end
 
+	default_pool: XM_XPATH_NAME_POOL
+			-- The default name pool
+
 feature -- Test
 
 	test_simple is
 		local
-			expression_tool: XM_XPATH_EXPRESSION_TOOL
 			expr1: XM_XPATH_EXPRESSION
 			expr2: XM_XPATH_PATH_EXPRESSION
 			sub_exprs: DS_LIST [XM_XPATH_EXPRESSION]
@@ -37,9 +44,8 @@ feature -- Test
 			a_string: STRING
 		do
 			a_string := "//fred[@son='Jim']"
-			create expression_tool.make
-			create context.make (shared_pool.default_pool, False)
-			expr1 := expression_tool.make_expression (a_string, context)
+			create context.make (default_pool, False)
+			expr1 := make_expression (a_string, context)
 			assert ("Parse sucessful", expr1 /= Void)
 			expr2 ?= expr1
 			assert ("Path expression", expr2 /= Void)
@@ -47,6 +53,13 @@ feature -- Test
 			assert ("Sub-expression", sub_exprs /= Void)
 			--print (sub_exprs.count)
 			--expr1 := sub_exprs.item (1)
+		end
+
+feature -- Setting
+
+	set_up is
+		do
+			default_pool := shared_pool.default_pool
 		end
 
 end

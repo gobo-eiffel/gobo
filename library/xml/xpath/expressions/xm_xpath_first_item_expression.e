@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Expressions that reverse a sequence of nodes"
+		"Objects that return the first item in a sequence"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_REVERSER
+class XM_XPATH_FIRST_ITEM_EXPRESSION
 
 inherit
 
@@ -22,26 +22,27 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_expression: XM_XPATH_EXPRESSION) is
-			-- Establish invariant.
+	make (a_base_expression: XM_XPATH_EXPRESSION) is
+			-- Establish invaraint.
 		require
-			base_expression_not_void: an_expression /= Void
+			base_expression_not_void: a_base_expression /= Void
 		do
-			base_expression := an_expression
+			base_expression := a_base_expression
+			-- TODO compute_static_properties
 		ensure
-			base_expression_set: base_expression = an_expression
+			base_expression_set: base_expression = a_base_expression
 		end
 
 feature -- Access
-
-	base_expression: XM_XPATH_EXPRESSION
-			-- Base expression
-
+	
 	item_type: INTEGER is
 			--Determine the data type of the expression, if possible
 		do
 			-- TODO
 		end
+
+	base_expression: XM_XPATH_EXPRESSION
+			-- Base expression to be filtered
 
 feature -- Status report
 
@@ -50,7 +51,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indent (level), "Sort into Reverse Order")
+			a_string := STRING_.appended_string (indent (level), "first item of ")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			base_expression.display (level + 1, pool)
@@ -77,4 +78,3 @@ invariant
 	base_expression_not_void: base_expression /= Void
 
 end
-	

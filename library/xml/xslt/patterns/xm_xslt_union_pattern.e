@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			simplify, type_check
+			simplify, type_check, set_original_text
 		end
 
 creation
@@ -53,6 +53,16 @@ feature -- Access
 			else
 				create {XM_XSLT_NODE_KIND_TEST} Result.make (node_type)
 			end
+		end
+
+feature -- Status setting
+
+	set_original_text (text: STRING) is
+			-- Set original text of the pattern.
+		do
+			original_text := clone (text)
+			left_hand_side.set_original_text (text)
+			right_hand_side.set_original_text (text)
 		end
 
 feature -- Analysis

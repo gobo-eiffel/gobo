@@ -93,6 +93,20 @@ feature -- Access
 			Result.put (step, 2)
 		end
 
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (level), "path /")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			start.display (level + 1, pool)
+			step.display (level + 1, pool)
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -126,7 +140,7 @@ feature -- Status setting
 			are_dependencies_computed := True
 		end
 	
-feature -- Analysis
+feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
 			-- Simplify an expression
@@ -257,36 +271,32 @@ feature -- Analysis
 
 									create offer.make (Focus_independent, Void, result_expression, False, result_expression.start.Context_document_nodeset)
 									expr1 := result_expression.step.promote (offer)
-									if expr1 = Void then
-										Result := Void
-									else
-										result_expression.set_step (expr1)
-										let ?= offer.containing_expression
-										if let /= Void then
-											expr2 := let.analyze (env)
-											if let.is_static_type_error then
-												is_static_type_error := True
-												set_last_static_type_error (let.last_static_type_error)
-											else
-												offer.set_containing_expression (expr2)
-											end
-
-											-- Decide whether the result needs to be wrapped in a sorting
-											-- expression to deliver the results in document order
-
-											if not is_static_type_error then
-												a_path ?= offer.containing_expression
-												if a_path = Void then
-													if a_path.Ordered_nodeset then
-														Result := a_path
-													elseif a_path.Reverse_document_order then
-														create {XM_XPATH_REVERSER} Result.make (a_path)
-													else
-														create {XM_XPATH_DOCUMENT_SORTER} Result.make (a_path)
-													end
+									result_expression.set_step (expr1)
+									let ?= offer.containing_expression
+									if let /= Void then
+										expr2 := let.analyze (env)
+										if let.is_static_type_error then
+											is_static_type_error := True
+											set_last_static_type_error (let.last_static_type_error)
+										else
+											offer.set_containing_expression (expr2)
+										end
+										
+										-- Decide whether the result needs to be wrapped in a sorting
+										-- expression to deliver the results in document order
+										
+										if not is_static_type_error then
+											a_path ?= offer.containing_expression
+											if a_path = Void then
+												if a_path.Ordered_nodeset then
+													Result := a_path
+												elseif a_path.Reverse_document_order then
+													create {XM_XPATH_REVERSER} Result.make (a_path)
 												else
-													Result := offer.containing_expression
+													create {XM_XPATH_DOCUMENT_SORTER} Result.make (a_path)
 												end
+											else
+												Result := offer.containing_expression
 											end
 										end
 									end
@@ -321,7 +331,9 @@ feature -- Analysis
 				result_expression.set_start (start.promote (offer))
 				if offer.action = Inline_variable_references then
 
-					-- This is the only request we pass on.
+					-- Don't pass on other requests. We could pass them on, but only after augmenting
+					--  them to say we are interested in subexpressions that don't depend on either the
+					--  outer context or the inner context.
 
 					result_expression.set_step (step.promote (offer))
 				end

@@ -69,6 +69,43 @@ feature -- Access
 			axis_number_in_range: Ancestor_axis >= Result and then Result < Preceding_or_ancestor_axis -- (can't be used in XPath expression)
 		end
 
+	axis_name (an_axis: INTEGER): STRING is
+			-- Name of axis
+		require
+			valid_axis: is_axis_valid (an_axis)
+		do
+			inspect
+				an_axis
+			when Ancestor_axis then
+				Result := "ancestor"
+			when Ancestor_or_self_axis then
+				Result := "ancestor-or-seld"
+			when Attribute_axis then
+				Result := "attribute"
+			when Child_axis then
+				Result := "child"
+			when Descendant_axis then
+				Result := "descendant"
+			when Descendant_or_self_axis then
+				Result := "descendant-or-self"
+			when Following_axis then
+				Result := "following"
+			when Following_sibling_axis then
+				Result := "following-sibling"
+			when Self_axis then
+				Result := "self"
+			when Parent_axis then
+				Result := "parent"
+			when Preceding_axis then
+				Result := "preceding"
+			when Preceding_sibling_axis then
+				Result := "preceding-sibling"
+			end
+		ensure
+			axis_name_not_void: Result /= Void
+			correct_axis_name: axis_number (Result) = an_axis
+		end
+
 	axis_principal_node_type (an_axis: INTEGER): INTEGER is
 	require
 		valid_axis: is_axis_valid (an_axis)

@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (source: XM_XPATH_EXPRESSION; target: XM_XPATH_SEQUENCE_TYPE) is
+	make (a_source: XM_XPATH_EXPRESSION; a_target: XM_XPATH_SEQUENCE_TYPE) is
 			-- TODO
 		do
 		end
@@ -35,7 +35,24 @@ feature -- Access
 			-- TODO
 		end
 
-feature -- Analysis
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (level), "instance-of ")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			source.display (level + 1, pool)
+			a_string := STRING_.appended_string (indent (level), type_name (target_type))
+			a_string := STRING_.appended_string (a_string, target.occurence_indicator)			
+			std.error.put_string (a_string)
+			std.error.put_new_line			
+		end
+
+feature -- Optimization
 
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions
@@ -49,5 +66,14 @@ feature {NONE} -- Implementation
 		do
 			-- TODO
 		end
+	
+	source: XM_XPATH_EXPRESSION
+			--  TODO
+
+	target: XM_XPATH_SEQUENCE_TYPE
+			-- TODO
+
+	target_type: INTEGER
+			--  TODO
 
 end

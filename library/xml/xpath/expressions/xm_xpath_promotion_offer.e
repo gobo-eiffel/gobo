@@ -66,6 +66,24 @@ feature -- Access
 			-- When a subexpression is promoted, an expression of the form let $VAR := SUB return ORIG is created,
 			--  and this replaces the original `containing_expression' within `Current'.
 
+feature -- Status report
+
+	promote_document_dependent: BOOLEAN
+			-- In the case of `Focus_indpendent', is it safe to promote a subexpression
+			--  that depends on the context document but not on other aspects of the focus?
+			-- This is the case, for example, in a filter expression when it is known that
+			--  all the nodes selected by the expression will be in the same document,
+			--  as happens when the filter is applied to a path expression.
+			-- This allows subexpressions such as key() to be promoted
+
+	must_eliminate_duplicates: BOOLEAN
+			-- In the case of Unordered, can the nodes can be delivered in any order so long as there are no duplicates?
+			-- For example, as required by the count() function. If `False', the
+			--  nodes can be delivered in any order and duplicates are allowed (for example, as
+			--  required by the boolean() function).
+
+feature -- Optimization
+
 	accept (child: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
 			-- Test whether a subexpression qualifies for promotion, and if so, accept the promotion
 		require
@@ -114,22 +132,6 @@ feature -- Access
 				end
 			end			
 		end
-
-feature -- Status report
-
-	promote_document_dependent: BOOLEAN
-			-- In the case of `Focus_indpendent', is it safe to promote a subexpression
-			--  that depends on the context document but not on other aspects of the focus?
-			-- This is the case, for example, in a filter expression when it is known that
-			--  all the nodes selected by the expression will be in the same document,
-			--  as happens when the filter is applied to a path expression.
-			-- This allows subexpressions such as key() to be promoted
-
-	must_eliminate_duplicates: BOOLEAN
-			-- In the case of Unordered, can the nodes can be delivered in any order so long as there are no duplicates?
-			-- For example, as required by the count() function. If `False', the
-			--  nodes can be delivered in any order and duplicates are allowed (for example, as
-			--  required by the boolean() function).
 
 feature -- Element change
 

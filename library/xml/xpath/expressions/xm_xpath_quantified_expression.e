@@ -58,8 +58,28 @@ feature -- Access
 		do
 			create result.make (sequence.item_type, Required_cardinality_exactly_one)
 		end
-	
-feature -- Analysis
+
+feature -- Status report
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (level), token_name (operator))
+			a_string := STRING_.appended_string (a_string, " $")
+			a_string := STRING_.appended_string (a_string, declaration.name)
+			a_string := STRING_.appended_string (a_string, " in")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			sequence.display (level + 1, pool)
+			a_string := STRING_.appended_string (indent (level), "satisfies")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			action.display (level + 1, pool)
+		end
+
+feature -- Optimization
 
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions;		

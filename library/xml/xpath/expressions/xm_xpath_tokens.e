@@ -305,5 +305,107 @@ feature	-- Access
 			-- not actually a token, but we
 			-- use token numbers to identify operators.	
 	
-end
+	token_name (a_token: INTEGER): STRING is
+			-- Name of `a_token'
+		require
+			valid_token: a_token > Eof_token and a_token <= Unary_minus_token
+		do
+			Result := tokens.item (a_token)
+		ensure
+			may_be_void: True -- as valid_token pre-condition is only sufficient to index the array
+		end
+
+feature {NONE} -- Implementation
+
+	tokens: ARRAY [STRING] is
+			-- Strings are used to represent tokens in error messages
+		once
+			create Result.make (0, 199)
+			
+			tokens.put ("<eof>", Eof_token)
+			tokens.put ("|", Union_token)
+			tokens.put ("/", Slash_token)
+			tokens.put ("@", At_token)
+			tokens.put ("[", Left_square_bracket_token)
+			tokens.put ("(", Left_parenthesis_token)
+			tokens.put ("=", Equals_token)
+			tokens.put (",", Comma_token)
+			tokens.put ("//", Slash_slash_token)
+			tokens.put ("or", Or_token)
+			tokens.put ("and", And_token)
+			tokens.put (">", Greater_than_token)
+			tokens.put ("<", Less_than_token)
+			tokens.put (">=", Greater_equal_token)
+			tokens.put ("<=", Less_equal_token)
+			tokens.put ("+", Plus_token)
+			tokens.put ("-", Minus_token)
+			tokens.put ("*", Multiply_token)
+			tokens.put ("div", Division_token)
+			tokens.put ("mod", Modulus_token)
+			tokens.put ("is", Is_token)
+			tokens.put ("$", Dollar_token)
+			tokens.put ("!=", Not_equal_token)
+			tokens.put ("intersect", Intersect_token)
+			tokens.put ("except", Except_token)
+			tokens.put ("return", Return_token)
+			tokens.put ("then", Then_token)
+			tokens.put ("else", Else_token)
+			tokens.put ("to", To_token)
+			tokens.put ("in", In_token)
+			tokens.put ("some", Some_token)
+			tokens.put ("every", Every_token)
+			tokens.put ("satisfies", Satisfies_token)
+			tokens.put ("<function>(", Function_token)
+			tokens.put ("<axis>", Axis_token)
+			tokens.put ("if(", If_token)
+			tokens.put ("<<", Precedes_token)
+			tokens.put (">>", Follows_token)
+			tokens.put ("::", Colon_colon_token)
+			tokens.put (":*", Colon_star_token)
+			tokens.put ("instance of", Instance_of_token)
+			tokens.put ("cast as", Cast_as_token)
+			tokens.put ("treat as", Treat_as_token)
+			tokens.put ("eq", Fortran_equal_token)
+			tokens.put ("ne", Fortran_not_equal_token)
+			tokens.put ("gt", Fortran_greater_than_token)
+			tokens.put ("ge", Fortran_greater_equal_token)
+			tokens.put ("lt", Fortran_less_than_token)
+			tokens.put ("le", Fortran_less_equal_token)
+			tokens.put ("idiv", Integer_division_token)
+			tokens.put ("castable as", Castable_as_token)
+			tokens.put (":=", Assign_token)
+			tokens.put ("typeswitch", Typeswitch_token)
+			tokens.put ("case", Case_token)
+			tokens.put ("default", Default_token)
+			tokens.put ("<name>", Name_token)
+			tokens.put ("<string-literal>", String_literal_token)
+			tokens.put ("]", Right_square_bracket_token)
+			tokens.put (")", Right_parenthesis_token)
+			tokens.put (".", Dot_token)
+			tokens.put ("..", Dot_dot_token)
+			tokens.put ("*", Star_token)
+			tokens.put ("<prefix:*>", Prefix_token)
+			tokens.put ("<numeric-literal>", Number_token)
+			tokens.put ("<node-type>()", Node_kind_token)
+			tokens.put ("for", For_token)
+			tokens.put ("<*:local-name>", Suffix_token)
+			tokens.put ("?", Question_mark_token)
+			tokens.put ("{", Left_curly_token)
+			tokens.put ("}", Right_curly_token)
+			tokens.put ("let", Let_token)
+			tokens.put ("xquery version", Xquery_version_token)
+			tokens.put ("declare namespace", Declare_namespace_token)
+			tokens.put ("declare base-uri", Declare_base_uri_token)
+			tokens.put ("declare default", Declare_default_token)
+			tokens.put ("declare xmlspace", Declare_xml_space_token)
+			tokens.put ("import schema", Import_schema_token)
+			tokens.put ("import module", Import_module_token)
+			tokens.put ("declare variable", Declare_variable_token)
+			tokens.put ("declare function", Declare_function_token)
+			tokens.put ("module namespace", Module_namespace_token)
+			tokens.put (";", Semicolon_token)
+			tokens.put ("-", Unary_minus_token)
+		end
 	
+end
+		

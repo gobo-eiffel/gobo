@@ -42,6 +42,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	operator: INTEGER
+			-- The operation, as a token number
+
+	operands: ARRAY [XM_XPATH_EXPRESSION]
+			-- The two operands
+
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
@@ -68,7 +74,20 @@ feature -- Status report
 				or else oper = Not_equal_token
 				or else oper = Fortran_not_equal_token
 		end
-		
+
+	display (level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
+		do
+			a_string := STRING_.appended_string (indent (level), "operator ")
+			a_string := STRING_.appended_string (a_string, display_operator)
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			operands.item (1).display (level + 1, pool)
+			operands.item (2).display (level + 1, pool)
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -92,7 +111,8 @@ feature -- Comparison
 				end
 			end
 		end
-feature -- Analysis
+
+feature -- Optimization	
 
 	simplify: XM_XPATH_EXPRESSION is
 			-- Simplify an expression;
@@ -132,14 +152,6 @@ feature -- Analysis
 			-- TODO: requires promotion offer features
 		end
 
-feature {XM_XPATH_BINARY_EXPRESSION} -- Implementation
-
-	operands: ARRAY [XM_XPATH_EXPRESSION]
-			-- The two operands
-
-	operator: INTEGER
-			-- The operation, as a token number
-
 feature {NONE} -- Implementation
 
 	compute_cardinality is
@@ -148,6 +160,14 @@ feature {NONE} -- Implementation
 			create cardinalities.make (1, 3) -- All False
 			cardinalities.put (True, 1)
 			cardinalities.put (True, 2)
+		end
+
+	display_operator: STRING is
+			-- Format `operator' for display
+		do
+			Result := token_name (operator)
+		ensure
+			display_operator_not_void: Result /= Void
 		end
 
 invariant
