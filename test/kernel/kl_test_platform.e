@@ -37,7 +37,7 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert_equal ("definition", 8, a_platform.Byte_bits)
+			assert_integers_equal ("definition", 8, a_platform.Byte_bits)
 		end
 
 	test_character_bits is
@@ -46,7 +46,7 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert_equal ("definition", a_platform.Character_bytes * a_platform.Byte_bits, a_platform.Character_bits)
+			assert_integers_equal ("definition", a_platform.Character_bytes * a_platform.Byte_bits, a_platform.Character_bits)
 				-- Needed in the implementation of some of the Gobo classes:
 			assert ("more_than_byte", a_platform.Character_bits >= a_platform.Byte_bits)
 		end
@@ -57,7 +57,7 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert_equal ("definition", a_platform.Double_bytes * a_platform.Byte_bits, a_platform.Double_bits)
+			assert_integers_equal ("definition", a_platform.Double_bytes * a_platform.Byte_bits, a_platform.Double_bits)
 			assert ("more_than_real", a_platform.Double_bits >= a_platform.Real_bits)
 		end
 
@@ -67,7 +67,7 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert_equal ("definition", a_platform.Integer_bytes * a_platform.Byte_bits, a_platform.Integer_bits)
+			assert_integers_equal ("definition", a_platform.Integer_bytes * a_platform.Byte_bits, a_platform.Integer_bits)
 				-- The code of characters should fit into an integer:
 			assert ("more_than_character", a_platform.Integer_bits >= a_platform.Character_bits)
 				-- Needed in the implementation of some of the Gobo classes:
@@ -80,7 +80,7 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert_equal ("definition", a_platform.Pointer_bytes * a_platform.Byte_bits, a_platform.Pointer_bits)
+			assert_integers_equal ("definition", a_platform.Pointer_bytes * a_platform.Byte_bits, a_platform.Pointer_bits)
 		end
 
 	test_real_bits is
@@ -89,7 +89,7 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert_equal ("definition", a_platform.Real_bytes * a_platform.Byte_bits, a_platform.Real_bits)
+			assert_integers_equal ("definition", a_platform.Real_bytes * a_platform.Byte_bits, a_platform.Real_bits)
 		end
 
 	test_boolean_bytes is
@@ -107,7 +107,7 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert_equal ("definition", 1, a_platform.Byte_bytes)
+			assert_integers_equal ("definition", 1, a_platform.Byte_bytes)
 		end
 
 	test_character_bytes is
@@ -168,7 +168,7 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert_equal ("definition", 0, a_platform.Minimum_byte_code)
+			assert_integers_equal ("definition", 0, a_platform.Minimum_byte_code)
 		end
 
 	test_maximum_byte_code is
@@ -177,7 +177,7 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert_equal ("definition", 255, a_platform.Maximum_byte_code)
+			assert_integers_equal ("definition", 255, a_platform.Maximum_byte_code)
 		end
 
 	test_minimum_character_code is
@@ -186,7 +186,7 @@ feature -- Test
 			a_platform: KL_PLATFORM
 		do
 			create a_platform
-			assert_equal ("definition", 0, a_platform.Minimum_character_code)
+			assert_integers_equal ("definition", 0, a_platform.Minimum_character_code)
 		end
 
 	test_maximum_character_code is
@@ -223,7 +223,7 @@ feature -- Test
 		do
 			create a_platform
 			assert ("meaningfull", a_platform.Maximum_integer >= 0)
-			assert_equal ("definition", - (a_platform.Minimum_integer + 1), a_platform.Maximum_integer)
+			assert_integers_equal ("definition", - (a_platform.Minimum_integer + 1), a_platform.Maximum_integer)
 			if a_platform.Integer_bits = 32 then
 				assert_equal ("value_32_bits", "2147483647", a_platform.Maximum_integer.out)
 			end
