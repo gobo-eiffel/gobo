@@ -203,13 +203,9 @@ feature -- Measurement
 			i: INTEGER
 		do
 			if start_index <= end_index then
-				if a_string.same_type (dummy_latin1) then
+				if a_string.same_type (dummy_string) then
 					from i := start_index until i > end_index loop
-						if byte_127 < a_string.item (i) then
-							Result := Result + 2
-						else
-							Result := Result + 1
-						end
+						Result := Result + character_byte_count (a_string.item (i))
 						i := i + 1
 					end
 				else
@@ -274,18 +270,46 @@ feature -- Measurement
 			code_byte_count_small_enough: Result <= 6
 		end
 
-	latin1_byte_count (c: CHARACTER): INTEGER is
-			-- Number of bytes needed to encode Latin-1
-			-- character `c' with the UTF-8 encoding
+	character_byte_count (c: CHARACTER): INTEGER is
+			-- Number of bytes needed to encode character
+			-- `c' with the UTF-8 encoding
+		local
+			a_code: INTEGER
 		do
-			if byte_127 < c then
+			if c <= byte_127 then
+					-- 2^7
+					-- 0xxxxxxx
+				Result := 1
+			elseif c <= byte_255 then
+					-- 110xxxxx 10xxxxxx 
 				Result := 2
 			else
-				Result := 1
+				a_code := c.code
+				if a_code < 2048 then
+						-- 2^11
+						-- 110xxxxx 10xxxxxx 
+					Result := 2
+				elseif a_code < 65536 then
+						-- 2^16
+						-- 1110xxxx 10xxxxxx 10xxxxxx
+					Result := 3
+				elseif a_code < 2097152 then
+						-- 2^21
+						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+					Result := 4
+				elseif a_code < 67108864 then
+						-- 2^26
+						-- 111110xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+					Result := 5
+				else
+						-- 2^31
+						-- 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
+					Result := 6
+				end
 			end
 		ensure
-			latin1_byte_count_large_enough: Result >= 1
-			latin1_byte_count_small_enough: Result <= 2
+			character_byte_count_large_enough: Result >= 1
+			character_byte_count_small_enough: Result <= 6
 		end
 
 feature {NONE} -- Constants
@@ -330,9 +354,11 @@ feature {NONE} -- Constants
 	code_253: INTEGER is 253
 			-- 11111101
 
+	byte_255: CHARACTER is '%/255/'
+
 feature {NONE} -- Implementation
 
-	dummy_latin1: STRING is ""
-			-- Latin-1 string
+	dummy_string: STRING is ""
+			-- Dummy string
 
 end
