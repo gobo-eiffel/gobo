@@ -435,8 +435,7 @@ feature -- Element change
 			if position /= No_position then
 				items_put (v, position)
 			else
-				last_position := last_position + 1
-				i := last_position
+				i := last_position + 1
 				if i > capacity then
 					resize (new_capacity (i))
 					h := hash_position (v)
@@ -446,6 +445,7 @@ feature -- Element change
 				clashes_put (slots_item (h), i)
 				slots_put (i, h)
 				items_put (v, i)
+				last_position := i
 				count := count + 1
 			end
 		ensure
