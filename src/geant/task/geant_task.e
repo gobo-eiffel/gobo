@@ -87,7 +87,6 @@ feature {NONE} -- Implementation
 			an_element_not_void: an_element /= Void
 			an_attr_name_not_void: an_attr_name /= Void
 			an_attr_name_not_empty: an_attr_name.count > 0
-			an_attr_name_not_empty: not an_attr_name.empty
 			has_attribute: has_attribute (an_element, an_attr_name)
 		local
 			uc_name: UC_STRING
