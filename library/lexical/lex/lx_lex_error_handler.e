@@ -112,14 +112,6 @@ feature -- Option errors
 				%cannot be used with -f">>)
 		end
 
-feature -- Limitations
-
-	too_many_rules (max: INTEGER) is
-			-- Report that too many rules have been declared.
-		do
-			error_message (<<"too many rules (> ", max.out, ")!">>)
-		end
-
 feature -- Syntax error messages
 
 	all_start_conditions_have_EOF (filename: STRING; line: INTEGER) is
@@ -383,6 +375,30 @@ feature -- Syntax error messages
 			syntax_message (filename, line, <<"unrecognized rule">>)
 		ensure
 			syntax_error: syntax_error
+		end
+
+feature -- Limitations
+
+	dangerous_trailing_context (rules: DS_ARRAYED_LIST [LX_RULE]; a_filename: STRING) is
+			-- Emit a warning message because `rules' contain "dangerous"
+			-- variable trailing context.
+		require
+			rules_not_void: rules /= Void
+			no_void_rule: not rules.has (Void)
+			a_filename_not_void: a_filename /= Void
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := 1
+				nb := rules.count
+			until
+				i > nb
+			loop
+				warning_message (a_filename, rules.item (i).line_nb,
+					<<"dangerous trailing context">>)
+				i := i + 1
+			end
 		end
 
 feature -- Status report

@@ -212,19 +212,18 @@ feature -- Scanning
 							yy_act := yy_acclist.item (yy_lp)
 							if yyVariable_trail_context then
 								if
-									yy_act > yyTrailing_head_mark or
+									yy_act < - yyNb_rules or
 									yy_looking_for_trail_begin /= 0
 								then
 									if yy_act = yy_looking_for_trail_begin then
 										yy_looking_for_trail_begin := 0
-										yy_act := yy_act - yyTrailing_head_mark
+										yy_act := - yy_act - yyNb_rules
 										yy_found := True
 									else
 										yy_lp := yy_lp + 1
 									end
-								elseif yy_act > yyTrailing_mark then
-									yy_looking_for_trail_begin := yy_act -
-										yyTrailing_mark + yyTrailing_head_mark
+								elseif yy_act < 0 then
+									yy_looking_for_trail_begin := yy_act - yyNb_rules
 									if yyReject_used then
 											-- Remember matched text in case
 											-- we back up due to `reject'.

@@ -71,11 +71,22 @@ feature -- Processing
 
 	build_dfa is
 			-- Build `dfa'.
+		local
+			compressed_dfa: LX_COMPRESSED_DFA
+			rules: DS_ARRAYED_LIST [LX_RULE]
+			a_filename: STRING
 		do
 			if description.full_table then
 				!LX_FULL_DFA! dfa.make (description)
 			else
-				!LX_COMPRESSED_DFA! dfa.make (description)
+				!! compressed_dfa.make (description)
+				rules := compressed_dfa.dangerous_variable_trail_rules
+				a_filename := description.input_filename
+				if a_filename = Void then
+					a_filename := "standard input"
+				end
+				error_handler.dangerous_trailing_context (rules, a_filename)
+				dfa := compressed_dfa
 			end
 		ensure
 			dfa_not_void: dfa /= Void
