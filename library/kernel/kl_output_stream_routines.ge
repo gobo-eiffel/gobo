@@ -26,18 +26,14 @@ feature -- Initialization
 			-- if operation was successful.
 		require
 			a_filename_not_void: a_filename /= Void
-#ifdef SE
 			a_filename_not_empty: a_filename.count > 0
-#else
-			a_filename_not_empty: not a_filename.empty
-#endif
 		local
 			rescued: BOOLEAN
 #ifdef ISE || HACT
 			a_file: PLAIN_TEXT_FILE
 #else
 #ifdef SE
-			a_file: STD_FILE_WRITE
+			a_file: TEXT_FILE_WRITE
 #else
 #ifdef TOWER
 			a_file: FILE
@@ -112,7 +108,7 @@ feature -- Status setting
 			not_closed: not is_closed (a_stream)
 #ifdef SE
 		local
-			a_file: STD_FILE_WRITE
+			a_file: TEXT_FILE_WRITE
 #endif
 		do
 #ifdef SE
