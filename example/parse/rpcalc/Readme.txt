@@ -8,7 +8,7 @@ To compile this example:
 2. Use your favorite Eiffel compiler to compile the Eiffel system using
    the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace) or
    ESD file (Visual Eiffel: ve.esd). With SmallEiffel, you can just execute
-   the script se.bat (after possible modifications).
+   the script se.bat or se.sh (after possible modifications).
 5. Run the calcultor:
        rpcalc
    and enter reverse polish notation expressions to be evaluated, one

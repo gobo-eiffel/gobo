@@ -21,7 +21,7 @@ To compile this example:
 3. Choose either `execute' or `benchmark' as the creation prodecure of
    the root class EIFFEL_PARSER in your Ace file (ISE Eiffel: ise.ace,
    Halstenbach: hact.ace), your ESD file (Visual Eiffel: ve.esd) or
-   your command line (SmallEiffel: se.bat).
+   your command line (SmallEiffel: se.bat or se.sh).
 4. Use your favorite Eiffel compiler to compile the Eiffel system.
    With SmallEiffel, you can just execute the script se.bat (after
    possible modifications).
