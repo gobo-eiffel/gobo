@@ -15,10 +15,18 @@ class ET_ONCE_PROCEDURE
 inherit
 
 	ET_INTERNAL_PROCEDURE
+		redefine
+			is_once
+		end
 
 creation
 
 	make
+
+feature -- Status report
+
+	is_once: BOOLEAN is True
+			-- Is current feature a once feature?
 
 feature -- Duplication
 

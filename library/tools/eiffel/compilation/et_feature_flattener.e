@@ -581,8 +581,6 @@ feature {NONE} -- Feature flattening
 					resolve_identifier_signature (a_feature.flattened_feature)
 					i := i + 1
 				end
-				new_features_count := 0
-				named_features.wipe_out
 				check_anchored_signatures
 				nb := class_features.count
 				from i := 1 until i > nb loop
@@ -640,10 +638,10 @@ feature {NONE} -- Feature flattening
 						error_handler.report_vcch2a_error (current_class)
 					end
 				end
-			else
-				new_features_count := 0
-				named_features.wipe_out
+				check_creators_validity
 			end
+			new_features_count := 0
+			named_features.wipe_out
 		ensure
 			named_features_wiped_out: named_features.is_empty
 		end
@@ -1826,6 +1824,86 @@ feature {NONE} -- Parents validity
 
 	parent_checker: ET_PARENT_CHECKER2
 			-- Parent validity checker
+
+feature {NONE} -- Creators validity
+
+	check_creators_validity is
+			-- Check validity of creators of `current_class'.
+		local
+			a_creators: ET_CREATOR_LIST
+			a_creator, other_creator: ET_CREATOR
+			a_name, other_name: ET_FEATURE_NAME
+			i, j, nb: INTEGER
+			k, h, nb2, nb3: INTEGER
+			a_feature: ET_FLATTENED_FEATURE
+		do
+			a_creators := current_class.creators
+			if a_creators /= Void and then not a_creators.is_empty then
+				if current_class.is_deferred then
+					set_fatal_error (current_class)
+					error_handler.report_vgcp1a_error (current_class, a_creators.first)
+				end
+				nb := a_creators.count
+				from i := 1 until i > nb loop
+					a_creator := a_creators.item (i)
+					nb2 := a_creator.count
+					from k := 1 until k > nb2 loop
+						a_name := a_creator.feature_name (k)
+						from h := 1 until h >= k loop
+							other_name := a_creator.feature_name (h)
+							if other_name.same_feature_name (a_name) then
+									-- Feature name appears twice in Creation clause.
+									-- This is not considered as a fatal error.
+								error_handler.report_vgcp3a_error (current_class, other_name, a_name)
+							end
+							h := h + 1
+						end
+						from j := 1 until j >= i loop
+							other_creator := a_creators.item (j)
+							nb3 := other_creator.count
+							from h := 1 until h > nb3 loop
+								other_name := other_creator.feature_name (h)
+								if other_name.same_feature_name (a_name) then
+										-- Feature name appears twice in Creation clauses.
+										-- Note that it appears in two different clauses.
+										-- This case is not covered by ETL2 but ISE reports
+										-- this error anyway.
+										-- This is not considered as a fatal error.
+									error_handler.report_vgcp3b_error (current_class, other_name, a_name)
+								end
+								h := h + 1
+							end
+							j := j + 1
+						end
+						named_features.search (a_name)
+						if named_features.found then
+							a_feature := named_features.found_item.flattened_feature
+							if a_feature.is_procedure then
+								if a_feature.is_once then
+									set_fatal_error (current_class)
+									error_handler.report_vgcc6a_error (current_class, a_name, a_feature)
+								else
+										-- We finally got a valid creation
+										-- procedure. Record its seed.
+									a_name.set_seed (a_feature.first_seed)
+								end
+							else
+									-- This feature is not a procedure.
+								set_fatal_error (current_class)
+								error_handler.report_vgcp2b_error (current_class, a_name, a_feature)
+							end
+						else
+								-- This name is not the final name of
+								-- a feature on `current_class'.
+							set_fatal_error (current_class)
+							error_handler.report_vgcp2a_error (current_class, a_name)
+						end
+						k := k + 1
+					end
+					i := i + 1
+				end
+			end
+		end
 
 invariant
 

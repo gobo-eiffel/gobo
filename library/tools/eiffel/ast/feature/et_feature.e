@@ -140,6 +140,20 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_procedure: BOOLEAN is
+			-- Is current feature a procedure?
+		do
+			Result := (type = Void)
+		ensure
+			definition: Result = (type = Void)
+		end
+
+	is_once: BOOLEAN is
+			-- Is current feature a once feature?
+		do
+			-- Result := False
+		end
+		
 	is_infixable: BOOLEAN is
 			-- Can current feature have a name of
 			-- the form 'infix ...'?

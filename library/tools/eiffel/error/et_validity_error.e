@@ -52,6 +52,12 @@ creation
 	make_vdus2b,
 	make_vdus3a,
 	make_vdus4a,
+	make_vgcc6a,
+	make_vgcp1a,
+	make_vgcp2a,
+	make_vgcp2b,
+	make_vgcp3a,
+	make_vgcp3b,
 	make_vhpr1a,
 	make_vhpr3a,
 	make_vhpr3b,
@@ -1511,6 +1517,230 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = feature name
 			-- dollar7: $7 = parent base class
+		end
+
+	make_vgcc6a (a_class: like current_class; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE) is
+			-- Create a new VGCC-6 error: creation procedure name
+			-- `cp' is the final name of a once-procedure in `a_class'.
+			--
+			-- ETL2: p.286
+			-- ETL3 (4.82-00-00): p.432 (VGCC-4)
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f_not_void: f /= Void
+			f_name: f.name.same_feature_name (cp)
+			f_procedure: f.is_procedure
+			f_once: f.is_once
+		do
+			code := vgcc6a_template_code
+			etl_code := vgcc6_etl_code
+			default_template := vgcc6a_default_template
+			current_class := a_class
+			position := cp.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (cp.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = creation procedure name
+		end
+
+	make_vgcp1a (a_class: like current_class; a_creator: ET_CREATOR) is
+			-- Create a new VGCP-1 error: `a_class' is deferred
+			-- but has a Creation clause.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_creator_not_void: a_creator /= Void
+		do
+			code := vgcp1a_template_code
+			etl_code := vgcp1_etl_code
+			default_template := vgcp1a_default_template
+			current_class := a_class
+			position := a_creator.position
+			create parameters.make (1, 5)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+		end
+
+	make_vgcp2a (a_class: like current_class; cp: ET_FEATURE_NAME) is
+			-- Create a new VGCP-2 error: creation procedure name
+			-- `cp' is not the final name of a feature in `a_class'.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+		do
+			code := vgcp2a_template_code
+			etl_code := vgcp2_etl_code
+			default_template := vgcp2a_default_template
+			current_class := a_class
+			position := cp.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (cp.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = creation procedure name
+		end
+
+	make_vgcp2b (a_class: like current_class; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE) is
+			-- Create a new VGCP-2 error: creation procedure name
+			-- `cp' is not the final name of a procedure in `a_class'.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f_not_void: f /= Void
+			f_name: f.name.same_feature_name (cp)
+			f_not_procedure: not f.is_procedure
+		do
+			code := vgcp2b_template_code
+			etl_code := vgcp2_etl_code
+			default_template := vgcp2b_default_template
+			current_class := a_class
+			position := cp.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (cp.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = creation procedure name
+		end
+
+	make_vgcp3a (a_class: like current_class; f1, f2: ET_FEATURE_NAME) is
+			-- Create a new VGCP-3 error: procedure name
+			-- appears twice in creation Feature_list.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vgcp3a_template_code
+			etl_code := vgcp3_etl_code
+			default_template := vgcp3a_default_template
+			current_class := a_class
+			position := f2.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f2.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = procedure name
+		end
+
+	make_vgcp3b (a_class: like current_class; f1, f2: ET_FEATURE_NAME) is
+			-- Create a new VGCP-3 error: procedure name
+			-- appears in two different Creation clauses.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		do
+			code := vgcp3b_template_code
+			etl_code := vgcp3_etl_code
+			default_template := vgcp3b_default_template
+			current_class := a_class
+			position := f2.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f2.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = procedure name
 		end
 
 	make_vhpr1a (a_class: like current_class; a_cycle: DS_LIST [ET_CLASS]) is
@@ -3190,6 +3420,12 @@ feature {NONE} -- Implementation
 	vdus2b_default_template: STRING is "[$1] Class $5 ($3,$4): cannot undefine the attribute `$6'."
 	vdus3a_default_template: STRING is "[$1] Class $5 ($3,$4): cannot undefine the deferred feature `$6'."
 	vdus4a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears twice in the Undefine subclause of parent $7."
+	vgcc6a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is the final name of a once-procedure."
+	vgcp1a_default_template: STRING is "[$1] Class $5 ($3,$4): deferred class has a creation clause."
+	vgcp2a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure."
+	vgcp2b_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure."
+	vgcp3a_default_template: STRING is "[$1] Class $5 ($3,$4): procedure name `$6' appears twice in creation clause."
+	vgcp3b_default_template: STRING is "[$1] Class $5 ($3,$4): procedure name `$6' appears in two different creation clauses."
 	vhpr1a_default_template: STRING is "[$1] Class $5: inheritance cycle $6."
 	vhpr3a_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in parent clause."
 	vhpr3b_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in parent clause."
@@ -3248,6 +3484,10 @@ feature {NONE} -- Implementation
 	vdus3_etl_code: STRING is "VDUS-3"
 	vdus4_etl_code: STRING is "VDUS-4"
 	vhpr1_etl_code: STRING is "VHPR-1"
+	vgcc6_etl_code: STRING is "VGCC-6"
+	vgcp1_etl_code: STRING is "VGCP-1"
+	vgcp2_etl_code: STRING is "VGCP-2"
+	vgcp3_etl_code: STRING is "VGCP-3"
 	vhpr3_etl_code: STRING is "VHPR-3"
 	vhrc1_etl_code: STRING is "VHRC-1"
 	vhrc2_etl_code: STRING is "VHRC-2"
@@ -3307,6 +3547,12 @@ feature {NONE} -- Implementation
 	vdus2b_template_code: STRING is "vdus2b"
 	vdus3a_template_code: STRING is "vdus3a"
 	vdus4a_template_code: STRING is "vdus4a"
+	vgcc6a_template_code: STRING is "vgcc6a"
+	vgcp1a_template_code: STRING is "vgcp1a"
+	vgcp2a_template_code: STRING is "vgcp2a"
+	vgcp2b_template_code: STRING is "vgcp2b"
+	vgcp3a_template_code: STRING is "vgcp3a"
+	vgcp3b_template_code: STRING is "vgcp3b"
 	vhpr1a_template_code: STRING is "vhpr1a"
 	vhpr3a_template_code: STRING is "vhpr3a"
 	vhpr3b_template_code: STRING is "vhpr3b"

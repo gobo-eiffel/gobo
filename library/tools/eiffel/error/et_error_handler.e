@@ -1161,6 +1161,124 @@ feature -- Validity errors
 			end
 		end
 
+	report_vgcc6a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE) is
+			-- Report VGCC-6 error: creation procedure name
+			-- `cp' is the final name of a once-procedure in `a_class'.
+			--
+			-- ETL2: p.286
+			-- ETL3 (4.82-00-00): p.432 (VGCC-4)
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f_not_void: f /= Void
+			f_name: f.name.same_feature_name (cp)
+			f_procedure: f.is_procedure
+			f_once: f.is_once
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcc6_error (a_class) then
+				create an_error.make_vgcc6a (a_class, cp, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcp1a_error (a_class: ET_CLASS; a_creator: ET_CREATOR) is
+			-- Report VGCP-1 error: `a_class' is deferred
+			-- but has a Creation clause.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_creator_not_void: a_creator /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcp1_error (a_class) then
+				create an_error.make_vgcp1a (a_class, a_creator)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcp2a_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME) is
+			-- Report VGCP-2 error: creation procedure name
+			-- `cp' is not the final name of a feature in `a_class'.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcp2_error (a_class) then
+				create an_error.make_vgcp2a (a_class, cp)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcp2b_error (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FLATTENED_FEATURE) is
+			-- Report VGCP-2 error: creation procedure name
+			-- `cp' is not the final name of a procedure in `a_class'.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f_not_void: f /= Void
+			f_name: f.name.same_feature_name (cp)
+			f_not_procedure: not f.is_procedure
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcp2_error (a_class) then
+				create an_error.make_vgcp2b (a_class, cp, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcp3a_error (a_class: ET_CLASS; f1, f2: ET_FEATURE_NAME) is
+			-- Report VGCP-3 error: procedure name
+			-- appears twice in creation Feature_list.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcp3_error (a_class) then
+				create an_error.make_vgcp3a (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vgcp3b_error (a_class: ET_CLASS; f1, f2: ET_FEATURE_NAME) is
+			-- Report VGCP-3 error: procedure name appears
+			-- in two different Creation clauses.
+			--
+			-- ETL2: p.285
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f2_not_void: f2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vgcp3_error (a_class) then
+				create an_error.make_vgcp3b (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vhpr1a_error (a_class: ET_CLASS; a_cycle: DS_LIST [ET_CLASS]) is
 			-- Report VHPR-1 error: `a_class' is involved
 			-- in the inheritance cycle `a_cycle'.
@@ -2073,6 +2191,46 @@ feature -- Validity error status
 
 	reportable_vdus4_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VDUS-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vgcc6_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VGCC-6 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vgcp1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VGCP-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vgcp2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VGCP-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vgcp3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VGCP-3 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
