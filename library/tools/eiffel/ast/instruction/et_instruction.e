@@ -25,4 +25,12 @@ feature -- Status report
 			-- Result := False
 		end
 
+feature -- System
+
+	add_to_system is
+			-- Recursively add to system classes that
+			-- appear in current instruction.
+		do
+		end
+
 end -- class ET_INSTRUCTION

@@ -16,6 +16,9 @@ class ET_DEBUG_INSTRUCTION
 inherit
 
 	ET_INSTRUCTION
+		undefine
+			add_to_system
+		end
 
 	ET_COMPOUND
 		rename

@@ -90,6 +90,21 @@ feature -- Setting
 			keyword_set: keyword = a_keyword
 		end
 
+feature -- System
+
+	add_to_system is
+			-- Recursively add to system classes that
+			-- appear in current compound.
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				item (i).add_to_system
+				i := i + 1
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_INSTRUCTION] is

@@ -79,6 +79,9 @@ feature -- System
 			if locals /= Void then
 				locals.add_to_system
 			end
+			if compound /= Void then
+				compound.add_to_system
+			end
 		end
 
 end -- class ET_INTERNAL_PROCEDURE
