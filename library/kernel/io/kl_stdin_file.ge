@@ -97,7 +97,10 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new standard input file.
 		do
-#ifdef ISE || HACT
+#ifdef ISE
+			make_open_stdin ("stdin")
+#endif
+#ifdef HACT
 			old_make ("stdin")
 			file_pointer := console_def (0)
 			set_read_mode
@@ -247,7 +250,7 @@ feature -- Input
 				if a_target.capacity < nb then
 					a_target.resize (nb)
 				end
-				a_target.clear
+				a_target.wipe_out
 			end
 			from i := nb until i < 1 loop
 				read_character
@@ -328,13 +331,10 @@ feature -- Input
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef SE
-				last_string.clear
-#endif
 #ifdef HACT
 				last_string.set_count (0)
 #endif
-#ifdef VE
+#ifdef VE || SE
 				last_string.wipe_out
 #endif
 			end
@@ -386,13 +386,10 @@ feature -- Input
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef SE
-				last_string.clear
-#endif
 #ifdef HACT
 				last_string.set_count (0)
 #endif
-#ifdef VE
+#ifdef VE || SE
 				last_string.wipe_out
 #endif
 			end
@@ -426,8 +423,9 @@ feature -- Input
 			-- most `nb' characters read from standard input file.
 			-- Return the number of characters actually read.
 		local
-			str_area: ANY
 			i, j: INTEGER
+			k, nb2: INTEGER
+			tmp_string: STRING
 		do
 			from
 				j := pos
@@ -442,8 +440,20 @@ feature -- Input
 			end
 			if i < nb then
 				if not old_end_of_file then
-					str_area := a_string.area
-					Result := i + console_readstream (file_pointer, c_rtid ($str_area) + (j - 1), nb - i)
+					if a_string.same_type (dummy_string) then
+						Result := i + old_read_to_string (a_string, j, nb - i)
+					else
+						nb2 := nb - i
+						!! tmp_string.make (nb2)
+						tmp_string.set_count (nb2)
+						nb2 := old_read_to_string (tmp_string, 1, nb2)
+						from k := 1 until k > nb2 loop
+							a_string.put (tmp_string.item (k), j)
+							j := j + 1
+							k := k + 1
+						end
+						Result := i + nb2
+					end
 				else
 					Result := i
 				end
@@ -496,6 +506,31 @@ feature {NONE} -- Implementation
 		alias
 			"/**/"
 		end
+
+	old_read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+			-- Fill `a_string', starting at position `pos' with at
+			-- most `nb' characters read from current file.
+			-- Return the number of characters actually read.
+		require
+			is_readable: file_readable
+			not_end_of_file: not old_end_of_file
+			a_string_not_void: a_string /= Void
+			valid_position: a_string.valid_index (pos)
+			nb_large_enough: nb > 0
+			nb_small_enough: nb <= a_string.count - pos + 1
+		local
+			str_area: ANY
+		do
+			str_area := a_string.area
+			Result := console_readstream (file_pointer, c_rtid ($str_area) + (pos - 1), nb)
+		ensure
+			nb_char_read_large_enough: Result >= 0
+			nb_char_read_small_enough: Result <= nb
+			character_read: not old_end_of_file implies Result > 0
+		end
+
+	dummy_string: STRING is ""
+			-- Dummy string
 
 #endif
 #endif

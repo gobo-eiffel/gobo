@@ -56,13 +56,10 @@ feature -- Input
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef SE
-				last_string.clear
-#endif
 #ifdef HACT
 				last_string.set_count (0)
 #endif
-#ifdef VE
+#ifdef VE || SE
 				last_string.wipe_out
 #endif
 			end
@@ -121,13 +118,10 @@ feature -- Input
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef SE
-				last_string.clear
-#endif
 #ifdef HACT
 				last_string.set_count (0)
 #endif
-#ifdef VE
+#ifdef VE || SE
 				last_string.wipe_out
 #endif
 			end
