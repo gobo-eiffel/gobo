@@ -6,7 +6,7 @@
 # revision:   "$Revision$"
 
 
-GOBO_LIBS= structure time
+GOBO_LIBS= kernel structure time
 GOBO_SRCS= gelex geyacc getest gepp
 GOBO_LEXICAL_EXAMPLES= ascii2ps eiffel_scanner gegrep
 GOBO_PARSE_EXAMPLES= eiffel_parser calc mcalc rpcalc
