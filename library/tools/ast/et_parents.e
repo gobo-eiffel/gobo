@@ -82,6 +82,22 @@ feature -- Genealogy status
 			end
 		end
 
+	has_ancestors_error: BOOLEAN is
+			-- Has a fatal error occurred during
+			-- ancestors searching?
+		local
+			a_parent: ET_PARENT
+		do
+			from a_parent := parents until a_parent = Void loop
+				if a_parent.has_ancestors_error then
+					Result := True
+					a_parent := Void -- Jump out of the loop.
+				else
+					a_parent := a_parent.next
+				end
+			end
+		end
+
 feature -- Genealogy
 
 	add_to_sorter (an_heir: ET_CLASS;
@@ -135,11 +151,11 @@ feature -- Genealogy
 						!! anc.make_map (0)
 						a_parent := Void -- Jump out of the loop.
 					else
-							-- ET_TYPE.check_parent_validity does not
-							-- check conformance to generic constraints
-							-- to avoid infinite loop if `an_heir' is
-							-- involved in a generic constraint or an
-							-- actual generic parameter. Example:
+							-- Do not call ET_TYPE.check_parent_validity
+							-- here because checking conformance to generic
+							-- constraints now may lead to infinite loop if
+							-- `an_heir' is involved in a generic constraint
+							-- or an actual generic parameter. Example:
 							--
 							--   class BAR [G]
 							--   inherit
@@ -148,15 +164,7 @@ feature -- Genealogy
 							--
 							--   class FOO [G -> COMPARABLE]
 							--
-						if not a_type.check_parent_validity1 (an_heir) then
-								-- The error has already been reported
-								-- in `check_parent_validity1'.
-							an_heir.set_ancestors_error (True)
-							!! anc.make_map (0)
-							a_parent := Void -- Jump out of the loop.
-						else
-							a_parent := a_parent.next
-						end
+						a_parent := a_parent.next
 					end
 				end
 			end
@@ -206,8 +214,6 @@ feature -- Genealogy
 				end
 			end
 		end
-
-feature -- Generic derivation
 
 	check_generic_derivation (an_heir: ET_CLASS): BOOLEAN is
 			-- Check whether current parents are valid
