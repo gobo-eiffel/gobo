@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			is_correct := True
 			last_error := Xml_err_none
 
-			create {XM_STRING_SOURCE} source
+			create source.make ("-")
 
 			create {XM_CALLBACKS_NULL} callbacks.make
 
@@ -84,7 +84,7 @@ feature -- Status report
 
 feature -- Access
 
-	source: XM_SOURCE
+	source: XM_FILE_SOURCE
 			-- Source of the XML document beeing parsed
 
 	position: XM_POSITION is
@@ -176,7 +176,7 @@ feature -- Incremental parsing
 			-- After the last part of the data has been fed into the parser,
 			-- call `finish_incremental' to get any pending error messages.
 		do
-			create {XM_DEFAULT_URI_SOURCE} source.make (a_stream.name)
+			create source.make (a_stream.name)
 			if not is_parser_created then
 				create_new_parser
 				on_start
@@ -198,7 +198,7 @@ feature -- Incremental parsing
 			-- You have to call `finish_incremental' after the last call to
 			-- 'parse_incremental_from_string' in every case.
 		do
-			create {XM_STRING_SOURCE} source
+			create source.make ("-")
 			if not is_parser_created then
 				create_new_parser
 				on_start
@@ -790,7 +790,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			-- saving parents on the stack.
 		local
 			parent_item: POINTER
-			parent_source: XM_SOURCE
+			parent_source: like source
 			encoding: POINTER
 			system_id: UC_STRING
 			in_file: KL_TEXT_INPUT_FILE
@@ -810,7 +810,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 				if system_id_ptr /= default_pointer then
 					parent_source := source
 					system_id := new_uc_string_from_c_utf8_zero_terminated_string_safe (system_id_ptr)
-					create {XM_DEFAULT_URI_SOURCE} source.make (system_id)
+					create source.make (system_id)
 					create in_file.make (system_id.to_utf8)
 					in_file.open_read
 					if in_file.is_open_read then

@@ -235,28 +235,30 @@ feature -- Error diagnostic
 	position: XM_POSITION is
 			-- Current position in the source of the XML document
 		do
-			create {XM_DEFAULT_POSITION} Result.make (source, byte_position, column, line)
+			create {XM_DEFAULT_POSITION} Result.make (scanner.input_name, byte_position, column, line)
 		end
 
 	filename: STRING is
 			-- Current file
+		obsolete  "Use position.source_name"
 		do
-			Result := scanner.filename
+			Result := scanner.input_name
 		ensure
 			filename_not_void: Result /= Void
 		end
 
 	source: XM_SOURCE is
 			-- Source of the XML document beeing parsed
+		obsolete "Use position.source_name"
 		do
-			Result := scanner.source
+			create {XM_FILE_SOURCE} Result.make (scanner.input_name)
 		end
 
 	error_header: STRING is
 			-- Header for error message
 			-- (<filename>:<line>:<column>:)
 		do
-			Result := clone (filename)
+			Result := clone (scanner.input_name)
 			Result.append_character (':')
 			Result := STRING_.appended_string (Result, line.out)
 			Result.append_character (':')

@@ -44,8 +44,7 @@ feature -- Reset
 			-- Reset.
 		do
 			Precursor
-			filename := "-"
-			create {XM_FILE_SOURCE} source.make (filename)
+			input_name := "-"
 			last_error := Void
 			create start_conditions.make
 		end
@@ -62,10 +61,9 @@ feature -- Input
 			-- Set `input_buffer' to `a_buffer'.
 		do
 			Precursor (a_buffer)
-			filename := a_buffer.name
-			create {XM_FILE_SOURCE} source.make (filename)
+			input_name := a_buffer.name
 		ensure then
-			filename_set: filename = a_buffer.name
+			name_set: input_name = a_buffer.name
 		end
 
 	set_input_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
@@ -169,11 +167,8 @@ feature -- Error reporting
 
 feature -- Access
 
-	filename: STRING
-			-- Name of file being scanned
-
-	source: XM_SOURCE
-			-- Source of the XML document beeing parsed
+	input_name: STRING
+			-- Name of object being scanned
 
 	last_value: STRING
 			-- Semantic value of last token read
@@ -266,7 +261,6 @@ invariant
 
 	start_conditions_not_void: start_conditions /= Void
 	character_entity_not_void: character_entity /= Void
-	filename_not_void: filename /= Void
-	source_not_void: source /= Void
+	input_name_not_void: input_name /= Void
 
 end
