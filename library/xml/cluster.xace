@@ -48,16 +48,16 @@
 			<cluster name="general"/>
 			<cluster name="event"/>
 			<cluster name="spec" abstract="true">
-				<cluster name="compiler" location="${GOBO}/library/xml/impl/expat/spec/${GOBO_EIFFEL}"/>
+				<cluster name="${GOBO_EIFFEL}"/>
 			</cluster>
 			<external unless="${GOBO_OS}=windows">
 				<include_dir location="${EXPAT}/include"/>
-				<link_library location="expat" unless="${GOBO_EIFFEL}=ve"/>
-				<link_library location="/usr/local/lib/libexpat.a" if="${GOBO_EIFFEL}=ve"/>
+				<link_library location="-lexpat" unless="${GOBO_EIFFEL}=ve"/>
+				<link_library location="${EXPAT}/lib/libexpat.a" if="${GOBO_EIFFEL}=ve"/>
 			</external>
 			<external if="${GOBO_OS}=windows">
-				<include_dir location="${EXPAT}\Source\lib"/>
-				<link_library location="${EXPAT}\Libs\expat.lib"/>
+				<include_dir location="${EXPAT}/Source/lib"/>
+				<link_library location="${EXPAT}/Libs/expat.lib"/>
 			</external>
 		</cluster>
 		<cluster name="eiffel" abstract="true">
