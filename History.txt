@@ -22,6 +22,8 @@ Version 2.1 - ?
 	* Added command-line options: -g for testcase generation
 	  only, -c for testcase compilation only, and -e for
 	  testcase execution only (suggested by Glenn Maughan).
+	* Added assertion routines to compare file contents and
+	  filenames.
 
 	Gobo Eiffel Kernel Library:
 
@@ -29,6 +31,8 @@ Version 2.1 - ?
 	  order to use KL_STRING_BUFFER_ROUTINES with ISE Eiffel.
 	  Use new routines introduced in class POINTER in ISE
 	  Eiffel 4.5 instead.
+	* Added cluster $GOBO/library/kernel/io with directory,
+	  file and file-system functionalities.
 
 	Gobo Eiffel Structure Library:
 
