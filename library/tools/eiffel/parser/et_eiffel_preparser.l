@@ -115,7 +115,7 @@ creation
 				elseif class_keyword_found then
 					last_token := E_IDENTIFIER
 					last_literal_start := 1
-					last_literal_end := 6
+					last_literal_end := 9
 					last_break_end := 0
 					last_comment_end := 0
 					last_classname := ast_factory.new_identifier (Current)
@@ -127,7 +127,7 @@ creation
 				elseif class_keyword_found then
 					last_token := E_IDENTIFIER
 					last_literal_start := 1
-					last_literal_end := 6
+					last_literal_end := 7
 					last_break_end := 0
 					last_comment_end := 0
 					last_classname := ast_factory.new_identifier (Current)
