@@ -322,6 +322,32 @@ feature -- Test
 			assert ("same5", STRING_.same_string (uc_string1, uc_string2))
 		end
 
+	test_same_unicode_string is
+			-- Test feature `same_unicode_string'.
+		local
+			a_string1, a_string2: STRING
+			uc_string1, uc_string2: UC_UTF8_STRING
+		do
+			a_string1 := clone ("foo")
+			assert ("same1", STRING_.same_unicode_string (a_string1, a_string1))
+			a_string2 := clone ("foo")
+			assert ("same2", STRING_.same_unicode_string (a_string1, a_string2))
+			a_string2 := clone ("bar")
+			assert ("not_same1", not STRING_.same_unicode_string (a_string1, a_string2))
+			!! uc_string1.make_from_string ("foo")
+			assert ("same3", STRING_.same_unicode_string (a_string1, uc_string1))
+			assert ("same4", STRING_.same_unicode_string (uc_string1, a_string1))
+			uc_string1.put_code (9876, 3)
+			assert ("not_same2", not STRING_.same_unicode_string (a_string1, uc_string1))
+			assert ("not_same3", not STRING_.same_unicode_string (uc_string1, a_string1))
+			!! uc_string2.make_from_string ("foo")
+			assert ("not_same4", not STRING_.same_unicode_string (uc_string1, uc_string2))
+			uc_string2.put_code (2852, 3)
+			assert ("not_same5", not STRING_.same_unicode_string (uc_string1, uc_string2))
+			uc_string2.put_code (9876, 3)
+			assert ("same5", STRING_.same_unicode_string (uc_string1, uc_string2))
+		end
+
 	test_fill_with is
 			-- Test feature `fill_with'.
 		local
