@@ -86,7 +86,6 @@ feature {NONE} -- Initialization
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make (100)
 			create dynamic_calls.make (100)
-			create dynamic_assignment_attempts.make (100)
 		ensure
 			current_system_set: current_system = a_system
 		end
@@ -158,7 +157,6 @@ feature -- Generation
 			old_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_calls: ET_DYNAMIC_CALL_LIST
-			l_dynamic_assignment_attempts: ET_DYNAMIC_ASSIGNMENT_ATTEMPT_LIST
 			i, nb: INTEGER
 		do
 			old_feature := current_dynamic_feature
@@ -192,13 +190,6 @@ feature -- Generation
 				i := i - 1
 			end
 			a_feature.set_dynamic_calls (l_dynamic_calls)
-			nb := dynamic_assignment_attempts.count
-			create l_dynamic_assignment_attempts.make_with_capacity (nb)
-			from i := nb until i < 1 loop
-				l_dynamic_assignment_attempts.put_first (dynamic_assignment_attempts.item (i))
-				i := i - 1
-			end
-			a_feature.set_dynamic_assignment_attempts (l_dynamic_assignment_attempts)
 			a_feature.set_built (True)
 			current_index := 0
 			result_index := 0
@@ -214,7 +205,6 @@ feature -- Generation
 			string_index := 0
 			dynamic_type_sets.wipe_out
 			dynamic_calls.wipe_out
-			dynamic_assignment_attempts.wipe_out
 			current_dynamic_feature := old_feature
 			current_dynamic_type := old_type
 		end
@@ -319,7 +309,6 @@ feature {NONE} -- Event handling
 				else
 					create l_assignment_attempt.make (l_source_type_set, an_instruction, current_feature, current_type)
 					l_target_type_set.put_source (l_assignment_attempt, current_system)
-					set_dynamic_assignment_attempt (l_assignment_attempt, an_instruction)
 				end
 			end
 		end
@@ -1626,43 +1615,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_dynamic_assignment_attempt (a_dynamic_assignment: ET_DYNAMIC_ASSIGNMENT_ATTEMPT; an_assignment: ET_ASSIGNMENT_ATTEMPT) is
-			-- Set dynamic assignment attempt associated with `an_assignment' to `a_dynamic_assignment'.
-		require
-			a_dynamic_assignment_not_void: a_dynamic_assignment /= Void
-			an_assignment_not_void: an_assignment /= Void
-		local
-			i, nb: INTEGER
-			l_null_assignment: ET_DYNAMIC_ASSIGNMENT_ATTEMPT
-		do
-			i := an_assignment.index
-			if i = 0 then
-				dynamic_assignment_attempts.force_last (a_dynamic_assignment)
-				an_assignment.set_index (dynamic_assignment_attempts.count)
-			else
-				nb := dynamic_assignment_attempts.count
-				if i <= nb then
-					dynamic_assignment_attempts.replace (a_dynamic_assignment, i)
-				else
-					l_null_assignment := a_dynamic_assignment
-					i := i - 1
-					from until nb >= i loop
-						dynamic_assignment_attempts.force_last (l_null_assignment)
-						nb := nb + 1
-					end
-					dynamic_assignment_attempts.force_last (a_dynamic_assignment)
-				end
-			end
-		end
-
 	dynamic_type_sets: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE_SET]
 			-- Dynamic type sets of expressions within current feature
 
 	dynamic_calls: DS_ARRAYED_LIST [ET_DYNAMIC_CALL]
 			-- Dynamic qualified calls within current feature
-
-	dynamic_assignment_attempts: DS_ARRAYED_LIST [ET_DYNAMIC_ASSIGNMENT_ATTEMPT]
-			-- Dynamic assignment attempts within current feature
 
 	dummy_dynamic_type: ET_DYNAMIC_TYPE is
 			-- Dummy_dynamic type
@@ -1686,8 +1643,6 @@ invariant
 	no_void_dynamic_type_set: not dynamic_type_sets.has (Void)
 	dynamic_calls_not_void: dynamic_calls /= Void
 	no_void_dynamic_call: not dynamic_calls.has (Void)
-	dynamic_assignment_attempts_not_void: dynamic_assignment_attempts /= Void
-	no_void_dynamic_assignment_attempt: not dynamic_assignment_attempts.has (Void)
 	current_dynamic_type_not_void: current_dynamic_type /= Void
 	current_dynamic_feature_not_void: current_dynamic_feature /= Void
 	current_system_not_void: current_system /= Void

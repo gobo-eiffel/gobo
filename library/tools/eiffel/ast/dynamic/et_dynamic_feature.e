@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 				create {ET_NESTED_DYNAMIC_TYPE_SET} result_type.make (l_dynamic_type)
 			end
 			dynamic_calls := empty_dynamic_calls
-			dynamic_assignment_attempts := empty_dynamic_assignment_attempts
 			dynamic_type_sets := empty_dynamic_type_sets
 			args := a_feature.arguments
 			if args /= Void then
@@ -101,23 +100,6 @@ feature -- Access
 			i := a_call.call_index
 			if i >= 1 and i <= dynamic_calls.count then
 				Result := dynamic_calls.item (i)
-			end
-		end
-
-	dynamic_assignment_attempts: ET_DYNAMIC_ASSIGNMENT_ATTEMPT_LIST
-			-- Dynamic assignment attempts within current feature
-
-	dynamic_assignment_attempt (an_assignment: ET_ASSIGNMENT_ATTEMPT): ET_DYNAMIC_ASSIGNMENT_ATTEMPT is
-			-- Dynamic assignment attempt associated with `an_assignment';
-			-- Void if unknown yet
-		require
-			an_assignment_not_void: an_assignment /= Void
-		local
-			i: INTEGER
-		do
-			i := an_assignment.index
-			if i >= 1 and i <= dynamic_assignment_attempts.count then
-				Result := dynamic_assignment_attempts.item (i)
 			end
 		end
 
@@ -202,16 +184,6 @@ feature -- Setting
 			dynamic_calls := a_dynamic_calls
 		ensure
 			dynamic_calls_set: dynamic_calls = a_dynamic_calls
-		end
-
-	set_dynamic_assignment_attempts (a_dynamic_assignment_attempts: like dynamic_assignment_attempts) is
-			-- Set `dynamic_assignment_attempts' to `an_dynamic_assignment_attempts'.
-		require
-			a_dynamic_assignment_attempts_not_void: a_dynamic_assignment_attempts /= Void
-		do
-			dynamic_assignment_attempts := a_dynamic_assignment_attempts
-		ensure
-			dynamic_assignment_attempts_set: dynamic_assignment_attempts = a_dynamic_assignment_attempts
 		end
 
 	set_result_type (a_result_type: like result_type) is
@@ -392,20 +364,10 @@ feature {NONE} -- Constants
 			dynamic_calls_empty: Result.is_empty
 		end
 
-	empty_dynamic_assignment_attempts: ET_DYNAMIC_ASSIGNMENT_ATTEMPT_LIST is
-			-- Empty dynamic assignment attempt list
-		once
-			create Result.make
-		ensure
-			dynamic_assignment_attempts_not_void: Result /= Void
-			dynamic_assignment_attempts_empty: Result.is_empty
-		end
-
 invariant
 
 	static_feature_not_void: static_feature /= Void
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
 	dynamic_calls_not_void: dynamic_calls /= Void
-	dynamic_assignment_attempts_not_void: dynamic_assignment_attempts /= Void
 
 end

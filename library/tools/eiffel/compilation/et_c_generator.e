@@ -117,6 +117,8 @@ feature {NONE} -- Initialization
 			create instruction_buffer_stack.make (10)
 			create local_buffer_stack.make (10)
 			create current_local_buffer.make ("")
+			create accepted_types.make_with_capacity (15)
+			create denied_types.make_with_capacity (15)
 		end
 
 feature -- Access
@@ -978,19 +980,53 @@ feature {NONE} -- Instruction generation
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
-			l_dynamic_assignment: ET_DYNAMIC_ASSIGNMENT_ATTEMPT
 			l_other_types: ET_DYNAMIC_TYPE_LIST
 			i, nb: INTEGER
 			l_local_index: INTEGER
+			l_source_type_set: ET_DYNAMIC_TYPE_SET
+			l_source_type: ET_DYNAMIC_TYPE
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_target_type: ET_DYNAMIC_TYPE
+			l_accepted_types: ET_DYNAMIC_TYPE_LIST
+			l_denied_types: ET_DYNAMIC_TYPE_LIST
 		do
-			l_dynamic_assignment := current_feature.dynamic_assignment_attempt (an_instruction)
-			if l_dynamic_assignment = Void then
-					-- Internal error: there should be a least one assignment attempt
-					-- dynamic representation left.
+			l_source_type_set := current_feature.dynamic_type_set (an_instruction.source)
+			l_target_type_set := current_feature.dynamic_type_set (an_instruction.target)
+			if l_source_type_set = Void or l_target_type_set = Void then
+					-- Internal error: the dynamic type sets of the source
+					-- and the target should be known at this stage.
 				set_fatal_error
 				error_handler.report_gibcj_error
 			else
-				if l_dynamic_assignment.is_direct_assignment then
+				nb := l_source_type_set.count
+				l_accepted_types := accepted_types
+				l_accepted_types.resize (nb)
+				l_denied_types := denied_types
+				l_denied_types.resize (nb)
+				l_target_type := l_target_type_set.static_type
+				l_source_type := l_source_type_set.first_type
+				if l_source_type /= Void then
+					if l_source_type.conforms_to_type (l_target_type, current_system) then
+						l_accepted_types.put_first (l_source_type)
+					else
+						l_denied_types.put_first (l_source_type)
+					end
+					l_other_types := l_source_type_set.other_types
+					if l_other_types /= Void then
+						nb := l_other_types.count
+						from i := 1 until i > nb loop
+							l_source_type := l_other_types.item (i)
+							if l_source_type.conforms_to_type (l_target_type, current_system) then
+								l_accepted_types.put_first (l_source_type)
+							else
+								l_denied_types.put_first (l_source_type)
+							end
+							i := i + 1
+						end
+					end
+				end
+				if l_denied_types.is_empty then
+						-- Direct assignment.
 					print_writable (an_instruction.target)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
@@ -999,6 +1035,84 @@ feature {NONE} -- Instruction generation
 					print_expression (an_instruction.source)
 					current_file.put_character (')')
 					current_file.put_character (';')
+				elseif l_accepted_types.is_empty then
+						-- We need to compute the source (in case there is
+						-- a side-effect) before assigning Void to the target.
+					local_count := local_count + 1
+					l_local_index := local_count
+					print_reference_local_declaration (l_local_index)
+					current_file.put_character ('z')
+					current_file.put_integer (l_local_index)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_expression (an_instruction.source)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					print_writable (an_instruction.target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string ("EIF_VOID;")
+				elseif l_denied_types.count < l_accepted_types.count then
+					local_count := local_count + 1
+					l_local_index := local_count
+					print_reference_local_declaration (l_local_index)
+					current_file.put_character ('z')
+					current_file.put_integer (l_local_index)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('(')
+					print_expression (an_instruction.source)
+					current_file.put_character (')')
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_string ("switch (z")
+					current_file.put_integer (l_local_index)
+					current_file.put_line ("->id) {")
+					nb := l_denied_types.count
+					from i := 1 until i > nb loop
+						l_source_type := l_denied_types.item (i)
+						print_indentation
+						current_file.put_string ("case ")
+						current_file.put_integer (l_source_type.id)
+						current_file.put_character (':')
+						current_file.put_new_line
+						i := i + 1
+					end
+					indent
+					print_indentation
+					print_writable (an_instruction.target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_string ("EIF_VOID;")
+					current_file.put_new_line
+					print_indentation
+					current_file.put_string ("break;")
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_string ("default:")
+					current_file.put_new_line
+					indent
+					print_indentation
+					print_writable (an_instruction.target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('z')
+					current_file.put_integer (l_local_index)
+					current_file.put_character (';')
+					current_file.put_new_line
+					dedent
+					print_indentation
+					current_file.put_character ('}')
 				else
 					local_count := local_count + 1
 					l_local_index := local_count
@@ -1017,39 +1131,30 @@ feature {NONE} -- Instruction generation
 					current_file.put_string ("switch (z")
 					current_file.put_integer (l_local_index)
 					current_file.put_line ("->id) {")
-					if l_dynamic_assignment.first_type /= Void then
+					nb := l_accepted_types.count
+					from i := 1 until i > nb loop
+						l_source_type := l_accepted_types.item (i)
 						print_indentation
 						current_file.put_string ("case ")
-						current_file.put_integer (l_dynamic_assignment.first_type.id)
+						current_file.put_integer (l_source_type.id)
 						current_file.put_character (':')
 						current_file.put_new_line
-						l_other_types := l_dynamic_assignment.other_types
-						if l_other_types /= Void then
-							nb := l_other_types.count
-							from i := 1 until i > nb loop
-								print_indentation
-								current_file.put_string ("case ")
-								current_file.put_integer (l_other_types.item (i).id)
-								current_file.put_character (':')
-								current_file.put_new_line
-								i := i + 1
-							end
-						end
-						indent
-						print_indentation
-						print_writable (an_instruction.target)
-						current_file.put_character (' ')
-						current_file.put_character ('=')
-						current_file.put_character (' ')
-						current_file.put_character ('z')
-						current_file.put_integer (l_local_index)
-						current_file.put_character (';')
-						current_file.put_new_line
-						print_indentation
-						current_file.put_string ("break;")
-						current_file.put_new_line
-						dedent
+						i := i + 1
 					end
+					indent
+					print_indentation
+					print_writable (an_instruction.target)
+					current_file.put_character (' ')
+					current_file.put_character ('=')
+					current_file.put_character (' ')
+					current_file.put_character ('z')
+					current_file.put_integer (l_local_index)
+					current_file.put_character (';')
+					current_file.put_new_line
+					print_indentation
+					current_file.put_string ("break;")
+					current_file.put_new_line
+					dedent
 					print_indentation
 					current_file.put_string ("default:")
 					current_file.put_new_line
@@ -1066,6 +1171,8 @@ feature {NONE} -- Instruction generation
 					current_file.put_character ('}')
 					current_file.put_character (';')
 				end
+				l_accepted_types.wipe_out
+				l_denied_types.wipe_out
 			end
 		end
 
@@ -3618,6 +3725,12 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
+	accepted_types: ET_DYNAMIC_TYPE_LIST
+			-- Types accepted by the current assignment attempt
+
+	denied_types: ET_DYNAMIC_TYPE_LIST
+			-- Types deined by the current assignment attempt
+
 	dummy_feature: ET_DYNAMIC_FEATURE is
 			-- Dummy feature
 		local
@@ -3644,5 +3757,7 @@ invariant
 	local_buffer_stack_not_void: local_buffer_stack /= Void
 	no_void_local_buffer: not local_buffer_stack.has (Void)
 	current_local_buffer_not_void: current_local_buffer /= Void
+	accepted_types_not_void: accepted_types /= Void
+	denied_types_not_void: denied_types /= Void
 
 end
