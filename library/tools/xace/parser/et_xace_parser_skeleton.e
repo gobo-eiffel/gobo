@@ -743,6 +743,12 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_assertion, a_position_table.item (an_element))
 									end
+								when callback_code then
+									if an_option.valid_callback.has (a_value) then
+										an_option.set_callback (a_value)
+									else
+										error_handler.report_wrong_attribute_value_error (an_element, uc_value, a_value, an_option.valid_callback, a_position_table.item (an_element))
+									end
 								when case_insensitive_code then
 									if is_true (a_value) then
 										an_option.set_case_insensitive (True)

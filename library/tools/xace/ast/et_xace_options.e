@@ -5,7 +5,7 @@ indexing
 		"Xace option clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2004, Andreas Leitner and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,8 @@ class ET_XACE_OPTIONS
 inherit
 
 	ET_SHARED_XACE_OPTION_NAMES
+
+	UC_SHARED_STRING_EQUALITY_TESTER
 
 creation
 
@@ -79,6 +81,14 @@ feature -- Status report
 			Result := declared_assertion /= Void and then not declared_assertion.is_empty
 		ensure
 			definition: Result = (declared_assertion /= Void and then not declared_assertion.is_empty)
+		end
+
+	is_callback_declared: BOOLEAN is
+			-- Has 'callback' option been declared?
+		do
+			Result := declared_callback /= Void
+		ensure
+			definition: Result = (declared_callback /= Void)
 		end
 
 	is_case_insensitive_declared: BOOLEAN is
@@ -683,6 +693,18 @@ feature -- Option values
 		ensure
 			assertion_not_void: Result /= Void
 			-- valid_value: forall v in Result, valid_assertion.has (v)
+		end
+
+	callback: STRING is
+			-- 'callback' option
+		do
+			if is_callback_declared then
+				Result := declared_callback
+			else
+				Result := default_callback
+			end
+		ensure
+			valid_callback: Result /= Void implies valid_callback.has (Result)
 		end
 
 	case_insensitive: BOOLEAN is
@@ -1483,6 +1505,18 @@ feature -- Status setting
 		ensure
 			assertion_declared: is_assertion_declared
 			assertion_set: assertion.has (a_value)
+		end
+
+	set_callback (a_value: STRING) is
+			-- Set `callback' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+			a_value_valid: valid_callback.has (a_value)
+		do
+			declared_callback := a_value
+		ensure
+			callback_declared: is_callback_declared
+			callback_set: callback = a_value
 		end
 
 	set_case_insensitive (b: BOOLEAN) is
@@ -2468,6 +2502,19 @@ feature -- Valid values
 			-- all_lower: forall v in Result, v.is_lower
 		end
 
+	valid_callback: DS_HASH_SET [STRING] is
+			-- Valid values for 'callback' option
+		once
+			create Result.make (1)
+			Result.set_equality_tester (string_equality_tester)
+			Result.put_last (options.winapi_value)
+		ensure
+			valid_assertion_not_void: Result /= Void
+			valid_assertion_not_empty: not Result.is_empty
+			no_void_value: not Result.has (Void)
+			-- all_lower: forall v in Result, v.is_lower
+		end
+
 	valid_dead_code_removal: DS_HASH_SET [STRING] is
 			-- Valid values for 'dead_code_removal' option
 		once
@@ -2596,6 +2643,9 @@ feature -- Declared values
 
 	declared_assertion: DS_HASH_SET [STRING]
 			-- Declared values for 'assertion' option
+
+	declared_callback: STRING
+			-- Declared value for 'callback' option
 
 	declared_case_insensitive: UT_TRISTATE
 			-- Declared value for 'case_insensitive' option
@@ -2834,6 +2884,14 @@ feature -- Default values
 		ensure
 			default_assertion_not_void: Result /= Void
 			-- valid_value: forall v in Result, valid_assertion.has (v)
+		end
+
+	default_callback: STRING is
+			-- Default value for 'callback' option
+		once
+			Result := Void
+		ensure
+			valid_default_callback: Result /= Void implies valid_callback.has (Result)
 		end
 
 	default_case_insensitive: BOOLEAN is True
@@ -3155,15 +3213,5 @@ feature -- Default values
 
 	default_wedit: BOOLEAN is False
 			-- Default value for 'wedit' option
-
-feature {NONE} -- Implementation
-
-	string_equality_tester: UC_EQUALITY_TESTER is
-			-- String equality tester (works with UC_STRING as well)
-		once
-			create Result
-		ensure
-			tester_not_void: Result /= Void
-		end
 
 end
