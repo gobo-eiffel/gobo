@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 		do
-			make_with_size (a_file, Default_capacity)
+			make_with_size (a_file, default_capacity)
 		ensure
 			count_set: count = 0
 			file_set: file = a_file

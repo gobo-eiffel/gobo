@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			-- Increase `capacity'.
 		do
 			if capacity = 0 then
-				capacity := Default_capacity
+				capacity := default_capacity
 			else
 				capacity := capacity * 2
 			end
@@ -287,8 +287,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Default_capacity: INTEGER is 16384
-			-- Default capacity of buffer
+	default_capacity: INTEGER is
+			-- Default capacity of buffer.
+		do
+			Result := 16384
+		ensure
+			positive_default_capacity: Result > 0
+		end
 
 	End_of_buffer_character: CHARACTER is '%U'
 			-- End of buffer character
