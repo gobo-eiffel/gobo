@@ -5,7 +5,7 @@ indexing
 		"Lace parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 		do
 			ast_factory := a_factory
 			create named_clusters.make (100)
+			create override_cluster_names.make (5)
 			make_lace_scanner ("unknown file", an_error_handler)
 			make_parser_skeleton
 		ensure
@@ -72,7 +73,7 @@ feature -- Parsing
 			named_clusters.wipe_out
 			set_input_buffer (new_file_buffer (a_file))
 			last_universe := Void
-			override_cluster_name := Void
+			override_cluster_names.wipe_out
 			named_clusters.wipe_out
 			yyparse
 		end
@@ -189,11 +190,12 @@ feature {NONE} -- AST factory
 			an_error_handler: ET_ERROR_HANDLER
 			a_factory: ET_AST_FACTORY
 		do
-			if override_cluster_name /= Void then
-				named_clusters.search (override_cluster_name)
+			from override_cluster_names.start until override_cluster_names.after loop
+				named_clusters.search (override_cluster_names.item_for_iteration)
 				if named_clusters.found then
 					named_clusters.found_item.set_override (True)
 				end
+				override_cluster_names.forth
 			end
 			an_error_handler := ast_factory.new_error_handler
 			a_factory := ast_factory.new_ast_factory
@@ -210,7 +212,7 @@ feature {NONE} -- AST factory
 			a_value_not_void: a_value /= Void
 		do
 			if a_name.same_identifier (override_cluster_option) then
-				override_cluster_name := a_value
+				override_cluster_names.force_last (a_value)
 			end
 		end
 
@@ -219,9 +221,8 @@ feature {NONE} -- Implementation
 	named_clusters: DS_HASH_TABLE [ET_LACE_CLUSTER, ET_IDENTIFIER]
 			-- Named clusters
 
-	override_cluster_name: ET_IDENTIFIER
-			-- Override cluster name, if any;
-			-- Void if none specified
+	override_cluster_names: DS_HASH_SET [ET_IDENTIFIER]
+			-- Override cluster names
 
 	override_cluster_option: ET_IDENTIFIER is
 			-- 'override_cluster' default option name
@@ -260,5 +261,7 @@ invariant
 	ast_factory_not_void: ast_factory /= Void
 	named_clusters_not_void: named_clusters /= Void
 	no_void_named_cluster: not named_clusters.has_item (Void)
+	override_cluster_names_not_void: override_cluster_names /= Void
+	no_void_override_cluster_name: not override_cluster_names.has (Void)
 
 end
