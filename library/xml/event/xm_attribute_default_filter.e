@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -17,6 +16,7 @@ indexing
 class XM_ATTRIBUTE_DEFAULT_FILTER
 
 inherit
+
 	XM_DTD_CALLBACKS
 	
 	XM_CALLBACKS_FILTER
