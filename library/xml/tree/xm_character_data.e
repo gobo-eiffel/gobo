@@ -63,9 +63,9 @@ feature -- Element change
 		do
 			content := STRING_.appended_string (content, other.content)
 		ensure
-			appended_count: content.count = other.count + old (content.count)
-			appended: STRING_.same_string (other,
-					content.substring (content.count - other.count + 1, content.count))
+			appended_count: content.count = other.content.count + old (content.count)
+			appended: STRING_.same_string (other.content,
+					content.substring (content.count - other.content.count + 1, content.count))
 		end
 
 feature -- Processing
