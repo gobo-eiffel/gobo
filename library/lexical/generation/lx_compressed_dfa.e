@@ -5,8 +5,9 @@ indexing
 		"DFA which can generate scanners implemented with compressed tables"
 
 	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -214,15 +215,15 @@ feature {NONE} -- Generation
 			a_file.put_integer (yyNull_equiv_class)
 			a_file.put_string ("%N%T%T%T-- Equivalence code for NULL character%
 				%%N%N%TyyReject_used: BOOLEAN is ")
-			a_file.put_boolean (yyReject_used)
+			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyReject_used)
 			a_file.put_string ("%N%T%T%T-- Is `reject' called?%N%N%
 				%%TyyVariable_trail_context: BOOLEAN is ")
-			a_file.put_boolean (yyVariable_trail_context)
+			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyVariable_trail_context)
 			a_file.put_string ("%N%T%T%T-- Is there a regular expression with%N%
 				%%T%T%T-- both leading and trailing parts having%N%
 				%%T%T%T-- variable length?%N%N%
 				%%TyyReject_or_variable_trail_context: BOOLEAN is ")
-			a_file.put_boolean (yyReject_used or yyVariable_trail_context)
+			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyReject_used or yyVariable_trail_context)
 			a_file.put_string ("%N%T%T%T-- Is `reject' called or is there a%N%
 				%%T%T%T-- regular expression with both leading%N%
 				%%T%T%T-- and trailing parts having variable length?%N%N")

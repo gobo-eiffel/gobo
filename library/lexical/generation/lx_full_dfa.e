@@ -5,8 +5,9 @@ indexing
 		"DFA which can generate scanners implemented with full tables"
 
 	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -128,7 +129,7 @@ feature {NONE} -- Generation
 			a_file.put_integer (yyNb_rows)
 			a_file.put_string ("%N%T%T%T-- Number of rows in `yy_nxt'%N%N%
 				%%TyyBacking_up: BOOLEAN is ")
-			a_file.put_boolean (yyBacking_up)
+			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyBacking_up)
 			a_file.put_string ("%N%T%T%T-- Does current scanner back up?%N%
 				%%T%T%T-- (i.e. does it have non-accepting states)%N%N")
 			generatable_dfa_print_constants (a_file)
