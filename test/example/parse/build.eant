@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<project name="parse" inherit="${GOBO}/misc/test.eant" default="help">
+
+	<description>
+		system:      "Gobo Eiffel Parse Examples Tester"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Tcalc"/>
+		<delete directory="Teiffel_parser"/>
+		<delete directory="Tmcalc"/>
+		<delete directory="Trpcalc"/>
+	</target>
+
+	<target name="init_system">
+		<set name="system" value="xparse"/>
+		<set name="library" value="parse"/>
+		<set name="system_dir" value="${GOBO}/test/example/${library}"/>
+	</target>
+
+</project>
