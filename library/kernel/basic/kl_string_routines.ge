@@ -128,7 +128,7 @@ feature -- Initialization
 			string_not_void: Result /= Void
 			new_string: Result /= s
 			string_type: Result.same_type ("")
-			initialized: same_string (Result, s)
+			initialized: elks_same_string (Result, s)
 		end
 
 	make_empty: STRING is
@@ -210,9 +210,9 @@ feature -- Status report
 		ensure
 			false_if_too_small: a_string.count < other.count implies not Result
 			true_if_initial: (a_string.count >= other.count and then
-				same_string (other, substring (a_string, 1, other.count))) implies Result
+				elks_same_string (other, substring (a_string, 1, other.count))) implies Result
 			recurse: (a_string.count >= other.count and then
-				not same_string (other, substring (a_string, 1, other.count))) implies
+				not elks_same_string (other, substring (a_string, 1, other.count))) implies
 				(Result = has_substring (substring (a_string, 2, a_string.count), other))
 		end
 
@@ -476,7 +476,7 @@ feature -- Access
 		ensure
 			valid_result: Result = 0 or else (start_index <= Result and Result <= a_string.count - other.count + 1)
 			zero_if_absent: (Result = 0) = not has_substring (substring (a_string, start_index, a_string.count), other)
-			at_this_index: Result >= start_index implies same_string (other, substring (a_string, Result, Result + other.count - 1))
+			at_this_index: Result >= start_index implies elks_same_string (other, substring (a_string, Result, Result + other.count - 1))
 			none_before: Result > start_index implies not
 				has_substring (substring (a_string, start_index, Result + other.count - 2), other)
 		end
@@ -559,13 +559,13 @@ feature -- Access
 		ensure
 			concat_not_void: Result /= Void
 			concat_count: Result.count = a_string.count + other.count
-			initial: same_unicode_string (substring (Result, 1, a_string.count), a_string)
-			final: same_unicode_string (substring (Result, a_string.count + 1, Result.count), other)
+			initial: same_string (substring (Result, 1, a_string.count), a_string)
+			final: same_string (substring (Result, a_string.count + 1, Result.count), other)
 		end
 
 feature -- Comparison
 
-	same_string (a_string, other: STRING): BOOLEAN is
+	elks_same_string (a_string, other: STRING): BOOLEAN is
 			-- Do `a_string' and `other' have the same character sequence?
 			-- `a_string' and `other' are considered with their characters
 			-- which do not fit in a CHARACTER replaced by a '%U'.
@@ -589,9 +589,9 @@ feature -- Comparison
 			definition: Result = string (a_string).is_equal (string (other))
 		end
 
-	same_unicode_string (a_string, other: STRING): BOOLEAN is
+	same_string (a_string, other: STRING): BOOLEAN is
 			-- Do `a_string' and `other' have the same unicode character sequence?
-			-- Note: the difference with `same_string' is that here the
+			-- Note: the difference with `elks_same_string' is that here the
 			-- implementation uses STRING.item_code instead of STRING.item
 			-- and hence characters which have different codes are not
 			-- considered equal even if they do not fit into a CHARACTER.
@@ -613,7 +613,7 @@ feature -- Comparison
 					if uc_string /= Void then
 						Result := uc_string.same_unicode_string (a_string)
 					elseif a_string.same_type (dummy_string) and other.same_type (dummy_string) then
-						Result := same_string (a_string, other)
+						Result := elks_same_string (a_string, other)
 					else
 						Result := True
 						nb := a_string.count
@@ -631,8 +631,8 @@ feature -- Comparison
 		ensure
 			definition: Result = (a_string.count = other.count and then
 				(a_string.count > 0 implies (a_string.item_code (1) = other.item_code (1) and 
-				(a_string.count >= 2 implies same_unicode_string (substring (a_string, 2, a_string.count), substring (other, 2, a_string.count))))))
-			same_string: Result implies same_string (a_string, other)
+				(a_string.count >= 2 implies same_string (substring (a_string, 2, a_string.count), substring (other, 2, a_string.count))))))
+			elks_same_string: Result implies elks_same_string (a_string, other)
 		end
 
 	same_case_insensitive (s1, s2: STRING): BOOLEAN is
@@ -727,8 +727,8 @@ feature -- Element change
 			append_not_void: Result /= Void
 			type_if_not_aliased: Result /= a_string implies Result.same_type (other)
 			new_count: Result.count = old a_string.count + old other.count
-			initial: same_unicode_string (substring (Result, 1, old a_string.count), old clone (a_string))
-			final: same_unicode_string (substring (Result, old a_string.count + 1, Result.count), old clone (other))
+			initial: same_string (substring (Result, 1, old a_string.count), old clone (a_string))
+			final: same_string (substring (Result, old a_string.count + 1, Result.count), old clone (other))
 		end
 
 	appended_substring (a_string, other: STRING; s, e: INTEGER): STRING is
@@ -779,8 +779,8 @@ feature -- Element change
 			append_not_void: Result /= Void
 			type_if_not_aliased: Result /= a_string implies Result.same_type (other)
 			new_count: Result.count = old a_string.count + e - s + 1
-			initial: same_unicode_string (substring (Result, 1, old a_string.count), old clone (a_string))
-			final: same_unicode_string (substring (Result, old a_string.count + 1, Result.count), old substring (other, s, e))
+			initial: same_string (substring (Result, 1, old a_string.count), old clone (a_string))
+			final: same_string (substring (Result, old a_string.count + 1, Result.count), old substring (other, s, e))
 		end
 
 	append_substring_to_string (a_string: STRING; other: STRING; s, e: INTEGER) is
@@ -1199,6 +1199,28 @@ feature -- Resizing
 #endif
 		ensure
 			count_set: a_string.count = n
+		end
+
+feature -- Obsolete
+
+	same_unicode_string (a_string, other: STRING): BOOLEAN is
+			-- Do `a_string' and `other' have the same unicode character sequence?
+			-- Note: the difference with `elks_same_string' is that here the
+			-- implementation uses STRING.item_code instead of STRING.item
+			-- and hence characters which have different codes are not
+			-- considered equal even if they do not fit into a CHARACTER.
+		obsolete
+			"[020722] Use `same_string' instead."
+		require
+			a_string_not_void: a_string /= Void
+			other_not_void: other /= Void
+		do
+			Result := same_string (a_string, other)
+		ensure
+			definition: Result = (a_string.count = other.count and then
+				(a_string.count > 0 implies (a_string.item_code (1) = other.item_code (1) and 
+				(a_string.count >= 2 implies same_string (substring (a_string, 2, a_string.count), substring (other, 2, a_string.count))))))
+			elks_same_string: Result implies elks_same_string (a_string, other)
 		end
 
 feature {NONE} -- Implementation
