@@ -60,6 +60,9 @@ Version 2.1 - ?
 	* Added feature `set_storage' to DT_DATE and DT_TIME.
 	* Fixed bug in feature `add_minutes' of DT_DATE_TIME
 	  (reported by Glenn Maughan).
+	* Fixed bug in feature `set_from_epoch_days' of DT_DATE
+	  when the resulting date in 1 January 1600 (reported by
+	  Emmanuel Bouyer).
 
 Version 2.0 - 29 April 2001
 

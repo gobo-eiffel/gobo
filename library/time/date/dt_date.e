@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 				elseif dd > Days_in_year then
 					yy := yy + 2
 					dd := Days_in_2_years - dd
-				else
+				elseif dd > 0 then
 					yy := yy + 1
 					dd := Days_in_year - dd
 				end
