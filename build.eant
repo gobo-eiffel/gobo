@@ -84,6 +84,10 @@
 
 		<geant file="library/build.eant" target="install"/>
 		<geant file="src/build.eant" target="install"/>
+		<geant file="src/gexace/build.eant" target="compile"/>
+		<geant file="src/gexace/build.eant" target="clean"/>
+		<delete file="bin/gexace${exe}"/>
+		<move file="src/gexace/gexace${exe}" to_file="bin/gexace${exe}"/>
 		<geant file="src/gelex/build.eant" target="compile"/>
 		<geant file="src/gelex/build.eant" target="clean"/>
 		<delete file="bin/gelex${exe}"/>
@@ -92,10 +96,6 @@
 		<geant file="src/gepp/build.eant" target="clean"/>
 		<delete file="bin/gepp${exe}"/>
 		<move file="src/gepp/gepp${exe}" to_file="bin/gepp${exe}"/>
-		<geant file="src/gexace/build.eant" target="compile"/>
-		<geant file="src/gexace/build.eant" target="clean"/>
-		<delete file="bin/gexace${exe}"/>
-		<move file="src/gexace/gexace${exe}" to_file="bin/gexace${exe}"/>
 		<geant file="src/geyacc/build.eant" target="compile"/>
 		<geant file="src/geyacc/build.eant" target="clean"/>
 		<delete file="bin/geyacc${exe}"/>
