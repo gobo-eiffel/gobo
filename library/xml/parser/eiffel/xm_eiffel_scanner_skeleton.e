@@ -220,6 +220,11 @@ feature {NONE} -- System literal
 
 feature {NONE} -- Constants
 
+	dtd_ignore: INTEGER is
+			-- Code for start condition 'dtd_ignore'
+		deferred
+		end
+
 	normalized_newline: STRING is
 			-- Newline normalized text (2.11)
 		once
@@ -239,11 +244,6 @@ feature {NONE} -- Constants
 
 	two_normalized_spaces: STRING is "  "
 			-- Two normalized spaces
-
-	dtd_ignore: INTEGER is
-			-- Code for start condition 'dtd_ignore'
-		deferred
-		end
 
 invariant
 
