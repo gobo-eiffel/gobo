@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			ast_factory := a_factory
 			!! eiffel_parser.make_with_factory (Current, a_factory, an_error_handler)
 			eiffel_parser.set_create_keyword (True)
+			!DS_HASH_TOPOLOGICAL_SORTER [ET_CLASS]! class_sorter.make_default
 			make_basic_classes
 		ensure
 			clusters_set: clusters = a_clusters
@@ -163,18 +164,18 @@ feature -- Compilation
 			a_class: ET_CLASS
 			nb: INTEGER
 		do
-			if root_class /= Void then
-				root_class.add_to_system
-			end
+--			if root_class /= Void then
+--				root_class.add_to_system
+--			end
 			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
-				if a_class.in_system then
+--				if a_class.in_system then
 					nb := nb + 1
 					if a_class.is_parsed and then not a_class.has_syntax_error then
 						a_class.flatten
 					end
-				end
+--				end
 				a_cursor.forth
 			end
 			print ("Flattened ")
@@ -190,6 +191,11 @@ feature {NONE} -- Implementation
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
 
+feature {ET_CLASS} -- Implementation
+
+	class_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS]
+			-- Class sorter
+
 invariant
 
 	classes_not_void: classes /= Void
@@ -197,6 +203,7 @@ invariant
 	error_handler_not_void: error_handler /= Void
 	eiffel_parser_not_void: eiffel_parser /= Void
 	ast_factory_not_void: ast_factory /= Void
+	class_sorter_not_void: class_sorter /= Void
 	any_class_not_void: any_class /= Void
 	general_class_not_void: general_class /= Void
 	none_class_not_void: none_class /= Void

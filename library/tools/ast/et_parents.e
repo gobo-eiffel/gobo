@@ -84,21 +84,27 @@ feature -- Genealogy status
 
 feature -- Genealogy
 
-	add_to_ancestors (an_heir: ET_CLASS; anc: DS_HASH_SET [ET_CLASS]) is
-			-- Add current parents and their ancestors to `anc'
+	add_to_sorter (an_heir: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS]) is
+			-- Add current parents and their ancestors to `a_sorter'
 			-- if not already done and if their ancestors have
 			-- not been searched yet. `an_heir' is the class
 			-- where current parents appear.
 		require
 			an_heir_not_void: an_heir /= Void
-			anc_not_void: anc /= Void
+			a_sorter_not_void: a_sorter /= Void
 		local
 			a_parent: ET_PARENT
 			a_type: ET_CLASS_TYPE
+			a_class: ET_CLASS
 		do
 			from a_parent := parents until a_parent = Void loop
 				a_type := a_parent.type
-				a_type.base_class.add_to_ancestors (a_type, an_heir, anc)
+				a_class := a_type.base_class
+				a_class.add_to_sorter (a_type, an_heir, a_sorter)
+				if not a_class.ancestors_searched then
+					a_sorter.force_relation (a_class, an_heir)
+				end
 				a_parent := a_parent.next
 			end
 		end
@@ -157,6 +163,32 @@ feature -- Genealogy
 			an_heir.set_ancestors (anc)
 		ensure
 			heir_ancestors_searched: an_heir.ancestors_searched
+		end
+
+	set_ancestors_error is
+			-- Set `has_ancestors_error' to true to current
+			-- parents (and recursively to their parents)
+			-- whose ancestors have not been searched yet.
+		local
+			anc: DS_HASH_TABLE [ET_CLASS_TYPE, ET_CLASS]
+			a_parent: ET_PARENT
+			a_class: ET_CLASS
+			grand_parents: ET_PARENTS
+		do
+			!! anc.make (0)
+			from a_parent := parents until a_parent = Void loop
+				a_class := a_parent.type.base_class
+				if not a_class.ancestors_searched then
+					a_class.set_ancestors_error (True)
+					a_class.set_ancestors (anc)
+					grand_parents := a_class.parents
+					if grand_parents = Void then
+						grand_parents := a_class.universe.any_parents
+					end
+					grand_parents.set_ancestors_error
+				end
+				a_parent := a_parent.next
+			end
 		end
 
 	first_unsearched_parent: ET_PARENT is

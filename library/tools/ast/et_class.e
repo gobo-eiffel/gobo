@@ -295,90 +295,66 @@ feature -- Genealogy
 			is_parsed: is_parsed
 			no_syntax_error: not has_syntax_error
 		local
-			anc: DS_HASH_SET [ET_CLASS]
-			cycle: DS_LINKED_LIST [ET_CLASS]
-			a_class, any_class, cycle_root: ET_CLASS
+			a_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS]
+			sorted_anc, anc: DS_ARRAYED_LIST [ET_CLASS]
 			a_parents, any_parents: like parents
-			a_parent: ET_PARENT
-			nb, old_nb: INTEGER
+			a_cycle: DS_ARRAYED_LIST [ET_CLASS]
+			a_class: ET_CLASS
+			i, nb: INTEGER
 		do
 			if not ancestors_searched then
-				!! anc.make (10)
+				a_sorter := universe.class_sorter
+				a_sorter.wipe_out
 					-- Give dummy values to the first two arguments of
-					-- `add_to_ancestors'. These two arguments are only
-					-- used `for error reporting and there will not be
+					-- `add_to_sorter'. These two arguments are only
+					-- used for error reporting and there will not be
 					-- any error here thanks to the preconditions
 					-- "is_parsed" and "no_syntax_error".
-				add_to_ancestors (universe.any_type, Current, anc)
-				any_class := universe.any_class
+				add_to_sorter (universe.any_type, Current, a_sorter)
+				a_sorter.sort
+				sorted_anc := a_sorter.sorted_items
 				any_parents := universe.any_parents
-				nb := anc.count
-				from until nb = 0 or nb = old_nb loop
-					from anc.start until anc.after loop
-						a_class := anc.item_for_iteration
-						a_parents := a_class.parents
-						if a_parents /= Void then
-							if a_parents.ancestors_searched then
-								a_parents.set_ancestors (a_class)
-								anc.remove (a_class)
-							else
-								anc.forth
-							end
-						elseif any_class.ancestors_searched then
-							any_parents.set_ancestors (a_class)
-							anc.remove (a_class)
-						else
-							anc.forth
-						end
+				nb := sorted_anc.count
+				from i := 1 until i > nb loop
+					a_class := sorted_anc.item (i)
+					a_parents := a_class.parents
+					if a_parents /= Void then
+						check sorted: a_parents.ancestors_searched end
+						a_parents.set_ancestors (a_class)
+					else
+						check sorted: any_parents.ancestors_searched end
+						any_parents.set_ancestors (a_class)
 					end
-					old_nb := nb
-					nb := anc.count
+					i := i + 1
 				end
-				if nb /= 0 then
+				if a_sorter.has_cycle then
 						-- There is a cycle in the inheritance graph.
-					!! cycle.make
-					a_class := anc.first
-					from until cycle.has (a_class) loop
-						cycle.put_last (a_class)
-							-- Look for first parent of `a_class' whose
-							-- ancestors have not been searched yet. This
-							-- parent exists otherwise `a_class' would not
-							-- be in `anc' in the first place.
-						a_parents := a_class.parents
-						if a_parents = Void then
-							a_parents := universe.any_parents
-						end
-						a_parent := a_parents.first_unsearched_parent
-						a_class := a_parent.type.base_class
-					end
-					cycle_root := a_class
-					cycle.put_last (cycle_root)
-					from until cycle.first = cycle_root loop
-						cycle.remove_first
-					end
-						-- Make sure that all classes evolved in the
+					a_cycle := a_sorter.cycle
+					a_sorter.wipe_out
+						-- Make sure that all classes envolved in the
 						-- cycle and their descendants are marked
 						-- with `has_ancestors_error'.
 					!! ancestors.make (0)
-					from anc.start until anc.after loop
-						a_class := anc.item_for_iteration
-						a_class.set_ancestors_error (True)
-						a_class.set_ancestors (ancestors)
-						anc.forth
+					set_ancestors_error (True)
+					if parents /= Void then
+						parents.set_ancestors_error
+					else
+						any_parents.set_ancestors_error
 					end
 						-- Report the validity error VHPR-1.
-					error_handler.report_vhpr1_error (cycle_root, cycle)
+					error_handler.report_vhpr1_error (a_cycle.first, a_cycle)
+				else
+					a_sorter.wipe_out
 				end
 			end
-		ensure
-			ancestors_searched: ancestors_searched
 		end
-		
+
 feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
 
-	add_to_ancestors (a_type: ET_CLASS_TYPE; an_heir: ET_CLASS; anc: DS_HASH_SET [ET_CLASS]) is
+	add_to_sorter (a_type: ET_CLASS_TYPE; an_heir: ET_CLASS;
+		a_sorter: DS_TOPOLOGICAL_SORTER [ET_CLASS]) is
 			-- Add current class and recursively its ancestors
-			-- to `anc' if not already done and if `ancestors'
+			-- to `a_sorter' if not already done and if `ancestors'
 			-- have not been searched yet. `an_heir' is the class
 			-- where `a_type', whose base class is current class,
 			-- appears as a parent. (`a_type' and `an_heir' are
@@ -388,7 +364,7 @@ feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
 		require
 			a_type_not_void: a_type /= Void
 			an_heir_not_void: an_heir /= Void
-			anc_not_void: anc /= Void
+			a_sorter_not_void: a_sorter /= Void
 		local
 			any_class: ET_CLASS
 		do
@@ -412,7 +388,7 @@ feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
 							-- ISE Eiffel has no GENERAL class anymore.
 							-- Use ANY has class root now.
 						!! ancestors.make (0)
-					elseif not anc.has (Current) then
+					elseif not a_sorter.has (Current) then
 						any_class := universe.any_class
 						if not any_class.is_parsed then
 								-- Error: class ANY not in universe
@@ -426,13 +402,13 @@ feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
 							!! ancestors.make (0)
 							has_ancestors_error := True
 						else
-							anc.force (Current)
-							universe.any_parents.add_to_ancestors (Current, anc)
+							a_sorter.force (Current)
+							universe.any_parents.add_to_sorter (Current, a_sorter)
 						end
 					end
-				elseif not anc.has (Current) then
-					anc.force (Current)
-					parents.add_to_ancestors (Current, anc)
+				elseif not a_sorter.has (Current) then
+					a_sorter.force (Current)
+					parents.add_to_sorter (Current, a_sorter)
 				end
 			end
 		end
@@ -450,9 +426,6 @@ feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
 	set_ancestors_error (b: BOOLEAN) is
 			-- Set `has_ancestors_error' to `b'.
 		do
-if equal (name.name, "COLLECTION") then
-do_nothing
-end
 			has_ancestors_error := b
 		ensure
 			has_ancestors_error_set: has_ancestors_error = b
