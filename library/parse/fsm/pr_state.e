@@ -250,6 +250,30 @@ feature -- Element change
 			end
 		end
 
+feature -- Removal
+
+	remove_shift (a_symbol: PR_SYMBOL) is
+			-- Remove shift transition `a_symbol'
+			-- from current state?
+		require
+			a_symbol_not_void: a_symbol /= Void
+			has_shift: has_shift (a_symbol)
+		local
+			i: INTEGER
+		do
+			i := shifts.count
+			from until i < 1 loop
+				if shifts.item (i).accessing_symbol = a_symbol then
+					shifts.remove (i)
+					i := 0 -- Jump out of the loop.
+				else
+					i := i - 1
+				end
+			end
+		ensure
+			shift_removed: not has_shift (a_symbol)
+		end
+
 feature -- Setting
 
 	set_id (an_id: INTEGER) is
@@ -312,6 +336,7 @@ feature -- Conflicts
 								if token_prec < rule_prec then
 										-- Keep only the reduction.
 									tokens.remove (j)
+									remove_shift (a_token)
 									!! a_conflict.make (Current, a_rule, a_token, "reduce")
 									Result.force_last (a_conflict)
 								elseif rule_prec < token_prec then
@@ -322,6 +347,7 @@ feature -- Conflicts
 								elseif a_token.is_left_associative then
 										-- Keep only the reduction.
 									tokens.remove (j)
+									remove_shift (a_token)
 									!! a_conflict.make (Current, a_rule, a_token, "reduce")
 									Result.force_last (a_conflict)
 								elseif a_token.is_right_associative then
@@ -333,6 +359,7 @@ feature -- Conflicts
 										-- Keep neither.
 									lookaheads.delete (a_token)
 									tokens.remove (j)
+									remove_shift (a_token)
 										-- Record an explicit error for this token.
 									errors.force_last (a_token)
 									!! a_conflict.make (Current, a_rule, a_token, "an error")
