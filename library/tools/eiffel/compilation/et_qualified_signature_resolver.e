@@ -16,7 +16,8 @@ inherit
 
 	ET_CLASS_PROCESSOR
 		redefine
-			make
+			make,
+			process_class
 		end
 
 creation
@@ -29,13 +30,8 @@ feature {NONE} -- Initialization
 			-- Create a new qualified signature resolver for classes in `a_universe'.
 		do
 			precursor (a_universe)
-			create qualified_type_resolver.make (Current)
+			create qualified_type_resolver.make (a_universe)
 		end
-
-feature -- Access
-
-	degree: STRING is "4.3"
-			-- ISE's style degree of current processor
 
 feature -- Processing
 
@@ -122,7 +118,7 @@ feature {NONE} -- Processing
 						end
 					end
 					if not current_class.has_qualified_signatures_error then
-						error_handler.report_compilation_status (Current)
+						error_handler.report_compilation_status (Current, current_class)
 						resolve_qualified_type_signatures
 					end
 				else
@@ -175,14 +171,14 @@ feature {NONE} -- Signature resolving
 		do
 			a_type := a_feature.type
 			if a_type /= Void then
-				qualified_type_resolver.resolve_type (a_type)
+				qualified_type_resolver.resolve_type (a_type, current_class)
 			end
 			args := a_feature.arguments
 			if args /= Void then
 				nb := args.count
 				from i := 1 until i > nb loop
 					an_arg := args.formal_argument (i)
-					qualified_type_resolver.resolve_type (an_arg.type)
+					qualified_type_resolver.resolve_type (an_arg.type, current_class)
 					i := i + 1
 				end
 			end

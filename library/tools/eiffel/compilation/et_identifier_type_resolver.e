@@ -14,8 +14,9 @@ class ET_IDENTIFIER_TYPE_RESOLVER
 
 inherit
 
-	ET_CLASS_SUBPROCESSOR
+	ET_AST_NULL_PROCESSOR
 		redefine
+			make,
 			process_bit_feature,
 			process_class,
 			process_class_type,
@@ -32,39 +33,51 @@ creation
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_universe: like universe) is
+			-- Create a new identifier type resolver.
+		do
+			precursor (a_universe)
+			current_class := a_universe.unknown_class
+		end
+
 feature -- Access
+
+	current_class: ET_CLASS
+			-- Class where the type appears
 
 	current_feature: ET_FEATURE
 			-- Feature where the type appears;
 			-- Void if the type does not appear in a feature
 
-feature -- Setting
-
-	set_current_feature (a_feature: like current_feature) is
-			-- Set `current_feature' to `a_feature'.
-		require
-			a_feature_registered: a_feature /= Void implies a_feature.is_registered
-		do
-			current_feature := a_feature
-		ensure
-			current_feature_set: current_feature = a_feature
-		end
-
 feature -- Type resolving
 
-	resolve_type (a_type: ET_TYPE) is
+	resolve_type (a_type: ET_TYPE; a_feature: ET_FEATURE; a_class: ET_CLASS) is
 			-- Resolve identifiers (such as 'like identifier' and
-			-- 'BIT identifier') in type `a_type'. Do not try to
-			-- resolve qualified anchored types other than those of
+			-- 'BIT identifier') in type `a_type' when in appears
+			-- in `a_feature' in `a_class'. Do not try to resolve
+			-- qualified anchored types other than those of
 			-- the form 'like Current.b'. This is done after the
 			-- features of the corresponding classes have been
 			-- flattened.
 		require
 			a_type_not_void: a_type /= Void
+			a_feature_registered: a_feature /= Void implies a_feature.is_registered
+			a_class_not_void: a_class /= Void
+		local
+			old_feature: ET_FEATURE
+			old_class: ET_CLASS
 		do
+			old_feature := current_feature
+			current_feature := a_feature
+			old_class := current_class
+			current_class := a_class
 			internal_call := True
 			a_type.process (Current)
 			internal_call := False
+			current_class := old_class
+			current_feature := old_feature
 		end
 
 feature {NONE} -- Type resolving
@@ -91,13 +104,13 @@ feature {NONE} -- Type resolving
 						-- VTBT error (ETL2 page 210): The identifier
 						-- in Bit_type must be the final name of a
 						-- constant attribute of type INTEGER.
-					set_fatal_error (current_class)
+					current_class.set_fatal_error
 					error_handler.report_vtbt0a_error (current_class, a_type)
 				end
 			else
 					-- VTBT error (ETL2 page 210): The identifier
 					-- in Bit_type must be the final name of a feature.
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 				error_handler.report_vtbt0b_error (current_class, a_type)
 			end
 		end
@@ -136,7 +149,7 @@ feature {NONE} -- Type resolving
 				end
 			end
 			if not resolved then
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 				if current_feature /= Void then
 					error_handler.report_vtat1b_error (current_class, current_feature, a_type)
 				else
@@ -157,7 +170,7 @@ feature {NONE} -- Type resolving
 			if a_feature /= Void then
 				a_type.resolve_identifier_type (a_feature.first_seed)
 			else
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 				error_handler.report_vtat1c_error (current_class, a_type)
 			end
 		end
@@ -168,7 +181,7 @@ feature {NONE} -- Type resolving
 		require
 			a_type_not_void: a_type /= Void
 		do
-			resolve_type (a_type.target_type)
+			resolve_type (a_type.target_type, current_feature, current_class)
 		end
 
 	resolve_actual_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
@@ -180,7 +193,7 @@ feature {NONE} -- Type resolving
 		do
 			nb := a_parameters.count
 			from i := 1 until i > nb loop
-				resolve_type (a_parameters.type (i))
+				resolve_type (a_parameters.type (i), current_feature, current_class)
 				i := i + 1
 			end
 		end
@@ -195,7 +208,7 @@ feature {NONE} -- Validity
 		do
 			a_type.compute_size
 			if a_type.has_size_error then
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 				error_handler.report_vtbt0c_error (current_class, a_type)
 			elseif a_type.size = 0 and a_type.constant.is_negative then
 					-- Not considered as a fatal error by gelint.
@@ -306,6 +319,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+	current_class_not_void: current_class /= Void
 	current_feature_registered: current_feature /= Void implies current_feature.is_registered
 
 end

@@ -14,8 +14,9 @@ class ET_QUALIFIED_TYPE_RESOLVER
 
 inherit
 
-	ET_CLASS_SUBPROCESSOR
+	ET_AST_NULL_PROCESSOR
 		redefine
+			make,
 			process_class,
 			process_class_type,
 			process_generic_class_type,
@@ -29,17 +30,37 @@ creation
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_universe: like universe) is
+			-- Create a new qualified type resolver.
+		do
+			precursor (a_universe)
+			current_class := a_universe.unknown_class
+		end
+
+feature -- Access
+
+	current_class: ET_CLASS
+			-- Class being processed
+
 feature -- Type resolving
 
-	resolve_type (a_type: ET_TYPE) is
+	resolve_type (a_type: ET_TYPE; a_class: ET_CLASS) is
 			-- Resolve qualified anchored types of the form
 			-- 'like a.b' or 'like {A}.b'.
 		require
 			a_type_not_void: a_type /= Void
+			a_class_not_void: a_class /= Void
+		local
+			old_class: ET_CLASS
 		do
+			old_class := current_class
+			current_class := a_class
 			internal_call := True
 			a_type.process (Current)
 			internal_call := False
+			current_class := old_class
 		end
 
 feature {NONE} -- Type resolving
@@ -57,14 +78,14 @@ feature {NONE} -- Type resolving
 			a_target_type := a_type.target_type
 				-- The target type may also be made up of 
 				-- qualified anchored types.
-			resolve_type (a_target_type)
+			resolve_type (a_target_type, current_class)
 			a_base_class := a_target_type.base_class (current_class, universe)
 			a_base_class.process (universe.feature_flattener)
 			a_feature := a_base_class.named_feature (a_type.name)
 			if a_feature /= Void then
 				a_type.resolve_identifier_type (a_feature.first_seed)
 			else
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 				if a_base_class /= universe.unknown_class then
 					error_handler.report_vtat1d_error (current_class, a_type, a_base_class)
 				else
@@ -86,7 +107,7 @@ feature {NONE} -- Type resolving
 		do
 			nb := a_parameters.count
 			from i := 1 until i > nb loop
-				resolve_type (a_parameters.type (i))
+				resolve_type (a_parameters.type (i), current_class)
 				i := i + 1
 			end
 		end
@@ -164,5 +185,9 @@ feature {NONE} -- Implementation
 
 	internal_call: BOOLEAN
 			-- Have the process routines been called from here?
+
+invariant
+
+	current_class_not_void: current_class /= Void
 
 end

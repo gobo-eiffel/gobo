@@ -16,7 +16,8 @@ inherit
 
 	ET_CLASS_PROCESSOR
 		redefine
-			make
+			make,
+			process_class
 		end
 
 creation
@@ -31,15 +32,10 @@ feature {NONE} -- Initialization
 			precursor (a_universe)
 			create class_sorter.make_default
 			create ancestors.make_map (10)
-			create parent_checker.make (Current)
-			create formal_parameter_checker.make (Current)
+			create parent_checker.make (a_universe)
+			create formal_parameter_checker.make (a_universe)
 			create parent_context.make (a_universe.any_class, a_universe.any_class)
 		end
-
-feature -- Access
-
-	degree: STRING is "4.1"
-			-- ISE's style degree of current processor
 
 feature -- Processing
 
@@ -115,7 +111,7 @@ feature {NONE} -- Processing
 					from i := 1 until i > nb loop
 						current_class := sorted_ancestors.item (i)
 						current_class.set_ancestors_built
-						error_handler.report_compilation_status (Current)
+						error_handler.report_compilation_status (Current, current_class)
 						a_parents := current_class.parents
 						if a_parents = Void or else a_parents.is_empty then
 							a_parents := any_parents
@@ -142,7 +138,7 @@ feature {NONE} -- Processing
 						end
 							-- Report the validity error VHPR-1.
 						current_class := a_cycle.first
-						error_handler.report_compilation_status (Current)
+						error_handler.report_compilation_status (Current, current_class)
 						error_handler.report_vhpr1a_error (current_class, a_cycle)
 					else
 						class_sorter.wipe_out
@@ -393,7 +389,7 @@ feature {NONE} -- Formal parameters validity
 	check_formal_parameters_validity is
 			-- Check validity of formal parameters of `current_class'.
 		do
-			formal_parameter_checker.check_formal_parameters_validity
+			formal_parameter_checker.check_formal_parameters_validity (current_class)
 		end
 
 	formal_parameter_checker: ET_FORMAL_PARAMETER_CHECKER1
@@ -404,7 +400,7 @@ feature {NONE} -- Parents validity
 	check_parents_validity is
 			-- Check validity of parents of `current_class'.
 		do
-			parent_checker.check_parents_validity
+			parent_checker.check_parents_validity (current_class)
 		end
 
 	parent_checker: ET_PARENT_CHECKER1

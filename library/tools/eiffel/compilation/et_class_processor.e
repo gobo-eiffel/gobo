@@ -15,8 +15,6 @@ deferred class ET_CLASS_PROCESSOR
 inherit
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			process_class
 		redefine
 			make
 		end
@@ -35,22 +33,7 @@ feature -- Access
 	current_class: ET_CLASS
 			-- Class being processed
 
-	degree: STRING is
-			-- ISE's style degree of current processor
-		deferred
-		ensure
-			degree_not_void: Result /= Void
-		end
-
 feature -- Error handling
-
-	error_handler: ET_ERROR_HANDLER is
-			-- Error handler
-		do
-			Result := universe.error_handler
-		ensure
-			error_handler_not_void: Result /= Void
-		end
 
 	set_fatal_error (a_class: ET_CLASS) is
 			-- Report a fatal error to `a_class'.

@@ -16,7 +16,8 @@ inherit
 
 	ET_CLASS_PROCESSOR
 		redefine
-			make
+			make,
+			process_class
 		end
 
 creation
@@ -31,11 +32,6 @@ feature {NONE} -- Initialization
 			precursor (a_universe)
 			create parent_context.make (a_universe.any_class, a_universe.any_class)
 		end
-
-feature -- Access
-
-	degree: STRING is "4.4"
-			-- ISE's style degree of current processor
 
 feature -- Processing
 
@@ -117,7 +113,7 @@ feature {NONE} -- Processing
 						end
 					end
 					if not current_class.has_interface_error then
-						error_handler.report_compilation_status (Current)
+						error_handler.report_compilation_status (Current, current_class)
 							-- Check validity rules of the parents and of formal
 							-- generic parameters of `current_class'.
 						--check_formal_parameters_validity

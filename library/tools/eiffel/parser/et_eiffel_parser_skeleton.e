@@ -611,7 +611,7 @@ feature {NONE} -- AST factory
 						Result.set_in_system (True)
 						old_class := current_class
 						current_class := Result
-						error_handler.report_compilation_status (Current)
+						error_handler.report_compilation_status (Current, current_class)
 						current_class := old_class
 						features.wipe_out
 					end
@@ -629,7 +629,7 @@ feature {NONE} -- AST factory
 				Result.set_in_system (True)
 				old_class := current_class
 				current_class := Result
-				error_handler.report_compilation_status (Current)
+				error_handler.report_compilation_status (Current, current_class)
 				current_class := old_class
 				features.wipe_out
 			end

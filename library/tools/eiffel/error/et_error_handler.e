@@ -52,19 +52,40 @@ feature -- Status report
 
 feature -- Compilation report
 
-	report_compilation_status (a_processor: ET_CLASS_PROCESSOR) is
-			-- Report that `a_processor' is currently
-			-- processing a class.
+	report_compilation_status (a_processor: ET_AST_PROCESSOR; a_class: ET_CLASS) is
+			-- Report that `a_processor' is currently processing `a_class'.
 		require
 			a_processor_not_void: a_processor /= Void
+			a_class_not_void: a_class /= Void
+		local
+			a_universe: ET_UNIVERSE
 		do
---			if is_verbose then
---				print ("Degree ")
---				print (a_processor.degree)
---				print (" class ")
---				print (a_processor.current_class.name.name)
---				print ("%N")
---			end
+			if False then
+			if info_file /= Void then
+				a_universe := a_processor.universe
+				if a_processor = a_universe.eiffel_parser then
+					info_file.put_string ("Degree 5 class ")
+					info_file.put_string (a_class.name.name)
+					info_file.put_new_line
+				elseif a_processor = a_universe.ancestor_builder then
+					info_file.put_string ("Degree 4.1 class ")
+					info_file.put_string (a_class.name.name)
+					info_file.put_new_line
+				elseif a_processor = a_universe.feature_flattener then
+					info_file.put_string ("Degree 4.2 class ")
+					info_file.put_string (a_class.name.name)
+					info_file.put_new_line
+				elseif a_processor = a_universe.qualified_signature_resolver then
+					info_file.put_string ("Degree 4.3 class ")
+					info_file.put_string (a_class.name.name)
+					info_file.put_new_line
+				elseif a_processor = a_universe.interface_checker then
+					info_file.put_string ("Degree 4.4 class ")
+					info_file.put_string (a_class.name.name)
+					info_file.put_new_line
+				end
+			end
+			end
 		end
 
 feature -- Cluster errors
@@ -351,6 +372,24 @@ feature -- Validity errors
 			report_error (an_error)
 			if error_file /= Void then
 				error_file.put_line ("----")
+			end
+		end
+
+	report_vaol1a_error (a_class: ET_CLASS; an_expression: ET_OLD_EXPRESSION) is
+			-- Report VAOL-1 error: `an_expression', found in `a_class',
+			-- does not appear in a postcondition.
+			--
+			-- ETL2: p.124
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_expression_not_void: an_expression /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vaol1_error (a_class) then
+				create an_error.make_vaol1a (a_class, an_expression)
+				report_validity_error (an_error)
 			end
 		end
 
@@ -1161,7 +1200,7 @@ feature -- Validity errors
 		end
 
 	report_vdus3a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
-			-- Create a new VDUS-3 error: the Undefine subclause
+			-- Report VDUS-3 error: the Undefine subclause
 			-- of `a_parent' in `a_class' lists `f' which is not
 			-- the final name of an effective feature in `a_parent'.
 			--
@@ -1184,7 +1223,7 @@ feature -- Validity errors
 		end
 
 	report_vdus4a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f1, f2: ET_FEATURE_NAME) is
-			-- Create a new VDUS-4 error: feature name `f2' appears
+			-- Report VDUS-4 error: feature name `f2' appears
 			-- twice in the Undefine subclause of parent `a_parent'
 			-- in `a_class'.
 			--
@@ -1201,6 +1240,27 @@ feature -- Validity errors
 		do
 			if reportable_vdus4_error (a_class) then
 				create an_error.make_vdus4a (a_class, a_parent, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_veen2a_error (a_class: ET_CLASS; a_result: ET_RESULT; a_feature: ET_FEATURE) is
+			-- Report VEEN-2 error: `a_result' appears in the body, postcondition
+			-- or rescue clause of `a_feature' in `a_class', but `a_feature' is
+			-- a procedure.
+			--
+			-- ETL2: p.276
+			-- ETR: p.61
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_result_not_void: a_result /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_veen2_error (a_class) then
+				create an_error.make_veen2a (a_class, a_result, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -1511,6 +1571,90 @@ feature -- Validity errors
 		do
 			if reportable_vhrc5_error (a_class) then
 				create an_error.make_vhrc5a (a_class, a_parent, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vkcn2a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VKCN-2 error: `a_feature' of class `a_target', appearing
+			-- in the qualified expression call `a_name' in `a_class', is not
+			-- an attribute or a function.
+			--
+			-- ETL2: p.341
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vkcn2_error (a_class) then
+				create an_error.make_vkcn2a (a_class, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vkcn2b_error (a_class, a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VKCN-2 error: `a_feature' of class `a_target', appearing
+			-- in the qualified expression call `a_name' in `a_class' and viewed from
+			-- one of its descendants `a_descendant', is not an attribute or a function.
+			--
+			-- ETL2: p.341
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vkcn2_error (a_class) then
+				create an_error.make_vkcn2b (a_class, a_descendant, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vkcn2c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Report VKCN-2 error: `a_feature' of `a_class', appearing
+			-- in the unqualified expression call `a_name' in `a_class', is not
+			-- an attribute or a function.
+			--
+			-- ETL2: p.341
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vkcn2_error (a_class) then
+				create an_error.make_vkcn2c (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vkcn2d_error (a_class, a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Report VKCN-2 error: `a_feature' of `a_class', appearing
+			-- in the unqualified expression call `a_name' in `a_class' and viewed from
+			-- one of its descendants `a_descendant', is not an attribute or a function.
+			--
+			-- ETL2: p.341
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vkcn2_error (a_class) then
+				create an_error.make_vkcn2d (a_class, a_descendant, a_name, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -2074,6 +2218,324 @@ feature -- Validity errors
 			end
 		end
 
+	report_vuar1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VUAR-1 error: the number of actual arguments in
+			-- the qualified call `a_name' appearing in `a_class' is not the
+			-- same as the number of formal arguments of `a_feature' in
+			-- class `a_target'.
+			--
+			-- ETL2: p.369
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar1_error (a_class) then
+				create an_error.make_vuar1a (a_class, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar1b_error (a_class, a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VUAR-1 error: the number of actual arguments in
+			-- the qualified call `a_name' appearing in `a_class' and viewed
+			-- from one of its descendants `a_descendant' is not the same as
+			-- the number of formal arguments of `a_feature' in class `a_target'.
+			--
+			-- ETL2: p.369
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar1_error (a_class) then
+				create an_error.make_vuar1b (a_class, a_descendant, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar1c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Report VUAR-1 error: the number of actual arguments in
+			-- the unqualified call `a_name' appearing in `a_class' is not the
+			-- same as the number of formal arguments of `a_feature' in `a_class'.
+			--
+			-- ETL2: p.369
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar1_error (a_class) then
+				create an_error.make_vuar1c (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar1d_error (a_class, a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Report VUAR-1 error: the number of actual arguments in
+			-- the unqualified call `a_name' appearing in `a_class' and viewed
+			-- from one of its descendants `a_descendant' is not the same as
+			-- the number of formal arguments of `a_feature' in `a_class'.
+			--
+			-- ETL2: p.369
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar1_error (a_class) then
+				create an_error.make_vuar1d (a_class, a_descendant, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar2a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER) is
+			-- Report VUAR-2 error: the `arg'-th actual argument in the qualified
+			-- call `a_name' appearing in `a_class' does not conform to the corresponding
+			-- formal argument of `a_feature' in class `a_target'.
+			--
+			-- ETL2: p.369
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar2_error (a_class) then
+				create an_error.make_vuar2a (a_class, a_name, a_feature, a_target, arg)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar2b_error (a_class, a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER) is
+			-- Report VUAR-2 error: the `arg'-th actual argument in the qualified
+			-- call `a_name' appearing in `a_class' and viewed from one of its descendants
+			-- `a_descendant' does not conform to the corresponding formal argument of
+			-- `a_feature' in class `a_target'.
+			--
+			-- ETL2: p.369
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar2_error (a_class) then
+				create an_error.make_vuar2b (a_class, a_descendant, a_name, a_feature, a_target, arg)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar2c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; arg: INTEGER) is
+			-- Report VUAR-2 error: the `arg'-th actual argument in the unqualified
+			-- call `a_name' appearing in `a_class' does not conform to the corresponding
+			-- formal argument of `a_feature' in `a_class'.
+			--
+			-- ETL2: p.369
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar2_error (a_class) then
+				create an_error.make_vuar2c (a_class, a_name, a_feature, arg)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar2d_error (a_class, a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; arg: INTEGER) is
+			-- Report VUAR-2 error: the `arg'-th actual argument in the unqualified
+			-- call `a_name' appearing in `a_class' and viewed from one of its descendants
+			-- `a_descendant' does not conform to the corresponding formal argument of
+			-- `a_feature' in `a_class'.
+			--
+			-- ETL2: p.369
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar2_error (a_class) then
+				create an_error.make_vuar2d (a_class, a_descendant, a_name, a_feature, arg)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuar4a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
+			-- Report VUAR-4 error: `a_name', appearing in an
+			-- expression of Address form $`a_name' in `a_class', is
+			-- not the final name of a feature in `a_class'.
+			--
+			-- ETL2: p.369
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuar4_error (a_class) then
+				create an_error.make_vuar4a (a_class, a_name)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuex1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
+			-- Report VUEX-1 error: `a_name', appearing in an unqualified
+			-- call in `a_class', is not the final name of a feature
+			-- in `a_class'.
+			--
+			-- ETL2: p.368
+			--
+			-- Note: ISE Eiffel 5.4 reports this error as a VEEN.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuex1_error (a_class) then
+				create an_error.make_vuex1a (a_class, a_name)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuex2a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_target: ET_CLASS) is
+			-- Report VUEX-2 error: `a_name', appearing in a qualified
+			-- call in `a_class', is not the final name of a feature
+			-- in class `a_target'.
+			--
+			-- ETL2: p.368
+			--
+			-- Note: ISE Eiffel 5.4 reports this error as a VEEN.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuex2_error (a_class) then
+				create an_error.make_vuex2a (a_class, a_name, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuex2b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VUEX-2 error: `a_feature' of class `a_target',
+			-- is not exported to `a_class' where the qualified call 
+			-- `a_name' appears.
+			--
+			-- ETL2: p.368
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuex2_error (a_class) then
+				create an_error.make_vuex2b (a_class, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuex2c_error (a_class, a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Report VUEX-2 error: `a_feature' of class `a_target'
+			-- is not exported to `a_descendant', one of the descendants
+			-- of `a_class' where the qualified call `a_name' appears.
+			--
+			-- ETL2: p.368
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuex2_error (a_class) then
+				create an_error.make_vuex2c (a_class, a_descendant, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vweq0a_error (a_class: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION) is
+			-- Report VWEQ error: none of the operands of the equality
+			-- expression `an_expression' appearing in `a_class' conforms to
+			-- the other.
+			--
+			-- ETL2: p.375
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_expression_not_void: an_expression /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vweq_error (a_class) then
+				create an_error.make_vweq0a (a_class, an_expression)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vweq0b_error (a_class, a_descendant: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION) is
+			-- Report VWEQ error: none of the operands of the equality
+			-- expression `an_expression' appearing in `a_class' and viewed
+			-- from one of its descendants `a_descendant' conforms to the
+			-- other.
+			--
+			-- ETL2: p.375
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_descendant_not_void: a_descendant /= Void
+			an_expression_not_void: an_expression /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vweq_error (a_class) then
+				create an_error.make_vweq0b (a_class, a_descendant, an_expression)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvagp0a_error (a_class: ET_CLASS; anc1, anc2: ET_BASE_TYPE) is
 			-- Report GVAGP error: `anc1' and `anc2' are two ancestors
 			-- of `a_class' with the same base class but different generic
@@ -2117,10 +2579,10 @@ feature -- Validity errors
 		end
 
 	report_gvhpr5a_error (a_class: ET_CLASS; a_parent: ET_TUPLE_TYPE) is
-			-- Report GVHPR-4 error: cannot inherit from Tuple_type.
+			-- Report GVHPR-5 error: cannot inherit from Tuple_type.
 			--
 			-- Not in ETL as validity error but as syntax error
-			-- GVHPR-4: See ETL2 VHPR
+			-- GVHPR-5: See ETL2 VHPR
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -2134,7 +2596,59 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvuaa0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Report GVUAA error: `a_name' is a formal argument of
+			-- `a_feature' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAA: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuaa_error (a_class) then
+				create an_error.make_gvuaa0a (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvual0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Report GVUAL error: `a_name' is a local variable of
+			-- `a_feature' in `a_class', and hence cannot have actual
+			-- arguments.
+			--
+			-- Not in ETL as validity error but as syntax error
+			-- GVUAA: See ETL2 VUAR
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvual_error (a_class) then
+				create an_error.make_gvual0a (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 feature -- Validity error status
+
+	reportable_vaol1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VAOL-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
 
 	reportable_vcch1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VCCH-1 error be reported when it
@@ -2316,6 +2830,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_veen2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VEEN-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vgcc6_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VGCC-6 error be reported when it
 			-- appears in `a_class'?
@@ -2408,6 +2932,16 @@ feature -- Validity error status
 
 	reportable_vhrc5_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VHRC-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vkcn2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VKCN-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -2566,6 +3100,66 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vuar1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VUAR-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuar2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VUAR-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuar4_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VUAR-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuex1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VUEX-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuex2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VUEX-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vweq_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VWEQ error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_gvagp_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVAGP error be reported when it
 			-- appears in `a_class'?
@@ -2588,6 +3182,26 @@ feature -- Validity error status
 
 	reportable_gvhpr5_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVHPR-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvuaa_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVUAA error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvual_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVUAL error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -2687,6 +3301,114 @@ feature -- Internal errors
 			an_error: ET_INTERNAL_ERROR
 		do
 			create an_error.make_giaai
+			report_internal_error (an_error)
+		end
+
+	report_giaaj_error is
+			-- Report GIAAJ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaaj
+			report_internal_error (an_error)
+		end
+
+	report_giaak_error is
+			-- Report GIAAK internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaak
+			report_internal_error (an_error)
+		end
+
+	report_giaal_error is
+			-- Report GIAAL internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaal
+			report_internal_error (an_error)
+		end
+
+	report_giaam_error is
+			-- Report GIAAM internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaam
+			report_internal_error (an_error)
+		end
+
+	report_giaan_error is
+			-- Report GIAAN internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaan
+			report_internal_error (an_error)
+		end
+
+	report_giaao_error is
+			-- Report GIAAO internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaao
+			report_internal_error (an_error)
+		end
+
+	report_giaap_error is
+			-- Report GIAAP internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaap
+			report_internal_error (an_error)
+		end
+
+	report_giaaq_error is
+			-- Report GIAAQ internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaaq
+			report_internal_error (an_error)
+		end
+
+	report_giaar_error is
+			-- Report GIAAR internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaar
+			report_internal_error (an_error)
+		end
+
+	report_giaas_error is
+			-- Report GIAAS internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaas
+			report_internal_error (an_error)
+		end
+
+	report_giaat_error is
+			-- Report GIAAT internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaat
+			report_internal_error (an_error)
+		end
+
+	report_giaau_error is
+			-- Report GIAAU internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giaau
 			report_internal_error (an_error)
 		end
 

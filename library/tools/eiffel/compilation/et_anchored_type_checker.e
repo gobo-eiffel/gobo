@@ -14,7 +14,7 @@ class ET_ANCHORED_TYPE_CHECKER
 
 inherit
 
-	ET_CLASS_SUBPROCESSOR
+	ET_AST_NULL_PROCESSOR
 		redefine
 			make,
 			process_class,
@@ -34,23 +34,44 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_processor: like class_processor) is
-			-- Create a new anchored type checker to be
-			-- run during `a_processor' compilation stage.
+	make (a_universe: like universe) is
+			-- Create a new anchored type checker.
 		do
-			precursor (a_processor)
+			precursor (a_universe)
+			current_class := a_universe.unknown_class
 			create anchored_type_sorter.make_default
+		end
+
+feature -- Access
+
+	current_class: ET_CLASS
+			-- Class being processed
+
+feature -- Error handling
+
+	set_fatal_error (a_class: ET_CLASS) is
+			-- Report a fatal error to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			a_class.set_features_flattened
+			a_class.set_flattening_error
+		ensure
+			features_flattened: a_class.features_flattened
+			has_flattening_error: a_class.has_flattening_error
 		end
 
 feature -- Type checking
 
-	check_signatures is
+	check_signatures (a_class: ET_CLASS) is
 			-- Check whether there is no cycle in the anchored types
-			-- held in the types of all signatures of `current_class'.
+			-- held in the types of all signatures of `a_class'.
 			-- Do not try to follow qualified anchored types other
 			-- than those of the form 'like Current.b'. This is done
 			-- after the features of the corresponding classes have
 			-- been flattened.
+		require
+			a_class_not_void: a_class /= Void
 		local
 			a_features: ET_FEATURE_LIST
 			a_feature: ET_FEATURE
@@ -58,7 +79,10 @@ feature -- Type checking
 			args: ET_FORMAL_ARGUMENT_LIST
 			i, nb: INTEGER
 			j, nb2: INTEGER
+			old_class: ET_CLASS
 		do
+			old_class := current_class
+			current_class := a_class
 			a_features := current_class.features
 			nb := a_features.count
 			from i := 1 until i > nb loop
@@ -87,6 +111,7 @@ feature -- Type checking
 				error_handler.report_vtat2a_error (current_class, anchored_type_sorter.cycle)
 			end
 			anchored_type_sorter.wipe_out
+			current_class := old_class
 		end
 
 feature {NONE} -- Type checking
@@ -293,6 +318,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+	current_class_not_void: current_class /= Void
 	anchored_type_sorter_not_void: anchored_type_sorter /= Void
 
 end

@@ -31,6 +31,7 @@ inherit
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
 		redefine
+			process_class,
 			error_handler
 		end
 
@@ -121,9 +122,6 @@ feature -- Access
 
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
-
-	degree: STRING is "5"
-			-- ISE's style degree of current processor
 
 feature -- Setting
 

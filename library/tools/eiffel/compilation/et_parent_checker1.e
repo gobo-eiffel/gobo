@@ -14,8 +14,9 @@ class ET_PARENT_CHECKER1
 
 inherit
 
-	ET_CLASS_SUBPROCESSOR
+	ET_AST_NULL_PROCESSOR
 		redefine
+			make,
 			process_bit_feature,
 			process_bit_n,
 			process_class,
@@ -34,10 +35,24 @@ creation
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (a_universe: like universe) is
+			-- Create a new parent first pass checker.
+		do
+			precursor (a_universe)
+			current_class := a_universe.unknown_class
+		end
+
+feature -- Access
+
+	current_class: ET_CLASS
+			-- Class being processed
+
 feature -- Validity checking
 
-	check_parents_validity is
-			-- Check validity of parents of `current_class'. Do not check
+	check_parents_validity (a_class: ET_CLASS) is
+			-- Check validity of parents of `a_class'. Do not check
 			-- whether the actual generic parameters of the types held in
 			-- the parents conform to their corresponding formal parameters'
 			-- constraints (this is done after the ancestors for the involved
@@ -45,7 +60,10 @@ feature -- Validity checking
 		local
 			a_parents: ET_PARENT_LIST
 			i, nb: INTEGER
+			old_class: ET_CLASS
 		do
+			old_class := current_class
+			current_class := a_class
 			a_parents := current_class.parents
 			if a_parents /= Void then
 				nb := a_parents.count
@@ -58,6 +76,7 @@ feature -- Validity checking
 					i := i + 1
 				end
 			end
+			current_class := old_class
 		end
 
 feature {NONE} -- Parent validity
@@ -73,7 +92,7 @@ feature {NONE} -- Parent validity
 			a_parent_not_void: a_parent /= Void
 		do
 				-- It is not valid to have "BIT name" in parent clauses.
-			set_fatal_error (current_class)
+			current_class.set_fatal_error
 			error_handler.report_vhpr3a_error (current_class, a_type)
 		end
 
@@ -89,7 +108,7 @@ feature {NONE} -- Parent validity
 		do
 			if a_type = a_parent.type then
 					-- Cannot inherit from 'BIT N'.
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 				error_handler.report_gvhpr4a_error (current_class, a_type)
 			else
 					-- Not considered as a fatal error by gelint.
@@ -115,19 +134,19 @@ feature {NONE} -- Parent validity
 			a_class := a_type.direct_base_class (universe)
 			a_class.process (universe.eiffel_parser)
 			if not a_class.is_preparsed then
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 				error_handler.report_vtct0a_error (current_class, a_type)
 			elseif a_class.has_syntax_error then
 					-- Error should already have been
 					-- reported somewhere else.
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 			elseif not a_class.is_generic then
 				if a_type.is_generic then
-					set_fatal_error (current_class)
+					current_class.set_fatal_error
 					error_handler.report_vtug1a_error (current_class, a_type)
 				end
 			elseif not a_type.is_generic then
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 				error_handler.report_vtug2a_error (current_class, a_type)
 			else
 				a_formals := a_class.formal_parameters
@@ -137,7 +156,7 @@ feature {NONE} -- Parent validity
 					a_type_generic: an_actuals /= Void
 				end
 				if an_actuals.count /= a_formals.count then
-					set_fatal_error (current_class)
+					current_class.set_fatal_error
 					error_handler.report_vtug2a_error (current_class, a_type)
 				else
 					nb := an_actuals.count
@@ -162,7 +181,7 @@ feature {NONE} -- Parent validity
 			a_parent_not_void: a_parent /= Void
 		do
 				-- It is not valid to have anchored types in parent clauses.
-			set_fatal_error (current_class)
+			current_class.set_fatal_error
 			error_handler.report_vhpr3c_error (current_class, a_type)
 		end
 
@@ -182,7 +201,7 @@ feature {NONE} -- Parent validity
 			if a_type = a_parent.type then
 					-- Cannot inherit from 'TUPLE'.
 					-- ISE allows that though!
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 				error_handler.report_gvhpr5a_error (current_class, a_type)
 			else
 				a_parameters := a_type.actual_parameters
@@ -225,10 +244,10 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_class (a_type: ET_CLASS) is
-			-- Process `a_type'.
+	process_class (a_class: ET_CLASS) is
+			-- Process `a_class'.
 		do
-			process_class_type (a_type)
+			process_class_type (a_class)
 		end
 
 	process_class_type (a_type: ET_CLASS_TYPE) is
@@ -312,5 +331,9 @@ feature {NONE} -- Implementation
 
 	internal_call: BOOLEAN
 			-- Have the process routines been called from here?
+
+invariant
+
+	current_class_not_void: current_class /= Void
 
 end

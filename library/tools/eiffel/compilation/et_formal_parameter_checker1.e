@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel formal parameter validity first pass checkers"
+		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2003, Eric Bezault and others"
@@ -14,7 +14,7 @@ class ET_FORMAL_PARAMETER_CHECKER1
 
 inherit
 
-	ET_CLASS_SUBPROCESSOR
+	ET_AST_NULL_PROCESSOR
 		redefine
 			make,
 			process_bit_feature,
@@ -38,31 +38,41 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_processor: like class_processor) is
-			-- Create a new formal parameter checker to be
-			-- run during `a_processor' compilation stage.
+	make (a_universe: like universe) is
+			-- Create a new formal parameter first pass checker.
 		do
-			precursor (a_processor)
+			precursor (a_universe)
+			current_class := a_universe.unknown_class
 			create formal_parameter_sorter.make_default
 			create direct_formal_parameter_sorter.make_default
 		end
 
+feature -- Access
+
+	current_class: ET_CLASS
+			-- Class being processed
+
 feature -- Validity checking
 
-	check_formal_parameters_validity is
+	check_formal_parameters_validity (a_class: ET_CLASS) is
 			-- First pass of the validity check of the formal generic
-			-- parameters of `current_class'. Do not try to do any
-			-- conformance checking (this is done after the ancestors
-			-- have been built during the second pass) nor any checking
-			-- of creation procedures of formal parameters (this is done
-			-- after the features have been flattened during the third pass).
+			-- parameters of `a_class'. Do not try to do any conformance
+			-- checking (this is done after the ancestors have been built
+			-- during the second pass) nor any checking of creation
+			-- procedures of formal parameters (this is done after the
+			-- features have been flattened during the third pass).
+		require
+			a_class_not_void: a_class /= Void
 		local
 			i, j, nb: INTEGER
 			a_parameters: ET_FORMAL_PARAMETER_LIST
 			a_formal, other_formal: ET_FORMAL_PARAMETER
 			a_name: ET_IDENTIFIER
 			other_class: ET_CLASS
+			old_class: ET_CLASS
 		do
+			old_class := current_class
+			current_class := a_class
 			a_parameters := current_class.formal_parameters
 			if a_parameters /= Void then
 				nb := a_parameters.count
@@ -72,7 +82,7 @@ feature -- Validity checking
 					if universe.has_class (a_name) then
 							-- The name of a formal parameter cannot be the
 							-- name of a class in the universe.
-						set_fatal_error (current_class)
+						current_class.set_fatal_error
 						other_class := universe.eiffel_class (a_name)
 						error_handler.report_vcfg1a_error (current_class, a_formal, other_class)
 					else
@@ -80,7 +90,7 @@ feature -- Validity checking
 							other_formal := a_parameters.formal_parameter (j)
 							if other_formal.name.same_identifier (a_name) then
 									-- There are two formal parameters with the same name.
-								set_fatal_error (current_class)
+								current_class.set_fatal_error
 								error_handler.report_vcfg2a_error (current_class, other_formal, a_formal)
 							end
 							j := j + 1
@@ -91,6 +101,7 @@ feature -- Validity checking
 				end
 				check_constraint_cycles
 			end
+			current_class := old_class
 		end
 
 feature {NONE} -- Constraint validity
@@ -131,7 +142,7 @@ feature {NONE} -- Constraint validity
 			a_formal_not_void: a_formal /= Void
 		do
 				-- It is not valid to have "BIT name" in constraints.
-			set_fatal_error (current_class)
+			current_class.set_fatal_error
 			error_handler.report_vcfg3a_error (current_class, a_type)
 		end
 
@@ -177,19 +188,19 @@ feature {NONE} -- Constraint validity
 			a_class := a_type.direct_base_class (universe)
 			a_class.process (universe.eiffel_parser)
 			if not a_class.is_preparsed then
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 				error_handler.report_vtct0a_error (current_class, a_type)
 			elseif a_class.has_syntax_error then
 					-- Error should already have been
 					-- reported somewhere else.
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 			elseif not a_class.is_generic then
 				if a_type.is_generic then
-					set_fatal_error (current_class)
+					current_class.set_fatal_error
 					error_handler.report_vtug1a_error (current_class, a_type)
 				end
 			elseif not a_type.is_generic then
-				set_fatal_error (current_class)
+				current_class.set_fatal_error
 				error_handler.report_vtug2a_error (current_class, a_type)
 			else
 				a_formals := a_class.formal_parameters
@@ -199,7 +210,7 @@ feature {NONE} -- Constraint validity
 					a_type_generic: an_actuals /= Void
 				end
 				if an_actuals.count /= a_formals.count then
-					set_fatal_error (current_class)
+					current_class.set_fatal_error
 					error_handler.report_vtug2a_error (current_class, a_type)
 				else
 					nb := an_actuals.count
@@ -249,7 +260,7 @@ feature {NONE} -- Constraint validity
 					-- parameter is itself a formal parameter.
 				if a_parameters = Void or else index1 > a_parameters.count then
 						-- Internal error.
-					set_fatal_error (current_class)
+					current_class.set_fatal_error
 					error_handler.report_giaaf_error
 				elseif index1 = index2 then
 						-- The constraint of the formal parameter is
@@ -285,7 +296,7 @@ feature {NONE} -- Constraint validity
 			else
 				if a_parameters = Void or else index1 > a_parameters.count then
 						-- Internal error.
-					set_fatal_error (current_class)
+					current_class.set_fatal_error
 					error_handler.report_giaag_error
 				elseif index1 = index2 then
 						-- The constraint of the formal parameter is itself
@@ -328,7 +339,7 @@ feature {NONE} -- Constraint validity
 			a_formal_not_void: a_formal /= Void
 		do
 				-- It is not valid to have anchored types in constraints.
-			set_fatal_error (current_class)
+			current_class.set_fatal_error
 			error_handler.report_vcfg3c_error (current_class, a_type)
 		end
 
@@ -405,7 +416,7 @@ feature {NONE} -- Constraint cycles
 				a_parameters := current_class.formal_parameters
 				if a_parameters = Void then
 						-- Internal error.
-					set_fatal_error (current_class)
+					current_class.set_fatal_error
 					error_handler.report_giaah_error
 				else
 					any_type := universe.any_type
@@ -419,7 +430,7 @@ feature {NONE} -- Constraint cycles
 							an_index := a_constraint.index
 							if an_index > a_parameters_count then
 									-- Internal error.
-								set_fatal_error (current_class)
+								current_class.set_fatal_error
 								error_handler.report_giaai_error
 							else
 									-- We have "G -> H" and the base type of
@@ -490,10 +501,10 @@ feature {ET_AST_NODE} -- Type dispatcher
 			end
 		end
 
-	process_class (a_type: ET_CLASS) is
-			-- Process `a_type'.
+	process_class (a_class: ET_CLASS) is
+			-- Process `a_class'.
 		do
-			process_class_type (a_type)
+			process_class_type (a_class)
 		end
 
 	process_class_type (a_type: ET_CLASS_TYPE) is
@@ -591,6 +602,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+	current_class_not_void: current_class /= Void
 	formal_parameter_sorter_not_void: formal_parameter_sorter /= Void
 	direct_formal_parameter_sorter_not_void: direct_formal_parameter_sorter /= Void
 

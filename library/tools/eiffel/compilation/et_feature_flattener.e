@@ -16,7 +16,8 @@ inherit
 
 	ET_CLASS_PROCESSOR
 		redefine
-			make
+			make,
+			process_class
 		end
 
 	ET_SHARED_FEATURE_NAME_TESTER
@@ -47,17 +48,12 @@ feature {NONE} -- Initialization
 			create clients_list.make (20)
 			create client_names.make (20)
 			client_names.set_equality_tester (class_name_tester)
-			create identifier_type_resolver.make (Current)
-			create anchored_type_checker.make (Current)
-			create parent_checker.make (Current)
-			create formal_parameter_checker.make (Current)
+			create identifier_type_resolver.make (a_universe)
+			create anchored_type_checker.make (a_universe)
+			create parent_checker.make (a_universe)
+			create formal_parameter_checker.make (a_universe)
 			create parent_context.make (a_universe.any_class, a_universe.any_class)
 		end
-
-feature -- Access
-
-	degree: STRING is "4.2"
-			-- ISE's style degree of current processor
 
 feature -- Error handling
 
@@ -148,7 +144,7 @@ feature {NONE} -- Processing
 						end
 					end
 					if not current_class.has_flattening_error then
-						error_handler.report_compilation_status (Current)
+						error_handler.report_compilation_status (Current, current_class)
 							-- Check validity rules of the parents and of formal
 							-- generic parameters of `current_class'.
 						check_formal_parameters_validity
@@ -1413,10 +1409,9 @@ feature {NONE} -- Signature resolving
 			a_name: ET_IDENTIFIER
 			i, j, nb: INTEGER
 		do
-			identifier_type_resolver.set_current_feature (a_feature)
 			a_type := a_feature.type
 			if a_type /= Void then
-				identifier_type_resolver.resolve_type (a_type)
+				identifier_type_resolver.resolve_type (a_type, a_feature, current_class)
 			end
 			args := a_feature.arguments
 			if args /= Void then
@@ -1426,7 +1421,7 @@ feature {NONE} -- Signature resolving
 					a_type := an_arg.type
 					if a_type /= previous_type then
 							-- Not resolved yet.
-						identifier_type_resolver.resolve_type (a_type)
+						identifier_type_resolver.resolve_type (a_type, a_feature, current_class)
 						previous_type := a_type
 					end
 					a_name := an_arg.name
@@ -1454,7 +1449,6 @@ feature {NONE} -- Signature resolving
 					i := i + 1
 				end
 			end
-			identifier_type_resolver.set_current_feature (Void)
 		end
 
 	identifier_type_resolver: ET_IDENTIFIER_TYPE_RESOLVER
@@ -1470,7 +1464,7 @@ feature {NONE} -- Signature validity
 			-- after the features of the corresponding classes have
 			-- been flattened.
 		do
-			anchored_type_checker.check_signatures
+			anchored_type_checker.check_signatures (current_class)
 		end
 
 	anchored_type_checker: ET_ANCHORED_TYPE_CHECKER
@@ -1820,7 +1814,7 @@ feature {NONE} -- Formal parameters validity
 	check_formal_parameters_validity is
 			-- Check validity of formal parameters of `current_class'.
 		do
-			formal_parameter_checker.check_formal_parameters_validity
+			formal_parameter_checker.check_formal_parameters_validity (current_class)
 		end
 
 	formal_parameter_checker: ET_FORMAL_PARAMETER_CHECKER2
@@ -1831,7 +1825,7 @@ feature {NONE} -- Parents validity
 	check_parents_validity is
 			-- Check validity of parents of `current_class'.
 		do
-			parent_checker.check_parents_validity
+			parent_checker.check_parents_validity (current_class)
 		end
 
 	parent_checker: ET_PARENT_CHECKER2
