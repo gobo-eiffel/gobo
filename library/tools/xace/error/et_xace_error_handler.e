@@ -76,7 +76,7 @@ feature -- Measurement
 	error_count: INTEGER
 			-- Number of errors reported so far
 
-feature -- Reporting
+feature -- Reporting errors
 
 	report_cannot_read_file_error (a_filename: STRING) is
 			-- Report that file `a_filename' cannot
@@ -205,11 +205,67 @@ feature -- Reporting
 			report_error (an_error)
 		end
 
+	report_boolean_expected_error (an_element: XM_ELEMENT; an_attribute_name: UC_STRING;
+		an_actual_value: UC_STRING; a_position: XM_POSITION) is
+			-- Report that the value of attribute `an_attribute_name'
+			-- in element `an_element' should be a boolean value.
+		require
+			an_element_not_void: an_element /= Void
+			an_attribute_name_not_void: an_attribute_name /= Void
+			an_attribute_name_not_empty: an_attribute_name.count > 0
+			an_actual_value_not_void: an_actual_value /= Void
+			a_position_not_void: a_position /= Void
+		local
+			an_error: ET_XACE_BOOLEAN_EXPECTED_ERROR
+		do
+			!! an_error.make (an_element, an_attribute_name, an_actual_value, a_position)
+			report_error (an_error)
+		end
+
+	report_positive_integer_expected_error (an_element: XM_ELEMENT; an_attribute_name: UC_STRING;
+		an_actual_value: UC_STRING; a_position: XM_POSITION) is
+			-- Report that the value of attribute `an_attribute_name'
+			-- in element `an_element' should be a positive integer.
+		require
+			an_element_not_void: an_element /= Void
+			an_attribute_name_not_void: an_attribute_name /= Void
+			an_attribute_name_not_empty: an_attribute_name.count > 0
+			an_actual_value_not_void: an_actual_value /= Void
+			a_position_not_void: a_position /= Void
+		local
+			an_error: ET_XACE_POSITIVE_INTEGER_EXPECTED_ERROR
+		do
+			!! an_error.make (an_element, an_attribute_name, an_actual_value, a_position)
+			report_error (an_error)
+		end
+
+	report_wrong_attribute_value_error (an_element: XM_ELEMENT; an_attribute_name: UC_STRING;
+		an_actual_value: UC_STRING; an_expected_values: DS_LINEAR [STRING]; a_position: XM_POSITION) is
+			-- Report that the value `an_actual_value' of attribute
+			-- `an_attribute_name' in element `an_element' should be
+			-- one of the `an_expected_values'.
+		require
+			an_element_not_void: an_element /= Void
+			an_attribute_name_not_void: an_attribute_name /= Void
+			an_attribute_name_not_empty: an_attribute_name.count > 0
+			an_actual_value_not_void: an_actual_value /= Void
+			an_expected_values_not_void: an_expected_values /= Void
+			no_void_expected_value: not an_expected_values.has (Void)
+			a_position_not_void: a_position /= Void
+		local
+			an_error: ET_XACE_WRONG_ATTRIBUTE_VALUE_ERROR
+		do
+			!! an_error.make (an_element, an_attribute_name, an_actual_value, an_expected_values, a_position)
+			report_error (an_error)
+		end
+
 	report_error (an_error: UT_ERROR) is
 			-- Report `an_error'.
 		do
 			error_count := error_count + 1
 			precursor (an_error)
 		end
+
+feature -- Reporting warnings
 
 end
