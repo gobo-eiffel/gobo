@@ -2068,7 +2068,7 @@ feature -- Default values
 			-- Default value for 'dead_code_removal' option
 		once
 			!! Result.make_equal (1)
-			Result.put_new (options.feature_value)
+			Result.put_new (options.all_value)
 		ensure
 			default_dead_code_removal_not_void: Result /= Void
 			-- valid_value: forall v in Result, valid_dead_code_removal.has (v)
