@@ -47,7 +47,7 @@ feature -- Conversion
 		require
 			an_int_positive: an_int >= 0
 		do
-			Result := STRING_.make (10)
+			Result := STRING_.make (8) -- Max 8 hexadecimal digits for 32-bits
 			append_hexadecimal_integer (Result, an_int, uppercase)
 		ensure
 			hexadecimal_not_void: Result /= Void
