@@ -82,10 +82,32 @@ feature -- Status setting
 			string_mode_set: is_string_mode_unicode
 		end
 
-feature {NONE} -- Implementation
+feature -- Copy
+
+	copy_string_mode (other: XM_STRING_MODE) is
+			-- Copy string mode.
+		require
+			other_not_void: other /= Void
+		do
+			string_mode := other.string_mode
+		ensure
+			copied: same_string_mode (other)
+		end
+
+	same_string_mode (other: XM_STRING_MODE): BOOLEAN is
+			-- Is `other' with the same string mode?
+		require
+			other_not_void: other /= Void
+		do
+			Result := string_mode = other.string_mode
+		end
+		
+feature {XM_STRING_MODE} -- Implementation
 
 	string_mode: INTEGER
 			-- STRING/UC_STRING mode
+
+feature {NONE} -- Implementation
 
 	String_mode_ascii: INTEGER is 0
 	String_mode_unicode: INTEGER is 1
