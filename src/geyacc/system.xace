@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<system name="geyacc">
+	<description>
+		system:     "Gobo Eiffel Yacc: syntactical analyzer generator"
+		author:     "Eric Bezault [ericb@gobosoft.com]"
+		copyright:  "Copyright (c) 1997-2001, Eric Bezault and others"
+		license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:       "$Date$"
+		revision:   "$Revision$"
+	</description>
+
+	<root class="GEYACC" creation="execute"/>
+	<cluster>
+		<option>
+			<require enable="False"/>
+			<ensure enable="False"/>
+			<invariant enable="False"/>
+			<loop enable="False"/>
+			<optimize enable="True"/>
+		</option>
+
+		<cluster name="geyacc" location="${GOBO}/src/geyacc"/>
+
+		<mount location="${GOBO}/library/lexical/cluster.xace"/>
+		<mount location="${GOBO}/library/parse/cluster.xace"/>
+		<mount location="${GOBO}/library/utility/cluster.xace"/>
+		<mount location="${GOBO}/library/kernel/cluster.xace"/>
+		<mount location="${GOBO}/library/structure/cluster.xace"/>
+		<mount location="${GOBO}/library/kernel.xace"/>
+	</cluster>
+</system>
