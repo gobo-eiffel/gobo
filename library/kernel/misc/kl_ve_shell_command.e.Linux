@@ -14,6 +14,10 @@ indexing
 
 class KL_VE_SHELL_COMMAND
 
+inherit
+
+	EXTERNAL_PROCESS
+
 feature -- Execution
 
 	system (a_command: STRING): INTEGER is

@@ -14,6 +14,44 @@ indexing
 
 class KL_VE_SHELL_COMMAND
 
+inherit
+
+	EXTERNAL_PROCESS
+		redefine
+				-- Fix bug in variant of the loop in
+				-- `make_with_arguments'.
+			make_with_arguments
+		end
+
+feature {NONE} -- Initialization
+
+	make_with_arguments (program_name: STRING; arguments: ARRAY [STRING]) is
+			-- Specify `program_name', corresponding to the new process
+			-- and `arguments' to be passed to it
+		local
+			command_name: STRING
+			i: INTEGER
+		do
+			!! command_name.make_from_string (program_name)
+			command_name.prune_all ('"')
+			command_name.precede ('"')
+			command_name.append_character ('"')
+			if arguments /= Void then
+				from
+					i := arguments.lower
+				variant
+					arguments.upper - i + 1
+				until
+					i > arguments.upper
+				loop
+					command_name.append_character (' ')
+					command_name.append_string (arguments.item (i))
+					i := i + 1
+				end
+			end
+			make (command_name)
+		end
+
 feature -- Execution
 
 	system (a_command: STRING): INTEGER is

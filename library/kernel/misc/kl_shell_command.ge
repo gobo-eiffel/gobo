@@ -44,7 +44,7 @@ inherit
 
 #endif
 #ifdef VE
-	EXTERNAL_PROCESS
+	KL_VE_SHELL_COMMAND
 		rename
 			make as old_make,
 			command as old_command,
@@ -53,9 +53,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-	KL_VE_SHELL_COMMAND
-		export {NONE} all end
 
 	KL_SHARED_OPERATING_SYSTEM
 		export {NONE} all end
