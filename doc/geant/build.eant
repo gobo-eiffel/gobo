@@ -99,6 +99,9 @@
 		<set name="next_chapter" value="mkdir_task"/>
 		<geant target="xslt"/>
 
+		<set name="next_chapter" value="move_task"/>
+		<geant target="xslt"/>
+
 		<set name="next_chapter" value="outofdate_task"/>
 		<geant target="xslt"/>
 
@@ -165,6 +168,7 @@
 		<delete file="hact_task.html"/>
 		<delete file="ise_task.html"/>
 		<delete file="mkdir_task.html"/>
+		<delete file="move_task.html"/>
 		<delete file="outofdate_task.html"/>
 		<delete file="precursor_task.html"/>
 		<delete file="se_task.html"/>
@@ -195,7 +199,7 @@
 		>
 			<parameter name="previous" value="${previous}.html"/>
 			<parameter name="next" value="${next}.html"/>
-			<parameter name="toc" value="toc.html"/>
+			<parameter name="toc" value="introduction.html"/>
 		</xslt>
 	</target>
 
