@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<cluster name="test_skl" location="${GOBO}/library/test" abstract="true">
+
+	<description>
+		description: "Xace file for the Gobo Eiffel test harness"
+		library: "Gobo Eiffel Test Library"
+		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="harness"/>
+
+</cluster>
