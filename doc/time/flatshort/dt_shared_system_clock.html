@@ -28,7 +28,7 @@ content="text/html; charset=iso-8859-1">
 <blockquote>
     <pre><em>description</em>:
 
-<font color="#800000"><em>    &quot;Shared system clock&quot;
+<font color="#800000"><em>    &quot;Shared system clocks&quot;
 
 </em></font><em>pattern</em>:<em>    </em><font color="#800000"><em>&quot;Singleton&quot;</em></font><em>
 library:    </em><font color="#800000"><em>&quot;Gobo Eiffel Time Library&quot;
@@ -51,9 +51,16 @@ color="#008000">-- Access</font></pre>
 <blockquote>
     <pre><a name="system_clock"><em>system_clock</em></a>:<em> </em><a
 href="dt_system_clock.html"><em>DT_SYSTEM_CLOCK</em></a><em>
-</em><font color="#008000">        -- System clock</font><em>
+</em><font color="#008000">        -- Local system clock</font><em>
     </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
         system_clock_not_void</em>:<em> </em><font
+color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
+    <pre><a name="utc_system_clock"><em>utc_system_clock</em></a>:<em> </em><a
+href="dt_utc_system_clock.html"><em>DT_UTC_SYSTEM_CLOCK</em></a><em>
+</em><font color="#008000">        -- UTC system clock</font><em>
+    </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
+        utc_system_clock_not_void</em>:<em> </em><font
 color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
 color="#008080"><em>Void</em></font></pre>
 </blockquote>
@@ -80,7 +87,8 @@ color="#008000"> -- class DT_SHARED_SYSTEM_CLOCK</font></pre>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+            --> 
         </address>
         </td>
         <td align="right" valign="top"><a
