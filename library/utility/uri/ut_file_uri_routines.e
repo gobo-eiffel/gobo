@@ -94,7 +94,6 @@ feature -- Pathname
 				from a_cursor.forth until a_cursor.after loop
 					a_segment := uri_component_to_pathname (a_cursor.item)
 					Result.append_name (a_segment)
-					
 					a_cursor.forth
 				end
 			end
@@ -190,4 +189,3 @@ feature {NONE} -- Constants
 	File_scheme: STRING is "file"
 
 end
-

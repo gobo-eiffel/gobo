@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			a_base_not_void: a_base /= Void
 			a_base_is_absolute: a_base.is_absolute
 		do
-				-- See RFC 3986, section 5.2.2
+				-- See RFC 3986, section 5.2.2.
 			if is_absolute then
 				-- Keep scheme.
 				-- Keep authority.
@@ -365,7 +365,7 @@ feature -- Components
 		do
 			Result := path_base_item.encoded
 		ensure
-			result_not_void: Result /= Void
+			path_base_not_void: Result /= Void
 			not_empty: not Result.is_empty
 			no_separator: not Result.has ('/')
 		end
@@ -401,7 +401,7 @@ feature -- Components
 			-- Path in `scheme_specific_part'
 
 	path_base_item: UT_URI_STRING
-			-- Last segment, if any, of path.
+			-- Last segment, if any, of path
 			-- (See `path_has_base'.)
 
 	query_item: UT_URI_STRING
@@ -937,20 +937,19 @@ feature {NONE} -- Resolve a relative-path reference
 			segment: UT_URI_STRING
 			i, nb: INTEGER
 		do
-				-- See RFC 2396, section 5.2 step 6 for an implementation
-				-- I use a different one.
-			
+				-- See RFC 2396, section 5.2 step 6 for an implementation.
+				-- Another implementation is used below.
+
 				-- Resolved path is absolute.
 			has_absolute_path := True
 				-- Path items.
 			create some_items.make_from_linear (a_base.path_items)
-				
-				-- Handle path base if relative
+				-- Handle path base if relative.
 			if path_has_base and then (is_dot (path_base_item) or is_dot_dot (path_base_item)) then
 				path_items.force_last (path_base_item)
 				path_base_item := Void
 			end
-				-- Last segment is part of path if relative
+				-- Last segment is part of path if relative.
 			nb := path_items.count
 			from i := 1 until i > nb loop
 				segment := path_items.item (i)
@@ -1031,8 +1030,7 @@ invariant
 	full_reference_is_valid: not Url_encoding.has_excluded_characters (full_reference)
 	path_items_not_void: path_items /= Void
 	no_void_path_item: not path_items.has (Void)
-	--no_empty_path_item: not path_items.has ("")
-
+	-- no_empty_path_item: not path_items.has ("")
 		-- Contraints on parsed `authority'.
 	user_info_occurs_in_authority: user_info /= Void implies STRING_.substring_index (authority, user_info, 1) /= 0
 	host_occurs_in_authority: has_parsed_authority implies STRING_.substring_index (authority, host_port.host, 1) /= 0

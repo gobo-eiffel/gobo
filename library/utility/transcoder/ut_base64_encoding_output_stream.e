@@ -4,6 +4,15 @@ indexing
 
 		"Output streams that base64-encode a stream"
 
+	remark:
+
+		"According to RFC 2045, line breaks should be normalized to %
+		%CRLF before encoding, and encoded lines should not be longer %
+		%then 76 characters. It appears that neither of these operations %
+		%is always done in practice, accordingly they have been made %
+		%both BOOLEAN options in the creation procedure. %
+		%Set both options to True for 100%% conformance to RFC 2045."
+
 	library: "Gobo Eiffel Kernel Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -21,13 +30,6 @@ inherit
 			put_character, put_string,
 			close, is_closable
 		end
-
-	-- According to RFC 2045, line breaks should be normalized to
-	--  CRLF before encoding, and encoded lines should not be longer
-	--  then 76 characters. It appears that neither of these operations
-	--  is always done in practice, accordingly I have made them
-	--  both BOOLEAN options in the creation procedure.
-	-- Set both options to `True' for 100% conformance to RFC 2045.
 
 creation
 
@@ -83,8 +85,8 @@ feature -- Output
 						end
 					end
 				elseif c = '%N' then
-					buffer_character ('%N')
 					buffer_character ('%R')
+					buffer_character ('%N')
 				elseif c = '%R' then
 					buffer_character (c)
 					is_pending_line_break := True

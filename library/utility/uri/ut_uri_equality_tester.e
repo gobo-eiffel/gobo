@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Equality tester for UT_URI, based on full_reference equality"
+		"Equality testers for UT_URI, based on full_reference equality"
 	
 	library: "Gobo Eiffel Utility Library"
 	author: "Copyright (c) 2004, Eric Bezault and others"
@@ -21,14 +21,21 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
-feature
+feature -- Status report
 
-	test (v, g: UT_URI): BOOLEAN is
-			-- Compare UT_URIs based on `full_reference'
+	test (v, u: UT_URI): BOOLEAN is
+			-- Are `v' and `u' considered equal?
+			-- (Comparison of UT_URIs based on `full_reference')
 		do
-			Result := (v = g) or else 
-				((v /= Void and g /= Void) 
-					and then STRING_.same_string (v.full_reference, g.full_reference))
+			if v = u then
+				Result := True
+			elseif v = Void then
+				Result := False
+			elseif u = Void then
+				Result := False
+			else
+				Result := STRING_.same_string (v.full_reference, u.full_reference)
+			end
 		end
 
 end
