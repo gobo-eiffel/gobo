@@ -44,9 +44,13 @@ feature {NONE} -- Initialization
 
 feature -- Type checking
 
-	check_all_signatures is
+	check_signatures is
 			-- Check whether there is no cycle in the anchored types
 			-- held in the types of all signatures of `current_class'.
+			-- Do not try to follow qualified anchored types other
+			-- than those of the form 'like Current.b'. This is done
+			-- after the features of the corresponding classes have
+			-- been flattened.
 		local
 			a_features: ET_FEATURE_LIST
 			a_feature: ET_FEATURE
@@ -93,7 +97,7 @@ feature {NONE} -- Type checking
 			-- anchors' types are (or contain) also anchored types.
 		local
 			a_seed: INTEGER
-			a_query: ET_QUERY
+			a_query_type: ET_TYPE
 			a_feature: ET_FEATURE
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
@@ -117,58 +121,59 @@ feature {NONE} -- Type checking
 						end
 					end
 				else
-					a_query ?= current_class.seeded_feature (a_seed)
-					if a_query /= Void then
-						current_anchored_type := a_type
-						internal_call := True
-						a_query.type.process (Current)
-						internal_call := False
-						current_anchored_type := Void
+					a_feature := current_class.seeded_feature (a_seed)
+					if a_feature /= Void then
+						a_query_type := a_feature.type
+						if a_query_type /= Void then
+							current_anchored_type := a_type
+							internal_call := True
+							a_query_type.process (Current)
+							internal_call := False
+							current_anchored_type := Void
+						end
 					end
 				end
 			end
 		end
 
-	add_qualified_like_type_to_sorter (a_type: ET_QUALIFIED_TYPE) is
+	add_qualified_like_current_to_sorter (a_type: ET_QUALIFIED_LIKE_CURRENT) is
 			-- Add to `anchored_type_sorter' anchored types whose
 			-- anchors' types are (or contain) also anchored types.
 		local
-			a_target_type: ET_TYPE
-			a_like_current: ET_LIKE_CURRENT
-			a_like_type: ET_LIKE_TYPE
+			a_feature: ET_FEATURE
 			a_seed: INTEGER
-			a_query: ET_QUERY
+			a_query_type: ET_TYPE
 		do
 			if current_anchored_type /= Void then
 				anchored_type_sorter.force_relation (a_type, current_anchored_type)
 			else
-				a_target_type := a_type.target_type
-				a_like_current ?= a_target_type
-				if a_like_current /= Void then
-						-- This is a 'like Current.b',
-						-- consider it as a 'like b'.
-					a_seed := a_type.seed
-					if a_seed /= 0 then
-						a_query ?= current_class.seeded_feature (a_seed)
-						if a_query /= Void then
+					-- We consider 'like Current.b' as a 'like b'.
+				a_seed := a_type.seed
+				if a_seed /= 0 then
+					a_feature := current_class.seeded_feature (a_seed)
+					if a_feature /= Void then
+						a_query_type := a_feature.type
+						if a_query_type /= Void then
 							current_anchored_type := a_type
 							internal_call := True
-							a_query.type.process (Current)
+							a_query_type.process (Current)
 							internal_call := False
 							current_anchored_type := Void
 						end
 					end
-				else
-						-- This is a real 'like a.b'.
-					a_like_type ?= a_target_type
-					if a_like_type /= Void then
-						anchored_type_sorter.force_relation (a_like_type, a_type)
-					end
-					internal_call := True
-					a_target_type.process (Current)
-					internal_call := False
 				end
 			end
+		end
+
+	add_qualified_type_to_sorter (a_type: ET_QUALIFIED_TYPE) is
+			-- Add to `anchored_type_sorter' anchored types whose
+			-- anchors' types are (or contain) also anchored types.
+		do
+				-- We need to process 'like a' in types of
+				-- the form 'like a.b' and 'like {like a}.b'.
+			internal_call := True
+			a_type.target_type.process (Current)
+			internal_call := False
 		end
 
 	add_actual_parameters_to_sorter (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
@@ -235,28 +240,37 @@ feature {ET_AST_NODE} -- Type processing
 	process_qualified_braced_type (a_type: ET_QUALIFIED_BRACED_TYPE) is
 			-- Process `a_type'.
 		do
---			if internal_call then
---				internal_call := False
---				add_qualified_like_type_to_sorter (a_type)
---			end
+			if internal_call then
+				internal_call := False
+				add_qualified_type_to_sorter (a_type)
+			end
 		end
 
 	process_qualified_like_current (a_type: ET_QUALIFIED_LIKE_CURRENT) is
 			-- Process `a_type'.
 		do
--- TODO
+			if internal_call then
+				internal_call := False
+				add_qualified_like_current_to_sorter (a_type)
+			end
 		end
 
 	process_qualified_like_feature (a_type: ET_QUALIFIED_LIKE_FEATURE) is
 			-- Process `a_type'.
 		do
--- TODO
+			if internal_call then
+				internal_call := False
+				add_qualified_type_to_sorter (a_type)
+			end
 		end
 
 	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE) is
 			-- Process `a_type'.
 		do
--- TODO
+			if internal_call then
+				internal_call := False
+				add_qualified_type_to_sorter (a_type)
+			end
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is
