@@ -55,7 +55,7 @@
 		<cluster name="xslt">
 		  <cluster name="patterns"/>
 		  <cluster name="style"/>
-		  <cluster name="events"/>
+		  <cluster name="xslt_events" location="events" relative="true"/>
 		  <cluster name="transformation_support"/>
 		</cluster>
 	</cluster>
