@@ -11,9 +11,6 @@ indexing
 	revision: "$Revision$"
 
 	--xml_specific_lt: "Detection assuming first char is < is XML specific"
-	-- TODO:
-	-- UTF16 surrogate characters
-	-- factorise UTF8 encoding routines
 
 class XM_EIFFEL_UTF16_INPUT_STREAM
 
@@ -23,6 +20,7 @@ inherit
 	KL_SHARED_STANDARD_FILES
 	KL_IMPORTED_STRING_ROUTINES
 	UC_IMPORTED_UTF8_ROUTINES
+	UC_IMPORTED_UTF16_ROUTINES
 
 creation
 
@@ -189,10 +187,10 @@ feature {NONE} -- Implementation
 					second_char := impl.last_character
 						-- Check byte ordering character.
 						-- If found, set found and do not forward as input.
-					if (first_char.code = 254 and second_char.code = 255) then
+					if utf16.is_endian_detection_character_most_first (first_char.code, second_char.code) then
 						is_utf16 := True
 						is_msb_first := True
-					elseif (first_char.code = 255 and second_char.code = 254) then
+					elseif utf16.is_endian_detection_character_least_first (first_char.code, second_char.code) then
 						is_utf16 := True
 						is_msb_first := False
 					elseif (first_char.code = 0 and second_char = Lt_char) then 
@@ -205,7 +203,7 @@ feature {NONE} -- Implementation
 						is_msb_first := False
 						utf_queue.force (Lt_char)
 					else
-							-- Not unicode.
+							-- Not UTF16
 						utf_queue.force (first_char)
 						utf_queue.force (second_char)
 					end
@@ -221,22 +219,57 @@ feature {NONE} -- Implementation
 			not_end: not impl.end_of_input
 		local
 			first_char, second_char: CHARACTER
+			a_most, a_least: INTEGER
+			a_high_surrogate: INTEGER
 		do
+			-- warning: error conditions not handled on premature end of input,
+			-- partial characters do not produce output
+			
 			impl.read_character
 			if not impl.end_of_input then
 				first_char := impl.last_character
 				impl.read_character
 				if not impl.end_of_input then
 					second_char := impl.last_character
-					if is_msb_first then
-						append_character (first_char.code * 256 + second_char.code)
+					a_most := most_significant (first_char, second_char)
+					a_least := least_significant (first_char, second_char)
+
+					-- UTF16 surrogate?
+					if utf16.is_surrogate (a_most) then
+						-- the character is in the surrogate range
+						if utf16.is_high_surrogate (a_most) then
+							-- first value of a surrogate pair
+							a_high_surrogate := utf16.least_10_bits (a_most, a_least)
+							
+							-- now get second part of surrogate pair
+							impl.read_character
+							if not impl.end_of_input then
+								first_char := impl.last_character
+								impl.read_character
+								if not impl.end_of_input then
+									second_char := impl.last_character
+									a_most := most_significant (first_char, second_char)
+									a_least := least_significant (first_char, second_char)
+									if utf16.is_low_surrogate (a_most) then
+										append_character (utf16.surrogate (a_high_surrogate, utf16.least_10_bits (a_most, a_least)))
+									else
+										-- error condition: unexpected second byte of a 
+										-- surrogate pair
+									end
+								end
+							end
+						else
+							-- error condition: unexpected second byte of a 
+							-- surrogate pair.
+						end
 					else
-						append_character (second_char.code * 256 + first_char.code)
+						-- ordinary UTF16 character.
+						append_character (a_most * 256 + a_least)
 					end
 				end
 			end
 		end
-
+		
 	append_character (a_char: INTEGER) is
 			-- Append character from UTF16 code.
 		require
@@ -260,6 +293,34 @@ feature {NONE} -- Implementation
 				utf_queue.force (a_buffer.item (i))
 				i := i + 1
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	most_significant (first, second: CHARACTER): INTEGER is
+			-- Most significant byte from incoming bytes.
+		do
+			if is_msb_first then
+				Result := first.code
+			else
+				Result := second.code
+			end
+		ensure
+			result_byte: Result >= 0 and Result < 256
+			first_or_second: Result = first.code or Result = second.code
+		end
+
+	least_significant (first, second: CHARACTER): INTEGER is
+			-- Least significant byte from incoming bytes.
+		do
+			if is_msb_first then
+				Result := second.code
+			else
+				Result := first.code
+			end
+		ensure
+			result_byte: Result >= 0 and Result < 256
+			first_or_second: Result = first.code or Result = second.code
 		end
 
 feature {NONE} -- Constants
