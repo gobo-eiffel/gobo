@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 		local
 			i: INTEGER
 		do
+			capacity := n
 			make_items (n)
 			make_clashes (n)
 			from
@@ -65,7 +66,6 @@ feature {NONE} -- Initialization
 				slots_put (No_position, i)
 				i := i - 1
 			end
-			capacity := n
 			position := No_position
 			internal_cursor := new_cursor
 		ensure
