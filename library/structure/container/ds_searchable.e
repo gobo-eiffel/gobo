@@ -36,7 +36,7 @@ feature -- Setting
 feature -- Status report
 
 	has (v: G): BOOLEAN is
-			-- Does structure incluse `v'?
+			-- Does structure include `v'?
 			-- (Use `searcher''s comparison criterion.)
 		do
 			Result := searcher.has (Current, v)
