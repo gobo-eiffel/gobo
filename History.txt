@@ -2,20 +2,13 @@ Version 3.2 - ?
 
 	geant:
 
-	* Added optional attribute 'export' which takes
-	  the name of a project or a comma separated
-	  list of project names to which this target
-	  is exported to.
-
-	* Added new commandlineoption -t (--targets)
-	  to list targets and their descriptions.
-
+	* Added optional attribute 'export' which takes a comma separated
+	  list of project names to which the given target is exported.
+	* Added new command-line option -t (--targets) to list targets
+	  and their descriptions.
 	* Added new task <available>.
-
 	* Added subelement <directoryset> to task <delete>.
-
 	* Added attributes 'class' and 'feature' to task task <getest>.
-
 	* The task <hact> now takes advantage of Halstenbach incremental
 	  compiler.
 
@@ -24,7 +17,9 @@ Version 3.2 - ?
 	* Added command-line options --class and --feature to pass
 	  the regexps for tested class names and feature names as
 	  argument instead of through the 'class' and 'feature'
-	  fields of the config file.
+	  fields of the config file (needed by Guy Fokou).
+	* Better formatting of the message when `assert_equal' or
+	  `assert_not_equal' fail (suggested by Berend de Boer).
 
 Version 3.1 - 18 December 2002
 
