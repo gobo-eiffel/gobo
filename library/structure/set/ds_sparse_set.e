@@ -375,7 +375,7 @@ feature -- Element change
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Resize set if necessary.
-			-- Move cursors `off' when resizing.
+			-- Do not move cursors.
 		local
 			i, h: INTEGER
 		do
@@ -404,7 +404,7 @@ feature -- Element change
 			-- (Use `equality_tester''s comparison criterion
 			-- if not void, use `=' criterion otherwise.)
 			-- Resize set if necessary.
-			-- Move cursors `off' when resizing.
+			-- Do not move cursors.
 		require
 			new_item: not has (v)
 		local
@@ -593,11 +593,10 @@ feature -- Resizing
 	resize (n: INTEGER) is
 			-- Resize set so that it can contain
 			-- at least `n' items. Do not lose any item.
-			-- Move all cursors `off'.
+			-- Do not move cursors.
 		local
 			i, h: INTEGER
 		do
-			move_all_cursors_after
 			unset_found_item
 			modulus := new_modulus (n)
 			slots := FIXED_INTEGER_ARRAY_.resize (slots, modulus + 1)

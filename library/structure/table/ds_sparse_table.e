@@ -521,7 +521,7 @@ feature -- Element change
 	force (v: G; k: K) is
 			-- Associate `v' with key `k'.
 			-- Resize table if necessary.
-			-- Move cursors `off' when resizing.
+			-- Do not move cursors.
 		local
 			i, h: INTEGER
 		do
@@ -549,7 +549,7 @@ feature -- Element change
 	force_new (v: G; k: K) is
 			-- Associate `v' with key `k'.
 			-- Resize table if necessary.
-			-- Move cursors `off' when resizing.
+			-- Do not move cursors.
 		local
 			i, h: INTEGER
 		do
@@ -633,11 +633,10 @@ feature -- Resizing
 	resize (n: INTEGER) is
 			-- Resize table so that it can contain
 			-- at least `n' items. Do not lose any item.
-			-- Move all cursors `off'.
+			-- Do not move cursors.
 		local
 			i, h: INTEGER
 		do
-			move_all_cursors_after
 			unset_found_item
 			modulus := new_modulus (n)
 			slots := FIXED_INTEGER_ARRAY_.resize (slots, modulus + 1)
