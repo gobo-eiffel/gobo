@@ -91,35 +91,35 @@ feature {NONE} -- Tables
 
 	yy_nxt_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,    4,    5,    6,    7,    9,    8,   10,    3,   10,
 			   10,   10,   10>>, 0)
 		end
 
 	yy_chk_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,    1,    1,    1,    1,   12,   11,    3,   10,   10,
 			   10,   10,   10>>, 0)
 		end
 
 	yy_base_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,    0,    0,    7,    8,    0,    8,    0,    0,    0,
 			    8,    4,    2>>, 0)
 		end
 
 	yy_def_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,   10,    1,   10,   10,   11,   10,   12,   11,   12,
 			    0,   10,   10>>, 0)
 		end
 
 	yy_ec_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
 			    3,    1,    1,    2,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -152,13 +152,13 @@ feature {NONE} -- Tables
 
 	yy_meta_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,    1,    2,    1,    3>>, 0)
 		end
 
 	yy_accept_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,    0,    0,    6,    4,    1,    2,    3,    1,    3,
 			    0>>, 0)
 		end

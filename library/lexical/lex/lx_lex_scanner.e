@@ -798,7 +798,7 @@ feature {NONE} -- Tables
 
 	yy_nxt_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,  392,   39,   40,   39,  119,  119,  120,  120,  136,
 			  392,  136,   41,   38,   39,   40,   39,   38,   38,   42,
 			   38,   38,   38,   38,   41,   38,   38,   38,   38,   38,
@@ -980,7 +980,7 @@ feature {NONE} -- Tables
 
 	yy_chk_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,    0,    1,    1,    1,   31,   32,   31,   32,   39,
 			    0,   39,    1,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -1162,7 +1162,7 @@ feature {NONE} -- Tables
 
 	yy_base_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,    0,   12,   60,  108,    0,    0,   61,   70,  157,
 			    0, 1553, 1552,  206,    0,    0,    0,   77,   82,   84,
 			   95,  255,    0,   71,   87,  137,  140,   80,  103,  302,
@@ -1216,7 +1216,7 @@ feature {NONE} -- Tables
 
 	yy_def_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,  393,  392,  394,  394,  395,  395,  396,  396,  392,
 			    9,  397,  397,  392,   13,   13,   13,  398,  398,  399,
 			  399,  392,   21,  400,  400,  401,  401,  402,  402,  403,
@@ -1270,7 +1270,7 @@ feature {NONE} -- Tables
 
 	yy_ec_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
 			    3,    1,    1,    4,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -1303,7 +1303,7 @@ feature {NONE} -- Tables
 
 	yy_meta_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,    1,    1,    2,    3,    4,    1,    5,    6,    1,
 			    1,    1,    7,    1,    8,    9,    1,    1,    1,   10,
 			   10,   10,   10,   10,   10,   11,   12,   11,   11,   11,
@@ -1313,7 +1313,7 @@ feature {NONE} -- Tables
 
 	yy_accept_: ARRAY [INTEGER] is
 		once
-			Result := integer_array_.make_from_array (<<
+			Result := INTEGER_ARRAY_.make_from_array (<<
 			    0,    0,    0,    0,    0,    0,    0,   11,   11,    0,
 			    0,   50,   50,    0,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
