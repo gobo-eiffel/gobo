@@ -140,6 +140,14 @@ feature -- Statut setting
 			use_reference_keyword_set: use_reference_keyword = b
 		end
 
+	set_keep_all_breaks (b: BOOLEAN) is
+			-- Set `keep_all_breaks' to `b'.
+		do
+			keep_all_breaks := b
+		ensure
+			keep_all_breaks_set: keep_all_breaks = b
+		end
+
 feature {NONE} -- AST factory
 
 	new_bit_constant (a_literal: STRING): ET_BIT_CONSTANT is
@@ -151,6 +159,16 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_bit_constant (a_literal, line, column)
 		ensure
 			bit_constant_not_void: Result /= Void
+		end
+
+	new_break (a_text: STRING): ET_BREAK is
+			-- New break
+		require
+			a_text_not_void: a_text /= Void
+		do
+			Result := ast_factory.new_break (a_text, line, column)
+		ensure
+			break_not_void: Result /= Void
 		end
 
 	new_c2_character_constant (a_value: CHARACTER): ET_CHARACTER_CONSTANT is
@@ -178,6 +196,16 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_c1_character_constant (a_value, line, column)
 		ensure
 			character_constant_not_void: Result /= Void
+		end
+
+	new_comment (a_text: STRING): ET_COMMENT is
+			-- New comment
+		require
+			a_text_not_void: a_text /= Void
+		do
+			Result := ast_factory.new_comment (a_text, line, column)
+		ensure
+			comment_not_void: Result /= Void
 		end
 
 	new_current (a_text: STRING): ET_CURRENT is
@@ -242,6 +270,17 @@ feature {NONE} -- AST factory
 		ensure
 			free_operator_not_void: Result /= Void
 			is_prefix: Result.is_prefix
+		end
+
+	new_hexadecimal_integer_constant (a_literal: STRING): ET_INTEGER_CONSTANT is
+			-- New integer constant in hexadecimal format
+		require
+			a_literal_not_void: a_literal /= Void
+			-- valid_literal: regexp: 0x[0-9a-fA-F]+
+		do
+			Result := ast_factory.new_hexadecimal_integer_constant (a_literal, current_position)
+		ensure
+			integer_constant_not_void: Result /= Void
 		end
 
 	new_identifier (a_text: STRING): ET_IDENTIFIER is
@@ -744,7 +783,7 @@ feature {NONE} -- Constants
 	local_keyword: STRING is "local"
 	loop_keyword: STRING is "loop"
 	not_keyword: STRING is "not"
-	obsolete_keyword: STRING is "obsolet"
+	obsolete_keyword: STRING is "obsolete"
 	old_keyword: STRING is "old"
 	once_keyword: STRING is "once"
 	or_keyword: STRING is "or"

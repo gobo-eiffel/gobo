@@ -29,13 +29,22 @@ creation
 
 ----------/** Separators **/----------------------------------------------------
 
-[ \t\r]+		-- Ignore spaces.
-\n+				-- Ignore new-lines.
+[ \t\r\n]+	{
+				if keep_all_breaks then
+					last_token := E_BREAK
+					last_value := new_break (text)
+				end
+			}
 
 
 ----------/** Eiffel comments **/-----------------------------------------------
 
-"--".*			-- Ignore comments.
+([ \t\r\n]|"--".*)+	{
+				if keep_all_breaks then
+					last_token := E_BREAK
+					last_value := new_comment (text)
+				end
+			}
 
 
 ----------/** Eiffel symbols **/------------------------------------------------
@@ -1189,6 +1198,10 @@ _(_*[0-9_]+_*)+	{
 				last_value := new_underscored_integer_constant (text)
 			}
 
+0x[0-9a-fA-F]+		{
+				last_token := E_INTEGER
+				last_value := new_hexadecimal_integer_constant (text)
+			}
 
 ---------/** Eiffel reals **/---------------------------------------------------
 

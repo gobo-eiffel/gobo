@@ -179,6 +179,18 @@ feature -- AST factory
 			type_not_void: Result /= Void
 		end
 
+	new_break (a_text: STRING; a_line, a_column: INTEGER): ET_BREAK is
+			-- New break
+		require
+			a_text_not_void: a_text /= Void
+			a_line_positive: a_line >= 0
+			a_column_positive: a_column >= 0
+		do
+			!! Result.make_with_position (a_text, a_line, a_column)
+		ensure
+			break_not_void: Result /= Void
+		end
+
 	new_c1_character_constant (a_value: CHARACTER; a_line, a_column: INTEGER): ET_C1_CHARACTER_CONSTANT is
 			-- New character constant of the form 'A'
 		require
@@ -441,6 +453,18 @@ feature -- AST factory
 			!! Result.make (a_name, a_type)
 		ensure
 			comma_local_variable_not_void: Result /= Void
+		end
+
+	new_comment (a_text: STRING; a_line, a_column: INTEGER): ET_COMMENT is
+			-- New comment
+		require
+			a_text_not_void: a_text /= Void
+			a_line_positive: a_line >= 0
+			a_column_positive: a_column >= 0
+		do
+			!! Result.make_with_position (a_text, a_line, a_column)
+		ensure
+			comment_not_void: Result /= Void
 		end
 
 	new_compound (a_keyword: ET_TOKEN): ET_COMPOUND is
@@ -1145,6 +1169,18 @@ feature -- AST factory
 			!! Result.make (a_type_mark, a_name, a_generics)
 		ensure
 			generic_named_type_not_void: Result /= Void
+		end
+
+	new_hexadecimal_integer_constant (a_literal: STRING; a_position: ET_POSITION): ET_HEXADECIMAL_INTEGER_CONSTANT is
+			-- New integer constant in hexadecimal format
+		require
+			a_literal_not_void: a_literal /= Void
+			-- valid_literal: regexp: 0x[0-9a-fA-F]+
+			a_position_not_void: a_position /= Void
+		do
+			!! Result.make (a_literal, a_position)
+		ensure
+			integer_constant_not_void: Result /= Void
 		end
 
 	new_identifier (a_text: STRING; a_line, a_column: INTEGER): ET_IDENTIFIER is
