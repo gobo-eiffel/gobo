@@ -385,7 +385,7 @@ doctype_decl_external: DOCTYPE_START req_space doctype_name req_space external_i
 	 {
 		on_doctype ($3, $5, False)
 		debug ("xml_parser")
-			std.output.put_string ("[dtd: in]")
+			std.error.put_string ("[dtd: in]")
 		end
 		in_external_dtd := True
 		when_external_dtd ($5) 
@@ -400,7 +400,7 @@ doctype_decl_dtd: DOCTYPE_DECLARATION_START text_decl doctype_decl_dtd_content D
 				force_error (Error_misplaced_dtd_declaration)
 			end
 			debug ("xml_parser")
-				std.output.put_string ("[dtd: out]")
+				std.error.put_string ("[dtd: out]")
 			end
 			in_external_dtd := False
 		}
