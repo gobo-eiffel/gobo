@@ -4,7 +4,7 @@
 
 	<description>
 		system: "Regular expression test"
-		copyright: "Copyright (c) 2002, Harald Erdbruegger and others"
+		copyright: "Copyright (c) 2002, Harald Erdbrügger and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
