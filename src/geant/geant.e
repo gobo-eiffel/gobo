@@ -16,6 +16,8 @@ class GEANT
 
 inherit
 
+	GEANT_VERSION
+
 	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
 
@@ -23,6 +25,7 @@ inherit
 		export {NONE} all end
 
 	KL_SHARED_ARGUMENTS
+	KL_SHARED_EXCEPTIONS
 
 creation
 
@@ -34,13 +37,113 @@ feature {NONE} -- Initialization
 			-- Execute 'geant'.
 		local
 			a_project: GEANT_PROJECT
+			ucs		: UC_STRING
 		do
 			Arguments.set_program_name ("geant")
-			!! a_project.make
+			!! error_handler.make_standard
+			read_command_line
+
+			if build_filename /= void and then build_filename.count > 0 then
+				!! ucs.make_from_string(build_filename)
+				!! a_project.make_with_filename(ucs)
+			else
+				!! a_project.make
+			end
+
+			if start_target_name /= void and then start_target_name.count > 0 then
+				!! ucs.make_from_string(start_target_name)
+				a_project.set_start_target_name(ucs)
+			end
+
 			a_project.load
 			if a_project.targets /= Void then
 				a_project.build
+				if not a_project.build_successful then
+					print("Build FAILED!%N")
+					Exceptions.die (1)
+				end
 			end
 		end
+
+
+feature -- Access
+
+	error_handler: UT_ERROR_HANDLER
+			-- Error handler
+
+	build_filename: STRING
+			-- Build filename for geant.
+
+	start_target_name: STRING
+			-- Name of the target the build process starts with
+
+
+	read_command_line is
+			-- Read command line arguments.
+		local
+			i, nb: INTEGER
+			arg: STRING
+		do
+			nb := Arguments.argument_count
+			from i := 1 until i > nb loop
+				arg := Arguments.argument (i)
+				if arg.is_equal ("--version") or arg.is_equal ("-V") then
+					report_version_number
+				elseif arg.is_equal ("--help") or arg.is_equal ("-h") or arg.is_equal ("-?") then
+					report_usage_message
+				elseif arg.is_equal ("-b") then
+					i := i + 1
+					if i > nb then
+						report_usage_error
+					else
+						build_filename := Arguments.argument (i)
+					end
+				elseif arg.count > 16 and then arg.substring (1, 16).is_equal ("--buildfilename=") then
+					build_filename := arg.substring (16, arg.count)
+				elseif i = nb then
+					start_target_name := arg
+				else
+					report_usage_error
+				end
+				i := i + 1
+			end
+		end
+
+feature {NONE} -- Error handling
+
+	report_usage_error is
+			-- Report usage error and then terminate
+			-- with exit status 1.
+		do
+			error_handler.report_error (Usage_message)
+			Exceptions.die (1)
+		end
+
+	report_usage_message is
+			-- Report usage message and exit.
+		do
+			error_handler.report_message (Usage_message)
+			Exceptions.die (0)
+		end
+
+	report_version_number is
+			-- Report version number and exit.
+		local
+			a_message: UT_VERSION_NUMBER
+		do
+			!! a_message.make (Version_number)
+			error_handler.report_message (a_message)
+			Exceptions.die (0)
+		end
+
+	Usage_message: UT_USAGE_MESSAGE is
+			-- Geant usage message
+		once
+			!! Result.make ("[-hV?][-b buildfilename] [target]")
+		ensure
+			usage_message_not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
 
 end -- class GEANT
