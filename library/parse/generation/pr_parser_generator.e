@@ -49,10 +49,11 @@ feature -- Access
 
 feature -- Generation
 
-	print_parser (tokens_needed: BOOLEAN; a_file: like OUTPUT_STREAM_TYPE) is
+	print_parser (tokens_needed, actions_separated: BOOLEAN; a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print code for corresponding parser to `a_file'.
 			-- Print the token codes with the parser class text
-			-- if `tokens_needed' is true.
+			-- if `tokens_needed' is true, and the semantic actions
+			-- in individual routines if `actions_separated' is true.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
@@ -65,8 +66,12 @@ feature -- Generation
 			a_file.put_string ("%Nfeature {NONE} -- Implementation%N%N")
 			print_build_parser_tables (a_file)
 			a_file.put_string ("%Nfeature {NONE} -- Semantic actions%N%N")
-			print_actions (a_file)
-			a_file.put_string ("%Nfeature {NONE} -- Tables%N%N")
+			if actions_separated then
+				print_separated_actions (a_file)
+			else
+				print_actions (a_file)
+			end
+			a_file.put_string ("%Nfeature {NONE} -- Table templates%N%N")
 			print_eiffel_tables (a_file)
 			a_file.put_string ("%Nfeature {NONE} -- Constants%N%N")
 			print_constants (a_file)
@@ -166,15 +171,15 @@ feature {NONE} -- Generation
 		do
 			a_file.put_string ("%Tyy_build_parser_tables is%N%
 				%%T%T%T-- Build parser tables.%N%T%Tdo%N%
-				%%T%T%Tyytranslate := yytranslate_%N%
-				%%T%T%Tyyr1 := yyr1_%N%
-				%%T%T%Tyyr2 := yyr2_%N%
-				%%T%T%Tyydefact := yydefact_%N%
-				%%T%T%Tyydefgoto := yydefgoto_%N%
-				%%T%T%Tyypact := yypact_%N%
-				%%T%T%Tyypgoto := yypgoto_%N%
-				%%T%T%Tyytable := yytable_%N%
-				%%T%T%Tyycheck := yycheck_%N%
+				%%T%T%Tyytranslate ?= yytranslate_template%N%
+				%%T%T%Tyyr1 ?= yyr1_template%N%
+				%%T%T%Tyyr2 ?= yyr2_template%N%
+				%%T%T%Tyydefact ?= yydefact_template%N%
+				%%T%T%Tyydefgoto ?= yydefgoto_template%N%
+				%%T%T%Tyypact ?= yypact_template%N%
+				%%T%T%Tyypgoto ?= yypgoto_template%N%
+				%%T%T%Tyytable ?= yytable_template%N%
+				%%T%T%Tyycheck ?= yycheck_template%N%
 				%%T%Tend%N")
 		end
 
@@ -184,23 +189,23 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		do
-			print_eiffel_array ("yytranslate_", yytranslate, a_file)
+			print_eiffel_array ("yytranslate_template", yytranslate, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yyr1_", yyr1, a_file)
+			print_eiffel_array ("yyr1_template", yyr1, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yyr2_", yyr2, a_file)
+			print_eiffel_array ("yyr2_template", yyr2, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yydefact_", yydefact, a_file)
+			print_eiffel_array ("yydefact_template", yydefact, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yydefgoto_", yydefgoto, a_file)
+			print_eiffel_array ("yydefgoto_template", yydefgoto, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yypact_", yypact, a_file)
+			print_eiffel_array ("yypact_template", yypact, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yypgoto_", yypgoto, a_file)
+			print_eiffel_array ("yypgoto_template", yypgoto, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yytable_", yytable, a_file)
+			print_eiffel_array ("yytable_template", yytable, a_file)
 			a_file.put_character ('%N')
-			print_eiffel_array ("yycheck_", yycheck, a_file)
+			print_eiffel_array ("yycheck_template", yycheck, a_file)
 		end
 
 	print_eiffel_array (a_name: STRING; a_table: ARRAY [INTEGER]; a_file: like OUTPUT_STREAM_TYPE) is
@@ -208,21 +213,23 @@ feature {NONE} -- Generation
 		require
 			a_name_not_void: a_name /= Void
 			a_table_not_void: a_table /= Void
+			zero_based_table: a_table.lower = 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
 		do
 			a_file.put_character ('%T')
 			a_file.put_string (a_name)
-			a_file.put_string (": ARRAY [INTEGER] is%N%T%Tonce%N%
-				%%T%T%TResult := INTEGER_ARRAY_.make_from_array (<<%N")
+			a_file.put_string (": ANY is%N%
+				%%T%T%T-- This is supposed to be %"like FIXED_INTEGER_ARRAY_TYPE%",%N%
+				%%T%T%T-- but once functions cannot be declared with anchored types.%N%
+				%%T%Tonce%N%T%T%TResult := yyfixed_array (<<%N")
 			ARRAY_FORMATTER_.put_integer_array (a_file, a_table, a_table.lower, a_table.upper)
-			a_file.put_string (">>, ")
-			a_file.put_integer (a_table.lower)
-			a_file.put_string (")%N%T%Tend%N")
+			a_file.put_string (">>)%N%T%Tend%N")
 		end
 
 	print_actions (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print code for actions to `a_file'.
+			-- Print all actions in one routine.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
@@ -253,6 +260,56 @@ feature {NONE} -- Generation
 			end
 			a_file.put_string ("%T%T%Telse%N%T%T%T%T-- No action%N%
 				%%T%T%Tend%N%T%Tend%N")
+		end
+
+	print_separated_actions (a_file: like OUTPUT_STREAM_TYPE) is
+			-- Print code for actions to `a_file'.
+			-- Print each action into an individual routine.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+		local
+			i, nb: INTEGER
+			rules: DS_ARRAYED_LIST [PR_RULE]
+			a_rule: PR_RULE
+			an_action: STRING
+		do
+			a_file.put_string ("%Tyy_do_action (yy_act: INTEGER) is%N%
+				%%T%T%T-- Execute semantic action.%N%
+				%%T%Tdo%N%T%T%Tinspect yy_act%N")
+			rules := machine.grammar.rules
+			nb := rules.count
+			from i := 1 until i > nb loop
+				a_rule := rules.item (i)
+				an_action := a_rule.action.out
+				if not an_action.empty then
+					a_file.put_string ("when ")
+					a_file.put_integer (a_rule.id)
+					a_file.put_string (" then%N--|#line ")
+					a_file.put_integer (a_rule.line_nb)
+					a_file.put_string ("%N%T")
+					a_file.put_string ("yy_do_action_")
+					a_file.put_integer (i)
+					a_file.put_character ('%N')
+				end
+				i := i + 1
+			end
+			a_file.put_string ("%T%T%Telse%N%T%T%T%T-- No action%N%
+				%%T%T%Tend%N%T%Tend%N")
+			from i := 1 until i > nb loop
+				a_rule := rules.item (i)
+				an_action := a_rule.action.out
+				if not an_action.empty then
+					a_file.put_string ("%N%Tyy_do_action_")
+					a_file.put_integer (i)
+					a_file.put_string (" is%N%T%T%T--|#line ")
+					a_file.put_integer (a_rule.line_nb)
+					a_file.put_string ("%N%T%Tdo%N")
+					a_file.put_string (an_action)
+					a_file.put_string ("%N%T%Tend%N")
+				end
+				i := i + 1
+			end
 		end
 
 	print_constants (a_file: like OUTPUT_STREAM_TYPE) is
