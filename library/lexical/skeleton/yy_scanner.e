@@ -223,13 +223,13 @@ feature -- Input
 			flushed: input_buffer.count = 0
 		end
 
-	new_file_buffer (a_file: like INPUT_STREAM_TYPE): YY_BUFFER is
+	new_file_buffer (a_file: like INPUT_STREAM_TYPE): YY_FILE_BUFFER is
 			-- New input buffer for `a_file'
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: INPUT_STREAM_.is_open_read (a_file)
 		do
-			!YY_FILE_BUFFER! Result.make (a_file)
+			!! Result.make (a_file)
 		ensure
 			new_buffer_not_void: Result /= Void
 		end
@@ -264,13 +264,13 @@ feature -- Output
 
 feature -- Error handling
 
-	fatal_error (message: STRING) is
+	fatal_error (a_message: STRING) is
 			-- A fatal error occurred.
-			-- Print `message' and raise an exception.
+			-- Print `a_message' and raise an exception.
 		require
-			message_not_void: message /= Void
+			a_message_not_void: a_message /= Void
 		do
-			std.error.put_string (message)
+			std.error.put_string (a_message)
 			std.error.put_character ('%N')
 -- TO DO: Exceptions are not standard among compiler vendors.
 		end
