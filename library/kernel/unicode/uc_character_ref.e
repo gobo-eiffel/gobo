@@ -188,7 +188,7 @@ feature {UCCHAR_REF} -- Implementation
    code_to_character (i: INTEGER): CHARACTER is
          -- convert code position `i' to `CHARACTER'
       do
-	 Result := specific.code_to_character(i)
+	 Result := specific.to_character(i)
       end
 
    specific: KL_INTEGER_ROUTINES is
