@@ -1503,7 +1503,7 @@ feature {ET_AST_NODE} -- Processing
 	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION) is
 			-- Process `an_instruction'.
 		local
-			an_invariant_part: ET_INVARIANTS
+			an_invariant_part: ET_LOOP_INVARIANTS
 			a_variant_part: ET_VARIANT
 			a_compound: ET_COMPOUND
 		do
