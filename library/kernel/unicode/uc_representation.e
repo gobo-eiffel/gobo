@@ -71,7 +71,7 @@ feature
 	 -- want to append the code, use `idx' = `count' + 1.
       require
 	 valid_idx: valid_index(idx) or else idx = count + 1;
-	 valid code: valid_ocde(code);
+	 valid_code: valid_code(code);
       deferred
       ensure
 	 count = (old count) + 1
