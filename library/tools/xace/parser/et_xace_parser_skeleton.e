@@ -77,6 +77,39 @@ feature -- Access
 			no_void_library: not Result.has_item (Void)
 		end
 
+feature -- Status report
+
+	is_shallow: BOOLEAN
+			-- Should parsing of Xace files not follow mounted libraries?
+
+	is_ve: BOOLEAN
+			-- Should parsing of Xace files not follow mounted libraries
+			-- whose pathnames contains ${VE_Lib}?
+
+feature -- Status setting
+
+	set_shallow (b: BOOLEAN) is
+			-- Set `is_shallow' to `b'.
+		do
+			is_shallow := b
+			if library_parser.is_shallow /= b then
+				library_parser.set_shallow (b)
+			end
+		ensure
+			shallow_set: is_shallow = b
+		end
+
+	set_ve (b: BOOLEAN) is
+			-- Set `is_ve' to `b'.
+		do
+			is_ve := b
+			if library_parser.is_ve /= b then
+				library_parser.set_ve (b)
+			end
+		ensure
+			ve_set: is_ve = b
+		end
+
 feature {NONE} -- AST factory
 
 	new_system (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_SYSTEM is
@@ -326,14 +359,16 @@ feature {NONE} -- AST factory
 					else
 						a_library := ast_factory.new_library
 						parsed_libraries.force_new (a_library, a_pathname)
-						a_filename := Execution_environment.interpreted_string (a_pathname)
-						create a_file.make (a_filename)
-						a_file.open_read
-						if a_file.is_open_read then
-							library_parser.parse_library (a_library, a_file)
-							a_file.close
-						else
-							error_handler.report_cannot_read_file_error (a_pathname)
+						if not is_shallow and then (not is_ve or else not a_pathname.has_substring ("${VE_Lib}")) then
+							a_filename := Execution_environment.interpreted_string (a_pathname)
+							create a_file.make (a_filename)
+							a_file.open_read
+							if a_file.is_open_read then
+								library_parser.parse_library (a_library, a_file)
+								a_file.close
+							else
+								error_handler.report_cannot_read_file_error (a_pathname)
+							end
 						end
 					end
 					Result := ast_factory.new_mounted_library (a_pathname, a_library, a_position_table.item (an_element))

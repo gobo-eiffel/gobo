@@ -140,8 +140,6 @@ feature {NONE} -- Precompilation
 			-- Test precompilation with Visual Eiffel.
 		local
 			ve_4_1: STRING
-			ve_os: STRING
-			l_define: STRING
 		do
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
@@ -150,20 +148,12 @@ feature {NONE} -- Precompilation
 			ve_4_1 := Execution_environment.variable_value ("VE_4_1")
 			if ve_4_1 /= Void and then ve_4_1.count > 0 then
 					-- Generate ELD file.
-				assert_execute ("gexace --define=%"VE_4_1%" --library=ve " + xace_filename + output_log)
+				assert_execute ("gexace --define=%"VE_4_1%" --library=ve41 " + xace_filename + output_log)
 					-- Eiffel precompilation.
 				assert_execute ("vec -no -p:ve.eld" + output_log)
 			else
-				ve_os := Execution_environment.variable_value ("VE_OS")
-				if ve_os /= Void and then ve_os.count > 0 then
-					l_define := "--define=%"GOBO_EIFFEL=ve VE_OS=" + ve_os + "%""
-				elseif operating_system.is_windows then
-					l_define := "--define=%"GOBO_EIFFEL=ve VE_OS=Win32%""
-				else
-					l_define := "--define=%"GOBO_EIFFEL=ve VE_OS=Linux%""
-				end
 					-- Generate Xace file.
-				assert_execute ("gexace " + l_define + " --library=xml --output=ve.xace " + xace_filename + output_log)
+				assert_execute ("gexace --library=ve " + xace_filename + output_log)
 					-- Eiffel precompilation.
 				assert_execute ("vec -no -p:ve.xace" + output_log)
 			end

@@ -145,6 +145,7 @@ feature {NONE} -- Command-line processing
 			a_compiler: STRING
 		do
 			create a_command.make (variables, error_handler)
+			a_command.set_shallow (is_shallow)
 			commands.force_last (a_command)
 			if is_next_option_long_option and then has_next_option_value then
 				a_compiler := next_option_value
@@ -168,6 +169,7 @@ feature {NONE} -- Command-line processing
 			a_compiler: STRING
 		do
 			create a_command.make (variables, error_handler)
+			a_command.set_shallow (is_shallow)
 			commands.force_last (a_command)
 			if is_next_option_long_option and then has_next_option_value then
 				a_compiler := next_option_value
@@ -191,6 +193,7 @@ feature {NONE} -- Command-line processing
 			a_compiler: STRING
 		do
 			create a_command.make (variables, error_handler)
+			a_command.set_shallow (is_shallow)
 			commands.force_last (a_command)
 			if is_next_option_long_option and then has_next_option_value then
 				a_compiler := next_option_value
@@ -213,6 +216,7 @@ feature {NONE} -- Command-line processing
 			a_command: GEXACE_VALIDATE_COMMAND
 		do
 			create a_command.make (variables, error_handler)
+			a_command.set_shallow (is_shallow)
 			commands.force_last (a_command)
 			consume_option
 			process_xace_file (a_command)
@@ -242,11 +246,14 @@ feature {NONE} -- Command-line processing
 				variables.force_last ("ve", "GOBO_EIFFEL")
 				create {ET_XACE_VE_GENERATOR} g.make (variables, error_handler)
 				a_command.generators.force_last (g)
+				a_command.set_ve (True)
+			elseif a_compiler.is_equal ("ve41") then
+				variables.force_last ("ve", "GOBO_EIFFEL")
+				create {ET_XACE_VE41_GENERATOR} g.make (variables, error_handler)
+				a_command.generators.force_last (g)
 			elseif a_compiler.is_equal ("xml") then
 				create l_xml_generator.make (variables, error_handler)
-				if not is_shallow then
-					l_xml_generator.set_flat (True)
-				end
+				l_xml_generator.set_shallow (is_shallow)
 				a_command.generators.force_last (l_xml_generator)
 			end
 			if a_command.generators.is_empty then
@@ -330,8 +337,8 @@ feature {NONE} -- Usage message
 			create Result.make ("[defines][options] command [xace-file]%N%
 				%%Tdefines:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 				%%Toptions:  --verbose|--shallow%N%
-				%%Tcommand:  --system=(se|ise|ve|xml) [--output=<filename>]%N%
-				%%Tcommand:  --library=(se|ise|ve|xml) [--output=<filename>]%N%
+				%%Tcommand:  --system=(se|ise|ve|ve41|xml) [--output=<filename>]%N%
+				%%Tcommand:  --library=(se|ise|ve|ve41|xml) [--output=<filename>]%N%
 				%%Tcommand:  --validate")
 		ensure
 			usage_message_not_void: Result /= Void

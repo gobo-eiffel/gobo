@@ -48,6 +48,8 @@ feature -- Execution
 			a_file: KL_TEXT_INPUT_FILE
 		do
 			create a_parser.make_with_variables (variables, error_handler)
+			a_parser.set_shallow (is_shallow)
+			a_parser.set_ve (is_ve)
 			create a_file.make (xace_filename)
 			a_file.open_read
 			if a_file.is_open_read then

@@ -25,25 +25,32 @@ creation
 
 feature -- Access
 
-	default_system_output_filename: STRING is "xace.xml"
+	default_system_output_filename: STRING is
 			-- Name of generated XML file
+		once
+			Result := "xace.xml"
+		end
 
-	default_library_output_filename: STRING is "xace.xml"
+	default_library_output_filename: STRING is
 			-- Name of generated library XML file
+		once
+			Result := "xace.xml"
+		end
 
 feature -- Status report
 
-	is_flat: BOOLEAN
-			-- Does current generator generate flat Xace files?
+	is_shallow: BOOLEAN
+			-- Does current generator generate Xace files
+			-- which do follow mounted libraries?
 
 feature -- Status setting
 
-	set_flat (b: BOOLEAN) is
-			-- set `is_flat' to `b'.
+	set_shallow (b: BOOLEAN) is
+			-- set `is_shallow' to `b'.
 		do
-			is_flat := b
+			is_shallow := b
 		ensure
-			flat_set: is_flat = b
+			shallow_set: is_shallow = b
 		end
 
 feature -- Output
@@ -93,16 +100,15 @@ feature {NONE} -- Output
 			an_option := a_system.options
 			if an_option /= Void then
 				print_options (an_option, 1, a_file)
+				print_console_application_option (an_option, 1, a_file)
 			end
 			a_clusters := a_system.clusters
 			if a_clusters /= Void then
 				print_clusters (a_clusters, 1, a_file)
 			end
-			if not is_flat then
-				a_mounted_libraries := a_system.libraries
-				if a_mounted_libraries /= Void then
-					print_mounted_libraries (a_mounted_libraries, 1, a_file)
-				end
+			a_mounted_libraries := a_system.libraries
+			if a_mounted_libraries /= Void then
+				print_mounted_libraries (a_mounted_libraries, 1, a_file)
 			end
 			a_file.put_line ("</system>")
 		end
@@ -125,7 +131,7 @@ feature {NONE} -- Output
 			a_file.put_new_line
 			a_file.put_string ("<library name=%"")
 			print_quote_escaped_string (a_library.name, a_file)
-			if not is_flat then
+			if is_shallow then
 				a_prefix := a_library.library_prefix
 				if a_prefix.count > 0 then
 					a_file.put_string ("%" prefix=%"")
@@ -136,16 +142,15 @@ feature {NONE} -- Output
 			an_option := a_library.options
 			if an_option /= Void then
 				print_options (an_option, 1, a_file)
+				print_console_application_option (an_option, 1, a_file)
 			end
 			a_clusters := a_library.clusters
 			if a_clusters /= Void then
 				print_clusters (a_clusters, 1, a_file)
 			end
-			if not is_flat then
-				a_mounted_libraries := a_library.libraries
-				if a_mounted_libraries /= Void then
-					print_mounted_libraries (a_mounted_libraries, 1, a_file)
-				end
+			a_mounted_libraries := a_library.libraries
+			if a_mounted_libraries /= Void then
+				print_mounted_libraries (a_mounted_libraries, 1, a_file)
 			end
 			a_file.put_line ("</library>")
 		end
@@ -721,6 +726,16 @@ feature {NONE} -- Output
 			end
 		end
 
+	print_console_application_option (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print option 'console_application' to `a_file' if not already done.
+		require
+			an_option_not_void: an_option /= Void
+			indent_positive: indent >= 0
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+		end
+
 	print_clusters (a_clusters: ET_XACE_CLUSTERS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print `a_clusters' to `a_file'.
 		require
@@ -761,7 +776,7 @@ feature {NONE} -- Output
 			a_cluster_prefix: STRING
 			a_library_prefix: STRING
 		do
-			if is_flat or else not a_cluster.is_mounted then
+			if not is_shallow or else not a_cluster.is_mounted then
 				print_indentation (indent, a_file)
 				a_file.put_string ("<cluster name=%"")
 				print_quote_escaped_string (a_cluster.name, a_file)
@@ -779,7 +794,7 @@ feature {NONE} -- Output
 				a_parent := a_cluster.parent
 				if a_parent = Void or else not STRING_.same_string (a_parent.cluster_prefix, a_cluster_prefix) then
 					a_library_prefix := a_cluster.library_prefix
-					if not a_library_prefix.is_empty and (a_cluster.is_mounted or is_flat) then
+					if not a_library_prefix.is_empty and (a_cluster.is_mounted or not is_shallow) then
 						a_file.put_string ("%" prefix=%"")
 						print_quote_escaped_string (a_library_prefix, a_file)
 						if not a_cluster_prefix.is_empty then
@@ -881,17 +896,19 @@ feature {NONE} -- Output
 			library_list: DS_ARRAYED_LIST [ET_XACE_MOUNTED_LIBRARY]
 			a_library: ET_XACE_MOUNTED_LIBRARY
 		do
-			library_list := a_mounted_libraries.libraries
-			nb := library_list.count
-			from i := 1 until i > nb loop
-				a_library := library_list.item (i)
-				if a_library.is_root then
-					print_indentation (indent, a_file)
-					a_file.put_string ("<mount location=%"")
-					print_quote_escaped_string (a_library.pathname, a_file)
-					a_file.put_line ("%"/>")
+			if is_shallow then
+				library_list := a_mounted_libraries.libraries
+				nb := library_list.count
+				from i := 1 until i > nb loop
+					a_library := library_list.item (i)
+					if a_library.is_root then
+						print_indentation (indent, a_file)
+						a_file.put_string ("<mount location=%"")
+						print_quote_escaped_string (a_library.pathname, a_file)
+						a_file.put_line ("%"/>")
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 

@@ -42,9 +42,8 @@
 		<set name="eiffel" value="se"/>
 		<geant target="xace"/>
 		<set name="eiffel" value="ve"/>
-		<set name="gexace_output" value="ve.xace" unless="${VE_4_1}"/>
-		<set name="gexace_system" value="xml" unless="${VE_4_1}"/>
-		<geant target="xace" if="${VE_Lib}"/>
+		<set name="gexace_system" value="ve41" if="${VE_4_1}"/>
+		<geant target="xace"/>
 		<unset name="gexace_output"/>
 		<unset name="gexace_system"/>
 		<geant target="other_install"/>
@@ -107,8 +106,8 @@
 		<set name="eiffel" value="ve"/>
 		<set name="gexace_output" value="compile_ve.esd" if="${VE_4_1}"/>
 		<set name="gexace_output" value="compile_ve.xace" unless="${VE_4_1}"/>
-		<set name="gexace_system" value="ve" if="${VE_4_1}"/>
-		<set name="gexace_system" value="xml" unless="${VE_4_1}"/>
+		<set name="gexace_system" value="ve41" if="${VE_4_1}"/>
+		<set name="gexace_system" value="ve" unless="${VE_4_1}"/>
 		<geant target="xace"/>
 		<unset name="gexace_output"/>
 		<unset name="gexace_system"/>
@@ -247,8 +246,10 @@
 		<set name="l_gexace_output" value="${gexace_output}" if="${gexace_output}"/>
 		<set name="l_gexace_system" value="${eiffel}" unless="${gexace_system}"/>
 		<set name="l_gexace_system" value="${gexace_system}" if="${gexace_system}"/>
+<!--
 		<set name="l_ve_os_default" value="Win32" if="${GOBO_OS}=windows"/>
 		<set name="l_ve_os_default" value="Linux" unless="${GOBO_OS}=windows"/>
+-->
 		<gexace system="${l_gexace_system}" output="${l_gexace_output}" xace="${system_dir}/system.xace">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
 			<define name="BOOTSTRAP" value="${bootstrap}" if="${bootstrap}"/>
@@ -259,8 +260,10 @@
 			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
 			<define name="SE_2_0" value="true" if="${SE_2_0}"/>
 			<define name="VE_4_1" value="true" if="${VE_4_1}"/>
+<!--
 			<define name="VE_OS" value="${VE_OS}" if="${VE_OS}"/>
 			<define name="VE_OS" value="${l_ve_os_default}" unless="${VE_OS}"/>
+-->
 		</gexace>
 	</target>
 

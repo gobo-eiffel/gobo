@@ -50,7 +50,7 @@ feature -- Test
 			xace_filename := file_system.pathname (sample_dirname, "system2.xace")
 				-- Generate ELD file.
 			ace_filename := file_system.pathname (sample_dirname, "ve2.esd")
-			assert_execute (gexace_exe + " --system=ve " + xace_filename + output_log)
+			assert_execute (gexace_exe + " --system=ve41 " + xace_filename + output_log)
 			if file_system.file_count (output_log_filename) = 0 then
 				assert ("no_output_log2a", True)
 			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then
@@ -63,7 +63,7 @@ feature -- Test
 			assert_files_equal ("diff2a", ace_filename, "ve.esd")
 				-- Generate Xace file.
 			ace_filename := file_system.pathname (sample_dirname, "ve2.xace")
-			assert_execute (gexace_exe + " --define=%"GOBO_EIFFEL=ve%" --system=xml --output=ve.xace " + xace_filename + output_log)
+			assert_execute (gexace_exe + " --system=ve " + xace_filename + output_log)
 			if file_system.file_count (output_log_filename) = 0 then
 				assert ("no_output_log3a", True)
 			elseif file_system.same_text_files (freeise_log_filename, output_log_filename) then

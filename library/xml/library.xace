@@ -48,7 +48,7 @@
 			</cluster>
 			<cluster name="no_expat" unless="${GOBO_XML_EXPAT}"/>
 		</cluster>
-		<cluster name="xpath">
+		<cluster name="xpath" unless="${VE_4_1}">
 			<cluster name="data_model"/>
 			<cluster name="tinytree"/>
 			<cluster name="xpath_tree" location="tree" relative="true"/>
@@ -62,7 +62,7 @@
 			<cluster name="node_tests"/>
 			<cluster name="types"/>
 		</cluster>
-		<cluster name="xslt">
+		<cluster name="xslt" unless="${VE_4_1}">
 			<cluster name="patterns"/>
 			<cluster name="xslt_functions" location="functions" relative="true"/>
 			<cluster name="instructions"/>
