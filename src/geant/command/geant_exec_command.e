@@ -27,10 +27,12 @@ feature -- Status report
 		do
 			Result := command_line /= Void and then command_line.count > 0
 			Result := Result and then fileset = Void
+			Result := Result and then (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
 		ensure
 			command_line_not_void: Result implies command_line /= Void
 			command_line_not_empty: Result implies command_line.count > 0
 			fileset_void: Result implies fileset = Void
+			exit_code_variable_name_void_or_not_empty: Result implies (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
 		end
 
 	is_fileset_executable: BOOLEAN is
@@ -38,10 +40,12 @@ feature -- Status report
 		do
 			Result := command_line /= Void and then command_line.count > 0
 			Result := Result and then fileset /= Void
+			Result := Result and then exit_code_variable_name = Void
 		ensure
 			command_line_not_void: Result implies command_line /= Void
 			command_line_not_empty: Result implies command_line.count > 0
 			fileset_not_void: Result implies fileset /= Void
+			exit_code_variable_name_void: Result implies exit_code_variable_name = Void
 		end
 
 	is_executable: BOOLEAN is
@@ -58,13 +62,27 @@ feature -- Access
 	command_line: STRING
 			-- Command-line
 
+	exit_code_variable_name: STRING
+			-- Name of variable holding exit code of called process
+
 	accept_errors: BOOLEAN
-			-- Should return codes from the `executable' other than zero be accepted?
+			-- Should return codes of called process other than zero be accepted?
 
 	fileset: GEANT_FILESET
 		-- Fileset for current command
 
 feature -- Setting
+
+	set_exit_code_variable_name (a_exit_code_variable_name: like exit_code_variable_name) is
+			-- Set `exit_code_variable_name' to `a_exit_code_variable_name'.
+		require
+			a_exit_code_variable_name_not_void: a_exit_code_variable_name /= Void
+			a_exit_code_variable_name_not_empty: a_exit_code_variable_name.count > 0
+		do
+			exit_code_variable_name := a_exit_code_variable_name
+		ensure
+			command_list_set: exit_code_variable_name = a_exit_code_variable_name
+		end
 
 	set_command_line (a_command_line: like command_line) is
 			-- Set `command_line' to `a_command_line'.
@@ -107,6 +125,15 @@ feature -- Execution
 			if is_commandline_executable then
 				project.trace (<<"  [exec] ", command_line>>)
 				execute_shell (command_line)
+
+				if exit_code_variable_name /= Void then
+						-- Store return_code of process:
+					project.variables.set_variable_value (exit_code_variable_name, exit_code.out)
+						-- Reset `exit_code' since return_code of process is available through
+						-- variable 'exit_code_variable_name':
+					exit_code := 0
+				end
+					-- TODO: remove after obsolete period:
 				if accept_errors then
 					exit_code := 0
 				end
@@ -135,6 +162,8 @@ feature -- Execution
 					end
 				end
 			end
+
+			
 		end
 
 end
