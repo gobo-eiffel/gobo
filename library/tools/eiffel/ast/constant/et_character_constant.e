@@ -20,6 +20,9 @@ inherit
 		end
 
 	ET_CHOICE_CONSTANT
+		rename
+			expression as expression_item
+		end
 
 	ET_INDEXING_TERM
 

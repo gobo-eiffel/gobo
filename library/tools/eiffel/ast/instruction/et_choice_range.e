@@ -5,7 +5,7 @@ indexing
 		"Eiffel choice ranges in when parts of inspect instructions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class ET_CHOICE_RANGE
 inherit
 
 	ET_CHOICE
+		redefine
+			is_range
+		end
 
 creation
 
@@ -36,10 +39,18 @@ feature {NONE} -- Initialization
 			upper_set: upper = an_upper
 		end
 
+feature -- Status report
+
+	is_range: BOOLEAN is True
+			-- Is current choice a range?
+
 feature -- Access
 
-	lower, upper: ET_CHOICE_CONSTANT
-			-- Lower and upper bounds of current range
+	lower: ET_CHOICE_CONSTANT
+			-- Lower bound of current range
+
+	upper: ET_CHOICE_CONSTANT
+			-- Upper bound of current range
 
 	dotdot: ET_SYMBOL
 			-- '..' symbol

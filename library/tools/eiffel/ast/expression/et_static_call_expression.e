@@ -15,8 +15,13 @@ class ET_STATIC_CALL_EXPRESSION
 inherit
 
 	ET_STATIC_FEATURE_CALL
+
 	ET_EXPRESSION
+
 	ET_CHOICE_CONSTANT
+		rename
+			expression as expression_item
+		end
 
 creation
 

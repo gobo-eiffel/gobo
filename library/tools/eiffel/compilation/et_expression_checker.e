@@ -2031,6 +2031,8 @@ feature {NONE} -- Expression validity
 						a_type := a_class
 					elseif a_class = universe.integer_16_class then
 						a_type := a_class
+					elseif a_class = universe.integer_64_class then
+						a_type := a_class
 					end
 				end
 				a_context.force_first (a_type)
@@ -2227,6 +2229,8 @@ feature {NONE} -- Expression validity
 					if a_class = universe.integer_8_class then
 						a_type := a_class
 					elseif a_class = universe.integer_16_class then
+						a_type := a_class
+					elseif a_class = universe.integer_64_class then
 						a_type := a_class
 					end
 				end

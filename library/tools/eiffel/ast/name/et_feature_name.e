@@ -15,10 +15,18 @@ deferred class ET_FEATURE_NAME
 inherit
 
 	ET_FEATURE_NAME_ITEM
+
 	ET_QUALIFIED_FEATURE_NAME
+
 	ET_CHOICE_CONSTANT
+		rename
+			expression as expression_item
+		end
+
 	ET_EXPRESSION
+	
 	ET_INSTRUCTION
+
 	HASHABLE
 
 feature -- Access

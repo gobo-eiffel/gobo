@@ -37,6 +37,8 @@ feature -- Access
 			-- Current expression
 		do
 			Result := Current
+		ensure then
+			definition: Result = Current
 		end
 
 end
