@@ -26,6 +26,9 @@ inherit
 		end
 
 	ET_OPERATOR
+		undefine
+			first_position, last_position
+		end
 
 creation
 

@@ -15,10 +15,13 @@ class ET_RESULT
 inherit
 
 	ET_EXPRESSION
+		undefine
+			first_position, last_position
+		end
 
 	ET_WRITABLE
 		undefine
-			reset
+			reset, first_position, last_position
 		end
 
 	ET_KEYWORD

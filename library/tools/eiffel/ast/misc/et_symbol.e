@@ -496,6 +496,12 @@ feature -- Access
 			text_not_empty: Result.count > 0
 		end
 
+	last_position: ET_POSITION is
+			-- Position of last character of current node in source code
+		do
+			create {ET_COMPRESSED_POSITION} Result.make (line, column + text.count - 1)
+		end
+
 feature -- Status report
 
 	is_arrow: BOOLEAN is

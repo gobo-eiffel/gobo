@@ -15,6 +15,8 @@ deferred class ET_CHARACTER_CONSTANT
 inherit
 
 	ET_CONSTANT
+		undefine
+			first_position, last_position
 		redefine
 			is_character_constant
 		end
@@ -23,10 +25,13 @@ inherit
 		rename
 			expression as expression_item
 		undefine
-			reset
+			reset, first_position, last_position
 		end
 
 	ET_INDEXING_TERM
+		undefine
+			first_position, last_position
+		end
 
 	ET_AST_LEAF
 		rename

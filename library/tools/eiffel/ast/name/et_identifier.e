@@ -15,6 +15,8 @@ class ET_IDENTIFIER
 inherit
 
 	ET_FEATURE_NAME
+		undefine
+			first_position, last_position
 		redefine
 			reset,
 			is_local, is_argument,
@@ -23,31 +25,37 @@ inherit
 
 	ET_CLASS_NAME
 		undefine
+			first_position, last_position,
 			is_identifier, is_equal
 		end
 
 	ET_LOCAL_NAME
 		undefine
+			first_position, last_position,
 			reset, is_equal
 		end
 
 	ET_ARGUMENT_NAME
 		undefine
+			first_position, last_position,
 			reset, is_equal
 		end
 
 	ET_TAG
 		undefine
+			first_position, last_position,
 			is_equal
 		end
 
 	ET_WRITABLE
 		undefine
+			first_position, last_position,
 			reset, is_equal
 		end
 
 	ET_INDEXING_TERM
 		undefine
+			first_position, last_position,
 			is_equal
 		end
 
@@ -64,6 +72,7 @@ inherit
 		rename
 			name as identifier
 		undefine
+			first_position, last_position,
 			is_equal
 		end
 

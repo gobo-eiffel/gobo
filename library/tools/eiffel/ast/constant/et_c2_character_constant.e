@@ -90,6 +90,12 @@ feature -- Access
 			end
 		end
 
+	last_position: ET_POSITION is
+			-- Position of last character of current node in source code
+		do
+			create {ET_COMPRESSED_POSITION} Result.make (line, column + 3)
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is

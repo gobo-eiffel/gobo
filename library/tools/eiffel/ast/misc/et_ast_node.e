@@ -26,6 +26,38 @@ feature -- Access
 			position_not_void: Result /= Void
 		end
 
+	first_position: ET_POSITION is
+			-- Position of first character of current node in source code;
+			-- NUll position is current node is empty
+		local
+			l_first_leaf: like first_leaf
+		do
+			l_first_leaf := first_leaf
+			if l_first_leaf /= Void then
+				Result := l_first_leaf.first_position
+			else
+				create {ET_COMPRESSED_POSITION} Result.make_default
+			end
+		ensure
+			first_position_not_void: Result /= Void
+		end
+
+	last_position: ET_POSITION is
+			-- Position of last character of current node in source code;
+			-- NUll position is current node is empty
+		local
+			l_last_leaf: like last_leaf
+		do
+			l_last_leaf := last_leaf
+			if l_last_leaf /= Void then
+				Result := l_last_leaf.last_position
+			else
+				create {ET_COMPRESSED_POSITION} Result.make_default
+			end
+		ensure
+			last_position_not_void: Result /= Void
+		end
+
 	first_leaf: ET_AST_LEAF is
 			-- First leaf node in current node
 		deferred

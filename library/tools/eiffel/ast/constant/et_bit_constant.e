@@ -15,11 +15,16 @@ class ET_BIT_CONSTANT
 inherit
 
 	ET_CONSTANT
+		undefine
+			first_position, last_position
 		redefine
 			is_bit_constant
 		end
 
 	ET_INDEXING_TERM
+		undefine
+			first_position, last_position
+		end
 
 	ET_AST_LEAF
 		rename
@@ -56,6 +61,12 @@ feature -- Access
 
 	literal: STRING
 			-- Literal bit value
+
+	last_position: ET_POSITION is
+			-- Position of last character of current node in source code
+		do
+			create {ET_COMPRESSED_POSITION} Result.make (line, column + literal.count - 1)
+		end
 
 feature -- Processing
 

@@ -23,11 +23,13 @@ inherit
 
 	ET_NULL_EXPORT
 		undefine
+			first_position, last_position,
 			reset, is_semicolon
 		end
 
 	ET_NULL_INSTRUCTION
 		undefine
+			first_position, last_position,
 			is_semicolon
 		end
 

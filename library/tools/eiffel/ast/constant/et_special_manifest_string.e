@@ -44,6 +44,30 @@ feature -- Access
 	literal: STRING
 			-- Literal value
 
+	last_position: ET_POSITION is
+			-- Position of last character of current node in source code
+		local
+			l_newlines: INTEGER
+			l_column: INTEGER
+			i, nb: INTEGER
+		do
+			l_newlines := literal.occurrences ('%N')
+			if l_newlines = 0 then
+				create {ET_COMPRESSED_POSITION} Result.make (line, column + literal.count + 1)
+			else
+				from
+					nb := literal.count
+					i := nb
+				until
+					literal.item (i) = '%N'
+				loop
+					i := i - 1
+				end
+				l_column := nb - i
+				create {ET_COMPRESSED_POSITION} Result.make (line + l_newlines, l_column)
+			end
+		end
+
 feature -- Status report
 
 	computed: BOOLEAN is

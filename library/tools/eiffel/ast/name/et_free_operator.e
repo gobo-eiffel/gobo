@@ -15,12 +15,15 @@ class ET_FREE_OPERATOR
 inherit
 
 	ET_INFIX_FREE
+		undefine
+			first_position, last_position
 		redefine
 			name, same_feature_name
 		end
 
 	ET_PREFIX_FREE
 		undefine
+			first_position, last_position,
 			name, same_feature_name
 		end
 

@@ -15,11 +15,16 @@ deferred class ET_BOOLEAN_CONSTANT
 inherit
 
 	ET_CONSTANT
+		undefine
+			first_position, last_position
 		redefine
 			is_boolean_constant
 		end
 
 	ET_INDEXING_TERM
+		undefine
+			first_position, last_position
+		end
 
 	ET_KEYWORD
 		undefine

@@ -62,6 +62,12 @@ feature -- Access
 	close_white_characters: STRING
 			-- White characters after "xyz[ and before ]xyz"
 
+	last_position: ET_POSITION is
+			-- Position of last character of current node in source code
+		do
+			create {ET_COMPRESSED_POSITION} Result.make (line + value.occurrences ('%N') + 1, close_white_characters.count + marker.count)
+		end
+
 feature -- Status report
 
 	computed: BOOLEAN is True

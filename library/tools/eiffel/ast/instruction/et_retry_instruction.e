@@ -15,6 +15,9 @@ class ET_RETRY_INSTRUCTION
 inherit
 
 	ET_INSTRUCTION
+		undefine
+			first_position, last_position
+		end
 	
 	ET_KEYWORD
 		rename

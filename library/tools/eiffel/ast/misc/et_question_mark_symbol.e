@@ -22,6 +22,9 @@ inherit
 		end
 
 	ET_AGENT_ACTUAL_ARGUMENT
+		undefine
+			first_position, last_position
+		end
 
 creation
 

@@ -41,6 +41,12 @@ feature -- Access
 	text: STRING
 			-- Text of token
 
+	last_position: ET_POSITION is
+			-- Position of last character of current node in source code
+		do
+			create {ET_COMPRESSED_POSITION} Result.make (line, column + text.count - 1)
+		end
+
 feature -- Setting
 
 	set_text (a_text: like text) is

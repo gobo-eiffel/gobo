@@ -15,6 +15,9 @@ class ET_CURRENT
 inherit
 
 	ET_EXPRESSION
+		undefine
+			first_position, last_position
+		end
 
 	ET_KEYWORD
 		rename

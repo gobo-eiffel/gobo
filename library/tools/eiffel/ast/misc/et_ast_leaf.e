@@ -15,6 +15,11 @@ deferred class ET_AST_LEAF
 inherit
 
 	ET_AST_NODE
+		undefine
+			last_position
+		redefine
+			first_position
+		end
 
 	ET_COMPRESSED_POSITION
 		rename
@@ -27,6 +32,12 @@ feature -- Access
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
+		do
+			Result := Current
+		end
+
+	first_position: ET_POSITION is
+			-- Position of first character of current node in source code
 		do
 			Result := Current
 		end

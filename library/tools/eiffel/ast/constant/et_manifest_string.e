@@ -15,19 +15,36 @@ deferred class ET_MANIFEST_STRING
 inherit
 
 	ET_CONSTANT
+		undefine
+			first_position, last_position
 		redefine
 			is_string_constant
 		end
 
 	ET_MANIFEST_STRING_ITEM
+		undefine
+			first_position, last_position
+		end
 
 	ET_INDEXING_TERM
+		undefine
+			first_position, last_position
+		end
 
 	ET_EXTERNAL_LANGUAGE
+		undefine
+			first_position, last_position
+		end
 
 	ET_EXTERNAL_ALIAS
+		undefine
+			first_position, last_position
+		end
 
 	ET_OBSOLETE
+		undefine
+			first_position, last_position
+		end
 
 	ET_AST_LEAF
 		rename

@@ -19,10 +19,12 @@ inherit
 			make as make_leaf,
 			make_with_position as make_leaf_with_position
 		redefine
-			position, first_leaf
+			position, first_position, first_leaf
 		end
 
 	ET_CONSTANT
+		undefine
+			first_position, last_position
 		redefine
 			reset, is_integer_constant
 		end
@@ -31,10 +33,14 @@ inherit
 		rename
 			expression as expression_item
 		undefine
+			first_position, last_position,
 			reset
 		end
 
 	ET_INDEXING_TERM
+		undefine
+			first_position, last_position
+		end
 
 feature -- Initialization
 
@@ -65,6 +71,22 @@ feature -- Access
 			else
 				Result := Current
 			end
+		end
+
+	first_position: ET_POSITION is
+			-- Position of first character of current node in source code
+		do
+			if sign /= Void then
+				Result := sign.first_position
+			else
+				Result := Current
+			end
+		end
+
+	last_position: ET_POSITION is
+			-- Position of last character of current node in source code
+		do
+			create {ET_COMPRESSED_POSITION} Result.make (line, column + literal.count - 1)
 		end
 
 	first_leaf: ET_AST_LEAF is

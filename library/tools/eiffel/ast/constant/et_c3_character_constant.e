@@ -41,6 +41,12 @@ feature -- Access
 	literal: STRING
 			-- Literal value of character code
 
+	last_position: ET_POSITION is
+			-- Position of last character of current node in source code
+		do
+			create {ET_COMPRESSED_POSITION} Result.make (line, column + literal.count + 4)
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
