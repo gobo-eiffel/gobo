@@ -47,7 +47,7 @@ feature {ANY} -- Access
 	fact: XM_PARSER_FACTORY is
 			-- the parser factory
 		once
-			!! Result
+			!! Result.make
 		ensure
 			factory_not_void: Result /= Void
 		end

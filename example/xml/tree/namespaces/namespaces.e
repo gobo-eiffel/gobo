@@ -127,7 +127,7 @@ feature
 
 	fact: XM_PARSER_FACTORY is
 		once
-			!! Result
+			!! Result.make
 		ensure
 			factory_not_void: Result /= Void
 		end
