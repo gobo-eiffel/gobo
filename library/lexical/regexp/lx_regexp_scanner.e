@@ -5,8 +5,9 @@ indexing
 		"Scanners for regular expressions"
 
 	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -55,13 +56,13 @@ if yy_act <= 7 then
 if yy_act <= 4 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 43
+--|#line 44
 
 					last_token := Caret_code
 					set_start_condition (REGEXP)
 				
 else
---|#line 47
+--|#line 48
 
 					less (0)
 					set_start_condition (REGEXP)
@@ -69,27 +70,27 @@ else
 end
 else
 if yy_act = 3 then
---|#line 54
+--|#line 55
 
 					last_token := Double_quote_code
 					set_start_condition (QUOTE)
 				
 else
 	yy_position := yy_position - 1
---|#line 58
+--|#line 59
 last_token := Dollar_code
 end
 end
 else
 if yy_act <= 6 then
 if yy_act = 5 then
---|#line 59
+--|#line 60
 
 					last_token := Left_brace_code
 					set_start_condition (NUM)
 				
 else
---|#line 63
+--|#line 64
 
 					last_string := text
 					if character_classes.has (last_string) then
@@ -105,7 +106,7 @@ else
 				
 end
 else
---|#line 76
+--|#line 77
 last_token := text_item (1).code
 end
 end
@@ -113,38 +114,38 @@ else
 if yy_act <= 11 then
 if yy_act <= 9 then
 if yy_act = 8 then
---|#line 77
+--|#line 78
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 				
 else
---|#line 84
+--|#line 85
 -- Separator.
 end
 else
 if yy_act = 10 then
---|#line 85
+--|#line 86
 
 					last_token := NUMBER
 					check is_integer: STRING_.is_integer (text) end
 					last_value := text.to_integer
 				
 else
---|#line 90
+--|#line 91
 last_token := Comma_code
 end
 end
 else
 if yy_act <= 13 then
 if yy_act = 12 then
---|#line 91
+--|#line 92
 
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				
 else
---|#line 95
+--|#line 96
 
 					report_bad_character_in_brackets_error
 					last_token := Right_brace_code
@@ -152,7 +153,7 @@ else
 				
 end
 else
---|#line 100
+--|#line 101
 
 					report_missing_bracket_error
 					line_nb := line_nb + 1
@@ -167,13 +168,13 @@ if yy_act <= 21 then
 if yy_act <= 18 then
 if yy_act <= 16 then
 if yy_act = 15 then
---|#line 109
+--|#line 110
 
 					process_character (text_item (1).code)
 					last_token := CHAR
 				
 else
---|#line 113
+--|#line 114
 
 					last_token := Double_quote_code
 					set_start_condition (REGEXP)
@@ -181,7 +182,7 @@ else
 end
 else
 if yy_act = 17 then
---|#line 117
+--|#line 118
 
 					report_missing_quote_error
 					line_nb := line_nb + 1
@@ -189,7 +190,7 @@ if yy_act = 17 then
 					set_start_condition (REGEXP)
 				
 else
---|#line 125
+--|#line 126
 
 					last_token := CHAR
 					process_escaped_character
@@ -203,18 +204,18 @@ else
 if yy_act <= 20 then
 if yy_act = 19 then
 	yy_position := yy_position - 1
---|#line 134
+--|#line 135
 
 					set_start_condition (CCL)
 					last_token := Caret_code
 				
 else
 	yy_position := yy_position - 1
---|#line 138
+--|#line 139
 last_token := Caret_code
 end
 else
---|#line 139
+--|#line 140
 
 					last_token := CHAR
 					process_character (text_item (1).code)
@@ -226,7 +227,7 @@ else
 if yy_act <= 25 then
 if yy_act <= 23 then
 if yy_act = 22 then
---|#line 144
+--|#line 145
 
 					report_bad_character_class_error
 					line_nb := line_nb + 1
@@ -235,18 +236,18 @@ if yy_act = 22 then
 				
 else
 	yy_position := yy_position - 1
---|#line 153
+--|#line 154
 last_token := Minus_code
 end
 else
 if yy_act = 24 then
---|#line 154
+--|#line 155
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 				
 else
---|#line 158
+--|#line 159
 
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
@@ -256,7 +257,7 @@ end
 else
 if yy_act <= 27 then
 if yy_act = 26 then
---|#line 162
+--|#line 163
 
 					report_bad_character_class_error
 					line_nb := line_nb + 1
@@ -264,7 +265,7 @@ if yy_act = 26 then
 					set_start_condition (REGEXP)
 				
 else
---|#line 170
+--|#line 171
 
 					if text_item (1) = '%N' then
 						report_bad_character_error ("%%N")

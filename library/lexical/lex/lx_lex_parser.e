@@ -5,8 +5,9 @@ indexing
 		"Parsers for lexical analyzer generators such as 'gelex'"
 
 	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -56,7 +57,7 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 1 then
---|#line 49
+--|#line 50
 			yyval := yyval_default;
 			process_default_rule
 			if equiv_classes /= Void then
@@ -66,7 +67,7 @@ when 1 then
 		
 
 when 2 then
---|#line 59
+--|#line 60
 			yyval := yyval_default;
 			if equiv_classes_used then
 				!! equiv_classes.make (1, characters_count)
@@ -74,31 +75,31 @@ when 2 then
 		
 
 when 4 then
---|#line 68
+--|#line 69
 			yyval := yyval_default;
 			start_condition_stack.keep_first (yytype2 (yyvs.item (yyvsp - 3)))
 		
 
 when 5 then
---|#line 72
+--|#line 73
 			yyval := yyval_default;
 			start_condition_stack.keep_first (yytype2 (yyvs.item (yyvsp - 3)))
 		
 
 when 7 then
---|#line 79
+--|#line 80
 			yyval := yyval_default;
 			set_action (yytype1 (yyvs.item (yyvsp)))
 		
 
 when 9 then
---|#line 84
+--|#line 85
 			yyval := yyval_default;
 			set_action ("")
 		
 
 when 10 then
---|#line 90
+--|#line 91
 			yyval := yyval_default;
 				-- Initialize for a parse of one rule.
 			variable_trail_rule := False
@@ -111,115 +112,115 @@ when 10 then
 		
 
 when 11 then
---|#line 103
+--|#line 104
 
 			yyval2 := start_condition_stack.count
 		
 			yyval := yyval2
 when 12 then
---|#line 107
+--|#line 108
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 2))
 			start_condition_stack.append_start_conditions (start_conditions)
 		
 			yyval := yyval2
 when 13 then
---|#line 112
+--|#line 113
 
 yyval2 := yytype2 (yyvs.item (yyvsp - 2)) 
 			yyval := yyval2
 when 14 then
---|#line 116
+--|#line 117
 
 			yyval2 := start_condition_stack.count
 		
 			yyval := yyval2
 when 15 then
---|#line 122
+--|#line 123
 			yyval := yyval_default;
 			push_start_condition (yytype1 (yyvs.item (yyvsp)), start_condition_stack)
 		
 
 when 16 then
---|#line 126
+--|#line 127
 			yyval := yyval_default;
 			push_start_condition (yytype1 (yyvs.item (yyvsp)), start_condition_stack)
 		
 
 when 17 then
---|#line 130
+--|#line 131
 			yyval := yyval_default;
 			report_bad_start_condition_list_error
 		
 
 when 18 then
---|#line 136
+--|#line 137
 			yyval := yyval_default;
 			process_bol_rule (yytype4 (yyvs.item (yyvsp)))
 		
 
 when 19 then
---|#line 140
+--|#line 141
 			yyval := yyval_default;
 			process_rule (yytype4 (yyvs.item (yyvsp)))
 		
 
 when 20 then
---|#line 144
+--|#line 145
 			yyval := yyval_default;
 			process_eof_rule
 		
 
 when 21 then
---|#line 148
+--|#line 149
 			yyval := yyval_default;
 			report_unrecognized_rule_error
 		
 
 when 22 then
---|#line 154
+--|#line 155
 
 			yyval4 := append_trail_context_to_regexp (yytype4 (yyvs.item (yyvsp)), yytype4 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval4
 when 23 then
---|#line 158
+--|#line 159
 
 			yyval4 := append_eol_to_regexp (yytype4 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval4
 when 24 then
---|#line 162
+--|#line 163
 
 			yyval4 := yytype4 (yyvs.item (yyvsp))
 		
 			yyval := yyval4
 when 25 then
---|#line 166
+--|#line 167
 
 			report_trailing_context_used_twice_error
 		
 			yyval := yyval4
 when 26 then
---|#line 170
+--|#line 171
 
 			report_trailing_context_used_twice_error
 		
 			yyval := yyval4
 when 27 then
---|#line 176
+--|#line 177
 
 yyval4 := yytype4 (yyvs.item (yyvsp)) 
 			yyval := yyval4
 when 28 then
---|#line 178
+--|#line 179
 
 			variable_length := True
 			yyval4 := yytype4 (yyvs.item (yyvsp - 2)) | yytype4 (yyvs.item (yyvsp))
 		
 			yyval := yyval4
 when 29 then
---|#line 185
+--|#line 186
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1))
 				-- This rule is written separately so the reduction
@@ -235,60 +236,60 @@ when 29 then
 		
 			yyval := yyval4
 when 30 then
---|#line 201
+--|#line 202
 
 yyval4 := yytype4 (yyvs.item (yyvsp)) 
 			yyval := yyval4
 when 31 then
---|#line 203
+--|#line 204
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1)) & yytype4 (yyvs.item (yyvsp))
 		
 			yyval := yyval4
 when 32 then
---|#line 209
+--|#line 210
 
 			rule_length := rule_length + 1
 			yyval4 := new_nfa_from_character (yytype2 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 33 then
---|#line 214
+--|#line 215
 
 			variable_length := True
 			yyval4 := |*| yytype4 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval4
 when 34 then
---|#line 219
+--|#line 220
 
 			variable_length := True
 			yyval4 := |+| yytype4 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval4
 when 35 then
---|#line 224
+--|#line 225
 
 			variable_length := True
 			yyval4 := |?| yytype4 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval4
 when 36 then
---|#line 229
+--|#line 230
 
 			variable_length := True
 			yyval4 := new_bounded_iteration_nfa (yytype4 (yyvs.item (yyvsp - 5)), yytype2 (yyvs.item (yyvsp - 3)), yytype2 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval4
 when 37 then
---|#line 234
+--|#line 235
 
 			variable_length := True
 			yyval4 := new_unbounded_iteration_nfa (yytype4 (yyvs.item (yyvsp - 4)), yytype2 (yyvs.item (yyvsp - 2)))
 		
 			yyval := yyval4
 when 38 then
---|#line 239
+--|#line 240
 
 				-- The singleton could be something like "(foo)",
 				-- in which case we have no idea what its length
@@ -298,47 +299,47 @@ when 38 then
 		
 			yyval := yyval4
 when 39 then
---|#line 247
+--|#line 248
 
 			rule_length := rule_length + 1
 			yyval4 := new_symbol_class_nfa (dot_character_class)
 		
 			yyval := yyval4
 when 40 then
---|#line 252
+--|#line 253
 
 			rule_length := rule_length + 1
 			yyval4 := new_symbol_class_nfa (yytype3 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 41 then
---|#line 257
+--|#line 258
 
 			rule_length := rule_length + 1
 			yyval4 := new_nfa_from_character_class (yytype3 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 42 then
---|#line 262
+--|#line 263
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval4
 when 43 then
---|#line 266
+--|#line 267
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval4
 when 44 then
---|#line 272
+--|#line 273
 
 			yyval3 := yytype3 (yyvs.item (yyvsp - 1))
 			character_classes.force (yyval3, yytype1 (yyvs.item (yyvsp - 2)))
 		
 			yyval := yyval3
 when 45 then
---|#line 277
+--|#line 278
 
 			yyval3 := yytype3 (yyvs.item (yyvsp - 1))
 			yyval3.set_negated (True)
@@ -346,45 +347,45 @@ when 45 then
 		
 			yyval := yyval3
 when 46 then
---|#line 285
+--|#line 286
 
 			yyval3 := append_character_to_character_class (yytype2 (yyvs.item (yyvsp)), new_character_class)
 		
 			yyval := yyval3
 when 47 then
---|#line 289
+--|#line 290
 
 			yyval3 := append_character_to_character_class (yytype2 (yyvs.item (yyvsp)), yytype3 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval3
 when 48 then
---|#line 293
+--|#line 294
 
 			yyval3 := append_character_set_to_character_class
 				(yytype2 (yyvs.item (yyvsp - 2)), yytype2 (yyvs.item (yyvsp)), new_character_class)
 		
 			yyval := yyval3
 when 49 then
---|#line 298
+--|#line 299
 
 			yyval3 := append_character_set_to_character_class (yytype2 (yyvs.item (yyvsp - 2)), yytype2 (yyvs.item (yyvsp)), yytype3 (yyvs.item (yyvsp - 3)))
 		
 			yyval := yyval3
 when 50 then
---|#line 304
+--|#line 305
 
 			yyval4 := new_epsilon_nfa
 		
 			yyval := yyval4
 when 51 then
---|#line 308
+--|#line 309
 
 			rule_length := rule_length + 1
 			yyval4 := append_character_to_string (yytype2 (yyvs.item (yyvsp)), yytype4 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval4
 when 54 then
---|#line 317
+--|#line 318
 			yyval := yyval_default;
 			eiffel_code := yytype1 (yyvs.item (yyvsp))
 		

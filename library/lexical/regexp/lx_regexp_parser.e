@@ -5,8 +5,9 @@ indexing
 		"Parsers for regular expressions"
 
 	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -57,7 +58,7 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 1 then
---|#line 46
+--|#line 47
 			yyval := yyval_default;
 			if equiv_classes /= Void then
 				build_equiv_classes
@@ -66,7 +67,7 @@ when 1 then
 		
 
 when 2 then
---|#line 55
+--|#line 56
 			yyval := yyval_default;
 			if equiv_classes_used then
 				!! equiv_classes.make (1, characters_count)
@@ -82,67 +83,67 @@ when 2 then
 		
 
 when 3 then
---|#line 71
+--|#line 72
 			yyval := yyval_default;
 			process_bol_rule (yytype4 (yyvs.item (yyvsp)))
 		
 
 when 4 then
---|#line 75
+--|#line 76
 			yyval := yyval_default;
 			process_rule (yytype4 (yyvs.item (yyvsp)))
 		
 
 when 5 then
---|#line 79
+--|#line 80
 			yyval := yyval_default;
 			report_unrecognized_rule_error
 		
 
 when 6 then
---|#line 85
+--|#line 86
 
 			yyval4 := append_trail_context_to_regexp (yytype4 (yyvs.item (yyvsp)), yytype4 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval4
 when 7 then
---|#line 89
+--|#line 90
 
 			yyval4 := append_eol_to_regexp (yytype4 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval4
 when 8 then
---|#line 93
+--|#line 94
 
 			yyval4 := yytype4 (yyvs.item (yyvsp))
 		
 			yyval := yyval4
 when 9 then
---|#line 97
+--|#line 98
 
 			report_trailing_context_used_twice_error
 		
 			yyval := yyval4
 when 10 then
---|#line 101
+--|#line 102
 
 			report_trailing_context_used_twice_error
 		
 			yyval := yyval4
 when 11 then
---|#line 107
+--|#line 108
 
 yyval4 := yytype4 (yyvs.item (yyvsp)) 
 			yyval := yyval4
 when 12 then
---|#line 109
+--|#line 110
 
 			variable_length := True
 			yyval4 := yytype4 (yyvs.item (yyvsp - 2)) | yytype4 (yyvs.item (yyvsp))
 		
 			yyval := yyval4
 when 13 then
---|#line 116
+--|#line 117
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1))
 				-- This rule is written separately so the reduction
@@ -158,60 +159,60 @@ when 13 then
 		
 			yyval := yyval4
 when 14 then
---|#line 132
+--|#line 133
 
 yyval4 := yytype4 (yyvs.item (yyvsp)) 
 			yyval := yyval4
 when 15 then
---|#line 134
+--|#line 135
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1)) & yytype4 (yyvs.item (yyvsp))
 		
 			yyval := yyval4
 when 16 then
---|#line 140
+--|#line 141
 
 			rule_length := rule_length + 1
 			yyval4 := new_nfa_from_character (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 17 then
---|#line 145
+--|#line 146
 
 			variable_length := True
 			yyval4 := |*| yytype4 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval4
 when 18 then
---|#line 150
+--|#line 151
 
 			variable_length := True
 			yyval4 := |+| yytype4 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval4
 when 19 then
---|#line 155
+--|#line 156
 
 			variable_length := True
 			yyval4 := |?| yytype4 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval4
 when 20 then
---|#line 160
+--|#line 161
 
 			variable_length := True
 			yyval4 := new_bounded_iteration_nfa (yytype4 (yyvs.item (yyvsp - 5)), yytype1 (yyvs.item (yyvsp - 3)), yytype1 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval4
 when 21 then
---|#line 165
+--|#line 166
 
 			variable_length := True
 			yyval4 := new_unbounded_iteration_nfa (yytype4 (yyvs.item (yyvsp - 4)), yytype1 (yyvs.item (yyvsp - 2)))
 		
 			yyval := yyval4
 when 22 then
---|#line 170
+--|#line 171
 
 				-- The singleton could be something like "(foo)",
 				-- in which case we have no idea what its length
@@ -221,47 +222,47 @@ when 22 then
 		
 			yyval := yyval4
 when 23 then
---|#line 178
+--|#line 179
 
 			rule_length := rule_length + 1
 			yyval4 := new_symbol_class_nfa (dot_character_class)
 		
 			yyval := yyval4
 when 24 then
---|#line 183
+--|#line 184
 
 			rule_length := rule_length + 1
 			yyval4 := new_symbol_class_nfa (yytype2 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 25 then
---|#line 188
+--|#line 189
 
 			rule_length := rule_length + 1
 			yyval4 := new_nfa_from_character_class (yytype2 (yyvs.item (yyvsp)))
 		
 			yyval := yyval4
 when 26 then
---|#line 193
+--|#line 194
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval4
 when 27 then
---|#line 197
+--|#line 198
 
 			yyval4 := yytype4 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval4
 when 28 then
---|#line 203
+--|#line 204
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 1))
 			character_classes.force (yyval2, yytype3 (yyvs.item (yyvsp - 2)))
 		
 			yyval := yyval2
 when 29 then
---|#line 208
+--|#line 209
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 1))
 			yyval2.set_negated (True)
@@ -269,38 +270,38 @@ when 29 then
 		
 			yyval := yyval2
 when 30 then
---|#line 216
+--|#line 217
 
 			yyval2 := append_character_to_character_class (yytype1 (yyvs.item (yyvsp)), new_character_class)
 		
 			yyval := yyval2
 when 31 then
---|#line 220
+--|#line 221
 
 			yyval2 := append_character_to_character_class (yytype1 (yyvs.item (yyvsp)), yytype2 (yyvs.item (yyvsp - 1)))
 		
 			yyval := yyval2
 when 32 then
---|#line 224
+--|#line 225
 
 			yyval2 := append_character_set_to_character_class
 				(yytype1 (yyvs.item (yyvsp - 2)), yytype1 (yyvs.item (yyvsp)), new_character_class)
 		
 			yyval := yyval2
 when 33 then
---|#line 229
+--|#line 230
 
 			yyval2 := append_character_set_to_character_class (yytype1 (yyvs.item (yyvsp - 2)), yytype1 (yyvs.item (yyvsp)), yytype2 (yyvs.item (yyvsp - 3)))
 		
 			yyval := yyval2
 when 34 then
---|#line 235
+--|#line 236
 
 			yyval4 := new_epsilon_nfa
 		
 			yyval := yyval4
 when 35 then
---|#line 239
+--|#line 240
 
 			rule_length := rule_length + 1
 			yyval4 := append_character_to_string (yytype1 (yyvs.item (yyvsp)), yytype4 (yyvs.item (yyvsp - 1)))

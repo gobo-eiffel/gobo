@@ -5,8 +5,9 @@ indexing
 		"Scanners for lexical analyzer generators such as 'gelex'"
 
 	library:    "Gobo Eiffel Lexical Library"
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
-	copyright:  "Copyright (c) 1997, Eric Bezault"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
@@ -57,35 +58,35 @@ if yy_act <= 7 then
 if yy_act <= 4 then
 if yy_act <= 2 then
 if yy_act = 1 then
---|#line 52
+--|#line 53
 -- Separator or comment.
 else
---|#line 53
+--|#line 54
 line_nb := line_nb + 1
 end
 else
 if yy_act = 3 then
---|#line 54
+--|#line 55
 
 					line_nb := line_nb + 1
 					set_start_condition (EIFFEL_BLOCK)
 				
 else
---|#line 58
+--|#line 59
 set_start_condition (SCNAME)
 end
 end
 else
 if yy_act <= 6 then
 if yy_act = 5 then
---|#line 59
+--|#line 60
 set_start_condition (XSCNAME)
 else
---|#line 60
+--|#line 61
 set_start_condition (OPTION)
 end
 else
---|#line 61
+--|#line 62
 
 						-- Keep track of the definition name.
 					last_string := text
@@ -97,13 +98,13 @@ else
 if yy_act <= 11 then
 if yy_act <= 9 then
 if yy_act = 8 then
---|#line 66
+--|#line 67
 
 					last_token := ENDSECT
 					set_start_condition (SECT2)
 				
 else
---|#line 70
+--|#line 71
 
 					report_unrecognized_directive_error
 					set_start_condition (RECOVER1)
@@ -111,27 +112,27 @@ else
 end
 else
 if yy_act = 10 then
---|#line 74
+--|#line 75
 
 					report_directive_expected_error
 					set_start_condition (RECOVER1)
 				
 else
---|#line 81
+--|#line 82
 more
 end
 end
 else
 if yy_act <= 13 then
 if yy_act = 12 then
---|#line 82
+--|#line 83
 more
 else
---|#line 83
+--|#line 84
 more
 end
 else
---|#line 84
+--|#line 85
 more
 end
 end
@@ -141,10 +142,10 @@ if yy_act <= 21 then
 if yy_act <= 18 then
 if yy_act <= 16 then
 if yy_act = 15 then
---|#line 85
+--|#line 86
 more
 else
---|#line 86
+--|#line 87
 
 					last_string := text_substring (1, text_count - 2)
 					line_nb := line_nb + last_string.occurrences ('%N')
@@ -154,30 +155,30 @@ else
 end
 else
 if yy_act = 17 then
---|#line 95
+--|#line 96
 -- Separator or comment.
 else
---|#line 96
+--|#line 97
 add_new_start_condition (text, start_condition = XSCNAME)
 end
 end
 else
 if yy_act <= 20 then
 if yy_act = 19 then
---|#line 97
+--|#line 98
 
 					line_nb := line_nb + 1
 					set_start_condition (INITIAL)
 				
 else
---|#line 101
+--|#line 102
 
 					report_start_condition_expected_error
 					set_start_condition (RECOVER1)
 				
 end
 else
---|#line 108
+--|#line 109
 -- Separator or comment.
 end
 end
@@ -185,14 +186,14 @@ else
 if yy_act <= 24 then
 if yy_act <= 23 then
 if yy_act = 22 then
---|#line 109
+--|#line 110
 backing_up_report := True
 else
---|#line 110
+--|#line 111
 backing_up_report := False
 end
 else
---|#line 111
+--|#line 112
 
 					case_insensitive := False
 				
@@ -200,16 +201,16 @@ end
 else
 if yy_act <= 26 then
 if yy_act = 25 then
---|#line 114
+--|#line 115
 
 					case_insensitive := True
 				
 else
---|#line 117
+--|#line 118
 debug_mode := True
 end
 else
---|#line 118
+--|#line 119
 debug_mode := False
 end
 end
@@ -221,32 +222,32 @@ if yy_act <= 34 then
 if yy_act <= 31 then
 if yy_act <= 29 then
 if yy_act = 28 then
---|#line 119
+--|#line 120
 no_default_rule := False
 else
---|#line 120
+--|#line 121
 no_default_rule := True
 end
 else
 if yy_act = 30 then
---|#line 121
+--|#line 122
 equiv_classes_used := True
 else
---|#line 122
+--|#line 123
 equiv_classes_used := False
 end
 end
 else
 if yy_act <= 33 then
 if yy_act = 32 then
---|#line 123
+--|#line 124
 full_table := True
 else
---|#line 124
+--|#line 125
 full_table := False
 end
 else
---|#line 125
+--|#line 126
 meta_equiv_classes_used := True
 end
 end
@@ -254,34 +255,34 @@ else
 if yy_act <= 38 then
 if yy_act <= 36 then
 if yy_act = 35 then
---|#line 126
+--|#line 127
 meta_equiv_classes_used := False
 else
---|#line 127
+--|#line 128
 reject_used := True
 end
 else
 if yy_act = 37 then
---|#line 128
+--|#line 129
 reject_used := False
 else
---|#line 129
+--|#line 130
 user_action_used := True
 end
 end
 else
 if yy_act <= 40 then
 if yy_act = 39 then
---|#line 130
+--|#line 131
 user_action_used := False
 else
---|#line 131
+--|#line 132
 
 					no_warning := False
 				
 end
 else
---|#line 134
+--|#line 135
 
 					no_warning := True
 				
@@ -293,10 +294,10 @@ if yy_act <= 48 then
 if yy_act <= 45 then
 if yy_act <= 43 then
 if yy_act = 42 then
---|#line 138
+--|#line 139
 set_start_condition (OUTFILE)
 else
---|#line 148
+--|#line 149
 
 					line_nb := line_nb + 1
 					set_start_condition (INITIAL)
@@ -304,13 +305,13 @@ else
 end
 else
 if yy_act = 44 then
---|#line 152
+--|#line 153
 
 					report_unrecognized_option_error (text)
 					set_start_condition (RECOVER1)
 			
 else
---|#line 159
+--|#line 160
 
 					output_filename := text_substring (2, text_count - 1)
 					set_start_condition (OPTION)
@@ -320,18 +321,18 @@ end
 else
 if yy_act <= 47 then
 if yy_act = 46 then
---|#line 163
+--|#line 164
 
 					output_filename := Void
 					report_missing_quote_error
 					set_start_condition (RECOVER1)
 				
 else
---|#line 171
+--|#line 172
 -- Separates name and definition.
 end
 else
---|#line 172
+--|#line 173
 
 					check last_string_not_void: last_string /= Void end
 					process_name_definition (last_string, text)
@@ -343,21 +344,21 @@ else
 if yy_act <= 51 then
 if yy_act <= 50 then
 if yy_act = 49 then
---|#line 177
+--|#line 178
 
 					line_nb := line_nb + 1
 					report_incomplete_name_definition_error
 					set_start_condition (INITIAL)
 				
 else
---|#line 185
+--|#line 186
 
 						-- Eat characters to end of line.
 					set_start_condition (INITIAL)
 				
 end
 else
---|#line 189
+--|#line 190
 
 						-- Eat characters to end of line.
 					line_nb := line_nb + 1
@@ -367,14 +368,14 @@ end
 else
 if yy_act <= 53 then
 if yy_act = 52 then
---|#line 202
+--|#line 203
 -- Separator or comment.
 else
---|#line 203
+--|#line 204
 line_nb := line_nb + 1
 end
 else
---|#line 204
+--|#line 205
 
 					last_token := ENDSECT
 					set_start_condition (SECT3)
@@ -391,7 +392,7 @@ if yy_act <= 61 then
 if yy_act <= 58 then
 if yy_act <= 56 then
 if yy_act = 55 then
---|#line 208
+--|#line 209
 
 					last_token := Caret_code
 						-- The line number is set when creating the rule,
@@ -402,15 +403,15 @@ if yy_act = 55 then
 					set_start_condition (REGEXP)
 				
 else
---|#line 217
+--|#line 218
 last_token := Left_brace_code
 end
 else
 if yy_act = 57 then
---|#line 218
+--|#line 219
 last_token := Right_brace_code
 else
---|#line 219
+--|#line 220
 
 					last_token := Less_than_code
 					set_start_condition (SCOND)
@@ -420,7 +421,7 @@ end
 else
 if yy_act <= 60 then
 if yy_act = 59 then
---|#line 223
+--|#line 224
 
 					less (0)
 						-- The line number is set when creating the rule,
@@ -431,7 +432,7 @@ if yy_act = 59 then
 					set_start_condition (REGEXP)
 				
 else
---|#line 235
+--|#line 236
 
 					last_token := Double_quote_code
 					set_start_condition (QUOTE)
@@ -439,7 +440,7 @@ else
 end
 else
 	yy_position := yy_position - 1
---|#line 239
+--|#line 240
 last_token := Dollar_code
 end
 end
@@ -447,7 +448,7 @@ else
 if yy_act <= 65 then
 if yy_act <= 63 then
 if yy_act = 62 then
---|#line 240
+--|#line 241
 
 					last_string := STRING_.to_lower (text)
 					if name_definitions.has (last_string) then
@@ -457,7 +458,7 @@ if yy_act = 62 then
 					end
 				
 else
---|#line 248
+--|#line 249
 
 					last_token := Left_brace_code
 					set_start_condition (NUM)
@@ -465,7 +466,7 @@ else
 end
 else
 if yy_act = 64 then
---|#line 252
+--|#line 253
 
 					last_string := text
 					if character_classes.has (last_string) then
@@ -479,23 +480,23 @@ if yy_act = 64 then
 					end
 				
 else
---|#line 264
+--|#line 265
 last_token := EOF_OP
 end
 end
 else
 if yy_act <= 67 then
 if yy_act = 66 then
---|#line 265
+--|#line 266
 last_token := text_item (1).code
 else
---|#line 266
+--|#line 267
 
 					set_start_condition (ACTION_TEXT)
 				
 end
 else
---|#line 269
+--|#line 270
 
 					line_nb := line_nb + 1
 					last_token := EMPTY
@@ -509,38 +510,38 @@ if yy_act <= 75 then
 if yy_act <= 72 then
 if yy_act <= 70 then
 if yy_act = 69 then
---|#line 274
+--|#line 275
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 				
 else
---|#line 281
+--|#line 282
 -- Separator or comment.
 end
 else
 if yy_act = 71 then
---|#line 282
+--|#line 283
 line_nb := line_nb + 1
 else
---|#line 283
+--|#line 284
 last_token := Comma_code
 end
 end
 else
 if yy_act <= 74 then
 if yy_act = 73 then
---|#line 284
+--|#line 285
 last_token := Star_code
 else
---|#line 285
+--|#line 286
 
 					last_token := Greater_than_code
 					set_start_condition (SECT2)
 				
 end
 else
---|#line 289
+--|#line 290
 
 					last_token := NAME
 					last_value := text
@@ -551,16 +552,16 @@ else
 if yy_act <= 78 then
 if yy_act <= 77 then
 if yy_act = 76 then
---|#line 293
+--|#line 294
 
 					report_bad_start_condition_error (text)
 				
 else
---|#line 299
+--|#line 300
 -- Separator.
 end
 else
---|#line 300
+--|#line 301
 
 					last_token := NUMBER
 					check is_integer: STRING_.is_integer (text) end
@@ -570,17 +571,17 @@ end
 else
 if yy_act <= 80 then
 if yy_act = 79 then
---|#line 305
+--|#line 306
 last_token := Comma_code
 else
---|#line 306
+--|#line 307
 
 					last_token := Right_brace_code
 					set_start_condition (REGEXP)
 				
 end
 else
---|#line 310
+--|#line 311
 
 					report_bad_character_in_brackets_error
 					last_token := Right_brace_code
@@ -596,7 +597,7 @@ if yy_act <= 88 then
 if yy_act <= 85 then
 if yy_act <= 83 then
 if yy_act = 82 then
---|#line 315
+--|#line 316
 
 					report_missing_bracket_error
 					line_nb := line_nb + 1
@@ -604,7 +605,7 @@ if yy_act = 82 then
 					set_start_condition (REGEXP)
 				
 else
---|#line 324
+--|#line 325
 
 					process_character (text_item (1).code)
 					last_token := CHAR
@@ -612,13 +613,13 @@ else
 end
 else
 if yy_act = 84 then
---|#line 328
+--|#line 329
 
 					last_token := Double_quote_code
 					set_start_condition (REGEXP)
 				
 else
---|#line 332
+--|#line 333
 
 					report_missing_quote_error
 					line_nb := line_nb + 1
@@ -630,7 +631,7 @@ end
 else
 if yy_act <= 87 then
 if yy_act = 86 then
---|#line 340
+--|#line 341
 
 					last_token := CHAR
 					process_escaped_character
@@ -640,7 +641,7 @@ if yy_act = 86 then
 				
 else
 	yy_position := yy_position - 1
---|#line 349
+--|#line 350
 
 					set_start_condition (CCL)
 					last_token := Caret_code
@@ -648,7 +649,7 @@ else
 end
 else
 	yy_position := yy_position - 1
---|#line 353
+--|#line 354
 last_token := Caret_code
 end
 end
@@ -656,14 +657,14 @@ else
 if yy_act <= 92 then
 if yy_act <= 90 then
 if yy_act = 89 then
---|#line 354
+--|#line 355
 
 					last_token := CHAR
 					process_character (text_item (1).code)
 					set_start_condition (CCL)
 				
 else
---|#line 359
+--|#line 360
 
 					report_bad_character_class_error
 					line_nb := line_nb + 1
@@ -674,10 +675,10 @@ end
 else
 if yy_act = 91 then
 	yy_position := yy_position - 1
---|#line 368
+--|#line 369
 last_token := Minus_code
 else
---|#line 369
+--|#line 370
 
 					last_token := CHAR
 					process_character (text_item (1).code)
@@ -687,13 +688,13 @@ end
 else
 if yy_act <= 94 then
 if yy_act = 93 then
---|#line 373
+--|#line 374
 
 					last_token := Right_bracket_code
 					set_start_condition (REGEXP)
 				
 else
---|#line 377
+--|#line 378
 
 					report_bad_character_class_error
 					line_nb := line_nb + 1
@@ -702,7 +703,7 @@ else
 				
 end
 else
---|#line 386
+--|#line 387
 
 					last_token := PIPED
 					set_start_condition (SECT2)
@@ -715,40 +716,40 @@ if yy_act <= 102 then
 if yy_act <= 99 then
 if yy_act <= 97 then
 if yy_act = 96 then
---|#line 390
+--|#line 391
 
 					last_token := EMPTY
 					line_nb := line_nb + 1
 					set_start_condition (SECT2)
 				
 else
---|#line 395
+--|#line 396
 set_start_condition (EIFFEL_BLOCK2)
 end
 else
 if yy_act = 98 then
---|#line 396
+--|#line 397
 
 					last_token := EIF_CODE
 					last_value := text
 					set_start_condition (SECT2)
 				
 else
---|#line 404
+--|#line 405
 more
 end
 end
 else
 if yy_act <= 101 then
 if yy_act = 100 then
---|#line 405
+--|#line 406
 more
 else
---|#line 406
+--|#line 407
 more
 end
 else
---|#line 407
+--|#line 408
 more
 end
 end
@@ -756,17 +757,17 @@ else
 if yy_act <= 105 then
 if yy_act <= 104 then
 if yy_act = 103 then
---|#line 408
+--|#line 409
 more
 else
---|#line 409
+--|#line 410
 
 					nb_open_brackets := nb_open_brackets + 1
 					more
 				
 end
 else
---|#line 413
+--|#line 414
 
 					if nb_open_brackets = 0 then
 						last_token := EIF_CODE
@@ -783,13 +784,13 @@ end
 else
 if yy_act <= 107 then
 if yy_act = 106 then
---|#line 431
+--|#line 432
 
 					last_token := EIF_CODE
 					last_value := text
 				
 else
---|#line 436
+--|#line 437
 
 					if text_item (1) = '%N' then
 						report_bad_character_error ("%%N")
