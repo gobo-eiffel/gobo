@@ -26,27 +26,23 @@ content="text/html; charset=iso-8859-1">
 <p>The usual way to invoke <em>geyacc</em> is as follows:</p>
 
 <blockquote>
-    <pre><font color="#800000">geyacc filename</font></pre>
+    <pre><font color="#800000">geyacc -o filename1 filename2</font></pre>
 </blockquote>
 
-<p>Here <font color="#800000"><tt>filename</tt></font> is the
+<p>Here <font color="#800000"><tt>filename2</tt></font> is the
 grammar file name, which usually ends in <font size="2">'</font><font
-color="#800000"><tt>.y</tt></font><font size="2">'</font>. The
-parser file's name is made by replacing the <font size="2">'</font><font
-color="#800000"><tt>.y</tt></font><font size="2">'</font> with <font
-size="2">'</font><font color="#800000"><tt>.e</tt></font><font
-size="2">'</font>. Thus, the <font color="#800000"><tt>geyacc
-foo.y</tt></font> filename yields <font color="#800000"><tt>foo.e</tt></font>,
-and the <font color="#800000"><tt>geyacc hack/foo.y</tt></font><font
-color="#800000" size="2" face="Courier New"> </font>filename
-yields <font color="#800000"><tt>hack/foo.e</tt></font>.</p>
+color="#800000"><tt>.y</tt></font><font size="2">'</font>, and
+the Eiffel parser class is generated in <font color="#800000"><tt>filename1</tt></font>.
+Thus, the <font color="#800000"><tt>geyacc -o foo.e foo.y </tt></font>yields
+an Eiffel class in <font color="#800000"><tt>foo.e</tt></font>
+describing a parser whose grammar is specified in <font
+color="#800000"><tt>foo.y</tt></font>.</p>
 
 <p><em>Geyacc</em> supports both traditional single-letter
 options and mnemonic long option names. Long option names are
 indicated with <font color="#800000"><tt>--</tt></font> instead
-of <font color="#800000"><tt>-</tt></font>. Abbreviations for
-option names are allowed as long as they are unique. When a long
-option takes an argument, like <font color="#800000"><tt>--output-file</tt></font>,
+of <font color="#800000"><tt>-</tt></font>. When a long option
+takes an argument, like <font color="#800000"><tt>--output-file</tt></font>,
 connect the option name and the argument with <font
 color="#800000"><tt>=</tt></font>. </p>
 
@@ -54,47 +50,41 @@ color="#800000"><tt>=</tt></font>. </p>
 alphabetized by short option:</p>
 
 <dl>
-    <dt><a name="-d"><font color="#800000"><tt>-d</tt></font></a><font
+    <dt><a name="-t"><font color="#800000"><tt>-t</tt></font></a><font
         color="#800000"><tt> classname<br>
-        --defines=classname</tt></font></dt>
+        --tokens=classname</tt></font></dt>
     <dd>Write an extra class named <font color="#800000"><tt>classname</tt></font>
         (in upper-case) containing integer constants for the
         token type names defined in the grammar. This class is
         saved in file <font color="#800000"><tt>classname.e</tt></font>
-        (in lower-case).<br>
-        <br>
-        This class is essential if you wish to put the definition
-        of routine <font color="#008080"><em><tt>read_token</tt></em></font>
+        (in lower-case). This class is essential if you wish to
+        put the definition of routine <font color="#008080"><em><tt>read_token</tt></em></font>
         in a separate class, because <font color="#008080"><em><tt>read_token</tt></em></font><font
         color="#008080" size="2" face="Courier New"><em> </em></font>needs
-        to be able to refer to token type codes.</dd>
+        to be able to refer to token type codes.<br>
+        <br>
+        [The options <font color="#800000"><tt>-d classname</tt></font>
+        and <font color="#800000"><tt>--defines=classname</tt></font>
+        are still available for compatibility with previous
+        version of <em>geyacc</em>. These options might be
+        removed in futures releases.]</dd>
     <dt><font color="#800000"><tt>-h<br>
+        -?<br>
         --help</tt></font></dt>
     <dd>Print a summary of the command-line options to <em>geyacc</em>
         and exit.</dd>
     <dt><font color="#800000"><tt>-o filename<br>
         --output-file=filename</tt></font></dt>
     <dd>Specify the name <font color="#800000"><tt>filename</tt></font>
-        for the parser file. The other output files' names are
-        constructed from <font color="#800000"><tt>filename</tt></font>
-        as described under the <font color="#800000"><tt>-v</tt></font>
-        option.</dd>
-    <dt><font color="#800000"><tt>-v<br>
-        --verbose</tt></font></dt>
+        for the parser file. If this option is not specified, the
+        parser is generated to the standard ouptut.</dd>
+    <dt><font color="#800000"><tt>-v filename<br>
+        --verbose=filename</tt></font></dt>
     <dd>Write an extra output file containing verbose
         descriptions of the parser states and what is done for
         each type of look-ahead token in that state. This file
         also describes all the conflicts, both those resolved by
-        operator precedence and the unresolved ones.<br>
-        <br>
-        The file's name is made by removing '<font
-        color="#800000"><tt>.e</tt></font>' from the parser
-        output file name, and adding '<font color="#800000"><tt>.output</tt></font>'
-        instead. Therefore, if the input file is <font
-        color="#800000"><tt>foo.y</tt></font>, then the parser
-        file is called <font color="#800000"><tt>foo.e</tt></font>
-        by default. As a consequence, the verbose output file is
-        called <font color="#800000"><tt>foo.output</tt></font>.</dd>
+        operator precedence and the unresolved ones.</dd>
     <dt><font color="#800000"><tt>-V<br>
         --version</tt></font></dt>
     <dd>Print the version number of <em>geyacc</em> and exit.</dd>
@@ -105,7 +95,7 @@ alphabetized by short option:</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -115,7 +105,7 @@ alphabetized by short option:</p>
             </font><a href="http://www.gobo.demon.co.uk"><font
             size="2">http://www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 7 September 1997</font><br>
+            <strong>Last Updated:</strong> 21 May 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
