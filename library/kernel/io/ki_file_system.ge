@@ -364,7 +364,7 @@ feature -- Pathname handling
 	dirname (a_pathname: STRING): STRING is
 			-- Pathname containing only the leading directory components so
 			-- that 'pathname (dirname (a_pathname), basename (a_pathname))'
-			-- is equivalent to `a_pathname; Return `relative_current_directory'
+			-- is equivalent to `a_pathname'; Return `relative_current_directory'
 			-- when there is no leading directory components in `a_pathname';
 			-- Return a root directory when `a_pathname' is a root directory
 			-- (`a_pathname' should follow the pathname convention of
