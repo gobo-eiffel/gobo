@@ -203,15 +203,7 @@ feature -- Input operations
 #else
 		do
 			a_stream.read_stream (nb_char)
-#ifdef VE
-			if a_stream.end_of_file then
-				Result := ""
-			else
-				Result := a_stream.last_string
-			end
-#else
 			Result := a_stream.last_string
-#endif
 #endif
 		ensure
 			string_not_void: Result /= Void
@@ -253,22 +245,14 @@ feature -- Input operations
 			end
 #else
 			a_stream.read_stream (nb_char)
-#ifdef VE
-			if a_stream.end_of_file then
-				Result := 0
-			else
-#endif
-				a_string := a_stream.last_string
-				Result := a_string.count
-				j := pos
-				from i := 1 until i > Result loop
-					a_buffer.put (a_string.item (i), j)
-					j := j + 1
-					i := i + 1
-				end
-#ifdef VE
+			a_string := a_stream.last_string
+			Result := a_string.count
+			j := pos
+			from i := 1 until i > Result loop
+				a_buffer.put (a_string.item (i), j)
+				j := j + 1
+				i := i + 1
 			end
-#endif
 #endif
 		ensure
 			nb_char_read_large_enough: Result >= 0

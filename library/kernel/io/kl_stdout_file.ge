@@ -22,6 +22,10 @@ inherit
 	KL_OPERATING_SYSTEM
 		export
 			{NONE} all
+#ifdef VE
+		undefine
+			copy
+#endif
 		end
 
 #ifdef ISE || HACT

@@ -45,7 +45,7 @@ feature -- Input
 		do
 			if last_string = Void then
 #ifdef VE
-				!! last_string.make (0)
+				!! last_string.make_empty
 #else
 				!! last_string.make (256)
 #endif
@@ -92,7 +92,7 @@ feature -- Input
 		do
 			if last_string = Void then
 #ifdef VE
-				!! last_string.make (0)
+				!! last_string.make_empty
 #else
 				!! last_string.make (256)
 #endif

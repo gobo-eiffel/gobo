@@ -26,6 +26,7 @@ inherit
 
 #ifdef ISE
 	STRING_HANDLER
+
 #endif
 creation
 
@@ -43,7 +44,7 @@ feature {NONE} -- Initialization
 			area := area_string.area
 #endif
 #ifdef VE
-			!! area.make (n)
+			!! area.make_filled ('%U', n)
 #endif
 #ifdef SE
 			!! area.blank (n)
@@ -74,7 +75,11 @@ feature -- Access
 		do
 			if e < s then
 					-- Empty string
+#ifdef VE
+				!! Result.make_empty
+#else
 				!! Result.make (0)
+#endif
 			else
 #ifdef ISE
 				nb := e - s + 1

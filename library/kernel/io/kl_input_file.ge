@@ -198,33 +198,20 @@ feature -- Input
 #endif
 #ifdef VE
 		local
-			old_string: STRING
-			i, j: INTEGER
-			a_target: STRING
+			i: INTEGER
 		do
+			if last_string = Void then
+				!! last_string.make_filled ('%U', nb)
+			elseif last_string.count < nb then
+				last_string.resize (nb)
+			end
 			if character_buffer = Void then
 				if not old_end_of_file then
-					old_string := last_string
 					old_read_stream (nb)
-					if last_string = Void then
-						if old_string /= Void then
-							old_string.wipe_out
-							last_string := old_string
-						else
-							!! last_string.make (0)
-						end
-					end
-				elseif last_string = Void then
-					!! last_string.make (0)
 				else
 					last_string.wipe_out
 				end
 			else
-				if last_string = Void then
-					!! last_string.make (nb)
-				elseif last_string.count < nb then
-					last_string.resize (nb)
-				end
 				i := read_to_string (last_string, 1, nb)
 				last_string.resize (i)
 			end

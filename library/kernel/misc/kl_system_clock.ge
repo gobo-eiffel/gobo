@@ -57,7 +57,7 @@ inherit
 		export
 			{NONE} all
 		undefine
-			out
+			out, is_equal
 		end
 
 #endif
@@ -118,7 +118,7 @@ feature -- Setting
 			second := basic_time.second
 #endif
 #ifdef VE
-			TIME_DATE_now (False, $year, $month, $day, $hour, $minute, $second, $millisecond)
+			old_set_local_time
 #endif
 #ifdef HACT
 			c_localtime (c_time, $year, $month, $day, $hour, $minute, $second, $tdst)
@@ -154,7 +154,7 @@ feature -- Setting
 			second := basic_time.second
 #endif
 #ifdef VE
-			TIME_DATE_now (True, $year, $month, $day, $hour, $minute, $second, $millisecond)
+			set_to_now
 #endif
 #ifdef HACT
 			c_utctime(c_time, $year, $month, $day, $hour, $minute, $second)

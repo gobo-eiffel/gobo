@@ -31,6 +31,10 @@ inherit
 	KL_OPERATING_SYSTEM
 		export
 			{NONE} all
+#ifdef VE
+		undefine
+			copy
+#endif
 		end
 
 #ifdef ISE || HACT
@@ -253,14 +257,13 @@ feature -- Input
 #endif
 #ifdef VE
 		local
-			old_string: STRING
 			i, j: INTEGER
 			a_target: STRING
 		do
 			if is_windows then
 					-- Windows.
 				if last_string = Void then
-					!! last_string.make (nb)
+					!! last_string.make_filled ('%U', nb)
 				elseif last_string.count < nb then
 					last_string.resize (nb)
 				end
@@ -276,31 +279,22 @@ feature -- Input
 					end
 				end
 				a_target.resize (j)
-			elseif character_buffer = Void then
-				if not old_end_of_file then
-					old_string := last_string
-					old_read_stream (nb)
-					if last_string = Void then
-						if old_string /= Void then
-							old_string.wipe_out
-							last_string := old_string
-						else
-							!! last_string.make (0)
-						end
-					end
-				elseif last_string = Void then
-					!! last_string.make (0)
-				else
-					last_string.wipe_out
-				end
 			else
 				if last_string = Void then
-					!! last_string.make (nb)
+					!! last_string.make_filled ('%U', nb)
 				elseif last_string.count < nb then
 					last_string.resize (nb)
 				end
-				i := read_to_string (last_string, 1, nb)
-				last_string.resize (i)
+				if character_buffer = Void then
+					if not old_end_of_file then
+						old_read_stream (nb)
+					else
+						last_string.wipe_out
+					end
+				else
+					i := read_to_string (last_string, 1, nb)
+					last_string.resize (i)
+				end
 			end
 #endif
 			end_of_file := (last_string.count = 0)
@@ -322,7 +316,7 @@ feature -- Input
 		do
 			if last_string = Void then
 #ifdef VE
-				!! last_string.make (0)
+				!! last_string.make_empty
 #else
 				!! last_string.make (256)
 #endif
@@ -380,7 +374,7 @@ feature -- Input
 		do
 			if last_string = Void then
 #ifdef VE
-				!! last_string.make (0)
+				!! last_string.make_empty
 #else
 				!! last_string.make (256)
 #endif
