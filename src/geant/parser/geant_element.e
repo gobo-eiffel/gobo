@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 		require
 			a_project_not_void: a_project /= Void
 			a_xml_element_not_void: a_xml_element /= Void
+			valid_xml_element: valid_xml_element (a_xml_element)
 		do
 			set_project (a_project)
 			set_xml_element (a_xml_element)
@@ -39,7 +40,20 @@ feature -- Access
 			-- Project to which Current belongs to
 
 	xml_element: GEANT_XML_ELEMENT
-		-- XML Element defining current element
+			-- XML Element defining current element
+
+	description: STRING is
+			-- Description for current element
+		require
+			has_description: has_description
+		local
+			children: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+		do
+			children := xml_element.children
+			Result := children.item (1).content.out
+		ensure
+			description_not_void: Result /= Void
+		end
 
 feature -- Status report
 
@@ -93,21 +107,20 @@ feature -- Status report
 			end
 		end
 
-	description: STRING is
-			-- Description for current element
+	valid_xml_element (an_xml_element: like xml_element): BOOLEAN is
+			-- Is `an_xml_element' a valid xml element?
 		require
-			has_description: has_description
-		local
-			children: DS_ARRAYED_LIST [GEANT_XML_ELEMENT]
+			an_xml_element_not_void: an_xml_element /= Void
 		do
-			children := xml_element.children
-			Result := children.item (1).content.out
+			Result := True
 		end
 
 feature -- Setting
 
 	set_project (a_project: like project) is
 			-- Set `project' to `a_project'.
+		require
+			a_project_not_void: a_project /= Void
 		do
 			project := a_project
 		ensure
@@ -116,6 +129,9 @@ feature -- Setting
 
 	set_xml_element (a_xml_element: like xml_element) is
 			-- Set `xml_element' to `a_xml_element'.
+		require
+			a_xml_element_not_void: a_xml_element /= Void
+			valid_xml_element: valid_xml_element (a_xml_element)
 		do
 			xml_element := a_xml_element
 		ensure
@@ -330,8 +346,9 @@ feature {NONE} -- Constants
 		end
 
 invariant
+
 	project_not_void: project /= Void
 	xml_element_not_void: xml_element /= Void
+	valid_xml_element: valid_xml_element (xml_element)
 
 end -- class GEANT_ELEMENT
-

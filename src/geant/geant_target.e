@@ -18,7 +18,7 @@ inherit
 
 	GEANT_ELEMENT
 		redefine
-			make
+			make, valid_xml_element
 		end
 
 	KL_SHARED_EXCEPTIONS
@@ -49,8 +49,6 @@ feature {NONE} -- Initialization
 
 	make (a_project: GEANT_PROJECT; a_xml_element: GEANT_XML_ELEMENT) is
 			-- Create a new target
---!!		require
---!!			a_xml_element_has_name: a_xml_element.has_attribute (Name_attribute_name)
 		do
 			precursor (a_project, a_xml_element)
 			set_name (xml_element.attribute_value_by_name (Name_attribute_name).out)
@@ -58,24 +56,42 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	has_dependencies: BOOLEAN is
-			-- Has current target dependent on other targets?
-		do
-			Result := xml_element.has_attribute (Depend_attribute_name)
-		end
-
 	dependencies: UC_STRING is
 			-- UC_STRING representation of dependencies
+		require
+			has_dependencies: has_dependencies
 		do
 			Result := xml_element.attribute_value_by_name (Depend_attribute_name)
+		ensure
+			dependencies_not_void: Result /= Void
 		end
 
 	name: STRING
 			-- Name of target
 
+feature -- Status report
+
 	is_executed: BOOLEAN
 			-- Was this target executed already?
-			
+
+	has_dependencies: BOOLEAN is
+			-- Has current target dependent on other targets?
+		do
+			Result := xml_element.has_attribute (Depend_attribute_name)
+		ensure
+			definition: Result = xml_element.has_attribute (Depend_attribute_name)
+		end
+
+	valid_xml_element (an_xml_element: like xml_element): BOOLEAN is
+			-- Is `an_xml_element' a valid xml element?
+		do
+			Result := an_xml_element.has_attribute (Name_attribute_name) and then
+				an_xml_element.attribute_value_by_name (Name_attribute_name).out.count > 0
+		ensure then
+			has_name_attribute: Result implies an_xml_element.has_attribute (Name_attribute_name)
+			has_non_empty_name_attribute: Result implies an_xml_element.attribute_value_by_name (Name_attribute_name).out.count > 0
+		end
+
 feature -- Setting
 
 	set_name (a_name: STRING) is

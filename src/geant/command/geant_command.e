@@ -66,6 +66,8 @@ feature -- Setting
 
 	set_project (a_project: like project) is
 			-- Set `project' to `a_project'.
+		require
+			project_not_void: a_project /= Void
 		do
 			project := a_project
 		ensure
@@ -117,5 +119,8 @@ feature {NONE} -- Implementation
 			exit_code := shell_command.exit_code
 		end
 
-end -- class GEANT_COMMAND
+invariant
 
+	project_not_void: project /= Void
+
+end -- class GEANT_COMMAND

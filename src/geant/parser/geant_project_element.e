@@ -79,6 +79,9 @@ feature -- Access
 			-- XML Child elements named 'target'
 		do
 			Result := xml_element.children_by_name (Target_element_name)
+		ensure
+			xm_target_elements_not_void: Result /= Void
+			no_void_xm_target_element: not Result.has (Void)
 		end
 
 feature {NONE} -- Constants
