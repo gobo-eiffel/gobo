@@ -99,13 +99,15 @@ feature -- Parsing
 			a_filename_not_void: a_filename /= Void
 			a_cluster_not_void: a_cluster /= Void
 		do
-			reset
 			filename := a_filename
 			cluster := a_cluster
 			input_buffer := Eiffel_buffer
 			Eiffel_buffer.set_file (a_file)
 			yy_load_input_buffer
 			yyparse
+			reset
+		rescue
+			reset
 		end
 
 feature {NONE} -- Basic operations
@@ -459,6 +461,7 @@ feature {NONE} -- AST factory
 			Result := universe.eiffel_class (a_name)
 			Result.set_filename (filename)
 			Result.set_cluster (cluster)
+			Result.set_parsed
 
 			debug ("GELINT")
 				std.error.put_string ("Parse class `")
@@ -1661,6 +1664,9 @@ feature {NONE} -- AST factory
 				Result := ast_factory.new_formal_generic_type (a_name, a_parameter.index)
 			else
 				a_class := universe.eiffel_class (a_name)
+				if last_class.in_system then
+					a_class.add_to_system
+				end
 				if a_generics /= Void then
 					Result := ast_factory.new_generic_class_type (a_type_mark, a_name, a_generics, a_class)
 				else
@@ -1746,6 +1752,7 @@ feature {NONE} -- AST factory
 			-- New parent
 		require
 			a_name_not_void: a_name /= Void
+			last_class_not_void: last_class /= Void
 		local
 			a_type: ET_CLASS_TYPE
 			a_class: ET_CLASS
@@ -1754,6 +1761,9 @@ feature {NONE} -- AST factory
 				-- Error
 			end
 			a_class := universe.eiffel_class (a_name)
+			if last_class.in_system then
+				a_class.add_to_system
+			end
 			if a_generic_parameters /= Void then
 				!ET_GENERIC_CLASS_TYPE! a_type.make (Void, a_name, a_generic_parameters, a_class)
 			else
