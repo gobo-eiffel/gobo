@@ -91,7 +91,6 @@
 				<ref name="getest"/>
 				<ref name="gexace"/>
 				<ref name="gexmlsplit"/>
-				<ref name="hact"/>
 				<ref name="ise"/>
 				<ref name="mkdir"/>
 				<ref name="move"/>
@@ -343,7 +342,6 @@
 					<!-- runtime evaluation
 					<choice>
 						<value>ise</value>
-						<value>hact</value>
 						<value>se</value>
 						<value>ve</value>
 						<value>xml</value>
@@ -356,7 +354,6 @@
 						<!-- runtime evaluation
 						<choice>
 							<value>ise</value>
-							<value>hact</value>
 							<value>se</value>
 							<value>ve</value>
 							<value>xml</value>
@@ -367,7 +364,6 @@
 						<!-- runtime evaluation
 						<choice>
 							<value>ise</value>
-							<value>hact</value>
 							<value>se</value>
 							<value>ve</value>
 							<value>xml</value>
@@ -394,26 +390,6 @@
 		<element name="gexmlsplit">
 			<ref name="dir_if_unless"/>
 			<attribute name="input"/>
-		</element>
-	</define>
-	<define name="hact">
-		<element name="hact">
-			<ref name="dir_if_unless"/>
-			<choice>
-				<group>
-					<attribute name="system"/>
-					<optional>
-						<attribute name="ace"/>
-					</optional>
-					<optional>
-						<attribute name="finalize"/>
-					</optional>
-					<optional>
-						<attribute name="fish"/>
-					</optional>
-				</group>
-				<attribute name="clean"/>
-			</choice>
 		</element>
 	</define>
 	<define name="ise">

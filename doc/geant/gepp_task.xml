@@ -124,7 +124,7 @@
 	output="kl_array_routines.e"
 	to_directory="path/to/some/directory"
   />
-    <define name="HACT" if="$HACT"/>
+    <define name="ISE" if="$ISE"/>
   </gepp>
   
 ]]>

@@ -19,12 +19,10 @@
 		<echo message="   geant install"/>
 		<echo message="   geant compile"/>
 		<echo message="   geant compile_ise"/>
-		<echo message="   geant compile_hact"/>
 		<echo message="   geant compile_se"/>
 		<echo message="   geant compile_ve"/>
 		<echo message="   geant compile_debug"/>
 		<echo message="   geant compile_debug_ise"/>
-		<echo message="   geant compile_debug_hact"/>
 		<echo message="   geant compile_debug_se"/>
 		<echo message="   geant compile_debug_ve"/>
 		<echo message="   geant bootstrap"/>
@@ -39,8 +37,6 @@
 
 		<unset name="gexace_output"/>
 		<set name="eiffel" value="ise"/>
-		<geant target="xace"/>
-		<set name="eiffel" value="hact"/>
 		<geant target="xace"/>
 		<set name="eiffel" value="se"/>
 		<geant target="xace"/>
@@ -90,24 +86,6 @@
 				<map type="flat"/>
 			</fileset>
 		</copy>
-	</target>
-
-	<target name="compile_hact" depend="prepare_compile">
-		<description>
-			Compile '${system}' with Halstenbach Eiffel.
-			Compile in debug mode if ${debug} is defined.
-		</description>
-
-		<set name="eiffel" value="hact"/>
-		<set name="gexace_output" value="compile_hact.ace"/>
-		<geant target="xace"/>
-		<delete file="${system}${exe}"/>
-		<delete file="${system}.h2o"/>
-		<hact ace="compile_hact.ace" system="${system}" finalize="true" fish="true" unless="${debug}"/>
-		<move file="${system}_gen/F_code/${system}${exe}" to_directory="." unless="${debug}"/>
-		<hact ace="compile_hact.ace" system="${system}" finalize="false" fish="true" if="${debug}"/>
-		<move file="${system}_gen/W_code/${system}${exe}" to_directory="." if="${debug}"/>
-		<move file="${system}_gen/W_code/${system}.h2o" to_directory="." if="${debug}"/>
 	</target>
 
 	<target name="compile_ve" depend="prepare_compile">
@@ -160,16 +138,6 @@
 		<geant target="compile"/>
 	</target>
 
-	<target name="compile_debug_hact" depend="prepare_compile">
-		<description>
-			Compile '${system}' with Halstenbach Eiffel in debug mode.
-		</description>
-
-		<set name="eiffel" value="hact"/>
-		<set name="debug" value="true"/>
-		<geant target="compile"/>
-	</target>
-
 	<target name="compile_debug_ve" depend="prepare_compile">
 		<description>
 			Compile '${system}' with Visual Eiffel in debug mode.
@@ -208,11 +176,9 @@
 		</description>
 
 		<ise clean="${system}"/>
-		<hact clean="${system}"/>
 		<se clean="${system}"/>
 		<ve clean="${system}" recursive="true"/>
 		<delete file="compile_ise.ace"/>
-		<delete file="compile_hact.ace"/>
 		<delete file="compile_se.ace"/>
 		<delete file="compile_ve.esd"/>
 		<geant target="other_clean"/>
@@ -225,7 +191,6 @@
 
 		<geant target="clean"/>
 		<delete file="ise.ace"/>
-		<delete file="hact.ace"/>
 		<delete file="se.ace"/>
 		<delete file="ve.esd"/>
 		<delete file="${system}${exe}"/>

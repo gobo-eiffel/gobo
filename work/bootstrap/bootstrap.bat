@@ -133,7 +133,6 @@ goto exit
 
 :install
 	if .%EIF%. == .ise. goto ise
-	if .%EIF%. == .hact. goto hact
 	if .%EIF%. == .se. goto se
 	if .%EIF%. == .ve. goto ve
 	echo Unknown Eiffel compiler: %EIF%
@@ -141,10 +140,6 @@ goto exit
 
 :ise
 	set GOBO_EIFFEL=ise
-	goto bootstrap
-
-:hact
-	set GOBO_EIFFEL=hact
 	goto bootstrap
 
 :se
@@ -175,7 +170,7 @@ goto exit
 :usage
 	echo "usage: bootstrap.bat [-v] <c_compiler> <eiffel_compiler>"
 	echo "   c_compiler:  msc | bcc | lcc | gcc | no_c"
-	echo "   eiffel_compiler:  ise | hact | se | ve"
+	echo "   eiffel_compiler:  ise | se | ve"
 	goto exit
 
 :exit

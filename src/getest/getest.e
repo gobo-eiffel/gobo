@@ -52,7 +52,6 @@ feature -- Processing
 				create config_parser.make (variables, error_handler)
 				config_parser.set_fail_on_rescue (fail_on_rescue)
 				config_parser.set_compiler_ise (compiler_ise)
-				config_parser.set_compiler_hact (compiler_hact)
 				config_parser.set_compiler_se (compiler_se)
 				config_parser.set_compiler_ve (compiler_ve)
 				config_parser.parse (a_file)
@@ -196,19 +195,18 @@ feature -- Status report
 			-- Should the testcases be executed?
 
 	compiler_ise: BOOLEAN
-	compiler_hact: BOOLEAN
 	compiler_se: BOOLEAN
 	compiler_ve: BOOLEAN
 			-- Compiler specified on the command-line
-			-- (--ise, --hact, --se or --ve)
+			-- (--ise, --se or --ve)
 
 	compiler_specified: BOOLEAN is
 			-- Has an Eiffel compiler been specified on the command-line?
-			-- (--ise, --hact, --se or --ve)
+			-- (--ise, --se or --ve)
 		do
-			Result := (compiler_ise or compiler_hact or compiler_se or compiler_ve)
+			Result := (compiler_ise or compiler_se or compiler_ve)
 		ensure
-			definition: Result = (compiler_ise or compiler_hact or compiler_se or compiler_ve)
+			definition: Result = (compiler_ise or compiler_se or compiler_ve)
 		end
 
 	fail_on_rescue: BOOLEAN
@@ -245,12 +243,6 @@ feature {NONE} -- Command line
 						report_usage_error
 					else
 						compiler_ise := True
-					end
-				elseif arg.is_equal ("--hact") then
-					if compiler_specified then
-						report_usage_error
-					else
-						compiler_hact := True
 					end
 				elseif arg.is_equal ("--ve") then
 					if compiler_specified then
@@ -324,11 +316,6 @@ feature {NONE} -- Command line
 					create a_file.make (ISE_config_filename)
 					if a_file.exists then
 						config_filename := ISE_config_filename
-					end
-				elseif compiler_hact then
-					create a_file.make (HACT_config_filename)
-					if a_file.exists then
-						config_filename := HACT_config_filename
 					end
 				elseif compiler_se then
 					create a_file.make (SE_config_filename)
@@ -447,7 +434,7 @@ feature {NONE} -- Error handling
 				%%T[-D <name>=<value>|--define=<name>=<value>]*%N%
 				%%T[--class=<regexp>][--feature=<regexp>]%N%
 				%%T[--compile=<command>]%N%
-				%%T[--se|--ise|--hact|--ve|<filename>]")
+				%%T[--se|--ise|--ve|<filename>]")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
@@ -457,7 +444,6 @@ feature {NONE} -- Constants
 	Getest_config_variable: STRING is "GETEST_CONFIG"
 			-- Environment variable
 
-	HACT_config_filename: STRING is "getest.hact"
 	ISE_config_filename: STRING is "getest.ise"
 	SE_config_filename: STRING is "getest.se"
 	VE_config_filename: STRING is "getest.ve"

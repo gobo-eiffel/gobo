@@ -26,7 +26,6 @@ inherit
 
 	KS_COMPARABLE
 		undefine
-				-- Note: HACT 4.0.1 does not support calling `copy' on itself.
 			copy, out
 		redefine
 			is_equal, copy, out,
@@ -89,9 +88,8 @@ feature -- Initialization
 			-- class STRING provided by the Eiffel compilers is not necessarily
 			-- aware of the implementation of UC_STRING and this may lead to
 			-- run-time errors or crashes.
-			-- Note2: Incorrect implementation in ISE 5.1 and HACT 4.0.1:
+			-- Note2: Incorrect implementation in ISE 5.1:
 			-- sharing internal representation (fixed in ISE 5.2).
-			-- Note3: Not declared as creation procedure in HACT 4.0.1.
 			-- Use KL_STRING_ROUTINES.make_from_string instead.
 		require
 			not_portable: False
@@ -119,7 +117,7 @@ feature {NONE} -- Initialization
 	make_empty is
 			-- Create empty string.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
+			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.make_empty instead.
 		require
 			not_portable: False
@@ -131,7 +129,7 @@ feature {NONE} -- Initialization
 	make_filled (c: CHARACTER; n: INTEGER) is
 			-- Create string of length `n' filled with `c'.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
+			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.make_filled instead.
 		require
 			not_portable: False
@@ -187,10 +185,9 @@ feature -- Access
 		deferred
 		ensure
 			valid_result: Result = 0 or (start_index <= Result and Result <= count)
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			zero_if_absent: (Result = 0) = not STRING_.substring (current_string, start_index, count).has (c)
-			found_if_present: STRING_.substring (current_string, start_index, count).has (c) implies item (Result) = c
-			none_before: STRING_.substring (current_string, start_index, count).has (c) implies not STRING_.substring (current_string, start_index, Result - 1).has (c)
+			zero_if_absent: (Result = 0) = not substring (start_index, count).has (c)
+			found_if_present: substring (start_index, count).has (c) implies item (Result) = c
+			none_before: substring (start_index, count).has (c) implies not substring (start_index, Result - 1).has (c)
 		end
 
 	string: STRING is
@@ -198,7 +195,7 @@ feature -- Access
 			-- where characters which do not fit in a CHARACTER are
 			-- replaced by a '%U'
 			-- (Extended from ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
+			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.string instead.
 		require
 			not_portable: False
@@ -214,22 +211,16 @@ feature -- Access
 			-- New object containing all characters from `start_index'
 			-- to `end_index' inclusive
 			-- (ELKS 2001 STRING)
-			-- Note: HACT 4.0.1 does not support empty substrings. Use
-			-- KL_STRING_ROUTINES.substring instead when empty substrings
-			-- are expected.
 		require
 			valid_start_index: 1 <= start_index
 			valid_end_index: end_index <= count
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			-- meaningful_interval: start_index <= end_index + 1
-			meaningful_interval: start_index <= end_index
+			meaningful_interval: start_index <= end_index + 1
 		deferred
 		ensure
 			substring_not_void: Result /= Void
 			substring_count: Result.count = end_index - start_index + 1
 			first_item: Result.count > 0 implies Result.item (1) = item (start_index)
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-				-- Note2: Too time and memory consuming with SE -0.74:
+				-- Note: Too time and memory consuming with SE -0.74:
 			-- recurse: Result.count > 0 implies Result.substring (2, Result.count).is_equal
 			--	(substring (start_index + 1, end_index))
 		end
@@ -256,13 +247,11 @@ feature -- Access
 		ensure
 			valid_result: Result = 0 or else (start_index <= Result and Result <= count - other.count + 1)
 				-- Note: ISE Eiffel 5.1 does not support feature `has_substring':
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			zero_if_absent: (Result = 0) = not STRING_.has_substring (STRING_.substring (current_string, start_index, count), other)
+			zero_if_absent: (Result = 0) = not STRING_.has_substring (substring (start_index, count).current_string, other)
 				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
-			at_this_index: Result >= start_index implies STRING_.elks_same_string (other, STRING_.substring (current_string, Result, Result + other.count - 1))
+			at_this_index: Result >= start_index implies STRING_.elks_same_string (other, substring (Result, Result + other.count - 1).current_string)
 				-- Note: ISE Eiffel 5.1 does not support feature `has_substring':
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			none_before: Result > start_index implies not STRING_.has_substring (STRING_.substring (current_string, start_index, Result + other.count - 2), other)
+			none_before: Result > start_index implies not STRING_.has_substring (substring (start_index, Result + other.count - 2).current_string, other)
 		end
 
 	infix "+" (other: STRING): like Current is
@@ -281,10 +270,9 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 			result_count: Result.count = count + other.count
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			initial: STRING_.substring (Result.current_string, 1, count).is_equal (current_string)
+			initial: Result.substring (1, count).is_equal (Current)
 				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
-			final: STRING_.elks_same_string (STRING_.substring (Result.current_string, count + 1, count + other.count), other)
+			final: STRING_.elks_same_string (Result.substring (count + 1, count + other.count).current_string, other)
 		end
 
 feature -- Measurement
@@ -301,11 +289,10 @@ feature -- Measurement
 		deferred
 		ensure
 			zero_if_empty: count = 0 implies Result = 0
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			recurse_if_not_found_at_first_position: (count > 0 and then item (1) /= c) implies
-				Result = STRING_.substring (current_string, 2, count).occurrences (c)
+				Result = substring (2, count).occurrences (c)
 			recurse_if_found_at_first_position: (count > 0 and then item (1) = c) implies
-				Result = 1 + STRING_.substring (current_string, 2, count).occurrences (c)
+				Result = 1 + substring (2, count).occurrences (c)
 		end
 
 feature -- Status report
@@ -317,8 +304,7 @@ feature -- Status report
 		ensure
 			false_if_empty: count = 0 implies not Result
 			true_if_first: count > 0 and then item (1) = c implies Result
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			recurse: (count > 0 and then item (1) /= c) implies (Result = STRING_.substring (current_string, 2, count).has (c))
+			recurse: (count > 0 and then item (1) /= c) implies (Result = substring (2, count).has (c))
 		end
 
 	has_substring (other: STRING): BOOLEAN is
@@ -333,7 +319,6 @@ feature -- Status report
 			-- not necessarily aware of the implementation of UC_STRING
 			-- and this may lead to run-time errors or crashes.
 			-- Note2: Not supported in ISE 5.1 (implemented in ISE 5.2).
-			-- Note3: The postcondition in HACT 4.0.1 is not correct.
 		require
 			not_portable: False
 			other_not_void: other /= Void
@@ -341,8 +326,8 @@ feature -- Status report
 		ensure
 			false_if_too_small: count < other.count implies not Result
 				-- Note: Feature `same_string' (from ELKS 2001) is not supported by all compilers yet:
-			true_if_initial: (count >= other.count and then STRING_.elks_same_string (other, STRING_.substring (current_string, 1, other.count))) implies Result
-			recurse: (count >= other.count and then not STRING_.elks_same_string (other, STRING_.substring (current_string, 1, other.count))) implies (Result = STRING_.has_substring (STRING_.substring (current_string, 2, count), other))
+			true_if_initial: (count >= other.count and then STRING_.elks_same_string (other, substring (1, other.count).current_string)) implies Result
+			recurse: (count >= other.count and then not STRING_.elks_same_string (other, substring (1, other.count).current_string)) implies (Result = STRING_.has_substring (substring (2, count).current_string, other))
 		end
 
 	valid_index (i: INTEGER): BOOLEAN is
@@ -356,10 +341,6 @@ feature -- Status report
 	is_empty: BOOLEAN is
 			-- Is string empty?
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1.
-			-- Use 'count = 0' instead.
-		require
-			not_portable: False
 		deferred
 		ensure
 			definition: Result = (count = 0)
@@ -465,8 +446,7 @@ feature -- Comparison
 			-- (Extended from ELKS 2001 STRING)
 		deferred
 		ensure then
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-				-- Note2: Definition not necessarily acceptable in proper descendant classes:
+				-- Note: Definition not necessarily acceptable in proper descendant classes:
 			-- definition: Result = (same_type (other) and then
 			--	count = other.count and then
 			--	(count > 0 implies (item (1) = other.item (1) and 
@@ -488,7 +468,7 @@ feature -- Comparison
 			-- because class STRING provided by the Eiffel compilers is
 			-- not necessarily aware of the implementation of UC_STRING
 			-- and this may lead to run-time errors or crashes.
-			-- Note2: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
+			-- Note2: Not supported in ISE 5.1 (implemented in ISE 5.2).
 		require
 			not_portable: False
 			other_not_void: other /= Void
@@ -505,14 +485,13 @@ feature -- Comparison
 			-- (Extended from ELKS 2001 STRING)
 		deferred
 		ensure then
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-				-- Note2: Definition not necessarily acceptable in proper descendant classes:
+				-- Note: Definition not necessarily acceptable in proper descendant classes:
 			-- definition: Result = (count = 0 and other.count > 0 or
 			--	count > 0 and then other.count > 0 and then (item (1) < other.item (1) or
 			--	item (1) = other.item (1) and substring (2, count) < other.substring (2, other.count)))
 			definition: same_type ("") implies Result = (count = 0 and other.count > 0 or
 				count > 0 and then other.count > 0 and then (item (1) < other.item (1) or
-				item (1) = other.item (1) and STRING_.substring (current_string, 2, count) < STRING_.substring (other.current_string, 2, other.count)))
+				item (1) = other.item (1) and substring (2, count) < other.substring (2, other.count)))
 		end
 
 feature -- Element change
@@ -526,9 +505,8 @@ feature -- Element change
 		ensure
 			stable_count: count = old count
 			replaced: item (i) = c
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			stable_before_i: STRING_.substring (current_string, 1, i - 1).is_equal (old STRING_.substring (current_string, 1, i - 1))
-			stable_after_i: STRING_.substring (current_string, i + 1, count).is_equal (old STRING_.substring (current_string, i + 1, count))
+			stable_before_i: substring (1, i - 1).is_equal (old substring (1, i - 1))
+			stable_after_i: substring (i + 1, count).is_equal (old substring (i + 1, count))
 		end
 
 	append_character (c: CHARACTER) is
@@ -538,8 +516,7 @@ feature -- Element change
 		ensure
 			new_count: count = old count + 1
 			appended: item (count) = c
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			stable_before: STRING_.substring (current_string, 1, count - 1).is_equal (old clone (current_string))
+			stable_before: substring (1, count - 1).is_equal (old clone (Current))
 		end
 
 	append_string (s: STRING) is
@@ -561,7 +538,7 @@ feature -- Element change
 	fill_with (c: CHARACTER) is
 			-- Replace every character with `c'.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
+			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.fill_with instead.
 		require
 			not_portable: False
@@ -584,9 +561,8 @@ feature -- Element change
 		ensure
 			one_more_character: count = old count + 1
 			inserted: item (i) = c
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			stable_before_i: STRING_.substring (current_string, 1, i - 1).is_equal (old STRING_.substring (current_string, 1, i - 1))
-			stable_after_i: STRING_.substring (current_string, i + 1, count).is_equal (old STRING_.substring (current_string, i, count))
+			stable_before_i: substring (1, i - 1).is_equal (old substring (1, i - 1))
+			stable_after_i: substring (i + 1, count).is_equal (old substring (i, count))
 		end
 
 	insert_string (s: STRING; i: INTEGER) is
@@ -599,19 +575,18 @@ feature -- Element change
 			-- class STRING provided by the Eiffel compilers is not necessarily
 			-- aware of the implementation of UC_STRING and this may lead to
 			-- run-time errors or crashes.
-			-- Note2: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in 5.2)
+			-- Note2: Not supported in ISE 5.1 (implemented in 5.2)
 		require
 			not_portable: False
 			string_not_void: s /= Void
 			valid_insertion_index: 1 <= i and i <= count + 1
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			inserted: is_equal (old substring (1, i - 1) + old clone (s) + old substring (i, count).current_string)
 		end
 
 	replace_substring (s: like Current; start_index, end_index: INTEGER) is
-		-- Note: VE 4.0, HACT 4.0.1 and ISE 5.1 have 'like Current'
+		-- Note: VE 4.0 and ISE 5.1 have 'like Current'
 		-- in their signature instead of STRING as specified in
 		-- ELKS 2001 (fixed in ISE 5.2):
 	-- replace_substring (s: STRING; start_index, end_index: INTEGER) is
@@ -628,16 +603,15 @@ feature -- Element change
 			string_not_void: s /= Void
 			valid_start_index: 1 <= start_index
 			valid_end_index: end_index <= count
-				-- Note: HACT 4.0.1 and ISE 5.1 do not support empty interval yet (fixed in ISE 5.2):
+				-- Note: ISE 5.1 does not support empty interval yet (fixed in ISE 5.2):
 			-- meaningful_interval: start_index <= end_index + 1
 			meaningful_interval: start_index <= end_index
-				-- Note: ISE 5.1 and HACT 4.0.1 do not support replacing
+				-- Note: ISE 5.1 does not support replacing
 				-- a substring by itself (fixed in ISE 5.2):
 			not_current: s /= Current
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			-- replaced: is_equal (old (substring (1, start_index - 1) + s + substring (end_index + 1, count).current_string))
+			replaced: is_equal (old (substring (1, start_index - 1) + s.current_string + substring (end_index + 1, count).current_string))
 		end
 
 feature -- Removal
@@ -646,15 +620,14 @@ feature -- Removal
 			-- Remove all the characters except for the first `n';
 			-- if `n' > `count', do nothing.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
+			-- Note: Not supported ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.keep_head instead.
-			-- Note2: Named `head' in HACT 4.0.1 and ISE 5.1.
+			-- Note2: Named `head' in ISE 5.1.
 		require
 			not_portable: False
 			n_non_negative: n >= 0
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			kept: is_equal (old substring (1, n.min (count)))
 		end
 
@@ -662,15 +635,14 @@ feature -- Removal
 			-- Remove all the characters except for the last `n';
 			-- if `n' > `count', do nothing.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
+			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.keep_tail instead.
-			-- Note2: Named `tail' in HACT 4.0.1 and ISE 5.1.
+			-- Note2: Named `tail' in ISE 5.1.
 		require
 			not_portable: False
 			n_non_negative: n >= 0
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			kept: is_equal (old substring (count - n.min (count) + 1, count))
 		end
 
@@ -678,14 +650,13 @@ feature -- Removal
 			-- Remove the first `n' characters;
 			-- if `n' > `count', remove all.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
+			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.remove_head instead.
 		require
 			not_portable: False
 			n_non_negative: n >= 0
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			removed: is_equal (old substring (n.min (count) + 1, count))
 		end
 
@@ -693,14 +664,13 @@ feature -- Removal
 			-- Remove the last `n' characters;
 			-- if `n' > `count', remove all.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
+			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.remove_tail instead.
 		require
 			not_portable: False
 			n_non_negative: n >= 0
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			removed: is_equal (old substring (1, count - n.min (count)))
 		end
 
@@ -712,15 +682,14 @@ feature -- Removal
 			valid_removal_index: valid_index (i)
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			-- removed: is_equal (old substring (1, i - 1) + old substring (i + 1, count).current_string)
+			removed: is_equal (old substring (1, i - 1) + old substring (i + 1, count).current_string)
 		end
 
 	remove_substring (start_index, end_index: INTEGER) is
 			-- Remove all characters from `start_index'
 			-- to `end_index' inclusive.
 			-- (ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ISE 5.2).
+			-- Note: Not supported in ISE 5.1 (implemented in ISE 5.2).
 			-- Use KL_STRING_ROUTINES.remove_substring instead.
 		require
 			not_portable: False
@@ -729,7 +698,6 @@ feature -- Removal
 			meaningful_interval: start_index <= end_index + 1
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
 			removed: is_equal (old substring (1, start_index - 1) + old substring (end_index + 1, count).current_string)
 		end
 
@@ -746,7 +714,7 @@ feature -- Conversion
 	as_lower: like Current is
 			-- New object with all letters in lower case
 			-- (Extended from ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ise 5.2).
+			-- Note: Not supported in ISE 5.1 (implemented in ise 5.2).
 			-- Use KL_STRING_ROUTINES.as_lower instead.
 		require
 			not_portable: False
@@ -761,7 +729,7 @@ feature -- Conversion
 	as_upper: like Current is
 			-- New object with all letters in upper case
 			-- (Extended from ELKS 2001 STRING)
-			-- Note: Not supported in HACT 4.0.1 and ISE 5.1 (implemented in ise 5.2).
+			-- Note: Not supported in ISE 5.1 (implemented in ise 5.2).
 			-- Use KL_STRING_ROUTINES.as_upper instead.
 		require
 			not_portable: False
@@ -778,7 +746,7 @@ feature -- Conversion
 			-- (ELKS 2001 STRING)
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 and ISE 5.1 does not support `as_lower' (implemented in ise 5.2):
+				-- Note: ISE 5.1 does not support `as_lower' (implemented in ise 5.2):
 				-- Note2: There is an infinite loop with SE -0.74 because SE
 				-- checks assertions even when execution assertions and `as_lower'
 				-- in descendant classes is implemented by calling `to_lower'
@@ -791,7 +759,7 @@ feature -- Conversion
 			-- (ELKS 2001 STRING)
 		deferred
 		ensure
-				-- Note: HACT 4.0.1 and ISE 5.1 does not support `as_upper' (implemented in ise 5.2):
+				-- Note: ISE 5.1 does not support `as_upper' (implemented in ise 5.2):
 				-- Note2: There is an infinite loop with SE -0.74 because SE
 				-- checks assertions even when execution assertions and `as_upper'
 				-- in descendant classes is implemented by calling `to_upper'
@@ -849,7 +817,6 @@ feature -- Duplication
 			-- Reinitialize by copying the characters of other.
 			-- (This is also used by clone.)
 			-- (ELKS 2001 STRING)
-			-- Note: HACT 4.0.1 does not support calling `copy' on itself.
 		deferred
 		end
 

@@ -35,7 +35,7 @@ feature -- Status report
 			-- Does `v' appear in `an_array'?
 		require
 			an_array_not_void: an_array /= Void
-#ifndef ISE || HACT
+#ifndef ISE
 		local
 			i, nb: INTEGER
 		do
@@ -93,7 +93,7 @@ feature -- Element change
 			valid_bounds: start_pos <= end_pos + 1
 			index_pos_large_enough: index_pos >= an_array.lower
 			enough_space: (an_array.upper - index_pos) >= (end_pos - start_pos)
-#ifndef ISE || HACT
+#ifndef ISE
 		local
 			i, j: INTEGER
 		do
@@ -124,7 +124,7 @@ feature -- Removal
 			-- Reset all items to default values.
 		require
 			an_array_not_void: an_array /= Void
-#ifndef (ISE && ISE_5_1) || HACT
+#ifndef (ISE && ISE_5_1)
 		local
 			i, nb: INTEGER
 			v: G

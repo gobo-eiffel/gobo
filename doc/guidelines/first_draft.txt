@@ -15,7 +15,7 @@ developer guidelines. Since I first sent it to the list
 we agreed on Berend's suggestions to follow more strictly
 OOSC2 guidelines, and to state clearly that 'gepp' should
 almost never be used (only for generating the classes in
-spec/[ise|se|ve|hact] for example) and that using deferred
+spec/[ise|se|ve] for example) and that using deferred
 classes was a preferred solution.
 
 -- 
@@ -72,12 +72,12 @@ Content-Disposition: inline;
 EIFFEL LANGUAGE
 
 The classes provided in the Gobo Eiffel package should compile
-and work without any change on the four currently maintained
-Eiffel compilers: Halstenbach, ISE Eiffel, SmallEiffel and
+and work without any change on the three currently maintained
+Eiffel compilers: ISE Eiffel, SmartEiffel and
 Visual Eiffel. In order to make things easier, only the latest
 public release of each compiler will be supported. This latest
 release can be a beta version provided that it is deemed stable
-enough, as it is often the case for SmallEiffel for example.
+enough, as it is often the case for SmartEiffel for example.
 
 In order to achieve Eiffel compiler interoperability, it is
 not necessarily required to strictly follow the Eiffel standard.
@@ -177,7 +177,6 @@ and 'impl' which stands for "implementation". For the
 cluster 'spec', compiler-dependent classes should have
 the same name and put into the four following clusters:
 
-  spec/hact       -- Implementation for Halstenbach
   spec/ise        -- Implementation for ISE Eiffel
   spec/se         -- Implementation for SmallEiffel
   spec/ve         -- Implementation for Visual Eiffel

@@ -112,11 +112,9 @@ feature -- Test
 			assert_equal ("substring1", "bar", a_string.substring (1, 3)) 
 			assert_equal ("substring2", "ba", a_string.substring (1, 2)) 
 			assert_equal ("substring3", "a", a_string.substring (2, 2)) 
-			-- TODO: Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			-- assert_equal ("substring4", "", a_string.substring (2, 1)) 
+			assert_equal ("substring4", "", a_string.substring (2, 1)) 
 			a_string := clone ("")
-			-- TODO: Note: HACT 4.0.1 does not support empty substrings (from ELKS 2001) yet:
-			-- assert_equal ("substring5", "", a_string.substring (1, 0)) 
+			assert_equal ("substring5", "", a_string.substring (1, 0)) 
 		end
 
 	test_is_equal is
@@ -159,12 +157,9 @@ feature -- Test
 			a_string := clone ("foo")
 			a_string.copy ("")
 			assert_equal ("copy3", "", a_string) 
-			if not eiffel_compiler.is_hact then
-					-- TODO: HACT 4.0.1 has a bug when copying a string on itself.
-				a_string := clone ("toto")
-				a_string.copy (a_string)
-				assert_equal ("copy4", "toto", a_string) 
-			end
+			a_string := clone ("toto")
+			a_string.copy (a_string)
+			assert_equal ("copy4", "toto", a_string) 
 		end
 
 	test_append_character is
@@ -362,7 +357,7 @@ feature -- Test
 			a_string2 := clone ("")
 			a_string.replace_substring (a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string) 
-			-- TODO: Note: ISE 5.1 and HACT 4.0.1 do not support replacing
+			-- TODO: Note: ISE 5.1 does not support replacing
 			-- a substring by itself:
 			-- a_string := clone ("foobar")
 			-- a_string.replace_substring (a_string, 4, 6)
@@ -583,11 +578,8 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			if not eiffel_compiler.is_hact then
-					-- HACT does not support null characters in manifest strings.
-				a_string := "%/0/"
-				assert_equal ("code_0", 0, a_string.item (1).code)
-			end
+			a_string := "%/0/"
+			assert_equal ("code_0", 0, a_string.item (1).code)
 		end
 
 	test_manifest_string_1 is

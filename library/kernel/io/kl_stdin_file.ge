@@ -42,7 +42,7 @@ inherit
 #endif
 		end
 
-#ifdef ISE || HACT
+#ifdef ISE
 	CONSOLE
 		rename
 			make as old_make,
@@ -107,11 +107,6 @@ feature {NONE} -- Initialization
 		do
 #ifdef ISE
 			make_open_stdin ("stdin")
-#endif
-#ifdef HACT
-			old_make ("stdin")
-			file_pointer := console_def (0)
-			set_read_mode
 #endif
 #ifdef SE
 			name := "stdin"
@@ -224,7 +219,7 @@ feature -- Input
 			-- Read at most `nb' characters from standard input file.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
-#ifdef ISE || HACT
+#ifdef ISE
 		local
 			i: INTEGER
 		do
@@ -235,13 +230,9 @@ feature -- Input
 			end
 			if character_buffer = Void then
 				if not old_end_of_file then
-#ifdef ISE
-				last_string.set_count (nb)
-				i := old_read_to_string (last_string, 1, nb)
-				last_string.set_count (i)
-#else
-					old_read_stream (nb)
-#endif
+					last_string.set_count (nb)
+					i := old_read_to_string (last_string, 1, nb)
+					last_string.set_count (i)
 				else
 					last_string.set_count (0)
 				end
@@ -345,9 +336,6 @@ feature -- Input
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef HACT
-				last_string.set_count (0)
-#endif
 #ifdef VE || SE
 				last_string.wipe_out
 #endif
@@ -399,9 +387,6 @@ feature -- Input
 			else
 #ifdef ISE
 				last_string.clear_all
-#endif
-#ifdef HACT
-				last_string.set_count (0)
 #endif
 #ifdef VE || SE
 				last_string.wipe_out
@@ -505,14 +490,13 @@ feature {NONE} -- Implementation
 	character_buffer: KL_LINKABLE [CHARACTER]
 			-- Unread characters
 
-#ifdef ISE || HACT
+#ifdef ISE
 	file_readable: BOOLEAN is
 			-- Is there a current item that may be read?
 		do
 			Result := is_open_read
 		end
 
-#ifdef ISE
 	dummy_string: STRING is ""
 			-- Dummy string
 
@@ -547,7 +531,6 @@ feature {NONE} -- Implementation
 			character_read: not old_end_of_file implies Result > 0
 		end
 
-#endif
 #endif
 #endif
 end

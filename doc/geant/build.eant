@@ -100,9 +100,6 @@
 		<set name="next_chapter" value="gexmlsplit_task"/>
 		<geant target="xslt"/>
 
-		<set name="next_chapter" value="hact_task"/>
-		<geant target="xslt"/>
-
 		<set name="next_chapter" value="ise_task"/>
 		<geant target="xslt"/>
 
@@ -178,7 +175,6 @@
 		<delete file="getest_task.html"/>
 		<delete file="gexace_task.html"/>
 		<delete file="gexmlsplit_task.html"/>
-		<delete file="hact_task.html"/>
 		<delete file="ise_task.html"/>
 		<delete file="mkdir_task.html"/>
 		<delete file="move_task.html"/>

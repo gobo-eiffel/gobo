@@ -46,10 +46,6 @@ feature -- Access
 		do
 			Result := environment_impl.get (STRING_.as_string (a_variable))
 #endif
-#ifdef HACT
-		do
-			Result := environment_impl.variables.item (STRING_.as_string (a_variable))
-#endif
 #ifdef SE
 		do
 			Result := environment_impl.get_environment_variable (STRING_.as_string (a_variable))
@@ -77,10 +73,6 @@ feature -- Setting
 #ifdef ISE
 		do
 			environment_impl.put (STRING_.as_string (a_value), STRING_.as_string (a_variable))
-#endif
-#ifdef HACT
-		do
-			environment_impl.variables.put (STRING_.as_string (a_value), STRING_.as_string (a_variable))
 #endif
 #ifdef SE
 		do
@@ -188,10 +180,10 @@ feature -- Conversion
 			interpreted_string_not_void: Result /= Void
 		end
 
-#ifdef HACT || ISE || SE
+#ifdef ISE || SE
 feature {NONE} -- Implementation
 
-#ifdef HACT || ISE
+#ifdef ISE
 	environment_impl: EXECUTION_ENVIRONMENT is
 #endif
 #ifdef SE

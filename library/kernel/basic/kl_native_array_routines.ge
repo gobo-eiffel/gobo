@@ -96,7 +96,7 @@ feature -- Resizing
 				Result := Result.calloc (new_size)
 			end
 #endif
-#ifdef HACT || VE
+#ifdef VE
 			Result := an_array
 			if new_size > an_array.count then
 				Result.resize (0, new_size - 1)

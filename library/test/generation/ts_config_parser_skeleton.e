@@ -99,7 +99,6 @@ feature -- Access
 feature -- Status report
 
 	compiler_ise: BOOLEAN
-	compiler_hact: BOOLEAN
 	compiler_se: BOOLEAN
 	compiler_ve: BOOLEAN
 			-- Compiler which will be used to compile the test classes
@@ -127,14 +126,6 @@ feature -- Status setting
 			compiler_se := b
 		ensure
 			compiler_se_set: compiler_se = b
-		end
-
-	set_compiler_hact (b: BOOLEAN) is
-			-- Set `compiler_hact' to `b'.
-		do
-			compiler_hact := b
-		ensure
-			compiler_hact_set: compiler_hact = b
 		end
 
 	set_compiler_ve (b: BOOLEAN) is
@@ -237,8 +228,6 @@ feature -- Defaults
 		do
 			if compiler_ise then
 				Result := "geant compile_ise"
-			elseif compiler_hact then
-				Result := "geant compile_hact"
 			elseif compiler_se then
 				Result := "geant compile_se"
 			elseif compiler_ve then

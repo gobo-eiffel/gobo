@@ -27,26 +27,15 @@ inherit
 		end
 
 	KL_INPUT_FILE
-#ifdef HACT || ISE
-#ifdef HACT
-		rename
-			index as position
-		undefine
-			medium_table_type
-#endif
-		redefine
 #ifdef ISE
+		redefine
 			string_name,
 			last_character,
 			last_string
-#endif
-#ifdef HACT
-			file_reopen, file_open, file_dopen
-#endif
 		end
 #endif
 
-#ifdef ISE || HACT
+#ifdef ISE
 	RAW_FILE
 		rename
 			make as old_make,
@@ -89,9 +78,6 @@ inherit
 			last_character,
 			last_string
 #endif
-#ifdef HACT
-			file_reopen, file_open, file_dopen
-#endif
 		end
 
 #endif
@@ -127,7 +113,7 @@ feature -- Access
 			-- However `last_string' is not shared between file objects.)
 
 #endif
-#ifdef ISE || HACT || SE
+#ifdef ISE || SE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -178,34 +164,6 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-#endif
-#ifdef HACT
-	file_open (f_name: POINTER; how: INTEGER): POINTER is
-			-- File pointer for file `f_name', in mode `how'.
-		external
-			"C | <eif_file.h>"
-		alias
-			"file_binary_open"
-		end
-
-	file_dopen (fd, how: INTEGER): POINTER is
-			-- File pointer for file of descriptor `fd' in mode `how'
-			-- (which must fit the way `fd' was obtained).
-		external
-			"C | <eif_file.h>"
-		alias
-			"file_binary_dopen"
-		end
-
-	file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER is
-		   -- File pointer to `file', reopened to have new name `f_name'
-		   -- in a mode specified by `how'.
-		external
-			"C | <eif_file.h>"
-		alias
-			"file_binary_reopen"
-		end
-
 #endif
 #endif
 end

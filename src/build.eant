@@ -15,12 +15,10 @@
 		<echo message="   geant install"/>
 		<echo message="   geant compile"/>
 		<echo message="   geant compile_ise"/>
-		<echo message="   geant compile_hact"/>
 		<echo message="   geant compile_se"/>
 		<echo message="   geant compile_ve"/>
 		<echo message="   geant compile_debug"/>
 		<echo message="   geant compile_debug_ise"/>
-		<echo message="   geant compile_debug_hact"/>
 		<echo message="   geant compile_debug_se"/>
 		<echo message="   geant compile_debug_ve"/>
 		<echo message="   geant clean"/>
@@ -53,15 +51,6 @@
 		</description>
 
 		<set name="target" value="compile_ise"/>
-		<geant target="do_all"/>
-	</target>
-
-	<target name="compile_hact" depend="init">
-		<description>
-			Compile Gobo tools with Halstenbach Eiffel.
-		</description>
-
-		<set name="target" value="compile_hact"/>
 		<geant target="do_all"/>
 	</target>
 
@@ -100,15 +89,6 @@
 		</description>
 
 		<set name="target" value="compile_debug_ise"/>
-		<geant target="do_all"/>
-	</target>
-
-	<target name="compile_debug_hact" depend="init">
-		<description>
-			Compile Gobo tools with Halstenbach Eiffel in debug mode.
-		</description>
-
-		<set name="target" value="compile_debug_hact"/>
 		<geant target="do_all"/>
 	</target>
 

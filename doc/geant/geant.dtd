@@ -9,7 +9,7 @@
   inherit CDATA #IMPLIED
   basedir CDATA #IMPLIED>
 
-<!ELEMENT target (description|set|unset|echo|geant|gexace|delete|move|ise|hact|se|ve)*>
+<!ELEMENT target (description|set|unset|echo|geant|gexace|delete|move|ise|se|ve)*>
 <!ATTLIST target
   name CDATA #REQUIRED
   depends CDATA #IMPLIED
@@ -70,16 +70,6 @@
   system CDATA #IMPLIED
   finalize CDATA #IMPLIED
   finish_freezing CDATA #IMPLIED
-  if CDATA #IMPLIED
-  unless CDATA #IMPLIED>
-
-<!ELEMENT hact EMPTY>
-<!ATTLIST hact
-  clean CDATA #IMPLIED
-  ace CDATA #IMPLIED
-  system CDATA #IMPLIED
-  finalize CDATA #IMPLIED
-  fish CDATA #IMPLIED
   if CDATA #IMPLIED
   unless CDATA #IMPLIED>
 

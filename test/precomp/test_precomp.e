@@ -50,14 +50,6 @@ feature -- Test
 			end
 		end
 
-	test_hact is
-			-- Test precompilation with Halstenach.
-		do
-			if eiffel_compiler.is_hact then
-				precomp_hact
-			end
-		end
-
 	test_ve is
 			-- Test precompilation with Visual Eiffel.
 		do
@@ -141,24 +133,6 @@ feature {NONE} -- Precompilation
 				-- Done.
 			file_system.cd (old_cwd)
 			file_system.recursive_delete_directory (testdir)
-		end
-
-	precomp_hact is
-			-- Test precompilation with Halstenbach.
-		do
-			old_cwd := file_system.cwd
-			file_system.create_directory (testdir)
-			assert (testdir + "_exists", file_system.directory_exists (testdir))
-			file_system.cd (testdir)
-				-- Generate Ace file.
-			assert_execute ("gexace --library=hact " + xace_filename + output_log)
-				-- Eiffel precompilation.
-			assert_execute ("ibcomp -precompile -new -stop -ace hact.ace -project gobo.eif" + output_log)
-				-- C compilation.
-			file_system.cd (file_system.pathname ("gobo_gen", "W_code"))
-			assert_execute ("fish" + output_log)
-				-- Check creation of precompiled files.
-			assert ("driver_exists", file_system.file_exists ("driver" + file_system.exe_extension))
 		end
 
 	precomp_ve is

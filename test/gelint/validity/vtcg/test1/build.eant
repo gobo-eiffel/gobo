@@ -24,12 +24,10 @@
 		<echo message="   geant parser"/>
 		<echo message="   geant compile"/>
 		<echo message="   geant compile_ise"/>
-		<echo message="   geant compile_hact"/>
 		<echo message="   geant compile_se"/>
 		<echo message="   geant compile_ve"/>
 		<echo message="   geant compile_debug"/>
 		<echo message="   geant compile_debug_ise"/>
-		<echo message="   geant compile_debug_hact"/>
 		<echo message="   geant compile_debug_se"/>
 		<echo message="   geant compile_debug_ve"/>
 		<echo message="   geant clean"/>

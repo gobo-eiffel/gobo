@@ -25,20 +25,10 @@ inherit
 #endif
 
 	KL_OUTPUT_FILE
-#ifdef HACT || VE || ISE
-#ifdef HACT
-		rename
-			index as position
-		undefine
-			medium_table_type,
-			is_plain_text
-#endif
+#ifdef VE || ISE
 		redefine
 #ifdef ISE
 			string_name
-#endif
-#ifdef HACT
-			file_ps
 #endif
 #ifdef VE
 			put_character,
@@ -47,7 +37,7 @@ inherit
 		end
 #endif
 
-#ifdef ISE || HACT
+#ifdef ISE
 	PLAIN_TEXT_FILE
 		rename
 			make as old_make,
@@ -79,17 +69,8 @@ inherit
 		export
 			{PLAIN_TEXT_FILE} old_open_read, extendible, file_pointer, old_count, old_close, old_is_closed, old_put_string, old_is_open_write;
 			{NONE} all
-#ifdef HACT
-		undefine
-			file_readable
-#endif
 		redefine
-#ifdef HACT
-			file_ps
-#endif
-#ifdef ISE
 			string_name
-#endif
 		end
 
 #endif
@@ -157,7 +138,7 @@ feature -- Output
 		end
 
 #endif
-#ifdef SE || HACT || ISE
+#ifdef SE || ISE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -175,16 +156,6 @@ feature {NONE} -- Implementation
 			if string_name /= Empty_name then
 				connect_for_appending_to (string_name)
 			end
-		end
-
-#endif
-#ifdef HACT
-	file_ps (file : POINTER; s : POINTER; length : INTEGER) is
-			-- Print `a_string' to `file'.
-		external
-			"C | <eif_file.h>"
-		alias
-			"file_pt_ps"
 		end
 
 #endif

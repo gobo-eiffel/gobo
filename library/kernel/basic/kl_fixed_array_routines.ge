@@ -159,7 +159,7 @@ feature -- Resizing
 			Result := an_array
 			Result.resize (n)
 #endif
-#ifdef HACT || VE
+#ifdef VE
 			Result := an_array
 			Result.resize (0, n - 1)
 #endif
@@ -180,7 +180,7 @@ feature -- Removal
 		do
 			c_spclearall ($an_array)
 #endif
-#ifdef HACT || (ISE && ! ISE_5_1)
+#ifdef (ISE && ! ISE_5_1)
 		do
 			an_array.clear_all
 #endif

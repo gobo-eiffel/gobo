@@ -30,22 +30,12 @@ inherit
 		end
 
 	KL_INPUT_FILE
-#ifdef ISE || HACT || VE
-#ifdef HACT
-		rename
-			index as position
-		undefine
-			medium_table_type,
-			is_plain_text
-#endif
+#ifdef ISE || VE
 		redefine
 #ifdef ISE
 			string_name,
 			last_character,
 			last_string
-#endif
-#ifdef HACT
-			file_ps
 #endif
 #ifdef VE
 			read_character,
@@ -54,7 +44,7 @@ inherit
 		end
 #endif
 
-#ifdef ISE || HACT
+#ifdef ISE
 	PLAIN_TEXT_FILE
 		rename
 			make as old_make,
@@ -92,14 +82,9 @@ inherit
 		undefine
 			file_readable
 		redefine
-#ifdef ISE
 			string_name,
 			last_character,
 			last_string
-#endif
-#ifdef HACT
-			file_ps
-#endif
 		end
 
 #endif
@@ -253,9 +238,6 @@ feature -- Input
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef HACT
-				last_string.set_count (0)
-#endif
 #ifdef VE || SE
 				last_string.wipe_out
 #endif
@@ -308,9 +290,6 @@ feature -- Input
 #ifdef ISE
 				last_string.clear_all
 #endif
-#ifdef HACT
-				last_string.set_count (0)
-#endif
 #ifdef VE || SE
 				last_string.wipe_out
 #endif
@@ -339,7 +318,7 @@ feature -- Input
 			end_of_file := False
 		end
 
-#ifdef SE || HACT || ISE
+#ifdef SE || ISE
 feature {NONE} -- Implementation
 
 #ifdef SE
@@ -349,16 +328,6 @@ feature {NONE} -- Implementation
 			if string_name /= Empty_name then
 				connect_to (string_name)
 			end
-		end
-
-#endif
-#ifdef HACT
-	file_ps (file : POINTER; s : POINTER; length : INTEGER) is
-			-- Print `a_string' to `file'.
-		external
-			"C | <eif_file.h>"
-		alias
-			"file_pt_ps"
 		end
 
 #endif

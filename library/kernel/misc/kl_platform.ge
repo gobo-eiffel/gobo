@@ -92,7 +92,7 @@ feature -- Bytes
 	Boolean_bytes: INTEGER is
 			-- Number of bytes in a value of type BOOLEAN
 		once
-#ifdef HACT || VE || SE
+#ifdef VE || SE
 			Result := Boolean_bits // Byte_bits
 			if (Boolean_bits \\ Byte_bits) /= 0 then
 				Result := Result + 1
@@ -105,7 +105,7 @@ feature -- Bytes
 	Character_bytes: INTEGER is
 			-- Number of bytes in a value of type CHARACTER
 		once
-#ifdef HACT || VE || SE
+#ifdef VE || SE
 			Result := Character_bits // Byte_bits
 #else
 			Result := old_character_bytes
@@ -115,7 +115,7 @@ feature -- Bytes
 	Double_bytes: INTEGER is
 			-- Number of bytes in a value of type DOUBLE
 		once
-#ifdef HACT || VE || SE
+#ifdef VE || SE
 			Result := Double_bits // Byte_bits
 #else
 			Result := old_double_bytes
@@ -125,7 +125,7 @@ feature -- Bytes
 	Integer_bytes: INTEGER is
 			-- Number of bytes in a value of type INTEGER
 		once
-#ifdef HACT || VE || SE
+#ifdef VE || SE
 			Result := Integer_bits // Byte_bits
 #else
 			Result := old_integer_bytes
@@ -135,7 +135,7 @@ feature -- Bytes
 	Pointer_bytes: INTEGER is
 			-- Number of bytes in a value of type POINTER
 		once
-#ifdef HACT || VE || SE
+#ifdef VE || SE
 			Result := Pointer_bits // Byte_bits
 #else
 			Result := old_pointer_bytes
@@ -145,7 +145,7 @@ feature -- Bytes
 	Real_bytes: INTEGER is
 			-- Number of bytes in a value of type REAL
 		once
-#ifdef HACT || VE || SE
+#ifdef VE || SE
 			Result := Real_bits // Byte_bits
 #else
 			Result := old_real_bytes
@@ -154,7 +154,7 @@ feature -- Bytes
 
 feature -- Values
 
-#ifdef HACT || (ISE && ISE_5_1)
+#ifdef (ISE && ISE_5_1)
 	Minimum_character_code: INTEGER is 0
 			-- Smallest supported code for CHARACTER values
 #else
@@ -175,9 +175,6 @@ feature -- Values
 #ifdef ISE && ISE_5_1
 			Result := c.Max_value
 #endif
-#ifdef HACT
-			Result := Maximum_byte_code
-#endif
 #ifdef VE || SE || (ISE && ! ISE_5_1)
 			Result := old_maximum_character_code
 #endif
@@ -186,7 +183,7 @@ feature -- Values
 	Minimum_integer: INTEGER is
 			-- Smallest supported value of type INTEGER
 		once
-#ifdef HACT || VE || (ISE && ISE_5_1)
+#ifdef VE || (ISE && ISE_5_1)
 				-- Avoid overflow:
 			Result := (2 ^ (Integer_bits - 2)).truncated_to_integer * -2
 #else
@@ -197,7 +194,7 @@ feature -- Values
 	Maximum_integer: INTEGER is
 			-- Largest supported value of type INTEGER
 		once
-#ifdef HACT || (ISE && ISE_5_1)
+#ifdef (ISE && ISE_5_1)
 				-- Avoid overflow:
 			Result := - (Minimum_integer + 1)
 #else

@@ -77,70 +77,31 @@
 		</cluster>
 	</cluster>
 
-	<cluster name="hact" if="${GOBO_EIFFEL}=hact">
-		<option name="abstract" value="true"/>
-		<cluster name="base" unless="${GOBO_ISS_BASELIB}">
-			<option name="abstract" value="true"/>
-			<option name="component" value="${ISS_BASE}/spec/${PLATFORM}/component/base.cl"/>
-		</cluster>
-		<cluster name="base" location="${ISS_BASE}/library/base" if="${GOBO_ISS_BASELIB}">
-			<option name="abstract" value="true"/>
-			<cluster name="command"/>
-			<cluster name="event"/>
-			<cluster name="formatters"/>
-			<cluster name="kernel"/>
-			<cluster name="matching"/>
-			<cluster name="misc">
-				<cluster name="spec" location="${ISS_BASE}/spec/${PLATFORM}/library/base/misc"/>
-			</cluster>
-			<cluster name="msgsystem"/>
-			<cluster name="process"/>
-			<cluster name="resource"/>
-			<cluster name="time"/>
-			<cluster name="structures">
-				<option name="abstract" value="true"/>
-				<cluster name="access"/>
-				<cluster name="cursors"/>
-				<cluster name="cursor_tree"/>
-				<cluster name="dispenser"/>
-				<cluster name="iteration"/>
-				<cluster name="list"/>
-				<cluster name="set"/>
-				<cluster name="sort"/>
-				<cluster name="storage"/>
-				<cluster name="table"/>
-				<cluster name="traversing"/>
-				<cluster name="tree"/>
-			</cluster>
-			<cluster name="internal" location="${ISS_BASE}/library/internal"/>
-		</cluster>
-	</cluster>
-
 	<cluster name="se" if="${GOBO_EIFFEL}=se">
 		<option name="abstract" value="true"/>
 		<cluster name="se" location="${SmartEiffelDirectory}/lib" unless="${SE_0_74}">
 			<option name="abstract" value="true"/>
-			<cluster name="abilities"/>
+			<cluster name="abilities" if="${SE_2_0}"/>
 			<cluster name="base"/>
 			<cluster name="io">
-				<cluster name="filter"/>
-				<cluster name="low_level"/>
-				<cluster name="terminal"/>
+				<cluster name="filter" if="${SE_2_0}"/>
+				<cluster name="low_level" if="${SE_2_0}"/>
+				<cluster name="terminal" if="${SE_2_0}"/>
 			</cluster>
 			<cluster name="iterator">
-				<cluster name="internal"/>
+				<cluster name="internal" if="${SE_2_0}"/>
 			</cluster>
 			<cluster name="kernel"/>
 			<cluster name="misc"/>
 			<cluster name="number"/>
-			<cluster name="numeric">
+			<cluster name="numeric" if="${SE_2_0}">
 				<cluster name="internal"/>
 			</cluster>
 			<cluster name="random"/>
-			<cluster name="sequencer"/>
-			<cluster name="signal"/>
+			<cluster name="sequencer" if="${SE_2_0}"/>
+			<cluster name="signal" if="${SE_2_0}"/>
 			<cluster name="sorting"/>
-			<cluster name="storage">
+			<cluster name="storage" if="${SE_2_0}">
 				<cluster name="collection"/>
 				<cluster name="collection2"/>
 				<cluster name="collection3"/>
@@ -149,14 +110,14 @@
 				<cluster name="low_level"/>
 				<cluster name="set"/>
 			</cluster>
-			<cluster name="string">
+			<cluster name="string" if="${SE_2_0}">
 				<cluster name="internal"/>
 				<cluster name="low_level"/>
 			</cluster>
 			<cluster name="time">
-				<cluster name="formatter"/>
+				<cluster name="formatter" if="${SE_2_0}"/>
 			</cluster>
-			<cluster name="unicode"/>
+			<cluster name="unicode" if="${SE_2_0}"/>
 		</cluster>
 		<cluster name="se" location="${SmallEiffelDirectory}/lib" if="${SE_0_74}">
 			<option name="abstract" value="true"/>

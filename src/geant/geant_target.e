@@ -508,9 +508,6 @@ feature -- Processing
 			elseif STRING_.same_string (a_xml_element.name, Ise_task_name) then
 					-- ise: ISE Eiffel compilation
 				create {GEANT_ISE_TASK} a_task.make (project, a_xml_element)
-			elseif STRING_.same_string (a_xml_element.name, Hact_task_name) then
-					-- hact: Halstenbach Eiffel compilation
-				create {GEANT_HACT_TASK} a_task.make (project, a_xml_element)
 			elseif STRING_.same_string (a_xml_element.name, Ve_task_name) then
 					-- ve: Visual Eiffel compilation
 				create {GEANT_VE_TASK} a_task.make (project, a_xml_element)

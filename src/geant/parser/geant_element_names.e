@@ -52,15 +52,6 @@ feature -- Task names
 			task_name_not_empty: Result.count > 0
 		end
 
-	Hact_task_name: STRING is
-			-- "hact" task name
-		once
-			Result := "hact"
-		ensure
-			task_name_not_void: Result /= Void
-			task_name_not_empty: Result.count > 0
-		end
-
 	Ve_task_name: STRING is
 			-- "ve" task name
 		once

@@ -23,22 +23,18 @@
 		<echo message="   geant install"/>
 		<echo message="   geant test"/>
 		<echo message="   geant test_ise"/>
-		<echo message="   geant test_hact"/>
 		<echo message="   geant test_se"/>
 		<echo message="   geant test_ve"/>
 		<echo message="   geant test_debug"/>
 		<echo message="   geant test_debug_ise"/>
-		<echo message="   geant test_debug_hact"/>
 		<echo message="   geant test_debug_se"/>
 		<echo message="   geant test_debug_ve"/>
 		<echo message="   geant compile"/>
 		<echo message="   geant compile_ise"/>
-		<echo message="   geant compile_hact"/>
 		<echo message="   geant compile_se"/>
 		<echo message="   geant compile_ve"/>
 		<echo message="   geant compile_debug"/>
 		<echo message="   geant compile_debug_ise"/>
-		<echo message="   geant compile_debug_hact"/>
 		<echo message="   geant compile_debug_se"/>
 		<echo message="   geant compile_debug_ve"/>
 		<echo message="   geant clean"/>
@@ -74,16 +70,6 @@
 		</description>
 
 		<set name="eiffel" value="ise"/>
-		<geant target="test"/>
-	</target>
-
-	<target name="test_hact" depend="init">
-		<description>
-			Test '${system}' with Halstenbach Eiffel.
-			Compile in debug mode if ${debug} is defined.
-		</description>
-
-		<set name="eiffel" value="hact"/>
 		<geant target="test"/>
 	</target>
 
@@ -128,16 +114,6 @@
 		<geant target="test"/>
 	</target>
 
-	<target name="test_debug_hact" depend="init">
-		<description>
-			Test '${system}' with Halstenbach Eiffel in debug mode.
-		</description>
-
-		<set name="eiffel" value="hact"/>
-		<set name="debug" value="true"/>
-		<geant target="test"/>
-	</target>
-
 	<target name="test_debug_ve" depend="init">
 		<description>
 			Test '${system}' with Visual Eiffel in debug mode.
@@ -164,11 +140,9 @@
 		</description>
 
 		<ise clean="${system}"/>
-		<hact clean="${system}"/>
 		<se clean="${system}"/>
 		<ve clean="${system}" recursive="true"/>
 		<delete file="compile_ise.ace"/>
-		<delete file="compile_hact.ace"/>
 		<delete file="compile_se.ace"/>
 		<delete file="compile_ve.esd"/>
 		<delete file="${system}${exe}"/>

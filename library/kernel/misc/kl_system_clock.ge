@@ -16,39 +16,6 @@ inherit
 
 	KI_SYSTEM_CLOCK
 
-#ifdef HACT
-	SYSTEM_CLOCK
-		rename
-			ty as year,
-			tm as month,
-			td as day,
-			thr as hour,
-			tme as minute,
-			tsd as second,
-			january as  hact_january,
-			february as hact_february,
-			march as hact_march,
-			april as hact_april,
-			may as hact_may,
-			june as hact_june,
-			july as hact_july,
-			august as hact_august,
-			september as hact_september,
-			october as hact_october,
-			november as hact_november,
-			december as hact_december,
-			sunday as hact_sunday,
-			monday as hact_monday,
-			tuesday as hact_tueday,
-			wednesday as hact_wednesday,
-			thursday as hact_thursday,
-			friday as hact_friday,
-			saturday as hact_saturday
-		export
-			{NONE} all
-		end
-
-#endif
 #ifdef VE
 	TIMESTAMP
 		rename
@@ -74,7 +41,7 @@ feature {NONE} -- Initialization
 #endif
 		end
 
-#ifndef HACT || VE
+#ifndef VE
 feature -- Access
 
 	year: INTEGER
@@ -127,9 +94,6 @@ feature -- Setting
 #ifdef VE
 			old_set_local_time
 #endif
-#ifdef HACT
-			c_localtime (c_time, $year, $month, $day, $hour, $minute, $second, $tdst)
-#endif
 #ifdef ISE
 			time_t := c_time
 			tm_struct := tm_localtime ($time_t)
@@ -170,9 +134,6 @@ feature -- Setting
 #endif
 #ifdef VE
 			set_to_now
-#endif
-#ifdef HACT
-			c_utctime (c_time, $year, $month, $day, $hour, $minute, $second)
 #endif
 #ifdef ISE
 			time_t := c_time

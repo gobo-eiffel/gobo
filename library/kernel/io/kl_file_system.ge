@@ -41,15 +41,6 @@ inherit
 			{NONE} all
 		end
 
-#ifdef HACT
-	EXECUTION_ENVIRONMENT
-		rename
-			current_working_directory as old_current_working_directory
-		export
-			{NONE} all
-		end
-
-#endif
 #ifdef VE
 feature {NONE} -- Initialization
 
@@ -413,9 +404,6 @@ feature -- Working directory
 #ifdef ISE
 			Result := execution_environment.current_working_directory
 #endif
-#ifdef HACT
-			Result := dir_current
-#endif
 #ifdef VE
 			Result := file_system_impl.current_cluster
 #endif
@@ -438,7 +426,7 @@ feature -- Working directory
 #ifdef SE
 					basic_directory.change_current_working_directory (a_string_dirname)
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 					execution_environment.change_working_directory (a_string_dirname)
 #endif
 #ifdef VE
@@ -493,7 +481,7 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 	execution_environment: EXECUTION_ENVIRONMENT is
 			-- Execution environment implementation
 		once

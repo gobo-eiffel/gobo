@@ -33,12 +33,9 @@ inherit
 			out_in_tagged_out_memory,
 			fill_tagged_out_memory
 #endif
-#ifdef HACT
-			setup, consistent
-#endif
 		select
-#ifdef (ISE && ISE_5_1) || HACT
-				-- Note: The signature of STRING.out in ISE 5.1 and HACT 4.0.1
+#ifdef (ISE && ISE_5_1)
+				-- Note: The signature of STRING.out in ISE 5.1 
 				-- is not compliant with ELKS 2001 STRING and does not allow
 				-- a redefinition here. Redefine version from ANY instead.
 			out,
@@ -65,37 +62,27 @@ inherit
 			prepend as old_prepend,
 			remove_prefix as old_remove_prefix,
 #endif
-#ifndef HACT
 			is_empty as old_is_empty,
-#endif
 #ifdef ISE
 			clear_all as old_clear_all,
 			left_adjust as old_left_adjust,
 			right_adjust as old_right_adjust,
 #endif
-#ifdef ISE || HACT
-#ifdef (ISE && ISE_5_1) || HACT
-				-- Note: The signature of STRING.out in ISE 5.1 and HACT 4.0.1
+#ifdef ISE
+#ifdef (ISE && ISE_5_1)
+				-- Note: The signature of STRING.out in ISE 5.1
 				-- is not compliant with ELKS 2001 STRING and does not allow
 				-- a redefinition here. Redefine version from ANY instead.
 			out as old_out,
 #endif
-				-- Note: The postconditions of `wipe_out' in HACT 4.0.1
-				-- and ISE 5.1 does not allow an optimized ELKS compliant
+				-- Note: The postconditions of `wipe_out' in 
+				-- ISE 5.1 does not allow an optimized ELKS compliant
 				-- redefinition here. In particular we don't want to
 				-- reset the capacity to zero.
 			wipe_out as old_wipe_out,
 				-- Note: The postconditions of `substring_index' in ISE 5.1
 				-- does not allow an ELKS compliant redefinition here.
-				-- Note2: There is a bug in the postcondition of `substring_index'
-				-- in HACT 4.0.1 because it forgot the fact that HACT does
-				-- not support empty substrings.
 			substring_index as old_substring_index,
-#endif
-#ifdef HACT
-				-- Note: The postconditions of `infix "+"' in HACT 4.0.1
-				-- does not allow an ELKS compliant redefinition here.
-			infix "+" as old_infix_plus,
 #endif
 #ifndef ISE
 			make as old_make,
@@ -138,7 +125,7 @@ inherit
 #ifndef VE || SE
 			byte_capacity,
 #endif
-#ifdef SE || VE || HACT || (ISE && ! ISE_5_1)
+#ifdef SE || VE || (ISE && ! ISE_5_1)
 			has_substring, insert_character,
 #endif
 #ifdef SE || VE || (ISE && ! ISE_5_1)
@@ -154,7 +141,7 @@ inherit
 #ifdef SE
 			old_prepend, old_remove_prefix,
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 			old_wipe_out,
 			old_substring_index,
 #else
@@ -168,11 +155,7 @@ inherit
 			old_left_adjust,
 			old_right_adjust,
 #endif
-#ifdef HACT
-			old_infix_plus,
-#else
 			infix "+",
-#endif
 			copy, infix "@"
 #ifdef ISE
 		select
@@ -196,21 +179,18 @@ inherit
 			left_adjust as old_left_adjust,
 			right_adjust as old_right_adjust,
 #ifdef (ISE && ISE_5_1)
-				-- Note: The signature of STRING.out in ISE 5.1 and HACT 4.0.1
+				-- Note: The signature of STRING.out in ISE 5.1
 				-- is not compliant with ELKS 2001 STRING and does not allow
 				-- a redefinition here. Redefine version from ANY instead.
 			out as old_out,
 #endif
-				-- Note: The postconditions of `wipe_out' in HACT 4.0.1
-				-- and ISE 5.1 does not allow an optimized ELKS compliant
+				-- Note: The postconditions of `wipe_out' in 
+				-- ISE 5.1 does not allow an optimized ELKS compliant
 				-- redefinition here. In particular we don't want to
 				-- reset the capacity to zero.
 			wipe_out as old_wipe_out,
 				-- Note: The postconditions of `substring_index' in ISE 5.1
 				-- does not allow an ELKS compliant redefinition here.
-				-- Note2: There is a bug in the postcondition of `substring_index'
-				-- in HACT 4.0.1 because it forgot the fact that HACT does
-				-- not support empty substrings.
 			substring_index as old_substring_index,
 --ericb			make as old_make,
 			empty as old_empty,
@@ -262,9 +242,6 @@ inherit
 			out_in_tagged_out_memory,
 			fill_tagged_out_memory,
 #endif
-#ifdef HACT
-			setup, consistent,
-#endif
 			three_way_comparison,
 			is_equal, copy, out
 		select
@@ -280,9 +257,6 @@ inherit
 			out_in_tagged_out_memory,
 			fill_tagged_out_memory,
 #endif
-#ifdef HACT
-			setup, consistent,
-#endif
 			is_equal, copy, out
 		end
 
@@ -291,9 +265,6 @@ inherit
 #ifdef SE
 			out_in_tagged_out_memory,
 			fill_tagged_out_memory,
-#endif
-#ifdef HACT
-			setup, consistent,
 #endif
 			is_equal, copy, out
 		end
@@ -304,9 +275,6 @@ inherit
 			out_in_tagged_out_memory,
 			fill_tagged_out_memory,
 #endif
-#ifdef HACT
-			setup, consistent,
-#endif
 			is_equal, copy, out
 		end
 
@@ -315,9 +283,6 @@ inherit
 #ifdef SE
 			out_in_tagged_out_memory,
 			fill_tagged_out_memory,
-#endif
-#ifdef HACT
-			setup, consistent,
 #endif
 			is_equal, copy, out
 		end
@@ -329,9 +294,6 @@ inherit
 #ifdef SE
 			out_in_tagged_out_memory,
 			fill_tagged_out_memory,
-#endif
-#ifdef HACT
-			setup, consistent,
 #endif
 			is_equal, copy, out
 		end
@@ -356,10 +318,8 @@ feature -- Initialization
 			create storage.make_filled ('%U', suggested_capacity)
 			ve_make_byte_storage ('%U', 0)
 #else
-#ifdef HACT || ISE
-			count := 0
-#endif
 #ifdef ISE
+			count := 0
 			precursor (suggested_capacity)
 #else
 			old_make (suggested_capacity)
@@ -580,10 +540,6 @@ feature -- Access
 			-- New object containing all characters
 			-- from `start_index' to `end_index' inclusive
 			-- (ELKS 2001 STRING)
-		require else
-			valid_start_index: 1 <= start_index
-			valid_end_index: end_index <= count
-			meaningful_interval: start_index <= end_index + 1
 		do
 			if end_index < start_index then
 				create Result.make (0)
@@ -1039,7 +995,7 @@ feature -- Access
 					i := next_byte_index (i)
 				end
 				if fit_in_string then
-#ifdef ISE || HACT
+#ifdef ISE
 					Result := string.hash_code
 #else
 					Result := precursor
@@ -1233,8 +1189,6 @@ feature -- Status report
 	is_empty: BOOLEAN is
 			-- Is string empty?
 			-- (ELKS 2001 STRING)
-		require else
-			portable: True
 		do
 			Result := (count = 0)
 		end
@@ -1616,7 +1570,7 @@ feature -- Element change
 	append_string (a_string: STRING) is
 			-- Append a copy of `a_string' at end.
 			-- (ELKS 2001 STRING)
-#ifdef HACT || ISE || SE
+#ifdef ISE || SE
 		local
 			nb: INTEGER
 			old_a_string_byte_count: INTEGER
@@ -1630,7 +1584,7 @@ feature -- Element change
 			b: BOOLEAN
 #endif
 		do
-#ifdef HACT || ISE || SE
+#ifdef ISE || SE
 			if a_string.same_type (dummy_string) then
 					-- Check if string does not contain non-ascii characters.
 					-- Unfortunately, this is a slow but necessary call.
@@ -2029,7 +1983,7 @@ feature -- Element change
 		end
 
 	replace_substring (a_string: like Current; start_index, end_index: INTEGER) is
-		-- Note: VE 4.0, HACT 4.0.1 and ISE 5.1 have 'like Current' in their
+		-- Note: VE 4.0 and ISE 5.1 have 'like Current' in their
 		-- signature instead of STRING as specified in ELKS 2001:
 	-- replace_substring (a_string: STRING; start_index, end_index: INTEGER) is
 			-- Replace the substring from `start_index' to `end_index',
@@ -2040,7 +1994,7 @@ feature -- Element change
 			valid_start_index: 1 <= start_index
 			valid_end_index: end_index <= count
 			meaningful_interval: start_index <= end_index + 1
-				-- Note: The postcondition inherited from ISE 5.1 and HACT 4.0.1
+				-- Note: The postcondition inherited from ISE 5.1
 				-- does not allow replacing a substring by itself:
 			not_current: a_string /= Current
 		local
@@ -2259,12 +2213,6 @@ feature -- Duplication
 				byte_count := other.byte_count
 				last_byte_index_input := other.last_byte_index_input
 				last_byte_index_result := other.last_byte_index_result
-#endif
-#ifdef HACT
-				byte_count := other.byte_count
-				last_byte_index_input := other.last_byte_index_input
-				last_byte_index_result := other.last_byte_index_result
-				precursor (other)
 #endif
 #ifdef SE
 				c := other.byte_count
@@ -2727,9 +2675,6 @@ feature {UC_STRING_HANDLER} -- Implementation
 #ifdef VE
 			Result := storage.item (i)
 #endif
-#ifdef HACT
-			Result := area.item (i - 1)
-#endif
 #ifdef SE
 			Result := storage.item (i - 1)
 #endif
@@ -2754,9 +2699,6 @@ feature {UC_STRING_HANDLER} -- Implementation
 #ifdef VE
 			storage.put (c, i)
 #endif
-#ifdef HACT
-			area.put (c, i - 1)
-#endif
 #ifdef SE
 			storage.put (c, i - 1)
 #endif
@@ -2773,9 +2715,6 @@ feature {UC_STRING_HANDLER} -- Implementation
 #endif
 		do
 			if n > byte_capacity then
-#ifdef HACT
-				area := str_resize ($area, n)
-#endif
 #ifdef ISE
 				resize (n)
 				old_count := count
@@ -2837,9 +2776,6 @@ feature {UC_STRING_HANDLER} -- Implementation
 #ifdef SE
 				storage.put (storage.item (j), j + offset)
 #endif
-#ifdef HACT
-				area.put (area.item (j), j + offset)
-#endif
 #ifdef VE
 				storage.put (storage.item (j), j + offset)
 #endif
@@ -2889,9 +2825,6 @@ feature {UC_STRING_HANDLER} -- Implementation
 #ifdef SE
 				storage.put (storage.item (j), j - offset)
 #endif
-#ifdef HACT
-				area.put (area.item (j), j - offset)
-#endif
 #ifdef VE
 				storage.put (storage.item (j), j - offset)
 #endif
@@ -2939,7 +2872,7 @@ feature {UC_STRING_HANDLER} -- Implementation
 				ve_keep_head (nb)
 			end
 #endif
-#ifdef SE || HACT || ISE
+#ifdef SE || ISE
 			count := nb
 #endif
 		ensure
@@ -3165,7 +3098,7 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-#ifdef HACT || ISE || SE
+#ifdef ISE || SE
 feature {NONE} -- Inapplicable
 
 #ifdef SE
@@ -3199,7 +3132,7 @@ feature {NONE} -- Inapplicable
 		end
 
 #endif
-#ifdef HACT || ISE
+#ifdef ISE
 	old_wipe_out is
 			-- Remove all characters.
 			-- (ELKS 2001 STRING)
@@ -3217,15 +3150,10 @@ feature {NONE} -- Inapplicable
 			-- (Extended from ELKS 2001 STRING)
 			-- Note: The postconditions of `substring_index' in ISE 5.1
 			-- does not allow an ELKS compliant redefinition here.
-			-- Note2: There is a bug in the postcondition of `substring_index'
-			-- in HACT 4.0.1 because it forgot the fact that HACT does
-			-- not support empty substrings.
 		do
 			Result := substring_index (other, start_index)
 		end
 
-#endif
-#ifdef ISE
 	old_clear_all is
 			-- Remove all characters.
 		do
@@ -3266,18 +3194,6 @@ feature {NONE} -- Inapplicable
 				end
 			end
 			keep_head (nb)
-		end
-
-#endif
-#ifdef HACT
-	old_infix_plus (other: STRING): like Current is
-			-- New object which is a clone of `Current' extended
-			-- by the characters of `other'
-			-- (ELKS 2001 STRING)
-			-- Note: The postconditions of `infix "+"' in HACT 4.0.1
-			-- does not allow an ELKS compliant redefinition here.
-		do
-			Result := Current + other
 		end
 
 #endif

@@ -230,17 +230,9 @@ xmltest_valid_ext_sa_005_ent: STRING is "<e/><e/><e/>"
 xmltest_valid_ext_sa_005: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (e*)>%R%N<!ELEMENT e EMPTY>%R%N<!ENTITY e SYSTEM %"005.ent%">%R%N]>%R%N<doc>&e;</doc>%R%N"
 xmltest_valid_ext_sa_006_ent: STRING is "Data%R%N<e/>%R%NMore data%R%N<e/>%R%N"
 xmltest_valid_ext_sa_006: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA|e)*>%R%N<!ELEMENT e EMPTY>%R%N<!ENTITY e SYSTEM %"006.ent%">%R%N]>%R%N<doc>&e;</doc>%R%N"
-xmltest_valid_ext_sa_007_ent: STRING is
-	once
-			-- HACT does not support null characters in manifest strings.
-		Result := "%/255/%/254/Y" + null
-	end
+xmltest_valid_ext_sa_007_ent: STRING is "%/255/%/254/Y%/0/"
 xmltest_valid_ext_sa_007: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ENTITY e SYSTEM %"007.ent%">%R%N]>%R%N<doc>X&e;Z</doc>%R%N"
-xmltest_valid_ext_sa_008_ent: STRING is
-	once
-			-- HACT does not support null characters in manifest strings.
-		Result := "%/255/%/254/<" + null + "?" + null + "x" + null + "m" + null + "l" + null + " " + null + "e" + null + "n" + null + "c" + null + "o" + null + "d" + null + "i" + null + "n" + null + "g" + null + "=" + null + "%"" + null + "U" + null + "T" + null + "F" + null + "-" + null + "1" + null + "6" + null + "%"" + null + "?" + null + ">" + null + "Y" + null
-	end
+xmltest_valid_ext_sa_008_ent: STRING is "%/255/%/254/<%/0/?%/0/x%/0/m%/0/l%/0/ %/0/e%/0/n%/0/c%/0/o%/0/d%/0/i%/0/n%/0/g%/0/=%/0/%"%/0/U%/0/T%/0/F%/0/-%/0/1%/0/6%/0/%"%/0/?%/0/>%/0/Y%/0/"
 xmltest_valid_ext_sa_008: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ENTITY e SYSTEM %"008.ent%">%R%N]>%R%N<doc>X&e;Z</doc>%R%N"
 xmltest_valid_ext_sa_009_ent: STRING is "%R"
 xmltest_valid_ext_sa_009: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ENTITY e SYSTEM %"009.ent%">%R%N]>%R%N<doc>&e;</doc>%R%N"
@@ -251,11 +243,7 @@ xmltest_valid_ext_sa_012_ent: STRING is "&e4;"
 xmltest_valid_ext_sa_012: STRING is "<!DOCTYPE doc [%R%N<!ENTITY e1 %"&e2;%">%R%N<!ENTITY e2 %"&e3;%">%R%N<!ENTITY e3 SYSTEM %"012.ent%">%R%N<!ENTITY e4 %"&e5;%">%R%N<!ENTITY e5 %"(e5)%">%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc>&e1;</doc>%R%N"
 xmltest_valid_ext_sa_013_ent: STRING is "<e/>"
 xmltest_valid_ext_sa_013: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (e)>%R%N<!ELEMENT e (#PCDATA)>%R%N<!ATTLIST e%R%N  a1 CDATA %"a1 default%"%R%N  a2 NMTOKENS %"a2 default%"%R%N>%R%N<!ENTITY x SYSTEM %"013.ent%">%R%N]>%R%N<doc>&x;</doc>%R%N"
-xmltest_valid_ext_sa_014_ent: STRING is
-	once
-			-- HACT does not support null characters in manifest strings.
-		Result := "%/255/%/254/%/255/%/254/d" + null + "a" + null + "t" + null + "a" + null
-	end
+xmltest_valid_ext_sa_014_ent: STRING is "%/255/%/254/%/255/%/254/d%/0/a%/0/t%/0/a%/0/"
 xmltest_valid_ext_sa_014: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ENTITY e SYSTEM %"014.ent%">%R%N]>%R%N<doc>&e;</doc>%R%N"
 xmltest_valid_ext_sa_out_001: STRING is "<doc>Data&#10;</doc>"
 xmltest_valid_ext_sa_out_002: STRING is "<doc>Data</doc>"
@@ -422,21 +410,9 @@ xmltest_valid_sa_045: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N
 xmltest_valid_sa_046: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ATTLIST doc a1 CDATA %"v1%">%R%N<!ATTLIST doc a2 CDATA %"v2%">%R%N]>%R%N<doc></doc>%R%N"
 xmltest_valid_sa_047: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc>X%R%NY</doc>%R%N"
 xmltest_valid_sa_048: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc>]</doc>%R%N"
-xmltest_valid_sa_049: STRING is
-	once
-			-- HACT does not support null characters in manifest strings.
-		Result := "%/255/%/254/<" + null + "!" + null + "D" + null + "O" + null + "C" + null + "T" + null + "Y" + null + "P" + null + "E" + null + " " + null + "d" + null + "o" + null + "c" + null + " " + null + "[" + null + "%R" + null + "%N" + null + "<" + null + "!" + null + "E" + null + "L" + null + "E" + null + "M" + null + "E" + null + "N" + null + "T" + null + " " + null + "d" + null + "o" + null + "c" + null + " " + null + "(" + null + "#" + null + "P" + null + "C" + null + "D" + null + "A" + null + "T" + null + "A" + null + ")" + null + ">" + null + "%R" + null + "%N" + null + "]" + null + ">" + null + "%R" + null + "%N" + null + "<" + null + "d" + null + "o" + null + "c" + null + ">" + null + "%/163/" + null + "<" + null + "/" + null + "d" + null + "o" + null + "c" + null + ">" + null + "%R" + null + "%N" + null
-	end
-xmltest_valid_sa_050: STRING is
-	once
-			-- HACT does not support null characters in manifest strings.
-		Result := "%/255/%/254/<" + null + "!" + null + "D" + null + "O" + null + "C" + null + "T" + null + "Y" + null + "P" + null + "E" + null + " " + null + "d" + null + "o" + null + "c" + null + " " + null + "[" + null + "%R" + null + "%N" + null + "<" + null + "!" + null + "E" + null + "L" + null + "E" + null + "M" + null + "E" + null + "N" + null + "T" + null + " " + null + "d" + null + "o" + null + "c" + null + " " + null + "(" + null + "#" + null + "P" + null + "C" + null + "D" + null + "A" + null + "T" + null + "A" + null + ")" + null + ">" + null + "%R" + null + "%N" + null + "]" + null + ">" + null + "%R" + null + "%N" + null + "<" + null + "d" + null + "o" + null + "c" + null + ">" + null + "@%/14/%/8/%/14/!%/14/*%/14/L%/14/<" + null + "/" + null + "d" + null + "o" + null + "c" + null + ">" + null + "%R" + null + "%N" + null
-	end
-xmltest_valid_sa_051: STRING is
-	once
-			-- HACT does not support null characters in manifest strings.
-		Result := "%/255/%/254/<" + null + "!" + null + "D" + null + "O" + null + "C" + null + "T" + null + "Y" + null + "P" + null + "E" + null + " " + null + "@%/14/%/8/%/14/!%/14/*%/14/L%/14/ " + null + "[" + null + "%R" + null + "%N" + null + "<" + null + "!" + null + "E" + null + "L" + null + "E" + null + "M" + null + "E" + null + "N" + null + "T" + null + " " + null + "@%/14/%/8/%/14/!%/14/*%/14/L%/14/ " + null + " " + null + "(" + null + "#" + null + "P" + null + "C" + null + "D" + null + "A" + null + "T" + null + "A" + null + ")" + null + ">" + null + "%R" + null + "%N" + null + "]" + null + ">" + null + "%R" + null + "%N" + null + "<" + null + "@%/14/%/8/%/14/!%/14/*%/14/L%/14/>" + null + "<" + null + "/" + null + "@%/14/%/8/%/14/!%/14/*%/14/L%/14/>" + null + "%R" + null + "%N" + null
-	end
+xmltest_valid_sa_049: STRING is "%/255/%/254/<%/0/!%/0/D%/0/O%/0/C%/0/T%/0/Y%/0/P%/0/E%/0/ %/0/d%/0/o%/0/c%/0/ %/0/[%/0/%R%/0/%N%/0/<%/0/!%/0/E%/0/L%/0/E%/0/M%/0/E%/0/N%/0/T%/0/ %/0/d%/0/o%/0/c%/0/ %/0/(%/0/#%/0/P%/0/C%/0/D%/0/A%/0/T%/0/A%/0/)%/0/>%/0/%R%/0/%N%/0/]%/0/>%/0/%R%/0/%N%/0/<%/0/d%/0/o%/0/c%/0/>%/0/%/163/%/0/<%/0//%/0/d%/0/o%/0/c%/0/>%/0/%R%/0/%N%/0/"
+xmltest_valid_sa_050: STRING is "%/255/%/254/<%/0/!%/0/D%/0/O%/0/C%/0/T%/0/Y%/0/P%/0/E%/0/ %/0/d%/0/o%/0/c%/0/ %/0/[%/0/%R%/0/%N%/0/<%/0/!%/0/E%/0/L%/0/E%/0/M%/0/E%/0/N%/0/T%/0/ %/0/d%/0/o%/0/c%/0/ %/0/(%/0/#%/0/P%/0/C%/0/D%/0/A%/0/T%/0/A%/0/)%/0/>%/0/%R%/0/%N%/0/]%/0/>%/0/%R%/0/%N%/0/<%/0/d%/0/o%/0/c%/0/>%/0/@%/14/%/8/%/14/!%/14/*%/14/L%/14/<%/0//%/0/d%/0/o%/0/c%/0/>%/0/%R%/0/%N%/0/"
+xmltest_valid_sa_051: STRING is "%/255/%/254/<%/0/!%/0/D%/0/O%/0/C%/0/T%/0/Y%/0/P%/0/E%/0/ %/0/@%/14/%/8/%/14/!%/14/*%/14/L%/14/ %/0/[%/0/%R%/0/%N%/0/<%/0/!%/0/E%/0/L%/0/E%/0/M%/0/E%/0/N%/0/T%/0/ %/0/@%/14/%/8/%/14/!%/14/*%/14/L%/14/ %/0/ %/0/(%/0/#%/0/P%/0/C%/0/D%/0/A%/0/T%/0/A%/0/)%/0/>%/0/%R%/0/%N%/0/]%/0/>%/0/%R%/0/%N%/0/<%/0/@%/14/%/8/%/14/!%/14/*%/14/L%/14/>%/0/<%/0//%/0/@%/14/%/8/%/14/!%/14/*%/14/L%/14/>%/0/%R%/0/%N%/0/"
 xmltest_valid_sa_052: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc>%/240/%/144/%/128/%/128/%/244/%/143/%/191/%/189/</doc>%R%N"
 xmltest_valid_sa_053: STRING is "<!DOCTYPE doc [%R%N<!ENTITY e %"<e/>%">%R%N<!ELEMENT doc (e)>%R%N<!ELEMENT e EMPTY>%R%N]>%R%N<doc>&e;</doc>%R%N"
 xmltest_valid_sa_054: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N%R%N%R%N<doc%R%N></doc%R%N>%R%N%R%N%R%N"
@@ -629,12 +605,5 @@ xmltest_valid_sa_out_116: STRING is "<doc>&#10;</doc>"
 xmltest_valid_sa_out_117: STRING is "<doc>]</doc>"
 xmltest_valid_sa_out_118: STRING is "<doc>]]</doc>"
 xmltest_valid_sa_out_119: STRING is "<doc></doc>"
-
-	null: STRING is
-		once
-				-- HACT does not support null characters in manifest strings.
-			Result := "T"
-			Result.put ('%U', 1)
-		end
 
 end

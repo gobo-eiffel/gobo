@@ -45,7 +45,7 @@
 					<para><emphasis>Description: </emphasis>System</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>hact|ise|se|ve|xml</para>
+					<para><emphasis>Domain: </emphasis>ise|se|ve|xml</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -58,7 +58,7 @@
 					<para><emphasis>Description: </emphasis>cluster (obsolete. Use 'library' instead)</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>hact|ise|se|ve|xml</para>
+					<para><emphasis>Domain: </emphasis>ise|se|ve|xml</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -71,7 +71,7 @@
 					<para><emphasis>Description: </emphasis>library</para>
 				</listitem>
 				<listitem>
-					<para><emphasis>Domain: </emphasis>hact|ise|se|ve|xml</para>
+					<para><emphasis>Domain: </emphasis>ise|se|ve|xml</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Default: </emphasis>-</para>
@@ -133,7 +133,6 @@
           <!-- runtime evaluation
           <choice>
             <value>ise</value>
-            <value>hact</value>
             <value>se</value>
             <value>ve</value>
             <value>xml</value>
@@ -144,7 +143,6 @@
           <!-- runtime evaluation
           <choice>
             <value>ise</value>
-            <value>hact</value>
             <value>se</value>
             <value>ve</value>
             <value>xml</value>

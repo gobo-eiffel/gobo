@@ -22,7 +22,7 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
-#ifdef ISE || HACT
+#ifdef ISE
 	DIRECTORY
 		rename
 			make as old_make,
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
 			name := a_name
-#ifdef ISE || HACT
+#ifdef ISE
 			old_make (STRING_.as_string (a_name))
 #endif
 #ifdef SE
@@ -167,7 +167,7 @@ feature -- Status report
 	is_open_read: BOOLEAN is
 			-- Has directory been opened in read mode?
 		do
-#ifdef ISE || HACT || VE
+#ifdef ISE || VE
 			Result := not is_closed
 #endif
 #ifdef SE
@@ -196,14 +196,8 @@ feature -- Status report
 			-- actually returns `is_readable'.)
 		do
 			if string_name.count > 0 then
-#ifdef ISE || HACT
+#ifdef ISE
 				Result := old_exists
-#ifdef HACT
-				if Result then
-					tmp_file.reset (string_name)
-					Result := not tmp_file.exists
-				end
-#endif
 #endif
 #ifdef SE
 				Result := is_readable
@@ -218,14 +212,8 @@ feature -- Status report
 			-- Can directory be opened in read mode?
 		do
 			if string_name.count > 0 then
-#ifdef HACT || ISE
+#ifdef ISE
 				Result := old_exists and then old_is_readable
-#ifdef HACT
-				if Result then
-					tmp_file.reset (string_name)
-					Result := not tmp_file.is_readable
-				end
-#endif
 #else
 				if is_open_read then
 					Result := True
@@ -259,16 +247,6 @@ feature -- Basic operations
 						lastentry := Dummy_entry
 					end
 #endif
-#ifdef HACT
-					if old_exists and then old_is_readable then
-						old_open_read
-						if directory_pointer = default_pointer then
-							mode := Close_directory
-						else
-							lastentry := Dummy_entry
-						end
-					end
-#endif
 #ifdef SE
 					basic_directory.connect_to (string_name)
 #endif
@@ -296,7 +274,7 @@ feature -- Basic operations
 #ifdef SE
 				basic_directory.disconnect
 #endif
-#ifdef ISE || HACT 
+#ifdef ISE
 				old_close
 				lastentry := Void
 #endif
@@ -331,7 +309,7 @@ feature -- Basic operations
 #ifdef SE
 					b := basic_directory.create_new_directory (string_name)
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 					if not old_exists then
 						create_dir
 					end
@@ -395,12 +373,8 @@ feature -- Basic operations
 #ifdef VE
 					directory.delete
 #endif
-#ifdef ISE || HACT
 #ifdef ISE
 					if old_exists and then is_empty then
-#else
-					if old_exists and then empty then
-#endif
 						old_delete
 					end
 #endif
@@ -451,7 +425,7 @@ feature -- Basic operations
 					end
 					delete
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 					if old_exists then
 						old_recursive_delete
 					end
@@ -477,7 +451,7 @@ feature -- Input
 			elseif old_end_of_input then
 				end_of_input := True
 			else
-#ifdef ISE || HACT
+#ifdef ISE
 				readentry
 				last_entry := lastentry
 #endif
@@ -523,7 +497,7 @@ feature {NONE} -- Implementation
 			-- Have all entries been read
 			-- (do not take `unread_entry' into account)?
 		do
-#ifdef ISE || HACT
+#ifdef ISE
 			Result := (lastentry = Void)
 #endif
 #ifdef SE
@@ -566,7 +540,7 @@ feature {NONE} -- Implementation
 			-- Internal data
 
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 	Dummy_entry: STRING is ""
 			-- Dummy entry
 

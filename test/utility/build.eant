@@ -15,12 +15,10 @@
 		<echo message="   geant install"/>
 		<echo message="   geant test"/>
 		<echo message="   geant test_ise"/>
-		<echo message="   geant test_hact"/>
 		<echo message="   geant test_se"/>
 		<echo message="   geant test_ve"/>
 		<echo message="   geant test_debug"/>
 		<echo message="   geant test_debug_ise"/>
-		<echo message="   geant test_debug_hact"/>
 		<echo message="   geant test_debug_se"/>
 		<echo message="   geant test_debug_ve"/>
 		<echo message="   geant clean"/>
@@ -54,16 +52,6 @@
 		</description>
 
 		<set name="target" value="test_ise"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
-	</target>
-
-	<target name="test_hact" depend="init">
-		<description>
-			Test the Gobo Eiffel Utility Library with Halstenbach Eiffel.
-		</description>
-
-		<set name="target" value="test_hact"/>
 		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>
@@ -106,16 +94,6 @@
 		</description>
 
 		<set name="target" value="test_debug_ise"/>
-		<set name="do_clean" value="true"/>
-		<geant target="do_all"/>
-	</target>
-
-	<target name="test_debug_hact" depend="init">
-		<description>
-			Test the Gobo Eiffel Utility Library with Halstenbach Eiffel in debug mode.
-		</description>
-
-		<set name="target" value="test_debug_hact"/>
 		<set name="do_clean" value="true"/>
 		<geant target="do_all"/>
 	</target>

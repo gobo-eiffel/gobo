@@ -58,7 +58,6 @@
 		</description>
 
 		<geant file="build.eant" target="${target}" dir="ascii2ps"/>
-		<geant file="build.eant" target="${target}" dir="calculator"/>
 		<geant file="build.eant" target="${target}" dir="eiffel_scanner"/>
 		<geant file="build.eant" target="${target}" dir="gegrep"/>
 	</target>

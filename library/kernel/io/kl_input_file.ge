@@ -35,9 +35,6 @@ inherit
 			open as open_read,
 			is_open as is_open_read
 		redefine
-#ifdef HACT
-			file_readable,
-#endif
 #ifdef SE
 			is_readable,
 #endif
@@ -139,7 +136,7 @@ feature -- Input
 			-- Read at most `nb' characters from input stream.
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
-#ifdef ISE || HACT
+#ifdef ISE
 		local
 			i: INTEGER
 		do
@@ -150,13 +147,9 @@ feature -- Input
 			end
 			if character_buffer = Void then
 				if not old_end_of_file then
-#ifdef ISE
 					last_string.set_count (nb)
 					i := old_read_to_string (last_string, 1, nb)
 					last_string.set_count (i)
-#else
-					old_read_stream (nb)
-#endif
 				else
 					last_string.set_count (0)
 				end
@@ -347,7 +340,7 @@ feature -- Basic operations
 				if string_name /= Empty_name then
 					character_buffer := Void
 					end_of_file := False
-#ifdef ISE || HACT
+#ifdef ISE
 					if old_exists and then old_is_readable then
 #endif
 #ifdef VE
@@ -355,7 +348,7 @@ feature -- Basic operations
 						eof := False
 #endif
 						old_open_read
-#ifdef ISE || HACT || VE
+#ifdef ISE || VE
 					end
 #endif
 				end
@@ -454,7 +447,7 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 	file_readable: BOOLEAN is
 			-- Is there a current item that may be read?
 		do

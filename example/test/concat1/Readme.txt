@@ -6,7 +6,7 @@ To run this test example:
 
     getest getest.<compiler>
 
-where <compiler> is either 'ise', 'hact', 've' or 'se' depending
+where <compiler> is either 'ise', 've' or 'se' depending
 on the Eiffel compiler used to compile the test suite. Alternatively
 you can use the following shorthand:
 

@@ -38,9 +38,6 @@ NOTE: This form of syntax is not supported in Visual Eiffel and
 ISE:
   true -> address_expression (yes)
   false -> address_expression (no)
-HACT:
-  true -> address_expression (yes)
-  false -> address_expression (no)
 VE:
   N/A
 SE:
@@ -56,8 +53,6 @@ NOTE: There can be several of these options.
 
 ISE:
   <arguments> -> arguments ("<arguments>")
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -73,9 +68,6 @@ NOTE: The option 'finalize' (finalization mode) should
   be set in order for this option to have any effect.
 
 ISE:
-  true -> array_optimization (yes)
-  false -> array_optimization (no)
-HACT:
   true -> array_optimization (yes)
   false -> array_optimization (no)
 VE:
@@ -105,20 +97,6 @@ ISE:
   loop_variant -> assertion (loop)
   check -> assertion (check)
   all -> assertion (all)
-HACT:
-  none -> assertion (no)
-  generate -> assertion (no)
-  require -> assertion (require)
-  ensure -> assertion (ensure)
-  invariant -> assertion (invariant)
-  loop_invariant -> assertion (loop)
-  loop_variant -> assertion (loop)
-  check -> assertion (check)
-  all -> assertion (all)
-  --
-  If several occurrences of Ace options would need to be generated,
-  only one occurrence would actually be generated with the value
-  which appears below all the others in the list above.
 VE:
   none ->
        assertions off
@@ -221,8 +199,6 @@ DESCRIPTION: Enable Eiffel code to be case insensitive.
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -236,9 +212,6 @@ DEFAULT: true
 DESCRIPTION: Report VAPE validity errors (ETL 2nd edition page 122).
 
 ISE:
-  true -> check_vape (yes)
-  false -> check_vape (no)
-HACT:
   true -> check_vape (yes)
   false -> check_vape (no)
 VE:
@@ -256,8 +229,6 @@ DESCRIPTION: Remove all generated C files, all generated object
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -274,8 +245,6 @@ DESCRIPTION: When compiling to the .NET framework. Is the generated
 ISE:
   true -> cls_compliant (yes)
   false -> cls_compliant (no)
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -289,9 +258,6 @@ DESCRIPTION: Under Windows, generate either a console, a windows
   application.
 
 ISE:
-  true -> console_application (yes)
-  false -> console_application (no)
-HACT:
   true -> console_application (yes)
   false -> console_application (no)
 VE:
@@ -310,9 +276,6 @@ DESCRIPTION: Specify that 'create' should be considered as
 
 ISE:
   N/A
-HACT:
-  true -> create_keyword_extension (yes)
-  false -> create_keyword_extension (no)
 VE:
   N/A
 SE:
@@ -330,8 +293,6 @@ NOTE: There can be several of these options.
   code.
 
 ISE:
-  <options> -> include_path: "some123/fake432/path567 <options>"
-HACT:
   <options> -> include_path: "some123/fake432/path567 <options>"
 VE:
   N/A
@@ -359,26 +320,6 @@ ISE:
   feature -> dead_code_removal (yes)
   class -> dead_code_removal (no)
   all -> dead_code_removal (yes)
-  --
-  If several occurrences of Ace options would need to be generated,
-  only one occurrence would actually be generated with value 'yes'
-  if there is at least one 'yes' and 'no' otherwise.
-HACT:
-  none ->
-      dead_code_removal (no)
-      optimize (no)
-  low_level ->
-      dead_code_removal (no)
-      optimize (no)
-  feature ->
-      dead_code_removal (yes)
-      optimize (no)
-  class ->
-      dead_code_removal (no)
-      optimize (yes)
-  all ->
-      dead_code_removal (yes)
-      optimize (yes)
   --
   If several occurrences of Ace options would need to be generated,
   only one occurrence would actually be generated with value 'yes'
@@ -420,9 +361,6 @@ DESCRIPTION: Enable debug instructions.
 ISE:
   true -> debug (yes)
   false -> debug (no)
-HACT:
-  true -> debug (yes)
-  false -> debug (no)
 VE:
   true -> debug instructions on
   false -> debug instructions off
@@ -445,8 +383,6 @@ NOTE: There can be several of these options.
 
 ISE:
   <tag> -> debug ("<tag>")
-HACT:
-  <tag> -> debug ("<tag>")
 VE:
   <tag> -> debug instructions on
   --
@@ -468,8 +404,6 @@ DESCRIPTION: Specify whether debug information should be
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   true -> debug on
   false -> debug off
@@ -489,8 +423,6 @@ DESCRIPTION: Specify in which directory the documentation
 
 ISE:
   <pathname> -> document ("<pathname>")
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -507,8 +439,6 @@ DESCRIPTION: When compiling to the .NET framework. Should the
 ISE:
   true -> dotnet_naming_convention (yes)
   false -> dotnet_naming_convention (no)
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -524,9 +454,6 @@ DESCRIPTION: Enable the use of the Eiffel runtime as a
 ISE:
   true -> dynamic_runtime (yes)
   false -> dynamic_runtime (no)
-HACT:
-  true -> dynamic_runtime_library (yes)
-  false -> dynamic_runtime_library (no)
 VE:
   true -> run_time_in_dll on
   false -> run_time_in_dll off
@@ -545,9 +472,6 @@ NOTE: The option 'finalize' (finalization mode) should
 ISE:
   true -> exception_trace (yes)
   false -> exception_trace (no)
-HACT:
-  true -> exception_trace (yes)
-  false -> exception_trace (no)
 VE:
   N/A
 SE:
@@ -562,8 +486,6 @@ NOTE: This option has no direct effect. Each individual
   optimization option should be set separately.
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   true -> finalize on
@@ -589,8 +511,6 @@ NOTE: The option 'finalize' (finalization mode) should
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   true -> optimize flat_fsf on
   false -> optimize flat_fsf off
@@ -615,8 +535,6 @@ DESCRIPTION: Visual Eiffel supports dynamic binding via
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   <value> -> FST_expansion_factor <value>
 SE:
@@ -630,8 +548,6 @@ DESCRIPTION: Replace dynamic feature calls by static ones
   when possible (FST stands for Feature Selection Tables).
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   true -> optimize FST on
@@ -647,10 +563,6 @@ DESCRIPTION: Select garbage collector.
 
 ISE:
   N/A
-HACT:
-  none -> garbage_collector ("internal")
-  internal -> garbage_collector ("internal")
-  boehm -> garbage_collector ("boehm")
 VE:
   N/A
 SE:
@@ -665,8 +577,6 @@ DEFAULT: false
 DESCRIPTION: Enable garbage collector status information.
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   N/A
@@ -683,8 +593,6 @@ NOTE: There can be several of these options.
 
 ISE:
   <pathname> -> include_path: "<pathname>"
-HACT:
-  <pathname> -> include_path: "<pathname>"
 VE:
   N/A
 SE:
@@ -700,8 +608,6 @@ DESCRIPTION: Specify the dynamic heap size for the program.
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   <value> -> heap_size <value>
 SE:
@@ -716,8 +622,6 @@ DESCRIPTION: Allow the compiler to use more memory at compile
   to be quicker, if you have enough memory (RAM, not disk!)... 
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   N/A
@@ -735,8 +639,6 @@ DESCRIPTION: When compiling to the .NET framework. Is the generated
 ISE:
   true -> il_verifiable (yes)
   false -> il_verifiable (no)
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -753,17 +655,6 @@ DESCRIPTION: Enable inlining. 'array' means ARRAY and STRING
 NOTE: There can be several of these options.
 
 ISE:
-  none -> inlining (no)
-  array -> inlining (yes)
-  constant -> inlining (yes)
-  once -> inlining (yes)
-  all -> inlining (yes)
-  --
-  If several occurrences of Ace options would need to be generated,
-  only one occurrence would actually be generated with value 'yes'
-  if there is at least one 'yes' and 'no' otherwise.
-  The option has effect only in finalized mode.
-HACT:
   none -> inlining (no)
   array -> inlining (yes)
   constant -> inlining (yes)
@@ -811,8 +702,6 @@ NOTE: No effect if 'inlining' is disabled.
 
 ISE:
   <value> -> inlining_size ("<value>")
-HACT:
-  <value> -> inlining_size ("<value>")
 VE:
   N/A
 SE:
@@ -829,8 +718,6 @@ DESCRIPTION: Specify whether jumps optimization will be enabled.
   shortcut jump instruction.
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   true -> optimize jumps on
@@ -850,8 +737,6 @@ NOTE: The option 'finalize' (finalization mode) should
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   true -> optimize layout on
   false -> optimize layout off
@@ -869,8 +754,6 @@ NOTE: The option 'finalize' (finalization mode) should
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   true -> optimize leaves on
   false -> optimize leaves off
@@ -886,8 +769,6 @@ DESCRIPTION: Generate C pragmas '#line x' in generated C code.
 ISE:
   true -> line_generation (yes)
   false -> line_generation (no)
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -902,8 +783,6 @@ DESCRIPTION: Specify object files, library files or command
 NOTE: There can be several of these options.
 
 ISE:
-  <pathname> -> object: "<pathname>"
-HACT:
   <pathname> -> object: "<pathname>"
 VE:
   <pathname> -> link "<pathname>"
@@ -920,8 +799,6 @@ DESCRIPTION: Specify which linker should be used. 'default'
   linker is invoked.
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   default -> linker default
@@ -943,9 +820,6 @@ DESCRIPTION: The default FPU precision used by gcc for Linux
 
 ISE:
   N/A
-HACT:
-  true -> linux_fpu_double_precision (yes)
-  false -> linux_fpu_double_precision (no)
 VE:
   N/A
 SE:
@@ -960,8 +834,6 @@ DESCRIPTION: Print an information message each time a non-once
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -975,8 +847,6 @@ DEFAULT: false
 DESCRIPTION: Specify whether the map file is to be created.
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   true -> map on
@@ -993,8 +863,6 @@ DESCRIPTION: Compile to the .NET framework.
 ISE:
   true -> msil_generation (yes)
   false -> msil_generation (no)
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1009,8 +877,6 @@ DESCRIPTION: Enable generation of a multithreaded application.
 ISE:
   true -> multithreaded (yes)
   false -> multithreaded (no)
-HACT:
-  N/A
 VE:
   true -> multithreading on
   false -> multithreading off
@@ -1028,8 +894,6 @@ DESCRIPTION: Specify that default library should not be linked
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   true -> no_default_lib on
   false -> no_default_lib off
@@ -1045,8 +909,6 @@ DESCRIPTION: Enable all classes of <cluster_name> to override
 
 ISE:
   <cluster_name> -> override_cluster (<cluster_name>)
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1060,9 +922,6 @@ DESCRIPTION: Should generated C code be portable?
 
 ISE:
   N/A
-HACT:
-  true -> portable_code_generation (yes)
-  false -> portable_code_generation (no)
 VE:
   N/A
 SE:
@@ -1075,8 +934,6 @@ DEFAULT: no default
 DESCRIPTION: Specify a precompiled library.
 
 ISE:
-  <pathname> -> precompiled ("<pathname>")
-HACT:
   <pathname> -> precompiled ("<pathname>")
 VE:
   N/A
@@ -1092,8 +949,6 @@ DESCRIPTION: Enable Eiffel profiling.
 ISE:
   true -> profile (yes)
   false -> profile (no)
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1109,8 +964,6 @@ DESCRIPTION: Specify whether register reloads optimizations
   from the memory if it is already stored in the register.
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   true -> optimize reloads on
@@ -1128,8 +981,6 @@ DESCRIPTION: Specify the file where the Eiffel compiler will
 
 ISE:
   <filename.def> -> shared_library_definition ("<filename.def>")
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1143,8 +994,6 @@ DESCRIPTION: Generate several C files instead of one big
   single C file for the complete system.
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   N/A
@@ -1162,8 +1011,6 @@ DESCRIPTION: Specify the stack size for the program. <value>
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   <value> -> stack_size <value>
 SE:
@@ -1180,8 +1027,6 @@ DESCRIPTION: Specify a list of class names (one per line) that
 
 ISE:
   N/A
-HACT:
-  <filename> -> storable_file_name ("<filename>")
 VE:
   N/A
 SE:
@@ -1194,8 +1039,6 @@ DEFAULT: true
 DESCRIPTION: Enable 'strip' to be run on the generated executable.
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   N/A
@@ -1214,8 +1057,6 @@ ISE:
   dll -> msil_generation_type ("dll")
   com -> msil_generation_type ("exe")
   no_main -> msil_generation_type ("exe")
-HACT:
-  N/A
 VE:
   exe -> target exe <application>
   dll -> target dll <application>
@@ -1236,9 +1077,6 @@ DESCRIPTION: Enable trace mode.
 ISE:
   true -> trace (yes)
   false -> trace (no)
-HACT:
-  true -> trace (yes)
-  false -> trace (no)
 VE:
   N/A
 SE:
@@ -1252,8 +1090,6 @@ DEFAULT: false
 DESCRIPTION: Run compiler in verbose mode.
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   N/A
@@ -1272,8 +1108,6 @@ DESCRIPTION: Specify a list of class names (one per line) that
 
 ISE:
   N/A
-HACT:
-  <filename> -> visible_file_name ("<filename>")
 VE:
   N/A
 SE:
@@ -1291,11 +1125,6 @@ DESCRIPTION: Specify warning level. 'style' means that Eiffel
 
 ISE:
   N/A
-HACT:
-  none -> warning_level (no)
-  style -> warning_level (no)
-  default -> warning_level ("default")
-  all -> warning_level (all)
 VE:
   N/A
 SE:
@@ -1319,8 +1148,6 @@ DEFAULT: false
 DESCRIPTION: Enable support for the Wedit debugger.
 
 ISE:
-  N/A
-HACT:
   N/A
 VE:
   N/A
@@ -1382,14 +1209,6 @@ ISE:
           no output
   false ->
       cluster_name: "pathname"
-HACT:
-  true ->
-      if there is at least one non-abstract subcluster ->
-          abstract cluster_name: "pathname"
-      if there is no non-abstract subcluster ->
-          no output
-  false ->
-      cluster_name: "pathname"
 VE:
   true ->
       no output
@@ -1411,8 +1230,6 @@ ISE:
   <name> ->
       assembly
          cluster_name: "<name>", "<version>", "<culture>", "<public_key_token>"
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1442,20 +1259,6 @@ ISE:
   loop_variant -> assertion (loop)
   check -> assertion (check)
   all -> assertion (all)
-HACT:
-  none -> assertion (no)
-  generate -> assertion (no)
-  require -> assertion (require)
-  ensure -> assertion (ensure)
-  invariant -> assertion (invariant)
-  loop_invariant -> assertion (loop)
-  loop_variant -> assertion (loop)
-  check -> assertion (check)
-  all -> assertion (all)
-  --
-  If several occurrences of Ace options would need to be generated,
-  only one occurrence would actually be generated with the value
-  which appears below all the others in the list above.
 VE:
   N/A
 SE:
@@ -1481,10 +1284,6 @@ DESCRIPTION: Specify that the cluster is in fact a component library.
 
 ISE:
   N/A
-HACT:
-  <pathname> ->
-      component
-         cluster_name: "<pathname>"
 VE:
   N/A
 SE:
@@ -1502,8 +1301,6 @@ ISE:
   <culture> ->
       assembly
          cluster_name: "<name>", "<version>", "<culture>", "<public_key_token>"
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1517,9 +1314,6 @@ DESCRIPTION: Enable debug instructions for the classes of this cluster.
   Override the 'debug' option specified at the system level.
 
 ISE:
-  true -> debug (yes)
-  false -> debug (no)
-HACT:
   true -> debug (yes)
   false -> debug (no)
 VE:
@@ -1538,8 +1332,6 @@ DESCRIPTION: Enable debug instructions with tag '<tag>' for the
 NOTE: There can be several of these options.
 
 ISE:
-  <tag> -> debug ("<tag>")
-HACT:
   <tag> -> debug ("<tag>")
 VE:
   N/A
@@ -1560,8 +1352,6 @@ DESCRIPTION: Specify in which directory the documentation for
 
 ISE:
   <pathname> -> document ("<pathname>")
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1582,12 +1372,6 @@ ISE:
          exclude
             "<pathname>"
          end
-HACT:
-  <pathname> ->
-      cluster_name: "pathname"
-         exclude
-            "<pathname>"
-         end
 VE:
   N/A
 SE:
@@ -1601,8 +1385,6 @@ DESCRIPTION: Specify a directory containing C header files.
 NOTE: There can be several of these options.
 
 ISE:
-  <pathname> -> include_path: "<pathname>"
-HACT:
   <pathname> -> include_path: "<pathname>"
 VE:
   N/A
@@ -1624,12 +1406,6 @@ ISE:
          include
             "<pathname>"
          end
-HACT:
-  <pathname> ->
-      cluster_name: "pathname"
-         include
-            "<pathname>"
-         end
 VE:
   N/A
 SE:
@@ -1644,8 +1420,6 @@ DESCRIPTION: Specify object files, library files or command
 NOTE: There can be several of these options.
 
 ISE:
-  <pathname> -> object: "<pathname>"
-HACT:
   <pathname> -> object: "<pathname>"
 VE:
   <pathname> -> link "<pathname>"
@@ -1667,8 +1441,6 @@ ISE:
             prefix
                "<prefix>"
             end
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1685,8 +1457,6 @@ DESCRIPTION: Enable Eiffel profiling for the classes of this
 ISE:
   true -> profile (yes)
   false -> profile (no)
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1704,8 +1474,6 @@ ISE:
   <public_key_token> ->
       assembly
          cluster_name: "<name>", "<version>", "<culture>", "<public_key_token>"
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1727,8 +1495,6 @@ ISE:
       library cluster_name: "pathname"
   false ->
       cluster_name: "pathname"
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1747,8 +1513,6 @@ ISE:
       all cluster_name: "pathname"
   false ->
       cluster_name: "pathname"
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1763,9 +1527,6 @@ DESCRIPTION: Specify that all classes in the cluster should
 
 ISE:
   N/A
-HACT:
-  true -> storable all
-  false -> no output
 VE:
   N/A
 SE:
@@ -1779,9 +1540,6 @@ DESCRIPTION: Enable trace mode for the classes of this cluster.
   Override the 'trace' option specified at the system level.
 
 ISE:
-  true -> trace (yes)
-  false -> trace (no)
-HACT:
   true -> trace (yes)
   false -> trace (no)
 VE:
@@ -1802,8 +1560,6 @@ ISE:
   <version> ->
       assembly
          cluster_name: "<name>", "<version>", "<culture>", "<public_key_token>"
-HACT:
-  N/A
 VE:
   N/A
 SE:
@@ -1860,20 +1616,6 @@ ISE:
   loop_variant -> assertion (loop): CLASS_NAME
   check -> assertion (check): CLASS_NAME
   all -> assertion (all): CLASS_NAME
-HACT:
-  none -> assertion (no): CLASS_NAME
-  generate -> assertion (no): CLASS_NAME
-  require -> assertion (require): CLASS_NAME
-  ensure -> assertion (ensure): CLASS_NAME
-  invariant -> assertion (invariant): CLASS_NAME
-  loop_invariant -> assertion (loop): CLASS_NAME
-  loop_variant -> assertion (loop): CLASS_NAME
-  check -> assertion (check): CLASS_NAME
-  all -> assertion (all): CLASS_NAME
-  --
-  If several occurrences of Ace options would need to be generated,
-  only one occurrence would actually be generated with the value
-  which appears below all the others in the list above.
 VE:
   N/A
 SE:
@@ -1902,9 +1644,6 @@ DESCRIPTION: Enable debug instructions for this class.
 ISE:
   true -> debug (yes): CLASS_NAME
   false -> debug (no): CLASS_NAME
-HACT:
-  true -> debug (yes): CLASS_NAME
-  false -> debug (no): CLASS_NAME
 VE:
   N/A
 SE:
@@ -1922,8 +1661,6 @@ NOTE: There can be several of these options.
 
 ISE:
   <tag> -> debug ("<tag>"): CLASS_NAME
-HACT:
-  <tag> -> debug ("<tag>"): CLASS_NAME
 VE:
   N/A
 SE:
@@ -1937,13 +1674,6 @@ DESCRIPTION: Specify that this class and its features should
   be visible from C when using Cecil for example.
 
 ISE:
-  <external_name> ->
-     visible
-         CLASS_NAME
-             end
-  --
-  Limitation: the external name is not taken into account.
-HACT:
   <external_name> ->
      visible
          CLASS_NAME
@@ -1970,8 +1700,6 @@ DESCRIPTION: Specify the layout of an object when it is accessed
 
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   auto -> no output
   sequential -> interface CLASS_NAME
@@ -1987,9 +1715,6 @@ DESCRIPTION: Specify that this class should be included into
 
 ISE:
   N/A
-HACT:
-  true -> storable CLASS_NAME
-  false -> no output
 VE:
   N/A
 SE:
@@ -2003,9 +1728,6 @@ DESCRIPTION: Enable trace mode for this class. Override the
   'trace' option specified at the cluster and system levels.
 
 ISE:
-  true -> trace (yes): CLASS_NAME
-  false -> trace (no): CLASS_NAME
-HACT:
   true -> trace (yes): CLASS_NAME
   false -> trace (no): CLASS_NAME
 VE:
@@ -2051,8 +1773,6 @@ DESCRIPTION: Specify that this feature should get a wrapper
   "winapi".
 ISE:
   N/A
-HACT:
-  N/A
 VE:
   winapi ->
     callback
@@ -2070,15 +1790,6 @@ DESCRIPTION: Specify that this feature should be visible
   from C when using Cecil for example.
 
 ISE:
-  <external_name> ->
-     visible
-         CLASS_NAME
-             export
-                 feature_name
-             end
-  --
-  Limitation: the external name is not taken into account.
-HACT:
   <external_name> ->
      visible
          CLASS_NAME

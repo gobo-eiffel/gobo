@@ -20,9 +20,6 @@ feature -- Access
 #ifdef ISE
 			Result := ise_vendor
 #endif
-#ifdef HACT
-			Result := hact_vendor
-#endif
 #ifdef SE
 			Result := se_vendor
 #endif
@@ -36,8 +33,15 @@ feature -- Access
 	ise_vendor: STRING is "ise"
 			-- ISE Eiffel vendor
 
-	hact_vendor: STRING is "hact"
+	hact_vendor: STRING is
 			-- Halstenbach vendor
+		obsolete
+			"[040922] HACT not supported anymore."
+		once
+			Result := "hact"
+		ensure
+			vendor_not_void: Result /= Void
+		end
 
 	se_vendor: STRING is "se"
 			-- SmallEiffel vendor
@@ -57,10 +61,12 @@ feature -- Status report
 
 	is_hact: BOOLEAN is
 			-- Has this program been compiled with Halstenbach?
+		obsolete
+			"[040922] HACT not supported anymore."
 		once
-			Result := (vendor = hact_vendor)
+			Result := False
 		ensure
-			definition: Result = (vendor = hact_vendor)
+			definition: not Result
 		end
 
 	is_se: BOOLEAN is

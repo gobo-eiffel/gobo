@@ -14,13 +14,9 @@
 		<description>
 			Generate Eiffel files to directory '${spec_dir}/[compiler]'
 			from '${gepp_dir}/${gepp_file}.ge', where [compiler] is
-			'ise', 'hact', 'se' and 've'. Create spec directories
-			if necessary.
+			'ise', 'se' and 've'. Create spec directories if necessary.
 		</description>
 
-		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/hact/${gepp_file}.e" lines="true">
-			<define name="HACT"/>
-		</gepp>
 		<gepp input="${gepp_dir}/${gepp_file}.ge" output="${spec_dir}/ise/${gepp_file}.e" lines="true">
 			<define name="ISE"/>
 			<define name="ISE_5_1" if="${ISE_5_1}"/>

@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			Result := clone (basic_directory.last_entry)
 			basic_directory.disconnect
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 			Result := execution_environment.current_working_directory
 #endif
 #ifdef VE
@@ -109,10 +109,6 @@ feature {NONE} -- Implementation
 #ifdef ISE
 		do
 			Result := execution_environment.get (a_variable)
-#endif
-#ifdef HACT
-		do
-			Result := execution_environment.variables.item (a_variable)
 #endif
 #ifdef SE
 		do
@@ -143,7 +139,7 @@ feature {NONE} -- Implementation
 		end
 
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 	execution_environment: EXECUTION_ENVIRONMENT is
 			-- Execution environment implementation
 		once

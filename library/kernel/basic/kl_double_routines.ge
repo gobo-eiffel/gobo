@@ -52,9 +52,6 @@ feature -- Logarithms
 #ifdef ISE
 			Result := old_log (d)
 #endif
-#ifdef HACT
-			Result := double_math.log (d)
-#endif
 #ifdef VE
 			Result := old_log (d.truncated_to_real)
 #endif
@@ -99,9 +96,6 @@ feature -- Logarithms
 #ifdef ISE
 			Result := old_log10 (d)
 #endif
-#ifdef HACT
-			Result := double_math.log10 (d)
-#endif
 #ifdef VE
 			Result := log (d) / log (10.0)
 #endif
@@ -140,18 +134,4 @@ feature -- Exponent
 #endif
 		end
 
-#ifdef HACT
-feature {NONE} -- Implementation
-
-	double_math: DOUBLE_MATH is
-			-- Double math functions
-			-- (Note: HACT 4.0.1 does not handle correctly the renaming
-			-- of external features with no alias clause.)
-		once
-			create Result
-		ensure
-			double_math_not_void: Result /= Void
-		end
-
-#endif
 end

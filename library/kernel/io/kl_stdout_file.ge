@@ -33,7 +33,7 @@ inherit
 #endif
 		end
 
-#ifdef ISE || HACT
+#ifdef ISE
 	CONSOLE
 		rename
 			make as old_make,
@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new standard output file.
 		do
-#ifdef ISE || HACT
+#ifdef ISE
 			make_open_stdout ("stdout")
 #endif
 #ifdef SE

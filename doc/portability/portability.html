@@ -249,8 +249,7 @@ color="#008080"><em>
 <em><strong>feature</strong></em> -- Anchor types
 
 </font><font color="#0000FF">#ifdef</font><font color="#008080"> </font><font
-color="#800080">ISE </font><font color="#0000FF">||</font><font
-color="#800080"> HACT</font><font color="#008080">
+color="#800080">ISE </font><font color="#008080">
     <em>INPUT_STREAM_TYPE</em>: <em>IO_MEDIUM</em> <em><strong>is do end</strong></em>
 </font><font color="#0000FF">#else
 #ifdef</font><font color="#008080"> </font><font color="#800080">SE</font><font
@@ -298,7 +297,6 @@ through the once function of the class above.</p>
         <em><strong>local</strong></em>
             <em>rescued</em>: <em>BOOLEAN</em>
 </font><font color="#0000FF">#ifdef </font><font color="#800080">ISE</font><font
-color="#0000FF"> || </font><font color="#800080">HACT</font><font
 color="#008080">
             <em>a_file</em>: <em>PLAIN_TEXT_FILE</em>
 </font><font color="#0000FF">#else
@@ -315,8 +313,6 @@ color="#008080">
         <em><strong>do
             if not</strong></em> <em>rescued</em> <em><strong>then</strong></em>
 </font><font color="#0000FF">#ifdef </font><font color="#800080">ISE</font><font
-color="#0000FF"> || </font><font color="#800080">HACT</font><font
-color="#0000FF"> || </font><font color="#800080">TOWER</font><font
 color="#008080">
                 !! <em>a_file</em>.<em>make</em> (<em>a_filename</em>)
                 <em>Result</em> := <em>a_file</em>

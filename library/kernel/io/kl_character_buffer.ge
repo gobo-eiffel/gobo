@@ -63,10 +63,6 @@ feature {NONE} -- Initialization
 			area := area.from_pointer (area_string.to_external)
 			count := n
 #endif
-#ifdef HACT
-			create area.make (n)
-			area.fill_blank
-#endif
 		end
 
 feature -- Access
@@ -127,9 +123,6 @@ feature -- Access
 					Result.put (area.item (i), j)
 					i := i + 1
 				end
-#endif
-#ifdef HACT
-				Result := area.substring (s, e)
 #endif
 			end
 		end
@@ -366,20 +359,6 @@ feature -- Resizing
 			else
 				area.resize (n)
 				area.set_count (n)
-			end
-#endif
-#ifdef HACT
-		local
-			i: INTEGER
-		do
-			from
-				i := n - count
-				area.resize (n)
-			until
-				i = 0
-			loop
-				area.append_character ('#')
-				i := i - 1
 			end
 #endif
 		end

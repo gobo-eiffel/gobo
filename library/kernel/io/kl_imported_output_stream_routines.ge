@@ -28,17 +28,13 @@ feature -- Access
 
 feature -- Type anchors
 
-#ifdef ISE || HACT
+#ifdef ISE
 	OUTPUT_STREAM_TYPE: IO_MEDIUM is do end
 #else
 #ifdef SE
 	OUTPUT_STREAM_TYPE: OUTPUT_STREAM is do end
 #else
-#ifdef TOWER
-	OUTPUT_STREAM_TYPE: TEXT_STREAM is do end
-#else
 	OUTPUT_STREAM_TYPE: FILE is do end
-#endif
 #endif
 #endif
 			-- Type anchor

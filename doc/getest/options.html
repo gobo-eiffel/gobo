@@ -58,8 +58,7 @@ provided by your favorite shell or operating system.) There are
 also some shorthands such as:</p>
 
 <blockquote>
-    <pre><font color="#800000">getest --hact
-getest --ise
+    <pre><font color="#800000">getest --ise
 getest --se
 getest --ve</font></pre>
 </blockquote>
@@ -67,8 +66,7 @@ getest --ve</font></pre>
 <p>which are equivalent to:</p>
 
 <blockquote>
-    <pre><font color="#800000">getest getest.hact
-getest getest.ise
+    <pre><font color="#800000">getest getest.ise
 getest getest.se
 getest getest.ve</font></pre>
 </blockquote>
@@ -83,16 +81,13 @@ which configuration file to use:</p>
         then use it.</li>
     <li>If either <font color="#800000"><tt>--</tt></font><a
         href="#ise"><font color="#800000"><tt>ise</tt></font></a>,
-        <font color="#800000"><tt>--</tt></font><a href="#hact"><font
-        color="#800000"><tt>hact</tt></font></a>, <font
-        color="#800000"><tt>--</tt></font><a href="#se"><font
+        <font color="#800000"><tt>--</tt></font><a href="#se"><font
         color="#800000"><tt>se</tt></font></a> or <font
         color="#800000"><tt>--</tt></font><a href="#ve"><font
         color="#800000"><tt>ve</tt></font></a><font
         color="#800000"><tt> </tt></font>has been specified on
         the command-line and the corresponding file <font
         color="#800000"><tt>getest.ise</tt></font>, <font
-        color="#800000"><tt>getest.hact</tt></font>, <font
         color="#800000"><tt>getest.se</tt></font> or <font
         color="#800000"><tt>getest.ve</tt></font> exists, then
         use this file.</li>
@@ -114,17 +109,6 @@ which configuration file to use:</p>
     <dt><font color="#800000"><tt>-V<br>
         --version</tt></font></dt>
     <dd>Print the version number of <em>getest</em> and exit.</dd>
-    <dt><font color="#800000"><tt>--</tt></font><a name="hact"><font
-        color="#800000"><tt>hact</tt></font></a></dt>
-    <dd>Run <em>getest</em> with the configuration file <font
-        color="#800000"><tt>getest.hact</tt></font> if it exists.
-        This configuration file is supposed to contain
-        instructions to run the test with the Halstenbach Eiffel
-        compiler. Also the default value for the <a
-        href="configuration.html#compile"><font color="#000080"><em><strong><tt>compile</tt></strong></em></font></a><font
-        color="#000080"><em><strong><tt> </tt></strong></em></font>field
-        of the configuration file is set to <font color="#800000"><tt>&quot;geant
-        compile_hact&quot;</tt></font>.</dd>
     <dt><font color="#800000"><tt>--</tt></font><a name="ise"><font
         color="#800000"><tt>ise</tt></font></a></dt>
     <dd>Run <em>getest</em> with the configuration file <font

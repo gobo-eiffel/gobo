@@ -22,13 +22,13 @@ uses this DFA to directly analyze input streams.
 To compile this example:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace,
-   SmallEiffel: se.ace) or ESD file (Visual Eiffel: ve.esd). Alternatively
-   you can use 'geant' to launch the compilation:
+   the provided Ace file (ISE Eiffel: ise.ace, SmallEiffel: se.ace) or
+   ESD file (Visual Eiffel: ve.esd). Alternatively you can use 'geant'
+   to launch the compilation:
    
        geant compile_<compiler>
        
-   where <compiler> is either 'ise', 'hact', 've' or 'se'.
+   where <compiler> is either 'ise', 've' or 'se'.
 
 2. Run the program using:
 

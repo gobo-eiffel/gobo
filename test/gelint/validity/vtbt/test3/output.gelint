@@ -1,1 +1,1 @@
-[?ISE,?HACT,SE][VTBT] Class BB (5,6): invalid type 'BIT -32': bit size must be a positive integer constant.
+[?ISE,SE][VTBT] Class BB (5,6): invalid type 'BIT -32': bit size must be a positive integer constant.

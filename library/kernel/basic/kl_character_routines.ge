@@ -49,7 +49,7 @@ feature -- Access
 	as_lower (c: CHARACTER): CHARACTER is
 			-- Lower-case version of character `c'
 		do
-#ifdef ISE || HACT
+#ifdef ISE
 			Result := c.lower
 #endif
 #ifdef SE
@@ -63,7 +63,7 @@ feature -- Access
 	as_upper (c: CHARACTER): CHARACTER is
 			-- Upper-case version of character `c'
 		do
-#ifdef ISE || HACT
+#ifdef ISE
 			Result := c.upper
 #endif
 #ifdef SE

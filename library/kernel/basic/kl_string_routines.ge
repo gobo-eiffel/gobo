@@ -107,7 +107,7 @@ feature -- Initialization
 				end
 			end
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 			nb := s.count
 			create Result.make (nb)
 			uc_string ?= s
@@ -135,8 +135,8 @@ feature -- Initialization
 			-- Create empty string.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon
-			-- as it is supported by ISE and HACT, which is not the
-			-- case in ISE 5.1.14 and HACT 4.0.1.
+			-- as it is supported by ISE, which is not the
+			-- case in ISE 5.1.14.
 		do
 			Result := make (0)
 		ensure
@@ -149,15 +149,15 @@ feature -- Initialization
 			-- Create string of length `n' filled with `c'.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon
-			-- as it is supported by ISE and HACT, which is not the
-			-- case in ISE 5.1.14 and HACT 4.0.1.
+			-- as it is supported by ISE , which is not the
+			-- case in ISE 5.1.14.
 		require
 			valid_count: n >= 0
 		do
 #ifdef VE || SE || (ISE && ! ISE_5_1)
 			create Result.make_filled (c, n)
 #endif
-#ifdef (ISE && ISE_5_1) || HACT
+#ifdef (ISE && ISE_5_1)
 			create Result.make (n)
 			Result.fill_character (c)
 #endif
@@ -179,7 +179,7 @@ feature -- Initialization
 #ifdef SE
 			create Result.blank (n)
 #endif
-#ifdef (ISE && ISE_5_1) || HACT
+#ifdef (ISE && ISE_5_1)
 			create Result.make (n)
 			Result.fill_blank
 #endif
@@ -210,10 +210,10 @@ feature -- Status report
 		ensure
 			false_if_too_small: a_string.count < other.count implies not Result
 			true_if_initial: (a_string.count >= other.count and then
-				elks_same_string (other, substring (a_string, 1, other.count))) implies Result
+				elks_same_string (other, a_string.substring (1, other.count))) implies Result
 			recurse: (a_string.count >= other.count and then
-				not elks_same_string (other, substring (a_string, 1, other.count))) implies
-				(Result = has_substring (substring (a_string, 2, a_string.count), other))
+				not elks_same_string (other, a_string.substring (1, other.count))) implies
+				(Result = has_substring (a_string.substring (2, a_string.count), other))
 		end
 
 	is_integer (a_string: STRING): BOOLEAN is
@@ -301,13 +301,13 @@ feature -- Access
 			-- replaced by a '%U'
 			-- (Extended from ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon
-			-- as it is supported by ISE and HACT, which is not the
-			-- case in ISE 5.1.14 and HACT 4.0.1.
+			-- as it is supported by ISE, which is not the
+			-- case in ISE 5.1.14.
 		require
 			a_string_not_void: a_string /= Void
 		local
 			uc_string: UC_STRING
-#ifdef ISE || HACT
+#ifdef ISE
 			i, nb: INTEGER
 #endif
 		do
@@ -318,7 +318,7 @@ feature -- Access
 #ifdef SE || VE
 				Result := a_string.string
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 				nb := a_string.count
 				create Result.make (nb)
 				from i := 1 until i > nb loop
@@ -331,50 +331,30 @@ feature -- Access
 			string_not_void: Result /= Void
 			string_type: Result.same_type ("")
 			first_item: a_string.count > 0 implies Result.item (1) = a_string.item (1)
-			recurse: a_string.count > 1 implies substring (Result, 2, a_string.count).is_equal (string (substring (a_string, 2, a_string.count)))
+			recurse: a_string.count > 1 implies Result.substring (2, a_string.count).is_equal (string (a_string.substring (2, a_string.count)))
 		end
 
 	substring (a_string: STRING; start_index, end_index: INTEGER): STRING is
 			-- New object containing all characters of `a_string'
 			-- from `start_index' to `end_index' inclusive
 			-- (ELKS 2001 STRING)
-			-- Note: This routine should be made obsolete as soon
-			-- as HACT supports empty substrings, which is not yet
-			-- the case as of HACT 4.0.1.
+		obsolete
+			"[040922] Use a_string.substring (start_index, end_index) instead."
 		require
 			a_string_not_void: a_string /= Void
 			valid_start_index: 1 <= start_index
 			valid_end_index: end_index <= a_string.count
 			meaningful_interval: start_index <= end_index + 1
-#ifdef HACT
-		local
-			a_unicode: UC_STRING
-		do
-			if start_index <= end_index then
-				Result := a_string.substring (start_index, end_index)
-			elseif a_string.same_type (dummy_string) then
-				Result := make (0)
-			else
-				a_unicode ?= a_string
-				if a_unicode /= Void then
-					Result := a_unicode.substring (start_index, end_index)
-				else
-					Result := clone (a_string)
-					Result.wipe_out
-				end
-			end
-#else
 		do
 			Result := a_string.substring (start_index, end_index)
-#endif
 		ensure
 			substring_not_void: Result /= Void
 			substring_same_type: Result.same_type (a_string)
 			substring_count: Result.count = end_index - start_index + 1
 			first_item: Result.count > 0 implies Result.item (1) = a_string.item (start_index)
 			-- Note: Too time and memory consumming with SE -0.74:
-			-- recurse: Result.count > 0 implies substring (Result, 2, Result.count).is_equal
-			--	(substring (a_string, start_index + 1, end_index))
+			-- recurse: Result.count > 0 implies Result.substring (2, Result.count).is_equal
+			--	(a_string.substring (start_index + 1, end_index))
 		end
 
 	substring_index (a_string, other: STRING; start_index: INTEGER): INTEGER is
@@ -477,10 +457,10 @@ feature -- Access
 			end
 		ensure
 			valid_result: Result = 0 or else (start_index <= Result and Result <= a_string.count - other.count + 1)
-			zero_if_absent: (Result = 0) = not has_substring (substring (a_string, start_index, a_string.count), other)
-			at_this_index: Result >= start_index implies elks_same_string (other, substring (a_string, Result, Result + other.count - 1))
+			zero_if_absent: (Result = 0) = not has_substring (a_string.substring (start_index, a_string.count), other)
+			at_this_index: Result >= start_index implies elks_same_string (other, a_string.substring (Result, Result + other.count - 1))
 			none_before: Result > start_index implies not
-				has_substring (substring (a_string, start_index, Result + other.count - 2), other)
+				has_substring (a_string.substring (start_index, Result + other.count - 2), other)
 		end
 
 	case_insensitive_hash_code (a_string: STRING): INTEGER is
@@ -494,7 +474,7 @@ feature -- Access
 		do
 			a_string_count := a_string.count
 			if a_string_count > 5 then
-#ifdef ISE || HACT
+#ifdef ISE
 				Result := a_string_count * a_string.item (a_string_count).lower.code
 #endif
 #ifdef SE
@@ -508,7 +488,7 @@ feature -- Access
 				nb := a_string_count
 			end
 			from i := 1 until i > nb loop
-#ifdef ISE || HACT
+#ifdef ISE
 				Result := Result + a_string.item (i).lower.code
 #endif
 #ifdef SE
@@ -561,8 +541,8 @@ feature -- Access
 		ensure
 			concat_not_void: Result /= Void
 			concat_count: Result.count = a_string.count + other.count
-			initial: same_string (substring (Result, 1, a_string.count), a_string)
-			final: same_string (substring (Result, a_string.count + 1, Result.count), other)
+			initial: same_string (Result.substring (1, a_string.count), a_string)
+			final: same_string (Result.substring (a_string.count + 1, Result.count), other)
 		end
 
 feature -- Comparison
@@ -633,7 +613,7 @@ feature -- Comparison
 		ensure
 			definition: Result = (a_string.count = other.count and then
 				(a_string.count > 0 implies (a_string.item_code (1) = other.item_code (1) and
-				(a_string.count >= 2 implies same_string (substring (a_string, 2, a_string.count), substring (other, 2, a_string.count))))))
+				(a_string.count >= 2 implies same_string (a_string.substring (2, a_string.count), other.substring (2, a_string.count))))))
 			elks_same_string: Result implies elks_same_string (a_string, other)
 		end
 
@@ -672,7 +652,7 @@ feature -- Comparison
 						c2 := s2.item (i)
 						if c1 = c2 then
 							i := i + 1
-#ifdef ISE || HACT
+#ifdef ISE
 						elseif c1.lower = c2.lower then
 #endif
 #ifdef SE
@@ -796,7 +776,7 @@ feature -- Comparison
 					if c1 = c2 then
 						i := i + 1
 					else
-#ifdef ISE || HACT
+#ifdef ISE
 						c1 := c1.lower
 						c2 := c2.lower
 #endif
@@ -905,8 +885,8 @@ feature -- Element change
 			append_not_void: Result /= Void
 			type_if_not_aliased: Result /= a_string implies Result.same_type (other)
 			new_count: Result.count = old a_string.count + old other.count
-			initial: same_string (substring (Result, 1, old a_string.count), old clone (a_string))
-			final: same_string (substring (Result, old a_string.count + 1, Result.count), old clone (other))
+			initial: same_string (Result.substring (1, old a_string.count), old clone (a_string))
+			final: same_string (Result.substring (old a_string.count + 1, Result.count), old clone (other))
 		end
 
 	appended_substring (a_string, other: STRING; s, e: INTEGER): STRING is
@@ -957,8 +937,8 @@ feature -- Element change
 			append_not_void: Result /= Void
 			type_if_not_aliased: Result /= a_string implies Result.same_type (other)
 			new_count: Result.count = old a_string.count + e - s + 1
-			initial: same_string (substring (Result, 1, old a_string.count), old clone (a_string))
-			final: same_string (substring (Result, old a_string.count + 1, Result.count), old substring (other, s, e))
+			initial: same_string (Result.substring (1, old a_string.count), old clone (a_string))
+			final: same_string (Result.substring (old a_string.count + 1, Result.count), old other.substring (s, e))
 		end
 
 	append_substring_to_string (a_string: STRING; other: STRING; s, e: INTEGER) is
@@ -985,19 +965,18 @@ feature -- Element change
 				end
 			end
 		ensure
-			appended: a_string.is_equal (old clone (a_string) + old substring (other, s, e))
+			appended: a_string.is_equal (old clone (a_string) + old other.substring (s, e))
 		end
 
 	fill_with (a_string: STRING; c: CHARACTER) is
 			-- Replace every character in `a_string' with `c'.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon
-			-- as it is supported by ISE and HACT, which is not the
-			-- case in ISE 5.1.14 and HACT 4.0.1 (implemented in
-			-- ISE 5.2).
+			-- as it is supported by ISE, which is not the
+			-- case in ISE 5.1.14 (implemented in ISE 5.2).
 		require
 			a_string_not_void: a_string /= Void
-#ifdef HACT || (ISE && ISE_5_1)
+#ifdef (ISE && ISE_5_1)
 		local
 			i, nb: INTEGER
 		do
@@ -1049,8 +1028,8 @@ feature -- Element change
 		ensure
 			one_more_character: a_string.count = old a_string.count + 1
 			inserted: a_string.item (i) = c
-			stable_before_i: substring (a_string, 1, i - 1).is_equal (old substring (a_string, 1, i - 1))
-			stable_after_i: substring (a_string, i + 1, a_string.count).is_equal (old substring (a_string, i, a_string.count))
+			stable_before_i: a_string.substring (1, i - 1).is_equal (old a_string.substring (1, i - 1))
+			stable_after_i: a_string.substring (i + 1, a_string.count).is_equal (old a_string.substring (i, a_string.count))
 		end
 
 feature -- Conversion
@@ -1117,8 +1096,8 @@ feature -- Conversion
 			-- New object with all letters in lower case
 			-- (Extended from ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon
-			-- as it is supported by ISE and HACT, which is not the
-			-- case in ISE 5.1.14 and HACT 4.0.1.
+			-- as it is supported by ISE, which is not the
+			-- case in ISE 5.1.14.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -1136,8 +1115,8 @@ feature -- Conversion
 			-- New object with all letters in upper case
 			-- (Extended from ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon
-			-- as it is supported by ISE and HACT, which is not the
-			-- case in ISE 5.1.14 and HACT 4.0.1.
+			-- as it is supported by ISE, which is not the
+			-- case in ISE 5.1.14.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -1270,19 +1249,19 @@ feature -- Removal
 			-- if `n' > `a_string.count', do nothing.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon as
-			-- ISE and HACT support it, which is not yet the case
-			-- as of ISE 5.1 and HACT 4.0.1.
+			-- ISE supports it, which is not yet the case
+			-- as of ISE 5.1.
 		require
 			a_string_not_void: a_string /= Void
 			n_non_negative: n >= 0
 		do
-#ifdef (ISE && ISE_5_1) || HACT
+#ifdef (ISE && ISE_5_1)
 			a_string.head (n)
 #else
 			a_string.keep_head (n)
 #endif
 		ensure
-			kept: a_string.is_equal (old substring (a_string, 1, n.min (a_string.count)))
+			kept: a_string.is_equal (old a_string.substring (1, n.min (a_string.count)))
 		end
 
 	keep_tail (a_string: STRING; n: INTEGER) is
@@ -1290,19 +1269,19 @@ feature -- Removal
 			-- if `n' > `a_string.count', do nothing.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon as
-			-- ISE and HACT support it, which is not yet the case
-			-- as of ISE 5.1 and HACT 4.0.1.
+			-- ISE supports it, which is not yet the case
+			-- as of ISE 5.1.
 		require
 			a_string_not_void: a_string /= Void
 			n_non_negative: n >= 0
 		do
-#ifdef (ISE && ISE_5_1) || HACT
+#ifdef (ISE && ISE_5_1)
 			a_string.tail (n)
 #else
 			a_string.keep_tail (n)
 #endif
 		ensure
-			kept: a_string.is_equal (old substring (a_string, a_string.count - n.min (a_string.count) + 1, a_string.count))
+			kept: a_string.is_equal (old a_string.substring (a_string.count - n.min (a_string.count) + 1, a_string.count))
 		end
 
 	remove_head (a_string: STRING; n: INTEGER) is
@@ -1310,8 +1289,8 @@ feature -- Removal
 			-- if `n' > `a_string.count', remove all.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon as
-			-- ISE and HACT support it, which is not yet the case
-			-- as of ISE 5.1 and HACT 4.0.1.
+			-- ISE supports it, which is not yet the case
+			-- as of ISE 5.1.
 		require
 			a_string_not_void: a_string /= Void
 			n_non_negative: n >= 0
@@ -1325,7 +1304,7 @@ feature -- Removal
 				keep_tail (a_string, a_string_count - n)
 			end
 		ensure
-			removed: a_string.is_equal (old substring (a_string, n.min (a_string.count) + 1, a_string.count))
+			removed: a_string.is_equal (old a_string.substring (n.min (a_string.count) + 1, a_string.count))
 		end
 
 	remove_tail (a_string: STRING; n: INTEGER) is
@@ -1333,8 +1312,8 @@ feature -- Removal
 			-- if `n' > `a_string.count', remove all.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon as
-			-- ISE and HACT support it, which is not yet the case
-			-- as of ISE 5.1 and HACT 4.0.1.
+			-- ISE supports it, which is not yet the case
+			-- as of ISE 5.1.
 		require
 			a_string_not_void: a_string /= Void
 			n_non_negative: n >= 0
@@ -1348,7 +1327,7 @@ feature -- Removal
 				keep_head (a_string, a_string_count - n)
 			end
 		ensure
-			removed: a_string.is_equal (old substring (a_string, 1, a_string.count - n.min (a_string.count)))
+			removed: a_string.is_equal (old a_string.substring (1, a_string.count - n.min (a_string.count)))
 		end
 
 	remove_substring (a_string: STRING; start_index, end_index: INTEGER) is
@@ -1356,14 +1335,14 @@ feature -- Removal
 			-- to `end_index' inclusive.
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon as
-			-- ISE and HACT support it, which is not yet the case
-			-- as of ISE 5.1 and HACT 4.0.1 (implemented in ISE 5.2).
+			-- ISE supports it, which is not yet the case
+			-- as of ISE 5.1 (implemented in ISE 5.2).
 		require
 			a_string_not_void: a_string /= Void
 			valid_start_index: 1 <= start_index
 			valid_end_index: end_index <= a_string.count
 			meaningful_interval: start_index <= end_index + 1
-#ifdef ISE || HACT
+#ifdef ISE
 		local
 			uc_string: UC_STRING
 		do
@@ -1379,7 +1358,7 @@ feature -- Removal
 			a_string.remove_substring (start_index, end_index)
 #endif
 		ensure
-			removed: a_string.is_equal (old substring (a_string, 1, start_index - 1) + old substring (a_string, end_index + 1, a_string.count))
+			removed: a_string.is_equal (old a_string.substring (1, start_index - 1) + old a_string.substring (end_index + 1, a_string.count))
 		end
 
 	wipe_out (a_string: STRING) is
@@ -1387,7 +1366,7 @@ feature -- Removal
 			-- Do not discard allocated memory (i.e. do not
 			-- change capacity) when allowed by the underlying
 			-- Eiffel compiler. (Note: currently only ISE and
-			-- SE will not change capacity, whereas HACT and
+			-- SE will not change capacity, whereas 
 			-- VE will reset capacity to zero.)
 		require
 			a_string_not_void: a_string /= Void
@@ -1428,7 +1407,7 @@ feature -- Resizing
 				i := i - 1
 			end
 #endif
-#ifdef ISE || HACT
+#ifdef ISE
 			from
 				i := n - a_string.count
 				a_string.resize (n)
@@ -1461,7 +1440,7 @@ feature -- Obsolete
 		ensure
 			definition: Result = (a_string.count = other.count and then
 				(a_string.count > 0 implies (a_string.item_code (1) = other.item_code (1) and
-				(a_string.count >= 2 implies same_string (substring (a_string, 2, a_string.count), substring (other, 2, a_string.count))))))
+				(a_string.count >= 2 implies same_string (a_string.substring (2, a_string.count), other.substring (2, a_string.count))))))
 			elks_same_string: Result implies elks_same_string (a_string, other)
 		end
 

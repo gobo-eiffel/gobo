@@ -12,7 +12,7 @@
 
 	<target name="gepp1" depend="init">
 		<gepp input="${GOBO}/library/kernel/basic/kl_array_routines.ge" output="${gendir_flat}/kl_array_routines.e" lines="false">
-			<define name="HACT" if="$HACT"/>
+			<define name="ISE" if="$ISE"/>
 		</gepp>
 	</target>
 
@@ -23,13 +23,13 @@
 			lines="false"
 			to_directory="ttt"
 		>
-			<define name="HACT" if="$HACT"/>
+			<define name="ISE" if="$ISE"/>
 		</gepp>
 	</target>
 
 	<target name="gepp2" depend="init">
 		<gepp input="${GOBO}/library/kernel/basic/kl_array_routines.ge" output="${gendir_flat}/ttt/kl_array_routines.e" lines="false">
-			<define name="HACT" if="$HACT"/>
+			<define name="ISE" if="$ISE"/>
 		</gepp>
 	</target>
 
@@ -45,8 +45,6 @@
 	<target name="gepp4" depend="init">
 		<set name="gendir" value="${gendir_deep}"/>
 		<set name="eiffelcomp" value="ise"/>
-		<geant target="gepp_deep"/>
-		<set name="eiffelcomp" value="hact"/>
 		<geant target="gepp_deep"/>
 		<set name="eiffelcomp" value="se"/>
 		<geant target="gepp_deep"/>
@@ -68,7 +66,7 @@
 		<exit code="1" unless="${eiffelcomp}"/>
 
 		<gepp lines="true" to_directory="${gendir}/${eiffelcomp}">
-			<define name="$HACT" if="$HACT"/>
+			<define name="$ISE" if="$ISE"/>
 			<fileset include="@(**/*.ge)" filename_directory="${GOBO}" dir="${GOBO}">
 				<map type="glob" from="*.ge" to="*.e"/>
 			</fileset>
@@ -80,7 +78,7 @@
 		<exit code="1" unless="${eiffelcomp}"/>
 
 		<gepp lines="true" to_directory="${gendir}/${eiffelcomp}">
-			<define name="$HACT" if="$HACT"/>
+			<define name="$ISE" if="$ISE"/>
 			<fileset include="@(**/*.ge)" filename_directory="${GOBO}" dir="${GOBO}">
 				<map type="glob" from="*.ge" to="*.e">
 					<map type="flat"/>

@@ -53,11 +53,6 @@ feature -- Initialization
 		do
 			create Result.blank (n)
 #endif
-#ifdef HACT
-		do
-			create Result.make (n)
-			Result.fill_blank
-#endif
 		ensure
 			string_buffer_not_void: Result /= Void
 			count_set: Result.count = n
@@ -352,7 +347,7 @@ feature -- Resizing
 		require
 			a_buffer_not_void: a_buffer /= Void
 			n_large_enough: n >= a_buffer.count
-#ifdef SE || HACT
+#ifdef SE
 		local
 			i: INTEGER
 #endif
@@ -372,18 +367,6 @@ feature -- Resizing
 #ifdef SE
 			from
 				i := n - a_buffer.count
-			until
-				i = 0
-			loop
-				a_buffer.append_character ('#')
-				i := i - 1
-			end
-			Result := a_buffer
-#endif
-#ifdef HACT
-			from
-				i := n - a_buffer.count
-				a_buffer.resize (n)
 			until
 				i = 0
 			loop

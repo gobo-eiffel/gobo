@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-#ifdef ISE || HACT
+#ifdef ISE
 class DUMMY_SPECIAL [G]
 #else
 class SPECIAL [G]

@@ -2062,7 +2062,6 @@ feature -- Test
 			-- Test feature `same_string'.
 		local
 			a_string, a_string2: UC_UTF8_STRING
-			foonullbar: STRING
 		do
 			create a_string.make_from_string ("foobar")
 			create a_string2.make_from_string ("foo")
@@ -2079,19 +2078,13 @@ feature -- Test
 			a_string2.append_code (too_big_character2)
 			a_string2.append_string ("bar")
 			assert ("same4", a_string.same_string (a_string2))
-				-- HACT 4.0.1 does not support null characters
-				-- in manifest strings.
-			foonullbar := clone ("foo")
-			foonullbar.append_character ('%U')
-			foonullbar.append_string ("bar")
-			assert ("same5", a_string.same_string (foonullbar))
+			assert ("same5", a_string.same_string ("foo%Ubar"))
 		end
 
 	test_same_string2 is
 			-- Test feature `same_string'.
 		local
 			a_string, a_string2: UC_STRING
-			foonullbar: STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
 			create {UC_UTF8_STRING} a_string2.make_from_string ("foo")
@@ -2108,12 +2101,7 @@ feature -- Test
 			a_string2.append_code (too_big_character2)
 			a_string2.append_string ("bar")
 			assert ("same4", a_string.same_string (a_string2))
-				-- HACT 4.0.1 does not support null characters
-				-- in manifest strings.
-			foonullbar := clone ("foo")
-			foonullbar.append_character ('%U')
-			foonullbar.append_string ("bar")
-			assert ("same5", a_string.same_string (foonullbar))
+			assert ("same5", a_string.same_string ("foo%Ubar"))
 		end
 
 	test_same_unicode_string1 is
@@ -2174,19 +2162,13 @@ feature -- Test
 			-- Test feature `string'.
 		local
 			a_string: UC_UTF8_STRING
-			foonullbar: STRING
 		do
 			create a_string.make_from_string ("foobar")
 			assert_equal ("string1", "foobar", a_string.string)
 			create a_string.make_from_string ("foo")
 			a_string.append_code (too_big_character)
 			a_string.append_string ("bar")
-				-- HACT 4.0.1 does not support null characters
-				-- in manifest strings.
-			foonullbar := clone ("foo")
-			foonullbar.append_character ('%U')
-			foonullbar.append_string ("bar")
-			assert_equal ("string2", foonullbar, a_string.string)
+			assert_equal ("string2", "foo%Ubar", a_string.string)
 			create a_string.make (0)
 			assert_equal ("string3", "", a_string.string)
 		end
@@ -2195,19 +2177,13 @@ feature -- Test
 			-- Test feature `string'.
 		local
 			a_string: UC_STRING
-			foonullbar: STRING
 		do
 			create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
 			assert_equal ("string1", "foobar", a_string.string)
 			create {UC_UTF8_STRING} a_string.make_from_string ("foo")
 			a_string.append_code (too_big_character)
 			a_string.append_string ("bar")
-				-- HACT 4.0.1 does not support null characters
-				-- in manifest strings.
-			foonullbar := clone ("foo")
-			foonullbar.append_character ('%U')
-			foonullbar.append_string ("bar")
-			assert_equal ("string2", foonullbar, a_string.string)
+			assert_equal ("string2", "foo%Ubar", a_string.string)
 			create {UC_UTF8_STRING} a_string.make (0)
 			assert_equal ("string3", "", a_string.string)
 		end
@@ -2701,9 +2677,9 @@ feature -- Test
 			create a_string2.make_from_string ("")
 			a_string.replace_substring (a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string.out) 
-			-- TODO: Note: The postcondition inherited from ISE 5.1 and
-			-- HACT 4.0.1 does not allow replacing a substring by itself:
-			-- !! a_string.make_from_string ("foobar")
+			-- TODO: Note: The postcondition inherited from ISE 5.1
+			-- does not allow replacing a substring by itself:
+			-- create a_string.make_from_string ("foobar")
 			-- a_string.replace_substring (a_string, 4, 6)
 			-- assert_equal ("replaced5", "foofoobar", a_string.out) 
 			create a_string.make_from_string ("foobar")
@@ -2733,8 +2709,8 @@ feature -- Test
 			create {UC_UTF8_STRING} a_string2.make_from_string ("")
 			a_string.replace_substring (a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string.out) 
-			-- TODO: Note: The postcondition inherited from ISE 5.1 and
-			-- HACT 4.0.1 does not allow replacing a substring by itself:
+			-- TODO: Note: The postcondition inherited from ISE 5.1
+			-- does not allow replacing a substring by itself:
 			-- create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
 			-- a_string.replace_substring (a_string, 4, 6)
 			-- assert_equal ("replaced5", "foofoobar", a_string.out) 
@@ -2765,8 +2741,8 @@ feature -- Test
 			create {UC_UTF8_STRING} a_string2.make_from_string ("")
 			a_string.replace_substring (a_string2, 2, 4)
 			assert_equal ("replaced4", "far", a_string.out) 
-			-- TODO: Note: The postcondition inherited from ISE 5.1 and
-			-- HACT 4.0.1 does not allow replacing a substring by itself:
+			-- TODO: Note: The postcondition inherited from ISE 5.1
+			-- does not allow replacing a substring by itself:
 			-- create {UC_UTF8_STRING} a_string.make_from_string ("foobar")
 			-- a_string.replace_substring (a_string, 4, 6)
 			-- assert_equal ("replaced5", "foofoobar", a_string.out) 

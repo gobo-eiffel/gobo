@@ -33,7 +33,7 @@ feature -- Initialization
 			a_filename_not_empty: a_filename.count > 0
 		local
 			rescued: BOOLEAN
-#ifdef ISE || HACT
+#ifdef ISE
 			a_file: PLAIN_TEXT_FILE
 #endif
 #ifdef SE
@@ -41,7 +41,7 @@ feature -- Initialization
 #endif
 		do
 			if not rescued then
-#ifdef ISE || HACT
+#ifdef ISE
 				create a_file.make (a_filename)
 				Result := a_file
 				a_file.open_write
@@ -131,7 +131,7 @@ feature -- Element change
 		do
 			a_stream.flush
 #else
-#ifdef ISE || HACT
+#ifdef ISE
 		local
 			a_file: FILE
 		do

@@ -159,7 +159,6 @@
         <ref name="getest"/>
         <ref name="gexace"/>
         <ref name="gexmlsplit"/>
-        <ref name="hact"/>
         <ref name="ise"/>
         <ref name="mkdir"/>
         <ref name="move"/>

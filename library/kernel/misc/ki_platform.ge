@@ -12,7 +12,7 @@ indexing
 
 deferred class KI_PLATFORM
 
-#ifdef SE || HACT
+#ifdef SE
 inherit
 
 	ANY

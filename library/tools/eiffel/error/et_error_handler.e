@@ -24,8 +24,6 @@ feature -- Status report
 
 	is_ise: BOOLEAN
 
-	is_hact: BOOLEAN
-
 	is_se: BOOLEAN
 
 	is_ve: BOOLEAN
@@ -44,7 +42,6 @@ feature -- Status report
 	set_compilers is
 		do
 			is_ise := True
-			is_hact := True
 			is_se := True
 			is_ve := True
 			is_ge := True
@@ -1634,7 +1631,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vdrd5_error (a_class) then
-				if is_ise or is_hact or is_ge then
+				if is_ise or is_ge then
 					create an_error.make_vdrd5a (a_class, f1, f2)
 					report_validity_error (an_error)
 				end
@@ -1894,7 +1891,7 @@ feature -- Validity errors
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vdus3_error (a_class) then
-				if is_ise or is_hact or is_ge then
+				if is_ise or is_ge then
 					create an_error.make_vdus3a (a_class, a_parent, f)
 					report_validity_error (an_error)
 				end

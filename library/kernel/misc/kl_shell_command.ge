@@ -21,18 +21,6 @@ inherit
 		export {NONE} all end
 
 #endif
-#ifdef HACT
-	SHELL
-		rename
-			make as old_make,
-			command as old_command,
-			execute as old_execute,
-			exit_code as old_exit_code
-		export
-			{NONE} all
-		end
-
-#endif
 #ifdef SE
 	SYSTEM
 		export
@@ -71,9 +59,6 @@ feature {NONE} -- Initialization
 			string_command := STRING_.as_string (a_command)
 #ifdef VE
 			make_shell (string_command)
-#endif
-#ifdef HACT
-			old_make (string_command)
 #endif
 			command := a_command
 		end
@@ -114,10 +99,6 @@ feature -- Execution
 #ifdef ISE
 				system (string_command)
 				exit_code := return_code
-#endif
-#ifdef HACT
-				old_execute
-				exit_code := old_exit_code
 #endif
 #ifdef VE
 				if operating_system.is_windows then

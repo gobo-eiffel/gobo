@@ -60,10 +60,7 @@ feature -- Test
 			assert ("not_void3", a_string /= Void) 
 			assert ("string_type3", a_string.same_type ("")) 
 			assert ("new_string3", a_string /= uc_string) 
-				-- HACT 4.0.1 does not support null characters
-				-- in manifest strings.
-			bnullr := clone ("bar")
-			bnullr.put ('%U', 2)
+			bnullr := clone ("b%Ur")
 			assert_equal ("same_string3", bnullr, a_string) 
 		end
 
@@ -192,10 +189,7 @@ feature -- Test
 			a_string2 := STRING_.string (uc_string)
 			assert ("not_void3", a_string2 /= Void)
 			assert ("string_type3", a_string2.same_type ("")) 
-				-- HACT 4.0.1 does not support null characters
-				-- in manifest strings.
-			a_string1 := clone ("bar")
-			a_string1.put ('%U', 2)
+			a_string1 := clone ("b%Ur")
 			assert_equal ("value3", a_string1, a_string2) 
 		end
 
