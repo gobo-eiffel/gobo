@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Geyacc Limitations</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Geyacc Limitations</strong></font></td>
+        <td align="right"><a href="skeleton.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="see_also.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<h2>Expanded types and multiple types for semantic values</h2>
+
+<p>In case of <a href="actions.html#value_types">multiple types</a>
+for semantic values, <em>geyacc</em> does not generate valid
+Eiffel code when the type specified in the <font color="#0000FF"><tt>%token</tt></font>
+and <font color="#0000FF"><tt>%type</tt></font> declarations is a
+user-defined expanded type. This is due to the fact that <em>geyacc</em>
+uses assignment attempts for type conversion. Reference types,
+generic or not, and basic expanded types such as <font
+color="#008080"><em><tt>INTEGER</tt></em></font> or <font
+color="#008080"><em><tt>CHARACTER</tt></em></font> are properly
+handled though, as shown in the following examples:</p>
+
+<blockquote>
+    <pre><font color="#0000FF">%token &lt;</font><font
+color="#008080"><em>STRING</em></font><font color="#0000FF">&gt;</font> <font
+color="#FF0000">IDENTIFIER</font>
+<font color="#0000FF">%type &lt;</font><font color="#008080"><em>INTEGER</em></font><font
+color="#0000FF">&gt;</font> <font color="#800080">expression</font>
+<font color="#0000FF">%type &lt;</font><font color="#008080"><em>LIST</em> [<em>INTEGER</em>]</font><font
+color="#0000FF">&gt;</font> <font color="#800080">expression_list</font></pre>
+</blockquote>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1999</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobo.demon.co.uk"><font size="2">ericb@gobo.demon.co.uk</font></a><font
+            size="2"> <br>
+            <strong>http:</strong></font><a
+            href="http://www.gobo.demon.co.uk"><font size="2">//www.gobo.demon.co.uk</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 29 March 1999</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$ 
+$Revision$" --> 
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobo.demon.co.uk"><img
+        src="../image/home.gif" alt="Home" border="0" width="40"
+        height="40"></a><a href="index.html"><img
+        src="../image/toc.gif" alt="Toc" border="0" width="40"
+        height="40"></a><a href="skeleton.html"><img
+        src="../image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="see_also.html"><img
+        src="../image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>
