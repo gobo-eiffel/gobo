@@ -277,6 +277,7 @@ xmltest_valid_not_sa_001: STRING is "<!DOCTYPE doc SYSTEM %"001.ent%" [%R%N<!ELE
 xmltest_valid_not_sa_002_ent: STRING is "%R"
 xmltest_valid_not_sa_002: STRING is "<!DOCTYPE doc SYSTEM %"002.ent%" [%R%N<!ELEMENT doc EMPTY>%R%N]>%R%N<doc></doc>%R%N"
 xmltest_valid_not_sa_003_1_ent: STRING is "<!ELEMENT doc EMPTY>%R%N<!ENTITY %% e SYSTEM %"003-2.ent%">%R%N<!ATTLIST doc a1 CDATA %%e; %"v1%">%R%N"
+xmltest_valid_not_sa_003_2_ent: STRING is "" -- missing empty file in original xmlconf, there in xmlconf CVS
 xmltest_valid_not_sa_003: STRING is "<!DOCTYPE doc SYSTEM %"003-1.ent%">%R%N<doc></doc>%R%N"
 xmltest_valid_not_sa_004_1_ent: STRING is "<!ELEMENT doc EMPTY>%R%N<!ENTITY %% e1 SYSTEM %"004-2.ent%">%R%N<!ENTITY %% e2 %"%%e1;%">%R%N%%e1;%R%N"
 xmltest_valid_not_sa_004_2_ent: STRING is "<!ATTLIST doc a1 CDATA %"value%">%R%N"
@@ -476,7 +477,7 @@ xmltest_valid_sa_088: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N
 xmltest_valid_sa_089: STRING is "<!DOCTYPE doc [%R%N<!ENTITY e %"&#x10000;&#x10FFFD;&#x10FFFF;%">%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc>&e;</doc>%R%N"
 xmltest_valid_sa_090: STRING is "<!DOCTYPE doc [%R%N<!ATTLIST e a NOTATION (n) #IMPLIED>%R%N<!ELEMENT doc (e)*>%R%N<!ELEMENT e (#PCDATA)>%R%N<!NOTATION n PUBLIC %"whatever%">%R%N]>%R%N<doc></doc>%R%N"
 xmltest_valid_sa_091: STRING is "<!DOCTYPE doc [%R%N<!NOTATION n SYSTEM %"http://www.w3.org/%">%R%N<!ENTITY e SYSTEM %"http://www.w3.org/%" NDATA n>%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ATTLIST doc a ENTITY %"e%">%R%N]>%R%N<doc></doc>%R%N"
-xmltest_valid_sa_092: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (a)*>%R%N<!ELEMENT a EMPTY>%R%N]>%R%N<doc>%R%N<a/>%R%N    <a/>%T <a/>%R%N%R%N%R%N</doc>%R%N"
+xmltest_valid_sa_092: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (a)*>%R%N<!ELEMENT a EMPTY>%R%N]>%R%N<doc>%R%N<a/>%R%N    <a/>%T<a/>%R%N%R%N%R%N</doc>%R%N"
 xmltest_valid_sa_093: STRING is "<!DOCTYPE doc [%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc>%R%N%R%N%R%N</doc>%R"
 xmltest_valid_sa_094: STRING is "<!DOCTYPE doc [%R%N<!ENTITY %% e %"foo%">%R%N<!ELEMENT doc (#PCDATA)>%R%N<!ATTLIST doc a1 CDATA %"%%e;%">%R%N]>%R%N<doc></doc>%R%N"
 xmltest_valid_sa_095: STRING is "<!DOCTYPE doc [%R%N<!ATTLIST doc a1 CDATA #IMPLIED>%R%N<!ATTLIST doc a1 NMTOKENS #IMPLIED>%R%N<!ELEMENT doc (#PCDATA)>%R%N]>%R%N<doc a1=%"1  2%"></doc>%R%N"
