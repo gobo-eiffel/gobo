@@ -94,7 +94,7 @@ feature -- Processing
 				if out_file.is_open_write then
 					a_parser.set_output_file (out_file)
 				else
-					io.error.put_string ("ge2e: cannot open '")
+					io.error.put_string ("ge2e: cannot open %'")
 					io.error.put_string (out_filename)
 					io.error.put_string ("%'%N")
 					die (1)
@@ -109,10 +109,10 @@ feature -- Processing
 					a_parser.parse_file (in_file)
 					in_file.close
 				else
-					io.error.put_string ("ge2e: cannot open '")
+					io.error.put_string ("ge2e: cannot open %'")
 					io.error.put_string (in_filename)
-					io.error.put_string ("'%N")
-				die (1)
+					io.error.put_string ("%'%N")
+					die (1)
 				end
 			end
 			if out_file /= Void and then out_file.is_open_write then
