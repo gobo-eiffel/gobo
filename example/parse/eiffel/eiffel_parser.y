@@ -394,7 +394,9 @@ Actual_list: Actual
 		;
 
 Actual:	Expression
-		| '$' E_IDENTIFIER
+		| '$' Feature_name
+		| '$' E_CURRENT
+		| '$' E_RESULT
 		;
 
 Assignment: Writable Assign_op Expression
