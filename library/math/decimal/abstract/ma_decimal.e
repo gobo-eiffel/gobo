@@ -155,7 +155,7 @@ feature {NONE} -- Initialization
 				until
 					v = 0
 				loop
-					coefficient.put (- integer_.mod (v, 10), index)
+					coefficient.put (- INTEGER_.mod (v, 10), index)
 					v := v // 10
 					if v /= 0 then
 						index := index + 1
