@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel 'expanded' type marks"
+		"Eiffel 'expanded' keywords"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -10,11 +10,18 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_EXPANDED_MARK
+class ET_EXPANDED_KEYWORD
 
 inherit
 
 	ET_TYPE_MARK
+		redefine
+			is_expanded
+		end
+
+	ET_CLASS_MARK
+		undefine
+			is_reference, is_separate
 		redefine
 			is_expanded
 		end

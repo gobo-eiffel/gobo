@@ -223,11 +223,11 @@ debug		{
 			}
 deferred	{
 				last_token := E_DEFERRED
-				last_value := new_token (deferred_keyword)
+				last_value := new_deferred_keyword (deferred_keyword)
 			}
 [dD][eE][fF][eE][rR][rR][eE][dD]	{
 				last_token := E_DEFERRED
-				last_value := new_token (text)
+				last_value := new_deferred_keyword (text)
 			}
 do			{
 				last_token := E_DO
@@ -271,11 +271,11 @@ ensure		{
 			}
 expanded	{
 				last_token := E_EXPANDED
-				last_value := new_expanded_mark (expanded_keyword)
+				last_value := new_expanded_keyword (expanded_keyword)
 			}
 [eE][xX][pP][aA][nN][dD][eE][dD]	{
 				last_token := E_EXPANDED
-				last_value := new_expanded_mark (text)
+				last_value := new_expanded_keyword (text)
 			}
 export		{
 				last_token := E_EXPORT
@@ -488,7 +488,7 @@ redefine	{
 reference	{
 				if use_reference_keyword then
 					last_token := E_REFERENCE
-					last_value := new_reference_mark (reference_keyword)
+					last_value := new_reference_keyword (reference_keyword)
 				else
 					last_token := E_IDENTIFIER
 					last_value := new_identifier (reference_keyword)
@@ -497,7 +497,7 @@ reference	{
 [rR][eE][fF][eE][rR][eE][nN][cC][eE] {
 				if use_reference_keyword then
 					last_token := E_REFERENCE
-					last_value := new_reference_mark (text)
+					last_value := new_reference_keyword (text)
 				else
 					last_token := E_IDENTIFIER
 					last_value := new_identifier (text)
@@ -557,11 +557,11 @@ select		{
 			}
 separate	{
 				last_token := E_SEPARATE
-				last_value := new_separate_mark (separate_keyword)
+				last_value := new_separate_keyword (separate_keyword)
 			}
 [sS][eE][pP][aA][rR][aA][tT][eE]	{
 				last_token := E_SEPARATE
-				last_value := new_separate_mark (text)
+				last_value := new_separate_keyword (text)
 			}
 strip		{
 				last_token := E_STRIP

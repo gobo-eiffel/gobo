@@ -16,6 +16,7 @@ inherit
 
 	ET_CONSTANT
 	ET_CHOICE_CONSTANT
+	ET_INDEXING_TERM
 
 feature -- Access
 

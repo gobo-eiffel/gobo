@@ -16,6 +16,7 @@ inherit
 
 	ET_CONSTANT
 	ET_TOKEN
+	ET_INDEXING_TERM
 
 feature -- Status report
 

@@ -32,7 +32,7 @@ creation
 %}
 
 %token <ET_TOKEN>              E_AGENT E_ALIAS E_ALL E_AS E_CHECK
-%token <ET_TOKEN>              E_CLASS E_CREATE E_CREATION E_DEBUG E_DEFERRED
+%token <ET_TOKEN>              E_CLASS E_CREATE E_CREATION E_DEBUG
 %token <ET_TOKEN>              E_DO E_ELSE E_ELSEIF E_END E_ENSURE
 %token <ET_TOKEN>              E_EXPORT E_EXTERNAL E_FEATURE E_FROM E_FROZEN
 %token <ET_TOKEN>              E_IF E_INDEXING E_INFIX E_INHERIT E_INSPECT
@@ -51,7 +51,8 @@ creation
 %token <ET_BREAK>              E_BREAK
 %token <ET_CHARACTER_CONSTANT> E_CHARACTER
 %token <ET_CURRENT>            E_CURRENT
-%token <ET_EXPANDED_MARK>      E_EXPANDED
+%token <ET_DEFERRED_KEYWORD>   E_DEFERRED
+%token <ET_EXPANDED_KEYWORD>   E_EXPANDED
 %token <ET_FREE_OPERATOR>      E_FREEOP
 %token <ET_IDENTIFIER>         E_IDENTIFIER E_BITTYPE
 %token <ET_INFIX_AND_OPERATOR> E_AND
@@ -74,10 +75,10 @@ creation
 %token <ET_MANIFEST_STRING>    E_STRIMPLIES E_STRFREEOP E_STRNOT E_STRING
 %token <ET_PREFIX_NOT_OPERATOR> E_NOT
 %token <ET_REAL_CONSTANT>      E_REAL
-%token <ET_REFERENCE_MARK>     E_REFERENCE
+%token <ET_REFERENCE_KEYWORD>  E_REFERENCE
 %token <ET_RESULT>             E_RESULT
 %token <ET_RETRY_INSTRUCTION>  E_RETRY
-%token <ET_SEPARATE_MARK>      E_SEPARATE
+%token <ET_SEPARATE_KEYWORD>   E_SEPARATE
 
 %token E_CHARERR E_STRERR E_INTERR
 
@@ -123,8 +124,9 @@ creation
 %type <ET_CURRENT>             Current
 %type <ET_DEBUG_INSTRUCTION>   Debug_instruction Debug_compound
 %type <ET_DEBUG_KEYS>          Debug_keys Debug_key_list
+%type <ET_DEFERRED_KEYWORD>    Deferred
 %type <ET_ELSEIF_PART_LIST>    Elseif_list Elseif_part_list
-%type <ET_EXPANDED_MARK>       Expanded
+%type <ET_EXPANDED_KEYWORD>    Expanded
 %type <ET_EXPORT>              New_export_item
 %type <ET_EXPORTS>             New_exports New_exports_opt New_export_list
 %type <ET_EXPRESSION>          Expression Call_chain Precursor_expression
@@ -142,6 +144,10 @@ creation
 %type <ET_FORMAL_GENERIC_PARAMETERS> Formal_generics_opt Formal_generic_list
 %type <ET_IDENTIFIER>          Identifier Class_name
 %type <ET_IF_INSTRUCTION>      Conditional
+%type <ET_INDEXINGS>           Indexing_clause Indexing_clause_opt Index_list
+%type <ET_INDEXING_ITEM>       Index_clause Index_clause_semicolon Index_clause_impl
+%type <ET_INDEXING_TERMS>      Index_terms
+%type <ET_INDEXING_TERM>       Index_value
 %type <ET_INSPECT_INSTRUCTION> Multi_branch
 %type <ET_INSTRUCTION>         Instruction Creation_instruction Call_instruction
                                Create_instruction
@@ -162,12 +168,12 @@ creation
 %type <ET_QUALIFIED_PRECURSOR_INSTRUCTION> Qualified_precursor_instruction
 %type <ET_PRECONDITIONS>       Precondition_opt
 %type <ET_REAL_CONSTANT>       Real_constant
-%type <ET_REFERENCE_MARK>      Reference
+%type <ET_REFERENCE_KEYWORD>   Reference
 %type <ET_RENAMES>             Rename_clause Rename_list
 %type <ET_RESULT>              Result
 %type <ET_RETRY_INSTRUCTION>   Retry
 %type <ET_SEMICOLON_SYMBOL>    Semicolon
-%type <ET_SEPARATE_MARK>       Separate
+%type <ET_SEPARATE_KEYWORD>    Separate
 %type <ET_SIGN_SYMBOL>         Plus_sign Minus_sign
 %type <ET_STRIP_EXPRESSION>    Strip_expression Strip_feature_name_list
 %type <ET_SYMBOL>              Assign Bang Bangbang Colon Comma Dollar Dot Left_array Right_array
@@ -177,6 +183,7 @@ creation
                                Loop Precursor Require Then Until Variant When Inspect Select
                                Rename Redefine Export Undefine All Creation As Do Once
                                Rescue Like Bit Local Obsolete Inherit Class Agent Feature
+                               Indexing
 %type <ET_TYPE>                Type Constraint_type
 %type <ET_VARIANT>             Variant_clause_opt
 %type <ET_WHEN_PART_LIST>      When_list When_list_opt
@@ -186,12 +193,12 @@ creation
 %start Class_declarations
 
 %%
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Class_declarations: Class_declaration
 	;
 
-Class_declaration: Indexing_opt Class_to_end
+Class_declaration: Indexing_clause_opt Class_to_end
 		{
 			$2.set_first_indexing ($1)
 			remove_last_class
@@ -203,7 +210,7 @@ Class_declaration_opt: -- Empty
 	;
 
 Class_to_end: Class_header Formal_generics_opt Obsolete_opt
-	   Creators_opt Features_opt Invariant_clause_opt Indexing_opt End Class_declaration_opt
+	   Creators_opt Features_opt Invariant_clause_opt Indexing_clause_opt End Class_declaration_opt
 		{
 			$$ := $1
 			$$.set_obsolete_message ($3)
@@ -219,7 +226,7 @@ Class_to_end: Class_header Formal_generics_opt Obsolete_opt
 		}
 	;
 
-Creators_to_end: Creators_opt Features_opt Invariant_clause_opt Indexing_opt End Class_declaration_opt
+Creators_to_end: Creators_opt Features_opt Invariant_clause_opt Indexing_clause_opt End Class_declaration_opt
 		{
 			last_class.set_creators ($1)
 			last_class.set_invariants ($3)
@@ -230,49 +237,104 @@ Creators_to_end: Creators_opt Features_opt Invariant_clause_opt Indexing_opt End
 
 --------------------------------------------------------------------------------
 
-Indexing: E_INDEXING Index_list
+Indexing_clause: Indexing
+		{ $$ := new_indexings ($1) }
+	| Indexing
+		{ add_counter }
+	  Index_list
+		{
+			$$ := $3
+			$$.set_indexing_keyword ($1)
+			remove_counter
+		}
 	;
 
-Indexing_opt: -- Empty
-	| E_INDEXING Index_list
-	;
-
-Index_list: -- Empty
---	| Index_list_with_no_terminator
---	| Index_list_with_no_terminator S
-	| Index_list_with_no_terminator SS
-	;
-
-Index_list_with_no_terminator: Index_clause
---	| Index_list_with_no_terminator Index_clause
---	| Index_list_with_no_terminator ';' Index_clause
---	| Index_list_with_no_terminator ';' S Index_clause
-	| Index_list_with_no_terminator SS Index_clause
-	;
-
-Index_clause: Index_terms
-	| Identifier ':' Index_terms
-		-- Note: Eiffel says that the Index_terms list 
-		-- should not be empty, but VE allows that!
---	| Identifier ':'
-	;
-
-Index_terms: Index_value
-	| Index_terms ',' Index_value
-	;
-
-Index_value: Identifier
-	| Boolean_constant
-	| Character_constant
-	| Integer_constant
-	| Real_constant
-	| Manifest_string
-	| Bit_constant
+Indexing_clause_opt: -- Empty
+		-- { $$ := Void }
+	| Indexing_clause
 		{ $$ := $1 }
 	;
 
-SS: -- Empty
-	| SS Semicolon
+Index_list: Index_clause
+		{
+			$$ := new_indexings_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Index_clause_semicolon
+		-- TODO: Syntax error
+		{
+			$$ := new_indexings_with_capacity (counter_value + 1)
+			$$.put_first ($1)
+		}
+	| Index_clause
+		{ increment_counter }
+	  Index_list
+		{
+			$$ := $3
+			$$.put_first ($1)
+		}
+	| Index_clause_semicolon
+		{ increment_counter }
+	  Index_list
+		{
+			$$ := $3
+			$$.put_first ($1)
+		}
+	;
+
+Index_clause: { add_counter } Index_clause_impl
+		{
+			$$ := $2
+			remove_counter
+		}
+	;
+
+Index_clause_impl: Index_terms
+		{
+			$$ := new_indexing ($1)
+		}
+	| Identifier Colon Index_terms
+		{
+			$$ := new_tagged_indexing (new_tag ($1, $2), $3)
+		}
+
+		-- Note: Eiffel says that the Index_terms list 
+		-- should not be empty, but VE allows that!
+--	| Identifier Colon
+	;
+
+Index_clause_semicolon: Index_clause Semicolon
+		{ $$ := new_indexing_semicolon ($1, $2) }
+	| Index_clause_semicolon Semicolon
+		-- TODO: Syntax error
+		{ $$ := new_indexing_semicolon ($1, $2) }
+	;
+
+Index_terms: Index_value
+		{ $$ := new_indexing_terms_with_capacity ($1, counter_value + 1) }
+	| Index_value Comma
+		{ increment_counter}
+	  Index_terms
+		{
+			$$ := $4
+			$$.put_first (new_indexing_term_comma ($1, $2))
+		}
+	;
+
+Index_value: Identifier
+		{ $$ := $1 }
+	| Boolean_constant
+		{ $$ := $1 }
+	| Character_constant
+		{ $$ := $1 }
+	| Integer_constant
+		{ $$ := $1 }
+	| Real_constant
+		{ $$ := $1 }
+	| Manifest_string
+		{ $$ := $1 }
+	| Bit_constant
+		{ $$ := $1 }
 	;
 
 --------------------------------------------------------------------------------
@@ -283,27 +345,30 @@ Class_header: Class Identifier
 			$$.set_class_keyword ($1)
 			add_last_class ($$)
 		}
-	| E_DEFERRED Class Identifier
+	| Deferred Class Identifier
 		{
-			$$ := new_deferred_class ($3)
+			$$ := new_class ($3)
 			$$.set_class_keyword ($2)
+			$$.set_class_mark ($1)
 			add_last_class ($$)
 		}
 	| Expanded Class Identifier
 		{
-			$$ := new_expanded_class ($3)
+			$$ := new_class ($3)
 			$$.set_class_keyword ($2)
+			$$.set_class_mark ($1)
 			add_last_class ($$)
 		}
 	| Separate Class Identifier
 		{
-			$$ := new_separate_class ($3)
+			$$ := new_class ($3)
 			$$.set_class_keyword ($2)
+			$$.set_class_mark ($1)
 			add_last_class ($$)
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Formal_generics_opt: -- Empty
 		-- { $$ := Void }
@@ -428,7 +493,7 @@ Constraint_type_list: Constraint_type
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Obsolete_opt: -- Empty
 		-- { $$ := Void }
@@ -436,7 +501,7 @@ Obsolete_opt: -- Empty
 		{ $$ := new_obsolete ($1, $2) }
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Inheritance_to_end: Inherit Creators_to_end
 		{
@@ -529,7 +594,7 @@ Parent_list_to_end: Class_name Actual_generics_opt Rename_clause New_exports_opt
 			$$ := new_parents_with_capacity (counter_value + 1)
 			$$.put_first (new_parent_semicolon (new_parent ($1, $2, Void, Void, Void, Void, Void, Void), $3))
 		}
-	| Class_name Actual_generics_opt End Indexing End Class_declaration_opt
+	| Class_name Actual_generics_opt End Indexing_clause End Class_declaration_opt
 		{
 			$$ := new_parents_with_capacity (counter_value + 1)
 			$$.put_first (new_parent ($1, $2, Void, Void, Void, Void, Void, $3))
@@ -655,7 +720,7 @@ Parent_list_to_end: Class_name Actual_generics_opt Rename_clause New_exports_opt
 		-- end of the feature adaptation of BAR instead of
 		-- as the end of the class FOO.
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Rename_clause: Rename
 		{ $$ := new_renames ($1) }
@@ -689,7 +754,7 @@ Rename_list: Feature_name As Feature_name
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 New_exports: Export
 		{ $$ := new_exports ($1) }
@@ -793,7 +858,7 @@ Export_feature_name_list: Feature_name
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Clients: Left_brace
 		{ add_counter }
@@ -842,7 +907,7 @@ Client_list: Identifier
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Redefine_clause: Redefine
 		{ $$ := new_keyword_feature_name_list ($1) }
@@ -918,7 +983,7 @@ Keyword_feature_name_list: Feature_name
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Creators_opt: -- Empty
 		-- { $$ := Void }
@@ -1006,14 +1071,14 @@ Creation_procedure_list: Identifier
 		}
 	;
 
---------------------------------------------------------------------------------
+--NOTDONE-----------------------------------------------------------------------
 
 Features_opt: -- Empty
 	| Features
 	;
 	
 Features: Feature_clause
-	| Features Feature_clause
+	| Feature_clause Features
 	;
 
 Feature_clause: Feature Clients_opt
@@ -1022,35 +1087,38 @@ Feature_clause: Feature Clients_opt
 					if new_any_clients ($1.position) = Void then end
 				end
 			}
-		Feature_declaration_list
+	| Feature Clients_opt
+			{
+				if $2 = Void then
+					if new_any_clients ($1.position) = Void then end
+				end
+			}
+	  Feature_declaration_list
 	;
 
 		-- Note: Does not support 'Header_comment'.
 
-Feature_declaration_list: -- Empty
-	| Feature_declaration_list_with_no_terminator
-	| Feature_declaration_list_with_no_terminator ';'
+Feature_declaration_list: Feature_declaration
+	| Feature_declaration Semicolon
+		-- TODO: Syntax error
+	| Feature_declaration Feature_declaration_list
+	| Feature_declaration Semicolon Feature_declaration_list
 	;
 
-Feature_declaration_list_with_no_terminator: Feature_declaration
-	| Feature_declaration_list_with_no_terminator Feature_declaration
-	| Feature_declaration_list_with_no_terminator ';' Feature_declaration
-	;
-
---------------------------------------------------------------------------------
+--NOTDONE-----------------------------------------------------------------------
 
 Feature_declaration: Single_feature_declaration
 		{ $$ := $1; register_feature ($$) }
 	| E_FROZEN Single_feature_declaration
 		{ $$ := $2; register_frozen_feature ($$) }
-	| Feature_name Feature_synonym_separator Feature_declaration
+	| Feature_name ',' Feature_declaration
 		{ $$ := new_synonym_feature ($1, $3); register_feature ($$) }
-	| E_FROZEN Feature_name Feature_synonym_separator Feature_declaration
+	| Feature_name Feature_declaration
+		{ $$ := new_synonym_feature ($1, $2); register_feature ($$) }
+	| E_FROZEN Feature_name ',' Feature_declaration
 		{ $$ := new_synonym_feature ($2, $4); register_frozen_feature ($$) }
-	;
-
-Feature_synonym_separator: -- Empty
-	| ','
+	| E_FROZEN Feature_name Feature_declaration
+		{ $$ := new_synonym_feature ($2, $3); register_frozen_feature ($$) }
 	;
 
 Single_feature_declaration: Attribute_declaration
@@ -1141,7 +1209,7 @@ External_name_opt: -- Empty
 		{ $$ := $2 }
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Feature_name: Identifier
 		{ $$ := $1 }
@@ -1466,7 +1534,7 @@ Feature_name: Identifier
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Formal_arguments_opt: -- Empty
 		-- { $$ := Void }
@@ -1523,7 +1591,7 @@ Formal_argument_list: Identifier Colon Type
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Local_declarations_opt: -- Empty
 		-- { $$ := Void }
@@ -1579,7 +1647,7 @@ Local_variable_list: Identifier Colon Type
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Assertions: Expression
 		{ add_expression_assertion ($1, Void) }
@@ -1641,7 +1709,7 @@ Variant_clause_opt: -- Empty
 		{ $$ := new_tagged_expression_variant ($1, $2, $3, $4) }
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Rescue_opt: -- Empty
 		-- { $$ := Void }
@@ -1649,7 +1717,7 @@ Rescue_opt: -- Empty
 		{ $$ := $1 }
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Type: Class_name Actual_generics_opt
 		{ $$ := new_named_type (Void, $1, $2) }
@@ -1712,7 +1780,7 @@ Type_list: Type
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Do_compound: Do
 		{ $$ := new_compound ($1) }
@@ -1868,7 +1936,7 @@ Instruction: Creation_instruction
 		{ $$ := $1 }
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Creation_instruction: Bang Type Bang Writable
 		{ $$ := new_typed_bang_instruction ($1, $2, $3, $4) }
@@ -1896,7 +1964,7 @@ Create_expression: Create Left_brace Type Right_brace
 		{ $$ := new_qualified_create_expression ($1, $2, $3, $4, $5, $6, $7) }
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Conditional: If Expression Then_compound End
 		{ $$ := new_if_instruction ($1, $2, $3, $4) }
@@ -1938,7 +2006,7 @@ Elseif_part_list: Elseif Expression Then_compound
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Multi_branch: Inspect Expression When_list_opt Else_compound End
 		{
@@ -2022,7 +2090,7 @@ Choice_constant: Integer_constant
 		{ $$ := $1 }
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Debug_instruction: Debug Debug_keys End
 		{ $$ := new_debug_instruction ($1, $2, $3) }
@@ -2110,7 +2178,7 @@ Debug_key_list: Manifest_string
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Call_instruction: Identifier Actuals_opt
 		{ $$ := new_call_instruction ($1, $2) }
@@ -2121,8 +2189,7 @@ Call_instruction: Identifier Actuals_opt
 	| Qualified_precursor_instruction
 		{ $$ := $1 }
 	| Feature Left_brace Type Right_brace Dot Identifier Actuals_opt
-			-- TODO:
-		{ $$ := new_call_instruction ($6, $7) }
+		{ $$ := new_static_call_instruction ($1, $2, $3, $4, $5, $6, $7) }
 	;
 
 Qualified_precursor_instruction: Precursor Left_brace Class_name Right_brace Actuals_opt
@@ -2142,8 +2209,7 @@ Call_expression: Identifier Actuals_opt
 	| Call_chain Dot Identifier Actuals_opt
 		{ $$ := new_qualified_call_expression ($1, $2, $3, $4) }
 	| Feature Left_brace Type Right_brace Dot Identifier Actuals_opt
-			-- TODO:
-		{ $$ := new_call_expression ($6, $7) }
+		{ $$ := new_static_call_expression ($1, $2, $3, $4, $5, $6, $7) }
 	;
 
 Precursor_expression: Precursor Actuals_opt
@@ -2178,7 +2244,7 @@ Call_chain: Identifier Actuals_opt
 		{ $$ := new_qualified_call_expression ($1, $2, $3, $4) }
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Actuals_opt: -- Empty
 		-- { $$ := Void }
@@ -2242,7 +2308,7 @@ Writable: Identifier
 		{ $$ := $1 }
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Expression: Call_expression
 		{ $$ := $1 }
@@ -2283,10 +2349,7 @@ Expression: Call_expression
 	| Manifest_string
 		{ $$ := $1 }
 	| Once Manifest_string
-		{
-				-- TODO:
-			$$ := $2
-		}
+		{ $$ := new_once_manifest_string ($1, $2) }
 	| Bit_constant
 		{ $$ := $1 }
 	| Manifest_array
@@ -2604,7 +2667,7 @@ Manifest_constant: Boolean_constant
 		{ $$ := $1 }
 	;
 
-------------------------------------------------------------------------------------
+--NOTDONE---------------------------------------------------------------------------
 
 Call_agent: Agent Feature_name Agent_actuals_opt
 		{ $$ := new_call_agent ($1) }
@@ -2690,7 +2753,7 @@ Agent_actual: Expression
 		--{ $$ := new_bit_identifier ($1, $2)  }
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Manifest_string: E_STRING
 		{ $$ := $1 }
@@ -2960,7 +3023,7 @@ Break_opt: -- Empty
 		{ $$ := $1 }
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Agent: E_AGENT
 		{ $$ := $1 }
@@ -3070,6 +3133,17 @@ Debug: E_DEBUG
 		}
 	;
 
+Deferred: E_DEFERRED
+		{ $$ := $1 }
+	| E_DEFERRED E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
 Do: E_DO
 		{ $$ := $1 }
 	| E_DO E_BREAK
@@ -3161,6 +3235,17 @@ Feature: E_FEATURE
 From: E_FROM
 		{ $$ := $1 }
 	| E_FROM E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Indexing: E_INDEXING
+		{ $$ := $1 }
+	| E_INDEXING E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then
@@ -3433,7 +3518,7 @@ When: E_WHEN
 		}
 	;
 
---DONE------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
 
 Minus_sign: '-'
 		{ $$ := $1 }

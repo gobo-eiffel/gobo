@@ -15,6 +15,7 @@ class ET_REAL_CONSTANT
 inherit
 
 	ET_CONSTANT
+	ET_INDEXING_TERM
 
 feature -- Access
 

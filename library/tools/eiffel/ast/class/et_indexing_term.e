@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel 'separate' type marks"
+		"Eiffel indexing terms"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -10,22 +10,18 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_SEPARATE_MARK
+deferred class ET_INDEXING_TERM
 
 inherit
 
-	ET_TYPE_MARK
-		redefine
-			is_separate
+	ET_INDEXING_TERM_ITEM
+
+feature -- Access
+
+	indexing_term_item: ET_INDEXING_TERM is
+			-- Indexing term in comma-separated list
+		do
+			Result := Current
 		end
-
-creation
-
-	make, make_with_position
-
-feature -- Status report
-
-	is_separate: BOOLEAN is True
-			-- Is mark 'separate'?
 
 end

@@ -80,6 +80,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	indexing_keyword: ET_TOKEN is
+			-- 'indexing' keyword
+		once
+			!! Result.make (indexing_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	inherit_keyword: ET_TOKEN is
 			-- 'inherit' keyword
 		once

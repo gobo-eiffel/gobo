@@ -46,14 +46,41 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_deferred: BOOLEAN
-			-- Is class deferred?
-
-	is_expanded: BOOLEAN
+	is_expanded: BOOLEAN is
 			-- Is class expanded?
+		do
+			Result := has_expanded_mark
+		end
 
-	is_separate: BOOLEAN
+	is_separate: BOOLEAN is
 			-- Is class separate?
+		do
+			Result := has_separate_mark
+		end
+
+	has_deferred_mark: BOOLEAN is
+			-- Has class been declared as deferred?
+		do
+			Result := (class_mark /= Void and then class_mark.is_deferred)
+		end
+
+	has_expanded_mark: BOOLEAN is
+			-- Has class been declared as expanded?
+		do
+			Result := (class_mark /= Void and then class_mark.is_expanded)
+		end
+
+	has_reference_mark: BOOLEAN is
+			-- Has class been declared as reference?
+		do
+			Result := (class_mark /= Void and then class_mark.is_reference)
+		end
+
+	has_separate_mark: BOOLEAN is
+			-- Has class been declared as separate?
+		do
+			Result := (class_mark /= Void and then class_mark.is_separate)
+		end
 
 feature -- Access
 
@@ -66,10 +93,10 @@ feature -- Access
 	obsolete_message: ET_OBSOLETE
 			-- Obsolete message
 
-	first_indexing: ANY
+	first_indexing: ET_INDEXINGS
 			-- Indexing clause at the beginning of the class
 
-	second_indexing: ANY
+	second_indexing: ET_INDEXINGS
 			-- Indexing clause at the end of the class
 
 	invariants: ET_INVARIANTS
@@ -80,6 +107,9 @@ feature -- Access
 
 	end_keyword: ET_TOKEN
 			-- 'end' keyword
+
+	class_mark: ET_CLASS_MARK
+			-- 'deferred', 'expanded', 'reference' or 'separate' keyword
 
 	id: INTEGER
 			-- Class ID
@@ -378,28 +408,12 @@ feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 			is_parsed: is_parsed
 		end
 
-	set_deferred is
-			-- Set `is_deferred' to True.
+	set_class_mark (a_mark: like class_mark) is
+			-- Set `class_mark' to `a_mark'.
 		do
-			is_deferred := True
+			class_mark := a_mark
 		ensure
-			is_deferred: is_deferred
-		end
-
-	set_expanded is
-			-- Set `is_expanded' to True.
-		do
-			is_expanded := True
-		ensure
-			is_expanded: is_expanded
-		end
-
-	set_separate is
-			-- Set `is_separate' to True.
-		do
-			is_separate := True
-		ensure
-			is_separate: is_separate
+			class_mark_set: class_mark = a_mark
 		end
 
 	set_name (a_name: like name) is

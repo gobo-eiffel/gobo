@@ -56,6 +56,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	value: STRING
+			-- String value
+
 	literal: STRING is
 			-- Literal value
 		do

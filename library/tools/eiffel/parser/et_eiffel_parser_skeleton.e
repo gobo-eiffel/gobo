@@ -804,19 +804,6 @@ feature {NONE} -- AST factory
 			debug_keys_not_void: Result /= Void
 		end
 
-	new_deferred_class (a_name: ET_IDENTIFIER): ET_CLASS is
-			-- New deferred class
-		require
-			a_name_not_void: a_name /= Void
-			cluster_not_void: cluster /= Void
-		do
-			Result := new_class (a_name)
-			Result.set_deferred
-		ensure
-			class_not_void: Result /= Void
-			is_deferred: Result.is_deferred
-		end
-
 	new_deferred_function (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
 		a_type: ET_TYPE; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_postconditions: ET_POSTCONDITIONS): ET_DEFERRED_FUNCTION is
@@ -930,19 +917,6 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_equality_expression (l, an_op, r)
 		ensure
 			equality_expression_not_void: Result /= Void
-		end
-
-	new_expanded_class (a_name: ET_IDENTIFIER): ET_CLASS is
-			-- New expanded class
-		require
-			a_name_not_void: a_name /= Void
-			cluster_not_void: cluster /= Void
-		do
-			Result := new_class (a_name)
-			Result.set_expanded
-		ensure
-			class_not_void: Result /= Void
-			is_expanded: Result.is_expanded
 		end
 
 	new_exports (an_export: ET_TOKEN): ET_EXPORTS is
@@ -1226,6 +1200,94 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_if_instruction (an_if, an_expression, a_then_compound, an_end)
 		ensure
 			if_instruction_not_void: Result /= Void
+		end
+
+	new_indexing (a_terms: ET_INDEXING_TERMS): ET_INDEXING is
+			-- New indexing clause
+		require
+			a_terms_not_void: a_terms /= Void
+		do
+			Result := ast_factory.new_indexing (a_terms)
+		ensure
+			indexing_not_void: Result /= Void
+		end
+
+	new_indexing_semicolon (an_indexing: ET_INDEXING_ITEM; a_semicolon: ET_SYMBOL): ET_INDEXING_ITEM is
+			-- New indexing-semicolon
+		require
+			an_indexing_not_void: an_indexing /= Void
+			a_semicolon_not_void: a_semicolon /= Void
+		do
+			if keep_all_breaks then
+				Result := ast_factory.new_indexing_semicolon (an_indexing, a_semicolon)
+			elseif keep_all_comments and a_semicolon.has_comment then
+				Result := ast_factory.new_indexing_semicolon (an_indexing, a_semicolon)
+			else
+				Result := an_indexing
+			end
+		ensure
+			indexing_semicolon_not_void: Result /= Void
+		end
+
+	new_indexing_term_comma (a_term: ET_INDEXING_TERM; a_comma: ET_SYMBOL): ET_INDEXING_TERM_ITEM is
+			-- New indexing_term-comma
+		require
+			a_term_not_void: a_term /= Void
+			a_comma_not_void: a_comma /= Void
+		do
+			if keep_all_breaks then
+				Result := ast_factory.new_indexing_term_comma (a_term, a_comma)
+			elseif keep_all_comments and a_comma.has_comment then
+				Result := ast_factory.new_indexing_term_comma (a_term, a_comma)
+			else
+				Result := a_term
+			end
+		ensure
+			indexing_term_comma_not_void: Result /= Void
+		end
+
+	new_indexing_terms (a_term: ET_INDEXING_TERM_ITEM): ET_INDEXING_TERMS is
+			-- New indexing terms
+		require
+			a_term_not_void: a_term /= Void
+		do
+			Result := ast_factory.new_indexing_terms (a_term)
+		ensure
+			indexing_terms_not_void: Result /= Void
+		end
+
+	new_indexing_terms_with_capacity (a_term: ET_INDEXING_TERM_ITEM; nb: INTEGER): ET_INDEXING_TERMS is
+			-- New indexing terms with given capacity
+		require
+			a_term_not_void: a_term /= Void
+			nb_positive: nb >= 1
+		do
+			Result := ast_factory.new_indexing_terms_with_capacity (a_term, nb)
+		ensure
+			indexing_terms_not_void: Result /= Void
+		end
+
+	new_indexings (an_indexing: ET_TOKEN): ET_INDEXINGS is
+			-- New indexing clause
+		require
+			an_indexing_not_void: an_indexing /= Void
+		do
+			Result := ast_factory.new_indexings (an_indexing)
+		ensure
+			indexings_not_void: Result /= Void
+		end
+
+	new_indexings_with_capacity (nb: INTEGER): ET_INDEXINGS is
+			-- New indexing clause with given capacity
+		require
+			nb_positive: nb >= 0
+		local
+			an_indexing: ET_TOKEN
+		do
+			an_indexing := tokens.indexing_keyword
+			Result := ast_factory.new_indexings_with_capacity (an_indexing, nb)
+		ensure
+			indexings_not_void: Result /= Void
 		end
 
 	new_infix_and_name (an_infix: ET_TOKEN; an_operator: ET_MANIFEST_STRING): ET_INFIX_AND_NAME is
@@ -1818,6 +1880,17 @@ feature {NONE} -- AST factory
 			once_function_not_void: Result /= Void
 		end
 
+	new_once_manifest_string (a_once: ET_TOKEN; a_string: ET_MANIFEST_STRING): ET_ONCE_MANIFEST_STRING is
+			-- New once manifest string
+		require
+			a_once_not_void: a_once /= Void
+			a_string_not_void: a_string /= Void
+		do
+			Result := ast_factory.new_once_manifest_string (a_once, a_string)
+		ensure
+			once_manifest_string_not_void: Result /= Void
+		end
+
 	new_once_procedure (a_name: ET_FEATURE_NAME; args: ET_FORMAL_ARGUMENTS;
 		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLES; a_compound: ET_COMPOUND;
@@ -2251,17 +2324,38 @@ feature {NONE} -- AST factory
 			result_address_not_void: Result /= Void
 		end
 
-	new_separate_class (a_name: ET_IDENTIFIER): ET_CLASS is
-			-- New separate class
+	new_static_call_expression (a_feature: ET_TOKEN; l: ET_SYMBOL; a_type: ET_TYPE;
+		r: ET_SYMBOL; a_dot: ET_SYMBOL; a_name: ET_IDENTIFIER;
+		args: ET_ACTUAL_ARGUMENTS): ET_STATIC_CALL_EXPRESSION is
+			-- New static call expression
 		require
+			a_feature_not_void: a_feature /= Void
+			l_not_void: l /= Void
+			a_type_not_void: a_type /= Void
+			r_not_void: r /= Void
+			a_dot_not_void: a_dot /= Void
 			a_name_not_void: a_name /= Void
-			cluster_not_void: cluster /= Void
 		do
-			Result := new_class (a_name)
-			Result.set_separate
+			Result := ast_factory.new_static_call_expression (a_feature, l, a_type, r, a_dot, a_name, args)
 		ensure
-			class_not_void: Result /= Void
-			is_separate: Result.is_separate
+			static_call_expression_not_void: Result /= Void
+		end
+
+	new_static_call_instruction (a_feature: ET_TOKEN; l: ET_SYMBOL; a_type: ET_TYPE;
+		r: ET_SYMBOL; a_dot: ET_SYMBOL; a_name: ET_IDENTIFIER;
+		args: ET_ACTUAL_ARGUMENTS): ET_STATIC_CALL_INSTRUCTION is
+			-- New static call instruction
+		require
+			a_feature_not_void: a_feature /= Void
+			l_not_void: l /= Void
+			a_type_not_void: a_type /= Void
+			r_not_void: r /= Void
+			a_dot_not_void: a_dot /= Void
+			a_name_not_void: a_name /= Void
+		do
+			Result := ast_factory.new_static_call_instruction (a_feature, l, a_type, r, a_dot, a_name, args)
+		ensure
+			static_call_instruction_not_void: Result /= Void
 		end
 
 	new_strip_expression (a_strip: ET_TOKEN; l: ET_SYMBOL; r: ET_SYMBOL): ET_STRIP_EXPRESSION is
@@ -2342,6 +2436,17 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_tagged_expression_variant (a_variant, a_tag, a_colon, an_expression)
 		ensure
 			tagged_expression_variant_not_void: Result /= Void
+		end
+
+	new_tagged_indexing (a_tag: ET_TAG; a_terms: ET_INDEXING_TERMS): ET_TAGGED_INDEXING is
+			-- New tagged indexing clause
+		require
+			a_tag_not_void: a_tag /= Void
+			a_terms_not_void: a_terms /= Void
+		do
+			Result := ast_factory.new_tagged_indexing (a_tag, a_terms)
+		ensure
+			tagged_indexing_not_void: Result /= Void
 		end
 
 	new_type_comma (a_type: ET_TYPE; a_comma: ET_SYMBOL): ET_TYPE_ITEM is

@@ -191,6 +191,17 @@ feature {NONE} -- AST factory
 			current_not_void: Result /= Void
 		end
 
+	new_deferred_keyword (a_text: STRING): ET_DEFERRED_KEYWORD is
+			-- New 'deferred' keyword
+		require
+			a_text_not_void: a_text /= Void
+			a_text_not_empty: a_text.count > 0
+		do
+			Result := ast_factory.new_deferred_keyword (a_text, line, column)
+		ensure
+			deferred_keyword_not_void: Result /= Void
+		end
+
 	new_equal_symbol: ET_EQUAL_SYMBOL is
 			-- New '=' symbol
 		do
@@ -199,15 +210,15 @@ feature {NONE} -- AST factory
 			equal_symbol_not_void: Result /= Void
 		end
 
-	new_expanded_mark (a_text: STRING): ET_EXPANDED_MARK is
+	new_expanded_keyword (a_text: STRING): ET_EXPANDED_KEYWORD is
 			-- New 'expanded' keyword
 		require
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: a_text.count > 0
 		do
-			Result := ast_factory.new_expanded_mark (a_text, line, column)
+			Result := ast_factory.new_expanded_keyword (a_text, line, column)
 		ensure
-			expanded_mark_not_void: Result /= Void
+			expanded_keyword_not_void: Result /= Void
 		end
 
 	new_false_constant (a_text: STRING): ET_FALSE_CONSTANT is
@@ -430,15 +441,15 @@ feature {NONE} -- AST factory
 			real_constant_not_void: Result /= Void
 		end
 
-	new_reference_mark (a_text: STRING): ET_REFERENCE_MARK is
+	new_reference_keyword (a_text: STRING): ET_REFERENCE_KEYWORD is
 			-- New 'reference' keyword
 		require
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: a_text.count > 0
 		do
-			Result := ast_factory.new_reference_mark (a_text, line, column)
+			Result := ast_factory.new_reference_keyword (a_text, line, column)
 		ensure
-			reference_mark_not_void: Result /= Void
+			reference_keyword_not_void: Result /= Void
 		end
 
 	new_result (a_text: STRING): ET_RESULT is
@@ -471,15 +482,15 @@ feature {NONE} -- AST factory
 			semicolon_symbol_not_void: Result /= Void
 		end
 
-	new_separate_mark (a_text: STRING): ET_SEPARATE_MARK is
+	new_separate_keyword (a_text: STRING): ET_SEPARATE_KEYWORD is
 			-- New 'separate' keyword
 		require
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: a_text.count > 0
 		do
-			Result := ast_factory.new_separate_mark (a_text, line, column)
+			Result := ast_factory.new_separate_keyword (a_text, line, column)
 		ensure
-			separate_mark_not_void: Result /= Void
+			separate_keyword_not_void: Result /= Void
 		end
 
 	new_special_manifest_string (a_literal: STRING): ET_MANIFEST_STRING is

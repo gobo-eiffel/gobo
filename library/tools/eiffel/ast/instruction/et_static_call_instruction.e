@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Eiffel 'reference' type marks"
+		"Eiffel static call instructions"
 
 	library: "Gobo Eiffel Tools Library"
 	copyright: "Copyright (c) 2002, Eric Bezault and others"
@@ -10,22 +10,21 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_REFERENCE_MARK
+class ET_STATIC_CALL_INSTRUCTION
 
 inherit
 
-	ET_TYPE_MARK
-		redefine
-			is_reference
+	ET_CALL_INSTRUCTION
+		rename
+			make as make_unqualified_call
+		undefine
+			position
 		end
+
+	ET_STATIC_FEATURE_CALL
 
 creation
 
-	make, make_with_position
-
-feature -- Status report
-
-	is_reference: BOOLEAN is True
-			-- Is mark 'reference'?
+	make
 
 end

@@ -16,6 +16,8 @@ inherit
 
 	ET_CONSTANT
 
+	ET_INDEXING_TERM
+
 	ET_AST_LEAF
 		rename
 			make as make_leaf,

@@ -18,6 +18,8 @@ inherit
 
 	ET_MANIFEST_STRING_ITEM
 
+	ET_INDEXING_TERM
+
 	ET_AST_LEAF
 		rename
 			make as make_leaf,
@@ -26,8 +28,10 @@ inherit
 
 feature -- Access
 
-	value: STRING
+	value: STRING is
 			-- String value
+		deferred
+		end
 
 	literal: STRING is
 			-- Literal value
@@ -63,6 +67,7 @@ feature -- Compilation
 
 invariant
 
+	value_not_void: value /= Void
 	literal_not_void: literal /= Void
 
 end

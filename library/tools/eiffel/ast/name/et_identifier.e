@@ -44,6 +44,11 @@ inherit
 			is_equal
 		end
 
+	ET_INDEXING_TERM
+		undefine
+			is_equal
+		end
+
 	ET_TOKEN
 		rename
 			text as name
