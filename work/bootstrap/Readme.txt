@@ -10,7 +10,7 @@ The procedure is quite simple:
 . Check out the source code from the Gobo CVS repository.
 . Set the environment variable $GOBO.
 . Add $GOBO/bin to your $PATH. Some Eiffel distributions
-  such as Visual Eiffel provides older versions of the Gobo
+  such as Visual Eiffel provide older versions of the Gobo
   tools in their installation directories. Make sure that
   $GOBO/bin is listed before these directories in your $PATH.
 . Make sure that your Eiffel and C compilers are in your $PATH.
