@@ -1,5 +1,50 @@
 <?xml version="1.0"?>
 
 <cluster name="kernel" abstract="True">
-	<mount location="${GOBO}/library/${GOBO_EIFFEL}_kernel.xace" />
+
+	<description>
+		description: "Xace file for the Eiffel compilers' kernel libraries"
+		author:      "Eric Bezault [ericb@gobosoft.com]"
+		copyright:   "Copyright (c) 2001, Eric Bezault and others"
+		license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+		date:        "$Date$"
+		revision:    "$Revision$"
+	</description>
+
+	<cluster name="ise" location="${ISE_EIFFEL}/library" abstract="True" if="${GOBO_EIFFEL}=ise">
+		<cluster name="base" abstract="True">
+			<cluster name="kernel"/>
+			<cluster name="support"/>
+			<cluster name="structures" abstract="True">
+				<cluster name="access"/>
+				<cluster name="cursors"/>
+				<cluster name="cursor_tree"/>
+				<cluster name="dispenser"/>
+				<cluster name="iteration"/>
+				<cluster name="list"/>
+				<cluster name="set"/>
+				<cluster name="sort"/>
+				<cluster name="storage"/>
+				<cluster name="table"/>
+				<cluster name="traversing"/>
+				<cluster name="tree"/>
+			</cluster>
+		</cluster>
+	</cluster>
+
+	<cluster name="hact" abstract="True" if="${GOBO_EIFFEL}=hact"/>
+
+	<cluster name="se" location="${SmallEiffelDirectory}/lib_std" if="${GOBO_EIFFEL}=se"/>
+
+	<cluster name="ve" location="${VE_Lib}" abstract="True" if="${GOBO_EIFFEL}=ve">
+		<cluster name="Kernel"/>
+		<cluster name="Misc" abstract="True">
+			<cluster name="Pool"/>
+		</cluster>
+		<cluster name="Tools" abstract="True">
+			<cluster name="gArgs"/>
+		</cluster>
+		<cluster name="TimeDate"/>
+	</cluster>
+
 </cluster>
