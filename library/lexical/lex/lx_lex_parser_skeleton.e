@@ -343,31 +343,6 @@ feature {NONE} -- Factory
 			nfa_not_void: Result /= Void
 		end
 
-feature {NONE} -- Conversion
-
-	dollar_integer (val: ANY): INTEGER is
-		local
-			int: INTEGER_REF
-		do
-			int ?= val
-			Result := int.item
-		end
-
-	dollar_nfa (val: ANY): LX_NFA is
-		do
-			Result ?= val
-		end
-
-	dollar_string (val: ANY): STRING is
-		do
-			Result ?= val
-		end
-
-	dollar_symbol_class (val: ANY): LX_SYMBOL_CLASS is
-		do
-			Result ?= val
-		end
-
 feature {NONE} -- Implementation
 
 	push_start_condition (a_name: STRING; stack: LX_START_CONDITIONS) is
@@ -507,7 +482,8 @@ feature {NONE} -- Implementation
 			rule.set_trail_context (False, 0, 0)
 			start_conditions.add_nfa_to_all (a_nfa)
 			if no_default_rule then
-				set_action ("fatal_error (%"scanner jammed%")")
+				set_action ("last_token := yyError_token%N%
+					%fatal_error (%"scanner jammed%")")
 			else
 				set_action ("echo")
 			end

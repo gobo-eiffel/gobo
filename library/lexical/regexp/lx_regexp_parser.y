@@ -31,7 +31,13 @@ creation
 feature
 %}
 
-%token CHAR NUMBER CCL_OP
+%token <INTEGER>			CHAR NUMBER
+%token <LX_SYMBOL_CLASS>	CCL_OP
+%token <STRING>				'['
+
+%type <LX_NFA>				Rule Regular_expression Regular_expression2
+							Series Singleton String
+%type <LX_SYMBOL_CLASS>		CCl Full_CCl
 
 %start Regexp
 
@@ -46,7 +52,7 @@ Regexp: Init_pattern Pattern
 		}
 	;
 
-Init_pattern: -- /* empty */
+Init_pattern: -- Empty
 		{
 			if equiv_classes_used then
 				!! equiv_classes.make (1, characters_count)
@@ -64,11 +70,11 @@ Init_pattern: -- /* empty */
 
 Pattern: '^' Rule
 		{
-			process_bol_rule (dollar_nfa ($2))
+			process_bol_rule ($2)
 		}
 	| Rule
 		{
-			process_rule (dollar_nfa ($1))
+			process_rule ($1)
 		}
 	| error
 		{
@@ -78,16 +84,15 @@ Pattern: '^' Rule
 
 Rule: Regular_expression2 Regular_expression
 		{
-			$$ := append_trail_context_to_regexp
-				(dollar_nfa ($2), dollar_nfa ($1))
+			$$ := append_trail_context_to_regexp ($2, $1)
 		}
 	| Regular_expression '$'
 		{
-			$$ := append_eol_to_regexp (dollar_nfa ($1))
+			$$ := append_eol_to_regexp ($1)
 		}
 	| Regular_expression
 		{
-			-- $$ := $1
+			$$ := $1
 		}
 	| Regular_expression2 Regular_expression2
 		{
@@ -100,15 +105,17 @@ Rule: Regular_expression2 Regular_expression
 	;
 
 Regular_expression: Series
+		{ $$ := $1 }
 	| Regular_expression '|' Series
 		{
 			variable_length := True
-			$$ := dollar_nfa ($1) | dollar_nfa ($3)
+			$$ := $1 | $3
 		}
 	;
 
 Regular_expression2: Regular_expression '/'
 		{
+			$$ := $1
 				-- This rule is written separately so the reduction
 				-- will occur before the trailing series is parsed.
 			if variable_length then
@@ -123,43 +130,42 @@ Regular_expression2: Regular_expression '/'
 	;
 
 Series: Singleton
+		{ $$ := $1 }
 	| Series Singleton
 		{
-			$$ := dollar_nfa ($1) & dollar_nfa ($2)
+			$$ := $1 & $2
 		}
 	;
 
 Singleton: CHAR
 		{
 			rule_length := rule_length + 1
-			$$ := new_nfa_from_character (dollar_integer ($1))
+			$$ := new_nfa_from_character ($1)
 		}
 	| Singleton '*'
 		{
 			variable_length := True
-			$$ := |*| dollar_nfa ($1)
+			$$ := |*| $1
 		}
 	| Singleton '+'
 		{
 			variable_length := True
-			$$ := |+| dollar_nfa ($1)
+			$$ := |+| $1
 		}
 	| Singleton '?'
 		{
 			variable_length := True
-			$$ := |?| dollar_nfa ($1)
+			$$ := |?| $1
 		}
 	| Singleton '{' NUMBER ',' NUMBER '}'
 		{
 			variable_length := True
-			$$ := new_bounded_iteration_nfa
-				(dollar_nfa ($1), dollar_integer ($3), dollar_integer ($5))
+			$$ := new_bounded_iteration_nfa ($1, $3, $5)
 		}
 	| Singleton '{' NUMBER ',' '}'
 		{
 			variable_length := True
-			$$ := new_unbounded_iteration_nfa
-				(dollar_nfa ($1), dollar_integer ($3))
+			$$ := new_unbounded_iteration_nfa ($1, $3)
 		}
 	| Singleton '{' NUMBER '}'
 		{
@@ -167,7 +173,7 @@ Singleton: CHAR
 				-- in which case we have no idea what its length
 				-- is, so we punt here.
 			variable_length := True
-			$$ := new_iteration_nfa (dollar_nfa ($1), dollar_integer ($3))
+			$$ := new_iteration_nfa ($1, $3)
 		}
 	| '.'
 		{
@@ -177,12 +183,12 @@ Singleton: CHAR
 	| CCL_OP
 		{
 			rule_length := rule_length + 1
-			$$ := new_symbol_class_nfa (dollar_symbol_class ($1))
+			$$ := new_symbol_class_nfa ($1)
 		}
 	| Full_CCl
 		{
 			rule_length := rule_length + 1
-			$$ := new_nfa_from_character_class (dollar_symbol_class ($1))
+			$$ := new_nfa_from_character_class ($1)
 		}
 	| '"' String '"'
 		{
@@ -196,52 +202,44 @@ Singleton: CHAR
 
 Full_CCl: '[' CCl ']'
 		{
-			character_classes.force
-				(dollar_symbol_class ($2), dollar_string ($1))
 			$$ := $2
+			character_classes.force ($$, $1)
 		}
 	| '[' '^' CCl  ']'
 		{
-			dollar_symbol_class ($3).set_negated (True)
-			character_classes.force
-				(dollar_symbol_class ($3), dollar_string ($1))
 			$$ := $3
+			$$.set_negated (True)
+			character_classes.force ($$, $1)
 		}
 	;
 
 CCl: CHAR
 		{
-			$$ := append_character_to_character_class
-				(dollar_integer ($1), new_character_class)
+			$$ := append_character_to_character_class ($1, new_character_class)
 		}
 	| CCl CHAR
 		{
-			$$ := append_character_to_character_class
-				(dollar_integer ($2), dollar_symbol_class ($1))
+			$$ := append_character_to_character_class ($2, $1)
 		}
 	| CHAR '-' CHAR
 		{
 			$$ := append_character_set_to_character_class
-				(dollar_integer ($1), dollar_integer ($3),
-				new_character_class)
+				($1, $3, new_character_class)
 		}
 	| CCl CHAR '-' CHAR
 		{
-			$$ := append_character_set_to_character_class
-				(dollar_integer ($2), dollar_integer ($4),
-				dollar_symbol_class ($1))
+			$$ := append_character_set_to_character_class ($2, $4, $1)
 		}
 	;
 	
-String: -- /* empty */
+String: -- Empty
 		{
 			$$ := new_epsilon_nfa
 		}
 	| String CHAR
 		{
 			rule_length := rule_length + 1
-			$$ := append_character_to_string
-				(dollar_integer ($2), dollar_nfa ($1))
+			$$ := append_character_to_string ($2, $1)
 		}
 	;
 
