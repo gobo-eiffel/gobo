@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -16,6 +16,9 @@ deferred class ET_PREFIX_NAME
 inherit
 
 	ET_FEATURE_NAME
+		redefine
+			is_prefix
+		end
 
 feature {NONE} -- Initialization
 
@@ -29,9 +32,9 @@ feature {NONE} -- Initialization
 			position_set: position = a_position
 		end
 
-feature -- Access
+feature -- Status report
 
-	name: STRING is "prefix"
-			-- Name of feature
+	is_prefix: BOOLEAN is True
+			-- Is current feature name of the form 'prefix ...'?
 
 end -- class ET_PREFIX_NAME
