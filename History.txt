@@ -7,6 +7,11 @@ Version 2.1 - ?
 	  reusing the same input buffer for subsequent scanning.
 	  (suggested by Emmanuel Stapf)
 
+	Gobo Eiffel Structure Library:
+
+	* Fixed bug in feature `force_last' of DS_SPARSE_SET and
+	  DS_SPARSE_TABLE when resizing the container.
+
 Version 2.0 - 29 April 2001
 
 	geyacc:
