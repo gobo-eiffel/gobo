@@ -1,7 +1,8 @@
 #!/bin/sh
 
-# usage: make_gobo <platform>
-
+# usage: make_gobo <platform> <compiler>
+if [ -z "$1" ]; then platform="windows"; else platform=$1; fi
+if [ -z "$2" ]; then compiler="se"; else compiler=$2; fi
 
 rootdir=`pwd`
 GOBO=`echo $GOBO | sed "s/\\\\\\/\//g"`
@@ -13,7 +14,7 @@ cd $GOBO
 echo ''; echo "#### Use \$GOBO/misc/$1.mk"
 cd $GOBO/misc
 sed "s/^GOBO_PLATFORM/#GOBO_PLATFORM/g" platform.mk | \
-sed "s/^#GOBO_PLATFORM=$1/GOBO_PLATFORM=$1/g" > platform.tmp
+sed "s/^#GOBO_PLATFORM=$platform/GOBO_PLATFORM=$platform/g" > platform.tmp
 mv platform.tmp platform.mk
 
 # Generate files in $GOBO/library.
@@ -60,11 +61,11 @@ echo ''; echo "#### Generate files in \$GOBO/src/geyacc"
 cd $GOBO/src/geyacc
 make depend ise.ace hact.ace
 
-# Compile binaries with SmallEiffel compiler
+# Compile binaries with desired compiler
 # and copy them to $GOBO/bin.
-echo ''; echo '#### Compile binaries with SmallEiffel compiler'
+echo ''; echo "#### Compile binaries with $compiler compiler"
 cd $GOBO/bin
-make se
+make $compiler
 
 # Generate files in $GOBO/example.
 echo ''; echo "#### Generate files in \$GOBO/example/lexical/ascii2ps"

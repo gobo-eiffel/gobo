@@ -1,7 +1,9 @@
 #!/bin/sh
 
-# usage: make_delivery <platform> <binaries>
-
+# usage: make_develop <platform> <binaries> <compiler>
+if [ -z "$1" ]; then platform="windows"; else platform=$1; fi
+if [ -z "$2" ]; then binaries="bin"; else binaries=$2; fi
+if [ -z "$3" ]; then compiler="se"; else compiler=$3; fi
 
 rootdir=`pwd`
 
@@ -15,12 +17,12 @@ export GOBO
 echo ''; echo "#### \$GOBO = $GOBO"
 
 # Get binaries to allow bootstraping.
-cd $2
+cd $binaries
 cp * $GOBO/bin
 cd $rootdir
 
 # Build Gobo files.
-$GOBO/work/script/make_gobo.sh $1
+$GOBO/work/script/make_gobo.sh $platforn $compiler
 
 # Remove develop files.
 echo ''; echo "### Removing develop files..."
