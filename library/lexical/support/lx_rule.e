@@ -20,7 +20,7 @@ inherit
 
 creation
 
-	make
+	make, make_default
 
 feature {NONE} -- Initialization
 
@@ -37,6 +37,16 @@ feature {NONE} -- Initialization
 			id_set: id = an_id
 			pattern_set: pattern = a_pattern
 			action_set: action = an_action
+		end
+
+	make_default (an_id: like id) is
+			-- Create a default rule.
+		do
+			id := an_id
+			pattern := Dummy_pattern
+			action := Dummy_action
+		ensure
+			id_set: id = an_id
 		end
 
 feature -- Access
@@ -133,6 +143,24 @@ feature -- Comparison
 			-- Is current rule less than `other'?
 		do
 			Result := id < other.id
+		end
+
+feature {NONE} -- Implementation
+
+	Dummy_pattern: LX_NFA is
+			-- Dummy pattern
+		once
+			!! Result.make_epsilon (False)
+		ensure
+			dummy_pattern_not_void: Result /= Void
+		end
+
+	Dummy_action: LX_ACTION is
+			-- Dummy action
+		once
+			!! Result.make ("")
+		ensure
+			dummy_action_not_void: Result /= Void
 		end
 
 invariant
