@@ -81,7 +81,6 @@ feature {NONE} -- Initialization
 			a_factory_not_void: a_factory /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
-			a_cluster_parser: ET_XACE_CLUSTER_PARSER
 			a_parser_factory: XM_PARSER_FACTORY
 		do
 			error_handler := an_error_handler

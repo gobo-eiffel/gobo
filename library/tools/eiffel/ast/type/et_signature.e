@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			-- Create a new signature.
 		local
 			i, nb: INTEGER
-			arg: ET_FORMAL_ARGUMENT
 		do
 			result_type := a_result
 			if args = Void then

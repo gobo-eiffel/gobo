@@ -87,7 +87,6 @@ feature -- Access
 		require
 			a_name_not_void: a_name /= Void
 		local
-			arg: ET_FORMAL_ARGUMENT
 			i, nb: INTEGER
 		do
 			nb := count
