@@ -67,4 +67,34 @@ feature -- Status report
 #endif
 		end
 
+feature -- Removal
+
+	clear_all (an_array: ARRAY [G]) is
+			-- Reset all items to default values.
+		require
+			an_array_not_void: an_array /= Void
+#ifndef ISE || HACT || TOWER
+		local
+			i, nb: INTEGER
+			v: G
+		do
+			from
+				i := an_array.lower
+				nb := an_array.upper
+			until
+				i > nb
+			loop
+				an_array.put (v, i)
+				i := i + 1
+			end
+#else
+		do
+			an_array.clear_all
+#endif
+		ensure
+			-- all_cleared: forall i in an_array.lower .. an_array.upper,
+			--		an_array.item (i) = Void or else
+			--		an_array.item (i) = an_array.item (i).default
+		end
+
 end -- class KL_ARRAY_ROUTINES
