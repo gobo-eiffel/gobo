@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Time Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 2000, Eric Bezault and others"
+	copyright:  "Copyright (c) 2000-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -521,6 +521,14 @@ feature {DT_DATE_HANDLER} -- Implementation
 	storage: INTEGER
 			-- Compact version of current date
 			-- (INTEGER should have at least 32 bits.)
+
+	set_storage (a_storage: INTEGER) is
+			-- Set `storage' to `a_storage'.
+		do
+			storage := a_storage
+		ensure
+			storage_set: storage = a_storage
+		end
 
 feature {NONE} -- Implementation
 
