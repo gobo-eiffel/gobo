@@ -1,39 +1,36 @@
--- system:     "Eiffel scanner"
--- compiler:   "Visual Eiffel 2.1"
+-- system:     "'ascii2ps' pretty-printer"
+-- compiler:   "Visual Eiffel 2.3"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
--- copyright:  "Copyright (c) 1997, Eric Bezault"
+-- copyright:  "Copyright (c) 1998, Eric Bezault"
 -- date:       "$Date$"
 -- revision:   "$Revision$"
 
 system
 
-	eiffel_scanner
+	ascii2ps
 
 root
 
-	EIFFEL_SCANNER
+	ASCII2PS
 
 creation
 
-	execute
-		
+	make
+
 cluster
 
-	[eiffel_project		"."] end
-	[eiffel				"$GOBO\example\lexical\eiffel"] end
+	[ascii2ps_project	"."] end
+	[ascii2ps			"$GOBO\example\lexical\ascii2ps"] end
 
 		-- Gobo Eiffel Lexical Library
 	[lx_skeleton		"$GOBO\library\lexical\skeleton"] end
-
-		-- Gobo Eiffel Utility Library
-	[ut_support			"$GOBO\library\utility\support"] end
 
 		-- Gobo Eiffel Kernel Library
 	[kl_kernel			"$GOBO\library\kernel"] end
 	[kl_kernel_spec		"$GOBO\library\kernel\spec\ve"] end
 
 		-- Visual Eiffel Kernel
-	[Kernel				"$VE_LIB\kernel"] end
+	[Kernel "$VE_LIB\kernel"] end
 
 option
 

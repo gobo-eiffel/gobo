@@ -1,26 +1,26 @@
--- system:     "Reverse Polish Notation Calculator"
--- compiler:   "Visual Eiffel 2.1"
+-- system:     "Infix Notation Calculator"
+-- compiler:   "Visual Eiffel 2.2"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
--- copyright:  "Copyright (c) 1997, Eric Bezault"
+-- copyright:  "Copyright (c) 1998, Eric Bezault"
 -- date:       "$Date$"
 -- revision:   "$Revision$"
 
 system
 
-	rpcalc
+	calc
 
 root
 
-	RPCALC
+	CALC
 
 creation
 
 	execute
-		
+
 cluster
 
-	[rpcalc_project			"."] end
-	[rpcalc					"$GOBO\example\parse\rpcalc"] end
+	[calc_project			"."] end
+	[calc					"$GOBO\example\parse\calc"] end
 
 		-- Gobo Eiffel Parse Library
 	[pr_skeleton			"$GOBO\library\parse\skeleton"] end

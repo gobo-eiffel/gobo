@@ -1,5 +1,5 @@
 -- system:     "'gepp' preprocessor"
--- compiler:   "Visual Eiffel 2.1"
+-- compiler:   "Visual Eiffel 2.3"
 -- author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 -- copyright:  "Copyright (c) 1998, Eric Bezault"
 -- date:       "$Date$"
@@ -16,7 +16,7 @@ root
 creation
 
 	execute
-		
+
 cluster
 
 	[gepp_project		"."] end
