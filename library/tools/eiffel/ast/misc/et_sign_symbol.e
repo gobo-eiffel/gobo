@@ -15,6 +15,9 @@ deferred class ET_SIGN_SYMBOL
 inherit
 
 	ET_SYMBOL
+		undefine
+			process
+		end
 
 feature -- Status report
 

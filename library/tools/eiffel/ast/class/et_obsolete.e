@@ -56,6 +56,14 @@ feature -- Access
 			Result := message.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_obsolete (Current)
+		end
+
 invariant
 
 	obsolete_keyword_not_void: obsolete_keyword /= Void

@@ -95,6 +95,14 @@ feature -- Setting
 			clients_clause_set: clients_clause = a_clients_clause
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_feature_export (Current)
+		end
+
 invariant
 
 	clients_clause_not_void: clients_clause /= Void

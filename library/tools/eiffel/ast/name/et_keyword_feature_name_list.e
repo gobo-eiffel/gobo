@@ -86,6 +86,14 @@ feature -- Setting
 			keyword_set: keyword = a_keyword
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_keyword_feature_name_list (Current)
+		end
+
 invariant
 
 	keyword_not_void: keyword /= Void

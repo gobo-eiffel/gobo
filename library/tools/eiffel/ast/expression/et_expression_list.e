@@ -113,6 +113,14 @@ feature -- Setting
 			right_symbol_set: right_symbol = r
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_expression_list (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_EXPRESSION_ITEM] is

@@ -15,6 +15,9 @@ deferred class ET_EQUALITY_SYMBOL
 inherit
 
 	ET_SYMBOL
+		undefine
+			process
+		end
 
 feature -- Status report
 

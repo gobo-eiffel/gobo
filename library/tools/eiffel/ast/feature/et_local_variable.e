@@ -53,7 +53,7 @@ feature -- Access
 	declared_type: ET_DECLARED_TYPE
 			-- Declared type (type preceded by a colon)
 
-	local_variable_item: ET_LOCAL_VARIABLE is
+	local_variable: ET_LOCAL_VARIABLE is
 			-- Local variable in semicolon-separated list
 		do
 			Result := Current

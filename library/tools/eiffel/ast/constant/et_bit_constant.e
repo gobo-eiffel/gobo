@@ -67,6 +67,14 @@ feature -- Access
 	literal: STRING
 			-- Literal bit value
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_bit_constant (Current)
+		end
+
 invariant
 
 	literal_not_void: literal /= Void

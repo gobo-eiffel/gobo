@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_QUALIFIED_PRECURSOR
+deferred class ET_QUALIFIED_PRECURSOR
 
 inherit
 
@@ -20,8 +20,6 @@ inherit
 		redefine
 			parent, position, break
 		end
-
-creation
 
 feature {NONE} -- Initialization
 

@@ -50,6 +50,14 @@ feature -- Access
 			Result := variant_keyword.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_variant (Current)
+		end
+
 invariant
 
 	variant_keyword_not_void: variant_keyword /= Void

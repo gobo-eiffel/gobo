@@ -35,4 +35,12 @@ feature -- Status report
 	is_reference: BOOLEAN is True
 			-- Is mark 'reference'?
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_reference_keyword (Current)
+		end
+
 end

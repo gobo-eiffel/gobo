@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_STATIC_FEATURE_CALL
+deferred class ET_STATIC_FEATURE_CALL
 
 inherit
 
@@ -20,8 +20,6 @@ inherit
 		redefine
 			position
 		end
-
-creation
 
 feature {NONE} -- Initialization
 

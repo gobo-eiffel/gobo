@@ -19,6 +19,8 @@ inherit
 			make as make_unqualfied_precursor
 		undefine
 			parent, position, break
+		redefine
+			process
 		end
 
 	ET_QUALIFIED_PRECURSOR
@@ -26,5 +28,13 @@ inherit
 creation
 
 	make
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_qualified_precursor_instruction (Current)
+		end
 
 end

@@ -93,6 +93,14 @@ feature -- Setting
 			else_compound_set: else_compound = a_compound
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_if_instruction (Current)
+		end
+
 invariant
 
 	if_keyword_not_void: if_keyword /= Void

@@ -62,7 +62,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := item (i).choice_item
+			Result := item (i).choice
 		ensure
 			choice_not_void: Result /= Void
 		end
@@ -78,6 +78,14 @@ feature -- Access
 			-- Break which appears just after current node
 		do
 			Result := item (count).break
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_choice_list (Current)
 		end
 
 feature {NONE} -- Implementation

@@ -94,6 +94,14 @@ feature -- Setting
 			else_keyword_set: else_keyword = an_else
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_preconditions (Current)
+		end
+
 invariant
 
 	require_keyword_not_void: require_keyword /= Void

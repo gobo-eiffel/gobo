@@ -59,6 +59,14 @@ feature -- Access
 			Result := then_keyword.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_infix_and_then_operator (Current)
+		end
+
 invariant
 
 	and_keyword_not_void: and_keyword /= Void

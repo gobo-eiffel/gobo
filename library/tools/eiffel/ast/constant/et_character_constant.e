@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_CHARACTER_CONSTANT
+deferred class ET_CHARACTER_CONSTANT
 
 inherit
 
@@ -25,7 +25,5 @@ inherit
 			make as make_leaf,
 			make_with_position as make_leaf_with_position
 		end
-
-creation
 
 end

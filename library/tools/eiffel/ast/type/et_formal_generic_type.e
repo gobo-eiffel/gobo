@@ -25,7 +25,8 @@ inherit
 			has_formal_parameters,
 			resolved_formal_parameters,
 			resolved_named_types,
-			base_type, deep_cloned_type
+			base_type, deep_cloned_type,
+			process
 		end
 
 creation
@@ -230,6 +231,14 @@ feature -- Duplication
 			-- Recursively cloned type
 		do
 			!! Result.make (name, index)
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_formal_generic_type (Current)
 		end
 
 invariant

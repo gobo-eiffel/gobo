@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_unqualified_create
 		redefine
-			break
+			break, process
 		end
 
 creation
@@ -75,6 +75,14 @@ feature -- Access
 			else
 				Result := procedure_name.break
 			end
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_qualified_create_expression (Current)
 		end
 
 invariant

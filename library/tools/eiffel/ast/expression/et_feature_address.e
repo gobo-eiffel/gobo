@@ -46,6 +46,14 @@ feature -- Access
 			Result := name.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_feature_address (Current)
+		end
+
 invariant
 
 	name_not_void: name /= Void

@@ -62,6 +62,14 @@ feature -- Access
 			Result := then_compound.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_when_part (Current)
+		end
+
 invariant
 
 	when_keyword_not_void: when_keyword /= Void

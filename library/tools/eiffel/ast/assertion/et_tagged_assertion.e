@@ -67,6 +67,14 @@ feature -- Setting
 			expression_set: expression = an_expression
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_tagged_assertion (Current)
+		end
+
 invariant
 
 	tag_not_void: tag /= Void

@@ -21,4 +21,12 @@ creation
 
 	make
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_call_instruction (Current)
+		end
+
 end

@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_untagged_indexing
 		redefine
-			tag
+			tag, process
 		end
 
 creation
@@ -44,6 +44,14 @@ feature -- Access
 
 	tag: ET_TAG
 			-- Tag
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_tagged_indexing (Current)
+		end
 
 invariant
 

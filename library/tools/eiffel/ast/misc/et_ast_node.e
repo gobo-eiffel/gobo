@@ -43,4 +43,13 @@ feature -- Status report
 			-- TODO
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		require
+			a_processor_not_void: a_processor /= Void
+		deferred
+		end
+
 end

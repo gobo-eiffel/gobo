@@ -80,6 +80,14 @@ feature -- Compilation
 			value := ""
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_special_manifest_string (Current)
+		end
+
 invariant
 
 	-- valid_literal: regexp: \"([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*\"

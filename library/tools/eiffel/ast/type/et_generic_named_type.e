@@ -22,7 +22,7 @@ inherit
 			resolved_named_types,
 			deep_cloned_type,
 			append_to_string,
-			break
+			break, process
 		end
 
 creation
@@ -115,6 +115,14 @@ feature -- Output
 				end
 				a_string.append_character (']')
 			end
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_generic_named_type (Current)
 		end
 
 invariant

@@ -54,4 +54,12 @@ feature -- Access
 	value: CHARACTER
 			-- Character value
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_c1_character_constant (Current)
+		end
+
 end

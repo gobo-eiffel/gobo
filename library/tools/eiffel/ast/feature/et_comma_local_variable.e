@@ -28,4 +28,12 @@ feature -- Access
 			Result := name_item.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_comma_local_variable (Current)
+		end
+
 end

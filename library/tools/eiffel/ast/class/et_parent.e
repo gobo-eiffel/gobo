@@ -236,6 +236,14 @@ feature -- Exports
 			end
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_parent (Current)
+		end
+
 invariant
 
 	type_not_void: type /= Void

@@ -322,6 +322,14 @@ feature -- Element change
 			an_item.formal_generic_parameter.set_index (capacity - count + 1)
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_formal_generic_parameters (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_FORMAL_GENERIC_PARAMETER_ITEM] is

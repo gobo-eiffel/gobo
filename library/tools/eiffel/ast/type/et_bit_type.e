@@ -266,6 +266,14 @@ feature -- Output
 			a_string.append_string (constant.literal)
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_bit_type (Current)
+		end
+
 feature {NONE} -- Constants
 
 	bit_space: STRING is "BIT "

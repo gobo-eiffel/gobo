@@ -53,6 +53,14 @@ feature -- Access
 			Result := target.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_bang_instruction (Current)
+		end
+
 invariant
 
 	bangbang_not_void: bangbang /= Void

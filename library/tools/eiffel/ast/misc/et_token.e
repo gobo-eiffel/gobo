@@ -63,6 +63,14 @@ feature -- Access
 	text: STRING
 			-- Text of token
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_token (Current)
+		end
+
 invariant
 
 	text_not_void: text /= Void

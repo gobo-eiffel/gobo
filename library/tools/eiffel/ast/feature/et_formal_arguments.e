@@ -69,7 +69,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := item (i).formal_argument_item
+			Result := item (i).formal_argument
 		ensure
 			formal_argument_not_void: Result /= Void
 		end
@@ -247,6 +247,14 @@ feature -- Duplication
 			end
 		ensure
 			arguments_not_void: Result /= Void
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_formal_arguments (Current)
 		end
 
 feature {NONE} -- Implementation

@@ -43,6 +43,14 @@ feature -- Access
 	operator: ET_EQUALITY_SYMBOL
 			-- Operator symbol
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_equality_expression (Current)
+		end
+
 invariant
 
 	operator_not_void: operator /= Void

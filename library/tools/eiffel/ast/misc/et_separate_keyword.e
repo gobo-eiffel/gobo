@@ -35,4 +35,12 @@ feature -- Status report
 	is_separate: BOOLEAN is True
 			-- Is mark 'separate'?
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_separate_keyword (Current)
+		end
+
 end

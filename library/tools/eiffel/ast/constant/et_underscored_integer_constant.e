@@ -75,6 +75,14 @@ feature -- Basic operations
 			end
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_underscored_integer_constant (Current)
+		end
+
 invariant
 
 	-- valid_literal: regexp: (_*[0-9]+_*)+

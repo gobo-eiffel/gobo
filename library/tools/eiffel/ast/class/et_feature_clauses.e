@@ -70,6 +70,14 @@ feature -- Access
 			Result := item (count).break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_feature_clauses (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_FEATURE_CLAUSE] is

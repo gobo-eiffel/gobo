@@ -15,6 +15,10 @@ deferred class ET_PREFIX_SYMBOL_OPERATOR
 inherit
 
 	ET_PREFIX_OPERATOR
+
 	ET_SYMBOL
+		undefine
+			process
+		end
 
 end

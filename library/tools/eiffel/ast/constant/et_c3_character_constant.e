@@ -59,6 +59,14 @@ feature -- Access
 	literal: STRING
 			-- Literal value of character code
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_c3_character_constant (Current)
+		end
+
 invariant
 
 	literal_not_void: literal /= Void

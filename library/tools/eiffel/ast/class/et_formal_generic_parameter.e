@@ -100,6 +100,14 @@ feature -- System
 		do
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_formal_generic_parameter (Current)
+		end
+
 invariant
 
 	name_not_void: name /= Void

@@ -102,6 +102,14 @@ feature -- Setting
 			end_keyword_set: end_keyword = an_end
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_constraint_creator (Current)
+		end
+
 invariant
 
 	create_keyword_not_void: create_keyword /= Void

@@ -15,8 +15,13 @@ deferred class ET_BOOLEAN_CONSTANT
 inherit
 
 	ET_CONSTANT
-	ET_TOKEN
+
 	ET_INDEXING_TERM
+
+	ET_TOKEN
+		undefine
+			process
+		end
 
 feature -- Status report
 

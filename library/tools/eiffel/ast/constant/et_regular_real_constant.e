@@ -36,6 +36,14 @@ feature {NONE} -- Initialization
 			literal_position_set: literal_position = a_position
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_regular_real_constant (Current)
+		end
+
 invariant
 
 	-- valid_literal: regexp: ([0-9]+\.[0-9]*|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?

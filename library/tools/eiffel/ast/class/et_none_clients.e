@@ -17,6 +17,8 @@ inherit
 	ET_CLIENTS
 		rename
 			make as make_clients
+		redefine
+			process
 		end
 
 creation
@@ -39,6 +41,14 @@ feature {NONE} -- Initialization
 		ensure
 			left_brace_set: left_brace = a_left
 			right_brace_set: right_brace = a_right
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_none_clients (Current)
 		end
 
 end

@@ -25,4 +25,12 @@ feature -- Status report
 	is_not_equal: BOOLEAN is True
 			-- Is symbol '/='?
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_not_equal_symbol (Current)
+		end
+
 end

@@ -65,6 +65,14 @@ feature -- Access
 			Result := terms.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_indexing (Current)
+		end
+
 invariant
 
 	terms_not_void: terms /= Void

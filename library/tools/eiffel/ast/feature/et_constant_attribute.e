@@ -130,6 +130,14 @@ feature -- Conversion
 			end
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_constant_attribute (Current)
+		end
+
 invariant
 
 	is_keyword_not_void: is_keyword /= Void

@@ -285,6 +285,14 @@ feature -- Output
 			a_string.append_string (class_name.name)
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_class_type (Current)
+		end
+
 invariant
 
 	class_name_not_void: class_name /= Void

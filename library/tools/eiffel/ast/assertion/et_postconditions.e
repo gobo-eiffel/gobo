@@ -94,6 +94,14 @@ feature -- Setting
 			then_keyword_set: then_keyword = a_then
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_postconditions (Current)
+		end
+
 invariant
 
 	ensure_keyword_not_void: ensure_keyword /= Void

@@ -15,6 +15,10 @@ deferred class ET_PREFIX_KEYWORD_OPERATOR
 inherit
 
 	ET_PREFIX_OPERATOR
+
 	ET_TOKEN
+		undefine
+			process
+		end
 
 end

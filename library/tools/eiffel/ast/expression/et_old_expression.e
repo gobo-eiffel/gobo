@@ -47,6 +47,14 @@ feature -- Access
 			Result := old_keyword.position
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_old_expression (Current)
+		end
+
 invariant
 
 	old_keyword_not_void: old_keyword /= Void

@@ -19,7 +19,7 @@ inherit
 			make, make_with_position,
 			name, is_prefix, is_infix,
 			is_prefix_free, is_infix_free,
-			same_feature_name
+			same_feature_name, process
 		end
 
 	ET_PREFIX_FREE_OPERATOR
@@ -27,7 +27,8 @@ inherit
 			make, make_with_position,
 			name, is_prefix, is_infix,
 			is_prefix_free, is_infix_free,
-			same_feature_name, hash_code
+			same_feature_name, hash_code,
+			process
 		end
 
 creation
@@ -143,6 +144,14 @@ feature -- Comparison
 					end
 				end
 			end
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_free_operator (Current)
 		end
 
 end

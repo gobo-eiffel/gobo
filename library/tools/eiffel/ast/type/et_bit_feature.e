@@ -22,7 +22,7 @@ inherit
 			check_constraint_validity,
 			deep_cloned_type,
 			append_to_string,
-			break
+			break, process
 		end
 
 creation
@@ -109,6 +109,14 @@ feature -- Output
 		do
 			a_string.append_string (bit_space)
 			a_string.append_string (name.name)
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_bit_feature (Current)
 		end
 
 invariant

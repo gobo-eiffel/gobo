@@ -71,6 +71,14 @@ feature -- Access
 			end
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_invariants (Current)
+		end
+
 invariant
 
 	invariant_keyword_not_void: invariant_keyword /= Void

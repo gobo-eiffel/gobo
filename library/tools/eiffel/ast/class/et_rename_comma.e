@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_rename
 		redefine
-			break
+			break, process
 		end
 
 creation
@@ -53,6 +53,14 @@ feature -- Access
 			-- Break which appears just after current node
 		do
 			Result := comma.break
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_rename_comma (Current)
 		end
 
 invariant

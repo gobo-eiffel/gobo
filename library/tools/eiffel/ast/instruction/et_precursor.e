@@ -10,13 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_PRECURSOR
+deferred class ET_PRECURSOR
 
 inherit
 
 	ET_AST_NODE
-
-creation
 
 feature {NONE} -- Initialization
 

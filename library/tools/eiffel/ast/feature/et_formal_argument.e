@@ -53,7 +53,7 @@ feature -- Access
 	declared_type: ET_DECLARED_TYPE
 			-- Declared type (type preceded by a colon)
 
-	formal_argument_item: ET_FORMAL_ARGUMENT is
+	formal_argument: ET_FORMAL_ARGUMENT is
 			-- Formal argument in semicolon-separated list
 		do
 			Result := Current

@@ -10,13 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_FEATURE_CALL
+deferred class ET_FEATURE_CALL
 
 inherit
 
 	ET_AST_NODE
-
-creation
 
 feature {NONE} -- Initialization
 

@@ -15,6 +15,9 @@ class ET_ACTUAL_ARGUMENTS
 inherit
 
 	ET_EXPRESSION_LIST
+		redefine
+			process
+		end
 
 creation
 
@@ -26,6 +29,14 @@ feature -- Status report
 			-- Is there exactly one argument?
 		do
 			Result := (count = 1)
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_actual_arguments (Current)
 		end
 
 end

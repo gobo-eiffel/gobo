@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_AST_LEAF
+deferred class ET_AST_LEAF
 
 inherit
 
@@ -21,8 +21,6 @@ inherit
 			make as make_with_position,
 			make_default as make
 		end
-
-creation
 
 feature -- Access
 

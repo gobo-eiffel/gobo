@@ -102,6 +102,14 @@ feature -- Setting
 			right_brace_set: right_brace = r
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_clients (Current)
+		end
+
 invariant
 
 	left_brace_not_void: left_brace /= Void

@@ -153,6 +153,14 @@ feature -- Setting
 			clients_set: clients = a_clients
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_creator (Current)
+		end
+
 invariant
 
 	creation_keyword_not_void: creation_keyword /= Void

@@ -10,13 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_BINARY_EXPRESSION
+deferred class ET_BINARY_EXPRESSION
 
 inherit
 
 	ET_EXPRESSION
-
-creation
 
 feature -- Access
 

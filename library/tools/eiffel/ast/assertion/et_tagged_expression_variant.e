@@ -17,6 +17,8 @@ inherit
 	ET_EXPRESSION_VARIANT
 		rename
 			make as make_expression_variant
+		redefine
+			process
 		end
 
 creation
@@ -46,6 +48,14 @@ feature -- Access
 
 	tag: ET_TAG
 			-- Tag
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_tagged_expression_variant (Current)
+		end
 
 invariant
 

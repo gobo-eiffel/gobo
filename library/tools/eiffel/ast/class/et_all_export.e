@@ -70,6 +70,14 @@ feature -- Status report
 			Result := True
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_all_export (Current)
+		end
+
 invariant
 
 	clients_clause_not_void: clients_clause /= Void

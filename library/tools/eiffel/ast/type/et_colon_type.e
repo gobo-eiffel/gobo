@@ -108,6 +108,14 @@ feature -- Duplication
 			end
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_colon_type (Current)
+		end
+
 invariant
 
 	colon_not_void: colon /= Void

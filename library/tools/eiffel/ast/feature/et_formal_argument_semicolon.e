@@ -22,22 +22,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_argument: like formal_argument_item; a_semicolon: like semicolon) is
+	make (an_argument: like formal_argument; a_semicolon: like semicolon) is
 			-- Create a new formal_argument-semicolon.
 		require
 			an_argument_not_void: an_argument /= Void
 			a_semicolon_not_void: a_semicolon /= Void
 		do
-			formal_argument_item := an_argument
+			formal_argument := an_argument
 			semicolon := a_semicolon
 		ensure
-			formal_argument_item_set: formal_argument_item = an_argument
+			formal_argument_set: formal_argument = an_argument
 			semicolon_set: semicolon = a_semicolon
 		end
 
 feature -- Access
 
-	formal_argument_item: ET_FORMAL_ARGUMENT
+	formal_argument: ET_FORMAL_ARGUMENT
 			-- Formal argument in semicolon-separated list
 
 	semicolon: ET_SYMBOL
@@ -46,14 +46,14 @@ feature -- Access
 	type: ET_TYPE is
 			-- Type
 		do
-			Result := formal_argument_item.type
+			Result := formal_argument.type
 		end
 
 	position: ET_POSITION is
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := formal_argument_item.position
+			Result := formal_argument.position
 		end
 
 	break: ET_BREAK is
@@ -68,7 +68,15 @@ feature -- Duplication
 			-- Cloned formal argument;
 			-- Do not recursively clone the type
 		do
-			!! Result.make (formal_argument_item, semicolon)
+			!! Result.make (formal_argument, semicolon)
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_formal_argument_semicolon (Current)
 		end
 
 invariant

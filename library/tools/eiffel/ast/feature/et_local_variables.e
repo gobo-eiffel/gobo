@@ -63,7 +63,7 @@ feature -- Access
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
-			Result := item (i).local_variable_item
+			Result := item (i).local_variable
 		ensure
 			local_variable_not_void: Result /= Void
 		end
@@ -113,6 +113,14 @@ feature -- System
 				local_variable (i).type.add_to_system
 				i := i + 1
 			end
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_local_variables (Current)
 		end
 
 feature {NONE} -- Implementation

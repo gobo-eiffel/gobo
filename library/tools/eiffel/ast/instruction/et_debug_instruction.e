@@ -26,7 +26,7 @@ inherit
 			keyword as debug_keyword,
 			set_keyword as set_debug_keyword
 		redefine
-			break
+			break, process
 		end
 
 creation
@@ -103,6 +103,14 @@ feature -- Setting
 			keys := a_keys
 		ensure
 			keys_set: keys = a_keys
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_debug_instruction (Current)
 		end
 
 invariant

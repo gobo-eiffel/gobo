@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_REAL_CONSTANT
+deferred class ET_REAL_CONSTANT
 
 inherit
 

@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	local_variable_item: ET_LOCAL_VARIABLE is
+	local_variable: ET_LOCAL_VARIABLE is
 			-- Local variable in semicolon-separated list
 		deferred
 		ensure
-			local_variable_item_not_void: Result /= Void
+			local_variable_not_void: Result /= Void
 		end
 
 	type: ET_TYPE is

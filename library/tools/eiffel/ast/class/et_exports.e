@@ -89,6 +89,14 @@ feature -- Setting
 			export_keyword_set: export_keyword = an_export
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_exports (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_EXPORT] is

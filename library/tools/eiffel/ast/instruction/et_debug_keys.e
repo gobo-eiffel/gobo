@@ -115,6 +115,14 @@ feature -- Setting
 			right_parenthesis_set: right_parenthesis = r
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_debug_keys (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_MANIFEST_STRING_ITEM] is

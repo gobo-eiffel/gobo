@@ -19,7 +19,8 @@ inherit
 			make, make_with_position,
 			name, is_prefix, is_infix,
 			is_prefix_minus, is_infix_minus,
-			same_feature_name, hash_code
+			same_feature_name, hash_code,
+			process
 		end
 
 	ET_PREFIX_MINUS_OPERATOR
@@ -27,7 +28,8 @@ inherit
 			make, make_with_position,
 			name, is_prefix, is_infix,
 			is_prefix_minus, is_infix_minus,
-			same_feature_name, hash_code
+			same_feature_name, hash_code,
+			process
 		end
 
 	ET_SIGN_SYMBOL
@@ -142,6 +144,14 @@ feature -- Comparison
 			else
 				Result := other.is_prefix_minus
 			end
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_minus_symbol (Current)
 		end
 
 end

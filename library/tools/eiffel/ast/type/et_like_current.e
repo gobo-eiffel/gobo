@@ -124,6 +124,14 @@ feature -- Output
 			a_string.append_string (like_space_current)
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_like_current (Current)
+		end
+
 feature {NONE} -- Constants
 
 	like_space_current: STRING is "like Current"

@@ -63,6 +63,14 @@ feature -- Access
 			Result := then_compound.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_elseif_part (Current)
+		end
+
 invariant
 
 	elseif_keyword_not_void: elseif_keyword /= Void

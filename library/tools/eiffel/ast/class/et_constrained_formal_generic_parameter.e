@@ -19,7 +19,7 @@ inherit
 			make as make_unconstrained
 		redefine
 			constraint, creation_procedures,
-			add_to_system, break
+			add_to_system, break, process
 		end
 
 creation
@@ -87,6 +87,14 @@ feature -- System
 			-- appear in the constraints.
 		do
 			constraint.add_to_system
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_constrained_formal_generic_parameter (Current)
 		end
 
 invariant

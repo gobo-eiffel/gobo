@@ -122,6 +122,14 @@ feature -- Setting
 			right_parenthesis_set: right_parenthesis = r
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_strip_expression (Current)
+		end
+
 invariant
 
 	strip_keyword_not_void: strip_keyword /= Void

@@ -25,6 +25,14 @@ feature -- Status report
 	is_true: BOOLEAN is True
 			-- Is boolean value true?
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_true_constant (Current)
+		end
+
 invariant
 
 	is_true: is_true

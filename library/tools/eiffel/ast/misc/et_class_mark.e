@@ -10,13 +10,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_CLASS_MARK
+deferred class ET_CLASS_MARK
 
 inherit
 
 	ET_TOKEN
-
-creation
+		undefine
+			process
+		end
 
 feature -- Status report
 

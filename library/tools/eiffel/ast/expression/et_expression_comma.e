@@ -56,6 +56,14 @@ feature -- Access
 			Result := comma.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_expression_comma (Current)
+		end
+
 invariant
 
 	comma_not_void: comma /= Void

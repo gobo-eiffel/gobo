@@ -143,6 +143,14 @@ feature -- Duplication
 			end
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_type_comma (Current)
+		end
+
 invariant
 
 	comma_not_void: comma /= Void

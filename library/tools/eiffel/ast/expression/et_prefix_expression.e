@@ -47,6 +47,14 @@ feature -- Access
 			Result := name.position
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_prefix_expression (Current)
+		end
+
 invariant
 
 	name_not_void: name /= Void

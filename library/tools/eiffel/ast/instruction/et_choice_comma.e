@@ -22,22 +22,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_choice: like choice_item; a_comma: like comma) is
+	make (a_choice: like choice; a_comma: like comma) is
 			-- Create a new choice-comma.
 		require
 			a_choice_not_void: a_choice /= Void
 			a_comma_not_void: a_comma /= Void
 		do
-			choice_item := a_choice
+			choice := a_choice
 			comma := a_comma
 		ensure
-			choice_item_set: choice_item = a_choice
+			choice_set: choice = a_choice
 			comma_set: comma = a_comma
 		end
 
 feature -- Access
 
-	choice_item: ET_CHOICE
+	choice: ET_CHOICE
 			-- Choice in comma-separated list
 
 	comma: ET_SYMBOL
@@ -47,13 +47,21 @@ feature -- Access
 			-- Position of first character of
 			-- current node in source code
 		do
-			Result := choice_item.position
+			Result := choice.position
 		end
 
 	break: ET_BREAK is
 			-- Break which appears just after current node
 		do
 			Result := comma.break
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_choice_comma (Current)
 		end
 
 invariant

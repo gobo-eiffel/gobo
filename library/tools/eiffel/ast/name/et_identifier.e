@@ -54,6 +54,8 @@ inherit
 			text as name
 		undefine
 			is_equal
+		redefine
+			process
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -137,6 +139,14 @@ feature -- Comparison
 			if same_type (other) then
 				Result := same_identifier (other)
 			end
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_identifier (Current)
 		end
 
 end

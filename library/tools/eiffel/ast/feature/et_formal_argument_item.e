@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	formal_argument_item: ET_FORMAL_ARGUMENT is
+	formal_argument: ET_FORMAL_ARGUMENT is
 			-- Formal argument in semicolon-separated list
 		deferred
 		ensure
-			formal_argument_item_not_void: Result /= Void
+			formal_argument_not_void: Result /= Void
 		end
 
 	type: ET_TYPE is

@@ -37,4 +37,12 @@ feature -- Duplication
 			!! Result.make (name_item, type)
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_colon_formal_argument (Current)
+		end
+
 end

@@ -29,6 +29,7 @@
 			</cluster>
 			<cluster name="error"/>
 			<cluster name="parser"/>
+			<cluster name="processor"/>
 		</cluster>
 		<cluster name="lace" prefix="lace_">
 			<option name="abstract" value="true"/>

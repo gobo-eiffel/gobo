@@ -60,6 +60,14 @@ feature -- Access
 			Result := target.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_typed_bang_instruction (Current)
+		end
+
 invariant
 
 	left_bang_not_void: left_bang /= Void

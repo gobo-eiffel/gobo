@@ -121,6 +121,14 @@ feature -- Setting
 			clients_set: clients = a_clients
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_feature_clause (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_FEATURE_ITEM] is

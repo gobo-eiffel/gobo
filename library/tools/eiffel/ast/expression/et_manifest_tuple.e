@@ -15,10 +15,22 @@ class ET_MANIFEST_TUPLE
 inherit
 
 	ET_EXPRESSION
+
 	ET_EXPRESSION_LIST
+		redefine
+			process
+		end
 
 creation
 
 	make, make_with_capacity
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_manifest_tuple (Current)
+		end
 
 end

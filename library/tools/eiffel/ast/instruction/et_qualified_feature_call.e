@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ET_QUALIFIED_FEATURE_CALL
+deferred class ET_QUALIFIED_FEATURE_CALL
 
 inherit
 
@@ -20,8 +20,6 @@ inherit
 		redefine
 			target, position
 		end
-
-creation
 
 feature {NONE} -- Initialization
 

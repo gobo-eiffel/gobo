@@ -46,6 +46,14 @@ feature -- Access
 			Result := current_entity.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_current_address (Current)
+		end
+
 invariant
 
 	current_entity_not_void: current_entity /= Void

@@ -67,6 +67,14 @@ feature -- Access
 			Result := target.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_typed_create_instruction (Current)
+		end
+
 invariant
 
 	create_keyword_not_void: create_keyword /= Void

@@ -15,6 +15,9 @@ class ET_SEMICOLON_SYMBOL
 inherit
 
 	ET_SYMBOL
+		redefine
+			process
+		end
 
 	ET_NULL_EXPORT
 		redefine
@@ -34,5 +37,13 @@ feature -- Status report
 
 	is_semicolon: BOOLEAN is True
 			-- Is current node a semicolon?
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_semicolon_symbol (Current)
+		end
 
 end

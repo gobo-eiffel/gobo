@@ -88,6 +88,14 @@ feature -- Access
 			Result := end_keyword.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_loop_instruction (Current)
+		end
+
 invariant
 
 	from_compound_not_void: from_compound /= Void

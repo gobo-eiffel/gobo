@@ -18,11 +18,11 @@ inherit
 
 feature -- Access
 
-	choice_item: ET_CHOICE is
+	choice: ET_CHOICE is
 			-- Choice in comma-separated list
 		deferred
 		ensure
-			choice_item_not_void: Result /= Void
+			choice_not_void: Result /= Void
 		end
 
 end

@@ -62,6 +62,14 @@ feature -- Access
 			Result := source.break
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_assignment (Current)
+		end
+
 invariant
 
 	target_not_void: target /= Void

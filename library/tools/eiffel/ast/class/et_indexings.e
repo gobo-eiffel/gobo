@@ -89,6 +89,14 @@ feature -- Setting
 			indexing_keyword_set: indexing_keyword = an_indexing
 		end
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_indexings (Current)
+		end
+
 feature {NONE} -- Implementation
 
 	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_INDEXING_ITEM] is

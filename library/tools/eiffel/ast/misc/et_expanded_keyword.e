@@ -35,4 +35,12 @@ feature -- Status report
 	is_expanded: BOOLEAN is True
 			-- Is mark 'expanded'?
 
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_expanded_keyword (Current)
+		end
+
 end
