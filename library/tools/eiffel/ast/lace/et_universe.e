@@ -607,7 +607,8 @@ end
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if a_class.interface_checked then
-					a_class.process (implementation_checker)
+					a_class.process (flat_checker)
+					--a_class.process (implementation_checker)
 				end
 				a_cursor.forth
 			end
@@ -773,6 +774,14 @@ feature -- Processors
 			create Result.make (Current)
 		ensure
 			implementation_checker_not_void: Result /= Void
+		end
+
+	flat_checker: ET_FLAT_CHECKER is
+			-- Flat implementation checker
+		once
+			create Result.make (Current)
+		ensure
+			flat_checker_not_void: Result /= Void
 		end
 
 	null_processor: ET_AST_NULL_PROCESSOR
