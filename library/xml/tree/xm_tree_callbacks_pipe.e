@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		do
 			start := new_namespace_resolver
 			error := new_stop_on_error
-			tree := new_tree_builder
+			create tree.make_null
 			last := tree
 				-- Dummy because we already store 'start' in
 				-- a variable of a descendant type

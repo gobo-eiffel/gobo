@@ -122,6 +122,7 @@ feature -- Filters
 
 	new_tree_builder: XM_CALLBACKS_TO_TREE_FILTER is
 			-- New tree construction filter
+		obsolete "See tree cluster, e.g. XM_TREE_CALLBACKS_PIPE"
 		do
 			create Result.make_null
 		ensure
