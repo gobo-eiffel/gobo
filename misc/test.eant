@@ -146,6 +146,7 @@
 		<delete file="compile_ise.ace"/>
 		<delete file="compile_se.ace"/>
 		<delete file="compile_ve.esd"/>
+		<delete file="compile_ve.xace"/>
 		<delete file="${system}${exe}"/>
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>
