@@ -1001,11 +1001,26 @@ feature -- Access
 			-- (ELKS 2001 STRING)
 		local
 			i, nb: INTEGER
+			a_code: INTEGER
+			fit_in_string: BOOLEAN
 		do
-			nb := byte_count
-			from i := 1 until i > nb loop
-				Result := 5 * Result + byte_item (i).code
-				i := i + 1
+			nb := count
+			if nb = byte_count then
+				Result := string.hash_code
+			else
+				fit_in_string := True
+				nb := byte_count
+				from i := 1 until i > nb loop
+					a_code := item_code_at_byte_index (i)
+					Result := 5 * Result + a_code
+					if a_code > Platform.Maximum_character_code then
+						fit_in_string := False
+					end
+					i := next_byte_index (i)
+				end
+				if fit_in_string then
+					Result := string.hash_code
+				end
 			end
 			if Result < 0 then
 				Result := - (Result + 1)
