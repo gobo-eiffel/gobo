@@ -86,10 +86,10 @@ feature {NONE} -- Assert
 			a_parser.parse_from_string (a_in)
 			
 			debug ("xml_parser")
-				if a_checker.has_failed then
-					std.output.put_string ("failed: "+ a_checker.failed)
-					std.output.put_new_line
-				end
+--				if a_checker.has_failed then
+--					std.output.put_string ("failed: " + a_checker.failed)
+--					std.output.put_new_line
+--				end
 			end
 			
 			assert ("parsing ok", a_parser.is_correct)
