@@ -218,10 +218,11 @@ feature -- Processing
 				a_target := Build_targets.item
 				if not Executed_targets.has (a_target) then
 						-- Execute topmost target of `Build_targets':
+					print("%N" + a_target.name)
 					if verbose then
-						print("**executing target : ")
-						print(a_target.name + ", stack item nr: " + Build_targets.count.out + "%N")
+						print(" (stack item nr=" + Build_targets.count.out + ")")
 					end
+					print(":%N%N")
 					a_target.execute
 					Executed_targets.force_last (a_target)
 				end
