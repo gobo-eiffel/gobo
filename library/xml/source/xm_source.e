@@ -10,20 +10,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_SOURCE
+deferred class XM_SOURCE
 
 inherit
 
 	ANY
-
-	XM_UNICODE_STRUCTURE_FACTORY
-		export {NONE} all
+		undefine
+			out
 		end
-
-	KL_IMPORTED_STRING_ROUTINES
-		export {NONE}all
-		end
-		
-feature
 
 end

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent xml nodes that can contain other xml nodes"
+		"XML nodes that can contain other xml nodes"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -31,261 +31,251 @@ inherit
 			is_equal, copy
 		end
 
-feature {NONE} -- Access
+feature {NONE} -- Initialization
 
 	make_composite is
-			-- Initialisation specific to this node.
+			-- Initialization specific to current node.
 		do
 			!! namespaces.make
 			make_list
 		end
 
-feature {ANY} -- Access
+feature -- Access
 
 	root_node: XM_COMPOSITE is
-			-- the root node of this node. In most cases this will be of
-			-- type XM_DOCUMENT
+			-- Root node of current node
+			-- (In most cases this will be of type XM_DOCUMENT)
 		do
 			if is_root_node then
 				Result := Current
 			else
-				Result := precursor
-			end
-		end
-
-			-- TODO: This feature does not work right now, fix needed
-			-- new_element_cursor: DS_BILINEAR_CURSOR [XM_ELEMENT] is
-			-- -- New external cursor. This cursor will ignore all nodes
-			-- -- but elements.
-			-- do
-			-- !XM_ELEMENT_CURSOR! Result.make (new_cursor)
-			-- end
-
-	has_element_by_name (a_name: STRING): BOOLEAN is
-			-- Has this element at least 1 direct child element with the name `a_name'?
-		require
-			a_name_not_void: a_name /= Void
-		local
-			cs: like new_cursor
-			e: XM_ELEMENT
-		do
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				e ?= cs.item
-				if e /= Void and then same_string (e.name, a_name) then
-					Result := True
-				end
-				cs.forth
+				Result := parent.root_node
 			end
 		end
 
 	element_by_name (a_name: STRING): XM_ELEMENT is
-			-- retrieve direct child element with name `a_name'.
-			-- if there are more than one elements with that name,
-			-- anyone may be returned.
-			-- Returns Void if no element with that name is a child of Current
+			-- Direct child element with name `a_name';
+			-- If there are more than one element with that name, anyone may be returned.
+			-- Return Void if no element with that name is a child of current node.
 		require
 			a_name_not_void: a_name /= Void
 		local
-			cs: like new_cursor
+			a_cursor: like new_cursor
 			e: XM_ELEMENT
 		do
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				e ?= cs.item
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				e ?= a_cursor.item
 				if e /= Void and then same_string (e.name, a_name) then
 					Result := e
+					a_cursor.go_after -- Jump out of the loop.
+				else
+					a_cursor.forth
 				end
-				cs.forth
 			end
 		ensure
-			result_not_void: has_element_by_name (a_name) = (Result /= Void)
+			element_not_void: has_element_by_name (a_name) = (Result /= Void)
 		end
 
 	namespaces: XM_NAMESPACE_TABLE
+			-- Namespaces
 
-feature {ANY} -- Basic routines
-
-	process_children (x: XM_NODE_PROCESSOR) is
-			-- process direct children
-		require
-			x_not_void: x /= Void
+	text: STRING is
+			-- Concatenation of all texts directly found in
+			-- current element; Void if no text found
+			-- (Return a new string at each call.)
 		local
-			cs: like new_cursor
+			text_node: XM_CHARACTER_DATA
+			a_cursor: like new_cursor
 		do
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				cs.item.process (x)
-				cs.forth
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				text_node ?= a_cursor.item
+				if text_node /= Void then
+					if Result = Void then
+						Result := clone (text_node.content)
+					else
+						Result := STRING_.appended_string (Result, text_node.content)
+					end
+				end
+				a_cursor.forth
 			end
 		end
 
-	process_children_recursive (x: XM_NODE_PROCESSOR) is
-			-- process direct and indirect children
+feature -- Status report
+
+	has_element_by_name (a_name: STRING): BOOLEAN is
+			-- Has current node at least one direct child
+			-- element with the name `a_name'?
 		require
-			x_not_void: x /= Void
+			a_name_not_void: a_name /= Void
 		local
-			cs: like new_cursor
+			a_cursor: like new_cursor
 			e: XM_ELEMENT
 		do
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				cs.item.process (x)
-				e ?= cs.item
-				if e /= Void then
-					e.process_children_recursive (x)
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				e ?= a_cursor.item
+				if e /= Void and then same_string (e.name, a_name) then
+					Result := True
+					a_cursor.go_after -- Jump out of the loop.
+				else
+					a_cursor.forth
 				end
-				cs.forth
 			end
 		end
 
-feature {ANY} -- Element change
+feature -- Element change
 
-	resolve_namespaces_start is
+	join_text_nodes is
+			-- Join sequences of text nodes.
+		local
+			text_node: XM_CHARACTER_DATA
+			joint_text_node: XM_CHARACTER_DATA
+			a_cursor: like new_cursor
+		do
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				text_node ?= a_cursor.item
+				if text_node /= Void then
+						-- Found a text node.
+						-- Now join all text-nodes that are following it
+						-- until there is a node that is no text-node.
+					joint_text_node := clone (text_node)
+					remove_at_cursor (a_cursor)
+					from
+					until
+						a_cursor.after or text_node = Void
+					loop
+						text_node ?= a_cursor.item
+						if text_node /= Void then
+								-- Found another text-node -> join.
+							joint_text_node.append_content (text_node)
+							remove_at_cursor (a_cursor)
+						else
+							a_cursor.forth
+						end
+					end
+					force_left_cursor (joint_text_node, a_cursor)
+				else
+					a_cursor.forth
+				end
+			end
+		end
+
+feature -- Namespaces
+
+	resolve_namespaces is
+			-- Check for "xmlns" attributes and set the corresponding namespace
+			-- and namespace_declaration features in elements and attributes.
+			-- Additionally the prefixes are removed from the attribute names
+			-- (except for "xmlns", see `remove_namespace_declaration_from_attributes'
+			-- to remove those as well).
 		local
 			decls: XM_NAMESPACE_TABLE
 		do
 			!! decls.make
-			resolve_namespaces (decls)
+			resolve_namespaces_impl (decls)
 		end
 
-	resolve_namespaces (decls: XM_NAMESPACE_TABLE) is
-			-- checks for "xmlns" attributes and sets
-			-- the correspondig namespace and namespace_declaration
-			-- features in elements and attributes
-			-- additionally the prefixes are removed from the attribute names
+	remove_namespace_declarations_from_attributes is
+			-- Remove all attributes that are namespace declarations.
+			-- That is any attribute whose name starts with "xmlns".
+		local
+			element: XM_COMPOSITE
+			a_cursor: like new_cursor
+		do
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				element ?= a_cursor.item
+				if element /= Void then
+						-- Found an element, now let's check if it has "xmlns"
+						-- attributes defined.
+					element.remove_namespace_declarations_from_attributes
+				end
+				a_cursor.forth
+			end
+		end
+
+feature -- Obsolete
+
+	resolve_namespaces_start is
+			-- Check for "xmlns" attributes and set the corresponding namespace
+			-- and namespace_declaration features in elements and attributes.
+			-- Additionally the prefixes are removed from the attribute names
 			-- (except for "xmlns", see `remove_namespace_declaration_from_attributes'
-			-- to remove those as well
+			-- to remove those as well).
+		obsolete
+			"[020811] Use `resolve_namespaces' instead."
+		do
+			resolve_namespaces
+		end
+
+feature {XM_COMPOSITE} -- Namespaces
+
+	resolve_namespaces_impl (decls: XM_NAMESPACE_TABLE) is
+			-- Check for "xmlns" attributes and set the corresponding namespace
+			-- and namespace_declaration features in elements and attributes.
+			-- Additionally the prefixes are removed from the attribute names
+			-- (except for "xmlns", see `remove_namespace_declaration_from_attributes'
+			-- to remove those as well).
 		require
 			decls_not_void: decls /= Void
 		local
 			element: XM_ELEMENT
 			comp: XM_COMPOSITE
-			cs: like new_cursor
+			a_cursor: like new_cursor
 		do
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				element ?= cs.item
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				element ?= a_cursor.item
 				if element /= Void then
-						-- found an element, now let's check if it has "xmlns"
-						-- attributes are defined
+						-- Found an element, now let's check if it has "xmlns"
+						-- attributes defined.
 					decls.override_with_list (element.namespace_declarations)
 					element.apply_namespace_declarations (decls)
 				end
-				comp ?= cs.item
+				comp ?= a_cursor.item
 				if comp /= Void then
-					comp.resolve_namespaces (decls)
+					comp.resolve_namespaces_impl (decls)
 				end
-				cs.forth
+				a_cursor.forth
 			end
 		end
 
-	remove_namespace_declarations_from_attributes is
-			-- Removes all attributes that are namesapce declarations.
-			-- That is any attribute whos name starts with "xmlns".
+feature -- Processing
+
+	process_children (a_processor: XM_NODE_PROCESSOR) is
+			-- Process direct children.
+		require
+			a_processor_not_void: a_processor /= Void
 		local
-			element: XM_COMPOSITE
-			cs: like new_cursor
+			a_cursor: like new_cursor
 		do
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				element ?= cs.item
-				if element /= Void then
-						-- found an element, now let's check if it has "xmlns"
-						-- attributes are defined
-					element.remove_namespace_declarations_from_attributes
-				end
-				cs.forth
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (a_processor)
+				a_cursor.forth
 			end
 		end
 
-	join_text_nodes is
-			-- joins sequences of text nodes
+	process_children_recursive (a_processor: XM_NODE_PROCESSOR) is
+			-- Process direct and indirect children.
+		require
+			processor_not_void: a_processor /= Void
 		local
-			text_node: XM_CHARACTER_DATA
-			joint_text_node: XM_CHARACTER_DATA
-			cs: like new_cursor
+			a_cursor: like new_cursor
+			e: XM_COMPOSITE
 		do
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				text_node ?= cs.item
-				if text_node /= Void then
-						-- found a text node
-						-- now join all text-nodes that are
-						-- more forward until there
-						-- is a node that is no text-node
-					joint_text_node := clone (text_node)
-					remove_at_cursor (cs)
-					from
-					until
-						cs.off or text_node = Void
-					loop
-						text_node ?= cs.item
-						if text_node /= Void then
-								-- found another text-node -> join
-							joint_text_node.append_content (text_node)
-							remove_at_cursor (cs)
-						else
-							cs.forth
-						end
-					end
-					force_left_cursor (joint_text_node, cs)
-				else
-					cs.forth
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (a_processor)
+				e ?= a_cursor.item
+				if e /= Void then
+					e.process_children_recursive (a_processor)
 				end
+				a_cursor.forth
 			end
-		end
-
-	text: STRING is
-			-- returns all text directly found in this element and
-			-- returns it as one string
-		local
-			text_node: XM_CHARACTER_DATA
-			cs: like new_cursor
-		do
-			from
-				!! Result.make (0)
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				text_node ?= cs.item
-				if text_node /= Void then
-					Result := STRING_.appended_string (Result, text_node.content)
-				end
-				cs.forth
-			end
-		ensure
-			result_not_void: Result /= Void
 		end
 
 invariant

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Abstract definition of a position in an XML document"
+		"Abstract definition of positions in XML documents"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -19,15 +19,19 @@ inherit
 			out
 		end
 
-feature {ANY}
+feature -- Access
 
 	source: XM_SOURCE is
+			-- Source from where position is taken
 		deferred
 		end
 
+feature -- Output
+
 	out: STRING is
+			-- Textual representation
 		do
-			Result := clone (source.out)
+			Result := source.out
 		end
 
 invariant

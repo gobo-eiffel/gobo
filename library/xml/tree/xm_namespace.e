@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent a XML namespace declaration"
+		"XML namespace declarations"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -16,33 +16,40 @@ creation
 
 	make
 
-feature {NONE} -- Initialisation
+feature {NONE} -- Initialization
 
-	make (a_prefix, a_uri: STRING) is
+	make (a_prefix: like ns_prefix; a_uri: like uri) is
+			-- Create a new namespace declaration.
 		require
-			valid: (a_uri = Void implies a_prefix /= Void) and (a_prefix = Void implies a_uri /= Void)
+			valid: not (a_uri = Void and a_prefix = Void)
 		do
 			ns_prefix := a_prefix
 			uri := a_uri
+		ensure
+			ns_prefix_set: ns_prefix = a_prefix
+			uri_set: uri = a_uri
 		end
 
-feature {ANY} -- Access
+feature -- Access
 
 	ns_prefix: STRING
-			-- Prefix of this namespace
+			-- Prefix of current namespace
 
 	uri: STRING
 			-- Namespace URI
 
+feature -- Status report
+
 	is_default: BOOLEAN is
-			-- Is this a default namespace declaration?
+			-- Is `Current' a default namespace declaration?
 		do
-			Result := ns_prefix = Void or else
-				ns_prefix.count = 0
+			Result := (ns_prefix = Void or else ns_prefix.count = 0)
+		ensure
+			definition: Result = (ns_prefix = Void or else ns_prefix.count = 0)
 		end
 
 invariant
 
-	either_uri_not_void_or_prefix: (uri = Void implies ns_prefix /= Void) and (ns_prefix = Void implies uri /= Void)
+	valid: not (uri = Void and ns_prefix = Void)
 
 end

@@ -16,20 +16,24 @@ deferred class XM_URI_SOURCE
 inherit
 
 	XM_SOURCE
-		redefine
-			out
-		end
 
-feature
+feature -- Access
 
 	uri: STRING is
 			-- URI for the source of the XML document
 		deferred
 		end
 
+feature -- Output
+
 	out: STRING is
+			-- Textual representation
 		do
 			Result := uri
 		end
+
+invariant
+
+	uri_not_void: uri /= Void
 
 end

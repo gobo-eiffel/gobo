@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent XML element nodes"
+		"XML element nodes"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -21,7 +21,7 @@ inherit
 			root_node
 		redefine
 			remove_namespace_declarations_from_attributes_recursive,
-			resolve_namespaces_start, make_default
+			resolve_namespaces, make_default
 		end
 
 	XM_NAMED_NODE
@@ -35,235 +35,240 @@ creation
 
 	make_root, make_child
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
-	make_root (a_name, a_ns_prefix: STRING) is
-			-- make a new root element based on the information held in a
-			-- XM_START_TAG object. This will fill in the name and the attributes
+	make_root (a_name: like name; a_prefix: like ns_prefix) is
+			-- Create a new root element based on the information held in a
+			-- XM_START_TAG object. This will fill in the name and the attributes.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
 		do
 			name := a_name
-			ns_prefix := a_ns_prefix
+			ns_prefix := a_prefix
 			make_composite
 		ensure
-			name_set: same_string (name, a_name)
+			name_set: name = a_name
+			ns_prefix_set: ns_prefix = a_prefix
 		end
 
-	make_child (a_parent: XM_COMPOSITE; a_name, a_ns_prefix: STRING) is
-			-- make a new child element based on the information held in a
-			-- XM_START_TAG object. This will fill in the name and the attributes
+	make_child (a_parent: like parent; a_name: like name; a_prefix: like ns_prefix) is
+			-- Create a new child element based on the information held in a
+			-- XM_START_TAG object. This will fill in the name and the attributes.
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
 		do
-			make_root (a_name, a_ns_prefix)
+			make_root (a_name, a_prefix)
 			parent := a_parent
 		ensure
-			name_set: same_string (name, a_name)
+			name_set: name = a_name
+			ns_prefix_set: ns_prefix = a_prefix
+			parent_set: parent = a_parent
 		end
 
 	make_default is
+			-- Default creation for empty container.
+			-- Meaningless in the current context.
 		do
-				-- needed by gobo 2.0
-				-- TODO: make a empty but valid document
+			make_root ("dummy", Void)
 		end
 
-feature {ANY} -- Access
+feature -- Status report
 
 	has_attribute_by_name (a_name: STRING): BOOLEAN is
-			-- is an attribute with the name `a_name' present in this
+			-- Does current element contain an attribute named `a_name'?
 			-- element?
 		require
 			a_name_not_void: a_name /= Void
 		local
-			cs: like new_cursor
+			a_cursor: like new_cursor
 			att: XM_ATTRIBUTE
 		do
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				att ?= cs.item
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				att ?= a_cursor.item
 				if att /= Void and then same_string (att.name, a_name) then
 					Result := True
-					cs.go_after
+					a_cursor.go_after -- Jump out of the loop.
 				else
-					cs.forth
+					a_cursor.forth
 				end
 			end
 		end
 
+feature -- Access
+
 	attribute_by_name (a_name: STRING): XM_ATTRIBUTE is
-			-- retrieves the attribute with the name `a_name' from element.
-			-- returns `Void' if no Attribute was found.
+			-- Attribute named `a_name' in current element;
+			-- Return Void if no such attribute was found.
 		require
 			a_name_not_void: a_name /= Void
 		local
-			cs: like new_cursor
+			a_cursor: like new_cursor
 			att: XM_ATTRIBUTE
 		do
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off or Result /= Void
-			loop
-				att ?= cs.item
-				if att /= Void then
-					if same_string (att.name, a_name) then
-						Result := att
-					end
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				att ?= a_cursor.item
+				if att /= Void and then same_string (att.name, a_name) then
+					Result := att
+					a_cursor.go_after -- Jump out of the loop.
+				else
+					a_cursor.forth
 				end
-				cs.forth
 			end
+		ensure
+			attribute_not_void: has_attribute_by_name (a_name) = (Result /= Void)
 		end
 
 	namespace_declarations: DS_LINKED_LIST [XM_NAMESPACE] is
-			-- namespaces declared directly in this element
-			-- this list must contain at most one namespace with a
+			-- Namespaces declared directly in this element;
+			-- This list must contain at most one namespace with a
 			-- void prefix. If such a namespace exists it is a declared
-			-- default namespace
+			-- default namespace.
+			-- (Return the same list object at each call.)
+		local
+			a_cursor: like new_cursor
+			att: XM_ATTRIBUTE
 		do
-			if namespace_declarations_cache = Void then
-				namespace_declarations_cache := get_namespace_declarations_from_attributes
+			if namespace_declarations_cache /= Void then
+				Result := namespace_declarations_cache
+			else
+				!! Result.make
+				a_cursor := new_cursor
+				from a_cursor.start until a_cursor.after loop
+					att ?= a_cursor.item
+					if att /= Void and then att.is_namespace_declaration then
+						Result.force_last (att.namespace_declaration)
+					end
+					a_cursor.forth
+				end
+				namespace_declarations_cache := Result
 			end
-			Result := namespace_declarations_cache
+		ensure
+			namespace_declarations_not_void: Result /= Void
+			no_void_declaration: not Result.has (Void)
 		end
 
-	attributes: DS_BILINEAR [XM_ATTRIBUTE] is
-			-- List of all attributes in this element.
+	attributes: DS_LIST [XM_ATTRIBUTE] is
+			-- List of all attributes in current element
+			-- (Create a new list at each call.)
 		local
-			cs: like new_cursor
+			a_cursor: like new_cursor
 			att: XM_ATTRIBUTE
-			l: DS_BILINKED_LIST [XM_ATTRIBUTE]
 		do
-			!! l.make
-			Result := l
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				att ?= cs.item
+			!DS_BILINKED_LIST [XM_ATTRIBUTE]! Result.make
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				att ?= a_cursor.item
 				if att /= Void then
-					l.force_last (att)
+					Result.force_last (att)
 				end
-				cs.forth
+				a_cursor.forth
 			end
 		end
 
 feature {XM_PARSER} -- Element change
 
-	add_attributes (a_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [STRING, STRING], STRING]]) is
-			-- Add `a_attributes' to this element.
+	add_attributes (an_attributes: DS_BILINEAR [DS_PAIR [DS_PAIR [STRING, STRING], STRING]]) is
+			-- Add `an_attributes' to current element.
 		require
-			a_attributes_not_void: a_attributes /= Void
+			an_attributes_not_void: an_attributes /= Void
+			-- no void pairs nor strings in `an_attributes'
 		local
-			cs: DS_BILINEAR_CURSOR [DS_PAIR [DS_PAIR [STRING, STRING], STRING]]
+			a_cursor: DS_BILINEAR_CURSOR [DS_PAIR [DS_PAIR [STRING, STRING], STRING]]
 		do
-			from
-				cs := a_attributes.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				add_attribute (cs.item.first.first, cs.item.first.second, cs.item.second)
-				cs.forth
+			a_cursor := an_attributes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				add_attribute (a_cursor.item.first.first, a_cursor.item.first.second, a_cursor.item.second)
+				a_cursor.forth
 			end
 		end
 
 	add_attribute (a_name, a_prefix, a_value: STRING) is
-			-- Add one attribute to this element.
-		local
-			xml: XM_ATTRIBUTE
-		do
-			!! xml.make (a_name, a_prefix, a_value, Current)
-			force_last (xml)
-		end
-		
-feature {ANY} -- Removal
-
-	remove_attribute_by_name (n: STRING) is
-			-- removes attribute with name `n' from element.
+			-- Add an attribute to current element.
 		require
-			n_not_void: n /= Void
-			has_attribute: has_attribute_by_name (n)
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			a_value_not_void: a_value /= Void
 		local
-			cs: like new_cursor
+			an_attribute: XM_ATTRIBUTE
+		do
+			!! an_attribute.make (a_name, a_prefix, a_value, Current)
+			force_last (an_attribute)
+		ensure
+			attribute_added: has_attribute_by_name (a_name)
+		end
+
+feature -- Removal
+
+	remove_attribute_by_name (a_name: STRING) is
+			-- Remove attribute named `a_name' from current element.
+		require
+			a_name_not_void: a_name /= Void
+			has_attribute: has_attribute_by_name (a_name)
+		local
+			a_cursor: like new_cursor
 			att: XM_ATTRIBUTE
 		do
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				att ?= cs.item
-				if att /= Void and then same_string (n, att.name) then
-					remove_at_cursor (cs)
-						-- `remove_at_cursor' does implicit `forth' for all cursors
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				att ?= a_cursor.item
+				if att /= Void and then same_string (a_name, att.name) then
+					remove_at_cursor (a_cursor)
 				else
-					cs.forth
+					a_cursor.forth
 				end
 			end
 		end
 
 	remove_namespace_declarations_from_attributes_recursive is
-			-- Removes the namespace declarations from the attributes 
-			-- in this element and all child-elements recursivly.
+			-- Remove the namespace declarations from the attributes 
+			-- in current element and all child-elements recursively.
 		do
 			remove_namespace_declarations_from_attributes
 			precursor
 		end
 
 	remove_namespace_declarations_from_attributes is
-			-- Remove all attributes that start with "xmlns:" permanently.
+			-- Remove all attributes that start with "xmlns:".
 		local
-			cs: like new_cursor
+			a_cursor: like new_cursor
 			att: XM_ATTRIBUTE
 		do
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				att ?= cs.item
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				att ?= a_cursor.item
 				if att /= Void and then att.is_namespace_declaration then
-					remove_at_cursor (cs)
-						-- `remove_at_cursor' does implicit `forth' for all cursors
+					remove_at_cursor (a_cursor)
 				else
-					cs.forth
+					a_cursor.forth
 				end
 			end
 		end
 
-feature {ANY} -- Basic operations
+feature -- Namespaces
 
-	process (x: XM_NODE_PROCESSOR) is
-			-- Processing procedure for Visitor Pattern.
-		do
-			x.process_element (Current)
-		end
-
-	resolve_namespaces_start is
+	resolve_namespaces is
+			-- Check for "xmlns" attributes and set the corresponding namespace
+			-- and namespace_declaration features in elements and attributes.
+			-- Additionally the prefixes are removed from the attribute names
+			-- (except for "xmlns", see `remove_namespace_declaration_from_attributes'
+			-- to remove those as well).
 		local
 			decls: XM_NAMESPACE_TABLE
 		do
 			!! decls.make
 			decls.override_with_list (namespace_declarations)
 			apply_namespace_declarations (decls)
-			resolve_namespaces (decls)
+			resolve_namespaces_impl (decls)
 		end
 
 	apply_namespace_declarations (decls: XM_NAMESPACE_TABLE) is
-			-- Apply namespace declaration.
+			-- Apply namespace declarations.
 		local
-			cs: DS_BILINEAR_CURSOR [XM_ATTRIBUTE]
+			a_cursor: DS_BILINEAR_CURSOR [XM_ATTRIBUTE]
 		do
 			if has_prefix then
 				precursor (decls)
@@ -272,41 +277,24 @@ feature {ANY} -- Basic operations
 					set_namespace (decls.default_ns)
 				end
 			end
-			from
-				cs := attributes.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				cs.item.apply_namespace_declarations (decls)
-				cs.forth
+			a_cursor := attributes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.apply_namespace_declarations (decls)
+				a_cursor.forth
 			end
+		end
+
+feature -- Processing
+
+	process (a_processor: XM_NODE_PROCESSOR) is
+			-- Process current node with `a_processor'.
+		do
+			a_processor.process_element (Current)
 		end
 
 feature {NONE} -- Implementation
 
-	get_namespace_declarations_from_attributes: DS_LINKED_LIST [XM_NAMESPACE] is
-		local
-			cs: like new_cursor
-			att: XM_ATTRIBUTE
-			l: DS_LINKED_LIST [XM_NAMESPACE]
-		do
-			!! l.make
-			Result := l
-			from
-				cs := new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				att ?= cs.item
-				if att /= Void and then att.is_namespace_declaration then
-					l.force_last (att.namespace_declaration)
-				end
-				cs.forth
-			end
-		end
-
 	namespace_declarations_cache: DS_LINKED_LIST [XM_NAMESPACE]
+			-- Cache for `namespace_declarations'
 
 end

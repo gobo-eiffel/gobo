@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent XML processing instruction nodes"
+		"XML processing instruction nodes"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -20,34 +20,39 @@ creation
 
 	make
 
-feature {NONE} -- Initialisation
+feature {NONE} -- Initialization
 
-	make (a_target, a_data: STRING) is
-			-- Set target and data.
+	make (a_target: like target; a_data: like data) is
+			-- Create a new processing instruction node.
 		require
 			a_target_not_void: a_target /= Void
 			a_data_not_void: a_data /= Void
 		do
 			target := a_target
 			data := a_data
+		ensure
+			target_set: target = a_target
+			data_set: data = a_data
 		end
 
-feature {ANY} -- Access
+feature -- Access
 
 	target: STRING
-			-- target of this processing instruction. XML defines this as being the
-			-- first token following the markup that begins the processing instruction.
+			-- Target of current processing instruction;
+			-- XML defines this as being the first token following
+			-- the markup that begins the processing instruction.
 
 	data: STRING
-			-- content of this processing instruction. This is from the first non
-			-- white space character after the target to the character immediately
-			-- preceding the ?>.
+			-- Content of current processing instruction;
+			-- This is from the first non white space character after
+			-- the target to the character immediately preceding the ?>.
 
-feature {ANY} -- Basic routines
+feature -- Processing
 
-	process (x: XM_NODE_PROCESSOR) is
+	process (a_processor: XM_NODE_PROCESSOR) is
+			-- Process current node with `a_processor'.
 		do
-			x.process_processing_instruction (Current)
+			a_processor.process_processing_instruction (Current)
 		end
 
 invariant

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Position in a XML document which has been parsed from a stream"
+		"Positions in an XML document which has been parsed from a stream"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -20,9 +20,10 @@ creation
 
 	make
 
-feature {ANY} -- Initialisation
+feature {NONE} -- Initialization
 
 	make (a_source: XM_SOURCE; a_byte_index, a_column, a_row: INTEGER) is
+			-- Create a new position.
 		require
 			a_source_not_void: a_source /= Void
 			a_byte_index_positive: a_byte_index >= 0
@@ -40,18 +41,18 @@ feature {ANY} -- Initialisation
 			row_set: row = a_row
 		end
 
-feature {ANY} -- Access
+feature -- Access
 
 	source: XM_SOURCE
-			-- file that the element resides in.
+			-- Source file
 
 	byte_index: INTEGER
-			-- character position of token in file.
+			-- Byte position of token in file
 
 	column: INTEGER
-			-- column of token in file.
+			-- Column of token in file
 
 	row: INTEGER
-			-- column of token in file.
+			-- Row of token in file
 
 end

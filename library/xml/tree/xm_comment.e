@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent XML comment nodes"
+		"XML comment nodes"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -20,31 +20,33 @@ creation
 
 	make
 
-feature {NONE} -- Initialisation
+feature {NONE} -- Initialization
 
-	make (a_parent: XM_COMPOSITE; a_data: STRING) is
+	make (a_parent: like parent; a_data: like data) is
+			-- Create a new comment node.
 		require
-			a_data_not_void: a_data /= Void
 			a_parent_not_void: a_parent /= Void
+			a_data_not_void: a_data /= Void
 		do
-			data := a_data
 			parent := a_parent
+			data := a_data
+		ensure
+			parent_set: parent = a_parent
+			data_set: data = a_data
 		end
 
-feature {ANY} -- Access
+feature -- Access
 
 	data: STRING
-			--Actual character data of this comment.
+			-- Comment's character data
 
-feature {ANY} -- Basic routines
+feature -- Processing
 
-	process (x: XM_NODE_PROCESSOR) is
-			-- Visitor process.
+	process (a_processor: XM_NODE_PROCESSOR) is
+			-- Process current node with `a_processor'.
 		do
-			x.process_comment (Current)
+			a_processor.process_comment (Current)
 		end
-
-feature {ANY} -- Element change
 
 invariant
 

@@ -15,15 +15,12 @@ class XM_STRING_SOURCE
 inherit
 
 	XM_SOURCE
-		redefine
-			out
-		end
 
-feature -- Out
+feature -- Output
 
 	out: STRING is 
-			-- STRING.
-		do
+			-- Textual representation
+		once
 			Result := "STRING" 
 		end
 	

@@ -20,17 +20,21 @@ creation
 
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make (a_uri: STRING) is
+			-- Create a new URI.
+		require
+			a_uri_not_void: a_uri /= Void
 		do
 			uri := a_uri
 		ensure
 			uri_set: uri = a_uri
 		end
 
-feature
+feature -- Access
 
 	uri: STRING
+			-- URI for the source of the XML document
 
 end

@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent character data XML nodes (plain text)"
+		"XML character data nodes (plain text)"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -22,10 +22,10 @@ creation
 
 	make
 
-feature {NONE} -- Initialisation
+feature {NONE} -- Initialization
 
-	make (a_parent: XM_COMPOSITE; c: STRING) is
-			-- Make a new object from a string.
+	make (a_parent: like parent; c: like content) is
+			-- Create a new character data node.
 		require
 			a_parent_not_void: a_parent /= Void
 			c_not_void: c /= Void
@@ -33,31 +33,32 @@ feature {NONE} -- Initialisation
 			parent := a_parent
 			content := c
 		ensure
-			content_set: same_string (content, c)
+			parent_set: parent = a_parent
+			content_set: content = c
 		end
 
-feature {ANY} -- Access
+feature -- Access
 
 	content: STRING
-			-- Actual character data of this node.
+			-- Actual character data
 
-feature {ANY} -- Basic routines
-
-	process (x: XM_NODE_PROCESSOR) is
-			-- Processing procedure for visitor pattern.
-		do
-			x.process_character_data (Current)
-		end
-
-feature {ANY} -- Element change
+feature -- Element change
 
 	append_content (other: like Current) is
 			-- Append the content of 'other' to
-			-- the content of Current.
+			-- the content of `Current'.
 		require
-			other /= Void
+			other_not_void: other /= Void
 		do
 			content := STRING_.appended_string (content, other.content)
+		end
+
+feature -- Processing
+
+	process (a_processor: XM_NODE_PROCESSOR) is
+			-- Process current node with `a_processor'.
+		do
+			a_processor.process_character_data (Current)
 		end
 
 invariant

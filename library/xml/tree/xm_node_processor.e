@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Implements visitor pattern for XML node objects. Inherit and %
+		"Visitor pattern for XML node objects. Inherit and %
 		%redefine to make use of this pattern"
 
 	library: "Gobo Eiffel XML Library"
@@ -13,41 +13,52 @@ indexing
 
 class XM_NODE_PROCESSOR
 
-feature {ANY} -- Access
+feature -- Processing
 
 	process_element (e: XM_ELEMENT) is
+			-- Process element `e'.
+		require
+			e_not_void: e /= Void
 		do
 		end
 
 	process_character_data (c: XM_CHARACTER_DATA) is
+			-- Process character data `c'.
 		require
 			c_not_void: c /= Void
 		do
 		end
 
 	process_processing_instruction (a_pi: XM_PROCESSING_INSTRUCTION) is
+			-- Process processing instruction `a_pi'.
 		require
-			pi_not_void: a_pi /= Void
+			a_pi_not_void: a_pi /= Void
 		do
 		end
 
 	process_document (doc: XM_DOCUMENT) is
+			-- Process document `doc'.
+		require
+			doc_not_void: doc /= Void
 		do
 		end
 
 	process_comment (com: XM_COMMENT) is
+			-- Process comment `com'.
 		require
 			com_not_void: com /= Void
 		do
 		end
 
 	process_attributes (e: XM_ELEMENT) is
+			-- Process attributes of element `e'.
 		require
 			e_not_void: e /= Void
 		do
 		end
 
 	process_attribute (att: XM_ATTRIBUTE) is
+			-- Process attribute `att'.
 		require
 			att_not_void: att /= Void
 		do

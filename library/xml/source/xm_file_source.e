@@ -19,43 +19,50 @@ inherit
 			out
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export
+			{NONE} all
+		undefine
+			out
+		end
+
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
-	make (a_file: STRING) is
-			-- Set file name.
+	make (a_filename: STRING) is
+			-- Create a new file source.
 		require
-			not_void: a_file /= Void
+			a_filename_not_void: a_filename /= Void
 		do
-			file_name := a_file
+			filename := a_filename
 		ensure
-			set: same_string (file_name, a_file)
+			filename_set: filename = a_filename
 		end
 
 feature -- Access
 
-	file_name: STRING
-			-- File name.
+	filename: STRING
+			-- File name
 
 	uri: STRING is
-			-- File URI.
+			-- File URI
 		do
-			Result := STRING_.concat ("file:", file_name)
+			Result := STRING_.concat ("file:", filename)
 		end
 
 feature -- Output
 
 	out: STRING is
-			-- Filename.
+			-- Textual representation
 		do
-			Result := file_name
+			Result := filename
 		end
 
 invariant
 
-	file_name_not_void: file_name /= Void
+	filename_not_void: filename /= Void
 
 end

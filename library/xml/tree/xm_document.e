@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent XML documents"
+		"XML documents"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -23,48 +23,46 @@ creation
 
 	make
 
-feature {NONE} -- Initialisation
+feature {NONE} -- Initialization
 
 	make is
-			-- Initialize root node.
+			-- Create root node.
 		do
 			make_composite
 		end
 
 	make_default is
+			-- Create root node.
 		do
 			make
-				-- needed by gobo 2.0
-				-- TODO: make a empty but valid document
 		end
 
-feature {ANY} -- Access
-
-		-- document_type: XM_DOCUMENT_TYPE
-		-- TODO: Implement!
+feature -- Access
 
 	root_element: XM_ELEMENT
-			-- Root element of this document.
-		
-	process (x: XM_NODE_PROCESSOR) is
-			-- Processing procedure for visitor pattern.
-		do
-			x.process_document (Current)
-		end
+			-- Root element of current document
 
-feature {XM_PARSER,XM_CALLBACKS}
+feature {XM_PARSER, XM_CALLBACKS} -- Setting
 
-	set_root_element (a: XM_ELEMENT) is
+	set_root_element (an_element: like root_element) is
 			-- Set root element.
 		do
-			root_element := a
-			-- composite
+			root_element := an_element
+				-- Composite operations:
 			wipe_out
-			force_last (a)
+			force_last (an_element)
 		ensure
-			set: root_element = a
-			last: last = a
-			count: count = 1
+			root_element_set: root_element = an_element
+			last_set: last = root_element
+			count_set: count = 1
+		end
+
+feature -- Processing
+
+	process (a_processor: XM_NODE_PROCESSOR) is
+			-- Process current node with `a_processor'.
+		do
+			a_processor.process_document (Current)
 		end
 
 end

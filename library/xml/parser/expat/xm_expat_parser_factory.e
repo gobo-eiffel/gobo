@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Factory for expat parser, allows client code to be compiled when expat is not available"
+		"Factories for Expat XML parsers"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Eric Bezault and others"
@@ -14,18 +14,32 @@ class XM_EXPAT_PARSER_FACTORY
 
 inherit
 
-	XM_EXPAT_PARSER_FACTORY_INTERFACE
+	XM_PARSER_FACTORY
+		rename
+			is_parser_available as is_expat_parser_available,
+			new_parser as new_expat_parser
+		end
 
-feature -- Factory
+feature -- Status report
 
-	is_expat_available: BOOLEAN is
-			-- Is expat parser available?
+	is_expat_parser_available: BOOLEAN is
+			-- Is Expat XML parser available?
 		do
 			Result := True
 		end
 
+	is_expat_available: BOOLEAN is
+			-- Is Expat XML parser available?
+		obsolete
+			"[020812] Use `is_expat_parser_available' instead."
+		do
+			Result := is_expat_parser_available
+		end
+
+feature -- Access
+
 	new_expat_parser: XM_PARSER is
-			-- Create expat parser.
+			-- New Expat XML parser
 		do
 			!XM_EXPAT_PARSER! Result.make
 		end

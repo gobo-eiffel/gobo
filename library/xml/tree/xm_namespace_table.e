@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that map namespace prefixes to namespace URIs"
+		"Mappings between namespace prefixes and namespace URIs"
 
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
@@ -16,14 +16,7 @@ inherit
 
 	DS_HASH_TABLE [STRING, STRING]
 		rename
-			make as table_make
-		end
-
-	UC_UNICODE_FACTORY
-		export
-			{NONE} all
-		undefine
-			copy, is_equal
+			make as make_hash_table
 		end
 
 	XM_UNICODE_STRUCTURE_FACTORY
@@ -32,67 +25,70 @@ inherit
 		undefine
 			copy, is_equal
 		end
-		
+
+	XM_MARKUP_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make is
-			-- Create and set equality tester.
+			-- Create a new empty namespace table.
 		do
-			table_make (10)
-			set_equality_tester (shared_string_equality_tester)
-			set_key_equality_tester (shared_string_equality_tester)
+			make_map (10)
+			set_equality_tester (string_equality_tester)
+			set_key_equality_tester (string_equality_tester)
 		end
-		
-feature {ANY} -- Access
+
+feature -- Status report
 
 	has_default: BOOLEAN is
-			-- has table a default namespace?
-			-- note: in any given table there must be at most one
-			-- default namespace
+			-- Has table a default namespace?
+			-- (Note: in any given table there must be at most one
+			-- default namespace)
 		do
-			search (empty_string)
+			search (Default_namespace)
 			Result := found
 		end
 
+feature -- Access
+
 	default_ns: STRING is
-			--	default namespace
+			-- Default namespace
+		require
+			has_default: has_default
 		do
-			search (empty_string)
+			search (Default_namespace)
 			Result := found_item
 		end
 
-feature {ANY} --
+feature -- Element change
 
 	override_with_list (l: DS_BILINEAR [XM_NAMESPACE]) is
-			-- take the namespace declarations from l and
-			-- integrated them in this table, if `l' has
-			-- an entry with a prefix that is already in
-			-- this table, overide it with the entry from the list
+			-- Add namespace declarations listed in `l'.
+			-- If `l' has an entry with a prefix that is already
+			-- in current table, override it with the entry from
+			-- the list.
 		require
 			l_not_void: l /= Void
+			no_void_namespace: not l.has (Void)
 		local
-			cs: DS_BILINEAR_CURSOR [XM_NAMESPACE]
+			a_cursor: DS_BILINEAR_CURSOR [XM_NAMESPACE]
+			a_namespace: XM_NAMESPACE
 		do
-			from
-				cs := l.new_cursor
-				cs.start
-			until
-				cs.off
-			loop
-				force (cs.item.uri, cs.item.ns_prefix)
-				cs.forth
+			a_cursor := l.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_namespace := a_cursor.item
+				force (a_namespace.uri, a_namespace.ns_prefix)
+				a_cursor.forth
 			end
-		end
-
-feature {NONE} -- Implementation
-
-	empty_string: STRING is
-		once
-			!! Result.make (0)
 		end
 
 end
