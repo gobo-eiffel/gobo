@@ -180,6 +180,20 @@ feature -- Nested
 	subclusters: ET_CLUSTERS
 			-- Subclusters
 
+feature -- Measurement
+
+	count: INTEGER is
+			-- Number (recursively) of non-abstract clusters,
+			-- including current cursor
+		do
+			if not is_abstract then
+				Result := 1
+			end
+			if subclusters /= Void then
+				Result := Result + subclusters.count
+			end
+		end
+
 feature -- Status setting
 
 	set_abstract (b: BOOLEAN) is
@@ -255,6 +269,41 @@ feature -- Element change
 			a_cluster.set_parent (Current)
 		end
 
+	add_implicit_subclusters (a_universe: ET_UNIVERSE) is
+			-- Add (recursively) implicit subclusters when current cluster is recursive.
+			-- Note that these subclusters will otherwise be added when running one of
+			-- the `preparse_*' or `parse_all' routines.
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			dir_name: STRING
+			dir: KL_DIRECTORY
+			s: STRING
+		do
+			if not is_abstract and is_recursive then
+				dir_name := Execution_environment.interpreted_string (full_pathname)
+				create dir.make (dir_name)
+				dir.open_read
+				if dir.is_open_read then
+					from dir.read_entry until dir.end_of_input loop
+						s := dir.last_entry
+						if not has_eiffel_extension (s) and is_valid_directory_name (s) then
+							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
+								add_recursive_cluster (s)
+							end
+						end
+						dir.read_entry
+					end
+					dir.close
+				else
+					a_universe.error_handler.report_gcaaa_error (Current, dir_name)
+				end
+			end
+			if subclusters /= Void then
+				subclusters.add_implicit_subclusters (a_universe)
+			end
+		end
+
 feature {ET_CLUSTER, ET_CLUSTERS} -- Setting
 
 	set_parent (a_parent: like parent) is
@@ -281,16 +330,16 @@ feature -- Parsing
 			s: STRING
 			a_classname: ET_IDENTIFIER
 			a_class: ET_CLASS
-			a_cluster: like Current
 		do
 			if not is_abstract then
+				a_universe.error_handler.report_preparsing_status (Current)
 				dir_name := Execution_environment.interpreted_string (full_pathname)
 				create dir.make (dir_name)
 				dir.open_read
 				if dir.is_open_read then
 					from dir.read_entry until dir.end_of_input loop
 						s := dir.last_entry
-						if is_valid_eiffel_filename (s) and has_eiffel_extension (s) then
+						if is_valid_eiffel_filename (s) then
 							a_filename := file_system.pathname (dir_name, s)
 							create a_classname.make (s.substring (1, s.count - 2))
 							a_class := a_universe.eiffel_class (a_classname)
@@ -318,8 +367,7 @@ feature -- Parsing
 							end
 						elseif is_recursive and then is_valid_directory_name (s) then
 							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
-								a_cluster := new_recursive_cluster (s)
-								add_subcluster (a_cluster)
+								add_recursive_cluster (s)
 							end
 						end
 						dir.read_entry
@@ -348,9 +396,9 @@ feature -- Parsing
 			dir_name: STRING
 			dir: KL_DIRECTORY
 			s: STRING
-			a_cluster: like Current
 		do
 			if not is_abstract then
+				a_universe.error_handler.report_preparsing_status (Current)
 				dir_name := Execution_environment.interpreted_string (full_pathname)
 				create dir.make (dir_name)
 				dir.open_read
@@ -369,8 +417,7 @@ feature -- Parsing
 							end
 						elseif is_recursive and then is_valid_directory_name (s) then
 							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
-								a_cluster := new_recursive_cluster (s)
-								add_subcluster (a_cluster)
+								add_recursive_cluster (s)
 							end
 						end
 						dir.read_entry
@@ -398,9 +445,9 @@ feature -- Parsing
 			dir_name: STRING
 			dir: KL_DIRECTORY
 			s: STRING
-			a_cluster: like Current
 		do
 			if not is_abstract then
+				a_universe.error_handler.report_preparsing_status (Current)
 				dir_name := Execution_environment.interpreted_string (full_pathname)
 				create dir.make (dir_name)
 				dir.open_read
@@ -419,8 +466,7 @@ feature -- Parsing
 							end
 						elseif is_recursive and then is_valid_directory_name (s) then
 							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
-								a_cluster := new_recursive_cluster (s)
-								add_subcluster (a_cluster)
+								add_recursive_cluster (s)
 							end
 						end
 						dir.read_entry
@@ -445,7 +491,6 @@ feature -- Parsing
 			dir_name: STRING
 			dir: KL_DIRECTORY
 			s: STRING
-			a_cluster: like Current
 		do
 			debug ("GELINT")
 				std.error.put_string ("Parse cluster '")
@@ -471,8 +516,7 @@ feature -- Parsing
 							end
 						elseif is_recursive and then is_valid_directory_name (s) then
 							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
-								a_cluster := new_recursive_cluster (s)
-								add_subcluster (a_cluster)
+								add_recursive_cluster (s)
 							end
 						end
 						dir.read_entry
@@ -496,6 +540,36 @@ feature -- Output
 		end
 
 feature {NONE} -- Implementation
+
+	add_recursive_cluster (a_name: STRING) is
+			-- Add recursive cluster named `s' to `subclusters'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+		local
+			a_cluster: ET_CLUSTER
+			a_cluster_list: DS_ARRAYED_LIST [ET_CLUSTER]
+			found: BOOLEAN
+			i, nb: INTEGER
+		do
+			if subclusters /= Void then
+				a_cluster_list := subclusters.clusters
+				nb := a_cluster_list.count
+				from i := 1 until i > nb loop
+					a_cluster := a_cluster_list.item (i)
+					if a_cluster.is_implicit then
+						if STRING_.same_string (a_name, a_cluster.name) then
+							found := True
+							i := nb + 1 -- Jump out of the loop.
+						end
+					end
+					i := i + 1
+				end
+			end
+			if not found then
+				add_subcluster (new_recursive_cluster (a_name))
+			end
+		end
 
 	new_recursive_cluster (a_name: STRING): like Current is
 			-- New recursive cluster
