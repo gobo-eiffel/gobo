@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -75,9 +75,25 @@ feature -- Access
 feature -- Compilation
 
 	flatten is
-			-- Flatten feature table of current parent.
+			-- Flatten features of current parent.
 		do
 			type.base_class.flatten
+		ensure
+			is_flattened: is_flattened
+		end
+
+feature -- Compilation status
+
+	is_flattened: BOOLEAN is
+			-- Has features of current parent been flattened?
+		do
+			Result := type.base_class.is_flattened
+		end
+
+	flatten_error: BOOLEAN is
+			-- Has a fatal error occurred during feature flattening?
+		do
+			Result := type.base_class.flatten_error
 		end
 
 feature -- Setting

@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -49,7 +49,85 @@ feature -- Element change
 			parent_added: parents = a_parent
 		end
 
+feature -- Compilation status
+
+	ancestors_computed: BOOLEAN is
+			-- Have ancestors of parent classes already
+			-- been computed?
+		local
+			a_parent: ET_PARENT
+		do
+			Result := True
+			from a_parent := parents until a_parent = Void loop
+				if not a_parent.type.base_class.ancestors_computed then
+					Result := False
+					a_parent := Void  -- Jump out of the loop.
+				else
+					a_parent := a_parent.next
+				end
+			end
+		end
+
+	is_flattened: BOOLEAN is
+			-- Has features of parent classes been flattened?
+		local
+			a_parent: ET_PARENT
+		do
+			Result := True
+			from a_parent := parents until a_parent = Void loop
+				if not a_parent.is_flattened then
+					Result := False
+					a_parent := Void  -- Jump out of the loop.
+				else
+					a_parent := a_parent.next
+				end
+			end
+		end
+
+	flatten_error: BOOLEAN is
+			-- Has a fatal error occurred during feature flattening?
+		local
+			a_parent: ET_PARENT
+		do
+			Result := True
+			from a_parent := parents until a_parent = Void loop
+				if not a_parent.flatten_error then
+					Result := False
+					a_parent := Void  -- Jump out of the loop.
+				else
+					a_parent := a_parent.next
+				end
+			end
+		end
+
 feature -- Compilation
+
+	add_to_ancestors (anc: DS_HASH_SET [ET_CLASS]) is
+		local
+			a_parent: ET_PARENT
+		do
+			from a_parent := parents until a_parent = Void loop
+				a_parent.type.base_class.add_to_ancestors (anc)
+				a_parent := a_parent.next
+			end
+		end
+
+	ancestors: DS_HASH_SET [ET_CLASS] is
+		local
+			a_parent: ET_PARENT
+			a_class: ET_CLASS
+		do
+			!! Result.make (10)
+			from a_parent := parents until a_parent = Void loop
+				a_class := a_parent.type.base_class
+				if not Result.has (a_class) then
+					Result.force (a_class)
+					Result.union (a_class.ancestors)
+				end
+				a_parent := a_parent.next
+			end
+		end
+
 
 	add_ancestors (a_class: ET_CLASS) is
 			-- Add current parents classes and their
@@ -92,18 +170,22 @@ feature -- Compilation
 				a_parent.flatten
 				a_parent := a_parent.next
 			end
+		ensure
+			is_flattened: is_flattened
 		end
 
-	add_inherited_features (a_features: ET_INHERITED_FEATURES) is
+	add_inherited_features (a_flattener: ET_FEATURE_FLATTENER) is
 			-- Add features inherited from current parents
-			-- to `inherited_features'.
+			-- to `a_flattener'.
 		require
-			a_features_not_void: a_features /= Void
+			a_flattener_not_void: a_flattener /= Void
+			is_flattened: is_flattened
+			no_flatten_error: not flatten_error
 		local
 			a_parent: ET_PARENT
 		do
 			from a_parent := parents until a_parent = Void loop
-				a_features.add_inherited_features (a_parent)
+				a_flattener.add_inherited_features (a_parent)
 				a_parent := a_parent.next
 			end
 		end
