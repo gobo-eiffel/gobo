@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 		do
 			type := a_type
-			left_brace := tokens.symbol
-			right_brace := tokens.symbol
+			left_brace := tokens.left_brace_symbol
+			right_brace := tokens.right_brace_symbol
 		ensure
 			type_set: type = a_type
 		end
