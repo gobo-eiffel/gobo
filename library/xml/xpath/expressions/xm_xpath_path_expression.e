@@ -209,19 +209,17 @@ feature -- Optimization
 			path_not_void: BOOLEAN
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
+			set_analyzed
 			create a_type_checker
-				check
-					start.may_analyze
-				end
-			start.analyze (a_context)
-			if start.was_expression_replaced then set_start (start.replacement_expression) end
-
+			if	start.may_analyze then
+				start.analyze (a_context)
+				if start.was_expression_replaced then set_start (start.replacement_expression) end
+			end
 			if not start.is_error then
-					check
-						step.may_analyze
-					end
-				step.analyze (a_context)
-				if step.was_expression_replaced then set_step (step.replacement_expression) end
+				if	step.may_analyze then
+					step.analyze (a_context)
+					if step.was_expression_replaced then set_step (step.replacement_expression) end
+				end
 				if not step.is_error then
 
 					-- We don't need the operands to be sorted;
@@ -334,7 +332,6 @@ feature -- Optimization
 			else
 				set_last_error (start.last_error)
 			end
-			set_analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is

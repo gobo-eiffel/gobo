@@ -20,8 +20,6 @@ inherit
 
 	XM_XPATH_SHARED_FUNCTION_FACTORY
 
-	XM_XPATH_SHARED_CONFORMANCE
-
 	KL_SHARED_STANDARD_FILES
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -32,7 +30,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; warnings: BOOLEAN) is
+	make (a_name_pool: XM_XPATH_NAME_POOL; warnings: BOOLEAN; backwards: BOOLEAN) is
 			-- Establish invariant.
 		require
 			name_pool_not_void: a_name_pool /= Void
@@ -45,9 +43,11 @@ feature {NONE} -- Initialization
 			declare_collation ("http://www.w3.org/2003/11/xpath-functions/collation/codepoint", a_code_point_collator, True)
 			clear_namespaces
 			warnings_to_std_error := warnings
+			is_backwards_compatible_mode := backwards
 		ensure
 			name_pool_set: name_pool = a_name_pool
 			warnings_set: warnings_to_std_error = warnings
+			backward_compatibility: is_backwards_compatible_mode = backwards
 		end
 
 	make_upon_node is
@@ -87,11 +87,8 @@ feature -- Access
 			Result := namespaces.item (an_xml_prefix)
 		end
 
-		is_backwards_compatible_mode: BOOLEAN is
+		is_backwards_compatible_mode: BOOLEAN
 			-- Is Backwards Compatible Mode used?
-		do
-			Result := conformance.xpath_one_compatibility
-		end
 
 feature -- Status report
 

@@ -18,8 +18,6 @@ inherit
 
 	XM_XPATH_CARDINALITY
 
-	XM_XPATH_SHARED_CONFORMANCE
-
 	-- This class provides a single feature to perform static type-checking of an expression.
 	-- The routine takes a `supplied' expression,  and checks to see whether it is
 	--  known statically to conform to the `required' type.
@@ -123,7 +121,7 @@ feature -- Optimization
 
 					-- Handle the special rules for 1.0 compatibility mode
 
-					if conformance.xpath_one_compatibility and not allows_many then
+					if backwards_compatible and not allows_many then
 						if is_sub_type (a_required_item_type, String_type) then
 							if is_sub_type (a_supplied_item_type, Atomic_type) then
 								create {XM_XPATH_ATOMIZER_EXPRESSION} an_expression.make (an_expression)

@@ -362,6 +362,7 @@ feature -- Optimization
 			min, max: INTEGER
 			finished, filter_is_positionl: BOOLEAN
 		do
+			set_analyzed
 			if base_expression.may_analyze then
 				base_expression.analyze (a_context)
 				if base_expression.was_expression_replaced then
@@ -425,9 +426,9 @@ feature -- Optimization
 									create another_filter.make (a_filter, a_third_expression)
 									another_filter.analyze (a_context)
 									if another_filter.was_expression_replaced then
-										replacement_expression := filter.replacement_expression
+										replacement_expression := another_filter.replacement_expression
 									else
-										replacement_expression := filter
+										replacement_expression := another_filter
 									end
 									was_expression_replaced := True
 								elseif is_explicitly_positional_filter (a_boolean_filter.second_operand)
@@ -438,44 +439,45 @@ feature -- Optimization
 									create another_filter.make (a_filter, another_expression)
 									another_filter.analyze (a_context)
 									if another_filter.was_expression_replaced then
-										replacement_expression := filter.replacement_expression
+										replacement_expression := another_filter.replacement_expression
 									else
-										replacement_expression := filter
+										replacement_expression := another_filter
 									end
 									was_expression_replaced := True
 								end
 							end
-							if not was_expression_replaced then
+--							if not was_expression_replaced then
 
 								-- If any subexpressions within the filter are not dependent on the focus,
 								-- promote them: this causes them to be evaluated once, outside the filter
 								-- expression.
-								
-								create an_offer.make (Focus_independent, Void, Current, False, base_expression.context_document_nodeset)
-								set_filter (filter.promote (an_offer))
-								a_let_expression ?= an_offer.containing_expression
-								if a_let_expression /= Void then
-									if a_let_expression.may_analyze then
-										a_let_expression.analyze (a_context)
-									end
-									if a_let_expression.is_error then
-										set_last_error (a_let_expression.last_error)
-										an_expression := a_let_expression
-									elseif a_let_expression.was_expression_replaced then
-										an_expression := a_let_expression.replacement_expression
-									else
-										an_expression := a_let_expression
-									end
-										an_offer.set_containing_expression (an_expression)
-								end
-								was_expression_replaced := True
-								replacement_expression := an_offer.containing_expression
-							end
+
+								-- promotions just don't work - something is wrong
+
+--								create an_offer.make (Focus_independent, Void, Current, False, base_expression.context_document_nodeset)
+--								set_filter (filter.promote (an_offer))
+--								a_let_expression ?= an_offer.containing_expression
+--								if a_let_expression /= Void then
+--									if a_let_expression.may_analyze then
+--										a_let_expression.analyze (a_context)
+--									end
+--									if a_let_expression.is_error then
+--										set_last_error (a_let_expression.last_error)
+--										an_expression := a_let_expression
+--									elseif a_let_expression.was_expression_replaced then
+--										an_expression := a_let_expression.replacement_expression
+--									else
+--										an_expression := a_let_expression
+--									end
+--										an_offer.set_containing_expression (an_expression)
+--								end
+--								was_expression_replaced := True
+--								replacement_expression := an_offer.containing_expression
+--							end
 						end
 					end
 				end
 			end
-			set_analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is

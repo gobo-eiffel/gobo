@@ -20,9 +20,6 @@ feature -- Status report
 	schema_aware_xslt_processor: BOOLEAN
 			-- Does this processor conform to a Schema-aware XSLT processor?
 
-	xpath_one_compatibility: BOOLEAN
-			-- Are we operating in XPath 1.0 compatibility mode?
-
 feature -- Status setting
 
 	set_basic_xslt_processor is
@@ -33,14 +30,6 @@ feature -- Status setting
 			basic_xslt_processor := True
 		ensure
 			set: basic_xslt_processor
-		end
-
-	set_xpath_one_compatibility (switch: BOOLEAN) is
-			-- Switch between XPath 2.0 mode, and XPath 1.0 compatibility mode
-		do
-			xpath_one_compatibility := switch
-		ensure
-			set: xpath_one_compatibility = switch
 		end
 
 invariant

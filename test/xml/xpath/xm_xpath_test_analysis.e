@@ -58,7 +58,7 @@ feature -- Test
 			create a_system_function_factory
 			Function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
-			create a_context.make (default_pool, True)
+			create a_context.make (default_pool, True, False)
 			an_expression := Expression_factory.make_expression (a_string, a_context)
 			if an_expression = Void then
 				-- Shouldn't happen

@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Element change
 	
-	build_context (a_source_uri: STRING) is
+	build_context (a_source_uri: STRING; warnings, xpath_one_compatibility: BOOLEAN) is
 			-- Create a new static_context by parsing `a_source_uri'
 		require
 			valid_uri: a_source_uri /= Void -- and then ... for now - is a relative file uri - TODO
@@ -76,7 +76,7 @@ feature -- Element change
 				else
 					context_node := tree_pipe.document
 					document := context_node.document_root
-					create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (document.name_pool, True) -- TODO - make warnings a parameter?
+					create {XM_XPATH_STAND_ALONE_CONTEXT} static_context.make (document.name_pool, warnings, xpath_one_compatibility)
 				end
 			else
 				was_build_error := True

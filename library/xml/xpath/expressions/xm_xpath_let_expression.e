@@ -110,14 +110,17 @@ feature -- Optimization
 			-- sequence expression is established. This is used to establish the type of the variable,
 			-- which in turn is required when type-checking the action part.
 
-				check
-					sequence.may_analyze
-				end
-			sequence.analyze (a_context)
-
+			if	sequence.may_analyze then
+				sequence.analyze (a_context)
+			end	
 			if sequence.is_error then
 				set_last_error (sequence.last_error)
 			else
+				if sequence.was_expression_replaced then
+					an_expression := sequence.replacement_expression
+				else
+					an_expression := sequence
+				end
 				create a_role.make (Variable_role, declaration.name, 1)
 				create a_type_checker
 				an_expression := a_type_checker.static_type_check (an_expression, declaration.required_type, False, a_role)
@@ -135,11 +138,10 @@ feature -- Optimization
 					
 					declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
 
-						check
-							action.may_analyze
-						end
-					action.analyze (a_context)
-					if action.was_expression_replaced then set_action (replacement_expression) end
+					if	action.may_analyze then
+						action.analyze (a_context)
+					end
+					if action.was_expression_replaced then set_action (action.replacement_expression) end
 					if action.is_error then
 						set_last_error (action.last_error)
 					end
