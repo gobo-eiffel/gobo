@@ -43,7 +43,6 @@ feature -- Access
 	required_type: XM_XPATH_SEQUENCE_TYPE is
 			-- Static type of the variable
 		local
-			default_type: XM_XPATH_SEQUENCE_TYPE
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_document_test: XM_XPATH_NODE_KIND_TEST
 		do

@@ -32,7 +32,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER_8) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER) is
 			-- Establish invariant
 		require
 			valid_node_type: is_node_type (a_node_type) and then a_node_type /= Any_node

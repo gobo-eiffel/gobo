@@ -99,8 +99,6 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-		local
-			an_xsl_choose: XM_XSLT_CHOOSE
 		do
 			check_within_template
 			type_check_expression ("test", condition)

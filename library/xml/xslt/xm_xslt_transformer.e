@@ -279,8 +279,6 @@ feature -- Creation
 			-- Stripper configured to implement the whitespace stripping rules
 		require
 			builder_not_void: a_builder /= Void
-		local
-			a_stripper_mode: XM_XSLT_MODE
 		do
 			Result := executable.new_stripper (Current, a_builder)
 		ensure
@@ -396,8 +394,6 @@ feature -- Element change
 		require
 			mode_name_not_void: a_mode_name /= Void
 			expanded_name: is_valid_expanded_name (a_mode_name)
-		local
-			a_fingerprint: INTEGER
 		do
 			if not shared_name_pool.is_expanded_name_allocated (a_mode_name) then
 				shared_name_pool.allocate_expanded_name (a_mode_name)
@@ -476,7 +472,6 @@ feature -- Element change
 			parameter_value_not_void: a_parameter_value /= Void
 		local
 			a_fingerprint: INTEGER
-			an_expression: XM_XPATH_EXPRESSION
 			an_expression_factory: XM_XPATH_EXPRESSION_FACTORY
 		do
 			if xpath_parameters = Void then
@@ -1031,7 +1026,6 @@ feature -- Implementation
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
 			a_fingerprint: INTEGER
-			a_message: STRING
 			an_expression_factory: XM_XPATH_EXPRESSION_FACTORY
 			a_value: XM_XPATH_VALUE
 		do

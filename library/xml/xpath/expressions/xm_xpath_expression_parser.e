@@ -174,19 +174,17 @@ feature -- Creation
 			end
 		end
 
-	generate_name_test (a_node_type: INTEGER_8; a_qname: STRING; use_default_namespace: BOOLEAN) is
+	generate_name_test (a_node_type: INTEGER; a_qname: STRING; use_default_namespace: BOOLEAN) is
 			-- Create a name test
 		require
 			valid_qname: a_qname /= Void and then is_qname (a_qname)
 			valid_node_type: is_node_type (a_node_type)
-		local
-			a_name_code: INTEGER
 		do
 			generate_name_code (a_qname, use_default_namespace)
 			create {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (a_node_type, last_generated_name_code, a_qname)
 		end
 
-	make_local_name_test (a_node_type: INTEGER_8; a_local_name: STRING): XM_XPATH_LOCAL_NAME_TEST is
+	make_local_name_test (a_node_type: INTEGER; a_local_name: STRING): XM_XPATH_LOCAL_NAME_TEST is
 			-- Create a name test
 		require
 			valid_name: a_local_name /= Void
@@ -201,7 +199,7 @@ feature -- Creation
 			Name_test_not_void_unless_parse_error: not is_parse_error implies Result /= Void
 		end
 
-	make_namespace_test (a_node_type: INTEGER_8; an_xml_prefix: STRING): XM_XPATH_NAMESPACE_TEST is
+	make_namespace_test (a_node_type: INTEGER; an_xml_prefix: STRING): XM_XPATH_NAMESPACE_TEST is
 			-- Make a NamespaceTest (name:*)
 		require
 			valid_node_type: is_node_type (a_node_type)
@@ -604,7 +602,7 @@ feature {NONE} -- Implementation
 			no_previous_parse_error: not is_parse_error
 		local
 			a_clause_list: DS_ARRAYED_LIST [XM_XPATH_FOR_CLAUSE]
-			an_operator, an_index, a_line_number: INTEGER
+			an_operator, a_line_number: INTEGER
 			finished: BOOLEAN
 			a_message, a_token_value: STRING
 		do
@@ -668,7 +666,6 @@ feature {NONE} -- Implementation
 		local
 			a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION
 			a_single_item: XM_XPATH_SEQUENCE_TYPE
-			an_index: INTEGER
 			a_clause: XM_XPATH_FOR_CLAUSE
 		do
 			debug ("XPath Expression Parser")
@@ -823,7 +820,7 @@ feature {NONE} -- Implementation
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			an_expression, another_expression: XM_XPATH_EXPRESSION
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_treat_expression%N")
@@ -1623,7 +1620,7 @@ feature {NONE} -- Implementation
 		local
 			a_message: STRING
 			an_axis_number: INTEGER
-			a_principal_node_type: INTEGER_8
+			a_principal_node_type: INTEGER
 		do
 			if not is_axis_name_valid (tokenizer.last_token_value) then
 				a_message := STRING_.appended_string ("Unexpected axis name, found ", display_current_token)
@@ -1910,7 +1907,7 @@ feature {NONE} -- Implementation
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_expression /= Void
 		end
 
-	parse_node_test (a_node_type: INTEGER_8) is
+	parse_node_test (a_node_type: INTEGER) is
 			-- Parse a NodeTest.
 			-- NodeTest ::= KindTest | NameTest
 			--	NameTest::=	QName | Wildcard
@@ -2405,7 +2402,7 @@ feature {NONE} -- Implementation
 		local
 			a_splitter: ST_SPLITTER
 			qname_parts: DS_LIST [STRING]
-			an_xml_prefix, a_uri, a_local_name, a_message: STRING
+			a_uri, a_local_name, a_message: STRING
 			a_uri_code: INTEGER
 			an_item_type: XM_XPATH_ITEM_TYPE
 		do

@@ -49,7 +49,6 @@ feature -- Access
 		local
 			tokenizer: ST_SPLITTER
 			tokens: DS_LIST [STRING]
-			zero: INTEGER
 		do
 			create tokenizer.make
 			tokens := tokenizer.split (a_string)

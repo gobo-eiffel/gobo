@@ -23,6 +23,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_IMPORTED_INTEGER_ROUTINES
+
 creation
 
 	make
@@ -58,7 +60,7 @@ feature -- Access
 	node_kind_mask: INTEGER is
 			-- Mask of types of nodes matched
 		do
-			Result := node_test_one.node_kind_mask & node_test_two.node_kind_mask
+			Result := INTEGER_.bit_and (node_test_one.node_kind_mask, node_test_two.node_kind_mask)
 		end
 
 	constraining_node_names: DS_SET [INTEGER] is

@@ -165,8 +165,6 @@ feature -- Evaluation
 			-- Map `an_item' to a sequence
 		local
 			a_node: XM_XPATH_NODE
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_sequence_value: XM_XPATH_SEQUENCE_VALUE
 		do
 			a_node ?= an_item
 			if a_node /= Void then

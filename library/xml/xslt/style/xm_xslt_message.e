@@ -109,7 +109,6 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			an_xsl_choose: XM_XSLT_CHOOSE
 			a_function: XM_XSLT_FUNCTION
 		do
 			a_function ?= parent_node

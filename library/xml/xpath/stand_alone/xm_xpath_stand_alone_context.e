@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 		require
 			valid_name: a_qname /= Void and then is_qname (a_qname)
 		local
-			an_xml_prefix, a_local_name, a_uri, a_message: STRING
+			an_xml_prefix, a_local_name, a_uri: STRING
 			a_splitter: ST_SPLITTER
 			parts: DS_LIST [STRING]
 			a_name_code: INTEGER

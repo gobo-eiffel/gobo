@@ -286,7 +286,6 @@ feature {NONE} -- Implementation
 	set_cardinality_for_union_expression is
 			-- Set cardinality for union expression.
 		local
-			a_cardinality_set: ARRAY [BOOLEAN]
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			an_empty_sequence ?= first_operand
@@ -309,7 +308,6 @@ feature {NONE} -- Implementation
 	set_cardinality_for_intersect_expression is
 			-- Set cardinality for intersect expression.
 		local
-			a_cardinality_set: ARRAY [BOOLEAN]
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			an_empty_sequence ?= first_operand
@@ -332,7 +330,6 @@ feature {NONE} -- Implementation
 	set_cardinality_for_difference_expression is
 			-- Set cardinality for difference expression.
 		local
-			a_cardinality_set: ARRAY [BOOLEAN]
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			an_empty_sequence ?= first_operand

@@ -265,7 +265,7 @@ feature -- Evaluation
 			--  evaluate expressions produced by compiling an attribute value template in XSLT.
 		require
 			-- TODO - check the above and turn it into pre-conditions.if possible
-			context_not_void: a_context /= Void -- TODO - check this out
+			context_may_be_void: True
 			expression_not_in_error: not is_error
 		deferred
 		ensure

@@ -119,7 +119,6 @@ feature -- Element change
 		local
 			an_entry: XM_XSLT_DECIMAL_FORMAT_MANAGER_ENTRY
 			a_list: DS_ARRAYED_LIST [XM_XSLT_FORMAT_NUMBER]
-			an_old_entry: XM_XSLT_DECIMAL_FORMAT_ENTRY
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FORMAT_NUMBER]
 		do
 			if has (a_format.fingerprint) then

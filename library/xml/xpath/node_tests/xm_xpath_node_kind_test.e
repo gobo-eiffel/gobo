@@ -19,6 +19,8 @@ inherit
 			node_kind
 		end
 
+	KL_IMPORTED_INTEGER_ROUTINES
+
 creation
 
 	make, make_document_test, make_element_test, make_attribute_test, make_text_test,
@@ -26,7 +28,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER_8) is
+	make (a_node_type: INTEGER) is
 			-- Establish invariant
 		require
 			valid_node_type: is_node_type (a_node_type) and then a_node_type /= Any_node -- Use XM_XPATH_SHARED_ANY_NODE_TEST for that
@@ -111,13 +113,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	node_kind: INTEGER_8
+	node_kind: INTEGER
 			-- Type of nodes to which this pattern applies
 
 	node_kind_mask: INTEGER is
 			-- Mask of types of nodes matched
 		do
-			Result := 1 |<< node_kind
+			Result := INTEGER_.bit_shift_left (1, node_kind)
 		end
 
 feature -- Status report

@@ -41,8 +41,6 @@ feature -- Element change
 		end
 
 	validate is
-		local
-			a_message: STRING
 		do
 			validated := True
 		end

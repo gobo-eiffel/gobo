@@ -61,7 +61,7 @@ feature -- Access
 	node_test: XM_XSLT_NODE_TEST
 			-- A node test that this pattern matches
 
-	node_kind: INTEGER_8 is
+	node_kind: INTEGER is
 			-- Type of nodes matched
 		do
 			Result := node_test.node_kind

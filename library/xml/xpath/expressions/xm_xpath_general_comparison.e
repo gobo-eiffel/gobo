@@ -283,7 +283,6 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 		local
-			an_expression: XM_XPATH_EXPRESSION
 			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_type, another_type: XM_XPATH_ITEM_TYPE

@@ -34,8 +34,6 @@ feature -- Access
 
 	primitive_type: INTEGER is
 			-- Primitive type corresponding to this item type
-		local
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
 		do
 			-- TODO
 		end

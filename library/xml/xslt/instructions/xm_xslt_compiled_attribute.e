@@ -91,8 +91,6 @@ feature -- Status report
 
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string: STRING
 		do
 			todo ("display", False)
 		end
@@ -133,11 +131,6 @@ feature -- Evaluation
 
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
-		local
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_receiver: XM_XPATH_RECEIVER
-			some_receiver_options, an_annotation: INTEGER
-			a_value: STRING
 		do
 			todo ("process_leaving_tale", False)
 		end

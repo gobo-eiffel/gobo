@@ -58,8 +58,7 @@ feature -- Access
 	value: MA_DECIMAL
 	
 	as_integer: INTEGER is
-		local
-			a_decimal: MA_DECIMAL
+			-- Value converted to an integer
 		do
 			Result := value.to_integer
 		end
@@ -240,7 +239,6 @@ feature -- Basic operations
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 			an_integer, a_decimal: MA_DECIMAL
-			a_decimal_value, another_decimal_value: XM_XPATH_DECIMAL_VALUE
 		do
 			debug ("XPath Integer values")
 				std.error.put_string ("Integer arithmetic%N")

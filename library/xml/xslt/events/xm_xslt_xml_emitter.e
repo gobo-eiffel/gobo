@@ -706,7 +706,7 @@ feature {NONE} -- Implementation
 		require
 			string_not_void: a_character_string /= Void
 		local
-			an_index, a_code, another_code: INTEGER
+			an_index, a_code: INTEGER
 			finished: BOOLEAN
 		do
 			from
@@ -813,8 +813,6 @@ feature {NONE} -- Implementation
 			-- Escaped version of `a_url'.
 		require
 			url_not_void: a_url /= Void
-		local
-			an_index, a_code: INTEGER
 		do
 
 			-- NULs are added to prevent further escaping

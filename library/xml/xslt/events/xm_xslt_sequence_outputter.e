@@ -123,9 +123,6 @@ feature -- Events
 			-- Notify the end of an element.
 		local
 			a_document: XM_XPATH_TREE_DOCUMENT
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			an_element: XM_XPATH_NODE
-			a_tiny_element: XM_XPATH_TREE_ELEMENT
 		do
 			if in_start_tag then
 				start_content
@@ -137,13 +134,6 @@ feature -- Events
 				a_document := builder.tree_document
 				tree := Void
 				builder := Void
-				--an_iterator := a_document.new_axis_iterator (Child_axis); an_iterator.start
-				--an_element := an_iterator.item
-				--a_tiny_element ?= an_element
-				--check
-				--	tiny_element: a_tiny_element /= Void
-				--end
-				--a_document.set_root_node (a_tiny_element)
 				append_item (a_document.document_element)
 
 				-- Now free the document from memory

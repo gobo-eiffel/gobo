@@ -221,6 +221,9 @@ feature -- Evaluation
 		do
 			sequence.lazily_evaluate (a_context)
 			a_value := last_evaluation
+			if slot_number = 0 then
+				set_slot_number (a_context.next_available_slot)
+			end
 			a_context.set_local_variable (slot_number, a_value)
 			action.evaluate_item (a_context)
 		end
@@ -232,6 +235,9 @@ feature -- Evaluation
 		do
 			sequence.lazily_evaluate (a_context)
 			a_value ?= sequence.last_evaluation
+			if slot_number = 0 then
+				set_slot_number (a_context.next_available_slot)
+			end
 			a_context.set_local_variable (slot_number, a_value)
 			Result := action.iterator (a_context)
 		end

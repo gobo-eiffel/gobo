@@ -33,12 +33,7 @@ feature -- Test
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
-			a_builder: XM_XPATH_BUILDER
-			a_parser: XM_EIFFEL_PARSER
-			a_document: XM_XPATH_DOCUMENT
 			an_output: XM_OUTPUT
-			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
@@ -69,12 +64,7 @@ feature -- Test
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
-			a_builder: XM_XPATH_BUILDER
-			a_parser: XM_EIFFEL_PARSER
-			a_document: XM_XPATH_DOCUMENT
 			an_output: XM_OUTPUT
-			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
@@ -101,12 +91,7 @@ feature -- Test
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
-			a_builder: XM_XPATH_BUILDER
-			a_parser: XM_EIFFEL_PARSER
-			a_document: XM_XPATH_DOCUMENT
 			an_output: XM_OUTPUT
-			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor

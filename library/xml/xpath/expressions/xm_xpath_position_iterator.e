@@ -31,8 +31,6 @@ feature {NONE} -- Initialization
 			base_iterator_not_void: a_base_iterator /= Void
 			valid_minimum: a_min > 0
 			valid_maximum: a_max >= minimum
-		local
-			counter: INTEGER
 		do
 			base_iterator := a_base_iterator
 			minimum := a_min

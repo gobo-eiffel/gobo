@@ -94,8 +94,6 @@ feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
-		local
-			an_expression: XM_XPATH_EXPRESSION
 		do
 			mark_unreplaced
 			base_expression.analyze (a_context)

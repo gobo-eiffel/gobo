@@ -62,7 +62,6 @@ feature -- Evaluation
 			-- Evaluate as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_count: INTEGER -- TODO - MA_DECIMAL
 			a_last_position_finder: XM_XPATH_LAST_POSITION_FINDER [XM_XPATH_ITEM]
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			an_integer: INTEGER

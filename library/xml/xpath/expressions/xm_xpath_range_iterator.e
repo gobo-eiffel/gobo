@@ -26,8 +26,6 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			valid_maximum: a_max >= minimum
-		local
-			counter: INTEGER
 		do
 			minimum := a_min
 			maximum := a_max

@@ -71,9 +71,7 @@ feature -- Status report
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			a_numeric_value ?= other
 			if a_numeric_value /= Void then

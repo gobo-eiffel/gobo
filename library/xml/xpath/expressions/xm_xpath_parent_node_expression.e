@@ -43,12 +43,8 @@ feature -- Access
 		local
 			an_item: XM_XPATH_ITEM
 			a_node: XM_XPATH_NODE
-			a_document: XM_XPATH_DOCUMENT
 		do
 			an_item := a_context.context_item
-			--if an_item = Void then
-			--	set_last_error_from_string ("Evaluating 'parent::node()': the context item is not set", 2, Dynamic_error)
-			--else
 			a_node ?= an_item
 			if a_node = Void then
 				Result := Void

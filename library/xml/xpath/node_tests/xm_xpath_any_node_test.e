@@ -21,6 +21,8 @@ inherit
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
 
+	KL_IMPORTED_INTEGER_ROUTINES
+
 creation {XM_XPATH_SHARED_ANY_NODE_TEST}
 
 	make
@@ -52,8 +54,12 @@ feature -- Access
 	node_kind_mask: INTEGER is
 			-- Mask of types of nodes matched
 		do
-			Result := 1 |<< Element_node | 1 |<< Attribute_node | 1 |<< Document_node |
-			1 |<< Text_node | 1 |<< Comment_node | 1 |<< Processing_instruction_node | 1 |<< Namespace_node
+			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Element_node), INTEGER_.bit_shift_left (1, Attribute_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Document_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Text_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Comment_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Processing_instruction_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Namespace_node))
 		end
 
 feature -- Status report

@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 		require
 			parser_not_void: a_parser /= Void
 		local
-			a_dummy: XM_CALLBACKS
 			namespace_resolver: XM_NAMESPACE_RESOLVER
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
 		do

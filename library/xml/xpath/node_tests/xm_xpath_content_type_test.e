@@ -19,13 +19,15 @@ inherit
 			node_kind
 		end
 
+	KL_IMPORTED_INTEGER_ROUTINES
+
 creation
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_node_kind: INTEGER_8; a_type: XM_XPATH_SCHEMA_TYPE) is
+	make (a_node_kind: INTEGER; a_type: XM_XPATH_SCHEMA_TYPE) is
 		require
 			valid_node_type: a_node_kind = Element_node or else a_node_kind = Attribute_node
 			valid_type: a_type /= Void
@@ -41,13 +43,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	node_kind: INTEGER_8
+	node_kind: INTEGER
 			-- Type of nodes to which this pattern applies
 
 	node_kind_mask: INTEGER is
 			-- Mask of types of nodes matched
 		do
-			Result := 1 |<< node_kind
+			Result := INTEGER_.bit_shift_left (1, node_kind)
 		end
 
 feature -- Status report

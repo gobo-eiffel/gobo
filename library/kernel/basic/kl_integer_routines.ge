@@ -202,7 +202,7 @@ feature -- Operation(s)
 	bit_shift_left (m, n: INTEGER): INTEGER is
 			-- `m' shifted `n' bits to left.
 		require
-			thrity_two_bit_shift: 0 <= n and n <= 32
+			thirty_two_bit_shift: 0 <= n and n < 32
 		local
 #ifdef VE
 			i: BIT 32
@@ -224,7 +224,7 @@ feature -- Operation(s)
 	bit_shift_right (m, n: INTEGER): INTEGER is
 			-- `m' shifted `n' bits to right.
 		require
-			thrity_two_bit_shift: 0 <= n and n <= 32
+			thirty_two_bit_shift: 0 <= n and n < 32
 		local
 #ifdef VE
 			i: BIT 32

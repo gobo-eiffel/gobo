@@ -1658,7 +1658,6 @@ feature -- Element change
 			an_instruction_list: DS_LINKED_LIST [XM_XSLT_INSTRUCTION]
 			a_node: XM_XPATH_NODE
 			a_text_instruction: XM_XSLT_COMPILED_TEXT
-			a_module_number: INTEGER
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 			another_instruction: XM_XSLT_INSTRUCTION
 			a_string_value: XM_XPATH_STRING_VALUE

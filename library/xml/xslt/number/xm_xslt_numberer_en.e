@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			Result.put ("dc", 6)
 			Result.put ("dcc", 7)
 			Result.put ("dccc", 8)
-			Result.put ("cm", 1)
+			Result.put ("cm", 9)
 		ensure
 			roman_hundreds_not_void: Result /= Void
 		end
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			Result.put ("lx", 6)
 			Result.put ("lxx", 7)
 			Result.put ("lxxxx", 8)
-			Result.put ("xc", 1)
+			Result.put ("xc", 9)
 		ensure
 			roman_tens_not_void: Result /= Void
 		end
@@ -221,7 +221,6 @@ feature {NONE} -- Implementation
 		require
 			positive_number: a_number /= Void and then a_number.is_positive and then a_number.is_integer
 		local
-			thousands, hundreds, tens, units: STRING
 			four_thousand: MA_DECIMAL
 		do
 

@@ -75,7 +75,7 @@ feature -- Evaluation
 		do
 			arguments.item (1).evaluate_item (a_context)
 			an_item := arguments.item (1).last_evaluated_item
-			if an_item= Void then
+			if an_item = Void then
 				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 			elseif not an_item.is_error then
 				a_node ?= an_item

@@ -54,7 +54,7 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name, a_select_attribute, a_mode_attribute, a_message: STRING
+			an_expanded_name, a_select_attribute, a_mode_attribute: STRING
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor

@@ -79,7 +79,7 @@ feature -- Access
 			base_uri_not_void: Result /= Void
 		end
 
-	node_type: INTEGER_8
+	node_type: INTEGER
 			-- `node_kind' expressed as an integer
 
 	node_kind: STRING is
@@ -368,7 +368,6 @@ feature -- Access
 			-- Typed value
 		local
 			a_type: INTEGER
-			a_string_value: XM_XPATH_STRING_VALUE
 			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
 		do
 			a_type := type_annotation

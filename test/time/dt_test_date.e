@@ -100,24 +100,30 @@ feature -- Test
 			assert_equal ("add_date_duration", d2, d1)
 		end
 
-	test_date5 is
-			-- Test features of DT_DATE.
-		local
-			d1: DT_DATE
-		do
-			create d1.make (1970, 1, 1)
-			assert_integers_equal ("week_day1", Thursday, d1.week_day)
-			assert_integers_equal ("year_day1", 1, d1.year_day)
-			assert_integers_equal ("day_count1", 0, d1.day_count)
-			create d1.make (2000, 3, 31)
-			assert_integers_equal ("week_day2", Friday, d1.week_day)
-			assert_integers_equal ("year_day2", 91, d1.year_day)
-			assert_integers_equal ("day_count2", 11047, d1.day_count)
-			create d1.make (1968, 2, 24)
-			assert_integers_equal ("week_day3", Saturday, d1.week_day)
-			assert_integers_equal ("year_day3", 55, d1.year_day)
-			assert_integers_equal ("day_count3", -677, d1.day_count)
-		end
+--	test_date5 is -- removed as it uses obsolete feature
+--			-- Test features of DT_DATE.
+--		local
+--			d1: DT_DATE
+--		do
+--			create d1.make (1932, 9, 9)
+--			assert_integers_equal ("week_day0", Friday, d1.week_day)
+--			assert_integers_equal ("ISO week_day0", Iso8601_friday, d1.iso8601_week_day)
+--			create d1.make (1970, 1, 1)
+--			assert_integers_equal ("week_day1", Thursday, d1.week_day)
+--			assert_integers_equal ("ISO week_day1", Iso8601_thursday, d1.iso8601_week_day)
+--			assert_integers_equal ("year_day1", 1, d1.year_day)
+--			assert_integers_equal ("day_count1", 0, d1.day_count)
+--			create d1.make (2000, 3, 31)
+--			assert_integers_equal ("week_day2", Friday, d1.week_day)
+--			assert_integers_equal ("ISO week_day2", Iso8601_friday, d1.iso8601_week_day)
+--			assert_integers_equal ("year_day2", 91, d1.year_day)
+--			assert_integers_equal ("day_count2", 11047, d1.day_count)
+--			create d1.make (1968, 2, 24)
+--			assert_integers_equal ("week_day3", Saturday, d1.week_day)
+--			assert_integers_equal ("ISO week_day3", Iso8601_saturday, d1.iso8601_week_day)
+--			assert_integers_equal ("year_day3", 55, d1.year_day)
+--			assert_integers_equal ("day_count3", -677, d1.day_count)
+--		end
 
 	test_date6 is
 			-- Test features of DT_DATE.

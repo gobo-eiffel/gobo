@@ -104,7 +104,6 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions.
 		local
-			a_sequence_instruction: XM_XSLT_SEQUENCE_INSTRUCTION
 			an_expression: XM_XSLT_EXPRESSION_INSTRUCTION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_INSTRUCTION]	
 		do

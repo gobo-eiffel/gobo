@@ -19,13 +19,15 @@ inherit
 			fingerprint, node_kind, constraining_node_names
 		end
 
+	KL_IMPORTED_INTEGER_ROUTINES
+
 creation
 
 	make, make_same_type
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER_8; a_name_code: INTEGER; an_original_text: STRING) is
+	make (a_node_type: INTEGER; a_name_code: INTEGER; an_original_text: STRING) is
 		require
 			valid_node_type: is_node_type (a_node_type)
 			positive_name_code: a_name_code >= 0
@@ -62,13 +64,13 @@ feature -- Access
 			-- Determine the name fingerprint of nodes to which this pattern applies;
 			-- Used for optimisation.
 
-	node_kind: INTEGER_8
+	node_kind: INTEGER
 			-- Type of nodes matched
 
 	node_kind_mask: INTEGER is
 			-- Mask of types of nodes matched
 		do
-			Result := 1 |<< node_kind
+			Result := INTEGER_.bit_shift_left (1, node_kind)
 		end
 
 	constraining_node_names: DS_SET [INTEGER] is

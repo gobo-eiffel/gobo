@@ -64,7 +64,6 @@ feature -- Element change
 	fixup_references is
 			-- Fix up references from XPath expressions.
 		local
-			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_BINDING_REFERENCE]
 			a_dependencies_set: ARRAY [BOOLEAN]
 			a_cardinalities_set: ARRAY [BOOLEAN]

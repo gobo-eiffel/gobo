@@ -883,8 +883,6 @@ feature {NONE} -- Implementation
 			local_name_not_void: a_local_name /= Void
 			value_not_void: a_value /= Void
 			no_previous_error: not is_error
-		local
-			a_boolean: BOOLEAN
 		do
 			if STRING_.same_string (a_local_name, Gexslt_character_representation_name) then
 				if is_valid_character_representation (a_value) then

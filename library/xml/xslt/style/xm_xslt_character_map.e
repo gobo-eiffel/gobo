@@ -263,7 +263,6 @@ feature {XM_XSLT_CHARACTER_MAP} -- Implementation
 			other_character_map_not_void: origin /= Void
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_CHARACTER_MAP]
-			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if Current = origin then

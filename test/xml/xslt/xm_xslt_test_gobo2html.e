@@ -34,13 +34,10 @@ feature
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			an_output: XM_OUTPUT
 			a_test_string: STRING
-			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_test_file: KL_TEXT_INPUT_FILE
-			n: INTEGER
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
@@ -83,13 +80,10 @@ feature
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			an_output: XM_OUTPUT
 			a_test_string: STRING
-			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_test_file: KL_BINARY_INPUT_FILE
-			n: INTEGER
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
@@ -132,13 +126,10 @@ feature
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			an_output: XM_OUTPUT
 			a_test_string: STRING
-			a_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 			a_test_file: KL_BINARY_INPUT_FILE
-			n: INTEGER
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults

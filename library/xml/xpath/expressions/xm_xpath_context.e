@@ -53,6 +53,14 @@ feature -- Access
 	reserved_slot_count: INTEGER
 			-- Slots reserved by host language
 
+	next_available_slot: INTEGER is
+			-- Next available local variable slot
+		do
+			Result := local_variable_frame.count - reserved_slot_count + 1
+		ensure
+			strictly_positive_result: Result > 0
+		end
+
 	available_functions: XM_XPATH_FUNCTION_LIBRARY is
 			-- Available functions
 		deferred
@@ -232,6 +240,8 @@ feature 	-- Element change
 
 	set_local_variable (a_slot_number: INTEGER; a_value: XM_XPATH_VALUE) is
 			-- Set the value of a local variable.
+		require
+			valid_local_variable: a_slot_number > 0
 		local
 			a_stack_entry: XM_XSLT_STACK_FRAME_ENTRY
 		do

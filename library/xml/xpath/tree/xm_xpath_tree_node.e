@@ -457,8 +457,6 @@ feature {NONE} -- Implementation
 			-- New following axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
-		local
-			a_parent_node: XM_XPATH_TREE_NODE
 		do
 			if node_type = Document_node then
 				Result := empty_abstract_node_iterator
@@ -506,8 +504,6 @@ feature {NONE} -- Implementation
 			-- New preceding axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
-		local
-			a_parent_node: XM_XPATH_TREE_NODE
 		do
 			if node_type = Document_node then
 				Result := empty_abstract_node_iterator
@@ -536,8 +532,6 @@ feature {NONE} -- Implementation
 			-- New preceding-or-ancestor axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
-		local
-			a_parent_node: XM_XPATH_TREE_NODE
 		do
 			if node_type = Document_node then
 				Result := empty_abstract_node_iterator

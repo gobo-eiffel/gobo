@@ -192,7 +192,6 @@ feature -- Element change
 		local
 			a_call: XM_XSLT_COMPILED_CALL
 			a_target: XM_XSLT_COMPILED_TEMPLATE
-			a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 		do
 			a_target := template.compiled_template
 			create a_call.make (an_executable, a_target, with_param_instructions (an_executable, False), with_param_instructions (an_executable, True), use_tail_recursion)

@@ -130,8 +130,6 @@ feature -- Optimization
 		local
 			fixed_values: BOOLEAN
 			a_value: XM_XPATH_VALUE
-			an_argument: XM_XPATH_EXPRESSION
-			result_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			mark_unreplaced

@@ -32,7 +32,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER_8; a_uri, an_original_text: STRING) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER; a_uri, an_original_text: STRING) is
 		require
 			static_context_not_void: a_static_context /= Void
 			uri_not_void: a_uri /= Void

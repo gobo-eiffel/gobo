@@ -58,7 +58,6 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		local
-			a_value, another_value: XM_XPATH_VALUE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			a_type_checker: XM_XPATH_TYPE_CHECKER

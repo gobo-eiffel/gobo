@@ -87,7 +87,6 @@ feature -- Access
 	uri_code_for_prefix_code (a_prefix_code: INTEGER): INTEGER is
 			-- URI code for `a_prefix_code'
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_namespace_node, a_namespace_code: INTEGER
 			an_element: XM_XPATH_TINY_ELEMENT
 		do
@@ -219,7 +218,6 @@ feature -- Element change
 			a_prefix_code: INTEGER -- _16
 			a_prefix_code_list: DS_ARRAYED_LIST [INTEGER] -- _16
 			a_parent: XM_XPATH_TINY_ELEMENT
-			a_cursor, a_parent_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
 			a_namespace_node := document.beta_value (node_number)
 			if a_namespace_node > 0 then

@@ -48,7 +48,6 @@ feature {NONE} -- Initialization
 			end
 			create a_sorter.make (a_comparer)
 			sequence.sort (a_sorter)
---			sequence_iterator := sequence.iterator (Void)
 		ensure
 			comparer_set: comparer = a_comparer
 		end
@@ -120,12 +119,6 @@ feature {NONE} -- Implementation
 
 	comparer: XM_XPATH_NODE_ORDER_COMPARER
 			-- Comparer
-
---	sequence: XM_XPATH_NODE_SEQUENCE_EXTENT
-		-- Base sequence
-
---	sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			-- Sequence extent iterator
 
 	current_node: XM_XPATH_NODE
 			-- used by `forth' and `item'

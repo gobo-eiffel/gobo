@@ -105,7 +105,7 @@ feature -- Matching
 
 feature {NONE} -- Implementation
 
-	node_type: INTEGER_8
+	node_type: INTEGER
 			-- Type of nodes in this pattern
 
 	static_context: XM_XPATH_STATIC_CONTEXT

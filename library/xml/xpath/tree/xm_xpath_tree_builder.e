@@ -85,8 +85,6 @@ feature -- Events
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
-		local
-			an_element: XM_XPATH_TREE_ELEMENT
 		do
 			if not has_error then
 				pending_element_name_code := a_name_code
@@ -110,7 +108,6 @@ feature -- Events
 			-- Notify an attribute.
 		local
 			a_new_type_code: like a_type_code
-			new_size: INTEGER
 		do
 			if not has_error then
 				a_new_type_code := a_type_code
@@ -138,8 +135,6 @@ feature -- Events
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		local
 			an_element: XM_XPATH_TREE_ELEMENT
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_counter: INTEGER
 		do
 			if not has_error then
 				an_element := node_factory.new_element_node (tree_document, current_composite_node, pending_attributes, pending_namespaces,

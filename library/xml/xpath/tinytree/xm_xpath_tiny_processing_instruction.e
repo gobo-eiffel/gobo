@@ -49,7 +49,6 @@ feature -- Access
 			-- String-value
 		local
 			start, length: INTEGER
-			buffer: STRING
 		do
 			length := document.beta_value (node_number)
 			start := document.alpha_value (node_number)

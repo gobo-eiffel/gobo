@@ -523,7 +523,6 @@ feature -- Status report
 			-- Produce diagnostic print of main tree arrays
 		local
 			an_index, a_limit: INTEGER
-			a_prefix, a_uri: STRING
 		do
 			std.error.put_string ("    node    type   depth    next   alpha    beta    name%N")
 			from

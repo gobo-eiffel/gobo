@@ -50,7 +50,9 @@ feature -- Access
 	node_kind_mask: INTEGER is
 			-- Mask of types of nodes matched
 		do
-			Result := 1 |<< Element_node | 1 |<< Comment_node | 1 |<< Text_node | 1 |<< Processing_instruction_node
+			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Element_node), INTEGER_.bit_shift_left (1, Comment_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Text_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Processing_instruction_node))
 		end
 
 feature -- Status report

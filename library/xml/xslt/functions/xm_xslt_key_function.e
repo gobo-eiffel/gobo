@@ -97,6 +97,9 @@ feature -- Evaluation
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
+			-- N.B. This function is not 100% pure, as it may cause
+			--  an index to be built for a key, but this is only a 
+			--  performance-affecting side effect.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
@@ -111,6 +114,9 @@ feature -- Evaluation
 			a_local_order_comparer: XM_XPATH_LOCAL_ORDER_COMPARER
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			debug ("XSLT key function")
+					std.error.put_string("Key iterator%N")
+			end
 			an_evaluation_context ?= a_context
 			check
 				evaluation_context_not_void: an_evaluation_context /= Void
@@ -145,13 +151,25 @@ feature -- Evaluation
 						an_expression.evaluate_item (an_evaluation_context)
 						an_atomic_value ?= an_expression.last_evaluated_item
 						if an_atomic_value /= Void then
-							Result := a_transformer.key_manager.sequence_by_key (a_fingerprint, a_context_document, an_atomic_value, a_transformer)
+							a_transformer.key_manager.generate_keyed_sequence (a_fingerprint, a_context_document, an_atomic_value, a_transformer)
+							if a_transformer.is_error then
+								create {XM_XPATH_INVALID_ITERATOR} Result.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)
+							else
+								Result := a_transformer.key_manager.last_key_sequence
+							end
 						else
 							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 						end
 					else
+						debug ("XSLT key function")
+							std.error.put_string ("key result may be plural%N")
+						end
 						create a_key_context_information.make (a_context_document, a_transformer, a_fingerprint)
 						a_key_iterator := an_expression.iterator (a_context)
+						debug ("XSLT key function")
+							an_expression.display (1)
+							std.error.put_string (a_key_iterator.out);std.error.put_new_line
+						end
 						create all_values_iterator.make (a_key_iterator, Current, Void, a_key_context_information)
 						create a_local_order_comparer
 						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (all_values_iterator, a_local_order_comparer)
@@ -169,7 +187,10 @@ feature -- Evaluation
 		end
 
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- Map `an_item' to a sequence
+			-- Map `an_item' to a sequence;
+			-- N.B. This function is not 100% pure, as it may cause
+			--  an index to be built for a key, but this is only a 
+			--  performance-affecting side effect.
 		local
 			a_key_context_information: XM_XSLT_KEY_CONTEXT_INFORMATION
 			a_key_manager: XM_XSLT_KEY_MANAGER
@@ -184,6 +205,9 @@ feature -- Evaluation
 			a_key_manager := a_key_context_information.transformer.key_manager
 			a_key_value ?= an_item
 			if a_key_value = Void then
+				debug ("XSLT key function")
+					std.error.put_string ("Key value is not an atomic value%N")
+				end
 				a_node ?= an_item
 				check
 					item_is_node: a_node /= Void
@@ -191,9 +215,18 @@ feature -- Evaluation
 				end
 				create {XM_XPATH_STRING_VALUE} a_key_value.make (a_node.string_value)
 			end
-			Result := a_key_manager.sequence_by_key (a_key_context_information.key_fingerprint,
-																			a_key_context_information.document, a_key_value,
-																			a_key_context_information.transformer)
+			a_key_manager.generate_keyed_sequence  (a_key_context_information.key_fingerprint,
+																 a_key_context_information.document, a_key_value,
+																 a_key_context_information.transformer)
+			if a_key_context_information.transformer.is_error then
+				create {XM_XPATH_EMPTY_ITERATOR[XM_XPATH_NODE]} Result.make -- error has already been reported 
+			else
+				Result := a_key_manager.last_key_sequence
+				debug ("XSLT key function")
+					std.error.put_string (Result.out);
+					std.error.put_new_line
+				end
+			end
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Restricted

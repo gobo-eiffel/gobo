@@ -133,36 +133,15 @@ feature -- Week day
 	Thursday: INTEGER is 5
 	Friday: INTEGER is 6
 	Saturday: INTEGER is 7
-			-- Week days
+			-- All the above are obsolete - use DT_WEEK_DAY instead
 
 	Days_in_week: INTEGER is 7
-			-- Number of days in a week
+			-- Obsolete - use DT_WEEK_DAY instead
 --		ensure
 --			definition: Result = (Saturday - Sunday + 1)
 
-	week_day_of_date (y, m, d: INTEGER): INTEGER is
-			-- Day of date (y,m,d) in current week
-		require
-			m_large_enough: m >= January
-			m_small_enough: m <= December
-			d_large_enough: d >= 1
-			d_small_enough: d <= days_in_month (m, y)
-		local
-			dd: INTEGER
-		do
-				-- 1 January 1970 is a Thursday.
-			dd := epoch_days (y, m, d) + 4 -- (Thursday - Sunday = 4)
-			if dd < 0 then
-				Result := Saturday - (-(dd + 1) \\ Days_in_week)
-			else
-				Result := Sunday + dd \\ Days_in_week
-			end
-		ensure
-			valid_day: Result >= Sunday and Result <= Saturday
-		end
-
 	next_day (d: INTEGER): INTEGER is
-			-- Week day after `d'
+			obsolete "{DT_WEEK_DAY}.next_day instead"
 		require
 			d_large_enough: d >= Sunday
 			d_small_enough: d <= Saturday
@@ -183,7 +162,7 @@ feature -- Week day
 		end
 
 	previous_day (d: INTEGER): INTEGER is
-			-- Week day before `d'
+		obsolete "{DT_WEEK_DAY}.previous_day instead"
 		require
 			d_large_enough: d >= Sunday
 			d_small_enough: d <= Saturday

@@ -52,7 +52,6 @@ feature -- Evaluation
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_saved_context: XM_XSLT_SAVED_TRANSFORMER_CONTEXT
-			a_bindery: XM_XSLT_BINDERY
 		do
 			a_saved_context := a_transformer.saved_context
 			a_transformer.restore_context (execution_context)

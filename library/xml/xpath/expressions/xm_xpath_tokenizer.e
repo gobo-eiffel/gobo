@@ -174,7 +174,7 @@ feature --Element change
 		local
 			operator_type, candidate, saved_position: INTEGER
 			qname, saved_token_value, composite: STRING
-			finished, retried: BOOLEAN
+			finished: BOOLEAN
 		do
 			is_lexical_error := False
 			internal_last_lexical_error := Void

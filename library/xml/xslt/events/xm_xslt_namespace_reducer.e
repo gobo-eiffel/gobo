@@ -55,8 +55,6 @@ feature -- Events
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
-		local
-			a_namespace_code: INTEGER
 		do
 			Precursor (a_name_code, a_type_code, properties)
 

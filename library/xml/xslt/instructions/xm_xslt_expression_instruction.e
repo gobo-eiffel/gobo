@@ -165,8 +165,6 @@ feature -- Optimization
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
-		local
-			an_expression: XM_XPATH_EXPRESSION
 		do
 			an_offer.accept (Current)
 			if an_offer.accepted_expression = Void then

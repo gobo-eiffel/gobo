@@ -65,7 +65,7 @@ feature -- Status report
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
-			a_string, another_string: STRING
+			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "element ")
 			std.error.put_string (a_string)

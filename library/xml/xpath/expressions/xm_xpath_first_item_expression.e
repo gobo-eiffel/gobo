@@ -96,8 +96,6 @@ feature -- Optimization
 
 	simplify is
 			-- Perform context-independent static optimizations.
-		local
-			an_is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
 		do
 			base_expression.simplify
 			if base_expression.is_error then

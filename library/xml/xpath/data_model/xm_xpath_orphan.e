@@ -25,7 +25,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_node_type: INTEGER_8; a_string_value: STRING) is
+	make (a_node_type: INTEGER; a_string_value: STRING) is
 			-- Establsh invariant.
 		require
 			valid_node_kind: a_node_type = Element_node or else
@@ -131,8 +131,6 @@ feature -- Access
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		local
-			a_type: INTEGER
-			a_string_value: XM_XPATH_STRING_VALUE
 			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
 		do
 			if type_annotation = type_factory.untyped_type.fingerprint or else type_annotation = type_factory.untyped_atomic_type.fingerprint then

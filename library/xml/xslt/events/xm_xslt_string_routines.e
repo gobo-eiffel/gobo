@@ -23,7 +23,6 @@ feature -- Status report
 	is_all_whitespace (chars: STRING): BOOLEAN is
 			-- Does `chars' consist only of XML white-space characters?
 		local
-			a_character: CHARACTER
 			counter: INTEGER
 		do
 			from
@@ -45,8 +44,6 @@ feature -- Status report
 			-- Does `a_character_code' represent an alphanumeric character?
 		require
 			positive_character_code: a_character_code > 0
-		local
-			a_character: CHARACTER
 		do
 			todo ("is_alphanumeric (does not use Unicode categories)", True)
 

@@ -98,7 +98,6 @@ feature -- Status setting
 			not_yet_computed: not are_dependencies_computed
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			an_index: INTEGER
 		do
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
 			dependencies := clone (intrinsic_dependencies)

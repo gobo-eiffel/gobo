@@ -181,12 +181,11 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations.
 		local
-			an_expression: XM_XPATH_EXPRESSION
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION
 			a_root: XM_XPATH_ROOT_EXPRESSION
 			a_parent_step: XM_XPATH_PARENT_NODE_EXPRESSION
-			a_step_path, a_start_path, a_path: XM_XPATH_PATH_EXPRESSION
+			a_step_path, a_start_path: XM_XPATH_PATH_EXPRESSION
 		do
 			start.simplify
 			if not start.is_error then

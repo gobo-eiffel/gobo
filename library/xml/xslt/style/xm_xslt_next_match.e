@@ -67,8 +67,6 @@ feature -- Element change
 
 	validate is
 			-- Check that the stylesheet element is valid.
-		local
-			an_xsl_choose: XM_XSLT_CHOOSE
 		do
 			check_within_template
 			check_only_with_parameter_content

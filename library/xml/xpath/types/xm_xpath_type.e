@@ -26,6 +26,8 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
+	KL_IMPORTED_INTEGER_ROUTINES
+
 	XM_XPATH_DEBUGGING_ROUTINES
 
 feature -- Access
@@ -34,15 +36,15 @@ feature -- Access
 	-- actually used by XPath;
 	-- All should be INTEGER_16 when this is available
 
-	Element_node: INTEGER_8 is 1
-	Attribute_node: INTEGER_8 is 2
-	Text_node: INTEGER_8 is 3
-	Processing_instruction_node: INTEGER_8 is 7
-	Comment_node: INTEGER_8 is 8
-	Document_node: INTEGER_8 is 9
-	Namespace_node: INTEGER_8 is 13
+	Element_node: INTEGER is 1
+	Attribute_node: INTEGER is 2
+	Text_node: INTEGER is 3
+	Processing_instruction_node: INTEGER is 7
+	Comment_node: INTEGER is 8
+	Document_node: INTEGER is 9
+	Namespace_node: INTEGER is 13
 
-	Any_node: INTEGER_8 is 0
+	Any_node: INTEGER is 0
 
 	Any_item_fingerprint: INTEGER is 88
 
@@ -341,13 +343,13 @@ feature {NONE} -- Implementation
 				-- Firstly, find the relationship between the node kinds allowed.
 
 				a_mask := a_node_test.node_kind_mask; another_mask := another_node_test.node_kind_mask
-				if a_mask & another_mask = 0 then
+				if INTEGER_.bit_and (a_mask, another_mask) = 0 then
 					Result := Disjoint_types
 				elseif a_mask = another_mask then
 					a_node_kind_relationship := Same_item_type
-				elseif a_mask & another_mask = a_mask then
+				elseif INTEGER_.bit_and (a_mask, another_mask) = a_mask then
 					a_node_kind_relationship := Subsumed_type
-				elseif a_mask & another_mask = another_mask then
+				elseif INTEGER_.bit_and (a_mask, another_mask) = another_mask then
 					a_node_kind_relationship := Subsuming_type
 				else
 					a_node_kind_relationship := Overlapping_types

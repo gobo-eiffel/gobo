@@ -33,7 +33,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER_8; a_name_code: INTEGER; an_original_text: STRING) is
+	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER; a_name_code: INTEGER; an_original_text: STRING) is
 		require
 			static_context_not_void: a_static_context /= Void
 			valid_node_type: is_node_type (a_node_type)

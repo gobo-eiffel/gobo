@@ -307,7 +307,6 @@ feature -- Evaluation
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterate over the values of a sequence
 		local
-			an_item: XM_XPATH_ITEM
 			a_value: XM_XPATH_VALUE
 			a_number: XM_XPATH_NUMERIC_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
@@ -574,10 +573,9 @@ feature {NONE} -- Implementation
 	optimize_positional_filter (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Determine whether the filter might depend on position.
 		local
-			an_expression, another_expression, a_third_expression: XM_XPATH_EXPRESSION
+			another_expression, a_third_expression: XM_XPATH_EXPRESSION
 			a_filter, another_filter: XM_XPATH_FILTER_EXPRESSION
 			a_boolean_filter: XM_XPATH_BOOLEAN_EXPRESSION
-			finished: BOOLEAN
 		do
 			filter_is_positional := is_positional_filter (filter)
 			
@@ -618,7 +616,6 @@ feature {NONE} -- Implementation
 		local
 			an_offer: XM_XPATH_PROMOTION_OFFER
 			a_let_expression: XM_XPATH_LET_EXPRESSION
-			a_path: XM_XPATH_PATH_EXPRESSION
 		do
 			create an_offer.make (Focus_independent, Void, Current, False, base_expression.context_document_nodeset)
 			filter.promote (an_offer)

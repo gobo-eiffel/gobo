@@ -551,7 +551,7 @@ feature {NONE} -- Implementation
 			priority_not_void: a_current_priority /= Void
 			positive_sequence_number: a_current_sequence_number >= 0
 		local
-			a_rule, a_specific_rule, a_general_rule: XM_XSLT_RULE
+			a_rule, a_specific_rule: XM_XSLT_RULE
 			a_specific_precedence: INTEGER
 			a_specific_priority: MA_DECIMAL
 			finished: BOOLEAN

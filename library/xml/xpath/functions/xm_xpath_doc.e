@@ -66,7 +66,6 @@ feature -- Evaluation
 			-- Evaluate as a single item
 		local
 			a_uri_item: XM_XPATH_ITEM
-			a_uri_reference: STRING
 		do
 			arguments.item (1).evaluate_item (a_context)
 			a_uri_item := arguments.item (1).last_evaluated_item

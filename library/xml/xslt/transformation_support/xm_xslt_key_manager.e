@@ -45,7 +45,7 @@ creation
 
 	make
 
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	make is
 			-- Establish invariant.
@@ -58,9 +58,12 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	sequence_by_key (a_key_fingerprint: INTEGER; a_document: XM_XPATH_DOCUMENT; a_key_value: XM_XPATH_ATOMIC_VALUE;
-						  a_transformer: XM_XSLT_TRANSFORMER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- Sequence of nodes for a particular key value
+	last_key_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+		-- Result from `generate_keyed_sequence'
+	
+	generate_keyed_sequence (a_key_fingerprint: INTEGER; a_document: XM_XPATH_DOCUMENT; a_key_value: XM_XPATH_ATOMIC_VALUE;
+						  a_transformer: XM_XSLT_TRANSFORMER) is
+			-- Generate a sequence of nodes for a particular key value
 		require
 			strictly_positive_key_fingerprint: a_key_fingerprint > 0
 			document_not_void: a_document /= Void
@@ -75,6 +78,10 @@ feature -- Access
 			--a_collator: ST_COLLATOR
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			debug ("XSLT key manager")
+				std.error.put_string ("Generate keyed sequence%N")
+			end
+			last_key_sequence := Void 
 			an_item_type := a_key_value.item_type.primitive_type
 			if an_item_type = Integer_type_code or else
 				an_item_type = Decimal_type_code or else
@@ -91,6 +98,9 @@ feature -- Access
 					a_transformer.report_fatal_error (an_error, Void)
 				end
 			else
+				debug ("XSLT key manager")
+					std.error.put_string ("Need to build an index%N")
+				end
 				create an_index.make_under_construction
 				put_index (a_document, a_key_fingerprint, an_item_type, an_index)
 				build_index (a_key_fingerprint, an_item_type, a_document, a_transformer)
@@ -104,13 +114,14 @@ feature -- Access
 				-- a_collator := a_key_definition.collator TODO - collation keys
 				if an_index.has (a_key_value) then
 					a_list := an_index.map.item (a_key_value)
-					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (a_list)
+					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} last_key_sequence.make (a_list)
 				else
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_key_sequence.make
 				end
 			end
 		ensure
-			error_or_iterator_not_void: not a_transformer.is_error implies Result /= Void -- of course, the iteration may well yield zero nodes
+			possible_error: a_transformer.is_error implies last_key_sequence = Void 
+			iterator_not_void: not a_transformer.is_error implies last_key_sequence /= Void -- of course, the iteration may well yield zero nodes
 		end
 
 	collation_uri (a_key_fingerprint: INTEGER): STRING is
@@ -162,7 +173,6 @@ feature -- Element change
 			same_collation: is_same_collation (a_key_definition, a_key_fingerprint)
 		local
 			a_key_list: DS_ARRAYED_LIST [XM_XSLT_KEY_DEFINITION]
-			a_collation_uri: STRING
 		do
 			if key_map.has (a_key_fingerprint) then
 				a_key_list := key_map.item (a_key_fingerprint)
@@ -210,6 +220,9 @@ feature {NONE} -- Implementation
 			a_map: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_NODE], XM_XPATH_ATOMIC_VALUE]
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			debug ("XSLT key manager")
+				std.error.put_string ("Ready to build an index%N")
+			end
 			last_built_index := Void
 			some_key_definitions := key_definitions (a_key_fingerprint)
 			if some_key_definitions /= Void then
@@ -260,6 +273,10 @@ feature {NONE} -- Implementation
 			a_saved_iterator := a_transformer.current_iterator
 			a_saved_context := a_transformer.saved_context
 			use := a_key.use
+			debug ("XSLT key manager")
+				std.error.put_string ("Building key for use=")
+				std.error.put_string (use.out);std.error.put_new_line
+			end
 			a_primitive_use_type := use.item_type.atomized_item_type.primitive_type
 			if are_types_comparable (a_primitive_use_type, a_sought_item_type) then
 				a_context := a_transformer.new_xpath_context
@@ -280,6 +297,10 @@ feature {NONE} -- Implementation
 					loop
 						a_node := all_nodes_iterator.item
 						if a_node.node_type = Element_node then
+							debug ("XSLT key manager")
+								std.error.put_string ("Examining ")
+								std.error.put_string (a_node.node_name);std.error.put_new_line
+							end
 							from
 								an_attribute_iterator := a_node.new_axis_iterator (Attribute_axis); an_attribute_iterator.start
 							until
@@ -296,11 +317,15 @@ feature {NONE} -- Implementation
 								-- Index the element as well as it's attributes
 
 								if match.matches (a_node, a_transformer) then
+									
 									process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_context, is_first)
 								end
 							end
 						else
 							if match.matches (a_node, a_transformer) then
+								debug ("XSLT key manager")
+									std.error.put_string ("Adding node%N")
+								end
 								process_key_node (a_node, use, a_sought_item_type, a_collator, a_map, a_context, is_first)
 							end
 						end
@@ -422,8 +447,8 @@ feature {NONE} -- Implementation
 					--  then this node must be after all existing nodes in document
 					--  order, or the same node as the last existing node
 
-					if a_node_list.last /= a_node then
-						a_node_list.put_last (a_node)
+					if a_node_list.is_empty or else a_node_list.last /= a_node then
+						a_node_list.force_last (a_node)
 					end
 				else
 
@@ -448,7 +473,7 @@ feature {NONE} -- Implementation
 
 								-- Add the node at this position.
 
-								a_cursor.put_left (a_node)
+								a_cursor.force_left (a_node)
 							end
 							added := True
 							a_cursor.go_after
@@ -459,12 +484,12 @@ feature {NONE} -- Implementation
 
 					-- Otherwise add the new node at the end.
 
-					if not added then a_node_list.put_last (a_node) end
+					if not added then a_node_list.force_last (a_node) end
 				end
 			else
 				create a_node_list.make_default
 				a_map.put (a_node_list, a_value)
-				a_node_list.put_last (a_node)
+				a_node_list.force_last (a_node)
 			end
 		end
 

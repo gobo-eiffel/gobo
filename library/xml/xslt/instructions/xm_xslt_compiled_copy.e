@@ -70,8 +70,6 @@ feature -- Status report
 
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
-		local
-			a_string, another_string: STRING
 		do
 			-- not used
 		end

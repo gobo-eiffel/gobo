@@ -19,6 +19,8 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
+	KL_SHARED_PLATFORM
+
 feature -- Test
 
 	test_power is
@@ -43,7 +45,15 @@ feature -- Test
 			assert_integers_equal ("one or four", 5, INTEGER_.bit_or (1, 4))
 			assert_integers_equal ("two and  four", 2, INTEGER_.bit_and (2, 6))
 			assert_integers_equal ("one shift left 4", 16, INTEGER_.bit_shift_left (1, 4))
-			assert_integers_equal ("16 shift right 4", 1, INTEGER_.bit_shift_right (16, 4)) 
+			assert_integers_equal ("shift left on negative argument", -18760, INTEGER_.bit_shift_left (-2345, 3))
+			assert_integers_equal ("shift left on minimum integer", 0, INTEGER_.bit_shift_left (Platform.Minimum_integer, 31))
+			assert_integers_equal ("shift left on maximum integer", -2, INTEGER_.bit_shift_left (Platform.Maximum_integer, 1))
+			assert_integers_equal ("zero shift left on maximum integer", Platform.Maximum_integer, INTEGER_.bit_shift_left (Platform.Maximum_integer, 0))
+			assert_integers_equal ("16 shift right 4", 1, INTEGER_.bit_shift_right (16, 4))
+			assert_integers_equal ("shift right on negative argument", -300, INTEGER_.bit_shift_right (-2400, 3))
+			assert_integers_equal ("shift right on minimum integer", Platform.Minimum_integer // 2, INTEGER_.bit_shift_right (Platform.Minimum_integer, 1))
+			assert_integers_equal ("zero shift right on minimum integer", Platform.Minimum_integer, INTEGER_.bit_shift_right (Platform.Minimum_integer, 0))
+			assert_integers_equal ("shift right on maximum integer", 0, INTEGER_.bit_shift_right (Platform.Maximum_integer, 31))
 		end
 
 	test_is_even is

@@ -86,7 +86,6 @@ feature -- Element change
 			an_element_uri_code, a_namespace_code: INTEGER
 			a_stylesheet: XM_XSLT_STYLESHEET
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			an_xml_prefix, a_uri: STRING
 			a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 		do
 			result_name_code := name_code

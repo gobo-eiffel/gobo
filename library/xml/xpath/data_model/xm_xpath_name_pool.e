@@ -140,7 +140,6 @@ feature -- Access
 			code_allocated: is_namespace_code_allocated (an_xml_prefix, a_uri)
 		local
 			a_prefix_code, a_uri_code: INTEGER -- should be INTEGER_16
-			a_key: STRING
 		do
 			debug ("XPath name pool")
 				std.error.put_string ("namespace_code: prefix is ")
@@ -439,7 +438,6 @@ feature -- Access
 			expanded_name_allocated: is_expanded_name_allocated (an_expanded_name)
 		local
 			a_local_name, a_namespace: STRING
-			a_closing_brace: INTEGER
 		do
 			a_namespace := namespace_uri_from_expanded_name (an_expanded_name)
 			a_local_name := local_name_from_expanded_name (an_expanded_name)
@@ -1014,9 +1012,6 @@ feature -- Element change
 			prefix_not_void: an_xml_prefix /= Void
 			code_not_allocated: not is_code_for_prefix_allocated (an_xml_prefix)
 			prefixes_not_all_used: not are_prefixes_all_used
-		local
-			a_counter: INTEGER
-			found: BOOLEAN
 		do
 			if prefixes.capacity = prefixes_used then prefixes.resize (2 * prefixes_used) end
 			debug ("XPath name pool")

@@ -148,7 +148,7 @@ feature -- Status report
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
-			a_string, another_string: STRING
+			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "element ")
 			std.error.put_string (a_string)
@@ -191,8 +191,6 @@ feature {XM_XSLT_ELEMENT_CREATOR} -- Local
 
 	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER) is
 			-- Output namespace nodes for the new element.
-		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
 			-- do_nothing
 		end

@@ -30,8 +30,6 @@ feature {NONE} -- Initialization
 		require
 			base_iterator_before: a_base_iterator /= Void and then a_base_iterator.before
 			valid_start_position: a_start_position > 0
-		local
-			an_index: INTEGER
 		do
 			base_iterator := a_base_iterator
 			start_position := a_start_position

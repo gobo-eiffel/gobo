@@ -145,8 +145,6 @@ feature {NONE} -- Implementation
 
 	code_one: CHARACTER is
 			-- Control-A
-		local
-			an_integer: INTEGER
 		once
 			Result := INTEGER_.to_character (1)
 		ensure
@@ -155,8 +153,6 @@ feature {NONE} -- Implementation
 
 	code_two: CHARACTER is
 			-- Control-B
-		local
-			an_integer: INTEGER
 		once
 			Result := INTEGER_.to_character (2)
 		ensure

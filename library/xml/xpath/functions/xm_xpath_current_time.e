@@ -63,7 +63,6 @@ feature -- Evaluation
 		local
 			a_result_string: STRING
 			a_date_time: DT_DATE_TIME
-			a_month, a_day: INTEGER
 		do
 			a_date_time := a_context.current_date_time
 			a_result_string := ""

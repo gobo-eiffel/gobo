@@ -124,12 +124,27 @@ feature -- Access
 		end
 
 	week_day: INTEGER is
-			-- Day in current week
+		obsolete "Use day_of_week instead"	
+		local
+			d: INTEGER
 		do
-			Result := week_day_of_date (year, month, day)
+			d := day_count + 4
+			if d < 0 then
+				Result := Saturday - (-(d + 1) \\ Days_in_week)
+			else
+				Result := Sunday + d \\ Days_in_week
+			end
 		ensure
 			valid_day: Result >= Sunday and Result <= Saturday
 		end
+
+	day_of_week: DT_WEEK_DAY is
+            -- Day of week for `Current' date
+        do
+            create {DT_WEEK_DAY_FROM_MONDAY} Result.make_from_date (Current)
+        ensure
+            day_of_week_not_void: Result /= Void
+        end
 
 	duration (other: like Current): DT_DATE_DURATION is
 			-- Duration between `other' and `Current'

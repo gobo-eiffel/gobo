@@ -139,7 +139,6 @@ feature -- Access
 			a_string_splitter: ST_SPLITTER
 			qname_parts: DS_LIST [STRING]
 			an_xml_prefix, a_uri, a_local_name: STRING
-			a_uri_code: INTEGER			
 		do
 			create a_string_splitter.make
 			a_string_splitter.set_separators (":")

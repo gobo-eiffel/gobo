@@ -77,12 +77,10 @@ feature {NONE} -- Implementation
 			a_saved_iterator, another_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_group_iterator: XM_XSLT_GROUP_ITERATOR
 			a_transformer: XM_XSLT_TRANSFORMER
-			an_index: INTEGER
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
 			a_sort_record: XM_XSLT_GROUP_SORT_RECORD
 			a_key_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
 			a_sort_key: XM_XPATH_ATOMIC_VALUE
-			an_expression: XM_XPATH_EXPRESSION
 		do
 			create node_keys.make_default
 
