@@ -6,6 +6,9 @@
 		<set name="gepp_in_dir" value="${GOBO}/library/kernel/io"/>
 		<set name="gepp_out_dir" value="${GOBO}/example/geant/tmp"/>
 		<set name="gepp_file" value="kl_file_system"/>
+
+		<set name="ls" value="ls" if="${GOBO_OS}=unix"/>
+		<set name="ls" value="dir" unless="${GOBO_OS}=unix"/>
 	</target>
 
 	<target name="ood1" depend="init">
@@ -30,16 +33,24 @@
 	</target>
 
 	<target name="ood3" depend="init">
+		<description>
+			Create new file '${gepp_out_dir}/toto.txt' if either file 'outofdate.eant' or
+			file '${GOBO}/Readme.txt' is new than '${gepp_out_dir}/toto.txt' or if file
+			'${gepp_out_dir}/toto.txt' does not exist.
+			This mechanism can be used for example to check if a new compilation run
+			is necessary by checking if one of the sourcefiles or resource files is
+			newer than the produced executable.
+		</description>
 		<mkdir directory="${gepp_out_dir}"/>
 		<outofdate variable="generate">
 			<fileset>
 				<include name="outofdate.eant"/>
-				<include name="build.eant"/>
+				<include name="${GOBO}/Readme.txt"/>
 				<map type="merge" from="*" to="${gepp_out_dir}/toto.txt"/>
 			</fileset>
 		</outofdate>
 		<echo message="generate: ${generate}"/>
-		<copy file="outofdate.eant" to_file="${gepp_out_dir}/toto.txt" if="${generate}=true"/>
+		<exec executable="${ls} ${GOBO} > ${gepp_out_dir}/toto.txt" if="${generate}=true"/>
 	</target>
 
 	<target name="ood4" depend="init">
