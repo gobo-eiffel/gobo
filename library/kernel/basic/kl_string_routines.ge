@@ -154,10 +154,10 @@ feature -- Initialization
 		require
 			valid_count: n >= 0
 		do
-#ifdef VE || SE
+#ifdef VE || SE || (ISE && ! ISE_5_1)
 			!! Result.make_filled (c, n)
 #endif
-#ifdef ISE || HACT
+#ifdef (ISE && ISE_5_1) || HACT
 			!! Result.make (n)
 			Result.fill_character (c)
 #endif
@@ -173,13 +173,13 @@ feature -- Initialization
 		require
 			non_negative_n: n >= 0
 		do
-#ifdef VE
+#ifdef VE || (ISE && ! ISE_5_1)
 			!! Result.make_filled ('%U', n)
 #endif
 #ifdef SE
 			!! Result.blank (n)
 #endif
-#ifdef ISE || HACT
+#ifdef (ISE && ISE_5_1) || HACT
 			!! Result.make (n)
 			Result.fill_blank
 #endif
@@ -894,13 +894,13 @@ feature -- Conversion
 			else
 				uc_string ?= a_string
 				if uc_string /= Void then
-					Result := uc_string.to_string
+					Result := uc_string.as_string
 				else
 					Result := string (a_string)
 				end
 			end
 		ensure
-			to_string_not_void: Result /= Void
+			as_string_not_void: Result /= Void
 			string_type: Result.same_type ("")
 			aliasing: a_string.same_type ("") implies Result = a_string
 		end
