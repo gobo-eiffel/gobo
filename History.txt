@@ -51,7 +51,9 @@ Version ?
 	Gobo Eiffel String Library
 
 	* New library.
-	* Contains the Formatter Library.
+	* Contains the Formatter Library (note that unlike the imported 
+	  library, the array-based formatter requires DS_CELL items for 
+	  basic types, rather than accepting the _REF types).
 	* ST_SPLITTER: parse a string to and from lists of tokens.
 
 	Gobo Eiffel Time Library
