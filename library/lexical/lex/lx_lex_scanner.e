@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Scanners for lexical analyzer generators such as 'gelex'";
+		"Scanners for lexical analyzer generators such as 'gelex'"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_LEX_SCANNER
@@ -37,7 +37,7 @@ inherit
 			{NONE} all
 		end
 
-	KL_STRING_ROUTINES
+	KL_SHARED_STRING_ROUTINES
 		export
 			{NONE} all
 		end
@@ -102,7 +102,7 @@ when 6 then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
 	end
 --|#line 81
-set_start_condition (OPTION);
+set_start_condition (OPTION)
 when 7 then
 	if yy_position > yy_start_position then
 		input_buffer.set_beginning_of_line (yy_content.item (yy_position - 1) = '%N')
@@ -517,7 +517,7 @@ when 62 then
 	end
 --|#line 253
 
-					last_string := string__to_lower (text)
+					last_string := string_.to_lower (text)
 					if name_definitions.has (last_string) then
 						put_back_string (name_definitions.item (last_string))
 					else
@@ -659,7 +659,7 @@ when 78 then
 --|#line 320
 
 					last_token := NUMBER
-					check is_integer: string__is_integer (text) end
+					check is_integer: string_.is_integer (text) end
 					last_value := text.to_integer
 				
 when 79 then
@@ -1609,7 +1609,7 @@ feature -- Access
 		do
 			file_buffer ?= input_buffer
 			if file_buffer /= Void then
-				Result := file_buffer.file.name
+				Result := input_stream_.name (file_buffer.file)
 			else
 				Result := "string"
 			end
@@ -1760,14 +1760,14 @@ feature {NONE} -- Implementation
 			bracketed_name: STRING
 			parenthesised_definition: STRING
 		do
-			bracketed_name := string__make (a_name.count + 2)
+			bracketed_name := string_.make (a_name.count + 2)
 			bracketed_name.append_character ('{')
-			bracketed_name.append_string (string__to_lower (a_name))
+			bracketed_name.append_string (string_.to_lower (a_name))
 			bracketed_name.append_character ('}')
 			if name_definitions.has (bracketed_name) then
 				error_handler.name_defined_twice (a_name, filename, line_nb)
 			end
-			parenthesised_definition := string__make (a_definition.count + 2)
+			parenthesised_definition := string_.make (a_definition.count + 2)
 			parenthesised_definition.append_character ('(')
 			parenthesised_definition.append_string (a_definition)
 				-- Skip trailing white spaces.

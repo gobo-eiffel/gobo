@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Skeletons of scanners implemented with tables";
+		"Skeletons of scanners implemented with tables"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 deferred class YY_SCANNER_SKELETON
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- `a_buffer' as input buffer.
 		do
 			yy_initialize
-			output_file := io.output
+			output_file := std.output
 			input_buffer := a_buffer
 			yy_load_input_buffer
 		end

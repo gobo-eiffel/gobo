@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Parsers for regular expressions";
+		"Parsers for regular expressions"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_REGEXP_PARSER
@@ -30,10 +30,7 @@ inherit
 			last_value, last_token
 		end
 
-	KL_FILE_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_INPUT_STREAM_ROUTINES
 
 creation
 
@@ -98,11 +95,11 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_file (a_file: like FILE_type) is
+	parse_file (a_file: like INPUT_STREAM_TYPE) is
 			-- Parse regular expression from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
+			a_file_open_read: input_stream_.is_open_read (a_file)
 		do
 			set_input_buffer (new_file_buffer (a_file))
 			parse

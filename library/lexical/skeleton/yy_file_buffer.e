@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Lexical analyzer input file buffers";
+		"Lexical analyzer input file buffers"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class YY_FILE_BUFFER
@@ -23,15 +23,9 @@ inherit
 			fill, filled, flush
 		end
 
-	KL_FILE_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_INPUT_STREAM_ROUTINES
 
-	KL_STRING_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_STRING_ROUTINES
 
 creation
 
@@ -39,11 +33,11 @@ creation
 
 feature -- Initialization
 
-	make (a_file: like FILE_type) is
+	make (a_file: like INPUT_STREAM_TYPE) is
 			-- Create a new buffer for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
+			a_file_open_read: input_stream_.is_open_read (a_file)
 		do
 			make_with_size (a_file, Default_capacity)
 		ensure
@@ -52,18 +46,18 @@ feature -- Initialization
 			beginning_of_line: beginning_of_line
 		end
 		
-	make_with_size (a_file: like FILE_type; size: INTEGER) is
+	make_with_size (a_file: like INPUT_STREAM_TYPE; size: INTEGER) is
 			-- Create a new buffer of capacity `size' for `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
+			a_file_open_read: input_stream_.is_open_read (a_file)
 			size_positive: size >= 0
 		do
 			capacity := size
 				-- `content' has to be 2 characters longer
 				-- than the size given because we need to
 				-- put in 2 end-of-buffer characters.
-			content := string__make_buffer (size + 2)
+			content := string_.make_buffer (size + 2)
 			set_file (a_file)
 		ensure
 			capacity_set: capacity = size
@@ -74,16 +68,16 @@ feature -- Initialization
 
 feature -- Access
 
-	file: like FILE_type
+	file: like INPUT_STREAM_TYPE
 			-- Input file
 
 feature -- Setting
 
-	set_file (a_file: like FILE_type) is
+	set_file (a_file: like INPUT_STREAM_TYPE) is
 			-- Set `file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
+			a_file_open_read: input_stream_.is_open_read (a_file)
 		do
 			flush
 			file := a_file
@@ -152,7 +146,7 @@ feature -- Element change
 						-- Include room for 2 EOB characters.
 					if capacity + 2 - buff.count > 0 then
 							-- Set `content.count' to `capacity' + 2.
-						string__resize_buffer (buff, capacity + 2)
+						string_.resize_buffer (buff, capacity + 2)
 					end
 					nb := capacity - count
 				end
@@ -161,18 +155,18 @@ feature -- Element change
 						-- Read characters one by one.
 					file.read_character
 					char := file.last_character
-					if file__end_of_file (file) then
+					if input_stream_.end_of_input (file) then
 						j := j + 1
 						buff.put (char, j)
 						filled := True
 					else
 						filled := False
 					end
-				elseif not file__end_of_file (file) then
+				elseif not input_stream_.end_of_input (file) then
 					if nb > Read_buffer_capacity then
 						nb := Read_buffer_capacity
 					end
-					nb := file__read_stream (file, buff, j + 1, nb)
+					nb := input_stream_.read_stream (file, buff, j + 1, nb)
 					if nb > 0 then
 						filled := True
 					else
@@ -211,6 +205,6 @@ feature {NONE} -- Constants
 invariant
 
 	file_not_void: file /= Void
-	file_open_read: file.is_open_read
+	file_open_read: input_stream_.is_open_read (file)
 
 end -- class YY_FILE_BUFFER

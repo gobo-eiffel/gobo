@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"DFA which can generate scanners implemented with full tables";
+		"DFA which can generate scanners implemented with full tables"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_FULL_DFA
@@ -44,13 +44,6 @@ inherit
 			is_equal, copy
 		end
 
-	KL_FILE_ROUTINES
-		export
-			{NONE} all
-		undefine
-			is_equal, copy
-		end
-
 creation
 
 	make
@@ -78,7 +71,7 @@ feature -- Generation
 			!! Result.make (Current)
 		end
 
-	print_backing_up_report (a_file: like FILE_type) is
+	print_backing_up_report (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print a backing-up report to `a_file'.
 		do
 			generatable_dfa_print_backing_up_report (a_file)
@@ -96,23 +89,23 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-	print_build_tables (a_file: like FILE_type) is
+	print_build_tables (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print code for `yy_build_tables' to `a_file'.
 		do
 			a_file.put_string ("%Tyy_build_tables is%N%
 				%%T%T%T-- Build scanner tables.%N%T%Tdo%N")
-			a_file.put_string (indentation)
+			a_file.put_string (Indentation)
 			a_file.put_string ("yy_nxt := yy_nxt_%N")
 			if yy_ec /= Void then
-				a_file.put_string (indentation)
+				a_file.put_string (Indentation)
 				a_file.put_string ("yy_ec_ := yy_ec_%N")
 			end
-			a_file.put_string (indentation)
+			a_file.put_string (Indentation)
 			a_file.put_string ("yy_accept_ := yy_accept_%N")
 			a_file.put_string ("%T%Tend%N")
 		end
 
-	print_eiffel_tables (a_file: like FILE_type) is
+	print_eiffel_tables (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print Eiffel code for full tables to `a_file'.
 		do
 			print_eiffel_array ("yy_nxt_", yy_nxt, a_file)
@@ -124,7 +117,7 @@ feature {NONE} -- Generation
 			print_eiffel_array ("yy_accept_", yy_accept, a_file)
 		end
 
-	print_constants (a_file: like FILE_type) is
+	print_constants (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print code for constants to `a_file'.
 		do
 			a_file.put_string ("%TyyNull_equiv_class: INTEGER is ")

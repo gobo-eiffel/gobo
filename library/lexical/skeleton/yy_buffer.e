@@ -2,22 +2,19 @@ indexing
 
 	description:
 
-		"Lexical analyzer input buffers";
+		"Lexical analyzer input buffers"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class YY_BUFFER
 
 inherit
 
-	KL_STRING_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_STRING_ROUTINES
 
 creation
 
@@ -33,7 +30,7 @@ feature -- Initialization
 		local
 			buff: STRING
 		do
-			buff := string__make (str.count + 2)
+			buff := string_.make (str.count + 2)
 			buff.append_string (str)
 			buff.append_character (End_of_buffer_character)
 			buff.append_character (End_of_buffer_character)
@@ -87,15 +84,15 @@ feature -- Access
 
 feature -- Setting
 
-	set_capacity (size: INTEGER) is
-			-- Set `capacity' to `size'.
+	set_capacity (nb: INTEGER) is
+			-- Set `capacity' to `nb'.
 		require
-			size_small_enough: size + 2 <= content.count
-			size_large_enough: size >= count
+			nb_small_enough: nb + 2 <= content.count
+			nb_large_enough: nb >= count
 		do
-			capacity := size
+			capacity := nb
 		ensure
-			capacity_set: capacity = size
+			capacity_set: capacity = nb
 		end
 
 	set_count (nb: INTEGER) is
@@ -130,10 +127,10 @@ feature -- Setting
 
 feature -- Status report
 
-	filled: BOOLEAN is
+	filled: BOOLEAN --is
 			-- Did the last call to `fill' add more characters to buffer?
-		do
-		end
+		--do
+		--end
 
 feature -- Element change
 

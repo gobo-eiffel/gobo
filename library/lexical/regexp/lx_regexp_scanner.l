@@ -3,12 +3,12 @@ indexing
 
 	description:
 
-		"Scanners for regular expressions";
+		"Scanners for regular expressions"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_REGEXP_SCANNER
@@ -38,10 +38,9 @@ inherit
 			{NONE} all
 		end
 
-	KL_STRING_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_STRING_ROUTINES
+
+	KL_SHARED_INPUT_STREAM_ROUTINES
 
 creation
 
@@ -65,7 +64,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 					last_token := Caret_code
 					set_start_condition (REGEXP)
 				}
-	.		{
+	.			{
 					less (0)
 					set_start_condition (REGEXP)
 				}
@@ -105,7 +104,7 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	{WS}			-- Separator.
 	[0-9]+		{
 					last_token := NUMBER
-					check is_integer: string__is_integer (text) end
+					check is_integer: string_.is_integer (text) end
 					last_value := text.to_integer
 				}
 	","				last_token := Comma_code
@@ -258,7 +257,7 @@ feature -- Access
 		do
 			file_buffer ?= input_buffer
 			if file_buffer /= Void then
-				Result := file_buffer.file.name
+				Result := input_stream_.name (file_buffer.file)
 			else
 				Result := "string"
 			end

@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"DFA which can generate scanners implemented with compressed tables";
+		"DFA which can generate scanners implemented with compressed tables"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_COMPRESSED_DFA
@@ -45,13 +45,6 @@ inherit
 			is_equal, copy
 		end
 
-	KL_FILE_ROUTINES
-		export
-			{NONE} all
-		undefine
-			is_equal, copy
-		end
-
 creation
 
 	make
@@ -82,7 +75,7 @@ feature -- Generation
 			!! Result.make (Current)
 		end
 
-	print_backing_up_report (a_file: like FILE_type) is
+	print_backing_up_report (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print a backing up report to `a_file'.
 		do
 			generatable_dfa_print_backing_up_report (a_file)
@@ -91,7 +84,7 @@ feature -- Generation
 
 feature {NONE} -- Generation
 
-	print_build_tables (a_file: like FILE_type) is
+	print_build_tables (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print code for `yy_build_tables' to `a_file'.
 		do
 			a_file.put_string ("%Tyy_build_tables is%N%
@@ -121,7 +114,7 @@ feature {NONE} -- Generation
 			a_file.put_string ("%T%Tend%N")
 		end
 
-	print_eiffel_tables (a_file: like FILE_type) is
+	print_eiffel_tables (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print Eiffel code for compressed tables to `a_file'.
 		do
 			print_eiffel_array ("yy_nxt_", yy_nxt, a_file)
@@ -147,7 +140,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	print_constants (a_file: like FILE_type) is
+	print_constants (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Print code for constants to `a_file'.
 		do
 			a_file.put_string ("%TyyJam_base: INTEGER is ")
@@ -537,10 +530,7 @@ feature {NONE} -- Compression
 						-- No good. If the state is homogeneous enough,
 						-- we make a template out of it. Otherwise, we
 						-- make a proto.
-					if
-						common_freq * 100 >=
-							trans_nb * Template_same_percentage
-					then
+					if common_freq * 100 >= trans_nb * Template_same_percentage then
 						templates.put (state, common_state)
 						template := templates.last
 						default_id := - templates.count
@@ -556,9 +546,7 @@ feature {NONE} -- Compression
 					put_entry (state.id, proto.state_id, difference)
 						-- If this state was sufficiently different from
 						-- the proto we built it from, make it a proto too.
-					if
-						min_diff * 100 >=
-							trans_nb * New_proto_diff_percentage
+					if min_diff * 100 >= trans_nb * New_proto_diff_percentage
 					then
 						protos.put (state.id, clone (transitions), common_state)
 					end

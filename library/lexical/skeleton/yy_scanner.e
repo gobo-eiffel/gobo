@@ -2,22 +2,23 @@ indexing
 
 	description:
 
-		"General lexical analyzers";
+		"General lexical analyzers"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 deferred class YY_SCANNER
 
 inherit
 
-	KL_FILE_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_INPUT_STREAM_ROUTINES
+
+	KL_SHARED_OUTPUT_STREAM_ROUTINES
+
+	KL_SHARED_STANDARD_FILES
 
 feature {NONE} -- Initialization
 
@@ -25,15 +26,15 @@ feature {NONE} -- Initialization
 			-- Create a new scanner with
 			-- standard input as input file.
 		do
-			make_with_file (io.input)
+			make_with_file (std.input)
 		end
 
-	make_with_file (a_file: like FILE_type) is
+	make_with_file (a_file: like INPUT_STREAM_TYPE) is
 			-- Create a new scanner with
 			-- `a_file' as input file.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
+			a_file_open_read: input_stream_.is_open_read (a_file)
 		do
 			make_with_buffer (new_file_buffer (a_file))
 		end
@@ -222,11 +223,11 @@ feature -- Input
 			flushed: input_buffer.count = 0
 		end
 
-	new_file_buffer (a_file: like FILE_type): YY_BUFFER is
+	new_file_buffer (a_file: like INPUT_STREAM_TYPE): YY_BUFFER is
 			-- New input buffer for `a_file'
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
+			a_file_open_read: input_stream_.is_open_read (a_file)
 		do
 			!YY_FILE_BUFFER! Result.make (a_file)
 		ensure
@@ -245,14 +246,14 @@ feature -- Input
 
 feature -- Output
 
-	output_file: like FILE_type
+	output_file: like OUTPUT_STREAM_TYPE
 			-- Output file
 
-	set_output_file (a_file: like FILE_type) is
+	set_output_file (a_file: like OUTPUT_STREAM_TYPE) is
 			-- Set `output_file' to `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
+			a_file_open_write: output_stream_.is_open_write (a_file)
 		do
 			output_file := a_file
 		ensure
@@ -273,8 +274,8 @@ feature -- Error handling
 		require
 			message_not_void: message /= Void
 		do
-			io.error.put_string (message)
-			io.error.put_character ('%N')
+			std.error.put_string (message)
+			std.error.put_character ('%N')
 -- TO DO: Exceptions are not standard among compiler vendors.
 		end
 
@@ -282,6 +283,6 @@ invariant
 
 	input_buffer_not_void: input_buffer /= Void
 	output_not_void: output_file /= Void
-	output_open_write: output_file.is_open_write
+	output_open_write: output_stream_.is_open_write (output_file)
 
 end -- class YY_SCANNER

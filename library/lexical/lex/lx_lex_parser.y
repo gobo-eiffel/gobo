@@ -3,12 +3,12 @@ indexing
 
 	description:
 
-		"Parsers for lexical analyzer generators such as 'gelex'";
+		"Parsers for lexical analyzer generators such as 'gelex'"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class LX_LEX_PARSER
@@ -18,8 +18,6 @@ inherit
 	YY_PARSER [ANY]
 		rename
 			reset as reset_parser_skeleton
-		redefine
-			last_value, last_token
 		end
 
 	LX_LEX_SCANNER
@@ -27,14 +25,9 @@ inherit
 			make as make_lex_scanner,
 			make_from_description as make_lex_scanner_from_description,
 			reset as reset_lex_scanner
-		redefine
-			last_value, last_token
 		end
 
-	KL_FILE_ROUTINES
-		export
-			{NONE} all
-		end
+	KL_SHARED_INPUT_STREAM_ROUTINES
 
 creation
 
@@ -401,11 +394,11 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_file (a_file: like FILE_type) is
+	parse_file (a_file: like INPUT_STREAM_TYPE) is
 			-- Parse scanner description from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
+			a_file_open_read: input_stream_.is_open_read (a_file)
 		do
 			set_input_buffer (new_file_buffer (a_file))
 			parse
@@ -421,12 +414,6 @@ feature -- Parsing
 		end
 
 feature -- Access
-
-	last_token: INTEGER
-			-- Code of last token read
-
-	last_value: ANY
-			-- Last value read by `read_token'
 
 	default_rule: like rule
 			-- Default rule

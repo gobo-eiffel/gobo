@@ -2,25 +2,23 @@ indexing
 
 	description:
 
-		"Error handlers for lexical analyzer generators such as 'gelex'";
+		"Error handlers for lexical analyzer generators such as 'gelex'"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 deferred class LX_LEX_ERROR_HANDLER
 
 inherit
 
-	EXCEPTIONS
+	KL_SHARED_EXCEPTIONS
 
-	KL_ARRAY_ROUTINES
-		export
-			{NONE} all;
-			{ANY} array__has
-		end
+	KL_SHARED_ARRAY_ROUTINES
+
+	KL_SHARED_STANDARD_FILES
 
 feature -- Access
 
@@ -50,7 +48,7 @@ feature -- Termination
 	terminate (exit_status: INTEGER) is
 			-- Terminate program.
 		do
-			die (exit_status)
+			exceptions_.die (exit_status)
 		end
 
 feature -- Command line info messages
@@ -80,7 +78,7 @@ feature -- Command line error messages
 			-- Report that `c' in an unknown flag
 			-- and then terminate.
 		do
-			error_message (<< "unknown flag '", c.out, "'" >>)
+			error_message (<<"unknown flag '", c.out, "'">>)
 		end
 
 feature -- Option errors
@@ -132,7 +130,7 @@ feature -- Syntax error messages
 			char_not_void: char /= Void
 			filename_not_void: filename /= Void
 		do
-			syntax_message (filename, line, <<"bad character: ", char >>)
+			syntax_message (filename, line, <<"bad character: ", char>>)
 		ensure
 			syntax_error: syntax_error
 		end
@@ -412,22 +410,22 @@ feature -- Error handling
 			-- Report an error message and terminate.
 		require
 			message_not_void: message /= Void
-			no_void_info: not array__has (message, Void)
+			no_void_info: not string_array_.has (message, Void)
 		local
 			i, nb: INTEGER
 		do
-			io.error.put_string (program_name)
-			io.error.put_string (": ")
+			std.error.put_string (program_name)
+			std.error.put_string (": ")
 			from
 				i := message.lower
 				nb := message.upper
 			until
 				i > nb
 			loop
-				io.error.put_string (message.item (i))
+				std.error.put_string (message.item (i))
 				i := i + 1
 			end
-			io.error.put_character ('%N')
+			std.error.put_character ('%N')
 			terminate (1)
 		end
 
@@ -435,7 +433,7 @@ feature -- Error handling
 			-- Report an info message and exit.
 		require
 			message_not_void: message /= Void
-			no_void_info: not array__has (message, Void)
+			no_void_info: not string_array_.has (message, Void)
 		local
 			i, nb: INTEGER
 		do
@@ -445,10 +443,10 @@ feature -- Error handling
 			until
 				i > nb
 			loop
-				io.put_string (message.item (i))
+				std.output.put_string (message.item (i))
 				i := i + 1
 			end
-			io.put_character ('%N')
+			std.output.put_character ('%N')
 			terminate (0)
 		end
 
@@ -457,7 +455,7 @@ feature -- Error handling
 		require
 			filename_not_void: filename /= Void
 			message_not_void: message /= Void
-			no_void_info: not array__has (message, Void)
+			no_void_info: not string_array_.has (message, Void)
 		do
 			parsing_message (filename, line, message)
 			syntax_error := True
@@ -471,26 +469,26 @@ feature -- Error handling
 		require
 			filename_not_void: filename /= Void
 			message_not_void: message /= Void
-			no_void_info: not array__has (message, Void)
+			no_void_info: not string_array_.has (message, Void)
 		local
 			i, nb: INTEGER
 		do
 			if not no_warning then
-				io.error.put_character ('%"')
-				io.error.put_string (filename)
-				io.error.put_string ("%", line ")
-				io.error.put_integer (line)
-				io.error.put_string (": warning, ")
+				std.error.put_character ('%"')
+				std.error.put_string (filename)
+				std.error.put_string ("%", line ")
+				std.error.put_integer (line)
+				std.error.put_string (": warning, ")
 				from
 					i := message.lower
 					nb := message.upper
 				until
 					i > nb
 				loop
-					io.error.put_string (message.item (i))
+					std.error.put_string (message.item (i))
 					i := i + 1
 				end
-				io.error.put_character ('%N')
+				std.error.put_character ('%N')
 			end
 		end
 
@@ -500,25 +498,25 @@ feature -- Error handling
 		require
 			filename_not_void: filename /= Void
 			message_not_void: message /= Void
-			no_void_info: not array__has (message, Void)
+			no_void_info: not string_array_.has (message, Void)
 		local
 			i, nb: INTEGER
 		do
-			io.error.put_character ('%"')
-			io.error.put_string (filename)
-			io.error.put_string ("%", line ")
-			io.error.put_integer (line)
-			io.error.put_string (": ")
+			std.error.put_character ('%"')
+			std.error.put_string (filename)
+			std.error.put_string ("%", line ")
+			std.error.put_integer (line)
+			std.error.put_string (": ")
 			from
 				i := message.lower
 				nb := message.upper
 			until
 				i > nb
 			loop
-				io.error.put_string (message.item (i))
+				std.error.put_string (message.item (i))
 				i := i + 1
 			end
-			io.error.put_character ('%N')
+			std.error.put_character ('%N')
 		end
 
 end -- class LX_LEX_ERROR_HANDLER

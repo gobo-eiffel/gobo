@@ -2,23 +2,19 @@ indexing
 
 	description:
 
-		"Tables for scanners";
+		"Tables for scanners"
 
-	library:    "Gobo Eiffel Lexical Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Lexical Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 deferred class LX_TABLES
 
 inherit
 
-	KL_ARRAY_ROUTINES
-		export
-			{NONE} all;
-			{ANY} array__has
-		end
+	KL_SHARED_ARRAY_ROUTINES
 
 feature {NONE} -- Initialization
 
@@ -85,9 +81,9 @@ invariant
 
 	yy_accept_not_void: yy_accept /= Void
 	yy_rules_not_void: yy_rules /= Void
-	no_void_rules: not array__has (yy_rules, Void)
+	no_void_rules: not any_array_.has (yy_rules, Void)
 	yy_eof_rules_not_void: yy_eof_rules /= Void
 	yy_start_conditions_not_void: yy_start_conditions /= Void
-	no_void_start_condition: not array__has (yy_start_conditions, Void)
+	no_void_start_condition: not any_array_.has (yy_start_conditions, Void)
 
 end -- class LX_TABLES
