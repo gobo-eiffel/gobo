@@ -84,17 +84,14 @@ feature -- Validity checking
 				set_fatal_error
 			else
 				a_class_impl := a_feature.implementation_class
-				a_feature_impl := a_feature.implementation_feature
 				if a_class_impl /= current_class then
+					a_feature_impl := a_feature.implementation_feature
 					if a_feature_impl.implementation_checked then
 						if a_feature_impl.has_implementation_error then
 							set_fatal_error
 						end
 					else
 						check_feature_validity (a_feature_impl, a_class_impl)
-						if has_fatal_error then
-							a_feature_impl.set_implementation_error
-						end
 					end
 				end
 				if not has_fatal_error then
@@ -105,6 +102,12 @@ feature -- Validity checking
 						internal_call := False
 						set_fatal_error
 						error_handler.report_giabr_error
+					end
+					if current_class = a_class_impl then
+						current_feature.set_implementation_checked
+						if has_fatal_error then
+							current_feature.set_implementation_error
+						end
 					end
 				end
 			end
@@ -538,7 +541,7 @@ feature {NONE} -- Locals/Arguments validity
 		do
 			nb := a_locals.count
 			from i := 1 until i > nb loop
-				check_type_validity (a_locals.local_variable (i).type)
+				check_local_type_validity (a_locals.local_variable (i).type)
 				i := i + 1
 			end
 		end
@@ -558,6 +561,29 @@ feature {NONE} -- Locals/Arguments validity
 					a_class_type ?= a_type.named_type (current_class, universe)
 					if a_class_type /= Void then
 						type_checker.check_creation_type_validity (a_class_type, current_feature, current_class, a_type.position)
+						if type_checker.has_fatal_error then
+							set_fatal_error
+						end
+					end
+				end
+			end
+		end
+
+	check_local_type_validity (a_type: ET_TYPE) is
+			-- Check validity of `a_type'.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			a_class_type: ET_CLASS_TYPE
+		do
+			type_checker.check_type_validity (a_type, current_feature.implementation_feature, current_feature.implementation_class)
+			if type_checker.has_fatal_error then
+				set_fatal_error
+			else
+				if a_type.is_type_expanded (current_class, universe) then
+					a_class_type ?= a_type.named_type (current_class, universe)
+					if a_class_type /= Void then
+						type_checker.check_creation_type_validity (a_class_type, current_feature.implementation_feature, current_feature.implementation_class, a_type.position)
 						if type_checker.has_fatal_error then
 							set_fatal_error
 						end

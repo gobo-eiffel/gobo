@@ -49,7 +49,6 @@ feature {NONE} -- Validity checking
 			a_target_not_void: a_target /= Void
 			a_name_not_void: a_name /= Void
 			a_context_not_void: a_context /= Void
-			current_class /= current_feature.implementation_class implies current_feature.implementation_feature.implementation_checked
 		local
 			a_class_impl: ET_CLASS
 			a_feature_impl: ET_FEATURE
@@ -772,6 +771,8 @@ invariant
 
 	current_feature_not_void: current_feature /= Void
 	current_class_not_void: current_class /= Void
+	implementation_checked: current_class /= current_feature.implementation_class implies
+		current_feature.implementation_feature.implementation_checked
 	type_checker_not_void: type_checker /= Void
 	formal_context_not_void: formal_context /= Void
 
