@@ -19,9 +19,6 @@ inherit
 	XM_NON_INCREMENTAL_PARSER
 
 	XM_FORWARD_CALLBACKS
-		redefine
-			on_error
-		end
 
 	XM_FORWARD_DTD_CALLBACKS
 
@@ -284,23 +281,17 @@ feature -- Error diagnostic
 
 feature {NONE} -- Error reporting
 
-	on_error (an_error: STRING) is
-			-- On error.
-		do
-			last_error_description := an_error
-			Precursor (an_error)
-		end
-
 	report_error (an_error: STRING) is
 			-- On error.
 		do
-			on_error (an_error)
+			last_error_description := an_error
+			on_error (last_error_extended_description)
 		end
 
 	force_error (a_message: STRING) is
 			-- Report error message.
 		do
-			on_error (a_message)
+			report_error (a_message)
 			abort
 		end
 
