@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			build_filename := a_filename
 			if not file_system.is_file_readable (build_filename.out) then
 				print ("cannot read build file '" + build_filename.out + "'")
+				print ("%NBUILD FAILED !%N")
 				Exceptions.die (1)
 			end
 
@@ -190,6 +191,7 @@ feature -- Processing
 						tmp_start_target_name := ucs
 					else
 						print ("geant error: unknown target: " + a_start_target_name.out + "%N")
+						print ("%NBUILD FAILED !%N")
 						Exceptions.die (1)
 					end
 				end
@@ -221,7 +223,19 @@ feature -- Processing
 			else
 				reset
 				print ("Parsing error in file %"" + build_filename.out + "%"%N")
+				print ("%NBUILD FAILED !%N")
+				Exceptions.die (1)
 			end
+
+			if start_target_name = Void or else start_target_name.count = 0 then
+				print ("Invalid start target%N")
+				print ("%NBUILD FAILED !%N")
+				Exceptions.die (1)
+			end
+
+		ensure
+			start_target_name_not_void: start_target_name /= Void
+			start_target_name_not_empty: start_target_name.count > 0
 	    end
 
 	calculate_depend_order (a_depend_targets: DS_ARRAYED_STACK [GEANT_TARGET]) is
@@ -254,7 +268,7 @@ feature -- Processing
 		require
 			loaded: targets /= Void
 			start_target_name_not_void: start_target_name /= Void
-			start_target_name_not_empty: start_target_name.count > 1
+			start_target_name_not_empty: start_target_name.count > 0
 		do
 			if verbose then
 				print("Building Project%N")

@@ -122,7 +122,7 @@ feature -- Execution
 					a_project.build
 					if not a_project.build_successful then
 							--!! TODO: Report this to parent project
-						print ("Build FAILED!%N")
+						print ("BUILD FAILED%N")
 						Exceptions.die (1)
 					end
 				end
@@ -135,6 +135,7 @@ feature -- Execution
 					project.build_target (a_target)
 				else
 					print ("geant error: unknown target: " + start_target_name + "%N")
+					print ("BUILD FAILED%N")
 					Exceptions.die (1)
 				end
 			end

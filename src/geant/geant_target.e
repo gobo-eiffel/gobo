@@ -138,7 +138,8 @@ feature -- Processing
 				-- Look for an 'if' XML attribute
 			if target_element.has_attribute (If_attribute_name) then
 				ucs := target_element.attribute_value_by_name (If_attribute_name)
-				if_condition := project.variables.has_variable (ucs.out)
+--!!				if_condition := project.variables.has_variable (ucs.out)
+				if_condition := boolean_condition_value (ucs.out)
 				if project.verbose then
 					print (" if    : '" + ucs.out + "'=" + if_condition.out + "%N")
 				end
@@ -147,7 +148,8 @@ feature -- Processing
 				-- Look for an 'unless' XML attribute
 			if target_element.has_attribute (Unless_attribute_name) then
 				ucs := target_element.attribute_value_by_name (Unless_attribute_name)
-				unless_condition := project.variables.has_variable (ucs.out)
+--!!				unless_condition := project.variables.has_variable (ucs.out)
+				unless_condition := boolean_condition_value (ucs.out)
 				if project.verbose then
 					print (" unless: '" + ucs.out + "'=" + unless_condition.out + "%N")
 				end
@@ -264,7 +266,7 @@ feature -- Processing
 				a_value := dependencies
 
 					-- Check for targets separated by commas:
-				a_dependent_targets := string_tokens (a_value)
+				a_dependent_targets := string_tokens (a_value, ',')
 
 				if project.verbose then
 					show_dependent_targets (a_dependent_targets)
@@ -278,6 +280,7 @@ feature -- Processing
 						Result.force (a_dependent_target)
 					else
 						print ("geant error: unknown dependent target '" + a_value.out + "'%N")
+						print ("%NBUILD FAILED !%N")
 						Exceptions.die (1)
 					end
 					i := i + 1
@@ -285,6 +288,51 @@ feature -- Processing
 			end
 		ensure
 			dependent_targets_not_void: Result /= Void
+		end
+
+	boolean_condition_value (a_condition: STRING): BOOLEAN is
+			-- Is `condition' True?;
+			-- used for "if" and "unless" attributes;
+			-- possible forms:
+			-- "$foo": True if variable $foo is defined
+			-- "$foo=bar": True if variable $foo is defined and its value is "bar"
+			--             bar can contain variable evaluation expressions like "bar${xyz}abc"
+			-- if `a_condition' is not in either form Result is `False'
+		require
+			condition_not_void: a_condition /= Void
+		local
+			a_tokens: DS_ARRAYED_LIST [UC_STRING]
+			s: STRING
+			s2: STRING
+			ucs: UC_STRING
+		do
+			!! ucs.make_from_string (a_condition)
+			a_tokens := string_tokens (ucs, '=')
+			if a_tokens.count = 1 then
+					-- a_condition should be in form "$foo";
+					-- check if $foo is defined
+				s := a_tokens.item (1).out
+				if s.item (1) = '$' then
+					s.tail (s.count - 1)
+					Result := project.variables.has_variable (s)
+				else
+					print ("geant: incorrect conditional: '" + a_condition + "'%N")
+					print ("%NBUILD FAILED !%N")
+					Exceptions.die (1)
+				end
+			elseif a_tokens.count = 2 then
+					-- a_condition should be in form "$foo=bar";
+					-- check if $foo equals "bar"
+				s := a_tokens.item (1).out
+				s := project.variables.interpreted_string (s)
+				s2 := a_tokens.item (2).out
+				s2 := project.variables.interpreted_string (s2)
+				Result := s.is_equal (s2)
+			else
+				print ("geant: incorrect conditional: '" + a_condition + "'%N")
+				print ("%NBUILD FAILED !%N")
+				Exceptions.die (1)
+			end
 		end
 
 	show_dependent_targets (a_dependent_targets: DS_ARRAYED_LIST [UC_STRING]) is
@@ -299,13 +347,13 @@ feature -- Processing
 			print ("=================%N")
 		end
 
-	string_tokens (a_string: UC_STRING): DS_ARRAYED_LIST [UC_STRING] is
-			-- Strings delimited by commas in `a_string'
+	string_tokens (a_string: UC_STRING; a_delimiter: CHARACTER): DS_ARRAYED_LIST [UC_STRING] is
+			-- Strings delimited by `a_delimiter' in `a_string';
 			-- Candidate for STRING_ROUTINES
 		require
 			string_not_void: a_string /= Void
 		local
-			a_delimiter: UC_CHARACTER
+			a_uc_delimiter: UC_CHARACTER
 			s: UC_STRING
 			ucs: UC_STRING
 			p_start: INTEGER
@@ -314,7 +362,7 @@ feature -- Processing
 		do
 			s := clone (a_string)
 			!! Result.make (5)
-			a_delimiter.make_from_character (',')
+			a_uc_delimiter.make_from_character (a_delimiter)
 
 				-- Cleanup String:
 			from
@@ -325,15 +373,15 @@ feature -- Processing
 			loop
 				nice_string := True
 				if s.count > 0 then
-					if s.item (1) = a_delimiter then
-						s.tail(s.count - 1)
+					if s.item (1) = a_uc_delimiter then
+						s.tail (s.count - 1)
 						nice_string := False
 					end
 				end
 	
 				if s.count > 0 then
-					if s.item (s.count) = a_delimiter then
-						s.head(s.count - 1)
+					if s.item (s.count) = a_uc_delimiter then
+						s.head (s.count - 1)
 						nice_string := False
 					end
 				end
@@ -343,7 +391,7 @@ feature -- Processing
 				-- Find Tokens:
 			from 
 				p_start := 1
-				p_end := s.index_of (a_delimiter, p_start)
+				p_end := s.index_of (a_uc_delimiter, p_start)
 			until
 				p_end = 0 or p_start > s.count
 			loop
@@ -356,7 +404,7 @@ feature -- Processing
 				p_start := p_end + 1
 
 				if p_start <= s.count then
-					p_end := s.index_of (a_delimiter, p_start)
+					p_end := s.index_of (a_uc_delimiter, p_start)
 				end
 			end
 
@@ -369,7 +417,8 @@ feature -- Processing
 					Result.force_last (ucs)
 				end
 			end
-
+		ensure
+			string_tokens_not_void: Result /= Void
 		end
 
 

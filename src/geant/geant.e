@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			if a_project.targets /= Void then
 				a_project.build
 				if not a_project.build_successful then
-					print("Build FAILED!%N")
+					print ("%NBUILD FAILED !%N")
 					Exceptions.die (1)
 				end
 			end
@@ -103,7 +103,7 @@ feature -- Access
 					end
 				elseif arg.count > 16 and then arg.substring (1, 16).is_equal ("--buildfilename=") then
 					build_filename := arg.substring (16, arg.count)
-				elseif arg.item (1) = '-' and arg.item (2) = 'D' then
+				elseif arg.count > 1 and then arg.item (1) = '-' and then arg.item (2) = 'D' then
 					p := arg.index_of('=', 1)
 					if p > 3 and p < arg.count then
 						a_variable_name := clone(arg.substring (3, p - 1))
@@ -136,6 +136,7 @@ feature {NONE} -- Error handling
 			-- with exit status 1.
 		do
 			error_handler.report_error (Usage_message)
+			print ("%NBUILD FAILED !%N")
 			Exceptions.die (1)
 		end
 
