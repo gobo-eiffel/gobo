@@ -32,16 +32,17 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	is_current_file_system: BOOLEAN is
-			-- Is file system the file system of the 
-			-- underlying platform?
+			-- Is file system the file system of the underlying platform?
 		deferred
 		end
 
 feature -- File handling
 
 	is_file_readable (a_filename: STRING): BOOLEAN is
-			-- Can file named `a_filename' be opened
-			-- in read mode?
+			-- Can file named `a_filename' be opened in read mode?
+			-- (`a_filename' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			a_filename_not_void: a_filename /= Void
 		deferred
@@ -51,6 +52,9 @@ feature -- File handling
 			-- Rename file named `old_name' as `new_name'.
 			-- Do nothing if the file could not be renamed, if
 			-- it did not exist or if `new_name' already existed.
+			-- (`old_name' and `new_name' should follow the pathname
+			-- convention of the underlying platform. For pathname
+			-- conversion use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			old_name_not_void: old_name /= Void
 			new_name_not_void: new_name /= Void
@@ -61,6 +65,9 @@ feature -- File handling
 			-- Copy file named `old_name' to `new_name'.
 			-- Do nothing if the file could not be copied, if it
 			-- did not exist or if `new_name' already existed.
+			-- (`old_name' and `new_name' should follow the pathname
+			-- convention of the underlying platform. For pathname
+			-- conversion use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			old_name_not_void: old_name /= Void
 			new_name_not_void: new_name /= Void
@@ -71,6 +78,9 @@ feature -- File handling
 			-- Delete file named `a_filename'.
 			-- Do nothing if the file could not be
 			-- deleted or if it did not exist.
+			-- (`a_filename' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			a_filename_not_void: a_filename /= Void
 		deferred
@@ -78,6 +88,9 @@ feature -- File handling
 
 	new_input_file (a_name: STRING): KI_TEXT_INPUT_FILE is
 			-- New input text file in current file system
+			-- (`a_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			a_name_not_void: a_name /= Void
 		deferred
@@ -89,6 +102,9 @@ feature -- File handling
 
 	new_output_file (a_name: STRING): KI_TEXT_OUTPUT_FILE is
 			-- New output text file in current file system
+			-- (`a_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			a_name_not_void: a_name /= Void
 		deferred
@@ -109,8 +125,10 @@ feature -- File handling
 feature -- Directory handling
 
 	is_directory_readable (a_dirname: STRING): BOOLEAN is
-			-- Can directory named `a_dirname' be opened
-			-- in read mode?
+			-- Can directory named `a_dirname' be opened in read mode?
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
@@ -122,6 +140,9 @@ feature -- Directory handling
 			-- be created, if it already existed or if
 			-- `a_dirname' is a nested directory name
 			-- and the parent directory does not exist.
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
@@ -129,9 +150,11 @@ feature -- Directory handling
 
 	delete_directory (a_dirname: STRING) is
 			-- Delete directory named `a_dirname'.
-			-- Do nothing if the directory could not
-			-- be deleted, if it did not exist or if
-			-- it is not empty.
+			-- Do nothing if the directory could not be deleted,
+			-- if it did not exist or if it is not empty.
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
@@ -143,6 +166,7 @@ feature -- Working directory
 			-- Name of current working directory;
 			-- Return absolute pathname with the naming 
 			-- convention of the underlying file system
+			-- (Return a new object at each call.)
 		require
 			is_current_file_system: is_current_file_system
 		deferred
@@ -153,9 +177,11 @@ feature -- Working directory
 
 	cd, set_current_working_directory (a_dirname: STRING) is
 			-- Set current working directory to `a_dirname'.
-			-- Do nothing if the current working directory
-			-- could not be changed or if directory
-			-- `a_dirname' did not exist.
+			-- Do nothing if the current working directory could not
+			-- be changed or if directory `a_dirname' did not exist.
+			-- (`a_dirname' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		require
 			a_dirname_not_void: a_dirname /= Void
 			is_current_file_system: is_current_file_system
@@ -166,6 +192,10 @@ feature -- Pathname handling
 
 	is_absolute_pathname (a_pathname: STRING): BOOLEAN is
 			-- Is `a_pathname' an absolute pathname?
+			-- (`a_pathname' should follow the pathname convention of
+			-- current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_pathname_not_void: a_pathname /= Void
 		deferred
@@ -176,6 +206,10 @@ feature -- Pathname handling
 	is_relative_pathname (a_pathname: STRING): BOOLEAN is
 			-- Is `a_pathname' a relative pathname (relative
 			-- to the current working directory)?
+			-- (`a_pathname' should follow the pathname convention of
+			-- current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_pathname_not_void: a_pathname /= Void
 		deferred
@@ -184,8 +218,11 @@ feature -- Pathname handling
 		end
 
 	is_root_directory (a_dirname: STRING): BOOLEAN is
-			-- Is `a_dirname' a root directory (i.e. it
-			-- has no parent directory)?
+			-- Is `a_dirname' a root directory (i.e. it has no parent directory)?
+			-- (`a_dirname' should follow the pathname convention of
+			-- current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_dirname_not_void: a_dirname /= Void
 		deferred
@@ -193,6 +230,11 @@ feature -- Pathname handling
 
 	basename (a_pathname: STRING): STRING is
 			-- Pathname with any leading directory components removed
+			-- (`a_pathname' should follow the pathname convention of
+			-- current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. The
+			-- result also follows this pathname convention. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_pathname_not_void: a_pathname /= Void
 		deferred
@@ -207,6 +249,11 @@ feature -- Pathname handling
 			-- is equivalent to `a_pathname; Return `relative_current_directory'
 			-- when there is no leading directory components in `a_pathname';
 			-- Return a root directory when `a_pathname' is a root directory
+			-- (`a_pathname' should follow the pathname convention of
+			-- current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. The
+			-- result also follows this pathname convention. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_pathname_not_void: a_pathname /= Void
 		deferred
@@ -219,6 +266,11 @@ feature -- Pathname handling
 	pathname (a_dirname, a_pathname: STRING): STRING is
 			-- Pathname made up of relative pathname
 			-- `a_pathname' in directory `a_dirname'
+			-- (`a_dirname' and `a_pathname' should follow the pathname convention
+			-- of current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. The
+			-- result also follows this pathname convention. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_dirname_not_void: a_dirname /= Void
 			a_pathname_not_void: a_pathname /= Void
@@ -233,6 +285,11 @@ feature -- Pathname handling
 	nested_pathname (a_dirname: STRING; a_pathnames: ARRAY [STRING]): STRING is
 			-- Pathname made up of relative pathnames
 			-- `a_pathnames' in directory `a_dirname'
+			-- (`a_dirname' and `a_pathnames' should follow the pathname convention
+			-- of current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. The
+			-- result also follows this pathname convention. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_dirname_not_void: a_dirname /= Void
 			a_pathnames_not_void: a_pathnames /= Void
@@ -248,6 +305,11 @@ feature -- Pathname handling
 
 	canonical_pathname (a_pathname: STRING): STRING is
 			-- Canonical form of `a_pathname'
+			-- (`a_pathname' should follow the pathname convention of
+			-- current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. The
+			-- result also follows this pathname convention. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_pathname_not_void: a_pathname /= Void
 		local
@@ -262,6 +324,10 @@ feature -- Pathname handling
 
 	relative_current_directory: STRING is
 			-- Relative pathname of current directory
+			-- (The result follows the pathname convention of current
+			-- file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. For
+			-- pathname conversion use `pathname_from_file_system'.)
 		deferred
 		ensure
 			relative_current_directory_not_void: Result /= Void
@@ -270,6 +336,10 @@ feature -- Pathname handling
 
 	relative_parent_directory: STRING is
 			-- Relative pathname of current parent directory
+			-- (The result follows the pathname convention of current
+			-- file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. For
+			-- pathname conversion use `pathname_from_file_system'.)
 		deferred
 		ensure
 			relative_parent_directory_not_void: Result /= Void
@@ -278,6 +348,10 @@ feature -- Pathname handling
 
 	root_directory: STRING is
 			-- Pathname of current root directory
+			-- (The result follows the pathname convention of current
+			-- file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. For
+			-- pathname conversion use `pathname_from_file_system'.)
 		deferred
 		ensure
 			root_directory_not_void: Result /= Void
@@ -287,6 +361,11 @@ feature -- Pathname handling
 
 	absolute_pathname (a_pathname: STRING): STRING is
 			-- Absolute pathname of `a_pathname'
+			-- (`a_pathname' should follow the pathname convention of
+			-- current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. The
+			-- result also follows this pathname convention. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_pathname_not_void: a_pathname /= Void
 			is_current_file_system: is_current_file_system
@@ -300,6 +379,11 @@ feature -- Pathname handling
 			-- Absolute pathname of parent directory of `a_pathname';
 			-- Return `absolute_root_directory' if `a_pathname'
 			-- is a root directory (i.e. has no parent)
+			-- (`a_pathname' should follow the pathname convention of
+			-- current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. The
+			-- result also follows this pathname convention. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_pathname_not_void: a_pathname /= Void
 			is_current_file_system: is_current_file_system
@@ -311,6 +395,10 @@ feature -- Pathname handling
 
 	absolute_root_directory: STRING is
 			-- Absolute pathname of current root directory
+			-- (The result follows the pathname convention of current
+			-- file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. For
+			-- pathname conversion use `pathname_from_file_system'.)
 		require
 			is_current_file_system: is_current_file_system
 		deferred
@@ -322,6 +410,10 @@ feature -- Pathname handling
 
 	string_to_pathname (a_pathname: STRING): KI_PATHNAME is
 			-- Convert string to pathname
+			-- (`a_pathname' should follow the pathname convention of
+			-- current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_pathname_not_void: a_pathname /= Void
 		deferred
@@ -331,6 +423,10 @@ feature -- Pathname handling
 
 	pathname_to_string (a_pathname: KI_PATHNAME): STRING is
 			-- Convert pathname to string
+			-- (The result follows the pathname convention of current
+			-- file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. For
+			-- pathname conversion use `pathname_from_file_system'.)
 		require
 			a_pathname_not_void: a_pathname /= Void
 		deferred
@@ -339,9 +435,10 @@ feature -- Pathname handling
 		end
 
 	pathname_from_file_system (a_pathname: STRING; a_file_system: KI_FILE_SYSTEM): STRING is
-			-- Pathname representation in current file system
-			-- of pathname `a_pathname' which is represented
-			-- using `a_file_system''s pathname convention
+			-- Pathname using pathname convention of current file system
+			-- (Unix convention in KL_UNIX_FILE_SYSTEM, Windows convention
+			-- in KL_WINDOWS_FILE_SYSTEM, etc.) converted from `a_pathname'
+			-- which should follow the pathname convention of `a_file_system'
 		require
 			a_pathname_not_void: a_pathname /= Void
 			a_file_system_not_void: a_file_system /= Void
@@ -357,6 +454,10 @@ feature -- Pathname handling
 
 	has_extension (a_filename, an_extension: STRING): BOOLEAN is
 			-- Is `an_extension' a file extension of `a_filename'?
+			-- (`a_filename' should follow the pathname convention of
+			-- current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_filename_not_void: a_filename /= Void
 			an_extension_not_void: an_extension /= Void
@@ -364,8 +465,11 @@ feature -- Pathname handling
 		end
 
 	extension (a_filename: STRING): STRING is
-			-- File extension of `a_filename'
-			-- (include the leading '.')
+			-- File extension of `a_filename' (include the leading '.')
+			-- (`a_filename' should follow the pathname convention of
+			-- current file system: Unix convention in KL_UNIX_FILE_SYSTEM,
+			-- Windows convention in KL_WINDOWS_FILE_SYSTEM, etc. For pathname
+			-- conversion use `pathname_from_file_system'.)
 		require
 			a_filename_not_void: a_filename /= Void
 		deferred
@@ -374,7 +478,8 @@ feature -- Pathname handling
 		end
 
 	exe_extension: STRING is
-			-- Executable file extension
+			-- Executable file extension (with the leading '.'
+			-- if this extension is not empty)
 		deferred
 		ensure
 			exe_extension_not_void: Result /= Void

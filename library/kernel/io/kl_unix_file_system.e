@@ -25,12 +25,18 @@ feature -- File handling
 
 	new_input_file (a_name: STRING): KL_UNIX_INPUT_FILE is
 			-- New input text file in current file system
+			-- (`a_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
 			!! Result.make (a_name)
 		end
 
 	new_output_file (a_name: STRING): KL_UNIX_OUTPUT_FILE is
 			-- New output text file in current file system
+			-- (`a_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
 			!! Result.make (a_name)
 		end
@@ -42,6 +48,8 @@ feature -- Pathname handling
 
 	is_absolute_pathname (a_pathname: STRING): BOOLEAN is
 			-- Is `a_pathname' an absolute pathname?
+			-- (`a_pathname' should follow the Unix pathname convention.
+			-- For pathname conversion use `pathname_from_file_system'.)
 		do
 			Result := (a_pathname.count > 0 and then a_pathname.item (1) = directory_separator)
 		end
@@ -49,6 +57,8 @@ feature -- Pathname handling
 	is_relative_pathname (a_pathname: STRING): BOOLEAN is
 			-- Is `a_pathname' a relative pathname (relative
 			-- to the current working directory)?
+			-- (`a_pathname' should follow the Unix pathname convention.
+			-- For pathname conversion use `pathname_from_file_system'.)
 		do
 			Result := not is_absolute_pathname (a_pathname)
 		ensure then
@@ -56,8 +66,9 @@ feature -- Pathname handling
 		end
 
 	is_root_directory (a_dirname: STRING): BOOLEAN is
-			-- Is `a_dirname' a root directory (i.e. it
-			-- has no parent directory)?
+			-- Is `a_dirname' a root directory (i.e. it has no parent directory)?
+			-- (`a_dirname' should follow the Unix pathname convention.
+			-- For pathname conversion use `pathname_from_file_system'.)
 		local
 			i, nb: INTEGER
 		do
@@ -77,6 +88,9 @@ feature -- Pathname handling
 
 	basename (a_pathname: STRING): STRING is
 			-- Pathname with any leading directory components removed
+			-- (`a_pathname' should follow the Unix pathname convention.
+			-- The result also follows this pathname convention. For
+			-- pathname conversion use `pathname_from_file_system'.)
 		local
 			i, nb: INTEGER
 		do
@@ -113,6 +127,9 @@ feature -- Pathname handling
 			-- is equivalent to `a_pathname; Return `relative_current_directory'
 			-- when there is no leading directory components in `a_pathname';
 			-- Return a root directory when `a_pathname' is a root directory
+			-- (`a_pathname' should follow the Unix pathname convention.
+			-- The result also follows this pathname convention. For
+			-- pathname conversion use `pathname_from_file_system'.)
 		local
 			i: INTEGER
 		do
@@ -156,6 +173,9 @@ feature -- Pathname handling
 	pathname (a_dirname, a_pathname: STRING): STRING is
 			-- Pathname made up of relative pathname
 			-- `a_pathname' in directory `a_dirname'
+			-- (`a_dirname' and `a_pathname' should follow the Unix pathname
+			-- convention. The result also follows this pathname convention.
+			-- For pathname conversion use `pathname_from_file_system'.)
 		local
 			nb: INTEGER
 		do
@@ -172,6 +192,9 @@ feature -- Pathname handling
 	nested_pathname (a_dirname: STRING; a_pathnames: ARRAY [STRING]): STRING is
 			-- Pathname made up of relative pathnames
 			-- `a_pathnames' in directory `a_dirname'
+			-- (`a_dirname' and `a_pathnames' should follow the Unix pathname
+			-- convention. The result also follows this pathname convention.
+			-- For pathname conversion use `pathname_from_file_system'.)
 		local
 			i, nb, k: INTEGER
 			a_pathname: STRING
@@ -194,18 +217,26 @@ feature -- Pathname handling
 
 	relative_current_directory: STRING is "."
 			-- Relative pathname of current directory
+			-- (The result follows the Unix pathname convention. For
+			-- pathname conversion use `pathname_from_file_system'.)
 
 	relative_parent_directory: STRING is ".."
 			-- Relative pathname of current parent directory
+			-- (The result follows the Unix pathname convention. For
+			-- pathname conversion use `pathname_from_file_system'.)
 
 	root_directory: STRING is
 			-- Pathname of current root directory
+			-- (The result follows the Unix pathname convention. For
+			-- pathname conversion use `pathname_from_file_system'.)
 		once
 			Result := "/"
 		end
 
 	absolute_pathname (a_pathname: STRING): STRING is
 			-- Absolute pathname of `a_pathname'
+			-- (`a_pathname' should follow the Unix pathname convention.
+			-- For pathname conversion use `pathname_from_file_system'.)
 		do
 			if is_absolute_pathname (a_pathname) then
 				Result := a_pathname
@@ -218,6 +249,8 @@ feature -- Pathname handling
 			-- Absolute pathname of parent directory of `a_pathname';
 			-- Return `absolute_root_directory' if `a_pathname'
 			-- is a root directory (i.e. has no parent)
+			-- (`a_pathname' should follow the Unix pathname convention.
+			-- For pathname conversion use `pathname_from_file_system'.)
 		local
 			an_absolute_pathname: STRING
 			a_basename: STRING
@@ -247,12 +280,16 @@ feature -- Pathname handling
 
 	absolute_root_directory: STRING is
 			-- Absolute pathname of current root directory
+			-- (The result follows the Unix pathname convention. For
+			-- pathname conversion use `pathname_from_file_system'.)
 		once
 			Result := "/"
 		end
 
 	string_to_pathname (a_pathname: STRING): KL_PATHNAME is
 			-- Convert string to pathname
+			-- (`a_pathname' should follow the Unix pathname convention.
+			-- For pathname conversion use `pathname_from_file_system'.)
 		local
 			i, nb: INTEGER
 			j, k: INTEGER
@@ -299,6 +336,8 @@ feature -- Pathname handling
 
 	pathname_to_string (a_pathname: KI_PATHNAME): STRING is
 			-- Convert pathname to string
+			-- (The result follows the Unix pathname convention. For
+			-- pathname conversion use `pathname_from_file_system'.)
 		local
 			i, nb: INTEGER
 		do
@@ -331,6 +370,8 @@ feature -- Pathname handling
 
 	has_extension (a_filename, an_extension: STRING): BOOLEAN is
 			-- Is `an_extension' a file extension of `a_filename'?
+			-- (`a_filename' should follow the Unix pathname convention.
+			-- For pathname conversion use `pathname_from_file_system'.)
 		local
 			nb, nb2: INTEGER
 		do
@@ -346,8 +387,9 @@ feature -- Pathname handling
 		end
 
 	extension (a_filename: STRING): STRING is
-			-- File extension of `a_filename'
-			-- (include the leading '.')
+			-- File extension of `a_filename' (include the leading '.')
+			-- (`a_filename' should follow the Unix pathname convention.
+			-- For pathname conversion use `pathname_from_file_system'.)
 		local
 			i: INTEGER
 			c: CHARACTER
@@ -375,7 +417,7 @@ feature -- Pathname handling
 		end
 
 	exe_extension: STRING is ""
-			-- Executable file extension
+			-- Executable file extension (empty under Unix)
 
 	directory_separator: CHARACTER is '/'
 			-- Directory separator
