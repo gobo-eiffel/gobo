@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="time" location="${GOBO}/library/time" abstract="true">
-
+<library name="time">
 	<description>
 		description: "Xace file for the Gobo Eiffel Time Library"
 		library: "Gobo Eiffel Time Library"
@@ -11,8 +10,9 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="clock"/>
-	<cluster name="date"/>
-	<cluster name="time_zone"/>
-
-</cluster>
+	<cluster name="time" location="${GOBO}/library/time" abstract="true">
+		<cluster name="clock"/>
+		<cluster name="date"/>
+		<cluster name="time_zone"/>
+	</cluster>
+</library>

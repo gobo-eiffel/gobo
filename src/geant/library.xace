@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="geant" location="${GOBO}/src/geant">
+<library name="geant">
 
 	<description>
 		system: "Gobo Eiffel Ant"
@@ -10,8 +10,9 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="command"/>
-	<cluster name="task"/>
-	<cluster name="parser"/>
-
-</cluster>
+	<cluster name="geant" location="${GOBO}/src/geant">
+		<cluster name="command"/>
+		<cluster name="task"/>
+		<cluster name="parser"/>
+	</cluster>
+</library>

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="test" location="${GOBO}/library/test" abstract="true">
-
+<library name="test">
 	<description>
 		description: "Xace file for the Gobo Eiffel Test Library"
 		library: "Gobo Eiffel Test Library"
@@ -11,7 +10,8 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="generation"/>
-	<cluster name="harness"/>
-
-</cluster>
+	<cluster name="test" location="${GOBO}/library/test" abstract="true">
+		<cluster name="generation"/>
+		<cluster name="harness"/>
+	</cluster>
+</library>

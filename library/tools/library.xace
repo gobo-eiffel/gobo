@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<library name="tools">
+	<description>
+		description: "Xace file for the Gobo Eiffel Tools Library"
+		library: "Gobo Eiffel Tools Library"
+		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="tools" location="${GOBO}/library/tools" abstract="true">
+		<cluster name="eiffel" abstract="true">
+			<cluster name="eiffel_ast" location="ast" relative="true" abstract="true">
+				<cluster name="eiffel_assertion" location="assertion" relative="true"/>
+				<cluster name="eiffel_class" location="class" relative="true"/>
+				<cluster name="eiffel_constant" location="constant" relative="true"/>
+				<cluster name="eiffel_expression" location="expression" relative="true"/>
+				<cluster name="eiffel_feature" location="feature" relative="true"/>
+				<cluster name="eiffel_instruction" location="instruction" relative="true"/>
+				<cluster name="eiffel_lace" location="lace" relative="true"/>
+				<cluster name="eiffel_misc" location="misc" relative="true"/>
+				<cluster name="eiffel_name" location="name" relative="true"/>
+				<cluster name="eiffel_type" location="type" relative="true"/>
+			</cluster>
+			<cluster name="eiffel_error" location="error" relative="true"/>
+			<cluster name="eiffel_parser" location="parser" relative="true"/>
+		</cluster>
+		<cluster name="lace" abstract="true">
+			<cluster name="lace_ast" location="ast" relative="true"/>
+			<cluster name="lace_error" location="error" relative="true"/>
+			<cluster name="lace_parser" location="parser" relative="true"/>
+		</cluster>
+		<cluster name="xace" abstract="true">
+			<cluster name="xace_ast" location="ast" relative="true"/>
+			<cluster name="xace_error" location="error" relative="true"/>
+			<cluster name="xace_generator" location="generator" relative="true"/>
+			<cluster name="xace_parser" location="parser" relative="true"/>
+			<cluster name="xace_support" location="support" relative="true"/>
+		</cluster>
+	</cluster>
+</library>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<library name="structure">
+	<description>
+		description: "Xace fle for the Gobo Eiffel Structure Library"
+		library: "Gobo Eiffel Structure Library"
+		copyright:  "Copyright (c) 2001, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="structure" location="${GOBO}/library/structure" abstract="true">
+		<cluster name="container"/>
+		<cluster name="dispenser"/>
+		<cluster name="list"/>
+		<cluster name="set"/>
+		<cluster name="sort"/>
+		<cluster name="support"/>
+		<cluster name="table"/>
+	</cluster>
+</library>

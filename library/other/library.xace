@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="other" location="${GOBO}/library/other" abstract="true">
-
+<library name="other">
 	<description>
 		description: "Xace file for the Gobo Eiffel Other Library"
 		library: "Gobo Eiffel Other Library"
@@ -11,7 +10,8 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="EiffelBase"/>
-	<cluster name="EiffelTime"/>
-
-</cluster>
+	<cluster name="other" location="${GOBO}/library/other" abstract="true">
+		<cluster name="EiffelBase"/>
+		<cluster name="EiffelTime"/>
+	</cluster>
+</library>

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="pattern" location="${GOBO}/library/pattern" abstract="true">
-
+<library name="pattern">
 	<description>
 		description: "Xace file for the Gobo Eiffel Pattern Library"
 		library: "Gobo Eiffel Pattern Library"
@@ -11,7 +10,8 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="command"/>
-	<cluster name="bridge"/>
-
-</cluster>
+	<cluster name="pattern" location="${GOBO}/library/pattern" abstract="true">
+		<cluster name="command"/>
+		<cluster name="bridge"/>
+	</cluster>
+</library>

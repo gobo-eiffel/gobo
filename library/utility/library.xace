@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="utility" location="${GOBO}/library/utility" abstract="true">
-
+<library name="utility">
 	<description>
 		description: "Xace file for the Gobo Eiffel Utility Library"
 		library: "Gobo Eiffel Utility Library"
@@ -11,9 +10,10 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="error"/>
-	<cluster name="formatter"/>
-	<cluster name="command"/>
-	<cluster name="support"/>
-
-</cluster>
+	<cluster name="utility" location="${GOBO}/library/utility" abstract="true">
+		<cluster name="error"/>
+		<cluster name="formatter"/>
+		<cluster name="command"/>
+		<cluster name="support"/>
+	</cluster>
+</library>

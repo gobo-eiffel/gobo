@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<library name="gobo">
+
+	<description>
+		description: "Xace file for the Gobo Eiffel Library libraries"
+		copyright: "Copyright (c) 2001-2002, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
+	<mount location="${GOBO}/library/lexical/library.xace" prefix="lx_"/>
+	<mount location="${GOBO}/library/parse/library.xace" prefix="pr_"/>
+	<mount location="${GOBO}/library/pattern/library.xace" prefix="dp_"/>
+	<mount location="${GOBO}/library/structure/library.xace" prefix="ds_"/>
+	<mount location="${GOBO}/library/test/library.xace" prefix="ts_"/>
+	<mount location="${GOBO}/library/time/library.xace" prefix="dt_"/>
+	<mount location="${GOBO}/library/tools/library.xace" prefix="et_"/>
+	<mount location="${GOBO}/library/utility/library.xace" prefix="ut_"/>
+	<mount location="${GOBO}/library/xml/library.xace" prefix="xm_"/>
+</library>

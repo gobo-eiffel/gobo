@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="lexical_skl" location="${GOBO}/library/lexical" abstract="true">
-
+<library name="lexical_skl">
 	<description>
 		description: "Xace file for the Gobo Eiffel scanner skeletons"
 		library: "Gobo Eiffel Lexical Library"
@@ -11,6 +10,5 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="skeleton"/>
-
-</cluster>
+	<cluster name="skeleton" location="${GOBO}/library/lexical/skeleton"/>
+</library>

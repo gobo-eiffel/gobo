@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<library name="lexical">
+	<description>
+		description: "Xace file for the Gobo Eiffel Lexical Library"
+		library: "Gobo Eiffel Lexical Library"
+		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<cluster name="lexical" location="${GOBO}/library/lexical" abstract="true">
+		<cluster name="automaton"/>
+		<cluster name="error"/>
+		<cluster name="generation"/>
+		<cluster name="lex"/>
+		<cluster name="regexp"/>
+		<cluster name="scanner"/>
+		<cluster name="skeleton"/>
+		<cluster name="support"/>
+	</cluster>
+</library>

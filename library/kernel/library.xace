@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="gobo_kernel" location="${GOBO}/library/kernel">
-
+<library name="kernel">
 	<description>
 		description: "Xace file for the Gobo Eiffel Kernel Library"
 		library: "Gobo Eiffel Kernel Library"
@@ -11,13 +10,14 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="elks"/>
-	<cluster name="io"/>
-	<cluster name="misc"/>
-	<cluster name="unicode"/>
-	<cluster name="support"/>
-	<cluster name="spec" abstract="true">
-		<cluster name="${GOBO_EIFFEL}"/>
+	<cluster name="kernel" location="${GOBO}/library/kernel">
+		<cluster name="elks"/>
+		<cluster name="io"/>
+		<cluster name="misc"/>
+		<cluster name="unicode"/>
+		<cluster name="support"/>
+		<cluster name="spec" abstract="true">
+			<cluster name="${GOBO_EIFFEL}"/>
+		</cluster>
 	</cluster>
-
-</cluster>
+</library>

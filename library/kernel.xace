@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="kernel" abstract="true">
+<library name="kernel">
 
 	<description>
 		description: "Xace file for the Eiffel compilers' kernel libraries"
@@ -14,7 +14,7 @@
 		<cluster name="base" abstract="true">
 			<cluster name="kernel"/>
 			<cluster name="support"/>
-			<cluster name="structures" abstract="true">
+			<cluster name="structures" abstract="true" unless="${GOBO_EIFFELBASE}">
 				<cluster name="access"/>
 				<cluster name="cursors"/>
 				<cluster name="cursor_tree"/>
@@ -90,4 +90,4 @@
 		<cluster name="TimeDate"/>
 	</cluster>
 
-</cluster>
+</library>

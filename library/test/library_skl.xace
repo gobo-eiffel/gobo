@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<cluster name="test_skl" location="${GOBO}/library/test" abstract="true">
-
+<library name="test_skl">
 	<description>
 		description: "Xace file for the Gobo Eiffel test harness"
 		library: "Gobo Eiffel Test Library"
@@ -11,6 +10,5 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="harness"/>
-
-</cluster>
+	<cluster name="harness" location="${GOBO}/library/test/harness"/>
+</library>
