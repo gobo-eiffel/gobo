@@ -523,14 +523,13 @@ feature {NONE} -- Compression
 				else
 						-- Use the proto.
 					put_entry (state.id, proto.state_id, difference)
-						-- If this state was sufficiently different from
-						-- the proto we built it from, make it a proto too.
-					if min_diff * 100 >= trans_nb * New_proto_diff_percentage
-					then
-						protos.put (state.id, clone (transitions), common_state)
-					end
 						-- Move `proto' to the front of the proto queue.
 					protos.move_to_front (proto_cursor)
+						-- If this state was sufficiently different from
+						-- the proto we built it from, make it a proto too.
+					if min_diff * 100 >= trans_nb * New_proto_diff_percentage then
+						protos.put (state.id, clone (transitions), common_state)
+					end
 				end
 			end
 		end
