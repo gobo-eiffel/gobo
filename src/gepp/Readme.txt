@@ -10,9 +10,9 @@ To compile this program:
 1. Use the script 'make_parser.bat' to generate class GEPP_PARSER and
    'make_scanner.bat' to generate class GEPP_SCANNER if necessary.
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise*.ace, Halstenbach: hact*.ace) or
-   ESD file (Visual Eiffel: ve*.esd). With SmallEiffel, you can just execute
-   the script se*.bat (after possible modifications).
+   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace) or
+   ESD file (Visual Eiffel: ve.esd). With SmallEiffel, you can just execute
+   the script se.bat (after possible modifications).
 2. Run Gepp using:
 
        gepp [-Dname ...] [filename | -] [filename | -]

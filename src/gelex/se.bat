@@ -1,5 +1,5 @@
 @rem system:     "Gobo Eiffel Lex: lexical analyzer generator"
-@rem compiler:   "SmallEiffel -0.81"
+@rem compiler:   "SmallEiffel -0.80"
 @rem author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
 @rem copyright:  "Copyright (c) 1998, Eric Bezault"
 @rem date:       "$Date$"
