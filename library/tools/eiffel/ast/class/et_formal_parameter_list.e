@@ -5,7 +5,7 @@ indexing
 		"Eiffel lists of formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,8 @@ inherit
 	ET_ACTUAL_PARAMETER_LIST
 		redefine
 			item, put_first, process,
-			fixed_array
+			resolved_formal_parameters,
+			named_types, fixed_array
 		end
 
 creation
@@ -67,6 +68,17 @@ feature -- Access
 			same_name: Result /= Void implies Result.name.same_identifier (a_name)
 		end
 
+	named_types (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): ET_FORMAL_PARAMETER_LIST is
+			-- Named types of current parameters, when they appear in `a_context'
+			-- in `a_universe', only made up of class names and generic
+			-- formal parameters when the root type of `a_context' is a
+			-- generic type not fully derived (Definition of base type in
+			-- ETL2 p.198). Replace by "*UNKNOWN*" any unresolved identifier
+			-- type, anchored type involved in a cycle.
+		do
+			Result := Current
+		end
+
 feature -- Status report
 
 	has_formal_parameter (a_name: ET_IDENTIFIER): BOOLEAN is
@@ -94,6 +106,16 @@ feature -- Element change
 		do
 			precursor (an_item)
 			an_item.formal_parameter.set_index (capacity - count + 1)
+		end
+
+feature -- Type processing
+
+	resolved_formal_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST): ET_FORMAL_PARAMETER_LIST is
+			-- Version of current types where the formal generic
+			-- parameter types have been replaced by their actual
+			-- counterparts in `a_parameters'
+		do
+			Result := Current
 		end
 
 feature -- Processing

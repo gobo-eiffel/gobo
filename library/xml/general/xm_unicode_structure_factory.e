@@ -79,7 +79,7 @@ feature -- General structures
 	new_string_string_table: DS_HASH_TABLE [STRING, STRING] is
 			-- New table of strings
 		do
-			create Result.make_default
+			create Result.make_map_default
 			Result.set_key_equality_tester (string_equality_tester)
 			Result.set_equality_tester (string_equality_tester)
 		ensure
@@ -93,7 +93,7 @@ feature -- Specialized structures
 	new_tokens_table: DS_HASH_TABLE [DS_HASH_TABLE [BOOLEAN, STRING], STRING] is
 			-- New tokens table
 		do
-			create Result.make_default
+			create Result.make_map_default
 			Result.set_key_equality_tester (string_equality_tester)
 		ensure
 			table_not_void: Result /= Void
@@ -103,7 +103,7 @@ feature -- Specialized structures
 	new_boolean_string_table: DS_HASH_TABLE [BOOLEAN, STRING] is
 			-- New boolean table
 		do
-			create Result.make_default
+			create Result.make_map_default
 			Result.set_key_equality_tester (string_equality_tester)
 		ensure
 			table_not_void: Result /= Void
@@ -113,7 +113,7 @@ feature -- Specialized structures
 	new_dtd_attribute_content_list_table: DS_HASH_TABLE [DS_LIST [XM_DTD_ATTRIBUTE_CONTENT], STRING] is
 			-- New attribute content table
 		do
-			create Result.make_default
+			create Result.make_map_default
 			Result.set_key_equality_tester (string_equality_tester)
 		ensure
 			table_not_void: Result /= Void

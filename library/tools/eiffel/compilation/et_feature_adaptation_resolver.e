@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		do
 			universe := a_universe
 			current_class := a_universe.unknown_class
-			create rename_table.make (10)
+			create rename_table.make_map (10)
 			rename_table.set_key_equality_tester (feature_name_tester)
 			create export_table.make (10)
 			export_table.set_equality_tester (feature_name_tester)

@@ -21,7 +21,7 @@ feature -- Specialized structures
 	new_entities_table: DS_HASH_TABLE [XM_EIFFEL_ENTITY_DEF, STRING] is
 			-- New entities table
 		do
-			create Result.make_default
+			create Result.make_map_default
 			Result.set_key_equality_tester (string_equality_tester)
 		ensure
 			entities_tale_not_void: Result /= Void

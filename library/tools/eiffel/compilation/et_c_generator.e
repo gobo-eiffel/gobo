@@ -653,7 +653,7 @@ feature {NONE} -- Feature generation
 			if not l_language_value.computed then
 				l_language_value.compute (error_handler)
 			end
-			if l_language_value.value.is_equal ("C inline") then
+			if STRING_.same_case_insensitive (l_language_value.value, "C inline") then
 				l_alias := a_feature.alias_clause
 				if l_alias /= Void then
 					l_alias_value := l_alias.manifest_string

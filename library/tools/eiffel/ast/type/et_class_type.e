@@ -23,6 +23,8 @@ inherit
 			resolved_formal_parameters
 		end
 
+	ET_SHARED_FEATURE_NAME_TESTER
+
 creation
 
 	make
@@ -169,7 +171,8 @@ feature -- Setting
 			a_name_not_void: a_name /= Void
 		do
 			if forget_features = Void then
-				create forget_features.make_equal (10)
+				create forget_features.make (10)
+				forget_features.set_equality_tester (feature_name_tester)
 			end
 			forget_features.force_last (a_name)
 			if unresolved_type /= Void then
