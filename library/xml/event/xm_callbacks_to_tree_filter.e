@@ -70,8 +70,9 @@ feature -- Document
 			-- Reset.
 		do
 			!! document.make
-			current_node := Void
-			current_open_composite := Void
+			current_open_composite := document
+			
+			!! namespace_cache.make_equal (0)
 		end
 
 feature -- Element
@@ -85,19 +86,18 @@ feature -- Element
 			end
 			if document.root_element = Void then
 					-- This is the first element in the document.
-				!! current_element.make_root (a_name, ns_prefix)
+				!! current_element.make_root (a_name, new_namespace (namespace, ns_prefix))
 					-- Add root element.
 				document.set_root_element (current_element)
 			else
 					-- This is not the first element in the document
-				!! current_element.make_child (current_open_composite, a_name, ns_prefix)
+				!! current_element.make_child (current_open_composite, a_name, new_namespace (namespace, ns_prefix))
 				current_open_composite.force_last (current_element)
 			end
 			handle_position (current_element)
 			check
 				element_not_void: current_element /= Void
 			end
-			current_node := current_element
 			current_open_composite := current_element
 		end
 
@@ -109,7 +109,7 @@ feature -- Element
 			check
 				element_not_void: current_element /= Void
 			end
-			!! xml.make (a_name, a_prefix, a_value, current_element)
+			!! xml.make (a_name, new_namespace (namespace, a_prefix), a_value, current_element)
 			handle_position (xml)
 			current_open_composite.force_last (xml)
 		end
@@ -125,7 +125,6 @@ feature -- Element
 			!! xml.make (current_open_composite, a_data)
 			current_open_composite.force_last (xml)
 			handle_position (xml)
-			current_node := xml
 		end
 
 	on_end_tag (a_namespace, a_ns_prefix, a_local_part: STRING) is
@@ -135,7 +134,6 @@ feature -- Element
 				open_composite_exists: current_open_composite /= Void
 			end
 			current_open_composite := next_open_composite (current_open_composite)
-			current_node := current_node.parent
 		end
 
 	on_processing_instruction (target, data: STRING) is
@@ -150,7 +148,6 @@ feature -- Element
 				current_open_composite.force_last (xml)
 			end
 			handle_position (xml)
-			current_node := xml
 		end
 
 	on_comment (com: STRING) is
@@ -159,19 +156,11 @@ feature -- Element
 			xml: XM_COMMENT
 		do
 			!! xml.make (current_open_composite, com)
-			if current_open_composite = Void then
-				document.force_last (xml)
-			else
-				current_open_composite.force_last (xml)
-			end
+			current_open_composite.force_last (xml)
 			handle_position (xml)
-			current_node := xml
 		end
 
 feature {NONE} -- Implementation
-
-	current_node: XM_NODE
-			-- Current node
 
 	current_open_composite: XM_COMPOSITE
 			-- Current composite node
@@ -187,6 +176,31 @@ feature {NONE} -- Implementation
 			Result := a_composite.parent
 		end
 
+feature {NONE} -- Implementation
+
+	new_namespace (a_uri, a_prefix: STRING): XM_NAMESPACE is
+			-- Create namespace object.
+		do
+			!! Result.make (a_prefix, a_uri)
+			
+			-- share namespace nodes
+			check cache_initialised: namespace_cache /= Void end
+			-- XM_NAMESPACE is hashable/equal on uri only, 
+			-- so we must explicitely check if the cached namespace
+			-- has the same prefix
+			if namespace_cache.has (Result) 
+				and then namespace_cache.item (Result).same_prefix (Result)
+			then
+				Result := namespace_cache.item (Result)
+			else 
+				namespace_cache.force_last (Result)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+	
+	namespace_cache: DS_HASH_SET [XM_NAMESPACE]
+	
 feature {NONE} -- Implementation (position)
 
 	handle_position (a_node: XM_NODE) is
@@ -202,12 +216,5 @@ feature {NONE} -- Implementation (position)
 
 	source_parser: XM_PARSER
 			-- Source parser
-
-invariant
-
-	-- TODO:
-	-- inv1: (root_element /= Void) implies (current_node /= Void)
-	-- inv2: (current_open_element = Void) implies (current_node = root_element)
-	-- inv3: ((root_element /= Void) and then (current_node = root_element)) implies current_node.is_root
 
 end
