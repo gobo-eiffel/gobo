@@ -26,7 +26,6 @@ inherit
 		rename
 			make as make_scanner_stdin
 		redefine
-			new_file_buffer,
 			set_input_buffer,
 			reset, fatal_error
 		end
@@ -89,6 +88,9 @@ COMMENTASCIICHAR [\x20-\x2C\x2E-\x7F]
 
 ATTRIBUTECHAR [\x21\x23-\x25\x28-\x3B\x3D-\x7F]
 -- = NOSPASCIICHAR less " & ' <
+
+ENTITYCHAR [\x21\x23\x24\x28-\x7F]
+-- = NOSPASCIICHAR less " % & ' 
 
 NAMECHAR [:A-Za-z0-9._\-]
 NAMECHAR_NOCOLON [A-Za-z0-9._\-]
@@ -775,11 +777,11 @@ NOQUOTSYSLITCHAR [\r\n\t\x20-!#-\x7F]
 			set_last_token (CHARDATA)
 			last_value := text			
 		}
-		({ATTRIBUTECHAR}|"<")+ {
+		({ENTITYCHAR})+ {
 			set_last_token (CHARDATA)
 			last_value := text
 		}
-		({ATTRIBUTECHAR}|"<"|{UTF8CHAR})+ {
+		({ENTITYCHAR}|{UTF8CHAR})+ {
 			set_last_token (CHARDATA_UTF8)
 			last_value := text
 		}		
@@ -892,29 +894,6 @@ feature -- Reset
 
 feature -- Input
 
-	set_input_file (a_name: STRING) is
-			-- Set `filename' to `a_name'.
-			-- Set `last_input_file_opened' to status.
-		require
-			a_name_not_void: a_name /= Void
-		local
-			a_file: XM_EIFFEL_UTF16_INPUT_STREAM
-			a_buffer: YY_FILE_BUFFER
-		do
-			!! a_file.make (a_name)
-			last_input_file_opened := a_file.is_open_read
-			if last_input_file_opened then
-				!! a_buffer.make (a_file)
-				set_input_buffer (a_buffer)
-			else
-				fatal_error (Error_cannot_read_file)
-			end
-			filename := a_name
-			!XM_FILE_SOURCE! source.make (filename)
-		ensure
-			filename_set: filename = a_name
-		end
-
 	set_input_buffer (a_buffer: like input_buffer) is
 			-- Set `input_buffer' to `a_buffer'.
 		do
@@ -925,18 +904,36 @@ feature -- Input
 			filename_set: filename = a_buffer.name
 		end
 
-	new_file_buffer (a_file: KI_CHARACTER_INPUT_STREAM): YY_FILE_BUFFER is
-			-- New input buffer for `a_file'
+	set_input_stream  (a_stream: KI_CHARACTER_INPUT_STREAM) is
+			-- Set input buffer from a stream.
+			-- This class is then in charge of closing it.
+		require
+			not_void: a_stream /= Void
+			readable: a_stream.is_open_read
 		local
 			a_utf16: XM_EIFFEL_UTF16_INPUT_STREAM
 		do
-			!! a_utf16.make_from_stream (a_file)
-			Result := Precursor (a_utf16)
+			input_stream := a_stream
+
+			!! a_utf16.make_from_stream (a_stream)
+			set_input_buffer (new_file_buffer (a_utf16))			
 		end
 
-	last_input_file_opened: BOOLEAN
-			-- Is last input file opened?
+	close_input is
+			-- Close input buffer if needed.
+		do
+			if input_stream /= Void then
+				if input_stream.is_closable then
+					input_stream.close
+				end
+			end
+		end
+		
+feature {NONE} -- Input
 
+	input_stream: KI_CHARACTER_INPUT_STREAM
+			 -- Saved stream for closing on end of stream.
+			 
 feature -- Error reporting
 
 	has_error: BOOLEAN is
