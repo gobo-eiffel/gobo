@@ -324,4 +324,24 @@ feature -- Test
 			assert_equal ("set_day_count3", d2, d1)
 		end
 
+	test_date13 is
+			-- Test features of DT_DATE.
+			-- (Regression test written after finding a bug in feature
+			-- `set_from_epoch_days'; Reported by Emmanuel Bouyer.)
+		local
+			d1, d2: DT_DATE
+			dd1: DT_DATE_DURATION
+		do
+			!! d1.make (2000, 1, 1)
+			!! d2.make (1600, 1, 1)
+			!! dd1.make (0, 0, - Days_in_400_years)
+			assert_equal ("infix_plus", d2, d1 + dd1)
+			assert_equal ("infix_&d", d2, d1 &d dd1)
+			d1.add_duration (dd1)
+			assert_equal ("add_duration", d2, d1)
+			d1.add_date_duration (dd1)
+			!! d2.make (1200, 1, 1)
+			assert_equal ("add_date_duration", d2, d1)
+		end
+
 end -- class DT_TEST_DATE
