@@ -9,16 +9,16 @@
 		revision: "$Revision$"
 	</description>
 
-	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
-	<mount location="${GOBO}/library/lexical/library.xace" prefix="lx_"/>
-	<mount location="${GOBO}/library/parse/library.xace" prefix="pr_"/>
-	<mount location="${GOBO}/library/pattern/library.xace" prefix="dp_"/>
-	<mount location="${GOBO}/library/structure/library.xace" prefix="ds_"/>
-	<mount location="${GOBO}/library/test/library.xace" prefix="ts_"/>
-	<mount location="${GOBO}/library/time/library.xace" prefix="dt_"/>
-	<mount location="${GOBO}/library/tools/library.xace" prefix="et_"/>
-	<mount location="${GOBO}/library/utility/library.xace" prefix="ut_"/>
-	<mount location="${GOBO}/library/xml/library.xace" prefix="xm_"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/lexical/library.xace"/>
+	<mount location="${GOBO}/library/parse/library.xace"/>
+	<mount location="${GOBO}/library/pattern/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/test/library.xace"/>
+	<mount location="${GOBO}/library/time/library.xace"/>
+	<mount location="${GOBO}/library/tools/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/xml/library.xace"/>
 
 	<cluster name="EiffelTime" location="${GOBO}/library/other/EiffelTime" if="${GOBO_EIFFEL}=ise"/>
 	<cluster name="EiffelBase" location="${GOBO}/library/other/EiffelBase" if="${GOBO_EIFFELBASE}"/>

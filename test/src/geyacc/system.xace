@@ -21,15 +21,15 @@
 		<option name="finalize" value="false"/>
 	</option>
 
-	<cluster name="geyacc_tester" location="${GOBO}/test/src" abstract="true">
+	<cluster name="geyacc_tester" location="${GOBO}/test/src" prefix="src_" abstract="true">
 		<cluster name="geyacc"/>
 		<cluster name="common"/>
-		<cluster name="testgen" location="TESTGEN"/>
 	</cluster>
-	<mount location="${GOBO}/library/test/library.xace" prefix="ts_"/>
-	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
-	<mount location="${GOBO}/library/structure/library.xace" prefix="ds_"/>
-	<mount location="${GOBO}/library/utility/library.xace" prefix="ut_"/>
-	<mount location="${GOBO}/library/pattern/library.xace" prefix="dp_"/>
+	<cluster name="src_geyacc_testgen" location="TESTGEN"/>
+	<mount location="${GOBO}/library/test/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/pattern/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>

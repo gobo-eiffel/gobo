@@ -21,11 +21,11 @@
 		<option name="finalize" value="false"/>
 	</option>
 
-	<cluster name="geant_tester" location="${GOBO}/test/src" abstract="true">
+	<cluster name="geant_tester" location="${GOBO}/test/src" prefix="src_" abstract="true">
 		<cluster name="geant"/>
 		<cluster name="common"/>
-		<cluster name="testgen" location="TESTGEN"/>
 	</cluster>
+	<cluster name="src_geant_testgen" location="TESTGEN"/>
 	<mount location="${GOBO}/src/geant/library.xace" prefix="geant_"/>
 	<mount location="${GOBO}/library/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>

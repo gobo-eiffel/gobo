@@ -21,14 +21,13 @@
 		<option name="finalize" value="false"/>
 	</option>
 
-	<cluster name="kl_tester" location="${GOBO}/test/kernel">
-		<cluster name="testgen" location="TESTGEN"/>
-	</cluster>
-	<mount location="${GOBO}/library/test/library.xace" prefix="ts_"/>
-	<mount location="${GOBO}/library/kernel/library.xace" prefix="kl_"/>
-	<mount location="${GOBO}/library/structure/library.xace" prefix="ds_"/>
-	<mount location="${GOBO}/library/utility/library.xace" prefix="ut_"/>
-	<mount location="${GOBO}/library/pattern/library.xace" prefix="dp_"/>
-	<mount location="${GOBO}/library/time/library.xace" prefix="dt_"/>
+	<cluster name="kl_tester" location="${GOBO}/test/kernel"/>
+	<cluster name="kl_testgen" location="TESTGEN"/>
+	<mount location="${GOBO}/library/test/library.xace"/>
+	<mount location="${GOBO}/library/kernel/library.xace"/>
+	<mount location="${GOBO}/library/structure/library.xace"/>
+	<mount location="${GOBO}/library/utility/library.xace"/>
+	<mount location="${GOBO}/library/pattern/library.xace"/>
+	<mount location="${GOBO}/library/time/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace"/>
 </system>
