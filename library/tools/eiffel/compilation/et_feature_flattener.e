@@ -1584,38 +1584,33 @@ feature {NONE} -- Signature validity
 			end
 			an_arguments := a_feature.arguments
 			other_arguments := other_precursor.arguments
-			if an_arguments = Void then
-				if other_arguments /= Void then
+			if an_arguments = Void or else an_arguments.is_empty then
+				if other_arguments /= Void and then not other_arguments.is_empty then
 					set_fatal_error (current_class)
 					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 				end
-			elseif other_arguments = Void then
+			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
 				set_fatal_error (current_class)
 				error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 			else
 				nb := an_arguments.count
-				if other_arguments.count /= nb then
-					set_fatal_error (current_class)
-					error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
-				else
-					from i := 1 until i > nb loop
-						a_type := an_arguments.formal_argument (i).type
-						other_type := other_arguments.formal_argument (i).type
-						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-							if
-								a_type.has_qualified_type (current_class, universe) or
-								other_type.has_qualified_type (parent_context, universe)
-							then
-									-- We have to delay until qualified
-									-- anchored types have been resolved.
-								has_qualified_type := True
-							else
-								set_fatal_error (current_class)
-								error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
-							end
+				from i := 1 until i > nb loop
+					a_type := an_arguments.formal_argument (i).type
+					other_type := other_arguments.formal_argument (i).type
+					if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+						if
+							a_type.has_qualified_type (current_class, universe) or
+							other_type.has_qualified_type (parent_context, universe)
+						then
+								-- We have to delay until qualified
+								-- anchored types have been resolved.
+							has_qualified_type := True
+						else
+							set_fatal_error (current_class)
+							error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature)
 						end
-						i := i + 1
 					end
+					i := i + 1
 				end
 			end
 			universe.set_qualified_signature_resolver (a_resolver)
@@ -1679,42 +1674,36 @@ feature {NONE} -- Signature validity
 			end
 			an_arguments := a_flattened_feature.arguments
 			other_arguments := other_precursor.arguments
-			if an_arguments = Void then
-				if other_arguments /= Void then
+			if an_arguments = Void or else an_arguments.is_empty then
+				if other_arguments /= Void and then not other_arguments.is_empty then
 					set_fatal_error (current_class)
 					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
 					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 				end
-			elseif other_arguments = Void then
+			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
 				set_fatal_error (current_class)
 				an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
 				error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 			else
 				nb := an_arguments.count
-				if other_arguments.count /= nb then
-					set_fatal_error (current_class)
-					an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-					error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
-				else
-					from i := 1 until i > nb loop
-						a_type := an_arguments.formal_argument (i).type
-						other_type := other_arguments.formal_argument (i).type
-						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-							if
-								a_type.has_qualified_type (current_class, universe) or
-								other_type.has_qualified_type (parent_context, universe)
-							then
-									-- We have to delay until qualified
-									-- anchored types have been resolved.
-								has_qualified_type := True
-							else
-								set_fatal_error (current_class)
-								an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
-								error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
-							end
+				from i := 1 until i > nb loop
+					a_type := an_arguments.formal_argument (i).type
+					other_type := other_arguments.formal_argument (i).type
+					if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
+						if
+							a_type.has_qualified_type (current_class, universe) or
+							other_type.has_qualified_type (parent_context, universe)
+						then
+								-- We have to delay until qualified
+								-- anchored types have been resolved.
+							has_qualified_type := True
+						else
+							set_fatal_error (current_class)
+							an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
+							error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature)
 						end
-						i := i + 1
 					end
+					i := i + 1
 				end
 			end
 			universe.set_qualified_signature_resolver (a_resolver)
@@ -1769,38 +1758,31 @@ feature {NONE} -- Signature validity
 			end
 			an_arguments := a_joined_feature.arguments
 			other_arguments := other_precursor.arguments
-			if an_arguments = Void then
+			if an_arguments = Void or else an_arguments.is_empty then
 				if other_arguments /= Void and then not other_arguments.is_empty then
 					set_fatal_error (current_class)
 					error_handler.report_vdjr0a_error (current_class, a_feature.inherited_feature, other.inherited_feature)
 				end
-			elseif other_arguments = Void then
-				if not an_arguments.is_empty then
-					set_fatal_error (current_class)
-					error_handler.report_vdjr0a_error (current_class, a_feature.inherited_feature, other.inherited_feature)
-				end
+			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
+				set_fatal_error (current_class)
+				error_handler.report_vdjr0a_error (current_class, a_feature.inherited_feature, other.inherited_feature)
 			else
 				nb := an_arguments.count
-				if other_arguments.count /= nb then
-					set_fatal_error (current_class)
-					error_handler.report_vdjr0a_error (current_class, a_feature.inherited_feature, other.inherited_feature)
-				else
-					from i := 1 until i > nb loop
-						if not an_arguments.formal_argument (i).type.same_syntactical_type (other_arguments.formal_argument (i).type, parent_context, current_class, universe) then
-							if
-								a_type.has_qualified_type (current_class, universe) or
-								other_type.has_qualified_type (parent_context, universe)
-							then
-									-- We have to delay until qualified
-									-- anchored types have been resolved.
-								has_qualified_type := True
-							else
-								set_fatal_error (current_class)
-								error_handler.report_vdjr0b_error (current_class, a_feature.inherited_feature, other.inherited_feature, i)
-							end
+				from i := 1 until i > nb loop
+					if not an_arguments.formal_argument (i).type.same_syntactical_type (other_arguments.formal_argument (i).type, parent_context, current_class, universe) then
+						if
+							a_type.has_qualified_type (current_class, universe) or
+							other_type.has_qualified_type (parent_context, universe)
+						then
+								-- We have to delay until qualified
+								-- anchored types have been resolved.
+							has_qualified_type := True
+						else
+							set_fatal_error (current_class)
+							error_handler.report_vdjr0b_error (current_class, a_feature.inherited_feature, other.inherited_feature, i)
 						end
-						i := i + 1
 					end
+					i := i + 1
 				end
 			end
 		end
