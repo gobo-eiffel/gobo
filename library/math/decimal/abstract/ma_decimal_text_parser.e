@@ -288,6 +288,9 @@ feature {MA_DECIMAL} -- Basic operations
 					state := State_error
 					error_code := Error_invalid_value
 				end
+			else
+				state := State_error
+				error_code := Error_invalid_value
 			end
 		ensure
 			definition: not error implies is_infinity and then state = State_infinity
