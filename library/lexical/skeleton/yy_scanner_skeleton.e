@@ -283,6 +283,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	yy_set_beginning_of_line is
+			-- Set `yy_at_beginning_of_line' according
+			-- to the current position in input source.
+		do
+			if yy_position > yy_start_position then
+				input_buffer.set_beginning_of_line
+					(yy_content.item (yy_position - 1) = '%N')
+			end
+		end
+
 	yy_previous_state: INTEGER is
 			-- State just before EOB character was reached
 		deferred
