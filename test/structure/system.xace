@@ -29,12 +29,14 @@
 			<optimize enable="False"/>
 		</option>
 
-		<cluster name="ds_tester" location="${GOBO}/test/structure"/>
-		<cluster name="TESTGEN"/>
+		<cluster name="ds_tester" location="${GOBO}/test/structure">
+			<cluster name="testgen" location="TESTGEN"/>
+		</cluster>
 		<mount location="${GOBO}/library/test/cluster.xace"/>
 		<mount location="${GOBO}/library/kernel/cluster.xace"/>
 		<mount location="${GOBO}/library/structure/cluster.xace"/>
 		<mount location="${GOBO}/library/utility/cluster.xace"/>
+		<mount location="${GOBO}/library/pattern/cluster.xace"/>
 		<mount location="${GOBO}/library/kernel.xace"/>
 	</cluster>
 </system>

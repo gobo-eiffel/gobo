@@ -32,8 +32,8 @@
 		<cluster name="parse_tester" location="${GOBO}/test/example" abstract="True">
 			<cluster name="parse"/>
 			<cluster name="common"/>
+			<cluster name="testgen" location="TESTGEN"/>
 		</cluster>
-		<cluster name="TESTGEN"/>
 		<mount location="${GOBO}/library/test/cluster.xace"/>
 		<mount location="${GOBO}/library/kernel/cluster.xace"/>
 		<mount location="${GOBO}/library/structure/cluster.xace"/>

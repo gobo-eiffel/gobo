@@ -32,8 +32,8 @@
 		<cluster name="gelex_tester" location="${GOBO}/test/src" abstract="True">
 			<cluster name="gelex"/>
 			<cluster name="common"/>
+			<cluster name="testgen" location="TESTGEN"/>
 		</cluster>
-		<cluster name="TESTGEN"/>
 		<mount location="${GOBO}/library/test/cluster.xace"/>
 		<mount location="${GOBO}/library/kernel/cluster.xace"/>
 		<mount location="${GOBO}/library/structure/cluster.xace"/>

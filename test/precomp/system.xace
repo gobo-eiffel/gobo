@@ -29,8 +29,9 @@
 			<optimize enable="False"/>
 		</option>
 
-		<cluster name="precomp_tester" location="${GOBO}/test/precomp"/>
-		<cluster name="TESTGEN"/>
+		<cluster name="precomp_tester" location="${GOBO}/test/precomp">
+			<cluster name="testgen" location="TESTGEN"/>
+		</cluster>
 		<mount location="${GOBO}/library/test/cluster.xace"/>
 		<mount location="${GOBO}/library/kernel/cluster.xace"/>
 		<mount location="${GOBO}/library/structure/cluster.xace"/>

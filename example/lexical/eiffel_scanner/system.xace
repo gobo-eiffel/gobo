@@ -29,7 +29,7 @@
 			<optimize enable="False"/>
 		</option>
 
-		<cluster name="eiffel" location="${GOBO}/example/lexical/eiffel_scanner"/>
+		<cluster name="eiffel_scanner" location="${GOBO}/example/lexical/eiffel_scanner"/>
 
 		<mount location="${GOBO}/library/lexical/cluster.xace"/>
 		<mount location="${GOBO}/library/utility/cluster.xace"/>
