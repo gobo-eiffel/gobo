@@ -55,7 +55,7 @@ feature -- Output, interface to descendants
 
 	output (s: UC_STRING) is
 			-- Output string.
-			-- All output from descendants should go through this for 
+			-- All output from descendants should go through this for
 			-- convenient redefinition.
 		require
 			s_not_void: s /= Void

@@ -30,7 +30,7 @@ feature -- Filters
 			new: Result /= Void
 		end
 
-	new_pretty_print_string (an_output: UC_STRING): XM_PRETTY_PRINT_FILTER is	
+	new_pretty_print_string (an_output: UC_STRING): XM_PRETTY_PRINT_FILTER is
 			-- New pretty printer output to string.
 		do
 			Result := new_pretty_print
@@ -62,7 +62,7 @@ feature -- Filters
 		ensure
 			new: Result /= Void
 		end
-			
+
 	new_namespace_resolver: XM_END_TAG_CHECKER is
 			-- New namespace resolver.
 		do
@@ -98,7 +98,7 @@ feature -- Filters
 feature -- Pipes
 
 	callbacks_pipe (a: ARRAY [XM_CALLBACKS_FILTER]): XM_CALLBACKS is
-			-- Make a pipe, 
+			-- Make a pipe,
 			-- eg << new_tag_checker, new_pretty_print >>
 			-- return first item of pipe.
 		require
@@ -119,9 +119,9 @@ feature -- Pipes
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	standard_callbacks_pipe (a: ARRAY [XM_CALLBACKS_FILTER]): XM_CALLBACKS is
-			-- Add elements to standard validation pipe, which 
+			-- Add elements to standard validation pipe, which
 			-- begins with:
 			--  tag check -> namespace resolver -> stop on error
 		require
@@ -130,7 +130,7 @@ feature -- Pipes
 			a_last: XM_CALLBACKS_FILTER
 		do
 			a_last := new_stop_on_error
-			Result := callbacks_pipe 
+			Result := callbacks_pipe
 				(<< new_end_tag_checker, new_namespace_resolver, a_last >>)
 			a_last.set_next (callbacks_pipe (a))
 		end

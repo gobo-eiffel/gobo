@@ -44,7 +44,7 @@ feature -- Meta
 			output_constant (Space_s)
 			output (a_content)
 			output_constant (Pi_end)
-			
+
 			Precursor (a_name, a_content)
 		end
 
@@ -54,7 +54,7 @@ feature -- Meta
 			output_constant (Comment_start)
 			output (a_content)
 			output_constant (Comment_end)
-			
+
 			Precursor (a_content)
 		end
 
@@ -65,7 +65,7 @@ feature -- Tag
 		do
 			output_constant (Stag_start)
 			output_name (a_prefix, a_local_part)
-			
+
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
@@ -78,7 +78,7 @@ feature -- Tag
 			output_constant (Quot_s)
 			output_quote_escaped (a_value)
 			output_constant (Quot_s)
-			
+
 			Precursor (a_namespace, a_prefix, a_local_part, a_value)
 		end
 
@@ -86,7 +86,7 @@ feature -- Tag
 			-- Print end of start tag.
 		do
 			output_constant (Stag_end)
-			
+
 			Precursor
 		end
 
@@ -96,7 +96,7 @@ feature -- Tag
 			output_constant (Etag_start)
 			output_name (a_prefix, a_local_part)
 			output_constant (Etag_end)
-		
+
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
@@ -108,7 +108,7 @@ feature -- Content
 			-- Default: forward event to 'next'.
 		do
 			output_escaped (a_content)
-			
+
 			Precursor (a_content)
 		end
 
@@ -117,7 +117,7 @@ feature {NONE} -- Escaped
 	is_escaped (a_char: INTEGER): BOOLEAN is
 			-- Is this an escapable character?
 		do
-			Result := a_char = Lt_char.code 
+			Result := a_char = Lt_char.code
 					or a_char = Gt_char.code
 					or a_char = Amp_char.code
 		end
@@ -154,7 +154,7 @@ feature {NONE} -- Output
 		end
 
 	output_quote_escaped (s: UC_STRING) is
-			-- Like output escaped with quote also escaped for 
+			-- Like output escaped with quote also escaped for
 			-- attribute values.
 		local
 			last_escaped: INTEGER
@@ -179,7 +179,7 @@ feature {NONE} -- Output
 				end
 				i := i + 1
 			end
-			
+
 			-- at exit
 			if last_escaped = 0 then
 				output_escaped (s)

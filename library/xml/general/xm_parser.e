@@ -59,7 +59,7 @@ feature {ANY} -- Parsing
 		do
 			!! a_source.make (a_file_name.to_utf8)
 			set_source (a_source)
-			
+
 			!! in_file.make (a_file_name.to_utf8)
 			in_file.open_read
 			check

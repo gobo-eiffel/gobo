@@ -1,7 +1,7 @@
 indexing
 
 	description:
-	
+
 		"Pretty printer as in James Clark's canonical XML"
 
 	library: "Gobo Eiffel XML Library"

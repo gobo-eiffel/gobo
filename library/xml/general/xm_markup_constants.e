@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 
 		"XML markup constants"
 
@@ -21,7 +21,7 @@ feature {NONE} -- Constants
 
 	Pi_start: STRING is once Result := "<?" end
 	Pi_end: STRING is once Result := "?>" end
-	
+
 	Space_s: STRING is once Result := " " end
 	Eq_s: STRING is once Result := "=" end
 	Quot_s: STRING is once Result := "%"" end
@@ -31,7 +31,7 @@ feature {NONE} -- Constants
 	Gt_char: CHARACTER is '>'
 	Amp_char: CHARACTER is '&'
 	Quot_char: CHARACTER is '%"'
-	
+
 	Lf_char: CHARACTER is '%N'
 	Cr_char: CHARACTER is '%R'
 	Tab_char: CHARACTER is '%T'
