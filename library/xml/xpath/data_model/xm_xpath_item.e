@@ -104,8 +104,12 @@ feature -- Conversion
 				a_node ?= Current
 				if a_node /= Void then
 					create {XM_XPATH_SINGLETON_NODE} Result.make (a_node)
+				else
+					create {XM_XPATH_EMPTY_SEQUENCE} Result.make
 				end
 			end
+		ensure
+			value_not_void: Result /= Void
 		end
 
 invariant
