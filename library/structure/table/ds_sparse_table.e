@@ -845,6 +845,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			prev: INTEGER
+			dead_key: K
 			a_tester: like key_equality_tester
 		do
 			if k = Void then
@@ -856,7 +857,8 @@ feature {NONE} -- Implementation
 				if a_tester /= Void then
 					if
 						position = No_position or else
-						not a_tester.test (k, keys_item (position))
+						not a_tester.test (k, keys_item (position)) or else
+						a_tester.test (k, dead_key)
 					then
 						from
 							slots_position := hash_position (k)
@@ -879,7 +881,8 @@ feature {NONE} -- Implementation
 				else
 					if
 						position = No_position or else
-						k /= keys_item (position)
+						k /= keys_item (position) or else
+						k = dead_key
 					then
 						from
 							slots_position := hash_position (k)

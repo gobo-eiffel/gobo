@@ -836,6 +836,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			prev: INTEGER
+			dead_item: G
 			a_tester: like equality_tester
 		do
 			if v = Void then
@@ -847,7 +848,8 @@ feature {NONE} -- Implementation
 				if a_tester /= Void then
 					if
 						position = No_position or else
-						not a_tester.test (v, items_item (position))
+						not a_tester.test (v, items_item (position)) or else
+						a_tester.test (v, dead_item)
 					then
 						from
 							slots_position := hash_position (v)
@@ -870,7 +872,8 @@ feature {NONE} -- Implementation
 				else
 					if
 						position = No_position or else
-						v /= items_item (position)
+						v /= items_item (position) or else
+						v = dead_item
 					then
 						from
 							slots_position := hash_position (v)
