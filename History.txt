@@ -65,9 +65,10 @@ Version 3.2 - ?
 	  for the root element, so that 'root_node' returns the real
 	  root (XM_DOCUMENT). XM_NODE.level consequently offset by 1.
 	* XM_COMPOSITE now a read-only list. Modification routines 
-	  are in XM_ELEMENT and XM_DOCUMENT (restricted to XM_DOCUMENT_NODE
-	  in the latter case).
+	  are in XM_ELEMENT and XM_DOCUMENT (typing is used to allow 
+	  only the correct node types to be added).
 	* XM_NODE.parent_element added, root_node now XM_DOCUMENT.
+	* XM_NAMESPACE stricter contracts and uri invariant.
 	* XM_DOCUMENT.set_root_element now exported to ANY.
 	* XM_NAMESPACE_RESOLVER now issues empty strings (the default 
 	  namespace) rather than the parent element's namespace for 
