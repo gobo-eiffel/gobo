@@ -412,7 +412,7 @@ feature {NONE} -- Initialization
 		end
 
 	execute is
-			-- Analyze Eiffel files `filenames'.
+			-- Analyze Eiffel files `arguments (1..argument_count)'.
 		local
 			j, n: INTEGER
 			filename: STRING
@@ -421,26 +421,31 @@ feature {NONE} -- Initialization
 		do
 			make
 			n := argument_count
-			from j := 1 until j > n loop
-				filename := argument (j)
-				a_file := file__make (filename)
-				file__open_read (a_file)
-				if a_file.is_open_read then
-					!! buffer.make (a_file)
-					set_input_buffer (buffer)
-					scan
-					a_file.close
-				else
-					io.error.put_string ("eiffel_scanner: cannot read %'")
-					io.error.put_string (filename)
-					io.error.put_string ("%'%N")
+			if n = 0 then
+				io.error.put_string ("usage: eiffel_scanner filename ...%N")
+				die (1)
+			else
+				from j := 1 until j > n loop
+					filename := argument (j)
+					a_file := file__make (filename)
+					file__open_read (a_file)
+					if a_file.is_open_read then
+						!! buffer.make (a_file)
+						set_input_buffer (buffer)
+						scan
+						a_file.close
+					else
+						io.error.put_string ("eiffel_scanner: cannot read %'")
+						io.error.put_string (filename)
+						io.error.put_string ("%'%N")
+					end
+					j := j + 1
 				end
-				j := j + 1
 			end
 		end
 
 	benchmark is
-			-- Analyze Eiffel file `arg.item (2)' `arg.item (1)' times.
+			-- Analyze Eiffel file `argument (2)' `argument (1)' times.
 		local
 			j, n: INTEGER
 			filename: STRING
@@ -471,8 +476,8 @@ feature {NONE} -- Initialization
 						io.error.put_string ("%'%N")
 						die (1)
 					end
+					j := j + 1
 				end
-				j := j + 1
 			end
 		end
 
