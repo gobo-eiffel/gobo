@@ -26,8 +26,6 @@ feature {ANY} -- Access
 feature {ANY} -- Basic Routines
 	
 	set_value (v: UC_STRING) is
-		require
-			v_not_void: v /= Void
 		do
 			value := v
 		ensure
