@@ -17,6 +17,11 @@ inherit
 
 	COMPARABLE
 
+	HASHABLE
+		undefine
+			is_equal
+		end
+
 	KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 		undefine
 			is_equal
@@ -71,6 +76,12 @@ feature -- Access
 			next_not_void: Result /= Void
 			same_rule: Result.rule = rule
 			next_position: Result.index = index + 1
+		end
+
+	hash_code: INTEGER is
+			-- Hash value
+		do
+			Result := index * rule.id
 		end
 
 feature -- Status report

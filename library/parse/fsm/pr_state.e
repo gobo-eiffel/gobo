@@ -147,7 +147,9 @@ feature -- Comparison
 			i: INTEGER
 			other_positions: like positions
 		do
-			if
+			if other = Current then
+				Result := True
+			elseif
 				same_type (other) and then
 				hash_code = other.hash_code and
 				positions.count = other.positions.count
@@ -221,7 +223,7 @@ feature -- Element change
 					positions.resize (positions.count + Max_nb_positions_increment)
 				end
 				positions.put_last (a_position)
-				hash_code := hash_code + a_position.index
+				hash_code := hash_code + a_position.hash_code
 			end
 		ensure
 			position_added: positions.has (a_position)

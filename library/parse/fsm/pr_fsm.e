@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 		do
 			grammar := a_grammar
 			!! states.make (Initial_max_nb_states)
+			!! cached_states.make (Initial_max_nb_states)
 			build_nondeterministic
 			build_deterministic
 		end
@@ -360,6 +361,7 @@ feature {NONE} -- Processing (nondeterministic)
 			end
 			if not states.extendible (nb_transitions) then
 				states.resize (states.capacity + nb_transitions + Max_nb_states_increment)
+				cached_states.resize (cached_states.capacity + nb_transitions + Max_nb_states_increment)
 			end
 			from i := - nb_tokens until i > nb_variables loop
 				target := transitions.item (i)
@@ -409,36 +411,50 @@ feature {NONE} -- Processing (nondeterministic)
  			-- otherwise insert `a_state' into FSM
 		require
 			a_state_not_void: a_state /= Void
-			not_full: not states.is_full
+			states_not_full: not states.is_full
+			cached_states_not_full: not cached_states.is_full
 		local
 			i, nb: INTEGER
+			a_code: INTEGER
+			state_list: DS_ARRAYED_LIST [PR_STATE]
 		do
 				-- The rule positions in `a_state' are sorted so
 				-- that we can compare states quickly.
 			a_state.sort_positions
-			from
-				i := 2
-				nb := states.count
-			until
-				Result /= Void or i > nb
-			loop
-				Result := states.item (i)
-				if not Result.same_state (a_state) then
-					Result := Void
-					i := i + 1
+			a_code := a_state.hash_code
+			if cached_states.has (a_code) then
+				state_list := cached_states.item (a_code)
+				from
+					i := 1
+					nb := state_list.count
+				until
+					Result /= Void or i > nb
+				loop
+					Result := state_list.item (i)
+					if not Result.same_state (a_state) then
+						Result := Void
+						i := i + 1
+					end
 				end
+			else
+				!! state_list.make (2)
+				cached_states.put (state_list, a_code)
 			end
 			if Result = Void then
 				Result := a_state
 					-- States are indexed from 0.
 				Result.set_id (states.count)
 				states.put_last (a_state)
+				state_list.force_last (a_state)
 			end
 		ensure
 			new_state_not_void: Result /= Void
 			same_state: Result.same_state (a_state)
 			has_new_state: states.has (Result)
 		end
+
+	cached_states: DS_HASH_TABLE [DS_ARRAYED_LIST [PR_STATE], INTEGER]
+			-- States indexed by hash-codes
 
 feature {NONE} -- Processing (deterministic)
 
@@ -584,5 +600,8 @@ invariant
 	grammar_not_void: grammar /= Void
 	valid_grammar: grammar.start_symbol /= Void
 --	positions_sorted: forall state in states, state.positions_sorted
+	cached_states_not_void: cached_states /= Void
+	no_void_state_list: not cached_states.has_item (Void)
+--	no_void_cached_state: forall state_list in cached_states, forall state in state_list, state /= Void
 
 end -- class PR_FSM
