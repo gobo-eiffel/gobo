@@ -66,45 +66,126 @@ feature {NONE} -- Output
 			a_file_open_write: a_file.is_open_write
 		local
 			a_clusters: ET_XACE_CLUSTERS
+			an_option: ET_XACE_OPTIONS
 		do
-			a_file.put_string ("system")
-			a_file.put_new_line
-			a_file.put_new_line
-			print_indentation (1, a_file)
-			a_file.put_string (a_system.system_name)
-			a_file.put_new_line
-			a_file.put_new_line
-			a_file.put_string ("root")
-			a_file.put_new_line
+			a_file.put_line ("system")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_string (a_system.root_class_name)
+			a_file.put_line (a_system.system_name)
 			a_file.put_new_line
-			a_file.put_new_line
-			a_file.put_string ("creation")
-			a_file.put_new_line
+			a_file.put_line ("root")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_string (a_system.creation_procedure_name)
+			a_file.put_line (a_system.root_class_name)
 			a_file.put_new_line
+			a_file.put_line ("creation")
 			a_file.put_new_line
-			a_file.put_string ("cluster")
+			print_indentation (1, a_file)
+			a_file.put_line (a_system.creation_procedure_name)
 			a_file.put_new_line
+			a_file.put_line ("cluster")
 			a_file.put_new_line
 			a_clusters := a_system.clusters
 			if a_clusters /= Void then
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
 			end
-			a_file.put_string ("option")
-			a_file.put_new_line
+			a_file.put_line ("option")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			a_file.put_string ("target exe console")
+			a_file.put_line ("target exe console")
+			an_option := a_system.options
+			if an_option /= Void then
+				print_options (an_option, 1, a_file)
+			end
 			a_file.put_new_line
-			a_file.put_new_line
-			a_file.put_string ("end")
-			a_file.put_new_line
+			a_file.put_line ("end")
+		end
+
+	print_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print `an_option' to `a_file'.
+		require
+			an_option_not_void: an_option /= Void
+			indent_positive: indent >= 0
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		local
+			assertions_on: BOOLEAN
+			assertions_off: BOOLEAN
+		do
+			if an_option.has_optimize.is_true then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertions off")
+				print_indentation (indent, a_file)
+				a_file.put_line ("finalize on")
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize leaves on")
+				print_indentation (indent, a_file)
+				a_file.put_line ("optimize calls on")
+				assertions_off := True
+			elseif an_option.has_optimize.is_false then
+				print_indentation (indent, a_file)
+				a_file.put_line ("assertions on")
+				assertions_on := True
+			end
+			if not assertions_off then
+				if an_option.has_check.is_true then
+					print_indentation (indent, a_file)
+					a_file.put_line ("check on")
+					assertions_on := True
+				elseif an_option.has_check.is_false then
+					print_indentation (indent, a_file)
+					a_file.put_line ("check off")
+					assertions_off := True
+				end
+				if an_option.has_loop.is_true then
+					print_indentation (indent, a_file)
+					a_file.put_line ("loop variant on")
+					print_indentation (indent, a_file)
+					a_file.put_line ("loop invariant on")
+					assertions_on := True
+				elseif an_option.has_loop.is_false then
+					print_indentation (indent, a_file)
+					a_file.put_line ("loop variant off")
+					print_indentation (indent, a_file)
+					a_file.put_line ("loop invariant off")
+					assertions_off := True
+				end
+				if an_option.has_invariant.is_true then
+					print_indentation (indent, a_file)
+					a_file.put_line ("class invariant on")
+					assertions_on := True
+				elseif an_option.has_invariant.is_false then
+					print_indentation (indent, a_file)
+					a_file.put_line ("class invariant off")
+					assertions_off := True
+				end
+				if an_option.has_ensure.is_true then
+					print_indentation (indent, a_file)
+					a_file.put_line ("ensure on")
+					assertions_on := True
+				elseif an_option.has_ensure.is_false then
+					print_indentation (indent, a_file)
+					a_file.put_line ("ensure off")
+					assertions_off := True
+				end
+				if an_option.has_require.is_true then
+					print_indentation (indent, a_file)
+					a_file.put_line ("require on")
+					assertions_on := True
+				elseif an_option.has_require.is_false then
+					print_indentation (indent, a_file)
+					a_file.put_line ("require off")
+					assertions_off := True
+				end
+				if assertions_on then
+					print_indentation (indent, a_file)
+					a_file.put_line ("assertions on")
+				elseif assertions_off then
+					print_indentation (indent, a_file)
+					a_file.put_line ("assertions off")
+				end
+			end
 		end
 
 	print_clusters (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
@@ -146,8 +227,7 @@ feature {NONE} -- Output
 				a_pathname := remove_all_characters (a_pathname, '{')
 				a_pathname := remove_all_characters (a_pathname, '}')
 				a_file.put_string (a_pathname)
-				a_file.put_string ("%"] end")
-				a_file.put_new_line
+				a_file.put_line ("%"] end")
 			end
 			subclusters := a_cluster.subclusters
 			if subclusters /= Void then
