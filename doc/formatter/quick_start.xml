@@ -17,8 +17,8 @@
 
   <para>
     Inheriting from <classname>GF_FORMAT</classname> adds the feature
-    <function>format</function> to the current
-    class. <function>format</function> takes two arguments: a <link
+    <featurename>format</featurename> to the current
+    class. <featurename>format</featurename> takes two arguments: a <link
     linkend="scientific_format">format specification</link> and an
     array of parameters. This array must be an array of
     references. For example <classname>ARRAY [BOOLEAN]</classname> does
@@ -28,8 +28,8 @@
   </para>
 
   <para>
-    <function>format</function> returns a
-    <returnvalue>STRING</returnvalue> where all format specifications have
+    <featurename>format</featurename> returns a
+    <classname>STRING</classname> where all format specifications have
     been replaced by their corresponding parameters..
   </para>
 
