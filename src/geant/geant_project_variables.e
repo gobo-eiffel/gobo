@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			-- Create a new variables object.
 		local
 			a_name: STRING
+			a_value: STRING
 		do
 			precursor
 				-- Create built-in variables $GOBO_OS, $is_windows/$is_unix, $exe
@@ -47,7 +48,17 @@ feature {NONE} -- Initialization
 			end
 			a_name := "is_windows"
 			if not Project_variables_resolver.has (a_name) then
-				set_variable_value (a_name, Default_builtin_variables.value (a_name))
+				a_value := Default_builtin_variables.value (a_name)
+				if a_value /= Void then
+					set_variable_value (a_name, a_value)
+				end
+			end
+			a_name := "is_unix"
+			if not Project_variables_resolver.has (a_name) then
+				a_value := Default_builtin_variables.value (a_name)
+				if a_value /= Void then
+					set_variable_value (a_name, a_value)
+				end
 			end
 			a_name := "path_separator"
 			if not Project_variables_resolver.has (a_name) then
