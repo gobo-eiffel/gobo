@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			a_cursor: DS_LINEAR_CURSOR [STRING]
 			i: INTEGER
 		do
-			assert_equal (a_tag + "_size", a_result.count, a_list.count)
+			assert_integers_equal (a_tag + "_size", a_result.count, a_list.count)
 			from
 				a_cursor := a_list.new_cursor
 				a_cursor.start
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			until
 				a_cursor.after
 			loop
-				assert_equal (a_tag + "_item_equal_at_" + i.out, a_result.item (i), a_cursor.item)
+				assert_strings_equal (a_tag + "_item_equal_at_" + i.out, a_result.item (i), a_cursor.item)
 				a_cursor.forth
 				i := i + 1
 			end
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			a_list: DS_LINKED_LIST [STRING]
 		do
 			create a_list.make_from_array (an_array)
-			assert_equal (a_tag, a_result, split.join (a_list))
+			assert_strings_equal (a_tag, a_result, split.join (a_list))
 		end
 		
 	assert_join_unescaped (a_tag: STRING; an_array: ARRAY [STRING]; a_result: STRING) is
