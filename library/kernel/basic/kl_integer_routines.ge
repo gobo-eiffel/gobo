@@ -223,7 +223,7 @@ feature -- Operation(s)
 
 	bit_shift_right (m, n: INTEGER): INTEGER is
 			-- `m' shifted `n' bits to right;
-			-- Note: If the first bit is set (i.e. the sign bit), then
+			-- Note: If the first bit of `m' is set (i.e. the sign bit), then
 			-- the new bits added on the left are 1; otherwise they are 0.
 		require
 			thirty_two_bit_shift: 0 <= n and n < 32
