@@ -14,6 +14,6 @@ deferred class ET_AGENT_TARGET
 
 inherit
 
-	ET_AST_NODE
+	ET_TARGET
 
 end
