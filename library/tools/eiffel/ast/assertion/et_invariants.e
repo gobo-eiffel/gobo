@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 		do
 			name_item := tokens.invariant_feature_name
+			hash_code := name.hash_code
 			clients := tokens.any_clients
 			implementation_class := a_class
 			implementation_feature := Current
@@ -55,6 +56,7 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 		do
 			name_item := tokens.invariant_feature_name
+			hash_code := name.hash_code
 			clients := tokens.any_clients
 			implementation_class := a_class
 			implementation_feature := Current

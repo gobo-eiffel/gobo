@@ -75,18 +75,14 @@ feature -- Access
 		deferred
 		end
 
-	first_seed: INTEGER is
+	first_seed: INTEGER
 			-- First seed
-		deferred
-		end
 
-	other_seeds: ET_FEATURE_IDS is
+	other_seeds: ET_FEATURE_IDS
 			-- Other seeds (feature IDs of first declarations
 			-- of current feature); May be Void if there
 			-- is only one seed (which is then accessible
 			-- through `first_seed')
-		deferred
-		end
 
 	flattened_feature: ET_FEATURE is
 			-- Feature resulting after feature flattening

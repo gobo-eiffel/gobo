@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 		do
 			name_item := a_name
+			hash_code := name.hash_code
 			arguments := args
 			is_keyword := tokens.is_keyword
 			obsolete_message := an_obsolete

@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 		do
 			name_item := a_name
+			hash_code := name.hash_code
 			declared_type := a_type
 			clients := a_clients
 			implementation_class := a_class

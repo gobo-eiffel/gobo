@@ -94,15 +94,6 @@ feature -- Access
 			definition: Result = flattened_feature.arguments
 		end
 
-	first_seed: INTEGER
-			-- First seed
-
-	other_seeds: ET_FEATURE_IDS
-			-- Other seeds (feature IDs of first declarations
-			-- of current feature); May be Void if there
-			-- is only one seed (which is then accessible
-			-- through `first_seed')
-
 	flattened_feature: ET_FEATURE
 			-- Feature resulting after feature adaptation
 

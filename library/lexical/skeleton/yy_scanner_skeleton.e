@@ -86,7 +86,11 @@ feature -- Access
 	text_item (i: INTEGER): CHARACTER is
 			-- `i'-th character of last token read
 		do
-			Result := yy_content.item (yy_start + i - 1)
+			if yy_content_area /= Void then
+				Result := yy_content_area.item (yy_start + i - 2)
+			else
+				Result := yy_content.item (yy_start + i - 1)
+			end
 		end
 
 	text_substring (s, e: INTEGER): STRING is
@@ -225,8 +229,14 @@ feature -- Element change
 			-- Make result available in `last_character'.
 		local
 			found: BOOLEAN
+			c: CHARACTER
 		do
-			if yy_content.item (yy_end) = yyEnd_of_buffer_character then
+			if yy_content_area /= Void then
+				c := yy_content_area.item (yy_end - 1)
+			else
+				c := yy_content.item (yy_end)
+			end
+			if c = yyEnd_of_buffer_character then
 					-- `yy_end' now points to the character we want
 					-- to return. If this occurs before the EOB characters,
 					-- then it's a valid NULL; if not, then we've hit the
@@ -250,7 +260,11 @@ feature -- Element change
 				end
 			end
 			if not found then
-				last_character := yy_content.item (yy_end)
+				if yy_content_area /= Void then
+					last_character := yy_content_area.item (yy_end - 1)
+				else
+					last_character := yy_content.item (yy_end)
+				end
 				yy_end := yy_end + 1
 				yy_position := yy_position + 1
 				if last_character = yyNew_line_character then
@@ -438,8 +452,13 @@ feature {NONE} -- Implementation
 			-- to the current position in input source.
 		do
 			if yy_end > yy_start then
-				input_buffer.set_beginning_of_line
-					(yy_content.item (yy_end - 1) = yyNew_line_character)
+				if yy_content_area /= Void then
+					input_buffer.set_beginning_of_line
+						(yy_content_area.item (yy_end - 2) = yyNew_line_character)
+				else
+					input_buffer.set_beginning_of_line
+						(yy_content.item (yy_end - 1) = yyNew_line_character)
+				end
 			end
 		end
 
@@ -453,6 +472,7 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			a_line: INTEGER
+			c: CHARACTER
 		do
 			from
 				i := yy_end - a_column - 1
@@ -460,7 +480,12 @@ feature {NONE} -- Implementation
 			until
 				i < nb
 			loop
-				if yy_content.item (i) = yyNew_line_character then
+				if yy_content_area /= Void then
+					c := yy_content_area.item (i - 1)
+				else
+					c := yy_content.item (i)
+				end
+				if c = yyNew_line_character then
 					a_line := a_line + 1
 				end
 				i := i - 1
@@ -481,6 +506,7 @@ feature {NONE} -- Implementation
 		local
 			i, nb: INTEGER
 			a_column: INTEGER
+			c: CHARACTER
 		do
 			from
 				i := yy_end - 1
@@ -488,7 +514,12 @@ feature {NONE} -- Implementation
 			until
 				i < nb
 			loop
-				if yy_content.item (i) /= yyNew_line_character then
+				if yy_content_area /= Void then
+					c := yy_content_area.item (i - 1)
+				else
+					c := yy_content.item (i)
+				end
+				if c /= yyNew_line_character then
 					a_column := a_column + 1
 					i := i - 1
 				else
@@ -505,6 +536,7 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			a_line, a_column: INTEGER
 			new_line_found: BOOLEAN
+			c: CHARACTER
 		do
 			from
 				i := yy_end - 1
@@ -512,7 +544,12 @@ feature {NONE} -- Implementation
 			until
 				i < nb or new_line_found
 			loop
-				if yy_content.item (i) = yyNew_line_character then
+				if yy_content_area /= Void then
+					c := yy_content_area.item (i - 1)
+				else
+					c := yy_content.item (i)
+				end
+				if c = yyNew_line_character then
 					a_line := a_line + 1
 					new_line_found := True
 				else
@@ -521,7 +558,12 @@ feature {NONE} -- Implementation
 				i := i - 1
 			end
 			from until i < nb loop
-				if yy_content.item (i) = yyNew_line_character then
+				if yy_content_area /= Void then
+					c := yy_content_area.item (i - 1)
+				else
+					c := yy_content.item (i)
+				end
+				if c = yyNew_line_character then
 					a_line := a_line + 1
 				end
 				i := i - 1

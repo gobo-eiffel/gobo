@@ -5,7 +5,7 @@ indexing
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -76,15 +76,6 @@ feature -- Access
 			-- Version (feature ID of last declaration
 			-- of current feature)
 
-	first_seed: INTEGER
-			-- First seed
-
-	other_seeds: ET_FEATURE_IDS
-			-- Other seeds (feature IDs of first declarations
-			-- of current feature); May be Void if there
-			-- is only one seed (which is then accessible
-			-- through `first_seed')
-
 	first_precursor: ET_FEATURE
 			-- First precursor;
 			-- Void if the feature has no precursor.
@@ -138,11 +129,8 @@ feature -- Access
 	synonym: ET_FEATURE
 			-- Next synonym if any
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
-		do
-			Result := name.hash_code
-		end
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -595,6 +583,7 @@ invariant
 
 	name_item_not_void: name_item /= Void
 	clients_not_void: clients /= Void
+	hash_code_definition: hash_code = name.hash_code
 	first_seed_positive: is_registered implies first_seed > 0
 	implementation_class_not_void: implementation_class /= Void
 	implementation_feature_not_void: implementation_feature /= Void
