@@ -19,6 +19,10 @@ inherit
 
 	KL_SHARED_ARGUMENTS
 
+creation
+
+	make
+
 feature {NONE} -- Initialization
 
 	make (handler: like error_handler) is
@@ -75,7 +79,7 @@ feature -- Parsing
 								(arg.substring (3, arg_count))
 						elseif i < nb then
 							i := i + 1
-							options.set_output_filename (argument (i))
+							options.set_output_filename (Arguments.argument (i))
 						else
 							options.set_output_filename (Void)
 							report_usage_error
@@ -86,7 +90,7 @@ feature -- Parsing
 							str := arg.substring (3, arg_count)
 						elseif i < nb then
 							i := i + 1
-							str := argument (i)
+							str := Arguments.argument (i)
 						end
 						if str /= Void and then STRING_.is_integer (str) then
 							a_size := str.to_integer
@@ -158,7 +162,7 @@ feature -- Parsing
 			end
 				-- Read file names.
 			if i = nb then
-				options.set_input_filename (argument (i))
+				options.set_input_filename (Arguments.argument (i))
 			else
 				report_usage_error
 			end
