@@ -6,7 +6,7 @@ indexing
 
 	system:     "Gobo Eiffel Xace"
 	author:     "Andreas Leitner <nozone@sbox.tugraz.at>"
-	copyright:  "Copyright (c) 2001, Andreas Leitner and others"
+	copyright:  "Copyright (c) 2001-2002, Andreas Leitner and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -194,34 +194,34 @@ feature {NONE} -- Command-line processing
 		do
 			if a_compiler.is_equal ("se") then
 				variables.define_value ("GOBO_EIFFEL", "se")
-				!ET_XACE_SE_GENERATOR! g.make (error_handler)
+				!ET_XACE_SE_GENERATOR! g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 				if not variables.is_defined ("GOBO_CC") then
 					variables.define_value ("GOBO_CC", se_c_compiler)
 				end
 			elseif a_compiler.is_equal ("ise") then
 				variables.define_value ("GOBO_EIFFEL", "ise")
-				!ET_XACE_ISE_GENERATOR! g.make (error_handler)
+				!ET_XACE_ISE_GENERATOR! g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 				if not variables.is_defined ("GOBO_CC") then
 					variables.define_value ("GOBO_CC", ise_c_compiler)
 				end
 			elseif a_compiler.is_equal ("ve") then
 				variables.define_value ("GOBO_EIFFEL", "ve")
-				!ET_XACE_VE_GENERATOR! g.make (error_handler)
+				!ET_XACE_VE_GENERATOR! g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 				if not variables.is_defined ("GOBO_CC") then
 					variables.define_value ("GOBO_CC", ve_c_compiler)
 				end
 			elseif a_compiler.is_equal ("hact") then
 				variables.define_value ("GOBO_EIFFEL", "hact")
-				!ET_XACE_HACT_GENERATOR! g.make (error_handler)
+				!ET_XACE_HACT_GENERATOR! g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 				if not variables.is_defined ("GOBO_CC") then
 					variables.define_value ("GOBO_CC", hact_c_compiler)
 				end
 			elseif a_compiler.is_equal ("xml") then
-				!ET_XACE_XML_GENERATOR! g.make (error_handler)
+				!ET_XACE_XML_GENERATOR! g.make (variables, error_handler)
 				a_command.generators.force_last (g)
 			end
 			if a_command.generators.is_empty then
