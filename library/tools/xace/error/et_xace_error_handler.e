@@ -223,6 +223,22 @@ feature -- Reporting errors
 			report_error (an_error)
 		end
 
+	report_non_empty_attribute_expected_error (an_element: XM_ELEMENT;
+		an_attribute_name: STRING; a_position: XM_POSITION) is
+			-- Report that the value of attribute `an_attribute_name'
+			-- in element `an_element' should be empty.
+		require
+			an_element_not_void: an_element /= Void
+			an_attribute_name_not_void: an_attribute_name /= Void
+			an_attribute_name_not_empty: an_attribute_name.count > 0
+			a_position_not_void: a_position /= Void
+		local
+			an_error: ET_XACE_NON_EMPTY_ATTRIBUTE_EXPECTED_ERROR
+		do
+			!! an_error.make (an_element, an_attribute_name, a_position)
+			report_error (an_error)
+		end
+
 	report_wrong_attribute_value_error (an_element: XM_ELEMENT; an_attribute_name: STRING;
 		an_actual_value: STRING; an_expected_values: DS_LINEAR [STRING]; a_position: XM_POSITION) is
 			-- Report that the value `an_actual_value' of attribute
