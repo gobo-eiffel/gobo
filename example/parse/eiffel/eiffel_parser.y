@@ -45,7 +45,7 @@ creation
 %token E_LOOP E_OBSOLETE E_ONCE E_PREFIX E_REDEFINE E_RENAME E_REQUIRE
 %token E_RESCUE E_RETRY E_SELECT E_SEPARATE E_STRIP E_THEN E_TRUE
 %token E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT E_WHEN E_CURRENT E_RESULT
-%token E_PRECURSOR
+%token E_PRECURSOR E_CREATE
 
 %token E_CHARERR E_INTERR E_REALERR E_STRERR E_UNKNOWN E_NOMEMORY
 %token E_STRPLUS E_STRMINUS E_STRSTAR E_STRSLASH E_STRDIV
@@ -63,7 +63,7 @@ creation
 %left E_FREEOP
 %right E_NOT E_OLD
 
-%expect 226
+%expect 253
 %start Class_declarations
 
 %%
@@ -141,6 +141,11 @@ Formal_generic_list: -- Empty
 
 Constraint_opt: -- Empty
 	| E_ARROW Class_type
+		-- Only supported by ISE (Generic creation):
+	| E_ARROW Class_type Creation_constraint
+	;
+
+Creation_constraint: E_CREATE Procedure_list E_END
 	;
 
 --------------------------------------------------------------------------------
@@ -296,6 +301,8 @@ Creators_opt: -- Empty
 	;
 
 Creation_clause: E_CREATION Clients_opt Procedure_list
+		-- Only supported by ISE:
+	| E_CREATE Clients_opt Procedure_list
 	;
 
 		-- Note: Does not support 'Header_comment'.
@@ -513,7 +520,9 @@ Compound: -- Empty
 	| Compound Instruction
 	;
 
-Instruction: Creation
+Instruction: Creation_instruction
+		-- Only supported by ISE:
+	| Create_instruction
 	| Call
 	| Assignment
 	| Conditional
@@ -527,12 +536,21 @@ Instruction: Creation
 
 --------------------------------------------------------------------------------
 
-Creation: '!' Type '!' Writable Creation_call_opt
+Creation_instruction: '!' Type '!' Writable Creation_call_opt
 	| E_BANGBANG Writable Creation_call_opt
 	;
 
 Creation_call_opt: -- Empty
 	| '.' Identifier Actuals_opt
+	;
+
+		-- Only supported by ISE:
+
+Create_instruction: E_CREATE '{' Type '}' Writable Creation_call_opt
+	| E_CREATE Writable Creation_call_opt
+	;
+
+Create_expression: E_CREATE '{' Type '}' Creation_call_opt
 	;
 
 --------------------------------------------------------------------------------
@@ -624,8 +642,18 @@ Call: Call_chain
 	| '(' Expression ')' '.' Call_chain
 	| E_PRECURSOR Actuals_opt
 	| E_PRECURSOR Actuals_opt '.' Call_chain
-	| '{' Identifier '}' E_PRECURSOR Actuals_opt
-	| '{' Identifier '}' E_PRECURSOR Actuals_opt '.' Call_chain
+			-- Put Type instead of Identifier to avoid
+			-- reduce/reduce conflict with Agent_expression:
+	| '{' Type '}' E_PRECURSOR Actuals_opt
+	| '{' Type '}' E_PRECURSOR Actuals_opt '.' Call_chain
+		-- Only supported by ISE:
+	| E_PRECURSOR '{' Type '}' Actuals_opt
+	| E_PRECURSOR '{' Type '}' Actuals_opt '.' Call_chain
+--	| '{' Identifier '}' E_PRECURSOR Actuals_opt
+--	| '{' Identifier '}' E_PRECURSOR Actuals_opt '.' Call_chain
+		-- Only supported by ISE:
+--	| E_PRECURSOR '{' Identifier '}' Actuals_opt
+--	| E_PRECURSOR '{' Identifier '}' Actuals_opt '.' Call_chain
 	;
 
 Call_chain: Identifier Actuals_opt
@@ -643,7 +671,7 @@ Actual_list: -- Empty
 	| Actual_list ',' Actual
 	;
 
-Actual:	Expression
+Actual: Expression
 	| '$' Address_mark
 	;
 
@@ -663,6 +691,10 @@ Writable: Identifier
 --------------------------------------------------------------------------------
 
 Expression: Call
+		-- Only supported by ISE:
+	| Create_expression
+		-- Only supported by ISE (Agents):
+	| Agent_expression
 	| E_RESULT
 	| E_CURRENT
 	| '(' Expression ')'
@@ -673,6 +705,8 @@ Expression: Call
 	| E_STRING
 	| E_BIT
 	| E_LARRAY Expression_list E_RARRAY
+		-- Only supported by ISE (Tuple_expression):
+	| '[' Expression_list ']'
 	| '+' Expression %prec E_NOT
 	| '-' Expression %prec E_NOT
 	| E_NOT Expression
@@ -700,6 +734,38 @@ Expression: Call
 	| E_OLD Expression
 	| E_STRIP '(' Attribute_list ')'
 	;
+
+--------------------------------------------------------------------------------
+
+		-- Only supported by ISE (Agents):
+
+Agent_expression: Identifier Agent_unqualified
+	| E_CURRENT Agent_unqualified
+	| E_RESULT Agent_unqualified
+	| '(' Expression ')' Agent_unqualified
+	| '{' Type '}' Agent_unqualified
+	| '?' Agent_unqualified
+	| Agent_unqualified
+	;
+
+Agent_unqualified: '~' Feature_name Agent_actuals_opt
+	;
+
+Agent_actuals_opt: -- Empty
+	| '(' Agent_actual_list ')'
+	;
+
+Agent_actual_list: -- Empty
+	| Agent_actual
+	| Agent_actual_list ',' Agent_actual
+	;
+
+Agent_actual: Actual
+	| '{' Type '}'
+	| '?'
+	;
+
+--------------------------------------------------------------------------------
 
 Attribute_list: -- Empty
 	| Identifier
