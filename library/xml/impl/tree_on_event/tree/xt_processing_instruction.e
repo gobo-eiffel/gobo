@@ -36,7 +36,7 @@ feature {ANY} -- Access
 
 	data: UC_STRING
 
-end -- XT_PROCESSING_INSTRUCTION
+end -- class XT_PROCESSING_INSTRUCTION
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

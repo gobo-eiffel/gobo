@@ -28,7 +28,7 @@ feature {ANY} -- Element change
 		deferred
 		end
 
-end -- XI_ELEMENT
+end -- class XI_ELEMENT
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

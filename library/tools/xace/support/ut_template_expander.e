@@ -146,7 +146,7 @@ feature
       require
 	 a_template_not_void: a_template /= Void
 	 a_variables_not_void: a_variables /= Void
-	 a_variable_values_not_void: not a_variables.to_array.has (Void)
+	 a_variable_values_not_void: not a_variables.has_item (Void)
       local
 	 str: STRING
 	 i, nb: INTEGER
@@ -222,7 +222,7 @@ feature
 		     str := "$"
 		  else
 		     str.prepend ("${")
-		     str.append ("}")
+		     str.append_string ("}")
 		  end
 		  Result.append_string (str)
 	       end

@@ -40,7 +40,7 @@ feature {ANY} -- Element change
 			ns_prefix := n
 		end
 
-end -- XT_NAMED_NODE
+end -- class XT_NAMED_NODE
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

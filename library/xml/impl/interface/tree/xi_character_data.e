@@ -34,7 +34,7 @@ invariant
 
 	content_not_void: content /= Void
 
-end -- XI_CHARACTER_DATA
+end -- class XI_CHARACTER_DATA
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

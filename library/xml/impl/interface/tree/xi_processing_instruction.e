@@ -33,7 +33,7 @@ invariant
 	target_not_void: target /= Void
 	data_not_void: data /= Void
 
-end -- XI_PROCESSING_INSTRUCTION
+end -- class XI_PROCESSING_INSTRUCTION
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

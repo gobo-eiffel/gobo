@@ -44,10 +44,10 @@ feature {ANY} -- Element change
 			-- append the content of 'other' to
 			-- the content of Current
 		do
-			content.append_ucstring (other.content)
+			content.append_uc_string (other.content)
 		end
 
-end -- XT_CHARACTER_DATA
+end -- class XT_CHARACTER_DATA
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

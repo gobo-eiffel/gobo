@@ -35,7 +35,7 @@ feature {ANY} -- Access
 	data: UC_STRING
 			-- the actual character data of this comment.
 
-end -- XT_COMMENT
+end -- class XT_COMMENT
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-end -- XI_DOCUMENT
+end -- class XI_DOCUMENT
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

@@ -95,7 +95,7 @@ invariant
 
 	name_not_void: name /= Void
 
-end -- XM_NAMED_NODE
+end -- class XM_NAMED_NODE
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

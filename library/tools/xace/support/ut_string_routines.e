@@ -136,7 +136,7 @@ feature
 	 -- returns a new string everytime.
       require
 	 a_not_void: a /= Void
-	 no_element_void: not a.has (Void)
+--	 no_element_void: not a.has (Void)
 	 a_count_bigger_zero: a.count > 0
       local
 	 i: INTEGER

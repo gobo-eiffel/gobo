@@ -47,7 +47,7 @@ feature {DP_IMPLEMENTATION, DP_INTERFACE} -- Implementation
 
 	implementation: XI_DOCUMENT
 
-end -- XM_DOCUMENT
+end -- class XM_DOCUMENT
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

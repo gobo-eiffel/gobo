@@ -172,10 +172,10 @@ feature -- Status
 			-- where the error occured.
 		do
 			!! Result.make (0)
-			Result.append (last_error_description)
-			Result.append ("(")
-			Result.append (position.out)
-			Result.append (")")
+			Result.append_string (last_error_description)
+			Result.append_string ("(")
+			Result.append_string (position.out)
+			Result.append_string (")")
 		end
 
 	position: XM_POSITION is

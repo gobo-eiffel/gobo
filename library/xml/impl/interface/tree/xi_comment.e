@@ -24,7 +24,7 @@ invariant
 
 	data_not_void: data /= Void
 
-end -- XI_COMMENT
+end -- class XI_COMMENT
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

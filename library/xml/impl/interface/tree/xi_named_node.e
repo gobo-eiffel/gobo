@@ -48,7 +48,7 @@ invariant
 
 	name_not_void: name /= Void
 
-end -- XI_NAMED_NODE
+end -- class XI_NAMED_NODE
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit

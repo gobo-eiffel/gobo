@@ -27,7 +27,7 @@ feature {ANY} -- Element change
 			parent := a_parent
 		end
 
-end -- XT_NODE
+end -- class XT_NODE
 
 --|-------------------------------------------------------------------------
 --| eXML, Eiffel XML Parser Toolkit
