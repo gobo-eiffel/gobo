@@ -157,7 +157,9 @@ feature -- Status report
 				Result := True
 			elseif is_parsed and then not has_syntax_error then
 				search_ancestors
-				Result := ancestors.has (a_class.id)
+				if not has_ancestors_error then
+					Result := ancestors.has (a_class.id)
+				end
 			end
 		end
 
@@ -305,6 +307,7 @@ feature -- Genealogy
 			a_cycle: DS_ARRAYED_LIST [ET_CLASS]
 			a_class: ET_CLASS
 			i, nb: INTEGER
+			has_error: BOOLEAN
 		do
 			if not ancestors_searched then
 				a_sorter := universe.class_sorter
@@ -322,13 +325,11 @@ feature -- Genealogy
 				from i := 1 until i > nb loop
 					a_class := sorted_anc.item (i)
 					a_parents := a_class.parents
-					if a_parents /= Void then
-						check sorted: a_parents.ancestors_searched end
-						a_parents.set_ancestors (a_class)
-					else
-						check sorted: any_parents.ancestors_searched end
-						any_parents.set_ancestors (a_class)
+					if a_parents = Void then
+						a_parents := any_parents
 					end
+					check sorted: a_parents.ancestors_searched end
+					a_parents.set_ancestors (a_class)
 					i := i + 1
 				end
 				if a_sorter.has_cycle then
@@ -349,6 +350,32 @@ feature -- Genealogy
 					error_handler.report_vhpr1_error (a_cycle.first, a_cycle)
 				else
 					a_sorter.wipe_out
+				end
+				nb := sorted_anc.count
+				from i := 1 until i > nb loop
+					a_class := sorted_anc.item (i)
+					a_parents := a_class.parents
+					if a_parents = Void then
+						a_parents := any_parents
+					end
+					has_error := a_parents.has_ancestors_error
+					if has_error then
+						a_class.set_ancestors_error (True)
+					else
+						if a_class.generic_parameters /= Void then
+							has_error := not a_class.generic_parameters.check_validity (a_class)
+						end
+						if has_error then
+							a_class.set_ancestors_error (True)
+						else
+							if a_class.parents /= Void then
+								if not a_class.parents.check_generic_derivation (a_class) then
+									a_class.set_ancestors_error (True)
+								end
+							end
+						end
+					end
+					i := i + 1
 				end
 			end
 		end
@@ -427,6 +454,8 @@ feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
 			ancestors_set: ancestors = an_ancestors
 		end
 
+feature {ET_PARENTS, ET_PARENT, ET_CLASS, ET_FORMAL_GENERIC_PARAMETERS} -- Genealogy
+
 	set_ancestors_error (b: BOOLEAN) is
 			-- Set `has_ancestors_error' to `b'.
 		do
@@ -459,18 +488,10 @@ feature -- Feature flattening
 		local
 			a_flattener: ET_FEATURE_FLATTENER
 			any_parents: ET_PARENTS
-			has_error: BOOLEAN
 		do
 			if not is_flattened then
 				search_ancestors
-				has_error := has_ancestors_error
-				if not has_error and then generic_parameters /= Void then
-					has_error := not generic_parameters.check_validity (Current)
-				end
-				if not has_error and then parents /= Void then
-					has_error := not parents.check_generic_derivation (Current)
-				end
-				if not has_error then
+				if not has_ancestors_error then
 					a_flattener := Shared_feature_flattener
 					if parents = Void then
 						if Current = universe.general_class then
