@@ -65,6 +65,20 @@ feature -- Access
 			positive_namespace_code: Result >= 0
 		end
 
+	default_collation_name: STRING is
+			-- URI naming the default collation
+		deferred
+		ensure
+			default_collation_name_not_void: Result /= Void
+		end
+
+	collator (a_collation_name: STRING): ST_COLLATOR is
+			-- Collator named by `a_collation_name'
+		require
+			uri_form: a_collation_name /= Void  -- and then is a URI
+		deferred
+		end
+
 	uri_for_prefix (an_xml_prefix: STRING): STRING is
 			-- URI for a namespace prefix;
 			-- The default namespace is NOT used when the prefix is empty.
@@ -136,7 +150,16 @@ feature -- Element change
 		ensure
 			function_bound: was_last_function_bound implies last_bound_function /= Void
 		end
-			
+
+feature -- Output
+
+	issue_warning (a_warning: STRING) is
+			-- Issue a warning message
+		require
+			warning_not_void: a_warning /= Void
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	internal_last_bound_variable: XM_XPATH_VARIABLE_DECLARATION

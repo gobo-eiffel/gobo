@@ -43,22 +43,6 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 		end
 
-feature -- Status report
-	
-	last_static_type_error: STRING is
-			-- Last static type error message
-		do
-			Result := ""
-		end
-
-feature -- Status setting
-
-	set_last_static_type_error (msg: STRING) is
-			-- Set result of `last_static_type_error'.
-		do
-			do_nothing -- (Pre-condition cannot be True)
-		end
-	
 feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is

@@ -15,7 +15,7 @@ class XM_XPATH_IS_LAST_EXPRESSION
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
-
+-- TODO redefine simplify (et.al?)
 creation
 
 	make
@@ -58,7 +58,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of `Current' and its subexpressions
 		do
-			-- TODO
+			Result := Current
 		end
 
 feature {NONE} -- Implementation

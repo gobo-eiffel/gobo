@@ -22,24 +22,33 @@ inherit
 
 	XM_XPATH_SHARED_CONFORMANCE
 
+	KL_SHARED_STANDARD_FILES
+
 creation
 
 	make, make_upon_node
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; clear_nmspces: BOOLEAN) is
+	make (a_name_pool: XM_XPATH_NAME_POOL; clear_nmspces: BOOLEAN; warnings: BOOLEAN) is
 			-- Establish invariant.
 		require
 			name_pool_not_void: a_name_pool /= Void
+		local
+			a_code_point_collator: ST_COLLATOR
 		do
 			name_pool := a_name_pool
+			create collations.make (10)
+			create a_code_point_collator
+			declare_collation ("http://www.w3.org/2003/11/xpath-functions/collation/codepoint", a_code_point_collator, True)
 			create namespaces.make (10)
 			if clear_nmspces then
 				clear_namespaces
 			end
+			warnings_to_std_error := warnings
 		ensure
 			name_pool_set: name_pool = a_name_pool
+			warnings_set: warnings_to_std_error = warnings
 		end
 
 	make_upon_node is
@@ -53,6 +62,20 @@ feature -- Access
 			-- Default XPath namespace, as a namespace code that can be looked up in `name_pool'
 		do
 			Result := Null_prefix_index
+		end
+
+	warnings_to_std_error: BOOLEAN
+			-- should warning messages be sent to standard error stream?
+	
+	default_collation_name: STRING
+			-- URI naming the default collation
+
+	collator (a_collation_name: STRING): ST_COLLATOR is
+			-- Collation named `a_collation_name'
+		do
+			if collations.has (a_collation_name) then
+				Result := collations.item (a_collation_name)
+			end
 		end
 
 	uri_for_prefix (an_xml_prefix: STRING): STRING is
@@ -77,6 +100,28 @@ feature -- Status report
 		end
 
 feature -- Element change
+
+	declare_collation (a_name: STRING; a_collator: ST_COLLATOR; is_default_collation: BOOLEAN) is
+			-- Declare a collation.
+		require
+			collation_name_not_void: a_name /= Void -- TODO and then is a URI
+			collator_not_void: a_collator /= Void
+		do
+			if collations.has (a_name) then
+				collations.replace (a_collator, a_name)
+			else
+				if collations.is_full then
+					collations.resize (2 * collations.count)
+				end
+				collations.put (a_collator, a_name)
+			end
+			if is_default_collation then
+				default_collation_name := a_name
+			end
+		ensure
+			collator_declared: collations.has (a_name) and then collations.item (a_name) = a_collator
+			default_collator: is_default_collation implies STRING_.same_string (a_name, default_collation_name)
+		end
 
 	clear_namespaces is
 			-- Clear all the declared namespaces, except for the standard ones.
@@ -152,7 +197,19 @@ feature -- Element change
 				end
 			end
 		end
-	
+
+
+feature -- Output
+
+	issue_warning (a_warning: STRING) is
+			-- Issue a warning message
+		do
+			if warnings_to_std_error then
+				std.error.put_string (a_warning)
+				std.error.put_new_line
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	namespaces: DS_HASH_TABLE [STRING, STRING]
@@ -160,7 +217,10 @@ feature {NONE} -- Implementation
 
 	variables:  DS_HASH_TABLE [XM_XPATH_VARIABLE, INTEGER]
 			-- Variable-bindings
-	
+
+	collations: DS_HASH_TABLE [ST_COLLATOR, STRING]
+			-- Named collations
+
 	bind_system_function (a_name: STRING; arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]) is
 			-- Identify a system function appearing in an expression.
 		require
@@ -189,5 +249,7 @@ feature {NONE} -- Implementation
 invariant
 
 	namespaces /= Void
+	default_collation_name: default_collation_name /= Void
+	collations: collations /= Void
 
 end

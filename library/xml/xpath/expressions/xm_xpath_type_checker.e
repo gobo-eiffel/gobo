@@ -160,5 +160,10 @@ feature -- Optimization
 		ensure
 			static_error_or_non_void_result: not is_static_type_check_error implies Result /= Void
 		end	
+
+invariant
+
+	error_message_when_error: is_static_type_check_error implies static_type_check_error_message /= Void
+
 end
 

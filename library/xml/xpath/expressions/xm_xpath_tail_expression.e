@@ -15,7 +15,7 @@ class XM_XPATH_TAIL_EXPRESSION
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
-
+-- TODO redefinitions
 creation
 
 	make

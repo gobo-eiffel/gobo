@@ -25,6 +25,8 @@ inherit
 
 	XM_XPATH_SHARED_FUNCTION_FACTORY
 
+	KL_PLATFORM
+
 creation
 
 	make
@@ -49,7 +51,7 @@ feature {NONE} -- Initialization
 			-- context node as an implicit argument, before checking its dependencies.
 
 			a_simplified_filter := a_filter.simplify
-			if a_filter.is_static_type_error then
+			if a_simplified_filter.is_error then
 				if not a_filter.are_dependencies_computed then
 					a_computed_expression ?= a_filter
 						check
@@ -147,6 +149,7 @@ feature -- Status report
 		local
 			an_item: XM_XPATH_ITEM
 			a_value: XM_XPATH_VALUE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			a_number: XM_XPATH_NUMERIC_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_sequence_value: XM_XPATH_SEQUENCE_VALUE
@@ -204,7 +207,8 @@ feature -- Status report
 
 							-- Filter is a constant that we can treat as boolean
 
-							if filter.effective_boolean_value (a_context) then
+							a_boolean_value := filter.effective_boolean_value (a_context)
+							if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
 								Result := a_base_iterator
 							else
 								create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
@@ -277,46 +281,58 @@ feature -- Optimization
 	simplify: XM_XPATH_EXPRESSION is
 			-- Simplify `Current'
 		local
+			an_expression: XM_XPATH_EXPRESSION
 			a_result_expression: XM_XPATH_FILTER_EXPRESSION
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_value: XM_XPATH_VALUE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			a_number: XM_XPATH_NUMERIC_VALUE
 			a_last_function: XM_XPATH_LAST
 			an_is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
 		do
 			a_result_expression := clone (Current)
-			a_result_expression.set_base_expression (base_expression.simplify)
-			a_result_expression.set_filter (filter.simplify)
-
-			-- Ignore the filter if `base_expression' is an empty sequence.
-
-			an_empty_sequence ?= a_result_expression.base_expression
-			if an_empty_sequence /= Void then
-				Result := an_empty_sequence
+			an_expression := base_expression.simplify
+			a_result_expression.set_base_expression (an_expression)
+			if an_expression.is_error then
+				a_result_expression.set_last_error (an_expression.last_error)
 			else
-				
-				-- Check whether the filter is a constant true() or false().
-
-				a_value ?= a_result_expression.filter
-				a_number ?= a_result_expression.filter
-
-				if a_value /= Void and then a_number = Void then
-					if a_result_expression.filter.effective_boolean_value (Void) then
-						Result := a_result_expression.base_expression
-					else
-						create {XM_XPATH_EMPTY_SEQUENCE} Result.make
-					end
+				an_expression := filter.simplify
+				a_result_expression.set_filter (an_expression)
+				if an_expression.is_error then
+					a_result_expression.set_last_error (an_expression.last_error)
 				else
-
-					-- Check whether the filter is [last()].
-					-- (note, position()=last() will have already been simplified)
-
-					a_last_function ?= a_result_expression.filter
-					if a_last_function /= Void then
-						create an_is_last_expression.make (True)
-						a_result_expression.set_filter (an_is_last_expression)
+					-- Ignore the filter if `base_expression' is an empty sequence.
+					
+					an_empty_sequence ?= a_result_expression.base_expression
+					if an_empty_sequence /= Void then
+						Result := an_empty_sequence
+					else
+						
+						-- Check whether the filter is a constant true() or false().
+						
+						a_value ?= a_result_expression.filter
+						a_number ?= a_result_expression.filter
+						
+						if a_value /= Void and then a_number = Void then
+							a_boolean_value := a_result_expression.filter.effective_boolean_value (Void)
+							if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
+								Result := a_result_expression.base_expression
+							else
+								create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+							end
+						else
+							
+							-- Check whether the filter is [last()].
+							-- (note, position()=last() is handled during analysis)
+							
+							a_last_function ?= a_result_expression.filter
+							if a_last_function /= Void then
+								create an_is_last_expression.make (True)
+								a_result_expression.set_filter (an_is_last_expression)
+							end
+							Result := a_result_expression
+						end
 					end
-					Result := a_result_expression
 				end
 			end
 		end
@@ -335,19 +351,20 @@ feature -- Optimization
 			finished, filter_is_positionl: BOOLEAN
 		do
 			a_result_expression := clone (Current)
-			a_result_expression.set_base_expression (base_expression.analyze (a_context))
-			if base_expression.is_static_type_error then
-				is_static_type_error := True
-				set_last_static_type_error (base_expression.last_static_type_error)
+			an_expression := base_expression.analyze (a_context)
+			an_expression.set_analyzed
+			a_result_expression.set_base_expression (an_expression)
+			if a_result_expression.base_expression.is_error then
+				a_result_expression.set_last_error (a_result_expression.base_expression.last_error)
 			else
 			
 				--	The filter expression never needs to be sorted.
-				
-				a_result_expression.set_filter (filter.analyze (a_context).unsorted (False))
 
-				if filter.is_static_type_error then
-					is_static_type_error := True
-					set_last_static_type_error (filter.last_static_type_error)
+				an_expression := filter.analyze (a_context).unsorted (False)
+				an_expression.set_analyzed
+				a_result_expression.set_filter (an_expression)
+				if a_result_expression.filter.is_error then
+					a_result_expression.set_last_error (a_result_expression.filter.last_error)
 				else
 					
 					-- Detect head expressions (E[1]) and tail expressions (E[position()!=1])
@@ -364,7 +381,7 @@ feature -- Optimization
 							if min = 1 and then max = 1 then
 								create {XM_XPATH_FIRST_ITEM_EXPRESSION} Result.make (a_result_expression.base_expression)
 								finished := True
-							elseif a_position_range.is_maximum_unbounded then
+							elseif max = Maximum_integer then
 								create {XM_XPATH_TAIL_EXPRESSION} Result.make (a_result_expression.base_expression, min)
 								finished := True
 							end
@@ -377,7 +394,6 @@ feature -- Optimization
 							
 							-- If the filter is positional, try changing f[a and b] to f[a][b] to increase
 							-- the chances of finishing early.
-							-- TODO - this is probably wrong - check what Mike does in 7.9.1
 							
 							a_boolean_filter ?= a_result_expression.filter
 							if filter_is_positional and then a_boolean_filter /= Void and then a_boolean_filter.operator = And_token then
@@ -388,11 +404,8 @@ feature -- Optimization
 									create a_filter.make (base_expression, another_expression)
 									create another_filter.make (a_filter, a_third_expression)
 									Result := another_filter.analyze (a_context)
+									Result.set_analyzed
 									finished := True
-									if another_filter.is_static_type_error then
-										is_static_type_error := True
-										set_last_static_type_error (another_filter.last_static_type_error)
-									end
 								elseif is_explicitly_positional_filter (a_boolean_filter.operands.item (2))
 									and then not is_explicitly_positional_filter (a_boolean_filter.operands.item (1)) then
 									another_expression := force_to_boolean (a_boolean_filter.operands.item (1))
@@ -400,11 +413,8 @@ feature -- Optimization
 									create a_filter.make (base_expression, a_third_expression)
 									create another_filter.make (a_filter, another_expression)
 									Result := another_filter.analyze (a_context)
+									Result.set_analyzed
 									finished := True
-									if another_filter.is_static_type_error then
-										is_static_type_error := True
-										set_last_static_type_error (another_filter.last_static_type_error)
-									end
 								end
 							end
 							if not finished then
@@ -418,9 +428,9 @@ feature -- Optimization
 								a_let_expression ?= an_offer.containing_expression
 								if a_let_expression /= Void then
 									an_expression := a_let_expression.analyze (a_context)
-									if a_let_expression.is_static_type_error then
-										is_static_type_error := True
-										set_last_static_type_error (a_let_expression.last_static_type_error)
+									an_expression.set_analyzed
+									if a_let_expression.is_error then
+											an_expression.set_last_error (a_let_expression.last_error)
 									else
 										an_offer.set_containing_expression (an_expression)
 									end

@@ -57,11 +57,6 @@ feature -- Access
 		ensure
 			error_text_not_void: Result /= Void
 		end
-		
-feature -- Status report
-
-	is_parse_error: BOOLEAN
-			-- Did last call to last parsing command fail?
 
 	last_parsed_expression: XM_XPATH_EXPRESSION is
 			-- Last expression sucessfully parsed by `parse'
@@ -83,6 +78,12 @@ feature -- Status report
 			parsed_expression_not_void: Result /= Void
 		end
 	
+
+feature -- Status report
+
+	is_parse_error: BOOLEAN
+			-- Did last call to last parsing command fail?
+
 feature -- Parsers
 
 	parse (an_expression_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -812,6 +813,7 @@ feature {NONE} -- Implementation
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			an_operator: INTEGER
+			a_default_collator: ST_COLLATOR
 		do
 			debug ("XPath Expression Parser")
 				std.error.put_string ("Entered parse_comparison_expression%N")
@@ -843,7 +845,8 @@ feature {NONE} -- Implementation
 					else
 						parse_range_expression
 						if not is_parse_error then
-							create {XM_XPATH_GENERAL_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, internal_last_parsed_expression)
+							a_default_collator := environment.collator (environment.default_collation_name)
+							create {XM_XPATH_GENERAL_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, internal_last_parsed_expression, a_default_collator)
 						end
 					end
 
@@ -855,7 +858,8 @@ feature {NONE} -- Implementation
 					else
 						parse_range_expression
 						if not is_parse_error then
-							create {XM_XPATH_VALUE_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, internal_last_parsed_expression)
+							a_default_collator := environment.collator (environment.default_collation_name)
+							create {XM_XPATH_VALUE_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, internal_last_parsed_expression, a_default_collator)
 						end
 					end
 

@@ -25,6 +25,8 @@ feature {NONE} -- Initialization
 
 	make (a_kind: INTEGER; a_container: STRING; an_operand: INTEGER) is
 			-- TODO
+		require
+			strictly_positive_operand: an_operand > 0
 		do
 		end
 	

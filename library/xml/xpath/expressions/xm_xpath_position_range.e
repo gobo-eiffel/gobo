@@ -16,6 +16,25 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (an_integer, another_integer: INTEGER) is
+			-- Establish invariant.
+		require
+			strictly_positive_lower_bound: an_integer > 0
+			valid_upper_bound: another_integer >= an_integer
+		do
+			minimum_position := an_integer
+			maximum_position := another_integer
+		ensure
+			minumum_set: minimum_position = an_integer
+			maxumum_set: maximum_position = another_integer
+		end
+			
 feature -- Access
 	
 	item_type: INTEGER is
@@ -46,15 +65,13 @@ feature -- Status report
 			std.error.put_new_line
 		end
 
-	is_maximum_unbounded: BOOLEAN
-			-- Do we ignore `maximum_position'?
 	
 feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of `Current' and its subexpressions
 		do
-			-- TODO
+			Result := Current
 		end
 
 feature {NONE} -- Implementation
@@ -68,7 +85,6 @@ feature {NONE} -- Implementation
 invariant
 
 	minimum_position: minimum_position > 0
-	proper_range: not is_maximum_unbounded implies maximum_position >= minimum_position 
-	unbounded_range: is_maximum_unbounded implies maximum_position = 0
+	proper_range: maximum_position >= minimum_position 
 
 end

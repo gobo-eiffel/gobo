@@ -86,6 +86,7 @@ feature -- Optimization
 		local
 			an_analyzed_expression: XM_XPATH_QUANTIFIED_EXPRESSION
 			a_declaration_type, a_sequence_type: XM_XPATH_SEQUENCE_TYPE
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			
 			-- The order of events is critical here. First we ensure that the type of the
@@ -93,17 +94,26 @@ feature -- Optimization
 			-- which in turn is required when type-checking the action part.
 
 			an_analyzed_expression := clone (Current)
-			if sequence.may_analyze then
-				an_analyzed_expression.set_sequence (sequence.analyze (a_context))
+			if not sequence.analyzed and then sequence.may_analyze then
+				an_expression := sequence.analyze (a_context)
+				an_expression.set_analyzed
+				an_analyzed_expression.set_sequence (an_expression)
+				if an_expression.is_error then
+					an_analyzed_expression.set_last_error (an_expression.last_error)
+				end
 			end
 
-			-- "some" and "every" have no ordering constraints
+			if not an_analyzed_expression.is_error then
+				
+				-- "some" and "every" have no ordering constraints
 
-			an_analyzed_expression.set_sequence (an_analyzed_expression.sequence.unsorted (False))
-			a_declaration_type := declaration.required_type
-			create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
+				an_analyzed_expression.set_sequence (an_analyzed_expression.sequence.unsorted (False))
+				a_declaration_type := declaration.required_type
+				create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
 
-			-- TODO - more code to write
+				-- TODO - more code to write
+			
+			end
 			
 			Result := an_analyzed_expression
 			declaration := Void -- Now the GC can reclaim it, and analysis cannot be performed again

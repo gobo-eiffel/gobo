@@ -19,11 +19,26 @@ inherit
 			display
 		end
 
+	-- N.B. Inheritance from XM_XPATH_STRING_VALUE is an implementation convenience;
+	-- xdt:untypedAtomic is NOT a sub-type of xs:integer
+	-- TODO - factor out the common implementation (all of string-value??) to tremove the sub-typing relationship
+	
 creation
 
 	make
 
+feature -- Comparison
 
+	three_way_comparison_using_collator (an_atomic_value: XM_XPATH_ATOMIC_VALUE; a_collator: ST_COLLATOR): INTEGER is
+			-- Comparison with `an_atomic_value'
+		require
+			atomic_value_valid: an_atomic_value /= Void -- and then is_comparable
+		do
+			-- TODO
+		ensure
+			three_way_comparison: Result >= -1 and Result <= 1
+		end
+			
 feature -- Status report
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is

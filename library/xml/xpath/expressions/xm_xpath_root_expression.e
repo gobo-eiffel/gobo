@@ -19,8 +19,6 @@ inherit
 			same_expression, compute_cardinality
 		end
 
-	XM_XPATH_EXCEPTIONS
-
 creation
 
 	make
@@ -42,22 +40,19 @@ feature -- Access
 			an_item: XM_XPATH_ITEM
 			a_node: XM_XPATH_NODE
 			a_document: XM_XPATH_DOCUMENT
-			an_exception_message: STRING
 		do
 			an_item := a_context.context_item
 			if an_item = Void then
-				an_exception_message := STRING_.appended_string (Xpath_dynamic_error_prefix, "Evaluating '/': the context item is not set")
-				Exceptions.raise (an_exception_message)
+				set_last_error_from_string ("Evaluating '/': the context item is not set", 2, Type_error)
 			else
 				a_node ?= an_item
 				if a_node = Void then
-					an_exception_message := STRING_.appended_string (Xpath_dynamic_error_prefix, "Evaluating '/': the context item is not a node")
-					Exceptions.raise (an_exception_message)
+					set_last_error_from_string ("Evaluating '/': the context item is not a node", 20, Type_error)
+				
 				else
 					a_document := a_node.document_root
 					if a_document = Void then
-						an_exception_message := STRING_.appended_string (Xpath_dynamic_error_prefix, "Evaluating '/': the root of the tree containing the context item is not a document node")
-						Exceptions.raise (an_exception_message)
+						set_last_error_from_string ("Evaluating '/': the root of the tree containing the context item is not a document node", 20, Type_error)
 					else
 						Result := a_document
 					end

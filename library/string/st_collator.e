@@ -18,7 +18,7 @@ inherit
 
 feature -- Comparison
 
-	compare (a_string, another_string: STRING): INTEGER is
+	three_way_comparison (a_string, another_string: STRING): INTEGER is
 			-- Compare `a_string' with `another_string'
 		require
 			first_string_not_void: a_string /= Void
@@ -35,7 +35,7 @@ feature -- Comparison
 	less_than (u, v: STRING): BOOLEAN is
 			-- Is `u' considered less than `v'?
 		do
-			Result := compare (u, v) = -1
+			Result := three_way_comparison (u, v) = -1
 		end
 
 end

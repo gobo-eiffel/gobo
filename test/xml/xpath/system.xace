@@ -16,6 +16,7 @@
     <option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
   </option>
   <option if="${DEBUG}">
+    <option name="case_insensitive" value="false" />
     <option name="assertion" value="all"/>
     <option name="garbage_collector" value="internal"/>
     <option name="finalize" value="false"/>
@@ -24,7 +25,7 @@
     <option name="debug_tag" value="XPath expression factory"/>
     <!-- <option name="debug_tag" value="XPath Expression Parser"/> -->
     <!-- <option name="debug_tag" value="XPath Expression Parser - tokens"/> -->
-    <option name="debug_tag" value="XPath stand-alone context"/>
+    <!-- <option name="debug_tag" value="XPath stand-alone context"/> -->
     <!-- <option name="debug_tag" value="XPath content emitter"/>  -->
     <!-- <option name="debug_tag" value="XPath descendants enumeration"/> -->
     <!-- <option name="debug_tag" value="XPath preceding enumeration"/> -->

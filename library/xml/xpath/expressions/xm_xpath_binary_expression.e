@@ -23,19 +23,19 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_operand_one: XM_XPATH_EXPRESSION; token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
 			-- Establish invariant
 		require
 			operand_1_not_void: an_operand_one /= Void
 			operand_2_not_void: an_operand_two /= Void
 			-- TODO: is_binary_op?
 		do
-			operator := token
+			operator := a_token
 			create operands.make (1,2)
 			operands.put (an_operand_one, 1)
 			operands.put (an_operand_two, 2)
 		ensure
-			operator_set: operator = token
+			operator_set: operator = a_token
 			operand_1_set: operands /= Void and then operands.item (1).same_expression (an_operand_one)
 			operand_2_set: operands.item (2).same_expression (an_operand_two)
 		end
@@ -117,10 +117,20 @@ feature -- Optimization
 			-- Simplify an expression
 		local
 			a_binary_expression: XM_XPATH_BINARY_EXPRESSION
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_binary_expression := clone (Current)
-			a_binary_expression.operands.put (operands.item (1).simplify, 1)
-			a_binary_expression.operands.put (operands.item (2).simplify, 2)
+			an_expression := operands.item (1).simplify
+			a_binary_expression.operands.put (an_expression, 1)
+			if an_expression.is_error then
+				a_binary_expression.set_last_error (an_expression.last_error)
+			else
+				an_expression := operands.item (2).simplify
+				a_binary_expression.operands.put (an_expression, 2)
+				if an_expression.is_error then
+					a_binary_expression.set_last_error (an_expression.last_error)
+				end
+			end
 			Result := a_binary_expression
 		end
 
@@ -157,7 +167,6 @@ feature {NONE} -- Implementation
 invariant
 
 	two_operands: operands /= Void and then operands.count = 2
-	static_type_error: is_static_type_error implies internal_last_static_type_error /= Void and then internal_last_static_type_error.count > 0
 
 end
 	

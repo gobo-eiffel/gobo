@@ -32,9 +32,6 @@ feature -- Access
 	operator: INTEGER
 			-- "for", "some" or "every" operator
 
-	analyzed: BOOLEAN
-			-- Has `analyze' been called?
-	
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
@@ -45,23 +42,33 @@ feature -- Access
 		end
 
 feature -- Status report
-	
-	may_analyze: BOOLEAN is
+
+		may_analyze: BOOLEAN is
 			-- OK to call `analyze'?
 		do
 			Result := declaration /= Void
-		end
-
+		end	
+			
 feature -- Optimization
 
 	simplify: XM_XPATH_EXPRESSION is
 			-- Simplify an expression
 		local
 			a_simplified_assignation: XM_XPATH_ASSIGNATION
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_simplified_assignation := clone (Current)
-			a_simplified_assignation.set_sequence (sequence.simplify)
-			a_simplified_assignation.set_action (action.simplify)
+			an_expression := sequence.simplify
+			a_simplified_assignation.set_sequence (an_expression)
+			if an_expression.is_error then
+				a_simplified_assignation.set_last_error (an_expression.last_error)
+			else
+				an_expression := action.simplify
+				a_simplified_assignation.set_action (an_expression)
+				if an_expression.is_error then
+					a_simplified_assignation.set_last_error (an_expression.last_error)
+				end
+			end
 			Result := a_simplified_assignation
 		end
 

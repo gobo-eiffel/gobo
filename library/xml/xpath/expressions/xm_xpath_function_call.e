@@ -21,6 +21,9 @@ inherit
 
 feature -- Access
 
+	arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			-- Actual parameters
+
 	supplied_argument_count: INTEGER is
 			-- Number of actual arguments supplied in the function call
 		do
@@ -82,9 +85,19 @@ feature -- Optimization
 			-- Simplify `Current'
 		local
 			result_expression: XM_XPATH_FUNCTION_CALL
+			simplified_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 		do
 			result_expression := clone (Current)
-			result_expression.set_arguments (simplify_arguments)
+			simplified_arguments := simplify_arguments
+			if simplified_arguments /= Void then
+				result_expression.set_arguments (simplified_arguments)
+			else
+				
+				-- don't simplify arguments if an error occured;
+				-- The error will be picked up later (?? - TODO check out this reasoning)
+
+				do_nothing
+			end
 			Result := result_expression
 		end
 
@@ -99,32 +112,35 @@ feature -- Optimization
 			a_value: XM_XPATH_VALUE
 			an_argument: XM_XPATH_EXPRESSION
 			result_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			a_result_expression: XM_XPATH_FUNCTION_CALL
 		do
 			a_result_expression := clone (Current)
-			result_arguments := clone (arguments)
+			create result_arguments.make (arguments.count)
 			from
 				fixed_values := True -- until we find otherwise
-				result_arguments.start
+				arguments_cursor := arguments.new_cursor
+				arguments_cursor.start
 			variant
-				result_arguments.count + 1 - result_arguments.index
+				arguments.count + 1 - arguments_cursor.index
 			until
-				result_arguments.after
+				arguments_cursor.after
 			loop
-				an_argument := result_arguments.item_for_iteration.analyze (a_context)
-				result_arguments.replace_at (an_argument)
+				an_argument := arguments_cursor.item.analyze (a_context)
+				an_argument.set_analyzed
+				result_arguments.put_last (an_argument)
 				a_value ?= an_argument
 				if a_value = Void then fixed_values := False end
-				result_arguments.forth
+				arguments_cursor.forth
 			end
 
 			a_result_expression.set_arguments (result_arguments)
 			a_result_expression.check_arguments (a_context)
 
 			-- Now, if any of the arguments has a static type error,
-			--  then `Current' as a whole has too.
+			--  then `a_result_expression' as a whole has too.
 			
-			if a_result_expression.is_static_type_error then
+			if a_result_expression.is_error then
 				Result := a_result_expression -- Marked in error
 			elseif fixed_values then
 				Result := a_result_expression.pre_evaluate (a_context) -- May or may not be in error
@@ -178,7 +194,7 @@ feature -- Evaluation
 			--  or that need access to context information,
 			--  can redefine this routine.
 		require
-			no_type_error: not is_static_type_error
+			no_error: not is_error
 			context_not_void: a_context /= Void
 		do
 			Result := eagerly_evaluate (Void)
@@ -191,7 +207,7 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		require
-			no_type_error: not is_static_type_error
+			no_error: not is_error
 			context_not_void: a_context /= Void
 		deferred
 		ensure
@@ -200,62 +216,73 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 feature {NONE} -- Implementation
 
-	arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			-- Actual parameters
-
 	simplify_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Simplify `arguments'
 		local
+			an_argument: XM_XPATH_EXPRESSION
 			result_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
+			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			in_error: BOOLEAN
 		do
 			from
-				create result_arguments.make_from_linear (arguments)
-				result_arguments.start
+				create result_arguments.make (arguments.count)
+				arguments_cursor := arguments.new_cursor
+				arguments_cursor.start
 			variant
-				result_arguments.count + 1 - result_arguments.index
+				result_arguments.count + 1 - arguments_cursor.index
 			until
-				result_arguments.after
+				in_error or else arguments_cursor.after
 			loop
-				result_arguments.replace_at (result_arguments.item_for_iteration.simplify)
-				result_arguments.forth
+				an_argument := arguments_cursor.item.simplify
+				if an_argument.is_error then
+					in_error := True
+				else
+					result_arguments.put_last (an_argument)
+				end
+				arguments_cursor.forth
 			end
-			Result := result_arguments
+			if not in_error then
+				Result := result_arguments
+			end
 		ensure
-			simplified_arguments_not_void: Result /= Void
+			simplified_arguments_void_on_error: True
 		end
 
-	check_argument_count (a_minimum_count, a_maximum_count: INTEGER): INTEGER is
+	check_argument_count (a_minimum_count, a_maximum_count: INTEGER) is
 			-- Check number of arguments
 		require
 			positive_minimum_count: a_minimum_count >= 0
 			nearly_positive_maximum_count: a_maximum_count >= -1
+			no_previous_error: not is_error
 		local
 			a_message: STRING
+			is_type_error: BOOLEAN
 		do
 			-- TODO - need to add location information in messages
-			Result := supplied_argument_count
-			if a_minimum_count = a_maximum_count and then a_minimum_count /= Result then
-				is_static_type_error := True
+			if a_minimum_count = a_maximum_count and then a_minimum_count /= supplied_argument_count then
+				is_type_error := True
 			a_message := STRING_.appended_string ("Function ", name)
 			a_message := STRING_.appended_string (a_message, " must have ")
 			a_message := STRING_.appended_string (a_message, a_minimum_count.out)
 			a_message := STRING_.appended_string (a_message, plural_arguments_text (a_minimum_count))
-			set_last_static_type_error (a_message)
-			elseif Result < a_minimum_count then
+			elseif supplied_argument_count < a_minimum_count then
+			is_type_error := True
 				a_message := STRING_.appended_string ("Function ", name)
 				a_message := STRING_.appended_string (a_message, " must have at least")
 				a_message := STRING_.appended_string (a_message, a_minimum_count.out)
 				a_message := STRING_.appended_string (a_message, plural_arguments_text (a_minimum_count))
-				set_last_static_type_error (a_message)
-			elseif a_maximum_count > -1 and Result > a_maximum_count then
+			elseif a_maximum_count > -1 and supplied_argument_count > a_maximum_count then
+			is_type_error := True
 				a_message := STRING_.appended_string ("Function ", name)
 				a_message := STRING_.appended_string (a_message, " must have at most")
 				a_message := STRING_.appended_string (a_message, a_maximum_count.out)
 				a_message := STRING_.appended_string (a_message, plural_arguments_text (a_maximum_count))
-				set_last_static_type_error (a_message)
+			end
+			if is_type_error then
+				set_last_error_from_string (a_message, 17, Type_error)
 			end
 		ensure
-			Correct_number_or_static_error: not is_static_type_error implies Result = supplied_argument_count
+			Correct_number_or_error: True
 		end
 
 	plural_arguments_text (a_count: INTEGER): STRING is

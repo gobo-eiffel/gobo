@@ -22,6 +22,8 @@ inherit
 	
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 
+	XM_XPATH_ERROR_TYPES
+
 	KL_SHARED_STANDARD_FILES
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -34,29 +36,26 @@ feature -- Access
 			-- This routine determines the type of the items within the
 			-- sequence, assuming that (a) this is known in advance,
 			-- and (b) it is the same for all items in the sequence.
+		require
+			not_in_error: not is_error
 		deferred
 		end
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
+		require
+			not_in_error: not is_error
 		deferred
 		end
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- An iterator over the values of a sequence
 		require
+			not_in_error: not is_error
 			context_not_void: a_context /= Void
 		deferred
 		ensure
 			iterator_not_void: Result /= Void
-		end
-
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value;
-			-- This returns `False' if the value is the empty sequence,
-			-- a zero-length string, a number equal to zero, or the boolean
-			-- `False'. Otherwise it returns `True'.
-		deferred
 		end
 
 feature -- Comparison
@@ -70,17 +69,18 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_static_type_error: BOOLEAN
-			-- Did a static type error occur?
 
-	last_static_type_error: STRING is
-			-- Last static type error message
-		require
-			static_type_error: is_static_type_error
-		deferred
-		ensure
-			message_not_void: Result /= Void
+	is_error: BOOLEAN is
+			-- Is `Current' in error?
+		do
+			Result := last_error /= Void
 		end
+	
+	last_error: XM_XPATH_ERROR_VALUE
+			-- Last error value
+
+	analyzed: BOOLEAN
+			-- Has `analyze' been called yet?
 
 	may_analyze: BOOLEAN is
 			-- OK to call `analyze'?
@@ -95,36 +95,44 @@ feature -- Status report
 		deferred
 		end
 
-	indent (a_level: INTEGER): STRING is
-			-- Construct indent string, for diagnostic output
-		require
-			strictly_positive_level: a_level > 0
-		local
-			counter: INTEGER
-		do
-			Result := ""
-			from
-				counter := 1
-			variant
-				a_level + 1 - counter
-			until
-				counter > a_level
-			loop
-				Result := STRING_.appended_string (Result, " ")
-				counter := counter + 1
-			end
-		end
-
 feature -- Status setting
 
-	set_last_static_type_error (msg: STRING) is
-			-- Set result of `last_static_type_error'.
+	set_analyzed is
+			-- Set `Current' has been analyzed.
 		require
-			type_error: is_static_type_error
-			message_not_void: msg /= Void
-		deferred
+			not_analyzed: not analyzed
+		do
+			analyzed := True
 		ensure
-			set: STRING_.same_string (last_static_type_error, msg)
+			set: analyzed = True
+		end
+
+	set_last_error (an_error_value: XM_XPATH_ERROR_VALUE) is
+			-- Set result of `last_error'.
+		require
+			not_in_error: not is_error		
+			error_value_not_void: an_error_value /= Void
+		do
+			last_error := an_error_value
+		ensure
+			set: last_error = an_error_value
+			in_error: is_error
+		end
+	
+	set_last_error_from_string (a_message: STRING; a_code: INTEGER; an_error_type: INTEGER) is
+			-- Set result of `last_error'.
+		require
+			error: is_error
+			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
+			message_not_void: a_message /= Void and then a_message.count > 0
+			valid_code: is_valid_error_code (a_code)
+			not_in_error: not is_error			
+		do
+			create last_error.make_from_string (a_message, a_code, an_error_type)
+		ensure
+			valid_error: last_error /= Void and then STRING_.same_string (last_error.error_message, a_message)
+				and then last_error.code = a_code
+			in_error: is_error
 		end
 
 feature -- Optimization
@@ -135,7 +143,8 @@ feature -- Optimization
 			--  (by rewriting the expression as a different expression);
 			-- The default implementation does nothing.
 		require
-			no_previous_type_error: not is_static_type_error
+			no_previous_error: not is_error
+			not_analyzed: not analyzed
 		deferred
 		ensure
 			expression_not_void: Result /= Void
@@ -150,13 +159,14 @@ feature -- Optimization
 			-- This routine is called after all references to functions and variables have been resolved
 			-- to the declaration of the function or variable. However, the types of such functions and
 			-- variables will only be accurately known if they have been explicitly declared
+			-- After calling `analyze', you must then call `set_analyze'.
 		require
 			context_not_void: a_context /= Void
-			ok_to_analyze: may_analyze
-			no_previous_type_error: not is_static_type_error
+			ok_to_analyze: not analyzed and then may_analyze
+			no_previous_error: not is_error
 		deferred
 		ensure
-			expression_not_void: not is_static_type_error implies Result /= Void
+			expression_not_void: Result /= Void
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -168,12 +178,26 @@ feature -- Optimization
 			-- advantage. This routine is always called at compile time.
 		require
 			offer_not_void: an_offer /= Void
+			no_previous_error: not is_error
 		deferred
 		ensure
 			expression_not_void: Result /= Void
 		end
 
 feature -- Evaluation
+
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value;
+			-- The result has value `False' if the value is the empty sequence,
+			-- a zero-length string, a number equal to zero, or the boolean
+			-- `False'. Otherwise it has value  `True'.
+		require
+			not_in_error: not is_error
+			analyzed: analyzed
+		deferred
+		ensure
+			value_not_void_but_may_be_in_error: Result /= Void
+		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate as a single item;
@@ -184,11 +208,13 @@ feature -- Evaluation
 			-- this condition will be detected.
 		require
 			context_not_void: a_context /= Void
-			no_type_error: not is_static_type_error
+			analyzed_without_errors: analyzed and then not is_error
 		deferred
+		ensure
+			item_returned_but_may_be_in_error: Result /= Void
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT): STRING is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
 			-- Evaluate as a String
 			-- This function must only be called in contexts where it is known
 			-- that the expression will return a single string (or where an empty sequence
@@ -196,18 +222,18 @@ feature -- Evaluation
 			-- the result to a string, other than converting () to "". This routine is used mainly to
 			-- evaluate expressions produced by compiling an attribute value template.
 		require
-			-- TODO - turn the above into pre-conditions.
+			-- TODO - check the above and turn it into pre-conditions.if possible
 			context_not_void: a_context /= Void
-			no_type_error: not is_static_type_error
+			analyzed_without_errors: analyzed and then not is_error
 		deferred
 		ensure
-			string_not_void: Result /= Void
+			string_not_void_but_may_be_in_error: Result /= Void
 		end
 
 	eagerly_evaluate (a_context: XM_XPATH_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Eager evaluation of `Current'		
 		require
-			no_type_error: not is_static_type_error
+			analyzed_without_errors: analyzed and then not is_error
 		local
 			a_length: INTEGER
 			an_item: XM_XPATH_ITEM
@@ -268,6 +294,26 @@ feature {XM_XPATH_EXPRESSION} -- Local
 			Result := Current.promote (an_offer)
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	indent (a_level: INTEGER): STRING is
+			-- Construct indent string, for diagnostic output
+		require
+			strictly_positive_level: a_level > 0
+		local
+			counter: INTEGER
+		do
+			Result := ""
+			from
+				counter := 1
+			variant
+				a_level + 1 - counter
+			until
+				counter > a_level
+			loop
+				Result := STRING_.appended_string (Result, " ")
+				counter := counter + 1
+			end
 		end
 
 end

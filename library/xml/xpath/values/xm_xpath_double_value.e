@@ -44,16 +44,28 @@ feature -- Access
 
 	value: DOUBLE -- TODO - insufficient??
 
+	
+	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
+		do
+			Result := value.truncated_to_integer
+		end
+
+	as_double: DOUBLE is
+			-- Value converted to a double
+		do
+			Result := value
+		end
+
 	item_type: INTEGER is
 			--Determine the data type of the expression, if possible
 		do
 			Result := Double_type
 		end
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): BOOLEAN is
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
 			-- Effective boolean value
 		do
-			Result := value /= 0.0
+			create Result.make (value /= 0.0)
 		end
 
 	string_value: STRING is
@@ -76,6 +88,19 @@ feature -- Status report
 			std.error.put_new_line
 		end
 	
+	is_convertible (a_required_type: INTEGER): BOOLEAN is
+			-- Is `Current' convertible to `a_required_type'?
+		do
+			inspect
+				a_required_type
+			when Any_item, Atomic_type, Boolean_type, String_type,
+				Number_type, Integer_type, Decimal_type, Float_type, Double_type then
+				Result := True
+			else
+				Result := False
+			end
+		end
+
 feature -- Conversion
 	
 	convert_to_type (a_required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is

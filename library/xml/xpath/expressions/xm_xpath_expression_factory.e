@@ -14,7 +14,14 @@ class XM_XPATH_EXPRESSION_FACTORY
 
 inherit
 
+	XM_XPATH_ERROR_TYPES
+
 	KL_SHARED_STANDARD_FILES
+
+feature -- Access
+
+	error_value: XM_XPATH_ERROR_VALUE
+			-- Error result from last call to make_expression
 
 feature -- Creation
 
@@ -41,8 +48,9 @@ feature -- Creation
 					std.error.put_new_line
 				end
 				Result := an_expr.simplify
-				if an_expr.is_static_type_error then
-					-- TODO
+				if an_expr.is_error then
+					error_value := an_expr.last_error
+					Result := Void
 					debug ("XPath expression factory")
 						std.error.put_string ("Simplification failed!%N")
 					end					
@@ -54,12 +62,10 @@ feature -- Creation
 					end					
 				end
 			else
-				std.error.put_string (a_parser.last_parse_error)
-				std.error.put_new_line
-				-- TODO - above should be an XM_XPATH_ERROR_EXPRESSION??
+				create error_value.make_from_string (a_parser.last_parse_error, 3, Static_error)
 			end
 		ensure
-			dont_know_yet: True
+			error_or_expression: Result = Void implies error_value /= Void
 		end
 
 	make_treat_expression (a_sequence: XM_XPATH_EXPRESSION; a_sequence_type: XM_XPATH_SEQUENCE_TYPE): XM_XPATH_EXPRESSION is

@@ -55,8 +55,13 @@ feature -- Test
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			a_string := "//fred[@son='Jim']"
-			create context.make (default_pool, False)
+			create context.make (default_pool, False, True)
 			an_expression := make_expression (a_string, context)
+			if an_expression = Void then
+				-- Shouldn't happen
+				std.error.put_string (error_value.error_message)
+				std.error.put_new_line
+			end
 			assert ("Parse sucessful", an_expression /= Void)
 			a_path ?= an_expression
 			assert ("Path expression", a_path /= Void)
@@ -107,7 +112,7 @@ feature -- Test
 			
 		end
 
-	test_filtered_path_with_simplification_of_position_equals_last is
+	test_filtered_path_two is
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			a_path: XM_XPATH_PATH_EXPRESSION
@@ -127,8 +132,13 @@ feature -- Test
 			create a_system_function_factory
 			Function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
-			create context.make (default_pool, False)
+			create context.make (default_pool, False, True)
 			an_expression := make_expression (a_string, context)
+			if an_expression = Void then
+				-- Shouldn't happen
+				std.error.put_string (error_value.error_message)
+				std.error.put_new_line
+			end
 			assert ("Parse sucessful", an_expression /= Void)
 			a_path ?= an_expression
 			assert ("Path expression", a_path /= Void)

@@ -74,8 +74,11 @@ feature -- Access
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterates over the values of a sequence
+		local
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			if condition.effective_boolean_value (a_context) then
+			a_boolean_value := condition.effective_boolean_value (a_context)
+			if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
 				Result := then_expression.iterator (a_context)
 			else
 				Result := else_expression.iterator (a_context)
@@ -109,34 +112,72 @@ feature -- Optimization
 			-- Simplify `Current'
 		local
 			a_value: XM_XPATH_VALUE
-			an_expression: XM_XPATH_IF_EXPRESSION
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			an_if_expression: XM_XPATH_IF_EXPRESSION
+			an_expression: XM_XPATH_EXPRESSION
 		do
-			an_expression := clone (Current)
-			an_expression.set_condition (condition.simplify)
-			a_value ?= condition
-			if a_value /= Void then
-				if condition.effective_boolean_value (Void) then
-					an_expression.set_then_expression (then_expression.simplify)
-				else
-					an_expression.set_else_expression (else_expression.simplify)
-				end
+			an_if_expression := clone (Current)
+			an_expression := condition.simplify
+			an_if_expression.set_condition (an_expression)
+			if an_expression.is_error then
+				an_if_expression.set_last_error (an_expression.last_error)
 			else
-				an_expression.set_then_expression (then_expression.simplify)
-				an_expression.set_else_expression (else_expression.simplify)
+				a_value ?= condition
+				if a_value /= Void then
+					a_boolean_value := condition.effective_boolean_value (Void)
+					if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
+						an_expression := then_expression.simplify
+						an_if_expression.set_then_expression (an_expression)
+						if an_expression.is_error then
+							an_if_expression.set_last_error (an_expression.last_error)
+						end
+					else
+						an_expression := else_expression.simplify
+						an_if_expression.set_else_expression (an_expression)
+						if an_expression.is_error then
+							an_if_expression.set_last_error (an_expression.last_error)
+						end						
+					end
+				else
+					an_if_expression.set_then_expression (then_expression.simplify)
+					an_if_expression.set_else_expression (else_expression.simplify)
+				end
 			end
-			Result := an_expression
+			Result := an_if_expression
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions	
 		local
-			an_expression: XM_XPATH_IF_EXPRESSION
+			an_if_expression: XM_XPATH_IF_EXPRESSION
+			an_expression: XM_XPATH_EXPRESSION
 		do
-			an_expression := clone (Current)
-			an_expression.set_condition (condition.analyze (a_context))
-			an_expression.set_then_expression (then_expression.analyze (a_context))
-			an_expression.set_else_expression (else_expression.analyze (a_context))
-			Result := an_expression.simplify
+			an_if_expression := clone (Current)
+			an_expression := condition.analyze (a_context)
+			an_expression.set_analyzed
+			an_if_expression.set_condition (an_expression)
+			if an_expression.is_error then
+				an_if_expression.set_last_error (an_expression.last_error)
+			else
+				an_expression := then_expression.analyze (a_context)
+				an_expression.set_analyzed
+				an_if_expression.set_then_expression (an_expression)
+				if an_expression.is_error then
+					an_if_expression.set_last_error (an_expression.last_error)
+				else
+					an_expression := else_expression.analyze (a_context)
+					an_expression.set_analyzed
+					an_if_expression.set_else_expression (an_expression)
+					if an_expression.is_error then
+						an_if_expression.set_last_error (an_expression.last_error)
+					end
+				end
+			end
+			if an_if_expression.is_error then
+				Result := an_if_expression
+			else
+				Result := an_if_expression.simplify
+			end
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -163,8 +204,11 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate `Current' as a single item
+		local
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			if condition.effective_boolean_value (a_context) then
+			a_boolean_value := condition.effective_boolean_value (a_context)
+			if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
 				Result := then_expression.evaluate_item (a_context)
 			else
 				Result := else_expression.evaluate_item (a_context)

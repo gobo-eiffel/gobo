@@ -45,12 +45,6 @@ feature -- Access
 			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (node (a_context)) 
 		end
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value
-		do
-			Result := node (a_context) /= Void
-		end
-
 feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
@@ -60,6 +54,12 @@ feature -- Optimization
 		end
 
 feature -- Evaluation
+
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value
+		do
+			create Result.make (node (a_context) /= Void)
+		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate `Current' as a single item

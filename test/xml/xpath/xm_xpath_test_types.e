@@ -26,7 +26,7 @@ feature -- Test
 		do
 			conformance.set_basic_xslt_processor
 			initialize_type_tables
-			assert ("super type", super_type (Decimal_type) = Atomic_type)
+			assert ("super type", super_type (Decimal_type) = Number_type)
 			assert ("is sub-type", is_sub_type (Atomic_type, Decimal_type) = False)
 			assert ("is sub-type 2", is_sub_type (Integer_type, Atomic_type) = True)
 			assert ("is type name valid", is_type_name_valid ("xs:double") = True)

@@ -44,12 +44,6 @@ feature -- Access
 			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
 		end
 
-	effective_boolean_value (context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value of the expression
-		do
-			Result := False
-		end
-
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -72,10 +66,16 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT): STRING is
+	effective_boolean_value (context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value of the expression
+		do
+			create Result.make (False)
+		end
+
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
 			-- Evaluate `Current' as a String
 		do
-			Result := ""
+			create Result.make ("")
 		end
 
 end

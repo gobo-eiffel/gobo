@@ -19,8 +19,6 @@ inherit
 			same_expression
 		end
 
-	XM_XPATH_EXCEPTIONS
-
 creation
 
 	make
@@ -46,8 +44,7 @@ feature -- Access
 		do
 			an_item := a_context.context_item
 			if an_item = Void then
-				an_exception_message := STRING_.appended_string (Xpath_dynamic_error_prefix, "Evaluating 'parent::node()': the context item is not set")
-				Exceptions.raise (an_exception_message)
+				set_last_error_from_string ("Evaluating 'parent::node()': the context item is not set", 2, Dynamic_error)
 			else
 				a_node ?= an_item
 				if a_node = Void then

@@ -59,12 +59,6 @@ feature -- Access
 			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (node)
 		end
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value;
-		do
-			Result := node /= Void
-		end
-
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -97,19 +91,25 @@ feature -- Status report
 
 feature -- Evaluation
 
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value;
+		do
+			create Result.make (node /= Void)
+		end
+
 	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate as a single item
 		do
 			Result := node
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT): STRING is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
 			-- Evaluate as a String
 		do
 			if node = Void then
-				Result := ""
+				create Result.make ("")
 			else
-				Result := node.string_value
+				create Result.make (node.string_value)
 			end
 		end
 

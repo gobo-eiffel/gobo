@@ -21,8 +21,6 @@ inherit
 
 	XM_XPATH_AXIS
 
-	XM_XPATH_EXCEPTIONS
-
 creation
 
 	make
@@ -79,7 +77,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT): STRING is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
 			-- Evaluate `Current' as a String
 		local
 			an_element: XM_XPATH_ELEMENT
@@ -87,13 +85,13 @@ feature -- Evaluation
 		do
 			an_element := find_element_node (a_context)
 			if an_element = Void then
-				Result := ""
+				create Result.make ("")
 			else
 				a_string := an_element.attribute_value (fingerprint)
 				if a_string = Void then
-					Result := ""
+					create Result.make ("")
 				else
-					Result := a_string
+					create Result.make (a_string)
 				end
 			end
 		end
@@ -124,12 +122,10 @@ feature {NONE} -- Implementation
 		local
 			an_item: XM_XPATH_ITEM
 			an_element: XM_XPATH_ELEMENT
-			an_exception_message: STRING
 		do
 			an_item := a_context.context_item
 			if an_item = Void then
-				an_exception_message := STRING_.appended_string (Xpath_dynamic_error_prefix, "Evaluating 'attribute::node()': the context item is not set")
-				Exceptions.raise (an_exception_message)
+				set_last_error_from_string ("Evaluating 'attribute::node()': the context item is not set", 2, Dynamic_error)
 			else
 				an_element ?= an_item
 				Result := an_element -- may be Void!

@@ -72,66 +72,6 @@ feature -- Access
 			end
 		end
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_item: XM_XPATH_ITEM
-			a_node: XM_XPATH_NODE
-			a_boolean: XM_XPATH_BOOLEAN_VALUE
-			a_string: XM_XPATH_STRING_VALUE
-			a_number: XM_XPATH_NUMERIC_VALUE
-			a_double: XM_XPATH_DOUBLE_VALUE
-		do
-			an_iterator := iterator (a_context)
-			if an_iterator.after then
-				Result := False
-			else
-					check
-						before: an_iterator.before
-					end
-				an_iterator.forth
-				an_item := an_iterator.item_for_iteration
-					check
-						item_not_void: an_item /= Void
-					end
-				a_node ?= an_item
-				if a_node /= Void then
-					Result := True
-				else
-					a_boolean ?= an_item
-					if a_boolean /= Void then
-						Result := a_boolean.value or else not an_iterator.after
-					else
-						a_string ?= an_item
-						if a_string /= Void then
-							Result := a_string.string_value.count /= 0 or else not an_iterator.after
-						else
-							a_number ?= an_item
-							if a_number /= Void then
-								if an_iterator.after then
-									Result := False
-								else
-									a_double ?=	a_number.convert_to_type (Double_type)
-										check
-											double_result_not_void: a_double /= Void
-											-- This conversion always suceeds
-										end
-									if a_double.value = 0.0 then
-										Result := False
-										else
-											Result := a_number.is_nan
-									end
-								end
-							else
-								Result := True
-							end
-						end
-					end
-				end
-			end
-		end
-
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -142,12 +82,6 @@ feature -- Comparison
 
 feature -- Status report
 
-	last_static_type_error: STRING is
-			-- Last static type error message
-		do
-			Result := internal_last_static_type_error
-		end
-
 	are_static_properties_computed: BOOLEAN is
 			-- Have the static properties been computed yet?
 		do
@@ -157,12 +91,6 @@ feature -- Status report
 		end
 
 feature -- Status setting
-
-	set_last_static_type_error (a_message: STRING) is
-			-- Set result of `last_static_type_error'.
-		do
-			internal_last_static_type_error := a_message
-		end
 
 	frozen compute_static_properties is
 			-- Compute the static properties
@@ -242,6 +170,67 @@ feature -- Optimization
 
 feature -- Evaluation
 
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_item: XM_XPATH_ITEM
+			a_node: XM_XPATH_NODE
+			a_boolean: XM_XPATH_BOOLEAN_VALUE
+			a_string: XM_XPATH_STRING_VALUE
+			a_number: XM_XPATH_NUMERIC_VALUE
+			a_double: XM_XPATH_DOUBLE_VALUE
+		do
+			an_iterator := iterator (a_context)
+			if an_iterator.after then
+				create Result.make (False)
+			else
+					check
+						before: an_iterator.before
+					end
+				an_iterator.forth
+				an_item := an_iterator.item_for_iteration
+					check
+						item_not_void: an_item /= Void
+					end
+				a_node ?= an_item
+				if a_node /= Void then
+					create Result.make (True)
+				else
+					a_boolean ?= an_item
+					if a_boolean /= Void then
+						create Result.make (a_boolean.value or else not an_iterator.after)
+					else
+						a_string ?= an_item
+						if a_string /= Void then
+							create Result.make (a_string.string_value.count /= 0 or else not an_iterator.after)
+						else
+							a_number ?= an_item
+							if a_number /= Void then
+								if an_iterator.after then
+									create Result.make (False)
+								else
+									a_double ?=	a_number.convert_to_type (Double_type)
+										check
+											double_result_not_void: a_double /= Void
+											-- This conversion always suceeds
+										end
+									if a_double.value = 0.0 then
+										create Result.make (False)
+										else
+											create Result.make (a_number.is_nan)
+									end
+								end
+							else
+								create Result.make (True)
+							end
+						end
+					end
+				end
+			end
+			if Result = Void then create Result.make (False) end			
+		end
+
 	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate `Current' as a single item
 		local
@@ -262,7 +251,7 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT): STRING is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
 			-- Evaluate `Current' as a String
 		local
 			an_item: XM_XPATH_ITEM
@@ -270,13 +259,13 @@ feature -- Evaluation
 		do
 			an_item := evaluate_item (a_context)
 			if an_item = Void then
-				Result := ""
+				create Result.make ("")
 			else
 				a_string ?= an_item
 				if a_string = Void then
-					Result := ""
+					create Result.make ("")
 				else
-					Result := a_string.string_value
+					Result := a_string
 				end
 			end
 		end
@@ -318,9 +307,6 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	
 feature {NONE} -- Implementation
 	
-	internal_last_static_type_error: STRING
-			-- Last static type error message
-
 	empty_abstract_item_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM] is
 			-- shared empty iterator
 		once

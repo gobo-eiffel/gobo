@@ -405,6 +405,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
 			a_nsv: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_new_context: XM_XPATH_CONTEXT
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			finished: BOOLEAN
 		do
 			if node_test.matches_node (a_node.item_type, a_node.fingerprint, Any_item) then
@@ -471,7 +472,8 @@ feature {XM_XSLT_PATTERN} -- Implementation
 										until
 											finished or else filters.after
 										loop
-											if not filters.item_for_iteration.effective_boolean_value (a_new_context)  then
+											a_boolean_value :=  filters.item_for_iteration.effective_boolean_value (a_new_context)
+											if a_boolean_value = Void or else not a_boolean_value.value  then
 												finished := True
 												Result := False
 											end

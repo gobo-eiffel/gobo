@@ -44,12 +44,6 @@ feature -- Access
 			-- TODO
 		end
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value
-		do
-			-- TODO
-		end
-
 	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
 			-- Item at `an_index'
 		require
@@ -71,6 +65,13 @@ feature -- Comparison
 			-- TODO
 		end
 
+feature -- Evaluation
+
+		effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value
+		do
+			-- TODO
+		end
 
 end
 	

@@ -25,8 +25,6 @@ inherit
 
 	XM_XPATH_AXIS
 
-	XM_XPATH_TYPE_CHECKER
-
 	XM_XPATH_PROMOTION_ACTIONS
 
 creation
@@ -150,10 +148,10 @@ feature -- Optimization
 		do
 			a_result_expression := clone (Current)
 			an_expression := start.simplify
-			if not start.is_static_type_error then
+			if not an_expression.is_error then
 				a_result_expression.set_start (an_expression)
 				an_expression := step.simplify
-				if not step.is_static_type_error then
+				if not an_expression.is_error then
 					a_result_expression.set_step (an_expression)
 				
 					an_empty_sequence ?= a_result_expression.start
@@ -191,12 +189,10 @@ feature -- Optimization
 						if Result = Void then Result := a_result_expression end
 					end
 				else
-					is_static_type_error := True
-					set_last_static_type_error (step.last_static_type_error)
+					a_result_expression.set_last_error (an_expression.last_error)
 				end
 			else
-				is_static_type_error := True
-				set_last_static_type_error (start.last_static_type_error)
+				a_result_expression.set_last_error (an_expression.last_error)
 			end
 		end
 
@@ -210,110 +206,124 @@ feature -- Optimization
 			an_offer: XM_XPATH_PROMOTION_OFFER
 			a_let_expression: XM_XPATH_LET_EXPRESSION
 			path_not_void: BOOLEAN
+			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
+			create a_type_checker
 			a_result_expression := clone (Current)
 			an_expression := start.analyze (a_context)
-			if not start.is_static_type_error then
+			an_expression.set_analyzed
+			if not an_expression.is_error then
 				a_result_expression.set_start (an_expression)
 				an_expression := step.analyze (a_context)
-				if not an_expression.is_static_type_error then
+				an_expression.set_analyzed
+				if not an_expression.is_error then
 					a_result_expression.set_step (an_expression)
-					
+
 					-- We don't need the operands to be sorted;
 					--  any sorting that's needed will be done at the top level
 					
 					a_result_expression.set_start (a_result_expression.start.unsorted (False))
 					a_result_expression.set_step (a_result_expression.step.unsorted (False))
-					
+
 					-- Both operands must be of type node()*
 					
-					create a_role.make (Binary_expression_role, "/", 0)
+					create a_role.make (Binary_expression_role, "/", 1)
 					create a_node_sequence.make_node_sequence
-					a_result_expression.set_start (static_type_check(a_result_expression.start, a_node_sequence, False, a_role))
-					if not is_static_type_check_error then
-						create another_role.make (Binary_expression_role, "/", 1)
-						a_result_expression.set_step (static_type_check (a_result_expression.step, a_node_sequence, False, another_role))
-						if not is_static_type_check_error then
-							
-							-- Try to simplify expressions such as a//b
+					another_expression := a_type_checker.static_type_check(a_result_expression.start, a_node_sequence, False, a_role)
+					if another_expression = Void then
+							check
+								static_type_error: a_type_checker.is_static_type_check_error
+							end
+						a_result_expression.set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+					else
+						a_result_expression.set_start (another_expression)
+						create another_role.make (Binary_expression_role, "/", 2)
+						another_expression := a_type_checker.static_type_check (a_result_expression.step, a_node_sequence, False, another_role)
+						if another_expression = Void then
+								check
+									static_type_error: a_type_checker.is_static_type_check_error
+								end
+							a_result_expression.set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+						else
+							a_result_expression.set_step (another_expression)
 
+							-- Try to simplify descendant expressions such as a//b
+							
 							a_path := simplify_descendant_path (a_result_expression)
 							path_not_void := a_path /= Void
 							if path_not_void then
-								a_path ?= a_path.simplify
-								path_not_void := a_path /= Void
-								if is_static_type_check_error then
-									is_static_type_error := True
-									set_last_static_type_error (static_type_check_error_message)
-								else
+
+								-- Descendant expressions such as a//b were simplified
+								
+								another_expression := a_path.simplify
+								if not another_expression.is_error then
+									a_path ?= another_expression
 										check
 											path_not_void: a_path /= Void
 										end
-									a_path ?= a_path.analyze (a_context)
-									if is_static_type_check_error then
-										is_static_type_error := True
-										set_last_static_type_error (static_type_check_error_message)
+									another_expression := a_path.analyze (a_context)
+									another_expression.set_analyzed
+									if another_expression.is_error then
+										a_result_expression.set_last_error (another_expression.last_error)
 									else
+										a_path ?= another_expression
 											check
 												path_not_void: a_path /= Void
 											end
 										Result := a_path
 									end
-								end
-								if path_not_void then
-
-									-- If any subexpressions within the step are not dependent on the focus, promote them:
-									-- this causes them to be evaluated once, outside the path  expression.
-
-									create an_offer.make (Focus_independent, Void, a_result_expression, False, a_result_expression.start.context_document_nodeset)
-									an_expression := a_result_expression.step.promote (an_offer)
-									a_result_expression.set_step (an_expression)
-									a_let_expression ?= an_offer.containing_expression
-									if a_let_expression /= Void then
-										another_expression := a_let_expression.analyze (a_context)
-										if a_let_expression.is_static_type_error then
-											is_static_type_error := True
-											set_last_static_type_error (a_let_expression.last_static_type_error)
-										else
-											an_offer.set_containing_expression (another_expression)
-										end
-										
-										-- Decide whether the result needs to be wrapped in a sorting
-										-- expression to deliver the results in document order
-										
-										if not is_static_type_error then
-											a_path ?= an_offer.containing_expression
-											if a_path = Void then
-												if a_path.ordered_nodeset then
-													Result := a_path
-												elseif a_path.reverse_document_order then
-													create {XM_XPATH_REVERSER} Result.make (a_path)
-												else
-													create {XM_XPATH_DOCUMENT_SORTER} Result.make (a_path)
-												end
-											else
-												Result := an_offer.containing_expression
-											end
-										end
-									end
+								else
+									a_result_expression.set_last_error (a_path.last_error)
 								end
 							else
-								is_static_type_error := True
-								set_last_static_type_error (static_type_check_error_message)
+
+								-- Failed to simplify expressions such as a//b
+														
+								-- If any subexpressions within the step are not dependent on the focus, promote them:
+								-- this causes them to be evaluated once, outside the path  expression.
+
+								create an_offer.make (Focus_independent, Void, a_result_expression, False, a_result_expression.start.Context_document_nodeset)
+								an_expression := a_result_expression.step.promote (an_offer)
+								a_result_expression.set_step (an_expression)
+								a_let_expression ?= an_offer.containing_expression
+								if a_let_expression /= Void then
+									another_expression := a_let_expression.analyze (a_context)
+									another_expression.set_analyzed
+									if a_let_expression.is_error then
+											a_result_expression.set_last_error (a_let_expression.last_error)
+									else
+										an_offer.set_containing_expression (another_expression)
+									end
+								end
+
+								if not a_result_expression.is_error then
+
+									-- Decide whether the result needs to be wrapped in a sorting
+									-- expression to deliver the results in document order
+										
+									a_path ?= an_offer.containing_expression
+									if a_path = Void then
+										if a_path.ordered_nodeset then
+											Result := a_path
+										elseif a_path.Reverse_document_order then
+											create {XM_XPATH_REVERSER} Result.make (a_path)
+										else
+											create {XM_XPATH_DOCUMENT_SORTER} Result.make (a_path)
+										end
+									else
+										Result := an_offer.containing_expression
+									end
+								end
 							end
-						else
-							is_static_type_error := True
-							set_last_static_type_error (static_type_check_error_message)
 						end
-					else
-						is_static_type_error := True
-						set_last_static_type_error (step.last_static_type_error)
 					end
 				else
-					is_static_type_error := True
-					set_last_static_type_error (start.last_static_type_error)
+					a_result_expression.set_last_error (an_expression.last_error)
 				end
+			else
+				a_result_expression.set_last_error (an_expression.last_error)
 			end
+			Result := a_result_expression
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -426,6 +436,9 @@ feature {NONE} -- Implementation
 		end
 
 	simplify_descendant_path (an_expression: XM_XPATH_PATH_EXPRESSION): XM_XPATH_PATH_EXPRESSION is
+			-- Simplified descendant path, or `Void' if not possible
+		require
+			expression_not_void: an_expression /= Void
 		local
 			st: XM_XPATH_EXPRESSION
 			an_axis: XM_XPATH_AXIS_EXPRESSION
@@ -444,6 +457,7 @@ feature {NONE} -- Implementation
 
 			an_axis ?= st
 			if an_axis /= Void and then an_axis.axis /= Descendant_or_self_axis then
+				Result := Void
 			else
 				if an_axis /= Void then
 					create a_context_item_expression.make -- TODO copy location information
@@ -514,6 +528,8 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+		ensure
+			result_may_be_void: True
 		end
 
 	compute_special_properties is
@@ -590,7 +606,7 @@ feature {NONE} -- Implementation
 				-- The result is sorted if the start is sorted and the step selects attributes
 				-- or namespaces
 					
-				if step.attribute_ns_nodeset then
+				if step.Attribute_ns_nodeset then
 					Result := True
 				else
 

@@ -66,7 +66,7 @@ feature -- Access
 				Result := Self_axis
 			end
 		ensure
-			axis_number_in_range: Ancestor_axis >= Result and then Result < Preceding_or_ancestor_axis -- (can't be used in XPath expression)
+			axis_number_in_range: Ancestor_axis <= Result and then Result < Preceding_or_ancestor_axis -- (can't be used in XPath expression)
 		end
 
 	axis_name (an_axis: INTEGER): STRING is

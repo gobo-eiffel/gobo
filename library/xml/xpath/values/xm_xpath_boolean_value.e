@@ -41,12 +41,6 @@ feature -- Access
 			Result := Boolean_type
 		end
 
-	effective_boolean_value (context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value of the expression
-		do
-			Result := value
-		end
-
 	string_value: STRING is
 			--Value of the item as a string
 		do
@@ -69,8 +63,49 @@ feature -- Comparison
 				Result := value = other_boolean.value
 			end
 		end
+	
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
+			-- Compare `Current' to `other'
+		local
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			a_boolean_value ?= other
+				check
+					a_boolean_value /= Void
+					-- From pre-condition `comparable_other'
+				end
+			if value = a_boolean_value.value then
+				Result := 0
+			elseif value = True then
+				Result := 1
+			else
+				Result := -1
+			end
+		end
 
 feature -- Status report
+
+	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+			-- Is `other' comparable to `Current'?
+		local
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			a_boolean_value ?= other
+			Result := a_boolean_value /= Void
+		end
+
+	is_convertible (a_required_type: INTEGER): BOOLEAN is
+			-- Is `Current' convertible to `a_required_type'?
+		do
+			inspect
+				a_required_type
+			when Any_item, Atomic_type, Boolean_type, String_type,
+				Number_type, Integer_type, Decimal_type, Float_type, Double_type then
+				Result := True
+			else
+				Result := False
+			end
+		end
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
@@ -83,7 +118,15 @@ feature -- Status report
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end
+
+feature -- Evaluation
 	
+	effective_boolean_value (context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value of the expression
+		do
+			Result := Current
+		end
+
 feature -- Conversions
 	
 	convert_to_type (a_required_type: INTEGER): XM_XPATH_ATOMIC_VALUE is

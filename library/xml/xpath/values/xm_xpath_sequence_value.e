@@ -51,12 +51,6 @@ feature -- Access
 			item_may_not_be_present: True -- As we do not know the lengths of sequences
 		end
 
-	effective_boolean_value (a_context: XM_XPATH_CONTEXT): BOOLEAN is
-			-- Effective boolean value
-		do
-			-- TODO
-		end
-
 feature -- Status report
 
 	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
@@ -89,6 +83,12 @@ feature -- Status report
 
 feature -- Evaluation
 
+	effective_boolean_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_BOOLEAN_VALUE is
+			-- Effective boolean value
+		do
+			-- TODO
+		end
+
 	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate an expression as a single item
 		local
@@ -100,16 +100,16 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT): STRING is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
 			-- Evaluate as a String
 		local
 			a_value: XM_XPATH_STRING_VALUE
 		do
 			a_value ?= evaluate_item (a_context)
 			if a_value = Void then
-				Result := ""
+				create Result.make ("")
 			else
-				Result := a_value.string_value
+				Result := a_value
 			end
 		end
 end

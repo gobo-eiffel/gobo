@@ -2,7 +2,11 @@ indexing
 
 	description:
 
-		"XPath range expressons"
+	"Objects that handle many-to-many A less-than B comparisons%
+	%by evaluating min(A) < max (B) and similarly for greater-than, etc.%
+	%This expression is only used where it is known that the comparisons%
+	%will all be numeric: that is, where at least one of the operands has%
+	%a static type that is a numeric sequence."
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +14,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_RANGE_EXPRESSION
+class XM_XPATH_MINIMAX_COMPARISON
 
 inherit
 
@@ -25,19 +29,8 @@ feature -- Access
 	item_type: INTEGER is
 			--Determine the data type of the expression, if possible
 		do
-			-- TODO
+			Result := Boolean_type
 		end
 
-	lower_bound: XM_XPATH_EXPRESSION is
-			-- Inclusive lower bound
-		do
-			Result := operands.item (1)
-		end
-
-	upper_bound: XM_XPATH_EXPRESSION is
-			-- Inclusive upper bound
-		do
-			Result := operands.item (2)
-		end
 end
 	

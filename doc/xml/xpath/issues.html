@@ -29,10 +29,11 @@
       <p>Eric has emailed Paul Crismer re. incorporating EDA into gobo.</p>
     </div>
     <div>
-      <h2>Exceptions</h2>
-      <p>It looks like I will need to use exceptions to deal with
-      dynamic errors. Can these be considered a violation of the
-      contract? I don't think so.</p>
+      <h2>Exception policy</h2>
+      <p>Any exception thrown is a bug in the library.</p>
+    </div>    <div>
+      <h2>Static typing festure</h2>
+      <p>Is this supported? Yes.</p>
     </div>
     <div>
       <h2>Style</h2>
@@ -59,6 +60,7 @@
 	<li>Resizing</li>
 	<li>Conversion</li>
 	<li>Duplication</li>
+	<li>Output</li>
 	<li>Restricted (features exported to other classes)</li>
 	<li>Local (features exported only to this class)</li>
 	<li>{NONE} -- Implementation</li>
@@ -72,6 +74,10 @@
 	<li>Review commenting style - this has been done to some extent.</li>
 	<li>Review unsafe string features.</li>
 	<li>Change remaining data model infoset properties into implementation stuff.</li>
+	<li>XPath 1.0 compatibility mode needs to be taken out of XM_XPATH_CONFORMANCE - it must be a parameter of the CONTEXT.</li>
+	<li>Change loops to use extrenal cursors (ongoing)</li>
+	<li>TINY_BUILDER throws exceptions to report errors. Re-design.</li>
+	<li>EXPRESSION.display should check the error status</li>
       </ul>
     </div>
     <div>
@@ -79,9 +85,8 @@
       <p>This section should be ignored. It consists solely of my notes
       with which to form the comments for the next cvs check-in operation.</p>
       <pre>
-      Working on functions.
-      position(), last() and normalize-function(arg?) fully
-      implemented (but they depend on xm_xpath_context, which is not finished).
+      GENERAL_COMPARISON and VALUE_COMPARISON mostly completed.
+      Error reporting has changed drastically.
       </pre>
     </div>
     <div >

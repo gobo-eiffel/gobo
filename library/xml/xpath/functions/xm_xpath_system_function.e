@@ -16,8 +16,6 @@ inherit
 
 	XM_XPATH_FUNCTION_CALL
 
-	XM_XPATH_TYPE_CHECKER
-
 	XM_XPATH_ROLE
 
 feature -- Access
@@ -50,28 +48,29 @@ feature -- Element change
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {XM_XPATH_FUNCTION_CALL} -- Local
 
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			number_of_arguments, counter: INTEGER
+			counter: INTEGER
 		do
-			number_of_arguments := check_argument_count (minimum_argument_count, maximum_argument_count)
-				check
-					argument_count: not is_static_type_error implies supplied_argument_count = number_of_arguments
+			check_argument_count (minimum_argument_count, maximum_argument_count)
+			if not is_error then
+				from
+					counter := 1
+				variant
+					supplied_argument_count + 1 - counter
+				until
+					is_error or else counter > supplied_argument_count
+				loop
+					check_argument (counter, a_context)
+					counter := counter + 1
 				end
-			from
-				counter := 1
-			variant
-				number_of_arguments + 1 - counter
-			until
-				is_static_type_error or else counter > number_of_arguments
-			loop
-				check_argument (counter, a_context)
-				counter := counter + 1
 			end
 		end
+
+feature {NONE} -- Implementation
 
 	minimum_argument_count, maximum_argument_count: INTEGER
 			-- Minimum and maximum number of arguments permitted;
@@ -83,21 +82,24 @@ feature {NONE} -- Implementation
 		require
 			argument_number_in_range: argument_number > 0 and then argument_number <= supplied_argument_count
 			context_not_void: a_context /= Void
-			no_type_error: not is_static_type_error
+			no_error: not is_error
 		local
 			a_role_locator: XM_XPATH_ROLE_LOCATOR
 			an_argument: XM_XPATH_EXPRESSION
+			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
+			create a_type_checker
 			create a_role_locator.make (Function_role, name, argument_number)
-			an_argument := static_type_check (arguments.item (argument_number), required_type (argument_number), a_context.is_backwards_compatible_mode, a_role_locator)
-			if is_static_type_check_error then
-				is_static_type_error := True
-				set_last_static_type_error (static_type_check_error_message)
+			an_argument := a_type_checker.static_type_check (arguments.item (argument_number), required_type (argument_number), a_context.is_backwards_compatible_mode, a_role_locator)
+			if a_type_checker.is_static_type_check_error then
+				set_last_error_from_string (a_type_checker.static_type_check_error_message, 17, Type_error)
 			else
+					check
+						argument_not_void: an_argument /= Void
+					end
 				an_argument := an_argument.simplify
-				if is_static_type_check_error then
-					is_static_type_error := True
-					set_last_static_type_error (static_type_check_error_message)
+				if an_argument.is_error then
+					set_last_error_from_string (an_argument.last_error.error_message, 17, Type_error)
 				else
 					arguments.replace (an_argument, argument_number)
 				end

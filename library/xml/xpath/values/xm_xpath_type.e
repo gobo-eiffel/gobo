@@ -41,9 +41,7 @@ feature -- Initialization
 				define_type (Namespace_node, "namespace")
 
 				define_type (Empty_item, "empty")
-				if not conformance.basic_xslt_processor then
-					define_type (Number_type, "number")
-				end
+				define_type (Number_type, "number")
 
 				define_builtin_type (Untyped_atomic_type, "xdt:untypedAtomic")
 				define_builtin_type (Untyped_type, "xdt:untyped")
@@ -123,8 +121,9 @@ feature -- Initialization
 				define_sub_type (Atomic_type, String_type)
 				define_sub_type (Atomic_type, Boolean_type)
 				if conformance.basic_xslt_processor then
-					define_sub_type (Atomic_type, Decimal_type)
-					define_sub_type (Atomic_type, Double_type)
+					define_sub_type (Atomic_type, Number_type)
+					define_sub_type (Number_type, Decimal_type)
+					define_sub_type (Number_type, Double_type)
 				else
 					define_sub_type (Atomic_type, Number_type)
 					define_sub_type (Number_type, Decimal_type)
