@@ -24,6 +24,8 @@ inherit
 	XM_XPATH_DOCUMENT
 
 	XM_XPATH_TINY_NODE
+
+	HASHABLE
 	
 creation
 
@@ -67,6 +69,11 @@ feature -- Initialization
 
 feature -- Access
 
+	hash_code: INTEGER is
+		do
+			Result := document_number \\ 7
+		end
+	
 	unparsed_entity_system_id (entity_name: STRING): STRING is
 			-- System identifier of an unparsed external entity
 		local

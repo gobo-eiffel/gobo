@@ -12,4 +12,17 @@ indexing
 
 class XM_XPATH_TINY_ELEMENT
 
+inherit
+
+	XM_XPATH_ELEMENT
+
+	XM_XPATH_TINY_NODE
+
+feature {XM_XPATH_NODE} -- Access
+
+	is_possible_child: BOOLEAN is
+			-- Can this node be a child of a document or element node?
+		do
+			Result := True
+		end
 end

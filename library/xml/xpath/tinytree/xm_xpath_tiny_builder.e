@@ -66,6 +66,7 @@ feature -- Element
 			-- called whenever the parser findes a start element.
 		do
 			-- TODO
+			-- first look up the `name_code' in the `name_pool'
 		end
 
 	on_attribute (namespace, a_prefix, a_name: STRING; a_value: STRING) is
