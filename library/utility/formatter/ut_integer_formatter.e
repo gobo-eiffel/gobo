@@ -54,13 +54,16 @@ feature -- String handling
 			j, k, i, nb: INTEGER
 			c: CHARACTER
 		do
-			if an_int < 0 then
-				a_string.append_character ('-')
-			end
 			if an_int = 0 then
 				a_string.append_character ('0')
 			else
-				from k := an_int until k = 0 loop
+				if an_int < 0 then
+					a_string.append_character ('-')
+					k := -an_int
+				else
+					k := an_int
+				end
+				from until k = 0 loop
 					inspect k \\ 10
 					when 0 then
 						a_string.append_character ('0')
@@ -166,6 +169,7 @@ feature -- File handling
 		require
 			a_file_not_void: a_file /= Void
 			a_file_is_open_write: OUTPUT_STREAM_.is_open_write (a_file)
+			an_int_positive: an_int >= 0
 		do
 			a_file.put_string (octal_integer_out (an_int))
 		end
