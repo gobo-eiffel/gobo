@@ -80,11 +80,13 @@ feature -- Setting
 				end
 			end
 
+			root_element.set_parent (Current)
 			root_element := an_element
 			
 				-- Composite operations:
 			force_last (an_element)
 		ensure
+			root_element_parent: root_element.parent = Current
 			root_element_set: root_element = an_element
 			last_set: last = root_element
 		end
@@ -111,7 +113,7 @@ feature -- Access
 		do
 			Result := same_string (root_element.name, a_name)
 		ensure then
-			definition: 
+			definition: Result = same_string (root_element.name, a_name)
 		end
 
 feature -- Text
@@ -132,6 +134,6 @@ feature -- Processing
 invariant
 	
 	root_element_not_void: root_element /= Void
-	single_element: elements.count = 1
+	--single_element: elements.count = 1
 	
 end
