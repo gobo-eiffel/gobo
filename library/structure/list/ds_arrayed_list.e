@@ -864,7 +864,7 @@ feature {NONE} -- Cursor movement
 			valid_i: 2 <= i and i <= count
 		local
 			j: INTEGER
-			a_cursor, previous_cursor, next_cursor: like new_cursor
+			a_cursor: like new_cursor
 		do
 			from a_cursor := internal_cursor until (a_cursor = Void) loop
 				j := a_cursor.position
