@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		do
 			!! a_variables.make
 			!! a_factory.make (a_variables, an_error_handler)
-			make_with_factory_and_variables (a_factory, an_error_handler)
+			make_with_factory (a_factory, an_error_handler)
 		ensure
 			error_handler_set: error_handler = an_error_handler
 		end
@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 			-- Create a new Xace parser.
 		require
 			a_factory_not_void: a_factory /= Void
-			a_variables_not_void: a_variables /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
 			a_parser_factory: XM_PARSER_FACTORY
