@@ -68,7 +68,7 @@ feature -- Input
 			filename_set: filename = a_buffer.name
 		end
 
-	set_input_stream  (a_stream: KI_CHARACTER_INPUT_STREAM) is
+	set_input_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
 			-- Set input buffer from a stream.
 			-- This class is then in charge of closing it.
 		require
@@ -90,7 +90,7 @@ feature -- Input
 			-- stream and remember resolver to close it. 
 		require
 			a_resolver_not_void: a_resolver /= Void
-			a_resolver_resolved: not has_error
+			a_resolver_resolved: not a_resolver.has_error
 		do
 			set_input_stream (a_resolver.last_stream)
 			input_resolver := a_resolver
