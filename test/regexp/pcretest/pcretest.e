@@ -184,7 +184,7 @@ feature {NONE} -- Processing
 						is_subject_anchored := a_regexp.is_anchored
 						is_subject_empty_allowed := a_regexp.is_empty_allowed
 
-						a_regexp.match_substring (subject, 1, subject.count)
+						a_regexp.match (subject)
 						count_matches := 0
 
 						if is_do_lower_g or is_do_upper_g then
@@ -198,14 +198,14 @@ feature {NONE} -- Processing
 								if a_regexp.has_matched then
 									print_matches (a_regexp, an_output_file)
 									count_matches := count_matches + 1
-									if a_regexp.start_of_portion (0) <= a_regexp.end_of_portion (0) then
+									if a_regexp.captured_start_position (0) <= a_regexp.captured_end_position (0) then
 										a_regexp.set_empty_allowed (is_subject_empty_allowed)
 										a_regexp.set_anchored (is_subject_anchored)
 									else
 										a_regexp.set_empty_allowed (False)
 										a_regexp.set_anchored (True)
 									end
-									subject_start := a_regexp.end_of_portion (0) + 1
+									subject_start := a_regexp.captured_end_position (0) + 1
 								elseif a_regexp.is_empty_allowed then
 										-- Jump out of the loop.
 									subject_start := subject.count + 1
@@ -230,6 +230,7 @@ feature {NONE} -- Processing
 								an_output_file.put_line ("No match")
 							end
 						end
+						a_regexp.wipe_out
 						text.wipe_out
 						subject.wipe_out
 						restore_options (a_regexp)
@@ -273,14 +274,14 @@ feature {NONE} -- Output
 						-- Jump out of the loop.
 					i := a_regexp.match_count
 				else
-					if not is_posix or else a_regexp.start_of_portion (i) /= 0 then
+					if not is_posix or else a_regexp.captured_start_position (i) /= 0 then
 						if i < 10 then
 							an_output_file.put_character (' ')
 						end
 						an_output_file.put_integer (i)
 						an_output_file.put_string (": ")
-						if a_regexp.is_portion_defined (i) then
-							s := a_regexp.matched_portion (i)
+						if a_regexp.is_captured_substring_defined (i) then
+							s := a_regexp.captured_substring (i)
 							print_substring (s, 1, s.count, False, an_output_file)
 							an_output_file.put_new_line
 						else
@@ -293,7 +294,7 @@ feature {NONE} -- Output
 						end
 						an_output_file.put_integer (i)
 						an_output_file.put_string ("+ ")
-						print_substring (a_regexp.subject, a_regexp.end_of_portion (0) + 1, a_regexp.subject_end, False, an_output_file)
+						print_substring (a_regexp.subject, a_regexp.captured_end_position (0) + 1, a_regexp.subject_end, False, an_output_file)
 						an_output_file.put_new_line
 					end
 					i := i + 1
@@ -302,7 +303,7 @@ feature {NONE} -- Output
 			from i := 0 until i >= 32 loop
 				if copy_string_mask.item (i + 1) then
 					if i < a_regexp.match_count then
-						s := a_regexp.matched_portion (i)
+						s := a_regexp.captured_substring (i)
 						if s.count >= 16 then
 							an_output_file.put_string ("copy substring ")
 							an_output_file.put_integer (i)
@@ -330,7 +331,7 @@ feature {NONE} -- Output
 			from i := 0 until i >= 32 loop
 				if get_string_mask.item (i + 1) then
 					if i < a_regexp.match_count then
-						s := a_regexp.matched_portion (i)
+						s := a_regexp.captured_substring (i)
 						if i < 10 then
 							an_output_file.put_character (' ')
 						end
@@ -355,7 +356,7 @@ feature {NONE} -- Output
 				until
 					i >= a_regexp.match_count
 				loop
-					s := a_regexp.matched_portion (i)
+					s := a_regexp.captured_substring (i)
 					if i < 10 then
 						an_output_file.put_character (' ')
 					end

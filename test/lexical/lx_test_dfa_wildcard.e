@@ -25,7 +25,7 @@ feature -- Test
 		do
 			!! a_wildcard.make
 			assert ("a_wildcard_not_void", a_wildcard /= Void)
-			assert ("not_compiled", not a_wildcard.compiled)
+			assert ("not_compiled", not a_wildcard.is_compiled)
 		end
 
 	test_compile is
@@ -34,7 +34,7 @@ feature -- Test
 			a_wildcard: LX_DFA_WILDCARD
 		do
 			!! a_wildcard.compile ("@(library/**/kl*.e|**/*.?ace)", False)
-			assert ("compiled1", a_wildcard.compiled)
+			assert ("compiled1", a_wildcard.is_compiled)
 		end
 
 	test_recognizes is
@@ -43,7 +43,7 @@ feature -- Test
 			a_wildcard: LX_DFA_WILDCARD
 		do
 			!! a_wildcard.compile ("@(library/**/kl*.e|**/*.?ace)", False)
-			assert ("compiled1", a_wildcard.compiled)
+			assert ("compiled1", a_wildcard.is_compiled)
 			assert ("recognizes1", a_wildcard.recognizes ("foo.xace"))
 			assert ("recognizes2", a_wildcard.recognizes ("foo/bar/baz.race"))
 			assert ("recognizes3", a_wildcard.recognizes ("library/bar/kl_foo.e"))
@@ -62,7 +62,7 @@ feature -- Test
 			a_wildcard: LX_DFA_WILDCARD
 		do
 			!! a_wildcard.compile ("@(library/**/kl*.e|**/*.?ace)", False)
-			assert ("compiled1", a_wildcard.compiled)
+			assert ("compiled1", a_wildcard.is_compiled)
 			assert ("matches1", a_wildcard.matches ("foo.xace"))
 			assert ("matches2", a_wildcard.matches ("abcfoo.xacexyz"))
 			assert ("matches3", a_wildcard.matches ("foo/bar/baz.race"))
@@ -85,7 +85,7 @@ feature -- Test
 			a_wildcard: LX_DFA_WILDCARD
 		do
 			!! a_wildcard.compile ("@(library/**/kl*.e|**/*.?ace)", False)
-			assert ("compiled1", a_wildcard.compiled)
+			assert ("compiled1", a_wildcard.is_compiled)
 			assert ("matches1", a_wildcard.matched_position ("foo.xace") /= Void)
 			assert_equal ("matches_first1", 1, a_wildcard.matched_position ("foo.xace").first)
 			assert_equal ("matches_second2", 8, a_wildcard.matched_position ("foo.xace").second)
