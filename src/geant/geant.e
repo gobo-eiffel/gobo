@@ -33,11 +33,6 @@ inherit
 			{NONE} all
 		end
 
-	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
-
 creation
 
 	make
@@ -51,7 +46,6 @@ feature {NONE} -- Initialization
 			ucs: UC_STRING
 		do
 			Arguments.set_program_name ("geant")
-			startup_working_directory := file_system.current_working_directory
 			!! error_handler.make_standard
 			read_command_line
 

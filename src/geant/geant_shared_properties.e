@@ -34,9 +34,6 @@ feature -- Access
 			Commandline_variables_not_void: Result /= Void
 		end
 
-	startup_working_directory: STRING
-			-- Name of directory from which geant has been invoked
-
 feature -- Processing
 
 	exit_application (a_code: INTEGER; a_message: STRING) is
@@ -47,7 +44,6 @@ feature -- Processing
 				print (a_message)
 			end
 			print ("%NBUILD FAILED!%N")
-			-- file_system.set_current_working_directory (startup_working_directory)
 			Exceptions.die (1)
 		end
 
