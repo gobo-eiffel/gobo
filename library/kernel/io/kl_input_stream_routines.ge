@@ -29,41 +29,37 @@ feature -- Initialization
 			-- if operation was successful.
 		require
 			a_filename_not_void: a_filename /= Void
+			a_filename_is_string: a_filename.same_type ("")
 			a_filename_not_empty: a_filename.count > 0
 		local
 			rescued: BOOLEAN
 #ifdef ISE || HACT
 			a_file: PLAIN_TEXT_FILE
-#else
+#endif
 #ifdef SE
 			a_file: TEXT_FILE_READ
-#else
-#ifdef TOWER
-			a_file: FILE
-#endif
-#endif
 #endif
 		do
 			if not rescued then
-#ifdef ISE || HACT || TOWER
+#ifdef ISE || HACT
 				!! a_file.make (a_filename)
 				Result := a_file
 				a_file.open_read
 			elseif not a_file.is_closed then
 				a_file.close
-#else
+#endif
 #ifdef SE
 				!! a_file.make
 				Result := a_file
 				a_file.connect_to (a_filename)
 			elseif a_file.is_connected then
 				a_file.disconnect
-#else
+#endif
+#ifdef VE
 				!! Result.make (a_filename)
 				Result.open_read
 			elseif not Result.is_closed then
 				Result.close
-#endif
 #endif
 			end
 		ensure
@@ -100,11 +96,7 @@ feature -- Access
 				end
 			end
 #else
-#ifdef TOWER
-			Result := ""
-#else
 			Result := a_stream.name
-#endif
 #endif
 		ensure
 			name_not_void: Result /= Void
@@ -144,12 +136,12 @@ feature -- Status report
 		do
 #ifdef ISE || HACT
 			Result := not a_stream.readable
-#else
+#endif
 #ifdef SE
 			Result := a_stream.end_of_input
-#else
-			Result := a_stream.end_of_file
 #endif
+#ifdef VE
+			Result := a_stream.end_of_file
 #endif
 		end
 
@@ -222,6 +214,7 @@ feature -- Input operations
 			a_stream_not_void: a_stream /= Void
 			a_stream_open_read: is_open_read (a_stream)
 			a_buffer_not_void: a_buffer /= Void
+			a_buffer_is_string: a_buffer.same_type ("")
 			valid_position: a_buffer.valid_index (pos)
 			nb_char_large_enough: nb_char >= 0
 			nb_char_small_enough: nb_char <= a_buffer.count - pos + 1

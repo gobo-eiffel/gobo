@@ -17,14 +17,16 @@ inherit
 	KI_DIRECTORY
 
 	KL_SHARED_FILE_SYSTEM
-		export
-			{NONE} all
-		end
+		export {NONE} all end
+
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 #ifdef ISE || HACT
 	DIRECTORY
 		rename
 			make as old_make,
+			name as string_name,
 			open_read as old_open_read,
 			is_readable as old_is_readable,
 			exists as old_exists,
@@ -48,27 +50,29 @@ feature {NONE} -- Initialization
 			-- of the underlying platform. For pathname conversion
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
+			name := a_name
 #ifdef ISE || HACT
-			old_make (a_name)
+			old_make (STRING_.as_string (a_name))
 #endif
 #ifdef SE
-			name := a_name
+			string_name := STRING_.as_string (a_name)
 #endif
 #ifdef VE
-			name := a_name
-			if a_name.count > 0 then
-				!! directory.make (a_name)
+			string_name := STRING_.as_string (a_name)
+			if string_name.count > 0 then
+				!! directory.make (string_name)
 			end
 #endif
 		end
 
 feature -- Access
 
-#ifdef SE || VE
 	name: STRING
-			-- Directory name
+			-- Directory name;
+			-- Note: If `name' is a UC_STRING or descendant, then
+			-- the bytes of its associated UTF unicode encoding will
+			-- be used.
 
-#endif
 	last_entry: STRING
 			-- Last entry (file or subdirectory name) read
 			-- (Note: this query returns the new object after
@@ -89,7 +93,7 @@ feature -- Access
 					!! an_array.make (1, k)
 					from read_entry until end_of_input loop
 						a_name := last_entry
-						tmp_file.reset (file_system.pathname (name, a_name))
+						tmp_file.reset (file_system.pathname (string_name, a_name))
 						if tmp_file.is_readable then
 							nb := nb + 1
 							if nb > k then
@@ -108,7 +112,7 @@ feature -- Access
 					end
 				end
 			else
-				tmp_directory.reset (name)
+				tmp_directory.reset (string_name)
 				Result := tmp_directory.filenames
 			end
 		end
@@ -130,10 +134,10 @@ feature -- Access
 					from read_entry until end_of_input loop
 						a_name := last_entry
 						if
-							not a_name.is_equal (file_system.relative_current_directory) and then
-							not a_name.is_equal (file_system.relative_parent_directory)
+							not STRING_.same_unicode_string (a_name, file_system.relative_current_directory) and then
+							not STRING_.same_unicode_string (a_name, file_system.relative_parent_directory)
 						then
-							tmp_directory.reset (file_system.pathname (name, a_name))
+							tmp_directory.reset (file_system.pathname (string_name, a_name))
 							if tmp_directory.is_readable then
 								nb := nb + 1
 								if nb > k then
@@ -153,7 +157,7 @@ feature -- Access
 					end
 				end
 			else
-				tmp_directory.reset (name)
+				tmp_directory.reset (string_name)
 				Result := tmp_directory.directory_names
 			end
 		end
@@ -191,12 +195,12 @@ feature -- Status report
 			-- (Note that with SmallEiffel this routine
 			-- actually returns `is_readable'.)
 		do
-			if name.count > 0 then
+			if string_name.count > 0 then
 #ifdef ISE || HACT
 				Result := old_exists
 #ifdef HACT
 				if Result then
-					tmp_file.reset (name)
+					tmp_file.reset (string_name)
 					Result := not tmp_file.exists
 				end
 #endif
@@ -213,12 +217,12 @@ feature -- Status report
 	is_readable: BOOLEAN is
 			-- Can directory be opened in read mode?
 		do
-			if name.count > 0 then
+			if string_name.count > 0 then
 #ifdef ISE || HACT
 				Result := old_exists and then old_is_readable
 #ifdef HACT
 				if Result then
-					tmp_file.reset (name)
+					tmp_file.reset (string_name)
 					Result := not tmp_file.is_readable
 				end
 #endif
@@ -246,7 +250,7 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
-				if name.count > 0 then
+				if string_name.count > 0 then
 					entry_buffer := Void
 					end_of_input := False
 #ifdef ISE || HACT
@@ -260,7 +264,7 @@ feature -- Basic operations
 					end
 #endif
 #ifdef SE
-					basic_directory.connect_to (name)
+					basic_directory.connect_to (string_name)
 #endif
 #ifdef VE
 					!! directory_stream.make (directory)
@@ -317,9 +321,9 @@ feature -- Basic operations
 #endif
 		do
 			if not rescued then
-				if name.count > 0 then
+				if string_name.count > 0 then
 #ifdef SE
-					b := basic_directory.create_new_directory (name)
+					b := basic_directory.create_new_directory (string_name)
 #endif
 #ifdef ISE || HACT
 					if not old_exists then
@@ -352,9 +356,9 @@ feature -- Basic operations
 		do
 			create_directory
 			if not exists then
-				a_pathname := file_system.canonical_pathname (name)
+				a_pathname := file_system.canonical_pathname (string_name)
 				a_dirname := file_system.dirname (a_pathname)
-				if not a_dirname.is_equal (a_pathname) then
+				if not STRING_.same_unicode_string (a_dirname, a_pathname) then
 					!! a_dir.make (a_dirname)
 					if not a_dir.exists then
 						a_dir.recursive_create_directory
@@ -378,9 +382,9 @@ feature -- Basic operations
 #endif
 		do
 			if not rescued then
-				if name.count > 0 then
+				if string_name.count > 0 then
 #ifdef SE
-					b := basic_directory.remove_directory (name)
+					b := basic_directory.remove_directory (string_name)
 #endif
 #ifdef VE
 					directory.delete
@@ -417,17 +421,17 @@ feature -- Basic operations
 #endif
 		do
 			if not rescued then
-				if name.count > 0 then
+				if string_name.count > 0 then
 #ifdef VE || SE
 					open_read
 					if is_open_read then
 						from read_entry until end_of_input loop
 							a_name := last_entry
 							if
-								not a_name.is_equal (file_system.relative_current_directory) and then
-								not a_name.is_equal (file_system.relative_parent_directory)
+								not STRING_.same_unicode_string (a_name, file_system.relative_current_directory) and then
+								not STRING_.same_unicode_string (a_name, file_system.relative_parent_directory)
 							then
-								a_pathname := file_system.pathname (name, a_name)
+								a_pathname := file_system.pathname (string_name, a_name)
 								if file_system.is_file_readable (a_pathname) then
 									file_system.delete_file (a_pathname)
 								else
@@ -501,6 +505,11 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
+#ifdef SE || VE
+	string_name: STRING
+			-- Name of directory (STRING version)
+
+#endif
 	entry_buffer: KL_LINKABLE [STRING]
 			-- Unread entries
 
@@ -558,9 +567,13 @@ feature {NONE} -- Implementation
 #endif
 invariant
 
+#ifdef SE || VE
+	string_name_not_void: string_name /= Void
+#endif
+	string_name_is_string: string_name.same_type ("")
 	no_void_bufferred_entry: entry_buffer /= Void implies entry_buffer.item /= Void
 #ifdef VE
-	directory_not_void: name.count > 0 implies directory /= Void
+	directory_not_void: string_name.count > 0 implies directory /= Void
 #endif
 
 end

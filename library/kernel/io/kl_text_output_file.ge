@@ -24,25 +24,24 @@ inherit
 #endif
 
 	KL_OUTPUT_FILE
-#ifdef ISE || HACT || VE
-#ifdef ISE || HACT
+#ifdef HACT || VE || ISE
+#ifdef HACT
 		rename
 			index as position
 		undefine
-#ifdef HACT
 			medium_table_type,
-#endif
 			is_plain_text
 #endif
-#ifdef HACT || VE
 		redefine
+#ifdef ISE
+			string_name
+#endif
 #ifdef HACT
 			file_ps
 #endif
 #ifdef VE
 			put_character,
 			put_string
-#endif
 #endif
 		end
 #endif
@@ -51,7 +50,7 @@ inherit
 	PLAIN_TEXT_FILE
 		rename
 			make as old_make,
-			name as old_name,
+			name as string_name,
 			count as old_count,
 			exists as old_exists,
 			is_readable as old_is_readable,
@@ -78,11 +77,16 @@ inherit
 			append as old_append
 		export
 			{NONE} all
+#ifdef HACT
 		undefine
 			file_readable
-#ifdef HACT
+#endif
 		redefine
+#ifdef HACT
 			file_ps
+#endif
+#ifdef ISE
+			string_name
 #endif
 		end
 
@@ -114,12 +118,14 @@ feature -- Output
 		local
 			i, nb: INTEGER
 			c: CHARACTER
+			a_string_string: STRING
 		do
+			a_string_string := STRING_.as_string (a_string)
 			if operating_system.is_windows then
 					-- Windows.
-				nb := a_string.count
+				nb := a_string_string.count
 				from i := 1 until i > nb loop
-					c := a_string.item (i)
+					c := a_string_string.item (i)
 					if c = '%N' then
 						old_put_character ('%R')
 					end
@@ -127,25 +133,29 @@ feature -- Output
 					i := i + 1
 				end
 			else
-				old_put_string (a_string)
+				old_put_string (a_string_string)
 			end
 		end
 
 #endif
-#ifdef SE || HACT
+#ifdef SE || HACT || ISE
 feature {NONE} -- Implementation
 
 #ifdef SE
 	old_open_write is
 			-- Open file in write mode.
 		do
-			connect_to (name)
+			if string_name /= Empty_name then
+				connect_to (string_name)
+			end
 		end
 
 	old_open_append is
 			-- Open file in append mode.
 		do
-			connect_for_appending_to (name)
+			if string_name /= Empty_name then
+				connect_for_appending_to (string_name)
+			end
 		end
 
 #endif
@@ -157,6 +167,11 @@ feature {NONE} -- Implementation
 		alias
 			"file_pt_ps"
 		end
+
+#endif
+#ifdef ISE
+	string_name: STRING
+			-- Name of file (STRING version)
 
 #endif
 #endif

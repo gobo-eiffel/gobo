@@ -298,18 +298,20 @@ feature -- Working directory
 			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		local
 			rescued: BOOLEAN
+			a_string_dirname: STRING
 		do
 			if not rescued then
-				if a_dirname.count > 0 then
+				a_string_dirname := STRING_.as_string (a_dirname)
+				if a_string_dirname.count > 0 then
 #ifdef SE
-					basic_directory.change_current_working_directory (a_dirname)
+					basic_directory.change_current_working_directory (a_string_dirname)
 #endif
 #ifdef ISE || HACT
-					execution_environment.change_working_directory (a_dirname)
+					execution_environment.change_working_directory (a_string_dirname)
 #endif
 #ifdef VE
-					if file_system_impl.cluster_exists (a_dirname) then
-						file_system_impl.change_cluster (a_dirname)
+					if file_system_impl.cluster_exists (a_string_dirname) then
+						file_system_impl.change_cluster (a_string_dirname)
 					end
 #endif
 				end

@@ -29,41 +29,37 @@ feature -- Initialization
 			-- if operation was successful.
 		require
 			a_filename_not_void: a_filename /= Void
+			a_filename_is_string: a_filename.same_type ("")
 			a_filename_not_empty: a_filename.count > 0
 		local
 			rescued: BOOLEAN
 #ifdef ISE || HACT
 			a_file: PLAIN_TEXT_FILE
-#else
+#endif
 #ifdef SE
 			a_file: TEXT_FILE_WRITE
-#else
-#ifdef TOWER
-			a_file: FILE
-#endif
-#endif
 #endif
 		do
 			if not rescued then
-#ifdef ISE || HACT || TOWER
+#ifdef ISE || HACT
 				!! a_file.make (a_filename)
 				Result := a_file
 				a_file.open_write
 			elseif not a_file.is_closed then
 				a_file.close
-#else
+#endif
 #ifdef SE
 				!! a_file.make
 				Result := a_file
 				a_file.connect_to (a_filename)
 			elseif a_file.is_connected then
 				a_file.disconnect
-#else
+#endif
+#ifdef VE
 				!! Result.make (a_filename)
 				Result.open_write
 			elseif not Result.is_closed then
 				Result.close
-#endif
 #endif
 			end
 		ensure

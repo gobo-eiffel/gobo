@@ -93,6 +93,8 @@ feature -- Pathname handling
 		local
 			i, nb: INTEGER
 		do
+-- TODO: Try to re-implement this routine with a forward traversal to
+-- have better performances when `a_pathname' is a UC_STRING. (ericb)
 			if is_root_directory (a_pathname) then
 				Result := root_directory
 			else
@@ -132,6 +134,8 @@ feature -- Pathname handling
 		local
 			i: INTEGER
 		do
+-- TODO: Try to re-implement this routine with a forward traversal to
+-- have better performances when `a_pathname' is a UC_STRING. (ericb)
 			if is_root_directory (a_pathname) then
 				Result := root_directory
 			else
@@ -184,7 +188,7 @@ feature -- Pathname handling
 				if nb > 0 and then Result.item (nb) /= directory_separator then
 					Result.append_character (directory_separator)
 				end
-				Result.append_string (a_pathname)
+				Result := STRING_.appended_string (Result, a_pathname)
 			end
 		end
 
@@ -208,7 +212,7 @@ feature -- Pathname handling
 					if k > 0 and then Result.item (k) /= directory_separator then
 						Result.append_character (directory_separator)
 					end
-					Result.append_string (a_pathname)
+					Result := STRING_.appended_string (Result, a_pathname)
 				end
 				i := i + 1
 			end
@@ -261,9 +265,9 @@ feature -- Pathname handling
 				stop
 			loop
 				a_basename := basename (an_absolute_pathname)
-				if a_basename.is_equal (relative_current_directory) then
+				if STRING_.same_unicode_string (a_basename, relative_current_directory) then
 					an_absolute_pathname := dirname (an_absolute_pathname)
-				elseif a_basename.is_equal (relative_parent_directory) then
+				elseif STRING_.same_unicode_string (a_basename, relative_parent_directory) then
 					an_absolute_pathname := absolute_parent_directory (dirname (an_absolute_pathname))
 				else
 					stop := True
@@ -322,9 +326,9 @@ feature -- Pathname handling
 					end
 					k := i - 1
 					str := a_pathname.substring (j, k)
-					if str.is_equal (relative_current_directory) then
+					if STRING_.same_unicode_string (str, relative_current_directory) then
 						Result.append_current
-					elseif str.is_equal (relative_parent_directory) then
+					elseif STRING_.same_unicode_string (str, relative_parent_directory) then
 						Result.append_parent
 					else
 						Result.append_name (str)
@@ -342,27 +346,27 @@ feature -- Pathname handling
 		do
 			Result := STRING_.make (50)
 			if not a_pathname.is_relative then
-				Result.append_string (root_directory)
+				Result := STRING_.appended_string (Result, root_directory)
 			end
 			nb:= a_pathname.count
 			from i := 1 until i >= nb loop
 				if a_pathname.is_current (i) then
-					Result.append_string (relative_current_directory)
+					Result := STRING_.appended_string (Result, relative_current_directory)
 				elseif a_pathname.is_parent (i) then
-					Result.append_string (relative_parent_directory)
+					Result := STRING_.appended_string (Result, relative_parent_directory)
 				else
-					Result.append_string (a_pathname.item (i))
+					Result := STRING_.appended_string (Result, a_pathname.item (i))
 				end
 				Result.append_character (directory_separator)
 				i := i + 1
 			end
 			if i = nb then
 				if a_pathname.is_current (i) then
-					Result.append_string (relative_current_directory)
+					Result := STRING_.appended_string (Result, relative_current_directory)
 				elseif a_pathname.is_parent (i) then
-					Result.append_string (relative_parent_directory)
+					Result := STRING_.appended_string (Result, relative_parent_directory)
 				else
-					Result.append_string (a_pathname.item (i))
+					Result := STRING_.appended_string (Result, a_pathname.item (i))
 				end
 			end
 		end
@@ -380,7 +384,7 @@ feature -- Pathname handling
 			else
 				nb2 := a_filename.count
 				if nb2 >= nb then
-					Result := a_filename.substring (nb2 - nb + 1, nb2).is_equal (an_extension)
+					Result := STRING_.same_unicode_string (a_filename.substring (nb2 - nb + 1, nb2), an_extension)
 				end
 			end
 		end
@@ -394,6 +398,8 @@ feature -- Pathname handling
 			c: CHARACTER
 			found, stop: BOOLEAN
 		do
+-- TODO: Try to re-implement this routine with a forward traversal to
+-- have better performances when `a_filename' is a UC_STRING. (ericb)
 			from
 				i := a_filename.count
 			until

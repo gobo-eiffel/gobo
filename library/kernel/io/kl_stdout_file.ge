@@ -138,16 +138,22 @@ feature -- Output
 
 	put_string (a_string: STRING) is
 			-- Write `a_string' to standard output file.
-#ifdef VE
+			-- Note: If `a_string' is a UC_STRING or descendant, then
+			-- write the bytes of its associated UTF unicode encoding.
 		local
+			a_string_string: STRING
+#ifdef VE
 			i, nb: INTEGER
 			c: CHARACTER
+#endif
 		do
+			a_string_string := STRING_.as_string (a_string)
+#ifdef VE
 			if is_windows then
 					-- Windows.
-				nb := a_string.count
+				nb := a_string_string.count
 				from i := 1 until i > nb loop
-					c := a_string.item (i)
+					c := a_string_string.item (i)
 					if c = '%N' then
 						old_put_character ('%R')
 					end
@@ -155,11 +161,10 @@ feature -- Output
 					i := i + 1
 				end
 			else
-				old_put_string (a_string)
+				old_put_string (a_string_string)
 			end
 #else
-		do
-			old_put_string (a_string)
+			old_put_string (a_string_string)
 #endif
 		end
 
