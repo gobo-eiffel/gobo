@@ -49,6 +49,7 @@ feature -- Scanning
 			yy_rejected_line: INTEGER
 			yy_rejected_column: INTEGER
 			yy_rejected_position: INTEGER
+			yy_done: BOOLEAN
 		do
 				-- This routine is implemented with a loop whose body
 				-- is a big inspect instruction. This is a mere
@@ -96,55 +97,22 @@ feature -- Scanning
 				when yyMatch then
 						-- Find the next match.
 					from
-						if yy_ec /= Void then
-							yy_c := yy_ec.item (yy_content.item (yy_cp).code)
-						else
-							yy_c := yy_content.item (yy_cp).code
-						end
-						if
-							not yyReject_or_variable_trail_context and then
-							yy_accept.item (yy_current_state) /= 0
-						then
-								-- Save the backing-up info before computing
-								-- the next state because we always compute one
-								-- more state than needed - we always proceed
-								-- until we reach a jam state.
-							yy_last_accepting_state := yy_current_state
-							yy_last_accepting_cpos := yy_cp
-						end
-						from until
-							yy_chk.item (yy_base.item (yy_current_state) + yy_c)
-								= yy_current_state
-						loop
-							yy_current_state := yy_def.item (yy_current_state)
-							if
-								yy_meta /= Void and then
-								yy_current_state >= yyTemplate_mark
-							then
-									-- We've arranged it so that templates are
-									-- never chained to one another. This means
-									-- we can afford to make a very simple test
-									-- to see if we need to convert to `yy_c''s
-									-- meta-equivalence class without worrying
-									-- about erroneously looking up the meta
-									-- equivalence class twice.
-								yy_c := yy_meta.item (yy_c)
-							end
-						end
-						yy_current_state :=
-							yy_nxt.item (yy_base.item (yy_current_state) + yy_c)
-						if yyReject_or_variable_trail_context then
-							yy_state_stack.put (yy_current_state, yy_state_count)
-							yy_state_count := yy_state_count + 1
-						end
-						yy_cp := yy_cp + 1
+						yy_done := False
 					until
-						yy_base.item (yy_current_state) = yyJam_base
+						yy_done
 					loop
 						if yy_ec /= Void then
-							yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+							if yy_content_area /= Void then
+								yy_c := yy_ec.item (yy_content_area.item (yy_cp - 1).code)
+							else
+								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+							end
 						else
-							yy_c := yy_content.item (yy_cp).code
+							if yy_content_area /= Void then
+								yy_c := yy_content_area.item (yy_cp - 1).code
+							else
+								yy_c := yy_content.item (yy_cp).code
+							end
 						end
 						if
 							not yyReject_or_variable_trail_context and then
@@ -183,6 +151,7 @@ feature -- Scanning
 							yy_state_count := yy_state_count + 1
 						end
 						yy_cp := yy_cp + 1
+						yy_done := (yy_base.item (yy_current_state) = yyJam_base)
 					end
 					yy_goto := yyFind_action
 				when yyFind_action then

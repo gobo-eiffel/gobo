@@ -20,6 +20,9 @@ inherit
 			copy, is_equal, out
 #endif
 		redefine
+#ifdef ISE
+			as_special,
+#endif
 #ifdef ISE || SE
 			append_substring_to_string,
 #endif
@@ -38,6 +41,13 @@ inherit
 			count as string_count,
 			resize as string_resize,
 			area as string_area
+		end
+
+	KL_SHARED_OPERATING_SYSTEM
+		export
+			{NONE} all
+		undefine
+			copy, is_equal, out
 		end
 
 #endif
@@ -109,7 +119,7 @@ feature -- Access
 				nb := e - s + 1
 				create Result.make (nb)
 				Result.set_count (nb)
-				Result.subcopy (area, s, e, 1)
+				Result.subcopy (Current, s, e, 1)
 #endif
 #ifdef SE
 				nb := e - s + 1
@@ -151,6 +161,20 @@ feature -- Measurement
 		end
 #endif
 
+#ifdef ISE
+feature -- Conversion
+
+	as_special: SPECIAL [CHARACTER] is
+			-- 'SPECIAL [CHARACTER]' version of current character buffer;
+			-- May return void in some descendants, and the result may share
+			-- the internal data with `Current'
+		do
+			if not operating_system.is_dotnet then
+				Result := string_area
+			end
+		end
+
+#endif
 feature -- Element change
 
 	put (v: CHARACTER; i: INTEGER) is
@@ -181,7 +205,7 @@ feature -- Element change
 				end
 				a_string.set_count (new_count)
 				if a_string.same_type (dummy_string) then
-					a_string.subcopy (area, s, e, old_count + 1)
+					a_string.subcopy (Current, s, e, old_count + 1)
 				else
 					from i := s until i > e loop
 						a_string.append_character (string_item (i))
@@ -257,7 +281,7 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				area.subcopy (area, old_pos, old_pos + nb - 1, new_pos)
+				area.subcopy (Current, old_pos, old_pos + nb - 1, new_pos)
 #else
 				j := new_pos
 				nb2 := old_pos + nb - 1
@@ -280,7 +304,7 @@ feature -- Element change
 		do
 			if nb > 0 then
 #ifdef ISE
-				area.subcopy (area, old_pos, old_pos + nb - 1, new_pos)
+				area.subcopy (Current, old_pos, old_pos + nb - 1, new_pos)
 #else
 				j := new_pos + nb - 1
 				from i := old_pos + nb - 1 until i < old_pos loop
@@ -310,8 +334,8 @@ feature -- Resizing
 #endif
 #ifdef ISE
 		do
-			area.resize (n)
-			area.set_count (n)
+			string_resize (n)
+			set_count (n)
 #endif
 #ifdef HACT
 		local

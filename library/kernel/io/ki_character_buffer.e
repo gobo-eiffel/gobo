@@ -79,6 +79,13 @@ feature -- Conversion
 			same_count: Result.count = count
 		end
 
+	as_special: SPECIAL [CHARACTER] is
+			-- 'SPECIAL [CHARACTER]' version of current character buffer;
+			-- May return void in some descendants, and the result may share
+			-- the internal data with `Current'
+		do
+		end
+
 feature -- Element change
 
 	append_substring_to_string (s, e: INTEGER; a_string: STRING) is

@@ -75,9 +75,17 @@ feature -- Scanning
 						-- Find the next match.
 					from
 						if yy_ec /= Void then
-							yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+							if yy_content_area /= Void then
+								yy_c := yy_ec.item (yy_content_area.item (yy_cp - 1).code)
+							else
+								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+							end
 						else
-							yy_c := yy_content.item (yy_cp).code
+							if yy_content_area /= Void then
+								yy_c := yy_content_area.item (yy_cp - 1).code
+							else
+								yy_c := yy_content.item (yy_cp).code
+							end
 						end
 						yy_current_state := yy_nxt.item
 							(yy_current_state * yyNb_rows + yy_c)
@@ -93,9 +101,17 @@ feature -- Scanning
 						end
 						yy_cp := yy_cp + 1
 						if yy_ec /= Void then
-							yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+							if yy_content_area /= Void then
+								yy_c := yy_ec.item (yy_content_area.item (yy_cp - 1).code)
+							else
+								yy_c := yy_ec.item (yy_content.item (yy_cp).code)
+							end
 						else
-							yy_c := yy_content.item (yy_cp).code
+							if yy_content_area /= Void then
+								yy_c := yy_content_area.item (yy_cp - 1).code
+							else
+								yy_c := yy_content.item (yy_cp).code
+							end
 						end
 						yy_current_state := yy_nxt.item
 							(yy_current_state * yyNb_rows + yy_c)
@@ -237,7 +253,11 @@ feature {NONE} -- Implementation
 				yy_cp >= yy_nb
 			loop
 					-- Find the next state.
-				yy_c := yy_content.item (yy_cp).code
+				if yy_content_area /= Void then
+					yy_c := yy_content_area.item (yy_cp - 1).code
+				else
+					yy_c := yy_content.item (yy_cp).code
+				end
 				if yy_c = 0 then
 					yy_c := yyNull_equiv_class
 				elseif yy_ec /= Void then

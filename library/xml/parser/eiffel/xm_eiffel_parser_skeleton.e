@@ -247,7 +247,7 @@ feature {NONE} -- Factory
 	new_name_set: DS_HASH_SET [XM_EIFFEL_PARSER_NAME] is
 			-- New name set for checking
 		do
-			create Result.make_equal (0)
+			create Result.make_equal (10)
 		ensure
 			name_set_not_void: Result /= Void
 		end
@@ -278,21 +278,24 @@ feature {NONE} -- Factory
 
 feature {NONE} -- DTD
 
-	set_element_repetition (a_node: XM_DTD_ELEMENT_CONTENT; a_value: CHARACTER) is
+	set_element_repetition (a_node: XM_DTD_ELEMENT_CONTENT; a_value: STRING) is
 			-- Set repetition status of a node.
 		require
 			a_node_not_void: a_node /= Void
 		do
 			a_node.set_one
-			inspect a_value
-			when '+' then
+			if a_value = One_or_more_repetition then
 				a_node.set_one_or_more
-			when '?' then
+			elseif a_value = Zero_or_one_repetition then
 				a_node.set_zero_or_one
-			when '*' then
+			elseif a_value = Zero_or_more_repetition then
 				a_node.set_zero_or_more
 			end
 		end
+
+	One_or_more_repetition: STRING is "+"
+	Zero_or_one_repetition: STRING is "?"
+	Zero_or_more_repetition: STRING is "*"
 
 	element_name (a_name: STRING): XM_DTD_ELEMENT_CONTENT is
 			-- New element content name node

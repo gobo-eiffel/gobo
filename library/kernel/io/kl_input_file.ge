@@ -284,6 +284,8 @@ feature -- Input
 #ifdef ISE
 					if a_string.same_type (dummy_string) then
 						i := i + old_read_to_string (a_string, j, nb - i)
+					elseif a_string.same_type (dummy_kl_character_buffer) then
+						i := i + old_read_to_string (a_string, j, nb - i)
 					else
 						nb2 := nb - i
 						create tmp_string.make (nb2)
@@ -480,6 +482,14 @@ feature {NONE} -- Implementation
 
 	dummy_string: STRING is ""
 			-- Dummy string
+
+	dummy_kl_character_buffer: KL_CHARACTER_BUFFER is
+			-- Dummy KL_CHARACTER_BUFFER
+		once
+			create Result.make (0)
+		ensure
+			dummy_not_void: Result /= Void
+		end
 
 	old_end_of_file: BOOLEAN is
 			-- Has an EOF been detected?

@@ -372,6 +372,7 @@ feature {NONE} -- Implementation
 			a_content_not_void: a_content /= Void
 		do
 			yy_content := a_content
+			yy_content_area := a_content.as_special
 		ensure
 			yy_content_set: yy_content = a_content
 		end
@@ -549,6 +550,10 @@ feature {NONE} -- Implementation
 
 	yy_content: KI_CHARACTER_BUFFER
 			-- Characters in `input_buffer'
+
+	yy_content_area: SPECIAL [CHARACTER]
+			-- Characters in `input_buffer';
+			-- More efficient than `yy_content' when not void
 
 	yy_end: INTEGER
 			-- Current index in `yy_content'
