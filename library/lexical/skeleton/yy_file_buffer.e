@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 				-- `content' has to be 2 characters longer
 				-- than the size given because we need to
 				-- put in 2 end-of-buffer characters.
-			create {KL_CHARACTER_BUFFER} content.make (size + 2)
+			content := new_default_buffer (size + 2)
 			set_file (a_file)
 		ensure
 			capacity_set: capacity = size
