@@ -36,7 +36,7 @@ creation
 feature
 %}
 
-%token CHAR NUMBER EOF_OP CCL_OP
+%token CHAR NUMBER CCL_OP
 
 %start Regexp
 
@@ -44,12 +44,19 @@ feature
 
 Regexp: Init_pattern Pattern
 		{
+			if equiv_classes /= Void then
+				build_equiv_classes
+			end
 			check_options
 		}
 	;
 
 Init_pattern: -- /* empty */
 		{
+			if equiv_classes_used then
+				!! equiv_classes.make (1, characters_count)
+				!! transitions.make (Initial_max_transitions)
+			end
 				-- Initialize for a parse of one pattern.
 			has_trail_context := False
 			variable_trail_rule := False
@@ -58,7 +65,7 @@ Init_pattern: -- /* empty */
 			head_count := 0
 			rule_length := 0
 			in_trail_context := False
-			init_new_rule
+			rule_id := 1
 		}
 	;
 
@@ -69,10 +76,6 @@ Pattern: '^' Rule
 	| Rule
 		{
 			process_rule (dollar_nfa ($1))
-		}
-	| EOF_OP
-		{
-			process_eof_rule
 		}
 	| error
 		{
@@ -339,6 +342,9 @@ feature -- Status report
 	head_count: INTEGER
 	trail_count: INTEGER
 
+	rule_id: INTEGER
+			-- Id of rule being parsed
+
 	in_trail_context: BOOLEAN
 			-- Is a trailing context being parsed?
 
@@ -347,12 +353,10 @@ feature -- Factory
 	new_symbol_nfa (symbol: INTEGER): LX_NFA is
 			-- New NFA made of two states and a
 			-- symbol transition labeled `symbol'
-		require
-			rule_not_void: rule /= Void
 		local
 			transition: LX_SYMBOL_TRANSITION [LX_NFA_STATE]
 		do
-			!! Result.make_symbol (symbol, rule, in_trail_context)
+			!! Result.make_symbol (symbol, in_trail_context)
 			if equiv_classes /= Void then
 				equiv_classes.put (symbol)
 					-- Keep track of symbol transition for later
@@ -366,10 +370,8 @@ feature -- Factory
 
 	new_epsilon_nfa: LX_NFA is
 			-- New NFA made of two states and an epsilon transition
-		require
-			rule_not_void: rule /= Void
 		do
-			!! Result.make_epsilon (rule, in_trail_context)
+			!! Result.make_epsilon (in_trail_context)
 		ensure
 			nfa_not_void: Result /= Void
 		end
@@ -379,9 +381,8 @@ feature -- Factory
 			-- class transition labeled `symbols'
 		require
 			symbols_not_void: symbols /= Void
-			rule_not_void: rule /= Void
 		do
-			!! Result.make_symbol_class (symbols, rule, in_trail_context)
+			!! Result.make_symbol_class (symbols, in_trail_context)
 		ensure
 			nfa_not_void: Result /= Void
 		end
@@ -397,8 +398,6 @@ feature -- Factory
 	new_nfa_from_character (a_char: INTEGER): LX_NFA is
 			-- New NFA with a transition labeled `a_char'
 			-- (Take case-sensitiveness into account.)
-		require
-			rule_not_void: rule /= Void
 		local
 			lower_char: INTEGER
 			a_name: STRING
@@ -552,41 +551,14 @@ feature {NONE} -- Conversion
 
 feature {NONE} -- Implementation
 
-	init_new_rule is
-			-- Initalize a new rule.
-		local
-			id: INTEGER
-		do
-			id := rules.count + 1
-			if id > yyTrailing_mark then
-					-- `yyTrailing_mark' and `yyTrailing_head_mark' are
-					-- used to mark accepting ids as being special (i.e.
-					-- part of a trailing context rule). As such, they
-					-- implicitly limit the number of accepting ids (and
-					-- hence the number of rules) because if there are
-					-- too many rules the rule ids will go below these
-					-- marks. Fortunately, this limit is large (10000)
-					-- so unlikely to actually cause any problems.
-				error_handler.too_many_rules (yyTrailing_mark)
-			end
-			!! rule.make (id)
-			rule.set_line_nb (line_nb)
-			rules.force_last (rule)
-		ensure
-			rule_not_void: rule /= Void
-		end
-
 	process_rule (a_nfa: LX_NFA) is
 			-- Process a rule.
 		require
 			a_nfa_not_void: a_nfa /= Void
-			rule_not_void: rule /= Void
 		local
 			a_state: LX_NFA_STATE
 		do
-			a_nfa.set_accepting_id (rule.id)
-			rule.set_trail_context
-				(variable_trail_rule, head_count, trail_count)
+			a_nfa.set_accepting_id (rule_id)
 			if variable_trail_rule then
 				variable_trail_context := True
 			end
@@ -600,13 +572,11 @@ feature {NONE} -- Implementation
 			-- Process a beginning-of-line rule.
 		require
 			a_nfa_not_void: a_nfa /= Void
-			rule_not_void: rule /= Void
 		local
 			a_state: LX_NFA_STATE
 		do
-			a_nfa.set_accepting_id (rule.id)
-			rule.set_trail_context
-				(variable_trail_rule, head_count, trail_count)
+			a_nfa.set_accepting_id (rule_id)
+			bol_needed := True
 			if variable_trail_rule then
 				variable_trail_context := True
 			end
@@ -614,76 +584,6 @@ feature {NONE} -- Implementation
 				-- Add `a_state' to all non-exclusive start condition,
 				-- including the default (INITIAL) start condition.
 			start_conditions.add_bol_state_to_non_exclusive (a_state)
-			if not bol_needed then
-				bol_needed := True
-			end
-		end
-
-	process_eof_rule is
-			-- Process a "<<EOF>>" rule.
-		require
-			rule_not_void: rule /= Void
-		do
---			if start_condition_stack.is_empty then
---					-- This EOF applies to all start conditions
---					-- which don't already have EOF actions.
---				start_condition_stack.append_non_eof_start_conditions
---					(start_conditions)
---				if start_condition_stack.is_empty then
---					error_handler.all_start_conditions_have_EOF
---						(filename, line_nb)
---				else
---					build_eof_action (start_condition_stack)
---				end
---			else
---				build_eof_action (start_condition_stack)
---			end
-		end
-
-	build_eof_action (stack: LX_START_CONDITIONS) is
-			-- Build the "<<EOF>>" action for start conditions in `stack'.
-		require
-			stack_not_void: stack /= Void
-			stack_not_empty: not stack.is_empty
-			rule_not_void: rule /= Void
-		local
-			i, nb: INTEGER
-			a_start_condition: LX_START_CONDITION
-			sc: STRING
-		do
-			from
-				a_start_condition := stack.first
-				if a_start_condition.has_eof then
-					sc := a_start_condition.name
-					error_handler.multiple_EOF_rules (sc, filename, line_nb)
-				else
-					a_start_condition.set_has_eof (True)
-						-- This is not a normal rule after all - don't
-						-- count it as such, so we don't have any holes
-						-- in the rule numbering.
-					rules.remove_last
-					rule.set_id (a_start_condition.id)
-						-- Save `rule' as an end-of-file rule.
-					eof_rules.force_last (rule)
-				end
-				i := 2
-				nb := stack.count
-			until
-				i > nb
-			loop
-				a_start_condition := stack.item (i)
-				if a_start_condition.has_eof then
-					sc := a_start_condition.name
-					error_handler.multiple_EOF_rules (sc, filename, line_nb)
-				else
-					a_start_condition.set_has_eof (True)
-					rule := clone (rule)
-					rule.set_id (a_start_condition.id)
-						-- Save `rule' as an end-of-file rule.
-					eof_rules.force_last (rule)
-				end
-				i := i + 1
-			end
 		end
 
 	append_character_to_string (a_char: INTEGER; a_string: LX_NFA): LX_NFA is
@@ -821,7 +721,6 @@ feature {NONE} -- Implementation
 		require
 			a_trail_not_void: a_trail /= Void
 			a_regexp_not_void: a_regexp /= Void
-			rule_not_void: rule /= Void
 		do
 			a_trail.set_beginning_as_normal
 			in_trail_context := False
@@ -829,7 +728,7 @@ feature {NONE} -- Implementation
 					-- Variable trailing context rule.
 					-- Mark the first part of the rule as the accepting
 					-- "head" part of a trailing context rule.
-				a_regexp.set_accepting_id (rule.id + yyTrailing_head_mark)
+				a_regexp.set_accepting_id (rule_id + yyTrailing_head_mark)
 				variable_trail_rule := True
 			else
 				trail_count := rule_length
@@ -844,7 +743,6 @@ feature {NONE} -- Implementation
 			-- to regular expression `a_regexp'.
 		require
 			a_regexp_not_void: a_regexp /= Void
-			rule_not_void: rule /= Void
 		do
 			head_count := 0
 			trail_count := 1
@@ -859,7 +757,7 @@ feature {NONE} -- Implementation
 						-- Variable trailing context rule.
 						-- Mark the first part of the rule as the accepting
 						-- "head" part of a trailing context rule.
-					a_regexp.set_accepting_id (rule.id + yyTrailing_head_mark)
+					a_regexp.set_accepting_id (rule_id + yyTrailing_head_mark)
 					variable_trail_rule := True
 				end
 				has_trail_context := True

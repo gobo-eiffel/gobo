@@ -230,6 +230,11 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	"^"			{
 					last_token := Caret_code
+						-- The line number is set when creating the rule,
+						-- but it often gets the wrong number because
+						-- it is done after the corresponding action has
+						-- be scanned.
+					rule_line_nb := line_nb
 					set_start_condition (REGEXP)
 				}
 	"{"				last_token := Left_brace_code
@@ -240,6 +245,11 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 				}
 	"{"{NAME}"}"|"<<"|.		{
 					less (0)
+						-- The line number is set when creating the rule,
+						-- but it often gets the wrong number because
+						-- it is done after the corresponding action has
+						-- be scanned.
+					rule_line_nb := line_nb
 					set_start_condition (REGEXP)
 				}
 }
@@ -278,17 +288,9 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 	"<<EOF>>"		last_token := EOF_OP
 	[/|*+?.()]		last_token := text_item (1).code
 	{WS}		{
-						-- The line number has already been set when creating
-						-- `rule', but it often gets the wrong number because
-						-- it is done before parsing the current rule.
-					rule.set_line_nb (line_nb)
 					set_start_condition (ACTION_TEXT)
 				}
 	{NL}		{
-						-- The line number has already been set when creating
-						-- `rule', but it often gets the wrong number because
-						-- it is done before parsing the current rule.
-					rule.set_line_nb (line_nb)
 					line_nb := line_nb + 1
 					last_token := EMPTY
 					set_start_condition (SECT2)
@@ -511,6 +513,9 @@ feature -- Access
 	line_nb: INTEGER
 			-- Current line number
 
+	rule_line_nb: INTEGER
+			-- Line number of rule being parsed
+
 	filename: STRING is
 			-- Name of file being parsed
 		local
@@ -528,9 +533,6 @@ feature -- Access
 
 	last_value: ANY
 			-- Semantic value to be passed to the parser
-
-	rule: LX_RULE
-			-- Rule being analyzed
 
 	character_classes: DS_HASH_TABLE [LX_SYMBOL_CLASS, STRING]
 			-- Character classes declared so far
