@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 
 			a_project.set_verbose (verbose)
 			a_project.set_debug_mode (debug_mode)
+			a_project.set_no_exec (no_exec)
 			a_project.load (start_target_name)
 			if a_project.targets /= Void then
 				a_project.build
@@ -65,6 +66,7 @@ feature {NONE} -- Initialization
 					exit_application (1, Void)
 				end
 			end
+			print ("%NBUILD SUCCESSFUL%N")
 		end
 
 
@@ -85,6 +87,9 @@ feature -- Access
 	debug_mode: BOOLEAN
 		-- Print additional, internal information during build process?
 
+	no_exec: BOOLEAN
+			-- Do not execute commands (only show what they would do)?
+
 	read_command_line is
 			-- Read command line arguments.
 		local
@@ -101,6 +106,8 @@ feature -- Access
 					report_version_number
 				elseif arg.is_equal ("--verbose") or arg.is_equal ("-v") then
 					set_verbose (true)
+				elseif arg.is_equal ("--noexec") or arg.is_equal ("-n") then
+					set_no_exec (true)
 				elseif arg.is_equal ("--debug") or arg.is_equal ("-d") then
 					set_debug_mode (true)
 				elseif arg.is_equal ("--help") or arg.is_equal ("-h") or arg.is_equal ("-?") then
@@ -153,6 +160,14 @@ feature -- Setting
 			debug_mode_set: debug_mode = a_debug_mode
 		end
 
+	set_no_exec (a_no_exec: BOOLEAN) is
+			-- Set `no_exec' to `a_no_exec'
+		do
+			no_exec := a_no_exec
+		ensure
+			no_exec_set: no_exec = a_no_exec
+		end
+
 feature {NONE} -- Error handling
 
 	report_usage_error is
@@ -182,8 +197,22 @@ feature {NONE} -- Error handling
 
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Geant usage message
+		local
+			s: STRING
 		once
-			!! Result.make ("[-hvd?][-b buildfilename] [target]")
+			s := clone ("[-options] [target]")
+			s.append_string ("%N")
+			s.append_string ("where options include:%N")
+			s.append_string ("  --version : Show version%N")
+			s.append_string ("  -v --verbose : Turn on verbose output%N")
+			s.append_string ("  -b --buildfilename <buildfilename> : Specify buildfile (default: 'build.eant'%N")
+			s.append_string ("  -n --noexec : Do not execute tasks, just show what they would do%N")
+			s.append_string ("  -D<variable> : Define variable named 'variable' with value 'True'%N")
+			s.append_string ("  -D<variable>=<value> : Define variable named 'variable' with value 'value'%N")
+			s.append_string ("  -d --debug : Show internal messages%N")
+			s.append_string ("  -? -h help : Print this help message%N")
+
+			!! Result.make (s)
 		ensure
 			usage_message_not_void: Result /= Void
 		end
