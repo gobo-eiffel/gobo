@@ -1,0 +1,606 @@
+indexing
+
+	description:
+
+		"Shell commands"
+
+	library:    "Gobo Eiffel Kernel Library"
+	author:     "Eric Bezault <ericb@gobosoft.com>"
+	copyright:  "Copyright (c) 2001, Eric Bezault and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
+
+class KL_SHELL_COMMAND
+
+inherit
+
+	KI_SHELL_COMMAND
+
+#ifdef ISE || HACT
+	EXECUTION_ENVIRONMENT
+		export {NONE} all end
+
+#endif
+#ifdef SE
+	SYSTEM
+		export {NONE} all end
+
+#endif
+#ifdef VE
+	EXTERNAL_PROCESS
+		rename
+			make as old_make,
+			command as old_command,
+			execute as old_execute,
+			exit_code as old_exit_code
+		export
+			{NONE} all
+		end
+
+#endif
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_command: like command) is
+			-- Create a new shell command.
+		do
+#ifdef VE
+			make_shell (a_command)
+#endif
+			command := a_command
+		end
+
+feature -- Access
+
+	command: STRING
+			-- Command to be executed from the shell
+
+	exit_code: INTEGER
+			-- Exit status code of the last execution
+			-- of `command' in shell
+
+feature -- Execution
+
+	execute is
+			-- Ask operating system to execute `command'.
+			-- Wait until termination. Make exit status
+			-- code available in `exit_code' (Note that
+			-- under Windows 95/98 the exit status code
+			-- returned is always 0).
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+#ifdef HACT || ISE
+				system (command)
+				exit_code := return_code
+#endif
+#ifdef VE
+				old_execute
+				exit_code := old_exit_code
+#endif
+#ifdef SE
+				exit_code := execute_command (command)
+#endif
+			else
+				exit_code := -1
+			end
+		rescue
+			if not retried then
+				retried := True
+				retry
+			end
+		end
+
+end -- class KL_SHELL_COMMAND
+#ifdef VE
+indexing
+
+   title:       "External process";
+   cluster:     "Kernel";
+   project:     "Eiffel Kernel Library: processes";
+   copyright:   "Object Tools, 1999-2001";
+   original:    "23 May 1999";
+   version:     "1.2";
+   last_change: "16 Jul 2001";
+   key:         "process", "OS", "OS command", "command line";
+   done_at:     "Object Tools (info@object-tools.com)";
+   extrnl_name: "$Workfile: external_process.e $"
+
+class EXTERNAL_PROCESS
+
+inherit
+
+   WAPI_PROCESS_AND_THREAD_FUNCTIONS
+      end
+
+   WAPI_CONSOLE_FUNCTIONS
+      end
+
+   WAPI_HANDLE_AND_OBJECT_FUNCTIONS
+      end
+
+   WAPI_WAIT_CONST
+      end
+
+   WAPI_SYNCHRONIZATION_FUNCTIONS
+      end
+
+   WAPI_STARTUP_FLAGS
+      end
+
+   WAPI_PROCESS_CREATION_FLAGS
+      end
+
+   WAPI_FILES_AND_DIRS_ACCESS_RIGHTS
+      end
+
+   WAPI_PROCESS_AND_THREAD_ACCESS_MASKS
+      end
+
+   WAPI_EXIT_CODE_CONST
+      end
+
+   WAPI_STD_HANDLES
+      end
+
+   WAPI_SHOWWINDOW_COMMANDS
+      end
+
+creation
+
+   make, make_shell,
+   make_with_arguments
+
+feature {NONE} -- Creation
+
+   make (command_name: STRING) is
+         -- Specify 'command', corresponding to the new process
+         -- The arguments are included in the `command'
+      require
+         non_void_command_name: command_name /= Void
+         non_empty_command_name: not command_name.is_empty
+      do
+         command := clone (command_name)
+         hProcess := INVALID_HANDLE_VALUE
+         allocate_default_console
+         show_window (SW_SHOWDEFAULT)
+      ensure
+         command_cloned: command /= command_name
+         not_is_running: not is_running
+         command_set: equal (command, command_name)
+         is_console_default: is_console_default
+         show_window_default: show_window_command = SW_SHOWDEFAULT
+      end
+
+   make_with_arguments (program_name: STRING; arguments: ARRAY [STRING]) is
+         -- Specify `program_name', corresponding to the new process
+         -- and `arguments' to be passed to it
+      require
+         non_void_program_name: program_name /= Void
+         non_empty_program_name: not program_name.is_empty
+      local
+         command_name: STRING
+         i: INTEGER
+      do
+         !!command_name.make_from_string (program_name)
+         command_name.prune_all ('"')
+         command_name.precede ('"')
+         command_name.append_character ('"')
+         if arguments /= Void then
+            from
+               i := arguments.lower
+            variant
+               arguments.upper - i
+            until
+               i > arguments.upper
+            loop
+               command_name.append_character (' ')
+               command_name.append_string (arguments.item (i))
+               i := i + 1
+            end
+         end
+         make (command_name)
+      ensure
+         command_set: command /= Void and then not command.is_empty
+      end
+
+   make_shell (command_name: STRING) is
+         -- Specify 'command', corresponding to the new process
+         -- that should be run in the default shell
+      require
+         non_void_command_name: command_name /= Void
+         non_empty_command_name: not command_name.is_empty
+      local
+         environment: ENVIRONMENT
+         shell_name: STRING
+         sys_functions: expanded WAPI_SYSTEM_INFORMATION_FUNCTIONS
+         osver: expanded WAPI_OSVERSIONINFO
+         ver_platform: expanded WAPI_VER_PLATFORM
+      do
+         !!environment
+         shell_name := environment.env_item ("COMSPEC")
+         if shell_name = Void then
+            -- Variable "COMSPEC" is not set, let's use the default shell
+            -- according to the OS version
+            sys_functions.GetVersionEx ($osver)
+            if osver.dwPlatformId = ver_platform.VER_PLATFORM_WIN32_NT then
+               -- We run under Windows NT/2000
+               shell_name := "CMD.EXE"
+            else
+               shell_name := "COMMAND.COM"
+            end
+         end
+         make_with_arguments (shell_name, <<"/C", command_name>>)
+      ensure
+         non_void_command: command /= Void
+         non_empty_command: not command.is_empty
+         command_cloned: command /= command_name
+         not_is_running: not is_running
+         is_console_default: is_console_default
+         show_window_default: show_window_command = SW_SHOWDEFAULT
+      end
+
+feature -- Status report
+
+   command: STRING
+         -- Command line corresponding to the external process
+
+   is_running: BOOLEAN is
+         -- Is process running?
+      local
+         termination_status: INTEGER
+      do
+         if hProcess /= INVALID_HANDLE_VALUE then
+            if GetExitCodeProcess (hProcess, $termination_status) = False_ then
+               raise_last_error
+            elseif termination_status = STILL_ACTIVE then
+               Result := True
+            else
+               exit_status := termination_status
+            end
+         end
+      end
+
+   exit_code: INTEGER is
+         -- The OS-dependent exit code of the process
+      require
+         not_is_running: not is_running
+      do
+         Result := exit_status
+      end
+
+feature -- Actions
+
+   execute is
+         -- Create new process and wait until it finishes
+      do
+         start
+         wait
+      ensure
+         not_is_running: not is_running
+      end
+
+   start is
+         -- Create new process and do not wait until it finishes
+      do
+         start_io (Void, Void, Void)
+      end
+
+   start_io (
+         input_stream: PROCESS_STREAM;
+         output_stream: PROCESS_STREAM;
+         error_stream: PROCESS_STREAM
+      ) is
+         -- Create new process and do not wait until it finishes; use specified
+         -- streams for process input, output and error
+      require
+         valid_input: input_stream /= Void implies input_stream.is_readable
+         valid_output: output_stream /= Void implies output_stream.extendible
+         valid_error: error_stream /= Void implies error_stream.extendible
+      local
+         si: expanded WAPI_STARTUPINFO
+         pi: expanded WAPI_PROCESS_INFORMATION
+         creation_flags: BIT 32
+         inherit_handles: INTEGER
+         hStdin: INTEGER
+         hStdout: INTEGER
+         hStderr: INTEGER
+         hStdin_handle: INTEGER
+         hStdout_handle: INTEGER
+         hStderr_handle: INTEGER
+         dwFlags: BIT 32
+         close_stdin: BOOLEAN
+         close_stdout: BOOLEAN
+         close_stderr: BOOLEAN
+      do
+         -- We must ensure that previously created process (if any) is closed
+         dispose
+         hStdin := INVALID_HANDLE_VALUE
+         hStdout := INVALID_HANDLE_VALUE
+         hStderr := INVALID_HANDLE_VALUE
+         hStdin_handle := GetStdHandle (STD_INPUT_HANDLE)
+         hStdout_handle := GetStdHandle (STD_OUTPUT_HANDLE)
+         hStderr_handle := GetStdHandle (STD_ERROR_HANDLE)
+         if input_stream /= Void then
+            hStdin := input_stream.hRead
+         end
+         if hStdin /= INVALID_HANDLE_VALUE and then
+            hStdin /= hStdin_handle
+         then
+            if DuplicateHandle (
+               GetCurrentProcess,
+               hStdin,
+               GetCurrentProcess,
+               $hStdin,
+               0B,
+               True_,
+               DUPLICATE_SAME_ACCESS
+            ) = False_ then
+               raise_last_error
+            end
+            dwFlags := dwFlags or STARTF_USESTDHANDLES
+            close_stdin := True
+         end
+         if output_stream /= Void then
+            hStdout := output_stream.hWrite
+         end
+         if hStdout /= INVALID_HANDLE_VALUE and then
+            hStdout /= hStdout_handle
+         then
+            if DuplicateHandle (
+               GetCurrentProcess,
+               hStdout,
+               GetCurrentProcess,
+               $hStdout,
+               0B,
+               True_,
+               DUPLICATE_SAME_ACCESS
+            ) = False_ then
+               raise_last_error
+            end
+            dwFlags := dwFlags or STARTF_USESTDHANDLES
+            close_stdout := True
+         end
+         if error_stream /= Void then
+            hStderr := error_stream.hWrite
+         end
+         if hStderr /= INVALID_HANDLE_VALUE and then
+            hStderr /= hStderr_handle
+         then
+            if DuplicateHandle (
+               GetCurrentProcess,
+               hStderr,
+               GetCurrentProcess,
+               $hStderr,
+               0B,
+               True_,
+               DUPLICATE_SAME_ACCESS
+            ) = False_ then
+               raise_last_error
+            end
+            dwFlags := dwFlags or STARTF_USESTDHANDLES
+            close_stderr := True
+         end
+         if is_console_none then
+            creation_flags := DETACHED_PROCESS
+         elseif is_console_new then
+            creation_flags := CREATE_NEW_CONSOLE
+         end
+         dwFlags := dwFlags or STARTF_USESHOWWINDOW
+         si.set_hStdInput (hStdin)
+         si.set_hStdOutput (hStdout)
+         si.set_hStdError (hStderr)
+         si.set_wShowWindow (show_window_command)
+         si.set_dwFlags (dwFlags)
+         inherit_handles := True_
+         if CreateProcess (
+               default_pointer,
+               command.to_c,
+               default_pointer,
+               default_pointer,
+               inherit_handles,
+               creation_flags,
+               default_pointer,
+               default_pointer,
+               $si,
+               $pi
+            ) = False_
+         then
+            raise_last_error
+         else
+            CloseHandle (pi.hThread)
+            hProcess := pi.hProcess
+         end
+         if close_stdin then
+            CloseHandle (hStdin)
+         end
+         if close_stdout then
+            CloseHandle (hStdout)
+         end
+         if close_stderr then
+            CloseHandle (hStderr)
+         end
+      end
+
+   wait is
+         -- Wait until running process finishes
+      local
+         termination_status: INTEGER
+      do
+         if hProcess /= INVALID_HANDLE_VALUE then
+            if WaitForSingleObject (hProcess, INFINITE) = WAIT_FAILED then
+               raise_last_error
+            elseif GetExitCodeProcess (hProcess, $termination_status) = False_ then
+               raise_last_error
+            else
+               exit_status := termination_status
+            end
+         end
+      ensure
+         not_is_running: not is_running
+      end
+
+feature {NONE} -- Implementation: status report
+
+   exit_status: INTEGER
+
+feature -- Removal
+
+   dispose is
+         -- Close all OS handles
+      do
+         if hProcess /= INVALID_HANDLE_VALUE then
+            CloseHandle (hProcess)
+            hProcess := INVALID_HANDLE_VALUE
+         end
+      end
+
+feature -- Win32 specific: status report
+
+   is_console_new: BOOLEAN
+         -- Will new console be created when the process starts?
+
+   is_console_default: BOOLEAN
+         -- Will console be managed using default conventions?
+         -- (The default conventions are:
+         --   No console is created for GUI process
+         --   Current console is used when console application starts
+         --   console process
+         --   New console is created when GUI application starts
+         --   console process)
+
+   is_console_none: BOOLEAN
+         -- Will process be started without any cosnole?
+
+   show_window_command: INTEGER
+         -- How the window be shown? (one of SW_... commands)
+
+feature -- Win32 specific: status setting
+
+   allocate_new_console is
+      do
+         is_console_new := True
+         is_console_default := False
+         is_console_none := False
+      ensure
+         is_console_new
+      end
+
+   allocate_default_console is
+      do
+         is_console_new := False
+         is_console_default := True
+         is_console_none := False
+      ensure
+         is_console_default
+      end
+
+   allocate_no_console is
+      do
+         is_console_new := False
+         is_console_default := False
+         is_console_none := True
+      ensure
+         is_console_none
+      end
+
+   show_window (sw_command: INTEGER) is
+      do
+         show_window_command := sw_command
+      ensure
+         show_window_command = sw_command
+      end
+
+feature {NONE} -- Implementation: status report
+
+   hProcess: INTEGER
+         -- Handle of the process
+
+invariant
+
+   non_void_command: command /= Void
+   non_empty_command: not command.is_empty
+
+   consistent_console_status:
+      (is_console_new implies not (is_console_default or is_console_none)) and
+      (is_console_default implies not (is_console_new or is_console_none)) and
+      (is_console_none implies not (is_console_new or is_console_default))
+
+end -- class EXTERNAL_PROCESS
+indexing
+   title       : "Visual Eiffel Library.",
+                 "Win32 API: Console and Standard Handles Functions";
+   cluster     : "WinLib";
+   project     : "Visual Eiffel Win32 Library";
+   copyright   : "(c) Object Tools, 2000";
+   original    : "22, Sep, 2000";
+   version     : "$Revision$";
+   last_change : "22, Sep, 2000";
+   key         : console;
+   done_at     : "Object Tools (info@object-tools.com)";
+   extrnl_name : "fn_console.e"
+
+class WAPI_CONSOLE_FUNCTIONS
+
+inherit
+
+   WAPI_ERROR_SERVER
+      end
+
+feature -- Access
+
+   GetStdHandle (
+      nStdHandle: INTEGER -- DWORD: input, output, or error device
+   ): INTEGER is          -- HANDLE
+         -- The GetStdHandle function returns a handle for the standard input,
+         -- standard output, or standard error device.
+      external "WINAPI"
+         alias "GetStdHandle"
+      end
+
+   SetStdHandle (
+      nStdHandle: INTEGER; -- DWORD: input, output, or error device
+      hHandle: INTEGER     -- HANDLE: handle to be a standard handle  
+   ): INTEGER is           -- BOOL
+         -- Set the handle for the standard input, standard output or
+         -- standard error device. The specified handle can be used by
+         -- subsequent calls to the GetStdHandle function to refer to
+         -- the input, output, or error device.
+      external "WINAPI"
+         alias "SetStdHandle"
+      end
+
+end -- class WAPI_CONSOLE_FUNCTIONS
+indexing
+   title       : "Visual Eiffel Library.",
+                 "Standard handles.";
+   cluster     : "WinLib";
+   project     : "Visual Eiffel Win32 Library";
+   copyright   : "(c) Object Tools, 2000";
+   original    : "22, Sep, 2000";
+   version     : "$Revision$";
+   last_change : no_changes;
+   key         : "console", "standard handle", "handle";
+   done_at     : "Object Tools (info@object-tools.com)";
+   extrnl_name : "std_handle.e"
+
+class WAPI_STD_HANDLES
+
+feature -- Constants
+
+   STD_INPUT_HANDLE  : INTEGER is -10
+         -- Standard input handle
+
+   STD_OUTPUT_HANDLE : INTEGER is -11
+         -- Standard output handle
+
+   STD_ERROR_HANDLE  : INTEGER is -12
+         -- Standard error handle
+
+end -- class WAPI_STD_HANDLES
+#endif
