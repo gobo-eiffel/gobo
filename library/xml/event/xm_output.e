@@ -81,9 +81,12 @@ feature -- Output, interface to descendants
 			if last_output /= Void then
 				last_output := STRING_.appended_string (last_output, a_string)
 			else
-				check output_stream_not_void: output_stream /= Void end
+				if output_stream = Void then
+					set_output_standard
+				end
 				output_stream.put_string (a_string)
 			end
+			check one_set: output_stream /= Void or last_output /= Void end
 		end
 
 end
