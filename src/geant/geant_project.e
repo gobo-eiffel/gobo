@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 		do
 			build_filename := a_filename
 			if not file_system.is_file_readable (build_filename.out) then
-				exit_application (1, "cannot read build file '" + build_filename.out + "'")
+				exit_application (1, "cannot read build file '" + build_filename.out + "' (Current working directory: " + file_system.current_working_directory + ")")
 			end
 
 			if a_variables = Void then
