@@ -67,6 +67,43 @@ feature -- Status report
 #endif
 		end
 
+feature -- Element change
+
+	subcopy (an_array, other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER) is
+			-- Copy items of `other' within bounds `start_pos' and `end_pos'
+			-- to `an_array' starting at index `index_pos'.
+		require
+			an_array_not_void: an_array /= Void
+			other_not_void: other /= Void
+			not_same: an_array /= other
+			valid_start_pos: other.valid_index (start_pos)
+			valid_end_pos: other.valid_index (end_pos)
+			valid_bounds: start_pos <= end_pos + 1
+			valid_index_pos: an_array.valid_index (index_pos)
+			enough_space: (an_array.upper - index_pos) >= (end_pos - start_pos)
+#ifndef ISE || HACT
+		local
+			i, j: INTEGER
+		do
+			from
+				i := start_pos
+				j := index_pos
+			until
+				i > end_pos
+			loop
+				an_array.put (other.item (i), j)
+				j := j + 1
+				i := i + 1
+			end
+#else
+		do
+			an_array.subcopy (other, start_pos, end_pos, index_pos)
+#endif
+		ensure
+			-- copied: forall i in 0 .. (end_pos - start_pos),
+			--     an_array.item (index_pos + i) = other.item (start_pos + i)
+		end
+
 feature -- Removal
 
 	clear_all (an_array: ARRAY [G]) is
