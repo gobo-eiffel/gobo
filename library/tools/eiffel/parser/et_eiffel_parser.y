@@ -2486,6 +2486,11 @@ Expression: Call_expression
 		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_minus_operator ($1), $2) }
 	| E_NOT Expression
 		{ $$ := ast_factory.new_prefix_expression ($1, $2) }
+-- Hack for SmartEiffel 1.1 (in INTEGER_GENERAL):
+	| '~' E_RESULT %prec E_NOT
+		{ $$ := ast_factory.new_call_agent ($1, Void, se_hack ($2), Void) }
+	| '~' E_INTEGER %prec E_NOT
+		{ $$ := ast_factory.new_call_agent ($1, Void, se_hack2 ($2), Void) }
 	| E_FREEOP Expression %prec E_NOT
 		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_free_operator ($1), $2) }
 	| Expression E_FREEOP Expression
@@ -2933,5 +2938,31 @@ Add_counter: { add_counter }
 
 --------------------------------------------------------------------------------
 %%
+
+feature {NONE} -- SmartEiffel hack
+
+	se_hack (r: ET_RESULT): ET_IDENTIFIER is
+			-- I hate SmartEiffel!!!!
+		require
+			r_not_void: r /= Void
+		do
+			create Result.make (r.text)
+			Result.set_position (r.line, r.column)
+			Result.set_break (r.break)
+		ensure
+			identifier_not_void: Result /= Void
+		end
+
+	se_hack2 (r: ET_INTEGER_CONSTANT): ET_IDENTIFIER is
+			-- I hate SmartEiffel!!!!
+		require
+			r_not_void: r /= Void
+		do
+			create Result.make (r.literal)
+			Result.set_position (r.line, r.column)
+			Result.set_break (r.break)
+		ensure
+			identifier_not_void: Result /= Void
+		end
 
 end

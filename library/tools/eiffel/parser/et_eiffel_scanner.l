@@ -133,7 +133,13 @@ creation
 		-- Note: Accepts non-printable characters as well,
 		-- provided that they are not break characters.
 
-[@#|&][^%" \t\r\n]*	{
+--[@#|&][^%" \t\r\n]*	{
+-- Hack to make it work with SmartEiffel 1.1.
+"#" |
+"#"[-+*] |
+"#"[-+*][^a-zA-Z0-9_%" \t\r\n][^%" \t\r\n]* |
+"#"[^+\-*%" \t\r\n][^%" \t\r\n]* |
+[@|&][^%" \t\r\n]*	{
 				last_token := E_FREEOP
 				last_literal_start := 1
 				last_literal_end := text_count
@@ -141,7 +147,13 @@ creation
 				last_comment_end := 0
 				last_et_free_operator_value := ast_factory.new_free_operator (Current)
 			}
-[@#|&][^%" \t\r\n]*/[ \t\r\n]	{
+--[@#|&][^%" \t\r\n]*/[ \t\r\n]	{
+-- Hack to make it work with SmartEiffel 1.1.
+"#"/[ \t\r\n] |
+"#"[-+*]/[ \t\r\n] |
+"#"[-+*][^a-zA-Z0-9_%" \t\r\n][^%" \t\r\n]*/[ \t\r\n] |
+"#"[^+\-*%" \t\r\n][^%" \t\r\n]*/[ \t\r\n] |
+[@|&][^%" \t\r\n]*/[ \t\r\n]	{
 				last_text_count := text_count
 				last_literal_start := 1
 				last_literal_end := last_text_count

@@ -41,7 +41,6 @@ creation
 [aA][lL][lL]	|
 [aA][nN][dD]	|
 [aA][sS]	|
-[bB][iI][tT]	|
 [cC][hH][eE][cC][kK]	|
 [cC][rR][eE][aA][tT][iI][oO][nN]	|
 [cC][uU][rR][rR][eE][nN][tT]	|
