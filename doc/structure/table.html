@@ -15,7 +15,7 @@ content="text/html; charset=iso-8859-1">
         <td><font size="6"><strong>Tables</strong></font></td>
         <td align="right"><a href="list.html"><img
         src="../image/previous.gif" alt="Previous" border="0"
-        width="40" height="40"></a><a href="dispenser.html"><img
+        width="40" height="40"></a><a href="set.html"><img
         src="../image/next.gif" alt="Next" border="0" width="40"
         height="40"></a></td>
     </tr>
@@ -24,14 +24,17 @@ content="text/html; charset=iso-8859-1">
 <hr size="1">
 
 <p align="center"><!--webbot bot="ImageMap" startspan
-rectangle=" (131,235) (233, 267)  flatshort/ds_hash_table.html"
-rectangle=" (124,160) (242, 191)  flatshort/ds_sparse_table.html"
-rectangle=" (258,85) (350, 115)  flatshort/ds_resizable.html"
-rectangle=" (141,84) (230, 116)  flatshort/ds_bilinear.html"
-rectangle=" (22,85) (107, 116)  flatshort/ds_table.html"
-rectangle=" (18,9) (110, 40)  flatshort/ds_container.html"
-src="image/table.gif" border="0" width="368" height="279" --><MAP NAME="FrontPageMap0"><AREA SHAPE="RECT" COORDS="131, 235, 233, 267" HREF="flatshort/ds_hash_table.html"><AREA SHAPE="RECT" COORDS="124, 160, 242, 191" HREF="flatshort/ds_sparse_table.html"><AREA SHAPE="RECT" COORDS="258, 85, 350, 115" HREF="flatshort/ds_resizable.html"><AREA SHAPE="RECT" COORDS="141, 84, 230, 116" HREF="flatshort/ds_bilinear.html"><AREA SHAPE="RECT" COORDS="22, 85, 107, 116" HREF="flatshort/ds_table.html"><AREA SHAPE="RECT" COORDS="18, 9, 110, 40" HREF="flatshort/ds_container.html"></MAP><img src="image/table.gif" border="0" width="368" height="279" usemap="#FrontPageMap0"><!--webbot
-bot="ImageMap" i-checksum="35398" endspan --></p>
+rectangle=" (227,318) (399, 348)  flatshort/ds_multiarrayed_hash_table.html"
+rectangle=" (60,318) (158, 349)  flatshort/ds_hash_table.html"
+rectangle=" (218,242) (406, 273)  flatshort/ds_multiarrayed_sparse_table.html"
+rectangle=" (29,242) (189, 274)  flatshort/ds_arrayed_sparse_table.html"
+rectangle=" (141,167) (262, 198)  flatshort/ds_sparse_table.html"
+rectangle=" (279,93) (367, 124)  flatshort/ds_resizable.html"
+rectangle=" (158,93) (247, 124)  flatshort/ds_bilinear.html"
+rectangle=" (41,91) (127, 123)  flatshort/ds_table.html"
+rectangle=" (36,18) (130, 49)  flatshort/ds_container.html"
+src="image/table.gif" border="0" width="451" height="374" --><MAP NAME="FrontPageMap0"><AREA SHAPE="RECT" COORDS="227, 318, 399, 348" HREF="flatshort/ds_multiarrayed_hash_table.html"><AREA SHAPE="RECT" COORDS="60, 318, 158, 349" HREF="flatshort/ds_hash_table.html"><AREA SHAPE="RECT" COORDS="218, 242, 406, 273" HREF="flatshort/ds_multiarrayed_sparse_table.html"><AREA SHAPE="RECT" COORDS="29, 242, 189, 274" HREF="flatshort/ds_arrayed_sparse_table.html"><AREA SHAPE="RECT" COORDS="141, 167, 262, 198" HREF="flatshort/ds_sparse_table.html"><AREA SHAPE="RECT" COORDS="279, 93, 367, 124" HREF="flatshort/ds_resizable.html"><AREA SHAPE="RECT" COORDS="158, 93, 247, 124" HREF="flatshort/ds_bilinear.html"><AREA SHAPE="RECT" COORDS="41, 91, 127, 123" HREF="flatshort/ds_table.html"><AREA SHAPE="RECT" COORDS="36, 18, 130, 49" HREF="flatshort/ds_container.html"></MAP><img src="image/table.gif" border="0" width="451" height="374" usemap="#FrontPageMap0"><!--webbot
+bot="ImageMap" i-checksum="43993" endspan --></p>
 
 <h2>Class <em><tt>DS_TABLE</tt></em></h2>
 
@@ -65,7 +68,7 @@ href="flatshort/ds_table.html#has"><font color="#008080"><em><tt>has</tt></em></
 to check whether an item has already been inserted in the table
 with a given key.</p>
 
-<h2>Class <em><tt>DS_HASH_TABLE</tt></em></h2>
+<h2>Class <a name="DS_HASH_TABLE"><em><tt>DS_HASH_TABLE</tt></em></a></h2>
 
 <p>One possible implementation of tables is hash tables. A hash
 table is typically made up of an array where items are accessed
@@ -147,17 +150,23 @@ copied. Therefore it is important that the hash code associated
 with each key doesn't change while the key is stored in the hash
 table. Otherwise the hashing mechanism would be broken and it
 would be impossible to access the item associated with this key.
-Likewise, keys are compared in the hash table using the feature <font
-color="#008080"><em><tt>is_equal</tt></em></font> from class <font
-color="#008080"><em><tt>GENERAL</tt></em></font>. Therefore if
-the critera used to implement the function <font color="#008080"><em><tt>is_equal
-</tt></em></font>are changed while the key is stored in the hash
-table, this key might not be recognized properly anymore within
-this hash table. Needless to say that if two keys are considered
-equal, they should have the same hash code. The solution when the
-hash code or equality criteria of a key are likely to vary while
-the key is stored in the hash table is clone that key when
-inserting an item associated with it.</p>
+Likewise, keys are compared in the hash table using the feature <a
+href="flatshort/ds_hash_table.html#key_equality_tester"><font
+color="#008080"><em><tt>key_equality_tester</tt></em></font></a>
+of type <a href="flatshort/ds_equality_tester.html"><font
+color="#008080"><em><tt>DS_EQUALITY_TESTER</tt></em></font></a>.
+Therefore if the critera used to implement the function <a
+href="flatshort/ds_equality_tester.html#test"><font
+color="#008080"><em><tt>test</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>in <font
+color="#008080"><em><tt>DS_EQUALITY_TESTER </tt></em></font>are
+changed while the key is stored in the hash table, this key might
+not be recognized properly anymore within this hash table.
+Needless to say that if two keys are considered equal, they
+should have the same hash code. The solution when the hash code
+or equality criteria of a key are likely to vary while the key is
+stored in the hash table is clone that key when inserting an item
+associated with it.</p>
 
 <p>The class <font color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>provides
 traversal facilities inherited from <a
@@ -168,13 +177,12 @@ subsequent traversals may traverse the items in different orders.
 This is because a hash table is not an ordered containter as can
 a list be. Items are not inserted before or after other items in
 the hash table but based on a hashing mechanism and
-collision-resolution algorithm. Therefore, altering the hash
-table by adding or removing items or by resizing the table may
-change the order of the items and hence will invalidate current
-traversals. For this reason, most of these routines will move <font
-color="#008080"><em><tt>off </tt></em></font>all existing cursors
-currently traversing the hash table (see the header comments of
-these routines for details).</p>
+collision-resolution algorithm. The only way to get a guaranteed
+ordered hash table with the current implementation is to use
+exclusively feature <a
+href="flatshort/ds_hash_table.html#force_last"><font
+color="#008080"><em><tt>force_last</tt></em></font></a> to insert
+items.</p>
 
 <p>As you may now realize after reading the first paragraph
 above, the performance of hash tables is one of their <em>raison
@@ -240,14 +248,30 @@ color="#000080"><em><strong>then</strong></em></font><em>
 <p>Both code excerpts should have the same execution time
 performance thanks to <font color="#008080"><em><tt>DS_HASH_TABLE</tt></em></font>'s
 internal optimizations. Using one or the other is just a question
-of taste. I personally prefer the first pattern.</p>
+of taste.</p>
+
+<h2>Class <em><tt>DS_MULTIARRAYED_HASH_TABLE</tt></em></h2>
+
+<p>When hash tables contain a very large number of items, the
+implementation of <font color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>may
+reach some limits since the internal arrays become too huge and
+resizing them may yield memory problems. The class <a
+href="flatshort/ds_multiarrayed_hash_table.html"><font
+color="#008080"><em><tt>DS_MULTIARRAYED_HASH_TABLE</tt></em></font></a><font
+color="#008080"><em><tt> </tt></em></font>provides the same
+functionalities as <font color="#008080"><em><tt>DS_HASH_TABLE </tt></em></font>but
+uses a sequence of fixed size arrays instead of a single array
+for its implementation. These array chunks are only created when
+first accessed and resizing the whole table does only require to
+add one or several chunks to the sequence and therefore avoids
+having to resize big arrays.</p>
 
 <hr size="1">
 
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 2000</b></font><font
+            <font size="2"><b>Copyright © 2000-2001</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -257,7 +281,7 @@ of taste. I personally prefer the first pattern.</p>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 16 April 2000</font><br>
+            <strong>Last Updated:</strong> 3 April 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
@@ -272,7 +296,7 @@ $Revision$"
         src="../image/toc.gif" alt="Toc" border="0" width="40"
         height="40"></a><a href="list.html"><img
         src="../image/previous.gif" alt="Previous" border="0"
-        width="40" height="40"></a><a href="dispenser.html"><img
+        width="40" height="40"></a><a href="set.html"><img
         src="../image/next.gif" alt="Next" border="0" width="40"
         height="40"></a></td>
     </tr>
