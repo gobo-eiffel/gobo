@@ -2,17 +2,21 @@ indexing
 
 	description:
 
-		"Hash tables, implemented with arrays";
+		"Hash tables, implemented with arrays"
 
 	note:       "To avoid performance degradation, %
-	             %make sure that `count <= capacity * 2 // 3'";
-	library:    "Gobo Eiffel Structure Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	             %make sure that `count <= capacity * 2 // 3'"
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
+#ifdef SE
+class DS_HASH_TABLE [G, K]
+#else
 class DS_HASH_TABLE [G, K -> HASHABLE]
+#endif
 
 inherit
 
@@ -20,66 +24,16 @@ inherit
 		rename
 			put as force,
 			valid_entry as has
-#ifdef ISE || HACT
-		undefine
-			consistent, setup
-#endif
-		select
-			copy
 		end
 
 	DS_BILINEAR [G]
 		rename
 			has as has_item
-#ifdef ISE || HACT
-		undefine
-			consistent, setup
-#endif
 		redefine
 			searcher
-#ifdef VE
---| Bug in VE (970520a)
-		select
-			copy
-#endif
 		end
 
 	DS_RESIZABLE [G]
-#ifdef ISE || HACT
-		undefine
-			consistent, setup
-		end
-#endif
-#ifdef VE
---| Bug in VE (970520a)
-		select
-			copy
-		end
-#endif
-
-	DS_ARRAYED [DS_PAIR [G, K]]
-		rename
-			make as make_array,
-			count as array_count,
-			resize as array_resize,
-			copy as array_copy,
-			infix "@" as array_at,
-			item as array_item,
-			put as array_put,
-			force as array_force,
-			valid_index as valid_array_index
-		export
-#ifndef SE
-			{NONE} all
-			{DS_HASH_TABLE_CURSOR, DS_HASH_TABLE_SEARCHER} array_item
-#else
---| SmallEiffel -0.90 bug (960905a)
---|			{NONE} all
---|			{DS_HASH_TABLE_CURSOR, DS_HASH_TABLE_SEARCHER} array_item
-#endif
-		redefine
-			is_equal
-		end
 
 creation
 
@@ -98,7 +52,7 @@ feature {NONE} -- Initialization
 			dead_key: K
 			ref_searcher: DS_HASH_TABLE_REFERENCE_SEARCHER [G, K]
 		do
-			make_array (0, n)
+			!! storage.make (0, n)
 			!! dead_cell.make (dead_item, dead_key)
 			!! ref_searcher
 			searcher := ref_searcher
@@ -118,7 +72,7 @@ feature {NONE} -- Initialization
 			dead_key: K
 			value_searcher: DS_HASH_TABLE_VALUE_SEARCHER [G, K]
 		do
-			make_array (0, n)
+			!! storage.make (0, n)
 			!! dead_cell.make (dead_item, dead_key)
 			!! value_searcher
 			searcher := value_searcher
@@ -133,8 +87,8 @@ feature -- Access
 			-- Item associated with `k'
 		do
 			search (k)
-			check has_k: valid_cell (array_item (position)) end
-			Result := array_item (position).first
+			check has_k: valid_cell (storage.item (position)) end
+			Result := storage.item (position).first
 		end
 
 	first: G is
@@ -143,11 +97,11 @@ feature -- Access
 			i: INTEGER
 		do
 			from until
-				valid_cell (array_item (i))
+				valid_cell (storage.item (i))
 			loop
 				i := i + 1
 			end
-			Result := array_item (i).first
+			Result := storage.item (i).first
 		end
 
 	last: G is
@@ -156,13 +110,13 @@ feature -- Access
 			i: INTEGER
 		do
 			from
-				i := upper
+				i := storage.upper
 			until
-				valid_cell (array_item (i))
+				valid_cell (storage.item (i))
 			loop
 				i := i - 1
 			end
-			Result := array_item (i).first
+			Result := storage.item (i).first
 		end
 
 	new_cursor: DS_HASH_TABLE_CURSOR [G, K] is
@@ -182,7 +136,7 @@ feature -- Measurement
 	capacity: INTEGER is
 			-- Maximum number of items in hash table
 		do
-			Result := array_count - 1
+			Result := storage.count - 1
 		end
 
 feature -- Status report
@@ -202,7 +156,7 @@ feature -- Status report
 		do
 			if valid_key (k) then
 				search (k)
-				current_cell := array_item (position)
+				current_cell := storage.item (position)
 				Result := valid_cell (current_cell)
 			end
 		end
@@ -221,7 +175,7 @@ feature -- Comparison
 					a_cursor.start
 					Result := True
 				until
-					a_cursor.after
+					not Result or a_cursor.after
 				loop
 					a_key := a_cursor.key
 					Result := other.has (a_key) and then
@@ -236,17 +190,17 @@ feature -- Duplication
 	copy (other: like Current) is
 			-- Copy `other' to current hash table.
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			current_cell: like dead_cell
 		do
-			array_copy (other)
-			nb := upper
-			from until i > nb loop
-				current_cell := array_item (i)
+			standard_copy (other)
+			storage := clone (storage)
+			from i := storage.upper until i < 0 loop
+				current_cell := storage.item (i)
 				if valid_cell (current_cell) then
-					array_put (clone (current_cell), i)
+					storage.put (clone (current_cell), i)
 				end
-				i := i + 1
+				i := i - 1
 			end
 		end
 
@@ -256,8 +210,8 @@ feature -- Element change
 			-- Replace item associated with `k' by `v'.
 		do
 			search (k)
-			check has_k: valid_cell (array_item (position)) end
-			array_item (position).put_first (v)
+			check has_k: valid_cell (storage.item (position)) end
+			storage.item (position).put_first (v)
 		end
 
 	put (v: G; k: K) is
@@ -269,10 +223,10 @@ feature -- Element change
 			current_cell: like dead_cell
 		do
 			search (k)
-			current_cell := array_item (position)
+			current_cell := storage.item (position)
 			if not valid_cell (current_cell) then
 				!! current_cell.make (v, k)
-				array_put (current_cell, position)
+				storage.put (current_cell, position)
 				count := count + 1
 			else
 				current_cell.put_first (v)
@@ -300,7 +254,7 @@ feature -- Removal
 			-- Remove item associated with `k'.
 		do
 			search (k)
-			array_put (dead_cell, position)
+			storage.put (dead_cell, position)
 			count := count - 1
 		ensure then
 			removed: not has (k)
@@ -309,12 +263,11 @@ feature -- Removal
 	wipe_out is
 			-- Remove all items.
 		local
-			i, nb: INTEGER
+			i: INTEGER
 		do
-			nb := upper
-			from until i > nb loop
-				array_put (Void, i)
-				i := i + 1
+			from i := storage.upper until i < 0 loop
+				storage.put (Void, i)
+				i := i - 1
 			end
 			count := 0
 		end
@@ -325,35 +278,26 @@ feature -- Resizing
 			-- Resize hash table so that it can contain
 			-- at least `n' items. Do not lose any item.
 		local
-			content: ARRAY [DS_PAIR [G, K]]
+			old_storage: like storage
 			current_cell: like dead_cell
-			i, j, nb: INTEGER
+			i: INTEGER
 		do
-			!! content.make (1, count)
-			from
-				nb := upper
-			until
-				i > nb
-			loop
-				current_cell := array_item (i)
+			old_storage := storage
+			!! storage.make (0, n)
+			from i := old_storage.upper until i < 0 loop
+				current_cell := old_storage.item (i)
 				if valid_cell (current_cell) then
-					j := j + 1
-					content.put (current_cell, j)
+					search (current_cell.second)
+					storage.put (current_cell, position)
 				end
-				array_put (Void, i)
-				i := i + 1
-			end
-			array_resize (0, n)
-			nb := count
-			from i := 1 until i > nb loop
-				current_cell := content.item (i)
-				search (current_cell.second)
-				array_put (current_cell, position)
-				i := i + 1
+				i := i - 1
 			end
 		end
 
 feature {DS_HASH_TABLE_SEARCHER, DS_HASH_TABLE_CURSOR} -- Implementation
+
+	storage: ARRAY [DS_PAIR [G, K]]
+			-- Storage for items of the table
 
 	valid_cell (cell: like dead_cell): BOOLEAN is
 			-- Does `cell' contain an item?
@@ -368,7 +312,7 @@ feature {DS_HASH_TABLE_SEARCHER, DS_HASH_TABLE_CURSOR} -- Implementation
 		require
 			valid_i: 0 <= i and i <= capacity
 		do
-			Result := valid_cell (array_item (i))
+			Result := valid_cell (storage.item (i))
 		end
 
 	dead_cell: DS_PAIR [G, K]
@@ -390,9 +334,10 @@ feature {NONE} -- Implementation
 				
 invariant
 
+	storage_not_void: storage /= Void
 	dead_cell: dead_cell /= Void
-	valid_position: valid_array_index (position)
-	capacity_definition: capacity = array_count - 1
-	lower_definition: lower = 0
+	valid_position: storage.valid_index (position)
+	capacity_definition: capacity = storage.count - 1
+	lower_definition: storage.lower = 0
 
 end -- class DS_HASH_TABLE
