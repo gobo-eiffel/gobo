@@ -19,6 +19,11 @@ inherit
 			is_equal
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+		undefine
+			is_equal
+		end
+
 feature -- Status report
 
 	is_relative: BOOLEAN is
@@ -131,12 +136,16 @@ feature -- Comparison
 				if
 					nb = a_pathname.count and
 					is_relative = a_pathname.is_relative and
-					equal (drive, a_pathname.drive) and
-					equal (hostname, a_pathname.hostname)
+					((drive = Void and a_pathname.drive = Void) or else
+					((drive /= Void and a_pathname.drive /= Void) and then
+					STRING_.same_unicode_string (drive, a_pathname.drive))) and
+					((hostname = Void and a_pathname.hostname = Void) or else
+					((hostname /= Void and a_pathname.hostname /= Void) and then
+					STRING_.same_unicode_string (hostname, a_pathname.hostname)))
 				then
 					Result := True
 					from i := 1 until i > nb loop
-						if not item (i).is_equal (a_pathname.item (i)) then
+						if not STRING_.same_unicode_string (item (i), a_pathname.item (i)) then
 							Result := False
 							i := nb + 1 -- Jump out of the loop.
 						end

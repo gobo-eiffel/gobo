@@ -83,6 +83,8 @@ feature -- Access
 			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 		deferred
+		ensure
+			string_type: Result /= Void implies Result.same_type ("")
 		end
 
 feature -- Status report

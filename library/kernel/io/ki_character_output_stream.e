@@ -41,8 +41,7 @@ feature -- Output
 		require
 			is_open_write: is_open_write
 		local
-			j, k: INTEGER
-			a_string: STRING
+			k, j: INTEGER
 		do
 			if i = 0 then
 				put_character ('0')
@@ -53,39 +52,31 @@ feature -- Output
 				else
 					k := i
 				end
-				a_string := STRING_.make (10)
-				from until k = 0 loop
-					inspect k \\ 10
-					when 0 then
-						a_string.append_character ('0')
-					when 1 then
-						a_string.append_character ('1')
-					when 2 then
-						a_string.append_character ('2')
-					when 3 then
-						a_string.append_character ('3')
-					when 4 then
-						a_string.append_character ('4')
-					when 5 then
-						a_string.append_character ('5')
-					when 6 then
-						a_string.append_character ('6')
-					when 7 then
-						a_string.append_character ('7')
-					when 8 then
-						a_string.append_character ('8')
-					when 9 then
-						a_string.append_character ('9')
-					end
-					k := k // 10
+				j := k // 10
+				if j /= 0 then
+					put_integer (j)
 				end
-				from
-					j := a_string.count
-				until
-					j < 1
-				loop
-					put_character (a_string.item (j))
-					j := j - 1
+				inspect k \\ 10
+				when 0 then
+					put_character ('0')
+				when 1 then
+					put_character ('1')
+				when 2 then
+					put_character ('2')
+				when 3 then
+					put_character ('3')
+				when 4 then
+					put_character ('4')
+				when 5 then
+					put_character ('5')
+				when 6 then
+					put_character ('6')
+				when 7 then
+					put_character ('7')
+				when 8 then
+					put_character ('8')
+				when 9 then
+					put_character ('9')
 				end
 			end
 		end

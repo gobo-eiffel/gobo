@@ -21,6 +21,8 @@ inherit
 			fill_from_stream
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
@@ -40,6 +42,7 @@ feature {NONE} -- Initialization
 			-- may not share internal representation.)
 		require
 			a_string_not_void: a_string /= Void
+			a_string_is_string: a_string.same_type ("")
 		do
 			make (a_string.count)
 			fill_from_string (a_string, 1)
@@ -60,6 +63,7 @@ feature -- Access
 		deferred
 		ensure
 			substring_not_void: Result /= Void
+			string_type: Result.same_type ("")
 			count_set: Result.count = e - s + 1
 		end
 
@@ -71,6 +75,7 @@ feature -- Conversion
 			Result := substring (1, count)
 		ensure
 			as_string_not_void: Result /= Void
+			string_type: Result.same_type ("")
 			same_count: Result.count = count
 		end
 
@@ -90,7 +95,7 @@ feature -- Element change
 			end
 		ensure
 			count_set: a_string.count = old (a_string.count) + (e - s + 1)
-			characters_set: s <= e implies equal (a_string.substring (old (a_string.count) + 1, a_string.count), substring (s, e))
+			characters_set: s <= e implies STRING_.same_unicode_string (a_string.substring (old (a_string.count) + 1, a_string.count), substring (s, e))
 		end
 
 	fill_from_string (a_string: STRING; pos: INTEGER) is
@@ -98,6 +103,7 @@ feature -- Element change
 			-- starting at position `pos'.
 		require
 			a_string_not_void: a_string /= Void
+			a_string_is_string: a_string.same_type ("")
 			pos_large_enough: pos >= 1
 			enough_space: (pos + a_string.count - 1) <= count
 		local
@@ -124,5 +130,10 @@ feature -- Element change
 		do
 			Result := a_stream.read_to_buffer (Current, pos, nb)
 		end
+
+feature {NONE} -- Implementation
+
+	dummy_string: STRING is ""
+			-- Dummy string
 
 end
