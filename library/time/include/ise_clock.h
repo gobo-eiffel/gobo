@@ -6,6 +6,10 @@
 #include <eif_eiffel.h>
 #include <time.h>
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 void gobo_get_date (EIF_INTEGER *y, EIF_INTEGER *m, EIF_INTEGER *d)
 {
 	struct tm *date_time;
@@ -42,5 +46,9 @@ void gobo_get_date_time (EIF_INTEGER *y, EIF_INTEGER *m, EIF_INTEGER *d,
 	*mi = (EIF_INTEGER)(date_time->tm_min);
 	*s = (EIF_INTEGER)(date_time->tm_sec);
 }
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif /* __GOBO_ISE_CLOCK__ */
