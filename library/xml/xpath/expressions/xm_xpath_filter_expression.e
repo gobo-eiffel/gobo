@@ -35,6 +35,20 @@ feature -- Access
 			-- TODO
 		end
 
+	filter: XM_XPATH_EXPRESSION
+			-- Filter
+	
+	base_expression: XM_XPATH_EXPRESSION
+			-- Base expression
+
+feature -- Status report
+
+	is_positional: BOOLEAN is
+			-- Is `Current' a positional filter?
+		do
+			-- TODO
+		end
+
 feature -- Analysis
 
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is

@@ -43,10 +43,15 @@ feature -- Expression creation
 			if not parser.is_parse_error then
 				expr1 := parser.last_parsed_expression
 				Result := expr1.simplify
+				if expr1.is_static_type_error then
+					-- TODO
+				end
 			else
 				print (parser.last_parse_error)
 				-- TODO - above should be an XM_XPATH_ERROR_EXPRESSION??
 			end
+		ensure
+			dont_know_yet: True
 		end
 end
 

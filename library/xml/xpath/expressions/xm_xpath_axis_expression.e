@@ -42,7 +42,11 @@ feature -- Access
 
 	axis: INTEGER
 			-- Type of axis
-		
+
+
+	node_test: XM_XPATH_NODE_TEST
+			-- Node test
+
 feature -- Analysis
 
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is

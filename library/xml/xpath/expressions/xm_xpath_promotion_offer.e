@@ -131,6 +131,18 @@ feature -- Status report
 			--  nodes can be delivered in any order and duplicates are allowed (for example, as
 			--  required by the boolean() function).
 
+feature -- Element change
+
+	set_containing_expression (exp:  XM_XPATH_EXPRESSION) is
+			-- Set `containing_expression'.
+		require
+			expression_not_void: exp /= Void
+		do
+			containing_expression := exp
+		ensure
+			set: containing_expression = exp
+		end
+
 feature {NONE} -- Implementation
 
 	promote (child: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is

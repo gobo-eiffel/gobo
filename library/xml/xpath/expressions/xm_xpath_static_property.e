@@ -23,7 +23,7 @@ feature -- Status report
 
 	are_dependencies_computed: BOOLEAN
 			-- Have `dependencies' been computed yet?
-		
+
 	are_cardinalities_computed: BOOLEAN
 			-- Have `cardinalities' been computed yet?
 
@@ -164,9 +164,9 @@ feature -- Cardinality
 		require
 			cardinalities_computed: are_cardinalities_computed
 		do
-			Result := Cardinality_allows_one
-				and then not Cardinality_allows_zero
-				and then not Cardinality_allows_many
+			Result := cardinality_allows_one
+				and then not cardinality_allows_zero
+				and then not cardinality_allows_many
 		end
 
 	cardinality_allows_many: BOOLEAN is
@@ -182,7 +182,7 @@ feature -- Cardinality
 		require
 			cardinalities_computed: are_cardinalities_computed
 		do
-			Result := Cardinality_allows_one and then Cardinality_allows_many
+			Result := not cardinality_allows_zero and then cardinality_allows_one and then cardinality_allows_many
 		end
 
 	cardinality_allows_zero_or_more: BOOLEAN is
@@ -190,11 +190,29 @@ feature -- Cardinality
 		require
 			cardinalities_computed: are_cardinalities_computed
 		do
-			Result := Cardinality_allows_zero
-				and then Cardinality_allows_one
-				and then Cardinality_allows_many
+			Result := cardinality_allows_zero
+				and then cardinality_allows_one
+				and then cardinality_allows_many
 		end
-	
+
+	cardinality_subsumes (requested_cardinality: INTEGER): BOOLEAN is
+			-- Are all options of `requested_cardinality' permitted by `Current'?
+		do
+			inspect
+				requested_cardinality
+			when Required_cardinality_empty then
+				Result := cardinality_allows_zero
+			when Required_cardinality_optional then
+				Result := cardinality_allows_zero and then cardinality_allows_one
+			when Required_cardinality_exactly_one then
+				Result := cardinality_allows_one
+			when Required_cardinality_one_or_more then
+				Result := cardinality_allows_one and then cardinality_allows_many
+			when Required_cardinality_zero_or_more then
+				Result := cardinality_allows_zero_or_more
+			end
+		end
+
 feature -- Setting cardinality
 
 	set_cardinality (requested_cardinality: INTEGER) is
@@ -286,8 +304,6 @@ feature -- Special properties
 	
 	special_properties: ARRAY [BOOLEAN]
 
-
-
 	context_document_nodeset: BOOLEAN is
 			-- Expression property: this is `True' in the case of
 			-- an expression whose item type is node, when the nodes in the result are
@@ -349,6 +365,72 @@ feature -- Special properties
 			special_properties_computed: are_special_properties_computed
 		do
 			Result := special_properties.item (6)
+		end
+
+feature -- Setting special properties
+
+	set_context_document_nodeset is
+			-- Guarentee nodes in the result are all to be in the same document as the context node.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (True, 1)
+		ensure
+			context_document_nodeset: context_document_nodeset
+		end
+
+	set_ordered_nodeset is
+			-- Guarentee nodes in the result are in document order.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (True, 2)
+		ensure
+			ordered_nodeset: ordered_nodeset
+		end
+
+	set_reverse_document_order is
+			-- Guarentee delivers items in reverse of correct order,
+			--  when unordered retrieval is requested.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (True, 3)
+		ensure
+			reverse_document_order: reverse_document_order
+		end
+
+	set_peer_nodeset is
+			-- Guarentee that no node in the
+			-- set will be an ancestor of any other.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (True, 4)
+		ensure
+			peer_nodeset: peer_nodeset
+		end
+
+	set_subtree_nodeset is
+			-- Guarentee every node in the result will be a descendant or self,
+			--  or attribute or namespace, of the context node
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (True, 5)
+		ensure
+			subtree_nodeset: subtree_nodeset
+		end	
+
+	set_attribute_ns_nodeset is
+			-- Guarentee every node in the result will be
+			--  an attribute or namespace of the context node
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (True, 6)
+		ensure
+			attribute_ns_nodeset: attribute_ns_nodeset
 		end
 
 end

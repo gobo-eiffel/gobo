@@ -76,6 +76,18 @@ feature -- Status report
 			Result := True
 		end
 
+feature -- Status setting
+
+	set_last_static_type_error (msg: STRING) is
+			-- Set result of `last_static_type_error'.
+		require
+			type_error: is_static_type_error
+			message_not_void: msg /= Void
+		deferred
+		ensure
+			set: STRING_.same_string (last_static_type_error, msg)
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -99,6 +111,8 @@ feature -- Analysis
 			-- This performs any static optimization 
 			--  (by rewriting the expression as a different expression);
 			-- The default implementation does nothing.
+		require
+			no_previous_type_error: not is_static_type_error
 		deferred
 		ensure
 			expression_not_void: Result /= Void
@@ -116,6 +130,7 @@ feature -- Analysis
 		require
 			context_not_void: env /= Void
 			ok_to_analyze: may_analyze
+			no_previous_type_error: not is_static_type_error
 		deferred
 		ensure
 			expression_not_void: not is_static_type_error implies Result /= Void

@@ -12,12 +12,47 @@ indexing
 
 class XM_XPATH_DOCUMENT_SORTER
 
-	-- TODO inherit XM_XPATH_COMPUTED_EXPRESSION
+inherit
+
+		XM_XPATH_COMPUTED_EXPRESSION
+
+creation
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (exp: XM_XPATH_EXPRESSION) is
+			-- TODO
+		do
+			base_expression := exp
+		end
 
 feature -- Access
 
 	base_expression: XM_XPATH_EXPRESSION
 			-- Base expression
+
+	item_type: INTEGER is
+			--Determine the data type of the expression, if possible
+		do
+			-- TODO
+		end
+
+feature -- Analysis
+
+	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+			-- Perform static analysis of an expression and its subexpressions
+		do
+		end
+
+feature {NONE} -- Implementation
+	
+	compute_cardinality is
+			-- Compute cardinality.
+		do
+			-- TODO
+		end
 
 end
 	

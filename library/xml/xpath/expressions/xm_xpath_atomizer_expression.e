@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath cast as Expressions"
+		"Objects that map a sequence by replacing nodes with their typed values. Corresponds to fn:data()"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,28 +10,23 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_CAST_EXPRESSION
+class XM_XPATH_ATOMIZER_EXPRESSION
 
 inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 
+
 creation
 
-	make, make_from_sequence_type
+	make
 
 feature {NONE} -- Initialization
 
-	make (a_source: XM_XPATH_EXPRESSION; a_target_type: INTEGER; empty_ok: BOOLEAN) is
+	make (seq: XM_XPATH_EXPRESSION) is
 			-- TODO
 		do
 		end
-
-	make_from_sequence_type (a_source: XM_XPATH_EXPRESSION; target: XM_XPATH_SEQUENCE_TYPE) is
-			-- TODO
-		do
-		end
-
 
 feature -- Access
 	
@@ -41,6 +36,9 @@ feature -- Access
 			-- TODO
 		end
 
+	base_expression: XM_XPATH_EXPRESSION
+			-- Base expression
+	
 feature -- Analysis
 
 	analyze (env: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
@@ -57,3 +55,5 @@ feature {NONE} -- Implementation
 		end
 
 end
+
+	

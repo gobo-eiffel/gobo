@@ -123,6 +123,34 @@ feature -- Status report
 			end				
 		end
 
+	is_forward_axis (an_axis: INTEGER): BOOLEAN is
+			-- Is `an_axis' traveresed in reverse document order?
+		require
+			valid_axis: is_axis_valid (an_axis)
+		do
+			inspect
+				an_axis
+			when Attribute_axis then
+				Result := True
+			when Child_axis then
+				Result := True
+			when Descendant_axis then
+				Result := True
+			when Descendant_or_self_axis then
+				Result := True
+			when Following_axis then
+				Result := True
+			when Following_sibling_axis then
+				Result := True
+			when Self_axis then
+				Result := True
+			when Parent_axis then
+				Result := True
+			else
+				Result := False
+			end
+		end
+
 	is_reverse_axis (an_axis: INTEGER): BOOLEAN is
 			-- Is `an_axis' traveresed in reverse document order?
 		require

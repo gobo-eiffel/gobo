@@ -784,7 +784,7 @@ feature {NONE} -- Expression parsers
 					else
 						parse_sequence
 						if not is_parse_error then
-							create expr2.make (expr1, internal_last_parsed_sequence)
+							create expr2.make_from_sequence_type (expr1, internal_last_parsed_sequence)
 							expr1 := expr2
 						end
 					end

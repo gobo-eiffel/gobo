@@ -149,7 +149,7 @@ feature -- Status report
 			are_cardinalities_computed and then
 			are_special_properties_computed
 		end
-	
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -159,6 +159,12 @@ feature -- Comparison
 		end
 
 feature -- Status setting
+
+	set_last_static_type_error (msg: STRING) is
+			-- Set result of `last_static_type_error'.
+		do
+			internal_last_static_type_error := msg
+		end
 
 	frozen compute_static_properties is
 			-- Compute the static properties
@@ -225,8 +231,6 @@ feature -- Analysis
 
 	simplify: XM_XPATH_EXPRESSION is
 			-- Simplify an expression;
-			-- This performs any static optimization 
-			--  (by rewriting the expression as a different expression);
 			-- The default implementation does nothing.
 		do
 			Result := Current
@@ -306,16 +310,7 @@ feature -- Element change
 			set: line_number = a_line_number
 		end
 
-feature {NONE} -- Implementation
-	
-	internal_last_static_type_error: STRING
-			-- Last static type error message
-
-	empty_abstract_item_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM] is
-			-- shared empty iterator
-		once
-			create Result.make
-		end
+feature {XM_XPATH_EXPRESSION} -- Implementation
 
 	compute_cardinality is
 			-- Compute cardinality.
@@ -337,5 +332,17 @@ feature {NONE} -- Implementation
 		ensure
 			computed: are_special_properties_computed and then special_properties /= Void
 		end
+	
+feature {NONE} -- Implementation
+	
+	internal_last_static_type_error: STRING
+			-- Last static type error message
+
+	empty_abstract_item_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM] is
+			-- shared empty iterator
+		once
+			create Result.make
+		end
+
 end
 	
