@@ -150,13 +150,6 @@
 			<option name="abstract" value="true"/>
 			<cluster name="Pool"/>
 		</cluster>
-		<cluster name="Other">
-			<option name="abstract" value="true"/>
-			<cluster name="Base">
-				<option name="abstract" value="true"/>
-				<cluster name="Support"/>
-			</cluster>
-		</cluster>
 		<cluster name="Tools">
 			<option name="abstract" value="true"/>
 			<cluster name="gArgs"/>
