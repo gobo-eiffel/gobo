@@ -17,6 +17,9 @@ inherit
 
 	ET_INTEGER_CONSTANT
 
+	UT_CHARACTER_CODES
+		export {NONE} all end
+
 creation
 
 	make
@@ -35,6 +38,35 @@ feature {NONE} -- Initialization
 		ensure
 			literal_set: literal = a_literal
 			position_set: position = a_position
+		end
+
+feature -- Basic operations
+
+	compute_value is
+			-- Compute value of current integer constant.
+			-- Make result available in `value' or set
+			-- `has_value_error' to true if an overflow or
+			-- underflow occurred during computation.
+		local
+			v, d: INTEGER
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			has_value_error := False
+			nb := literal.count
+			from i := 1 until i > nb loop
+				c := literal.item (i)
+				if c /= '_' then
+					d := c.code - Zero_code
+					v := 10 * v + d
+				end
+				i := i + 1
+			end
+			if is_negative then
+				value := - v
+			else
+				value := v
+			end
 		end
 
 invariant

@@ -11,7 +11,7 @@ indexing
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class ET_INTEGER_CONSTANT
+deferred class ET_INTEGER_CONSTANT
 
 inherit
 
@@ -25,8 +25,18 @@ feature -- Access
 	is_negative: BOOLEAN
 			-- Is integer value negative?
 
+	value: INTEGER
+			-- Integer value set by last call
+			-- to `compute_value'
+
 	position: ET_POSITION
 			-- Position in source code
+
+feature -- Status report
+
+	has_value_error: BOOLEAN
+			-- Has an overflow or underflow occurred during
+			-- the last computation of `value'?
 
 feature -- Setting
 
@@ -36,6 +46,16 @@ feature -- Setting
 			is_negative := True
 		ensure
 			is_negative: is_negative
+		end
+
+feature -- Basic operations
+
+	compute_value is
+			-- Compute value of current integer constant.
+			-- Make result available in `value' or set
+			-- `has_value_error' to true if an overflow or
+			-- underflow occurred during computation.
+		deferred
 		end
 
 invariant

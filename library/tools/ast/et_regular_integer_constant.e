@@ -6,7 +6,7 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2000, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
@@ -16,6 +16,9 @@ class ET_REGULAR_INTEGER_CONSTANT
 inherit
 
 	ET_INTEGER_CONSTANT
+
+	UT_CHARACTER_CODES
+		export {NONE} all end
 
 creation
 
@@ -35,6 +38,31 @@ feature {NONE} -- Initialization
 		ensure
 			literal_set: literal = a_literal
 			position_set: position = a_position
+		end
+
+feature -- Basic operations
+
+	compute_value is
+			-- Compute value of current integer constant.
+			-- Make result available in `value' or set
+			-- `has_value_error' to true if an overflow or
+			-- underflow occurred during computation.
+		local
+			v, d: INTEGER
+			i, nb: INTEGER
+		do
+			has_value_error := False
+			nb := literal.count
+			from i := 1 until i > nb loop
+				d := literal.item (i).code - Zero_code
+				v := 10 * v + d
+				i := i + 1
+			end
+			if is_negative then
+				value := - v
+			else
+				value := v
+			end
 		end
 
 invariant
