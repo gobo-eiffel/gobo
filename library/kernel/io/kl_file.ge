@@ -128,22 +128,19 @@ feature -- Status report
 
 	is_readable: BOOLEAN is
 			-- Can file be opened in read mode?
-#ifdef VE
-		local
-			a_file: KL_TEXT_INPUT_FILE
-#endif
 		do
 			if name.count > 0 then
 #ifdef ISE || HACT
 				Result := old_exists and then (old_is_readable and is_plain)
 #endif
 #ifdef SE
-				Result := old_is_readable (name)
+				tmp_file.reset (name)
+				Result := tmp_file.is_readable
 #endif
 #ifdef VE
 				if old_exists then
-					!! a_file.make (name)
-					Result := a_file.is_readable
+					tmp_file.reset (name)
+					Result := tmp_file.is_readable
 				end
 #endif
 			end
@@ -313,6 +310,20 @@ feature {NONE} -- Implementation
 			not_closed: is_open
 		deferred
 		end
+
+#endif
+#ifdef SE || VE
+	tmp_file: KL_TEXT_INPUT_FILE is
+			-- Temporary file object
+		once
+			!! Result.make (dummy_name)
+		ensure
+			file_not_void: Result /= Void
+			file_closed: Result.is_closed
+		end
+
+	dummy_name: STRING is "dummy"
+			-- Dummy name
 
 #endif
 #ifdef ISE || HACT || VE

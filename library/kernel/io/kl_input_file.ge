@@ -88,6 +88,12 @@ feature -- Status report
 				if is_open_read then
 					Result := True
 					close
+#ifdef SE
+					if operating_system.is_unix then
+						tmp_directory.reset (name)
+						Result := not tmp_directory.is_readable
+					end
+#endif
 				end
 			end
 		end
@@ -325,6 +331,15 @@ feature {NONE} -- Implementation
 			name_not_void: name /= Void
 			name_not_empty: name.count > 0
 		deferred
+		end
+
+	tmp_directory: KL_DIRECTORY is
+			-- Temporary directory object
+		once
+			!! Result.make (dummy_name)
+		ensure
+			directory_not_void: Result /= Void
+			directory_closed: Result.is_closed
 		end
 
 #endif
