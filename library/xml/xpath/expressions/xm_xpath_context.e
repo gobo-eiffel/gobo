@@ -14,6 +14,8 @@ deferred class XM_XPATH_CONTEXT
 
 inherit
 
+	ANY -- required by SE 2.1b1
+
 	DT_SHARED_SYSTEM_CLOCK
 
 	XM_XPATH_STANDARD_NAMESPACES
@@ -92,7 +94,7 @@ feature -- Access
 			 if not current_iterator.is_error then Result := current_iterator.index end
 		ensure
 			positive_result: Result >= 0 -- But it is a Dynamic error, XP0002, if Result = 0
-			restricted_implies_undefined: is_restricted implies Result = Void
+			restricted_implies_undefined: is_restricted implies Result = 0
 		end
 
 	last: INTEGER is
@@ -118,7 +120,7 @@ feature -- Access
 			Result := cached_last
 		ensure
 			positive_size: Result >= 0
-			restricted_implies_undefined: is_restricted implies Result = Void
+			restricted_implies_undefined: is_restricted implies Result = 0
 		end
 
 	collator (a_collation_name: STRING): ST_COLLATOR is
