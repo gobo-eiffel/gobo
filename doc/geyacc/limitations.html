@@ -46,12 +46,22 @@ color="#0000FF">&gt;</font> <font color="#800080">expression</font>
 color="#0000FF">&gt;</font> <font color="#800080">expression_list</font></pre>
 </blockquote>
 
+<h2>Formal generic parameters and multiple types for semantic
+values</h2>
+
+<p>In case of <a href="actions.html#value_types">multiple types</a>
+for semantic values, <em>geyacc</em> does not generate valid
+Eiffel code when the type specified in the <font color="#0000FF"><tt>%token</tt></font>
+and <font color="#0000FF"><tt>%type</tt></font> declarations is a
+formal generic parameter. This is due to the fact that <em>geyacc</em>
+uses assignment attempts for type conversion.</p>
+
 <hr size="1">
 
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1999</b></font><font
+            <font size="2"><b>Copyright © 1999-2001</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -61,7 +71,7 @@ color="#0000FF">&gt;</font> <font color="#800080">expression_list</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 29 March 1999</font><br>
+            <strong>Last Updated:</strong> 25 September 2001</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
