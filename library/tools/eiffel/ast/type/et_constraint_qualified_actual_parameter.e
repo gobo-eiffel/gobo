@@ -18,9 +18,6 @@ class ET_CONSTRAINT_QUALIFIED_ACTUAL_PARAMETER
 inherit
 
 	ET_CONSTRAINT_ACTUAL_PARAMETER
-		redefine
-			resolved_syntactical_constraint
-		end
 
 creation
 
