@@ -4,12 +4,12 @@ indexing
 
 		"Map"
 
-	library:		"Gobo Eiffel Ant"
-	author:		"Sven Ehrke <sven.ehrke@sven-ehrke.de>"
-	copyright:	"Copyright (c) 2001, Sven Ehrke and others"
-	license:		"Eiffel Forum Freeware License v1 (see forum.txt)"
-	date:			"$Date$"
-	revision:	"$Revision$"
+	library:    "Gobo Eiffel Ant"
+	author:     "Sven Ehrke <sven.ehrke@sven-ehrke.de>"
+	copyright:  "Copyright (c) 2001, Sven Ehrke and others"
+	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+	date:       "$Date$"
+	revision:   "$Revision$"
 
 
 class GEANT_MAP
@@ -131,14 +131,13 @@ feature -- Access
 				if map.is_executable then
 					a_map_filename := map.mapped_filename (a_filename)
 				else
-					project.log ("	[map] error: map definition wrong'%N")
+					project.log ("  [map] error: map definition wrong%N")
 					a_exit_code := 1
 				end
 			else
 				a_map_filename := clone (a_filename)
 			end
 			if a_exit_code = 0 then
-				project.trace_debug ("	mapping type: " + type + "%N")
 				if type.is_equal (Type_attribute_value_identity) then
 						-- handle identity mapping:
 					Result := clone (a_map_filename)
@@ -151,38 +150,36 @@ feature -- Access
 				else
 						-- handle glob mapping:
 					check type_is_glob: type.is_equal (Type_attribute_value_glob) end
-					project.trace_debug ("	source pattern: " + source_pattern + "%N")
-					project.trace_debug ("	target pattern: " + target_pattern + "%N")
 					source_prefix := glob_prefix (source_pattern)
 					source_postfix := glob_postfix (source_pattern)
 					target_prefix := glob_prefix (target_pattern)
 					target_postfix := glob_postfix (target_pattern)
-
+	
 					filename_prefix := clone (a_map_filename)
 					filename_prefix.head (source_prefix.count)
 					filename_postfix := clone (a_map_filename)
 					filename_postfix.tail (source_postfix.count)
-
+	
 					if
 						filename_prefix.is_equal (source_prefix) and
 						filename_postfix.is_equal (source_postfix)
 					then
 						s := clone (a_map_filename)
-
+	
 	--					s.remove_head (filename_prefix.count) -- Not supported in HACT 4.0.1 and ISE 5.1
 						s := string_remove_head (s, filename_prefix.count) -- workaround
 	--					s.remove_tail (filename_postfix.count) -- Not supported in HACT 4.0.1 and ISE 5.1
 						s := string_remove_tail (s, filename_postfix.count) -- workaround
-
+	
 						Result := clone (target_prefix)
 						Result.append_string (s)
 						Result.append_string (target_postfix)
 					else
-						project.trace_debug ("	no match for '" + a_map_filename + "'%N")
+						project.trace_debug ("  [*map] no match for '" + a_map_filename + "'%N")
 						Result := clone (a_map_filename)
 					end
 				end
-				project.trace_debug ("	mapping '" + a_map_filename + " to '" + Result + "'%N")
+				project.trace_debug ("  [*map] mapping '" + a_map_filename + "' to '" + Result + "'%N")
 			end
 		ensure
 			Result_not_void: Result /= Void
