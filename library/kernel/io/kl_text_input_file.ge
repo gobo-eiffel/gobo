@@ -98,9 +98,8 @@ inherit
 			read_line as old_read_line,
 			disconnect as old_close
 		export
-			-- Bug in SE 2.1b1:
-			-- {TEXT_FILE_READ} old_close, old_is_open_read, end_reached, buffer, fill_buffer, buffer_size, old_read_character, old_end_of_file, old_last_character;
-			-- {NONE} all
+			{TEXT_FILE_READ} old_close, old_is_open_read, end_reached, buffer, fill_buffer, buffer_size, old_read_character, old_end_of_file, old_last_character;
+			{NONE} all
 		undefine
 			last_string
 		end

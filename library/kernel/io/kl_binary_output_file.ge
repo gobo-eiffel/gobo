@@ -74,8 +74,7 @@ inherit
 			is_connected as old_is_open_write,
 			disconnect as old_close
 		export
-			-- Bug in SE 2.1b1:
-			-- {NONE} all
+			{NONE} all
 		end
 
 #endif

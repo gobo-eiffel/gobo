@@ -87,8 +87,7 @@ inherit
 			disconnect as old_close,
 			flush as old_flush
 		export
-			-- Bug in SE 2.1b1:
-			-- {NONE} all
+			{NONE} all
 		end
 
 #endif

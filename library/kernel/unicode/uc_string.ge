@@ -85,12 +85,7 @@ inherit
 #ifdef ISE
 			{STRING} share, area, old_is_empty, mirror;
 #endif
-#ifdef SE
-			-- Bug in SE 2.1b1:
-			-- {NONE} all
-#else
 			{NONE} all
-#endif
 		undefine
 #ifdef VE || SE
 			compare,
@@ -190,12 +185,7 @@ inherit
 #endif
 	COMPARABLE
 		export
-#ifdef SE
-			-- Bug in SE 2.1b1:
-			-- {NONE} all
-#else
 			{NONE} all
-#endif
 		undefine
 #ifdef SE
 			out_in_tagged_out_memory,
