@@ -50,13 +50,13 @@ feature -- Output
 		do
 			Result := STRING_.make (40)
 			Result.append_string (" ln: ")
-			Result := STRING_.appended_string (Result, row.out)
+			Result.append_string (STRING_.as_string (row.out))
 			Result.append_string (" cl: ")
-			Result := STRING_.appended_string (Result, column.out)
+			Result.append_string (STRING_.as_string (column.out))
 			Result.append_string (" byte: ")
-			Result := STRING_.appended_string (Result, byte_index.out)
+			Result.append_string (STRING_.as_string (byte_index.out))
 			Result.append_string (" -> ")
-			Result := STRING_.appended_string (Result, source.out)
+			Result.append_string (STRING_.as_string (source.out))
 		end
 
 invariant

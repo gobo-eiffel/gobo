@@ -63,7 +63,7 @@ feature -- Output
 		do
 				-- Name.
 			if has_name then
-				Result := clone (name)
+				Result := clone (STRING_.as_string (name))
 			else
 				Result := clone ("?")
 			end
@@ -96,7 +96,7 @@ feature -- Output
 			end
 			if has_default_value then
 				Result.append_string (" %"")
-				Result := STRING_.appended_string (Result, default_value)
+				Result.append_string (STRING_.as_string (default_value))
 				Result.append_character ('%"')
 			end
 		end
