@@ -29,6 +29,7 @@ inherit
 			is_equal as arrayed_list_is_equal
 		export
 			{ANY} item, count
+			{DS_ARRAYED_LIST} storage
 			{NONE} all
 		end
 
@@ -103,7 +104,10 @@ feature {NONE} -- Initialization
 				-- is considered match in the event of ties) will work.
 				-- Bubble sort is used since the list is probably
 				-- quite small.
-			accepted_rules.sort (rule_sorter)
+			if not accepted_rules.is_empty then
+				accepted_rules.sort (rule_sorter)
+				accepted_rules.first.set_useful (True)
+			end
 			accepted_head_rules.sort (rule_sorter)
 		ensure
 			sorted: sorted (bubble_sorter)
