@@ -4,10 +4,17 @@
 
 	<description>demonstrates filesystem functionality</description>
 
+	<target name="info">
+		<description>displays information about filesystem</description>
+		<echo message="GOBO_OS: ${GOBO_OS}"/>
+		<echo message="is_windows: ${is_windows}"/>
+		<echo message="is_unix: ${is_unix}"/>
+		<echo message="exe: ${exe}"/>
+	</target>
+
 	<target name="mkdir">
 		<description>creates a directory</description>
-		<mkdir directory="testdirectory"/>
-		<mkdir directory="testdirectory/subdirectory"/>
+		<mkdir directory="testdirectory\subdirectory"/>
 	</target>
 
 	<target name="deldir">
