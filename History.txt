@@ -1,3 +1,16 @@
+Version 3.1 - ?
+
+	gelex:
+
+	* Feature YY_BUFFER.content is now of type KI_CHARACTER_BUFFER
+	  instead of KL_CHARACTER_BUFFER (Berend de Boer).
+
+	Gobo Eiffel Kernel Library:
+
+	* Moved feature `close' up to KI_INPUT_STREAM and
+	  KI_OUTPUT_STREAM and added feature `is_closable'
+	  (suggested by Franck Arnaud).
+
 Version 3.0 - 1 September 2002
 
 	gelex:
