@@ -11,6 +11,41 @@ HACT 1.6 (Halstenbach)
 
 ISE 4.1 (ISE Eiffel)
 
+    . Input routines such as `read_character' from class CONSOLE do not
+      work as expected under Windows. When one writes something like:
+
+            from
+                    !! a_string.make
+                    io.input.read_character
+            until
+                    io.input.last_character = 'a'
+            loop
+                    a_string.append_character (io.input.last_character)
+                    io.input.read_character
+            end
+
+      and then enters the following input on the keyboard:
+
+            hello
+            world
+            letter a
+            skipped
+            a
+
+      one gets the following characters in `a_string':
+
+            "hwls"
+
+      instead of:
+
+            "hello%Nworld%Nletter "
+
+      This is because of a bug in `read_character' which reads only the first
+      character and discards the rest of the line.
+
+      This bug prevents some of the examples using IO input (such as the
+      calculator examples) from working.
+
 SE -0.83 (SmallEiffel)
 
 TOWER 2.0.0 (TowerEiffel)
