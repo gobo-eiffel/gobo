@@ -133,6 +133,34 @@ feature -- Output
 			end
 		end
 
+feature -- Operation(s)
+
+	power (x, n: INTEGER): INTEGER is
+			-- Integer x to the power of n (x ^ n)
+		require
+			positive_n: n >= 0
+		local
+			a_result: INTEGER
+		do
+			if n = 0 then
+				Result := 1
+			elseif n = 1 then
+				Result := x
+			elseif x /= 0 then
+				if is_even (n) then
+						-- x ^ 2N = (x ^ N) ^ 2
+					Result := power (x, n // 2)
+					Result := Result * Result
+				else
+					Result := power (x, n - 1) * x
+				end
+			end
+		ensure
+			zero_power_n: x = 0 and n /= 0 implies Result = 0
+			x_power_0: n = 0 implies Result = 1
+			recursive_definition: n > 0 implies (Result = x * power (x, n - 1))
+		end
+		
 feature -- Status report
 
 	is_even (an_int: INTEGER): BOOLEAN is
