@@ -753,27 +753,19 @@ feature -- Compilation
 			-- `flat' means that the inherited features are checked
 			-- again in the descendant classes during Degree 3.
 		local
-			clock: DT_SHARED_SYSTEM_CLOCK
-			dt1, dt2: DT_DATE_TIME
-			dtd: DT_DATE_TIME_DURATION
+			l_clock: DT_SHARED_SYSTEM_CLOCK
+			dt1: DT_DATE_TIME
 			a_signature_viewer: ET_SIGNATURE_VIEWER
 		do
 			activate_processors
 			debug ("ericb")
-				create clock
-				dt1 := clock.system_clock.date_time_now
+				create l_clock
+				dt1 := l_clock.system_clock.date_time_now
 			end
 			preparse_single
 			debug ("ericb")
-				dt2 := clock.system_clock.date_time_now
-				dtd := dt2 - dt1
-				dtd.set_canonical (dt1)
-				std.error.put_string ("Degree 6: ")
-				std.error.put_line (dtd.out)
-				debug ("stop")
-					io.read_line
-				end
-				dt1 := clock.system_clock.date_time_now
+				print_time (dt1, "Degree 6")
+				dt1 := l_clock.system_clock.date_time_now
 			end
 			parse_system
 			debug ("ericb")
@@ -787,67 +779,31 @@ feature -- Compilation
 				std.error.put_line (" features")
 			end
 			debug ("ericb")
-				dt2 := clock.system_clock.date_time_now
-				dtd := dt2 - dt1
-				dtd.set_canonical (dt1)
-				std.error.put_string ("Degree 5: ")
-				std.error.put_line (dtd.out)
-				debug ("stop")
-					io.read_line
-				end
-				dt1 := clock.system_clock.date_time_now
+				print_time (dt1, "Degree 5")
+				dt1 := l_clock.system_clock.date_time_now
 			end
 			if cat_enabled then
 				compile_cat_calls
 				debug ("ericb")
-					dt2 := clock.system_clock.date_time_now
-					dtd := dt2 - dt1
-					dtd.set_canonical (dt1)
-					std.error.put_string ("Degree CAT: ")
-					std.error.put_line (dtd.out)
-					debug ("stop")
-						io.read_line
-					end
-					dt1 := clock.system_clock.date_time_now
+					print_time (dt1, "Degree CAT")
+					dt1 := l_clock.system_clock.date_time_now
 				end
 			end
 			if forget_enabled then
 				compile_forget_features
 				debug ("ericb")
-					dt2 := clock.system_clock.date_time_now
-					dtd := dt2 - dt1
-					dtd.set_canonical (dt1)
-					std.error.put_string ("Degree FORGET: ")
-					std.error.put_line (dtd.out)
-					debug ("stop")
-						io.read_line
-					end
-					dt1 := clock.system_clock.date_time_now
+					print_time (dt1, "Degree FORGET")
+					dt1 := l_clock.system_clock.date_time_now
 				end
 			end
 			compile_degree_4
 			debug ("ericb")
-				dt2 := clock.system_clock.date_time_now
-				dtd := dt2 - dt1
-				dtd.set_canonical (dt1)
-				std.error.put_string ("Degree 4: ")
-				std.error.put_line (dtd.out)
-				debug ("stop")
-					io.read_line
-				end
-				dt1 := clock.system_clock.date_time_now
+				print_time (dt1, "Degree 4")
+				dt1 := l_clock.system_clock.date_time_now
 			end
 			compile_degree_3 (flat)
 			debug ("ericb")
-				dt2 := clock.system_clock.date_time_now
-				dtd := dt2 - dt1
-				dtd.set_canonical (dt1)
-				std.error.put_string ("Degree 3: ")
-				std.error.put_line (dtd.out)
-				debug ("stop")
-					io.read_line
-				end
-				dt1 := clock.system_clock.date_time_now
+				print_time (dt1, "Degree 3")
 			end
 			debug ("ericb")
 				create a_signature_viewer.make (Current)
@@ -860,33 +816,59 @@ feature -- Compilation
 			-- `flat' means that the inherited features are checked
 			-- again in the descendant classes during Degree 3.
 		local
-			a_parser: like eiffel_parser
-			clock: DT_SHARED_SYSTEM_CLOCK
-			dt1, dt2: DT_DATE_TIME
-			dtd: DT_DATE_TIME_DURATION
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class: ET_CLASS
+			l_clock: DT_SHARED_SYSTEM_CLOCK
+			dt1: DT_DATE_TIME
 		do
 			activate_processors
 			debug ("ericb")
-				create clock
-				dt1 := clock.system_clock.date_time_now
+				create l_clock
+				dt1 := l_clock.system_clock.date_time_now
 			end
 			preparse_single
 			debug ("ericb")
-				dt2 := clock.system_clock.date_time_now
-				dtd := dt2 - dt1
-				dtd.set_canonical (dt1)
-				std.error.put_string ("Degree 6: ")
-				std.error.put_line (dtd.out)
-				debug ("stop")
-					io.read_line
-				end
-				dt1 := clock.system_clock.date_time_now
+				print_time (dt1, "Degree 6")
+				dt1 := l_clock.system_clock.date_time_now
 			end
-			a_cursor := classes.new_cursor
+			compile_degree_5
+			debug ("ericb")
+				print_time (dt1, "Degree 5")
+				dt1 := l_clock.system_clock.date_time_now
+			end
+			if cat_enabled then
+				compile_cat_calls
+				debug ("ericb")
+					print_time (dt1, "Degree CAT")
+					dt1 := l_clock.system_clock.date_time_now
+				end
+			end
+			if forget_enabled then
+				compile_forget_features
+				debug ("ericb")
+					print_time (dt1, "Degree FORGET")
+					dt1 := l_clock.system_clock.date_time_now
+				end
+			end
+			compile_degree_4
+			debug ("ericb")
+				print_time (dt1, "Degree 4")
+				dt1 := l_clock.system_clock.date_time_now
+			end
+			compile_degree_3 (flat)
+			debug ("ericb")
+				print_time (dt1, "Degree 3")
+			end
+		end
+
+	compile_degree_5 is
+			-- Equivalent of ISE's Degree 5.
+		local
+			a_parser: like eiffel_parser
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class: ET_CLASS
+		do
 				-- Parse classes.
 			a_parser := eiffel_parser
+			a_cursor := classes.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_class := a_cursor.item
 				if a_class.is_preparsed then
@@ -900,69 +882,6 @@ feature -- Compilation
 				std.error.put_line (" classes")
 				std.error.put_integer (feature_count)
 				std.error.put_line (" features")
-			end
-			debug ("ericb")
-				dt2 := clock.system_clock.date_time_now
-				dtd := dt2 - dt1
-				dtd.set_canonical (dt1)
-				std.error.put_string ("Degree 5: ")
-				std.error.put_line (dtd.out)
-				debug ("stop")
-					io.read_line
-				end
-				dt1 := clock.system_clock.date_time_now
-			end
-			if cat_enabled then
-				compile_cat_calls
-				debug ("ericb")
-					dt2 := clock.system_clock.date_time_now
-					dtd := dt2 - dt1
-					dtd.set_canonical (dt1)
-					std.error.put_string ("Degree CAT: ")
-					std.error.put_line (dtd.out)
-					debug ("stop")
-						io.read_line
-					end
-					dt1 := clock.system_clock.date_time_now
-				end
-			end
-			if forget_enabled then
-				compile_forget_features
-				debug ("ericb")
-					dt2 := clock.system_clock.date_time_now
-					dtd := dt2 - dt1
-					dtd.set_canonical (dt1)
-					std.error.put_string ("Degree FORGET: ")
-					std.error.put_line (dtd.out)
-					debug ("stop")
-						io.read_line
-					end
-					dt1 := clock.system_clock.date_time_now
-				end
-			end
-			compile_degree_4
-			debug ("ericb")
-				dt2 := clock.system_clock.date_time_now
-				dtd := dt2 - dt1
-				dtd.set_canonical (dt1)
-				std.error.put_string ("Degree 4: ")
-				std.error.put_line (dtd.out)
-				debug ("stop")
-					io.read_line
-				end
-				dt1 := clock.system_clock.date_time_now
-			end
-			compile_degree_3 (flat)
-			debug ("ericb")
-				dt2 := clock.system_clock.date_time_now
-				dtd := dt2 - dt1
-				dtd.set_canonical (dt1)
-				std.error.put_string ("Degree 3: ")
-				std.error.put_line (dtd.out)
-				debug ("stop")
-					io.read_line
-				end
-				dt1 := clock.system_clock.date_time_now
 			end
 		end
 
@@ -1533,6 +1452,30 @@ feature -- Processors
 			qualified_signature_resolver := a_resolver
 		ensure
 			qualified_signature_resolver_not_void: qualified_signature_resolver = a_resolver
+		end
+
+feature -- Timing
+
+	print_time (a_start: DT_DATE_TIME; a_degree: STRING) is
+			-- Print time spent in `a_degree' since `a_start'.
+		require
+			a_start_not_void: a_start /= Void
+			a_degree_not_void: a_degree /= Void
+		local
+			l_clock: DT_SHARED_SYSTEM_CLOCK
+			dt2: DT_DATE_TIME
+			dtd: DT_DATE_TIME_DURATION
+		do
+			create l_clock
+			dt2 := l_clock.system_clock.date_time_now
+			dtd := dt2 - a_start
+			dtd.set_canonical (a_start)
+			std.error.put_string (a_degree)
+			std.error.put_string (": ")
+			std.error.put_line (dtd.out)
+			debug ("stop")
+				io.read_line
+			end
 		end
 
 feature {NONE} -- Implementation

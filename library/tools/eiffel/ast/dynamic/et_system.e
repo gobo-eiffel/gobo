@@ -205,30 +205,19 @@ feature -- Compilation
 			-- Compile current system.
 		local
 			l_class: ET_CLASS
-			l_name: ET_IDENTIFIER
-			l_feature: ET_FEATURE
-			l_command: KL_SHELL_COMMAND
 			l_eiffel_parser: ET_EIFFEL_PARSER
-			clock: DT_SHARED_SYSTEM_CLOCK
-			dt1, dt2: DT_DATE_TIME
-			dtd: DT_DATE_TIME_DURATION
+			l_clock: DT_SHARED_SYSTEM_CLOCK
+			dt1: DT_DATE_TIME
 		do
 			has_fatal_error := False
 			universe.activate_processors
 			debug ("ericb")
-				create clock
-				dt1 := clock.system_clock.date_time_now
+				create l_clock
+				dt1 := l_clock.system_clock.date_time_now
 			end
 			universe.preparse_single
 			debug ("ericb")
-				dt2 := clock.system_clock.date_time_now
-				dtd := dt2 - dt1
-				dtd.set_canonical (dt1)
-				std.error.put_string ("Degree 6: ")
-				std.error.put_line (dtd.out)
-				debug ("stop")
-					io.read_line
-				end
+				universe.print_time (dt1, "Degree 6")
 			end
 			l_eiffel_parser := universe.eiffel_parser
 			l_class := character_type.base_class
@@ -292,6 +281,20 @@ feature -- Compilation
 				compile_all
 				check_catcall_validity
 			elseif l_class /= Void then
+				compile_system
+			end
+		end
+
+	compile_system is
+			-- Compile all classes in the system.
+		local
+			l_class: ET_CLASS
+			l_name: ET_IDENTIFIER
+			l_feature: ET_FEATURE
+			l_command: KL_SHELL_COMMAND
+		do
+			l_class := universe.root_class
+			if l_class /= Void then
 				root_type := dynamic_type (l_class, l_class)
 				universe.set_feature_seeds
 				if universe.root_creation /= Void then
@@ -319,13 +322,13 @@ feature -- Compilation
 					else
 						create l_command.make ("cl " + l_class.name.name + ".c")
 					end
-					l_command.execute
+--					l_command.execute
 				end
 			end
 		end
 
 	compile_all is
-			-- Compile whole universe.
+			-- Compile all classes in the universe.
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
@@ -335,14 +338,27 @@ feature -- Compilation
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
-			clock: DT_SHARED_SYSTEM_CLOCK
-			dt1, dt2: DT_DATE_TIME
-			dtd: DT_DATE_TIME_DURATION
+			l_clock: DT_SHARED_SYSTEM_CLOCK
+			dt1: DT_DATE_TIME
 		do
-			universe.compile_all (False)
 			debug ("ericb")
-				create clock
-				dt1 := clock.system_clock.date_time_now
+				create l_clock
+				dt1 := l_clock.system_clock.date_time_now
+			end
+			universe.compile_degree_5
+			debug ("ericb")
+				universe.print_time (dt1, "Degree 5")
+				dt1 := l_clock.system_clock.date_time_now
+			end
+			universe.compile_degree_4
+			debug ("ericb")
+				universe.print_time (dt1, "Degree 4")
+				dt1 := l_clock.system_clock.date_time_now
+			end
+			universe.compile_degree_3 (False)
+			debug ("ericb")
+				universe.print_time (dt1, "Degree 3")
+				dt1 := l_clock.system_clock.date_time_now
 			end
 			create l_builder.make (Current)
 			l_cursor := universe.classes.new_cursor
@@ -366,14 +382,7 @@ feature -- Compilation
 			end
 			build_dynamic_type_sets
 			debug ("ericb")
-				dt2 := clock.system_clock.date_time_now
-				dtd := dt2 - dt1
-				dtd.set_canonical (dt1)
-				std.error.put_string ("Degree Dynamic Type Set: ")
-				std.error.put_line (dtd.out)
-				debug ("stop")
-					io.read_line
-				end
+				universe.print_time (dt1, "Degree Dynamic Type Set")
 			end
 		end
 
