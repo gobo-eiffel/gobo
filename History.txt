@@ -59,7 +59,7 @@ Version 3.2 - ?
 
 	Gobo Eiffel XML Library:
 
-    * Eiffel parser now accepts 'iso-8859-1' encoding.
+	* Eiffel parser now accepts 'iso-8859-1' encoding.
 	* Tree formatter now produces valid XML.
 	* Tree node parent not void (when not the root node) implemented
 	  where missing and creation procedures updated accordingly. Also
@@ -73,7 +73,9 @@ Version 3.2 - ?
 	  `make_last' creation routines that add the node to the 
 	  composite. `make_last' is faster than `make', `force_last'.
 	* XM_NODE.parent_element added, root_node now XM_DOCUMENT.
-	* XM_NAMESPACE stricter contracts and uri invariant.
+	* XM_NAMESPACE stricter contracts and uri invariant, 
+	  `is_default' replaced by `not has_prefix', removed rather 
+	  than obsoleted due to SmartEiffel's ANY using the name.
 	* XM_DOCUMENT.set_root_element now exported to ANY.
 	* XM_NAMESPACE_RESOLVER now issues empty strings (the default 
 	  namespace) rather than the parent element's namespace for 
