@@ -623,11 +623,11 @@ feature {NONE} -- URI parsing
 				full_reference.item (start) = '/' and
 				full_reference.item (start + 1) = '/'
 			valid_stop: full_reference.valid_index (stop - 1)
-			full_reference_contains_authority: start + 2 <= stop - 1
+			full_reference_contains_authority: start + 2 <= stop
 		do
 			authority := full_reference.substring (start+2, stop-1)
 		ensure
-			authority_set: authority /= Void and then not authority.is_empty
+			authority_set: authority /= Void
 		end
 
 	stop_path (start, stop: INTEGER) is
@@ -783,7 +783,6 @@ invariant
 -- I'm really unsure if these constraints hold for deliberate garbage...
 
 	-- Constraints on elements of a parsed URI.
-	valid_authority: authority = Void or else not authority.is_empty
 	path_void_or_not_empty: path = Void or else not path.is_empty
 	valid_path: path /= Void implies not (path.has ('?') or path.has ('#'))
 	query_void_or_not_empty: query = Void or else not query.is_empty
