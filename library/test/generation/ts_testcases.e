@@ -276,12 +276,24 @@ feature -- Access
 	error_handler: UT_ERROR_HANDLER
 			-- Error handler
 
-feature -- Status
+feature -- Measurement
 
-	has_testcases: BOOLEAN is
-			-- Have any testcases been added to this object?
+	count: INTEGER is
+			-- Number of testcases
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [DS_PAIR [DS_LIST [STRING], STRING], STRING]
+			a_list: DS_LIST [STRING]
 		do
-			Result := not testcases.is_empty
+			a_cursor := testcases.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_list := a_cursor.item.first
+				if a_list /= Void then
+					Result := Result + a_list.count
+				end
+				a_cursor.forth
+			end
+		ensure
+			count_nonnegative: Result >= 0
 		end
 
 feature {NONE} -- Implementation
