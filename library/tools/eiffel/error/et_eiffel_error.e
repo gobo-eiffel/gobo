@@ -21,8 +21,16 @@ feature -- Access
 	current_class: ET_CLASS
 			-- Class where current error occurred
 
+	class_impl: ET_CLASS is
+			-- Class where current error was written
+		do
+			Result := current_class
+		ensure
+			class_impl_not_void: class_impl /= Void
+		end
+
 	position: ET_POSITION
-			-- Position of current error in `a_class'
+			-- Position of current error in `class_impl'
 
 	filename: STRING is
 			-- Name of file where current error occurred
