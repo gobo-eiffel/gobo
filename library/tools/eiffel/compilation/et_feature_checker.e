@@ -485,7 +485,7 @@ feature -- Validity checking
 				from i := 1 until i > nb loop
 					an_actual := an_actuals.actual_argument (i)
 					a_formal := a_formals.formal_argument (i)
-					l_formal_context.force_first (a_formal.type)
+					l_formal_context.force_last (a_formal.type)
 					check_expression_validity (an_actual, actual_context, l_formal_context, feature_impl, current_feature, current_type)
 					if has_fatal_error then
 						had_error := True
@@ -585,7 +585,7 @@ feature -- Validity checking
 							end
 						end
 					end
-					l_formal_context.remove_first
+					l_formal_context.remove_last
 					actual_context.wipe_out
 					i := i + 1
 				end
@@ -1541,7 +1541,7 @@ feature {NONE} -- Instruction validity
 			if has_fatal_error then
 				had_error := True
 				a_target_context.wipe_out
-				a_target_context.force_first (universe.any_type)
+				a_target_context.force_last (universe.any_type)
 			end
 			check_subexpression_validity (a_source, a_source_context, a_target_context)
 			if had_error then
@@ -1647,7 +1647,7 @@ feature {NONE} -- Instruction validity
 			if has_fatal_error then
 				had_error := True
 				a_target_context.wipe_out
-				a_target_context.force_first (universe.any_type)
+				a_target_context.force_last (universe.any_type)
 			elseif not a_target_context.is_type_reference (universe) then
 				a_class_impl := feature_impl.implementation_class
 				if current_class = a_class_impl then
@@ -1807,7 +1807,7 @@ feature {NONE} -- Instruction validity
 							if not has_fatal_error then
 								a_target_type := tokens.like_current
 								if a_creation_type /= Void then
-									a_creation_context.force_first (a_creation_type)
+									a_creation_context.force_last (a_creation_type)
 									a_context := a_creation_context
 								else
 									a_context := a_target_context
@@ -1844,7 +1844,7 @@ feature {NONE} -- Instruction validity
 						if a_creation_type /= Void then
 							a_creation_type := resolved_formal_parameters (a_creation_type, feature_impl, current_type)
 							if not has_fatal_error then
-								a_creation_context.force_first (a_creation_type)
+								a_creation_context.force_last (a_creation_type)
 								a_context := a_creation_context
 							end
 						else
@@ -2518,7 +2518,7 @@ feature {NONE} -- Instruction validity
 				else
 					a_type := resolved_formal_parameters (a_type, current_feature, current_type)
 					if not has_fatal_error then
-						a_context.force_first (a_type)
+						a_context.force_last (a_type)
 						report_result_assignment_target (a_result)
 					end
 				end
@@ -2545,7 +2545,7 @@ feature {NONE} -- Instruction validity
 								a_local := a_locals.local_variable (a_seed)
 								a_type := resolved_formal_parameters (a_local.type, feature_impl, current_type)
 								if not has_fatal_error then
-									a_context.force_first (a_type)
+									a_context.force_last (a_type)
 									report_local_assignment_target (an_identifier, a_local)
 								end
 							end
@@ -2570,7 +2570,7 @@ feature {NONE} -- Instruction validity
 								end
 							else
 								a_type := an_attribute.type
-								a_context.force_first (a_type)
+								a_context.force_last (a_type)
 								report_attribute_assignment_target (a_writable, an_attribute)
 							end
 						end
@@ -2594,7 +2594,7 @@ feature {NONE} -- Instruction validity
 									an_identifier.set_local (True)
 									a_local := a_locals.local_variable (a_seed)
 									a_local.set_used (True)
-									a_context.force_first (a_local.type)
+									a_context.force_last (a_local.type)
 									report_local_assignment_target (an_identifier, a_local)
 								end
 							end
@@ -2609,7 +2609,7 @@ feature {NONE} -- Instruction validity
 											a_seed := an_attribute.first_seed
 											an_identifier.set_seed (a_seed)
 											a_type := an_attribute.type
-											a_context.force_first (a_type)
+											a_context.force_last (a_type)
 											report_attribute_assignment_target (a_writable, an_attribute)
 										else
 											set_fatal_error
@@ -2654,7 +2654,7 @@ feature {NONE} -- Expression validity
 			has_fatal_error := False
 			create an_integer_constant.make ((a_constant.literal.count - 1).out)
 			create a_type.make (an_integer_constant)
-			a_context.force_first (a_type)
+			a_context.force_last (a_type)
 			report_bit_constant (a_constant)
 		end
 
@@ -2666,7 +2666,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_first (universe.character_class)
+			a_context.force_last (universe.character_class)
 			report_character_constant (a_constant)
 		end
 
@@ -2678,7 +2678,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_first (universe.character_class)
+			a_context.force_last (universe.character_class)
 			report_character_constant (a_constant)
 		end
 
@@ -2714,7 +2714,7 @@ feature {NONE} -- Expression validity
 					report_character_constant (a_constant)
 				end
 			end
-			a_context.force_first (universe.character_class)
+			a_context.force_last (universe.character_class)
 		end
 
 	check_call_expression_validity (an_expression: ET_CALL_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -2749,7 +2749,7 @@ feature {NONE} -- Expression validity
 			else
 				check_expression_validity (an_expression.expression, a_context, current_target_type, feature_impl, current_feature, current_type)
 				an_expression.set_index (an_expression.expression.index)
-				a_context.force_first (current_target_type.named_type (universe))
+				a_context.force_last (current_target_type.named_type (universe))
 			end
 		end
 
@@ -2827,7 +2827,7 @@ feature {NONE} -- Expression validity
 								error_handler.report_giacy_error
 							end
 						else
-							a_context.force_first (l_type)
+							a_context.force_last (l_type)
 							a_class := a_context.base_class (universe)
 							a_class.process (universe.interface_checker)
 							if a_class.has_interface_error then
@@ -2855,7 +2855,7 @@ feature {NONE} -- Expression validity
 				if a_feature = Void then
 					l_type := resolved_formal_parameters (l_type, feature_impl, current_type)
 					if not has_fatal_error then
-						a_context.force_first (l_type)
+						a_context.force_last (l_type)
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
@@ -2967,7 +2967,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_first (current_type)
+			a_context.force_last (current_type)
 			report_current (an_expression)
 		end
 
@@ -2991,9 +2991,9 @@ feature {NONE} -- Expression validity
 				an_actuals.put_first (current_type)
 				create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 				report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
-				a_context.force_first (a_typed_pointer_type)
+				a_context.force_last (a_typed_pointer_type)
 			else
-				a_context.force_first (universe.pointer_class)
+				a_context.force_last (universe.pointer_class)
 				report_pointer_expression (an_expression)
 			end
 		end
@@ -3059,7 +3059,7 @@ feature {NONE} -- Expression validity
 						end
 					end
 					if not has_fatal_error then
-						a_context.force_first (universe.boolean_class)
+						a_context.force_last (universe.boolean_class)
 					end
 				end
 			else
@@ -3090,17 +3090,17 @@ feature {NONE} -- Expression validity
 				if not has_fatal_error then
 					if not a_context.is_empty then
 						create an_actuals.make_with_capacity (1)
-						an_actuals.put_first (a_context.first)
+						an_actuals.put_first (a_context.last)
 						create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
-						a_context.remove_first
+						a_context.remove_last
 						report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
-						a_context.put_first (a_typed_pointer_type)
+						a_context.put_last (a_typed_pointer_type)
 					else
 						create an_actuals.make_with_capacity (1)
 						an_actuals.put_first (a_context.root_context)
 						create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 						report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
-						a_context.force_first (a_typed_pointer_type)
+						a_context.force_last (a_typed_pointer_type)
 					end
 				end
 			else
@@ -3108,7 +3108,7 @@ feature {NONE} -- Expression validity
 				expression_context.reset (current_type)
 				check_subexpression_validity (an_expression.expression, expression_context, any_type)
 				if not has_fatal_error then
-					a_context.force_first (universe.pointer_class)
+					a_context.force_last (universe.pointer_class)
 					report_pointer_expression (an_expression)
 				end
 			end
@@ -3122,7 +3122,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_first (universe.boolean_class)
+			a_context.force_last (universe.boolean_class)
 			report_boolean_constant (a_constant)
 		end
 
@@ -3187,9 +3187,9 @@ feature {NONE} -- Expression validity
 										an_actuals.put_first (an_argument.type)
 										create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 										report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
-										a_context.force_first (a_typed_pointer_type)
+										a_context.force_last (a_typed_pointer_type)
 									else
-										a_context.force_first (universe.pointer_class)
+										a_context.force_last (universe.pointer_class)
 										report_pointer_expression (an_expression)
 									end
 								end
@@ -3225,9 +3225,9 @@ feature {NONE} -- Expression validity
 											an_actuals.put_first (a_local.type)
 											create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 											report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
-											a_context.force_first (a_typed_pointer_type)
+											a_context.force_last (a_typed_pointer_type)
 										else
-											a_context.force_first (universe.pointer_class)
+											a_context.force_last (universe.pointer_class)
 											report_pointer_expression (an_expression)
 										end
 									end
@@ -3256,15 +3256,15 @@ feature {NONE} -- Expression validity
 										an_actuals.put_first (a_feature.type)
 										create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 										report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
-										a_context.force_first (a_typed_pointer_type)
+										a_context.force_last (a_typed_pointer_type)
 									else
-										a_context.force_first (universe.pointer_class)
+										a_context.force_last (universe.pointer_class)
 										report_pointer_expression (an_expression)
 									end
 								else
 										-- $feature_name is of type POINTER, even
 										-- in ISE and its TYPED_POINTER support.
-									a_context.force_first (universe.pointer_class)
+									a_context.force_last (universe.pointer_class)
 									report_pointer_expression (an_expression)
 								end
 									-- No need to check validity in the
@@ -3335,10 +3335,10 @@ feature {NONE} -- Expression validity
 									an_actuals.put_first (a_type)
 									create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 									report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
-									a_context.force_first (a_typed_pointer_type)
+									a_context.force_last (a_typed_pointer_type)
 								end
 							else
-								a_context.force_first (universe.pointer_class)
+								a_context.force_last (universe.pointer_class)
 								report_pointer_expression (an_expression)
 							end
 						end
@@ -3387,10 +3387,10 @@ feature {NONE} -- Expression validity
 									an_actuals.put_first (a_type)
 									create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 									report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
-									a_context.force_first (a_typed_pointer_type)
+									a_context.force_last (a_typed_pointer_type)
 								end
 							else
-								a_context.force_first (universe.pointer_class)
+								a_context.force_last (universe.pointer_class)
 								report_pointer_expression (an_expression)
 							end
 						end
@@ -3411,15 +3411,15 @@ feature {NONE} -- Expression validity
 									an_actuals.put_first (a_feature.type)
 									create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 									report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
-									a_context.force_first (a_typed_pointer_type)
+									a_context.force_last (a_typed_pointer_type)
 								else
-									a_context.force_first (universe.pointer_class)
+									a_context.force_last (universe.pointer_class)
 									report_pointer_expression (an_expression)
 								end
 							else
 									-- $feature_name is of type POINTER, even
 									-- in ISE and its TYPED_POINTER support.
-								a_context.force_first (universe.pointer_class)
+								a_context.force_last (universe.pointer_class)
 								report_pointer_expression (an_expression)
 							end
 						else
@@ -3494,7 +3494,7 @@ feature {NONE} -- Expression validity
 					a_formal := an_arguments.formal_argument (a_seed)
 					a_type := resolved_formal_parameters (a_formal.type, current_feature, current_type)
 					if not has_fatal_error then
-						a_context.force_first (a_type)
+						a_context.force_last (a_type)
 						report_formal_argument (a_name, a_formal)
 					end
 				end
@@ -3515,26 +3515,26 @@ feature {NONE} -- Expression validity
 			inspect a_literal.count
 			when 4 then
 					-- 0[xX][a-fA-F0-9]{2}
-				a_context.force_first (universe.integer_8_class)
+				a_context.force_last (universe.integer_8_class)
 				a_constant.set_integer_8
 				report_integer_8_constant (a_constant)
 			when 6 then
 					-- 0[xX][a-fA-F0-9]{4}
-				a_context.force_first (universe.integer_16_class)
+				a_context.force_last (universe.integer_16_class)
 				a_constant.set_integer_16
 				report_integer_16_constant (a_constant)
 			when 10 then
 					-- 0[xX][a-fA-F0-9]{8}
-				a_context.force_first (universe.integer_class)
+				a_context.force_last (universe.integer_class)
 				a_constant.set_integer_32
 				report_integer_constant (a_constant)
 			when 18 then
 					-- 0[xX][a-fA-F0-9]{16}
-				a_context.force_first (universe.integer_64_class)
+				a_context.force_last (universe.integer_64_class)
 				a_constant.set_integer_64
 				report_integer_64_constant (a_constant)
 			else
-				a_context.force_first (universe.integer_class)
+				a_context.force_last (universe.integer_class)
 				a_constant.set_integer_32
 				report_integer_constant (a_constant)
 			end
@@ -3552,10 +3552,10 @@ feature {NONE} -- Expression validity
 			has_fatal_error := False
 			a_type := an_expression.type
 			formal_context.reset (current_type)
-			formal_context.force_first (a_type)
+			formal_context.force_last (a_type)
 			check_subexpression_validity (an_expression.expression, a_context, formal_context)
 			an_expression.set_index (an_expression.expression.index)
-			a_context.force_first (a_type)
+			a_context.force_last (a_type)
 		end
 
 	check_infix_expression_validity (an_expression: ET_INFIX_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -3615,7 +3615,7 @@ feature {NONE} -- Expression validity
 				else
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.first = universe.string_type then
+						if not a_context.is_empty and then a_context.last = universe.string_type then
 								-- When a manifest string is the target of a call,
 								-- we consider it as non-cat type.
 							a_context.put (universe.string_class, 1)
@@ -3643,7 +3643,7 @@ feature {NONE} -- Expression validity
 				if a_feature = Void then
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.first = universe.string_type then
+						if not a_context.is_empty and then a_context.last = universe.string_type then
 								-- When a manifest string is the target of a call,
 								-- we consider it as non-cat type.
 							a_context.put (universe.string_class, 1)
@@ -3706,7 +3706,7 @@ feature {NONE} -- Expression validity
 						l_actual_context.reset (current_type)
 						l_formal_context := a_context
 						l_formal_type := a_formal.type
-						l_formal_context.force_first (l_formal_type)
+						l_formal_context.force_last (l_formal_type)
 						if has_fatal_error then
 							had_error := True
 						end
@@ -3714,14 +3714,14 @@ feature {NONE} -- Expression validity
 						if had_error then
 							set_fatal_error
 						end
-						l_formal_context.remove_first
+						l_formal_context.remove_last
 						if not has_fatal_error then
 							if not l_actual_context.conforms_to_type (l_formal_type, l_formal_context, universe) then
 								a_class_impl := feature_impl.implementation_class
 								if current_class = a_class_impl then
-									l_formal_context.force_first (l_formal_type)
+									l_formal_context.force_last (l_formal_type)
 									a_convert_feature := type_checker.convert_feature (l_actual_context, l_formal_context)
-									l_formal_context.remove_first
+									l_formal_context.remove_last
 								else
 										-- Convertibility should be resolved in the implementation class.
 									a_convert_feature := Void
@@ -3923,16 +3923,16 @@ feature {NONE} -- Expression validity
 						a_like ?= a_type
 						if a_like /= Void and then a_like.is_like_argument then
 							formal_context.copy_type_context (a_context)
-							formal_context.force_first (a_feature.arguments.formal_argument (1).type)
+							formal_context.force_last (a_feature.arguments.formal_argument (1).type)
 							a_context.wipe_out
 							check_subexpression_validity (an_expression.right, a_context, formal_context)
 							if not has_fatal_error then
-								formal_context.remove_first
+								formal_context.remove_last
 								report_qualified_call_expression (an_expression, an_expression, formal_context, a_feature)
 							end
 						else
 							report_qualified_call_expression (an_expression, an_expression, a_context, a_feature)
-							a_context.force_first (a_type)
+							a_context.force_last (a_type)
 						end
 					end
 				end
@@ -3991,7 +3991,7 @@ feature {NONE} -- Expression validity
 					a_local := a_locals.local_variable (a_seed)
 					a_type := resolved_formal_parameters (a_local.type, feature_impl, current_type)
 					if not has_fatal_error then
-						a_context.force_first (a_type)
+						a_context.force_last (a_type)
 						report_local_variable (a_name, a_local)
 					end
 				end
@@ -4029,7 +4029,7 @@ feature {NONE} -- Expression validity
 			nb := an_expression.count
 			if an_array_parameter /= Void then
 				formal_context.reset (current_type)
-				formal_context.force_first (an_array_parameter)
+				formal_context.force_last (an_array_parameter)
 				expression_context.reset (current_type)
 				from i := 1 until i > nb loop
 					check_subexpression_validity (an_expression.expression (i), expression_context, formal_context)
@@ -4051,7 +4051,7 @@ feature {NONE} -- Expression validity
 					set_fatal_error
 				else
 					report_manifest_array (an_expression, an_array_type)
-					a_context.force_first (an_array_type)
+					a_context.force_last (an_array_type)
 				end
 			else
 				any_type := universe.any_type
@@ -4075,11 +4075,11 @@ feature {NONE} -- Expression validity
 				elseif an_item_type = Void then
 					an_array_type := universe.array_any_type
 					report_manifest_array (an_expression, an_array_type)
-					a_context.force_first (an_array_type)
+					a_context.force_last (an_array_type)
 				elseif hybrid_type then
 					an_array_type := universe.array_any_type
 					report_manifest_array (an_expression, an_array_type)
-					a_context.force_first (an_array_type)
+					a_context.force_last (an_array_type)
 				else
 					create an_actuals.make_with_capacity (1)
 					an_actuals.put_first (an_item_type)
@@ -4087,7 +4087,7 @@ feature {NONE} -- Expression validity
 					a_generic_class_type.set_cat_keyword (universe.array_any_type.cat_keyword)
 					a_generic_class_type.set_unresolved_type (universe.array_any_type)
 					report_manifest_array (an_expression, a_generic_class_type)
-					a_context.force_first (a_generic_class_type)
+					a_context.force_last (a_generic_class_type)
 				end
 			end
 		end
@@ -4130,7 +4130,7 @@ feature {NONE} -- Expression validity
 			end
 			formal_context.reset (current_type)
 			from until i < 1 loop
-				formal_context.force_first (a_tuple_parameters.type (i))
+				formal_context.force_last (a_tuple_parameters.type (i))
 				check_subexpression_validity (an_expression.expression (i), expression_context, formal_context)
 				if has_fatal_error then
 					had_error := True
@@ -4146,7 +4146,7 @@ feature {NONE} -- Expression validity
 			else
 				create a_tuple_type.make (an_actuals)
 				report_manifest_tuple (an_expression, a_tuple_type)
-				a_context.force_first (a_tuple_type)
+				a_context.force_last (a_tuple_type)
 			end
 		end
 
@@ -4288,7 +4288,7 @@ feature {NONE} -- Expression validity
 						else
 							if current_class = a_class_impl then
 								formal_context.reset (current_type)
-								formal_context.force_first (a_parent_type)
+								formal_context.force_last (a_parent_type)
 							else
 									-- Resolve generic parameters in the
 									-- context of `current_type'.
@@ -4305,13 +4305,13 @@ feature {NONE} -- Expression validity
 											error_handler.report_giabx_error
 										else
 											formal_context.reset (current_type)
-											formal_context.force_first (an_ancestor)
+											formal_context.force_last (an_ancestor)
 											a_parent_type := an_ancestor
 										end
 									end
 								else
 									formal_context.reset (current_type)
-									formal_context.force_first (a_parent_type)
+									formal_context.force_last (a_parent_type)
 								end
 							end
 							if not has_fatal_error then
@@ -4320,7 +4320,7 @@ feature {NONE} -- Expression validity
 								if not has_fatal_error then
 									if an_expression /= Void then 
 -- TODO: like argument and get the type as it was in the parent.
-										a_context.force_first (current_feature.type)
+										a_context.force_last (current_feature.type)
 										report_precursor_expression (an_expression, a_parent_type, a_feature)
 									else
 										report_precursor_instruction (a_precursor, a_parent_type, a_feature)
@@ -4384,7 +4384,7 @@ feature {NONE} -- Expression validity
 				else
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.first = universe.string_type then
+						if not a_context.is_empty and then a_context.last = universe.string_type then
 								-- When a manifest string is the target of a call,
 								-- we consider it as non-cat type.
 							a_context.put (universe.string_class, 1)
@@ -4412,7 +4412,7 @@ feature {NONE} -- Expression validity
 				if a_feature = Void then
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.first = universe.string_type then
+						if not a_context.is_empty and then a_context.last = universe.string_type then
 								-- When a manifest string is the target of a call,
 								-- we consider it as non-cat type.
 							a_context.put (universe.string_class, 1)
@@ -4490,20 +4490,20 @@ feature {NONE} -- Expression validity
 								a_like ?= a_type
 								if a_like /= Void and then a_like.is_like_argument then
 									formal_context.copy_type_context (a_context)
-									formal_context.force_first (a_feature.arguments.formal_argument (1).type)
+									formal_context.force_last (a_feature.arguments.formal_argument (1).type)
 									a_context.wipe_out
 									check_subexpression_validity (an_actuals.actual_argument (1), a_context, formal_context)
 									if not has_fatal_error then
-										formal_context.remove_first
+										formal_context.remove_last
 										report_qualified_call_expression (an_expression, a_call, formal_context, a_feature)
 									end
 								else
 									report_qualified_call_expression (an_expression, a_call, a_context, a_feature)
-									a_context.force_first (a_type)
+									a_context.force_last (a_type)
 								end
 							else
 								report_qualified_call_expression (an_expression, a_call, a_context, a_feature)
-								a_context.force_first (a_type)
+								a_context.force_last (a_type)
 							end
 						end
 					else
@@ -4564,7 +4564,7 @@ feature {NONE} -- Expression validity
 				a_constant.set_integer_32
 				report_integer_constant (a_constant)
 			end
-			a_context.force_first (a_type)
+			a_context.force_last (a_type)
 		end
 
 	check_regular_manifest_string_validity (a_string: ET_REGULAR_MANIFEST_STRING; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -4575,7 +4575,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_first (universe.string_type)
+			a_context.force_last (universe.string_type)
 			report_string_constant (a_string)
 		end
 
@@ -4587,7 +4587,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_first (universe.double_class)
+			a_context.force_last (universe.double_class)
 			a_constant.set_double_64
 			report_double_constant (a_constant)
 		end
@@ -4672,7 +4672,7 @@ feature {NONE} -- Expression validity
 				else
 					a_type := resolved_formal_parameters (a_type, current_feature, current_type)
 					if not has_fatal_error then
-						a_context.force_first (a_type)
+						a_context.force_last (a_type)
 						report_result (an_expression)
 					end
 				end
@@ -4770,10 +4770,10 @@ feature {NONE} -- Expression validity
 							an_actuals.put_first (a_type)
 							create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 							report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
-							a_context.force_first (a_typed_pointer_type)
+							a_context.force_last (a_typed_pointer_type)
 						end
 					else
-						a_context.force_first (universe.pointer_class)
+						a_context.force_last (universe.pointer_class)
 						report_pointer_expression (an_expression)
 					end
 				end
@@ -4788,7 +4788,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_first (universe.string_type)
+			a_context.force_last (universe.string_type)
 			report_string_constant (a_string)
 		end
 
@@ -4837,7 +4837,7 @@ feature {NONE} -- Expression validity
 							error_handler.report_giacl_error
 						end
 					else
-						a_context.force_first (a_type)
+						a_context.force_last (a_type)
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
@@ -4860,7 +4860,7 @@ feature {NONE} -- Expression validity
 					if a_feature = Void then
 						a_type := resolved_formal_parameters (a_type, feature_impl, current_type)
 						if not has_fatal_error then
-							a_context.force_first (a_type)
+							a_context.force_last (a_type)
 							a_class := a_context.base_class (universe)
 							a_class.process (universe.interface_checker)
 							if a_class.has_interface_error then
@@ -4918,7 +4918,7 @@ feature {NONE} -- Expression validity
 								end
 							elseif not has_fatal_error then
 -- TODO: like argument.
-								a_context.force_first (a_result_type)
+								a_context.force_last (a_result_type)
 								report_static_call_expression (an_expression, a_type, a_feature)
 							end
 						else
@@ -5042,7 +5042,7 @@ feature {NONE} -- Expression validity
 			end
 			if not has_fatal_error then
 				report_strip_expression (an_expression, universe.array_any_type, a_context)
-				a_context.force_first (universe.array_any_type)
+				a_context.force_last (universe.array_any_type)
 			end
 		end
 
@@ -5054,7 +5054,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_first (universe.boolean_class)
+			a_context.force_last (universe.boolean_class)
 			report_boolean_constant (a_constant)
 		end
 
@@ -5094,7 +5094,7 @@ feature {NONE} -- Expression validity
 				a_constant.set_integer_32
 				report_integer_constant (a_constant)
 			end
-			a_context.force_first (a_type)
+			a_context.force_last (a_type)
 		end
 
 	check_underscored_real_constant_validity (a_constant: ET_UNDERSCORED_REAL_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -5105,7 +5105,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_first (universe.double_class)
+			a_context.force_last (universe.double_class)
 			a_constant.set_double_64
 			report_double_constant (a_constant)
 		end
@@ -5291,14 +5291,14 @@ feature {NONE} -- Expression validity
 								a_like ?= a_type
 								if a_like /= Void and then a_like.is_like_argument then
 									formal_context.reset (current_type)
-									formal_context.force_first (a_feature.arguments.formal_argument (1).type)
+									formal_context.force_last (a_feature.arguments.formal_argument (1).type)
 									a_context.wipe_out
 									check_subexpression_validity (an_actuals.actual_argument (1), a_context, formal_context)
 								else
-									a_context.force_first (a_type)
+									a_context.force_last (a_type)
 								end
 							else
-								a_context.force_first (a_type)
+								a_context.force_last (a_type)
 							end
 							report_unqualified_call_expression (an_expression, a_call, a_feature)
 						end
@@ -5332,7 +5332,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_first (universe.string_type)
+			a_context.force_last (universe.string_type)
 			report_string_constant (a_string)
 		end
 
@@ -5344,7 +5344,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			has_fatal_error := False
-			a_context.force_first (universe.none_type)
+			a_context.force_last (universe.none_type)
 			report_void_constant (an_expression)
 		end
 
@@ -5715,7 +5715,7 @@ feature {NONE} -- Agent validity
 --							end
 						end
 						report_unqualified_call_agent (an_expression, a_feature, an_agent_type, a_context)
-						a_context.force_first (an_agent_type)
+						a_context.force_last (an_agent_type)
 					end
 				end
 			end
@@ -5767,7 +5767,7 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.first = universe.string_type then
+						if not a_context.is_empty and then a_context.last = universe.string_type then
 								-- When a manifest string is the target of a call,
 								-- we consider it as non-cat type.
 							a_context.put (universe.string_class, 1)
@@ -5797,7 +5797,7 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 					if not has_fatal_error then
-						if not a_context.is_empty and then a_context.first = universe.string_type then
+						if not a_context.is_empty and then a_context.last = universe.string_type then
 								-- When a manifest string is the target of a call,
 								-- we consider it as non-cat type.
 							a_context.put (universe.string_class, 1)
@@ -5889,7 +5889,7 @@ feature {NONE} -- Agent validity
 --							end
 						end
 						report_qualified_call_agent (an_expression, a_feature, an_agent_type, a_context)
-						a_context.force_first (an_agent_type)
+						a_context.force_last (an_agent_type)
 					end
 				end
 			end
@@ -5939,7 +5939,7 @@ feature {NONE} -- Agent validity
 						end
 					else
 						report_agent_open_operand (a_target_type, a_context)
-						a_context.force_first (a_target_type)
+						a_context.force_last (a_target_type)
 						a_class := a_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if a_class.has_interface_error then
@@ -5963,7 +5963,7 @@ feature {NONE} -- Agent validity
 						a_target_type := resolved_formal_parameters (a_target_type, feature_impl, current_type)
 						if not has_fatal_error then
 							report_agent_open_operand (a_target_type, a_context)
-							a_context.force_first (a_target_type)
+							a_context.force_last (a_target_type)
 							a_class := a_context.base_class (universe)
 							a_class.process (universe.interface_checker)
 							if a_class.has_interface_error then
@@ -6054,7 +6054,7 @@ feature {NONE} -- Agent validity
 --								end
 							end
 							report_qualified_call_agent (an_expression, a_feature, an_agent_type, a_context)
-							a_context.force_first (an_agent_type)
+							a_context.force_last (an_agent_type)
 						end
 					end
 				end
@@ -6160,7 +6160,7 @@ feature {NONE} -- Agent validity
 						an_actual ?= an_agent_actual
 						if an_actual /= Void then
 							has_fatal_error := False
-							l_formal_context.force_first (a_formal.type)
+							l_formal_context.force_last (a_formal.type)
 							check_subexpression_validity (an_actual, l_actual_context, l_formal_context)
 							if has_fatal_error then
 								had_error := True
@@ -6247,7 +6247,7 @@ feature {NONE} -- Agent validity
 									end
 								end
 							end
-							l_formal_context.remove_first
+							l_formal_context.remove_last
 							l_actual_context.wipe_out
 						else
 							an_agent_type ?= an_agent_actual

@@ -567,10 +567,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := True
 				l_base_type := base_type (a_context, a_universe)
 				create l_type_context.make_with_capacity (a_context.root_context, 1)
-				l_type_context.put_first (l_base_type)
+				l_type_context.put_last (l_base_type)
 				l_other_base_type := other.base_type (other_context, a_universe)
 				create l_other_type_context.make_with_capacity (other_context.root_context, 1)
-				l_other_type_context.put_first (l_other_base_type)
+				l_other_type_context.put_last (l_other_base_type)
 				nb := l_args.count
 				from i := 1 until i > nb loop
 					l_type := l_args.formal_argument (i).type

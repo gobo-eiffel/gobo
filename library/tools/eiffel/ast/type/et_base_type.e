@@ -420,7 +420,7 @@ feature -- Type context
 			-- New type context made up of `a_type' in current context
 		do
 			create Result.make_with_capacity (Current, 1)
-			Result.put_first (a_type)
+			Result.put_last (a_type)
 		end
 
 	context_base_class (a_universe: ET_UNIVERSE): ET_CLASS is
