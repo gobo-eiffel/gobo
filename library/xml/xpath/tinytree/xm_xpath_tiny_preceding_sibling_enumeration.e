@@ -22,7 +22,7 @@ creation
 	
 feature -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; start: XM_XPATH_TINY_NODE; test: XM_XPATH_NODE_TEST) is
+	make (doc: XM_XPATH_TINY_DOCUMENT; start: XM_XPATH_TINY_NODE; test: XM_XSLT_NODE_TEST) is
 			-- Establish invariant
 		require
 			document_not_void: doc /= Void
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 	parent_node: XM_XPATH_TINY_NODE
 			-- The parent node
 	
-	node_test: XM_XPATH_NODE_TEST
+	node_test: XM_XSLT_NODE_TEST
 			-- The node test to apply when selecting nodes
 
 	next_node_number: INTEGER

@@ -188,7 +188,7 @@ feature -- Access
 		local
 			the_root: XM_XPATH_DOCUMENT
 			iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			element_node_test: XM_XPATH_NODE_KIND_TEST
+			element_node_test: XM_XSLT_NODE_KIND_TEST
 		do
 			the_root := document_root
 			if the_root = Void then
@@ -243,7 +243,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	new_axis_iterator_with_node_test (axis_type: INTEGER; test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (axis_type: INTEGER; test: XM_XSLT_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `axis_type' from this node;
 			-- Only nodes that match the pattern specified by `test' will be selected.
 		require

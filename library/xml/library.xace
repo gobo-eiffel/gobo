@@ -46,11 +46,11 @@
 		  <cluster name="values"/>
 		  <cluster name="expressions"/>
 		  <cluster name="events"/>
-		  <cluster name="patterns"/>
 		  <cluster name="functions"/>
 		  <cluster name="sort"/>
 		</cluster>
 		<cluster name="xslt">
+		  <cluster name="patterns"/>
 		  <cluster name="style"/>
 		</cluster>
 	</cluster>

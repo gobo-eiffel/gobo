@@ -92,8 +92,8 @@ feature
 			attributes: XM_XPATH_TINY_ATTRIBUTE_ENUMERATION
 			following: XM_XPATH_TINY_FOLLOWING_ENUMERATION
 			preceding: XM_XPATH_TINY_PRECEDING_ENUMERATION
-			element_test, attribute_test: XM_XPATH_NAME_TEST
-			any_pi_test, any_element_test: XM_XPATH_NODE_KIND_TEST
+			element_test, attribute_test: XM_XSLT_NAME_TEST
+			any_pi_test, any_element_test: XM_XSLT_NODE_KIND_TEST
 			found: BOOLEAN
 		do
 			make_parser

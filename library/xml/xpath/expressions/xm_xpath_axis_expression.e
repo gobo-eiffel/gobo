@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST) is
+	make (an_axis_type: INTEGER; a_node_test: XM_XSLT_NODE_TEST) is
 			-- TODO
 		do
 		end

@@ -24,7 +24,7 @@ creation
 	
 feature -- Initialization
 
-	make (doc: XM_XPATH_TINY_DOCUMENT; element: INTEGER; test: XM_XPATH_NODE_TEST) is
+	make (doc: XM_XPATH_TINY_DOCUMENT; element: INTEGER; test: XM_XSLT_NODE_TEST) is
 			-- Establish invariant
 		require
 			document_not_void: doc /= Void
@@ -68,7 +68,7 @@ feature -- Cursor movement
 			-- Move to next position
 		local
 			a_node: INTEGER
-			name_test: XM_XPATH_NAME_TEST
+			name_test: XM_XSLT_NAME_TEST
 		do
 			index := index + 1
 			a_node := attribute_index
@@ -90,7 +90,7 @@ feature {NONE} -- Implemnentation
 	parent_element: INTEGER
 			-- The node number for the owning element
 
-	node_test: XM_XPATH_NODE_TEST
+	node_test: XM_XSLT_NODE_TEST
 			-- The node test to apply when selecting nodes
 			-- Do we include ourself in the enumeration
 

@@ -36,7 +36,7 @@ feature -- Access
 			last_expression_not_void: Result /= Void
 		end
 
-	last_pattern: XM_XPATH_PATTERN is
+	last_pattern: XM_XSLT_PATTERN is
 			-- Result of last call to `parse_pattern'
 		require
 			no_parse_error: not is_parse_error
@@ -589,7 +589,7 @@ feature {NONE} -- Pattern parsers
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			pat1, pat2: XM_XPATH_PATTERN
+			pat1, pat2: XM_XSLT_PATTERN
 			finished: BOOLEAN
 		do
 			internal_last_pattern := Void
@@ -610,7 +610,7 @@ feature {NONE} -- Pattern parsers
 						parse_path_pattern
 						if not is_parse_error then
 							pat2 := internal_last_pattern
-							create {XM_XPATH_UNION_PATTERN} internal_last_pattern.make (pat1, pat2)
+							create {XM_XSLT_UNION_PATTERN} internal_last_pattern.make (pat1, pat2)
 						end
 					end
 				end
@@ -630,10 +630,10 @@ feature {NONE} -- Pattern parsers
 			tokenizer_usable: tokenizer /= Void and then tokenizer.input /= Void and not tokenizer.is_lexical_error
 			no_previous_parse_error: not is_parse_error
 		local
-			previous_pattern: XM_XPATH_PATTERN
-			location_pattern, a_pattern: XM_XPATH_LOCATION_PATH_PATTERN
-			key_pattern: XM_XPATH_KEY_PATTERN
-			id_pattern: XM_XPATH_ID_PATTERN
+			previous_pattern: XM_XSLT_PATTERN
+			location_pattern, a_pattern: XM_XSLT_LOCATION_PATH_PATTERN
+			key_pattern: XM_XSLT_KEY_PATTERN
+			id_pattern: XM_XSLT_ID_PATTERN
 			id_value: XM_XPATH_EXPRESSION
 			connector, var_name_code: INTEGER
 			root_only, finished: BOOLEAN
@@ -651,7 +651,7 @@ feature {NONE} -- Pattern parsers
 				if tokenizer.is_lexical_error then
 					grumble (tokenizer.last_lexical_error)
 				else
-					create {XM_XPATH_NODE_KIND_TEST} previous_pattern.make (Document_node)
+					create {XM_XSLT_NODE_KIND_TEST} previous_pattern.make (Document_node)
 					root_only := True
 				end
 			when Slash_slash_token then -- leading // changes the default priority
@@ -660,7 +660,7 @@ feature {NONE} -- Pattern parsers
 				if tokenizer.is_lexical_error then
 					grumble (tokenizer.last_lexical_error)
 				else
-					create {XM_XPATH_NODE_KIND_TEST} previous_pattern.make (Document_node)
+					create {XM_XSLT_NODE_KIND_TEST} previous_pattern.make (Document_node)
 					root_only := False
 				end
 			else
@@ -786,7 +786,7 @@ feature {NONE} -- Pattern parsers
 										grumble ("id value must be either a literal or a variable reference")
 										finished := True
 									end
-									create {XM_XPATH_ID_PATTERN} id_pattern.make (id_value)
+									create {XM_XSLT_ID_PATTERN} id_pattern.make (id_value)
 									tokenizer.next
 									if tokenizer.is_lexical_error then
 										grumble (tokenizer.last_lexical_error)
@@ -859,7 +859,7 @@ feature {NONE} -- Pattern parsers
 														grumble ("id value must be either a literal or a variable reference")
 														finished := True
 													end
-													create {XM_XPATH_KEY_PATTERN} key_pattern.make (make_name_code (key_name, False), id_value)
+													create {XM_XSLT_KEY_PATTERN} key_pattern.make (make_name_code (key_name, False), id_value)
 													tokenizer.next
 													if tokenizer.is_lexical_error then
 														grumble (tokenizer.last_lexical_error)
@@ -967,10 +967,10 @@ feature {NONE} -- Implementation
 	internal_last_parse_error: STRING
 			-- Text of last parse error encountered
 	
-	internal_last_pattern: XM_XPATH_PATTERN 
+	internal_last_pattern: XM_XSLT_PATTERN 
 			-- Result of last call to `parse_pattern' and friends
 	
-	internal_last_location_pattern: XM_XPATH_LOCATION_PATH_PATTERN 
+	internal_last_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN 
 			-- Result of last call to `parse_pattern_step'
 	
 	internal_last_sequence_type: XM_XPATH_SEQUENCE_TYPE
