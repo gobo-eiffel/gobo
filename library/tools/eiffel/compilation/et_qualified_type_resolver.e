@@ -39,22 +39,24 @@ feature {NONE} -- Initialization
 			current_class := a_universe.unknown_class
 		end
 
-feature -- Access
+feature -- Status report
 
-	current_class: ET_CLASS
-			-- Class being processed
+	has_fatal_error: BOOLEAN
+			-- Has a fatal error occurred?
 
 feature -- Type resolving
 
 	resolve_type (a_type: ET_TYPE; a_class: ET_CLASS) is
 			-- Resolve qualified anchored types of the form
 			-- 'like a.b' or 'like {A}.b'.
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_class_not_void: a_class /= Void
 		local
 			old_class: ET_CLASS
 		do
+			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
 			internal_call := True
@@ -68,6 +70,7 @@ feature {NONE} -- Type resolving
 	resolve_qualified_type (a_type: ET_QUALIFIED_TYPE) is
 			-- Resolve 'identifier' in 'like a.identifier'
 			-- and 'like {A}.identifier'.
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 		local
@@ -85,7 +88,7 @@ feature {NONE} -- Type resolving
 			if a_feature /= Void then
 				a_type.resolve_identifier_type (a_feature.first_seed)
 			else
-				current_class.set_fatal_error
+				set_fatal_error
 				if a_base_class /= universe.unknown_class then
 					error_handler.report_vtat1d_error (current_class, a_type, a_base_class)
 				else
@@ -100,6 +103,7 @@ feature {NONE} -- Type resolving
 
 	resolve_actual_parameters (a_parameters: ET_ACTUAL_PARAMETER_LIST) is
 			-- Resolve the actual parameter types.
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_parameters_not_void: a_parameters /= Void
 		local
@@ -180,6 +184,21 @@ feature {ET_AST_NODE} -- Type processing
 				end
 			end
 		end
+
+feature {NONE} -- Error handling
+
+	set_fatal_error is
+			-- Report a fatal error.
+		do
+			has_fatal_error := True
+		ensure
+			has_fatal_error: has_fatal_error
+		end
+
+feature {NONE} -- Access
+
+	current_class: ET_CLASS
+			-- Class being processed
 
 feature {NONE} -- Implementation
 

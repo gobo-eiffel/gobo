@@ -390,6 +390,9 @@ feature {NONE} -- Formal parameters validity
 			-- Check validity of formal parameters of `current_class'.
 		do
 			formal_parameter_checker.check_formal_parameters_validity (current_class)
+			if formal_parameter_checker.has_fatal_error then
+				set_fatal_error (current_class)
+			end
 		end
 
 	formal_parameter_checker: ET_FORMAL_PARAMETER_CHECKER1
@@ -401,6 +404,9 @@ feature {NONE} -- Parents validity
 			-- Check validity of parents of `current_class'.
 		do
 			parent_checker.check_parents_validity (current_class)
+			if parent_checker.has_fatal_error then
+				set_fatal_error (current_class)
+			end
 		end
 
 	parent_checker: ET_PARENT_CHECKER1

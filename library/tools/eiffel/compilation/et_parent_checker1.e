@@ -44,10 +44,10 @@ feature {NONE} -- Initialization
 			current_class := a_universe.unknown_class
 		end
 
-feature -- Access
+feature -- Status report
 
-	current_class: ET_CLASS
-			-- Class being processed
+	has_fatal_error: BOOLEAN
+			-- Has a fatal error occurred?
 
 feature -- Validity checking
 
@@ -56,12 +56,14 @@ feature -- Validity checking
 			-- whether the actual generic parameters of the types held in
 			-- the parents conform to their corresponding formal parameters'
 			-- constraints (this is done after the ancestors for the involved
-			-- classes have been built).
+			-- classes have been built). Set `has_fatal_error' if an error
+			-- occurred.
 		local
 			a_parents: ET_PARENT_LIST
 			i, nb: INTEGER
 			old_class: ET_CLASS
 		do
+			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
 			a_parents := current_class.parents
@@ -87,12 +89,13 @@ feature {NONE} -- Parent validity
 			-- the actual generic parameters of `a_type' conform to their
 			-- corresponding formal parameters' constraints (this is done
 			-- after the ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_parent_not_void: a_parent /= Void
 		do
 				-- It is not valid to have "BIT name" in parent clauses.
-			current_class.set_fatal_error
+			set_fatal_error
 			error_handler.report_vhpr3a_error (current_class, a_type)
 		end
 
@@ -102,13 +105,14 @@ feature {NONE} -- Parent validity
 			-- the actual generic parameters of `a_type' conform to their
 			-- corresponding formal parameters' constraints (this is done
 			-- after the ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_parent_not_void: a_parent /= Void
 		do
 			if a_type = a_parent.type then
 					-- Cannot inherit from 'BIT N'.
-				current_class.set_fatal_error
+				set_fatal_error
 				error_handler.report_gvhpr4a_error (current_class, a_type)
 			else
 					-- Not considered as a fatal error by gelint.
@@ -122,6 +126,7 @@ feature {NONE} -- Parent validity
 			-- the actual generic parameters of `a_type' conform to their
 			-- corresponding formal parameters' constraints (this is done
 			-- after the ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_parent_not_void: a_parent /= Void
@@ -134,19 +139,19 @@ feature {NONE} -- Parent validity
 			a_class := a_type.direct_base_class (universe)
 			a_class.process (universe.eiffel_parser)
 			if not a_class.is_preparsed then
-				current_class.set_fatal_error
+				set_fatal_error
 				error_handler.report_vtct0a_error (current_class, a_type)
 			elseif a_class.has_syntax_error then
 					-- Error should already have been
 					-- reported somewhere else.
-				current_class.set_fatal_error
+				set_fatal_error
 			elseif not a_class.is_generic then
 				if a_type.is_generic then
-					current_class.set_fatal_error
+					set_fatal_error
 					error_handler.report_vtug1a_error (current_class, a_type)
 				end
 			elseif not a_type.is_generic then
-				current_class.set_fatal_error
+				set_fatal_error
 				error_handler.report_vtug2a_error (current_class, a_type)
 			else
 				a_formals := a_class.formal_parameters
@@ -156,7 +161,7 @@ feature {NONE} -- Parent validity
 					a_type_generic: an_actuals /= Void
 				end
 				if an_actuals.count /= a_formals.count then
-					current_class.set_fatal_error
+					set_fatal_error
 					error_handler.report_vtug2a_error (current_class, a_type)
 				else
 					nb := an_actuals.count
@@ -176,12 +181,13 @@ feature {NONE} -- Parent validity
 			-- the actual generic parameters of `a_type' conform to their
 			-- corresponding formal parameters' constraints (this is done
 			-- after the ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_parent_not_void: a_parent /= Void
 		do
 				-- It is not valid to have anchored types in parent clauses.
-			current_class.set_fatal_error
+			set_fatal_error
 			error_handler.report_vhpr3c_error (current_class, a_type)
 		end
 
@@ -191,6 +197,7 @@ feature {NONE} -- Parent validity
 			-- the actual generic parameters of `a_type' conform to their
 			-- corresponding formal parameters' constraints (this is done
 			-- after the ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_parent_not_void: a_parent /= Void
@@ -201,7 +208,7 @@ feature {NONE} -- Parent validity
 			if a_type = a_parent.type then
 					-- Cannot inherit from 'TUPLE'.
 					-- ISE allows that though!
-				current_class.set_fatal_error
+				set_fatal_error
 				error_handler.report_gvhpr5a_error (current_class, a_type)
 			else
 				a_parameters := a_type.actual_parameters
@@ -216,9 +223,6 @@ feature {NONE} -- Parent validity
 				end
 			end
 		end
-
-	current_parent: ET_PARENT
-			-- Parent being processed
 
 feature {ET_AST_NODE} -- Type dispatcher
 
@@ -326,6 +330,24 @@ feature {ET_AST_NODE} -- Type dispatcher
 				end
 			end
 		end
+
+feature {NONE} -- Error handling
+
+	set_fatal_error is
+			-- Report a fatal error.
+		do
+			has_fatal_error := True
+		ensure
+			has_fatal_error: has_fatal_error
+		end
+
+feature {NONE} -- Access
+
+	current_class: ET_CLASS
+			-- Class being processed
+
+	current_parent: ET_PARENT
+			-- Parent being processed
 
 feature {NONE} -- Implementation
 

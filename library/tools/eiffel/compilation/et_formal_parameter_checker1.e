@@ -47,10 +47,10 @@ feature {NONE} -- Initialization
 			create direct_formal_parameter_sorter.make_default
 		end
 
-feature -- Access
+feature -- Status report
 
-	current_class: ET_CLASS
-			-- Class being processed
+	has_fatal_error: BOOLEAN
+			-- Has a fatal error occurred?
 
 feature -- Validity checking
 
@@ -59,8 +59,9 @@ feature -- Validity checking
 			-- parameters of `a_class'. Do not try to do any conformance
 			-- checking (this is done after the ancestors have been built
 			-- during the second pass) nor any checking of creation
-			-- procedures of formal parameters (this is done after the
-			-- features have been flattened during the third pass).
+			-- procedures of formal parameters (this is done only for
+			-- parent types, creation types and expanded types).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_class_not_void: a_class /= Void
 		local
@@ -71,6 +72,7 @@ feature -- Validity checking
 			other_class: ET_CLASS
 			old_class: ET_CLASS
 		do
+			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
 			a_parameters := current_class.formal_parameters
@@ -82,7 +84,7 @@ feature -- Validity checking
 					if universe.has_class (a_name) then
 							-- The name of a formal parameter cannot be the
 							-- name of a class in the universe.
-						current_class.set_fatal_error
+						set_fatal_error
 						other_class := universe.eiffel_class (a_name)
 						error_handler.report_vcfg1a_error (current_class, a_formal, other_class)
 					else
@@ -90,7 +92,7 @@ feature -- Validity checking
 							other_formal := a_parameters.formal_parameter (j)
 							if other_formal.name.same_identifier (a_name) then
 									-- There are two formal parameters with the same name.
-								current_class.set_fatal_error
+								set_fatal_error
 								error_handler.report_vcfg2a_error (current_class, other_formal, a_formal)
 							end
 							j := j + 1
@@ -114,6 +116,7 @@ feature {NONE} -- Constraint validity
 			-- the constraint of `a_formal' conform to their corresponding
 			-- formal parameters' constraints (this is done after the
 			-- ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_formal_not_void: a_formal /= Void
 		local
@@ -137,12 +140,13 @@ feature {NONE} -- Constraint validity
 			-- parameters of `a_type' conform to their corresponding
 			-- formal parameters' constraints (this is done after the
 			-- ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_formal_not_void: a_formal /= Void
 		do
 				-- It is not valid to have "BIT name" in constraints.
-			current_class.set_fatal_error
+			set_fatal_error
 			error_handler.report_vcfg3a_error (current_class, a_type)
 		end
 
@@ -154,6 +158,7 @@ feature {NONE} -- Constraint validity
 			-- parameters of `a_type' conform to their corresponding
 			-- formal parameters' constraints (this is done after the
 			-- ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_formal_not_void: a_formal /= Void
@@ -176,6 +181,7 @@ feature {NONE} -- Constraint validity
 			-- parameters of `a_type' conform to their corresponding
 			-- formal parameters' constraints (this is done after the
 			-- ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_formal_not_void: a_formal /= Void
@@ -188,19 +194,19 @@ feature {NONE} -- Constraint validity
 			a_class := a_type.direct_base_class (universe)
 			a_class.process (universe.eiffel_parser)
 			if not a_class.is_preparsed then
-				current_class.set_fatal_error
+				set_fatal_error
 				error_handler.report_vtct0a_error (current_class, a_type)
 			elseif a_class.has_syntax_error then
 					-- Error should already have been
 					-- reported somewhere else.
-				current_class.set_fatal_error
+				set_fatal_error
 			elseif not a_class.is_generic then
 				if a_type.is_generic then
-					current_class.set_fatal_error
+					set_fatal_error
 					error_handler.report_vtug1a_error (current_class, a_type)
 				end
 			elseif not a_type.is_generic then
-				current_class.set_fatal_error
+				set_fatal_error
 				error_handler.report_vtug2a_error (current_class, a_type)
 			else
 				a_formals := a_class.formal_parameters
@@ -210,7 +216,7 @@ feature {NONE} -- Constraint validity
 					a_type_generic: an_actuals /= Void
 				end
 				if an_actuals.count /= a_formals.count then
-					current_class.set_fatal_error
+					set_fatal_error
 					error_handler.report_vtug2a_error (current_class, a_type)
 				else
 					nb := an_actuals.count
@@ -244,6 +250,7 @@ feature {NONE} -- Constraint validity
 			-- parameters of `a_type' conform to their corresponding
 			-- formal parameters' constraints (this is done after the
 			-- ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_formal_not_void: a_formal /= Void
@@ -260,7 +267,7 @@ feature {NONE} -- Constraint validity
 					-- parameter is itself a formal parameter.
 				if a_parameters = Void or else index1 > a_parameters.count then
 						-- Internal error.
-					current_class.set_fatal_error
+					set_fatal_error
 					error_handler.report_giaaf_error
 				elseif index1 = index2 then
 						-- The constraint of the formal parameter is
@@ -296,7 +303,7 @@ feature {NONE} -- Constraint validity
 			else
 				if a_parameters = Void or else index1 > a_parameters.count then
 						-- Internal error.
-					current_class.set_fatal_error
+					set_fatal_error
 					error_handler.report_giaag_error
 				elseif index1 = index2 then
 						-- The constraint of the formal parameter is itself
@@ -334,12 +341,13 @@ feature {NONE} -- Constraint validity
 			-- parameters of `a_type' conform to their corresponding
 			-- formal parameters' constraints (this is done after the
 			-- ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_formal_not_void: a_formal /= Void
 		do
 				-- It is not valid to have anchored types in constraints.
-			current_class.set_fatal_error
+			set_fatal_error
 			error_handler.report_vcfg3c_error (current_class, a_type)
 		end
 
@@ -351,6 +359,7 @@ feature {NONE} -- Constraint validity
 			-- parameters of `a_type' conform to their corresponding
 			-- formal parameters' constraints (this is done after the
 			-- ancestors for the involved classes have been built).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 			a_formal_not_void: a_formal /= Void
@@ -382,14 +391,12 @@ feature {NONE} -- Constraint validity
 			end
 		end
 
-	current_formal: ET_FORMAL_PARAMETER
-			-- Formal generic parameter being processed
-
 feature {NONE} -- Constraint cycles
 
 	check_constraint_cycles is
 			-- Check for cycles in the constraints of the formal
 			-- generic parameters of `current_class'.
+			-- Set `has_fatal_error' if an error occurred.
 		local
 			a_sorted_formals: DS_ARRAYED_LIST [ET_FORMAL_PARAMETER]
 			a_formal: ET_FORMAL_PARAMETER
@@ -416,7 +423,7 @@ feature {NONE} -- Constraint cycles
 				a_parameters := current_class.formal_parameters
 				if a_parameters = Void then
 						-- Internal error.
-					current_class.set_fatal_error
+					set_fatal_error
 					error_handler.report_giaah_error
 				else
 					any_type := universe.any_type
@@ -430,7 +437,7 @@ feature {NONE} -- Constraint cycles
 							an_index := a_constraint.index
 							if an_index > a_parameters_count then
 									-- Internal error.
-								current_class.set_fatal_error
+								set_fatal_error
 								error_handler.report_giaai_error
 							else
 									-- We have "G -> H" and the base type of
@@ -594,6 +601,24 @@ feature {ET_AST_NODE} -- Type dispatcher
 				end
 			end
 		end
+
+feature {NONE} -- Error handling
+
+	set_fatal_error is
+			-- Report a fatal error.
+		do
+			has_fatal_error := True
+		ensure
+			has_fatal_error: has_fatal_error
+		end
+
+feature {NONE} -- Access
+
+	current_class: ET_CLASS
+			-- Class being processed
+
+	current_formal: ET_FORMAL_PARAMETER
+			-- Formal generic parameter being processed
 
 feature {NONE} -- Implementation
 

@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 			current_class := a_universe.unknown_class
 		end
 
-feature -- Access
+feature -- Status report
 
-	current_class: ET_CLASS
-			-- Class being processed
+	has_fatal_error: BOOLEAN
+			-- Has a fatal error occurred?
 
 feature -- Validity checking
 
@@ -47,7 +47,7 @@ feature -- Validity checking
 			-- Second pass of the validity check of parents of `a_class'.
 			-- Do not try to check the creation procedures of formal parameters
 			-- (this is done after the features have been flattened during
-			-- the third pass).
+			-- the third pass). Set `has_fatal_error' if an error occurred.
 		require
 			a_class_not_void: a_class /= Void
 		local
@@ -55,6 +55,7 @@ feature -- Validity checking
 			i, nb: INTEGER
 			old_class: ET_CLASS
 		do
+			has_fatal_error := False
 			old_class := current_class
 			current_class := a_class
 			a_parents := current_class.parents
@@ -79,6 +80,7 @@ feature {NONE} -- Parent validity
 			-- corresponding formal parameters' constraints. Do not check
 			-- for the validity of the creation procedures of these constraints
 			-- (this is done after the features have been flattened).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 		local
@@ -97,8 +99,9 @@ feature {NONE} -- Parent validity
 				check a_class_generic: a_formals /= Void end
 				an_actuals := a_type.actual_parameters
 				if an_actuals = Void or else an_actuals.count /= a_formals.count then
-					-- Error already reported during first pass of
-					-- parent validity checking.
+						-- Error already reported during first pass of
+						-- parent validity checking.
+					set_fatal_error
 				else
 						-- We don't want the qualified anchored to be resolved here.
 					a_resolver := universe.qualified_signature_resolver
@@ -125,7 +128,7 @@ feature {NONE} -- Parent validity
 						if not an_actual.conforms_to_type (a_constraint, current_class, current_class, universe) then
 								-- The actual parameter does not conform to the
 								-- constraint of its corresponding formal parameter.
-							current_class.set_fatal_error
+							set_fatal_error
 							error_handler.report_vtcg3a_error (current_class, an_actual, a_constraint)
 						end
 						i := i + 1
@@ -142,6 +145,7 @@ feature {NONE} -- Parent validity
 			-- corresponding formal parameters' constraints. Do not check
 			-- for the validity of the creation procedures of these constraints
 			-- (this is done after the features have been flattened).
+			-- Set `has_fatal_error' if an error occurred.
 		require
 			a_type_not_void: a_type /= Void
 		local
@@ -191,6 +195,21 @@ feature {ET_AST_NODE} -- Type dispatcher
 				check_tuple_type_validity (a_type)
 			end
 		end
+
+feature {NONE} -- Error handling
+
+	set_fatal_error is
+			-- Report a fatal error.
+		do
+			has_fatal_error := True
+		ensure
+			has_fatal_error: has_fatal_error
+		end
+
+feature {NONE} -- Access
+
+	current_class: ET_CLASS
+			-- Class being processed
 
 feature {NONE} -- Implementation
 
