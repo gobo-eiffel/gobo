@@ -66,7 +66,7 @@ feature -- Test
 			!! utf8.make (15)
 			utf8.append_code (265)
 			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
+			utf8.append_character ('f')
 			utf8.append_code (23456)
 			!! a_string.make_from_string (utf8)
 			assert_equal ("utf8", "%%/265/%%/1021/f%%/23456/", a_string.out)
@@ -86,7 +86,7 @@ feature -- Test
 			!! utf8.make (15)
 			utf8.append_code (265)
 			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
+			utf8.append_character ('f')
 			utf8.append_code (23456)
 			a_string.make_from_string (utf8)
 			assert_equal ("utf8", "%%/265/%%/1021/f%%/23456/", a_string.out)
@@ -106,7 +106,7 @@ feature -- Test
 			!! utf8.make (15)
 			utf8.append_code (265)
 			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
+			utf8.append_character ('f')
 			utf8.append_code (23456)
 			a_string.make_from_string (utf8)
 			assert_equal ("utf8", "%%/265/%%/1021/f%%/23456/", a_string.out)
@@ -125,7 +125,7 @@ feature -- Test
 			!! utf8.make (15)
 			utf8.append_code (265)
 			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
+			utf8.append_character ('f')
 			utf8.append_code (23456)
 			!! a_string.make_from_utf8 (utf8.to_utf8)
 			assert_equal ("utf8", "%%/265/%%/1021/f%%/23456/", a_string.out)
@@ -140,19 +140,19 @@ feature -- Test
 			assert_equal ("empty", 0, a_string.count)
 		end
 
-	test_make_filled is
-			-- Test feature `make_filled'.
+	test_make_filled_unicode is
+			-- Test feature `make_filled_unicode'.
 		local
 			a_string: UC_UTF8_STRING
 			c: UC_CHARACTER
 		do
 			!! c.make_from_character ('z')
-			!! a_string.make_filled (c, 6)
+			!! a_string.make_filled_unicode (c, 6)
 			assert_equal ("filled1", "zzzzzz", a_string.out)
 			!! c.make_from_code (777)
-			!! a_string.make_filled (c, 3)
+			!! a_string.make_filled_unicode (c, 3)
 			assert_equal ("filled2", "%%/777/%%/777/%%/777/", a_string.out)
-			!! a_string.make_filled (c, 0)
+			!! a_string.make_filled_unicode (c, 0)
 			assert_equal ("filled3", "", a_string.out)
 		end
 
@@ -169,15 +169,15 @@ feature -- Test
 			assert_equal ("filled3", "", a_string.out)
 		end
 
-	test_make_filled_latin1 is
-			-- Test feature `make_filled_latin1'.
+	test_make_filled is
+			-- Test feature `make_filled'.
 		local
 			a_string: UC_UTF8_STRING
 		do
-			!! a_string.make_filled_latin1 ('z', 6)
+			!! a_string.make_filled ('z', 6)
 			assert_equal ("filled1", "zzzzzz", a_string.out)
-			!! a_string.make_filled_latin1 ('a', 0)
-			assert_equal ("filled3", "", a_string.out)
+			!! a_string.make_filled ('a', 0)
+			assert_equal ("filled2", "", a_string.out)
 		end
 
 	test_count1 is
@@ -193,9 +193,9 @@ feature -- Test
 			!! a_string.make_from_string ("foobar")
 			assert_equal ("count3", 6, a_string.count)
 			!! utf8.make (9)
-			utf8.append_latin1 ('g')
+			utf8.append_character ('g')
 			utf8.append_code (365)
-			utf8.append_latin1 ('o')
+			utf8.append_character ('o')
 			!! a_string.make_from_string (utf8)
 			assert_equal ("count4", 3, a_string.count)
 		end
@@ -213,9 +213,9 @@ feature -- Test
 			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
 			assert_equal ("count3", 6, a_string.count)
 			!! utf8.make (9)
-			utf8.append_latin1 ('g')
+			utf8.append_character ('g')
 			utf8.append_code (365)
-			utf8.append_latin1 ('o')
+			utf8.append_character ('o')
 			!UC_UTF8_STRING! a_string.make_from_string (utf8)
 			assert_equal ("count4", 3, a_string.count)
 		end
@@ -233,9 +233,9 @@ feature -- Test
 			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
 			assert_equal ("count3", 6, a_string.count)
 			!! utf8.make (9)
-			utf8.append_latin1 ('g')
+			utf8.append_character ('g')
 			utf8.append_code (365)
-			utf8.append_latin1 ('o')
+			utf8.append_character ('o')
 			!UC_UTF8_STRING! a_string.make_from_string (utf8)
 			assert_equal ("count4", 3, a_string.count)
 		end
@@ -256,10 +256,10 @@ feature -- Test
 			assert ("not_valid3", not a_string.valid_index (0)) 
 			assert ("not_valid4", not a_string.valid_index (1)) 
 			!! utf8.make (9)
-			utf8.append_latin1 ('b')
+			utf8.append_character ('b')
 			utf8.append_code (9345)
-			utf8.append_latin1 ('a')
-			utf8.append_latin1 ('r')
+			utf8.append_character ('a')
+			utf8.append_character ('r')
 			!! a_string.make_from_string (utf8)
 			assert ("valid4", a_string.valid_index (1)) 
 			assert ("valid5", a_string.valid_index (2)) 
@@ -285,10 +285,10 @@ feature -- Test
 			assert ("not_valid3", not a_string.valid_index (0)) 
 			assert ("not_valid4", not a_string.valid_index (1)) 
 			!! utf8.make (9)
-			utf8.append_latin1 ('b')
+			utf8.append_character ('b')
 			utf8.append_code (9345)
-			utf8.append_latin1 ('a')
-			utf8.append_latin1 ('r')
+			utf8.append_character ('a')
+			utf8.append_character ('r')
 			!UC_UTF8_STRING! a_string.make_from_string (utf8)
 			assert ("valid4", a_string.valid_index (1)) 
 			assert ("valid5", a_string.valid_index (2)) 
@@ -314,10 +314,10 @@ feature -- Test
 			assert ("not_valid3", not a_string.valid_index (0)) 
 			assert ("not_valid4", not a_string.valid_index (1)) 
 			!! utf8.make (9)
-			utf8.append_latin1 ('b')
+			utf8.append_character ('b')
 			utf8.append_code (9345)
-			utf8.append_latin1 ('a')
-			utf8.append_latin1 ('r')
+			utf8.append_character ('a')
+			utf8.append_character ('r')
 			!UC_UTF8_STRING! a_string.make_from_string (utf8)
 			assert ("valid4", a_string.valid_index (1)) 
 			assert ("valid5", a_string.valid_index (2)) 
@@ -327,46 +327,46 @@ feature -- Test
 			assert ("not_valid6", not a_string.valid_index (5)) 
 		end
 
-	test_item1 is
-			-- Test feature `item'.
+	test_unicode_item1 is
+			-- Test feature `unicode_item'.
 		local
 			a_string: UC_UTF8_STRING
 			c: UC_CHARACTER
 		do
 			!! a_string.make_from_string ("bar")
 			!! c.make_from_character ('b')
-			assert_equal ("item1", c, a_string.item (1)) 
+			assert_equal ("item1", c, a_string.unicode_item (1)) 
 			!! c.make_from_character ('a')
-			assert_equal ("item2", c, a_string.item (2)) 
+			assert_equal ("item2", c, a_string.unicode_item (2)) 
 			!! c.make_from_character ('r')
-			assert_equal ("item3", c, a_string.item (3)) 
+			assert_equal ("item3", c, a_string.unicode_item (3)) 
 			a_string.put_code (543, 2)
 			!! c.make_from_code (543)
-			assert_equal ("item4", c, a_string.item (2)) 
+			assert_equal ("item4", c, a_string.unicode_item (2)) 
 			a_string.put_code (134, 2)
 			!! c.make_from_code (134)
-			assert_equal ("item5", c, a_string.item (2)) 
+			assert_equal ("item5", c, a_string.unicode_item (2)) 
 		end
 
-	test_item2 is
-			-- Test feature `item'.
+	test_unicode_item2 is
+			-- Test feature `unicode_item'.
 		local
 			a_string: UC_STRING
 			c: UC_CHARACTER
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
 			!! c.make_from_character ('b')
-			assert_equal ("item1", c, a_string.item (1)) 
+			assert_equal ("item1", c, a_string.unicode_item (1)) 
 			!! c.make_from_character ('a')
-			assert_equal ("item2", c, a_string.item (2)) 
+			assert_equal ("item2", c, a_string.unicode_item (2)) 
 			!! c.make_from_character ('r')
-			assert_equal ("item3", c, a_string.item (3)) 
+			assert_equal ("item3", c, a_string.unicode_item (3)) 
 			a_string.put_code (543, 2)
 			!! c.make_from_code (543)
-			assert_equal ("item4", c, a_string.item (2)) 
+			assert_equal ("item4", c, a_string.unicode_item (2)) 
 			a_string.put_code (134, 2)
 			!! c.make_from_code (134)
-			assert_equal ("item5", c, a_string.item (2)) 
+			assert_equal ("item5", c, a_string.unicode_item (2)) 
 		end
 
 	test_item_code1 is
@@ -417,34 +417,34 @@ feature -- Test
 			assert_equal ("item_code5", 134, a_string.item_code (2)) 
 		end
 
-	test_latin1_item1 is
-			-- Test feature `latin1_item'.
+	test_item1 is
+			-- Test feature `item'.
 		local
 			a_string: UC_UTF8_STRING
 		do
 			!! a_string.make_from_string ("bar")
-			assert_equal ("item1", 'b', a_string.latin1_item (1)) 
-			assert_equal ("item2", 'a', a_string.latin1_item (2)) 
-			assert_equal ("item3", 'r', a_string.latin1_item (3)) 
+			assert_equal ("item1", 'b', a_string.item (1)) 
+			assert_equal ("item2", 'a', a_string.item (2)) 
+			assert_equal ("item3", 'r', a_string.item (3)) 
 			a_string.put_code (835, 2)
-			assert_equal ("item4", '%U', a_string.latin1_item (2)) 
+			assert_equal ("item4", '%U', a_string.item (2)) 
 		end
 
-	test_latin1_item2 is
-			-- Test feature `latin1_item'.
+	test_item2 is
+			-- Test feature `item'.
 		local
 			a_string: UC_STRING
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
-			assert_equal ("item1", 'b', a_string.latin1_item (1)) 
-			assert_equal ("item2", 'a', a_string.latin1_item (2)) 
-			assert_equal ("item3", 'r', a_string.latin1_item (3)) 
+			assert_equal ("item1", 'b', a_string.item (1)) 
+			assert_equal ("item2", 'a', a_string.item (2)) 
+			assert_equal ("item3", 'r', a_string.item (3)) 
 			a_string.put_code (835, 2)
-			assert_equal ("item4", '%U', a_string.latin1_item (2)) 
+			assert_equal ("item4", '%U', a_string.item (2)) 
 		end
 
-	test_latin1_item3 is
-			-- Test feature `latin1_item'.
+	test_item3 is
+			-- Test feature `item'.
 		local
 			a_string: STRING
 			utf8: UC_UTF8_STRING
@@ -501,53 +501,53 @@ feature -- Test
 			assert_equal ("item4", '%U', a_string @ 2) 
 		end
 
-	test_put1 is
-			-- Test feature `put'.
+	test_put_unicode1 is
+			-- Test feature `put_unicode'.
 		local
 			a_string: UC_UTF8_STRING
 			c: UC_CHARACTER
 		do
 			!! a_string.make_from_string ("bar")
 			!! c.make_from_character ('f')
-			a_string.put (c, 1)
+			a_string.put_unicode (c, 1)
 			!! c.make_from_character ('f')
 			assert_equal ("put1", "far", a_string.out) 
 			!! c.make_from_character ('o')
-			a_string.put (c, 2)
+			a_string.put_unicode (c, 2)
 			assert_equal ("put2", "for", a_string.out) 
 			!! c.make_from_character ('z')
-			a_string.put (c, 3)
+			a_string.put_unicode (c, 3)
 			assert_equal ("put3", "foz", a_string.out) 
 			!! c.make_from_code (257)
-			a_string.put (c, 1)
+			a_string.put_unicode (c, 1)
 			assert_equal ("put4", "%%/257/oz", a_string.out) 
 			!! c.make_from_character ('b')
-			a_string.put (c, 1)
+			a_string.put_unicode (c, 1)
 			assert_equal ("put5", "boz", a_string.out) 
 		end
 
-	test_put2 is
-			-- Test feature `put'.
+	test_put_unicode2 is
+			-- Test feature `put_unicode'.
 		local
 			a_string: UC_STRING
 			c: UC_CHARACTER
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
 			!! c.make_from_character ('f')
-			a_string.put (c, 1)
+			a_string.put_unicode (c, 1)
 			!! c.make_from_character ('f')
 			assert_equal ("put1", "far", a_string.out) 
 			!! c.make_from_character ('o')
-			a_string.put (c, 2)
+			a_string.put_unicode (c, 2)
 			assert_equal ("put2", "for", a_string.out) 
 			!! c.make_from_character ('z')
-			a_string.put (c, 3)
+			a_string.put_unicode (c, 3)
 			assert_equal ("put3", "foz", a_string.out) 
 			!! c.make_from_code (257)
-			a_string.put (c, 1)
+			a_string.put_unicode (c, 1)
 			assert_equal ("put4", "%%/257/oz", a_string.out) 
 			!! c.make_from_character ('b')
-			a_string.put (c, 1)
+			a_string.put_unicode (c, 1)
 			assert_equal ("put5", "boz", a_string.out) 
 		end
 
@@ -587,36 +587,36 @@ feature -- Test
 			assert_equal ("put_code5", "boz", a_string.out) 
 		end
 
-	test_put_latin1_1 is
-			-- Test feature `put_latin1'.
+	test_put1 is
+			-- Test feature `put'.
 		local
 			a_string: UC_UTF8_STRING
 		do
 			!! a_string.make_from_string ("bar")
-			a_string.put_latin1 ('f', 1)
+			a_string.put ('f', 1)
 			assert_equal ("put1", "far", a_string.out) 
-			a_string.put_latin1 ('o', 2)
+			a_string.put ('o', 2)
 			assert_equal ("put2", "for", a_string.out) 
-			a_string.put_latin1 ('z', 3)
+			a_string.put ('z', 3)
 			assert_equal ("put3", "foz", a_string.out) 
 		end
 
-	test_put_latin1_2 is
-			-- Test feature `put_latin1'.
+	test_put2 is
+			-- Test feature `put'.
 		local
 			a_string: UC_STRING
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
-			a_string.put_latin1 ('f', 1)
+			a_string.put ('f', 1)
 			assert_equal ("put1", "far", a_string.out) 
-			a_string.put_latin1 ('o', 2)
+			a_string.put ('o', 2)
 			assert_equal ("put2", "for", a_string.out) 
-			a_string.put_latin1 ('z', 3)
+			a_string.put ('z', 3)
 			assert_equal ("put3", "foz", a_string.out) 
 		end
 
-	test_put_latin1_3 is
-			-- Test feature `put_latin1'.
+	test_put3 is
+			-- Test feature `put'.
 		local
 			a_string: STRING
 		do
@@ -859,87 +859,87 @@ feature -- Test
 			assert_equal ("copy4", "fo%%/692/bar", a_string.out) 
 		end
 
-	test_append_character1 is
-			-- Test feature `append_character'.
+	test_append_unicode1 is
+			-- Test feature `append_unicode'.
 		local
 			a_string: UC_UTF8_STRING
 			c: UC_CHARACTER
 		do
 			!! a_string.make_from_string ("bar")
 			!! c.make_from_character ('f')
-			a_string.append_character (c)
-			assert_equal ("append_character1", "barf", a_string.out) 
+			a_string.append_unicode (c)
+			assert_equal ("append_unicode1", "barf", a_string.out) 
 			!! c.make_from_code (68457)
-			a_string.append_character (c)
-			assert_equal ("append_character2", "barf%%/68457/", a_string.out) 
+			a_string.append_unicode (c)
+			assert_equal ("append_unicode2", "barf%%/68457/", a_string.out) 
 			!! a_string.make_from_string ("")
 			!! c.make_from_code (462)
-			a_string.append_character (c)
-			assert_equal ("append_character3", "%%/462/", a_string.out) 
+			a_string.append_unicode (c)
+			assert_equal ("append_unicode3", "%%/462/", a_string.out) 
 			!! c.make_from_character ('z')
-			a_string.append_character (c)
-			assert_equal ("append_character4", "%%/462/z", a_string.out) 
+			a_string.append_unicode (c)
+			assert_equal ("append_unicode4", "%%/462/z", a_string.out) 
+		end
+
+	test_append_unicode2 is
+			-- Test feature `append_unicode'.
+		local
+			a_string: UC_STRING
+			c: UC_CHARACTER
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("bar")
+			!! c.make_from_character ('f')
+			a_string.append_unicode (c)
+			assert_equal ("append_unicode1", "barf", a_string.out) 
+			!! c.make_from_code (68457)
+			a_string.append_unicode (c)
+			assert_equal ("append_unicode2", "barf%%/68457/", a_string.out) 
+			!UC_UTF8_STRING! a_string.make_from_string ("")
+			!! c.make_from_code (462)
+			a_string.append_unicode (c)
+			assert_equal ("append_unicode3", "%%/462/", a_string.out) 
+			!! c.make_from_character ('z')
+			a_string.append_unicode (c)
+			assert_equal ("append_unicode4", "%%/462/z", a_string.out) 
+		end
+
+	test_append_character1 is
+			-- Test feature `append_character'.
+		local
+			a_string: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("bar")
+			a_string.append_character ('f')
+			assert_equal ("append_character1", "barf", a_string.out) 
+			!! a_string.make_from_string ("")
+			a_string.append_character ('z')
+			assert_equal ("append_character2", "z", a_string.out) 
 		end
 
 	test_append_character2 is
 			-- Test feature `append_character'.
 		local
 			a_string: UC_STRING
-			c: UC_CHARACTER
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
-			!! c.make_from_character ('f')
-			a_string.append_character (c)
+			a_string.append_character ('f')
 			assert_equal ("append_character1", "barf", a_string.out) 
-			!! c.make_from_code (68457)
-			a_string.append_character (c)
-			assert_equal ("append_character2", "barf%%/68457/", a_string.out) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
-			!! c.make_from_code (462)
-			a_string.append_character (c)
-			assert_equal ("append_character3", "%%/462/", a_string.out) 
-			!! c.make_from_character ('z')
-			a_string.append_character (c)
-			assert_equal ("append_character4", "%%/462/z", a_string.out) 
+			a_string.append_character ('z')
+			assert_equal ("append_character2", "z", a_string.out) 
 		end
 
-	test_append_latin1_1 is
-			-- Test feature `append_latin1'.
-		local
-			a_string: UC_UTF8_STRING
-		do
-			!! a_string.make_from_string ("bar")
-			a_string.append_latin1 ('f')
-			assert_equal ("append_latin_11", "barf", a_string.out) 
-			!! a_string.make_from_string ("")
-			a_string.append_latin1 ('z')
-			assert_equal ("append_latin1_2", "z", a_string.out) 
-		end
-
-	test_append_latin1_2 is
-			-- Test feature `append_latin1'.
-		local
-			a_string: UC_STRING
-		do
-			!UC_UTF8_STRING! a_string.make_from_string ("bar")
-			a_string.append_latin1 ('f')
-			assert_equal ("append_latin_11", "barf", a_string.out) 
-			!UC_UTF8_STRING! a_string.make_from_string ("")
-			a_string.append_latin1 ('z')
-			assert_equal ("append_latin1_2", "z", a_string.out) 
-		end
-
-	test_append_latin1_3 is
-			-- Test feature `append_latin1'.
+	test_append_character3 is
+			-- Test feature `append_character'.
 		local
 			a_string: STRING
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
 			a_string.append_character ('f')
-			assert_equal ("append_latin_11", "barf", a_string.out) 
+			assert_equal ("append_character1", "barf", a_string.out) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
 			a_string.append_character ('z')
-			assert_equal ("append_latin1_2", "z", a_string.out) 
+			assert_equal ("append_character2", "z", a_string.out) 
 		end
 
 	test_append_string1 is
@@ -960,7 +960,7 @@ feature -- Test
 			!! utf8.make (4)
 			utf8.append_code (265)
 			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
+			utf8.append_character ('f')
 			utf8.append_code (23456)
 			a_string.append_string (utf8)
 			assert_equal ("append_string4", "foo%%/265/%%/1021/f%%/23456/", a_string.out) 
@@ -991,7 +991,7 @@ feature -- Test
 			!! utf8.make (4)
 			utf8.append_code (265)
 			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
+			utf8.append_character ('f')
 			utf8.append_code (23456)
 			a_string.append_string (utf8)
 			assert_equal ("append_string4", "foo%%/265/%%/1021/f%%/23456/", a_string.out) 
@@ -1022,7 +1022,7 @@ feature -- Test
 			!! utf8.make (4)
 			utf8.append_code (265)
 			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
+			utf8.append_character ('f')
 			utf8.append_code (23456)
 			a_string.append_string (utf8)
 			assert_equal ("append_string4", "foo%%/265/%%/1021/f%%/23456/", a_string.out) 
@@ -1057,7 +1057,7 @@ feature -- Test
 			!! utf8.make (4)
 			utf8.append_code (265)
 			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
+			utf8.append_character ('f')
 			utf8.append_code (23456)
 			assert_equal ("append_string4", "foo%%/265/%%/1021/f%%/23456/", (a_string + utf8).out) 
 			!! a_string.make_from_string ("foo")
@@ -1087,7 +1087,7 @@ feature -- Test
 			!! utf8.make (4)
 			utf8.append_code (265)
 			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
+			utf8.append_character ('f')
 			utf8.append_code (23456)
 			assert_equal ("append_string4", "foo%%/265/%%/1021/f%%/23456/", (a_string + utf8).out) 
 			!UC_UTF8_STRING! a_string.make_from_string ("foo")
@@ -1097,8 +1097,8 @@ feature -- Test
 			assert_equal ("append_string6", "b%%/888/rb%%/888/r", (a_string + a_string).out) 
 		end
 
-	test_index_of1 is
-			-- Test feature `index_of'.
+	test_index_of_unicode1 is
+			-- Test feature `index_of_unicode'.
 		local
 			a_string: UC_UTF8_STRING
 			c: UC_CHARACTER
@@ -1106,32 +1106,32 @@ feature -- Test
 			!! a_string.make_from_string ("bar")
 			a_string.put_code (345, 2)
 			!! c.make_from_character ('b')
-			assert_equal ("index_of_b1", 1, a_string.index_of (c, 1)) 
-			assert_equal ("index_of_b2", 0, a_string.index_of (c, 2)) 
-			assert_equal ("index_of_b3", 0, a_string.index_of (c, 3)) 
-			assert_equal ("index_of_b4", 0, a_string.index_of (c, 4)) 
+			assert_equal ("index_of_b1", 1, a_string.index_of_unicode (c, 1)) 
+			assert_equal ("index_of_b2", 0, a_string.index_of_unicode (c, 2)) 
+			assert_equal ("index_of_b3", 0, a_string.index_of_unicode (c, 3)) 
+			assert_equal ("index_of_b4", 0, a_string.index_of_unicode (c, 4)) 
 			!! c.make_from_code (345)
-			assert_equal ("index_of_345_1", 2, a_string.index_of (c, 1)) 
-			assert_equal ("index_of_345_2", 2, a_string.index_of (c, 2)) 
-			assert_equal ("index_of_345_3", 0, a_string.index_of (c, 3)) 
-			assert_equal ("index_of_345_4", 0, a_string.index_of (c, 4)) 
+			assert_equal ("index_of_345_1", 2, a_string.index_of_unicode (c, 1)) 
+			assert_equal ("index_of_345_2", 2, a_string.index_of_unicode (c, 2)) 
+			assert_equal ("index_of_345_3", 0, a_string.index_of_unicode (c, 3)) 
+			assert_equal ("index_of_345_4", 0, a_string.index_of_unicode (c, 4)) 
 			!! c.make_from_character ('r')
-			assert_equal ("index_of_r1", 3, a_string.index_of (c, 1)) 
-			assert_equal ("index_of_r2", 3, a_string.index_of (c, 2)) 
-			assert_equal ("index_of_r3", 3, a_string.index_of (c, 3)) 
-			assert_equal ("index_of_r4", 0, a_string.index_of (c, 4)) 
+			assert_equal ("index_of_r1", 3, a_string.index_of_unicode (c, 1)) 
+			assert_equal ("index_of_r2", 3, a_string.index_of_unicode (c, 2)) 
+			assert_equal ("index_of_r3", 3, a_string.index_of_unicode (c, 3)) 
+			assert_equal ("index_of_r4", 0, a_string.index_of_unicode (c, 4)) 
 			!! c.make_from_character ('z')
-			assert_equal ("index_of_z1", 0, a_string.index_of (c, 1)) 
-			assert_equal ("index_of_z2", 0, a_string.index_of (c, 2)) 
-			assert_equal ("index_of_z3", 0, a_string.index_of (c, 3)) 
-			assert_equal ("index_of_z4", 0, a_string.index_of (c, 4)) 
+			assert_equal ("index_of_z1", 0, a_string.index_of_unicode (c, 1)) 
+			assert_equal ("index_of_z2", 0, a_string.index_of_unicode (c, 2)) 
+			assert_equal ("index_of_z3", 0, a_string.index_of_unicode (c, 3)) 
+			assert_equal ("index_of_z4", 0, a_string.index_of_unicode (c, 4)) 
 			!! a_string.make_from_string ("")
 			!! c.make_from_character ('o')
-			assert_equal ("index_of_o1", 0, a_string.index_of (c, 1)) 
+			assert_equal ("index_of_o1", 0, a_string.index_of_unicode (c, 1)) 
 		end
 
-	test_index_of2 is
-			-- Test feature `index_of'.
+	test_index_of_unicode2 is
+			-- Test feature `index_of_unicode'.
 		local
 			a_string: UC_STRING
 			c: UC_CHARACTER
@@ -1139,28 +1139,28 @@ feature -- Test
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
 			a_string.put_code (345, 2)
 			!! c.make_from_character ('b')
-			assert_equal ("index_of_b1", 1, a_string.index_of (c, 1)) 
-			assert_equal ("index_of_b2", 0, a_string.index_of (c, 2)) 
-			assert_equal ("index_of_b3", 0, a_string.index_of (c, 3)) 
-			assert_equal ("index_of_b4", 0, a_string.index_of (c, 4)) 
+			assert_equal ("index_of_b1", 1, a_string.index_of_unicode (c, 1)) 
+			assert_equal ("index_of_b2", 0, a_string.index_of_unicode (c, 2)) 
+			assert_equal ("index_of_b3", 0, a_string.index_of_unicode (c, 3)) 
+			assert_equal ("index_of_b4", 0, a_string.index_of_unicode (c, 4)) 
 			!! c.make_from_code (345)
-			assert_equal ("index_of_345_1", 2, a_string.index_of (c, 1)) 
-			assert_equal ("index_of_345_2", 2, a_string.index_of (c, 2)) 
-			assert_equal ("index_of_345_3", 0, a_string.index_of (c, 3)) 
-			assert_equal ("index_of_345_4", 0, a_string.index_of (c, 4)) 
+			assert_equal ("index_of_345_1", 2, a_string.index_of_unicode (c, 1)) 
+			assert_equal ("index_of_345_2", 2, a_string.index_of_unicode (c, 2)) 
+			assert_equal ("index_of_345_3", 0, a_string.index_of_unicode (c, 3)) 
+			assert_equal ("index_of_345_4", 0, a_string.index_of_unicode (c, 4)) 
 			!! c.make_from_character ('r')
-			assert_equal ("index_of_r1", 3, a_string.index_of (c, 1)) 
-			assert_equal ("index_of_r2", 3, a_string.index_of (c, 2)) 
-			assert_equal ("index_of_r3", 3, a_string.index_of (c, 3)) 
-			assert_equal ("index_of_r4", 0, a_string.index_of (c, 4)) 
+			assert_equal ("index_of_r1", 3, a_string.index_of_unicode (c, 1)) 
+			assert_equal ("index_of_r2", 3, a_string.index_of_unicode (c, 2)) 
+			assert_equal ("index_of_r3", 3, a_string.index_of_unicode (c, 3)) 
+			assert_equal ("index_of_r4", 0, a_string.index_of_unicode (c, 4)) 
 			!! c.make_from_character ('z')
-			assert_equal ("index_of_z1", 0, a_string.index_of (c, 1)) 
-			assert_equal ("index_of_z2", 0, a_string.index_of (c, 2)) 
-			assert_equal ("index_of_z3", 0, a_string.index_of (c, 3)) 
-			assert_equal ("index_of_z4", 0, a_string.index_of (c, 4)) 
+			assert_equal ("index_of_z1", 0, a_string.index_of_unicode (c, 1)) 
+			assert_equal ("index_of_z2", 0, a_string.index_of_unicode (c, 2)) 
+			assert_equal ("index_of_z3", 0, a_string.index_of_unicode (c, 3)) 
+			assert_equal ("index_of_z4", 0, a_string.index_of_unicode (c, 4)) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
 			!! c.make_from_character ('o')
-			assert_equal ("index_of_o1", 0, a_string.index_of (c, 1)) 
+			assert_equal ("index_of_o1", 0, a_string.index_of_unicode (c, 1)) 
 		end
 
 	test_index_of_code1 is
@@ -1229,72 +1229,72 @@ feature -- Test
 			assert_equal ("index_of_o1", 0, a_string.index_of_code (a_code, 1)) 
 		end
 
-	test_index_of_latin1_1 is
-			-- Test feature `index_of_latin1'.
+	test_index_of1 is
+			-- Test feature `index_of'.
 		local
 			a_string: UC_UTF8_STRING
 		do
 			!! a_string.make_from_string ("bar")
 			a_string.put_code (456, 2)
-			assert_equal ("index_of_b1", 1, a_string.index_of_latin1 ('b', 1)) 
-			assert_equal ("index_of_b2", 0, a_string.index_of_latin1 ('b', 2)) 
-			assert_equal ("index_of_b3", 0, a_string.index_of_latin1 ('b', 3)) 
-			assert_equal ("index_of_b4", 0, a_string.index_of_latin1 ('b', 4)) 
-			assert_equal ("index_of_456_1", 2, a_string.index_of_latin1 ('%U', 1)) 
-			assert_equal ("index_of_456_2", 2, a_string.index_of_latin1 ('%U', 2)) 
-			assert_equal ("index_of_456_3", 0, a_string.index_of_latin1 ('%U', 3)) 
-			assert_equal ("index_of_456_4", 0, a_string.index_of_latin1 ('%U', 4)) 
-			assert_equal ("index_of_r1", 3, a_string.index_of_latin1 ('r', 1)) 
-			assert_equal ("index_of_r2", 3, a_string.index_of_latin1 ('r', 2)) 
-			assert_equal ("index_of_r3", 3, a_string.index_of_latin1 ('r', 3)) 
-			assert_equal ("index_of_r4", 0, a_string.index_of_latin1 ('r', 4)) 
-			assert_equal ("index_of_z1", 0, a_string.index_of_latin1 ('z', 1)) 
-			assert_equal ("index_of_z2", 0, a_string.index_of_latin1 ('z', 2)) 
-			assert_equal ("index_of_z3", 0, a_string.index_of_latin1 ('z', 3)) 
-			assert_equal ("index_of_z4", 0, a_string.index_of_latin1 ('z', 4)) 
-			a_string.put_latin1 ('%U', 2)
-			assert_equal ("index_of_null1", 2, a_string.index_of_latin1 ('%U', 1)) 
-			assert_equal ("index_of_null2", 2, a_string.index_of_latin1 ('%U', 2)) 
-			assert_equal ("index_of_null3", 0, a_string.index_of_latin1 ('%U', 3)) 
-			assert_equal ("index_of_null4", 0, a_string.index_of_latin1 ('%U', 4)) 
+			assert_equal ("index_of_b1", 1, a_string.index_of ('b', 1)) 
+			assert_equal ("index_of_b2", 0, a_string.index_of ('b', 2)) 
+			assert_equal ("index_of_b3", 0, a_string.index_of ('b', 3)) 
+			assert_equal ("index_of_b4", 0, a_string.index_of ('b', 4)) 
+			assert_equal ("index_of_456_1", 2, a_string.index_of ('%U', 1)) 
+			assert_equal ("index_of_456_2", 2, a_string.index_of ('%U', 2)) 
+			assert_equal ("index_of_456_3", 0, a_string.index_of ('%U', 3)) 
+			assert_equal ("index_of_456_4", 0, a_string.index_of ('%U', 4)) 
+			assert_equal ("index_of_r1", 3, a_string.index_of ('r', 1)) 
+			assert_equal ("index_of_r2", 3, a_string.index_of ('r', 2)) 
+			assert_equal ("index_of_r3", 3, a_string.index_of ('r', 3)) 
+			assert_equal ("index_of_r4", 0, a_string.index_of ('r', 4)) 
+			assert_equal ("index_of_z1", 0, a_string.index_of ('z', 1)) 
+			assert_equal ("index_of_z2", 0, a_string.index_of ('z', 2)) 
+			assert_equal ("index_of_z3", 0, a_string.index_of ('z', 3)) 
+			assert_equal ("index_of_z4", 0, a_string.index_of ('z', 4)) 
+			a_string.put ('%U', 2)
+			assert_equal ("index_of_null1", 2, a_string.index_of ('%U', 1)) 
+			assert_equal ("index_of_null2", 2, a_string.index_of ('%U', 2)) 
+			assert_equal ("index_of_null3", 0, a_string.index_of ('%U', 3)) 
+			assert_equal ("index_of_null4", 0, a_string.index_of ('%U', 4)) 
 			!! a_string.make_from_string ("")
-			assert_equal ("index_of_o1", 0, a_string.index_of_latin1 ('o', 1)) 
+			assert_equal ("index_of_o1", 0, a_string.index_of ('o', 1)) 
 		end
 
-	test_index_of_latin1_2 is
-			-- Test feature `index_of_latin1'.
+	test_index_of2 is
+			-- Test feature `index_of'.
 		local
 			a_string: UC_STRING
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
 			a_string.put_code (456, 2)
-			assert_equal ("index_of_b1", 1, a_string.index_of_latin1 ('b', 1)) 
-			assert_equal ("index_of_b2", 0, a_string.index_of_latin1 ('b', 2)) 
-			assert_equal ("index_of_b3", 0, a_string.index_of_latin1 ('b', 3)) 
-			assert_equal ("index_of_b4", 0, a_string.index_of_latin1 ('b', 4)) 
-			assert_equal ("index_of_456_1", 2, a_string.index_of_latin1 ('%U', 1)) 
-			assert_equal ("index_of_456_2", 2, a_string.index_of_latin1 ('%U', 2)) 
-			assert_equal ("index_of_456_3", 0, a_string.index_of_latin1 ('%U', 3)) 
-			assert_equal ("index_of_456_4", 0, a_string.index_of_latin1 ('%U', 4)) 
-			assert_equal ("index_of_r1", 3, a_string.index_of_latin1 ('r', 1)) 
-			assert_equal ("index_of_r2", 3, a_string.index_of_latin1 ('r', 2)) 
-			assert_equal ("index_of_r3", 3, a_string.index_of_latin1 ('r', 3)) 
-			assert_equal ("index_of_r4", 0, a_string.index_of_latin1 ('r', 4)) 
-			assert_equal ("index_of_z1", 0, a_string.index_of_latin1 ('z', 1)) 
-			assert_equal ("index_of_z2", 0, a_string.index_of_latin1 ('z', 2)) 
-			assert_equal ("index_of_z3", 0, a_string.index_of_latin1 ('z', 3)) 
-			assert_equal ("index_of_z4", 0, a_string.index_of_latin1 ('z', 4)) 
-			a_string.put_latin1 ('%U', 2)
-			assert_equal ("index_of_null1", 2, a_string.index_of_latin1 ('%U', 1)) 
-			assert_equal ("index_of_null2", 2, a_string.index_of_latin1 ('%U', 2)) 
-			assert_equal ("index_of_null3", 0, a_string.index_of_latin1 ('%U', 3)) 
-			assert_equal ("index_of_null4", 0, a_string.index_of_latin1 ('%U', 4)) 
+			assert_equal ("index_of_b1", 1, a_string.index_of ('b', 1)) 
+			assert_equal ("index_of_b2", 0, a_string.index_of ('b', 2)) 
+			assert_equal ("index_of_b3", 0, a_string.index_of ('b', 3)) 
+			assert_equal ("index_of_b4", 0, a_string.index_of ('b', 4)) 
+			assert_equal ("index_of_456_1", 2, a_string.index_of ('%U', 1)) 
+			assert_equal ("index_of_456_2", 2, a_string.index_of ('%U', 2)) 
+			assert_equal ("index_of_456_3", 0, a_string.index_of ('%U', 3)) 
+			assert_equal ("index_of_456_4", 0, a_string.index_of ('%U', 4)) 
+			assert_equal ("index_of_r1", 3, a_string.index_of ('r', 1)) 
+			assert_equal ("index_of_r2", 3, a_string.index_of ('r', 2)) 
+			assert_equal ("index_of_r3", 3, a_string.index_of ('r', 3)) 
+			assert_equal ("index_of_r4", 0, a_string.index_of ('r', 4)) 
+			assert_equal ("index_of_z1", 0, a_string.index_of ('z', 1)) 
+			assert_equal ("index_of_z2", 0, a_string.index_of ('z', 2)) 
+			assert_equal ("index_of_z3", 0, a_string.index_of ('z', 3)) 
+			assert_equal ("index_of_z4", 0, a_string.index_of ('z', 4)) 
+			a_string.put ('%U', 2)
+			assert_equal ("index_of_null1", 2, a_string.index_of ('%U', 1)) 
+			assert_equal ("index_of_null2", 2, a_string.index_of ('%U', 2)) 
+			assert_equal ("index_of_null3", 0, a_string.index_of ('%U', 3)) 
+			assert_equal ("index_of_null4", 0, a_string.index_of ('%U', 4)) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
-			assert_equal ("index_of_o1", 0, a_string.index_of_latin1 ('o', 1)) 
+			assert_equal ("index_of_o1", 0, a_string.index_of ('o', 1)) 
 		end
 
-	test_index_of_latin1_3 is
-			-- Test feature `index_of_latin1'.
+	test_index_of3 is
+			-- Test feature `index_of'.
 		local
 			a_string: STRING
 			utf8: UC_UTF8_STRING
@@ -1328,8 +1328,8 @@ feature -- Test
 			assert_equal ("index_of_o1", 0, a_string.index_of ('o', 1)) 
 		end
 
-	test_has1 is
-			-- Test feature `has'.
+	test_has_unicode1 is
+			-- Test feature `has_unicode'.
 		local
 			a_string: UC_UTF8_STRING
 			c: UC_CHARACTER
@@ -1337,26 +1337,26 @@ feature -- Test
 			!! a_string.make_from_string ("bar")
 			a_string.append_code (432)
 			!! c.make_from_character ('b')
-			assert ("has_b", a_string.has (c)) 
+			assert ("has_b", a_string.has_unicode (c)) 
 			!! c.make_from_character ('a')
-			assert ("has_a", a_string.has (c)) 
+			assert ("has_a", a_string.has_unicode (c)) 
 			!! c.make_from_character ('r')
-			assert ("has_r", a_string.has (c)) 
+			assert ("has_r", a_string.has_unicode (c)) 
 			!! c.make_from_code (432)
-			assert ("has_432", a_string.has (c)) 
+			assert ("has_432", a_string.has_unicode (c)) 
 			!! c.make_from_character ('o')
-			assert ("not_has_o", not a_string.has (c)) 
+			assert ("not_has_o", not a_string.has_unicode (c)) 
 			!! c.make_from_code (278)
-			assert ("not_has_278", not a_string.has (c)) 
+			assert ("not_has_278", not a_string.has_unicode (c)) 
 			!! a_string.make_from_string ("")
 			!! c.make_from_character ('f')
-			assert ("not_has_f", not a_string.has (c)) 
+			assert ("not_has_f", not a_string.has_unicode (c)) 
 			!! c.make_from_code (678)
-			assert ("not_has_678", not a_string.has (c)) 
+			assert ("not_has_678", not a_string.has_unicode (c)) 
 		end
 
-	test_has2 is
-			-- Test feature `has'.
+	test_has_unicode2 is
+			-- Test feature `has_unicode'.
 		local
 			a_string: UC_STRING
 			c: UC_CHARACTER
@@ -1364,22 +1364,22 @@ feature -- Test
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
 			a_string.append_code (432)
 			!! c.make_from_character ('b')
-			assert ("has_b", a_string.has (c)) 
+			assert ("has_b", a_string.has_unicode (c)) 
 			!! c.make_from_character ('a')
-			assert ("has_a", a_string.has (c)) 
+			assert ("has_a", a_string.has_unicode (c)) 
 			!! c.make_from_character ('r')
-			assert ("has_r", a_string.has (c)) 
+			assert ("has_r", a_string.has_unicode (c)) 
 			!! c.make_from_code (432)
-			assert ("has_432", a_string.has (c)) 
+			assert ("has_432", a_string.has_unicode (c)) 
 			!! c.make_from_character ('o')
-			assert ("not_has_o", not a_string.has (c)) 
+			assert ("not_has_o", not a_string.has_unicode (c)) 
 			!! c.make_from_code (278)
-			assert ("not_has_278", not a_string.has (c)) 
+			assert ("not_has_278", not a_string.has_unicode (c)) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
 			!! c.make_from_character ('f')
-			assert ("not_has_f", not a_string.has (c)) 
+			assert ("not_has_f", not a_string.has_unicode (c)) 
 			!! c.make_from_code (678)
-			assert ("not_has_678", not a_string.has (c)) 
+			assert ("not_has_678", not a_string.has_unicode (c)) 
 		end
 
 	test_has_code1 is
@@ -1436,40 +1436,40 @@ feature -- Test
 			assert ("not_has_678", not a_string.has_code (a_code)) 
 		end
 
-	test_has_latin1_1 is
-			-- Test feature `has_latin1'.
+	test_has1 is
+			-- Test feature `has'.
 		local
 			a_string: UC_UTF8_STRING
 		do
 			!! a_string.make_from_string ("bar")
 			a_string.append_code (347)
-			assert ("has_b", a_string.has_latin1 ('b')) 
-			assert ("has_a", a_string.has_latin1 ('a')) 
-			assert ("has_r", a_string.has_latin1 ('r')) 
-			assert ("has_null", a_string.has_latin1 ('%U')) 
-			assert ("not_has_o", not a_string.has_latin1 ('o')) 
+			assert ("has_b", a_string.has ('b')) 
+			assert ("has_a", a_string.has ('a')) 
+			assert ("has_r", a_string.has ('r')) 
+			assert ("has_null", a_string.has ('%U')) 
+			assert ("not_has_o", not a_string.has ('o')) 
 			!! a_string.make_from_string ("")
-			assert ("not_has_f", not a_string.has_latin1 ('f')) 
+			assert ("not_has_f", not a_string.has ('f')) 
 		end
 
-	test_has_latin1_2 is
-			-- Test feature `has_latin1'.
+	test_has2 is
+			-- Test feature `has'.
 		local
 			a_string: UC_STRING
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
 			a_string.append_code (347)
-			assert ("has_b", a_string.has_latin1 ('b')) 
-			assert ("has_a", a_string.has_latin1 ('a')) 
-			assert ("has_r", a_string.has_latin1 ('r')) 
-			assert ("has_null", a_string.has_latin1 ('%U')) 
-			assert ("not_has_o", not a_string.has_latin1 ('o')) 
+			assert ("has_b", a_string.has ('b')) 
+			assert ("has_a", a_string.has ('a')) 
+			assert ("has_r", a_string.has ('r')) 
+			assert ("has_null", a_string.has ('%U')) 
+			assert ("not_has_o", not a_string.has ('o')) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
-			assert ("not_has_f", not a_string.has_latin1 ('f')) 
+			assert ("not_has_f", not a_string.has ('f')) 
 		end
 
-	test_has_latin1_3 is
-			-- Test feature `has_latin1'.
+	test_has3 is
+			-- Test feature `has'.
 		local
 			a_string: STRING
 			utf8: UC_UTF8_STRING
@@ -1487,8 +1487,8 @@ feature -- Test
 			assert ("not_has_f", not a_string.has ('f')) 
 		end
 
-	test_occurrences1 is
-			-- Test feature `occurrences'.
+	test_unicode_occurrences1 is
+			-- Test feature `unicode_occurrences'.
 		local
 			a_string: UC_UTF8_STRING
 			c: UC_CHARACTER
@@ -1498,30 +1498,30 @@ feature -- Test
 			a_string.append_code (988)
 			a_string.append_code (988)
 			!! c.make_from_character ('b')
-			assert_equal ("b", 1, a_string.occurrences (c)) 
+			assert_equal ("b", 1, a_string.unicode_occurrences (c)) 
 			!! c.make_from_character ('a')
-			assert_equal ("a", 1, a_string.occurrences (c)) 
+			assert_equal ("a", 1, a_string.unicode_occurrences (c)) 
 			!! c.make_from_character ('r')
-			assert_equal ("r", 1, a_string.occurrences (c)) 
+			assert_equal ("r", 1, a_string.unicode_occurrences (c)) 
 			!! c.make_from_character ('o')
-			assert_equal ("o", 2, a_string.occurrences (c)) 
+			assert_equal ("o", 2, a_string.unicode_occurrences (c)) 
 			!! c.make_from_character ('f')
-			assert_equal ("f", 1, a_string.occurrences (c)) 
+			assert_equal ("f", 1, a_string.unicode_occurrences (c)) 
 			!! c.make_from_character ('z')
-			assert_equal ("z", 0, a_string.occurrences (c)) 
+			assert_equal ("z", 0, a_string.unicode_occurrences (c)) 
 			!! c.make_from_code (988)
-			assert_equal ("988", 3, a_string.occurrences (c)) 
+			assert_equal ("988", 3, a_string.unicode_occurrences (c)) 
 			!! c.make_from_code (444)
-			assert_equal ("444", 0, a_string.occurrences (c)) 
+			assert_equal ("444", 0, a_string.unicode_occurrences (c)) 
 			!! a_string.make_from_string ("")
 			!! c.make_from_character ('x')
-			assert_equal ("x", 0, a_string.occurrences (c)) 
+			assert_equal ("x", 0, a_string.unicode_occurrences (c)) 
 			!! c.make_from_code (555)
-			assert_equal ("555", 0, a_string.occurrences (c)) 
+			assert_equal ("555", 0, a_string.unicode_occurrences (c)) 
 		end
 
-	test_occurrences2 is
-			-- Test feature `occurrences'.
+	test_unicode_occurrences2 is
+			-- Test feature `unicode_occurrences'.
 		local
 			a_string: UC_STRING
 			c: UC_CHARACTER
@@ -1531,26 +1531,26 @@ feature -- Test
 			a_string.append_code (988)
 			a_string.append_code (988)
 			!! c.make_from_character ('b')
-			assert_equal ("b", 1, a_string.occurrences (c)) 
+			assert_equal ("b", 1, a_string.unicode_occurrences (c)) 
 			!! c.make_from_character ('a')
-			assert_equal ("a", 1, a_string.occurrences (c)) 
+			assert_equal ("a", 1, a_string.unicode_occurrences (c)) 
 			!! c.make_from_character ('r')
-			assert_equal ("r", 1, a_string.occurrences (c)) 
+			assert_equal ("r", 1, a_string.unicode_occurrences (c)) 
 			!! c.make_from_character ('o')
-			assert_equal ("o", 2, a_string.occurrences (c)) 
+			assert_equal ("o", 2, a_string.unicode_occurrences (c)) 
 			!! c.make_from_character ('f')
-			assert_equal ("f", 1, a_string.occurrences (c)) 
+			assert_equal ("f", 1, a_string.unicode_occurrences (c)) 
 			!! c.make_from_character ('z')
-			assert_equal ("z", 0, a_string.occurrences (c)) 
+			assert_equal ("z", 0, a_string.unicode_occurrences (c)) 
 			!! c.make_from_code (988)
-			assert_equal ("988", 3, a_string.occurrences (c)) 
+			assert_equal ("988", 3, a_string.unicode_occurrences (c)) 
 			!! c.make_from_code (444)
-			assert_equal ("444", 0, a_string.occurrences (c)) 
+			assert_equal ("444", 0, a_string.unicode_occurrences (c)) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
 			!! c.make_from_character ('x')
-			assert_equal ("x", 0, a_string.occurrences (c)) 
+			assert_equal ("x", 0, a_string.unicode_occurrences (c)) 
 			!! c.make_from_code (555)
-			assert_equal ("555", 0, a_string.occurrences (c)) 
+			assert_equal ("555", 0, a_string.unicode_occurrences (c)) 
 		end
 
 	test_code_occurrences1 is
@@ -1619,8 +1619,8 @@ feature -- Test
 			assert_equal ("555", 0, a_string.code_occurrences (a_code)) 
 		end
 
-	test_latin1_occurrences1 is
-			-- Test feature `latin1_occurrences'.
+	test_occurrences1 is
+			-- Test feature `occurrences'.
 		local
 			a_string: UC_UTF8_STRING
 		do
@@ -1628,20 +1628,20 @@ feature -- Test
 			a_string.append_code (988)
 			a_string.append_code (988)
 			a_string.append_code (988)
-			assert_equal ("b", 1, a_string.latin1_occurrences ('b')) 
-			assert_equal ("a", 1, a_string.latin1_occurrences ('a')) 
-			assert_equal ("r", 1, a_string.latin1_occurrences ('r')) 
-			assert_equal ("o", 2, a_string.latin1_occurrences ('o')) 
-			assert_equal ("f", 1, a_string.latin1_occurrences ('f')) 
-			assert_equal ("z", 0, a_string.latin1_occurrences ('z')) 
-			assert_equal ("null", 3, a_string.latin1_occurrences ('%U')) 
+			assert_equal ("b", 1, a_string.occurrences ('b')) 
+			assert_equal ("a", 1, a_string.occurrences ('a')) 
+			assert_equal ("r", 1, a_string.occurrences ('r')) 
+			assert_equal ("o", 2, a_string.occurrences ('o')) 
+			assert_equal ("f", 1, a_string.occurrences ('f')) 
+			assert_equal ("z", 0, a_string.occurrences ('z')) 
+			assert_equal ("null", 3, a_string.occurrences ('%U')) 
 			!! a_string.make_from_string ("")
-			assert_equal ("x", 0, a_string.latin1_occurrences ('x')) 
-			assert_equal ("null", 0, a_string.latin1_occurrences ('%U')) 
+			assert_equal ("x", 0, a_string.occurrences ('x')) 
+			assert_equal ("null", 0, a_string.occurrences ('%U')) 
 		end
 
-	test_latin1_occurrences2 is
-			-- Test feature `latin1_occurrences'.
+	test_occurrences2 is
+			-- Test feature `occurrences'.
 		local
 			a_string: UC_STRING
 		do
@@ -1649,20 +1649,20 @@ feature -- Test
 			a_string.append_code (988)
 			a_string.append_code (988)
 			a_string.append_code (988)
-			assert_equal ("b", 1, a_string.latin1_occurrences ('b')) 
-			assert_equal ("a", 1, a_string.latin1_occurrences ('a')) 
-			assert_equal ("r", 1, a_string.latin1_occurrences ('r')) 
-			assert_equal ("o", 2, a_string.latin1_occurrences ('o')) 
-			assert_equal ("f", 1, a_string.latin1_occurrences ('f')) 
-			assert_equal ("z", 0, a_string.latin1_occurrences ('z')) 
-			assert_equal ("null", 3, a_string.latin1_occurrences ('%U')) 
+			assert_equal ("b", 1, a_string.occurrences ('b')) 
+			assert_equal ("a", 1, a_string.occurrences ('a')) 
+			assert_equal ("r", 1, a_string.occurrences ('r')) 
+			assert_equal ("o", 2, a_string.occurrences ('o')) 
+			assert_equal ("f", 1, a_string.occurrences ('f')) 
+			assert_equal ("z", 0, a_string.occurrences ('z')) 
+			assert_equal ("null", 3, a_string.occurrences ('%U')) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
-			assert_equal ("x", 0, a_string.latin1_occurrences ('x')) 
-			assert_equal ("null", 0, a_string.latin1_occurrences ('%U')) 
+			assert_equal ("x", 0, a_string.occurrences ('x')) 
+			assert_equal ("null", 0, a_string.occurrences ('%U')) 
 		end
 
-	test_latin1_occurrences3 is
-			-- Test feature `latin1_occurrences'.
+	test_occurrences3 is
+			-- Test feature `occurrences'.
 		local
 			a_string: STRING
 			utf8: UC_UTF8_STRING
@@ -1685,7 +1685,7 @@ feature -- Test
 			assert_equal ("null", 0, a_string.occurrences ('%U')) 
 		end
 
-	test_head1 is
+	obsolete_test_head1 is
 			-- Test feature `head'.
 		local
 			a_string: UC_UTF8_STRING
@@ -1703,7 +1703,7 @@ feature -- Test
 			assert_equal ("head_0", "", a_string.out) 
 		end
 
-	test_head2 is
+	obsolete_test_head2 is
 			-- Test feature `head'.
 		local
 			a_string: UC_STRING
@@ -1721,7 +1721,7 @@ feature -- Test
 			assert_equal ("head_0", "", a_string.out) 
 		end
 
-	test_head3 is
+	obsolete_test_head3 is
 			-- Test feature `head'.
 		local
 			a_string: STRING
@@ -1778,7 +1778,7 @@ feature -- Test
 			assert_equal ("head_0", "", a_string.out) 
 		end
 
-	test_tail1 is
+	obsolete_test_tail1 is
 			-- Test feature `tail'.
 		local
 			a_string: UC_UTF8_STRING
@@ -1796,7 +1796,7 @@ feature -- Test
 			assert_equal ("tail_0", "", a_string.out) 
 		end
 
-	test_tail2 is
+	obsolete_test_tail2 is
 			-- Test feature `tail'.
 		local
 			a_string: UC_STRING
@@ -1814,7 +1814,7 @@ feature -- Test
 			assert_equal ("tail_0", "", a_string.out) 
 		end
 
-	test_tail3 is
+	obsolete_test_tail3 is
 			-- Test feature `tail'.
 		local
 			a_string: STRING
@@ -1999,68 +1999,11 @@ feature -- Test
 			assert ("hash_code2", a_string.hash_code = a_string2.hash_code) 
 		end
 
-	test_same_latin1_string1 is
-			-- Test feature `same_latin1_string'.
-		local
-			a_string, a_string2: UC_UTF8_STRING
-			foonullbar: STRING
-		do
-			!! a_string.make_from_string ("foobar")
-			!! a_string2.make_from_string ("foo")
-			assert ("not_same1", not a_string.same_latin1_string (a_string2))
-			assert ("not_same2", not a_string.same_latin1_string ("bar"))
-			assert ("same1", a_string.same_latin1_string (a_string))
-			assert ("same2", a_string.same_latin1_string ("foobar"))
-			!! a_string2.make_from_string ("foobar")
-			assert ("same3", a_string.same_latin1_string (a_string2))
-			!! a_string.make_from_string ("foo")
-			a_string.append_code (345)
-			a_string.append_string ("bar")
-			!! a_string2.make_from_string ("foo")
-			a_string2.append_code (278)
-			a_string2.append_string ("bar")
-			assert ("same4", a_string.same_latin1_string (a_string2))
-				-- HACT 4.0.1 does not support null characters
-				-- in manifest strings.
-			foonullbar := clone ("foo")
-			foonullbar.append_character ('%U')
-			foonullbar.append_string ("bar")
-			assert ("same5", a_string.same_latin1_string (foonullbar))
-		end
-
-	test_same_latin1_string2 is
-			-- Test feature `same_latin1_string'.
-		local
-			a_string, a_string2: UC_STRING
-			foonullbar: STRING
-		do
-			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
-			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
-			assert ("not_same1", not a_string.same_latin1_string (a_string2))
-			assert ("not_same2", not a_string.same_latin1_string ("bar"))
-			assert ("same1", a_string.same_latin1_string (a_string))
-			assert ("same2", a_string.same_latin1_string ("foobar"))
-			!UC_UTF8_STRING! a_string2.make_from_string ("foobar")
-			assert ("same3", a_string.same_latin1_string (a_string2))
-			!UC_UTF8_STRING! a_string.make_from_string ("foo")
-			a_string.append_code (345)
-			a_string.append_string ("bar")
-			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
-			a_string2.append_code (278)
-			a_string2.append_string ("bar")
-			assert ("same4", a_string.same_latin1_string (a_string2))
-				-- HACT 4.0.1 does not support null characters
-				-- in manifest strings.
-			foonullbar := clone ("foo")
-			foonullbar.append_character ('%U')
-			foonullbar.append_string ("bar")
-			assert ("same5", a_string.same_latin1_string (foonullbar))
-		end
-
 	test_same_string1 is
 			-- Test feature `same_string'.
 		local
 			a_string, a_string2: UC_UTF8_STRING
+			foonullbar: STRING
 		do
 			!! a_string.make_from_string ("foobar")
 			!! a_string2.make_from_string ("foo")
@@ -2076,18 +2019,20 @@ feature -- Test
 			!! a_string2.make_from_string ("foo")
 			a_string2.append_code (278)
 			a_string2.append_string ("bar")
-			assert ("not_same3", not a_string.same_string (a_string2))
-			assert ("not_same4", not a_string.same_string ("foo%Ubar"))
-			!! a_string2.make_from_string ("foo")
-			a_string2.append_code (345)
-			a_string2.append_string ("bar")
 			assert ("same4", a_string.same_string (a_string2))
+				-- HACT 4.0.1 does not support null characters
+				-- in manifest strings.
+			foonullbar := clone ("foo")
+			foonullbar.append_character ('%U')
+			foonullbar.append_string ("bar")
+			assert ("same5", a_string.same_string (foonullbar))
 		end
 
 	test_same_string2 is
 			-- Test feature `same_string'.
 		local
 			a_string, a_string2: UC_STRING
+			foonullbar: STRING
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
 			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
@@ -2103,22 +2048,77 @@ feature -- Test
 			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
 			a_string2.append_code (278)
 			a_string2.append_string ("bar")
-			assert ("not_same3", not a_string.same_string (a_string2))
-			assert ("not_same4", not a_string.same_string ("foo%Ubar"))
+			assert ("same4", a_string.same_string (a_string2))
+				-- HACT 4.0.1 does not support null characters
+				-- in manifest strings.
+			foonullbar := clone ("foo")
+			foonullbar.append_character ('%U')
+			foonullbar.append_string ("bar")
+			assert ("same5", a_string.same_string (foonullbar))
+		end
+
+	test_same_unicode_string1 is
+			-- Test feature `same_unicode_string'.
+		local
+			a_string, a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foobar")
+			!! a_string2.make_from_string ("foo")
+			assert ("not_same1", not a_string.same_unicode_string (a_string2))
+			assert ("not_same2", not a_string.same_unicode_string ("bar"))
+			assert ("same1", a_string.same_unicode_string (a_string))
+			assert ("same2", a_string.same_unicode_string ("foobar"))
+			!! a_string2.make_from_string ("foobar")
+			assert ("same3", a_string.same_unicode_string (a_string2))
+			!! a_string.make_from_string ("foo")
+			a_string.append_code (345)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("foo")
+			a_string2.append_code (278)
+			a_string2.append_string ("bar")
+			assert ("not_same3", not a_string.same_unicode_string (a_string2))
+			assert ("not_same4", not a_string.same_unicode_string ("foo%Ubar"))
+			!! a_string2.make_from_string ("foo")
+			a_string2.append_code (345)
+			a_string2.append_string ("bar")
+			assert ("same4", a_string.same_unicode_string (a_string2))
+		end
+
+	test_same_unicode_string2 is
+			-- Test feature `same_unicode_string'.
+		local
+			a_string, a_string2: UC_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			assert ("not_same1", not a_string.same_unicode_string (a_string2))
+			assert ("not_same2", not a_string.same_unicode_string ("bar"))
+			assert ("same1", a_string.same_unicode_string (a_string))
+			assert ("same2", a_string.same_unicode_string ("foobar"))
+			!UC_UTF8_STRING! a_string2.make_from_string ("foobar")
+			assert ("same3", a_string.same_unicode_string (a_string2))
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string.append_code (345)
+			a_string.append_string ("bar")
+			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
+			a_string2.append_code (278)
+			a_string2.append_string ("bar")
+			assert ("not_same3", not a_string.same_unicode_string (a_string2))
+			assert ("not_same4", not a_string.same_unicode_string ("foo%Ubar"))
 			!UC_UTF8_STRING! a_string2.make_from_string ("foo")
 			a_string2.append_code (345)
 			a_string2.append_string ("bar")
-			assert ("same4", a_string.same_string (a_string2))
+			assert ("same4", a_string.same_unicode_string (a_string2))
 		end
 
-	test_latin1_string1 is
-			-- Test feature `latin1_string'.
+	test_string1 is
+			-- Test feature `string'.
 		local
 			a_string: UC_UTF8_STRING
 			foonullbar: STRING
 		do
 			!! a_string.make_from_string ("foobar")
-			assert_equal ("string1", "foobar", a_string.latin1_string)
+			assert_equal ("string1", "foobar", a_string.string)
 			!! a_string.make_from_string ("foo")
 			a_string.append_code (345)
 			a_string.append_string ("bar")
@@ -2127,19 +2127,19 @@ feature -- Test
 			foonullbar := clone ("foo")
 			foonullbar.append_character ('%U')
 			foonullbar.append_string ("bar")
-			assert_equal ("string2", foonullbar, a_string.latin1_string)
+			assert_equal ("string2", foonullbar, a_string.string)
 			!! a_string.make (0)
-			assert_equal ("string3", "", a_string.latin1_string)
+			assert_equal ("string3", "", a_string.string)
 		end
 
-	test_latin1_string2 is
-			-- Test feature `latin1_string'.
+	test_string2 is
+			-- Test feature `string'.
 		local
 			a_string: UC_STRING
 			foonullbar: STRING
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
-			assert_equal ("string1", "foobar", a_string.latin1_string)
+			assert_equal ("string1", "foobar", a_string.string)
 			!UC_UTF8_STRING! a_string.make_from_string ("foo")
 			a_string.append_code (345)
 			a_string.append_string ("bar")
@@ -2148,46 +2148,46 @@ feature -- Test
 			foonullbar := clone ("foo")
 			foonullbar.append_character ('%U')
 			foonullbar.append_string ("bar")
-			assert_equal ("string2", foonullbar, a_string.latin1_string)
+			assert_equal ("string2", foonullbar, a_string.string)
 			!UC_UTF8_STRING! a_string.make (0)
-			assert_equal ("string3", "", a_string.latin1_string)
+			assert_equal ("string3", "", a_string.string)
 		end
 
-	test_fill_with1 is
-			-- Test feature `fill_with'.
+	test_fill_with_unicode1 is
+			-- Test feature `fill_with_unicode'.
 		local
 			a_string: UC_UTF8_STRING
 			c: UC_CHARACTER
 		do
 			!! a_string.make_from_string ("foobar")
 			!! c.make_from_character ('z')
-			a_string.fill_with (c)
+			a_string.fill_with_unicode (c)
 			assert_equal ("filled1", "zzzzzz", a_string.out)
 			!! a_string.make_from_string ("foo")
 			!! c.make_from_code (777)
-			a_string.fill_with (c)
+			a_string.fill_with_unicode (c)
 			assert_equal ("filled2", "%%/777/%%/777/%%/777/", a_string.out)
 			!! a_string.make_empty
-			a_string.fill_with (c)
+			a_string.fill_with_unicode (c)
 			assert_equal ("filled3", "", a_string.out)
 		end
 
-	test_fill_with2 is
-			-- Test feature `fill_with'.
+	test_fill_with_unicode2 is
+			-- Test feature `fill_with_unicode'.
 		local
 			a_string: UC_STRING
 			c: UC_CHARACTER
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
 			!! c.make_from_character ('z')
-			a_string.fill_with (c)
+			a_string.fill_with_unicode (c)
 			assert_equal ("filled1", "zzzzzz", a_string.out)
 			!UC_UTF8_STRING! a_string.make_from_string ("foo")
 			!! c.make_from_code (777)
-			a_string.fill_with (c)
+			a_string.fill_with_unicode (c)
 			assert_equal ("filled2", "%%/777/%%/777/%%/777/", a_string.out)
 			!UC_UTF8_STRING! a_string.make_empty
-			a_string.fill_with (c)
+			a_string.fill_with_unicode (c)
 			assert_equal ("filled3", "", a_string.out)
 		end
 
@@ -2223,30 +2223,134 @@ feature -- Test
 			assert_equal ("filled3", "", a_string.out)
 		end
 
-	test_fill_with_latin1_1 is
-			-- Test feature `fill_with_latin1'.
+	test_fill_with1 is
+			-- Test feature `fill_with'.
 		local
 			a_string: UC_UTF8_STRING
 		do
 			!! a_string.make_from_string ("foobar")
-			a_string.fill_with_latin1 ('z')
+			a_string.fill_with ('z')
 			assert_equal ("filled1", "zzzzzz", a_string.out)
 			!! a_string.make_empty
-			a_string.fill_with_latin1 ('a')
+			a_string.fill_with ('a')
 			assert_equal ("filled3", "", a_string.out)
 		end
 
-	test_fill_with_latin1_2 is
-			-- Test feature `fill_with_latin1'.
+	test_fill_with2 is
+			-- Test feature `fill_with'.
 		local
 			a_string: UC_STRING
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
-			a_string.fill_with_latin1 ('z')
+			a_string.fill_with ('z')
 			assert_equal ("filled1", "zzzzzz", a_string.out)
 			!UC_UTF8_STRING! a_string.make_empty
-			a_string.fill_with_latin1 ('a')
+			a_string.fill_with ('a')
 			assert_equal ("filled3", "", a_string.out)
+		end
+
+	test_unicode_substring_index1 is
+			-- Test feature `unicode_substring_index'.
+		local
+			a_string: UC_UTF8_STRING
+			a_string2: UC_UTF8_STRING
+		do
+			!! a_string.make_from_string ("foobar")
+			!! a_string2.make_from_string ("bar")
+			assert_equal ("index1", 4, a_string.unicode_substring_index (a_string2, 1)) 
+			assert_equal ("index2", 4, a_string.unicode_substring_index (a_string2, 2)) 
+			assert_equal ("index3", 4, a_string.unicode_substring_index (a_string2, 3)) 
+			assert_equal ("index4", 4, a_string.unicode_substring_index (a_string2, 4)) 
+			assert_equal ("index5", 0, a_string.unicode_substring_index (a_string2, 5)) 
+			assert_equal ("index6", 0, a_string.unicode_substring_index (a_string2, 6)) 
+			assert_equal ("index7", 0, a_string.unicode_substring_index (a_string2, 7)) 
+			assert_equal ("index8", 4, a_string.unicode_substring_index ("bar", 1)) 
+			assert_equal ("index9", 4, a_string.unicode_substring_index ("bar", 2)) 
+			assert_equal ("index10", 4, a_string.unicode_substring_index ("bar", 3)) 
+			assert_equal ("index11", 4, a_string.unicode_substring_index ("bar", 4)) 
+			assert_equal ("index12", 0, a_string.unicode_substring_index ("bar", 5)) 
+			assert_equal ("index13", 0, a_string.unicode_substring_index ("bar", 6)) 
+			assert_equal ("index14", 0, a_string.unicode_substring_index ("bar", 7)) 
+			!! a_string.make_from_string ("bar")
+			!! a_string2.make_from_string ("foobar")
+			assert_equal ("index15", 0, a_string.unicode_substring_index (a_string2, 1)) 
+			assert_equal ("index16", 0, a_string.unicode_substring_index (a_string2, 2)) 
+			assert_equal ("index17", 0, a_string.unicode_substring_index (a_string2, 3)) 
+			assert_equal ("index18", 0, a_string.unicode_substring_index (a_string2, 4)) 
+			assert_equal ("index19", 1, a_string.unicode_substring_index ("", 1)) 
+			assert_equal ("index20", 2, a_string.unicode_substring_index ("", 2)) 
+			assert_equal ("index21", 3, a_string.unicode_substring_index ("", 3)) 
+			assert_equal ("index22", 4, a_string.unicode_substring_index ("", 4)) 
+			assert_equal ("index23", 1, a_string.unicode_substring_index (a_string, 1)) 
+			assert_equal ("index24", 0, a_string.unicode_substring_index (a_string, 2)) 
+			assert_equal ("index25", 0, a_string.unicode_substring_index (a_string, 3)) 
+			assert_equal ("index26", 0, a_string.unicode_substring_index (a_string, 4)) 
+			!! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (986)
+			a_string2.append_string ("b")
+			assert_equal ("index27", 3, a_string.unicode_substring_index (a_string2, 1)) 
+			assert_equal ("index28", 3, a_string.unicode_substring_index (a_string2, 2)) 
+			assert_equal ("index29", 3, a_string.unicode_substring_index (a_string2, 3)) 
+			assert_equal ("index30", 0, a_string.unicode_substring_index (a_string2, 4)) 
+			assert_equal ("index31", 0, a_string.unicode_substring_index (a_string2, 5)) 
+			assert_equal ("index32", 0, a_string.unicode_substring_index (a_string2, 6)) 
+			assert_equal ("index33", 0, a_string.unicode_substring_index (a_string2, 7)) 
+			assert_equal ("index34", 0, a_string.unicode_substring_index (a_string2, 8)) 
+		end
+
+	test_unicode_substring_index2 is
+			-- Test feature `unicode_substring_index'.
+		local
+			a_string: UC_STRING
+			a_string2: UC_UTF8_STRING
+		do
+			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
+			!! a_string2.make_from_string ("bar")
+			assert_equal ("index1", 4, a_string.unicode_substring_index (a_string2, 1)) 
+			assert_equal ("index2", 4, a_string.unicode_substring_index (a_string2, 2)) 
+			assert_equal ("index3", 4, a_string.unicode_substring_index (a_string2, 3)) 
+			assert_equal ("index4", 4, a_string.unicode_substring_index (a_string2, 4)) 
+			assert_equal ("index5", 0, a_string.unicode_substring_index (a_string2, 5)) 
+			assert_equal ("index6", 0, a_string.unicode_substring_index (a_string2, 6)) 
+			assert_equal ("index7", 0, a_string.unicode_substring_index (a_string2, 7)) 
+			assert_equal ("index8", 4, a_string.unicode_substring_index ("bar", 1)) 
+			assert_equal ("index9", 4, a_string.unicode_substring_index ("bar", 2)) 
+			assert_equal ("index10", 4, a_string.unicode_substring_index ("bar", 3)) 
+			assert_equal ("index11", 4, a_string.unicode_substring_index ("bar", 4)) 
+			assert_equal ("index12", 0, a_string.unicode_substring_index ("bar", 5)) 
+			assert_equal ("index13", 0, a_string.unicode_substring_index ("bar", 6)) 
+			assert_equal ("index14", 0, a_string.unicode_substring_index ("bar", 7)) 
+			!UC_UTF8_STRING! a_string.make_from_string ("bar")
+			!! a_string2.make_from_string ("foobar")
+			assert_equal ("index15", 0, a_string.unicode_substring_index (a_string2, 1)) 
+			assert_equal ("index16", 0, a_string.unicode_substring_index (a_string2, 2)) 
+			assert_equal ("index17", 0, a_string.unicode_substring_index (a_string2, 3)) 
+			assert_equal ("index18", 0, a_string.unicode_substring_index (a_string2, 4)) 
+			assert_equal ("index19", 1, a_string.unicode_substring_index ("", 1)) 
+			assert_equal ("index20", 2, a_string.unicode_substring_index ("", 2)) 
+			assert_equal ("index21", 3, a_string.unicode_substring_index ("", 3)) 
+			assert_equal ("index22", 4, a_string.unicode_substring_index ("", 4)) 
+			assert_equal ("index23", 1, a_string.unicode_substring_index (a_string, 1)) 
+			assert_equal ("index24", 0, a_string.unicode_substring_index (a_string, 2)) 
+			assert_equal ("index25", 0, a_string.unicode_substring_index (a_string, 3)) 
+			assert_equal ("index26", 0, a_string.unicode_substring_index (a_string, 4)) 
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (986)
+			a_string2.append_string ("b")
+			assert_equal ("index27", 3, a_string.unicode_substring_index (a_string2, 1)) 
+			assert_equal ("index28", 3, a_string.unicode_substring_index (a_string2, 2)) 
+			assert_equal ("index29", 3, a_string.unicode_substring_index (a_string2, 3)) 
+			assert_equal ("index30", 0, a_string.unicode_substring_index (a_string2, 4)) 
+			assert_equal ("index31", 0, a_string.unicode_substring_index (a_string2, 5)) 
+			assert_equal ("index32", 0, a_string.unicode_substring_index (a_string2, 6)) 
+			assert_equal ("index33", 0, a_string.unicode_substring_index (a_string2, 7)) 
+			assert_equal ("index34", 0, a_string.unicode_substring_index (a_string2, 8)) 
 		end
 
 	test_substring_index1 is
@@ -2299,6 +2403,20 @@ feature -- Test
 			assert_equal ("index32", 0, a_string.substring_index (a_string2, 6)) 
 			assert_equal ("index33", 0, a_string.substring_index (a_string2, 7)) 
 			assert_equal ("index34", 0, a_string.substring_index (a_string2, 8)) 
+			!! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (555)
+			a_string2.append_string ("b")
+			assert_equal ("index35", 3, a_string.substring_index (a_string2, 1)) 
+			assert_equal ("index36", 3, a_string.substring_index (a_string2, 2)) 
+			assert_equal ("index37", 3, a_string.substring_index (a_string2, 3)) 
+			assert_equal ("index38", 0, a_string.substring_index (a_string2, 4)) 
+			assert_equal ("index39", 0, a_string.substring_index (a_string2, 5)) 
+			assert_equal ("index40", 0, a_string.substring_index (a_string2, 6)) 
+			assert_equal ("index41", 0, a_string.substring_index (a_string2, 7)) 
+			assert_equal ("index42", 0, a_string.substring_index (a_string2, 8)) 
 		end
 
 	test_substring_index2 is
@@ -2351,138 +2469,68 @@ feature -- Test
 			assert_equal ("index32", 0, a_string.substring_index (a_string2, 6)) 
 			assert_equal ("index33", 0, a_string.substring_index (a_string2, 7)) 
 			assert_equal ("index34", 0, a_string.substring_index (a_string2, 8)) 
+			!UC_UTF8_STRING! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (555)
+			a_string2.append_string ("b")
+			assert_equal ("index35", 3, a_string.substring_index (a_string2, 1)) 
+			assert_equal ("index36", 3, a_string.substring_index (a_string2, 2)) 
+			assert_equal ("index37", 3, a_string.substring_index (a_string2, 3)) 
+			assert_equal ("index38", 0, a_string.substring_index (a_string2, 4)) 
+			assert_equal ("index39", 0, a_string.substring_index (a_string2, 5)) 
+			assert_equal ("index40", 0, a_string.substring_index (a_string2, 6)) 
+			assert_equal ("index41", 0, a_string.substring_index (a_string2, 7)) 
+			assert_equal ("index42", 0, a_string.substring_index (a_string2, 8)) 
 		end
 
-	test_latin1_substring_index1 is
-			-- Test feature `latin1_substring_index'.
+	test_has_unicode_substring1 is
+			-- Test feature `has_unicode_substring'.
 		local
 			a_string: UC_UTF8_STRING
 			a_string2: UC_UTF8_STRING
 		do
 			!! a_string.make_from_string ("foobar")
 			!! a_string2.make_from_string ("bar")
-			assert_equal ("index1", 4, a_string.latin1_substring_index (a_string2, 1)) 
-			assert_equal ("index2", 4, a_string.latin1_substring_index (a_string2, 2)) 
-			assert_equal ("index3", 4, a_string.latin1_substring_index (a_string2, 3)) 
-			assert_equal ("index4", 4, a_string.latin1_substring_index (a_string2, 4)) 
-			assert_equal ("index5", 0, a_string.latin1_substring_index (a_string2, 5)) 
-			assert_equal ("index6", 0, a_string.latin1_substring_index (a_string2, 6)) 
-			assert_equal ("index7", 0, a_string.latin1_substring_index (a_string2, 7)) 
-			assert_equal ("index8", 4, a_string.latin1_substring_index ("bar", 1)) 
-			assert_equal ("index9", 4, a_string.latin1_substring_index ("bar", 2)) 
-			assert_equal ("index10", 4, a_string.latin1_substring_index ("bar", 3)) 
-			assert_equal ("index11", 4, a_string.latin1_substring_index ("bar", 4)) 
-			assert_equal ("index12", 0, a_string.latin1_substring_index ("bar", 5)) 
-			assert_equal ("index13", 0, a_string.latin1_substring_index ("bar", 6)) 
-			assert_equal ("index14", 0, a_string.latin1_substring_index ("bar", 7)) 
+			assert ("has1", a_string.has_unicode_substring (a_string2)) 
+			assert ("has2", a_string.has_unicode_substring ("bar")) 
 			!! a_string.make_from_string ("bar")
 			!! a_string2.make_from_string ("foobar")
-			assert_equal ("index15", 0, a_string.latin1_substring_index (a_string2, 1)) 
-			assert_equal ("index16", 0, a_string.latin1_substring_index (a_string2, 2)) 
-			assert_equal ("index17", 0, a_string.latin1_substring_index (a_string2, 3)) 
-			assert_equal ("index18", 0, a_string.latin1_substring_index (a_string2, 4)) 
-			assert_equal ("index19", 1, a_string.latin1_substring_index ("", 1)) 
-			assert_equal ("index20", 2, a_string.latin1_substring_index ("", 2)) 
-			assert_equal ("index21", 3, a_string.latin1_substring_index ("", 3)) 
-			assert_equal ("index22", 4, a_string.latin1_substring_index ("", 4)) 
-			assert_equal ("index23", 1, a_string.latin1_substring_index (a_string, 1)) 
-			assert_equal ("index24", 0, a_string.latin1_substring_index (a_string, 2)) 
-			assert_equal ("index25", 0, a_string.latin1_substring_index (a_string, 3)) 
-			assert_equal ("index26", 0, a_string.latin1_substring_index (a_string, 4)) 
+			assert ("not_has1", not a_string.has_unicode_substring (a_string2)) 
+			assert ("has3", a_string.has_unicode_substring ("")) 
+			assert ("has4", a_string.has_unicode_substring (a_string)) 
 			!! a_string.make_from_string ("foo")
 			a_string.append_code (986)
 			a_string.append_string ("bar")
 			!! a_string2.make_from_string ("o")
 			a_string2.append_code (986)
 			a_string2.append_string ("b")
-			assert_equal ("index27", 3, a_string.latin1_substring_index (a_string2, 1)) 
-			assert_equal ("index28", 3, a_string.latin1_substring_index (a_string2, 2)) 
-			assert_equal ("index29", 3, a_string.latin1_substring_index (a_string2, 3)) 
-			assert_equal ("index30", 0, a_string.latin1_substring_index (a_string2, 4)) 
-			assert_equal ("index31", 0, a_string.latin1_substring_index (a_string2, 5)) 
-			assert_equal ("index32", 0, a_string.latin1_substring_index (a_string2, 6)) 
-			assert_equal ("index33", 0, a_string.latin1_substring_index (a_string2, 7)) 
-			assert_equal ("index34", 0, a_string.latin1_substring_index (a_string2, 8)) 
-			!! a_string.make_from_string ("foo")
-			a_string.append_code (986)
-			a_string.append_string ("bar")
-			!! a_string2.make_from_string ("o")
-			a_string2.append_code (555)
-			a_string2.append_string ("b")
-			assert_equal ("index35", 3, a_string.latin1_substring_index (a_string2, 1)) 
-			assert_equal ("index36", 3, a_string.latin1_substring_index (a_string2, 2)) 
-			assert_equal ("index37", 3, a_string.latin1_substring_index (a_string2, 3)) 
-			assert_equal ("index38", 0, a_string.latin1_substring_index (a_string2, 4)) 
-			assert_equal ("index39", 0, a_string.latin1_substring_index (a_string2, 5)) 
-			assert_equal ("index40", 0, a_string.latin1_substring_index (a_string2, 6)) 
-			assert_equal ("index41", 0, a_string.latin1_substring_index (a_string2, 7)) 
-			assert_equal ("index42", 0, a_string.latin1_substring_index (a_string2, 8)) 
+			assert ("has5", a_string.has_unicode_substring (a_string2)) 
 		end
 
-	test_latin1_substring_index2 is
-			-- Test feature `latin1_substring_index'.
+	test_has_unicode_substring2 is
+			-- Test feature `has_unicode_substring'.
 		local
 			a_string: UC_STRING
 			a_string2: UC_UTF8_STRING
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
 			!! a_string2.make_from_string ("bar")
-			assert_equal ("index1", 4, a_string.latin1_substring_index (a_string2, 1)) 
-			assert_equal ("index2", 4, a_string.latin1_substring_index (a_string2, 2)) 
-			assert_equal ("index3", 4, a_string.latin1_substring_index (a_string2, 3)) 
-			assert_equal ("index4", 4, a_string.latin1_substring_index (a_string2, 4)) 
-			assert_equal ("index5", 0, a_string.latin1_substring_index (a_string2, 5)) 
-			assert_equal ("index6", 0, a_string.latin1_substring_index (a_string2, 6)) 
-			assert_equal ("index7", 0, a_string.latin1_substring_index (a_string2, 7)) 
-			assert_equal ("index8", 4, a_string.latin1_substring_index ("bar", 1)) 
-			assert_equal ("index9", 4, a_string.latin1_substring_index ("bar", 2)) 
-			assert_equal ("index10", 4, a_string.latin1_substring_index ("bar", 3)) 
-			assert_equal ("index11", 4, a_string.latin1_substring_index ("bar", 4)) 
-			assert_equal ("index12", 0, a_string.latin1_substring_index ("bar", 5)) 
-			assert_equal ("index13", 0, a_string.latin1_substring_index ("bar", 6)) 
-			assert_equal ("index14", 0, a_string.latin1_substring_index ("bar", 7)) 
+			assert ("has1", a_string.has_unicode_substring (a_string2)) 
+			assert ("has2", a_string.has_unicode_substring ("bar")) 
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
 			!! a_string2.make_from_string ("foobar")
-			assert_equal ("index15", 0, a_string.latin1_substring_index (a_string2, 1)) 
-			assert_equal ("index16", 0, a_string.latin1_substring_index (a_string2, 2)) 
-			assert_equal ("index17", 0, a_string.latin1_substring_index (a_string2, 3)) 
-			assert_equal ("index18", 0, a_string.latin1_substring_index (a_string2, 4)) 
-			assert_equal ("index19", 1, a_string.latin1_substring_index ("", 1)) 
-			assert_equal ("index20", 2, a_string.latin1_substring_index ("", 2)) 
-			assert_equal ("index21", 3, a_string.latin1_substring_index ("", 3)) 
-			assert_equal ("index22", 4, a_string.latin1_substring_index ("", 4)) 
-			assert_equal ("index23", 1, a_string.latin1_substring_index (a_string, 1)) 
-			assert_equal ("index24", 0, a_string.latin1_substring_index (a_string, 2)) 
-			assert_equal ("index25", 0, a_string.latin1_substring_index (a_string, 3)) 
-			assert_equal ("index26", 0, a_string.latin1_substring_index (a_string, 4)) 
+			assert ("not_has1", not a_string.has_unicode_substring (a_string2)) 
+			assert ("has3", a_string.has_unicode_substring ("")) 
+			assert ("has4", a_string.has_unicode_substring (a_string)) 
 			!UC_UTF8_STRING! a_string.make_from_string ("foo")
 			a_string.append_code (986)
 			a_string.append_string ("bar")
 			!! a_string2.make_from_string ("o")
 			a_string2.append_code (986)
 			a_string2.append_string ("b")
-			assert_equal ("index27", 3, a_string.latin1_substring_index (a_string2, 1)) 
-			assert_equal ("index28", 3, a_string.latin1_substring_index (a_string2, 2)) 
-			assert_equal ("index29", 3, a_string.latin1_substring_index (a_string2, 3)) 
-			assert_equal ("index30", 0, a_string.latin1_substring_index (a_string2, 4)) 
-			assert_equal ("index31", 0, a_string.latin1_substring_index (a_string2, 5)) 
-			assert_equal ("index32", 0, a_string.latin1_substring_index (a_string2, 6)) 
-			assert_equal ("index33", 0, a_string.latin1_substring_index (a_string2, 7)) 
-			assert_equal ("index34", 0, a_string.latin1_substring_index (a_string2, 8)) 
-			!UC_UTF8_STRING! a_string.make_from_string ("foo")
-			a_string.append_code (986)
-			a_string.append_string ("bar")
-			!! a_string2.make_from_string ("o")
-			a_string2.append_code (555)
-			a_string2.append_string ("b")
-			assert_equal ("index35", 3, a_string.latin1_substring_index (a_string2, 1)) 
-			assert_equal ("index36", 3, a_string.latin1_substring_index (a_string2, 2)) 
-			assert_equal ("index37", 3, a_string.latin1_substring_index (a_string2, 3)) 
-			assert_equal ("index38", 0, a_string.latin1_substring_index (a_string2, 4)) 
-			assert_equal ("index39", 0, a_string.latin1_substring_index (a_string2, 5)) 
-			assert_equal ("index40", 0, a_string.latin1_substring_index (a_string2, 6)) 
-			assert_equal ("index41", 0, a_string.latin1_substring_index (a_string2, 7)) 
-			assert_equal ("index42", 0, a_string.latin1_substring_index (a_string2, 8)) 
+			assert ("has5", a_string.has_unicode_substring (a_string2)) 
 		end
 
 	test_has_substring1 is
@@ -2507,6 +2555,13 @@ feature -- Test
 			a_string2.append_code (986)
 			a_string2.append_string ("b")
 			assert ("has5", a_string.has_substring (a_string2)) 
+			!! a_string.make_from_string ("foo")
+			a_string.append_code (986)
+			a_string.append_string ("bar")
+			!! a_string2.make_from_string ("o")
+			a_string2.append_code (22222)
+			a_string2.append_string ("b")
+			assert ("has6", a_string.has_substring (a_string2)) 
 		end
 
 	test_has_substring2 is
@@ -2531,68 +2586,13 @@ feature -- Test
 			a_string2.append_code (986)
 			a_string2.append_string ("b")
 			assert ("has5", a_string.has_substring (a_string2)) 
-		end
-
-	test_has_latin1_substring1 is
-			-- Test feature `has_latin1_substring'.
-		local
-			a_string: UC_UTF8_STRING
-			a_string2: UC_UTF8_STRING
-		do
-			!! a_string.make_from_string ("foobar")
-			!! a_string2.make_from_string ("bar")
-			assert ("has1", a_string.has_latin1_substring (a_string2)) 
-			assert ("has2", a_string.has_latin1_substring ("bar")) 
-			!! a_string.make_from_string ("bar")
-			!! a_string2.make_from_string ("foobar")
-			assert ("not_has1", not a_string.has_latin1_substring (a_string2)) 
-			assert ("has3", a_string.has_latin1_substring ("")) 
-			assert ("has4", a_string.has_latin1_substring (a_string)) 
-			!! a_string.make_from_string ("foo")
-			a_string.append_code (986)
-			a_string.append_string ("bar")
-			!! a_string2.make_from_string ("o")
-			a_string2.append_code (986)
-			a_string2.append_string ("b")
-			assert ("has5", a_string.has_latin1_substring (a_string2)) 
-			!! a_string.make_from_string ("foo")
-			a_string.append_code (986)
-			a_string.append_string ("bar")
-			!! a_string2.make_from_string ("o")
-			a_string2.append_code (22222)
-			a_string2.append_string ("b")
-			assert ("has6", a_string.has_latin1_substring (a_string2)) 
-		end
-
-	test_has_latin1_substring2 is
-			-- Test feature `has_latin1_substring'.
-		local
-			a_string: UC_STRING
-			a_string2: UC_UTF8_STRING
-		do
-			!UC_UTF8_STRING! a_string.make_from_string ("foobar")
-			!! a_string2.make_from_string ("bar")
-			assert ("has1", a_string.has_latin1_substring (a_string2)) 
-			assert ("has2", a_string.has_latin1_substring ("bar")) 
-			!UC_UTF8_STRING! a_string.make_from_string ("bar")
-			!! a_string2.make_from_string ("foobar")
-			assert ("not_has1", not a_string.has_latin1_substring (a_string2)) 
-			assert ("has3", a_string.has_latin1_substring ("")) 
-			assert ("has4", a_string.has_latin1_substring (a_string)) 
-			!UC_UTF8_STRING! a_string.make_from_string ("foo")
-			a_string.append_code (986)
-			a_string.append_string ("bar")
-			!! a_string2.make_from_string ("o")
-			a_string2.append_code (986)
-			a_string2.append_string ("b")
-			assert ("has5", a_string.has_latin1_substring (a_string2)) 
 			!UC_UTF8_STRING! a_string.make_from_string ("foo")
 			a_string.append_code (986)
 			a_string.append_string ("bar")
 			!! a_string2.make_from_string ("o")
 			a_string2.append_code (22222)
 			a_string2.append_string ("b")
-			assert ("has6", a_string.has_latin1_substring (a_string2)) 
+			assert ("has6", a_string.has_substring (a_string2)) 
 		end
 
 	test_is_empty1 is
@@ -2717,47 +2717,47 @@ feature -- Test
 			assert_equal ("replaced6", "foototobar", a_string.out) 
 		end
 
-	test_insert_character1 is
-			-- Test feature `insert_character'.
+	test_insert_unicode1 is
+			-- Test feature `insert_unicode'.
 		local
 			a_string: UC_UTF8_STRING
 			c: UC_CHARACTER
 		do
 			!! a_string.make_from_string ("bar")
 			!! c.make_from_character ('f')
-			a_string.insert_character (c, 4)
+			a_string.insert_unicode (c, 4)
 			assert_equal ("inserted1", "barf", a_string.out) 
 			!! c.make_from_code (68457)
-			a_string.insert_character (c, 2)
+			a_string.insert_unicode (c, 2)
 			assert_equal ("inserted2", "b%%/68457/arf", a_string.out) 
 			!! a_string.make_from_string ("")
 			!! c.make_from_code (462)
-			a_string.insert_character (c, 1)
+			a_string.insert_unicode (c, 1)
 			assert_equal ("inserted3", "%%/462/", a_string.out) 
 			!! c.make_from_character ('z')
-			a_string.insert_character (c, 1)
+			a_string.insert_unicode (c, 1)
 			assert_equal ("inserted4", "z%%/462/", a_string.out) 
 		end
 
-	test_insert_character2 is
-			-- Test feature `insert_character'.
+	test_insert_unicode2 is
+			-- Test feature `insert_unicode'.
 		local
 			a_string: UC_STRING
 			c: UC_CHARACTER
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
 			!! c.make_from_character ('f')
-			a_string.insert_character (c, 4)
+			a_string.insert_unicode (c, 4)
 			assert_equal ("inserted1", "barf", a_string.out) 
 			!! c.make_from_code (68457)
-			a_string.insert_character (c, 2)
+			a_string.insert_unicode (c, 2)
 			assert_equal ("inserted2", "b%%/68457/arf", a_string.out) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
 			!! c.make_from_code (462)
-			a_string.insert_character (c, 1)
+			a_string.insert_unicode (c, 1)
 			assert_equal ("inserted3", "%%/462/", a_string.out) 
 			!! c.make_from_character ('z')
-			a_string.insert_character (c, 1)
+			a_string.insert_unicode (c, 1)
 			assert_equal ("inserted4", "z%%/462/", a_string.out) 
 		end
 
@@ -2805,37 +2805,37 @@ feature -- Test
 			assert_equal ("inserted4", "z%%/462/", a_string.out) 
 		end
 
-	test_insert_latin1_1 is
-			-- Test feature `insert_latin1'.
+	test_insert_character1 is
+			-- Test feature `insert_character'.
 		local
 			a_string: UC_UTF8_STRING
 		do
 			!! a_string.make_from_string ("bar")
-			a_string.insert_latin1 ('f', 4)
+			a_string.insert_character ('f', 4)
 			assert_equal ("inserted1", "barf", a_string.out) 
-			a_string.insert_latin1 ('o', 2)
+			a_string.insert_character ('o', 2)
 			assert_equal ("inserted2", "boarf", a_string.out) 
 			!! a_string.make_from_string ("")
-			a_string.insert_latin1 ('t', 1)
+			a_string.insert_character ('t', 1)
 			assert_equal ("inserted3", "t", a_string.out) 
-			a_string.insert_latin1 ('z', 1)
+			a_string.insert_character ('z', 1)
 			assert_equal ("inserted4", "zt", a_string.out) 
 		end
 
-	test_insert_latin1_2 is
-			-- Test feature `insert_latin1'.
+	test_insert_character2 is
+			-- Test feature `insert_character'.
 		local
 			a_string: UC_STRING
 		do
 			!UC_UTF8_STRING! a_string.make_from_string ("bar")
-			a_string.insert_latin1 ('f', 4)
+			a_string.insert_character ('f', 4)
 			assert_equal ("inserted1", "barf", a_string.out) 
-			a_string.insert_latin1 ('o', 2)
+			a_string.insert_character ('o', 2)
 			assert_equal ("inserted2", "boarf", a_string.out) 
 			!UC_UTF8_STRING! a_string.make_from_string ("")
-			a_string.insert_latin1 ('t', 1)
+			a_string.insert_character ('t', 1)
 			assert_equal ("inserted3", "t", a_string.out) 
-			a_string.insert_latin1 ('z', 1)
+			a_string.insert_character ('z', 1)
 			assert_equal ("inserted4", "zt", a_string.out) 
 		end
 
@@ -2857,7 +2857,7 @@ feature -- Test
 			!! utf8.make (4)
 			utf8.append_code (265)
 			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
+			utf8.append_character ('f')
 			utf8.append_code (23456)
 			a_string.insert_string (utf8, 3)
 			assert_equal ("inserted4", "fo%%/265/%%/1021/f%%/23456/o", a_string.out) 
@@ -2888,7 +2888,7 @@ feature -- Test
 			!! utf8.make (4)
 			utf8.append_code (265)
 			utf8.append_code (1021)
-			utf8.append_latin1 ('f')
+			utf8.append_character ('f')
 			utf8.append_code (23456)
 			a_string.insert_string (utf8, 3)
 			assert_equal ("inserted4", "fo%%/265/%%/1021/f%%/23456/o", a_string.out) 
