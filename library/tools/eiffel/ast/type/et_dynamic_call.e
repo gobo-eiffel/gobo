@@ -57,7 +57,10 @@ feature -- Initialization
 				l_dynamic_type := a_system.dynamic_type (l_type, a_type.base_type)
 				create l_dynamic_type_set.make (l_dynamic_type)
 				result_type := l_dynamic_type_set
+			else
+				result_type := Void
 			end
+			argument_types := Void
 			args := a_feature.arguments
 			if args /= Void then
 				nb := args.count
