@@ -4,6 +4,7 @@ ${GOBO}/library/tools/ast/constant/
 ${GOBO}/library/tools/ast/expression/
 ${GOBO}/library/tools/ast/feature/
 ${GOBO}/library/tools/ast/instruction/
+${GOBO}/library/tools/ast/lace/
 ${GOBO}/library/tools/ast/name/
 ${GOBO}/library/tools/ast/type/
 ${GOBO}/library/tools/error/

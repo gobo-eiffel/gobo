@@ -1,11 +1,15 @@
 		-- Gobo Eiffel Tools Library
-	et_ast_assertion:	"$GOBO/library/tools/ast/assertion";
-	et_ast_class:		"$GOBO/library/tools/ast/class";
-	et_ast_constant:	"$GOBO/library/tools/ast/constant";
-	et_ast_expression:	"$GOBO/library/tools/ast/expression";
-	et_ast_feature:		"$GOBO/library/tools/ast/feature";
-	et_ast_instruction:	"$GOBO/library/tools/ast/instruction";
-	et_ast_name:		"$GOBO/library/tools/ast/name";
-	et_ast_type:		"$GOBO/library/tools/ast/type";
-	et_error:			"$GOBO/library/tools/error";
-	et_parser:			"$GOBO/library/tools/parser";
+	et_eiffel_ast_assertion:	"$GOBO/library/tools/eiffel/ast/assertion";
+	et_eiffel_ast_class:		"$GOBO/library/tools/eiffel/ast/class";
+	et_eiffel_ast_constant:		"$GOBO/library/tools/eiffel/ast/constant";
+	et_eiffel_ast_expression:	"$GOBO/library/tools/eiffel/ast/expression";
+	et_eiffel_ast_feature:		"$GOBO/library/tools/eiffel/ast/feature";
+	et_eiffel_ast_instruction:	"$GOBO/library/tools/eiffel/ast/instruction";
+	et_eiffel_ast_lace:			"$GOBO/library/tools/eiffel/ast/lace";
+	et_eiffel_ast_name:			"$GOBO/library/tools/eiffel/ast/name";
+	et_eiffel_ast_type:			"$GOBO/library/tools/eiffel/ast/type";
+	et_eiffel_error:			"$GOBO/library/tools/eiffel/error";
+	et_eiffel_parser:			"$GOBO/library/tools/eiffel/parser";
+	et_lace_ast:				"$GOBO/library/tools/lace/ast";
+	et_lace_error:				"$GOBO/library/tools/lace/error";
+	et_lace_parser:				"$GOBO/library/tools/lace/parser";

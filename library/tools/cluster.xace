@@ -1,15 +1,35 @@
 <?xml version="1.0"?>
 
-<cluster name="tools" location="${GOBO}/library/tools">
+<cluster name="tools" location="${GOBO}/library/tools" abstract="True">
 
 	<description>
 	</description>
 
-	<cluster name="xace" >
-		<cluster name="support" />
-		<cluster name="ast" />
-		<cluster name="generator" />
-		<cluster name="parse" />
-		<cluster name="error" />
+	<cluster name="eiffel" abstract="True">
+		<cluster name="ast" abstract="True">
+			<cluster name="assertion"/>
+			<cluster name="class"/>
+			<cluster name="constant"/>
+			<cluster name="expression"/>
+			<cluster name="feature"/>
+			<cluster name="instruction"/>
+			<cluster name="lace"/>
+			<cluster name="name"/>
+			<cluster name="type"/>
+		</cluster>
+		<cluster name="error"/>
+		<cluster name="parser"/>
+	</cluster>
+	<cluster name="lace" abstract="True">
+		<cluster name="ast"/>
+		<cluster name="error"/>
+		<cluster name="parser"/>
+	</cluster>
+	<cluster name="xace" abstract="True">
+		<cluster name="ast"/>
+		<cluster name="error"/>
+		<cluster name="generator"/>
+		<cluster name="parser"/>
+		<cluster name="support"/>
 	</cluster>
 </cluster>
