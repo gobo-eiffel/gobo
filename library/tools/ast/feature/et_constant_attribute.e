@@ -17,7 +17,8 @@ inherit
 
 	ET_QUERY
 		redefine
-			is_constant_attribute
+			is_constant_attribute,
+			is_prefixable
 		end
 
 creation
@@ -91,6 +92,10 @@ feature -- Status report
 
 	is_constant_attribute: BOOLEAN is True
 			-- Is feature a constant attribute?
+
+	is_prefixable: BOOLEAN is True
+			-- Can current feature have a name of
+			-- the form 'prefix ...'?
 
 feature -- Duplication
 

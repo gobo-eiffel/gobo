@@ -16,7 +16,11 @@ class ET_EXTERNAL_FUNCTION
 inherit
 
 	ET_FUNCTION
+
 	ET_EXTERNAL_ROUTINE
+		undefine
+			is_prefixable, is_infixable
+		end
 
 creation
 

@@ -17,7 +17,8 @@ inherit
 
 	ET_QUERY
 		redefine
-			is_unique_attribute
+			is_unique_attribute,
+			is_prefixable
 		end
 
 creation
@@ -80,6 +81,10 @@ feature -- Status report
 
 	is_unique_attribute: BOOLEAN is True
 			-- Is feature a unique attribute?
+
+	is_prefixable: BOOLEAN is True
+			-- Can current feature have a name of
+			-- the form 'prefix ...'?
 
 feature -- Duplication
 

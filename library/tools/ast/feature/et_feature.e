@@ -71,25 +71,39 @@ feature -- Status report
 	is_deferred: BOOLEAN is
 			-- Is feature deferred?
 		do
-			Result := False
+			-- Result := False
 		end
 
 	is_attribute: BOOLEAN is
 			-- Is feature an attribute?
 		do
-			Result := False
+			-- Result := False
 		end
 
 	is_constant_attribute: BOOLEAN is
 			-- Is feature a constant attribute?
 		do
-			Result := False
+			-- Result := False
 		end
 
 	is_unique_attribute: BOOLEAN is
 			-- Is feature a unique attribute?
 		do
-			Result := False
+			-- Result := False
+		end
+
+	is_infixable: BOOLEAN is
+			-- Can current feature have a name of
+			-- the form 'infix ...'?
+		do
+			-- Result := False
+		end
+
+	is_prefixable: BOOLEAN is
+			-- Can current feature have a name of
+			-- the form 'prefix ...'?
+		do
+			-- Result := False
 		end
 
 feature -- Comparison
@@ -103,24 +117,6 @@ feature -- Comparison
 			Result := version = other.version
 		ensure
 			definition: Result = (version = other.version)
-		end
-
-	same_signature (other: ET_FEATURE): BOOLEAN is
-			-- Does current feature have the same 
-			-- signature as `other'?
-		require
-			other_not_void: other /= Void
-		do
-			Result := True
-		end
-
-	signature_conforms_to (other: ET_FEATURE): BOOLEAN is
-			-- Does signature of current feature
-			-- conform to signature of `other'?
-		require
-			other_not_void: other /= Void
-		do
-			Result := True
 		end
 
 feature -- Setting

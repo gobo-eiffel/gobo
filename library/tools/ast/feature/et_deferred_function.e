@@ -21,6 +21,9 @@ inherit
 		end
 
 	ET_DEFERRED_ROUTINE
+		undefine
+			is_prefixable, is_infixable
+		end
 
 creation
 

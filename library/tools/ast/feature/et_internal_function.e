@@ -21,6 +21,9 @@ inherit
 		end
 
 	ET_INTERNAL_ROUTINE
+		undefine
+			is_prefixable, is_infixable
+		end
 
 feature {NONE} -- Initialization
 

@@ -17,6 +17,7 @@ inherit
 
 	ET_QUERY
 		redefine
+			is_prefixable, is_infixable,
 			signature, undefined_feature,
 			has_formal_parameters,
 			resolve_formal_parameters,
@@ -25,6 +26,9 @@ inherit
 		end
 
 	ET_ROUTINE
+		undefine
+			is_prefixable, is_infixable
+		end
 
 feature -- Access
 
@@ -33,6 +37,23 @@ feature -- Access
 			-- (Create a new object at each call.)
 		do
 			!! Result.make (arguments, type)
+		end
+
+feature -- Status report
+
+	is_infixable: BOOLEAN is
+			-- Can current feature have a name of
+			-- the form 'infix ...'?
+		do
+			Result := arguments /= Void and then
+				arguments.count = 1
+		end
+
+	is_prefixable: BOOLEAN is
+			-- Can current feature have a name of
+			-- the form 'prefix ...'?
+		do
+			Result := arguments = Void
 		end
 
 feature -- Conversion
