@@ -1714,8 +1714,8 @@ feature -- AST nodes
 		end
 
 	new_deferred_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
-		a_type: ET_DECLARED_TYPE; an_is: ET_KEYWORD; an_obsolete: ET_OBSOLETE;
-		a_preconditions: ET_PRECONDITIONS; a_deferred: ET_KEYWORD;
+		a_type: ET_DECLARED_TYPE; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_deferred: ET_KEYWORD;
 		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
 		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_DEFERRED_FUNCTION is
@@ -1724,6 +1724,7 @@ feature -- AST nodes
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
 					a_postconditions, a_clients, a_class)
+				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
@@ -1739,15 +1740,16 @@ feature -- AST nodes
 		end
 
 	new_deferred_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
-		an_is: ET_KEYWORD; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_deferred: ET_KEYWORD; a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
-		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
+		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
+		a_preconditions: ET_PRECONDITIONS; a_deferred: ET_KEYWORD; a_postconditions: ET_POSTCONDITIONS;
+		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_DEFERRED_PROCEDURE is
 			-- New deferred procedure
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, an_obsolete, a_preconditions,
 					a_postconditions, a_clients, a_class)
+				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
@@ -1776,7 +1778,7 @@ feature -- AST nodes
 		end
 
 	new_do_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
-		an_is: ET_KEYWORD; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
 		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
 		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
@@ -1786,6 +1788,7 @@ feature -- AST nodes
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
+				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
@@ -1798,7 +1801,7 @@ feature -- AST nodes
 		end
 
 	new_do_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
-		an_is: ET_KEYWORD; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
 		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
 		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
@@ -1808,6 +1811,7 @@ feature -- AST nodes
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
+				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
@@ -1883,8 +1887,8 @@ feature -- AST nodes
 		end
 
 	new_external_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
-		a_type: ET_DECLARED_TYPE; an_is: ET_KEYWORD; an_obsolete: ET_OBSOLETE;
-		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
+		a_type: ET_DECLARED_TYPE; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
+		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
 		an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
 		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_FUNCTION is
@@ -1893,6 +1897,7 @@ feature -- AST nodes
 			if a_name /= Void and a_type /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
 					a_language, an_alias, a_postconditions, a_clients, a_class)
+				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
@@ -1915,9 +1920,9 @@ feature -- AST nodes
 		end
 
 	new_external_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
-		an_is: ET_KEYWORD; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
-		a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
-		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
+		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
+		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
+		an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
 		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_PROCEDURE is
 			-- New external procedure
@@ -1925,6 +1930,7 @@ feature -- AST nodes
 			if a_name /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, an_obsolete, a_preconditions,
 					a_language, an_alias, a_postconditions, a_clients, a_class)
+				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
@@ -2520,7 +2526,7 @@ feature -- AST nodes
 		end
 
 	new_once_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
-		a_type: ET_DECLARED_TYPE; an_is: ET_KEYWORD; an_obsolete: ET_OBSOLETE;
+		a_type: ET_DECLARED_TYPE; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
 		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD;
 		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
@@ -2530,6 +2536,7 @@ feature -- AST nodes
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
+				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
@@ -2553,7 +2560,7 @@ feature -- AST nodes
 		end
 
 	new_once_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
-		an_is: ET_KEYWORD; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
+		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
 		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
 		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
@@ -2563,6 +2570,7 @@ feature -- AST nodes
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
+				Result.set_first_indexing (a_first_indexing)
 				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end

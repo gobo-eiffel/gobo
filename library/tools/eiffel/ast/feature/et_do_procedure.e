@@ -31,6 +31,7 @@ feature -- Duplication
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
+			Result.set_first_indexing (first_indexing)
 			Result.set_synonym (Current)
 		end
 
@@ -50,6 +51,7 @@ feature -- Conversion
 			Result.set_frozen_keyword (frozen_keyword)
 			Result.set_semicolon (semicolon)
 			Result.set_feature_clause (feature_clause)
+			Result.set_first_indexing (first_indexing)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 			Result.set_cat_keyword (cat_keyword)

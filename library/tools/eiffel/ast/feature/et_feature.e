@@ -69,6 +69,9 @@ feature -- Access
 		do
 		end
 
+	first_indexing: ET_INDEXING_LIST
+			-- Indexing clause at the beginning of the feature
+
 	id: INTEGER
 			-- Feature ID
 
@@ -391,6 +394,14 @@ feature -- Setting
 			feature_clause := a_feature_clause
 		ensure
 			feature_clause_set: feature_clause = a_feature_clause
+		end
+
+	set_first_indexing (an_indexing: like first_indexing) is
+			-- Set `first_indexing' to `an_indexing'
+		do
+			first_indexing := an_indexing
+		ensure
+			first_indexing_set: first_indexing = an_indexing
 		end
 
 	set_version (a_version: INTEGER) is
