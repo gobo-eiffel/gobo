@@ -126,6 +126,22 @@ creation
 	make_vmss1a,
 	make_vmss2a,
 	make_vmss3a,
+	make_vpca1a,
+	make_vpca1b,
+	make_vpca2a,
+	make_vpca2b,
+	make_vpca3a,
+	make_vpca3b,
+	make_vpca3c,
+	make_vpca3d,
+	make_vpca4a,
+	make_vpca4b,
+	make_vpca4c,
+	make_vpca4d,
+	make_vpca5a,
+	make_vpca5b,
+	make_vpca5c,
+	make_vpca5d,
 	make_vqmc1a,
 	make_vqmc1b,
 	make_vqmc2a,
@@ -4867,6 +4883,822 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
+	make_vpca1a (a_class: like current_class; a_name: ET_FEATURE_NAME) is
+			-- Create a new VPCA-1 error: `a_name', appearing in an unqualified
+			-- call agent in `a_class', is not the final name of a feature
+			-- in `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+			--
+			-- Note: ISE Eiffel 5.4 reports this error as a VEEN.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+		do
+			code := vpca1a_template_code
+			etl_code := vpca1_etl_code
+			default_template := vpca1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call agent
+		end
+
+	make_vpca1b (a_class: like current_class; a_name: ET_FEATURE_NAME; a_target: ET_CLASS) is
+			-- Create a new VPCA-1 error: `a_name', appearing in a qualified
+			-- call agent in `a_class', is not the final name of a feature
+			-- in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+			--
+			-- Note: ISE Eiffel 5.4 reports this error as a VEEN.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vpca1b_template_code
+			etl_code := vpca1_etl_code
+			default_template := vpca1b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_target.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call agent
+			-- dollar7: $7 = base class of target of the call agent
+		end
+
+	make_vpca2a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VPCA-2 error: `a_feature' of class `a_target',
+			-- is not exported to `a_class' where the qualified call 
+			-- agent `a_name' appears.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vpca2a_template_code
+			etl_code := vpca2_etl_code
+			default_template := vpca2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call agent
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of target of the call agent
+		end
+
+	make_vpca2b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VPCA-2 error: `a_feature' of class `a_target'
+			-- is not exported to `a_class', one of the descendants
+			-- of `a_class_impl' where the qualified call agent
+			-- `a_name' appears.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vpca2b_template_code
+			etl_code := vpca2_etl_code
+			default_template := vpca2b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call agent
+			-- dollar8: $8 = name of corresponding feature in class $9
+			-- dollar9: $9 = base class of target of the call agent
+		end
+
+	make_vpca3a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VPCA-3 error: the number of actual arguments in
+			-- the qualified call agent `a_name' appearing in `a_class' is not the
+			-- same as the number of formal arguments of `a_feature' in
+			-- class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vpca3a_template_code
+			etl_code := vpca3_etl_code
+			default_template := vpca3a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call agent
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of target of the call agent
+		end
+
+	make_vpca3b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+			-- Create a new VPCA-3 error: the number of actual arguments in
+			-- the qualified call agent `a_name' appearing in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' is not the same as the number
+			-- of formal arguments of `a_feature' in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+		do
+			code := vpca3b_template_code
+			etl_code := vpca3_etl_code
+			default_template := vpca3b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call agent
+			-- dollar8: $8 = name of corresponding feature in class $9
+			-- dollar9: $9 = base class of target of the call agent
+		end
+
+	make_vpca3c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Create a new VPCA-3 error: the number of actual arguments in
+			-- the unqualified call agent `a_name' appearing in `a_class' is not the
+			-- same as the number of formal arguments of `a_feature' in `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := vpca3c_template_code
+			etl_code := vpca3_etl_code
+			default_template := vpca3c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call agent
+			-- dollar7: $7 = name of corresponding feature in class $5
+		end
+
+	make_vpca3d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Create a new VPCA-3 error: the number of actual arguments in
+			-- the unqualified call agent `a_name' appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' is not the same as
+			-- the number of formal arguments of `a_feature' in `a_class_impl'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := vpca3d_template_code
+			etl_code := vpca3_etl_code
+			default_template := vpca3d_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call agent
+			-- dollar8: $8 = name of corresponding feature in class $6
+		end
+
+	make_vpca4a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Create a new VPCA-4 error: the `arg'-th actual argument in the qualified
+			-- call agent `a_name' appearing in `a_class' does not conform to the corresponding
+			-- formal argument of `a_feature' in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		do
+			code := vpca4a_template_code
+			etl_code := vpca4_etl_code
+			default_template := vpca4a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target.name.name, 8)
+			parameters.put (arg.out, 9)
+			parameters.put (an_actual.to_text, 10)
+			parameters.put (a_formal.to_text, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call agent
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of target of the call agent
+			-- dollar9: $9 = argument index
+			-- dollar10: $10 = actual type
+			-- dollar11: $11 = formal type
+		end
+
+	make_vpca4b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Create a new VPCA-4 error: the `arg'-th actual argument in the qualified
+			-- call agent `a_name' appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class' does not conform to the corresponding formal
+			-- argument of `a_feature' in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		do
+			code := vpca4b_template_code
+			etl_code := vpca4_etl_code
+			default_template := vpca4b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 12)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target.name.name, 9)
+			parameters.put (arg.out, 10)
+			parameters.put (an_actual.to_text, 11)
+			parameters.put (a_formal.to_text, 12)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call agent
+			-- dollar8: $8 = name of corresponding feature in class $9
+			-- dollar9: $9 = base class of target of the call agent
+			-- dollar10: $10 = argument index
+			-- dollar11: $11 = actual type
+			-- dollar12: $12 = formal type
+		end
+
+	make_vpca4c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Create a new VPCA-4 error: the `arg'-th actual argument in the unqualified
+			-- call agent `a_name' appearing in `a_class' does not conform to the corresponding
+			-- formal argument of `a_feature' in `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		do
+			code := vpca4c_template_code
+			etl_code := vpca4_etl_code
+			default_template := vpca4c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (arg.out, 8)
+			parameters.put (an_actual.to_text, 9)
+			parameters.put (a_formal.to_text, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call agent
+			-- dollar7: $7 = name of corresponding feature in class $5
+			-- dollar8: $8 = argument index
+			-- dollar9: $9 = actual type
+			-- dollar10: $10 = formal type
+		end
+
+	make_vpca4d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
+		a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Create a new VPCA-4 error: the `arg'-th actual argument in the unqualified
+			-- call agent `a_name' appearing in `a_class_impl' and viewed from one of its
+			-- descendants `a_class' does not conform to the corresponding formal
+			-- argument of `a_feature' in `a_class_impl'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		do
+			code := vpca4d_template_code
+			etl_code := vpca4_etl_code
+			default_template := vpca4d_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (arg.out, 9)
+			parameters.put (an_actual.to_text, 10)
+			parameters.put (a_formal.to_text, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call agent
+			-- dollar8: $8 = name of corresponding feature in class $6
+			-- dollar9: $9 = argument index
+			-- dollar10: $10 = actual type
+			-- dollar11: $11 = formal type
+		end
+
+	make_vpca5a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Create a new VPCA-5 error: the type specified for the `arg'-th
+			-- actual argument in the qualified call agent `a_name' appearing
+			-- in `a_class' does not conform to the corresponding formal argument
+			-- of `a_feature' in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		do
+			code := vpca5a_template_code
+			etl_code := vpca5_etl_code
+			default_template := vpca5a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (a_target.name.name, 8)
+			parameters.put (arg.out, 9)
+			parameters.put (an_actual.to_text, 10)
+			parameters.put (a_formal.to_text, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call agent
+			-- dollar7: $7 = name of corresponding feature in class $8
+			-- dollar8: $8 = base class of target of the call agent
+			-- dollar9: $9 = argument index
+			-- dollar10: $10 = actual type
+			-- dollar11: $11 = formal type
+		end
+
+	make_vpca5b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Create a new VPCA-5 error: the type specified for the `arg'-th actual
+			-- argument in the qualified call agent `a_name' appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' does not conform to
+			-- the corresponding formal argument of `a_feature' in class `a_target'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_target_not_void: a_target /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		do
+			code := vpca5b_template_code
+			etl_code := vpca5_etl_code
+			default_template := vpca5b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 12)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (a_target.name.name, 9)
+			parameters.put (arg.out, 10)
+			parameters.put (an_actual.to_text, 11)
+			parameters.put (a_formal.to_text, 12)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call agent
+			-- dollar8: $8 = name of corresponding feature in class $9
+			-- dollar9: $9 = base class of target of the call agent
+			-- dollar10: $10 = argument index
+			-- dollar11: $11 = actual type
+			-- dollar12: $12 = formal type
+		end
+
+	make_vpca5c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+		arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Create a new VPCA-5 error: the type specified for the `arg'-th actual
+			-- argument in the unqualified call agent `a_name' appearing in `a_class'
+			-- does not conform to the corresponding formal argument of `a_feature'
+			-- in `a_class'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		do
+			code := vpca5c_template_code
+			etl_code := vpca5_etl_code
+			default_template := vpca5c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			parameters.put (arg.out, 8)
+			parameters.put (an_actual.to_text, 9)
+			parameters.put (a_formal.to_text, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name of the call agent
+			-- dollar7: $7 = name of corresponding feature in class $5
+			-- dollar8: $8 = argument index
+			-- dollar9: $9 = actual type
+			-- dollar10: $10 = formal type
+		end
+
+	make_vpca5d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
+		a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
+			-- Create a new VPCA-5 error: the type specified for the `arg'-th actual
+			-- argument in the unqualified call agent `a_name' appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' does not conform to
+			-- the corresponding formal argument of `a_feature' in `a_class_impl'.
+			--
+			-- ETL3 (4.82-00-00): p.581
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			an_actual_not_void: an_actual /= Void
+			an_actual_named_type: an_actual.is_named_type
+			a_formal_not_void: a_formal /= Void
+			a_formal_named_type: a_formal.is_named_type
+		do
+			code := vpca5d_template_code
+			etl_code := vpca5_etl_code
+			default_template := vpca5d_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			create parameters.make (1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_name.name, 7)
+			parameters.put (a_feature.name.name, 8)
+			parameters.put (arg.out, 9)
+			parameters.put (an_actual.to_text, 10)
+			parameters.put (a_formal.to_text, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call agent
+			-- dollar8: $8 = name of corresponding feature in class $6
+			-- dollar9: $9 = argument index
+			-- dollar10: $10 = actual type
+			-- dollar11: $11 = formal type
+		end
+
 	make_vqmc1a (a_class: like current_class; an_attribute: ET_CONSTANT_ATTRIBUTE) is
 			-- Create a new VQMC-1 error: `an_attribute' introduces a boolean constant
 			-- but its type is not "BOOLEAN".
@@ -7965,6 +8797,22 @@ feature {NONE} -- Implementation
 	vmss1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
 	vmss2a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Select subclause of parent $7."
 	vmss3a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears in the Select subclause of parent $7 but is not replicated."
+	vpca1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in class $5."
+	vpca1b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in class $7."
+	vpca2a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$7' of class $8 is not exported to class $5."
+	vpca2b_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$8' of class $9 is not exported to class $5."
+	vpca3a_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7' in class $8."
+	vpca3b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$8' in class $9."
+	vpca3c_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7'."
+	vpca3d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$8'."
+	vpca4a_default_template: STRING is "[$1] class $5 ($3,$4): the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$7' in class $8."
+	vpca4b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $10-th actual argument (of type '$11') does not conform to the corresponding formal argument (of type '$12') of feature `$8' in class $9."
+	vpca4c_default_template: STRING is "[$1] class $5 ($3,$4): the $8-th actual argument (of type '$9') does not conform to the corresponding formal argument (of type '$10') of feature `$7'."
+	vpca4d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$8'."
+	vpca5a_default_template: STRING is "[$1] class $5 ($3,$4): the type '$10' specified for the $9-th actual argument of Call_agent does not conform to the corresponding formal argument (of type '$11') of feature `$7' in class $8."
+	vpca5b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the type '$11' specified for the $10-th actual argument of Call_agent does not conform to the corresponding formal argument (of type '$12') of feature `$8' in class $9."
+	vpca5c_default_template: STRING is "[$1] class $5 ($3,$4): the type '$9' specified for the $8-th actual argument of Call_agent does not conform to the corresponding formal argument (of type '$10') of feature `$7'."
+	vpca5d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the type '$10' specified for the $9-th actual argument of Call_agent does not conform to the corresponding formal argument (of type '$11') of feature `$8'."
 	vqmc1a_default_template: STRING is "[$1] class $5 ($3,$4): boolean constant attribute `$6' is not declared of type BOOLEAN."
 	vqmc1b_default_template: STRING is "[$1] class $5 ($6,$3,$4): boolean constant attribute `$7' is not declared of type BOOLEAN."
 	vqmc2a_default_template: STRING is "[$1] class $5 ($3,$4): character constant attribute `$6' is not declared of type CHARACTER."
@@ -8082,6 +8930,11 @@ feature {NONE} -- Implementation
 	vmss1_etl_code: STRING is "VMSS-1"
 	vmss2_etl_code: STRING is "VMSS-2"
 	vmss3_etl_code: STRING is "VMSS-3"
+	vpca1_etl_code: STRING is "VPCA-1"
+	vpca2_etl_code: STRING is "VPCA-2"
+	vpca3_etl_code: STRING is "VPCA-3"
+	vpca4_etl_code: STRING is "VPCA-4"
+	vpca5_etl_code: STRING is "VPCA-5"
 	vqmc1_etl_code: STRING is "VQMC-1"
 	vqmc2_etl_code: STRING is "VQMC-2"
 	vqmc3_etl_code: STRING is "VQMC-3"
@@ -8225,6 +9078,22 @@ feature {NONE} -- Implementation
 	vmss1a_template_code: STRING is "vmss1a"
 	vmss2a_template_code: STRING is "vmss2a"
 	vmss3a_template_code: STRING is "vmss3a"
+	vpca1a_template_code: STRING is "vpca1a"
+	vpca1b_template_code: STRING is "vpca1b"
+	vpca2a_template_code: STRING is "vpca2a"
+	vpca2b_template_code: STRING is "vpca2b"
+	vpca3a_template_code: STRING is "vpca3a"
+	vpca3b_template_code: STRING is "vpca3b"
+	vpca3c_template_code: STRING is "vpca3c"
+	vpca3d_template_code: STRING is "vpca3d"
+	vpca4a_template_code: STRING is "vpca4a"
+	vpca4b_template_code: STRING is "vpca4b"
+	vpca4c_template_code: STRING is "vpca4c"
+	vpca4d_template_code: STRING is "vpca4d"
+	vpca5a_template_code: STRING is "vpca5a"
+	vpca5b_template_code: STRING is "vpca5b"
+	vpca5c_template_code: STRING is "vpca5c"
+	vpca5d_template_code: STRING is "vpca5d"
 	vqmc1a_template_code: STRING is "vqmc1a"
 	vqmc1b_template_code: STRING is "vqmc1b"
 	vqmc2a_template_code: STRING is "vqmc2a"

@@ -20,6 +20,9 @@ inherit
 		end
 
 	ET_OPERATOR
+		undefine
+			is_semicolon
+		end
 
 creation
 

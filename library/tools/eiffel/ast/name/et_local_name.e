@@ -14,7 +14,7 @@ deferred class ET_LOCAL_NAME
 
 inherit
 
-	ET_AST_NODE
+	ET_EXPRESSION
 
 feature -- Access
 

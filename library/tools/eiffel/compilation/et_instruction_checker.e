@@ -24,6 +24,7 @@ inherit
 			process_check_instruction,
 			process_create_instruction,
 			process_debug_instruction,
+			process_identifier,
 			process_if_instruction,
 			process_inspect_instruction,
 			process_loop_instruction,
@@ -809,6 +810,15 @@ feature {ET_AST_NODE} -- Processing
 			if internal_call then
 				internal_call := False
 				check_debug_instruction_validity (an_instruction)
+			end
+		end
+
+	process_identifier (a_identifier: ET_IDENTIFIER) is
+			-- Process `a_identifier'.
+		do
+			if internal_call then
+				internal_call := False
+				check_unqualified_call_validity (a_identifier, Void, Void)
 			end
 		end
 

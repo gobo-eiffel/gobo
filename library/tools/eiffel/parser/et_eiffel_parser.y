@@ -98,7 +98,7 @@ creation
 %type <ET_AGENT_TARGET> Agent_target
 %type <ET_BOOLEAN_CONSTANT> Boolean_constant
 %type <ET_CALL_AGENT> Call_agent Tilde_call_agent
-%type <ET_CALL_EXPRESSION> Call_expression
+%type <ET_CALL_EXPRESSION> Qualified_call_expression
 %type <ET_CHARACTER_CONSTANT> Character_constant
 %type <ET_CHOICE> Choice
 %type <ET_CHOICE_CONSTANT> Choice_constant
@@ -126,7 +126,7 @@ creation
 %type <ET_EXPORT> New_export_item
 %type <ET_EXPORT_LIST> New_exports New_exports_opt New_export_list
 %type <ET_EXPRESSION> Expression Call_chain Precursor_expression
-%type <ET_EXPRESSION> Address_mark Create_expression
+%type <ET_EXPRESSION> Address_mark Create_expression Call_expression
 %type <ET_EXPRESSION_ITEM> Expression_comma
 %type <ET_EXTERNAL_ALIAS> External_name_opt
 %type <ET_FEATURE> Feature_declaration Single_feature_declaration
@@ -1672,7 +1672,7 @@ Feature_name: Identifier
 ------------------------------------------------------------------------------------
 
 Formal_arguments: '(' ')'
-		{ $$ := ast_factory.new_formal_arguments ($1, $2, 0) }
+		{ $$ := new_formal_arguments ($1, $2, 0) }
 	| '('
 		{
 			add_symbol ($1)
@@ -1688,14 +1688,14 @@ Formal_arguments: '(' ')'
 
 Formal_argument_list: Formal_argument ')'
 		{
-			$$ := ast_factory.new_formal_arguments (last_symbol, $2, counter_value)
+			$$ := new_formal_arguments (last_symbol, $2, counter_value)
 			if $$ /= Void and $1 /= Void then
 				$$.put_first ($1)
 			end
 		}
 	| Formal_argument_semicolon ')'
 		{
-			$$ := ast_factory.new_formal_arguments (last_symbol, $2, counter_value)
+			$$ := new_formal_arguments (last_symbol, $2, counter_value)
 			if $$ /= Void and $1 /= Void then
 				$$.put_first ($1)
 			end
@@ -1778,7 +1778,7 @@ Formal_argument_semicolon: Identifier ':' Type  ';'
 Local_declarations_opt: -- Empty
 		-- { $$ := Void }
 	| E_LOCAL
-		{ $$ := ast_factory.new_local_variables ($1, 0) }
+		{ $$ := new_local_variables ($1, 0) }
 	| E_LOCAL
 		{
 			add_keyword ($1)
@@ -1794,14 +1794,14 @@ Local_declarations_opt: -- Empty
 
 Local_variable_list: Local_variable
 		{
-			$$ := ast_factory.new_local_variables (last_keyword, counter_value)
+			$$ := new_local_variables (last_keyword, counter_value)
 			if $1 /= Void then
 				$$.put_first ($1)
 			end
 		}
 	| Local_variable_semicolon
 		{
-			$$ := ast_factory.new_local_variables (last_keyword, counter_value)
+			$$ := new_local_variables (last_keyword, counter_value)
 			if $1 /= Void then
 				$$.put_first ($1)
 			end
@@ -2356,9 +2356,11 @@ Choice_constant: Integer_constant
 		{ $$ := $1 }
 	| Character_constant
 		{ $$ := $1 }
-	| Call_expression
+	| Qualified_call_expression
 		-- For Visual Eiffel and TowerEiffel (not standard Eiffel,
-		-- should be 'Identifier' instead of 'Call_expression'):
+		-- should be 'Identifier' instead of '[Qualified_]Call_expression'):
+		{ $$ := $1 }
+	| Identifier
 		{ $$ := $1 }
 	| Static_call_expression
 		{ $$ := $1 }
@@ -2424,7 +2426,7 @@ Manifest_string_comma: Manifest_string ','
 ------------------------------------------------------------------------------------
 
 Call_instruction: Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_instruction (Void, $1, $2) }
+		{ $$ := new_unqualified_call_instruction ($1, $2) }
 	| Call_chain '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_call_instruction ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	| E_PRECURSOR Actuals_opt
@@ -2442,8 +2444,12 @@ Qualified_precursor_instruction: E_PRECURSOR '{' Class_name '}' Actuals_opt
 	;
 
 Call_expression: Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_expression (Void, $1, $2) }
-	| Call_chain '.' Identifier Actuals_opt
+		{ $$ := new_unqualified_call_expression ($1, $2) }
+	| Qualified_call_expression
+		{ $$ := $1 }
+	;
+
+Qualified_call_expression: Call_chain '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 
@@ -2464,7 +2470,7 @@ Qualified_precursor_expression: E_PRECURSOR '{' Class_name '}' Actuals_opt
 	;
 
 Call_chain: Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_expression (Void, $1, $2) }
+		{ $$ := new_unqualified_call_expression ($1, $2) }
 	| E_RESULT
 		{ $$ := $1 }
 	| E_CURRENT
@@ -2840,7 +2846,7 @@ Call_agent: E_AGENT Feature_name Agent_actuals_opt
 Tilde_call_agent: '~' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($1, Void, $2, $3) }
 	| Identifier '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
+		{ $$ := ast_factory.new_call_agent ($2, new_agent_identifier_target ($1), $3, $4) }
 	| Parenthesized_expression '~' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
 	| E_RESULT '~' Feature_name Agent_actuals_opt
@@ -2868,7 +2874,7 @@ Tilde_call_agent: '~' Feature_name Agent_actuals_opt
 	;
 
 Agent_target: Identifier
-		{ $$ := $1 }
+		{ $$ := new_agent_identifier_target ($1) }
 	| Parenthesized_expression
 		{ $$ := $1 }
 	| E_RESULT

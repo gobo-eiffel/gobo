@@ -91,6 +91,8 @@ feature -- Initialization
 			last_clients := Void
 			last_export_clients := Void
 			last_feature_clause := Void
+			last_local_variables := Void
+			last_formal_arguments := Void
 			cluster := Void
 		end
 
@@ -157,6 +159,10 @@ feature {NONE} -- Basic operations
 				features.force_last (a_feature)
 				features.finish
 			end
+				-- Reset local variables and formal arguments
+				-- before reading the next feature.
+			last_local_variables := Void
+			last_formal_arguments := Void
 		end
 
 	register_synonym (a_feature: ET_FEATURE) is
@@ -542,6 +548,30 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_agent_identifier_target (an_identifier: ET_IDENTIFIER): ET_IDENTIFIER is
+			-- New agent identifier target
+		local
+			a_seed: INTEGER
+		do
+			if an_identifier /= Void then
+				Result := an_identifier
+				if last_formal_arguments /= Void then
+					a_seed := last_formal_arguments.index_of (an_identifier)
+					if a_seed /= 0 then
+						an_identifier.set_seed (a_seed)
+						an_identifier.set_argument (True)
+					end
+				end
+				if a_seed = 0 and then last_local_variables /= Void then
+					a_seed := last_local_variables.index_of (an_identifier)
+					if a_seed /= 0 then
+						an_identifier.set_seed (a_seed)
+						an_identifier.set_local (True)
+					end
+				end
+			end
+		end
+
 	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT): ET_BIT_N is
 			-- New 'BIT N' type
 		do
@@ -626,6 +656,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_formal_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_ARGUMENT_LIST is
+			-- New formal argument list with given capacity
+		require
+			nb_positive: nb >= 0
+		do
+			Result := ast_factory.new_formal_arguments (a_left, a_right, nb)
+			last_formal_arguments := Result
+		end
+
 	new_formal_parameter (a_name: ET_IDENTIFIER): ET_FORMAL_PARAMETER is
 			-- New formal generic parameter
 		do
@@ -686,6 +725,15 @@ feature {NONE} -- AST factory
 				end
 				assertions.wipe_out
 			end
+		end
+
+	new_local_variables (a_local: ET_KEYWORD; nb: INTEGER): ET_LOCAL_VARIABLE_LIST is
+			-- New local variable list with given capacity
+		require
+			nb_positive: nb >= 0
+		do
+			Result := ast_factory.new_local_variables (a_local, nb)
+			last_local_variables := Result
 		end
 
 	new_named_type (a_type_mark: ET_KEYWORD; a_name: ET_IDENTIFIER; a_generics: ET_ACTUAL_PARAMETER_LIST): ET_TYPE is
@@ -815,8 +863,41 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_tuple_type (a_name, a_parameters)
 		end
 
+	new_unqualified_call_expression (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_EXPRESSION is
+			-- New unqualified call expression
+		local
+			a_seed: INTEGER
+		do
+			if args /= Void then
+				Result := ast_factory.new_call_expression (Void, a_name, args)
+			elseif a_name /= Void then
+				Result := a_name
+				if last_formal_arguments /= Void then
+					a_seed := last_formal_arguments.index_of (a_name)
+					if a_seed /= 0 then
+						a_name.set_seed (a_seed)
+						a_name.set_argument (True)
+					end
+				end
+				if a_seed = 0 and then last_local_variables /= Void then
+					a_seed := last_local_variables.index_of (a_name)
+					if a_seed /= 0 then
+						a_name.set_seed (a_seed)
+						a_name.set_local (True)
+					end
+				end
+			end
+		end
 
-
+	new_unqualified_call_instruction (a_name: ET_IDENTIFIER; args: ET_ACTUAL_ARGUMENT_LIST): ET_INSTRUCTION is
+			-- New unqualified call instruction
+		do
+			if args /= Void then
+				Result := ast_factory.new_call_instruction (Void, a_name, args)
+			else
+				Result := a_name
+			end
+		end
 
 
 
@@ -913,6 +994,12 @@ feature {NONE} -- Access
 
 	last_class: ET_CLASS
 			-- Class being parsed
+
+	last_local_variables: ET_LOCAL_VARIABLE_LIST
+			-- Last local variable clause read
+
+	last_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			-- Last formal argument clause read
 
 feature {NONE} -- Last keyword
 
