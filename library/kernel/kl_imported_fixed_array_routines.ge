@@ -25,6 +25,14 @@ feature -- Access
 			fixed_any_array_routines_not_void: Result /= Void
 		end
 
+	FIXED_BOOLEAN_ARRAY_: KL_FIXED_ARRAY_ROUTINES [BOOLEAN] is
+			-- Routines that ought to be in class FIXED_ARRAY
+		once
+			!! Result
+		ensure
+			fixed_boolean_array_routines_not_void: Result /= Void
+		end
+
 	FIXED_INTEGER_ARRAY_: KL_FIXED_ARRAY_ROUTINES [INTEGER] is
 			-- Routines that ought to be in class FIXED_ARRAY
 		once
@@ -45,12 +53,21 @@ feature -- Type anchors
 
 #ifdef ISE
 	FIXED_ANY_ARRAY_TYPE: SPECIAL [ANY] is do end
+	FIXED_BOOLEAN_ARRAY_TYPE: SPECIAL [BOOLEAN] is do end
 	FIXED_INTEGER_ARRAY_TYPE: SPECIAL [INTEGER] is do end
 	FIXED_STRING_ARRAY_TYPE: SPECIAL [STRING] is do end
 #else
+#ifdef SE
+	FIXED_ANY_ARRAY_TYPE: FIXED_ARRAY [ANY] is do end
+	FIXED_BOOLEAN_ARRAY_TYPE: FIXED_ARRAY [BOOLEAN] is do end
+	FIXED_INTEGER_ARRAY_TYPE: FIXED_ARRAY [INTEGER] is do end
+	FIXED_STRING_ARRAY_TYPE: FIXED_ARRAY [STRING] is do end
+#else
 	FIXED_ANY_ARRAY_TYPE: ARRAY [ANY] is do end
+	FIXED_BOOLEAN_ARRAY_TYPE: ARRAY [BOOLEAN] is do end
 	FIXED_INTEGER_ARRAY_TYPE: ARRAY [INTEGER] is do end
 	FIXED_STRING_ARRAY_TYPE: ARRAY [STRING] is do end
+#endif
 #endif
 			-- Type anchors
 
