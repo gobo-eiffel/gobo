@@ -265,50 +265,7 @@ feature -- Processing
 		do
 			file.put_character ('%'')
 			file.put_character ('%%')
-			inspect a_constant.value
-			when '%A' then
-				file.put_character ('A')
-			when '%B' then
-				file.put_character ('B')
-			when '%C' then
-				file.put_character ('C')
-			when '%D' then
-				file.put_character ('D')
-			when '%F' then
-				file.put_character ('F')
-			when '%H' then
-				file.put_character ('H')
-			when '%L' then
-				file.put_character ('L')
-			when '%N' then
-				file.put_character ('N')
-			when '%Q' then
-				file.put_character ('Q')
-			when '%R' then
-				file.put_character ('R')
-			when '%S' then
-				file.put_character ('S')
-			when '%T' then
-				file.put_character ('T')
-			when '%U' then
-				file.put_character ('U')
-			when '%V' then
-				file.put_character ('V')
-			when '%%' then
-				file.put_character ('%%')
-			when '%'' then
-				file.put_character ('%'')
-			when '%"' then
-				file.put_character ('%"')
-			when '%(' then
-				file.put_character ('(')
-			when '%)' then
-				file.put_character (')')
-			when '%<' then
-				file.put_character ('<')
-			when '%>' then
-				file.put_character ('>')
-			end
+			file.put_character (a_constant.literal)
 			file.put_character ('%'')
 			process_break (a_constant.break)
 		end
