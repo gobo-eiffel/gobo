@@ -139,7 +139,7 @@ feature -- Access
 		end
 
 	duration (other: like Current): DT_DATE_DURATION is
-			-- Duration between `other' and current date
+			-- Duration between `other' and `Current'
 		do
 			Result := date_duration (other)
 		ensure then
@@ -147,7 +147,7 @@ feature -- Access
 		end
 
 	canonical_duration (other: like Current): like duration is
-			-- Canonical duration between `other' and current date
+			-- Canonical duration between `other' and `Current'
 		require
 			other_not_void: other /= Void
 		do
@@ -159,7 +159,7 @@ feature -- Access
 		end
 
 	date_duration (other: like Current): DT_DATE_DURATION is
-			-- Duration between `other' and current date
+			-- Duration between `other' and `Current'
 		require
 			other_not_void: other /= Void
 		do
@@ -203,7 +203,7 @@ feature -- Access
 		end
 
 	infix "&@" (a_duration: like date_duration): like Current is
-			-- Addition of `a_duration' to current date
+			-- Addition of `a_duration' to `Current'
 			-- (Create a new object at each call.)
 		require
 			a_duration_not_void: a_duration /= Void
@@ -355,7 +355,7 @@ feature -- Setting
 feature -- Element change
 
 	add_duration (a_duration: like duration) is
-			-- Add `a_duration' to current date.
+			-- Add `a_duration' to `Current'.
 			-- (Add `a_duration.year' and `a_duration.month' first, then
 			-- set `day' to `day.min (days_in_month (new_month, new_year))'
 			-- and finally add `a_duration.day'.)
@@ -364,7 +364,7 @@ feature -- Element change
 		end
 
 	add_date_duration (a_duration: like date_duration) is
-			-- Add `a_duration' to current date.
+			-- Add `a_duration' to `Current'.
 			-- (Add `a_duration.year' and `a_duration.month' first, then
 			-- set `day' to `day.min (days_in_month (new_month, new_year))'
 			-- and finally add `a_duration.day'.)
@@ -375,7 +375,7 @@ feature -- Element change
 		end
 
 	add_years_months_days (y, m, d: INTEGER) is
-			-- Add `y' years, `m' months and `d' days to current date.
+			-- Add `y' years, `m' months and `d' days to `Current'.
 			-- (Add `y' and `m' first, then set `day' to
 			-- `day.min (days_in_month (new_month, new_year))'
 			-- and finally add `d'.)
@@ -418,7 +418,7 @@ feature -- Element change
 		end
 
 	add_years (y: INTEGER) is
-			-- Add `y' years to current date.
+			-- Add `y' years to `Current'.
 		local
 			yy, mm, dd: INTEGER
 			dim: INTEGER
@@ -438,7 +438,7 @@ feature -- Element change
 		end
 
 	add_months (m: INTEGER) is
-			-- Add `m' months to current date.
+			-- Add `m' months to `Current'.
 		local
 			yy, mm, dd: INTEGER
 			dim: INTEGER
@@ -465,7 +465,7 @@ feature -- Element change
 		end
 
 	add_days (d: INTEGER) is
-			-- Add `d' days to current date.
+			-- Add `d' days to `Current'.
 		local
 			yy, mm, dd: INTEGER
 			new_day: INTEGER
@@ -486,7 +486,7 @@ feature -- Element change
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
-			-- Is current date before `other' on the time axis?
+			-- Is `Current' before `other' on the time axis?
 		do
 			Result := storage < other.storage
 		end
@@ -518,7 +518,7 @@ feature -- Output
 feature {DT_DATE_HANDLER} -- Implementation
 
 	storage: INTEGER
-			-- Compact version of current date
+			-- Compact version of `Current'
 			-- (INTEGER should have at least 32 bits.)
 
 	set_storage (a_storage: INTEGER) is
@@ -532,7 +532,7 @@ feature {DT_DATE_HANDLER} -- Implementation
 feature {NONE} -- Implementation
 
 	set_from_epoch_days (d: INTEGER) is
-			-- Set current date from number of
+			-- Set `Current' from number of
 			-- days `d' since epoch (1 Jan 1970).
 		local
 			yy, mm, dd: INTEGER

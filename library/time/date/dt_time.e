@@ -174,13 +174,13 @@ feature -- Access
 		end
 
 	duration (other: like Current): DT_TIME_DURATION is
-			-- Duration between `other' and current time
+			-- Duration between `other' and `Current'
 		do
 			Result := time_duration (other)
 		end
 
 	canonical_duration (other: like Current): like duration is
-			-- Canonical duration between `other' and current time
+			-- Canonical duration between `other' and `Current'
 		require
 			other_not_void: other /= Void
 		do
@@ -195,7 +195,7 @@ feature -- Access
 		end
 
 	time_duration (other: like Current): DT_TIME_DURATION is
-			-- Duration between `other' and current time
+			-- Duration between `other' and `Current'
 		require
 			other_not_void: other /= Void
 		do
@@ -207,7 +207,7 @@ feature -- Access
 		end
 
 	infix "&|" (a_duration: like time_duration): like Current is
-			-- Addition of `a_duration' to current time
+			-- Addition of `a_duration' to `Current'
 			-- (Create a new object at each call.)
 		require
 			a_duration_not_void: a_duration /= Void
@@ -361,13 +361,13 @@ feature -- Setting
 feature -- Element change
 
 	add_duration (a_duration: like duration) is
-			-- Add `a_duration' to current time.
+			-- Add `a_duration' to `Current'.
 		do
 			add_time_duration (a_duration)
 		end
 
 	add_time_duration (a_duration: like time_duration) is
-			-- Add `a_duration' to current time.
+			-- Add `a_duration' to `Current'.
 		require
 			a_duration_not_void: a_duration /= Void
 		do
@@ -376,20 +376,20 @@ feature -- Element change
 
 	add_hours_minutes_seconds (h, m, s: INTEGER) is
 			-- Add `h' hours, `m' minutes and
-			-- `s' seconds to current time.
+			-- `s' seconds to `Current'.
 		do
 			add_seconds ((h * Minutes_in_hour + m) * Seconds_in_minute + s)
 		end
 
 	add_precise_hours_minutes_seconds (h, m, s, ms: INTEGER) is
 			-- Add `h' hours, `m' minutes, `s' seconds
-			-- and `ms' milliseconds to current time.
+			-- and `ms' milliseconds to `Current'.
 		do
 			add_milliseconds (((h * Minutes_in_hour + m) * Seconds_in_minute + s) * 1000 + ms)
 		end
 
 	add_hours (h: INTEGER) is
-			-- Add `h' hours to current time.
+			-- Add `h' hours to `Current'.
 		do
 			if h /= Void then
 				storage := storage + h * Hour_shift
@@ -402,7 +402,7 @@ feature -- Element change
 		end
 
 	add_minutes (m: INTEGER) is
-			-- Add `m' minutes to current time.
+			-- Add `m' minutes to `Current'.
 		do
 			if m /= 0 then
 				storage := storage + m * Minute_shift
@@ -415,7 +415,7 @@ feature -- Element change
 		end
 
 	add_seconds (s: INTEGER) is
-			-- Add `s' seconds to current time.
+			-- Add `s' seconds to `Current'.
 		do
 			if s /= Void then
 				storage := storage + s * Second_shift
@@ -428,7 +428,7 @@ feature -- Element change
 		end
 
 	add_milliseconds (ms: INTEGER) is
-			-- Add `ms' milliseconds to current time.
+			-- Add `ms' milliseconds to `Current'.
 		do
 			if ms /= 0 then
 				storage := storage + ms
@@ -443,7 +443,7 @@ feature -- Element change
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
-			-- Is current time before `other' on the time axis?
+			-- Is `Current' before `other' on the time axis?
 		do
 			Result := storage < other.storage
 		end
@@ -503,7 +503,7 @@ feature -- Output
 feature {DT_TIME_HANDLER} -- Implementation
 
 	storage: INTEGER
-			-- Compact version of current time
+			-- Compact version of `Current'
 			-- (INTEGER should have at least 32 bits.)
 
 	set_storage (a_storage: INTEGER) is

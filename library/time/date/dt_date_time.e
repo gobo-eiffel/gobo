@@ -216,7 +216,7 @@ feature -- Access
 		end
 
 	duration (other: like Current): DT_DATE_TIME_DURATION is
-			-- Duration between `other' and current date time
+			-- Duration between `other' and `Current'
 		do
 			create Result.make_precise (0, 0, day_count - other.day_count,
 				hour - other.hour, minute - other.minute,
@@ -235,7 +235,7 @@ feature -- Access
 feature -- Element change
 
 	add_duration (a_duration: like duration) is
-			-- Add `a_duration' to current date time.
+			-- Add `a_duration' to `Current'.
 			-- (Add `a_duration.year' and `a_duration.month' first, then
 			-- set `day' to `day.min (day_in_month (new_month, new_year))'
 			-- and finally add `a_duration.day', `a_duration.hour',
@@ -259,7 +259,7 @@ feature -- Element change
 		end
 
 	add_hours (h: INTEGER) is
-			-- Add `h' hours to current date time.
+			-- Add `h' hours to `Current'.
 		do
 			if h /= 0 then
 				time_storage := time_storage + h * Hour_shift
@@ -274,7 +274,7 @@ feature -- Element change
 		end
 
 	add_minutes (m: INTEGER) is
-			-- Add `m' minutes to current date time.
+			-- Add `m' minutes to `Current'.
 		do
 			if m /= 0 then
 				time_storage := time_storage + m * Minute_shift
@@ -289,7 +289,7 @@ feature -- Element change
 		end
 
 	add_seconds (s: INTEGER) is
-			-- Add `s' seconds to current date time.
+			-- Add `s' seconds to `Current'.
 		do
 			if s /= 0 then
 				time_storage := time_storage + s * Second_shift
@@ -304,7 +304,7 @@ feature -- Element change
 		end
 
 	add_milliseconds (ms: INTEGER) is
-			-- Add `ms' milliseconds to current date time.
+			-- Add `ms' milliseconds to `Current'.
 		do
 			if ms /= 0 then
 				time_storage := time_storage + ms
@@ -321,7 +321,7 @@ feature -- Element change
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
-			-- Is current date time before `other' on the time axis?
+			-- Is `Current' before `other' on the time axis?
 		do
 			Result := date_storage < other.date_storage or else
 				(date_storage = other.date_storage and then
