@@ -145,7 +145,7 @@ feature -- File handling
 			a_file_is_open_write: a_file.is_open_write
 		do
 			a_file.put_character ('%'')
-			put_quoted_eiffel_character (a_file, c)
+			put_eiffel_character (a_file, c)
 			a_file.put_character ('%'')
 		end
 
