@@ -20,8 +20,8 @@ To compile this example:
    and EIFFEL_TOKENS if necessary.
 3. Choose either `execute' or `benchmark' as the creation prodecure of
    the root class EIFFEL_PARSER in you Ace file (ISE Eiffel: ise*.ace,
-   Halstenbach: hact*.ace, TowerEiffel: tower*.ace), your ESD file
-   (Visual Eiffel: ve*.esd) or your command line (SmallEiffel: se*.bat).
+   Halstenbach: hact*.ace), your ESD file (Visual Eiffel: ve*.esd) or
+   your command line (SmallEiffel: se*.bat).
 4. Use your favorite Eiffel compiler to compile the Eiffel system.
    With SmallEiffel, you can just execute the script se*.bat (after
    possible modifications).
@@ -33,4 +33,6 @@ To compile this example:
    filenames containing Eiffel classes and `nb' is an integer.
 
 --
-Eric Bezault <ericb@gobo.demon.co.uk>
+Copyright (c) 1998, Eric Bezault
+mailto:ericb@gobo.demon.co.uk
+http://www.gobo.demon.co.uk
