@@ -157,6 +157,21 @@ feature -- Setting
 			error_handler_set: error_handler = a_handler
 		end
 
+feature -- Status report
+
+	is_null: BOOLEAN
+			-- Is current processor a null processor?
+
+feature -- Status setting
+
+	set_null (b: BOOLEAN) is
+			-- Set `is_null' to `b'.
+		do
+			is_null := b
+		ensure
+			null_set: is_null = b
+		end
+
 feature -- Parsing
 
 	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
@@ -169,19 +184,21 @@ feature -- Parsing
 			a_filename_not_void: a_filename /= Void
 			a_cluster_not_void: a_cluster /= Void
 		do
-			debug ("GELINT")
-				std.error.put_string ("Parsing file '")
-				std.error.put_string (a_filename)
-				std.error.put_line ("%'")
+			if not is_null then
+				debug ("GELINT")
+					std.error.put_string ("Parsing file '")
+					std.error.put_string (a_filename)
+					std.error.put_line ("%'")
+				end
+				filename := a_filename
+				time_stamp := a_time_stamp
+				cluster := a_cluster
+				input_buffer := Eiffel_buffer
+				Eiffel_buffer.set_file (a_file)
+				yy_load_input_buffer
+				yyparse
+				reset
 			end
-			filename := a_filename
-			time_stamp := a_time_stamp
-			cluster := a_cluster
-			input_buffer := Eiffel_buffer
-			Eiffel_buffer.set_file (a_file)
-			yy_load_input_buffer
-			yyparse
-			reset
 		rescue
 			reset
 		end
@@ -199,51 +216,53 @@ feature -- Parsing
 			s: STRING
 			l_subclusters: ET_CLUSTERS
 		do
-			debug ("GELINT")
-				std.error.put_string ("Parse cluster '")
-				std.error.put_string (a_cluster.full_pathname)
-				std.error.put_line ("%'")
-			end
-			if not a_cluster.is_abstract then
-				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
-				dir := tmp_directory
-				dir.reset (dir_name)
-				dir.open_read
-				if dir.is_open_read then
-					from dir.read_entry until dir.end_of_input loop
-						s := dir.last_entry
-						if a_cluster.is_valid_eiffel_filename (s) then
-							a_filename := file_system.pathname (dir_name, s)
-							a_file := tmp_file
-							a_file.reset (a_filename)
-							if eiffel_compiler.is_se then
-									-- KL_FILE.time_stamp is too slow with SE.
-								a_time_stamp := -1
-							else
-								a_time_stamp := a_file.time_stamp
-							end
-							a_file.open_read
-							if a_file.is_open_read then
-								parse_file (a_file, a_filename, a_time_stamp, a_cluster)
-								a_file.close
-							else
-								error_handler.report_gcaab_error (a_cluster, a_filename)
-							end
-						elseif a_cluster.is_recursive and then a_cluster.is_valid_directory_name (s) then
-							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
-								a_cluster.add_recursive_cluster (s)
-							end
-						end
-						dir.read_entry
-					end
-					dir.close
-				else
-					error_handler.report_gcaaa_error (a_cluster, dir_name)
+			if not is_null then
+				debug ("GELINT")
+					std.error.put_string ("Parse cluster '")
+					std.error.put_string (a_cluster.full_pathname)
+					std.error.put_line ("%'")
 				end
-			end
-			l_subclusters := a_cluster.subclusters
-			if l_subclusters /= Void then
-				parse_clusters (l_subclusters)
+				if not a_cluster.is_abstract then
+					dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
+					dir := tmp_directory
+					dir.reset (dir_name)
+					dir.open_read
+					if dir.is_open_read then
+						from dir.read_entry until dir.end_of_input loop
+							s := dir.last_entry
+							if a_cluster.is_valid_eiffel_filename (s) then
+								a_filename := file_system.pathname (dir_name, s)
+								a_file := tmp_file
+								a_file.reset (a_filename)
+								if eiffel_compiler.is_se then
+										-- KL_FILE.time_stamp is too slow with SE.
+									a_time_stamp := -1
+								else
+									a_time_stamp := a_file.time_stamp
+								end
+								a_file.open_read
+								if a_file.is_open_read then
+									parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+									a_file.close
+								else
+									error_handler.report_gcaab_error (a_cluster, a_filename)
+								end
+							elseif a_cluster.is_recursive and then a_cluster.is_valid_directory_name (s) then
+								if file_system.directory_exists (file_system.pathname (dir_name, s)) then
+									a_cluster.add_recursive_cluster (s)
+								end
+							end
+							dir.read_entry
+						end
+						dir.close
+					else
+						error_handler.report_gcaaa_error (a_cluster, dir_name)
+					end
+				end
+				l_subclusters := a_cluster.subclusters
+				if l_subclusters /= Void then
+					parse_clusters (l_subclusters)
+				end
 			end
 		end
 
@@ -255,11 +274,13 @@ feature -- Parsing
 			l_clusters: DS_ARRAYED_LIST [ET_CLUSTER]
 			i, nb: INTEGER
 		do
-			l_clusters := a_clusters.clusters
-			nb := l_clusters.count
-			from i := 1 until i > nb loop
-				parse_cluster (l_clusters.item (i))
-				i := i + 1
+			if not is_null then
+				l_clusters := a_clusters.clusters
+				nb := l_clusters.count
+				from i := 1 until i > nb loop
+					parse_cluster (l_clusters.item (i))
+					i := i + 1
+				end
 			end
 		end
 
@@ -279,69 +300,71 @@ feature -- Parsing
 			l_class: ET_CLASS
 			i, nb: INTEGER
 		do
-			debug ("GELINT")
-				std.error.put_string ("Parse cluster '")
-				std.error.put_string (a_cluster.full_pathname)
-				std.error.put_line ("%'")
-			end
-			if not a_cluster.is_abstract then
-				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
-				dir := tmp_directory
-				dir.reset (dir_name)
-				dir.open_read
-				if dir.is_open_read then
-					from dir.read_entry until dir.end_of_input loop
-						s := dir.last_entry
-						if a_cluster.is_valid_eiffel_filename (s) then
-							a_filename := file_system.pathname (dir_name, s)
-							if l_classes = Void then
-								l_classes := universe.classes_by_cluster (a_cluster)
-							end
-							l_class := Void
-							nb := l_classes.count
-							from i := 1 until i > nb loop
-								l_class := l_classes.item (i)
-								if STRING_.same_string (l_class.filename, a_filename) then
-									i := nb + 1
-								else
-									l_class := Void
-									i := i + 1
-								end
-							end
-							if l_class = Void then
-									-- This file is either new or has been marked as modified.
-									-- We need to analyze it again.
-								a_file := tmp_file
-								a_file.reset (a_filename)
-								if eiffel_compiler.is_se then
-										-- KL_FILE.time_stamp is too slow with SE.
-									a_time_stamp := -1
-								else
-									a_time_stamp := a_file.time_stamp
-								end
-								a_file.open_read
-								if a_file.is_open_read then
-									parse_file (a_file, a_filename, a_time_stamp, a_cluster)
-									a_file.close
-								else
-									error_handler.report_gcaab_error (a_cluster, a_filename)
-								end
-							end
-						elseif a_cluster.is_recursive and then a_cluster.is_valid_directory_name (s) then
-							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
-								a_cluster.add_recursive_cluster (s)
-							end
-						end
-						dir.read_entry
-					end
-					dir.close
-				else
-					error_handler.report_gcaaa_error (a_cluster, dir_name)
+			if not is_null then
+				debug ("GELINT")
+					std.error.put_string ("Parse cluster '")
+					std.error.put_string (a_cluster.full_pathname)
+					std.error.put_line ("%'")
 				end
-			end
-			l_subclusters := a_cluster.subclusters
-			if l_subclusters /= Void then
-				reparse_clusters (l_subclusters)
+				if not a_cluster.is_abstract then
+					dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
+					dir := tmp_directory
+					dir.reset (dir_name)
+					dir.open_read
+					if dir.is_open_read then
+						from dir.read_entry until dir.end_of_input loop
+							s := dir.last_entry
+							if a_cluster.is_valid_eiffel_filename (s) then
+								a_filename := file_system.pathname (dir_name, s)
+								if l_classes = Void then
+									l_classes := universe.classes_by_cluster (a_cluster)
+								end
+								l_class := Void
+								nb := l_classes.count
+								from i := 1 until i > nb loop
+									l_class := l_classes.item (i)
+									if STRING_.same_string (l_class.filename, a_filename) then
+										i := nb + 1
+									else
+										l_class := Void
+										i := i + 1
+									end
+								end
+								if l_class = Void then
+										-- This file is either new or has been marked as modified.
+										-- We need to analyze it again.
+									a_file := tmp_file
+									a_file.reset (a_filename)
+									if eiffel_compiler.is_se then
+											-- KL_FILE.time_stamp is too slow with SE.
+										a_time_stamp := -1
+									else
+										a_time_stamp := a_file.time_stamp
+									end
+									a_file.open_read
+									if a_file.is_open_read then
+										parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+										a_file.close
+									else
+										error_handler.report_gcaab_error (a_cluster, a_filename)
+									end
+								end
+							elseif a_cluster.is_recursive and then a_cluster.is_valid_directory_name (s) then
+								if file_system.directory_exists (file_system.pathname (dir_name, s)) then
+									a_cluster.add_recursive_cluster (s)
+								end
+							end
+							dir.read_entry
+						end
+						dir.close
+					else
+						error_handler.report_gcaaa_error (a_cluster, dir_name)
+					end
+				end
+				l_subclusters := a_cluster.subclusters
+				if l_subclusters /= Void then
+					reparse_clusters (l_subclusters)
+				end
 			end
 		end
 
@@ -355,22 +378,24 @@ feature -- Parsing
 			dir_name: STRING
 			i, nb: INTEGER
 		do
-			l_clusters := a_clusters.clusters
-			nb := l_clusters.count
-			from i := 1 until i > nb loop
-				l_cluster := l_clusters.item (i)
-				if l_cluster.is_implicit then
-					dir_name := Execution_environment.interpreted_string (l_cluster.full_pathname)
-					if not file_system.directory_exists (dir_name) then
-						l_clusters.remove (i)
-						nb := nb - 1
+			if not is_null then
+				l_clusters := a_clusters.clusters
+				nb := l_clusters.count
+				from i := 1 until i > nb loop
+					l_cluster := l_clusters.item (i)
+					if l_cluster.is_implicit then
+						dir_name := Execution_environment.interpreted_string (l_cluster.full_pathname)
+						if not file_system.directory_exists (dir_name) then
+							l_clusters.remove (i)
+							nb := nb - 1
+						else
+							reparse_cluster (l_cluster)
+							i := i + 1
+						end
 					else
 						reparse_cluster (l_cluster)
 						i := i + 1
 					end
-				else
-					reparse_cluster (l_cluster)
-					i := i + 1
 				end
 			end
 		end
@@ -389,7 +414,9 @@ feature -- AST processing
 			a_file: KL_TEXT_INPUT_FILE
 			an_overridden_class: ET_CLASS
 		do
-			if a_class = none_class then
+			if is_null then
+				-- Do nothing.
+			elseif a_class = none_class then
 				a_class.set_parsed
 			elseif current_class /= unknown_class then
 					-- Internal error (recursive call)
@@ -432,7 +459,7 @@ feature -- AST processing
 				current_class := unknown_class
 			end
 		ensure then
-			is_parsed: a_class.is_parsed
+			is_parsed: not is_null implies a_class.is_parsed
 		end
 
 feature {NONE} -- Basic operations
