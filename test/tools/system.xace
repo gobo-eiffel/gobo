@@ -20,6 +20,8 @@
 		<option name="assertion" value="all" unless="${GOBO_EIFFEL}=ve"/>
 		<option name="assertion" value="require" if="${GOBO_EIFFEL}=ve"/>
 		<option name="garbage_collector" value="internal"/>
+			<!-- Generate too big C file with SmartEiffel -->
+		<option name="split" value="true" if="${GOBO_EIFFEL}=se"/>
 		<option name="finalize" value="false"/>
 	</option>
 	<option if="${GOBO_DOTNET}">
