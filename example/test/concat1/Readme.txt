@@ -29,7 +29,9 @@ Test Summary for xconcat1
 # Total:      1 test (2 assertions)
 
 Test Results:
-FAIL:  [TEST_CONCAT1.test_concat] foo+bar (expected: foobar but got: foofoo)
+FAIL:  [TEST_CONCAT1.test_concat] foo+bar
+   expected: foobar
+   but  got: foofoo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 'getest' can also be invoked from 'geant' using the

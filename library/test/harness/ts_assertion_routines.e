@@ -447,13 +447,12 @@ feature {NONE} -- Messages
 			else
 				Result.append_string (expected.out)
 			end
-			Result.append_string ("%N   but got : ")
+			Result.append_string ("%N   but  got: ")
 			if actual = Void then
 				Result.append_string ("Void")
 			else
 				Result.append_string (actual.out)
 			end
-			Result.append_character ('%N')
 		ensure
 			message_not_void: Result /= Void
 		end
@@ -465,19 +464,18 @@ feature {NONE} -- Messages
 		do
 			Result := STRING_.make (50)
 			Result.append_string (a_tag)
-			Result.append_string (" (expected: ")
-			if expected = Void then
-				Result.append_string ("Void")
-			else
-				Result.append_string (expected.out)
-			end
-			Result.append_string (" should not match: ")
+			Result.append_string ("%N   got actual value: ")
 			if actual = Void then
 				Result.append_string ("Void")
 			else
 				Result.append_string (actual.out)
 			end
-			Result.append_character (')')
+			Result.append_string ("%N   should not match: ")
+			if expected = Void then
+				Result.append_string ("Void")
+			else
+				Result.append_string (expected.out)
+			end
 		ensure
 			message_not_void: Result /= Void
 		end
