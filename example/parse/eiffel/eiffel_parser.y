@@ -63,7 +63,7 @@ creation
 %left E_FREEOP
 %right E_NOT E_OLD
 
-%expect 244
+%expect 262
 %start Class_declarations
 
 %%
@@ -677,7 +677,26 @@ Expression: Call
 	| '-' Expression %prec E_NOT
 	| E_NOT Expression
 	| E_FREEOP Expression %prec E_NOT
-	| Expression Binary_op Expression
+	| Expression E_FREEOP Expression
+	| Expression '+' Expression
+	| Expression '-' Expression
+	| Expression '*' Expression
+	| Expression '/' Expression
+	| Expression '^' Expression
+	| Expression E_DIV Expression
+	| Expression E_MOD Expression
+	| Expression '=' Expression
+	| Expression E_NE Expression
+	| Expression '<' Expression
+	| Expression '>' Expression
+	| Expression E_LE Expression
+	| Expression E_GE Expression
+	| Expression E_AND Expression
+	| Expression E_OR Expression
+	| Expression E_XOR Expression
+	| Expression E_AND E_THEN Expression
+	| Expression E_OR E_ELSE Expression
+	| Expression E_IMPLIES Expression
 	| E_OLD Expression
 	| E_STRIP '(' Attribute_list ')'
 	;
@@ -690,28 +709,6 @@ Attribute_list: -- /* empty */
 Expression_list: -- /* empty */
 	| Expression
 	| Expression_list ',' Expression
-	;
-
-Binary_op: E_FREEOP
-	| '+'
-	| '-'
-	| '*'
-	| '/'
-	| '^'
-	| E_DIV
-	| E_MOD
-	| '='
-	| E_NE
-	| '<'
-	| '>'
-	| E_LE
-	| E_GE
-	| E_AND
-	| E_OR
-	| E_XOR
-	| E_AND E_THEN
-	| E_OR E_ELSE
-	| E_IMPLIES
 	;
 
 Manifest_constant: Boolean_constant
