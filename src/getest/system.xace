@@ -27,6 +27,7 @@
 		<mount location="${GOBO}/library/lexical/cluster.xace"/>
 		<mount location="${GOBO}/library/parse/cluster.xace"/>
 		<mount location="${GOBO}/library/utility/cluster.xace"/>
+		<mount location="${GOBO}/library/pattern/cluster.xace"/>
 		<mount location="${GOBO}/library/kernel/cluster.xace"/>
 		<mount location="${GOBO}/library/structure/cluster.xace"/>
 		<mount location="${GOBO}/library/kernel.xace"/>
