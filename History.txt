@@ -34,6 +34,16 @@ Version 2.1 - ?
 	  the 'compile' field of the config file.
 	* The 'testgen' directory is now created by 'getest' if
 	  it does not exist yet.
+	* Do not try to run the test anymore when the command
+	  specified for the Eiffel compilation exists with a
+	  status code other than zero.
+
+	gepp:
+
+	* Added command-line options --lines and -l in order to
+	  generate empty lines whenever lines are ignored from
+	  the input file. That way line numbers are preserved.
+	  (suggested by Alexander Kogtenkov)
 
 	Gobo Eiffel Kernel Library:
 
