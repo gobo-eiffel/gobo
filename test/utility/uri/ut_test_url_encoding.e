@@ -41,7 +41,7 @@ feature
 			
 			assert_equal ("space", "a+b", encoder.escape_string ("a b"))
 			assert_equal ("percent", "%%25", encoder.escape_string ("%%")) 
-			assert_equal ("sequence", "%%2b+ab", encoder.escape_string ("+ ab")) 
+			assert_equal ("sequence", "%%2B+ab", encoder.escape_string ("+ ab")) 
 		end
 		
 feature {NONE} -- Implementation
