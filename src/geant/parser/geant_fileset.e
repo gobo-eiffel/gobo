@@ -101,7 +101,8 @@ feature -- Access
 
 	convert_to_filesystem: BOOLEAN
 			-- Are `item_filename' and `item_mapped_filename' in the format
-			-- of the current filesystem? If not they are in unix format.
+			-- of the current filesystem?
+			-- Note: Result = false implies that both features' Result is in unix format
 
 	map: GEANT_MAP
 			-- Map for filenames
@@ -452,8 +453,8 @@ feature {NONE} -- Implementation/Processing
 
 	scan_internal (a_directory_name: STRING) is
 			-- Scan directory named `directory_name' recursivley;
-			-- put filenames found matching `regexp_pattern' into `filenames';
-			-- if `filter' is Void all filenames will be put into `filenames'.
+			-- put filenames found matching `include_wildcard' and not matching `exclude_wildcard'
+			-- into `filenames';
 		local
 			a_dir: KL_DIRECTORY
 			a_name: STRING
@@ -475,9 +476,9 @@ feature {NONE} -- Implementation/Processing
 							scan_internal (s)
 						else
 								-- Handle files:
---!!							project.trace_debug ("filename: " + s + "%N")
+--!!							project.trace_debug (<<"filename: ", s, "%N">>)
 							smatch := s.substring (directory_name.count + 2, s.count)	-- 2 because of '/'
---!!							project.trace_debug ("  trying to match: " + smatch + "%N")
+--!!							project.trace_debug (<<"  trying to match: ", smatch, "%N">>)
 							if include_wildcard /= Void and then include_wildcard.recognizes (smatch) then
 								add_fileset_entry_if_necessary (smatch)
 							end
