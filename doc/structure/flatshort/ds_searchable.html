@@ -106,6 +106,22 @@ color="#008000">'s comparison criterion
         not_empty</em>:<em> </em><font color="#008080"><em>Result</em></font><em> </em><font
 color="#000080"><em><strong>implies not</strong></em></font><em> </em><a
 href="#is_empty"><em>is_empty</em></a></pre>
+    <pre><a name="same_items"><em>same_items</em></a><em> </em>(<em>v</em>,<em> u</em>:<em> G</em>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Are </font><em>v</em><font
+color="#008000"> and </font><em>u</em><font color="#008000"> considered equal?
+        -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s comparison criterion
+        -- if not void, use `=' criterion otherwise.)</font></pre>
+    <pre><a name="same_equality_tester"><em>same_equality_tester</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_searchable.html"><em>DS_SEARCHABLE</em></a><em> </em>[<em>G</em>]):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Does container use the same comparison
+        -- criterion as </font><em>other</em><font
+color="#008000">?</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
     <pre><a name="is_empty"><em>is_empty</em></a>:<em> </em><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><font
 color="#000080"><em><strong>

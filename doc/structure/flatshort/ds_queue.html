@@ -142,6 +142,29 @@ color="#008000"> items?</font><em>
         positive_n</em>:<em> n </em>&gt;=<em> </em><font
 color="#808000"><em>0</em></font><em>
     </em><font color="#000080"><em><strong>deferred</strong></em></font></pre>
+    <pre><a name="same_items"><em>same_items</em></a><em> </em>(<em>v</em>,<em> u</em>:<em> G</em>):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Are </font><em>v</em><font
+color="#008000"> and </font><em>u</em><font color="#008000"> considered equal?
+        -- (Use </font><a href="#equality_tester"><em>equality_tester</em></a><font
+color="#008000">'s comparison criterion
+        -- if not void, use `=' criterion otherwise.)
+</font><em>        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#same_items"><font color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font></pre>
+    <pre><a name="same_equality_tester"><em>same_equality_tester</em></a><em> </em>(<em>other</em>:<em> </em><a
+href="ds_searchable.html"><em>DS_SEARCHABLE</em></a><em> </em>[<em>G</em>]):<em> </em><a
+href="http://www.gobosoft.com/eiffel/nice/elks95/boolean.html"><em>BOOLEAN</em></a><em>
+       </em><font color="#008000"> -- Does container use the same comparison
+        -- criterion as </font><em>other</em><font
+color="#008000">?</font><em>
+        </em><font color="#008000">-- (From </font><a
+href="ds_searchable.html#same_equality_tester"><font
+color="#008000"><em>DS_SEARCHABLE</em></font></a><font
+color="#008000">.)</font><em>
+    </em><font color="#000080"><em><strong>require</strong></em></font><em>
+        other_not_void</em>:<em> other </em>/=<em> </em><font
+color="#008080"><em>Void</em></font></pre>
 </blockquote>
 
 <pre><font color="#000080"><em><strong>feature</strong></em></font><font
@@ -387,7 +410,8 @@ color="#008000"> -- class DS_QUEUE</font></pre>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+            --> 
         </address>
         </td>
         <td align="right" valign="top"><a
