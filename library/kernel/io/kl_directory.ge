@@ -44,6 +44,9 @@ feature {NONE} -- Initialization
 
 	make (a_name: STRING) is
 			-- Create a new directory object.
+			-- (`a_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
 #ifdef ISE || HACT
 			old_make (a_name)
@@ -53,7 +56,9 @@ feature {NONE} -- Initialization
 #endif
 #ifdef VE
 			name := a_name
-			!! directory.make (a_name)
+			if a_name.count > 0 then
+				!! directory.make (a_name)
+			end
 #endif
 		end
 
@@ -74,24 +79,37 @@ feature -- Access
 			-- Void if current directory could not be searched
 		local
 			a_name: STRING
-			a_dir: KL_DIRECTORY
+			an_array: ARRAY [STRING]
+			i, nb, k: INTEGER
 		do
 			if is_closed then
 				open_read
 				if is_open_read then
-					!! Result.make (1, 0)
+					k := 10
+					!! an_array.make (1, k)
 					from read_entry until end_of_input loop
 						a_name := last_entry
-						if file_system.is_file_readable (file_system.pathname (name, a_name)) then
-							Result.force (a_name, Result.count + 1)
+						tmp_file.reset (file_system.pathname (name, a_name))
+						if tmp_file.is_readable then
+							nb := nb + 1
+							if nb > k then
+								k := k + 10
+								an_array.resize (1, k)
+							end
+							an_array.put (a_name, nb)
 						end
 						read_entry
 					end
 					close
+					!! Result.make (1, nb)
+					from i := 1 until i > nb loop
+						Result.put (an_array.item (i), i)
+						i := i + 1
+					end
 				end
 			else
-				!! a_dir.make (name)
-				Result := a_dir.filenames
+				tmp_directory.reset (name)
+				Result := tmp_directory.filenames
 			end
 		end
 
@@ -101,28 +119,42 @@ feature -- Access
 			-- (Do not include parent and current directory names.)
 		local
 			a_name: STRING
-			a_dir: KL_DIRECTORY
+			an_array: ARRAY [STRING]
+			i, nb, k: INTEGER
 		do
 			if is_closed then
 				open_read
 				if is_open_read then
-					!! Result.make (1, 0)
+					k := 10
+					!! an_array.make (1, k)
 					from read_entry until end_of_input loop
 						a_name := last_entry
 						if
 							not a_name.is_equal (file_system.relative_current_directory) and then
-							not a_name.is_equal (file_system.relative_parent_directory) and then
-							file_system.is_directory_readable (file_system.pathname (name, a_name))
+							not a_name.is_equal (file_system.relative_parent_directory)
 						then
-							Result.force (a_name, Result.count + 1)
+							tmp_directory.reset (file_system.pathname (name, a_name))
+							if tmp_directory.is_readable then
+								nb := nb + 1
+								if nb > k then
+									k := k + 10
+									an_array.resize (1, k)
+								end
+								an_array.put (a_name, nb)
+							end
 						end
 						read_entry
 					end
 					close
+					!! Result.make (1, nb)
+					from i := 1 until i > nb loop
+						Result.put (an_array.item (i), i)
+						i := i + 1
+					end
 				end
 			else
-				!! a_dir.make (name)
-				Result := a_dir.directory_names
+				tmp_directory.reset (name)
+				Result := tmp_directory.directory_names
 			end
 		end
 
@@ -160,6 +192,12 @@ feature -- Status report
 			if name.count > 0 then
 #ifdef ISE || HACT
 				Result := old_exists and then old_is_readable
+#ifdef HACT
+				if Result then
+					tmp_file.reset (name)
+					Result := not tmp_file.is_readable
+				end
+#endif
 #else
 				if is_open_read then
 					Result := True
@@ -250,11 +288,14 @@ feature -- Basic operations
 			-- the parent directory does not exist.
 		local
 			rescued: BOOLEAN
+#ifdef SE
+			b: BOOLEAN
+#endif
 		do
 			if not rescued then
 				if name.count > 0 then
 #ifdef SE
-					file_system.create_directory (name)
+					b := basic_directory.create_new_directory (name)
 #endif
 #ifdef ISE || HACT
 					if not old_exists then
@@ -308,11 +349,14 @@ feature -- Basic operations
 			-- it is not empty.
 		local
 			rescued: BOOLEAN
+#ifdef SE
+			b: BOOLEAN
+#endif
 		do
 			if not rescued then
 				if name.count > 0 then
 #ifdef SE
-					file_system.delete_directory (name)
+					b := basic_directory.remove_directory (name)
 #endif
 #ifdef VE
 					directory.delete
@@ -451,9 +495,31 @@ feature {NONE} -- Implementation
 #endif
 		end
 
+	tmp_file: KL_TEXT_INPUT_FILE is
+			-- Temporary file object
+		once
+			!! Result.make (dummy_name)
+		ensure
+			file_not_void: Result /= Void
+			file_closed: Result.is_closed
+		end
+
+	tmp_directory: KL_DIRECTORY is
+			-- Temporary directory object
+		once
+			!! Result.make (dummy_name)
+		ensure
+			directory_not_void: Result /= Void
+			directory_closed: Result.is_closed
+		end
+
+	dummy_name: STRING is "dummy"
+			-- Dummy name
+
 #ifdef VE
 	directory: DIRECTORY
 	directory_stream: DIRECTORY_INPUT_STREAM
+			-- Internal data
 
 #endif
 #ifdef SE
@@ -470,7 +536,7 @@ invariant
 
 	no_void_bufferred_entry: entry_buffer /= Void implies entry_buffer.item /= Void
 #ifdef VE
-	directory_not_void: directory /= Void
+	directory_not_void: name.count > 0 implies directory /= Void
 #endif
 
 end -- class KL_DIRECTORY

@@ -46,7 +46,8 @@ inherit
 			change_name as old_change_name,
 			flush as old_flush,
 			close as old_close,
-			delete as old_delete
+			delete as old_delete,
+			reset as old_reset
 		export
 			{NONE} all
 		end
@@ -93,6 +94,9 @@ feature {NONE} -- Initialization
 
 	make (a_name: like name) is
 			-- Create a new file named `a_name'.
+			-- (`a_name' should follow the pathname convention
+			-- of the underlying platform. For pathname conversion
+			-- use KI_FILE_SYSTEM.pathname_from_file_system.)
 		do
 			name := a_name
 #ifdef ISE || HACT
@@ -124,6 +128,10 @@ feature -- Status report
 
 	is_readable: BOOLEAN is
 			-- Can file be opened in read mode?
+#ifdef VE
+		local
+			a_file: KL_TEXT_INPUT_FILE
+#endif
 		do
 			if name.count > 0 then
 #ifdef ISE || HACT
@@ -133,7 +141,10 @@ feature -- Status report
 				Result := old_is_readable (name)
 #endif
 #ifdef VE
-				Result := old_exists and then old_is_readable
+				if old_exists then
+					!! a_file.make (name)
+					Result := a_file.is_readable
+				end
 #endif
 			end
 		end
@@ -172,34 +183,89 @@ feature -- Basic operations
 			-- it did not exist or if `new_name' already existed.
 			-- If renaming was successful, then `name' is set to
 			-- `new_name'.
-#ifndef SE
 		local
+			rescued: BOOLEAN
+#ifdef ISE || HACT || VE
 			a_name: STRING
 #endif
 		do
-			if new_name.count > 0 then
+			if not rescued then
+				if name.count > 0 and new_name.count > 0 then
+#ifdef SE
+					if not file_exists (new_name) then
+						rename_to (name, new_name)
+						if file_exists (new_name) then
+							name := new_name
+						end
+					end
+#endif
+#ifdef ISE || HACT || VE
+					a_name := name
+					old_name := new_name
+					if old_exists then
+						old_name := a_name
+					else
+						old_name := a_name
+						if old_exists then
+							old_change_name (new_name)
+							old_name := new_name
+							if old_exists then
+								name := new_name
+							else
+								old_name := a_name
+							end
+						end
+					end
+#endif
+				end
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
+			end
+		end
+
+	copy_file (new_name: STRING) is
+			-- Copy current file to `new_name'.
+			-- Do nothing if the file could not be copied, if it
+			-- did not exist or if `new_name' already existed.
+		local
+			old_file: KL_BINARY_INPUT_FILE
+			new_file: KL_BINARY_OUTPUT_FILE
+#ifdef ISE || HACT || VE
+			a_name: STRING
+#endif
+		do
+			if name.count > 0 and new_name.count > 0 then
 #ifdef SE
 				if not file_exists (new_name) then
-#else
-				a_name := old_name
+#endif
+#ifdef ISE || HACT || VE
+				a_name := name
 				old_name := new_name
 				if old_exists then
 					old_name := a_name
 				else
 					old_name := a_name
 #endif
-					file_system.rename_file (name, new_name)
-#ifdef SE
-					if file_exists (new_name) then
-						name := new_name
-#else
-					a_name := old_name
-					old_name := new_name
-					if old_exists then
-						name := new_name
-					else
-						old_name := a_name
-#endif
+					!! old_file.make (name)
+					old_file.open_read
+					if old_file.is_open_read then
+						!! new_file.make (new_name)
+						new_file.open_write
+						if new_file.is_open_write then
+							from
+								old_file.read_string (512)
+							until
+								old_file.end_of_file
+							loop
+								new_file.put_string (old_file.last_string)
+								old_file.read_string (512)
+							end
+							new_file.close
+						end
+						old_file.close
 					end
 				end
 			end
