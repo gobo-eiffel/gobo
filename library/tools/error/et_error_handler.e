@@ -2239,8 +2239,8 @@ feature {NONE}
 		end
 
 	classes_in_system: DS_HASH_TABLE [ANY, STRING] is
-		local
-			a_file: PLAIN_TEXT_FILE
+--		local
+--			a_file: PLAIN_TEXT_FILE
 		once
 			!! Result.make (6000)
 --			!! a_file.make ("system.txt")
