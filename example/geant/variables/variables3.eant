@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+
+<project name="variables1" >
+	<target name="var" >
+		<description>set and query a variable</description>
+		<echo message="Location of GOBO is: ${GOBO}" />
+	</target>
+</project>
