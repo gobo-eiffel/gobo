@@ -5,13 +5,15 @@
 	<description>
 		description: "Xace file for the Gobo Eiffel Regexp Library"
 		library: "Gobo Eiffel Regexp Library"
-		copyright: "Copyright (c) 2002, Harald Erdbruegger and others"
+		copyright: "Copyright (c) 2002, Eric Bezault and others"
 		license: "Eiffel Forum License v1 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="regexp" location="${GOBO}/library/regexp"/>
-	<mount location="${GOBO}/library/kernel/cluster.xace"/>
-	<mount location="${GOBO}/library/structure/cluster.xace"/>
+	<cluster name="regexp" location="${GOBO}/library/regexp" abstract="true">
+		<cluster name="interface"/>
+		<cluster name="pcre"/>
+		<cluster name="support"/>
+	</cluster>
 </library>
