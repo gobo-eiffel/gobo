@@ -159,8 +159,10 @@ feature -- Keyword names
 	capitalized_precursor_keyword_name: STRING is "Precursor"
 	capitalized_result_keyword_name: STRING is "Result"
 	capitalized_true_keyword_name: STRING is "True"
+	capitalized_unique_keyword: STRING is "Unique"
 			-- Eiffel keyword names with first letter in upper-case
 
+	agent_keyword: STRING is "agent"
 	alias_keyword_name: STRING is "alias"
 	all_keyword_name: STRING is "all"
 	and_keyword_name: STRING is "and"
@@ -221,6 +223,41 @@ feature -- Keyword names
 	when_keyword_name: STRING is "when"
 	xor_keyword_name: STRING is "xor"
 			-- Eiffel keyword names
+
+	arrow_symbol: STRING is "->"
+	assign_symbol: STRING is ":="
+	assign_attempt_symbol: STRING is "?="
+	bang_symbol: STRING is "!"
+	bangbang_symbol: STRING is "!!"
+	colon_symbol: STRING is ":"
+	comma_symbol: STRING is ","
+	div_symbol: STRING is "//"
+	divide_symbol: STRING is "/"
+	dollar_symbol: STRING is "$"
+	dot_symbol: STRING is "."
+	dotdot_symbol: STRING is ".."
+	equal_symbol: STRING is "="
+	ge_symbol: STRING is ">="
+	gt_symbol: STRING is ">"
+	le_symbol: STRING is "<="
+	left_array_symbol: STRING is "<<"
+	left_brace_symbol: STRING is "{"
+	left_bracket_symbol: STRING is "["
+	left_parenthesis_symbol: STRING is "("
+	lt_symbol: STRING is "<"
+	minus_symbol: STRING is "-"
+	mod_symbol: STRING is "\\"
+	not_equal_symbol: STRING is "/="
+	plus_symbol: STRING is "+"
+	power_symbol: STRING is "^"
+	question_mark_symbol: STRING is "?"
+	right_array_symbol: STRING is ">>"
+	right_brace_symbol: STRING is "}"
+	right_bracket_symbol: STRING is "]"
+	right_parenthesis_symbol: STRING is ")"
+	semicolon_symbol: STRING is ";"
+	times_symbol: STRING is "*"
+			-- Eiffel symbols
 
 feature -- Nodes
 

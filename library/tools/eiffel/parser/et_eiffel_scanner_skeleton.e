@@ -59,9 +59,8 @@ feature {NONE} -- Initialization
 			an_error_handler_not_void: an_error_handler /= Void
 		do
 			make_with_buffer (Empty_buffer)
+			last_text_count := 1
 			last_literal_start := 1
-			last_break_start := 1
-			last_comment_start := 1
 			filename := a_filename
 			ast_factory := a_factory
 			error_handler := an_error_handler
@@ -78,9 +77,12 @@ feature -- Initialization
 	reset is
 			-- Reset scanner before scanning next input.
 		do
-			precursor
+			last_literal_start := 1
+			last_literal_end := 0
 			verbatim_marker := Void
 			verbatim_open_white_characters := Void
+			verbatim_close_white_characters := Void
+			precursor
 		end
 
 feature -- Access
@@ -175,52 +177,66 @@ feature {NONE} -- AST factory
 			comment_not_void: Result /= Void
 		end
 
-feature --
-
-	last_literal: STRING is
-		do
-			if last_literal_start = 0 then
-				Result := last_literal_impl
-			else
-				Result := text_substring (last_literal_start, last_literal_end)
-			end
-		end
-
-	last_break: STRING is
-		require
-			has_break: has_break
-		do
-			Result := text_substring (last_break_start, last_break_end)
-		end
-
-	last_comment: STRING is
-		require
-			has_comment: has_comment
-		do
-			Result := text_substring (last_comment_start, last_comment_end)
-		end
+feature -- Tokens
 
 	has_break: BOOLEAN is
+			-- Has a break been scanned?
 		do
-			Result := last_break_end >= last_break_start
+			Result := last_break_end > last_text_count
+		ensure
+			definition: Result = (last_break_end > last_text_count)
 		end
 
 	has_comment: BOOLEAN is
+			-- Has a comment been scanned?
 		do
-			Result := last_comment_end >= last_comment_start
+			Result := last_comment_end > last_text_count
+		ensure
+			definition: Result = (last_comment_end > last_text_count)
 		end
 
-	last_literal_start: INTEGER
-	last_literal_end: INTEGER
-	last_break_start: INTEGER
-	last_break_end: INTEGER
-	last_comment_start: INTEGER
-	last_comment_end: INTEGER
-	last_literal_impl: STRING
+	last_literal_count: INTEGER is
+			-- Number of characters in `last_literal'
+		do
+			Result := last_literal_end - last_literal_start + 1
+		ensure
+			last_literal_count_positive: Result >= 0
+			definition: Result = last_literal.count
+		end
 
-feature {NONE} -- String handler
+	last_literal: STRING is
+			-- Last literal scanned
+		do
+			Result := text_substring (last_literal_start, last_literal_end)
+		ensure
+			last_literal_not_void: Result /= Void
+		end
+
+	last_break: STRING is
+			-- Last break scanned
+		require
+			has_break: has_break
+		do
+			Result := text_substring (last_text_count + 1, last_break_end)
+		ensure
+			last_break_not_void: Result /= Void
+			last_break_not_empty: Result.count > 0
+		end
+
+	last_comment: STRING is
+			-- Last comment scanned
+		require
+			has_comment: has_comment
+		do
+			Result := text_substring (last_text_count + 1, last_comment_end)
+		ensure
+			last_comment_not_void: Result /= Void
+			last_comment_not_empty: Result.count > 0
+		end
 
 	text: STRING is
+			-- Text of last token read
+			-- (Share strings when already scanned.)
 		local
 			a_string: STRING
 		do
@@ -238,6 +254,8 @@ feature {NONE} -- String handler
 		end
 
 	text_substring (s, e: INTEGER): STRING is
+			-- Substring of last token read
+			-- (Share strings when already scanned.)
 		local
 			a_string: STRING
 		do
@@ -254,32 +272,41 @@ feature {NONE} -- String handler
 			end
 		end
 
+feature {NONE} -- Positions
+
+	last_literal_start: INTEGER
+	last_literal_end: INTEGER
+	last_text_count: INTEGER
+	last_break_end: INTEGER
+	last_comment_end: INTEGER
+			-- Positions of various parts of the token
+
+feature {NONE} -- String handler
+
 	strings: DS_HASH_SET [STRING] is
+			-- Strings known by the current scanner
 		once
 			!! Result.make_equal (1000)
+		ensure
+			strings_not_void: Result /= Void
+			no_void_string: not Result.has (Void)
 		end
 
 	string_buffer: STRING is
+			-- String buffer
 		once
 			Result := STRING_.make (30)
+		ensure
+			string_buffer_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementation
-
-	last_string_kind: INTEGER
-			-- Kind of manifest string being parsed when reading the
-			-- following break or comment
-
-	str_regular, str_special, str_freeop, str_verbatim: INTEGER is unique
-			-- Various kinds of manifest string being parsed when
-			-- reading the following break or comment
+feature {NONE} -- Multi-line manifest strings
 
 	ms_line, ms_column: INTEGER
 			-- Line and column numbers of currently
 			-- scanned special manifest string
 
-	vs_count: INTEGER
-			-- Character count used when scanning verbatim strings
+feature {NONE} -- Verbatim strings
 
 	verbatim_marker: STRING
 			-- Marker of verbatim string currently scanned
@@ -297,7 +324,7 @@ feature {NONE} -- Implementation
 			verbatim_string_scanned: verbatim_marker /= Void
 			a_start_large_enough: a_start >= 1
 			an_end_small_enough: an_end <= text_count
-			-- valid_string: regexp of text_substring (a_start, an_end): '[ \t\r]*\][^%\n"]*'
+			-- valid_string: ([ \t\r]*\][^%\n"]*).recognizes (text_substring (a_start, an_end))
 		local
 			i, j, nb: INTEGER
 		do
@@ -322,202 +349,2177 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Breaks
+
+	break_kind: INTEGER
+			-- Kind of break being parsed when reading the
+			-- following break or comment
+
+	identifier_break, freeop_break, character_break, integer_break,
+	uinteger_break, hinteger_break, real_break, ureal_break,
+	bit_break, string_break, str_freeop_break, str_special_break,
+	str_verbatim_break: INTEGER is unique
+			-- Various kinds of breaks being parsed when
+			-- reading the following break or comment
+
 feature {NONE} -- Processing
 
-	process_c2_character_constant (a_value: CHARACTER) is
+	process_identifier (nb: INTEGER) is
+			-- Process identifier with `nb' characters.
+			-- Detect keywords.
+		require
+			nb_large_enough: nb >= 1
+			nb_small_enough: nb <= text_count
+			-- valid_string: ([a-zA-Z][a-zA-Z0-9_]*).recognizes (text_substring (1, nb))
+		do
+			last_token := E_IDENTIFIER
+			last_literal_start := 1
+			last_literal_end := nb
+			inspect nb
+			when 2 then
+				inspect text_item (1)
+				when 'a', 'A' then
+					inspect text_item (2)
+					when 's', 'S' then
+						last_token := E_AS
+						last_value := ast_factory.new_as_keyword (Current)
+					else
+						-- Do nothing.
+					end
+				when 'd', 'D' then
+					inspect text_item (2)
+					when 'o', 'O' then
+						last_token := E_DO
+						last_value := ast_factory.new_do_keyword (Current)
+					else
+						-- Do nothing.
+					end
+				when 'i', 'I' then
+					inspect text_item (2)
+					when 'f', 'F' then
+						last_token := E_IF
+						last_value := ast_factory.new_if_keyword (Current)
+					when 's', 'S' then
+						last_token := E_IS
+						last_value := ast_factory.new_is_keyword (Current)
+					else
+						-- Do nothing.
+					end
+				when 'o', 'O' then
+					inspect text_item (2)
+					when 'r', 'R' then
+						last_token := E_OR
+						last_value := ast_factory.new_or_keyword (Current)
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			when 3 then
+				inspect text_item (1)
+				when 'a', 'A' then
+					inspect text_item (2)
+					when 'n', 'N' then
+						inspect text_item (3)
+						when 'd', 'D' then
+							last_token := E_AND
+							last_value := ast_factory.new_and_keyword (Current)
+						else
+							-- Do nothing.
+						end
+					when 'l', 'L' then
+						inspect text_item (3)
+						when 'l', 'L' then
+							last_token := E_ALL
+							last_value := ast_factory.new_all_keyword (Current)
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'b', 'B' then
+					inspect text_item (2)
+					when 'i', 'I' then
+						inspect text_item (3)
+						when 't', 'T' then
+							last_token := E_BITTYPE
+							last_value := ast_factory.new_identifier (Current)
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'e', 'E' then
+					inspect text_item (2)
+					when 'n', 'N' then
+						inspect text_item (3)
+						when 'd', 'D' then
+							last_token := E_END
+							last_value := ast_factory.new_end_keyword (Current)
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'n', 'N' then
+					inspect text_item (2)
+					when 'o', 'O' then
+						inspect text_item (3)
+						when 't', 'T' then
+							last_token := E_NOT
+							last_value := ast_factory.new_not_keyword (Current)
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'o', 'O' then
+					inspect text_item (2)
+					when 'l', 'L' then
+						inspect text_item (3)
+						when 'd', 'D' then
+							last_token := E_OLD
+							last_value := ast_factory.new_old_keyword (Current)
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'x', 'X' then
+					inspect text_item (2)
+					when 'o', 'O' then
+						inspect text_item (3)
+						when 'r', 'R' then
+							last_token := E_XOR
+							last_value := ast_factory.new_xor_keyword (Current)
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			when 4 then
+				inspect text_item (1)
+				when 'e', 'E' then
+					inspect text_item (2)
+					when 'l', 'L' then
+						inspect text_item (3)
+						when 's', 'S' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								last_token := E_ELSE
+								last_value := ast_factory.new_else_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'f', 'F' then
+					inspect text_item (2)
+					when 'r', 'R' then
+						inspect text_item (3)
+						when 'o', 'O' then
+							inspect text_item (4)
+							when 'm', 'M' then
+								last_token := E_FROM
+								last_value := ast_factory.new_from_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'l', 'L' then
+					inspect text_item (2)
+					when 'i', 'I' then
+						inspect text_item (3)
+						when 'k', 'K' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								last_token := E_LIKE
+								last_value := ast_factory.new_like_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					when 'o', 'O' then
+						inspect text_item (3)
+						when 'o', 'O' then
+							inspect text_item (4)
+							when 'p', 'P' then
+								last_token := E_LOOP
+								last_value := ast_factory.new_loop_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'o', 'O' then
+					inspect text_item (2)
+					when 'n', 'N' then
+						inspect text_item (3)
+						when 'c', 'C' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								last_token := E_ONCE
+								last_value := ast_factory.new_once_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 't', 'T' then
+					inspect text_item (2)
+					when 'h', 'H' then
+						inspect text_item (3)
+						when 'e', 'E' then
+							inspect text_item (4)
+							when 'n', 'N' then
+								last_token := E_THEN
+								last_value := ast_factory.new_then_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					when 'r', 'R' then
+						inspect text_item (3)
+						when 'u', 'U' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								last_token := E_TRUE
+								last_value := ast_factory.new_true_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'w', 'W' then
+					inspect text_item (2)
+					when 'h', 'H' then
+						inspect text_item (3)
+						when 'e', 'E' then
+							inspect text_item (4)
+							when 'n', 'N' then
+								last_token := E_WHEN
+								last_value := ast_factory.new_when_keyword (Current)
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			when 5 then
+				inspect text_item (1)
+				when 'a', 'A' then
+					inspect text_item (2)
+					when 'g', 'G' then
+						inspect text_item (3)
+						when 'e', 'E' then
+							inspect text_item (4)
+							when 'n', 'N' then
+								inspect text_item (5)
+								when 't', 'T' then
+									last_token := E_AGENT
+									last_value := ast_factory.new_agent_keyword (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					when 'l', 'L' then
+						inspect text_item (3)
+						when 'i', 'I' then
+							inspect text_item (4)
+							when 'a', 'A' then
+								inspect text_item (5)
+								when 's', 'S' then
+									last_token := E_ALIAS
+									last_value := ast_factory.new_alias_keyword (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'c', 'C' then
+					inspect text_item (2)
+					when 'h', 'H' then
+						inspect text_item (3)
+						when 'e', 'E' then
+							inspect text_item (4)
+							when 'c', 'C' then
+								inspect text_item (5)
+								when 'k', 'K' then
+									last_token := E_CHECK
+									last_value := ast_factory.new_check_keyword (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					when 'l', 'L' then
+						inspect text_item (3)
+						when 'a', 'A' then
+							inspect text_item (4)
+							when 's', 'S' then
+								inspect text_item (5)
+								when 's', 'S' then
+									last_token := E_CLASS
+									last_value := ast_factory.new_class_keyword (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'd', 'D' then
+					inspect text_item (2)
+					when 'e', 'E' then
+						inspect text_item (3)
+						when 'b', 'B' then
+							inspect text_item (4)
+							when 'u', 'U' then
+								inspect text_item (5)
+								when 'g', 'G' then
+									last_token := E_DEBUG
+									last_value := ast_factory.new_debug_keyword (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'f', 'F' then
+					inspect text_item (2)
+					when 'a', 'A' then
+						inspect text_item (3)
+						when 'l', 'L' then
+							inspect text_item (4)
+							when 's', 'S' then
+								inspect text_item (5)
+								when 'e', 'E' then
+									last_token := E_FALSE
+									last_value := ast_factory.new_false_keyword (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'i', 'I' then
+					inspect text_item (2)
+					when 'n', 'N' then
+						inspect text_item (3)
+						when 'f', 'F' then
+							inspect text_item (4)
+							when 'i', 'I' then
+								inspect text_item (5)
+								when 'x', 'X' then
+									last_token := E_INFIX
+									last_value := ast_factory.new_infix_keyword (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'l', 'L' then
+					inspect text_item (2)
+					when 'o', 'O' then
+						inspect text_item (3)
+						when 'c', 'C' then
+							inspect text_item (4)
+							when 'a', 'A' then
+								inspect text_item (5)
+								when 'l', 'L' then
+									last_token := E_LOCAL
+									last_value := ast_factory.new_local_keyword (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'r', 'R' then
+					inspect text_item (2)
+					when 'e', 'E' then
+						inspect text_item (3)
+						when 't', 'T' then
+							inspect text_item (4)
+							when 'r', 'R' then
+								inspect text_item (5)
+								when 'y', 'Y' then
+									last_token := E_RETRY
+									last_value := ast_factory.new_retry_keyword (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 's', 'S' then
+					inspect text_item (2)
+					when 't', 'T' then
+						inspect text_item (3)
+						when 'r', 'R' then
+							inspect text_item (4)
+							when 'i', 'I' then
+								inspect text_item (5)
+								when 'p', 'P' then
+									last_token := E_STRIP
+									last_value := ast_factory.new_strip_keyword (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'u', 'U' then
+					inspect text_item (2)
+					when 'n', 'N' then
+						inspect text_item (3)
+						when 't', 'T' then
+							inspect text_item (4)
+							when 'i', 'I' then
+								inspect text_item (5)
+								when 'l', 'L' then
+									last_token := E_UNTIL
+									last_value := ast_factory.new_until_keyword (Current)
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			when 6 then
+				inspect text_item (1)
+				when 'c', 'C' then
+					inspect text_item (2)
+					when 'r', 'R' then
+						inspect text_item (3)
+						when 'e', 'E' then
+							inspect text_item (4)
+							when 'a', 'A' then
+								inspect text_item (5)
+								when 't', 'T' then
+									inspect text_item (6)
+									when 'e', 'E' then
+										if use_create_keyword then
+											last_token := E_CREATE
+											last_value := ast_factory.new_create_keyword (Current)
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'e', 'E' then
+					inspect text_item (2)
+					when 'l', 'L' then
+						inspect text_item (3)
+						when 's', 'S' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								inspect text_item (5)
+								when 'i', 'I' then
+									inspect text_item (6)
+									when 'f', 'F' then
+										last_token := E_ELSEIF
+										last_value := ast_factory.new_elseif_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					when 'n', 'N' then
+						inspect text_item (3)
+						when 's', 'S' then
+							inspect text_item (4)
+							when 'u', 'U' then
+								inspect text_item (5)
+								when 'r', 'R' then
+									inspect text_item (6)
+									when 'e', 'E' then
+										last_token := E_ENSURE
+										last_value := ast_factory.new_ensure_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					when 'x', 'X' then
+						inspect text_item (3)
+						when 'p', 'P' then
+							inspect text_item (4)
+							when 'o', 'O' then
+								inspect text_item (5)
+								when 'r', 'R' then
+									inspect text_item (6)
+									when 't', 'T' then
+										last_token := E_EXPORT
+										last_value := ast_factory.new_export_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'f', 'F' then
+					inspect text_item (2)
+					when 'r', 'R' then
+						inspect text_item (3)
+						when 'o', 'O' then
+							inspect text_item (4)
+							when 'z', 'Z' then
+								inspect text_item (5)
+								when 'e', 'E' then
+									inspect text_item (6)
+									when 'n', 'N' then
+										last_token := E_FROZEN
+										last_value := ast_factory.new_frozen_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'p', 'P' then
+					inspect text_item (2)
+					when 'r', 'R' then
+						inspect text_item (3)
+						when 'e', 'E' then
+							inspect text_item (4)
+							when 'f', 'F' then
+								inspect text_item (5)
+								when 'i', 'I' then
+									inspect text_item (6)
+									when 'x', 'X' then
+										last_token := E_PREFIX
+										last_value := ast_factory.new_prefix_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'r', 'R' then
+					inspect text_item (2)
+					when 'e', 'E' then
+						inspect text_item (3)
+						when 'n', 'N' then
+							inspect text_item (4)
+							when 'a', 'A' then
+								inspect text_item (5)
+								when 'm', 'M' then
+									inspect text_item (6)
+									when 'e', 'E' then
+										last_token := E_RENAME
+										last_value := ast_factory.new_rename_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						when 's', 'S' then
+							inspect text_item (4)
+							when 'c', 'C' then
+								inspect text_item (5)
+								when 'u', 'U' then
+									inspect text_item (6)
+									when 'e', 'E' then
+										last_token := E_RESCUE
+										last_value := ast_factory.new_rescue_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							when 'u', 'U' then
+								inspect text_item (5)
+								when 'l', 'L' then
+									inspect text_item (6)
+									when 't', 'T' then
+										last_token := E_RESULT
+										last_value := ast_factory.new_result_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 's', 'S' then
+					inspect text_item (2)
+					when 'e', 'E' then
+						inspect text_item (3)
+						when 'l', 'L' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								inspect text_item (5)
+								when 'c', 'C' then
+									inspect text_item (6)
+									when 't', 'T' then
+										last_token := E_SELECT
+										last_value := ast_factory.new_select_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'u', 'U' then
+					inspect text_item (2)
+					when 'n', 'N' then
+						inspect text_item (3)
+						when 'i', 'I' then
+							inspect text_item (4)
+							when 'q', 'Q' then
+								inspect text_item (5)
+								when 'u', 'U' then
+									inspect text_item (6)
+									when 'e', 'E' then
+										last_token := E_UNIQUE
+										last_value := ast_factory.new_unique_keyword (Current)
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			when 7 then
+				inspect text_item (1)
+				when 'c', 'C' then
+					inspect text_item (2)
+					when 'u', 'U' then
+						inspect text_item (3)
+						when 'r', 'R' then
+							inspect text_item (4)
+							when 'r', 'R' then
+								inspect text_item (5)
+								when 'e', 'E' then
+									inspect text_item (6)
+									when 'n', 'N' then
+										inspect text_item (7)
+										when 't', 'T' then
+											last_token := E_CURRENT
+											last_value := ast_factory.new_current_keyword (Current)
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'f', 'F' then
+					inspect text_item (2)
+					when 'e', 'E' then
+						inspect text_item (3)
+						when 'a', 'A' then
+							inspect text_item (4)
+							when 't', 'T' then
+								inspect text_item (5)
+								when 'u', 'U' then
+									inspect text_item (6)
+									when 'r', 'R' then
+										inspect text_item (7)
+										when 'e', 'E' then
+											last_token := E_FEATURE
+											last_value := ast_factory.new_feature_keyword (Current)
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'i', 'I' then
+					inspect text_item (2)
+					when 'm', 'M' then
+						inspect text_item (3)
+						when 'p', 'P' then
+							inspect text_item (4)
+							when 'l', 'L' then
+								inspect text_item (5)
+								when 'i', 'I' then
+									inspect text_item (6)
+									when 'e', 'E' then
+										inspect text_item (7)
+										when 's', 'S' then
+											last_token := E_IMPLIES
+											last_value := ast_factory.new_implies_keyword (Current)
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					when 'n', 'N' then
+						inspect text_item (3)
+						when 'h', 'H' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								inspect text_item (5)
+								when 'r', 'R' then
+									inspect text_item (6)
+									when 'i', 'I' then
+										inspect text_item (7)
+										when 't', 'T' then
+											last_token := E_INHERIT
+											last_value := ast_factory.new_inherit_keyword (Current)
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						when 's', 'S' then
+							inspect text_item (4)
+							when 'p', 'P' then
+								inspect text_item (5)
+								when 'e', 'E' then
+									inspect text_item (6)
+									when 'c', 'C' then
+										inspect text_item (7)
+										when 't', 'T' then
+											last_token := E_INSPECT
+											last_value := ast_factory.new_inspect_keyword (Current)
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'r', 'R' then
+					inspect text_item (2)
+					when 'e', 'E' then
+						inspect text_item (3)
+						when 'q', 'Q' then
+							inspect text_item (4)
+							when 'u', 'U' then
+								inspect text_item (5)
+								when 'i', 'I' then
+									inspect text_item (6)
+									when 'r', 'R' then
+										inspect text_item (7)
+										when 'e', 'E' then
+											last_token := E_REQUIRE
+											last_value := ast_factory.new_require_keyword (Current)
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'v', 'V' then
+					inspect text_item (2)
+					when 'a', 'A' then
+						inspect text_item (3)
+						when 'r', 'R' then
+							inspect text_item (4)
+							when 'i', 'I' then
+								inspect text_item (5)
+								when 'a', 'A' then
+									inspect text_item (6)
+									when 'n', 'N' then
+										inspect text_item (7)
+										when 't', 'T' then
+											last_token := E_VARIANT
+											last_value := ast_factory.new_variant_keyword (Current)
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			when 8 then
+				inspect text_item (1)
+				when 'c', 'C' then
+					inspect text_item (2)
+					when 'r', 'R' then
+						inspect text_item (3)
+						when 'e', 'E' then
+							inspect text_item (4)
+							when 'a', 'A' then
+								inspect text_item (5)
+								when 't', 'T' then
+									inspect text_item (6)
+									when 'i', 'I' then
+										inspect text_item (7)
+										when 'o', 'O' then
+											inspect text_item (8)
+											when 'n', 'N' then
+												last_token := E_CREATION
+												last_value := ast_factory.new_creation_keyword (Current)
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'd', 'D' then
+					inspect text_item (2)
+					when 'e', 'E' then
+						inspect text_item (3)
+						when 'f', 'F' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								inspect text_item (5)
+								when 'r', 'R' then
+									inspect text_item (6)
+									when 'r', 'R' then
+										inspect text_item (7)
+										when 'e', 'E' then
+											inspect text_item (8)
+											when 'd', 'D' then
+												last_token := E_DEFERRED
+												last_value := ast_factory.new_deferred_keyword (Current)
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'e', 'E' then
+					inspect text_item (2)
+					when 'x', 'X' then
+						inspect text_item (3)
+						when 'p', 'P' then
+							inspect text_item (4)
+							when 'a', 'A' then
+								inspect text_item (5)
+								when 'n', 'N' then
+									inspect text_item (6)
+									when 'd', 'D' then
+										inspect text_item (7)
+										when 'e', 'E' then
+											inspect text_item (8)
+											when 'd', 'D' then
+												last_token := E_EXPANDED
+												last_value := ast_factory.new_expanded_keyword (Current)
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						when 't', 'T' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								inspect text_item (5)
+								when 'r', 'R' then
+									inspect text_item (6)
+									when 'n', 'N' then
+										inspect text_item (7)
+										when 'a', 'A' then
+											inspect text_item (8)
+											when 'l', 'L' then
+												last_token := E_EXTERNAL
+												last_value := ast_factory.new_external_keyword (Current)
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'i', 'I' then
+					inspect text_item (2)
+					when 'n', 'N' then
+						inspect text_item (3)
+						when 'd', 'D' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								inspect text_item (5)
+								when 'x', 'X' then
+									inspect text_item (6)
+									when 'i', 'I' then
+										inspect text_item (7)
+										when 'n', 'N' then
+											inspect text_item (8)
+											when 'g', 'G' then
+												last_token := E_INDEXING
+												last_value := ast_factory.new_indexing_keyword (Current)
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'o', 'O' then
+					inspect text_item (2)
+					when 'b', 'B' then
+						inspect text_item (3)
+						when 's', 'S' then
+							inspect text_item (4)
+							when 'o', 'O' then
+								inspect text_item (5)
+								when 'l', 'L' then
+									inspect text_item (6)
+									when 'e', 'E' then
+										inspect text_item (7)
+										when 't', 'T' then
+											inspect text_item (8)
+											when 'e', 'E' then
+												last_token := E_OBSOLETE
+												last_value := ast_factory.new_obsolete_keyword (Current)
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'r', 'R' then
+					inspect text_item (2)
+					when 'e', 'E' then
+						inspect text_item (3)
+						when 'd', 'D' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								inspect text_item (5)
+								when 'f', 'F' then
+									inspect text_item (6)
+									when 'i', 'I' then
+										inspect text_item (7)
+										when 'n', 'N' then
+											inspect text_item (8)
+											when 'e', 'E' then
+												last_token := E_REDEFINE
+												last_value := ast_factory.new_redefine_keyword (Current)
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 's', 'S' then
+					inspect text_item (2)
+					when 'e', 'E' then
+						inspect text_item (3)
+						when 'p', 'P' then
+							inspect text_item (4)
+							when 'a', 'A' then
+								inspect text_item (5)
+								when 'r', 'R' then
+									inspect text_item (6)
+									when 'a', 'A' then
+										inspect text_item (7)
+										when 't', 'T' then
+											inspect text_item (8)
+											when 'e', 'E' then
+												last_token := E_SEPARATE
+												last_value := ast_factory.new_separate_keyword (Current)
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'u', 'U' then
+					inspect text_item (2)
+					when 'n', 'N' then
+						inspect text_item (3)
+						when 'd', 'D' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								inspect text_item (5)
+								when 'f', 'F' then
+									inspect text_item (6)
+									when 'i', 'I' then
+										inspect text_item (7)
+										when 'n', 'N' then
+											inspect text_item (8)
+											when 'e', 'E' then
+												last_token := E_UNDEFINE
+												last_value := ast_factory.new_undefine_keyword (Current)
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			when 9 then
+				inspect text_item (1)
+				when 'i', 'I' then
+					inspect text_item (2)
+					when 'n', 'N' then
+						inspect text_item (3)
+						when 'v', 'V' then
+							inspect text_item (4)
+							when 'a', 'A' then
+								inspect text_item (5)
+								when 'r', 'R' then
+									inspect text_item (6)
+									when 'i', 'I' then
+										inspect text_item (7)
+										when 'a', 'A' then
+											inspect text_item (8)
+											when 'n', 'N' then
+												inspect text_item (9)
+												when 't', 'T' then
+													last_token := E_INVARIANT
+													last_value := ast_factory.new_invariant_keyword (Current)
+												else
+													-- Do nothing.
+												end
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'p', 'P' then
+					inspect text_item (2)
+					when 'r', 'R' then
+						inspect text_item (3)
+						when 'e', 'E' then
+							inspect text_item (4)
+							when 'c', 'C' then
+								inspect text_item (5)
+								when 'u', 'U' then
+									inspect text_item (6)
+									when 'r', 'R' then
+										inspect text_item (7)
+										when 's', 'S' then
+											inspect text_item (8)
+											when 'o', 'O' then
+												inspect text_item (9)
+												when 'r', 'R' then
+													last_token := E_PRECURSOR
+													last_value := ast_factory.new_precursor_keyword (Current)
+												else
+													-- Do nothing.
+												end
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'r', 'R' then
+					inspect text_item (2)
+					when 'e', 'E' then
+						inspect text_item (3)
+						when 'f', 'F' then
+							inspect text_item (4)
+							when 'e', 'E' then
+								inspect text_item (5)
+								when 'r', 'R' then
+									inspect text_item (6)
+									when 'e', 'E' then
+										inspect text_item (7)
+										when 'n', 'N' then
+											inspect text_item (8)
+											when 'c', 'C' then
+												inspect text_item (9)
+												when 'e', 'E' then
+													if use_reference_keyword then
+														last_token := E_REFERENCE
+														last_value := ast_factory.new_reference_keyword (Current)
+													end
+												else
+													-- Do nothing.
+												end
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			else
+				-- Do nothing.
+			end
+			if last_token = E_IDENTIFIER then
+				last_value := ast_factory.new_identifier (Current)
+			end
+		end
+
+	process_one_char_symbol (c: CHARACTER) is
+			-- Process Eiffel symbol with made up of only
+			-- one character `c'.
+		require
+			one_char: text_count >= 1
+			-- valid_string: ([-+*/^=><.;,:!?(){}[\]$]).recognizes (text_substring (1, 1))
+			valid_c: text_item (1) = c
+		do
+			last_literal_start := 1
+			last_literal_end := 1
+			inspect c
+			when '-' then
+				last_token := Minus_code
+				last_value := ast_factory.new_minus_symbol (Current)
+			when '+' then
+				last_token := Plus_code
+				last_value := ast_factory.new_plus_symbol (Current)
+			when '*' then
+				last_token := Star_code
+				last_value := ast_factory.new_times_symbol (Current)
+			when '/' then
+				last_token := Slash_code
+				last_value := ast_factory.new_divide_symbol (Current)
+			when '^' then
+				last_token := Caret_code
+				last_value := ast_factory.new_power_symbol (Current)
+			when '=' then
+				last_token := Equal_code
+				last_value := ast_factory.new_equal_symbol (Current)
+			when '>' then
+				last_token := Greater_than_code
+				last_value := ast_factory.new_gt_symbol (Current)
+			when '<' then
+				last_token := Less_than_code
+				last_value := ast_factory.new_lt_symbol (Current)
+			when '.' then
+				last_token := Dot_code
+				last_value := ast_factory.new_dot_symbol (Current)
+			when ';' then
+				last_token := Semicolon_code
+				last_value := ast_factory.new_semicolon_symbol (Current)
+			when ',' then
+				last_token := Comma_code
+				last_value := ast_factory.new_comma_symbol (Current)
+			when ':' then
+				last_token := Colon_code
+				last_value := ast_factory.new_colon_symbol (Current)
+			when '!' then
+				last_token := Exclamation_code
+				last_value := ast_factory.new_bang_symbol (Current)
+			when '?' then
+				last_token := Question_mark_code
+				last_value := ast_factory.new_question_mark_symbol (Current)
+			when '(' then
+				last_token := Left_parenthesis_code
+				last_value := ast_factory.new_left_parenthesis_symbol (Current)
+			when ')' then
+				last_token := Right_parenthesis_code
+				last_value := ast_factory.new_right_parenthesis_symbol (Current)
+			when '{' then
+				last_token := Left_brace_code
+				last_value := ast_factory.new_left_brace_symbol (Current)
+			when '}' then
+				last_token := Right_brace_code
+				last_value := ast_factory.new_right_brace_symbol (Current)
+			when '[' then
+				last_token := Left_bracket_code
+				last_value := ast_factory.new_left_bracket_symbol (Current)
+			when ']' then
+				last_token := Right_bracket_code
+				last_value := ast_factory.new_right_bracket_symbol (Current)
+			when '$' then
+				last_token := Dollar_code
+				last_value := ast_factory.new_dollar_symbol (Current)
+			else
+				last_token := E_UNKNOWN
+				last_value := current_position
+			end
+		end
+
+	process_two_char_symbol (c1, c2: CHARACTER) is
+			-- Process Eiffel symbol with made up of exactly
+			-- two characters `c1' and `c2'.
+		require
+			two_chars: text_count >= 2
+			-- valid_string: ("//"|"\\\\"|"/="|">="|"<="|"!!"|"->"|".."|"<<"|">>"|":="|"?=").recognizes (text_substring (1, 2))
+			valid_c1: text_item (1) = c1
+			valid_c2: text_item (2) = c2
+		do
+			last_literal_start := 1
+			last_literal_end := 2
+			inspect c1
+			when '/' then
+				inspect c2
+				when '/' then
+					last_token := E_DIV
+					last_value := ast_factory.new_div_symbol (Current)
+				when '=' then
+					last_token := E_NE
+					last_value := ast_factory.new_not_equal_symbol (Current)
+				else
+					last_token := E_UNKNOWN
+					last_value := current_position
+				end
+			when '\' then
+				check valid_symbol: c2 = '\' end
+				last_token := E_MOD
+				last_value := ast_factory.new_mod_symbol (Current)
+			when '>' then
+				inspect c2
+				when '=' then
+					last_token := E_GE
+					last_value := ast_factory.new_ge_symbol (Current)
+				when '>' then
+					last_token := E_RARRAY
+					last_value := ast_factory.new_right_array_symbol (Current)
+				else
+					last_token := E_UNKNOWN
+					last_value := current_position
+				end
+			when '<' then
+				inspect c2
+				when '=' then
+					last_token := E_LE
+					last_value := ast_factory.new_le_symbol (Current)
+				when '<' then
+					last_token := E_LARRAY
+					last_value := ast_factory.new_left_array_symbol (Current)
+				else
+					last_token := E_UNKNOWN
+					last_value := current_position
+				end
+			when '!' then
+				check valid_symbol: c2 = '!' end
+				last_token := E_BANGBANG
+				last_value := ast_factory.new_bangbang_symbol (Current)
+			when '-' then
+				check valid_symbol: c2 = '>' end
+				last_token := E_ARROW
+				last_value := ast_factory.new_arrow_symbol (Current)
+			when '.' then
+				check valid_symbol: c2 = '.' end
+				last_token := E_DOTDOT
+				last_value := ast_factory.new_dotdot_symbol (Current)
+			when ':' then
+				check valid_symbol: c2 = '=' end
+				last_token := E_ASSIGN
+				last_value := ast_factory.new_assign_symbol (Current)
+			when '?' then
+				check valid_symbol: c2 = '=' end
+				last_token := E_REVERSE
+				last_value := ast_factory.new_assign_attempt_symbol (Current)
+			else
+				last_token := E_UNKNOWN
+				last_value := current_position
+			end
+		end
+
+	process_c1_character_constant (c: CHARACTER) is
+			-- Process character constant of the form 'A'.
+		require
+			c1_char: text_count >= 3
+			-- valid_string: (\'[^%\n]\').recognizes (text_substring (1, 3))
+			valid_c: text_item (2) = c
+		do
+			if c = '%'' then
+					-- Syntax error: character quote should be declared
+					-- as '%'' and not as ''' in character constant.
+				column := column + 1
+				error_handler.report_SCTQ_error (current_position)
+				column := column - 1
+			end
+			last_literal_start := 2
+			last_literal_end := 2
+			last_token := E_CHARACTER
+			last_value := ast_factory.new_c1_character_constant (c, Current)
+		end
+
+	process_c2_character_constant (c: CHARACTER) is
 			-- Process character constant of the form '%A'.
+		require
+			c2_char: text_count >= 4
+			-- valid_string: (\'%.\').recognizes (text_substring (1, 4))
+			valid_c: text_item (3) = c
+		local
+			a_value: CHARACTER
 		do
+			inspect c
+			when 'A' then
+				a_value := '%A'
+			when 'B' then
+				a_value := '%B'
+			when 'C' then
+				a_value := '%C'
+			when 'D' then
+				a_value := '%D'
+			when 'F' then
+				a_value := '%F'
+			when 'H' then
+				a_value := '%H'
+			when 'L' then
+				a_value := '%L'
+			when 'N' then
+				a_value := '%N'
+			when 'Q' then
+				a_value := '%Q'
+			when 'R' then
+				a_value := '%R'
+			when 'S' then
+				a_value := '%S'
+			when 'T' then
+				a_value := '%T'
+			when 'U' then
+				a_value := '%U'
+			when 'V' then
+				a_value := '%V'
+			when '%%' then
+				a_value := '%%'
+			when '%'' then
+				a_value := '%''
+			when '%"' then
+				a_value := '%"'
+			when '(' then
+				a_value := '%('
+			when ')' then
+				a_value := '%)'
+			when '<' then
+				a_value := '%<'
+			when '>' then
+				a_value := '%>'
+			when 'a' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%A'
+			when 'b' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%B'
+			when 'c' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%C'
+			when 'd' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%D'
+			when 'f' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%F'
+			when 'h' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%H'
+			when 'l' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%L'
+			when 'n' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%N'
+			when 'q' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%Q'
+			when 'r' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%R'
+			when 's' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%S'
+			when 't' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%T'
+			when 'u' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%U'
+			when 'v' then
+					-- Syntax error: special character specification
+					-- %l where l is a letter code should be in
+					-- upper-case in character constant.
+				column := column + 2
+				error_handler.report_SCCU_error (current_position)
+				column := column - 2
+				a_value := '%V'
+			else
+					-- Syntax error: invalid special character
+					-- %l in character constant.
+				column := column + 2
+				error_handler.report_SCSC_error (current_position)
+				column := column - 2
+				a_value := c
+			end
+			last_literal_start := 3
+			last_literal_end := 3
 			last_token := E_CHARACTER
-			last_break_end := 0
-			last_comment_end := 0
 			last_value := ast_factory.new_c2_character_constant (a_value, Current)
 		end
 
-	process_c2_character_constant_break (a_value: CHARACTER) is
-			-- Process character constant of the form '%A',
-			-- followed by a break.
+	process_regular_manifest_string (nb: INTEGER) is
+			-- Process regular manifest string of the form "..."
+			-- with length `nb' (including the two quotes).
+		require
+			nb_large_enough: nb >= 2
+			nb_small_enough: nb <= text_count
+			-- valid_string: (\"[^%\n"]*\").recognizes (text_substring (1, nb))
 		do
-			last_token := E_CHARACTER
-			last_break_start := 5
-			last_break_end := text_count
-			last_comment_end := 0
-			last_value := ast_factory.new_c2_character_constant (a_value, Current)
+			last_token := E_STRING
+			inspect nb
+			when 3 then
+				inspect text_item (2)
+				when '+' then
+					last_token := E_STRPLUS
+				when '-' then
+					last_token := E_STRMINUS
+				when '*' then
+					last_token := E_STRSTAR
+				when '/' then
+					last_token := E_STRSLASH
+				when '^' then
+					last_token := E_STRPOWER
+				when '<' then
+					last_token := E_STRLT
+				when '>' then
+					last_token := E_STRGT
+				else
+					-- Do nothing.
+				end
+			when 4 then
+				inspect text_item (2)
+				when '/' then
+					inspect text_item (3)
+					when '/' then
+						last_token := E_STRDIV
+					else
+						-- Do nothing.
+					end
+				when '\' then
+					inspect text_item (3)
+					when '\' then
+						last_token := E_STRMOD
+					else
+						-- Do nothing.
+					end
+				when '<' then
+					inspect text_item (3)
+					when '=' then
+						last_token := E_STRLE
+					else
+						-- Do nothing.
+					end
+				when '>' then
+					inspect text_item (3)
+					when '=' then
+						last_token := E_STRGE
+					else
+						-- Do nothing.
+					end
+				when 'o', 'O' then
+					inspect text_item (3)
+					when 'r', 'R' then
+						last_token := E_STROR
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			when 5 then
+				inspect text_item (2)
+				when 'a', 'A' then
+					inspect text_item (3)
+					when 'n', 'N' then
+						inspect text_item (4)
+						when 'd', 'D' then
+							last_token := E_STRAND
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'n', 'N' then
+					inspect text_item (3)
+					when 'o', 'O' then
+						inspect text_item (4)
+						when 't', 'T' then
+							last_token := E_STRNOT
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'x', 'X' then
+					inspect text_item (3)
+					when 'o', 'O' then
+						inspect text_item (4)
+						when 'r', 'R' then
+							last_token := E_STRXOR
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			when 9 then
+				inspect text_item (2)
+				when 'o', 'O' then
+					inspect text_item (3)
+					when 'r', 'R' then
+						inspect text_item (4)
+						when ' ' then
+							inspect text_item (5)
+							when 'e', 'E' then
+								inspect text_item (6)
+								when 'l', 'L' then
+									inspect text_item (7)
+									when 's', 'S' then
+										inspect text_item (8)
+										when 'e', 'E' then
+											last_token := E_STRORELSE
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				when 'i', 'I' then
+					inspect text_item (3)
+					when 'm', 'M' then
+						inspect text_item (4)
+						when 'p', 'P' then
+							inspect text_item (5)
+							when 'l', 'L' then
+								inspect text_item (6)
+								when 'i', 'I' then
+									inspect text_item (7)
+									when 'e', 'E' then
+										inspect text_item (8)
+										when 's', 'S' then
+											last_token := E_STRIMPLIES
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			when 10 then
+				inspect text_item (2)
+				when 'a', 'A' then
+					inspect text_item (3)
+					when 'n', 'N' then
+						inspect text_item (4)
+						when 'd', 'D' then
+							inspect text_item (5)
+							when ' ' then
+								inspect text_item (6)
+								when 't', 'T' then
+									inspect text_item (7)
+									when 'h', 'H' then
+										inspect text_item (8)
+										when 'e', 'E' then
+											inspect text_item (9)
+											when 'n', 'N' then
+												last_token := E_STRANDTHEN
+											else
+												-- Do nothing.
+											end
+										else
+											-- Do nothing.
+										end
+									else
+										-- Do nothing.
+									end
+								else
+									-- Do nothing.
+								end
+							else
+								-- Do nothing.
+							end
+						else
+							-- Do nothing.
+						end
+					else
+						-- Do nothing.
+					end
+				else
+					-- Do nothing.
+				end
+			else
+				-- Do nothing.
+			end
+			last_literal_start := 2
+			last_literal_end := nb - 1
+			last_value := ast_factory.new_regular_manifest_string (Current)
 		end
 
-	process_c2_character_constant_comment (a_value: CHARACTER) is
-			-- Process character constant of the form '%A',
-			-- followed by a comment.
+	process_break is
+			-- Process break.
 		do
-			last_token := E_CHARACTER
-			last_break_end := 0
-			last_comment_start := 5
-			last_comment_end := text_count
-			last_value := ast_factory.new_c2_character_constant (a_value, Current)
+			inspect break_kind
+			when identifier_break then
+				process_identifier (last_text_count)
+			when freeop_break then
+				last_token := E_FREEOP
+				last_value := ast_factory.new_free_operator (Current)
+			when character_break then
+				last_token := E_CHARACTER
+				last_value := ast_factory.new_c3_character_constant (Current)
+			when integer_break then
+				last_token := E_INTEGER
+				last_value := ast_factory.new_regular_integer_constant (Current)
+			when uinteger_break then
+				last_token := E_INTEGER
+				last_value := ast_factory.new_underscored_integer_constant (Current)
+			when hinteger_break then
+				last_token := E_INTEGER
+				last_value := ast_factory.new_hexadecimal_integer_constant (Current)
+			when real_break then
+				last_token := E_REAL
+				last_value := ast_factory.new_regular_real_constant (Current)
+			when ureal_break then
+				last_token := E_REAL
+				last_value := ast_factory.new_underscored_real_constant (Current)
+			when bit_break then
+				last_token := E_BIT
+				last_value := ast_factory.new_bit_constant (Current)
+			when string_break then
+				process_regular_manifest_string (last_text_count)
+			when str_freeop_break then
+				last_token := E_STRFREEOP
+				last_value := ast_factory.new_regular_manifest_string (Current)
+			when str_special_break then
+				last_token := E_STRING
+				last_value := ast_factory.new_special_manifest_string (Current)
+			when str_verbatim_break then
+				last_token := E_STRING
+				last_value := ast_factory.new_verbatim_string (verbatim_marker,
+					verbatim_open_white_characters, verbatim_close_white_characters, Current)
+				verbatim_marker := Void
+				verbatim_open_white_characters := Void
+				verbatim_close_white_characters := Void
+			else
+				last_token := E_UNKNOWN
+				last_value := current_position
+			end
 		end
-
-	process_lower_case_c2_character_constant (a_value: CHARACTER) is
-			-- Process character constant of the form '%a'.
-		do
-				-- Syntax error: special character specification
-				-- %l where l is a letter code should be in
-				-- upper-case in character constant.
-			column := column + 2
-			error_handler.report_SCCU_error (current_position)
-			column := column - 2
-
-			last_token := E_CHARACTER
-			last_break_end := 0
-			last_comment_end := 0
-			last_value := ast_factory.new_c2_character_constant (a_value, Current)
-		end
-
-	process_lower_case_c2_character_constant_break (a_value: CHARACTER) is
-			-- Process character constant of the form '%a',
-			-- followed by a break.
-		do
-				-- Syntax error: special character specification
-				-- %l where l is a letter code should be in
-				-- upper-case in character constant.
-			column := column + 2
-			error_handler.report_SCCU_error (current_position)
-			column := column - 2
-
-			last_token := E_CHARACTER
-			last_break_start := 5
-			last_break_end := text_count
-			last_comment_end := 0
-			last_value := ast_factory.new_c2_character_constant (a_value, Current)
-		end
-
-	process_lower_case_c2_character_constant_comment (a_value: CHARACTER) is
-			-- Process character constant of the form '%a',
-			-- followed by a comment.
-		do
-				-- Syntax error: special character specification
-				-- %l where l is a letter code should be in
-				-- upper-case in character constant.
-			column := column + 2
-			error_handler.report_SCCU_error (current_position)
-			column := column - 2
-
-			last_token := E_CHARACTER
-			last_break_end := 0
-			last_comment_start := 5
-			last_comment_end := text_count
-			last_value := ast_factory.new_c2_character_constant (a_value, Current)
-		end
-
-feature {NONE} -- Constants
-
-	capitalized_current_keyword: STRING is "Current"
-	capitalized_false_keyword: STRING is "False"
-	capitalized_precursor_keyword: STRING is "Precursor"
-	capitalized_result_keyword: STRING is "Result"
-	capitalized_true_keyword: STRING is "True"
-	capitalized_unique_keyword: STRING is "Unique"
-			-- Eiffel keywords with first letter in upper-case
-
-	agent_keyword: STRING is "agent"
-	alias_keyword: STRING is "alias"
-	all_keyword: STRING is "all"
-	and_keyword: STRING is "and"
-	as_keyword: STRING is "as"
-	check_keyword: STRING is "check"
-	class_keyword: STRING is "class"
-	create_keyword: STRING is "create"
-	creation_keyword: STRING is "creation"
-	current_keyword: STRING is "current"
-	debug_keyword: STRING is "debug"
-	deferred_keyword: STRING is "deferred"
-	do_keyword: STRING is "do"
-	else_keyword: STRING is "else"
-	elseif_keyword: STRING is "elseif"
-	end_keyword: STRING is "end"
-	ensure_keyword: STRING is "ensure"
-	expanded_keyword: STRING is "expanded"
-	export_keyword: STRING is "export"
-	external_keyword: STRING is "external"
-	false_keyword: STRING is "false"
-	feature_keyword: STRING is "feature"
-	from_keyword: STRING is "from"
-	frozen_keyword: STRING is "frozen"
-	if_keyword: STRING is "if"
-	implies_keyword: STRING is "implies"
-	indexing_keyword: STRING is "indexing"
-	infix_keyword: STRING is "infix"
-	inherit_keyword: STRING is "inherit"
-	inspect_keyword: STRING is "inspect"
-	invariant_keyword: STRING is "invariant"
-	is_keyword: STRING is "is"
-	like_keyword: STRING is "like"
-	local_keyword: STRING is "local"
-	loop_keyword: STRING is "loop"
-	not_keyword: STRING is "not"
-	obsolete_keyword: STRING is "obsolete"
-	old_keyword: STRING is "old"
-	once_keyword: STRING is "once"
-	or_keyword: STRING is "or"
-	precursor_keyword: STRING is "precursor"
-	prefix_keyword: STRING is "prefix"
-	redefine_keyword: STRING is "redefine"
-	reference_keyword: STRING is "reference"
-	rename_keyword: STRING is "rename"
-	require_keyword: STRING is "require"
-	rescue_keyword: STRING is "rescue"
-	result_keyword: STRING is "result"
-	retry_keyword: STRING is "retry"
-	select_keyword: STRING is "select"
-	separate_keyword: STRING is "separate"
-	strip_keyword: STRING is "strip"
-	then_keyword: STRING is "then"
-	true_keyword: STRING is "true"
-	undefine_keyword: STRING is "undefine"
-	unique_keyword: STRING is "unique"
-	until_keyword: STRING is "until"
-	variant_keyword: STRING is "variant"
-	when_keyword: STRING is "when"
-	xor_keyword: STRING is "xor"
-			-- Eiffel keywords
-
-	arrow_symbol: STRING is "->"
-	assign_symbol: STRING is ":="
-	assign_attempt_symbol: STRING is "?="
-	bang_symbol: STRING is "!"
-	bangbang_symbol: STRING is "!!"
-	colon_symbol: STRING is ":"
-	comma_symbol: STRING is ","
-	div_symbol: STRING is "//"
-	divide_symbol: STRING is "/"
-	dollar_symbol: STRING is "$"
-	dot_symbol: STRING is "."
-	dotdot_symbol: STRING is ".."
-	equal_symbol: STRING is "="
-	ge_symbol: STRING is ">="
-	gt_symbol: STRING is ">"
-	le_symbol: STRING is "<="
-	left_array_symbol: STRING is "<<"
-	left_brace_symbol: STRING is "{"
-	left_bracket_symbol: STRING is "["
-	left_parenthesis_symbol: STRING is "("
-	lt_symbol: STRING is "<"
-	minus_symbol: STRING is "-"
-	mod_symbol: STRING is "\\"
-	not_equal_symbol: STRING is "/="
-	plus_symbol: STRING is "+"
-	power_symbol: STRING is "^"
-	question_mark_symbol: STRING is "?"
-	right_array_symbol: STRING is ">>"
-	right_brace_symbol: STRING is "}"
-	right_bracket_symbol: STRING is "]"
-	right_parenthesis_symbol: STRING is ")"
-	semicolon_symbol: STRING is ";"
-	times_symbol: STRING is "*"
-			-- Eiffel symbols
 
 invariant
 
 	filename_not_void: filename /= Void
 	ast_factory_not_void: ast_factory /= Void
 	error_handler_not_void: error_handler /= Void
+	last_text_count_positive: last_text_count >= 0
+	last_literal_start_large_enough: last_literal_start >= 1
+	last_literal_start_small_enough: last_literal_start <= last_literal_end + 1
+	last_literal_end_small_enough: last_literal_end <= text_count
 
 end

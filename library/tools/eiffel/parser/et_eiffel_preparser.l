@@ -27,127 +27,76 @@ creation
 
 %%
 
-----------/** Separators **/----------------------------------------------------
+----------/** Separators, Comments, Symbols **/----------------------------------------------------
 
-[ \t\r]+		-- Ignore spaces.
-\n+				-- Ignore new-lines.
-
-
-----------/** Eiffel comments **/-----------------------------------------------
-
-"--".*			-- Ignore comments.
-
-
-----------/** Eiffel symbols **/------------------------------------------------
-
-"-"			{
+([ \t\r\n]|"--".*)+	|
+[-+*/^=><.;,:!?(){}[\]$]	|
+("//"|"\\\\"|"/="|">="|"<="|"!!"|"->"|".."|"<<"|">>"|":="|"?=")	{
 			}
-"+"			{
-			}
-"*"			{
-			}
-"/"			{
-			}
-"^"			{
-			}
-"="			{
-			}
-">"			{
-			}
-"<"			{
-			}
-"."			{
-			}
-";"			{
-			}
-","			{
-			}
-":"			{
-			}
-"!"			{
-			}
-"("			{
-			}
-")"			{
-			}
-"{"			{
-			}
-"}"			{
-			}
-"["			{
-			}
-"]"			{
-			}
-"$"			{
-			}
-"//"		{
-			}
-"\\\\"		{
-			}
-"/="		{
-			}
-">="		{
-			}
-"<="		{
-			}
-"!!"		{
-			}
-"->"		{
-			}
-".."		{
-			}
-"<<"		{
-			}
-">>"		{
-			}
-":="		{
-			}
-"?="		{
-			}
-
 
 ----------/** Reserved words **/------------------------------------------------
 
-agent		{
-			}
-[aA][gG][eE][nN][tT]	{
-			}
-alias		{
-			}
-[aA][lL][iI][aA][sS]	{
-			}
-all			{
-			}
-[aA][lL][lL]	{
-			}
-and			{
-			}
-[aA][nN][dD]	{
-			}
-as			{
-			}
-[aA][sS]	{
-			}
-check		{
-			}
-[cC][hH][eE][cC][kK]	{
-			}
-class		{
-				class_keyword_found := True
+[aA][gG][eE][nN][tT]	|
+[aA][lL][iI][aA][sS]	|
+[aA][lL][lL]	|
+[aA][nN][dD]	|
+[aA][sS]	|
+[bB][iI][tT]	|
+[cC][hH][eE][cC][kK]	|
+[cC][rR][eE][aA][tT][iI][oO][nN]	|
+[cC][uU][rR][rR][eE][nN][tT]	|
+[dD][eE][bB][uU][gG]	|
+[dD][eE][fF][eE][rR][rR][eE][dD]	|
+[dD][oO]	|
+[eE][lL][sS][eE]	|
+[eE][lL][sS][eE][iI][fF]	|
+[eE][nN][dD]	|
+[eE][nN][sS][uU][rR][eE]	|
+[eE][xX][pP][aA][nN][dD][eE][dD]	|
+[eE][xX][pP][oO][rR][tT]	|
+[eE][xX][tT][eE][rR][nN][aA][lL]	|
+[fF][aA][lL][sS][eE]	|
+[fF][eE][aA][tT][uU][rR][eE]	|
+[fF][rR][oO][mM]	|
+[fF][rR][oO][zZ][eE][nN]	|
+[iI][fF]	|
+[iI][mM][pP][lL][iI][eE][sS]	|
+[iI][nN][dD][eE][xX][iI][nN][gG]	|
+[iI][nN][fF][iI][xX]	|
+[iI][nN][hH][eE][rR][iI][tT]	|
+[iI][nN][sS][pP][eE][cC][tT]	|
+[iI][nN][vV][aA][rR][iI][aA][nN][tT]	|
+[iI][sS]	|
+[lL][iI][kK][eE]	|
+[lL][oO][cC][aA][lL]	|
+[lL][oO][oO][pP]	|
+[nN][oO][tT]	|
+[oO][bB][sS][oO][lL][eE][tT][eE]	|
+[oO][lL][dD]	|
+[oO][nN][cC][eE]	|
+[oO][rR]	|
+[pP][rR][eE][cC][uU][rR][sS][oO][rR]	|
+[pP][rR][eE][fF][iI][xX]	|
+[rR][eE][dD][eE][fF][iI][nN][eE]	|
+[rR][eE][nN][aA][mM][eE]	|
+[rR][eE][qQ][uU][iI][rR][eE]	|
+[rR][eE][sS][cC][uU][eE]	|
+[rR][eE][sS][uU][lL][tT]	|
+[rR][eE][tT][rR][yY]	|
+[sS][eE][lL][eE][cC][tT]	|
+[sS][eE][pP][aA][rR][aA][tT][eE]	|
+[sS][tT][rR][iI][pP]	|
+[tT][hH][eE][nN]	|
+[tT][rR][uU][eE]	|
+[uU][nN][dD][eE][fF][iI][nN][eE]	|
+[uU][nN][iI][qQ][uU][eE]	|
+[uU][nN][tT][iI][lL]	|
+[vV][aA][rR][iI][aA][nN][tT]	|
+[wW][hH][eE][nN]	|
+[xX][oO][rR]	{
 			}
 [cC][lL][aA][sS][sS]	{
 				class_keyword_found := True
-			}
-create		{
-				if use_create_keyword then
-					-- Do nothing.
-				elseif class_keyword_found then
-					last_token := E_IDENTIFIER
-					last_literal_start := 1
-					last_literal_end := 6
-					last_break_end := 6
-					last_classname := ast_factory.new_identifier (Current)
-				end
 			}
 [cC][rR][eE][aA][tT][eE]	{
 				if use_create_keyword then
@@ -156,164 +105,8 @@ create		{
 					last_token := E_IDENTIFIER
 					last_literal_start := 1
 					last_literal_end := 6
-					last_break_end := 6
-					last_classname := ast_factory.new_identifier (Current)
-				end
-			}
-creation	{
-			}
-[cC][rR][eE][aA][tT][iI][oO][nN]	{
-			}
-current		{
-			}
-Current		{
-			}
-[cC][uU][rR][rR][eE][nN][tT]	{
-			}
-debug		{
-			}
-[dD][eE][bB][uU][gG]	{
-			}
-deferred	{
-			}
-[dD][eE][fF][eE][rR][rR][eE][dD]	{
-			}
-do			{
-			}
-[dD][oO]	{
-			}
-else		{
-			}
-[eE][lL][sS][eE]	{
-			}
-elseif		{
-			}
-[eE][lL][sS][eE][iI][fF]	{
-			}
-end			{
-			}
-[eE][nN][dD]	{
-			}
-ensure		{
-			}
-[eE][nN][sS][uU][rR][eE]	{
-			}
-expanded	{
-			}
-[eE][xX][pP][aA][nN][dD][eE][dD]	{
-			}
-export		{
-			}
-[eE][xX][pP][oO][rR][tT]	{
-			}
-external	{
-			}
-[eE][xX][tT][eE][rR][nN][aA][lL]	{
-			}
-false		{
-			}
-False		{
-			}
-[fF][aA][lL][sS][eE]	{
-			}
-feature		{
-			}
-[fF][eE][aA][tT][uU][rR][eE]	{
-			}
-from		{
-			}
-[fF][rR][oO][mM]	{
-			}
-frozen		{
-			}
-[fF][rR][oO][zZ][eE][nN]	{
-			}
-if			{
-			}
-[iI][fF]	{
-			}
-implies		{
-			}
-[iI][mM][pP][lL][iI][eE][sS]	{
-			}
-indexing	{
-			}
-[iI][nN][dD][eE][xX][iI][nN][gG]	{
-			}
-infix		{
-			}
-[iI][nN][fF][iI][xX]	{
-			}
-inherit		{
-			}
-[iI][nN][hH][eE][rR][iI][tT]	{
-			}
-inspect		{
-			}
-[iI][nN][sS][pP][eE][cC][tT]	{
-			}
-invariant	{
-			}
-[iI][nN][vV][aA][rR][iI][aA][nN][tT]	{
-			}
-is			{
-			}
-[iI][sS]	{
-			}
-like		{
-			}
-[lL][iI][kK][eE]	{
-			}
-local		{
-			}
-[lL][oO][cC][aA][lL]	{
-			}
-loop		{
-			}
-[lL][oO][oO][pP]	{
-			}
-not			{
-			}
-[nN][oO][tT]	{
-			}
-obsolete	{
-			}
-[oO][bB][sS][oO][lL][eE][tT][eE]	{
-			}
-old			{
-			}
-[oO][lL][dD]	{
-			}
-once		{
-			}
-[oO][nN][cC][eE]	{
-			}
-or			{
-			}
-[oO][rR]	{
-			}
-precursor	{
-			}
-Precursor	{
-			}
-[pP][rR][eE][cC][uU][rR][sS][oO][rR]	{
-			}
-prefix		{
-			}
-[pP][rR][eE][fF][iI][xX]	{
-			}
-redefine	{
-			}
-[rR][eE][dD][eE][fF][iI][nN][eE]	{
-			}
-reference	{
-				if use_reference_keyword then
-					-- Do nothing.
-				elseif class_keyword_found then
-					last_token := E_IDENTIFIER
-					last_literal_start := 1
-					last_literal_end := 9
-					last_break_end := 9
+					last_break_end := 0
+					last_comment_end := 0
 					last_classname := ast_factory.new_identifier (Current)
 				end
 			}
@@ -324,90 +117,22 @@ reference	{
 					last_token := E_IDENTIFIER
 					last_literal_start := 1
 					last_literal_end := 9
-					last_break_end := 9
+					last_break_end := 0
+					last_comment_end := 0
 					last_classname := ast_factory.new_identifier (Current)
 				end
-			}
-rename		{
-			}
-[rR][eE][nN][aA][mM][eE]	{
-			}
-require		{
-			}
-[rR][eE][qQ][uU][iI][rR][eE]	{
-			}
-rescue		{
-			}
-[rR][eE][sS][cC][uU][eE]	{
-			}
-result		{
-			}
-Result		{
-			}
-[rR][eE][sS][uU][lL][tT]	{
-			}
-retry		{
-			}
-[rR][eE][tT][rR][yY]	{
-			}
-select		{
-			}
-[sS][eE][lL][eE][cC][tT]	{
-			}
-separate	{
-			}
-[sS][eE][pP][aA][rR][aA][tT][eE]	{
-			}
-strip		{
-			}
-[sS][tT][rR][iI][pP]	{
-			}
-then		{
-			}
-[tT][hH][eE][nN]	{
-			}
-true		{
-			}
-True		{
-			}
-[tT][rR][uU][eE]	{
-			}
-undefine	{
-			}
-[uU][nN][dD][eE][fF][iI][nN][eE]	{
-			}
-unique		{
-			}
-[uU][nN][iI][qQ][uU][eE]	{
-			}
-until		{
-			}
-[uU][nN][tT][iI][lL]	{
-			}
-variant		{
-			}
-[vV][aA][rR][iI][aA][nN][tT]	{
-			}
-when		{
-			}
-[wW][hH][eE][nN]	{
-			}
-xor			{
-			}
-[xX][oO][rR]	{
 			}
 
 
 ----------/** Eiffel identifiers **/--------------------------------------------
 
-[bB][iI][tT]	{
-			}
 [a-zA-Z][a-zA-Z0-9_]*	{
 				if class_keyword_found then
 					last_token := E_IDENTIFIER
 					last_literal_start := 1
 					last_literal_end := text_count
-					last_break_end := last_literal_end
+					last_break_end := 0
+					last_comment_end := 0
 					last_classname := ast_factory.new_identifier (Current)
 				end
 			}
@@ -424,97 +149,9 @@ xor			{
 
 ----------/** Eiffel characters **/---------------------------------------------
 
-\'[^%\n']\'	{
-			}
-\'\'\'		{
-					-- Syntax error: character quote should be declared
-					-- as '%'' and not as ''' in character constant.
---				column := column + 1
---				error_handler.report_SCTQ_error (current_position)
---				column := column - 1
-			}
-
-\'%A\'		{
-			}
-\'%B\'		{
-			}
-\'%C\'		{
-			}
-\'%D\'		{
-			}
-\'%F\'		{
-			}
-\'%H\'		{
-			}
-\'%L\'		{
-			}
-\'%N\'		{
-			}
-\'%Q\'		{
-			}
-\'%R\'		{
-			}
-\'%S\'		{
-			}
-\'%T\'		{
-			}
-\'%U\'		{
-			}
-\'%V\'		{
-			}
-\'%%\'		{
-			}
-\'%\'\'		{
-			}
-\'%\"\'		{
-			}
-\'%\(\'		{
-			}
-\'%\)\'		{
-			}
-\'%<\'		{
-			}
-\'%>\'		{
-			}
-
+\'[^%\n]\'	|
+\'%.\'		|
 \'%\/[0-9]+\/\'	{
-			}
-			`
-\'%a\'		{
-			}
-\'%b\'		{
-			}
-\'%c\'		{
-			}
-\'%d\'		{
-			}
-\'%f\'		{
-			}
-\'%h\'		{
-			}
-\'%l\'		{
-			}
-\'%n\'		{
-			}
-\'%q\'		{
-			}
-\'%r\'		{
-			}
-\'%s\'		{
-			}
-\'%t\'		{
-			}
-\'%u\'		{
-			}
-\'%v\'		{
-			}
-
-\'%.\'		{
-					-- Syntax error: invalid special character
-					-- %l in character constant.
---				column := column + 2
---				error_handler.report_SCSC_error (current_position)
---				column := column - 2
 			}
 
 \'%\/[0-9]+	{
@@ -523,7 +160,6 @@ xor			{
 				column := column + text_count
 				error_handler.report_SCAS_error (current_position)
 				column := column - text_count
-
 				last_token := E_CHARERR
 			}
 \'%\/		{
@@ -532,7 +168,6 @@ xor			{
 				column := column + 3
 				error_handler.report_SCAC_error (current_position)
 				column := column - 3
-
 				last_token := E_CHARERR
 			}
 \'\'		{
@@ -540,7 +175,6 @@ xor			{
 				column := column + 1
 				error_handler.report_SCQQ_error (current_position)
 				column := column - 1
-
 				last_token := E_CHARERR
 			}
 \'(.|%.|%\/[0-9]+\/)?	{
@@ -549,51 +183,11 @@ xor			{
 				column := column + text_count
 				error_handler.report_SCEQ_error (current_position)
 				column := column - text_count
-
 				last_token := E_CHARERR
 			}
 
 
 ----------/** Eiffel strings **/------------------------------------------------
-
-\"\+\"		{
-			}
-\"-\"		{
-			}
-\"\*\"		{
-			}
-\"\/\"		{
-			}
-\"\/\/\"	{
-			}
-\"\\\\\"	{
-			}
-\"^\"		{
-			}
-\"<\"		{
-			}
-\"<=\"		{
-			}
-\">\"		{
-			}
-\">=\"		{
-			}
-\"[nN][oO][tT]\"	{
-			}
-\"[aA][nN][dD]\"	{
-			}
-\"[oO][rR]\"	{
-			}
-\"[xX][oO][rR]\"	{
-			}
-\"[aA][nN][dD]\ [tT][hH][eE][nN]\"	{
-			}
-\"[oO][rR]\ [eE][lL][sS][eE]\"	{
-			}
-\"[iI][mM][pP][lL][iI][eE][sS]\"	{
-			}
-\"[@#|&][^%" \t\r\n]*\"	{
-			}
 
 \"[^%\n"]*\"	{
 			}
@@ -607,7 +201,8 @@ xor			{
 		-- Discard space characters at the
 		-- end of Verbatim_string_opener.
 	[ \t\r]*\n {
-				vs_count := 0
+				last_literal_start := 1
+				last_literal_end := 0
 				set_start_condition (VS2)
 			}
 	.		{
@@ -625,7 +220,7 @@ xor			{
 		-- Read one line of a verbatim string body
 		-- from the beginning of line.
 	[ \t\r]*\][^%\n"]*\" {
-				if is_verbatim_string_closer (vs_count + 1, text_count - 1) then
+				if is_verbatim_string_closer (last_literal_end + 1, text_count - 1) then
 					verbatim_marker := Void
 					set_start_condition (INITIAL)
 				else
@@ -639,11 +234,11 @@ xor			{
 			}
 	[^"\n]*\r\n {
 				more
-				vs_count := text_count - 2
+				last_literal_end := text_count - 2
 			}
 	[^"\n]*\n {
 				more
-				vs_count := text_count - 1
+				last_literal_end := text_count - 1
 			}
 	[^"\n]* {
 					-- No final bracket-double-quote.
@@ -661,12 +256,12 @@ xor			{
 		-- in verbatim string body.
 	.*\r\n	{
 				more
-				vs_count := text_count - 2
+				last_literal_end := text_count - 2
 				set_start_condition (VS2)
 			}
 	.*\n	{
 				more
-				vs_count := text_count - 1
+				last_literal_end := text_count - 1
 				set_start_condition (VS2)
 			}
 	.*		{
