@@ -26,7 +26,7 @@
 		<option name="line_generation" value="true"/>
 	</option>
 	<option if="${GOBO_EIFFEL}=ve">
-		<option name="linker" value="microsoft"/>
+		<option name="linker" value="microsoft" if="${GOBO_OS}=windows"/>
 	</option>
 
 	<cluster name="expat_tester" location="${GOBO}/test/xml/expat"/>
