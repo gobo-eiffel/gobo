@@ -71,6 +71,18 @@ feature -- Access
 	ancestors: DS_HASH_TABLE [ET_CLASS_TYPE, ET_CLASS]
 			-- Proper ancestors, indexed by base class
 
+	ancestor (a_type: ET_CLASS_TYPE): ET_CLASS_TYPE is
+		require
+			a_type_not_void: a_type /= Void
+			has_ancestor: has_ancestor (a_type.base_class)
+		do
+			if a_type.base_class = Current then
+				Result := a_type
+			else
+				Result := ancestors.item (a_type.base_class)
+			end
+		end
+
 	features: DS_HASH_TABLE [ET_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
 
@@ -438,6 +450,9 @@ feature {ET_PARENTS, ET_PARENT, ET_CLASS} -- Genealogy
 	set_ancestors_error (b: BOOLEAN) is
 			-- Set `has_ancestors_error' to `b'.
 		do
+if equal (name.name, "COLLECTION") then
+do_nothing
+end
 			has_ancestors_error := b
 		ensure
 			has_ancestors_error_set: has_ancestors_error = b
