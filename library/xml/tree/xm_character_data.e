@@ -4,7 +4,7 @@ indexing
 
 		"Objects that represent character data XML nodes (plain text)"
 
-	library:	"Gobo Eiffel Kernel Library"
+	library:	"Gobo Eiffel XML Library"
 	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
 	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
 	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"

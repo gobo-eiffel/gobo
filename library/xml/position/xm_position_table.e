@@ -4,7 +4,7 @@ indexing
 
 		"A Table which maps XML nodes to their position in the source document"
 
-	library:	"Gobo Eiffel Kernel Library"
+	library:	"Gobo Eiffel XML Library"
 	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
 	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
 	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"

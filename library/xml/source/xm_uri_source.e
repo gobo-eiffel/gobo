@@ -5,7 +5,7 @@ indexing
 		"Abstract definition of the source of an XML document that %
 		%has been retrieved via an URI"
 
-	library:	"Gobo Eiffel Kernel Library"
+	library:	"Gobo Eiffel XML Library"
 	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
 	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
 	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"

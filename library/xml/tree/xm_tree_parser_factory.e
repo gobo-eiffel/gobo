@@ -5,7 +5,7 @@ indexing
 		"Abstract definition of a factory that creates tree based XML %
 		%parser objects"
 
-	library:	"Gobo Eiffel Kernel Library"
+	library:	"Gobo Eiffel XML Library"
 	author:		"Andreas Leitner <nozone@sbox.tugraz.at>"
 	copyright:	"Copyright (c) 2001, Andreas Leitner and others"
 	license:	"Eiffel Forum Freeware License v1 (see forum.txt)"
