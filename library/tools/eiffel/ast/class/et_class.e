@@ -14,6 +14,7 @@ class ET_CLASS
 
 inherit
 
+	ET_AST_NODE
 	HASHABLE
 	ET_SHARED_FEATURE_NAME_TESTER
 	ET_SHARED_TOKEN_CONSTANTS
@@ -132,6 +133,29 @@ feature -- Access
 			Result := universe.error_handler
 		ensure
 			error_handler_not_void: Result /= Void
+		end
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			if first_indexing /= Void then
+				Result := first_indexing.position
+			elseif class_mark /= Void then
+				Result := class_mark.position
+			else
+				Result := class_keyword.position
+			end
+		end
+
+	leading_break: ET_BREAK
+			-- Break that appears at the top of the file, before
+			-- the class declaration
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			Result := end_keyword.break
 		end
 
 feature -- Genericity
@@ -506,6 +530,14 @@ feature {ET_EIFFEL_SCANNER_SKELETON} -- Compilation: parsing
 			end_keyword := an_end
 		ensure
 			end_keyword_set: end_keyword = an_end
+		end
+
+	set_leading_break (a_break: like leading_break) is
+			-- Set `leading_break' to `a_break'.
+		do
+			leading_break := a_break
+		ensure
+			leading_break_set: leading_break = a_break
 		end
 
 	put_feature (a_feature: ET_FEATURE) is
@@ -888,6 +920,14 @@ feature {ET_FEATURE_FLATTENER} -- Compilation: feature flattening
 			seeded_features := some_features
 		ensure
 			seeded_features_set: seeded_features = some_features
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR) is
+			-- Process current node.
+		do
+			a_processor.process_class (Current)
 		end
 
 invariant
