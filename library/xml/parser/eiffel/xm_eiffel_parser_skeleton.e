@@ -304,6 +304,16 @@ feature {NONE} -- Error reporting
 			abort
 		end
 
+feature {XM_PARSER_STOP_ON_ERROR_FILTER}
+
+	force_unreported_error (an_error: STRING) is
+			-- Stop the parser, but do not issue an event error because
+			-- the error is issued by a downstream event.
+		do
+			last_error_description := an_error
+			abort
+		end
+
 feature {NONE} -- State
 
 	entities: DS_HASH_TABLE [XM_EIFFEL_ENTITY_DEF, STRING]

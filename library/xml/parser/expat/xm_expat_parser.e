@@ -176,9 +176,19 @@ feature {NONE} -- Implementation
 	parse_from_entity is
 			-- Parse from entity resolver
 		do
-			-- TODO: I suppose, applicable for Expat?
+			-- TODO: plug entity_resolver into expat entity resolving scheme and use it
 		end
 
+feature {XM_PARSER_STOP_ON_ERROR_FILTER} -- 
+
+	force_unreported_error (an_error: STRING) is
+			-- Stop the parser without reporting the error to downstream events.
+		do
+			is_correct := False
+			last_error := Xml_err_unknown
+			-- TODO: really stop the parser
+		end
+		
 feature -- Incremental parsing
 
 	parse_incremental_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM) is
