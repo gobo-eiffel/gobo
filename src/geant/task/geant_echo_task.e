@@ -56,7 +56,7 @@ feature -- Access
 feature {NONE} -- Constants
 
 	Message_attribute_name: STRING is
-			-- Name of xml attribute message.
+			-- Name of xml attribute message
 		once
 			Result := "message"
 		ensure
@@ -65,7 +65,7 @@ feature {NONE} -- Constants
 		end
 
 	To_file_attribute_name: STRING is
-			-- Name of xml attribute to_file.
+			-- Name of xml attribute to_file
 		once
 			Result := "to_file"
 		ensure
@@ -74,7 +74,7 @@ feature {NONE} -- Constants
 		end
 
 	Append_attribute_name: STRING is
-			-- Name of xml attribute append.
+			-- Name of xml attribute append
 		once
 			Result := "append"
 		ensure

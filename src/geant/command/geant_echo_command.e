@@ -39,7 +39,7 @@ feature -- Access
 			-- Name of destination file
 
 	append: BOOLEAN
-			-- Should `message' be appended to file named `to_file'
+			-- Should `message' be appended to file named `to_file'?
 
 feature -- Setting
 
