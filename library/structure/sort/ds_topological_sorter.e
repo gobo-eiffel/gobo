@@ -478,5 +478,6 @@ invariant
 	successors_not_void: successors /= Void
 	successors_count: successors.count = items.count
 	successors_capacity: successors.capacity = items.capacity
+	has_cycle: has_cycle implies cycle.count >= 2 and then cycle.first = cycle.last
 
 end
