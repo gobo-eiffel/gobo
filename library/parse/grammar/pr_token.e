@@ -94,7 +94,7 @@ feature -- Access
 	literal_string: STRING
 			-- Literal string that can be used instead
 			-- of curren token's name in rules
-			-- (Void if no sucg string.)
+			-- (Void if no such string.)
 
 feature -- Setting
 
