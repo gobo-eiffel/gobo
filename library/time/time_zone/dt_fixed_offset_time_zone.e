@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 					l_name.append_character ('0')
 				end
 				INTEGER_FORMATTER_.append_decimal_integer (l_name, l_second)
-				if l_millisecond /= Void then
+				if l_millisecond /= 0 then
 					l_name.append_character ('.')
 					if l_millisecond < 10 then
 						l_name.append_character ('0')
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 					end
 					INTEGER_FORMATTER_.append_decimal_integer (l_name, l_millisecond)
 				end
-			elseif l_millisecond /= Void then
+			elseif l_millisecond /= 0 then
 				l_name.append_character (':')
 				l_name.append_character ('0')
 				l_name.append_character ('0')
@@ -194,7 +194,7 @@ feature -- Access
 			-- Time zone name
 
 	offset (a_date_time: DT_DATE_TIME): DT_TIME_DURATION is
-			-- UTC offset for `a_date_time' in current time zone
+			-- UTC offset for `a_date_time' in `Current' time zone
 		do
 			Result := fixed_offset
 		end
@@ -205,7 +205,7 @@ feature -- Access
 feature -- Conversion
 
 	convert_to_utc (a_date_time: DT_DATE_TIME) is
-			-- Convert `a_date_time', considered to be relative to current
+			-- Convert `a_date_time', considered to be relative to `Current'
 			-- time zone, into the same time but relative to UTC.
 			-- (`a_date_time' will be altered by the call.)
 		do
@@ -214,7 +214,7 @@ feature -- Conversion
 
 	convert_from_utc (a_date_time: DT_DATE_TIME) is
 			-- Convert `a_date_time', considered to be relative to UTC,
-			-- into the same time but relative to current time zone.
+			-- into the same time but relative to `Current' time zone.
 			-- (`a_date_time' will be altered by the call.)
 		do
 			a_date_time.add_time_duration (fixed_offset)
