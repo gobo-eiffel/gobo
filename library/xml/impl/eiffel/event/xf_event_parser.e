@@ -28,7 +28,7 @@ feature {ANY}
 
 	parse_from_file_name (a_file_name: UC_STRING) is
 		local
-			in_file: like input_stream_type
+			in_file: like INPUT_STREAM_TYPE
 		do
 			in_file := INPUT_STREAM_.make_file_open_read (a_file_name.out)
 			check
@@ -38,7 +38,7 @@ feature {ANY}
 			INPUT_STREAM_.close (in_file)
 		end
 
-	parse_from_stream (a_stream: like input_stream_type) is
+	parse_from_stream (a_stream: like INPUT_STREAM_TYPE) is
 		local
 			a_filename: UC_STRING
 		do
@@ -49,7 +49,7 @@ feature {ANY}
 			parse
 		end
 
-	parse_from_string_buffer (a_buffer: like string_buffer_type) is
+	parse_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
 		do
 			check
 				False   -- TODO
@@ -65,14 +65,14 @@ feature {ANY}
 
 feature {ANY} -- Incremental parsing
 
-	parse_incremental_from_stream (a_stream: like input_stream_type) is
+	parse_incremental_from_stream (a_stream: like INPUT_STREAM_TYPE) is
 		do
 			check
 				False   -- Not supported
 			end
 		end
 
-	parse_incremental_from_string_buffer (a_buffer: like string_buffer_type) is
+	parse_incremental_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
 		do
 			check
 				False   -- Not supported

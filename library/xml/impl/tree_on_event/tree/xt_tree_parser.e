@@ -76,7 +76,7 @@ feature {ANY}
 			current_open_composite := Void
 		end
 
-	parse_from_stream (a_stream: like input_stream_type) is
+	parse_from_stream (a_stream: like INPUT_STREAM_TYPE) is
 			-- Parse XML Document from GOBO input stream.
 		do
 			reset

@@ -110,7 +110,7 @@ feature {ANY} -- Parsing
 	parse_from_file_name (a_file_name: UC_STRING) is
 			-- Parse XML Document from file
 		local
-			in_file: like input_stream_type
+			in_file: like INPUT_STREAM_TYPE
 		do
 			!XM_DEFAULT_URI_SOURCE! source.make (a_file_name)
 			in_file := INPUT_STREAM_.make_file_open_read (a_file_name.to_utf8)
@@ -121,14 +121,14 @@ feature {ANY} -- Parsing
 			INPUT_STREAM_.close (in_file)
 		end
 
-	parse_from_stream (a_stream: like input_stream_type) is
+	parse_from_stream (a_stream: like INPUT_STREAM_TYPE) is
 		do
 			create_new_parser
 			parse_incremental_from_stream (a_stream)
 			set_end_of_document
 		end
 
-	parse_from_string_buffer (a_buffer: like string_buffer_type) is
+	parse_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
 		do
 			create_new_parser
 			parse_incremental_from_string_buffer (a_buffer)
@@ -143,7 +143,7 @@ feature {ANY} -- Parsing
 
 feature {ANY} -- Incremental parsing
 
-	parse_incremental_from_stream (a_stream: like input_stream_type) is
+	parse_incremental_from_stream (a_stream: like INPUT_STREAM_TYPE) is
 			-- Parse partial XML document from GOBO input stream.
 			-- After the last part of the data has been fed into the parser,
 			-- call set_end_of_document to get any pending error messages.
@@ -158,7 +158,7 @@ feature {ANY} -- Incremental parsing
 			end
 		end
 
-	parse_incremental_from_string_buffer (a_buffer: like string_buffer_type) is
+	parse_incremental_from_string_buffer (a_buffer: like STRING_BUFFER_TYPE) is
 		do
 			parse_string_buffer_and_set_error (a_buffer, False)
 		end
@@ -190,7 +190,7 @@ feature {NONE} -- Low level parsing
 			set_error_from_parse_result (int_result)
 		end
 
-	parse_string_buffer_and_set_error (data: like string_buffer_type; is_final: BOOLEAN) is
+	parse_string_buffer_and_set_error (data: like STRING_BUFFER_TYPE; is_final: BOOLEAN) is
 			-- parse `data' (which may be empty).
 			-- set the error flags according to result.
 			-- `is_final' signals end of data input.
@@ -662,7 +662,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			parent_source: XM_SOURCE
 			encoding: POINTER
 			system_id: UC_STRING
-			in_file: like input_stream_type
+			in_file: like INPUT_STREAM_TYPE
 		do
 			parent_item := item
 			encoding := default_pointer

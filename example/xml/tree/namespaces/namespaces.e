@@ -106,7 +106,7 @@ feature -- Checks we have to do before we can run
 	check_file_readable is
 			-- check if file_name is readable
 		local
-			s: like input_stream_type
+			s: like INPUT_STREAM_TYPE
 		do
 			s := INPUT_STREAM_.make_file_open_read (file_name.to_utf8)
 			if not INPUT_STREAM_.is_open_read (s) then

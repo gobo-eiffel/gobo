@@ -62,7 +62,7 @@ feature {ANY} -- Basic operations
 			tree_parser_not_void: tree_parser /= Void
 		local
 			formatter: XM_FORMATTER
-			os: like output_stream_type
+			os: like OUTPUT_STREAM_TYPE
 		do
 			io.put_string ("1) parsing data...%N")
 			tree_parser.parse_from_file_name (in_file_name)
@@ -151,8 +151,8 @@ feature {ANY} -- Checks we have to do before we can run
 			in_file_name_not_void: in_file_name /= Void
 			out_file_name: not use_std_out implies out_file_name /= Void
 		local
-			i: like input_stream_type
-			o: like output_stream_type
+			i: like INPUT_STREAM_TYPE
+			o: like OUTPUT_STREAM_TYPE
 		do
 			i := INPUT_STREAM_.make_file_open_read (in_file_name.to_utf8)
 			if not INPUT_STREAM_.is_open_read (i) then
