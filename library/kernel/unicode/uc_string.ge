@@ -243,6 +243,7 @@ feature -- Initialization
 		require else
 			non_negative_suggested_capacity: suggested_capacity >= 0
 		do
+			reset_byte_index_cache
 #ifdef VE
 			!! storage.make_filled ('%U', suggested_capacity)
 			ve_make_byte_storage ('%U', 0)
@@ -1412,6 +1413,7 @@ feature -- Element change
 			i, nb: INTEGER
 			new_byte_count: INTEGER
 		do
+			reset_byte_index_cache
 			nb := utf8.code_byte_count (a_code)
 			new_byte_count := nb * count
 			if new_byte_count > byte_capacity then
@@ -1436,6 +1438,7 @@ feature -- Element change
 			i, nb: INTEGER
 			new_byte_count: INTEGER
 		do
+			reset_byte_index_cache
 			nb := utf8.character_byte_count (c)
 			new_byte_count := nb * count
 			if new_byte_count > byte_capacity then
@@ -1810,9 +1813,13 @@ feature -- Duplication
 				c_string_copy (other)
 				storage := clone (other.storage)
 				byte_count := other.byte_count
+				last_byte_index_input := other.last_byte_index_input
+				last_byte_index_result := other.last_byte_index_result
 #endif
 #ifdef HACT
 				byte_count := other.byte_count
+				last_byte_index_input := other.last_byte_index_input
+				last_byte_index_result := other.last_byte_index_result
 				precursor (other)
 #endif
 #ifdef SE
@@ -1826,6 +1833,8 @@ feature -- Duplication
 				end
 				count := other.count
 				byte_count := other.byte_count
+				last_byte_index_input := other.last_byte_index_input
+				last_byte_index_result := other.last_byte_index_result
 #endif
 			end
 		end
@@ -1911,7 +1920,8 @@ feature -- Conversion
 			-- (ELKS 2001 STRING)
 		local
 			i, nb: INTEGER
-			b: INTEGER
+			old_count, new_count: INTEGER
+			new_byte_count: INTEGER
 			a_code, new_code: INTEGER
 		do
 			nb := byte_count
@@ -1919,8 +1929,21 @@ feature -- Conversion
 				a_code := item_code_at_byte_index (i)
 				new_code := unicode.lower_code (a_code)
 				if new_code /= a_code then
-					b := utf8.code_byte_count (new_code)
-					put_code_at_byte_index (new_code, b, i)
+					old_count := utf8.code_byte_count (a_code)
+					new_count := utf8.code_byte_count (new_code)
+					if new_count = old_count then
+						-- Do nothing.
+					elseif new_count < old_count then
+						move_bytes_left (i + old_count, old_count - new_count)
+					else
+						nb := new_count - old_count
+						new_byte_count := byte_count + nb
+						if new_byte_count > byte_capacity then
+							resize_byte_storage (new_byte_count)
+						end
+						move_bytes_right (i + old_count, nb)
+					end
+					put_code_at_byte_index (new_code, new_count, i)
 				end
 				i := next_byte_index (i)
 			end
@@ -1931,7 +1954,8 @@ feature -- Conversion
 			-- (ELKS 2001 STRING)
 		local
 			i, nb: INTEGER
-			b: INTEGER
+			old_count, new_count: INTEGER
+			new_byte_count: INTEGER
 			a_code, new_code: INTEGER
 		do
 			nb := byte_count
@@ -1939,8 +1963,21 @@ feature -- Conversion
 				a_code := item_code_at_byte_index (i)
 				new_code := unicode.upper_code (a_code)
 				if new_code /= a_code then
-					b := utf8.code_byte_count (new_code)
-					put_code_at_byte_index (new_code, b, i)
+					old_count := utf8.code_byte_count (a_code)
+					new_count := utf8.code_byte_count (new_code)
+					if new_count = old_count then
+						-- Do nothing.
+					elseif new_count < old_count then
+						move_bytes_left (i + old_count, old_count - new_count)
+					else
+						nb := new_count - old_count
+						new_byte_count := byte_count + nb
+						if new_byte_count > byte_capacity then
+							resize_byte_storage (new_byte_count)
+						end
+						move_bytes_right (i + old_count, nb)
+					end
+					put_code_at_byte_index (new_code, new_count, i)
 				end
 				i := next_byte_index (i)
 			end
@@ -2081,13 +2118,27 @@ feature -- Traversal
 			if byte_count = count then
 				Result := i
 			else
-				Result := 1
-				from j := 1 until j = i loop
+				from 
+					if i < last_byte_index_input then
+						j := 1
+						Result := 1
+					else
+						j := last_byte_index_input
+						Result := last_byte_index_result
+					end
+				invariant
+					j <= i 
+				until
+					j = i
+				loop
 					a_byte := byte_item (Result)
 					Result := Result + utf8.encoded_byte_count (a_byte)
 					j := j + 1
 				end
 			end
+				-- Save cache.
+			last_byte_index_input := i
+			last_byte_index_result := Result
 		ensure
 			byte_index_large_enough: Result >= 1
 			byte_index_small_enough: Result <= byte_count
@@ -2101,6 +2152,23 @@ feature -- Traversal
 			i_small_enough: i <= byte_count
 		do
 			Result := utf8.is_encoded_first_byte (byte_item (i))
+		end
+
+feature {UC_STRING} -- Byte index cache
+
+	last_byte_index_input: INTEGER
+			-- Last `byte_index' requested
+			-- (Cache for 'i := i + 1' iterations and similar)
+
+	last_byte_index_result: INTEGER
+			-- Last `byte_index' Result
+			-- (Cache for 'i := i + 1' iterations and similar)
+
+	reset_byte_index_cache is
+			-- Reset byte index (after write operation for example).
+		do
+			last_byte_index_input := 1
+			last_byte_index_result := 1
 		end
 
 feature -- Implementation
@@ -2243,6 +2311,9 @@ feature {UC_STRING_HANDLER} -- Implementation
 		local
 			j, nb: INTEGER
 		do
+			if last_byte_index_result > i then
+				reset_byte_index_cache
+			end
 			from
 #ifdef VE
 				j := byte_count
@@ -2280,6 +2351,9 @@ feature {UC_STRING_HANDLER} -- Implementation
 		local
 			j, nb: INTEGER
 		do
+			if last_byte_index_result > i - offset then
+				reset_byte_index_cache
+			end
 			from
 #ifdef VE
 				j := i
@@ -2313,6 +2387,9 @@ feature {UC_STRING_HANDLER} -- Implementation
 			nb_large_enough: nb >= 0
 			nb_small_enough: nb <= byte_capacity
 		do
+			if last_byte_index_result > nb then
+				reset_byte_index_cache
+			end
 			byte_count := nb
 		ensure
 			byte_count_set: byte_count = nb
@@ -2327,6 +2404,9 @@ feature {UC_STRING_HANDLER} -- Implementation
 			s: STRING
 #endif
 		do
+			if last_byte_index_input > nb then
+				reset_byte_index_cache
+			end
 #ifdef VE
 			if nb > count then
 				!! s.make_filled ('%U', nb - count)
