@@ -28,6 +28,8 @@ inherit
 
 	XM_XSLT_VALIDATION
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 creation
 
 	make
@@ -53,6 +55,7 @@ feature {NONE} -- Initialization
 			initial_mode := -1
 			recovery_policy := Recover_with_warnings
 			create parser_factory
+			create user_data_table.make_with_equality_testers (10, Void, string_equality_tester)
 		ensure
 			configuration_set: configuration = a_configuration
 			prepared_stylesheet_set: prepared_stylesheet = a_prepared_stylesheet
@@ -150,7 +153,22 @@ feature -- Access
 
 	message_emitter: XM_XSLT_MESSAGE_EMITTER
 			-- Emitter for writing xsl:messages
-	
+
+	user_data (an_object: HASHABLE; a_name_key: STRING): ANY is
+			-- User data associated with `an_object'
+		require
+			object_not_void: an_object /= Void
+			name_key_meaningful: a_name_key /= Void and then a_name_key.count > 0
+		local
+			a_key: STRING
+		do
+			a_key := STRING_.concat (an_object.hash_code.out, " ")
+			a_key := STRING_.appended_string (a_key, a_name_key)
+			if user_data_table.has (a_key) then
+				Result := user_data_table.item (a_key)
+			end
+		end
+
 feature -- Status report
 
 	is_tracing: BOOLEAN
@@ -270,6 +288,27 @@ feature -- Creation
 		end
 
 feature -- Element change
+	
+	put_user_data (an_object: HASHABLE; a_name_key: STRING; some_user_data: ANY) is
+			-- User data associated with `an_object'
+		require
+			object_not_void: an_object /= Void
+			name_key_meaningful: a_name_key /= Void and then a_name_key.count > 0
+		local
+			a_key: STRING
+		do
+			a_key := STRING_.concat (an_object.hash_code.out, " ")
+			a_key := STRING_.appended_string (a_key, a_name_key)
+			if user_data_table.has (a_key) then
+				if some_user_data = Void then
+					user_data_table.remove (a_key)
+				else
+					user_data_table.put (some_user_data, a_key)
+				end
+			elseif some_user_data /= Void then
+				user_data_table.put (some_user_data, a_key)
+			end
+		end
 
 	set_message_emitter (a_message_emitter: like message_emitter) is
 			-- Set `message_emitter'.
@@ -295,6 +334,28 @@ feature -- Element change
 			current_group_iterator := a_group_iterator
 		ensure
 			group_iterator_set: current_group_iterator = a_group_iterator
+		end
+
+	set_initial_template (a_template_name: STRING) is
+			-- Set initial template.
+		require
+			template_not_void: a_template_name /= Void
+			expanded_name: is_valid_expanded_name (a_template_name)
+		local
+			a_fingerprint: INTEGER
+			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
+		do
+			if not shared_name_pool.is_expanded_name_allocated (a_template_name) then
+				shared_name_pool.allocate_expanded_name (a_template_name)
+			end
+			a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_template_name)
+			a_compiled_templates_index := executable.compiled_templates_index
+			if a_compiled_templates_index.has (a_fingerprint) then
+				initial_template := a_compiled_templates_index.item (a_fingerprint)
+			else
+				initial_template := Void
+				error_listener.fatal_error ("Unable to locate a template named " + a_template_name, Void)
+			end
 		end
 
 	set_current_mode (a_mode: XM_XSLT_MODE) is
@@ -530,9 +591,7 @@ feature -- Transformation
 			if initial_template = Void then
 				perform_transformation (a_start_node)
 			else
-				-- TODO
-
-				report_fatal_error ("Provision for an initial template has not yet been added", Void)
+				initial_template.process (Current)
 			end
 
 			reset_output_destination (Void)
@@ -655,6 +714,9 @@ feature -- Implementation
 
 	parameters: XM_XSLT_PARAMETER_SET
 			-- Global parameters supplied to the transformer
+
+	user_data_table: DS_HASH_TABLE [ANY, STRING]
+			-- User data map
 
 	perform_default_action (a_node: XM_XPATH_NODE; some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
 			-- Perform default action for `a_node'.
@@ -791,6 +853,7 @@ invariant
 	decimal_format_manager_not_void: decimal_format_manager /= Void
 	positive_temporary_destination_depth: temporary_destination_depth >= 0
 	error_listener_not_void: error_listener /= Void
+	user_data_table_not_void: user_data_table /= Void
 	reporting_policy: -- TODO
 
 end

@@ -79,6 +79,21 @@ feature -- Status report
 
 feature -- Evaluation
 
+	process (a_transformer: XM_XSLT_TRANSFORMER) is
+			-- process `Current', without returning any tail calls
+		require
+			transformer_not_void: a_transformer /= Void
+		do
+			from
+				process_leaving_tail (a_transformer)
+			until
+				last_tail_call = Void
+			loop
+				last_tail_call.process_leaving_tail (a_transformer)
+				last_tail_call := last_tail_call.last_tail_call
+			end
+		end
+
 	process_leaving_tail (a_transformer: XM_XSLT_TRANSFORMER) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		local

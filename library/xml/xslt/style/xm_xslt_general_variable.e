@@ -295,7 +295,7 @@ feature -- Status setting
 				else
 					select_expression := a_type_checker.checked_expression
 				end
-			else
+			elseif has_child_nodes then
 				
 				-- TODO: check the type of the instruction sequence statically
 				

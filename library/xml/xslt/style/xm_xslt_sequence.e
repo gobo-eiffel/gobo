@@ -46,7 +46,7 @@ feature -- Status setting
 			if a_last_instruction /= Void then
 				a_last_instruction.mark_tail_calls
 			elseif select_expression /= Void then
-				-- TODO - apparently does nothing				
+				select_expression.mark_tail_function_calls
 			end
 		end
 

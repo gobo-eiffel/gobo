@@ -64,7 +64,6 @@ feature -- Status report
 			end
 		end
 
-
 feature -- Evaluation
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
@@ -76,7 +75,7 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			set_replacement (Current)
+			--	set_replacement (Current)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

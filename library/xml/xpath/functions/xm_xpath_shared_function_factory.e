@@ -17,7 +17,7 @@ feature -- Access
 	function_factory: XM_XPATH_FUNCTION_FACTORY is
 			-- Function factory
 		once
-			create Result
+			create Result.make
 		ensure
 			function_factory_not_void: Result /= Void
 		end

@@ -163,7 +163,7 @@ feature -- Element change
 		end
 
 	open_stack_frame (some_local_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET) is
-			-- Start a new stack frame
+			-- Start a new stack frame.
 		require
 			parameters_not_void: some_local_parameters /= Void
 			tunnel_parameters_not_void: some_tunnel_parameters /= Void
@@ -175,6 +175,30 @@ feature -- Element change
 			create another_stack_entry.make_parameter_set (some_tunnel_parameters)
 			current_stack_frame.put (a_stack_entry, Frame_parameters_slot)
 			current_stack_frame.put (another_stack_entry, Frame_tunnel_parameters_slot)
+		ensure
+			one_more: frame_stack.count = old frame_stack.count + 1			
+		end
+
+	open_stack_frame_with_positional_parameters (some_actual_arguments: DS_LIST [XM_XPATH_VALUE]) is
+			-- Start a new stack frame, supplying positional parameter values.
+		require
+			positional_parameters_not_void: some_actual_arguments /= Void
+		local
+			a_cursor:  DS_LIST_CURSOR [XM_XPATH_VALUE]
+			a_stack_frame_entry: XM_XSLT_STACK_FRAME_ENTRY
+		do
+			allocate_stack_frame
+			from
+				a_cursor := some_actual_arguments.new_cursor; a_cursor.start
+			variant
+				some_actual_arguments.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				create a_stack_frame_entry.make (a_cursor.item)
+				current_stack_frame.put (a_stack_frame_entry, a_cursor.index + Frame_reserved_slots_count)
+				a_cursor.forth
+			end
 		ensure
 			one_more: frame_stack.count = old frame_stack.count + 1			
 		end

@@ -475,6 +475,7 @@ feature {NONE} -- Implementation
 			else
 				create an_index_map.make_with_equality_testers (10, Void, long_equality_tester)
 				document_map.put (an_index_map, a_document)
+				-- TODO a_transformer.put_user_data when an_index_map becomes a weak reference
 			end
 			create a_long.make (a_key_fingerprint, an_item_type)
 			if an_index_map.has (a_long) then

@@ -86,8 +86,8 @@ feature -- Access
 	Xhtml_uri: STRING is "http://www.w3.org/1999/xhtml"
 			-- XHTML namespace
 
-	Gexslt_eiffel_type_uri: STRING is "http://www.gobosoft.com/gexslt/eiffel-type"
-			-- Namespace for extension functions written in Eiffel
+	Gexslt_eiffel_type_uri: STRING is "http://www.gobosoft.com/eiffel/gobo/gexslt/extension"
+			-- Namespace for extension functions, etc. written in Eiffel
 
 
 			-- The following codes are 3-bit values for building a fingerprint
@@ -293,6 +293,7 @@ feature -- Access
 	Omit_xml_declaration_attribute: STRING is "omit-xml-declaration"
 	Order_attribute: STRING is "order"
 	Ordinal_attribute: STRING is "ordinal"
+	Override_attribute: STRING is "override"
 	Pattern_separator_attribute: STRING is "pattern-separator"
 	Per_mille_attribute: STRING is "per-mille"
 	Percent_attribute: STRING is "percent"

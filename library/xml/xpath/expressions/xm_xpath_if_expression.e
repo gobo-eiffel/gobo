@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplified_expression, evaluate_item, promote, iterator, sub_expressions
+			simplified_expression, evaluate_item, promote, iterator,
+			sub_expressions, mark_tail_function_calls
 		end
 
 creation
@@ -100,6 +101,15 @@ feature -- Status report
 					else_expression.display (a_level + 1)				
 				end
 			end
+
+feature -- Status setting
+	
+	mark_tail_function_calls is
+			-- Mark tail-recursive calls on stylesheet functions.
+		do
+			then_expression.mark_tail_function_calls
+			else_expression.mark_tail_function_calls
+		end
 
 feature -- Optimization
 

@@ -99,6 +99,22 @@ feature -- Access
 			node_type_name_not_void: Result /= Void
 		end
 
+	built_in_item_type (a_uri, a_local_name: STRING): XM_XPATH_ITEM_TYPE is
+			-- Built-in type named by `a_uri', `a_local_name'
+		require
+			uri_not_void: a_uri /= Void
+			local_name_not_void: a_local_name /= Void
+		local
+			a_fingerprint: INTEGER
+		do
+			if is_reserved_namespace (a_uri) then
+				a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
+				if a_fingerprint /= -1 then
+					Result := type_factory.schema_type (a_fingerprint)
+				end
+			end
+		end
+
 feature -- Status report
 
 	is_node_type (a_type: INTEGER): BOOLEAN is

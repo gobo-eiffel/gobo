@@ -56,6 +56,7 @@ feature -- Execution
 				report_usage_message
 				Exceptions.die (0)
 			end
+			initial_template_name := Void
 			create uris.make (nb)
 			uris.set_equality_tester (string_equality_tester)
 			is_line_numbering := True
@@ -90,8 +91,13 @@ feature -- Execution
 					report_usage_message
 					Exceptions.die (1)
 				else
-					report_usage_message
-					Exceptions.die (1)
+					if initial_template_name = Void then
+						report_general_message ("An initial template must be named when the source document is omitted")
+						report_usage_message
+						Exceptions.die (1)
+					else
+						-- This is dealt with in `process_uris'.
+					end
 				end
 			end
 			if uris.count > 2 then
@@ -112,6 +118,9 @@ feature -- Status report
 
 	is_line_numbering: BOOLEAN
 			-- Will diagnostics include line numbers?
+
+	initial_template_name: STRING
+			-- Name of initial template to be invoked
 
 feature -- Setting
 
@@ -309,6 +318,7 @@ feature -- Error handling
 									  "       --catalog-debug-level=[0-10]%N" +
 									  "       --output=local-file-name%N" +
 									  "       --tiny-tree%N" +
+									  "       --template=[{namespace-uri}]local-name%N" +									  
 									  "       --param=name=string-value%N" +
 									  "       --xpath-param=name=xpath-expression%N")
 		ensure
@@ -341,8 +351,8 @@ feature {NONE} -- Implementation
 				end
 			elseif an_option.substring_index ("use-pi", 1) = 1 then
 				report_not_yet_implemented ("Xml-stylesheet processing instruction")					
-			elseif an_option.substring_index ("template", 1) = 1 then
-				report_not_yet_implemented ("Initial template")					
+			elseif an_option.substring_index ("template=", 1) = 1 and then an_option.count > 9 then
+				initial_template_name := an_option.substring (10, an_option.count)
 			elseif an_option.substring_index ("mode", 1) = 1 then
 				report_not_yet_implemented ("Initial mode")					
 			elseif an_option.is_equal ("no-gc") then
@@ -469,7 +479,12 @@ feature {NONE} -- Implementation
 			else
 				a_transformer := a_stylesheet.new_transformer
 				process_parameters (a_transformer)
-				create a_source_uri.make (uris.item (2))
+				if uris.count = 2 then
+					create a_source_uri.make (uris.item (2))
+				end
+				if initial_template_name /= Void then
+					a_transformer.set_initial_template (initial_template_name)
+				end
 				create a_destination -- To standard output
 				if output_destination /= Void then
 					create a_stream.make (output_destination)

@@ -345,10 +345,16 @@ feature {NONE} -- Implementation
 			receiver_not_void: a_receiver /= Void
 		local
 			an_object_value: XM_XPATH_OBJECT_VALUE
+			a_function_package: XM_XSLT_FUNCTION_CALL_PACKAGE
 		do
 			an_object_value ?= an_item
 			if an_object_value /= Void then
-				todo ("append_item", True)
+				a_function_package ?= an_object_value.value
+				if a_function_package /= Void then
+					todo ("append_item (function call package)", True)
+				else
+					todo ("append_item (Don't know how to deal with unknown object value)", True)
+				end
 			else
 				a_receiver.append_item (an_item)
 			end

@@ -72,8 +72,35 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
+		local
+			a_collator: ST_COLLATOR
+			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
+			s1, s2: STRING
 		do
-			todo ("evaluate-item", False)
+			a_collator := collator (3, a_context, False)
+			if a_collator = Void then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", 2, Dynamic_error)
+			else
+				arguments.item (1).evaluate_item (a_context)
+				an_atomic_value ?= arguments.item (1).last_evaluated_item
+				if an_atomic_value = Void then
+					create {XM_XPATH_STRING_VALUE} an_atomic_value.make ("")
+				end
+				arguments.item (2).evaluate_item (a_context)
+				another_atomic_value ?= arguments.item (2).last_evaluated_item
+				if another_atomic_value = Void then
+					create {XM_XPATH_STRING_VALUE} another_atomic_value.make ("")
+				end
+				s1 := an_atomic_value.string_value
+				s2 := another_atomic_value.string_value
+				if s2.count = 0 then
+					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+				elseif s1.count = 0 then
+					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+				else
+					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (substring_before (s1, s2, a_collator))
+				end
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -84,5 +111,39 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			set_cardinality_exactly_one
 		end
 
+feature {NONE} -- Implementation
+
+	substring_before (s1, s2: STRING; a_collator: ST_COLLATOR): STRING is
+			-- Substring of s1 before first occurence of s2 according to the rules of `a_collator'?
+		require
+			first_string_not_void: s1 /= Void
+			second_string_not_void: s2 /= Void
+			collator_not_void: a_collator /= Void
+		local
+			an_index: INTEGER
+			a_substring: STRING
+			found: BOOLEAN
+		do
+			from
+				an_index := 1
+			variant
+				s1.count - s2.count + 1 - an_index
+			until
+				found or else an_index > s1.count - s2.count
+			loop
+				a_substring := s1.substring (an_index, an_index + s2.count - 1)
+				if a_collator.three_way_comparison (a_substring, s2) = 0 then
+					found := True
+					if an_index = 1 then
+						Result := ""
+					else
+						Result := s1.substring (1, an_index - 1)
+					end
+				end
+				an_index := an_index + 1
+			end
+			if not found then Result := "" end
+		end
+	
 end
 	

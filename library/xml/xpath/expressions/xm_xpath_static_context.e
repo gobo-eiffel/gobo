@@ -144,6 +144,7 @@ feature -- Status setting
 			expression_not_void: an_expression /= Void
 		do
 			internal_last_bound_function := an_expression
+			was_last_function_bound := True
 		ensure
 			set: last_bound_function = an_expression
 		end

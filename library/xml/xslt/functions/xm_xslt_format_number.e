@@ -85,7 +85,7 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			set_replacement (Current)
+			--			set_replacement (Current)
 		end
 
 feature -- Element change

@@ -330,6 +330,42 @@ feature -- Access
 			sort_key_list_not_void: Result /= Void
 		end
 
+	stylesheet_function (a_fingerprint, an_arity: INTEGER): XM_XSLT_FUNCTION is
+			-- Xsl:function named by `a_fingerprint' with `an_arity' arguments
+		require
+			positive_fingerprint: a_fingerprint >= 0
+			nearly_positive_arity: an_arity >= -1 -- -1 = any arity will do
+		local
+			a_root: XM_XSLT_STYLESHEET
+			a_top_level_element_list: DS_LINKED_LIST [XM_XSLT_STYLE_ELEMENT]
+			a_cursor: DS_LINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
+			a_function: XM_XSLT_FUNCTION
+		do
+
+			-- We rely on the search following the order of decreasing import precedence.
+
+			a_root := principal_stylesheet
+			a_top_level_element_list := a_root.top_level_elements
+			from
+				a_cursor := a_top_level_element_list.new_cursor; a_cursor.finish
+			variant
+				a_cursor.index
+			until
+				a_cursor.before
+			loop
+				a_function ?= a_cursor.item
+				if a_function /= Void and then a_function.function_fingerprint = a_fingerprint
+					and then (an_arity = -1 or else a_function.arity = an_arity) then
+					Result := a_function
+					a_cursor.go_before
+				else
+					a_cursor.back
+				end
+			end
+		ensure
+			function_may_not_be_available: True
+		end
+
 feature -- Status_report
 
 	any_compile_errors: BOOLEAN is

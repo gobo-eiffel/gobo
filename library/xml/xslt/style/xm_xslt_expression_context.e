@@ -21,7 +21,13 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
+	XM_XPATH_TYPE
+
 	XM_XPATH_SHARED_FUNCTION_FACTORY
+
+	XM_XPATH_NAME_UTILITIES
+
+	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_DEBUGGING_ROUTINES
 
@@ -175,10 +181,18 @@ feature -- Element change
 			-- Rather, it returns an error expression that will fail at run-time if
 			--  the function is actually called.
 		local
-			an_xml_prefix, a_uri, a_local_name: STRING
+			an_xml_prefix, a_uri, a_local_name, a_message: STRING
 			a_splitter: ST_SPLITTER
 			name_parts: DS_LIST [STRING]
+			is_debugging: BOOLEAN
+			a_stylesheet_function: XM_XSLT_FUNCTION
+			a_fingerprint: INTEGER
+			an_error_expression: XM_XPATH_INVALID_VALUE
+			an_error_value: XM_XPATH_ERROR_VALUE
+			a_user_function: XM_XSLT_USER_FUNCTION_CALL
+			an_atomic_type: XM_XPATH_ATOMIC_TYPE
 		do
+			was_last_function_bound := False
 			create a_splitter.make
 			a_splitter.set_separators (":")
 			name_parts := a_splitter.split (a_qname)
@@ -197,8 +211,82 @@ feature -- Element change
 			if STRING_.same_string (a_uri, Xpath_functions_uri) then
 				bind_system_function (a_local_name, arguments)
 			else
-				internal_last_function_binding_failure_message := "Non-system functions not yet supported"
-				todo ("bind-function (prefixed funtion name)", True)
+				is_debugging := style_element.prepared_stylesheet.configuration.is_trace_external_functions
+				if is_debugging then
+					std.error.put_string ("Resolving external function call to " + a_qname + "%N")
+				end
+				if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
+					shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+					a_fingerprint := fingerprint_from_name_code (shared_name_pool.last_name_code)
+				else
+					a_fingerprint := fingerprint_from_name_code (shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name))
+				end
+
+				-- First see if there is a stylesheet function with override=yes
+
+				a_stylesheet_function := style_element.stylesheet_function (a_fingerprint, arguments.count)
+				if a_stylesheet_function /= Void and then a_stylesheet_function.is_overriding then
+					if is_debugging then
+						std.error.put_string ("Found a stylesheet function with override='yes'%N")
+					end
+					create a_user_function.make (a_fingerprint, arguments)
+					set_last_bound_function (a_user_function)
+					a_stylesheet_function.register_reference (a_user_function)
+				else
+
+					-- Look for a constructor function for a built-in type
+
+					if STRING_.same_string (a_uri, Xml_schema_uri) or else
+						STRING_.same_string (a_uri, Xml_schema_datatypes_uri) or else
+						STRING_.same_string (a_uri, Xpath_defined_datatypes_uri) then
+						
+						-- it's a constructor function: treat it as shorthand for a cast expression
+
+						if arguments.count /= 1 then
+							set_bind_function_failure_message ("A constructor function must have exactly one argument")
+						else
+							an_atomic_type ?= built_in_item_type (a_uri, a_local_name)
+							if an_atomic_type = Void then
+								a_message := STRING_.concat ("Unknown constructor function: ", a_qname)
+								create an_error_value.make_from_string (a_message, 1410, Dynamic_error)
+								create an_error_expression.make (an_error_value)
+								set_last_bound_function (an_error_expression)
+							else
+								todo ("bind_function", True)
+							end
+						end
+					end
+
+					if not was_last_function_bound then
+
+						-- maybe it's a linked-in extension function
+
+						if function_factory.is_extension_function (a_uri, a_local_name, arguments.count) then
+							set_last_bound_function (function_factory.extension_function (a_uri, a_local_name, arguments.count))
+						end
+					end
+					if not  was_last_function_bound then
+						
+						-- Finally, see if there is a stylesheet function with override=no
+
+						if a_stylesheet_function /= Void then
+							if is_debugging then
+								std.error.put_string ("Found a stylesheet function with override='no'%N")
+							end
+							create a_user_function.make (a_fingerprint, arguments)
+							set_last_bound_function (a_user_function)
+							a_stylesheet_function.register_reference (a_user_function)
+						else
+							a_message := STRING_.concat ("No function found matching ", a_qname)
+							a_message := STRING_.appended_string (a_message, " with ")
+							a_message := STRING_.appended_string (a_message, displayed_argument_count (arguments.count))
+							create an_error_value.make_from_string (a_message, 1410, Dynamic_error)
+							create an_error_expression.make (an_error_value)
+							set_last_bound_function (an_error_expression)
+						end
+					end
+				end
+				was_last_function_bound := True
 			end
 		end
 
@@ -237,6 +325,24 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			function_bound: was_last_function_bound implies last_bound_function /= Void
+		end
+
+	displayed_argument_count (a_count: INTEGER): STRING is
+			-- Number of arguments, as error text
+		require
+			positive_count: a_count >= 0
+		do
+			inspect
+				a_count
+			when 0 then
+				Result := "no arguments"
+			when 1 then
+				Result := "one argument"
+			else
+				Result := a_count.out + " arguments"
+			end
+		ensure
+			displayed_argument_count_not_void: Result /= Void
 		end
 
 invariant

@@ -90,7 +90,7 @@ feature -- Optimization
 
 					-- Try a static type check. We only throw it out if the call cannot possibly succeed.
 
-					if conformance.customized_host_language and then not a_context.is_data_type_valid (supplied_item_type.fingerprint) then
+					if conformance.customized_host_language and then a_context /= Void and then a_context.is_data_type_valid (supplied_item_type.fingerprint) then
 						report_type_check_error (a_role_locator)
 					elseif not is_sub_type (supplied_item_type, required_item_type) then
 						-- with pessimistic type checking we could output an error now, but we

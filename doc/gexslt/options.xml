@@ -34,10 +34,10 @@
       <listitem><para>gexslt --help</para></listitem>
       <listitem><para>gexslt --version</para></listitem>
       <listitem><para>gexslt [--file=|--uri=]stylesheet [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
-      <listitem><para>gexslt --use-pi [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
       <listitem><para>gexslt stylesheet --template=template-name (--options)* (string-parameter)*</para></listitem>
+      <listitem><para>gexslt --use-pi [--file=|--uri=]source-document (--options)* (string-parameter)*</para></listitem>
     </itemizedlist>
-    <warning>These last two forms are not yet supported.</warning>
+    <warning>The last form is not yet supported.</warning>
     </para>
   </sect1>
   <sect1>
@@ -245,6 +245,20 @@
 	    the standard tree model. This saves on memory, but will usually result
 	    in slower execution, except for very simple tranformations, such as the 
 	    identity transform, where it may actually improve execution speed.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--template=[{&lt;namespace-uri&gt;}]&lt;local-name&gt;</term>
+	<listitem>
+	  <para>
+	    Specifies a named template to be invoked. If the name is not in the
+	    default namespace, then enclose the namespace URI in curly brackets, preceding the local name.
+	  </para>
+	  <para>
+	    If this parameter is omitted (the usual situation), then the initial template is the one
+	    that matches the document node of the source document. If this parameter is supplied,
+	    then the source document may be omitted.
 	  </para>
 	</listitem>
       </varlistentry>

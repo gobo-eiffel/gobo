@@ -61,7 +61,7 @@ feature -- Access
 			not_in_error: not is_error
 		deferred
 		ensure
-			expression_tester: Result /= Void  and then Result.equality_tester.is_equal (expression_tester)
+			expression_tester: Result /= Void and then Result.equality_tester /= Void and then Result.equality_tester.is_equal (expression_tester)
 		end
 
 feature -- Comparison
@@ -137,6 +137,12 @@ feature -- Status setting
 			valid_error: error_value /= Void and then STRING_.same_string (error_value.error_message, a_message)
 				and then error_value.code = a_code
 			in_error: is_error
+		end
+
+	mark_tail_function_calls is
+			-- Mark tail-recursive calls on stylesheet functions.
+		do
+			-- do_nothing by default.
 		end
 
 	mark_unreplaced is

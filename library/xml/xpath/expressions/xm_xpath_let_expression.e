@@ -17,7 +17,8 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			promote, iterator, evaluate_item, compute_special_properties
+			promote, iterator, evaluate_item, compute_special_properties,
+			mark_tail_function_calls
 		end
 
 	XM_XPATH_ROLE
@@ -93,6 +94,15 @@ feature -- Status report
 			end
 		end
 
+feature -- Status setting
+
+	mark_tail_function_calls is
+			-- Mark tail-recursive calls on stylesheet functions.
+		do
+			action.mark_tail_function_calls
+		end
+
+	  
 feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is

@@ -112,6 +112,9 @@ feature -- Access
 	is_tiny_tree_model: BOOLEAN
 			-- Should the tiny tree model be used for XML source?
 
+	is_trace_external_functions: BOOLEAN
+			-- Is tracing of external functions turned on?
+	
 	recovery_policy: INTEGER
 			-- Recovery policy when warnings or errors are encountered
 
@@ -167,6 +170,14 @@ feature -- Element change
 			is_line_numbering := on_or_off
 		ensure
 			set: is_line_numbering = on_or_off
+		end
+
+	set_external_function_tracing (on_or_off: BOOLEAN) is
+			-- Turn tracing of external functions `on_or_off'.
+		do
+			is_trace_external_functions := on_or_off
+		ensure
+			set: is_trace_external_functions = on_or_off
 		end
 
 	set_entity_resolver (an_entity_resolver: like entity_resolver) is
