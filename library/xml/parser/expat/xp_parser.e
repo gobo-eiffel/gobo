@@ -11,7 +11,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class XP_PARSER
-	
+
 inherit
 
 	XP_EXPAT_API
@@ -22,11 +22,11 @@ inherit
 	XP_ENCODING_CALLBACK
 
 	XM_CALLBACKS
-	
+
 	XM_DTD_CALLBACKS
-	
+
 	MEMORY
-		export 
+		export
 			{NONE} all
 		redefine
 			dispose
@@ -57,29 +57,29 @@ feature {NONE} -- Gc
 
 feature {NONE} -- Orphan expat events
 	-- TODO: should be in a separate class?
-	
+
 	on_xml_declaration (a_version: UC_STRING; an_encoding: UC_STRING; a_standalone: BOOLEAN) is
 			-- XML declaration.
 		do
 		end
-		
+
 	on_not_standalone: BOOLEAN is
 			-- TODO: routine with side-effect!
 		do
 		end
-		
+
 	on_end_doctype is
 		do
 		end
-		
+
 	on_start_namespace_declaration (a_prefix: UC_STRING; a_uri: UC_STRING) is
 		do
 		end
-	
+
 	on_end_namespace_declaration (a_prefix: UC_STRING) is
 		do
-		end	
-	
+		end
+
 	on_default (a_data: UC_STRING) is
 		do
 		end
@@ -87,15 +87,15 @@ feature {NONE} -- Orphan expat events
 	on_default_expanded (a_data: UC_STRING) is
 		do
 		end
-				
+
 	on_start_cdata_section is
 		do
 		end
-		
+
 	on_end_cdata_section is
 		do
 		end
-	
+
 feature {ANY} -- Access
 
 	is_incremental: BOOLEAN is True
@@ -249,7 +249,7 @@ feature {ANY} -- Status
 			-- data does not origin from a file, this is void
 
 	is_correct: BOOLEAN
-			
+
 	last_error: INTEGER
 
 	last_error_description: STRING is
@@ -486,7 +486,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			attname := new_uc_string_from_c_utf8_zero_terminated_string (attname_ptr)
 			att_type := new_uc_string_from_c_utf8_zero_terminated_string (att_type_ptr).to_utf8
 			dflt := new_uc_string_from_c_utf8_zero_terminated_string_safe (dflt_ptr)
-			
+
 			!! a_model.make
 			-- value
 			if dflt /= Void then
@@ -502,7 +502,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 					a_model.set_value_implied
 				end
 			end
-			
+
 			-- type
 			if att_type.is_equal ("CDATA") then
 				a_model.set_data
@@ -528,7 +528,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			else
 				a_model.set_enumeration
 			end
-			
+
 			on_attribute_declaration (elname, attname, a_model)
 		end
 
@@ -553,10 +553,10 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			an_id: XM_DTD_EXTERNAL_ID
 		do
 			entity_name := new_uc_string_from_c_utf8_zero_terminated_string (entity_name_ptr)
-			-- does value_lenght means that value can contain zero, or is it to 
+			-- does value_lenght means that value can contain zero, or is it to
 			-- prevent seeking to zero?
 			value := new_uc_string_from_c_utf8_zero_terminated_string_safe (value_ptr)
-			
+
 			!! an_id.make
 			an_id.set_base (new_uc_string_from_c_utf8_zero_terminated_string_safe (base_ptr))
 			an_id.set_system (new_uc_string_from_c_utf8_zero_terminated_string_safe (system_id_ptr))
@@ -585,7 +585,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 			--!! a_prefix.make (0)
 			end
 			att_list := new_attribute_list_from_c (attribute_specifications_ptr)
-			
+
 			on_start_tag (Void, a_prefix, a_name)
 			from
 				it := att_list.new_cursor

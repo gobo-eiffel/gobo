@@ -13,17 +13,17 @@ indexing
 class XM_EXPAT_PARSER
 
 inherit
-	
+
 	XM_PARSER
-	
+
 	XM_FORWARD_CALLBACKS
-	
+
 	XM_FORWARD_DTD_CALLBACKS
-	
+
 	XP_PARSER
 		export
 			{NONE} all
-		end	
+		end
 
 creation
 
