@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 
 	make (a_project: GEANT_PROJECT; a_xml_element: XM_ELEMENT) is
 			-- Create new fileset element with information held in `a_xml_element'.
-			-- Create `fileset' using parameter `a_convert_to_filesystem'.
 		local
 			a_value: STRING
 			a_xml_subelement: XM_ELEMENT
