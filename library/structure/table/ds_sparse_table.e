@@ -3,7 +3,7 @@ indexing
 	description:
 
 		"Sparse tables, implemented with arrays. Ancestor of hash tables %
-		%and hash maps, which should supply their hashing mechanisms."
+		%which should supply their hashing mechanisms."
 
 	library:    "Gobo Eiffel Structure Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
@@ -58,12 +58,103 @@ feature {NONE} -- Initialization
 	make (n: INTEGER) is
 			-- Create an empty table and allocate
 			-- memory space for at least `n' items.
-			-- Use `=' as comparison criterion.
+			-- Use `=' as comparison criterion for items.
+			-- Use `equal' as comparison criterion for keys.
+		require
+			positive_n: n >= 0
+		do
+			!! key_equality_tester
+			make_with_equality_testers (n, Void, key_equality_tester)
+		ensure
+			empty: is_empty
+			capacity_set: capacity = n
+			before: before
+		end
+
+	make_equal (n: INTEGER) is
+			-- Create an empty table and allocate
+			-- memory space for at least `n' items.
+			-- Use `equal' as comparison criterion for items.
+			-- Use `equal' as comparison criterion for keys.
+		require
+			positive_n: n >= 0
+		do
+			!! equality_tester
+			!! key_equality_tester
+			make_with_equality_testers (n, equality_tester, key_equality_tester)
+		ensure
+			empty: is_empty
+			capacity_set: capacity = n
+			before: before
+		end
+
+	make_default is
+			-- Create an empty table and allocate memory
+			-- space for at least `default_capacity' items.
+			-- Use `=' as comparison criterion for items.
+			-- Use `equal' as comparison criterion for keys.
+		do
+			make (default_capacity)
+		ensure then
+			before: before
+		end
+
+	make_map (n: INTEGER) is
+			-- Create an empty table and allocate
+			-- memory space for at least `n' items.
+			-- Use `=' as comparison criterion for items.
+			-- Use `=' as comparison criterion for keys.
+		require
+			positive_n: n >= 0
+		do
+			make_with_equality_testers (n, Void, Void)
+		ensure
+			empty: is_empty
+			capacity_set: capacity = n
+			before: before
+		end
+
+	make_map_equal (n: INTEGER) is
+			-- Create an empty table and allocate
+			-- memory space for at least `n' items.
+			-- Use `equal' as comparison criterion for items.
+			-- Use `=' as comparison criterion for keys.
+		require
+			positive_n: n >= 0
+		do
+			!! equality_tester
+			make_with_equality_testers (n, equality_tester, Void)
+		ensure
+			empty: is_empty
+			capacity_set: capacity = n
+			before: before
+		end
+
+	make_map_default is
+			-- Create an empty table and allocate memory
+			-- space for at least `default_capacity' items.
+			-- Use `=' as comparison criterion for items.
+			-- Use `=' as comparison criterion for keys.
+		do
+			make_map (default_capacity)
+		ensure
+			before: before
+		end
+
+	make_with_equality_testers (n: INTEGER;
+		an_item_tester: like equality_tester;
+		a_key_tester: like key_equality_tester) is
+			-- Create an empty table and allocate
+			-- memory space for at least `n' items.
+			-- Use `an_item_tester' as comparison criterion for items.
+			-- Use `a_key_tester' as comparison criterion for keys.
 		require
 			positive_n: n >= 0
 		local
 			i: INTEGER
 		do
+			equality_tester := an_item_tester
+			key_equality_tester := a_key_tester
 			!! FIXED_ITEM_ARRAY_
 			!! FIXED_KEY_ARRAY_
 			items := FIXED_ITEM_ARRAY_.make (n)
@@ -91,31 +182,8 @@ feature {NONE} -- Initialization
 			empty: is_empty
 			capacity_set: capacity = n
 			before: before
-		end
-
-	make_equal (n: INTEGER) is
-			-- Create an empty table and allocate
-			-- memory space for at least `n' items.
-			-- Use `equal' as comparison criterion.
-		require
-			positive_n: n >= 0
-		do
-			make (n)
-			!! equality_tester
-		ensure
-			empty: is_empty
-			capacity_set: capacity = n
-			before: before
-		end
-
-	make_default is
-			-- Create an empty table and allocate memory
-			-- space for at least `default_capacity' items.
-			-- Use `=' as comparison criterion.
-		do
-			make (default_capacity)
-		ensure then
-			before: before
+			equality_tester_set: equality_tester = an_item_tester
+			key_equality_tester_set: key_equality_tester = a_key_tester
 		end
 
 feature -- Access
@@ -187,6 +255,11 @@ feature -- Access
 		do
 			!! Result.make (Current)
 		end
+
+	key_equality_tester: DS_EQUALITY_TESTER [K]
+			-- Equality tester for keys;
+			-- A void equality tester means that `='
+			-- will be used as comparison criterion.
 
 feature -- Measurement
 
@@ -627,15 +700,76 @@ feature {NONE} -- Implementation
 
 	search_position (k: K) is
 			-- Search for position where key is equal to `k'.
+			-- or to possible insertion position otherwise.
+			-- (Use `key_equality_tester''s comparison criterion
+			-- if not void, use `=' criterion otherwise.)
 		require
 			valid_key: valid_key (k)
-		deferred
+		local
+			i: INTEGER
+			prev: INTEGER
+			a_tester: like key_equality_tester
+		do
+			if k = Void then
+				position := slots.item (modulus)
+				slots_position := modulus
+				clashes_previous_position := No_position
+			else
+				a_tester := key_equality_tester
+				if a_tester /= Void then
+					if
+						position = No_position or else
+						not a_tester.test (k, keys.item (position))
+					then
+						from
+							slots_position := hash_position (k)
+							i := slots.item (slots_position)
+							position := No_position
+							prev := No_position
+						until
+							i = No_position
+						loop
+							if a_tester.test (k, keys.item (i)) then
+								position := i
+								i := No_position -- Jump out of the loop.
+							else
+								prev := i
+								i := clashes.item (i)
+							end
+						end
+						clashes_previous_position := prev
+					end
+				else
+					if
+						position = No_position or else
+						k /= keys.item (position)
+					then
+						from
+							slots_position := hash_position (k)
+							i := slots.item (slots_position)
+							position := No_position
+							prev := No_position
+						until
+							i = No_position
+						loop
+							if k = keys.item (i) then
+								position := i
+								i := No_position -- Jump out of the loop.
+							else
+								prev := i
+								i := clashes.item (i)
+							end
+						end
+						clashes_previous_position := prev
+					end
+				end
+			end
 		ensure
 			slots_position_set: slots_position = hash_position (k)
-			clashes_previous_previous_set: (position /= No_position and
+			clashes_previous_position_set: (position /= No_position and
 				clashes_previous_position /= No_position) implies
 					(clashes.item (clashes_previous_position) = position)
-			clashes_previous_previous_not_set: (position /= No_position and
+			clashes_previous_position_not_set: (position /= No_position and
 				clashes_previous_position = No_position) implies
 					(slots.item (slots_position) = position)
 		end
