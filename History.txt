@@ -1,3 +1,40 @@
+Version 1.5 - 2 October 1999
+
+	geyacc:
+
+	* Fixed bug in verbose mode: the useless rules and
+	  nonterminals were not displayed properly (reported
+	  by Berend de Boer).
+	* Fixed bug when dealing with two consecutive semantic
+	  actions in a rule (reported by Alexander Kogtenkov).
+	* Fixed bug whereby the end-of-file was not recognized
+	  properly (reported by Patrick Doyle).
+	* Updated documentation to state that the Eiffel type
+	  for the semantic of a mid-rule action is the same 
+	  type as declared for the full grouping (reported by
+	  Andreas Auras).
+
+	Gobo Eiffel Structure Library:
+
+	* The documentation has been greatly improved.
+	* Added a `test' directory as a starting point for
+	  a test suite.
+	* Added a cluster containing an implementation of the
+	  main EiffelBase classes based on the Gobo containers.
+	* Added support for internal iterations (a la EiffelBase).
+	  Some feature renaming was necessary: routines with an
+	  external cursor as argument, such as `put_right',
+	  have been renamed with the `_cursor' suffix, as in
+	  `put_right_cursor'. The original feature names have
+	  been reused by the internal traversal interface, e.g.
+	  `put_right' inserts an item to the right of the
+	  internal cursor position.
+	* Cursors are always kept valid. There is no need for
+	  calls to `a_cursor.is_valid' anymore.
+	* DS_LINEAR_CURSOR does not inherit from DS_INDEXED_CURSOR
+	  anymore.
+	* Added classes DS_QUEUE and DS_LINKED_QUEUE.
+
 Version 1.4 - 14 April 1999
 
 	* Multiple types for semantic values now supported

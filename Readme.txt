@@ -1,4 +1,4 @@
-Gobo Eiffel, version 1.4
+Gobo Eiffel, version 1.5
 
 One of the main concerns of Gobo Eiffel is to provide you with Eiffel
 libraries and tools that are portable across various Eiffel compilers
@@ -20,21 +20,9 @@ This package consists of five Eiffel libraries:
 
 and three utilities:
 
-    . Gobo Eiffel Lex, version 1.4 (gelex)
-    . Gobo Eiffel Yacc, version 1.4 (geyacc)
-    . Gobo Eiffel Preprocessor, version 1.4 (gepp)
-
-The originality of this software compared to other already existing lex
-and yacc programs for Eiffel, apart from its portability on many Eiffel
-compilers, is that gelex and geyacc are entirely written in Eiffel using
-the lexical and parse libraries, making it possible to include gelex and
-geyacc functionalities in your own programs. On the other hand, care has
-been taken to make sure that the skeleton classes of gelex and geyacc
-were not dependent on classes other than those from the Eiffel kernel.
-In particular the output of gelex and geyacc can be included into your
-application without the overhead of the library classes provided in the
-Gobo Eiffel package (see "$GOBO\doc\gelex\stages.html" and
-"$GOBO\doc\geyacc\stages.html" for details).
+    . Gobo Eiffel Lex, version 1.5 (gelex)
+    . Gobo Eiffel Yacc, version 1.5 (geyacc)
+    . Gobo Eiffel Preprocessor, version 1.5 (gepp)
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
@@ -83,6 +71,7 @@ In this distribution:
     src\gelex                   gelex source code
     src\gepp                    gepp source code
     src\geyacc                  geyacc source code
+    test\structure              test suite for Gobo Eiffel Structure Library
 
 Each of the above directories comes with a Readme file providing
 some basic information. Documentation is also available on the Web
@@ -100,4 +89,4 @@ for your specific needs. Thank you in advance.
 Copyright (c) 1999, Eric Bezault
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com
-14 April 1999
+2 October 1999
