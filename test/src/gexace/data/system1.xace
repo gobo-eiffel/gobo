@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<system name="xace1">
+	<description>
+		description: "Test cluster option 'recursive'"
+		system: "Gobo Eiffel Xace Tester"
+		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		license: "Eiffel Forum License v1 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<root class="FOO" creation="make"/>
+
+	<cluster name="gefoo" location="${GOBO}/test/src/gexace/data">
+		<option name="recursive" value="true"/>
+	</cluster>
+
+	<cluster name="base" location="${ISE_EIFFEL}/library/base" if="${GOBO_EIFFEL}=ise">
+		<option name="recursive" value="true"/>
+		<option name="exclude" value="CVS"/>
+		<option name="exclude" value="table_eiffel3"/>
+	</cluster>
+
+	<mount location="${GOBO}/library/kernel.xace" unless="${GOBO_EIFFEL}=ise"/>
+</system>

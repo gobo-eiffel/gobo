@@ -1,0 +1,36 @@
+system
+
+	xace1
+
+root
+
+	FOO: "make"
+
+default
+
+	address_expression (no)
+	array_optimization (no)
+	assertion (require)
+	check_vape (yes)
+	console_application (yes)
+	dead_code_removal (yes)
+	debug (no)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	inlining_size ("4")
+	line_generation (no)
+	multithreaded (no)
+	profile (no)
+	trace (no)
+
+cluster
+
+	all gefoo: "${GOBO}/test/src/gexace/data"
+	all base: "${ISE_EIFFEL}/library/base"
+		exclude
+			"CVS";
+			"table_eiffel3"
+		end
+
+end
