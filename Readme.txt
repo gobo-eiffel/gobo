@@ -42,7 +42,7 @@ known as the distribution directory. Also put the directory $GOBO/bin
 in your PATH.
 
 The supported Eiffel compilers, in alphabetical order, are: Halstenbach
-3.0Beta 3, ISE Eiffel 4.5.020, SmallEiffel -0.75beta#5 (19 February 2001),
+3.0Beta 3, ISE Eiffel 4.5.020, SmallEiffel -0.75beta#7 (24 February 2001),
 Visual Eiffel 3.3b (Build 2300). For more details about the supported Eiffel
 compilers, please see the file "Release_notes.txt". This software might
 work with other Eiffel compilers and/or other compiler versions, however
@@ -52,30 +52,45 @@ software has been designed and implemented, you can also have a look at
 
 In this distribution:
 
-    bin                         Windows 95/NT executables (gelex, geyacc, etc.)
+    bin                         WinNT or Linux executables (gelex, geyacc, etc.)
     doc                         Gobo Eiffel documentation in HTML format
-    doc\gelex                   gelex documentation in HTML format
-    doc\geyacc                  geyacc documentation in HTML format
-    doc\portability             discussion about portability issues, in HTML
-    doc\structure               GE Structure Library documentation, in HTML
-    example\lexical\ascii2ps    pretty-printer
-    example\lexical\calculator  simple calculator (interface with iss-yacc)
-    example\lexical\eiffel      scanner for the Eiffel language
-    example\lexical\gegrep      grep-like program
-    example\parse\calc          infix notation calculator (see geyacc doc)
-    example\parse\eiffel        simple parser for Eiffel
-    example\parse\mcalc         calculator with memory (see geyacc doc)
-    example\parse\rpcalc        reverse polish notation calc (see geyacc doc)
-    library\kernel              compiler-dependent kernel class adapters
-    library\lexical             Gobo Eiffel Lexical Library classes
-    library\parse               Gobo Eiffel Parse Library classes
-    library\structure           Gobo Eiffel Structure Library classes
-    library\utility             Gobo Eiffel Utility Library classes
+    doc/gelex                   gelex documentation in HTML format
+    doc/getest                  getest documentation in HTML format
+    doc/geyacc                  geyacc documentation in HTML format
+    doc/portability             discussion about portability issues, in HTML
+    doc/structure               Gobo Eiffel Structure Library documentation, in HTML
+    doc/time                    Gobo Eiffel Time Library documentation, in HTML
+    example/lexical/ascii2ps    pretty-printer
+    example/lexical/calculator  simple calculator (interface with iss-yacc)
+    example/lexical/eiffel      scanner for the Eiffel language
+    example/lexical/gegrep      grep-like program
+    example/parse/calc          infix notation calculator (see geyacc doc)
+    example/parse/eiffel        simple parser for Eiffel
+    example/parse/mcalc         calculator with memory (see geyacc doc)
+    example/parse/rpcalc        reverse polish notation calc (see geyacc doc)
+    example/test/concat1        string concatenator getest example (see getest doc)
+    example/test/concat2        string concatenator getest example (see getest doc)
+    example/time/clock          system clock
+    library/kernel              compiler-dependent kernel class adapters
+    library/lexical             Gobo Eiffel Lexical Library classes
+    library/other               Emulation of third-party Eiffel libraries
+    library/parse               Gobo Eiffel Parse Library classes
+    library/structure           Gobo Eiffel Structure Library classes
+    library/test                Gobo Eiffel Test Library classes
+    library/time                Gobo Eiffel Time Library classes
+    library/tools               Gobo Eiffel Tools Library classes
+    library/utility             Gobo Eiffel Utility Library classes
     misc                        miscellaneous files
-    src\gelex                   gelex source code
-    src\gepp                    gepp source code
-    src\geyacc                  geyacc source code
-    test\structure              test suite for Gobo Eiffel Structure Library
+    src/gelex                   gelex source code
+    src/gelint                  gelint source code (still under development)
+    src/gepp                    gepp source code
+    src/getest                  getest source code
+    src/geyacc                  geyacc source code
+    test/all                    scripts to run all tests
+    test/gelint                 Eiffel compiler dependent tests for gelint
+    test/precomp                precompilation test
+    test/structure              test suite for Gobo Eiffel Structure Library
+    test/time                   test suite for Gobo Eiffel Time Library
 
 Each of the above directories comes with a Readme file providing
 some basic information. Documentation is also available on the Web
@@ -95,4 +110,4 @@ for your specific needs. Thank you in advance.
 Copyright (c) 1997-2001, Eric Bezault
 mailto:ericb@gobosoft.com
 http://www.gobosoft.com
-16 April 2001
+29 April 2001
