@@ -50,6 +50,10 @@ Version 2.0 -
 	* Moved cursor classes next to their associated containers
 	  and removed cluster $GOBO/library/structure/cursor.
 
+	Gobo Eiffel Time Library:
+
+	* First release.
+
 	Miscellaneous:
 
 	* Removed comments in 'loadpath.se' files which caused
