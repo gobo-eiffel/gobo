@@ -10,9 +10,8 @@ library Gobo
 
 cluster
 
-   [Gobo_project	"."] end
-   [Gobo			"$GOBO/library"] end
-   [Kernel			"$VE_Lib/Kernel"] end
+	[Gobo_project	"."] end
+	[Gobo			"$GOBO/library"] end
 
 option
 
