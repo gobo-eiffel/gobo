@@ -27,12 +27,17 @@ feature -- Execution
 			-- Print current date and time.
 		do
 			std.output.put_string ("Time Now: ")
-			std.output.put_string (system_clock.time_now.out)
-			std.output.put_string ("%NDate Now: ")
-			std.output.put_string (system_clock.date_now.out)
-			std.output.put_string ("%NDateTime Now: ")
-			std.output.put_string (system_clock.date_time_now.out)
-			std.output.put_string ("%N")
+			std.output.put_line (system_clock.time_now.out)
+			std.output.put_string ("Date Now: ")
+			std.output.put_line (system_clock.date_now.out)
+			std.output.put_string ("DateTime Now: ")
+			std.output.put_line (system_clock.date_time_now.out)
+			std.output.put_string ("UTC Time Now: ")
+			std.output.put_line (utc_system_clock.time_now.out)
+			std.output.put_string ("UTC Date Now: ")
+			std.output.put_line (utc_system_clock.date_now.out)
+			std.output.put_string ("UTC DateTime Now: ")
+			std.output.put_line (utc_system_clock.date_time_now.out)
 		end
 
 end -- class CLOCK
