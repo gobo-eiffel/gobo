@@ -59,8 +59,12 @@ feature -- Setting
 
 	set_root_class_name (a_name: like root_class_name) is
 			-- Set `root_class_name' to `a_name'.
+		local
+			an_identifier:  ET_IDENTIFIER
 		do
 			root_class_name := a_name
+			!! an_identifier.make (a_name)
+			set_root_class (an_identifier)
 		ensure
 			root_class_name_set: root_class_name = a_name
 		end
