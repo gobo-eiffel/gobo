@@ -28,6 +28,7 @@ inherit
 		end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
+	KL_IMPORTED_STRING_ROUTINES
 
 creation
 
@@ -61,7 +62,7 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 when 7 then
---|#line 66
+--|#line 67
 			yyval := yyval_default;
 			if not ignored then
 				define_value ("", yytype1 (yyvs.item (yyvsp - 1)))
@@ -69,7 +70,7 @@ when 7 then
 		
 
 when 8 then
---|#line 72
+--|#line 73
 			yyval := yyval_default;
 			if not ignored then
 				undefine_value (yytype1 (yyvs.item (yyvsp - 1)))
@@ -77,7 +78,7 @@ when 8 then
 		
 
 when 9 then
---|#line 78
+--|#line 79
 			yyval := yyval_default;
 			if not ignored then
 				process_include (yytype1 (yyvs.item (yyvsp - 1)))
@@ -85,7 +86,7 @@ when 9 then
 		
 
 when 10 then
---|#line 86
+--|#line 87
 			yyval := yyval_default;
 			if_level := if_level + 1
 			if not ignored and not yytype2 (yyvs.item (yyvsp - 1)) then
@@ -94,7 +95,7 @@ when 10 then
 		
 
 when 11 then
---|#line 93
+--|#line 94
 			yyval := yyval_default;
 			if_level := if_level + 1
 			if not ignored and yytype2 (yyvs.item (yyvsp - 1)) then
@@ -103,37 +104,37 @@ when 11 then
 		
 
 when 12 then
---|#line 102
+--|#line 103
 
 			yyval2 := is_defined (yytype1 (yyvs.item (yyvsp)))
 		
 			yyval := yyval2
 when 13 then
---|#line 106
+--|#line 107
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 1))
 		
 			yyval := yyval2
 when 14 then
---|#line 110
+--|#line 111
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 2)) and yytype2 (yyvs.item (yyvsp))
 		
 			yyval := yyval2
 when 15 then
---|#line 114
+--|#line 115
 
 			yyval2 := yytype2 (yyvs.item (yyvsp - 2)) or yytype2 (yyvs.item (yyvsp))
 		
 			yyval := yyval2
 when 16 then
---|#line 118
+--|#line 119
 
 			yyval2 := not yytype2 (yyvs.item (yyvsp))
 		
 			yyval := yyval2
 when 17 then
---|#line 124
+--|#line 125
 			yyval := yyval_default;
 			if ignored_level = if_level then
 				ignored_level := 0
@@ -142,7 +143,7 @@ when 17 then
 		
 
 when 18 then
---|#line 133
+--|#line 134
 			yyval := yyval_default;
 			if not ignored then
 				ignored_level := if_level
@@ -407,7 +408,7 @@ feature -- Processing
 			too_many_includes: GEPP_TOO_MANY_INCLUDES_ERROR
 		do
 			if not include_stack.is_full then
-				a_file := INPUT_STREAM_.make_file_open_read (Execution_environment.interpreted_string (a_filename))
+				a_file := INPUT_STREAM_.make_file_open_read (dos_filename (Execution_environment.interpreted_string (a_filename)))
 				if INPUT_STREAM_.is_open_read (a_file) then
 					include_stack.put (input_buffer)
 					set_input_buffer (new_file_buffer (a_file))
@@ -502,6 +503,34 @@ feature {NONE} -- Implementation
 
 	Max_include_depth: INTEGER is 10
 			-- Maximum number of nested include files
+
+	dos_filename (a_filename: STRING): STRING is
+			-- Replace leading '//D/' by 'D:\' where
+			-- 'D' is a drive letter
+		require
+			a_filename_not_void: a_filename /= Void
+		local
+			nb: INTEGER
+		do
+			nb := a_filename.count
+			if
+				nb >= 4 and then
+				a_filename.item (1) = '/' and then
+				a_filename.item (2) = '/' and then
+				a_filename.item (4) = '/'
+			then
+				Result := STRING_.make (nb - 1)
+				Result.append_character (a_filename.item (3))
+				Result.append_string (":\")
+				if nb > 4 then
+					Result.append_string (a_filename.substring (4, nb))
+				end
+			else
+				Result := a_filename
+			end
+		ensure
+			dos_filename_not_void: Result /= Void
+		end
 
 invariant
 
