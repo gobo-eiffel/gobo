@@ -362,6 +362,9 @@ feature -- Preparsing
 			a_class_not_void: a_class /= Void
 		do
 			master_class := a_class
+			if overridden_class /= Void then
+				overridden_class.set_master_class (a_class)
+			end
 		ensure
 			master_class_set: master_class = a_class
 		end
