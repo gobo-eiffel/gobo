@@ -13,7 +13,6 @@ indexing
 class KL_DOUBLE_ROUTINES
 
 inherit
-	ANY
 
 #ifdef ISE
 	DOUBLE_MATH
@@ -36,9 +35,9 @@ inherit
 		end
 
 #endif
-	
+
 	KL_SHARED_PLATFORM
-	
+
 feature -- Logarithms
 
 	log (d: DOUBLE): DOUBLE is
