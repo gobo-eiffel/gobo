@@ -32,6 +32,7 @@ feature -- XML asserts
 		do
 			reset_parser
 			parser.parse_from_string (new_unicode_string_from_utf8 (in))
+			debug ("xml_parser") print_parser_error end
 			assert (a_name, not error.has_error)
 		end
 
@@ -46,6 +47,7 @@ feature -- XML asserts
 			assert (a_name, error.has_error)
 		end
 
+
 	assert_output (a_name: STRING; in: STRING; an_out: STRING) is
 			-- Assert valid and compare output with expected.
 		require
@@ -55,13 +57,8 @@ feature -- XML asserts
 		do
 			reset_parser
 			parser.parse_from_string (new_unicode_string_from_utf8 (in))
-
-			debug ("xml_parser")
-				if not parser.is_correct then
-					std.output.put_string (parser.last_error_description) 
-					std.output.put_new_line
-				end
-			end
+			debug ("xml_parser") print_parser_error end
+			
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
 
 				-- Constants are in UTF8, so convert if UC_STRING.
@@ -77,15 +74,67 @@ feature -- XML asserts
 		do
 			reset_parser
 			parser.parse_from_string (new_unicode_string_from_utf16 (in_utf16))
+			debug ("xml_parser") print_parser_error end
 			
-			debug ("xml_parser")
-				if not parser.is_correct then
-					std.output.put_string (parser.last_error_description)
-					std.output.put_new_line
-				end
-			end
 			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
 			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), output))
+		end
+	
+	assert_valid_external (a_name: STRING; in: STRING; a_resolver: XM_EXTERNAL_RESOLVER) is
+			-- Assert valid with external entities.
+		require
+			name_not_void: a_name /= Void
+			in_not_void: in /= Void
+		do
+			reset_parser
+			parser.set_dtd_resolver (a_resolver)
+			parser.set_entity_resolver (a_resolver)
+			parser.parse_from_string (new_unicode_string_from_utf8 (in))
+			debug ("xml_parser") print_parser_error end
+			
+			assert (a_name, not error.has_error)
+		end
+		
+	assert_invalid_external (a_name: STRING; in: STRING; a_resolver: XM_EXTERNAL_RESOLVER) is
+			-- Assert invalid with external entities.
+		require
+			name_not_void: a_name /= Void
+			in_not_void: in /= Void
+		do
+			reset_parser
+			parser.set_dtd_resolver (a_resolver)
+			parser.set_entity_resolver (a_resolver)
+			parser.parse_from_string (new_unicode_string_from_utf8 (in))
+			debug ("xml_parser") print_parser_error end
+			
+			assert (a_name, error.has_error)
+		end
+
+	assert_output_external (a_name: STRING; in: STRING; an_out: STRING; a_resolver: XM_EXTERNAL_RESOLVER) is
+			-- Assert output valid with external.
+		require
+			name: a_name /= Void
+			in_not_void: in /= Void
+		do
+			reset_parser
+			parser.set_dtd_resolver (a_resolver)
+			parser.set_entity_resolver (a_resolver)
+			parser.parse_from_string (new_unicode_string_from_utf8 (in))
+			debug ("xml_parser") print_parser_error end
+
+			assert (STRING_.concat ("Valid: ", a_name), parser.is_correct)
+			assert (STRING_.concat ("Output: ", a_name), STRING_.same_string (new_unicode_string_from_utf8 (an_out), output))
+		end
+
+feature {NONE} -- Debug
+
+	print_parser_error is
+			-- Debug: print error
+		do
+			if not parser.is_correct then
+				std.output.put_string (parser.last_error_description) 
+				std.output.put_new_line
+			end
 		end
 
 feature {NONE} -- Parser
