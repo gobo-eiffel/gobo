@@ -376,6 +376,9 @@
 			<optional>
 				<attribute name="abort"/>
 			</optional>
+			<optional>
+				<attribute name="verbose"/>
+			</optional>
 			<zeroOrMore>
 				<ref name="define"/>
 			</zeroOrMore>
