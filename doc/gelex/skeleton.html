@@ -82,7 +82,7 @@ name="text_substring"><em>text_substring</em></a><em> </em>(<em>s</em>,<em> e</e
             -- (Create a new string at each call.)<em>
         </em><em><strong>require</strong></em><em>
             meaningful_start</em>:<em> 1 </em>&lt;=<em> s
-            meaningful_interval</em>:<em> s </em>+<em> 1 </em>&lt;=<em> e
+            meaningful_interval</em>:<em> s </em>&lt;=<em> e </em>+<em> 1
             meaningful_end</em>:<em> e </em>&lt;= <em>text_count
         </em><em><strong>ensure</strong></em><em>
             text_substring_not_void</em>:<em> Result </em>/=<em> Void
