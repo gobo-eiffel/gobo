@@ -27,7 +27,6 @@
 
 	<cluster name="bang2create" location="${GOBO}/example/tools/bang2create"/>
 	<mount location="${GOBO}/library/tools/library.xace"/>
-	<mount location="${GOBO}/library/tools/library.xace"/>
 	<mount location="${GOBO}/library/kernel/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>
 	<mount location="${GOBO}/library/parse/library.xace"/>
