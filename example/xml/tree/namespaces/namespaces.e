@@ -57,8 +57,6 @@ feature -- Processing
 					error_handler.report_error_message (tree_pipe.last_error)
 					has_error := True
 				else
-					tree_pipe.document.root_element.resolve_namespaces
-					tree_pipe.document.root_element.remove_namespace_declarations_from_attributes
 					error_handler.report_info_message ("printing document...")
 					!! formatter.make
 					formatter.process_document (tree_pipe.document)
