@@ -26,7 +26,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	non_negative_node_number: node_number >= 0
+	positive_node_number: node_number > 0
 	owned_node: document /= Void
 	
 end
