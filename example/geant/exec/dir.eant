@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+
+<project name="dir" default="dir" >
+	<target name="dir" description="executes a dir command under dos/windows">
+		<var name="directory" value="." />
+		<exec executable="dir ${directory}" />
+	</target>
+</project>
