@@ -16,6 +16,9 @@ deferred class XM_PARSER
 inherit
 
 	XM_ERROR_CODES
+	
+	XM_CALLBACKS_SOURCE
+	
 
 feature {ANY} -- Access
 
@@ -123,7 +126,12 @@ feature -- Status
 	last_error_extended_description: STRING is
 			-- Same as `last_error_description', but more verbose.
 		do
-			Result := clone (last_error_description)
+			if last_error_description /= Void then
+				Result := clone (last_error_description)
+				Result.append_character (' ')
+			else
+				Result := clone ("")
+			end
 			Result.append_string ("(")
 			Result.append_string (position.out)
 			Result.append_string (")")
