@@ -944,7 +944,6 @@ feature {NONE} -- Resolve a relative-path reference
 			has_absolute_path := True
 				-- Path items.
 			create some_items.make_from_linear (a_base.path_items)
-				
 				-- Handle path base if relative.
 			if has_path_base and then (is_dot (path_base_item) or is_dot_dot (path_base_item)) then
 				path_items.force_last (path_base_item)
