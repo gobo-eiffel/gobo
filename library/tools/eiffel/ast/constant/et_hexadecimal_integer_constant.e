@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a new Integer constant.
 		require
 			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: 0x[0-9a-fA-F]+
+			-- valid_literal: (0x[0-9a-fA-F]+).recognizes (a_literal)
 		do
 			literal := a_literal
 			make_leaf
@@ -155,6 +155,6 @@ feature -- Processing
 
 invariant
 
-	-- valid_literal: regexp: 0x[0-9a-fA-F]+
+	-- valid_literal: (0x[0-9a-fA-F]+).recognizes (literal)
 
 end

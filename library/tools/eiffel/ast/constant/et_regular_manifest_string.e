@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a new manifest string.
 		require
 			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: [^"%\n]*
+			-- valid_literal: ([^"%\n]*).recognizes (a_literal)
 		do
 			value := a_literal
 			make_leaf
@@ -89,7 +89,7 @@ feature -- Processing
 
 invariant
 
-	-- valid_literal: regexp: [^"%\n]*
+	-- valid_literal: ([^"%\n]*).recognizes (literal)
 	value_not_void: value /= Void
 
 end

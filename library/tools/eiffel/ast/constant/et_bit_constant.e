@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- Create a new Bit constant.
 		require
 			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: [0-1]+[bB]
+			-- valid_literal: ([0-1]+[bB]).recognizes (a_literal)
 		do
 			literal := a_literal
 			make_leaf
@@ -78,6 +78,6 @@ feature -- Processing
 invariant
 
 	literal_not_void: literal /= Void
-	-- valid_literal: regexp: [0-1]+[bB]
+	-- valid_literal: ([0-1]+[bB]).recognizes (literal)
 
 end

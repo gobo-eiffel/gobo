@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a new manifest string.
 		require
 			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: ([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*
+			-- valid_literal: (([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (a_literal)
 		do
 			literal := a_literal
 			make_leaf
@@ -90,6 +90,6 @@ feature -- Processing
 
 invariant
 
-	-- valid_literal: regexp: ([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*
+	-- valid_literal: (([^"%\n]|%([^\n]|\/[0-9]+\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (literal)
 
 end

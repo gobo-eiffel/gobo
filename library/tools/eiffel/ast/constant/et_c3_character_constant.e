@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a new character constant.
 		require
 			a_literal_not_void: a_literal /= Void
-			-- valid_literal: regexp: [0-9]+
+			-- valid_literal: ([0-9]+).recognizes (a_literal)
 		do
 			literal := a_literal
 			make_leaf
@@ -70,6 +70,6 @@ feature -- Processing
 invariant
 
 	literal_not_void: literal /= Void
-	-- valid_literal: regexp: [0-9]+
+	-- valid_literal: ([0-9]+).recognizes (literal)
 
 end
