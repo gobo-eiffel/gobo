@@ -125,7 +125,13 @@ feature -- Parsing
 								std.error.put_integer (last_token)
 								std.error.put_character ('%N')
 							end
-							yychar1 := yy_translate (last_token)
+								-- Translate lexical token `last_token' into 
+								-- geyacc internal token code.
+							if last_token <= yyMax_token then
+								yychar1 := yytranslate.item (last_token)
+							else
+								yychar1 := yyNsyms
+							end
 							yyn := yyn + yychar1
 						elseif last_token = yyEof then
 								-- This means end of input.
@@ -392,7 +398,13 @@ feature {YY_PARSER_ACTION} -- Status report
 					if a_token = yyEof then
 						yychar1 := 0
 					else
-						yychar1 := yy_translate (a_token)
+							-- Translate lexical token `a_token' into 
+							-- geyacc internal token code.
+						if a_token <= yyMax_token then
+							yychar1 := yytranslate.item (a_token)
+						else
+							yychar1 := yyNsyms
+						end
 						yyn := yyn + yychar1
 					end
 					if
@@ -594,19 +606,6 @@ feature {NONE} -- Tables
 			-- `yytable.item (p+i)' should be used.
 
 feature {NONE} -- Implementation
-
-	yy_translate (i: INTEGER): INTEGER is
-			-- Translate lexical token `i' into 
-			-- geyacc internal token code.
-		require
-			i_positive: i >= 0
-		do
-			if i <= yyMax_token then
-				Result := yytranslate.item (i)
-			else
-				Result := yyNsyms
-			end
-		end
 
 	yy_do_action (yy_act: INTEGER) is
 			-- Execute semantic action.
