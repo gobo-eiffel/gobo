@@ -59,13 +59,13 @@ feature -- Status report
 				project.log ("  [fileset] error: attribute 'directory' is mandatory%N")
 			end
 			if Result then
-				Result := include_wildcard = Void or else include_wildcard.compiled
+				Result := include_wildcard = Void or else include_wildcard.is_compile
 				if not Result then
 					project.log ("  [fileset] error: attribute 'include' is not valid%N")
 				end
 			end
 			if Result then
-				Result := exclude_wildcard = Void or else exclude_wildcard.compiled
+				Result := exclude_wildcard = Void or else exclude_wildcard.is_compile
 				if not Result then
 					project.log ("  [fileset] error: attribute 'exclude' is not valid%N")
 				end
@@ -81,9 +81,9 @@ feature -- Status report
 			directory_name_not_void: Result implies directory_name /= Void
 			directory_name_not_empty: Result implies directory_name.count > 0
 			include_wildcard_compiled: Result implies include_wildcard = Void or else
-				include_wildcard.compiled
+				include_wildcard.is_compile
 			exclude_wildcard_compiled: Result implies exclude_wildcard = Void or else
-				exclude_wildcard.compiled
+				exclude_wildcard.is_compile
 			map_executable: Result implies (map = Void or else map.is_executable)
 		end
 
@@ -238,7 +238,7 @@ feature -- Setting
 
 				-- Setup wildcard for include patterns:
 			!LX_DFA_WILDCARD! include_wildcard.compile (include_wc_string, True)
-			if not include_wildcard.compiled then
+			if not include_wildcard.is_compile then
 				project.log ("  [fileset] error: invalid include wildcard: '" + include_wc_string + "'%N")
 			end
 
@@ -257,7 +257,7 @@ feature -- Setting
 
 				-- Setup wildcard for exclude patterns:
 			!LX_DFA_WILDCARD! exclude_wildcard.compile (exclude_wc_string, True)
-			if not exclude_wildcard.compiled then
+			if not exclude_wildcard.is_compile then
 				project.log ("  [fileset] error: invalid exclude wildcard: '" + exclude_wc_string + "'%N")
 			end
 
