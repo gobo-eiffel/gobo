@@ -54,7 +54,7 @@ creation
 feature {NONE} -- Initialization
 	
 	make (a_parent: like parent; a_name: like name; a_ns: like namespace) is
-			-- Create a new child element.
+			-- Create a new child element, without attaching to parent.
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 		end
 		
 	make_last (a_parent: XM_ELEMENT; a_name: like name; a_ns: like namespace) is
-			-- Create a new child element.
+			-- Create a new child element, and add it to the parent.
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 		end
 		
 	make_root (a_parent: XM_DOCUMENT; a_name: like name; a_ns: like namespace) is
-			-- Create a new child element.
+			-- Create a new root element, and add it to the document parent.
 		require
 			a_parent_not_void: a_parent /= Void
 			a_name_not_void: a_name /= Void
