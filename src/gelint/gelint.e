@@ -41,6 +41,10 @@ feature -- Execution
 			an_xace_parser: ET_XACE_UNIVERSE_PARSER
 			an_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
 			an_xace_variables: DS_HASH_TABLE [STRING, STRING]
+			a_splitter: ST_SPLITTER
+			a_cursor: DS_LIST_CURSOR [STRING]
+			a_definition: STRING
+			an_index: INTEGER
 			gobo_eiffel: STRING
 			a_universe: ET_UNIVERSE
 			i, nb: INTEGER
@@ -57,6 +61,8 @@ feature -- Execution
 				elseif arg.is_equal ("-h") or arg.is_equal ("-?") or arg.is_equal ("--help") then
 					report_usage_message
 					Exceptions.die (0)
+				elseif arg.count > 9 and then arg.substring (1, 9).is_equal ("--define=") then
+					defined_variables := arg.substring (10, arg.count)
 				elseif arg.is_equal ("--all_breaks") then
 					all_breaks := True
 				elseif arg.is_equal ("--verbose") then
@@ -103,6 +109,24 @@ feature -- Execution
 						if gobo_eiffel /= Void then
 							an_xace_variables.force_last (gobo_eiffel, "GOBO_EIFFEL")
 						end
+						if defined_variables /= Void then
+							create a_splitter.make
+							a_cursor := a_splitter.split (defined_variables).new_cursor
+							from a_cursor.start until a_cursor.after loop
+								a_definition := a_cursor.item
+								if a_definition.count > 0 then
+									an_index := a_definition.index_of ('=', 1)
+									if an_index = 0 then
+										an_xace_variables.force_last ("", a_definition)
+									elseif an_index = a_definition.count then
+										an_xace_variables.force_last ("", a_definition.substring (1, an_index - 1))
+									elseif an_index /= 1 then
+										an_xace_variables.force_last (a_definition.substring (an_index + 1 ,a_definition.count), a_definition.substring (1, an_index - 1))
+									end
+								end
+								a_cursor.forth
+							end
+						end
 						create an_xace_parser.make_with_variables (an_xace_variables, an_xace_error_handler)
 						an_xace_parser.parse_file (a_file)
 						a_file.close
@@ -134,6 +158,7 @@ feature -- Execution
 
 feature -- Status report
 
+	defined_variables: STRING
 	all_breaks: BOOLEAN
 	is_verbose: BOOLEAN
 	is_cat: BOOLEAN
@@ -247,7 +272,7 @@ feature -- Error handling
 	Usage_message: UT_USAGE_MESSAGE is
 			-- Gepp usage message.
 		once
-			create Result.make ("[--verbose][--all_breaks][--void][--cat][--forget][--flat] filename")
+			create Result.make ("[--verbose][--all_breaks][--define=variables][--void][--flat] filename")
 		ensure
 			usage_message_not_void: Result /= Void
 		end
