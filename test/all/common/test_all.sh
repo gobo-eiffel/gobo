@@ -2,6 +2,10 @@
 
 # usage: test_all.sh [--finalize] compiler
 
+echo "Testing Gobo Eiffel Structure Library..."
+$GOBO/test/all/common/test_harness.sh --getest $1 $2 structure $GOBO/test/structure
+
+echo ""
 echo "Testing Gobo Eiffel Time Library..."
 $GOBO/test/all/common/test_harness.sh --getest $1 $2 time $GOBO/test/time
 
