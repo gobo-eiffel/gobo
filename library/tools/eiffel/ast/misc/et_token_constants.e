@@ -65,6 +65,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	local_keyword: ET_TOKEN is
+			-- 'local' keyword
+		once
+			!! Result.make (local_keyword_name)
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	rename_keyword: ET_TOKEN is
 			-- 'rename' keyword
 		once

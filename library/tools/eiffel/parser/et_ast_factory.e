@@ -378,6 +378,50 @@ feature -- AST factory
 			clients_not_void: Result /= Void
 		end
 
+	new_colon_formal_argument (a_name: ET_ARGUMENT_NAME; a_type: ET_TYPE): ET_COLON_FORMAL_ARGUMENT is
+			-- New formal argument whose name is followed by a colon
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+		do
+			!! Result.make (a_name, a_type)
+		ensure
+			colon_formal_argument_not_void: Result /= Void
+		end
+
+	new_colon_local_variable (a_name: ET_LOCAL_NAME; a_type: ET_TYPE): ET_COLON_LOCAL_VARIABLE is
+			-- New local variable whose name is followed by a colon
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+		do
+			!! Result.make (a_name, a_type)
+		ensure
+			colon_local_variable_not_void: Result /= Void
+		end
+
+	new_comma_formal_argument (a_name: ET_ARGUMENT_NAME; a_type: ET_TYPE): ET_COMMA_FORMAL_ARGUMENT is
+			-- New formal agument whose name is followed by a comma
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+		do
+			!! Result.make (a_name, a_type)
+		ensure
+			comma_formal_argument_not_void: Result /= Void
+		end
+
+	new_comma_local_variable (a_name: ET_LOCAL_NAME; a_type: ET_TYPE): ET_COMMA_LOCAL_VARIABLE is
+			-- New local variable whose name is followed by a comma
+		require
+			a_name_not_void: a_name /= Void
+			a_type_not_void: a_type /= Void
+		do
+			!! Result.make (a_name, a_type)
+		ensure
+			comma_local_variable_not_void: Result /= Void
+		end
+
 	new_compound (a_keyword: ET_TOKEN): ET_COMPOUND is
 			-- New instruction compound
 		require
@@ -849,14 +893,36 @@ feature -- AST factory
 			feature_name_comma_not_void: Result /= Void
 		end
 
-	new_formal_arguments (a_name: ET_IDENTIFIER; a_type: ET_TYPE): ET_FORMAL_ARGUMENTS is
-			-- New formal argument list with initially
-			-- one argument `a_name' of type `a_type'
+	new_formal_argument_semicolon (an_argument: ET_FORMAL_ARGUMENT; a_semicolon: ET_SYMBOL): ET_FORMAL_ARGUMENT_SEMICOLON is
+			-- New formal_argument-semicolon
 		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
+			an_argument_not_void: an_argument /= Void
+			a_semicolon_not_void: a_semicolon /= Void
 		do
-			!! Result.make (a_name, a_type)
+			!! Result.make (an_argument, a_semicolon)
+		ensure
+			formal_argument_semicolon_not_void: Result /= Void
+		end
+
+	new_formal_arguments (a_left, a_right: ET_SYMBOL): ET_FORMAL_ARGUMENTS is
+			-- New formal argument list
+		require
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
+		do
+			!! Result.make (a_left, a_right)
+		ensure
+			formal_arguments_not_void: Result /= Void
+		end
+
+	new_formal_arguments_with_capacity (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_FORMAL_ARGUMENTS is
+			-- New formal argument list with given capacity
+		require
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
+			nb_positive: nb >= 0
+		do
+			!! Result.make_with_capacity (a_left, a_right, nb)
 		ensure
 			formal_arguments_not_void: Result /= Void
 		end
@@ -1443,14 +1509,34 @@ feature -- AST factory
 			type_not_void: Result /= Void
 		end
 
-	new_local_variables (a_name: ET_IDENTIFIER; a_type: ET_TYPE): ET_LOCAL_VARIABLES is
-			-- New local variable list with initially
-			-- one variable `a_name' of type `a_type'
+	new_local_variable_semicolon (a_variable: ET_LOCAL_VARIABLE; a_semicolon: ET_SYMBOL): ET_LOCAL_VARIABLE_SEMICOLON is
+			-- New local_variable-semicolon
 		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
+			a_variable_not_void: a_variable /= Void
+			a_semicolon_not_void: a_semicolon /= Void
 		do
-			!! Result.make (a_name, a_type)
+			!! Result.make (a_variable, a_semicolon)
+		ensure
+			local_variable_semicolon_not_void: Result /= Void
+		end
+
+	new_local_variables (a_local: ET_TOKEN): ET_LOCAL_VARIABLES is
+			-- New local variable list
+		require
+			a_local_not_void: a_local /= Void
+		do
+			!! Result.make (a_local)
+		ensure
+			local_variables_not_void: Result /= Void
+		end
+
+	new_local_variables_with_capacity (a_local: ET_TOKEN; nb: INTEGER): ET_LOCAL_VARIABLES is
+			-- New local variable list with given capacity
+		require
+			a_local_not_void: a_local /= Void
+			nb_positive: nb >= 0
+		do
+			!! Result.make_with_capacity (a_local, nb)
 		ensure
 			local_variables_not_void: Result /= Void
 		end

@@ -6,57 +6,80 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999-2001, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
 class ET_FORMAL_ARGUMENTS
 
+inherit
+
+	ET_AST_NODE
+
+	ET_AST_LIST [ET_FORMAL_ARGUMENT_ITEM]
+		rename
+			make as make_ast_list,
+			make_with_capacity as make_ast_list_with_capacity
+		end
+
 creation
 
-	make
+	make, make_with_capacity
 
 feature {NONE} -- Initialization
 
-	make (a_name: ET_IDENTIFIER; a_type: ET_TYPE) is
-			-- Create a new formal argument list with initially
-			-- one argument `a_name' of type `a_type'.
+	make (a_left: like left_parenthesis; a_right: like right_parenthesis) is
+			-- Create a new formal argument list.
 		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
 		do
-			!! arguments.make (a_name, a_type)
-			count := count + 1
+			left_parenthesis := a_left
+			right_parenthesis := a_right
+			make_ast_list
 		ensure
-			name_set: arguments.name = a_name
-			type_set: arguments.type = a_type
+			left_parenthesis_set: left_parenthesis = a_left
+			right_parenthesis_set: right_parenthesis = a_right
+			is_empty: is_empty
+			capacity_set: capacity = 0
+		end
+
+	make_with_capacity (a_left: like left_parenthesis; a_right: like right_parenthesis; nb: INTEGER) is
+			-- Create a new formal argument list with capacity `nb'.
+		require
+			a_left_not_void: a_left /= Void
+			a_right_not_void: a_right /= Void
+			nb_positive: nb >= 0
+		do
+			left_parenthesis := a_left
+			right_parenthesis := a_right
+			make_ast_list_with_capacity (nb)
+		ensure
+			left_parenthesis_set: left_parenthesis = a_left
+			right_parenthesis_set: right_parenthesis = a_right
+			is_empty: is_empty
+			capacity_set: capacity = nb
 		end
 
 feature -- Access
 
-	item (i: INTEGER): ET_FORMAL_ARGUMENT is
-			-- `i'-th formal argument
+	formal_argument (i: INTEGER): ET_FORMAL_ARGUMENT is
+			-- Formal argument at index `i' in list
 		require
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
-		local
-			j: INTEGER
-			arg: ET_FORMAL_ARGUMENT
 		do
-			from
-				arg := arguments
-				j := 1
-			until
-				j = i
-			loop
-				arg := arg.next
-				j := j + 1
-			end
-			Result := arg
+			Result := item (i).formal_argument_item
 		ensure
-			item_not_void: Result /= Void
+			formal_argument_not_void: Result /= Void
 		end
+
+	left_parenthesis: ET_SYMBOL
+			-- Left parenthesis
+
+	right_parenthesis: ET_SYMBOL
+			-- Right parenthesis
 
 	index_of (a_name: ET_IDENTIFIER): INTEGER is
 			-- Index of formal argument `a_name';
@@ -65,15 +88,15 @@ feature -- Access
 			a_name_not_void: a_name /= Void
 		local
 			arg: ET_FORMAL_ARGUMENT
-			i: INTEGER
+			i, nb: INTEGER
 		do
-			from arg := arguments until arg = Void loop
-				i := i + 1
-				if arg.name.same_identifier (a_name) then
+			nb := count
+			from i := 1 until i > nb loop
+				if formal_argument (i).name.same_identifier (a_name) then
 					Result := i
-					arg := Void -- Jump out of the loop.
+					i := nb + 1 -- Jump out of the loop.
 				else
-					arg := arg.next
+					i := i + 1
 				end
 			end
 		ensure
@@ -81,53 +104,39 @@ feature -- Access
 			index_small_enough: Result <= count
 		end
 
-	arguments: ET_FORMAL_ARGUMENT
-			-- Arguments
-
-feature -- Measurement
-
-	count: INTEGER
-			-- Number of formal arguments
-
-feature -- Element change
-
-	put_first (a_name: ET_IDENTIFIER; a_type: ET_TYPE) is
-			-- Add formal argument `a_name' with type
-			-- `a_type' to argument list.
-		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-		local
-			an_argument: like arguments
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
 		do
-			!! an_argument.make (a_name, a_type)
-			an_argument.set_next (arguments)
-			arguments := an_argument
-			count := count + 1
-		ensure
-			one_more: arguments.next = old arguments
-			name_set: arguments.name = a_name
-			type_set: arguments.type = a_type
+			Result := left_parenthesis.position
 		end
 
-	put_name_first (a_name: ET_IDENTIFIER) is
-			-- Add formal argument `a_name' to argument list
-			-- with same type as previously inserted argument.
-		require
-			a_name_not_void: a_name /= Void
-		local
-			an_argument: like arguments
-			a_type: ET_TYPE
+	break: ET_BREAK is
+			-- Break which appears just after current node
 		do
-			a_type := arguments.type
-			!! an_argument.make (a_name, a_type)
-			an_argument.set_next (arguments)
-			arguments := an_argument
-			count := count + 1
+			Result := right_parenthesis.break
+		end
+
+feature -- Setting
+
+	set_left_parenthesis (a_left: like left_parenthesis) is
+			-- Set `left_parenthesis' to `a_left'.
+		require
+			a_left_not_void: a_left /= Void
+		do
+			left_parenthesis := a_left
 		ensure
-			one_more: arguments.next = old arguments
-			name_set: arguments.name = a_name
-			type_set: arguments.type = (old arguments).type
+			left_parenthesis_set: left_parenthesis = a_left
+		end
+
+	set_right_parenthesis (a_right: like right_parenthesis) is
+			-- Set `right_parenthesis' to `a_right'.
+		require
+			a_right_not_void: a_right /= Void
+		do
+			right_parenthesis := a_right
+		ensure
+			right_parenthesis_set: right_parenthesis = a_right
 		end
 
 feature -- System
@@ -136,11 +145,12 @@ feature -- System
 			-- Recursively add to system classes that
 			-- appear in current formal arguments.
 		local
-			arg: like arguments
+			i, nb: INTEGER
 		do
-			from arg := arguments until arg = Void loop
-				arg.type.add_to_system
-				arg := arg.next
+			nb := count
+			from i := 1 until i > nb loop
+				formal_argument (i).type.add_to_system
+				i := i + 1
 			end
 		end
 
@@ -154,14 +164,15 @@ feature -- Type processing
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		local
-			arg: like arguments
+			i, nb: INTEGER
 		do
-			from arg := arguments until arg = Void loop
-				if arg.type.has_formal_parameters (actual_parameters) then
+			nb := count
+			from i := 1 until i > nb loop
+				if formal_argument (i).type.has_formal_parameters (actual_parameters) then
 					Result := True
-					arg := Void -- Jump out of the loop.
+					i := nb + 1 -- Jump out of the loop.
 				else
-					arg := arg.next
+					i := i + 1
 				end
 			end
 		end
@@ -174,10 +185,13 @@ feature -- Type processing
 		require
 			actual_parameters_not_void: actual_parameters /= Void
 		local
-			arg: like arguments
+			i: INTEGER
+			arg: ET_FORMAL_ARGUMENT
 			a_type, new_type: ET_TYPE
 		do
-			from arg := arguments until arg = Void loop
+			i := count
+			from until i < 1 loop
+				arg := formal_argument (i)
 				if arg.type = a_type then
 						-- This argument shares the same
 						-- type as the previous argument.
@@ -192,7 +206,7 @@ feature -- Type processing
 						new_type := a_type
 					end
 				end
-				arg := arg.next
+				i := i - 1
 			end
 		end
 
@@ -208,12 +222,13 @@ feature -- Type processing
 			a_class_not_void: a_class /= Void
 			immediate_or_redeclared: a_feature.implementation_class = a_class
 		local
-			arg: like arguments
+			i, nb: INTEGER
 		do
 -- TODO: check arguments' names.
-			from arg := arguments until arg = Void loop
-				arg.resolve_identifier_types (a_feature, Current, a_class)
-				arg := arg.next
+			nb := count
+			from i := 1 until i > nb loop
+				formal_argument (i).resolve_identifier_types (a_feature, Current, a_class)
+				i := i + 1
 			end
 -- TODO: check cycles in 'like argument'.
 		end
@@ -224,31 +239,29 @@ feature -- Duplication
 			-- Cloned formal arguments;
 			-- Do not recursively clone the types
 		local
-			arg: ET_FORMAL_ARGUMENT
-			args: ARRAY [ET_FORMAL_ARGUMENT]
-			i, nb: INTEGER
+			i: INTEGER
 		do
-			nb := count
-			!! args.make (1, nb)
-			from arg := arguments until arg = Void loop
-				i := i + 1
-				args.put (arg, i)
-				arg := arg.next
-			end
-			arg := args.item (nb)
-			!! Result.make (arg.name, arg.type)
-			from i := nb - 1 until i < 1 loop
-				arg := args.item (i)
-				Result.put_first (arg.name, arg.type)
+			i := count
+			!! Result.make_with_capacity (left_parenthesis, right_parenthesis, i)
+			from until i < 1 loop
+				Result.put_first (item (i).cloned_argument)
 				i := i - 1
 			end
 		ensure
 			arguments_not_void: Result /= Void
 		end
 
+feature {NONE} -- Implementation
+
+	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_FORMAL_ARGUMENT_ITEM] is
+			-- Fixed array routines
+		once
+			!! Result
+		end
+
 invariant
 
-	arguments_not_void: arguments /= Void
-	count_positive: count >= 1
+	left_parenthesis_not_void: left_parenthesis /= Void
+	right_parenthesis_not_void: right_parenthesis /= Void
 
 end -- class ET_FORMAL_ARGUMENTS

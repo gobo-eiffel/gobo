@@ -6,56 +6,63 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class ET_LOCAL_VARIABLE
+deferred class ET_LOCAL_VARIABLE
 
-creation
+inherit
 
-	make
+	ET_LOCAL_VARIABLE_ITEM
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_type: like type) is
+	make (a_name: like name_item; a_type: like type) is
 			-- Create a new local variable.
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 		do
-			name := a_name
+			name_item := a_name
 			type := a_type
 		ensure
-			name_set: name = a_name
+			name_set: name_item = a_name
 			type_set: type = a_type
 		end
 
 feature -- Access
 
-	name: ET_IDENTIFIER
+	name: ET_IDENTIFIER is
 			-- Name
+		do
+			Result := name_item.identifier_item
+		ensure
+			name_not_void: Result /= Void
+		end
 
 	type: ET_TYPE
 			-- Type
 
-	next: ET_LOCAL_VARIABLE
-			-- Next variable in local variable list
+	name_item: ET_LOCAL_NAME
+			-- Name follow by a comma or semicolon
 
-feature -- Setting
-
-	set_next (a_variable: like next) is
-			-- Set `next' to `a_variable'.
+	local_variable_item: ET_LOCAL_VARIABLE is
+			-- Local variable in semicolon-separated list
 		do
-			next := a_variable
-		ensure
-			next_set: next = a_variable
+			Result := Current
+		end
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := name_item.position
 		end
 
 invariant
 
-	name_not_void: name /= Void
-	type_not_void: type /= Void
+	name_item_not_void: name_item /= Void
 
 end -- class ET_LOCAL_VARIABLE

@@ -16,6 +16,7 @@ class ET_IDENTIFIER_COLON
 inherit
 
 	ET_LOCAL_NAME
+	ET_ARGUMENT_NAME
 	ET_TAG
 
 creation

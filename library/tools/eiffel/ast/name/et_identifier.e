@@ -30,6 +30,11 @@ inherit
 			is_equal
 		end
 
+	ET_ARGUMENT_NAME
+		undefine
+			is_equal
+		end
+
 	ET_TAG
 		undefine
 			is_equal

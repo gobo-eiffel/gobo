@@ -6,74 +6,99 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
 class ET_LOCAL_VARIABLES
 
+inherit
+
+	ET_AST_NODE
+
+	ET_AST_LIST [ET_LOCAL_VARIABLE_ITEM]
+		rename
+			make as make_ast_list,
+			make_with_capacity as make_ast_list_with_capacity
+		end
+
 creation
 
-	make
+	make, make_with_capacity
 
 feature {NONE} -- Initialization
 
-	make (a_name: ET_IDENTIFIER; a_type: ET_TYPE) is
-			-- Create a new local variable list with initially
-			-- one variable `a_name' of type `a_type'.
+	make (a_local: like local_keyword) is
+			-- Create a new local variable list.
 		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
+			a_local_not_void: a_local /= Void
 		do
-			!! variables.make (a_name, a_type)
+			local_keyword := a_local
+			make_ast_list
 		ensure
-			name_set: variables.name = a_name
-			type_set: variables.type = a_type
+			local_keyword_set: local_keyword = a_local
+			is_empty: is_empty
+			capacity_set: capacity = 0
+		end
+
+	make_with_capacity (a_local: like local_keyword; nb: INTEGER) is
+			-- Create a new local variable list with capacity `nb'.
+		require
+			a_local_not_void: a_local /= Void
+			nb_positive: nb >= 0
+		do
+			local_keyword := a_local
+			make_ast_list_with_capacity (nb)
+		ensure
+			local_keyword_set: local_keyword = a_local
+			is_empty: is_empty
+			capacity_set: capacity = nb
 		end
 
 feature -- Access
 
-	variables: ET_LOCAL_VARIABLE
-			-- Local variables
-
-feature -- Element change
-
-	put_first (a_name: ET_IDENTIFIER; a_type: ET_TYPE) is
-			-- Add local variable `a_name' with type
-			-- `a_type' to local variable list.
+	local_variable (i: INTEGER): ET_LOCAL_VARIABLE is
+			-- Local variable at index `i' in list
 		require
-			a_name_not_void: a_name /= Void
-			a_type_not_void: a_type /= Void
-		local
-			a_variable: like variables
+			i_large_enough: i >= 1
+			i_small_enough: i <= count
 		do
-			!! a_variable.make (a_name, a_type)
-			a_variable.set_next (variables)
-			variables := a_variable
+			Result := item (i).local_variable_item
 		ensure
-			one_more: variables.next = old variables
-			name_set: variables.name = a_name
-			type_set: variables.type = a_type
+			local_variable_not_void: Result /= Void
 		end
 
-	put_name_first (a_name: ET_IDENTIFIER) is
-			-- Add local variable `a_name' to variable list
-			-- with same type as previously inserted variable.
-		require
-			a_name_not_void: a_name /= Void
-		local
-			a_variable: like variables
-			a_type: ET_TYPE
+	local_keyword: ET_TOKEN
+			-- 'local' keyword
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
 		do
-			a_type := variables.type
-			!! a_variable.make (a_name, a_type)
-			a_variable.set_next (variables)
-			variables := a_variable
+			Result := local_keyword.position
+		end
+
+	break: ET_BREAK is
+			-- Break which appears just after current node
+		do
+			if is_empty then
+				Result := local_keyword.break
+			else
+				Result := item (count).break
+			end
+		end
+
+feature -- Setting
+
+	set_local_keyword (a_local: like local_keyword) is
+			-- Set `local_keyword' to `a_local'.
+		require
+			a_local_not_void: a_local /= Void
+		do
+			local_keyword := a_local
 		ensure
-			one_more: variables.next = old variables
-			name_set: variables.name = a_name
-			type_set: variables.type = (old variables).type
+			local_keyword_set: local_keyword = a_local
 		end
 
 feature -- System
@@ -82,16 +107,25 @@ feature -- System
 			-- Recursively add to system classes that
 			-- appear in current local declarations.
 		local
-			a_local: like variables
+			i, nb: INTEGER
 		do
-			from a_local := variables until a_local = Void loop
-				a_local.type.add_to_system
-				a_local := a_local.next
+			nb := count
+			from i := 1 until i > nb loop
+				local_variable (i).type.add_to_system
+				i := i + 1
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	fixed_array: KL_FIXED_ARRAY_ROUTINES [ET_LOCAL_VARIABLE_ITEM] is
+			-- Fixed array routines
+		once
+			!! Result
 		end
 
 invariant
 
-	variables_not_void: variables /= Void
+	local_keyword_not_void: local_keyword /= Void
 
 end -- class ET_LOCAL_VARIABLES

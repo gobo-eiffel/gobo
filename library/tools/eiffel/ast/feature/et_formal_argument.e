@@ -6,42 +6,60 @@ indexing
 
 	library:    "Gobo Eiffel Tools Library"
 	author:     "Eric Bezault <ericb@gobosoft.com>"
-	copyright:  "Copyright (c) 1999, Eric Bezault and others"
+	copyright:  "Copyright (c) 1999-2002, Eric Bezault and others"
 	license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
 	date:       "$Date$"
 	revision:   "$Revision$"
 
-class ET_FORMAL_ARGUMENT
+deferred class ET_FORMAL_ARGUMENT
 
-creation
+inherit
 
-	make
+	ET_FORMAL_ARGUMENT_ITEM
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_type: like type) is
+	make (a_name: like name_item; a_type: like type) is
 			-- Create a new formal argument.
 		require
 			a_name_not_void: a_name /= Void
 			a_type_not_void: a_type /= Void
 		do
-			name := a_name
+			name_item := a_name
 			type := a_type
 		ensure
-			name_set: name = a_name
+			name_item_set: name_item = a_name
 			type_set: type = a_type
 		end
 
 feature -- Access
 
-	name: ET_IDENTIFIER
+	name: ET_IDENTIFIER is
 			-- Name
+		do
+			Result := name_item.identifier_item
+		ensure
+			name_not_void: Result /= Void
+		end
 
 	type: ET_TYPE
 			-- Type
 
-	next: ET_FORMAL_ARGUMENT
-			-- Next argument in argument list
+	name_item: ET_ARGUMENT_NAME
+			-- Name follow by a comma or semicolon
+
+	formal_argument_item: ET_FORMAL_ARGUMENT is
+			-- Formal argument in semicolon-separated list
+		do
+			Result := Current
+		end
+
+	position: ET_POSITION is
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := name_item.position
+		end
 
 feature -- Setting
 
@@ -53,14 +71,6 @@ feature -- Setting
 			type := a_type
 		ensure
 			type_set: type = a_type
-		end
-
-	set_next (an_argument: like next) is
-			-- Set `next' to `an_argument'.
-		do
-			next := an_argument
-		ensure
-			next_set: next = an_argument
 		end
 
 feature -- Type processing
@@ -80,10 +90,5 @@ feature -- Type processing
 		do
 			type := type.resolved_identifier_types (a_feature, args, a_class)
 		end
-
-invariant
-
-	name_not_void: name /= Void
-	type_not_void: type /= Void
 
 end -- class ET_FORMAL_ARGUMENT

@@ -16,6 +16,7 @@ class ET_IDENTIFIER_COMMA
 inherit
 
 	ET_LOCAL_NAME
+	ET_ARGUMENT_NAME
 
 creation
 

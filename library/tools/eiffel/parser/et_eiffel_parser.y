@@ -173,7 +173,7 @@ creation
 %type <ET_TOKEN>               Check Create Debug Else Elseif End Ensure From If Invariant
                                Loop Precursor Require Then Until Variant When Inspect Select
                                Rename Redefine Export Undefine All Creation As Do Once
-                               Rescue Like Bit
+                               Rescue Like Bit Local
 %type <ET_TYPE>                Type Constraint_type
 %type <ET_VARIANT>             Variant_clause_opt
 %type <ET_WHEN_PART_LIST>      When_list When_list_opt
@@ -1253,52 +1253,117 @@ Feature_name: Identifier
 		}
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Formal_arguments_opt: -- Empty
 		-- { $$ := Void }
-	| '(' ')'
-		-- { $$ := Void }
-	| '(' Formal_argument_list ')'
-		{ $$ := $2 }
+	| Left_parenthesis Right_parenthesis
+		{ $$ := new_formal_arguments ($1, $2) }
+	| Left_parenthesis
+		{ add_counter }
+	  Formal_argument_list Right_parenthesis
+		{
+			$$ := $3
+			$$.set_left_parenthesis ($1)
+			$$.set_right_parenthesis ($4)
+			remove_counter
+		}
 	;
 
-Formal_argument_list: Identifier ':' Type
-		{ $$ := new_formal_arguments ($1, $3) }
-	| Identifier ':' Type ';'
-		{ $$ := new_formal_arguments ($1, $3) }
-	| Identifier ',' Formal_argument_list
-		{ $$ := $3; $$.put_name_first ($1) }
-	| Identifier     Formal_argument_list
-		{ $$ := $2; $$.put_name_first ($1) }
-	| Identifier ':' Type ';' Formal_argument_list
-		{ $$ := $5; $$.put_first ($1, $3) }
-	| Identifier ':' Type     Formal_argument_list
-		{ $$ := $4; $$.put_first ($1, $3) }
+Formal_argument_list: Identifier Colon Type
+		{
+			$$ := new_formal_arguments_with_capacity (counter_value + 1)
+			$$.put_first (new_colon_formal_argument (new_argument_name_colon ($1, $2), $3))
+		}
+	| Identifier Colon Type Semicolon
+		{
+			$$ := new_formal_arguments_with_capacity (counter_value + 1)
+			$$.put_first (new_formal_argument_semicolon (new_colon_formal_argument (new_argument_name_colon ($1, $2), $3), $4))
+		}
+	| Identifier Comma
+		{ increment_counter }
+	  Formal_argument_list
+		{
+			$$ := $4
+			$$.put_first (new_comma_formal_argument (new_argument_name_comma ($1, $2), $$.item (1).type))
+		}
+	| Identifier
+		{ increment_counter }
+	  Formal_argument_list
+		{
+			$$ := $3
+			$$.put_first (new_comma_formal_argument ($1, $$.item (1).type))
+		}
+	| Identifier Colon Type Semicolon
+		{ increment_counter }
+	  Formal_argument_list
+		{
+			$$ := $6
+			$$.put_first (new_formal_argument_semicolon (new_colon_formal_argument (new_argument_name_colon ($1, $2), $3), $4))
+		}
+	| Identifier Colon Type
+		{ increment_counter }
+	  Formal_argument_list
+		{
+			$$ := $5
+			$$.put_first (new_colon_formal_argument (new_argument_name_colon ($1, $2), $3))
+		}
 	;
 
---------------------------------------------------------------------------------
+--DONE------------------------------------------------------------------------------
 
 Local_declarations_opt: -- Empty
 		-- { $$ := Void }
-	| E_LOCAL
-		-- { $$ := Void }
-	| E_LOCAL Local_variable_list
-		{ $$ := $2 }
+	| Local
+		{ $$ := new_local_variables ($1) }
+	| Local
+		{ add_counter}
+	  Local_variable_list
+		{
+			$$ := $3
+			$$.set_local_keyword ($1)
+			remove_counter
+		}
 	;
 
-Local_variable_list: Identifier ':' Type
-		{ $$ := new_local_variables ($1, $3) }
-	| Identifier ':' Type ';'
-		{ $$ := new_local_variables ($1, $3) }
-	| Identifier ',' Local_variable_list
-		{ $$ := $3; $$.put_name_first ($1) }
-	| Identifier     Local_variable_list
-		{ $$ := $2; $$.put_name_first ($1) }
-	| Identifier ':' Type ';' Local_variable_list
-		{ $$ := $5; $$.put_first ($1, $3) }
-	| Identifier ':' Type     Local_variable_list
-		{ $$ := $4; $$.put_first ($1, $3) }
+Local_variable_list: Identifier Colon Type
+		{
+			$$ := new_local_variables_with_capacity (counter_value + 1)
+			$$.put_first (new_colon_local_variable (new_local_name_colon ($1, $2), $3))
+		}
+	| Identifier Colon Type Semicolon
+		{
+			$$ := new_local_variables_with_capacity (counter_value + 1)
+			$$.put_first (new_local_variable_semicolon (new_colon_local_variable (new_local_name_colon ($1, $2), $3), $4))
+		}
+	| Identifier Comma
+		{ increment_counter }
+	  Local_variable_list
+		{
+			$$ := $4
+			$$.put_first (new_comma_local_variable (new_local_name_comma ($1, $2), $$.item (1).type))
+		}
+	| Identifier
+		{ increment_counter }
+	  Local_variable_list
+		{
+			$$ := $3
+			$$.put_first (new_comma_local_variable ($1, $$.item (1).type))
+		}
+	| Identifier Colon Type Semicolon
+		{ increment_counter }
+	  Local_variable_list
+		{
+			$$ := $6
+			$$.put_first (new_local_variable_semicolon (new_colon_local_variable (new_local_name_colon ($1, $2), $3), $4))
+		}
+	| Identifier Colon Type
+		{ increment_counter }
+	  Local_variable_list
+		{
+			$$ := $5
+			$$.put_first (new_colon_local_variable (new_local_name_colon ($1, $2), $3))
+		}
 	;
 
 --DONE------------------------------------------------------------------------------
@@ -2793,6 +2858,17 @@ Invariant: E_INVARIANT
 Like: E_LIKE
 		{ $$ := $1 }
 	| E_LIKE E_BREAK
+		{
+			$$ := $1
+			if keep_all_breaks or keep_all_comments then
+				$$.set_break ($2)
+			end
+		}
+	;
+
+Local: E_LOCAL
+		{ $$ := $1 }
+	| E_LOCAL E_BREAK
 		{
 			$$ := $1
 			if keep_all_breaks or keep_all_comments then

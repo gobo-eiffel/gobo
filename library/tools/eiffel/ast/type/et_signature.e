@@ -26,23 +26,18 @@ feature {NONE} -- Initialization
 	make (args: ET_FORMAL_ARGUMENTS; a_result: like result_type) is
 			-- Create a new signature.
 		local
-			i: INTEGER
+			i, nb: INTEGER
 			arg: ET_FORMAL_ARGUMENT
 		do
 			result_type := a_result
 			if args = Void then
 				!! arguments.make (1, 0)
 			else
-				from arg := args.arguments until arg = Void loop
+				nb := args.count
+				!! arguments.make (1, nb)
+				from i := 1 until i > nb loop
+					arguments.put (args.formal_argument (i).type, i)
 					i := i + 1
-					arg := arg.next
-				end
-				!! arguments.make (1, i)
-				i := 1
-				from arg := args.arguments until arg = Void loop
-					arguments.put (arg.type, i)
-					i := i + 1
-					arg := arg.next
 				end
 			end
 		ensure
