@@ -15,6 +15,9 @@ class ET_VALIDITY_ERROR
 inherit
 
 	ET_EIFFEL_ERROR
+		redefine
+			class_impl
+		end
 
 creation
 
@@ -148,6 +151,7 @@ feature {NONE} -- Initialization
 			etl_code := gvzzz_etl_code
 			default_template := gvzzz0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_position
 			create parameters.make (1, 5)
 			parameters.put (etl_code, 1)
@@ -158,6 +162,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			position_set: position = a_position
 			all_reported: all_reported
 			all_fatal: all_fatal
@@ -183,6 +188,7 @@ feature {NONE} -- Initialization
 			etl_code := vaol1_etl_code
 			default_template := vaol1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := an_expression.position
 			create parameters.make (1, 5)
 			parameters.put (etl_code, 1)
@@ -193,6 +199,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -220,6 +227,7 @@ feature {NONE} -- Initialization
 			etl_code := vcch1_etl_code
 			default_template := vcch1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f.name.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -231,6 +239,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -259,6 +268,7 @@ feature {NONE} -- Initialization
 			etl_code := vcch1_etl_code
 			default_template := vcch1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			if f.has_undefine then
 				position := f.undefine_name.position
 			else
@@ -275,6 +285,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -301,6 +312,7 @@ feature {NONE} -- Initialization
 			etl_code := vcch2_etl_code
 			default_template := vcch2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_class.class_mark.position
 			create parameters.make (1, 5)
 			parameters.put (etl_code, 1)
@@ -311,6 +323,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -339,6 +352,7 @@ feature {NONE} -- Initialization
 			etl_code := vcfg1_etl_code
 			default_template := vcfg1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_formal.name.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -350,6 +364,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -377,6 +392,7 @@ feature {NONE} -- Initialization
 			etl_code := vcfg2_etl_code
 			default_template := vcfg2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_formal1.name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -390,6 +406,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -417,6 +434,7 @@ feature {NONE} -- Initialization
 			etl_code := vcfg3_etl_code
 			default_template := vcfg3a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -428,6 +446,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -453,6 +472,7 @@ feature {NONE} -- Initialization
 			etl_code := vcfg3_etl_code
 			default_template := vcfg3b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -464,6 +484,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -489,6 +510,7 @@ feature {NONE} -- Initialization
 			etl_code := vcfg3_etl_code
 			default_template := vcfg3c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -500,6 +522,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -527,6 +550,7 @@ feature {NONE} -- Initialization
 			etl_code := vcfg3_etl_code
 			default_template := vcfg3d_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_constraint.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -539,6 +563,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -569,6 +594,7 @@ feature {NONE} -- Initialization
 			etl_code := vcfg3_etl_code
 			default_template := vcfg3e_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_constraint.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -581,6 +607,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -613,6 +640,7 @@ feature {NONE} -- Initialization
 			etl_code := vcfg3_etl_code
 			default_template := vcfg3g_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_cycle.first.name.position
 			from
 				create a_string.make (20)
@@ -637,6 +665,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -664,6 +693,7 @@ feature {NONE} -- Initialization
 			etl_code := vcfg3_etl_code
 			default_template := vcfg3h_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -676,6 +706,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -708,6 +739,7 @@ feature {NONE} -- Initialization
 			etl_code := vcfg3_etl_code
 			default_template := vcfg3j_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_cycle.first.name.position
 			from
 				create a_string.make (20)
@@ -732,6 +764,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -759,6 +792,7 @@ feature {NONE} -- Initialization
 			etl_code := vdjr_etl_code
 			default_template := vdjr0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f1.parent.type.name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -772,6 +806,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -801,6 +836,7 @@ feature {NONE} -- Initialization
 			etl_code := vdjr_etl_code
 			default_template := vdjr0b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f1.parent.type.name.position
 			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
@@ -815,6 +851,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -845,6 +882,7 @@ feature {NONE} -- Initialization
 			etl_code := vdjr_etl_code
 			default_template := vdjr0c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f1.parent.type.name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -858,6 +896,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -888,6 +927,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrd2_etl_code
 			default_template := vdrd2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f1.name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -901,6 +941,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -932,6 +973,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrd2_etl_code
 			default_template := vdrd2b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f1.parent.type.name.position
 			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
@@ -946,6 +988,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -977,6 +1020,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrd3_etl_code
 			default_template := vdrd3a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := p.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -988,6 +1032,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1016,6 +1061,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrd3_etl_code
 			default_template := vdrd3b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := p.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -1027,6 +1073,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1058,6 +1105,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrd4_etl_code
 			default_template := vdrd4a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f2.name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1070,6 +1118,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1102,6 +1151,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrd4_etl_code
 			default_template := vdrd4b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f2.name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1114,6 +1164,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1146,6 +1197,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrd4_etl_code
 			default_template := vdrd4c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f2.name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1158,6 +1210,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1190,6 +1243,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrd5_etl_code
 			default_template := vdrd5a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f1.redefine_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1202,6 +1256,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1231,6 +1286,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrs1_etl_code
 			default_template := vdrs1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1243,6 +1299,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1272,6 +1329,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrs2_etl_code
 			default_template := vdrs2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1284,6 +1342,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1313,6 +1372,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrs2_etl_code
 			default_template := vdrs2b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1325,6 +1385,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1354,6 +1415,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrs3_etl_code
 			default_template := vdrs3a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f2.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1366,6 +1428,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1395,6 +1458,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrs4_etl_code
 			default_template := vdrs4a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_feature.redefine_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1407,6 +1471,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1439,6 +1504,7 @@ feature {NONE} -- Initialization
 			etl_code := vdrs4_etl_code
 			default_template := vdrs4b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_deferred.redefine_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1451,6 +1517,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1481,6 +1548,7 @@ feature {NONE} -- Initialization
 			etl_code := vdus1_etl_code
 			default_template := vdus1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1493,6 +1561,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1522,6 +1591,7 @@ feature {NONE} -- Initialization
 			etl_code := vdus2_etl_code
 			default_template := vdus2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1534,6 +1604,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1563,6 +1634,7 @@ feature {NONE} -- Initialization
 			etl_code := vdus2_etl_code
 			default_template := vdus2b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1575,6 +1647,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1604,6 +1677,7 @@ feature {NONE} -- Initialization
 			etl_code := vdus3_etl_code
 			default_template := vdus3a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1616,6 +1690,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1646,6 +1721,7 @@ feature {NONE} -- Initialization
 			etl_code := vdus4_etl_code
 			default_template := vdus4a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f2.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -1658,6 +1734,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1687,6 +1764,7 @@ feature {NONE} -- Initialization
 			etl_code := veen2_etl_code
 			default_template := veen2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_result.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -1698,6 +1776,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1728,6 +1807,7 @@ feature {NONE} -- Initialization
 			etl_code := vgcc6_etl_code
 			default_template := vgcc6a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := cp.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -1739,6 +1819,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1766,6 +1847,7 @@ feature {NONE} -- Initialization
 			etl_code := vgcc6_etl_code
 			default_template := vgcc6b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -1779,6 +1861,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1792,16 +1875,16 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of creation type
 		end
 
-	make_vgcc6c (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	make_vgcc6c (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VGCC-6 error: the feature name `a_name', appearing
-			-- in a creation expression in `a_class' and viewed from on of its
-			-- descendants `a_descendant', is not a procedure.
+			-- in a creation expression in `a_class_impl' and viewed from one
+			-- of its descendants `a_class', is not a procedure.
 			--
 			-- ETL2: p.286
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_target_not_void: a_target /= Void
@@ -1810,6 +1893,7 @@ feature {NONE} -- Initialization
 			etl_code := vgcc6_etl_code
 			default_template := vgcc6c_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := a_name.position
 			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
@@ -1817,13 +1901,14 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (a_target.name.name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1832,7 +1917,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the creation call
 			-- dollar8: $8 = name of corresponding feature in class $8
 			-- dollar9: $9 = base class of creation type
@@ -1855,6 +1940,7 @@ feature {NONE} -- Initialization
 			etl_code := vgcc6_etl_code
 			default_template := vgcc6d_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -1868,6 +1954,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1881,16 +1968,16 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of creation type
 		end
 
-	make_vgcc6e (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	make_vgcc6e (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VGCC-6 error: `a_feature' of class `a_target', appearing in
-			-- a creation expression with creation procedure name `a_name' in `a_class',
-			-- is not exported for creation to `a_descendant'.
+			-- a creation expression with creation procedure name `a_name' in `a_class_impl',
+			-- is not exported for creation to `a_class'.
 			--
 			-- ETL2: p.286
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_target_not_void: a_target /= Void
@@ -1899,6 +1986,7 @@ feature {NONE} -- Initialization
 			etl_code := vgcc6_etl_code
 			default_template := vgcc6e_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := a_name.position
 			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
@@ -1906,13 +1994,14 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (a_target.name.name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1921,7 +2010,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the creation call
 			-- dollar8: $8 = name of corresponding feature in class $8
 			-- dollar9: $9 = base class of creation type
@@ -1941,6 +2030,7 @@ feature {NONE} -- Initialization
 			etl_code := vgcp1_etl_code
 			default_template := vgcp1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_creator.position
 			create parameters.make (1, 5)
 			parameters.put (etl_code, 1)
@@ -1951,6 +2041,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -1975,6 +2066,7 @@ feature {NONE} -- Initialization
 			etl_code := vgcp2_etl_code
 			default_template := vgcp2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := cp.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -1986,6 +2078,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2014,6 +2107,7 @@ feature {NONE} -- Initialization
 			etl_code := vgcp2_etl_code
 			default_template := vgcp2b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := cp.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -2025,6 +2119,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2051,6 +2146,7 @@ feature {NONE} -- Initialization
 			etl_code := vgcp3_etl_code
 			default_template := vgcp3a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f2.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -2062,6 +2158,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2088,6 +2185,7 @@ feature {NONE} -- Initialization
 			etl_code := vgcp3_etl_code
 			default_template := vgcp3b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f2.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -2099,6 +2197,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2126,6 +2225,7 @@ feature {NONE} -- Initialization
 			etl_code := vgcp3_etl_code
 			default_template := vgcp3c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f2.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -2137,6 +2237,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2167,6 +2268,7 @@ feature {NONE} -- Initialization
 			etl_code := vhpr1_etl_code
 			default_template := vhpr1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := null_position
 			from
 				create a_string.make (20)
@@ -2191,6 +2293,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2216,6 +2319,7 @@ feature {NONE} -- Initialization
 			etl_code := vhpr3_etl_code
 			default_template := vhpr3a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -2227,6 +2331,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2252,6 +2357,7 @@ feature {NONE} -- Initialization
 			etl_code := vhpr3_etl_code
 			default_template := vhpr3b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -2263,6 +2369,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2288,6 +2395,7 @@ feature {NONE} -- Initialization
 			etl_code := vhpr3_etl_code
 			default_template := vhpr3c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -2299,6 +2407,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2328,6 +2437,7 @@ feature {NONE} -- Initialization
 			etl_code := vhrc1_etl_code
 			default_template := vhrc1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_rename.old_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -2340,6 +2450,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2371,6 +2482,7 @@ feature {NONE} -- Initialization
 			etl_code := vhrc2_etl_code
 			default_template := vhrc2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_rename2.old_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -2383,6 +2495,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2413,6 +2526,7 @@ feature {NONE} -- Initialization
 			etl_code := vhrc4_etl_code
 			default_template := vhrc4a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_rename.new_name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -2426,6 +2540,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2456,6 +2571,7 @@ feature {NONE} -- Initialization
 			etl_code := vhrc5_etl_code
 			default_template := vhrc5a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_rename.new_name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -2469,6 +2585,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2499,6 +2616,7 @@ feature {NONE} -- Initialization
 			etl_code := vkcn1_etl_code
 			default_template := vkcn1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -2512,6 +2630,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2525,16 +2644,16 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vkcn1b (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	make_vkcn1b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VKCN-1 error: `a_feature' of class `a_target', appearing
-			-- in the qualified instruction call `a_name' in `a_class' and viewed from
-			-- one of its descendants `a_descendant', is a procedure.
+			-- in the qualified instruction call `a_name' in `a_class_impl' and viewed
+			-- from one of its descendants `a_class', is a procedure.
 			--
 			-- ETL2: p.341
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_target_not_void: a_target /= Void
@@ -2543,6 +2662,7 @@ feature {NONE} -- Initialization
 			etl_code := vkcn1_etl_code
 			default_template := vkcn1b_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := a_name.position
 			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
@@ -2550,13 +2670,14 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (a_target.name.name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2565,7 +2686,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $9
 			-- dollar9: $9 = base class of target of the call
@@ -2587,6 +2708,7 @@ feature {NONE} -- Initialization
 			etl_code := vkcn1_etl_code
 			default_template := vkcn1c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -2599,6 +2721,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2611,16 +2734,16 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = name of corresponding feature in class $5
 		end
 
-	make_vkcn1d (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
-			-- Create a new VKCN-1 error: `a_feature' of `a_class', appearing
-			-- in the unqualified instruction call `a_name' in `a_class' and viewed from
-			-- one of its descendants `a_descendant', is not a procedure.
+	make_vkcn1d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Create a new VKCN-1 error: `a_feature' of `a_class_impl', appearing
+			-- in the unqualified instruction call `a_name' in `a_class_impl' and
+			-- viewed from one of its descendants `a_class', is not a procedure.
 			--
 			-- ETL2: p.341
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 		do
@@ -2628,6 +2751,7 @@ feature {NONE} -- Initialization
 			etl_code := vkcn1_etl_code
 			default_template := vkcn1d_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := a_name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -2635,12 +2759,13 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2649,7 +2774,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $6
 		end
@@ -2671,6 +2796,7 @@ feature {NONE} -- Initialization
 			etl_code := vkcn2_etl_code
 			default_template := vkcn2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -2684,6 +2810,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2697,16 +2824,16 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vkcn2b (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	make_vkcn2b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VKCN-2 error: `a_feature' of class `a_target', appearing
-			-- in the qualified expression call `a_name' in `a_class' and viewed from
-			-- one of its descendants `a_descendant', is not an attribute or a function.
+			-- in the qualified expression call `a_name' in `a_class_impl' and viewed from
+			-- one of its descendants `a_class', is not an attribute or a function.
 			--
 			-- ETL2: p.341
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_target_not_void: a_target /= Void
@@ -2715,6 +2842,7 @@ feature {NONE} -- Initialization
 			etl_code := vkcn2_etl_code
 			default_template := vkcn2b_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := a_name.position
 			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
@@ -2722,13 +2850,14 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (a_target.name.name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2737,7 +2866,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $9
 			-- dollar9: $9 = base class of target of the call
@@ -2759,6 +2888,7 @@ feature {NONE} -- Initialization
 			etl_code := vkcn2_etl_code
 			default_template := vkcn2c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -2771,6 +2901,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2783,16 +2914,16 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = name of corresponding feature in class $5
 		end
 
-	make_vkcn2d (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
-			-- Create a new VKCN-2 error: `a_feature' of `a_class', appearing
-			-- in the unqualified expression call `a_name' in `a_class' and viewed from
-			-- one of its descendants `a_descendant', is not an attribute or a function.
+	make_vkcn2d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+			-- Create a new VKCN-2 error: `a_feature' of `a_class_impl', appearing
+			-- in the unqualified expression call `a_name' in `a_class_impl' and viewed
+			-- from one of its descendants `a_class', is not an attribute or a function.
 			--
 			-- ETL2: p.341
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 		do
@@ -2800,6 +2931,7 @@ feature {NONE} -- Initialization
 			etl_code := vkcn2_etl_code
 			default_template := vkcn2d_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := a_name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -2807,12 +2939,13 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2821,7 +2954,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $6
 		end
@@ -2842,6 +2975,7 @@ feature {NONE} -- Initialization
 			etl_code := vmfn_etl_code
 			default_template := vmfn0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f2.name.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -2853,6 +2987,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2882,6 +3017,7 @@ feature {NONE} -- Initialization
 			etl_code := vmfn_etl_code
 			default_template := vmfn0b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f2.name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -2895,6 +3031,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2928,6 +3065,7 @@ feature {NONE} -- Initialization
 			etl_code := vmfn_etl_code
 			default_template := vmfn0c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f1.parent.type.name.position
 			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
@@ -2942,6 +3080,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -2978,6 +3117,7 @@ feature {NONE} -- Initialization
 			etl_code := vmrc2_etl_code
 			default_template := vmrc2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			a_feature := replicated_features.first
 			position := a_feature.parent.type.name.position
 			a_cursor := replicated_features.new_cursor
@@ -3009,6 +3149,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3043,6 +3184,7 @@ feature {NONE} -- Initialization
 			etl_code := vmrc2_etl_code
 			default_template := vmrc2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			a_feature := replicated_features.first
 			position := a_feature.select_name.position
 			a_cursor := replicated_features.new_cursor
@@ -3074,6 +3216,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3102,6 +3245,7 @@ feature {NONE} -- Initialization
 			etl_code := vmss1_etl_code
 			default_template := vmss1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3114,6 +3258,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3143,6 +3288,7 @@ feature {NONE} -- Initialization
 			etl_code := vmss2_etl_code
 			default_template := vmss2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := f2.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3155,6 +3301,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3184,6 +3331,7 @@ feature {NONE} -- Initialization
 			etl_code := vmss3_etl_code
 			default_template := vmss3a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_feature.select_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3196,6 +3344,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3224,6 +3373,7 @@ feature {NONE} -- Initialization
 			etl_code := vreg_etl_code
 			default_template := vreg0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := arg2.name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3236,6 +3386,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3264,6 +3415,7 @@ feature {NONE} -- Initialization
 			etl_code := vrfa_etl_code
 			default_template := vrfa0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := arg.name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3276,6 +3428,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3303,6 +3456,7 @@ feature {NONE} -- Initialization
 			etl_code := vscn_etl_code
 			default_template := vscn0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := null_position
 			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
@@ -3317,6 +3471,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3346,6 +3501,7 @@ feature {NONE} -- Initialization
 			etl_code := vtat1_etl_code
 			default_template := vtat1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3358,6 +3514,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3387,6 +3544,7 @@ feature {NONE} -- Initialization
 			etl_code := vtat1_etl_code
 			default_template := vtat1b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -3400,6 +3558,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3429,6 +3588,7 @@ feature {NONE} -- Initialization
 			etl_code := vtat1_etl_code
 			default_template := vtat1c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3441,6 +3601,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3468,6 +3629,7 @@ feature {NONE} -- Initialization
 			etl_code := vtat1_etl_code
 			default_template := vtat1d_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -3481,6 +3643,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3515,6 +3678,7 @@ feature {NONE} -- Initialization
 			etl_code := vtat2_etl_code
 			default_template := vtat2a_default_template
 			current_class := a_class
+			class_impl := a_class
 				-- Look for an anchor that has been written
 				-- in `current_class'. Even though we consider
 				-- that there was no cycles in the parents of
@@ -3611,6 +3775,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3637,6 +3802,7 @@ feature {NONE} -- Initialization
 			etl_code := vtbt_etl_code
 			default_template := vtbt0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3649,6 +3815,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3675,6 +3842,7 @@ feature {NONE} -- Initialization
 			etl_code := vtbt_etl_code
 			default_template := vtbt0b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3687,6 +3855,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3714,6 +3883,7 @@ feature {NONE} -- Initialization
 			etl_code := vtbt_etl_code
 			default_template := vtbt0c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -3725,6 +3895,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3752,6 +3923,7 @@ feature {NONE} -- Initialization
 			etl_code := vtbt_etl_code
 			default_template := vtbt0d_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -3763,6 +3935,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3791,6 +3964,7 @@ feature {NONE} -- Initialization
 			etl_code := vtcg_etl_code
 			default_template := vtcg0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := an_actual.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3803,6 +3977,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3830,6 +4005,7 @@ feature {NONE} -- Initialization
 			etl_code := vtct_etl_code
 			default_template := vtct0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.name.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -3841,6 +4017,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3867,6 +4044,7 @@ feature {NONE} -- Initialization
 			etl_code := vtct_etl_code
 			default_template := vtct0b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.name.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -3878,6 +4056,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3903,6 +4082,7 @@ feature {NONE} -- Initialization
 			etl_code := vtct_etl_code
 			default_template := vtct0c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := null_position
 			create parameters.make (1, 5)
 			parameters.put (etl_code, 1)
@@ -3913,6 +4093,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3939,6 +4120,7 @@ feature {NONE} -- Initialization
 			etl_code := vtgc_etl_code
 			default_template := vtgc0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := cp.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3951,6 +4133,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -3982,6 +4165,7 @@ feature {NONE} -- Initialization
 			etl_code := vtgc_etl_code
 			default_template := vtgc0b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := cp.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -3994,6 +4178,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4022,6 +4207,7 @@ feature {NONE} -- Initialization
 			etl_code := vtug1_etl_code
 			default_template := vtug1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -4034,6 +4220,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4062,6 +4249,7 @@ feature {NONE} -- Initialization
 			etl_code := vtug2_etl_code
 			default_template := vtug2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_type.name.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -4073,6 +4261,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4102,6 +4291,7 @@ feature {NONE} -- Initialization
 			etl_code := vuar1_etl_code
 			default_template := vuar1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -4115,6 +4305,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4128,17 +4319,17 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vuar1b (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	make_vuar1b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new  VUAR-1 error: the number of actual arguments in
-			-- the qualified call `a_name' appearing in `a_class' and viewed
-			-- from one of its descendants `a_descendant' is not the same as
-			-- the number of formal arguments of `a_feature' in class `a_target'.
+			-- the qualified call `a_name' appearing in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' is not the same as the number
+			-- of formal arguments of `a_feature' in class `a_target'.
 			--
 			-- ETL2: p.369
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_target_not_void: a_target /= Void
@@ -4147,6 +4338,7 @@ feature {NONE} -- Initialization
 			etl_code := vuar1_etl_code
 			default_template := vuar1b_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := a_name.position
 			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
@@ -4154,13 +4346,14 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (a_target.name.name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4169,7 +4362,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $9
 			-- dollar9: $9 = base class of target of the call
@@ -4191,6 +4384,7 @@ feature {NONE} -- Initialization
 			etl_code := vuar1_etl_code
 			default_template := vuar1c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -4203,6 +4397,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4215,17 +4410,17 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = name of corresponding feature in class $5
 		end
 
-	make_vuar1d (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	make_vuar1d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
 			-- Create a new  VUAR-1 error: the number of actual arguments in
-			-- the unqualified call `a_name' appearing in `a_class' and viewed
-			-- from one of its descendants `a_descendant' is not the same as
-			-- the number of formal arguments of `a_feature' in `a_class'.
+			-- the unqualified call `a_name' appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' is not the same as
+			-- the number of formal arguments of `a_feature' in `a_class_imple'.
 			--
 			-- ETL2: p.369
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 		do
@@ -4233,6 +4428,7 @@ feature {NONE} -- Initialization
 			etl_code := vuar1_etl_code
 			default_template := vuar1d_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := a_name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -4240,12 +4436,13 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4254,7 +4451,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $6
 		end
@@ -4281,6 +4478,7 @@ feature {NONE} -- Initialization
 			etl_code := vuar2_etl_code
 			default_template := vuar2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 11)
 			parameters.put (etl_code, 1)
@@ -4297,6 +4495,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4313,18 +4512,18 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = formal type
 		end
 
-	make_vuar2b (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME;
+	make_vuar2b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
 		a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Create a new VUAR-2 error: the `arg'-th actual argument in the qualified
-			-- call `a_name' appearing in `a_class' and viewed from one of its descendants
-			-- `a_descendant' does not conform to the corresponding formal argument of
-			-- `a_feature' in class `a_target'.
+			-- call `a_name' appearing in `a_class_impl' and viewed from one of its descendants
+			-- `a_class' does not conform to the corresponding formal argument of `a_feature'
+			-- in class `a_target'.
 			--
 			-- ETL2: p.369
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_target_not_void: a_target /= Void
@@ -4337,6 +4536,7 @@ feature {NONE} -- Initialization
 			etl_code := vuar2_etl_code
 			default_template := vuar2b_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := a_name.position
 			create parameters.make (1, 12)
 			parameters.put (etl_code, 1)
@@ -4344,16 +4544,17 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
-			parameters.put (a_target.name.name, 8)
+			parameters.put (a_target.name.name, 9)
 			parameters.put (arg.out, 10)
 			parameters.put (an_actual.to_text, 11)
 			parameters.put (a_formal.to_text, 12)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4362,7 +4563,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $8
 			-- dollar9: $9 = base class of target of the call
@@ -4392,6 +4593,7 @@ feature {NONE} -- Initialization
 			etl_code := vuar2_etl_code
 			default_template := vuar2c_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 10)
 			parameters.put (etl_code, 1)
@@ -4407,6 +4609,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4422,18 +4625,18 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = formal type
 		end
 
-	make_vuar2d (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME;
+	make_vuar2d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
 		a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Create a new VUAR-2 error: the `arg'-th actual argument in the unqualified
-			-- call `a_name' appearing in `a_class' and viewed from one of its descendants
-			-- `a_descendant' does not conform to the corresponding formal argument of
-			-- `a_feature' in `a_class'.
+			-- call `a_name' appearing in `a_class_imple' and viewed from one of its descendants
+			-- `a_class' does not conform to the corresponding formal argument of `a_feature'
+			-- in `a_class_impl'.
 			--
 			-- ETL2: p.369
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			an_actual_not_void: an_actual /= Void
@@ -4445,6 +4648,7 @@ feature {NONE} -- Initialization
 			etl_code := vuar2_etl_code
 			default_template := vuar2d_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := a_name.position
 			create parameters.make (1, 11)
 			parameters.put (etl_code, 1)
@@ -4452,7 +4656,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (arg.out, 9)
@@ -4461,6 +4665,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4469,7 +4674,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $6
 			-- dollar9: $9 = argument index
@@ -4492,6 +4697,7 @@ feature {NONE} -- Initialization
 			etl_code := vuar4_etl_code
 			default_template := vuar4a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -4503,6 +4709,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4529,6 +4736,7 @@ feature {NONE} -- Initialization
 			etl_code := vuex1_etl_code
 			default_template := vuex1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -4540,6 +4748,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4567,6 +4776,7 @@ feature {NONE} -- Initialization
 			etl_code := vuex2_etl_code
 			default_template := vuex2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -4579,6 +4789,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4608,6 +4819,7 @@ feature {NONE} -- Initialization
 			etl_code := vuex2_etl_code
 			default_template := vuex2b_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
@@ -4621,6 +4833,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4634,16 +4847,16 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vuex2c (a_class: like current_class; a_descendant: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	make_vuex2c (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VUEX-2 error: `a_feature' of class `a_target'
-			-- is not exported to `a_descendant', one of the descendants
-			-- of `a_class' where the qualified call `a_name' appears.
+			-- is not exported to `a_class', one of the descendants of
+			-- `a_class_impl' where the qualified call `a_name' appears.
 			--
 			-- ETL2: p.368
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			a_name_not_void: a_name /= Void
 			a_feature_not_void: a_feature /= Void
 			a_target_not_void: a_target /= Void
@@ -4652,6 +4865,7 @@ feature {NONE} -- Initialization
 			etl_code := vuex2_etl_code
 			default_template := vuex2c_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := a_name.position
 			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
@@ -4659,13 +4873,14 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (a_name.name, 7)
 			parameters.put (a_feature.name.name, 8)
 			parameters.put (a_target.name.name, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4674,13 +4889,14 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $9
 			-- dollar9: $9 = base class of target of the call
 		end
 
-	make_vweq0a (a_class: like current_class; an_expression: ET_EQUALITY_EXPRESSION) is
+	make_vweq0a (a_class: like current_class; an_expression: ET_EQUALITY_EXPRESSION;
+		a_type1, a_type2: ET_NAMED_TYPE) is
 			-- Create a new VWEQ error: none of the operands of the equality
 			-- expression `an_expression' appearing in `a_class' conforms to
 			-- the other.
@@ -4690,22 +4906,28 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_expression_not_void: an_expression /= Void
+			a_type1_not_void: a_type1 /= Void
+			a_type2_not_void: a_type2 /= Void
 		do
 			code := vweq0a_template_code
 			etl_code := vweq_etl_code
 			default_template := vweq0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := an_expression.operator.position
-			create parameters.make (1, 6)
+			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
 			parameters.put (an_expression.operator.text, 6)
+			parameters.put (a_type1.to_text, 7)
+			parameters.put (a_type2.to_text, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4715,37 +4937,45 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = equality operator
+			-- dollar7: $7 = base type of left operand
+			-- dollar8: $8 = base type of right operand
 		end
 
-	make_vweq0b (a_class: like current_class; a_descendant: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION) is
+	make_vweq0b (a_class: like current_class; a_class_impl: ET_CLASS;
+		an_expression: ET_EQUALITY_EXPRESSION; a_type1, a_type2: ET_NAMED_TYPE) is
 			-- Create a new VWEQ error: none of the operands of the equality
-			-- expression `an_expression' appearing in `a_class' and viewed
-			-- from one of its descendants `a_descendant' conforms to the
-			-- other.
+			-- expression `an_expression' appearing in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' conforms to the other.
 			--
 			-- ETL2: p.375
 		require
 			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_descendant_not_void: a_descendant /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
 			an_expression_not_void: an_expression /= Void
+			a_type1_not_void: a_type1 /= Void
+			a_type2_not_void: a_type2 /= Void
 		do
-			code := vweq0a_template_code
+			code := vweq0b_template_code
 			etl_code := vweq_etl_code
-			default_template := vweq0a_default_template
+			default_template := vweq0b_default_template
 			current_class := a_class
+			class_impl := a_class_impl
 			position := an_expression.operator.position
-			create parameters.make (1, 7)
+			create parameters.make (1, 9)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.name.name, 5)
-			parameters.put (a_descendant.name.name, 6)
+			parameters.put (a_class_impl.name.name, 6)
 			parameters.put (an_expression.operator.text, 7)
+			parameters.put (a_type1.to_text, 8)
+			parameters.put (a_type2.to_text, 9)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4754,8 +4984,10 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = descendant class name
+			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = equality operator
+			-- dollar8: $8 = base type of left operand
+			-- dollar9: $9 = base type of right operand
 		end
 
 	make_vwst1a (a_class: like current_class; a_name: ET_FEATURE_NAME) is
@@ -4773,6 +5005,7 @@ feature {NONE} -- Initialization
 			etl_code := vwst1_etl_code
 			default_template := vwst1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -4784,6 +5017,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4811,6 +5045,7 @@ feature {NONE} -- Initialization
 			etl_code := vwst1_etl_code
 			default_template := vwst1a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -4823,6 +5058,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4850,6 +5086,7 @@ feature {NONE} -- Initialization
 			etl_code := vwst2_etl_code
 			default_template := vwst2a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name2.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -4861,6 +5098,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4889,6 +5127,7 @@ feature {NONE} -- Initialization
 			etl_code := gvagp_etl_code
 			default_template := gvagp0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := null_position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -4901,6 +5140,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4927,6 +5167,7 @@ feature {NONE} -- Initialization
 			etl_code := gvhpr4_etl_code
 			default_template := gvhpr4a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_parent.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -4938,6 +5179,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -4963,6 +5205,7 @@ feature {NONE} -- Initialization
 			etl_code := gvhpr5_etl_code
 			default_template := gvhpr5a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_parent.position
 			create parameters.make (1, 6)
 			parameters.put (etl_code, 1)
@@ -4974,6 +5217,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -5002,6 +5246,7 @@ feature {NONE} -- Initialization
 			etl_code := gvuaa_etl_code
 			default_template := gvuaa0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -5014,6 +5259,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -5043,6 +5289,7 @@ feature {NONE} -- Initialization
 			etl_code := gvual_etl_code
 			default_template := gvual0a_default_template
 			current_class := a_class
+			class_impl := a_class
 			position := a_name.position
 			create parameters.make (1, 7)
 			parameters.put (etl_code, 1)
@@ -5055,6 +5302,7 @@ feature {NONE} -- Initialization
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
 			all_reported: all_reported
 			all_fatal: all_fatal
 			-- dollar0: $0 = program name
@@ -5069,13 +5317,27 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	class_impl: ET_CLASS
+			-- Class where current error was written
+
 	filename: STRING is
 			-- Name of file where current error occurred
 		do
-			Result := current_class.filename
+			Result := class_impl.filename
 		end
 
 feature -- Setting
+
+	set_class_impl (a_class: like class_impl) is
+			-- Set `class_impl' to `a_class'.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			class_impl := a_class
+		ensure
+			class_impl_set: class_impl = a_class
+		end
 
 	set_current_class (a_class: like current_class) is
 			-- Set `current_class' to `a_class'.
@@ -5089,122 +5351,122 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	vaol1a_default_template: STRING is "[$1] Class $5 ($3,$4): old expression does not appear in a postcondition."
-	vcch1a_default_template: STRING is "[$1] Class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6'."
-	vcch1b_default_template: STRING is "[$1] Class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6' inherited from $7."
-	vcch2a_default_template: STRING is "[$1] Class $5 ($3,$4): class is marked as deferred but has no deferred feature."
-	vcfg1a_default_template: STRING is "[$1] Class $5 ($3,$4): formal generic parameter '$6' has the same name as a class in the surrounding universe."
-	vcfg2a_default_template: STRING is "[$1] Class $5 ($3,$4): '$6' is the name of formal generic parameters #$7 and #$8."
-	vcfg3a_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in constraint of formal generic parameter."
-	vcfg3b_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in constraint of formal generic parameter."
-	vcfg3c_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in constraint of formal generic parameter."
-	vcfg3d_default_template: STRING is "[$1] Class $5 ($3,$4): constraint of formal generic parameter '$6' is '$7' itself."
-	vcfg3e_default_template: STRING is "[$1] Class $5 ($3,$4): constraint of formal generic parameter '$6' is another formal generic parameter '$7'."
-	vcfg3g_default_template: STRING is "[$1] Class $5 ($3,$4): formal generic constraint cycle $6."
-	vcfg3h_default_template: STRING is "[$1] Class $5 ($3,$4): constraint of formal generic parameter '$6' contains '$7' itself."
-	vcfg3j_default_template: STRING is "[$1] Class $5 ($3,$4): formal generic constraint cycle $6."
-	vdjr0a_default_template: STRING is "[$1] Class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Different number of arguments."
-	vdjr0b_default_template: STRING is "[$1] Class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of argument number $9 differs."
-	vdjr0c_default_template: STRING is "[$1] Class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of result differs."
-	vdrd2a_default_template: STRING is "[$1] Class $5 ($3,$4): signature of feature `$6' does not conform to the signature of redeclared feature `$7' in parent $8."
-	vdrd2b_default_template: STRING is "[$1] Class $5 ($3,$4): signature of feature `$6' inherited from $7 does not conform to the signature of redeclared feature `$8' in parent $9."
-	vdrd3a_default_template: STRING is "[$1] Class $5 ($3,$4): feature `$6' is redeclared but its preconditions do not begin with 'require else'."
-	vdrd3b_default_template: STRING is "[$1] Class $5 ($3,$4): feature `$6' is redeclared but its postconditions do not begin with 'ensure then'."
-	vdrd4a_default_template: STRING is "[$1] Class $5 ($3,$4): deferred feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
-	vdrd4b_default_template: STRING is "[$1] Class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
-	vdrd4c_default_template: STRING is "[$1] Class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses."
-	vdrd5a_default_template: STRING is "[$1] Class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined into a deferred one."
-	vdrs1a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in $7."
-	vdrs2a_default_template: STRING is "[$1] Class $5 ($3,$4): cannot redefine the frozen feature `$6'."
-	vdrs2b_default_template: STRING is "[$1] Class $5 ($3,$4): cannot redefine the constant attribute `$6'."
-	vdrs3a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears twice in the Redefine subclause of parent $7."
-	vdrs4a_default_template: STRING is "[$1] Class $5 ($3,$4): Redefine subclause of $7 lists feature `$6' but it is not redefined."
-	vdrs4b_default_template: STRING is "[$1] Class $5 ($3,$4): redeclaration of feature `$6' from $7 is an effecting and should not appear in the Redefine subclause."
-	vdus1a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in $7."
-	vdus2a_default_template: STRING is "[$1] Class $5 ($3,$4): cannot undefine the frozen feature `$6'."
-	vdus2b_default_template: STRING is "[$1] Class $5 ($3,$4): cannot undefine the attribute `$6'."
-	vdus3a_default_template: STRING is "[$1] Class $5 ($3,$4): cannot undefine the deferred feature `$6'."
-	vdus4a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears twice in the Undefine subclause of parent $7."
-	veen2a_default_template: STRING is "[$1] Class $5 ($3,$4): entity 'Result' appears in the body, postcondition or rescue clause of a procedure `$6'."
-	vgcc6a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is the final name of a once-procedure."
-	vgcc6b_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure in class $8."
-	vgcc6c_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: `$8' is not the final name of a procedure in class $9."
-	vgcc6d_default_template: STRING is "[$1] Class $5 ($3,$4): procedure `$6' of class $8 is not exported for creation to class $5."
-	vgcc6e_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: procedure `$8' of class $9 is not exported for creation to class $6."
-	vgcp1a_default_template: STRING is "[$1] Class $5 ($3,$4): deferred class has a creation clause."
-	vgcp2a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure."
-	vgcp2b_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure."
-	vgcp3a_default_template: STRING is "[$1] Class $5 ($3,$4): procedure name `$6' appears twice in creation clause."
-	vgcp3b_default_template: STRING is "[$1] Class $5 ($3,$4): procedure name `$6' appears in two different creation clauses."
-	vgcp3c_default_template: STRING is "[$1] Class $5 ($3,$4): procedure name `$6' appears twice in creation clause of constraint."
-	vhpr1a_default_template: STRING is "[$1] Class $5: inheritance cycle $6."
-	vhpr3a_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in parent clause."
-	vhpr3b_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in parent clause."
-	vhpr3c_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6' in parent clause."
-	vhrc1a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in $7."
-	vhrc2a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears as first element of two Rename_pairs."
-	vhrc4a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is of the Prefix form but `$7' in $8 is not an attribute nor a function with no argument."
-	vhrc5a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is of the Infix form but `$7' in $8 is not a function with one argument."
-	vkcn1a_default_template: STRING is "[$1] Class $5 ($3,$4): query `$7' of class $8 appears in a call instruction."
-	vkcn1b_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: query `$8' of class $9 appears in a call instruction."
-	vkcn1c_default_template: STRING is "[$1] Class $5 ($3,$4): query `$7' appears in a call instruction."
-	vkcn1d_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: query `$8' appears in a call instruction."
-	vkcn2a_default_template: STRING is "[$1] Class $5 ($3,$4): procedure `$7' of class $8 appears in a call expression."
-	vkcn2b_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: procedure `$8' of class $9 appears in a call expression."
-	vkcn2c_default_template: STRING is "[$1] Class $5 ($3,$4): procedure `$7' appears in a call expression."
-	vkcn2d_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: procedure `$8' appears in a call expression."
-	vmfn0a_default_template: STRING is "[$1] Class $5 ($3,$4): two features with the same name `$6'."
-	vmfn0b_default_template: STRING is "[$1] Class $5 ($3,$4): two features with the same name `$6' in current class and `$7' inherited from $8."
-	vmfn0c_default_template: STRING is "[$1] Class $5 ($3,$4): two features with the same name `$6' inherited from $7 and `$8' inherited from $9."
-	vmrc2a_default_template: STRING is "[$1] Class $5 ($3,$4): replicated features $6 have not been selected."
-	vmrc2b_default_template: STRING is "[$1] Class $5 ($3,$4): replicated features $6 have been selected more than once."
-	vmss1a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in $7."
-	vmss2a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears twice in the Select subclause of parent $7."
-	vmss3a_default_template: STRING is "[$1] Class $5 ($3,$4): class name clash: first file '$7', second file '$9'."
-	vreg0a_default_template: STRING is "[$1] Class $5 ($3,$4): argument name '$6' appear twice in feature `$7'."
-	vrfa0a_default_template: STRING is "[$1] Class $5 ($3,$4): argument name '$6' in feature `$7' is also the final name of feature."
-	vscn0a_default_template: STRING is "[$1] Class $5: class appears in files '$7' and '$9'."
-	vtat1a_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
-	vtat1b_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query, or an argument of routine `$8'."
-	vtat1c_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
-	vtat1d_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query in class $8."
-	vtat2a_default_template: STRING is "[$1] Class $5 ($3,$4): anchor cycle $6."
-	vtbt0a_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': `$7' is not the final name of a constant attribute of type INTEGER."
-	vtbt0b_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': `$7' is not the final name of a feature."
-	vtbt0c_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': bit size must be a positive integer constant."
-	vtbt0d_default_template: STRING is "[$1] Class $5 ($3,$4): invalid type '$6': bit size must be a positive integer constant."
-	vtcg0a_default_template: STRING is "[$1] Class $5 ($3,$4): actual generic parameter '$6' does not conform to constraint '$7'."
-	vtct0a_default_template: STRING is "[$1] Class $5 ($3,$4): type based on unknown class $6."
-	vtct0b_default_template: STRING is "[$1] Class $5 ($3,$4): type based on unknown class $6."
-	vtct0c_default_template: STRING is "[$1] Class $5: implicitly inherits from unknown class ANY."
-	vtgc0a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure in constraint's base class $7."
-	vtgc0b_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a procedure in constraint's base class $7."
-	vtug1a_default_template: STRING is "[$1] Class $5 ($3,$4): type '$6' has actual generic parameters but class $7 is not generic."
-	vtug2a_default_template: STRING is "[$1] Class $5 ($3,$4): type '$6' has wrong number of actual generic parameters."
-	vuar1a_default_template: STRING is "[$1] Class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7' in class $8."
-	vuar1b_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: the number of actual arguments is not the same as the number of formal arguments of feature `$8' in class $9."
-	vuar1c_default_template: STRING is "[$1] Class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7'."
-	vuar1d_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: the number of actual arguments is not the same as the number of formal arguments of feature `$8'."
-	vuar2a_default_template: STRING is "[$1] Class $5 ($3,$4): the $9-th actual argument (type '$10') does not conform to the corresponding formal argument (type '$11') of feature `$7' in class $8."
-	vuar2b_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: the $10-th actual argument (type '$11') does not conform to the corresponding formal argument (type '$12') of feature `$8' in class $9."
-	vuar2c_default_template: STRING is "[$1] Class $5 ($3,$4): the $8-th actual argument (type '$9') does not conform to the corresponding formal argument (type '$10') of feature `$7'."
-	vuar2d_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: the $9-th actual argument (type '$10') does not conform to the corresponding formal argument (type '$11') of feature `$8'."
-	vuar4a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in class $5."
-	vuex1a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in class $5."
-	vuex2a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is not the final name of a feature in class $7."
-	vuex2b_default_template: STRING is "[$1] Class $5 ($3,$4): feature `$7' of class $6 is not exported to class $5."
-	vuex2c_default_template: STRING is "[$1] Class $5 ($3,$4): feature `$8' of class $7 is not exported to class $6."
-	vweq0a_default_template: STRING is "[$1] Class $5 ($3,$4): none of the operands of '$6' conforms to the other."
-	vweq0b_default_template: STRING is "[$1] Class $5 ($3,$4), in descendant $6: none of the operands of '$7' conforms to the other."
-	vwst1a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' is not the final name of a feature in class $5."
-	vwst1b_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' is not the final name of an attribute in class $5."
-	vwst2a_default_template: STRING is "[$1] Class $5 ($3,$4): feature name `$6' appears twice in strip expression."
-	gvagp0a_default_template: STRING is "[$1] Class $5: ancestors with generic parameter mismatch: '$6' and '$7'."
-	gvhpr4a_default_template: STRING is "[$1] Class $5: cannot inherit from Bit_type '$6'."
-	gvhpr5a_default_template: STRING is "[$1] Class $5: cannot inherit from Tuple_type '$6'."
-	gvuaa0a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot have actual arguments."
-	gvual0a_default_template: STRING is "[$1] Class $5 ($3,$4): `$6' is a local variable of feature `$7' and hence cannot have actual arguments."
-	gvzzz0a_default_template: STRING is "[$1] Class $5 ($3,$4): validity error"
+	vaol1a_default_template: STRING is "[$1] class $5 ($3,$4): old expression does not appear in a postcondition."
+	vcch1a_default_template: STRING is "[$1] class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6'."
+	vcch1b_default_template: STRING is "[$1] class $5 ($3,$4): class is not marked as deferred but has deferred feature `$6' inherited from $7."
+	vcch2a_default_template: STRING is "[$1] class $5 ($3,$4): class is marked as deferred but has no deferred feature."
+	vcfg1a_default_template: STRING is "[$1] class $5 ($3,$4): formal generic parameter '$6' has the same name as a class in the surrounding universe."
+	vcfg2a_default_template: STRING is "[$1] class $5 ($3,$4): '$6' is the name of formal generic parameters #$7 and #$8."
+	vcfg3a_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6' in constraint of formal generic parameter."
+	vcfg3b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6' in constraint of formal generic parameter."
+	vcfg3c_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6' in constraint of formal generic parameter."
+	vcfg3d_default_template: STRING is "[$1] class $5 ($3,$4): constraint of formal generic parameter '$6' is '$7' itself."
+	vcfg3e_default_template: STRING is "[$1] class $5 ($3,$4): constraint of formal generic parameter '$6' is another formal generic parameter '$7'."
+	vcfg3g_default_template: STRING is "[$1] class $5 ($3,$4): formal generic constraint cycle $6."
+	vcfg3h_default_template: STRING is "[$1] class $5 ($3,$4): constraint of formal generic parameter '$6' contains '$7' itself."
+	vcfg3j_default_template: STRING is "[$1] class $5 ($3,$4): formal generic constraint cycle $6."
+	vdjr0a_default_template: STRING is "[$1] class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Different number of arguments."
+	vdjr0b_default_template: STRING is "[$1] class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of argument number $9 differs."
+	vdjr0c_default_template: STRING is "[$1] class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of result differs."
+	vdrd2a_default_template: STRING is "[$1] class $5 ($3,$4): signature of feature `$6' does not conform to the signature of redeclared feature `$7' in parent $8."
+	vdrd2b_default_template: STRING is "[$1] class $5 ($3,$4): signature of feature `$6' inherited from $7 does not conform to the signature of redeclared feature `$8' in parent $9."
+	vdrd3a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is redeclared but its preconditions do not begin with 'require else'."
+	vdrd3b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is redeclared but its postconditions do not begin with 'ensure then'."
+	vdrd4a_default_template: STRING is "[$1] class $5 ($3,$4): deferred feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
+	vdrd4b_default_template: STRING is "[$1] class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined but is not listed in the Redefine subclause."
+	vdrd4c_default_template: STRING is "[$1] class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined into a deferred one but is not listed in the Undefine and Redefine subclauses."
+	vdrd5a_default_template: STRING is "[$1] class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined into a deferred one."
+	vdrs1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vdrs2a_default_template: STRING is "[$1] class $5 ($3,$4): cannot redefine the frozen feature `$6'."
+	vdrs2b_default_template: STRING is "[$1] class $5 ($3,$4): cannot redefine the constant attribute `$6'."
+	vdrs3a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Redefine subclause of parent $7."
+	vdrs4a_default_template: STRING is "[$1] class $5 ($3,$4): Redefine subclause of $7 lists feature `$6' but it is not redefined."
+	vdrs4b_default_template: STRING is "[$1] class $5 ($3,$4): redeclaration of feature `$6' from $7 is an effecting and should not appear in the Redefine subclause."
+	vdus1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vdus2a_default_template: STRING is "[$1] class $5 ($3,$4): cannot undefine the frozen feature `$6'."
+	vdus2b_default_template: STRING is "[$1] class $5 ($3,$4): cannot undefine the attribute `$6'."
+	vdus3a_default_template: STRING is "[$1] class $5 ($3,$4): cannot undefine the deferred feature `$6'."
+	vdus4a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Undefine subclause of parent $7."
+	veen2a_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the body, postcondition or rescue clause of a procedure `$6'."
+	vgcc6a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is the final name of a once-procedure."
+	vgcc6b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure in class $8."
+	vgcc6c_default_template: STRING is "[$1] class $5 ($6,$3,$4): `$8' is not the final name of a procedure in class $9."
+	vgcc6d_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$6' of class $8 is not exported for creation to class $5."
+	vgcc6e_default_template: STRING is "[$1] class $5 ($6,$3,$4): procedure `$8' of class $9 is not exported for creation to class $5."
+	vgcp1a_default_template: STRING is "[$1] class $5 ($3,$4): deferred class has a creation clause."
+	vgcp2a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure."
+	vgcp2b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure."
+	vgcp3a_default_template: STRING is "[$1] class $5 ($3,$4): procedure name `$6' appears twice in creation clause."
+	vgcp3b_default_template: STRING is "[$1] class $5 ($3,$4): procedure name `$6' appears in two different creation clauses."
+	vgcp3c_default_template: STRING is "[$1] class $5 ($3,$4): procedure name `$6' appears twice in creation clause of constraint."
+	vhpr1a_default_template: STRING is "[$1] class $5: inheritance cycle $6."
+	vhpr3a_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6' in parent clause."
+	vhpr3b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6' in parent clause."
+	vhpr3c_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6' in parent clause."
+	vhrc1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vhrc2a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears as first element of two Rename_pairs."
+	vhrc4a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is of the Prefix form but `$7' in $8 is not an attribute nor a function with no argument."
+	vhrc5a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is of the Infix form but `$7' in $8 is not a function with one argument."
+	vkcn1a_default_template: STRING is "[$1] class $5 ($3,$4): query `$7' of class $8 appears in a call instruction."
+	vkcn1b_default_template: STRING is "[$1] class $5 ($6,$3,$4): query `$8' of class $9 appears in a call instruction."
+	vkcn1c_default_template: STRING is "[$1] class $5 ($3,$4): query `$7' appears in a call instruction."
+	vkcn1d_default_template: STRING is "[$1] class $5 ($6,$3,$4): query `$8' appears in a call instruction."
+	vkcn2a_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$7' of class $8 appears in a call expression."
+	vkcn2b_default_template: STRING is "[$1] class $5 ($6,$3,$4): procedure `$8' of class $9 appears in a call expression."
+	vkcn2c_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$7' appears in a call expression."
+	vkcn2d_default_template: STRING is "[$1] class $5 ($6,$3,$4): procedure `$8' appears in a call expression."
+	vmfn0a_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6'."
+	vmfn0b_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6' in current class and `$7' inherited from $8."
+	vmfn0c_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6' inherited from $7 and `$8' inherited from $9."
+	vmrc2a_default_template: STRING is "[$1] class $5 ($3,$4): replicated features $6 have not been selected."
+	vmrc2b_default_template: STRING is "[$1] class $5 ($3,$4): replicated features $6 have been selected more than once."
+	vmss1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vmss2a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Select subclause of parent $7."
+	vmss3a_default_template: STRING is "[$1] class $5 ($3,$4): class name clash: first file '$7', second file '$9'."
+	vreg0a_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' appear twice in feature `$7'."
+	vrfa0a_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' in feature `$7' is also the final name of feature."
+	vscn0a_default_template: STRING is "[$1] class $5: class appears in files '$7' and '$9'."
+	vtat1a_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
+	vtat1b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query, or an argument of routine `$8'."
+	vtat1c_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query."
+	vtat1d_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': the anchor `$7' must be the final name of a query in class $8."
+	vtat2a_default_template: STRING is "[$1] class $5 ($3,$4): anchor cycle $6."
+	vtbt0a_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': `$7' is not the final name of a constant attribute of type INTEGER."
+	vtbt0b_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': `$7' is not the final name of a feature."
+	vtbt0c_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': bit size must be a positive integer constant."
+	vtbt0d_default_template: STRING is "[$1] class $5 ($3,$4): invalid type '$6': bit size must be a positive integer constant."
+	vtcg0a_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' does not conform to constraint '$7'."
+	vtct0a_default_template: STRING is "[$1] class $5 ($3,$4): type based on unknown class $6."
+	vtct0b_default_template: STRING is "[$1] class $5 ($3,$4): type based on unknown class $6."
+	vtct0c_default_template: STRING is "[$1] class $5: implicitly inherits from unknown class ANY."
+	vtgc0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure in constraint's base class $7."
+	vtgc0b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a procedure in constraint's base class $7."
+	vtug1a_default_template: STRING is "[$1] class $5 ($3,$4): type '$6' has actual generic parameters but class $7 is not generic."
+	vtug2a_default_template: STRING is "[$1] class $5 ($3,$4): type '$6' has wrong number of actual generic parameters."
+	vuar1a_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7' in class $8."
+	vuar1b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$8' in class $9."
+	vuar1c_default_template: STRING is "[$1] class $5 ($3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$7'."
+	vuar1d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the number of actual arguments is not the same as the number of formal arguments of feature `$8'."
+	vuar2a_default_template: STRING is "[$1] class $5 ($3,$4): the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$7' in class $8."
+	vuar2b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $10-th actual argument (of type '$11') does not conform to the corresponding formal argument (of type '$12') of feature `$8' in class $9."
+	vuar2c_default_template: STRING is "[$1] class $5 ($3,$4): the $8-th actual argument (of type '$9') does not conform to the corresponding formal argument (of type '$10') of feature `$7'."
+	vuar2d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$8'."
+	vuar4a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in class $5."
+	vuex1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in class $5."
+	vuex2a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in class $7."
+	vuex2b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$7' of class $8 is not exported to class $5."
+	vuex2c_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$8' of class $9 is not exported to class $5."
+	vweq0a_default_template: STRING is "[$1] class $5 ($3,$4): none of the operands of '$6' (of types '$7' and '$8') conforms to the other."
+	vweq0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): none of the operands of '$7' (of types '$8' and '$9') conforms to the other."
+	vwst1a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' is not the final name of a feature in class $5."
+	vwst1b_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' is not the final name of an attribute in class $5."
+	vwst2a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in strip expression."
+	gvagp0a_default_template: STRING is "[$1] class $5: ancestors with generic parameter mismatch: '$6' and '$7'."
+	gvhpr4a_default_template: STRING is "[$1] class $5: cannot inherit from Bit_type '$6'."
+	gvhpr5a_default_template: STRING is "[$1] class $5: cannot inherit from Tuple_type '$6'."
+	gvuaa0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot have actual arguments."
+	gvual0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a local variable of feature `$7' and hence cannot have actual arguments."
+	gvzzz0a_default_template: STRING is "[$1] class $5 ($3,$4): validity error"
 			-- Default templates
 
 	vaol1_etl_code: STRING is "VAOL-1"
@@ -5392,5 +5654,6 @@ feature {NONE} -- Implementation
 invariant
 
 	current_class_not_void: current_class /= Void
+	class_impl_preparsed: class_impl.is_preparsed
 
 end
