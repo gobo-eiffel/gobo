@@ -29,10 +29,9 @@
 			Generate Eiffel files from .ge files.
 		</description>
 
-		<geant target="xf_full_scanner"/>
-		<geant target="xf_full_parser"/>
-		<geant target="install_api"/>
-		<geant target="install_general"/>
+		<geant target="xm_eiffel_scanner"/>
+		<geant target="xm_eiffel_parser"/>
+		<geant target="install_expat"/>
 	</target>
 
 	<target name="clean">
@@ -49,34 +48,27 @@
 		</description>
 
 		<geant target="clean"/>
-		<delete file="parser/eiffel/xf_full_scanner.e"/>
-		<delete file="parser/eiffel/xf_full_parser.e"/>
-		<delete file="parser/eiffel/xf_parser_tokens.e"/>
-		<delete directory="impl/expat/spec"/>
+		<delete file="parser/eiffel/xm_eiffel_scanner.e"/>
+		<delete file="parser/eiffel/xm_eiffel_parser.e"/>
+		<delete file="parser/eiffel/xm_eiffel_tokens.e"/>
+		<delete directory="parser/expat/spec"/>
 	</target>
 
 
 <!-- Implementation -->
 
-	<target name="xf_full_scanner" dir="parser/eiffel">
-		<gelex input="xf_full_scanner.l" output="xf_full_scanner.e"/>
+	<target name="xm_eiffel_scanner" dir="parser/eiffel">
+		<gelex input="xm_eiffel_scanner.l" output="xm_eiffel_scanner.e"/>
 	</target>
 	
-	<target name="xf_full_parser" dir="parser/eiffel">
-		<geyacc input="xf_full_parser.y" tokens="XF_PARSER_TOKENS" output="xf_full_parser.e"/>
-	</target>
-	
-	<target name="install_api">
-		<set name="gepp_dir" value="impl/expat/api"/>
-		<set name="spec_dir" value="impl/expat/spec"/>
-		<set name="gepp_file" value="xp_expat_api"/>
-		<geant target="ge2e"/>
+	<target name="xm_eiffel_parser" dir="parser/eiffel">
+		<geyacc input="xm_eiffel_parser.y" tokens="XM_EIFFEL_TOKENS" output="xm_eiffel_parser.e"/>
 	</target>
 
-	<target name="install_general">
-		<set name="gepp_dir" value="impl/expat/general"/>
-		<set name="spec_dir" value="impl/expat/spec"/>
-		<set name="gepp_file" value="c_string_helper"/>
+	<target name="install_expat">
+		<set name="gepp_dir" value="parser/expat"/>
+		<set name="spec_dir" value="parser/expat/spec"/>
+		<set name="gepp_file" value="xm_expat_api"/>
 		<geant target="ge2e"/>
 	</target>
 
