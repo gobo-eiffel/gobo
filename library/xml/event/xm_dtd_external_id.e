@@ -56,7 +56,15 @@ feature -- ANY
 				Result.append_character (' ')
 			end
 		end
-		
+
+feature -- Query
+
+	is_public: BOOLEAN is
+			--- Is public_id defined?
+		do
+			Result := public_id /= Void
+		end
+			
 feature -- Access
 
 	base: STRING
