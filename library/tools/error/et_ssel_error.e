@@ -19,6 +19,9 @@ class ET_SSEL_ERROR
 inherit
 
 	ET_SYNTAX_ERROR
+		redefine
+			default_template, code
+		end
 
 creation
 
