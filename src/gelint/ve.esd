@@ -1,0 +1,41 @@
+-- system:     "Gobo Eiffel Lint"
+-- compiler:   "Visual Eiffel 3.1"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 1999, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+system
+
+	gelint
+
+root
+
+	GELINT
+
+creation
+
+	execute
+
+cluster
+
+	[gelint_project		"."] end
+	[gelint				"$GOBO/src/gelint"] end
+
+		-- Gobo Eiffel Library
+	[Gobo				"$GOBO/library"] end
+	[ast				"$GOBO/library/tools/ast"] end
+	[error				"$GOBO/library/tools/error"] end
+	[parser				"$GOBO/library/tools/parser"] end
+
+		-- Visual Eiffel Kernel
+	[Kernel				"$VE_LIB/kernel"] end
+	[gArgs				"$VE_LIB/Tools/gArgs"] end
+
+option
+
+	assertions off
+	target exe console
+
+end
