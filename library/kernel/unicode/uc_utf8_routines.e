@@ -114,6 +114,22 @@ feature -- Status report
 			Result := (byte_127 < a_byte and a_byte <= byte_191)
 		end
 
+feature -- Status report
+
+	is_endian_detection_character (a_first, a_second, a_third: CHARACTER): BOOLEAN is
+			-- Is this sequence a UTF-8 Byte Order Marker (BOM)?
+		do
+			Result := is_endian_detection_character_start (a_first, a_second) and a_third = byte_bf
+		ensure
+			result_start: Result implies is_endian_detection_character_start (a_first, a_second)
+		end
+		
+	is_endian_detection_character_start (a_first, a_second: CHARACTER): BOOLEAN is
+			-- Are these characters the start of a UTF-8 encoded Byte Order Marker (BOM)?
+		do
+			Result := a_first = byte_ef and a_second = byte_bb
+		end
+		
 feature -- Access
 
 	encoded_first_value (a_byte: CHARACTER): INTEGER is
@@ -474,6 +490,13 @@ feature {NONE} -- Constants
 			-- 11111101
 
 	byte_255: CHARACTER is '%/255/'
+
+	byte_ef: CHARACTER is '%/239/'
+		-- UTF-8 BOM first: EF
+	byte_bb: CHARACTER is '%/187/'
+		-- UTF-8 BOM second: BB
+	byte_bf: CHARACTER is '%/191/'
+		-- UTF-8 BOM third: BF
 
 feature {NONE} -- Implementation
 
