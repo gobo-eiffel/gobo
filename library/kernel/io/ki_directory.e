@@ -95,7 +95,7 @@ feature -- Basic operations
 
 	recursive_create_directory is
 			-- Create current directory on disk.
-			-- Create its subdirectories if they do not exist yet.
+			-- Create its parent directories if they do not exist yet.
 			-- Do nothing if the directory could not be created,
 			-- if it already existed or `name' is a nested directory
 			-- name and its parent directory does not exist and 
