@@ -84,16 +84,11 @@ feature -- Output
 			-- Output string to top element of file output stack.
 		local
 			a_file: KL_TEXT_OUTPUT_FILE
-			s_out: STRING
 		do
 			if not output_files.is_empty then
 				a_file := output_files.item
 				if a_file.is_open_write then
-					s_out := s
-					if is_unicode_string (s_out) then
-						s_out := forced_unicode_string (s_out).to_utf8
-					end
-					output_files.item.put_string (s_out)
+					a_file.put_string (s)
 				end
 			end
 		end
