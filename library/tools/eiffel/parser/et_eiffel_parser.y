@@ -42,10 +42,10 @@ creation
 %token <ET_KEYWORD> E_THEN E_UNDEFINE E_UNIQUE E_UNTIL E_VARIANT
 %token <ET_KEYWORD> E_WHEN E_PRECURSOR
 %token <ET_KEYWORD> E_DEFERRED E_EXPANDED E_REFERENCE E_SEPARATE
-%token <ET_KEYWORD> E_ATTRIBUTE E_CONVERT E_RECAST
+%token <ET_KEYWORD> E_ATTRIBUTE E_CONVERT E_RECAST E_ASSIGN
 
 %token <ET_SYMBOL> E_ARROW E_DOTDOT E_LARRAY E_RARRAY
-%token <ET_SYMBOL> E_ASSIGN E_REVERSE
+%token <ET_SYMBOL> E_ASSIGN_SYMBOL E_REVERSE
 %token <ET_POSITION> E_UNKNOWN
 
 %token <ET_BIT_CONSTANT> E_BIT
@@ -112,6 +112,9 @@ creation
 %type <ET_CONSTRAINT_CREATOR> Constraint_create Constraint_create_procedure_list
 %type <ET_CONSTRAINT_TYPE> Constraint_type
 %type <ET_CONSTRAINT_TYPE_ITEM> Constraint_type_comma
+%type <ET_CONVERT_FEATURE> Convert_feature
+%type <ET_CONVERT_FEATURE_ITEM> Convert_feature_comma
+%type <ET_CONVERT_FEATURE_LIST> Convert_clause_opt Convert_clause Convert_list
 %type <ET_CREATOR> Creation_clause Creation_procedure_list
 %type <ET_CREATOR_LIST> Creators Creators_opt Creators_list
 %type <ET_DEBUG_INSTRUCTION> Debug_instruction
@@ -176,6 +179,7 @@ creation
 %type <ET_STRIP_EXPRESSION> Strip_expression Strip_feature_name_list
 %type <ET_TYPE> Type
 %type <ET_TYPE_ITEM> Type_comma
+%type <ET_TYPE_LIST> Convert_types Convert_type_list
 %type <ET_VARIANT> Variant_clause_opt
 %type <ET_WHEN_PART> When_part
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
@@ -210,28 +214,34 @@ Class_declaration_opt: -- Empty
 	;
 
 Class_to_end: Class_header Formal_parameters_opt Obsolete_opt Inheritance_opt Creators_opt
-	Features_opt Invariant_clause_opt Indexing_clause_opt E_END Class_declaration_opt
+	Convert_clause_opt Features_opt Invariant_clause_opt Indexing_clause_opt E_END Class_declaration_opt
 		{
 			$$ := $1
-			set_class_to_end ($$, $3, $4, $5, $6, $7, $8, $9)
+			set_class_to_end ($$, $3, $4, $5, $6, $7, $8, $9, $10)
 		}
-	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Creators
+	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Creators Convert_clause_opt
 	Features_opt Invariant_clause_opt Indexing_clause_opt E_END Class_declaration_opt
 		{
 			$$ := $1
-			set_class_to_end ($$, $3, $4, $5, $6, $7, $8, $9)
+			set_class_to_end ($$, $3, $4, $5, $6, $7, $8, $9, $10)
+		}
+	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Convert_clause
+	Features_opt Invariant_clause_opt Indexing_clause_opt E_END Class_declaration_opt
+		{
+			$$ := $1
+			set_class_to_end ($$, $3, $4, Void, $5, $6, $7, $8, $9)
 		}
 	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end
 	Features Invariant_clause_opt Indexing_clause_opt E_END Class_declaration_opt
 		{
 			$$ := $1
-			set_class_to_end ($$, $3, $4, Void, $5, $6, $7, $8)
+			set_class_to_end ($$, $3, $4, Void, Void, $5, $6, $7, $8)
 		}
 	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end
 	Invariant_clause Indexing_clause_opt E_END Class_declaration_opt
 		{
 			$$ := $1
-			set_class_to_end ($$, $3, $4, Void, Void, $5, $6, $7)
+			set_class_to_end ($$, $3, $4, Void, Void, Void, $5, $6, $7)
 		}
 	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt Class_to_end
 		{
@@ -244,7 +254,7 @@ Class_to_end: Class_header Formal_parameters_opt Obsolete_opt Inheritance_opt Cr
 	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end Indexing_clause_opt E_END Class_declaration_opt
 		{
 			$$ := $1
-			set_class_to_end ($$, $3, $4, Void, Void, Void, $5, $6)
+			set_class_to_end ($$, $3, $4, Void, Void, Void, Void, $5, $6)
 		}
 	| Class_header Formal_parameters_opt Obsolete_opt Inheritance_end
 		{
@@ -1282,6 +1292,104 @@ Creation_procedure_comma: Identifier ','
 
 --------------------------------------------------------------------------------
 
+Convert_clause_opt: -- Empty
+		-- { $$ := Void }
+	| Convert_clause
+		{ $$ := $1 }
+	;
+
+Convert_clause: E_CONVERT
+		{
+			add_keyword ($1)
+			add_counter
+		}
+	  Convert_list
+		{
+			$$ := $3
+			remove_keyword
+			remove_counter
+		}
+	;
+
+Convert_list: Convert_feature
+		{
+			$$ := ast_factory.new_convert_features (last_keyword, counter_value + 1)
+			if $$ /= Void and $1 /= Void then
+				$$.put_first ($1)
+			end
+		}
+	| Convert_feature_comma
+		{
+			$$ := ast_factory.new_convert_features (last_keyword, counter_value)
+			if $$ /= Void and $1 /= Void then
+				$$.put_first ($1)
+			end
+		}
+	| Convert_feature_comma Convert_list
+		{
+			$$ := $2
+			if $$ /= Void and $1 /= Void then
+				$$.put_first ($1)
+			end
+		}
+	;
+
+Convert_feature_comma: Convert_feature ','
+		{
+			$$ := ast_factory.new_convert_feature_comma ($1, $2)
+			if $$ /= Void then
+				increment_counter
+			end
+		}
+	;
+
+Convert_feature: Feature_name ':' Convert_types
+		{
+			$$ := ast_factory.new_convert_function ($1, $2, $3)
+		}
+	| Feature_name '(' Convert_types ')'
+		{
+			$$ := ast_factory.new_convert_procedure ($1, $2, $3, $4)
+		}
+	;
+
+Convert_types: '{' '}'
+		-- Warning:
+	| '{'
+		{
+			add_symbol ($1)
+			add_counter
+		}
+	  Convert_type_list
+		{
+			$$ := $3
+			remove_symbol
+			remove_counter
+		}
+	;
+
+Convert_type_list: Type '}'
+		{
+			if $1 /= Void then
+				$$ := ast_factory.new_convert_types (last_symbol, $2, counter_value + 1)
+				if $$ /= Void then
+					$$.put_first ($1)
+				end
+			else
+				$$ := ast_factory.new_convert_types (last_symbol, $2, counter_value)
+			end
+		}
+	| Type_comma Convert_type_list
+		{
+			$$ := $2
+			if $$ /= Void and $1 /= Void then
+				$$.put_first ($1)
+			end
+		}
+	;
+
+--------------------------------------------------------------------------------
+
 Features_opt: -- Empty
 		{
 			-- $$ := Void
@@ -2025,7 +2133,7 @@ Instruction: Creation_instruction
 		{ $$ := $1 }
 	| Call_instruction
 		{ $$ := $1 }
-	| Writable E_ASSIGN Expression
+	| Writable E_ASSIGN_SYMBOL Expression
 		{ $$ := ast_factory.new_assignment ($1, $2, $3) }
  	| Writable E_REVERSE Expression
 		{ $$ := ast_factory.new_assignment_attempt ($1, $2, $3) }
