@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-	
+
 		"Test URI parsing."
 
 	library: "Gobo Eiffel Utility Library"
@@ -54,7 +54,7 @@ feature -- Tests
 			create uri.make ("//www.invalid/abc")
 			check_uri (uri, Void, "www.invalid", "/abc", Void, Void)
 		end
-		
+
 	test_query is
 			-- Test query parsing.
 		local
@@ -62,7 +62,7 @@ feature -- Tests
 		do
 			create uri.make ("/path?query")
 			check_uri (uri, Void, Void, "/path", "query", Void)
-			
+
 			create uri.make ("/?query")
 			check_uri (uri, Void, Void, "/", "query", Void)
 
@@ -71,17 +71,17 @@ feature -- Tests
 			
 			create uri.make ("s:?query")
 			check_uri (uri, "s", Void, "", "query", Void)
-		
+
 			create uri.make ("//invalid?q")
 			check_uri (uri, Void, "invalid", "", "q", Void)
 
 			create uri.make ("?")
 			check_uri (uri, Void, Void, "", "", Void)
-			
+
 			create uri.make ("abc?")
 			check_uri (uri, Void, Void, "abc", "", Void)
 		end
-		
+
 	test_fragment is
 			-- Test fragment.
 		local
@@ -89,7 +89,7 @@ feature -- Tests
 		do
 			create uri.make ("/#fragment")
 			check_uri (uri, Void, Void, "/", Void, "fragment")
-			
+
 			create uri.make ("#fragment")
 			check_uri (uri, Void, Void, "", Void, "fragment")
 
@@ -105,14 +105,13 @@ feature -- Tests
 			create uri.make ("abc#")
 			check_uri (uri, Void, Void, "abc", Void, "")
 		end
-		
+
 	test_broken_parsing is
 			-- Test parsing of broken URI.
 		local
 			uri: UT_URI
 		do
-			-- uri:abc
-
+				-- uri:abc
 			create uri.make (":abc")
 			check_uri (uri, "", Void, "abc", Void, Void)
 			check_invalid_scheme (uri)
@@ -120,7 +119,7 @@ feature -- Tests
 			create uri.make (":")
 			check_uri (uri, "", Void, "", Void, Void)
 			check_invalid_scheme (uri)
-			
+
 			create uri.make ("bro,ken:foo")
 			check_uri (uri, "bro,ken", Void, "foo", Void, Void)
 			check_invalid_scheme (uri)
@@ -150,20 +149,21 @@ feature {NONE} -- Implementation
 			uri_not_void: uri /= Void
 			path_not_void: path /= Void
 		do
+				-- Scheme.
 			assert_equal ("scheme", scheme, uri.scheme)
-			
+				-- Authority.
 			assert ("has_authority", uri.has_authority = (authority /= Void))
 			if uri.has_authority then
 				assert_equal ("authority", authority, uri.authority)
 			end
-			
+				-- Path.
 			assert_equal ("path", path, uri.path)
-			
+				-- Query.
 			assert ("has_query", uri.has_query = (query /= Void))
 			if uri.has_query then
 				assert_equal ("query", query, uri.query)
 			end
-
+				-- Fragment.
 			assert ("has_fragment", uri.has_fragment = (fragment /= Void))
 			if uri.has_fragment then
 				assert_equal ("fragment", uri.fragment, fragment)
@@ -177,5 +177,5 @@ feature {NONE} -- Implementation
 		do
 			assert ("invalid_scheme", not a_uri.has_valid_scheme)
 		end
-		
+
 end

@@ -1,7 +1,7 @@
 indexing
 
 	description:
-	
+
 		"Test resolving using examples from RFC2396, appendix C"
 
 	library: "Gobo Eiffel Utility Library"
@@ -15,25 +15,17 @@ deferred class UT_TEST_URI_RESOLVE
 inherit
 
 	TS_TEST_CASE
-		redefine
-			set_up
-		end
 
 feature -- Tests
-
-	base: UT_URI
-
-	set_up is
-			-- Create base URI.
-		do
-			create base.make ("http://a/b/c/d;p?q")
-		end
 
 	test_normal_cases is
 			-- Test sample cases from RFC.
 		local
 			uri: UT_URI
+			base: UT_URI
 		do
+			create base.make ("http://a/b/c/d;p?q")
+
 			create uri.make_resolve (base, "g:h")
 			check_uri (uri, "g", Void, "h", Void, Void, "g:h")
 
@@ -59,7 +51,7 @@ feature -- Tests
 			check_uri (uri, "http", "a", "/b/c/g", "y", Void, "http://a/b/c/g?y")
 
 			create uri.make_resolve (base, "#s")
-			-- current document is this?
+				-- Current document is this?
 			check_uri (uri, "http", "a", "/b/c/d;p", Void, "s", "http://a/b/c/d;p#s")
 
 			create uri.make_resolve (base, "g#s")
@@ -103,7 +95,7 @@ feature -- Tests
 		end
 
 	test_rfc293_bis_cases is
-			-- See http://www.apache.org/~fielding/uri/rev-2002/rfc2396bis.html
+			-- See http://www.apache.org/~fielding/uri/rev-2002/rfc2396bis.html.
 		local
 			my_base: UT_URI
 			uri: UT_URI
@@ -115,12 +107,12 @@ feature -- Tests
 
 	test_abnormal_cases is
 			-- Test error cases from standard.
-		require
-			have_base: base /= Void
 		local
 			uri: UT_URI
+			base: UT_URI
 		do
-			-- start of current document
+			create base.make ("http://a/b/c/d;p?q")
+				-- Start of current document.
 			create uri.make_resolve (base, "")
 			check_uri (uri, "http", "a", "/b/c/d;p", Void, Void, "http://a/b/c/d;p")
 
@@ -177,7 +169,6 @@ feature -- Tests
 
 			create uri.make_resolve (base, "g#s/../x")
 			check_uri (uri, "http", "a", "/b/c/g", Void, "s/../x", "http://a/b/c/g#s/../x")
-
 		end
 
 	test_empty is
@@ -199,20 +190,21 @@ feature {NONE} -- Implementation
 			uri_not_void: uri /= Void
 			path_nto_void: path /= Void
 		do
+				-- Scheme.
 			assert_equal ("scheme", scheme, uri.scheme)
-			
+				-- Authority.
 			assert ("has_authority", uri.has_authority = (authority /= Void))
 			if uri.has_authority then
 				assert_equal ("authority", authority, uri.authority)
 			end
-			
+				-- Path.
 			assert_equal ("path", path, uri.path)
-			
+				-- Query.
 			assert ("has_query", uri.has_query = (query /= Void))
 			if uri.has_query then
 				assert_equal ("query", query, uri.query)
 			end
-
+				-- Fragment.
 			assert ("has_fragment", uri.has_fragment = (fragment /= Void))
 			if uri.has_fragment then
 				assert_equal ("fragment", uri.fragment, fragment)
