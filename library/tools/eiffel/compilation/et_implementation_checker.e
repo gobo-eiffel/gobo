@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"Eiffel implementation checkers for the immediate and redeclared features and invariants"
+		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,9 +31,32 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_universe)
 			create feature_checker.make (a_universe)
-			create precondition_checker.make (a_universe)
-			create postcondition_checker.make (a_universe)
-			create invariant_checker.make (a_universe)
+		end
+
+feature -- Status report
+
+	flat_mode: BOOLEAN
+			-- Process flat form of `current_class'
+
+	short_mode: BOOLEAN
+			-- Process short form of `current_class'
+
+feature -- Status setting
+
+	set_flat_mode (b: BOOLEAN) is
+			-- Set `flat_mode' to `b'.
+		do
+			flat_mode := b
+		ensure
+			flat_mode_set: flat_mode = b
+		end
+
+	set_short_mode (b: BOOLEAN) is
+			-- Set `short_mode' to `b'.
+		do
+			short_mode := b
+		ensure
+			short_mode_set: short_mode = b
 		end
 
 feature -- Processing
@@ -147,7 +170,11 @@ feature {NONE} -- Feature validity
 			i, nb: INTEGER
 		do
 			a_features := current_class.features
-			nb := current_class.declared_feature_count
+			if flat_mode then
+				nb := a_features.count
+			else
+				nb := current_class.declared_feature_count
+			end
 			from i := 1 until i > nb loop
 				a_feature := a_features.item (i)
 				feature_checker.check_feature_validity (a_feature, current_class)
@@ -173,19 +200,22 @@ feature {NONE} -- Assertion validity
 			a_postconditions: ET_POSTCONDITIONS
 			a_class_impl: ET_CLASS
 			had_error: BOOLEAN
+			l_first_precursor: ET_FEATURE
+			l_other_precursors: ET_FEATURE_LIST
+			i, nb: INTEGER
 		do
 			a_preconditions := a_feature.preconditions
 			if a_preconditions /= Void then
-				precondition_checker.check_preconditions_validity (a_preconditions, a_feature, current_class)
-				if precondition_checker.has_fatal_error then
+				feature_checker.check_preconditions_validity (a_preconditions, a_feature, current_class)
+				if feature_checker.has_fatal_error then
 					had_error := True
 --					set_fatal_error (current_class)
 				end
 			end
 			a_postconditions := a_feature.postconditions
 			if a_postconditions /= Void then
-				postcondition_checker.check_postconditions_validity (a_postconditions, a_feature, current_class)
-				if postcondition_checker.has_fatal_error then
+				feature_checker.check_postconditions_validity (a_postconditions, a_feature, current_class)
+				if feature_checker.has_fatal_error then
 					had_error := True
 --					set_fatal_error (current_class)
 				end
@@ -197,38 +227,57 @@ feature {NONE} -- Assertion validity
 					a_feature.set_assertions_error
 				end
 			end
-		end
-
-	precondition_checker: ET_PRECONDITION_CHECKER
-			-- Precondition checker
-
-	postcondition_checker: ET_POSTCONDITION_CHECKER
-			-- Postcondition checker
-
-feature {NONE} -- Invariant validity
-
-	check_invariants_validity is
-			-- Check validity of invariants of `current_class'.
-		local
-			an_invariants: ET_INVARIANTS
-		do
-			an_invariants := current_class.invariants
-			if an_invariants /= Void then
-				invariant_checker.check_invariants_validity (an_invariants, current_class)
-				if invariant_checker.has_fatal_error then
---					set_fatal_error (current_class)
+			if flat_mode then
+				l_first_precursor := a_feature.first_precursor
+				if l_first_precursor /= Void then
+					check_assertions_validity (l_first_precursor)
+					l_other_precursors := a_feature.other_precursors
+					if l_other_precursors /= Void then
+						nb := l_other_precursors.count
+						from i := 1 until i > nb loop
+							check_assertions_validity (l_other_precursors.item (i))
+							i := i + 1
+						end
+					end
 				end
 			end
 		end
 
-	invariant_checker: ET_INVARIANT_CHECKER
-			-- Invariant checker
+	check_invariants_validity is
+			-- Check validity of invariants of `current_class',
+			-- and of its proper ancestors in flat mode.
+		local
+			an_invariants: ET_INVARIANTS
+			an_ancestors: ET_BASE_TYPE_LIST
+			an_ancestor: ET_CLASS
+			i, nb: INTEGER
+		do
+			an_invariants := current_class.invariants
+			if an_invariants /= Void then
+				feature_checker.check_invariants_validity (an_invariants, current_class)
+				if feature_checker.has_fatal_error then
+					set_fatal_error (current_class)
+				end
+			end
+			if flat_mode then
+				an_ancestors := current_class.ancestors
+				nb := an_ancestors.count
+				from i := 1 until i > nb loop
+					an_ancestor := an_ancestors.item (i).direct_base_class (universe)
+					an_invariants := an_ancestor.invariants
+					if an_invariants /= Void then
+						feature_checker.check_invariants_validity (an_invariants, an_ancestor)
+						if feature_checker.has_fatal_error then
+--							set_fatal_error (current_class)
+						end
+					end
+					i := i + 1
+				end
+			end
+		end
 
 invariant
 
 	feature_checker_not_void: feature_checker /= Void
-	precondition_checker_not_void: precondition_checker /= Void
-	postcondition_checker_not_void: postcondition_checker /= Void
-	invariant_checker_not_void: invariant_checker /= Void
 
 end

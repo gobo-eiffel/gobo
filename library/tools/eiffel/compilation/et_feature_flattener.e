@@ -5,7 +5,7 @@ indexing
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,28 +37,34 @@ feature {NONE} -- Initialization
 			-- Create a new feature flattener for classes in `a_universe'.
 		do
 			precursor (a_universe)
+			conformance_checked := True
 			create named_features.make_map (400)
 			named_features.set_key_equality_tester (feature_name_tester)
-			create rename_table.make (10)
-			rename_table.set_key_equality_tester (feature_name_tester)
-			create export_table.make (10)
-			export_table.set_equality_tester (feature_name_tester)
-			create undefine_table.make (10)
-			undefine_table.set_equality_tester (feature_name_tester)
-			create redefine_table.make (10)
-			redefine_table.set_equality_tester (feature_name_tester)
-			create select_table.make (10)
-			select_table.set_equality_tester (feature_name_tester)
-			create replicable_features.make_map (400)
 			create clients_list.make (20)
 			create client_names.make (20)
 			client_names.set_equality_tester (class_name_tester)
+			create feature_adaptation_resolver.make (a_universe)
 			create identifier_type_resolver.make (a_universe)
 			create anchored_type_checker.make (a_universe)
+			create signature_checker.make (a_universe)
 			create parent_checker.make (a_universe)
 			create formal_parameter_checker.make (a_universe)
 			create precursor_checker.make (a_universe)
-			create parent_context.make_with_capacity (a_universe.any_class, 1)
+		end
+
+feature -- Status report
+
+	conformance_checked: BOOLEAN
+			-- Can conformance checks be performed in this processor?
+
+feature -- Status setting
+
+	set_conformance_checked (b: BOOLEAN) is
+			-- Set `conformance_checked' to `b'.
+		do
+			conformance_checked := b
+		ensure
+			conformance_checked_set: conformance_checked = b
 		end
 
 feature -- Error handling
@@ -151,24 +157,17 @@ feature {NONE} -- Processing
 					end
 					if not current_class.has_flattening_error then
 						error_handler.report_compilation_status (Current, current_class)
-							-- Check validity rules of the parents and of formal
-							-- generic parameters of `current_class'.
-						check_formal_parameters_validity
-						check_parents_validity
-					end
-					if not current_class.has_flattening_error then
-						add_current_features
-						if a_parents /= Void then
-							from i := 1 until i > nb loop
-								add_inherited_features (a_parents.parent (i))
-								i := i + 1
+						if conformance_checked then
+								-- Check validity rules of the parents and of formal
+								-- generic parameters of `current_class'.
+							check_formal_parameters_validity
+							check_parents_validity
+							if not current_class.has_flattening_error then
+								flatten_features
 							end
+						else
+							flatten_features
 						end
-						flatten_features
-							-- Clean up.
-						free_parent_feature := parent_feature_list
-						free_inherited_feature := inherited_feature_list
-						free_redeclared_feature := redeclared_feature_list
 					end
 				else
 					set_fatal_error (current_class)
@@ -179,404 +178,21 @@ feature {NONE} -- Processing
 			features_flattened: a_class.features_flattened
 		end
 
-feature {NONE} -- Feature recording
+feature {NONE} -- Feature adaptation
+
+	feature_adaptation_resolver: ET_FEATURE_ADAPTATION_RESOLVER
+			-- Feature adaptation resolver
 
 	named_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
 
-	declared_feature_count: INTEGER
-			-- Number of features which appear in one
-			-- of the feature clauses of `current_class'
-
-	add_current_features is
-			-- Add to `named_features' features declared in `current_class'.
-		local
-			a_feature: ET_FEATURE
-			other_feature: ET_FLATTENED_FEATURE
-			a_name: ET_FEATURE_NAME
-			class_features: ET_FEATURE_LIST
-			i, nb: INTEGER
+	resolve_feature_adaptations is
+			-- Resolve the feature adaptations of the inheritance clause of
+			-- `current_class' and put resulting features in `named_features'.
 		do
-			class_features := current_class.features
-			nb := current_class.declared_feature_count
-			if named_features.capacity < nb then
-				named_features.resize (nb)
-			end
-			from i := 1 until i > nb loop
-				a_feature := class_features.item (i)
-				a_name := a_feature.name
-				named_features.search (a_name)
-				if named_features.found then
-					other_feature := named_features.found_item
-					set_fatal_error (current_class)
-					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, a_feature)
-				else
-					named_features.put_last (a_feature, a_name)
-				end
-				i := i + 1
-			end
-			declared_feature_count := named_features.count
-		end
-
-	add_inherited_features (a_parent: ET_PARENT) is
-			-- Add to `named_features' features inherited from `a_parent'.
-			-- Also process the Feature_adaptation clause of `a_parent'.
-			-- `a_parent' is one of the parents, explicit or implicit
-			-- (i.e. ANY), of `current_class'.
-		require
-			a_parent_not_void: a_parent /= Void
-		local
-			a_class: ET_CLASS
-			has_rename: BOOLEAN
-			has_export: BOOLEAN
-			has_redefine: BOOLEAN
-			has_undefine: BOOLEAN
-			has_select: BOOLEAN
-			class_features: ET_FEATURE_LIST
-			a_feature: ET_FEATURE
-			a_named_feature: ET_FLATTENED_FEATURE
-			a_redeclared_feature: ET_REDECLARED_FEATURE
-			an_inherited_feature: ET_INHERITED_FEATURE
-			a_parent_feature: ET_PARENT_FEATURE
-			a_name: ET_FEATURE_NAME
-			a_rename: ET_RENAME
-			i, nb: INTEGER
-		do
-			if a_parent.renames /= Void then
-				fill_rename_table (a_parent)
-				has_rename := not rename_table.is_empty
-			end
-			if a_parent.exports /= Void then
-				fill_export_table (a_parent)
-				has_export := not export_table.is_empty
-			end
-			if a_parent.undefines /= Void then
-				fill_undefine_table (a_parent)
-				has_undefine := not undefine_table.is_empty
-			end
-			if a_parent.redefines /= Void then
-				fill_redefine_table (a_parent)
-				has_redefine := not redefine_table.is_empty
-			end
-			if a_parent.selects /= Void then
-				fill_select_table (a_parent)
-				has_select := not select_table.is_empty
-			end
-			a_class := a_parent.type.direct_base_class (universe)
-			class_features := a_class.features
-			nb := class_features.count + named_features.count
-			if named_features.capacity < nb then
-				named_features.resize (nb)
-			end
-			nb := class_features.count
-			from i := 1 until i > nb loop
-				a_feature := class_features.item (i)
-				a_parent_feature := new_parent_feature (a_feature, a_parent)
-				a_name := a_feature.name
-				if has_rename then
-					rename_table.search (a_name)
-					if rename_table.found then
-						a_rename := rename_table.found_item
-						rename_table.remove_found_item
-						has_rename := not rename_table.is_empty
-						a_parent_feature.set_new_name (a_rename)
-						a_name := a_rename.new_name
-					end
-				end
-				if has_export then
-					export_table.search (a_name)
-					if export_table.found then
-						export_table.remove_found_item
-						has_export := not export_table.is_empty
-					end
-				end
-				if has_undefine then
-					undefine_table.search (a_name)
-					if undefine_table.found then
-						a_parent_feature.set_undefine_name (undefine_table.found_item)
-						undefine_table.remove_found_item
-						has_undefine := not undefine_table.is_empty
-					end
-				end
-				if has_redefine then
-					redefine_table.search (a_name)
-					if redefine_table.found then
-						a_parent_feature.set_redefine_name (redefine_table.found_item)
-						redefine_table.remove_found_item
-						has_redefine := not redefine_table.is_empty
-					end
-				end
-				if has_select then
-					select_table.search (a_name)
-					if select_table.found then
-						a_parent_feature.set_select_name (select_table.found_item)
-						select_table.remove_found_item
-						has_select := not select_table.is_empty
-					end
-				end
-				named_features.search (a_name)
-				if named_features.found then
-					a_named_feature := named_features.found_item
-					if a_named_feature.is_immediate then
-						a_redeclared_feature := new_redeclared_feature (a_named_feature.immediate_feature, a_parent_feature)
-						named_features.replace_found_item (a_redeclared_feature)
-					elseif a_named_feature.is_redeclared then
-						a_redeclared_feature := a_named_feature.redeclared_feature
-						a_redeclared_feature.put_parent_feature (a_parent_feature)
-					elseif a_named_feature.is_inherited then
-						an_inherited_feature := a_named_feature.inherited_feature
-						an_inherited_feature.put_parent_feature (a_parent_feature)
-					end
-				else
-					an_inherited_feature := new_inherited_feature (a_parent_feature)
-					named_features.put_last (an_inherited_feature, a_name)
-				end
-				i := i + 1
-			end
-			if has_rename then
-				from rename_table.start until rename_table.after loop
-					a_rename := rename_table.item_for_iteration
-					set_fatal_error (current_class)
-					error_handler.report_vhrc1a_error (current_class, a_parent, a_rename)
-					rename_table.forth
-				end
-				rename_table.wipe_out
-			end
-			if has_export then
-				from export_table.start until export_table.after loop
-					a_name := export_table.item_for_iteration
-					set_fatal_error (current_class)
-					error_handler.report_vlel2a_error (current_class, a_parent, a_name)
-					export_table.forth
-				end
-				export_table.wipe_out
-			end
-			if has_undefine then
-				from undefine_table.start until undefine_table.after loop
-					a_name := undefine_table.item_for_iteration
-					set_fatal_error (current_class)
-					error_handler.report_vdus1a_error (current_class, a_parent, a_name)
-					undefine_table.forth
-				end
-				undefine_table.wipe_out
-			end
-			if has_redefine then
-				from redefine_table.start until redefine_table.after loop
-					a_name := redefine_table.item_for_iteration
-					set_fatal_error (current_class)
-					error_handler.report_vdrs1a_error (current_class, a_parent, a_name)
-					redefine_table.forth
-				end
-				redefine_table.wipe_out
-			end
-			if has_select then
-				from select_table.start until select_table.after loop
-					a_name := select_table.item_for_iteration
-					set_fatal_error (current_class)
-					error_handler.report_vmss1a_error (current_class, a_parent, a_name)
-					select_table.forth
-				end
-				select_table.wipe_out
-			end
-		end
-
-feature {NONE} -- Feature adaptation
-
-	rename_table: DS_HASH_TABLE [ET_RENAME, ET_FEATURE_NAME]
-			-- Rename table
-
-	export_table: DS_HASH_SET [ET_FEATURE_NAME]
-			-- Export table
-
-	undefine_table: DS_HASH_SET [ET_FEATURE_NAME]
-			-- Undefine table
-
-	redefine_table: DS_HASH_SET [ET_FEATURE_NAME]
-			-- Redefine table
-
-	select_table: DS_HASH_SET [ET_FEATURE_NAME]
-			-- Select table
-
-	fill_rename_table (a_parent: ET_PARENT) is
-			-- Fill `rename_table' with rename pairs of `a_parent'
-			-- indexed by their old_name.
-		require
-			a_parent_not_void: a_parent /= Void
-			renames_not_void: a_parent.renames /= Void
-		local
-			i, nb: INTEGER
-			a_renames: ET_RENAME_LIST
-			a_rename: ET_RENAME
-			a_name: ET_FEATURE_NAME
-		do
-			a_renames := a_parent.renames
-			nb := a_renames.count
-			if rename_table.capacity < nb then
-				rename_table.resize (nb)
-			end
-			from i := 1 until i > nb loop
-				a_rename := a_renames.rename_pair (i)
-				a_name := a_rename.old_name
-				rename_table.search (a_name)
-				if not rename_table.found then
-					rename_table.put (a_rename, a_name)
-				else
-						-- Feature name `a_name' appears twice on the
-						-- left-hand-side of a Rename_pair in the Rename
-						-- clause.
-					if not rename_table.found_item.new_name.same_feature_name (a_rename.new_name) then
-							-- The two Rename_pairs have a different `new_name'.
-							-- The flatten process will have to fail.
-						set_fatal_error (current_class)
-					end
-					error_handler.report_vhrc2a_error (current_class, a_parent, rename_table.found_item, a_rename)
-				end
-				i := i + 1
-			end
-		end
-
-	fill_export_table (a_parent: ET_PARENT) is
-			-- Fill `export_table' with export feature names of `a_parent'.
-		require
-			a_parent_not_void: a_parent /= Void
-			exports_not_void: a_parent.exports /= Void
-		local
-			i, nb: INTEGER
-			an_exports: ET_EXPORT_LIST
-			an_export: ET_EXPORT
-			an_all_export: ET_ALL_EXPORT
-			other_all_export: ET_ALL_EXPORT
-			a_feature_export: ET_FEATURE_EXPORT
-			j, nb2: INTEGER
-			new_count: INTEGER
-			a_name: ET_FEATURE_NAME
-		do
-			an_exports := a_parent.exports
-			nb := an_exports.count
-			from i := 1 until i > nb loop
-				an_export := an_exports.item (i)
-				an_all_export ?= an_export
-				if an_all_export /= Void then
-					if other_all_export /= Void then
-							-- Two 'all' export clauses for this parent.
-							-- This is not considered as a fatal error by gelint.
-						error_handler.report_vlel1a_error (current_class, a_parent, other_all_export, an_all_export)
-					else
-						other_all_export := an_all_export
-					end
-				else
-					a_feature_export ?= an_export
-					if a_feature_export /= Void then
-						nb2 := a_feature_export.count
-						new_count := new_count + nb2
-						if export_table.capacity < new_count then
-							 export_table.resize (new_count)
-						end
-						from j := 1 until j > nb2 loop
-							a_name := a_feature_export.feature_name (j)
-							export_table.search (a_name)
-							if not export_table.found then
-								export_table.put_new (a_name)
-							else
-									-- Feature name `a_name' appears twice in the Export clause.
-									-- This is not considered as a fatal error by gelint.
-								error_handler.report_vlel3a_error (current_class, a_parent, export_table.found_item, a_name)
-							end
-							j := j + 1
-						end
-					end
-				end
-				i := i + 1
-			end
-		end
-
-	fill_undefine_table (a_parent: ET_PARENT) is
-			-- Fill `undefine_table' with undefined names of `a_parent'.
-		require
-			a_parent_not_void: a_parent /= Void
-			undefines_not_void: a_parent.undefines /= Void
-		local
-			i, nb: INTEGER
-			a_undefines: ET_KEYWORD_FEATURE_NAME_LIST
-			a_name: ET_FEATURE_NAME
-		do
-			a_undefines := a_parent.undefines
-			nb := a_undefines.count
-			if undefine_table.capacity < nb then
-				undefine_table.resize (nb)
-			end
-			from i := 1 until i > nb loop
-				a_name := a_undefines.feature_name (i)
-				undefine_table.search (a_name)
-				if not undefine_table.found then
-					undefine_table.put_new (a_name)
-				else
-						-- Feature name `a_name' appears twice in the
-						-- Undefine clause. This is not considered as
-						-- a fatal error by gelint.
-					error_handler.report_vdus4a_error (current_class, a_parent, undefine_table.found_item, a_name)
-				end
-				i := i + 1
-			end
-		end
-
-	fill_redefine_table (a_parent: ET_PARENT) is
-			-- Fill `redefine_table' with redefined names of `a_parent'.
-		require
-			a_parent_not_void: a_parent /= Void
-			redefines_not_void: a_parent.redefines /= Void
-		local
-			i, nb: INTEGER
-			a_redefines: ET_KEYWORD_FEATURE_NAME_LIST
-			a_name: ET_FEATURE_NAME
-		do
-			a_redefines := a_parent.redefines
-			nb := a_redefines.count
-			if redefine_table.capacity < nb then
-				redefine_table.resize (nb)
-			end
-			from i := 1 until i > nb loop
-				a_name := a_redefines.feature_name (i)
-				redefine_table.search (a_name)
-				if not redefine_table.found then
-					redefine_table.put_new (a_name)
-				else
-						-- Feature name `a_name' appears twice in the
-						-- Redefine clause. This is not considered as
-						-- a fatal error by gelint.
-					error_handler.report_vdrs3a_error (current_class, a_parent, redefine_table.found_item, a_name)
-				end
-				i := i + 1
-			end
-		end
-
-	fill_select_table (a_parent: ET_PARENT) is
-			-- Fill `select_table' with selected names of `a_parent'.
-		require
-			a_parent_not_void: a_parent /= Void
-			selects_not_void: a_parent.selects /= Void
-		local
-			i, nb: INTEGER
-			a_selects: ET_KEYWORD_FEATURE_NAME_LIST
-			a_name: ET_FEATURE_NAME
-		do
-			a_selects := a_parent.selects
-			nb := a_selects.count
-			if select_table.capacity < nb then
-				select_table.resize (nb)
-			end
-			from i := 1 until i > nb loop
-				a_name := a_selects.feature_name (i)
-				select_table.search (a_name)
-				if not select_table.found then
-					select_table.put_new (a_name)
-				else
-						-- Feature name `a_name' appears twice in the
-						-- Select clause. This is not considered as
-						-- a fatal error by gelint.
-					error_handler.report_vmss2a_error (current_class, a_parent, select_table.found_item, a_name)
-				end
-				i := i + 1
+			feature_adaptation_resolver.resolve_feature_adaptations (current_class, named_features)
+			if feature_adaptation_resolver.has_fatal_error then
+				set_fatal_error (current_class)
 			end
 		end
 
@@ -591,8 +207,9 @@ feature {NONE} -- Feature flattening
 			a_deferred_feature: ET_FLATTENED_FEATURE
 			i, nb: INTEGER
 			a_type: ET_TYPE
+			l_declared_feature_count: INTEGER
 		do
-			process_replication
+			resolve_feature_adaptations
 			if not current_class.has_flattening_error then
 				nb := named_features.count
 				create class_features.make_with_capacity (nb)
@@ -602,8 +219,17 @@ feature {NONE} -- Feature flattening
 					class_features.put_first (a_named_feature.flattened_feature)
 					named_features.back
 				end
-				current_class.set_features (class_features, declared_feature_count)
-				nb := declared_feature_count
+				l_declared_feature_count := current_class.declared_feature_count
+				if l_declared_feature_count > nb then
+						-- Internal error: the number of features declared in
+						-- `current_class' should be less than or equal to the
+						-- total number of features in `curren_class'.
+					set_fatal_error (current_class)
+					error_handler.report_giadp_error
+					l_declared_feature_count := nb
+				end
+				current_class.set_features (class_features, l_declared_feature_count)
+				nb := l_declared_feature_count
 				from i := 1 until i > nb loop
 					a_feature := class_features.item (i)
 						-- Resolve identifier types and check argument
@@ -654,14 +280,8 @@ feature {NONE} -- Feature flattening
 							a_deferred_feature := a_named_feature
 						end
 					end
-					has_qualified_type := False
-					check_signature_validity (a_named_feature)
-					if has_qualified_type and not current_class.has_flattening_error then
-							-- There is a qualified anchored type in (or reachable
-							-- from) the signature of `a_feature'. We will have to
-							-- check the signature of this feature again after the
-							-- features of the corresponding classes have been
-							-- flattened.
+					if conformance_checked then
+						check_signature_validity (a_named_feature)
 					end
 					named_features.forth
 				end
@@ -704,7 +324,6 @@ feature {NONE} -- Feature flattening
 				check_creators_validity
 				check_convert_validity
 			end
-			declared_feature_count := 0
 			named_features.wipe_out
 		ensure
 			named_features_wiped_out: named_features.is_empty
@@ -995,147 +614,6 @@ feature {NONE} -- Feature processing
 		end
 
 feature {NONE} -- Replication
-
-	replicable_features: DS_HASH_TABLE [ET_REPLICABLE_FEATURE, INTEGER]
-			-- Table of potentially replicable features, indexed by seed
-
-	process_replication is
-			-- Take care of selected features and replication.
-		local
-			l_feature: ET_FLATTENED_FEATURE
-			l_adapted_feature: ET_ADAPTED_FEATURE
-			l_replicable_feature: ET_REPLICABLE_FEATURE
-			l_other_seeds: ET_FEATURE_IDS
-			l_seed: INTEGER
-			i, nb: INTEGER
-		do
-			from named_features.start until named_features.after loop
-				l_feature := named_features.item_for_iteration
-				if l_feature.is_adapted then
-					l_adapted_feature := l_feature.adapted_feature
-					l_seed := l_adapted_feature.first_seed
-					record_replicable_feature (l_adapted_feature, l_seed)
-					l_other_seeds := l_adapted_feature.other_seeds
-					if l_other_seeds /= Void then
-						nb := l_other_seeds.count
-						from i := 1 until i > nb loop
-							l_seed := l_other_seeds.item (i)
-							record_replicable_feature (l_adapted_feature, l_seed)
-							i := i + 1
-						end
-					end
-				end
-				named_features.forth
-			end
-			from replicable_features.start until replicable_features.after loop
-				l_replicable_feature := replicable_features.item_for_iteration
-				if l_replicable_feature.has_replication then
-					l_seed := replicable_features.key_for_iteration
-					process_replicated_feature (l_replicable_feature.replicated_feature, l_seed)
-				elseif l_replicable_feature.selected_count /= 0 then
-					-- There is still a chance that this feature was
-					-- listed in the Select subclause to resolve a
-					-- replication conflict with another seed. Wait
-					-- until all possible replications have been processed.
-					-- The actual check is done in `flatten_feature'.
-				end
-				replicable_features.forth
-			end
-			replicable_features.wipe_out
-		end
-
-	record_replicable_feature (a_feature: ET_ADAPTED_FEATURE; a_seed: INTEGER) is
-			-- Record `a_feature' with seed `a_seed' in `replicable_features'.
-		require
-			a_feature_not_void: a_feature /= Void
-			valid_seed: a_feature.has_seed (a_seed)
-		local
-			other_feature: ET_ADAPTED_FEATURE
-			a_replicable_feature: ET_REPLICABLE_FEATURE
-			a_replicated_feature: ET_REPLICATED_FEATURE
-		do
-			replicable_features.search (a_seed)
-			if replicable_features.found then
-				a_replicable_feature := replicable_features.found_item
-				if a_replicable_feature.has_replication then
-					a_replicated_feature := a_replicable_feature.replicated_feature
-					a_replicated_feature.put_feature (a_feature)
-				else
-					other_feature := a_replicable_feature.first_feature
-					create a_replicated_feature.make (other_feature, a_feature)
-					replicable_features.replace_found_item (a_replicated_feature)
-				end
-			else
-				replicable_features.force_new (a_feature, a_seed)
-			end
-		end
-
-	process_replicated_feature (a_feature: ET_REPLICATED_FEATURE; a_seed: INTEGER) is
-			-- Process replicated feature `a_feature'.
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			a_replicated_features: DS_LINKED_LIST [ET_ADAPTED_FEATURE]
-			a_parent_features: DS_ARRAYED_LIST [ET_PARENT_FEATURE]
-			a_parent_feature: ET_PARENT_FEATURE
-			a_replicated_feature: ET_ADAPTED_FEATURE
-			a_selected_feature: ET_ADAPTED_FEATURE
-		do
-			a_replicated_features := a_feature.features
-			inspect a_feature.selected_count
-			when 0 then
-				create a_parent_features.make (a_replicated_features.count)
-				from a_replicated_features.start until a_replicated_features.after loop
-					a_replicated_feature := a_replicated_features.item_for_iteration
-					a_parent_feature := a_replicated_feature.seeded_feature (a_seed)
-					a_parent_features.put_last (a_parent_feature)
-					a_replicated_features.forth
-				end
-				set_fatal_error (current_class)
-				error_handler.report_vmrc2a_error (current_class, a_parent_features)
-			when 1 then
-					-- OK.
-				from a_replicated_features.start until a_replicated_features.after loop
-					a_replicated_feature := a_replicated_features.item_for_iteration
-					if not a_replicated_feature.has_selected_feature then
-						a_replicated_feature.set_replicated (a_seed)
-					else
-						a_replicated_feature.set_selected
-						a_selected_feature := a_replicated_feature
-					end
-					a_replicated_features.forth
-				end
-				from a_replicated_features.start until a_replicated_features.after loop
-					a_replicated_feature := a_replicated_features.item_for_iteration
-					if not a_replicated_feature.has_selected_feature then
-						from
-							a_parent_feature := a_replicated_feature.parent_feature
-						until
-							a_parent_feature = Void
-						loop
-							if a_parent_feature.has_seed (a_seed) then
-								a_selected_feature.add_replicated_feature (a_parent_feature)
-							end
-							a_parent_feature := a_parent_feature.merged_feature
-						end
-					end
-					a_replicated_features.forth
-				end
-			else
-				create a_parent_features.make (a_replicated_features.count)
-				from a_replicated_features.start until a_replicated_features.after loop
-					a_replicated_feature := a_replicated_features.item_for_iteration
-					if a_replicated_feature.has_selected_feature then
-						a_replicated_feature.set_selected
-						a_parent_feature := a_replicated_feature.selected_feature
-						a_parent_features.put_last (a_parent_feature)
-					end
-					a_replicated_features.forth
-				end
-				set_fatal_error (current_class)
-				error_handler.report_vmrc2b_error (current_class, a_parent_features)
-			end
-		end
 
 	process_replicated_seeds (a_feature: ET_ADAPTED_FEATURE; a_new_seed: INTEGER) is
 			-- Process the seeds of replicated feature `a_feature'.
@@ -1584,658 +1062,15 @@ feature {NONE} -- Signature validity
 			-- Check signature validity for redeclarations and joinings.
 		require
 			a_feature_not_void: a_feature /= Void
-		local
-			a_flattened_feature: ET_FEATURE
-			an_inherited_flattened_feature: ET_PARENT_FEATURE
-			a_redeclared_feature: ET_REDECLARED_FEATURE
-			an_inherited_feature: ET_INHERITED_FEATURE
-			a_parent_feature: ET_PARENT_FEATURE
-			an_adapted_feature: ET_ADAPTED_FEATURE
-			a_replicated_features: DS_LINKED_LIST [ET_PARENT_FEATURE]
-			a_cursor: DS_LINKED_LIST_CURSOR [ET_PARENT_FEATURE]
 		do
-			if a_feature.is_redeclared then
-					-- Redeclaration.
-				a_redeclared_feature := a_feature.redeclared_feature
-				from
-					a_parent_feature := a_redeclared_feature.parent_feature
-				until
-					a_parent_feature = Void
-				loop
-					check_redeclared_signature_validity (a_redeclared_feature, a_parent_feature)
-					a_parent_feature := a_parent_feature.merged_feature
-				end
-			elseif a_feature.is_inherited then
-				an_inherited_feature := a_feature.inherited_feature
-				a_flattened_feature := an_inherited_feature.flattened_feature
-				an_inherited_flattened_feature := an_inherited_feature.flattened_parent
-				if a_flattened_feature.is_deferred then
-						-- Joining (merging deferred features together).
-					from
-						a_parent_feature := an_inherited_feature.parent_feature
-					until
-						a_parent_feature = Void
-					loop
-						if not a_parent_feature.same_version (an_inherited_flattened_feature) then
-							check_joined_signature_validity (an_inherited_feature, a_parent_feature)
-						end
-						a_parent_feature := a_parent_feature.merged_feature
-					end
-				else
-						-- Redeclaration (merging deferred features into an effective one).
-					from
-						a_parent_feature := an_inherited_feature.parent_feature
-					until
-						a_parent_feature = Void
-					loop
-						if a_parent_feature.is_deferred then
-							check_redeclared_signature_validity (an_inherited_feature, a_parent_feature)
-						end
-						a_parent_feature := a_parent_feature.merged_feature
-					end
-				end
-			else
-				check_immediate_signature_validity (a_feature.flattened_feature)
-			end
-			if a_feature.is_adapted then
-				an_adapted_feature := a_feature.adapted_feature
-				if an_adapted_feature.is_selected then
-					a_replicated_features := an_adapted_feature.replicated_features
-					if a_replicated_features /= Void then
-						a_cursor := a_replicated_features.new_cursor
-						from a_cursor.start until a_cursor.after loop
-							check_selected_signature_validity (an_adapted_feature, a_cursor.item)
-							a_cursor.forth
-						end
-					end
-				end
+			signature_checker.check_signature_validity (a_feature, current_class)
+			if signature_checker.has_fatal_error then
+				set_fatal_error (current_class)
 			end
 		end
 
-	check_immediate_signature_validity (a_feature: ET_FEATURE) is
-			-- Check whether `a_feature' has correctly been declared
-			-- as having arguments which can possibly be redefined
-			-- covariantly in descendant classes?
-		require
-			a_feature_not_void: a_feature /= Void
-		local
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			i, nb: INTEGER
-			a_type: ET_TYPE
-		do
-			if universe.anchored_cat_features then
-				if not universe.all_cat_features and not a_feature.is_cat then
-					an_arguments := a_feature.arguments
-					if an_arguments /= Void then
-						nb := an_arguments.count
-						from i := 1 until i > nb loop
-							a_type := an_arguments.formal_argument (i).type
-							if a_type.has_anchored_type (current_class, universe) then
-								if universe.searching_cat_features then
-									a_feature.set_cat_keyword (tokens.cat_keyword)
-									universe.set_cat_feature_count (universe.cat_feature_count + 1)
-									i := nb + 1 -- Jump out of the loop.
-								else
-									set_fatal_error (current_class)
--- TODO:
-									error_handler.report_error_message ("Feature " + current_class.name.name + "." + a_feature.name.name + " should be marked as covariant")
-								end
-							end
-							i := i + 1
-						end
-					end
-				end
-			end
-		end
-
-	check_redeclared_signature_validity (a_feature: ET_ADAPTED_FEATURE; other: ET_PARENT_FEATURE) is
-			-- Check whether the signature of `a_feature' conforms
-			-- to the signature of `other'. This check has to be done
-			-- when `a_feature' is a redeclaration in `current_class'
-			-- of the inherited feature `other', or when the inherited
-			-- feature `other' is deferred and is merged to the other
-			-- inherted feature `a_feature'.
-		require
-			a_feature_not_void: a_feature /= Void
-			other_not_void: other /= Void
-		local
-			a_type: ET_TYPE
-			other_type: ET_TYPE
-			other_precursor: ET_FEATURE
-			a_flattened_feature: ET_FEATURE
-			a_parent_feature: ET_PARENT_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			other_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_resolver: ET_AST_PROCESSOR
-			b: BOOLEAN
-			i, nb: INTEGER
-			l_cat: BOOLEAN
-			l_other_cat: BOOLEAN
-			l_mark_cat: BOOLEAN
-			l_mark_other_cat: BOOLEAN
-			an_ancestors: ET_BASE_TYPE_LIST
-			an_ancestor: ET_CLASS
-			a_cat_feature: ET_FEATURE
-			a_seeds: ET_FEATURE_IDS
-			j, nb2: INTEGER
-		do
-				-- We don't want the qualified anchored types in signatures to be resolved yet.
-			a_resolver := universe.qualified_signature_resolver
-			universe.set_qualified_signature_resolver (universe.null_processor)
-			a_flattened_feature := a_feature.flattened_feature
-			a_type := a_flattened_feature.type
-			parent_context.set (other.parent.type, current_class)
-			other_precursor := other.precursor_feature
-			other_type := other_precursor.type
-			if a_type = Void then
-				if other_type /= Void then
-					set_fatal_error (current_class)
-					if a_feature.is_inherited then
-						a_parent_feature := a_feature.inherited_feature.flattened_parent
-						error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
-					else
-						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
-					end
-				end
-			elseif other_type = Void then
-				set_fatal_error (current_class)
-				if a_feature.is_inherited then
-					a_parent_feature := a_feature.inherited_feature.flattened_parent
-					error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
-				else
-					error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
-				end
-			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-				if
-					a_type.has_qualified_type (current_class, universe) or
-					other_type.has_qualified_type (parent_context, universe)
-				then
-						-- We have to delay until qualified
-						-- anchored types have been resolved.
-					has_qualified_type := True
-				else
-					set_fatal_error (current_class)
-					if a_feature.is_inherited then
-						a_parent_feature := a_feature.inherited_feature.flattened_parent
-						error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
-					else
-						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
-					end
-				end
-			elseif a_feature.is_redeclared and other_precursor.is_attribute then
-				if not a_flattened_feature.is_attribute then
-					-- We already checked in `check_redeclaration_validity' whether
-					-- `a_flattened_feature' was an attribute and reported
-					-- an error otherwise.
-				elseif a_type.type.is_type_expanded (current_class, universe) /= other_type.is_type_expanded (current_class, universe) then
-						-- VDRD-6 says that the types of the two attributes should
-						-- be both expanded or both non-expanded.
-					set_fatal_error (current_class)
-					error_handler.report_vdrd6b_error (current_class, other, a_flattened_feature)
-				end
-			end
-			an_arguments := a_flattened_feature.arguments
-			other_arguments := other_precursor.arguments
-			if an_arguments = Void or else an_arguments.is_empty then
-				if other_arguments /= Void and then not other_arguments.is_empty then
-					set_fatal_error (current_class)
-					if a_feature.is_inherited then
-						a_parent_feature := a_feature.inherited_feature.flattened_parent
-						error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
-					else
-						error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
-					end
-				end
-			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
-				set_fatal_error (current_class)
-				error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
-			else
-				l_cat := universe.all_cat_features or a_flattened_feature.is_cat
-				l_other_cat := universe.all_cat_features or other_precursor.is_cat
-				nb := an_arguments.count
-				from i := 1 until i > nb loop
-					a_type := an_arguments.formal_argument (i).type
-					if universe.anchored_cat_features then
-						if not l_cat and a_feature.is_redeclared then
-							if a_type.has_anchored_type (current_class, universe) then
-								if universe.searching_cat_features then
-									l_mark_cat := True
-									l_cat := True
-								else
-									set_fatal_error (current_class)
--- TODO:
-									error_handler.report_error_message ("Feature " + current_class.name.name + "." + a_flattened_feature.name.name + " should be marked as covariant")
-								end
-							end
-						end
-					end
-					other_type := other_arguments.formal_argument (i).type
-					if not l_other_cat then
-						if universe.searching_cat_features then
-							if l_cat then
-								l_mark_other_cat := True
-								l_other_cat := True
-							elseif not a_type.same_named_type (other_type, parent_context, current_class, universe) then
-								l_mark_other_cat := True
-								l_other_cat := True
-							end
-						else
-							if l_cat then
-								set_fatal_error (current_class)
--- TODO:
-								error_handler.report_error_message ("Feature " + current_class.name.name + "." + a_flattened_feature.name.name + " is marked as covariant but is the redeclaration of an no-variant feature")
-							end
-							if not a_type.same_named_type (other_type, parent_context, current_class, universe) then
-								if
-									a_type.has_qualified_type (current_class, universe) or
-									other_type.has_qualified_type (parent_context, universe)
-								then
-										-- We have to delay until qualified
-										-- anchored types have been resolved.
-									has_qualified_type := True
-								else
-									set_fatal_error (current_class)
-									if a_feature.is_inherited then
-										a_parent_feature := a_feature.inherited_feature.flattened_parent
-										error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
-									else
-										error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
-									end
-								end
-							end
-						end
-					end
-					if l_other_cat then
-						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-							if
-								a_type.has_qualified_type (current_class, universe) or
-								other_type.has_qualified_type (parent_context, universe)
-							then
-									-- We have to delay until qualified
-									-- anchored types have been resolved.
-								has_qualified_type := True
-							else
-								set_fatal_error (current_class)
-								if a_feature.is_inherited then
-									a_parent_feature := a_feature.inherited_feature.flattened_parent
-									error_handler.report_vdrd2b_error (current_class, a_parent_feature, other)
-								else
-									error_handler.report_vdrd2a_error (current_class, a_flattened_feature, other)
-								end
-							end
-						elseif universe.searching_dog_types then
-								-- Force the redeclared type to be non-cat when the two
-								-- types are the same except for their cat-ness. This
-								-- trick may prevent this feature from having to be
-								-- marked as cat.
-							b := a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
-						end
-					end
-					i := i + 1
-				end
-				if l_mark_cat then
-					a_flattened_feature.set_cat_keyword (tokens.cat_keyword)
-					universe.set_cat_feature_count (universe.cat_feature_count + 1)
-					an_ancestors := current_class.ancestors
-					nb := an_ancestors.count
-					from i := 1 until i > nb loop
-						an_ancestor := an_ancestors.item (i).direct_base_class (universe)
-						a_cat_feature := an_ancestor.seeded_feature (a_flattened_feature.first_seed)
-						if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-							a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-							universe.set_cat_feature_count (universe.cat_feature_count + 1)
-						end
-						a_seeds := a_flattened_feature.other_seeds
-						if a_seeds /= Void then
-							nb2 := a_seeds.count
-							from j := 1 until j > nb2 loop
-								a_cat_feature := an_ancestor.seeded_feature (a_seeds.item (j))
-								if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-									a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-									universe.set_cat_feature_count (universe.cat_feature_count + 1)
-								end
-								j := j + 1
-							end
-						end
-						i := i + 1
-					end
-				elseif l_mark_other_cat then
-					other_precursor.set_cat_keyword (tokens.cat_keyword)
-					universe.set_cat_feature_count (universe.cat_feature_count + 1)
-					an_ancestors := other.parent.type.direct_base_class (universe).ancestors
-					nb := an_ancestors.count
-					from i := 1 until i > nb loop
-						an_ancestor := an_ancestors.item (i).direct_base_class (universe)
-						a_cat_feature := an_ancestor.seeded_feature (other_precursor.first_seed)
-						if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-							a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-							universe.set_cat_feature_count (universe.cat_feature_count + 1)
-						end
-						a_seeds := other_precursor.other_seeds
-						if a_seeds /= Void then
-							nb2 := a_seeds.count
-							from j := 1 until j > nb2 loop
-								a_cat_feature := an_ancestor.seeded_feature (a_seeds.item (j))
-								if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-									a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-									universe.set_cat_feature_count (universe.cat_feature_count + 1)
-								end
-								j := j + 1
-							end
-						end
-						i := i + 1
-					end
-				end
-			end
-			universe.set_qualified_signature_resolver (a_resolver)
-		end
-
-	check_selected_signature_validity (a_feature: ET_ADAPTED_FEATURE; other: ET_PARENT_FEATURE) is
-			-- Check whether the signature of `a_feature' conforms
-			-- to the signature of `other'. This check has to be done
-			-- when `a_feature' is the selected version in `current_class'
-			-- of the inherited replicated feature `other'.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_feature_selected: a_feature.is_selected
-			other_not_void: other /= Void
-		local
-			a_type: ET_TYPE
-			other_type: ET_TYPE
-			other_precursor: ET_FEATURE
-			a_flattened_feature: ET_FEATURE
-			a_parent_feature: ET_PARENT_FEATURE
-			an_arguments: ET_FORMAL_ARGUMENT_LIST
-			other_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_resolver: ET_AST_PROCESSOR
-			b: BOOLEAN
-			i, nb: INTEGER
-			l_cat: BOOLEAN
-			l_other_cat: BOOLEAN
-			l_mark_cat: BOOLEAN
-			l_mark_other_cat: BOOLEAN
-			an_ancestors: ET_BASE_TYPE_LIST
-			an_ancestor: ET_CLASS
-			a_cat_feature: ET_FEATURE
-			a_seeds: ET_FEATURE_IDS
-			j, nb2: INTEGER
-		do
-				-- We don't want the qualified anchored types in signatures to be resolved yet.
-			a_resolver := universe.qualified_signature_resolver
-			universe.set_qualified_signature_resolver (universe.null_processor)
-			a_flattened_feature := a_feature.flattened_feature
-			a_type := a_flattened_feature.type
-			parent_context.set (other.parent.type, current_class)
-			other_precursor := other.precursor_feature
-			other_type := other_precursor.type
-			if a_type = Void then
-				if other_type /= Void then
-					set_fatal_error (current_class)
-					if a_feature.is_inherited then
-						a_parent_feature := a_feature.inherited_feature.flattened_parent
-						error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-					else
-						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
-					end
-				end
-			elseif other_type = Void then
-				set_fatal_error (current_class)
-				if a_feature.is_inherited then
-					a_parent_feature := a_feature.inherited_feature.flattened_parent
-					error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-				else
-					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
-				end
-			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-				if
-					a_type.has_qualified_type (current_class, universe) or
-					other_type.has_qualified_type (parent_context, universe)
-				then
-						-- We have to delay until qualified
-						-- anchored types have been resolved.
-					has_qualified_type := True
-				else
-					set_fatal_error (current_class)
-					if a_feature.is_inherited then
-						a_parent_feature := a_feature.inherited_feature.flattened_parent
-						error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-					else
-						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
-					end
-				end
-			end
-			an_arguments := a_flattened_feature.arguments
-			other_arguments := other_precursor.arguments
-			if an_arguments = Void or else an_arguments.is_empty then
-				if other_arguments /= Void and then not other_arguments.is_empty then
-					set_fatal_error (current_class)
-					if a_feature.is_inherited then
-						a_parent_feature := a_feature.inherited_feature.flattened_parent
-						error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-					else
-						error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
-					end
-				end
-			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
-				set_fatal_error (current_class)
-				if a_feature.is_inherited then
-					a_parent_feature := a_feature.inherited_feature.flattened_parent
-					error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-				else
-					error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
-				end
-			else
-				l_cat := universe.all_cat_features or a_flattened_feature.is_cat
-				l_other_cat := universe.all_cat_features or other_precursor.is_cat
-				nb := an_arguments.count
-				from i := 1 until i > nb loop
-					a_type := an_arguments.formal_argument (i).type
-					other_type := other_arguments.formal_argument (i).type
-					if not l_other_cat then
-						if universe.searching_cat_features then
-							if l_cat then
-								l_mark_other_cat := True
-								l_other_cat := True
-							elseif not a_type.same_named_type (other_type, parent_context, current_class, universe) then
-								l_mark_other_cat := True
-								l_other_cat := True
-							end
-						else
-							if l_cat then
-								set_fatal_error (current_class)
--- TODO:
-								error_handler.report_error_message ("Feature " + current_class.name.name + "." + a_flattened_feature.name.name + " is marked as covariant but is the redeclaration of an no-variant feature")
-							end
-							if not a_type.same_named_type (other_type, parent_context, current_class, universe) then
-								if
-									a_type.has_qualified_type (current_class, universe) or
-									other_type.has_qualified_type (parent_context, universe)
-								then
-										-- We have to delay until qualified
-										-- anchored types have been resolved.
-									has_qualified_type := True
-								else
-									set_fatal_error (current_class)
-									if a_feature.is_inherited then
-										a_parent_feature := a_feature.inherited_feature.flattened_parent
-										error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-									else
-										error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
-									end
-								end
-							end
-						end
-					end
-					if l_other_cat then
-						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
-							if
-								a_type.has_qualified_type (current_class, universe) or
-								other_type.has_qualified_type (parent_context, universe)
-							then
-									-- We have to delay until qualified
-									-- anchored types have been resolved.
-								has_qualified_type := True
-							else
-								set_fatal_error (current_class)
-								if a_feature.is_inherited then
-									a_parent_feature := a_feature.inherited_feature.flattened_parent
-									error_handler.report_vdrd2d_error (current_class, a_parent_feature, other)
-								else
-									error_handler.report_vdrd2c_error (current_class, a_flattened_feature, other)
-								end
-							end
-						elseif universe.searching_dog_types then
-								-- Force the redeclared type to be non-cat when the two
-								-- types are the same except for their cat-ness. This
-								-- trick may prevent this feature from having to be
-								-- marked as cat.
-							b := a_type.same_syntactical_type (other_type, parent_context, current_class, universe)
-						end
-					end
-					i := i + 1
-				end
-				if l_mark_cat then
-					a_flattened_feature.set_cat_keyword (tokens.cat_keyword)
-					universe.set_cat_feature_count (universe.cat_feature_count + 1)
-					an_ancestors := current_class.ancestors
-					nb := an_ancestors.count
-					from i := 1 until i > nb loop
-						an_ancestor := an_ancestors.item (i).direct_base_class (universe)
-						a_cat_feature := an_ancestor.seeded_feature (a_flattened_feature.first_seed)
-						if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-							a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-							universe.set_cat_feature_count (universe.cat_feature_count + 1)
-						end
-						a_seeds := a_flattened_feature.other_seeds
-						if a_seeds /= Void then
-							nb2 := a_seeds.count
-							from j := 1 until j > nb2 loop
-								a_cat_feature := an_ancestor.seeded_feature (a_seeds.item (j))
-								if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-									a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-									universe.set_cat_feature_count (universe.cat_feature_count + 1)
-								end
-								j := j + 1
-							end
-						end
-						i := i + 1
-					end
-				elseif l_mark_other_cat then
-					other_precursor.set_cat_keyword (tokens.cat_keyword)
-					universe.set_cat_feature_count (universe.cat_feature_count + 1)
-					an_ancestors := other.parent.type.direct_base_class (universe).ancestors
-					nb := an_ancestors.count
-					from i := 1 until i > nb loop
-						an_ancestor := an_ancestors.item (i).direct_base_class (universe)
-						a_cat_feature := an_ancestor.seeded_feature (other_precursor.first_seed)
-						if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-							a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-							universe.set_cat_feature_count (universe.cat_feature_count + 1)
-						end
-						a_seeds := other_precursor.other_seeds
-						if a_seeds /= Void then
-							nb2 := a_seeds.count
-							from j := 1 until j > nb2 loop
-								a_cat_feature := an_ancestor.seeded_feature (a_seeds.item (j))
-								if a_cat_feature /= Void and then not a_cat_feature.is_cat then
-									a_cat_feature.set_cat_keyword (tokens.cat_keyword)
-									universe.set_cat_feature_count (universe.cat_feature_count + 1)
-								end
-								j := j + 1
-							end
-						end
-						i := i + 1
-					end
-				end
-			end
-			universe.set_qualified_signature_resolver (a_resolver)
-		end
-
-	check_joined_signature_validity (a_feature: ET_INHERITED_FEATURE; other: ET_PARENT_FEATURE) is
-			-- Check that `a_feature' and `other' have the same signature
-			-- when viewed from `current_class'. This check has to be done
-			-- when joining two or more deferred features, the `a_feature'
-			-- being the result of the join in `current_class' and `other'
-			-- being one of the other deferred features inherited from a
-			-- parent of `current_class'. (See ETL2 page 165 about Joining.)
-		require
-			a_feature_not_void: a_feature /= Void
-			other_not_void: other /= Void
-		local
-			a_joined_feature: ET_FEATURE
-			other_precursor: ET_FEATURE
-			an_arguments, other_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_type, other_type: ET_TYPE
-			i, nb: INTEGER
-		do
-			a_joined_feature := a_feature.flattened_feature
-			a_type := a_joined_feature.type
-			other_precursor := other.precursor_feature
-			other_type := other_precursor.type
-			parent_context.set (other.parent.type, current_class)
-			if a_type = Void then
-				if other_type /= Void then
-					set_fatal_error (current_class)
-					error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
-				end
-			elseif other_type = Void then
-				set_fatal_error (current_class)
-				error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
-			elseif not a_type.same_syntactical_type (other_type, parent_context, current_class, universe) then
-				if
-					a_type.has_qualified_type (current_class, universe) or
-					other_type.has_qualified_type (parent_context, universe)
-				then
-						-- We have to delay until qualified
-						-- anchored types have been resolved.
-					has_qualified_type := True
-				else
-					set_fatal_error (current_class)
-					error_handler.report_vdjr0c_error (current_class, a_feature.flattened_parent, other)
-				end
-			end
-			an_arguments := a_joined_feature.arguments
-			other_arguments := other_precursor.arguments
-			if an_arguments = Void or else an_arguments.is_empty then
-				if other_arguments /= Void and then not other_arguments.is_empty then
-					set_fatal_error (current_class)
-					error_handler.report_vdjr0a_error (current_class, a_feature.flattened_parent, other)
-				end
-			elseif other_arguments = Void or else other_arguments.count /= an_arguments.count then
-				set_fatal_error (current_class)
-				error_handler.report_vdjr0a_error (current_class, a_feature.flattened_parent, other)
-			else
--- TODO: if one of the joined features is not argument covariant, then the
--- feature resulting of the join should be no argument covariant as well.
-				nb := an_arguments.count
-				from i := 1 until i > nb loop
-					if not an_arguments.formal_argument (i).type.same_syntactical_type (other_arguments.formal_argument (i).type, parent_context, current_class, universe) then
-						if
-							a_type.has_qualified_type (current_class, universe) or
-							other_type.has_qualified_type (parent_context, universe)
-						then
-								-- We have to delay until qualified
-								-- anchored types have been resolved.
-							has_qualified_type := True
-						else
-							set_fatal_error (current_class)
-							error_handler.report_vdjr0b_error (current_class, a_feature.flattened_parent, other, i)
-						end
-					end
-					i := i + 1
-				end
-			end
-		end
-
-	parent_context: ET_NESTED_TYPE_CONTEXT
-			-- Parent context for type conformance checking
-
-	has_qualified_type: BOOLEAN
-			-- Is there a qualified anchored type in (or reachable
-			-- from) the signature of the feature being analyzed?
-			-- If this is the case we will have to check again the
-			-- signature of this feature after the features of the
-			-- corresponding classes have been flattened.
+	signature_checker: ET_SIGNATURE_CHECKER
+			-- Signature validity checker
 
 feature {NONE} -- Formal parameters validity
 
@@ -2378,110 +1213,20 @@ feature {NONE} -- Convert validity
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	new_parent_feature (a_feature: ET_FEATURE; a_parent: ET_PARENT): ET_PARENT_FEATURE is
-			-- New parent feature
-		require
-			a_feature_not_void: a_feature /= Void
-			a_parent_not_void: a_parent /= Void
-		do
-			if free_parent_feature /= Void then
-				Result := free_parent_feature
-				Result.reset (a_feature, a_parent)
-				free_parent_feature := free_parent_feature.next
-			else
-				create Result.make (a_feature, a_parent)
-				Result.set_next (parent_feature_list)
-				parent_feature_list := Result
-			end
-		ensure
-			parent_feature_not_void: Result /= Void
-		end
-
-	new_inherited_feature (a_parent_feature: ET_PARENT_FEATURE): ET_INHERITED_FEATURE is
-			-- New inherited feature
-		require
-			a_parent_feature_not_void: a_parent_feature /= Void
-		do
-			if free_inherited_feature /= Void then
-				Result := free_inherited_feature
-				Result.reset (a_parent_feature)
-				free_inherited_feature := free_inherited_feature.next
-			else
-				create Result.make (a_parent_feature)
-				Result.set_next (inherited_feature_list)
-				inherited_feature_list := Result
-			end
-		ensure
-			inherited_feature_not_void: Result /= Void
-		end
-
-	new_redeclared_feature (a_feature: ET_FEATURE; a_parent_feature: ET_PARENT_FEATURE): ET_REDECLARED_FEATURE is
-			-- Reset redeclared feature.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_parent_feature_not_void: a_parent_feature /= Void
-		do
-			if free_redeclared_feature /= Void then
-				Result := free_redeclared_feature
-				Result.reset (a_feature, a_parent_feature)
-				free_redeclared_feature := free_redeclared_feature.next
-			else
-				create Result.make (a_feature, a_parent_feature)
-				Result.set_next (redeclared_feature_list)
-				redeclared_feature_list := Result
-			end
-		ensure
-			redeclared_feature_not_void: Result /= Void
-		end
-
-	parent_feature_list: ET_PARENT_FEATURE
-			-- Parent feature free list
-
-	free_parent_feature: ET_PARENT_FEATURE
-			-- First available parent feature in free list
-
-	inherited_feature_list: ET_INHERITED_FEATURE
-			-- Inherited feature free list
-
-	free_inherited_feature: ET_INHERITED_FEATURE
-			-- First available inherited feature in free list
-
-	redeclared_feature_list: ET_REDECLARED_FEATURE
-			-- Redeclared feature free list
-
-	free_redeclared_feature: ET_REDECLARED_FEATURE
-			-- First available redeclared feature in free list
-
 invariant
 
 	named_features_not_void: named_features /= Void
 	no_void_named_feature: not named_features.has_item (Void)
-	declared_feature_count_positive: declared_feature_count >= 0
-	declared_feature_count_small_enough: declared_feature_count <= named_features.count
-	rename_table_not_void: rename_table /= Void
-	no_void_rename: not rename_table.has_item (Void)
-	no_void_rename_old_name: not rename_table.has (Void)
-	export_table_not_void: export_table /= Void
-	no_void_export: not export_table.has (Void)
-	undefine_table_not_void: undefine_table /= Void
-	no_void_undefine: not undefine_table.has (Void)
-	redefine_table_not_void: redefine_table /= Void
-	no_void_redefine: not redefine_table.has (Void)
-	select_table_not_void: select_table /= Void
-	no_void_select: not select_table.has (Void)
 	clients_list_not_void: clients_list /= Void
 	not_void_clients: not clients_list.has (Void)
 	client_names_not_void: client_names /= Void
 	no_void_client_name: not client_names.has (Void)
-	replicable_features_not_void: replicable_features /= Void
-	no_void_replicable_feature: not replicable_features.has_item (Void)
+	feature_adaptation_resolver_not_void: feature_adaptation_resolver /= Void
 	identifier_type_resolver_not_void: identifier_type_resolver /= Void
 	anchored_type_checker_not_void: anchored_type_checker /= Void
+	signature_checker_not_void: signature_checker /= Void
 	parent_checker_not_void: parent_checker /= Void
 	formal_parameter_checker_not_void: formal_parameter_checker /= Void
 	precursor_checker_not_void: precursor_checker /= Void
-	parent_context_not_void: parent_context /= Void
 
 end
