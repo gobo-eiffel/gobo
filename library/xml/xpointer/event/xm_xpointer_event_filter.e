@@ -58,10 +58,13 @@ feature {NONE} -- Initialization
 			media_type := a_media_type
 			callbacks := a_callback
 			dtd_callbacks := a_dtd_callback
-			set_xpointer (an_xpointer)
+			if an_xpointer.count > 0 then
+				set_xpointer (an_xpointer)
+			else
+				set_no_filtering
+			end
 		ensure
 			media_type_set: media_type = a_media_type
-			filtering: is_filtering
 		end
 
 feature -- Status report
@@ -153,6 +156,8 @@ feature -- Document
 					
 					is_forwarding := True 
 				end
+			else
+				Precursor
 			end
 		end
 

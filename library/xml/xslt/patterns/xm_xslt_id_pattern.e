@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			id_not_void: an_id /= Void
 			static_context_not_void: a_static_context /= Void
 		do
-			static_context := static_context
+			static_context := a_static_context
 			system_id := a_static_context.system_id
 			line_number := a_static_context.line_number
 			id_expression := an_id

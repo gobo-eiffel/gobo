@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 		local
 			a_uri: UT_URI
 		do
+			create default_media_type.make ("application", "xslt+xml")
 			create a_uri.make (a_system_id)
 			system_id := a_uri.full_uri
 			if a_uri.has_fragment then
@@ -50,6 +51,9 @@ feature -- Access
 	fragment_identifier: STRING
 			-- Possible decoded fragment identifier
 
+	default_media_type: UT_MEDIA_TYPE
+			-- Default media type for stylesheet processing
+
 feature -- Events
 
 	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is
@@ -65,11 +69,17 @@ feature -- Events
 			create attributes.set_next (namespace_resolver)
 			create content.set_next (attributes)
 			create oasis_xml_catalog_filter.set_next (content, content_emitter)
-			create start.set_next (oasis_xml_catalog_filter)
+			create xpointer_filter.make (" ", default_media_type, oasis_xml_catalog_filter, oasis_xml_catalog_filter)
+			if fragment_identifier = Void or else not is_stylesheet then
+				xpointer_filter.set_no_filtering
+			else
+				xpointer_filter.set_xpointer (fragment_identifier)
+			end
+			create start.set_next (xpointer_filter)
 			create a_locator.make (a_parser)
 			a_receiver.set_document_locator (a_locator)
 			a_parser.set_callbacks (start)
-			a_parser.set_dtd_callbacks (oasis_xml_catalog_filter)
+			a_parser.set_dtd_callbacks (xpointer_filter)
 			a_parser.parse_from_system (system_id)
 		end
 
@@ -118,6 +128,9 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	xpointer_filter: XM_XPOINTER_EVENT_FILTER
+			-- Filter for fragment identifiers
+
 	oasis_xml_catalog_filter: XM_OASIS_XML_CATALOG_FILTER
 			-- Filter for oasis-xml-catalog PIs
 
@@ -142,6 +155,7 @@ feature {NONE} -- Implementation
 invariant
 
 	system_id_not_void: system_id /= Void
+	default_media_type_not_void: default_media_type /= Void
 
 end
 	

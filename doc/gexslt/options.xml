@@ -89,6 +89,11 @@
 	is defined to have identical fragment identifier semantics to the former, there is
 	no significance to this difference).
       </para>
+      <para>
+	Only shorthand pointers are supported for stylesheets. In this case, the shorthand pointer
+	must point to an ID attribute (and the DTD must be available), or an xml:id attribute, on
+	the xsl:transform or xsl:stylesheet element.
+      </para>
     </section>
   </section>
   <section>

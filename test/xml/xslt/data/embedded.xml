@@ -1,0 +1,21 @@
+<?xml-stylesheet type="application/xslt+xml" href="#style1"?>
+<doc>
+  <head>
+    <xsl:stylesheet xml:id="style1"
+		    version="2.0"
+		    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+		    xmlns:fo="http://www.w3.org/1999/XSL/Format">
+      <xsl:template match="id('foo')">
+	<fo:block font-weight="bold"><xsl:apply-templates/></fo:block>
+      </xsl:template>
+      <xsl:template match="xsl:stylesheet">
+	<!-- ignore -->
+      </xsl:template>
+    </xsl:stylesheet>
+  </head>
+  <body>
+    <para xml:id="foo">
+      Some bold text.
+    </para>
+  </body>
+</doc>
