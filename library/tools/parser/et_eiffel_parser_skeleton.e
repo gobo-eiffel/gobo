@@ -116,6 +116,16 @@ feature -- Basic operations
 			frozen_feature: a_feature.is_frozen
 		end
 
+	set_formal_generic_parameters (a_generics: ET_FORMAL_GENERIC_PARAMETERS) is
+			-- Set formal generic parameters of `last_class'.
+		require
+			a_generics_not_void: a_generics /= Void
+			last_class_not_void: last_class /= Void
+		do
+			last_class.set_generic_parameters (a_generics)
+			a_generics.resolve_named_types (last_class, ast_factory)
+		end
+
 feature -- AST factory
 
 	new_actual_arguments (an_expression: ET_EXPRESSION): ET_ACTUAL_ARGUMENTS is
@@ -264,31 +274,6 @@ feature -- AST factory
 			class_not_void: Result /= Void
 		end
 
-	new_class_type (a_name: ET_IDENTIFIER;
-		a_generics: like new_actual_generics): ET_TYPE is
-			-- New Eiffel class type or formal
-			-- generic paramater
-		require
-			a_name_not_void: a_name /= Void
-			last_class_not_void: last_class /= Void
-		local
-			a_parameter: ET_FORMAL_GENERIC_PARAMETER
-			a_class: ET_CLASS
-		do
-			a_parameter := last_class.generic_parameter (a_name)
-			if a_parameter /= Void then
-				if a_generics /= Void then
-					-- Error
-				end
-				Result := ast_factory.new_formal_generic_type (a_name, a_parameter.index)
-			else
-				a_class := universe.eiffel_class (a_name)
-				Result := ast_factory.new_class_type (a_name, a_generics, a_class)
-			end
-		ensure
-			class_type_not_void: Result /= Void
-		end
-
 	new_client (a_name: ET_IDENTIFIER): ET_CLIENT is
 			-- New client
 		require
@@ -344,6 +329,23 @@ feature -- AST factory
 			Result := ast_factory.new_constant_attribute (a_name, a_type, a_constant, last_clients, last_class, an_id)
 		ensure
 			constant_attribute_not_void: Result /= Void
+		end
+
+	new_constraint_named_type (a_name: ET_IDENTIFIER;
+		a_generics: like new_actual_generics): ET_NAMED_TYPE is
+			-- New Eiffel class type or formal
+			-- generic paramater appearing in a
+			-- generic constraint
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if a_generics /= Void then
+				Result := ast_factory.new_generic_named_type (a_name, a_generics)
+			else
+				Result := ast_factory.new_named_type (a_name)
+			end
+		ensure
+			named_type_not_void: Result /= Void
 		end
 
 	new_creation_instruction (a_type: ET_TYPE; a_target: ET_WRITABLE; a_call: ANY): ET_CREATION_INSTRUCTION is
@@ -1163,6 +1165,35 @@ feature -- AST factory
 			manifest_array_not_void: Result /= Void
 		end
 
+	new_named_type (a_name: ET_IDENTIFIER;
+		a_generics: like new_actual_generics): ET_NAMED_TYPE is
+			-- New Eiffel class type or formal
+			-- generic paramater
+		require
+			a_name_not_void: a_name /= Void
+			last_class_not_void: last_class /= Void
+		local
+			a_parameter: ET_FORMAL_GENERIC_PARAMETER
+			a_class: ET_CLASS
+		do
+			a_parameter := last_class.generic_parameter (a_name)
+			if a_parameter /= Void then
+				if a_generics /= Void then
+					-- Error
+				end
+				Result := ast_factory.new_formal_generic_type (a_name, a_parameter.index)
+			else
+				a_class := universe.eiffel_class (a_name)
+				if a_generics /= Void then
+					Result := ast_factory.new_generic_class_type (a_name, a_generics, a_class)
+				else
+					Result := ast_factory.new_class_type (a_name, a_class)
+				end
+			end
+		ensure
+			named_type_not_void: Result /= Void
+		end
+
 	new_none_clients: ET_CLIENTS is
 			-- New client list with only one client: NONE
 		do
@@ -1249,7 +1280,11 @@ feature -- AST factory
 				-- Error
 			end
 			a_class := universe.eiffel_class (a_name)
-			!! a_type.make (a_name, a_generic_parameters, a_class)
+			if a_generic_parameters /= Void then
+				!ET_GENERIC_CLASS_TYPE! a_type.make (a_name, a_generic_parameters, a_class)
+			else
+				!! a_type.make (a_name, a_class)
+			end
 			Result := ast_factory.new_parent (a_type, a_renames,
 				an_exports, an_undefines, a_redefines, a_selects)
 		ensure
