@@ -99,6 +99,28 @@ feature -- Access
 			full_pathname_not_void: Result /= Void
 		end
 
+	classes (a_universe: ET_UNIVERSE): DS_ARRAYED_LIST [ET_CLASS] is
+			-- Classes of `a_universe' which are in current cluster
+		require
+			a_universe_not_void: a_universe /= Void
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_IDENTIFIER]
+			a_class: ET_CLASS
+		do
+			!! Result.make (Initial_classes_capacity)
+			a_cursor := a_universe.classes.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_class := a_cursor.item
+				if a_class.cluster = Current then
+					Result.force_last (a_class)
+				end
+				a_cursor.forth
+			end
+		ensure
+			classes_not_void: Result /= Void
+			no_void_class: not Result.has (Void)
+		end
+
 feature -- Nested
 
 	parent: ET_CLUSTER
@@ -253,19 +275,6 @@ feature -- Output
 			a_file.put_string (name.name)
 		end
 
-feature {ET_CLUSTERS} -- Implementation
-
-	next: ET_CLUSTER
-			-- Next cluster in universe
-
-	set_next (a_cluster: like next) is
-			-- Set `next' to `a_cluster'.
-		do
-			next := a_cluster
-		ensure
-			next_set: next = a_cluster
-		end
-
 feature {NONE} -- Implementation
 
 	has_eiffel_extension (a_filename: STRING): BOOLEAN is
@@ -297,6 +306,9 @@ feature {NONE} -- Constants
 	dot_directory_name: STRING is "."
 	dot_dot_directory_name: STRING is ".."
 			-- Directory names
+
+	Initial_classes_capacity: INTEGER is 20
+			-- Initial capacity for `classes'
 
 invariant
 
