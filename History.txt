@@ -29,6 +29,11 @@ Version 2.1 - ?
 	  testcase execution only (suggested by Glenn Maughan).
 	* Added assertion routines to compare file contents and
 	  filenames.
+	* Added command-line option --compile to pass the Eiffel
+	  compilation command-line as argument instead of through
+	  the 'compile' field of the config file.
+	* The 'testgen' directory is now created by 'getest' if
+	  it does not exist yet.
 
 	Gobo Eiffel Kernel Library:
 
