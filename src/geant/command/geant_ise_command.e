@@ -209,6 +209,13 @@ feature -- Execution
 					file_system.delete_file (a_name)
 				end
 			end
+			a_name := "arguments.wb"
+			if file_system.file_exists (a_name) then
+				project.trace (<<"  [ise] delete ", a_name>>)
+				if not project.options.no_exec then
+					file_system.delete_file (a_name)
+				end
+			end
 			if file_system.directory_exists ("EIFGEN") then
 				project.trace (<<"  [ise] delete EIFGEN">>)
 				if not project.options.no_exec then
