@@ -2,12 +2,12 @@ indexing
 
 	description:
 
-		"Stacks (Last-In, First-Out) implemented with arrays";
+		"Stacks (Last-In, First-Out) implemented with arrays"
 
-	library:    "Gobo Eiffel Structure Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class DS_ARRAYED_STACK [G]
@@ -35,12 +35,7 @@ inherit
 			remove as remove_i_th,
 			prune as prune_i_th
 		export
-#ifndef SE
 			{NONE} all
-#else
---| SmallEiffel -0.90 bug (960905a)
---|			{NONE} all
-#endif
 		select
 			item, put, force, extend,
 			append, remove, prune
