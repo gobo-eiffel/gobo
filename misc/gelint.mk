@@ -12,7 +12,7 @@ SE_CLEAN=clean
 SE_CFLAGS=-all_check -no_split -no_style_warning -no_gc ${SE_PCFLAGS}
 
 # ISE Eiffel
-ISE_COMPILER=es4
+ISE_ECOMPILER=es4
 ISE_FINISH_FREEZING=finish_freezing
 ISE_CFLAGS=-batch
 ISE_CODEGEN=W_code
@@ -92,7 +92,7 @@ ise:
 	fi
 
 test-ise: ise.ace
-	-${ISE_COMPILER} ${ISE_CFLAGS} -ace ise.ace > tmp11.txt 2>&1
+	-${ISE_ECOMPILER} ${ISE_CFLAGS} -ace ise.ace > tmp11.txt 2>&1
 	if ! $(MAKE) ise_finish_freezing 'MAKEFLAGS=' > /dev/null 2>&1 ; then \
 		${ECHO} 'finish_freezing failed!' >> tmp11.txt ; \
 	fi

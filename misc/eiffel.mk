@@ -13,7 +13,7 @@ SE_CFLAGS=-boost -no_split -no_style_warning -no_gc ${SE_PCFLAGS}
 SE_DEBUG_CFLAGS=-all_check -no_split -no_style_warning -no_gc ${SE_PCFLAGS}
 
 # ISE Eiffel
-ISE_COMPILER=es4
+ISE_ECOMPILER=es4
 ISE_FINISH_FREEZING=finish_freezing
 ISE_CFLAGS=-batch -finalize
 ISE_CODEGEN=F_code
@@ -84,7 +84,7 @@ clean-se-debug:
 	${SE_CLEAN} ${ROOT_CLASS}
 
 
-#ISE Eiffel
+# ISE Eiffel
 
 ise:
 	${MAKE} compile-ise
@@ -97,7 +97,7 @@ ise-debug:
 	${MAKE} clean-ise-debug
 
 compile-ise: ise.ace
-	${ISE_COMPILER} ${ISE_CFLAGS} -ace ise.ace
+	${ISE_ECOMPILER} ${ISE_CFLAGS} -ace ise.ace
 	${MAKE} ise_finish_freezing 'MAKEFLAGS='
 
 # Problem with ${MAKEFLAGS} when compiling under
@@ -107,14 +107,14 @@ ise_finish_freezing:
 	cd EIFGEN/${ISE_CODEGEN} ; ${ISE_FINISH_FREEZING} ${ISE_FFLAGS}
 
 compile-ise-debug: ise-debug.ace
-	${ISE_COMPILER} ${ISE_DEBUG_CFLAGS} -ace ise-debug.ace
+	${ISE_ECOMPILER} ${ISE_DEBUG_CFLAGS} -ace ise-debug.ace
 	${MAKE} ise_finish_freezing_debug 'MAKEFLAGS='
 
 # Problem with ${MAKEFLAGS} when compiling under
 # Windows: 'nmake' (called by 'finish_freezing')
 # does not recognize option --unix.
 ise_finish_freezing_debug:
-	cd EIFGEN/${ISE_DEBUG_CODEGEN} ; ${ISE_FINISH_FREEZING} ${ISE_FFLAGS}
+	cd EIFGEN/${ISE_DEBUG_CODEGEN} ; ${ISE_FINISH_FREEZING} ${ISE_DEBUG_FFLAGS}
 
 include ise.dep
 
