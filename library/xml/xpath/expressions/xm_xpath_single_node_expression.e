@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			iterator, evaluated_item, effective_boolean_value
+			iterator, evaluate_item, effective_boolean_value
 		end
 
 	-- N.B. This class is supposed to have intrinsic dependency on the context item
@@ -47,11 +47,10 @@ feature -- Access
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		do
-			Result := Current
-			Result.set_analyzed			
+			set_analyzed			
 		end
 
 feature -- Evaluation
@@ -62,12 +61,12 @@ feature -- Evaluation
 			create Result.make (node (a_context) /= Void)
 		end
 
-	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
-			Result := node (a_context)
+			last_evaluated_item := node (a_context)
 		end
 
 feature {NONE} -- Implementation

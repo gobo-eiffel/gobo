@@ -101,22 +101,19 @@ feature -- Optimization
 			Result := result_expression
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions;
-			-- This also calls early_evaluation to evaluate the function
+			-- This also calls pre_evaluate to evaluate the function
 			--  if all the arguments are constant;
 			-- Functions that do not require this behavior
-			--  can override the early_evaluation routine.
+			--  can override the pre_evaluate routine.
 		local
 			fixed_values: BOOLEAN
 			a_value: XM_XPATH_VALUE
 			an_argument: XM_XPATH_EXPRESSION
 			result_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
-			a_result_expression: XM_XPATH_FUNCTION_CALL
 		do
-			a_result_expression := clone (Current)
-			create result_arguments.make (arguments.count)
 			from
 				fixed_values := True -- until we find otherwise
 				arguments_cursor := arguments.new_cursor
@@ -127,30 +124,26 @@ feature -- Optimization
 				arguments_cursor.after
 			loop
 				if arguments_cursor.item.may_analyze then
-					an_argument := arguments_cursor.item.analyze (a_context)
-				else
-					an_argument := arguments_cursor.item
+					arguments_cursor.item.analyze (a_context)
+					if arguments_cursor.item.was_expression_replaced then
+						arguments_cursor.replace (arguments_cursor.item.replacement_expression)
+					end
+
+					a_value ?= arguments_cursor.item
+					if a_value = Void then fixed_values := False end
+					arguments_cursor.forth
 				end
-				result_arguments.put_last (an_argument)
-				a_value ?= an_argument
-				if a_value = Void then fixed_values := False end
-				arguments_cursor.forth
-			end
 
-			a_result_expression.set_arguments (result_arguments)
-			a_result_expression.check_arguments (a_context)
+				check_arguments (a_context)
 
-			-- Now, if any of the arguments has a static type error,
-			--  then `a_result_expression' as a whole has too.
+				-- Now, if any of the arguments has a static type error,
+				--  then `Current' as a whole has too.
 			
-			if a_result_expression.is_error then
-				Result := a_result_expression -- Marked in error
-			elseif fixed_values then
-				Result := a_result_expression.early_evaluation (a_context) -- May or may not be in error
-			else
-				Result := a_result_expression -- No error, but needs run-time evaluation
+				if not is_error and then fixed_values then
+					pre_evaluate (a_context) -- May or may not be in error
+				end
 			end
-			Result.set_analyzed
+			set_analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -192,7 +185,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	early_evaluation (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 			-- Functions that do not allow pre-evaluation,
 			--  or that need access to context information,
@@ -201,9 +194,11 @@ feature -- Evaluation
 			no_error: not is_error
 			context_not_void: a_context /= Void
 		do
-			Result := eager_evaluation (Void)
+			eagerly_evaluate (Void)
+			replacement_expression := last_evaluation
+			was_expression_replaced := True
 		ensure
-			evaluated: Result /= Void
+			evaluated: was_expression_replaced
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local

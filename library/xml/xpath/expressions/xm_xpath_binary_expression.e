@@ -31,14 +31,13 @@ feature {NONE} -- Initialization
 			-- TODO: is_binary_op?
 		do
 			operator := a_token
-			create operands.make (1,2)
-			operands.put (an_operand_one, 1)
-			operands.put (an_operand_two, 2)
+			set_first_operand (an_operand_one)
+			set_second_operand (an_operand_two)
 			compute_static_properties
 		ensure
 			operator_set: operator = a_token
-			operand_1_set: operands /= Void and then operands.item (1).same_expression (an_operand_one)
-			operand_2_set: operands.item (2).same_expression (an_operand_two)
+			operand_1_set: first_operand /= Void and then first_operand.same_expression (an_operand_one)
+			operand_2_set: second_operand /= Void and then second_operand.same_expression (an_operand_two)
 		end
 
 feature -- Access
@@ -46,7 +45,7 @@ feature -- Access
 	operator: INTEGER
 			-- The operation, as a token number
 
-	operands: ARRAY [XM_XPATH_EXPRESSION]
+	first_operand, second_operand: XM_XPATH_EXPRESSION
 			-- The two operands
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
@@ -54,8 +53,8 @@ feature -- Access
 		do
 			create Result.make (2)
 			Result.set_equality_tester (expression_tester)
-			Result.put (operands.item (1), 1)
-			Result.put (operands.item (2), 2)
+			Result.put (first_operand, 1)
+			Result.put (second_operand, 2)
 		end
 
 feature -- Comparison
@@ -68,12 +67,12 @@ feature -- Comparison
 			other_binary ?= other
 			if other_binary /= Void then
 				if operator = other_binary.operator then
-					if operands.item (1).same_expression (other_binary.operands.item (1))
-						and then operands.item (2).same_expression ( other_binary.operands.item (2)) then
+					if first_operand.same_expression (other_binary.first_operand)
+						and then second_operand.same_expression ( other_binary.second_operand) then
 						Result := True
 					elseif is_commutative (operator) and then
-						operands.item (1).same_expression ( other_binary.operands.item (2))
-							and then operands.item (2).same_expression ( other_binary.operands.item (1)) then
+						first_operand.same_expression ( other_binary.second_operand)
+							and then second_operand.same_expression ( other_binary.first_operand) then
 							Result := True
 							-- TODO: recognize associative operators (A|(B|C)) == ((A|B)|C)
 							--    and inverse operators (A<B) == (B>A)
@@ -108,8 +107,8 @@ feature -- Status report
 			a_string := STRING_.appended_string (a_string, display_operator)
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			operands.item (1).display (a_level + 1, a_pool)
-			operands.item (2).display (a_level + 1, a_pool)
+			first_operand.display (a_level + 1, a_pool)
+			second_operand.display (a_level + 1, a_pool)
 		end
 
 feature -- Optimization	
@@ -118,64 +117,57 @@ feature -- Optimization
 			-- Simplify an expression
 		local
 			a_binary_expression: XM_XPATH_BINARY_EXPRESSION
-			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_binary_expression := clone (Current)
-			if operands.item (1).may_analyze then
-				an_expression := operands.item (1).simplify
-				a_binary_expression.operands.put (an_expression, 1)
-				if an_expression.is_error then
-					a_binary_expression.set_last_error (an_expression.last_error)
-				end
+			a_binary_expression.set_first_operand (first_operand.simplify)
+			if a_binary_expression.first_operand.is_error then
+				a_binary_expression.set_last_error (a_binary_expression.first_operand.last_error)
 			end
 
 			if not a_binary_expression.is_error then
-				if operands.item (2).may_analyze then
-					an_expression := operands.item (2).simplify
-					a_binary_expression.operands.put (an_expression, 2)
-					if an_expression.is_error then
-						a_binary_expression.set_last_error (an_expression.last_error)
-					end
+				a_binary_expression.set_second_operand (second_operand.simplify)
+				if a_binary_expression.second_operand.is_error then
+					a_binary_expression.set_last_error (a_binary_expression.second_operand.last_error)
 				end
 			end
 			Result := a_binary_expression
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		local
-			a_result_expression: XM_XPATH_BINARY_EXPRESSION
-			first_operand, second_operand: XM_XPATH_EXPRESSION
 			a_value, another_value: XM_XPATH_VALUE
 		do
-			a_result_expression := clone (Current)
-			first_operand := operands.item (1)
-			second_operand := operands.item (2)
-			if first_operand.may_analyze then
-				first_operand := first_operand.analyze (a_context)
+				check
+					first_operand_not_analyzed: not first_operand.analyzed
+					second_operand_not_analyzed: not second_operand.analyzed
+				end
+			first_operand.analyze (a_context)
+			if first_operand.was_expression_replaced then
+				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
-				a_result_expression.set_last_error (first_operand.last_error)
+				set_last_error (first_operand.last_error)
 			else
-				a_result_expression.operands.put (first_operand, 1)
-				if second_operand.may_analyze then
-					second_operand := second_operand.analyze (a_context)
+				second_operand.analyze (a_context)
+				if second_operand.was_expression_replaced then
+					set_second_operand (second_operand.replacement_expression)
 				end
 				if second_operand.is_error then
-				a_result_expression.set_last_error (second_operand.last_error)
+					set_last_error (second_operand.last_error)
 				else
 
 					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
 
 					a_value ?= first_operand; another_value ?= second_operand
 					if a_value /= Void and then another_value /= Void then
-						a_result_expression.set_analyzed
-						Result := a_result_expression.eager_evaluation (Void)
+						eagerly_evaluate (Void)
+						was_expression_replaced := True
+						replacement_expression := last_evaluation
 					end
 				end
 			end
-			if Result = Void then Result := a_result_expression end
-			Result.set_analyzed
+			set_analyzed
 		end
 	
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -190,13 +182,35 @@ feature -- Optimization
 			else
 				if an_offer.action = Unordered then
 					a_result_expression := clone (Current)
-					a_result_expression.operands.put (operands.item(1).promote (an_offer), 1)
-					a_result_expression.operands.put (operands.item(2).promote (an_offer), 2)
+					a_result_expression.set_first_operand (first_operand.promote (an_offer))
+					a_result_expression.set_second_operand (second_operand.promote (an_offer))
 					Result := a_result_expression
 				else
 					Result := Current
 				end
 			end
+		end
+
+feature -- Element change
+
+	set_first_operand (an_operand: XM_XPATH_EXPRESSION) is
+			-- Set `first_operand'.
+		require
+			operand_not_void: an_operand /= Void
+		do
+			first_operand := an_operand
+		ensure
+			first_operand_set: first_operand = an_operand
+		end
+
+	set_second_operand (an_operand: XM_XPATH_EXPRESSION) is
+			-- Set `second_operand'.
+		require
+			operand_not_void: an_operand /= Void
+		do
+			second_operand := an_operand
+		ensure
+			second_operand_set: second_operand = an_operand
 		end
 
 feature {NONE} -- Implementation
@@ -220,7 +234,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	two_operands: operands /= Void and then operands.count = 2
+	first_operand: first_operand /= Void
+	second_operand: second_operand /= Void
 
 end
 	

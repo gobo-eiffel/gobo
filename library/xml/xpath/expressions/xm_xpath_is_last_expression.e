@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			evaluated_item, compute_intrinsic_dependencies
+			evaluate_item, compute_intrinsic_dependencies
 		end
 
 creation
@@ -72,19 +72,18 @@ feature -- Status report
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		do
-			Result := Current
-			Result.set_analyzed
+			set_analyzed
 		end
 
 feature -- Evaluation
 	
-		evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+		evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			todo ("evaluated-item", False)
+			todo ("evaluate-item", False)
 			-- TODO
 		end
 

@@ -135,7 +135,7 @@ feature -- Optimization
 			is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
 			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 			a_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
-			a_filter_expression: XM_XPATH_EXPRESSION
+			a_filter_expression, an_expression: XM_XPATH_EXPRESSION
 		do
 			a_result_pattern := clone (Current)
 
@@ -155,7 +155,12 @@ feature -- Optimization
 				until
 					a_result_pattern.filters.after
 				loop
-					a_filter_expression := a_result_pattern.filters.item_for_iteration.analyze (a_context)
+					a_result_pattern.filters.item_for_iteration.analyze (a_context)
+					if a_result_pattern.filters.item_for_iteration.was_expression_replaced then
+						a_filter_expression := a_result_pattern.filters.item_for_iteration.replacement_expression
+					else
+						a_filter_expression := a_result_pattern.filters.item_for_iteration
+					end
 					
 					-- If the last filter is constant true, remove it.
 					
@@ -203,7 +208,13 @@ feature -- Optimization
 			end
 
 			if a_result_pattern.is_positional then
-				a_result_pattern.set_equivalent_expression (make_equivalent_expression.analyze (a_context))
+				an_expression := make_equivalent_expression
+				an_expression.analyze (a_context)
+				if an_expression.was_expression_replaced then
+					a_result_pattern.set_equivalent_expression (an_expression.replacement_expression)
+				else
+					a_result_pattern.set_equivalent_expression (an_expression)
+				end
 				a_result_pattern.set_special_filter (True)
 			end
 			Result := a_result_pattern

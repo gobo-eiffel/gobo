@@ -24,13 +24,15 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
 	make, make_upon_node
 
 feature {NONE} -- Initialization
 
-	make (a_name_pool: XM_XPATH_NAME_POOL; clear_nmspces: BOOLEAN; warnings: BOOLEAN) is
+	make (a_name_pool: XM_XPATH_NAME_POOL; warnings: BOOLEAN) is
 			-- Establish invariant.
 		require
 			name_pool_not_void: a_name_pool /= Void
@@ -41,10 +43,7 @@ feature {NONE} -- Initialization
 			create collations.make (10)
 			create a_code_point_collator
 			declare_collation ("http://www.w3.org/2003/11/xpath-functions/collation/codepoint", a_code_point_collator, True)
-			create namespaces.make (10)
-			if clear_nmspces then
-				clear_namespaces
-			end
+			clear_namespaces
 			warnings_to_std_error := warnings
 		ensure
 			name_pool_set: name_pool = a_name_pool
@@ -63,6 +62,9 @@ feature -- Access
 		do
 			Result := Null_prefix_index
 		end
+
+	namespaces: DS_HASH_TABLE [STRING, STRING]
+			-- Maps prefixes to URIs
 
 	warnings_to_std_error: BOOLEAN
 			-- should warning messages be sent to standard error stream?
@@ -123,10 +125,25 @@ feature -- Element change
 			default_collator: is_default_collation implies STRING_.same_string (a_name, default_collation_name)
 		end
 
+	declare_namespace (an_xml_prefix, a_uri: STRING) is
+		require
+			prefix_not_void: an_xml_prefix /= Void
+			uri_not_void: a_uri /= Void
+			not_declared: not namespaces.has (an_xml_prefix)
+		do
+			namespaces.put (a_uri, an_xml_prefix)
+		ensure
+			set: namespaces.has (an_xml_prefix) and then STRING_.same_string (a_uri, namespaces.item (an_xml_prefix))
+		end
+
 	clear_namespaces is
 			-- Clear all the declared namespaces, except for the standard ones.
 		do
-			--TODO
+			create namespaces.make (10)
+			declare_namespace ("xml", Xml_uri)
+			declare_namespace ("xsl", Xslt_uri)
+			declare_namespace ("xs", Xml_schema_uri)
+			declare_namespace ("", Null_uri)
 		end
 
 	bind_variable (a_fingerprint: INTEGER) is
@@ -211,9 +228,6 @@ feature -- Output
 		end
 
 feature {NONE} -- Implementation
-
-	namespaces: DS_HASH_TABLE [STRING, STRING]
-			-- Maps prefixes to URIs
 
 	variables:  DS_HASH_TABLE [XM_XPATH_VARIABLE, INTEGER]
 			-- Variable-bindings

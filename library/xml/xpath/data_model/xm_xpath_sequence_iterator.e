@@ -48,6 +48,15 @@ feature -- Status report
 
 feature -- Cursor movement
 
+	start is
+			-- Move to first position
+		require
+			before: before
+			not_after: not after
+		do
+			forth
+		end
+			
 	forth is
 			-- Move to next position
 		require

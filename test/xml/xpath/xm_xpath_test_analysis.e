@@ -58,7 +58,7 @@ feature -- Test
 			create a_system_function_factory
 			Function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
-			create a_context.make (default_pool, False, True)
+			create a_context.make (default_pool, True)
 			an_expression := Expression_factory.make_expression (a_string, a_context)
 			if an_expression = Void then
 				-- Shouldn't happen
@@ -66,8 +66,10 @@ feature -- Test
 				std.error.put_new_line
 			end
 			assert ("Parse sucessful", an_expression /= Void)
-			an_expression := an_expression.analyze (a_context)
-			assert ("Analysis finished", an_expression /= Void)
+			an_expression.analyze (a_context)
+			if an_expression.was_expression_replaced then
+				an_expression := an_expression.replacement_expression
+			end
 			assert ("Analysis sucessfull", not an_expression.is_error)
 			debug ("XPath expression factory")
 				print ("After analysis: %N")

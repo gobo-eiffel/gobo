@@ -89,27 +89,28 @@ feature -- Evaluation
 			-- TODO
 		end
 
-	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate an expression as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			an_iterator := iterator (a_context)
 			if not an_iterator.before then
-				Result := an_iterator.item_for_iteration
+				last_evaluated_item := an_iterator.item_for_iteration
 			end
 		end
 
-	evaluated_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a String
 		local
 			a_value: XM_XPATH_STRING_VALUE
 		do
-			a_value ?= evaluated_item (a_context)
+			evaluate_item (a_context)
+			a_value ?= last_evaluated_item
 			if a_value = Void then
-				create Result.make ("")
+				create last_evaluated_string.make ("")
 			else
-				Result := a_value
+				last_evaluated_string := a_value
 			end
 		end
 end

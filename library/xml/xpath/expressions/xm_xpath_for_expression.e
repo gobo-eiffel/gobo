@@ -78,13 +78,11 @@ feature -- Status report
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
-			todo ("analyze", True)
+			todo ("analyze", False)
 			-- TODO
-			Result := Current
-			Result.set_analyzed			
 		end
 
 

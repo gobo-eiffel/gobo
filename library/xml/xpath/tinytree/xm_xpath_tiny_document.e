@@ -98,9 +98,6 @@ feature -- Access
 	comment_buffer: STRING
 			-- Buffer for comments, created when needed
 
-	name_pool: XM_XPATH_NAME_POOL
-			-- Namespace mappings.
-
 	root_node: INTEGER
 			-- The actual root of the tree. Normally 1.
 
@@ -481,15 +478,11 @@ feature -- Status setting
 
 	set_name_pool (a_new_pool: XM_XPATH_NAME_POOL) is
 			-- Set the name pool used by this builder
-		require
-			pool_not_void: a_new_pool /= Void
 		do
 			name_pool := a_new_pool
 			add_namespace (node_number, name_pool.namespace_code ("xml", Xml_uri))
 			name_pool.allocate_document_number (Current)
 			document_number := name_pool.document_number (Current)
-		ensure
-			pool_set: name_pool = a_new_pool
 		end
 
 	ensure_prior_index is
@@ -534,6 +527,7 @@ feature -- Status setting
 		end
 	
 feature -- Element change
+
 
 	add_node (a_new_node_type: INTEGER; a_depth_value: INTEGER; an_alpha_value: INTEGER;  a_beta_value: INTEGER; a_new_name_code: INTEGER) is
 			-- Add a node to the document

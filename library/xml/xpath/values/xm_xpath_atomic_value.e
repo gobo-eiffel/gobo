@@ -70,17 +70,17 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
-			Result := Current
+			last_evaluated_item := Current
 		end
 
 	
-	evaluated_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a String
 		do
-			create Result.make (string_value)
+			create last_evaluated_string.make (string_value)
 		end
 
 feature -- Conversion

@@ -14,13 +14,13 @@ deferred class XM_XPATH_COMPUTED_EXPRESSION
 
 	-- There are two principal routines for evaluating an expression:
 	--  `iterator', which yields an iterator over the result of the expression
-	--  as a sequence, and `evaluated_item', which returns an XM_XPATH_ITEM.
+	--  as a sequence, and `evaluate_item', which sets an XM_XPATH_ITEM.
 	-- Both routines take an XM_XPATH_CONTEXT object to supply the evaluation context;
 	--  for an expression that is a Value, this argument is ignored and may be `Void'.
-	-- This base class provides an implementation of iterator in terms of evaluated_item
+	-- This base class provides an implementation of iterator in terms of evaluate_item
 	--  that works only for singleton expressions, and an implementation
-	--  of evaluated_item in terms of iterator that works only for non-singleton expressions.
-	-- Sub-classes of expression must therefore provide either iterator or evaluated_item:
+	--  of evaluate_item in terms of iterator that works only for non-singleton expressions.
+	-- Sub-classes of expression must therefore provide either iterator or evaluate_item:
 	--  they do not have to provide both.
 
 inherit
@@ -52,8 +52,6 @@ feature -- Access
 
 	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the values of a sequence
-		local
-			an_item: XM_XPATH_ITEM
 		do
 			-- The value of every expression can be regarded as a sequence, s
 			--  so this routine is supported for all expressions.
@@ -64,11 +62,11 @@ feature -- Access
 					singleton_expression: not cardinality_allows_many
 					-- Not a prefect check, as cardinality may not have been set!
 				end
-			an_item := evaluated_item (a_context)
-			if an_item = Void then
+			evaluate_item (a_context)
+			if last_evaluated_item = Void then
 				Result := empty_abstract_item_iterator
 			else
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (an_item) 
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} Result.make (last_evaluated_item) 
 			end
 		end
 
@@ -221,7 +219,7 @@ feature -- Evaluation
 			if Result = Void then create Result.make (False) end			
 		end
 
-	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -229,33 +227,33 @@ feature -- Evaluation
 				check
 					singleton_expression: not cardinality_allows_many
 				end
+			last_evaluated_item := Void
 			an_iterator := iterator (a_context)
 			if an_iterator.after then
-				Result := Void
+				last_evaluated_item := Void
 			else
 					check
 						before: an_iterator.before
 					end
 				an_iterator.forth
-				Result := an_iterator.item_for_iteration
+				last_evaluated_item := an_iterator.item_for_iteration
 			end
 		end
 
-	evaluated_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a String
 		local
-			an_item: XM_XPATH_ITEM
 			a_string: XM_XPATH_STRING_VALUE
 		do
-			an_item := evaluated_item (a_context)
-			if an_item = Void then
-				create Result.make ("")
+			evaluate_item (a_context)
+			if last_evaluated_item = Void then
+				create last_evaluated_string.make ("")
 			else
-				a_string ?= an_item
+				a_string ?= last_evaluated_item
 				if a_string = Void then
-					create Result.make ("")
+					create last_evaluated_string.make ("")
 				else
-					Result := a_string
+					last_evaluated_string := a_string
 				end
 			end
 		end

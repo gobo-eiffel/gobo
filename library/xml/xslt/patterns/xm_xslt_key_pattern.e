@@ -38,6 +38,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	key_fingerprint: INTEGER
+			-- Name-pool fingerprint
+
+	key_expression: XM_XPATH_EXPRESSION
+			-- The expression
+
 	node_test: XM_XSLT_NODE_TEST is
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		do
@@ -52,7 +58,10 @@ feature -- Optimization
 			a_key_pattern: XM_XSLT_KEY_PATTERN
 		do
 			a_key_pattern := clone (Current)
-			a_key_pattern.set_expression (key_expression.analyze (a_context))
+			a_key_pattern.key_expression.analyze (a_context)
+			if a_key_pattern.key_expression.was_expression_replaced then
+				a_key_pattern.set_expression (a_key_pattern.key_expression.replacement_expression)
+			end
 			Result := a_key_pattern
 		end
 
@@ -122,12 +131,6 @@ feature {XM_XSLT_KEY_PATTERN} -- Local
 		end
 
 feature {NONE} -- Implementation
-
-	key_fingerprint: INTEGER
-			-- Name-pool fingerprint
-
-	key_expression: XM_XPATH_EXPRESSION
-			-- The expression
 
 	bits_20: INTEGER is 1048576 
 			-- 0x0fffff

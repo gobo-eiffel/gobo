@@ -37,6 +37,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	id_expression: XM_XPATH_EXPRESSION
+			-- The expression
+
 	node_test: XM_XSLT_NODE_TEST is
 			-- Retrieve an `XM_XSLT_NODE_TEST' that all nodes matching this pattern must satisfy
 		do
@@ -59,7 +62,10 @@ feature -- Optimization
 			an_id_pattern: XM_XSLT_ID_PATTERN
 		do
 			an_id_pattern := clone (Current)
-			an_id_pattern.set_expression (id_expression.analyze (a_context))
+			an_id_pattern.id_expression.analyze (a_context)
+			if an_id_pattern.id_expression.was_expression_replaced then
+				an_id_pattern.set_expression (an_id_pattern.id_expression.replacement_expression)
+			end
 			Result := an_id_pattern
 		end
 
@@ -81,7 +87,8 @@ feature -- Matching
 				if a_doc = Void then
 					Result := False
 				else
-					an_id_value ?= id_expression.evaluated_item (a_controller.new_xpath_context)
+					id_expression.evaluate_item (a_controller.new_xpath_context)
+					an_id_value ?= id_expression.last_evaluated_item
 					if an_id_value = Void then
 						Result := False						
 					else
@@ -132,11 +139,6 @@ feature {XM_XSLT_ID_PATTERN} -- Local
 		ensure
 			id_expression_set: id_expression = an_expr
 		end
-
-feature {NONE} -- Implementation
-
-	id_expression: XM_XPATH_EXPRESSION
-			-- The expression
 
 invariant
 

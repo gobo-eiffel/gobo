@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			evaluated_item, display, item_type
+			evaluate_item, display, item_type
 		end
 
 creation
@@ -40,7 +40,7 @@ creation
 		--  over the reservoir contents. Alternatively, of course, the values may be left unread.
 
 		-- Delayed evaluation is used only for expressions with a static type that allows
-		--  more than one item, so the evaluated_item routine will not normally be used, but it is
+		--  more than one item, so the evaluate_item routine will not normally be used, but it is
 		--  supported for completeness.
 
 		-- The expression may depend on local variables and on the context item; these values
@@ -116,10 +116,11 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		do
 			-- TODO
+			todo ("evaluate-item", False)
 		end
 
 feature {XM_XPATH_CLOSURE} -- Local

@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 			create atomic_comparer.make (a_collator)
 		ensure
 			operator_set: operator = a_token
-			operand_1_set: operands /= Void and then operands.item (1).same_expression (an_operand_one)
-			operand_2_set: operands.item (2).same_expression (an_operand_two)
+			operand_1_set: first_operand /= Void and then first_operand.same_expression (an_operand_one)
+			operand_2_set: second_operand /= Void and then second_operand.same_expression (an_operand_two)
 		end
 
 feature -- Access

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			evaluated_item, effective_boolean_value, check_arguments
+			evaluate_item, effective_boolean_value, check_arguments
 		end
 
 creation
@@ -59,10 +59,11 @@ feature -- Evaluation
 			-- TODO
 		end
 
-	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		do
 			-- TODO
+			todo ("evaluate-item", False)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

@@ -112,15 +112,14 @@ feature -- Status report
 
 feature -- Optimization
 
-		analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+		analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions;		
 		do
 			if constant_value /= Void then
-				Result := constant_value
-			else
-				Result := Current
+				replacement_expression := constant_value
+				was_expression_replaced := True
 			end
-			Result.set_analyzed
+			set_analyzed
 		end
 
 feature -- Element change

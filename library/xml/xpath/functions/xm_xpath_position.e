@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-		early_evaluation, evaluated_item, compute_intrinsic_dependencies
+		pre_evaluate, evaluate_item, compute_intrinsic_dependencies
 		end
 
 	creation
@@ -68,16 +68,18 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		do
-			create {XM_XPATH_INTEGER_VALUE} Result.make (a_context.context_position)
+			create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make (a_context.context_position)
 		end
 
-	early_evaluation (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+
+	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-			Result := Current
+			replacement_expression := Current
+			was_expression_replaced := True			
 		end
 	
 feature {XM_XPATH_EXPRESSION} -- Restricted

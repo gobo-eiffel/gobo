@@ -96,23 +96,22 @@ feature -- Optimization
 			Result.set_analyzed			
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		local
-			a_result_expression: XM_XPATH_DOCUMENT_SORTER
 			an_expression: XM_XPATH_EXPRESSION
 		do
-			a_result_expression := clone (Current)
-			if base_expression.may_analyze then
-				an_expression := base_expression.analyze (a_context)
-				if not an_expression.is_error then
-					a_result_expression.set_base_expression (an_expression)
-				else
-					a_result_expression.set_last_error (an_expression.last_error)
+				check
+					base_expression.may_analyze
 				end
-			end
-			Result := a_result_expression
-			Result.set_analyzed
+				base_expression.analyze (a_context)
+				if base_expression.was_expression_replaced then
+					set_base_expression (base_expression.replacement_expression)
+				end
+				if base_expression.is_error then
+					set_last_error (base_expression.last_error)
+				end
+			set_analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is

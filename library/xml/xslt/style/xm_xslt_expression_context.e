@@ -12,6 +12,10 @@ indexing
 
 class XM_XSLT_EXPRESSION_CONTEXT
 
+inherit
+
+	XM_XPATH_STATIC_CONTEXT
+
 feature -- Access
 
 	style_element: XM_XSLT_STYLE_ELEMENT is

@@ -32,13 +32,13 @@ feature -- Access
 	lower_bound: XM_XPATH_EXPRESSION is
 			-- Inclusive lower bound
 		do
-			Result := operands.item (1)
+			Result := first_operand
 		end
 
 	upper_bound: XM_XPATH_EXPRESSION is
 			-- Inclusive upper bound
 		do
-			Result := operands.item (2)
+			Result := second_operand
 		end
 end
 	

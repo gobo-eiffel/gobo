@@ -74,4 +74,19 @@ feature -- Access
 		deferred
 		end
 
+	name_pool: XM_XPATH_NAME_POOL
+			-- The name pool used to build `Current'
+
+
+feature -- Element change
+
+	set_name_pool (a_name_pool: XM_XPATH_NAME_POOL) is
+			-- Set the name pool.
+		require
+			name_pool_not_void: a_name_pool /= Void
+		deferred
+		ensure
+			name_pool_set: name_pool = a_name_pool
+		end
+		
 end

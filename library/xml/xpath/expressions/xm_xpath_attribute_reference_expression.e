@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SINGLE_NODE_EXPRESSION
 		redefine
-			compute_special_properties, same_expression, evaluated_string
+			compute_special_properties, same_expression, evaluate_as_string
 		end
 
 	XM_XPATH_AXIS
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluated_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a String
 		local
 			an_element: XM_XPATH_ELEMENT
@@ -89,13 +89,13 @@ feature -- Evaluation
 		do
 			an_element := find_element_node (a_context)
 			if an_element = Void then
-				create Result.make ("")
+				create last_evaluated_string.make ("")
 			else
 				a_string := an_element.attribute_value (fingerprint)
 				if a_string = Void then
-					create Result.make ("")
+					create last_evaluated_string.make ("")
 				else
-					create Result.make (a_string)
+					create last_evaluated_string.make (a_string)
 				end
 			end
 		end

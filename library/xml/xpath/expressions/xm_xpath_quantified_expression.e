@@ -82,10 +82,9 @@ feature -- Status report
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions		
 		local
-			an_analyzed_expression: XM_XPATH_QUANTIFIED_EXPRESSION
 			a_declaration_type, a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			an_expression: XM_XPATH_EXPRESSION
 		do
@@ -93,21 +92,21 @@ feature -- Optimization
 			-- The order of events is critical here. First we ensure that the type of the
 			-- sequence expression is established. This is used to establish the type of the variable,
 			-- which in turn is required when type-checking the action part.
-
-			an_analyzed_expression := clone (Current)
-			if sequence.may_analyze then
-				an_expression := sequence.analyze (a_context)
-				an_analyzed_expression.set_sequence (an_expression)
-				if an_expression.is_error then
-					an_analyzed_expression.set_last_error (an_expression.last_error)
+			
+				check
+					sequence.may_analyze
 				end
+			sequence.analyze (a_context)
+			if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
+			if sequence.is_error then
+				set_last_error (sequence.last_error)
 			end
 
-			if not an_analyzed_expression.is_error then
+			if not is_error then
 				
 				-- "some" and "every" have no ordering constraints
 
-				an_analyzed_expression.set_sequence (an_analyzed_expression.sequence.unsorted (False))
+				set_sequence (sequence.unsorted (False))
 				a_declaration_type := declaration.required_type
 				create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
 
@@ -116,9 +115,7 @@ feature -- Optimization
 			
 			end
 			
-			Result := an_analyzed_expression
-			Result.set_analyzed
-			declaration := Void -- Now the GC can reclaim it, and analysis cannot be performed again
+			set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again. Also sets analyzed to `True'
 		end
 
 feature {NONE} -- Implementation

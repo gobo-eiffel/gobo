@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, evaluated_item, promote, iterator, sub_expressions
+			simplify, evaluate_item, promote, iterator, sub_expressions
 		end
 
 creation
@@ -147,48 +147,40 @@ feature -- Optimization
 			Result := an_if_expression
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions	
-		local
-			an_if_expression: XM_XPATH_IF_EXPRESSION
-			an_expression: XM_XPATH_EXPRESSION
 		do
-			an_if_expression := clone (Current)
-			if condition.may_analyze then
-				an_expression := condition.analyze (a_context)
-			else
-				an_expression := condition
-			end
-			an_if_expression.set_condition (an_expression)
-			if an_expression.is_error then
-				an_if_expression.set_last_error (an_expression.last_error)
-			else
-				if then_expression.may_analyze then
-					an_expression := then_expression.analyze (a_context)
-				else
-					an_expression := then_expression
+				check
+					condition.may_analyze
 				end
-				an_if_expression.set_then_expression (an_expression)
-				if an_expression.is_error then
-					an_if_expression.set_last_error (an_expression.last_error)
-				else
-					if else_expression.may_analyze then
-						an_expression := else_expression.analyze (a_context)
-					else
-						an_expression := else_expression
+			condition.analyze (a_context)
+			if condition.was_expression_replaced then set_condition (condition.replacement_expression) end
+			if condition.is_error then
+				set_last_error (condition.last_error)
+			else
+					check
+						then_expression.may_analyze
 					end
-					an_if_expression.set_else_expression (an_expression)
-					if an_expression.is_error then
-						an_if_expression.set_last_error (an_expression.last_error)
+				then_expression.analyze (a_context)
+				if then_expression.was_expression_replaced then set_then_expression (then_expression.replacement_expression) end
+				if then_expression.is_error then
+					set_last_error (then_expression.last_error)
+				else
+						check
+							else_expression.may_analyze
+						end
+					else_expression.analyze (a_context)
+					if else_expression.was_expression_replaced then set_else_expression (else_expression.replacement_expression) end
+					if else_expression.is_error then
+						set_last_error (else_expression.last_error)
 					end
 				end
+				if not is_error then
+					replacement_expression := simplify
+					was_expression_replaced := True
+				end
 			end
-			if an_if_expression.is_error then
-				Result := an_if_expression
-			else
-				Result := an_if_expression.simplify
-			end
-			Result.set_analyzed
+			set_analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -213,16 +205,17 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
+			last_evaluated_item := Void
 			a_boolean_value := condition.effective_boolean_value (a_context)
 			if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
-				Result := then_expression.evaluated_item (a_context)
+				then_expression.evaluate_item (a_context)
 			else
-				Result := else_expression.evaluated_item (a_context)
+				else_expression.evaluate_item (a_context)
 			end
 		end
 

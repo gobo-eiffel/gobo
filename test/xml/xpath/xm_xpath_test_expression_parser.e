@@ -49,15 +49,15 @@ feature -- Test
 			a_root: XM_XPATH_ROOT_EXPRESSION
 			a_comparison: XM_XPATH_GENERAL_COMPARISON
 			sub_exprs, sub_exprs_2, sub_exprs_3, sub_exprs_4: DS_LIST [XM_XPATH_EXPRESSION]
-			context: XM_XPATH_STAND_ALONE_CONTEXT
+			a_context: XM_XPATH_STAND_ALONE_CONTEXT
 			tokenizer: XM_XPATH_TOKENIZER
 			a_string: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
 			an_attribute_reference: XM_XPATH_ATTRIBUTE_REFERENCE_EXPRESSION
 		do
 			a_string := "//fred[@son='Jim']"
-			create context.make (default_pool, False, True)
-			an_expression := Expression_factory.make_expression (a_string, context)
+			create a_context.make (default_pool, True)
+			an_expression := Expression_factory.make_expression (a_string, a_context)
 			if an_expression = Void then
 				-- Shouldn't happen
 				std.error.put_string (Expression_factory.error_value.error_message)
@@ -123,7 +123,7 @@ feature -- Test
 			a_position_function: XM_XPATH_POSITION
 			a_last_function: XM_XPATH_LAST
 			sub_exprs, sub_exprs_2, sub_exprs_3, sub_exprs_4: DS_LIST [XM_XPATH_EXPRESSION]
-			context: XM_XPATH_STAND_ALONE_CONTEXT
+			a_context: XM_XPATH_STAND_ALONE_CONTEXT
 			tokenizer: XM_XPATH_TOKENIZER
 			a_string: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
@@ -132,8 +132,8 @@ feature -- Test
 			create a_system_function_factory
 			Function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
-			create context.make (default_pool, False, True)
-			an_expression := Expression_factory.make_expression (a_string, context)
+			create a_context.make (default_pool, True)
+			an_expression := Expression_factory.make_expression (a_string, a_context)
 			if an_expression = Void then
 				-- Shouldn't happen
 				std.error.put_string (Expression_factory.error_value.error_message)

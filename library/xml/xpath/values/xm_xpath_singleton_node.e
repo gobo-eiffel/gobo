@@ -97,19 +97,19 @@ feature -- Evaluation
 			create Result.make (node /= Void)
 		end
 
-	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		do
-			Result := node
+			last_evaluated_item := node
 		end
 
-	evaluated_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a String
 		do
 			if node = Void then
-				create Result.make ("")
+				create last_evaluated_string.make ("")
 			else
-				create Result.make (node.string_value)
+				create last_evaluated_string.make (node.string_value)
 			end
 		end
 

@@ -84,6 +84,20 @@ feature -- Status report
 	analyzed: BOOLEAN
 			-- Has `analyze' been called yet?
 
+	was_expression_replaced: BOOLEAN
+			-- Did `analyze' create a replacement expression for current?
+
+	replacement_expression: XM_XPATH_EXPRESSION
+			-- Replacement for `Current' when `expression_replaced' is `True'
+
+	last_evaluation: XM_XPATH_VALUE
+			-- Value from last call to `eagerly_evaluate' or `lazily_evaluate'
+
+	last_evaluated_item: XM_XPATH_ITEM
+			-- Value from last call to `evaluate_item'
+
+	last_evaluated_string: XM_XPATH_STRING_VALUE
+
 	may_analyze: BOOLEAN is
 			-- OK to call `analyze'?
 		do
@@ -148,18 +162,17 @@ feature -- Optimization
 			-- The default implementation does nothing.
 		require
 			no_previous_error: not is_error
-			not_analyzed: not analyzed
 		deferred
 		ensure
 			expression_not_void: Result /= Void
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions;		
 			-- This checks statically that the operands of the expression have the correct type;
 			-- If necessary it generates code to do run-time type checking or type conversion;
 			-- A static type error is reported only if execution cannot possibly succeed, that
-			-- is, if a run-time type error is inevitable. The call may return a modified form of the expression;
+			-- is, if a run-time type error is inevitable. The call may create a modified form of the expression;
 			-- This routine is called after all references to functions and variables have been resolved
 			-- to the declaration of the function or variable. However, the types of such functions and
 			-- variables will only be accurately known if they have been explicitly declared.
@@ -169,7 +182,7 @@ feature -- Optimization
 			no_previous_error: not is_error
 		deferred
 		ensure
-			analyzed : Result /= Void and then Result.analyzed
+			analyzed: analyzed
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -202,9 +215,9 @@ feature -- Evaluation
 			value_not_void_but_may_be_in_error: Result /= Void
 		end
 
-	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item;
-			-- This always returns either a single Item or Void
+			-- This always sets `last_evaluated_item' to either a single Item or Void
 			-- (denoting the empty sequence). No conversion is done. This routine should not be
 			-- used unless the static type of the expression is a subtype of "item" or "item?": that is,
 			-- it should not be called if the expression may return a sequence. There is no guarantee that
@@ -214,13 +227,13 @@ feature -- Evaluation
 			analyzed_without_errors: analyzed and then not is_error
 		deferred
 		ensure
-			item_returned_but_may_be_in_error: Result /= Void
+			item_evaluated_but_may_be_void: True
 		end
 
-	evaluated_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
+	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a String
-			-- This function must only be called in contexts where it is known
-			-- that the expression will return a single string (or where an empty sequence
+			-- This procedure must only be called in contexts where it is known
+			-- that the expression will evaluate to a single string (or where an empty sequence
 			-- is to be treated as a zero-length string). Implementations should not attempt to convert
 			-- the result to a string, other than converting () to "". This routine is used mainly to
 			-- evaluate expressions produced by compiling an attribute value template.
@@ -230,10 +243,10 @@ feature -- Evaluation
 			analyzed_without_errors: analyzed and then not is_error
 		deferred
 		ensure
-			string_not_void_but_may_be_in_error: Result /= Void
+			string_not_void_but_may_be_in_error: last_evaluated_string /= Void
 		end
 
-	eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	eagerly_evaluate (a_context: XM_XPATH_CONTEXT) is
 			-- Eager evaluation of `Current'		
 		require
 			analyzed_without_errors: analyzed and then not is_error
@@ -250,45 +263,46 @@ feature -- Evaluation
 			a_result_value ?= Current
 			a_closure ?= Current
 			if a_result_value /= Void and then a_closure = Void then
-				Result := a_result_value
+				last_evaluation := a_result_value
 			else
 				an_iterator := iterator (a_context)
 				an_empty_iterator ?= an_iterator
 				if an_empty_iterator /= Void then
-					create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+					create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
 				else
 					a_singleton_iterator ?= an_iterator
 					if a_singleton_iterator /= Void then
 						a_singleton_iterator.forth
 						an_item := a_singleton_iterator.item_for_iteration
 						if an_item = Void then
-							create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+							create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
 						else
-							Result := an_item.as_value -- May still be `Void'
+							last_evaluation := an_item.as_value -- May still be `Void'
 						end
 					else
 						create an_extent.make (an_iterator)
 						a_length := an_extent.count
 						if a_length = 0 then
-							create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+							create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
 						elseif a_length = 1 then
-							Result := an_extent.item_at (1).as_value
+							last_evaluation := an_extent.item_at (1).as_value
 						else
-							Result := an_extent
+							last_evaluation := an_extent
 						end
 					end
 				end
 			end
-			if Result = Void then
-				create {XM_XPATH_EMPTY_SEQUENCE} Result.make
+			if last_evaluation = Void then
+				create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
 			end
+			last_evaluation.set_analyzed
 		ensure
-			evaluated: Result /= Void
+			evaluated: last_evaluation /= Void and then last_evaluation.analyzed
 		end
 
-	lazy_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	lazily_evaluate (a_context: XM_XPATH_CONTEXT) is
 			-- Lazy evaluation of `Current'		;
-			-- This will return a value, which may optionally be an XM_XPATH_CLOSURE,
+			-- This will set a value, which may optionally be an XM_XPATH_CLOSURE,
 			--  which is a wrapper around an iterator over the value of the expression.
 		require
 			analyzed_without_errors: analyzed and then not is_error
@@ -302,33 +316,35 @@ feature -- Evaluation
 				--   this will often perform lazy evaluation
 				--   of the expression to which the variable is bound
 
-				Result := a_variable_reference.eager_evaluation (a_context)
+				a_variable_reference.eagerly_evaluate (a_context)
 			else
 				if a_context = Void then
 
 					-- We are evaluating a value
 
-					Result := eager_evaluation (Void)
+					eagerly_evaluate (Void)
 				elseif not cardinality_allows_many then
 
 					-- Singletons are always evaluated eagerly
 
-					Result := eager_evaluation (a_context)
+					eagerly_evaluate (a_context)
 				elseif depends_upon_position or else depends_upon_last
 					or else depends_upon_current_item or else depends_upon_current_group then
 
 					-- We can't save these values in the closure, so we evaluate
 					-- the expression now if they are needed
 
+					eagerly_evaluate (Void)
 				else
 
 					-- Create a Closure, a wrapper for the expression and its context
 
-					Result := Expression_factory.make_closure (Current, a_context)
+					last_evaluation := Expression_factory.make_closure (Current, a_context)
 				end
 			end
+			last_evaluation.set_analyzed
 		ensure
-			evaluated: Result /= Void
+			evaluated: last_evaluation /= Void and then last_evaluation.analyzed
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Local
@@ -382,6 +398,10 @@ feature {NONE} -- Implementation
 			end
 			std.error.put_new_line
 		end
+
+invariant
+
+	expression_may_be_replaced: was_expression_replaced implies replacement_expression /= Void
 
 end
 	

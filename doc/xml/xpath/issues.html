@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+	description:
+	
+		"Issues arising during the development of Gobo XPath engine"
+
+	library: "Gobo Eiffel Ant"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
   <head>
@@ -78,9 +89,10 @@
 	<li>Change loops to use extrenal cursors (ongoing)</li>
 	<li>TINY_BUILDER throws exceptions to report errors. Re-design.</li>
 	<li>EXPRESSION.display should check the error status</li>
-	<li>Document where there are side effects on the static context. (e.g. analyze, parse)</li>
+	<li>Document procedures such as analyze, that cause side effects on the context.</li>
 	<li>Promotion in path expression commented out as it causes an infinite recursion inside let-action analyze</li>
 	<li>Need to test all returns from {XM_XPATH_EXPRESSION}.iterator for Void, or equivalently for a Dynamic or Type Error.</li>
+	<li>Review sequence iterators. Look at Saxon 7.9.1. Also consider descendants of DS_CURSOR.</li>
       </ul>
     </div>
     <div>
@@ -88,8 +100,7 @@
       <p>This section should be ignored. It consists solely of my notes
       with which to form the comments for the next cvs check-in operation.</p>
       <pre>
-	Renamed evaluate_item to evaluated_item, etc.
-	Much work on AXIS_EXPRESSION, and LET_EXPRESSION.
+
       </pre>
     </div>
     <div >

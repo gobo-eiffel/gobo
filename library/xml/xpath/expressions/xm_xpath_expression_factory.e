@@ -109,8 +109,8 @@ feature -- Creation
 				another_expression := a_tail_expression.base_expression
 				a_variable_reference ?= another_expression
 				if a_variable_reference /= Void then
-					another_expression := a_variable_reference.lazy_evaluation (a_context)
-					a_sequence_extent ?= another_expression
+					a_variable_reference.lazily_evaluate (a_context)
+					a_sequence_extent ?= a_variable_reference.last_evaluation
 					if a_sequence_extent /= Void then
 						create {XM_XPATH_SEQUENCE_EXTENT} Result.make_as_view (a_sequence_extent, a_tail_expression.start - 1, a_sequence_extent.count -  a_tail_expression.start +1)
 					end

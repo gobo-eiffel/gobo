@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			promote, iterator, evaluated_item, compute_special_properties
+			promote, iterator, evaluate_item, compute_special_properties
 		end
 
 	XM_XPATH_ROLE
@@ -60,7 +60,8 @@ feature -- Access
 		local
 			a_value: XM_XPATH_VALUE
 		do
-			a_value ?= sequence.lazy_evaluation (a_context)
+			sequence.lazily_evaluate (a_context)
+			a_value ?= sequence.last_evaluation
 			
 			a_context.set_local_variable (slot_number, a_value)
 			Result := action.iterator (a_context)
@@ -92,10 +93,9 @@ feature -- Status report
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions;
 		local
-			a_result_expression: XM_XPATH_LET_EXPRESSION
 			an_expression: XM_XPATH_EXPRESSION
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
@@ -105,18 +105,18 @@ feature -- Optimization
 				check
 					declaration /= Void
 				end
-			a_result_expression := clone (Current)
 			
 			-- The order of events is critical here. First we ensure that the type of the
 			-- sequence expression is established. This is used to establish the type of the variable,
 			-- which in turn is required when type-checking the action part.
 
-			an_expression := sequence
-			if sequence.may_analyze then
-				an_expression := sequence.analyze (a_context)
-			end
-			if an_expression.is_error then
-				a_result_expression.set_last_error (an_expression.last_error)
+				check
+					sequence.may_analyze
+				end
+			sequence.analyze (a_context)
+
+			if sequence.is_error then
+				set_last_error (sequence.last_error)
 			else
 				create a_role.make (Variable_role, declaration.name, 1)
 				create a_type_checker
@@ -125,30 +125,27 @@ feature -- Optimization
 						check
 							static_type_error: a_type_checker.is_static_type_check_error
 						end
-					a_result_expression.set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, 4, Type_error)
 				else
-					a_result_expression.set_sequence (an_expression)
-					a_type := an_expression.item_type
-					a_value ?= an_expression
+					set_sequence (an_expression)
+					a_type := sequence.item_type
+					a_value ?= sequence
 
 					-- Now set the static type of the binding reference, more accurately:
 					
-					a_result_expression.declaration.refine_type_information (a_type, an_expression.cardinalities, a_value, an_expression.dependencies, an_expression.special_properties)
+					declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
 
-					if action.may_analyze then
-						an_expression := action.analyze (a_context)
-							check
-								an_expression.analyzed
-							end
-						a_result_expression.set_action (an_expression)
-						if an_expression.is_error then
-							a_result_expression.set_last_error (an_expression.last_error)
+						check
+							action.may_analyze
 						end
+					action.analyze (a_context)
+					if action.was_expression_replaced then set_action (replacement_expression) end
+					if action.is_error then
+						set_last_error (action.last_error)
 					end
 				end
 			end
-			a_result_expression.set_declaration_void -- also sets `analyzed' to `True'
-			Result := a_result_expression
+			set_declaration_void -- also sets `analyzed' to `True'
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
@@ -196,14 +193,15 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
 			a_value: XM_XPATH_VALUE
 		do
-			a_value := sequence.lazy_evaluation (a_context)
+			sequence.lazily_evaluate (a_context)
+			a_value := last_evaluation
 			a_context.set_local_variable (slot_number, a_value)
-			Result := action.evaluated_item (a_context)
+			action.evaluate_item (a_context)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
