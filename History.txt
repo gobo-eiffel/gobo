@@ -1,3 +1,17 @@
+Version ?
+
+	Gobo Eiffel XML Library:
+
+	* XM_DOCUMENT.process_to_events makes the tree an event source.
+	* New XM_XMLNS_GENERATOR filter injects xmlns declarations 
+	  in event stream. It can be combined with a print filter.
+	* XM_FORMATTER is now a wrapper for the above and so 
+	  produces XML compliant output.
+	* XM_INDENT_PRETTY_PRINT_FILTER and XM_WHITESPACE_NORMALIZER 
+	  added to allow pretty indented output.
+	* XM_NAMESPACE_RESOLVER has new option to forward 
+	  xmlns attribute events (forward_xmlns).
+	  
 Version 3.3 - 2 November 2003
 
 	geant:
