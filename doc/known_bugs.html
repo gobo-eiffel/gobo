@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 2.0">
+<title>Gobo Eiffel: Known Bugs</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<table border="0" width="100%">
+    <tr>
+        <td><font size="6"><strong>Known Bugs</strong></font></td>
+        <td align="right"><a href="download.html"><img
+        src="image/previous.gif" alt="Previous" border="0"
+        width="40" height="40"></a><a href="license.html"><img
+        src="image/next.gif" alt="Next" border="0" width="40"
+        height="40"></a></td>
+    </tr>
+</table>
+
+<hr size="1">
+
+<p>Following is a list of known defects in <em>Gobo Eiffel </em>1.5
+along with eventual bug fixes or workarounds. If you find a bug
+which does not appear in this list yet, please send <a
+href="mailto:ericb@gobosoft.com">me</a> a bug report. I will add
+the description of this bug here and try to provide a bug fix as
+soon as possible (usually within one or two days).</p>
+
+<hr size="1">
+
+<p>1.5-001 <font face="Symbol">-</font> Reported by Eric Bezault
+(02/10/99)</p>
+
+<blockquote>
+    <p><em>gelex</em> does not compile with SmallEiffel -0.77b2
+    and -0.77b3 (the generated C code is erroneous). You should
+    use SmallEiffel -0.78 or wait for -0.77b4 in order to
+    generate <em>gelex </em>executable. Note that <tt>gelex.exe</tt>
+    compiled under Windows is already available in the
+    distribution.</p>
+</blockquote>
+
+<hr size="1">
+
+<p>1.5-002 <font face="Symbol">-</font> Reported by Alexander
+Kogtenkov (07/10/99)</p>
+
+<blockquote>
+    <p>In the following two feature signatures, <font
+    color="#008080"><em><strong><tt>like</tt></strong></em><em><tt>
+    item </tt></em></font>has to be replaced by <font
+    color="#008080"><em><tt>G</tt></em></font>:</p>
+    <ul>
+        <li>in class <font color="#008080"><em><tt>DYNAMIC_LIST </tt></em></font>(<font
+            color="#800000"><tt>$GOBO/library/structure/base/dynamic_list.e</tt></font>):<font
+            color="#008080" face="Courier New"><em><tt><br>
+            </tt></em></font><font color="#008080"><em><tt>put_right</tt></em><tt>
+            (</tt><em><tt>v</tt></em><tt>: </tt><em><strong><tt>like</tt></strong></em><tt>
+            </tt><em><tt>item</tt></em><tt>)</tt></font> becomes<font
+            color="#008080"><em><tt> put_right </tt></em><tt>(</tt><em><tt>v</tt></em><tt>:</tt><em><tt>
+            G</tt></em><tt>)</tt></font></li>
+        <li>and in class <font color="#008080"><em><tt>LINEAR </tt></em></font>(<font
+            color="#800000"><tt>$GOBO/library/structure/base/linear.e</tt></font>):<font
+            color="#008080" face="Courier New"><em><tt><br>
+            </tt></em></font><font color="#008080"><em><tt>has</tt></em><tt>
+            (</tt><em><tt>v</tt></em><tt>: </tt><em><strong><tt>like</tt></strong></em><tt>
+            </tt><em><tt>item</tt></em><tt>): </tt><em><tt>BOOLEAN
+            </tt></em></font>becomes<font color="#008080"><em><tt>
+            has</tt></em><tt> (</tt><em><tt>v</tt></em><tt>: </tt><em><tt>G</tt></em><tt>):
+            </tt><em><tt>BOOLEAN</tt></em></font></li>
+    </ul>
+    <p>This is because Visual Eiffel is strict in handling
+    anchored types and follows Eiffel validity rule <font
+    size="2">VTAT</font> in this regard.</p>
+</blockquote>
+
+<hr size="1">
+
+<table border="0" width="100%">
+    <tr>
+        <td><address>
+            <font size="2"><b>Copyright © 1999</b></font><font
+            size="1"><b>, </b></font><font size="2"><strong>Eric
+            Bezault</strong></font><strong> </strong><font
+            size="2"><br>
+            <strong>mailto:</strong></font><a
+            href="mailto:ericb@gobosoft.com"><font size="2">ericb@gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>http:</strong></font><a
+            href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
+            size="2"><br>
+            <strong>Last Updated:</strong> 10 October 1999</font><br>
+            <!--webbot bot="PurpleText"
+            preview="
+$Date$ 
+$Revision$" --> 
+        </address>
+        </td>
+        <td align="right" valign="top"><a
+        href="http://www.gobosoft.com"><img src="image/home.gif"
+        alt="Home" border="0" width="40" height="40"></a><a
+        href="index.html"><img src="image/toc.gif" alt="Toc"
+        border="0" width="40" height="40"></a><a
+        href="download.html"><img src="image/previous.gif"
+        alt="Previous" border="0" width="40" height="40"></a><a
+        href="license.html"><img src="image/next.gif" alt="Next"
+        border="0" width="40" height="40"></a></td>
+    </tr>
+</table>
+</body>
+</html>
