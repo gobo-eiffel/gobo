@@ -25,9 +25,12 @@ feature {NONE} -- C Strings to STRING
       do
 #ifdef SE
          !! Result.from_external_copy (psz)
+#else
+#ifdef VE
+         !! Result.make_empty
+#else
+         !! Result.make (0)
 #endif
-#ifdef ISE
-         create Result.make (0)
          Result.from_c (psz)
 #endif
       end
@@ -39,13 +42,20 @@ feature {NONE} -- C Strings to STRING
       require
          ps_valid: ps /= default_pointer
          len_valid: length > 0
-#ifdef SE
+#ifdef SE || VE
       local
-         storage: NATIVE_ARRAY[CHARACTER];
          i: INTEGER
+#ifdef SE
+         storage: NATIVE_ARRAY[CHARACTER];
+#endif
+#ifdef VE
+         a_storage: RTS_MEMORY_MAPPED_AREA_ARRAY [CHARACTER]
+#endif
+#endif
       do
+#ifdef SE
          storage := storage.from_pointer (ps);
-         create Result.make (length)
+         !! Result.make (length)
          from 
             i := 0
          until 
@@ -54,14 +64,24 @@ feature {NONE} -- C Strings to STRING
             Result.append_character (storage.item (i))
             i := i + 1
          end
-      end
+#endif
+#ifdef HACT
+         !! Result.make (0)
+         Result.from_c_substring (ps, 1, length)
 #endif
 #ifdef ISE
-      do
-         create Result.make (length)
+         !! Result.make (length)
          Result.from_c_substring (ps, 1, length)
-      end
 #endif
+#ifdef VE
+         !! Result.make_filled ('%U', length)
+         !! a_storage.make (ps, length)
+         from i := 1 until i > length loop
+            Result.put (a_storage.item (i), i)
+            i := i + 1
+         end
+#endif
+      end
    
    new_string_from_c_zero_terminated_string_safe (psz: POINTER): STRING is
          -- Same as `new_string_from_c_zero_terminated_string', 
@@ -118,4 +138,4 @@ feature {NONE} -- C Strings to UC_STRING
    
    
    
-end -- C_STRING_HELPER
+end -- class C_STRING_HELPER
