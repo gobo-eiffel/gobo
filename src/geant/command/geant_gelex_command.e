@@ -21,6 +21,8 @@ inherit
 			make
 		end
 
+	KL_IMPORTED_STRING_ROUTINES
+
 creation
 
 	make
