@@ -52,13 +52,11 @@ feature {NONE} -- Initialization
 			create type_checker.make (a_universe)
 		end
 
-feature -- Access
+feature -- Status report
 
-	current_feature: ET_FEATURE
-			-- Feature being processed
-
-	current_class: ET_CLASS
-			-- Class to with `current_feature' belongs
+	has_fatal_error: BOOLEAN
+			-- Has a fatal error occurred when checking
+			-- validity of last feature?
 
 feature -- Validity checking
 
@@ -71,6 +69,7 @@ feature -- Validity checking
 			old_feature: ET_FEATURE
 			old_class: ET_CLASS
 		do
+			has_fatal_error := False
 			old_feature := current_feature
 			current_feature := a_feature
 			old_class := current_class
@@ -78,10 +77,17 @@ feature -- Validity checking
 				-- First, make sure that the interface of
 				-- `current_class' is valid.
 			current_class.process (universe.interface_checker)
-			if not current_class.has_interface_error then
+			if current_class.has_interface_error then
+				set_fatal_error
+			else
 				internal_call := True
 				a_feature.process (Current)
-				internal_call := False
+				if internal_call then
+						-- Internal error.
+					internal_call := False
+					set_fatal_error
+					error_handler.report_giabr_error
+				end
 			end
 			current_class := old_class
 			current_feature := old_feature
@@ -94,16 +100,104 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			a_feature.declared_type.process (Current)
+			check_type_validity (a_feature.type)
 		end
 
 	check_constant_attribute_validity (a_feature: ET_CONSTANT_ATTRIBUTE) is
 			-- Check validity of `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			a_type: ET_TYPE
+			a_constant: ET_CONSTANT
+			a_class_impl: ET_CLASS
+			a_bit_type: ET_BIT_TYPE
 		do
-			a_feature.declared_type.process (Current)
-			a_feature.constant.process (Current)
+			a_type := a_feature.type
+			check_type_validity (a_type)
+			if not has_fatal_error then
+				a_constant := a_feature.constant
+				if a_constant.is_boolean_constant then
+					if not a_type.same_named_type (universe.boolean_class, current_class, current_class, universe) then
+						set_fatal_error
+						a_class_impl := current_feature.implementation_class
+						if current_class = a_class_impl then
+							error_handler.report_vqmc1a_error (current_class, a_feature)
+						else
+							error_handler.report_vqmc1b_error (current_class, a_class_impl, a_feature)
+						end
+					end
+				elseif a_constant.is_character_constant then
+					if not a_type.same_named_type (universe.character_class, current_class, current_class, universe) then
+						set_fatal_error
+						a_class_impl := current_feature.implementation_class
+						if current_class = a_class_impl then
+							error_handler.report_vqmc2a_error (current_class, a_feature)
+						else
+							error_handler.report_vqmc2b_error (current_class, a_class_impl, a_feature)
+						end
+					end
+				elseif a_constant.is_integer_constant then
+					if a_type.same_named_type (universe.integer_class, current_class, current_class, universe) then
+						-- OK.
+					elseif a_type.same_named_type (universe.integer_8_class, current_class, current_class, universe) then
+						-- Valid with ISE Eiffel. To be checked with other compilers.
+					elseif a_type.same_named_type (universe.integer_16_class, current_class, current_class, universe) then
+						-- Valid with ISE Eiffel. To be checked with other compilers.
+					elseif a_type.same_named_type (universe.integer_64_class, current_class, current_class, universe) then
+						-- Valid with ISE Eiffel. To be checked with other compilers.
+					else
+						set_fatal_error
+						a_class_impl := current_feature.implementation_class
+						if current_class = a_class_impl then
+							error_handler.report_vqmc3a_error (current_class, a_feature)
+						else
+							error_handler.report_vqmc3b_error (current_class, a_class_impl, a_feature)
+						end
+					end
+				elseif a_constant.is_real_constant then
+					if a_type.same_named_type (universe.real_class, current_class, current_class, universe) then
+						-- OK.
+					elseif a_type.same_named_type (universe.double_class, current_class, current_class, universe) then
+						-- OK.
+					else
+						set_fatal_error
+						a_class_impl := current_feature.implementation_class
+						if current_class = a_class_impl then
+							error_handler.report_vqmc4a_error (current_class, a_feature)
+						else
+							error_handler.report_vqmc4b_error (current_class, a_class_impl, a_feature)
+						end
+					end
+				elseif a_constant.is_string_constant then
+					if not a_type.same_named_type (universe.string_class, current_class, current_class, universe) then
+						set_fatal_error
+						a_class_impl := current_feature.implementation_class
+						if current_class = a_class_impl then
+							error_handler.report_vqmc5a_error (current_class, a_feature)
+						else
+							error_handler.report_vqmc5b_error (current_class, a_class_impl, a_feature)
+						end
+					end
+				elseif a_constant.is_bit_constant then
+					a_bit_type ?= a_type.named_type (current_class, universe)
+					if a_bit_type /= Void then
+-- TODO: check bit size.
+					else
+						set_fatal_error
+						a_class_impl := current_feature.implementation_class
+						if current_class = a_class_impl then
+							error_handler.report_vqmc6a_error (current_class, a_feature)
+						else
+							error_handler.report_vqmc6b_error (current_class, a_class_impl, a_feature)
+						end
+					end
+				else
+						-- Internal error: no other kind of constant.
+					set_fatal_error
+					error_handler.report_giabs_error
+				end
+			end
 		end
 
 	check_deferred_function_validity (a_feature: ET_DEFERRED_FUNCTION) is
@@ -111,16 +205,24 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				check_preconditions_validity (a_preconditions)
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				check_arguments_validity (an_arguments)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				check_postconditions_validity (a_postconditions)
+			check_type_validity (a_feature.type)
+			if not has_fatal_error then
+				a_preconditions := a_feature.preconditions
+				if a_preconditions /= Void then
+					check_preconditions_validity (a_preconditions)
+				end
+				a_postconditions := a_feature.postconditions
+				if a_postconditions /= Void then
+					check_postconditions_validity (a_postconditions)
+				end
 			end
 		end
 
@@ -129,16 +231,23 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				check_preconditions_validity (a_preconditions)
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				check_arguments_validity (an_arguments)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				check_postconditions_validity (a_postconditions)
+			if not has_fatal_error then
+				a_preconditions := a_feature.preconditions
+				if a_preconditions /= Void then
+					check_preconditions_validity (a_preconditions)
+				end
+				a_postconditions := a_feature.postconditions
+				if a_postconditions /= Void then
+					check_postconditions_validity (a_postconditions)
+				end
 			end
 		end
 
@@ -147,21 +256,26 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			has_local_error: BOOLEAN
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				check_preconditions_validity (a_preconditions)
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				check_arguments_validity (an_arguments)
 			end
+			check_type_validity (a_feature.type)
 			a_locals := a_feature.locals
 			if a_locals /= Void then
 				check_locals_validity (a_locals)
 			end
-			if not has_local_error then
+			if not has_fatal_error then
+				a_preconditions := a_feature.preconditions
+				if a_preconditions /= Void then
+					check_preconditions_validity (a_preconditions)
+				end
 				a_compound := a_feature.compound
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
@@ -182,21 +296,25 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			has_local_error: BOOLEAN
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				check_preconditions_validity (a_preconditions)
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				check_arguments_validity (an_arguments)
 			end
 			a_locals := a_feature.locals
 			if a_locals /= Void then
 				check_locals_validity (a_locals)
 			end
-			if not has_local_error then
+			if not has_fatal_error then
+				a_preconditions := a_feature.preconditions
+				if a_preconditions /= Void then
+					check_preconditions_validity (a_preconditions)
+				end
 				a_compound := a_feature.compound
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
@@ -217,16 +335,24 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				check_preconditions_validity (a_preconditions)
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				check_arguments_validity (an_arguments)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				check_postconditions_validity (a_postconditions)
+			check_type_validity (a_feature.type)
+			if not has_fatal_error then
+				a_preconditions := a_feature.preconditions
+				if a_preconditions /= Void then
+					check_preconditions_validity (a_preconditions)
+				end
+				a_postconditions := a_feature.postconditions
+				if a_postconditions /= Void then
+					check_postconditions_validity (a_postconditions)
+				end
 			end
 		end
 
@@ -235,16 +361,23 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				check_preconditions_validity (a_preconditions)
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				check_arguments_validity (an_arguments)
 			end
-			a_postconditions := a_feature.postconditions
-			if a_postconditions /= Void then
-				check_postconditions_validity (a_postconditions)
+			if not has_fatal_error then
+				a_preconditions := a_feature.preconditions
+				if a_preconditions /= Void then
+					check_preconditions_validity (a_preconditions)
+				end
+				a_postconditions := a_feature.postconditions
+				if a_postconditions /= Void then
+					check_postconditions_validity (a_postconditions)
+				end
 			end
 		end
 
@@ -253,21 +386,26 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			has_local_error: BOOLEAN
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				check_preconditions_validity (a_preconditions)
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				check_arguments_validity (an_arguments)
 			end
+			check_type_validity (a_feature.type)
 			a_locals := a_feature.locals
 			if a_locals /= Void then
 				check_locals_validity (a_locals)
 			end
-			if not has_local_error then
+			if not has_fatal_error then
+				a_preconditions := a_feature.preconditions
+				if a_preconditions /= Void then
+					check_preconditions_validity (a_preconditions)
+				end
 				a_compound := a_feature.compound
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
@@ -288,21 +426,25 @@ feature {NONE} -- Feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			has_local_error: BOOLEAN
+			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_locals: ET_LOCAL_VARIABLE_LIST
 			a_compound: ET_COMPOUND
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 		do
-			a_preconditions := a_feature.preconditions
-			if a_preconditions /= Void then
-				check_preconditions_validity (a_preconditions)
+			an_arguments := a_feature.arguments
+			if an_arguments /= Void then
+				check_arguments_validity (an_arguments)
 			end
 			a_locals := a_feature.locals
 			if a_locals /= Void then
 				check_locals_validity (a_locals)
 			end
-			if not has_local_error then
+			if not has_fatal_error then
+				a_preconditions := a_feature.preconditions
+				if a_preconditions /= Void then
+					check_preconditions_validity (a_preconditions)
+				end
 				a_compound := a_feature.compound
 				if a_compound /= Void then
 					check_instructions_validity (a_compound)
@@ -322,11 +464,48 @@ feature {NONE} -- Feature validity
 			-- Check validity of `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			a_type: ET_TYPE
+			a_class_impl: ET_CLASS
 		do
-			a_feature.declared_type.process (Current)
+			a_type := a_feature.type
+			check_type_validity (a_type)
+			if not has_fatal_error then
+				if a_type.same_named_type (universe.integer_class, current_class, current_class, universe) then
+					-- OK.
+				elseif a_type.same_named_type (universe.integer_8_class, current_class, current_class, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
+				elseif a_type.same_named_type (universe.integer_16_class, current_class, current_class, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
+				elseif a_type.same_named_type (universe.integer_64_class, current_class, current_class, universe) then
+					-- Valid with ISE Eiffel. To be checked with other compilers.
+				else
+					set_fatal_error
+					a_class_impl := current_feature.implementation_class
+					if current_class = a_class_impl then
+						error_handler.report_vqui0a_error (current_class, a_feature)
+					else
+						error_handler.report_vqui0b_error (current_class, a_class_impl, a_feature)
+					end
+				end
+			end
 		end
 
-feature {NONE} -- Locals validity
+feature {NONE} -- Locals/Arguments validity
+
+	check_arguments_validity (an_arguments: ET_FORMAL_ARGUMENT_LIST) is
+			-- Check validity of `an_arguments'.
+		require
+			an_arguments_not_void: an_arguments /= Void
+		local
+			i, nb: INTEGER
+		do
+			nb := an_arguments.count
+			from i := 1 until i > nb loop
+				check_type_validity (an_arguments.formal_argument (i).type)
+				i := i + 1
+			end
+		end
 
 	check_locals_validity (a_locals: ET_LOCAL_VARIABLE_LIST) is
 			-- Check validity of `a_locals'.
@@ -349,7 +528,7 @@ feature {NONE} -- Locals validity
 		do
 			type_checker.check_type_validity (a_type, current_feature, current_feature.implementation_class)
 			if type_checker.has_fatal_error then
-				--set_fatal_error
+				set_fatal_error
 			end
 		end
 
@@ -364,6 +543,9 @@ feature {NONE} -- Instructions validity
 			a_compound_not_void: a_compound /= Void
 		do
 			instruction_checker.check_instructions_validity (a_compound, current_feature, current_class)
+			if instruction_checker.has_fatal_error then
+				set_fatal_error
+			end
 		end
 
 	instruction_checker: ET_INSTRUCTION_CHECKER
@@ -375,6 +557,9 @@ feature {NONE} -- Instructions validity
 			a_compound_not_void: a_compound /= Void
 		do
 			rescue_checker.check_instructions_validity (a_compound, current_feature, current_class)
+			if rescue_checker.has_fatal_error then
+				set_fatal_error
+			end
 		end
 
 	rescue_checker: ET_RESCUE_CHECKER
@@ -388,18 +573,34 @@ feature {NONE} -- Assertions validity
 			a_preconditions_not_void: a_preconditions /= Void
 		local
 			i, nb: INTEGER
-			had_error: BOOLEAN
 			an_expression: ET_EXPRESSION
+			boolean_type: ET_CLASS_TYPE
+			a_type: ET_TYPE
+			a_context: ET_TYPE_CONTEXT
+			a_class_impl: ET_CLASS
+			a_named_type: ET_NAMED_TYPE
 		do
+			boolean_type := universe.boolean_class
 			nb := a_preconditions.count
 			from i := 1 until i > nb loop
 				an_expression := a_preconditions.assertion (i).expression
 				if an_expression /= Void then
-					precondition_checker.check_expression_validity (an_expression, universe.boolean_class, current_class, current_feature, current_class)
+					precondition_checker.check_expression_validity (an_expression, boolean_type, current_class, current_feature, current_class)
 					if precondition_checker.has_fatal_error then
-						had_error := True
+						set_fatal_error
 					else
--- TODO: check that it is a boolean expression
+						a_type := precondition_checker.type
+						a_context := precondition_checker.context
+						if not a_type.same_named_type (boolean_type, current_class, a_context, universe) then
+							set_fatal_error
+							a_named_type := a_type.named_type (a_context, universe)
+							a_class_impl := current_feature.implementation_class
+							if current_class = a_class_impl then
+								error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
+							else
+								error_handler.report_vwbe0b_error (current_class, a_class_impl, an_expression, a_named_type)
+							end
+						end
 					end
 				end
 				i := i + 1
@@ -415,18 +616,34 @@ feature {NONE} -- Assertions validity
 			a_postconditions_not_void: a_postconditions /= Void
 		local
 			i, nb: INTEGER
-			had_error: BOOLEAN
 			an_expression: ET_EXPRESSION
+			boolean_type: ET_CLASS_TYPE
+			a_type: ET_TYPE
+			a_context: ET_TYPE_CONTEXT
+			a_class_impl: ET_CLASS
+			a_named_type: ET_NAMED_TYPE
 		do
+			boolean_type := universe.boolean_class
 			nb := a_postconditions.count
 			from i := 1 until i > nb loop
 				an_expression := a_postconditions.assertion (i).expression
 				if an_expression /= Void then
-					postcondition_checker.check_expression_validity (an_expression, universe.boolean_class, current_class, current_feature, current_class)
+					postcondition_checker.check_expression_validity (an_expression, boolean_type, current_class, current_feature, current_class)
 					if postcondition_checker.has_fatal_error then
-						had_error := True
+						set_fatal_error
 					else
--- TODO: check that it is a boolean expression
+						a_type := postcondition_checker.type
+						a_context := postcondition_checker.context
+						if not a_type.same_named_type (boolean_type, current_class, a_context, universe) then
+							set_fatal_error
+							a_named_type := a_type.named_type (a_context, universe)
+							a_class_impl := current_feature.implementation_class
+							if current_class = a_class_impl then
+								error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
+							else
+								error_handler.report_vwbe0b_error (current_class, a_class_impl, an_expression, a_named_type)
+							end
+						end
 					end
 				end
 				i := i + 1
@@ -536,6 +753,24 @@ feature {ET_AST_NODE} -- Processing
 				check_unique_attribute_validity (a_feature)
 			end
 		end
+
+feature {NONE} -- Error handling
+
+	set_fatal_error is
+			-- Report a fatal error.
+		do
+			has_fatal_error := True
+		ensure
+			has_fatal_error: has_fatal_error
+		end
+
+feature {NONE} -- Access
+
+	current_feature: ET_FEATURE
+			-- Feature being processed
+
+	current_class: ET_CLASS
+			-- Class to with `current_feature' belongs
 
 feature {NONE} -- Implementation
 

@@ -2496,6 +2496,283 @@ feature -- Validity errors
 			end
 		end
 
+	report_vqmc1a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-1 error: `an_attribute' introduces a boolean constant
+			-- but its type is not "BOOLEAN".
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			boolean_constant: an_attribute.constant.is_boolean_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc1_error (a_class) then
+				create an_error.make_vqmc1a (a_class, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc1b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-1 error: `an_attribute' introduces a boolean constant
+			-- but its type is not "BOOLEAN" when viewed from `a_class' (a descendant
+			-- of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			boolean_constant: an_attribute.constant.is_boolean_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc1_error (a_class) then
+				create an_error.make_vqmc1b (a_class, a_class_impl, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc2a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-2 error: `an_attribute' introduces a character constant
+			-- but its type is not "CHARACTER".
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			character_constant: an_attribute.constant.is_character_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc2_error (a_class) then
+				create an_error.make_vqmc2a (a_class, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc2b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-2 error: `an_attribute' introduces a character constant
+			-- but its type is not "CHARACTER" when viewed from `a_class' (a descendant
+			-- of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			character_constant: an_attribute.constant.is_character_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc2_error (a_class) then
+				create an_error.make_vqmc2b (a_class, a_class_impl, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc3a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-3 error: `an_attribute' introduces an integer constant
+			-- but its type is not "INTEGER".
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			integer_constant: an_attribute.constant.is_integer_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc3_error (a_class) then
+				create an_error.make_vqmc3a (a_class, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc3b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-3 error: `an_attribute' introduces an integer constant
+			-- but its type is not "INTEGER" when viewed from `a_class' (a descendant
+			-- of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			integer_constant: an_attribute.constant.is_integer_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc3_error (a_class) then
+				create an_error.make_vqmc3b (a_class, a_class_impl, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc4a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-4 error: `an_attribute' introduces a real constant
+			-- but its type is not "REAL" or "DOUBLE".
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			real_constant: an_attribute.constant.is_real_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc4_error (a_class) then
+				create an_error.make_vqmc4a (a_class, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc4b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-4 error: `an_attribute' introduces a real constant
+			-- but its type is not "REAL" or "DOUBLE" when viewed from `a_class' (a descendant
+			-- of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			real_constant: an_attribute.constant.is_real_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc4_error (a_class) then
+				create an_error.make_vqmc4b (a_class, a_class_impl, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc5a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-5 error: `an_attribute' introduces a string constant
+			-- but its type is not "STRING".
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			string_constant: an_attribute.constant.is_string_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc5_error (a_class) then
+				create an_error.make_vqmc5a (a_class, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc5b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-5 error: `an_attribute' introduces a string constant
+			-- but its type is not "STRING" when viewed from `a_class' (a descendant
+			-- of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			string_constant: an_attribute.constant.is_string_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc5_error (a_class) then
+				create an_error.make_vqmc5b (a_class, a_class_impl, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc6a_error (a_class: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-6 error: `an_attribute' introduces a bit constant
+			-- but its type is not a Bit_type.
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			bit_constant: an_attribute.constant.is_bit_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc6_error (a_class) then
+				create an_error.make_vqmc6a (a_class, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqmc6b_error (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Report VQMC-6 error: `an_attribute' introduces a bit constant
+			-- but its type is not a Bit_type when viewed from `a_class' (a descendant
+			-- of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			bit_constant: an_attribute.constant.is_bit_constant
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqmc6_error (a_class) then
+				create an_error.make_vqmc6b (a_class, a_class_impl, an_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqui0a_error (a_class: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE) is
+			-- Report VQUI error: the type of `a_unique' is not "INTEGER".
+			--
+			-- ETL2: p.266
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_unique_not_void: a_unique /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqui_error (a_class) then
+				create an_error.make_vqui0a (a_class, a_unique)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vqui0b_error (a_class, a_class_impl: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE) is
+			-- Report VQUI error: the type of `a_unique' is not "INTEGER"
+			-- when viewed from `a_class' (a descendant of `a_class_impl'
+			-- where `a_unique' has been declared).
+			--
+			-- ETL2: p.266
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_unique_not_void: a_unique /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vqui_error (a_class) then
+				create an_error.make_vqui0b (a_class, a_class_impl, a_unique)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vreg0a_error (a_class: ET_CLASS; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FLATTENED_FEATURE) is
 			-- Report VREG error: `arg1' and `arg2' have the same
 			-- name in feature `f' in `a_class'.
@@ -3263,6 +3540,46 @@ feature -- Validity errors
 			end
 		end
 
+	report_vwbe0a_error (a_class: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Report VWBE error: the boolean expression `an_expression'
+			-- in `a_class' is of type `a_type' which is not "BOOLEAN".
+			--
+			-- ETL2: p.374
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwbe_error (a_class) then
+				create an_error.make_vwbe0a (a_class, an_expression, a_type)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vwbe0b_error (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Report VWBE error: the boolean expression `an_expression'
+			-- in `a_class_impl' and viewed from one of its descendants
+			-- `a_class' is of type `a_type' which is not "BOOLEAN".
+			--
+			-- ETL2: p.374
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwbe_error (a_class) then
+				create an_error.make_vwbe0b (a_class, a_class_impl, an_expression, a_type)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vweq0a_error (a_class: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION;
 		a_type1, a_type2: ET_NAMED_TYPE) is
 			-- Report VWEQ error: none of the operands of the equality
@@ -3482,6 +3799,46 @@ feature -- Validity errors
 		do
 			if reportable_gvual_error (a_class) then
 				create an_error.make_gvual0a (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuia0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Report GVUIA error: `a_name' is a formal argument of
+			-- `a_feature' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuia_error (a_class) then
+				create an_error.make_gvuia0a (a_class, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvuil0a_error (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Report GVUIL error: `a_name' is a local variable of
+			-- `a_feature' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvuil_error (a_class) then
+				create an_error.make_gvuil0a (a_class, a_name, a_feature)
 				report_validity_error (an_error)
 			end
 		end
@@ -3918,6 +4275,76 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vqmc1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VQMC-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vqmc2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VQMC-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vqmc3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VQMC-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vqmc4_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VQMC-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vqmc5_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VQMC-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vqmc6_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VQMC-6 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vqui_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VQUI error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vreg_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VREG error be reported when it
 			-- appears in `a_class'?
@@ -4078,6 +4505,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vwbe_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VWBE error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vweq_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VWEQ error be reported when it
 			-- appears in `a_class'?
@@ -4160,6 +4597,26 @@ feature -- Validity error status
 
 	reportable_gvual_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVUAL error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvuia_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVUIA error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvuil_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVUIL error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -4565,6 +5022,24 @@ feature -- Internal errors
 			an_error: ET_INTERNAL_ERROR
 		do
 			create an_error.make_giabq
+			report_internal_error (an_error)
+		end
+
+	report_giabr_error is
+			-- Report GIABR internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabr
+			report_internal_error (an_error)
+		end
+
+	report_giabs_error is
+			-- Report GIABS internal error.
+		local
+			an_error: ET_INTERNAL_ERROR
+		do
+			create an_error.make_giabs
 			report_internal_error (an_error)
 		end
 

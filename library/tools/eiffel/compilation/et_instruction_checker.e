@@ -29,6 +29,7 @@ inherit
 			process_loop_instruction,
 			process_precursor_instruction,
 			process_retry_instruction,
+			process_semicolon_symbol,
 			process_static_call_instruction
 		end
 
@@ -401,8 +402,7 @@ feature {NONE} -- Instruction validity
 									set_fatal_error
 										-- Note: ISE 5.4 reports a VKCN-1 here. However
 										-- `a_name' is not a function nor an attribute name.
--- TODO
-									--error_handler.report_gvuaa0a_error (a_class_impl, an_identifier, current_feature)
+									error_handler.report_gvuia0a_error (a_class_impl, an_identifier, current_feature)
 								end
 							end
 							if a_seed = 0 then
@@ -418,8 +418,9 @@ feature {NONE} -- Instruction validity
 										end
 											-- Syntax error: a local variable cannot be an instruction.
 										set_fatal_error
--- TODO
-										--error_handler.report_gvual0a_error (a_class_impl, an_identifier, current_feature)
+											-- Note: ISE 5.4 reports a VKCN-1 here. However
+											-- `a_name' is not a function nor an attribute name.
+										error_handler.report_gvuil0a_error (a_class_impl, an_identifier, current_feature)
 									end
 								end
 							end
@@ -514,22 +515,35 @@ feature {NONE} -- Instruction validity
 			an_instruction_not_void: an_instruction /= Void
 		local
 			i, nb: INTEGER
-			had_error: BOOLEAN
 			an_expression: ET_EXPRESSION
+			boolean_type: ET_CLASS_TYPE
+			a_type: ET_TYPE
+			a_context: ET_TYPE_CONTEXT
+			a_class_impl: ET_CLASS
+			a_named_type: ET_NAMED_TYPE
 		do
+			boolean_type := universe.boolean_class
+			a_class_impl := current_feature.implementation_class
 			nb := an_instruction.count
 			from i := 1 until i > nb loop
 				an_expression := an_instruction.assertion (i).expression
-				expression_checker.check_expression_validity (an_expression, universe.boolean_class, current_class, current_feature, current_class)
+				expression_checker.check_expression_validity (an_expression, boolean_type, current_class, current_feature, current_class)
 				if expression_checker.has_fatal_error then
-					had_error := True
+					set_fatal_error
 				else
--- TODO: check that it is a boolean expression
+					a_type := expression_checker.type
+					a_context := expression_checker.context
+					if not a_type.same_named_type (boolean_type, current_class, a_context, universe) then
+						set_fatal_error
+						a_named_type := a_type.named_type (a_context, universe)
+						if current_class = a_class_impl then
+							error_handler.report_vwbe0a_error (current_class, an_expression, a_named_type)
+						else
+							error_handler.report_vwbe0b_error (current_class, a_class_impl, an_expression, a_named_type)
+						end
+					end
 				end
 				i := i + 1
-			end
-			if had_error then
-				set_fatal_error
 			end
 		end
 
@@ -827,19 +841,36 @@ feature {NONE} -- Instruction validity
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
+			boolean_type: ET_CLASS_TYPE
 			a_conditional: ET_EXPRESSION
 			a_compound: ET_COMPOUND
 			an_elseif_parts: ET_ELSEIF_PART_LIST
 			an_elseif: ET_ELSEIF_PART
 			i, nb: INTEGER
 			had_error: BOOLEAN
+			a_type: ET_TYPE
+			a_context: ET_TYPE_CONTEXT
+			a_class_impl: ET_CLASS
+			a_named_type: ET_NAMED_TYPE
 		do
+			boolean_type := universe.boolean_class
 			a_conditional := an_instruction.conditional.expression
-			expression_checker.check_expression_validity (a_conditional, universe.boolean_class, current_class, current_feature, current_class)
+			expression_checker.check_expression_validity (a_conditional, boolean_type, current_class, current_feature, current_class)
 			if expression_checker.has_fatal_error then
 				had_error := True
 			else
--- TODO: check that it is a boolean expression
+				a_type := expression_checker.type
+				a_context := expression_checker.context
+				if not a_type.same_named_type (boolean_type, current_class, a_context, universe) then
+					had_error := True
+					a_named_type := a_type.named_type (a_context, universe)
+					a_class_impl := current_feature.implementation_class
+					if current_class = a_class_impl then
+						error_handler.report_vwbe0a_error (current_class, a_conditional, a_named_type)
+					else
+						error_handler.report_vwbe0b_error (current_class, a_class_impl, a_conditional, a_named_type)
+					end
+				end
 			end
 			a_compound := an_instruction.then_compound
 			if a_compound /= Void then
@@ -854,11 +885,22 @@ feature {NONE} -- Instruction validity
 				from i := 1 until i > nb loop
 					an_elseif := an_elseif_parts.item (i)
 					a_conditional := an_elseif.conditional.expression
-					expression_checker.check_expression_validity (a_conditional, universe.boolean_class, current_class, current_feature, current_class)
+					expression_checker.check_expression_validity (a_conditional, boolean_type, current_class, current_feature, current_class)
 					if expression_checker.has_fatal_error then
 						had_error := True
 					else
--- TODO: check that it is a boolean expression
+						a_type := expression_checker.type
+						a_context := expression_checker.context
+						if not a_type.same_named_type (boolean_type, current_class, a_context, universe) then
+							had_error := True
+							a_named_type := a_type.named_type (a_context, universe)
+							a_class_impl := current_feature.implementation_class
+							if current_class = a_class_impl then
+								error_handler.report_vwbe0a_error (current_class, a_conditional, a_named_type)
+							else
+								error_handler.report_vwbe0b_error (current_class, a_class_impl, a_conditional, a_named_type)
+							end
+						end
 					end
 					a_compound := an_elseif.then_compound
 					if a_compound /= Void then
@@ -937,6 +979,10 @@ feature {NONE} -- Instruction validity
 			a_conditional: ET_EXPRESSION
 			a_compound: ET_COMPOUND
 			had_error: BOOLEAN
+			a_type: ET_TYPE
+			a_context: ET_TYPE_CONTEXT
+			a_class_impl: ET_CLASS
+			a_named_type: ET_NAMED_TYPE
 		do
 			a_compound := an_instruction.from_compound
 			if a_compound /= Void then
@@ -951,7 +997,18 @@ feature {NONE} -- Instruction validity
 			if expression_checker.has_fatal_error then
 				had_error := True
 			else
--- TODO: check that it is a boolean expression
+				a_type := expression_checker.type
+				a_context := expression_checker.context
+				if not a_type.same_named_type (universe.boolean_class, current_class, a_context, universe) then
+					had_error := True
+					a_named_type := a_type.named_type (a_context, universe)
+					a_class_impl := current_feature.implementation_class
+					if current_class = a_class_impl then
+						error_handler.report_vwbe0a_error (current_class, a_conditional, a_named_type)
+					else
+						error_handler.report_vwbe0b_error (current_class, a_class_impl, a_conditional, a_named_type)
+					end
+				end
 			end
 			a_compound := an_instruction.loop_compound
 			if a_compound /= Void then
@@ -1309,6 +1366,14 @@ feature {ET_AST_NODE} -- Processing
 			if internal_call then
 				internal_call := False
 				check_retry_instruction_validity (an_instruction)
+			end
+		end
+
+	process_semicolon_symbol (a_symbol: ET_SEMICOLON_SYMBOL) is
+			-- Process `a_symbol'.
+		do
+			if internal_call then
+				internal_call := False
 			end
 		end
 

@@ -116,6 +116,20 @@ creation
 	make_vmss1a,
 	make_vmss2a,
 	make_vmss3a,
+	make_vqmc1a,
+	make_vqmc1b,
+	make_vqmc2a,
+	make_vqmc2b,
+	make_vqmc3a,
+	make_vqmc3b,
+	make_vqmc4a,
+	make_vqmc4b,
+	make_vqmc5a,
+	make_vqmc5b,
+	make_vqmc6a,
+	make_vqmc6b,
+	make_vqui0a,
+	make_vqui0b,
 	make_vreg0a,
 	make_vrfa0a,
 	make_vscn0a,
@@ -153,6 +167,8 @@ creation
 	make_vuex2a,
 	make_vuex2b,
 	make_vuex2c,
+	make_vwbe0a,
+	make_vwbe0b,
 	make_vweq0a,
 	make_vweq0b,
 	make_vwst1a,
@@ -163,7 +179,9 @@ creation
 	make_gvhpr4a,
 	make_gvhpr5a,
 	make_gvuaa0a,
-	make_gvual0a
+	make_gvual0a,
+	make_gvuia0a,
+	make_gvuil0a
 
 feature {NONE} -- Initialization
 	
@@ -4392,6 +4410,605 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
+	make_vqmc1a (a_class: like current_class; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-1 error: `an_attribute' introduces a boolean constant
+			-- but its type is not "BOOLEAN".
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			boolean_constant: an_attribute.constant.is_boolean_constant
+		do
+			code := vqmc1a_template_code
+			etl_code := vqmc1_etl_code
+			default_template := vqmc1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_attribute.type.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_attribute.name.name, 6)
+			parameters.put (an_attribute.type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = type
+		end
+
+	make_vqmc1b (a_class: like current_class; a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-1 error: `an_attribute' introduces a boolean constant
+			-- but its type is not "BOOLEAN" when viewed from `a_class' (a descendant
+			-- of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			boolean_constant: an_attribute.constant.is_boolean_constant
+		do
+			code := vqmc1b_template_code
+			etl_code := vqmc1_etl_code
+			default_template := vqmc1b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_attribute.type.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (an_attribute.name.name, 7)
+			parameters.put (an_attribute.type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = type
+		end
+
+	make_vqmc2a (a_class: like current_class; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-2 error: `an_attribute' introduces a character constant
+			-- but its type is not "CHARACTER".
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			character_constant: an_attribute.constant.is_character_constant
+		do
+			code := vqmc2a_template_code
+			etl_code := vqmc2_etl_code
+			default_template := vqmc2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_attribute.type.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_attribute.name.name, 6)
+			parameters.put (an_attribute.type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = type
+		end
+
+	make_vqmc2b (a_class: like current_class; a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-2 error: `an_attribute' introduces a character constant
+			-- but its type is not "CHARACTER" when viewed from `a_class' (a descendant
+			-- of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			characterconstant: an_attribute.constant.is_character_constant
+		do
+			code := vqmc2b_template_code
+			etl_code := vqmc2_etl_code
+			default_template := vqmc2b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_attribute.type.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (an_attribute.name.name, 7)
+			parameters.put (an_attribute.type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = type
+		end
+
+	make_vqmc3a (a_class: like current_class; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-3 error: `an_attribute' introduces an integer constant
+			-- but its type is not "INTEGER".
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			integer_constant: an_attribute.constant.is_integer_constant
+		do
+			code := vqmc3a_template_code
+			etl_code := vqmc3_etl_code
+			default_template := vqmc3a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_attribute.type.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_attribute.name.name, 6)
+			parameters.put (an_attribute.type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = type
+		end
+
+	make_vqmc3b (a_class: like current_class; a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-3 error: `an_attribute' introduces an integer constant
+			-- but its type is not "INTEGER" when viewed from `a_class' (a descendant
+			-- of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			integer_constant: an_attribute.constant.is_integer_constant
+		do
+			code := vqmc3b_template_code
+			etl_code := vqmc3_etl_code
+			default_template := vqmc3b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_attribute.type.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (an_attribute.name.name, 7)
+			parameters.put (an_attribute.type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = type
+		end
+
+	make_vqmc4a (a_class: like current_class; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-4 error: `an_attribute' introduces a real constant
+			-- but its type is not "REAL" or "DOUBLE".
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			real_constant: an_attribute.constant.is_real_constant
+		do
+			code := vqmc4a_template_code
+			etl_code := vqmc4_etl_code
+			default_template := vqmc4a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_attribute.type.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_attribute.name.name, 6)
+			parameters.put (an_attribute.type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = type
+		end
+
+	make_vqmc4b (a_class: like current_class; a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-4 error: `an_attribute' introduces a real constant
+			-- but its type is not "REAL" or "DOUBLE" when viewed from `a_class'
+			-- (a descendant of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			real_constant: an_attribute.constant.is_real_constant
+		do
+			code := vqmc4b_template_code
+			etl_code := vqmc4_etl_code
+			default_template := vqmc4b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_attribute.type.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (an_attribute.name.name, 7)
+			parameters.put (an_attribute.type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = type
+		end
+
+	make_vqmc5a (a_class: like current_class; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-5 error: `an_attribute' introduces a string constant
+			-- but its type is not "STRING".
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			string_constant: an_attribute.constant.is_string_constant
+		do
+			code := vqmc5a_template_code
+			etl_code := vqmc5_etl_code
+			default_template := vqmc5a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_attribute.type.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_attribute.name.name, 6)
+			parameters.put (an_attribute.type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = type
+		end
+
+	make_vqmc5b (a_class: like current_class; a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-5 error: `an_attribute' introduces a string constant
+			-- but its type is not "STRING" when viewed from `a_class' (a descendant
+			-- of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			string_constant: an_attribute.constant.is_string_constant
+		do
+			code := vqmc5b_template_code
+			etl_code := vqmc5_etl_code
+			default_template := vqmc5b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_attribute.type.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (an_attribute.name.name, 7)
+			parameters.put (an_attribute.type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = type
+		end
+
+	make_vqmc6a (a_class: like current_class; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-6 error: `an_attribute' introduces a bit constant
+			-- but its type is not a Byte_type.
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			bit_constant: an_attribute.constant.is_bit_constant
+		do
+			code := vqmc6a_template_code
+			etl_code := vqmc6_etl_code
+			default_template := vqmc6a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_attribute.type.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (an_attribute.name.name, 6)
+			parameters.put (an_attribute.type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = type
+		end
+
+	make_vqmc6b (a_class: like current_class; a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE) is
+			-- Create a new VQMC-6 error: `an_attribute' introduces a bit constant
+			-- but its type is not a Bit_type when viewed from `a_class' (a descendant
+			-- of `a_class_impl' where `an_attribute' has been declared).
+			--
+			-- ETL2: p.264
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_attribute_not_void: an_attribute /= Void
+			bit_constant: an_attribute.constant.is_bit_constant
+		do
+			code := vqmc6b_template_code
+			etl_code := vqmc6_etl_code
+			default_template := vqmc6b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_attribute.type.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (an_attribute.name.name, 7)
+			parameters.put (an_attribute.type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = type
+		end
+
+	make_vqui0a (a_class: like current_class; a_unique: ET_UNIQUE_ATTRIBUTE) is
+			-- Create a new VQUI error: the type of `a_unique' is not "INTEGER".
+			--
+			-- ETL2: p.266
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_unique_not_void: a_unique /= Void
+		do
+			code := vqui0a_template_code
+			etl_code := vqui_etl_code
+			default_template := vqui0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_unique.type.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_unique.name.name, 6)
+			parameters.put (a_unique.type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = type
+		end
+
+	make_vqui0b (a_class: like current_class; a_class_impl: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE) is
+			-- Create a new VQUI error: the type of `a_unique' is not "INTEGER"
+			-- when viewed from `a_class' (a descendant of `a_class_impl'
+			-- where `a_unique' has been declared).
+			--
+			-- ETL2: p.266
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_unique_not_void: a_unique /= Void
+		do
+			code := vqui0b_template_code
+			etl_code := vqui_etl_code
+			default_template := vqui0b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_unique.type.position
+			create parameters.make (1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_unique.name.name, 7)
+			parameters.put (a_unique.type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = type
+		end
+
 	make_vreg0a (a_class: like current_class; arg1, arg2: ET_FORMAL_ARGUMENT; f: ET_FLATTENED_FEATURE) is
 			-- Create a new VREG error: `arg1' and `arg2' have the same
 			-- name in feature `f' in `a_class'.
@@ -6128,6 +6745,89 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = base class of target of the call
 		end
 
+	make_vwbe0a (a_class: like current_class; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Create a new VWBE error: the boolean expression `an_expression'
+			-- in `a_class' is of type `a_type' which is not "BOOLEAN".
+			--
+			-- ETL2: p.374
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		do
+			code := vwbe0a_template_code
+			etl_code := vwbe_etl_code
+			default_template := vwbe0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := an_expression.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_type.to_text, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = base type of expression
+		end
+
+	make_vwbe0b (a_class: like current_class; a_class_impl: ET_CLASS;
+		an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE) is
+			-- Create a new VWBE error: the boolean expression `an_expression'
+			-- in `a_class_impl' and viewed from one of its descendants
+			-- `a_class' is of type `a_type' which is not "BOOLEAN".
+			--
+			-- ETL2: p.374
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			an_expression_not_void: an_expression /= Void
+			a_type_not_void: a_type /= Void
+		do
+			code := vwbe0b_template_code
+			etl_code := vwbe_etl_code
+			default_template := vwbe0b_default_template
+			current_class := a_class
+			class_impl := a_class_impl
+			position := an_expression.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_class_impl.name.name, 6)
+			parameters.put (a_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = base type of expression
+		end
+
 	make_vweq0a (a_class: like current_class; an_expression: ET_EQUALITY_EXPRESSION;
 		a_type1, a_type2: ET_NAMED_TYPE) is
 			-- Create a new VWEQ error: none of the operands of the equality
@@ -6584,6 +7284,90 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
+	make_gvuia0a (a_class: like current_class; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Create a new GVUIA error: `a_name' is a formal argument of
+			-- `a_feature' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := gvuia0a_template_code
+			etl_code := gvuia_etl_code
+			default_template := gvuia0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = formal argument name
+			-- dollar7: $7 = feature name
+		end
+
+	make_gvuil0a (a_class: like current_class; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE) is
+			-- Create a new GVUIL error: `a_name' is a local variable of
+			-- `a_feature' in `a_class', and hence cannot be an
+			-- instruction.
+			--
+			-- Not in ETL as validity error but as syntax error
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+		do
+			code := gvuil0a_template_code
+			etl_code := gvuil_etl_code
+			default_template := gvuil0a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			parameters.put (a_feature.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = local variable name
+			-- dollar7: $7 = feature name
+		end
+
 feature -- Access
 
 	class_impl: ET_CLASS
@@ -6714,6 +7498,20 @@ feature {NONE} -- Implementation
 	vmss1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
 	vmss2a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Select subclause of parent $7."
 	vmss3a_default_template: STRING is "[$1] class $5 ($3,$4): class name clash: first file '$7', second file '$9'."
+	vqmc1a_default_template: STRING is "[$1] class $5 ($3,$4): boolean constant attribute `$6' is not declared of type BOOLEAN."
+	vqmc1b_default_template: STRING is "[$1] class $5 ($6,$3,$4): boolean constant attribute `$7' is not declared of type BOOLEAN."
+	vqmc2a_default_template: STRING is "[$1] class $5 ($3,$4): character constant attribute `$6' is not declared of type CHARACTER."
+	vqmc2b_default_template: STRING is "[$1] class $5 ($6,$3,$4): character constant attribute `$7' is not declared of type CHARACTER."
+	vqmc3a_default_template: STRING is "[$1] class $5 ($3,$4): integer constant attribute `$6' is not declared of type INTEGER."
+	vqmc3b_default_template: STRING is "[$1] class $5 ($6,$3,$4): integer constant attribute `$7' is not declared of type INTEGER."
+	vqmc4a_default_template: STRING is "[$1] class $5 ($3,$4): real constant attribute `$6' is not declared of type REAL or DOUBLE."
+	vqmc4b_default_template: STRING is "[$1] class $5 ($6,$3,$4): real constant attribute `$7' is not declared of type REAL or DOUBLE."
+	vqmc5a_default_template: STRING is "[$1] class $5 ($3,$4): string constant attribute `$6' is not declared of type STRING."
+	vqmc5b_default_template: STRING is "[$1] class $5 ($6,$3,$4): string constant attribute `$7' is not declared of type STRING."
+	vqmc6a_default_template: STRING is "[$1] class $5 ($3,$4): bit constant attribute `$6' is not declared of Bit_type."
+	vqmc6b_default_template: STRING is "[$1] class $5 ($6,$3,$4): bit constant attribute `$7' is not declared of Bit_type."
+	vqui0a_default_template: STRING is "[$1] class $5 ($3,$4): unique attribute `$6' is not declared of type INTEGER."
+	vqui0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): unique attribute `$7' is not declared of type INTEGER."
 	vreg0a_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' appear twice in feature `$7'."
 	vrfa0a_default_template: STRING is "[$1] class $5 ($3,$4): argument name '$6' in feature `$7' is also the final name of feature."
 	vscn0a_default_template: STRING is "[$1] class $5: class appears in files '$7' and '$9'."
@@ -6751,6 +7549,8 @@ feature {NONE} -- Implementation
 	vuex2a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in class $7."
 	vuex2b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$7' of class $8 is not exported to class $5."
 	vuex2c_default_template: STRING is "[$1] class $5 ($6,$3,$4): feature `$8' of class $9 is not exported to class $5."
+	vwbe0a_default_template: STRING is "[$1] class $5 ($3,$4): boolean expression of non-BOOLEAN type '$6'."
+	vwbe0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): boolean expression of non-BOOLEAN type '$7'."
 	vweq0a_default_template: STRING is "[$1] class $5 ($3,$4): none of the operands of '$6' (of types '$7' and '$8') conforms to the other."
 	vweq0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): none of the operands of '$7' (of types '$8' and '$9') conforms to the other."
 	vwst1a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' is not the final name of a feature in class $5."
@@ -6762,6 +7562,8 @@ feature {NONE} -- Implementation
 	gvhpr5a_default_template: STRING is "[$1] class $5: cannot inherit from Tuple_type '$6'."
 	gvuaa0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot have actual arguments."
 	gvual0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a local variable of feature `$7' and hence cannot have actual arguments."
+	gvuia0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot be an instruction."
+	gvuil0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a local variable of feature `$7' and hence cannot be an instruction."
 	gvzzz0a_default_template: STRING is "[$1] class $5 ($3,$4): validity error"
 			-- Default templates
 
@@ -6808,6 +7610,13 @@ feature {NONE} -- Implementation
 	vmss1_etl_code: STRING is "VMSS-1"
 	vmss2_etl_code: STRING is "VMSS-2"
 	vmss3_etl_code: STRING is "VMSS-3"
+	vqmc1_etl_code: STRING is "VQMC-1"
+	vqmc2_etl_code: STRING is "VQMC-2"
+	vqmc3_etl_code: STRING is "VQMC-3"
+	vqmc4_etl_code: STRING is "VQMC-4"
+	vqmc5_etl_code: STRING is "VQMC-5"
+	vqmc6_etl_code: STRING is "VQMC-6"
+	vqui_etl_code: STRING is "VQUI"
 	vreg_etl_code: STRING is "VREG"
 	vrfa_etl_code: STRING is "VRFA"
 	vscn_etl_code: STRING is "VSCN"
@@ -6825,6 +7634,7 @@ feature {NONE} -- Implementation
 	vuar4_etl_code: STRING is "VUAR-4"
 	vuex1_etl_code: STRING is "VUEX-1"
 	vuex2_etl_code: STRING is "VUEX-2"
+	vwbe_etl_code: STRING is "VWBE"
 	vweq_etl_code: STRING is "VWEQ"
 	vwst1_etl_code: STRING is "VWST-1"
 	vwst2_etl_code: STRING is "VWST-2"
@@ -6834,6 +7644,8 @@ feature {NONE} -- Implementation
 	gvhpr5_etl_code: STRING is "GVHPR-5"
 	gvuaa_etl_code: STRING is "GVUAA"
 	gvual_etl_code: STRING is "GVUAL"
+	gvuia_etl_code: STRING is "GVUIA"
+	gvuil_etl_code: STRING is "GVUIL"
 	gvzzz_etl_code: STRING is "GVZZZ"
 			-- ETL validity codes
 
@@ -6931,6 +7743,20 @@ feature {NONE} -- Implementation
 	vmss1a_template_code: STRING is "vmss1a"
 	vmss2a_template_code: STRING is "vmss2a"
 	vmss3a_template_code: STRING is "vmss3a"
+	vqmc1a_template_code: STRING is "vqmc1a"
+	vqmc1b_template_code: STRING is "vqmc1b"
+	vqmc2a_template_code: STRING is "vqmc2a"
+	vqmc2b_template_code: STRING is "vqmc2b"
+	vqmc3a_template_code: STRING is "vqmc3a"
+	vqmc3b_template_code: STRING is "vqmc3b"
+	vqmc4a_template_code: STRING is "vqmc4a"
+	vqmc4b_template_code: STRING is "vqmc4b"
+	vqmc5a_template_code: STRING is "vqmc5a"
+	vqmc5b_template_code: STRING is "vqmc5b"
+	vqmc6a_template_code: STRING is "vqmc6a"
+	vqmc6b_template_code: STRING is "vqmc6b"
+	vqui0a_template_code: STRING is "vqui0a"
+	vqui0b_template_code: STRING is "vqui0b"
 	vreg0a_template_code: STRING is "vreg0a"
 	vrfa0a_template_code: STRING is "vrfa0a"
 	vscn0a_template_code: STRING is "vscn0a"
@@ -6968,6 +7794,8 @@ feature {NONE} -- Implementation
 	vuex2a_template_code: STRING is "vuex2a"
 	vuex2b_template_code: STRING is "vuex2b"
 	vuex2c_template_code: STRING is "vuex2c"
+	vwbe0a_template_code: STRING is "vwbe0a"
+	vwbe0b_template_code: STRING is "vwbe0b"
 	vweq0a_template_code: STRING is "vweq0a"
 	vweq0b_template_code: STRING is "vweq0b"
 	vwst1a_template_code: STRING is "vwst1a"
@@ -6979,6 +7807,8 @@ feature {NONE} -- Implementation
 	gvhpr5a_template_code: STRING is "gvhpr5a"
 	gvuaa0a_template_code: STRING is "gvuaa0a"
 	gvual0a_template_code: STRING is "gvual0a"
+	gvuia0a_template_code: STRING is "gvuia0a"
+	gvuil0a_template_code: STRING is "gvuil0a"
 	gvzzz0a_template_code: STRING is "gvzzz0a"
 			-- Template error codes
 

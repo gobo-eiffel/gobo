@@ -158,7 +158,7 @@ feature {NONE} -- Type resolving
 					if args /= Void then
 						an_index := args.index_of (an_argument_name)
 						if an_index /= 0 then
-							a_type.resolve_like_argument (current_feature.first_seed, an_index)
+							a_type.resolve_like_argument (current_feature.first_seed, an_index, an_argument_name)
 							resolved := True
 						end
 					end
