@@ -57,7 +57,7 @@ feature -- Setting
 			-- Set `directory_separators' to `separators'.
 		require
 			separators_not_void: separators /= Void
-			separators_not_empty: not separators.empty
+			separators_not_empty: separators.count > 0
 		do
 			directory_separators := separators
 		ensure
@@ -67,6 +67,6 @@ feature -- Setting
 invariant
 
 	directory_separators_not_void: directory_separators /= Void
-	directory_separators_not_empty: not directory_separators.empty
+	directory_separators_not_empty: directory_separators.count > 0
 
 end -- class UT_FILENAME_HANDLER

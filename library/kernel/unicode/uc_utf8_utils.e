@@ -287,7 +287,7 @@ feature
 	 -- and having a length of `cnt', an valid one?
       require
 	 buffer_not_void: buffer /= void;
-	 valid_index: buffer.empty or else buffer.valid_index(start);
+	 valid_index: buffer.count = 0 or else buffer.valid_index(start);
 	 valid_cnt: cnt >= 0;
 	 valid_cnt_1: cnt > 0 implies buffer.valid_index(start+cnt-1);
       local

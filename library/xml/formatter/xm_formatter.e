@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			str_not_void: str /= Void
 			last_string_not_void: last_string /= Void
 		do
-			last_string.append_ucstring (str)
+			last_string.append_uc_string (str)
 		end
 
 	append (str: STRING) is
