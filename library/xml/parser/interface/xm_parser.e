@@ -85,6 +85,46 @@ feature -- Status report
 		deferred
 		end
 
+feature -- Resolving external entity
+
+	set_resolver (a_resolver: like dtd_resolver) is
+			-- Set both entity and DTD resolvers to the same one.
+		require
+			not_void: a_resolver /= Void
+		do
+			set_dtd_resolver (a_resolver)
+			set_entity_resolver (a_resolver)
+		ensure
+			entity_resolver_set: entity_resolver = a_resolver
+			dtd_resolver_set: dtd_resolver = a_resolver
+		end
+		
+	set_dtd_resolver (a_resolver: like dtd_resolver) is
+			-- Set resolver for external DTD.
+		require
+			not_void: a_resolver /= Void
+		do
+			dtd_resolver := a_resolver
+		ensure
+			dtd_resolver_set: dtd_resolver = a_resolver
+		end
+		
+	set_entity_resolver (a_resolver: like entity_resolver) is
+			-- Set resolver for external entities.
+		require
+			not_void: a_resolver /= Void
+		do
+			entity_resolver := a_resolver
+		ensure
+			entity_resolver_set: entity_resolver = a_resolver
+		end
+		
+	dtd_resolver: XM_EXTERNAL_RESOLVER
+			-- Resolver for external DTD.
+			
+	entity_resolver: XM_EXTERNAL_RESOLVER
+			-- Resolver for external entities.
+		
 feature -- Access
 
 	source: XM_SOURCE is
@@ -142,4 +182,7 @@ feature -- Error reporting
 			description_not_void: Result /= Void
 		end
 
+invariant
+	resolvers_not_void: entity_resolver /= Void and dtd_resolver /= Void
+	
 end
