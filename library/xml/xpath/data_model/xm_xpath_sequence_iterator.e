@@ -14,6 +14,8 @@ deferred class XM_XPATH_SEQUENCE_ITERATOR [G -> XM_XPATH_ITEM]
 
 inherit
 
+	ANY -- required by SE 2.1b1
+	
 	XM_XPATH_DEBUGGING_ROUTINES
 
 feature -- Access

@@ -14,6 +14,8 @@ deferred class XM_XPATH_ITEM
 
 inherit
 
+	ANY -- required by SE 2.1b1
+	
 	XM_XPATH_TYPE
 
 	XM_XPATH_ERROR_TYPES

@@ -13,6 +13,8 @@ indexing
 class XM_XPATH_TYPE
 
 inherit
+	
+	ANY -- required by SE 2.1b1
 
 	XM_XPATH_SHARED_TYPE_FACTORY
 
