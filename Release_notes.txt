@@ -1,15 +1,9 @@
-HACT 1.6 (Halstenbach)
+HACT 2.0 (Halstenbach)
 
-    . On Windows 95, after C compilation of a system, started by freeze
-      or melt, the console input of the application (the statements
-      io.readxxxx) does not work properly. Most of the time the application
-      hangs during executing of an 'io.readxxxx' statement.
+    . Make sure that sure that you have the CL1 patch release
+      installed.
 
-      Workaround: Stop and restart ibbench and start the application again.
-
-      See the release notes which come with ibbench for details.
-
-ISE 4.1 (ISE Eiffel)
+ISE 4.2F (ISE Eiffel)
 
     . Input routines such as `read_character' from class CONSOLE do not
       work as expected under Windows. When one writes something like:
@@ -46,115 +40,8 @@ ISE 4.1 (ISE Eiffel)
       This bug prevents some of the examples using IO input (such as the
       calculator examples) from working.
 
-SE -0.83 (SmallEiffel)
+SE -0.81 (SmallEiffel)
 
-TOWER 2.0.0 (TowerEiffel)
+VE 2.3 (Visual Eiffel)
 
-    . This compiler is not fully supported yet because of problems with
-      manifest arrays (which are extensively used in gelex and geyacc).
-
-    . The option '-a' has been introduced in Gelex to produce smaller
-      manifest arrays. However it does not solve completely the problems
-      reported above. You may try to play with this option anyway.
-      For more information about Gelex options, see "$GOBO\doc\gelex".
-
-VE 2.1 (Visual Eiffel)
-
-    . Feature 'clone' is not implemented correctly in class GENERAL.
-      ETL, page 299, states that the resulting object should be initialized
-      by applying 'copy' to that object, which is not done in Visual Eiffel.
-      I have been promised by Object-Tools that this bug will be fixed
-      in 2.2. In the meantime, replace 'clone' in GENERAL by:
-
-          frozen clone (other : GENERAL) : like other is
-                  -- Void if 'other' is void; otherwise,
-                  -- new object equal to 'other'
-              do
-                  if other /= Void then
-                     Result := c_gen_standard_clone (other)
-                     Result.copy (other)
-                  end
-              ensure
-                  equal: equal (Result, other)
-              end
-
-      Note that this workaround is not 100% satisfactory since the invariant
-      of 'Result' may be invalid after 'c_gen_standard_clone', resulting
-      in an invariant violation when calling 'copy'. Following is an 
-      example where the invariant is violated:
-
-          class A
-
-          inherit
-
-              ANY
-                  redefine
-                      copy
-                  end
-
-          creation
-
-              make
-
-          feature {NONE} -- Initialization
-
-              make is
-                      -- Create a new A.
-                  do
-                      !! b.make (Current)
-                  end
-
-          feature -- Access
-
-              b: B
-
-          feature -- Duplication
-
-              copy (other: like Current) is
-                      --
-                  do
-                      standard_copy (other)
-                      !! b.make (Current)
-                  end
-
-          invariant
-
-              b_not_void: b /= Void
-              two_way: b.a = Current
-
-          end -- class A
-
-          class B
-
-          creation
-
-              make
-
-          feature {NONE} -- Initialization
-
-              make (aa: like a) is
-                      -- Create a new B.
-                  do
-                      a := aa
-                  ensure
-                      a_set: a = aa
-                  end
-
-          feature -- Access
-
-              a: A
-
-          invariant
-
-              a_not_void: a /= Void
-
-          end -- class B
-
-      The following piece of code:
-
-          a1, a2: A
-          !! a1.make
-          a2 := clone (a1)
-
-      will violate the invariant "two_way".
-
+    . Make sure that you have the Service Pack 2 installed.

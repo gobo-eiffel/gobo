@@ -1,4 +1,4 @@
-Gobo Eiffel, version 1.2
+Gobo Eiffel, version 1.3
 
 One of the main concerns of Gobo Eiffel is to provide you with Eiffel
 libraries and tools that are portable across various Eiffel compilers
@@ -6,13 +6,9 @@ available on the market. That way, you can still use your favorite
 Eiffel compiler while taking advantage of the goodies included in
 this package.
 
-The software included in this package is distributed under the terms
-and conditions listed in file "License.txt". This basically says 
-"do whatever you please with this software except removing the
-copyright notice from the source code". Note that this license is
-more flexible than GNU licenses since this software may be used
-in non-free programs. (Geyacc, based on GNU Bison, is distributed
-under GNU GPL though.)
+The software included in this package is copyrighted freeware distributed
+under the terms and conditions of the Eiffel Forum Freeware License as 
+specified in file License.txt.
 
 This package consists of five Eiffel libraries:
 
@@ -24,14 +20,21 @@ This package consists of five Eiffel libraries:
 
 and three utilities:
 
-    . Gobo Eiffel Lex, version 1.2 (gelex)
-    . Gobo Eiffel Yacc, version 1.0a (geyacc)
-    . Gobo Eiffel Preprocessor (gepp)
+    . Gobo Eiffel Lex, version 1.3 (gelex)
+    . Gobo Eiffel Yacc, version 1.2 (geyacc)
+    . Gobo Eiffel Preprocessor, version 1.1 (gepp)
 
-The originality of this software compared to other already existing lex and
-yacc programs for Eiffel, apart from its portability on many Eiffel compilers,
-is that gelex is entirely written in Eiffel using the lexical library, making
-it possible to include gelex functionalities in your own programs.
+The originality of this software compared to other already existing lex
+and yacc programs for Eiffel, apart from its portability on many Eiffel
+compilers, is that gelex and geyacc are entirely written in Eiffel using
+the lexical and parse libraries, making it possible to include gelex and
+geyacc functionalities in your own programs. On the other hand, care has
+been taken to make sure that the skeleton classes of gelex and geyacc
+were not dependent on classes other than those from the Eiffel kernel.
+In particular the output of gelex and geyacc can be included into your
+application without the overhead of the library classes provided in the
+Gobo Eiffel package (see "$GOBO\doc\gelex\stages.html" and
+"$GOBO\doc\geyacc\stages.html" for details).
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
@@ -47,15 +50,16 @@ known as the distribution directory. Also put the directory $GOBO\bin
 in your PATH.
 
 The supported Eiffel compilers, in alphabetical order, are:
-Halstenbach 1.6, ISE Eiffel 4.1, SmallEiffel -0.83, Visual Eiffel 2.1.
-An effort has been made to port this package to TowerEiffel 2.0, however
-this compiler is not fully supported yet because of problems with manifest
-arrays (which are extensively used in gelex and geyacc). For more details
-about the supported Eiffel compilers, please see the file
-"Release_notes.txt". This software might work with other Eiffel compilers
-and/or other compiler versions, however no test has been made.
-To have a better understanding of the way this software has been designed
-and implemented, you can also have a look at "$GOBO\doc\portability".
+Halstenbach 2.0 CL1, ISE Eiffel 4.2F, SmallEiffel -0.81, Visual Eiffel
+2.3 Service Pack 2.  An effort has been made to port this package to
+TowerEiffel 2.0, however this compiler is not supported yet because of
+problems with manifest arrays (which are extensively used in gelex and
+geyacc). For more details about the supported Eiffel compilers, please
+see the file "Release_notes.txt". This software might work with other
+Eiffel compilers and/or other compiler versions, however no test has
+been made.  To have a better understanding of the way this software has
+been designed and implemented, you can also have a look at
+"$GOBO\doc\portability".
 
 In this distribution:
 
@@ -94,14 +98,8 @@ your work and ideas as well. I would also be interested to hear about
 your projects and how easy (or difficult) it was to adapt this software
 for your specific needs. Thank you in advance.
 
-+------------------------------------------------------------------------------+
-|  THIS SOFTWARE IS PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED        |
-|  WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF        |
-|  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.                       |
-+------------------------------------------------------------------------------+
-
 --
-Copyright (c) 1997, Eric Bezault
+Copyright (c) 1998, Eric Bezault
 mailto:ericb@gobo.demon.co.uk
 http://www.gobo.demon.co.uk
-17 December 1997
+23 May 1998
