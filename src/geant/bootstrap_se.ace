@@ -10,24 +10,24 @@ default
 	no_style_warning (yes)
 			assertion (ensure)
 cluster
-	geant: "${BONBON}/tools/geant"
+	geant: "${GOBO}/src/geant"
 		default
 			assertion (no)
 		option
 	;
-	geant_command: "${BONBON}/tools/geant/command"
-		default
-			assertion (no)
-		option
-	;
-
-	geant_task: "${BONBON}/tools/geant/task"
+	geant_command: "${GOBO}/src/geant/command"
 		default
 			assertion (no)
 		option
 	;
 
-	geant_parser: "${BONBON}/tools/geant/parser"
+	geant_task: "${GOBO}/src/geant/task"
+		default
+			assertion (no)
+		option
+	;
+
+	geant_parser: "${GOBO}/src/geant/parser"
 		default
 			assertion (no)
 		option

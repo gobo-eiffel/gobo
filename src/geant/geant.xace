@@ -7,7 +7,7 @@
 			<ensure enable="True"/>
 		</option>
 
-		<cluster name="geant" location="${BONBON}/tools/geant" >
+		<cluster name="geant" location="${GOBO}/src/geant" >
 			<cluster name="command" />
 			<cluster name="task" />
 			<cluster name="parser" />
