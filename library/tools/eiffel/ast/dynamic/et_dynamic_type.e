@@ -53,6 +53,9 @@ feature -- Status report
 			definition: Result = base_type.is_expanded
 		end
 
+	has_static: BOOLEAN
+			-- Does current type contain features that are used as static features?
+
 feature -- Conformance
 
 	conforms_to_type (other: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): BOOLEAN is
@@ -85,7 +88,35 @@ feature -- Status setting
 			alive_set: is_alive = b
 		end
 
+	set_static (b: BOOLEAN) is
+			-- Set `has_static' to `b'.
+		do
+			has_static := b
+		ensure
+			static_set: has_static = b
+		end
+
 feature -- Access
+
+	typed_pointer_type (a_system: ET_SYSTEM): ET_DYNAMIC_TYPE is
+			-- Typed pointer type of current type
+		require
+			a_system_not_void: a_system /= Void
+		local
+			a_typed_pointer_type: ET_GENERIC_CLASS_TYPE
+			a_typed_pointer_class: ET_CLASS
+			an_actuals: ET_ACTUAL_PARAMETER_LIST
+			a_universe: ET_UNIVERSE
+		do
+			a_universe := a_system.universe
+			create an_actuals.make_with_capacity (1)
+			an_actuals.put_first (base_type)
+			a_typed_pointer_class := a_universe.typed_pointer_class
+			create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
+			Result := a_system.dynamic_type (a_typed_pointer_type, a_universe.any_class)
+		ensure
+			typed_pointer_type_not_void: Result /= Void
+		end
 
 	base_type: ET_BASE_TYPE
 			-- Base type
