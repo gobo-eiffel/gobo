@@ -37,7 +37,7 @@ inherit
 			setup, consistent
 #endif
 		select
-#ifdef ISE || HACT
+#ifdef (ISE && ISE_5_1) || HACT
 				-- Note: The signature of STRING.out in ISE 5.1 and HACT 4.0.1
 				-- is not compliant with ELKS 2001 STRING and does not allow
 				-- a redefinition here. Redefine version from ANY instead.
@@ -70,10 +70,12 @@ inherit
 			clear_all as old_clear_all,
 #endif
 #ifdef ISE || HACT
+#ifdef (ISE && ISE_5_1) || HACT
 				-- Note: The signature of STRING.out in ISE 5.1 and HACT 4.0.1
 				-- is not compliant with ELKS 2001 STRING and does not allow
 				-- a redefinition here. Redefine version from ANY instead.
 			out as old_out,
+#endif
 				-- Note: The postconditions of `wipe_out' in HACT 4.0.1
 				-- and ISE 5.1 does not allow an optimized ELKS compliant
 				-- redefinition here. In particular we don't want to
@@ -134,7 +136,7 @@ inherit
 			remove_substring,
 			as_lower, as_upper,
 #endif
-#ifdef SE || VE
+#ifdef SE || VE || (ISE && ! ISE_5_1)
 			out, fill_with,
 #endif
 #ifdef SE
@@ -175,10 +177,12 @@ inherit
 #endif
 			is_empty as old_is_empty,
 			clear_all as old_clear_all,
+#ifdef (ISE && ISE_5_1)
 				-- Note: The signature of STRING.out in ISE 5.1 and HACT 4.0.1
 				-- is not compliant with ELKS 2001 STRING and does not allow
 				-- a redefinition here. Redefine version from ANY instead.
 			out as old_out,
+#endif
 				-- Note: The postconditions of `wipe_out' in HACT 4.0.1
 				-- and ISE 5.1 does not allow an optimized ELKS compliant
 				-- redefinition here. In particular we don't want to
@@ -219,6 +223,7 @@ inherit
 			remove_head, remove_tail,
 			remove_substring,
 			as_lower, as_upper,
+			out, fill_with,
 #endif
 			old_wipe_out,
 			old_substring_index,

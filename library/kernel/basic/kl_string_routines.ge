@@ -404,6 +404,7 @@ feature -- Access
 				-- other_not_empty: other.count > 0
 				-- start_index_large_enough: start_index >= 1
 				-- start_index_small_enough: start_index <= a_string.count
+				-- Fixed in ISE 5.2.
 			if other.count = 0 then
 				Result := start_index
 			elseif start_index = a_string.count + 1 then
@@ -815,10 +816,11 @@ feature -- Element change
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon
 			-- as it is supported by ISE and HACT, which is not the
-			-- case in ISE 5.1.14 and HACT 4.0.1.
+			-- case in ISE 5.1.14 and HACT 4.0.1 (implemented in
+			-- ISE 5.2).
 		require
 			a_string_not_void: a_string /= Void
-#ifdef HACT || ISE
+#ifdef HACT || (ISE && ISE_5_1)
 		local
 			i, nb: INTEGER
 		do
@@ -828,7 +830,7 @@ feature -- Element change
 				i := i + 1
 			end
 #endif
-#ifdef SE || VE
+#ifdef SE || VE || (ISE && ! ISE_5_1)
 		do
 			a_string.fill_with (c)
 #endif
@@ -1115,7 +1117,7 @@ feature -- Removal
 			-- (ELKS 2001 STRING)
 			-- Note: This routine should be made obsolete as soon as
 			-- ISE and HACT support it, which is not yet the case
-			-- as of ISE 5.1 and HACT 4.0.1.
+			-- as of ISE 5.1 and HACT 4.0.1 (implemented in ISE 5.2).
 		require
 			a_string_not_void: a_string /= Void
 			valid_start_index: 1 <= start_index
