@@ -1,47 +1,47 @@
 indexing
 
 	description:
-	
+
 		"Split a string into tokens"
-	
+
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class ST_SPLITTER
 
 inherit
-	
+
 	ANY
-	
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
 creation
 
 	make
-	
+
 feature {NONE} -- Creation
 
 	make is
 			-- Initialise.
 		do
-			set_separators (Default_Separators)
+			set_separators (Default_separators)
 		ensure
 			default_separators: separators = Default_separators 
 			no_escape_character: not has_escape_character
 		end
-		
+
 feature -- Status	
 
 	separators: STRING
 			-- Characters used as token separators
-	
+
 	has_escape_character: BOOLEAN
 			-- Is there an escape character set?
-			
+
 	escape_character: CHARACTER
 			-- Escape character
 			-- (When in an input string, it is removed and replaced 
@@ -56,7 +56,7 @@ feature {NONE} -- Status
 	separator_codes: DS_HASH_SET [INTEGER]
 			-- Character codes of separators 
 			-- (Hashed, and integer for unicode compatibility.)
-			
+
 feature -- Setting
 
 	set_separators (a_string: STRING) is
@@ -95,7 +95,7 @@ feature -- Setting
 			has_escape_character: has_escape_character
 			escape_character_set: escape_character = a_character
 		end
-		
+
 	reset_escape_character is
 			-- Remove escape character.
 		do
@@ -157,7 +157,7 @@ feature -- Operation(s)
 				and then a_string.item (a_string.count - 1) /= escape_character)
 					implies (Result.last.item (Result.last.count) = escape_character)
 		end
-		
+
 	join (a_linear: DS_LINEAR [STRING]): STRING is
 			-- Join sequence to a string using the first of 
 			-- the separators as separator, and escape separators 
@@ -189,7 +189,7 @@ feature -- Operation(s)
 			same_count: split (Result).count = a_linear.count
 			stable_reversible: join (split (Result)).is_equal (Result)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	is_separator (a_string: STRING; a_position: INTEGER): BOOLEAN is
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 				Result := separator_codes.has (a_string.item_code (a_position))
 			end
 		end
-		
+
 	escape_appended_string (a_result: STRING; a_string: STRING): STRING is
 			-- Append a string, with escaping if necessary.
 		require
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 				Result := STRING_.appended_string (Result, a_string.substring (last_after, cnt))
 			end
 		end
-		
+
 	unescape (a_string: STRING): STRING is
 			-- Remove escaped character sequences from input string.
 		require
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 				Result := a_string
 			end
 		end
-				
+
 invariant
 
 	separators_not_void: separators /= Void
