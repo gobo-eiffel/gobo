@@ -77,7 +77,8 @@ S_NS_WORD     {S_WORD}:{S_WORD}
 
 %s B_IN_TAG B_IN_CONTENT B_IN_PI B_IN_XML_DECL B_IN_DOCTYPE
 %s B_IN_PI_AFTER_TARGET
-%x B_IN_ATTR_TEXT B_IN_XML_DECL_ATTR_TEXT B_IN_COMMENT B_IN_COMMENT_AFTER_CONTENT
+%x B_IN_ATTR_TEXT B_IN_XML_DECL_ATTR_TEXT
+%x B_IN_COMMENT B_IN_COMMENT_AFTER_CONTENT
 
 %%
 
@@ -275,54 +276,69 @@ S_NS_WORD     {S_WORD}:{S_WORD}
         handle_found_text
   }
 
--- comments
+-- Comments
 
-<B_IN_CONTENT>{S_START_COMMENT}	{
+<B_IN_CONTENT>{S_START_COMMENT} {
 			last_token := T_START_COMMENT
 			set_start_condition (B_IN_COMMENT)
 		}
+
+<B_IN_COMMENT>{
+	[^-]+ {
+				-- A sequence of characters not including a
+				-- minus sign can be included in the comment
+				-- token.
+			more
+		}
+	\-[^-] {
+				-- A minus sign followed by a character which
+				-- is not itself a minus sign can be included
+				-- in the comment token.
+			more
+		}
+	\-\-[^->] {
+				-- Two minus signs followed by a character which
+				-- is not a greater-than or a minus sign can be
+				-- included in the comment token.
+			more
+		}
+	\-/\-\- {
+				-- If we have three consecutive minus signs, we
+				-- we include the first one in the comment token
+				-- and see if the two others are not part of the
+				-- end of comment marker.
+			more
+		}
+	\-\-> {
+				-- This is the end of comment marker.
+			less (text_count - 3)
+			last_token := T_COMMENT_CONTENT
+			handle_found_text
+			set_start_condition (B_IN_COMMENT_AFTER_CONTENT)
+		}
+}
 
 <B_IN_COMMENT_AFTER_CONTENT>{S_END_COMMENT} {
 			last_token := T_END_COMMENT
 			set_start_condition (B_IN_CONTENT)
 		}
 
-<B_IN_COMMENT>(.|\n)*/{S_END_COMMENT} {
-				-- since the longest text is matched by gelex
-				-- having more than one comment this rule will
-				-- match until the last S_END_COMMENT in the input.
-				-- What we want is that it matches the shortest text.
-				-- Since this is not possible with the current implementation
-				-- of gelex's regexp's this is simulated by unreading the text
-				-- matched too much.
-			if text.substring_index ("-->", 1) > 0 then
-				less (text.substring_index ("-->", 1) - 1)
-			end
-
-			last_token := T_COMMENT_CONTENT
-			handle_found_text
-			set_start_condition (B_IN_COMMENT_AFTER_CONTENT)
-		}
+-- Unexpected characters
 
 <*>.|\n {
-	handle_found_text
-  }
+			last_token := T_UNKNOWN
+		}
 
 %%
-
-feature {NONE} -- Initialization
-
-feature -- Initialization
 
 feature -- Access
 
 	handle_found_text is
-	        do
-		        last_value := new_unicode_string (text)
-	        end
-
+		do
+			last_value := new_unicode_string (text)
+		end
 
 	last_value: UC_STRING
 			-- Last value read (only valid for some tokens)
 
-end
+end -- class XF_SCANNER
