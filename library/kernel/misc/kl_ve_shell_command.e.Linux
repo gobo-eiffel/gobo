@@ -16,6 +16,21 @@ class KL_VE_SHELL_COMMAND
 inherit
 
 	EXTERNAL_PROCESS
+		rename
+			make_shell as old_make_shell
+		end
+
+feature {NONE} -- Initialization
+
+	make_shell (a_command_name: STRING) is
+			-- Just to set the invariant.
+		require
+			a_command_name_not_void: a_command_name /= Void
+			a_command_name_not_empty: not a_command_name.is_empty
+		do
+			filename := a_command_name
+			!! argument_array.make (1, 0)
+		end
 
 feature -- Execution
 

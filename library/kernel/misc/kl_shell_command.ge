@@ -70,9 +70,7 @@ feature {NONE} -- Initialization
 		do
 			string_command := STRING_.as_string (a_command)
 #ifdef VE
-			if operating_system.is_windows then
-				make_shell (string_command)
-			end
+			make_shell (string_command)
 #endif
 #ifdef HACT
 			old_make (string_command)
