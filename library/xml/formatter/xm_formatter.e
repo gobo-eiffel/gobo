@@ -48,7 +48,7 @@ feature -- Initialization
 	wipe_out is
 			-- Clear `last_string'.
 		do
-			last_string.wipe_out
+--			last_string.wipe_out
 		end
 
 feature -- Access
@@ -308,7 +308,7 @@ feature {NONE} -- Non standard processor routines
 feature {NONE} -- Implementation
 
 	append (a_string: STRING) is
-			-- Append `a_string' to `last_string'.
+			-- Append `a_string' to `last_output'.
 		require
 			a_string_not_void: a_string /= Void
 		do
