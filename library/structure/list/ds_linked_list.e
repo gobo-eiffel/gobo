@@ -1119,8 +1119,7 @@ feature -- Removal
 					end
 				else
 						-- Use `=' as comparison criterion.
-
-						-- Remove all occurrences of `v' at the beginning
+						-- First, remove all occurrences of `v' at the beginning
 						-- of the list.
 					from
 						a_cell := first_cell

@@ -25,7 +25,7 @@ feature -- Sort
 	subsort_with_comparator (a_container: DS_INDEXABLE [G]; a_comparator: KL_PART_COMPARATOR [G]; lower, upper: INTEGER) is
 			-- Sort `a_container' according to `a_comparator''s comparison criterion within bounds `lower'..`upper'.
 			-- Build a heap into container, where `lower' is the root, then iterate k from `upper' to `lower',
-			-- swapping root element with k-th, and maintaining the heap property of [lower..k-1] .
+			-- swapping root element with k-th, and maintaining the heap property of [`lower'..k-1] .
 		local
 			i: INTEGER
 			count: INTEGER

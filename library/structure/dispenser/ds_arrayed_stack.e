@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 		require
 			positive_n: n >= 0
 		do
-			create SPECIAL_
-			storage := SPECIAL_.make (n + 1)
+			create special_routines
+			storage := special_routines.make (n + 1)
 			capacity := n
 		ensure
 			empty: is_empty
@@ -287,7 +287,7 @@ feature -- Resizing
 			-- Resize stack so that it can contain
 			-- at least `n' items. Do not lose any item.
 		do
-			storage := SPECIAL_.resize (storage, n + 1)
+			storage := special_routines.resize (storage, n + 1)
 			capacity := n
 		end
 
@@ -314,13 +314,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	SPECIAL_: KL_SPECIAL_ROUTINES [G]
+	special_routines: KL_SPECIAL_ROUTINES [G]
 			-- Routines that ought to be in SPECIAL
 
 invariant
 
 	storage_not_void: storage /= Void
 	capacity_definition: capacity = storage.count - 1
-	special_routines_not_void: SPECIAL_ /= Void
+	special_routines_not_void: special_routines /= Void
 
 end

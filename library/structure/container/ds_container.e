@@ -54,7 +54,7 @@ feature -- Comparison
 				-- TODO: The following assertion has been commented out
 				-- because of a bug in SmallEiffel -0.77b2 (implicit
 				-- feature renaming in ACTIVE, COUNTABLE and LINEAR
-				-- in cluster $GOBO/library/structure/base).
+				-- in cluster $GOBO/library/other/EiffelBase).
 			-- same_count: Result implies count = other.count
 		end
 

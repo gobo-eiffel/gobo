@@ -29,7 +29,6 @@
 		<description>
 			Remove intermediary generated files.
 		</description>
-
 		<ve clean="structure" recursive="true"/>
 	</target>
 
@@ -37,7 +36,6 @@
 		<description>
 			Remove all generated files.
 		</description>
-
 		<geant target="clean"/>
 	</target>
 

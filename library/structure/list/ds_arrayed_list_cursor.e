@@ -105,7 +105,7 @@ feature {DS_ARRAYED_LIST} -- Implementation
 
 invariant
 
--- The following assertion are commented out because
+-- The following assertion is commented out because
 -- some Eiffel compilers check invariants even when the
 -- execution of the creation procedure is not completed.
 -- (In this case, this is `container' which is not fully
