@@ -45,15 +45,8 @@ feature -- Status report
 
 	is_executable: BOOLEAN is
 			-- Can command be executed?
-		local
-			a_has_directory: BOOLEAN
-			a_has_file: BOOLEAN
 		do
 			Result := is_file_executable xor is_directory_executable
-
-			a_has_directory := directory /= Void and then directory.count > 0
-			a_has_file := file /= Void and then file.count > 0
-			Result := (a_has_directory and not a_has_file) or (not a_has_directory and a_has_file)
 		ensure then
 			file_xor_directory: Result implies (is_file_executable xor is_directory_executable)
 		end
@@ -97,11 +90,12 @@ feature -- Execution
 		local
 			a_directory: KL_DIRECTORY
 		do
-			if directory /= Void then
+			if is_directory_executable then
 				log ("  [delete] " + directory + "%N")
 				!! a_directory.make (directory)
 				a_directory.recursive_delete
 			else
+				check is_file_executable: is_file_executable end
 				log ("  [delete] " + file + "%N")
 				file_system.delete_file (file)
 			end
