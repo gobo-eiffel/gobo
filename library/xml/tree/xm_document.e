@@ -153,10 +153,10 @@ feature {NONE} -- Implementation
 				a_cursor.after
 			loop
 				if a_cursor.item = root_element then
-				   a_cursor.remove
-				   a_cursor.go_after
+					a_cursor.remove
+					a_cursor.go_after
 				else
-				   a_cursor.forth
+					a_cursor.forth
 				end
 			end
 		end

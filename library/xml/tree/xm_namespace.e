@@ -74,7 +74,7 @@ feature -- Status report
 		ensure then
 			definition: Result = STRING_.same_string (uri, other.uri)
 		end
-		
+	
 	hash_code: INTEGER is
 			-- Hash code of URI.
 		do
@@ -82,7 +82,7 @@ feature -- Status report
 				Result := uri.hash_code
 			end
 		end
-		
+	
 	out: STRING is
 			-- Out.
 		do
@@ -92,7 +92,7 @@ feature -- Status report
 				Result := uri
 			end
 		end
-		 
+	
 feature -- Status report
 
 	same_prefix (other: XM_NAMESPACE): BOOLEAN is
