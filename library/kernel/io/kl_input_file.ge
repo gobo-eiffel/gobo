@@ -40,6 +40,7 @@ inherit
 		rename
 			read_stream as ise_read_stream,
 			make as ise_make,
+			name as do_name,
 			open_read as ise_open_read,
 			read_line as ise_read_line,
 			close as do_close,
@@ -55,6 +56,7 @@ inherit
 		rename
 			read_stream as hact_read_stream,
 			make as hact_make,
+			name as do_name,
 			open_read as hact_open_read,
 			read_line as hact_read_line,
 			close as do_close,
@@ -93,6 +95,7 @@ inherit
 	FILE
 		rename
 			make as ve_make,
+			name as do_name,
 			read_stream as ve_read_stream,
 			read_character as ve_read_character,
 			open_read as ve_open_read,
@@ -113,16 +116,24 @@ feature {NONE} -- Initialization
 	make (a_name: like name) is
 			-- Create a new input file named `a_name'.
 		do
-#ifdef ISE || HACT
 			name := a_name
+#ifdef ISE || HACT
+			if a_name.count > 0 then
+				do_name := a_name
+			else
+				do_name := Empty_name
+			end
 			mode := Closed_file
 #endif
 #ifdef SE
-			name := a_name
 			se_make
 #endif
 #ifdef VE
-			ve_make (a_name)
+			if a_name.count > 0 then
+				ve_make (a_name)
+			else
+				ve_make (Empty_name)
+			end
 #endif
 		end
 
@@ -131,10 +142,10 @@ feature -- Access
 	eol: STRING is "%N"
 			-- Line separator
 
-#ifdef SE
 	name: STRING
 			-- File name
 
+#ifdef SE
 	last_string: STRING
 			-- Last string read
 			-- (Note: this query always return the same object.
@@ -450,18 +461,20 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
+				if name.count > 0 then
 #ifdef ISE
-				ise_open_read
+					ise_open_read
 #endif
 #ifdef HACT
-				hact_open_read
+					hact_open_read
 #endif
 #ifdef SE
-				connect_to (name)
+					connect_to (name)
 #endif
 #ifdef VE
-				ve_open_read
+					ve_open_read
 #endif
+				end
 			elseif not is_closed then
 				close
 			end
@@ -500,20 +513,23 @@ feature -- Basic operations
 		do
 			if not rescued then
 				old_name := name
+				if old_name.count > 0 and new_name.count > 0 and not new_name.is_equal (old_name) then
 #ifdef SE
-				if file_exists (name) then
-					rename_to (name, new_name)
-					if file_exists (new_name) then
-						name := new_name
+					if file_exists (old_name) then
+						rename_to (old_name, new_name)
+						if file_exists (new_name) then
+							name := new_name
+						end
 					end
-				end
 #endif
 #ifdef ISE || HACT || VE
-				if exists then
-					change_name (new_name)
-				end
+					if exists then
+						change_name (new_name)
+						name := do_name
+					end
 #endif
-			else
+				end
+			elseif old_name /= Void then
 				name := old_name
 			end
 		rescue
@@ -531,14 +547,16 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
+				if name.count > 0 then
 #ifdef SE
-				se_delete (name)
+					se_delete (name)
 #endif
 #ifdef ISE || HACT || VE
-				if exists then
-					do_delete
-				end
+					if exists then
+						do_delete
+					end
 #endif
+				end
 			end
 		rescue
 			if not rescued then
@@ -547,15 +565,17 @@ feature -- Basic operations
 			end
 		end
 
-#ifdef ISE || HACT
+#ifndef SE
 feature {NONE} -- Implementation
 
+#ifdef ISE || HACT
 	file_readable: BOOLEAN is
 			-- Is there a current item that may be read?
 		do
 			Result := is_open_read
 		end
 
+#endif
 #ifdef ISE
 	c_rtid (p: POINTER): POINTER is
 			-- Return `p'
@@ -564,6 +584,11 @@ feature {NONE} -- Implementation
 		alias
 			"/**/"
 		end
+
+#endif
+#ifdef ISE || HACT || VE
+	Empty_name: STRING is "empty_name"
+			-- Empty name place-holder
 
 #endif
 #endif

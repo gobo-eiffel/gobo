@@ -21,6 +21,7 @@ inherit
 	RAW_FILE
 		rename
 			make as ise_make,
+			name as do_name,
 			open_write as ise_open_write,
 			close as do_close,
 			delete as do_delete,
@@ -35,6 +36,7 @@ inherit
 	RAW_FILE
 		rename
 			make as hact_make,
+			name as do_name,
 			open_write as hact_open_write,
 			close as do_close,
 			delete as do_delete,
@@ -72,6 +74,7 @@ inherit
 	FILE
 		rename
 			make as ve_make,
+			name as do_name,
 			open_write as ve_open_write,
 			close as do_close,
 			delete as do_delete,
@@ -91,25 +94,33 @@ feature {NONE} -- Initialization
 	make (a_name: like name) is
 			-- Create a new output file named `a_name'.
 		do
-#ifdef ISE || HACT
 			name := a_name
+#ifdef ISE || HACT
+			if a_name.count > 0 then
+				do_name := a_name
+			else
+				do_name := Empty_name
+			end
 			mode := Closed_file
 #endif
 #ifdef SE
-			name := a_name
 			se_make
 #endif
 #ifdef VE
-			ve_make (a_name)
+			if a_name.count > 0 then
+				ve_make (a_name)
+			else
+				ve_make (Empty_name)
+			end
 #endif
 		end
 
-#ifdef SE
 feature -- Access
 
 	name: STRING
 			-- File name
 
+#ifdef SE
 feature -- Status report
 
 	is_closed: BOOLEAN is
@@ -128,21 +139,23 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
+				if name.count > 0 then
 #ifdef ISE
-				ise_open_write
+					ise_open_write
 #endif
 #ifdef HACT
-				hact_open_write
+					hact_open_write
 #endif
 #ifdef SE
-				output_stream := bfw_open (name.to_external)
-				if output_stream.is_not_null then
-					path := name
-				end
+					output_stream := bfw_open (name.to_external)
+					if output_stream.is_not_null then
+						path := name
+					end
 #endif
 #ifdef VE
-				ve_open_write
+					ve_open_write
 #endif
+				end
 			elseif not is_closed then
 				close
 			end
@@ -188,20 +201,23 @@ feature -- Basic operations
 		do
 			if not rescued then
 				old_name := name
+				if old_name.count > 0 and new_name.count > 0 and not new_name.is_equal (old_name) then
 #ifdef SE
-				if file_exists (name) then
-					rename_to (name, new_name)
-					if file_exists (new_name) then
-						name := new_name
+					if file_exists (old_name) then
+						rename_to (old_name, new_name)
+						if file_exists (new_name) then
+							name := new_name
+						end
 					end
-				end
 #endif
 #ifdef ISE || HACT || VE
-				if exists then
-					change_name (new_name)
-				end
+					if exists then
+						change_name (new_name)
+						name := do_name
+					end
 #endif
-			else
+				end
+			elseif old_name /= Void then
 				name := old_name
 			end
 		rescue
@@ -219,14 +235,16 @@ feature -- Basic operations
 			rescued: BOOLEAN
 		do
 			if not rescued then
+				if name.count > 0 then
 #ifdef SE
-				se_delete (name)
+					se_delete (name)
 #endif
 #ifdef ISE || HACT || VE
-				if exists then
-					do_delete
-				end
+					if exists then
+						do_delete
+					end
 #endif
+				end
 			end
 		rescue
 			if not rescued then
@@ -235,14 +253,19 @@ feature -- Basic operations
 			end
 		end
 
-#ifdef SE
 feature {NONE} -- Implementation
 
+#ifdef SE
 	bfw_open (path_pointer: POINTER): POINTER is
 			-- Open file in binary write mode.
 		do
 			c_inline_c ("R=fopen(a1,%"wb%");")
 		end
+
+#endif
+#ifdef ISE || HACT || VE
+	Empty_name: STRING is "empty_name"
+			-- Empty name place-holder
 
 #endif
 end -- class KL_BINARY_OUTPUT_FILE

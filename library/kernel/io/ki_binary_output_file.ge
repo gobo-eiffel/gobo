@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			-- Create a new output file named `a_name'.
 		require
 			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
 		deferred
 		ensure
 			name_set: name = a_name
@@ -72,7 +71,6 @@ feature -- Basic operations
 		require
 			is_closed: is_closed
 			new_name_not_void: new_name /= Void
-			new_name_not_empty: new_name.count > 0
 		deferred
 		end
 
