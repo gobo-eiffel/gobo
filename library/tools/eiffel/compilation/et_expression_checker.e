@@ -1117,7 +1117,6 @@ feature {NONE} -- Expression validity
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
 			already_checked: BOOLEAN
-			i, nb: INTEGER
 			an_identifier: ET_IDENTIFIER
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			a_locals: ET_LOCAL_VARIABLE_LIST
@@ -1270,7 +1269,6 @@ feature {NONE} -- Expression validity
 			i, nb: INTEGER
 			had_error: BOOLEAN
 			a_type: ET_TYPE
-			other_type: ET_TYPE
 			hybrid_type: BOOLEAN
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
 			array_class: ET_CLASS

@@ -355,7 +355,6 @@ feature {NONE} -- Instruction validity
 			an_actual: ET_EXPRESSION
 			a_formals: ET_FORMAL_ARGUMENT_LIST
 			a_formal: ET_FORMAL_ARGUMENT
-			already_checked: BOOLEAN
 			i, nb: INTEGER
 			an_identifier: ET_IDENTIFIER
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
@@ -931,8 +930,6 @@ feature {NONE} -- Instruction validity
 		local
 			a_conditional: ET_EXPRESSION
 			a_compound: ET_COMPOUND
-			an_invariant_part: ET_INVARIANTS
-			a_variant_part: ET_VARIANT
 			had_error: BOOLEAN
 		do
 			a_compound := an_instruction.from_compound
