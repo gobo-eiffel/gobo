@@ -54,8 +54,6 @@ inherit
 			text as name
 		undefine
 			is_equal
-		redefine
-			process
 		end
 
 	KL_IMPORTED_STRING_ROUTINES

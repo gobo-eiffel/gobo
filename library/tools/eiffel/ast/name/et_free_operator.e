@@ -28,8 +28,6 @@ inherit
 		rename
 			make as make_token,
 			text as free_operator_name
-		redefine
-			process
 		end
 
 creation

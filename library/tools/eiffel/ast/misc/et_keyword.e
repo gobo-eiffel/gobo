@@ -17,8 +17,6 @@ inherit
 	ET_TOKEN
 		rename
 			make as make_token
-		redefine
-			process
 		end
 
 creation
