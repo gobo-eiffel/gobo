@@ -20,8 +20,7 @@ feature -- Initialization
 		require
 			an_array_not_void: an_array /= Void
 		do
-			!! Result.make (min_index, min_index + an_array.count - 1)
-			subcopy (Result, an_array, an_array.lower, an_array.upper, min_index)
+			Result := subarray (an_array, an_array.lower, an_array.upper, min_index)
 		ensure
 			array_not_void: Result /= Void
 			lower_set: Result.lower = min_index
@@ -55,6 +54,27 @@ feature -- Status report
 #endif
 		end
 
+feature -- Access
+
+	subarray (an_array: ARRAY [G]; start_pos, end_pos, min_index: INTEGER): ARRAY [G] is
+			-- Array made up of items from `an_array' within
+			-- bounds `start_pos' and `end_pos'
+		require
+			an_array_not_void: an_array /= Void
+			start_pos_large_enough: start_pos >= an_array.lower
+			end_pos_small_enough: end_pos <= an_array.upper
+			valid_bounds: start_pos <= end_pos + 1
+		do
+			!! Result.make (min_index, min_index + end_pos - start_pos)
+			subcopy (Result, an_array, start_pos, end_pos, min_index)
+		ensure
+			array_not_void: Result /= Void
+			lower_set: Result.lower = min_index
+			count_set: Result.count = end_pos - start_pos + 1
+--			same_items: forall i in Result.lower .. Result.upper,
+--				Result.item (i) = an_array.item (i + start_pos - min_index)
+		end
+
 feature -- Element change
 
 	subcopy (an_array, other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER) is
@@ -64,10 +84,10 @@ feature -- Element change
 			an_array_not_void: an_array /= Void
 			other_not_void: other /= Void
 			not_same: an_array /= other
-			valid_start_pos: other.valid_index (start_pos)
-			valid_end_pos: other.valid_index (end_pos)
+			start_pos_large_enough: start_pos >= other.lower
+			end_pos_small_enough: end_pos <= other.upper
 			valid_bounds: start_pos <= end_pos + 1
-			valid_index_pos: an_array.valid_index (index_pos)
+			index_pos_large_enough: index_pos >= an_array.lower
 			enough_space: (an_array.upper - index_pos) >= (end_pos - start_pos)
 #ifndef ISE || HACT
 		local
@@ -85,7 +105,9 @@ feature -- Element change
 			end
 #else
 		do
-			an_array.subcopy (other, start_pos, end_pos, index_pos)
+			if start_pos <= end_pos then
+				an_array.subcopy (other, start_pos, end_pos, index_pos)
+			end
 #endif
 		ensure
 			-- copied: forall i in 0 .. (end_pos - start_pos),
