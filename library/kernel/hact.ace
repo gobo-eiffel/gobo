@@ -1,0 +1,3 @@
+		-- Gobo Eiffel Kernel Library
+	kl_kernel:			"$GOBO/library/kernel";
+	kl_kernel_spec:		"$GOBO/library/kernel/spec/hact";

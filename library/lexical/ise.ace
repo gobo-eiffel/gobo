@@ -1,0 +1,8 @@
+		-- Gobo Eiffel Lexical Library
+	lx_automaton:		"$GOBO/library/lexical/automaton";
+	lx_error:			"$GOBO/library/lexical/error";
+	lx_lex:				"$GOBO/library/lexical/lex";
+	lx_generation:		"$GOBO/library/lexical/generation";
+	lx_scanner:			"$GOBO/library/lexical/scanner";
+	lx_skeleton:		"$GOBO/library/lexical/skeleton";
+	lx_support:			"$GOBO/library/lexical/support";
