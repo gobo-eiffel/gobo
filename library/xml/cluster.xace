@@ -32,6 +32,10 @@
 	<cluster name="event"/>
 	<cluster name="tree"/>
 	<cluster name="formatter"/>
+	<cluster name="parser" abstract="True">
+		<cluster name="eiffel"/>
+		<cluster name="expat" if="${GOBO_XML_EXPAT}"/>
+	</cluster>
 	<cluster name="impl" abstract="True">
 		<cluster name="interface" abstract="True">
 			<cluster name="general"/>
