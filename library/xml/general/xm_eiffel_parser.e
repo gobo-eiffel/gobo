@@ -61,7 +61,7 @@ feature -- Parsing
 			!XM_STRING_SOURCE! source
 			uc_string ?= a
 			if uc_string = Void then
-				!UC_UTF8_STRING! uc_string.make_from_string (a)
+				uc_string := new_unicode_string (a)
 			end
 			!! a_stream.make (uc_string.to_utf8)
 			parse_stream (a_stream)

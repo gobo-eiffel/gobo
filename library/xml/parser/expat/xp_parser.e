@@ -127,12 +127,12 @@ feature {ANY} -- Element change
 			r: BOOLEAN
 		do
 				-- don't have a way yet to turn UC_STRING to pointer...
-			r := exml_XML_SetBase_string (item, a_base.to_utf8)
+			r := exml_XML_SetBase_string (item, new_unicode_string (a_base).to_utf8)
 			if not r then
 				raise ("Expat out of memory.%N")
 			end
 		ensure
-			same_string (relative_URI_base)
+			same_string (relative_URI_base, a_base)
 		end
 
 	relative_URI_base: STRING is
