@@ -239,6 +239,15 @@ feature -- Error reporting
 			result_not_void: Result /= Void
 		end
 
+feature {XM_PARSER_STOP_ON_ERROR_FILTER} -- Error reporting
+
+	force_unreported_error (an_error: STRING) is
+			-- Force error but do not report it to event listeners.
+		require
+			an_error_not_void: an_error /= Void
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	safe_error_component (a_string: STRING): STRING is
@@ -294,15 +303,6 @@ feature {NONE} -- Implementation
 	
 	Safe_error_component_undefined: STRING is "undefined"
 			-- Error component undefined
-
-feature {XM_PARSER_STOP_ON_ERROR_FILTER} -- Error reporting
-
-	force_unreported_error (an_error: STRING) is
-			-- Force error but do not report it to event listeners.
-		require
-			an_error_not_void: an_error /= Void
-		deferred
-		end
 
 invariant
 
