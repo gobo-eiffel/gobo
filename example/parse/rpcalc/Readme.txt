@@ -1,14 +1,15 @@
 This directory contains the source code for the reverse polish notation
 calculator used as an example in Geyacc documentation.
-Please refer to $GOBO\doc\geyacc\examples.html for details.
+Please refer to $GOBO/doc/geyacc/examples.html for details.
 
 To compile this example:
 
 1. Use the script 'make_parser.bat' to generate class RPCALC if necessary.
 2. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace) or
-   ESD file (Visual Eiffel: ve.esd). With SmallEiffel, you can just execute
-   the script se.bat or se.sh (after possible modifications).
+   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace),
+   ESD file (Visual Eiffel: ve.esd) or loadpath file (SmallEiffel:
+   loadpath.se). If you have GNU make, you can alternatively type:
+    'make ise', 'make hact', 'make ve' or 'make se'.
 5. Run the calcultor:
        rpcalc
    and enter reverse polish notation expressions to be evaluated, one

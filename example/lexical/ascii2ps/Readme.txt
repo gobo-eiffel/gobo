@@ -7,11 +7,12 @@ This script can easily be adapted to shells from other platforms.
 
 To compile this example:
 
-1. Use the script 'make_scanner.bat' to generate class ASCII2PS if necessary.
+1. Use the script 'make scanner' to generate class ASCII2PS if necessary.
 2. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace) or
-   ESD file (Visual Eiffel: ve.esd). With SmallEiffel, you can just execute
-   the script se.bat or se.sh (after possible modifications).
+   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace),
+   ESD file (Visual Eiffel: ve.esd) or loadpath file (SmallEiffel:
+   loadpath.se). If you have GNU make, you can alternatively type:
+   'make ise', 'make hact', 'make ve' or 'make se'.
 3. Run the filter using:
 
        ascii2ps [-h][-n][-d date][-t time][-l][-2][filename|-][filename|-]

@@ -13,15 +13,17 @@ not generate any output.
 
 To compile this example:
 
-1. Use the script 'make_scanner.bat' to generate class EIFFEL_SCANNER
+1. Use the script 'make scanner' to generate class EIFFEL_SCANNER
    if necessary.
-2. Choose either `execute' or `benchmark' as the creation prodecure of
+2. Choose either `execute' or `benchmark' as the creation procedure of
    the root class EIFFEL_SCANNER in your Ace file (ISE Eiffel: ise.ace,
    Halstenbach: hact.ace), your ESD file (Visual Eiffel: ve.esd) or
-   your command line (SmallEiffel: se.bat or se.sh).
-3. Use your favorite Eiffel compiler to compile the Eiffel system.
-   With SmallEiffel, you can just execute the script se.bat (after
-   possible modifications).
+   your command line (SmallEiffel).
+3. Use your favorite Eiffel compiler to compile the Eiffel system using
+   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace),
+   ESD file (Visual Eiffel: ve.esd) or loadpath file (SmallEiffel:
+   loadpath.se). If you have GNU make, you can alternatively type:
+   'make ise', 'make hact', 'make ve' or 'make se'.
 4. Execute the Eiffel scanner using
        eiffel_scanner filename1 ...
    if you selected `execute' as creation procedure, or

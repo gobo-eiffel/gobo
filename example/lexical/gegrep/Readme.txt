@@ -22,9 +22,10 @@ uses this DFA to directly analyze input streams.
 To compile this example:
 
 1. Use your favorite Eiffel compiler to compile the Eiffel system using
-   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace) or
-   ESD file (Visual Eiffel: ve.esd). With SmallEiffel, you can just execute
-   the script se.bat or se.sh (after possible modifications).
+   the provided Ace file (ISE Eiffel: ise.ace, Halstenbach: hact.ace),
+   ESD file (Visual Eiffel: ve.esd) or loadpath file (SmallEiffel:
+   loadpath.se). If you have GNU make, you can alternatively type:
+   'make ise', 'make hact', 'make ve' or 'make se'.
 2. Run the program using:
 
        gegrep [-i] regexp [filename...]
@@ -39,7 +40,7 @@ To compile this example:
            input if no filename is specified.
 
 The regular expression given as argument follows the same notation as
-regular expressions provided in Gelex. See "$GOBO\doc\gelex\patterns.html"
+regular expressions provided in Gelex. See "$GOBO/doc/gelex/patterns.html"
 for details.
 
 When several filenames are given as argument, the matched lines are
