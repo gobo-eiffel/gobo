@@ -254,7 +254,6 @@ feature -- Element change
 			a_required_item_type: XM_XPATH_ITEM_TYPE
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_atomic_type: XM_XPATH_ATOMIC_TYPE
-			a_required_cardinality: INTEGER
 		do
 			last_binding_failure := Void
 			a_value := global_parameters.value (a_fingerprint)

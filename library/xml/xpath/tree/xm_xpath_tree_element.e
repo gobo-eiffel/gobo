@@ -42,8 +42,6 @@ feature {NONE} -- Initialization
 		require
 			document_not_void: a_document /= Void
 			strictly_positive_sequence_number: a_sequence_number > 0
-		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
 			document := a_document
 			parent_node := a_parent

@@ -412,13 +412,13 @@ feature -- Element change
 			higher_precedence: is_higher_precedence (an_import_precedence, Encoding_attribute)
 		do
 			precedence_property_map.force (an_import_precedence, Encoding_attribute)
-			encoding := STRING_.to_upper (an_encoding)
+			encoding := an_encoding.as_upper
 			if STRING_.same_string (encoding, "UTF-16") and then not precedence_property_map.has (Byte_order_mark_attribute) then
 				byte_order_mark_required := True
 			end
 		ensure
 			import_precedence_set: precedence_property_map.has (Encoding_attribute) and then precedence_property_map.item (Encoding_attribute) = an_import_precedence
-			encoding_set: STRING_.same_string (encoding, STRING_.to_upper (an_encoding))
+			encoding_set: STRING_.same_string (encoding, an_encoding.as_upper)
 		end
 
 	set_media_type (a_media_type: STRING; an_import_precedence: INTEGER) is
@@ -765,9 +765,9 @@ feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted
 		require
 			encoding_not_void: an_encoding /= Void
 		do
-			encoding := STRING_.to_upper (an_encoding)
+			encoding := an_encoding.as_upper
 		ensure
-			encoding_set: STRING_.same_string (encoding, STRING_.to_upper (an_encoding))
+			encoding_set: STRING_.same_string (encoding, an_encoding.as_upper)
 		end
 
 	set_default_byte_order_mark (an_byte_order_mark_required_value: BOOLEAN) is
