@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			required_type := a_sequence_type
 			instruction_name := "sequence"
 			create children.make (0)
-			make_expression_instruction			
+			make_expression_instruction
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = an_expression

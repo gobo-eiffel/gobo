@@ -150,9 +150,9 @@ feature -- Element change
 			end
 			if indent_spaces /= Void then
 				if not indent_spaces.is_integer then
-					report_compile_error (STRING_.concat (Gexslt_indent_spaces_attribute, " must be a strictly positive integer"))
+					report_compile_warning (STRING_.concat (Gexslt_indent_spaces_attribute, " must be a strictly positive integer"))
 				elseif indent_spaces.to_integer <= 0 then
-					report_compile_error (STRING_.concat (Gexslt_indent_spaces_attribute, " must be a strictly positive integer"))
+					report_compile_warning (STRING_.concat (Gexslt_indent_spaces_attribute, " must be a strictly positive integer"))
 				end
 			end
 			if omit_xml_declaration /= Void then
@@ -308,7 +308,7 @@ feature -- Element change
 					a_property_set.set_duplication_error (Indent_attribute)
 				end
 			end
-			if indent_spaces /= Void and then not a_property_set.is_error then
+			if indent_spaces /= Void and then not a_property_set.is_error and then indent_spaces.is_integer and then indent_spaces.to_integer > 0 then
 				if a_property_set.is_higher_precedence (an_import_precedence, Gexslt_indent_spaces_attribute) then
 					a_property_set.set_indent_spaces (indent_spaces.to_integer, an_import_precedence)
 				elseif not a_property_set.is_lower_precedence (an_import_precedence, Gexslt_indent_spaces_attribute) and then
@@ -451,7 +451,7 @@ feature -- Element change
 						a_property_set.set_duplication_error (Gexslt_character_representation_attribute)
 					end
 				else
-					a_property_set.set_general_error (STRING_.concat (character_representation, " is not a valid value for gexslt:character-representation"))
+					report_compile_warning (STRING_.concat (character_representation, " is not a valid value for gexslt:character-representation"))
 				end
 			end			
 			if include_content_type /= Void and then not a_property_set.is_error then

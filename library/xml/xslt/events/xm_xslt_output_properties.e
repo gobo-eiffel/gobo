@@ -181,9 +181,9 @@ feature -- Access
 			a_splitter.set_separators (";")
 			representations := a_splitter.split (a_character_representation)
 			if representations.count = 0 then
-				set_general_error ("gexslt:character-representation must not be a zero-length string.")
+				Result := False
 			elseif representations.count > 2 then
-				set_general_error ("gexslt:character-representation may not contain more than one semi-colon.")
+				Result := False
 			else
 				if representations.count = 1 then
 					a_non_ascii_representation := representations.item (1)
@@ -199,9 +199,6 @@ feature -- Access
 				if STRING_.same_string (method, "xml") then
 					Result := STRING_.same_string (a_non_ascii_representation, "hex")
 						or else STRING_.same_string (a_non_ascii_representation, "decimal")
-					if not Result then
-						set_general_error ("gexslt:character-representation must be 'hex' or 'decimal' for method='xml'.")
-					end
 				elseif STRING_.same_string (method, "text") then
 					Result := True
 				else
@@ -212,9 +209,6 @@ feature -- Access
 						and then (STRING_.same_string (an_excluded_representation, "hex")
 									 or else STRING_.same_string (a_non_ascii_representation, "decimal")
 									 or else STRING_.same_string (a_non_ascii_representation, "entity"))
-					if not Result then
-						set_general_error ("Invalid value(s) for gexslt:character-representation.")
-					end	
 				end
 			end
 		end
@@ -895,20 +889,14 @@ feature {NONE} -- Implementation
 			if STRING_.same_string (a_local_name, Gexslt_character_representation_name) then
 				if is_valid_character_representation (a_value) then
 					set_character_representation (a_value, 1000000)
-				else
-					set_general_error (STRING_.concat (a_value, " is not a valid value for gexslt:character-representation"))
 				end
 			elseif STRING_.same_string (a_local_name, Gexslt_indent_spaces_name) then
-				if a_value.is_integer then
+				if a_value.is_integer and then a_value.to_integer > 0 then
 					set_indent_spaces (a_value.to_integer, 1000000)
-				else
-					set_general_error ("gexslt:indent-spaces must be a 32-bit positive integer.")
 				end
-			else
-				set_general_error (STRING_.concat (a_value, " is not a recognized gexslt extension attribute for xsl:result-document"))
 			end
 		ensure
-			error_message_set: is_error implies error_message /= Void			
+			no_error: not is_error
 		end
 
 	last_yes_no_value: BOOLEAN

@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			executable := an_executable
 			error_message := an_error_message
 			instruction_name := an_instruction_name
+			create children.make (0)
 		ensure
 			executable_set: executable = an_executable
 			error_message_set: error_message = an_error_message
@@ -48,7 +49,7 @@ feature -- Evaluation
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			todo ("process_leaving_tail", False)
+			a_context.transformer.report_fatal_error (error_message, Current)
 		end
 
 feature {NONE} -- Implementation

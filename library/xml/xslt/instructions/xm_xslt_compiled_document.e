@@ -215,7 +215,7 @@ feature -- Evaluation
 				create a_builder.make (a_node_factory)
 				a_builder.set_system_id (base_uri)
 				create a_result.make_receiver (a_builder)
-				a_transformer.change_output_destination (Void, a_result, False, Validation_strip, Void)
+				a_transformer.change_output_destination (Void, a_result, False, Validation_strip, Void) -- TODO for schema-awareness
 				process_children (an_evaluation_context)
 				a_transformer.reset_output_destination (a_saved_receiver)
 				a_builder.end_document

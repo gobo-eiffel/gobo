@@ -179,9 +179,9 @@ feature -- Element change
 				is_pattern := True
 			end
 			if is_pattern then
-				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_instruction.make_with_pattern (an_executable, select_expression, key_pattern, algorithm, sort_keys)
+				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_instruction.make_with_pattern (an_executable, select_expression, key_pattern, algorithm, sort_keys, default_collation_name)
 			else
-				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_instruction.make (an_executable, select_expression, key_expression, algorithm, sort_keys, collation_name)
+				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_instruction.make (an_executable, select_expression, key_expression, algorithm, sort_keys, collation_name, default_collation_name)
 			end
 			compile_children (an_executable, last_generated_instruction)
 		end

@@ -54,7 +54,7 @@ feature -- Creation
 							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XPATH_TREE_ELEMENT is
 			-- New element node.
 		local
-			a_uri_code: INTEGER
+			a_uri_code, a_child_index: INTEGER
 			a_local_name: STRING
 			a_stylesheet: XM_XSLT_STYLESHEET
 			a_style_element: XM_XSLT_STYLE_ELEMENT
@@ -70,7 +70,7 @@ feature -- Creation
 			if a_data_element /= Void or else (a_style_element /= Void and then a_style_element.is_excluded) then
 
 				-- The test for an excluded element is for [xsl:]use-when processing - by making all the descendants
-				--  data elements, the whole sub-tree is effectively excluded
+				--  unrecognized User-defined Data elements, the whole sub-tree is effectively excluded
 
 				create {XM_XSLT_DATA_ELEMENT} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 				if a_parent /= Void then a_parent.add_child (Result) end
@@ -86,25 +86,43 @@ feature -- Creation
 					a_uri_code := shared_name_pool.uri_code_from_name_code (a_name_code)
 					if a_uri_code = Xslt_uri_code then
 						create {XM_XSLT_ABSENT_EXTENSION_ELEMENT} a_style_element.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-						a_style_element.set_validation_error ("Unknown XSLT element", Report_unless_forwards_comptible) -- TODO - only under certain circumstances
+						a_style_element.set_validation_error (STRING_.concat ("Unknown XSLT element: ", a_local_name), Report_unless_forwards_comptible) -- TODO - only under certain circumstances
 						Result := a_style_element
 						if a_parent /= Void then a_parent.add_child (Result) end
-						a_style_element.process_use_when_attribute (Use_when_attribute)						
+						a_style_element.process_use_when_attribute (Use_when_attribute)
+						if not a_style_element.is_excluded then
+							a_style_element.process_extension_element_attribute (Extension_element_prefixes_attribute)
+							a_style_element.process_excluded_namespaces_attribute (Exclude_result_prefixes_attribute)
+							a_style_element.process_version_attribute (Version_attribute, Report_unless_forwards_comptible)
+							a_style_element.process_default_xpath_namespace_attribute (Xpath_default_namespace_attribute)
+							a_style_element.process_default_collation_attribute (Default_collation_attribute)
+						end
 					else
-
-						-- We can't work out the final class of the node until we've examined its attributes
-						-- such as version and extension-element-prefixes; but we can have a good guess, and
-						-- change it later if need be.
-
-						if a_uri_code = Gexslt_uri_code then -- TODO
+						if a_uri_code = Gexslt_uri_code and then is_top_level_element then
+								Result := new_gexslt_user_defined_element (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 						elseif  is_top_level_element and then a_uri_code /= Default_uri_code then
 
-							-- User-defined Data Elements
+							-- Unrecognized User-defined Data Elements
 
 							create {XM_XSLT_DATA_ELEMENT} Result.make (a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 							if a_parent /= Void then a_parent.add_child (Result) end
 						else
-							Result := possible_literal_result_element (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+							a_style_element := possible_literal_result_element (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+							if a_parent /= Void then
+								a_child_index := a_style_element.child_index
+							end
+							if a_style_element.is_extension_instruction_namespace (a_uri_code) then
+
+								-- not a Literal Result Element, but an absent Extension Instruction
+
+								create {XM_XSLT_ABSENT_EXTENSION_ELEMENT} a_style_element.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+								a_style_element.set_validation_error (STRING_.concat ("XT1450: Unknown extension element: ", shared_name_pool.display_name_from_name_code (a_name_code)),
+																				  Report_if_instantiated)
+								if a_parent /= Void then
+									a_parent.replace_child (a_style_element, a_child_index)
+								end
+							end
+							Result := a_style_element
 						end
 					end
 				end
@@ -146,13 +164,17 @@ feature {NONE} -- Implementation
 			when Xslt_copy_type_code then
 				create {XM_XSLT_COPY} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_copy_of_type_code then
-				create {XM_XSLT_COPY_OF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+				create {XM_XSLT_COPY_OF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_decimal_format_type_code then
 				create {XM_XSLT_DECIMAL_FORMAT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			when Xslt_document_type_code then
+				create {XM_XSLT_DOCUMENT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)								
 			when Xslt_element_type_code then
 				create {XM_XSLT_ELEMENT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_for_each_type_code then
 				create {XM_XSLT_FOR_EACH} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+			when Xslt_fallback_type_code then
+				create {XM_XSLT_FALLBACK} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
 			when Xslt_for_each_group_type_code then
 				create {XM_XSLT_FOR_EACH_GROUP} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 			when Xslt_function_type_code then
@@ -213,6 +235,7 @@ feature {NONE} -- Implementation
 					Result.process_excluded_namespaces_attribute (Exclude_result_prefixes_attribute)
 					Result.process_version_attribute (Version_attribute, Report_always)
 					Result.process_default_xpath_namespace_attribute (Xpath_default_namespace_attribute)
+					Result.process_default_collation_attribute (Default_collation_attribute)
 				end
 			end
 		end
@@ -236,6 +259,35 @@ feature {NONE} -- Implementation
 				Result.process_excluded_namespaces_attribute (Xslt_exclude_result_prefixes_attribute)
 				Result.process_version_attribute (Xslt_version_attribute, Report_unless_forwards_comptible)
 				Result.process_default_xpath_namespace_attribute (Xslt_xpath_default_namespace_attribute)
+				Result.process_default_collation_attribute (Xslt_default_collation_attribute)
+			end
+		end
+
+	new_gexslt_user_defined_element (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
+							a_name_code: INTEGER; a_sequence_number: INTEGER): XM_XSLT_STYLE_ELEMENT is
+			-- New gexslt User-defined Element.
+		require
+			document_not_void: a_document /= Void
+			strictly_positive_sequence_number: a_sequence_number > 0
+		local
+			a_fingerprint: INTEGER
+		do
+			a_fingerprint := shared_name_pool.fingerprint_from_name_code (a_name_code)
+			
+			inspect
+				a_fingerprint
+			when Gexslt_collation_type_code then
+				create {XM_XSLT_GEXSLT_COLLATION} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)				
+			else
+			end
+			if a_parent /= Void then a_parent.add_child (Result) end
+			Result.process_use_when_attribute (Xslt_use_when_attribute)
+			if not Result.is_excluded then
+				Result.process_extension_element_attribute (Xslt_extension_element_prefixes_attribute)
+				Result.process_excluded_namespaces_attribute (Xslt_exclude_result_prefixes_attribute)
+				Result.process_version_attribute (Xslt_version_attribute, Report_unless_forwards_comptible)
+				Result.process_default_xpath_namespace_attribute (Xslt_xpath_default_namespace_attribute)
+				Result.process_default_collation_attribute (Xslt_default_collation_attribute)
 			end
 		end
 

@@ -64,7 +64,7 @@ feature -- Element change
 			elseif a_fingerprint = Current_group_function_type_code then
 				create {XM_XSLT_CURRENT_GROUP} a_function_call.make
 			elseif a_fingerprint = Document_function_type_code then
-				create {XM_XSLT_DOCUMENT} a_function_call.make
+				create {XM_XSLT_DOCUMENT_FUNCTION} a_function_call.make
 			elseif a_fingerprint = Format_number_function_type_code then
 				create {XM_XSLT_FORMAT_NUMBER} a_function_call.make
 			elseif a_fingerprint = Function_available_function_type_code then

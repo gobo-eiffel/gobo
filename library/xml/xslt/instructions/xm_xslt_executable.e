@@ -19,7 +19,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_configuration: XM_XSLT_CONFIGURATION; a_rule_manager: XM_XSLT_RULE_MANAGER; a_key_manager: XM_XSLT_KEY_MANAGER;
-			a_decimal_format_manager: XM_XSLT_DECIMAL_FORMAT_MANAGER; a_default_collation_name: STRING;
+			a_decimal_format_manager: XM_XSLT_DECIMAL_FORMAT_MANAGER;
 			a_collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]; a_mode: XM_XSLT_MODE; strips_whitespace: BOOLEAN;
 			a_module_list: DS_ARRAYED_LIST [STRING]; a_function_library: XM_XPATH_FUNCTION_LIBRARY_MANAGER) is
 			-- Establish invariant.
@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			rule_manager_not_void: a_rule_manager /= Void
 			key_manager_not_void: a_key_manager /= Void
 			decimal_format_manager: a_decimal_format_manager /= Void
-			default_collation_name: a_default_collation_name /= Void
 			collation_map: a_collation_map /= Void
 			module_list_not_void: a_module_list /= Void
 			function_library_not_void: a_function_library /= Void
@@ -37,7 +36,6 @@ feature {NONE} -- Initialization
 			rule_manager := a_rule_manager
 			key_manager := a_key_manager
 			decimal_format_manager := a_decimal_format_manager
-			default_collation_name := a_default_collation_name
 			collation_map := a_collation_map
 			stripper_rules := a_mode
 			is_strips_whitespace := strips_whitespace
@@ -49,7 +47,6 @@ feature {NONE} -- Initialization
 			rule_manager_set: rule_manager = a_rule_manager
 			key_manager_set: key_manager = a_key_manager
 			decimal_format_manager_set: decimal_format_manager = a_decimal_format_manager
-			default_collation_name_set: default_collation_name = a_default_collation_name
 			collation_map_set: collation_map = a_collation_map
 			stripper_rules_set: stripper_rules = a_mode
 			strips_whitespace_set: is_strips_whitespace = strips_whitespace
@@ -74,9 +71,6 @@ feature -- Access
 
 	decimal_format_manager: XM_XSLT_DECIMAL_FORMAT_MANAGER
 			-- Manager of decimal formats
-
-	default_collation_name: STRING
-			-- Default collation name
 
 	default_output_properties: XM_XSLT_OUTPUT_PROPERTIES
 			-- Default output properties (for the unnamed output format)
@@ -193,12 +187,14 @@ feature -- Element change
 		ensure
 			static_context_saved: static_context = a_static_context
 		end
+	
+feature {XM_XSLT_EVALUATION_CONTEXT} -- Access
+
+		collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
+			-- Map of collation names to collators
 
 feature {NONE} -- Implementation
 	
-	collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
-			-- Map of collation names to collators
-
 	stripper_rules: XM_XSLT_MODE
 			-- Whitespace stripping rules
 
@@ -217,8 +213,7 @@ invariant
 	rule_manager_not_void: rule_manager /= Void
 	key_manager_not_void: key_manager /= Void
 	decimal_format_manager: decimal_format_manager /= Void
-	default_collation_name: default_collation_name /= Void
-	collation_map: collation_map /= Void
+	collation_map_not_void: collation_map /= Void
 	module_list_not_void: module_list /= Void
 	character_map_index_not_void: character_map_index /= Void
 	function_library_not_void: function_library /= Void

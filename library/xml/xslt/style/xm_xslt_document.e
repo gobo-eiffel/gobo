@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"xsl:fallback element nodes"
+		"xsl:document element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_FALLBACK
+class XM_XSLT_DOCUMENT
 
 inherit
 
@@ -25,17 +25,16 @@ creation {XM_XSLT_NODE_FACTORY}
 
 feature {NONE} -- Initialization
 	
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
+	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;  a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
 		a_name_code: INTEGER; a_sequence_number: INTEGER) is
 			-- Establish invariant.
 		do
 			is_instruction := True
 			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-		end
+			end
 
-
-feature -- Status_report
+feature -- Status report
 
 	may_contain_sequence_constructor: BOOLEAN is
 			-- Is `Current' allowed to contain a sequence constructor?
@@ -50,7 +49,8 @@ feature -- Element change
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name: STRING
+			validation: INTEGER
+			an_expanded_name, a_validation_attribute, a_type_attribute: STRING
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor
@@ -62,32 +62,46 @@ feature -- Element change
 			loop
 				a_name_code := a_cursor.item
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
-				check_unknown_attribute (a_name_code)
+				if STRING_.same_string (an_expanded_name, Validation_attribute) then
+					a_validation_attribute:= attribute_value_by_index (a_cursor.index)
+				elseif STRING_.same_string (an_expanded_name, Type_attribute) then
+					a_type_attribute:= attribute_value_by_index (a_cursor.index)
+				end
 				a_cursor.forth
+			end
+			if a_validation_attribute /= Void then
+				validation := validation_code (a_validation_attribute)
+				if validation = Validation_invalid then
+					
+				elseif validation /= Validation_strip then
+					report_compile_error ("To perform validation, a schema-aware XSLT processor is needed")
+				end
+			end
+			
+			if a_type_attribute /= Void then
+				report_compile_error ("The type attribute is available only with a schema-aware XSLT processor")
+			end
+			
+			if a_type_attribute /= Void  and then a_validation_attribute /= Void then
+				
+				-- redundant for now
+				
+				report_compile_error ("The validation and type attributes are mutually exclusive")
 			end
 			attributes_prepared := True
 		end
 
 	validate is
 			-- Check that the stylesheet element is valid.
-		local
-			a_parent: XM_XSLT_STYLE_ELEMENT
 		do
-			a_parent ?= parent
-			if not a_parent.may_contain_fallback then
-				report_compile_error (STRING_.concat ("xsl:fallback is not allowed as a child of ", a_parent.node_name))
-			end
+			check_within_template
 			validated := True
 		end
 
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
-			-- Compile `Current' to an excutable instruction. 
+			-- Compile `Current' to an excutable instruction.
 		do
-
-			-- If we get here, then the parent instruction is OK, so the fallback is not activated
-			
-			last_generated_instruction := Void
+			create {XM_XSLT_COMPILED_DOCUMENT} last_generated_instruction.make (an_executable, False, Void, base_uri)
 		end
-	
+
 end
-	

@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_TEXT_COMPARER} comparer.make_from_collator (collator)
 			else
 				if language.count = 0 or else STRING_.same_string (language, "en") then
-					a_base_collator := a_context.default_collation
+					create a_base_collator
 				else
 					a_message := STRING_.concat ("Language '", language)
 					a_message := STRING_.appended_string (a_message, "' is not supported by this implementation.")

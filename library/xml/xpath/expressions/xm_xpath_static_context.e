@@ -72,6 +72,7 @@ feature -- Access
 		deferred
 		ensure
 			default_collation_name_not_void: Result /= Void
+			known_collation: is_known_collation (Result)
 			restricted_means_unicode_code_point_collation: is_restricted implies
 			String_.same_string (Result, Unicode_codepoint_collation_uri)	
 		end
@@ -80,8 +81,15 @@ feature -- Access
 			-- Collator named by `a_collation_name'
 		require
 			uri_form: a_collation_name /= Void  -- and then is a URI
-		deferred
+			known_collation: is_known_collation (a_collation_name)
+		do
+			Result := known_collations.item (a_collation_name)
+		ensure
+			collator_not_void: Result /= Void
 		end
+
+	known_collations: DS_HASH_TABLE [ST_COLLATOR, STRING]
+			-- Statically known collations
 
 	uri_for_prefix (an_xml_prefix: STRING): STRING is
 			-- URI for a namespace prefix;
@@ -113,7 +121,15 @@ feature -- Status report
 
 	is_restricted: BOOLEAN
 			-- Is this a restricted context (for use with xsl:use-when)?
-	
+
+	is_known_collation (a_collation_name: STRING): BOOLEAN is
+			-- Is `a_collation_name' a statically know collation?
+		require
+			collation_name_not_void: a_collation_name /= Void
+		do
+			Result := known_collations.has (a_collation_name)
+		end
+
 	is_prefix_declared (an_xml_prefix: STRING): BOOLEAN is
 			-- Is `an_xml_prefix' allocated to a namespace?
 		require
@@ -156,6 +172,19 @@ feature -- Element change
 			variable_bound: last_bound_variable /= Void
 		end
 
+	declare_collation (a_collator: ST_COLLATOR; a_collation_name: STRING) is
+			-- Associate `a_collation_name' with `a_collator'.
+		require
+			collation_name_not_void: a_collation_name /= Void
+			collator_not_void: a_collator /= Void
+			collation_not_known: not is_known_collation (a_collation_name)
+		do
+			known_collations.force (a_collator, a_collation_name)
+		ensure
+			collation_known: is_known_collation (a_collation_name)
+			correct_collation: collator (a_collation_name) = a_collator
+		end
+							
 feature -- Output
 
 	issue_warning (a_warning: STRING) is
@@ -170,6 +199,9 @@ feature {NONE} -- Implementation
 	internal_last_bound_variable: XM_XPATH_VARIABLE_DECLARATION
 			-- Result of last sucessfull call to  `bind_variable'
 
+invariant
+
+	known_collations_not_void: known_collations /= Void
 
 end
 	

@@ -9,7 +9,7 @@
               use-when="system-property('xsl:is-schema-aware')='yes'"/>
 
 <xsl:template name="first" use-when="system-property('xsl:is-schema-aware')='no'">
-  OK
+  <xsl:value-of select="'OK'" />
 </xsl:template>
 
 <xsl:template name="first" use-when="system-property('xsl:is-schema-aware')='yes'">

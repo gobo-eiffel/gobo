@@ -22,7 +22,8 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression, a_key_expression: XM_XPATH_EXPRESSION; an_algorithm: INTEGER; some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]; a_collation_name: XM_XPATH_EXPRESSION) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression, a_key_expression: XM_XPATH_EXPRESSION; an_algorithm: INTEGER; some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION];
+			a_collation_name: XM_XPATH_EXPRESSION; a_default_collation_name: STRING) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -30,6 +31,7 @@ feature {NONE} -- Initialization
 			key_expression_not_void: a_key_expression /= Void
 			expression_algorithm: an_algorithm = Group_by_algorithm  or an_algorithm = Group_adjacent_algorithm
 			sort_keys: some_sort_keys /= Void
+			default_collation_name_not_void: a_default_collation_name /= Void
 		do
 			executable := an_executable
 			select_expression := a_select_expression
@@ -39,6 +41,7 @@ feature {NONE} -- Initialization
 			collation_name := a_collation_name
 			instruction_name := "for-each-group"
 			create children.make (0)
+			default_collation_name := a_default_collation_name
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
@@ -46,9 +49,11 @@ feature {NONE} -- Initialization
 			algorithm_set: algorithm = an_algorithm
 			sort_keys_set: sort_keys = some_sort_keys
 			collation_name_set: collation_name = a_collation_name
+			default_collation_name_set: default_collation_name = a_default_collation_name
 		end
 
-	make_with_pattern (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; a_key_pattern: XM_XSLT_PATTERN; an_algorithm: INTEGER; some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]) is
+	make_with_pattern (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; a_key_pattern: XM_XSLT_PATTERN; an_algorithm: INTEGER;
+							 some_sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]; a_default_collation_name: STRING) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -56,6 +61,7 @@ feature {NONE} -- Initialization
 			key_pattern_not_void: a_key_pattern /= Void
 			pattern_algorithm: an_algorithm = Group_starting_with_algorithm  or an_algorithm = Group_ending_with_algorithm
 			sort_keys: some_sort_keys /= Void
+			default_collation_name_not_void: a_default_collation_name /= Void
 		do
 			executable := an_executable
 			select_expression := a_select_expression
@@ -64,12 +70,14 @@ feature {NONE} -- Initialization
 			sort_keys := some_sort_keys
 			instruction_name := "for-each-group"
 			create children.make (0)
+			default_collation_name := a_default_collation_name
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
 			key_pattern_set: key_pattern = a_key_pattern
 			algorithm_set: algorithm = an_algorithm
 			sort_keys_set: sort_keys = some_sort_keys
+			default_collation_name_set: default_collation_name = a_default_collation_name
 		end
 
 feature -- Access
@@ -173,6 +181,9 @@ feature -- Evaluation
 
 feature {NONE} -- Implementation
 
+	default_collation_name: STRING
+			-- Default collation name
+
 	algorithm: INTEGER
 			-- Grouping algoritm
 
@@ -188,9 +199,6 @@ feature {NONE} -- Implementation
 	sort_keys: DS_ARRAYED_LIST [XM_XSLT_SORT_KEY_DEFINITION]
 			-- Sort keys
 
-	unicode_codepoint_collation_name: STRING is "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
-		-- Unicode code-point collator name
-		
 	collation_name: XM_XPATH_EXPRESSION
 			-- Collation name
 
@@ -210,9 +218,9 @@ feature {NONE} -- Implementation
 				if collation_name /= Void then
 					collation_name.evaluate_item (a_context)
 					a_collation_name := collation_name.last_evaluated_item.string_value
-					Result := a_context.collation (a_collation_name)
+					Result := a_context.collator (a_collation_name)
 				else
-					Result := a_context.default_collation
+					Result := a_context.collator (default_collation_name)
 				end
 
 			end
@@ -226,6 +234,7 @@ invariant
 	sort_keys: sort_keys /= Void
 	algorithm: algorithm >= Group_by_algorithm and then algorithm <= Group_ending_with_algorithm
 	collation: algorithm >= Group_starting_with_algorithm implies collation_name = Void
+	default_collation_name_not_void: default_collation_name /= Void
 
 end
 	

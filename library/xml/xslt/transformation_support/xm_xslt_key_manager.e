@@ -56,7 +56,8 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	sequence_by_key (a_key_fingerprint: INTEGER; a_document: XM_XPATH_DOCUMENT; a_key_value: XM_XPATH_ATOMIC_VALUE; a_transformer: XM_XSLT_TRANSFORMER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	sequence_by_key (a_key_fingerprint: INTEGER; a_document: XM_XPATH_DOCUMENT; a_key_value: XM_XPATH_ATOMIC_VALUE;
+						  a_transformer: XM_XSLT_TRANSFORMER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Sequence of nodes for a particular key value
 		require
 			strictly_positive_key_fingerprint: a_key_fingerprint > 0

@@ -59,6 +59,46 @@ feature {NONE} -- Initialization
 			
 feature -- Access
 
+	default_collation_name: STRING is
+			-- Default collation name
+		local
+			a_splitter: ST_SPLITTER
+			some_collation_names: DS_LIST [STRING]
+			a_cursor: DS_LIST_CURSOR [STRING]
+			a_collation_name: STRING
+			a_style_element: XM_XSLT_STYLE_ELEMENT
+		do
+			if local_default_collation_name /= Void then
+				create a_splitter.make
+				some_collation_names := a_splitter.split (local_default_collation_name)
+				from
+					a_cursor := some_collation_names.new_cursor; a_cursor.start
+				variant
+					some_collation_names.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					a_collation_name := a_cursor.item
+					if principal_stylesheet.collation_map.has (a_collation_name) then
+						Result := a_collation_name
+						a_cursor.go_after
+					else
+						a_cursor.forth
+					end
+				end
+				if Result = Void then
+					report_compile_error (STRING_.concat ("XT0125: None of the following are recognized as a collation URI by this implementation: ", local_default_collation_name))
+				end
+			else
+				a_style_element ?= parent
+				if a_style_element /= Void then					
+					Result := a_style_element.default_collation_name
+				else
+					Result := Unicode_codepoint_collation_uri
+				end
+			end
+		end
+
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
 
@@ -385,6 +425,35 @@ feature -- Access
 			function_may_not_be_available: True
 		end
 
+	is_defined_extension_instruction_namespace (a_uri_code: INTEGER): BOOLEAN is
+			-- Is `a_uri_code' defined as an extension instruction namespace in `Current'?
+		local
+		do
+			if extension_namespaces /= Void then
+				Result := extension_namespaces.has (a_uri_code)
+			end
+		end
+
+	is_extension_instruction_namespace (a_uri_code: INTEGER): BOOLEAN is
+			-- Is `a_uri_code' an in-scope extension instruction namespace?
+		local
+			an_ancestor: XM_XPATH_NODE
+			a_style_element: XM_XSLT_STYLE_ELEMENT
+		do
+			from
+				an_ancestor := Current
+				a_style_element := Current
+			until
+				Result or else a_style_element = Void
+			loop
+				Result := a_style_element.is_defined_extension_instruction_namespace (a_uri_code)
+				if not Result then
+					an_ancestor := an_ancestor.parent
+					a_style_element ?= an_ancestor
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	as_function (an_element: XM_XSLT_STYLE_ELEMENT): XM_XSLT_FUNCTION is
@@ -654,16 +723,18 @@ feature -- Status setting
 				an_element_uri := uri	
 				a_local_name := shared_name_pool.local_name_from_name_code (a_name_code)
 
-				-- Allow xsl:extension-element-prefixes etc on an extension element.
+				-- Allow standard on an Extension Instruction or a user-defined Data Element.
 
 				if is_instruction and then
 					STRING_.same_string (an_attribute_uri, Xslt_uri) and then
-					not STRING_.same_string (an_element_uri, Xslt_uri) and then
+					STRING_.same_string (an_element_uri, Gexslt_eiffel_type_uri) and then
 					(
+					 STRING_.same_string (a_local_name, Use_when_attribute) or else
 					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
 					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
 					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
-					 STRING_.same_string (a_local_name, Version_attribute)
+					 STRING_.same_string (a_local_name, Version_attribute) or else
+					 STRING_.same_string (a_local_name, Default_collation_attribute)
 					 ) then
 					do_nothing
 
@@ -676,7 +747,8 @@ feature -- Status setting
 					 STRING_.same_string (a_local_name, Xpath_default_namespace_attribute) or else
 					 STRING_.same_string (a_local_name, Extension_element_prefixes_attribute) or else
 					 STRING_.same_string (a_local_name, Exclude_result_prefixes_attribute) or else
-					 STRING_.same_string (a_local_name, Version_attribute)
+					 STRING_.same_string (a_local_name, Version_attribute) or else
+					 STRING_.same_string (a_local_name, Default_collation_attribute)
 					 ) then
 					do_nothing
 				elseif STRING_.same_string (an_attribute_uri, "") or else
@@ -920,7 +992,7 @@ feature -- Creation
 						end
 						append_parsed_expression (components, an_expression)
 					else
-						todo ("generate_attribute_value_template - error expression", True)
+						create {XM_XPATH_INVALID_VALUE} last_generated_expression.make_from_string (a_parser.first_parse_error, "XP0003", Static_error)
 					end
 					a_leading_character := a_right_curly_brace + 1
 				end
@@ -1235,7 +1307,7 @@ feature -- Element change
 						if an_expression.is_error then
 							report_compile_error (an_expression.error_value.error_message)
 						else
-							create a_dynamic_context.make_restricted (a_static_context)
+							create a_dynamic_context.make_restricted (a_static_context, principal_stylesheet.collation_map)
 							a_boolean_value := an_expression.effective_boolean_value (a_dynamic_context)
 							if a_boolean_value.is_error then
 								report_compile_error (a_boolean_value.error_value.error_message)
@@ -1305,13 +1377,27 @@ feature -- Element change
 							version := a_parent.version
 							finished := True
 						end
-						a_parent ?= parent_node
+						a_parent ?= a_parent.parent_node
 					end
 				end
 			end
 			version_attribute_processed := True
 		ensure
 			version_attribute_processed: version_attribute_processed
+		end
+
+	process_default_collation_attribute (an_attribute_name: STRING) is
+			--	Process the [xsl:]default-collation attribute. 
+		require
+			not_excluded: not is_excluded
+			attributes_not_prepared: not attributes_prepared
+			valid_attribute_name: an_attribute_name /= Void
+				and then	is_valid_expanded_name (an_attribute_name)
+				and then STRING_.same_string (local_name_from_expanded_name (an_attribute_name), Default_collation_attribute)
+				and then ( namespace_uri_from_expanded_name (an_attribute_name).count = 0
+							  or else STRING_.same_string (namespace_uri_from_expanded_name (an_attribute_name), Xslt_uri))
+		do
+			local_default_collation_name := attribute_value_by_expanded_name (an_attribute_name)
 		end
 
 	process_extension_element_attribute (an_attribute_name: STRING) is
@@ -1443,7 +1529,8 @@ feature -- Element change
 				elseif reporting_circumstances = Report_unless_forwards_comptible and then not is_forwards_compatible_processing_enabled then
 					report_compile_error (validation_error_message)
 				end
-			else
+			end
+			if not any_compile_errors then
 				validate
 				if validated and not any_compile_errors then
 					validate_children
@@ -1611,6 +1698,7 @@ feature -- Element change
 			end
 			if not found_fallback then
 				create a_deferred_error.make (an_executable, a_style_element.validation_error_message, a_style_element.node_name)
+				an_instruction_list.put_last (a_deferred_error)
 			end
 		end
 
@@ -1784,7 +1872,10 @@ feature {NONE} -- Implementation
 	Right_double_curly_brace_component: INTEGER is 3
 	Avt_component: INTEGER is 4
 			-- Constants used by `generate_attribute_value_template'
-	
+
+	local_default_collation_name: STRING
+			-- list of possible default collation names (optional)
+
 	common_child_item_type: XM_XPATH_ITEM_TYPE is
 			-- Most general type of item returned by the children of this instruction
 		local
@@ -1961,5 +2052,6 @@ invariant
 	inherited_verion: version_attribute_processed implies version /= Void
 	validation_reporting: Report_always <= reporting_circumstances and then reporting_circumstances <= Report_if_instantiated
 	error_listener_not_void: error_listener /= Void
+	default_collation_name_not_void: default_collation_name /= Void
 
 end

@@ -16,6 +16,8 @@ inherit
 
 	DT_SHARED_SYSTEM_CLOCK
 
+	XM_XPATH_STANDARD_NAMESPACES
+
 	KL_IMPORTED_STRING_ROUTINES
 
 
@@ -119,30 +121,20 @@ feature -- Access
 			restricted_implies_undefined: is_restricted implies Result = Void
 		end
 
-	default_collation: ST_COLLATOR is
-			-- Default collator
-		do
-			Result := unicode_codepoint_collator -- TODO - this should be settable
-		end
-
-	collation (a_collation_name: STRING): ST_COLLATOR is
+	collator (a_collation_name: STRING): ST_COLLATOR is
 			-- Named collation
 		require
 			collation_name_not_void: a_collation_name /= Void
+			is_known_collation (a_collation_name)
 		do
-			-- TODO - do this properly
-			if STRING_.same_string (a_collation_name, unicode_codepoint_collation_name) then
-				Result := unicode_codepoint_collator
-			end
+			Result := collation_map.item (a_collation_name)
 		end
 
-	unicode_codepoint_collation_name: STRING is "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
-			-- Unicode code-point collator name
-	
 	unicode_codepoint_collator: ST_COLLATOR is
-			-- Unicode code-point collator
-		once
-			create Result
+		do
+			Result := collator (Unicode_codepoint_collation_uri)
+		ensure
+			unicode_codepoint_collator_available: Result /= Void
 		end
 
 	last_parsed_document: XM_XPATH_DOCUMENT is
@@ -158,7 +150,15 @@ feature -- Status report
 
 	is_restricted: BOOLEAN
 			-- Is this a restricted context (for use with xsl:use-when)?
-	
+
+	is_known_collation (a_collation_name: STRING): BOOLEAN is
+			-- Is `a_collation_name' a statically know collation?
+		require
+			collation_name_not_void: a_collation_name /= Void
+		do
+			Result := collation_map.has (a_collation_name)
+		end
+
 	is_context_position_set: BOOLEAN is
 			-- Is the context position available?
 		do
@@ -255,11 +255,15 @@ feature {NONE} -- Implementation
 	internal_date_time: like current_date_time
 			-- Used by stand-alone XPath and restricted contexts
 
+		collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
+			-- Collations index by URI
+
 invariant
 
 	reserved_slots: reserved_slot_count >= 0
 	local_variables_frame: local_variable_frame /= Void and then local_variable_frame.count - reserved_slot_count >= 0
 	no_context_position_for_restricted_contexts: is_restricted implies current_iterator = Void
+	collation_map_not_void: collation_map /= Void
 
 end
 

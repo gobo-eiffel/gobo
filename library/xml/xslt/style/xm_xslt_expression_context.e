@@ -41,7 +41,8 @@ feature {NONE} -- Initialization
 			style_element_not_void:	a_style_element /= Void
 		do
 			style_element := a_style_element
-			default_collation_name := "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
+			known_collations := a_style_element.principal_stylesheet.collation_map
+			default_collation_name := a_style_element.default_collation_name
 			create base_uri.make (style_element.base_uri)
 		ensure
 			style_element_set: style_element = a_style_element
@@ -54,7 +55,8 @@ feature {NONE} -- Initialization
 			style_element_not_void:	a_style_element /= Void
 		do
 			style_element := a_style_element
-			default_collation_name := "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
+			known_collations := a_style_element.principal_stylesheet.collation_map
+			default_collation_name := a_style_element.default_collation_name
 			create base_uri.make (style_element.base_uri)
 			is_restricted := True
 		ensure
@@ -105,15 +107,6 @@ feature -- Access
 	
 	default_collation_name: STRING
 			-- URI naming the default collation
-
-	collator (a_collation_name: STRING): ST_COLLATOR is
-			-- Collation named `a_collation_name'
-		do
-			-- TODO - need a proper implementation
-			if STRING_.same_string (a_collation_name, default_collation_name) then
-				Result := code_point_collator
-			end
-		end
 
 	uri_for_prefix (an_xml_prefix: STRING): STRING is
 			-- URI for a namespace prefix

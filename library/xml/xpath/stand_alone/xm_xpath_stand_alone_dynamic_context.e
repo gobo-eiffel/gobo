@@ -20,6 +20,8 @@ inherit
 
 	XM_STRING_MODE
 
+	UC_SHARED_STRING_EQUALITY_TESTER
+
 creation
 
 	make
@@ -33,6 +35,7 @@ feature {NONE} -- Initialization
 			document_pool_not_void: a_document_pool /= Void
 		local
 			a_file_resolver: XM_FILE_URI_RESOLVER
+			a_collator: ST_COLLATOR
 		do
 			make_dynamic_context (a_context_item)
 			available_documents := a_document_pool
@@ -40,6 +43,9 @@ feature {NONE} -- Initialization
 			create uri_resolver.make
 			create a_file_resolver.make
 			uri_resolver.register_scheme (a_file_resolver)
+			create collation_map.make_with_equality_testers (1, Void, string_equality_tester)
+			create a_collator
+			collation_map.put (a_collator, Unicode_codepoint_collation_uri)
 		ensure
 			reserved_slot_count_zero: reserved_slot_count = 0
 			context_item_set: current_iterator /= Void and then current_iterator.item = a_context_item
@@ -57,7 +63,7 @@ feature -- Access
 
 	last_parsed_document: XM_XPATH_DOCUMENT
 		-- Result from last call to `build_document'
-	
+
 feature -- Status report
 
 	last_build_error: STRING

@@ -33,7 +33,7 @@ inherit
 feature -- Test
 
 	test_use_when is
-			-- Test use-character-maps with method=xml
+			-- Test use-when
 		local
 			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			a_configuration: XM_XSLT_CONFIGURATION
@@ -64,7 +64,7 @@ feature -- Test
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (Void, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", STRING_.same_string (an_output.last_output, "%N  OK%N"))
+			assert ("Correct result", STRING_.same_string (an_output.last_output, "OK"))
 		end
 
 end

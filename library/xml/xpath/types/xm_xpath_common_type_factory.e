@@ -476,6 +476,7 @@ feature {NONE} -- Implementation
 			bind_gexslt_name (Indent_spaces_type_code, "indent-spaces")
 			bind_gexslt_name (Character_representation_type_code, "character-representation")
 			bind_gexslt_name (Byte_order_mark_type_code, "byte-order-mark")
+			bind_gexslt_name (Gexslt_collation_type_code, "collation")
 		end
 	
 	bind_xdt_names is
@@ -648,6 +649,7 @@ feature {NONE} -- Implementation
 			bind_xslt_name (Xslt_copy_type_code, "copy")
 			bind_xslt_name (Xslt_copy_of_type_code, "copy-of")
 			bind_xslt_name (Xslt_decimal_format_type_code, "decimal-format")
+			bind_xslt_name (Xslt_default_collation_type_code, "default-collation")
 			bind_xslt_name (Xslt_document_type_code, "document")
 			bind_xslt_name (Xslt_element_type_code, "element")
 			bind_xslt_name (Xslt_fallback_type_code, "fallback")

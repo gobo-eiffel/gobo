@@ -134,6 +134,16 @@ feature -- Element change
 			a_child.set_parent (Current, children.count)
 		end
 
+	replace_child (a_child: XM_XPATH_TREE_NODE;an_index: INTEGER) is
+			-- Replace child at `an_index' with `a_child'
+		require
+			child_not_void: a_child /= Void
+			valid_index: is_valid_child_index (an_index)
+		do
+			children.replace (a_child, an_index)
+			a_child.set_parent (Current, an_index)
+		end
+
 feature {NONE} -- Implementation
 
 	children: DS_ARRAYED_LIST [XM_XPATH_TREE_NODE]

@@ -36,23 +36,26 @@ feature {NONE} -- Initialization
 			local_variable_frame := transformer.bindery.current_stack_frame
 			reserved_slot_count := 2
 			cached_last := -1
+			collation_map := transformer.executable.collation_map
 		ensure
 			transformer_set: transformer = a_transformer
 			not_restricted: not is_restricted
 		end
 
-	make_restricted (a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
+	make_restricted (a_static_context: XM_XSLT_EXPRESSION_CONTEXT; a_collation_map: like collation_map) is
 			-- Create a restricted context for [xsl:]use-when
 		require
 			static_context_not_void: a_static_context /= Void
 		do
 			is_restricted := True
 			static_context := a_static_context
+			collation_map := a_collation_map
 			create internal_date_time.make_from_epoch (0)
 			create local_variable_frame.make (0, 0)
 		ensure
 			restricted: is_restricted
 			static_context_set: static_context = a_static_context
+			collation_map_set: collation_map = a_collation_map
 		end
 
 feature -- Access

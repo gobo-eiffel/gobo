@@ -18,7 +18,7 @@ inherit
 
 creation
 
-	make
+	make, make_from_string
 	
 feature {NONE} -- Initialization
 
@@ -30,6 +30,20 @@ feature {NONE} -- Initialization
 		ensure
 			in_error: is_error = True
 			error_set: error_value = an_error_value
+		end
+
+	make_from_string (a_string, an_error_code: STRING; an_error_type: INTEGER) is
+			-- Create from `a_string'.
+		require
+			valid_error_code: an_error_code /= Void and then is_valid_error_code (an_error_code)
+			valid_error_type: an_error_type = Static_error or an_error_type = Type_error or an_error_type = Dynamic_error
+			string_not_void: a_string /= Void and then a_string.count > 0
+		do
+			set_last_error_from_string (a_string, an_error_code, an_error_type)
+		ensure
+			item_set: error_value.item /= Void and then STRING_.same_string (error_value.item.string_value, a_string)
+			code_set: error_value.code = an_error_code
+			type_set: error_value.type = an_error_type
 		end
 
 feature -- Access

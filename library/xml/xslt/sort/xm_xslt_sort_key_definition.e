@@ -31,10 +31,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_sort_key, an_order, a_case_order, a_language, a_data_type, a_collation_name: XM_XPATH_EXPRESSION; ) is
+	make (a_sort_key, an_order, a_case_order, a_language, a_data_type, a_collation_name: XM_XPATH_EXPRESSION) is
 			-- Establish invariant.
 		require
-			sort_key_not_void: a_sort_key /= Void			
+			sort_key_not_void: a_sort_key /= Void
 		do
 			sort_key := a_sort_key
 			order_expression := an_order
@@ -43,6 +43,12 @@ feature {NONE} -- Initialization
 			data_type_expression := a_data_type
 			collation_name_expression := a_collation_name
 		ensure
+			sort_key_set:sort_key = a_sort_key
+			order_expressiion_set: order_expression = an_order
+			case_order_expression_set: case_order_expression = a_case_order
+			language_expression_set: language_expression = a_language
+			data_type_expression_set: data_type_expression = a_data_type
+			collation_name_expression_set: collation_name_expression = a_collation_name
 		end
 
 feature -- Access
@@ -60,7 +66,7 @@ feature -- Access
 		local
 			a_collator: ST_COLLATOR
 		do
-			if collation_name /= Void then a_collator := a_context.collation (collation_name) end
+			if collation_name /= Void then a_collator := a_context.collator (collation_name) end
 			create Result.make (sort_key, order, data_type, case_order, language, a_collator, a_context)
 		ensure
 			reduced_definition_not_void: Result /= Void

@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_DOCUMENT
+class XM_XSLT_DOCUMENT_FUNCTION
 
 inherit
 

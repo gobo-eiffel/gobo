@@ -196,6 +196,7 @@ feature -- Access
 	Indent_spaces_type_code: INTEGER is 516
 	Character_representation_type_code: INTEGER is 517
 	Byte_order_mark_type_code: INTEGER is 518
+	Gexslt_collation_type_code: INTEGER is 519
 	
 			-- Codes in XSLT namespace (`Xslt_uri_code' * 128 + 0..n)
 
@@ -256,6 +257,7 @@ feature -- Access
 	Xslt_use_when_type_code: INTEGER is 694
 	Xslt_validation_type_code: INTEGER is 695
 	Xslt_version_type_code: INTEGER is 696
+	Xslt_default_collation_type_code: INTEGER is 697
 
 			-- Codes in XML Schema Instance namespace (`Xml_schema_instance_uri_code' * 128 + 1..n)
 
@@ -406,6 +408,7 @@ feature -- Access
 	Count_attribute: STRING is "count"
 	Data_type_attribute: STRING is "data-type"
 	Decimal_separator_attribute: STRING is "decimal-separator"
+	Default_collation_attribute: STRING is "default-collation"
 	Default_validation_attribute: STRING is "default-validation"
 	Digit_attribute: STRING is "digit"
 	Disable_output_escaping_attribute: STRING is	"disable-output-escaping"
@@ -477,9 +480,9 @@ feature -- Access
 			Result := "{" + Xslt_uri + "}"
 		end
 
-	Xslt_use_when_attribute: STRING is
+	Xslt_default_collation_attribute: STRING is
 		once
-			Result := "{" + Xslt_uri + "}" + Use_when_attribute
+			Result := "{" + Xslt_uri + "}" + Default_collation_attribute
 		end
 
 	Xslt_extension_element_prefixes_attribute: STRING is
@@ -490,6 +493,11 @@ feature -- Access
 	Xslt_exclude_result_prefixes_attribute: STRING is
 		once
 			Result := "{" + Xslt_uri + "}" + Exclude_result_prefixes_attribute
+		end
+
+	Xslt_use_when_attribute: STRING is
+		once
+			Result := "{" + Xslt_uri + "}" + Use_when_attribute
 		end
 
 	Xslt_version_attribute: STRING is

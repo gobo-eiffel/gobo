@@ -18,15 +18,19 @@ inherit
 		undefine
 			evaluate_item
 		redefine
-			pre_evaluate
+			pre_evaluate, analyze
 		end
 
 feature -- Access
+
+	default_collation_name: STRING
+			-- Default_collation_name
 
 	collator (an_argument_number: INTEGER; a_context: XM_XPATH_CONTEXT; use_default_collator: BOOLEAN): ST_COLLATOR is
 			-- Collator to be used
 		require
 			context_not_void: a_context /= Void
+			default_collation_name_not_void: default_collation_name /= Void
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			a_string_value: XM_XPATH_STRING_VALUE
@@ -43,15 +47,26 @@ feature -- Access
 					string_value: a_string_value /= Void
 					-- it's statically typed as a string
 				end
-				Result := a_context.collation (a_string_value.string_value)
+				Result := a_context.collator (a_string_value.string_value)
 			elseif use_default_collator then
-				Result := a_context.default_collation
+				Result := a_context.collator (default_collation_name)
 			else
 
 				-- We use the Unicode codepoint collator
 
 				Result := a_context.unicode_codepoint_collator
 			end
+		end
+
+feature -- Optimization
+	
+	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+		do
+			Precursor (a_context)
+			default_collation_name := a_context.default_collation_name
+		ensure then
+			default_collation_name_not_void: default_collation_name /= Void
+			default_collation_name_set: default_collation_name = a_context.default_collation_name
 		end
 
 feature -- Evaluation

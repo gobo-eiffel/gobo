@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			create decimal_format_manager.make
 			create collation_map.make_with_equality_testers (1, Void, string_equality_tester)
 			create a_code_point_collator
-			declare_collation (default_collation_name, a_code_point_collator)
+			declare_collation (a_code_point_collator, default_collation_name)
 			create stylesheet_module_map.make_with_equality_testers (5, Void, string_equality_tester)
 			create module_list.make_default
 			module_list.set_equality_tester (string_equality_tester)
@@ -61,8 +61,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_collation_name: STRING is "http://www.w3.org/2003/11/xpath-functions/collation/codepoint"
-			-- Default collation name
+	collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
+			-- Map of collation names to collators
 
 	importer: like Current
 			-- The stylesheet that imported or included `Current';
@@ -410,7 +410,7 @@ feature -- Element change
 			module_registered: is_module_registered (a_system_id)
 		end
 
-	declare_collation (a_name: STRING; a_collator: ST_COLLATOR) is
+	declare_collation (a_collator: ST_COLLATOR; a_name: STRING) is
 			-- Declare a collation.
 		require
 			collation_name_not_void: a_name /= Void -- TODO and then is a URI
@@ -419,10 +419,7 @@ feature -- Element change
 			if collation_map.has (a_name) then
 				collation_map.replace (a_collator, a_name)
 			else
-				if collation_map.is_full then
-					collation_map.resize (2 * collation_map.count)
-				end
-				collation_map.put (a_collator, a_name)
+				collation_map.force (a_collator, a_name)
 			end
 		ensure
 			collator_declared: is_collator_defined (a_name)
@@ -731,7 +728,7 @@ feature -- Element change
 			a_function_library: XM_XPATH_FUNCTION_LIBRARY
 		do
 						
-			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager, default_collation_name,
+			create last_compiled_executable.make (a_configuration, rule_manager, key_manager, decimal_format_manager,
 			collation_map, stripper_rules, strips_whitespace, module_list, function_library)
 
 			-- Call compile method for each top-level object in the stylesheet
@@ -897,9 +894,6 @@ feature {NONE} -- Implementation
 
 	largest_stack_frame: INTEGER
 			-- Maximum number of local variables in any template
-
-	collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
-			-- Map of collation names to collators
 
 	stylesheet_module_map: DS_HASH_TABLE [INTEGER, STRING]
 			-- Map of SYSTEM IDs to module numbers

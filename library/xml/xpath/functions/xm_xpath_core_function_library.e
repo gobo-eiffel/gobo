@@ -36,6 +36,8 @@ feature -- Access
 		do
 			if a_fingerprint = Boolean_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Compare_function_type_code then
+				Result := an_arity = -1 or else an_arity = 2  or else an_arity = 3
 			elseif a_fingerprint = Concat_function_type_code then
 				Result := an_arity = -1 or else an_arity > 1
 			elseif a_fingerprint = Contains_function_type_code then
@@ -116,6 +118,8 @@ feature -- Element change
 		do
 			if a_fingerprint = Boolean_function_type_code then
 				create {XM_XPATH_BOOLEAN} a_function_call.make
+			elseif a_fingerprint = Compare_function_type_code then
+				create {XM_XPATH_COMPARE} a_function_call.make
 			elseif a_fingerprint = Concat_function_type_code then
 				create {XM_XPATH_CONCAT} a_function_call.make
 			elseif a_fingerprint = Contains_function_type_code then

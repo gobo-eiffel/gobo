@@ -45,10 +45,11 @@ feature {NONE} -- Initialization
 		local
 			a_code_point_collator: ST_COLLATOR
 		do
-			create collations.make_with_equality_testers (10, Void, string_equality_tester)
+			create known_collations.make_with_equality_testers (10, Void, string_equality_tester)
 			create variables.make (10)
 			create a_code_point_collator
-			declare_collation (Unicode_codepoint_collation_uri, a_code_point_collator, True)
+			declare_collation (a_code_point_collator, Unicode_codepoint_collation_uri)
+			default_collation_name := Unicode_codepoint_collation_uri
 			clear_namespaces
 			warnings_to_std_error := warnings
 			is_backwards_compatible_mode := backwards
@@ -109,14 +110,6 @@ feature -- Access
 	
 	default_collation_name: STRING
 			-- URI naming the default collation
-
-	collator (a_collation_name: STRING): ST_COLLATOR is
-			-- Collation named `a_collation_name'
-		do
-			if collations.has (a_collation_name) then
-				Result := collations.item (a_collation_name)
-			end
-		end
 
 	uri_for_prefix (an_xml_prefix: STRING): STRING is
 			-- URI for a namespace prefix;
@@ -197,28 +190,6 @@ feature -- Status report
 
 feature -- Element change
 
-	declare_collation (a_name: STRING; a_collator: ST_COLLATOR; is_default_collation: BOOLEAN) is
-			-- Declare a collation.
-		require
-			collation_name_not_void: a_name /= Void -- TODO and then is a URI
-			collator_not_void: a_collator /= Void
-		do
-			if collations.has (a_name) then
-				collations.replace (a_collator, a_name)
-			else
-				if collations.is_full then
-					collations.resize (2 * collations.count)
-				end
-				collations.put (a_collator, a_name)
-			end
-			if is_default_collation then
-				default_collation_name := a_name
-			end
-		ensure
-			collator_declared: collations.has (a_name) and then collations.item (a_name) = a_collator
-			default_collator: is_default_collation implies STRING_.same_string (a_name, default_collation_name)
-		end
-
 	declare_namespace (an_xml_prefix, a_uri: STRING) is
 		require
 			prefix_not_void: an_xml_prefix /= Void
@@ -294,9 +265,6 @@ feature {NONE} -- Implementation
 	variables:  DS_HASH_TABLE [XM_XPATH_VARIABLE, INTEGER]
 			-- Variable-bindings
 
-	collations: DS_HASH_TABLE [ST_COLLATOR, STRING]
-			-- Named collations
-
 	bits_20: INTEGER is 1048576 
 			-- 0x0fffff
 
@@ -340,7 +308,6 @@ invariant
 
 	namespaces /= Void
 	default_collation_name: default_collation_name /= Void
-	collations: collations /= Void
 	variables: variables /= Void
 	warnings_implies_backwards_compatibility: warnings_to_std_error implies is_backwards_compatible_mode
 	not_restricted: not is_restricted

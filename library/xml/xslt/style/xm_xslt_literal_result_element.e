@@ -60,8 +60,10 @@ feature -- Element change
 						elseif a_fingerprint = Xslt_exclude_result_prefixes_type_code then -- already dealt with
 						elseif a_fingerprint = Xslt_version_type_code then -- already dealt with
 						elseif a_fingerprint = Xslt_xpath_default_namespace_type_code then -- already dealt with
+						elseif a_fingerprint = Xslt_default_collation_type_code then -- already dealt with
 						elseif a_fingerprint = Xslt_type_type_code then -- deal with this later
 						elseif a_fingerprint = Xslt_validation_type_code then -- deal with this later
+			
 						else
 							report_compile_error (STRING_.appended_string ("Unknown XSL attribute ", shared_name_pool.display_name_from_name_code (a_name_code)))
 						end
@@ -180,7 +182,7 @@ feature -- Element change
 					if not direct_children.extendible (attributes.count) then
 						direct_children.resize (direct_children.count + attributes.count)
 					end
-					direct_children.extend_first (attributes) -- TODO this is inefficient
+					direct_children.extend_first (attributes) -- TODO this is inefficient, but as it is only during compilation, hardly matters
 				end
 
 				last_generated_instruction := a_fixed_element

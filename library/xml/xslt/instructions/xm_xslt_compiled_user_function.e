@@ -45,6 +45,7 @@ feature -- Access
 	details: XM_XSLT_TRACE_DETAILS
 			-- Trace details
 
+
 feature -- Evaluation
 
 	call (some_actual_arguments: DS_LIST [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER; evaluate_tail_calls: BOOLEAN) is

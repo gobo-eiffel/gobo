@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 
 	make (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Establish invariant.
+		require
+			executable_not_void: an_executable /= Void
 		do
 			executable := an_executable
 			instruction_name := "comment"

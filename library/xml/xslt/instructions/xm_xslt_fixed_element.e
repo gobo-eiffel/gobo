@@ -21,7 +21,8 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]; some_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET]; a_simple_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER; a_namespace_code_list: DS_ARRAYED_LIST [INTEGER]; some_attribute_sets: DS_ARRAYED_LIST [XM_XSLT_COMPILED_ATTRIBUTE_SET];
+			a_simple_type: XM_XPATH_SCHEMA_TYPE; a_validation_action: INTEGER) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
