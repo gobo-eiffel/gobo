@@ -3,7 +3,7 @@
 <project name="ls" default="ls" >
 	<target name="ls" >
 		<description>executes a ls -l command under unix</description>
-		<var name="directory" value="." />
+		<set name="directory" value="." />
 		<exec executable="ls -l ${directory}" />
 	</target>
 </project>

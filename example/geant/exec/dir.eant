@@ -3,7 +3,7 @@
 <project name="dir" default="dir" >
 	<target name="dir" >
 		<description>executes a dir command under dos/windows</description>
-		<var name="directory" value="." />
+		<set name="directory" value="." />
 		<exec executable="dir ${directory}" />
 	</target>
 </project>

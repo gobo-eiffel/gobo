@@ -1,11 +1,11 @@
 <project name="if_demo" default="list" >
 
 	<target name="windows" if="WINDIR" >
-		<var name="os.windows" value="true" />
+		<set name="os.windows" value="true" />
 	</target>
 
 	<target name="unix" unless="WINDIR" >
-		<var name="os.unix" value="true" />
+		<set name="os.unix" value="true" />
 	</target>
 
 	<target name="init" depend="windows,unix" >

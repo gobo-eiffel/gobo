@@ -2,19 +2,19 @@
 
 <project name="multiple commands" default="ls" basedir="." >
 	<target name="windows" if="WINDIR" >
-		<var name="copy" value="copy" />
-		<var name="del" value="del" />
-		<var name="dir" value="dir" />
-		<var name="cmdsep" value="&&" />
-		<var name="pathsep" value="\" />
+		<set name="copy" value="copy" />
+		<set name="del" value="del" />
+		<set name="dir" value="dir" />
+		<set name="cmdsep" value="&&" />
+		<set name="pathsep" value="\" />
 	</target>
 
 	<target name="unix" unless="WINDIR" >
-		<var name="cp" value="cp" />
-		<var name="del" value="rm" />
-		<var name="dir" value="ls -l" />
-		<var name="cmdsep" value=";" />
-		<var name="pathsep" value="/" />
+		<set name="cp" value="cp" />
+		<set name="del" value="rm" />
+		<set name="dir" value="ls -l" />
+		<set name="cmdsep" value=";" />
+		<set name="pathsep" value="/" />
 	</target>
 
 	<target name="init" depend="windows,unix" >
@@ -22,8 +22,8 @@
 
 	<target name="ls" depend="init">
 		<description>print content of current directory</description>
-		<var name="from_dir" value="exec" />
-		<var name="to_dir" value=".." />
+		<set name="from_dir" value="exec" />
+		<set name="to_dir" value=".." />
 		<exec executable="cd ${to_dir} ${cmdsep} ${dir} ${cmdsep} cd ${from_dir} ${cmdsep} ${dir}" />
 	</target>
 	

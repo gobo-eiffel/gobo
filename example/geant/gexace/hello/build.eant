@@ -1,7 +1,7 @@
 <project name="geant" default="compile">
 
 	<target name="init">
-		<var name="system" value="hello" />
+		<set name="system" value="hello" />
 	</target>
 
 	<target name="compile" depend="init">

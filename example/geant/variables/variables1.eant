@@ -3,7 +3,7 @@
 <project name="variables1" >
 	<target name="var" >
 		<description>set and query a variable</description>
-		<var name="who" value="world" />
+		<set name="who" value="world" />
 		<echo message="Hello ${who}" />
 	</target>
 </project>

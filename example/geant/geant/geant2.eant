@@ -8,10 +8,10 @@
 	<target name="one" >
 		<description>call other targets</description>
 
-		<var name="who" value="World" />
+		<set name="who" value="World" />
 		<geant target="print_who" />
 
-		<var name="who" value="you" />
+		<set name="who" value="you" />
 		<geant target="print_who" />
 	</target>
 

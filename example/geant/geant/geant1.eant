@@ -1,9 +1,9 @@
 <project name="geant" >
 	<target name="one" >
 		<description>calls other ant files</description>
-		<var name="who" value="Bart" />
+		<set name="who" value="Bart" />
 
-		<var name="buildfile" value="../variables/variables5.eant" />
+		<set name="buildfile" value="../variables/variables5.eant" />
 
 		<echo message="------------------------" />
 		<echo message="before call of ${buildfile}" />
