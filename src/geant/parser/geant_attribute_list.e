@@ -76,7 +76,7 @@ feature -- Output
 			nb := count
 			from i := 1 until i > nb loop
 				an_attribute := item (i)
-				print (an_attribute.name.out + "=%"" + an_attribute.value.out + "%"%N")
+				std.output.put_string (an_attribute.name.out + "=%"" + an_attribute.value.out + "%"%N")
 				i := i + 1
 			end
 		end
