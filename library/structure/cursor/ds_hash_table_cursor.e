@@ -2,15 +2,19 @@ indexing
 
 	description:
 
-		"Cursors for hash table traversals";
+		"Cursors for hash table traversals"
 
-	library:    "Gobo Eiffel Structure Library";
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	library:    "Gobo Eiffel Structure Library"
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
+#ifdef SE
+class DS_HASH_TABLE_CURSOR [G, K]
+#else
 class DS_HASH_TABLE_CURSOR [G, K -> HASHABLE]
+#endif
 
 inherit
 
@@ -41,13 +45,13 @@ feature -- Access
 	item: G is
 			-- Item at cursor position
 		do
-			Result := container.array_item (position).first
+			Result := container.storage.item (position).first
 		end
 
 	key: K is
 			-- Key at cursor position
 		do
-			Result := container.array_item (position).second
+			Result := container.storage.item (position).second
 		end
 
 	index: INTEGER is
@@ -244,7 +248,7 @@ feature -- Element change
 	put (v: G) is
 			-- Replace item at cursor position by `v'.
 		do
-			container.array_item (position).put_first (v)
+			container.storage.item (position).put_first (v)
 		end
 
 feature {DS_HASH_TABLE} -- Implementation
