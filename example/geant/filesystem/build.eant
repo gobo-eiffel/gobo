@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+
+<project name="filesystem_examples" default="all" >
+	<target name="mkdir1">
+		<mkdir directory="testdirectory" />
+	</target>
+
+	<target name="all" depends="mkdir1">
+	</target>
+</project>
