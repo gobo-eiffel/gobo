@@ -79,7 +79,7 @@ feature -- Execution
 		do
 			if old_cwd /= Void then
 				file_system.cd (old_cwd)
-				file_system.recursive_delete_directory (testdir)
+				-- file_system.recursive_delete_directory (testdir)
 				old_cwd := Void
 			end
 		end
@@ -140,9 +140,6 @@ feature {NONE} -- Precompilation
 			assert_execute ("fish" + output_log)
 				-- Check creation of precompiled files.
 			assert ("driver_exists", file_system.file_exists ("driver" + file_system.exe_extension))
-				-- Done.
-			file_system.cd (old_cwd)
-			file_system.recursive_delete_directory (testdir)
 		end
 
 	precomp_ve is
@@ -159,8 +156,6 @@ feature {NONE} -- Precompilation
 			assert ("no_output", not file_system.file_exists ("Result.out"))
 				-- Done.
 			assert_execute ("vec -no -dc -y" + output_log)
-			file_system.cd (old_cwd)
-			file_system.recursive_delete_directory (testdir)
 		end
 
 	precomp_se is
@@ -213,9 +208,6 @@ feature {NONE} -- Precompilation
 			else
 				assert ("open_read1", False)
 			end
-				-- Done.
-			file_system.cd (old_cwd)
-			file_system.recursive_delete_directory (testdir)
 		end
 
 feature {NONE} -- Implementation
