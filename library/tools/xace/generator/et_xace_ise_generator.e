@@ -163,7 +163,7 @@ feature {NONE} -- Output
 			a_file.put_line ("root")
 			a_file.put_new_line
 			print_indentation (1, a_file)
-			print_escaped_name ("ANY", a_file)
+			print_escaped_name ("NONE", a_file)
 			a_file.put_new_line
 			a_file.put_new_line
 			an_option := a_library.options
