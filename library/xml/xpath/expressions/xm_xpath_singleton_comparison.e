@@ -50,6 +50,7 @@ feature -- Access
 		item_type: INTEGER is
 			--Determine the data type of the expression, if possible
 		do
+			todo ("item-type", False)
 			-- TODO
 		end
 

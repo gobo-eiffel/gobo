@@ -12,6 +12,10 @@ indexing
 
 class XM_XPATH_CONTEXT
 
+inherit
+
+	KL_SHARED_STANDARD_FILES -- TODO - remove
+
 creation
 
 	make
@@ -26,6 +30,7 @@ feature {NONE} -- Initialization
 			controller := a_controller
 			cached_last := -1
 			-- TODO more code
+			todo ("make", True)
 		ensure
 			controller_set: controller = a_controller
 		end
@@ -49,6 +54,7 @@ feature -- Access
 			-- Context position;
 			-- (the position of the context node in the context node list)
 		do
+			todo ("context-position", False)
 			-- TODO
 		end
 
@@ -59,17 +65,35 @@ feature -- Access
 			if cached_last > 0 then
 				Result := cached_last
 			else
+				todo ("last", True)
 				-- TODO
 			end
 		end
 
+feature -- Status setting
+
+	set_local_variable (a_slot_number: INTEGER; a_value: XM_XPATH_VALUE) is
+			-- TODO
+		do
+			todo ("set-local-variable", False)
+		end
+
+feature -- Creation
+
+	new_context: XM_XPATH_CONTEXT is
+			-- Create a copy of `Current'
+		do
+			Result := clone (Current)
+		end
+
 feature -- Evaluation
 
-	evaluate_local_variable (a_slot_number: INTEGER): XM_XPATH_VALUE is
+	evaluated_local_variable (a_slot_number: INTEGER): XM_XPATH_VALUE is
 			-- Value of a local variable, identified by its slot number
 		require
 			strictly_positive_slot_number: a_slot_number > 0
 		do
+			todo ("evaluated-local-variable", False)
 			-- TODO
 		end
 	
@@ -90,6 +114,23 @@ feature {NONE} -- Implementation
 
 	cached_last: INTEGER
 			-- Used by `last'
+
+	todo (a_routine_name: STRING; is_partially_done: BOOLEAN) is
+			-- Write a TODO message.
+		require
+			routine_name_not_void: a_routine_name /= Void and then a_routine_name.count > 2
+		do
+			std.error.put_string ("{")
+			std.error.put_string (generating_type)
+			std.error.put_string ("}.")
+			std.error.put_string (a_routine_name)
+			if is_partially_done then
+				std.error.put_string (" is only partly written")
+			else
+				std.error.put_string (" needs to be written")
+			end
+			std.error.put_new_line
+		end
 
 invariant
 

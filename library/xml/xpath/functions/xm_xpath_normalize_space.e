@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplify, evaluate_item
+			simplify, evaluated_item
 		end
 
 creation
@@ -87,12 +87,12 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate as a single item
 		local
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
-
+			-- TODO
 		end
 	
 feature {XM_XPATH_EXPRESSION} -- Restricted

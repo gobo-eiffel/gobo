@@ -71,6 +71,7 @@ feature -- Status report
 			a_string := STRING_.appended_string (indent (a_level), "for $")
 			a_string := STRING_.appended_string (a_string, variable_name)
 			-- TODO
+			todo ("display", True)
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end
@@ -80,6 +81,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions
 		do
+			todo ("analyze", True)
 			-- TODO
 			Result := Current
 			Result.set_analyzed			
@@ -91,6 +93,7 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
+			todo ("compute-cardinality", False)
 			-- TODO
 		end
 

@@ -16,8 +16,12 @@ inherit
 	
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			evaluate_item, display, item_type
+			evaluated_item, display, item_type
 		end
+
+creation
+
+	make
 
 		-- A XM_XPATH_CLOSURE represents a value that has not yet been evaluated: the value is represented
 		--  by an expression, together with saved values of all the context variables that the
@@ -36,7 +40,7 @@ inherit
 		--  over the reservoir contents. Alternatively, of course, the values may be left unread.
 
 		-- Delayed evaluation is used only for expressions with a static type that allows
-		--  more than one item, so the evaluate_item routine will not normally be used, but it is
+		--  more than one item, so the evaluated_item routine will not normally be used, but it is
 		--  supported for completeness.
 
 		-- The expression may depend on local variables and on the context item; these values
@@ -48,8 +52,30 @@ inherit
 		--  always be evaluated eagerly. This means that the XM_XPATH_CLOSURE does not need to keep a copy
 		--  of these context variables.
 
+feature {NONE} -- Initialization
+
+	make (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
+			-- Establish invariant.
+			-- Do not call directly. Use {XM_XPATH_EXPRESSION_FACTORY}.make_closure.
+		require
+			valid_expression: an_expression /= Void and then not (an_expression.depends_upon_position or else an_expression.depends_upon_last)
+			context_not_void: a_context /= Void
+		local
+			new_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+		do
+			base_expression := an_expression
+			saved_xpath_context := a_context.new_context
+			state := Unread_state
+			if saved_xpath_context.current_iterator /= Void then
+				create new_singleton_iterator.make (saved_xpath_context.current_iterator.item_for_iteration)
+				saved_xpath_context.set_current_iterator (new_singleton_iterator)
+			end
+		ensure
+			base_expression_set: base_expression = an_expression
+		end
+
 feature -- Access
-	
+
 	item_type: INTEGER is
 			-- Determine the data type of the expression, if possible
 		do
@@ -90,7 +116,7 @@ feature -- Status report
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate as a single item
 		do
 			-- TODO
@@ -100,5 +126,19 @@ feature {XM_XPATH_CLOSURE} -- Local
 
 	base_expression: XM_XPATH_EXPRESSION
 			-- Underlying expression
+
+	saved_xpath_context: XM_XPATH_CONTEXT
+			-- Context created when the closure was created
+
+	state: INTEGER
+			-- Information on items read
+
+	Unread_state, Maybe_more_state, More_to_come_state, All_read_state: INTEGER is unique
+	
+invariant
+
+	base_expression_not_void: base_expression /= Void
+	saved_xpath_context_not_void: saved_xpath_context /= Void
+	state: Unread_state <= state and state <= All_read_state
 
 end

@@ -14,13 +14,13 @@ deferred class XM_XPATH_COMPUTED_EXPRESSION
 
 	-- There are two principal routines for evaluating an expression:
 	--  `iterator', which yields an iterator over the result of the expression
-	--  as a sequence, and `evaluate_item', which returns an XM_XPATH_ITEM.
+	--  as a sequence, and `evaluated_item', which returns an XM_XPATH_ITEM.
 	-- Both routines take an XM_XPATH_CONTEXT object to supply the evaluation context;
 	--  for an expression that is a Value, this argument is ignored and may be `Void'.
-	-- This base class provides an implementation of iterator in terms of evaluate_item
+	-- This base class provides an implementation of iterator in terms of evaluated_item
 	--  that works only for singleton expressions, and an implementation
-	--  of evaluate_item in terms of iterator that works only for non-singleton expressions.
-	-- Sub-classes of expression must therefore provide either iterator or evaluate_item:
+	--  of evaluated_item in terms of iterator that works only for non-singleton expressions.
+	-- Sub-classes of expression must therefore provide either iterator or evaluated_item:
 	--  they do not have to provide both.
 
 inherit
@@ -64,7 +64,7 @@ feature -- Access
 					singleton_expression: not cardinality_allows_many
 					-- Not a prefect check, as cardinality may not have been set!
 				end
-			an_item := evaluate_item (a_context)
+			an_item := evaluated_item (a_context)
 			if an_item = Void then
 				Result := empty_abstract_item_iterator
 			else
@@ -221,7 +221,7 @@ feature -- Evaluation
 			if Result = Void then create Result.make (False) end			
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate `Current' as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -241,13 +241,13 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
+	evaluated_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
 			-- Evaluate `Current' as a String
 		local
 			an_item: XM_XPATH_ITEM
 			a_string: XM_XPATH_STRING_VALUE
 		do
-			an_item := evaluate_item (a_context)
+			an_item := evaluated_item (a_context)
 			if an_item = Void then
 				create Result.make ("")
 			else

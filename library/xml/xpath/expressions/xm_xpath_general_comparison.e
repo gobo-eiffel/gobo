@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_binary_expression
 		redefine
-			display_operator, evaluate_item, analyze, effective_boolean_value
+			display_operator, evaluated_item, analyze, effective_boolean_value
 		end
 
 	XM_XPATH_CARDINALITY
@@ -260,7 +260,7 @@ feature -- Optimization
 												if a_value /= Void and then another_value /= Void then
 													a_result_expression.operands.put (first_operand, 1)
 													a_result_expression.operands.put (second_operand, 2)
-													Result := a_result_expression.evaluate_item (Void).as_value
+													Result := a_result_expression.evaluated_item (Void).as_value
 												end
 											end
 										end
@@ -363,7 +363,7 @@ feature -- Evaluation
 			if Result = Void then create Result.make (False) end
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate `Current' as a single item
 		do
 			Result := effective_boolean_value (a_context)

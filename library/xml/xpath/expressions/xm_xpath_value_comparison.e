@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_binary_expression
 		redefine
-			analyze, evaluate_item, effective_boolean_value
+			analyze, evaluated_item, effective_boolean_value
 		end
 
 	XM_XPATH_COMPARISON_ROUTINES
@@ -360,10 +360,10 @@ feature -- Optimization
 
 						-- Evaluate the expression now if both arguments are constant
 
-						a_boolean_value ?= a_result_expression.evaluate_item (Void)
+						a_boolean_value ?= a_result_expression.evaluated_item (Void)
 							check
 								a_boolean_value /= Void
-								-- That's what evaluate_item returns for this class.
+								-- That's what evaluated_item returns for this class.
 							end
 						Result := a_boolean_value
 					end
@@ -382,12 +382,12 @@ feature -- Evaluation
 			an_item, another_item: XM_XPATH_ITEM
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
-			an_item := operands.item (1).evaluate_item (a_context)
+			an_item := operands.item (1).evaluated_item (a_context)
 			if an_item.is_item_in_error then
 				create Result.make (False)
 				Result.set_evaluation_error (an_item.evaluation_error_value)
 			else
-				another_item := operands.item (2).evaluate_item (a_context)
+				another_item := operands.item (2).evaluated_item (a_context)
 				if another_item.is_item_in_error then
 				create Result.make (False)
 				Result.set_evaluation_error (another_item.evaluation_error_value)
@@ -416,7 +416,7 @@ feature -- Evaluation
 			end
 		end
 
-		evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate `Current' as a single item
 		do
 			Result := effective_boolean_value (a_context)

@@ -21,6 +21,8 @@ inherit
 
 	XM_XPATH_TYPE
 
+	XM_XPATH_CARDINALITY
+
 creation
 
 	make
@@ -77,25 +79,9 @@ feature -- Element change
 			-- Fix up binding references.
 		require
 			binding_not_void: a_binding /= Void
-			-- analyzed??
-		do
-			-- TODO
-		ensure
-			-- ?
-		end
-
-	refine_type_information (a_type: INTEGER; a_cardinality_set: ARRAY [BOOLEAN]; a_constant_value: XM_XPATH_VALUE; a_special_properties_set: ARRAY [BOOLEAN]) is
-			-- Set static type in the binding reference more accurately.
-		require
-			valid_type: is_valid_type (a_type)
-			cardinalities_not_void: a_cardinality_set /= Void
-			possible_constant_value: True
-			special_properties_not_void: a_special_properties_set /= Void
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_BINDING_REFERENCE]
-			a_binding_reference: XM_XPATH_BINDING_REFERENCE
-			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
-			old_item_type, new_item_type: INTEGER
+			a_reference: XM_XPATH_BINDING_REFERENCE
 		do
 			a_cursor := references.new_cursor
 			from
@@ -105,15 +91,51 @@ feature -- Element change
 			until
 				a_cursor.after
 			loop
-				a_binding_reference := a_cursor.item
-				a_variable_reference ?= a_binding_reference
+				a_reference := a_cursor.item
+
+				-- We supply the properties of the expression (3rd argument) later
+				-- in the call of refine_type_information
+
+				a_reference.set_static_type (required_type, Void, Void, Void, Void)
+				a_reference.fix_up (a_binding)
+				
+				a_cursor.forth
+			end
+		end
+
+	refine_type_information (a_type: INTEGER; a_cardinality_set: ARRAY [BOOLEAN]; a_constant_value: XM_XPATH_VALUE;
+									 a_dependencies_set: ARRAY [BOOLEAN];  a_special_properties_set: ARRAY [BOOLEAN]) is
+			-- Set static type in the binding reference more accurately.
+		require
+			valid_type: is_valid_type (a_type)
+			cardinalities_not_void: a_cardinality_set /= Void and then a_cardinality_set.count = 3
+			possible_constant_value: True
+			special_properties_not_void: a_special_properties_set /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_BINDING_REFERENCE]
+			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
+			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
+			old_item_type, new_item_type: INTEGER
+			a_cardinality: INTEGER
+		do
+			a_cursor := references.new_cursor
+			from
+				a_cursor.start
+			variant
+				references.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				a_variable_reference ?= a_cursor.item
 				if a_variable_reference /= Void then
 					old_item_type := a_variable_reference.item_type
 					new_item_type := old_item_type
 					if is_sub_type (a_type, old_item_type) then
 						new_item_type := a_type
 					end
-					-- TODO
+					a_cardinality := cardinalities_to_integer (a_variable_reference.merged_cardinality (a_cardinality_set))
+					create a_sequence_type.make (new_item_type, a_cardinality) 
+					a_variable_reference.set_static_type (a_sequence_type, a_constant_value, a_dependencies_set, a_cardinality_set, a_special_properties_set)
 				end
 				a_cursor.forth
 			end

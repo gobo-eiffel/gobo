@@ -22,6 +22,8 @@ inherit
 	
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 
+	XM_XPATH_SHARED_EXPRESSION_FACTORY
+
 	XM_XPATH_ERROR_TYPES
 
 	KL_SHARED_STANDARD_FILES
@@ -55,7 +57,7 @@ feature -- Access
 			context_not_void: a_context /= Void
 		deferred
 		ensure
-			iterator_not_void: Result /= Void
+			iterator_not_void_or_dynamic_error: Result = Void implies is_error and then (last_error.type = Dynamic_error or else last_error.type = Type_error)
 		end
 
 feature -- Comparison
@@ -200,7 +202,7 @@ feature -- Evaluation
 			value_not_void_but_may_be_in_error: Result /= Void
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate as a single item;
 			-- This always returns either a single Item or Void
 			-- (denoting the empty sequence). No conversion is done. This routine should not be
@@ -215,7 +217,7 @@ feature -- Evaluation
 			item_returned_but_may_be_in_error: Result /= Void
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
+	evaluated_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
 			-- Evaluate as a String
 			-- This function must only be called in contexts where it is known
 			-- that the expression will return a single string (or where an empty sequence
@@ -231,7 +233,7 @@ feature -- Evaluation
 			string_not_void_but_may_be_in_error: Result /= Void
 		end
 
-	eagerly_evaluate (a_context: XM_XPATH_CONTEXT): XM_XPATH_EXPRESSION is
+	eager_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
 			-- Eager evaluation of `Current'		
 		require
 			analyzed_without_errors: analyzed and then not is_error
@@ -284,6 +286,51 @@ feature -- Evaluation
 			evaluated: Result /= Void
 		end
 
+	lazy_evaluation (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+			-- Lazy evaluation of `Current'		;
+			-- This will return a value, which may optionally be an XM_XPATH_CLOSURE,
+			--  which is a wrapper around an iterator over the value of the expression.
+		require
+			analyzed_without_errors: analyzed and then not is_error
+		local
+			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
+		do
+			a_variable_reference ?= Current
+			if a_variable_reference /= Void then
+
+				-- We always deference the variable reference;
+				--   this will often perform lazy evaluation
+				--   of the expression to which the variable is bound
+
+				Result := a_variable_reference.eager_evaluation (a_context)
+			else
+				if a_context = Void then
+
+					-- We are evaluating a value
+
+					Result := eager_evaluation (Void)
+				elseif not cardinality_allows_many then
+
+					-- Singletons are always evaluated eagerly
+
+					Result := eager_evaluation (a_context)
+				elseif depends_upon_position or else depends_upon_last
+					or else depends_upon_current_item or else depends_upon_current_group then
+
+					-- We can't save these values in the closure, so we evaluate
+					-- the expression now if they are needed
+
+				else
+
+					-- Create a Closure, a wrapper for the expression and its context
+
+					Result := Expression_factory.make_closure (Current, a_context)
+				end
+			end
+		ensure
+			evaluated: Result /= Void
+		end
+
 feature {XM_XPATH_EXPRESSION} -- Local
 
 	unsorted (eliminate_duplicates: BOOLEAN): XM_XPATH_EXPRESSION is
@@ -315,6 +362,25 @@ feature {XM_XPATH_EXPRESSION} -- Local
 				Result := STRING_.appended_string (Result, " ")
 				counter := counter + 1
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	todo (a_routine_name: STRING; is_partially_done: BOOLEAN) is
+			-- Write a TODO message.
+		require
+			routine_name_not_void: a_routine_name /= Void and then a_routine_name.count > 2
+		do
+			std.error.put_string ("TODO: {")
+			std.error.put_string (generating_type)
+			std.error.put_string ("}.")
+			std.error.put_string (a_routine_name)
+			if is_partially_done then
+				std.error.put_string (" is only partly written")
+			else
+				std.error.put_string (" needs to be written")
+			end
+			std.error.put_new_line
 		end
 
 end

@@ -121,13 +121,15 @@ feature -- Dependencies
 
 feature -- Setting dependencies
 
-	set_dependencies (dep: ARRAY [BOOLEAN]) is
+	set_dependencies (a_dep: ARRAY [BOOLEAN]) is
 		require
-			dependencies_not_void: dep /= Void
+			dependencies_not_void: a_dep /= Void and then a_dep.count = 6
 		do
-			dependencies := dep
+			dependencies := a_dep
+			are_dependencies_computed := True
 		ensure
-			set: dependencies = dep
+			set: dependencies = a_dep
+			dependencies_computed: are_dependencies_computed
 		end
 
 	set_depends_upon_current_item is
@@ -279,6 +281,26 @@ feature -- Cardinality
 
 feature -- Setting cardinality
 
+	merged_cardinality (more_cardinalities: ARRAY [BOOLEAN]):  ARRAY [BOOLEAN] is
+			-- Merger of `cardinalities' with more_cardinalities'
+		require
+			more_cardinalities_not_void: more_cardinalities /= Void
+		local
+			a_counter: INTEGER
+		do
+			create Result.make (1, 3)
+			from
+				a_counter := 1
+			variant
+				4 - a_counter
+			until
+				a_counter > 3
+			loop
+				Result.put (cardinalities.item (a_counter) and more_cardinalities.item (a_counter), a_counter)
+				a_counter := a_counter + 1
+			end
+		end
+
 	clone_cardinality (other: XM_XPATH_STATIC_PROPERTY) is
 			-- Set `cardinalities' from `other'.
 		require
@@ -289,6 +311,17 @@ feature -- Setting cardinality
 		ensure
 			-- TODO - check equality set: cardinalities = other.cardinalities
 			cardinalities_computed: are_cardinalities_computed
+		end
+
+	set_cardinalities (a_card: ARRAY [BOOLEAN]) is
+		require
+			cardinalities_not_void: a_card /= Void and then a_card.count = 3
+		do
+			cardinalities := a_card
+			are_cardinalities_computed := True
+		ensure
+			computed: are_cardinalities_computed
+			set: cardinalities = a_card
 		end
 
 	set_cardinality (requested_cardinality: INTEGER) is
@@ -459,7 +492,7 @@ feature -- Setting special properties
 
 	set_special_properties (properties: ARRAY [BOOLEAN]) is
 		require
-			properties_not_void: properties /= Void
+			properties_not_void: properties /= Void and then properties.count = 6
 		do
 			special_properties := properties
 			are_special_properties_computed := True

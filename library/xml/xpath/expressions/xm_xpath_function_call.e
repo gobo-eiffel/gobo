@@ -103,10 +103,10 @@ feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of `Current' and its subexpressions;
-			-- This also calls pre_evaluate to evaluate the function
+			-- This also calls early_evaluation to evaluate the function
 			--  if all the arguments are constant;
 			-- Functions that do not require this behavior
-			--  can override the pre_evaluate routine.
+			--  can override the early_evaluation routine.
 		local
 			fixed_values: BOOLEAN
 			a_value: XM_XPATH_VALUE
@@ -146,7 +146,7 @@ feature -- Optimization
 			if a_result_expression.is_error then
 				Result := a_result_expression -- Marked in error
 			elseif fixed_values then
-				Result := a_result_expression.pre_evaluate (a_context) -- May or may not be in error
+				Result := a_result_expression.early_evaluation (a_context) -- May or may not be in error
 			else
 				Result := a_result_expression -- No error, but needs run-time evaluation
 			end
@@ -192,7 +192,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
+	early_evaluation (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Pre-evaluate `Current' at compile time.
 			-- Functions that do not allow pre-evaluation,
 			--  or that need access to context information,
@@ -201,7 +201,7 @@ feature -- Evaluation
 			no_error: not is_error
 			context_not_void: a_context /= Void
 		do
-			Result := eagerly_evaluate (Void)
+			Result := eager_evaluation (Void)
 		ensure
 			evaluated: Result /= Void
 		end

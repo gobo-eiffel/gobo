@@ -37,7 +37,7 @@ feature -- Element change
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 		do
 			create a_sequence_type.make_any_sequence
-			a_reference.set_static_type (a_sequence_type, Void, 0)
+			a_reference.set_static_type (a_sequence_type, Void, Void, Void, Void)
 		end
 
 end

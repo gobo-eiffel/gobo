@@ -125,15 +125,20 @@ feature -- Optimization
 
 feature -- Element change
 
-	set_static_type (a_type: XM_XPATH_SEQUENCE_TYPE; a_constant_value: XM_XPATH_VALUE; properties: INTEGER) is
-			-- Fix up the static type of this variable reference;
-			-- Optionally, supply a constant value for the variable.
-			-- Also supplies other static properties of the expression to which the variable is bound,
-			--  for example whether it is an ordered node-set.
+	set_static_type (a_type: XM_XPATH_SEQUENCE_TYPE; a_constant_value: XM_XPATH_VALUE; a_dependencies_set: ARRAY [BOOLEAN]; a_cardinalities_set: ARRAY [BOOLEAN]; a_special_properties_set: ARRAY [BOOLEAN]) is
+			-- Fix up the static type of this variable reference
 		do
 			static_type := a_type
 			constant_value := a_constant_value
-			-- TODO - static properties
+			if	a_dependencies_set /= Void then
+				set_dependencies (a_dependencies_set)
+			end
+			if a_cardinalities_set /= Void then
+				set_cardinalities (a_type.merged_cardinality (a_cardinalities_set))
+			end
+			if a_special_properties_set /= Void then
+				set_special_properties (a_special_properties_set)
+			end
 		end
 
 	fix_up (a_required_binding: XM_XPATH_BINDING) is

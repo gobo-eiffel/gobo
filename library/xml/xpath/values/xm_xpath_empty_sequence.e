@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			item_type, display, evaluate_as_string, effective_boolean_value
+			item_type, display, evaluated_string, effective_boolean_value
 		end
 
 creation
@@ -72,7 +72,7 @@ feature -- Evaluation
 			create Result.make (False)
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
+	evaluated_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
 			-- Evaluate `Current' as a String
 		do
 			create Result.make ("")

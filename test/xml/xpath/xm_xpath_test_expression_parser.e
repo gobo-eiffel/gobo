@@ -19,7 +19,7 @@ inherit
 			set_up
 		end
 
-	XM_XPATH_EXPRESSION_FACTORY
+	XM_XPATH_SHARED_EXPRESSION_FACTORY
 
 	XM_XPATH_AXIS
 
@@ -53,13 +53,14 @@ feature -- Test
 			tokenizer: XM_XPATH_TOKENIZER
 			a_string: STRING
 			a_string_value: XM_XPATH_STRING_VALUE
+			an_attribute_reference: XM_XPATH_ATTRIBUTE_REFERENCE_EXPRESSION
 		do
 			a_string := "//fred[@son='Jim']"
 			create context.make (default_pool, False, True)
-			an_expression := make_expression (a_string, context)
+			an_expression := Expression_factory.make_expression (a_string, context)
 			if an_expression = Void then
 				-- Shouldn't happen
-				std.error.put_string (error_value.error_message)
+				std.error.put_string (Expression_factory.error_value.error_message)
 				std.error.put_new_line
 			end
 			assert ("Parse sucessful", an_expression /= Void)
@@ -102,10 +103,9 @@ feature -- Test
 			assert ("Sub-expression 4", sub_exprs_4 /= Void)
 			assert ("Two sub-expressions 4", sub_exprs_4.count = 2)
 			an_expression := sub_exprs_4.item (1)
-			an_axis ?= an_expression
-			assert ("Axis expression 3 not void", an_axis /= Void) -- attribute::son
-			assert ("Axis selects attribute::son", an_axis.axis = Attribute_axis
-					  and an_axis.node_test /= Void and then STRING_.same_string (an_axis.node_test.original_text, "son")) -- attribute::son
+			an_attribute_reference ?= an_expression
+			assert ("Attribute reference not void", an_attribute_reference /= Void) -- attribute::son
+			assert ("Attribute reference is to attribute::son", STRING_.same_string (default_pool.display_name_from_name_code (an_attribute_reference.fingerprint), "son"))
 			an_expression := sub_exprs_4.item (2)
 			a_string_value ?= an_expression
 			assert ("String-value is Jim", a_string_value /= Void and then STRING_.same_string (a_string_value.string_value, "Jim"))
@@ -133,10 +133,10 @@ feature -- Test
 			Function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
 			create context.make (default_pool, False, True)
-			an_expression := make_expression (a_string, context)
+			an_expression := Expression_factory.make_expression (a_string, context)
 			if an_expression = Void then
 				-- Shouldn't happen
-				std.error.put_string (error_value.error_message)
+				std.error.put_string (Expression_factory.error_value.error_message)
 				std.error.put_new_line
 			end
 			assert ("Parse sucessful", an_expression /= Void)

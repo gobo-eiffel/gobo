@@ -89,7 +89,7 @@ feature -- Evaluation
 			-- TODO
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate an expression as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -100,12 +100,12 @@ feature -- Evaluation
 			end
 		end
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
+	evaluated_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
 			-- Evaluate as a String
 		local
 			a_value: XM_XPATH_STRING_VALUE
 		do
-			a_value ?= evaluate_item (a_context)
+			a_value ?= evaluated_item (a_context)
 			if a_value = Void then
 				create Result.make ("")
 			else

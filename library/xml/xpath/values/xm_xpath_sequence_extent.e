@@ -21,11 +21,16 @@ inherit
 
 creation
 
-	make
+	make, make_as_view
 
 feature {NONE} -- Initialization
 
 	make (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+			-- TODO
+		do
+		end
+
+	make_as_view (an_extent: XM_XPATH_SEQUENCE_EXTENT; a_start, a_length: INTEGER) is
 			-- TODO
 		do
 		end

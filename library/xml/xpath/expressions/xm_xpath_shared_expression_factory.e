@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath Venn exxpressions"
+		"Shared XPath expression factory"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,23 +10,16 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_VENN_EXPRESSION
-
-inherit
-
-	XM_XPATH_BINARY_EXPRESSION
+class XM_XPATH_SHARED_EXPRESSION_FACTORY
 	
-creation
-
-	make
-
 feature -- Access
 
-		item_type: INTEGER is
-			--Determine the data type of the expression, if possible
-		do
-			-- TODO
-			todo ("item-type", False)
+	Expression_factory: XM_XPATH_EXPRESSION_FACTORY is
+			-- Expression equality tester
+		once
+			create Result
+		ensure
+			expression_factory_not_void: Result /= Void
 		end
+
 end
-	

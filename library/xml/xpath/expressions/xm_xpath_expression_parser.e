@@ -161,12 +161,12 @@ feature -- Creation
 				a_uri := qname_parts.item (1)
 				if use_default_namespace then
 					a_uri_code := environment.default_element_namespace
-					if a_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_qname) then
-						Result := a_name_pool.name_code (an_xml_prefix, a_name_pool.uri_from_uri_code (a_uri_code), a_qname)
-					else
-						a_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_qname)
-						Result := a_name_pool.last_name_code
-					end
+				end
+				if a_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_qname) then
+					Result := a_name_pool.name_code (an_xml_prefix, a_name_pool.uri_from_uri_code (a_uri_code), a_qname)
+				else
+					a_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_qname)
+					Result := a_name_pool.last_name_code
 				end
 			else
 					check

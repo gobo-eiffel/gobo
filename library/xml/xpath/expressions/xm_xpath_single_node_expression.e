@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			iterator, evaluate_item, effective_boolean_value
+			iterator, evaluated_item, effective_boolean_value
 		end
 
 	-- N.B. This class is supposed to have intrinsic dependency on the context item
@@ -62,7 +62,7 @@ feature -- Evaluation
 			create Result.make (node (a_context) /= Void)
 		end
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate `Current' as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]

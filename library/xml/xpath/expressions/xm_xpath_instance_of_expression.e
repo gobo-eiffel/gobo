@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 	make (a_source: XM_XPATH_EXPRESSION; a_target: XM_XPATH_SEQUENCE_TYPE) is
 			-- TODO
 		do
+			todo ("make", False)
 		end
 
 feature -- Access
@@ -33,6 +34,7 @@ feature -- Access
 			--Determine the data type of the expression, if possible
 		do
 			-- TODO
+			todo ("item-type", False)
 		end
 
 feature -- Status report
@@ -58,6 +60,7 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			-- TODO
+			todo ("analyze", True)
 			Result := Current
 			Result.set_analyzed			
 		end
@@ -67,6 +70,7 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
+			todo ("compute-cardinality", False)
 			-- TODO
 		end
 	

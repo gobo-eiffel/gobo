@@ -40,7 +40,7 @@ feature -- Access
 
 	declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION
 			-- Range variable
-
+	
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
@@ -105,10 +105,10 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	evaluated_binding (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
 			-- Evaluate variable
 		do
-			Result := a_context.evaluate_local_variable (slot_number)
+			Result := a_context.evaluated_local_variable (slot_number)
 		end
 
 feature -- Element change
@@ -127,10 +127,24 @@ feature -- Element change
 			-- Set `action'.
 		require
 			action_not_void: an_action /= Void
+			declaration_not_void: declaration /= Void
 		do
 			action := an_action
+			declaration.fix_up_references (Current)
 		ensure
 			action_set: action = an_action
+		end
+
+	set_declaration (a_declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION) is
+			-- Set `declaration'.
+		require
+			declaration_not_void: a_declaration /= Void
+		do
+			declaration := a_declaration
+			name := declaration.name
+		ensure
+			declaration_set: declaration = a_declaration
+			name_not_void: name /= Void
 		end
 
 	set_declaration_void is
@@ -157,5 +171,5 @@ invariant
 	action_not_void: action /= Void
 	declaration_not_void_until_analysis: not analyzed implies declaration /= Void
 	declaration_void_after_analysis: analyzed implies declaration = Void
-
+	
 end

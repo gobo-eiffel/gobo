@@ -33,6 +33,7 @@ feature -- Access
 			--Determine the data type of the expression, if possible
 		do
 			-- TODO
+			todo ("item-type", False)
 		end
 
 feature -- Status report
@@ -53,6 +54,7 @@ feature -- Optimization
 			-- Perform static analysis of an expression and its subexpressions
 		do
 			-- TODO
+			todo ("analyze", True)
 			Result := Current
 			Result.set_analyzed			
 		end
@@ -63,6 +65,7 @@ feature {NONE} -- Implementation
 			-- Compute cardinality.
 		do
 			-- TODO
+			todo ("compute-cardinality", False)
 		end
 
 end

@@ -28,6 +28,7 @@ feature -- Access
 			--Determine the data type of the expression, if possible
 		do
 			-- TODO
+			todo ("item-type", False)
 		end
 end
 	

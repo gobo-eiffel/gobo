@@ -24,6 +24,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_SHARED_STANDARD_FILES
+
 creation
 
 	make
@@ -97,7 +99,7 @@ feature -- Optimization
 				action
 			when Range_independent then
 				if depends_upon_variable (a_child_expression, binding_expression) then
-					Result := a_child_expression
+					Result := Void
 				else
 					Result := promote (a_child_expression)
 				end
@@ -107,14 +109,14 @@ feature -- Optimization
 				elseif promote_document_dependent and not a_child_expression.depends_upon_non_document_focus then
 					Result := promote (a_child_expression)
 				else
-					Result := a_child_expression
+					Result := Void
 				end
 			when Inline_variable_references then
 				variable_reference ?= a_child_expression
 				if variable_reference /= Void and then variable_reference.binding.is_equal (binding_expression) then
 					Result := containing_expression
 				else
-					Result := a_child_expression
+					Result := Void
 				end
 			when Unordered then
 				reverser ?= a_child_expression
@@ -125,10 +127,10 @@ feature -- Optimization
 					if document_sorter /= Void then
 						Result := document_sorter.base_expression
 					else
-						Result := a_child_expression
+						Result := Void
 					end
 				else
-					Result := a_child_expression
+					Result := Void
 				end
 			end			
 		end

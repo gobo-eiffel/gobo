@@ -170,7 +170,7 @@ feature -- Optimization
 					a_value ?= first_operand; another_value ?= second_operand
 					if a_value /= Void and then another_value /= Void then
 						a_result_expression.set_analyzed
-						Result := a_result_expression.eagerly_evaluate (Void)
+						Result := a_result_expression.eager_evaluation (Void)
 					end
 				end
 			end
@@ -180,8 +180,23 @@ feature -- Optimization
 	
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
 			-- Offer promotion for this subexpression
+		local
+			an_expression: XM_XPATH_EXPRESSION
+			a_result_expression: XM_XPATH_BINARY_EXPRESSION
 		do
-			-- TODO
+			an_expression := an_offer.accept (Current)
+			if an_expression /= Void then
+				Result := an_expression
+			else
+				if an_offer.action = Unordered then
+					a_result_expression := clone (Current)
+					a_result_expression.operands.put (operands.item(1).promote (an_offer), 1)
+					a_result_expression.operands.put (operands.item(2).promote (an_offer), 2)
+					Result := a_result_expression
+				else
+					Result := Current
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

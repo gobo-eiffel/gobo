@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			evaluate_item, compute_intrinsic_dependencies
+			evaluated_item, compute_intrinsic_dependencies
 		end
 
 creation
@@ -81,9 +81,10 @@ feature -- Optimization
 
 feature -- Evaluation
 	
-		evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+		evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate `Current' as a single item
 		do
+			todo ("evaluated-item", False)
 			-- TODO
 		end
 

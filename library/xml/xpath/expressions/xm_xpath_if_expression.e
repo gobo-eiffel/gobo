@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, evaluate_item, promote, iterator, sub_expressions
+			simplify, evaluated_item, promote, iterator, sub_expressions
 		end
 
 creation
@@ -213,16 +213,16 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
 			-- Evaluate `Current' as a single item
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			a_boolean_value := condition.effective_boolean_value (a_context)
 			if not a_boolean_value.is_item_in_error and then a_boolean_value.value then
-				Result := then_expression.evaluate_item (a_context)
+				Result := then_expression.evaluated_item (a_context)
 			else
-				Result := else_expression.evaluate_item (a_context)
+				Result := else_expression.evaluated_item (a_context)
 			end
 		end
 
@@ -263,6 +263,7 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
+			todo ("compute-cardinality", False)
 			-- TODO
 		end
 	

@@ -469,19 +469,18 @@ feature -- Optimization
 			a_result_expression: XM_XPATH_FILTER_EXPRESSION
 		do
 			a_result_expression ?= an_offer.accept (Current)
-			if a_result_expression = Void then
-				a_result_expression := clone (Current)
+			if a_result_expression /= Void then
+				do_nothing
 			else
+				a_result_expression := clone (Current)
 				if not (an_offer.action = Unordered and then filter_is_positional) then
 					a_result_expression.set_base_expression (a_result_expression.base_expression.promote (an_offer))
 				end
 
 				if an_offer.action = Inline_variable_references then
-
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					--  them to say we are interested in subexpressions that don't depend on either the
 					--  outer context or the inner context.
-				
 					a_result_expression.set_filter (a_result_expression.filter.promote (an_offer))
 				end
 			end

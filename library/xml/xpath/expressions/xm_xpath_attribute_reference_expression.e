@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SINGLE_NODE_EXPRESSION
 		redefine
-			compute_special_properties, same_expression, evaluate_as_string
+			compute_special_properties, same_expression, evaluated_string
 		end
 
 	XM_XPATH_AXIS
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 	make (a_fingerprint: INTEGER) is
 			-- Create intrinsic dependencies, and establish invariant.
 		require
-			positive_fingerprint: fingerprint > 0
+			strictly_positive_fingerprint: a_fingerprint > 0
 		do
 			fingerprint := a_fingerprint
 			create name_test.make (Attribute_node, a_fingerprint) 
@@ -52,6 +52,9 @@ feature -- Access
 			Result := find_attribute_node (an_element)
 		end
 
+	fingerprint: INTEGER
+			-- Fingerprint of name in name_pool
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -65,20 +68,20 @@ feature -- Comparison
 
 feature -- Status report
 
-	display (a_level: INTEGER; pool: XM_XPATH_NAME_POOL) is
+	display (a_level: INTEGER; a_pool: XM_XPATH_NAME_POOL) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indent (a_level), "@")
-			a_string := STRING_.appended_string (a_string, fingerprint.out)
+			a_string := STRING_.appended_string (a_string, a_pool.display_name_from_name_code (fingerprint))
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end
 
 feature -- Evaluation
 
-	evaluate_as_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
+	evaluated_string (a_context: XM_XPATH_CONTEXT): XM_XPATH_STRING_VALUE is
 			-- Evaluate `Current' as a String
 		local
 			an_element: XM_XPATH_ELEMENT
@@ -102,13 +105,10 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_special_properties is
 			-- Compute special properties.
 		do
+			create special_properties.make (1, 6)
+			are_special_properties_computed := True
 			set_attribute_ns_nodeset
 		end
-
-feature {XM_XPATH_ATTRIBUTE_REFERENCE_EXPRESSION} -- Local
-
-	fingerprint: INTEGER
-			-- Fingerprint of name in name_pool
 
 feature {NONE} -- Implementation
 
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	positive_fingerprint: fingerprint > 0
+	strictly_positive_fingerprint: fingerprint > 0
 	name_test_not_void: name_test /= Void
 
 end

@@ -214,5 +214,51 @@ feature -- Status report
 			end
 		end
 
+	is_peer_axis (an_axis: INTEGER): BOOLEAN is
+			-- Does `an_axis' have any nodes which are ancestors of others on same axis?
+		require
+			valid_axis: is_axis_valid (an_axis)
+		do
+			inspect
+				an_axis
+			when Attribute_axis then
+				Result := True
+			when Child_axis then
+				Result := True
+			when Following_sibling_axis then
+				Result := True
+			when Preceding_sibling_axis then
+				Result := True				
+			when Self_axis then
+				Result := True
+			when Parent_axis then
+				Result := True
+			else
+				Result := False
+			end
+		end
+
+	is_subtree_axis (an_axis: INTEGER): BOOLEAN is
+			-- Is `an_axis' a sub-tree rooted at origin node?
+		require
+			valid_axis: is_axis_valid (an_axis)
+		do
+			inspect
+				an_axis
+			when Attribute_axis then
+				Result := True
+			when Child_axis then
+				Result := True
+			when Self_axis then
+				Result := True
+			when Descendant_axis then
+				Result := True
+			when Descendant_or_self_axis then
+				Result := True
+			else
+				Result := False
+			end
+		end
+
 end
 	

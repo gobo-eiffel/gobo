@@ -42,6 +42,7 @@ feature -- Access
 			--Determine the data type of the expression, if possible
 		do
 			-- TODO
+			todo ("item-type", False)
 		end
 
 	minimum_position: INTEGER
@@ -81,6 +82,7 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		do
+			todo ("compute-cardinality", False)
 			-- TODO
 		end
 

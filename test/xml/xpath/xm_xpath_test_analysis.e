@@ -19,7 +19,7 @@ inherit
 			set_up
 		end
 
-	XM_XPATH_EXPRESSION_FACTORY
+	XM_XPATH_SHARED_EXPRESSION_FACTORY
 	
 	XM_XPATH_SHARED_FUNCTION_FACTORY
 
@@ -59,10 +59,10 @@ feature -- Test
 			Function_factory.register_system_function_factory (a_system_function_factory)
 			a_string := "//fred[position() = last()]"
 			create a_context.make (default_pool, False, True)
-			an_expression := make_expression (a_string, a_context)
+			an_expression := Expression_factory.make_expression (a_string, a_context)
 			if an_expression = Void then
 				-- Shouldn't happen
-				std.error.put_string (error_value.error_message)
+				std.error.put_string (Expression_factory.error_value.error_message)
 				std.error.put_new_line
 			end
 			assert ("Parse sucessful", an_expression /= Void)

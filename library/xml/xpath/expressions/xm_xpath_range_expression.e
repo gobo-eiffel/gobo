@@ -15,7 +15,7 @@ class XM_XPATH_RANGE_EXPRESSION
 inherit
 
 	XM_XPATH_BINARY_EXPRESSION
-	
+
 creation
 
 	make
@@ -26,6 +26,7 @@ feature -- Access
 			--Determine the data type of the expression, if possible
 		do
 			-- TODO
+			todo ("item-type", False)
 		end
 
 	lower_bound: XM_XPATH_EXPRESSION is

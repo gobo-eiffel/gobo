@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			base_expression_not_void: a_base_expression /= Void
 		do
 			base_expression := a_base_expression
-			-- TODO compute_static_properties
+			compute_static_properties
 		ensure
 			base_expression_set: base_expression = a_base_expression
 		end
@@ -39,6 +39,7 @@ feature -- Access
 			--Determine the data type of the expression, if possible
 		do
 			-- TODO
+			todo ("item-type", False)
 		end
 
 	base_expression: XM_XPATH_EXPRESSION
@@ -62,6 +63,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT): XM_XPATH_EXPRESSION is
 			-- Perform static analysis of an expression and its subexpressions
 		do
+			todo ("analyze", True)
 			-- TODO
 			Result := Current
 			Result.set_analyzed			
@@ -73,6 +75,7 @@ feature {NONE} -- Implementation
 			-- Compute cardinality.
 		do
 			-- TODO
+			todo ("compute-cardinality", False)
 		end
 
 invariant

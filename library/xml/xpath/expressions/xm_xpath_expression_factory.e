@@ -91,5 +91,36 @@ feature -- Creation
 			-- TODO
 		end
 
+	make_closure (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+			-- Create an `XM_XPATH_CLOSURE' (or sometimes, an `XM_XPATH_SEQUENCE_EXTENT'). 
+		require
+			expression_not_void: an_expression /= Void
+			context_not_void: a_context /= Void
+		local
+			a_tail_expression: XM_XPATH_TAIL_EXPRESSION
+			another_expression: XM_XPATH_EXPRESSION
+			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
+			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
+		do
+			-- Treat tail recursion as a special case.
+
+			a_tail_expression ?= an_expression
+			if a_tail_expression /= Void then
+				another_expression := a_tail_expression.base_expression
+				a_variable_reference ?= another_expression
+				if a_variable_reference /= Void then
+					another_expression := a_variable_reference.lazy_evaluation (a_context)
+					a_sequence_extent ?= another_expression
+					if a_sequence_extent /= Void then
+						create {XM_XPATH_SEQUENCE_EXTENT} Result.make_as_view (a_sequence_extent, a_tail_expression.start - 1, a_sequence_extent.count -  a_tail_expression.start +1)
+					end
+				end
+			end
+			if Result /= Void then
+				create {XM_XPATH_CLOSURE} Result.make (an_expression, a_context)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
 end
 

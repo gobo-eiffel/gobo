@@ -112,6 +112,7 @@ feature -- Optimization
 				create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
 
 				-- TODO - more code to write
+				todo ("quantified-expression", True)
 			
 			end
 			

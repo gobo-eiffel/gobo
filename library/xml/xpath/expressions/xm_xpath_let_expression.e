@@ -16,8 +16,13 @@ class XM_XPATH_LET_EXPRESSION
 inherit
 
 	XM_XPATH_ASSIGNATION
+		redefine
+			promote, iterator, evaluated_item, compute_special_properties
+		end
 
 	XM_XPATH_ROLE
+
+	XM_XPATH_PROMOTION_ACTIONS
 
 creation
 
@@ -32,14 +37,14 @@ feature {NONE} -- Initialization
 			action_not_void: an_action /= Void
 		do
 			operator := Let_token
-			declaration := a_range_variable
-			sequence := a_sequence_expression
-			action := an_action
+			set_declaration (a_range_variable)
+			set_sequence (a_sequence_expression)
+			set_action (an_action)
 			compute_static_properties
 		ensure
 			declaration_set: declaration = a_range_variable
-			sequence_set: sequence = a_sequence_expression
 			action_set: action = an_action
+			sequence_set: sequence = a_sequence_expression
 		end
 
 feature -- Access
@@ -48,6 +53,17 @@ feature -- Access
 			--Determine the data type of the expression, if possible
 		do
 				Result := action.item_type
+		end
+
+	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
+			-- Iterator over the values of a sequence
+		local
+			a_value: XM_XPATH_VALUE
+		do
+			a_value ?= sequence.lazy_evaluation (a_context)
+			
+			a_context.set_local_variable (slot_number, a_value)
+			Result := action.iterator (a_context)
 		end
 
 	required_type: XM_XPATH_SEQUENCE_TYPE is
@@ -117,7 +133,7 @@ feature -- Optimization
 
 					-- Now set the static type of the binding reference, more accurately:
 					
-					a_result_expression.declaration.refine_type_information (a_type, an_expression.cardinalities, a_value, an_expression.special_properties)
+					a_result_expression.declaration.refine_type_information (a_type, an_expression.cardinalities, a_value, an_expression.dependencies, an_expression.special_properties)
 
 					if action.may_analyze then
 						an_expression := action.analyze (a_context)
@@ -135,6 +151,69 @@ feature -- Optimization
 			Result := a_result_expression
 		end
 
+	promote (an_offer: XM_XPATH_PROMOTION_OFFER): XM_XPATH_EXPRESSION is
+			-- Offer promotion for `Current'
+		local
+			an_expression: XM_XPATH_EXPRESSION
+			a_result_expression: XM_XPATH_LET_EXPRESSION
+			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
+			another_offer: XM_XPATH_PROMOTION_OFFER
+		do
+			an_expression := an_offer.accept (Current)
+			if an_expression /= Void then
+				Result := an_expression
+			else
+				a_result_expression := clone (Current)
+
+				-- Pass the offer on to the sequence expression
+
+				an_expression := sequence.promote (an_offer)
+				a_result_expression.set_sequence (sequence)
+				if an_offer.action = Inline_variable_references
+					or else an_offer.action = Unordered then
+
+					-- Don't pass on other requests. We could pass them on, but only after augmenting
+					--  them to say we are interested in subexpressions that don't depend on either the
+					--  outer context or the inner context.
+
+					a_result_expression.set_action (action.promote (an_offer))
+				end
+
+				-- If this results in the expression (let $x := $y return Z), replace all references to
+				-- to $x by references to $y in the Z part, and eliminate this LetExpression by
+				-- returning the action part.
+
+				a_variable_reference ?= a_result_expression.sequence
+				if a_variable_reference /= Void then
+					create another_offer.make (Inline_variable_references, Current, a_variable_reference, False, False)
+					Result := a_result_expression.action.promote (another_offer)
+				end
+				
+				if Result = Void then Result := a_result_expression end
+			end
+		end
+
+
+feature -- Evaluation
+
+	evaluated_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
+			-- Evaluate as a single item
+		local
+			a_value: XM_XPATH_VALUE
+		do
+			a_value := sequence.lazy_evaluation (a_context)
+			a_context.set_local_variable (slot_number, a_value)
+			Result := action.evaluated_item (a_context)
+		end
+
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	compute_special_properties is
+			-- Compute special properties.
+		do
+			clone_special_properties (action)
+			are_special_properties_computed := True
+		end
 
 feature {NONE} -- Implementation
 

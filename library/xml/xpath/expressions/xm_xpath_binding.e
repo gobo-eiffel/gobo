@@ -24,11 +24,15 @@ feature -- Access
 
 feature -- Evaluation
 
-	evaluate (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
+	evaluated_binding (a_context: XM_XPATH_CONTEXT): XM_XPATH_VALUE is
 			-- Evaluate variable
 		require
 			context_not_void: a_context /= Void
 		deferred
 		end
+
+invariant
+
+	name_not_void: name /= Void
 
 end

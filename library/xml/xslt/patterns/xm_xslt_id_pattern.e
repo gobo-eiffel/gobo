@@ -81,7 +81,7 @@ feature -- Matching
 				if a_doc = Void then
 					Result := False
 				else
-					an_id_value ?= id_expression.evaluate_item (a_controller.new_xpath_context)
+					an_id_value ?= id_expression.evaluated_item (a_controller.new_xpath_context)
 					if an_id_value = Void then
 						Result := False						
 					else
