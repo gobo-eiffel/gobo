@@ -174,8 +174,16 @@ feature -- Defaults
 
 	is_value_required: BOOLEAN is
 			-- Is attribute value required?
+		local
+			a_value: CHARACTER
 		do
-			Result := value = 'R'
+				-- This is a workaround to avoid a crash with ISE 5.2.1123
+				-- under Windows NT. The crash is due to a memory corruption
+				-- because of a bug in the GC (Current has been moved when
+				-- executing the invariant, but this routine still has a
+				-- pointer to the old location).
+			a_value := value
+			Result := a_value = 'R'
 		end
 
 	set_value_required is
