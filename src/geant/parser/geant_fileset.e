@@ -303,9 +303,7 @@ feature -- Element change
 
 	set_convert_to_filesystem (b: BOOLEAN) is
 			-- Set `convert_to_filesystem' to `b'.
-			-- Note: `convert_to_filesystem' should be set only once.
-			-- Therefore this is a once command.
-		once
+		do
 			convert_to_filesystem := b
 		ensure
 			convert_to_filesystem_set: convert_to_filesystem = b
