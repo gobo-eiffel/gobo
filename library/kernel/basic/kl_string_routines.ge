@@ -977,7 +977,7 @@ feature -- Element change
 		end
 
 	replaced_all_substrings (a_text, a_old, a_new: STRING): STRING is
-			-- Copy of `a_text' for which each occurence of `a_old' got replaced
+			-- Copy of `a_text' for which each occurrence of `a_old' has been replaced
 			-- by `a_new'; `a_text' if no occurrence could be found
 		require
 			a_text_not_void: a_text /= Void
@@ -1016,7 +1016,7 @@ feature -- Element change
 		end
 
 	replaced_first_substring (a_text: STRING; a_old, a_new: STRING): STRING is
-			-- Copy of `a_text' for which first occurence of `a_old' got replaced
+			-- Copy of `a_text' for which first occurrence of `a_old' has been replaced
 			-- by `a_new'; `a_text' if no occurrence could be found
 		require
 			a_text_not_void: a_text /= Void

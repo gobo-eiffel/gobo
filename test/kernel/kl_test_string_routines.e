@@ -1112,7 +1112,6 @@ feature -- Test
 			a_expt := "totobartotobar"
 			a_got := STRING_.replaced_all_substrings (a_text, s_old, s_new)
 			assert_equal ("replaced1_50", a_expt, a_got)
-
 		end
 
 	test_replaced_all_substrings2 is
@@ -1124,7 +1123,6 @@ feature -- Test
 			s_old: STRING
 			s_new: STRING
 			a_uc_string: UC_STRING
-
 			a_utf8_string: UC_UTF8_STRING
 		do
 			s_old := "-"
@@ -1309,7 +1307,6 @@ feature -- Test
 			create a_uc_string.make_from_string (a_text)
 			a_got := STRING_.replaced_all_substrings (a_uc_string, s_old, s_new)
 			assert_equal ("replaced2_50", a_expt, a_got)
-
 		end
 
 	test_elks_same_string is
