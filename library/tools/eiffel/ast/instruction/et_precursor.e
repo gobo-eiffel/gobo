@@ -37,7 +37,7 @@ feature -- Access
 	precursor_keyword: ET_TOKEN
 			-- Precursor keyword
 
-	parent: ET_IDENTIFIER is
+	parent: ET_CLASS_NAME is
 			-- Parent
 		do
 			-- No parent specified.

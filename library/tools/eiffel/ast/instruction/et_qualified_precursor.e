@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: ET_IDENTIFIER
+	parent: ET_CLASS_NAME
 			-- Parent
 
 	left_brace: ET_SYMBOL
