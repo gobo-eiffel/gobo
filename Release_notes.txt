@@ -48,9 +48,6 @@ SE -0.74 (SmallEiffel)
 	  order to avoid being overwhelmed by zillions of unjustified warning
 	  messages, please use the option -no_style_warning.
 
-	* The SmallEiffel compiler crashes when compiling the examples
-	  'formatter' and 'namespaces' in '$GOBO/example/xml/tree'.
-
 VE 4.1 (Visual Eiffel)
 
 VE 4.0 (Visual Eiffel)
