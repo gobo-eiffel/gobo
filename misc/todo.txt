@@ -27,3 +27,7 @@ releases.
 
 . Look at `fatal_error'. Try to avoid raising an exception.
 . Put precondition to `set_start_condition'.
+
+18 October 1997
+
+. Add a Bug/Deficiency section in Gelex documentation.
