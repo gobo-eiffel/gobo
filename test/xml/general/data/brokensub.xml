@@ -1,0 +1,7 @@
+<!DOCTYPE doc [
+<!ELEMENT doc ANY>
+<!ENTITY e SYSTEM "broken.xml">
+]>
+<doc>
+&e;
+</doc>
