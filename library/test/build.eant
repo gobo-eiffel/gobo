@@ -43,19 +43,19 @@
 		</description>
 
 		<geant target="clean"/>
-		<delete file="config/ts_config_scanner.e"/>
-		<delete file="config/ts_config_parser.e"/>
-		<delete file="config/ts_config_tokens.e"/>
+		<delete file="generation/ts_config_scanner.e"/>
+		<delete file="generation/ts_config_parser.e"/>
+		<delete file="generation/ts_config_tokens.e"/>
 	</target>
 
 
 <!-- Implementation -->
 
-	<target name="config_scanner" dir="config">
+	<target name="config_scanner" dir="generation">
 		<gelex input="ts_config_scanner.l"/>
 	</target>
 
-	<target name="config_parser" dir="config">
+	<target name="config_parser" dir="generation">
 		<geyacc input="ts_config_parser.y" tokens="TS_CONFIG_TOKENS" output="ts_config_parser.e"/>
 	</target>
 
