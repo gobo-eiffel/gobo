@@ -1,4 +1,4 @@
-Gobo Eiffel, version 3.1
+Gobo Eiffel, version 3.2
 
 One of the main concerns of Gobo Eiffel is to provide you with Eiffel
 libraries and tools that are portable across various Eiffel compilers
@@ -7,9 +7,9 @@ Eiffel compiler while taking advantage of the goodies included in
 this package.
 
 The software included in this package is copyrighted freeware distributed
-under the terms and conditions of the Eiffel Forum License as specified
-in file License.txt. Starting with this release, Gobo Eiffel is now a multi-
-developer open source project whose development is hosted at SourceForge
+under the terms and conditions of the Eiffel Forum License version 2 as
+specified in file License.txt. Gobo Eiffel is now a multi-developer
+open-source project whose development is hosted at SourceForge
 (https://sourceforge.net/projects/gobo-eiffel/) while the official stite
 (for stable releases) is still located at http://www.gobosoft.com/.
 
@@ -21,7 +21,7 @@ by other Eiffel projects. So now that the code of these tools and Eiffel
 libraries is stable, it was deemed useful to make it available in an
 official package rather that still requiring those third party Eiffel
 projects to tell their users to download the development version of Gobo
-under CVS. The next release will be devoted to making the documentation
+under CVS. The next releases will be devoted to making the documentation
 more uptodate and providing more tests and examples.
 
 This package consists of ten Eiffel libraries:
@@ -39,17 +39,17 @@ This package consists of ten Eiffel libraries:
 
 and seven utilities:
 
-    . Gobo Eiffel Ant, version 3.1 (geant)
-    . Gobo Eiffel Xace, version 3.1 (gexace)
-    . Gobo Eiffel Lex, version 3.1 (gelex)
-    . Gobo Eiffel Yacc, version 3.1 (geyacc)
-    . Gobo Eiffel Test, version 3.1 (getest)
-    . Gobo Eiffel Preprocessor, version 3.1 (gepp)
-    . Gobo Eiffel XML Splitter, version 3.1 (gexmlsplit)
+    . Gobo Eiffel Ant (geant)
+    . Gobo Eiffel Xace (gexace)
+    . Gobo Eiffel Lex (gelex)
+    . Gobo Eiffel Yacc (geyacc)
+    . Gobo Eiffel Test (getest)
+    . Gobo Eiffel Preprocessor (gepp)
+    . Gobo Eiffel XML Splitter (gexmlsplit)
 
 The software provided in this distribution should work on any platform
 where supported Eiffel compilers are available. However this software
-has only been tested under Windows NT, Linux RedHat 7.1.
+has only been tested under Windows XP and Linux RedHat 7.1.
 Since most Eiffel compilers use the notation $NAME for environment variables
 in their Ace files (or equivalent), this convention has been used instead
 of the Windowish %NAME%. Likewise, the directory separator used through
@@ -60,7 +60,7 @@ To install this package, please follow the instructions below:
 
 Under Windows:
 
-    . download the package gobo31.zip
+    . download the package gobo32.zip
     . copy the files to a directory of your choice on your disk and
       set the environment variable %GOBO% to that directory, known as
       the distribution directory. Also put the directory %GOBO%\bin
@@ -68,7 +68,7 @@ Under Windows:
 
 Under Linux:
 
-    . download the package gobo31.tar.gz
+    . download the package gobo32.tar.gz
     . copy the files to a directory of your choice on your disk and
       set the environment variable $GOBO to that directory, known as
       the distribution directory. Also put the directory $GOBO/bin
@@ -76,7 +76,7 @@ Under Linux:
 
 For other platforms:
 
-    . download the package gobo31.tar.gz
+    . download the package gobo32.tar.gz
     . copy the files to a directory of your choice on your disk and
       set the environment variable $GOBO to that directory, known as
       the distribution directory. Also put the directory $GOBO/bin
@@ -89,9 +89,9 @@ For other platforms:
 Note that if you downloaded this package from CVS on SourceForge, you
 will need to bootstrap it. Please read $GOBO/work/bootstrap/Readme.txt.
 
-The supported Eiffel compilers, in alphabetical order, are: Halstenbach
-4.0.1, ISE Eiffel 5.2.1123 (Classic and .NET), SmartEiffel 1.0,
-Visual Eiffel 4.1 (Build 4802). For more details about the supported
+The supported Eiffel compilers, in alphabetical order, are: ISE Eiffel
+5.3.0620 (Classic and .NET), SmartEiffel 1.1, Visual Eiffel 4.1 (Build 4802).
+Halstenbach is not supported anymore. For more details about the supported
 Eiffel compilers, please see the file "Release_notes.txt". This software
 might work with other Eiffel compilers and/or other compiler versions,
 however no test has been done. To have a better understanding of the
@@ -177,5 +177,5 @@ your projects and how easy (or difficult) it was to adapt this software
 for your specific needs. Thank you in advance.
 
 --
-Copyright (c) 1997-2002, Eric Bezault and others
-18 December 2002
+Copyright (c) 1997-2003, Eric Bezault and others
+29 June 2003

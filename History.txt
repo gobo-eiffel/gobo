@@ -1,4 +1,4 @@
-Version 3.2 - ?
+Version 3.2 - 29 June 2003
 
 	geant:
 
@@ -10,7 +10,7 @@ Version 3.2 - ?
 	  and their descriptions.
 	* Added new task <available>.
 	* Added subelement <directoryset> to task <delete>.
-	* Added attributes 'class' and 'feature' to task task <getest>.
+	* Added attributes 'class' and 'feature' to task <getest>.
 	* The task <hact> now takes advantage of Halstenbach incremental
 	  compiler.
 	* Added attributes 'old_typing' and 'new_typing' to task <geyacc>.
@@ -57,6 +57,10 @@ Version 3.2 - ?
 	* Renamed `convert' as `convert_to_equivalence' in class
 	  LX_SYMBOL_CLASS because 'convert' is a keyword in ETL3.
 
+	Gobo Eiffel Tools Library:
+
+	* Big chunks have been redesigned. Still under development.
+
 	Gobo Eiffel XML Library:
 
 	* Eiffel parser now accepts 'iso-8859-1' encoding.
@@ -87,6 +91,17 @@ Version 3.2 - ?
 	* XM_FORMATTER.last_string replaced by .last_output stream.
 	* XM_NODE_TYPER.attribute obsoleted and renamed to `xml_attribute' 
 	  to avoid future keyword collision.
+
+	Miscellaneous:
+
+	* Now uses the Eiffel Forum License version 2, which is an OSI
+	  Approved License and a GPL-Compatible, Free Software License.
+
+	* Does not support Halstenbach compiler anymore. Indeed Halstenbach
+	  does not seem to maintain/release their Eiffel compiler on their
+	  Web site anymore and a poll among the Gobo users has shown that
+	  it was not worth the effort to continue supporting this out-of-date
+	  compiler in Gobo.
 
 Version 3.1 - 18 December 2002
 
