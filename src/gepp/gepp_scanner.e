@@ -2,14 +2,14 @@ indexing
 
 	description:
 
-		"Scanners for 'ge2e' preprocessors";
+		"Scanners for 'gepp' preprocessors"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
-deferred class GE2E_SCANNER
+deferred class GEPP_SCANNER
 
 inherit
 
@@ -19,7 +19,7 @@ inherit
 			reset as reset_compressed_scanner_skeleton
 		end
 
-	GE2E_TOKENS
+	GEPP_TOKENS
 		export
 			{NONE} all
 		end
@@ -364,4 +364,4 @@ feature -- Status report
 		deferred
 		end
 
-end -- class GE2E_SCANNER
+end -- class GEPP_SCANNER

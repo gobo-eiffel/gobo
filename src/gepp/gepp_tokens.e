@@ -2,14 +2,14 @@ indexing
 
 	description:
 
-		"Token codes for parsers for 'ge2e' preprocessors";
+		"Token codes for parsers for 'gepp' preprocessors"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
-class GE2E_TOKENS
+class GEPP_TOKENS
 
 feature -- Access
 
@@ -26,4 +26,4 @@ feature -- Access
 	P_OR: INTEGER is 267
 	P_AND: INTEGER is 268
 
-end -- class GE2E_TOKENS
+end -- class GEPP_TOKENS

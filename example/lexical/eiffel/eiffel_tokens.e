@@ -2,11 +2,11 @@ indexing
 
 	description:
 
-		"Token codes for Eiffel parsers";
+		"Token codes for Eiffel parsers"
 
-	author:     "Eric Bezault <ericb@gobo.demon.co.uk>";
-	copyright:  "Copyright (c) 1997, Eric Bezault";
-	date:       "$Date$";
+	author:     "Eric Bezault <ericb@gobo.demon.co.uk>"
+	copyright:  "Copyright (c) 1997, Eric Bezault"
+	date:       "$Date$"
 	revision:   "$Revision$"
 
 class EIFFEL_TOKENS
