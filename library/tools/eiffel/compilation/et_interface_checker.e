@@ -32,29 +32,7 @@ feature {NONE} -- Initialization
 			-- Create a new interface checker for classes in `a_universe'.
 		do
 			precursor (a_universe)
-			conformance_checked := False
-			create parent_checker2.make (a_universe)
 			create parent_checker3.make (a_universe)
-			create formal_parameter_checker.make (a_universe)
-			create signature_checker.make (a_universe)
-			create feature_adaptation_resolver.make (a_universe)
-			create named_features.make_map (400)
-			named_features.set_key_equality_tester (feature_name_tester)
-		end
-
-feature -- Status report
-
-	conformance_checked: BOOLEAN
-			-- Can conformance checks be performed in this processor?
-
-feature -- Status setting
-
-	set_conformance_checked (b: BOOLEAN) is
-			-- Set `conformance_checked' to `b'.
-		do
-			conformance_checked := b
-		ensure
-			conformance_checked_set: conformance_checked = b
 		end
 
 feature -- Processing
@@ -139,10 +117,6 @@ feature {NONE} -- Processing
 					if not current_class.has_interface_error then
 						error_handler.report_compilation_status (Current, current_class)
 						check_constraint_creations_validity
-						if conformance_checked then
-							check_signatures_validity
-							check_formal_parameters_validity
-						end
 						check_parents_validity
 					end
 				else
@@ -238,88 +212,6 @@ feature {NONE} -- Constraint creation validity
 			end
 		end
 
-feature {NONE} -- Signature validity
-
-	check_signatures_validity is
-			-- Check validity of redeclarations and joinings for all
-			-- feature signatures of `current_class' which could not
-			-- be checked before in the feature flattener because
-			-- of the presence of some qualified anchired types.
-		local
-			i, nb: INTEGER
-			a_named_feature: ET_FLATTENED_FEATURE
-			a_features: ET_FEATURE_LIST
-			a_feature: ET_FEATURE
-		do
-			resolve_feature_adaptations
-			a_features := current_class.features
-			nb := a_features.count
-			from i := 1 until i > nb loop
-				a_feature := a_features.item (i)
-				a_named_feature := named_features.item (a_feature.name)
-				if a_named_feature.is_inherited then
-					a_named_feature.inherited_feature.set_flattened_feature (a_feature)
-				end
-				check_signature_validity (a_named_feature)
-				i := i + 1
-			end
-			named_features.wipe_out
-		end
-
-	check_signature_validity (a_feature: ET_FLATTENED_FEATURE) is
-			-- Check signature validity for redeclarations and joinings.
-		require
-			a_feature_not_void: a_feature /= Void
-		do
-			signature_checker.check_signature_validity (a_feature, current_class)
-			if signature_checker.has_fatal_error then
-				set_fatal_error (current_class)
-			end
-		end
-
-	signature_checker: ET_SIGNATURE_CHECKER
-			-- Signature validity checker
-
-feature {NONE} -- Feature adaptation
-
-	feature_adaptation_resolver: ET_FEATURE_ADAPTATION_RESOLVER
-			-- Feature adaptation resolver
-
-	named_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
-			-- Features indexed by name
-
-	resolve_feature_adaptations is
-			-- Resolve the feature adaptations of the inheritance clause of
-			-- `current_class' and put resulting features in `named_features'.
-		do
-			feature_adaptation_resolver.resolve_feature_adaptations (current_class, named_features)
-			if feature_adaptation_resolver.has_fatal_error then
-				set_fatal_error (current_class)
-			end
-		end
-
-feature {NONE} -- Formal parameters validity
-
-	check_formal_parameters_validity is
-			-- Check validity of formal parameters of `current_class'.
-		local
-			old_class: ET_CLASS
-		do
-				-- There might be controlled recursive calls
-				-- to `process', hence the following precaution
-				-- with `current_class'.
-			old_class := current_class
-			current_class := unknown_class
-			formal_parameter_checker.check_formal_parameters_validity (old_class)
-			current_class := old_class
-			if formal_parameter_checker.has_fatal_error then
-				set_fatal_error (current_class)
-			end
-		end
-
-	formal_parameter_checker: ET_FORMAL_PARAMETER_CHECKER2
-			-- Formal parameter validity checker
-
 feature {NONE} -- Parents validity
 
 	check_parents_validity is
@@ -332,32 +224,18 @@ feature {NONE} -- Parents validity
 				-- with `current_class'.
 			old_class := current_class
 			current_class := unknown_class
-			parent_checker2.check_parents_validity (old_class)
-			if parent_checker2.has_fatal_error then
+			parent_checker3.check_parents_validity (old_class)
+			if parent_checker3.has_fatal_error then
 				set_fatal_error (old_class)
-			elseif conformance_checked then
-				parent_checker3.check_parents_validity (old_class)
-				if parent_checker3.has_fatal_error then
-					set_fatal_error (old_class)
-				end
 			end
 			current_class := old_class
 		end
-
-	parent_checker2: ET_PARENT_CHECKER2
-			-- Parent validity checker (second pass)
 
 	parent_checker3: ET_PARENT_CHECKER3
 			-- Parent validity checker (third pass)
 
 invariant
 
-	named_features_not_void: named_features /= Void
-	no_void_named_feature: not named_features.has_item (Void)
-	feature_adaptation_resolver_not_void: feature_adaptation_resolver /= Void
-	signature_checker_not_void: signature_checker /= Void
-	parent2_checker_not_void: parent_checker2 /= Void
 	parent3_checker_not_void: parent_checker3 /= Void
-	formal_parameter_checker_not_void: formal_parameter_checker /= Void
 
 end

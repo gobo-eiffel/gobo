@@ -69,8 +69,6 @@ feature -- Execution
 					is_verbose := True
 				elseif arg.is_equal ("--cat") then
 					is_cat := True
-				elseif arg.is_equal ("--forget") then
-					is_forget := True
 				elseif arg.is_equal ("--flat") then
 					is_flat := True
 				elseif arg.is_equal ("--compile") then
@@ -162,7 +160,6 @@ feature -- Status report
 	all_breaks: BOOLEAN
 	is_verbose: BOOLEAN
 	is_cat: BOOLEAN
-	is_forget: BOOLEAN
 	is_flat: BOOLEAN
 	do_compile: BOOLEAN
 	do_c_compile: BOOLEAN
@@ -219,7 +216,6 @@ feature {NONE} -- Processing
 			else
 				a_universe.set_cat_enabled (False)
 			end
-			a_universe.set_forget_enabled (is_forget)
 			if do_compile then
 				create a_system.make (a_universe)
 				if push_dynamic_type_sets then

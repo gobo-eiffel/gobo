@@ -479,7 +479,6 @@ feature -- Parsing status
 			declared_feature_count := 0
 			features := tokens.empty_features
 			leading_break := Void
-			forget_features := Void
 		ensure
 			not_parsed: not is_parsed
 			no_syntax_error: not has_syntax_error

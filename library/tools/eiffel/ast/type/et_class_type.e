@@ -98,16 +98,12 @@ feature -- Access
 					if a_named_parameters /= an_actual_parameters then
 						create a_generic_class_type.make (type_mark, name, a_named_parameters, eiffel_class)
 						a_generic_class_type.set_cat_keyword (cat_keyword)
-						a_generic_class_type.set_forget_features (forget_features)
 						a_generic_class_type.set_unresolved_type (Current)
 						Result := a_generic_class_type
 					end
 				end
 			end
 		end
-
-	forget_features: DS_HASH_SET [ET_FEATURE_NAME]
-			-- Forgotten features
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -169,60 +165,6 @@ feature -- Setting
 			cat_keyword_set: cat_keyword = a_cat
 		end
 
-	set_forget_features (a_features: like forget_features) is
-			-- Set `forget_features' to `a_features'.
-		do
-			forget_features := a_features
-			if unresolved_type /= Void then
-				unresolved_type.set_forget_features (a_features)
-			end
-		ensure
-			forget_features_set: forget_features = a_features
-		end
-
-	put_forget_feature (a_feature: ET_FEATURE) is
-			-- Add `a_feature' to the list of forgotten features.
-		require
-			a_feature_not_void: a_feature /= Void
-		do
-			put_forget_feature_name (a_feature.name)
-		end
-
-	put_forget_feature_name (a_name: ET_FEATURE_NAME) is
-			-- Add `a_name' to the list of forgotten features.
-		require
-			a_name_not_void: a_name /= Void
-		do
-			if forget_features = Void then
-				create forget_features.make (10)
-				forget_features.set_equality_tester (feature_name_tester)
-			end
-			forget_features.force_last (a_name)
-			if unresolved_type /= Void then
-				unresolved_type.put_forget_feature_name (a_name)
-			end
-		end
-
-	append_forget_features (other: ET_CLASS_TYPE) is
-			-- Append forgotten features of `other' to those of current type.
-		require
-			other_not_void: other /= Void
-		local
-			l_forget_features: like forget_features
-		do
-			l_forget_features := other.forget_features
-			if l_forget_features = forget_features then
-				-- Nothing to do.
-			elseif l_forget_features = Void then
-				-- Nothing to do.
-			else
-				from l_forget_features.start until l_forget_features.after loop
-					put_forget_feature_name (l_forget_features.item_for_iteration)
-					l_forget_features.forth
-				end
-			end
-		end
-
 feature -- Status report
 
 	is_separate: BOOLEAN is
@@ -270,32 +212,6 @@ feature -- Status report
 			-- when viewed from `a_context' in `a_universe'?
 		do
 			Result := is_cat
-		end
-
-	has_forget_feature (a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does current type have `a_feature' in its list of forgotten
-			-- features when viewed from `a_context' in `a_universe'?
-		do
-			if forget_features /= Void then
-				Result := forget_features.has (a_feature.name)
-			end
-		end
-
-	same_forget_features (other: ET_CLASS_TYPE): BOOLEAN is
-			-- Do current type and `other' have the same forgotten features?
-		require
-			other_not_void: other /= Void
-		local
-			l_forget_features: like forget_features
-		do
-			l_forget_features := forget_features
-			if forget_features = Void then
-				Result := l_forget_features = Void or else l_forget_features.is_empty
-			elseif l_forget_features = Void then
-				Result := forget_features.is_empty
-			else
-				Result := forget_features.is_equal (l_forget_features)
-			end
 		end
 
 	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -388,8 +304,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- if they have the same base type.)
 		local
 			old_cat_keyword: like cat_keyword
-			old_forget_features: like forget_features
-			old_count: INTEGER
 		do
 			Result := standard_same_syntactical_class_type (other, other_context, a_context, a_universe)
 			if not Result then
@@ -412,30 +326,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 							other.set_cat_keyword (old_cat_keyword)
 							a_universe.set_dog_type_count (a_universe.dog_type_count - 1)
 						end
-					end
-				elseif a_universe.searching_forget_features then
-					old_forget_features := forget_features
-					forget_features := other.forget_features
-					if standard_same_syntactical_class_type (other, other_context, a_context, a_universe) then
-						forget_features := old_forget_features
-						if forget_features /= Void then
-							old_count := forget_features.count
-						end
-						append_forget_features (other)
-						if forget_features /= Void then
-							a_universe.set_forget_feature_count (a_universe.forget_feature_count + forget_features.count - old_count)
-						end
-						if other.forget_features /= Void then
-							old_count := other.forget_features.count
-						else
-							old_count := 0
-						end
-						other.append_forget_features (Current)
-						if other.forget_features /= Void then
-							a_universe.set_forget_feature_count (a_universe.forget_feature_count + other.forget_features.count - old_count)
-						end
-					else
-						forget_features := old_forget_features
 					end
 				end
 			end
@@ -464,9 +354,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				eiffel_class = other_base_class and
 				is_expanded = other.is_expanded and
 				is_cat = other.is_cat and
-				is_separate = other.is_separate and
-				--(a_universe.forget_enabled implies (a_universe.all_forget_features or same_forget_features (other)))
-				(a_universe.forget_enabled implies same_forget_features (other))
+				is_separate = other.is_separate
 			then
 				if not other.is_generic then
 					Result := not is_generic
@@ -501,9 +389,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				eiffel_class = other_base_class and
 				is_expanded = other.is_expanded and
 				is_cat = other.is_cat and
-				is_separate = other.is_separate and
-				--(a_universe.forget_enabled implies (a_universe.all_forget_features or same_forget_features (other)))
-				(a_universe.forget_enabled implies same_forget_features (other))
+				is_separate = other.is_separate
 			then
 				if not other.is_generic then
 					Result := not is_generic
@@ -538,9 +424,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				eiffel_class = other_base_class and
 				is_expanded = other.is_expanded and
 				is_cat = other.is_cat and
-				is_separate = other.is_separate and
-				--(a_universe.forget_enabled implies (a_universe.all_forget_features or same_forget_features (other)))
-				(a_universe.forget_enabled implies same_forget_features (other))
+				is_separate = other.is_separate
 			then
 				if not other.is_generic then
 					Result := not is_generic
@@ -553,57 +437,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 						other_is_generic: other_parameters /= Void
 					end
 					Result := actual_parameters.same_named_types (other_parameters, other_context, a_context, a_universe)
-				end
-			end
-		end
-
-	same_argument_named_types (a_feature, other_feature: ET_FEATURE; other: ET_CLASS_TYPE;
-		other_context: ET_TYPE_CONTEXT; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Do `a_feature' in current type appearing in `a_context' and
-			-- `other_feature' in `other' type appearing in `other_context'
-			-- have the same named argument types?
-			-- (Used to figure out whether a feature should be marked 'forget' or not.)
-		require
-			a_feature_not_void: a_feature /= Void
-			other_feature_not_void: other_feature /= Void
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		local
-			l_args, l_other_args: ET_FORMAL_ARGUMENT_LIST
-			l_type, l_other_type: ET_TYPE
-			l_type_context, l_other_type_context: ET_NESTED_TYPE_CONTEXT
-			l_base_type, l_other_base_type: ET_BASE_TYPE
-			i, nb: INTEGER
-		do
-			l_args := a_feature.arguments
-			l_other_args := other_feature.arguments
-			if l_args = Void then
-				Result := l_other_args = Void or else l_other_args.is_empty
-			elseif l_other_args = Void then
-				Result := l_args.is_empty
-			else
-				Result := True
-				l_base_type := base_type (a_context, a_universe)
-				create l_type_context.make_with_capacity (a_context.root_context, 1)
-				l_type_context.put_last (l_base_type)
-				l_other_base_type := other.base_type (other_context, a_universe)
-				create l_other_type_context.make_with_capacity (other_context.root_context, 1)
-				l_other_type_context.put_last (l_other_base_type)
-				nb := l_args.count
-				from i := 1 until i > nb loop
-					l_type := l_args.formal_argument (i).type
-					l_other_type := l_other_args.formal_argument (i).type
-					if not l_type.same_named_type (l_other_type, l_other_type_context, l_type_context, a_universe) then
-						Result := False
-						i := nb + 1 -- Jump out of the loop.
-					else
-						i := i + 1
-					end
 				end
 			end
 		end
@@ -646,14 +479,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- check conformance.)
 		local
 			old_cat_keyword: like cat_keyword
-			old_forget_features: like forget_features
-			old_forget_enabled: BOOLEAN
-			other_base_class: ET_CLASS
-			l_features: ET_FEATURE_LIST
-			l_feature: ET_FEATURE
-			l_other_feature: ET_FEATURE
-			i, nb: INTEGER
-			old_count: INTEGER
 		do
 			Result := standard_conforms_from_class_type (other, other_context, a_context, a_universe)
 			if not Result then
@@ -667,67 +492,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 							set_cat_keyword (old_cat_keyword)
 							a_universe.set_dog_type_count (a_universe.dog_type_count - 1)
 						end
-					end
-				elseif a_universe.searching_forget_features then
-					old_forget_enabled := a_universe.forget_enabled
-					a_universe.set_forget_enabled (False)
-					if standard_conforms_from_class_type (other, other_context, a_context, a_universe) then
-						a_universe.set_forget_enabled (old_forget_enabled)
-						Result := True
-						other_base_class := other.direct_base_class (a_universe)
-						if other_base_class.features_flattened then
-							if other_base_class.has_flattening_error then
-								-- Do not stop because of this.
-							else
-								l_features := eiffel_class.features
-								nb := l_features.count
-								from i := 1 until i > nb loop
-									l_feature := l_features.item (i)
-									if not has_forget_feature (l_feature, a_context, a_universe) then
-										l_other_feature := other_base_class.seeded_feature (l_feature.first_seed)
-										if l_other_feature = Void then
-												-- Internal error.
-											put_forget_feature (l_feature)
-											a_universe.set_forget_feature_count (a_universe.forget_feature_count + 1)
-										elseif other.has_forget_feature (l_other_feature, other_context, a_universe) then
-											put_forget_feature (l_feature)
-											a_universe.set_forget_feature_count (a_universe.forget_feature_count + 1)
-										elseif not same_argument_named_types (l_feature, l_other_feature, other, other_context, a_context, a_universe) then
-											put_forget_feature (l_feature)
-											a_universe.set_forget_feature_count (a_universe.forget_feature_count + 1)
-										end
-									end
-									i := i + 1
-								end 
-							end
-						end
-					else
-						a_universe.set_forget_enabled (old_forget_enabled)
-					end
-				end
-			end
-			if Result and a_universe.searching_forget_features then
-					-- Make sure that if the types are the same then they have the
-					-- same forget features. This avoids introducing new covariant
-					-- features when the type of their arguments only differ by
-					-- their foret features.
-				if not same_named_class_type (other, other_context, a_context, a_universe) then
-					old_forget_features := forget_features
-					forget_features := other.forget_features
-					if same_named_class_type (other, other_context, a_context, a_universe) then
-						forget_features := old_forget_features
-							-- We know that `other' conforms to `Current',
-							-- so the forget features of `other' are already
-							-- listed in `Current'.
-						if other.forget_features /= Void then
-							old_count := other.forget_features.count
-						end
-						other.append_forget_features (Current)
-						if other.forget_features /= Void then
-							a_universe.set_forget_feature_count (a_universe.forget_feature_count + other.forget_features.count - old_count)
-						end
-					else
-						forget_features := old_forget_features
 					end
 				end
 			end
@@ -746,12 +510,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			other_base_class: ET_CLASS
 			an_ancestor: ET_BASE_TYPE
 			other_parameters: ET_ACTUAL_PARAMETER_LIST
-			l_forget_features: like forget_features
-			l_features: ET_FEATURE_LIST
-			l_feature: ET_FEATURE
-			l_other_feature: ET_FEATURE
-			i, nb: INTEGER
-			l_parameters_conform: BOOLEAN
 		do
 			other_base_class := other.direct_base_class (a_universe)
 			if other_base_class = a_universe.unknown_class then
@@ -763,24 +521,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				if (is_cat and not is_expanded) and not other.is_cat then
 					Result := False
 				elseif not other.is_generic then
-					if not is_generic then
-						if a_universe.forget_enabled then
---							if a_universe.all_forget_features then
---								Result := True
---							else
-								l_forget_features := other.forget_features
-								if l_forget_features /= Void and then not l_forget_features.is_empty then
-									Result := forget_features /= Void and then l_forget_features.is_subset (forget_features)
-								else
-									Result := True
-								end
---							end
-						else
-							Result := True
-						end
-					else
-						Result := False
-					end
+					Result := not is_generic
 				elseif not is_generic then
 					Result := False
 				else
@@ -796,55 +537,10 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						eiffel_class = a_universe.predicate_class
 					then
 							-- SmartEiffel's agent type conformance.
-						-- l_parameters_conform := other_parameters.agent_conforms_to_types (actual_parameters, a_context, other_context, a_universe)
-						l_parameters_conform := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
+						-- Result := other_parameters.agent_conforms_to_types (actual_parameters, a_context, other_context, a_universe)
+						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
 					else
-						l_parameters_conform := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
-					end
-					if l_parameters_conform then
-						if a_universe.forget_enabled then
---							if a_universe.all_forget_features then
---								Result := True
-							if other_parameters.same_named_types (actual_parameters, a_context, other_context, a_universe) then
-								l_forget_features := other.forget_features
-								if l_forget_features /= Void and then not l_forget_features.is_empty then
-									Result := forget_features /= Void and then l_forget_features.is_subset (forget_features)
-								else
-									Result := True
-								end
-							elseif other_base_class.features_flattened then
-								if other_base_class.has_flattening_error then
-										-- Do not stop because of this.
-									Result := True
-								else
-									Result := True
-									l_features := eiffel_class.features
-									nb := l_features.count
-									from i := 1 until i > nb loop
-										l_feature := l_features.item (i)
-										if not has_forget_feature (l_feature, a_context, a_universe) then
-											l_other_feature := other_base_class.seeded_feature (l_feature.first_seed)
-											if l_other_feature = Void then
-													-- Internal error.
-												Result := False
-												i := nb + 1 -- Jump out of the loop.
-											elseif other.has_forget_feature (l_other_feature, other_context, a_universe) then
-												Result := False
-												i := nb + 1 -- Jump out of the loop.
-											elseif not same_argument_named_types (l_feature, l_other_feature, other, other_context, a_context, a_universe) then
-												Result := False
-												i := nb + 1 -- Jump out of the loop.
-											end
-										end
-										i := i + 1
-									end 
-								end
-							else
-								Result := True
-							end
-						else
-							Result := True
-						end
+						Result := other_parameters.conforms_to_types (actual_parameters, a_context, other_context, a_universe)
 					end
 				end
 			elseif not is_expanded then
@@ -866,43 +562,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 						if other_parameters /= Void then
 							an_ancestor := an_ancestor.resolved_formal_parameters (other_parameters)
 						end
-						if an_ancestor.conforms_to_type (Current, a_context, other_context, a_universe) then
-							if a_universe.forget_enabled then
---								if a_universe.all_forget_features then
---									Result := True
-								if other_base_class.features_flattened then
-									if other_base_class.has_flattening_error then
-										Result := False
-									else
-										Result := True
-										l_features := eiffel_class.features
-										nb := l_features.count
-										from i := 1 until i > nb loop
-											l_feature := l_features.item (i)
-											if not has_forget_feature (l_feature, a_context, a_universe) then
-												l_other_feature := other_base_class.seeded_feature (l_feature.first_seed)
-												if l_other_feature = Void then
-														-- Internal error.
-													Result := False
-													i := nb + 1 -- Jump out of the loop.
-												elseif other.has_forget_feature (l_other_feature, other_context, a_universe) then
-													Result := False
-													i := nb + 1 -- Jump out of the loop.
-												elseif not same_argument_named_types (l_feature, l_other_feature, other, other_context, a_context, a_universe) then
-													Result := False
-													i := nb + 1 -- Jump out of the loop.
-												end
-											end
-											i := i + 1
-										end 
-									end
-								else
-									Result := True
-								end
-							else
-								Result := True
-							end
-						end
+						Result := an_ancestor.conforms_to_type (Current, a_context, other_context, a_universe)
 					end
 				end
 			end
@@ -926,7 +586,6 @@ feature -- Type processing
 				if a_resolved_parameters /= an_actual_parameters then
 					create a_generic_class_type.make (type_mark, name, a_resolved_parameters, eiffel_class)
 					a_generic_class_type.set_cat_keyword (cat_keyword)
-					a_generic_class_type.set_forget_features (forget_features)
 					a_generic_class_type.set_unresolved_type (Current)
 					Result := a_generic_class_type
 				end
@@ -946,7 +605,6 @@ feature -- Output
 			-- current type to `a_string'.
 		local
 			a_parameters: like actual_parameters
-			a_cursor: DS_HASH_SET_CURSOR [ET_FEATURE_NAME]
 		do
 			if cat_keyword /= Void then
 				a_string.append_string (cat_keyword.text)
@@ -961,18 +619,6 @@ feature -- Output
 			if a_parameters /= Void and then not a_parameters.is_empty then
 				a_string.append_character (' ')
 				a_parameters.append_to_string (a_string)
-			end
-			if forget_features /= Void and then not forget_features.is_empty then
-				a_string.append_string (" forget ")
-				a_cursor := forget_features.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_string.append_string (a_cursor.item.name)
-					a_cursor.forth
-					if not a_cursor.after then
-						a_string.append_string (", ")
-					end
-				end
-				a_string.append_string (" end")
 			end
 		end
 

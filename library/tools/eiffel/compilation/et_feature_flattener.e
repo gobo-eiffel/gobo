@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 			-- Create a new feature flattener for classes in `a_universe'.
 		do
 			precursor (a_universe)
-			conformance_checked := True
 			create named_features.make_map (400)
 			named_features.set_key_equality_tester (feature_name_tester)
 			create clients_list.make (20)
@@ -50,21 +49,6 @@ feature {NONE} -- Initialization
 			create parent_checker.make (a_universe)
 			create formal_parameter_checker.make (a_universe)
 			create precursor_checker.make (a_universe)
-		end
-
-feature -- Status report
-
-	conformance_checked: BOOLEAN
-			-- Can conformance checks be performed in this processor?
-
-feature -- Status setting
-
-	set_conformance_checked (b: BOOLEAN) is
-			-- Set `conformance_checked' to `b'.
-		do
-			conformance_checked := b
-		ensure
-			conformance_checked_set: conformance_checked = b
 		end
 
 feature -- Error handling
@@ -157,15 +141,11 @@ feature {NONE} -- Processing
 					end
 					if not current_class.has_flattening_error then
 						error_handler.report_compilation_status (Current, current_class)
-						if conformance_checked then
-								-- Check validity rules of the parents and of formal
-								-- generic parameters of `current_class'.
-							check_formal_parameters_validity
-							check_parents_validity
-							if not current_class.has_flattening_error then
-								flatten_features
-							end
-						else
+							-- Check validity rules of the parents and of formal
+							-- generic parameters of `current_class'.
+						check_formal_parameters_validity
+						check_parents_validity
+						if not current_class.has_flattening_error then
 							flatten_features
 						end
 					end
@@ -280,9 +260,7 @@ feature {NONE} -- Feature flattening
 							a_deferred_feature := a_named_feature
 						end
 					end
-					if conformance_checked then
-						check_signature_validity (a_named_feature)
-					end
+					check_signature_validity (a_named_feature)
 					named_features.forth
 				end
 				if a_deferred_feature /= Void then

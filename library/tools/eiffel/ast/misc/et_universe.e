@@ -1347,13 +1347,6 @@ feature -- Compilation
 					dt1 := l_clock.system_clock.date_time_now
 				end
 			end
-			if forget_enabled then
-				compile_forget_features
-				debug ("ericb")
-					print_time (dt1, "Degree FORGET")
-					dt1 := l_clock.system_clock.date_time_now
-				end
-			end
 			compile_degree_4
 			debug ("ericb")
 				print_time (dt1, "Degree 4")
@@ -1393,13 +1386,6 @@ feature -- Compilation
 				compile_cat_calls
 				debug ("ericb")
 					print_time (dt1, "Degree CAT")
-					dt1 := l_clock.system_clock.date_time_now
-				end
-			end
-			if forget_enabled then
-				compile_forget_features
-				debug ("ericb")
-					print_time (dt1, "Degree FORGET")
 					dt1 := l_clock.system_clock.date_time_now
 				end
 			end
@@ -1819,76 +1805,6 @@ feature -- CAT-calls
 			searching_cat_features := False
 		end
 
-feature -- Forget features
-
-	forget_enabled: BOOLEAN
-			-- Is forget feature processing enabled?
-
-	set_forget_enabled (b: BOOLEAN) is
-			-- Set `forget_enabled' to `b'.
-		do
-			forget_enabled := b
-		ensure
-			forget_enabled_set: forget_enabled = b
-		end
-
-	all_forget_features: BOOLEAN
-			-- Are all features considered as 'forget'?
-
-	searching_forget_features: BOOLEAN
-			-- Are we currently searching for 'forget' features?
-
-	forget_feature_count: INTEGER
-			-- Number of 'forget' features found
-
-	set_forget_feature_count (i: INTEGER) is
-			-- Set `forget_feature_count' to `i'.
-		do
-			forget_feature_count := i
-		ensure
-			forget_feature_count_set: forget_feature_count = i
-		end
-
-	compile_forget_features is
-			-- Process 'forget' features.
-		require
-			forget_enabled: forget_enabled
-		local
-			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
-			a_class: ET_CLASS
-			old_feature_count: INTEGER
-		do
-			old_feature_count := feature_count
-				-- Find 'forget' features.
-			a_cursor := classes.new_cursor
-			searching_forget_features := True
-			from forget_feature_count := 1 until forget_feature_count = 0 loop
-				forget_feature_count := 0
-				compile_degree_4
-				compile_degree_3 (False)
-					-- Rewind processing to just after parsing.
-				from a_cursor.start until a_cursor.after loop
-					a_class := a_cursor.item
-					a_class.reset_implementation_checked
-					a_class.reset_interface_checked
-					a_class.reset_qualified_signatures_resolved
-					a_class.reset_features_flattened
-					a_class.reset_ancestors_built
-					a_cursor.forth
-				end
-				feature_count := old_feature_count
-				debug ("ericb")
-					std.error.put_string ("Forget feature count = ")
-					std.error.put_integer (forget_feature_count)
-					std.error.put_new_line
-					debug ("stop")
-						io.read_line
-					end
-				end
-			end
-			searching_forget_features := False
-		end
-
 feature -- Processors
 
 	eiffel_preparser: ET_EIFFEL_PREPARSER is
@@ -1976,9 +1892,6 @@ feature -- Processors
 			end
 			if feature_flattener = null_processor then
 				create l_feature_flattener.make (Current)
-				if forget_enabled then
-					l_feature_flattener.set_conformance_checked (False)
-				end
 				feature_flattener := l_feature_flattener
 			end
 			if qualified_signature_resolver = null_processor then
@@ -1986,9 +1899,6 @@ feature -- Processors
 			end
 			if interface_checker = null_processor then
 				create l_interface_checker.make (Current)
-				if forget_enabled then
-					l_interface_checker.set_conformance_checked (True)
-				end
 				interface_checker := l_interface_checker
 			end
 			if implementation_checker = null_processor then

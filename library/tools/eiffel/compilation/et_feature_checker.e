@@ -3895,11 +3895,6 @@ feature {NONE} -- Expression validity
 						-- Check whether `a_feature' satisfies CAT validity rules.
 					had_error := has_fatal_error
 					check_cat_validity (a_name, a_feature, a_context)
-					if has_fatal_error then
-						had_error := True
-					end
-						-- Check whether `a_feature' satisfies forget feature validity rules.
-					check_forget_feature_validity (a_name, a_feature, a_context)
 					if had_error then
 						set_fatal_error
 					end
@@ -4457,14 +4452,6 @@ feature {NONE} -- Expression validity
 					end
 						-- Check whether `a_feature' satisfies CAT validity rules.
 					check_cat_validity (a_name, a_feature, a_context)
-					if has_fatal_error then
-						had_error := True
-					end
-						-- Check whether `a_feature' satisfies forget feature validity rules.
-					check_forget_feature_validity (a_name, a_feature, a_context)
-					if has_fatal_error then
-						had_error := True
-					end
 					if had_error then
 						set_fatal_error
 					end
@@ -5485,28 +5472,6 @@ feature {NONE} -- Expression validity
 			end
 		end
 
-	check_forget_feature_validity (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT) is
-			-- Check 'forget' features validity rules on qualified call to `a_feature'
-			-- named `a_name' in context of its target `a_context'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_context_not_void: a_context /= Void
-		do
-			has_fatal_error := False
-			if universe.forget_enabled and not universe.searching_forget_features then
-				if a_context.has_forget_feature (a_feature, universe) then
---					set_fatal_error
--- TODO: better error message reporting.
-					error_handler.report_error_message ("class " + current_class.name.name + " (" +
-						a_name.position.line.out + "," + a_name.position.column.out +
-						"): forget feature `" + a_name.name + "' applied to target '" +
-						a_context.base_type (universe).to_text + "'")
-				end
-			end
-		end
-
 	check_subexpression_validity (an_expression: ET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT;
 		a_target_type: ET_TYPE_CONTEXT) is
 			-- Check validity of `an_expression' (whose target is of type
@@ -5884,8 +5849,6 @@ feature {NONE} -- Agent validity
 					if has_fatal_error then
 						had_error := True
 					end
-						-- Check whether `a_feature' satisfies forget feature validity rules.
-					check_forget_feature_validity (a_name, a_feature, a_context)
 					if had_error then
 						set_fatal_error
 					end
@@ -6063,8 +6026,6 @@ feature {NONE} -- Agent validity
 						if has_fatal_error then
 							had_error := True
 						end
-							-- Check whether `a_feature' satisfies forget feature validity rules.
-						check_forget_feature_validity (a_name, a_feature, a_context)
 						if had_error then
 							set_fatal_error
 						end

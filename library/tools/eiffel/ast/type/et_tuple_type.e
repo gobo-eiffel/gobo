@@ -169,13 +169,6 @@ feature -- Status report
 			Result := False
 		end
 
-	has_forget_feature (a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does current type have `a_feature' in its list of forgotten
-			-- features when viewed from `a_context' in `a_universe'?
-		do
-			Result := False
-		end
-
 	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does the base type of current type contain `a_class'
 			-- when it appears in `a_context' in `a_universe'?

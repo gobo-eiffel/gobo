@@ -251,35 +251,6 @@ feature -- Status report
 			definition: Result = base_type_actual (i, a_context, a_universe).is_cat_parameter (a_context, a_universe)
 		end
 
-	has_forget_feature (a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does current type have `a_feature' in its list of forgotten
-			-- features when viewed from `a_context' in `a_universe'?
-		require
-			a_feature_not_void: a_feature /= Void
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		deferred
-		end
-
-	has_actual_forget_feature (i: INTEGER; a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does actual generic parameter at index `i' in the base type of current
-			-- type have `a_feature' in its list of forgotten features when viewed
-			-- from `a_context' in `a_universe'?
-		require
-			a_feature_not_void: a_feature /= Void
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-			a_universe_not_void: a_universe /= Void
-			-- no_cycle: no cycle in anchored types involved.
-			i_large_enough: i >= 1
-			i_small_enough: i <= base_type_actual_count (a_context, a_universe)
-		deferred
-		ensure
-			definition: Result = base_type_actual (i, a_context, a_universe).has_forget_feature (a_feature, a_context, a_universe)
-		end
-
 	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type contain an anchored type
 			-- when viewed from `a_context' in `a_universe'?

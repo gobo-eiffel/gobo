@@ -45,8 +45,6 @@ inherit
 			is_actual_cat_type as context_is_actual_cat_type,
 			is_cat_parameter as context_is_cat_parameter,
 			is_actual_cat_parameter as context_is_actual_cat_parameter,
-			has_forget_feature as context_has_forget_feature,
-			has_actual_forget_feature as context_has_actual_forget_feature,
 			same_named_type as context_same_named_type,
 			same_base_type as context_same_base_type,
 			same_named_bit_type as context_same_named_bit_type,
@@ -233,14 +231,6 @@ feature -- Status report
 			-- type a non-conforming parameter when viewed from `a_context' in `a_universe'?
 		do
 			Result := actual_parameters.actual_parameter (i).is_cat_parameter (a_context, a_universe)
-		end
-
-	has_actual_forget_feature (i: INTEGER; a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does actual generic parameter at index `i' in the base type of current
-			-- type have `a_feature' in its list of forgotten features when viewed
-			-- from `a_context' in `a_universe'?
-		do
-			Result := actual_parameters.type (i).has_forget_feature (a_feature, a_context, a_universe)
 		end
 
 	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -547,20 +537,6 @@ feature -- Type context
 			-- a non-conforming parameter in `a_universe'?
 		do
 			Result := is_actual_cat_parameter (i, Current, a_universe)
-		end
-
-	context_has_forget_feature (a_feature: ET_FEATURE; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does `base_type' have `a_feature' in its list of forgotten
-			-- features in `a_universe'?
-		do
-			Result := has_forget_feature (a_feature, Current, a_universe)
-		end
-
-	context_has_actual_forget_feature (i: INTEGER; a_feature: ET_FEATURE; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does actual generic parameter at index `i' in `base_type' have
-			-- `a_feature' in its list of forgotten features in `a_universe'?
-		do
-			Result := has_actual_forget_feature (i, a_feature, Current, a_universe)
 		end
 
 	context_has_formal_type (i: INTEGER; a_universe: ET_UNIVERSE): BOOLEAN is

@@ -528,38 +528,6 @@ feature -- Status report
 			Result := base_type_actual_parameter (i, a_context, a_universe).is_cat_parameter (a_context.root_context, a_universe)
 		end
 
-	has_forget_feature (a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does current type have `a_feature' in its list of forgotten
-			-- features when viewed from `a_context' in `a_universe'?
-		local
-			an_actual: ET_NAMED_TYPE
-			a_formal_type: ET_FORMAL_PARAMETER_TYPE
-		do
-			if index <= a_context.base_type_actual_count (a_universe) then
-				an_actual := a_context.base_type_actual (index, a_universe)
-				a_formal_type ?= an_actual
-				if a_formal_type /= Void then
-						-- The actual parameter associated with current
-						-- type is itself a formal generic parameter.
-					Result := False
-				else
-					Result := an_actual.has_forget_feature (a_feature, a_context.root_context, a_universe)
-				end
-			else
-					-- Internal error: does current type really
-					-- appear in `a_context'?
-				Result := False
-			end	
-		end
-
-	has_actual_forget_feature (i: INTEGER; a_feature: ET_FEATURE; a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
-			-- Does actual generic parameter at index `i' in the base type of current
-			-- type have `a_feature' in its list of forgotten features when viewed
-			-- from `a_context' in `a_universe'?
-		do
-			Result := base_type_actual (i, a_context, a_universe).has_forget_feature (a_feature, a_context.root_context, a_universe)
-		end
-
 	has_anchored_type (a_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
 			-- Does current type contain an anchored type
 			-- when viewed from `a_context' in `a_universe'?
