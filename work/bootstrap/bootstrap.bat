@@ -1,16 +1,52 @@
 @echo off
 
+rem description: "Bootstrap Gobo Eiffel package"
+rem author:      "Eric Bezault <ericb@gobosoft.com>"
+rem copyright:   "Copyright (c) 2001, Eric Bezault and others"
+rem license:     "Eiffel Forum Freeware License v1 (see forum.txt)"
+rem date:        "$Date$"
+rem revision:    "$Revision$"
+
+
 rem usage: bootstrap.bat <c_compiler> <eiffel_compiler>
 
 
 set CC=%1
 set EIF=%2
-set CP=copy
-set RM=del
-set BIN_DIR=%GOBO%\bin
-set OBJ=.obj
-set EXE=.exe
 
+if .%GOBO%. == .. goto gobo
+if .%GOBO_OS%. == .. goto gobo_os
+if .%GOBO_OS%. == .windows. goto windows
+goto unix
+
+:gobo
+	echo Environment variable GOBO must be set
+	goto exit
+
+:gobo_os
+	echo Environment variable GOBO_OS must be set
+	goto exit
+
+:unix
+	set CP=cp
+	set MV=mv
+	set RM=rm
+	set OBJ=.o
+	set EXE=
+	goto c_compilation
+
+:windows
+	set CP=copy
+	set MV=rename
+	set RM=del
+	set BIN_DIR=%GOBO%\bin
+	set OBJ=.obj
+	set EXE=.exe
+	goto c_compilation
+
+:c_compilation
+
+set BIN_DIR=%GOBO%\bin
 cd %GOBO%\work\bootstrap
 
 if .%CC%. == .. goto usage
@@ -98,13 +134,43 @@ goto exit
 	goto install
 
 :install
+	if .%EIF%. == .ise. goto ise
+	if .%EIF%. == .hact. goto hact
+	if .%EIF%. == .se. goto se
+	if .%EIF%. == .ve. goto ve
+	echo Unknown Eiffel compiler: %EIF%
 	goto exit
 
+:ise
+	set GOBO_EIFFEL=ise
+	goto bootstrap
+
+:hact
+	set GOBO_EIFFEL=hact
+	goto bootstrap
+
+:se
+	set GOBO_EIFFEL=se
+	goto bootstrap
+
+:ve
+	set GOBO_EIFFEL=ve
+	goto bootstrap
+
 :bootstrap
+	cd %GOBO%
+	geant bootstrap1
+	cd %BIN_DIR%
+	%RM% geant%EXE%
+	%MV% geant1%EXE% geant%EXE%
+	cd %GOBO%
+	geant bootstrap2
 	goto exit
 
 :usage
 	echo "usage: bootstrap.bat <c_compiler> <eiffel_compiler>"
+	echo "   c_compiler:  cl | bcc32 | lcc | gcc | no_c"
+	echo "   elffel_compiler:  ise | hact | se | ve"
 	goto exit
   
 :exit
