@@ -578,6 +578,14 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
+	expanded_keyword: ET_KEYWORD is
+			-- 'expanded' keyword
+		once
+			create Result.make_expanded
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
 	export_keyword: ET_KEYWORD is
 			-- 'export' keyword
 		once
@@ -750,6 +758,14 @@ feature -- Keywords
 			-- 'redefine' keyword
 		once
 			create Result.make_redefine
+		ensure
+			keyword_not_void: Result /= Void
+		end
+
+	reference_keyword: ET_KEYWORD is
+			-- 'reference' keyword
+		once
+			create Result.make_reference
 		ensure
 			keyword_not_void: Result /= Void
 		end
