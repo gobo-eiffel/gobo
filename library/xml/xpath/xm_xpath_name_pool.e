@@ -54,6 +54,8 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
+	KL_IMPORTED_STRING_ROUTINES
+	
 creation
 	make
 
@@ -154,7 +156,7 @@ feature -- Access
 			until
 				counter > uris_used or found = True
 			loop
-				if uris.item (counter).is_equal (uri) then
+				if STRING_.same_string (uris.item (counter), uri) then
 					Result := counter - 1
 					found := True
 				end
@@ -195,7 +197,7 @@ feature -- Access
 					std.error.put_string (prefixes.item (counter))
 					std.error.put_new_line
 				end				
-				if prefixes.item (counter).is_equal (xml_prefix) then
+				if STRING_.same_string (prefixes.item (counter),xml_prefix) then
 					Result := counter - 1
 					found := True
 				end
@@ -344,7 +346,7 @@ feature -- Access
 			until
 				counter > uris_used or found = True
 			loop
-				if uris.item (counter).is_equal (uri) then
+				if STRING_.same_string (uris.item (counter), uri) then
 					uri_code := counter - 1
 					found := True
 				end
@@ -365,7 +367,7 @@ feature -- Access
 					until
 						finished = True
 					loop
-						if entry.local_name.is_equal (local_name) and entry.uri_code = uri_code then
+						if STRING_.same_string (entry.local_name, local_name) and entry.uri_code = uri_code then
 							finished := True
 						else
 							next := entry.next
@@ -438,7 +440,7 @@ feature -- Access
 			until
 				counter > uris_used or Result = True
 			loop
-				if uris.item (counter).is_equal (uri) then
+				if STRING_.same_string (uris.item (counter), uri) then
 					Result := True
 				end
 				counter := counter + 1
@@ -464,7 +466,7 @@ feature -- Access
 					std.error.put_string (prefixes.item (counter))
 					std.error.put_new_line
 				end				
-				if prefixes.item (counter).is_equal (xml_prefix) then
+				if STRING_.same_string (prefixes.item (counter), xml_prefix) then
 					Result := True
 				end
 				counter := counter + 1
@@ -536,7 +538,7 @@ feature -- Access
 								std.error.put_string (depth.out)
 								std.error.put_new_line
 							end
-							if the_name_entry.local_name.is_equal (local_name) and the_name_entry.uri_code = uri_code then
+							if STRING_.same_string (the_name_entry.local_name, local_name) and the_name_entry.uri_code = uri_code then
 								finished := True
 								Result := True
 							else
@@ -842,7 +844,7 @@ feature -- Element change
 				until
 					finished = True
 				loop
-					if the_name_entry.local_name.is_equal (local_name) and the_name_entry.uri_code = uri_code then
+					if STRING_.same_string (the_name_entry.local_name, local_name) and the_name_entry.uri_code = uri_code then
 						finished := True
 					else
 						next := the_name_entry.next
@@ -1064,7 +1066,7 @@ feature {NONE} -- Implementation
 					std.error.put_new_line
 				end				
 				count := the_prefixes.count
-				if count = xml_prefix.count + 1 and then the_prefixes.item (count).is_equal (' ') and then the_prefixes.substring (1, count - 1).is_equal (xml_prefix) then -- sole prefix
+				if count = xml_prefix.count + 1 and then the_prefixes.item (count).is_equal (' ') and then STRING_.same_string (the_prefixes.substring (1, count - 1), xml_prefix) then -- sole prefix
 					debug ("name pool")
 						std.error.put_string ("prefix_index: sole prefix - code 1%N")
 					end
@@ -1104,7 +1106,7 @@ feature {NONE} -- Implementation
 								std.error.put_string ((blank - 1).out)
 								std.error.put_new_line
 							end
-							if this_prefix.is_equal (xml_prefix) then
+							if STRING_.same_string (this_prefix, xml_prefix) then
 								debug ("name pool")
 									std.error.put_string ("prefix_index: prefix found%N")
 								end
