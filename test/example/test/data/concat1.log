@@ -1,0 +1,15 @@
+
+Testing xconcat1...
+Preparing Test Cases
+Compiling Test Cases
+Running Test Cases
+
+Test Summary for xconcat1
+
+# Passed:     0 test
+# FAILED:     1 test
+# Aborted:    0 test
+# Total:      1 test (2 assertions)
+
+Test Results:
+FAIL:  [TEST_CONCAT1.test_concat] foo+bar (expected: foobar but got: foofoo)
