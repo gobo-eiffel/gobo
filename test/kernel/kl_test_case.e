@@ -16,7 +16,9 @@ deferred class KL_TEST_CASE
 inherit
 
 	TS_TEST_CASE
+
 	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
 
 feature -- Filenames
 
