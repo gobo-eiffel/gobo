@@ -15,9 +15,6 @@ class
 
    XP_API
 
-inherit
-   KL_IMPORTED_STRING_BUFFER_ROUTINES
-
 feature {NONE} -- creating and destroying parsers
    
    exml_XML_ParserCreate (encoding: POINTER): POINTER is
@@ -137,7 +134,7 @@ feature {NONE} -- parsing
 	 result_ge_zero: Result >= 0
       end
 
-   exml_XML_Parse_string_buffer (parser_handle: POINTER; a_buffer: like STRING_BUFFER_TYPE; is_final: BOOLEAN): INTEGER  is
+   exml_XML_Parse_string_buffer (parser_handle: POINTER; a_buffer: KL_CHARACTER_BUFFER; is_final: BOOLEAN): INTEGER  is
          -- Parses some input. Returns 0 if a fatal error is 
          -- detected. The last call to XML_Parse must have isFinal 
          -- true; `a_buffer' may be empty
@@ -147,16 +144,16 @@ feature {NONE} -- parsing
       local
 #ifdef ISE
 	 c_str: ANY
-	 count: INTEGER
 #endif
       do
 #ifdef ISE
-	 count := STRING_BUFFER_.upper (a_buffer) - STRING_BUFFER_.lower
 	 c_str := $a_buffer
-	 Result := ext_exml_XML_Parse (parser_handle, $c_str, count, is_final)
+-- TO DO
+--	 Result := ext_exml_XML_Parse (parser_handle, $c_str, a_buffer.count, is_final)
 #endif
 #ifdef SE
-	Result := ext_exml_XML_Parse (parser_handle, a_buffer.to_external, a_buffer.count, is_final)
+-- TO DO
+--	Result := ext_exml_XML_Parse (parser_handle, a_buffer.to_pointer, a_buffer.count, is_final)
 #endif
       ensure
 	 result_ge_zero: Result >= 0
