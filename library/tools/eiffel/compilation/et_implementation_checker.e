@@ -15,22 +15,42 @@ class ET_IMPLEMENTATION_CHECKER
 inherit
 
 	ET_CLASS_PROCESSOR
+		rename
+			make as make_class_processor
 		redefine
-			make,
 			process_class
 		end
 
 creation
 
-	make
+	make, make_with_feature_checker
 
 feature {NONE} -- Initialization
 
 	make (a_universe: like universe) is
 			-- Create a new implementation checker for classes in `a_universe'.
+		require
+			a_universe_not_void: a_universe /= Void
 		do
-			precursor (a_universe)
+			make_class_processor (a_universe)
 			create feature_checker.make (a_universe)
+		ensure
+			universe_set: universe = a_universe
+		end
+
+	make_with_feature_checker (a_universe: like universe; a_feature_checker: like feature_checker) is
+			-- Create a new implementation checker for classes in `a_universe'
+			-- using `a_feature_checker' to check the feature implementation
+			-- and their assertions.
+		require
+			a_universe_not_void: a_universe /= Void
+			a_feature_checker_not_void: a_feature_checker /= Void
+		do
+			make_class_processor (a_universe)
+			feature_checker := a_feature_checker
+		ensure
+			universe_set: universe = a_universe
+			feature_checker_set: feature_checker = a_feature_checker
 		end
 
 feature -- Status report
