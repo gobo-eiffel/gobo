@@ -162,14 +162,10 @@ feature -- Basic operations
 			an_externals_not_void: an_externals /= Void
 		local
 			i, nb: INTEGER
-			a_library_externals: ET_XACE_EXTERNALS
 		do
 			nb := libraries.count
 			from i := 1 until i > nb loop
-				a_library_externals := libraries.item (i).library.externals
-				if a_library_externals /= Void then
-					an_externals.merge (a_library_externals)
-				end
+				libraries.item (i).library.merge_externals (an_externals)
 				i := i + 1
 			end
 		end

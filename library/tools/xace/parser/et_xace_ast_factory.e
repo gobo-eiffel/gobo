@@ -46,38 +46,6 @@ feature -- AST factory
 			clusters_not_void: Result /= Void
 		end
 
-	new_exported_class (a_name: STRING): ET_XACE_EXPORTED_CLASS is
-			-- New export clause
-		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: a_name.count > 0
-		do
-			!! Result.make (a_name)
-		ensure
-			exported_class_not_void: Result /= Void
-		end
-
-	new_exported_feature (a_feature_name, an_external_name: STRING): ET_XACE_EXPORTED_FEATURE is
-			-- New exported feature
-		require
-			a_feature_name_not_void: a_feature_name /= Void
-			a_feature_name_not_empty: a_feature_name.count > 0
-			an_external_name_not_void: an_external_name /= Void
-			an_external_name_not_void: an_external_name.count > 0
-		do
-			!! Result.make (a_feature_name, an_external_name)
-		ensure
-			exported_feature_not_void: Result /= Void
-		end
-
-	new_externals: ET_XACE_EXTERNALS is
-			-- New external clause
-		do
-			!! Result.make
-		ensure
-			externals_not_void: Result /= Void
-		end
-
 	new_library: ET_XACE_LIBRARY is
 			-- New Xace library
 		do
@@ -112,6 +80,30 @@ feature -- AST factory
 			!! Result.make
 		ensure
 			options_not_void: Result /= Void
+		end
+
+	new_class_options (a_name: STRING; an_option: ET_XACE_OPTIONS): ET_XACE_CLASS_OPTIONS is
+			-- New options for class `a_name'
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			an_option_not_void: an_option /= Void
+		do
+			!! Result.make (a_name, an_option)
+		ensure
+			class_options_not_void: Result /= Void
+		end
+
+	new_feature_options (a_name: STRING; an_option: ET_XACE_OPTIONS): ET_XACE_FEATURE_OPTIONS is
+			-- New options for feature `a_name'
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: a_name.count > 0
+			an_option_not_void: an_option /= Void
+		do
+			!! Result.make (a_name, an_option)
+		ensure
+			feature_options_not_void: Result /= Void
 		end
 
 	new_system (a_clusters: ET_XACE_CLUSTERS): ET_XACE_SYSTEM is

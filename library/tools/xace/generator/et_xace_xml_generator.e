@@ -86,7 +86,6 @@ feature {NONE} -- Output
 		local
 			a_clusters: ET_XACE_CLUSTERS
 			an_option: ET_XACE_OPTIONS
-			an_external: ET_XACE_EXTERNALS
 		do
 			a_file.put_line ("<?xml version=%"1.0%"?>")
 			a_file.put_new_line
@@ -107,10 +106,6 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, 1, a_file)
 			end
-			an_external := a_system.externals
-			if an_external /= Void then
-				print_externals (an_external, 1, a_file)
-			end
 			a_file.put_line ("</system>")
 		end
 
@@ -125,7 +120,6 @@ feature {NONE} -- Output
 		local
 			a_clusters: ET_XACE_CLUSTERS
 			an_option: ET_XACE_OPTIONS
-			an_external: ET_XACE_EXTERNALS
 		do
 			a_file.put_line ("<?xml version=%"1.0%"?>")
 			a_file.put_new_line
@@ -140,10 +134,6 @@ feature {NONE} -- Output
 			a_clusters := a_library.clusters
 			if a_clusters /= Void then
 				print_clusters (a_clusters, 1, a_file)
-			end
-			an_external := a_library.externals
-			if an_external /= Void then
-				print_externals (an_external, 1, a_file)
 			end
 			a_file.put_line ("</library>")
 		end
@@ -623,7 +613,7 @@ feature {NONE} -- Output
 		local
 			an_option: ET_XACE_OPTIONS
 			subclusters: ET_XACE_CLUSTERS
-			an_externals: ET_XACE_EXTERNALS
+			a_class_options: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
 			a_location: STRING
 		do
 			print_indentation (indent, a_file)
@@ -640,118 +630,76 @@ feature {NONE} -- Output
 				a_file.put_string ("%" relative=%"false")
 			end
 			an_option := a_cluster.options
+			a_class_options := a_cluster.class_options
 			subclusters := a_cluster.subclusters
-			an_externals := a_cluster.externals
-			if an_option = Void and subclusters = Void and an_externals = Void then
+			if an_option = Void and a_class_options = Void and subclusters = Void then
 				a_file.put_line ("%"/>")
 			else
 				a_file.put_line ("%">")
 				if an_option /= Void then
 					print_options (an_option, indent + 1, a_file)
 				end
+				if a_class_options /= Void then
+					print_class_options (a_class_options, indent + 1, a_file)
+				end
 				if subclusters /= Void then
 					print_clusters (subclusters, indent + 1, a_file)
-				end
-				if an_externals /= Void then
-					print_externals (an_externals, indent + 1, a_file)
 				end
 				print_indentation (indent, a_file)
 				a_file.put_line ("</cluster>")
 			end
 		end
 
-	print_externals (an_external: ET_XACE_EXTERNALS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print `an_external' to `a_file'.
+	print_class_options (an_option_list: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print class options `an_option_list' to `a_file'.
 		require
-			an_xternal_not_void: an_external /= Void
+			an_option_list_not_void: an_option_list /= Void
+			no_void_option: not an_option_list.has (Void)
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_EXPORTED_CLASS]
+			a_class_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_CLASS_OPTIONS]
+			a_class_options: ET_XACE_CLASS_OPTIONS
+			a_feature_options: DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]
 		do
-			print_indentation (indent, a_file)
-			a_file.put_line ("<external>")
-			a_cursor := an_external.exported_classes.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				print_exported_class (a_cursor.item, indent + 1, a_file)
-				a_cursor.forth
-			end
-			print_include_directories (an_external.include_directories, indent + 1, a_file)
-			print_link_libraries (an_external.link_libraries, indent + 1, a_file)
-			print_indentation (indent, a_file)
-			a_file.put_line ("</external>")
-		end
-
-	print_exported_class (a_class: ET_XACE_EXPORTED_CLASS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print `a_class' to `a_file'.
-		require
-			a_class_not_void: a_class /= Void
-			indent_positive: indent >= 0
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		local
-			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_EXPORTED_FEATURE]
-		do
-			print_indentation (indent, a_file)
-			a_file.put_string ("<export class=%"")
-			a_file.put_string (a_class.class_name)
-			if a_class.features.is_empty then
-				a_file.put_line ("%"/>")
-			else
+			a_class_cursor := an_option_list.new_cursor
+			from a_class_cursor.start until a_class_cursor.after loop
+				a_class_options := a_class_cursor.item
+				a_file.put_string ("<class name=%"")
+				a_file.put_string (a_class_options.class_name)
 				a_file.put_line ("%">")
-				a_cursor := a_class.features.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					print_indentation (indent + 1, a_file)
-					a_file.put_string ("<feature name=%"")
-					a_file.put_string (a_cursor.item.feature_name)
-					a_file.put_string ("%" alias=%"")
-					a_file.put_string (a_cursor.item.external_name)
-					a_file.put_string ("%"/>")
-					a_cursor.forth
+				print_options (a_class_options.options, indent + 1, a_file)
+				a_feature_options := a_class_options.feature_options
+				if a_feature_options /= Void then
+					print_feature_options (a_feature_options, indent + 1, a_file)
 				end
+				a_class_cursor.forth
+				a_file.put_line ("</class>")
 			end
 		end
 
-	print_include_directories (a_directories: DS_LINKED_LIST [STRING]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print `a_directories' to `a_file'.
+	print_feature_options (an_option_list: DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
+			-- Print feature options `an_option_list' to `a_file'.
 		require
-			a_directories_not_void: a_directories /= Void
-			no_void_directory: not a_directories.has (Void)
+			an_option_list_not_void: an_option_list /= Void
+			no_void_option: not an_option_list.has (Void)
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
+			a_feature_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_FEATURE_OPTIONS]
+			a_feature_options: ET_XACE_FEATURE_OPTIONS
 		do
-			a_cursor := a_directories.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				print_indentation (indent, a_file)
-				a_file.put_string ("<include_dir location=%"")
-				a_file.put_string (a_cursor.item)
-				a_file.put_line ("%"/>")
-				a_cursor.forth
-			end
-		end
-
-	print_link_libraries (a_libraries: DS_LINKED_LIST [STRING]; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print `a_libraries' to `a_file'.
-		require
-			a_libraries_not_void: a_libraries /= Void
-			no_void_library: not a_libraries.has (Void)
-			indent_positive: indent >= 0
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		local
-			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
-		do
-			a_cursor := a_libraries.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				print_indentation (indent, a_file)
-				a_file.put_string ("<link_library location=%"")
-				a_file.put_string (a_cursor.item)
-				a_file.put_line ("%"/>")
-				a_cursor.forth
+			a_feature_cursor := an_option_list.new_cursor
+			from a_feature_cursor.start until a_feature_cursor.after loop
+				a_feature_options := a_feature_cursor.item
+				a_file.put_string ("<feature name=%"")
+				a_file.put_string (a_feature_options.feature_name)
+				a_file.put_line ("%">")
+				print_options (a_feature_options.options, indent + 1, a_file)
+				a_feature_cursor.forth
+				a_file.put_line ("</feature>")
 			end
 		end
 

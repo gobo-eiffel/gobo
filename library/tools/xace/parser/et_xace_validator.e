@@ -145,6 +145,9 @@ feature {NONE} -- Validation
 				elseif a_child.name.is_equal (uc_option) then
 					validate_option (a_child, a_position_table)
 				elseif a_child.name.is_equal (uc_external) then
+						-- Old syntax.
+					!! a_warning.make ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N" + a_position_table.item (a_child).out)
+					error_handler.report_warning (a_warning)
 					validate_external (a_child, a_position_table)
 				else
 					has_error := True
@@ -164,6 +167,7 @@ feature {NONE} -- Validation
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
+			a_warning: UT_MESSAGE
 		do
 			if not a_library.has_attribute_by_name (uc_name) then
 				has_error := True
@@ -183,6 +187,9 @@ feature {NONE} -- Validation
 				elseif a_child.name.is_equal (uc_option) then
 					validate_option (a_child, a_position_table)
 				elseif a_child.name.is_equal (uc_external) then
+						-- Old syntax.
+					!! a_warning.make ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N" + a_position_table.item (a_child).out)
+					error_handler.report_warning (a_warning)
 					validate_external (a_child, a_position_table)
 				else
 					has_error := True
@@ -235,6 +242,7 @@ feature {NONE} -- Validation
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
+			a_warning: UT_MESSAGE
 		do
 			a_cursor := a_cluster.new_cursor
 			from a_cursor.start until a_cursor.after loop
@@ -249,11 +257,78 @@ feature {NONE} -- Validation
 					validate_mount (a_child, a_position_table)
 				elseif a_child.name.is_equal (uc_option) then
 					validate_option (a_child, a_position_table)
+				elseif a_child.name.is_equal (uc_class) then
+					validate_class (a_child, a_position_table)
 				elseif a_child.name.is_equal (uc_external) then
+						-- Old syntax.
+					!! a_warning.make ("Warning: <external> is obsolete, use <option name=%"header/link/export%" ...> instead%N" + a_position_table.item (a_child).out)
+					error_handler.report_warning (a_warning)
 					validate_external (a_child, a_position_table)
 				else
 					has_error := True
 					error_handler.report_unknown_element_error (a_cluster, a_child, a_position_table.item (a_child))
+				end
+				a_cursor.forth
+			end
+		end
+
+	validate_class (a_class: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+			-- Check whether `a_class' is a valid Xace 'class' element.
+			-- Set `has_error' to True if not.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_class: a_class.name.is_equal (uc_class)
+			a_position_table_not_void: a_position_table /= Void
+		local
+			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			a_child: XM_ELEMENT
+		do
+			if not a_class.has_attribute_by_name (uc_name) then
+				has_error := True
+				error_handler.report_missing_attribute_error (a_class, uc_name, a_position_table.item (a_class))
+			end
+			a_cursor := a_class.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_child ?= a_cursor.item
+				if a_child = Void then
+						-- Not an element. Ignore.
+				elseif a_child.name.is_equal (uc_option) then
+					validate_option (a_child, a_position_table)
+				elseif a_child.name.is_equal (uc_feature) then
+					validate_feature (a_child, a_position_table)
+				else
+					has_error := True
+					error_handler.report_unknown_element_error (a_class, a_child, a_position_table.item (a_child))
+				end
+				a_cursor.forth
+			end
+		end
+
+	validate_feature (a_feature: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+			-- Check whether `a_feature' is a valid Xace 'feature' element.
+			-- Set `has_error' to True if not.
+		require
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_feature: a_feature.name.is_equal (uc_feature)
+			a_position_table_not_void: a_position_table /= Void
+		local
+			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			a_child: XM_ELEMENT
+		do
+			if not a_feature.has_attribute_by_name (uc_name) then
+				has_error := True
+				error_handler.report_missing_attribute_error (a_feature, uc_name, a_position_table.item (a_feature))
+			end
+			a_cursor := a_feature.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_child ?= a_cursor.item
+				if a_child = Void then
+						-- Not an element. Ignore.
+				elseif a_child.name.is_equal (uc_option) then
+					validate_option (a_child, a_position_table)
+				else
+					has_error := True
+					error_handler.report_unknown_element_error (a_feature, a_child, a_position_table.item (a_child))
 				end
 				a_cursor.forth
 			end

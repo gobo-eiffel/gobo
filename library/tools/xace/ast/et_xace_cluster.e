@@ -95,8 +95,8 @@ feature -- Access
 	options: ET_XACE_OPTIONS
 			-- Options
 
-	externals: ET_XACE_EXTERNALS
-			-- External clause
+	class_options: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
+			-- Class options
 
 feature -- Status report
 
@@ -129,14 +129,6 @@ feature -- Setting
 			options_set: options = an_options
 		end
 
-	set_externals (an_externals: like externals) is
-			-- Set `externals' to `an_externals'.
-		do
-			externals := an_externals
-		ensure
-			externals_set: externals = an_externals
-		end
-
 	set_library_prefix (a_prefix: STRING) is
 			-- Set `library_prefix' to `a_prefix',
 			-- and recursively in the subclusters.
@@ -159,6 +151,19 @@ feature -- Setting
 			cluster_prefix := a_prefix
 		ensure
 			cluster_prefix_set: cluster_prefix = a_prefix
+		end
+
+feature -- Element change
+
+	put_class_option (an_option: ET_XACE_CLASS_OPTIONS) is
+			-- Add `an_option' to `class_options'.
+		require
+			an_option_not_void: an_option /= Void
+		do
+			if class_options = Void then
+				!! class_options.make
+			end
+			class_options.put_last (an_option)
 		end
 
 feature -- Status setting
@@ -188,17 +193,93 @@ feature -- Basic operations
 			end
 		end
 
-	merge_externals (an_externals: like externals) is
-			-- Merge current cluster's externals to `an_externals'.
+	merge_externals (an_externals: ET_XACE_EXTERNALS) is
+			-- Merge current cluster's externals and those
+			-- of subclusters to `an_externals'.
 		require
 			an_externals_not_void: an_externals /= Void
+		local
+			a_cursor: DS_HASH_SET_CURSOR [STRING]
 		do
-			if externals /= Void then
-				an_externals.merge (externals)
+			if options /= Void then
+				a_cursor := options.header.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					an_externals.put_include_directory (a_cursor.item)
+					a_cursor.forth
+				end
+				a_cursor := options.link.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					an_externals.put_link_library (a_cursor.item)
+					a_cursor.forth
+				end
 			end
 			if subclusters /= Void then
 				subclusters.merge_externals (an_externals)
 			end
+		end
+
+	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE]) is
+			-- Merge current cluster's exported features and those
+			-- of subclusters to `an_export'.
+		require
+			an_export_not_void: an_export /= Void
+			no_void_export: not an_export.has (Void)
+		local
+			an_exported_feature: ET_XACE_EXPORTED_FEATURE
+			a_class_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_CLASS_OPTIONS]
+			a_class_options: ET_XACE_CLASS_OPTIONS
+			a_feature_options_list: DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]
+			a_feature_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_FEATURE_OPTIONS]
+			a_feature_options: ET_XACE_FEATURE_OPTIONS
+			an_options: ET_XACE_OPTIONS
+		do
+			if class_options /= Void then
+				a_class_cursor := class_options.new_cursor
+				from a_class_cursor.start until a_class_cursor.after loop
+					a_class_options := a_class_cursor.item
+					a_feature_options_list := a_class_options.feature_options
+					if a_feature_options_list /= Void then
+						a_feature_cursor := a_feature_options_list.new_cursor
+						from a_feature_cursor.start until a_feature_cursor.after loop
+							a_feature_options := a_feature_cursor.item
+							an_options := a_feature_options.options
+							if an_options.is_export_option_declared then
+								!! an_exported_feature.make (a_class_options.class_name, a_feature_options.feature_name, an_options.export_option)
+								an_export.force_last (an_exported_feature)
+							end
+							a_feature_cursor.forth
+						end
+					end
+					a_class_cursor.forth
+				end
+			end
+			if subclusters /= Void then
+				subclusters.merge_exported_features (an_export)
+			end
+		ensure
+			no_void_export: not an_export.has (Void)
+		end
+
+	merge_components (a_components: DS_LIST [ET_XACE_COMPONENT]) is
+			-- Merge current cluster's components and those
+			-- of subclusters to `a_components'.
+		require
+			a_components_not_void: a_components /= Void
+			no_void_component: not a_components.has (Void)
+		local
+			a_component: ET_XACE_COMPONENT
+		do
+			if options /= Void then
+				if options.is_component_declared then
+					!! a_component.make (name, options.component)
+					a_components.force_last (a_component)
+				end
+			end
+			if subclusters /= Void then
+				subclusters.merge_components (a_components)
+			end
+		ensure
+			no_void_component: not a_components.has (Void)
 		end
 
 feature {NONE} -- Implementation
@@ -252,5 +333,6 @@ invariant
 
 	library_prefix_not_void: library_prefix /= Void
 	cluster_prefix_not_void: cluster_prefix /= Void
+	no_void_class_option: class_options /= Void implies not class_options.has (Void)
 
 end

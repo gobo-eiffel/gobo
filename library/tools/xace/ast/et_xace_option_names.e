@@ -33,6 +33,7 @@ feature -- Option names
 	dynamic_runtime_name: STRING is "dynamic_runtime"
 	exception_trace_name: STRING is "exception_trace"
 	exclude_name: STRING is "exclude"
+	export_option_name: STRING is "export"
 	finalize_name: STRING is "finalize"
 	flat_fst_optimization_name: STRING is "flat_fst_optimization"
 	fst_expansion_factor_name: STRING is "fst_expansion_factor"
@@ -40,13 +41,16 @@ feature -- Option names
 	garbage_collector_name: STRING is "garbage_collector"
 	gc_info_name: STRING is "gc_info"
 	heap_size_name: STRING is "heap_size"
+	header_name: STRING is "header"
 	high_memory_compiler_name: STRING is "high_memory_compiler"
+	include_name: STRING is "include"
 	inlining_name: STRING is "inlining"
 	inlining_size_name: STRING is "inlining_size"
 	jumps_optimization_name: STRING is "jumps_optimization"
 	layout_optimization_name: STRING is "layout_optimization"
 	leaves_optimization_name: STRING is "leaves_optimization"
 	line_generation_name: STRING is "line_generation"
+	link_name: STRING is "link"
 	linker_name: STRING is "linker"
 	linux_fpu_double_precision_name: STRING is "linux_fpu_double_precision"
 	manifest_string_trace_name: STRING is "manifest_string_trace"
@@ -62,6 +66,7 @@ feature -- Option names
 	shared_library_definition_name: STRING is "shared_library_definition"
 	split_name: STRING is "split"
 	stack_size_name: STRING is "stack_size"
+	storable_name: STRING is "storable"
 	storable_filename_name: STRING is "storable_filename"
 	strip_option_name: STRING is "strip"
 	target_name: STRING is "target"
@@ -92,6 +97,7 @@ feature -- Option codes
 	dynamic_runtime_code: INTEGER is unique
 	exception_trace_code: INTEGER is unique
 	exclude_code: INTEGER is unique
+	export_option_code: INTEGER is unique
 	finalize_code: INTEGER is unique
 	flat_fst_optimization_code: INTEGER is unique
 	fst_expansion_factor_code: INTEGER is unique
@@ -99,13 +105,16 @@ feature -- Option codes
 	garbage_collector_code: INTEGER is unique
 	gc_info_code: INTEGER is unique
 	heap_size_code: INTEGER is unique
+	header_code: INTEGER is unique
 	high_memory_compiler_code: INTEGER is unique
+	include_code: INTEGER is unique
 	inlining_code: INTEGER is unique
 	inlining_size_code: INTEGER is unique
 	jumps_optimization_code: INTEGER is unique
 	layout_optimization_code: INTEGER is unique
 	leaves_optimization_code: INTEGER is unique
 	line_generation_code: INTEGER is unique
+	link_code: INTEGER is unique
 	linker_code: INTEGER is unique
 	linux_fpu_double_precision_code: INTEGER is unique
 	manifest_string_trace_code: INTEGER is unique
@@ -121,6 +130,7 @@ feature -- Option codes
 	shared_library_definition_code: INTEGER is unique
 	split_code: INTEGER is unique
 	stack_size_code: INTEGER is unique
+	storable_code: INTEGER is unique
 	storable_filename_code: INTEGER is unique
 	strip_option_code: INTEGER is unique
 	target_code: INTEGER is unique
@@ -133,7 +143,7 @@ feature -- Option codes
 	option_codes: DS_HASH_TABLE [INTEGER, STRING] is
 			-- Mapping option names -> option codes
 		once
-			!! Result.make_equal (56)
+			!! Result.make_equal (61)
 			Result.put_new (abstract_code, abstract_name)
 			Result.put_new (address_expression_code, address_expression_name)
 			Result.put_new (arguments_code, arguments_name)
@@ -153,6 +163,7 @@ feature -- Option codes
 			Result.put_new (dynamic_runtime_code, dynamic_runtime_name)
 			Result.put_new (exception_trace_code, exception_trace_name)
 			Result.put_new (exclude_code, exclude_name)
+			Result.put_new (export_option_code, export_option_name)
 			Result.put_new (finalize_code, finalize_name)
 			Result.put_new (flat_fst_optimization_code, flat_fst_optimization_name)
 			Result.put_new (fst_expansion_factor_code, fst_expansion_factor_name)
@@ -160,13 +171,16 @@ feature -- Option codes
 			Result.put_new (garbage_collector_code, garbage_collector_name)
 			Result.put_new (gc_info_code, gc_info_name)
 			Result.put_new (heap_size_code, heap_size_name)
+			Result.put_new (header_code, header_name)
 			Result.put_new (high_memory_compiler_code, high_memory_compiler_name)
+			Result.put_new (include_code, include_name)
 			Result.put_new (inlining_code, inlining_name)
 			Result.put_new (inlining_size_code, inlining_size_name)
 			Result.put_new (jumps_optimization_code, jumps_optimization_name)
 			Result.put_new (layout_optimization_code, layout_optimization_name)
 			Result.put_new (leaves_optimization_code, leaves_optimization_name)
 			Result.put_new (line_generation_code, line_generation_name)
+			Result.put_new (link_code, link_name)
 			Result.put_new (linker_code, linker_name)
 			Result.put_new (linux_fpu_double_precision_code, linux_fpu_double_precision_name)
 			Result.put_new (manifest_string_trace_code, manifest_string_trace_name)
@@ -182,6 +196,7 @@ feature -- Option codes
 			Result.put_new (shared_library_definition_code, shared_library_definition_name)
 			Result.put_new (split_code, split_name)
 			Result.put_new (stack_size_code, stack_size_name)
+			Result.put_new (storable_code, storable_name)
 			Result.put_new (storable_filename_code, storable_filename_name)
 			Result.put_new (strip_option_code, strip_option_name)
 			Result.put_new (target_code, target_name)

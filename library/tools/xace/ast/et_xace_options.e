@@ -185,6 +185,14 @@ feature -- Status report
 			definition: Result = (declared_exclude /= Void and then not declared_exclude.is_empty)
 		end
 
+	is_export_option_declared: BOOLEAN is
+			-- Has 'export' option been declared?
+		do
+			Result := declared_export_option /= Void
+		ensure
+			definition: Result = (declared_export_option /= Void)
+		end
+
 	is_finalize_declared: BOOLEAN is
 			-- Has 'finalize' option been declared?
 		do
@@ -241,12 +249,28 @@ feature -- Status report
 			definition: Result = (declared_heap_size >= 0)
 		end
 
+	is_header_declared: BOOLEAN is
+			-- Has 'header' option been declared?
+		do
+			Result := declared_header /= Void and then not declared_header.is_empty
+		ensure
+			definition: Result = (declared_header /= Void and then not declared_header.is_empty)
+		end
+
 	is_high_memory_compiler_declared: BOOLEAN is
 			-- Has 'high_memory_compiler' option been declared?
 		do
 			Result := declared_high_memory_compiler /= Void and then not declared_high_memory_compiler.is_undefined
 		ensure
 			definition: Result = (declared_high_memory_compiler /= Void and then not declared_high_memory_compiler.is_undefined)
+		end
+
+	is_include_declared: BOOLEAN is
+			-- Has 'include' option been declared?
+		do
+			Result := declared_include /= Void and then not declared_include.is_empty
+		ensure
+			definition: Result = (declared_include /= Void and then not declared_include.is_empty)
 		end
 
 	is_inlining_declared: BOOLEAN is
@@ -295,6 +319,14 @@ feature -- Status report
 			Result := declared_line_generation /= Void and then not declared_line_generation.is_undefined
 		ensure
 			definition: Result = (declared_line_generation /= Void and then not declared_line_generation.is_undefined)
+		end
+
+	is_link_declared: BOOLEAN is
+			-- Has 'link' option been declared?
+		do
+			Result := declared_link /= Void and then not declared_link.is_empty
+		ensure
+			definition: Result = (declared_link /= Void and then not declared_link.is_empty)
 		end
 
 	is_linker_declared: BOOLEAN is
@@ -415,6 +447,14 @@ feature -- Status report
 			Result := declared_stack_size >= 0
 		ensure
 			definition: Result = (declared_stack_size >= 0)
+		end
+
+	is_storable_declared: BOOLEAN is
+			-- Has 'storable' option been declared?
+		do
+			Result := declared_storable /= Void and then not declared_storable.is_undefined
+		ensure
+			definition: Result = (declared_storable /= Void and then not declared_storable.is_undefined)
 		end
 
 	is_storable_filename_declared: BOOLEAN is
@@ -688,6 +728,16 @@ feature -- Option values
 			no_void_exclude: not Result.has (Void)
 		end
 
+	export_option: STRING is
+			-- 'export' option
+		do
+			if is_export_option_declared then
+				Result := declared_export_option
+			else
+				Result := default_export_option
+			end
+		end
+
 	finalize: BOOLEAN is
 			-- 'finalize' option
 		do
@@ -762,6 +812,19 @@ feature -- Option values
 			end
 		end
 
+	header: DS_HASH_SET [STRING] is
+			-- 'header' option
+		do
+			if is_header_declared then
+				Result := declared_header
+			else
+				Result := default_header
+			end
+		ensure
+			header_not_void: Result /= Void
+			no_void_header: not Result.has (Void)
+		end
+
 	high_memory_compiler: BOOLEAN is
 			-- 'high_memory_compiler' option
 		do
@@ -770,6 +833,19 @@ feature -- Option values
 			else
 				Result := default_high_memory_compiler
 			end
+		end
+
+	include: DS_HASH_SET [STRING] is
+			-- 'include' option
+		do
+			if is_include_declared then
+				Result := declared_include
+			else
+				Result := default_include
+			end
+		ensure
+			include_not_void: Result /= Void
+			no_void_include: not Result.has (Void)
 		end
 
 	inlining: DS_HASH_SET [STRING] is
@@ -835,6 +911,19 @@ feature -- Option values
 			else
 				Result := default_line_generation
 			end
+		end
+
+	link: DS_HASH_SET [STRING] is
+			-- 'link' option
+		do
+			if is_link_declared then
+				Result := declared_link
+			else
+				Result := default_link
+			end
+		ensure
+			link_not_void: Result /= Void
+			no_void_link: not Result.has (Void)
 		end
 
 	linker: STRING is
@@ -986,6 +1075,16 @@ feature -- Option values
 				Result := declared_stack_size
 			else
 				Result := default_stack_size
+			end
+		end
+
+	storable: BOOLEAN is
+			-- 'storable' option
+		do
+			if is_storable_declared then
+				Result := declared_storable.is_true
+			else
+				Result := default_storable
 			end
 		end
 
@@ -1360,6 +1459,17 @@ feature -- Status setting
 			exclude_set: exclude.has (a_value)
 		end
 
+	set_export_option (a_value: STRING) is
+			-- Set `export_option' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			declared_export_option := a_value
+		ensure
+			export_option_declared: is_export_option_declared
+			export_option_set: export_option = a_value
+		end
+
 	set_finalize (b: BOOLEAN) is
 			-- Set `finalize' to `b'.
 		do
@@ -1457,6 +1567,20 @@ feature -- Status setting
 			heap_size_set: heap_size = v
 		end
 
+	set_header (a_value: STRING) is
+			-- Set `header' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			if declared_header = Void then
+				!! declared_header.make_equal (10)
+			end
+			declared_header.force_last (a_value)
+		ensure
+			header_declared: is_header_declared
+			header_set: header.has (a_value)
+		end
+
 	set_high_memory_compiler (b: BOOLEAN) is
 			-- Set `high_memory_compiler' to `b'.
 		do
@@ -1471,6 +1595,20 @@ feature -- Status setting
 		ensure
 			high_memory_compiler_declared: is_high_memory_compiler_declared
 			high_memory_compiler_set: high_memory_compiler = b
+		end
+
+	set_include (a_value: STRING) is
+			-- Set `include' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			if declared_include = Void then
+				!! declared_include.make_equal (10)
+			end
+			declared_include.force_last (a_value)
+		ensure
+			include_declared: is_include_declared
+			include_set: include.has (a_value)
 		end
 
 	set_inlining (a_value: STRING) is
@@ -1560,6 +1698,20 @@ feature -- Status setting
 		ensure
 			line_generation_declared: is_line_generation_declared
 			line_generation_set: line_generation = b
+		end
+
+	set_link (a_value: STRING) is
+			-- Set `link' to `a_value'.
+		require
+			a_value_not_void: a_value /= Void
+		do
+			if declared_link = Void then
+				!! declared_link.make_equal (10)
+			end
+			declared_link.force_last (a_value)
+		ensure
+			link_declared: is_link_declared
+			link_set: link.has (a_value)
 		end
 
 	set_linker (a_value: STRING) is
@@ -1775,6 +1927,22 @@ feature -- Status setting
 		ensure
 			stack_size_declared: is_stack_size_declared
 			stack_size_set: stack_size = v
+		end
+
+	set_storable (b: BOOLEAN) is
+			-- Set `storable' to `b'.
+		do
+			if declared_storable = Void then
+				!! declared_storable.make_undefined
+			end
+			if b then
+				declared_storable.set_true
+			else
+				declared_storable.set_false
+			end
+		ensure
+			storable_declared: is_storable_declared
+			storable_set: storable = b
 		end
 
 	set_storable_filename (a_value: STRING) is
@@ -2054,6 +2222,9 @@ feature -- Declared values
 	declared_exclude: DS_HASH_SET [STRING]
 			-- Declared values for 'exclude' option
 
+	declared_export_option: STRING
+			-- Declared value for 'export' option
+
 	declared_finalize: UT_TRISTATE
 			-- Declared value for 'finalize' option
 
@@ -2075,8 +2246,14 @@ feature -- Declared values
 	declared_heap_size: INTEGER
 			-- Declared value for 'heap_size' option
 
+	declared_header: DS_HASH_SET [STRING]
+			-- Declared values for 'header' option
+
 	declared_high_memory_compiler: UT_TRISTATE
 			-- Declared value for 'high_memory_compiler' option
+
+	declared_include: DS_HASH_SET [STRING]
+			-- Declared values for 'include' option
 
 	declared_inlining: DS_HASH_SET [STRING]
 			-- Declared values for 'inlining' option
@@ -2095,6 +2272,9 @@ feature -- Declared values
 
 	declared_line_generation: UT_TRISTATE
 			-- Declared value for 'line_generation' option
+
+	declared_link: DS_HASH_SET [STRING]
+			-- Declared values for 'link' option
 
 	declared_linker: STRING
 			-- Declared value for 'linker' option
@@ -2140,6 +2320,9 @@ feature -- Declared values
 
 	declared_stack_size: INTEGER
 			-- Declared value for 'stack_size' option
+
+	declared_storable: UT_TRISTATE
+			-- Declared value for 'storable' option
 
 	declared_storable_filename: STRING
 			-- Declared value for 'storable_filename' option
@@ -2262,6 +2445,12 @@ feature -- Default values
 			no_void_exclude: not Result.has (Void)
 		end
 
+	default_export_option: STRING is
+			-- Default value for 'export' option
+		once
+			Result := Void
+		end
+
 	default_finalize: BOOLEAN is False
 			-- Default value for 'finalize' option
 
@@ -2288,8 +2477,26 @@ feature -- Default values
 	default_heap_size: INTEGER is -1
 			-- Default value for 'heap_size' option
 
+	default_header: DS_HASH_SET [STRING] is
+			-- Default value for 'header' option
+		once
+			!! Result.make_equal (0)
+		ensure
+			default_header_not_void: Result /= Void
+			no_void_header: not Result.has (Void)
+		end
+
 	default_high_memory_compiler: BOOLEAN is False
 			-- Default value for 'high_memory_compiler' option
+
+	default_include: DS_HASH_SET [STRING] is
+			-- Default value for 'include' option
+		once
+			!! Result.make_equal (0)
+		ensure
+			default_include_not_void: Result /= Void
+			no_void_include: not Result.has (Void)
+		end
 
 	default_inlining: DS_HASH_SET [STRING] is
 			-- Default value for 'inlining' option
@@ -2315,6 +2522,15 @@ feature -- Default values
 
 	default_line_generation: BOOLEAN is False
 			-- Default value for 'line_generation' option
+
+	default_link: DS_HASH_SET [STRING] is
+			-- Default value for 'link' option
+		once
+			!! Result.make_equal (0)
+		ensure
+			default_link_not_void: Result /= Void
+			no_void_link: not Result.has (Void)
+		end
 
 	default_linker: STRING is
 			-- Default value for 'linker' option
@@ -2374,6 +2590,9 @@ feature -- Default values
 
 	default_stack_size: INTEGER is -1
 			-- Default value for 'stack_size' option
+
+	default_storable: BOOLEAN is False
+			-- Default value for 'storable' option
 
 	default_storable_filename: STRING is
 			-- Default value for 'storable_filename' option

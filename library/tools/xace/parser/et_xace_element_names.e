@@ -40,7 +40,7 @@ feature -- Constants
 		end
 
 	uc_class: UC_STRING is
-			-- "class" attribute name
+			-- "class" element/attribute name
 		once
 			Result := new_unicode_string ("class")
 		ensure

@@ -40,7 +40,6 @@ feature -- Output
 		local
 			a_filename: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
-			an_externals: ET_XACE_EXTERNALS
 		do
 			if output_filename /= Void then
 				a_filename := output_filename
@@ -50,14 +49,8 @@ feature -- Output
 			!! a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				an_externals := a_system.externals
-				if an_externals /= Void then
-					an_externals := an_externals.cloned_externals
-				end
-				a_system.merge_externals
 				print_ace_file (a_system, a_file)
 				a_file.close
-				a_system.set_externals (an_externals)
 			else
 				error_handler.report_cannot_write_file_error (a_filename)
 			end
@@ -68,7 +61,6 @@ feature -- Output
 		local
 			a_filename: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
-			an_externals: ET_XACE_EXTERNALS
 		do
 			if output_filename /= Void then
 				a_filename := output_filename
@@ -78,14 +70,8 @@ feature -- Output
 			!! a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				an_externals := a_library.externals
-				if an_externals /= Void then
-					an_externals := an_externals.cloned_externals
-				end
-				a_library.merge_externals
 				print_precompile_ace_file (a_library, a_file)
 				a_file.close
-				a_library.set_externals (an_externals)
 			else
 				error_handler.report_cannot_write_file_error (a_filename)
 			end
@@ -137,15 +123,11 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, 1, a_file)
 				a_file.put_new_line
-				if print_components (a_clusters, False, a_file) then
-					a_file.put_new_line
-				end
+				print_components (a_clusters, a_file)
 			end
-			an_external := a_system.externals
-			if
-				an_external /= Void and then
-				(an_external.has_include_directories or an_external.has_link_libraries)
-			then
+			!! an_external.make
+			a_system.merge_externals (an_external)
+			if an_external.has_include_directories or an_external.has_link_libraries then
 				a_file.put_line ("external")
 				a_file.put_new_line
 				print_include_directories (an_external.include_directories, a_file)
@@ -192,15 +174,11 @@ feature {NONE} -- Output
 			if a_clusters /= Void then
 				print_clusters (a_clusters, 1, a_file)
 				a_file.put_new_line
-				if print_components (a_clusters, False, a_file) then
-					a_file.put_new_line
-				end
+				print_components (a_clusters, a_file)
 			end
-			an_external := a_library.externals
-			if
-				an_external /= Void and then
-				(an_external.has_include_directories or an_external.has_link_libraries)
-			then
+			!! an_external.make
+			a_library.merge_externals (an_external)
+			if an_external.has_include_directories or an_external.has_link_libraries then
 				a_file.put_line ("external")
 				a_file.put_new_line
 				print_include_directories (an_external.include_directories, a_file)
@@ -209,56 +187,34 @@ feature {NONE} -- Output
 			a_file.put_line ("end")
 		end
 
-	print_components (a_clusters: ET_XACE_CLUSTERS; keyword_printed: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN is
+	print_components (a_clusters: ET_XACE_CLUSTERS; a_file: KI_TEXT_OUTPUT_STREAM) is
 			-- Print to `a_file' the component clause for
 			-- `a_clusters' and recursively their subclusters.
-			-- Return True if the keyword 'component' has been printed.
 		require
 			a_clusters_not_void: a_clusters /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			i, nb: INTEGER
-			cluster_list: DS_ARRAYED_LIST [ET_XACE_CLUSTER]
+			a_components: DS_LINKED_LIST [ET_XACE_COMPONENT]
+			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_COMPONENT]
+			a_component: ET_XACE_COMPONENT
 		do
-			Result := keyword_printed
-			cluster_list := a_clusters.clusters
-			nb := cluster_list.count
-			from i := 1 until i > nb loop
-				Result := print_component (cluster_list.item (i), Result, a_file)
-				i := i + 1
-			end
-		end
-
-	print_component (a_cluster: ET_XACE_CLUSTER; keyword_printed: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN is
-			-- Print to `a_file' the component clause for
-			-- `a_cluster' and recursively its subclusters.
-			-- Return True if the keyword 'component' has been printed.
-		require
-			a_cluster_not_void: a_cluster /= Void
-			a_file_not_void: a_file /= Void
-			a_file_open_write: a_file.is_open_write
-		local
-			an_option: ET_XACE_OPTIONS
-			subclusters: ET_XACE_CLUSTERS
-		do
-			Result := keyword_printed
-			an_option := a_cluster.options
-			if an_option /= Void and then an_option.is_component_declared then
-				if not Result then
-					a_file.put_line ("component")
-					a_file.put_new_line
-					Result := True
+			!! a_components.make
+			a_clusters.merge_components (a_components)
+			if not a_components.is_empty then
+				a_file.put_line ("component")
+				a_file.put_new_line
+				a_cursor := a_components.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_component := a_cursor.item
+					print_indentation (1, a_file)
+					print_escaped_name (a_component.cluster_name, a_file)
+					a_file.put_string (": %"")
+					a_file.put_string (a_component.pathname)
+					a_file.put_line ("%";")
+					a_cursor.forth
 				end
-				print_indentation (1, a_file)
-				print_escaped_name (a_cluster.name, a_file)
-				a_file.put_string (": %"")
-				a_file.put_string (an_option.component)
-				a_file.put_line ("%";")
-			end
-			subclusters := a_cluster.subclusters
-			if subclusters /= Void then
-				Result := print_components (subclusters, Result, a_file)
+				a_file.put_new_line
 			end
 		end
 
@@ -529,11 +485,8 @@ feature {NONE} -- Output
 			an_option: ET_XACE_OPTIONS
 			subclusters: ET_XACE_CLUSTERS
 			need_end_keyword: BOOLEAN
-			has_default_keyword: BOOLEAN
-			an_externals: ET_XACE_EXTERNALS
-			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_EXPORTED_CLASS]
-			an_exclude: DS_HASH_SET [STRING]
-			an_exclude_cursor: DS_HASH_SET_CURSOR [STRING]
+			a_class_options: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS]
+			all_storable: BOOLEAN
 		do
 			if not a_cluster.is_fully_abstract then
 				print_indentation (indent, a_file)
@@ -550,70 +503,34 @@ feature {NONE} -- Output
 				end
 				an_option := a_cluster.options
 				if an_option /= Void then
-					if an_option.is_exclude_declared then
-						an_exclude := an_option.exclude
-						if not an_exclude.is_empty then
-							if not need_end_keyword then
-								a_file.put_new_line
-								need_end_keyword := True
-							end
-							print_indentation (indent + 1, a_file)
-							a_file.put_line ("exclude")
-							an_exclude_cursor := an_exclude.new_cursor
-							from
-								an_exclude_cursor.start
-								print_indentation (indent + 2, a_file)
-								a_file.put_character ('%"')
-								a_file.put_string (an_exclude_cursor.item)
-								a_file.put_character ('%"')
-								an_exclude_cursor.forth
-							until
-								an_exclude_cursor.after
-							loop
-								a_file.put_character (';')
-								a_file.put_new_line
-								print_indentation (indent + 2, a_file)
-								a_file.put_character ('%"')
-								a_file.put_string (an_exclude_cursor.item)
-								a_file.put_character ('%"')
-								an_exclude_cursor.forth
-							end
-							a_file.put_new_line
-						end
+					if an_option.is_storable_declared then
+						all_storable := an_option.storable
 					end
-					has_default_keyword := print_cluster_options (an_option, indent + 1, not need_end_keyword, a_file)
-					if not need_end_keyword then
-						need_end_keyword := has_default_keyword
-					end
+					need_end_keyword := need_end_keyword or print_cluster_options (an_option, indent + 1, a_file)
 				end
-				an_externals := a_cluster.externals
-				if an_externals /= Void and then not an_externals.exported_classes.is_empty then
-					if not need_end_keyword then
-						a_file.put_new_line
-						need_end_keyword := True
-					end
+				a_class_options := a_cluster.class_options
+				if a_class_options /= Void then
+					need_end_keyword := need_end_keyword or print_class_options (a_class_options, all_storable, indent + 1, a_file)
+				elseif all_storable then
+					a_file.put_new_line
 					print_indentation (indent + 1, a_file)
-					a_file.put_line ("visible")
-					a_cursor := an_externals.exported_classes.new_cursor
-					from a_cursor.start until a_cursor.after loop
-						print_exported_class (a_cursor.item, indent + 2, a_file)
-						a_cursor.forth
-					end
+					a_file.put_line ("storable")
+					print_indentation (indent + 2, a_file)
+					a_file.put_string ("all")
+					need_end_keyword := True
 				end
 				subclusters := a_cluster.subclusters
 				if subclusters /= Void then
-					if not need_end_keyword then
-						a_file.put_new_line
-						need_end_keyword := True
-					end
+					a_file.put_new_line
 					print_indentation (indent + 1, a_file)
 					a_file.put_line ("cluster")
 					print_clusters (subclusters, indent + 2, a_file)
-				end
-				if need_end_keyword then
 					print_indentation (indent + 1, a_file)
-					a_file.put_string ("end;")
+					a_file.put_line ("end;")
+				elseif need_end_keyword then
 					a_file.put_new_line
+					print_indentation (indent + 1, a_file)
+					a_file.put_line ("end;")
 				else
 					a_file.put_character (';')
 					a_file.put_new_line
@@ -621,126 +538,407 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_cluster_options (an_option: ET_XACE_OPTIONS; indent: INTEGER;
-		need_newline: BOOLEAN; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN is
+	print_cluster_options (an_option: ET_XACE_OPTIONS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN is
 			-- Print cluster options `an_option' to `a_file'.
-			-- `need_newline' indicates whether a new-line is need before the `default' keyword.
-			-- Return True if the keyword 'default' has been printed.
+			-- Return True if the end keyword needs to be printed.
 		require
 			an_option_not_void: an_option /= Void
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
+			an_exclude: DS_HASH_SET [STRING]
+			an_exclude_cursor: DS_HASH_SET_CURSOR [STRING]
+			an_include: DS_HASH_SET [STRING]
+			an_include_cursor: DS_HASH_SET_CURSOR [STRING]
+			need_default: BOOLEAN
 			an_indent: INTEGER
 			an_assertion: DS_HASH_SET [STRING]
 			a_debug_tag_cursor: DS_HASH_SET_CURSOR [STRING]
 		do
-			if an_option.is_assertion_declared then
-				Result := True
-			elseif an_option.is_debug_option_declared then
-				Result := True
-			elseif an_option.is_debug_tag_declared then
-				Result := True
-			elseif an_option.is_trace_declared then
-				Result := True
-			end
-			if Result then
-				if need_newline then
+			if an_option.is_include_declared then
+				an_include := an_option.include
+				if not an_include.is_empty then
+					Result := True
 					a_file.put_new_line
+					print_indentation (indent, a_file)
+					a_file.put_line ("include")
+					an_include_cursor := an_include.new_cursor
+					from
+						an_include_cursor.start
+						print_indentation (indent + 1, a_file)
+						a_file.put_character ('%"')
+						a_file.put_string (an_include_cursor.item)
+						a_file.put_character ('%"')
+						an_include_cursor.forth
+					until
+						an_include_cursor.after
+					loop
+						a_file.put_character (';')
+						a_file.put_new_line
+						print_indentation (indent + 1, a_file)
+						a_file.put_character ('%"')
+						a_file.put_string (an_include_cursor.item)
+						a_file.put_character ('%"')
+						an_include_cursor.forth
+					end
 				end
+			end
+			if an_option.is_exclude_declared then
+				an_exclude := an_option.exclude
+				if not an_exclude.is_empty then
+					Result := True
+					a_file.put_new_line
+					print_indentation (indent, a_file)
+					a_file.put_line ("exclude")
+					an_exclude_cursor := an_exclude.new_cursor
+					from
+						an_exclude_cursor.start
+						print_indentation (indent + 1, a_file)
+						a_file.put_character ('%"')
+						a_file.put_string (an_exclude_cursor.item)
+						a_file.put_character ('%"')
+						an_exclude_cursor.forth
+					until
+						an_exclude_cursor.after
+					loop
+						a_file.put_character (';')
+						a_file.put_new_line
+						print_indentation (indent + 1, a_file)
+						a_file.put_character ('%"')
+						a_file.put_string (an_exclude_cursor.item)
+						a_file.put_character ('%"')
+						an_exclude_cursor.forth
+					end
+				end
+			end
+			if an_option.is_assertion_declared then
+				need_default := True
+			elseif an_option.is_debug_option_declared then
+				need_default := True
+			elseif an_option.is_debug_tag_declared then
+				need_default := True
+			elseif an_option.is_trace_declared then
+				need_default := True
+			end
+			if need_default then
+				Result := True
+				a_file.put_new_line
 				an_indent := indent
 				print_indentation (an_indent, a_file)
-				a_file.put_line ("default")
+				a_file.put_string ("default")
 				an_indent := an_indent + 1
 				if an_option.is_assertion_declared then
 					an_assertion := an_option.assertion
 					if an_assertion.has (options.all_value) then
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("assertion (all);")
+						a_file.put_string ("assertion (all);")
 					elseif an_assertion.has (options.check_value) then
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("assertion (check);")
+						a_file.put_string ("assertion (check);")
 					elseif an_assertion.has (options.loop_variant_value) then
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("assertion (loop);")
+						a_file.put_string ("assertion (loop);")
 					elseif an_assertion.has (options.loop_invariant_value) then
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("assertion (loop);")
+						a_file.put_string ("assertion (loop);")
 					elseif an_assertion.has (options.invariant_value) then
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("assertion (invariant);")
+						a_file.put_string ("assertion (invariant);")
 					elseif an_assertion.has (options.ensure_value) then
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("assertion (ensure);")
+						a_file.put_string ("assertion (ensure);")
 					elseif an_assertion.has (options.require_value) then
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("assertion (require);")
+						a_file.put_string ("assertion (require);")
 					elseif an_assertion.has (options.none_value) then
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("assertion (no);")
+						a_file.put_string ("assertion (no);")
 					end
 				end
 				if an_option.is_debug_option_declared then
 					if an_option.debug_option then
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("debug (yes);")
+						a_file.put_string ("debug (yes);")
 					else
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("debug (no);")
+						a_file.put_string ("debug (no);")
 					end
 				end
 				a_debug_tag_cursor := an_option.debug_tag.new_cursor
 				from a_debug_tag_cursor.start until a_debug_tag_cursor.after loop
+					a_file.put_new_line
 					print_indentation (an_indent, a_file)
 					a_file.put_string ("debug (%"")
 					a_file.put_string (a_debug_tag_cursor.item)
-					a_file.put_line ("%");")
+					a_file.put_string ("%");")
 					a_debug_tag_cursor.forth
 				end
 				if an_option.is_trace_declared then
 					if an_option.trace then
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("trace (yes);")
+						a_file.put_string ("trace (yes);")
 					else
+						a_file.put_new_line
 						print_indentation (an_indent, a_file)
-						a_file.put_line ("trace (no);")
+						a_file.put_string ("trace (no);")
 					end
 				end
 			end
 		end
 
-	print_exported_class (a_class: ET_XACE_EXPORTED_CLASS; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM) is
-			-- Print `a_class' to `a_file'.
+	print_class_options (an_option_list: DS_LINKED_LIST [ET_XACE_CLASS_OPTIONS];
+		all_storable: BOOLEAN; indent: INTEGER; a_file: KI_TEXT_OUTPUT_STREAM): BOOLEAN is
+			-- Print class options `an_option_list' to `a_file'. `all_storable'
+			-- indicates that the option 'storable all' should be printed.
+			-- Return True if the end keyword needs to be printed.
 		require
-			a_class_not_void: a_class /= Void
+			an_option_list_not_void: an_option_list /= Void
+			no_void_option: not an_option_list.has (Void)
 			indent_positive: indent >= 0
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_EXPORTED_FEATURE]
+			a_class_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_CLASS_OPTIONS]
+			a_class_options: ET_XACE_CLASS_OPTIONS
+			an_indent: INTEGER
+			an_assertion: DS_HASH_SET [STRING]
+			a_debug_tag_cursor: DS_HASH_SET_CURSOR [STRING]
+			need_option, option_printed: BOOLEAN
+			need_visible, visible_printed: BOOLEAN
+			need_storable, storable_printed: BOOLEAN
+			nb_export: INTEGER
+			a_class_name: STRING
+			a_feature_list: DS_LINKED_LIST [ET_XACE_FEATURE_OPTIONS]
+			a_feature_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_FEATURE_OPTIONS]
+			a_feature_options: ET_XACE_FEATURE_OPTIONS
+			an_option: ET_XACE_OPTIONS
 		do
-			print_indentation (indent, a_file)
-			print_escaped_name (a_class.class_name, a_file)
-			a_file.put_new_line
-			if not a_class.features.is_empty then
-				print_indentation (indent + 1, a_file)
-				a_file.put_string ("export")
-				a_file.put_new_line
-				a_cursor := a_class.features.new_cursor
-				from a_cursor.start until a_cursor.after loop
-					print_indentation (indent + 2, a_file)
-					print_escaped_name (a_cursor.item.feature_name, a_file)
-					if not a_cursor.is_last then
-						a_file.put_character (',')
+			an_indent := indent
+			a_class_cursor := an_option_list.new_cursor
+			from a_class_cursor.start until a_class_cursor.after loop
+				a_class_options := a_class_cursor.item
+				a_class_name := a_class_options.class_name
+				an_option := a_class_options.options
+				need_option := False
+				if an_option.is_assertion_declared then
+					need_option := True
+				elseif an_option.is_debug_option_declared then
+					need_option := True
+				elseif an_option.is_debug_tag_declared then
+					need_option := True
+				elseif an_option.is_trace_declared then
+					need_option := True
+				end
+				if need_option then
+					if not option_printed then
+						a_file.put_new_line
+						print_indentation (an_indent, a_file)
+						a_file.put_string ("option")
+						option_printed := True
 					end
+					an_indent := an_indent + 1
+					if an_option.is_assertion_declared then
+						an_assertion := an_option.assertion
+						if an_assertion.has (options.all_value) then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("assertion (all): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						elseif an_assertion.has (options.check_value) then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("assertion (check): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						elseif an_assertion.has (options.loop_variant_value) then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("assertion (loop): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						elseif an_assertion.has (options.loop_invariant_value) then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("assertion (loop): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						elseif an_assertion.has (options.invariant_value) then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("assertion (invariant): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						elseif an_assertion.has (options.ensure_value) then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("assertion (ensure): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						elseif an_assertion.has (options.require_value) then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("assertion (require): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						elseif an_assertion.has (options.none_value) then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("assertion (no): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						end
+					end
+					if an_option.is_debug_option_declared then
+						if an_option.debug_option then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("debug (yes): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						else
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("debug (no): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						end
+					end
+					a_debug_tag_cursor := an_option.debug_tag.new_cursor
+					from a_debug_tag_cursor.start until a_debug_tag_cursor.after loop
+						a_file.put_new_line
+						print_indentation (an_indent, a_file)
+						a_file.put_string ("debug (%"")
+						a_file.put_string (a_debug_tag_cursor.item)
+						a_file.put_string ("%"): ")
+						a_file.put_string (a_class_name)
+						a_file.put_character (';')
+						a_debug_tag_cursor.forth
+					end
+					if an_option.is_trace_declared then
+						if an_option.trace then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("trace (yes): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						else
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_string ("trace (no): ")
+							a_file.put_string (a_class_name)
+							a_file.put_character (';')
+						end
+					end
+					an_indent := an_indent - 1
+				end
+				a_class_cursor.forth
+			end
+			from a_class_cursor.start until a_class_cursor.after loop
+				a_class_options := a_class_cursor.item
+				a_feature_list := a_class_options.feature_options
+				a_class_name := a_class_options.class_name
+				an_option := a_class_options.options
+				need_visible := False
+				nb_export := 0
+				if an_option.is_export_option_declared then
+					need_visible := True
+				elseif a_feature_list /= Void then
+					a_feature_cursor := a_feature_list.new_cursor
+					from a_feature_cursor.start until a_feature_cursor.after loop
+						if a_feature_cursor.item.options.is_export_option_declared then
+							nb_export := nb_export + 1
+						end
+						a_feature_cursor.forth
+					end
+					need_visible := (nb_export > 0)
+				end
+				if need_visible then
+					if not visible_printed then
+						a_file.put_new_line
+						print_indentation (an_indent, a_file)
+						a_file.put_string ("visible")
+						visible_printed := True
+					end
+					an_indent := an_indent + 1
 					a_file.put_new_line
-					a_cursor.forth
+					print_indentation (an_indent, a_file)
+					print_escaped_name (a_class_name, a_file)
+					a_file.put_new_line
+					an_indent := an_indent + 1
+					if nb_export > 0 then
+						print_indentation (an_indent, a_file)
+						a_file.put_line ("export")
+						an_indent := an_indent + 1
+						a_feature_cursor := a_feature_list.new_cursor
+						from a_feature_cursor.start until a_feature_cursor.after loop
+							a_feature_options := a_feature_cursor.item
+							if a_feature_options.options.is_export_option_declared then
+								print_indentation (an_indent, a_file)
+								print_escaped_name (a_feature_options.feature_name, a_file)
+								nb_export := nb_export - 1
+								if nb_export > 0 then
+									a_file.put_character (',')
+								end
+								a_file.put_new_line
+							end
+							a_feature_cursor.forth
+						end
+						an_indent := an_indent - 1
+					end
+					print_indentation (an_indent, a_file)
+					a_file.put_string ("end")
+					an_indent := an_indent - 2
+				end
+				a_class_cursor.forth
+			end
+			if all_storable then
+				a_file.put_new_line
+				print_indentation (an_indent, a_file)
+				a_file.put_line ("storable")
+				print_indentation (an_indent + 1, a_file)
+				a_file.put_string ("all")
+				storable_printed := True
+			else
+				from a_class_cursor.start until a_class_cursor.after loop
+					a_class_options := a_class_cursor.item
+					a_class_name := a_class_options.class_name
+					an_option := a_class_options.options
+					need_storable := False
+					if an_option.is_storable_declared then
+						need_storable := an_option.storable
+					end
+					if need_storable then
+						if not storable_printed then
+							a_file.put_new_line
+							print_indentation (an_indent, a_file)
+							a_file.put_line ("storable")
+							storable_printed := True
+						else
+							a_file.put_character (',')
+							a_file.put_new_line
+						end
+						an_indent := an_indent + 1
+						print_indentation (an_indent, a_file)
+						print_escaped_name (a_class_name, a_file)
+						an_indent := an_indent - 1
+					end
+					a_class_cursor.forth
 				end
 			end
-			print_indentation (indent + 1, a_file)
-			a_file.put_string ("end")
-			a_file.put_new_line
+			Result := option_printed or visible_printed or storable_printed
 		end
 
 	print_include_directories (a_directories: DS_LINKED_LIST [STRING]; a_file: KI_TEXT_OUTPUT_STREAM) is

@@ -46,9 +46,6 @@ feature -- Access
 	libraries: ET_XACE_MOUNTED_LIBRARIES
 			-- Mounted libraries
 
-	externals: ET_XACE_EXTERNALS
-			-- External clause
-
 feature -- Setting
 
 	set_system_name (a_name: like system_name) is
@@ -99,14 +96,6 @@ feature -- Setting
 			libraries_set: libraries = a_libraries
 		end
 
-	set_externals (an_externals: like externals) is
-			-- Set `externals' to `an_externals'.
-		do
-			externals := an_externals
-		ensure
-			externals_set: externals = an_externals
-		end
-
 feature -- Basic operations
 
 	mount_libraries is
@@ -121,27 +110,46 @@ feature -- Basic operations
 			end
 		end
 
-	merge_externals is
-			-- Merge the external clauses of all clusters
-			-- and subclusters of current system to `externals'.
+	merge_externals (an_externals: ET_XACE_EXTERNALS) is
+			-- Merge current system's externals, and those of
+			-- all clusters and subclusters, to `an_externals'.
+		require
+			an_externals_not_void: an_externals /= Void
 		local
-			was_void: BOOLEAN
+			a_cursor: DS_HASH_SET_CURSOR [STRING]
 		do
-			if clusters /= Void or libraries /= Void then
-				if externals = Void then
-					was_void := True
-					!! externals.make
+			if options /= Void then
+				a_cursor := options.header.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					an_externals.put_include_directory (a_cursor.item)
+					a_cursor.forth
+				end
+				a_cursor := options.link.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					an_externals.put_link_library (a_cursor.item)
+					a_cursor.forth
 				end
 			end
 			if clusters /= Void then
-				clusters.merge_externals (externals)
+				clusters.merge_externals (an_externals)
 			end
 			if libraries /= Void then
-				libraries.merge_externals (externals)
+				libraries.merge_externals (an_externals)
 			end
-			if was_void and then externals.is_empty then
-				externals := Void
+		end
+
+	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE]) is
+			-- Merge current system's exported features and those
+			-- all clusters and subclusters to `an_export'.
+		require
+			an_export_not_void: an_export /= Void
+			no_void_export: not an_export.has (Void)
+		do
+			if clusters /= Void then
+				clusters.merge_exported_features (an_export)
 			end
+		ensure
+			no_void_export: not an_export.has (Void)
 		end
 
 end

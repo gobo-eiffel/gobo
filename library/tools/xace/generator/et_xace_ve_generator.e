@@ -40,7 +40,6 @@ feature -- Output
 		local
 			a_filename: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
-			an_externals: ET_XACE_EXTERNALS
 		do
 			if output_filename /= Void then
 				a_filename := output_filename
@@ -50,14 +49,8 @@ feature -- Output
 			!! a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				an_externals := a_system.externals
-				if an_externals /= Void then
-					an_externals := an_externals.cloned_externals
-				end
-				a_system.merge_externals
 				print_esd_file (a_system, a_file)
 				a_file.close
-				a_system.set_externals (an_externals)
 			else
 				error_handler.report_cannot_write_file_error (a_filename)
 			end
@@ -68,7 +61,6 @@ feature -- Output
 		local
 			a_filename: STRING
 			a_file: KL_TEXT_OUTPUT_FILE
-			an_externals: ET_XACE_EXTERNALS
 		do
 			if output_filename /= Void then
 				a_filename := output_filename
@@ -78,14 +70,8 @@ feature -- Output
 			!! a_file.make (a_filename)
 			a_file.open_write
 			if a_file.is_open_write then
-				an_externals := a_library.externals
-				if an_externals /= Void then
-					an_externals := an_externals.cloned_externals
-				end
-				a_library.merge_externals
 				print_eld_file (a_library, a_file)
 				a_file.close
-				a_library.set_externals (an_externals)
 			else
 				error_handler.report_cannot_write_file_error (a_filename)
 			end
@@ -135,8 +121,9 @@ feature {NONE} -- Output
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
 			end
-			an_external := a_system.externals
-			if an_external /= Void and then an_external.has_link_libraries then
+			!! an_external.make
+			a_system.merge_externals (an_external)
+			if an_external.has_link_libraries then
 				a_file.put_line ("link")
 				a_file.put_new_line
 				print_link_libraries (an_external.link_libraries, a_file)
@@ -177,8 +164,9 @@ feature {NONE} -- Output
 				print_clusters (a_clusters, a_file)
 				a_file.put_new_line
 			end
-			an_external := a_library.externals
-			if an_external /= Void and then an_external.has_link_libraries then
+			!! an_external.make
+			a_library.merge_externals (an_external)
+			if an_external.has_link_libraries then
 				a_file.put_line ("link")
 				a_file.put_new_line
 				print_link_libraries (an_external.link_libraries, a_file)

@@ -139,7 +139,7 @@ feature {NONE} -- AST factory
 			a_child: XM_ELEMENT
 			a_cluster: ET_XACE_CLUSTER
 			an_option: ET_XACE_OPTIONS
-			an_external: ET_XACE_EXTERNALS
+			a_class: ET_XACE_CLASS_OPTIONS
 			subclusters: ET_XACE_CLUSTERS
 			a_mount: ET_XACE_MOUNTED_LIBRARY
 			a_mounts: ET_XACE_MOUNTED_LIBRARIES
@@ -224,11 +224,15 @@ feature {NONE} -- AST factory
 								else
 									an_option := new_options (a_child, a_position_table)
 								end
+							elseif a_child.name.is_equal (uc_class) then
+								a_class := new_class (a_child, a_position_table)
+								if a_class /= Void then
+									Result.put_class_option (a_class)
+								end
 							elseif a_child.name.is_equal (uc_external) then
-								if an_external /= Void then
-									fill_externals (an_external, a_child, a_position_table)
-								else
-									an_external := new_externals (a_child, a_position_table)
+								if an_option /= Void then
+									an_option := ast_factory.new_options
+									fill_externals (an_option, Result, a_child, a_position_table)
 								end
 							end
 						end
@@ -243,9 +247,84 @@ feature {NONE} -- AST factory
 						end
 					end
 					Result.set_options (an_option)
-					Result.set_externals (an_external)
 					Result.set_subclusters (subclusters)
 					Result.set_libraries (a_mounts)
+				end
+			end
+		end
+
+	new_class (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_CLASS_OPTIONS is
+			-- New class options build from `an_element'.
+		require
+			an_element_not_void: an_element /= Void
+			is_class: an_element.name.is_equal (uc_class)
+			a_position_table_not_void: a_position_table /= Void
+		local
+			a_value: UC_STRING
+			a_class_name: STRING
+			an_option: ET_XACE_OPTIONS
+			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			a_child: XM_ELEMENT
+			a_feature: ET_XACE_FEATURE_OPTIONS
+		do
+			if an_element.has_attribute_by_name (uc_name) then
+				a_value := an_element.attribute_by_name (uc_name).value
+				if a_value /= Void then
+					a_class_name := a_value.to_utf8
+					if a_class_name.count > 0 then
+						an_option := ast_factory.new_options
+						Result := ast_factory.new_class_options (a_class_name, an_option)
+						a_cursor := an_element.new_cursor
+						from a_cursor.start until a_cursor.after loop
+							a_child ?= a_cursor.item
+							if a_child /= Void then
+								if a_child.name.is_equal (uc_option) then
+									fill_options (an_option, a_child, a_position_table)
+								elseif a_child.name.is_equal (uc_feature) then
+									a_feature := new_feature (a_child, a_position_table)
+									if a_feature /= Void then
+										Result.put_feature_option (a_feature)
+									end
+								end
+							end
+							a_cursor.forth
+						end
+					end
+				end
+			end
+		end
+
+	new_feature (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_FEATURE_OPTIONS is
+			-- New feature options build from `an_element'.
+		require
+			an_element_not_void: an_element /= Void
+			is_feature: an_element.name.is_equal (uc_feature)
+			a_position_table_not_void: a_position_table /= Void
+		local
+			a_value: UC_STRING
+			a_feature_name: STRING
+			an_option: ET_XACE_OPTIONS
+			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
+			a_child: XM_ELEMENT
+		do
+			if an_element.has_attribute_by_name (uc_name) then
+				a_value := an_element.attribute_by_name (uc_name).value
+				if a_value /= Void then
+					a_feature_name := a_value.to_utf8
+					if a_feature_name.count > 0 then
+						an_option := ast_factory.new_options
+						Result := ast_factory.new_feature_options (a_feature_name, an_option)
+						a_cursor := an_element.new_cursor
+						from a_cursor.start until a_cursor.after loop
+							a_child ?= a_cursor.item
+							if a_child /= Void then
+								if a_child.name.is_equal (uc_option) then
+									fill_options (an_option, a_child, a_position_table)
+								end
+							end
+							a_cursor.forth
+						end
+					end
 				end
 			end
 		end
@@ -311,20 +390,7 @@ feature {NONE} -- AST factory
 			options_not_void: Result /= Void
 		end
 
-	new_externals (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_EXTERNALS is
-			-- New external clause build from `an_element'
-		require
-			an_element_not_void: an_element /= Void
-			is_external: an_element.name.is_equal (uc_external)
-			a_position_table_not_void: a_position_table /= Void
-		do
-			Result := ast_factory.new_externals
-			fill_externals (Result, an_element, a_position_table)
-		ensure
-			externals_not_void: Result /= Void
-		end
-
-	new_export (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_EXPORTED_CLASS is
+	new_export (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_CLASS_OPTIONS is
 			-- New export clause build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -333,33 +399,38 @@ feature {NONE} -- AST factory
 		local
 			a_name: STRING
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
-			a_feature: ET_XACE_EXPORTED_FEATURE
+			a_feature: ET_XACE_FEATURE_OPTIONS
 			a_child: XM_ELEMENT
 			a_value: UC_STRING
+			an_option: ET_XACE_OPTIONS
 		do
 			if an_element.has_attribute_by_name (uc_class) then
 				a_value := an_element.attribute_by_name (uc_class).value
 				if a_value /= Void then
 					a_name := a_value.to_utf8
 					if a_name.count > 0 then
-						Result := ast_factory.new_exported_class (a_name)
+						an_option := ast_factory.new_options
+						Result := ast_factory.new_class_options (a_name, an_option)
 						a_cursor := an_element.new_cursor
 						from a_cursor.start until a_cursor.after loop
 							a_child ?= a_cursor.item
 							if a_child /= Void and then a_child.name.is_equal (uc_feature) then
 								a_feature := new_exported_feature (a_child, a_position_table)
 								if a_feature /= Void then
-									Result.features.force_last (a_feature)
+									Result.put_feature_option (a_feature)
 								end
 							end
 							a_cursor.forth
+						end
+						if Result.feature_options.is_empty then
+							an_option.set_export_option (a_name)
 						end
 					end
 				end
 			end
 		end
 
-	new_exported_feature (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_EXPORTED_FEATURE is
+	new_exported_feature (an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE): ET_XACE_FEATURE_OPTIONS is
 			-- New exported feature build from `an_element'
 		require
 			an_element_not_void: an_element /= Void
@@ -369,6 +440,7 @@ feature {NONE} -- AST factory
 			a_name: STRING
 			an_alias: STRING
 			a_value: UC_STRING
+			an_option: ET_XACE_OPTIONS
 		do
 			if an_element.has_attribute_by_name (uc_name) then
 				a_value := an_element.attribute_by_name (uc_name).value
@@ -385,7 +457,9 @@ feature {NONE} -- AST factory
 						an_alias := a_name
 					end
 					if a_name.count > 0 and an_alias.count > 0 then
-						Result := ast_factory.new_exported_feature (a_name, an_alias)
+						an_option := ast_factory.new_options
+						an_option.set_export_option (an_alias)
+						Result := ast_factory.new_feature_options (a_name, an_option)
 					end
 				end
 			end
@@ -409,7 +483,6 @@ feature {NONE} -- Element change
 			a_child: XM_ELEMENT
 			a_cluster: ET_XACE_CLUSTER
 			an_option: ET_XACE_OPTIONS
-			an_external: ET_XACE_EXTERNALS
 			a_clusters: ET_XACE_CLUSTERS
 			a_mount: ET_XACE_MOUNTED_LIBRARY
 			a_mounts: ET_XACE_MOUNTED_LIBRARIES
@@ -480,10 +553,9 @@ feature {NONE} -- Element change
 											an_option := new_options (a_child, a_position_table)
 										end
 									elseif a_child.name.is_equal (uc_external) then
-										if an_external /= Void then
-											fill_externals (an_external, a_child, a_position_table)
-										else
-											an_external := new_externals (a_child, a_position_table)
+										if an_option /= Void then
+											an_option := ast_factory.new_options
+											fill_externals (an_option, Void, a_child, a_position_table)
 										end
 									end
 								end
@@ -505,10 +577,9 @@ feature {NONE} -- Element change
 							an_option := new_options (a_child, a_position_table)
 						end
 					elseif a_child.name.is_equal (uc_external) then
-						if an_external /= Void then
-							fill_externals (an_external, a_child, a_position_table)
-						else
-							an_external := new_externals (a_child, a_position_table)
+						if an_option /= Void then
+							an_option := ast_factory.new_options
+							fill_externals (an_option, Void, a_child, a_position_table)
 						end
 					end
 				end
@@ -538,7 +609,6 @@ feature {NONE} -- Element change
 			a_system.set_root_class_name (a_class)
 			a_system.set_creation_procedure_name (a_creation)
 			a_system.set_options (an_option)
-			a_system.set_externals (an_external)
 			a_system.set_libraries (a_mounts)
 		end
 
@@ -558,7 +628,6 @@ feature {NONE} -- Element change
 			a_child: XM_ELEMENT
 			a_cluster: ET_XACE_CLUSTER
 			an_option: ET_XACE_OPTIONS
-			an_external: ET_XACE_EXTERNALS
 			a_clusters: ET_XACE_CLUSTERS
 			a_mount: ET_XACE_MOUNTED_LIBRARY
 			a_mounts: ET_XACE_MOUNTED_LIBRARIES
@@ -585,7 +654,6 @@ feature {NONE} -- Element change
 				if a_pathname = Void and a_cluster.is_abstract then
 					a_library.set_name (a_cluster.name)
 					a_library.set_options (a_cluster.options)
-					a_library.set_externals (a_cluster.externals)
 					a_clusters := a_cluster.subclusters
 					a_mounts := a_cluster.libraries
 				else
@@ -627,10 +695,9 @@ feature {NONE} -- Element change
 								an_option := new_options (a_child, a_position_table)
 							end
 						elseif a_child.name.is_equal (uc_external) then
-							if an_external /= Void then
-								fill_externals (an_external, a_child, a_position_table)
-							else
-								an_external := new_externals (a_child, a_position_table)
+							if an_option /= Void then
+								an_option := ast_factory.new_options
+								fill_externals (an_option, Void, a_child, a_position_table)
 							end
 						end
 					end
@@ -653,7 +720,6 @@ feature {NONE} -- Element change
 				a_clusters.merge_libraries (a_mounts, error_handler)
 			end
 			a_library.set_options (an_option)
-			a_library.set_externals (an_external)
 			a_library.set_clusters (a_clusters)
 			a_library.set_libraries (a_mounts)
 		end
@@ -813,6 +879,8 @@ feature {NONE} -- Element change
 									end
 								when exclude_code then
 									an_option.set_exclude (a_string_value)
+								when export_option_code then
+									an_option.set_export_option (a_string_value)
 								when finalize_code then
 									if is_true (a_string_value) then
 										an_option.set_finalize (True)
@@ -873,6 +941,8 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_positive_integer_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when header_code then
+									an_option.set_header (a_string_value)
 								when high_memory_compiler_code then
 									if is_true (a_string_value) then
 										an_option.set_high_memory_compiler (True)
@@ -881,6 +951,8 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when include_code then
+									an_option.set_include (a_string_value)
 								when inlining_code then
 									if an_option.valid_inlining.has (a_string_value) then
 										an_option.set_inlining (a_string_value)
@@ -930,6 +1002,8 @@ feature {NONE} -- Element change
 									else
 										error_handler.report_boolean_expected_error (an_element, uc_value, a_value, a_position_table.item (an_element))
 									end
+								when link_code then
+									an_option.set_link (a_string_value)
 								when linker_code then
 									if an_option.valid_linker.has (a_string_value) then
 										an_option.set_linker (a_string_value)
@@ -1234,17 +1308,17 @@ feature {NONE} -- Element change
 			end
 		end
 
-	fill_externals (an_external: ET_XACE_EXTERNALS; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
-			-- Fill Xace externals `an_external' with data found in `an_element'.
+	fill_externals (an_option: ET_XACE_OPTIONS; a_cluster: ET_XACE_CLUSTER; an_element: XM_ELEMENT; a_position_table: XM_POSITION_TABLE) is
+			-- Fill Xace externals with data found in `an_element'.
 		require
-			an_external_not_void: an_external /= Void
+			an_option_not_void: an_option /= Void
 			an_element_not_void: an_element /= Void
 			is_external: an_element.name.is_equal (uc_external)
 			a_position_table_not_void: a_position_table /= Void
 		local
 			a_cursor: DS_BILINEAR_CURSOR [XM_NODE]
 			a_child: XM_ELEMENT
-			an_export: ET_XACE_EXPORTED_CLASS
+			an_export: ET_XACE_CLASS_OPTIONS
 			a_value: UC_STRING
 		do
 			a_cursor := an_element.new_cursor
@@ -1255,20 +1329,22 @@ feature {NONE} -- Element change
 						if a_child.has_attribute_by_name (uc_location) then
 							a_value := a_child.attribute_by_name (uc_location).value
 							if a_value /= Void then
-								an_external.put_link_library (a_value.to_utf8)
+								an_option.set_link (a_value.to_utf8)
 							end
 						end
 					elseif a_child.name.is_equal (uc_include_dir) then
 						if a_child.has_attribute_by_name (uc_location) then
 							a_value := a_child.attribute_by_name (uc_location).value
 							if a_value /= Void then
-								an_external.put_include_directory (a_value.to_utf8)
+								an_option.set_header (a_value.to_utf8)
 							end
 						end
 					elseif a_child.name.is_equal (uc_export) then
-						an_export := new_export (a_child, a_position_table)
-						if an_export /= Void then
-							an_external.put_exported_class (an_export)
+						if a_cluster /= Void then
+							an_export := new_export (a_child, a_position_table)
+							if an_export /= Void then
+								a_cluster.put_class_option (an_export)
+							end
 						end
 					end
 				end

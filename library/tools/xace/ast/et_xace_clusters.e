@@ -87,7 +87,8 @@ feature -- Basic operations
 		end
 
 	merge_externals (an_externals: ET_XACE_EXTERNALS) is
-			-- Merge clusters' externals to `an_externals'.
+			-- Merge clusters' externals and those
+			-- of subclusters to `an_externals'.
 		require
 			an_externals_not_void: an_externals /= Void
 		local
@@ -98,6 +99,42 @@ feature -- Basic operations
 				clusters.item (i).merge_externals (an_externals)
 				i := i + 1
 			end
+		end
+
+	merge_exported_features (an_export: DS_LIST [ET_XACE_EXPORTED_FEATURE]) is
+			-- Merge current clusters' exported features and those
+			-- of subclusters to `an_export'.
+		require
+			an_export_not_void: an_export /= Void
+			no_void_export: not an_export.has (Void)
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).merge_exported_features (an_export)
+				i := i + 1
+			end
+		ensure
+			no_void_export: not an_export.has (Void)
+		end
+
+	merge_components (a_components: DS_LIST [ET_XACE_COMPONENT]) is
+			-- Merge current clusters' components and those
+			-- of subclusters to `a_components'.
+		require
+			a_components_not_void: a_components /= Void
+			no_void_component: not a_components.has (Void)
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).merge_components (a_components)
+				i := i + 1
+			end
+		ensure
+			no_void_component: not a_components.has (Void)
 		end
 
 end
