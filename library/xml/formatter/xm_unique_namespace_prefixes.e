@@ -5,7 +5,7 @@ indexing
 		"Infer a unique set of namespace prefixes for a document tree"
 
 	library: "Gobo Eiffel XML Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2003, Eric Bezault and others"
 	license: "Eiffel Forum License v1 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 				not prefixes.has (Result)
 			loop
 				i := i + 1
-				Result := "ns"+i.out
+				Result := "ns" + i.out
 			end
 		ensure
 			result_not_void: Result /= Void
