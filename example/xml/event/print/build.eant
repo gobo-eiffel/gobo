@@ -21,7 +21,7 @@
 	</target>
 
 	<target name="xace" depend="init" dir="${system_dir}">
-		<gexace command="build" command_options="${eiffel}">
+		<gexace system="${eiffel}">
 			<define name="DEBUG" value="${debug}" if="${debug}"/>
 			<define name="GOBO_XML_EXPAT" value="${GOBO_XML_EXPAT}" if="${GOBO_XML_EXPAT}"/>
 		</gexace>

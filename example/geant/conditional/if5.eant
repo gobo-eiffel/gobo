@@ -13,7 +13,7 @@
 	</target>
 
 	<target name="gexace">
-		<gexace command="build" command_options="ise">
+		<gexace system="ise">
 			<define name="DEBUG" value="true" if="$DEBUG"/>
 		</gexace>
 	</target>
