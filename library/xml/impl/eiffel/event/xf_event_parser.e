@@ -29,7 +29,6 @@ feature {ANY}
       local
 	 in_file: like INPUT_STREAM_TYPE
       do
-         !XM_DEFAULT_URI_SOURCE! source.make (a_file_name)
 	 in_file := INPUT_STREAM_.make_file_open_read (a_file_name.out)
 	 check
 	    is_open_read: INPUT_STREAM_.is_open_read (in_file)
@@ -39,7 +38,11 @@ feature {ANY}
       end
    
    parse_from_stream (a_stream: like INPUT_STREAM_TYPE) is
+		local
+			a_filename: UC_STRING
       do
+			!! a_filename.make_from_string (INPUT_STREAM_.name (a_stream))
+			!XM_DEFAULT_URI_SOURCE! source.make (a_filename)
 	 set_input_buffer (new_file_buffer (a_stream))
 	 parse
       end
