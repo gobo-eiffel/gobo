@@ -1,0 +1,17 @@
+-- library:    "Gobo Eiffel Parse Library"
+-- compiler:   "SmallEiffel -0.77b2"
+-- author:     "Eric Bezault <ericb@gobosoft.com>"
+-- copyright:  "Copyright (c) 1999, Eric Bezault and others"
+-- license:    "Eiffel Forum Freeware License v1 (see forum.txt)"
+-- date:       "$Date$"
+-- revision:   "$Revision$"
+
+
+${GOBO}/library/parse/error/
+${GOBO}/library/parse/fsm/
+${GOBO}/library/parse/generation/
+${GOBO}/library/parse/grammar/
+${GOBO}/library/parse/parser/
+${GOBO}/library/parse/skeleton/
+${GOBO}/library/parse/support/
+${GOBO}/library/parse/yacc/
