@@ -50,7 +50,7 @@ feature -- Element change
 			-- Return the number of items actually read.
 		require
 			a_stream_not_void: a_stream /= Void
-			a_stream_open_read: a_stream.is_readable
+			a_stream_open_read: a_stream.is_open_read
 			not_end_of_input: not a_stream.end_of_input
 			pos_large_enough: pos >= 1
 			nb_large_enough: nb > 0

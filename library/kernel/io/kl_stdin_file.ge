@@ -20,7 +20,6 @@ inherit
 
 	KI_TEXT_INPUT_STREAM
 		rename
-			is_readable as is_open_read,
 			end_of_input as end_of_file
 		redefine
 #ifdef ISE

@@ -29,7 +29,7 @@ feature -- Input
 			-- Make the characters that have actually been read
 			-- available in `last_string'.
 		require
-			is_readable: is_readable
+			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 			nb_large_enough: nb > 0
 		deferred
@@ -44,7 +44,7 @@ feature -- Input
 			-- at most `nb' characters read from input stream.
 			-- Return the number of characters actually read.
 		require
-			is_readable: is_readable
+			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 			a_string_not_void: a_string /= Void
 			valid_position: a_string.valid_index (pos)
@@ -80,7 +80,7 @@ feature -- Access
 			-- is to be kept beyond the next call to this feature.
 			-- However `last_string' is not shared between file objects.)
 		require
-			is_readable: is_readable
+			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 		deferred
 		end

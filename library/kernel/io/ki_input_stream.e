@@ -19,7 +19,7 @@ feature -- Input
 			-- Read the next item in input stream.
 			-- Make the result available in `last_item'.
 		require
-			is_readable: is_readable
+			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 		deferred
 		end
@@ -29,7 +29,7 @@ feature -- Input
 			-- This item will be read first by the next
 			-- call to a read routine.
 		require
-			is_readable: is_readable
+			is_open_read: is_open_read
 		deferred
 		ensure
 			not_end_of_input: not end_of_input
@@ -41,7 +41,7 @@ feature -- Input
 			-- at most `nb' items read from input stream.
 			-- Return the number of items actually read.
 		require
-			is_readable: is_readable
+			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 			a_buffer_not_void: a_buffer /= Void
 			pos_large_enough: pos >= 1
@@ -70,7 +70,7 @@ feature -- Input
 
 feature -- Status report
 
-	is_readable: BOOLEAN is
+	is_open_read: BOOLEAN is
 			-- Can items be read from input stream?
 		deferred
 		end
@@ -78,7 +78,7 @@ feature -- Status report
 	end_of_input: BOOLEAN is
 			-- Has the end of input stream been reached?
 		require
-			is_readable: is_readable
+			is_open_read: is_open_read
 		deferred
 		end
 
@@ -94,7 +94,7 @@ feature -- Access
 	last_item: G is
 			-- Last item read
 		require
-			is_readable: is_readable
+			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 		deferred
 		end

@@ -20,8 +20,7 @@ inherit
 #ifdef SE
 			rename_file as se_rename_file,
 #endif
-			end_of_input as end_of_file,
-			is_readable as is_open_read
+			end_of_input as end_of_file
 		end
 
 feature {NONE} -- Initialization

@@ -25,7 +25,7 @@ feature -- Input
 			-- been read available in `last_string' and discard the line
 			-- separator characters from the input stream.
 		require
-			is_readable: is_readable
+			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 		deferred
 		ensure
@@ -40,7 +40,7 @@ feature -- Input
 			-- input stream unchanged if no line separator
 			-- was found.
 		require
-			is_readable: is_readable
+			is_open_read: is_open_read
 			not_end_of_input: not end_of_input
 		deferred
 		ensure
