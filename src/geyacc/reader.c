@@ -77,6 +77,8 @@ extern int lex();
 extern char* spec_token_class_name;
 extern char* copys();
 
+extern char *geyacc_version;
+
 void reader_output_yylsp();
 void read_declarations();
 void copy_definition();
@@ -1956,8 +1958,8 @@ packsymbols()
 		strupr(class_name);
 		fprintf(fdefines, "\
 indexing\n\n\tdescription: \"Parser token codes\"\n\
-\tgenerator:   \"geyacc version 1.0\"\n\n\
-class %s\n\nfeature -- Token codes\n\n", class_name);
+\tgenerator:   \"%s\"\n\n\
+class %s\n\nfeature -- Token codes\n\n", geyacc_version, class_name);
 		output_token_defines(fdefines);
 		fprintf(fdefines, "\nend -- class %s\n", class_name);
 		FREE(class_name);
