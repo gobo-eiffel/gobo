@@ -157,11 +157,11 @@ color="#008080"><em><tt>KL_INTEGER_ROUTINES</tt></em></font>, the
 following class will be provided:</p>
 
 <blockquote>
-    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_SHARED_INTEGER_ROUTINES</em>
+    <pre><font color="#008080"><em><strong>class</strong></em> <em>KL_IMPORTED_INTEGER_ROUTINES</em>
 
 <em><strong>feature</strong></em>
 
-    <em>integer_routines</em> <em><strong>is</strong></em>
+    <em>INTEGER_</em> <em><strong>is</strong></em>
             -- Routines that ought to be in class INTEGER
         <em><strong>once</strong></em>
             !! <em>Result
@@ -169,7 +169,7 @@ following class will be provided:</p>
             integer_routines_not_void</em>:<em> Result </em>/=<em> Void</em>
         <em><strong>end</strong></em>
 
-<em><strong>end</strong></em> -- class KL_SHARED_INTEGER_ROUTINES</font></pre>
+<em><strong>end</strong></em> -- class KL_IMPORTED_INTEGER_ROUTINES</font></pre>
 </blockquote>
 
 <p>and class <font color="#008080"><em><tt>FOO</tt></em></font>
@@ -180,7 +180,7 @@ will become:</p>
 
 <em><strong>inherit</strong></em>
 
-    <em>KL_SHARED_INTEGER_ROUTINES</em>
+    <em>KL_IMPORTED_INTEGER_ROUTINES</em>
 
 <em><strong>feature</strong></em>
 
@@ -190,12 +190,32 @@ will become:</p>
             c</em>: <em>CHARACTER</em>
         <em><strong>do</strong></em>
             <em>io</em>.<em>read_integer</em>
-            <em>c</em> := <em>integer_routines.to_character</em> (<em>io</em>.<em>last_integer</em>)
+            <em>c</em> := <em>INTEGER_.to_character</em> (<em>io</em>.<em>last_integer</em>)
             ...
         <em><strong>end</strong></em>
 
 <em><strong>end</strong></em> -- class FOO</font></pre>
 </blockquote>
+
+<p>The class name convention <font color="#008080"><em><tt>_IMPORTED_</tt></em></font><em>
+</em>has been adopted after reading an article from Richie Bielak
+which appeared in <em>Eiffel Outlook</em> (volume 3, number 5)
+back in 1994. The use of <font color="#008080"><em><tt>INTEGER_</tt></em></font>,
+all characters in uppercase (instead of the typical style
+guideline which states that <em>once</em> function names should
+have their first letter capitalized and all remaining in
+lowercase), has been chosen to make it clear that these routines
+really ought to be implemented in class <font color="#008080"><em><tt>INTEGER
+</tt></em></font>itself. The underscore at the end is to avoid
+compilation problems since <font color="#008080"><em><tt>INTEGER </tt></em></font>is,
+with no good reasons in my opinion, one of Eiffel's reserved
+words. (Note that if you are using SmallEiffel, you will have to
+specify the command line option <tt>-no_warning </tt>if don't
+want to be overwhelmed by hundreds of warnings telling you that <font
+color="#008080"><em><tt>INTEGER_ </tt></em></font>and the like
+are in uppercase. I still don't understand why SmallEiffel
+generates these warnings since the corresponding code is correct
+Eiffel!)</p>
 
 <h2>Caveats</h2>
 
@@ -215,7 +235,7 @@ href="gepp.html">preprocessor</a> will help in such situations.</p>
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -225,7 +245,7 @@ href="gepp.html">preprocessor</a> will help in such situations.</p>
             </font><a href="http://www.gobo.demon.co.uk"><font
             size="2">http://www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 4 October 1997</font><br>
+            <strong>Last Updated:</strong> 23 May 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

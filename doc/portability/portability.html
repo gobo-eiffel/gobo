@@ -229,17 +229,17 @@ class should be used through inheritance to take advantage of the
 anchor technique.</p>
 
 <blockquote>
-    <pre><font color="#008080"><em><strong>class</strong></em><em> KL_SHARED_INPUT_STREAM_ROUTINES
+    <pre><font color="#008080"><em><strong>class</strong></em><em> KL_IMPORTED_INPUT_STREAM_ROUTINES
 
 </em><em><strong>feature</strong></em> -- Access
 
-    <em>input_stream_</em>: <em>KL_INPUT_STREAM_ROUTINES</em> <em><strong>is</strong></em>
+    <em>INPUT_STREAM_</em>: <em>KL_INPUT_STREAM_ROUTINES</em> <em><strong>is</strong></em>
             -- Routines that ought to be in class INPUT_STREAM
         <em><strong>once</strong></em>
             !! <em>Result</em>
         </font><font color="#008080" size="3"><em><strong>ensure</strong></em></font><font
 color="#008080"><em>
-            input_stream__not_void</em>: <em>Result</em> /= <em>Void</em>
+            input_stream_routines_not_void</em>: <em>Result</em> /= <em>Void</em>
         <em><strong>end</strong></em>
 
 <em><strong>feature</strong></em> -- Anchor types
@@ -263,7 +263,7 @@ color="#008080">
 #endif</font><font color="#008080">
             -- Anchor type
 
-<em><strong>end</strong></em> -- class KL_SHARED_INPUT_STREAM_ROUTINES</font></pre>
+<em><strong>end</strong></em> -- class KL_IMPORTED_INPUT_STREAM_ROUTINES</font></pre>
 </blockquote>
 
 <p>Note that the name convention used for the once function is
@@ -279,7 +279,7 @@ the once function of the class above.</p>
 
 </em><em><strong>inherit</strong></em><em>
 
-    KL_SHARED_INPUT_STREAM_ROUTINES
+    KL_IMPORTED_INPUT_STREAM_ROUTINES
 
 </em><em><strong>feature</strong></em> -- Initialization
 
@@ -369,25 +369,25 @@ end</strong></em> -- class KL_INPUT_STREAM_ROUTINES</font></pre>
 
 </em><em><strong>inherit</strong></em><em>
 
-    KL_SHARED_INPUT_STREAM_ROUTINES
+    KL_IMPORTED_INPUT_STREAM_ROUTINES
 
 </em><em><strong>feature</strong></em><em>
 
-    parse_from_file</em> (<em>a_file</em>: <em><strong>like</strong></em> <em>KL_INPUT_STREAM</em>) <em><strong>is</strong></em>
+    parse_from_file</em> (<em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM</em>_TYPE) <em><strong>is</strong></em>
             -- Parse data from <em>a_file</em>.
         <em><strong>require</strong></em>
             <em>a_file_not_void</em>: <em>a_file</em> /= <em>Void</em>
-            <em>a_file_open_read</em>: <em>input_stream_</em>.<em>is_open_read</em> (<em>a_file</em>)
+            <em>a_file_open_read</em>: <em>INPUT_STREAM_</em>.<em>is_open_read</em> (<em>a_file</em>)
         <em><strong>do</strong></em>
             ...
         <em><strong>end</strong></em>
 
     <em>execute</em> <em><strong>is</strong></em>
         <em><strong>local</strong></em>
-            <em>a_file</em>: <em><strong>like</strong></em> <em>KL_INPUT_STREAM</em>
+            <em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM</em>_TYPE
         <em><strong>do</strong></em>
-            <em>a_file</em> := <em>input_stream_</em>.<em>make_file_open_read</em> (<em>&quot;foo.txt&quot;</em>)
-            <em><strong>if</strong></em> <em>input_stream_</em>.<em>is_open_read</em> (<em>a_file</em>) <em><strong>then</strong></em>
+            <em>a_file</em> := <em>INPUT_STREAM_</em>.<em>make_file_open_read</em> (<em>&quot;foo.txt&quot;</em>)
+            <em><strong>if</strong></em> <em>INPUT_STREAM_</em>.<em>is_open_read</em> (<em>a_file</em>) <em><strong>then</strong></em>
                 <em>parse_from_file</em> (<em>a_file</em>)
             <em><strong>else</strong></em>
                     -- Parse from standard input.
@@ -432,9 +432,9 @@ class from <font size="2">ELKS</font>:</p>
 
 </em><em><strong>inherit</strong></em><em>
 
-    KL_SHARED_INPUT_STREAM_ROUTINES
+    KL_IMPORTED_INPUT_STREAM_ROUTINES
 
-    KL_SHARED_OUTPUT_STREAM_ROUTINES
+    KL_IMPORTED_OUTPUT_STREAM_ROUTINES
 
 </em><em><strong>feature</strong></em> -- Access
 
@@ -459,7 +459,7 @@ color="#800080">SE</font><font color="#008080">
 </font><font color="#0000FF">#endif</font><font color="#008080">
         <em><strong>ensure</strong></em>
             <em>file_not_void</em>: <em>Result</em> /= <em>Void</em>
-            <em>file_open_read</em>: <em>input_stream_</em>.<em>is_open_read</em> (<em>Result</em>)
+            <em>file_open_read</em>: <em>INPUT_STREAM_</em>.<em>is_open_read</em> (<em>Result</em>)
         <em><strong>end</strong></em>
 
 </font>... Same thing for <font color="#008080"><em>output</em></font> and <font
@@ -470,7 +470,7 @@ color="#008080"><em>error</em></font> ...<font color="#008080">
 
 <p>Note that <font color="#008080"><em><tt>input</tt></em></font>
 could not be declared as<font color="#008080"><em><strong><tt>
-like</tt></strong></em><em><tt> KL_INPUT_STREAM </tt></em></font>since
+like</tt></strong></em><em><tt> INPUT_STREAM_TYPE </tt></em></font>since
 it is a once function. The second class is used to access these
 standard files through a once function in the same way as <font
 color="#008080"><em><tt>io</tt></em></font> from <font
@@ -509,26 +509,27 @@ way as in the following example:</p>
 
 </em><em><strong>feature</strong></em><em>
 
-    parse_from_file</em> (<em>a_file</em>: <em><strong>like</strong></em> <em>KL_INPUT_STREAM</em>) <em><strong>is</strong></em>
+    parse_from_file</em> (<em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM_TYPE</em>) <em><strong>is</strong></em>
             -- Parse data from <em>a_file</em>.
         <em><strong>require</strong></em>
             <em>a_file_not_void</em>: <em>a_file</em> /= <em>Void</em>
-            <em>a_file_open_read</em>: <em>input_stream_</em>.<em>is_open_read</em> (<em>a_file</em>)
+            <em>a_file_open_read</em>: <em>INPUT_STREAM_</em>.<em>is_open_read</em> (<em>a_file</em>)
         <em><strong>do</strong></em>
             ...
         <em><strong>end</strong></em>
 
     <em>execute</em> <em><strong>is</strong></em>
         <em><strong>local</strong></em>
-            <em>a_file</em>: <em><strong>like</strong></em> <em>KL_INPUT_STREAM</em>
+            <em>a_file</em>: <em><strong>like</strong></em> <em>INPUT_STREAM_TYPE</em>
             <em>a_name</em>: <em>STRING</em>
         <em><strong>do</strong></em>
             <em>std</em>.<em>output</em>.<em>put_string</em> (&quot;Enter a filename: &quot;)
             <em>std</em>.<em>input</em>.<em>read_line</em>
             <em>a_name</em> := <em>std</em>.<em>input</em>.<em>last_string</em>
-            <em>a_file</em> := <em>input_stream_</em>.<em>make_file_open_read</em> (<em>a_name</em>)
-            <em><strong>if</strong></em> <em>input_stream_</em>.<em>is_open_read</em> (<em>a_file</em>) <em><strong>then</strong></em>
+            <em>a_file</em> := <em>INPUT_STREAM_</em>.<em>make_file_open_read</em> (<em>a_name</em>)
+            <em><strong>if</strong></em> <em>INPUT_STREAM_</em>.<em>is_open_read</em> (<em>a_file</em>) <em><strong>then</strong></em>
                 <em>parse_from_file</em> (<em>a_file</em>)
+                <em>INPUT_STREAM_.close </em>(<em>a_file</em>)
             <em><strong>else</strong></em>
                 <em>std</em>.<em>error</em>.<em>put_string</em> (<em>&quot;Cannot open file &quot;</em>)
                 <em>std</em>.<em>error</em>.<em>put_string</em> (<em>a_name</em>)
@@ -654,7 +655,7 @@ color="#008080">
 
 <blockquote>
     <pre><font color="#008080"><em>str</em>: <em>STRING</em>
-<em>str</em> := <em>string_</em>.<em>make</em> (<em>10</em>)</font></pre>
+<em>str</em> := <em>STRING_</em>.<em>make</em> (<em>10</em>)</font></pre>
 </blockquote>
 
 <hr size="1">
@@ -662,7 +663,7 @@ color="#008080">
 <table border="0" width="100%">
     <tr>
         <td><address>
-            <font size="2"><b>Copyright © 1997</b></font><font
+            <font size="2"><b>Copyright © 1998</b></font><font
             size="1"><b>, </b></font><font size="2"><strong>Eric
             Bezault</strong></font><strong> </strong><font
             size="2"><br>
@@ -672,7 +673,7 @@ color="#008080">
             </font><a href="http://www.gobo.demon.co.uk"><font
             size="2">http://www.gobo.demon.co.uk</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 17 October 1997</font><br>
+            <strong>Last Updated:</strong> 23 May 1998</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
