@@ -72,7 +72,7 @@ feature -- Status report
 			-- the parser with a document in several steps. You must use
 			-- the special parsing routines (the ones that contain
 			-- "incremental" in their name) to do this and call
-			-- `set_end_of_document' after the last part has been fed.
+			-- `finish_incremental' after the last part has been fed.
 
 	is_parser_created: BOOLEAN is
 			-- Has Expat parser handle been created?
@@ -801,7 +801,7 @@ feature {NONE} -- (low level) frozen callbacks (called from exml clib)
 					in_file.open_read
 					if in_file.is_open_read then
 						parse_incremental_from_stream (in_file)
-						set_end_of_document
+						finish_incremental
 						in_file.close
 						Result := True
 					else
