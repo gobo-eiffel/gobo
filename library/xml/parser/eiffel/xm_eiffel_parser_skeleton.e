@@ -145,6 +145,7 @@ feature {NONE} -- Implementation
 	parse_with_events is
 			-- Parse with start/finish events.
 		do
+			reset_error_state
 			on_start
 			parse
 			on_finish
@@ -281,24 +282,39 @@ feature {NONE} -- Error
 	error_positions: like positions
 			-- Position stack in case of error.
 
+	reset_error_state is
+			-- Set error state.
+		do
+			error_positions := Void
+			last_error_description := Void
+		end
+		
 	setup_error_state (an_error: STRING) is
-			-- Set position
+			-- Set error message and position
 		require
 			an_error_not_void: an_error /= Void
 		do
 				-- Set error info
 			last_error_description := an_error
-			error_positions := new_positions
 			
-				-- Unfold scanner stack
-			scanner.close_input
-			from
-			until
-				scanners.is_empty
-			loop
-				scanners.item.close_input
-				scanners.remove
+				-- Setup position and unfold scanner stack,
+				-- if not already done
+			if error_positions = Void then
+				error_positions := new_positions
+			
+					-- Unfold scanner stack
+				scanner.close_input
+				from
+				until
+					scanners.is_empty
+				loop
+					scanners.item.close_input
+					scanners.remove
+				end
 			end
+		ensure
+			in_error: not is_correct
+			scanners_empty: scanners.is_empty
 		end
 
 	new_positions: DS_BILINKED_LIST [XM_POSITION] is
