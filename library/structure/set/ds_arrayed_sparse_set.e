@@ -58,7 +58,7 @@ feature {DS_ARRAYED_SPARSE_SET_CURSOR} -- Implementation
 feature {NONE} -- Implementation
 
 	items: like FIXED_ITEM_ARRAY_TYPE
-			-- Storage for items of the set indexed from 0 to `capacity-1'
+			-- Storage for items of the set indexed from 1 to `capacity'
 
 	make_items (n: INTEGER) is
 			-- Create `items'.
@@ -85,12 +85,24 @@ feature {NONE} -- Implementation
 			items := FIXED_ITEM_ARRAY_.resize (items, n)
 		end
 
+	items_wipe_out is
+			-- Wipe out items in `items'.
+		local
+			i: INTEGER
+			dead_item: G
+		do
+			from i := last_position until i < 1 loop
+				items.put (dead_item, i)
+				i := i - 1
+			end
+		end
+
 	clashes: like FIXED_INTEGER_ARRAY_TYPE
-			-- Indexes in `items' when there is clashes
+			-- Indexes in `items' when there are clashes
 			-- in `slots'. Each entry points to the next alternative
-			-- until `No_position' is reached. Also keep track of
-			-- free slot positions with indexes less that or equal
-			-- to `Free_watermark'
+			-- until `No_position' is reached. Also keep track of free
+			-- slot positions located before or at `last_position' with
+			-- indexes less that or equal to `Free_watermark'.
 
 	make_clashes (n: INTEGER) is
 			-- Create `clashes'.
@@ -114,6 +126,17 @@ feature {NONE} -- Implementation
 			-- Resize `clashes'.
 		do
 			clashes := FIXED_INTEGER_ARRAY_.resize (clashes, n)
+		end
+
+	clashes_wipe_out is
+			-- Wipe out items in `clashes'.
+		local
+			i: INTEGER
+		do
+			from i := last_position until i < 1 loop
+				clashes.put (No_position, i)
+				i := i - 1
+			end
 		end
 
 	slots: like FIXED_INTEGER_ARRAY_TYPE
@@ -151,15 +174,26 @@ feature {NONE} -- Implementation
 			slots := FIXED_INTEGER_ARRAY_.resize (slots, n)
 		end
 
+	slots_wipe_out is
+			-- Wipe out items in `slots'.
+		local
+			i: INTEGER
+		do
+			from i := modulus until i < 0 loop
+				slots.put (No_position, i)
+				i := i - 1
+			end
+		end
+
 	FIXED_ITEM_ARRAY_: KL_FIXED_ARRAY_ROUTINES [G]
 			-- Routines that ought to be in FIXED_ARRAY
 
 invariant
 
 	items_not_void: items /= Void
-	items_count: items.count = capacity
+	items_count: items.count = capacity + 1
 	clashes_not_void: clashes /= Void
-	clashes_count: clashes.count = capacity
+	clashes_count: clashes.count = capacity + 1
 	slots_not_void: slots /= Void
 	slots_count: slots.count = modulus + 1
 
