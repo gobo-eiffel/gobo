@@ -248,21 +248,19 @@ feature {NONE} -- Implementation
 	yy_refill_input_buffer is
 			-- Refill `input_buffer'.
 			-- Update `yy_start_position' and `yy_position'.
+		require
+			end_of_buffer_not_missed: yy_position <= (input_buffer.upper + 2)
 		local
 			yy_new_position: INTEGER
 		do
-			if yy_position > input_buffer.upper + 2 then
-				fatal_error ("fatal scanner internal error: end of buffer missed")
-			else
-				input_buffer.set_position (yy_start_position)
-				input_buffer.fill
-					-- `input_buffer.content' may have been resized.
-					-- Therefore `content' has to be queried again.
-				yy_set_content (input_buffer.content)
-				yy_new_position := input_buffer.position
-				yy_position := yy_position - yy_start_position + yy_new_position
-				yy_start_position := yy_new_position
-			end
+			input_buffer.set_position (yy_start_position)
+			input_buffer.fill
+				-- `input_buffer.content' may have been resized.
+				-- Therefore `content' has to be queried again.
+			yy_set_content (input_buffer.content)
+			yy_new_position := input_buffer.position
+			yy_position := yy_position - yy_start_position + yy_new_position
+			yy_start_position := yy_new_position
 		end
 
 	yy_set_content (a_content: like yy_content) is

@@ -48,10 +48,10 @@ feature -- Scanning
 				-- ugly but fast scanning routine rather than a nice and
 				-- slow version. I hope you won't blame me for that! :-)
 			from
-				last_token := -1
+				last_token := yyUnknown_token
 				yy_goto := yyNext_token
 			until
-				last_token /= -1
+				last_token /= yyUnknown_token
 			loop
 				inspect yy_goto
 				when yyNext_token then
@@ -118,7 +118,8 @@ feature -- Scanning
 							yy_current_state := yy_last_accepting_state
 							yy_goto := yyFind_action
 						else
-				fatal_error ("fatal scanner internal error: no action found")
+							last_token := yyError_token
+							fatal_error ("fatal scanner internal error: no action found")
 						end
 					elseif yy_act = yyEnd_of_buffer then
 							-- Amount of text matched not including
@@ -190,8 +191,6 @@ feature -- Scanning
 					end
 				end
 			end
-		rescue
-			fatal_error ("fatal scanner internal error")
 		end
 
 feature {NONE} -- Tables

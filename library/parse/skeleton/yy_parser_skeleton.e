@@ -15,6 +15,9 @@ deferred class YY_PARSER_SKELETON [G]
 inherit
 
 	YY_PARSER [G]
+		redefine
+			clear_all
+		end
 
 	KL_SHARED_STANDARD_FILES
 
@@ -114,21 +117,31 @@ feature -- Parsing
 						end
 							-- Convert token to internal form (in `yychar1')
 							-- for indexing tables.
-						if last_token <= yyEof then
-								-- This means end of input.
-							yychar1 := 0
-							debug ("GEYACC")
-								std.error.put_string ("Now at end of input.%N")
-							end
-						else
-							yychar1 := yy_translate (last_token)
+						if last_token > yyEof then
 							debug ("GEYACC")
 								std.error.put_string ("Next token is ")
 								std.error.put_integer (last_token)
 								std.error.put_character ('%N')
 							end
+							yychar1 := yy_translate (last_token)
+							yyn := yyn + yychar1
+						elseif last_token = yyEof then
+								-- This means end of input.
+							debug ("GEYACC")
+								std.error.put_string ("Now at end of input.%N")
+							end
+							yychar1 := 0
+						else
+								-- An error occurred in the scanner.
+							debug ("GEYACC")
+								std.error.put_string ("Error in scanner.%N")
+							end
+							error_count := error_count + 1
+							report_error ("parse error")
+							abort
+								-- Skip next conditional instruction:
+							yyn := -1
 						end
-						yyn := yyn + yychar1
 						if
 							(yyn < 0 or yyn > yyLast) or else
 							yycheck.item (yyn) /= yychar1
@@ -192,9 +205,6 @@ feature -- Parsing
 						-- Do a reduction. `yyn' is the number of a rule
 						-- to reduce with.
 					yylen := yyr2.item (yyn)
-					if yylen > 0 then
-						yyval := yyvs.item (yyvsp - yylen + 1)
-					end
 					debug ("GEYACC")
 						std.error.put_string ("Reducing via rule #")
 						std.error.put_integer (yyn)
@@ -321,6 +331,24 @@ feature -- Access
 
 	error_count: INTEGER
 			-- Number of errors detected during last parsing
+
+feature -- Element change
+
+	clear_all is
+			-- Clear temporary objects so that they can be collected
+			-- by the garbage collector. (This routine is called by
+			-- `parse' before exiting. It can be redefined in descendants.)
+			-- Clear internal stacks by default.
+		do
+			clear_stacks
+		end
+
+	clear_stacks is
+			-- Clear objects in internal stacks so that they can
+			-- be collected by the garbage collector.
+		do
+			FIXED_ARRAY_.clear_all (yyvs)
+		end
 
 feature {YY_PARSER_ACTION} -- Status report
 
@@ -503,6 +531,9 @@ feature {NONE} -- Implementation
 	yyval: G
 			-- Semantic value from action
 
+	yyval_default: G is do end
+			-- Default value for `yyval'
+
 	yy_lookahead_needed: BOOLEAN
 			-- Is a lookahead token needed?
 
@@ -522,7 +553,6 @@ feature {NONE} -- Implementation
 		do
 			clear_all
 			yyval := default_value
-			FIXED_ARRAY_.clear_all (yyvs)
 		end
 
 feature {NONE} -- Constants
