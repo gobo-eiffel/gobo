@@ -253,17 +253,28 @@ feature -- Status report
 			-- Does file physically exist on disk?
 			-- (Note that with SmallEiffel this routine
 			-- actually returns `is_readable'.)
+		local
+			rescued: BOOLEAN
 		do
-			if name.count > 0 then
+			if not rescued then
+				if name.count > 0 then
 #ifdef ISE || HACT
-				Result := old_exists and then is_plain
+					Result := old_exists and then is_plain
 #endif
 #ifdef SE
-				Result := is_readable
+					Result := is_readable
 #endif
 #ifdef VE
-				Result := old_exists
+					Result := old_exists
 #endif
+				end
+			else
+				Result := False
+			end
+		rescue
+			if not rescued then
+				rescued := True
+				retry
 			end
 		end
 
