@@ -21,5 +21,5 @@
 
 
 set options= -boost -no_split -case_insensitive -no_warning
-compile_to_c -boost -no_split CALC execute
+compile_to_c %options% CALC execute
 calc.bat
