@@ -15,15 +15,13 @@
 <chapter id="geant_examples">
 	<title>Geant examples</title>
 
-	<sect1 id="abstract">
-		<para>
-			This document explains the individual geant examples and how to use them.
-			It serves as a first draft version for the geant documentation.
-			All examples should be invoked from the commandline.
-		</para>
-		<para>Here ist the commandline syntax of geant:</para>
-		<programlisting>geant [-V][-v|--verbose][-b|--buildfile &lt;buildfile>] [-D&lt;varname>=&lt;varvalue>]* [target]</programlisting>
-	</sect1>
+	<para>
+		This document explains the individual geant examples and how to use them.
+		It serves as a first draft version for the geant documentation.
+		All examples should be invoked from the commandline.
+	</para>
+	<para>Here ist the commandline syntax of geant:</para>
+	<programlisting>geant [-V][-v|--verbose][-b|--buildfile &lt;buildfile>] [-D&lt;varname>=&lt;varvalue>]* [target]</programlisting>
 
 	<sect1 id="introduction">
 		<title>Getting started</title>

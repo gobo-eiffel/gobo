@@ -42,7 +42,6 @@
    whether there is a testing class set up for the function. If so, it will be in $GOBO/test/xml/xpath/, and will be named xm_xpath_test_&lt;function-name&gt;.e .
   </para>
   <para>The final column gives a link to the W3C draft or recommendation against which the tests have been checked, or &quot;None&quot;, if this has not been done. </para>
-  <sect1>
-    <para><ulink url="functions.html">Table of functions</ulink></para>
-  </sect1>
+  
+  <para><ulink url="functions.html">Table of functions</ulink></para>
 </chapter>

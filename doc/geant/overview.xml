@@ -15,11 +15,9 @@
 <chapter id="geant_overview">
 	<title>Overview of Geant</title>
 
-	<sect1 id="what_is_it">
-		<para>
-			Geant is a build tool specifically tailored for the Eiffel programming language.
-		</para>
-	</sect1>
+	<para>
+		Geant is a build tool specifically tailored for the Eiffel programming language.
+	</para>
 
 	<sect1 id="introduction">
 		<title>Why Geant?</title>
