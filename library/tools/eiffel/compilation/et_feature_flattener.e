@@ -1347,7 +1347,7 @@ feature {NONE} -- Feature adaptation validity
 			end
 		end
 
-feature {NONE} -- Signature validity
+feature {NONE} -- Signature resolving
 
 	resolve_identifier_type_signature (a_feature: ET_FLATTENED_FEATURE) is
 			-- Resolve identifier types (e.g. "like identifier"
@@ -1384,6 +1384,8 @@ feature {NONE} -- Signature validity
 
 	identifier_type_resolver: ET_IDENTIFIER_TYPE_RESOLVER
 			-- Identifier type resolver
+
+feature {NONE} -- Signature validity
 
 	check_anchored_signatures is
 			-- Check whether there is no cycle in the anchored types
@@ -1474,10 +1476,12 @@ feature {NONE} -- Signature validity
 			other_precursor: ET_FLATTENED_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			other_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_ancestor_builder: ET_ANCESTOR_BUILDER
+			a_resolver: ET_AST_PROCESSOR
 			i, nb: INTEGER
 		do
-			an_ancestor_builder := universe.ancestor_builder
+				-- We don't want the qualified anchored types in signatures to be resolved yet.
+			a_resolver := universe.qualified_signature_resolver
+			universe.set_qualified_signature_resolver (universe.null_processor)
 			a_type := a_feature.type
 			parent_context.set (other.parent.type, current_class)
 			other_precursor := other.precursor_feature
@@ -1490,7 +1494,7 @@ feature {NONE} -- Signature validity
 			elseif other_type = Void then
 				set_fatal_error (current_class)
 				error_handler.report_vdrd2a_error (current_class, a_feature, other.inherited_feature, universe)
-			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, an_ancestor_builder) then
+			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 				if
 					a_type.has_qualified_type (current_class, universe) or
 					other_type.has_qualified_type (parent_context, universe)
@@ -1522,7 +1526,7 @@ feature {NONE} -- Signature validity
 					from i := 1 until i > nb loop
 						a_type := an_arguments.formal_argument (i).type
 						other_type := other_arguments.formal_argument (i).type
-						if not a_type.conforms_to_type (other_type, parent_context, current_class, an_ancestor_builder) then
+						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 							if
 								a_type.has_qualified_type (current_class, universe) or
 								other_type.has_qualified_type (parent_context, universe)
@@ -1539,6 +1543,7 @@ feature {NONE} -- Signature validity
 					end
 				end
 			end
+			universe.set_qualified_signature_resolver (a_resolver)
 		end
 
 	check_merged_signature_validity (a_feature, other: ET_FEATURE) is
@@ -1562,10 +1567,12 @@ feature {NONE} -- Signature validity
 			other_precursor: ET_FLATTENED_FEATURE
 			an_arguments: ET_FORMAL_ARGUMENT_LIST
 			other_arguments: ET_FORMAL_ARGUMENT_LIST
-			an_ancestor_builder: ET_ANCESTOR_BUILDER
+			a_resolver: ET_AST_PROCESSOR
 			i, nb: INTEGER
 		do
-			an_ancestor_builder := universe.ancestor_builder
+				-- We don't want the qualified anchored types in signatures to be resolved yet.
+			a_resolver := universe.qualified_signature_resolver
+			universe.set_qualified_signature_resolver (universe.null_processor)
 			a_flattened_feature := a_feature.flattened_feature
 			a_type := a_flattened_feature.type
 			parent_context.set (other.parent.type, current_class)
@@ -1581,7 +1588,7 @@ feature {NONE} -- Signature validity
 				set_fatal_error (current_class)
 				an_inherited_feature := a_feature.inherited_feature.inherited_flattened_feature.inherited_feature
 				error_handler.report_vdrd2b_error (current_class, an_inherited_feature, other.inherited_feature, universe)
-			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, an_ancestor_builder) then
+			elseif not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 				if
 					a_type.has_qualified_type (current_class, universe) or
 					other_type.has_qualified_type (parent_context, universe)
@@ -1617,7 +1624,7 @@ feature {NONE} -- Signature validity
 					from i := 1 until i > nb loop
 						a_type := an_arguments.formal_argument (i).type
 						other_type := other_arguments.formal_argument (i).type
-						if not a_type.conforms_to_type (other_type, parent_context, current_class, an_ancestor_builder) then
+						if not a_type.conforms_to_type (other_type, parent_context, current_class, universe) then
 							if
 								a_type.has_qualified_type (current_class, universe) or
 								other_type.has_qualified_type (parent_context, universe)
@@ -1635,6 +1642,7 @@ feature {NONE} -- Signature validity
 					end
 				end
 			end
+			universe.set_qualified_signature_resolver (a_resolver)
 		end
 
 	check_joined_signature_validity (a_feature, other: ET_FEATURE) is
