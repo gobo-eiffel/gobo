@@ -85,13 +85,6 @@ feature {NONE} -- Assert
 			a_parser.set_callbacks (standard_callbacks_pipe (<<a_filter>>))
 			a_parser.parse_from_string (a_in)
 			
-			debug ("xml_parser")
---				if a_checker.has_failed then
---					std.output.put_string ("failed: " + a_checker.failed)
---					std.output.put_new_line
---				end
-			end
-			
 			assert ("parsing ok", a_parser.is_correct)
 			assert ("version", STRING_.same_string ("1.0", a_filter.version))
 			assert ("encoding", STRING_.same_string (expected_encoding, a_filter.encoding))
