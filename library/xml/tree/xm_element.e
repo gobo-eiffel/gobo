@@ -423,25 +423,20 @@ feature -- Access
 			-- This list must contain at most one namespace with a
 			-- void prefix. If such a namespace exists it is a declared
 			-- default namespace.
-			-- (Return the same list object at each call.)
+			-- (Returns a new list object at each call.)
 		local
 			a_cursor: like new_cursor
 			typer: XM_NODE_TYPER
 		do
 			create typer
-			if namespace_declarations_cache /= Void then
-				Result := namespace_declarations_cache
-			else
-				create Result.make
-				a_cursor := new_cursor
-				from a_cursor.start until a_cursor.after loop
-					a_cursor.item.process (typer)
-					if typer.is_attribute and then typer.xml_attribute.is_namespace_declaration then
-						Result.force_last (typer.xml_attribute.namespace_declaration)
-					end
-					a_cursor.forth
+			create Result.make
+			a_cursor := new_cursor
+			from a_cursor.start until a_cursor.after loop
+				a_cursor.item.process (typer)
+				if typer.is_attribute and then typer.xml_attribute.is_namespace_declaration then
+					Result.force_last (typer.xml_attribute.namespace_declaration)
 				end
-				namespace_declarations_cache := Result
+				a_cursor.forth
 			end
 		ensure
 			namespace_declarations_not_void: Result /= Void
@@ -605,10 +600,5 @@ feature -- Processing
 		do
 			a_processor.process_element (Current)
 		end
-
-feature {NONE} -- Implementation
-
-	namespace_declarations_cache: DS_LINKED_LIST [XM_NAMESPACE]
-			-- Cache for `namespace_declarations'
 
 end
