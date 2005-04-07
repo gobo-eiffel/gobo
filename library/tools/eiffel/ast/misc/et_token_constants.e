@@ -258,6 +258,14 @@ feature -- Class names
 			function_class_name_not_void: Result /= Void
 		end
 
+	system_object_class_name: ET_CLASS_NAME is
+			-- "SYSTEM_OBJECT" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_system_object_name)
+		ensure
+			system_object_class_name_not_void: Result /= Void
+		end
+
 	unknown_class_name: ET_CLASS_NAME is
 			-- "*UNKNOWN*" class name
 		once
@@ -1208,6 +1216,7 @@ feature -- Keyword and symbol names
 	capitalized_routine_name: STRING is "ROUTINE"
 	capitalized_special_name: STRING is "SPECIAL"
 	capitalized_string_name: STRING is "STRING"
+	capitalized_system_object_name: STRING is "SYSTEM_OBJECT"
 	capitalized_tuple_name: STRING is "TUPLE"
 	capitalized_type_name: STRING is "TYPE"
 	capitalized_typed_pointer_name: STRING is "TYPED_POINTER"
