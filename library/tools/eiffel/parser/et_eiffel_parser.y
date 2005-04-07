@@ -124,6 +124,7 @@ creation
 %type <ET_CONVERT_FEATURE> Convert_feature
 %type <ET_CONVERT_FEATURE_ITEM> Convert_feature_comma
 %type <ET_CONVERT_FEATURE_LIST> Convert_clause_opt Convert_clause Convert_list
+%type <ET_CREATE_EXPRESSION> Create_expression
 %type <ET_CREATOR> Creation_clause Creation_procedure_list
 %type <ET_CREATOR_LIST> Creators Creators_opt Creators_list
 %type <ET_DEBUG_INSTRUCTION> Debug_instruction
@@ -132,7 +133,7 @@ creation
 %type <ET_EXPORT> New_export_item
 %type <ET_EXPORT_LIST> New_exports New_exports_opt New_export_list
 %type <ET_EXPRESSION> Expression Call_chain_without_static Call_chain_with_static
-%type <ET_EXPRESSION> Precursor_expression Manifest_type Address_mark Create_expression
+%type <ET_EXPRESSION> Precursor_expression Manifest_type Address_mark
 %type <ET_EXPRESSION> Call_expression_without_static Call_expression_with_static
 %type <ET_EXPRESSION> Typed_expression Typable_expression Binary_expression Non_binary_expression
 %type <ET_EXPRESSION> Non_binary_expression_without_unsigned_numeric
@@ -412,6 +413,10 @@ Index_value: Identifier
 		{ $$ := $1 }
 	| E_BIT
 		{ $$ := $1 }
+	| Create_expression E_END
+		{ $$ := ast_factory.new_custom_attribute ($1, Void, $2) }
+	| Create_expression Manifest_tuple E_END
+		{ $$ := ast_factory.new_custom_attribute ($1, $2, $3) }
 	;
 
 Index_value_comma: Index_value ','

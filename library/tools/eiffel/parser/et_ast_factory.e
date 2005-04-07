@@ -1666,6 +1666,15 @@ feature -- AST nodes
 			end
 		end
 
+	new_custom_attribute (a_creation: ET_CREATE_EXPRESSION;
+		a_settings: ET_MANIFEST_TUPLE; an_end: ET_KEYWORD): ET_CUSTOM_ATTRIBUTE is
+			-- New if instruction
+		do
+			if a_creation /= Void then
+				create Result.make (a_creation, a_settings)
+			end
+		end
+
 	new_debug_compound (a_debug: ET_KEYWORD; a_compound: ET_COMPOUND): ET_COMPOUND is
 			-- New compound preceded by a 'debug' keyword
 		do

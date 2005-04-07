@@ -646,7 +646,7 @@ feature {ET_AST_NODE} -- Processing
 	process_current (an_expression: ET_CURRENT) is
 			-- Process `an_expression'.
 		do
-			process_token (an_expression)
+			process_keyword (an_expression)
 		end
 
 	process_current_address (an_expression: ET_CURRENT_ADDRESS) is
@@ -654,6 +654,19 @@ feature {ET_AST_NODE} -- Processing
 		do
 			an_expression.dollar.process (Current)
 			an_expression.current_keyword.process (Current)
+		end
+
+	process_custom_attribute (an_attribute: ET_CUSTOM_ATTRIBUTE) is
+			-- Process `an_attribute'.
+		local
+			l_settings: ET_MANIFEST_TUPLE
+		do
+			an_attribute.creation_expression.process (Current)
+			l_settings := an_attribute.settings
+			if l_settings /= Void then
+				l_settings.process (Current)
+			end
+			an_attribute.end_keyword.process (Current)
 		end
 
 	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION) is
@@ -1137,7 +1150,7 @@ feature {ET_AST_NODE} -- Processing
 	process_false_constant (a_constant: ET_FALSE_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			process_token (a_constant)
+			process_keyword (a_constant)
 		end
 
 	process_feature_address (an_expression: ET_FEATURE_ADDRESS) is
@@ -2071,7 +2084,7 @@ feature {ET_AST_NODE} -- Processing
 	process_result (an_expression: ET_RESULT) is
 			-- Process `an_expression'.
 		do
-			process_token (an_expression)
+			process_keyword (an_expression)
 		end
 
 	process_result_address (an_expression: ET_RESULT_ADDRESS) is
@@ -2084,7 +2097,7 @@ feature {ET_AST_NODE} -- Processing
 	process_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			process_token (an_instruction)
+			process_keyword (an_instruction)
 		end
 
 	process_semicolon_symbol (a_symbol: ET_SEMICOLON_SYMBOL) is
@@ -2189,7 +2202,7 @@ feature {ET_AST_NODE} -- Processing
 	process_true_constant (a_constant: ET_TRUE_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			process_token (a_constant)
+			process_keyword (a_constant)
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is
@@ -2292,7 +2305,7 @@ feature {ET_AST_NODE} -- Processing
 	process_void (an_expression: ET_VOID) is
 			-- Process `an_expression'.
 		do
-			process_token (an_expression)
+			process_keyword (an_expression)
 		end
 
 	process_when_part (a_when_part: ET_WHEN_PART) is

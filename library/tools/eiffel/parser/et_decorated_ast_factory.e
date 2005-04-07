@@ -169,6 +169,7 @@ inherit
 			new_create_instruction,
 			new_creator,
 			new_current_address,
+			new_custom_attribute,
 			new_debug_compound,
 			new_debug_instruction,
 			new_deferred_function,
@@ -1727,6 +1728,18 @@ feature -- AST nodes
 			end
 			if c /= Void then
 				Result.set_current_keyword (c)
+			end
+		end
+
+	new_custom_attribute (a_creation: ET_CREATE_EXPRESSION;
+		a_settings: ET_MANIFEST_TUPLE; an_end: ET_KEYWORD): ET_CUSTOM_ATTRIBUTE is
+			-- New if instruction
+		do
+			if a_creation /= Void then
+				create Result.make (a_creation, a_settings)
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
+				end
 			end
 		end
 

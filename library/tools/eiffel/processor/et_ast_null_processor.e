@@ -277,6 +277,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_custom_attribute (an_attribute: ET_CUSTOM_ATTRIBUTE) is
+			-- Process `an_attribute'.
+		do
+		end
+
 	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do

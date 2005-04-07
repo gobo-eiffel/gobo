@@ -402,6 +402,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_custom_attribute (an_attribute: ET_CUSTOM_ATTRIBUTE) is
+			-- Process `an_attribute'.
+		require
+			an_attribute_not_void: an_attribute /= Void
+		deferred
+		end
+
 	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION) is
 			-- Process `an_instruction'.
 		require
