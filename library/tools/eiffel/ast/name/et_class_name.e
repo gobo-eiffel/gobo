@@ -28,6 +28,16 @@ feature -- Access
 			name_not_empty: Result.count > 0
 		end
 
+	upper_name: STRING is
+			-- Upper-name of class
+			-- (May return the same object as `name' if already in upper case.)
+		deferred
+		ensure
+			upper_name_not_void: Result /= Void
+			upper_name_not_empty: Result.count > 0
+			definition: Result.is_equal (name.as_upper)
+		end
+
 	class_name: ET_CLASS_NAME is
 			-- Class name
 		do

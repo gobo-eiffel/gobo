@@ -138,6 +138,50 @@ feature -- Initialization
 
 feature -- Access
 
+	lower_name: STRING is
+			-- Lower-name of identifier
+			-- (May return the same object as `name' if already in lower case.)
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			Result := name
+			nb := Result.count
+			from i := 1 until i > nb loop
+				c := Result.item (i)
+				if c >= 'A' and c <= 'Z' then
+					Result := Result.as_lower
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			lower_name_not_void: Result /= Void
+			lower_name_not_empty: Result.count > 0
+			definition: Result.is_equal (name.as_lower)
+		end
+
+	upper_name: STRING is
+			-- Upper-name of identifer
+			-- (May return the same object as `name' if already in upper case.)
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			Result := name
+			nb := Result.count
+			from i := 1 until i > nb loop
+				c := Result.item (i)
+				if c >= 'a' and c <= 'z' then
+					Result := Result.as_upper
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		end
+
 	target: ET_EXPRESSION is
 			-- Target
 		do

@@ -118,6 +118,30 @@ feature -- Access
 			name_not_empty: Result.count > 0
 		end
 
+	lower_name: STRING is
+			-- Lower-name of cluster
+			-- (May return the same object as `name' if already in lower case.)
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			Result := name
+			nb := Result.count
+			from i := 1 until i > nb loop
+				c := Result.item (i)
+				if c >= 'A' and c <= 'Z' then
+					Result := Result.as_lower
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
+		ensure
+			lower_name_not_void: Result /= Void
+			lower_name_not_empty: Result.count > 0
+			definition: Result.is_equal (name.as_lower)
+		end
+
 	prefixed_name: STRING is
 			-- Cluster name with possible prefixes
 		do
@@ -152,6 +176,29 @@ feature -- Access
 		ensure
 			full_name_not_void: Result /= Void
 			full_name_not_empty: Result.count > 0
+		end
+
+	full_lower_name (a_separator: CHARACTER): STRING is
+			-- Full lower_name (use `a_separator' as separator
+			-- between parents' names)
+		local
+			parent_name: STRING
+			a_basename: STRING
+		do
+			if parent /= Void then
+				parent_name := parent.full_lower_name (a_separator)
+				a_basename := lower_name
+				Result := STRING_.new_empty_string (parent_name, parent_name.count + a_basename.count + 1)
+				Result.append_string (parent_name)
+				Result.append_character (a_separator)
+				Result := STRING_.appended_string (Result, a_basename)
+			else
+				Result := lower_name
+			end
+		ensure
+			full_lower_name_not_void: Result /= Void
+			full_lower_name_not_empty: Result.count > 0
+			definition: Result.is_equal (full_name (a_separator).as_lower)
 		end
 
 	full_pathname: STRING is
