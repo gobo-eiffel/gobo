@@ -45,7 +45,7 @@ feature -- Status report
 			-- class name "NONE" or is empty?
 		do
 			if count = 1 then
-				Result := storage.item (0).class_name.same_class_name (tokens.none_class_name)
+				Result := storage.item (0).class_name.is_none
 			elseif count = 0 then
 				Result := True
 			end

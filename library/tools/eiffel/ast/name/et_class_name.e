@@ -42,6 +42,12 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_none: BOOLEAN is
+			-- Is current class name "NONE"?
+		do
+			Result := same_class_name (tokens.none_class_name)
+		end
+
 feature -- Comparison
 
 	same_class_name (other: ET_CLASS_NAME): BOOLEAN is
