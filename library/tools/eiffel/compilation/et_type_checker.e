@@ -462,6 +462,9 @@ feature -- Type conversion
 					then
 						Result := universe.double_convert_feature
 					end
+				elseif universe.is_dotnet and a_target_base_class = universe.system_object_class then
+						-- Needed for Eiffel for .NET.
+					create {ET_BUILTIN_CONVERT_FEATURE} Result.make (a_source_type.named_type (universe))
 				elseif a_source_base_class = universe.boolean_class then
 						-- Needed by ISE Eiffel 5.6.
 					if
