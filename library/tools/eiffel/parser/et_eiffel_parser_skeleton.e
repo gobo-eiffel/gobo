@@ -1304,9 +1304,6 @@ feature {NONE} -- AST factory
 			end
 		end
 
-
-
-
 	new_class (a_name: ET_IDENTIFIER): ET_CLASS is
 			-- New Eiffel class
 		require
@@ -1317,6 +1314,11 @@ feature {NONE} -- AST factory
 			l_other_class: ET_CLASS
 		do
 			Result := universe.eiffel_class (a_name)
+			if current_class.master_class = Result then
+					-- Make sure that `current_class' is parsed,
+					-- and not its overriding class if any.
+				Result := current_class
+			end
 			if Result.is_parsed and Result.is_preparsed then
 				if cluster.is_override then
 					if Result.is_override then
@@ -1357,7 +1359,7 @@ feature {NONE} -- AST factory
 					l_other_class.reset_all
 					l_other_class.set_filename (filename)
 					l_other_class.set_cluster (cluster)
-					l_other_class.set_name (a_name)					
+					l_other_class.set_name (a_name)
 					l_other_class.set_parsed
 					l_other_class.set_time_stamp (time_stamp)
 					l_other_class.set_in_system (True)
