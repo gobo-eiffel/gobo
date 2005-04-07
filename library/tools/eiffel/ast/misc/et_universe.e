@@ -148,6 +148,7 @@ feature {NONE} -- Initialization
 			predicate_class.set_in_system (True)
 			function_class := eiffel_class (tokens.function_class_name)
 			function_class.set_in_system (True)
+			system_object_class := eiffel_class (tokens.system_object_class_name)
 				-- Unknown class.
 			create unknown_class.make_unknown (tokens.unknown_class_name)
 				-- Type "ANY".
@@ -229,6 +230,7 @@ feature {NONE} -- Initialization
 			procedure_class_not_void: procedure_class /= Void
 			predicate_class_not_void: predicate_class /= Void
 			function_class_not_void: function_class /= Void
+			system_object_class_not_void: system_object_class /= Void
 			unknown_class_not_void: unknown_class /= Void
 			any_type_not_void: any_type /= Void
 			string_type_not_void: string_type /= Void
@@ -305,8 +307,27 @@ feature -- Status report
 			is_preparsed: Result implies eiffel_class (a_name).is_preparsed
 		end
 
+	has_cluster (a_cluster: ET_CLUSTER): BOOLEAN is
+			-- Is `a_cluster' one of the clusters or recursively
+			-- subclusters of current universe?
+		do
+			if clusters /= Void then
+				Result := clusters.has_subcluster (a_cluster)
+			end
+		end
+
 	is_preparsed: BOOLEAN
 			-- Has the whole universe already been preparsed?
+
+	is_dotnet: BOOLEAN is
+			-- Does current universe contain Eiffel for .NET kernel classes?
+			-- Hence follow Eiffel for .NET validity rules.
+			-- (We just check whether class "SYSTEM_OBJECT" is in the universe,
+			-- so you will need to call one of the [pre]parse routines before
+			-- calling this routine.)
+		do
+			Result := system_object_class.is_preparsed
+		end
 
 feature -- Access
 
@@ -530,6 +551,9 @@ feature -- Basic classes
 
 	function_class: ET_CLASS
 			-- Class "FUNCTION"
+
+	system_object_class: ET_CLASS
+			-- Class "SYSTEM_OBJECT" (in Eiffel for .NET)
 
 	unknown_class: ET_CLASS
 			-- Class "*UNKNOWN*"
@@ -2329,6 +2353,7 @@ invariant
 	procedure_class_not_void: procedure_class /= Void
 	predicate_class_not_void: predicate_class /= Void
 	function_class_not_void: function_class /= Void
+	system_object_class_not_void: system_object_class /= Void
 	unknown_class_not_void: unknown_class /= Void
 	any_type_not_void: any_type /= Void
 	none_type_not_void: none_type /= Void
