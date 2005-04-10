@@ -24,6 +24,7 @@ feature -- Evaluation
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		require
 			context_not_void: a_context /= Void
+			no_error: not a_context.transformer.is_error
 		deferred
 		ensure
 			possible_tail_call: last_tail_call = Void or else last_tail_call /= Void

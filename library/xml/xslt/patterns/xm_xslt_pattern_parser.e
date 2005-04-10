@@ -73,11 +73,11 @@ feature -- Parsers
 			parse_union_pattern
 
 			if	tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XT0340")
+				report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 			elseif tokenizer.last_token /= Eof_token then
 				s := STRING_.appended_string ("Unexpected token ", display_current_token)
 				s := STRING_.appended_string (s, " beyond end of pattern")
-				report_parse_error (s, "XT0340")
+				report_parse_error (s, "XTSE0340")
 			end
 			debug ("XSLT pattern parsing")
 				if not is_parse_error then
@@ -108,11 +108,11 @@ feature -- Parsers
 			parse_sequence
 
 			if	tokenizer.is_lexical_error then
-				report_parse_error (tokenizer.last_lexical_error, "XT0340")
+				report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 			elseif tokenizer.last_token /= Eof_token then
 				s := STRING_.appended_string ("Unexpected token ", display_current_token)
 				s := STRING_.appended_string (s, " beyond end of sequence type")
-				report_parse_error (s, "XT0340")
+				report_parse_error (s, "XTSE0340")
 			end
 		ensure
 			sequence_not_void_unless_error: not is_parse_error implies last_parsed_sequence /= Void
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 				loop
 					tokenizer.next
 					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XT0340")
+						report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 						finished := True
 					else
 						parse_path_pattern
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 				connector := Slash_token
 				tokenizer.next
 				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XT0340")
+					report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 				else
 					create {XM_XSLT_NODE_KIND_TEST} previous_pattern.make (environment, Document_node)
 					root_only := True
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 				connector := Slash_slash_token
 				tokenizer.next
 				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XT0340")
+					report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 				else
 					create {XM_XSLT_NODE_KIND_TEST} previous_pattern.make (environment, Document_node)
 					root_only := False
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 						if STRING_.same_string (tokenizer.last_token_value, "child") then
 							tokenizer.next
 							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XT0340")
+								report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 								finished := True
 							else
 								parse_pattern_step (Element_node)
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 						elseif STRING_.same_string (tokenizer.last_token_value, "attribute") then
 							tokenizer.next
 							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XT0340")
+								report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 								finished := True
 							else
 								parse_pattern_step (Attribute_node)
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 								end
 							end
 						else
-							report_parse_error ("Axis in pattern must be child or attribute", "XT0340")
+							report_parse_error ("Axis in pattern must be child or attribute", "XTSE0340")
 							finished := True
 						end
 					when Star_token then
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 					when At_token then
 						tokenizer.next
 						if tokenizer.is_lexical_error then
-							report_parse_error (tokenizer.last_lexical_error, "XT0340")
+							report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 							finished := True
 						else						
 							parse_pattern_step (Attribute_node)
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 							if STRING_.same_string (tokenizer.last_token_value, "id") then
 								tokenizer.next
 								if tokenizer.is_lexical_error then
-									report_parse_error (tokenizer.last_lexical_error, "XT0340")
+									report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 									finished := True
 								else
 									id_value :=	Void
@@ -310,13 +310,13 @@ feature {NONE} -- Implementation
 									elseif tokenizer.last_token = Dollar_token then
 										tokenizer.next
 										if tokenizer.is_lexical_error then
-											report_parse_error (tokenizer.last_lexical_error, "XT0340")
+											report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 											finished := True
 										else
 											if tokenizer.last_token /= Name_token then
 												message := "expected %"<name>%", found "
 												message := STRING_.appended_string (message, display_current_token)
-												report_parse_error (message, "XT0340")
+												report_parse_error (message, "XTSE0340")
 												finished := True
 											else
 												generate_name_code (tokenizer.last_token_value, False)
@@ -325,24 +325,24 @@ feature {NONE} -- Implementation
 											end
 										end
 									else
-										report_parse_error ("id value must be either a literal or a variable reference", "XT0340")
+										report_parse_error ("id value must be either a literal or a variable reference", "XTSE0340")
 										finished := True
 									end
 									create {XM_XSLT_ID_PATTERN} id_pattern.make (environment, id_value)
 									tokenizer.next
 									if tokenizer.is_lexical_error then
-										report_parse_error (tokenizer.last_lexical_error, "XT0340")
+										report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 										finished := True
 									else
 										if tokenizer.last_token /= Right_parenthesis_token then
 											message := "expected %")%", found "
 											message := STRING_.appended_string (message, display_current_token)
-											report_parse_error (message, "XT0340")
+											report_parse_error (message, "XTSE0340")
 											finished := True
 										else
 											tokenizer.next
 											if tokenizer.is_lexical_error then
-												report_parse_error (tokenizer.last_lexical_error, "XT0340")
+												report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 												finished := True
 											end
 										end
@@ -351,30 +351,30 @@ feature {NONE} -- Implementation
 							elseif STRING_.same_string (tokenizer.last_token_value, "key") then
 								tokenizer.next
 								if tokenizer.is_lexical_error then
-									report_parse_error (tokenizer.last_lexical_error, "XT0340")
+									report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 									finished := True
 								else
 									if tokenizer.last_token /= String_literal_token then
 										message := "expected %"<string literal>%", found "
 										message := STRING_.appended_string (message, display_current_token)
-										report_parse_error (message, "XT0340")
+										report_parse_error (message, "XTSE0340")
 										finished := True
 									else
 										key_name := tokenizer.last_token_value
 										tokenizer.next
 										if tokenizer.is_lexical_error then
-											report_parse_error (tokenizer.last_lexical_error, "XT0340")
+											report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 											finished := True
 										else
 											if tokenizer.last_token /= Comma_token then
 												message := "expected %",%", found "
 												message := STRING_.appended_string (message, display_current_token)
-												report_parse_error (message, "XT0340")
+												report_parse_error (message, "XTSE0340")
 												finished := True
 											else
 												tokenizer.next
 												if tokenizer.is_lexical_error then
-													report_parse_error (tokenizer.last_lexical_error, "XT0340")
+													report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 													finished := True
 												else
 													id_value := Void
@@ -383,13 +383,13 @@ feature {NONE} -- Implementation
 													elseif tokenizer.last_token = Dollar_token then
 														tokenizer.next
 														if tokenizer.is_lexical_error then
-															report_parse_error (tokenizer.last_lexical_error, "XT0340")
+															report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 															finished := True
 														else
 															if tokenizer.last_token /= Name_token then
 																message := "expected %"<name>%", found "
 																message := STRING_.appended_string (message, display_current_token)
-																report_parse_error (message, "XT0340")
+																report_parse_error (message, "XTSE0340")
 																finished := True
 															else
 																generate_name_code (tokenizer.last_token_value, False)
@@ -398,25 +398,25 @@ feature {NONE} -- Implementation
 															end
 														end
 													else
-														report_parse_error ("id value must be either a literal or a variable reference", "XT0340")
+														report_parse_error ("id value must be either a literal or a variable reference", "XTSE0340")
 														finished := True
 													end
 													generate_name_code (key_name, False)
 													create {XM_XSLT_KEY_PATTERN} key_pattern.make (environment, last_generated_name_code, id_value)
 													tokenizer.next
 													if tokenizer.is_lexical_error then
-														report_parse_error (tokenizer.last_lexical_error, "XT0340")
+														report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 														finished := True
 													else
 														if tokenizer.last_token /= Right_parenthesis_token then
 															message := "expected %")%", found "
 															message := STRING_.appended_string (message, display_current_token)
-															report_parse_error (message, "XT0340")
+															report_parse_error (message, "XTSE0340")
 															finished := True
 														else
 															tokenizer.next
 															if tokenizer.is_lexical_error then
-																report_parse_error (tokenizer.last_lexical_error, "XT0340")
+																report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 																finished := True
 															end
 														end
@@ -427,11 +427,11 @@ feature {NONE} -- Implementation
 									end
 								end
 							else
-								report_parse_error ("The only functions allowed in a pattern are id() and key()", "XT0340")
+								report_parse_error ("The only functions allowed in a pattern are id() and key()", "XTSE0340")
 								finished := True
 							end
 						else
-							report_parse_error ("Function call may appear only at the start of a pattern", "XT0340")
+							report_parse_error ("Function call may appear only at the start of a pattern", "XTSE0340")
 							finished := True
 						end
 					else
@@ -439,7 +439,7 @@ feature {NONE} -- Implementation
 						if root_only then
 							internal_last_parsed_pattern := previous_pattern -- the patter was plain "/"
 						else
-							report_parse_error (STRING_.appended_string ("Unexpected token in pattern, found ", display_current_token), "XT0340")
+							report_parse_error (STRING_.appended_string ("Unexpected token in pattern, found ", display_current_token), "XTSE0340")
 						end
 					end
 					if not finished then
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 							previous_pattern := a_pattern
 							tokenizer.next
 							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XT0340")
+								report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 								finished := True
 							end
 						else
@@ -555,7 +555,7 @@ feature {NONE} -- Implementation
 			loop
 				next_token ("In parse_filters: current token is ")
 				if tokenizer.is_lexical_error then
-					report_parse_error (tokenizer.last_lexical_error, "XT0340")
+					report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 				else
 					parse_single_expression
 					if not is_parse_error then
@@ -563,11 +563,11 @@ feature {NONE} -- Implementation
 						if tokenizer.last_token /= Right_square_bracket_token then
 							a_message := "expected %"]%", found "
 							a_message := STRING_.appended_string (a_message, display_current_token)
-							report_parse_error (a_message, "XT0340")
+							report_parse_error (a_message, "XTSE0340")
 						else
 							next_token ("In parse_filters after RPAR: current token is ")
 							if tokenizer.is_lexical_error then
-								report_parse_error (tokenizer.last_lexical_error, "XT0340")
+								report_parse_error (tokenizer.last_lexical_error, "XTSE0340")
 							else
 								a_step.add_filter (a_qualifier)
 							end

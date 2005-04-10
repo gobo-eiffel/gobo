@@ -319,7 +319,7 @@ feature -- Evaluation
 			variant
 				children.count + 1 - a_cursor.index
 			until
-				a_cursor.after
+				a_context.transformer.is_error or else a_cursor.after
 			loop
 				a_child := a_cursor.item
 				an_instruction ?= a_child

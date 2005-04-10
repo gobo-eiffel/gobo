@@ -146,7 +146,7 @@ feature -- Evaluation
 					promote_number (a_value, a_context)
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",
-																				Xpath_errors_uri, "XP0006", Dynamic_error)
+																				Xpath_errors_uri, "XPTY0004", Type_error)
 				end
 			end
 		end
@@ -161,11 +161,11 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void, Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
 			end
 		end
 	
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		local
 			a_value: XM_XPATH_ATOMIC_VALUE
@@ -175,7 +175,7 @@ feature -- Evaluation
 				promote_number (a_value, a_context)
 			else
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",
-																	  Xpath_errors_uri, "XP0006", Dynamic_error)
+																	  Xpath_errors_uri, "XPTY0004", Dynamic_error)
 			end
 			create last_mapped_item.make_item (last_evaluated_item)
 		end
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 				last_evaluated_item := a_primitive_value.convert_to_type (item_type)
 			else
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot promote non-numeric value to " + item_type.conventional_name,
-													 Xpath_errors_uri, "XP0006", Dynamic_error)
+													 Xpath_errors_uri, "XPTY0004", Dynamic_error)
 			end
 		ensure
 			promotion_not_void: last_evaluated_item /= Void

@@ -32,15 +32,18 @@ feature -- Test
 			a_parser: XM_PARSER
 			a_dtd_filter: XM_DTD_CALLBACKS_NULL
 			a_sink: XM_PRETTY_PRINT_FILTER
+			a_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
 			system_id := "./test_event.xml"
 			a_parser := new_eiffel_parser
-			a_parser.set_resolver (new_resolver_current_directory)
+			a_resolver := new_resolver_current_directory
+			a_parser.set_resolver (a_resolver)
 			create a_dtd_filter.make
 			create a_sink.make_null
 			a_sink.set_output_to_string
 			create default_media_type.make ("application", "xml")
-			create a_filter.make ("an-id", default_media_type, a_sink, a_dtd_filter)
+			create a_filter.make ("an-id", default_media_type, a_resolver, a_sink, a_dtd_filter)
+			a_filter.add_media_type (default_media_type)
 			a_parser.set_callbacks (a_filter)
 			a_parser.set_dtd_callbacks (a_filter)
 			a_parser.parse_from_system (system_id)
@@ -55,17 +58,20 @@ feature -- Test
 			a_parser: XM_PARSER
 			a_dtd_filter: XM_DTD_CALLBACKS_NULL
 			a_sink: XM_PRETTY_PRINT_FILTER
+			a_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
 			system_id := "./test_event.xml"
 			a_parser := new_eiffel_parser
-			a_parser.set_resolver (new_resolver_current_directory)
+			a_resolver := new_resolver_current_directory
+			a_parser.set_resolver (a_resolver)
 			create a_dtd_filter.make
 			create a_sink.make_null
 			a_sink.set_output_to_string
 			create default_media_type.make ("application", "xml")
-			create a_filter.make ("fred", default_media_type, a_sink, a_dtd_filter)
+			create a_filter.make ("fred", default_media_type, a_resolver, a_sink, a_dtd_filter)
 			a_filter.set_no_filtering -- immediately overridden!
 			a_filter.set_xpointer ("S")
+			a_filter.add_media_type (default_media_type)
 			a_parser.set_callbacks (a_filter)
 			a_parser.set_dtd_callbacks (a_filter)
 			a_parser.parse_from_system (system_id)
@@ -80,15 +86,17 @@ feature -- Test
 			a_parser: XM_PARSER
 			a_dtd_filter: XM_DTD_CALLBACKS_NULL
 			a_sink: XM_PRETTY_PRINT_FILTER
+			a_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
 			system_id := "./test_event.xml"
 			a_parser := new_eiffel_parser
-			a_parser.set_resolver (new_resolver_current_directory)
+			a_resolver := new_resolver_current_directory
+			a_parser.set_resolver (a_resolver)
 			create a_dtd_filter.make
 			create a_sink.make_null
 			a_sink.set_output_to_string
 			create default_media_type.make ("application", "xml")
-			create a_filter.make ("fred", default_media_type, a_sink, a_dtd_filter)
+			create a_filter.make ("fred", default_media_type, a_resolver, a_sink, a_dtd_filter)
 			a_filter.set_no_filtering
 			a_parser.set_callbacks (a_filter)
 			a_parser.set_dtd_callbacks (a_filter)

@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			loop
 				a_qname := a_cursor.item
 				if not is_qname (a_qname) then
-					create cdata_validation_error.make_from_string (STRING_.concat ("Invalid CDATA element name in xsl:output or xsl:result-document. ", a_qname), "", "XT0020", Static_error)
+					create cdata_validation_error.make_from_string (STRING_.concat ("Invalid CDATA element name in xsl:output or xsl:result-document. ", a_qname), "", "XTSE0020", Static_error)
 					a_cursor.go_after
 				else
 					create another_string_splitter.make
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 					end
 					a_uri := a_namespace_resolver.uri_for_defaulted_prefix (an_xml_prefix, True)
 					if a_uri = Void then
-						create cdata_validation_error.make_from_string (STRING_.concat ("Invalid CDATA element prefix. in xsl:output or xsl:result-document ", an_xml_prefix), "", "XT0020", Static_error)
+						create cdata_validation_error.make_from_string (STRING_.concat ("Invalid CDATA element prefix. in xsl:output or xsl:result-document ", an_xml_prefix), "", "XTSE0020", Static_error)
 						a_cursor.go_after
 					else
 						an_expanded_name := STRING_.concat ("{", a_uri)

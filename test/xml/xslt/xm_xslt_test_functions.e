@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test stylesheet functions and extenstion functions"
+		"Test stylesheet functions"
 
 	library: "Gobo Eiffel XSLT test suite"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

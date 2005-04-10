@@ -76,7 +76,7 @@ feature -- Evaluation
 			if a_context.is_context_position_set then
 				create {XM_XPATH_INTEGER_VALUE} last_evaluated_item.make_from_integer (a_context.last)
 			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context position is undefined.", Xpath_errors_uri, "XP0002", Dynamic_error)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context position is undefined.", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 			end
 		end
 

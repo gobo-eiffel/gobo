@@ -76,6 +76,7 @@ feature -- Evaluation
 		do
 			was_supplied := a_context.is_local_parameter_supplied (variable_fingerprint, is_tunnel_parameter)
 			if was_supplied then
+				a_context.ensure_local_parameter_set (variable_fingerprint, is_tunnel_parameter, slot_number)
 				if conversion /= Void then
 
 					-- We do an eager evaluation here for safety, because the result of the
@@ -84,12 +85,10 @@ feature -- Evaluation
 
 					conversion.eagerly_evaluate (a_context)
 					a_context.set_local_variable (conversion.last_evaluation, slot_number)
-				else
-					a_context.ensure_local_parameter_set (variable_fingerprint, is_tunnel_parameter, slot_number)
 				end
 			else
 				if is_required_parameter then
-					create an_invalid_item.make_from_string (STRING_.concat ("Circular definition of global variable: ", variable_name), "", "XT0640", Dynamic_error)
+					create an_invalid_item.make_from_string (STRING_.concat ("No value supplied for required parameter: ", variable_name), "", "XTDE0700", Dynamic_error)
 					a_context.current_receiver.append_item (an_invalid_item)
 				else
 					a_context.set_local_variable (select_value (a_context), slot_number)

@@ -56,8 +56,24 @@ feature -- Events
 			-- Event producer detected an error.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
+			a_uri, a_code, a_text: STRING
+			an_index: INTEGER
 		do
-			create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "SERIALIZATION_ERROR", Dynamic_error)
+			an_index := a_message.index_of (':', 1)
+			if a_message.count > an_index + 1 and then STRING_.same_string (a_message.substring (1, 1), "X") and then an_index > 0 then
+				if STRING_.same_string (a_message.substring (1, 2), "XT") then
+					a_uri := ""
+				else
+					a_uri := Xpath_errors_uri
+				end
+				a_code := a_message.substring (1, an_index - 1)
+				a_text := a_message.substring (an_index + 2, a_message.count)
+			else
+				a_text := a_message
+				a_uri := Gexslt_eiffel_type_uri
+				a_code := "SERIALIZATION_ERROR"
+			end
+			create an_error.make_from_string (a_text, a_uri, a_code, Dynamic_error)
 			transformer.report_fatal_error (an_error, Void)
 			is_error := True
 		end

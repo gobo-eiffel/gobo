@@ -14,7 +14,7 @@ class XM_XPATH_UNION_ENUMERATION
 
 inherit
 
-	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 
 
 creation
@@ -25,7 +25,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER) is
+	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER) is
 			-- Establish invariant.
 		require
 			first_iterator_not_void: an_iterator /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	item: XM_XPATH_ITEM
+	item: XM_XPATH_NODE
 			-- Value or node at the current position
 
 feature -- Status report
@@ -78,7 +78,7 @@ feature -- Cursor movement
 							item := cached_second_node
 						end
 					else
-						first_node ?= first_iterator.item
+						first_node := first_iterator.item
 						if cached_second_node /= Void then
 							second_node := cached_second_node
 							compare_two_nodes
@@ -87,7 +87,7 @@ feature -- Cursor movement
 							if second_iterator.after then
 								item := first_node
 							else
-								second_node ?= second_iterator.item
+								second_node := second_iterator.item
 								compare_two_nodes
 							end
 						end
@@ -98,7 +98,7 @@ feature -- Cursor movement
 					if second_iterator.after then
 						item := first_node
 					else
-						second_node ?= second_iterator.item
+						second_node := second_iterator.item
 						compare_two_nodes
 					end
 				end
@@ -115,10 +115,10 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	first_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	first_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- First sequence
 
-	second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Second sequence
 
 	comparer: XM_XPATH_GLOBAL_ORDER_COMPARER

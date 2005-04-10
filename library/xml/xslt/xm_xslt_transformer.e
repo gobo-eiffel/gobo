@@ -196,9 +196,13 @@ feature -- Status setting
 		require
 			error_not_void: an_error /= Void
 		do
-			error_listener.error (an_error, a_locator)
-			if not error_listener.recovered then
-				is_error := True
+			if an_error.type = Type_error then
+				report_fatal_error (an_error, a_locator)
+			else
+				error_listener.error (an_error, a_locator)
+				if not error_listener.recovered then
+					is_error := True
+				end
 			end
 		end
 
@@ -456,6 +460,7 @@ feature -- Transformation
 		do
 			utc_system_clock.set_date_time_to_now (current_date_time)
 			if a_source /= Void then
+				a_source.ignore_media_types
 				if	document_pool.is_mapped (a_source.system_id) then
 					a_document := document_pool.document (a_source.system_id)
 					if a_source.fragment_identifier /= Void then
@@ -488,12 +493,12 @@ feature -- Transformation
 					a_parser := new_parser
 					a_builder := new_builder (a_parser)
 					a_source.send (a_parser, new_stripper (a_builder), False)
+					a_media_type := a_source.media_type
 					if a_builder.has_error then
 						create an_error.make_from_string (a_builder.last_error, Gexslt_eiffel_type_uri, "BUILD_ERROR", Static_error)
 						report_fatal_error (an_error, Void)
 					else
 						a_document := a_builder.document
-						a_media_type := Void -- TODO
 						register_document (a_document, a_media_type, a_source.system_id)
 						a_fragment_id := a_source.fragment_identifier
 						if a_fragment_id = Void then

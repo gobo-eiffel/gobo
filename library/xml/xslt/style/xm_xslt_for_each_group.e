@@ -134,7 +134,7 @@ feature -- Element change
 					create an_atomic_sequence.make_atomic_sequence
 					a_type_checker.static_type_check (static_context, group_by, an_atomic_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error	then
-						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 						report_compile_error (an_error)
 					else
 						group_by := a_type_checker.checked_expression
@@ -152,7 +152,7 @@ feature -- Element change
 					create an_atomic_sequence.make_single_atomic
 					a_type_checker.static_type_check (static_context, group_adjacent, an_atomic_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error	then
-						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 						report_compile_error (an_error)
 					else
 						group_adjacent := a_type_checker.checked_expression
@@ -171,7 +171,7 @@ feature -- Element change
 				create a_node_sequence.make_node_sequence
 				a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XT1120", Type_error)
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XTTE1120", Type_error)
 					report_compile_error (an_error)
 				end					
 			end
@@ -292,11 +292,11 @@ feature {NONE} -- Implementation
 			end
 
 			if count_of_grouping_attributes /= 1 then
-				create an_error.make_from_string ("Exactly one of the attributes group-by, group-adjacent, group-starting-with, and group-ending-with must be specified", "", "XT1080", Static_error)
+				create an_error.make_from_string ("Exactly one of the attributes group-by, group-adjacent, group-starting-with, and group-ending-with must be specified", "", "XTSE1080", Static_error)
 				report_compile_error (an_error)
 			end
 			if a_collation_attribute /= Void and then a_group_by_attribute = Void and then a_group_adjacent_attribute = Void then
-				create an_error.make_from_string ("A collation may be specified only if group-by or group-adjacent is specified", "", "XT1090", Static_error)
+				create an_error.make_from_string ("A collation may be specified only if group-by or group-adjacent is specified", "", "XTSE1090", Static_error)
 				report_compile_error (an_error)
 			end
 		end

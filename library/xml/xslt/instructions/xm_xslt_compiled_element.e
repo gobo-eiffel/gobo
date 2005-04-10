@@ -95,7 +95,7 @@ feature -- Access
 			element_name.evaluate_item (a_context)
 			a_name_value := element_name.last_evaluated_item
 			if a_name_value = Void or else a_name_value.is_error then -- empty sequence
-				create an_error.make_from_string ("xsl:element has no 'name'", "","XT0820", Dynamic_error) 
+				create an_error.make_from_string ("xsl:element has no 'name'", "","XTDE0820", Dynamic_error) 
 				a_context.transformer.report_recoverable_error (an_error, Current)
 				Result := -1
 			else
@@ -107,7 +107,7 @@ feature -- Access
 				a_splitter.set_separators (":")
 				qname_parts := a_splitter.split (a_string_value.string_value)
 				if qname_parts.count = 0 or else qname_parts.count > 2 then
-					create an_error.make_from_string ("'name' attribute of xsl:element does not evaluate to a lexical QName.", "","XT0820", Dynamic_error) 
+					create an_error.make_from_string ("'name' attribute of xsl:element does not evaluate to a lexical QName.", "","XTDE0820", Dynamic_error) 
 					a_context.transformer.report_recoverable_error (an_error, Current)
 					Result := -1
 				elseif qname_parts.count = 1 then
@@ -122,7 +122,7 @@ feature -- Access
 				if namespace = Void then
 					a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, True)
 					if a_uri = Void then
-						create an_error.make_from_string (STRING_.concat ("'name' attribute of xsl:element has an undeclared prefix: ", an_xml_prefix), "","XT0830", Dynamic_error) 
+						create an_error.make_from_string (STRING_.concat ("'name' attribute of xsl:element has an undeclared prefix: ", an_xml_prefix), "","XTDE0830", Dynamic_error) 
 						a_context.transformer.report_recoverable_error (an_error, Current)
 						Result := -1
 						check False end
@@ -210,7 +210,7 @@ feature -- Optimization
 			create a_single_string_type.make_single_string
 			a_type_checker.static_type_check (a_context, element_name, a_single_string_type, False, a_role)
 			if a_type_checker.is_static_type_check_error then
-				set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+				set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 			else
 				element_name := (a_type_checker.checked_expression)
 				adopt_child_expression (element_name)
@@ -224,7 +224,7 @@ feature -- Optimization
 				create a_type_checker
 				a_type_checker.static_type_check (a_context, namespace, a_single_string_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 				else
 					namespace := (a_type_checker.checked_expression)
 					adopt_child_expression (namespace)

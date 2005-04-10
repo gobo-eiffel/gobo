@@ -47,7 +47,7 @@ feature -- Dependencies
 			-- Intrinsic dependencies of expression (ignoring sub-expressions)
 	
 	depends_upon_current_item: BOOLEAN is
-		-- Expression depends upon current item
+		-- Expression depends upon current() item
 		require
 			dependencies_computed: are_dependencies_computed
 		do

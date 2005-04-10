@@ -156,13 +156,13 @@ feature {NONE} -- Implementation
 						some_parameters.remove_last
 					end
 					from
+						a_splitter.set_separators ("=")
 						a_cursor := some_parameters.new_cursor; a_cursor.start
 					variant
 						some_parameters.count + 1 - a_cursor.index
 					until
 						a_cursor.after
 					loop
-						a_splitter.set_separators ("=")
 						a_parameter_pair := a_splitter.split (a_cursor.item)
 						if a_parameter_pair.count /= 2 then
 							set_last_error (a_cursor.item + " is not valid syntax for a Content-type parameter.")

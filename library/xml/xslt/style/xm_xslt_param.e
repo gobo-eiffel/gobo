@@ -89,7 +89,7 @@ feature -- Element change
 			a_template ?= parent; a_function ?= parent
 			is_local := a_template /= Void or else a_function /= Void
 			if not is_local and then not is_global_variable then
-				create an_error.make_from_string ("xsl:param must be immediately within a template, function or stylesheet", "", "XT0010", Static_error)
+				create an_error.make_from_string ("xsl:param must be immediately within a template, function or stylesheet", "", "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			else
 				if not is_global_variable then
@@ -103,20 +103,20 @@ feature -- Element change
 						a_parameter ?= a_node
 						if a_parameter /= Void then
 							if variable_fingerprint = a_parameter.variable_fingerprint then
-								create an_error.make_from_string ("The name of the parameter is not unique", "", "XT0580", Static_error)
+								create an_error.make_from_string ("The name of the parameter is not unique", "", "XTSE0580", Static_error)
 								report_compile_error (an_error)
 							end
 						else
 							a_style_element ?= a_node
 							if a_style_element /= Void then
-								create an_error.make_from_string ("xsl:param must be the first element within a template or function", "", "XT0010", Static_error)
+								create an_error.make_from_string ("xsl:param must be the first element within a template or function", "", "XTSE0010", Static_error)
 								report_compile_error (an_error)
 							else
 
 								-- must be a text node - allow it only if all white-space
 
 								if not is_all_whitespace (a_node.string_value) then
-									create an_error.make_from_string ("xsl:param must not be preceded by text", "", "XT0010", Static_error)
+									create an_error.make_from_string ("xsl:param must not be preceded by text", "", "XTSE0010", Static_error)
 								report_compile_error (an_error)
 								end
 							end
@@ -129,11 +129,11 @@ feature -- Element change
 
 						-- NB, we do this test before setting the default select attribute
 
-						create an_error.make_from_string ("The select attribute should be omitted when required='yes'", "", "XT0010", Static_error)
+						create an_error.make_from_string ("The select attribute should be omitted when required='yes'", "", "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 					if has_child_nodes then
-						create an_error.make_from_string ("A parameter specifying required='yes' must have empty content", "", "XT0010", Static_error)
+						create an_error.make_from_string ("A parameter specifying required='yes' must have empty content", "", "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 				end
@@ -179,7 +179,7 @@ feature -- Element change
 					create a_supplied_parameter_reference.make (a_slot_number)
 					a_type_checker.static_type_check (static_context, a_supplied_parameter_reference, as_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XT0320", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XPTY0004", Type_error)
 					else
 						a_conversion := a_type_checker.checked_expression
 					end

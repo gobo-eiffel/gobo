@@ -38,7 +38,7 @@ feature -- Evaluation
 		some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Apply templates to `an_iterator'.
 		require
-			iterator_before: an_iterator /= Void and then an_iterator.before
+			iterator_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
 			major_context_not_void: a_context /= Void and then not a_context.is_minor
 			no_previous_error: not a_context.transformer.is_error
 		local
@@ -55,17 +55,7 @@ feature -- Evaluation
 			until
 				a_transformer.is_error or else an_iterator.after
 			loop
-
-				-- process any tail calls returned from previous nodes
-
-				from
-				until
-					a_transformer.is_error or else a_last_tail_call = Void
-				loop
-					a_last_tail_call.process_leaving_tail (a_context)
-					a_last_tail_call := a_last_tail_call.last_tail_call
-				end
-				if not a_transformer.is_error then
+				if not a_transformer.is_error and then not an_iterator.after then
 					a_node ?= an_iterator.item
 					check
 						item_is_a_node: a_node /= Void
@@ -108,7 +98,17 @@ feature -- Evaluation
 						end
 					end
 				end
-				an_iterator.forth
+				
+				-- process any tail calls returned from previous nodes
+
+				from
+				until
+					a_transformer.is_error or else a_last_tail_call = Void
+				loop
+					a_last_tail_call.process_leaving_tail (a_context)
+					a_last_tail_call := a_last_tail_call.last_tail_call
+				end
+				if not an_iterator.after then an_iterator.forth end
 			end
 			set_last_tail_call (a_last_tail_call)
 		end

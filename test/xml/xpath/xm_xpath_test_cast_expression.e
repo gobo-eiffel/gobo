@@ -121,7 +121,7 @@ feature -- Tests
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:double")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XP0021"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
 	test_untyped_atomic_to_double is
@@ -152,7 +152,7 @@ feature -- Tests
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:decimal")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XP0021"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
 	test_untyped_atomic_to_decimal is
@@ -185,7 +185,7 @@ feature -- Tests
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:integer")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XP0021"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
 	test_untyped_atomic_to_integer is
@@ -218,7 +218,7 @@ feature -- Tests
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:boolean")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XP0021"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
 	test_untyped_atomic_to_boolean is

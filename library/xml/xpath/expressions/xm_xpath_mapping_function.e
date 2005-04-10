@@ -15,6 +15,8 @@ indexing
 
 deferred class XM_XPATH_MAPPING_FUNCTION
 
+	-- TODO: drop the information object
+
 feature -- Access
 
 	last_mapped_item: XM_XPATH_MAPPED_ITEM
@@ -22,11 +24,10 @@ feature -- Access
 
 feature -- Evaluation
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		require
 			item_not_void: an_item /= Void
-			information: True -- /= Void implies must be immutable and read-only for the duration of the iteration
 		deferred
 
 			-- If an error is detected, then this function should do: create last_mapped_item.make_item

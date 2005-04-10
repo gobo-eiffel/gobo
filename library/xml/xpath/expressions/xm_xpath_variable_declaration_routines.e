@@ -59,6 +59,9 @@ feature -- Access
 				a_variable_reference ?= a_reference_list.item (1)
 				if a_variable_reference /= Void then
 					from
+						check
+							variable_reference_not_replaced: not a_variable_reference.was_expression_replaced
+						end
 						a_child := a_variable_reference
 						a_container := a_variable_reference.container
 					until
@@ -70,6 +73,12 @@ feature -- Access
 							--  for example in the predicate of a filter expression, then return `Many_references'.
 
 							a_computed_expression ?= a_container
+							if a_computed_expression.was_expression_replaced then
+
+								-- dodgy - give up attempting to optimize
+
+								finished := True;	Result := Many_references
+							end
 							an_assignation ?= a_computed_expression
 							if an_assignation /= void and then an_assignation = a_binding then
 								finished := True; Result := 1
@@ -81,6 +90,9 @@ feature -- Access
 								a_depth := a_depth + 1
 								if a_depth = 100 then
 									std.error.put_string ("Probable cycle detected in variable references. BUG.%N")
+									check
+										variable_reference_bug: False
+									end
 								end
 							end
 						elseif a_container.is_user_function then

@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			binding:	a_requested_action = Range_independent implies a_binding /= Void
 			containing: a_requested_action /= Unordered implies containing /= Void
 		do
+			may_promote_xslt_functions := True
 			action := a_requested_action
 			binding_expression := a_binding
 			containing_expression := containing
@@ -53,6 +54,7 @@ feature {NONE} -- Initialization
 			action_set: action = a_requested_action
 			binding_set: binding_expression = a_binding
 			containing_set: containing_expression = containing
+			may_promote_xslt_functions: may_promote_xslt_functions
 		end
 
 feature -- Access
@@ -93,12 +95,12 @@ feature -- Status report
 
 feature -- Status setting
 
-	allow_promoting_xslt_functions: BOOLEAN is
-			-- Allow promotion of XSLT functions such as current().
+	disallow_promoting_xslt_functions is
+			-- Disallow promotion of XSLT functions such as current().
 		do
-			may_promote_xslt_functions := True
+			may_promote_xslt_functions := False
 		ensure
-			may_promote_xslt_functions: may_promote_xslt_functions
+			may_promote_xslt_functions: not may_promote_xslt_functions
 		end
 
 feature -- Optimization
@@ -110,7 +112,7 @@ feature -- Optimization
 		local
 			variable_reference: XM_XPATH_VARIABLE_REFERENCE
 			reverser: XM_XPATH_REVERSER
-			document_sorter: XM_XPATH_DOCUMENT_SORTER
+			a_document_sorter: XM_XPATH_DOCUMENT_SORTER
 		do
 			inspect
 				action
@@ -145,9 +147,10 @@ feature -- Optimization
 				if reverser /= Void then
 					accepted_expression := reverser.base_expression
 				elseif not must_eliminate_duplicates then
-					document_sorter ?= a_child_expression
-					if document_sorter /= Void then
-						accepted_expression := document_sorter.base_expression
+					a_document_sorter ?= a_child_expression
+					if a_document_sorter /= Void then
+						accepted_expression := a_document_sorter.base_expression
+						accepted_expression.mark_unreplaced
 					else
 						accepted_expression := Void
 					end
@@ -190,7 +193,6 @@ feature {NONE} -- Implementation
 			create a_clock.make
 			a_variable_name := a_clock.time_now.out
 			a_variable_name := STRING_.appended_string ("zz:",a_variable_name)
-			a_variable_name := STRING_.appended_string (a_variable_name, a_child_expression.out)
 			create a_range_variable.make (a_variable_name, -1, a_type)
 
 			create a_variable.make (a_range_variable)

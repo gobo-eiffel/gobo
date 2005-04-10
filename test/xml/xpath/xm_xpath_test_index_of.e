@@ -114,7 +114,7 @@ feature -- Tests
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("index-of (('a', (1,2)/last(), 'and', 'a', 'pastime'), 'a')")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("Error XP0019", STRING_.same_string (an_evaluator.error_value.code, "XP0019"))
+			assert ("Error XPTY0019", STRING_.same_string (an_evaluator.error_value.code, "XPTY0019"))
 		end
 
 	set_up is

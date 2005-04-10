@@ -165,12 +165,12 @@ feature -- Status setting
 			if a_name_attribute = Void then
 				report_absence ("name")
 			elseif not is_qname (a_name_attribute) then
-				create an_error.make_from_string ("Name attribute must be a valid QName", "", "XT0020", Static_error)
+				create an_error.make_from_string ("Name attribute must be a valid QName", "", "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			end
 			if a_select_attribute /= Void then
 				if not allows_value then
-					create an_error.make_from_string ("Function parameters cannot have a default value", "", "XT0760", Static_error)
+					create an_error.make_from_string ("Function parameters cannot have a default value", "", "XTSE0760", Static_error)
 					report_compile_error (an_error)
 				else
 					generate_expression (a_select_attribute)
@@ -196,7 +196,7 @@ feature -- Status setting
 			if select_expression /= Void and then has_child_nodes then
 				a_message := STRING_.concat ("An ", node_name)
 				a_message := STRING_.appended_string (a_message, " element with a select attribute must be empty")
-				create an_error.make_from_string (a_message, "", "XT0010", Static_error)
+				create an_error.make_from_string (a_message, "", "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			else
 				if as_type /= Void then check_against_required_type (as_type) end
@@ -226,7 +226,7 @@ feature -- Status setting
 									if as_type.cardinality_allows_zero then
 											create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
 									else
-										create an_error.make_from_string ("Default value () is not valid for the declared type", "", "XT0570", Type_error)
+										create an_error.make_from_string ("Default value () is not valid for the declared type", "", "XTTE0570", Type_error)
 										report_compile_error (an_error)
 									end
 								end
@@ -273,7 +273,7 @@ feature -- Status setting
 				create a_type_checker
 				a_type_checker.static_type_check (static_context, select_expression, a_required_type, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XT0570", Type_error)
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XTTE0570", Type_error)
 					report_compile_error (an_error)
 				else
 					select_expression := a_type_checker.checked_expression
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 							create a_type_checker
 							a_type_checker.static_type_check (static_context, select_expression, as_type, False, a_role)
 							if a_type_checker.is_static_type_check_error	then
-								create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XT0570", Type_error)
+								create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XTTE0570", Type_error)
 								report_compile_error (an_error)
 							else
 								a_variable.set_selector (a_type_checker.checked_expression)
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 				elseif STRING_.same_string (a_required_attribute, "no") then
 					is_required_parameter := False
 				else
-					create an_error.make_from_string ("The attribute 'required' must be set to 'yes' or 'no'", "", "XT0020", Static_error)
+					create an_error.make_from_string ("The attribute 'required' must be set to 'yes' or 'no'", "", "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 				elseif STRING_.same_string (a_tunnel_attribute, "no") then
 					is_tunnel_parameter := False
 				else
-					create an_error.make_from_string ("The attribute 'tunnel' must be set to 'yes' or 'no'", "", "XT0020", Static_error)
+					create an_error.make_from_string ("The attribute 'tunnel' must be set to 'yes' or 'no'", "", "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end

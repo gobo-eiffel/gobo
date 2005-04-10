@@ -19,6 +19,8 @@ inherit
 
 	ANY
 
+	HASHABLE
+
 	KL_IMPORTED_ANY_ROUTINES
 
 creation
@@ -53,6 +55,12 @@ feature -- Access
 
 	subtype: STRING
 			-- Subtype
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := subtype.hash_code
+		end
 
 	parameter (a_name: STRING): STRING is
 			-- Value of parameter named `a_name'.

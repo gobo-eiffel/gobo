@@ -594,9 +594,9 @@ feature
 
 	-- Eventually, all errors should be tested here
 
-	-- We can't test for XP0002 with the stand-alone evaluator, because it is proof against it. (NO - not if we can put the current iterator into error, or before )
+	-- We can't test for XPDY0002 with the stand-alone evaluator, because it is proof against it. (NO - not if we can put the current iterator into error, or before )
 
-	test_for_error_xp0003 is
+	test_for_error_xpst0003 is
 			-- Syntax error
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
@@ -607,11 +607,11 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//[position() = ()]")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0003", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XP0003"))
+			assert ("XPST0003", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XPST0003"))
 
 		end
 
-	test_for_error_xp0006 is
+	test_for_error_xpty0004 is
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			a_string_value: XM_XPATH_STRING_VALUE
@@ -624,10 +624,10 @@ feature
 			an_evaluator.static_context.declare_variable ("fred", a_string_value)
 			an_evaluator.evaluate ("(1 to $fred)")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0006", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XP0006"))
+			assert ("XPTY0004", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
 		end
 
-	test_for_error_xp0008 is
+	test_for_error_xpst0008 is
 			-- Name not bound in static context
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
@@ -638,10 +638,10 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//TITLE[position() = $fred]")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0008", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XP0008"))
+			assert ("XPST0008", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XPST0008"))
 		end
 
-	test_for_error_xp0017 is
+	test_for_error_xpst0017 is
 			-- Function has wrong number of arguments
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
@@ -652,10 +652,10 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//TITLE[position(1,2,3)]")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0017", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XP0017"))
+			assert ("XPST0017", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XPST0017"))
 		end
 
-	test_for_error_xp0018 is
+	test_for_error_xpty0018 is
 			-- Final step is heterogeneous
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
@@ -666,10 +666,10 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//TITLE/(string(.), .)")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0018", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XP0018"))
+			assert ("XPTY0018", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0018"))
 		end
 
-	test_for_error_xp0019 is
+	test_for_error_xpty0019 is
 			-- Non-final step is not a node
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
@@ -680,10 +680,10 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/%"fred%"/%"fred%"")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0019", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XP0019"))
+			assert ("XPTY0019", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0019"))
 		end
 
-	test_for_error_xp0020 is
+	test_for_error_xpty0020 is
 			-- Context item for an axis expression is not a node
 		local
 			an_evaluator: XM_XPATH_EVALUATOR			
@@ -694,25 +694,10 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("'fred'[child::title]")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0020", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XP0020"))
+			assert ("XPTY0020", an_evaluator.error_value.type = Type_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0020"))
 		end
 
-	test_for_error_xp0021 is
-			-- Cast expression cannot be cast to correct type - this is probably a 4 or a 6, but Cast needs fixing anyway.
-		local
-			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-		do
-			create an_evaluator.make (18, False)
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
-			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("('fred' eq 'jim') cast as xs:date")
-			evaluated_items := an_evaluator.evaluated_items
-			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0021", an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XP0021"))
-		end
-
-	test_for_error_xp0051 is
+	test_for_error_xpst0051 is
 			-- Named type can't be found in the static context
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -724,7 +709,7 @@ feature
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("'fred' eq 'jim' cast as xs:Date")
 			assert ("Evaluation error", an_evaluator.is_error)
-			assert ("XP0051", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XP0051"))
+			assert ("XPST0051", an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "XPST0051"))
 		end
 
 	set_up is

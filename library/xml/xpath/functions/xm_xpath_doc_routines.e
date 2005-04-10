@@ -52,6 +52,7 @@ feature -- Evaluation
 																													 Gexslt_eiffel_type_uri, "SECURITY", Dynamic_error)
 				elseif a_context.available_documents.is_mapped (a_uri.full_uri) then
 					last_evaluated_document := a_context.available_documents.document (a_uri.full_uri)
+					last_evaluated_media_type := a_context.available_documents.media_type (a_uri.full_uri)
 				else
 					a_context.build_document (a_uri.full_uri)
 					if a_context.is_build_document_error then

@@ -83,7 +83,7 @@ feature -- Evaluation
 			if an_evaluation_context.is_current_item_available then
 				last_evaluated_item := an_evaluation_context.context_item
 			else
-				create an_error.make_from_string ("Context item is undefined when calling current().", "",  "XT1360", Dynamic_error)
+				create an_error.make_from_string ("Context item is undefined when calling current().", "",  "XTDE1360", Dynamic_error)
 				an_evaluation_context.transformer.report_fatal_error (an_error, Void)
 			end
 		end

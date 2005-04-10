@@ -121,13 +121,13 @@ feature -- Optimization
 					create a_node_sequence.make_node_sequence
 					a_type_checker.static_type_check (a_context, first_operand, a_node_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 					else
 						set_first_operand (a_type_checker.checked_expression)
 						create another_role.make (Binary_expression_role, token_name (operator), 2)
 						a_type_checker.static_type_check (a_context, second_operand, a_node_sequence, False, another_role)
 						if a_type_checker.is_static_type_check_error then
-							set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+							set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 						else
 							set_second_operand (a_type_checker.checked_expression)
 						end
@@ -161,42 +161,36 @@ feature -- Evaluation
 			-- Iterate over the values of a sequence
 		local
 			an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_node_iterator, another_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			first_operand.create_iterator (a_context)
 			an_iterator := first_operand.last_iterator
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			else
-				if not first_operand.ordered_nodeset then
-					a_node_iterator ?= an_iterator
-					if a_node_iterator /= Void then
-						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} an_iterator.make (a_node_iterator, global_order_comparer)
-					else
-						do_nothing -- must be an empty iterator, but we won't bother to check this
-					end
+				a_node_iterator ?= an_iterator
+				if not first_operand.ordered_nodeset and then a_node_iterator /= Void then
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} a_node_iterator.make (a_node_iterator, global_order_comparer)
 				end
+				if a_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} a_node_iterator.make end
 				second_operand.create_iterator (a_context)
 				another_iterator := second_operand.last_iterator
 				if another_iterator.is_error then
 					last_iterator := another_iterator
 				else
-					if not second_operand.ordered_nodeset then
-						a_node_iterator ?= an_iterator
-						if a_node_iterator /= Void then
-							create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} another_iterator.make (a_node_iterator, global_order_comparer)
-						else
-							do_nothing -- must be an empty iterator, but we won't bother to check this
-						end
+					another_node_iterator ?= another_iterator
+					if not second_operand.ordered_nodeset and then another_node_iterator /= Void then
+						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} another_node_iterator.make (another_node_iterator, global_order_comparer)
 					end
+					if another_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} another_node_iterator.make end
 					inspect
 						operator
 					when Union_token then
-						create {XM_XPATH_UNION_ENUMERATION} last_iterator.make (an_iterator, another_iterator, global_order_comparer)
+						create {XM_XPATH_UNION_ENUMERATION} last_iterator.make (a_node_iterator, another_node_iterator, global_order_comparer)
 					when Intersect_token then
-						create {XM_XPATH_INTERSECTION_ENUMERATION} last_iterator.make (an_iterator, another_iterator, global_order_comparer)
+						create {XM_XPATH_INTERSECTION_ENUMERATION} last_iterator.make (a_node_iterator, another_node_iterator, global_order_comparer)
 					when Except_token then
-						create {XM_XPATH_DIFFERENCE_ENUMERATION} last_iterator.make (an_iterator, another_iterator, global_order_comparer)
+						create {XM_XPATH_DIFFERENCE_ENUMERATION} last_iterator.make (a_node_iterator, another_node_iterator, global_order_comparer)
 					end
 				end
 			end

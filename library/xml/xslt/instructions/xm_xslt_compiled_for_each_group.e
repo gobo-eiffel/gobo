@@ -127,12 +127,12 @@ feature -- Access
 		do
 			create Result.make (3 + sort_keys.count * 5)
 			Result.set_equality_tester (expression_tester)
-			Result.Put (select_expression, 1)
-			Result.Put (action, 2)
+			Result.put (select_expression, 1)
+			Result.put (action, 2)
 			if key_expression /= Void then
-				Result.Put (key_expression, 3)
+				Result.put (key_expression, 3)
 -- TODO:			else
---				Result.Put (key_pattern, 3)
+--				Result.put (key_pattern, 3)
 			end
 			from
 				an_index := 4
@@ -331,7 +331,7 @@ feature -- Evaluation
 			from
 				a_group_iterator.start
 			until
-				a_group_iterator.after
+				a_transformer.is_error or else a_group_iterator.after
 			loop
 				if a_transformer.is_tracing then
 					a_trace_listener.trace_current_item_start (a_group_iterator.item)
@@ -362,11 +362,11 @@ feature -- Evaluation
 			a_new_context.set_current_template (Void)
 			a_new_context.set_current_iterator (a_group_iterator)
 			a_new_context.set_current_group_iterator (a_group_iterator)
-			create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_group_iterator, Current, a_new_context, Void)
+			create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_group_iterator, Current, a_new_context)
 			
 		end
 	
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		do
 			action.create_iterator (a_context)

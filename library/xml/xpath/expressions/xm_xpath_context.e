@@ -95,7 +95,9 @@ feature -- Access
 		do
 			if current_iterator /= Void and then not current_iterator.is_error then
 				if current_iterator.before then current_iterator.start end
-				Result := current_iterator.item
+				if not current_iterator.after then
+					Result := current_iterator.item
+				end
 			end
 		ensure
 			restricted_implies_undefined: is_restricted implies Result = Void
@@ -109,7 +111,7 @@ feature -- Access
 		do
 			 if not current_iterator.is_error then Result := current_iterator.index end
 		ensure
-			positive_result: Result >= 0 -- But it is a Dynamic error, XP0002, if Result = 0
+			positive_result: Result >= 0 -- But it is a Dynamic error, XPDY0002, if Result = 0
 			restricted_implies_undefined: is_restricted implies Result = 0
 		end
 
@@ -230,6 +232,11 @@ feature -- Status report
 			-- Error message from last call to `build_document'
 		require
 			build_error: is_build_document_error
+		deferred
+		end
+
+	is_process_error: BOOLEAN is
+			-- Has a processing error occured?
 		deferred
 		end
 

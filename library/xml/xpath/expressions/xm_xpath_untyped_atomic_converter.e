@@ -130,11 +130,11 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void, Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
 			end
 		end
 	
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		local
 			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE

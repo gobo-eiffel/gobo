@@ -87,7 +87,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			Set_cardinality_zero_or_more
+			set_cardinality_zero_or_more
 		end
 
 feature {NONE} -- Implementation

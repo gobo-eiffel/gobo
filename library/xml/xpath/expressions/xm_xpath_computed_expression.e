@@ -374,11 +374,12 @@ feature -- Element change
 	adopt_child_expression (a_child: XM_XPATH_EXPRESSION) is
 			-- Adopt `a_child' if it is a computed expression.
 		require
-			child_expression_not_void: a_child /= Void
+			child_expression_not_replacedd: a_child /= Void and then not a_child.was_expression_replaced
 			not_self: a_child /= Current
 		local
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
+			a_child.mark_unreplaced
 			a_computed_expression ?= a_child
 			if a_computed_expression /= Void then
 				if parent = Void and then a_computed_expression.container /= Current then

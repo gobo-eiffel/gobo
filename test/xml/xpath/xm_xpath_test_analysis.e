@@ -39,12 +39,6 @@ feature -- Test
 	test_filtered_path_two is
 		local
 			an_expression: XM_XPATH_EXPRESSION
-			a_path: XM_XPATH_PATH_EXPRESSION
-			an_axis: XM_XPATH_AXIS_EXPRESSION
-			a_filter: XM_XPATH_FILTER_EXPRESSION
-			a_root: XM_XPATH_ROOT_EXPRESSION
-			an_is_last: XM_XPATH_IS_LAST_EXPRESSION
-			sub_exprs, sub_exprs_2, sub_exprs_3: DS_LIST [XM_XPATH_EXPRESSION]
 			a_context: XM_XPATH_STAND_ALONE_CONTEXT
 			a_string: STRING
 			a_base_uri: UT_URI
@@ -72,40 +66,6 @@ feature -- Test
 				print ("After analysis: %N")
 				an_expression.display (1)
 			end
-			a_path ?= an_expression
-			assert ("Path expression", a_path /= Void)
-			sub_exprs := a_path.sub_expressions
-			assert ("Sub-expression", sub_exprs /= Void)
-			assert ("Two sub-expressions", sub_exprs.count = 2)
-			an_expression := sub_exprs.item (1)
-			assert ("First sub-expression not void", an_expression /= Void)
-			a_path ?= an_expression
-			assert ("Path expression 2", a_path /= Void)
-			sub_exprs_2 := a_path.sub_expressions
-			assert ("Sub-expression 2", sub_exprs_2 /= Void)
-			assert ("Two sub-expressions 2", sub_exprs_2.count = 2)
-			an_expression := sub_exprs_2.item (1)
-			a_root ?= an_expression
-			assert ("Root expression not void", a_root /= Void) -- /
-			an_expression := sub_exprs_2.item (2)
-			an_axis ?= an_expression
-			assert ("Axis expression not void", an_axis /= Void)
-			assert ("Descendant-or-self-axis", an_axis.axis = Descendant_or_self_axis) -- Descendant-or-self::node()
-			an_expression := sub_exprs.item (2)
-			assert ("Second sub-expression not void", an_expression /= Void)
-			a_filter ?= an_expression
-			assert ("Filter expression", a_filter /= Void) -- fred[...]
-			sub_exprs_3 := a_filter.sub_expressions
-			assert ("Sub-expression 3", sub_exprs_3 /= Void)
-			assert ("Two sub-expressions 3", sub_exprs_3.count = 2)
-			an_expression := sub_exprs_3.item (1)
-			an_axis ?= an_expression
-			assert ("Axis expression 2 not void", an_axis /= Void) -- child::fred
-			assert ("Axis selects child::fred", an_axis.axis = Child_axis
-					  and an_axis.node_test /= Void and then STRING_.same_string (an_axis.node_test.original_text, "fred")) -- child::fred
-			an_expression := sub_exprs_3.item (2)
-			an_is_last ?= an_expression
-			assert ("Islast()", an_is_last /= Void)
 		end
 
 feature -- Setting

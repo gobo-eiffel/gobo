@@ -35,7 +35,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_mapping_function: XM_XPATH_MAPPING_FUNCTION; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
+	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_mapping_function: XM_XPATH_MAPPING_FUNCTION; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant.
 		require
 			base_iterator_not_void: a_base_iterator /= Void
@@ -44,12 +44,10 @@ feature {NONE} -- Initialization
 			base_iterator := a_base_iterator
 			mapping_function := a_mapping_function
 			context := a_context
-			information_object := an_information_object
 		ensure
 			base_set: base_iterator = a_base_iterator
 			mapping_function_set: mapping_function = a_mapping_function
 			context_set: context = a_context
-			information_object_set: information_object = an_information_object
 		end
 
 feature -- Access
@@ -88,7 +86,7 @@ feature -- Duplication
 				a_context := a_context.new_context
 				a_context.set_current_iterator (new_base)
 			end
-			create Result.make (new_base, mapping_function, a_context, information_object)
+			create Result.make (new_base, mapping_function, a_context)
 		end
 
 feature {NONE} -- Implementation
@@ -104,9 +102,6 @@ feature {NONE} -- Implementation
 
 	context: XM_XPATH_CONTEXT
 			-- Optional dynamic context
-
-	information_object: ANY
-			-- Optional object to be passed to `mapping_function' whenever it is called
 
 	advance is
 			-- Move to the next matching node
@@ -154,7 +149,7 @@ feature {NONE} -- Implementation
 
 						-- Call the supplied mapping function
 
-						mapping_function.map (next_source, context, information_object)
+						mapping_function.map (next_source, context)
 						a_mapped_item := mapping_function.last_mapped_item
 
 						if a_mapped_item /= Void then

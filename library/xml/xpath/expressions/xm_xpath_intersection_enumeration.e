@@ -14,7 +14,7 @@ class XM_XPATH_INTERSECTION_ENUMERATION
 
 inherit
 
-	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 
 
 creation
@@ -23,7 +23,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER) is
+	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER) is
 		require
 			first_iterator_not_void: an_iterator /= Void
 			second_iterator_not_void: another_iterator /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	item: XM_XPATH_ITEM
+	item: XM_XPATH_NODE
 			-- Value or node at the current position
 
 feature -- Status report
@@ -60,8 +60,8 @@ feature -- Cursor movement
 			first_iterator.forth
 			second_iterator.forth
 			if not after then
-				a_first_node ?= first_iterator.item
-				a_second_node ?= second_iterator.item
+				a_first_node := first_iterator.item
+				a_second_node := second_iterator.item
 				a_comparison := comparer.three_way_comparison (a_first_node, a_second_node)
 				if a_comparison = 0 then
 					item := a_first_node
@@ -72,7 +72,7 @@ feature -- Cursor movement
 					loop
 						first_iterator.forth
 						if not first_iterator.after then
-							a_first_node ?= first_iterator.item
+							a_first_node := first_iterator.item
 							a_comparison := comparer.three_way_comparison (a_first_node, a_second_node)
 							if a_comparison = 0 then
 								item := a_first_node
@@ -86,7 +86,7 @@ feature -- Cursor movement
 					loop
 						second_iterator.forth
 						if not second_iterator.after then
-							a_second_node ?= second_iterator.item
+							a_second_node := second_iterator.item
 							a_comparison := comparer.three_way_comparison (a_first_node, a_second_node)
 							if a_comparison = 0 then
 								item := a_first_node
@@ -107,10 +107,10 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	first_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	first_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- First sequence
 
-	second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Second sequence
 
 	comparer: XM_XPATH_GLOBAL_ORDER_COMPARER

@@ -134,7 +134,6 @@ feature -- Optimization
 			-- Perform context-independent static optimizations
 		local
 			a_name_test: XM_XPATH_NAME_TEST
-			--an_attribute_reference: XM_XPATH_ATTRIBUTE_REFERENCE_EXPRESSION
 			a_parent_node: XM_XPATH_PARENT_NODE_EXPRESSION
 		do
 			a_name_test ?= node_test
@@ -164,11 +163,11 @@ feature -- Evaluation
 		do
 			an_item := a_context.context_item
 			if an_item = Void then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item for an axis step is not set.", Xpath_errors_uri, "XP0002", Dynamic_error)
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item for an axis step is not set.", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 			else
 				a_node ?= an_item
 				if a_node = Void then
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item for an axis is not a node.", Xpath_errors_uri, "XP0020", Type_error)
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item for an axis is not a node.", Xpath_errors_uri, "XPTY0020", Type_error)
 				elseif node_test = Void then
 					last_iterator := a_node.new_axis_iterator (axis)
 				else

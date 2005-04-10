@@ -97,7 +97,10 @@ feature -- Cursor movement
 				sequence.forth
 				if not sequence.after then
 					current_node := sequence.item_for_iteration
-					if not a_node.is_same_node (current_node) then
+					if a_node.is_error then
+						finished := True
+						set_last_error (a_node.error_value)
+					elseif not a_node.is_same_node (current_node) then
 						finished := True
 					end
 				else

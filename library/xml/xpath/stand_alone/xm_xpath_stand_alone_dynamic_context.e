@@ -84,6 +84,9 @@ feature -- Status report
 	last_build_error: STRING
 			-- Error message from last call to `build_document'
 
+	is_process_error: BOOLEAN
+			-- Has a processing error occured?
+
 feature -- Creation
 
 	new_minor_context: like Current is
@@ -142,6 +145,9 @@ feature 	-- Element change
 			if uri_resolver.has_uri_reference_error then
 				set_build_error (uri_resolver.last_uri_reference_error)
 			else
+				if uri_resolver.has_media_type then
+					last_parsed_media_type := uri_resolver.last_media_type
+				end
 				an_entity_resolver := new_file_resolver_current_directory
 				create a_parser.make
 				a_parser.copy_string_mode (Current)

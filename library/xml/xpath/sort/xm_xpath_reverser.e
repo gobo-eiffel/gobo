@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make (an_expression: XM_XPATH_EXPRESSION) is
 			-- Establish invariant.
 		require
-			base_expression_not_void: an_expression /= Void
+			base_expression_not_replaced: an_expression /= Void	and then not an_expression.was_expression_replaced
 		do
 			make_unary (an_expression)
 			compute_static_properties

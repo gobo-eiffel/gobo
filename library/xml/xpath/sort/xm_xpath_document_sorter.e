@@ -27,7 +27,8 @@ feature {NONE} -- Initialization
 
 	make (an_expression: XM_XPATH_EXPRESSION) is
 		require
-			expression_not_void: an_expression /= Void and then an_expression.are_static_properties_computed
+			expression_not_replaced: an_expression /= Void and then an_expression.are_static_properties_computed
+				and then not an_expression.was_expression_replaced
 		do
 			make_unary (an_expression)
 			if base_expression.context_document_nodeset or else base_expression.single_document_nodeset then
@@ -49,6 +50,7 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations.
 		do
+			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
 			base_expression.simplify
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
@@ -64,6 +66,7 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			mark_unreplaced
+			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
 			base_expression.analyze (a_context)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
@@ -85,6 +88,7 @@ feature -- Optimization
 			if a_promotion /= Void then
 				set_replacement (a_promotion)
 			else
+				base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
 				base_expression.promote (an_offer)
 				if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression ) end
 			end
@@ -101,15 +105,19 @@ feature -- Evaluation
 		do
 			base_expression.create_iterator (a_context)
 			an_iterator := base_expression.last_iterator
-			a_node_iterator ?= an_iterator
-			if a_node_iterator /= Void then
-				create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (a_node_iterator, comparer)
+			if an_iterator.is_error then
+				last_iterator := an_iterator
 			else
-				an_empty_iterator ?= an_iterator
-				if an_empty_iterator /= Void then
-					last_iterator := an_empty_iterator
+				a_node_iterator ?= an_iterator
+				if a_node_iterator /= Void then
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (a_node_iterator, comparer)
 				else
-					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Unexpected sequence", Gexslt_eiffel_type_uri, "NNON_NODE_SEQUENCE", Dynamic_error)
+					an_empty_iterator ?= an_iterator
+					if an_empty_iterator /= Void then
+						last_iterator := an_empty_iterator
+					else
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Unexpected sequence", Gexslt_eiffel_type_uri, "NON_NODE_SEQUENCE", Dynamic_error)
+					end
 				end
 			end
 		end

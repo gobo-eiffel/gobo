@@ -109,7 +109,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-		process (a_context: XM_XSLT_EVALUATION_CONTEXT) is
+	process (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_tail_call: XM_XSLT_TAIL_CALL
@@ -137,6 +137,9 @@ feature -- Evaluation
 		local
 			some_tunnel_parameters: XM_XSLT_PARAMETER_SET
 			some_parameters: XM_XSLT_PARAMETER_SET
+			a_local_variable_frame: XM_XPATH_STACK_FRAME
+			some_variables: ARRAY [XM_XPATH_VALUE]
+			an_index: INTEGER
 		do
 			if not use_tail_recursion then
 				process (a_context)
@@ -147,6 +150,19 @@ feature -- Evaluation
 
 				some_parameters := assembled_parameters (a_context, actual_parameter_list)
 				some_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameter_list)
+
+				-- The local variables are no longer needed, so we clear them:
+
+				a_local_variable_frame := a_context.local_variable_frame
+				some_variables := a_local_variable_frame.variables
+				from
+					an_index := 1
+				until
+					an_index > some_variables.count
+				loop
+					some_variables.put (Void, an_index)
+					an_index := an_index + 1
+				end
 
 				-- Call the named template. Actually, don't call it; rather construct a call package
 				--  and return it to the caller, who will then process this package.

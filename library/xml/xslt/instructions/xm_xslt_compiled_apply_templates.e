@@ -219,22 +219,25 @@ feature {NONE} -- Implementation
 
 				select_expression.create_iterator (a_context)
 				an_iterator := select_expression.last_iterator
-
-				-- quick exit if the iterator is empty
-
-				an_empty_iterator ?= an_iterator
-				if an_empty_iterator = Void then
-
-					-- Process the selected nodes now.
-
-					from
-						a_new_context := a_context.new_context
-						apply_templates (an_iterator, a_mode, some_parameters, some_tunnel_parameters, a_new_context)
-					until
-						last_tail_call = Void
-					loop
-						last_tail_call.process_leaving_tail (a_new_context)
-						last_tail_call := last_tail_call.last_tail_call
+				if an_iterator.is_error then
+					a_context.transformer.report_fatal_error (an_iterator.error_value, Current)
+				else
+					-- quick exit if the iterator is empty
+					
+					an_empty_iterator ?= an_iterator
+					if an_empty_iterator = Void then
+						
+						-- Process the selected nodes now.
+						
+						from
+							a_new_context := a_context.new_context
+							apply_templates (an_iterator, a_mode, some_parameters, some_tunnel_parameters, a_new_context)
+						until
+							a_new_context.transformer.is_error or else last_tail_call = Void
+						loop
+							last_tail_call.process_leaving_tail (a_new_context)
+							last_tail_call := last_tail_call.last_tail_call
+						end
 					end
 				end
 			end

@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_comparer: XM_XPATH_NODE_ORDER_COMPARER) is
+	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_NODE_ORDER_COMPARER) is
 			-- Establish invariant.
 		require
 			comparer_not_void: a_comparer /= Void
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 	comparer: XM_XPATH_NODE_ORDER_COMPARER
 			-- Node order comparer
 
-	first_iterator, second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	first_iterator, second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Iterators across the two sets
 
 	current_node: like item
@@ -86,8 +86,6 @@ feature {NONE} -- Implementation
 			-- Move to next item.
 		require
 			not_after: before or else not after
-		local
-			first_item: XM_XPATH_ITEM
 		do
 			if before then
 				first_iterator.start
@@ -99,14 +97,7 @@ feature {NONE} -- Implementation
 			if first_iterator.after then
 				current_node := Void
 			elseif second_iterator.after then
-				first_item := first_iterator.item
-				if first_item /= Void then
-					current_node ?= first_item
-						check
-							current_node /= Void
-							-- We are dealing with node sets
-						end
-				end
+				current_node := first_iterator.item
 			else
 				advance_both_iterators
 			end
@@ -121,33 +112,14 @@ feature {NONE} -- Implementation
 			finished: BOOLEAN
 			comparison: INTEGER
 			first_node, second_node: XM_XPATH_NODE
-			first_item, second_item: XM_XPATH_ITEM
 		do
 			from
 				finished := False
 			until
 				finished
 			loop
-				first_item := first_iterator.item
-					check
-						first_item_not_void: first_item /= Void
-						-- From pre-condition and settings of `finished' below
-					end
-				first_node ?= first_item
-					check
-						first_node_not_void: first_node /= Void
-						-- We are dealing with node sets
-					end
-				second_item := second_iterator.item
-					check
-						second_item_not_void: second_item /= Void
-						-- From pre-condition and settings of `finished' below
-					end
-				second_node ?= second_item
-					check
-						second_node_not_void: second_node /= Void
-						-- We are dealing with node sets
-					end				
+				first_node := first_iterator.item
+				second_node := second_iterator.item
 				comparison := comparer.three_way_comparison (first_node, second_node)
 				if comparison = -1 then
 					finished := True

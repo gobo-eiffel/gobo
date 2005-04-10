@@ -194,7 +194,7 @@ feature -- Element change
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
 					function_name := attribute_value_by_index (a_cursor.index)
 					if function_name.index_of (':', 2) = 0 then
-						create an_error.make_from_string ("Xsl:function name must have a namespace prefix", "", "XT0740", Static_error)
+						create an_error.make_from_string ("Xsl:function name must have a namespace prefix", "", "XTSE0740", Static_error)
 						report_compile_error (an_error)
 					else
 						STRING_.left_adjust (function_name)
@@ -214,7 +214,7 @@ feature -- Element change
 					elseif STRING_.same_string (an_override_attribute, "no") then
 						is_overriding := False
 					else
-						create an_error.make_from_string ("Xsl:function override attribute must be 'yes' or 'no'", "", "XT0020", Static_error)
+						create an_error.make_from_string ("Xsl:function override attribute must be 'yes' or 'no'", "", "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					end
 				elseif STRING_.same_string (an_expanded_name, Gexslt_memo_function_attribute) then
@@ -229,7 +229,7 @@ feature -- Element change
 					elseif STRING_.same_string (a_memo_function_attribute, "no") then
 						is_memo_function := False
 					else
-						create an_error.make_from_string ("Xsl:function memo-function extension attribute must be 'yes' or 'no'", "", "XT0020", Static_error)
+						create an_error.make_from_string ("Xsl:function memo-function extension attribute must be 'yes' or 'no'", "", "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					end
 				else
@@ -279,7 +279,7 @@ feature -- Element change
 					and then a_function.arity = an_arity
 					and then a_function.function_fingerprint = function_fingerprint
 					and then a_function.precedence = precedence then
-					create an_error.make_from_string (STRING_.concat ("Duplicate function declaration for ", function_name), "", "XT0770", Static_error)
+					create an_error.make_from_string (STRING_.concat ("Duplicate function declaration for ", function_name), "", "XTSE0770", Static_error)
 					report_compile_error (an_error)
 					a_cursor.go_before
 				else
@@ -316,7 +316,7 @@ feature -- Element change
 				create a_type_checker
 				a_type_checker.static_type_check (static_context, a_body, result_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 					report_compile_error (an_error)
 				else
 					a_body := a_type_checker.checked_expression

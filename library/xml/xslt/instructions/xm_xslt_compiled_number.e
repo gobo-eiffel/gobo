@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 							if a_numeric_value = Void then
 								a_numeric_value := item_to_double (an_atomic_value)
 								if a_numeric_value.is_nan then
-									create an_error.make_from_string ("Numbers to be formatted must be positive integers", "", "XT0980", Dynamic_error)
+									create an_error.make_from_string ("Numbers to be formatted must be positive integers", "", "XTDE0980", Dynamic_error)
 									transformer.report_fatal_error (an_error, Current)
 									finished := True
 								end
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 							end
 						end
 						if not finished and then an_integer_value.value.is_negative then
-							create an_error.make_from_string ("Numbers to be formatted must be positive integers", "", "XT0980", Dynamic_error)
+							create an_error.make_from_string ("Numbers to be formatted must be positive integers", "", "XTDE0980", Dynamic_error)
 							transformer.report_fatal_error (an_error, Current)
 						end
 						if not finished then
@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 				else
 					a_source  ?= a_context.context_item
 					if a_source = Void then
-						create an_error.make_from_string ("Context item for xsl:number must be a node", "", "XT0990", Dynamic_error)
+						create an_error.make_from_string ("Context item for xsl:number must be a node", "", "XTTE0990", Type_error)
 						transformer.report_recoverable_error (an_error, Current)
 						if not transformer.is_error then
 							todo ("calculate_value", True) -- return empty sequence

@@ -95,13 +95,13 @@ feature -- Optimization
 				create a_role.make (Binary_expression_role, token_name (operator), 1)
 				a_type_checker.static_type_check (a_context, first_operand, an_atomic_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 				else
 					set_first_operand (a_type_checker.checked_expression)
 					create another_role.make (Binary_expression_role, token_name (operator), 2)
 					a_type_checker.static_type_check (a_context, second_operand, an_atomic_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 					else
 						set_second_operand (a_type_checker.checked_expression)
 						a_type := first_operand.item_type.atomized_item_type; a_primitive_type := a_type.primitive_type
@@ -116,7 +116,7 @@ feature -- Optimization
 								warn_comparison_failure (a_context, is_first_optional, is_second_optional, a_type, another_type)
 							else
 								a_message := STRING_.appended_string (a_message, another_type.conventional_name)
-								set_last_error_from_string (a_message, Xpath_errors_uri, "XP0004", Type_error)
+								set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
 							end
 						end
 						if not is_error then optimize (a_context) end
@@ -158,10 +158,10 @@ feature -- Evaluation
 					another_atomic_value ?= another_item
 					if an_atomic_value = Void then
 						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XP0006", Type_error)
+						last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XPTY0004", Type_error)
 					elseif another_atomic_value = Void then
 						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XP0006", Type_error)
+						last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of value comparison", Xpath_errors_uri, "XPTY0004", Type_error)
 					else
 						create a_comparison_checker
 						a_comparison_checker.check_correct_value_relation (an_atomic_value, operator, atomic_comparer, another_atomic_value)

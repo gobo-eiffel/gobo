@@ -347,7 +347,7 @@ feature -- Element change
 			elseif a_value.is_double then
 				value := a_value.to_double
 			else
-				set_last_error_from_string	("Invalid xs:double string value", Xpath_errors_uri, "XP0006", Type_error)
+				set_last_error_from_string	("Invalid xs:double string value", Xpath_errors_uri, "XPTY0004", Type_error)
 			end
 		end
 

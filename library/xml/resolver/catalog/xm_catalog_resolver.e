@@ -189,13 +189,13 @@ feature -- Result
 	has_media_type: BOOLEAN is
 			-- Is the media type available.
 		do
-			Result := shared_catalog_manager.bootstrap_resolver.has_media_type
+			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.has_media_type
 		end
 
 	last_media_type: UT_MEDIA_TYPE is
 			-- Media type, if available.
 		do
-			Result := shared_catalog_manager.bootstrap_resolver.last_media_type
+			Result := shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.last_media_type
 		end
 
 end

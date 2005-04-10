@@ -19,7 +19,7 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 
 		-- This class is not used where the filter is a constant number.
-		-- Instead, use XM_XPATH_POSITION_FILTER, so this class does not
+		-- Instead, use XM_XPATH_POSITION_ITERATOR, so this class does not
 		--  need to do optimization for numeric predicates.
 
 creation

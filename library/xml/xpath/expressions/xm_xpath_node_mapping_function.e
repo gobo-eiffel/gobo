@@ -15,19 +15,25 @@ indexing
 
 deferred class XM_XPATH_NODE_MAPPING_FUNCTION
 
+	-- TODO: drop the information object
+	
+feature -- Access
+
+	last_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			-- Result from `map_nodes'
+
 feature -- Evaluation
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		require
 			item_not_void: an_item /= Void
-			information: True -- /= Void implies must be immutable and read-only for the duration of the iteration
 		deferred
 
-			-- If an error is detected, then this function should return an invalid iterator
+			-- If an error is detected, then this command should create an invalid iterator
 
 		ensure
-			result_not_void: Result /= Void
+			result_not_void: last_node_iterator /= Void
 		end
 
 end

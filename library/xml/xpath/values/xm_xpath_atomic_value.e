@@ -101,7 +101,7 @@ feature -- Evaluation
 		do
 			create last_boolean_value.make (False)
 			a_message := STRING_.concat ("Effective boolean value is not defined for an atomic value of type ", item_type.conventional_name)
-			last_boolean_value.set_last_error_from_string (a_message, "", "XP0004", Type_error)
+			last_boolean_value.set_last_error_from_string (a_message, "", "XPTY0004", Type_error)
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
@@ -122,7 +122,7 @@ feature -- Evaluation
 		do
 			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (Current)
 		end
-
+	
 	process (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		do

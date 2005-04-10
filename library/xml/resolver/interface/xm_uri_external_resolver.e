@@ -16,6 +16,8 @@ inherit
 
 	XM_EXTERNAL_RESOLVER
 
+	XM_RESOLVER_MEDIA_TYPE
+
 feature -- Status report
 
 	supports_registering_schemes: BOOLEAN is
@@ -69,6 +71,6 @@ feature -- Element change
 			registering_schemes_supported: supports_registering_schemes
 		deferred
 		end
-	
+
 end
 

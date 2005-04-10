@@ -387,13 +387,17 @@ feature -- Events
 					
 					shared_name_pool.remove_document_from_pool (a_document.document_number)					
 				else
-					a_node ?= an_item
-					check
-						node: a_node /= Void
-						-- items are atomic values or nodes
+					if an_item.is_error then
+						on_error (an_item.error_value.error_message)
+					else
+						a_node ?= an_item
+						check
+							node: a_node /= Void
+							-- items are atomic values or nodes
+						end
+						a_node.copy_node (Current, All_namespaces, True)
+						previous_atomic := False
 					end
-					a_node.copy_node (Current, All_namespaces, True)
-					previous_atomic := False
 				end
 			end
 		end

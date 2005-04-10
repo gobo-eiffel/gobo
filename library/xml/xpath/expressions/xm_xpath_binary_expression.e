@@ -196,8 +196,10 @@ feature -- Element change
 			operand_not_marked_for_replacement: an_operand /= Void and then not an_operand.was_expression_replaced
 		do
 			first_operand := an_operand
+			if not first_operand.is_error then first_operand.mark_unreplaced end
 		ensure
 			first_operand_set: first_operand = an_operand
+			first_operand_not_replaced: not first_operand.was_expression_replaced
 		end
 
 	set_second_operand (an_operand: XM_XPATH_EXPRESSION) is
@@ -206,8 +208,10 @@ feature -- Element change
 			operand_not_marked_for_replacement: an_operand /= Void and then not an_operand.was_expression_replaced
 		do
 			second_operand := an_operand
+			if not second_operand.is_error then second_operand.mark_unreplaced end
 		ensure
 			second_operand_set: second_operand = an_operand
+			second_operand_not_replaced: not second_operand.was_expression_replaced
 		end
 
 feature {XM_XSLT_EXPRESSION} -- Restricted

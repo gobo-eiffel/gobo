@@ -83,7 +83,7 @@ feature -- Element change
 					end
 					called_template_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 				else
-					create an_error.make_from_string (STRING_.concat ("Name attribute of xsl:call-template must be a QName. Found: ", a_name_attribute), "", "XT0290", Static_error)
+					create an_error.make_from_string (STRING_.concat ("Name attribute of xsl:call-template must be a QName. Found: ", a_name_attribute), "", "XTDE0290", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -123,7 +123,7 @@ feature -- Element change
 					any_compile_errors or else a_declared_parameter_iterator.after
 				loop
 					a_param ?= a_declared_parameter_iterator.item
-					if a_param /= Void and then a_param.is_required_parameter then
+					if a_param /= Void and then a_param.is_required_parameter and then not a_param.is_tunnel_parameter then
 						from
 							is_parameter_ok := False
 							an_actual_parameter_iterator := new_axis_iterator (Child_axis)
@@ -138,7 +138,7 @@ feature -- Element change
 							an_actual_parameter_iterator.forth
 						end
 						if not is_parameter_ok then
-							create an_error.make_from_string (STRING_.concat ("No value supplied for required parameter ", a_param.variable_name), "", "XT0690", Static_error)
+							create an_error.make_from_string (STRING_.concat ("No value supplied for required parameter ", a_param.variable_name), "", "XTSE0690", Static_error)
 							report_compile_error (an_error)
 						end
 					end
@@ -173,10 +173,10 @@ feature -- Element change
 							end
 							a_declared_parameter_iterator.forth
 						end
-						if not is_parameter_ok and then not is_backwards_compatible_processing_enabled then
+						if not a_with_param.is_tunnel_parameter and then not is_parameter_ok and then not is_backwards_compatible_processing_enabled then
 							a_message := STRING_.concat ("Parameter ", a_with_param.variable_name)
 							a_message := STRING_.appended_string (a_message, " is not declared in the called template")
-							create an_error.make_from_string (a_message, "", "XT0680", Static_error)
+							create an_error.make_from_string (a_message, "", "XTSE0680", Static_error)
 							report_compile_error (an_error)
 
 						end
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if template = Void then
-				create an_error.make_from_string (STRING_.concat ("No template exists named ", called_template_name), "", "XT0650", Static_error)
+				create an_error.make_from_string (STRING_.concat ("No template exists named ", called_template_name), "", "XTSE0650", Static_error)
 				report_compile_error (an_error)
 			end
 		end

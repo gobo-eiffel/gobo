@@ -227,20 +227,10 @@ feature -- Events
 						output (chars)
 					else
 
-						-- Recoverable error: using disable output escaping with characters
+						-- Ignore disable output escaping with characters
                   --  that are not available in the target encoding
 
-						if not warning_issued then
-							create an_error.make_from_string ("disable-output-escaping is ignored for characters not available in the chosen encoding", "", "XT1640", Dynamic_error)
-							transformer.report_recoverable_error (an_error, Void)
-							warning_issued := True
-							if transformer.is_error then
-								is_error := True
-							end
-						end
-						if not is_error then
-							output_escape (chars, False)
-						end
+						output_escape (chars, False)
 					end
 				elseif character_map_expander /= Void then
 					a_mapped_string := character_map_expander.mapped_string (chars)

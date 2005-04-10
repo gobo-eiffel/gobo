@@ -75,9 +75,13 @@ feature -- Evaluation
 		local
 			a_value: XM_XPATH_VALUE
 		do
-			a_value := a_context.evaluated_local_variable (slot_number)
-			a_value.create_iterator (a_context)
-			last_iterator := a_value.last_iterator
+			if a_context.local_variable_frame.variables.item (slot_number) /= Void then
+				a_value := a_context.evaluated_local_variable (slot_number)
+				a_value.create_iterator (a_context)
+				last_iterator := a_value.last_iterator
+			else
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Local parameter value missing", "", "XTTE0570", Type_error)
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

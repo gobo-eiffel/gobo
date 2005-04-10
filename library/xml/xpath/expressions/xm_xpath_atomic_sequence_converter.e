@@ -137,11 +137,11 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void, Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
 			end
 		end
 	
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a base_expression
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE

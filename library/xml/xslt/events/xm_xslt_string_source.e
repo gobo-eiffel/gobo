@@ -60,6 +60,9 @@ feature -- Access
 	
 	default_media_type: UT_MEDIA_TYPE
 			-- Default media type for stylesheet processing
+	
+	media_type: UT_MEDIA_TYPE
+			-- Media type of document entity
 
 feature -- Events
 
@@ -78,23 +81,30 @@ feature -- Events
 			create attributes.set_next (namespace_resolver)
 			create content.set_next (attributes)
 			create oasis_xml_catalog_filter.set_next (content, content_emitter)
-			create xpointer_filter.make (" ", default_media_type, oasis_xml_catalog_filter, oasis_xml_catalog_filter)
+			a_resolver ?= a_parser.entity_resolver
+			create xpointer_filter.make (" ", default_media_type, a_resolver, oasis_xml_catalog_filter, oasis_xml_catalog_filter)
 			if fragment_identifier = Void or else not is_stylesheet then
 				xpointer_filter.set_no_filtering
 			else
 				xpointer_filter.set_xpointer (fragment_identifier)
+				if are_media_type_ignored then
+					xpointer_filter.ignore_media_types
+				else
+					xpointer_filter.allow_generic_xml_types (True)
+					xpointer_filter.add_standard_media_types
+				end
 			end
 			create start.set_next (xpointer_filter)
 			create a_locator.make (a_parser)
 			a_receiver.set_document_locator (a_locator)
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (xpointer_filter)
-			a_resolver ?= a_parser.entity_resolver
 			if a_resolver /= Void then
 				create a_uri.make (system_id)
 				a_resolver.push_uri (a_uri)
 			end
 			a_parser.parse_from_string (source_text)
+			media_type := xpointer_filter.media_type
 		end
 
 feature -- Element change

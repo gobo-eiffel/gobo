@@ -138,7 +138,7 @@ feature -- Evaluation
 			some_tunnel_parameters := assembled_tunnel_parameters (a_context, tunnel_parameters)
 			a_current_template := a_context.current_template
 			if a_current_template = Void then
-				create an_error.make_from_string ("Current template rule is null whilst evaluating xsl:apply-imports.", "", "XT0560", Dynamic_error)
+				create an_error.make_from_string ("Current template rule is null whilst evaluating xsl:apply-imports.", "", "XTDE0560", Dynamic_error)
 				a_transformer.report_fatal_error (an_error, Current)
 			else
 				a_minimum_precedence := a_current_template.minimum_import_precedence
@@ -147,12 +147,12 @@ feature -- Evaluation
 				a_current_iterator := a_context.current_iterator
 				if a_mode = Void then a_mode := a_transformer.rule_manager.mode (Default_mode) end
 				if a_current_iterator = Void or else a_current_iterator.off then
-					create an_error.make_from_string ("Context item is not set whilst applying imports.", "", "XT0565", Dynamic_error)
+					create an_error.make_from_string ("Context item is not set whilst applying imports.", "", "XTDE0565", Dynamic_error)
 					a_transformer.report_fatal_error (an_error, Void)
 				else
 					a_context_node ?= a_current_iterator.item
 					if a_context_node = Void then
-						create an_error.make_from_string ("Context item is not a node whilst applying imports.", "", "XT0565", Dynamic_error)
+						create an_error.make_from_string ("Context item is not a node whilst applying imports.", "", "XTDE0565", Dynamic_error)
 						a_transformer.report_fatal_error (an_error, Void)
 					else
 						a_node_handler := a_transformer.rule_manager.imported_template_rule (a_context_node, a_mode, a_minimum_precedence, a_maximum_precedence, a_context)

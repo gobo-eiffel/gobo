@@ -68,8 +68,8 @@ feature -- Access
 		do
 			create Result.make (2)
 			Result.set_equality_tester (expression_tester)
-			Result.Put (select_expression, 1)
-			Result.Put (action, 2)
+			Result.put (select_expression, 1)
+			Result.put (action, 2)
 		end
 
 feature -- Status report
@@ -162,6 +162,7 @@ feature -- Optimization
 					--  promote them: this causes them to be evaluated once, outside the for-each loop
 
 					create a_promotion_offer.make (Focus_independent, Void, Current, False, select_expression.context_document_nodeset)
+					a_promotion_offer.disallow_promoting_xslt_functions
 					action.promote (a_promotion_offer)
 					if action.was_expression_replaced then
 						action := action.replacement_expression
@@ -218,19 +219,23 @@ feature -- Evaluation
 			if a_transformer.is_tracing then
 				a_trace_listener := a_transformer.trace_listener
 			end
-			from
-				an_iterator.start
-			until
-				an_iterator.after
-			loop
-				if a_transformer.is_tracing then
-					a_trace_listener.trace_current_item_start (an_iterator.item)
+			if an_iterator.is_error then
+				a_transformer.report_fatal_error (an_iterator.error_value, Current)
+			else
+				from
+					an_iterator.start
+				until
+					a_transformer.is_error or else an_iterator.is_error or else an_iterator.after
+				loop
+					if a_transformer.is_tracing then
+						a_trace_listener.trace_current_item_start (an_iterator.item)
+					end
+					action.process (an_inner_context)
+					if a_transformer.is_tracing then
+						a_trace_listener.trace_current_item_finish (an_iterator.item)
+					end
+					an_iterator.forth
 				end
-				action.process (an_inner_context)
-				if a_transformer.is_tracing then
-					a_trace_listener.trace_current_item_finish (an_iterator.item)
-				end
-				an_iterator.forth
 			end
 		end
 
@@ -248,10 +253,10 @@ feature -- Evaluation
 			end
 			a_new_context.set_current_template (Void)
 			a_new_context.set_current_iterator (last_iterator)
-			create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (last_iterator, Current, a_new_context, Void)
+			create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (last_iterator, Current, a_new_context)
 		end
 	
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		do
 			action.create_iterator (a_context)

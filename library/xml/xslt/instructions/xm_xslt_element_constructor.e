@@ -141,14 +141,13 @@ feature -- Evaluation
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			a_validator: XM_XPATH_RECEIVER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_name_code := name_code (a_context)
 			if a_name_code = -1 then
-
-				-- XSLT recovery action when the computed name is invalid
-
-				skip_element (a_context)
-				last_tail_call := Void
+				-- TODO: this might be an XTDE0820
+				create an_error.make_from_string ("Name is not a valid QName", "", "XTDE0830", Dynamic_error)
+				a_context.transformer.report_fatal_error (an_error, Current)
 			else
 				a_transformer := a_context.transformer
 				a_receiver := a_context.current_receiver

@@ -20,8 +20,6 @@ inherit
 			analyze, create_iterator, evaluate_item, compute_cardinality
 		end
 
-	XM_XPATH_MAPPING_FUNCTION
-
 creation
 
 	make
@@ -107,7 +105,7 @@ feature -- Evaluation
 						end
 						if items > 1 then
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ",
-																																						 role_locator.message), Xpath_errors_uri, "XP0006", Type_error)
+																																						 role_locator.message), Xpath_errors_uri, "XPTY0004", Type_error)
 							finished := True
 						else
 							an_iterator.forth
@@ -118,7 +116,7 @@ feature -- Evaluation
 				if not an_iterator.is_error then
 					if items = 0 and then not is_cardinality_allows_zero (required_cardinality) then
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
-																																					 role_locator.message), Xpath_errors_uri, "XP0006", Type_error)
+																																					 role_locator.message), Xpath_errors_uri, "XPTY0004", Type_error)
 					end
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
@@ -133,6 +131,7 @@ feature -- Evaluation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_stopper: XM_XPATH_OBJECT_VALUE
+			a_cardinality_checking_function: XM_XPATH_CARDINALITY_CHECKING_FUNCTION
 		do
 			base_expression.create_iterator (a_context)
 			an_iterator := base_expression.last_iterator
@@ -147,50 +146,10 @@ feature -- Evaluation
 					create a_stopper.make (Current)
 					create {XM_XPATH_APPEND_ITERATOR} an_iterator.make (an_iterator, a_stopper, a_context)
 				end
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void, an_iterator)
+				create a_cardinality_checking_function.make (an_iterator, role_locator, required_cardinality)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, a_cardinality_checking_function, Void)
 			else
 				last_iterator := an_iterator 
-			end
-		end
-
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
-			-- Map `an_item' to a sequence
-		local
-			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_stopper: XM_XPATH_OBJECT_VALUE
-			a_position: INTEGER
-			an_invalid_item: XM_XPATH_INVALID_ITEM
-		do
-				check
-					information_object_not_void: an_information_object /= Void
-				end
-
-			a_sequence_iterator ?= an_information_object
-				check
-					iterator_not_void: a_sequence_iterator /= Void
-					iterator_not_in_error: not a_sequence_iterator.is_error
-					-- See logic of `iterator' above.
-				end
-			a_position := a_sequence_iterator.index
-			a_stopper ?= an_item
-			if a_stopper /= Void then
-				if a_position = 1 then
-					create an_invalid_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
-																											role_locator.message), Xpath_errors_uri, "XP0006", Type_error)
-					create last_mapped_item.make_item (an_invalid_item)
-				end
-
-				-- We don't include the stopper in the result
-				
-					last_mapped_item := Void
-			else -- no stopper
-				if a_position = 2 and then not cardinality_allows_many then
-					create an_invalid_item.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ",
-																											role_locator.message), Xpath_errors_uri, "XP0006", Type_error)
-					create last_mapped_item.make_item (an_invalid_item)
-				else
-					create last_mapped_item.make_item (an_item)
-				end
 			end
 		end
 

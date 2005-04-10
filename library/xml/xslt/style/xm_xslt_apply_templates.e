@@ -140,10 +140,10 @@ feature -- Element change
 					else
 						a_text ?= a_child_iterator.item
 						if a_text /= Void and then not is_all_whitespace (a_text.string_value) then
-							create an_error.make_from_string ("No character data allowed within xsl:apply-templates", "", "XT0010", Static_error)
+							create an_error.make_from_string ("No character data allowed within xsl:apply-templates", "", "XTSE0010", Static_error)
 							report_compile_error (an_error)
 						elseif a_text = Void then
-							create an_error.make_from_string ("Invalid element within xsl:apply-templates", "", "XT0010", Static_error)
+							create an_error.make_from_string ("Invalid element within xsl:apply-templates", "", "XTSE0010", Static_error)
 							report_compile_error (an_error)
 						end
 					end
@@ -162,7 +162,7 @@ feature -- Element change
 			create a_node_sequence.make_node_sequence
 			a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
 			if a_type_checker.is_static_type_check_error	then
-				create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+				create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 					report_compile_error (an_error)
 			else
 				select_expression := a_type_checker.checked_expression

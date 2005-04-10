@@ -19,8 +19,6 @@ inherit
 			simplify, compute_special_properties, create_iterator, pre_evaluate, check_arguments
 		end
 
-	XM_XPATH_NODE_MAPPING_FUNCTION
-
 	XM_XPATH_SHARED_ANY_NODE_TEST
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
@@ -123,7 +121,7 @@ feature -- Evaluation
 			arguments.item (3).evaluate_item (an_evaluation_context)
 			a_context_document ?= arguments.item (3).last_evaluated_item
 			if a_context_document = Void then
-				create an_error.make_from_string ("In the key() function, the context node must be in a tree whose root is a document node", "", "XT1270", Dynamic_error)
+				create an_error.make_from_string ("In the key() function, the context node must be in a tree whose root is a document node", "", "XTDE1270", Dynamic_error)
 				a_transformer.report_fatal_error (an_error, Void)
 			else
 				a_fingerprint := key_fingerprint
@@ -134,7 +132,7 @@ feature -- Evaluation
 					if a_fingerprint = -1 then
 						a_message := STRING_.concat ("Key '", a_given_key_name)
 						a_message := STRING_.appended_string (a_message, "' has not been defined")
-						create an_error.make_from_string (a_message, "", "XT1260", Dynamic_error)
+						create an_error.make_from_string (a_message, "", "XTDE1260", Dynamic_error)
 						a_transformer.report_fatal_error (an_error, Void)
 					end
 				end
@@ -161,7 +159,7 @@ feature -- Evaluation
 						create a_key_context_information.make (a_context_document, an_evaluation_context, a_fingerprint)
 						an_expression.create_iterator (a_context)
 						a_key_iterator := an_expression.last_iterator
-						create all_values_iterator.make (a_key_iterator, Current, Void, a_key_context_information)
+						create all_values_iterator.make (a_key_iterator, a_key_context_information, Void)
 						create a_local_order_comparer
 						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (all_values_iterator, a_local_order_comparer)
 					end
@@ -174,49 +172,6 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-		end
-
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- Map `an_item' to a sequence;
-			-- N.B. This function is not 100% pure, as it may cause
-			--  an index to be built for a key, but this is only a 
-			--  performance-affecting side effect.
-		local
-			a_key_context_information: XM_XSLT_KEY_CONTEXT_INFORMATION
-			a_key_manager: XM_XSLT_KEY_MANAGER
-			a_key_value: XM_XPATH_ATOMIC_VALUE
-			a_node: XM_XPATH_NODE
-		do
-			a_key_context_information ?= an_information_object
-			check
-				key_context_information: a_key_context_information /= Void
-				-- See `iterator'.
-			end
-			a_key_manager := a_key_context_information.context.transformer.key_manager
-			a_key_value ?= an_item
-			if a_key_value = Void then
-				debug ("XSLT key function")
-					std.error.put_string ("Key value is not an atomic value%N")
-				end
-				a_node ?= an_item
-				check
-					item_is_node: a_node /= Void
-					-- as it is not atomic
-				end
-				create {XM_XPATH_STRING_VALUE} a_key_value.make (a_node.string_value)
-			end
-			a_key_manager.generate_keyed_sequence  (a_key_context_information.key_fingerprint,
-																 a_key_context_information.document, a_key_value,
-																 a_key_context_information.context)
-			if a_key_context_information.context.transformer.is_error then
-				create {XM_XPATH_EMPTY_ITERATOR[XM_XPATH_NODE]} Result.make -- error has already been reported 
-			else
-				Result := a_key_manager.last_key_sequence
-				debug ("XSLT key function")
-					std.error.put_string (Result.out);
-					std.error.put_new_line
-				end
-			end
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Restricted

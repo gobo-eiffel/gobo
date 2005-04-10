@@ -94,33 +94,36 @@ feature -- Evaluation
 			--  separator argument unless there are at least two items in the sequence.
 
 			arguments.item (1).create_iterator (a_context)
-			an_iterator := arguments.item (1).last_iterator; an_iterator.start
+			an_iterator := arguments.item (1).last_iterator
 			if an_iterator.is_error then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
-			elseif an_iterator.after then
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")	
 			else
-				a_string := an_iterator.item.string_value
-				an_iterator.forth
+				an_iterator.start
 				if an_iterator.after then
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_string)
+				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")	
 				else
-
-					-- Type checking ensured that the separator was not an empty sequence.
-
-					arguments.item (2).evaluate_item (a_context)
-					a_separator := arguments.item (2).last_evaluated_item.string_value
-					a_result := STRING_.concat (a_string, a_separator)
-					from
-					until
-						an_iterator.after
-					loop
-						a_string := an_iterator.item.string_value
-						a_result := STRING_.appended_string (a_result, a_separator)
-						a_result := STRING_.appended_string (a_result, a_string)
-						an_iterator.forth
+					a_string := an_iterator.item.string_value
+					an_iterator.forth
+					if an_iterator.after then
+						create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_string)
+					else
+						
+						-- Type checking ensured that the separator was not an empty sequence.
+						
+						arguments.item (2).evaluate_item (a_context)
+						a_separator := arguments.item (2).last_evaluated_item.string_value
+						a_result := STRING_.concat (a_string, a_separator)
+						from
+						until
+							an_iterator.after
+						loop
+							a_string := an_iterator.item.string_value
+							a_result := STRING_.appended_string (a_result, a_separator)
+							a_result := STRING_.appended_string (a_result, a_string)
+							an_iterator.forth
+						end
+						create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_result)
 					end
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_result)
 				end
 			end
 		end

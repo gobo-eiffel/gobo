@@ -99,7 +99,7 @@ feature -- Element change
 				elseif STRING_.same_string (a_terminate_attribute, "yes") then
 					-- OK
 				else
-					create an_error.make_from_string ("xsl:message terminate attribute must be 'yes' or 'no'", "", "XT0020", Static_error)
+					create an_error.make_from_string ("xsl:message terminate attribute must be 'yes' or 'no'", "", "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end

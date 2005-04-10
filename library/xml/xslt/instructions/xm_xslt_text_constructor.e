@@ -99,7 +99,7 @@ feature -- Optimization
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this instruction.
 		do
-			if select_expression /= void then
+			if select_expression /= Void then
 				select_expression.promote (an_offer)
 				if select_expression.was_expression_replaced then
 					set_select_expression (select_expression.replacement_expression)

@@ -16,6 +16,8 @@ inherit
 
 	ANY -- SE 2.1
 
+	XM_XPATH_NODE_MAPPING_FUNCTION
+
 creation
 
 	make
@@ -49,6 +51,34 @@ feature -- Access
 	key_fingerprint: INTEGER
 			-- Fingerprint of key's name
 
+feature -- Evaluation
+
+	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+			-- Map `an_item' to a sequence
+		local
+			a_key_manager: XM_XSLT_KEY_MANAGER
+			a_key_value: XM_XPATH_ATOMIC_VALUE
+			a_node: XM_XPATH_NODE
+		do
+			a_key_manager := context.transformer.key_manager
+			a_key_value ?= an_item
+			if a_key_value = Void then
+				a_node ?= an_item
+				check
+					item_is_node: a_node /= Void
+					-- as it is not atomic
+				end
+				create {XM_XPATH_STRING_VALUE} a_key_value.make (a_node.string_value)
+			end
+			a_key_manager.generate_keyed_sequence  (key_fingerprint, document, a_key_value, context)
+			if context.transformer.is_error then
+				create {XM_XPATH_EMPTY_ITERATOR[XM_XPATH_NODE]} last_node_iterator.make -- error has already been reported 
+			else
+				last_node_iterator := a_key_manager.last_key_sequence
+			end
+		end
+
+	
 invariant
 
 	document_not_void: document /= Void

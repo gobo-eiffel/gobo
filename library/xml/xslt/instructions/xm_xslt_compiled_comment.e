@@ -95,20 +95,12 @@ feature -- Evaluation
 				loop
 					a_comment_marker_index := a_comment.substring_index ("--", 1)
 					if a_comment_marker_index /= 0 then
-						create an_error.make_from_string ("Invalid characters (--) in comment", "", "XT0950", Dynamic_error)
-						a_transformer.report_recoverable_error (an_error, Current)
-						if not a_transformer.is_error then -- recovery action
-							a_string := STRING_.concat (a_comment.substring (1, a_comment_marker_index), " ")
-							a_comment := STRING_.appended_string (a_string, a_comment.substring (a_comment_marker_index + 1, a_comment.count))
-						end
+						a_string := STRING_.concat (a_comment.substring (1, a_comment_marker_index), " ")
+						a_comment := STRING_.appended_string (a_string, a_comment.substring (a_comment_marker_index + 1, a_comment.count))
 					end
 				end
 				if a_comment.count > 0 and then a_comment.item (a_comment.count).is_equal ('-') then
-					create an_error.make_from_string ("Invalid characters (-) at end of comment", "", "XT0950", Dynamic_error)
-					a_transformer.report_recoverable_error (an_error, Current)
-					if not a_transformer.is_error then -- recovery action
-						a_comment := STRING_.appended_string (a_comment, " ")
-					end
+					a_comment := STRING_.appended_string (a_comment, " ")
 				end
 			end
 			if not a_transformer.is_error then

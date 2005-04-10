@@ -476,9 +476,9 @@ feature {NONE} -- Implementation
 			elseif an_option.is_equal ("treat-warnings-as-errors") then
 				error_listener.treat_warnings_as_recoverable_errors
 			elseif an_option.is_equal ("do-not-recover") then
-				error_listener.set_recovery_policy (Do_not_recover)
+				configuration.set_recovery_policy (Do_not_recover)
 			elseif an_option.is_equal ("recover-silently") then
-				error_listener.set_recovery_policy (Recover_silently)				
+				configuration.set_recovery_policy (Recover_silently)				
 			elseif an_option.substring_index ("warning-threshold=", 1) = 1 and then an_option.count > 18 then
 				set_warning_threshold (an_option.substring (19, an_option.count))
 			elseif an_option.substring_index ("error-threshold=", 1) = 1 and then an_option.count > 16 then

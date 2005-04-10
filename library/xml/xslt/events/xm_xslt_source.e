@@ -44,6 +44,11 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	media_type: UT_MEDIA_TYPE is
+			-- Media type of document entity
+		deferred
+		end
+
 feature -- Events
 
 	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is
@@ -56,6 +61,21 @@ feature -- Events
 			-- User requests (such as type of validation) are available in `a_configuration'.
 			-- These can be sensitive to `is_stylesheet'.
 			
+		end
+
+feature -- Status report
+
+	are_media_type_ignored: BOOLEAN
+			-- Are media types ignored when processing fragments?
+
+feature -- Status setting
+
+	ignore_media_types is
+			-- Ignore media types when processing fragments.
+		do
+			are_media_type_ignored := True
+		ensure
+			media_types_ignored: are_media_type_ignored = True
 		end
 
 feature -- Element change

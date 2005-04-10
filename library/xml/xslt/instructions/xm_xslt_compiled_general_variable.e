@@ -124,8 +124,8 @@ feature -- Optimization
 				if select_expression.was_expression_replaced then
 					set_selector (select_expression.replacement_expression)
 				end
+				if select_expression.is_error then set_last_error (select_expression.error_value) end
 			end
-			if select_expression.is_error then set_last_error (select_expression.error_value) end
 			if not is_error then check_against_required_type (a_context) end
 		end
 
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
-			
+
 			-- N.B. Sometimes this check gets performed more than once
 			
 			if required_type /= Void and then select_expression /= Void then
@@ -207,18 +207,12 @@ feature {NONE} -- Implementation
 				create a_type_checker
 				a_type_checker.static_type_check (a_context, select_expression, required_type, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					set_last_error_from_string(a_type_checker.static_type_check_error_message, "", "XT0570", Type_error)
+					set_last_error_from_string(a_type_checker.static_type_check_error_message, "", "XTTE0570", Type_error)
 				else
 					set_selector (a_type_checker.checked_expression)
 				end
 			end
 		end
-
-invariant
-
-	required_parameter: not (is_required_parameter and then (is_global or else is_tunnel_parameter))
-	tunnel_parameter: not (is_tunnel_parameter and then (is_global or else is_required_parameter))
-	global_variable: not (is_global and then (is_required_parameter or else is_tunnel_parameter))
 
 end
 

@@ -67,7 +67,7 @@ feature -- Optimization
 	static_type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_supplied_expression: XM_XPATH_EXPRESSION; a_required_type: XM_XPATH_SEQUENCE_TYPE; backwards_compatible: BOOLEAN; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
 			-- Check an expression against a required type, modifying it if necessary
 		require
-			supplied_expression_not_void: a_supplied_expression /= Void
+			supplied_expression_not_replaced: a_supplied_expression /= Void and then not a_supplied_expression.was_expression_replaced
 			required_type_not_void: a_required_type /= Void
 			role_not_void: a_role_locator /= Void
 			no_previous_error: not is_static_type_check_error
@@ -82,6 +82,7 @@ feature -- Optimization
 			static_context := a_context
 			if static_context /= Void then function_library := static_context.available_functions end
 			a_required_cardinality := a_required_type.cardinality
+			a_supplied_expression.mark_unreplaced
 			initialize (a_supplied_expression, a_required_type)
 			handle_xpath_one_compatibility (backwards_compatible)
 			if not item_type_ok then handle_xpath_two_rules end

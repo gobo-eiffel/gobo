@@ -61,12 +61,17 @@ feature -- Access
 	default_media_type: UT_MEDIA_TYPE
 			-- Default media type for stylesheet processing
 
+	media_type: UT_MEDIA_TYPE
+			-- Media type of document entity
+
 feature -- Events
 
 	send (a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is
 			-- Generate and send  events to `a_receiver'
 		local
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
+			an_entity_resolver: XM_URI_EXTERNAL_RESOLVER
+			a_media_type: UT_MEDIA_TYPE
 		do
 			shared_catalog_manager.reset_pi_catalogs
 			error := a_parser.new_stop_on_error_filter
@@ -76,11 +81,23 @@ feature -- Events
 			create attributes.set_next (namespace_resolver)
 			create content.set_next (attributes)
 			create oasis_xml_catalog_filter.set_next (content, content_emitter)
-			create xpointer_filter.make (" ", default_media_type, oasis_xml_catalog_filter, oasis_xml_catalog_filter)
+			an_entity_resolver ?= a_parser.entity_resolver
+			if is_stylesheet then
+				a_media_type := default_media_type
+			else
+				a_media_type := Void
+			end
+			create xpointer_filter.make (" ", a_media_type, an_entity_resolver, oasis_xml_catalog_filter, oasis_xml_catalog_filter)
 			if fragment_identifier = Void or else not is_stylesheet then
 				xpointer_filter.set_no_filtering
 			else
 				xpointer_filter.set_xpointer (fragment_identifier)
+				if are_media_type_ignored then
+					xpointer_filter.ignore_media_types
+				else
+					xpointer_filter.allow_generic_xml_types (True)
+					xpointer_filter.add_standard_media_types
+				end
 			end
 			create start.set_next (xpointer_filter)
 			create a_locator.make (a_parser)
@@ -89,6 +106,7 @@ feature -- Events
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (xpointer_filter)
 			a_parser.parse_from_system (system_id)
+			media_type := xpointer_filter.media_type
 		end
 
 	send_from_stream (a_stream: KI_CHARACTER_INPUT_STREAM; a_system_id: UT_URI; a_parser: XM_PARSER; a_receiver: XM_XPATH_RECEIVER; is_stylesheet: BOOLEAN) is
@@ -102,6 +120,7 @@ feature -- Events
 			an_entity_resolver: XM_URI_EXTERNAL_RESOLVER
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
 			a_uri: UT_URI
+			a_media_type: UT_MEDIA_TYPE
 		do
 			shared_catalog_manager.reset_pi_catalogs
 			error := a_parser.new_stop_on_error_filter
@@ -111,11 +130,27 @@ feature -- Events
 			create attributes.set_next (namespace_resolver)
 			create content.set_next (attributes)
 			create oasis_xml_catalog_filter.set_next (content, content_emitter)
-			create xpointer_filter.make (" ", default_media_type, oasis_xml_catalog_filter, oasis_xml_catalog_filter)
+			an_entity_resolver ?= a_parser.entity_resolver
+			check
+				uri_entity_resolver: an_entity_resolver /= Void
+				-- from the pre-condition comment
+			end
+			if is_stylesheet then
+				a_media_type := default_media_type
+			else
+				a_media_type := Void
+			end
+			create xpointer_filter.make (" ", a_media_type, an_entity_resolver, oasis_xml_catalog_filter, oasis_xml_catalog_filter)
 			if fragment_identifier = Void or else not is_stylesheet then
 				xpointer_filter.set_no_filtering
 			else
 				xpointer_filter.set_xpointer (fragment_identifier)
+				if are_media_type_ignored then
+					xpointer_filter.ignore_media_types
+				else
+					xpointer_filter.allow_generic_xml_types (True)
+					xpointer_filter.add_standard_media_types
+				end				
 			end
 			create start.set_next (xpointer_filter)
 			create a_locator.make (a_parser)
@@ -123,16 +158,12 @@ feature -- Events
 			a_receiver.set_system_id (uri_reference)
 			a_parser.set_callbacks (start)
 			a_parser.set_dtd_callbacks (oasis_xml_catalog_filter)
-			an_entity_resolver ?= a_parser.entity_resolver
-			check
-				uri_entity_resolver: an_entity_resolver /= Void
-				-- from the pre-condition comment
-			end
 			create a_uri.make (system_id)
 			an_entity_resolver.push_uri (a_uri)
 			a_parser.parse_from_stream (a_stream)
 			a_parser.entity_resolver.resolve_finish
 			a_stream.close
+			media_type := xpointer_filter.media_type
 		end
 
 feature -- Element change

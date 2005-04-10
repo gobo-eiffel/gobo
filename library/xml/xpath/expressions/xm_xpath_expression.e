@@ -121,7 +121,7 @@ feature -- Status report
 		do
 			Result := INTEGER_.bit_and (native_implementations, Supports_process) /= 0
 		end
-	
+
 	error_value: XM_XPATH_ERROR_VALUE
 			-- Last error value
 
@@ -145,7 +145,7 @@ feature -- Status report
 
 	last_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Result from last call to `create_iterator'
-
+	
 	last_slot_number: INTEGER
 			-- Last allocated variable slot number
 
@@ -197,6 +197,8 @@ feature -- Status setting
 
 	mark_unreplaced is
 			-- Reset replacement status.
+		require
+			not_in_error: not is_error
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
@@ -339,13 +341,14 @@ feature -- Evaluation
 			iterator_not_void_but_may_be_error: last_iterator /= Void
 			iterator_before: not last_iterator.is_error implies last_iterator.before
 		end
-	
+
 	process (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		require
 			evaluation_context_not_void: a_context /= Void
 			push_processing: a_context.has_push_processing
 			not_replaced: not was_expression_replaced
+			no_error: not a_context.is_process_error
 		deferred
 		ensure
 			no_tail_calls: True -- this will be refined within XSLT
@@ -526,6 +529,7 @@ feature -- Element change
 				a_cursor.after
 			loop
 				if not a_cursor.item.is_error then
+					a_cursor.item.mark_unreplaced -- in case it's a path expression replaced by `Current'
 					a_cursor.item.allocate_slots (last_slot_number, a_slot_manager)
 					last_slot_number := a_cursor.item.last_slot_number
 				end

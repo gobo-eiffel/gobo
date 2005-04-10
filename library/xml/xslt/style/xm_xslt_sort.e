@@ -101,7 +101,7 @@ feature -- Element change
 		do
 			if select_expression /= Void then
 				if has_child_nodes then
-					create an_error.make_from_string ("xsl:sort must be empty when a 'select' attribute is supplied", "", "XT0010", Static_error)
+					create an_error.make_from_string ("xsl:sort must be empty when a 'select' attribute is supplied", "", "XTSE0010", Static_error)
 				else
 					an_apply_templates ?= parent
 					a_for_each ?= parent
@@ -110,7 +110,7 @@ feature -- Element change
 					if an_apply_templates = Void and then
 						a_for_each = Void and then
 						a_for_each_group = Void then
-						create an_error.make_from_string ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort", "", "XT0010", Static_error)
+						create an_error.make_from_string ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort", "", "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 				end
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 				create an_atomic_sequence.make_atomic_sequence
 				a_type_checker.static_type_check (static_context, select_expression, an_atomic_sequence, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 					report_compile_error (an_error)
 				else
 					select_expression := a_type_checker.checked_expression

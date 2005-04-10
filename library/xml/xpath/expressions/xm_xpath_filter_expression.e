@@ -330,6 +330,7 @@ feature -- Evaluation
 			a_position_range: XM_XPATH_POSITION_RANGE
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
+			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 
 			-- Fast path where both operands are constants
@@ -374,15 +375,29 @@ feature -- Evaluation
 							
 							-- Test whether the filter is a position range, e.g. [position()>$x]
 							-- TODO: handle all such cases with a TailExpression
-							
+
+							a_node_iterator ?= a_base_iterator
 							a_position_range ?= filter
 							if a_position_range /= Void then
-								
-								last_iterator := expression_factory.created_item_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
-							elseif filter_is_positional then
-								create {XM_XPATH_FILTER_ITERATOR} last_iterator.make (a_base_iterator, filter, a_context)
+								if a_node_iterator /= Void then
+									last_iterator := expression_factory.created_node_position_iterator (a_node_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
+								else
+									last_iterator := expression_factory.created_item_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
+								end
 							else
-								create {XM_XPATH_FILTER_ITERATOR} last_iterator.make_non_numeric (a_base_iterator, filter, a_context)
+								if filter_is_positional then
+									if a_node_iterator /= Void then
+										create {XM_XPATH_NODE_FILTER_ITERATOR} last_iterator.make (a_node_iterator, filter, a_context)
+									else
+										create {XM_XPATH_FILTER_ITERATOR} last_iterator.make (a_base_iterator, filter, a_context)
+									end
+								else
+									if a_node_iterator /= Void then
+										create {XM_XPATH_NODE_FILTER_ITERATOR} last_iterator.make_non_numeric (a_node_iterator, filter, a_context)
+									else
+										create {XM_XPATH_FILTER_ITERATOR} last_iterator.make_non_numeric (a_base_iterator, filter, a_context)
+									end			
+								end
 							end
 						end
 					end
@@ -398,7 +413,7 @@ feature -- Element change
 			base_expression_not_void: a_base_expression /= Void
 		do
 			base_expression := a_base_expression
-			if base_expression.was_expression_replaced then base_expression.mark_unreplaced end
+			base_expression.mark_unreplaced
 		ensure
 			base_expression_set: base_expression = a_base_expression
 			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
@@ -410,7 +425,7 @@ feature -- Element change
 			filter_not_void: a_filter /= Void
 		do
 			filter := a_filter
-			if filter.was_expression_replaced then filter.mark_unreplaced end
+			filter.mark_unreplaced
 		ensure
 			filter_set: filter = a_filter
 			filter_not_marked_for_replacement: not filter.was_expression_replaced
@@ -511,12 +526,18 @@ feature {NONE} -- Implementation
 		local
 			a_position: INTEGER
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			if a_number /= Void then
 				if a_number.is_platform_integer then
 					a_position := a_number.as_integer
 					if a_position >= 1 then
-						last_iterator := expression_factory.created_item_position_iterator (a_base_iterator, a_position, a_position)
+						a_node_iterator ?= a_base_iterator
+						if a_node_iterator /= Void then
+							last_iterator := expression_factory.created_node_position_iterator (a_node_iterator, a_position, a_position)
+						else
+							last_iterator := expression_factory.created_item_position_iterator (a_base_iterator, a_position, a_position)
+						end
 					else
 					
 						-- Index is less than one, no items will be selected

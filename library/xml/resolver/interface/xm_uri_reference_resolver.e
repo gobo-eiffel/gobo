@@ -12,6 +12,10 @@ indexing
 
 deferred class  XM_URI_REFERENCE_RESOLVER
 
+inherit
+
+	XM_RESOLVER_MEDIA_TYPE
+
 feature -- Action
 
 	resolve_uri (a_uri_reference: STRING) is
@@ -53,20 +57,6 @@ feature -- Result
 		deferred
 		ensure
 			not_void: Result /= Void
-		end
-
-	has_media_type: BOOLEAN is
-			-- Is the media type available.
-		deferred
-		end
-
-	last_media_type: UT_MEDIA_TYPE is
-			-- Media type, if available.
-		require
-			has_media_type: has_media_type
-		deferred
-		ensure
-			result_not_void: Result /= Void
 		end
 
 end

@@ -74,7 +74,7 @@ feature -- Element change
 					a_string_value ?= attribute_name
 					if a_string_value /= Void then
 						if not is_qname (a_string_value.string_value) then
-							create an_error.make_from_string ("Attribute name is not a valid QName", "", "XT0850", Static_error)
+							create an_error.make_from_string ("Attribute name is not a valid QName", "", "XTDE0850", Static_error)
 							report_compile_error (an_error)
 							
 							-- Prevent a duplicate error message.
@@ -231,21 +231,21 @@ feature {NONE} -- Implementation
 			if a_validation_attribute /= Void then
 				validation_action := validation_code (a_validation_attribute)
 				if validation_action /= Validation_strip then
-					create an_error.make_from_string ("To perform validation, a schema-aware XSLT processor is needed", "", "XT1660", Static_error)
+					create an_error.make_from_string ("To perform validation, a schema-aware XSLT processor is needed", "", "XTSE1660", Static_error)
 				report_compile_error (an_error)
 				elseif validation_action = Validation_invalid then
-					create an_error.make_from_string ("Invalid value of validation attribute", "", "XT0020", Static_error)
+					create an_error.make_from_string ("Invalid value of validation attribute", "", "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
 
 			if a_type_attribute /= Void then
-				create an_error.make_from_string ("The type attribute is available only with a schema-aware XSLT processor", "", "XT1660", Static_error)
+				create an_error.make_from_string ("The type attribute is available only with a schema-aware XSLT processor", "", "XTSE1660", Static_error)
 				report_compile_error (an_error)
 			end
 
 			if a_type_attribute /= Void and then a_validation_attribute /= Void then
-				create an_error.make_from_string ("The validation and type attributes are mutually exclusive", "", "XT1505", Static_error)
+				create an_error.make_from_string ("The validation and type attributes are mutually exclusive", "", "XTSE1505", Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -266,10 +266,10 @@ feature {NONE} -- Implementation
 			STRING_.left_adjust (qname)
 			STRING_.right_adjust (qname)
 			if qname.count = 0 then
-				create an_error.make_from_string ("Attribute name must not be zero length", "", "XT0020", Static_error)
+				create an_error.make_from_string ("Attribute name must not be zero length", "", "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			elseif STRING_.same_string (qname, "xmlns") and namespace = Void then
-				create an_error.make_from_string ("Invalid attribute name: xmlns", "", "XT0020", Static_error)
+				create an_error.make_from_string ("Invalid attribute name: xmlns", "", "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			else
 				create a_string_splitter.make
@@ -282,12 +282,12 @@ feature {NONE} -- Implementation
 					local_name := qname_parts.item (2)
 					xml_prefix := qname_parts.item (1)
 				else
-					create an_error.make_from_string (STRING_.concat ("Invalid attribute name: ", qname), "", "XT0020", Static_error)
+					create an_error.make_from_string (STRING_.concat ("Invalid attribute name: ", qname), "", "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 				if STRING_.same_string (xml_prefix, "xmlns") then
 					if namespace = Void then
-						create an_error.make_from_string (STRING_.concat ("Invalid attribute name: ", qname), "", "XT0020", Static_error)
+						create an_error.make_from_string (STRING_.concat ("Invalid attribute name: ", qname), "", "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					else
 						xml_prefix := "" -- We ignore it anyway when the namespace attribute is present

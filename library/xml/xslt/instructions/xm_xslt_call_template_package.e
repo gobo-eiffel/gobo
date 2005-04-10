@@ -50,7 +50,7 @@ feature -- Evaluation
 		local
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			a_new_context := a_context.new_context
+			a_new_context := execution_context.new_context
 			a_new_context.set_local_parameters (actual_parameters)
 			a_new_context.set_tunnel_parameters (tunnel_parameters)
 			a_new_context.open_stack_frame (target.slot_manager)

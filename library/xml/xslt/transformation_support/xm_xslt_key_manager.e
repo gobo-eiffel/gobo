@@ -91,7 +91,7 @@ feature -- Access
 			if does_index_exist (a_document, a_key_fingerprint, an_item_type) then
 				an_index := index (a_document, a_key_fingerprint, an_item_type)
 				if an_index.is_under_construction then
-					create an_error.make_from_string ("Key definition is circular", "", "XT0640", Dynamic_error)
+					create an_error.make_from_string ("Key definition is circular", "", "XTDE0640", Dynamic_error)
 					a_context.transformer.report_fatal_error (an_error, Void)
 				end
 			else
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			else
 				a_message := STRING_.concat ("Key ", shared_name_pool.display_name_from_name_code (a_key_fingerprint))
 				a_message := STRING_.appended_string (a_message, " has not been defined")
-				create an_error.make_from_string (a_message, "", "XT1260", Dynamic_error)
+				create an_error.make_from_string (a_message, "", "XTDE1260", Dynamic_error)
 				a_context.transformer.report_fatal_error (an_error, Void)
 			end
 		ensure

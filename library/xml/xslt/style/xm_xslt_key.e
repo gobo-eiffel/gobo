@@ -120,9 +120,9 @@ feature -- Element change
 		do
 			check_top_level (Void)
 			if use /= Void then
-				check_empty_with_attribute ("use", "XT1205")
+				check_empty_with_attribute ("use", "XTSE1205")
 			else
-				check_not_empty_missing_attribute ("use", "XT1205")
+				check_not_empty_missing_attribute ("use", "XTSE1205")
 			end
 			if not any_compile_errors and then use /= Void then
 				create a_type_checker
@@ -130,7 +130,7 @@ feature -- Element change
 				create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
 				a_type_checker.static_type_check (static_context, use, an_atomic_type, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 					report_compile_error (an_error)
 				else
 					use := a_type_checker.checked_expression
@@ -153,7 +153,7 @@ feature -- Element change
 			if a_key_manager.has_key (key_fingerprint) then
 				a_collation_name := a_key_manager.collation_uri (key_fingerprint)
 				if not STRING_.same_string (a_collation_name, collation_uri) then
-					create an_error.make_from_string (STRING_.concat("inconsistent collation names for key ", key_name), "", "XT1220", Static_error)
+					create an_error.make_from_string (STRING_.concat("inconsistent collation names for key ", key_name), "", "XTSE1220", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -175,7 +175,7 @@ feature -- Element change
 			if not principal_stylesheet.is_collator_defined (collation_uri) then
 				a_message := STRING_.concat ("The collation named '", collation_uri)
 				a_message := STRING_.appended_string (a_message, "' has not been defined")
-				create an_error.make_from_string (a_message, "", "XT1210", Static_error)
+				create an_error.make_from_string (a_message, "", "XTSE1210", Static_error)
 				report_compile_error (an_error)
 			else
 				a_collator := principal_stylesheet.find_collator (collation_uri)
@@ -186,7 +186,7 @@ feature -- Element change
 
 					-- This really shouldn't occur
 
-					create an_error.make_from_string ("BUG: Sequence constructor must be present for xsl:key when use attribute is absent.", "", "XT1205", Static_error)
+					create an_error.make_from_string ("BUG: Sequence constructor must be present for xsl:key when use attribute is absent.", "", "XTSE1205", Static_error)
 					report_compile_error (an_error)
 				else
 					create {XM_XPATH_ATOMIZER_EXPRESSION} use.make (last_generated_expression)
@@ -195,7 +195,7 @@ feature -- Element change
 					create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
 					a_type_checker.static_type_check (static_context, use, an_atomic_type, False, a_role)
 					if a_type_checker.is_static_type_check_error	then
-						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 						report_compile_error (an_error)
 					else
 						use := a_type_checker.checked_expression

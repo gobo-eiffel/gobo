@@ -71,13 +71,13 @@ feature -- Optimization
 					create a_single_node.make_optional_node
 					a_type_checker.static_type_check (a_context, first_operand, a_single_node, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0006", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 					else
 						set_first_operand (a_type_checker.checked_expression)
 						create another_role.make (Binary_expression_role, token_name (operator), 2)
 						a_type_checker.static_type_check (a_context, second_operand, a_single_node, False, another_role)
 						if a_type_checker.is_static_type_check_error then
-							set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0006", Type_error)
+							set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 						else
 							set_second_operand (a_type_checker.checked_expression)
 						end

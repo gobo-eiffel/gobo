@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test the XSLT document function"
+		"Test the XSLT document() function"
 
 	library: "Gobo Eiffel XSLT test suite"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

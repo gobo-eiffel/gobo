@@ -114,7 +114,7 @@ feature -- Optimization
 				elseif a_relation = Disjoint_types then
 					a_message := "Required type of " + role_locator.message + " is "
 					+ required_item_type.conventional_name + "; supplied value has type " + base_expression.item_type.conventional_name
-					set_last_error_from_string (a_message, Xpath_errors_uri, "XP0004", Static_error)
+					set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
 				end
 			end
 		end
@@ -145,11 +145,11 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void, Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
 			end
 		end
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		do
 			if not an_item.is_error then test_conformance (an_item) end
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 				a_message := STRING_.appended_string (a_message, required_item_type.conventional_name)
 				a_message := STRING_.appended_string (a_message, "; supplied value is ")
 				a_message := STRING_.appended_string (a_message, an_item.item_type.conventional_name)
-				an_item.set_last_error_from_string (a_message, Xpath_errors_uri, "XP0006", Type_error)
+				an_item.set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
 			end
 		end
 

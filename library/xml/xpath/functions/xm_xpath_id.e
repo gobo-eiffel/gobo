@@ -20,8 +20,6 @@ inherit
 			compute_special_properties, create_iterator
 		end
 
-	XM_XPATH_NODE_MAPPING_FUNCTION
-
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 
 creation
@@ -94,6 +92,7 @@ feature -- Evaluation
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			a_mapping_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
 			a_local_order_comparer: XM_XPATH_LOCAL_ORDER_COMPARER
+			an_id_mapping_function: XM_XPATH_ID_MAPPING_FUNCTION
 		do
 			arguments.item (2).evaluate_item (a_context)
 			a_node ?= arguments.item (2).last_evaluated_item
@@ -121,7 +120,8 @@ feature -- Evaluation
 				else
 					create a_local_order_comparer
 					arguments.item (1).create_iterator (a_context)
-					create a_mapping_iterator.make (arguments.item (1).last_iterator, Current, Void, a_document)
+					create an_id_mapping_function.make (a_document)
+					create a_mapping_iterator.make (arguments.item (1).last_iterator, an_id_mapping_function, Void)
 					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (a_mapping_iterator, a_local_order_comparer) 
 				end
 			else
@@ -133,29 +133,6 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		do
-		end
-
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
-			-- Map `an_item' to a sequence
-		local
-			a_splitter: ST_SPLITTER
-			some_idrefs: DS_LIST [STRING]
-			a_document: XM_XPATH_DOCUMENT
-			an_element: XM_XPATH_ELEMENT
-		do
-			create a_splitter.make
-			some_idrefs := a_splitter.split (an_item.string_value)
-			if some_idrefs.count = 1 then
-				a_document ?= an_information_object
-				check
-					document_not_void: a_document /= Void
-					-- as `iterator' pass one to the mapping iterator
-				end
-				an_element := a_document.selected_id (some_idrefs.item (1))
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (an_element)
-			else
-				todo ("map", True)
-			end
 		end
 
 feature {XM_XPATH_FUNCTION_CALL} -- Local

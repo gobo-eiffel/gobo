@@ -233,6 +233,12 @@ feature -- Status report
 			Result := True
 		end
 
+	is_process_error: BOOLEAN is
+			-- Has a processing error occured?
+		do
+			Result := transformer.is_error
+		end
+
 feature -- Creation
 
 	new_context: like Current is
@@ -450,6 +456,9 @@ feature -- Element change
 			if a_uri_resolver.has_uri_reference_error then
 				set_build_error (a_uri_resolver.last_uri_reference_error)
 			else
+				if a_uri_resolver.has_media_type then
+					last_parsed_media_type := a_uri_resolver.last_media_type
+				end
 				a_parser := transformer.new_parser
 				a_builder := transformer.new_builder (a_parser)
 				create a_source.make (a_uri_resolver.last_system_id.full_uri)
@@ -484,7 +493,7 @@ feature -- Element change
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if is_final and then is_temporary_destination then
-				create an_error.make_from_string ("Cannot switch to a final result destination while writing a temporary tree", "", "XT1480", Dynamic_error)
+				create an_error.make_from_string ("Cannot switch to a final result destination while writing a temporary tree", "", "XTDE1480", Dynamic_error)
 				transformer.report_fatal_error (an_error, Void)
 			else
 				if properties = Void then

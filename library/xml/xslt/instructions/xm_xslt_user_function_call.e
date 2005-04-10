@@ -198,7 +198,7 @@ feature -- Element change
 				create a_type_checker
 				a_type_checker.static_type_check (Void, arguments.item (an_index), some_required_types.item (an_index), False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XT0320", Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XTTY0004", Type_error)
 					is_type_error := True
 				else
 					 arguments.replace (a_type_checker.checked_expression, an_index)

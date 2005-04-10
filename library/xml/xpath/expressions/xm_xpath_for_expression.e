@@ -122,7 +122,7 @@ feature -- Optimization
 					create a_type_checker
 					a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 					else
 						create a_cardinality_set.make (1, 3)
 						a_cardinality_set.put (True, 2) -- Exactly One
@@ -165,7 +165,7 @@ feature -- Evaluation
 				--  setting the range variable at each step. TODO: mapping_action?
 
 				create a_mapping_function.make (a_context, slot_number, action)
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_base_iterator,a_mapping_function , Void, Void)
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_base_iterator,a_mapping_function , Void)
 			end
 		end
 

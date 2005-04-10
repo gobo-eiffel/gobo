@@ -92,13 +92,13 @@ feature {NONE} -- Implementation
 			-- Dynamic error value
 		do
 			if a_context = Void then
-				create Result.make_from_string 	("Evaluating '/': dynamic the context is not available", Xpath_errors_uri, "XP0002", Dynamic_error)
+				create Result.make_from_string 	("Evaluating '/': dynamic the context is not available", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 			else
 					check
 						a_context.context_item = Void
 						-- follows from pre-condition
 					end
-				create Result.make_from_string ("Evaluating 'parent::node()': the context item is not set", Xpath_errors_uri, "XP0002", Dynamic_error)
+				create Result.make_from_string ("Evaluating 'parent::node()': the context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 			end
 		end
 

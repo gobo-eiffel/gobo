@@ -123,7 +123,7 @@ feature -- Optimization
 				create a_role.make (Type_operation_role, "castable as", 1)
 				a_type_checker.static_type_check (a_context, base_expression, an_atomic_sequence, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0004", Type_error)
+					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
 				else
 					set_base_expression (a_type_checker.checked_expression)
 				end

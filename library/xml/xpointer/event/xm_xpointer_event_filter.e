@@ -39,6 +39,8 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
+	UT_SHARED_MEDIA_TYPE_TESTER
+
 	-- TODO: Extend the filter to accept element() scheme. (?)
 
 creation
@@ -47,15 +49,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (an_xpointer: STRING; a_media_type: UT_MEDIA_TYPE; a_callback: XM_CALLBACKS; a_dtd_callback: XM_DTD_CALLBACKS) is
+	make (an_xpointer: STRING; a_media_type: UT_MEDIA_TYPE; a_resolver: XM_RESOLVER_MEDIA_TYPE; a_callback: XM_CALLBACKS; a_dtd_callback: XM_DTD_CALLBACKS) is
 			-- Establish invariant.
 		require
 			xpointer_not_void: an_xpointer /= Void
-			default_media_type_not_void: a_media_type /= Void
 			callbacks_not_void: a_callback /= Void
 			dtd_callbacks_not_void: a_dtd_callback /= Void
+			resolver_not_void: a_resolver /= Void
 		do
-			media_type := a_media_type
+			default_media_type := a_media_type
 			callbacks := a_callback
 			dtd_callbacks := a_dtd_callback
 			if an_xpointer.count > 0 then
@@ -63,14 +65,47 @@ feature {NONE} -- Initialization
 			else
 				set_no_filtering
 			end
+			resolver := a_resolver
 		ensure
-			media_type_set: media_type = a_media_type
+			resolver_set: resolver = a_resolver
+			default_media_type_set: default_media_type = a_media_type
 		end
+
+feature -- Access
+
+	media_type: UT_MEDIA_TYPE
+		-- Media type of document entity
+
+	Unacceptable_media_type: STRING is "Media type is not acceptable for fragment processing"
+			-- Unaaceptable media type error message
 
 feature -- Status report
 
 	is_filtering: BOOLEAN
 			-- Are we actually doing any XPointer filtering?
+
+	has_media_type (a_media_type: UT_MEDIA_TYPE): BOOLEAN is
+			-- Is `a_media_type' acceptable for fragment processing?
+		require
+			filtering: is_filtering
+			media_type_not_void: a_media_type /= Void
+		do
+			Result := acceptable_media_types.has (a_media_type)
+		end
+
+	any_types_added: BOOLEAN is
+			-- Have any acceptable media types been declared?
+		require
+			filtering: is_filtering
+		do
+			Result := acceptable_media_types.count > 0
+		end
+
+	generic_xml_types_allowed: BOOLEAN
+			-- Are media types of form "application/*+xml" allowed?
+
+	are_media_type_ignored: BOOLEAN
+			-- Do we ignore the media type?
 
 feature -- Status setting
 
@@ -79,6 +114,7 @@ feature -- Status setting
 		do
 			is_filtering := False
 			is_error := False
+			acceptable_media_types := Void
 		ensure
 			not_filtering: not is_filtering
 		end
@@ -101,8 +137,67 @@ feature -- Status setting
 			end
 			create attribute_types.make_with_equality_testers (7, Void, string_equality_tester)
 			is_filtering := True
+			create acceptable_media_types.make_default
+			acceptable_media_types.set_equality_tester (media_type_tester)
+			are_media_type_ignored := False
 		ensure
 			filtering: is_filtering
+			acceptable_media_types_table_created: acceptable_media_types /= Void
+			media_types_not_ignored: are_media_type_ignored = False
+		end
+
+	add_media_type (a_media_type: UT_MEDIA_TYPE) is
+			-- Add `a_media_type' to list of acceptable media types
+		require
+			filtering: is_filtering
+			media_type_not_void: a_media_type /= Void
+			not_previously_added: not has_media_type (a_media_type)
+		do
+			acceptable_media_types.force_new (a_media_type)
+		ensure
+			media_type_added: has_media_type (a_media_type)
+		end
+
+	add_standard_media_types is
+			-- Add standard XPointer media types to list of acceptable media types
+		require
+			filtering: is_filtering
+			no_acceptable_types: not any_types_added
+		local
+			a_media_type: UT_MEDIA_TYPE
+		do
+			create a_media_type.make ("text", "xml")
+			add_media_type (a_media_type)
+			create a_media_type.make ("text", "xml-external-parsed-entity")
+			add_media_type (a_media_type)
+			create a_media_type.make ("application", "xml")
+			add_media_type (a_media_type)
+			create a_media_type.make ("application", "xml-external-parsed-entity")
+			add_media_type (a_media_type)
+			create a_media_type.make ("application", "xhtml+xml")
+			add_media_type (a_media_type)
+			create a_media_type.make ("application", "xslt+xml")
+			add_media_type (a_media_type)
+		end
+
+	allow_generic_xml_types (yes_or_no: BOOLEAN) is
+			-- Allow or disallow all media types of form "application/*+xml"
+		require
+			filtering: is_filtering		
+		do
+			generic_xml_types_allowed := yes_or_no
+		ensure
+			generic_types_set: generic_xml_types_allowed = yes_or_no
+		end
+
+	ignore_media_types is
+			-- Ignore `media_type'.
+		require
+			filtering: is_filtering
+		do
+			are_media_type_ignored := True
+		ensure
+			media_types_ignored: are_media_type_ignored = True
 		end
 
 feature -- Document type definition callbacks
@@ -140,7 +235,14 @@ feature -- Document
 
 	on_start is
 			-- Called when parsing starts.
+		local
+			ok_to_filter: BOOLEAN
 		do
+			if resolver.has_media_type then
+				media_type := resolver.last_media_type
+			else
+				media_type := default_media_type -- which may still be `Void'
+			end
 			if is_filtering then
 				is_forwarding := False
 				is_forwarding_processing_instructions := True
@@ -148,13 +250,30 @@ feature -- Document
 				if is_error then
 					on_error (error_message)
 				else
-					-- TODO: check media type is OK for ID or XPointer processing
-					Precursor
-					
-					-- We forward comments PIs prior to the document element,
-					--  as they might be needed for other purposes.
-					
-					is_forwarding := True 
+					ok_to_filter := are_media_type_ignored
+					if not ok_to_filter then
+						if media_type /= Void then
+							if has_media_type (media_type) then
+								ok_to_filter := True
+							elseif generic_xml_types_allowed then
+								if media_type.subtype.count > 4 and then media_type.type.is_equal ("application") then
+									ok_to_filter := media_type.subtype.substring (media_type.subtype.count - 4, media_type.subtype.count).is_equal ("+xml")
+								end
+							end
+						end
+					end
+					if ok_to_filter then
+						Precursor
+						
+						-- We forward comments PIs prior to the document element,
+						--  as they might be needed for other purposes.
+						
+						is_forwarding := True
+					else
+						is_error := True
+						error_message := Unacceptable_media_type
+						on_error (error_message)
+					end
 				end
 			else
 				Precursor
@@ -165,7 +284,6 @@ feature -- Document
 			-- Called when parsing finished
 		do
 			if not is_error then Precursor end
-			is_error := False
 			is_shorthand_found := False
 		end
 
@@ -233,7 +351,7 @@ feature -- Tag
 		do
 			if not is_filtering or else is_forwarding then
 				Precursor (a_namespace, a_prefix, a_local_part, a_value)
-			elseif not is_shorthand_found then
+			elseif not is_error and then not is_shorthand_found then
 				if a_prefix /= Void and then Xml_prefix.is_equal (a_prefix) and then Xml_id.is_equal (a_local_part) then
 					is_shorthand_found := STRING_.same_string (shorthand, a_value)
 				else
@@ -356,9 +474,12 @@ feature {NONE} -- Implementation
 	pending_attribute_values: DS_LINKED_QUEUE [STRING]
 			-- Values of pending attributes
 
-	media_type: UT_MEDIA_TYPE
-			-- Media type
+	default_media_type: UT_MEDIA_TYPE
+			-- Media type to use if resolver does not provide it
 
+	resolver: XM_RESOLVER_MEDIA_TYPE
+			-- Resolver for media type
+	
 	shorthand: STRING
 			-- parsed shorthand pointer
 
@@ -370,12 +491,16 @@ feature {NONE} -- Implementation
 
 	is_error: BOOLEAN
 			-- Did XPointer processing flag an error?
-	
+
+	acceptable_media_types: DS_HASH_SET [UT_MEDIA_TYPE]
+			-- Acceptable media types for current fragment-processing semantics
+
 invariant
 
-	media_type_not_void: media_type /= Void
+	resolver_not_void: resolver /= Void
 	xpointer_error: is_error implies error_message /= Void
 	attribute_types_not_void: attribute_types /= Void
+	acceptable_media_types: is_filtering implies acceptable_media_types /= Void and then acceptable_media_types.equality_tester = media_type_tester
 
 end
 	

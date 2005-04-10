@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_MAPPING_FUNCTION
 
+	XM_XPATH_NODE_MAPPING_FUNCTION
+
 	XM_XPATH_ROLE
 
 	XM_XPATH_AXIS
@@ -77,14 +79,7 @@ feature -- Access
 		local
 			a_step_type: XM_XPATH_ITEM_TYPE
 		do
-			a_step_type := step.item_type
-			if is_node_item_type (a_step_type) then
-				Result := a_step_type
-			elseif is_atomic_item_type (a_step_type) then
-				Result := a_step_type
-			else
-				Result := any_item -- can't do better than this yet
-			end
+			Result := step.item_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -256,64 +251,72 @@ feature -- Optimization
 			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_homogeneous_checker: XM_XPATH_HOMOGENEOUS_ITEM_CHECKER
+			an_offer: XM_XPATH_PROMOTION_OFFER
 		do
-			-- TODO - review all of this
 			mark_unreplaced
 			create a_type_checker
 			start.analyze (a_context)
 			if start.was_expression_replaced then
 				set_start (start.replacement_expression)
 			end
-			if not start.is_error then
+			if start.is_error then
+				set_last_error (start.error_value)
+			else
 				step.analyze (a_context)
 				if step.was_expression_replaced then
 					set_step (step.replacement_expression)
 				end
-				if not step.is_error then
-
-					-- We don't need the operands to be sorted;
-					--  any sorting that's needed will be done at the top level
-					
-					start.set_unsorted (False)
-					step.set_unsorted (False)
+				if step.is_error then
+					set_last_error (step.error_value)
+				else
 
 					-- Start must be of type node()*
-					-- Step must be homogenous (all nodes or all atomic)
-
+					
 					create a_role.make (Binary_expression_role, "/", 1)
 					create a_node_sequence.make_node_sequence
 					a_type_checker.static_type_check (a_context, start, a_node_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0019", Type_error)
+						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0019", Type_error)
 					else
 						set_start (a_type_checker.checked_expression)
-						create another_role.make (Binary_expression_role, "/", 2)
-						if is_node_item_type (step.item_type) then
-							a_type_checker.static_type_check (a_context, step, a_node_sequence, False, another_role)
-							if a_type_checker.is_static_type_check_error then
-								set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0019", Type_error)
+						create an_offer.make (Focus_independent, Void, Current, False, start.context_document_nodeset)
+						promote_sub_expressions (a_context, an_offer)
+						if not is_error and then not was_expression_replaced then
+							
+							-- We distinguish three cases for the step:
+							--  either it is known statically to deliver nodes only (a 1.0 path expression),
+							--  or it is known statically to deliver atomic values
+							--  only, or we don't yet know.
+							
+							if is_node_item_type (step.item_type) then
+								if step.non_creating then
+									
+									-- We don't need the operands to be sorted;
+									--  any sorting that's needed will be done at the top level
+									
+									start.set_unsorted (False)
+									if start.was_expression_replaced then set_start (start.replacement_expression) end
+									step.set_unsorted (False)
+									if step.was_expression_replaced then set_step (step.replacement_expression) end
+									optimize (a_context, an_offer)
+								end
+							elseif is_atomic_item_type (step.item_type) then
+								create another_role.make (Binary_expression_role, "/", 2)
+								create an_atomic_sequence.make_atomic_sequence
+								a_type_checker.static_type_check (a_context, step, an_atomic_sequence, False, another_role)
+								if a_type_checker.is_static_type_check_error then
+									set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0019", Type_error)
+								else
+									set_step (a_type_checker.checked_expression)
+								end
 							else
-								set_step (a_type_checker.checked_expression)
+								create another_role.make (Binary_expression_role, "/", 2)
+								create a_homogeneous_checker.make (step, another_role)
+								set_step (a_homogeneous_checker)
 							end
-						elseif is_atomic_item_type (step.item_type) then
-							create an_atomic_sequence.make_atomic_sequence
-							a_type_checker.static_type_check (a_context, step, an_atomic_sequence, False, another_role)
-							if a_type_checker.is_static_type_check_error then
-								set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XP0019", Type_error)
-							else
-								set_step (a_type_checker.checked_expression)
-							end
-						else
-							create a_homogeneous_checker.make (step, another_role)
-							set_step (a_homogeneous_checker)
 						end
-						if not is_error then optimize (a_context) end
 					end
-				else
-					set_last_error (step.error_value)
 				end
-			else
-				set_last_error (start.error_value)
 			end
 		end
 
@@ -363,11 +366,15 @@ feature -- Evaluation
 				another_context := a_context.new_context
 				another_context.set_current_iterator (an_iterator)
 
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, another_context, Void)
+				if is_node_item_type (step.item_type) then
+					create {XM_XPATH_NODE_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, another_context)
+				else
+					create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, another_context)
+				end
 			end
 		end
 
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT; an_information_object: ANY) is
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -385,7 +392,34 @@ feature -- Evaluation
 				create last_mapped_item.make_sequence (an_iterator)
 			end
 		end
-	
+
+	map_nodes (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+			-- Map `an_item' to a sequence
+		local
+			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+			a_node: XM_XPATH_NODE
+		do
+			step.create_iterator (a_context)
+			a_singleton_iterator ?= step.last_iterator
+			if a_singleton_iterator /= Void then
+				a_singleton_iterator.start
+				if a_singleton_iterator.after then
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
+				else
+					a_node ?= a_singleton_iterator.item
+					check
+						single_node: a_node /= Void
+					end
+					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make (a_node)
+				end
+			else
+				last_node_iterator ?= step.last_iterator
+			end
+			check
+				node_iterator: last_node_iterator /= Void
+				-- from `create_iterator'
+			end
+		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
 	
@@ -432,7 +466,7 @@ feature {XM_XPATH_PATH_EXPRESSION} -- Local
 			start_not_void: a_start /= Void
 		do
 			start := a_start
-			if start.was_expression_replaced then start.mark_unreplaced end
+			start.mark_unreplaced
 		ensure
 			start_set: start = a_start
 			start_not_marked_for_replacement: not start.was_expression_replaced
@@ -444,7 +478,7 @@ feature {XM_XPATH_PATH_EXPRESSION} -- Local
 			step_not_void: a_step /= Void
 		do
 			step := a_step
-			if step.was_expression_replaced then step.mark_unreplaced end
+			step.mark_unreplaced
 		ensure
 			step_set: step = a_step
 			step_not_marked_for_replacement: not step.was_expression_replaced
@@ -697,8 +731,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Perform context-dependent optimizations
+		require
+			context_not_void: a_context /= Void
+			offer_not_void: an_offer /= Void
 		local
 			a_path: XM_XPATH_PATH_EXPRESSION
 			an_expression: XM_XPATH_EXPRESSION
@@ -721,31 +758,55 @@ feature {NONE} -- Implementation
 				end
 				if not an_expression.is_error then
 					a_path ?= an_expression
-						check
-							path_not_void: a_path /= Void
-						end
+					check
+						path_not_void: a_path /= Void
+					end
 					a_path.analyze (a_context)
 					if a_path.was_expression_replaced then
 						set_replacement (a_path.replacement_expression)
 					else
 						set_replacement (a_path)
 					end
+				end
+			else
+				
+				-- Decide whether the result needs to be wrapped in a sorting
+				-- expression to deliver the results in document order
+				
+				a_path ?= an_offer.containing_expression
+				if a_path /= Void then
+					if a_path.was_expression_replaced then
+						an_expression := a_path.replacement_expression
+					else
+						an_expression := a_path
+					end
+					if a_path.ordered_nodeset and then a_path /= Current then
+						set_replacement (an_expression)
+					elseif a_path.reverse_document_order then
+						create {XM_XPATH_REVERSER} an_expression.make (an_expression)
+						set_replacement (an_expression)
+					else
+						create {XM_XPATH_DOCUMENT_SORTER} an_expression.make (an_expression)
+						set_replacement (an_expression)
+					end
+				elseif an_offer.containing_expression.was_expression_replaced then
+					set_replacement (an_offer.containing_expression.replacement_expression)
 				else
-					promote_sub_expressions (a_context)
+					set_replacement (an_offer.containing_expression)
 				end
 			end
 		end
 	
-	promote_sub_expressions (a_context: XM_XPATH_STATIC_CONTEXT) is
+	promote_sub_expressions (a_context: XM_XPATH_STATIC_CONTEXT; an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote any subexpressions within the step are not dependent on the focus.
 			-- This causes them to be evaluated once, outside the path  expression.
+		require
+			promotion_offer_not_void: an_offer /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
-			an_offer: XM_XPATH_PROMOTION_OFFER
 			a_let_expression: XM_XPATH_LET_EXPRESSION
 			a_path: XM_XPATH_PATH_EXPRESSION
 		do
-			create an_offer.make (Focus_independent, Void, Current, False, start.context_document_nodeset)
 			step.promote (an_offer)
 			if step.was_expression_replaced then
 				set_step (step.replacement_expression)
@@ -754,33 +815,16 @@ feature {NONE} -- Implementation
 				set_last_error (step.error_value)
 			end
 			if not is_error then
-				a_let_expression ?= an_offer.containing_expression; if a_let_expression /= Void then
-				a_let_expression.analyze (a_context)
-					if a_let_expression.is_error then
-						set_last_error (a_let_expression.error_value)
-					elseif a_let_expression.was_expression_replaced then
-					an_offer.set_containing_expression (a_let_expression.replacement_expression)
-					end
-				end
-			end
-			if not is_error then
-
-				-- Decide whether the result needs to be wrapped in a sorting
-				-- expression to deliver the results in document order
-
-				a_path ?= an_offer.containing_expression
-				if a_path /= Void then
-					if a_path.ordered_nodeset then
-						set_replacement (a_path)
-					elseif a_path.reverse_document_order then
-						create {XM_XPATH_REVERSER} an_expression.make (a_path)
-						set_replacement (an_expression)
+				reset_static_properties
+				if an_offer.containing_expression /= Current then
+					an_offer.containing_expression.analyze (a_context)
+					if an_offer.containing_expression.is_error then
+						set_last_error (an_offer.containing_expression.error_value)
+					elseif an_offer.containing_expression.was_expression_replaced then
+						set_replacement (an_offer.containing_expression.replacement_expression)
 					else
-						create {XM_XPATH_DOCUMENT_SORTER} an_expression.make (a_path)
-						set_replacement (an_expression)
+						set_replacement (an_offer.containing_expression)
 					end
-				else
-					set_replacement (an_offer.containing_expression)
 				end
 			end
 		end

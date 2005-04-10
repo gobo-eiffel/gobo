@@ -83,6 +83,7 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations
 		do
+			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
 			base_expression.simplify
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
@@ -97,6 +98,7 @@ feature -- Optimization
 			a_value: XM_XPATH_VALUE
 		do
 			mark_unreplaced
+			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
 			base_expression.analyze (a_context)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
@@ -124,6 +126,7 @@ feature -- Optimization
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		do
+			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
 			base_expression.promote (an_offer)
 			if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression) end
 		end
@@ -136,7 +139,7 @@ feature -- Element change
 			operand_not_void: an_operand /= Void
 		do
 			base_expression := an_operand
-			if base_expression.was_expression_replaced then base_expression.mark_unreplaced end
+			base_expression.mark_unreplaced
 		ensure
 			base_expression_set: base_expression = an_operand
 			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
