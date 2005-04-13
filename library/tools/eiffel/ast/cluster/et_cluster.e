@@ -17,6 +17,7 @@ inherit
 	HASHABLE
 	DEBUG_OUTPUT
 	KL_SHARED_OPERATING_SYSTEM
+	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_SHARED_FILE_SYSTEM
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_ARRAY_ROUTINES
@@ -296,6 +297,26 @@ feature -- Nested
 	subclusters: ET_CLUSTERS
 			-- Subclusters
 
+feature -- Dependence constraints
+
+	provider_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
+			-- Clusters that are the only allowed providers of current cluster;
+			-- No such constraint if `provider_constraint' is Void.
+			-- If a file 'providers.txt' is found in current cluster's directory,
+			-- then `provider_constraint' is filled with current cluster and the
+			-- clusters whose names are listed in this file (separated by spaces,
+			-- tabs or newlines). Otherwise `provider_constraint' is set to be the
+			-- `provider_constraint' of current cluster's parent cluster if any.
+
+	dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
+			-- Clusters that are the only allowed dependants of current cluster;
+			-- No such constraint if `dependant_constraint' is Void.
+			-- If a file 'dependants.txt' is found in current cluster's directory,
+			-- then `dependant_constraint' is filled with current cluster and the
+			-- clusters whose names are listed in this file (separated by spaces,
+			-- tabs or newlines). Otherwise `dependant_constraint' is set to be the
+			-- `dependant_constraint' of current cluster's parent cluster if any.
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -414,6 +435,28 @@ feature -- Setting
 			data_set: data = a_data
 		end
 
+	set_provider_constraint (a_constraint: like provider_constraint) is
+			-- Set `provider_constraint' to `a_constraint'.
+		do
+			provider_constraint := a_constraint
+			if subclusters /= Void then
+				subclusters.set_provider_constraint (a_constraint)
+			end
+		ensure
+			provider_constraint_set: provider_constraint = a_constraint
+		end
+
+	set_dependant_constraint (a_constraint: like dependant_constraint) is
+			-- Set `dependant_constraint' to `a_constraint'.
+		do
+			dependant_constraint := a_constraint
+			if subclusters /= Void then
+				subclusters.set_dependant_constraint (a_constraint)
+			end
+		ensure
+			dependant_constraint_set: dependant_constraint = a_constraint
+		end
+
 feature -- Element change
 
 	add_subcluster (a_cluster: like parent) is
@@ -462,12 +505,53 @@ feature -- Element change
 			end
 		end
 
+	add_implicit_subclusters is
+			-- Add (recursively) implicit subclusters to current cluster if it is recursive.
+			-- Note that these subclusters will otherwise be added when running one of
+			-- the `preparse_*' or `parse_*_all' routines of ET_UNIVERSE.
+		local
+			dir_name: STRING
+			dir: KL_DIRECTORY
+			s: STRING
+		do
+			if not is_abstract and is_recursive then
+				dir_name := Execution_environment.interpreted_string (full_pathname)
+				create dir.make (dir_name)
+				dir.open_read
+				if dir.is_open_read then
+					from dir.read_entry until dir.end_of_input loop
+						s := dir.last_entry
+						if not has_eiffel_extension (s) and is_valid_directory_name (s) then
+							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
+								add_recursive_cluster (s)
+							end
+						end
+						dir.read_entry
+					end
+					dir.close
+				else
+					-- The cluster does not exist on disk or is not readable.
+					-- Just ignore it.
+				end
+			end
+			if subclusters /= Void then
+				subclusters.add_implicit_subclusters
+			end
+		end
+
 feature {ET_CLUSTER, ET_CLUSTERS} -- Setting
 
 	set_parent (a_parent: like parent) is
 			-- Set `parent' to `a_parent'.
 		do
 			parent := a_parent
+			if parent /= Void then
+				set_provider_constraint (parent.provider_constraint)
+				set_dependant_constraint (parent.dependant_constraint)
+			else
+				set_provider_constraint (Void)
+				set_dependant_constraint (Void)
+			end
 		ensure
 			parent_set: parent = a_parent
 		end

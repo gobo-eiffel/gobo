@@ -209,6 +209,32 @@ feature -- Measurement
 			read_write_count_non_negative: Result >= 0
 		end
 
+feature -- Setting
+
+	set_provider_constraint (a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT) is
+			-- Set provider constraint of all clusters to `a_constraint'.
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).set_provider_constraint (a_constraint)
+				i := i + 1
+			end
+		end
+
+	set_dependant_constraint (a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT) is
+			-- Set dependant constraint of all clusters to `a_constraint'.
+		local
+			i, nb: INTEGER
+		do
+			nb := clusters.count
+			from i := 1 until i > nb loop
+				clusters.item (i).set_dependant_constraint (a_constraint)
+				i := i + 1
+			end
+		end
+
 feature {ET_CLUSTER} -- Setting
 
 	set_parent (a_parent: like cluster) is
@@ -234,6 +260,22 @@ feature -- Element change
 		ensure
 			one_more: clusters.count = old clusters.count + 1
 			cluster_added: clusters.last = a_cluster
+		end
+
+	add_implicit_subclusters is
+			-- Add (recursively) implicit subclusters to current clusters if they are recursive.
+			-- Note that these subclusters will otherwise be added when running one of
+			-- the `preparse_*' or `parse_*_all' routines of ET_UNIVERSE.
+		local
+			l_clusters: DS_ARRAYED_LIST [ET_CLUSTER]
+			i, nb: INTEGER
+		do
+			l_clusters := clusters
+			nb := l_clusters.count
+			from i := 1 until i > nb loop
+				l_clusters.item (i).add_implicit_subclusters
+				i := i + 1
+			end
 		end
 
 feature {NONE} -- Constants
