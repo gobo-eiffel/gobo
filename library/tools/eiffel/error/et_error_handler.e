@@ -136,6 +136,46 @@ feature -- Cluster errors
 			end
 		end
 
+	report_gcdep_error (a_cluster: ET_CLUSTER; a_class, a_dependant: ET_CLASS; a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT) is
+			-- Report GCDEP error: class `a_class' (recursively) from cluster
+			-- `a_cluster' has a dependant class `a_dependant' which is not
+			-- contained in the dependence constraint `a_constraint'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_dependant_not_void: a_dependant /= Void
+			a_dependant_preparsed: a_dependant.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+		local
+			an_error: ET_CLUSTER_ERROR
+		do
+			if reportable_gcdep_error (a_cluster) then
+				create an_error.make_gcdep (a_cluster, a_class, a_dependant, a_constraint)
+				report_cluster_error (an_error)
+			end
+		end
+
+	report_gcpro_error (a_cluster: ET_CLUSTER; a_class, a_provider: ET_CLASS; a_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT) is
+			-- Report GCPRO error: class `a_class' (recursively) from cluster
+			-- `a_cluster' has a provider class `a_provider' which is not
+			-- contained in the dependence constraint `a_constraint'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_provider_not_void: a_provider /= Void
+			a_provider_preparsed: a_provider.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+		local
+			an_error: ET_CLUSTER_ERROR
+		do
+			if reportable_gcpro_error (a_cluster) then
+				create an_error.make_gcpro (a_cluster, a_class, a_provider, a_constraint)
+				report_cluster_error (an_error)
+			end
+		end
+
 feature -- Cluster error status
 
 	reportable_gcaaa_error (a_cluster: ET_CLUSTER): BOOLEAN is
@@ -149,6 +189,24 @@ feature -- Cluster error status
 
 	reportable_gcaab_error (a_cluster: ET_CLUSTER): BOOLEAN is
 			-- Can a GCAAB error be reported when it
+			-- appears in `a_cluster'?
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			Result := True
+		end
+
+	reportable_gcdep_error (a_cluster: ET_CLUSTER): BOOLEAN is
+			-- Can a GCDEP error be reported when it
+			-- appears in `a_cluster'?
+		require
+			a_cluster_not_void: a_cluster /= Void
+		do
+			Result := True
+		end
+
+	reportable_gcpro_error (a_cluster: ET_CLUSTER): BOOLEAN is
+			-- Can a GCPRO error be reported when it
 			-- appears in `a_cluster'?
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -9244,7 +9302,6 @@ feature -- Internal errors
 
 --Error codes not used:
 
-	-- report_gibif_error
 	-- report_gibig_error
 	-- report_gibih_error
 	-- report_gibii_error

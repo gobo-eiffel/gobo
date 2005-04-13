@@ -223,6 +223,8 @@ feature {NONE} -- Processing
 				a_system.set_c_code_compilation (do_c_compile)
 				a_system.compile
 			else
+				a_universe.set_providers_enabled (True)
+				a_universe.set_cluster_dependence_enabled (True)
 				a_universe.compile (is_flat)
 			end
 		end

@@ -33,31 +33,36 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 	KL_SHARED_PLATFORM
 	KL_SHARED_EIFFEL_COMPILER
+	KL_SHARED_EXECUTION_ENVIRONMENT
+	KL_SHARED_FILE_SYSTEM
 	ET_SHARED_TOKEN_CONSTANTS
 	KL_SHARED_STRING_EQUALITY_TESTER
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING; an_error_handler: like error_handler) is
+	make (a_filename: STRING; a_universe: ET_UNIVERSE; an_error_handler: like error_handler) is
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		local
 			a_factory: ET_AST_FACTORY
 		do
 			create a_factory.make
-			make_with_factory (a_filename, a_factory, an_error_handler)
+			make_with_factory (a_filename, a_universe, a_factory, an_error_handler)
 		ensure
 			filename_set: filename = a_filename
+			universe_set: universe = a_universe
 			error_handler_set: error_handler = an_error_handler
 		end
 
-	make_with_factory (a_filename: STRING;
+	make_with_factory (a_filename: STRING; a_universe: ET_UNIVERSE;
 		a_factory: like ast_factory; an_error_handler: like error_handler) is
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
+			a_universe_not_void: a_universe /= Void
 			a_factory_not_void: a_factory /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
@@ -65,6 +70,7 @@ feature {NONE} -- Initialization
 			last_text_count := 1
 			last_literal_start := 1
 			filename := a_filename
+			universe := a_universe
 			ast_factory := a_factory
 			error_handler := an_error_handler
 			set_use_assign_keyword (True)
@@ -76,6 +82,7 @@ feature {NONE} -- Initialization
 			set_use_void_keyword (True)
 		ensure
 			filename_set: filename = a_filename
+			universe_set: universe = a_universe
 			ast_factory_set: ast_factory = a_factory
 			error_handler_set: error_handler = an_error_handler
 		end
@@ -106,6 +113,9 @@ feature -- Access
 		ensure
 			current_position_not_void: Result /= Void
 		end
+
+	universe: ET_UNIVERSE
+			-- Surrounding universe
 
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
@@ -202,6 +212,74 @@ feature -- Error handling
 
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
+
+feature -- Cluster dependences
+
+	build_provider_constraint (a_cluster: ET_CLUSTER) is
+			-- Build `provider_constraint' of `a_cluster'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			l_filename: STRING
+			l_file: KL_TEXT_INPUT_FILE
+			nb: INTEGER
+			l_splitter: ST_SPLITTER
+			l_names: DS_LIST [STRING]
+			l_cluster_names: DS_ARRAYED_LIST [STRING]
+			l_provider_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
+		do
+			if universe.cluster_dependence_enabled then
+				l_filename := Execution_environment.interpreted_string (file_system.pathname (a_cluster.full_pathname, "providers.txt"))
+				nb := file_system.file_count (l_filename)
+				create l_file.make (l_filename)
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_splitter.make
+					l_splitter.set_separators (" %T%R%N")
+					l_file.read_string (nb)
+					l_names := l_splitter.split (l_file.last_string)
+					l_file.close
+					create l_cluster_names.make_from_linear (l_names)
+					create l_provider_constraint.make (a_cluster, l_cluster_names)
+				elseif a_cluster.parent /= Void then
+					l_provider_constraint := a_cluster.parent.provider_constraint
+				end
+				a_cluster.set_provider_constraint (l_provider_constraint)
+			end
+		end
+
+	build_dependant_constraint (a_cluster: ET_CLUSTER) is
+			-- Build `dependant_constraint' of `a_cluster'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			l_filename: STRING
+			l_file: KL_TEXT_INPUT_FILE
+			nb: INTEGER
+			l_splitter: ST_SPLITTER
+			l_names: DS_LIST [STRING]
+			l_cluster_names: DS_ARRAYED_LIST [STRING]
+			l_dependant_constraint: ET_CLUSTER_DEPENDENCE_CONSTRAINT
+		do
+			if universe.cluster_dependence_enabled then
+				l_filename := Execution_environment.interpreted_string (file_system.pathname (a_cluster.full_pathname, "dependants.txt"))
+				nb := file_system.file_count (l_filename)
+				create l_file.make (l_filename)
+				l_file.open_read
+				if l_file.is_open_read then
+					create l_splitter.make
+					l_splitter.set_separators (" %T%R%N")
+					l_file.read_string (nb)
+					l_names := l_splitter.split (l_file.last_string)
+					l_file.close
+					create l_cluster_names.make_from_linear (l_names)
+					create l_dependant_constraint.make (a_cluster, l_cluster_names)
+				elseif a_cluster.parent /= Void then
+					l_dependant_constraint := a_cluster.parent.dependant_constraint
+				end
+				a_cluster.set_dependant_constraint (l_dependant_constraint)
+			end
+		end
 
 feature -- Tokens
 
@@ -2942,6 +3020,7 @@ feature {NONE} -- Implementation
 invariant
 
 	filename_not_void: filename /= Void
+	universe_not_void: universe /= Void
 	ast_factory_not_void: ast_factory /= Void
 	error_handler_not_void: error_handler /= Void
 	last_text_count_positive: last_text_count >= 0

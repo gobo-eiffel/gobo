@@ -19,7 +19,7 @@ inherit
 		undefine
 			read_token
 		redefine
-			yyparse
+			yyparse, universe
 		end
 
 	ET_EIFFEL_SCANNER
@@ -28,6 +28,8 @@ inherit
 			make_with_factory as make_eiffel_scanner_with_factory
 		undefine
 			reset
+		redefine
+			universe
 		end
 
 creation
@@ -3165,6 +3167,11 @@ Add_counter: { add_counter }
 
 --------------------------------------------------------------------------------
 %%
+
+feature -- Access
+
+	universe: ET_UNIVERSE
+			-- Surrounding universe
 
 feature -- Parsing
 
