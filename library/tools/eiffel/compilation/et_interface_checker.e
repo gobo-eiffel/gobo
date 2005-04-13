@@ -38,6 +38,11 @@ feature {NONE} -- Initialization
 feature -- Processing
 
 	process_class (a_class: ET_CLASS) is
+			-- Flatten fetaures of `a_class' is not already done.
+			-- Then check validity of the constraint creations of
+			-- formal parameters of `a_class' and of the actual
+			-- paramaters of its parents after having done
+			-- so for its parent classes recursively.
 		local
 			a_processor: like Current
 		do
@@ -73,6 +78,11 @@ feature -- Error handling
 feature {NONE} -- Processing
 
 	internal_process_class (a_class: ET_CLASS) is
+			-- Flatten fetaures of `a_class' is not already done.
+			-- Then check validity of the constraint creations of
+			-- formal parameters of `a_class' and of the actual
+			-- paramaters of its parents after having done
+			-- so for its parent classes recursively.
 		require
 			a_class_not_void: a_class /= Void
 		local
