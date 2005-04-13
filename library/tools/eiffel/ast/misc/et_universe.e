@@ -73,6 +73,7 @@ feature {NONE} -- Initialization
 			set_use_void_keyword (True)
 			make_basic_classes
 			create null_processor.make (Current)
+			provider_checker := null_processor
 			ancestor_builder := null_processor
 			feature_flattener := null_processor
 			interface_checker := null_processor
@@ -865,6 +866,12 @@ feature -- Parser status report
 			-- Should 'void' be considered as
 			-- a keyword (otherwise identifier)?
 
+	providers_enabled: BOOLEAN
+			-- Should providers be built when parsing a class?
+
+	cluster_dependence_enabled: BOOLEAN
+			-- Should cluster dependence constraint be checked?
+
 feature -- Parser setting
 
 	set_use_assign_keyword (b: BOOLEAN) is
@@ -923,6 +930,22 @@ feature -- Parser setting
 			use_void_keyword_set: use_void_keyword = b
 		end
 
+	set_providers_enabled (b: BOOLEAN) is
+			-- Set `providers_enabled' to `b'.
+		do
+			providers_enabled := b
+		ensure
+			providers_enabled_set: providers_enabled = b
+		end
+
+	set_cluster_dependence_enabled (b: BOOLEAN) is
+			-- Set `cluster_dependence_enabled' to `b'.
+		do
+			cluster_dependence_enabled := b
+		ensure
+			cluster_dependence_enabled_set: cluster_dependence_enabled = b
+		end
+
 feature -- Element change
 
 	add_implicit_subclusters is
@@ -931,64 +954,7 @@ feature -- Element change
 			-- the `preparse_*' or `parse_all' routines.
 		do
 			if clusters /= Void then
-				add_implicit_subclusters_to_clusters (clusters)
-			end
-		end
-
-feature {NONE} -- Element change
-
-	add_implicit_subclusters_to_clusters (a_clusters: ET_CLUSTERS) is
-			-- Add (recursively) implicit subclusters `a_clusters' when they are recursive.
-			-- Note that these subclusters will otherwise be added when running one of
-			-- the `preparse_*' or `parse_*_all' routines.
-		require
-			a_clusters_not_void: a_clusters /= Void
-		local
-			l_clusters: DS_ARRAYED_LIST [ET_CLUSTER]
-			i, nb: INTEGER
-		do
-			l_clusters := a_clusters.clusters
-			nb := l_clusters.count
-			from i := 1 until i > nb loop
-				add_implicit_subclusters_to_cluster (l_clusters.item (i))
-				i := i + 1
-			end
-		end
-
-	add_implicit_subclusters_to_cluster (a_cluster: ET_CLUSTER) is
-			-- Add (recursively) implicit subclusters to `a_cluster' when it is recursive.
-			-- Note that these subclusters will otherwise be added when running one of
-			-- the `preparse_*' or `parse_*_all' routines.
-		require
-			a_cluster_not_void: a_cluster /= Void
-		local
-			dir_name: STRING
-			dir: KL_DIRECTORY
-			s: STRING
-			l_subclusters: ET_CLUSTERS
-		do
-			if not a_cluster.is_abstract and a_cluster.is_recursive then
-				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
-				create dir.make (dir_name)
-				dir.open_read
-				if dir.is_open_read then
-					from dir.read_entry until dir.end_of_input loop
-						s := dir.last_entry
-						if not has_eiffel_extension (s) and a_cluster.is_valid_directory_name (s) then
-							if file_system.directory_exists (file_system.pathname (dir_name, s)) then
-								a_cluster.add_recursive_cluster (s)
-							end
-						end
-						dir.read_entry
-					end
-					dir.close
-				else
-					error_handler.report_gcaaa_error (a_cluster, dir_name)
-				end
-			end
-			l_subclusters := a_cluster.subclusters
-			if l_subclusters /= Void then
-				add_implicit_subclusters_to_clusters (l_subclusters)
+				clusters.add_implicit_subclusters
 			end
 		end
 
@@ -1152,10 +1118,12 @@ feature -- Parsing
 					end
 					a_cursor.forth
 				end
-				if a_modified then
+				eiffel_preparser.repreparse_clusters_shallow (clusters, False, False)
+				if a_modified or eiffel_preparser.overriding_class_added then
+						-- A class has been modified (or removed) or
+						-- may have been overridden by a new class.
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_shallow (clusters, False, False)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1245,10 +1213,12 @@ feature -- Parsing
 					end
 					a_cursor.forth
 				end
-				if a_modified then
+				eiffel_preparser.repreparse_clusters_single (clusters, False, False)
+				if a_modified or eiffel_preparser.overriding_class_added then
+						-- A class has been modified (or removed) or
+						-- may have been overridden by a new class.
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_single (clusters, False, False)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1341,10 +1311,12 @@ feature -- Parsing
 					end
 					a_cursor.forth
 				end
-				if a_modified then
+				eiffel_preparser.repreparse_clusters_multiple (clusters, False, False)
+				if a_modified or eiffel_preparser.overriding_class_added then
+						-- A class has been modified (or removed) or
+						-- may have been overridden by a new class.
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_multiple (clusters, False, False)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1431,10 +1403,12 @@ feature -- Parsing
 					end
 					a_cursor.forth
 				end
-				if a_modified then
+				eiffel_preparser.repreparse_clusters_shallow (clusters, True, False)
+				if a_modified or eiffel_preparser.overriding_class_added then
+						-- A class has been modified (or removed) or
+						-- may have been overridden by a new class.
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_shallow (clusters, True, False)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1508,10 +1482,12 @@ feature -- Parsing
 					end
 					a_cursor.forth
 				end
-				if a_modified then
+				eiffel_preparser.repreparse_clusters_single (clusters, True, False)
+				if a_modified or eiffel_preparser.overriding_class_added then
+						-- A class has been modified (or removed) or
+						-- may have been overridden by a new class.
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_single (clusters, True, False)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1588,10 +1564,12 @@ feature -- Parsing
 					end
 					a_cursor.forth
 				end
-				if a_modified then
+				eiffel_preparser.repreparse_clusters_multiple (clusters, True, False)
+				if a_modified or eiffel_preparser.overriding_class_added then
+						-- A class has been modified (or removed) or
+						-- may have been overridden by a new class.
 					reset_classes
 				end
-				eiffel_preparser.repreparse_clusters_multiple (clusters, True, False)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1695,10 +1673,12 @@ feature -- Parsing
 					end
 					a_cursor.forth
 				end
-				if a_modified then
+				eiffel_parser.reparse_clusters (clusters, False, False)
+				if a_modified or eiffel_parser.overriding_class_added then
+						-- A class has been modified (or removed) or
+						-- may have been overridden by a new class.
 					reset_classes
 				end
-				eiffel_parser.reparse_clusters (clusters, False, False)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1775,10 +1755,12 @@ feature -- Parsing
 					end
 					a_cursor.forth
 				end
-				if a_modified then
+				eiffel_parser.reparse_clusters (clusters, True, False)
+				if a_modified or eiffel_parser.overriding_class_added then
+						-- A class has been modified (or removed) or
+						-- may have been overridden by a new class.
 					reset_classes
 				end
-				eiffel_parser.reparse_clusters (clusters, True, False)
 			end
 		ensure
 			preparsed: is_preparsed
@@ -1902,13 +1884,14 @@ feature -- Compilation
 				create l_clock
 				dt1 := l_clock.system_clock.date_time_now
 			end
-			parse_all
 --			preparse_single
 --			debug ("ericb")
 --				print_time (dt1, "Degree 6")
 --				dt1 := l_clock.system_clock.date_time_now
 --			end
 --			compile_degree_5
+			parse_all
+			check_provider_validity
 			debug ("ericb")
 				print_time (dt1, "Degree 5")
 				dt1 := l_clock.system_clock.date_time_now
@@ -1941,6 +1924,7 @@ feature -- Compilation
 				end
 				a_cursor.forth
 			end
+			check_provider_validity
 			debug ("ericb")
 				std.error.put_string ("Parsed ")
 				std.error.put_integer (classes.count)
@@ -2013,6 +1997,24 @@ feature -- Compilation
 					a_class.process (implementation_checker)
 				end
 				a_cursor.forth
+			end
+		end
+
+	check_provider_validity is
+			-- Check cluster dependence constraints.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
+			a_class: ET_CLASS
+		do
+			if cluster_dependence_enabled then
+				a_cursor := classes.new_cursor
+				from a_cursor.start until a_cursor.after loop
+					a_class := a_cursor.item
+					if a_class.is_parsed then
+						a_class.process (provider_checker)
+					end
+					a_cursor.forth
+				end
 			end
 		end
 
@@ -2169,9 +2171,13 @@ feature -- Processors
 			Result.set_use_recast_keyword (use_recast_keyword)
 			Result.set_use_reference_keyword (use_reference_keyword)
 			Result.set_use_void_keyword (use_void_keyword)
+			Result.set_providers_enabled (providers_enabled)
 		ensure
 			eiffel_parser_not_void: Result /= Void
 		end
+
+	provider_checker: ET_AST_PROCESSOR
+			-- Provider checker
 
 	ancestor_builder: ET_AST_PROCESSOR
 			-- Ancestor builder
@@ -2194,6 +2200,9 @@ feature -- Processors
 			l_feature_flattener: ET_FEATURE_FLATTENER
 			l_interface_checker: ET_INTERFACE_CHECKER
 		do
+			if provider_checker = null_processor then
+				create {ET_PROVIDER_CHECKER} provider_checker.make (Current)
+			end
 			if ancestor_builder = null_processor then
 				create {ET_ANCESTOR_BUILDER} ancestor_builder.make (Current)
 			end
@@ -2208,6 +2217,16 @@ feature -- Processors
 			if implementation_checker = null_processor then
 				create {ET_IMPLEMENTATION_CHECKER} implementation_checker.make (Current)
 			end
+		end
+
+	set_provider_checker (a_provider_checker: like provider_checker) is
+			-- Set `provider_checker' to `a_provider_checker'.
+		require
+			a_provider_checker_not_void: a_provider_checker /= Void
+		do
+			provider_checker := a_provider_checker
+		ensure
+			provider_checker_set: provider_checker = a_provider_checker
 		end
 
 	set_ancestor_builder (an_ancestor_builder: like ancestor_builder) is
@@ -2282,31 +2301,6 @@ feature {NONE} -- Implementation
 	internal_eiffel_parser: ET_EIFFEL_PARSER
 			-- Eiffel parser
 
-	has_eiffel_extension (a_filename: STRING): BOOLEAN is
-			-- Has `a_filename' an Eiffel extension (.e)?
-		require
-			a_filename_not_void: a_filename /= Void
-		local
-			nb: INTEGER
-			c: CHARACTER
-		do
-			nb := a_filename.count
-			if nb > 2 and then a_filename.item (nb - 1) = '.' then
-				c := a_filename.item (nb)
-				if c = 'e' then
-					Result := True
-				elseif operating_system.is_windows and then c = 'E' then
-					Result := True
-				end
-			end
-		ensure
-			definition: Result = (a_filename.count > 2 and then
-				((a_filename.item (a_filename.count) = 'e' or
-				(operating_system.is_windows and then
-				a_filename.item (a_filename.count) = 'E')) and
-				a_filename.item (a_filename.count - 1) = '.'))
-		end
-
 feature {NONE} -- Constants
 
 	initial_classes_by_cluster_capacity: INTEGER is
@@ -2374,6 +2368,7 @@ invariant
 	double_convert_feature_not_void: double_convert_feature /= Void
 	default_create_seed_non_negative: default_create_seed >= 0
 	void_seed_non_negative: void_seed >= 0
+	provider_checker_not_void: provider_checker /= Void
 	ancestor_builder_not_void: ancestor_builder /= Void
 	feature_flattener_not_void: feature_flattener /= Void
 	interface_checker_not_void: interface_checker /= Void
