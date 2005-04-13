@@ -27,7 +27,7 @@ inherit
 			make as make_eiffel_scanner,
 			make_with_factory as make_eiffel_scanner_with_factory
 		redefine
-			reset
+			reset, universe
 		end
 
 	ET_CLASS_PROCESSOR
@@ -40,19 +40,13 @@ inherit
 		undefine
 			error_handler
 		redefine
-			process_class
+			process_class, universe
 		end
 
 	ET_SHARED_EIFFEL_BUFFER
 		export {NONE} all end
 
 	ET_SHARED_FEATURE_NAME_TESTER
-		export {NONE} all end
-
-	KL_SHARED_EXECUTION_ENVIRONMENT
-		export {NONE} all end
-
-	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
 feature {NONE} -- Initialization
@@ -87,7 +81,7 @@ feature {NONE} -- Initialization
 			create features.make (Initial_features_capacity)
 			create constraints.make (Initial_constraints_capacity)
 			create providers.make (Initial_providers_capacity)
-			make_eiffel_scanner_with_factory ("unknown file", a_factory, an_error_handler)
+			make_eiffel_scanner_with_factory ("unknown file", a_universe, a_factory, an_error_handler)
 			make_class_processor (a_universe)
 			make_parser_skeleton
 		ensure
@@ -120,6 +114,9 @@ feature -- Initialization
 		end
 
 feature -- Access
+
+	universe: ET_UNIVERSE
+			-- Surrounding universe
 
 	cluster: ET_CLUSTER
 			-- Cluster containing the class being parsed
@@ -165,8 +162,11 @@ feature -- Status report
 			-- Is current processor a null processor?
 
 	providers_enabled: BOOLEAN
-			-- Should it providers be built when parsing a class?
-			
+			-- Should providers be built when parsing a class?
+
+	overriding_class_added: BOOLEAN
+			-- Has an overriding class been added to universe?
+
 feature -- Status setting
 
 	set_null (b: BOOLEAN) is
@@ -184,19 +184,22 @@ feature -- Status setting
 		ensure
 			providers_enabled_set: providers_enabled = b
 		end
-		
+
 feature -- Parsing
 
 	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
 			-- Parse all classes in `a_file' within cluster `a_cluster'.
 			-- `a_filename' is the filename of `a_file' and `a_time_stamp'
 			-- its time stamp just before it was open.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
 			a_filename_not_void: a_filename /= Void
 			a_cluster_not_void: a_cluster /= Void
 		do
+			overriding_class_added := False
 			if not is_null then
 				debug ("GELINT")
 					std.error.put_string ("Parsing file '")
@@ -218,6 +221,8 @@ feature -- Parsing
 
 	parse_cluster (a_cluster: ET_CLUSTER) is
 			-- Parse all classes in `a_cluster' (recursively).
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -228,7 +233,9 @@ feature -- Parsing
 			dir: KL_DIRECTORY
 			s: STRING
 			l_subclusters: ET_CLUSTERS
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			if not is_null then
 				debug ("GELINT")
 					std.error.put_string ("Parse cluster '")
@@ -256,6 +263,9 @@ feature -- Parsing
 								a_file.open_read
 								if a_file.is_open_read then
 									parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+									if overriding_class_added then
+										l_overriding_added := True
+									end
 									a_file.close
 								else
 									error_handler.report_gcaab_error (a_cluster, a_filename)
@@ -272,28 +282,41 @@ feature -- Parsing
 						error_handler.report_gcaaa_error (a_cluster, dir_name)
 					end
 				end
+				build_provider_constraint (a_cluster)
+				build_dependant_constraint (a_cluster)
 				l_subclusters := a_cluster.subclusters
 				if l_subclusters /= Void then
 					parse_clusters (l_subclusters)
+				end
+				if l_overriding_added then
+					overriding_class_added := True
 				end
 			end
 		end
 
 	parse_clusters (a_clusters: ET_CLUSTERS) is
 			-- Parse all classes in `a_clusters' (recursively).
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
 			l_clusters: DS_ARRAYED_LIST [ET_CLUSTER]
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			if not is_null then
 				l_clusters := a_clusters.clusters
 				nb := l_clusters.count
 				from i := 1 until i > nb loop
 					parse_cluster (l_clusters.item (i))
+					if overriding_class_added then
+						l_overriding_added := True
+					end
 					i := i + 1
 				end
+				overriding_class_added := l_overriding_added
 			end
 		end
 
@@ -301,6 +324,8 @@ feature -- Parsing
 			-- Parse all classes in `a_cluster' (recursively) again.
 			-- `a_override' means that only override clusters are taken into account.
 			-- `a_read_only' means that read-only clusters are taken into account.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -314,7 +339,9 @@ feature -- Parsing
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 			l_class: ET_CLASS
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			if not is_null then
 				debug ("GELINT")
 					std.error.put_string ("Parse cluster '")
@@ -359,6 +386,9 @@ feature -- Parsing
 									a_file.open_read
 									if a_file.is_open_read then
 										parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+										if overriding_class_added then
+											l_overriding_added := True
+										end
 										a_file.close
 									else
 										error_handler.report_gcaab_error (a_cluster, a_filename)
@@ -376,9 +406,14 @@ feature -- Parsing
 						error_handler.report_gcaaa_error (a_cluster, dir_name)
 					end
 				end
+				build_provider_constraint (a_cluster)
+				build_dependant_constraint (a_cluster)
 				l_subclusters := a_cluster.subclusters
 				if l_subclusters /= Void then
 					reparse_clusters (l_subclusters, a_override, a_read_only)
+				end
+				if l_overriding_added then
+					overriding_class_added := True
 				end
 			end
 		end
@@ -387,6 +422,8 @@ feature -- Parsing
 			-- Parse all classes in `a_clusters' (recursively) again.
 			-- `a_override' means that only override clusters are taken into account.
 			-- `a_read_only' means that read-only clusters are taken into account.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
@@ -394,7 +431,9 @@ feature -- Parsing
 			l_cluster: ET_CLUSTER
 			dir_name: STRING
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			if not is_null then
 				l_clusters := a_clusters.clusters
 				nb := l_clusters.count
@@ -407,13 +446,20 @@ feature -- Parsing
 							nb := nb - 1
 						else
 							reparse_cluster (l_cluster, a_override, a_read_only)
+							if overriding_class_added then
+								l_overriding_added := True
+							end
 							i := i + 1
 						end
 					else
 						reparse_cluster (l_cluster, a_override, a_read_only)
+						if overriding_class_added then
+							l_overriding_added := True
+						end
 						i := i + 1
 					end
 				end
+				overriding_class_added := l_overriding_added
 			end
 		end
 
@@ -424,6 +470,8 @@ feature -- AST processing
 			-- The class may end up with a syntax error status its
 			-- `filename' didn't contain this class after all (i.e.
 			-- if the preparsing phase gave errouneous result).
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		local
 			a_filename: STRING
 			a_time_stamp: INTEGER
@@ -431,6 +479,7 @@ feature -- AST processing
 			a_file: KL_TEXT_INPUT_FILE
 			an_overridden_class: ET_CLASS
 		do
+			overriding_class_added := False
 			if is_null then
 				-- Do nothing.
 			elseif a_class = none_class then
@@ -1352,6 +1401,7 @@ feature {NONE} -- AST factory
 						error_handler.report_compilation_status (Current, current_class)
 						current_class := old_class
 						features.wipe_out
+						overriding_class_added := True
 					end
 				elseif not Result.is_override then
 						-- Two classes with the same name in two non-override clusters.

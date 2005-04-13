@@ -25,9 +25,6 @@ inherit
 	ET_SHARED_EIFFEL_BUFFER
 		export {NONE} all end
 
-	KL_SHARED_EXECUTION_ENVIRONMENT
-	KL_SHARED_FILE_SYSTEM
-
 feature {NONE} -- Initialization
 
 	make (a_universe: ET_UNIVERSE; an_error_handler: like error_handler) is
@@ -53,8 +50,7 @@ feature {NONE} -- Initialization
 			a_factory_not_void: a_factory /= Void
 			an_error_handler_not_void: an_error_handler /= Void
 		do
-			universe := a_universe
-			make_eiffel_scanner_with_factory ("unknown file", a_factory, an_error_handler)
+			make_eiffel_scanner_with_factory ("unknown file", a_universe, a_factory, an_error_handler)
 		ensure
 			universe_set: universe = a_universe
 			ast_factory_set: ast_factory = a_factory
@@ -74,13 +70,13 @@ feature -- Initialization
 
 feature -- Status report
 
+	overriding_class_added: BOOLEAN
+			-- Has an overriding class been added to universe?
+
 	class_keyword_found: BOOLEAN
 			-- Has a 'class' keyword been found?
 
 feature -- Access
-
-	universe: ET_UNIVERSE
-			-- Surrounding universe
 
 	last_classname: ET_CLASS_NAME
 			-- Last classname found
@@ -92,6 +88,8 @@ feature -- Parsing
 			-- between class names and filenames. Classes are added to
 			-- `universe.classes', but are not parsed. Filenames are
 			-- supposed to be of the form 'classname.e'.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -103,7 +101,9 @@ feature -- Parsing
 			a_class: ET_CLASS
 			l_other_class: ET_CLASS
 			l_subclusters: ET_CLUSTERS
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			if not a_cluster.is_abstract then
 				error_handler.report_preparsing_status (a_cluster)
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
@@ -136,6 +136,7 @@ feature -- Parsing
 										a_class.set_filename (a_filename)
 										a_class.set_cluster (a_cluster)
 										a_class.set_overridden_class (l_other_class)
+										l_overriding_added := True
 									end
 								elseif not a_class.is_override then
 										-- Two classes with the same name in two non-override clusters.
@@ -170,9 +171,14 @@ feature -- Parsing
 					error_handler.report_gcaaa_error (a_cluster, dir_name)
 				end
 			end
+			build_provider_constraint (a_cluster)
+			build_dependant_constraint (a_cluster)
 			l_subclusters := a_cluster.subclusters
 			if l_subclusters /= Void then
 				preparse_clusters_shallow (l_subclusters)
+			end
+			if l_overriding_added then
+				overriding_class_added := True
 			end
 		end
 
@@ -181,18 +187,26 @@ feature -- Parsing
 			-- between class names and filenames in each cluster. Classes
 			-- are added to `universe.classes', but are not parsed.
 			-- Filenames are supposed to be of the form 'classname.e'.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
 			l_clusters: DS_ARRAYED_LIST [ET_CLUSTER]
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			l_clusters := a_clusters.clusters
 			nb := l_clusters.count
 			from i := 1 until i > nb loop
 				preparse_cluster_shallow (l_clusters.item (i))
+				if overriding_class_added then
+					l_overriding_added := True
+				end
 				i := i + 1
 			end
+			overriding_class_added := l_overriding_added
 		end
 
 	repreparse_cluster_shallow (a_cluster: ET_CLUSTER; a_override, a_read_only: BOOLEAN) is
@@ -202,6 +216,8 @@ feature -- Parsing
 			-- supposed to be of the form 'classname.e'.
 			-- `a_override' means that only override clusters are taken into account.
 			-- `a_read_only' means that read-only clusters are taken into account.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -215,7 +231,9 @@ feature -- Parsing
 			l_subclusters: ET_CLUSTERS
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			if (a_read_only or else not a_cluster.is_read_only) and then (a_override implies a_cluster.is_override) and then not a_cluster.is_abstract then
 				error_handler.report_preparsing_status (a_cluster)
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
@@ -265,6 +283,7 @@ feature -- Parsing
 											a_class.set_filename (a_filename)
 											a_class.set_cluster (a_cluster)
 											a_class.set_overridden_class (l_other_class)
+											l_overriding_added := True
 										end
 									elseif not a_class.is_override then
 											-- Two classes with the same name in two non-override clusters.
@@ -300,9 +319,14 @@ feature -- Parsing
 					error_handler.report_gcaaa_error (a_cluster, dir_name)
 				end
 			end
+			build_provider_constraint (a_cluster)
+			build_dependant_constraint (a_cluster)
 			l_subclusters := a_cluster.subclusters
 			if l_subclusters /= Void then
 				repreparse_clusters_shallow (l_subclusters, a_override, a_read_only)
+			end
+			if l_overriding_added then
+				overriding_class_added := True
 			end
 		end
 
@@ -313,6 +337,8 @@ feature -- Parsing
 			-- Filenames are supposed to be of the form 'classname.e'.
 			-- `a_override' means that only override clusters are taken into account.
 			-- `a_read_only' means that read-only clusters are taken into account.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
@@ -320,7 +346,9 @@ feature -- Parsing
 			l_cluster: ET_CLUSTER
 			dir_name: STRING
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			l_clusters := a_clusters.clusters
 			nb := l_clusters.count
 			from i := 1 until i > nb loop
@@ -332,13 +360,20 @@ feature -- Parsing
 						nb := nb - 1
 					else
 						repreparse_cluster_shallow (l_cluster, a_override, a_read_only)
+						if overriding_class_added then
+							l_overriding_added := True
+						end
 						i := i + 1
 					end
 				else
 					repreparse_cluster_shallow (l_cluster, a_override, a_read_only)
+					if overriding_class_added then
+						l_overriding_added := True
+					end
 					i := i + 1
 				end
 			end
+			overriding_class_added := l_overriding_added
 		end
 
 	preparse_file_single (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
@@ -347,6 +382,8 @@ feature -- Parsing
 			-- Add the class to `universe.classes', but do not parse it.
 			-- `a_filename' is the filename of `a_file' and `a_time_stamp'
 			-- its time stamp just before it was open.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -356,6 +393,7 @@ feature -- Parsing
 			a_class: ET_CLASS
 			l_other_class: ET_CLASS
 		do
+			overriding_class_added := False
 			filename := a_filename
 			input_buffer := Eiffel_buffer
 			Eiffel_buffer.set_file (a_file)
@@ -384,6 +422,7 @@ feature -- Parsing
 							a_class.set_time_stamp (a_time_stamp)
 							a_class.set_cluster (a_cluster)
 							a_class.set_overridden_class (l_other_class)
+							overriding_class_added := True
 						end
 					elseif not a_class.is_override then
 							-- Two classes with the same name in two non-override clusters.
@@ -423,6 +462,8 @@ feature -- Parsing
 			-- between class names and filenames. Classes are added to 
 			-- `universe.classes', but are not parsed. Each Eiffel file
 			-- is supposed to contain exactly one class.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -433,7 +474,9 @@ feature -- Parsing
 			dir: KL_DIRECTORY
 			s: STRING
 			l_subclusters: ET_CLUSTERS
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			if not a_cluster.is_abstract then
 				error_handler.report_preparsing_status (a_cluster)
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
@@ -456,6 +499,9 @@ feature -- Parsing
 							a_file.open_read
 							if a_file.is_open_read then
 								preparse_file_single (a_file, a_filename, a_time_stamp, a_cluster)
+								if overriding_class_added then
+									l_overriding_added := True
+								end
 								a_file.close
 							else
 								error_handler.report_gcaab_error (a_cluster, a_filename)
@@ -472,9 +518,14 @@ feature -- Parsing
 					error_handler.report_gcaaa_error (a_cluster, dir_name)
 				end
 			end
+			build_provider_constraint (a_cluster)
+			build_dependant_constraint (a_cluster)
 			l_subclusters := a_cluster.subclusters
 			if l_subclusters /= Void then
 				preparse_clusters_single (l_subclusters)
+			end
+			if l_overriding_added then
+				overriding_class_added := True
 			end
 		end
 
@@ -483,18 +534,26 @@ feature -- Parsing
 			-- class names and filenames in each cluster. Classes are added to
 			-- `universe.classes', but are not parsed. Each Eiffel file is
 			-- supposed to contain exactly one class.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
 			l_clusters: DS_ARRAYED_LIST [ET_CLUSTER]
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			l_clusters := a_clusters.clusters
 			nb := l_clusters.count
 			from i := 1 until i > nb loop
 				preparse_cluster_single (l_clusters.item (i))
+				if overriding_class_added then
+					l_overriding_added := True
+				end
 				i := i + 1
 			end
+			overriding_class_added := l_overriding_added
 		end
 
 	repreparse_cluster_single (a_cluster: ET_CLUSTER; a_override, a_read_only: BOOLEAN) is
@@ -503,6 +562,8 @@ feature -- Parsing
 			-- are not parsed. Each Eiffel file is supposed to contain exactly one class.
 			-- `a_override' means that only override clusters are taken into account.
 			-- `a_read_only' means that read-only clusters are taken into account.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -516,7 +577,9 @@ feature -- Parsing
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 			l_class: ET_CLASS
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			if (a_read_only or else not a_cluster.is_read_only) and then (a_override implies a_cluster.is_override) and then not a_cluster.is_abstract then
 				error_handler.report_preparsing_status (a_cluster)
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
@@ -556,6 +619,9 @@ feature -- Parsing
 								a_file.open_read
 								if a_file.is_open_read then
 									preparse_file_single (a_file, a_filename, a_time_stamp, a_cluster)
+									if overriding_class_added then
+										l_overriding_added := True
+									end
 									a_file.close
 								else
 									error_handler.report_gcaab_error (a_cluster, a_filename)
@@ -573,9 +639,14 @@ feature -- Parsing
 					error_handler.report_gcaaa_error (a_cluster, dir_name)
 				end
 			end
+			build_provider_constraint (a_cluster)
+			build_dependant_constraint (a_cluster)
 			l_subclusters := a_cluster.subclusters
 			if l_subclusters /= Void then
 				repreparse_clusters_single (l_subclusters, a_override, a_read_only)
+			end
+			if l_overriding_added then
+				overriding_class_added := True
 			end
 		end
 
@@ -586,6 +657,8 @@ feature -- Parsing
 			-- to contain exactly one class.
 			-- `a_override' means that only override clusters are taken into account.
 			-- `a_read_only' means that read-only clusters are taken into account.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
@@ -593,7 +666,9 @@ feature -- Parsing
 			l_cluster: ET_CLUSTER
 			dir_name: STRING
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			l_clusters := a_clusters.clusters
 			nb := l_clusters.count
 			from i := 1 until i > nb loop
@@ -605,13 +680,20 @@ feature -- Parsing
 						nb := nb - 1
 					else
 						repreparse_cluster_single (l_cluster, a_override, a_read_only)
+						if overriding_class_added then
+							l_overriding_added := True
+						end
 						i := i + 1
 					end
 				else
 					repreparse_cluster_single (l_cluster, a_override, a_read_only)
+					if overriding_class_added then
+						l_overriding_added := True
+					end
 					i := i + 1
 				end
 			end
+			overriding_class_added := l_overriding_added
 		end
 
 	preparse_file_multiple (a_file: KI_CHARACTER_INPUT_STREAM; a_filename: STRING; a_time_stamp: INTEGER; a_cluster: ET_CLUSTER) is
@@ -620,6 +702,8 @@ feature -- Parsing
 			-- the classes to `universe.classes', but do not parse them.
 			-- `a_filename' is the filename of `a_file' and `a_time_stamp'
 			-- its time stamp just before it was open.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
@@ -629,6 +713,7 @@ feature -- Parsing
 			a_class: ET_CLASS
 			l_other_class: ET_CLASS
 		do
+			overriding_class_added := False
 			filename := a_filename
 			input_buffer := Eiffel_buffer
 			Eiffel_buffer.set_file (a_file)
@@ -664,6 +749,7 @@ feature -- Parsing
 							a_class.set_time_stamp (a_time_stamp)
 							a_class.set_cluster (a_cluster)
 							a_class.set_overridden_class (l_other_class)
+							overriding_class_added := True
 						end
 					elseif not a_class.is_override then
 							-- Two classes with the same name in two non-override clusters.
@@ -702,6 +788,8 @@ feature -- Parsing
 			-- Traverse `a_cluster' (recursively) and build a mapping between
 			-- class names and filenames. Classes are added to `universe.classes',
 			-- but are not parsed. Each Eiffel file can contain more than one class.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -712,7 +800,9 @@ feature -- Parsing
 			dir: KL_DIRECTORY
 			s: STRING
 			l_subclusters: ET_CLUSTERS
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			if not a_cluster.is_abstract then
 				error_handler.report_preparsing_status (a_cluster)
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
@@ -735,6 +825,9 @@ feature -- Parsing
 							a_file.open_read
 							if a_file.is_open_read then
 								preparse_file_multiple (a_file, a_filename, a_time_stamp, a_cluster)
+								if overriding_class_added then
+									l_overriding_added := True
+								end
 								a_file.close
 							else
 								error_handler.report_gcaab_error (a_cluster, a_filename)
@@ -751,9 +844,14 @@ feature -- Parsing
 					error_handler.report_gcaaa_error (a_cluster, dir_name)
 				end
 			end
+			build_provider_constraint (a_cluster)
+			build_dependant_constraint (a_cluster)
 			l_subclusters := a_cluster.subclusters
 			if l_subclusters /= Void then
 				preparse_clusters_multiple (l_subclusters)
+			end
+			if l_overriding_added then
+				overriding_class_added := True
 			end
 		end
 
@@ -762,18 +860,26 @@ feature -- Parsing
 			-- class names and filenames in each cluster. Classes are added to
 			-- `universe.classes', but are not parsed. Each Eiffel file can
 			-- contain more than one class.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
 			l_clusters: DS_ARRAYED_LIST [ET_CLUSTER]
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			l_clusters := a_clusters.clusters
 			nb := l_clusters.count
 			from i := 1 until i > nb loop
 				preparse_cluster_multiple (l_clusters.item (i))
+				if overriding_class_added then
+					l_overriding_added := True
+				end
 				i := i + 1
 			end
+			overriding_class_added := l_overriding_added
 		end
 
 	repreparse_cluster_multiple (a_cluster: ET_CLUSTER; a_override, a_read_only: BOOLEAN) is
@@ -782,6 +888,8 @@ feature -- Parsing
 			-- are not parsed. Each Eiffel file can contain more than one class.
 			-- `a_override' means that only override clusters are taken into account.
 			-- `a_read_only' means that read-only clusters are taken into account.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
@@ -795,7 +903,9 @@ feature -- Parsing
 			l_classes: DS_ARRAYED_LIST [ET_CLASS]
 			l_class: ET_CLASS
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			if (a_read_only or else not a_cluster.is_read_only) and then (a_override implies a_cluster.is_override) and then not a_cluster.is_abstract then
 				error_handler.report_preparsing_status (a_cluster)
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
@@ -835,6 +945,9 @@ feature -- Parsing
 								a_file.open_read
 								if a_file.is_open_read then
 									preparse_file_multiple (a_file, a_filename, a_time_stamp, a_cluster)
+									if overriding_class_added then
+										l_overriding_added := True
+									end
 									a_file.close
 								else
 									error_handler.report_gcaab_error (a_cluster, a_filename)
@@ -852,9 +965,14 @@ feature -- Parsing
 					error_handler.report_gcaaa_error (a_cluster, dir_name)
 				end
 			end
+			build_provider_constraint (a_cluster)
+			build_dependant_constraint (a_cluster)
 			l_subclusters := a_cluster.subclusters
 			if l_subclusters /= Void then
 				repreparse_clusters_multiple (l_subclusters, a_override, a_read_only)
+			end
+			if l_overriding_added then
+				overriding_class_added := True
 			end
 		end
 
@@ -865,6 +983,8 @@ feature -- Parsing
 			-- contain more than one class.
 			-- `a_override' means that only override clusters are taken into account.
 			-- `a_read_only' means that read-only clusters are taken into account.
+			-- Set `overriding_class_added' if a class overriding
+			-- another one has been added.
 		require
 			a_clusters_not_void: a_clusters /= Void
 		local
@@ -872,7 +992,9 @@ feature -- Parsing
 			l_cluster: ET_CLUSTER
 			dir_name: STRING
 			i, nb: INTEGER
+			l_overriding_added: BOOLEAN
 		do
+			overriding_class_added := False
 			l_clusters := a_clusters.clusters
 			nb := l_clusters.count
 			from i := 1 until i > nb loop
@@ -884,13 +1006,20 @@ feature -- Parsing
 						nb := nb - 1
 					else
 						repreparse_cluster_multiple (l_cluster, a_override, a_read_only)
+						if overriding_class_added then
+							l_overriding_added := True
+						end
 						i := i + 1
 					end
 				else
 					repreparse_cluster_multiple (l_cluster, a_override, a_read_only)
+					if overriding_class_added then
+						l_overriding_added := True
+					end
 					i := i + 1
 				end
 			end
+			overriding_class_added := l_overriding_added
 		end
 
 feature -- Error handling
@@ -922,9 +1051,5 @@ feature {NONE} -- Implementation
 		ensure
 			directory_not_void: Result /= Void
 		end
-
-invariant
-
-	universe_not_void: universe /= Void
 
 end
