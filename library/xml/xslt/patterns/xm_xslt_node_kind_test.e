@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_NODE_TEST
 		undefine
-			node_kind
+			node_kind, content_type
 		redefine
 			default_priority
 		end

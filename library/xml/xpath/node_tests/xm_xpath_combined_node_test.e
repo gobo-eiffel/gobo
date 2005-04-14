@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			constraining_node_names, is_at_most_one_name_constraint
+			constraining_node_names, is_at_most_one_name_constraint, content_type
 		end
 
 	XM_XPATH_TOKENS
@@ -70,6 +70,25 @@ feature -- Access
 				Result := node_test_two.constraining_node_names
 			elseif node_test_two.constraining_node_names = Void then
 				Result := node_test_one.constraining_node_names
+			end
+		end
+
+	content_type: XM_XPATH_SCHEMA_TYPE is
+			-- Content type
+		local
+			a_type, another_type: XM_XPATH_SCHEMA_TYPE
+		do
+			Result := any_item
+			a_type := node_test_one.content_type
+			another_type := node_test_two.content_type
+			if a_type.is_same_type (another_type) then
+				Result := a_type
+			elseif operator = Intersect_token then
+				if another_type = any_item then
+					Result := a_type
+				elseif a_type = any_item then
+					Result := another_type
+				end
 			end
 		end
 

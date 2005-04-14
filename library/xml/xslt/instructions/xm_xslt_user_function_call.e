@@ -194,11 +194,11 @@ feature -- Element change
 			until
 				is_type_error or else an_index > an_argument_count
 			loop
-				create a_role.make (Function_role, name, an_index)
+				create a_role.make (Function_role, name, an_index, Xpath_errors_uri, "XPTY0004")
 				create a_type_checker
 				a_type_checker.static_type_check (Void, arguments.item (an_index), some_required_types.item (an_index), False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XTTY0004", Type_error)
+					set_last_error (a_type_checker.static_type_check_error)
 					is_type_error := True
 				else
 					 arguments.replace (a_type_checker.checked_expression, an_index)

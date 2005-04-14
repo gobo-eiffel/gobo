@@ -120,10 +120,10 @@ feature -- Optimization
 					a_cardinality := Required_cardinality_exactly_one
 				end
 				create an_atomic_sequence.make (type_factory.any_atomic_type, a_cardinality)
-				create a_role.make (Type_operation_role, "castable as", 1)
+				create a_role.make (Type_operation_role, "castable as", 1, Xpath_errors_uri, "XPTY0004")
 				a_type_checker.static_type_check (a_context, base_expression, an_atomic_sequence, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+					set_last_error (a_type_checker.static_type_check_error)
 				else
 					set_base_expression (a_type_checker.checked_expression)
 				end

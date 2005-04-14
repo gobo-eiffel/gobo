@@ -24,19 +24,25 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_kind: INTEGER; a_container: STRING; an_operand: INTEGER) is
+	make (a_kind: INTEGER; a_container: STRING; an_operand: INTEGER; a_namespace_uri, an_error_code: STRING) is
 		require
 			strictly_positive_operand: an_operand > 0
 			container_not_void: a_container /= Void and then a_container.count > 0
 			kind_in_range: Function_role <= a_kind and then a_kind <= Order_by_role
+			namespace_uri_not_void: a_namespace_uri /= Void
+			error_code_not_void: an_error_code /= Void
 		do
 			kind := a_kind
 			container := a_container
 			operand := an_operand
+			namespace_uri := a_namespace_uri
+			error_code := an_error_code
 		ensure
 			kind_set: kind = a_kind
 			container_set: container = a_container
 			operand_set: operand = an_operand
+			namespace_uri_set: namespace_uri = a_namespace_uri
+			error_code_set: error_code = an_error_code
 		end
 	
 feature  -- Access
@@ -92,6 +98,9 @@ feature  -- Access
 	container: STRING
 			-- Containing XPath expression text
 
+	namespace_uri, error_code: STRING
+			-- Error message identifier
+
 feature {NONE} -- Implementation
 
 	ordinal (an_integer: INTEGER): STRING is
@@ -125,6 +134,8 @@ invariant
 	strictly_positive_operand: operand > 0
 	container_not_void: container /= Void and then container.count > 0
 	kind_in_range: Function_role <= kind and then kind <= Order_by_role
-	
+	namespace_uri_not_void: namespace_uri /= Void
+	error_code_not_void: error_code /= Void
+
 end
 

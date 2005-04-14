@@ -57,7 +57,7 @@ feature -- Events
 		local
 			an_error: XM_XPATH_ERROR_VALUE
 			a_uri, a_code, a_text: STRING
-			an_index: INTEGER
+			an_index, a_second_index: INTEGER
 		do
 			an_index := a_message.index_of (':', 1)
 			if a_message.count > an_index + 1 and then STRING_.same_string (a_message.substring (1, 1), "X") and then an_index > 0 then
@@ -68,6 +68,20 @@ feature -- Events
 				end
 				a_code := a_message.substring (1, an_index - 1)
 				a_text := a_message.substring (an_index + 2, a_message.count)
+			elseif a_message.count > 0 and then STRING_.same_string (a_message.substring (1, 1), "{") then
+				an_index := a_message.index_of ('}', 2)
+				check
+					closing_brace_found: an_index > 1
+				end
+				a_uri := a_message.substring (2, an_index - 1)
+				a_second_index := a_message.index_of (':', an_index + 1)
+				check
+					colon_found: a_second_index > an_index + 1
+				end
+				a_code := a_message.substring (an_index + 1, a_second_index - 1)
+				STRING_.left_adjust (a_code)
+				STRING_.right_adjust (a_code)
+				a_text := a_message.substring (a_second_index + 1, a_message.count)
 			else
 				a_text := a_message
 				a_uri := Gexslt_eiffel_type_uri

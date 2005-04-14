@@ -138,10 +138,18 @@ feature -- Evaluation
 			-- Map `an_item' to a sequence
 		local
 			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
+			an_invalid_item: XM_XPATH_INVALID_ITEM
+			a_message: STRING
 		do
 			an_untyped_atomic_value ?= an_item
 			if an_untyped_atomic_value /= Void then
-				create last_mapped_item.make_item (an_untyped_atomic_value.convert_to_type (target_type))
+				if an_untyped_atomic_value.is_convertible (target_type) then
+					create last_mapped_item.make_item (an_untyped_atomic_value.convert_to_type (target_type))
+				else
+					a_message := STRING_.concat ("Unable to convert an xdt:untypedAtomic value to type ", target_type.conventional_name)
+					create an_invalid_item.make_from_string (a_message, Xpath_errors_uri, "FORG0001", Type_error)
+					create last_mapped_item.make_item (an_invalid_item)
+				end
 			else
 				create last_mapped_item.make_item (an_item)
 			end

@@ -158,12 +158,11 @@ feature -- Element change
 				select_expression := select_expression.replacement_expression
 			end
 			create a_type_checker
-			create a_role.make (Instruction_role, "xsl:apply-templates/select", 1)
+			create a_role.make (Instruction_role, "xsl:apply-templates/select", 1, "", "XTTE0520")
 			create a_node_sequence.make_node_sequence
 			a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
 			if a_type_checker.is_static_type_check_error	then
-				create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
-					report_compile_error (an_error)
+				report_compile_error (a_type_checker.static_type_check_error)
 			else
 				select_expression := a_type_checker.checked_expression
 			end

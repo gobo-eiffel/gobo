@@ -143,11 +143,11 @@ feature -- Optimization
 					end
 					a_declaration_type := declaration.required_type
 					create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
-					create a_role.make (Variable_role, declaration.variable_name, 1)
+					create a_role.make (Variable_role, declaration.variable_name, 1, Xpath_errors_uri, "XPTY0004")
 					create a_type_checker
 					a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+						set_last_error (a_type_checker.static_type_check_error)
 					else
 						set_sequence (a_type_checker.checked_expression)
 						actual_item_type := sequence.item_type

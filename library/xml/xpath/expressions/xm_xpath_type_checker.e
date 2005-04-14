@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_TYPE
 
+	XM_XPATH_ERROR_TYPES
+
 	XM_XPATH_CARDINALITY
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -38,7 +40,7 @@ inherit
 		--   type, the rotuine returns the expression unchanged.
 		--  If the static type of the expression is incompatible with the required type
 		--   (for example, if the supplied type is integer and the required type is string)
-		--   the routine returns `Void' and sets `static_type_check_error_message'.
+		--   the routine returns `Void' and sets `static_type_check_error'.
 		--  If the static type is a super-type of the required type, then a new expression
 		--   is constructed that evaluates the original expression and checks the dynamic
 		--   type of the result; this new expression is returned as the result of the routine.
@@ -59,8 +61,8 @@ feature -- Status_report
 	is_static_type_check_error: BOOLEAN
 			-- Has a static typing error occured?
 
-	static_type_check_error_message: STRING
-			-- Error message from `static_type_check'
+	static_type_check_error: XM_XPATH_ERROR_VALUE
+			-- Error value from `static_type_check'
 
 feature -- Optimization
 
@@ -114,7 +116,7 @@ feature -- Optimization
 					-- If the supplied value is () and () isn't allowed, fail now
 
 					if supplied_cardinality = Required_cardinality_empty and then not is_cardinality_allows_zero (a_required_cardinality) then
-						report_error (STRING_.appended_string ("An empty sequence is not allowed as the ", a_role_locator.message))
+						report_error ("An empty sequence is not allowed as the ", a_role_locator)
 					else
 						
 						-- Try a static type check. We only throw it out if the call cannot possibly succeed.
@@ -231,12 +233,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	report_error (a_string :STRING) is
-			-- Report `a_string' as an error message.
+	report_error (a_message: STRING; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
+			-- Report custom error message.
+		require
+			messaage_not_void: a_message /= Void
+			role_locator_not_void: a_role_locator /= Void
 		do
 			is_static_type_check_error := True
-			static_type_check_error_message := a_string
-			-- TODO need to add location information
+			create static_type_check_error.make_from_string (STRING_.concat (a_message, a_role_locator.message), a_role_locator.namespace_uri, a_role_locator.error_code, Type_error)
+
+			-- TODO need to add location information.
+
 			checked_expression := Void
 		end
 
@@ -268,18 +275,23 @@ feature {NONE} -- Implementation
 
 	report_type_check_error (a_role_locator: XM_XPATH_ROLE_LOCATOR) is
 			-- Report failure of static type checking
+		require
+			role_locator_not_void: a_role_locator /= Void
+		local
+			a_message: STRING
 		do
 			is_static_type_check_error := True
-			static_type_check_error_message := STRING_.appended_string ("Required type of ", a_role_locator.message)
-			static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, " is ")
-			static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, required_item_type.conventional_name)
-			static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, "; supplied value has type ")
+			a_message := STRING_.concat ("Required type of ", a_role_locator.message)
+			a_message := STRING_.appended_string (a_message, " is ")
+			a_message := STRING_.appended_string (a_message, required_item_type.conventional_name)
+			a_message := STRING_.appended_string (a_message, "; supplied value has type ")
 			if supplied_item_type /= Void then
-				static_type_check_error_message := STRING_.appended_string (static_type_check_error_message, supplied_item_type.conventional_name)
+				a_message := STRING_.appended_string (a_message, supplied_item_type.conventional_name)
 			end
 
 			-- TODO add location info
 
+			create static_type_check_error.make_from_string (a_message, a_role_locator.namespace_uri, a_role_locator.error_code, Type_error)
 			checked_expression := Void
 		end
 
@@ -475,7 +487,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	error_message_when_error: is_static_type_check_error implies static_type_check_error_message /= Void
+	error_message_when_error: is_static_type_check_error implies static_type_check_error /= Void
 
 end
 

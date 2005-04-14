@@ -81,6 +81,12 @@ feature -- Access
 			Result := type_factory.any_atomic_type
 		end
 
+	content_type: XM_XPATH_SCHEMA_TYPE is
+			-- Content type
+		do
+			Result := any_item
+		end
+
 feature -- Comparison
 
 	is_same_type (other: XM_XPATH_ITEM_TYPE): BOOLEAN is

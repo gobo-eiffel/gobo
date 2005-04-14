@@ -343,16 +343,16 @@ feature {NONE} -- Implementation
 		do
 			create a_type_checker
 			create an_atomic_sequence.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
-			create a_role.make (Binary_expression_role, token_name (operator), 1)
+			create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
 			a_type_checker.static_type_check (a_context, first_operand, an_atomic_sequence, False, a_role)
 			if a_type_checker.is_static_type_check_error then
-				set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+				set_last_error (a_type_checker.static_type_check_error)
 			else
 				set_first_operand (a_type_checker.checked_expression)
-				create another_role.make (Binary_expression_role, token_name (operator), 2)
+				create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
 				a_type_checker.static_type_check (a_context, second_operand, an_atomic_sequence, False, another_role)
 				if a_type_checker.is_static_type_check_error	then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+					set_last_error (a_type_checker.static_type_check_error)
 				else
 					set_second_operand (a_type_checker.checked_expression)
 					a_type := first_operand.item_type
@@ -485,10 +485,10 @@ feature {NONE} -- Implementation
 					todo ("analyze-inequalities - need atomic sequence converter - BUG!", True)
 				else
 					create a_numeric_type.make_numeric_sequence
-					create a_role.make (Binary_expression_role, token_name (operator), 1)
+					create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
 					a_type_checker.static_type_check (a_context, first_operand, a_numeric_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+						set_last_error (a_type_checker.static_type_check_error)
 					else
 						set_first_operand (a_type_checker.checked_expression)
 					end
@@ -496,14 +496,14 @@ feature {NONE} -- Implementation
 			end
 			if not is_error and then not is_sub_type (another_type, type_factory.numeric_type) then
 				create a_type_checker
-				create another_role.make (Binary_expression_role, token_name (operator), 2)
+				create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
 				if is_backwards_compatible_mode then
 					todo ("analyze-inequalities - need atomic sequence converter - BUG!", True)
 				else
 					create a_numeric_type.make_numeric_sequence
 					a_type_checker.static_type_check (a_context, second_operand, a_numeric_type, False, another_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+						set_last_error (a_type_checker.static_type_check_error)
 					else
 						set_second_operand (a_type_checker.checked_expression)
 					end

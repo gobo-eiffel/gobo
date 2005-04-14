@@ -145,11 +145,11 @@ feature -- Optimization
 					else
 						an_expression := sequence
 					end
-					create a_role.make (Variable_role, declaration.variable_name, 1)
+					create a_role.make (Variable_role, declaration.variable_name, 1, Xpath_errors_uri, "XPTY0004")
 					create a_type_checker
 					a_type_checker.static_type_check (a_context, an_expression, declaration.required_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+						set_last_error (a_type_checker.static_type_check_error)
 					else
 						set_sequence (a_type_checker.checked_expression)
 					end

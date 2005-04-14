@@ -92,16 +92,16 @@ feature -- Optimization
 			end
 			if not is_error then
 				create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_exactly_one)
-				create a_role.make (Binary_expression_role, token_name (operator), 1)
+				create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
 				a_type_checker.static_type_check (a_context, first_operand, an_atomic_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+					set_last_error (a_type_checker.static_type_check_error)
 				else
 					set_first_operand (a_type_checker.checked_expression)
-					create another_role.make (Binary_expression_role, token_name (operator), 2)
+					create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
 					a_type_checker.static_type_check (a_context, second_operand, an_atomic_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+						set_last_error (a_type_checker.static_type_check_error)
 					else
 						set_second_operand (a_type_checker.checked_expression)
 						a_type := first_operand.item_type.atomized_item_type; a_primitive_type := a_type.primitive_type

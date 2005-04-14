@@ -102,11 +102,11 @@ feature -- Optimization
 				name := name.replacement_expression
 			end
 			create a_required_type.make_single_string
-			create a_role.make (Instruction_role, "processing-instruction:name", 1)
+			create a_role.make (Instruction_role, "processing-instruction:name", 1, Xpath_errors_uri, "XPTY0004")
 			create a_type_checker
 			a_type_checker.static_type_check (a_context, name, a_required_type, False, a_role)
 			if a_type_checker.is_static_type_check_error then
-				name.set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XPTY0004", Type_error)
+				name.set_last_error (a_type_checker.static_type_check_error)
 			else
 				name := a_type_checker.checked_expression; adopt_child_expression (name)
 			end			

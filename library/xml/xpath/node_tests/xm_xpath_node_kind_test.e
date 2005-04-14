@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			node_kind
+			node_kind, content_type
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
@@ -120,6 +120,16 @@ feature -- Access
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_shift_left (1, node_kind)
+		end
+
+	content_type: XM_XPATH_SCHEMA_TYPE is
+			-- Content type
+		do
+			if node_kind = Attribute_node then
+				create {XM_XPATH_ANY_SIMPLE_TYPE} Result.make 
+			else
+				Result := Precursor
+			end
 		end
 
 feature -- Status report

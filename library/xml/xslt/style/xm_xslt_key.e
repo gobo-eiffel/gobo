@@ -126,12 +126,11 @@ feature -- Element change
 			end
 			if not any_compile_errors and then use /= Void then
 				create a_type_checker
-				create a_role.make (Instruction_role, "xsl:key/use", 1)
+				create a_role.make (Instruction_role, "xsl:key/use", 1, Xpath_errors_uri, "XPTY0004")
 				create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
 				a_type_checker.static_type_check (static_context, use, an_atomic_type, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
-					report_compile_error (an_error)
+					report_compile_error (a_type_checker.static_type_check_error)
 				else
 					use := a_type_checker.checked_expression
 				end
@@ -191,12 +190,11 @@ feature -- Element change
 				else
 					create {XM_XPATH_ATOMIZER_EXPRESSION} use.make (last_generated_expression)
 					create a_type_checker
-					create a_role.make (Instruction_role, "xsl:key/use", 1)
+					create a_role.make (Instruction_role, "xsl:key/use", 1, Xpath_errors_uri, "XPTY0004")
 					create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_zero_or_more)
 					a_type_checker.static_type_check (static_context, use, an_atomic_type, False, a_role)
 					if a_type_checker.is_static_type_check_error	then
-						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
-						report_compile_error (an_error)
+						report_compile_error (a_type_checker.static_type_check_error)
 					else
 						use := a_type_checker.checked_expression
 					end

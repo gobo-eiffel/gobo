@@ -14,6 +14,11 @@ class XM_XSLT_FIXED_ELEMENT
 inherit
 
 	XM_XSLT_ELEMENT_CONSTRUCTOR
+		redefine
+			item_type, simplify
+		end
+
+	XM_XPATH_TOKENS
 
 creation
 
@@ -54,6 +59,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Data type of the expression, when known
+		do
+			if internal_item_type /= Void then
+				Result := internal_item_type
+			else
+				Result := Precursor
+			end
+		end
+
 	instruction_name: STRING is
 			-- Name of instruction, for diagnostics
 		do
@@ -86,6 +101,27 @@ feature -- Status report
 			content.display (a_level + 2)
 		end
 
+feature -- Optimization
+
+	simplify is
+			-- Perform context-free optimizations.
+		local
+			a_name_test: XM_XPATH_NAME_TEST
+			an_original_text: STRING
+			a_content_test: XM_XPATH_CONTENT_TYPE_TEST
+		do
+			
+			-- The following code will need modifying for a schema-aware processor:
+
+			an_original_text := STRING_.concat ("element(", shared_name_pool.display_name_from_name_code (fixed_name_code))
+			an_original_text := STRING_.appended_string (an_original_text, ")")
+			create a_name_test.make (Element_node, fixed_name_code, an_original_text)
+			create a_content_test.make (Element_node, type_factory.untyped_type)
+			create {XM_XPATH_COMBINED_NODE_TEST} internal_item_type.make (a_name_test, Intersect_token, a_content_test)
+			
+			Precursor
+		end
+
 feature {XM_XSLT_ELEMENT_CREATOR} -- Local
 
 	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER) is
@@ -114,6 +150,9 @@ feature {NONE} -- Implementation
 
 	namespace_code_list: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes
+
+	internal_item_type: XM_XPATH_ITEM_TYPE 
+			-- Data type of the expression, when known
 
 invariant
 

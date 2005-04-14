@@ -68,7 +68,7 @@ feature -- Optimization
 			else
 				if required_cardinality = Required_cardinality_zero_or_more then
 					set_replacement (base_expression)
-				elseif base_expression.cardinality_subsumes (required_cardinality) then
+				elseif base_expression.cardinality_subsumed_by (required_cardinality) then
 					set_replacement (base_expression)
 				end
 			end
@@ -105,7 +105,7 @@ feature -- Evaluation
 						end
 						if items > 1 then
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ",
-																																						 role_locator.message), Xpath_errors_uri, "XPTY0004", Type_error)
+																																						 role_locator.message), role_locator.namespace_uri, role_locator.error_code, Type_error)
 							finished := True
 						else
 							an_iterator.forth
@@ -116,7 +116,7 @@ feature -- Evaluation
 				if not an_iterator.is_error then
 					if items = 0 and then not is_cardinality_allows_zero (required_cardinality) then
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
-																																					 role_locator.message), Xpath_errors_uri, "XPTY0004", Type_error)
+																																					 role_locator.message), role_locator.namespace_uri, role_locator.error_code, Type_error)
 					end
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)

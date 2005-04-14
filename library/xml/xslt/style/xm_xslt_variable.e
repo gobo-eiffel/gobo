@@ -114,7 +114,9 @@ feature -- Element change
 				else
 					create a_local_variable.make (an_executable, variable_name, slot_number)
 					initialize_instruction (an_executable, a_local_variable)
+					
 					-- fixup_binding omitted, as that is done by `compile_variable'
+
 					last_generated_expression := a_local_variable
 				end
 			end

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			node_kind
+			node_kind, content_type
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
@@ -33,12 +33,12 @@ feature {NONE} -- Initialization
 			valid_type: a_type /= Void
 		do
 			node_kind := a_node_kind
-			content_type := a_type.fingerprint
+			content_type := a_type
 			original_text := a_type.description
 		ensure
 			node_kind_set: node_kind = a_node_kind
-			content_type_set: content_type = a_type.fingerprint
-			original_text_set: original_text = a_type.description
+			content_type_set: content_type = a_type
+			original_text_set: STRING_.same_string (original_text, a_type.description)
 		end
 
 feature -- Access
@@ -51,6 +51,9 @@ feature -- Access
 		do
 			Result := INTEGER_.bit_shift_left (1, node_kind)
 		end
+
+	content_type: XM_XPATH_SCHEMA_TYPE
+			-- Content type
 
 feature -- Status report
 
@@ -67,17 +70,11 @@ feature -- Matching
 		do
 			if node_kind /= a_node_kind then
 				Result := False
-			elseif a_node_type = content_type then
+			elseif a_node_type = content_type.fingerprint then
 				Result := True
 			else
 				Result := False
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	content_type: INTEGER
-			-- Required content type
-
 
 end

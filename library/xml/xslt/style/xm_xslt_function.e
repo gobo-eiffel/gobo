@@ -302,7 +302,6 @@ feature -- Element change
 			a_body: XM_XPATH_EXPRESSION
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
-			an_error: XM_XPATH_ERROR_VALUE
 		do
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), False)
 			a_body := last_generated_expression
@@ -312,12 +311,11 @@ feature -- Element change
 			a_body.analyze (static_context)
 			if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
 			if result_type /= Void then
-				create a_role.make (Function_result_role, function_name, 1)
+				create a_role.make (Function_result_role, function_name, 1, Xpath_errors_uri, "XPTY0004")
 				create a_type_checker
 				a_type_checker.static_type_check (static_context, a_body, result_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
-					report_compile_error (an_error)
+					report_compile_error (a_type_checker.static_type_check_error)
 				else
 					a_body := a_type_checker.checked_expression
 				end

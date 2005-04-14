@@ -272,11 +272,11 @@ feature -- Optimization
 
 					-- Start must be of type node()*
 					
-					create a_role.make (Binary_expression_role, "/", 1)
+					create a_role.make (Binary_expression_role, "/", 1, Xpath_errors_uri, "XPTY0019")
 					create a_node_sequence.make_node_sequence
 					a_type_checker.static_type_check (a_context, start, a_node_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0019", Type_error)
+						set_last_error (a_type_checker.static_type_check_error)
 					else
 						set_start (a_type_checker.checked_expression)
 						create an_offer.make (Focus_independent, Void, Current, False, start.context_document_nodeset)
@@ -301,16 +301,16 @@ feature -- Optimization
 									optimize (a_context, an_offer)
 								end
 							elseif is_atomic_item_type (step.item_type) then
-								create another_role.make (Binary_expression_role, "/", 2)
+								create another_role.make (Binary_expression_role, "/", 2, Xpath_errors_uri, "XPTY0018")
 								create an_atomic_sequence.make_atomic_sequence
 								a_type_checker.static_type_check (a_context, step, an_atomic_sequence, False, another_role)
 								if a_type_checker.is_static_type_check_error then
-									set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0019", Type_error)
+									set_last_error (a_type_checker.static_type_check_error)
 								else
 									set_step (a_type_checker.checked_expression)
 								end
 							else
-								create another_role.make (Binary_expression_role, "/", 2)
+								create another_role.make (Binary_expression_role, "/", 2, Xpath_errors_uri, "XPTY0018")
 								create a_homogeneous_checker.make (step, another_role)
 								set_step (a_homogeneous_checker)
 							end

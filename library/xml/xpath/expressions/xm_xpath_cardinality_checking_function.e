@@ -71,7 +71,7 @@ feature -- Evaluation
 			if a_stopper /= Void then
 				if a_position = 1 then
 					create an_invalid_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
-																											role_locator.message), Xpath_errors_uri, "XPTY0004", Type_error)
+																											role_locator.message),  role_locator.namespace_uri, role_locator.error_code, Type_error)
 					create last_mapped_item.make_item (an_invalid_item)
 				end
 
@@ -81,7 +81,7 @@ feature -- Evaluation
 			else -- no stopper
 				if a_position = 2 and then not is_cardinality_allows_many (required_cardinality) then
 					create an_invalid_item.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ",
-																											role_locator.message), Xpath_errors_uri, "XPTY0004", Type_error)
+																											role_locator.message), role_locator.namespace_uri, role_locator.error_code, Type_error)
 					create last_mapped_item.make_item (an_invalid_item)
 				else
 					create last_mapped_item.make_item (an_item)

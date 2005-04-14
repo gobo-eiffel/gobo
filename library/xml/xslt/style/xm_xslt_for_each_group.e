@@ -115,7 +115,6 @@ feature -- Element change
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			an_atomic_sequence, a_node_sequence: XM_XPATH_SEQUENCE_TYPE
-			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_within_template
 			check_sort_comes_first (False)
@@ -130,12 +129,11 @@ feature -- Element change
 				end
 				if not any_compile_errors then
 					create a_type_checker
-					create a_role.make (Instruction_role, "xsl:for-each-group/group-by", 1)
+					create a_role.make (Instruction_role, "xsl:for-each-group/group-by", 1, Xpath_errors_uri, "XPTY0004")
 					create an_atomic_sequence.make_atomic_sequence
 					a_type_checker.static_type_check (static_context, group_by, an_atomic_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error	then
-						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
-						report_compile_error (an_error)
+						report_compile_error (a_type_checker.static_type_check_error)
 					else
 						group_by := a_type_checker.checked_expression
 					end					
@@ -148,12 +146,11 @@ feature -- Element change
 				end
 				if not any_compile_errors then
 					create a_type_checker
-					create a_role.make (Instruction_role, "xsl:for-each-group/group-adjacent", 1)
+					create a_role.make (Instruction_role, "xsl:for-each-group/group-adjacent", 1, "", "XTTE1100")
 					create an_atomic_sequence.make_single_atomic
 					a_type_checker.static_type_check (static_context, group_adjacent, an_atomic_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error	then
-						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
-						report_compile_error (an_error)
+						report_compile_error (a_type_checker.static_type_check_error)
 					else
 						group_adjacent := a_type_checker.checked_expression
 					end					
@@ -167,12 +164,11 @@ feature -- Element change
 			end
 			if group_starting_with /= Void or else group_ending_with /= Void then
 				create a_type_checker
-				create a_role.make (Instruction_role, "xsl:for-each-group/select", 1)
+				create a_role.make (Instruction_role, "xsl:for-each-group/select", 1, "", "XTTE1120")
 				create a_node_sequence.make_node_sequence
 				a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XTTE1120", Type_error)
-					report_compile_error (an_error)
+					report_compile_error (a_type_checker.static_type_check_error)
 				end					
 			end
 			validated := True

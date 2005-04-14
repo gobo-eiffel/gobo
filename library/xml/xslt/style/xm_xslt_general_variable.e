@@ -266,15 +266,13 @@ feature -- Status setting
 		local
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
-			an_error: XM_XPATH_ERROR_VALUE
 		do
-			create a_role.make (Variable_role, variable_name, 1)
+			create a_role.make (Variable_role, variable_name, 1, "", "XTTE0570")
 			if select_expression /= Void then
 				create a_type_checker
 				a_type_checker.static_type_check (static_context, select_expression, a_required_type, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XTTE0570", Type_error)
-					report_compile_error (an_error)
+					report_compile_error (a_type_checker.static_type_check_error)
 				else
 					select_expression := a_type_checker.checked_expression
 				end
@@ -319,7 +317,6 @@ feature {NONE} -- Implementation
 			a_document: XM_XSLT_COMPILED_DOCUMENT
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
-			an_error: XM_XPATH_ERROR_VALUE
 			a_global_variable: XM_XSLT_GLOBAL_VARIABLE
 		do
 			a_variable.initialize_variable (select_expression, as_type, variable_fingerprint)
@@ -349,16 +346,16 @@ feature {NONE} -- Implementation
 						if select_expression.is_error then
 							report_compile_error (select_expression.error_value)
 						else
-							create a_role.make (Variable_role, variable_name, 1)
+							create a_role.make (Variable_role, variable_name, 1, "", "XTTE0570")
 							create a_type_checker
 							a_type_checker.static_type_check (static_context, select_expression, as_type, False, a_role)
 							if a_type_checker.is_static_type_check_error	then
-								create an_error.make_from_string(a_type_checker.static_type_check_error_message, "", "XTTE0570", Type_error)
-								report_compile_error (an_error)
+								report_compile_error (a_type_checker.static_type_check_error)
 							else
-								a_variable.set_selector (a_type_checker.checked_expression)
+								select_expression := a_type_checker.checked_expression
 							end
 						end
+						a_variable.set_selector (select_expression)
 					end
 				end
 			end

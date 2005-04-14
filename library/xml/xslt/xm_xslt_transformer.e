@@ -196,7 +196,10 @@ feature -- Status setting
 		require
 			error_not_void: an_error /= Void
 		do
-			if an_error.type = Type_error then
+			if an_error.type = Type_error or else (an_error.type = Dynamic_error and then an_error.namespace_uri.count = 0 and then an_error.code.substring (1, 4).is_equal ("XTDE")) then
+
+				-- XSLT recoverable error codes start with XTRE, not XTDE
+
 				report_fatal_error (an_error, a_locator)
 			else
 				error_listener.error (an_error, a_locator)

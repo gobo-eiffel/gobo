@@ -15,7 +15,7 @@ inherit
 
 	XM_XSLT_ELEMENT_CONSTRUCTOR
 		redefine
-			simplify, analyze, sub_expressions, promote_instruction
+			simplify, analyze, sub_expressions, promote_instruction, item_type
 		end
 
 creation
@@ -62,6 +62,16 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+	
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Data type of the expression, when known
+		do
+			if internal_item_type /= Void then
+				Result := internal_item_type
+			else
+				Result := Precursor
+			end
+		end
 	
 	instruction_name: STRING is
 			-- Name of instruction, for diagnostics
@@ -191,6 +201,11 @@ feature -- Optimization
 					adopt_child_expression (namespace)
 				end
 			end
+
+			-- The following code will need modifying for a schema-aware processor:
+
+			create {XM_XPATH_CONTENT_TYPE_TEST} internal_item_type.make (Element_node, type_factory.untyped_type)
+			
 			Precursor
 		end
 
@@ -205,12 +220,12 @@ feature -- Optimization
 			if element_name.was_expression_replaced then
 				element_name := element_name.replacement_expression
 			end
-			create a_role.make (Instruction_role, "xsl:element/name", 1)
+			create a_role.make (Instruction_role, "xsl:element/name", 1, Xpath_errors_uri, "XPTY0004")
 			create a_type_checker
 			create a_single_string_type.make_single_string
 			a_type_checker.static_type_check (a_context, element_name, a_single_string_type, False, a_role)
 			if a_type_checker.is_static_type_check_error then
-				set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+				set_last_error (a_type_checker.static_type_check_error)
 			else
 				element_name := (a_type_checker.checked_expression)
 				adopt_child_expression (element_name)
@@ -220,11 +235,11 @@ feature -- Optimization
 				if namespace.was_expression_replaced then
 					namespace := namespace.replacement_expression
 				end
-				create a_role.make (Instruction_role, "xsl:element/namespace", 1)
+				create a_role.make (Instruction_role, "xsl:element/namespace", 1, Xpath_errors_uri, "XPTY0004")
 				create a_type_checker
 				a_type_checker.static_type_check (a_context, namespace, a_single_string_type, False, a_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+					set_last_error (a_type_checker.static_type_check_error)
 				else
 					namespace := (a_type_checker.checked_expression)
 					adopt_child_expression (namespace)
@@ -270,6 +285,9 @@ feature {NONE} -- Implementation
 
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			-- namespace context
+
+	internal_item_type: XM_XPATH_ITEM_TYPE 
+			-- Data type of the expression, when known
 
 invariant
 

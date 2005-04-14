@@ -100,7 +100,6 @@ feature -- Element change
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_single_node: XM_XPATH_SEQUENCE_TYPE
-			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_within_template
 			check_empty
@@ -110,12 +109,11 @@ feature -- Element change
 					select_expression := select_expression.replacement_expression
 				end
 				create a_type_checker
-				create a_role.make (Instruction_role, "xsl:number/select", 1)
+				create a_role.make (Instruction_role, "xsl:number/select", 1, Xpath_errors_uri, "XPTY0004")
 				create a_single_node.make_single_node
 				a_type_checker.static_type_check (static_context, select_expression, a_single_node, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
-					report_compile_error (an_error)
+					report_compile_error (a_type_checker.static_type_check_error)
 				else
 					select_expression := a_type_checker.checked_expression
 				end

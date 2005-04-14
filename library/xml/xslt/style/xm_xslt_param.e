@@ -175,11 +175,11 @@ feature -- Element change
 				a_slot_number := slot_number
 				if as_type /= Void then
 					create a_type_checker
-					create a_role.make (Variable_role, variable_name, 1)
+					create a_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XPTY0004")
 					create a_supplied_parameter_reference.make (a_slot_number)
 					a_type_checker.static_type_check (static_context, a_supplied_parameter_reference, as_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, "", "XPTY0004", Type_error)
+						report_compile_error (a_type_checker.static_type_check_error)
 					else
 						a_conversion := a_type_checker.checked_expression
 					end

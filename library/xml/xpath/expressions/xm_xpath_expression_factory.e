@@ -18,6 +18,8 @@ inherit
 
 	XM_XPATH_ERROR_TYPES
 
+	XM_XPATH_DEBUGGING_ROUTINES
+
 	KL_SHARED_STANDARD_FILES
 
 feature -- Access
@@ -103,9 +105,9 @@ feature -- Creation
 			sequence_not_void: a_sequence /= Void
 			sequence_type_not_void: a_sequence_type /= Void
 		do
-			-- TODO
+			todo ("created_treat_expression", False)
 		ensure
-			-- result_not_void: Result /= Void
+			result_not_void: Result /= Void
 		end
 
 	created_item_position_iterator (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_min, a_max: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is

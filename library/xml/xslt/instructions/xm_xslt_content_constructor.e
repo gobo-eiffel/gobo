@@ -132,7 +132,7 @@ feature -- Evaluation
 	
 				select_expression.evaluate_item (a_context)
 				if select_expression.last_evaluated_item /= Void then
-					if select_expression.is_error then
+					if select_expression.last_evaluated_item.is_error then
 						last_evaluated_item := select_expression.last_evaluated_item
 					else
 						a_string_value ?= select_expression.last_evaluated_item

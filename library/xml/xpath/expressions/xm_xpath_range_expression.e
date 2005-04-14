@@ -78,17 +78,17 @@ feature -- Optimization
 					set_last_error (second_operand.error_value)
 				else
 					create a_sequence_type.make_optional_integer
-					create a_role.make (Binary_expression_role, "to", 1)
+					create a_role.make (Binary_expression_role, "to", 1, Xpath_errors_uri, "XPTY0004")
 					create a_type_checker
 					a_type_checker.static_type_check (a_context, first_operand, a_sequence_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
-						set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+						set_last_error (a_type_checker.static_type_check_error)
 					else
 						set_first_operand (a_type_checker.checked_expression)
-						create another_role.make (Binary_expression_role, "to", 2)
+						create another_role.make (Binary_expression_role, "to", 2, Xpath_errors_uri, "XPTY0004")
 						a_type_checker.static_type_check (a_context, second_operand, a_sequence_type, False, another_role)
 						if a_type_checker.is_static_type_check_error then
-							set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+							set_last_error (a_type_checker.static_type_check_error)
 						else
 							set_second_operand (a_type_checker.checked_expression)
 							simplify

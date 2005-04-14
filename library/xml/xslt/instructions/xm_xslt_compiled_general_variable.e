@@ -105,7 +105,7 @@ feature -- Status setting
 feature -- Optimization
 
 	simplify is
-			-- Preform context-independent static optimizations
+			-- Perform context-independent static optimizations
 		do
 			if select_expression /= Void then
 				select_expression.simplify
@@ -201,13 +201,13 @@ feature {NONE} -- Implementation
 		do
 
 			-- N.B. Sometimes this check gets performed more than once
-			
+
 			if required_type /= Void and then select_expression /= Void then
-				create a_role.make (Variable_role, variable_name, 1)
+				create a_role.make (Variable_role, variable_name, 1, "", "XTTE0570")
 				create a_type_checker
 				a_type_checker.static_type_check (a_context, select_expression, required_type, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					set_last_error_from_string(a_type_checker.static_type_check_error_message, "", "XTTE0570", Type_error)
+					set_last_error (a_type_checker.static_type_check_error)
 				else
 					set_selector (a_type_checker.checked_expression)
 				end

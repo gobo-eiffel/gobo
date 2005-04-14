@@ -67,17 +67,17 @@ feature -- Optimization
 			-- TODO: this is using the function call rules. Arithetic expressions have slightly different rules.
 
 			create a_sequence_type.make_optional_atomic
-			create a_role.make (Binary_expression_role, token_name (operator), 1)
+			create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
 			create a_type_checker
 			a_type_checker.static_type_check (a_context, first_operand, a_sequence_type, is_backwards_compatible_mode, a_role)
 			if a_type_checker.is_static_type_check_error then
-				set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+				set_last_error (a_type_checker.static_type_check_error)
 			else
 				set_first_operand (a_type_checker.checked_expression)
-				create another_role.make (Binary_expression_role, token_name (operator), 2)
+				create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
 				a_type_checker.static_type_check (a_context, second_operand, a_sequence_type, is_backwards_compatible_mode, another_role)
 				if a_type_checker.is_static_type_check_error then
-					set_last_error_from_string (a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
+					set_last_error (a_type_checker.static_type_check_error)
 				else
 					set_second_operand (a_type_checker.checked_expression)
 					Precursor (a_context)

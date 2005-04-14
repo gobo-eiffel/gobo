@@ -1799,15 +1799,17 @@ feature -- Element change
 					create a_string_value.make (a_node.string_value)
 					create a_text.make (an_executable, a_string_value, False)
 					a_text.set_source_location (containing_stylesheet.module_number (a_node.system_id), a_line_number)
-					compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
-					if last_generated_expression = Void then
-						last_generated_expression := a_text
-					else
-						create a_block.make (an_executable, a_text, last_generated_expression)
-						a_block.set_source_location (containing_stylesheet.module_number (a_node.system_id), a_line_number)
-						last_generated_expression := a_block
+					if not is_error and then not any_compile_errors then
+						compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
+						if last_generated_expression = Void then
+							last_generated_expression := a_text
+						else
+							create a_block.make (an_executable, a_text, last_generated_expression)
+							a_block.set_source_location (containing_stylesheet.module_number (a_node.system_id), a_line_number)
+							last_generated_expression := a_block
+						end
 					end
-				else 
+				elseif not is_error and then not any_compile_errors then
 					a_variable ?= a_node
 					if a_variable /= Void then
 						compile_variable (an_executable, a_variable, an_axis_iterator, include_parameters)
@@ -1838,35 +1840,37 @@ feature -- Element change
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_variable.compile (an_executable)
-			if a_variable.last_generated_expression = Void then
-				
-				-- i.e. a redundant variable, so compile everything after it:
-
-				compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
-			else
-				a_local_variable ?= a_variable.last_generated_expression
-				check
-					local_variable: a_local_variable /= Void
-					-- `a_variable' is local, since we are compiling a sequence constructor
-				end
-				compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
-				if last_generated_expression /= Void then
-					a_required_type := a_local_variable.required_type
-					if a_required_type = Void then create a_required_type.make_any_sequence end
-					create a_range_variable.make (a_local_variable.variable_name, a_local_variable.variable_fingerprint, a_required_type)
-					a_range_variable.set_reference_list (a_variable.references)
-					an_expression := a_local_variable.select_expression
-					if an_expression = Void then create {XM_XPATH_EMPTY_SEQUENCE} an_expression.make end
-					create a_let_expression.make (a_range_variable, an_expression, last_generated_expression)
-					a_let_expression.set_slot_number (a_local_variable.slot_number)
-					a_variable.fixup_binding (a_let_expression)
-					a_let_expression.set_source_location (containing_stylesheet.module_number (a_variable.system_id), a_variable.line_number)
-					-- TODO: tracing
-					last_generated_expression := a_let_expression
+			if not is_error and then not any_compile_errors then
+				if a_variable.last_generated_expression = Void then
+					
+					-- i.e. a redundant variable, so compile everything after it:
+					
+					compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
 				else
+					a_local_variable ?= a_variable.last_generated_expression
 					check
-						local_variable_without_following_instructions: False
-						-- because in that case, the variable's compile would have done nothing
+						local_variable: a_local_variable /= Void
+						-- `a_variable' is local, since we are compiling a sequence constructor
+					end
+					compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
+					if last_generated_expression /= Void then
+						a_required_type := a_local_variable.required_type
+						if a_required_type = Void then create a_required_type.make_any_sequence end
+						create a_range_variable.make (a_local_variable.variable_name, a_local_variable.variable_fingerprint, a_required_type)
+						a_range_variable.set_reference_list (a_variable.references)
+						an_expression := a_local_variable.select_expression
+						if an_expression = Void then create {XM_XPATH_EMPTY_SEQUENCE} an_expression.make end
+						create a_let_expression.make (a_range_variable, an_expression, last_generated_expression)
+						a_let_expression.set_slot_number (a_local_variable.slot_number)
+						a_variable.fixup_binding (a_let_expression)
+						a_let_expression.set_source_location (containing_stylesheet.module_number (a_variable.system_id), a_variable.line_number)
+						-- TODO: tracing
+						last_generated_expression := a_let_expression
+					else
+						check
+							local_variable_without_following_instructions: False
+							-- because in that case, the variable's compile would have done nothing
+						end
 					end
 				end
 			end

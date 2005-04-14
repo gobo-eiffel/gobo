@@ -39,7 +39,7 @@ feature -- Access
 			finished: BOOLEAN
 		do
 			
-			-- Remove any inlined variable references
+			-- Remove any inlined variable references and replacements
 			
 			from
 				a_cursor := a_reference_list.new_cursor; a_cursor.finish
@@ -49,7 +49,7 @@ feature -- Access
 				a_cursor.before
 			loop
 				a_variable_reference ?= a_cursor.item
-				if a_variable_reference /= Void and then a_variable_reference.binding = Void then
+				if a_variable_reference /= Void and then not a_variable_reference.was_expression_replaced and then a_variable_reference.binding = Void then
 					a_cursor.remove
 				end
 				a_cursor.back
@@ -59,9 +59,6 @@ feature -- Access
 				a_variable_reference ?= a_reference_list.item (1)
 				if a_variable_reference /= Void then
 					from
-						check
-							variable_reference_not_replaced: not a_variable_reference.was_expression_replaced
-						end
 						a_child := a_variable_reference
 						a_container := a_variable_reference.container
 					until
@@ -71,12 +68,12 @@ feature -- Access
 							
 							-- If the variable reference occurs in a subexpression that is evaluated repeatedly,
 							--  for example in the predicate of a filter expression, then return `Many_references'.
-
+							
 							a_computed_expression ?= a_container
 							if a_computed_expression.was_expression_replaced then
-
+								
 								-- dodgy - give up attempting to optimize
-
+								
 								finished := True;	Result := Many_references
 							end
 							an_assignation ?= a_computed_expression

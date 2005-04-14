@@ -2022,6 +2022,8 @@ feature {NONE} -- Implementation
 			-- Create a node kind test
 		require
 			type_name_not_void: a_type_name /= Void
+		local
+			is_attribute, is_schema_declaration: BOOLEAN
 		do
 			if STRING_.same_string (a_type_name, "item") then
 				report_parse_error ("item() is not allowed in a path expression", "XPST0003")
@@ -2037,8 +2039,11 @@ feature {NONE} -- Implementation
 				create_document_node_kind_test (is_empty)
 			elseif STRING_.same_string (a_type_name, "processing-instruction") then
 				create_processing_instruction_node_kind_test (is_empty)
-			elseif STRING_.same_string (a_type_name, "element") or else STRING_.same_string (a_type_name, "attribute") then
-				create_named_node_kind_test (is_empty, STRING_.same_string (a_type_name, "attribute"))
+			elseif STRING_.same_string (a_type_name, "element") or else STRING_.same_string (a_type_name, "attribute")
+				or else STRING_.same_string (a_type_name, "schema-element") or else STRING_.same_string (a_type_name, "schema-attribute") then
+				is_schema_declaration := STRING_.same_string (a_type_name.substring (1, 7), "schema-")
+				is_attribute := STRING_.same_string (a_type_name.substring (a_type_name.count - 6, a_type_name.count), "tribute")
+				create_named_node_kind_test (is_empty, is_attribute, is_schema_declaration)
 			else
 				report_parse_error ("unknown node kind", "XPST0003") -- This is supposed not to happen - empty()??
 			end
@@ -2084,11 +2089,31 @@ feature {NONE} -- Implementation
 
 	create_document_node_kind_test (is_empty: BOOLEAN) is
 			-- Create a node kind test that matches the specified document node(s).
+		local
+			a_message: STRING
 		do
 			if is_empty then
 				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_document_test
 			elseif STRING_.same_string (tokenizer.last_token_value, "element") then
-				report_parse_error ("document-node(...) is not yet implemented. Sorry.", "XPST0003")
+				parse_node_kind_test
+				if not is_parse_error then
+					create {XM_XPATH_DOCUMENT_NODE_TEST} internal_last_parsed_node_test.make (internal_last_parsed_node_test)
+					next_token ("create_document_node_kind_test ")
+					if tokenizer.is_lexical_error then
+						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+					else
+						if tokenizer.last_token /= Right_parenthesis_token then
+							a_message := "expected %")%", found "
+			            a_message := STRING_.appended_string (a_message, display_current_token)
+							report_parse_error (a_message, "XPST0003")
+						else
+							next_token ("create_document_node_kind_test 2.")
+							if tokenizer.is_lexical_error then
+								report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+							end
+						end
+					end
+				end
 			else
 				report_parse_error ("Argument to document-node() must be an element type descriptor", "XPST0003")
 			end
@@ -2169,22 +2194,90 @@ feature {NONE} -- Implementation
 			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
 		end
 
-	create_named_node_kind_test (is_empty, is_attribute: BOOLEAN) is
+	create_named_node_kind_test (is_empty, is_attribute, is_schema_declaration: BOOLEAN) is
 			-- Create a node kind test that matches the specified element or attribute node(s).
+		local
+			a_name_code: INTEGER
+			a_message, a_node_name: STRING
 		do
+			a_node_name := ""
+			internal_last_parsed_node_test := Void
 			if is_empty then
 				if is_attribute then
 					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_attribute_test
+				elseif is_schema_declaration then
+					report_parse_error ("schema-attribute(...) or schema-element(...) require a name within the parentheses.", "XPST0003")
 				else
 					create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_element_test
 				end
+			elseif tokenizer.last_token = Star_token or else tokenizer.last_token = Multiply_token then
+				if is_schema_declaration then
+					report_parse_error ("schema-attribute(...) or schema-element(...) require a QName, not *.", "XPST0003")
+				else
+					a_name_code := -1
+				end
+			elseif tokenizer.last_token = Name_token then
+				a_node_name := tokenizer.last_token_value
+				generate_name_code (a_node_name, True)
+				a_name_code := last_generated_name_code
 			else
-				report_parse_error ("attribute(...) or element(...) is not yet implemented. Sorry.", "XPST0003")
+				a_message := STRING_.concat ("Unexpected ", display_current_token)
+				a_message := STRING_.appended_string (a_message, " after '(' in named node-kind test.")
+				report_parse_error (a_message, "XPST0003")
+			end
+			if not is_parse_error and then internal_last_parsed_node_test = Void then
+				next_token ("In create_named_node_kind_test")
+				if tokenizer.is_lexical_error then
+					report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+				elseif tokenizer.last_token = Right_parenthesis_token then
+					next_token ("In create_named_node_kind_test after ')'")
+					if a_name_code = -1 then
+						if is_attribute then
+							create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_attribute_test
+						else
+							create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_element_test
+						end
+					else
+						if is_schema_declaration then
+							report_parse_error ("schema-attribute(...) or schema-element(...) not supported with a Basic-level XSLT processor.", "XPST0003")
+						else
+							create_bare_name_node_kind_test (a_name_code, a_node_name, is_attribute)
+						end
+					end
+				elseif tokenizer.last_token = Comma_token then
+						report_parse_error ("Named node-kind tests with type name not implemented yet. Sorry.", "XPST0003")
+				else
+					a_message := STRING_.concat ("Expected ',' or ')', found ", display_current_token)
+					a_message := STRING_.appended_string (a_message, " in named node-kind test.")
+					report_parse_error (a_message, "XPST0003")
+				end
+			end
+		ensure
+			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
+		end
+	
+	create_bare_name_node_kind_test (a_name_code: INTEGER; a_node_name: STRING; is_attribute: BOOLEAN) is
+			-- Create a node kind test that matches the specified element or attribute name.
+		require
+			positive_name_code: a_name_code >= 0
+			node_name_not_void: a_node_name /= Void
+		local
+			an_original_text: STRING
+		do
+			if is_attribute then
+				an_original_text := STRING_.concat ("attribute(", a_node_name)
+				an_original_text := STRING_.appended_string (an_original_text, ")")
+				create  {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (Attribute_node, a_name_code, an_original_text)
+			else
+				an_original_text := STRING_.concat ("element(", a_node_name)
+				an_original_text := STRING_.appended_string (an_original_text, ")")
+				create  {XM_XPATH_NAME_TEST} internal_last_parsed_node_test.make (Element_node, a_name_code, an_original_text)
 			end
 		ensure
 			node_test: not is_parse_error implies internal_last_parsed_node_test /= Void
 		end
 
+			
 	tokenizer: XM_XPATH_TOKENIZER
 			-- Lexical scanner
 	

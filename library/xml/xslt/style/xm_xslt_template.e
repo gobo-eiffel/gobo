@@ -223,7 +223,6 @@ feature -- Element change
 			a_content: XM_XPATH_EXPRESSION
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_role: XM_XPATH_ROLE_LOCATOR
-			an_error: XM_XPATH_ERROR_VALUE
 		do
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
 			if last_generated_expression = Void then
@@ -237,12 +236,11 @@ feature -- Element change
 			else
 				if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
 				if required_type /= Void then
-					create a_role.make (Template_result_role, role_identifier, 1)
+					create a_role.make (Template_result_role, role_identifier, 1, Xpath_errors_uri, "XPTY0004")
 					create a_type_checker
 					a_type_checker.static_type_check (static_context, a_content, required_type, False, a_role)
 					if a_type_checker.is_static_type_check_error	then
-						create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
-						report_compile_error (an_error)
+						report_compile_error (a_type_checker.static_type_check_error)
 					else
 						a_content := a_type_checker.checked_expression
 					end	

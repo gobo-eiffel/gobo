@@ -143,7 +143,7 @@ feature -- Evaluation
 			else
 				a_value ?= base_expression.last_evaluated_item
 				if a_value /= Void then
-					promote_number (a_value, a_context)
+					promote_number (a_value)
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",
 																				Xpath_errors_uri, "XPTY0004", Type_error)
@@ -172,7 +172,7 @@ feature -- Evaluation
 		do
 			a_value ?= an_item
 			if a_value /= Void then
-				promote_number (a_value, a_context)
+				promote_number (a_value)
 			else
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",
 																	  Xpath_errors_uri, "XPTY0004", Dynamic_error)
@@ -190,11 +190,10 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	promote_number (an_atomic_value: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT) is
+	promote_number (an_atomic_value: XM_XPATH_ATOMIC_VALUE) is
 			-- Promote of `an_atomic_value'.
 		require
 			atomic_value_not_void: an_atomic_value /= Void
-			context_not_void: a_context /= Void
 			no_previous_error: not is_error
 		local
 			a_primitive_value: XM_XPATH_ATOMIC_VALUE

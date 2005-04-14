@@ -147,7 +147,7 @@ feature -- Element change
 				a_cursor.after
 			loop
 				a_variable_reference ?= a_cursor.item
-				if a_variable_reference /= Void then
+				if a_variable_reference /= Void and then not a_variable_reference.was_expression_replaced then
 					old_item_type := a_variable_reference.item_type
 					new_item_type := old_item_type
 					if is_sub_type (a_type, old_item_type) then

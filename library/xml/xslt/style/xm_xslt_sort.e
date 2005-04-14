@@ -227,7 +227,6 @@ feature {NONE} -- Implementation
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_role: XM_XPATH_ROLE_LOCATOR
 			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
-			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if select_expression /= Void then
 				type_check_expression ("select", select_expression)
@@ -260,13 +259,12 @@ feature {NONE} -- Implementation
 				end
 			end
 			if select_expression /= Void then
-				create a_role.make (Instruction_role, "xsl:sort/select", 1)
+				create a_role.make (Instruction_role, "xsl:sort/select", 1, Xpath_errors_uri, "XPTY0004")
 				create a_type_checker
 				create an_atomic_sequence.make_atomic_sequence
 				a_type_checker.static_type_check (static_context, select_expression, an_atomic_sequence, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
-					create an_error.make_from_string(a_type_checker.static_type_check_error_message, Xpath_errors_uri, "XPTY0004", Type_error)
-					report_compile_error (an_error)
+					report_compile_error (a_type_checker.static_type_check_error)
 				else
 					select_expression := a_type_checker.checked_expression
 					create sort_key_definition.make (select_expression, order, case_order, language, data_type, collation_name)

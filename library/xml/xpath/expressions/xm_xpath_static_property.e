@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_CARDINALITY
 
+	KL_IMPORTED_INTEGER_ROUTINES
+
 	KL_SHARED_STANDARD_FILES
 
 feature -- Status report
@@ -561,6 +563,12 @@ feature -- Cardinality
 			end
 		end
 
+	cardinality_subsumed_by (requested_cardinality: INTEGER): BOOLEAN is
+			-- Are all cardinality options of `Current' permitted by `requested_cardinality'?
+		do
+			Result := INTEGER_.bit_or (requested_cardinality, cardinality) = requested_cardinality
+		end
+
 	occurence_indicator: STRING is
 			-- Text of the occurence-indicator
 		do
@@ -650,9 +658,11 @@ feature -- Setting cardinality
 		do
 			if not are_cardinalities_computed then
 				create cardinalities.make (1,3)
-				cardinalities.put (True, 1)
 				are_cardinalities_computed := True
 			end
+			cardinalities.put (True, 1)
+			cardinalities.put (False, 2)
+			cardinalities.put (False, 3)
 		ensure
 			cardinalities_computed: are_cardinalities_computed
 		end
