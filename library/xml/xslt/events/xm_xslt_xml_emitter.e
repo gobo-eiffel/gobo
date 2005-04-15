@@ -208,7 +208,6 @@ feature -- Events
 		local
 			a_bad_character: INTEGER
 			a_mapped_string: STRING
-			an_error: XM_XPATH_ERROR_VALUE
 		do
 			debug ("XSLT stripper")
 				std.error.put_string ("Is start tag open? " + is_open_start_tag.out)

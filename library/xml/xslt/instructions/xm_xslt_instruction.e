@@ -190,7 +190,6 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item.
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
 			another_context: XM_XSLT_EVALUATION_CONTEXT
 		do

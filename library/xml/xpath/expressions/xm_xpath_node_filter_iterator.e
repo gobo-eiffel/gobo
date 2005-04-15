@@ -151,9 +151,6 @@ feature {NONE} -- Implementation
 			an_item: XM_XPATH_ITEM
 			a_node: XM_XPATH_NODE
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			an_integer_value: XM_XPATH_INTEGER_VALUE
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			last_match_test := False
 			if non_numeric then

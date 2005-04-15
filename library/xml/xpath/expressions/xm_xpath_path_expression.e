@@ -76,8 +76,6 @@ feature -- Access
 	
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
-		local
-			a_step_type: XM_XPATH_ITEM_TYPE
 		do
 			Result := step.item_type
 			if Result /= Void then
@@ -802,10 +800,6 @@ feature {NONE} -- Implementation
 			-- This causes them to be evaluated once, outside the path  expression.
 		require
 			promotion_offer_not_void: an_offer /= Void
-		local
-			an_expression: XM_XPATH_EXPRESSION
-			a_let_expression: XM_XPATH_LET_EXPRESSION
-			a_path: XM_XPATH_PATH_EXPRESSION
 		do
 			step.promote (an_offer)
 			if step.was_expression_replaced then

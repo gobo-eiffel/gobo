@@ -46,7 +46,6 @@ feature -- Evaluation
 		local
 			a_splitter: ST_SPLITTER
 			some_idrefs: DS_LIST [STRING]
-			a_document: XM_XPATH_DOCUMENT
 			an_element: XM_XPATH_ELEMENT
 		do
 			create a_splitter.make

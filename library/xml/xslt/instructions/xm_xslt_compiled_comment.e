@@ -80,7 +80,6 @@ feature -- Evaluation
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_comment, a_string: STRING
 			a_comment_marker_index: INTEGER
-			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_transformer := a_context.transformer
 			expand_children (a_context)

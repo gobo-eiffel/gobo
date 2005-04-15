@@ -366,7 +366,6 @@ feature -- Evaluation
 			a_result_value: XM_XPATH_VALUE
 			a_closure: XM_XPATH_CLOSURE
 			an_extent: XM_XPATH_SEQUENCE_EXTENT
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
 			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
