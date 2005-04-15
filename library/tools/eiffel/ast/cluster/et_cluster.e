@@ -83,9 +83,16 @@ feature -- Status report
 			-- of current cluster?
 		require
 			a_cluster_not_void: a_cluster /= Void
+		local
+			l_parent: ET_CLUSTER
 		do
-			if subclusters /= Void then
-				Result := subclusters.has_subcluster (a_cluster)
+			from
+				l_parent := a_cluster.parent
+			until
+				l_parent = Void or Result
+			loop
+				Result := l_parent = Current
+				l_parent := l_parent.parent
 			end
 		end
 
