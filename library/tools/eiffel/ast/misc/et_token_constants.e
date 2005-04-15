@@ -1352,7 +1352,7 @@ feature -- Keyword and symbol names
 	times_symbol_name: STRING is "*"
 			-- Eiffel symbol names
 
-	unknown_name: STRING is "***UNKNOWN_NAME***"
+	unknown_name: STRING is "***unknown_name***"
 			-- Unknown name
 
 feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be removed later)
