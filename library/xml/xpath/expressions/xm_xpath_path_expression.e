@@ -396,6 +396,7 @@ feature -- Evaluation
 		local
 			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 			a_node: XM_XPATH_NODE
+			a_tree_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TREE_NODE]
 		do
 			step.create_iterator (a_context)
 			a_singleton_iterator ?= step.last_iterator
@@ -412,6 +413,12 @@ feature -- Evaluation
 				end
 			else
 				last_node_iterator ?= step.last_iterator
+				if last_node_iterator = Void then
+						-- Workaround a bug with assignment attempts and generics
+						-- in VE 4.1 and 5.0b reported on 15 April 2005.
+					a_tree_node_iterator ?= step.last_iterator
+					last_node_iterator := a_tree_node_iterator
+				end
 			end
 			check
 				node_iterator: last_node_iterator /= Void
