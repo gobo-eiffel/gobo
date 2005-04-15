@@ -97,6 +97,13 @@ feature -- Access
 			end
 		end
 
+	lower_name: STRING is
+			-- Lower-name of feature
+			-- (May return the same object as `name' if already in lower case.)
+		do
+			Result := name
+		end
+
 	hash_code: INTEGER is
 			-- Hash code
 		do

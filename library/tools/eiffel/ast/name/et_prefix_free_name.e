@@ -18,7 +18,7 @@ inherit
 
 	ET_PREFIX_NAME
 		undefine
-			name, hash_code, same_feature_name
+			name, lower_name, hash_code, same_feature_name
 		redefine
 			process
 		end

@@ -18,7 +18,7 @@ inherit
 		undefine
 			hash_code
 		redefine
-			name, same_feature_name
+			name, lower_name, same_feature_name
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -32,6 +32,26 @@ feature -- Access
 			Result.append_string (prefix_double_quote)
 			Result.append_string (free_operator_name)
 			Result.append_character ('%"')
+		end
+
+	lower_name: STRING is
+			-- Lower-name of feature
+			-- (May return the same object as `name' if already in lower case.)
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			Result := name
+			nb := Result.count
+			from i := 1 until i > nb loop
+				c := Result.item (i)
+				if c >= 'A' and c <= 'Z' then
+					Result := Result.as_lower
+					i := nb + 1 -- Jump out of the loop.
+				else
+					i := i + 1
+				end
+			end
 		end
 
 	free_operator_name: STRING is

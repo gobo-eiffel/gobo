@@ -57,6 +57,16 @@ feature -- Access
 			name_not_empty: Result.count > 0
 		end
 
+	lower_name: STRING is
+			-- Lower-name of feature
+			-- (May return the same object as `name' if already in lower case.)
+		deferred
+		ensure
+			lower_name_not_void: Result /= Void
+			lower_name_not_empty: Result.count > 0
+			definition: Result.is_equal (name.as_lower)
+		end
+
 	seed: INTEGER
 			-- One of the seeds of feature in enclosing class
 

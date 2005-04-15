@@ -156,10 +156,6 @@ feature -- Access
 					i := i + 1
 				end
 			end
-		ensure
-			lower_name_not_void: Result /= Void
-			lower_name_not_empty: Result.count > 0
-			definition: Result.is_equal (name.as_lower)
 		end
 
 	upper_name: STRING is
