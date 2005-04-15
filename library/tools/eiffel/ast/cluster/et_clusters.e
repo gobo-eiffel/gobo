@@ -74,6 +74,40 @@ feature -- Status report
 			end
 		end
 
+	has_subcluster_by_name (a_names: ARRAY [STRING]): BOOLEAN is
+			-- Is there a subcluster (recursively) named `a_names' in current clusters?
+			-- Do not take into account missing implicit subclusters.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not STRING_ARRAY_.has (a_names, Void)
+			-- no_empty_name: forall n in a_names, n.count > 0
+		local
+			l_name: STRING
+			i, nb: INTEGER
+			l_clusters: ET_CLUSTERS
+			l_cluster: ET_CLUSTER
+		do
+			Result := True
+			l_clusters := Current
+			i := a_names.lower
+			nb := a_names.upper
+			from until i > nb loop
+				if l_clusters /= Void then
+					l_name := a_names.item (i)
+					l_cluster := l_clusters.cluster_by_name (l_name)
+				else
+					l_cluster := Void
+				end
+				if l_cluster /= Void then
+					l_clusters := l_cluster.subclusters
+					i := i + 1
+				else
+					Result := False
+					i := nb + 1 -- Jump out of the loop.
+				end
+			end
+		end
+
 feature -- Access
 
 	cluster (i: INTEGER): ET_CLUSTER is
