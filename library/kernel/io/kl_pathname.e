@@ -163,8 +163,9 @@ feature -- Element change
 					if is_current (i) then
 						-- Ignore current directory components.
 					elseif is_parent (i) then
-						if i = 1 or else is_parent (i - 1) then
+						if j = 1 or else is_parent (j - 1) then
 								-- Leading parent directory component.
+							components.put (item (i), j)
 							j := j + 1
 						else
 								-- Consume parent directory: go one
@@ -182,6 +183,9 @@ feature -- Element change
 				from until j > nb loop
 					components.put (Void, j)
 					j := j + 1
+				end
+				if is_relative and count = 0 then
+					append_current
 				end
 			end
 		end
