@@ -317,6 +317,19 @@ feature -- Status report
 			end
 		end
 
+	has_cluster_by_name (a_names: ARRAY [STRING]): BOOLEAN is
+			-- Is there a cluster named `a_names' in universe?
+			-- Do not take into account missing implicit subclusters.
+		require
+			a_names_not_void: a_names /= Void
+			no_void_name: not STRING_ARRAY_.has (a_names, Void)
+			-- no_empty_name: forall n in a_names, n.count > 0
+		do
+			if clusters /= Void then
+				Result := clusters.has_subcluster_by_name (a_names)
+			end
+		end
+
 	is_preparsed: BOOLEAN
 			-- Has the whole universe already been preparsed?
 
