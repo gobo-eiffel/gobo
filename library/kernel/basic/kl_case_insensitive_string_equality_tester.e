@@ -27,8 +27,10 @@ feature -- Status report
 			-- Are `s1' and `s2' considered equal?
 			-- Use case-insensitive comparison.
 		do
-			if s1 = Void then
-				Result := (s2 = Void)
+			if s1 = s2 then
+				Result := True
+			elseif s1 = Void then
+				Result := False
 			elseif s2 = Void then
 				Result := False
 			else

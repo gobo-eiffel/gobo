@@ -29,8 +29,10 @@ feature -- Status report
 			-- characters and these characters (possibly unicode characters)
 			-- have codes which are one by one equal.
 		do
-			if v = Void then
-				Result := (u = Void)
+			if v = u then
+				Result := True
+			elseif v = Void then
+				Result := False
 			elseif u = Void then
 				Result := False
 			else

@@ -24,8 +24,10 @@ feature -- Status report
 	test (v, u: ET_CLASS_NAME): BOOLEAN is
 			-- Are `v' and `u' considered equal?
 		do
-			if v = Void then
-				Result := (u = Void)
+			if v = u then
+				Result := True
+			elseif v = Void then
+				Result := False
 			elseif u = Void then
 				Result := False
 			else

@@ -24,8 +24,10 @@ feature -- Status report
 	test (v, u: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Are `v' and `u' considered equal?
 		do
-			if v = Void then
-				Result := (u = Void)
+			if v = u then
+				Result := True
+			elseif v = Void then
+				Result := False
 			elseif u = Void then
 				Result := False
 			else
