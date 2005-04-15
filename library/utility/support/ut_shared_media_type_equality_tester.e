@@ -10,8 +10,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class UT_SHARED_MEDIA_TYPE_TESTER
-	
+class UT_SHARED_MEDIA_TYPE_EQUALITY_TESTER
+
 feature -- Access
 
 	media_type_tester: UT_MEDIA_TYPE_EQUALITY_TESTER is

@@ -39,7 +39,7 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
-	UT_SHARED_MEDIA_TYPE_TESTER
+	UT_SHARED_MEDIA_TYPE_EQUALITY_TESTER
 
 	-- TODO: Extend the filter to accept element() scheme. (?)
 
