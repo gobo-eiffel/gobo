@@ -162,7 +162,7 @@ feature -- Test
 			assert ("parent4", a_pathname.is_parent (1))
 		end
 
-	test_set_canonical is
+	test_set_canonical1 is
 			-- Test feature `set_canonical'.
 		local
 			a_pathname: KL_PATHNAME
@@ -208,6 +208,235 @@ feature -- Test
 			assert_integers_equal ("count7", 2, a_pathname.count)
 			assert_equal ("bar7", "bar", a_pathname.item (1))
 			assert_equal ("gobo7", "gobo", a_pathname.item (2))
+		end
+
+	test_set_canonical2 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "/foo/gobo/../../bar"
+			create a_pathname.make
+			a_pathname.append_name ("foo")
+			a_pathname.append_name ("gobo")
+			a_pathname.append_parent
+			a_pathname.append_parent
+			a_pathname.append_name ("bar")
+			assert_integers_equal ("count1", 5, a_pathname.count)
+			a_pathname.set_canonical
+				-- "/bar"
+			assert_integers_equal ("count2", 1, a_pathname.count)
+			assert_equal ("bar", "bar", a_pathname.item (1))
+		end
+
+	test_set_canonical3 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "../../bar"
+			create a_pathname.make
+			a_pathname.set_relative (True)
+			a_pathname.append_parent
+			a_pathname.append_parent
+			a_pathname.append_name ("bar")
+			assert_integers_equal ("count1", 3, a_pathname.count)
+			a_pathname.set_canonical
+				-- "../../bar"
+			assert_integers_equal ("count2", 3, a_pathname.count)
+			assert ("parent1", a_pathname.is_parent (1))
+			assert ("parent2", a_pathname.is_parent (2))
+			assert_equal ("bar", "bar", a_pathname.item (3))
+		end
+
+	test_set_canonical4 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "./../bar"
+			create a_pathname.make
+			a_pathname.set_relative (True)
+			a_pathname.append_current
+			a_pathname.append_parent
+			a_pathname.append_name ("bar")
+			assert_integers_equal ("count1", 3, a_pathname.count)
+			a_pathname.set_canonical
+				-- "../bar"
+			assert_integers_equal ("count2", 2, a_pathname.count)
+			assert ("parent", a_pathname.is_parent (1))
+			assert_equal ("bar", "bar", a_pathname.item (2))
+		end
+
+	test_set_canonical5 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "foo/../../bar"
+			create a_pathname.make
+			a_pathname.set_relative (True)
+			a_pathname.append_name ("foo")
+			a_pathname.append_parent
+			a_pathname.append_parent
+			a_pathname.append_name ("bar")
+			assert_integers_equal ("count1", 4, a_pathname.count)
+			a_pathname.set_canonical
+				-- "../bar"
+			assert_integers_equal ("count2", 2, a_pathname.count)
+			assert ("parent", a_pathname.is_parent (1))
+			assert_equal ("bar", "bar", a_pathname.item (2))
+		end
+
+	test_set_canonical6 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "../foo/../bar"
+			create a_pathname.make
+			a_pathname.set_relative (True)
+			a_pathname.append_parent
+			a_pathname.append_name ("foo")
+			a_pathname.append_parent
+			a_pathname.append_name ("bar")
+			assert_integers_equal ("count1", 4, a_pathname.count)
+			a_pathname.set_canonical
+				-- "../bar"
+			assert_integers_equal ("count2", 2, a_pathname.count)
+			assert ("parent", a_pathname.is_parent (1))
+			assert_equal ("bar", "bar", a_pathname.item (2))
+		end
+
+	test_set_canonical7 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "."
+			create a_pathname.make
+			a_pathname.set_relative (True)
+			a_pathname.append_current
+			assert_integers_equal ("count1", 1, a_pathname.count)
+			a_pathname.set_canonical
+				-- "."
+			assert_integers_equal ("count2", 1, a_pathname.count)
+			assert ("current", a_pathname.is_current (1))
+		end
+
+	test_set_canonical8 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "/."
+			create a_pathname.make
+			a_pathname.append_current
+			assert_integers_equal ("count1", 1, a_pathname.count)
+			a_pathname.set_canonical
+				-- "/"
+			assert_integers_equal ("count2", 0, a_pathname.count)
+		end
+
+	test_set_canonical9 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- ".."
+			create a_pathname.make
+			a_pathname.set_relative (True)
+			a_pathname.append_parent
+			assert_integers_equal ("count1", 1, a_pathname.count)
+			a_pathname.set_canonical
+				-- ".."
+			assert_integers_equal ("count2", 1, a_pathname.count)
+			assert ("parent", a_pathname.is_parent (1))
+		end
+
+	test_set_canonical10 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "foo/.."
+			create a_pathname.make
+			a_pathname.set_relative (True)
+			a_pathname.append_name ("foo")
+			a_pathname.append_parent
+			assert_integers_equal ("count1", 2, a_pathname.count)
+			a_pathname.set_canonical
+				-- "."
+			assert_integers_equal ("count2", 1, a_pathname.count)
+			assert ("current", a_pathname.is_current (1))
+		end
+
+	test_set_canonical11 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "/foo/.."
+			create a_pathname.make
+			a_pathname.append_name ("foo")
+			a_pathname.append_parent
+			assert_integers_equal ("count1", 2, a_pathname.count)
+			a_pathname.set_canonical
+				-- "/"
+			assert_integers_equal ("count2", 0, a_pathname.count)
+		end
+
+	test_set_canonical12 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "foo/./.."
+			create a_pathname.make
+			a_pathname.set_relative (True)
+			a_pathname.append_name ("foo")
+			a_pathname.append_current
+			a_pathname.append_parent
+			assert_integers_equal ("count1", 3, a_pathname.count)
+			a_pathname.set_canonical
+				-- "."
+			assert_integers_equal ("count2", 1, a_pathname.count)
+			assert ("current", a_pathname.is_current (1))
+		end
+
+	test_set_canonical13 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "foo/../."
+			create a_pathname.make
+			a_pathname.set_relative (True)
+			a_pathname.append_name ("foo")
+			a_pathname.append_parent
+			a_pathname.append_current
+			assert_integers_equal ("count1", 3, a_pathname.count)
+			a_pathname.set_canonical
+				-- "."
+			assert_integers_equal ("count2", 1, a_pathname.count)
+			assert ("current", a_pathname.is_current (1))
+		end
+
+	test_set_canonical14 is
+			-- Test feature `set_canonical'.
+		local
+			a_pathname: KL_PATHNAME
+		do
+				-- "foo/."
+			create a_pathname.make
+			a_pathname.set_relative (True)
+			a_pathname.append_name ("foo")
+			a_pathname.append_current
+			assert_integers_equal ("count1", 2, a_pathname.count)
+			a_pathname.set_canonical
+				-- "foo"
+			assert_integers_equal ("count2", 1, a_pathname.count)
+			assert_equal ("foo", "foo", a_pathname.item (1))
 		end
 
 	test_same_pathname is
