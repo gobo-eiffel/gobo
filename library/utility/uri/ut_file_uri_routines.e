@@ -130,14 +130,14 @@ feature -- Pathname
 					Result.set_authority (hostname_to_authority (Localhost_authority))
 				end
 			end
-			create a_path.make_default
+			nb := a_pathname.count
+			create a_path.make (nb + 1)
 			if a_pathname.drive /= Void then
 					-- If drive present first item is path.
-				a_path.force_last (pathname_to_uri_component (a_pathname.drive))
+				a_path.put_last (pathname_to_uri_component (a_pathname.drive))
 			end
-			nb := a_pathname.count
 			from i := 1 until i > nb loop
-				a_path.force_last (pathname_to_uri_component (a_pathname.item (i)))
+				a_path.put_last (pathname_to_uri_component (a_pathname.item (i)))
 				i := i + 1
 			end
 			Result.set_path_items (not a_pathname.is_relative, a_path)
