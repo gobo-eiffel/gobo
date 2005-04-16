@@ -140,8 +140,6 @@ feature -- Pathname
 				a_path.force_last (pathname_to_uri_component (a_pathname.item (i)))
 				i := i + 1
 			end
-				-- Path marker (see file_system.basename vs. dirname).
-			a_path.force_last (pathname_to_uri_component ("")) 
 			Result.set_path_items (not a_pathname.is_relative, a_path)
 			debug ("file_uri")
 				std.output.put_string ("pathname_to_uri ")
