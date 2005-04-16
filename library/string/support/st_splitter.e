@@ -146,6 +146,8 @@ feature -- Operation(s)
 			-- and escape character settings.
 			-- Each separator character makes a separate separator
 			-- e.g. split ("/a//") = << "", "a", "", "" >>.
+			-- So we end up with as many items (possibly empty) as
+			-- possible, hence the name "greedy".
 		require
 			a_string_not_void: a_string /= Void
 		do
