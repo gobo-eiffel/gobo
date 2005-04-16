@@ -79,12 +79,12 @@ feature -- Testing
 		do
 			create split.make
 			split.set_separators (",;")
-			assert_split_character ("single", "a", <<"a">>)
-			assert_split_character ("simple", "a,b", <<"a", "b">>)
-			assert_split_character ("multi", "a,;b", <<"a", "", "b">>)
-			assert_split_character ("start", ",a", <<"", "a">>)
-			assert_split_character ("end", "a;", <<"a", "">>)
-			assert_split_character ("single_separator", ",", <<"", "">>)
+			assert_split_greedy ("single", "a", <<"a">>)
+			assert_split_greedy ("simple", "a,b", <<"a", "b">>)
+			assert_split_greedy ("multi", "a,;b", <<"a", "", "b">>)
+			assert_split_greedy ("start", ",a", <<"", "a">>)
+			assert_split_greedy ("end", "a;", <<"a", "">>)
+			assert_split_greedy ("single_separator", ",", <<"", "">>)
 		end
 
 	test_join is
@@ -140,8 +140,8 @@ feature {NONE} -- Implementation
 			assert_list_equal (a_tag, a_list, a_result)
 		end
 
-	assert_split_character (a_tag: STRING; a_in: STRING; a_result: ARRAY [STRING]) is
-			-- Test case for `split_character'.
+	assert_split_greedy (a_tag: STRING; a_in: STRING; a_result: ARRAY [STRING]) is
+			-- Test case for `split_greedy'.
 		require
 			a_tag_not_void: a_tag /= Void
 			a_in_not_void: a_in /= Void
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 		local
 			a_list: DS_LIST [STRING]
 		do
-			a_list := split.split_character (a_in)
+			a_list := split.split_greedy (a_in)
 			assert_list_equal (a_tag, a_list, a_result)
 		end
 

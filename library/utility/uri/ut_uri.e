@@ -584,10 +584,10 @@ feature -- Setting
 				create {DS_ARRAYED_LIST [STRING]} some_items.make_default
 			elseif a_path.item (1) = '/' then
 				has_absolute_path := True
-				some_items := a_splitter.split_character (a_path.substring (2, a_path.count))
+				some_items := a_splitter.split_greedy (a_path.substring (2, a_path.count))
 			else
 				has_absolute_path := False
-				some_items := a_splitter.split_character (a_path)
+				some_items := a_splitter.split_greedy (a_path)
 			end
 			create path_items.make_default
 			a_cursor := some_items.new_cursor

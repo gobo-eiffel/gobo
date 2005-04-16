@@ -133,6 +133,7 @@ feature -- Operation(s)
 			separators_as_sequence: split (separators).is_empty
 			split_not_void: Result /= Void
 			no_void_item: not Result.has (Void)
+			no_empty_item: not has_empty (Result)
 			count_ceiling: Result.count <= a_string.count // 2 + 1
 			last_escape_character_verbatim: (a_string.count >= 2
 				and then a_string.item (a_string.count) = escape_character 
@@ -140,7 +141,7 @@ feature -- Operation(s)
 				implies (Result.last.item (Result.last.count) = escape_character)
 		end
 
-	split_character (a_string: STRING): DS_LIST [STRING] is
+	split_greedy (a_string: STRING): DS_LIST [STRING] is
 			-- Split a string according to separator 
 			-- and escape character settings.
 			-- Each separator character makes a separate separator
@@ -150,7 +151,7 @@ feature -- Operation(s)
 		do
 			Result := do_split (a_string, True)
 		ensure
-			separators_as_character: split_character (separators).count = separators.count + 1
+			separators_as_character: split_greedy (separators).count = separators.count + 1
 			split_character_not_void: Result /= Void
 			no_void_item: not Result.has (Void)
 			count_ceiling: Result.count <= a_string.count + 1
@@ -168,26 +169,29 @@ feature -- Operation(s)
 			has_escape_character: has_escape_character
 			a_linear_not_void: a_linear /= Void
 			no_void_item: not a_linear.has (Void)
-			no_empty_items: not has_empty (a_linear)
-		local
-			a_cursor: DS_LINEAR_CURSOR [STRING]
-			a_separator: STRING
+			no_empty_item: not has_empty (a_linear)
 		do
-			create Result.make_empty
-				-- Using a string for separator is unicode compatible.
-			a_separator := separators.substring (1, 1)
-			a_cursor := a_linear.new_cursor
-			from a_cursor.start until a_cursor.after loop
-				Result := escape_appended_string (Result, a_cursor.item)
-				a_cursor.forth
-				if not a_cursor.after then
-					Result := STRING_.appended_string (Result, a_separator)
-				end
-			end
+			Result := do_join (a_linear, False)
 		ensure
 			join_not_void: Result /= Void
 			same_count: split (Result).count = a_linear.count
 			stable_reversible: STRING_.same_string (join (split (Result)), Result)
+		end
+
+	join_greedy (a_linear: DS_LINEAR [STRING]): STRING is
+			-- Join sequence to a string using the first of the
+			-- `separators' as separator, and escape separators 
+			-- within tokens.
+		require
+			has_escape_character: has_escape_character
+			a_linear_not_void: a_linear /= Void
+			no_void_item: not a_linear.has (Void)
+		do
+			Result := do_join (a_linear, True)
+		ensure
+			join_not_void: Result /= Void
+			same_count: split_greedy (Result).count = a_linear.count
+			stable_reversible: STRING_.same_string (join_greedy (split_greedy (Result)), Result)
 		end
 
 	join_unescaped (a_linear: DS_LINEAR [STRING]): STRING is
@@ -222,7 +226,7 @@ feature {NONE} -- Implementation
 			-- Character codes of separators 
 			-- (Hashed, and integer for unicode compatibility.)
 
-	do_split (a_string: STRING; insert_between_separators: BOOLEAN): DS_LIST [STRING] is
+	do_split (a_string: STRING; a_greedy: BOOLEAN): DS_LIST [STRING] is
 			-- Split implementation.
 		local
 			i, nb: INTEGER
@@ -259,7 +263,7 @@ feature {NONE} -- Implementation
 						last_escaped := i
 					elseif separator_codes.has (a_code) then
 						if last_separator = i - 1 then
-							if insert_between_separators then
+							if a_greedy then
 								Result.force_last ("")
 							end
 						else
@@ -290,13 +294,40 @@ feature {NONE} -- Implementation
 						an_item := STRING_.appended_substring (an_item, a_string, last_escaped, nb)
 					end
 					Result.force_last (an_item)
-				elseif insert_between_separators then
+				elseif a_greedy then
 					Result.force_last ("")
 				end
 			end
 		ensure
 			split_not_void: Result /= Void
 			no_void_item: not Result.has (Void)
+		end
+
+	do_join (a_linear: DS_LINEAR [STRING]; a_greedy: BOOLEAN): STRING is
+			-- Join sequence to a string using the first of the
+			-- `separators' as separator, and escape separators 
+			-- within tokens.
+		require
+			has_escape_character: has_escape_character
+			a_linear_not_void: a_linear /= Void
+			no_void_item: not a_linear.has (Void)
+		local
+			a_cursor: DS_LINEAR_CURSOR [STRING]
+			a_separator: STRING
+		do
+			create Result.make_empty
+				-- Using a string for separator is unicode compatible.
+			a_separator := separators.substring (1, 1)
+			a_cursor := a_linear.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				Result := escape_appended_string (Result, a_cursor.item)
+				a_cursor.forth
+				if not a_cursor.after then
+					Result := STRING_.appended_string (Result, a_separator)
+				end
+			end
+		ensure
+			join_not_void: Result /= Void
 		end
 
 	escape_appended_string (a_result: STRING; a_string: STRING): STRING is
