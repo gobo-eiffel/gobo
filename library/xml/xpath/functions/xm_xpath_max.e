@@ -25,13 +25,14 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "max"
+			name := "max"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
 			is_max := True
+			initialized := True
 		end
 
 end

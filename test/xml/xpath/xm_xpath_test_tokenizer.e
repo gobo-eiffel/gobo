@@ -29,7 +29,7 @@ feature -- Test
 		do
 			a_string := "boolean($fred = 'happy')"
 			create tokenizer.make
-			tokenizer.tokenize (a_string, 1, -1)
+			tokenizer.tokenize (a_string, 1, -1, 1)
 			assert ("No lexical error 1", not tokenizer.is_lexical_error)
 			assert ("Function token", tokenizer.last_token = Function_token)
 			assert ("Function is boolean()", STRING_.same_string (tokenizer.last_token_value, "boolean"))
@@ -69,7 +69,7 @@ feature -- Test
 			a_string := "//fred[@son='Jim']"
 
 		create tokenizer.make
-			tokenizer.tokenize (a_string, 1, -1)
+			tokenizer.tokenize (a_string, 1, -1, 1)
 			assert ("No lexical error 1", not tokenizer.is_lexical_error)
 			assert ("Ancestor token", tokenizer.last_token = Slash_slash_token)
 			
@@ -117,7 +117,7 @@ feature -- Test
 			a_string := "//fred[attribute::son='Jim']"
 
 		create tokenizer.make
-			tokenizer.tokenize (a_string, 1, -1)
+			tokenizer.tokenize (a_string, 1, -1, 1)
 			assert ("No lexical error 1", not tokenizer.is_lexical_error)
 			assert ("Ancestor token", tokenizer.last_token = Slash_slash_token)
 			
@@ -165,7 +165,7 @@ feature -- Test
 		do
 			a_string := "boolean($fred = .78 + 3.45E6)"
 			create tokenizer.make
-			tokenizer.tokenize (a_string, 1, -1)
+			tokenizer.tokenize (a_string, 1, -1, 1)
 			tokenizer.next
 			tokenizer.next
 			tokenizer.next
@@ -189,7 +189,7 @@ feature -- Test
 		do
 			a_string := "boolean($fred :@ 'happy')"
 			create tokenizer.make
-			tokenizer.tokenize (a_string, 1, -1)
+			tokenizer.tokenize (a_string, 1, -1, 1)
 			tokenizer.next
 			tokenizer.next
 			assert ("Lexical error", tokenizer.is_lexical_error)
@@ -203,7 +203,7 @@ feature -- Test
 		do
 			a_string := "boolean($fred (::@ (:'happy':) oops)"
 			create tokenizer.make
-			tokenizer.tokenize (a_string, 1, -1)
+			tokenizer.tokenize (a_string, 1, -1, 1)
 			tokenizer.next
 			tokenizer.next
 			assert ("Lexical error", tokenizer.is_lexical_error)
@@ -217,7 +217,7 @@ feature -- Test
 		do
 			a_string := "boolean($fred !@ 'happy')"
 			create tokenizer.make
-			tokenizer.tokenize (a_string, 1, -1)
+			tokenizer.tokenize (a_string, 1, -1, 1)
 			tokenizer.next
 			tokenizer.next
 			assert ("Lexical error", tokenizer.is_lexical_error)
@@ -231,7 +231,7 @@ feature -- Test
 		do
 			a_string := "boolean($fred *: 'happy')"
 			create tokenizer.make
-			tokenizer.tokenize (a_string, 1, -1)
+			tokenizer.tokenize (a_string, 1, -1, 1)
 			tokenizer.next
 			tokenizer.next
 			assert ("Lexical error", tokenizer.is_lexical_error)
@@ -245,7 +245,7 @@ feature -- Test
 		do
 			a_string := "boolean($fred  'happy%")"
 			create tokenizer.make
-			tokenizer.tokenize (a_string, 1, -1)
+			tokenizer.tokenize (a_string, 1, -1, 1)
 			tokenizer.next
 			tokenizer.next
 			assert ("Lexical error", tokenizer.is_lexical_error)
@@ -259,7 +259,7 @@ feature -- Test
 		do
 			a_string := "boolean($fred #= 'happy')"
 			create tokenizer.make
-			tokenizer.tokenize (a_string, 1, -1)
+			tokenizer.tokenize (a_string, 1, -1, 1)
 			tokenizer.next
 			tokenizer.next
 			assert ("Lexical error", tokenizer.is_lexical_error)

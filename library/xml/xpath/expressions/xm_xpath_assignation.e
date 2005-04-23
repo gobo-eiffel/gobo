@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, sub_expressions, allocate_slots, promote
+			simplify, sub_expressions, allocate_slots, promote,
+			is_assignation, as_assignation
 		end
 	
 	XM_XPATH_BINDING
@@ -51,6 +52,18 @@ feature -- Access
 			Result.set_equality_tester (expression_tester)
 			Result.put (sequence, 1)
 			Result.put (action, 2)
+		end
+
+	is_assignation: BOOLEAN is
+			-- Is `Current' a assignation?
+		do
+			Result := True
+		end
+
+	as_assignation: XM_XPATH_ASSIGNATION is
+			-- `Current' seen as a assignation
+		do
+			Result := Current
 		end
 
 feature -- Status report
@@ -215,7 +228,7 @@ feature {XM_XPATH_ASSIGNATION} -- Local
 invariant
 
 	valid_operator: operator = For_token or operator = Some_token or operator = Every_token or operator = Let_token
-	sequence_not_void: sequence /= Void
-	action_not_void: action /= Void
+	sequence_not_void: initialized implies sequence /= Void
+	action_not_void: initialized implies action /= Void
 	
 end

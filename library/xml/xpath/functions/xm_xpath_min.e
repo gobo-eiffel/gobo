@@ -25,12 +25,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "min"
+			name := "min"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 end

@@ -38,11 +38,8 @@ feature -- Access
 
 	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
 			-- Does `an_item' conform to `Current'?
-		local
-			a_node: XM_XPATH_NODE
 		do
-			a_node ?= an_item
-			Result := a_node /= Void
+			Result := an_item.is_node
 		end
 
 	super_type: XM_XPATH_ITEM_TYPE is

@@ -387,7 +387,7 @@ feature -- Element change
 			end
 			a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
 			create an_expression_factory
-			an_expression_factory.make_expression (a_parameter_value, static_context, 1, 0)
+			an_expression_factory.make_expression (a_parameter_value, static_context, 1, 0, 1)
 			if an_expression_factory.is_parse_error then
 				report_recoverable_error (an_expression_factory.parsed_error_value, Void)
 			else
@@ -850,11 +850,11 @@ feature -- Implementation
 						-- Only remaining possibility
 					end
 					if a_sequence_extent.is_node_sequence and then a_sequence_extent.count = 1 then
-						Result ?= a_sequence_extent.item_at (1)
 						check
-							result_is_a_node: Result /= Void
+							result_is_a_node: a_sequence_extent.item_at (1).is_node
 							-- from the condition of the if clause
 						end
+						Result := a_sequence_extent.item_at (1).as_node
 					else
 						create an_error.make_from_string ("XPointer returned something other than a single node", "", "XT1160", Dynamic_error)
 						report_recoverable_error (an_error, Void)

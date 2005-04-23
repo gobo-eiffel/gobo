@@ -161,6 +161,7 @@ feature
 			a_uri_source: XM_XSLT_URI_SOURCE
 			an_output: XM_OUTPUT
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			a_chooser: XM_XSLT_PREFERRED_PI_CHOOSER
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
@@ -168,7 +169,8 @@ feature
 			a_configuration.use_tiny_tree_model (False)
 			create a_transformer_factory.make (a_configuration)
 			create a_uri_source.make ("./data/processing_instructions.xml")
-			a_stylesheet_source := a_transformer_factory.associated_stylesheet (a_uri_source.system_id, "print", Void)
+			create a_chooser.make
+			a_stylesheet_source := a_transformer_factory.associated_stylesheet (a_uri_source.system_id, "print", a_chooser)
 			assert ("Stylesheet found", a_stylesheet_source /= Void)
 			a_transformer_factory.create_new_transformer (a_stylesheet_source)
 			assert ("Stylesheet compiled without errors", not a_transformer_factory.was_error)
@@ -193,6 +195,7 @@ feature
 			a_uri_source: XM_XSLT_URI_SOURCE
 			an_output: XM_OUTPUT
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			a_chooser: XM_XSLT_PI_CHOOSER_BY_NAME
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
@@ -200,7 +203,8 @@ feature
 			a_configuration.use_tiny_tree_model (False)
 			create a_transformer_factory.make (a_configuration)
 			create a_uri_source.make ("./data/processing_instructions.xml")
-			a_stylesheet_source := a_transformer_factory.associated_stylesheet (a_uri_source.system_id, "screen", "Alternate")
+			create a_chooser.make ("Alternate")
+			a_stylesheet_source := a_transformer_factory.associated_stylesheet (a_uri_source.system_id, "screen", a_chooser)
 			assert ("Stylesheet found", a_stylesheet_source /= Void)
 			a_transformer_factory.create_new_transformer (a_stylesheet_source)
 			assert ("Stylesheet compiled without errors", not a_transformer_factory.was_error)

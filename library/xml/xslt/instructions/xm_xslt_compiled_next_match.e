@@ -40,7 +40,6 @@ feature -- Evaluation
 			a_current_template: XM_XSLT_COMPILED_TEMPLATE
 			an_error: XM_XPATH_ERROR_VALUE
 			a_mode: XM_XSLT_MODE
-			a_context_node: XM_XPATH_NODE
 			a_node_handler: XM_XSLT_COMPILED_TEMPLATE
 			a_current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			another_context: XM_XSLT_EVALUATION_CONTEXT
@@ -63,17 +62,16 @@ feature -- Evaluation
 					create an_error.make_from_string ("Context item is not set whilst evaluating xsl:next-match.", "", "XTDE0565", Dynamic_error)
 					a_transformer.report_fatal_error (an_error, Void)
 				else
-					a_context_node ?= a_current_iterator.item
-					if a_context_node = Void then
+					if not a_current_iterator.item.is_node then
 						create an_error.make_from_string ("Context item is not a node whilst evaluating xsl:next-match.", "", "XTDE0565", Dynamic_error)
 						a_transformer.report_fatal_error (an_error, Void)
 					else
-						a_node_handler := a_transformer.rule_manager.next_match_handler (a_context_node, a_mode, a_current_template, a_context)
+						a_node_handler := a_transformer.rule_manager.next_match_handler (a_current_iterator.item.as_node, a_mode, a_current_template, a_context)
 						if a_node_handler = Void then
 	
 							-- Use the default action for the node.
 							
-							perform_default_action (a_context_node, some_parameters, some_tunnel_parameters, a_context)
+							perform_default_action (a_current_iterator.item.as_node, some_parameters, some_tunnel_parameters, a_context)
 						else
 							another_context := a_context.new_context
 							another_context.set_local_parameters (some_parameters)
@@ -89,8 +87,8 @@ feature -- Evaluation
 
 invariant
 
-	actual_parameters_not_void: actual_parameters /= Void
-	tunnel_parameters_not_void: tunnel_parameters /= Void
+	actual_parameters_not_void: initialized implies actual_parameters /= Void
+	tunnel_parameters_not_void: initialized implies tunnel_parameters /= Void
 
 end
 	

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate
+			validate, is_namespace_alias, as_namespace_alias
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -100,6 +100,20 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		do
 			last_generated_expression := Void
+		end
+
+feature -- Conversion
+
+	is_namespace_alias: BOOLEAN is
+			-- Is `Current' an xsl:namespace-alias?
+		do
+			Result := True
+		end
+
+	as_namespace_alias: XM_XSLT_NAMESPACE_ALIAS is
+			-- `Current' seen as an xsl:namespace-alias
+		do
+			Result := Current
 		end
 
 end

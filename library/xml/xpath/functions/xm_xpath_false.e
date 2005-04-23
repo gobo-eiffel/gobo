@@ -28,12 +28,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "false"
+			name := "false"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 0
 			maximum_argument_count := 0
 			create arguments.make (0)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access

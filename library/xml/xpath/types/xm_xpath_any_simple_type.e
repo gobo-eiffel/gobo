@@ -15,6 +15,9 @@ class XM_XPATH_ANY_SIMPLE_TYPE
 inherit
 
 	XM_XPATH_SCHEMA_TYPE
+		redefine
+			is_any_simple_type
+		end
 
 creation
 
@@ -32,6 +35,18 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	is_any_simple_type: BOOLEAN is
+			-- Is `Current' an any simple type?
+		do
+			Result := True
+		end
+
+	common_atomic_type: XM_XPATH_ATOMIC_TYPE is
+			-- Lowest common super-type
+		do
+			Result := Type_factory.any_atomic_type
+		end
 
 	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
 			-- Does `an_item' conform to `Current'?
@@ -62,11 +77,8 @@ feature -- Comparison
 
 	is_same_type (other: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `other' the same type as `Current'?
-		local
-			a_simple_type: like Current
 		do
-			a_simple_type ?= other
-			Result := a_simple_type /= Void
+			Result := other.is_any_simple_type
 		end
 
 feature -- Conversion

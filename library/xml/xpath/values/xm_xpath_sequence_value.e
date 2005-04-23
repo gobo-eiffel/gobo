@@ -15,8 +15,23 @@ deferred class XM_XPATH_SEQUENCE_VALUE
 inherit
 
 	XM_XPATH_VALUE
+		redefine
+			is_sequence_value, as_sequence_value
+		end
 
 feature -- Access
+
+	is_sequence_value: BOOLEAN is
+			-- Is `Current' a sequence value?
+		do
+			Result := True
+		end
+
+	as_sequence_value: XM_XPATH_SEQUENCE_VALUE is
+			-- `Current' seen as a sequence value
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type
@@ -110,9 +125,6 @@ feature -- Evaluation
 			-- Effective boolean value
 		local
 			an_item: XM_XPATH_ITEM
-			a_node: XM_XPATH_NODE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			a_string_value: XM_XPATH_STRING_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
 			create_iterator (a_context)
@@ -121,40 +133,33 @@ feature -- Evaluation
 				create last_boolean_value.make (False)
 			else
 				an_item := last_iterator.item
-				a_node ?= an_item
-				if a_node /= Void then
+				if an_item.is_node then
 					create last_boolean_value.make (True)
+				elseif an_item.is_boolean_value then
+					if an_item.as_boolean_value.value then
+						last_boolean_value := an_item.as_boolean_value
+					else
+						last_iterator.forth
+						create last_boolean_value.make (not last_iterator.after)
+					end
+				elseif an_item.is_string_value  then
+					if an_item.as_string_value.string_value.count > 0 then
+						create last_boolean_value.make (True)
+					else
+						last_iterator.forth
+						create last_boolean_value.make (not last_iterator.after)
+					end
 				else
-					a_boolean_value ?= an_item
-					if a_boolean_value /= Void then
-						if a_boolean_value.value then
-							last_boolean_value := a_boolean_value
+					if an_item.is_numeric_value then
+						last_iterator.forth
+						if not last_iterator.after then
+							create last_boolean_value.make (True)
 						else
-							last_iterator.forth
-							create last_boolean_value.make (not last_iterator.after)
+							a_numeric_value := an_item.as_numeric_value 
+							create last_boolean_value.make ((not a_numeric_value.is_zero ) and then (not a_numeric_value.is_nan))
 						end
 					else
-						a_string_value ?= an_item
-						if a_string_value /= Void then
-							if a_string_value.string_value.count > 0 then
-								create last_boolean_value.make (True)
-							else
-								last_iterator.forth
-								create last_boolean_value.make (not last_iterator.after)
-							end
-						else
-							a_numeric_value ?= an_item
-							if a_numeric_value /= Void then
-								last_iterator.forth
-								if not last_iterator.after then
-									create last_boolean_value.make (True)
-								else
-									create last_boolean_value.make ((not a_numeric_value.is_zero ) and then (not a_numeric_value.is_nan))
-								end
-							else
-								create last_boolean_value.make (True)
-							end
-						end
+						create last_boolean_value.make (True)
 					end
 				end
 			end
@@ -176,15 +181,12 @@ feature -- Evaluation
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a String
-		local
-			a_value: XM_XPATH_STRING_VALUE
 		do
 			evaluate_item (a_context)
-			a_value ?= last_evaluated_item
-			if a_value = Void then
+			if not last_evaluated_item.is_string_value then
 				create last_evaluated_string.make ("")
 			else
-				last_evaluated_string := a_value
+				last_evaluated_string := last_evaluated_item.as_string_value 
 			end
 		end
 

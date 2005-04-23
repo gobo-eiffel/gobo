@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			content := a_content
 			adopt_child_expression (content)
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			name_code_set: fixed_name_code = a_name_code
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	namespace_codes_not_void: namespace_code_list /= Void
+	namespace_codes_not_void: initialized implies namespace_code_list /= Void
 
 end
 	

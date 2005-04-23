@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			executable := an_executable
 			instruction_name := "xsl:comment"
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 		end

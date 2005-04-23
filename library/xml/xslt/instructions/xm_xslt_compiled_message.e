@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			adopt_child_expression (select_expression)
 			instruction_name := "xsl:message"
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			terminate_set: terminate = a_terminate
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	select_expression_not_void: select_expression /= Void
+	select_expression_not_void: initialized implies select_expression /= Void
 
 end
 	

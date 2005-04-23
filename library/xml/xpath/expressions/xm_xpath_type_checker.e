@@ -75,11 +75,11 @@ feature -- Optimization
 			no_previous_error: not is_static_type_check_error
 		local
 			a_message: STRING
-			a_value: XM_XPATH_VALUE
 			a_relationship: INTEGER
 			a_required_cardinality: INTEGER
 			an_expression: XM_XPATH_EXPRESSION
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+			an_item_checker: XM_XPATH_ITEM_CHECKER
 		do
 			static_context := a_context
 			if static_context /= Void then function_library := static_context.available_functions end
@@ -154,13 +154,13 @@ feature -- Optimization
 							
 							if a_relationship /= Same_item_type and then a_relationship /= Subsumed_type then
 								an_expression := checked_expression
-								create {XM_XPATH_ITEM_CHECKER} a_computed_expression.make (an_expression, required_item_type, a_role_locator)
-								a_computed_expression.adopt_child_expression (an_expression)
-								checked_expression := a_computed_expression
+								create an_item_checker.make (an_expression, required_item_type, a_role_locator)
+								an_item_checker.set_error_code ("XPTY0004")
+								an_item_checker.adopt_child_expression (an_expression)
+								checked_expression := an_item_checker
 							end
 							if not cardinality_ok then
-								a_value ?= checked_expression
-								if a_value /= Void then
+								if checked_expression.is_value then
 									report_type_check_error (a_role_locator)
 								else
 									an_expression := checked_expression
@@ -306,10 +306,7 @@ feature {NONE} -- Implementation
 				create new_arguments.make (1)
 				new_arguments.put_last (checked_expression)
 				function_library.bind_function (String_function_type_code, new_arguments, False)
-				a_string_function ?= function_library.last_bound_function
-				check
-					string_function: a_string_function /= Void
-				end
+				a_string_function := function_library.last_bound_function.as_string_function
 				a_string_function.simplify
 				if a_string_function.was_expression_replaced then
 					an_expression := a_string_function.replacement_expression
@@ -346,10 +343,7 @@ feature {NONE} -- Implementation
 				create new_arguments.make (1)
 				new_arguments.put_last (checked_expression)
 				function_library.bind_function (Number_function_type_code, new_arguments, False)
-				a_number_function ?= function_library.last_bound_function
-				check
-					number_function: a_number_function /= Void
-				end
+				a_number_function := function_library.last_bound_function.as_number_function
 				a_number_function.simplify
 				if a_number_function.was_expression_replaced then
 					an_expression := a_number_function.replacement_expression
@@ -378,12 +372,10 @@ feature {NONE} -- Implementation
 	handle_xpath_two_rules is
 			-- Apply conversions needed in 2.0 mode.
 		local
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
 			a_required_item_type_fingerprint: INTEGER
 			an_expression: XM_XPATH_EXPRESSION
 		do
-			an_atomic_type ?= required_item_type
-			if an_atomic_type /= Void then
+			if required_item_type.is_atomic_type then
 
 				-- Rule 1: Atomize
 
@@ -426,12 +418,10 @@ feature {NONE} -- Implementation
 	conditionally_atomize is
 			-- Conditionally add an Atomizer
 		local
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
 			an_expression: XM_XPATH_EXPRESSION
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
-			an_atomic_type ?= supplied_item_type
-			if an_atomic_type = Void then
+			if not supplied_item_type.is_atomic_type then
 				if supplied_cardinality /= Required_cardinality_empty then
 					an_expression := checked_expression
 					create {XM_XPATH_ATOMIZER_EXPRESSION} a_computed_expression.make (an_expression)
@@ -448,7 +438,6 @@ feature {NONE} -- Implementation
 			--  Conditionally add an Untyped Atomic Converter
 		local
 			an_expression: XM_XPATH_EXPRESSION
-			a_value: XM_XPATH_VALUE
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 
@@ -461,8 +450,7 @@ feature {NONE} -- Implementation
 				required_item_type /= type_factory.any_atomic_type then
 				an_expression := checked_expression
 				create {XM_XPATH_UNTYPED_ATOMIC_CONVERTER} checked_expression.make (an_expression, required_item_type)
-				a_value ?= an_expression
-				if a_value /= Void then
+				if an_expression.is_value then
 					checked_expression.create_iterator (Void)
 					an_iterator := checked_expression.last_iterator
 					if an_iterator.is_error then

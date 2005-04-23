@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			sequence := a_sequence_expression
 			set_action (an_action)
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			operator_set: operator = an_operator
@@ -160,7 +160,7 @@ feature -- Optimization
 						if action_expression.is_error then
 							set_last_error (action_expression.error_value)
 						end
-						promote_subexpressions (a_context)
+						if not is_error then promote_subexpressions (a_context) end
 					end
 				end
 			end
@@ -206,11 +206,7 @@ feature -- Evaluation
 						last_boolean_value.set_last_error (an_item.error_value)
 						finished := True
 					else
-						a_value ?= an_item.as_value
-						check
-							value_not_void: a_value /= Void
-							-- From post-condition of `as_value'.
-						end
+						a_value := an_item.as_item_value
 						a_context.set_local_variable (a_value, slot_number)
 						action.calculate_effective_boolean_value (a_context)
 						a_boolean_value := action.last_boolean_value
@@ -263,7 +259,8 @@ feature {NONE} -- Implementation
 			action_expression.mark_unreplaced
 			action_expression.promote (an_offer)
 			if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end
-			a_let_expression ?= an_offer.containing_expression; if a_let_expression /= Void then
+			if an_offer.containing_expression.is_let_expression then
+				a_let_expression := an_offer.containing_expression.as_let_expression
 				a_let_expression.analyze (a_context)
 				if a_let_expression.is_error then
 					set_last_error (a_let_expression.error_value)

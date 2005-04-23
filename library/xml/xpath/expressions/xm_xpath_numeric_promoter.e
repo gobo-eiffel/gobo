@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, same_expression, simplify, analyze, evaluate_item, create_iterator
+			item_type, same_expression, simplify, analyze, evaluate_item,
+			create_iterator, is_numeric_promoter, as_numeric_promoter
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -35,7 +36,6 @@ feature {NONE} -- Initialization
 			make_unary (a_sequence)
 			required_type := a_required_type
 			compute_static_properties
-			initialize
 		ensure
 			static_properties_computed: are_static_properties_computed
 			base_expression_set: base_expression = a_sequence
@@ -47,6 +47,18 @@ feature -- Access
 
 	required_type: INTEGER
 			-- Required type
+
+	is_numeric_promoter: BOOLEAN is
+			-- Is `Current' a numeric promoter?
+		do
+			Result := True
+		end
+
+	as_numeric_promoter: XM_XPATH_NUMERIC_PROMOTER is
+			-- `Current' seen as a numeric promoter
+		do
+			Result := Current
+		end
 	
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
@@ -69,8 +81,8 @@ feature -- Comparison
 		local
 			other_promoter: XM_XPATH_NUMERIC_PROMOTER
 		do
-			other_promoter ?= other
-			if other_promoter /= Void then
+			if other.is_numeric_promoter then
+				other_promoter := other.as_numeric_promoter
 				Result := base_expression.same_expression (other_promoter.base_expression) 
 					and then other_promoter.required_type = required_type
 			end
@@ -81,15 +93,13 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations.
 		local
-			a_value: XM_XPATH_VALUE
 			an_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			base_expression.simplify
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			else
-				a_value ?= base_expression
-				if a_value /= Void then
+				if base_expression.is_value then
 					create_iterator (Void)
 					if last_iterator.is_error then
 						set_last_error (last_iterator.error_value)
@@ -104,7 +114,6 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		local
-			a_value: XM_XPATH_VALUE
 			an_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			mark_unreplaced
@@ -115,8 +124,7 @@ feature -- Optimization
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			else
-				a_value ?= base_expression
-				if a_value /= Void then
+				if base_expression.is_value then
 					create_iterator (Void)
 					if last_iterator.is_error then
 						set_last_error (last_iterator.error_value)
@@ -132,8 +140,6 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
-		local
-			a_value: XM_XPATH_ATOMIC_VALUE
 		do
 			base_expression.evaluate_item (a_context)
 			if base_expression.last_evaluated_item = Void then
@@ -141,9 +147,8 @@ feature -- Evaluation
 			elseif base_expression.last_evaluated_item.is_error then
 				last_evaluated_item := base_expression.last_evaluated_item
 			else
-				a_value ?= base_expression.last_evaluated_item
-				if a_value /= Void then
-					promote_number (a_value)
+				if base_expression.last_evaluated_item.is_atomic_value then
+					promote_number (base_expression.last_evaluated_item.as_atomic_value)
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",
 																				Xpath_errors_uri, "XPTY0004", Type_error)
@@ -167,12 +172,9 @@ feature -- Evaluation
 	
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
-		local
-			a_value: XM_XPATH_ATOMIC_VALUE
 		do
-			a_value ?= an_item
-			if a_value /= Void then
-				promote_number (a_value)
+			if an_item.is_atomic_value then
+				promote_number (an_item.as_atomic_value)
 			else
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",
 																	  Xpath_errors_uri, "XPTY0004", Dynamic_error)

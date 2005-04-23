@@ -16,12 +16,12 @@ inherit
 
 	XM_XPATH_NAMESPACE
 		undefine
-			local_part
+			local_part,	is_tiny_node, as_tiny_node
 		end
 
 	XM_XPATH_TINY_NODE
 		undefine
-			parent, base_uri, next_sibling, previous_sibling
+			parent, base_uri, next_sibling, previous_sibling, is_tiny_namespace, as_tiny_namespace
 		redefine
 			local_part, name_code, sequence_number, is_same_node
 		end
@@ -57,6 +57,18 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+	
+	is_tiny_namespace: BOOLEAN is
+			-- Is `Current' a namespace node?
+		do
+			Result := True
+		end
+
+	as_tiny_namespace: XM_XPATH_TINY_NAMESPACE is
+			-- `Current' seen as a namespace node
+		do
+			Result := Current
+		end
 
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
 			-- Node sequence number (in document order)
@@ -93,7 +105,6 @@ feature -- Access
 
 feature -- Comparison
 
-
 	is_same_node (other: XM_XPATH_TINY_NODE): BOOLEAN is
 			-- Does `Current' represent the same node in the tree as `other'?
 		local
@@ -102,10 +113,9 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			else
-				another_namespace ?= other
-				if another_namespace /= Void then
-					Result := document = another_namespace.document and then
-					node_number = another_namespace.node_number
+				if other.is_tiny_namespace then
+					another_namespace := other.as_tiny_namespace
+					Result := document = another_namespace.document and then	node_number = another_namespace.node_number
 				end
 			end
 		end

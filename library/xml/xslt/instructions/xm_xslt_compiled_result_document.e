@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 				a_cursor.forth
 			end
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			base_uri_set: base_uri = a_base_uri
@@ -325,12 +325,12 @@ feature {NONE} -- Implementation
 
 invariant
 
-	base_uri: base_uri /= Void
-	property_set_not_void: property_set /= Void
-	only_basic_xslt_as_yet: validation_action = Validation_strip
-	no_schema_type_as_yet: schema_type = Void
-	formatting_attributes_not_void: formatting_attributes /= Void
-	content_not_void: content /= Void
+	base_uri: initialized implies base_uri /= Void
+	property_set_not_void: initialized implies property_set /= Void
+	only_basic_xslt_as_yet: initialized implies validation_action = Validation_strip
+	no_schema_type_as_yet: initialized implies schema_type = Void
+	formatting_attributes_not_void: initialized implies formatting_attributes /= Void
+	content_not_void: initialized implies content /= Void
 
 end
 

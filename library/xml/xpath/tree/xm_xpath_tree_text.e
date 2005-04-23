@@ -16,10 +16,13 @@ inherit
 	
 	XM_XPATH_TEXT
 		undefine
-			document_element, next_sibling, previous_sibling, local_part
+			document_element, next_sibling, previous_sibling, local_part, is_tree_node, as_tree_node
 		end
 
 	XM_XPATH_TREE_NODE
+		redefine
+			is_tree_text, as_tree_text
+		end
 
 creation
 
@@ -43,6 +46,18 @@ feature -- Access
 
 	string_value: STRING
 			--Value of the item as a string
+
+	is_tree_text: BOOLEAN is
+			-- Is `Current' a text node?
+		do
+			Result := True
+		end
+
+	as_tree_text: XM_XPATH_TREE_TEXT is
+			-- `Current' seen as a text node
+		do
+			Result := Current
+		end
 
 feature -- Duplication
 

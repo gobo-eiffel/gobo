@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			error := an_error
 			instruction_name := an_instruction_name
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			error_set: error = an_error
 			name_set: instruction_name = an_instruction_name
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	error_not_void: error /= Void
+	error_not_void: initialized implies error /= Void
 
 end
 	

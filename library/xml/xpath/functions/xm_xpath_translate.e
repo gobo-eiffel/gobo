@@ -28,12 +28,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "translate"
+			name := "translate"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 3
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -80,17 +81,17 @@ feature -- Evaluation
 				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 			else
 				arguments.item (2).evaluate_item (a_context)
-				a_source_map ?= arguments.item (2).last_evaluated_item
 				check
-					source_map_not_void: a_source_map /= Void
+					source_map: arguments.item (2).last_evaluated_item /= Void and then arguments.item (2).last_evaluated_item.is_string_value
 					-- static typing
 				end
+				a_source_map := arguments.item (2).last_evaluated_item.as_string_value
 				arguments.item (3).evaluate_item (a_context)
-				a_target_map ?= arguments.item (3).last_evaluated_item
 				check
-					target_map_not_void: a_target_map /= Void
+					target_map: arguments.item (3).last_evaluated_item /= Void and then arguments.item (3).last_evaluated_item.is_string_value
 					-- static typing
-				end				
+				end
+				a_target_map := arguments.item (3).last_evaluated_item.as_string_value
 				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (translated_string (a_string, a_source_map.string_value, a_target_map.string_value))
 			end
 		end

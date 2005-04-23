@@ -15,6 +15,9 @@ class XM_XPATH_TINY_COMMENT
 inherit
 
 	XM_XPATH_COMMENT
+		undefine
+			is_tiny_node, as_tiny_node
+		end
 
 	XM_XPATH_TINY_NODE
 		undefine

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			use_tail_recursion := a_use_tail_recursion
 			instruction_name := "call-template"
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			target_set: target = a_target
@@ -190,9 +190,9 @@ feature {NONE} -- Implementation
 
 invariant
 
-	target_not_void: target /= Void
-	actual_parameter_list_not_void: actual_parameter_list /= Void
-	tunnel_parameter_list_not_void: tunnel_parameter_list /= Void
+	target_not_void: initialized implies target /= Void
+	actual_parameter_list_not_void: initialized implies actual_parameter_list /= Void
+	tunnel_parameter_list_not_void: initialized implies tunnel_parameter_list /= Void
 	
 end
 	

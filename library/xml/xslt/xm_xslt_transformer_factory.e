@@ -120,11 +120,12 @@ feature -- Creation
 			error_or_transformer_not_void: not was_error implies created_transformer /= Void
 		end
 
-	associated_stylesheet (a_uri: STRING; a_medium, a_title: STRING): XM_XSLT_SOURCE is
+	associated_stylesheet (a_uri: STRING; a_medium: STRING; a_chooser: XM_XSLT_PI_CHOOSER): XM_XSLT_SOURCE is
 			-- Stylesheet associated with `a_source'
 		require
 			source_uri_not_a_fragment: a_uri /= Void and then a_uri.index_of ('#', 1) = 0
 			medium_not_void: a_medium /= Void
+			chooser_not_void: a_chooser /= Void
 		local
 			a_pi_parser: XM_XSLT_PROCESSING_INSTRUCTION_PARSER
 			an_xml_parser: XM_PARSER
@@ -134,6 +135,9 @@ feature -- Creation
 			a_candidate: XM_XSLT_XML_STYLESHEET
 			candidate_approved, preferred_seen: BOOLEAN
 			another_uri: UT_URI
+			a_candidate_count, a_selected_index: INTEGER
+			selectable_candidate_indices: DS_ARRAYED_LIST [INTEGER]
+			selectable_candidates: DS_ARRAYED_LIST [STRING]
 		do
 			an_xml_parser := new_eiffel_parser
 			an_error_collector := an_xml_parser.new_stop_on_error_filter
@@ -146,6 +150,8 @@ feature -- Creation
 			if some_candidate_stylesheets.count > 0 then
 				from
 					create selected_stylesheets.make (some_candidate_stylesheets.count)
+					create selectable_candidates.make (some_candidate_stylesheets.count)
+					create selectable_candidate_indices.make (some_candidate_stylesheets.count)
 					a_cursor := some_candidate_stylesheets.new_cursor; a_cursor.start
 				variant
 					some_candidate_stylesheets.count + 1 - a_cursor.index
@@ -156,26 +162,29 @@ feature -- Creation
 					candidate_approved := a_candidate.applicable_media.has (a_medium) or else a_candidate.applicable_media.has ("all")
 					if candidate_approved then
 						if a_candidate.is_alternate then
-							if a_title = Void then
-								candidate_approved := False
-							else
-								candidate_approved := STRING_.same_string (a_title, a_candidate.title)
-							end
+							a_candidate_count := a_candidate_count + 1
+							selected_stylesheets.put_last (a_candidate)
+							selectable_candidate_indices.put_last (a_candidate_count)
+							selectable_candidates.put_last (a_candidate.title)
 						elseif a_candidate.is_preferred then
-							if preferred_seen then
-								candidate_approved := False
-							elseif a_title = Void then
+							if not preferred_seen then
 								preferred_seen := True
-							else
-								candidate_approved := STRING_.same_string (a_title, a_candidate.title)
-								preferred_seen := candidate_approved
+								a_candidate_count := a_candidate_count + 1
+								selected_stylesheets.put_last (a_candidate)
+								selectable_candidate_indices.put_first (a_candidate_count)
+								selectable_candidates.put_first (a_candidate.title)
 							end
+						else
+							a_candidate_count := a_candidate_count + 1
+							selected_stylesheets.put_last (a_candidate)
 						end
 					end
-					if candidate_approved then
-						selected_stylesheets.put_last (a_candidate)
-					end
 					a_cursor.forth
+				end
+				if selectable_candidates.count > 1 then
+					a_selected_index := a_chooser.selected_index (selectable_candidates)
+					selectable_candidate_indices.remove (a_selected_index)
+					trim_selected_stylesheets (selected_stylesheets, selectable_candidate_indices)
 				end
 				if selected_stylesheets.count > 0 then
 					create another_uri.make_resolve (configuration.entity_resolver.uri, a_uri)
@@ -249,6 +258,29 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	trim_selected_stylesheets (selected_stylesheets: DS_ARRAYED_LIST [XM_XSLT_XML_STYLESHEET]; selectable_candidate_indices: DS_ARRAYED_LIST [INTEGER]) is
+			-- Remove entries from `selected_stylesheets' by index.
+		require
+			multiple_selected_stylesheets: selected_stylesheets /= Void and then selected_stylesheets.count > 0
+			selectable_candidate_indices_not_empty: selectable_candidate_indices /= Void and then selectable_candidate_indices.count > 0
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+		do
+
+			-- The indices are in ascending order, so we process them
+			--  back-to-front to avoid removing prior entries
+			--  (and thus wrecking the index numbers)
+
+			from
+				a_cursor := selectable_candidate_indices.new_cursor; a_cursor.finish
+			until
+				a_cursor.before
+			loop
+				selected_stylesheets.remove (a_cursor.item)
+				a_cursor.back
+			end
 		end
 
 invariant

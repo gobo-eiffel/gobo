@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, compute_cardinality, create_iterator
+			analyze, compute_cardinality, create_iterator, make,
+			is_range_expression, as_range_expression
 		end
 
 	XM_XPATH_ROLE
@@ -29,7 +30,28 @@ creation
 		--  than the start-point, an empty sequence is returned. This is to allow
 		--  expressions of the form "for $i in 1 to count($seq) return ...."
 
+feature {NONE} -- Initialization
+
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+			-- Establish invariant
+		do
+			Precursor (an_operand_one, a_token, an_operand_two)
+			initialized := True
+		end
+
 feature -- Access
+
+	is_range_expression: BOOLEAN is
+			-- Is `Current' a range expression?
+		do
+			Result := True
+		end
+
+	as_range_expression: XM_XPATH_RANGE_EXPRESSION is
+			-- `Current' seen as a range expression
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
@@ -109,23 +131,25 @@ feature -- Evaluation
 			if first_operand.last_evaluated_item.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (first_operand.last_evaluated_item.error_value)
 			else
-				an_integer_value ?= first_operand.last_evaluated_item
-				if an_integer_value = Void then
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+				if not first_operand.last_evaluated_item.is_integer_value then
+					create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 				else
 					second_operand.evaluate_item (a_context)
 					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_error then
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (second_operand.last_evaluated_item.error_value)
 					else
-						another_integer_value ?= second_operand.last_evaluated_item
-						if another_integer_value = Void then
-							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
-						elseif an_integer_value.value > another_integer_value.value then
-							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
-						elseif an_integer_value.is_platform_integer and then another_integer_value.is_platform_integer then
-							create {XM_XPATH_RANGE_ITERATOR} last_iterator.make (an_integer_value.as_integer, another_integer_value.as_integer)
+						if not second_operand.last_evaluated_item.is_integer_value then
+							create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 						else
-							todo ("iterator - large integers", True)
+							an_integer_value := first_operand.last_evaluated_item.as_integer_value
+							another_integer_value := second_operand.last_evaluated_item.as_integer_value
+							if an_integer_value.value > another_integer_value.value then
+								create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+							elseif an_integer_value.is_platform_integer and then another_integer_value.is_platform_integer then
+								create {XM_XPATH_RANGE_ITERATOR} last_iterator.make (an_integer_value.as_integer, another_integer_value.as_integer)
+							else
+								todo ("iterator - large integers", True)
+							end
 						end
 					end
 				end

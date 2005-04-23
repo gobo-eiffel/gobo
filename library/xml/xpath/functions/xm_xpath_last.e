@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, evaluate_item, compute_intrinsic_dependencies
+			pre_evaluate, evaluate_item, compute_intrinsic_dependencies,
+			is_last_function
 		end
 
 creation
@@ -28,15 +29,22 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "last"
+			name := "last"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 0
 			maximum_argument_count := 0
 			create arguments.make (0)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
+		
+	is_last_function: BOOLEAN is
+			-- Is `Current' a last() function?
+		do
+			Result := True
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible

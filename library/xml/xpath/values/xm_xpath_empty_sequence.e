@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			item_type, display, evaluate_as_string, calculate_effective_boolean_value, is_convertible_to_item
+			item_type, display, evaluate_as_string, calculate_effective_boolean_value,
+			is_convertible_to_item, is_empty_sequence, as_empty_sequence
 		end
 
 creation
@@ -36,6 +37,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_empty_sequence: BOOLEAN is
+			-- Is `Current' an empty sequence?
+		do
+			Result := True
+		end
+
+	as_empty_sequence: XM_XPATH_EMPTY_SEQUENCE is
+			-- `Current' seen as an empty_sequence
+		do
+			Result := Current
+		end
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
@@ -49,18 +62,15 @@ feature -- Access
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Yields an iterator to iterate over the values of a sequence
 		do
-			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+			create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 		end
 
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			other2: XM_XPATH_EMPTY_SEQUENCE
 		do
-			other2 ?= other
-			Result := other2 /= Void
+			Result := other.is_empty_sequence
 		end
 
 feature -- Status report

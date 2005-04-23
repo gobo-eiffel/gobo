@@ -171,10 +171,10 @@ feature {NONE} -- Implementation
 				until
 					a_keys_iterator.after
 				loop
-					a_key ?= a_keys_iterator.item
 					check
-						key_is_atomic: a_key /= Void
+						key_is_atomic: a_keys_iterator.item.is_atomic_value
 					end
+					a_key := a_keys_iterator.item.as_atomic_value
 					a_comparison_key := comparer.comparison_key (a_key)
 					if a_map.has (a_comparison_key) then
 						a_group := a_map.item (a_comparison_key)

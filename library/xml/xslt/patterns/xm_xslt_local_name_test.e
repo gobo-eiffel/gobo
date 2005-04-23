@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_NODE_TEST
 		undefine
-			fingerprint, node_kind
+			fingerprint, node_kind, is_local_name_test, as_local_name_test
 		redefine
 			default_priority
 		end

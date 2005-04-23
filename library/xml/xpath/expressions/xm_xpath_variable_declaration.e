@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Element change
 
-	register_reference (a_reference: XM_XPATH_BINDING_REFERENCE) is
+	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE) is
 			-- Register `ref' as a reference to this variable for fix-up.
 			-- This routine is called by the XPath parser when
 			-- each reference to the variable is enountered.

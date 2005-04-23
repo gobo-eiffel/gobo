@@ -99,7 +99,6 @@ feature -- Test
 			a_document: XM_XPATH_DOCUMENT
 			system_id: STRING
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
-			a_node: XM_XPATH_NODE
 			an_element: XM_XPATH_ELEMENT
 			an_xpath_scheme: XM_XPOINTER_XPATH_XPATH_SCHEME
 			an_xmlns_scheme: XM_XPOINTER_XPATH_XMLNS_SCHEME

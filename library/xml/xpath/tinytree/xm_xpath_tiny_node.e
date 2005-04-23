@@ -15,6 +15,9 @@ deferred class XM_XPATH_TINY_NODE
 inherit
 
 	XM_XPATH_NODE
+		redefine
+			is_tiny_node, as_tiny_node
+		end
 
 	XM_XPATH_TYPE
 
@@ -23,6 +26,78 @@ inherit
 	XM_XPATH_SHARED_ANY_NODE_TEST
 
 feature -- Access
+
+	is_tiny_node: BOOLEAN is
+			-- Is `Current' a tiny-tree node?
+		do
+			Result := True
+		end
+	
+	as_tiny_node: XM_XPATH_TINY_NODE is
+			-- `Current' seen as a tiny-tree node
+		do
+			Result := Current
+		end
+
+	is_tiny_composite_node: BOOLEAN is
+			-- Is `Current' a composite node?
+		do
+			Result := False
+		end
+
+	as_tiny_composite_node: XM_XPATH_TINY_COMPOSITE_NODE is
+			-- `Current' seen as a composite node
+		require
+			tiny_composite: is_tiny_composite_node
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_tiny_document: BOOLEAN is
+			-- Is `Current' a tiny-tree document node?
+		do
+			Result := False
+		end
+
+	as_tiny_document: XM_XPATH_TINY_DOCUMENT is
+			-- `Current' seen as a tiny-tree document
+		require
+			tiny_document: is_tiny_document
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_tiny_namespace: BOOLEAN is
+			-- Is `Current' a namespace node?
+		do
+			Result := False
+		end
+
+	as_tiny_namespace: XM_XPATH_TINY_NAMESPACE is
+			-- `Current' seen as a namespace node
+		require
+			tiny_namespace: is_tiny_namespace
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_tiny_element: BOOLEAN is
+			-- Is `Current' an element?
+		do
+			Result := False
+		end
+
+	as_tiny_element: XM_XPATH_TINY_ELEMENT is
+			-- `Current' seen as an element
+		require
+			tiny_element: is_tiny_element
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
 
 	system_id: STRING is
 			-- SYSTEM id of `Current', or `Void' if not known
@@ -68,16 +143,18 @@ feature -- Access
 			-- `Void' if current node is root, or for orphan nodes.
 		local
 			p: INTEGER
+			a_node: XM_XPATH_TINY_NODE
 		do
-			-- Are we the effective root of the tree
+
+			-- Are we the effective root of the tree?
+
 			if node_number = document.root_node then
 				cached_parent_node := Void
-				Result := Void
-			elseif cached_parent_node /= Void then
-				Result := cached_parent_node
-			else
+			elseif cached_parent_node = Void then
+
 				-- if parent_node is unknown, follow the next-sibling axis backwards
 				-- until we find the owner pointer
+
 				from
 					p := document.retrieve_next_sibling (node_number)
 				until
@@ -85,9 +162,14 @@ feature -- Access
 				loop
 					p := document.retrieve_next_sibling (p)
 				end
-				cached_parent_node ?= document.retrieve_node (p)
-				Result := cached_parent_node
+				a_node := document.retrieve_node (p)
+				if a_node.is_tiny_composite_node then
+					cached_parent_node := a_node.as_tiny_composite_node
+				else
+					cached_parent_node := Void
+				end
 			end
+			Result := cached_parent_node
 		end
 
 	node_name: STRING is
@@ -132,7 +214,7 @@ feature -- Access
 				if has_child_nodes then
 					create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, Void, True)					
 				else
-					Result := empty_abstract_node_iterator
+					create {XM_XPATH_EMPTY_ITERATOR} Result.make
 				end
 			else
 				Result := new_axis_iterator_with_node_test (an_axis_type, any_node_test)
@@ -169,9 +251,9 @@ feature -- Access
 				Result := created_preceding_sibling_axis_iterator (a_node_test)
 			when Self_axis then
 				if a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
-					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (Current)
+					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 				else
-					Result := empty_abstract_node_iterator
+					create {XM_XPATH_EMPTY_ITERATOR} Result.make
 				end
 			when Preceding_or_ancestor_axis then
 				Result := created_preceding_or_ancestor_axis_iterator (a_node_test)
@@ -189,8 +271,8 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			else
-				a_tiny_node ?= other
-				if a_tiny_node /= Void then
+				if other.is_tiny_node then
+					a_tiny_node := other.as_tiny_node
 					if document /= a_tiny_node.document then
 						Result := False
 					elseif node_number /= a_tiny_node.node_number then
@@ -218,13 +300,6 @@ feature {NONE} -- Implementation
 	
 	cached_parent_node: XM_XPATH_TINY_COMPOSITE_NODE
 			-- Cached parent node
-	
-	empty_abstract_node_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE] is
-			-- Empty iterator
-		do
-			create Result.make
-		end
-
 
 	created_ancestor_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- New ancestor axis iterator
@@ -232,7 +307,7 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void
 		do
 			if node_type = Document_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create {XM_XPATH_TINY_ANCESTOR_ENUMERATION} Result.make (document, Current, a_node_test, False)
 			end
@@ -247,9 +322,9 @@ feature {NONE} -- Implementation
 		do
 			if node_type = Document_node then
 				if a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
-					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (Current)
+					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 				else
-					Result := empty_abstract_node_iterator
+					create {XM_XPATH_EMPTY_ITERATOR} Result.make
 				end
 			else
 				create {XM_XPATH_TINY_ANCESTOR_ENUMERATION} Result.make (document, Current, a_node_test, True)
@@ -264,9 +339,9 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void		
 		do
 			if node_type /= Element_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			elseif document.alpha_value (node_number) < 1 then -- Element has no attributes
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create {XM_XPATH_TINY_ATTRIBUTE_ENUMERATION} Result.make (document, node_number, a_node_test)
 			end
@@ -282,7 +357,7 @@ feature {NONE} -- Implementation
 			if has_child_nodes then
 				create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, a_node_test, True)
 			else
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			end
 		ensure
 			child_axis_iterator_not_void: Result /= Void
@@ -292,20 +367,15 @@ feature {NONE} -- Implementation
 			-- New descendant axis iterator
 		require
 			node_test_not_void: a_node_test /= Void		
-		local
-			a_name_test: XM_XPATH_NAME_TEST
-			a_document: XM_XPATH_TINY_DOCUMENT
 		do
-			a_name_test ?= a_node_test
-			if node_type = Document_node and then a_name_test /= Void and then a_name_test.node_kind = Element_node then
-				a_document ?= Current
-					check
-						document_not_void: document /= Void
-						-- as `node_type' is `Document_node'
-					end
-				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_TINY_ELEMENT]} Result.make (a_document.all_elements (a_node_test.fingerprint))
+			if a_node_test.is_name_test then
+				if node_type = Document_node and then a_node_test.as_name_test.node_kind = Element_node then
+					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_TINY_ELEMENT]} Result.make (as_tiny_document.all_elements (a_node_test.fingerprint))
+				else
+					create {XM_XPATH_EMPTY_ITERATOR} Result.make
+				end
 			else
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			end
 		ensure
 			descendant_axis_iterator_not_void: Result /= Void
@@ -319,9 +389,9 @@ feature {NONE} -- Implementation
 			if has_child_nodes then
 				create {XM_XPATH_TINY_DESCENDANT_ENUMERATION} Result.make (document, Current, a_node_test, True)
 			elseif a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (Current)
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 			else
-				Result := empty_abstract_node_iterator					
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make					
 			end				
 		ensure
 			descendant_or_self_axis_iterator_not_void: Result /= Void
@@ -335,7 +405,7 @@ feature {NONE} -- Implementation
 			a_parent_node: XM_XPATH_TINY_NODE
 		do
 			if node_type = Document_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			elseif node_type = Attribute_node or else node_type = Namespace_node then
 					a_parent_node := parent
 					create {XM_XPATH_TINY_FOLLOWING_ENUMERATION} Result.make (document, a_parent_node, a_node_test, True)
@@ -352,7 +422,7 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void
 		do
 			if node_type = Document_node or else node_type = Attribute_node or else node_type = Namespace_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create  {XM_XPATH_TINY_SIBLING_ENUMERATION} Result.make (document, Current, a_node_test, False)
 			end
@@ -369,11 +439,11 @@ feature {NONE} -- Implementation
 		do
 			a_parent_node := parent
 			if a_parent_node = Void then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			elseif a_node_test.matches_node (a_parent_node.node_type, a_parent_node.fingerprint, any_item.fingerprint) then
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (a_parent_node)
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (a_parent_node)
 			else
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			end
 		ensure
 			parent_axis_iterator_not_void: Result /= Void
@@ -387,7 +457,7 @@ feature {NONE} -- Implementation
 			a_parent_node: XM_XPATH_TINY_NODE
 		do
 			if node_type = Document_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			elseif node_type = Attribute_node or else node_type = Namespace_node then
 				a_parent_node := parent
 				create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, a_parent_node, a_node_test, False)
@@ -404,7 +474,7 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void
 		do	
 			if node_type = Document_node or else node_type = Attribute_node or else node_type = Namespace_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create  {XM_XPATH_TINY_PRECEDING_SIBLING_ENUMERATION} Result.make (document, Current, a_node_test)
 			end
@@ -420,7 +490,7 @@ feature {NONE} -- Implementation
 			a_parent_node: XM_XPATH_TINY_NODE
 		do
 			if node_type = Document_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			elseif node_type = Attribute_node or else node_type = Namespace_node then
 				a_parent_node := parent
 				create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (document, a_parent_node, a_node_test, True)

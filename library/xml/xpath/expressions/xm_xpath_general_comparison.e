@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 		do
 			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			create atomic_comparer.make (a_collator)
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			operator_set: operator = a_token
@@ -117,7 +118,6 @@ feature -- Evaluation
 		local
 			an_iterator, another_iterator, a_third_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
-			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
 			a_count: INTEGER
 			finished: BOOLEAN
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
@@ -152,8 +152,7 @@ feature -- Evaluation
 							until
 								finished or else is_error or else an_iterator.after
 							loop
-								an_atomic_value ?= an_iterator.item
-								if an_atomic_value = Void then
+								if not an_iterator.item.is_atomic_value then
 									set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
 									finished := True
 								else
@@ -164,13 +163,13 @@ feature -- Evaluation
 									until
 										finished or else a_third_iterator.after
 									loop
-										another_atomic_value ?= a_third_iterator.item
-										if another_atomic_value = Void then
+										if not a_third_iterator.item.is_atomic_value then
 											set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
 											finished := True
 										else
 											create a_comparison_checker
-											a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_value_operator (operator), atomic_comparer, another_atomic_value, is_backwards_compatible_mode)
+											a_comparison_checker.check_correct_general_relation (an_iterator.item.as_atomic_value,
+																												  singleton_value_operator (operator), atomic_comparer, a_third_iterator.item.as_atomic_value, is_backwards_compatible_mode)
 											if a_comparison_checker.is_comparison_type_error then
 												set_last_error (a_comparison_checker.last_type_error)
 												finished := True
@@ -236,13 +235,11 @@ feature {NONE} -- Implementation
 	calculate_effective_boolean_value_with_second_operand_singleton (a_context: XM_XPATH_CONTEXT; an_item: XM_XPATH_ITEM; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Effective boolean value
 		local
-			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
 			finished: BOOLEAN
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			last_boolean_value := Void
-			another_atomic_value ?= an_item
-			if another_atomic_value = Void then
+			if not an_item.is_atomic_value then
 				create last_boolean_value.make (False)
 				last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
 			end
@@ -251,14 +248,13 @@ feature {NONE} -- Implementation
 			until
 				finished or else an_iterator.after
 			loop
-				an_atomic_value ?= an_iterator.item
-				if an_atomic_value = Void then
+				if not an_iterator.item.is_atomic_value then
 					create last_boolean_value.make (False)
 					last_boolean_value.set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
 					finished := True
 				else
 					create a_comparison_checker
-					a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_value_operator (operator), atomic_comparer, another_atomic_value, is_backwards_compatible_mode)
+					a_comparison_checker.check_correct_general_relation (an_iterator.item.as_atomic_value, singleton_value_operator (operator), atomic_comparer, an_item.as_atomic_value, is_backwards_compatible_mode)
 					if a_comparison_checker.is_comparison_type_error then
 						create last_boolean_value.make (False)
 						last_boolean_value.set_last_error (a_comparison_checker.last_type_error)
@@ -309,7 +305,6 @@ feature {NONE} -- Implementation
 			end
 			
 			create {XM_XPATH_VALUE_COMPARISON} a_computed_expression.make (first_operand, singleton_value_operator (operator), second_operand, atomic_comparer.collator)
-			-- TODO copy location
 			a_computed_expression.set_parent (container)
 			a_computed_expression.simplify
 			if not a_computed_expression.is_error then
@@ -336,9 +331,7 @@ feature {NONE} -- Implementation
 			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_type, another_type: XM_XPATH_ITEM_TYPE
-			an_atomic_type, another_atomic_type: XM_XPATH_ATOMIC_TYPE
 			a_message: STRING
-			a_range_expression: XM_XPATH_RANGE_EXPRESSION
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
 			create a_type_checker
@@ -371,23 +364,20 @@ feature {NONE} -- Implementation
 					end
 					if not is_error then
 						if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one then
-							an_atomic_type ?= a_type
-							another_atomic_type ?= another_type
 							check
-								first_type_atomic: an_atomic_type /= Void
-								second_type_atomic: another_atomic_type /= Void
+								first_type_atomic: a_type.is_atomic_type
+								second_type_atomic: another_type.is_atomic_type
 								-- from earlier static type checking
 							end
-							analyze_two_singletons_two_point_zero (a_context, an_atomic_type, another_atomic_type)
+							analyze_two_singletons_two_point_zero (a_context, a_type.as_atomic_type, another_type.as_atomic_type)
 						else -- one or both arguments are not singletons
 							if	not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
 								analyze_singleton_and_empty_sequence (a_context)
 							elseif not first_operand.cardinality_allows_many then
 								analyze_first_operand_single (a_context)
 							else
-								a_range_expression ?= first_operand
-								if a_range_expression /= Void and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
-									analyze_n_to_m_equals_i (a_context, a_range_expression)
+								if first_operand.is_range_expression and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
+									analyze_n_to_m_equals_i (a_context, first_operand.as_range_expression)
 								else
 									if operator /= Equals_token and then operator /= Not_equal_token	and then (is_sub_type (a_type, type_factory.numeric_type)
 																																		 or else is_sub_type (another_type, type_factory.numeric_type)) then
@@ -445,16 +435,12 @@ feature {NONE} -- Implementation
 			range_expression_not_void: a_range_expression /= void
 			xpath_2_mode: not is_backwards_compatible_mode
 		local
-			an_integer_value, another_integer_value: XM_XPATH_INTEGER_VALUE
-			a_position: XM_XPATH_POSITION
 			an_expression: XM_XPATH_EXPRESSION
 		do
-			an_integer_value ?= a_range_expression.lower_bound
-			another_integer_value ?= a_range_expression.upper_bound
-			a_position ?= second_operand
-			if an_integer_value /= Void and then another_integer_value /= Void and then a_position /= Void
-				and then an_integer_value.is_platform_integer and then another_integer_value.is_platform_integer then
-				create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer_value.as_integer, another_integer_value.as_integer)
+			if a_range_expression.lower_bound.is_integer_value and then a_range_expression.upper_bound.is_integer_value
+				and then second_operand.is_position_function and then a_range_expression.lower_bound.as_integer_value.is_platform_integer
+				and then a_range_expression.upper_bound.as_integer_value.is_platform_integer then
+				create {XM_XPATH_POSITION_RANGE} an_expression.make (a_range_expression.lower_bound.as_integer_value.as_integer, a_range_expression.upper_bound.as_integer_value.as_integer)
 			else
 				create {XM_XPATH_INTEGER_RANGE_TEST} an_expression.make (second_operand, a_range_expression.lower_bound, a_range_expression.upper_bound)
 			end
@@ -522,20 +508,14 @@ feature {NONE} -- Implementation
 
 	evaluate_two_constants is
 			-- Evaluate the expression now if both arguments are constant
-		local
-			a_value, another_value: XM_XPATH_VALUE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			a_value ?= first_operand
-			another_value ?= second_operand
-			if a_value /= Void and then another_value /= Void then
+			if first_operand.is_value and then second_operand.is_value then
 				evaluate_item (Void)
-				a_boolean_value ?= last_evaluated_item
-					check
-						a_boolean_value /= Void
-						-- We are guarenteed a boolean value
-					end
-				set_replacement (a_boolean_value)
+				check
+					boolean_value: last_evaluated_item.is_boolean_value
+					-- We are guarenteed a boolean value
+				end
+				set_replacement (last_evaluated_item.as_boolean_value)
 			end
 		end
 
@@ -545,10 +525,7 @@ feature {NONE} -- Implementation
 			context_not_void: a_context /= Void
 			backwards_compatible_mode: is_backwards_compatible_mode
 		local
-			a_value, another_value: XM_XPATH_VALUE
 			a_type, another_type: XM_XPATH_ITEM_TYPE
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			maybe_first_operand_boolean, maybe_second_operand_boolean: BOOLEAN
 			maybe_first_operand_numeric, maybe_second_operand_numeric: BOOLEAN
 			a_general_comparison: XM_XPATH_GENERAL_COMPARISON
@@ -556,26 +533,21 @@ feature {NONE} -- Implementation
 			
 			-- If both operands are values, then evaluate now
 			
-			a_value ?= first_operand
-			another_value ?= second_operand
-			if a_value /= Void and then another_value /= Void then
+			if first_operand.is_value and then second_operand.is_value then
 				evaluate_item (Void)
-				a_boolean_value ?= last_evaluated_item
 				check
-					value_is_atomic: a_boolean_value /= Void
+					value_is_boolean: last_evaluated_item.is_boolean_value
 				end
-				set_replacement (a_boolean_value)
+				set_replacement (last_evaluated_item.as_boolean_value)
 			else
 				a_type := first_operand.item_type
 				another_type := second_operand.item_type
-				an_atomic_type ?= a_type
-				if an_atomic_type = Void then
+				if not a_type.is_atomic_type then
 					atomize_first_operand  := True
 				else
 					atomize_first_operand  := False
 				end
-				an_atomic_type ?= another_type
-				if an_atomic_type = Void then
+				if not another_type.is_atomic_type then
 					atomize_second_operand  := True
 				else
 					atomize_second_operand  := False
@@ -617,7 +589,7 @@ feature {NONE} -- Implementation
 invariant
 	
 	general_comparison: is_general_comparison_operator (operator)
-	atomic_comparer_not_void: atomic_comparer /= Void
+	atomic_comparer_not_void: initialized implies atomic_comparer /= Void
 	
 end
 	

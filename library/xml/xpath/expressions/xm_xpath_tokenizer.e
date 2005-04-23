@@ -37,8 +37,6 @@ feature {NONE} -- Initialization
 			next_token := Eof_token
 			next_token_start_index := 1
 			input_index := 1
-			line_number := 1
-			next_line_number := 1
 			input := Void
 		end
 	
@@ -121,13 +119,16 @@ feature -- Status report
 	
 feature -- Status setting
 
-	tokenize (an_input: STRING; a_start, an_end: INTEGER) is
+	tokenize (an_input: STRING; a_start, an_end, a_line_number: INTEGER) is
 			-- Prepare a string for tokenization.
 		require
 			input_string_not_void: an_input /= Void
 			strictly_positive_start: a_start > 0 and then a_start <= an_input.count
 			valid_end_point: an_end = -1 or else an_end >0 and then an_end > a_start and then an_end <= an_input.count
+			nearly_positive_line_number: a_line_number >= -1
 		do
+			line_number := a_line_number
+			next_line_number := line_number
 			next_token := Eof_token
 			next_token_value := Void
 			next_token_start_index := a_start
@@ -972,7 +973,8 @@ invariant
 
 	tokens_not_void: tokens /= Void
 	double_keywords_not_void: double_keywords /= Void
-	
+	nearly_positive_line_number: line_number >= -1
+
 end
 
 -- The logic in this class ultimately (via Michael Kay's Saxon product)

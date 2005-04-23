@@ -16,13 +16,14 @@ inherit
 	
 	XM_XPATH_ATTRIBUTE
 		undefine
-			document_element, next_sibling, previous_sibling, local_part
+			document_element, next_sibling, previous_sibling, local_part, is_tree_node, as_tree_node
 		end
 
 	XM_XPATH_TREE_NODE
 		redefine
 			name_code, is_same_node, sequence_number,
-			next_sibling, previous_sibling, previous_node_in_document_order, next_node_in_document_order
+			next_sibling, previous_sibling, previous_node_in_document_order, next_node_in_document_order,
+			is_tree_attribute, as_tree_attribute
 		end
 
 creation
@@ -55,6 +56,18 @@ feature -- Access
 
 	name_code: INTEGER
 			-- Name code this node - used in displaying names
+
+	is_tree_attribute: BOOLEAN is
+			-- Is `Current' an attribute?
+		do
+			Result := True
+		end
+
+	as_tree_attribute: XM_XPATH_TREE_ATTRIBUTE is
+			-- `Current' seen as an attribute
+		do
+			Result := Current
+		end
 
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
 			-- Node sequence number (in document order)
@@ -91,8 +104,8 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			else
-				another_attribute ?= other
-				if another_attribute /= Void then
+				if other.is_tree_node and then other.as_tree_node.is_tree_attribute then
+					another_attribute := other.as_tree_node.as_tree_attribute
 					Result := parent_node.is_same_node (another_attribute.parent_node) and then name_code = another_attribute.name_code
 				end
 			end

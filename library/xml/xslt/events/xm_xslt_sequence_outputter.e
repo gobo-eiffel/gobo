@@ -69,7 +69,7 @@ feature -- Access
 			when 0 then
 				create {XM_XPATH_EMPTY_SEQUENCE} Result.make
 			when 1 then
-				Result := output_list.item (1).as_value
+				Result := output_list.item (1).as_item_value
 			else
 				create {XM_XPATH_SEQUENCE_EXTENT} Result.make_from_list (output_list)
 			end
@@ -91,7 +91,7 @@ feature -- Access
 			context_not_void: a_context /= Void
 		do
 			if output_list.count = 0 then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} Result.make
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (output_list)
 			end
@@ -248,32 +248,25 @@ feature -- Events
 
 	append_item (an_item: XM_XPATH_ITEM) is
 			-- Output an item (atomic value or node) to the sequence.
-		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_node: XM_XPATH_NODE
 		do
 
 			-- If an atomic value is written to a tree, and the previous item was also
 			--  an atomic value, then add a single space to separate them
 
-			an_atomic_value ?= an_item
-			if previous_atomic and then tree /= Void and then an_atomic_value /= Void then
+			if previous_atomic and then tree /= Void and then an_item.is_atomic_value then
 				tree.notify_characters (" ", 0)
 			end
-			previous_atomic := an_atomic_value /= Void
+			previous_atomic := an_item.is_atomic_value
 			if tree = Void then
 				output_list.force_last (an_item)
+			elseif an_item.is_atomic_value then
+				tree.notify_characters (an_item.as_atomic_value.string_value, 0)
 			else
-				if an_atomic_value /= Void then
-					tree.notify_characters (an_atomic_value.string_value, 0)
-				else
-					a_node ?= an_item
-					check
-						node: a_node /= Void
-						-- Items are atomic values or nodes
-					end
-					a_node.copy_node (tree, All_namespaces, True)
+				check
+					node: an_item.is_node
+					-- Items are atomic values or nodes
 				end
+				an_item.as_node.copy_node (tree, All_namespaces, True)
 			end
 		end
 

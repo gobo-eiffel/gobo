@@ -84,12 +84,13 @@ feature -- Status report
 
 feature -- Parsers
 
-	parse (an_expression_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator: INTEGER) is
+	parse (an_expression_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator, a_line_number: INTEGER) is
 			--  Parse `an_expression_string'.
 		require
 			expression_string_not_void: an_expression_string /= Void
 			static_context_not_void: a_context /= Void
 			strictly_positive_start: a_start > 0
+			nearly_positive_line_number: a_line_number >= -1
 		local
 			s: STRING
 		do
@@ -97,7 +98,7 @@ feature -- Parsers
 			environment := a_context
 			function_library := environment.available_functions
 			create tokenizer.make
-			tokenizer.tokenize (an_expression_string, a_start, -1)
+			tokenizer.tokenize (an_expression_string, a_start, -1, a_line_number)
 			if	tokenizer.is_lexical_error then
 				report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 			else
@@ -1398,7 +1399,6 @@ feature {NONE} -- Implementation
 			no_previous_parse_error: not is_parse_error
 		local
 			a_step, a_predicate: XM_XPATH_EXPRESSION
-			an_axis: XM_XPATH_AXIS_EXPRESSION
 			reverse: BOOLEAN
 			a_message: STRING
 		do
@@ -1413,8 +1413,7 @@ feature {NONE} -- Implementation
 				-- axis order. In all other cases they are considered in document order.
 
 				a_step := internal_last_parsed_expression
-				an_axis ?= a_step
-				reverse := (an_axis /= Void and then is_reverse_axis (an_axis.axis))
+				reverse := (a_step.is_axis_expression and then is_reverse_axis (a_step.as_axis_expression.axis))
 
 				from
 				until
@@ -2531,11 +2530,12 @@ feature {NONE} -- Implementation
 						if an_item_type = Void then
 							report_parse_error (STRING_.concat ("Unknown atomic type ", a_qname), "XPST0051")
 						else
-							Result ?= an_item_type
-							if Result = Void then
+							if not an_item_type.is_atomic_type then
 								a_message := STRING_.concat ("The type ", a_qname)
 								a_message := STRING_.appended_string (a_message, " is not atomic.")
 								report_parse_error (a_message, "XPST0003")
+							else
+								Result := an_item_type.as_atomic_type
 							end
 						end
 					else

@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, returned_item_type, may_contain_sequence_constructor, is_permitted_child
+			make_style_element, validate, returned_item_type, may_contain_sequence_constructor,
+			is_permitted_child, is_for_each
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
@@ -44,11 +45,8 @@ feature -- Status report
 
 	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
 			-- Is `a_style_element' a permitted child of `Current'?
-		local
-			a_sort: XM_XSLT_SORT
 		do
-			a_sort ?= a_style_element
-			Result := a_sort /= Void
+			Result := a_style_element.is_sort
 		end
 		
 feature -- Element change
@@ -120,6 +118,14 @@ feature -- Element change
 			a_content := last_generated_expression
 			if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end 
 			create {XM_XSLT_COMPILED_FOR_EACH} last_generated_expression.make (an_executable, a_sorted_sequence, a_content)
+		end
+
+feature -- Conversion
+	
+	is_for_each: BOOLEAN is
+			-- Is `Current' an xsl:for-each?
+		do
+			Result := True
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted

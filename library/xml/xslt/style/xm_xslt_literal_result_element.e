@@ -244,7 +244,6 @@ feature {NONE} -- Implementation
 		require
 			expression_not_void: an_expression /= Void
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
 			a_string: STRING
 			an_index, a_character_code: INTEGER
 		do
@@ -254,9 +253,8 @@ feature {NONE} -- Implementation
 			-- Note that the check includes characters that need to be escaped in a URL if the
 			--  output method turns out to be HTML (we don't know the method at compile time).
 
-			a_string_value ?= last_generated_expression
-			if a_string_value /= Void then
-				a_string := a_string_value.string_value
+			if last_generated_expression.is_string_value then
+				a_string := last_generated_expression.as_string_value.string_value
 				Result := True
 				from
 					an_index := 1

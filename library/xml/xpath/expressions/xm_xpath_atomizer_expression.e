@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			make_unary (a_sequence)
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			base_expression_set: base_expression = a_sequence
 			static_properties_computed: are_static_properties_computed
@@ -44,12 +44,9 @@ feature -- Access
 	
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
-		local
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE 
 		do
 			Result := base_expression.item_type
-			an_atomic_type ?= Result
-			if an_atomic_type = Void then
+			if not Result.is_atomic_type then
 				Result := type_factory.any_atomic_type -- best guess
 			end			
 		end
@@ -59,8 +56,6 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations
 		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_value: XM_XPATH_VALUE
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			finished: BOOLEAN
 			a_node: XM_XPATH_NODE
@@ -71,12 +66,10 @@ feature -- Optimization
 			elseif base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end
-			an_atomic_value ?= base_expression
-			if an_atomic_value /= Void then
-				set_replacement (an_atomic_value)
+			if base_expression.is_atomic_value then
+				set_replacement (base_expression.as_atomic_value)
 			else
-				a_value ?= base_expression
-				if a_value /= Void then
+				if base_expression.is_value then
 					from
 						base_expression.create_iterator (Void)
 						an_iterator := base_expression.last_iterator
@@ -92,8 +85,8 @@ feature -- Optimization
 
 						-- If all items in the sequence are atomic (they generally will be, since this is
 						--  done at compile time), then return the sequence.
-						a_node ?= an_iterator.item
-						if a_node /= Void then
+
+						if an_iterator.item.is_node then
 							finished := True
 						else
 							an_iterator.forth
@@ -129,7 +122,6 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
-			a_node: XM_XPATH_NODE
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
 		do
 			base_expression.evaluate_item (a_context)
@@ -138,13 +130,12 @@ feature -- Evaluation
 			elseif base_expression.last_evaluated_item.is_error then
 				last_evaluated_item := base_expression.last_evaluated_item
 			else
-				a_node ?= base_expression.last_evaluated_item
-				if a_node = Void then
-					last_evaluated_item := base_expression.last_evaluated_item
-				else
-					an_iterator := a_node.typed_value
+				if base_expression.last_evaluated_item.is_node then
+					an_iterator := base_expression.last_evaluated_item.as_node.typed_value
 					an_iterator.start
-					last_evaluated_item :=  an_iterator.item
+					last_evaluated_item := an_iterator.item
+				else
+					last_evaluated_item := base_expression.last_evaluated_item
 				end
 			end
 		end
@@ -165,12 +156,9 @@ feature -- Evaluation
 
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
-		local
-			a_node: XM_XPATH_NODE
 		do
-			a_node ?= an_item
-			if a_node /= Void then
-				create last_mapped_item.make_sequence (a_node.typed_value)
+			if an_item.is_node then
+				create last_mapped_item.make_sequence (an_item.as_node.typed_value)
 			else
 				create last_mapped_item.make_item (an_item)
 			end

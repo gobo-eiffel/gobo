@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SINGLE_NODE_EXPRESSION
 		redefine
-			same_expression
+			same_expression, is_parent_node_expression, as_parent_node_expression
 		end
 
 creation
@@ -31,25 +31,35 @@ feature {NONE} -- Initialization
 			create intrinsic_dependencies.make (1, 6)
 			intrinsic_dependencies.put (True, 2) -- depends_upon_context_item												
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 		end
 
 feature -- Access
 
+	is_parent_node_expression: BOOLEAN is
+			-- Is `Current' a parent node expression?
+		do
+			Result := True
+		end
+
+	as_parent_node_expression: XM_XPATH_PARENT_NODE_EXPRESSION is
+			-- `Current' seen as a parent node expression
+		do
+			Result := Current 
+		end
+
 	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE is
 			-- The single node
 		local
 			an_item: XM_XPATH_ITEM
-			a_node: XM_XPATH_NODE
 		do
 			an_item := a_context.context_item
-			a_node ?= an_item
-			if a_node = Void then
+			if not an_item.is_node then
 				Result := Void
 			else
-				Result := a_node.parent
+				Result := an_item.as_node.parent
 			end
 		end
 
@@ -57,11 +67,8 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			another_parent: XM_XPATH_PARENT_NODE_EXPRESSION
 		do
-			another_parent ?= other
-			Result := another_parent /= Void
+			Result := other.is_parent_node_expression
 		end
 
 feature -- Status report

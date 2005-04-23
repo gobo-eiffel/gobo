@@ -109,10 +109,6 @@ feature -- Optimization
 			-- Test whether a subexpression qualifies for promotion, and if so, accept the promotion
 		require
 			sub_expression_dependencies_and_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_dependencies_computed and then a_child_expression.are_cardinalities_computed
-		local
-			variable_reference: XM_XPATH_VARIABLE_REFERENCE
-			reverser: XM_XPATH_REVERSER
-			a_document_sorter: XM_XPATH_DOCUMENT_SORTER
 		do
 			inspect
 				action
@@ -136,20 +132,17 @@ feature -- Optimization
 					accepted_expression := Void
 				end
 			when Inline_variable_references then
-				variable_reference ?= a_child_expression
-				if variable_reference /= Void and then variable_reference.binding = binding_expression then
+				if a_child_expression.is_variable_reference and then a_child_expression.as_variable_reference.binding = binding_expression then
 					accepted_expression := containing_expression
 				else
 					accepted_expression := Void
 				end
 			when Unordered then
-				reverser ?= a_child_expression
-				if reverser /= Void then
-					accepted_expression := reverser.base_expression
+				if a_child_expression.is_reverser then
+					accepted_expression := a_child_expression.as_reverser.base_expression
 				elseif not must_eliminate_duplicates then
-					a_document_sorter ?= a_child_expression
-					if a_document_sorter /= Void then
-						accepted_expression := a_document_sorter.base_expression
+					if a_child_expression.is_document_sorter then
+						accepted_expression := a_child_expression.as_document_sorter.base_expression
 						accepted_expression.mark_unreplaced
 					else
 						accepted_expression := Void
@@ -197,7 +190,9 @@ feature {NONE} -- Implementation
 
 			create a_variable.make (a_range_variable)
 			promoted_expression := a_variable
-
+			if containing_expression.is_computed_expression then
+				containing_expression.as_computed_expression.copy_location_identifier (promoted_expression)
+			end
 			create a_let_expression.make (a_range_variable, a_child_expression, containing_expression)
 			a_let_expression.adopt_child_expression (containing_expression)
 			set_containing_expression (a_let_expression)
@@ -209,14 +204,12 @@ feature {NONE} -- Implementation
 			child_not_void: a_child_expression /= Void
 			binding_not_void: a_binding /= Void
 		local
-			a_variable: XM_XPATH_VARIABLE_REFERENCE
 			children: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			finished: BOOLEAN
 			an_index: INTEGER
 		do
-			a_variable ?= a_child_expression
-			if a_variable /= Void then
-				Result := a_variable.binding = a_binding
+			if a_child_expression.is_variable_reference then
+				Result := a_child_expression.as_variable_reference.binding = a_binding
 			else
 				from
 					children := a_child_expression.sub_expressions

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			executable := an_executable			
-			a_block ?= a_head_expression
+			a_block ?= a_head_expression -- TODO: as_block
 			another_block ?= a_tail_expression
 			if a_block = Void and then another_block = Void then
 				create children.make (2)
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 				a_cursor.forth
 			end
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 		end
@@ -297,7 +297,7 @@ feature -- Evaluation
 			-- Iterate over the values of a sequence
 		do
 			if children.count = 0 then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 			elseif children.count = 1 then
 				children.item (1).create_iterator (a_context)
 				last_iterator := children.item (1).last_iterator
@@ -322,7 +322,7 @@ feature -- Evaluation
 				a_context.transformer.is_error or else a_cursor.after
 			loop
 				a_child := a_cursor.item
-				an_instruction ?= a_child
+				an_instruction ?= a_child -- TODO: ? - cluster dependency
 				if an_instruction /= Void then
 					an_instruction.process_leaving_tail (a_context)
 					last_tail_call := an_instruction.last_tail_call
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	children_not_void: children /= Void
+	children_not_void: initialized implies children /= Void
 
 end
 	

@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 		local
 			fixed: BOOLEAN
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
-			a_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION
 		do
 			set_select_expression (a_select_expression)
 			sort_key_list := a_sort_key_list
@@ -45,8 +44,7 @@ feature {NONE} -- Initialization
 			until
 				a_cursor.after
 			loop
-				a_fixed_sort_key ?= a_cursor.item
-				if a_fixed_sort_key = Void then
+				if not a_cursor.item.is_fixed_sort_key then
 					fixed := False
 					a_cursor.go_after
 				else
@@ -62,16 +60,15 @@ feature {NONE} -- Initialization
 				until
 					a_cursor.after
 				loop
-					a_fixed_sort_key ?= a_cursor.item
 					check
-						fixed_sort_key: a_fixed_sort_key /= Void
+						fixed_sort_key: a_cursor.item.is_fixed_sort_key
 					end
-					fixed_sort_key_list.put_last (a_fixed_sort_key)
+					fixed_sort_key_list.put_last (a_cursor.item.as_fixed_sort_key)
 					a_cursor.forth
 				end
 			end
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			select_expression_set: select_expression = a_select_expression
 			sort_key_list_set: sort_key_list = a_sort_key_list
@@ -246,7 +243,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	select_expression_not_void: select_expression /= Void
-	sort_key_list_not_void: sort_key_list /= Void
+	select_expression_not_void: initialized implies select_expression /= Void
+	sort_key_list_not_void: initialized implies sort_key_list /= Void
 
 end

@@ -78,11 +78,11 @@ feature -- Cursor movement
 				if an_item.is_error then
 					item := an_item
 				else
-					an_atomic_value ?= an_item
 					check
-						item_is_atomic: an_atomic_value /= Void
+						item_is_atomic: an_item.is_atomic_value
 						-- static typing in XM_XPATH_INDEX_OF
 					end
+					an_atomic_value := an_item.as_atomic_value
 					if not atomic_comparer.are_comparable (an_atomic_value, search_value) then
 						create {XM_XPATH_INVALID_ITEM} item.make_from_string ("Items are not comparable", Xpath_errors_uri, "FOTY0012", Dynamic_error)
 					elseif atomic_comparer.three_way_comparison (an_atomic_value, search_value) = 0 then

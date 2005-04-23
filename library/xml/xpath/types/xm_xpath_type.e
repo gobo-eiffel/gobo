@@ -59,15 +59,11 @@ feature -- Access
 			-- Common supertype of two given types
 		require
 			types_not_void: t1 /= Void and then t2 /= void
-		local
-			a_no_node_test: XM_XPATH_NO_NODE_TEST
 		do
-			a_no_node_test ?= t1
-			if a_no_node_test /= Void then
+			if t1.is_no_node_test then
 				Result := t2
 			else
-				a_no_node_test ?= t2
-				if a_no_node_test /= Void then
+				if t2.is_no_node_test then
 					Result := t1
 				elseif t1 = t2 then
 					Result := t1
@@ -181,8 +177,6 @@ feature -- Status report
 		require
 			types_not_void: a_first_type /= Void and then a_second_type /= Void
 		local
-			an_atomic_type, another_atomic_type, a_third_atomic_type: XM_XPATH_ATOMIC_TYPE
-			a_node_test, another_node_test: XM_XPATH_NODE_TEST
 			an_item_type: XM_XPATH_ITEM_TYPE
 			finished: BOOLEAN
 			a_fingerprint: INTEGER
@@ -198,16 +192,13 @@ feature -- Status report
 			elseif a_second_type = any_item then
 				Result := Subsumed_type
 			else
-				an_atomic_type ?= a_first_type
-				if an_atomic_type /= Void then
-					a_node_test ?= a_second_type
-					if a_node_test /= Void then
+				if a_first_type.is_atomic_type then
+					if a_second_type.is_node_test then
 						Result := Disjoint_types
 					else
-						another_atomic_type ?= a_second_type
-						a_fingerprint := an_atomic_type.fingerprint
-						if another_atomic_type /= Void and then
-							a_fingerprint = another_atomic_type.fingerprint then
+						a_fingerprint := a_first_type.fingerprint
+						if a_second_type.is_atomic_type and then
+							a_fingerprint = a_second_type.fingerprint then
 							Result := Same_item_type
 						else
 							Result := -1
@@ -216,11 +207,10 @@ feature -- Status report
 							until
 								finished
 							loop
-								a_third_atomic_type ?= an_item_type
-								if a_third_atomic_type = Void then
+								if not an_item_type.is_atomic_type then
 									finished := True
 								else
-									if a_fingerprint = a_third_atomic_type.fingerprint then
+									if a_fingerprint = an_item_type.fingerprint then
 										Result := Subsuming_type
 										finished := True
 									else
@@ -231,17 +221,16 @@ feature -- Status report
 							if Result = -1 then
 								from
 									finished := False
-									a_fingerprint := another_atomic_type.fingerprint
+									a_fingerprint := a_second_type.fingerprint
 									an_item_type := a_first_type
 								until
 									finished
 								loop
-									a_third_atomic_type ?= an_item_type
-									if a_third_atomic_type = Void then
+									if not an_item_type.is_atomic_type then
 										Result := Disjoint_types
 										finished := True
 									else
-										if a_fingerprint = a_third_atomic_type.fingerprint then
+										if a_fingerprint = an_item_type.fingerprint then
 											Result := Subsumed_type
 											finished := True
 										else
@@ -256,16 +245,13 @@ feature -- Status report
 
 					-- `a_first_type' must be a node test
 
-					an_atomic_type ?= a_second_type
-					if an_atomic_type /= Void then
+					if a_second_type.is_atomic_type then
 						Result := Disjoint_types
 					else
-						a_node_test ?= a_first_type
-						another_node_test ?= a_second_type
 						check
-							both_node_tests: a_node_test /= Void and then another_node_test /= Void
+							both_node_tests: a_first_type.is_node_test and then a_second_type.is_node_test
 						end
-						Result := node_test_relationship (a_node_test, another_node_test)
+						Result := node_test_relationship (a_first_type.as_node_test, a_second_type.as_node_test)
 					end
 				end
 			end
@@ -442,20 +428,15 @@ feature {NONE} -- Implementation
 			-- Relationship between two node contents
 		require
 			tests_not_void: a_node_test /= Void and then another_node_test /= Void
-		local
-			a_document_node_test, another_document_node_test: XM_XPATH_DOCUMENT_NODE_TEST
 		do
-			a_document_node_test ?= a_node_test
-			if a_document_node_test /= Void then
-				another_document_node_test ?= another_node_test
-				if another_document_node_test /= Void then
-					Result := type_relationship (a_document_node_test.element_test, another_document_node_test.element_test)
+			if a_node_test.is_document_node_test then
+				if another_node_test.is_document_node_test then
+					Result := type_relationship (a_node_test.as_document_node_test.element_test, another_node_test.as_document_node_test.element_test)
 				else
 					Result := Subsuming_type
 				end
 			else
-				another_document_node_test ?= another_node_test
-				if another_document_node_test /= Void then
+				if another_node_test.is_document_node_test then
 					Result := Subsuming_type
 				else
 					Result := schema_type_relationship (a_node_test.content_type, another_node_test.content_type)

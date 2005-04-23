@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			evaluate_item, check_arguments
+			evaluate_item, check_arguments, is_count_function, as_count_function
 		end
 
 creation
@@ -29,14 +29,28 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "count"
+			namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
+
+	is_count_function: BOOLEAN is
+			-- Is `Current' XPath count() function?
+		do
+			Result := True
+		end
+
+	as_count_function: XM_XPATH_COUNT is
+			-- `Current' seen as XPath count() function
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
@@ -62,15 +76,13 @@ feature -- Evaluation
 			-- Evaluate as a single item
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_last_position_finder: XM_XPATH_LAST_POSITION_FINDER [XM_XPATH_ITEM]
 			an_integer_value: XM_XPATH_INTEGER_VALUE
 			an_integer: INTEGER
 		do
 			arguments.item (1).create_iterator (a_context)
 			an_iterator := arguments.item (1).last_iterator
-			a_last_position_finder ?= an_iterator
-			if a_last_position_finder /= Void then
-				create an_integer_value.make_from_integer (a_last_position_finder.last_position)
+			if an_iterator.is_last_position_finder then
+				create an_integer_value.make_from_integer (an_iterator.as_last_position_finder.last_position)
 				last_evaluated_item := an_integer_value
 			else
 				from

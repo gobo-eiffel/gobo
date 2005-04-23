@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ATOMIC_VALUE
 		redefine
-			calculate_effective_boolean_value
+			calculate_effective_boolean_value, is_string_value, as_string_value
 		end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
@@ -42,6 +42,18 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+	
+	is_string_value: BOOLEAN is
+			-- Is `Current' a string value?
+		do
+			Result := True
+		end
+
+	as_string_value: XM_XPATH_STRING_VALUE is
+			-- `Current' seen as a string value
+		do
+			Result := Current
+		end
 
 	string_value: STRING is
 			--Value of the item as a string
@@ -63,41 +75,28 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			other_string: XM_XPATH_STRING_VALUE
 		do
-			other_string ?= other
-			if other_string /= Void then
-				Result := STRING_.same_string (string_value, other_string.string_value)
+			if other.is_string_value then
+				Result := STRING_.same_string (string_value, other.as_string_value.string_value)
 			end
 		end
 
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
 			-- Compare `Current' to `other'
-		local
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 
 			-- N.B. This implementatation won't be used, as ST_COLLATOR's version
 			-- will be used for comparing strings
 			
-			a_string_value ?= other
-				check
-					a_string_value /= Void
-					-- From pre-condition `are_comparable'
-				end
-			Result := string_value.three_way_comparison (a_string_value.string_value)
+			Result := string_value.three_way_comparison (other.as_string_value.string_value)
 		end
 
 feature -- Status report
 
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
-		local
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
-			a_string_value ?= other
-			Result := a_string_value /= Void
+			Result := other.is_string_value
 		end
 	
 	display (a_level: INTEGER) is

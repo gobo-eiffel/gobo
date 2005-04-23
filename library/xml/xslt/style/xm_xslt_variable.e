@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_VARIABLE_DECLARATION
 		redefine
-			make_style_element, prepare_attributes
+			make_style_element, prepare_attributes, is_xslt_variable, as_xslt_variable
 		end
 
 	XM_XPATH_CARDINALITY
@@ -44,14 +44,12 @@ feature -- Access
 	required_type: XM_XPATH_SEQUENCE_TYPE is
 			-- Static type of the variable
 		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_document_test: XM_XPATH_NODE_KIND_TEST
 		do
 			if as_type /= Void then
 				Result := as_type
 			elseif select_expression /= Void then
-				an_empty_sequence ?= select_expression
-				if an_empty_sequence /= Void then
+				if select_expression /= Void and then select_expression.is_empty_sequence then
 					create Result.make_any_sequence -- apparently, returning empty sequence as the type gives problems with static type checking
 				else
 
@@ -109,17 +107,43 @@ feature -- Element change
 				if is_global_variable then
 					create a_global_variable.make_global_variable (an_executable, variable_name, slot_number, slot_manager)
 					initialize_instruction (an_executable, a_global_variable)
+					if select_expression /= Void and then select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+					a_global_variable.set_required_type (required_type)
 					fixup_binding (a_global_variable)					
 					last_generated_expression := a_global_variable
 				else
 					create a_local_variable.make (an_executable, variable_name, slot_number)
 					initialize_instruction (an_executable, a_local_variable)
-					
+					a_local_variable.set_required_type (required_type)
 					-- fixup_binding omitted, as that is done by `compile_variable'
 
 					last_generated_expression := a_local_variable
 				end
+				if last_generated_expression /= Void then
+					last_generated_expression.simplify
+					if last_generated_expression.was_expression_replaced then
+						last_generated_expression := last_generated_expression.replacement_expression
+					end
+					last_generated_expression.analyze (static_context)
+					if last_generated_expression.was_expression_replaced then
+						last_generated_expression := last_generated_expression.replacement_expression
+					end
+				end
 			end
+		end
+
+feature -- Conversion
+
+	is_xslt_variable: BOOLEAN is
+			-- Is `Current' an xsl:variable?
+		do
+			Result := True
+		end
+
+	as_xslt_variable: XM_XSLT_VARIABLE is
+			-- `Current' seen as an xsl:variable
+		do
+			Result := Current
 		end
 
 end

@@ -134,7 +134,6 @@ feature -- Element change
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_when: XM_XSLT_WHEN
 			an_otherwise: XM_XSLT_OTHERWISE
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			a_condition: XM_XPATH_EXPRESSION
 			an_action: XM_XPATH_EXPRESSION
 		do
@@ -180,9 +179,8 @@ feature -- Element change
 			if compiled_actions_count = 0 then
 				last_generated_expression := Void
 			elseif compiled_actions_count = 1 then
-				a_boolean_value ?= compiled_conditions.item (1)
-				if a_boolean_value /= Void then
-					if a_boolean_value.value then
+				if compiled_conditions.item (1).is_boolean_value then
+					if compiled_conditions.item (1).as_boolean_value.value then
 
 						-- only one condition left, and it's known to be true: return the corresponding action
 						
@@ -240,7 +238,6 @@ feature {NONE} -- Implementation
 			when_clause_not_void: a_when /= Void
 		local
 			a_condition, an_action: XM_XPATH_EXPRESSION
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			a_condition := a_when.condition
 			compile_sequence_constructor (an_executable, a_when.new_axis_iterator (Child_axis), True)
@@ -254,9 +251,8 @@ feature {NONE} -- Implementation
 				
 				-- Optimize for constant conditions (true or false)
 				
-				a_boolean_value ?= a_condition
-				if a_boolean_value /= Void then
-					if a_boolean_value.value then
+				if a_condition.is_boolean_value then
+					if a_condition.as_boolean_value.value then
 						compiled_actions_count := compiled_actions_count + 1
 						compiled_conditions.put_last (a_condition)
 						compiled_actions.put_last (an_action)

@@ -30,12 +30,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "format-number"
+			name := "format-number"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -95,10 +96,10 @@ feature -- Evaluation
 				last_evaluated_string.set_last_error (arguments.item (1).last_evaluated_item.error_value)
 				in_error := True
 			else
-				a_number ?= arguments.item (1).last_evaluated_item
 				check
-					numeric: a_number /= Void -- static typing
+					numeric: arguments.item (1).last_evaluated_item.is_numeric_value -- static typing
 				end
+				a_number := arguments.item (1).last_evaluated_item.as_numeric_value
 			end
 			if not in_error then
 				if decimal_format = Void then
@@ -203,7 +204,6 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
 			a_qname, a_uri, a_local_name: STRING
 			a_dfm: XM_XSLT_DECIMAL_FORMAT_MANAGER
 			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
@@ -212,24 +212,22 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 			some_qname_parts: DS_LIST [STRING]
 		do
 			Precursor (a_context)
-			a_string_value ?= arguments.item (2)
-			if a_string_value /= Void then
+			if arguments.item (2).is_string_value then
 
 				-- picture is known statically - optimize for this common case
 
-				picture := a_string_value.string_value
+				picture := arguments.item (2).as_string_value.string_value
 			end
 			an_expression_context ?= a_context
 			check
 				expression_context: an_expression_context /= Void
 			end
 			if arguments.count = 3 then
-				a_string_value ?= arguments.item (3)
-				if a_string_value /= Void then
+				if arguments.item (3).is_string_value then
 
 					-- common case, decimal format name is supplied as a string literal
 					
-					a_qname := a_string_value.string_value
+					a_qname := arguments.item (3).as_string_value.string_value
 					if is_qname (a_qname) then
 						a_dfm := an_expression_context.style_sheet.decimal_format_manager
 						is_fixup_required := True

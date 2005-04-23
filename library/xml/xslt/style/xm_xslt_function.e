@@ -17,7 +17,7 @@ inherit
 	XM_XSLT_STYLE_ELEMENT
 		redefine
 			make_style_element, validate, may_contain_sequence_constructor,
-			fixup_references, is_permitted_child
+			fixup_references, is_permitted_child, is_xslt_function, as_xslt_function
 		end
 
 	XM_XSLT_PROCEDURE
@@ -135,11 +135,8 @@ feature -- Status report
 	
 	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
 			-- Is `a_style_element' a permitted child of `Current'?
-		local
-			a_param: XM_XSLT_PARAM
 		do
-			a_param ?= a_style_element
-			Result := a_param /= Void
+			Result := a_style_element.is_param
 		end
 
 	is_overriding: BOOLEAN
@@ -258,7 +255,6 @@ feature -- Element change
 			an_arity: INTEGER
 			a_root: XM_XSLT_STYLESHEET
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
-			a_function: XM_XSLT_FUNCTION
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_top_level (Void)
@@ -274,23 +270,15 @@ feature -- Element change
 			until
 				a_cursor.before
 			loop
-				a_function ?= a_cursor.item
-				if a_function /= Void and then a_function /= Current
-					and then a_function.arity = an_arity
-					and then a_function.function_fingerprint = function_fingerprint
-					and then a_function.precedence = precedence then
+				if a_cursor.item.is_xslt_function and then a_cursor.item.as_xslt_function /= Current
+					and then a_cursor.item.as_xslt_function.arity = an_arity
+					and then a_cursor.item.as_xslt_function.function_fingerprint = function_fingerprint
+					and then a_cursor.item.as_xslt_function.precedence = precedence then
 					create an_error.make_from_string (STRING_.concat ("Duplicate function declaration for ", function_name), "", "XTSE0770", Static_error)
 					report_compile_error (an_error)
 					a_cursor.go_before
 				else
 					a_cursor.back
-				end
-			end
-			debug ("XSLT memo function")
-				if is_memo_function then
-					std.error.put_string ("Memo function:")
-					std.error.put_string (function_name)
-					std.error.put_new_line
 				end
 			end
 			validated := True
@@ -323,6 +311,20 @@ feature -- Element change
 			create compiled_function.make (an_executable, a_body, function_name, system_id, line_number, slot_manager, result_type, is_memo_function)
 			set_parameter_definitions (compiled_function)
 			fixup_instruction (compiled_function)
+		end
+
+feature -- Conversion
+
+	is_xslt_function: BOOLEAN is
+			-- Is `Current' an xsl:function?
+		do
+			Result := True
+		end
+
+	as_xslt_function: XM_XSLT_FUNCTION is
+			-- `Current' seen as an xsl:function
+		do
+			Result := Current
 		end
 
 feature {NONE} -- Implementation

@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 			required_cardinality := a_request
 			role_locator := a_role_locator
 			compute_static_properties
-			initialize
 		ensure
 			sequence_set: base_expression = a_sequence
 			required_cardinality_set: required_cardinality = a_request
@@ -144,7 +143,8 @@ feature -- Evaluation
 					-- and will be ignored otherwise.
 			
 					create a_stopper.make (Current)
-					create {XM_XPATH_APPEND_ITERATOR} an_iterator.make (an_iterator, a_stopper, a_context)
+					a_stopper.create_iterator (a_context)
+					create {XM_XPATH_APPEND_ITERATOR} an_iterator.make (an_iterator, a_stopper.last_iterator, a_context)
 				end
 				create a_cardinality_checking_function.make (an_iterator, role_locator, required_cardinality)
 				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, a_cardinality_checking_function, Void)
@@ -171,8 +171,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 invariant
 
-	role_locator_not_void: role_locator /= void
-	valid_cardinality_request: is_valid_required_cardinality (required_cardinality)
+	role_locator_not_void: initialized implies role_locator /= void
+	valid_cardinality_request: initialized implies is_valid_required_cardinality (required_cardinality)
 
 end
 

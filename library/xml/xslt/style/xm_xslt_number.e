@@ -304,15 +304,12 @@ feature {NONE} -- Implementation
 	prepare_attributes_3 (an_ordinal_attribute, a_lang_attribute, a_letter_value_attribute: STRING;
 		a_grouping_size_attribute, a_grouping_separator_attribute, a_format_attribute: STRING) is
 			-- Prepare attributes even more.
-		local
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			if a_format_attribute /= Void then
 				generate_attribute_value_template (a_format_attribute, static_context)
 				format := last_generated_expression
-				a_string_value ?= format
-				if a_string_value /= Void then
-					create formatter.make (a_string_value.string_value)
+				if format.is_string_value then
+					create formatter.make (format.as_string_value.string_value)
 				else
 					do_nothing -- We must allocate the formatter at run time
 				end
@@ -333,9 +330,8 @@ feature {NONE} -- Implementation
 			else
 				generate_attribute_value_template (a_lang_attribute, static_context)
 				language := last_generated_expression
-				a_string_value ?= language
-				if a_string_value /= Void then
-					numberer := selected_numberer (a_string_value.string_value)
+				if language.is_string_value then
+					numberer := selected_numberer (language.as_string_value.string_value)
 					if numberer = Void then
 						numberer := selected_numberer ("en")
 					end

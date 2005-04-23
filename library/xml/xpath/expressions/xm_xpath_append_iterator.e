@@ -22,17 +22,15 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
+	make (a_base_iterator, a_second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant.
-			-- This form of creation procedure is designed to delay getting an iterator for the second
-			--  expression until it is actually needed.
-			-- This gives savings in cases where the iteration is aborted prematurely.
 		require
-			base_iterator_not_void: a_base_iterator /= Void
-			expresssion_not_void: an_expression /= void
+			base_iterator_before: a_base_iterator /= Void and then a_base_iterator.before
+			second_iterator_before: a_second_iterator /= Void and then a_second_iterator.before
 		do
 			base_iterator := a_base_iterator
-			second_expression := an_expression
+			second_iterator := a_second_iterator
+			second_iterator.start
 			context := a_context
 			current_iterator := base_iterator
 			if current_iterator.is_error then
@@ -40,7 +38,7 @@ feature {NONE} -- Initialization
 			end
 		ensure
 			base_set: base_iterator = a_base_iterator
-			second_expression_set: second_expression = an_expression
+			second_iterator_set: second_iterator = a_second_iterator
 			context_set: context = a_context
 		end
 
@@ -59,17 +57,7 @@ feature -- Status report
 		do
 			Result := not current_iterator.before and then current_iterator.after
 			if Result and then current_iterator = base_iterator then
-
-				-- TODO: the following is a SEVERE violation of CQS - I can't think what to do about it
-				second_expression.create_iterator (context)
-				current_iterator := second_expression.last_iterator
-				current_iterator.start
-				if current_iterator.is_error then
-					set_last_error (current_iterator.error_value)
-					Result := True -- Hm.
-				else
-					Result := current_iterator.after
-				end
+				Result := second_iterator.after
 			end
 		end
 
@@ -79,18 +67,15 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			if current_iterator = base_iterator and then not current_iterator.before and then current_iterator.after then
-				second_expression.create_iterator (context)
-				current_iterator := second_expression.last_iterator
+			if current_iterator.before then
+				current_iterator.start
+			else
+				current_iterator.forth
 			end
 			if current_iterator.is_error then
 				set_last_error (current_iterator.error_value)
-			else
-				if current_iterator.before then
-					current_iterator.start
-				else
-					current_iterator.forth
-				end
+			elseif current_iterator = base_iterator and then current_iterator.after then
+				current_iterator := second_iterator -- already started
 				if current_iterator.is_error then
 					set_last_error (current_iterator.error_value)
 				end
@@ -102,7 +87,7 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			create Result.make (base_iterator.another, second_expression, context)
+			create Result.make (base_iterator.another, second_iterator.another, context)
 		end
 
 feature {NONE} -- Implementation
@@ -113,8 +98,8 @@ feature {NONE} -- Implementation
 	context: XM_XPATH_CONTEXT
 			-- Optional dynamic context
 
-	second_expression: XM_XPATH_EXPRESSION
-			-- Expression which supplies the second iterator
+	second_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			-- Iterator over second expression
 
 	current_iterator: like base_iterator
 			-- Iterator currently being used
@@ -122,7 +107,7 @@ feature {NONE} -- Implementation
 invariant
 
 	base_iterator_not_void: base_iterator /= Void
-	second_expression_not_void: second_expression /= Void
+	second_iterator_not_befoe: second_iterator /= Void and then not second_iterator.before
 	current_iterator_not_void: current_iterator /= Void
 
 end

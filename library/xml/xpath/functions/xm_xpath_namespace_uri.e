@@ -28,12 +28,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "namespace-uri"
+			name := "namespace-uri"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -69,16 +70,13 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
-		local
-			a_node: XM_XPATH_NODE
 		do
 			arguments.item (1).evaluate_item (a_context)
 			if not arguments.item (1).last_evaluated_item.is_error then
-				a_node ?= arguments.item (1).last_evaluated_item
-				if a_node = Void then
+				if not arguments.item (1).last_evaluated_item.is_node then
 					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 				else
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_node.uri)
+					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (arguments.item (1).last_evaluated_item.as_node.uri)
 				end
 			end
 		end

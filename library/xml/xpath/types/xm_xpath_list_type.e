@@ -10,11 +10,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_LIST_TYPE
+deferred class XM_XPATH_LIST_TYPE
 
 inherit
 
 	XM_XPATH_SIMPLE_TYPE
+		redefine
+
+		end
 
 	XM_XPATH_TYPE
 

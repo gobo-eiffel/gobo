@@ -17,7 +17,8 @@ inherit
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
 			same_expression, analyze, calculate_effective_boolean_value, evaluate_item,
-			compute_cardinality, item_type, display
+			compute_cardinality, item_type, display, is_instance_of_expression,
+			as_instance_of_expression
 		end
 
 creation
@@ -35,7 +36,6 @@ feature {NONE} -- Initialization
 			make_unary (a_source)
 			target_type := a_target_type
 			compute_static_properties
-			initialize
 		ensure
 			static_properties_computed: are_static_properties_computed
 			base_expression_set: base_expression = a_source
@@ -46,6 +46,18 @@ feature -- Access
 
 	target_type: XM_XPATH_SEQUENCE_TYPE
 			-- Target sequence type
+
+	is_instance_of_expression: BOOLEAN is
+			-- Is `Current' an instance-of expression?
+		do
+			Result := True
+		end
+
+	as_instance_of_expression: XM_XPATH_INSTANCE_OF_EXPRESSION is
+			-- `Current' seen as an instance-of expression
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
@@ -64,8 +76,8 @@ feature -- Comparison
 		local
 			other_instance_of: XM_XPATH_INSTANCE_OF_EXPRESSION
 		do
-			other_instance_of ?= other
-			if other_instance_of /= Void then
+			if other.is_instance_of_expression then
+				other_instance_of := other.as_instance_of_expression
 				Result := base_expression.same_expression (other_instance_of.base_expression) 
 					and then other_instance_of.target_type = target_type
 					and then other_instance_of.cardinality = cardinality
@@ -98,8 +110,6 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		local
-			a_value: XM_XPATH_VALUE
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			mark_unreplaced
@@ -110,12 +120,10 @@ feature -- Optimization
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			else
-				a_value ?= base_expression
-				if a_value /= Void then
+				if base_expression.is_value then
 					evaluate_item (Void)
 					if last_evaluated_item /= Void then
-						an_atomic_value ?= last_evaluated_item
-						set_replacement (an_atomic_value)
+						set_replacement (last_evaluated_item.as_atomic_value)
 					end
 				else
 					
@@ -194,6 +202,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	target_sequence_type_not_void: target_type /= Void
+	target_sequence_type_not_void: initialized implies target_type /= Void
 
 end

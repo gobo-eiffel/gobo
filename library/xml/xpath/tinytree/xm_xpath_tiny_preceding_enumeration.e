@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
 		redefine
-			start
+			start, as_node_iterator
 		end
 
 	KL_SHARED_STANDARD_FILES
@@ -63,7 +63,19 @@ feature {NONE} -- Initialization
 			include_ancestors: include_ancestors = ancestors
 		end
 
+feature -- Access
+
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- `Current' seen as a node iterator
+		local
+			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
+		do
+			a_tiny_node_iterator ?= ANY_.to_any (Current)
+			Result := a_tiny_node_iterator
+		end
+
 feature -- Cursor movement
+
 	start is
 			-- Move to next position
 		do

@@ -16,12 +16,12 @@ inherit
 
 	XM_XPATH_COMPOSITE_NODE
 		undefine
-			has_child_nodes
+			has_child_nodes, is_tiny_node, as_tiny_node
 		end
 
 	XM_XPATH_TINY_NODE
 		undefine
-			first_child, last_child
+			first_child, last_child, is_tiny_composite_node, as_tiny_composite_node
 		redefine
 			has_child_nodes
 		end
@@ -29,6 +29,18 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
+
+	is_tiny_composite_node: BOOLEAN is
+			-- Is `Current' a composite node?
+		do
+			Result := True
+		end
+
+	as_tiny_composite_node: XM_XPATH_TINY_COMPOSITE_NODE is
+			-- `Current' seen as a composite node
+		do
+			Result := Current
+		end
 
 	string_value: STRING is
 			-- String-value

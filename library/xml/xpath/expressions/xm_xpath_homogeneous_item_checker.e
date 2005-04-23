@@ -35,11 +35,11 @@ feature {NONE} -- Initialization
 			underlying_expression_not_void: a_sequence /= Void
 			role_locator_not_void: a_role_locator /= Void
 		do
+			error_code := "XPTY0018"
 			make_unary (a_sequence)
 			role_locator := a_role_locator
 			required_item_type := any_item
 			compute_static_properties
-			initialize
 		ensure
 			base_expression_set: base_expression = a_sequence
 			role_locator_set: role_locator = a_role_locator

@@ -19,7 +19,9 @@ inherit
 	XM_XPATH_SHARED_EXPRESSION_TESTER
 
 	KL_IMPORTED_STRING_ROUTINES
-	
+
+	KL_IMPORTED_ANY_ROUTINES
+
 feature -- Access
 
 
@@ -58,6 +60,21 @@ feature -- Access
 			
 			create Result.make_default
 			Result.set_equality_tester (expression_tester)
+		end
+	
+	is_location_pattern: BOOLEAN is
+			-- Is `Current' a location-path pattern?
+		do
+			Result := False
+		end
+
+	as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN is
+			-- `Current' seen as a location-path pattern
+		require
+			location_path_pattern: is_location_pattern
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
 		end
 
 feature -- Status report

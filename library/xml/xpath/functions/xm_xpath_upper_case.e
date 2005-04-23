@@ -28,12 +28,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "upper-case"
+			name := "upper-case"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -61,14 +62,14 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			an_item: XM_XPATH_ITEM
 		do
 			arguments.item (1).evaluate_item (a_context)
-			an_atomic_value ?= arguments.item (1).last_evaluated_item
-			if an_atomic_value = Void then
+			an_item := arguments.item (1).last_evaluated_item
+			if not an_item.is_atomic_value then
 				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 			else
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (an_atomic_value.string_value.as_upper)
+				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (an_item.as_atomic_value.string_value.as_upper)
 			end
 		end
 

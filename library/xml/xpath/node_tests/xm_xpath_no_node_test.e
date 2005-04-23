@@ -15,6 +15,9 @@ class XM_XPATH_NO_NODE_TEST
 inherit
 
 	XM_XPATH_NODE_TEST
+		redefine
+			is_no_node_test
+		end
 
 creation {XM_XPATH_SHARED_NO_NODE_TEST}
 
@@ -28,6 +31,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	is_no_node_test: BOOLEAN is
+			-- Is `Current' a no-node test?
+		do
+			Result := True
+		end
 
 	node_kind_mask: INTEGER is
 			-- Mask of types of nodes matched

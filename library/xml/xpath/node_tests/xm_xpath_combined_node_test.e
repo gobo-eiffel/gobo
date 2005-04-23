@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			constraining_node_names, is_at_most_one_name_constraint, content_type
+			constraining_node_names, is_at_most_one_name_constraint, content_type,
+			is_combined_node_test, as_combined_node_test
 		end
 
 	XM_XPATH_TOKENS
@@ -90,6 +91,18 @@ feature -- Access
 					Result := another_type
 				end
 			end
+		end
+
+	is_combined_node_test: BOOLEAN is
+			-- Is `Current' a combined node test?
+		do
+			Result := True
+		end
+
+	as_combined_node_test: XM_XPATH_COMBINED_NODE_TEST is
+			-- `Current' seen as a combined node test
+		do
+			Result := Current
 		end
 
 feature -- Status report

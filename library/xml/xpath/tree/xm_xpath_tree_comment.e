@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_COMMENT
 		undefine
-			document_element, next_sibling, previous_sibling, local_part
+			document_element, next_sibling, previous_sibling, local_part, is_tree_node, as_tree_node
 		end
 
 	XM_XPATH_TREE_NODE

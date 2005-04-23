@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_PATTERN
 		redefine
-			fingerprint, simplified_pattern, type_check, internal_matches, node_kind, sub_expressions
+			fingerprint, simplified_pattern, type_check, internal_matches, node_kind,
+			sub_expressions, is_location_pattern, as_location_pattern
 		end
 
 	XM_XPATH_AXIS
@@ -93,6 +94,18 @@ feature -- Access
 			Result := node_test.fingerprint
 		end
 
+	is_location_pattern: BOOLEAN is
+			-- Is `Current' a location-path pattern?
+		do
+			Result := True
+		end
+
+	as_location_pattern: XM_XSLT_LOCATION_PATH_PATTERN is
+			-- `Current' seen as a location-path pattern
+		do
+			Result := Current
+		end
+
 feature -- Status report
 
 	is_constructed: BOOLEAN
@@ -116,7 +129,7 @@ feature -- Optimization
 			-- Simplify a pattern by applying any context-independent optimizations;
 			-- Default implementation does nothing
 		local
-			a_location_pattern, a_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
+			a_result_pattern: XM_XSLT_LOCATION_PATH_PATTERN
 			a_filter_expression: XM_XPATH_EXPRESSION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
@@ -134,15 +147,13 @@ feature -- Optimization
 				
 				if parent_pattern /= Void then
 					a_result_pattern.set_parent_pattern (parent_pattern.simplified_pattern)
-					a_location_pattern ?= a_result_pattern.parent_pattern
-					if a_location_pattern /= Void then
-						a_result_pattern.set_uses_current (a_location_pattern.uses_current)
+					if a_result_pattern.parent_pattern.is_location_pattern then
+						a_result_pattern.set_uses_current (a_result_pattern.parent_pattern.as_location_pattern.uses_current)
 					end
 				elseif ancestor_pattern /= Void then
 					a_result_pattern.set_ancestor_pattern (ancestor_pattern.simplified_pattern)
-					a_location_pattern ?= a_result_pattern.ancestor_pattern
-					if a_location_pattern /= Void then
-						a_result_pattern.set_uses_current (a_location_pattern.uses_current)
+					if a_result_pattern.ancestor_pattern.is_location_pattern then
+						a_result_pattern.set_uses_current (a_result_pattern.ancestor_pattern.as_location_pattern.uses_current)
 					end
 				end
 				
@@ -174,10 +185,6 @@ feature -- Optimization
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Type-check the pattern;
 		local
-			a_boolean: XM_XPATH_BOOLEAN_VALUE
-			an_integer: XM_XPATH_INTEGER_VALUE
-			a_position_range: XM_XPATH_POSITION_RANGE
-			is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
 			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 			a_filter_expression, an_expression: XM_XPATH_EXPRESSION
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -215,8 +222,7 @@ feature -- Optimization
 
 						-- If the last filter is constant true, remove it.
 					
-						a_boolean ?= a_filter_expression
-						if a_boolean /= Void and then a_boolean.value then
+						if a_filter_expression.is_boolean_value and then a_filter_expression.as_boolean_value.value then
 							do_nothing
 						else
 							a_cursor.replace (a_filter_expression)
@@ -237,15 +243,10 @@ feature -- Optimization
 
 				if node_test.node_kind = Element_node and then filters /= Void and then filters.count = 1 then
 					a_filter_expression := filters.item (1)
-					an_integer ?= a_filter_expression
-					a_position_range ?= a_filter_expression
-					if (an_integer /= Void and then an_integer.value.is_equal (one))
-						or else (a_position_range /= Void and then
-									(a_position_range.minimum_position = 1 and
-									 a_position_range.maximum_position = 1)) then
---					if (an_integer /= Void and then an_integer.value.is_equal (one))
---						or else (a_position_range /= Void and then
---									a_position_range.minimum_position = 1 and a_position_range.maximum_position = 1) then
+					if (a_filter_expression.is_integer_value and then a_filter_expression.as_integer_value.value.is_equal (one))
+						or else (a_filter_expression.is_position_range and then
+									(a_filter_expression.as_position_range.minimum_position = 1 and then
+									 a_filter_expression.as_position_range.maximum_position = 1)) then
 						set_first_element_pattern (True)
 						set_special_filter (True)
 						set_filters (Void)
@@ -256,8 +257,7 @@ feature -- Optimization
 				-- of [position()=last()]
 				
 				if not is_first_element_pattern and then node_test.node_kind = Element_node and then filters /= Void and then filters.count = 1 then
-					is_last_expression ?= filters.item (1)
-					if is_last_expression /= Void and then is_last_expression.condition then
+					if filters.item (1).is_last_expression  and then filters.item (1).as_last_expression.condition then
 						set_last_element_pattern (True)
 						set_special_filter (True)
 						set_filters (Void)
@@ -287,7 +287,7 @@ feature -- Matching
 			-- Determine whether this Pattern matches the given Node;
 			-- Not 100% pure, as it changes the current iterator.
 		local
-			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
+			a_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
 		do
 			if uses_current then
 				create a_singleton_iterator.make (a_node)
@@ -483,7 +483,7 @@ feature {XM_XSLT_PATTERN} -- Implementation
 			another_node: XM_XPATH_NODE
 			is_candidate_match, is_result_determined: BOOLEAN
 			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
+			a_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			if node_test.matches_node (a_node.node_type, a_node.fingerprint, a_node.type_annotation) then

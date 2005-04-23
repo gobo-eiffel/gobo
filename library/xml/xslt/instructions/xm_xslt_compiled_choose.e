@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 				a_cursor.forth
 			end
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			conditions_set: conditions = some_conditions
@@ -278,7 +278,7 @@ feature -- Evaluation
 					a_cursor.forth
 				end
 			end
-			if last_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make end
+			if last_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
@@ -373,8 +373,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	conditions: conditions /= Void and then conditions.count > 0
-	actions: actions /= Void and then actions.count = conditions.count
+	conditions: initialized implies conditions /= Void and then conditions.count > 0
+	actions: initialized implies actions /= Void and then actions.count = conditions.count
 	
 end
 	

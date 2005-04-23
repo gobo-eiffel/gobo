@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			check_arguments, evaluate_item, calculate_effective_boolean_value
+			check_arguments, evaluate_item, calculate_effective_boolean_value,
+			is_not_function, as_not_function
 		end
 
 creation
@@ -28,15 +29,28 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "not"
+			name := "not"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
+
+	is_not_function: BOOLEAN is
+			-- Is `Current' an XPath not() function?
+		do
+			Result := True
+		end
+
+	as_not_function: XM_XPATH_NOT is
+			-- `Current' seen as an XPath not() function
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known

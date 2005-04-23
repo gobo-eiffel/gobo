@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			fingerprint, node_kind, constraining_node_names
+			fingerprint, node_kind, constraining_node_names, is_name_test, as_name_test
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
@@ -66,6 +66,18 @@ feature -- Access
 
 	node_kind: INTEGER
 			-- Type of nodes matched
+	
+	is_name_test: BOOLEAN is
+			-- Is `Current' a name test?
+		do
+			Result := True
+		end
+
+	as_name_test: XM_XPATH_NAME_TEST is
+			-- `Current' seen as a name test
+		do
+			Result := Current
+		end
 
 	node_kind_mask: INTEGER is
 			-- Mask of types of nodes matched

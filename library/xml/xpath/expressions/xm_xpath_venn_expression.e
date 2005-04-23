@@ -49,6 +49,7 @@ feature {NONE} -- Initialization
 				not_function_fingerprint := fingerprint_from_name_code (shared_name_pool.last_name_code)
 			end
 			function_library := a_function_library
+			initialized := True
 		ensure
 			operator_set: operator = a_token
 			operand_1_set: first_operand /= Void and then first_operand.same_expression (an_operand_one)
@@ -168,21 +169,21 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			else
-				a_node_iterator ?= an_iterator
-				if not first_operand.ordered_nodeset and then a_node_iterator /= Void then
-					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} a_node_iterator.make (a_node_iterator, global_order_comparer)
+				if an_iterator.is_node_iterator then a_node_iterator := an_iterator.as_node_iterator end
+				if not first_operand.ordered_nodeset and then an_iterator.is_node_iterator then
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} a_node_iterator.make (an_iterator.as_node_iterator, global_order_comparer)
 				end
-				if a_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} a_node_iterator.make end
+				if a_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR} a_node_iterator.make end
 				second_operand.create_iterator (a_context)
 				another_iterator := second_operand.last_iterator
 				if another_iterator.is_error then
 					last_iterator := another_iterator
 				else
-					another_node_iterator ?= another_iterator
-					if not second_operand.ordered_nodeset and then another_node_iterator /= Void then
-						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} another_node_iterator.make (another_node_iterator, global_order_comparer)
+					if another_iterator.is_node_iterator then another_node_iterator := another_iterator.as_node_iterator end
+					if not second_operand.ordered_nodeset and then another_iterator.is_node_iterator then
+						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} another_node_iterator.make (another_iterator.as_node_iterator, global_order_comparer)
 					end
-					if another_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} another_node_iterator.make end
+					if another_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR} another_node_iterator.make end
 					inspect
 						operator
 					when Union_token then
@@ -237,43 +238,36 @@ feature {XM_XPATH_VENN_EXPRESSION} -- Local
 			-- This can happen after reduction with constructs of the form //a[condition] | //b[not(condition)]
 			-- (common in XPath 1.0 because there were no conditional expressions)
 		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			finished: BOOLEAN
 		do
 			inspect
 				operator
 			when Union_token then
-				an_empty_sequence ?= first_operand
-				if an_empty_sequence /= Void and then second_operand.ordered_nodeset then
+				if first_operand.is_empty_sequence and then second_operand.ordered_nodeset then
 					set_replacement (second_operand)
 					finished := True
 				else
-					an_empty_sequence ?= second_operand
-					if an_empty_sequence /= Void and then first_operand.ordered_nodeset then
+					if second_operand.is_empty_sequence and then first_operand.ordered_nodeset then
 						set_replacement (first_operand)
 						finished := True
 					end
 				end
 			when Intersect_token then
-				an_empty_sequence ?= first_operand
-				if an_empty_sequence /= Void then
-					set_replacement (an_empty_sequence)
+				if first_operand.is_empty_sequence then
+					set_replacement (first_operand)
 					finished := True
 				else
-					an_empty_sequence ?= second_operand
-					if an_empty_sequence /= Void then
-						set_replacement (an_empty_sequence)
+					if second_operand.is_empty_sequence then
+						set_replacement (second_operand)
 						finished := True
 					end
 				end
 			when Except_token then
-				an_empty_sequence ?= first_operand
-				if an_empty_sequence /= Void then
-					set_replacement (an_empty_sequence)
+				if first_operand.is_empty_sequence then
+					set_replacement (first_operand)
 					finished := True
 				else
-					an_empty_sequence ?= second_operand
-					if an_empty_sequence /= Void and then first_operand.ordered_nodeset then
+					if second_operand.is_empty_sequence and then first_operand.ordered_nodeset then
 						set_replacement (first_operand)
 						finished := True
 					end
@@ -286,67 +280,43 @@ feature {NONE} -- Implementation
 
 	set_cardinality_for_union_expression is
 			-- Set cardinality for union expression.
-		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
-			an_empty_sequence ?= first_operand
-			if an_empty_sequence /= Void then
+			if first_operand.is_empty_sequence then
 				clone_cardinality (second_operand)
+			elseif second_operand.is_empty_sequence then
+				clone_cardinality (first_operand)
+			elseif first_operand.cardinality_allows_zero or else second_operand.cardinality_allows_zero then
+				set_cardinality_zero_or_more
 			else
-				an_empty_sequence ?= second_operand
-				if an_empty_sequence /= Void then
-					clone_cardinality (first_operand)
-				else
-					if first_operand.cardinality_allows_zero or else second_operand.cardinality_allows_zero then
-						set_cardinality_zero_or_more
-					else
-						set_cardinality_one_or_more
-					end
-				end
+				set_cardinality_one_or_more
 			end
 		end
 
 	set_cardinality_for_intersect_expression is
 			-- Set cardinality for intersect expression.
-		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
-			an_empty_sequence ?= first_operand
-			if an_empty_sequence /= Void then
+			if first_operand.is_empty_sequence then
 				set_cardinality_empty
+			elseif second_operand.is_empty_sequence then
+				set_cardinality_empty
+			elseif first_operand.cardinality_allows_many or else second_operand.cardinality_allows_many then
+				set_cardinality_zero_or_more
 			else
-				an_empty_sequence ?= second_operand
-				if an_empty_sequence /= Void then
-					set_cardinality_empty
-				else
-					if first_operand.cardinality_allows_many or else second_operand.cardinality_allows_many then
-						set_cardinality_zero_or_more
-					else
-						set_cardinality_optional
-					end
-				end
+				set_cardinality_optional
 			end
 		end
 
 	set_cardinality_for_difference_expression is
 			-- Set cardinality for difference expression.
-		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
-			an_empty_sequence ?= first_operand
-			if an_empty_sequence /= Void then
+			if first_operand.is_empty_sequence then
 				set_cardinality_empty
-			else
-				an_empty_sequence ?= second_operand
-				if an_empty_sequence /= Void then
+			elseif second_operand.is_empty_sequence then
 					clone_cardinality (first_operand)
-				else
-					if first_operand.cardinality_allows_many then
-						set_cardinality_zero_or_more
-					else
-						set_cardinality_optional
-					end
-				end
+			elseif first_operand.cardinality_allows_many then
+				set_cardinality_zero_or_more
+			else
+				set_cardinality_optional
 			end
 		end
 
@@ -385,12 +355,16 @@ feature {NONE} -- Implementation
 			an_axis_expression, another_axis_expression: XM_XPATH_AXIS_EXPRESSION
 			a_combined_node_test: XM_XPATH_COMBINED_NODE_TEST
 		do
-			an_axis_expression ?= first_operand; another_axis_expression ?= second_operand
-			if an_axis_expression /= Void and then another_axis_expression /= Void and then
-				an_axis_expression.axis = another_axis_expression.axis then
-				create a_combined_node_test.make (an_axis_expression.node_test, operator, another_axis_expression.node_test)
-				create another_axis_expression.make (an_axis_expression.axis, a_combined_node_test)
-				set_replacement (another_axis_expression)
+			if first_operand.is_axis_expression and then second_operand.is_axis_expression then
+				an_axis_expression := first_operand.as_axis_expression;
+				another_axis_expression := second_operand.as_axis_expression;
+				if an_axis_expression.axis = another_axis_expression.axis then
+					create a_combined_node_test.make (an_axis_expression.node_test, operator, another_axis_expression.node_test)
+					create another_axis_expression.make (an_axis_expression.axis, a_combined_node_test)
+					set_replacement (another_axis_expression)
+				else
+					merge_common_start_expression
+				end
 			else
 				merge_common_start_expression
 			end
@@ -404,18 +378,21 @@ feature {NONE} -- Implementation
 			a_path_expression, another_path_expression: XM_XPATH_PATH_EXPRESSION
 			a_venn_expression: XM_XPATH_VENN_EXPRESSION
 		do
-			a_path_expression ?= first_operand; another_path_expression ?= second_operand
-			if a_path_expression /= Void and then another_path_expression /= Void and then
-				a_path_expression.first_step.same_expression (another_path_expression.first_step) then
-				create a_venn_expression.make (a_path_expression.remaining_steps, operator, another_path_expression.remaining_steps, function_library)
-				create another_path_expression.make (a_path_expression.first_step, a_venn_expression)
-				another_path_expression.simplify
-				if another_path_expression.was_expression_replaced then
-					set_replacement (another_path_expression.replacement_expression)
+			if first_operand.is_path_expression and then second_operand.is_path_expression then
+				a_path_expression := first_operand.as_path_expression
+				another_path_expression := second_operand.as_path_expression
+				if a_path_expression.first_step.same_expression (another_path_expression.first_step) then
+					create a_venn_expression.make (a_path_expression.remaining_steps, operator, another_path_expression.remaining_steps, function_library)
+					create another_path_expression.make (a_path_expression.first_step, a_venn_expression)
+					another_path_expression.simplify
+					if another_path_expression.was_expression_replaced then
+						set_replacement (another_path_expression.replacement_expression)
+					else
+						set_replacement (another_path_expression)
+					end
 				else
-					set_replacement (another_path_expression)
+					merge_non_positional_filter_expression
 				end
-				-- TODO: copy location information
 			else
 				merge_non_positional_filter_expression
 			end
@@ -427,28 +404,28 @@ feature {NONE} -- Implementation
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			a_filter_expression, another_filter_expression: XM_XPATH_FILTER_EXPRESSION
-			a_not_function: XM_XPATH_NOT
 			arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 		do
-			a_filter_expression ?= first_operand; another_filter_expression ?= second_operand
-			if a_filter_expression /= Void and then another_filter_expression /= Void and then
-				not a_filter_expression.is_positional and then not another_filter_expression.is_positional then
-				inspect
-					operator
-				when Union_token then
-					create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, Or_token, another_filter_expression.filter)
-				when Intersect_token then
-					create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, And_token, another_filter_expression.filter)
-				when Except_token then
-					create arguments.make (1)
-					arguments.put (another_filter_expression.filter, 1)
-					function_library.bind_function (not_function_fingerprint, arguments, False)
-					a_not_function ?= function_library.last_bound_function
-					create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, And_token, a_not_function)
+			if first_operand.is_filter_expression and then second_operand.is_filter_expression then
+				a_filter_expression := first_operand.as_filter_expression
+				another_filter_expression := second_operand.as_filter_expression
+				if not a_filter_expression.is_positional and then not another_filter_expression.is_positional then
+					inspect
+						operator
+					when Union_token then
+						create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, Or_token, another_filter_expression.filter)
+					when Intersect_token then
+						create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, And_token, another_filter_expression.filter)
+					when Except_token then
+						create arguments.make (1)
+						arguments.put (another_filter_expression.filter, 1)
+						function_library.bind_function (not_function_fingerprint, arguments, False)
+						create {XM_XPATH_BOOLEAN_EXPRESSION} an_expression.make (a_filter_expression.filter, And_token, function_library.last_bound_function.as_not_function)
+					end
+					copy_location_identifier (an_expression)
+					create another_filter_expression.make (a_filter_expression.base_expression, an_expression)
+					set_replacement (another_filter_expression)
 				end
-				create another_filter_expression.make (a_filter_expression.base_expression, an_expression)
-				set_replacement (another_filter_expression)
-				-- TODO copy location information
 			end
 		end
 
@@ -461,8 +438,8 @@ feature {NONE} -- Implementation
 invariant
 
 	venn_operator: operator = Union_token or else operator = Intersect_token or else operator = Except_token
-	strictly_positive_not_function_fingerprint: not_function_fingerprint > 0
-	function_library_not_void: function_library /= Void
+	strictly_positive_not_function_fingerprint: initialized implies not_function_fingerprint > 0
+	function_library_not_void: initialized implies function_library /= Void
 
 end
 	

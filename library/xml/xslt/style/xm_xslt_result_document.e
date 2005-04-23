@@ -175,7 +175,6 @@ feature -- Element change
 			another_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_fingerprint: INTEGER
 			an_expression,a_content: XM_XPATH_EXPRESSION
-			a_string_value: XM_XPATH_STRING_VALUE
 			a_namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER
 			a_local_name, a_message: STRING
 			an_error: XM_XPATH_ERROR_VALUE
@@ -201,9 +200,8 @@ feature -- Element change
 					loop
 						a_fingerprint := a_cursor.key
 						an_expression := a_cursor.item
-						a_string_value ?= an_expression
-						if a_string_value /= Void then
-							a_property_set.set_property (a_fingerprint, a_string_value.string_value, a_namespace_resolver)
+						if an_expression.is_string_value then
+							a_property_set.set_property (a_fingerprint, an_expression.as_string_value.string_value, a_namespace_resolver)
 							if a_property_set.is_error then
 								a_cursor.go_after
 								create an_error.make_from_string (a_property_set.error_message, Gexslt_eiffel_type_uri, "OUTPUT_PROPERTY", Static_error)

@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			compute_intrinsic_dependencies, evaluate_item, compute_special_properties
+			compute_intrinsic_dependencies, evaluate_item, compute_special_properties,
+			is_position_range, as_position_range
 		end
 
 creation
@@ -34,7 +35,7 @@ feature {NONE} -- Initialization
 			minimum_position := an_integer
 			maximum_position := another_integer
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			minumum_set: minimum_position = an_integer
@@ -58,6 +59,18 @@ feature -- Access
 
 	maximum_position: INTEGER
 			-- Maximum position
+
+	is_position_range: BOOLEAN is
+			-- Is `Current' a position range?
+		do
+			Result := True
+		end
+
+	as_position_range: XM_XPATH_POSITION_RANGE is
+			-- `Current' seen as a position range
+		do
+			Result := Current
+		end
 
 feature -- Status report
 

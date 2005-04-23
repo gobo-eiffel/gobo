@@ -81,7 +81,7 @@ feature -- Evaluation
 
 feature -- Element change
 
-	register_reference (a_reference: XM_XPATH_BINDING_REFERENCE) is
+	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE) is
 			-- Register `a_reference' as a reference to this variable for fix-up.
 		local
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE

@@ -59,6 +59,7 @@ feature -- Evaluation
 			a_primitive_type, another_primitive_type: INTEGER
 			already_finished: BOOLEAN
 		do
+			last_evaluated_item := Void
 			a_comparer := atomic_comparer (2, a_context)
 			if a_comparer = Void then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
@@ -68,12 +69,11 @@ feature -- Evaluation
 				an_iterator := arguments.item (1).last_iterator
 				an_iterator.start
 				if not an_iterator.after then
-					last_evaluated_item := Void
-					an_atomic_value ?= an_iterator.item
 					check
-						atomic_item: an_atomic_value /= Void
+						atomic_item: an_iterator.item.is_atomic_value
 						-- static typing
 					end
+					an_atomic_value := an_iterator.item.as_atomic_value
 					a_primitive_type := an_atomic_value.item_type.primitive_type
 					if a_primitive_type = Untyped_atomic_type_code then
 						a_primitive_type := Numeric_type_code
@@ -95,10 +95,7 @@ feature -- Evaluation
 						inspect
 							a_primitive_type
 						when Numeric_type_code then
-							a_numeric_value ?= an_atomic_value
-							check
-								numeric: a_numeric_value /= Void
-							end
+							a_numeric_value := an_atomic_value.as_numeric_value
 							if a_numeric_value.is_nan then
 								already_finished := True
 								last_evaluated_item := a_numeric_value
@@ -120,11 +117,11 @@ feature -- Evaluation
 						if an_iterator.after then
 							last_evaluated_item := an_atomic_value
 						else
-							another_atomic_value ?= an_iterator.item
 							check
-								atomic_item: an_atomic_value /= Void
+								atomic_item: an_iterator.item.is_atomic_value
 								-- static typing
 							end
+							another_atomic_value := an_iterator.item.as_atomic_value
 							another_primitive_type := another_atomic_value.item_type.primitive_type
 							if another_primitive_type = Untyped_atomic_type_code then
 								another_primitive_type := Numeric_type_code
@@ -148,10 +145,7 @@ feature -- Evaluation
 									already_finished := True
 								else
 									if a_primitive_type = Numeric_type_code then
-										a_numeric_value ?= another_atomic_value
-										check
-											numeric: a_numeric_value /= Void
-										end
+										a_numeric_value := another_atomic_value.as_numeric_value
 										if a_numeric_value.is_nan then
 											already_finished := True
 											last_evaluated_item := a_numeric_value

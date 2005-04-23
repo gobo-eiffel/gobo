@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			content := a_content
 			adopt_child_expression (content)
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			element_name_set: element_name = an_element_name
@@ -291,8 +291,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	element_name_not_void: element_name /= Void
-	namespace_or_namespace_context: namespace = Void implies namespace_context /= Void
+	element_name_not_void: initialized implies element_name /= Void
+	namespace_or_namespace_context: initialized implies namespace = Void implies namespace_context /= Void
 
 end
 	

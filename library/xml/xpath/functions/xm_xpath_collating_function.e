@@ -32,23 +32,18 @@ feature -- Access
 			context_not_void: a_context /= Void
 			default_collation_name_not_void: default_collation_name /= Void
 		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_string_value: XM_XPATH_STRING_VALUE
+			an_item: XM_XPATH_ITEM
 			a_collation_name: STRING
 		do
 			if arguments.count >= an_argument_number then
 				arguments.item (an_argument_number).evaluate_item (a_context)
-				an_atomic_value ?= arguments.item (an_argument_number).last_evaluated_item
+				an_item := arguments.item (an_argument_number).last_evaluated_item
 				check
-					atomic_value: an_atomic_value /= Void
+					atomic_value: an_item.is_atomic_value
+					string_value: an_item.as_atomic_value.primitive_value.is_string_value
 					-- it's statically typed as a string
 				end
-				a_string_value ?= an_atomic_value.primitive_value
-				check
-					string_value: a_string_value /= Void
-					-- it's statically typed as a string
-				end
-				a_collation_name := a_string_value.string_value
+				a_collation_name := an_item.as_atomic_value.primitive_value.as_string_value.string_value
 				if a_context.is_known_collation (a_collation_name) then
 					Result := a_context.collator (a_collation_name)
 					-- otherwise `Result' = `Void' and a FOCH0002 error will be reported by the caller 

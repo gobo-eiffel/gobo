@@ -58,21 +58,20 @@ feature -- Evaluation
 		local
 			a_key_manager: XM_XSLT_KEY_MANAGER
 			a_key_value: XM_XPATH_ATOMIC_VALUE
-			a_node: XM_XPATH_NODE
 		do
 			a_key_manager := context.transformer.key_manager
-			a_key_value ?= an_item
-			if a_key_value = Void then
-				a_node ?= an_item
+			if not an_item.is_atomic_value then
 				check
-					item_is_node: a_node /= Void
+					item_is_node: an_item.is_node
 					-- as it is not atomic
 				end
-				create {XM_XPATH_STRING_VALUE} a_key_value.make (a_node.string_value)
+				create {XM_XPATH_STRING_VALUE} a_key_value.make (an_item.as_node.string_value)
+			else
+				a_key_value := an_item.as_atomic_value
 			end
 			a_key_manager.generate_keyed_sequence  (key_fingerprint, document, a_key_value, context)
 			if context.transformer.is_error then
-				create {XM_XPATH_EMPTY_ITERATOR[XM_XPATH_NODE]} last_node_iterator.make -- error has already been reported 
+				create {XM_XPATH_EMPTY_ITERATOR} last_node_iterator.make -- error has already been reported 
 			else
 				last_node_iterator := a_key_manager.last_key_sequence
 			end

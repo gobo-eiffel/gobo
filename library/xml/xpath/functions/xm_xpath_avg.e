@@ -31,23 +31,29 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "avg"
+			namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
+		local
+			a_base_type: XM_XPATH_ITEM_TYPE
 		do
-			Result := arguments.item (1).item_type
-			if Result.fingerprint = Untyped_atomic_type_code then
+			a_base_type := arguments.item (1).atomized_item_type (False)
+			if a_base_type = type_factory.untyped_atomic_type then
 				Result := type_factory.double_type
-			elseif Result.primitive_type = type_factory.integer_type.fingerprint then
+			elseif a_base_type.primitive_type = type_factory.integer_type.fingerprint then
 				Result := type_factory.decimal_type
+			else
+				Result := a_base_type
 			end
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
@@ -88,31 +94,32 @@ feature -- Evaluation
 					if an_item.is_error then
 						last_evaluated_item := an_item
 					else
-						an_atomic_value ?= an_item
 						check
-							item_is_atomic: an_atomic_value /= Void
+							item_is_atomic: an_item.is_atomic_value
 							-- static typing
 						end
-						an_atomic_value := an_atomic_value.primitive_value
-						an_untyped_atomic ?= an_atomic_value
-						if an_untyped_atomic /= Void then
+						an_atomic_value := an_item.as_atomic_value.primitive_value
+						if an_atomic_value.is_untyped_atomic then
+							an_untyped_atomic := an_atomic_value.as_untyped_atomic 
 							if an_untyped_atomic.is_convertible (type_factory.double_type) then
-								a_numeric_value ?= an_untyped_atomic.convert_to_type (type_factory.double_type)
+								a_numeric_value := an_untyped_atomic.convert_to_type (type_factory.double_type).as_numeric_value
 							else
 								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
 																															Xpath_errors_uri, "FORG0007", Dynamic_error)
 							end
-						else
-							a_numeric_value ?= an_atomic_value
-						end
-						if a_numeric_value = Void then
+						elseif not an_atomic_value.is_numeric_value then
 							-- TODO - duration values
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
 																														Xpath_errors_uri, "FORG0007", Dynamic_error)
-						elseif a_numeric_value.is_nan then
-							last_evaluated_item := a_numeric_value
 						else
-							evaluate_numeric_average (a_numeric_value, an_iterator)
+							a_numeric_value := an_atomic_value.as_numeric_value
+						end
+						if last_evaluated_item = Void then -- no error yet
+							if a_numeric_value.is_nan then
+								last_evaluated_item := a_numeric_value
+							else
+								evaluate_numeric_average (a_numeric_value, an_iterator)
+							end
 						end
 					end
 				end
@@ -162,26 +169,28 @@ feature {NONE} -- Implementation
 				if an_item.is_error then
 					last_evaluated_item := an_item
 				else
-					an_untyped_atomic ?= an_item
-					if an_untyped_atomic /= Void then
+					if an_item.is_untyped_atomic then
+						an_untyped_atomic := an_item.as_untyped_atomic
 						if an_untyped_atomic.is_convertible (type_factory.double_type) then
-							a_numeric_value ?= an_untyped_atomic.convert_to_type (type_factory.double_type)
+							a_numeric_value := an_untyped_atomic.convert_to_type (type_factory.double_type).as_numeric_value
 						else
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
 																														Xpath_errors_uri, "FORG0007", Dynamic_error)
 						end
-					else
-						a_numeric_value ?= an_item
-					end
-					if a_numeric_value = Void then
+					elseif not an_item.is_numeric_value then
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains mixed numeric and non-numeric values",
 																													Xpath_errors_uri, "FORG0007", Dynamic_error)
-					elseif a_numeric_value.is_nan then
-						last_evaluated_item := a_numeric_value
 					else
-						a_sum := a_sum.arithmetic (Plus_token, a_numeric_value)
-						if a_sum.is_error or else a_sum.is_nan then
-							last_evaluated_item := a_sum
+						a_numeric_value := an_item.as_numeric_value
+					end
+					if last_evaluated_item = Void then
+						if a_numeric_value.is_nan then
+							last_evaluated_item := a_numeric_value
+						else
+							a_sum := a_sum.arithmetic (Plus_token, a_numeric_value)
+							if a_sum.is_error or else a_sum.is_nan then
+								last_evaluated_item := a_sum
+							end
 						end
 					end
 				end

@@ -44,7 +44,7 @@ feature -- Status report
 
 feature -- Creation
 
-	make_expression (an_expression: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator: INTEGER) is
+	make_expression (an_expression: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator, a_line_number: INTEGER) is
 			-- Parse an expression;
 			-- This performs the basic analysis of the expression against the grammar,
 			--  it binds variable references and function calls to variable definitions and
@@ -54,6 +54,7 @@ feature -- Creation
 			expression_not_void: an_expression /= Void
 			context_not_void: a_context /= Void
 			strictly_positive_start: a_start > 0
+			nearly_positive_line_number: a_line_number >= -1
 		local
 			a_parser: XM_XPATH_EXPRESSION_PARSER
 			an_error_type: INTEGER
@@ -61,7 +62,7 @@ feature -- Creation
 			is_parse_error := False
 			internal_parsed_expression := Void
 			create a_parser.make
-			a_parser.parse (an_expression, a_context, a_start, a_terminator)
+			a_parser.parse (an_expression, a_context, a_start, a_terminator, a_line_number)
 			if not a_parser.is_parse_error then
 				internal_parsed_expression := a_parser.last_parsed_expression
 				check
@@ -118,12 +119,9 @@ feature -- Creation
 			--  repeated calls of $nodes[position()>1]
 		require
 			base_iterator_not_void: a_base_iterator /= Void
-		local
-			an_array_iterator: XM_XPATH_ARRAY_ITERATOR [XM_XPATH_ITEM]
 		do
-			an_array_iterator ?= a_base_iterator
-			if an_array_iterator /= Void then
-				Result := an_array_iterator.new_slice_iterator (a_min, a_max)
+			if a_base_iterator.is_array_iterator then
+				Result := a_base_iterator.as_array_iterator.new_slice_iterator (a_min, a_max)
 			else
 				create {XM_XPATH_POSITION_ITERATOR} Result.make (a_base_iterator, a_min, a_max)
 			end
@@ -139,12 +137,9 @@ feature -- Creation
 			--  repeated calls of $nodes[position()>1]
 		require
 			base_iterator_not_void: a_base_iterator /= Void
-		local
-			an_array_iterator: XM_XPATH_ARRAY_ITERATOR [XM_XPATH_NODE]
 		do
-			an_array_iterator ?= a_base_iterator
-			if an_array_iterator /= Void then
-				Result := an_array_iterator.new_slice_iterator (a_min, a_max)
+			if a_base_iterator.is_array_iterator then
+				Result := a_base_iterator.as_array_iterator.new_slice_iterator (a_min, a_max)
 			else
 				create {XM_XPATH_POSITION_NODE_ITERATOR} Result.make (a_base_iterator, a_min, a_max)
 			end
@@ -164,13 +159,13 @@ feature -- Creation
 		do
 			-- Treat tail recursion as a special case.
 
-			a_tail_expression ?= an_expression
-			if a_tail_expression /= Void then
-				a_variable_reference ?= a_tail_expression.base_expression
-				if a_variable_reference /= Void then
+			if an_expression.is_tail_expression then
+				a_tail_expression := an_expression.as_tail_expression
+				if a_tail_expression.base_expression.is_variable_reference then
+					a_variable_reference := a_tail_expression.base_expression.as_variable_reference
 					a_variable_reference.lazily_evaluate (a_context, False)
-					a_sequence_extent ?= a_variable_reference.last_evaluation
-					if a_sequence_extent /= Void then
+					if a_variable_reference.last_evaluation.is_sequence_extent then
+						a_sequence_extent := a_variable_reference.last_evaluation.as_sequence_extent
 						create {XM_XPATH_SEQUENCE_EXTENT} Result.make_as_view (a_sequence_extent, a_tail_expression.start, a_sequence_extent.count -  a_tail_expression.start + 1)
 					end
 				end

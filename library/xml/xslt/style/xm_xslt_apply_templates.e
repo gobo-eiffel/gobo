@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, mark_tail_calls, set_additional_trace_properties
+			make_style_element, validate, mark_tail_calls, set_additional_trace_properties,
+			is_apply_templates
 		end
 
 	XM_XPATH_ROLE
@@ -105,7 +106,7 @@ feature -- Element change
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_sort: XM_XSLT_SORT
 			a_param: XM_XSLT_WITH_PARAM
-			a_text: XM_XPATH_TEXT
+			a_node: XM_XPATH_NODE
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
@@ -130,22 +131,22 @@ feature -- Element change
 			until
 				any_compile_errors or else a_child_iterator.after
 			loop
-				a_sort ?= a_child_iterator.item
+				a_node := a_child_iterator.item
+				a_sort ?= a_node
 				if a_sort /= Void then
 					do_nothing
 				else
-					a_param ?= a_child_iterator.item
+					a_param ?= a_node
 					if a_param /= Void then
 						do_nothing
-					else
-						a_text ?= a_child_iterator.item
-						if a_text /= Void and then not is_all_whitespace (a_text.string_value) then
+					elseif a_node.node_type = Text_node then
+						if not is_all_whitespace (a_node.string_value) then
 							create an_error.make_from_string ("No character data allowed within xsl:apply-templates", "", "XTSE0010", Static_error)
 							report_compile_error (an_error)
-						elseif a_text = Void then
-							create an_error.make_from_string ("Invalid element within xsl:apply-templates", "", "XTSE0010", Static_error)
-							report_compile_error (an_error)
 						end
+					else
+						create an_error.make_from_string ("Invalid element within xsl:apply-templates", "", "XTSE0010", Static_error)
+						report_compile_error (an_error)
 					end
 				end
 				a_child_iterator.forth
@@ -192,7 +193,15 @@ feature -- Element change
 		do
 			if mode /= Void then a_trace_instruction.add_property (mode.name, "mode") end
 		end
+
+feature -- Conversion
 	
+	is_apply_templates: BOOLEAN is
+			-- Is `Current' an xsl:apply-templates?
+		do
+			Result := True
+		end
+
 feature {NONE} -- Implementation
 
 	mode: XM_XSLT_MODE

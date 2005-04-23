@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			instruction_name := "xsl:apply-templates"
 			adopt_child_expression (select_expression)
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			a_mode: XM_XSLT_MODE
 			some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
+			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR
 		do
 			last_tail_call := Void
 			an_evaluation_context ?= a_context
@@ -245,10 +245,10 @@ feature {NONE} -- Implementation
 
 invariant
 
-	select_expression_not_void: select_expression /= Void
-	actual_parameters_not_void: actual_parameters /= Void
-	tunnel_parameters_not_void: tunnel_parameters /= Void
-	current_mode: not is_current_mode_used implies mode /= Void
+	select_expression_not_void: initialized implies select_expression /= Void
+	actual_parameters_not_void: initialized implies actual_parameters /= Void
+	tunnel_parameters_not_void: initialized implies tunnel_parameters /= Void
+	current_mode: initialized and then not is_current_mode_used implies mode /= Void
 
 end
 	

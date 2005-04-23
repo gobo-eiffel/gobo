@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			arguments.set_equality_tester (expression_tester)
 			fingerprint := a_fingerprint
 			compute_static_properties
+			initialized := True
 		ensure
 			arguments_set: arguments = some_arguments
 			fingerprint_set: fingerprint = a_fingerprint
@@ -240,13 +241,15 @@ feature {NONE} -- Implementation
 			-- Compiled function
 
 	name: STRING is
-			-- Name of function, for use in diagnostics
+			-- Local name of function
 		do
-			if function = Void then
-				Result := "*** call to user function ***"
-			else
-				Result := function.function_name
-			end
+			Result := shared_name_pool.local_name_from_name_code (fingerprint)
+		end
+
+	namespace_uri: STRING is
+			-- Namespace uri for `name'
+		do
+			Result := shared_name_pool.namespace_uri_from_name_code (fingerprint)
 		end
 
 	call (a_context: XM_XSLT_EVALUATION_CONTEXT) is
@@ -313,7 +316,7 @@ feature {NONE} -- Implementation
 invariant
 
 	strictly_positive_fingerprint: fingerprint > 0
-	arguments_not_void: arguments /= Void
+	arguments_not_void: initialized implies arguments /= Void
 
 end
 	

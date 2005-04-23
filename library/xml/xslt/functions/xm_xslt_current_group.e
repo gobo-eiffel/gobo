@@ -28,12 +28,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "current-group"
+			name := "current-group"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 0
 			maximum_argument_count := 0
 			create arguments.make (0)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -79,7 +80,7 @@ feature -- Evaluation
 			end
 			a_group_iterator := an_evaluation_context.current_group_iterator
 			if a_group_iterator = Void then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 			else
 				last_iterator := a_group_iterator.current_group_iterator
 			end

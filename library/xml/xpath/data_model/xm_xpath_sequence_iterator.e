@@ -15,7 +15,9 @@ deferred class XM_XPATH_SEQUENCE_ITERATOR [G -> XM_XPATH_ITEM]
 inherit
 
 	ANY -- required by SE 2.1b1
-	
+
+	KL_IMPORTED_ANY_ROUTINES
+
 	XM_XPATH_DEBUGGING_ROUTINES
 
 feature -- Access
@@ -31,6 +33,81 @@ feature -- Access
 	index: INTEGER
 			-- The position of the current item;
 			-- This will be zero after creation of the iterator
+
+	is_singleton_iterator: BOOLEAN is
+			-- Is `Current' a singleton iterator?
+		do
+			Result := False
+		end
+
+	as_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [G] is
+			-- `Current' seen as a singleton iterator
+		require
+			singleton_iterator: is_singleton_iterator
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_node_iterator: BOOLEAN is
+			-- Does `Current' yield a node sequence?
+		do
+			Result := False
+		end
+
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- `Current' seen as a node iterator
+		require
+			node_iterator: is_node_iterator
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_array_iterator: BOOLEAN is
+			-- Is `Current' an iterator over an array?
+		do
+			Result := False
+		end
+
+	as_array_iterator: XM_XPATH_ARRAY_ITERATOR [G] is
+			-- `Current' seen as a array iterator
+		require
+			array_iterator: is_array_iterator
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_reversible_iterator: BOOLEAN is
+			-- Does `Current' yield a reversible_sequence?
+		do
+			Result := False
+		end
+
+	as_reversible_iterator: XM_XPATH_REVERSIBLE_ITERATOR [G] is
+			-- `Current' seen as a reversible iterator
+		require
+			reversible_iterator: is_reversible_iterator
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_last_position_finder: BOOLEAN is
+			-- Can `Current' find the last position?
+		do
+			Result := False
+		end
+
+	as_last_position_finder: XM_XPATH_LAST_POSITION_FINDER [G] is
+			-- `Current' seen as a node iterator
+		require
+			last_position_finder: is_last_position_finder
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
 
 feature -- Status report
 
@@ -58,6 +135,12 @@ feature -- Status report
 			not_in_error: not is_error
 		do
 			Result := before or else after
+		end
+
+	is_empty_iterator: BOOLEAN is
+			-- Is `Current' an iterator over a guarenteed empty sequence?
+		do
+			Result := False
 		end
 
 	is_error: BOOLEAN

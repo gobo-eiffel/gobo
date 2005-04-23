@@ -15,6 +15,9 @@ class XM_XPATH_UNTYPED_TYPE
 inherit
 
 	XM_XPATH_SCHEMA_TYPE
+		redefine
+			is_untyped
+		end
 
 creation
 
@@ -31,6 +34,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	is_untyped: BOOLEAN is
+			-- Is `Current' an untyped?
+		do
+			Result := True
+		end
 
 	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
 			-- Does `an_item' conform to `Current'?
@@ -61,11 +70,8 @@ feature -- Comparison
 
 	is_same_type (other: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `other' the same type as `Current'?
-		local
-			an_untyped: like Current
 		do
-			an_untyped ?= other
-			Result := an_untyped /= Void
+			Result := other.is_untyped
 		end
 
 feature -- Conversion

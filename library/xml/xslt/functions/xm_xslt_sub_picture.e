@@ -115,21 +115,16 @@ feature -- Access
 					create an_integer_value.make_from_integer (a_multiplier)
 					a_number := a_value.arithmetic (Multiply_token, an_integer_value)
 				end
-				a_double_value ?= a_number
-				if a_double_value /= Void then
+				if a_number.is_double_value  then
 					Result := formatted_double (a_number.as_double) -- this will also be used for float in future
+				elseif a_number.is_integer_value then
+					Result := formatted_integer (a_number.as_integer_value)
 				else
-					an_integer_value ?= a_number
-					if an_integer_value /= Void then
-						Result := formatted_integer (an_integer_value)
-					else
-						a_decimal_value ?= a_number
-						check
-							decimal: a_decimal_value /= Void
-							-- This will fail when we introduce float, and other integer types
-						end
-						Result := formatted_decimal (a_decimal_value)
+					check
+						decimal: a_number.is_decimal_value
+						-- This will fail when we introduce float, and other integer types
 					end
+					Result := formatted_decimal (a_number.as_decimal_value)
 				end
 				Result := mapped_formatted_number (Result, a_decimal_format)
 				Result := grouped_formatted_number (Result, a_decimal_format)

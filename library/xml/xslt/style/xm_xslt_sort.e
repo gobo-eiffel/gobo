@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, may_contain_sequence_constructor
+			validate, may_contain_sequence_constructor, is_sort
 		end
 
 	XM_XPATH_ROLE
@@ -93,23 +93,20 @@ feature -- Element change
 	validate is
 			-- Check that the stylesheet element is valid.
 		local
-			an_apply_templates: XM_XSLT_APPLY_TEMPLATES
-			a_for_each: XM_XSLT_FOR_EACH
-			a_for_each_group: XM_XSLT_FOR_EACH_GROUP
+			a_style_element: XM_XSLT_STYLE_ELEMENT
 			an_error: XM_XPATH_ERROR_VALUE
-			-- TODO a_perform_sort: XM_XSLT_PERFORM_SORT
 		do
 			if select_expression /= Void then
 				if has_child_nodes then
 					create an_error.make_from_string ("xsl:sort must be empty when a 'select' attribute is supplied", "", "XTSE0010", Static_error)
 				else
-					an_apply_templates ?= parent
-					a_for_each ?= parent
-					a_for_each_group ?= parent
-					-- TODO a_perform_sort  ?= parent
-					if an_apply_templates = Void and then
-						a_for_each = Void and then
-						a_for_each_group = Void then
+					a_style_element ?= parent
+					if a_style_element = Void or else
+						(not a_style_element.is_for_each and then
+						 not a_style_element.is_for_each_group and then
+						 not a_style_element.is_perform_sort and then
+						 not a_style_element.is_apply_templates)
+					 then
 						create an_error.make_from_string ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort", "", "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
@@ -143,6 +140,14 @@ feature -- Element change
 			end
 			-- TODO: simplify sort key definition
 			last_generated_expression := Void
+		end
+
+feature -- Conversion
+
+	is_sort: BOOLEAN is
+			-- Is `Current' an xsl:sort?
+		do
+			Result := True
 		end
 
 feature {NONE} -- Implementation

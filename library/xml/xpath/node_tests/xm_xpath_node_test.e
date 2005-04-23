@@ -15,6 +15,9 @@ deferred class XM_XPATH_NODE_TEST
 inherit
 
 	XM_XPATH_ITEM_TYPE
+		redefine
+			is_node_test, as_node_test
+		end
 
 	XM_XPATH_TYPE
 
@@ -23,6 +26,18 @@ inherit
 	XM_XPATH_SHARED_ANY_NODE_TEST
 
 feature -- Access
+
+	is_node_test: BOOLEAN is
+			-- Is `Current' a node test?
+		do
+			Result := True
+		end
+
+	as_node_test: XM_XPATH_NODE_TEST is
+			-- `Current' seen as a node test
+		do
+			Result := Current
+		end
 
 	fingerprint: INTEGER is
 			-- Determine the name fingerprint of nodes to which this pattern applies
@@ -35,8 +50,8 @@ feature -- Access
 		local
 			a_node: XM_XPATH_NODE
 		do
-			a_node ?= an_item
-			if a_node /= Void then
+			if an_item.is_node then
+				a_node := an_item.as_node
 				Result := matches_node (a_node.node_type, a_node.fingerprint, a_node.type_annotation)
 			end
 		end
@@ -91,12 +106,9 @@ feature -- Comparison
 
 	is_same_type (other: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `other' the same type as `Current'?
-		local
-			an_item_type: XM_XPATH_NODE_TEST
 		do
-			an_item_type ?= other
-			if an_item_type /= Void then
-				Result := STRING_.same_string (original_text, an_item_type.original_text)
+			if other.is_node_test then
+				Result := STRING_.same_string (original_text, other.as_node_test.original_text)
 			end
 		end
 

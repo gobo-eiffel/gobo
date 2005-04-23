@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			compute_cardinality, simplify, create_iterator
+			compute_cardinality, simplify, create_iterator, make,
+			is_append_expression, as_append_expression
 		end
 
 	XM_XPATH_TOKENS
@@ -25,7 +26,28 @@ creation
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+			-- Establish invariant
+		do
+			Precursor (an_operand_one, a_token, an_operand_two)
+			initialized := True
+		end
+
 feature -- Access
+
+	is_append_expression: BOOLEAN is
+			-- Is `Current' a append expression?
+		do
+			Result := True
+		end
+
+	as_append_expression: XM_XPATH_APPEND_EXPRESSION is
+			-- `Current' seen as a append expression
+		do
+			Result := Current
+		end
 
 	frozen item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
@@ -45,8 +67,6 @@ feature -- Optimization
 			an_append_expression, another_append_expression, a_third_append_expression: XM_XPATH_APPEND_EXPRESSION
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 			an_expression: XM_XPATH_EXPRESSION
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
-			a_value, another_value: XM_XPATH_VALUE
 		do
 			first_operand.simplify
 			if first_operand.is_error then
@@ -65,12 +85,10 @@ feature -- Optimization
 			end
 
 			if not is_error then
-				an_empty_sequence ?= first_operand
-				if an_empty_sequence /= Void then
+				if first_operand.is_empty_sequence then
 					 set_replacement (second_operand)
 				else
-					an_empty_sequence ?= second_operand
-					if an_empty_sequence /= Void then
+					if second_operand.is_empty_sequence then
 						set_replacement (first_operand)
 					else
 
@@ -85,11 +103,9 @@ feature -- Optimization
 							-- An expression such as (1,2,$x) will be parsed as (1, (2, $x)). This can be
 							--  simplified to ((1,2), $x), reducing the number of iterators needed to evaluate it
 
-							a_value ?= first_operand
-							another_append_expression ?= second_operand
-							if a_value /= Void and then another_append_expression /= Void then
-								another_value ?= another_append_expression.first_operand
-								if another_value /= Void then
+							if first_operand.is_value and then second_operand.is_append_expression then
+								another_append_expression := second_operand.as_append_expression
+								if another_append_expression.first_operand.is_value then
 									an_expression := another_append_expression.first_operand; an_expression.simplify
 									if an_expression.is_error then
 										set_replacement (an_expression)
@@ -121,22 +137,19 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		do
 			first_operand.create_iterator (a_context)
-			create {XM_XPATH_APPEND_ITERATOR} last_iterator.make (first_operand.last_iterator, second_operand, a_context)
+			second_operand.create_iterator (a_context)
+			create {XM_XPATH_APPEND_ITERATOR} last_iterator.make (first_operand.last_iterator, second_operand.last_iterator, a_context)
 		end
 
 feature {NONE} -- Implementation
 
 	compute_cardinality is
 			-- Compute cardinality.
-		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
-			an_empty_sequence ?= first_operand
-			if an_empty_sequence /= Void then
+			if first_operand.is_empty_sequence then
 				clone_cardinality (second_operand)
 			else
-				an_empty_sequence ?= second_operand
-				if an_empty_sequence /= Void then
+				if second_operand.is_empty_sequence then
 					clone_cardinality (first_operand)
 				else
 					if first_operand.cardinality_allows_zero and then second_operand.cardinality_allows_zero then
@@ -157,18 +170,11 @@ feature {NONE} -- Implementation
 
 	is_atomic (an_expression: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Is `an_expression' atomic or an atomic extent?
-		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
-			an_atomic_value ?= an_expression
-			if an_atomic_value /= Void then
+			if an_expression.is_atomic_value then
 				Result := True
-			else
-				a_sequence_extent ?= an_expression
-				if a_sequence_extent /= Void then
+			elseif an_expression.is_sequence_extent then
 					Result := True
-				end
 			end
 		end
 

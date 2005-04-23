@@ -30,12 +30,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "insert-before"
+			name := "insert-before"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 3
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -95,11 +96,11 @@ feature -- Evaluation
 					if an_item.is_error then
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 					else
-						an_integer_value ?= an_item
 						check
-							insertion_position_is_integer: an_integer_value /= Void
+							insertion_position_is_integer: an_item.is_integer_value
 							-- Static typing
 						end
+						an_integer_value := an_item.as_integer_value
 						if an_integer_value.is_platform_integer then
 							an_insert_position := an_integer_value.as_integer
 							create {XM_XPATH_INSERT_ITERATOR} last_iterator.make (a_base_iterator, an_insertion_iterator, an_insert_position)

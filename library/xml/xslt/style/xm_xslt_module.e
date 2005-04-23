@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate
+			validate, is_module, as_module
 		end
 
 feature -- Access
@@ -76,7 +76,7 @@ feature -- Access
 							report_compile_error (an_error)
 						else
 							included_document := a_stylesheet_compiler.last_loaded_module
-							-- TODO: allow "Literal Result Element as Stylesheet" syntax, and validation errors
+							-- TODO: allow "Literal Result Element as Stylesheet" syntax, and validation errors - ?? - isn't this already done? check it!
 							Result ?= included_document.document_element
 							if Result = Void then
 								a_message := STRING_.concat ("Included document ", href)
@@ -172,6 +172,20 @@ feature -- Element change
 				never_compiled: False
 			end
 			last_generated_expression := Void
+		end
+
+feature -- Conversion
+
+	is_module: BOOLEAN is
+			-- Is `Current' an xsl:include/import?
+		do
+			Result := True
+		end
+
+	as_module: XM_XSLT_MODULE is
+			-- `Current' seen as an xsl:include/import
+		do
+			Result := Current
 		end
 
 feature {NONE} -- Implementation

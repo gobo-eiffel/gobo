@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NUMERIC_VALUE
 		redefine
-			hash_code
+			hash_code, is_double_value, as_double_value
 		end
 
 	XM_XPATH_SHARED_DECIMAL_CONTEXTS
@@ -56,6 +56,18 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	value: DOUBLE
+	
+	is_double_value: BOOLEAN is
+			-- Is `Current' a double value?
+		do
+			Result := True
+		end
+
+	as_double_value: XM_XPATH_DOUBLE_VALUE is
+			-- `Current' seen as a double value
+		do
+			Result := Current
+		end
 
 	hash_code: INTEGER is
 			-- Hash code value

@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			compute_intrinsic_dependencies, create_iterator, evaluate_item, same_expression, compute_special_properties
+			compute_intrinsic_dependencies, create_iterator, evaluate_item, same_expression,
+			compute_special_properties, is_context_item, as_context_item
 		end
 
 creation
@@ -28,13 +29,25 @@ feature {NONE} -- Initialization
 	make is
 		do
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed			
 		end
 
 feature -- Access
-	
+
+	is_context_item: BOOLEAN is
+			-- Is `Current' a context-item expression?
+		do
+			Result := True
+		end
+
+	as_context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION is
+			-- `Current' seen as a context-item expression
+		do
+			Result := Current
+		end
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
 		do
@@ -49,11 +62,8 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			another_context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION
 		do
-			another_context_item ?= other
-			Result := another_context_item /= Void
+			Result := other.is_context_item
 		end
 	
 feature -- Status report
@@ -104,7 +114,11 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		do
 			if a_context /= Void and then a_context.is_context_position_set then
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (a_context.context_item)
+				if a_context.context_item.is_node then
+					create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (a_context.context_item.as_node)
+				else
+					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (a_context.context_item)
+				end
 			else
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 			end

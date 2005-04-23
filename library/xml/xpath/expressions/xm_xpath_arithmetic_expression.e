@@ -16,8 +16,8 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, evaluate_item
-	end
+			analyze, evaluate_item, make, is_arithmetic_expression, as_arithmetic_expression
+		end
 
 	XM_XPATH_ROLE
 
@@ -25,7 +25,28 @@ creation
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+			-- Establish invariant
+		do
+			Precursor (an_operand_one, a_token, an_operand_two)
+			initialized := True
+		end
+
 feature -- Access
+
+	is_arithmetic_expression: BOOLEAN is
+			-- Is `Current' a arithmetic expression?
+		do
+			Result := True
+		end
+
+	as_arithmetic_expression: XM_XPATH_ARITHMETIC_EXPRESSION is
+			-- `Current' seen as a arithmetic expression
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
@@ -59,7 +80,6 @@ feature -- Optimization
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			an_expression: XM_XPATH_EXPRESSION
-			an_arithmetic_expression: XM_XPATH_ARITHMETIC_EXPRESSION
 		do
 			mark_unreplaced
 			is_backwards_compatible_mode := a_context.is_backwards_compatible_mode
@@ -89,9 +109,8 @@ feature -- Optimization
 					else
 						an_expression := Current
 					end
-					an_arithmetic_expression ?= an_expression
-					if an_arithmetic_expression /= Void then
-						an_arithmetic_expression.analyze_arithmetic_expression (a_context)
+					if an_expression.is_arithmetic_expression then
+						an_expression.as_arithmetic_expression.analyze_arithmetic_expression (a_context)
 					end
 				end
 			end
@@ -115,8 +134,7 @@ feature -- Evaluation
 			elseif first_operand.last_evaluated_item.is_error then
 				last_evaluated_item := first_operand.last_evaluated_item
 			else
-				an_atomic_value ?= first_operand.last_evaluated_item
-				if an_atomic_value = Void then
+				if not first_operand.last_evaluated_item.is_atomic_value then
 					last_evaluated_item := Void
 				else
 					second_operand.evaluate_item (a_context)
@@ -125,10 +143,11 @@ feature -- Evaluation
 					elseif second_operand.last_evaluated_item.is_error then
 						last_evaluated_item := second_operand.last_evaluated_item
 					else
-						another_atomic_value ?= second_operand.last_evaluated_item
-						if another_atomic_value = Void then
+						if not second_operand.last_evaluated_item.is_atomic_value then
 							last_evaluated_item := Void
 						else
+							an_atomic_value := first_operand.last_evaluated_item.as_atomic_value
+							another_atomic_value := second_operand.last_evaluated_item.as_atomic_value
 							an_action := action (an_atomic_value.item_type, another_atomic_value.item_type)
 							inspect
 								an_action
@@ -158,8 +177,8 @@ feature -- Evaluation
 								
 								if is_backwards_compatible_mode then
 									if an_atomic_value.is_convertible (type_factory.numeric_type) and then another_atomic_value.is_convertible (type_factory.numeric_type) then
-										a_numeric_value ?= an_atomic_value.convert_to_type (type_factory.numeric_type)
-										another_numeric_value ?= another_atomic_value.convert_to_type (type_factory.numeric_type)
+										a_numeric_value := an_atomic_value.convert_to_type (type_factory.numeric_type).as_numeric_value
+										another_numeric_value := another_atomic_value.convert_to_type (type_factory.numeric_type).as_numeric_value
 										create {XM_XPATH_NUMERIC_ARITHMETIC} an_expression.make (a_numeric_value, operator, another_numeric_value)
 										an_expression.evaluate_item (a_context)
 										last_evaluated_item := an_expression.last_evaluated_item
@@ -204,7 +223,6 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 			an_action: INTEGER
 			a_string: STRING
 			finished: BOOLEAN
-			a_value, another_value: XM_XPATH_VALUE
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_type := first_operand.item_type
@@ -243,9 +261,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 				end
 			end
 			if not finished and not is_error then
-				a_value ?= first_operand
-				another_value ?= second_operand
-				if a_value /= Void and then another_value /= Void then
+				if first_operand.is_value and then second_operand.is_value then
 					eagerly_evaluate (Void)
 					set_replacement (last_evaluation)
 				else

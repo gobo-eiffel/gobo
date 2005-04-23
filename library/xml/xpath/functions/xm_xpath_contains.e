@@ -33,11 +33,13 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "contains"
+			namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -87,18 +89,20 @@ feature -- Evaluation
 				if an_item /= Void and then an_item.is_error then
 					last_evaluated_item := an_item
 				else
-					an_atomic_value ?= an_item
-					if an_atomic_value = Void then
+					if not an_item.is_atomic_value then
 						create {XM_XPATH_STRING_VALUE} an_atomic_value.make ("")
+					else
+						an_atomic_value := an_item.as_atomic_value
 					end
 					arguments.item (2).evaluate_item (a_context)
 					an_item := arguments.item (2).last_evaluated_item
 					if an_item /= Void and then an_item.is_error then
 						last_evaluated_item := an_item
 					else
-						another_atomic_value ?= an_item
-						if another_atomic_value = Void then
+						if not an_item.is_atomic_value then
 							create {XM_XPATH_STRING_VALUE} another_atomic_value.make ("")
+						else
+							another_atomic_value := an_item.as_atomic_value
 						end
 						s1 := an_atomic_value.string_value
 						s2 := another_atomic_value.string_value

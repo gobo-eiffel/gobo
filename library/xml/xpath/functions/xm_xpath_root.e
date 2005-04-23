@@ -30,12 +30,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "root"
+			name := "root"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -76,7 +77,6 @@ feature -- Evaluation
 			-- Evaluate as a single item
 		local
 			an_item: XM_XPATH_ITEM
-			a_node: XM_XPATH_NODE
 		do
 			last_evaluated_item := Void
 			arguments.item (1).evaluate_item (a_context)
@@ -85,11 +85,10 @@ feature -- Evaluation
 				if an_item.is_error then
 					last_evaluated_item := an_item
 				else
-					a_node ?= an_item
-					if a_node = Void then
+					if not an_item.is_node then
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is not a node", Xpath_errors_uri, "FOTY0011", Dynamic_error)
 					else
-						last_evaluated_item := a_node.root
+						last_evaluated_item := an_item.as_node.root
 					end
 				end
 			end

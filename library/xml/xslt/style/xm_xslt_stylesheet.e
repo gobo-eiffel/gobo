@@ -17,7 +17,7 @@ inherit
 	XM_XSLT_STYLE_ELEMENT
 		redefine
 			make_style_element, precedence, process_all_attributes, validate, is_global_variable_declared,
-			any_compile_errors, stylesheet_compiler
+			any_compile_errors, stylesheet_compiler, system_id_from_module_number, is_stylesheet
 		end
 
 	XM_XSLT_PROCEDURE
@@ -174,7 +174,6 @@ feature -- Access
 		local
 			found: BOOLEAN
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
-			an_output: XM_XSLT_OUTPUT
 		do
 			if a_fingerprint = -1 then found := True end
 			create Result.make (-1000000)
@@ -190,10 +189,9 @@ feature -- Access
 			until
 				Result.is_error or else a_cursor.before
 			loop
-				an_output ?= a_cursor.item
-				if an_output /= Void and then not an_output.is_excluded and then an_output.output_fingerprint = a_fingerprint then
+				if a_cursor.item.is_output and then not a_cursor.item.as_output.is_excluded and then a_cursor.item.as_output.output_fingerprint = a_fingerprint then
 					found := True
-					an_output.gather_output_properties (Result)
+					a_cursor.item.as_output.gather_output_properties (Result)
 				end
 				a_cursor.back
 			end
@@ -210,7 +208,6 @@ feature -- Access
 			positive_fingerprint: a_fingerprint >= 0
 		local
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
-			a_character_map: XM_XSLT_CHARACTER_MAP 
 		do
 
 			-- Note that we process backwards, so as to find highest
@@ -224,14 +221,19 @@ feature -- Access
 			until
 				a_cursor.before
 			loop
-				a_character_map ?= a_cursor.item
-				if a_character_map /= Void and then a_character_map.character_map_fingerprint = a_fingerprint then
-					Result := a_character_map
+				if a_cursor.item.is_character_map and then a_cursor.item.as_character_map.character_map_fingerprint = a_fingerprint then
+					Result := a_cursor.item.as_character_map
 					a_cursor.go_before
 				else
 					a_cursor.back
 				end
 			end
+		end
+
+	system_id_from_module_number (a_module_number: INTEGER): STRING is
+			-- System identifier
+		do
+			Result := module_list.item (a_module_number)
 		end
 
 feature -- Status report
@@ -256,7 +258,6 @@ feature -- Status report
 			post_validated: post_validated
 		local
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
-			an_output: XM_XSLT_OUTPUT
 		do
 			from
 				a_cursor := top_level_elements.new_cursor; a_cursor.finish
@@ -265,8 +266,7 @@ feature -- Status report
 			until
 				Result or else a_cursor.before
 			loop
-				an_output ?= a_cursor.item
-				if an_output /= Void and then an_output.output_fingerprint = a_fingerprint then
+				if a_cursor.item.is_output and then a_cursor.item.as_output.output_fingerprint = a_fingerprint then
 					Result := True
 				end
 				a_cursor.back
@@ -573,8 +573,8 @@ feature -- Element change
 			until
 				a_cursor.after
 			loop
-				a_style_element ?= a_cursor.item
-				if a_style_element /= Void and then not a_style_element.is_excluded then
+				a_style_element := a_cursor.item
+				if not a_style_element.is_excluded then
 					a_style_element.fixup_references
 				end
 				a_cursor.forth
@@ -591,8 +591,8 @@ feature -- Element change
 			until
 				any_compile_errors or else a_cursor.after
 			loop
-				a_style_element ?= a_cursor.item
-				if a_style_element /= Void and then not a_style_element.is_excluded then
+				a_style_element := a_cursor.item
+				if not a_style_element.is_excluded then
 					a_style_element.validate_subtree
 				end
 				a_cursor.forth
@@ -645,32 +645,34 @@ feature -- Element change
 							child_is_style_element: a_previous_style_element /= Void
 							-- Only data elements, style elements and white-space text nodes may be present
 						end
-						a_module ?= a_child
-						if a_module /= Void and then not a_module.is_excluded then
-							a_module.create_static_context
-							a_module.process_attributes
-							if a_module.is_import then
-								if found_non_import then
-									create an_error.make_from_string ("xsl:import elements must come first", "", "XTSE0200", Static_error)
-									a_module.report_compile_error (an_error)
-								end
-							else
-								found_non_import := True
-							end
-							an_included_stylesheet := a_module.included_stylesheet (Current, import_precedence)
-							if an_included_stylesheet /= Void then
-
-								-- After processing the imported stylesheet and any others it brought in,
-								--  adjust the import precedence of this stylesheet if necessary.
-
+						if a_previous_style_element.is_module then
+							a_module := a_previous_style_element.as_module
+							if not a_module.is_excluded then
+								a_module.create_static_context
+								a_module.process_attributes
 								if a_module.is_import then
-									import_precedence := an_included_stylesheet.precedence + 1
+									if found_non_import then
+										create an_error.make_from_string ("xsl:import elements must come first", "", "XTSE0200", Static_error)
+										a_module.report_compile_error (an_error)
+									end
 								else
-									import_precedence := an_included_stylesheet.precedence
-									an_included_stylesheet.set_minimum_import_precedence (minimum_import_precedence)
-									an_included_stylesheet.set_was_included
+									found_non_import := True
 								end
-								copy_top_level_elements (an_included_stylesheet)
+								an_included_stylesheet := a_module.included_stylesheet (Current, import_precedence)
+								if an_included_stylesheet /= Void then
+									
+									-- After processing the imported stylesheet and any others it brought in,
+									--  adjust the import precedence of this stylesheet if necessary.
+									
+									if a_module.is_import then
+										import_precedence := an_included_stylesheet.precedence + 1
+									else
+										import_precedence := an_included_stylesheet.precedence
+										an_included_stylesheet.set_minimum_import_precedence (minimum_import_precedence)
+										an_included_stylesheet.set_was_included
+									end
+									copy_top_level_elements (an_included_stylesheet)
+								end
 							end
 						else
 							found_non_import := True
@@ -698,8 +700,8 @@ feature -- Element change
 			until
 				a_cursor.after
 			loop
-				a_style_element ?= a_cursor.item
-				if a_style_element /= Void and then not a_style_element.is_excluded then
+				a_style_element := a_cursor.item
+				if not a_style_element.is_excluded then
 					a_style_element.process_all_attributes
 				end
 				a_cursor.forth
@@ -714,17 +716,13 @@ feature -- Element change
 			-- This is called once for each element, after the entire tree has been built.
 			-- As well as validation, it can perform first-time initialisation.
 		local
-			a_document: XM_XPATH_TREE_DOCUMENT
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if validation_error /= Void then
 				report_compile_error (validation_error)
-			else
-				a_document ?= parent
-				if a_document = Void then
-					create an_error.make_from_string (STRING_.concat (node_name, " must be the outermost element"), "", "XTSE0010", Static_error)
-					report_compile_error (an_error)
-				end
+			elseif not parent.is_document then
+				create an_error.make_from_string (STRING_.concat (node_name, " must be the outermost element"), "", "XTSE0010", Static_error)
+				report_compile_error (an_error)
 			end
 			validated := True
 		end
@@ -745,15 +743,12 @@ feature -- Element change
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			another_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_TEMPLATE, INTEGER]
 			a_third_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_FUNCTION_LIBRARY]
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 			a_compiled_templates_index: DS_HASH_TABLE [XM_XSLT_COMPILED_TEMPLATE, INTEGER]
 			a_property_set: XM_XSLT_OUTPUT_PROPERTIES
 			a_message, a_system_id: STRING
 			a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
-			a_character_map: XM_XSLT_CHARACTER_MAP
 			a_character_code_map: DS_HASH_TABLE [STRING, INTEGER]
 			a_fingerprint: INTEGER
-			a_function: XM_XSLT_FUNCTION
 			a_function_library: XM_XPATH_FUNCTION_LIBRARY
 			an_error: XM_XPATH_ERROR_VALUE
 			explaining: BOOLEAN
@@ -774,9 +769,8 @@ feature -- Element change
 					a_system_id := a_cursor.item.system_id
 					if not is_module_registered (a_system_id) then register_module (a_system_id) end
 					a_cursor.item.compile (executable)
-					a_computed_expression ?= a_cursor.item.last_generated_expression
-					if a_computed_expression /= Void then
-						a_computed_expression.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
+					if a_cursor.item.last_generated_expression /= Void and then a_cursor.item.last_generated_expression.is_computed_expression then
+						a_cursor.item.last_generated_expression.as_computed_expression.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
 					end
 					if explaining and then a_cursor.item.last_generated_expression /= Void then
 						a_cursor.item.last_generated_expression.display (1)
@@ -822,11 +816,10 @@ feature -- Element change
 				until
 					a_cursor.after
 				loop
-					a_character_map ?= a_cursor.item
-					if a_character_map /= Void and then not a_character_map.is_excluded and then not a_character_map.is_redundant then
-						a_fingerprint := a_character_map.character_map_fingerprint
+					if a_cursor.item.is_character_map and then not a_cursor.item.as_character_map.is_excluded and then not a_cursor.item.as_character_map.is_redundant then
+						a_fingerprint := a_cursor.item.as_character_map.character_map_fingerprint
 						create a_character_code_map.make_with_equality_testers (10, string_equality_tester, Void)
-						a_character_map.assemble (a_character_code_map)
+						a_cursor.item.as_character_map.assemble (a_character_code_map)
 						a_character_map_index.force (a_character_code_map, a_fingerprint)
 					end
 					a_cursor.forth
@@ -861,12 +854,11 @@ feature -- Element change
 				until
 					a_cursor.after
 				loop
-					a_function ?= a_cursor.item
-					if a_function /= Void and then not a_function.is_excluded then
-						if a_function.is_overriding then
-							overriding_runtime_library.add_function (a_function)
+					if a_cursor.item.is_xslt_function and then not a_cursor.item.as_xslt_function.is_excluded then
+						if a_cursor.item.as_xslt_function.is_overriding then
+							overriding_runtime_library.add_function (a_cursor.item.as_xslt_function)
 						else
-							non_overriding_runtime_library.add_function (a_function)
+							non_overriding_runtime_library.add_function (a_cursor.item.as_xslt_function)
 						end
 					end
 					a_cursor.forth
@@ -901,6 +893,14 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 			a_static_context.set_last_bound_variable (variables_index.item (a_fingerprint))
 		ensure
 			variable_bound: a_static_context.last_bound_variable /= Void
+		end
+
+feature -- Conversion
+
+	is_stylesheet: BOOLEAN is
+			-- Is `Current' an xsl:stylesheet or xsl:transform?
+		do
+			Result := True
 		end
 	
 feature {NONE} -- Implementation
@@ -942,9 +942,6 @@ feature {NONE} -- Implementation
 		require
 			indices_not_built: not indices_built
 		local
-			a_template: XM_XSLT_TEMPLATE
-			a_variable_declaration: XM_XSLT_VARIABLE_DECLARATION
-			a_namespace_alias: XM_XSLT_NAMESPACE_ALIAS
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 		do
 			from
@@ -953,22 +950,15 @@ feature {NONE} -- Implementation
 			until
 				a_cursor.before
 			loop
-				a_template ?= a_cursor.item
-				if a_template /= Void and then not a_template.is_excluded then
-					index_named_template (a_template)
-				else
-					a_variable_declaration ?= a_cursor.item
-					if a_variable_declaration /= Void then
-						index_variable_declaration (a_variable_declaration)
-					else
-						a_namespace_alias ?= a_cursor.item
-						if a_namespace_alias /= Void then
-							if not namespace_alias_list.extendible (1) then
-								namespace_alias_list.resize (2 * namespace_alias_list.count)
-							end
-							namespace_alias_list.put_last (a_namespace_alias)
-						end
+				if a_cursor.item.is_template and then not a_cursor.item.as_template.is_excluded then
+					index_named_template (a_cursor.item.as_template)
+				elseif a_cursor.item.is_xslt_variable_declaration then
+						index_variable_declaration (a_cursor.item.as_xslt_variable_declaration)
+				elseif a_cursor.item.is_namespace_alias then
+					if not namespace_alias_list.extendible (1) then
+						namespace_alias_list.resize (2 * namespace_alias_list.count)
 					end
+					namespace_alias_list.put_last (a_cursor.item.as_namespace_alias)
 				end
 				a_cursor.back
 			end

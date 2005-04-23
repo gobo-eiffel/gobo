@@ -196,7 +196,7 @@ feature -- Compilation
 					load_stylesheet_module_failed := True
 					load_stylesheet_module_error := "There were error compiling the stylesheet"
 				else
-					executable ?= a_stylesheet.executable
+					executable := a_stylesheet.executable
 					check
 						executable: executable /= Void
 						-- as {XM_XSLT_STYLESHEET}.compile produces an executable if no error.

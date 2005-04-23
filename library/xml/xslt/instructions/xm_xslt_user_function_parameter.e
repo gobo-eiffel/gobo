@@ -66,7 +66,7 @@ feature -- Evaluation
 
 feature -- Element change
 	
-	set_reference_count (some_references: DS_ARRAYED_LIST [XM_XPATH_BINDING_REFERENCE]) is
+	set_reference_count (some_references: DS_ARRAYED_LIST [XM_XPATH_VARIABLE_REFERENCE]) is
 			-- Set `reference_count'.
 		require
 			references_not_void: some_references /= Void

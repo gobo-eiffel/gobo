@@ -19,6 +19,10 @@ class XM_XSLT_SORT_KEY_DEFINITION
 
 	-- TODO - optimizations
 
+inherit
+
+	KL_IMPORTED_ANY_ROUTINES
+
 creation
 
 	make
@@ -125,6 +129,23 @@ feature -- Element change
 			case_order_not_void: case_order /= Void
 			language_not_void: language /= Void
 			data_type_not_void: data_type /= Void
+		end
+
+feature -- Conversion
+
+	is_fixed_sort_key: BOOLEAN is
+			-- Is `Current' a fixed_sort_key?
+		do
+			Result := False
+		end
+
+	as_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION is
+			-- `Current' seen as a fixed_sort_key
+		require
+			fixed_sort_key: is_fixed_sort_key
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
 		end
 
 feature {NONE} -- Implementation

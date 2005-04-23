@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			slot_number := a_slot_number
 			instruction_name := "xsl:variable"
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			name_set: variable_name = a_name

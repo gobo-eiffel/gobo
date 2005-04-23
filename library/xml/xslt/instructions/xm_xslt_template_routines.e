@@ -56,12 +56,12 @@ feature -- Evaluation
 				a_transformer.is_error or else an_iterator.after
 			loop
 				if not a_transformer.is_error and then not an_iterator.after then
-					a_node ?= an_iterator.item
 					check
-						item_is_a_node: a_node /= Void
+						item_is_a_node: an_iterator.item.is_node
 						-- guarenteed by static type checking during stylesheet compilation
 					end
-					
+					a_node := an_iterator.item.as_node
+
 					-- find the node handler [i.e., the template rule] for this node
 					
 					a_node_handler := a_transformer.rule_manager.template_rule (a_node, a_mode, a_context)

@@ -21,7 +21,7 @@ feature -- Access
 	system_id: STRING is ""
 			-- Current SYSTEM ID
 
-	line_number: INTEGER is -1
-			-- Approximate line number of current event, or -1 if unknown
+	line_number: INTEGER is 0
+			-- Approximate line number of current event, or 0 if unknown
 
 end

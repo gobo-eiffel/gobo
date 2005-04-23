@@ -33,12 +33,13 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			key_fingerprint := -1
-			name := "key"
+			name := "key"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 2
 			maximum_argument_count := 2
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -78,7 +79,7 @@ feature -- Optimization
 		do
 			Precursor
 			if was_expression_replaced then
-				a_function ?= replacement_expression
+				a_function ?= replacement_expression -- TODO: as_key_function
 				if a_function /= Void then
 					a_function.add_context_document_argument (2, "key+")
 				end
@@ -153,7 +154,7 @@ feature -- Evaluation
 								last_iterator := a_transformer.key_manager.last_key_sequence
 							end
 						else
-							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+							create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 						end
 					else
 						create a_key_context_information.make (a_context_document, an_evaluation_context, a_fingerprint)

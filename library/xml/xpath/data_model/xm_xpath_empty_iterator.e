@@ -10,20 +10,23 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_EMPTY_ITERATOR [G -> XM_XPATH_ITEM]
-
-	-- This class has no state, and so a single
-	-- instance can be used. This is available
-	-- in XM_PATH_SHARED_EMPTY_ITERATOR
-
-	-- The previous comment is wrong in every respect.
-	-- TDOD: don't change the comment - make it be true
+class XM_XPATH_EMPTY_ITERATOR
 	
 inherit
 
-	XM_XPATH_REVERSIBLE_ITERATOR [G]
+	XM_XPATH_REVERSIBLE_ITERATOR [XM_XPATH_NODE]
+		undefine
+			is_last_position_finder, as_last_position_finder
+		redefine
+			is_node_iterator, as_node_iterator, is_empty_iterator
+		end
 
-	XM_XPATH_LAST_POSITION_FINDER [G]
+	XM_XPATH_LAST_POSITION_FINDER [XM_XPATH_NODE]
+		undefine
+			is_reversible_iterator, as_reversible_iterator
+		redefine
+			is_node_iterator, as_node_iterator, is_empty_iterator
+		end
 
 creation
 
@@ -38,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: XM_XPATH_NODE is
 			-- Value or node at the current position
 		do
 		end
@@ -54,7 +57,25 @@ feature -- Access
 			Result := Current
 		end
 
+	is_node_iterator: BOOLEAN is
+			-- Does `Current' yield a node_sequence?
+		do
+			Result := True
+		end
+
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- `Current' seen as a node iterator
+		do
+			Result := Current
+		end
+
 feature -- Status report
+
+	is_empty_iterator: BOOLEAN is
+			-- Is `Current' an iterator over a guarenteed empty sequence?
+		do
+			Result := True
+		end
 
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
@@ -68,8 +89,6 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-		ensure then
-			after: after
 		end
 
 feature -- Duplication

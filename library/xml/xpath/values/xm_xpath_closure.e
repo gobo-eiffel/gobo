@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			evaluate_item, display, item_type, is_convertible_to_item, as_item, process
+			evaluate_item, display, item_type, is_convertible_to_item, as_item, process, is_closure, as_closure
 		end
 
 creation {XM_XPATH_EXPRESSION_FACTORY}
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			valid_expression: an_expression /= Void and then not (an_expression.depends_upon_position or else an_expression.depends_upon_last)
 			context_not_void: a_context /= Void
 		local
-			new_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			make_value
 			base_expression := an_expression
@@ -60,15 +60,39 @@ feature {NONE} -- Initialization
 			clone_special_properties (base_expression)
 			saved_xpath_context := a_context.new_context
 			save_local_variables (a_context)
-			if saved_xpath_context.current_iterator /= Void and then not saved_xpath_context.current_iterator.off then -- TODO: Is this the right test?
-				create new_singleton_iterator.make (saved_xpath_context.current_iterator.item)
-				saved_xpath_context.set_current_iterator (new_singleton_iterator)
+
+			-- save a reference to the context item
+
+			an_iterator := a_context.current_iterator
+			if an_iterator /= Void then
+				if an_iterator.off then
+					create {XM_XPATH_EMPTY_ITERATOR} an_iterator.make
+				else
+					if an_iterator.is_node_iterator then
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} an_iterator.make (an_iterator.item.as_node)
+					else
+						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} an_iterator.make (an_iterator.item)
+					end
+				end
+				saved_xpath_context.set_current_iterator (an_iterator)
 			end
 		ensure
 			base_expression_set: base_expression = an_expression
 		end
 
 feature -- Access
+
+	is_closure: BOOLEAN is
+			-- Is `Current' a closure?
+		do
+			Result := True
+		end
+
+	as_closure: XM_XPATH_CLOSURE is
+			-- `Current' seen as a closure
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
@@ -84,15 +108,8 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			another_closure: XM_XPATH_CLOSURE
 		do
-			another_closure ?= other
-			if another_closure /= Void then
-				Result := base_expression.same_expression (another_closure.base_expression)
-			else
-				Result := base_expression.same_expression (other)
-			end
+			Result := other = Current
 		end
 
 feature -- Status report
@@ -202,8 +219,8 @@ feature {NONE} -- Implementation
 						an_index > a_local_variable_frame.variables.count
 					loop
 						a_value := a_local_variable_frame.variables.item (an_index)
-						a_closure ?= a_value
-						if a_closure /= Void then
+						if a_value.is_closure then
+							a_closure := a_value.as_closure
 							a_depth := a_closure.depth
 							if a_depth >= Maximum_closure_nesting_depth then
 								a_closure.eagerly_evaluate (a_context)

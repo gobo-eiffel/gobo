@@ -14,9 +14,18 @@ class XM_XPATH_ANY_URI_VALUE
 
 inherit
 
-	XM_XPATH_ATOMIC_VALUE
+	XM_XPATH_STRING_VALUE
+		rename
+			make as make_string
+		redefine
+			is_any_uri, as_any_uri, convert_to_type, item_type, same_expression,
+			is_comparable, is_convertible, display, three_way_comparison
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
+
+		-- Although anyURI is not a sub-type of xs:string, it is convenient
+		-- to implement it as such.
 
 creation
 
@@ -38,10 +47,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	string_value: STRING is
-			--Value of the item as a string
+	is_any_uri: BOOLEAN is
+			-- Is `Current' an anyURI value?
 		do
-			Result := value
+			Result := True
+		end
+
+	as_any_uri: XM_XPATH_ANY_URI_VALUE is
+			-- `Current' seen as an anyURI value
+		do
+			Result := Current
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
@@ -58,41 +73,28 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			other_uri: XM_XPATH_ANY_URI_VALUE
 		do
-			other_uri ?= other
-			if other_uri /= Void then
-				Result := STRING_.same_string (string_value, other_uri.string_value)
+			if other.is_any_uri then
+				Result := STRING_.same_string (string_value, other.as_any_uri.string_value)
 			end
 		end
 
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
 			-- Compare `Current' to `other'
-		local
-			a_uri_value: XM_XPATH_ANY_URI_VALUE
 		do
 
 			-- N.B. This implementatation won't be used, as ST_COLLATOR's version
 			-- will be used for comparing strings (TODO: ? - check this out).			
 
-			a_uri_value ?= other
-				check
-					a_uri_value /= Void
-					-- From pre-condition `are_comparable'
-				end
-			Result := string_value.three_way_comparison (a_uri_value.string_value)
+			Result := string_value.three_way_comparison (other.as_string_value.string_value)
 		end
 
 feature -- Status report
 
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
-		local
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
-			a_string_value ?= other
-			Result := a_string_value /= Void
+			Result := other.is_string_value
 		end
 	
 	display (a_level: INTEGER) is
@@ -124,11 +126,6 @@ feature -- Conversion
 		do
 				todo ("convert-to-type", False)				
 		end
-
-feature {NONE} -- Implementation
-
-	value: STRING
-			-- The actual string-value
 
 invariant
 	value_not_void: value /= Void

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_PROCESSING_INSTRUCTION
 		undefine
-			base_uri
+			base_uri, is_tiny_node, as_tiny_node
 		end
 
 	XM_XPATH_TINY_NODE

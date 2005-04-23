@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, analyze, compute_special_properties, promote, create_iterator, calculate_effective_boolean_value
+			simplify, analyze, compute_special_properties, promote, create_iterator,
+			calculate_effective_boolean_value, is_document_sorter, as_document_sorter
 		end
 
 creation
@@ -37,14 +38,25 @@ feature {NONE} -- Initialization
 				create {XM_XPATH_GLOBAL_ORDER_COMPARER} comparer
 			end
 			compute_static_properties
-			initialize
 		end
 
 feature -- Access
 
 	comparer: XM_XPATH_NODE_ORDER_COMPARER
 			-- Comparer
-	
+
+	is_document_sorter: BOOLEAN is
+			-- Is `Current' a document sorter?
+		do
+			Result := True
+		end
+
+	as_document_sorter: XM_XPATH_DOCUMENT_SORTER is
+			-- `Current' seen as a document sorter
+		do
+			Result := Current
+		end
+
 feature -- Optimization
 
 	simplify is
@@ -100,21 +112,17 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
 			an_iterator := base_expression.last_iterator
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			else
-				a_node_iterator ?= an_iterator
-				if a_node_iterator /= Void then
-					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (a_node_iterator, comparer)
+				if an_iterator.is_node_iterator then
+					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (an_iterator.as_node_iterator, comparer)
 				else
-					an_empty_iterator ?= an_iterator
-					if an_empty_iterator /= Void then
-						last_iterator := an_empty_iterator
+					if an_iterator.is_empty_iterator then
+						last_iterator := an_iterator
 					else
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Unexpected sequence", Gexslt_eiffel_type_uri, "NON_NODE_SEQUENCE", Dynamic_error)
 					end

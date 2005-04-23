@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			set_else_expression (an_else_expression)
 			set_then_expression (a_then_expression)
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			condition_set: condition = a_condition
@@ -112,7 +112,6 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations
 		local
-			a_value: XM_XPATH_VALUE
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			condition.simplify
@@ -122,8 +121,7 @@ feature -- Optimization
 				if condition.was_expression_replaced then
 					set_condition (condition.replacement_expression)
 				end
-				a_value ?= condition
-				if a_value /= Void then
+				if condition.is_value then
 					condition.calculate_effective_boolean_value (Void)
 					a_boolean_value := condition.last_boolean_value
 					if not a_boolean_value.is_error and then a_boolean_value.value then
@@ -309,9 +307,9 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	
 invariant
 
-	condition_not_void: condition /= Void
-	else_not_void: else_expression /= Void
-	then_not_void: then_expression /= Void
+	condition_not_void: initialized implies condition /= Void
+	else_not_void: initialized implies else_expression /= Void
+	then_not_void: initialized implies then_expression /= Void
 
 end
 

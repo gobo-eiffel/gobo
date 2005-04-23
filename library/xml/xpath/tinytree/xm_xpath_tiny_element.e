@@ -16,14 +16,16 @@ inherit
 
 	XM_XPATH_ELEMENT
 		undefine
-			has_child_nodes, is_nilled, first_child
+			has_child_nodes, is_nilled, first_child, is_tiny_node, as_tiny_node
 		redefine
 			has_attributes
 		end
 
 	XM_XPATH_TINY_COMPOSITE_NODE
 		undefine
-			type_annotation, has_attributes, local_part, base_uri
+			type_annotation, has_attributes, local_part, base_uri, is_element, as_element
+		redefine
+			is_tiny_element, as_tiny_element
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS
@@ -49,7 +51,19 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
+	is_tiny_element: BOOLEAN is
+			-- Is `Current' an element?
+		do
+			Result := True
+		end
+
+	as_tiny_element: XM_XPATH_TINY_ELEMENT is
+			-- `Current' seen as an element
+		do
+			Result := Current
+		end
+
 	attribute_value_by_name (a_uri: STRING; a_local_name:STRING): STRING is
 			-- Value of named attribute
 		do
@@ -88,7 +102,7 @@ feature -- Access
 			-- URI code for `a_prefix_code'
 		local
 			a_namespace_node, a_namespace_code: INTEGER
-			an_element: XM_XPATH_TINY_ELEMENT
+			a_composite: XM_XPATH_TINY_COMPOSITE_NODE
 		do
 			Result := -1 -- not found
 			if a_prefix_code = Xml_prefix_index - 1 then
@@ -113,8 +127,8 @@ feature -- Access
 			--  then we must look at the parent element
 
 			if Result = -1 then
-				an_element ?= parent
-				if an_element = Void then
+				a_composite := parent
+				if not a_composite.is_element then
 					
 					-- Document node
 					
@@ -122,7 +136,7 @@ feature -- Access
 						Result := Default_uri_code
 					end
 				else
-					Result := an_element.uri_code_for_prefix_code (a_prefix_code)
+					Result := a_composite.as_element.uri_code_for_prefix_code (a_prefix_code)
 				end
 			end
 		end
@@ -131,7 +145,7 @@ feature -- Access
 			-- Output all namespace nodes associated with this element.
 		local
 			a_namespace_node: INTEGER
-			a_parent: XM_XPATH_TINY_ELEMENT
+			a_node: XM_XPATH_TINY_COMPOSITE_NODE
 		do
 			a_namespace_node := document.beta_value (node_number)
 			if a_namespace_node > 0 then
@@ -148,9 +162,9 @@ feature -- Access
 			-- We rely on the receiver to eliminate multiple declarations of the same prefix.
 
 			if include_ancestors then
-				a_parent ?= parent
-				if a_parent /= Void then
-					a_parent.output_namespace_nodes (a_receiver, true)
+				a_node := parent
+				if a_node.is_element then
+					a_node.as_element.output_namespace_nodes (a_receiver, true)
 				end
 			end
 		end
@@ -159,7 +173,7 @@ feature -- Access
 			-- Namespace codes in scope for `Current'
 		local
 			a_namespace_node: INTEGER
-			a_parent: XM_XPATH_TINY_ELEMENT
+			a_node: XM_XPATH_TINY_NODE
 		do
 			create Result.make (0)
 			a_namespace_node := document.beta_value (node_number)
@@ -172,9 +186,9 @@ feature -- Access
 					a_namespace_node := a_namespace_node + 1
 				end
 			end
-			a_parent ?= parent
-			if a_parent /= Void then
-				a_parent.accumulate_namespace_codes (Result)
+			a_node := parent
+			if a_node.is_tiny_element then
+				a_node.as_tiny_element.accumulate_namespace_codes (Result)
 			end
 
 			-- Now add the xml namespace
@@ -217,7 +231,7 @@ feature -- Element change
 			a_namespace_node, a_namespace_code: INTEGER
 			a_prefix_code: INTEGER -- _16
 			a_prefix_code_list: DS_ARRAYED_LIST [INTEGER] -- _16
-			a_parent: XM_XPATH_TINY_ELEMENT
+			a_node: XM_XPATH_TINY_NODE
 		do
 			a_namespace_node := document.beta_value (node_number)
 			if a_namespace_node > 0 then
@@ -234,9 +248,9 @@ feature -- Element change
 					a_namespace_node := a_namespace_node + 1
 				end
 			end
-			a_parent ?= parent
-			if a_parent /= Void then
-				a_parent.accumulate_namespace_codes (a_list)
+			a_node := parent
+			if a_node.is_tiny_element then
+				a_node.as_tiny_element.accumulate_namespace_codes (a_list)
 			end
 		end
 

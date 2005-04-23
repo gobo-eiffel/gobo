@@ -30,12 +30,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "tokenize"
+			name := "tokenize"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -84,7 +85,7 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			an_item: XM_XPATH_ITEM
 			an_input_string, a_pattern_string, a_flags_string, a_key: STRING
 			a_regexp_cache_entry: like regexp_cache_entry
 		do
@@ -92,22 +93,22 @@ feature -- Evaluation
 			an_input_string := arguments.item (1).last_evaluated_item.string_value
 			if regexp_cache_entry = Void then
 				arguments.item (2).evaluate_item (a_context)
-				an_atomic_value ?= arguments.item (2).last_evaluated_item
+				an_item := arguments.item (2).last_evaluated_item
 				check
-					atomic_pattern: an_atomic_value /= Void
+					atomic_pattern: an_item.is_atomic_value
 					-- Statically typed as a single string
 				end
-				a_pattern_string := an_atomic_value.string_value
+				a_pattern_string := an_item.as_atomic_value.string_value
 				if arguments.count = 2 then
 					a_flags_string := ""
 				else
 					arguments.item (3).evaluate_item (a_context)
-					an_atomic_value ?= arguments.item (3).last_evaluated_item
+					an_item := arguments.item (3).last_evaluated_item
 					check
-						atomic_pattern: an_atomic_value /= Void
+						atomic_pattern: an_item.is_atomic_value
 						-- Statically typed as a single string
 					end
-					a_flags_string := normalized_flags_string (an_atomic_value.string_value)
+					a_flags_string := normalized_flags_string (an_item.as_atomic_value.string_value)
 				end
 				if a_flags_string = Void then
 					set_last_error_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error)

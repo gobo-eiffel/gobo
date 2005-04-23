@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate
+			make_style_element, validate, is_attribute_set, as_attribute_set
 		end
 
 	XM_XSLT_PROCEDURE
@@ -210,4 +210,18 @@ feature -- Element change
 			last_generated_expression := Void
 		end
 
+feature -- Conversion
+
+	is_attribute_set: BOOLEAN is
+			-- Is `Current' an xsl:attribute-set?
+		do
+			Result := True
+		end
+
+	as_attribute_set: XM_XSLT_ATTRIBUTE_SET is
+			-- `Current' seen as an xsl:attribute-set
+		do
+			Result := Current
+		end
+	
 end

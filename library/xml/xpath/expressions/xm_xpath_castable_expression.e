@@ -17,7 +17,8 @@ inherit
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
 			simplify, item_type, analyze, same_expression, evaluate_item,
-			calculate_effective_boolean_value, compute_cardinality, compute_special_properties
+			calculate_effective_boolean_value, compute_cardinality, compute_special_properties,
+			is_castable_expression, as_castable_expression
 		end
 
 	XM_XPATH_TYPE
@@ -37,7 +38,6 @@ feature {NONE} -- Initialization
 			target_type := a_target.primary_type
 			is_empty_allowed := a_target.cardinality = Required_cardinality_optional 
 			compute_static_properties
-			initialize
 		ensure
 			base_expression_set: base_expression = a_source
 			static_properties_computed: are_static_properties_computed
@@ -50,6 +50,18 @@ feature -- Access
 
 	target_type: XM_XPATH_ITEM_TYPE
 			-- Target type 
+
+	is_castable_expression: BOOLEAN is
+			-- Is `Current' a castable expression?
+		do
+			Result := True
+		end
+
+	as_castable_expression: XM_XPATH_CASTABLE_EXPRESSION is
+			-- `Current' seen as a castable expression
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
@@ -68,8 +80,8 @@ feature -- Comparison
 		local
 			other_castable: XM_XPATH_CASTABLE_EXPRESSION
 		do
-			other_castable ?= other
-			if other_castable /= Void then
+			if other.is_castable_expression then
+				other_castable := other.as_castable_expression
 				Result := base_expression.same_expression (other_castable.base_expression) 
 					and then other_castable.is_empty_allowed = is_empty_allowed
 					and then other_castable.target_type = target_type
@@ -80,8 +92,6 @@ feature -- Optimization
 
 	simplify is
 			-- Perform context-independent static optimizations
-		local
-			a_value: XM_XPATH_VALUE
 		do
 			base_expression.simplify
 			if base_expression.is_error then
@@ -89,8 +99,7 @@ feature -- Optimization
 			elseif base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end
-			a_value ?= base_expression
-			if a_value /= Void then
+			if base_expression.is_value then
 				calculate_effective_boolean_value (Void)
 				set_replacement (last_boolean_value)
 			end
@@ -103,7 +112,6 @@ feature -- Optimization
 			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_cardinality: INTEGER
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			mark_unreplaced
 			base_expression.analyze (a_context)
@@ -127,8 +135,7 @@ feature -- Optimization
 				else
 					set_base_expression (a_type_checker.checked_expression)
 				end
-				an_atomic_value ?= base_expression
-				if an_atomic_value /= Void then
+				if base_expression.is_atomic_value then
 					calculate_effective_boolean_value (Void)
 					set_replacement (last_boolean_value)
 				end
@@ -147,15 +154,12 @@ feature -- Evaluation
 	
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
-		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			base_expression.evaluate_item (a_context)
-			an_atomic_value ?= base_expression.last_evaluated_item
-			if an_atomic_value = Void then
+			if not base_expression.last_evaluated_item.is_atomic_value then
 				create last_boolean_value.make (is_empty_allowed)
 			else
-				create last_boolean_value.make (an_atomic_value.is_convertible (target_type))
+				create last_boolean_value.make (base_expression.last_evaluated_item.as_atomic_value.is_convertible (target_type))
 			end
 		end
 

@@ -28,12 +28,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "namespace-uri-for-prefix"
+			name := "namespace-uri-for-prefix"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 2
 			maximum_argument_count := 2
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -68,21 +69,21 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			an_element: XM_XPATH_ELEMENT
+			an_item: XM_XPATH_ITEM
 			an_xml_prefix: STRING
 			a_uri_code: INTEGER
 		do
 			last_evaluated_item := Void
 			arguments.item (2).evaluate_item (a_context)
-			if not arguments.item (2).last_evaluated_item.is_error then
-				an_element ?= arguments.item (2).last_evaluated_item
-				if an_element /= Void then
+			an_item := arguments.item (2).last_evaluated_item 
+			if not an_item.is_error then
+				if an_item.is_element then
 					arguments.item (1).evaluate_item (a_context)
 					if arguments.item (1).last_evaluated_item.is_error then
 						last_evaluated_item := arguments.item (1).last_evaluated_item
 					else
 						an_xml_prefix := arguments.item (1).last_evaluated_item.string_value
-						a_uri_code := an_element.uri_code_for_prefix (an_xml_prefix)
+						a_uri_code := an_item.as_element.uri_code_for_prefix (an_xml_prefix)
 						if shared_name_pool.is_valid_uri_code (a_uri_code) then
 							create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (shared_name_pool.uri_from_uri_code (a_uri_code))
 						end
@@ -91,7 +92,7 @@ feature -- Evaluation
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Second argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)
 				end
 			else
-				last_evaluated_item := arguments.item (2).last_evaluated_item
+				last_evaluated_item := an_item
 			end
 		end
 

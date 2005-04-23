@@ -15,6 +15,9 @@ deferred class XM_XPATH_AXIS_ITERATOR [G -> XM_XPATH_NODE]
 inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [G]
+		redefine
+			is_node_iterator
+		end
 
 feature -- Access
 
@@ -24,6 +27,12 @@ feature -- Access
 			Result := current_item
 		end
 
+	is_node_iterator: BOOLEAN is
+			-- Does `Current' yield a node_sequence?
+		do
+			Result := True
+		end
+	
 feature -- Status report
 	
 	after: BOOLEAN is

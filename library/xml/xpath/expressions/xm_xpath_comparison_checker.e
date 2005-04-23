@@ -43,10 +43,8 @@ feature -- Comparison
 		do
 			is_comparison_type_error := False
 			an_atomic_value_one := an_atomic_value
-			an_untyped_value ?= an_atomic_value
-			if an_untyped_value /= Void then
-				a_numeric_value ?= another_atomic_value
-				if a_numeric_value /= Void then
+			if an_atomic_value.is_untyped_atomic then
+				if another_atomic_value.is_numeric_value then
 					if an_atomic_value.is_convertible (type_factory.double_type) then
 						an_atomic_value_one := an_atomic_value.convert_to_type (type_factory.double_type)
 					else
@@ -65,10 +63,8 @@ feature -- Comparison
 			end
 			if not is_comparison_type_error then
 				an_atomic_value_two := another_atomic_value
-				an_untyped_value ?= another_atomic_value
-				if an_untyped_value /= Void then
-					a_numeric_value ?= an_atomic_value
-					if a_numeric_value /= Void then
+				if another_atomic_value.is_untyped_atomic then
+					if an_atomic_value.is_numeric_value then
 						if another_atomic_value.is_convertible (type_factory.double_type) then
 							an_atomic_value_two := another_atomic_value.convert_to_type (type_factory.double_type)
 						else
@@ -87,10 +83,8 @@ feature -- Comparison
 				end
 			end
 			if backwards_compatible and not is_comparison_type_error then
-				a_numeric_value ?= an_atomic_value_one
-				another_numeric_value ?= an_atomic_value_two
-				if a_numeric_value /= Void or else another_numeric_value /= Void then
-					if a_numeric_value.is_convertible (type_factory.double_type) and then another_numeric_value.is_convertible (type_factory.double_type) then
+				if an_atomic_value_one.is_numeric_value or else an_atomic_value_two.is_numeric_value then
+					if an_atomic_value_one.is_convertible (type_factory.double_type) and then an_atomic_value_two.is_convertible (type_factory.double_type) then
 						an_atomic_value_one := an_atomic_value_one.convert_to_type (type_factory.double_type)
 						an_atomic_value_two := an_atomic_value_two.convert_to_type (type_factory.double_type)
 					else

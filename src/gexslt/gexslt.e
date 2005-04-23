@@ -624,6 +624,7 @@ feature {NONE} -- Implementation
 			a_pathname: KI_PATHNAME
 			a_drive, a_string: STRING
 			a_destination_system_id: STRING
+			a_chooser: XM_XSLT_PI_CHOOSER
 		do
 			conformance.set_basic_xslt_processor
 			configuration.use_tiny_tree_model (is_tiny_tree_model)
@@ -651,7 +652,12 @@ feature {NONE} -- Implementation
 						title := title.substring (2, title.count - 1)
 					end
 				end
-				a_stylesheet_source := a_transformer_factory.associated_stylesheet (a_source.system_id, medium, title)
+				if title = Void then
+					create {XM_XSLT_PREFERRED_PI_CHOOSER} a_chooser.make
+				else
+					create {XM_XSLT_PI_CHOOSER_BY_NAME} a_chooser.make (title)
+				end
+				a_stylesheet_source := a_transformer_factory.associated_stylesheet (a_source.system_id, medium, a_chooser)
 				if a_stylesheet_source = Void then
 					report_processing_error ("Unable to compile stylesheet",  "Xml-stylesheet processing instuction(s) did not lead to a stylesheet being compiled sucessfully..")
 					Exceptions.die (2)

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			node_kind
+			node_kind, is_local_name_test, as_local_name_test
 		end
 	
 	XM_XPATH_SHARED_NAME_POOL
@@ -57,6 +57,17 @@ feature -- Access
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_shift_left (1, node_kind)
+		end
+	is_local_name_test: BOOLEAN is
+			-- Is `Current' a local-name test?
+		do
+			Result := True
+		end
+
+	as_local_name_test: XM_XPATH_LOCAL_NAME_TEST is
+			-- `Current' seen as a local-name test
+		do
+			Result := Current
 		end
 
 feature -- Status report

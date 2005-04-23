@@ -127,11 +127,11 @@ feature -- Element change
 				else
 					context_item := tree_pipe.document
 				end
-				a_context_node ?= context_item
 				check
-					context_item_is_node: a_context_node /= Void
+					context_item_is_node: context_item.is_node
 					-- because tree_pipe.document is a document node
 				end
+				a_context_node := context_item.as_node
 				document := a_context_node.document_root
 				create a_base_uri.make (document.base_uri)
 				create function_library.make
@@ -183,7 +183,7 @@ feature -- Evaluation
 			an_expression: XM_XPATH_EXPRESSION
 			a_slot_manager: XM_XPATH_SLOT_MANAGER
 		do
-			expression_factory.make_expression (an_expression_text, static_context, 1, Eof_token)
+			expression_factory.make_expression (an_expression_text, static_context, 1, Eof_token, 1)
 			if expression_factory.is_parse_error then
 				is_error := True
 				internal_error_value := expression_factory.parsed_error_value

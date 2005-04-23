@@ -21,8 +21,6 @@ feature -- Conversion
 	item_to_double (an_item: XM_XPATH_ITEM): XM_XPATH_DOUBLE_VALUE is
 			-- `an_item' as a double
 		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 			a_string: STRING
 		do
 			if an_item = Void then
@@ -30,20 +28,16 @@ feature -- Conversion
 			elseif an_item.is_error then
 				create Result.make_nan
 			else
-				a_boolean_value ?= an_item
-				if a_boolean_value /= Void then
-					Result ?= a_boolean_value.convert_to_type (type_factory.double_type)
+				if an_item.is_boolean_value then
+					Result := an_item.as_boolean_value.convert_to_type (type_factory.double_type).as_double_value
+				elseif an_item.is_numeric_value then
+					Result := an_item.as_numeric_value.convert_to_type (type_factory.double_type).as_double_value
 				else
-					a_numeric_value ?= an_item
-					if a_numeric_value /= Void then
-						Result ?= a_numeric_value.convert_to_type (type_factory.double_type)
+					a_string := an_item.string_value
+					if a_string.is_double then
+						create Result.make_from_string (a_string)
 					else
-						 a_string := an_item.string_value
-						if a_string.is_double then
-							create Result.make_from_string (a_string)
-						else
-							create Result.make_nan
-						end
+						create Result.make_nan
 					end
 				end
 			end

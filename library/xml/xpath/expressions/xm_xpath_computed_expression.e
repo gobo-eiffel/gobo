@@ -26,22 +26,75 @@ deferred class XM_XPATH_COMPUTED_EXPRESSION
 inherit
 
 	XM_XPATH_EXPRESSION
+		redefine
+			is_computed_expression, as_computed_expression
+		end
 
 	XM_XPATH_EXPRESSION_CONTAINER
-
-feature {NONE} -- Initialization
-
-	initialize is
-			-- Initialize attributes.
-			-- All creation routines should call this
-		do
-			line_number := -1
+		undefine
+			as_computed_expression
 		end
 
 feature -- Access
+	
+	is_computed_expression: BOOLEAN is
+			-- Is `Current' a computed expression?
+		do
+			Result := True
+		end
 
-	line_number: INTEGER
-			-- Line number of the expression within a module
+	as_computed_expression: XM_XPATH_COMPUTED_EXPRESSION is
+			-- `Current' seen as a computed expression
+		do
+			Result := Current
+		end
+
+	line_number: INTEGER is
+			-- Line number of `Current' within source document
+		do
+			if location_identifier = 0 then
+				if parent /= Void then
+					Result := parent.line_number
+				end
+			else
+				Result := INTEGER_.bit_and (location_identifier, line_number_mask)
+			end
+		end
+
+	system_id: STRING is
+			-- System identifier of module containg `Current'
+		local
+			a_module_number: INTEGER
+		do
+			if was_expression_replaced then -- WHY is this necessary ??
+				Result := ""
+			elseif location_identifier /= 0 then
+				a_module_number := INTEGER_.bit_shift_right (location_identifier, module_number_shift)
+				check
+					strictly_positive_module_number: a_module_number > 0
+				end
+				Result := system_id_from_module_number (a_module_number)
+			elseif container = Void then
+				Result := ""
+			else
+				Result := container.system_id
+			end
+		end
+
+	system_id_from_module_number (a_module_number: INTEGER): STRING is
+			-- System identifier
+		do
+
+			-- Default implementation - redefined by top-level containers
+
+			if was_expression_replaced then -- WHY is this necessary ??
+				Result := ""
+			elseif container = Void then
+				Result := ""
+			else
+				Result := container.system_id_from_module_number (a_module_number)
+			end
+		end
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
@@ -84,12 +137,6 @@ feature -- Comparison
 
 feature -- Status report
 	
-	frozen is_computed_expression: BOOLEAN is
-			-- Is `Current' a computed expression?
-		do
-			Result := True
-		end
-
 	frozen is_user_function: BOOLEAN is
 			-- Is `Current' a compiled user function?
 		do
@@ -184,9 +231,6 @@ feature -- Evaluation
 			-- Effective boolean value
 		local
 			an_item: XM_XPATH_ITEM
-			a_node: XM_XPATH_NODE
-			a_boolean: XM_XPATH_BOOLEAN_VALUE
-			a_string: XM_XPATH_STRING_VALUE
 			a_number: XM_XPATH_NUMERIC_VALUE
 		do
 			create_iterator (a_context)
@@ -194,34 +238,30 @@ feature -- Evaluation
 				last_iterator.start
 				if not last_iterator.after then
 					an_item := last_iterator.item
-					a_node ?= an_item
-					if a_node /= Void then
+					if an_item.is_node then
 						create last_boolean_value.make (True)
 					else
-						a_boolean ?= an_item
-						if a_boolean /= Void then
+						if an_item.is_boolean_value then
 							last_iterator.forth
 							if last_iterator.after then
-								create last_boolean_value.make (a_boolean.value)
+								create last_boolean_value.make (an_item.as_boolean_value.value)
 							else
 								last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 							end
 						else
-							a_string ?= an_item
-							if a_string /= Void then
+							if an_item.is_string_value then
 								last_iterator.forth
 								if last_iterator.after then
-									create last_boolean_value.make (a_string.string_value.count /= 0)
+									create last_boolean_value.make (an_item.as_string_value.string_value.count /= 0)
 								else
 									last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 								end
 							else
-								a_number ?= an_item
-								if a_number /= Void then
+								if an_item.is_numeric_value then
 									last_iterator.forth
 									if last_iterator.after then
 										a_number.calculate_effective_boolean_value (a_context)
-										last_boolean_value := a_number.last_boolean_value
+										last_boolean_value := an_item.as_numeric_value.last_boolean_value
 									else
 										last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
 									end
@@ -260,21 +300,16 @@ feature -- Evaluation
 
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a String
-		local
-			a_string: XM_XPATH_STRING_VALUE
 		do
 			evaluate_item (a_context)
 			if last_evaluated_item = Void then
 				create last_evaluated_string.make ("")
 			elseif last_evaluated_item.is_error then
 				todo ("Logic error in {XM_XPATH_COMPUTED_EXPRESSION}.evaluate_as_string", True)
+			elseif not last_evaluated_item.is_string_value then
+				create last_evaluated_string.make ("")
 			else
-				a_string ?= last_evaluated_item
-				if a_string = Void then
-					create last_evaluated_string.make ("")
-				else
-					last_evaluated_string := a_string
-				end
+				last_evaluated_string := last_evaluated_item.as_string_value
 			end
 		end
 
@@ -287,15 +322,18 @@ feature -- Evaluation
 			-- This default implementation handles iteration for expressions that
 			--  return singleton values: for non-singleton expressions, the subclass must
 			--  provide its own implementation.
-				check
+
+			check
 					singleton_expression: not cardinality_allows_many
 					-- Not a prefect check, as cardinality may not have been set!
 				end
 			evaluate_item (a_context)
 			if last_evaluated_item = Void then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 			elseif last_evaluated_item.is_error then
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value) 
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
+			elseif last_evaluated_item.is_node then
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (last_evaluated_item.as_node) 
 			else
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item) 
 			end
@@ -341,24 +379,31 @@ feature -- Evaluation
 
 feature -- Element change
 
-	set_line_number (a_line_number: INTEGER) is
-			-- Set line number to `a_line_number'.
-		require
-			strictly_positive_line_number: a_line_number > 0
-		do
-			line_number := a_line_number
-		ensure
-			set: line_number = a_line_number
-		end
-	
 	set_source_location (a_module_number, a_line_number: INTEGER) is
 			-- Set source location information.
+		require
+			strictly_positive_module_number: a_module_number > 0
+			positive_line_number: a_line_number >= 0
 		do
-			module_number := a_module_number
-			line_number := a_line_number
+			location_identifier := INTEGER_.bit_shift_left (a_module_number, module_number_shift) + a_line_number
+		end
+
+	set_location_identifier (a_location_identifier: INTEGER) is
+			-- Set source location information.
+		do
+			location_identifier := a_location_identifier
 		ensure
-			line_number_set: line_number = a_line_number
-			system_id_set: module_number = a_module_number
+			location_identifier_set: location_identifier = a_location_identifier
+		end
+
+	copy_location_identifier (a_destination: XM_XPATH_EXPRESSION) is
+			-- Copy source location information.
+		require
+			destination_not_replaced: a_destination /= Void and then not a_destination.was_expression_replaced
+		do
+			if a_destination.is_computed_expression then
+				a_destination.as_computed_expression.set_location_identifier (location_identifier)
+			end
 		end
 
 	set_parent (a_container: XM_XPATH_EXPRESSION_CONTAINER) is
@@ -374,22 +419,26 @@ feature -- Element change
 	adopt_child_expression (a_child: XM_XPATH_EXPRESSION) is
 			-- Adopt `a_child' if it is a computed expression.
 		require
-			child_expression_not_replacedd: a_child /= Void and then not a_child.was_expression_replaced
+			child_expression_not_replaced: a_child /= Void and then not a_child.was_expression_replaced
 			not_self: a_child /= Current
 		local
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
-			a_child.mark_unreplaced
-			a_computed_expression ?= a_child
-			if a_computed_expression /= Void then
+			if not a_child.is_error then a_child.mark_unreplaced end
+			if a_child.is_computed_expression then
+				a_computed_expression := a_child.as_computed_expression
 				if parent = Void and then a_computed_expression.container /= Current then
 					parent := a_computed_expression.container
 				end
 				a_computed_expression.set_parent (Current)
-				-- TODO copy location information
+				if location_identifier = 0 then
+					a_computed_expression.copy_location_identifier (Current)
+				else
+					copy_location_identifier (a_computed_expression)
+				end
 			end
 		end
-	
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	native_implementations: INTEGER is
@@ -426,6 +475,12 @@ feature {NONE} -- Implementation
 	parent: XM_XPATH_EXPRESSION_CONTAINER
 			-- Containing parent
 
+	location_identifier: INTEGER
+			-- Index into SYSTEM ID array
+
+	initialized: BOOLEAN
+			-- Has creation procedure completed?
+
 	effective_boolean_value_in_error (a_reason: STRING): XM_XPATH_BOOLEAN_VALUE is
 			-- Type error for `calculate_effective_boolean_value'
 		require
@@ -435,12 +490,18 @@ feature {NONE} -- Implementation
 			Result.set_last_error_from_string ("Effective boolean value is not defined for a " + a_reason, Gexslt_eiffel_type_uri, "EFFECTIVE_BOOLEAN_VALUE", Type_error)
 		end
 
-	module_number: INTEGER
-			-- Index into SYSTEM ID array
-	
+	line_number_mask: INTEGER is
+			-- Bit mask for extracting line number from `location_identifer'
+		once
+			Result := 1048575
+		end
+
+	module_number_shift: INTEGER is 20
+			-- Number of bits to shift `location_identifer' for module number
+
 invariant
 
-		positive_module_number: module_number >= 0
+		positive_location_identifier: location_identifier >= 0
 
 end
 	

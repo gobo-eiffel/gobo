@@ -98,8 +98,8 @@ feature -- Element change
 			a_separator: STRING
 		do
 			create a_pi.make (an_executable, name)
-			a_string_value ?= select_expression
-			if a_string_value /= Void then
+			if select_expression.is_string_value then
+				a_string_value := select_expression.as_string_value
 				a_separator := " "
 			else
 				a_separator := ""

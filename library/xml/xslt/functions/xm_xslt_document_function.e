@@ -34,12 +34,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "document"
+			name := "document"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (0)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -89,11 +90,11 @@ feature -- Evaluation
 					if an_item.is_error then
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 					else
-						a_base_node ?= an_item
 						check
-							item_is_node: a_base_node /= Void
+							item_is_node: an_item.is_node
 							-- Static typing
 						end
+						a_base_node := an_item.as_node
 						create a_base_uri.make (a_base_node.base_uri)
 					end
 				end

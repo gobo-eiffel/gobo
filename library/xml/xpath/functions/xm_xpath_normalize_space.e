@@ -28,12 +28,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "normalize-space"
+			name := "normalize-space"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -89,13 +90,10 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
-		local
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			arguments.item (1).evaluate_item (a_context)
-			a_string_value ?= arguments.item (1).last_evaluated_item
-			if a_string_value /= Void then
-				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (normalize (a_string_value.string_value))
+			if arguments.item (1).last_evaluated_item.is_string_value then
+				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (normalize (arguments.item (1).last_evaluated_item.as_string_value.string_value))
 			else
 				last_evaluated_item := Void
 			end

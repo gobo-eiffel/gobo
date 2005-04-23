@@ -15,6 +15,9 @@ class XM_XPATH_INVALID_VALUE
 inherit
 
 	XM_XPATH_ATOMIC_VALUE
+		redefine
+			is_invalid_value, as_invalid_value
+		end
 
 creation
 
@@ -49,6 +52,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_invalid_value: BOOLEAN is
+			-- Is `Current' an invalid value?
+		do
+			Result := True
+		end
+
+	as_invalid_value: XM_XPATH_INVALID_VALUE is
+			-- `Current' seen as an invalid value
+		do
+			Result := Current
+		end
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type
 		do
@@ -65,12 +80,9 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			an_error_value: XM_XPATH_INVALID_VALUE
 		do
-			an_error_value ?= other
-			if an_error_value /= void then
-				Result := error_value.same_error (an_error_value.error_value)
+			if other.is_invalid_value then
+				Result := error_value.same_error (other.as_invalid_value.error_value)
 			end
 		end
 

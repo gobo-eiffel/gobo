@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			minimum_bound := a_min
 			maximum_bound := a_max
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			value_set: value = a_value

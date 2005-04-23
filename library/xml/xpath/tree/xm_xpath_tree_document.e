@@ -17,16 +17,16 @@ inherit
 	XM_XPATH_DOCUMENT
 		undefine
 			document_element, next_sibling, previous_sibling, has_child_nodes,
-			first_child, last_child
+			first_child, last_child, is_tree_node, as_tree_node
 		redefine
 			hash_code
 		end
 
 	XM_XPATH_TREE_COMPOSITE_NODE
 		undefine
-			document_number, base_uri, local_part, system_id, line_number, hash_code
+			document_number, base_uri, local_part, system_id, line_number, hash_code, is_document, as_document
 		redefine
-			document_element, next_sibling, previous_sibling, root, document_root
+			document_element, next_sibling, previous_sibling, root, document_root, is_tree_document, as_tree_document
 		end
 
 creation
@@ -55,6 +55,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_tree_document: BOOLEAN is
+			-- Is `Current' a document?
+		do
+			Result := True
+		end
+
+	as_tree_document: XM_XPATH_TREE_DOCUMENT is
+			-- `Current' seen as a document
+		do
+			Result := Current
+		end
+
 	system_id: STRING is
 			-- SYSTEM id of `Current', or `Void' if not known
 		do
@@ -62,7 +74,7 @@ feature -- Access
 		end
 
 	line_number: INTEGER is
-			-- Line number of node in original source document, or -1 if not known
+			-- Line number of node in original source document, or 0 if not known
 		do
 			Result := 0
 		end
@@ -128,15 +140,14 @@ feature -- Access
 			loop
 				if a_node.node_type = Element_node and then
 					a_node.fingerprint = a_fingerprint then
-					an_element ?= a_node
-						check
-							is_an_element: an_element /= Void
-							-- because of `node_type'
-						end
+					check
+						is_an_element: a_node.is_tree_element
+						-- because of `node_type'
+					end
 					if a_list.is_full then
 						a_list.resize (a_list.count * 2)
 					end
-					a_list.put_last (an_element)
+					a_list.put_last (a_node.as_tree_element)
 				end
 				a_node := a_node.next_node_in_document_order (Current)
 			end
@@ -210,7 +221,7 @@ feature -- Access
 		end
 
 	line_number_for_node (a_node_number: INTEGER): INTEGER is
-			-- Line number of `a_node_number' in original source document, or -1 if not known
+			-- Line number of `a_node_number' in original source document, or 0 if not known
 		do
 			if line_number_map /= Void then
 				Result := line_number_map.line_number (a_node_number)
@@ -259,6 +270,7 @@ feature -- Element change
 			-- Set the line number for `a_node_number'.
 		require
 			valid_node_number: a_node_number > 0
+			prositive_line_number: a_line_number >= 0
 		do
 			if line_number_map /= Void then
 				line_number_map.set_line_number(a_node_number, a_line_number)
@@ -328,7 +340,7 @@ feature {NONE} -- Implementation
 					a_node = Void
 				loop
 					if a_node.node_type = Element_node then
-						an_element ?= a_node
+						an_element := a_node.as_tree_element
 						from
 							an_index := 1
 						variant

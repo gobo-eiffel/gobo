@@ -30,20 +30,35 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "sum"
+			name := "sum"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
+		local
+			a_base_type: XM_XPATH_ITEM_TYPE
 		do
-			Result := type_factory.any_atomic_type
+			a_base_type := arguments.item (1).atomized_item_type (False)
+			if a_base_type = type_factory.untyped_atomic_type then
+				a_base_type := type_factory.double_type
+			end
+			if arguments.item (1).cardinality_allows_zero then
+				if arguments.count = 1 then
+					Result := common_super_type (a_base_type, type_factory.integer_type)
+				else
+					Result := common_super_type (a_base_type, arguments.item (2).item_type)
+				end
+			else
+				Result := a_base_type
+			end
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -71,8 +86,8 @@ feature -- Evaluation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_sum: XM_XPATH_ATOMIC_VALUE
-			an_untyped_atomic: XM_XPATH_UNTYPED_ATOMIC_VALUE
-			a_numeric_value, another_numeric_value: XM_XPATH_NUMERIC_VALUE
+			an_item: XM_XPATH_ITEM
+			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 			finished: BOOLEAN
 		do
 			last_evaluated_item := Void
@@ -92,31 +107,31 @@ feature -- Evaluation
 						last_evaluated_item := arguments.item (2).last_evaluated_item
 					end
 				else
-					a_sum ?= an_iterator.item
 					check
-						sum_not_void: a_sum /= Void
+						sum_is_atomic: an_iterator.item.is_atomic_value
 						-- static typing
 					end
-					an_untyped_atomic ?= a_sum
-					if an_untyped_atomic /= Void then
-						a_sum := an_untyped_atomic.convert_to_type (type_factory.double_type)
+					a_sum := an_iterator.item.as_atomic_value
+					-- TODO: for schema-aware processor
+					if a_sum.is_untyped_atomic then
+						a_sum := a_sum.convert_to_type (type_factory.double_type)
 					end
-					a_numeric_value ?= a_sum
-					if a_numeric_value /= Void then
+					if a_sum.is_numeric_value then
+						a_numeric_value := a_sum.as_numeric_value
 						if not a_numeric_value.is_nan then
 							from
 								an_iterator.forth
 							until
 								finished or else an_iterator.is_error or else an_iterator.after
 							loop
-								a_sum ?= an_iterator.item
-								an_untyped_atomic ?= a_sum
-								if an_untyped_atomic /= Void then
-									a_sum := an_untyped_atomic.convert_to_type (type_factory.double_type)
+								an_item := an_iterator.item
+								if an_item.is_untyped_atomic then
+									a_sum := an_item.as_untyped_atomic.convert_to_type (type_factory.double_type)
+								else
+									a_sum := an_item.as_atomic_value.convert_to_type (type_factory.double_type)
 								end
-								another_numeric_value ?= a_sum
-								if another_numeric_value /= Void then
-									a_numeric_value := a_numeric_value.arithmetic (Plus_token, another_numeric_value)
+								if a_sum.is_numeric_value then
+									a_numeric_value := a_numeric_value.arithmetic (Plus_token, a_sum.as_numeric_value)
 								else
 									create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains a mix of numeric and non-numeric values",
 																																"", "FORG0006", Dynamic_error)
@@ -128,7 +143,11 @@ feature -- Evaluation
 							end
 						end
 						if last_evaluated_item = Void then
-							last_evaluated_item := a_numeric_value
+							if not a_numeric_value.item_type.is_same_type (item_type) then
+								last_evaluated_item := a_numeric_value.convert_to_type (item_type)
+							else
+								last_evaluated_item := a_numeric_value
+							end
 						end
 					else
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains a value that is not numeric (durations not supported yet)",

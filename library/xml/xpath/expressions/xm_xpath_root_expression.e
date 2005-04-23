@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_SINGLE_NODE_EXPRESSION
 		redefine
-			same_expression, compute_cardinality, item_type, compute_intrinsic_dependencies
+			same_expression, compute_cardinality, item_type, compute_intrinsic_dependencies,
+			is_root_expression, as_root_expression
 		end
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
@@ -31,12 +32,24 @@ feature {NONE} -- Initialization
 			-- Create intrinsic dependencies.
 		do
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed			
 		end
 
 feature -- Access
+
+	is_root_expression: BOOLEAN is
+			-- Is `Current' a root expression?
+		do
+			Result := True
+		end
+
+	as_root_expression: XM_XPATH_ROOT_EXPRESSION is
+			-- `Current' seen as a root expression
+		do
+			Result := Current
+		end
 	
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
@@ -51,21 +64,17 @@ feature -- Access
 	node (a_context: XM_XPATH_CONTEXT): XM_XPATH_NODE is
 			-- The single node
 		local
-			an_item: XM_XPATH_ITEM
-			a_node: XM_XPATH_NODE
 			a_document: XM_XPATH_DOCUMENT
 		do
-			an_item := a_context.context_item
-			a_node ?= an_item
-				check
-					a_node /= void
-					-- from pre-condition
-				end
-			a_document := a_node.document_root
-				check
-					a_document /= Void
-					-- from pre-condition
-				end
+			check
+				is_node: a_context.context_item.is_node
+				-- from pre-condition
+			end
+			a_document := a_context.context_item.as_node.document_root
+			check
+				is_document: a_document /= Void -- TODO: as_document
+				-- from pre-condition
+			end
 			Result := a_document
 		end
 
@@ -73,24 +82,18 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			another_root: XM_XPATH_ROOT_EXPRESSION
 		do
-			another_root ?= other
-			Result := another_root /= Void
+			Result := other.is_root_expression
 		end
 
 feature -- Status report
 
 	is_valid_context_for_node (a_context: XM_XPATH_CONTEXT): BOOLEAN is
 			-- Is the dynamic context in a suitable condition to call `node'?
-		local
-			a_node: XM_XPATH_NODE
 		do
 			if a_context /= Void and then a_context.context_item /= Void then
-				a_node ?= a_context.context_item
-				if a_node /= Void then
-					Result := a_node.document_root /= Void
+				if a_context.context_item.is_node then
+					Result := a_context.context_item.as_node.document_root /= Void
 				end
 			end
 		end
@@ -130,25 +133,20 @@ feature {NONE} -- Implementation
 
 	dynamic_error_value (a_context: XM_XPATH_CONTEXT): XM_XPATH_ERROR_VALUE is
 			-- Dynamic error value
-		local
-			an_item: XM_XPATH_ITEM
-			a_node: XM_XPATH_NODE
 		do
 			if a_context = Void then
 				create Result.make_from_string ("Evaluating '/': the dynamic context is not available", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 			else
-				an_item := a_context.context_item
-				if an_item = Void then
+				if a_context.context_item = Void then
 					create Result.make_from_string ("Evaluating '/': the context item is not set", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 				else
-					a_node ?= an_item
-					if a_node = Void then
+					if not a_context.context_item.is_node then
 						create Result.make_from_string ("Evaluating '/': the context item is not a node", Xpath_errors_uri, "XPTY0020", Type_error)
 					else
-							check
-								a_node.document_root = Void
-								-- follows from pre-condition
-							end
+						check
+							no_document_node: a_context.context_item.as_node.document_root = Void
+							-- follows from pre-condition
+						end
 						create Result.make_from_string ("Evaluating '/': the root of the tree containing the context item is not a document node", Xpath_errors_uri, "XPTY0020", Type_error)
 					end
 				end

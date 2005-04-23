@@ -10,7 +10,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	XM_XSLT_SORT_RECORD -- ? [G -> XM_XPATH_ITEM]
+class	XM_XSLT_SORT_RECORD
+
+inherit
+
+	KL_IMPORTED_ANY_ROUTINES
 
 creation
 
@@ -44,7 +48,24 @@ feature -- Access
 
 	record_number: INTEGER
 			-- Position of `item' in original sequence
-	
+
+feature -- Conversion
+
+	is_group_sort_record: BOOLEAN is
+			-- Is `Current' a group_sort_record?
+		do
+			Result := False
+		end
+
+	as_group_sort_record: XM_XSLT_GROUP_SORT_RECORD is
+			-- `Current' seen as a group_sort_record
+		require
+			group_sort_record: is_group_sort_record
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 invariant
 
 	item_not_void: item /= Void

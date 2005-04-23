@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			evaluate_item, compute_intrinsic_dependencies, compute_special_properties
+			evaluate_item, compute_intrinsic_dependencies, compute_special_properties,
+			is_last_expression, as_last_expression
 		end
 
 creation
@@ -30,7 +31,7 @@ feature {NONE} -- Initialization
 		do
 			condition := a_condition
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			condition_set: condition = a_condition
@@ -50,6 +51,18 @@ feature -- Access
 
 	condition: BOOLEAN
 			-- Is position() eq last()?
+
+	is_last_expression: BOOLEAN is
+			-- Is `Current' an is-last expression?
+		do
+			Result := True
+		end
+
+	as_last_expression: XM_XPATH_IS_LAST_EXPRESSION is
+			-- `Current' seen as an is-last expression
+		do
+			Result := Current
+		end
 
 feature -- Status setting
 

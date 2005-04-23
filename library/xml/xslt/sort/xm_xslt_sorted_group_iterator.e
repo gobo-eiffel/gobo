@@ -15,6 +15,9 @@ class	XM_XSLT_SORTED_GROUP_ITERATOR
 inherit
 
 	XM_XSLT_GROUP_ITERATOR
+		undefine
+			is_last_position_finder, as_last_position_finder
+		end
 
 	XM_XSLT_SORTED_ITERATOR
 		rename
@@ -55,15 +58,12 @@ feature -- Evaluation
 
 	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- Iterator over the members of the current group, in population order.
-		local
-			a_sort_record: XM_XSLT_GROUP_SORT_RECORD
 		do
-			a_sort_record ?= node_keys.item (index)
 			check
-				group_sort_record: a_sort_record /= Void
+				group_sort_record: node_keys.item (index).is_group_sort_record
 				-- `build_array' assures this
 			end
-			Result := a_sort_record.current_group_iterator.another
+			Result := node_keys.item (index).as_group_sort_record.current_group_iterator.another
 		end
 
 feature {NONE} -- Implementation
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 				loop
 					a_cursor.item.sort_key.evaluate_item (context)
 					if a_cursor.item.sort_key.last_evaluated_item /= Void then
-						a_sort_key ?= a_cursor.item.sort_key.last_evaluated_item
+						a_sort_key := a_cursor.item.sort_key.last_evaluated_item.as_atomic_value
 					else
 						a_sort_key := Void  -- = () - an empty sequence
 					end

@@ -32,7 +32,6 @@ feature -- Element change
 			a_name_code: INTEGER
 			an_expanded_name, a_name_attribute, a_namespace_attribute, a_type_attribute: STRING
 			a_select_attribute, a_separator_attribute, a_validation_attribute: STRING
-			a_string_value: XM_XPATH_STRING_VALUE
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			validation_action := Validation_strip
@@ -71,9 +70,8 @@ feature -- Element change
 				if attribute_name.is_error then
 					report_compile_error (attribute_name.error_value)
 				else
-					a_string_value ?= attribute_name
-					if a_string_value /= Void then
-						if not is_qname (a_string_value.string_value) then
+					if attribute_name.is_string_value then
+						if not is_qname (attribute_name.as_string_value.string_value) then
 							create an_error.make_from_string ("Attribute name is not a valid QName", "", "XTDE0850", Static_error)
 							report_compile_error (an_error)
 							
@@ -152,7 +150,6 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
 			a_name_code: INTEGER
 			a_namespace_context: XM_XSLT_NAMESPACE_CONTEXT
 			an_attribute: XM_XSLT_COMPILED_ATTRIBUTE
@@ -161,9 +158,8 @@ feature -- Element change
 			
 			-- Deal specially with the case where the attribute name is known statically.
 			
-			a_string_value ?= attribute_name
-			if a_string_value /= Void then
-				set_qname_parts (a_string_value)
+			if attribute_name.is_string_value then
+				set_qname_parts (attribute_name.as_string_value)
 				if not any_compile_errors then
 					if shared_name_pool.is_name_code_allocated (xml_prefix, namespace_uri, local_name) then
 						a_name_code := shared_name_pool.name_code (xml_prefix, namespace_uri, local_name)
@@ -174,9 +170,8 @@ feature -- Element change
 					compile_fixed_attribute (an_executable, a_name_code)
 				end
 			else
-				a_string_value ?= namespace
-				if a_string_value /= Void then
-					namespace_uri := a_string_value.string_value
+				if namespace.is_string_value then
+					namespace_uri := namespace.as_string_value.string_value
 					if namespace_uri.count = 0 then
 						xml_prefix := ""
 					elseif xml_prefix.count = 0 then

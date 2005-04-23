@@ -15,13 +15,16 @@ class XM_XPATH_ARRAY_ITERATOR [G -> XM_XPATH_ITEM]
 inherit
 
 	XM_XPATH_REVERSIBLE_ITERATOR [G]
+		undefine
+			is_last_position_finder, as_last_position_finder
 		redefine
-			before
+			before, is_array_iterator, as_array_iterator
 		end
 
 	XM_XPATH_LAST_POSITION_FINDER [G]
 		undefine
-			before
+			before, is_reversible_iterator, as_reversible_iterator,
+			is_array_iterator, as_array_iterator
 		end
 
 	KL_SHARED_STANDARD_FILES
@@ -58,6 +61,18 @@ feature -- Access
 
 	last_item: INTEGER
 			-- Last item in slice
+
+	is_array_iterator: BOOLEAN is
+			-- Is `Current' an iterator over an array?
+		do
+			Result := True
+		end
+
+	as_array_iterator: XM_XPATH_ARRAY_ITERATOR [G] is
+			-- `Current' seen as a array iterator
+		do
+			Result := Current
+		end
 
 	item: G is
 			-- Value or node at the current position

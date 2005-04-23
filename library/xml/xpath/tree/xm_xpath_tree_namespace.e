@@ -16,14 +16,14 @@ inherit
 	
 	XM_XPATH_NAMESPACE
 		undefine
-			document_element, local_part
+			document_element, local_part, is_tree_node, as_tree_node
 		end
 
 	XM_XPATH_TREE_NODE
 		undefine
 			base_uri, next_sibling, previous_sibling
 		redefine
-			is_same_node, name_code, local_part, previous_node_in_document_order, next_node_in_document_order
+			is_same_node, name_code, local_part, previous_node_in_document_order, next_node_in_document_order, is_tree_namespace, as_tree_namespace
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS
@@ -70,9 +70,19 @@ feature -- Access
 	namespace_code: INTEGER
 			-- Code for the namespace represented by `Current'
 
+	is_tree_namespace: BOOLEAN is
+			-- Is `Current' a namespace?
+		do
+			Result := True
+		end
+
+	as_tree_namespace: XM_XPATH_TREE_NAMESPACE is
+			-- `Current' seen as a namespace
+		do
+			Result := Current
+		end
 
 feature -- Comparison
-
 
 	is_same_node (other: XM_XPATH_NODE): BOOLEAN is
 			-- Does `Current' represent the same node in the tree as `other'?
@@ -81,12 +91,9 @@ feature -- Comparison
 		do
 			if other = Current then
 				Result := True
-			else
-				another_namespace ?= other
-				if another_namespace /= Void then
-					Result := document = another_namespace.document and then
-					namespace_code = another_namespace.namespace_code
-				end
+			elseif other.is_tree_node and then other.as_tree_node.is_tree_namespace then
+				another_namespace := other.as_tree_node.as_tree_namespace
+				Result := document = another_namespace.document and then namespace_code = another_namespace.namespace_code
 			end
 		end
 

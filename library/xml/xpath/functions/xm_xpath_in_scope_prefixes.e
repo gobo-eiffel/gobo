@@ -28,12 +28,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "in-scope-prefixes"
+			name := "in-scope-prefixes"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -64,13 +65,13 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		local
-			an_element: XM_XPATH_ELEMENT
+			an_item: XM_XPATH_ITEM
 		do
 			arguments.item (1).evaluate_item (a_context)
-			an_element ?= arguments.item (1).last_evaluated_item
-			if an_element /= Void then
-				an_element.ensure_namespace_nodes
-				last_iterator := an_element.prefixes_in_scope
+			an_item := arguments.item (1).last_evaluated_item
+			if an_item.is_element then
+				an_item.as_element.ensure_namespace_nodes
+				last_iterator := an_item.as_element.prefixes_in_scope
 			else
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("First argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)
 			end

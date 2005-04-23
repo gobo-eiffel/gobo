@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		do
 			source := an_expression
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			source_set: source = an_expression
@@ -90,7 +90,6 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			a_string, an_xml_prefix, a_namespace_uri, a_local_name: STRING
 			a_splitter: ST_SPLITTER
 			qname_parts: DS_LIST [STRING]
@@ -98,11 +97,10 @@ feature -- Evaluation
 		do
 			last_evaluated_item := Void
 			source.evaluate_item (a_context)
-			an_atomic_value ?= source.last_evaluated_item
-			if an_atomic_value = Void then
+			if not source.last_evaluated_item.is_atomic_value then
 				last_evaluated_item := Void
 			else
-				a_string := an_atomic_value.primitive_value.string_value
+				a_string := source.last_evaluated_item.as_atomic_value.primitive_value.string_value
 				create a_splitter.make
 				a_splitter.set_separators (":")
 				qname_parts := a_splitter.split (a_string)

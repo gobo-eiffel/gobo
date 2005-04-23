@@ -31,12 +31,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "id"
+			name := "id"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -85,42 +86,40 @@ feature -- Evaluation
 			-- An iterator over the values of a sequence
 		local
 			a_node: XM_XPATH_NODE
-			a_document: XM_XPATH_DOCUMENT
 			idrefs: STRING
 			a_splitter: ST_SPLITTER
 			an_idref_list: DS_LIST [STRING]
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			an_item: XM_XPATH_ITEM
 			a_mapping_iterator: XM_XPATH_NODE_MAPPING_ITERATOR
 			a_local_order_comparer: XM_XPATH_LOCAL_ORDER_COMPARER
 			an_id_mapping_function: XM_XPATH_ID_MAPPING_FUNCTION
 		do
 			arguments.item (2).evaluate_item (a_context)
-			a_node ?= arguments.item (2).last_evaluated_item
 			check
-				node: a_node /= Void
+				node: arguments.item (2).last_evaluated_item.is_node
 				-- `required_type' will have ensured this
 			end
-			a_document ?= a_node.root
-			if a_document /= Void then
+			a_node := arguments.item (2).last_evaluated_item.as_node.root
+			if a_node.is_document then
 				if is_singleton_id then
 					arguments.item (1).evaluate_item (a_context)
-					an_atomic_value ?= arguments.item (1).last_evaluated_item
-					if an_atomic_value /= Void then
-						idrefs := an_atomic_value.string_value
+					an_item := arguments.item (1).last_evaluated_item
+					if an_item.is_atomic_value then
+						idrefs := an_item.as_atomic_value.string_value
 						create a_splitter.make
 						an_idref_list := a_splitter.split (idrefs)
 						if an_idref_list.count > 1 then
 							todo ("iterator (multiple IDREFS/string)", True)
 						else
-							create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} last_iterator.make (a_document.selected_id (idrefs))
+							create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (a_node.as_document.selected_id (idrefs))
 						end
 					else
-						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+						create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 					end
 				else
 					create a_local_order_comparer
 					arguments.item (1).create_iterator (a_context)
-					create an_id_mapping_function.make (a_document)
+					create an_id_mapping_function.make (a_node.as_document)
 					create a_mapping_iterator.make (arguments.item (1).last_iterator, an_id_mapping_function, Void)
 					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (a_mapping_iterator, a_local_order_comparer) 
 				end

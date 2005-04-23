@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, may_contain_sequence_constructor, is_permitted_child
+			make_style_element, validate, may_contain_sequence_constructor,
+			is_permitted_child, is_for_each_group
 		end
 
 	XM_XSLT_FOR_EACH_GROUP_CONSTANTS
@@ -51,8 +52,7 @@ feature -- Status report
 		local
 			a_sort: XM_XSLT_SORT
 		do
-			a_sort ?= a_style_element
-			Result := a_sort /= Void
+			Result := a_style_element.is_sort
 		end
 
 feature -- Element change
@@ -208,6 +208,14 @@ feature -- Element change
 			else
 				create {XM_XSLT_COMPILED_FOR_EACH_GROUP} last_generated_expression.make (an_executable, select_expression, an_action, a_key, algorithm, sort_keys, collation_name, default_collation_name)
 			end
+		end
+
+feature -- Conversion
+	
+	is_for_each_group: BOOLEAN is
+			-- Is `Current' an xsl:for-each-group?
+		do
+			Result := True
 		end
 
 feature {NONE} -- Implementation

@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			make_unary (a_sequence)
 			required_type := a_required_type
 			compute_static_properties
-			initialize
 		ensure
 			static_properties_computed: are_static_properties_computed
 			base_expression_set: base_expression = a_sequence
@@ -61,7 +60,6 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations.
 		local
-			a_value: XM_XPATH_VALUE
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			base_expression.simplify
@@ -70,8 +68,7 @@ feature -- Optimization
 			elseif base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end
-			a_value ?= base_expression
-			if a_value /= Void then
+			if base_expression.is_value then
 				create_iterator (Void)
 				if last_iterator.is_error then
 					set_last_error (last_iterator.error_value)
@@ -99,7 +96,6 @@ feature -- Optimization
 					set_replacement (base_expression)
 				elseif not base_expression.cardinality_allows_many then
 					create a_cast_expression.make (base_expression, required_type, base_expression.cardinality_allows_zero)
-					-- TODO copy location
 					a_cast_expression.set_parent (container)
 					set_replacement (a_cast_expression)
 				end
@@ -110,8 +106,6 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
-		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			base_expression.evaluate_item (a_context)
 			if base_expression.last_evaluated_item = Void then
@@ -119,11 +113,10 @@ feature -- Evaluation
 			elseif base_expression.last_evaluated_item.is_error then
 				last_evaluated_item := base_expression.last_evaluated_item
 			else
-				an_atomic_value ?= base_expression.last_evaluated_item
 				check
-					atomic_value: an_atomic_value /= Void
+					atomic_value: base_expression.last_evaluated_item.is_atomic_value
 				end
-				last_evaluated_item := an_atomic_value.convert_to_type (required_type)
+				last_evaluated_item := base_expression.last_evaluated_item.as_atomic_value.convert_to_type (required_type)
 			end
 		end
 
@@ -143,14 +136,11 @@ feature -- Evaluation
 	
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a base_expression
-		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
-			an_atomic_value ?= an_item
 			check
-				atomic_value: an_atomic_value /= Void
+				atomic_value: an_item.is_atomic_value
 			end
-			create last_mapped_item.make_item (an_atomic_value.convert_to_type (required_type))
+			create last_mapped_item.make_item (an_item.as_atomic_value.convert_to_type (required_type))
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -173,6 +163,6 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 invariant
 
-	required_type_not_void: required_type /= Void
+	required_type_not_void: initialized implies required_type /= Void
 
 end

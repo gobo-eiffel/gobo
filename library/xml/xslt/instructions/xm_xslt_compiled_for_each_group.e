@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			instruction_name := "xsl:for-each-group"
 			default_collation_name := a_default_collation_name
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			instruction_name := "xsl:for-each-group"
 			default_collation_name := a_default_collation_name
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
@@ -494,12 +494,12 @@ feature {NONE} -- Implementation
 
 invariant
 
-	select_expression_not_void: select_expression /= Void
-	key: key_expression /= Void xor key_pattern /= Void
-	sort_keys: sort_keys /= Void
-	algorithm: algorithm >= Group_by_algorithm and then algorithm <= Group_ending_with_algorithm
-	collation: algorithm >= Group_starting_with_algorithm implies collation_name = Void
-	default_collation_name_not_void: default_collation_name /= Void
+	select_expression_not_void: initialized implies select_expression /= Void
+	key: initialized implies key_expression /= Void xor key_pattern /= Void
+	sort_keys: initialized implies sort_keys /= Void
+	algorithm: initialized implies algorithm >= Group_by_algorithm and then algorithm <= Group_ending_with_algorithm
+	collation: initialized implies algorithm >= Group_starting_with_algorithm implies collation_name = Void
+	default_collation_name_not_void: initialized implies default_collation_name /= Void
 
 end
 	

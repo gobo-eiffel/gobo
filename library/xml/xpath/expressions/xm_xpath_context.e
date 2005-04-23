@@ -33,7 +33,11 @@ feature {NONE} -- Initialization
 			create internal_date_time.make_from_epoch (0)
 			utc_system_clock.set_date_time_to_now (internal_date_time)
 			cached_last := -1
-			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} current_iterator.make (a_context_item)
+			if a_context_item.is_node then
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} current_iterator.make (a_context_item.as_node)
+			else
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} current_iterator.make (a_context_item)
+			end
 			current_iterator.start
 		ensure
 			context_item_set: current_iterator /= Void and then current_iterator.item = a_context_item

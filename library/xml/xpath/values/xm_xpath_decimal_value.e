@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NUMERIC_VALUE
 		redefine
-			three_way_comparison, hash_code
+			three_way_comparison, hash_code, is_decimal_value, as_decimal_value
 		end
 
 	XM_XPATH_SHARED_DECIMAL_CONTEXTS
@@ -64,6 +64,19 @@ feature -- Access
 
 	value: MA_DECIMAL
 
+	
+	is_decimal_value: BOOLEAN is
+			-- Is `Current' a decimal value?
+		do
+			Result := True
+		end
+
+	as_decimal_value: XM_XPATH_DECIMAL_VALUE is
+			-- `Current' seen as a decimal value
+		do
+			Result := Current
+		end
+
 	hash_code: INTEGER is
 			-- Hash code value
 		do
@@ -109,27 +122,20 @@ feature -- Comparison
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
 			-- Compare `Current' to `other'
 		local
-			a_decimal_value: XM_XPATH_DECIMAL_VALUE
-			an_integer_value: XM_XPATH_INTEGER_VALUE
 			is_a_decimal: BOOLEAN
+			a_value: like value
 		do
-			an_integer_value ?= other
-			if an_integer_value /= Void then
-				a_decimal_value ?= an_integer_value.convert_to_type (type_factory.decimal_type)
-					check
-						decimal_conversion: a_decimal_value /= Void
-					end
+			if other.is_integer_value then
+				a_value := other.as_integer_value.convert_to_type (type_factory.decimal_type).as_decimal_value.value
 				is_a_decimal := True
-			else
-				a_decimal_value ?= other
-				if a_decimal_value /= Void then
-					is_a_decimal := True
-				end
+			elseif other.is_decimal_value then
+				a_value := other.as_decimal_value.value
+				is_a_decimal := True
 			end
 			if is_a_decimal then
-				if value = a_decimal_value.value then
+				if value = a_value then
 					Result := 0
-				elseif value > a_decimal_value.value then
+				elseif value > a_value then
 					Result := 1
 				else
 					Result := -1
@@ -324,46 +330,38 @@ feature -- Basic operations
 			-- Arithmetic calculation
 		local
 			another_decimal: XM_XPATH_DECIMAL_VALUE
-			an_integer_value: XM_XPATH_INTEGER_VALUE
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			a_decimal: MA_DECIMAL
 		do
-			another_decimal ?= other
-			if another_decimal /= Void then
+			if other.is_decimal_value then
 				inspect
 					an_operator
 				when Plus_token then
-					create {XM_XPATH_DECIMAL_VALUE} Result.make (value + another_decimal.value)
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (value + other.as_decimal_value.value)
 				when Minus_token then
-					create {XM_XPATH_DECIMAL_VALUE} Result.make (value - another_decimal.value)
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (value - other.as_decimal_value.value)
 				when Multiply_token then
-					create {XM_XPATH_DECIMAL_VALUE} Result.make (value * another_decimal.value)
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (value * other.as_decimal_value.value)
 				when Division_token then
-					if another_decimal.is_zero then
+					another_decimal := other.as_decimal_value
+					if another_decimal.value.is_zero then
 						create {XM_XPATH_DECIMAL_VALUE} Result.make_error ("Division by Zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
 					else
 						a_decimal := value / another_decimal.value
 						create {XM_XPATH_DECIMAL_VALUE} Result.make (a_decimal)
 					end
 				when Modulus_token then
-					create {XM_XPATH_DECIMAL_VALUE} Result.make (value \\ another_decimal.value)
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (value \\ other.as_decimal_value.value)
 				end
+			elseif other.is_numeric_value and then other.as_numeric_value.is_whole_number then
+				another_decimal := other.convert_to_type (type_factory.decimal_type).as_decimal_value
+				Result := arithmetic (an_operator, another_decimal)
 			else
-				an_integer_value ?= other
-				if an_integer_value /= Void then
-					another_decimal ?= other.convert_to_type (type_factory.decimal_type)
-					check
-						converted_to_decimal: another_decimal /= Void
-						-- as integers will always convert to decimals
-					end
-					Result := arithmetic (an_operator, another_decimal)
+				an_atomic_value := convert_to_type (other.item_type)
+				if an_atomic_value.is_numeric_value then
+					Result := an_atomic_value.as_numeric_value.arithmetic (an_operator, other)
 				else
-					a_numeric_value ?= convert_to_type (other.item_type)
-					if a_numeric_value /= Void then
-						Result := a_numeric_value.arithmetic (an_operator, other)
-					else
-						create {XM_XPATH_DECIMAL_VALUE} Result.make (value.nan)
-					end
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (value.nan)
 				end
 			end
 		end

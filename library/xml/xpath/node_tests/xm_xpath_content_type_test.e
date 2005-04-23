@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			node_kind, content_type
+			node_kind, content_type, is_content_test, as_content_test
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
@@ -54,6 +54,18 @@ feature -- Access
 
 	content_type: XM_XPATH_SCHEMA_TYPE
 			-- Content type
+
+	is_content_test: BOOLEAN is
+			-- Is `Current' a content test?
+		do
+			Result := True
+		end
+
+	as_content_test: XM_XPATH_CONTENT_TYPE_TEST is
+			-- `Current' seen as a content test
+		do
+			Result := Current
+		end
 
 feature -- Status report
 

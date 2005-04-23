@@ -24,16 +24,16 @@ inherit
 
 	XM_XPATH_DOCUMENT
 		undefine
-			has_child_nodes, first_child
+			has_child_nodes, first_child, is_tiny_node, as_tiny_node
 		redefine
 			node_kind, hash_code
 		end
 
 	XM_XPATH_TINY_COMPOSITE_NODE
 		undefine
-			document_number, base_uri, local_part, hash_code
+			document_number, base_uri, local_part, hash_code, is_document, as_document
 		redefine
-			root, document_root, system_id, line_number
+			root, document_root, system_id, line_number, is_tiny_document, as_tiny_document
 		end
 	
 	XM_XPATH_STANDARD_NAMESPACES
@@ -107,7 +107,7 @@ feature -- Access
 		end
 
 	line_number: INTEGER is
-			-- Line number of node in original source document, or -1 if not known
+			-- Line number of node in original source document, or 0 if not known
 		do
 			Result := 0
 		end
@@ -124,6 +124,17 @@ feature -- Access
 	number_of_nodes: INTEGER
 			-- Number of nodes excluding attributes and namespaces
 
+	is_tiny_document: BOOLEAN is
+			-- Is `Current' a tiny-tree document node?
+		do
+			Result := True
+		end
+
+	as_tiny_document: XM_XPATH_TINY_DOCUMENT is
+			-- `Current' seen as a tiny-tree document
+		do
+			Result := Current
+		end
 
 	node_kind: STRING is
 			-- Kind of node
@@ -389,7 +400,7 @@ feature -- Access
 		local
 			a_list: DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT]
 			an_index, a_stored_name_code, another_fingerprint, top_bits: INTEGER
-			an_element: XM_XPATH_TINY_ELEMENT
+			a_node: XM_XPATH_TINY_NODE
 		do
 			if element_list = Void then
 				create element_list.make_map (10)
@@ -417,14 +428,14 @@ feature -- Access
 				another_fingerprint := a_stored_name_code - top_bits
 				if node_kinds.item (an_index) = Element_node
 					and then  another_fingerprint = a_fingerprint then
-					an_element ?= retrieve_node (an_index)
+					a_node := retrieve_node (an_index)
 						check
-							element_not_void: an_element /= Void
+							is_element: a_node.is_tiny_element
 						end
 					if a_list.is_full then
 						a_list.resize (a_list.count * 2)
 					end
-					a_list.put_last (an_element)
+					a_list.put_last (a_node.as_tiny_element)
 				end
 				an_index := an_index + 1
 			end
@@ -474,7 +485,7 @@ feature -- Access
 			if line_number_map /= Void then
 				Result := line_number_map.line_number (a_node_number)
 			else
-				Result := -1
+				Result := 0
 			end
 		end
 		
@@ -725,6 +736,7 @@ feature -- Element change
 			-- Set the line number for `a_node_number'.
 		require
 			valid_node_number: (a_node_number = 1 and last_node_added = 0) or else is_node_number_valid (a_node_number)
+			positive_line_number: a_line_number >= 0
 		do
 			if line_number_map /= Void then
 				line_number_map.set_line_number(a_node_number, a_line_number)
@@ -802,7 +814,7 @@ feature -- Element change
 			-- Add an attribute
 		local
 			a_new_size, an_index, another_type_code: INTEGER
-			an_element: XM_XPATH_TINY_ELEMENT
+			a_node: XM_XPATH_TINY_NODE
 		do
 			if attribute_parents.capacity < a_parent  then
 				a_new_size := last_node_added.max (attribute_parents.count * 2)
@@ -864,11 +876,11 @@ feature -- Element change
 					if id_table = Void then
 						create id_table.make_with_equality_testers (10, Void, string_equality_tester)
 					end
-					an_element ?= retrieve_node (a_parent)
+					a_node := retrieve_node (a_parent)
 					check
-						is_an_element: an_element /= Void
+						is_element: a_node.is_tiny_element
 					end
-					register_id (an_element, a_value)
+					register_id (a_node.as_tiny_element, a_value)
 				end
 			end
 		end

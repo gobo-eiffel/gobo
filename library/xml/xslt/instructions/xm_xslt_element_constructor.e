@@ -247,8 +247,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	validation_action: validation_action >= Validation_strict  and then Validation_strip >= validation_action
-	content_not_void: content /= Void
+	validation_action: initialized implies validation_action >= Validation_strict  and then Validation_strip >= validation_action
+	content_not_void: initialized implies content /= Void
 
 end
 	

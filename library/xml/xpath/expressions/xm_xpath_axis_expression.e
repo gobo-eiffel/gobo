@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, create_iterator, compute_intrinsic_dependencies, same_expression, compute_special_properties
+			simplify, create_iterator, compute_intrinsic_dependencies, same_expression, compute_special_properties,
+			is_axis_expression, as_axis_expression
 		end
 
 	XM_XPATH_AXIS
@@ -34,7 +35,7 @@ feature {NONE} -- Initialization
 			axis := an_axis_type
 			node_test := a_node_test
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			axis_set: axis = an_axis_type
 			node_test_set: node_test = a_node_test
@@ -48,6 +49,18 @@ feature -- Access
 
 	node_test: XM_XPATH_NODE_TEST
 			-- Node test
+	
+	is_axis_expression: BOOLEAN is
+			-- Is `Current' an axis expression?
+		do
+			Result := True
+		end
+
+	as_axis_expression: XM_XPATH_AXIS_EXPRESSION is
+			-- `Current' seen as an axis expression
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
@@ -75,15 +88,17 @@ feature -- Comparison
 		local
 			an_axis_expression: XM_XPATH_AXIS_EXPRESSION
 		do
-			an_axis_expression ?= other
-			if an_axis_expression = Void then
+			if not other.is_axis_expression then
 				Result := False
-			elseif axis /= an_axis_expression.axis then
-				Result := False
-			elseif node_test = Void and then an_axis_expression.node_test = Void then
-				Result := True
 			else
-				Result := STRING_.same_string (node_test.original_text, an_axis_expression.node_test.original_text)
+				an_axis_expression := other.as_axis_expression
+				if axis /= an_axis_expression.axis then
+					Result := False
+				elseif node_test = Void and then an_axis_expression.node_test = Void then
+					Result := True
+				else
+					Result := STRING_.same_string (node_test.original_text, an_axis_expression.node_test.original_text)
+				end
 			end
 		end
 
@@ -133,15 +148,9 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations
 		local
-			a_name_test: XM_XPATH_NAME_TEST
 			a_parent_node: XM_XPATH_PARENT_NODE_EXPRESSION
 		do
-			a_name_test ?= node_test
-			--if axis = Attribute_axis and then a_name_test /= Void then
-			--	create an_attribute_reference.make (a_name_test.fingerprint)
-			--	set_replacement (an_attribute_reference)
-			--elseif axis = Parent_axis and then (node_test = Void or else node_test = any_node_test) then
-			if axis = Parent_axis and then (node_test = Void or else node_test = any_node_test) then
+			if axis = Parent_axis and then (not node_test.is_name_test or else node_test = any_node_test) then
 				create  a_parent_node.make
 				set_replacement (a_parent_node)
 			end
@@ -158,20 +167,18 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		local
-			a_node: XM_XPATH_NODE
 			an_item: XM_XPATH_ITEM
 		do
 			an_item := a_context.context_item
 			if an_item = Void then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item for an axis step is not set.", Xpath_errors_uri, "XPDY0002", Dynamic_error)
 			else
-				a_node ?= an_item
-				if a_node = Void then
+				if not an_item.is_node then
 					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("The context item for an axis is not a node.", Xpath_errors_uri, "XPTY0020", Type_error)
 				elseif node_test = Void then
-					last_iterator := a_node.new_axis_iterator (axis)
+					last_iterator := an_item.as_node.new_axis_iterator (axis)
 				else
-					last_iterator := a_node.new_axis_iterator_with_node_test (axis, node_test)
+					last_iterator := an_item.as_node.new_axis_iterator_with_node_test (axis, node_test)
 				end
 			end
 		end

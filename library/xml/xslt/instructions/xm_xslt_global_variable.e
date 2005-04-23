@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_COMPILED_VARIABLE
 		redefine
-			is_global, select_value
+			is_global, select_value, is_global_variable, as_global_variable
 		end
 
 creation
@@ -134,6 +134,20 @@ feature -- Element_change
 			slot_manager := a_slot_manager
 		ensure
 			set: slot_manager = a_slot_manager
+		end
+
+feature -- Conversion
+
+	is_global_variable: BOOLEAN is
+			-- Is `Current' a global xsl:variable/param?
+		do
+			Result := True
+		end
+
+	as_global_variable: XM_XSLT_GLOBAL_VARIABLE is
+			-- `Current' seen as a global xsl:variable/param
+		do
+			Result := Current
 		end
 
 invariant

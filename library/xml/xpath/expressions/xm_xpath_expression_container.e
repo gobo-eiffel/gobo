@@ -12,6 +12,12 @@ indexing
 
 deferred class	XM_XPATH_EXPRESSION_CONTAINER
 
+inherit
+
+	XM_XPATH_LOCATOR
+
+	KL_IMPORTED_ANY_ROUTINES
+
 feature -- Access
 
 	parameter_references (a_binding: XM_XPATH_BINDING): INTEGER is
@@ -23,6 +29,24 @@ feature -- Access
 		deferred
 		ensure
 			one_or_many: Result = 1 or else Result = 10
+		end
+
+	system_id_from_module_number (a_module_number: INTEGER): STRING is
+			-- System identifier
+		require
+			strictly_positive_module_number: a_module_number > 0
+		deferred
+		ensure
+			system_id_not_void: Result /= Void
+		end
+
+	as_computed_expression: XM_XPATH_COMPUTED_EXPRESSION is
+			-- `Current' seen as a computed expression
+		require
+			computed_expression: is_computed_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
 		end
 
 feature -- Status report

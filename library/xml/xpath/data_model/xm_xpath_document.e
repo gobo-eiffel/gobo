@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPOSITE_NODE
 		redefine
-			base_uri
+			base_uri, is_document, as_document
 		end
 
 		HASHABLE
@@ -25,6 +25,18 @@ feature -- Access
 
 	document_number: INTEGER
 			-- Uniquely identifies this document.
+	
+	is_document: BOOLEAN is
+			-- Is `Current' a document?
+		do
+			Result := True
+		end
+
+	as_document: XM_XPATH_DOCUMENT is
+			-- `Current' seen as a document
+		do
+			Result := Current
+		end
 
 	base_uri: STRING is
 			-- Base URI

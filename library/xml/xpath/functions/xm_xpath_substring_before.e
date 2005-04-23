@@ -32,12 +32,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "substring-before"
+			name := "substring-before"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -74,6 +75,7 @@ feature -- Evaluation
 			-- Evaluate as a single item
 		local
 			a_collator: ST_COLLATOR
+			an_item: XM_XPATH_ITEM
 			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
 			s1, s2: STRING
 		do
@@ -82,14 +84,18 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
 			else
 				arguments.item (1).evaluate_item (a_context)
-				an_atomic_value ?= arguments.item (1).last_evaluated_item
-				if an_atomic_value = Void then
+				an_item := arguments.item (1).last_evaluated_item
+				if not an_item.is_atomic_value then
 					create {XM_XPATH_STRING_VALUE} an_atomic_value.make ("")
+				else
+					an_atomic_value := an_item.as_atomic_value 
 				end
 				arguments.item (2).evaluate_item (a_context)
-				another_atomic_value ?= arguments.item (2).last_evaluated_item
-				if another_atomic_value = Void then
+				an_item := arguments.item (2).last_evaluated_item
+				if not an_item.is_atomic_value then
 					create {XM_XPATH_STRING_VALUE} another_atomic_value.make ("")
+				else
+					another_atomic_value := an_item.as_atomic_value 
 				end
 				s1 := an_atomic_value.string_value
 				s2 := another_atomic_value.string_value

@@ -16,15 +16,27 @@ inherit
 
 	XM_XPATH_FUNCTION_CALL
 		redefine
-			simplify
+			simplify, is_system_function, as_system_function
 		end
 
 	XM_XPATH_ROLE
 
 feature -- Access
 	
-	name: STRING
-			-- Function name
+	namespace_uri, name: STRING
+			-- Qualified function name
+
+	is_system_function: BOOLEAN is
+			-- Is `Current' an XPath system function?
+		do
+			Result := True
+		end
+
+	as_system_function: XM_XPATH_SYSTEM_FUNCTION is
+			-- `Current' seen as an XPath system function
+		do
+			Result := Current
+		end
 
 feature -- Status report
 
@@ -55,8 +67,8 @@ feature -- Element change
 		do
 			if supplied_argument_count = 0 then
 				create a_context_item_expression.make
+				copy_location_identifier (a_context_item_expression)
 				arguments.put (a_context_item_expression, 1)
-				-- TODO - copy location information
 			end
 		end
 
@@ -83,6 +95,8 @@ feature -- Element change
 					arguments.resize (arguments.count + 1)
 				end
 				create a_root_expression.make
+				copy_location_identifier (a_root_expression)
+				a_root_expression.set_parent (Current)
 				arguments.put_last (a_root_expression)
 				minimum_argument_count := minimum_argument_count + 1
 				maximum_argument_count := maximum_argument_count + 1
@@ -198,6 +212,5 @@ invariant
 
 	argument_count: minimum_argument_count >= 0 and maximum_argument_count >= -1
 		and (maximum_argument_count >= minimum_argument_count or else maximum_argument_count = -1)
-	name_not_void: name /= Void and then name.count > 1
 
 end

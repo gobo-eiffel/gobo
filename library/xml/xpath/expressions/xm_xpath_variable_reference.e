@@ -17,10 +17,9 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			same_expression, promote, create_iterator, evaluate_item, lazily_evaluate,
-			native_implementations, compute_special_properties, compute_intrinsic_dependencies
+			native_implementations, compute_special_properties, compute_intrinsic_dependencies,
+			is_variable_reference, as_variable_reference
 		end
-
-	XM_XPATH_BINDING_REFERENCE
 
 creation
 
@@ -41,10 +40,23 @@ feature {NONE} -- Initialization
 			a_declaration.register_reference (Current)
 			display_name := a_declaration.variable_name
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
-	
+
+	is_variable_reference: BOOLEAN is
+			-- Is `Current' a variable reference?
+		do
+			Result := True
+		end
+
+	as_variable_reference: XM_XPATH_VARIABLE_REFERENCE is
+			-- `Current' seen as a variable reference
+		do
+			Result := Current
+		end
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
@@ -74,14 +86,11 @@ feature -- Comparison
 			--  since if binding is `Void', then we cannot know
 			--  if the two references are to the same
 			--  binding or not.
-			-- But it is necessary to return `Ture' to avoid
+			-- But it is necessary to return `True' to avoid
 			--  {DS_ARRAYED_LIST}.put from failing it's post-condition.
-		local
-			other_reference: XM_XPATH_VARIABLE_REFERENCE
 		do
-			other_reference ?= other
-			if other_reference /= Void then 
-				Result := binding = other_reference.binding
+			if other.is_variable_reference then 
+				Result := binding = other.as_variable_reference.binding
 			end
 		end
 
@@ -187,6 +196,8 @@ feature -- Evaluation
 		do
 			binding.evaluate_variable (a_context)
 			last_evaluated_binding := binding.last_evaluated_binding
+		ensure
+			evaluation: last_evaluated_binding /= Void			
 		end
 
 	lazily_evaluate (a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
@@ -200,6 +211,11 @@ feature -- Element change
 
 	set_static_type (a_type: XM_XPATH_SEQUENCE_TYPE; a_constant_value: XM_XPATH_VALUE; a_dependencies_set: ARRAY [BOOLEAN]; a_cardinalities_set: ARRAY [BOOLEAN]; a_special_properties_set: ARRAY [BOOLEAN]) is
 			-- Fix up the static type of this variable reference
+			-- Optionally, supply a constant value for the variable.
+			-- Also supplies other static properties of the expression to which the variable is bound,
+			--  for example whether it is an ordered node-set.
+		require
+			static_type_not_void: a_type /= Void
 		do
 			static_type := a_type
 			constant_value := a_constant_value
@@ -216,6 +232,8 @@ feature -- Element change
 
 	fix_up (a_required_binding: XM_XPATH_BINDING) is
 			-- Fix up this binding reference to a binding.
+		require
+			binding_not_void: a_required_binding /= Void
 		do
 			binding := a_required_binding
 		end

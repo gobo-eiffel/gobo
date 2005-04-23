@@ -22,6 +22,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_IMPORTED_ANY_ROUTINES
+
 	KL_SHARED_STANDARD_FILES
 
 	XM_XPATH_SHARED_NAME_POOL
@@ -66,6 +68,192 @@ feature -- Access
 			type_name_not_void: Result /= Void
 		end
 
+	is_node: BOOLEAN is
+			-- Is `Current' a node?
+		do
+			Result := False
+		end
+
+	as_node: XM_XPATH_NODE is
+			-- `Current' seen as a node
+		require
+			node: is_node
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_element: BOOLEAN is
+			-- Is `Current' an element?
+		do
+			Result := False
+		end
+
+	as_element: XM_XPATH_ELEMENT is
+			-- `Current' seen as an element
+		require
+			element: is_element
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_document: BOOLEAN is
+			-- Is `Current' a document?
+		do
+			Result := False
+		end
+
+	as_document: XM_XPATH_DOCUMENT is
+			-- `Current' seen as a document
+		require
+			document: is_document
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_untyped_atomic: BOOLEAN is
+			-- Is `Current' an untyped atomic value?
+		do
+			Result := False
+		end
+
+	as_untyped_atomic: XM_XPATH_UNTYPED_ATOMIC_VALUE is
+			-- `Current' seen as an untyped atomic
+		require
+			untyped_atomic_value: is_untyped_atomic
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_object_value: BOOLEAN is
+			-- Is `Current' an object value?
+		do
+			Result := False
+		end
+
+	is_atomic_value: BOOLEAN is
+			-- Is `Current' an atomic value?
+		do
+			Result := False
+		end
+
+	as_atomic_value: XM_XPATH_ATOMIC_VALUE is
+			-- `Current' seen as an atomic_value
+		require
+			atomic_value: is_atomic_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_numeric_value: BOOLEAN is
+			-- Is `Current' a numeric value?
+		do
+			Result := False
+		end
+
+	as_numeric_value: XM_XPATH_NUMERIC_VALUE is
+			-- `Current' seen as a numeric value
+		require
+			numeric_value: is_numeric_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_integer_value: BOOLEAN is
+			-- Is `Current' an integer value?
+		do
+			Result := False
+		end
+
+	as_integer_value: XM_XPATH_INTEGER_VALUE is
+			-- `Current' seen as an integer value
+		require
+			integer_value: is_integer_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_double_value: BOOLEAN is
+			-- Is `Current' a double value?
+		do
+			Result := False
+		end
+
+	as_double_value: XM_XPATH_DOUBLE_VALUE is
+			-- `Current' seen as a double value
+		require
+			double_value: is_double_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_decimal_value: BOOLEAN is
+			-- Is `Current' a decimal value?
+		do
+			Result := False
+		end
+
+	as_decimal_value: XM_XPATH_DECIMAL_VALUE is
+			-- `Current' seen as a decimal value
+		require
+			decimal_value: is_decimal_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_string_value: BOOLEAN is
+			-- Is `Current' a string value?
+		do
+			Result := False
+		end
+
+	as_string_value: XM_XPATH_STRING_VALUE is
+			-- `Current' seen as a string value
+		require
+			string_value: is_string_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_boolean_value: BOOLEAN is
+			-- Is `Current' a boolean value?
+		do
+			Result := False
+		end
+
+	as_boolean_value: XM_XPATH_BOOLEAN_VALUE is
+			-- `Current' seen as a boolean value
+		require
+			boolean_value: is_boolean_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_qname_value: BOOLEAN is
+			-- Is `Current' a QName value?
+		do
+			Result := False
+		end
+
+	as_qname_value: XM_XPATH_QNAME_VALUE is
+			-- `Current' seen as a QName value
+		require
+			qname_value: is_qname_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 feature -- Status report
 
 	is_error: BOOLEAN is
@@ -108,8 +296,8 @@ feature -- Status setting
 
 feature -- Conversion
 	
-	as_value: XM_XPATH_VALUE is
-			-- Convert to a value
+	as_item_value: XM_XPATH_VALUE is
+			-- `Current' seen as a value
 		require
 			item_not_in_error: not is_error
 		do
@@ -125,6 +313,9 @@ invariant
 
 	no_error_value_without_error: not is_error implies error_value = Void
 	item_in_error: is_error implies error_value /= Void
+	node_or_atomic_value: not is_error implies is_node xor is_atomic_value
+	integers_are_numeric: is_integer_value implies is_numeric_value
+	doubles_are_numeric: is_double_value implies is_numeric_value
 
 end
 	

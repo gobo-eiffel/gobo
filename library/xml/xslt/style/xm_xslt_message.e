@@ -52,7 +52,6 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_terminate_attribute, a_select_attribute: STRING
-			a_string_value: XM_XPATH_STRING_VALUE
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
@@ -91,9 +90,8 @@ feature -- Element change
 			if terminate.is_error then
 				report_compile_error (terminate.error_value)
 			end
-			a_string_value ?= terminate
-			if a_string_value /= Void then
-				a_terminate_attribute := a_string_value.string_value
+			if terminate.is_string_value then
+				a_terminate_attribute := terminate.as_string_value.string_value
 				if STRING_.same_string (a_terminate_attribute, "no") then
 					-- OK
 				elseif STRING_.same_string (a_terminate_attribute, "yes") then

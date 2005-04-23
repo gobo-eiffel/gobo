@@ -31,11 +31,13 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "concat"
+			namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 2
 			maximum_argument_count := Platform.Maximum_integer
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access

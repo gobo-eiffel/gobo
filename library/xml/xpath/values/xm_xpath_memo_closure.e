@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_CLOSURE
 		redefine
-			make, create_iterator, same_expression, process
+			make, create_iterator, same_expression, process, is_memo_closure, as_memo_closure
 		end
 
 creation {XM_XPATH_EXPRESSION_FACTORY}
@@ -63,19 +63,24 @@ feature {NONE} -- Initialization
 			create reservoir.make_default
 		end
 
+	is_memo_closure: BOOLEAN is
+			-- Is `Current' a memo-closure?
+		do
+			Result := True
+		end
+
+	as_memo_closure: XM_XPATH_MEMO_CLOSURE is
+			-- `Current' seen as a closure
+		do
+			Result := Current
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			another_closure: XM_XPATH_MEMO_CLOSURE
 		do
-			another_closure ?= other
-			if another_closure /= Void then
-				Result := base_expression.same_expression (another_closure.base_expression)
-			else
-				Result := base_expression.same_expression (other)
-			end
+			Result := other = Current
 		end
 
 feature -- Evaluation

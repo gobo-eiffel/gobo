@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			is_copy_namespaces := a_copy_namespaces
 			is_inherit_namespaces := an_inherit_namespaces
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			content_set: content = a_content
@@ -66,11 +66,10 @@ feature -- Access
 		local
 			a_node: XM_XPATH_NODE
 		do
-			a_node ?= a_context.context_item
 			check
-				context_item_is_node: a_node /= Void
+				context_item_is_node: a_context.context_item.is_node
 			end
-			Result := a_node.name_code
+			Result := a_context.context_item.as_node.name_code
 		end
 
 feature -- Status report
@@ -114,10 +113,10 @@ feature -- Evaluation
 			a_new_context := a_context.new_minor_context
 			a_receiver := a_new_context.current_receiver
 			an_item := a_new_context.context_item
-			a_node ?= an_item
-			if a_node = Void then
+			if not an_item.is_node then
 				a_receiver.append_item (an_item)
 			else
+				a_node := an_item.as_node
 				inspect
 					a_node.node_type
 				when Element_node then

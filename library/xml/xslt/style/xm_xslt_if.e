@@ -118,12 +118,12 @@ feature -- Element change
 			some_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 		do
 			last_generated_expression := Void
-			a_value ?= condition
-			if a_value /= Void then
+			if condition.is_value then
 
 				-- Condition known statically, so we only need compile the code if true.
             -- This can happen with expressions such as test="function-available('abc')".
 
+				a_value := condition.as_value
 				a_value.calculate_effective_boolean_value (Void)
 				a_boolean_value := a_value.last_boolean_value
 				if a_boolean_value.is_error then

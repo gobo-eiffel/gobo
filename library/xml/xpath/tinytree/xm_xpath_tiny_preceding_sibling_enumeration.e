@@ -15,6 +15,9 @@ class XM_XPATH_TINY_PRECEDING_SIBLING_ENUMERATION
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_NODE]
+		redefine
+			as_node_iterator
+		end
 
 creation
 
@@ -39,6 +42,17 @@ feature {NONE} -- Initialization
 			document_set: document = a_document
 			starting_node_set: starting_node = a_starting_node
 			test_set: node_test = a_node_test
+		end
+
+feature -- Access
+
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- `Current' seen as a node iterator
+		local
+			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_NODE]
+		do
+			a_tiny_node_iterator ?= ANY_.to_any (Current)
+			Result := a_tiny_node_iterator
 		end
 
 feature -- Cursor movement

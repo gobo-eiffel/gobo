@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, may_contain_sequence_constructor
+			make_style_element, validate, may_contain_sequence_constructor, is_key, as_key
 		end
 
 	XM_XSLT_PROCEDURE
@@ -206,6 +206,20 @@ feature -- Element change
 				a_key_manager.add_key_definition (a_key_definition, key_fingerprint)
 			end
 			last_generated_expression := Void
+		end
+
+feature -- Conversion
+
+	is_key: BOOLEAN is
+			-- Is `Current' an xsl:key?
+		do
+			Result := True
+		end
+
+	as_key: XM_XSLT_KEY is
+			-- `Current' seen as an xsl:key
+		do
+			Result := Current
 		end
 
 feature {NONE} -- Implementation

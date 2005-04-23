@@ -240,7 +240,6 @@ feature {NONE} -- Implementation
 			a_stylesheet: XM_XSLT_STYLESHEET
 			an_element_list: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
-			a_template: XM_XSLT_TEMPLATE
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_stylesheet := principal_stylesheet
@@ -257,9 +256,8 @@ feature {NONE} -- Implementation
 			until
 				a_cursor.before
 			loop
-				a_template ?= a_cursor.item
-				if a_template /= Void and then a_template.template_fingerprint = called_template_fingerprint then
-					template := a_template
+				if a_cursor.item.is_template and then a_cursor.item.as_template.template_fingerprint = called_template_fingerprint then
+					template := a_cursor.item.as_template
 					a_cursor.go_before
 				else
 					a_cursor.back

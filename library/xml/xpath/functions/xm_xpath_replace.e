@@ -32,12 +32,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "replace"
+			name := "replace"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 3
 			maximum_argument_count := 4
 			create arguments.make (4)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -84,7 +85,6 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_input_string, a_pattern_string, a_flags_string: STRING
 			an_item: XM_XPATH_ITEM
 		do
@@ -109,12 +109,11 @@ feature -- Evaluation
 					if an_item.is_error then
 						last_evaluated_item := an_item
 					else	
-						an_atomic_value ?= an_item
 						check
-							atomic_pattern: an_atomic_value /= Void
+							atomic_pattern: an_item.is_atomic_value
 							-- Statically typed as a single string
 						end
-						a_pattern_string := an_atomic_value.string_value
+						a_pattern_string := an_item.as_atomic_value.string_value
 						if arguments.count = 3 then
 							a_flags_string := ""
 						else
@@ -127,12 +126,11 @@ feature -- Evaluation
 							if an_item.is_error then
 								last_evaluated_item := an_item
 							else
-								an_atomic_value ?= an_item
 								check
-									atomic_pattern: an_atomic_value /= Void
+									atomic_pattern: an_item.is_atomic_value
 									-- Statically typed as a single string
 								end
-								a_flags_string := normalized_flags_string (an_atomic_value.string_value)
+								a_flags_string := normalized_flags_string (an_item.as_atomic_value.string_value)
 							end
 							if a_flags_string = Void then
 								set_last_error_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error)

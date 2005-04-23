@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 		do
 			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			create atomic_comparer.make (a_collator)
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			operator_set: operator = a_token
@@ -82,29 +83,25 @@ feature -- Evaluation
 			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
 				create last_boolean_value.make (False)
 				last_boolean_value.set_last_error (first_operand.last_evaluated_item.error_value)
+			elseif not first_operand.last_evaluated_item.is_atomic_value then
+				create last_boolean_value.make (False)
 			else
-				an_atomic_value ?= first_operand.last_evaluated_item
-				if an_atomic_value = Void then
+				second_operand.evaluate_item (a_context)
+				if second_operand.last_evaluated_item.is_error then
+					create last_boolean_value.make (False)
+					last_boolean_value.set_last_error (second_operand.last_evaluated_item.error_value)
+				elseif not second_operand.last_evaluated_item.is_atomic_value then
 					create last_boolean_value.make (False)
 				else
-					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item.is_error then
+					create a_comparison_checker
+					a_comparison_checker.check_correct_general_relation (first_operand.last_evaluated_item.as_atomic_value,
+																						  singleton_value_operator (operator), atomic_comparer,
+																						  second_operand.last_evaluated_item.as_atomic_value, is_backwards_compatible_mode)
+					if a_comparison_checker.is_comparison_type_error then
+						set_last_error (a_comparison_checker.last_type_error)
 						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error (second_operand.last_evaluated_item.error_value)
 					else
-						another_atomic_value ?= second_operand.last_evaluated_item
-						if another_atomic_value = Void then
-							create last_boolean_value.make (False)
-						else
-							create a_comparison_checker
-							a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_value_operator (operator), atomic_comparer, another_atomic_value, is_backwards_compatible_mode)
-							if a_comparison_checker.is_comparison_type_error then
-								set_last_error (a_comparison_checker.last_type_error)
-								create last_boolean_value.make (False)
-							else
-								create last_boolean_value.make (a_comparison_checker.last_check_result)
-							end
-						end
+						create last_boolean_value.make (a_comparison_checker.last_check_result)
 					end
 				end
 			end

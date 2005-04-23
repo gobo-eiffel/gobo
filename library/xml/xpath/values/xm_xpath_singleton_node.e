@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_VALUE
 		redefine
-			process
+			process, is_singleton_node, as_singleton_node
 		end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
@@ -45,6 +45,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_singleton_node: BOOLEAN is
+			-- Is `Current' a singleton node?
+		do
+			Result := True
+		end
+
+	as_singleton_node: XM_XPATH_SINGLETON_NODE is
+			-- `Current' seen as a singleton node
+		do
+			Result := Current
+		end
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type
 		do
@@ -61,21 +73,18 @@ feature -- Access
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
 		do
-			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (node)
+			create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (node)
 		end
 
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			a_singleton_node: XM_XPATH_SINGLETON_NODE
 		do
-			a_singleton_node ?= other
-			if	a_singleton_node = Void then
+			if	not other.is_singleton_node then
 				Result := False
 			else
-				Result := node.is_same_node (a_singleton_node.node)
+				Result := node.is_same_node (other.as_singleton_node.node)
 			end
 		end
 

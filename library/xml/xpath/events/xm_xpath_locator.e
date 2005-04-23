@@ -23,14 +23,10 @@ feature -- Access
 		end
 
 	line_number: INTEGER is
-			-- Approximate line number of current event, or -1 if unknown
+			-- Approximate line number of current event, or 0 if unknown
 		deferred
 		ensure
-			nearly_positive_result: Result >= -1
+			positive_result: Result >= 0
 		end
-
-invariant
-
-	system_id_not_void: system_id /= Void
 
 end

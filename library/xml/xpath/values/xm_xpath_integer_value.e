@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NUMERIC_VALUE
 		redefine
-			three_way_comparison, hash_code
+			three_way_comparison, hash_code, is_integer_value, as_integer_value
 		end
 
 	XM_XPATH_SHARED_DECIMAL_CONTEXTS
@@ -55,6 +55,17 @@ feature -- Access
 
 	value: MA_DECIMAL
 
+	is_integer_value: BOOLEAN is
+			-- Is `Current' an integer value?
+		do
+			Result := True
+		end
+
+	as_integer_value: XM_XPATH_INTEGER_VALUE is
+			-- `Current' seen as an integer value
+		do
+			Result := Current
+		end
 
 	hash_code: INTEGER is
 			-- Hash code value
@@ -98,17 +109,13 @@ feature -- Comparison
 	
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
 			-- Compare `Current' to `other'
-		local
-			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
-			an_integer_value ?= other
-
-			if an_integer_value = Void then
+			if not other.is_integer_value then
 				Result := Precursor (other)
 			else
-				if value.is_equal (an_integer_value.value) then
+				if value.is_equal (other.as_integer_value.value) then
 					Result := 0
-				elseif value > an_integer_value.value then
+				elseif value > other.as_integer_value.value then
 					Result := 1
 				else
 					Result := -1
@@ -276,8 +283,8 @@ feature -- Basic operations
 			debug ("XPath Integer values")
 				std.error.put_string ("Integer arithmetic%N")
 			end
-			an_integer_value ?= other
-			if an_integer_value /= void then
+			if other.is_integer_value then
+				an_integer_value := other.as_integer_value
 				inspect
 					an_operator
 				when Plus_token then
@@ -322,7 +329,7 @@ feature -- Basic operations
 					end
 				end
 			else
-				a_numeric_value ?= convert_to_type (other.item_type)
+				a_numeric_value := convert_to_type (other.item_type).as_numeric_value
 				Result := a_numeric_value.arithmetic (an_operator, other)
 			end
 		end

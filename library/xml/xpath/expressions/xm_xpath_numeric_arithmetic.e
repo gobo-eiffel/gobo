@@ -30,17 +30,13 @@ feature -- Evaluation
 			-- We only take this path if the type could not be determined statically.
 		local
 			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
-			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
-			a_numeric_value, another_numeric_value: XM_XPATH_NUMERIC_VALUE
 			a_string: STRING
 		do
 			first_operand.evaluate_item (a_context)
-			an_atomic_value ?= first_operand.last_evaluated_item
-			if an_atomic_value /= Void then
-				an_atomic_value := an_atomic_value.primitive_value
-				an_untyped_atomic_value ?= an_atomic_value
-				if an_untyped_atomic_value /= Void then
-					a_string := an_untyped_atomic_value.string_value
+			if first_operand.last_evaluated_item.is_atomic_value then
+				an_atomic_value := first_operand.last_evaluated_item.as_atomic_value.primitive_value
+				if an_atomic_value.is_untyped_atomic then
+					a_string := an_atomic_value.as_untyped_atomic.string_value
 					if a_string.is_double then
 						create {XM_XPATH_DOUBLE_VALUE} an_atomic_value.make_from_string (a_string)
 					else
@@ -48,22 +44,18 @@ feature -- Evaluation
 					end
 				end
 				second_operand.evaluate_item (a_context)
-				another_atomic_value ?= second_operand.last_evaluated_item
-				if another_atomic_value /= Void then
-					another_atomic_value := another_atomic_value.primitive_value
-					an_untyped_atomic_value ?= another_atomic_value
-					if an_untyped_atomic_value /= Void then
-						a_string := an_untyped_atomic_value.string_value
+				if second_operand.last_evaluated_item.is_atomic_value then
+					another_atomic_value := second_operand.last_evaluated_item.as_atomic_value.primitive_value
+					if another_atomic_value.is_untyped_atomic then
+						a_string := another_atomic_value.as_untyped_atomic.string_value
 						if a_string.is_double then
 							create {XM_XPATH_DOUBLE_VALUE} another_atomic_value.make_from_string (a_string)
 						else
 							create {XM_XPATH_DOUBLE_VALUE} another_atomic_value.make_nan
 						end
 					end
-					a_numeric_value ?= an_atomic_value
-					another_numeric_value ?= another_atomic_value
-					if a_numeric_value /= Void and then another_numeric_value /= Void then
-						last_evaluated_item := a_numeric_value.arithmetic (operator, another_numeric_value)
+					if an_atomic_value.is_numeric_value and then another_atomic_value.is_numeric_value then
+						last_evaluated_item := an_atomic_value.as_numeric_value.arithmetic (operator, another_atomic_value.as_numeric_value)
 					end
 				end
 			end

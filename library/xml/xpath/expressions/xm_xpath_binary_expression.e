@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			promote, simplify, sub_expressions, same_expression, compute_special_properties
+			promote, simplify, sub_expressions, same_expression, compute_special_properties,
+			is_binary_expression, as_binary_expression
 		end
 
 	XM_XPATH_TOKENS
@@ -36,7 +37,6 @@ feature {NONE} -- Initialization
 			adopt_child_expression (an_operand_one)
 			adopt_child_expression (an_operand_two)
 			compute_static_properties
-			initialize
 		ensure
 			operator_set: operator = a_token
 			operand_1_set: first_operand /= Void and then first_operand.same_expression (an_operand_one)
@@ -51,6 +51,18 @@ feature -- Access
 
 	first_operand, second_operand: XM_XPATH_EXPRESSION
 			-- The two operands
+	
+	is_binary_expression: BOOLEAN is
+			-- Is `Current' a binary expression?
+		do
+			Result := True
+		end
+
+	as_binary_expression: XM_XPATH_BINARY_EXPRESSION is
+			-- `Current' seen as a binary expression
+		do
+			Result := Current
+		end
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
@@ -68,8 +80,8 @@ feature -- Comparison
 		local
 			other_binary: XM_XPATH_BINARY_EXPRESSION
 		do
-			other_binary ?= other
-			if other_binary /= Void then
+			if other.is_binary_expression then
+				other_binary := other.as_binary_expression
 				if operator = other_binary.operator then
 					if first_operand.same_expression (other_binary.first_operand)
 						and then second_operand.same_expression ( other_binary.second_operand) then
@@ -79,7 +91,7 @@ feature -- Comparison
 							and then second_operand.same_expression ( other_binary.first_operand) then
 							Result := True
 							-- TODO: recognize associative operators (A|(B|C)) == ((A|B)|C)
-							--    and inverse operators (A<B) == (B>A)
+							-- TODO: hang-on! What is the purpose of same expression, after all?
 					end
 				end
 			end
@@ -139,8 +151,6 @@ feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
-		local
-			a_value, another_value: XM_XPATH_VALUE
 		do
 			mark_unreplaced
 			first_operand.analyze (a_context)
@@ -160,8 +170,7 @@ feature -- Optimization
 
 					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
 
-					a_value ?= first_operand; another_value ?= second_operand
-					if a_value /= Void and then another_value /= Void then
+					if first_operand.is_value and then second_operand.is_value then
 						eagerly_evaluate (Void)
 						set_replacement (last_evaluation)
 					end
@@ -197,6 +206,7 @@ feature -- Element change
 		do
 			first_operand := an_operand
 			if not first_operand.is_error then first_operand.mark_unreplaced end
+			adopt_child_expression (first_operand)
 		ensure
 			first_operand_set: first_operand = an_operand
 			first_operand_not_replaced: not first_operand.was_expression_replaced
@@ -209,6 +219,7 @@ feature -- Element change
 		do
 			second_operand := an_operand
 			if not second_operand.is_error then second_operand.mark_unreplaced end
+			adopt_child_expression (second_operand)
 		ensure
 			second_operand_set: second_operand = an_operand
 			second_operand_not_replaced: not second_operand.was_expression_replaced
@@ -244,8 +255,8 @@ feature {XM_XSLT_EXPRESSION} -- Restricted
 
 invariant
 
-	first_operand: first_operand /= Void
-	second_operand: second_operand /= Void
+	first_operand: initialized implies first_operand /= Void
+	second_operand: initialized implies second_operand /= Void
 
 end
 	

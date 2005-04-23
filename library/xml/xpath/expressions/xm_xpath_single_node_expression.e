@@ -93,7 +93,7 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		do
 			if is_valid_context_for_node (a_context) then
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (node (a_context))
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (node (a_context))
 			else
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (dynamic_error_value (a_context))
 			end

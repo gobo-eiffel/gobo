@@ -31,11 +31,11 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
-			receiver_not_void: a_receiver /= Void
+			receiver_is_xml_emitter: a_receiver /= Void and then a_receiver.is_xml_emitter
 			output_properties_not_void: some_output_properties /= Void
 		do
 			base_receiver := a_receiver
-			emitter ?= base_receiver
+			emitter := a_receiver.as_xml_emitter
 			indent_spaces := some_output_properties.indent_spaces
 			is_after_formatted := True
 			system_id := a_receiver.system_id

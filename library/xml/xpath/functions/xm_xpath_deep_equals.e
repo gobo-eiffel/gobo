@@ -34,12 +34,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "deep-equals"
+			name := "deep-equals"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -113,8 +114,6 @@ feature {NONE} -- Implementation
 		local
 			finished, first_sequence_exhausted, second_sequence_exhausted: BOOLEAN
 			an_item, another_item: XM_XPATH_ITEM
-			a_node, another_node: XM_XPATH_NODE
-			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			Result := True -- innocent untily proven guilty
 			from
@@ -139,28 +138,24 @@ feature {NONE} -- Implementation
 						end
 					end
 					if not finished then
-						a_node ?= an_item
-						another_node ?= another_item
-						if a_node /= Void then
-							if another_node /= Void then
-								if not nodes_are_deep_equal (a_node, another_node, a_comparer) then
+						if an_item.is_node then
+							if another_item.is_node then
+								if not nodes_are_deep_equal (an_item.as_node, another_item.as_node, a_comparer) then
 									Result := False; finished := True
 								end
 							else
 								Result := False; finished := True
 							end
 						else
-							if another_node /= Void then
+							if another_item.is_node then
 								Result := False; finished := True
 							else
-								an_atomic_value ?= an_item
-								another_atomic_value ?= another_item
 								check
-									first_item_atomic: an_atomic_value /= Void
-									second_item_atomic: another_atomic_value /= Void
+									first_item_atomic: an_item.is_atomic_value
+									second_item_atomic: another_item.is_atomic_value 
 									-- as they are not nodes
 								end
-								if a_comparer.three_way_comparison (an_atomic_value, another_atomic_value) /= 0 then
+								if a_comparer.three_way_comparison (an_item.as_atomic_value, another_item.as_atomic_value) /= 0 then
 									Result := False; finished := True
 								end
 							end

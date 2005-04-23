@@ -26,8 +26,8 @@ feature -- Comparison
 			a_double, another_double: DOUBLE
 			is_first_nan, is_second_nan: BOOLEAN
 		do
-			a_numeric_value ?= u
-			if a_numeric_value /= Void then
+			if u.is_numeric_value then
+				a_numeric_value := u.as_numeric_value
 				if a_numeric_value.is_double then
 				a_double := a_numeric_value.as_double
 				else
@@ -42,8 +42,8 @@ feature -- Comparison
 				end	
 			end
 
-			a_numeric_value ?= v
-			if a_numeric_value /= Void then
+			if v.is_numeric_value then
+				a_numeric_value := v.as_numeric_value
 				if a_numeric_value.is_double then
 				another_double := a_numeric_value.as_double
 				else

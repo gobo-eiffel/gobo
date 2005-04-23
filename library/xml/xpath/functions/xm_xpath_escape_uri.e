@@ -30,12 +30,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "escape-uri"
+			name := "escape-uri"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -69,7 +70,6 @@ feature -- Evaluation
 		local
 			an_item: XM_XPATH_ITEM
 			a_uri_string: STRING
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			escape_reserved: BOOLEAN
 		do
 			arguments.item (1).evaluate_item (a_context)
@@ -89,12 +89,11 @@ feature -- Evaluation
 				if an_item.is_error then
 					last_evaluated_item := an_item
 				else
-					a_boolean_value ?= an_item
 					check
-						escape_reserved2_not_void: a_boolean_value /= Void
+						escape_reserved2_not_void: an_item.is_boolean_value
 						-- static typing
 					end
-					escape_reserved := a_boolean_value.value
+					escape_reserved := an_item.as_boolean_value.value
 					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (escaped_uri (a_uri_string, escape_reserved))
 				end
 			end

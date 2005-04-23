@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			sub_expressions, same_expression, simplify, promote, compute_special_properties
+			sub_expressions, same_expression, simplify, promote, compute_special_properties,
+			is_unary_expression, as_unary_expression
 		end
 
 feature {NONE} -- Initialization
@@ -28,6 +29,7 @@ feature {NONE} -- Initialization
 		do
 			base_expression := an_operand
 			adopt_child_expression (base_expression)
+			initialized := True
 		ensure
 			base_expression_set: base_expression /= Void and then base_expression.same_expression (an_operand)
 		end
@@ -36,6 +38,18 @@ feature -- Access
 
 	base_expression: XM_XPATH_EXPRESSION
 			-- Base_Expression
+
+	is_unary_expression: BOOLEAN is
+			-- Is `Current' a unary expression?
+		do
+			Result := True
+		end
+
+	as_unary_expression: XM_XPATH_UNARY_EXPRESSION is
+			-- `Current' seen as a unary expression
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
@@ -55,12 +69,9 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			other_unary: XM_XPATH_UNARY_EXPRESSION
 		do
-			other_unary ?= other
-			if other_unary /= Void then
-				Result := base_expression.same_expression (other_unary.base_expression)
+			if other.is_unary_expression then
+				Result := base_expression.same_expression (other.as_unary_expression.base_expression)
 			end
 		end
 
@@ -94,8 +105,6 @@ feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
-		local
-			a_value: XM_XPATH_VALUE
 		do
 			mark_unreplaced
 			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
@@ -109,8 +118,7 @@ feature -- Optimization
 
 				-- If  operand value is, pre-evaluate the expression
 
-				a_value ?= base_expression
-				if a_value /= Void then
+				if base_expression.is_value then
 					eagerly_evaluate (Void)
 					set_replacement (last_evaluation)
 
@@ -140,6 +148,7 @@ feature -- Element change
 		do
 			base_expression := an_operand
 			base_expression.mark_unreplaced
+			adopt_child_expression (base_expression)
 		ensure
 			base_expression_set: base_expression = an_operand
 			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced

@@ -15,6 +15,9 @@ class XM_XPATH_ANY_ITEM_TYPE
 inherit
 
 	XM_XPATH_SCHEMA_TYPE
+		redefine
+			is_any_item_type
+		end
 
 	XM_XPATH_TYPE
 
@@ -34,6 +37,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	is_any_item_type: BOOLEAN is
+			-- Is `Current' an any item type?
+		do
+			Result := True
+		end
 
 	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
 			-- Does `an_item' conform to `Current'?
@@ -64,11 +73,8 @@ feature -- Comparison
 
 	is_same_type (other: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `other' the same type as `Current'?
-		local
-			an_any_item: XM_XPATH_ANY_ITEM_TYPE
 		do
-			an_any_item ?= other
-			Result := an_any_item /= Void
+			Result := other.is_any_item_type
 		end
 
 feature -- Conversion

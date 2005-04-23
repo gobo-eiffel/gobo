@@ -56,12 +56,11 @@ feature -- Element change
 		local
 			an_atomic_type: XM_XPATH_ATOMIC_TYPE
 		do
-			an_atomic_type ?= type_factory.schema_type (a_fingerprint)
 			check
-				atomic_type: an_atomic_type /= Void
+				atomic_type: type_factory.schema_type (a_fingerprint).is_atomic_type
 				-- ensured by implementation of `is_function_available'
 			end
-			create {XM_XPATH_CAST_EXPRESSION} last_bound_function.make (some_arguments.item (1), an_atomic_type, True)
+			create {XM_XPATH_CAST_EXPRESSION} last_bound_function.make (some_arguments.item (1), type_factory.schema_type (a_fingerprint).as_atomic_type, True)
 		end
 
 end

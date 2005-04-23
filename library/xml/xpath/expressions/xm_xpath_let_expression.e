@@ -18,7 +18,7 @@ inherit
 	XM_XPATH_ASSIGNATION
 		redefine
 			promote, create_iterator, evaluate_item, compute_special_properties,
-			mark_tail_function_calls, action
+			mark_tail_function_calls, action, is_let_expression, as_let_expression
 		end
 
 	XM_XPATH_ROLE
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			set_sequence (a_sequence_expression)
 			replace_action (an_action)
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			declaration_set: declaration = a_range_variable
@@ -51,7 +51,19 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+		
+	is_let_expression: BOOLEAN is
+			-- Is `Current' a let expression?
+		do
+			Result := True
+		end
+
+	as_let_expression: XM_XPATH_LET_EXPRESSION is
+			-- `Current' seen as a let expression
+		do
+			Result := Current
+		end
+
 	action: XM_XPATH_EXPRESSION is
 			-- Action expression;
 			-- Not 100% pure.
@@ -157,7 +169,7 @@ feature -- Optimization
 			
 				if not is_error then
 					a_type := sequence.item_type
-					a_value ?= sequence
+					if sequence.is_value then a_value := sequence.as_value end
 					
 					-- Now set the static type of the binding reference, more accurately:
 					
@@ -190,7 +202,6 @@ feature -- Optimization
 			-- Promote this subexpression.
 		local
 			a_promotion: XM_XPATH_EXPRESSION
-			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 			another_offer: XM_XPATH_PROMOTION_OFFER
 		do
 			an_offer.accept (Current)
@@ -220,9 +231,8 @@ feature -- Optimization
 				-- to $x by references to $y in the Z part, and eliminate this LetExpression by
 				-- returning the action part.
 
-				a_variable_reference ?= sequence
-				if a_variable_reference /= Void then
-					create another_offer.make (Inline_variable_references, Current, a_variable_reference, False, False)
+				if sequence.is_variable_reference then
+					create another_offer.make (Inline_variable_references, Current, sequence.as_variable_reference, False, False)
 					action_expression.promote (another_offer)
 					if action_expression.was_expression_replaced then
 						set_replacement (action_expression.replacement_expression)
@@ -238,30 +248,24 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
-		local
-			a_value: XM_XPATH_VALUE
 		do
 			sequence.lazily_evaluate (a_context, keep_value)
-			a_value := sequence.last_evaluation
 			if slot_number = 0 then
 				set_slot_number (a_context.next_available_slot)
 			end
-			a_context.set_local_variable (a_value, slot_number)
+			a_context.set_local_variable (sequence.last_evaluation, slot_number)
 			action.evaluate_item (a_context)
 			last_evaluated_item := action.last_evaluated_item
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
-		local
-			a_value: XM_XPATH_VALUE
 		do
 			sequence.lazily_evaluate (a_context, keep_value)
-			a_value ?= sequence.last_evaluation
 			if slot_number = 0 then
 				set_slot_number (a_context.next_available_slot)
 			end
-			a_context.set_local_variable (a_value, slot_number)
+			a_context.set_local_variable (sequence.last_evaluation, slot_number)
 			action.create_iterator (a_context)
 			last_iterator := action.last_iterator
 		end

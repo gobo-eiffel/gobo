@@ -15,13 +15,17 @@ deferred class XM_XPATH_ATOMIC_VALUE
 inherit
 
 	XM_XPATH_VALUE
+		undefine
+			is_integer_value, as_integer_value, is_string_value, as_string_value, is_decimal_value, as_decimal_value,
+			is_qname_value, as_qname_value, is_boolean_value, as_boolean_value, is_numeric_value, as_numeric_value,
+			is_atomic_value, as_atomic_value, is_untyped_atomic, as_untyped_atomic, is_object_value
 		redefine
 			process
 		end
 
 	XM_XPATH_ITEM
 		redefine
-			as_value
+			as_item_value, is_atomic_value, as_atomic_value
 		end
 
 	HASHABLE
@@ -57,6 +61,18 @@ feature -- Access
 			Result := Current
 		ensure
 			primitive_value_not_void: Result /= Void
+		end
+	
+	is_atomic_value: BOOLEAN is
+			-- Is `Current' an atomic value?
+		do
+			Result := True
+		end
+
+	as_atomic_value: XM_XPATH_ATOMIC_VALUE is
+			-- `Current' seen as an atomic_value
+		do
+			Result := Current
 		end
 
 feature -- Comparison
@@ -120,7 +136,7 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
 		do
-			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (Current)
+			create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ATOMIC_VALUE]} last_iterator.make (Current)
 		end
 	
 	process (a_context: XM_XPATH_CONTEXT) is
@@ -143,13 +159,13 @@ feature -- Conversion
 		end
 
 	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
-			-- Convert to an item
+			-- `Current' seen as an item
 		do
 			Result := Current
 		end
 	
-	as_value: XM_XPATH_VALUE is
-			-- Convert to a value
+	as_item_value: XM_XPATH_VALUE is
+			-- `Current' seen as a value
 		do
 				Result := Current
 		end

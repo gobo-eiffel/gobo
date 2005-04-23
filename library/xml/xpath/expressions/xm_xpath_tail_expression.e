@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			promote, compute_special_properties, sub_expressions, same_expression, create_iterator
+			promote, compute_special_properties, sub_expressions, same_expression, create_iterator,
+			is_tail_expression, as_tail_expression
 		end
 
 	KL_SHARED_PLATFORM
@@ -36,7 +37,7 @@ feature {NONE} -- Initialization
 			base_expression := a_base_expression
 			start := a_start
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			base_expression_set: base_expression = a_base_expression
@@ -45,6 +46,18 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 	
+	is_tail_expression: BOOLEAN is
+			-- Is `Current' a tail expression?
+		do
+			Result := True
+		end
+
+	as_tail_expression: XM_XPATH_TAIL_EXPRESSION is
+			-- `Current' seen as a tail expression
+		do
+			Result := Current
+		end
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
@@ -73,12 +86,9 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			a_tail: XM_XPATH_TAIL_EXPRESSION
 		do
-			a_tail ?= other
-			if a_tail /= Void then
-				Result := base_expression.same_expression (a_tail.base_expression)
+			if other.is_tail_expression then
+				Result := base_expression.same_expression (other.as_tail_expression.base_expression)
 			end
 		end
 
@@ -129,18 +139,16 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence
 		local
-			an_array_iterator: XM_XPATH_ARRAY_ITERATOR [XM_XPATH_ITEM]
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			base_expression.create_iterator (a_context)
 			an_iterator := base_expression.last_iterator
-			an_array_iterator ?= an_iterator
-			if an_array_iterator /= Void then
+			if an_iterator.is_array_iterator then
 
-				-- Hm. This is theoretically insufficient, but it practice memory will get
+				-- Hm. This is theoretically insufficient, but in practice memory will get
 				--  exhausted before the problem manifests itself
 
-				last_iterator := an_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
+				last_iterator := an_iterator.as_array_iterator.new_slice_iterator (start, Platform.Maximum_integer)
 			else
 				create {XM_XPATH_TAIL_ITERATOR} last_iterator.make (an_iterator, start)
 			end

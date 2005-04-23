@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 				receiver_options := Disable_escaping
 			end
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			select_set: select_expression = a_select_expression

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ATOMIC_VALUE
 		redefine
-			calculate_effective_boolean_value
+			calculate_effective_boolean_value, is_boolean_value, as_boolean_value
 		end
 
 creation
@@ -38,6 +38,18 @@ feature -- Access
 	value: BOOLEAN
 			-- Value of expression
 
+	is_boolean_value: BOOLEAN is
+			-- Is `Current' a boolean value?
+		do
+			Result := True
+		end
+
+	as_boolean_value: XM_XPATH_BOOLEAN_VALUE is
+			-- `Current' seen as a boolean value
+		do
+			Result := Current
+		end
+	
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where know
 		do
@@ -62,26 +74,16 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			other_boolean: XM_XPATH_BOOLEAN_VALUE
 		do
-			other_boolean ?= other
-			if other_boolean /= Void then
-				Result := value = other_boolean.value
+			if other.is_boolean_value then
+				Result := value = other.as_boolean_value.value
 			end
 		end
 	
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
 			-- Compare `Current' to `other'
-		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			a_boolean_value ?= other
-				check
-					a_boolean_value /= Void
-					-- From pre-condition `comparable_other'
-				end
-			if value = a_boolean_value.value then
+			if value = other.as_boolean_value.value then
 				Result := 0
 			elseif value = True then
 				Result := 1
@@ -94,11 +96,8 @@ feature -- Status report
 
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
-		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
-			a_boolean_value ?= other
-			Result := a_boolean_value /= Void
+			Result := other.is_boolean_value
 		end
 
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is

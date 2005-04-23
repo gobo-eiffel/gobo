@@ -17,7 +17,8 @@ inherit
 	XM_XSLT_STYLE_ELEMENT
 		redefine
 			make_style_element, validate, returned_item_type, mark_tail_calls,
-			may_contain_sequence_constructor, is_permitted_child, allocate_slots
+			may_contain_sequence_constructor, is_permitted_child, allocate_slots,
+			is_template, as_template
 		end
 
 	XM_XSLT_PROCEDURE
@@ -90,11 +91,8 @@ feature -- Status report
 	
 	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
 			-- Is `a_style_element' a permitted child of `Current'?
-		local
-			a_param: XM_XSLT_PARAM
 		do
-			a_param ?= a_style_element
-			Result := a_param /= Void
+			Result := a_style_element.is_param
 		end
 
 feature -- Status setting
@@ -308,6 +306,20 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 			else
 				Result := required_type.primary_type
 			end
+		end
+
+feature -- Conversion
+
+	is_template: BOOLEAN is
+			-- Is `Current' an xsl:template?
+		do
+			Result := True
+		end
+
+	as_template: XM_XSLT_TEMPLATE is
+			-- `Current' seen as an xsl:template
+		do
+			Result := Current
 		end
 
 feature {NONE} -- Implementation

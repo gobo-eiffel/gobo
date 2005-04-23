@@ -15,8 +15,16 @@ class XM_XPATH_SINGLETON_ITERATOR [G -> XM_XPATH_ITEM]
 inherit
 
 	XM_XPATH_REVERSIBLE_ITERATOR [G]
+		undefine
+			is_last_position_finder, as_last_position_finder, is_singleton_iterator, as_singleton_iterator
+		end
 
 	XM_XPATH_LAST_POSITION_FINDER [G]
+		undefine
+			is_reversible_iterator, as_reversible_iterator
+		redefine
+			is_singleton_iterator, as_singleton_iterator
+		end
 
 creation
 
@@ -35,6 +43,18 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	is_singleton_iterator: BOOLEAN is
+			-- Is `Current' a singleton iterator?
+		do
+			Result := True
+		end
+
+	as_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [G] is
+			-- `Current' seen as a singleton iterator
+		do
+			Result := Current
+		end
 
 	item: G is
 			-- Value or node at the current position

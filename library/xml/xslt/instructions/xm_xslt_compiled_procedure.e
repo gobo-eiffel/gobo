@@ -63,7 +63,7 @@ feature -- Status report
 
 	initialized: BOOLEAN
 			-- Hae `make_procedure' been called yet?
-
+	
 invariant
 
 	executable_not_void: initialized implies executable /= Void

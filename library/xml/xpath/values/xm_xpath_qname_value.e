@@ -15,6 +15,9 @@ class XM_XPATH_QNAME_VALUE
 inherit
 
 	XM_XPATH_ATOMIC_VALUE
+		redefine
+			is_qname_value, as_qname_value
+		end
 
 	XM_XPATH_SHARED_NAME_POOL
 
@@ -39,6 +42,18 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	is_qname_value: BOOLEAN is
+			-- Is `Current' a QName value?
+		do
+			Result := True
+		end
+
+	as_qname_value: XM_XPATH_QNAME_VALUE is
+			-- `Current' seen as a QName value
+		do
+			Result := Current
+		end
 
 	string_value: STRING is
 			--Value of the item as a string
@@ -80,8 +95,8 @@ feature -- Comparison
 		local
 			other_qname: XM_XPATH_QNAME_VALUE
 		do
-			other_qname ?= other
-			if other_qname /= Void then
+			if other.is_qname_value then
+				other_qname := other.as_qname_value
 				Result := shared_name_pool.uri_code_from_name_code (name_code) = shared_name_pool.uri_code_from_name_code (other_qname.name_code)
 					and then STRING_.same_string (shared_name_pool.local_name_from_name_code (name_code), shared_name_pool.local_name_from_name_code (other_qname.name_code))
 			end
@@ -93,31 +108,24 @@ feature -- Comparison
 			a_qname_value: XM_XPATH_QNAME_VALUE
 			a_uri_code, another_uri_code: INTEGER
 		do
-			a_qname_value ?= other
-				check
-					a_qname_value /= Void
-					-- From pre-condition `are_comparable'
-				end
-				a_uri_code := shared_name_pool.uri_code_from_name_code (name_code)
-				another_uri_code := shared_name_pool.uri_code_from_name_code (a_qname_value.name_code)
-				if a_uri_code = another_uri_code then
-					Result := STRING_.three_way_comparison (shared_name_pool.local_name_from_name_code (name_code), shared_name_pool.local_name_from_name_code (a_qname_value.name_code))
-				elseif a_uri_code < another_uri_code then
-					Result := - 1
-				else
-					Result := 1
-				end
+			a_qname_value := other.as_qname_value
+			a_uri_code := shared_name_pool.uri_code_from_name_code (name_code)
+			another_uri_code := shared_name_pool.uri_code_from_name_code (a_qname_value.name_code)
+			if a_uri_code = another_uri_code then
+				Result := STRING_.three_way_comparison (shared_name_pool.local_name_from_name_code (name_code), shared_name_pool.local_name_from_name_code (a_qname_value.name_code))
+			elseif a_uri_code < another_uri_code then
+				Result := - 1
+			else
+				Result := 1
+			end
 		end
 
 feature -- Status report
 
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
-		local
-			a_qname_value: XM_XPATH_QNAME_VALUE
 		do
-			a_qname_value ?= other
-			Result := a_qname_value /= Void
+			Result := other.is_qname_value
 		end
 	
 	display (a_level: INTEGER) is

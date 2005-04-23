@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			fingerprint, matches_item, node_kind
+			fingerprint, matches_item, node_kind, is_document_node_test, as_document_node_test
 		end
 
 	XM_XPATH_AXIS
@@ -43,6 +43,18 @@ feature -- Access
 
 	element_test: XM_XPATH_NODE_TEST
 			-- Test for document element
+	
+	is_document_node_test: BOOLEAN is
+			-- Is `Current' a document node test?
+		do
+			Result := True
+		end
+
+	as_document_node_test: XM_XPATH_DOCUMENT_NODE_TEST is
+			-- `Current' seen as a document node test
+		do
+			Result := Current
+		end
 
 	node_kind: INTEGER is
 			-- Type of nodes matched
@@ -74,32 +86,33 @@ feature -- Access
 			-- `Result' is `True' if there is exactly one element node child, no text node
 			--  children, and the element node matches the element test.
 
-			a_node ?= an_item
-			if a_node /= Void and then a_node.node_type = Document_node then
-				from
-					an_iterator := a_node.new_axis_iterator (Child_axis); an_iterator.start
-				until
-					finished or else an_iterator.after
-				loop
-					a_node := an_iterator.item
-					a_node_type := a_node.node_type
-					if a_node_type = Text_node then
-						found := False
-						finished := True
-					elseif a_node_type = Element_node then
-						if found then
+			if an_item.is_node then
+				a_node := an_item.as_node
+				if a_node.node_type = Document_node then
+					from
+						an_iterator := a_node.new_axis_iterator (Child_axis); an_iterator.start
+					until
+						finished or else an_iterator.after
+					loop
+						a_node := an_iterator.item
+						a_node_type := a_node.node_type
+						if a_node_type = Text_node then
 							found := False
 							finished := True
-						else
-							found := element_test.matches_item (a_node)
-							if not found then finished := True end
+						elseif a_node_type = Element_node then
+							if found then
+								found := False
+								finished := True
+							else
+								found := element_test.matches_item (a_node)
+								if not found then finished := True end
+							end
 						end
+						an_iterator.forth
 					end
-					an_iterator.forth
+					Result := found
 				end
-				Result := found
 			end
-
 		end
 
 feature -- Status report

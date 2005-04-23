@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			end
 			instruction_name := "xsl:number"
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
@@ -527,15 +527,18 @@ feature {NONE} -- Implementation
 			else
 				if select_expression /= Void then
 					select_expression.evaluate_item (a_context)
-					a_source ?= select_expression.last_evaluated_item
+					if select_expression.last_evaluated_item.is_node then
+						a_source := select_expression.last_evaluated_item.as_node
+					end
 				else
-					a_source  ?= a_context.context_item
-					if a_source = Void then
+					if not a_context.context_item.is_node then
 						create an_error.make_from_string ("Context item for xsl:number must be a node", "", "XTTE0990", Type_error)
 						transformer.report_recoverable_error (an_error, Current)
 						if not transformer.is_error then
 							todo ("calculate_value", True) -- return empty sequence
 						end
+					else
+						a_source := a_context.context_item.as_node
 					end
 				end
 				if not transformer.is_error then
@@ -599,8 +602,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	language: language = Void implies numberer /= Void
-	formatter: formatter = Void implies format /= Void
+	language: initialized and then language = Void implies numberer /= Void
+	formatter: initialized and then formatter = Void implies format /= Void
 
 end
 	

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate
+			make_style_element, validate, is_output, as_output
 		end
 
 	XM_XSLT_OUTPUT_ROUTINES
@@ -506,6 +506,20 @@ feature -- Element change
 				end
 			end
 			a_property_set.merge_extension_attributes (extension_attributes)
+		end
+
+feature -- Conversion
+
+	is_output: BOOLEAN is
+			-- Is `Current' an xsl:output?
+		do
+			Result := True
+		end
+
+	as_output: XM_XSLT_OUTPUT is
+			-- `Current' seen as an xsl:output
+		do
+			Result := Current
 		end
 
 feature {NONE} -- Implementation

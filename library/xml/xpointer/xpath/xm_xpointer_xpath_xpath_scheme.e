@@ -87,7 +87,7 @@ feature -- Element change
 				a_static_context.declare_namespace (a_cursor.key, a_cursor.item)
 				a_cursor.forth
 			end
-			expression_factory.make_expression (some_data, a_static_context, 1, Eof_token)
+			expression_factory.make_expression (some_data, a_static_context, 1, Eof_token, 1)
 			if expression_factory.is_parse_error then
 				is_error := True
 				create {XM_XPATH_INVALID_VALUE} value.make (expression_factory.parsed_error_value)

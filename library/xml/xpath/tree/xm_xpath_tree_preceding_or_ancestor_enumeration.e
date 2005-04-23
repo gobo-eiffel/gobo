@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TREE_NODE]
 		redefine
-			start
+			start, as_node_iterator
 		end
 
 	XM_XPATH_TREE_ENUMERATION
@@ -39,6 +39,17 @@ feature {NONE} -- Initialization
 		ensure
 			starting_node_set: starting_node = a_starting_node
 			test_set: node_test = a_node_test
+		end
+
+feature -- Access
+
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- Does `Current' yield a node_sequence?	
+		local
+			a_tree_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TREE_NODE]
+		do
+			a_tree_node_iterator ?= ANY_.to_any (Current)
+			Result := a_tree_node_iterator
 		end
 
 feature -- Cursor movement

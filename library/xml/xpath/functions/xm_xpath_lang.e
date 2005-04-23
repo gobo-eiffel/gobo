@@ -28,12 +28,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "lang"
+			name := "lang"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -73,8 +74,7 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			an_item: XM_XPATH_ITEM
-			a_target: XM_XPATH_NODE
+			an_item, another_item: XM_XPATH_ITEM
 			a_language: STRING
 		do
 			last_evaluated_item := Void
@@ -89,23 +89,22 @@ feature -- Evaluation
 			elseif an_item.is_error then
 				last_evaluated_item := an_item
 			else
-				a_target ?= an_item
-				if a_target = Void then
+				if not an_item.is_node then
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("The context item is not a node", Xpath_errors_uri, "FOTY0011", Dynamic_error)
 				else
 					arguments.item (1).evaluate_item (a_context)
-					an_item := arguments.item (1).last_evaluated_item
-					if an_item = Void then
+					another_item := arguments.item (1).last_evaluated_item
+					if another_item = Void then
 						a_language := ""
-					elseif an_item.is_error then
-						last_evaluated_item := an_item
+					elseif another_item.is_error then
+						last_evaluated_item := another_item
 					else
-						a_language := an_item.string_value
+						a_language := another_item.string_value
 					end
 				end
-			end
-			if last_evaluated_item = Void then -- no error
-				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (is_lang (a_language, a_target))
+				if last_evaluated_item = Void then -- no error
+					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (is_lang (a_language, an_item.as_node))
+				end
 			end
 		end
 
@@ -131,7 +130,6 @@ feature {NONE} -- Implementation
 			language_not_void: a_language /= Void
 			target_node_not_void: a_target /= Void
 		local
-			an_element: XM_XPATH_ELEMENT
 			a_node: XM_XPATH_NODE
 			found: BOOLEAN
 			a_language_attribute: STRING
@@ -142,9 +140,8 @@ feature {NONE} -- Implementation
 			until
 				a_node = Void or else found
 			loop
-				an_element ?= a_node
-				if an_element /= Void then
-					a_language_attribute :=	an_element.attribute_value (Xml_lang_type_code)
+				if a_node.is_element then
+					a_language_attribute :=	a_node.as_element.attribute_value (Xml_lang_type_code)
 					if a_language_attribute /= Void then
 						found := True
 					end

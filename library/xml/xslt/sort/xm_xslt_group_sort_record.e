@@ -17,6 +17,8 @@ inherit
 	XM_XSLT_SORT_RECORD
 		rename
 			make as make_sort_record
+		redefine
+			is_group_sort_record, as_group_sort_record
 		end
 
 creation
@@ -53,6 +55,20 @@ feature -- Access
 
 	current_group_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- Current group iterator
+
+feature -- Conversion
+
+	is_group_sort_record: BOOLEAN is
+			-- Is `Current' a group_sort_record?
+		do
+			Result := True
+		end
+
+	as_group_sort_record: XM_XSLT_GROUP_SORT_RECORD is
+			-- `Current' seen as a group_sort_record
+		do
+			Result := Current
+		end
 
 invariant
 

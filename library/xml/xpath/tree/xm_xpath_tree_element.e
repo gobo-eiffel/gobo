@@ -18,14 +18,14 @@ inherit
 	
 	XM_XPATH_ELEMENT
 		undefine
-			document_element, next_sibling, previous_sibling, type_annotation, first_child, last_child, has_child_nodes
+			document_element, next_sibling, previous_sibling, type_annotation, first_child, last_child, has_child_nodes, is_tree_node, as_tree_node
 		end
 
 	XM_XPATH_TREE_COMPOSITE_NODE
 		undefine
-			is_nilled, local_part, base_uri
+			is_nilled, local_part, base_uri, is_element, as_element
 		redefine
-			name_code, system_id, line_number
+			name_code, system_id, line_number, is_tree_element, as_tree_element
 		end
 
 	XM_XPATH_ERROR_TYPES
@@ -81,6 +81,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_tree_element: BOOLEAN is
+			-- Is `Current' an element?
+		do
+			Result := True
+		end
+
+	as_tree_element: XM_XPATH_TREE_ELEMENT is
+			-- `Current' seen as an element
+		do
+			Result := Current
+		end
+
 	system_id: STRING is
 			-- SYSTEM id of `Current', or `Void' if not known
 		do
@@ -113,7 +125,7 @@ feature -- Access
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_namespace_code: INTEGER
-			an_element: XM_XPATH_TREE_ELEMENT
+			a_composite: XM_XPATH_COMPOSITE_NODE 
 		do
 			Result := -1 -- not found
 			if a_prefix_code = Xml_prefix_index - 1 then
@@ -141,8 +153,8 @@ feature -- Access
 			--  then we must look at the parent element
 			
 			if Result = -1 then
-				an_element ?= parent
-				if an_element = Void then
+				a_composite := parent
+				if a_composite = Void or else not a_composite.is_element then
 					
 					-- Document node
 					
@@ -150,7 +162,7 @@ feature -- Access
 						Result := Default_uri_code
 					end
 				else
-					Result := an_element.uri_code_for_prefix_code (a_prefix_code)
+					Result := a_composite.as_element.uri_code_for_prefix_code (a_prefix_code)
 				end
 			end
 		end
@@ -158,7 +170,7 @@ feature -- Access
 	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
 			-- Output all namespace nodes associated with this element.
 		local
-			a_parent: XM_XPATH_TREE_ELEMENT
+			a_parent: XM_XPATH_COMPOSITE_NODE
          a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
 			from
@@ -176,9 +188,9 @@ feature -- Access
 			-- We rely on the receiver to eliminate multiple declarations of the same prefix.
 
 			if include_ancestors then
-				a_parent ?= parent
-				if a_parent /= Void then
-					a_parent.output_namespace_nodes (a_receiver, true)
+				a_parent := parent
+				if a_parent /= Void and then a_parent.is_element then
+					a_parent.as_tree_node.as_tree_element.output_namespace_nodes (a_receiver, true)
 				end
 			end
 		end
@@ -244,7 +256,7 @@ feature -- Element change
 			a_namespace: XM_XPATH_TREE_NAMESPACE
 			a_prefix_code: INTEGER -- _16
 			found: BOOLEAN
-			a_parent_element: XM_XPATH_TREE_ELEMENT
+			a_parent: XM_XPATH_COMPOSITE_NODE
 		do
 			from
 				a_code_cursor := namespace_code_list.new_cursor; a_code_cursor.start
@@ -283,11 +295,11 @@ feature -- Element change
 			-- Now add the namespaces defined on the ancestor nodes.
 
 			if parent.node_type /= Document_node then
-				a_parent_element ?= parent
+				a_parent := parent
 				check
-					parent_is_element: a_parent_element /= Void
+					parent_is_element: a_parent /= Void
 				end
-				a_parent_element.accumulate_namespace_nodes (an_owner, an_accumulation_list, False)
+				a_parent.as_tree_node.as_tree_element.accumulate_namespace_nodes (an_owner, an_accumulation_list, False)
 			end
 
 			if add_xml then

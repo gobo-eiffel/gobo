@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate
+			validate, is_character_map, as_character_map
 		end
 
 creation
@@ -253,6 +253,20 @@ feature -- Element change
 				a_map.force (an_output_character.replacement_string, an_output_character.code_point)
 				a_child_iterator.forth
 			end
+		end
+
+feature -- Conversion
+
+	is_character_map: BOOLEAN is
+			-- Is `Current' an xsl:character-map?
+		do
+			Result := True
+		end
+
+	as_character_map: XM_XSLT_CHARACTER_MAP is
+			-- `Current' seen as an xsl:character-map
+		do
+			Result := Current
 		end
 
 feature {XM_XSLT_CHARACTER_MAP} -- Implementation

@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			type_annotation := a_type_annotation
 			options := 0
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			name_code_set: name_code = a_name_code
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	validation: validation_action >= Validation_strict  and then Validation_strip >= validation_action
+	validation: initialized implies validation_action >= Validation_strict  and then Validation_strip >= validation_action
 
 end
 	

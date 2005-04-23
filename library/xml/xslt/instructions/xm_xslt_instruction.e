@@ -19,7 +19,7 @@ inherit
 			simplify
 		redefine
 			promote, native_implementations, evaluate_item, create_iterator, compute_special_properties,
-			processed_eager_evaluation, process
+			processed_eager_evaluation, process, system_id_from_module_number
 		end
 
 	XM_XPATH_LOCATOR
@@ -41,14 +41,10 @@ feature -- Access
 	executable: XM_XSLT_EXECUTABLE
 			-- Executable
 
-	system_id: STRING is
-			--  SYSTEM id
+	system_id_from_module_number (a_module_number: INTEGER): STRING is
+			-- System identifier
 		do
-			if module_number = 0 then
-				Result := ""
-			else
-				Result := executable.system_id (module_number)
-			end
+			Result := executable.system_id (a_module_number)
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
@@ -230,11 +226,15 @@ feature -- Evaluation
 			if is_evaluate_item_supported then
 				evaluate_item (a_context)
 				if last_evaluated_item = Void then
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+					create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 				elseif last_evaluated_item.is_error then
 					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
 				else
-					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item)
+					if not last_evaluated_item.is_node then
+						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item)
+					else
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (last_evaluated_item.as_node)
+					end
 				end
 			else
 				another_context ?= a_context.new_minor_context
@@ -327,7 +327,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 invariant
 
-	executable_not_void: executable /= Void
+	executable_not_void: initialized implies executable /= Void
 
 end
 	

@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, calculate_effective_boolean_value, evaluate_item
+			analyze, calculate_effective_boolean_value, evaluate_item, make,
+			is_boolean_expression, as_boolean_expression
 		end
 	
 	XM_XPATH_TOKENS
@@ -25,7 +26,28 @@ creation
 
 	make
 
+feature {NONE} -- Initialization
+
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+			-- Establish invariant
+		do
+			Precursor (an_operand_one, a_token, an_operand_two)
+			initialized := True
+		end
+
 feature -- Access
+	
+	is_boolean_expression: BOOLEAN is
+			-- Is `Current' a boolean expression?
+		do
+			Result := True
+		end
+
+	as_boolean_expression: XM_XPATH_BOOLEAN_EXPRESSION is
+			-- `Current' seen as a boolean expression
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
@@ -47,7 +69,9 @@ feature -- Optimization
 			mark_unreplaced
 			Precursor (a_context)
 			if was_expression_replaced then
-				a_boolean_expression ?= replacement_expression
+				if replacement_expression.is_boolean_expression then
+					a_boolean_expression := replacement_expression.as_boolean_expression
+				end
 			else
 				a_boolean_expression := Current
 			end

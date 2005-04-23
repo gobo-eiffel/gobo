@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_VARIABLE_DECLARATION
 		redefine
-			make_style_element, validate, allows_required, allows_value
+			make_style_element, validate, allows_required, allows_value, is_param
 		end
 
 	XM_XSLT_STRING_ROUTINES
@@ -189,8 +189,7 @@ feature -- Element change
 				else
 					if is_global_variable then
 						create a_global_param.make_global_variable (an_executable, variable_name, a_slot_number, slot_manager)
-						a_computed_expression ?= select_expression
-						if a_computed_expression /= Void then a_computed_expression.set_parent (a_global_param) end
+						if select_expression /= Void and then select_expression.is_computed_expression then select_expression.as_computed_expression.set_parent (a_global_param) end
 						a_param := a_global_param
 					else
 						create a_local_param.make (an_executable, variable_name, a_slot_number)
@@ -203,6 +202,14 @@ feature -- Element change
 					last_generated_expression := a_param
 				end
 			end
+		end
+
+feature -- Conversion
+
+	is_param: BOOLEAN is
+			-- Is `Current' an xsl:param?
+		do
+			Result := False
 		end
 
 end

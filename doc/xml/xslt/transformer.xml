@@ -42,6 +42,14 @@
     passing it the <exmlsyntax>URI</exmlsyntax> of your text file, as an absolute URI.
   </para>
   <para>
+    If instead, you wish to transform a source document according to any xml-stylesheet processing instructions contained within it, then
+    you should first call <featurename>associated_stylesheet</featurename> to create the <classname>XM_XSLT_SOURCE</classname>. This takes
+    the <exmlsyntax>URI</exmlsyntax> of the source document as the first argument, the medium for the transformed document as the second
+    argument, and an <classname>XM_XSLT_PI_CHOOSER</classname> as the third argument. This last argument is to allow choosing between
+    alternate stylesheets. See <ulink url="http://www.w3.org/TR/xml-stylesheet/">Associating Style Sheets with XML documents</ulink> for an
+    understanding of what is involved.
+  </para>
+  <para>
     The transformer factory either sets <featurename>was_error</featurename>, or else the new transformer is made available in
     <featurename>created_transformer</featurename>.
   </para>

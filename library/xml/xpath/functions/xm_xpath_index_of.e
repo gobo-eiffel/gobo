@@ -35,12 +35,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "index-of"
+			name := "index-of"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -78,7 +79,7 @@ feature -- Evaluation
 		local
 			an_atomic_comparer: XM_XPATH_ATOMIC_COMPARER
 			a_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			an_item: XM_XPATH_ITEM
 		do
 			an_atomic_comparer := atomic_comparer (3, a_context)
 			if an_atomic_comparer = Void then
@@ -90,15 +91,15 @@ feature -- Evaluation
 					last_iterator := a_sequence
 				else
 					arguments.item (2).evaluate_item (a_context)
-					an_atomic_value ?= arguments.item (2).last_evaluated_item
+					an_item := arguments.item (2).last_evaluated_item
 					check
-						search_parameter_present: an_atomic_value /= Void
+						search_parameter_present: an_item.is_error or else an_item.is_atomic_value
 						-- static typing
 					end
-					if an_atomic_value.is_error then
-						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_atomic_value.error_value)
+					if an_item.is_error then
+						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 					else
-						create {XM_XPATH_INDEX_ITERATOR} last_iterator.make (a_sequence, an_atomic_value, an_atomic_comparer)
+						create {XM_XPATH_INDEX_ITERATOR} last_iterator.make (a_sequence, an_item.as_atomic_value, an_atomic_comparer)
 					end
 				end
 			end

@@ -208,19 +208,16 @@ feature -- Status setting
 						if a_child_iterator.after then
 							if as_type = Void then
 								create {XM_XPATH_STRING_VALUE} select_expression.make ("")
-							else
-								a_parameter ?= Current
-								if a_parameter /= Void then -- xsl:param
-									if not is_required_parameter then
-										if as_type.cardinality_allows_zero then
-											create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
-										else
-
-											-- The implicit default value () is not valid for the required type,
-											--  so we treat it as if there is no default
-
-											is_required_parameter := True 
-										end
+							elseif is_param then
+								if not is_required_parameter then
+									if as_type.cardinality_allows_zero then
+										create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
+									else
+										
+										-- The implicit default value () is not valid for the required type,
+										--  so we treat it as if there is no default
+										
+										is_required_parameter := True 
 									end
 								else -- not an xsl:param
 									if as_type.cardinality_allows_zero then
@@ -317,7 +314,6 @@ feature {NONE} -- Implementation
 			a_document: XM_XSLT_COMPILED_DOCUMENT
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_global_variable: XM_XSLT_GLOBAL_VARIABLE
 		do
 			a_variable.initialize_variable (select_expression, as_type, variable_fingerprint)
 			a_variable.set_required_parameter (is_required_parameter)
@@ -360,20 +356,14 @@ feature {NONE} -- Implementation
 				end
 			end
 			if is_global_variable then
-				a_global_variable ?= a_variable
-				check
-					global_variable: a_global_variable /= Void
-					-- from `compile'
-				end
-				initialize_global_variable (an_executable, a_global_variable)
+				initialize_global_variable (a_variable.as_global_variable)
 			end
 		end
 
-	initialize_global_variable (an_executable: XM_XSLT_EXECUTABLE; a_global_variable: XM_XSLT_GLOBAL_VARIABLE) is
+	initialize_global_variable (a_global_variable: XM_XSLT_GLOBAL_VARIABLE) is
 			-- Initialize global variable.
 		require
 			global_variable: is_global_variable and then a_global_variable /= Void
-			executable_not_void: an_executable /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
 		do

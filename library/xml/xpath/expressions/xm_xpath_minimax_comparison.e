@@ -20,12 +20,21 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, evaluate_item, calculate_effective_boolean_value
+			analyze, evaluate_item, calculate_effective_boolean_value, make
 		end
 
 creation
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+			-- Establish invariant
+		do
+			Precursor (an_operand_one, a_token, an_operand_two)
+			initialized := True
+		end
 
 feature -- Access
 
@@ -54,8 +63,8 @@ feature -- Optimization
 				-- If either operand is a statically-known list of values, we only need
 				-- to retain the minimum or maximum value, depending on the operator.
 
-				a_value ?= first_operand
-				if a_value /= Void then
+				if first_operand.is_value then
+					a_value := first_operand.as_value
 					a_value.create_iterator (Void)
 					a_range :=  computed_range (a_value.last_iterator)
 					if a_range = Void then
@@ -67,8 +76,8 @@ feature -- Optimization
 					end
 				end
 				if not was_expression_replaced then
-					a_value ?= second_operand
-					if a_value /= Void then
+					if second_operand.is_value  then
+						a_value := second_operand.as_value
 						a_value.create_iterator (Void)
 						a_range :=  computed_range (a_value.last_iterator)
 						if a_range = Void then
@@ -137,10 +146,10 @@ feature {NONE} -- Implementation
 				until
 					finished or else an_iterator.after
 				loop
-					a_number ?= an_iterator.item
-					if a_number = Void then
+					if not an_iterator.item.is_numeric_value then
 						finished := True
 					else
+						a_number := an_iterator.item.as_numeric_value
 						if not a_number.is_nan then
 							if Result = Void then
 								create Result.make (1,2)

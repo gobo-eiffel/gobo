@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "system-property"
+			name := "system-property"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
@@ -70,12 +70,11 @@ feature -- Evaluation
 			qname_parts: DS_LIST [STRING]
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
-			a_string_value ?= arguments.item (1)
 			check
-				string_value: a_string_value /= Void
+				string_value: arguments.item (1).is_string_value
 				-- from static typing, and `pre_evaluate' is only called for fixed values
 			end
-			a_qname := a_string_value.string_value 
+			a_qname := arguments.item (1).as_string_value.string_value 
 			create a_splitter.make
 			a_splitter.set_separators (":")
 			qname_parts := a_splitter.split (a_qname)
@@ -103,12 +102,11 @@ feature -- Evaluation
 			qname_parts: DS_LIST [STRING]
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
-			a_string_value ?= arguments.item (1)
 			check
-				string_value: a_string_value /= Void
+				string_value: arguments.item (1).is_string_value
 				-- from static typing, and `pre_evaluate' is only called for fixed values
 			end
-			a_qname := a_string_value.string_value 
+			a_qname := arguments.item (1).as_string_value.string_value 
 			create a_splitter.make
 			a_splitter.set_separators (":")
 			qname_parts := a_splitter.split (a_qname)
@@ -133,12 +131,10 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
 			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 		do
 			Precursor (a_context)
-			a_string_value ?= arguments.item (1)
-			if a_string_value = Void then
+			if not arguments.item (1).is_string_value then
 
 				-- we need to save the namespace context
 

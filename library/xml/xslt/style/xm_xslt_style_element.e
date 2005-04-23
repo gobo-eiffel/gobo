@@ -227,11 +227,7 @@ feature -- Access
 		local
 			a_node, a_next_node: XM_XPATH_NODE
 			a_stylesheet: XM_XSLT_STYLESHEET
-			a_template: XM_XSLT_TEMPLATE
-			a_variable: XM_XSLT_GENERAL_VARIABLE
-			an_attribute_set: XM_XSLT_ATTRIBUTE_SET
-			a_function: XM_XSLT_FUNCTION
-			a_key: XM_XSLT_KEY
+			a_style_element: XM_XSLT_STYLE_ELEMENT
 			found: BOOLEAN
 		do
 			from
@@ -243,28 +239,18 @@ feature -- Access
 				a_stylesheet ?= a_next_node
 				if a_stylesheet /= Void then
 					found := True
-					a_template ?= a_node
-					if a_template /= Void then
-						Result := a_template
-					else
-						a_variable ?=	 a_node
-						if a_variable /= Void then
-							Result := a_variable
-						else
-							an_attribute_set ?= a_node
-							if an_attribute_set /= Void then
-								Result := an_attribute_set
-							else
-								a_function ?= a_node
-								if a_function /= Void then
-									Result := a_function
-								else
-									a_key ?= a_node
-									if a_key /= Void then
-										Result := a_key
-									end
-								end
-							end
+					a_style_element ?= a_node
+					if a_style_element /= Void then
+						if a_style_element.is_template then
+							Result := a_style_element.as_template
+						elseif a_style_element.is_xslt_variable then
+							Result := a_style_element.as_xslt_variable
+						elseif a_style_element.is_attribute_set then
+							Result := a_style_element.as_attribute_set
+						elseif a_style_element.is_xslt_function then
+							Result := a_style_element.as_xslt_function
+						elseif a_style_element.is_key then
+							Result := a_style_element.as_key
 						end
 					end
 				end
@@ -430,7 +416,6 @@ feature -- Access
 			a_root: XM_XSLT_STYLESHEET
 			a_top_level_element_list: DS_BILINKED_LIST [XM_XSLT_STYLE_ELEMENT]
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
-			a_function: XM_XSLT_FUNCTION
 		do
 
 			-- We rely on the search following the order of decreasing import precedence.
@@ -444,10 +429,9 @@ feature -- Access
 			until
 				a_cursor.before
 			loop
-				a_function := as_function (a_cursor.item)
-				if a_function /= Void and then a_function.function_fingerprint = a_fingerprint
-					and then (an_arity = -1 or else a_function.arity = an_arity) then
-					Result := a_function
+				if a_cursor.item.is_xslt_function and then a_cursor.item.as_xslt_function.function_fingerprint = a_fingerprint
+					and then (an_arity = -1 or else a_cursor.item.as_xslt_function.arity = an_arity) then
+					Result := a_cursor.item.as_xslt_function
 					a_cursor.go_before
 				else
 					a_cursor.back
@@ -486,13 +470,10 @@ feature -- Access
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	as_function (an_element: XM_XSLT_STYLE_ELEMENT): XM_XSLT_FUNCTION is
-			-- Reverse assignment extracted to prevent
-			-- SmartEiffel bug.
+	system_id_from_module_number (a_module_number: INTEGER): STRING is
+			-- System identifier
 		do
-			Result ?= an_element
+			Result := containing_stylesheet.system_id_from_module_number (a_module_number)
 		end
 		
 feature -- Status_report
@@ -671,7 +652,7 @@ feature -- Status_report
 				Result := True
 			else
 				from
-					a_style_element ?= Current
+					a_style_element := Current
 				until
 					Result or else a_style_element = Void
 				loop
@@ -896,15 +877,13 @@ feature -- Status setting
 			valid_name: a_name /= Void and then a_name.count > 0
 		local
 			an_analyzed_expression: XM_XPATH_EXPRESSION
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 			was_replaced: BOOLEAN
 		do
-			a_computed_expression ?= an_expression
-			if a_computed_expression /= Void then
+			if an_expression.is_computed_expression then
 
 				-- temporary measure, until instruction is compiled:
 
-				a_computed_expression.set_parent (Current)
+				an_expression.as_computed_expression.set_parent (Current)
 			end
 			an_expression.analyze (static_context)
 			if an_expression.was_expression_replaced then
@@ -1023,7 +1002,6 @@ feature -- Status setting
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_parameter: XM_XSLT_WITH_PARAM
-			a_text_node: XM_XPATH_TEXT
 			a_fallback: XM_XSLT_FALLBACK
 			finished: BOOLEAN
 			an_error: XM_XPATH_ERROR_VALUE
@@ -1040,8 +1018,7 @@ feature -- Status setting
 
 						-- may be a whitespace text node or xsl:fallback
 
-						a_text_node ?= a_child_iterator.item
-						if a_text_node /= Void and then is_all_whitespace (a_text_node.string_value) then
+						if a_child_iterator.item.node_type = Text_node and then is_all_whitespace (a_child_iterator.item.string_value) then
 							do_nothing
 						elseif may_contain_fallback then
 							a_fallback ?= a_child_iterator.item
@@ -1070,7 +1047,7 @@ feature -- Creation
 		local
 			a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION
 		do
-			a_trace_instruction ?= an_instruction
+			a_trace_instruction ?= an_instruction -- TODO: as_trace_instruction (? - check after re-work of tracing)
 			if a_trace_instruction /= Void then
 
 				-- this can happen, for example, after optimizing a compile-time xsl:if
@@ -1140,7 +1117,7 @@ feature -- Creation
 						append_fixed_component (components, an_avt_expression.substring (a_leading_character, a_left_curly_brace - 1))
 					end
 					create a_parser.make
-					a_parser.parse (an_avt_expression, a_static_context, a_left_curly_brace + 1, Right_curly_token)
+					a_parser.parse (an_avt_expression, a_static_context, a_left_curly_brace + 1, Right_curly_token, line_number)
 					if not a_parser.is_parse_error then
 						a_parser.last_parsed_expression.simplify
 						if a_parser.last_parsed_expression.was_expression_replaced then
@@ -1241,7 +1218,7 @@ feature -- Creation
 		local
 			a_deferred_error: XM_XSLT_DEFERRED_ERROR
 		do
-			expression_factory.make_expression (an_expression, static_context, 1, Eof_token)
+			expression_factory.make_expression (an_expression, static_context, 1, Eof_token, line_number)
 			if expression_factory.is_parse_error then
 				if not is_forwards_compatible_processing_enabled then
 					report_compile_error (expression_factory.parsed_error_value)
@@ -1266,7 +1243,7 @@ feature -- Creation
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			create a_pattern_parser.make
-			a_pattern_parser.parse_pattern (a_pattern, static_context)
+			a_pattern_parser.parse_pattern (a_pattern, static_context, line_number)
 			if not a_pattern_parser.is_parse_error then
 				last_generated_pattern := a_pattern_parser.last_parsed_pattern.simplified_pattern
 			else
@@ -1290,7 +1267,7 @@ feature -- Creation
 				create static_context.make (Current)
 			end
 			create a_pattern_parser.make
-			a_pattern_parser.parse_sequence_type (a_sequence_type, static_context)
+			a_pattern_parser.parse_sequence_type (a_sequence_type, static_context, line_number)
 			if a_pattern_parser.is_parse_error then
 				create an_error.make_from_string (a_pattern_parser.first_parse_error, "", "XTSE0340", Static_error)
 				report_compile_error (an_error)
@@ -1451,7 +1428,7 @@ feature -- Element change
 			a_use_when_attribute := attribute_value_by_expanded_name (an_attribute_name)
 			if a_use_when_attribute /= Void then
 				create a_static_context.make_restricted (Current)
-				expression_factory.make_expression (a_use_when_attribute, a_static_context, 1, Eof_token)
+				expression_factory.make_expression (a_use_when_attribute, a_static_context, 1, Eof_token, line_number)
 				if expression_factory.is_parse_error then
 					report_compile_error (expression_factory.parsed_error_value)
 				else
@@ -1716,8 +1693,6 @@ feature -- Element change
 		local
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_style_element, a_last_child: XM_XSLT_STYLE_ELEMENT
-			a_variable: XM_XSLT_VARIABLE
-			a_stylesheet: XM_XSLT_STYLESHEET
 			contains_instructions: BOOLEAN
 			an_error: XM_XPATH_ERROR_VALUE
 			a_message: STRING
@@ -1745,10 +1720,8 @@ feature -- Element change
 				end
 				a_child_iterator.forth
 			end
-			a_variable ?= a_last_child 
-			if a_variable /= Void then
-				a_stylesheet ?= Current
-				if a_stylesheet = Void then
+			if a_last_child /= Void and then a_last_child.is_xslt_variable then
+				if not is_stylesheet then
 					report_compile_warning ("A variable with no following sibling instructions has no effect")
 				end
 			end
@@ -1782,7 +1755,6 @@ feature -- Element change
 			a_node: XM_XPATH_NODE
 			a_text: XM_XSLT_COMPILED_VALUE_OF
 			a_block: XM_XSLT_BLOCK
-			a_variable: XM_XSLT_VARIABLE
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
@@ -1810,9 +1782,8 @@ feature -- Element change
 						end
 					end
 				elseif not is_error and then not any_compile_errors then
-					a_variable ?= a_node
-					if a_variable /= Void then
-						compile_variable (an_executable, a_variable, an_axis_iterator, include_parameters)
+					if a_style_element /= Void and then a_style_element.is_xslt_variable then
+						compile_variable (an_executable, a_style_element.as_xslt_variable, an_axis_iterator, include_parameters)
 					elseif a_style_element /= Void then
 						compile_style_element (an_executable, a_style_element, an_axis_iterator, include_parameters)
 					end
@@ -1945,7 +1916,6 @@ feature -- Element change
 			a_fingerprint: INTEGER
 			found: BOOLEAN
 			another_cursor: DS_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
-			an_attribute_set: XM_XSLT_ATTRIBUTE_SET
 			a_third_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_ATTRIBUTE_SET]
 			an_error: XM_XPATH_ERROR_VALUE
 		do
@@ -1983,10 +1953,9 @@ feature -- Element change
 					until
 						another_cursor.after
 					loop
-						an_attribute_set ?= another_cursor.item
-						if an_attribute_set /= Void and then an_attribute_set.attribute_set_name_code = a_fingerprint then
+						if another_cursor.item.is_attribute_set and then another_cursor.item.as_attribute_set.attribute_set_name_code = a_fingerprint then
 							found := True
-							a_list.force_last (an_attribute_set)
+							a_list.force_last (another_cursor.item.as_attribute_set)
 						end
 						another_cursor.forth
 					end
@@ -2015,6 +1984,200 @@ feature -- Element change
 			end
 		ensure
 			accumulated_list_not_void: not any_compile_errors implies used_attribute_sets /= Void
+		end
+
+feature -- Conversion
+	
+	is_apply_templates: BOOLEAN is
+			-- Is `Current' an xsl:apply-templates?
+		do
+			Result := False
+		end
+
+	is_param: BOOLEAN is
+			-- Is `Current' an xsl:param?
+		do
+			Result := False
+		end
+
+	is_stylesheet: BOOLEAN is
+			-- Is `Current' an xsl:stylesheet or xsl:transform?
+		do
+			Result := False
+		end
+
+	is_for_each: BOOLEAN is
+			-- Is `Current' an xsl:for-each?
+		do
+			Result := False
+		end
+
+	is_for_each_group: BOOLEAN is
+			-- Is `Current' an xsl:for-each-group?
+		do
+			Result := False
+		end
+
+	is_perform_sort: BOOLEAN is
+			-- Is `Current' an xsl:perform-sort?
+		do
+			Result := False
+		end
+
+	is_sort: BOOLEAN is
+			-- Is `Current' an xsl:sort?
+		do
+			Result := False
+		end
+
+	is_template: BOOLEAN is
+			-- Is `Current' an xsl:template?
+		do
+			Result := False
+		end
+
+	as_template: XM_XSLT_TEMPLATE is
+			-- `Current' seen as an xsl:template
+		require
+			template: is_template
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_key: BOOLEAN is
+			-- Is `Current' an xsl:key?
+		do
+			Result := False
+		end
+
+	as_key: XM_XSLT_KEY is
+			-- `Current' seen as an xsl:key
+		require
+			key: is_key
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_output: BOOLEAN is
+			-- Is `Current' an xsl:output?
+		do
+			Result := False
+		end
+
+	as_output: XM_XSLT_OUTPUT is
+			-- `Current' seen as an xsl:output
+		require
+			output: is_output
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_module: BOOLEAN is
+			-- Is `Current' an xsl:include/import?
+		do
+			Result := False
+		end
+
+	as_module: XM_XSLT_MODULE is
+			-- `Current' seen as an xsl:include/import
+		require
+			module: is_module
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_xslt_function: BOOLEAN is
+			-- Is `Current' an xsl:function?
+		do
+			Result := False
+		end
+
+	as_xslt_function: XM_XSLT_FUNCTION is
+			-- `Current' seen as an xsl:function
+		require
+			xslt_function: is_xslt_function
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_namespace_alias: BOOLEAN is
+			-- Is `Current' an xsl:namespace-alias?
+		do
+			Result := False
+		end
+
+	as_namespace_alias: XM_XSLT_NAMESPACE_ALIAS is
+			-- `Current' seen as an xsl:namespace-alias
+		require
+			namespace_alias: is_namespace_alias
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_xslt_variable: BOOLEAN is
+			-- Is `Current' an xsl:variable?
+		do
+			Result := False
+		end
+
+	as_xslt_variable: XM_XSLT_VARIABLE is
+			-- `Current' seen as an xsl:variable
+		require
+			xslt_variable: is_xslt_variable
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_xslt_variable_declaration: BOOLEAN is
+			-- Is `Current' an xsl:variable or xsl:param?
+		do
+			Result := False
+		end
+
+	as_xslt_variable_declaration: XM_XSLT_VARIABLE_DECLARATION is
+			-- `Current' seen as an XSLT variable declaration
+		require
+			xslt_variable_declaration: is_xslt_variable_declaration
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_attribute_set: BOOLEAN is
+			-- Is `Current' an xsl:attribute-set?
+		do
+			Result := False
+		end
+
+	as_attribute_set: XM_XSLT_ATTRIBUTE_SET is
+			-- `Current' seen as an xsl:attribute-set
+		require
+			attribute_set: is_attribute_set
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_character_map: BOOLEAN is
+			-- Is `Current' an xsl:character-map?
+		do
+			Result := False
+		end
+
+	as_character_map: XM_XSLT_CHARACTER_MAP is
+			-- `Current' seen as an xsl:character-map
+		require
+			character_map: is_character_map
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Local
@@ -2288,7 +2451,6 @@ feature {NONE} -- Implementation
 			style_element_not_void: a_style_element /= Void
 		local
 			a_child, a_tail: XM_XPATH_EXPRESSION
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 			a_block: XM_XSLT_BLOCK
 		do
 			if a_style_element.validation_error /= Void then
@@ -2296,9 +2458,8 @@ feature {NONE} -- Implementation
 			else
 				a_style_element.compile (an_executable)
 				a_child := a_style_element.last_generated_expression
-				a_computed_expression ?= a_child
-				if a_computed_expression /= Void and then a_style_element.line_number > 0 then -- TODO: this last condition should not be necessary
-					a_computed_expression.set_line_number (a_style_element.line_number) -- TODO - all this sort of thing needs to have system id too
+				if a_child /= Void and then a_child.is_computed_expression then 
+					a_child.as_computed_expression.set_source_location (containing_stylesheet.module_number (a_style_element.system_id), a_style_element.line_number)
 				end
 				compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
 				a_tail := last_generated_expression

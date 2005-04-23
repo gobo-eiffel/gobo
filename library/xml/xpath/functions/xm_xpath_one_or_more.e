@@ -28,13 +28,14 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "one-or-more"
+			name := "one-or-more"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
 			set_argument_error_code ("FORG0004")
+			initialized := True
 		end
 
 feature -- Access

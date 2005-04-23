@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE
 		redefine
-			next_sibling, previous_sibling, document_element
+			next_sibling, previous_sibling, document_element, is_tree_node, as_tree_node
 		end
 
 	XM_XPATH_TYPE
@@ -31,6 +31,108 @@ feature -- Access
 
 	document: XM_XPATH_TREE_DOCUMENT
 			-- Document that owns this node
+	
+	is_tree_node: BOOLEAN is
+			-- Is `Current' a tree node?
+		do
+			Result := True
+		end
+
+	as_tree_node: XM_XPATH_TREE_NODE is
+			-- `Current' seen as a tree node
+		do
+			Result := Current
+		end
+
+	is_tree_composite_node: BOOLEAN is
+			-- Is `Current' a composite node?
+		do
+			Result := False
+		end
+
+	as_tree_composite_node: XM_XPATH_TREE_COMPOSITE_NODE is
+			-- `Current' seen as a composite node
+		require
+			tree_composite: is_tree_composite_node
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_tree_document: BOOLEAN is
+			-- Is `Current' a document?
+		do
+			Result := False
+		end
+
+	as_tree_document: XM_XPATH_TREE_DOCUMENT is
+			-- `Current' seen as a document
+		require
+			document: is_tree_document
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_tree_element: BOOLEAN is
+			-- Is `Current' an element?
+		do
+			Result := False
+		end
+
+	as_tree_element: XM_XPATH_TREE_ELEMENT is
+			-- `Current' seen as an element
+		require
+			element: is_tree_element
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_tree_namespace: BOOLEAN is
+			-- Is `Current' a namespace?
+		do
+			Result := False
+		end
+
+	as_tree_namespace: XM_XPATH_TREE_NAMESPACE is
+			-- `Current' seen as a namespace
+		require
+			namespace: is_tree_namespace
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_tree_attribute: BOOLEAN is
+			-- Is `Current' an attribute?
+		do
+			Result := False
+		end
+
+	as_tree_attribute: XM_XPATH_TREE_ATTRIBUTE is
+			-- `Current' seen as an attribute
+		require
+			attribute: is_tree_attribute
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_tree_text: BOOLEAN is
+			-- Is `Current' a text node?
+		do
+			Result := False
+		end
+
+	as_tree_text: XM_XPATH_TREE_TEXT is
+			-- `Current' seen as a text node
+		require
+			text: is_tree_text
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
 
 	system_id: STRING is
 			-- SYSTEM id of `Current'
@@ -64,7 +166,6 @@ feature -- Access
 			-- This is the default implementation for child nodes.
 		local
 			a_previous_node: XM_XPATH_TREE_NODE
-			a_parent_node: XM_XPATH_TREE_COMPOSITE_NODE
 			finished: BOOLEAN
 			counter: INTEGER
 		do
@@ -73,8 +174,7 @@ feature -- Access
 			until
 				finished
 			loop
-				a_parent_node ?= a_previous_node
-				if a_parent_node /= Void then
+				if a_previous_node.is_tree_composite_node then
 					finished := True
 
 					-- N.B. the large offset is to leave room for namespace and attribute nodes.
@@ -90,8 +190,11 @@ feature -- Access
 
 	document_element: XM_XPATH_TREE_ELEMENT is
 			-- The top-level element
+		local
+			an_element: XM_XPATH_ELEMENT
 		do
-			Result ?= document_root.document_element
+			an_element := document_root.document_element
+			if an_element /= Void then	Result := an_element.as_tree_node.as_tree_element end
 		end
 
 	document_number: INTEGER is
@@ -169,18 +272,15 @@ feature -- Access
 
 	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
-		local
-			a_composite_node: XM_XPATH_TREE_COMPOSITE_NODE
 		do
 
 			-- Fast path for child axis
 
 			if an_axis_type = Child_axis then
-				a_composite_node ?= Current
-				if a_composite_node /= Void then
-					Result := a_composite_node.child_iterator (any_node_test)
+				if is_tree_composite_node then
+					Result := as_tree_composite_node.child_iterator (any_node_test)
 				else
-					Result := empty_abstract_node_iterator
+					create {XM_XPATH_EMPTY_ITERATOR} Result.make
 				end
 			else
 				Result := new_axis_iterator_with_node_test (an_axis_type, any_node_test)
@@ -217,9 +317,9 @@ feature -- Access
 				Result := created_preceding_sibling_axis_iterator (a_node_test)
 			when Self_axis then
 				if a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
-					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TREE_NODE]} Result.make (Current)
+					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 				else
-					Result := empty_abstract_node_iterator
+					create {XM_XPATH_EMPTY_ITERATOR} Result.make
 				end
 			when Preceding_or_ancestor_axis then
 				Result := created_preceding_or_ancestor_axis_iterator (a_node_test)
@@ -259,7 +359,7 @@ feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 	previous_node_in_document_order: XM_XPATH_TREE_NODE is
 			-- Previous node within the document
 		local
-			a_previous_node: XM_XPATH_TREE_NODE
+			a_previous_node: XM_XPATH_NODE
 		do
 
 			-- Find the last child of the previous sibling if there is one;
@@ -267,9 +367,9 @@ feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 			--  otherwise the parent, up to the anchor element.
 			-- If this reaches the document root, return `Void'
 
-			a_previous_node ?= previous_sibling
+			a_previous_node := previous_sibling
 			if a_previous_node /= Void then
-				Result := a_previous_node.last_descendant_or_self
+				Result := a_previous_node.as_tree_node.last_descendant_or_self
 			else
 				Result := parent
 			end
@@ -281,19 +381,20 @@ feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 		require
 			anchor_not_void: an_anchor /= Void -- and then `an_anchor' is an ancestor-or-self of `Current'
 		local
-			a_next_node, a_parent: XM_XPATH_TREE_NODE
+			a_parent: XM_XPATH_TREE_NODE
+			a_node: XM_XPATH_NODE
 			finished: BOOLEAN
 		do
-			a_next_node ?= first_child
-			if a_next_node /= Void then
-				Result := a_next_node
+			a_node := first_child
+			if a_node /= Void then
+				Result := a_node.as_tree_node
 			else
 				if an_anchor = Current then
 					Result := Void
 				else
-					a_next_node ?= next_sibling
-					if a_next_node /= Void then
-						Result := a_next_node
+					a_node := next_sibling
+					if a_node /= Void then
+						Result := a_node.as_tree_node
 					else
 						from
 							a_parent := Current
@@ -306,9 +407,9 @@ feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 							elseif a_parent = an_anchor then
 								finished := true
 							else
-								a_next_node ?= a_parent.next_sibling
-								if a_next_node /= Void then
-									Result := a_next_node
+								a_node := a_parent.next_sibling
+								if a_node /= Void then
+									Result := a_node.as_tree_node
 									finished := true
 								end
 							end
@@ -321,13 +422,13 @@ feature {XM_XPATH_TREE_NODE, XM_XPATH_TREE_ENUMERATION} -- Restricted
 	last_descendant_or_self: XM_XPATH_TREE_NODE is
 			-- Last descendant or `Current' if no descendants
 		local
-			a_last_descendant: XM_XPATH_TREE_NODE
+			a_last_descendant: XM_XPATH_NODE
 		do
-			a_last_descendant ?= last_child
+			a_last_descendant := last_child
 			if a_last_descendant = Void then
 				Result := Current
 			else
-				Result := a_last_descendant.last_descendant_or_self
+				Result := a_last_descendant.as_tree_node.last_descendant_or_self
 			end
 		ensure
 			last_descendant_or_self_not_void: Result /= Void
@@ -341,18 +442,13 @@ feature {XM_XPATH_TREE_NODE} -- Local
 	
 feature {NONE} -- Implementation
 	
-	empty_abstract_node_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE] is
-			-- Empty iterator
-		do
-			create Result.make
-		end
 	created_ancestor_axis_iterator (a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- New ancestor axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
 		do
 			if node_type = Document_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create {XM_XPATH_TREE_ANCESTOR_ENUMERATION} Result.make (Current, a_node_test, False)
 			end
@@ -367,9 +463,9 @@ feature {NONE} -- Implementation
 		do
 			if node_type = Document_node then
 				if a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
-					create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TREE_NODE]} Result.make (Current)
+					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 				else
-					Result := empty_abstract_node_iterator
+					create {XM_XPATH_EMPTY_ITERATOR} Result.make
 				end
 			else
 				create {XM_XPATH_TREE_ANCESTOR_ENUMERATION} Result.make (Current, a_node_test, True)
@@ -382,14 +478,11 @@ feature {NONE} -- Implementation
 			-- New attribute axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
-		local
-			an_element: XM_XPATH_TREE_ELEMENT
 		do
-			an_element ?= Current
-			if an_element = Void then
-				Result := empty_abstract_node_iterator
+			if not is_tree_element then
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
-				create {XM_XPATH_TREE_ATTRIBUTE_ENUMERATION} Result.make (an_element, a_node_test)
+				create {XM_XPATH_TREE_ATTRIBUTE_ENUMERATION} Result.make (as_tree_element, a_node_test)
 			end
 		ensure
 			attribute_axis_iterator_not_void: Result /= Void
@@ -399,14 +492,11 @@ feature {NONE} -- Implementation
 			-- New child axis iterator
 		require
 			node_test_not_void: a_node_test /= Void
-		local
-			a_composite_node: XM_XPATH_TREE_COMPOSITE_NODE
 		do
-			a_composite_node ?= Current
-			if a_composite_node /= Void then
-				Result := a_composite_node.child_iterator (a_node_test)
+			if is_tree_composite_node then
+				Result := as_tree_composite_node.child_iterator (a_node_test)
 			else
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			end
 		ensure
 			child_axis_iterator_not_void: Result /= Void
@@ -417,21 +507,18 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void		
 		local
-			a_name_test: XM_XPATH_NAME_TEST
 			a_document: XM_XPATH_TREE_DOCUMENT
 		do
-			a_name_test ?= a_node_test
-			if node_type = Document_node and then a_name_test /= Void and then a_name_test.node_kind = Element_node then
-				a_document ?= Current
-					check
-						document_not_void: document /= Void
-						-- as `node_type' is `Document_node'
-					end
-				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_TREE_ELEMENT]} Result.make (a_document.all_elements (a_node_test.fingerprint))
+			if node_type = Document_node and then a_node_test.is_name_test and then a_node_test.as_name_test.node_kind = Element_node then
+				check
+					document: is_tree_document
+					-- as `node_type' is `Document_node'
+				end
+				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_TREE_ELEMENT]} Result.make (as_tree_document.all_elements (a_node_test.fingerprint))
 			elseif has_child_nodes then
 				create {XM_XPATH_TREE_DESCENDANT_ENUMERATION} Result.make (Current, a_node_test, False)
 			else
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			end
 		ensure
 			descendant_axis_iterator_not_void: Result /= Void
@@ -445,9 +532,9 @@ feature {NONE} -- Implementation
 			if has_child_nodes then
 				create {XM_XPATH_TREE_DESCENDANT_ENUMERATION} Result.make (Current, a_node_test, True)
 			elseif a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TREE_NODE]} Result.make (Current)
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 			else
-				Result := empty_abstract_node_iterator					
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make					
 			end				
 		ensure
 			descendant_or_self_axis_iterator_not_void: Result /= Void
@@ -459,7 +546,7 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void
 		do
 			if node_type = Document_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create {XM_XPATH_TREE_FOLLOWING_ENUMERATION} Result.make (Current, a_node_test)
 			end
@@ -473,7 +560,7 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void
 		do
 			if node_type = Document_node or else node_type = Attribute_node or else node_type = Namespace_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create  {XM_XPATH_TREE_FOLLOWING_SIBLING_ENUMERATION} Result.make (Current, a_node_test)
 			end
@@ -490,11 +577,11 @@ feature {NONE} -- Implementation
 		do
 			a_parent_node := parent
 			if a_parent_node = Void then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			elseif a_node_test.matches_node (a_parent_node.node_type, a_parent_node.fingerprint, any_item.fingerprint) then
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_TREE_NODE]} Result.make (a_parent_node)
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (a_parent_node)
 			else
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			end
 		ensure
 			parent_axis_iterator_not_void: Result /= Void
@@ -506,7 +593,7 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void
 		do
 			if node_type = Document_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create  {XM_XPATH_TREE_PRECEDING_ENUMERATION} Result.make (Current, a_node_test)
 			end
@@ -520,7 +607,7 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void
 		do	
 			if node_type = Document_node or else node_type = Attribute_node or else node_type = Namespace_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create  {XM_XPATH_TREE_PRECEDING_SIBLING_ENUMERATION} Result.make (Current, a_node_test)
 			end
@@ -534,7 +621,7 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void
 		do
 			if node_type = Document_node then
-				Result := empty_abstract_node_iterator
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create  {XM_XPATH_TREE_PRECEDING_OR_ANCESTOR_ENUMERATION} Result.make (Current, a_node_test)
 			end	

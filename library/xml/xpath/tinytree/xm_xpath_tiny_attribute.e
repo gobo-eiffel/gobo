@@ -15,6 +15,9 @@ class XM_XPATH_TINY_ATTRIBUTE
 inherit
 
 	XM_XPATH_ATTRIBUTE
+		undefine
+			is_tiny_node, as_tiny_node
+		end
 
 	XM_XPATH_TINY_NODE
 		undefine
@@ -59,8 +62,11 @@ feature -- Access
 	parent: XM_XPATH_TINY_COMPOSITE_NODE is
 			-- Parent of current node;
 			-- `Void' if current node is root, or for orphan nodes.
-		do
-			Result ?= document.retrieve_node (document.attribute_parent (node_number))
+		local
+			a_node: XM_XPATH_TINY_NODE
+		do		
+			a_node := document.retrieve_node (document.attribute_parent (node_number))
+			if a_node.is_tiny_composite_node then Result := a_node.as_tiny_composite_node end
 		end
 
 	string_value: STRING is

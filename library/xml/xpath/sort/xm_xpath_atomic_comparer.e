@@ -48,18 +48,14 @@ feature -- Comparison
 			second_value_not: another_atomic_value /= Void
 			are_comparable (an_atomic_value, another_atomic_value)
 		local
-			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
-			a_string_value, another_string_value: XM_XPATH_STRING_VALUE
 			compared: BOOLEAN
 		do
-			an_untyped_atomic_value ?= an_atomic_value
-			if an_untyped_atomic_value /= Void then
-				Result := an_untyped_atomic_value.three_way_comparison_using_collator (another_atomic_value, collator)
+			if an_atomic_value.is_untyped_atomic then
+				Result := an_atomic_value.as_untyped_atomic.three_way_comparison_using_collator (another_atomic_value, collator)
 				compared := True
 			else
-				an_untyped_atomic_value ?= another_atomic_value
-				if an_untyped_atomic_value /= Void then
-					Result := - an_untyped_atomic_value.three_way_comparison_using_collator (an_atomic_value, collator)
+				if another_atomic_value.is_untyped_atomic then
+					Result := - another_atomic_value.as_untyped_atomic.three_way_comparison_using_collator (an_atomic_value, collator)
 					compared := True
 				end
 			end
@@ -67,10 +63,7 @@ feature -- Comparison
 
 				-- Neither operand is xdt:untypedAtomic
 
-				a_string_value ?= an_atomic_value
-				another_string_value ?= another_atomic_value
-				
-				if a_string_value = Void or else another_string_value = Void then
+				if not an_atomic_value.is_string_value or else not another_atomic_value.is_string_value then
 					Result := an_atomic_value.three_way_comparison (another_atomic_value)
 				else
 
@@ -96,22 +89,15 @@ feature -- Status report
 		require
 			first_value_not_void: an_atomic_value /= Void
 			second_value_not: another_atomic_value /= Void
-		local
-			an_untyped_atomic_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
-			an_untyped_atomic_value ?= an_atomic_value
-			if an_untyped_atomic_value /= Void then
-				Result := an_untyped_atomic_value.is_comparable (another_atomic_value)
+			if an_atomic_value.is_untyped_atomic then
+				Result := an_atomic_value.as_untyped_atomic.is_comparable (another_atomic_value)
 			else
-				a_numeric_value ?= an_atomic_value
-				if a_numeric_value /= Void then
-					Result := a_numeric_value.is_comparable (another_atomic_value)
+				if an_atomic_value.is_numeric_value then
+					Result := an_atomic_value.as_numeric_value.is_comparable (another_atomic_value)
 				else
-					a_string_value ?= an_atomic_value
-					if a_string_value /= Void then
-						Result := a_string_value.is_comparable (another_atomic_value)
+					if an_atomic_value.is_string_value then
+						Result := an_atomic_value.as_string_value.is_comparable (another_atomic_value)
 					else
 						Result := an_atomic_value.is_comparable (another_atomic_value)
 					end

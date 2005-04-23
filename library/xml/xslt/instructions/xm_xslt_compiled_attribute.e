@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			namespace_context := a_namespace_context
 			options := 0
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			name_set: attribute_name = an_attribute_name
@@ -197,8 +197,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	validation: validation_action >= Validation_strict  and then Validation_strip <= validation_action
-	name_not_void: attribute_name /= Void
+	validation: initialized implies validation_action >= Validation_strict  and then Validation_strip <= validation_action
+	name_not_void: initialized implies attribute_name /= Void
 
 end
 	

@@ -147,11 +147,8 @@ feature {NONE} -- Implementation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: like item
-			a_node: XM_XPATH_NODE
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			last_match_test := False
 			if non_numeric then
@@ -173,40 +170,29 @@ feature {NONE} -- Implementation
 					an_iterator.start
 					if not an_iterator.after then
 						an_item := an_iterator.item
-						a_node ?= an_item
-						if a_node /= Void then
+						if an_item.is_node then
 							last_match_test := True
+						elseif an_item.is_boolean_value then
+							if an_item.as_boolean_value.value then	last_match_test := True	else an_iterator.forth; last_match_test := not an_iterator.after end
+						elseif an_item.is_integer_value and then an_item.as_integer_value.is_platform_integer then
+							if an_item.as_integer_value.as_integer = base_iterator.index then last_match_test := True else an_iterator.forth; last_match_test := not an_iterator.after end
+						elseif an_item.is_numeric_value then
+							create an_integer_value.make_from_integer (base_iterator.index)
+							last_match_test := an_item.as_numeric_value.same_expression (an_integer_value)
+							if not last_match_test then an_iterator.forth; last_match_test := not an_iterator.after end
 						else
-							a_boolean_value ?= an_item
-							if a_boolean_value /= Void then
-								if a_boolean_value.value then	last_match_test := True	else an_iterator.forth; last_match_test := not an_iterator.after end
+							if an_item.is_string_value then
+								last_match_test := STRING_.same_string (an_item.as_string_value.string_value, "")
+								if not last_match_test then an_iterator.forth; last_match_test := not an_iterator.after end
 							else
-								an_integer_value ?= an_item
-								if an_integer_value /= Void and then an_integer_value.is_platform_integer then
-									if an_integer_value.as_integer = base_iterator.index then last_match_test := True else an_iterator.forth; last_match_test := not an_iterator.after end
-								else
-									a_numeric_value ?= an_item
-									if a_numeric_value /= Void then
-										create an_integer_value.make_from_integer (base_iterator.index)
-										last_match_test := a_numeric_value.same_expression (an_integer_value)
-										if not last_match_test then an_iterator.forth; last_match_test := not an_iterator.after end
-									else
-										a_string_value ?= an_item
-										if a_string_value /= Void then
-											last_match_test := STRING_.same_string (a_string_value.string_value, "")
-											if not last_match_test then an_iterator.forth; last_match_test := not an_iterator.after end
-										else
-											last_match_test := True
-										end
-									end
-								end
+								last_match_test := True
 							end
 						end
 					end
 				else
-
+					
 					-- We are in error
-
+					
 					last_match_test := False
 					set_last_error (an_iterator.error_value)
 				end

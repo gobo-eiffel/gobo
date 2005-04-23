@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Element change
 
-	register_reference (a_reference: XM_XPATH_BINDING_REFERENCE) is
+	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE) is
 			-- Register `a_reference' as a reference to this variable for fix-up.
 		do
 			if not references.extendible (1) then
@@ -100,8 +100,8 @@ feature -- Element change
 		require
 			binding_not_void: a_binding /= Void
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_BINDING_REFERENCE]
-			a_reference: XM_XPATH_BINDING_REFERENCE
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_VARIABLE_REFERENCE]
+			a_reference: XM_XPATH_VARIABLE_REFERENCE
 		do
 			a_cursor := references.new_cursor
 			from
@@ -132,7 +132,7 @@ feature -- Element change
 			possible_constant_value: True
 			special_properties_not_void: a_special_properties_set /= Void
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_BINDING_REFERENCE]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_VARIABLE_REFERENCE]
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			old_item_type, new_item_type: like a_type
@@ -146,8 +146,8 @@ feature -- Element change
 			until
 				a_cursor.after
 			loop
-				a_variable_reference ?= a_cursor.item
-				if a_variable_reference /= Void and then not a_variable_reference.was_expression_replaced then
+				a_variable_reference := a_cursor.item
+				if not a_variable_reference.was_expression_replaced then
 					old_item_type := a_variable_reference.item_type
 					new_item_type := old_item_type
 					if is_sub_type (a_type, old_item_type) then
@@ -163,7 +163,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	references: DS_ARRAYED_LIST [XM_XPATH_BINDING_REFERENCE]
+	references: DS_ARRAYED_LIST [XM_XPATH_VARIABLE_REFERENCE]
 
 invariant
 

@@ -22,6 +22,8 @@ inherit
 
 	UC_UNICODE_ROUTINES
 
+	KL_IMPORTED_ANY_ROUTINES
+
 feature -- Access
 
 	outputter: XM_XSLT_OUTPUT_ENCODER
@@ -43,6 +45,21 @@ feature -- Access
 			-- TODO
 
 			Result := a_value
+		end
+
+	is_xml_emitter: BOOLEAN is
+			-- Is `Current' an XML emitter?
+		do
+			Result := False
+		end
+
+	as_xml_emitter: XM_XSLT_XML_EMITTER is
+			-- `Current' seen as an XML emitter
+		require
+			xml_emitter: is_xml_emitter
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
 		end
 
 feature -- Status report

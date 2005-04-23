@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			adopt_child_expression (action)
 			instruction_name := "xsl:for-each"
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
@@ -276,8 +276,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	select_expression_not_void: select_expression /= Void
-	action_not_void: action /= Void
+	select_expression_not_void: initialized implies select_expression /= Void
+	action_not_void: initialized implies action /= Void
 
 end
 	

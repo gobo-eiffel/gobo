@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			set_sequence (a_sequence_expression)
 			set_action (an_action)
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			range_variable_set: declaration = a_range_variable
@@ -82,16 +82,13 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "for $")
 			a_string := STRING_.appended_string (a_string, variable_name)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_string (" in")
-				std.error.put_new_line
-				sequence.display (a_level + 1)
-				std.error.put_string (STRING_.appended_string (indentation (a_level), "return"))
-				std.error.put_new_line
-				action_expression.display (a_level + 1)
-			end
+			std.error.put_string (a_string)
+			std.error.put_string (" in")
+			std.error.put_new_line
+			sequence.display (a_level + 1)
+			std.error.put_string (STRING_.appended_string (indentation (a_level), "return"))
+			std.error.put_new_line
+			action_expression.display (a_level + 1)
 		end
 
 feature -- Optimization

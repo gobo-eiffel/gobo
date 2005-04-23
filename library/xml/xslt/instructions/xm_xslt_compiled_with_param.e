@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			instruction_name := "xsl:with-param"
 			variable_name := a_variable_name
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			name_set: variable_name = a_variable_name

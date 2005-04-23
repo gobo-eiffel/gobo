@@ -33,11 +33,13 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "ceiling"
+			namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -64,24 +66,16 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
-		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
 			arguments.item (1).evaluate_item (a_context)
 			last_evaluated_item := arguments.item (1).last_evaluated_item
-			if last_evaluated_item /= Void then
-				an_atomic_value ?= last_evaluated_item
+			if last_evaluated_item /= Void and then not last_evaluated_item.is_error then
 				check
-					is_atomic: an_atomic_value /= Void
+					is_atomic: last_evaluated_item.is_atomic_value
+					is_numeric: last_evaluated_item.as_atomic_value.primitive_value.is_numeric_value
 					-- static typing
 				end
-				a_numeric_value ?= an_atomic_value.primitive_value
-				check
-					is_numeric: a_numeric_value /= Void
-					-- static typing
-				end
-				last_evaluated_item := a_numeric_value.ceiling
+				last_evaluated_item := last_evaluated_item.as_atomic_value.primitive_value.as_numeric_value.ceiling
 			end
 		end
 

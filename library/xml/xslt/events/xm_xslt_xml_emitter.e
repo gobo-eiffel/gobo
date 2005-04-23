@@ -15,6 +15,9 @@ class XM_XSLT_XML_EMITTER
 inherit
 
 	XM_XSLT_EMITTER
+		redefine
+			is_xml_emitter, as_xml_emitter
+		end
 
 	XM_UNICODE_CHARACTERS_1_1
 
@@ -57,6 +60,20 @@ feature {NONE} -- Initialization
 			outputter_set: raw_outputter = an_outputter
 			output_properties_set: output_properties = some_output_properties
 			character_map_expander_set: character_map_expander = a_character_map_expander
+		end
+
+feature -- Conversion
+
+	is_xml_emitter: BOOLEAN is
+			-- Is `Current' an XML emitter?
+		do
+			Result := True
+		end
+
+	as_xml_emitter: XM_XSLT_XML_EMITTER is
+			-- `Current' seen as an XML emitter
+		do
+			Result := Current
 		end
 
 feature -- Events

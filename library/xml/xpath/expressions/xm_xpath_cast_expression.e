@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, analyze, evaluate_item, compute_cardinality, same_expression, compute_special_properties
+			item_type, analyze, evaluate_item, compute_cardinality, same_expression,
+			compute_special_properties, is_cast_expression, as_cast_expression
 		end
 
 	XM_XPATH_ROLE
@@ -34,7 +35,6 @@ feature {NONE} -- Initialization
 			target_type := a_target_type
 			is_empty_allowed := empty_ok
 			compute_static_properties
-			initialize
 		ensure
 			base_expression_set: base_expression = a_source
 			target_type_set: target_type = a_target_type
@@ -49,6 +49,18 @@ feature -- Access
 
 	is_empty_allowed: BOOLEAN
 			-- Is empty sequence allowed?
+
+	is_cast_expression: BOOLEAN is
+			-- Is `Current' a cast expression?
+		do
+			Result := True
+		end
+
+	as_cast_expression: XM_XPATH_CAST_EXPRESSION is
+			-- `Current' seen as a cast expression
+		do
+			Result := Current
+		end
 	
 	item_type: XM_XPATH_ITEM_TYPE is
 			--Determine the data type of the expression, if possible
@@ -67,8 +79,8 @@ feature -- Comparison
 		local
 			other_cast: XM_XPATH_CAST_EXPRESSION
 		do
-			other_cast ?= other
-			if other_cast /= Void then
+			if other.is_cast_expression then
+				other_cast := other.as_cast_expression
 				Result := base_expression.same_expression (other_cast.base_expression) 
 					and then other_cast.is_empty_allowed = is_empty_allowed
 					and then other_cast.target_type = target_type
@@ -85,7 +97,6 @@ feature -- Optimization
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			an_expression: XM_XPATH_EXPRESSION
 			a_qname_cast: XM_XPATH_CAST_AS_QNAME_EXPRESSION
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			mark_unreplaced
 			base_expression.analyze (a_context)
@@ -119,12 +130,10 @@ feature -- Optimization
 							set_replacement (a_qname_cast)
 						end
 					else
-						an_atomic_value ?= an_expression
-						if an_atomic_value /= Void then
+						if an_expression.is_atomic_value then
 							evaluate_item (Void)
-							an_atomic_value ?= last_evaluated_item
-							if an_atomic_value /= Void then
-								set_replacement (an_atomic_value)
+							if last_evaluated_item.is_atomic_value then
+								set_replacement (last_evaluated_item.as_atomic_value)
 							end
 						else
 							set_base_expression (an_expression)
@@ -138,27 +147,22 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
-		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			base_expression.evaluate_item (a_context)
 			if base_expression.last_evaluated_item = Void or else base_expression.last_evaluated_item.is_error then
 				last_evaluated_item := base_expression.last_evaluated_item
-			else
-				an_atomic_value ?= base_expression.last_evaluated_item
-				if an_atomic_value = Void then
-					if is_empty_allowed then
-						last_evaluated_item := Void
-					else
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Target typr for cast as does not allow empty sequence",
-																																					 target_type.conventional_name), Xpath_errors_uri, "XPTY0004", Type_error)
-					end
-				elseif an_atomic_value.is_convertible (target_type) then
-					last_evaluated_item := an_atomic_value.convert_to_type (target_type)
+			elseif not base_expression.last_evaluated_item.is_atomic_value then
+				if is_empty_allowed then
+					last_evaluated_item := Void
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Could not cast expression to type ",
-																																				 target_type.conventional_name), Xpath_errors_uri, "XPTY0004", Dynamic_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Target typr for cast as does not allow empty sequence",
+																																				 target_type.conventional_name), Xpath_errors_uri, "XPTY0004", Type_error)
 				end
+			elseif base_expression.last_evaluated_item.as_atomic_value.is_convertible (target_type) then
+				last_evaluated_item := base_expression.last_evaluated_item.as_atomic_value.convert_to_type (target_type)
+			else
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Could not cast expression to type ",
+																																			 target_type.conventional_name), Xpath_errors_uri, "XPTY0004", Dynamic_error)
 			end
 		end
 
@@ -193,6 +197,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	target_type_not_void: target_type /= Void
+	target_type_not_void: initialized implies target_type /= Void
 
 end

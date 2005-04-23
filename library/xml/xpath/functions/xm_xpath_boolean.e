@@ -29,11 +29,13 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "boolean"
+			namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access

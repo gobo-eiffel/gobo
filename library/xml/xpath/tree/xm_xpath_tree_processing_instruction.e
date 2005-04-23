@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_PROCESSING_INSTRUCTION
 		undefine
-			document_element, next_sibling, previous_sibling, base_uri, local_part
+			document_element, next_sibling, previous_sibling, base_uri, local_part, is_tree_node, as_tree_node
 		end
 
 	XM_XPATH_TREE_NODE

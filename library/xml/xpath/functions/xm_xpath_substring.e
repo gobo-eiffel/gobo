@@ -28,12 +28,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "substring"
+			name := "substring"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -66,7 +67,7 @@ feature -- Evaluation
 			-- Evaluate as a single item
 		local
 			a_string: STRING
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			an_item: XM_XPATH_ITEM
 			a_double_value: XM_XPATH_DOUBLE_VALUE
 			a_starting_position, an_ending_position, a_count: INTEGER
 		do
@@ -80,30 +81,24 @@ feature -- Evaluation
 				if arguments.item (2).last_evaluated_item /= Void and then arguments.item (2).last_evaluated_item.is_error then
 					last_evaluated_item := arguments.item (2).last_evaluated_item
 				else
-					an_atomic_value ?= arguments.item (2).last_evaluated_item
+					an_item := arguments.item (2).last_evaluated_item
 					check
-						second_argument_convertible_to_double: an_atomic_value /= Void and then	an_atomic_value.is_convertible (type_factory.double_type)
+						second_argument_convertible_to_double: an_item.is_atomic_value and then	an_item.as_atomic_value.is_convertible (type_factory.double_type)
 						-- static typing
 					end
-					a_double_value ?= an_atomic_value.convert_to_type (type_factory.double_type)
-					check
-						second_argument_is_double: a_double_value /= Void
-					end
+					a_double_value := an_item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value
 					a_starting_position := a_double_value.rounded_value.value.truncated_to_integer
 					if arguments.count = 3 then
 						arguments.item (3).evaluate_item (a_context)
 						if arguments.item (3).last_evaluated_item.is_error then
 							last_evaluated_item := arguments.item (3).last_evaluated_item
 						else
-							an_atomic_value ?= arguments.item (3).last_evaluated_item
+							an_item := arguments.item (3).last_evaluated_item
 							check
-								third_argument_convertible_to_double:	an_atomic_value /= Void and then	an_atomic_value.is_convertible (type_factory.double_type)
+								third_argument_convertible_to_double:	an_item.is_atomic_value and then	an_item.as_atomic_value.is_convertible (type_factory.double_type)
 								-- static typing
 							end
-							a_double_value ?= an_atomic_value.convert_to_type (type_factory.double_type)
-							check
-								third_argument_is_double: a_double_value /= Void
-							end
+							a_double_value := an_item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value
 							a_count := a_double_value.rounded_value.value.truncated_to_integer
 							if a_count < 1 then
 								a_count := 0

@@ -151,8 +151,7 @@ feature -- Events
 				a_duration := a_time.canonical_duration (start_time)
 			end
 			indentation := indentation + 1
-			a_node ?= a_current_item
-			if a_node = Void then
+			if not a_current_item.is_node then
 				if is_timing then
 					a_message := STRING_.concat (spaces (indentation), "<item time=%"")
 					a_message := STRING_.appended_string (a_message, a_duration.millisecond_count.out)
@@ -161,6 +160,7 @@ feature -- Events
 					a_message := STRING_.concat (spaces (indentation), "<item>")
 				end
 			else
+				a_node := a_current_item.as_node
 				a_message := STRING_.concat (spaces (indentation), "<node path=%"")
 				a_message := STRING_.appended_string (a_message, a_node.path)
 				a_message := STRING_.appended_string (a_message, "%" line=%"")
@@ -179,7 +179,6 @@ feature -- Events
 	trace_current_item_finish (a_current_item: XM_XPATH_ITEM) is
 			-- Trace leaving current item.
 		local
-			a_node: XM_XPATH_NODE
 			a_message: STRING
 			a_duration: DT_TIME_DURATION
 			a_time: DT_TIME		
@@ -189,12 +188,11 @@ feature -- Events
 				a_duration := a_time.canonical_duration (start_time)
 				reporter.report_info_message (STRING_.concat (spaces (indentation + 1), "<end time=%"" + a_duration.millisecond_count.out + "%"/>"))
 			end
-			a_node ?= a_current_item
-			if a_node = Void then
+			if not a_current_item.is_node then
 				a_message := STRING_.concat (spaces (indentation), "</item>")
 			else
 				a_message := STRING_.concat (spaces (indentation), "</node><!-- ")
-				a_message := STRING_.appended_string (a_message, a_node.path)
+				a_message := STRING_.appended_string (a_message, a_current_item.as_node.path)
 				a_message := STRING_.appended_string (a_message, " -->")
 			end
 			reporter.report_info_message (a_message)

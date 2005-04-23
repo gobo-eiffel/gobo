@@ -56,7 +56,22 @@ feature -- Access
 			end
 		ensure
 			description_not_void: Result /= Void
-			end
+		end
+
+	is_simple_type: BOOLEAN is
+			-- Is `Current' a simple type?
+		do
+			Result := False
+		end
+
+	as_simple_type: XM_XPATH_SIMPLE_TYPE is
+			-- `Current' seen as a simple type
+		require
+			simple_type: is_simple_type
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
 
 invariant
 

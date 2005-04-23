@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		do
 			child := a_child; adopt_child_expression (child)
 			compute_special_properties
-			initialize
+			initialized := True
 			create properties.make_with_equality_testers (3, string_equality_tester, string_equality_tester)
 		end
 
@@ -221,8 +221,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	trace_properties_not_void: properties /= Void
-	child_not_void: child /= Void
+	trace_properties_not_void: initialized implies properties /= Void
+	child_not_void: initialized implies child /= Void
 
 end
 	

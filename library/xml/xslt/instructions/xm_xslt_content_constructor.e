@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			separator_expression := a_separator_expression
 			adopt_child_expression (separator_expression)
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			select_expression_set: select_expression = a_select_expression
 			separator_expression_set: separator_expression = a_separator_expression
@@ -198,8 +198,8 @@ feature {NONE} -- Implementation
 				if an_item.is_error then
 					last_evaluated_item := an_item
 				else
-					a_node ?= an_item
-					if a_node /= Void then
+					if an_item.is_node then
+						a_node := an_item.as_node
 						if a_node.node_type = Text_node then
 							a_text := a_node.string_value
 							if a_text.count > 0 then
@@ -266,8 +266,8 @@ feature {NONE} -- Implementation
 	
 invariant
 
-	select_expression_not_void: select_expression /= Void
-	separator_expression: separator_expression /= Void
+	select_expression_not_void: initialized implies select_expression /= Void
+	separator_expression: initialized implies separator_expression /= Void
 
 end
 

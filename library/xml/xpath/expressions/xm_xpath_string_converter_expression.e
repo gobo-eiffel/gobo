@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, promote, sub_expressions, evaluate_item, same_expression
+			simplify, promote, sub_expressions, evaluate_item, same_expression,
+			is_string_converter_expression, as_string_converter_expression
 		end
 
 creation
@@ -32,14 +33,26 @@ feature {NONE} -- Initialization
 		do
 			base_expression := a_base_expression
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			base_expression_set: base_expression = a_base_expression
 			static_properties_computed: are_static_properties_computed			
 		end
 
 feature -- Access
-	
+
+	is_string_converter_expression: BOOLEAN is
+			-- Is `Current' a string converter expression?
+		do
+			Result := True
+		end
+
+	as_string_converter_expression: XM_XPATH_STRING_CONVERTER_EXPRESSION is
+			-- `Current' seen as a string converter expression
+		do
+			Result := Current
+		end
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
@@ -65,12 +78,9 @@ feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			a_string_converter: XM_XPATH_STRING_CONVERTER_EXPRESSION 
 		do
-			a_string_converter ?= other
-			if a_string_converter /= Void then
-				Result := base_expression.same_expression (a_string_converter.base_expression)
+			if other.is_string_converter_expression then
+				Result := base_expression.same_expression (other.as_string_converter_expression.base_expression)
 			end
 		end
 

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ITEM
 		redefine
-			as_value
+			as_item_value, is_node, as_node
 		end
 
 	XM_XPATH_SHARED_TYPE_FACTORY
@@ -41,6 +41,48 @@ inherit
 		--  along with additional features to make life easier.
 
 feature -- Access
+	
+	is_node: BOOLEAN is
+			-- Is `Current' a node?
+		do
+			Result := True
+		end
+
+	as_node: XM_XPATH_NODE is
+			-- `Current' seen as a node
+		do
+			Result := Current
+		end
+
+	is_tiny_node: BOOLEAN is
+			-- Is `Current' a tiny-tree node?
+		do
+			Result := False
+		end
+
+	as_tiny_node: XM_XPATH_TINY_NODE is
+			-- `Current' seen as a tiny-tree node
+		require
+			tiny_node: is_tiny_node
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)			
+		end
+
+	is_tree_node: BOOLEAN is
+			-- Is `Current' a tree node?
+		do
+			Result := False
+		end
+
+	as_tree_node: XM_XPATH_TREE_NODE is
+			-- `Current' seen as a tree node
+		require
+			tree_node: is_tree_node
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)			
+		end
 
 	document: XM_XPATH_DOCUMENT is
 			-- Document that owns this node
@@ -360,7 +402,9 @@ feature -- Access
 					std.error.put_new_line
 				end
 				an_iterator.start
-				Result ?= an_iterator.item
+				if an_iterator.item.is_element then
+					Result := an_iterator.item.as_element
+				end
 			end
 		end
 	
@@ -530,8 +574,8 @@ feature -- Status setting
 
 feature -- Conversion
 	
-	as_value: XM_XPATH_VALUE is
-			-- Convert to a value
+	as_item_value: XM_XPATH_VALUE is
+			-- `Current' seen as a value
 		do
 			create {XM_XPATH_SINGLETON_NODE} Result.make (Current)
 		end

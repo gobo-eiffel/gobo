@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			content := a_content
 			adopt_child_expression (content)
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			is_text_only: is_text_only = text_only
@@ -214,8 +214,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	base_uri: base_uri /= Void
-	content_not_void: content /= Void
+	base_uri: initialized implies base_uri /= Void
+	content_not_void: initialized implies content /= Void
 
 end
 

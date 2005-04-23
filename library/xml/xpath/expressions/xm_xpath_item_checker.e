@@ -17,7 +17,8 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, analyze, create_iterator, evaluate_item, item_type, same_expression
+			simplify, analyze, create_iterator, evaluate_item, item_type,
+			same_expression, is_item_checker, as_item_checker
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -35,12 +36,12 @@ feature {NONE} -- Initialization
 				role_locator_not_void: a_role_locator /= Void
 				item_type_not_void: an_item_type /= Void
 		do
+			error_code := "XPDY0050" -- for genuine "treat as" expressions
 			make_unary (a_sequence)
 			role_locator := a_role_locator
 			required_item_type := an_item_type
 			compute_static_properties
 			adopt_child_expression (base_expression)
-			initialize
 		ensure
 			base_expression_set: base_expression = a_sequence
 			role_locator_set: role_locator = a_role_locator
@@ -55,6 +56,21 @@ feature -- Access
 	
 	role_locator: XM_XPATH_ROLE_LOCATOR
 			-- Role locator for error messages
+
+	error_code: STRING
+			-- Error code to be reported
+
+	is_item_checker: BOOLEAN is
+			-- Is `Current' an item checker?
+		do
+			Result := True
+		end
+
+	as_item_checker: XM_XPATH_ITEM_CHECKER is
+			-- `Current' seen as an item checker
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
@@ -73,8 +89,8 @@ feature -- Comparison
 		local
 			other_checker: XM_XPATH_ITEM_CHECKER
 		do
-			other_checker ?= other
-			if other_checker /= Void then
+			if other.is_item_checker then
+				other_checker := other.as_item_checker
 				Result := base_expression.same_expression (other_checker.base_expression) 
 					and then other_checker.required_item_type = required_item_type
 			end
@@ -156,6 +172,18 @@ feature -- Evaluation
 			create last_mapped_item.make_item (an_item)
 		end
 
+feature -- Element change
+
+	set_error_code (an_error_code: like error_code) is
+			-- Set error code to be reported.
+		require
+			error_code_length_eight: an_error_code /= Void and then an_error_code.count = 8
+		do
+			error_code := an_error_code
+		ensure
+			error_code_set: error_code = an_error_code
+		end
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 	
 	display_operator: STRING is
@@ -180,14 +208,15 @@ feature {NONE} -- Implementation
 				a_message := STRING_.appended_string (a_message, required_item_type.conventional_name)
 				a_message := STRING_.appended_string (a_message, "; supplied value is ")
 				a_message := STRING_.appended_string (a_message, an_item.item_type.conventional_name)
-				an_item.set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
+				an_item.set_last_error_from_string (a_message, Xpath_errors_uri, error_code, Type_error)
 			end
 		end
 
 invariant
 
-	role_locator_not_void: role_locator /= void
-	item_type_not_void: required_item_type /= Void
+	role_locator_not_void: initialized implies role_locator /= void
+	item_type_not_void: initialized implies required_item_type /= Void
+	error_code_length_eight: error_code /= Void and then error_code.count = 8
 
 end
 

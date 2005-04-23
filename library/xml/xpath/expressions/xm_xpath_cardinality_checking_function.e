@@ -62,13 +62,11 @@ feature -- Evaluation
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		local
-			a_stopper: XM_XPATH_OBJECT_VALUE
 			a_position: INTEGER
 			an_invalid_item: XM_XPATH_INVALID_ITEM
 		do
 			a_position := sequence_iterator.index
-			a_stopper ?= an_item
-			if a_stopper /= Void then
+			if an_item.is_object_value then
 				if a_position = 1 then
 					create an_invalid_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
 																											role_locator.message),  role_locator.namespace_uri, role_locator.error_code, Type_error)

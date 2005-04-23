@@ -15,6 +15,9 @@ class XM_XPATH_ATOMIC_TYPE
 inherit
 
 	XM_XPATH_SIMPLE_TYPE
+		redefine
+			is_atomic_type, as_atomic_type
+		end
 
 	XM_XPATH_TYPE
 
@@ -47,23 +50,36 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
+	is_atomic_type: BOOLEAN is
+			-- Is `Current' an atomic type?
+		do
+			Result := True
+		end
+
+	as_atomic_type: XM_XPATH_ATOMIC_TYPE is
+			-- `Current' seen as an atomic type
+		do
+			Result := Current
+		end
+
+	common_atomic_type: XM_XPATH_ATOMIC_TYPE is
+			-- Lowest common super-type
+		do
+			Result := Current
+		end
+
 	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
 			-- Does `an_item' conform to `Current'?
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_atomic_type: XM_XPATH_ATOMIC_TYPE
 		do
-			an_atomic_value ?= an_item
-			if an_atomic_value /= Void then
-				an_atomic_type ?= an_atomic_value.item_type
-					check
-						atomic_type: an_atomic_type /= Void
-						-- Atomic values have atomic types
-					end
-				if fingerprint = an_atomic_type.fingerprint then
+			if an_item.is_atomic_value then
+				an_atomic_value := an_item.as_atomic_value
+				if fingerprint = an_atomic_value.item_type.fingerprint then
 					Result := True
 				else
-					Result := is_promotable (an_item.item_type, Current) or else is_sub_type (an_item.item_type, Current)
+					Result := is_sub_type (an_item.item_type, Current)
 				end
 			end
 		end
@@ -81,14 +97,14 @@ feature -- Access
 	primitive_type: INTEGER is
 			-- Primitive type corresponding to this item type
 		local
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
+			a_super_type: XM_XPATH_ITEM_TYPE
 		do
 			if type_factory.is_primitive_type (fingerprint) then
 				Result := fingerprint
 			else
-				an_atomic_type ?= super_type
-				if an_atomic_type /= Void then
-					Result := an_atomic_type.primitive_type
+				a_super_type := super_type
+				if a_super_type.is_atomic_type then
+					Result := a_super_type.as_atomic_type.primitive_type
 				else
 					Result := fingerprint
 				end
@@ -105,11 +121,8 @@ feature -- Comparison
 
 	is_same_type (other: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `other' the same type as `Current'?
-		local
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
 		do
-			an_atomic_type ?= other
-			Result := an_atomic_type /= Void and then an_atomic_type.fingerprint = fingerprint
+			Result := other.is_atomic_type and then other.fingerprint = fingerprint
 		end
 
 feature -- Status report

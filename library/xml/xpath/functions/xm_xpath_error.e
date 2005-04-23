@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "error"
+			name := "error"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 0
 			maximum_argument_count := 3
 			create arguments.make (3)
@@ -81,7 +81,6 @@ feature -- Evaluation
 			a_namespace_uri, an_error_code, a_description: STRING
 			an_item: XM_XPATH_ITEM
 			a_qname: XM_XPATH_QNAME_VALUE
-			a_string_value: XM_XPATH_STRING_VALUE
 			an_error_sequence: XM_XPATH_VALUE
 			an_error_value: XM_XPATH_ERROR_VALUE
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -102,11 +101,11 @@ feature -- Evaluation
 					a_description := an_item.error_value.description
 					an_error_sequence := an_item.error_value.value
 				else
-					a_qname ?= an_item
 					check
-						qname: a_qname /= Void
+						qname: an_item.is_qname_value
 						-- static typing
 					end
+					a_qname := an_item.as_qname_value
 					a_namespace_uri := a_qname.namespace_uri
 					an_error_code := a_qname.local_name
 				end
@@ -120,12 +119,11 @@ feature -- Evaluation
 					a_description := an_item.error_value.description
 					an_error_sequence := an_item.error_value.value
 				else
-					a_string_value ?= an_item
 					check
-						description: a_string_value /= Void
+						description: an_item.is_string_value
 						-- static typing
 					end
-					a_description := a_string_value.string_value
+					a_description := an_item.as_string_value.string_value
 				end
 			end
 			if arguments.count = 3 then

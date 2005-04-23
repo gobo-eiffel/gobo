@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TREE_NODE]
 		redefine
-			start
+			start, as_node_iterator
 		end
 
 	XM_XPATH_TREE_ENUMERATION
@@ -35,24 +35,27 @@ feature {NONE} -- Initialization
 			starting_node_not_void: a_starting_node /= Void
 			node_test_not_void: a_node_test /= Void
 		local
-			a_node: XM_XPATH_TREE_NODE
+			a_tree_node: XM_XPATH_TREE_NODE
+			a_node: XM_XPATH_NODE
 		do
 			make_enumeration (a_starting_node, a_node_test)
-			root ?= starting_node.document_root
-				check
-					root_not_void: root /= Void
-				end
+			check
+				root_not_void: starting_node.document_root /= Void and then starting_node.document_root.is_document
+			end
+			root := starting_node.document_root.as_tree_node.as_tree_document
 			if a_starting_node.node_type = Attribute_node or else a_starting_node.node_type = Namespace_node then
 				next_node := starting_node.parent.next_node_in_document_order (root)
 			else
 				from
-					a_node := a_starting_node
+					a_tree_node := a_starting_node
 				until
-					next_node /= Void or else a_node = Void
+					next_node /= Void or else a_tree_node = Void
 				loop
-					next_node ?= a_node.next_sibling
-					if next_node = Void then
-						a_node := a_node.parent
+					a_node := a_tree_node.next_sibling
+					if a_node = Void then
+						a_tree_node := a_tree_node.parent
+					else
+						next_node := a_node.as_tree_node
 					end
 				end
 			end
@@ -66,6 +69,17 @@ feature {NONE} -- Initialization
 		ensure
 			starting_node_set: starting_node = a_starting_node
 			test_set: node_test = a_node_test
+		end
+
+feature -- Access
+
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- Does `Current' yield a node_sequence?	
+		local
+			a_tree_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TREE_NODE]
+		do
+			a_tree_node_iterator ?= ANY_.to_any (Current)
+			Result := a_tree_node_iterator
 		end
 
 feature -- Cursor movement

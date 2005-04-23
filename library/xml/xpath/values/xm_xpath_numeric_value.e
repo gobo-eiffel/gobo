@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ATOMIC_VALUE
 		redefine
-			calculate_effective_boolean_value
+			calculate_effective_boolean_value, is_numeric_value, as_numeric_value
 		end
 
 	XM_XPATH_TOKENS
@@ -36,32 +36,33 @@ feature -- Access
 			convertible_to_double: is_double
 		deferred
 		end
+	
+	is_numeric_value: BOOLEAN is
+			-- Is `Current' a numeric value?
+		do
+			Result := True
+		end
+
+	as_numeric_value: XM_XPATH_NUMERIC_VALUE is
+			-- `Current' seen as a numeric value
+		do
+			Result := Current
+		end
 
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
-		local
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			an_integer_value, another_integer_value: XM_XPATH_INTEGER_VALUE
-			a_decimal_value, another_decimal_value: XM_XPATH_DECIMAL_VALUE
 		do
-			a_numeric_value ?= other
-			if a_numeric_value = Void then
+			if not other.is_numeric_value then
 				Result := False
 			else
-				an_integer_value ?= Current
-				another_integer_value ?= other
-				if an_integer_value /= Void and then another_integer_value /= Void then
-					Result := an_integer_value.value.is_equal (another_integer_value.value)
+				if is_integer_value and then other.is_integer_value then
+					Result := as_integer_value.value.is_equal (other.as_integer_value.value)
+				elseif is_decimal_value and then other.is_decimal_value then
+						Result := as_decimal_value.value.is_equal (other.as_decimal_value.value)
 				else
-					a_decimal_value ?= Current
-					another_decimal_value ?= other
-					if a_decimal_value /= Void and then another_decimal_value /= Void then
-						Result := a_decimal_value.value.is_equal (another_decimal_value.value)
-					else
-						Result := as_double.is_equal (a_numeric_value.as_double)
-					end
+					Result := as_double.is_equal (other.as_numeric_value.as_double)
 				end
 			end
 		end
@@ -69,22 +70,16 @@ feature -- Comparison
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
 			-- Compare `Current' to `other'
 		local
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 			a_double_value, another_double_value: DOUBLE
 		do
-			a_numeric_value ?= other
-				check
-					a_numeric_value_not_void: a_numeric_value /= Void
-					-- From pre-condition `arte_comparable'
-				end
 
 			-- This is the default implementation.
 			-- Descendant classes can avoid the conversion to a double,
 			--  when comparing to another number of the same type.
 
 			a_double_value := as_double
-			another_double_value := a_numeric_value.as_double
-			if a_double_value = another_double_value then -- Floating poinmt equality test! Hm. Exact comparison?
+			another_double_value := other.as_numeric_value.as_double
+			if a_double_value = another_double_value then -- Floating point equality test! Hm. Exact comparison?
 				Result := 0
 			elseif a_double_value > another_double_value then
 				Result := 1
@@ -97,11 +92,8 @@ feature -- Status_report
 
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
-		local
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
-			a_numeric_value ?= other
-			Result := a_numeric_value /= Void
+			Result := other.is_numeric_value
 		end
 
 	is_nan: BOOLEAN is

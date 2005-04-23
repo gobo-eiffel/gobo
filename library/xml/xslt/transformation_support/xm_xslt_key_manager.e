@@ -110,7 +110,7 @@ feature -- Access
 					a_list := an_index.map.item (a_key_value)
 					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} last_key_sequence.make (a_list)
 				else
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_key_sequence.make
+					create {XM_XPATH_EMPTY_ITERATOR} last_key_sequence.make
 				end
 			end
 		ensure
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 			collator: a_collator /= Void
 			context_not_void: a_context /= Void
 		local
-			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
+			a_singleton_iterator: XM_XPATH_SINGLETON_NODE_ITERATOR
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_atomic_value, a_value: XM_XPATH_ATOMIC_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE

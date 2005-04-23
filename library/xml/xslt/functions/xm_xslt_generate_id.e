@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplify, evaluate_item
+			simplify, evaluate_item, is_generate_id_function
 		end
 
 creation
@@ -28,15 +28,22 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "generate-id"
+			name := "generate-id"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
+
+	is_generate_id_function: BOOLEAN is
+			-- Is `Current' an XSLT generate-id() function?
+		do
+			Result := True
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
@@ -82,10 +89,10 @@ feature -- Evaluation
 			if an_item = Void then
 				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 			elseif not an_item.is_error then
-				a_node ?= an_item
-				if a_node = Void then
+				if not an_item.is_node then
 					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 				else
+					a_node := an_item.as_node
 					if a_node.generated_id = Void then
 						a_node.generate_id
 					end

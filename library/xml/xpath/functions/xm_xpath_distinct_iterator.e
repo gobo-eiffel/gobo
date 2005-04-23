@@ -60,7 +60,6 @@ feature -- Cursor movement
 	forth is
 			-- Move to next position
 		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_item: XM_XPATH_ITEM
 			a_comparison_key: XM_XPATH_COMPARISON_KEY
 		do
@@ -79,19 +78,18 @@ feature -- Cursor movement
 				if an_item.is_error then
 					item := an_item
 				else
-					an_atomic_value ?= an_item
 					check
-						item_is_atomic: an_atomic_value /= Void
+						item_is_atomic: an_item.is_atomic_value
 						-- static typing in XM_XPATH_DISTINCT_VALUES
 					end
-					a_comparison_key := atomic_comparer.comparison_key (an_atomic_value)
+					a_comparison_key := atomic_comparer.comparison_key (an_item.as_atomic_value)
 					if values_seen.has (a_comparison_key) then
 						if not base_sequence.after then
 							base_sequence.forth
 						end
 					else
 						values_seen.force_new (a_comparison_key)
-						item := an_atomic_value
+						item := an_item.as_atomic_value
 					end
 				end
 			end

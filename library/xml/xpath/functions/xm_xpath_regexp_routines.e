@@ -40,20 +40,22 @@ feature {NONE} -- Implementation
 				arguments: arguments /= Void and then arguments.equality_tester.is_equal (expression_tester)
 		local
 			a_flags_string, a_key: STRING
+			an_expression: XM_XPATH_EXPRESSION
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			regexp_error_value := Void
 			if a_flag_argument_position = 0 then
 				a_flags_string := ""
 			else
-				a_string_value ?= arguments.item (a_flag_argument_position)
-				if a_string_value /= Void then
-					a_flags_string := normalized_flags_string (a_string_value.string_value)
+				an_expression := arguments.item (a_flag_argument_position)
+				if an_expression.is_string_value then
+					a_flags_string := normalized_flags_string (an_expression.as_string_value.string_value)
 				end
 			end
 			if a_flags_string /= Void then
-				a_string_value ?= arguments.item (2) -- the pattern
-				if a_string_value /= Void then
+				an_expression := arguments.item (2) -- the pattern
+				if an_expression.is_string_value then
+					a_string_value := an_expression.as_string_value
 					a_key := composed_key (a_string_value.string_value, a_flags_string)
 					regexp_cache_entry :=  shared_regexp_cache.item (a_key)
 					if regexp_cache_entry = Void then

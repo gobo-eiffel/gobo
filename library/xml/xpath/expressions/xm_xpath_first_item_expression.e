@@ -32,7 +32,6 @@ feature {NONE} -- Initialization
 		do
 			make_unary (a_base_expression)
 			compute_static_properties
-			initialize
 		ensure
 			static_properties_computed: are_static_properties_computed
 			base_expression_set: base_expression = a_base_expression

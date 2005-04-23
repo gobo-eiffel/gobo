@@ -16,18 +16,41 @@ inherit
 
 	XM_XPATH_STRING_VALUE
 		redefine
-			display, convert_to_type, item_type, is_comparable
+			display, convert_to_type, item_type, is_comparable, is_string_value, as_string_value, is_untyped_atomic, as_untyped_atomic
 		end
 
 	-- N.B. Inheritance from XM_XPATH_STRING_VALUE is an implementation convenience;
 	-- xdt:untypedAtomic is NOT a sub-type of xs:string
-	-- TODO - factor out the common implementation (all of string-value??) to tremove the sub-typing relationship
+	-- TODO - factor out the common implementation (all of string-value??) to remove the sub-typing relationship ? - maybe not, as is_string_value = False
 	
 creation
 
 	make
 
 feature -- Access
+	
+	is_string_value: BOOLEAN is
+			-- Is `Current' a string value?
+		do
+			Result := False
+		end
+
+	as_string_value: XM_XPATH_STRING_VALUE is
+			-- `Current' seen as a string value
+		do
+		end
+
+	is_untyped_atomic: BOOLEAN is
+			-- Is `Current' an untyped atomic value?
+		do
+			Result := True
+		end
+
+	as_untyped_atomic: XM_XPATH_UNTYPED_ATOMIC_VALUE is
+			-- `Current' seen as an untyped atomic
+		do
+			Result := Current
+		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type
@@ -46,19 +69,12 @@ feature -- Comparison
 		require
 			atomic_value_valid: other /= Void and then is_comparable (other)
 			collator_not_void: a_collator /= Void
-		local
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
-			a_numeric_value ?= other
-			if a_numeric_value /= Void then
+			if other.is_numeric_value then
 				if double_value = Void then
-					double_value ?= convert_to_type (type_factory.double_type)
-						check
-							double_value_not_void: double_value /= Void
-							-- because is_comparable
-						end
+					double_value := convert_to_type (type_factory.double_type).as_double_value
 				end
-				Result := double_value.three_way_comparison (a_numeric_value)
+				Result := double_value.three_way_comparison (other.as_numeric_value)
 			else
 				Result := a_collator.three_way_comparison (string_value, other.string_value)
 			end
@@ -70,11 +86,8 @@ feature -- Status report
 
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
 			-- Is `other' comparable to `Current'?
-		local
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
-			a_numeric_value ?= other
-			if a_numeric_value /= Void then
+			if other.is_numeric_value then
 				if double_value /= Void then
 					Result := True
 				else
@@ -115,11 +128,7 @@ feature -- Conversion
 					
 					-- Cache the result
 					
-					double_value ?= Precursor (type_factory.double_type)
-						check
-							double_value_not_void: double_value /= Void
-							-- As is_convertible (Double_type) will return the same result for both String_type and Untyped_atomic_type
-						end
+					double_value := Precursor (type_factory.double_type).as_double_value
 					Result := double_value 
 				end
 			else

@@ -15,7 +15,10 @@ class XM_XPATH_TINY_ATTRIBUTE_ENUMERATION
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [XM_XPATH_TINY_ATTRIBUTE]
-			
+		redefine
+			as_node_iterator
+		end
+
 	XM_XPATH_TYPE
 
 creation
@@ -43,13 +46,23 @@ feature {NONE} -- Initialization
 			test_set: node_test = a_node_test
 		end
 
+feature -- Access
+
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- `Current' seen as a node iterator
+		local
+			a_tiny_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_TINY_ATTRIBUTE]
+		do
+			a_tiny_node_iterator ?= ANY_.to_any (Current)
+			Result := a_tiny_node_iterator
+		end
+
 feature -- Cursor movement
 
 	forth is
 			-- Move to next position
 		local
 			a_node: INTEGER
-			a_name_test: XM_XPATH_NAME_TEST
 		do
 			if attribute_index = -1 then
 				current_item := Void
@@ -62,8 +75,7 @@ feature -- Cursor movement
 				else
 					a_node := attribute_index
 					attribute_index := attribute_index + 1
-					a_name_test ?= node_test
-					if a_name_test /= Void then
+					if node_test.is_name_test then
 						attribute_index := -1 -- there can only be one match, so abandon further searching
 					end
 					if document.is_attribute_number_valid (a_node) then current_item := document.retrieve_attribute_node (a_node) end

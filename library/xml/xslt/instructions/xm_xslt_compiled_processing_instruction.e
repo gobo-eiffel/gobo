@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			instruction_name := "xsl:processing-instruction"
 			name := a_name;  adopt_child_expression (name)
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			name_set: name = a_name
@@ -169,7 +169,7 @@ feature {XM_XSLT_EXPRESSION} -- Restricted
 
 invariant
 
-	name_not_void: name /= Void
+	name_not_void: initialized implies name /= Void
 	
 end
 	

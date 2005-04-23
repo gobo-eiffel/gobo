@@ -44,6 +44,8 @@ inherit
 
 	KL_IMPORTED_INTEGER_ROUTINES
 
+	KL_IMPORTED_ANY_ROUTINES
+
 feature -- Access
 
 	item_type: XM_XPATH_ITEM_TYPE is
@@ -58,6 +60,62 @@ feature -- Access
 		deferred
 		ensure
 			item_type_not_void: Result /= Void
+		end
+
+	atomized_item_type (always_untyped: BOOLEAN): XM_XPATH_ITEM_TYPE is
+			-- Type of atomized items
+		local
+			a_base_type: XM_XPATH_ITEM_TYPE
+			a_node_kind_mask: INTEGER
+			finished: BOOLEAN
+			a_content_type: XM_XPATH_SCHEMA_TYPE
+		do
+			a_base_type := item_type
+			if a_base_type.is_atomic_type then
+				Result := a_base_type
+			elseif a_base_type.is_node_test then
+				if a_base_type.is_no_node_test then
+					Result := a_base_type
+					finished := True
+				else
+					a_node_kind_mask := a_base_type.as_node_test.node_kind_mask
+					if always_untyped then
+						
+						-- Some node-kinds always have a typed value that's a string
+						
+						if INTEGER_.bit_or (a_node_kind_mask, string_kinds) = string_kinds then
+							Result := type_factory.string_type
+							finished := True
+							
+							-- Some node-kinds are always untypedAtomic; some are conditionally so:
+							
+						elseif INTEGER_.bit_or (a_node_kind_mask, untyped_if_untyped_kinds) = untyped_if_untyped_kinds then
+							Result := type_factory.untyped_atomic_type
+							finished := True
+						end
+					else
+						if INTEGER_.bit_or (a_node_kind_mask, untyped_kinds) = untyped_kinds then
+							Result := type_factory.untyped_atomic_type
+							finished := True
+						end
+					end
+					if not finished then
+						a_content_type := a_base_type.as_node_test.content_type
+						if a_content_type.is_simple_type then
+							Result := a_content_type.as_simple_type.common_atomic_type
+						else
+
+							-- TODO: Complex types for schema-aware processor
+
+							Result := type_factory.untyped_atomic_type
+						end
+					end
+				end
+			else
+				Result := type_factory.any_atomic_type
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
@@ -80,13 +138,840 @@ feature -- Access
 		deferred
 		end
 
+	is_system_function: BOOLEAN is
+			-- Is `Current' an XPath system function?
+		do
+			Result := False
+		end
+
+	as_system_function: XM_XPATH_SYSTEM_FUNCTION is
+			-- `Current' seen as an XPath system function
+		require
+			system_function: is_system_function
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_unordered_function: BOOLEAN is
+			-- Is `Current' an XPath unordered() function?
+		do
+			Result := False
+		end
+
+	as_unordered_function: XM_XPATH_UNORDERED is
+			-- `Current' seen as an XPath unordered() function
+		require
+			unordered_function: is_unordered_function
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_not_function: BOOLEAN is
+			-- Is `Current' an XPath not() function?
+		do
+			Result := False
+		end
+
+	as_not_function: XM_XPATH_NOT is
+			-- `Current' seen as an XPath not() function
+		require
+			not_function: is_not_function
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_count_function: BOOLEAN is
+			-- Is `Current' an XPath count() function?
+		do
+			Result := False
+		end
+
+	as_count_function: XM_XPATH_COUNT is
+			-- `Current' seen as an XPath count() function
+		require
+			count_function: is_count_function
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_empty_function: BOOLEAN is
+			-- Is `Current' an XPath empty() function?
+		do
+			Result := False
+		end
+
+	as_empty_function: XM_XPATH_EMPTY is
+			-- `Current' seen as an XPath empty() function
+		require
+			empty_function: is_empty_function
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_exists_function: BOOLEAN is
+			-- Is `Current' XPath an exists() function?
+		do
+			Result := False
+		end
+
+	as_exists_function: XM_XPATH_EXISTS is
+			-- `Current' seen as an XPath exists() function
+		require
+			exists_function: is_exists_function
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_string_length_function: BOOLEAN is
+			-- Is `Current' XPath an string-length() function?
+		do
+			Result := False
+		end
+
+	as_string_length_function: XM_XPATH_STRING_LENGTH is
+			-- `Current' seen as an XPath string-length() function
+		require
+			string_length_function: is_string_length_function
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_string_function: BOOLEAN is
+			-- Is `Current' XPath an string() function?
+		do
+			Result := False
+		end
+
+	as_string_function: XM_XPATH_STRING is
+			-- `Current' seen as an XPath string() function
+		require
+			string_function: is_string_function
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_number_function: BOOLEAN is
+			-- Is `Current' XPath an number() function?
+		do
+			Result := False
+		end
+
+	as_number_function: XM_XPATH_NUMBER is
+			-- `Current' seen as an XPath number() function
+		require
+			number_function: is_number_function
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_generate_id_function: BOOLEAN is
+			-- Is `Current' an XSLT generate-id() function?
+		do
+			Result := False
+		end
+
+	is_last_function: BOOLEAN is
+			-- Is `Current' an XPath last() function?
+		do
+			Result := False
+		end
+
+	is_position_function: BOOLEAN is
+			-- Is `Current' an XPath position() function?
+		do
+			Result := False
+		end
+
+	is_value: BOOLEAN is
+			-- Is `Current' a value?
+		do
+			Result := False
+		end
+
+	as_value: XM_XPATH_VALUE is
+			-- `Current' seen as a value
+		require
+			value: is_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_atomic_value: BOOLEAN is
+			-- Is `Current' an atomic value?
+		do
+			Result := False
+		end
+
+	as_atomic_value: XM_XPATH_ATOMIC_VALUE is
+			-- `Current' seen as an atomic value
+		require
+			atomic_value: is_atomic_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_numeric_value: BOOLEAN is
+			-- Is `Current' a numeric value?
+		do
+			Result := False
+		end
+
+	as_numeric_value: XM_XPATH_NUMERIC_VALUE is
+			-- `Current' seen as a numeric value
+		require
+			numeric_value: is_numeric_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_integer_value: BOOLEAN is
+			-- Is `Current' an integer value?
+		do
+			Result := False
+		end
+
+	as_integer_value: XM_XPATH_INTEGER_VALUE is
+			-- `Current' seen as an integer value
+		require
+			integer_value: is_integer_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_decimal_value: BOOLEAN is
+			-- Is `Current' a decimal value?
+		do
+			Result := False
+		end
+
+	as_decimal_value: XM_XPATH_DECIMAL_VALUE is
+			-- `Current' seen as a decimal value
+		require
+			decimal_value: is_decimal_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_string_value: BOOLEAN is
+			-- Is `Current' a string value?
+		do
+			Result := False
+		end
+
+	as_string_value: XM_XPATH_STRING_VALUE is
+			-- `Current' seen as a string value
+		require
+			string_value: is_string_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_untyped_atomic: BOOLEAN is
+			-- Is `Current' an untyped atomic value?
+		do
+			Result := False
+		end
+
+	as_untyped_atomic: XM_XPATH_UNTYPED_ATOMIC_VALUE is
+			-- `Current' seen as an untyped atomic
+		require
+			untyped_atomic_value: is_untyped_atomic
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_qname_value: BOOLEAN is
+			-- Is `Current' a QName value?
+		do
+			Result := False
+		end
+
+	as_qname_value: XM_XPATH_QNAME_VALUE is
+			-- `Current' seen as a QName value
+		require
+			qname_value: is_qname_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_object_value: BOOLEAN is
+			-- Is `Current' a object value?
+		do
+			Result := False
+		end
+
+	as_object_value: XM_XPATH_OBJECT_VALUE is
+			-- `Current' seen as a object value
+		require
+			object_value: is_object_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_invalid_value: BOOLEAN is
+			-- Is `Current' an invalid value?
+		do
+			Result := False
+		end
+
+	as_invalid_value: XM_XPATH_INVALID_VALUE is
+			-- `Current' seen as an invalid value
+		require
+			invalid_value: is_invalid_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_boolean_value: BOOLEAN is
+			-- Is `Current' a boolean value?
+		do
+			Result := False
+		end
+
+	as_boolean_value: XM_XPATH_BOOLEAN_VALUE is
+			-- `Current' seen as a boolean value
+		require
+			boolean_value: is_boolean_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end	
+
+	is_any_uri: BOOLEAN is
+			-- Is `Current' an anyURI value?
+		do
+			Result := False
+		end
+
+	as_any_uri: XM_XPATH_ANY_URI_VALUE is
+			-- `Current' seen as an anyURI value
+		require
+			any_uri_value: is_any_uri
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_closure: BOOLEAN is
+			-- Is `Current' a closure?
+		do
+			Result := False
+		end
+
+	as_closure: XM_XPATH_CLOSURE is
+			-- `Current' seen as a closure
+		require
+			closure: is_closure
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_memo_closure: BOOLEAN is
+			-- Is `Current' a memo-closure?
+		do
+			Result := False
+		end
+
+	as_memo_closure: XM_XPATH_MEMO_CLOSURE is
+			-- `Current' seen as a closure
+		require
+			memo_closure: is_memo_closure
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_empty_sequence: BOOLEAN is
+			-- Is `Current' an empty sequence?
+		do
+			Result := False
+		end
+
+	as_empty_sequence: XM_XPATH_EMPTY_SEQUENCE is
+			-- `Current' seen as an empty_sequence
+		require
+			empty_sequence: is_empty_sequence
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_singleton_node: BOOLEAN is
+			-- Is `Current' a singleton node?
+		do
+			Result := False
+		end
+
+	as_singleton_node: XM_XPATH_SINGLETON_NODE is
+			-- `Current' seen as a singleton node
+		require
+			singleton_node: is_singleton_node
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_sequence_extent: BOOLEAN is
+			-- Is `Current' a sequence extent?
+		do
+			Result := False
+		end
+
+	as_sequence_extent: XM_XPATH_SEQUENCE_EXTENT is
+			-- `Current' seen as a sequence extent
+		require
+			sequence_extent: is_sequence_extent
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_sequence_value: BOOLEAN is
+			-- Is `Current' a sequence value?
+		do
+			Result := False
+		end
+
+	as_sequence_value: XM_XPATH_SEQUENCE_VALUE is
+			-- `Current' seen as a sequence value
+		require
+			sequence_value: is_sequence_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_computed_expression: BOOLEAN is
+			-- Is `Current' a computed expression?
+		do
+			Result := False
+		end
+
+	as_computed_expression: XM_XPATH_COMPUTED_EXPRESSION is
+			-- `Current' seen as a computed expression
+		require
+			computed_expression: is_computed_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_range_expression: BOOLEAN is
+			-- Is `Current' a range expression?
+		do
+			Result := False
+		end
+
+	as_range_expression: XM_XPATH_RANGE_EXPRESSION is
+			-- `Current' seen as a range expression
+		require
+			range_expression: is_range_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_arithmetic_expression: BOOLEAN is
+			-- Is `Current' a arithmetic expression?
+		do
+			Result := False
+		end
+
+	as_arithmetic_expression: XM_XPATH_ARITHMETIC_EXPRESSION is
+			-- `Current' seen as a arithmetic expression
+		require
+			arithmetic_expression: is_arithmetic_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_unary_expression: BOOLEAN is
+			-- Is `Current' a unary expression?
+		do
+			Result := False
+		end
+
+	as_unary_expression: XM_XPATH_UNARY_EXPRESSION is
+			-- `Current' seen as a unary expression
+		require
+			unary_expression: is_unary_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_cast_expression: BOOLEAN is
+			-- Is `Current' a cast expression?
+		do
+			Result := False
+		end
+
+	as_cast_expression: XM_XPATH_CAST_EXPRESSION is
+			-- `Current' seen as a cast expression
+		require
+			cast_expression: is_cast_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_castable_expression: BOOLEAN is
+			-- Is `Current' a castable expression?
+		do
+			Result := False
+		end
+
+	as_castable_expression: XM_XPATH_CASTABLE_EXPRESSION is
+			-- `Current' seen as a castable expression
+		require
+			castable_expression: is_castable_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_instance_of_expression: BOOLEAN is
+			-- Is `Current' an instance-of expression?
+		do
+			Result := False
+		end
+
+	as_instance_of_expression: XM_XPATH_INSTANCE_OF_EXPRESSION is
+			-- `Current' seen as an instance-of expression
+		require
+			instance_of_expression: is_instance_of_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_string_converter_expression: BOOLEAN is
+			-- Is `Current' a string converter expression?
+		do
+			Result := False
+		end
+
+	as_string_converter_expression: XM_XPATH_STRING_CONVERTER_EXPRESSION is
+			-- `Current' seen as a string converter expression
+		require
+			string_converter_expression: is_string_converter_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_variable_reference: BOOLEAN is
+			-- Is `Current' a variable reference?
+		do
+			Result := False
+		end
+
+	as_variable_reference: XM_XPATH_VARIABLE_REFERENCE is
+			-- `Current' seen as a variable reference
+		require
+			variable_reference: is_variable_reference
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_numeric_promoter: BOOLEAN is
+			-- Is `Current' a numeric promoter?
+		do
+			Result := False
+		end
+
+	as_numeric_promoter: XM_XPATH_NUMERIC_PROMOTER is
+			-- `Current' seen as a numeric promoter
+		require
+			numeric_promoter: is_numeric_promoter
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_document_sorter: BOOLEAN is
+			-- Is `Current' a document sorter?
+		do
+			Result := False
+		end
+
+	as_document_sorter: XM_XPATH_DOCUMENT_SORTER is
+			-- `Current' seen as a document sorter
+		require
+			document_sorter: is_document_sorter
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_reverser: BOOLEAN is
+			-- Is `Current' a reverser?
+		do
+			Result := False
+		end
+
+	as_reverser: XM_XPATH_REVERSER is
+			-- `Current' seen as a reverser
+		require
+			reverser: is_reverser
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end	
+
+	is_assignation: BOOLEAN is
+			-- Is `Current' a assignation?
+		do
+			Result := False
+		end
+
+	as_assignation: XM_XPATH_ASSIGNATION is
+			-- `Current' seen as a assignation
+		require
+			assignation: is_assignation
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_axis_expression: BOOLEAN is
+			-- Is `Current' an axis expression?
+		do
+			Result := False
+		end
+
+	as_axis_expression: XM_XPATH_AXIS_EXPRESSION is
+			-- `Current' seen as an axis expression
+		require
+			axis_expression: is_axis_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_let_expression: BOOLEAN is
+			-- Is `Current' a let expression?
+		do
+			Result := False
+		end
+
+	as_let_expression: XM_XPATH_LET_EXPRESSION is
+			-- `Current' seen as a let expression
+		require
+			let_expression: is_let_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_append_expression: BOOLEAN is
+			-- Is `Current' a append expression?
+		do
+			Result := False
+		end
+
+	as_append_expression: XM_XPATH_APPEND_EXPRESSION is
+			-- `Current' seen as a append expression
+		require
+			append_expression: is_append_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_binary_expression: BOOLEAN is
+			-- Is `Current' a binary expression?
+		do
+			Result := False
+		end
+
+	as_binary_expression: XM_XPATH_BINARY_EXPRESSION is
+			-- `Current' seen as a binary expression
+		require
+			binary_expression: is_binary_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_boolean_expression: BOOLEAN is
+			-- Is `Current' a boolean expression?
+		do
+			Result := False
+		end
+
+	as_boolean_expression: XM_XPATH_BOOLEAN_EXPRESSION is
+			-- `Current' seen as a boolean expression
+		require
+			boolean_expression: is_boolean_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_tail_expression: BOOLEAN is
+			-- Is `Current' a tail expression?
+		do
+			Result := False
+		end
+
+	as_tail_expression: XM_XPATH_TAIL_EXPRESSION is
+			-- `Current' seen as a tail expression
+		require
+			tail_expression: is_tail_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_root_expression: BOOLEAN is
+			-- Is `Current' a root expression?
+		do
+			Result := False
+		end
+
+	as_root_expression: XM_XPATH_ROOT_EXPRESSION is
+			-- `Current' seen as a root expression
+		require
+			root_expression: is_root_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_parent_node_expression: BOOLEAN is
+			-- Is `Current' a parent node expression?
+		do
+			Result := False
+		end
+
+	as_parent_node_expression: XM_XPATH_PARENT_NODE_EXPRESSION is
+			-- `Current' seen as a parent node expression
+		require
+			parent_node_expression: is_parent_node_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_path_expression: BOOLEAN is
+			-- Is `Current' a path expression?
+		do
+			Result := False
+		end
+
+	as_path_expression: XM_XPATH_PATH_EXPRESSION is
+			-- `Current' seen as a path expression
+		require
+			path_expression: is_path_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_filter_expression: BOOLEAN is
+			-- Is `Current' a filter expression?
+		do
+			Result := False
+		end
+
+	as_filter_expression: XM_XPATH_FILTER_EXPRESSION is
+			-- `Current' seen as a filter expression
+		require
+			filter_expression: is_filter_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_context_item: BOOLEAN is
+			-- Is `Current' a context-item expression?
+		do
+			Result := False
+		end
+
+	as_context_item: XM_XPATH_CONTEXT_ITEM_EXPRESSION is
+			-- `Current' seen as a context-item expression
+		require
+			context_item: is_context_item
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_last_expression: BOOLEAN is
+			-- Is `Current' an is-last expression?
+		do
+			Result := False
+		end
+
+	as_last_expression: XM_XPATH_IS_LAST_EXPRESSION is
+			-- `Current' seen as an is-last expression
+		require
+			last_expression: is_last_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_item_checker: BOOLEAN is
+			-- Is `Current' an item checker?
+		do
+			Result := False
+		end
+
+	as_item_checker: XM_XPATH_ITEM_CHECKER is
+			-- `Current' seen as an item checker
+		require
+			item_checker: is_item_checker
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_position_range: BOOLEAN is
+			-- Is `Current' a position range?
+		do
+			Result := False
+		end
+
+	as_position_range: XM_XPATH_POSITION_RANGE is
+			-- `Current' seen as a position range
+		require
+			position_range: is_position_range
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Are `Current' and `other' the same expression?
 		require
 			other_not_void: other /= Void
-			not_replaced: not was_expression_replaced
 		deferred
 		end
 
@@ -153,7 +1038,6 @@ feature -- Status report
 			-- Diagnostic print of expression structure to `std.error'
 		require
 			no_error: not is_error
-			not_replaced: not was_expression_replaced
 		deferred
 		end
 
@@ -229,6 +1113,9 @@ feature -- Status setting
 		do
 			debug ("XPath expression replacement")
 				std.error.put_string ("An " + an_expression.generating_type + " is about to be set as a replacement for an " + generating_type + "%N")
+			end
+			if an_expression.is_computed_expression then
+				an_expression.as_computed_expression.copy_location_identifier (Current)
 			end
 			replacement_expression := an_expression
 			was_expression_replaced := True
@@ -363,69 +1250,60 @@ feature -- Evaluation
 		local
 			a_length: INTEGER
 			an_item: XM_XPATH_ITEM
-			a_result_value: XM_XPATH_VALUE
+			a_binding: XM_XPATH_VALUE
 			a_closure: XM_XPATH_CLOSURE
 			an_extent: XM_XPATH_SEQUENCE_EXTENT
-			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
 			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 		do
 			last_evaluation := Void
-			a_result_value ?= Current
-			a_closure ?= Current
-			if a_result_value /= Void and then a_closure = Void then
-				last_evaluation := a_result_value
+			if is_value and then not is_closure then
+				last_evaluation := as_value
 			else
-				a_variable_reference ?= Current
-				if a_variable_reference /= Void then
+				if is_variable_reference then
+					a_variable_reference := as_variable_reference
 					a_variable_reference.evaluate_variable (a_context)
-					a_closure ?= a_variable_reference.last_evaluated_binding
-					if a_closure /= Void then
+					a_binding := a_variable_reference.last_evaluated_binding
+					if a_binding.is_closure then
+						a_closure := a_binding.as_closure
 						a_closure.create_iterator (Void)
 						create an_extent.make (a_closure.last_iterator)
 						last_evaluation := an_extent
 					else
-						a_result_value ?= a_variable_reference.last_evaluated_binding
-						if a_result_value /= Void then
-							last_evaluation := a_result_value
-						-- else NODE?
-						end
+						last_evaluation := a_binding
 					end
 				end
 				if last_evaluation = Void then
 					if is_iterator_supported then
 						create_iterator (a_context)
 						if not last_iterator.is_error then
-							an_empty_iterator ?= last_iterator
-							if an_empty_iterator /= Void then
+							if last_iterator.is_empty_iterator then
 								create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
+							elseif last_iterator.is_singleton_iterator then
+								a_singleton_iterator := last_iterator.as_singleton_iterator
+								a_singleton_iterator.forth
+								if not a_singleton_iterator.off then an_item := a_singleton_iterator.item end
+								if an_item = Void then
+									create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
+								elseif an_item.is_error then
+									create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
+								else
+									last_evaluation := an_item.as_item_value -- May still be `Void'
+								end
 							else
-								a_singleton_iterator ?= last_iterator
-								if a_singleton_iterator /= Void then
-									a_singleton_iterator.forth
-									if not a_singleton_iterator.off then an_item := a_singleton_iterator.item end
-									if an_item = Void then
-										create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
-									elseif an_item.is_error then
+								create an_extent.make (last_iterator)
+								a_length := an_extent.count
+								if a_length = 0 then
+									create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
+								elseif a_length = 1 then
+									an_item := an_extent.item_at (1)
+									if an_item.is_error then
 										create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
 									else
-										last_evaluation := an_item.as_value -- May still be `Void'
+										last_evaluation := an_item.as_item_value
 									end
 								else
-									create an_extent.make (last_iterator)
-									a_length := an_extent.count
-									if a_length = 0 then
-										create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
-									elseif a_length = 1 then
-										an_item := an_extent.item_at (1)
-										if an_item.is_error then
-											create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
-										else
-											last_evaluation := an_item.as_value
-										end
-									else
-										last_evaluation := an_extent
-									end
+									last_evaluation := an_extent
 								end
 							end
 						else
@@ -437,7 +1315,7 @@ feature -- Evaluation
 							if last_evaluated_item.is_error then
 								create {XM_XPATH_INVALID_VALUE} last_evaluation.make (last_evaluated_item.error_value)
 							else
-								last_evaluation := last_evaluated_item.as_value
+								last_evaluation := last_evaluated_item.as_item_value
 							end
 						end
 					else
@@ -548,7 +1426,28 @@ feature {XM_XPATH_EXPRESSION} -- Local
 
 	Supports_process: INTEGER is 4
 			-- `Current natively supports `process'
-	
+
+	string_kinds: INTEGER is
+			-- Node kinds whose typed value is always string
+		once
+			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Namespace_node), INTEGER_.bit_shift_left (1, Comment_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Processing_instruction_node))
+		end
+
+	untyped_kinds: INTEGER is
+			-- Node kinds whose typed value is always untypedAtomic
+		once
+			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Document_node), INTEGER_.bit_shift_left (1, Text_node))
+		end
+
+	untyped_if_untyped_kinds: INTEGER is
+			-- Node kinds whose typed value is conditionally untypedAtomic
+		once
+			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Document_node), INTEGER_.bit_shift_left (1, Text_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Element_node))
+			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Attribute_node))
+		end
+
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines
 		deferred
@@ -557,7 +1456,7 @@ feature {XM_XPATH_EXPRESSION} -- Local
 		end
 
 	set_unsorted (eliminate_duplicates: BOOLEAN) is
-			-- Remove unwanted sorting from an expression, at compile time
+			-- Remove unwanted sorting from an expression, at compile time.
 		require
 			not_in_error: not is_error
 			not_replaced: not was_expression_replaced
@@ -566,6 +1465,21 @@ feature {XM_XPATH_EXPRESSION} -- Local
 		do
 			create an_offer.make (Unordered, Void, Void, eliminate_duplicates, False)
 			promote (an_offer)
+		end
+
+	set_unsorted_if_homogeneous  (eliminate_duplicates: BOOLEAN) is
+			-- Remove unwanted sorting from an expression, at compile time,
+			--  but only if all nodes or all atomic values.
+		require
+			not_in_error: not is_error
+			not_replaced: not was_expression_replaced
+		local
+			an_offer: XM_XPATH_PROMOTION_OFFER
+		do
+			if not is_value and then not item_type.is_any_item_type then
+				create an_offer.make (Unordered, Void, Void, eliminate_duplicates, False)
+				promote (an_offer)
+			end
 		end
 
 	indentation (a_level: INTEGER): STRING is
@@ -592,6 +1506,7 @@ invariant
 
 	replacement_expression: was_expression_replaced implies replacement_expression /= Void
 	no_replacement: not was_expression_replaced implies replacement_expression = Void
+	value_or_computed_expression: is_value xor is_computed_expression
 
 end
 	

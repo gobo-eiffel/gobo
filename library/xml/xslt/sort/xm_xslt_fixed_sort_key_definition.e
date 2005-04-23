@@ -18,7 +18,7 @@ inherit
 		rename
 			make as old_make
 		redefine
-			reduced_definition
+			reduced_definition, is_fixed_sort_key, as_fixed_sort_key
 		end
 
 	XM_XPATH_STANDARD_NAMESPACES
@@ -88,6 +88,20 @@ feature -- Status report
 
 	is_error: BOOLEAN
 			-- Didi an error occur when binding the comparer?
+
+feature -- Conversion
+
+	is_fixed_sort_key: BOOLEAN is
+			-- Is `Current' a fixed_sort_key?
+		do
+			Result := True
+		end
+
+	as_fixed_sort_key: XM_XSLT_FIXED_SORT_KEY_DEFINITION is
+			-- `Current' seen as a fixed_sort_key
+		do
+			Result := Current
+		end
 
 feature {NONE} -- Implementation
 

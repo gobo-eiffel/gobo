@@ -23,7 +23,7 @@ inherit
 		undefine
 			copy, is_equal, item
 		redefine
-			item_type, calculate_effective_boolean_value
+			item_type, calculate_effective_boolean_value, is_sequence_extent, as_sequence_extent
 		end
 
 	DS_ARRAYED_LIST [XM_XPATH_ITEM]
@@ -110,7 +110,19 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
+
+	is_sequence_extent: BOOLEAN is
+			-- Is `Current' a sequence extent?
+		do
+			Result := True
+		end
+
+	as_sequence_extent: XM_XPATH_SEQUENCE_EXTENT is
+			-- `Current' seen as a sequence extent
+		do
+			Result := Current
+		end
+
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression
 		local
@@ -167,12 +179,11 @@ feature -- Comparison
 		local
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 			counter: INTEGER
-			an_item: XM_XPATH_ITEM
-			a_node, another_node: XM_XPATH_NODE
+			an_item, another_item: XM_XPATH_ITEM
 			a_value, another_value: XM_XPATH_ATOMIC_VALUE
 		do
-			a_sequence_extent ?= other
-			if a_sequence_extent /= Void then
+			if other.is_sequence_extent then
+				a_sequence_extent := other.as_sequence_extent
 				if count = a_sequence_extent.count then
 					from
 						Result := True
@@ -183,24 +194,21 @@ feature -- Comparison
 						Result = False or else counter > count
 					loop
 						an_item := item_at (counter)
-						a_node ?= an_item
-						if a_node /= Void then
-							another_node ?= a_sequence_extent.item_at (counter)
-							if another_node = Void then
+						if an_item.is_node then
+							another_item := a_sequence_extent.item_at (counter)
+							if not another_item.is_node then
 								Result := False
 							else
-								Result := a_node.is_same_node (another_node)
+								Result := an_item.as_node.is_same_node (another_item.as_node)
 							end
 						else
-							a_value ?= an_item
-								check
-									item_is_atomic_value: a_value /= Void
-								end
-							another_value ?= a_sequence_extent.item_at (counter)
-							if another_value = Void then
+							check
+								item_is_atomic_value: an_item.is_atomic_value
+							end
+							if not a_sequence_extent.item_at (counter).is_atomic_value then
 								Result := False
 							else
-								Result := a_value.same_expression (another_value)
+								Result := an_item.as_atomic_value.same_expression (a_sequence_extent.item_at (counter).as_atomic_value)
 							end
 						end
 
@@ -216,15 +224,13 @@ feature -- Status report
 			-- Is `Current' a node-sequence?
 		local
 			an_index: INTEGER
-			a_node: XM_XPATH_NODE
 		do
 			from
 				an_index := 1; Result := True
 			until
 				not Result or else an_index > count
 			loop
-				a_node ?= item_at (an_index)
-				Result := a_node /= Void
+				Result := item_at (an_index).is_node
 				an_index := an_index + 1
 			end
 		end
@@ -260,7 +266,7 @@ feature -- Evaluation
 				end
 			end
 			if count = 0 then
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 			else
 				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (Current)
 			end
@@ -279,7 +285,6 @@ feature -- Evaluation
 		local
 			a_node_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_ITEM]
-			a_node: XM_XPATH_NODE
 		do
 			create a_node_list.make (count)
 			from
@@ -289,12 +294,11 @@ feature -- Evaluation
 			until
 				a_cursor.after
 			loop
-				a_node ?= a_cursor.item
 				check
-					is_node: a_node /= Void
+					is_node: a_cursor.item.is_node
 					-- from pre-condition
 				end
-				a_node_list.put_last (a_node)
+				a_node_list.put_last (a_cursor.item.as_node)
 				a_cursor.forth
 			end
 			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (a_node_list)

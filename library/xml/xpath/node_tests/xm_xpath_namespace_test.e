@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			node_kind
+			node_kind, is_namespace_test, as_namespace_test
 		end
 
 	XM_XPATH_SHARED_NAME_POOL
@@ -59,6 +59,18 @@ feature -- Access
 			-- Mask of types of nodes matched
 		do
 			Result := INTEGER_.bit_shift_left (1, node_kind)
+		end
+
+	is_namespace_test: BOOLEAN is
+			-- Is `Current' a namespace test?
+		do
+			Result := True
+		end
+
+	as_namespace_test: XM_XPATH_NAMESPACE_TEST is
+			-- `Current' seen as a namespace test
+		do
+			Result := Current
 		end
 
 feature -- Status report

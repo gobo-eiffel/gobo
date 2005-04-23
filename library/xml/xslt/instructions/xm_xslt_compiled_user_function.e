@@ -118,7 +118,7 @@ feature -- Evaluation
 					an_object_value ?= last_called_value
 					if an_object_value /= Void then
 						from
-							a_function_package ?= an_object_value.value
+							a_function_package ?= an_object_value.value -- TODO: as_function_package (? - cluster dependency)
 						until
 							a_function_package = Void
 						loop
@@ -222,8 +222,8 @@ feature {NONE} -- Implementation
 					an_iterator.after
 				loop
 					an_item := an_iterator.item
-					a_node ?= an_item
-					if a_node /= Void then
+					if an_item.is_node then
+						a_node := an_item.as_node
 						if a_node.generated_id = Void then
 							a_node.generate_id
 						end

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_GENERAL_VARIABLE
 		redefine
-			fixup_references, validate
+			fixup_references, validate, is_xslt_variable_declaration, as_xslt_variable_declaration
 		end
 
 	XM_XPATH_VARIABLE_DECLARATION
@@ -42,12 +42,12 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 			
-	references: DS_ARRAYED_LIST [XM_XPATH_BINDING_REFERENCE]
+	references: DS_ARRAYED_LIST [XM_XPATH_VARIABLE_REFERENCE]
 			-- List of XM_XPATH_VARIABLE_REFERENCE objects that reference `Current'
 										  
 feature -- Element change
 
-	register_reference (a_reference: XM_XPATH_BINDING_REFERENCE) is
+	register_reference (a_reference: XM_XPATH_VARIABLE_REFERENCE) is
 			-- Register `ref' as a reference to this variable for fix-up.
 			-- This routine is called by the XPath parser when
 			-- each reference to the variable is enountered.
@@ -64,23 +64,21 @@ feature -- Element change
 	fixup_references is
 			-- Fix up references from XPath expressions.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_BINDING_REFERENCE]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_VARIABLE_REFERENCE]
 			a_dependencies_set: ARRAY [BOOLEAN]
 			a_cardinalities_set: ARRAY [BOOLEAN]
 			a_special_properties_set: ARRAY [BOOLEAN]
 			a_constant_value: XM_XPATH_VALUE
-			a_variable: XM_XSLT_VARIABLE
-			a_binding_reference: XM_XPATH_BINDING_REFERENCE
+			a_binding_reference: XM_XPATH_VARIABLE_REFERENCE
 			a_relationship: INTEGER
 		do
-			a_variable ?= Current
 			a_constant_value := Void
 			a_dependencies_set := Void
 			a_cardinalities_set := Void
 			a_special_properties_set := Void
-			if a_variable /= Void then
-				a_constant_value ?= select_expression
-				if a_constant_value /= Void then
+			if is_xslt_variable then
+				if select_expression /= Void and then select_expression.is_value then
+					a_constant_value := select_expression.as_value
 					
 					-- We can't rely on the constant value, as it hasn't been type-checked yet
 					--  (e.g. numeric promotion might change it).
@@ -154,7 +152,7 @@ feature -- Element change
 		require
 			binding_not_void: a_binding /= Void
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_BINDING_REFERENCE]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_VARIABLE_REFERENCE]
 		do
 			from
 				a_cursor := references.new_cursor
@@ -167,6 +165,20 @@ feature -- Element change
 				a_cursor.item.fix_up (a_binding)
 				a_cursor.forth
 			end
+		end
+
+feature -- Conversion
+
+	is_xslt_variable_declaration: BOOLEAN is
+			-- Is `Current' an xsl:variable or xsl:param?
+		do
+			Result := True
+		end
+
+	as_xslt_variable_declaration: XM_XSLT_VARIABLE_DECLARATION is
+			-- `Current' seen as an XSLT variable declaration
+		do
+			Result := Current
 		end
 
 feature {NONE} -- Implementation

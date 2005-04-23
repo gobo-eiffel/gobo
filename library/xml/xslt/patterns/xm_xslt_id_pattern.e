@@ -93,7 +93,6 @@ feature -- Matching
 			-- Determine whether this Pattern matches the given Node;
 		local
 			a_doc: XM_XPATH_DOCUMENT
-			an_id_value: XM_XPATH_STRING_VALUE
 			an_id, ids: STRING
 			a_splitter: ST_SPLITTER
 			strings:  DS_LIST [STRING]
@@ -106,11 +105,10 @@ feature -- Matching
 					Result := False
 				else
 					id_expression.evaluate_item (a_context)
-					an_id_value ?= id_expression.last_evaluated_item
-					if an_id_value = Void then
+					if not id_expression.last_evaluated_item.is_string_value then
 						Result := False						
 					else
-						ids := an_id_value.string_value
+						ids := id_expression.last_evaluated_item.as_string_value.string_value
 						create a_splitter.make
 						strings := a_splitter.split (ids)
 							check

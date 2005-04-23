@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			copy_namespaces := copy_ns
 			instruction_name := "xsl:copy-of"
 			compute_static_properties
-			initialize
+			initialized := True
 		ensure
 			executable_set: executable = an_executable
 			select_expression_set: select_expression = a_select_expression
@@ -150,7 +150,6 @@ feature -- Evaluation
 			which_namespaces: INTEGER
 			a_sequence_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
-			a_node: XM_XPATH_NODE
 		do
 			last_tail_call := Void
 			a_receiver := a_context.current_receiver
@@ -171,9 +170,8 @@ feature -- Evaluation
 				a_sequence_iterator.is_error or else a_sequence_iterator.after
 			loop
 				an_item := a_sequence_iterator.item
-				a_node ?= an_item
-				if a_node /= Void then
-					process_node (a_node, a_receiver, which_namespaces, a_context)
+				if an_item.is_node then
+					process_node (an_item.as_node, a_receiver, which_namespaces, a_context)
 				else
 					a_receiver.append_item (an_item)
 				end
@@ -238,7 +236,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	select_expression_not_void: select_expression /= Void
+	select_expression_not_void: initialized implies select_expression /= Void
 
 end
 	

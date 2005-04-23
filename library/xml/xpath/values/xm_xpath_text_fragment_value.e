@@ -71,13 +71,13 @@ feature -- Access
 			inspect
 				an_axis_type
 			when Self_axis, Ancestor_or_self_axis then
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (Current)
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 			when Child_axis, Descendant_axis then
 				todo ("new_axis_iterator", True)
 			when Descendant_or_self_axis then
 				todo ("new_axis_iterator", True)
 			else
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			end
 		end
 
@@ -88,13 +88,13 @@ feature -- Access
 			inspect
 				an_axis_type
 			when Self_axis, Ancestor_or_self_axis then
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} Result.make (Current)
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 			when Child_axis, Descendant_axis then
 				todo ("new_axis_iterator", True)
 			when Descendant_or_self_axis then
 				todo ("new_axis_iterator", True)
 			else
-				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			end	
 		end
 	

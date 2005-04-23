@@ -19,7 +19,7 @@ inherit
 
 	XM_XPATH_EXPRESSION
 		redefine
-			lazily_evaluate
+			lazily_evaluate, is_value, as_value
 		end
 
 feature {NONE} -- Initialization
@@ -35,6 +35,18 @@ feature {NONE} -- Initialization
 		end
 	
 feature -- Access
+	
+	is_value: BOOLEAN is
+			-- Is `Current' a value?
+		do
+			Result := True
+		end
+
+	as_value: XM_XPATH_VALUE is
+			-- `Current' seen as a value
+		do
+			Result := Current
+		end
 
 	frozen sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
@@ -111,10 +123,12 @@ feature -- Evaluation
 feature -- Conversion
 
 	as_item (a_context: XM_XPATH_CONTEXT): XM_XPATH_ITEM is
-			-- Convert to an item
+			-- `Current' seen as an item
 		require
 			is_convertible_to_item (a_context)
 		deferred
+		ensure
+			may_be_void: True
 		end
 
 feature {NONE} -- Implementation

@@ -177,6 +177,23 @@ feature -- Element change
 			set: required_type = a_required_type
 		end
 
+feature -- Conversion
+
+	is_global_variable: BOOLEAN is
+			-- Is `Current' a global xsl:variable/param?
+		do
+			Result := False
+		end
+
+	as_global_variable: XM_XSLT_GLOBAL_VARIABLE is
+			-- `Current' seen as a global xsl:variable/param
+		require
+			global_variable: is_global_variable
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is

@@ -17,7 +17,8 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			compute_dependencies, compute_special_properties, simplify, promote, sub_expressions,
-			same_expression, create_iterator, is_repeated_sub_expression
+			same_expression, create_iterator, is_repeated_sub_expression, is_filter_expression,
+			as_filter_expression
 		end
 
 	XM_XPATH_TOKENS
@@ -40,55 +41,31 @@ feature {NONE} -- Initialization
 			start_not_void: a_start /= Void
 			filter_not_void: a_filter /= Void
 		local
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 			are_void: BOOLEAN
 		do
 			base_expression := a_start
 			filter := a_filter
 
-			-- the reason we simplified_expression the filter 
+			-- the reason we simplify the filter 
 			-- is to ensure that functions like name() are expanded to use the
 			-- context node as an implicit argument, before checking its dependencies.
 
 			filter.simplify
 			if filter.is_error then
-				if not filter.are_dependencies_computed then
-					a_computed_expression ?= filter
-						check
-							computed_expression_not_void: a_computed_expression /= Void
-						end
-					a_computed_expression.compute_dependencies
-				end
-				filter_dependencies := filter.dependencies
-				debug ("XPath expressions")
-					std.error.put_string ("Filter failed to simplified_expression. Are dependencies Void? ")
-					are_void := filter_dependencies = Void
-					std.error.put_string (are_void.out)
-					std.error.put_new_line
-				end
+				set_replacement (filter)
 			else
 				if filter.was_expression_replaced then
 					set_filter (filter.replacement_expression)
 				end
-				if not filter.are_dependencies_computed then
-					a_computed_expression ?= filter
-						check
-							computed_expression_not_void: a_computed_expression /= Void
-						end
-					a_computed_expression.compute_dependencies
+				if not filter.are_dependencies_computed and then filter.is_computed_expression then
+					filter.as_computed_expression.compute_dependencies
 				end
 				filter_dependencies := filter.dependencies
-				debug ("XPath expressions")
-					std.error.put_string ("Filter simplified. Are dependencies Void? ")
-					are_void := filter_dependencies = Void
-					std.error.put_string (are_void.out)
-					std.error.put_new_line
-				end
 			end
 			compute_static_properties
 			adopt_child_expression (base_expression)
 			adopt_child_expression (filter)
-			initialize
+			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			base_expression_set: base_expression = a_start
@@ -111,6 +88,18 @@ feature -- Access
 
 	base_expression: XM_XPATH_EXPRESSION
 			-- Base expression
+
+	is_filter_expression: BOOLEAN is
+			-- Is `Current' a filter expression?
+		do
+			Result := True
+		end
+
+	as_filter_expression: XM_XPATH_FILTER_EXPRESSION is
+			-- `Current' seen as a filter expression
+		do
+			Result := Current
+		end
 
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
@@ -135,8 +124,8 @@ feature -- Comparison
 		local
 			a_filter: XM_XPATH_FILTER_EXPRESSION
 		do
-			a_filter ?= other
-			if a_filter /= Void then
+			if other.is_filter_expression then
+				a_filter := other.as_filter_expression
 				Result := base_expression.same_expression (a_filter.base_expression)
 					and then filter.same_expression (a_filter.filter)
 			end
@@ -171,15 +160,12 @@ feature -- Status setting
 
 	compute_dependencies is
 			-- Compute dependencies on context.
-		local
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
 
 			if not base_expression.are_dependencies_computed then
-				a_computed_expression ?= base_expression
-				if a_computed_expression /= Void then
-					a_computed_expression.compute_dependencies
+				if base_expression.is_computed_expression then
+					base_expression.as_computed_expression.compute_dependencies
 				end
 			end
 			set_dependencies (base_expression.dependencies)
@@ -206,10 +192,7 @@ feature -- Optimization
 			-- Perform context-independent static optimizations
 		local
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
-			a_value: XM_XPATH_VALUE
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			a_number: XM_XPATH_NUMERIC_VALUE
-			a_last_function: XM_XPATH_LAST
 			an_is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
 		do
 			base_expression.simplify
@@ -229,17 +212,13 @@ feature -- Optimization
 
 					-- Ignore the filter if `base_expression' is an empty sequence.
 					
-					an_empty_sequence ?= base_expression
-					if an_empty_sequence /= Void then
-						set_replacement (an_empty_sequence)
+					if base_expression.is_empty_sequence then
+						set_replacement (base_expression.as_empty_sequence)
 					else
 						
 						-- Check whether the filter is a constant true() or false().
 						
-						a_value ?= filter
-						a_number ?= filter
-						
-						if a_value /= Void and then a_number = Void then
+						if filter.is_value and then not filter.is_numeric_value then
 							filter.calculate_effective_boolean_value (Void)
 							a_boolean_value := filter.last_boolean_value
 							if a_boolean_value.is_error then
@@ -255,8 +234,7 @@ feature -- Optimization
 							-- Check whether the filter is [last()].
 							-- (note, position()=last() is handled during analysis)
 							
-							a_last_function ?= filter
-							if a_last_function /= Void then
+							if filter.is_last_function then
 								create an_is_last_expression.make (True)
 								set_filter (an_is_last_expression)
 							end
@@ -275,13 +253,13 @@ feature -- Optimization
 				set_base_expression (base_expression.replacement_expression)
 			end
 			if base_expression.is_error then
-					set_last_error (base_expression.error_value)
+				set_last_error (base_expression.error_value)
 			else
 				filter.analyze (a_context)
 				if filter.was_expression_replaced then
 					set_filter (filter.replacement_expression)
 				end
-				
+
 				if filter.is_error then
 					set_last_error (filter.error_value)
 				else
@@ -321,27 +299,19 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterate over the values of a sequence
 		local
-			a_value: XM_XPATH_VALUE
 			a_number: XM_XPATH_NUMERIC_VALUE
-			an_integer_value: XM_XPATH_INTEGER_VALUE
-			a_sequence_value: XM_XPATH_SEQUENCE_VALUE
 			a_position: INTEGER
 			finished: BOOLEAN
 			a_position_range: XM_XPATH_POSITION_RANGE
 			a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]
-			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 
 			-- Fast path where both operands are constants
 
-			a_sequence_value ?= base_expression
-			an_integer_value ?= filter
-
-			if a_sequence_value /= Void and then an_integer_value /= Void 
-				and then an_integer_value.is_platform_integer then
-				a_position := an_integer_value.as_integer
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (a_sequence_value.item (a_position))
+			if base_expression.is_sequence_value and then filter.is_integer_value
+				and then filter.as_integer_value.is_platform_integer then
+				a_position := filter.as_integer_value.as_integer
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (base_expression.as_sequence_value.item (a_position))
 			else
 				
 				-- Get an iterator over the base nodes
@@ -354,18 +324,15 @@ feature -- Evaluation
 				if  a_base_iterator.is_error then
 					last_iterator := a_base_iterator
 				else
-					an_empty_iterator ?= a_base_iterator
-					if an_empty_iterator /= Void then
-						last_iterator := an_empty_iterator
+					if a_base_iterator.is_empty_iterator then
+						create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 					else
 						
 						-- Test whether the filter is a constant value
 						
-						a_value ?= filter
-						
-						if a_value /= Void then
+						if filter.is_value then
 							finished := True
-							a_number ?= a_value
+							if filter.is_numeric_value then a_number := filter.as_numeric_value end
 							create_constant_value_iterator (a_number, a_base_iterator, a_context)
 						end
 						
@@ -376,24 +343,23 @@ feature -- Evaluation
 							-- Test whether the filter is a position range, e.g. [position()>$x]
 							-- TODO: handle all such cases with a TailExpression
 
-							a_node_iterator ?= a_base_iterator
-							a_position_range ?= filter
-							if a_position_range /= Void then
-								if a_node_iterator /= Void then
-									last_iterator := expression_factory.created_node_position_iterator (a_node_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
+							if filter.is_position_range then
+								a_position_range := filter.as_position_range
+								if a_base_iterator.is_node_iterator then
+									last_iterator := expression_factory.created_node_position_iterator (a_base_iterator.as_node_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
 								else
 									last_iterator := expression_factory.created_item_position_iterator (a_base_iterator, a_position_range.minimum_position, a_position_range.maximum_position)
 								end
 							else
 								if filter_is_positional then
-									if a_node_iterator /= Void then
-										create {XM_XPATH_NODE_FILTER_ITERATOR} last_iterator.make (a_node_iterator, filter, a_context)
+									if a_base_iterator.is_node_iterator then
+										create {XM_XPATH_NODE_FILTER_ITERATOR} last_iterator.make (a_base_iterator.as_node_iterator, filter, a_context)
 									else
 										create {XM_XPATH_FILTER_ITERATOR} last_iterator.make (a_base_iterator, filter, a_context)
 									end
 								else
-									if a_node_iterator /= Void then
-										create {XM_XPATH_NODE_FILTER_ITERATOR} last_iterator.make_non_numeric (a_node_iterator, filter, a_context)
+									if a_base_iterator.is_node_iterator then
+										create {XM_XPATH_NODE_FILTER_ITERATOR} last_iterator.make_non_numeric (a_base_iterator.as_node_iterator, filter, a_context)
 									else
 										create {XM_XPATH_FILTER_ITERATOR} last_iterator.make_non_numeric (a_base_iterator, filter, a_context)
 									end			
@@ -414,6 +380,7 @@ feature -- Element change
 		do
 			base_expression := a_base_expression
 			base_expression.mark_unreplaced
+			adopt_child_expression (base_expression)
 		ensure
 			base_expression_set: base_expression = a_base_expression
 			base_expression_not_marked_for_replacement: not base_expression.was_expression_replaced
@@ -426,6 +393,7 @@ feature -- Element change
 		do
 			filter := a_filter
 			filter.mark_unreplaced
+			adopt_child_expression (filter)
 		ensure
 			filter_set: filter = a_filter
 			filter_not_marked_for_replacement: not filter.was_expression_replaced
@@ -436,26 +404,22 @@ feature {NONE} -- Implementation
 	compute_cardinality is
 			-- Compute cardinality.
 		local
-			a_number: XM_XPATH_NUMERIC_VALUE
 			a_position_range: XM_XPATH_POSITION_RANGE
-			an_is_last_expression: XM_XPATH_IS_LAST_EXPRESSION
 		do
-			a_number ?= filter
-			if a_number /= Void then
+			if filter.is_numeric_value then
 				set_cardinality_optional
 			elseif not base_expression.cardinality_allows_many then
 				set_cardinality_optional
 			else
-				a_position_range ?= filter
-				if a_position_range /= Void then
+				if filter.is_position_range then
+					a_position_range := filter.as_position_range
 					if a_position_range.minimum_position = a_position_range.maximum_position then
 						set_cardinality_optional
 					end
 				end
 			end
 			if not are_cardinalities_computed then
-				an_is_last_expression ?= filter
-				if an_is_last_expression /= Void then
+				if filter.is_last_expression then
 					set_cardinality_optional
 				elseif base_expression.cardinality_allows_one_or_more then
 					set_cardinality_zero_or_more
@@ -526,15 +490,13 @@ feature {NONE} -- Implementation
 		local
 			a_position: INTEGER
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
-			a_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
 			if a_number /= Void then
 				if a_number.is_platform_integer then
 					a_position := a_number.as_integer
 					if a_position >= 1 then
-						a_node_iterator ?= a_base_iterator
-						if a_node_iterator /= Void then
-							last_iterator := expression_factory.created_node_position_iterator (a_node_iterator, a_position, a_position)
+						if a_base_iterator.is_node_iterator then
+							last_iterator := expression_factory.created_node_position_iterator (a_base_iterator.as_node_iterator, a_position, a_position)
 						else
 							last_iterator := expression_factory.created_item_position_iterator (a_base_iterator, a_position, a_position)
 						end
@@ -542,13 +504,13 @@ feature {NONE} -- Implementation
 					
 						-- Index is less than one, no items will be selected
 					
-						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+						create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 					end
 				else
 					
 					-- A non-integer value will never be equal to position()
 					
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+					create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 				end
 			else
 				
@@ -561,7 +523,7 @@ feature {NONE} -- Implementation
 				elseif a_boolean_value.value then
 					last_iterator := a_base_iterator
 				else
-					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_ITEM]} last_iterator.make
+					create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 				end
 			end
 		end
@@ -570,24 +532,24 @@ feature {NONE} -- Implementation
 			-- Optimize `Current'
 		local
 			a_position_range: XM_XPATH_POSITION_RANGE
-			an_integer: XM_XPATH_INTEGER_VALUE
 			a_min, a_max: INTEGER
 			an_expression: XM_XPATH_EXPRESSION
 		do
 						
-			--	The filter expression never needs to be sorted.
+			--	The filter expression usually need not be sorted.
 			
-			filter.set_unsorted (False)
-			
+			filter.set_unsorted_if_homogeneous (False)
+						
 			-- Detect head expressions (E[1]) and tail expressions (E[position()!=1])
 			-- and treat them specially.
 
-			an_integer ?= filter; if an_integer /= Void and then an_integer.is_platform_integer
-			and then an_integer.as_integer = 1 then
+			if filter.is_integer_value and then filter.as_integer_value.is_platform_integer
+				and then filter.as_integer_value.as_integer = 1 then
 				create {XM_XPATH_FIRST_ITEM_EXPRESSION} an_expression.make (base_expression)
 				set_replacement (an_expression)
 			else
-				a_position_range ?= filter; if a_position_range /= Void then
+				if filter.is_position_range then
+					a_position_range := filter.as_position_range
 					a_min := a_position_range.minimum_position
 					a_max := a_position_range.maximum_position
 					if a_min = 1 and then a_max = 1 then
@@ -615,34 +577,37 @@ feature {NONE} -- Implementation
 			a_boolean_filter: XM_XPATH_BOOLEAN_EXPRESSION
 		do
 			filter_is_positional := is_positional_filter (filter)
-			
+
 			-- If the filter is positional, try changing f[a and b] to f[a][b] to increase
 			-- the chances of finishing early.
 
-			a_boolean_filter ?= filter; if filter_is_positional and then a_boolean_filter /= Void and then a_boolean_filter.operator = And_token then
-				if is_explicitly_positional_filter (a_boolean_filter.first_operand)
-					and then not is_explicitly_positional_filter (a_boolean_filter.second_operand) then
-					another_expression := force_to_boolean (a_boolean_filter.first_operand, a_context)
-					a_third_expression := force_to_boolean (a_boolean_filter.second_operand, a_context)
-					create a_filter.make (base_expression, another_expression)
-					create another_filter.make (a_filter, a_third_expression)
-					another_filter.analyze (a_context)
-					if another_filter.was_expression_replaced then
-						set_replacement (another_filter.replacement_expression)
-					else
-						set_replacement (another_filter)
-					end
-				elseif is_explicitly_positional_filter (a_boolean_filter.second_operand)
-					and then not is_explicitly_positional_filter (a_boolean_filter.first_operand) then
-					another_expression := force_to_boolean (a_boolean_filter.first_operand, a_context)
-					a_third_expression := force_to_boolean (a_boolean_filter.second_operand, a_context)
-					create a_filter.make (base_expression, a_third_expression)
-					create another_filter.make (a_filter, another_expression)
-					another_filter.analyze (a_context)
-					if another_filter.was_expression_replaced then
-						set_replacement (another_filter.replacement_expression)
-					else
-						set_replacement (another_filter)
+			if filter_is_positional and then filter.is_boolean_expression then
+				a_boolean_filter := filter.as_boolean_expression
+				if a_boolean_filter.operator = And_token then
+					if is_explicitly_positional_filter (a_boolean_filter.first_operand)
+						and then not is_explicitly_positional_filter (a_boolean_filter.second_operand) then
+						another_expression := force_to_boolean (a_boolean_filter.first_operand, a_context)
+						a_third_expression := force_to_boolean (a_boolean_filter.second_operand, a_context)
+						create a_filter.make (base_expression, another_expression)
+						create another_filter.make (a_filter, a_third_expression)
+						another_filter.analyze (a_context)
+						if another_filter.was_expression_replaced then
+							set_replacement (another_filter.replacement_expression)
+						else
+							set_replacement (another_filter)
+						end
+					elseif is_explicitly_positional_filter (a_boolean_filter.second_operand)
+						and then not is_explicitly_positional_filter (a_boolean_filter.first_operand) then
+						another_expression := force_to_boolean (a_boolean_filter.first_operand, a_context)
+						a_third_expression := force_to_boolean (a_boolean_filter.second_operand, a_context)
+						create a_filter.make (base_expression, a_third_expression)
+						create another_filter.make (a_filter, another_expression)
+						another_filter.analyze (a_context)
+						if another_filter.was_expression_replaced then
+							set_replacement (another_filter.replacement_expression)
+						else
+							set_replacement (another_filter)
+						end
 					end
 				end
 			end
@@ -657,7 +622,8 @@ feature {NONE} -- Implementation
 			create an_offer.make (Focus_independent, Void, Current, False, base_expression.context_document_nodeset)
 			filter.promote (an_offer)
 			if filter.was_expression_replaced then set_filter(filter.replacement_expression) end
-			a_let_expression ?= an_offer.containing_expression; if a_let_expression /= Void then
+			if an_offer.containing_expression.is_let_expression then
+				a_let_expression := an_offer.containing_expression.as_let_expression
 				a_let_expression.analyze (a_context)
 				if a_let_expression.is_error then
 					set_last_error (a_let_expression.error_value)

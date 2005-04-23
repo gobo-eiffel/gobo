@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPOSITE_NODE
 		undefine
-			document_element, next_sibling, previous_sibling, has_child_nodes
+			document_element, next_sibling, previous_sibling, has_child_nodes, is_tree_node, as_tree_node
 		redefine
 			first_child, last_child
 		end
@@ -25,10 +25,22 @@ inherit
 		undefine
 			first_child, last_child
 		redefine
-			has_child_nodes, sequence_number
+			has_child_nodes, sequence_number, is_tree_composite_node, as_tree_composite_node
 		end
 				
 feature -- Access
+
+	is_tree_composite_node: BOOLEAN is
+			-- Is `Current' a composite node?
+		do
+			Result := True
+		end
+
+	as_tree_composite_node: XM_XPATH_TREE_COMPOSITE_NODE is
+			-- `Current' seen as a composite node
+		do
+			Result := Current
+		end
 
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
 			-- Node sequence number (in document order)
@@ -45,7 +57,7 @@ feature -- Access
 	string_value: STRING is
 			-- String-value
 		local
-			a_node: XM_XPATH_TREE_NODE
+			a_node: XM_XPATH_NODE
 			a_text_node: XM_XPATH_TREE_TEXT
 		do
 			-- Return the concatentation of the string value of all it's
@@ -53,19 +65,17 @@ feature -- Access
 			-- Actually, more complicated than the above description.
 
 			from
-				a_node ?= first_child
+				a_node := first_child
 			until
-				a_node = Void
+				a_node = Void or else not a_node.as_tree_node.is_tree_text
 			loop
-				a_text_node ?= a_node
-				if a_text_node /= Void then
-					if Result = Void then
-						Result := a_text_node.string_value
-					else
-						Result := STRING_.appended_string (Result, a_text_node.string_value)
-					end
+				a_text_node := a_node.as_tree_node.as_tree_text
+				if Result = Void then
+					Result := a_text_node.string_value
+				else
+					Result := STRING_.appended_string (Result, a_text_node.string_value)
 				end
-				a_node ?= a_node.next_node_in_document_order (Current)
+				a_node := a_text_node.next_node_in_document_order (Current)
 			end
 			if Result = Void then Result := "" end
 		end

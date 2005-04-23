@@ -45,6 +45,13 @@ feature -- Access
 			Name_not_void: Result /= Void and then Result.count > 0
 		end
 
+	namespace_uri: STRING is
+			-- Namespace uri for `name'
+		deferred
+		ensure
+			Namespace_uri_not_void: Result /= Void
+		end
+
 feature -- Status report
 
 	display (a_level: INTEGER) is
@@ -54,6 +61,11 @@ feature -- Status report
 		do
 			std.error.put_string (indentation (a_level))
 			std.error.put_string ("function ")
+			if namespace_uri.count > 0 then
+				std.error.put_string ("{")
+				std.error.put_string (namespace_uri)
+				std.error.put_string ("}")
+			end
 			std.error.put_string (name)
 			if is_error then
 				std.error.put_string (" in error%N")
@@ -142,7 +154,6 @@ feature -- Optimization
 			--  can override the pre_evaluate routine.
 		local
 			fixed_values: BOOLEAN
-			a_value: XM_XPATH_VALUE
 			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			mark_unreplaced
@@ -164,9 +175,7 @@ feature -- Optimization
 						arguments_cursor.item.mark_unreplaced
 						adopt_child_expression (arguments_cursor.item)
 					end
-					
-					a_value ?= arguments_cursor.item
-					if a_value = Void then fixed_values := False end
+					if not arguments_cursor.item.is_value then fixed_values := False end
 				end
 				arguments_cursor.forth
 			end

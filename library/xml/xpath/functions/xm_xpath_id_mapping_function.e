@@ -52,7 +52,7 @@ feature -- Evaluation
 			some_idrefs := a_splitter.split (an_item.string_value)
 			if some_idrefs.count = 1 then
 				an_element := document.selected_id (some_idrefs.item (1))
-				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make (an_element)
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (an_element)
 			else
 				todo ("map_nodes", True)
 			end

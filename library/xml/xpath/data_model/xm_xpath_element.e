@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPOSITE_NODE
 		redefine
-			type_annotation, is_nilled, base_uri
+			type_annotation, is_nilled, base_uri, is_element, as_element
 		end
 
 	XM_UNICODE_CHARACTERS_1_1
@@ -29,6 +29,18 @@ feature -- Access
 			Result := "element"
 		ensure then
 			node_kind_is_element: STRING_.same_string (Result, "element")
+		end
+
+	is_element: BOOLEAN is
+			-- Is `Current' an element?
+		do
+			Result := True
+		end
+
+	as_element: XM_XPATH_ELEMENT is
+			-- `Current' seen as an element
+		do
+			Result := Current
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE is

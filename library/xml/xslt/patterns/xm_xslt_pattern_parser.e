@@ -24,6 +24,7 @@ inherit
 
 	XM_XPATH_DEBUGGING_ROUTINES
 
+	-- TODO: Add XSLT Pattern as host language
 creation
 
 	make
@@ -52,11 +53,12 @@ feature -- Status report
 
 feature -- Parsers
 
-	parse_pattern (a_pattern_text: STRING; a_context: XM_XPATH_STATIC_CONTEXT) is
+	parse_pattern (a_pattern_text: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_line_number: INTEGER) is
 			-- Parse `a_pattern_text', which represents an XSLT pattern
 		require
 			pattern_text_not_void: a_pattern_text /= Void
 			static_context_not_void: a_context /= Void
+			nearly_positive_line_number: a_line_number >= -1
 		local
 			s: STRING
 		do
@@ -68,7 +70,7 @@ feature -- Parsers
 			environment := a_context
 			function_library := environment.available_functions
 			create tokenizer.make
-			tokenizer.tokenize (a_pattern_text, 1, -1)
+			tokenizer.tokenize (a_pattern_text, 1, -1, a_line_number)
 			is_parse_error := False
 			parse_union_pattern
 
@@ -91,19 +93,20 @@ feature -- Parsers
 			static_context_not_void: environment /= Void
 		end
 
-	parse_sequence_type (a_sequence_type_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT) is
+	parse_sequence_type (a_sequence_type_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_line_number: INTEGER) is
 			-- Parse `a_sequence_type_string';
 			-- SequenceType ::= (ItemType OccurrenceIndicator?) | ("empty" "(" ")")
 		require
 			sequence_text_not_void: a_sequence_type_string /= Void
 			static_context_not_void: a_context /= Void
+			nearly_positive_line_number: a_line_number >= -1
 		local
 			s: STRING
 		do
 			internal_last_parse_error := Void
 			environment := a_context
 			create tokenizer.make
-			tokenizer.tokenize (a_sequence_type_string, 1, -1)
+			tokenizer.tokenize (a_sequence_type_string, 1, -1, a_line_number)
 			is_parse_error := False
 			parse_sequence
 
@@ -581,50 +584,25 @@ feature {NONE} -- Implementation
 			-- XSLT node-test-pattern from an XPath node-test
 		require
 			node_test_not_void: an_xpath_node_test /= Void
-		local
-			a_combined_node_test: XM_XPATH_COMBINED_NODE_TEST
-			a_content_test: XM_XPATH_CONTENT_TYPE_TEST
-			a_local_name_test: XM_XPATH_LOCAL_NAME_TEST
-			a_namespace_test: XM_XPATH_NAMESPACE_TEST
-			a_name_test: XM_XPATH_NAME_TEST
-			a_node_kind_test: XM_XPATH_NODE_KIND_TEST
 		do
 			if an_xpath_node_test = any_node_test then
 				Result := any_xslt_node_test
 			elseif an_xpath_node_test = empty_item then
 				Result := xslt_empty_item
-			else
-				a_combined_node_test ?= an_xpath_node_test
-				if a_combined_node_test /= Void then
+			elseif an_xpath_node_test.is_combined_node_test then
 					todo ("xpath_to_xslt_node_test - combined node test", True)
-				else
-					a_content_test ?= an_xpath_node_test
-					if a_content_test /= Void then
-						todo ("xpath_to_xslt_node_test - content type test", True)
-					else
-						a_local_name_test ?= an_xpath_node_test
-						if a_local_name_test /= Void then
-							todo ("xpath_to_xslt_node_test - local name test", True)
-						else
-							a_namespace_test ?= an_xpath_node_test
-							if a_namespace_test /= Void then
-								create  {XM_XSLT_NAMESPACE_TEST} Result.make (environment, a_namespace_test.node_kind, shared_name_pool.uri_from_uri_code(a_namespace_test.uri_code), a_namespace_test.original_text)
-							else
-								a_name_test ?= an_xpath_node_test
-								if a_name_test /= Void then
-									create {XM_XSLT_NAME_TEST} Result.make (environment, a_name_test.node_kind, a_name_test.fingerprint, a_name_test.original_text)
-								else
-									a_node_kind_test ?= an_xpath_node_test
-									if a_node_kind_test /= Void then
-										create {XM_XSLT_NODE_KIND_TEST} Result.make (environment, a_node_kind_test.node_kind)
-									else
-										todo ("xpath_to_xslt_node_test - unknown test", True)
-									end
-								end
-							end
-						end
-					end
-				end
+			elseif an_xpath_node_test.is_content_test then
+				todo ("xpath_to_xslt_node_test - content type test", True)
+			elseif an_xpath_node_test.is_local_name_test then
+				todo ("xpath_to_xslt_node_test - local name test", True)
+			elseif an_xpath_node_test.is_namespace_test then
+				create  {XM_XSLT_NAMESPACE_TEST} Result.make (environment, an_xpath_node_test.as_namespace_test.node_kind, shared_name_pool.uri_from_uri_code(an_xpath_node_test.as_namespace_test.uri_code), an_xpath_node_test.as_namespace_test.original_text)
+			elseif an_xpath_node_test.is_name_test then
+				create {XM_XSLT_NAME_TEST} Result.make (environment, an_xpath_node_test.as_name_test.node_kind, an_xpath_node_test.as_name_test.fingerprint, an_xpath_node_test.as_name_test.original_text)
+			elseif an_xpath_node_test.is_node_kind_test then
+				create {XM_XSLT_NODE_KIND_TEST} Result.make (environment, an_xpath_node_test.as_node_kind_test.node_kind)
+			else
+				todo ("xpath_to_xslt_node_test - unknown test", True)
 			end
 		ensure
 			xslt_node_test_not_void: Result /= Void

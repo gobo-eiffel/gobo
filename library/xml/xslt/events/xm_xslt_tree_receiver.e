@@ -117,42 +117,34 @@ feature -- Events
 	append_item (an_item: XM_XPATH_ITEM) is
 			-- Output an item (atomic value or node) to the sequence.
 		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_document: XM_XPATH_DOCUMENT
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
-			a_node: XM_XPATH_NODE
 		do
-			an_atomic_value ?= an_item
-			if an_atomic_value /= Void then
+			if an_item.is_atomic_value then
 				if was_previous_atomic then
 					notify_characters (" ", 0)
 				end
-				notify_characters (an_atomic_value.string_value, 0)
+				notify_characters (an_item.as_atomic_value.string_value, 0)
 				was_previous_atomic := True
-			else
-				a_document ?= an_item
-				if a_document /= Void then
-					from
-						an_iterator := a_document.new_axis_iterator (Child_axis); an_iterator.start
-					until
-						an_iterator.after
-					loop
-						append_item (an_iterator.item)
-						an_iterator.forth
-					end
-
-					-- Now free the document from memory
-					
-					shared_name_pool.remove_document_from_pool (a_document.document_number)						
-				else
-					a_node ?= an_item
-					check
-						is_node: a_node /= Void
-						-- It can't be anything else
-					end
-					a_node.copy_node (Current, All_namespaces, True)
-					was_previous_atomic := False
+			elseif an_item.is_document then
+				from
+					an_iterator := an_item.as_document.new_axis_iterator (Child_axis); an_iterator.start
+				until
+					an_iterator.after
+				loop
+					append_item (an_iterator.item)
+					an_iterator.forth
 				end
+				
+				-- Now free the document from memory
+				
+				shared_name_pool.remove_document_from_pool (an_item.as_document.document_number)						
+			else
+				check
+					is_node: an_item.is_node
+					-- It can't be anything else
+				end
+				an_item.as_node.copy_node (Current, All_namespaces, True)
+				was_previous_atomic := False
 			end
 		end
 

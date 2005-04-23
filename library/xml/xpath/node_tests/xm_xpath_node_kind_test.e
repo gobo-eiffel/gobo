@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_NODE_TEST
 		redefine
-			node_kind, content_type
+			node_kind, content_type, is_node_kind_test, as_node_kind_test
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
@@ -130,6 +130,18 @@ feature -- Access
 			else
 				Result := Precursor
 			end
+		end
+
+	is_node_kind_test: BOOLEAN is
+			-- Is `Current' a node kind test?
+		do
+			Result := True
+		end
+
+	as_node_kind_test: XM_XPATH_NODE_KIND_TEST is
+			-- `Current' seen as a node kind test
+		do
+			Result := Current
 		end
 
 feature -- Status report

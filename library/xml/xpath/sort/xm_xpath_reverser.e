@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			compute_special_properties, promote, create_iterator, calculate_effective_boolean_value
+			compute_special_properties, promote, create_iterator, calculate_effective_boolean_value,
+			is_reverser, as_reverser
 		end
 
 creation
@@ -32,9 +33,22 @@ feature {NONE} -- Initialization
 		do
 			make_unary (an_expression)
 			compute_static_properties
-			initialize
 		ensure
 			base_expression_set: base_expression = an_expression
+		end
+
+feature -- Access
+
+	is_reverser: BOOLEAN is
+			-- Is `Current' a reverser?
+		do
+			Result := True
+		end
+
+	as_reverser: XM_XPATH_REVERSER is
+			-- `Current' seen as a reverser
+		do
+			Result := Current
 		end
 
 feature -- Optimization
@@ -60,14 +74,12 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_reversible_iterator: XM_XPATH_REVERSIBLE_ITERATOR [XM_XPATH_ITEM]
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			base_expression.create_iterator (a_context)
 			an_iterator := base_expression.last_iterator
-			a_reversible_iterator ?= an_iterator
-			if a_reversible_iterator /= Void then
-				last_iterator := a_reversible_iterator.reverse_iterator
+			if an_iterator.is_reversible_iterator then
+				last_iterator := an_iterator.as_reversible_iterator.reverse_iterator
 			else
 				create a_sequence_extent.make (an_iterator)
 				last_iterator := a_sequence_extent.reverse_iterator

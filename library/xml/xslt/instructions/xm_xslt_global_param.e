@@ -66,12 +66,12 @@ feature -- Evaluation
 				slot_number_in_range: slot_number > 0 and then slot_number <= a_bindery. global_variable_count
 			end
 			last_evaluated_binding := a_bindery.global_variable_value (slot_number)
-			if not was_supplied and then last_evaluated_binding = Void then
-				if is_required_parameter then
+			if last_evaluated_binding = Void then
+				if not was_supplied and then is_required_parameter then
 					create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("No value supplied for global parameter: ", variable_name), "", "XTDE0050", Dynamic_error)
 				else
 					
-					-- This is the first reference to a global variable; try to evaluate it now.
+					-- This is the first reference to a global parameter; try to evaluate it now.
 					-- But first set a flag to stop looping.
 
 					a_bindery.set_executing (slot_number, True)

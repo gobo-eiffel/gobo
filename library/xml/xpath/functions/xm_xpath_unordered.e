@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPILE_TIME_FUNCTION
 		redefine
-			analyze, pre_evaluate
+			analyze, pre_evaluate, is_unordered_function, as_unordered_function
 		end
 
 creation
@@ -28,12 +28,13 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "unordered"
+			name := "unordered"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
 			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -48,22 +49,29 @@ feature -- Access
 			end
 		end
 
+	is_unordered_function: BOOLEAN is
+			-- Is `Current' XPath unordered() function?
+		do
+			Result := True
+		end
+
+	as_unordered_function: XM_XPATH_UNORDERED is
+			-- `Current' seen as XPath unordered() function
+		do
+			Result := Current
+		end
+
 feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
-		local
-			an_unordered: XM_XPATH_UNORDERED
 		do
 			mark_unreplaced
 			Precursor (a_context)
 			if not was_expression_replaced then
 				arguments.item (1).set_unsorted (True)
-			else
-				an_unordered ?= replacement_expression
-				if an_unordered /= Void then
-					an_unordered.arguments.item (1).set_unsorted (True)
-				end
+			elseif replacement_expression.is_unordered_function then
+				replacement_expression.as_unordered_function.arguments.item (1).set_unsorted (True)
 			end
 		end
 	

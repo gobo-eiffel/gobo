@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, evaluate_item, calculate_effective_boolean_value
+			analyze, evaluate_item, calculate_effective_boolean_value, make
 		end
 
 	XM_XPATH_ROLE
@@ -26,6 +26,15 @@ inherit
 creation
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (an_operand_one: XM_XPATH_EXPRESSION; a_token: INTEGER; an_operand_two: XM_XPATH_EXPRESSION) is
+			-- Establish invariant
+		do
+			Precursor (an_operand_one, a_token, an_operand_two)
+			initialized := True
+		end
 
 feature -- Access
 
@@ -90,34 +99,29 @@ feature -- Evaluation
 
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
-		local
-			a_node, another_node: XM_XPATH_NODE
 		do
 			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item.is_error then
+			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
 				create last_boolean_value.make (False)
 				last_boolean_value.set_last_error (first_operand.last_evaluated_item.error_value)
 			else
-				a_node ?= first_operand.last_evaluated_item
-				if a_node = Void then
+				if first_operand.last_evaluated_item = Void or else  not first_operand.last_evaluated_item.is_node then
 					if generate_id_emulation_mode then
 						second_operand.evaluate_item (a_context)
-						a_node ?= second_operand.last_evaluated_item
-						create last_boolean_value.make (a_node = Void)
+						create last_boolean_value.make (second_operand.last_evaluated_item = Void or else not second_operand.last_evaluated_item.is_node)
 					else
 						create last_boolean_value.make (False)
 					end
 				else
 					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item.is_error then
+					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_error then
 						create last_boolean_value.make (False)
 						last_boolean_value.set_last_error (second_operand.last_evaluated_item.error_value)
 					else
-						another_node ?= second_operand.last_evaluated_item
-						if another_node = Void then
+						if second_operand.last_evaluated_item = Void or else not second_operand.last_evaluated_item.is_node then
 							create last_boolean_value.make (False)
 						else
-							create last_boolean_value.make (identity_comparison (a_node, another_node))
+							create last_boolean_value.make (identity_comparison (first_operand.last_evaluated_item.as_node,  second_operand.last_evaluated_item.as_node))
 						end
 					end
 				end
@@ -126,36 +130,31 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item.
-		local
-			a_node, another_node: XM_XPATH_NODE
 		do
 			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item.is_error then
+			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
 				last_evaluated_item := first_operand.last_evaluated_item
 			else
-				a_node ?= first_operand.last_evaluated_item
-				if a_node = Void then
+				if first_operand.last_evaluated_item = Void or else not first_operand.last_evaluated_item.is_node then
 					if	generate_id_emulation_mode	then
 						second_operand.evaluate_item (a_context)
-						another_node ?= second_operand.last_evaluated_item
-						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (another_node = Void)
+						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (second_operand.last_evaluated_item = Void or else not second_operand.last_evaluated_item.is_node)
 					else
 						last_evaluated_item := Void
 					end
 				else
 					second_operand.evaluate_item (a_context)
-					if second_operand.last_evaluated_item.is_error then
+					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_error then
 						last_evaluated_item := second_operand.last_evaluated_item
 					else
-						another_node ?= second_operand.last_evaluated_item
-						if another_node = Void then
+						if second_operand.last_evaluated_item = Void or else not second_operand.last_evaluated_item.is_node then
 							if	generate_id_emulation_mode	then
 								create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
 							else
 								last_evaluated_item := Void
 							end
 						else
-							create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (identity_comparison (a_node, another_node))
+							create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (identity_comparison (first_operand.last_evaluated_item.as_node, second_operand.last_evaluated_item.as_node))
 						end
 					end
 				end
