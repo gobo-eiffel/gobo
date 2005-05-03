@@ -44,9 +44,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	string: STRING
-			-- String into which the output is stored. 
-			-- It is always the same object for each instance of
-			-- this class, but not shared between instances.
+			-- String into which the output is stored
 
 	name: STRING is
 			-- Name of output stream
@@ -56,6 +54,18 @@ feature -- Access
 
 	eol: STRING is "%N"
 			-- Line separator
+
+feature -- Setting
+
+	set_string (a_string: STRING) is
+			-- Set `string' to `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			string := a_string
+		ensure
+			string_set: string = a_string
+		end
 
 feature -- Status report
 
