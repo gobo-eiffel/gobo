@@ -34,6 +34,21 @@ feature -- Output
 		deferred
 		end
 
+	put_substring (a_string: STRING; s, e: INTEGER) is
+			-- Write substring of `a_string' between indexes
+			-- `s' and `e' to output stream.
+		require
+			is_open_write: is_open_write
+			a_string_not_void: a_string /= Void
+			s_large_enough: s >= 1
+			e_small_enough: e <= a_string.count
+			valid_interval: s <= e + 1
+		do
+			if s <= e then
+				put_string (a_string.substring (s, e))
+			end
+		end
+
 	put_integer (i: INTEGER) is
 			-- Write decimal representation
 			-- of `i' to output stream.
