@@ -277,13 +277,13 @@ feature {NONE} -- Generation
 						next_rule := yy_rules.item (i)
 						if
 							rule.action = next_rule.action and
-							not next_rule.has_trail_context
+							not (next_rule.has_trail_context or yyLine_used or yyPosition_used)
 						then
 							a_file.put_string (", ")
 							a_file.put_integer (next_rule.id)
 							i := i + 1
-						elseif next_rule.has_trail_context then
-								-- Warning: ("action duplicated due to trailing context")
+						elseif next_rule.has_trail_context or yyLine_used or yyPosition_used then
+								-- Warning: ("action duplicated due to trailing context or options line or position")
 							not_shared := True
 						else
 							not_shared := True
