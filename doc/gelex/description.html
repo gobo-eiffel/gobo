@@ -101,6 +101,29 @@ zero-or-more letters-or-digits. A subsequent reference to:</p>
 <p>and matches one-or-more digits followed by a dot followed by
 zero-or-more digits.</p>
 
+<p>Note that the <font color="#FF0000">definition </font>part can
+be defined in terms of other definitions. For example:</p>
+
+<blockquote>
+    <pre><font color="#800080"><tt>ID</tt></font><font
+color="#FF0000"><tt>     {LETTER}({LETTER}|{DIGIT})*
+</tt></font><font color="#800080"><tt>DIGIT</tt></font><tt> </tt><font
+color="#FF0000"><tt> [0-9]</tt></font><font color="#800080"><tt>
+LETTER</tt></font><tt> </tt><font color="#FF0000"><tt>[a-z]</tt></font></pre>
+</blockquote>
+
+<p>Then a subsequent reference to:</p>
+
+<blockquote>
+    <pre><font color="#FF0000"><tt>{ID}</tt></font></pre>
+</blockquote>
+
+<p>is identical to:</p>
+
+<blockquote>
+    <pre><font color="#FF0000"><tt>([a-z])(([a-z])|([0-9]))*</tt></font></pre>
+</blockquote>
+
 <p>As opposed to <a href="start_conditions.html">start conditions</a>,
 the name definition mechanism has its own name space. Names that
 are otherwise used as feature names in the generated scanner
@@ -173,15 +196,16 @@ chapters.</p>
 
 <h2><a name="user_code">User code section</a></h2>
 
-<p>Finally, the user code section is simply copied verbatim to the 
-end of the generated scanner class. <em>Gelex</em> does not generate 
-the invariant clause and the end of class keyword. This section is
-hence used to specify such clauses and also to define features
-called from the semantic actions. The presence of this section is
-optional (if it is missing, the second <font color="#0000FF"><tt>%%</tt></font>
-in the input file may be skipped, too) but is highly recommended
-if only to specify the end of the generated scanner class and
-thus ensure that this class is syntactically correct.</p>
+<p>Finally, the user code section is simply copied verbatim to
+the end of the generated scanner class. <em>Gelex</em> does not
+generate the invariant clause and the end of class keyword. This
+section is hence used to specify such clauses and also to define
+features called from the semantic actions. The presence of this
+section is optional (if it is missing, the second <font
+color="#0000FF"><tt>%%</tt></font> in the input file may be
+skipped, too) but is highly recommended if only to specify the
+end of the generated scanner class and thus ensure that this
+class is syntactically correct.</p>
 
 <p>Names of implementation features in inherited classes <font
 color="#008080"><em><tt>YY_*_SCANNER_SKELETON</tt></em></font>
