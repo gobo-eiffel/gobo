@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "%"$1%", line $2: bad character class"
+	default_template: STRING is "%"$1%", line $2: bad character class or missing close bracket"
 			-- Default template used to built the error message
 
 	code: STRING is "LX0004"

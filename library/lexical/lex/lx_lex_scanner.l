@@ -276,6 +276,11 @@ CCL_CHAR			[^\\\n\]]|{ESC}
 						set_start_condition (FIRSTCCL)
 					end
 				}
+	"["			{
+					report_bad_character_class_error
+					last_token := CHAR
+					process_character (text_item (1).code)
+				}
 	"<<EOF>>"		last_token := EOF_OP
 	[/|*+?.()]		last_token := text_item (1).code
 	{WS}		{
