@@ -202,6 +202,24 @@ inherit
 #endif
 		end
 
+	KI_TEXT_OUTPUT_STREAM
+		rename
+			put_character as append_character,
+			put_string as append_string,
+			put_substring as append_substring,
+			append as append_stream,
+			True_constant as stream_true_constant,
+			False_constant as stream_false_constant
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory,
+#endif
+			is_equal, copy, out
+		redefine
+			append_substring
+		end
+
 	UC_STRING_HANDLER
 		undefine
 #ifdef SE
@@ -239,6 +257,15 @@ inherit
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
+		undefine
+#ifdef SE
+			out_in_tagged_out_memory,
+			fill_tagged_out_memory,
+#endif
+			is_equal, copy, out
+		end
+
+	DEBUG_OUTPUT
 		undefine
 #ifdef SE
 			out_in_tagged_out_memory,
@@ -1622,11 +1649,6 @@ feature -- Element change
 	append_substring (a_string: STRING; s, e: INTEGER) is
 			-- Append substring of `a_string' between indexes
 			-- `s' and `e' at end of current string.
-		require
-			a_string_not_void: a_string /= Void
-			s_large_enough: s >= 1
-			e_small_enough: e <= a_string.count
-			valid_interval: s <= e + 1
 		local
 			a_substring_count: INTEGER
 			k, nb: INTEGER
@@ -1650,7 +1672,7 @@ feature -- Element change
 				set_count (count + a_substring_count)
 				put_substring_at_byte_index (str, s, e, nb, k)
 			end
-		ensure
+		ensure then
 			appended: is_equal (old clone (Current) + old a_string.substring (s, e))
 		end
 
@@ -2215,6 +2237,12 @@ feature -- Output
 			end
 		end
 
+	debug_output: STRING is
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := out
+		end
+
 feature -- Conversion
 
 	as_lower: like Current is
@@ -2335,6 +2363,25 @@ feature -- Conversion
 		ensure
 			as_string_not_void: Result /= Void
 			string_type: ANY_.same_types (Result, "")
+		end
+
+feature -- Output stream
+
+	name: STRING is "UC_STRING"
+			-- Name of output stream
+
+	eol: STRING is "%N"
+			-- Line separator
+
+	is_open_write: BOOLEAN is
+			-- Can characters be written to output stream?
+		do
+			Result := True
+		end
+
+	flush is
+			-- Do nothing (operation does not apply to string).
+		do
 		end
 
 feature -- Traversal
