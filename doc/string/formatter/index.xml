@@ -3,36 +3,102 @@
 <!--
 	description:
 
-		"Overview of the Gobo Eiffel Formatter library"
+		"Gobo Eiffel String Formatter Library"
 
-	library: "Gobo Eiffel Formatter"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Berend de Boer and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 -->
 
-<chapter id="geant_index">
-	<title>Table of Contents</title>
+<chapter id="string/formatter/index">
 
-  <para>
-    The Gobo Formatter library gives Eiffel programmers access to the
-    functionality of the Standard C library sprintf.
-  </para>
+<chapterinfo>
+	<copyright>
+		<year>2004-2005</year>
+		<holder>Berend de Boer</holder>
+	</copyright>
+	<author>
+		<firstname>Berend</firstname><surname>de Boer</surname>
+	</author>
+	<email>berend@pobox.com</email>
+	<date>7 March 2005</date>
+</chapterinfo>
 
-	<sect1>
-		<title>Overview</title>
-		<para>
-			<link linkend="overview">Overview of this library</link>
-		</para>
-		<para>
+<title>Gobo Eiffel Formatter Library</title>
+
+<para>
+The <libraryname>Gobo Eiffel String Formatter Library</libraryname> gives Eiffel 
+programmers access to the functionality of the Standard C library 
+<libraryname>sprintf</libraryname>. The 
+<libraryname>Gobo Eiffel String Formatter Library</libraryname> is fully implemented in 
+Eiffel. It does not use the C function.
+</para>
+
+<para>
+This documentation is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
 			<link linkend="quick_start">Quick Start</link>
-		</para>
-		<para>
-			<link linkend="scientific_format">The scientific format</link>
-		</para>
-		<para>
+		</term>
+		<listitem><para>
+			Quick library overview.
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
 			<link linkend="examples">Examples</link>
-		</para>
-	</sect1>
+		</term>
+		<listitem><para>
+			Some simple explained examples.
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<link linkend="correctness">Format Correctness</link>
+		</term>
+		<listitem><para>
+			How format correctness is checked.
+		</para></listitem>
+	</varlistentry>
+	
+	<varlistentry>
+		<term>
+			<link linkend="scientific_format">Scientific Format</link>
+		</term>
+		<listitem><para>
+			Definition of the scientific format.
+		</para></listitem>
+	</varlistentry>
+	
+	<varlistentry>
+		<term>
+			<link linkend="see_also">See Also</link>
+		</term>
+		<listitem><para>
+			History, related resources.
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
+	
+</variablelist>
+</blockquote>
+
+</para>
+
 </chapter>

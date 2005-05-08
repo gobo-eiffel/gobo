@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Format Correctness"
+
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2004, Berend de Boer and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="string/formatter/correctness">
+
+<chapterinfo>
+	<copyright>
+		<year>2004-2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Berend</firstname><surname>de Boer</surname>
+	</author>
+	<email>berend@pobox.com</email>
+	<date>7 March 2005</date>
+</chapterinfo>
+
+<title>Format Correctness</title>
+
+<para>
+The correctness of formats cannot be evaluated at compile-time. In fact, no 
+format can be checked completely at compile-time because the final appearance 
+on paper or on the screen must be checked by a human in each case.
+</para>
+
+<para>
+It is possible to check the correctness of formats at run-time thanks to
+preconditions:
+</para>
+
+<para>
+<orderedlist>
+	<listitem><para>about the syntactical correctness of the format 
+	string.</para></listitem>
+	<listitem><para>about the relation between the format string and the 
+	other parameters.</para></listitem>
+</orderedlist>
+</para>
+
+<para>
+Therefore, the approach is not completely unsafe. Part of the class declaration 
+is a set of routines that check the format string and parameters.
+</para>
+
+</chapter>

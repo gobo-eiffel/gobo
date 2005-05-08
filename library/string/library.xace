@@ -16,10 +16,8 @@
 		<cluster name="support"/>
 		<cluster name="formatter">
 			<option name="abstract" value="true"/>
-			<cluster name="abstract"/>
-			<cluster name="formatters"/>
-			<cluster name="support" prefix="formatter_"/>
-			<cluster name="types"/>
+			<cluster name="general"/>
+			<cluster name="parameter"/>
 		</cluster>
 	</cluster>
 </library>

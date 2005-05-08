@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"See Also"
+
+	library: "Gobo Eiffel String Library"
+	copyright: "Copyright (c) 2004, Berend de Boer and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter id="string/formatter/see_also">
+
+<chapterinfo>
+	<copyright>
+		<year>2004-2005</year>
+		<holder>Berend de Boer</holder>
+	</copyright>
+	<author>
+		<firstname>Berend</firstname><surname>de Boer</surname>
+	</author>
+	<email>berend@pobox.com</email>
+	<date>7 March 2005</date>
+</chapterinfo>
+
+<title>See Also</title>
+
+<sect1 id="related_resources"><title>Related Resources</title>
+
+<para>
+The <libraryname>Gobo Eiffel String Formatter Library</libraryname> is based on the
+<ulink url="http://www.eiffelzone.com/esd/fmt/index.html"><libraryname>SiG 
+Formatting Cluster</libraryname></ulink> of Eiffel/S (now 
+<ulink url="http://www.object-tools.com">Object Tools</ulink>). SiG put the 
+<libraryname>Formatting Cluster</libraryname> in the public domain by licensing it 
+under the <ulink url="http://www.opensource.org/licenses/eiffel.php">Eiffel Forum 
+License, version 1</ulink>. It was ported by Friedrich Dominicus to other Eiffel 
+compilers. The <libraryname>Gobo Eiffel String Formatter Library</libraryname> is based 
+on Friedrich Dominicus's work, which can be 
+<ulink url="http://www.eiffelzone.com/esd/fc/index.html">downloaded</ulink> 
+from the <ulink url="http://www.eiffelzone.com">Eiffel Zone</ulink> page.
+</para>
+
+</sect1>
+
+</chapter>

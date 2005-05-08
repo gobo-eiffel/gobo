@@ -29,8 +29,8 @@
 			<!-- Concepts: -->
 		<xslt
 			processor="${xslt_processor}"
-			input="overview.xml"
-			output="overview.html"
+			input="quick_start.xml"
+			output="quick_start.html"
 			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
 		/>
 
@@ -40,16 +40,19 @@
 		<set name="next_chapter" value="index"/>
 		<geant target="xslt"/>
 
-		<set name="next_chapter" value="overview"/>
+		<set name="next_chapter" value="quick_start"/>
 		<geant target="xslt"/>
 
-		<set name="next_chapter" value="quick_start"/>
+		<set name="next_chapter" value="examples"/>
+		<geant target="xslt"/>
+
+		<set name="next_chapter" value="correctness"/>
 		<geant target="xslt"/>
 
 		<set name="next_chapter" value="scientific_format"/>
 		<geant target="xslt"/>
 
-		<set name="next_chapter" value="examples"/>
+		<set name="next_chapter" value="see_also"/>
 		<geant target="xslt"/>
 
 		<set name="next_chapter" value="index"/>
@@ -72,11 +75,11 @@
 
 			<!-- Concepts: -->
 		<delete file="index.html"/>
-		<delete file="overview.html"/>
 		<delete file="quick_start.html"/>
+		<delete file="examples.html"/>		
+		<delete file="correctness.html"/>
 		<delete file="scientific_format.html"/>
-		<delete file="examples.html"/>
-		<delete file="flat_short_form.html"/>
+		<delete file="see_also.html"/>
 	</target>
 
 
