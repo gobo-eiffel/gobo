@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test ST_SPLITTER"
+		"Test features of class ST_SPLITTER"
 
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
