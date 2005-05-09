@@ -28,7 +28,7 @@ creation
 feature {NONE} -- Initialization
 
 	make_with_escape (c: CHARACTER) is
-			-- Create new scientific formatter with `c' as escape character.
+			-- Create new formatter with `c' as escape character.
 		do
 			precursor (c)
 			create parameter_formatters.make (50)

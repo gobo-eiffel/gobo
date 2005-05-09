@@ -33,7 +33,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make is
-			-- Create new scientific formatter with default escape character '$'.
+			-- Create new formatter with default escape character '$'.
 		do
 			make_with_escape ('$')
 		ensure
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_escape (c: CHARACTER) is
-			-- Create new scientific formatter with `c' as escape character.
+			-- Create new formatter with `c' as escape character.
 		do
 			escape_character := c
 			create string_output_stream.make (empty_string)
