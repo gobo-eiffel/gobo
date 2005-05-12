@@ -53,15 +53,6 @@ feature -- Access
 			Result := any_item
 		end
 
-	instruction_name: STRING is
-			-- Name of instruction, for diagnostics
-		require
-			executable_not_void: executable /= Void
-		deferred
-		ensure
-			instruction_name_not_void: Result /= Void
-		end
-
 	assembled_parameters (a_context:XM_XSLT_EVALUATION_CONTEXT;  a_parameter_list: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]): XM_XSLT_PARAMETER_SET is
 			-- Assembled parameter set
 		require
@@ -126,7 +117,7 @@ feature -- Status report
 	creates_new_nodes: BOOLEAN is
 			-- Can `Current' create new nodes?
 		do
-			Result := false
+			Result := False
 		end
 
 feature -- Optimization
@@ -194,11 +185,17 @@ feature -- Evaluation
 			end
 			if is_iterator_supported then
 				create_iterator (a_context)
-				last_iterator.start
-				if last_iterator.after then
-					last_evaluated_item := Void
+				if last_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
 				else
-					last_evaluated_item := last_iterator.item
+					last_iterator.start
+					if last_iterator.is_error then
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
+					elseif last_iterator.after then
+						last_evaluated_item := Void
+					else
+						last_evaluated_item := last_iterator.item
+					end
 				end
 			else
 				another_context ?= a_context.new_minor_context
@@ -206,7 +203,7 @@ feature -- Evaluation
 					evaluation_context: another_context /= Void
 					-- This is XSLT
 				end
-				create a_receiver.make_with_size (1)
+				create a_receiver.make_with_size (1, another_context.transformer)
 				another_context.change_to_sequence_output_destination (a_receiver)
 				process (another_context)
 				a_receiver.end_document
@@ -242,11 +239,12 @@ feature -- Evaluation
 					evaluation_context: another_context /= Void
 					-- This is XSLT
 				end
-				create a_receiver.make
+				create a_receiver.make (another_context.transformer)
 				another_context.change_to_sequence_output_destination (a_receiver)
 				process (another_context)
 				a_receiver.end_document
-				last_iterator := a_receiver.iterator (a_context)
+				a_receiver.sequence.create_iterator (a_context)
+				last_iterator := a_receiver.sequence.last_iterator
 			end
 		end
 
@@ -261,7 +259,7 @@ feature -- Evaluation
 					evaluation_context: another_context /= Void
 					-- This is XSLT
 				end
-			create a_receiver.make
+			create a_receiver.make (another_context.transformer)
 			another_context.change_to_sequence_output_destination (a_receiver)
 			process (another_context)
 			a_receiver.end_document

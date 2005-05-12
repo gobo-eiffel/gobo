@@ -73,12 +73,6 @@ feature -- Access
 			end
 		end
 	
-	instruction_name: STRING is
-			-- Name of instruction, for diagnostics
-		do
-			Result := "xsl:element"
-		end
-
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions
 		do
@@ -171,7 +165,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "element ")
+			a_string := STRING_.appended_string (indentation (a_level), "xsl:element ")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			a_string := STRING_.appended_string (indentation (a_level + 1), "name ")
@@ -292,7 +286,7 @@ feature {NONE} -- Implementation
 invariant
 
 	element_name_not_void: initialized implies element_name /= Void
-	namespace_or_namespace_context: initialized implies namespace = Void implies namespace_context /= Void
+	namespace_or_namespace_context: initialized and then namespace = Void implies namespace_context /= Void
 
 end
 	

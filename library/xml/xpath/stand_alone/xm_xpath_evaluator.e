@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			else
 				from
 					a_sequence_iterator.start
-					if a_sequence_iterator.is_error then -- can happen due to mapping iterators
+					if a_sequence_iterator.is_error then
 						is_error := True
 						internal_error_value := a_sequence_iterator.error_value
 					end
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 					end
 					
 					a_sequence_iterator.forth
-					if a_sequence_iterator.is_error then -- can happen due to mapping iterators
+					if a_sequence_iterator.is_error then
 						is_error := True
 						internal_error_value := a_sequence_iterator.error_value
 					end

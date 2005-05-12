@@ -72,7 +72,6 @@ feature -- Access
 			-- Does `an_item' conform to `Current'?
 		local
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
 		do
 			if an_item.is_atomic_value then
 				an_atomic_value := an_item.as_atomic_value

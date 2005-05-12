@@ -16,24 +16,13 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, post_validate, returned_item_type,
-			mark_tail_calls, set_additional_trace_properties
+			validate, post_validate, returned_item_type,
+			mark_tail_calls
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
-
-feature {NONE} -- Initialization
-	
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
-		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
-			-- Establish invariant.
-		do
-			is_instruction := True
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-		end
 
 feature -- Status setting
 
@@ -198,14 +187,6 @@ feature -- Element change
 			last_generated_expression := a_call
 		end
 
-	set_additional_trace_properties (a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION) is
-			-- Set additional properties on `a_trace_instruction'.
-		do
-			if template /= Void then
-				a_trace_instruction.add_property (called_template_name, "name")
-			end
-		end
-		
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
 	returned_item_type: XM_XPATH_ITEM_TYPE is
@@ -268,9 +249,5 @@ feature {NONE} -- Implementation
 				report_compile_error (an_error)
 			end
 		end
-
-invariant
-
-	instruction: is_instruction = True
 
 end

@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -72,7 +71,9 @@ feature -- Evaluation
 			-- Evaluate as a single item
 		do
 			arguments.item (1).evaluate_item (a_context)
-			if not arguments.item (1).last_evaluated_item.is_error then
+			if arguments.item (1).last_evaluated_item = Void then
+				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+			elseif not arguments.item (1).last_evaluated_item.is_error then
 				if not arguments.item (1).last_evaluated_item.is_node then
 					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
 				else

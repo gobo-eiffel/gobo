@@ -16,24 +16,13 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, returned_item_type, may_contain_sequence_constructor,
+			validate, returned_item_type, may_contain_sequence_constructor,
 			is_permitted_child, is_for_each
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
-
-feature {NONE} -- Initialization
-	
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
-		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
-			-- Establish invariant.
-		do
-			is_instruction := True
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-		end
 
 feature -- Status report
 
@@ -141,8 +130,5 @@ feature {NONE} -- Implementation
 	select_expression: XM_XPATH_EXPRESSION
 			-- Select expression
 
-invariant
-
-	instruction: is_instruction = True
 
 end

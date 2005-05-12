@@ -14,6 +14,11 @@ class XM_XSLT_CONFIGURATION
 
 inherit
 
+	XM_XPATH_CONFIGURATION
+		redefine
+			is_tracing, trace
+		end
+
 	XM_STRING_MODE
 
 	XM_RESOLVER_FACTORY
@@ -268,6 +273,14 @@ feature -- Element change
 			use_xpointer := False
 		ensure
 			no_xpointer_usage: not use_xpointer
+		end
+
+	trace (a_label, a_value: STRING) is
+			-- Create trace entry.
+		do
+			if trace_listener.is_tracing then
+				trace_listener.trace_user_entry (a_label, a_value)
+			end
 		end
 
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation

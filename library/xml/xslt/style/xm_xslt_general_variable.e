@@ -17,8 +17,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, returned_item_type, may_contain_sequence_constructor,
-			set_additional_trace_properties
+			validate, returned_item_type, may_contain_sequence_constructor
 		end
 
 	XM_XSLT_PROCEDURE
@@ -190,7 +189,6 @@ feature -- Status setting
 			a_message: STRING
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_first_node: XM_XPATH_NODE
-			a_parameter: XM_XSLT_PARAM
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if select_expression /= Void and then has_child_nodes then
@@ -278,12 +276,6 @@ feature -- Status setting
 			end
 		end
 
-	set_additional_trace_properties (a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION) is
-			-- Set additional properties on `a_trace_instruction'.
-		do
-			a_trace_instruction.add_property (variable_name, "name")
-		end
-
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 
 	returned_item_type: XM_XPATH_ITEM_TYPE is
@@ -356,16 +348,18 @@ feature {NONE} -- Implementation
 				end
 			end
 			if is_global_variable then
-				initialize_global_variable (a_variable.as_global_variable)
+				initialize_global_variable (a_variable.as_global_variable, an_executable)
 			end
 		end
 
-	initialize_global_variable (a_global_variable: XM_XSLT_GLOBAL_VARIABLE) is
+	initialize_global_variable (a_global_variable: XM_XSLT_GLOBAL_VARIABLE; an_executable: XM_XSLT_EXECUTABLE) is
 			-- Initialize global variable.
 		require
 			global_variable: is_global_variable and then a_global_variable /= Void
+			executable_not_void: an_executable /= Void
 		local
 			an_expression: XM_XPATH_EXPRESSION
+			a_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
 		do
 			
 			if select_expression /= Void then
@@ -385,6 +379,11 @@ feature {NONE} -- Implementation
 					if an_expression.is_error then
 						report_compile_error (an_expression.error_value)
 					else
+						if configuration.is_tracing then
+							create a_trace_wrapper.make (an_expression, an_executable, Current)
+							a_trace_wrapper.set_source_location (containing_stylesheet.module_number (system_id), line_number)
+							an_expression := a_trace_wrapper
+						end
 						allocate_slots (an_expression, slot_manager)
 						a_global_variable.set_slot_manager (slot_manager)
 					end

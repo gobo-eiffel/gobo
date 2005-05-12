@@ -16,21 +16,12 @@ inherit
 
 	XM_XSLT_LOCAL_VARIABLE
 		redefine
-			make, process_leaving_tail, sub_expressions, display
+			process_leaving_tail, sub_expressions, display
 		end
 
 creation
 
 	make
-
-feature {NONE} -- Initialization
-
-	make (an_executable: XM_XSLT_EXECUTABLE; a_name: STRING; a_slot_number: INTEGER) is
-			-- Establish invariant.
-		do
-			Precursor (an_executable, a_name, a_slot_number)
-			instruction_name := "xsl:param"
-		end
 
 feature -- Access
 	

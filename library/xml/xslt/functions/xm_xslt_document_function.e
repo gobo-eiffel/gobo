@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 2
 			create arguments.make (0)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -81,6 +80,7 @@ feature -- Evaluation
 			a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER
 			an_xslt_context: XM_XSLT_EVALUATION_CONTEXT
 		do
+			last_iterator := Void
 			arguments.item (1).create_iterator (a_context)
 			an_href_iterator := arguments.item (1).last_iterator
 			if not an_href_iterator.is_error then

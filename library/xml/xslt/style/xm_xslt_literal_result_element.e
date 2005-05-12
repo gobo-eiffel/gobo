@@ -16,22 +16,31 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, validate_children, may_contain_sequence_constructor
+			validate, validate_children, may_contain_sequence_constructor, trace_property, construct_type
 		end
+
+	XM_XSLT_TRACE_CONSTANTS
 
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 
-feature {NONE} -- Initialization
-		
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
-		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
-			-- Establish invariant.
+feature -- Access
+
+	trace_property (an_expanded_name: STRING): STRING is
+			-- Value of trace-property
 		do
-			is_instruction := True
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			if STRING_.same_string (an_expanded_name, Gexslt_name_pseudo_attribute) then
+				Result := shared_name_pool.display_name_from_name_code (name_code)
+			else
+				Result := Precursor (an_expanded_name)
+			end
+		end
+	
+	construct_type: INTEGER is
+			-- Type of construct being traced
+		do
+			Result := Literal_result_element
 		end
 
 feature -- Status report

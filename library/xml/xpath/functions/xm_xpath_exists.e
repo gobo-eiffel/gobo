@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -75,8 +74,18 @@ feature -- Evaluation
 		do
 			arguments.item (1).create_iterator (a_context)
 			an_iterator := arguments.item (1).last_iterator
-			an_iterator.start
-			create last_boolean_value.make (not an_iterator.after)
+			if an_iterator.is_error then
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (an_iterator.error_value)
+			else
+				an_iterator.start
+				if an_iterator.is_error then
+					create last_boolean_value.make (False)
+					last_boolean_value.set_last_error (an_iterator.error_value)
+				else
+					create last_boolean_value.make (not an_iterator.after)
+				end
+			end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is

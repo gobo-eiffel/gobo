@@ -25,7 +25,7 @@ feature -- Access
 feature -- Status report
 
 	last_evaluated_binding: XM_XPATH_VALUE
-			-- Value from calling evaluated_binding
+			-- Value from calling `evaluate_variable'
 
 	is_global: BOOLEAN is
 			-- Is binding global or local?

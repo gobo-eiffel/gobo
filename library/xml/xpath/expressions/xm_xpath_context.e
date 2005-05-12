@@ -51,6 +51,13 @@ feature -- Access
 	current_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			-- Receiver to which output is currently being written.
 
+	configuration: XM_XPATH_CONFIGURATION is
+			-- System configuration
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	local_variable_frame: XM_XPATH_STACK_FRAME is
 			-- Local variables in scope
 		deferred
@@ -97,9 +104,11 @@ feature -- Access
 	context_item: XM_XPATH_ITEM is
 			-- The context item (".")
 		do
-			if current_iterator /= Void and then not current_iterator.is_error then
+			if current_iterator /= Void then
 				if current_iterator.before then current_iterator.start end
-				if not current_iterator.after then
+				if current_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} Result.make (current_iterator.error_value)
+				elseif not current_iterator.after then
 					Result := current_iterator.item
 				end
 			end
@@ -113,7 +122,7 @@ feature -- Access
 		require
 			context_position_set: is_context_position_set
 		do
-			 if not current_iterator.is_error then Result := current_iterator.index end
+			 Result := current_iterator.index
 		ensure
 			positive_result: Result >= 0 -- But it is a Dynamic error, XPDY0002, if Result = 0
 			restricted_implies_undefined: is_restricted implies Result = 0
@@ -128,15 +137,17 @@ feature -- Access
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			if cached_last = -1 then
-				an_iterator := current_iterator.another
 				cached_last := 0
-				from
-					an_iterator.start
-				until
-					an_iterator.after
-				loop
-					an_iterator.forth
-					cached_last := cached_last + 1
+				if not current_iterator.is_error then
+					an_iterator := current_iterator.another
+					from
+						an_iterator.start
+					until
+						an_iterator.is_error or else an_iterator.after
+					loop
+						an_iterator.forth
+						cached_last := cached_last + 1
+					end
 				end
 			end
 			Result := cached_last
@@ -208,7 +219,7 @@ feature -- Status report
 	is_context_position_set: BOOLEAN is
 			-- Is the context position available?
 		do
-			Result := current_iterator /= Void
+			Result := current_iterator /= Void and then not current_iterator.is_error
 		ensure
 			restricted_implies_false: is_restricted implies Result = False
 		end

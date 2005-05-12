@@ -46,7 +46,6 @@ feature {NONE} -- Initialization
 			set_with_params_parent (actual_parameters, Current)
 			tunnel_parameters := some_tunnel_parameters
 			set_with_params_parent (tunnel_parameters, Current)
-			instruction_name := "xsl:apply-templates"
 			adopt_child_expression (select_expression)
 			compute_static_properties
 			initialized := True
@@ -62,9 +61,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
-
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
@@ -101,10 +97,48 @@ feature -- Status report
 			-- Diagnostic print of expression structure to `std.error'
 		local
 			a_string: STRING
+			a_cursor:  DS_ARRAYED_LIST_CURSOR [XM_XSLT_COMPILED_WITH_PARAM]
+			a_param: XM_XSLT_COMPILED_WITH_PARAM
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "apply templates: select=")
+			a_string := STRING_.appended_string (indentation (a_level), "xsl:apply templates")
 			std.error.put_string (a_string); std.error.put_new_line
-			select_expression.display (a_level + 1)
+			a_string := STRING_.appended_string (indentation (a_level + 1), "node selection criteria:")
+			std.error.put_string (a_string); std.error.put_new_line
+			select_expression.display (a_level + 2)
+			if is_current_mode_used then
+				a_string := STRING_.appended_string (indentation (a_level + 1), "applies to current mode.")
+			else
+				a_string := STRING_.appended_string (indentation (a_level + 1), "applies to mode ")
+				std.error.put_string (a_string)
+				std.error.put_string (mode.name)
+				std.error.put_string (" %N")
+			end
+			if actual_parameters.count > 0 then
+				a_string := STRING_.appended_string (indentation (a_level + 1), "The following parameters will be passed:%N")
+				std.error.put_string (a_string)
+				from
+					a_cursor := actual_parameters.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					a_param := a_cursor.item
+					a_param.display (a_level + 1)
+					a_cursor.forth
+				end
+			end
+			if tunnel_parameters.count > 0 then
+				a_string := STRING_.appended_string (indentation (a_level + 1), "The following tunnel parameters are in scope:%N")
+				std.error.put_string (a_string)
+				from
+					a_cursor := tunnel_parameters.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					a_param := a_cursor.item
+					a_param.display (a_level + 1)
+					a_cursor.forth
+				end
+			end
 		end
 	
 feature -- Optimization
@@ -115,20 +149,17 @@ feature -- Optimization
 			simplify_with_params (actual_parameters)
 			simplify_with_params (tunnel_parameters)
 			select_expression.simplify
-			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression)end
+			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions.
-		local
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			analyze_with_params (actual_parameters, a_context)
 			analyze_with_params (tunnel_parameters, a_context)
 			select_expression.analyze (a_context)
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
-			an_empty_sequence ?= select_expression
-			if an_empty_sequence /= Void then set_replacement (an_empty_sequence) end
+			if select_expression.is_empty_sequence then set_replacement (select_expression.as_empty_sequence) end
 		end
 
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is
@@ -186,7 +217,6 @@ feature {NONE} -- Implementation
 			a_mode: XM_XSLT_MODE
 			some_parameters, some_tunnel_parameters: XM_XSLT_PARAMETER_SET
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR
 		do
 			last_tail_call := Void
 			an_evaluation_context ?= a_context
@@ -224,8 +254,7 @@ feature {NONE} -- Implementation
 				else
 					-- quick exit if the iterator is empty
 					
-					an_empty_iterator ?= an_iterator
-					if an_empty_iterator = Void then
+					if not an_iterator.is_empty_iterator then
 						
 						-- Process the selected nodes now.
 						

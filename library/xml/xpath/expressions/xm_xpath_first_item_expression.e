@@ -81,11 +81,17 @@ feature -- Evaluation
 		do
 			base_expression.create_iterator (a_context)
 			an_iterator := base_expression.last_iterator
-			an_iterator.start
-			if not an_iterator.after then
-				last_evaluated_item := an_iterator.item
+			if an_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 			else
-				last_evaluated_item := Void
+				an_iterator.start
+				if an_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				elseif not an_iterator.after then
+					last_evaluated_item := an_iterator.item
+				else
+					last_evaluated_item := Void
+				end
 			end
 		end
 

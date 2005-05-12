@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		do
 			Precursor (an_executable, some_actual_parameters, some_tunnel_parameters)
-			instruction_name := "xsl:next-match"
+			-- TODO: remove this re-defintion (?) instruction_name := "xsl:next-match"
 		end
 
 feature -- Evaluation
@@ -58,7 +58,7 @@ feature -- Evaluation
 				a_mode := a_context.current_mode
 				if a_mode = Void then a_mode := a_transformer.rule_manager.mode (Default_mode) end
 				a_current_iterator := a_context.current_iterator
-				if a_current_iterator = Void or else a_current_iterator.off then
+				if a_current_iterator = Void or else a_current_iterator.is_error or else a_current_iterator.off then
 					create an_error.make_from_string ("Context item is not set whilst evaluating xsl:next-match.", "", "XTDE0565", Dynamic_error)
 					a_transformer.report_fatal_error (an_error, Void)
 				else

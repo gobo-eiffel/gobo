@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_TREE_ELEMENT
 
-	XM_XPATH_LOCATOR
+	XM_XSLT_TRACE_DETAILS
 
 	XM_XSLT_VALIDATION
 
@@ -44,22 +44,56 @@ feature {NONE} -- Initialization
 
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
 			-- Establish invariant.
 		require
 			error_listener_not_void: an_error_listener /= Void
 			document_not_void: a_document /= Void
+			configuration_not_void: a_configuration /= Void
 			strictly_positive_sequence_number: a_sequence_number > 0
 		do
+			configuration := a_configuration
 			reporting_circumstances := Report_always
 			error_listener := an_error_listener
 			make (a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
 		ensure
 			error_listener_set: error_listener = an_error_listener
+			configuration_set: configuration = a_configuration
 			name_code_set: name_code = a_name_code
 		end			
 			
 feature -- Access
+	
+	construct_type: INTEGER is
+			-- Type of construct being traced
+		do
+			Result := fingerprint
+		end
+
+	trace_properties: DS_LIST [STRING] is
+			-- Additional trace properties
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			an_attribute: XM_XPATH_TREE_ATTRIBUTE
+		do
+			create {DS_ARRAYED_LIST [STRING]} Result.make_default
+			Result.set_equality_tester (string_equality_tester)
+			from
+				an_iterator := new_axis_iterator (Attribute_axis); an_iterator.start
+			until
+				an_iterator.after
+			loop
+				an_attribute := an_iterator.item.as_tree_node.as_tree_attribute
+				Result.force_last (shared_name_pool.expanded_name_from_name_code (an_attribute.fingerprint))
+				an_iterator.forth
+			end
+		end			
+
+	trace_property (an_expanded_name: STRING): STRING is
+			-- Value of trace-property
+		do
+			Result := attribute_value_by_name (namespace_uri_from_expanded_name (an_expanded_name), local_name_from_expanded_name (an_expanded_name))
+		end
 
 	default_collation_name: STRING is
 			-- Default collation name
@@ -102,6 +136,9 @@ feature -- Access
 				end
 			end
 		end
+
+	configuration: XM_XSLT_CONFIGURATION
+			-- System configuration
 
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
@@ -558,11 +595,6 @@ feature -- Status_report
 					if a_style_element /= Void then
 						if a_style_element.is_stylesheet_in_error then
 							Result := True
-							debug ("XSLT stylesheet compilation")
-								std.error.put_string ("Style element marked in error:%N")
-								std.error.put_string (a_style_element.error_value.error_message)
-								print (a_style_element.out);print ("%N")
-							end
 							a_cursor.go_after
 						end
 					end
@@ -593,11 +625,8 @@ feature -- Status_report
 				Result := False
 			elseif an_explain_value /= Void and then STRING_.same_string (an_explain_value, "yes") then
 				Result := True
-			else
-				an_explain_value := containing_stylesheet.attribute_value_by_expanded_name (Gexslt_explain_attribute)
-				if an_explain_value /= Void then 
-					Result := STRING_.same_string (an_explain_value, "all")
-				end
+			elseif an_explain_value /= Void and then STRING_.same_string (an_explain_value, "all") then
+				Result := True
 			end
 		end
 
@@ -878,6 +907,8 @@ feature -- Status setting
 		local
 			an_analyzed_expression: XM_XPATH_EXPRESSION
 			was_replaced: BOOLEAN
+			--some_trace_details: XM_XSLT_INSTRUCTION_DETAILS
+			--a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION
 		do
 			if an_expression.is_computed_expression then
 
@@ -898,7 +929,7 @@ feature -- Status setting
 				std.error.put_string ("' of element '")
 				std.error.put_string (node_name)
 				std.error.put_string ("' at line ")
-				--	std.error.put_string (line_number)
+				std.error.put_string (line_number.out)
 				std.error.put_string (" %N")
 				if not an_analyzed_expression.is_error then
 					std.error.put_string ("Static type: ")
@@ -923,12 +954,21 @@ feature -- Status setting
 
 					an_expression.set_replacement (an_analyzed_expression)
 				end
+				-- TODO: this all needs an executable
+				--if configuration.is_tracing then
+				--	create some_trace_details.make (Xpath_expression_in_xslt, line_numer, system_id)
+				--	some_trace_details.set_trace_property (a_name, Gexslt_expression_name_pseudo_attribute)
+				--	create a_trace_instruction.make (an_analyzed_expression, an_executable, some_trace_details)
+				--	a_trace_expression.set_parent (Current)
+				--	a_trace_expression.set_source_location (containing_stylesheet.module_number (system_id), line_number)
+				--	an_expression.set_replacement (an_analyzed_expression)
+				--end
 			end
 		end
 
 	type_check_pattern (a_name: STRING; a_pattern: XM_XSLT_PATTERN) is
 			-- Type-check `a_pattern'.
-			-- This is called to check each expression while the containing  instruction is being validated.
+			-- This is called to check each pattern while the containing  instruction is being validated.
 			-- It is not just a static type-check, it also adds code
 			--  to perform any necessary run-time type checking and/or conversion
 		require
@@ -1040,25 +1080,26 @@ feature -- Status setting
 
 feature -- Creation
 
-	new_trace_instruction (an_instruction: XM_XSLT_INSTRUCTION): XM_XSLT_TRACE_INSTRUCTION is
-			-- newly created trace instruction
+	new_trace_wrapper (a_child: XM_XPATH_EXPRESSION; an_executable: XM_XSLT_EXECUTABLE;  some_details: XM_XSLT_TRACE_DETAILS): XM_XSLT_TRACE_WRAPPER is
+			-- newly created trace wrapper
 		require
-			base_instruction_not_void: an_instruction /= Void
+			child_expresion_not_void: a_child /= Void
+			executable_not_void: an_executable /= Void
+			trace_details_not_void: some_details /= Void
 		local
-			a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION
+			a_trace_wrapper: XM_XSLT_TRACE_WRAPPER
 		do
-			a_trace_instruction ?= an_instruction -- TODO: as_trace_instruction (? - check after re-work of tracing)
-			if a_trace_instruction /= Void then
+			a_trace_wrapper ?= a_child
+			if a_trace_wrapper /= Void then
 
 				-- this can happen, for example, after optimizing a compile-time xsl:if
 				
-				Result := a_trace_instruction
+				Result := a_trace_wrapper
 			else
-				create Result.make (an_instruction)
-				set_additional_trace_properties (Result)
+				create {XM_XSLT_TRACE_INSTRUCTION} Result.make (a_child, an_executable, some_details)
 			end
 		ensure
-			trace_instruction_not_void: Result /= Void
+			trace_wrapper_not_void: Result /= Void
 		end
 
 	generate_attribute_value_template (an_avt_expression: STRING; a_static_context: XM_XSLT_EXPRESSION_CONTEXT) is
@@ -1281,14 +1322,6 @@ feature -- Creation
 
 feature -- Element change
 
-	set_additional_trace_properties (a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION) is
-			-- Set additional properties on `a_trace_instruction'.
-		require
-			trace_instruction_not_void: a_trace_instruction /= Void
-		do
-			-- default does nothing
-		end
-
 	bind_variable (a_fingerprint: INTEGER) is
 			-- Bind variable to it's declaration.
 		require
@@ -1443,7 +1476,7 @@ feature -- Element change
 						if an_expression.is_error then
 							report_compile_error (an_expression.error_value)
 						else
-							create a_dynamic_context.make_restricted (a_static_context, principal_stylesheet.collation_map)
+							create a_dynamic_context.make_restricted (a_static_context, principal_stylesheet.collation_map, configuration)
 							an_expression.calculate_effective_boolean_value (a_dynamic_context)
 							a_boolean_value := an_expression.last_boolean_value
 							if a_boolean_value.is_error then
@@ -1749,7 +1782,7 @@ feature -- Element change
 			no_previous_error: not any_compile_errors
 			validation_complete: post_validated
 			executable_not_void: an_executable /= Void
-			iterator_not_void: an_axis_iterator /= Void
+			iterator_invulnerable: an_axis_iterator /= Void and then an_axis_iterator.is_invulnerable
 		local
 			a_line_number: INTEGER
 			a_node: XM_XPATH_NODE
@@ -2257,6 +2290,16 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Local
 			returned_item_type_not_void: Result /= Void
 		end
 
+feature {XM_XSLT_NODE_FACTORY} -- Status setting
+	
+	flag_as_instruction is
+			-- Flag `Current' as an XSLT instruction.
+		do
+			is_instruction := True
+		ensure
+			is_instruction: is_instruction
+		end
+
 feature {NONE} -- Implementation
 
 	Fixed_component: INTEGER is 1
@@ -2447,7 +2490,7 @@ feature {NONE} -- Implementation
 			no_previous_error: not any_compile_errors
 			validation_complete: post_validated
 			executable_not_void: an_executable /= Void
-			iterator_not_void: an_axis_iterator /= Void
+			iterator_not_void: an_axis_iterator /= Void and then an_axis_iterator.is_invulnerable
 			style_element_not_void: a_style_element /= Void
 		local
 			a_child, a_tail: XM_XPATH_EXPRESSION
@@ -2460,6 +2503,9 @@ feature {NONE} -- Implementation
 				a_child := a_style_element.last_generated_expression
 				if a_child /= Void and then a_child.is_computed_expression then 
 					a_child.as_computed_expression.set_source_location (containing_stylesheet.module_number (a_style_element.system_id), a_style_element.line_number)
+				end
+				if a_child /= Void and then configuration.is_tracing and then (include_parameters or else not a_style_element.is_param) then
+					a_child := new_trace_wrapper (a_child, an_executable, a_style_element)
 				end
 				compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
 				a_tail := last_generated_expression

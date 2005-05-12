@@ -70,14 +70,10 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "range test minimum<=value<=maximum ")
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				minimum_bound.display (a_level + 1)
-				value.display (a_level + 1)
-				maximum_bound.display (a_level + 1)
-			end
+			std.error.put_new_line
+			minimum_bound.display (a_level + 1)
+			value.display (a_level + 1)
+			maximum_bound.display (a_level + 1)
 		end
 
 feature -- Optimization

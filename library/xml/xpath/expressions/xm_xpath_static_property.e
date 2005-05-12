@@ -42,6 +42,9 @@ feature -- Status report
 
 feature -- Dependencies
 
+	Dependency_flag_count: INTEGER is 9
+			-- Number of dependency flags
+
 	dependencies: ARRAY [BOOLEAN]
 			-- Dependencies of expression
 
@@ -110,6 +113,14 @@ feature -- Dependencies
 			Result := dependencies.item (8)
 		end
 	
+	depends_upon_user_functions: BOOLEAN is
+		-- Expression depends upon user functions
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			Result := dependencies.item (9)
+		end
+	
 
 	depends_upon_xslt_context: BOOLEAN is
 			-- Expression depends upon the XSLT context
@@ -148,7 +159,7 @@ feature -- Setting dependencies
 			dependencies_not_computed: not are_dependencies_computed
 		do
 			are_dependencies_computed := True
-			create dependencies.make (1, 8)
+			create dependencies.make (1, Dependency_flag_count)
 		ensure
 			dependencies_computed: are_dependencies_computed
 		end
@@ -159,7 +170,7 @@ feature -- Setting dependencies
 			intrinsic_dependencies_not_computed: not are_intrinsic_dependencies_computed
 		do
 			are_intrinsic_dependencies_computed := True
-			create intrinsic_dependencies.make (1,8)
+			create intrinsic_dependencies.make (1, Dependency_flag_count)
 		ensure
 			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
 		end
@@ -167,7 +178,7 @@ feature -- Setting dependencies
 	set_dependencies (a_dep: ARRAY [BOOLEAN]) is
 			-- Set all dependencies from `a_dep'.
 		require
-			dependencies_not_void: a_dep /= Void and then a_dep.count = 8
+			dependencies_not_void: a_dep /= Void and then a_dep.count = Dependency_flag_count
 		do
 			dependencies := a_dep
 			are_dependencies_computed := True
@@ -179,7 +190,7 @@ feature -- Setting dependencies
 	merge_dependencies (a_dep: ARRAY [BOOLEAN]) is
 		-- Merge all dependencies from `a_dep' into current.
 		require
-			dependencies_not_void: a_dep /= Void and then a_dep.count = 8
+			dependencies_not_void: a_dep /= Void and then a_dep.count = Dependency_flag_count
 			dependencies_computed: are_dependencies_computed
 		local
 			an_index: INTEGER
@@ -187,9 +198,9 @@ feature -- Setting dependencies
 			from
 				an_index := 1
 			variant
-				9 - an_index
+				Dependency_flag_count + 1 - an_index
 			until
-				an_index > 8
+				an_index > Dependency_flag_count
 			loop
 				if a_dep.item (an_index) then
 					dependencies.put (True, an_index)
@@ -203,7 +214,7 @@ feature -- Setting dependencies
 		do
 			if not are_dependencies_computed then
 				are_dependencies_computed := True
-				create dependencies.make (1, 8)
+				create dependencies.make (1, Dependency_flag_count)
 			end
 			dependencies.put (True, 1)
 		ensure
@@ -215,7 +226,7 @@ feature -- Setting dependencies
 		do
 			if not are_intrinsic_dependencies_computed then
 				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1, 8)
+				create intrinsic_dependencies.make (1, Dependency_flag_count)
 			end
 			intrinsic_dependencies.put (True, 1)
 		ensure
@@ -226,8 +237,7 @@ feature -- Setting dependencies
 		-- Set expression to depend upon context item.
 		do
 			if not are_dependencies_computed then
-				are_dependencies_computed := True
-				create dependencies.make (1, 8)
+				initialize_dependencies
 			end
 			dependencies.put (True, 2)
 		ensure
@@ -248,8 +258,7 @@ feature -- Setting dependencies
 			-- Set expression to depend upon context item.
 		do
 			if not are_intrinsic_dependencies_computed then
-				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1, 8)
+				initialize_intrinsic_dependencies
 			end
 			intrinsic_dependencies.put (True, 2)
 		ensure
@@ -260,8 +269,7 @@ feature -- Setting dependencies
 		-- Set expression to depend upon context position.
 		do
 			if not are_dependencies_computed then
-				are_dependencies_computed := True
-				create dependencies.make (1, 8)
+				initialize_dependencies
 			end
 			dependencies.put (True, 3)
 		ensure
@@ -282,8 +290,7 @@ feature -- Setting dependencies
 			-- Set expression to depend upon context position.
 		do
 			if not are_intrinsic_dependencies_computed then
-				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1, 8)
+				initialize_intrinsic_dependencies
 			end
 			intrinsic_dependencies.put (True, 3)
 		ensure
@@ -294,8 +301,7 @@ feature -- Setting dependencies
 		-- Set expression to depend upon last.
 		do
 			if not are_dependencies_computed then
-				are_dependencies_computed := True
-				create dependencies.make (1, 8)
+				initialize_dependencies
 			end
 			dependencies.put (True, 4)
 		ensure
@@ -306,8 +312,7 @@ feature -- Setting dependencies
 			-- Set expression to depend upon last.
 		do
 			if not are_intrinsic_dependencies_computed then
-				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1, 8)
+				initialize_intrinsic_dependencies
 			end
 			intrinsic_dependencies.put (True, 4)
 		ensure
@@ -328,8 +333,7 @@ feature -- Setting dependencies
 		-- Set expression to depend upon context document.
 		do
 			if not are_dependencies_computed then
-				are_dependencies_computed := True
-				create dependencies.make (1, 8)
+				initialize_dependencies
 			end
 			dependencies.put (True, 5)
 		ensure
@@ -340,8 +344,7 @@ feature -- Setting dependencies
 			-- Set expression to depend upon context document.
 		do
 			if not are_intrinsic_dependencies_computed then
-				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1, 8)
+				initialize_intrinsic_dependencies
 			end
 			intrinsic_dependencies.put (True, 5)
 		ensure
@@ -362,8 +365,7 @@ feature -- Setting dependencies
 			-- Set expression to depend upon current-group() and/or current-grouping-key() and/or regex-group().
 		do
 			if not are_dependencies_computed then
-				are_dependencies_computed := True
-				create dependencies.make (1, 8)
+				initialize_dependencies
 			end
 			dependencies.put (True, 6)
 		ensure
@@ -374,8 +376,7 @@ feature -- Setting dependencies
 			-- Set expression to depend upon current-group() and/or current-grouping-key() and/or regex-group().
 		do
 			if not are_intrinsic_dependencies_computed then
-				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1, 8)
+				initialize_intrinsic_dependencies
 			end
 			intrinsic_dependencies.put (True, 6)
 		ensure
@@ -396,20 +397,29 @@ feature -- Setting dependencies
 			-- Set expression to depend upon regexp-group().
 		do
 			if not are_dependencies_computed then
-				are_dependencies_computed := True
-				create dependencies.make (1, 8)
+				initialize_dependencies
 			end
 			dependencies.put (True, 7)
 		ensure
 			dependencies_computed: are_dependencies_computed
 		end
 
+	set_intrinsically_depends_upon_regexp_group is
+			-- Set expression to depend upon regexp-group().
+		do
+			if not are_intrinsic_dependencies_computed then
+				initialize_intrinsic_dependencies
+			end
+			intrinsic_dependencies.put (True, 7)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
 	set_intrinsically_depends_upon_expression_group is
 			-- Set expression to depend upon regexp-group().
 		do
 			if not are_intrinsic_dependencies_computed then
-				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1, 8)
+				initialize_intrinsic_dependencies
 			end
 			intrinsic_dependencies.put (True, 7)
 		ensure
@@ -420,8 +430,7 @@ feature -- Setting dependencies
 			-- Set expression to depend upon local variables.
 		do
 			if not are_dependencies_computed then
-				are_dependencies_computed := True
-				create dependencies.make (1, 8)
+				initialize_dependencies
 			end
 			dependencies.put (True, 8)
 		ensure
@@ -432,10 +441,31 @@ feature -- Setting dependencies
 			-- Set expression to depend upon local variables.
 		do
 			if not are_intrinsic_dependencies_computed then
-				are_intrinsic_dependencies_computed := True
-				create intrinsic_dependencies.make (1, 8)
+				initialize_intrinsic_dependencies
 			end
 			intrinsic_dependencies.put (True, 8)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
+	set_depends_upon_user_functions is
+			-- Set expression to depend upon user functions.
+		do
+			if not are_dependencies_computed then
+				initialize_dependencies
+			end
+			dependencies.put (True, 9)
+		ensure
+			dependencies_computed: are_dependencies_computed
+		end
+
+	set_intrinsically_depends_upon_user_functions is
+			-- Set expression to depend upon user functions.
+		do
+			if not are_intrinsic_dependencies_computed then
+				initialize_intrinsic_dependencies
+			end
+			intrinsic_dependencies.put (True, 9)
 		ensure
 			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
 		end
@@ -443,12 +473,32 @@ feature -- Setting dependencies
 	set_depends_upon_xslt_context is
 			-- Set expression to depend upon XSLT context.
 		do
-				set_depends_upon_current_group
+				set_depends_upon_current_item
 				set_depends_upon_current_group
 				set_depends_upon_regexp_group
 		end
 
+	set_intrinsically_depends_upon_xslt_context is
+			-- Set expression to intrinsically depend upon XSLT context.
+		do
+				set_intrinsically_depends_upon_current_item
+				set_intrinsically_depends_upon_current_group
+				set_intrinsically_depends_upon_regexp_group
+		end
+
+	set_intrinsically_depends_upon_focus is
+			-- Set expression to intrinsically depend upon focus.
+		do
+			set_intrinsically_depends_upon_context_item
+			set_intrinsically_depends_upon_position
+			set_intrinsically_depends_upon_last
+			set_intrinsically_depends_upon_context_document
+		end
+
 feature -- Cardinality
+
+	Cardinality_flag_count: INTEGER is 3
+			-- Number of cardinality flags
 
 	cardinalities: ARRAY [BOOLEAN]
 
@@ -595,13 +645,13 @@ feature -- Setting cardinality
 		local
 			a_counter: INTEGER
 		do
-			create Result.make (1, 3)
+			create Result.make (1, Cardinality_flag_count)
 			from
 				a_counter := 1
 			variant
-				4 - a_counter
+				Cardinality_flag_count + 1 - a_counter
 			until
-				a_counter > 3
+				a_counter > Cardinality_flag_count
 			loop
 				Result.put (cardinalities.item (a_counter) and more_cardinalities.item (a_counter), a_counter)
 				a_counter := a_counter + 1
@@ -622,7 +672,7 @@ feature -- Setting cardinality
 
 	set_cardinalities (a_card: ARRAY [BOOLEAN]) is
 		require
-			cardinalities_not_void: a_card /= Void and then a_card.count = 3
+			cardinalities_not_void: a_card /= Void and then a_card.count = Cardinality_flag_count
 		do
 			cardinalities := a_card
 			are_cardinalities_computed := True
@@ -657,7 +707,7 @@ feature -- Setting cardinality
 			-- Allow no items
 		do
 			if not are_cardinalities_computed then
-				create cardinalities.make (1,3)
+				create cardinalities.make (1, Cardinality_flag_count)
 				are_cardinalities_computed := True
 			end
 			cardinalities.put (True, 1)
@@ -671,7 +721,7 @@ feature -- Setting cardinality
 			-- Allow zero or one items
 		do
 			if not are_cardinalities_computed then
-				create cardinalities.make (1,3)
+				create cardinalities.make (1, Cardinality_flag_count)
 				are_cardinalities_computed := True
 			end
 			cardinalities.put (True, 1)
@@ -685,7 +735,7 @@ feature -- Setting cardinality
 			-- Allow any number of items
 		do
 			if not are_cardinalities_computed then
-				create cardinalities.make (1,3)
+				create cardinalities.make (1, Cardinality_flag_count)
 				are_cardinalities_computed := True
 			end
 			cardinalities.put (True, 1)
@@ -699,7 +749,7 @@ feature -- Setting cardinality
 			-- Allow any number of items other than zero
 		do
 			if not are_cardinalities_computed then
-				create cardinalities.make (1,3)
+				create cardinalities.make (1, Cardinality_flag_count)
 				are_cardinalities_computed := True
 			end
 			cardinalities.put (False, 1)
@@ -709,11 +759,25 @@ feature -- Setting cardinality
 			cardinalities_computed: are_cardinalities_computed
 		end
 
+	set_cardinality_many is
+			-- Allow only more than one item.
+		do
+			if not are_cardinalities_computed then
+				create cardinalities.make (1, Cardinality_flag_count)
+				are_cardinalities_computed := True
+			end
+			cardinalities.put (False, 1)
+			cardinalities.put (False, 2)
+			cardinalities.put (True, 3)
+		ensure
+			cardinalities_computed: are_cardinalities_computed
+		end
+
 	set_cardinality_exactly_one is
 			-- Allow exactly one item
 		do
 			if not are_cardinalities_computed then
-				create cardinalities.make (1,3)
+				create cardinalities.make (1, Cardinality_flag_count)
 				are_cardinalities_computed := True
 			end
 			cardinalities.put (False, 1)
@@ -732,7 +796,10 @@ feature -- Setting cardinality
 		end
 
 feature -- Special properties
-	
+
+	Special_properties_flag_count: INTEGER is 8
+			-- Number of special property flags
+
 	special_properties: ARRAY [BOOLEAN]
 
 	context_document_nodeset: BOOLEAN is
@@ -829,7 +896,7 @@ feature -- Setting special properties
 		require
 			special_properties_not_computed: not are_special_properties_computed
 		do
-			create special_properties.make (1, 8)
+			create special_properties.make (1, Special_properties_flag_count)
 			are_special_properties_computed := True
 		ensure
 			special_properties_computed: are_special_properties_computed
@@ -869,7 +936,7 @@ feature -- Setting special properties
 
 	set_special_properties (properties: ARRAY [BOOLEAN]) is
 		require
-			properties_not_void: properties /= Void and then properties.count = 8
+			properties_not_void: properties /= Void and then properties.count = Special_properties_flag_count
 		do
 			special_properties := properties
 			are_special_properties_computed := True
@@ -885,6 +952,16 @@ feature -- Setting special properties
 			special_properties.put (True, 1)
 		ensure
 			context_document_nodeset: context_document_nodeset
+		end
+
+	reset_context_document_nodeset is
+			-- Don't guarentee nodes in the result are all to be in the same document as the context node.
+		require
+			special_properties_computed: are_special_properties_computed
+		do
+			special_properties.put (False, 1)
+		ensure
+			not_context_document_nodeset: not context_document_nodeset
 		end
 
 	set_ordered_nodeset is
@@ -994,9 +1071,9 @@ feature -- Setting special properties
 
 invariant
 
-	special_properties: are_special_properties_computed implies special_properties /= Void and then special_properties.count = 8
-	intrinsic_dependencies: are_intrinsic_dependencies_computed implies intrinsic_dependencies /= Void and then intrinsic_dependencies.count = 8
-	dependencies: are_dependencies_computed implies dependencies /= Void and then dependencies.count = 8
-	cardinalities: are_cardinalities_computed implies cardinalities /= Void and then cardinalities.count = 3
+	special_properties: are_special_properties_computed implies special_properties /= Void and then special_properties.count = Special_properties_flag_count
+	intrinsic_dependencies: are_intrinsic_dependencies_computed implies intrinsic_dependencies /= Void and then intrinsic_dependencies.count = Dependency_flag_count
+	dependencies: are_dependencies_computed implies dependencies /= Void and then dependencies.count = Dependency_flag_count
+	cardinalities: are_cardinalities_computed implies cardinalities /= Void and then cardinalities.count = Cardinality_flag_count
 	
 end

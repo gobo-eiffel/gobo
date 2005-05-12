@@ -112,13 +112,15 @@ feature -- Element change
 				a_cursor.after
 			loop
 				a_reference := a_cursor.item
+				if not a_reference.was_expression_replaced then
 
-				-- We supply the properties of the expression (3rd argument) later
-				-- in the call of refine_type_information
+					-- We supply the static properties of the expression later
+					-- in the call to refine_type_information
+					
+					a_reference.set_static_type (required_type, Void, Void, Void, Void)
+					a_reference.fix_up (a_binding)
+				end
 
-				a_reference.set_static_type (required_type, Void, Void, Void, Void)
-				a_reference.fix_up (a_binding)
-				
 				a_cursor.forth
 			end
 		end

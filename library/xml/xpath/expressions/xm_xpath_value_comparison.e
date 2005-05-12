@@ -138,7 +138,6 @@ feature -- Evaluation
 		local
 			an_item, another_item: XM_XPATH_ITEM
 			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			first_operand.evaluate_item (a_context)
 			an_item := first_operand.last_evaluated_item
@@ -153,7 +152,9 @@ feature -- Evaluation
 			else
 				second_operand.evaluate_item (a_context)
 				another_item := second_operand.last_evaluated_item
-				if another_item.is_error then
+				if another_item = Void then
+					create last_boolean_value.make (False)
+				elseif another_item.is_error then
 					create last_boolean_value.make (False)
 					last_boolean_value.set_last_error (another_item.error_value)
 				else
@@ -172,12 +173,11 @@ feature -- Evaluation
 						if another_atomic_value.is_untyped_atomic then
 							another_atomic_value := another_atomic_value.convert_to_type (type_factory.string_type)
 						end
-						create a_comparison_checker
-						a_comparison_checker.check_correct_value_relation (an_atomic_value, operator, atomic_comparer, another_atomic_value)
-						if a_comparison_checker.is_comparison_type_error then
+						check_correct_relation (an_atomic_value, operator, atomic_comparer, another_atomic_value)
+						if is_error then
 							create last_boolean_value.make (False)
-							last_boolean_value.set_last_error (a_comparison_checker.last_type_error)
-						elseif a_comparison_checker.last_check_result then
+							last_boolean_value.set_last_error (error_value)
+						elseif last_check_result then
 							create last_boolean_value.make (True)
 						else
 							create last_boolean_value.make (False)
@@ -191,7 +191,6 @@ feature -- Evaluation
 			-- Evaluate `Current' as a single item
 		local
 			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			first_operand.evaluate_item (a_context)
 			if first_operand.last_evaluated_item = Void then
@@ -219,12 +218,11 @@ feature -- Evaluation
 					if another_atomic_value.is_untyped_atomic then
 						another_atomic_value := another_atomic_value.convert_to_type (type_factory.string_type)
 					end
-					create a_comparison_checker
-					a_comparison_checker.check_correct_value_relation (an_atomic_value, operator, atomic_comparer, another_atomic_value)
-					if a_comparison_checker.is_comparison_type_error then
+					check_correct_relation (an_atomic_value, operator, atomic_comparer, another_atomic_value)
+					if is_error then
 						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error (a_comparison_checker.last_type_error)
-					elseif a_comparison_checker.last_check_result then
+						last_boolean_value.set_last_error (error_value)
+					elseif last_check_result then
 						create last_boolean_value.make (True)
 					else
 						create last_boolean_value.make (False)
@@ -563,6 +561,49 @@ feature {NONE} -- Implementation
 			a_message := STRING_.appended_string (a_message, " empty.")
 			a_context.issue_warning (a_message)
 		end
+
+	check_correct_relation (an_atomic_value: XM_XPATH_ATOMIC_VALUE; an_operator: INTEGER;
+											an_atomic_comparer: XM_XPATH_ATOMIC_COMPARER; another_atomic_value: XM_XPATH_ATOMIC_VALUE) is
+			-- Compare two atomic values
+		require
+			first_value_not_void: an_atomic_value /= Void
+			second_value_not: another_atomic_value /= Void
+			valid_value_operator: is_value_comparison_operator (an_operator)
+			comparer_not_void: an_atomic_comparer /= Void
+			no_previous_error: not is_error
+		local
+			a_message: STRING
+		do
+			if an_atomic_value.is_numeric_value and then an_atomic_value.as_numeric_value.is_nan then
+				last_check_result := False
+			elseif another_atomic_value.is_numeric_value and then another_atomic_value.as_numeric_value.is_nan then
+				last_check_result := False
+			elseif an_atomic_comparer.are_comparable (an_atomic_value, another_atomic_value) then
+				inspect
+					an_operator
+				when Fortran_equal_token then
+					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) = 0
+				when Fortran_not_equal_token then
+					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) /= 0
+				when Fortran_greater_than_token then
+					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) = 1
+				when Fortran_less_than_token then
+					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) = -1
+				when Fortran_greater_equal_token then
+					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) /= -1
+				when Fortran_less_equal_token then
+					last_check_result := an_atomic_comparer.three_way_comparison (an_atomic_value, another_atomic_value) /= 1
+				end
+			else
+				a_message := STRING_.appended_string ("Cannot compare ", an_atomic_value.item_type.conventional_name)
+				a_message := STRING_.appended_string (a_message, " with ")
+				a_message := STRING_.appended_string (a_message, another_atomic_value.item_type.conventional_name)
+				create error_value.make_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
+			end
+		end
+
+	last_check_result: BOOLEAN
+			-- Result from `check_correct_relation' if no type error
 
 end
 	

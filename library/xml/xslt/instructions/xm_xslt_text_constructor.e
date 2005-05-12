@@ -16,7 +16,8 @@ inherit
 
 	XM_XSLT_INSTRUCTION
 		redefine
-			evaluate_item, compute_special_properties, creates_new_nodes, sub_expressions, promote_instruction
+			evaluate_item, compute_special_properties, creates_new_nodes, sub_expressions,
+			promote_instruction, create_iterator
 		end
 
 	XM_XPATH_ROLE
@@ -137,6 +138,19 @@ feature -- Evaluation
 						last_evaluated_item := an_orphan
 					end
 				end
+			end
+		end
+
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Iterator over the values of a sequence
+		do
+			evaluate_item (a_context)
+			if last_evaluated_item /= Void and then last_evaluated_item.is_error then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
+			elseif last_evaluated_item.is_node then
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (last_evaluated_item.as_node)
+			else
+				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_evaluated_item)
 			end
 		end
 

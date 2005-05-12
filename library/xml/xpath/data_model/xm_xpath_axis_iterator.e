@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [G]
 		redefine
-			is_node_iterator
+			is_node_iterator, is_invulnerable
 		end
 
 feature -- Access
@@ -34,7 +34,13 @@ feature -- Access
 		end
 	
 feature -- Status report
-	
+
+	is_invulnerable: BOOLEAN is
+			-- Is `Current' guarenteed free of implicit errors?
+		do
+			Result := True
+		end
+
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do

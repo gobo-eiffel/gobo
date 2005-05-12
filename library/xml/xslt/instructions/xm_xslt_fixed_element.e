@@ -88,7 +88,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "element ")
+			a_string := STRING_.appended_string (indentation (a_level), "xsl:element ")
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			a_string := STRING_.appended_string (indentation (a_level + 1), "name ")

@@ -38,7 +38,6 @@ feature {NONE} -- Initialization
 			content_not_void: not text_only implies a_content /= Void and then a_constant_text = Void
 		do
 			executable := an_executable
-			instruction_name := "xsl:document"
 			is_text_only := text_only
 			constant_text := a_constant_text
 			base_uri := a_base_uri
@@ -55,9 +54,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
 	
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
@@ -89,17 +85,10 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "document-constructor")
+			a_string := STRING_.appended_string (indentation (a_level), "xsl:document")
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			todo ("display", True)
-			--if children.count = 0 then
-			--	a_string := STRING_.appended_string (indentation (a_level + 1), "empty content")
-			--	std.error.put_string (a_string)
-			--	std.error.put_new_line
-			--else
-			--	display_children (a_level + 1)
-			--end
+			content.display (a_level + 1)
 		end
 	
 feature -- Optimization
@@ -147,6 +136,7 @@ feature -- Evaluation
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 			a_receiver: XM_XPATH_RECEIVER
 		do
+			last_evaluated_item := Void
 			if is_text_only then
 				if constant_text /= Void then
 					a_text_value := constant_text
@@ -154,15 +144,23 @@ feature -- Evaluation
 					a_text_value := ""
 					from
 						content.create_iterator (a_context)
-						an_iterator := content.last_iterator; an_iterator.start
+						an_iterator := content.last_iterator
+						if an_iterator.is_error then
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+						else
+							an_iterator.start
+						end
 					until
-						an_iterator.after
+						an_iterator.is_error or else an_iterator.after
 					loop
 						a_text_value := STRING_.appended_string (a_text_value, an_iterator.item.string_value)
 						an_iterator.forth
 					end
+					if an_iterator.is_error then
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+					end
 				end
-				create {XM_XPATH_TEXT_FRAGMENT_VALUE} last_evaluated_item.make (a_text_value, base_uri)
+				if last_evaluated_item = Void then create {XM_XPATH_TEXT_FRAGMENT_VALUE} last_evaluated_item.make (a_text_value, base_uri) end
 			else
 				a_new_context ?= a_context.new_minor_context
 				create a_node_factory

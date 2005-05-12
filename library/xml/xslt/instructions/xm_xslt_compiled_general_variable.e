@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_INSTRUCTION
 		redefine
-			item_type, compute_cardinality,
+			item_type, compute_cardinality, evaluate_item, create_iterator,
 			sub_expressions, promote_instruction
 		end
 
@@ -36,9 +36,6 @@ feature -- Access
 
 	variable_fingerprint: INTEGER
 			-- Fingerprint of variable name
-
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
 
 	slot_number: INTEGER
 			-- Slot number within local stack frame or all global variables
@@ -143,6 +140,20 @@ feature -- Optimization
 
 feature -- Evaluation
 
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate as a single item.
+		do
+			process (a_context)
+			last_evaluated_item := Void
+		end
+
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Iterator over the values of a sequence
+		do
+			evaluate_item (a_context)
+			create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+		end
+	
 	select_value (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XPATH_VALUE is
 			-- Value of `select_expression'
 		require

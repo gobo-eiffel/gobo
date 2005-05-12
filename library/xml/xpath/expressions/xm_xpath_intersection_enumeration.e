@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 
 	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER) is
 		require
-			first_iterator_not_void: an_iterator /= Void
-			second_iterator_not_void: another_iterator /= Void
+			first_iterator_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
+			second_iterator_before: another_iterator /= Void and then not another_iterator.is_error and then another_iterator.before
 			comparer_not_void: a_comparer /= Void
 		do
 			second_iterator := another_iterator
@@ -73,7 +73,11 @@ feature -- Cursor movement
 			index := index + 1
 			first_iterator.forth
 			second_iterator.forth
-			if not after then
+			if first_iterator.is_error then
+				set_last_error (first_iterator.error_value)
+			elseif second_iterator.is_error then
+				set_last_error (second_iterator.error_value)
+			elseif not after then
 				a_first_node := first_iterator.item
 				a_second_node := second_iterator.item
 				a_comparison := comparer.three_way_comparison (a_first_node, a_second_node)
@@ -82,10 +86,12 @@ feature -- Cursor movement
 				elseif a_comparison = -1 then
 					from
 					until
-						a_comparison = 0 or else after
+						is_error or else a_comparison = 0 or else after
 					loop
 						first_iterator.forth
-						if not first_iterator.after then
+						if first_iterator.is_error then
+							set_last_error (first_iterator.error_value)
+						elseif not first_iterator.after then
 							a_first_node := first_iterator.item
 							a_comparison := comparer.three_way_comparison (a_first_node, a_second_node)
 							if a_comparison = 0 then
@@ -96,10 +102,12 @@ feature -- Cursor movement
 				else
 					from
 					until
-						a_comparison = 0 or else after
+						is_error or else a_comparison = 0 or else after
 					loop
 						second_iterator.forth
-						if not second_iterator.after then
+						if second_iterator.is_error then
+							set_last_error (second_iterator.error_value)
+						elseif not second_iterator.after then
 							a_second_node := second_iterator.item
 							a_comparison := comparer.three_way_comparison (a_first_node, a_second_node)
 							if a_comparison = 0 then

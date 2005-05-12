@@ -18,7 +18,8 @@ inherit
 	XM_XPATH_ASSIGNATION
 		redefine
 			promote, create_iterator, evaluate_item, compute_special_properties,
-			mark_tail_function_calls, action, is_let_expression, as_let_expression
+			mark_tail_function_calls, action, is_let_expression, as_let_expression,
+			is_tail_recursive
 		end
 
 	XM_XPATH_ROLE
@@ -70,7 +71,7 @@ feature -- Access
 		do
 			-- See `Note on action' at end of file.
 
-			action_expression.mark_unreplaced
+			if not action_expression.is_error then action_expression.mark_unreplaced end
 			Result := action_expression 
 		end
 
@@ -90,6 +91,12 @@ feature -- Access
 			create Result.make (sequence.item_type, sequence.cardinality)
 		end
 
+	is_tail_recursive: BOOLEAN is
+			-- Is `Current' a tail recursive function call?
+		do
+			Result := action_expression.is_tail_recursive
+		end
+
 feature -- Status report
 
 	display (a_level: INTEGER) is
@@ -98,22 +105,14 @@ feature -- Status report
 			a_string: STRING
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "let $")
-			if declaration = Void then
-				a_string := STRING_.appended_string (a_string, "<range variable>")
-			else
-				a_string := STRING_.appended_string (a_string, declaration.variable_name)
-			end
+			a_string := STRING_.appended_string (a_string, variable_name)
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				sequence.display (a_level + 1)
-				a_string := STRING_.appended_string (indentation (a_level), "return")
-				std.error.put_string (a_string)
-				std.error.put_new_line
-				action_expression.display (a_level + 1)
-			end
+			std.error.put_new_line
+			sequence.display (a_level + 1)
+			a_string := STRING_.appended_string (indentation (a_level), "return")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			action_expression.display (a_level + 1)
 		end
 
 feature -- Status setting

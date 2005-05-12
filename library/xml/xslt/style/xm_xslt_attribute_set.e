@@ -31,11 +31,11 @@ feature {NONE} -- Initialization
 		
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
 			-- Establish invariant.
 		do
 			create slot_manager.make
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
 		end
 
 feature -- Access
@@ -190,6 +190,7 @@ feature -- Element change
 			-- Compile `Current' to an excutable instruction.
 		local
 			a_body: XM_XPATH_EXPRESSION
+			a_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
 		do
 			last_generated_expression := Void
 			if reference_count > 0 then
@@ -198,6 +199,12 @@ feature -- Element change
 				if a_body /= Void then
 					a_body.simplify
 					if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
+					if configuration.is_tracing then
+						create a_trace_wrapper.make (a_body, an_executable, Current)
+						a_trace_wrapper.set_source_location (containing_stylesheet.module_number (system_id), line_number)
+						a_trace_wrapper.set_parent (Current)
+						a_body := a_trace_wrapper
+					end
 					create {XM_XSLT_COMPILED_ATTRIBUTE_SET} instruction.make (attribute_set_name_code,
 																								 used_attribute_sets,
 																								 an_executable,

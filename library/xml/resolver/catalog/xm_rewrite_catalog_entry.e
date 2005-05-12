@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	start_string: STRING
-			-- Public identifier prefix
+			-- System identifier or URI prefix
 
 	count: INTEGER
 			-- length of `start_string'

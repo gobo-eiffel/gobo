@@ -16,7 +16,8 @@ inherit
 	
 	XM_XPATH_VALUE
 		redefine
-			process, is_singleton_node, as_singleton_node
+			process, is_singleton_node, as_singleton_node, count,
+			item_at, calculate_effective_boolean_value 
 		end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
@@ -70,10 +71,21 @@ feature -- Access
 	node: XM_XPATH_NODE
 			-- Optional node
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- An iterator over the values of a sequence
+	
+	count: INTEGER is
+			-- Number of items in `Current'
 		do
-			create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (node)
+			if node = Void then
+				Result := 0
+			else
+				Result := 1
+			end
+		end
+
+	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
+			-- Item at `an_index'
+		do
+			Result := node
 		end
 
 feature -- Comparison
@@ -104,13 +116,9 @@ feature -- Status report
 				std.error.put_string ("Empty node-set")
 			else
 				std.error.put_string ("Node ")
-				-- TODO add navigator stuff
+				std.error.put_string (node.path)
 			end
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-			end
+			std.error.put_new_line
 		end
 
 feature -- Evaluation
@@ -135,6 +143,12 @@ feature -- Evaluation
 			else
 				create last_evaluated_string.make (node.string_value)
 			end
+		end
+
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- An iterator over the values of a sequence
+		do
+			create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (node)
 		end
 
 	process (a_context: XM_XPATH_CONTEXT) is

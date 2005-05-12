@@ -41,7 +41,6 @@ feature {NONE} -- Initialization
 			set_with_params_parent (actual_parameters, Current)
 			tunnel_parameters := some_tunnel_parameters
 			set_with_params_parent (tunnel_parameters, Current)
-			instruction_name := "xsl:apply-imports"
 			compute_static_properties
 			initialized := True
 		ensure
@@ -52,9 +51,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
-
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
@@ -145,7 +141,7 @@ feature -- Evaluation
 				a_mode := a_context.current_mode
 				a_current_iterator := a_context.current_iterator
 				if a_mode = Void then a_mode := a_transformer.rule_manager.mode (Default_mode) end
-				if a_current_iterator = Void or else a_current_iterator.off then
+				if a_current_iterator = Void or else a_current_iterator.is_error or else a_current_iterator.off then
 					create an_error.make_from_string ("Context item is not set whilst applying imports.", "", "XTDE0565", Dynamic_error)
 					a_transformer.report_fatal_error (an_error, Void)
 				else

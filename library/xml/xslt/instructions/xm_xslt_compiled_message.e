@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 			adopt_child_expression (terminate)
 			select_expression := a_select_expression
 			adopt_child_expression (select_expression)
-			instruction_name := "xsl:message"
 			compute_static_properties
 			initialized := True
 		ensure
@@ -48,9 +47,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
-
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
@@ -77,7 +73,8 @@ feature -- Status report
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
-			std.error.put_string ("message%N")
+			std.error.put_string (indentation (a_level))
+			std.error.put_string ("xsl:message%N")
 		end
 
 feature -- Optimization
@@ -166,27 +163,31 @@ feature -- Evaluation
 				from
 					an_iterator.start
 				until
-					an_iterator.after
+					an_iterator.is_error or else an_iterator.after
 				loop
 					a_tree_receiver.append_item (an_iterator.item)
 					an_iterator.forth
 				end
 			end
-			a_tree_receiver.end_document
-			if terminate /= Void then
-				terminate.evaluate_as_string (a_context)
-				a_string_value := terminate.last_evaluated_string
-				if a_string_value.is_error then
-					a_transformer.report_fatal_error (a_string_value.error_value, Current)
-				elseif STRING_.same_string (a_string_value.string_value, "no") then
-					-- do_nothing
-				elseif STRING_.same_string (a_string_value.string_value, "yes") then
-					create an_error.make_from_string ("Execution terminated owing to xsl:message terminate='yes'.", Gexslt_eiffel_type_uri, "TERMINATE_MESSAGE", Dynamic_error)
-					a_transformer.report_fatal_error (an_error, Current)
-				else
-					create an_error.make_from_string (STRING_.concat ("xsl:message terminate attribute must evaluate to 'yes' or 'no'. Found: ", a_string_value.string_value),
-																 Gexslt_eiffel_type_uri, "INVALID_TERMINATE", Dynamic_error)
-					a_transformer.report_fatal_error (an_error, Current)
+			if an_iterator.is_error then
+				a_transformer.report_fatal_error (an_iterator.error_value, Current)
+			else
+				a_tree_receiver.end_document
+				if terminate /= Void then
+					terminate.evaluate_as_string (a_context)
+					a_string_value := terminate.last_evaluated_string
+					if a_string_value.is_error then
+						a_transformer.report_fatal_error (a_string_value.error_value, Current)
+					elseif STRING_.same_string (a_string_value.string_value, "no") then
+						-- do_nothing
+					elseif STRING_.same_string (a_string_value.string_value, "yes") then
+						create an_error.make_from_string ("Execution terminated owing to xsl:message terminate='yes'.", Gexslt_eiffel_type_uri, "TERMINATE_MESSAGE", Dynamic_error)
+						a_transformer.report_fatal_error (an_error, Current)
+					else
+						create an_error.make_from_string (STRING_.concat ("xsl:message terminate attribute must evaluate to 'yes' or 'no'. Found: ", a_string_value.string_value),
+																	 Gexslt_eiffel_type_uri, "INVALID_TERMINATE", Dynamic_error)
+						a_transformer.report_fatal_error (an_error, Current)
+					end
 				end
 			end
 			last_tail_call := Void

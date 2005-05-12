@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			a_collator: ST_COLLATOR) is
 			-- Establish invariant.
 		require
-			population_not_void: a_population /= Void
+			population_before: a_population /= Void and then not a_population.is_error and then a_population.before
 			key_not_void: a_key /= Void
 			context_not_void: a_context /= Void
 			collator_not_void: a_collator /= Void
@@ -153,23 +153,27 @@ feature {NONE} -- Implementation
 			a_key: XM_XPATH_ATOMIC_VALUE
 			a_comparison_key: XM_XPATH_COMPARISON_KEY
 			a_group: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+			a_transformer: XM_XSLT_TRANSFORMER
 		do
 			create a_map.make_with_equality_testers (20, Void, comparison_key_tester)
 			a_context := key_context.new_minor_context			
 			a_context.set_current_iterator (population)
-
+			a_transformer := a_context.transformer
 			from
 				population.start
 			until
-				population.after
+				a_transformer.is_error or else population.after
 			loop
 				an_item := population.item
 				from
 					key_expression.create_iterator (a_context)
-					a_keys_iterator := key_expression.last_iterator; a_keys_iterator.start
-					first_key := True
+					a_keys_iterator := key_expression.last_iterator
+					if not a_keys_iterator.is_error then
+						a_keys_iterator.start
+						first_key := True
+					end
 				until
-					a_keys_iterator.after
+					a_keys_iterator.is_error or else a_keys_iterator.after
 				loop
 					check
 						key_is_atomic: a_keys_iterator.item.is_atomic_value
@@ -201,7 +205,11 @@ feature {NONE} -- Implementation
 					first_key := False
 					a_keys_iterator.forth
 				end
-				population.forth
+				if a_keys_iterator.is_error then
+					a_transformer.report_fatal_error (a_keys_iterator.error_value, Void)
+				else
+					population.forth
+				end
 			end
 			indexed_groups_built := True
 		ensure

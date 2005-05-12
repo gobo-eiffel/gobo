@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		do
 			Precursor (an_executable, a_name, a_slot_number)
-			instruction_name := "xsl:param"
+			-- TODO: remove this re-defintion (?) instruction_name := "xsl:param"
 		end
 
 feature -- Status report
@@ -43,7 +43,7 @@ feature -- Status report
 			std.error.put_string (a_string);
 			std.error.put_string (variable_name);
 			std.error.put_new_line
-			if select_expression /= Void then select_expression.display (a_level + 1) end
+			if select_expression /= Void and then not select_expression.is_error then select_expression.display (a_level + 1) end
 		end
 
 feature -- Evaluation

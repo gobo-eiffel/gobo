@@ -14,9 +14,9 @@ class XM_XPATH_ARRAY_LIST_ITERATOR [G -> XM_XPATH_ITEM]
 
 inherit
 
-	XM_XPATH_SEQUENCE_ITERATOR [G]
+	XM_XPATH_REALIZABLE_ITERATOR [G]
 		redefine
-			start
+			start, is_invulnerable
 		end
 
 creation
@@ -45,6 +45,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_invulnerable: BOOLEAN is
+			-- Is `Current' guarenteed free of implicit errors?
+		do
+			Result := True
+		end
+
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
@@ -67,6 +73,27 @@ feature -- Cursor movement
 			cursor.forth
 		end
 
+feature -- Evaluation
+
+	realize is
+			-- Realize the sequence as a value.
+		local
+			a_list: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+			an_index: INTEGER
+		do
+			-- temporary is to get round expanded/reference generics problem
+			create a_list.make (list.count)
+			from
+				an_index := 1
+			until
+				an_index > list.count
+			loop
+				a_list.put_last (list.item (an_index))
+				an_index := an_index + 1
+			end			
+			create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make_from_list (a_list)
+		end
+	
 feature -- Duplication
 
 	another: like Current is

@@ -17,7 +17,7 @@ inherit
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
 			item_type, display, evaluate_as_string, calculate_effective_boolean_value,
-			is_convertible_to_item, is_empty_sequence, as_empty_sequence
+			is_convertible_to_item, is_empty_sequence, as_empty_sequence, count
 		end
 
 creation
@@ -58,12 +58,13 @@ feature -- Access
 				-- that `Result' is not optimized away.
 			end
 		end
-
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Yields an iterator to iterate over the values of a sequence
+	
+	count: INTEGER is
+			-- Number of items in `Current'
 		do
-			create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+			Result := 0
 		end
+
 
 feature -- Comparison
 
@@ -85,11 +86,7 @@ feature -- Status report
 			-- Diagnostic print of expression structure to `std.error'
 		do
 			std.error.put_string (STRING_.appended_string (indentation (a_level), "()"))
-			if is_error then
-				std.error.put_string (" in error%N")
-			else			
-				std.error.put_new_line
-			end
+			std.error.put_new_line
 		end
 
 feature -- Evaluation
@@ -104,6 +101,12 @@ feature -- Evaluation
 			-- Evaluate `Current' as a String
 		do
 			create last_evaluated_string.make ("")
+		end
+
+	create_iterator (a_context: XM_XPATH_CONTEXT) is
+			-- Yields an iterator to iterate over the values of a sequence
+		do
+			create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

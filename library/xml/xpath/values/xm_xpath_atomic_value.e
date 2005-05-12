@@ -18,9 +18,9 @@ inherit
 		undefine
 			is_integer_value, as_integer_value, is_string_value, as_string_value, is_decimal_value, as_decimal_value,
 			is_qname_value, as_qname_value, is_boolean_value, as_boolean_value, is_numeric_value, as_numeric_value,
-			is_atomic_value, as_atomic_value, is_untyped_atomic, as_untyped_atomic, is_object_value
+			is_atomic_value, as_atomic_value, is_untyped_atomic, as_untyped_atomic, is_object_value, is_function_package
 		redefine
-			process
+			process, count, calculate_effective_boolean_value 
 		end
 
 	XM_XPATH_ITEM
@@ -75,6 +75,12 @@ feature -- Access
 			Result := Current
 		end
 
+	count: INTEGER is
+			-- Number of items in `Current'
+		do
+			Result := 1
+		end
+
 feature -- Comparison
 
 	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
@@ -126,7 +132,6 @@ feature -- Evaluation
 			last_evaluated_item := Current
 		end
 
-	
 	evaluate_as_string (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a String
 		do

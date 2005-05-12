@@ -34,8 +34,8 @@
     <para>
       <classname>XM_CATALOG__RESOLVER</classname> is a resolver that implements a two-stage 
       resolution process. In the first stage, it uses XML catalogs (as defined by the
-      <link linkend="http://www.oasis-open.org/committees/download.php/4952/wd-entity-xml-catalogs-1.0_2e.html">
-	OASIS Entity Resolution Technical Committee's January 2004 working draft</link>) to look up
+      <link linkend="http://www.oasis-open.org/committees/download.php/12075/xml-catalogs.html">
+	OASIS Entity Resolution Technical Committee's 1.1 specification of 16th March 2005</link>) to look up
 	a <exmlsyntax>SYSTEM</exmlsyntax> or <exmlsyntax>PUBLIC</exmlsyntax> id. or a 
 	URI reference from the source document, and fetches another URI reference
 	to feed into the second stage.
@@ -81,7 +81,7 @@
 	    <para>
 	      Additional catalogs are searched for particular documents if one or more
 	      <exmlsyntax>oasis-xml-catalog</exmlsyntax> processing instructions appear
-	      within that documents (see <link linkend="http://www.oasis-open.org/committees/download.php/4952/wd-entity-xml-catalogs-1.0_2e.html#oasis-er-tc-abc">
+	      within that documents (see <link linkend="http://www.oasis-open.org/committees/download.php/12075/xml-catalogs.html#oasis-er-tc-abc">
 	      the working draft for restrictions</link>).
 	      This behaviour can be suppressed by calling <featurename>suppress_processing_instructions</featurename>.
 	    </para>

@@ -83,6 +83,10 @@ feature -- Optimization
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			a_type_checker: XM_XPATH_TYPE_CHECKER
+			an_integer, another_integer: INTEGER
+			an_integer_range: XM_XPATH_INTEGER_RANGE
+			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			mark_unreplaced
 			first_operand.analyze (a_context)
@@ -113,7 +117,24 @@ feature -- Optimization
 							set_last_error (a_type_checker.static_type_check_error)
 						else
 							set_second_operand (a_type_checker.checked_expression)
-							simplify
+							if first_operand.is_integer_value and then second_operand.is_integer_value and then
+								first_operand.as_integer_value.is_platform_integer and then
+								second_operand.as_integer_value.is_platform_integer then
+								an_integer := first_operand.as_integer_value.as_integer
+								another_integer := second_operand.as_integer_value.as_integer
+								if an_integer > another_integer then
+									create an_empty_sequence.make
+									set_replacement (an_empty_sequence)
+								elseif an_integer = another_integer then
+									create an_integer_value.make_from_integer (an_integer)
+									set_replacement (an_integer_value)
+								else
+									create an_integer_range.make (an_integer, another_integer)
+									set_replacement (an_integer_range)
+								end
+							else
+								simplify
+							end
 						end
 					end
 				end

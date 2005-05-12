@@ -38,7 +38,6 @@ feature {NONE} -- Initialization
 			name_not_void: a_name /= Void
 		do
 			executable := an_executable
-			instruction_name := "xsl:processing-instruction"
 			name := a_name;  adopt_child_expression (name)
 			compute_static_properties
 			initialized := True
@@ -49,9 +48,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
-	
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
@@ -73,7 +69,7 @@ feature -- Status report
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
-			std.error.put_string (STRING_.appended_string (indentation (a_level), "processing-instruction"))
+			std.error.put_string (STRING_.appended_string (indentation (a_level), "xsl:processing-instruction"))
 			std.error.put_new_line
 			name.display (a_level + 1)
 			Precursor (a_level + 1)

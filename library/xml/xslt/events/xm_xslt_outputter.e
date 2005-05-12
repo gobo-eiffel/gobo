@@ -16,11 +16,6 @@ inherit
 	
 	XM_XPATH_SEQUENCE_RECEIVER
 
-feature -- Access
-
-	configuration: XM_XSLT_CONFIGURATION
-			-- Configuration
-
 feature -- Events
 
 	start_document is

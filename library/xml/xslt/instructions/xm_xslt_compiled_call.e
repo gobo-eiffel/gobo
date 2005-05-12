@@ -14,7 +14,8 @@ inherit
 	
 	XM_XSLT_INSTRUCTION
 		redefine
-			sub_expressions, process, creates_new_nodes, promote_instruction
+			sub_expressions, process, creates_new_nodes, promote_instruction,
+			compute_intrinsic_dependencies
 		end
 
 	XM_XSLT_WITH_PARAM_ROUTINES
@@ -38,7 +39,6 @@ feature {NONE} -- Initialization
 			actual_parameter_list := an_actual_parameter_list
 			tunnel_parameter_list := a_tunnel_parameter_list
 			use_tail_recursion := a_use_tail_recursion
-			instruction_name := "call-template"
 			compute_static_properties
 			initialized := True
 		ensure
@@ -50,9 +50,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
 	
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
@@ -75,7 +72,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "call template")
+			a_string := STRING_.appended_string (indentation (a_level), "xsl:call-template")
 			std.error.put_string (a_string); std.error.put_new_line
 			if target.template_fingerprint > 0 then
 				std.error.put_string (indentation (a_level + 1))
@@ -83,7 +80,21 @@ feature -- Status report
 				std.error.put_string (shared_name_pool.display_name_from_name_code (target.template_fingerprint)); std.error.put_new_line
 			end
 		end
+
+feature -- Status setting
 	
+	compute_intrinsic_dependencies is
+			-- Determine the intrinsic dependencies of an expression.
+		do
+
+			-- We could go to the called template and find which parts of the context it depends on, but this
+			--  would create the risk of infinite recursion. So we just assume that the dependencies exist.
+
+			set_intrinsically_depends_upon_xslt_context
+			set_intrinsically_depends_upon_focus
+		end
+			
+
 feature -- Optimization
 
 	simplify is
@@ -117,9 +128,9 @@ feature -- Evaluation
 			a_transformer: XM_XSLT_TRANSFORMER
 		do
 			a_new_context := a_context.new_context
+			a_new_context.open_stack_frame (target.slot_manager)
 			a_new_context.set_local_parameters (assembled_parameters (a_context, actual_parameter_list))
 			a_new_context.set_tunnel_parameters (assembled_tunnel_parameters (a_context, tunnel_parameter_list))
-			a_new_context.open_stack_frame (target.slot_manager)
 			a_transformer := a_context.transformer
 			target.expand (a_new_context)
 			from

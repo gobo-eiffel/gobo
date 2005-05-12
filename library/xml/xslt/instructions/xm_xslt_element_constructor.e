@@ -112,7 +112,7 @@ feature -- Evaluation
 				-- This is XSLT
 			end
 			a_transformer := a_new_context.transformer
-			create an_outputter.make_with_size (1)
+			create an_outputter.make_with_size (1, a_transformer)
 			a_receiver := an_outputter
 			a_name_code := name_code (a_new_context)
 			a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 	
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
 			-- Establish invariant.
 		do
 			number_of_arguments := -1
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			is_overriding := True
 			create references.make_default
 			create slot_manager.make
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
 		end
 
 feature -- Access
@@ -52,6 +52,9 @@ feature -- Access
 
 	compiled_function: XM_XSLT_COMPILED_USER_FUNCTION
 			-- Compiled version of `Current'
+
+	function_name: STRING
+			-- QName of function
 
 	arity: INTEGER is
 			-- Arity of function;
@@ -115,7 +118,7 @@ feature -- Access
 				-- This is a forwards reference to the function.
 
 				if static_context = Void then create static_context.make (Current) end
-				prepare_attributes
+				if not attributes_prepared then prepare_attributes end
 				if any_compile_errors then
 					internal_function_fingerprint := -1
 				end
@@ -290,7 +293,17 @@ feature -- Element change
 			a_body: XM_XPATH_EXPRESSION
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
+			a_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
 		do
+
+			-- Compile the function into a XM_XSLT_COMPILED_USER_FUNCTION, which treats the function
+			--  body as a single XPath expression. This involves recursively translating
+			--  xsl:variable declarations into let expressions, with the action part of the
+			--  let expression containing the rest of the function body.
+			-- The XM_XSLT_COMPILED_USER_FUNCTION that is created will be linked from all calls to
+			--  this function, so nothing else needs to be done with the result. If there are
+			--  no calls to it, the compiled function will be garbage-collected away.
+  
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), False)
 			a_body := last_generated_expression
 			if a_body = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_body.make end
@@ -308,6 +321,13 @@ feature -- Element change
 					a_body := a_type_checker.checked_expression
 				end
 			end
+			if configuration.is_tracing then
+				create a_trace_wrapper.make (a_body, an_executable, Current)
+				a_trace_wrapper.set_source_location (containing_stylesheet.module_number (system_id), line_number)
+				a_body := a_trace_wrapper
+			end
+			allocate_slots (a_body, slot_manager)
+			a_body.mark_tail_function_calls
 			create compiled_function.make (an_executable, a_body, function_name, system_id, line_number, slot_manager, result_type, is_memo_function)
 			set_parameter_definitions (compiled_function)
 			fixup_instruction (compiled_function)
@@ -335,9 +355,6 @@ feature {NONE} -- Implementation
 	number_of_arguments: INTEGER
 			-- Number of arguments (-1 = not yet known)
 
-	function_name: STRING
-			-- QName of function
-
 	result_type: XM_XPATH_SEQUENCE_TYPE
 			-- Type of result
 
@@ -358,7 +375,7 @@ feature {NONE} -- Implementation
 			until
 				any_compile_errors or else a_cursor.after
 			loop
-				a_cursor.item.set_function (Current, a_user_function)
+				a_cursor.item.set_function (Current, a_user_function, static_context)
 				if a_cursor.item.is_type_error then
 					report_compile_error (a_cursor.item.error_value)
 				end

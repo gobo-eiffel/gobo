@@ -14,7 +14,7 @@ class XM_XPATH_RANGE_ITERATOR
 
 inherit
 
-	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	XM_XPATH_REALIZABLE_ITERATOR [XM_XPATH_ITEM]
 
 creation
 
@@ -56,6 +56,14 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
+		end
+
+feature -- Evaluation
+
+	realize is
+			-- Realize the sequence as a value.
+		do
+			create {XM_XPATH_INTEGER_RANGE} last_realized_value .make (minimum, maximum)
 		end
 
 feature -- Duplication

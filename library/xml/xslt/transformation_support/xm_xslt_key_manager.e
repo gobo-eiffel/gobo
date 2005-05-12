@@ -352,9 +352,14 @@ feature {NONE} -- Implementation
 
 			from
 				use.create_iterator (a_context)
-				an_iterator := use.last_iterator; an_iterator.start
+				an_iterator := use.last_iterator
+				if an_iterator.is_error then
+					a_context.transformer.report_fatal_error (an_iterator.error_value, Void)
+				else
+					an_iterator.start
+				end
 			until
-				an_iterator.after
+				an_iterator.is_error or else an_iterator.after
 			loop
 				an_atomic_value ?= an_iterator.item
 				check
@@ -390,6 +395,9 @@ feature {NONE} -- Implementation
 					add_node_to_index (a_node, a_map, a_value, is_first)
 				end
 				an_iterator.forth
+			end
+			if an_iterator.is_error then
+				a_context.transformer.report_fatal_error (an_iterator.error_value, Void)
 			end
 		end
 

@@ -21,6 +21,8 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
+	XM_XPATH_ERROR_TYPES
+
 	XM_XPATH_AXIS
 
 	XM_XPATH_DEBUGGING_ROUTINES
@@ -43,36 +45,56 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_transformer: XM_XSLT_TRANSFORMER) is
 			-- Establish invariant.
+		require
+			transformer_not_void: a_transformer /= Void
 		do
 			create output_list.make_default
 			system_id := ""
+			transformer := a_transformer
+		ensure
+			transformer_set: transformer = a_transformer
 		end
 
-	make_with_size (a_size: INTEGER) is
+	make_with_size (a_size: INTEGER; a_transformer: XM_XSLT_TRANSFORMER) is
 			-- Establish invariant.
 		require
 			strictly_positive_size: a_size > 0
+			transformer_not_void: a_transformer /= Void
 		do
 			create output_list.make (a_size)
 			system_id := ""
+			transformer := a_transformer
+		ensure
+			transformer_set: transformer = a_transformer
 		end
 
 feature -- Access
 
+	transformer: XM_XSLT_TRANSFORMER
+			-- Transformer for error reporting
+
+	is_under_construction: BOOLEAN
+			-- Is `sequence' under construction?
+
 	sequence: XM_XPATH_VALUE is
 			-- Built sequence
+		require
+			not_under_construction: not is_under_construction
 		do
-			inspect
-				output_list.count
-			when 0 then
-				create {XM_XPATH_EMPTY_SEQUENCE} Result.make
-			when 1 then
-				Result := output_list.item (1).as_item_value
-			else
-				create {XM_XPATH_SEQUENCE_EXTENT} Result.make_from_list (output_list)
+			if cached_sequence = Void then
+				inspect
+					output_list.count
+				when 0 then
+					create {XM_XPATH_EMPTY_SEQUENCE} cached_sequence.make
+				when 1 then
+					cached_sequence := output_list.item (1).as_item_value
+				else
+					create {XM_XPATH_SEQUENCE_EXTENT} cached_sequence.make_from_list (output_list)
+				end
 			end
+			Result := cached_sequence
 		ensure
 			sequence_not_void: Result /= Void
 		end
@@ -85,34 +107,56 @@ feature -- Access
 			end
 		end
 
-	iterator (a_context: XM_XPATH_CONTEXT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
-			-- An iterator over the values of a sequence
-		require
-			context_not_void: a_context /= Void
-		do
-			if output_list.count = 0 then
-				create {XM_XPATH_EMPTY_ITERATOR} Result.make
-			else
-				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (output_list)
-			end
-		ensure
-			iterator_not_void_but_may_be_error: Result /= Void -- and then (Result.is_error or else not Result.is_error)
-			iterator_before: not Result.is_error implies Result.before
-		end
-
 feature -- Events
 
 	on_error (a_message: STRING) is
 			-- Event producer detected an error.
+		local
+			an_error: XM_XPATH_ERROR_VALUE
+			a_uri, a_code, a_text: STRING
+			an_index, a_second_index: INTEGER
 		do
 			if tree /= Void then
 				tree.on_error (a_message)
+			else
+				an_index := a_message.index_of (':', 1)
+				if a_message.count > an_index + 1 and then STRING_.same_string (a_message.substring (1, 1), "X") and then an_index > 0 then
+					if STRING_.same_string (a_message.substring (1, 2), "XT") then
+						a_uri := ""
+					else
+						a_uri := Xpath_errors_uri
+					end
+					a_code := a_message.substring (1, an_index - 1)
+					a_text := a_message.substring (an_index + 2, a_message.count)
+				elseif a_message.count > 0 and then STRING_.same_string (a_message.substring (1, 1), "{") then
+					an_index := a_message.index_of ('}', 2)
+					check
+						closing_brace_found: an_index > 1
+					end
+					a_uri := a_message.substring (2, an_index - 1)
+					a_second_index := a_message.index_of (':', an_index + 1)
+					check
+						colon_found: a_second_index > an_index + 1
+					end
+					a_code := a_message.substring (an_index + 1, a_second_index - 1)
+					STRING_.left_adjust (a_code)
+					STRING_.right_adjust (a_code)
+					a_text := a_message.substring (a_second_index + 1, a_message.count)
+				else
+					a_text := a_message
+					a_uri := Gexslt_eiffel_type_uri
+					a_code := "SERIALIZATION_ERROR"
+				end
+				create an_error.make_from_string (a_text, a_uri, a_code, Dynamic_error)
+				transformer.report_fatal_error (an_error, Void)
 			end
 		end
 
 	start_document is
 			-- New document
 		do
+			cached_sequence := Void
+			is_under_construction := True
 			is_document_started := True
 		end
 
@@ -244,6 +288,7 @@ feature -- Events
 			-- Notify the end of the document.
 		do
 			previous_atomic := False
+			is_under_construction := False
 		end
 
 	append_item (an_item: XM_XPATH_ITEM) is
@@ -303,9 +348,13 @@ feature {NONE} -- Implementation
 	level: INTEGER
 			-- Element nesting level
 
+	cached_sequence: XM_XPATH_VALUE
+			-- Result returned by `sequence'
+
 invariant
 
 	output_list_not_void: output_list /= Void
+	transformer_not_void: transformer /= Void
 
 end
 	

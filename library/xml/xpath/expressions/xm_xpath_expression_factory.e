@@ -27,6 +27,9 @@ feature -- Access
 	parsed_error_value: XM_XPATH_ERROR_VALUE
 			-- Error result from last call to make_expression
 
+	last_created_closure: XM_XPATH_VALUE
+			-- Result from `create_closure' or `create_sequence_extent'
+
 	parsed_expression: XM_XPATH_EXPRESSION is
 			-- Parsed expression
 		require
@@ -118,7 +121,7 @@ feature -- Creation
 			-- This optimization is important when doing recursion over a node-set using
 			--  repeated calls of $nodes[position()>1]
 		require
-			base_iterator_not_void: a_base_iterator /= Void
+			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
 		do
 			if a_base_iterator.is_array_iterator then
 				Result := a_base_iterator.as_array_iterator.new_slice_iterator (a_min, a_max)
@@ -136,7 +139,7 @@ feature -- Creation
 			-- This optimization is important when doing recursion over a node-set using
 			--  repeated calls of $nodes[position()>1]
 		require
-			base_iterator_not_void: a_base_iterator /= Void
+			base_iterator_not_void: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
 		do
 			if a_base_iterator.is_array_iterator then
 				Result := a_base_iterator.as_array_iterator.new_slice_iterator (a_min, a_max)
@@ -147,38 +150,82 @@ feature -- Creation
 			iterator_created: Result /= Void
 		end
 
-	created_closure (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN): XM_XPATH_VALUE is
-			-- New `XM_XPATH_CLOSURE' (or sometimes, an `XM_XPATH_SEQUENCE_EXTENT'). 
+	create_closure (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
+			-- New `XM_XPATH_CLOSURE' (or sometimes, an `XM_XPATH_SEQUENCE_EXTENT').
 		require
 			expression_not_void: an_expression /= Void
 			context_not_void: a_context /= Void
 		local
 			a_tail_expression: XM_XPATH_TAIL_EXPRESSION
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
+			a_value: XM_XPATH_VALUE
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
+			a_realizable_iterator: XM_XPATH_REALIZABLE_ITERATOR [XM_XPATH_ITEM]
+			a_start, an_end: INTEGER
 		do
+			last_created_closure := Void
+
 			-- Treat tail recursion as a special case.
 
 			if an_expression.is_tail_expression then
 				a_tail_expression := an_expression.as_tail_expression
 				if a_tail_expression.base_expression.is_variable_reference then
 					a_variable_reference := a_tail_expression.base_expression.as_variable_reference
-					a_variable_reference.lazily_evaluate (a_context, False)
-					if a_variable_reference.last_evaluation.is_sequence_extent then
-						a_sequence_extent := a_variable_reference.last_evaluation.as_sequence_extent
-						create {XM_XPATH_SEQUENCE_EXTENT} Result.make_as_view (a_sequence_extent, a_tail_expression.start, a_sequence_extent.count -  a_tail_expression.start + 1)
+					a_variable_reference.lazily_evaluate (a_context, save_values)
+					a_value := a_variable_reference.last_evaluation
+					if a_value.is_memo_closure then
+						a_value.create_iterator (Void)
+						if a_value.last_iterator.is_error then
+							create {XM_XPATH_INVALID_VALUE} last_created_closure.make (a_value.last_iterator.error_value)
+						else
+							a_realizable_iterator := a_value.last_iterator.as_realizable_iterator
+							a_realizable_iterator.realize
+							a_value := a_realizable_iterator.last_realized_value
+						end
+					end
+					if a_value.is_integer_range then
+						a_start := a_value.as_integer_range.minimum + 1
+						an_end := a_value.as_integer_range.maximum
+						if a_start = an_end then
+							create {XM_XPATH_INTEGER_VALUE} last_created_closure.make_from_integer (a_start)
+						else
+							create {XM_XPATH_INTEGER_RANGE} last_created_closure.make (a_start, an_end)
+						end
+					elseif a_value.is_sequence_extent then
+						a_sequence_extent := a_value.as_sequence_extent
+						create {XM_XPATH_SEQUENCE_EXTENT} last_created_closure.make_as_view (a_sequence_extent, a_tail_expression.start, a_sequence_extent.count -  a_tail_expression.start + 1)
+					else
+						last_created_closure := a_value
 					end
 				end
 			end
-			if Result = Void then
+			if last_created_closure = Void then
 				if save_values then
-					create {XM_XPATH_MEMO_CLOSURE} Result.make (an_expression, a_context)
+					create {XM_XPATH_MEMO_CLOSURE} last_created_closure.make (an_expression, a_context)
 				else
-					create {XM_XPATH_CLOSURE} Result.make (an_expression, a_context)
+					create {XM_XPATH_CLOSURE} last_created_closure.make (an_expression, a_context)
 				end
 			end
 		ensure
-			result_not_void: Result /= Void
+			result_not_void: last_created_closure /= Void
+		end
+
+	create_sequence_extent (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+			-- Create an extensional value.
+		require
+			iterator_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
+		local
+			a_realizable_iterator: XM_XPATH_REALIZABLE_ITERATOR [XM_XPATH_ITEM]
+		do
+			if an_iterator.is_realizable_iterator then
+				a_realizable_iterator := an_iterator.as_realizable_iterator
+				a_realizable_iterator.realize
+				last_created_closure := a_realizable_iterator.last_realized_value
+			else
+				create {XM_XPATH_SEQUENCE_EXTENT} last_created_closure.make (an_iterator)
+			end
+		ensure
+			result_not_void: last_created_closure /= Void
 		end
 
 feature {NONE} -- Implementation

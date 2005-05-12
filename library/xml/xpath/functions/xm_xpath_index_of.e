@@ -40,7 +40,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 

@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
 		do
 			executable := an_executable
-			instruction_name := "xsl:result-document"
 			base_uri := a_base_uri
 			property_set := a_property_set
 			href := an_href; if href /= Void then adopt_child_expression (href) end
@@ -77,9 +76,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
-
 	property_set: XM_XSLT_OUTPUT_PROPERTIES
 			-- Output properties
 

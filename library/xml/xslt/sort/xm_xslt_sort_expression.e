@@ -164,32 +164,36 @@ feature -- Evaluation
 		do
 			select_expression.create_iterator (a_context)
 			a_sequence_iterator := select_expression.last_iterator
-			an_evaluation_context ?= a_context.new_context
-			check
-				evaluation_context_not_void: an_evaluation_context /= Void
-				-- as this is XSLT
-			end
-
-			if fixed_sort_key_list /= Void then
-				reduced_sort_keys := fixed_sort_key_list
+			if a_sequence_iterator.is_error then
+				last_iterator := a_sequence_iterator
 			else
-				from
-					create reduced_sort_keys.make (sort_key_list.count)
-					a_cursor := sort_key_list.new_cursor; a_cursor.start
-				variant
-					sort_key_list.count + 1 - a_cursor.index
-				until
-					a_cursor.after
-				loop
-					a_sort_key := a_cursor.item
-					if not a_sort_key.is_reducible then
-						a_sort_key.evaluate_expressions (an_evaluation_context)
-					end
-					reduced_sort_keys.put_last (a_sort_key.reduced_definition (an_evaluation_context))
-					a_cursor.forth
+				an_evaluation_context ?= a_context.new_context
+				check
+					evaluation_context_not_void: an_evaluation_context /= Void
+					-- as this is XSLT
 				end
+				
+				if fixed_sort_key_list /= Void then
+					reduced_sort_keys := fixed_sort_key_list
+				else
+					from
+						create reduced_sort_keys.make (sort_key_list.count)
+						a_cursor := sort_key_list.new_cursor; a_cursor.start
+					variant
+						sort_key_list.count + 1 - a_cursor.index
+					until
+						a_cursor.after
+					loop
+						a_sort_key := a_cursor.item
+						if not a_sort_key.is_reducible then
+							a_sort_key.evaluate_expressions (an_evaluation_context)
+						end
+						reduced_sort_keys.put_last (a_sort_key.reduced_definition (an_evaluation_context))
+						a_cursor.forth
+					end
+				end
+				create {XM_XSLT_SORTED_ITERATOR} last_iterator.make (an_evaluation_context, a_sequence_iterator, reduced_sort_keys)
 			end
-			create {XM_XSLT_SORTED_ITERATOR} last_iterator.make (an_evaluation_context, a_sequence_iterator, reduced_sort_keys)
 		end
 
 feature {XM_XSLT_SORT_EXPRESSION} -- Local

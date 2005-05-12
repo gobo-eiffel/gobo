@@ -15,7 +15,7 @@ class XM_XPATH_PROGRESSIVE_ITERATOR
 
 inherit
 	
-	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+	XM_XPATH_REALIZABLE_ITERATOR [XM_XPATH_ITEM]
 
 creation
 
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			reservoir_not_void: a_reservoir /= Void
-			base_iterator_not_void: a_base_iterator /= Void
+			base_iterator_not_in_error: a_base_iterator /= Void and then not a_base_iterator.is_error
 		do
 			reservoir := a_reservoir
 			base_iterator := a_base_iterator
@@ -51,8 +51,6 @@ feature -- Status report
 		do
 			if not base_iterator.is_error then
 				Result := base_iterator.after
-			else
-				set_last_error (base_iterator.error_value)
 			end
 		end
 
@@ -72,9 +70,27 @@ feature -- Cursor movement
 						base_iterator.forth
 					end
 				end
-				if not base_iterator.is_error and then not base_iterator.after then
+				if base_iterator.is_error then
+					set_last_error (base_iterator.error_value)
+				elseif not base_iterator.after then
 					reservoir.force_last (base_iterator.item)
 				end
+			end
+		end
+
+feature -- Evaluation
+
+	realize is
+			-- Realize the sequence as a value.
+		do
+			if base_iterator.is_error then
+				create {XM_XPATH_INVALID_VALUE} last_realized_value.make (base_iterator.error_value)
+			elseif base_iterator.after then
+				create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make_from_list (reservoir)
+			elseif reservoir.is_empty then
+				create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make (base_iterator)
+			else
+				create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make (another)
 			end
 		end
 

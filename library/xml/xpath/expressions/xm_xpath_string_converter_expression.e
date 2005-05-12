@@ -93,12 +93,8 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "convert to string: ")
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				base_expression.display (a_level + 1)
-			end
+			std.error.put_new_line
+			base_expression.display (a_level + 1)
 		end
 
 feature -- Optimization
@@ -151,7 +147,9 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (a_sequence_iterator.error_value)
 			else
 				a_sequence_iterator.start
-				if not a_sequence_iterator.after then
+				if a_sequence_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (a_sequence_iterator.error_value)
+				elseif not a_sequence_iterator.after then
 					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_sequence_iterator.item.string_value)
 				else
 					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")

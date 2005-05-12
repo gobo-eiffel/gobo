@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_min, a_max: INTEGER) is
 			-- Establish invariant.
 		require
-			base_iterator_not_void: a_base_iterator /= Void
+			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
 			valid_minimum: a_min > 0
 			valid_maximum: a_max >= minimum
 		do
@@ -84,10 +84,11 @@ feature -- Cursor movement
 				base_iterator.start
 				index :=  1
 			until
-				index = minimum or else base_iterator.after
+				index = minimum or else base_iterator.is_error or else base_iterator.after
 			loop
 				index := index + 1
 				if not base_iterator.after then base_iterator.forth end
+				if base_iterator.is_error then set_last_error (base_iterator.error_value) end
 			end
 			if index < minimum then index := minimum end
 		end

@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 2
 			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -100,30 +99,46 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 			else
 				an_iterator.start
-				if an_iterator.after then
+				if an_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				elseif an_iterator.after then
 				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")	
 				else
 					a_string := an_iterator.item.string_value
 					an_iterator.forth
-					if an_iterator.after then
+					if an_iterator.is_error then
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+					elseif an_iterator.after then
 						create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_string)
 					else
 						
 						-- Type checking ensured that the separator was not an empty sequence.
 						
 						arguments.item (2).evaluate_item (a_context)
-						a_separator := arguments.item (2).last_evaluated_item.string_value
-						a_result := STRING_.concat (a_string, a_separator)
-						from
-						until
-							an_iterator.after
-						loop
-							a_string := an_iterator.item.string_value
-							a_result := STRING_.appended_string (a_result, a_separator)
-							a_result := STRING_.appended_string (a_result, a_string)
-							an_iterator.forth
+						check
+							second_string_not_void: arguments.item (2).last_evaluated_item /= Void
+							-- static typing
 						end
-						create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_result)
+						if arguments.item (2).last_evaluated_item.is_error then
+							last_evaluated_item := arguments.item (2).last_evaluated_item
+						else
+							a_separator := arguments.item (2).last_evaluated_item.string_value
+							a_result := STRING_.concat (a_string, a_separator)
+							from
+							until
+								an_iterator.is_error or else an_iterator.after
+							loop
+								a_string := an_iterator.item.string_value
+								a_result := STRING_.appended_string (a_result, a_separator)
+								a_result := STRING_.appended_string (a_result, a_string)
+								an_iterator.forth
+							end
+							if an_iterator.is_error then
+								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+							else
+								create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_result)
+							end
+						end
 					end
 				end
 			end

@@ -16,15 +16,26 @@ inherit
 
 	XM_XPATH_REVERSIBLE_ITERATOR [G]
 		undefine
-			is_last_position_finder, as_last_position_finder
+			is_last_position_finder, as_last_position_finder,
+			is_realizable_iterator, as_realizable_iterator
 		redefine
-			before, is_array_iterator, as_array_iterator
+			before, is_array_iterator, as_array_iterator,
+			is_invulnerable
 		end
 
 	XM_XPATH_LAST_POSITION_FINDER [G]
 		undefine
 			before, is_reversible_iterator, as_reversible_iterator,
-			is_array_iterator, as_array_iterator
+			is_array_iterator, as_array_iterator,
+			is_realizable_iterator, as_realizable_iterator,
+			is_invulnerable
+		end
+
+	XM_XPATH_REALIZABLE_ITERATOR [G]
+		undefine
+			before, is_reversible_iterator, as_reversible_iterator,
+			is_array_iterator, as_array_iterator, is_last_position_finder, as_last_position_finder,
+			is_invulnerable
 		end
 
 	KL_SHARED_STANDARD_FILES
@@ -94,6 +105,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_invulnerable: BOOLEAN is
+			-- Is `Current' guarenteed free of implicit errors?
+		do
+			Result := True
+		end
+
 	before: BOOLEAN is
 		do
 			Result := index < first_item
@@ -116,6 +133,28 @@ feature -- Cursor movement
 				index := index + 1
 			end
 		end
+
+feature -- Evaluation
+
+	realize is
+			-- Realize the sequence as a value.
+		local
+			a_list: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+			an_index: INTEGER
+		do
+			-- temporary is to get round expanded/reference generics problem
+			create a_list.make (items.count)
+			from
+				an_index := 1
+			until
+				an_index > items.count
+			loop
+				a_list.put_last (items.item (an_index))
+				an_index := an_index + 1
+			end
+			create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make_from_list (a_list)
+		end
+
 
 feature -- Duplication
 

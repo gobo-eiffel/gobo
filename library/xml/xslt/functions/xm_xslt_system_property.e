@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access

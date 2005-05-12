@@ -69,7 +69,7 @@ feature -- Access
 					create a_source.make (a_uri_resolver.last_system_id.full_reference)
 					check_recursion (a_source, a_stylesheet)
 					if not any_compile_errors then
-						create a_node_factory.make (a_configuration.error_listener, a_configuration.are_external_functions_allowed)
+						create a_node_factory.make (a_configuration.error_listener, a_configuration)
 						a_stylesheet_compiler.load_stylesheet_module (a_source, a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id)
 						if a_stylesheet_compiler.load_stylesheet_module_failed then
 							create an_error.make_from_string (a_stylesheet_compiler.load_stylesheet_module_error, "", "XTSE0165", Static_error)

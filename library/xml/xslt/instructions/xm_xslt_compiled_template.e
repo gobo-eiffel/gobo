@@ -114,16 +114,8 @@ feature -- Evaluation
 		require
 			context_not_void: a_context /= Void
 		local
-			a_transformer: XM_XSLT_TRANSFORMER
 			an_instruction: XM_XSLT_INSTRUCTION
 		do
-			a_transformer := a_context.transformer
-			if a_transformer.is_tracing then
-				if details = Void then
-					create details.make ("template", system_id, line_number, empty_property_set)
-				end
-				a_transformer.trace_listener.trace_instruction_entry (details)
-			end
 			an_instruction ?= body
 			if an_instruction /= Void then
 				an_instruction.process_leaving_tail (a_context)
@@ -132,14 +124,6 @@ feature -- Evaluation
 				body.process (a_context)
 				last_tail_call := Void
 			end
-			if a_transformer.is_tracing then
-				a_transformer.trace_listener.trace_instruction_exit (details)
-			end
 		end
-
-feature {NONE} -- Implementation
-
-	details:  XM_XSLT_TRACE_DETAILS
-			-- Trace details
 
 end

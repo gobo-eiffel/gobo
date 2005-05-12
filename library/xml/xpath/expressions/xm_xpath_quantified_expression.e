@@ -87,23 +87,15 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), token_name (operator))
 			a_string := STRING_.appended_string (a_string, " $")
-			if declaration = Void then
-				a_string := STRING_.appended_string (a_string, "<range variable>")
-			else
-				a_string := STRING_.appended_string (a_string, declaration.variable_name)
-			end
+			a_string := STRING_.appended_string (a_string, variable_name)
 			a_string := STRING_.appended_string (a_string, " in")
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				sequence.display (a_level + 1)
-				a_string := STRING_.appended_string (indentation (a_level), "satisfies")
-				std.error.put_string (a_string)
-				std.error.put_new_line
-				action_expression.display (a_level + 1)
-			end
+			std.error.put_new_line
+			sequence.display (a_level + 1)
+			a_string := STRING_.appended_string (indentation (a_level), "satisfies")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			action_expression.display (a_level + 1)
 		end
 
 feature -- Optimization
@@ -196,7 +188,7 @@ feature -- Evaluation
 				from
 					a_base_iterator.start
 				until
-					finished or else a_base_iterator.after
+					finished or else a_base_iterator.is_error or else a_base_iterator.after
 				loop
 					an_item := a_base_iterator.item
 					if an_item = Void then
@@ -222,8 +214,12 @@ feature -- Evaluation
 						a_base_iterator.forth
 					end
 				end
-					
-				if not (finished or else found_a_match) then create last_boolean_value.make (not some) end
+				if a_base_iterator.is_error then
+					create last_boolean_value.make (False)
+					last_boolean_value.set_last_error (a_base_iterator.error_value)
+				elseif not (finished or else found_a_match) then
+					create last_boolean_value.make (not some)
+				end
 			end
 		end
 

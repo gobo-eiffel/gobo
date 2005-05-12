@@ -23,7 +23,7 @@ feature -- Access
 
 	first_child: XM_XPATH_NODE is
 			-- The first child of this node;
-			-- If there are no children, return `Void'
+			-- If there are no children, return `Void'.
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
@@ -34,7 +34,7 @@ feature -- Access
 
 	last_child: XM_XPATH_NODE is
 			-- The last child of this node;
-			-- If there are no children, return `Void'
+			-- If there are no children, return `Void'.
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
@@ -45,10 +45,10 @@ feature -- Access
 				an_iterator.after
 			loop
 				Result := an_iterator.item
-					check
-						result_not_void: Result /= Void
-						-- Because not before (due to start) and not after (due to until)
-					end
+				check
+					result_not_void: Result /= Void
+					-- Because not before (due to start) and not after (due to until)
+				end
 				an_iterator.forth
 			end
 		end

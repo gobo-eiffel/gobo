@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_filter: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant.
 		require
-			base_iterator_not_void: a_base_iterator /= Void
+			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
 			filter_not_void: a_filter /= Void
 			context_not_void: a_context /= Void
 		do
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 	make_non_numeric (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_filter: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant for non-numeric results.
 		require
-			base_iterator_not_void: a_base_iterator /= Void
+			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
 			filter_not_void: a_filter /= Void
 			context_not_void: a_context /= Void
 		do
@@ -145,6 +145,7 @@ feature {NONE} -- Implementation
 				test_match
 				matched := last_match_test
 				if not base_iterator.after then base_iterator.forth end
+				if base_iterator.is_error then set_last_error (base_iterator.error_value) end
 			end
 
 			if is_error then
@@ -165,6 +166,7 @@ feature {NONE} -- Implementation
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			an_item: XM_XPATH_ITEM
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+			an_integer_value: XM_XPATH_INTEGER_VALUE
 		do
 			last_match_test := False
 			if non_numeric then
@@ -176,6 +178,10 @@ feature {NONE} -- Implementation
 					last_match_test := a_boolean_value.value
 				end
 			else
+
+				-- This code is carefully designed to avoid reading more items from the
+				-- iteration of the filter expression than are absolutely essential.
+
 				filter.create_iterator (filter_context)
 				an_iterator := filter.last_iterator
 				if not an_iterator.is_error then
@@ -184,6 +190,21 @@ feature {NONE} -- Implementation
 						an_item := an_iterator.item
 						if an_item.is_node then
 							last_match_test := True
+						elseif an_item.is_boolean_value then
+							if an_item.as_boolean_value.value then	last_match_test := True	else an_iterator.forth; last_match_test := not an_iterator.after end
+						elseif an_item.is_integer_value and then an_item.as_integer_value.is_platform_integer then
+							if an_item.as_integer_value.as_integer = base_iterator.index then last_match_test := True else an_iterator.forth; last_match_test := not an_iterator.after end
+						elseif an_item.is_numeric_value then
+							create an_integer_value.make_from_integer (base_iterator.index)
+							last_match_test := an_item.as_numeric_value.same_expression (an_integer_value)
+							if not last_match_test then an_iterator.forth; last_match_test := not an_iterator.after end
+						else
+							if an_item.is_string_value then
+								last_match_test := STRING_.same_string (an_item.as_string_value.string_value, "")
+								if not last_match_test then an_iterator.forth; last_match_test := not an_iterator.after end
+							else
+								last_match_test := True
+							end
 						end
 					end
 				else

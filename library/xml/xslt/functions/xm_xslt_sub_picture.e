@@ -92,8 +92,6 @@ feature -- Access
 			a_multiplier: INTEGER
 			a_number: XM_XPATH_NUMERIC_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
-			a_double_value: XM_XPATH_DOUBLE_VALUE
-			a_decimal_value: XM_XPATH_DECIMAL_VALUE
 		do
 			if a_value.is_nan then
 				Result := STRING_.concat (prefix_string, a_decimal_format.nan)

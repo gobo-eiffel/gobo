@@ -162,13 +162,9 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "path /")
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				start.display (a_level + 1)
-				step.display (a_level + 1)
-			end
+			std.error.put_new_line
+			start.display (a_level + 1)
+			step.display (a_level + 1)
 		end
 
 feature -- Status setting
@@ -181,6 +177,12 @@ feature -- Status setting
 			if step.depends_upon_xslt_context then
 				set_depends_upon_xslt_context
 			end
+			if step.depends_upon_user_functions then
+				set_depends_upon_user_functions
+			end
+			if step.depends_upon_local_variables then
+				set_depends_upon_local_variables
+			end			
 			are_dependencies_computed := True
 		end
 	
@@ -190,8 +192,6 @@ feature -- Optimization
 			-- Perform context-independent static optimizations.
 		local
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
-			a_root: XM_XPATH_ROOT_EXPRESSION
-			a_parent_step: XM_XPATH_PARENT_NODE_EXPRESSION
 		do
 			start.simplify
 			if not start.is_error then

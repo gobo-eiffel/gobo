@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 	make (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_GLOBAL_ORDER_COMPARER) is
 			-- Establish invariant.
 		require
-			first_iterator_not_void: an_iterator /= Void
-			second_iterator_not_void: another_iterator /= Void
+			first_iterator_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
+			second_iterator_before: another_iterator /= Void and then not another_iterator.is_error and then another_iterator.before
 			comparer_not_void: a_comparer /= Void
 		do
 			second_iterator := another_iterator
@@ -71,19 +71,37 @@ feature -- Cursor movement
 		do
 			index := index + 1
 			if not first_iterator.before and then first_iterator.after then
-				advance_second_iterator; if not second_iterator.after then item := second_iterator.item else item := Void end
+				advance_second_iterator
+				if second_iterator.is_error then
+					set_last_error (second_iterator.error_value)
+				elseif not second_iterator.after then
+					item := second_iterator.item
+				else
+					item := Void
+				end
 			elseif not second_iterator.before and then second_iterator.after then
-				advance_first_iterator; if not first_iterator.after then item := first_iterator.item else item := Void end
+				advance_first_iterator
+				if first_iterator.is_error then
+					set_last_error (first_iterator.error_value)
+				elseif not first_iterator.after then
+					item := first_iterator.item
+				else
+					item := Void
+				end
 			else
 
 				-- both iterators may point to valid items
 
 				if cached_first_node = Void then
 					advance_first_iterator
-					if first_iterator.after then
+					if first_iterator.is_error then
+						set_last_error (first_iterator.error_value)
+					elseif first_iterator.after then
 						if cached_second_node = Void then
 							advance_second_iterator
-							if second_iterator.after then
+							if second_iterator.is_error then
+								set_last_error (second_iterator.error_value)
+							elseif second_iterator.after then
 								item := Void
 							else
 								item := second_iterator.item
@@ -98,7 +116,9 @@ feature -- Cursor movement
 							compare_two_nodes
 						else
 							advance_second_iterator
-							if second_iterator.after then
+							if second_iterator.is_error then
+								set_last_error (second_iterator.error_value)
+							elseif second_iterator.after then
 								item := first_node
 							else
 								second_node := second_iterator.item
@@ -109,7 +129,9 @@ feature -- Cursor movement
 				else -- first node is cached so second can't be
 					first_node := cached_first_node
 					advance_second_iterator
-					if second_iterator.after then
+					if second_iterator.is_error then
+						set_last_error (second_iterator.error_value)
+					elseif second_iterator.after then
 						item := first_node
 					else
 						second_node := second_iterator.item

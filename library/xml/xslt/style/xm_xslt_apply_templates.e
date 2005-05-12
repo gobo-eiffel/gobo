@@ -16,8 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, mark_tail_calls, set_additional_trace_properties,
-			is_apply_templates
+			make_style_element, validate, mark_tail_calls, is_apply_templates
 		end
 
 	XM_XPATH_ROLE
@@ -32,12 +31,12 @@ feature {NONE} -- Initialization
 	
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER;a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
 			-- Establish invariant.
 		do
 			mode_name_code := -1 -- default mode
 			is_instruction := True
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
 		end
 
 feature -- Status setting
@@ -186,12 +185,6 @@ feature -- Element change
 																											  with_param_instructions (an_executable, False),
 																											  with_param_instructions (an_executable, True),
 																											  use_current_mode, use_tail_recursion, mode)
-		end
-
-	set_additional_trace_properties (a_trace_instruction: XM_XSLT_TRACE_INSTRUCTION) is
-			-- Set additional properties on `a_trace_instruction'.
-		do
-			if mode /= Void then a_trace_instruction.add_property (mode.name, "mode") end
 		end
 
 feature -- Conversion

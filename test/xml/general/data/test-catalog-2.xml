@@ -23,7 +23,9 @@
   <public publicId="ISO 8879:1986//ENTITIES Added Math Symbols: Relations//EN" uri="xml-dtd-4.2-1.0-24/ent/iso-amsr.ent"/>
   <public publicId="ISO 8879:1986//ENTITIES Non-Russian Cyrillic//EN" uri="xml-dtd-4.2-1.0-24/ent/iso-cyr2.ent"/>
   <group xml:base="ftp://ftp.gobosoft.com/pub/README">
+    <rewriteSystem systemIdStartString="http://www.oasis-open.org/" rewritePrefix="rubbish/xml-dtd-4.1.2-1.0-24"/>
     <rewriteSystem systemIdStartString="http://www.oasis-open.org/docbook/xml/4.1.2" rewritePrefix="xml-dtd-4.1.2-1.0-24"/>
+    <rewriteURI uriStartString="http://www.oasis-open.org/" rewritePrefix="rubbish/xml-dtd-4.1.2-1.0-24"/>
     <rewriteURI uriStartString="http://www.oasis-open.org/docbook/xml/4.1.2" rewritePrefix="xml-dtd-4.1.2-1.0-24"/>
   </group>
   <public publicId="-//OASIS//ELEMENTS DocBook XML Information Pool V4.2//EN" uri="xml-dtd-4.2-1.0-24/dbpoolx.mod"/>

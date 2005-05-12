@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 2
 			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -71,9 +70,6 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations
 		do
-			if supplied_argument_count = 1 or else arguments.item (1).context_document_nodeset then
-				set_context_document_nodeset
-			end
 			Precursor
 			add_context_document_argument (1, "id+")
 			merge_dependencies (arguments.item (2).dependencies)
@@ -119,9 +115,13 @@ feature -- Evaluation
 				else
 					create a_local_order_comparer
 					arguments.item (1).create_iterator (a_context)
-					create an_id_mapping_function.make (a_node.as_document)
-					create a_mapping_iterator.make (arguments.item (1).last_iterator, an_id_mapping_function, Void)
-					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (a_mapping_iterator, a_local_order_comparer) 
+					if arguments.item (1).last_iterator.is_error then
+						last_iterator := arguments.item (1).last_iterator
+					else
+						create an_id_mapping_function.make (a_node.as_document)
+						create a_mapping_iterator.make (arguments.item (1).last_iterator, an_id_mapping_function, Void)
+						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (a_mapping_iterator, a_local_order_comparer) 
+					end
 				end
 			else
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("In the id() function," +
@@ -161,6 +161,9 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			set_single_document_nodeset
 			set_ordered_nodeset
 			set_non_creating
+			if supplied_argument_count = 1 or else arguments.item (1).context_document_nodeset then
+				set_context_document_nodeset
+			end
 		end
 
 feature {NONE} -- Implementation

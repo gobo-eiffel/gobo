@@ -61,7 +61,83 @@ feature -- Access
 			-- `Void'
 		end
 
+	count: INTEGER is
+			-- Number of items in `Current';
+			-- Not 100% pure - may put `Current' into error.
+		local
+			a_saved_iterator, an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			a_saved_iterator := last_iterator -- to avoid state change
+			create_iterator (Void); an_iterator := last_iterator
+			if an_iterator.is_error then
+				Result := 0
+				set_last_error (an_iterator.error_value)
+			elseif an_iterator.is_last_position_finder then
+				Result := an_iterator.as_last_position_finder.last_position
+			else
+				from
+					an_iterator.start
+				until
+					an_iterator.is_error or else an_iterator.after
+				loop
+					Result := Result + 1
+					an_iterator.forth
+				end
+			end
+			if an_iterator.is_error then
+				Result := 0
+				set_last_error (an_iterator.error_value)
+			end
+			last_iterator := a_saved_iterator
+		ensure
+			positive_result: Result >= 0
+		end
+
+	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
+			-- Item at `an_index'
+		require
+			index_in_range: an_index > 0 and then an_index <= count
+		local
+			an_integer: INTEGER
+			a_saved_item: XM_XPATH_ITEM
+			a_saved_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+		do
+			if is_evaluate_item_supported and then an_index = 1 then
+				a_saved_item := last_evaluated_item -- to avoid state change
+				evaluate_item (Void)
+				Result := last_evaluated_item
+				last_evaluated_item := a_saved_item
+			else
+				a_saved_iterator := last_iterator -- to avoid state change
+				create_iterator (Void)
+				from
+					an_integer := 1
+				until
+					an_integer > an_index or else last_iterator.is_error or else last_iterator.after
+				loop
+					if an_integer = 1 then last_iterator.start else last_iterator.forth end
+					an_integer := an_integer + 1
+				end
+				if last_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} Result.make (last_iterator.error_value)
+				elseif not last_iterator.after then
+					Result := last_iterator.item
+				else
+					check
+						out_of_range: False
+						-- pre-condition on `an_index'
+					end
+				end
+				last_iterator := a_saved_iterator
+			end
+		ensure
+			item_may_be_void: True
+		end
+
 feature -- Status report
+
+	last_reduced_value: XM_XPATH_VALUE
+			-- Result of last call to `reduce'
 
 	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is
 			-- Can `Current' be converted to an `XM_XPATH_ITEM'?
@@ -89,6 +165,14 @@ feature -- Optimization
 			do_nothing
 		end
 
+	reduce is
+			-- Reduce a value to its simplest form.
+		do
+			last_reduced_value := Current
+		ensure
+			last_reduced_value_not_void: last_reduced_value /= Void
+		end
+
 feature -- Evaluation
 
 	lazily_evaluate (a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
@@ -96,21 +180,26 @@ feature -- Evaluation
 		do
 				last_evaluation := Current
 		end
-			
+
 	process (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
+			an_item: XM_XPATH_INVALID_ITEM
 		do
 			create_iterator (a_context)
 			a_receiver := a_context.current_receiver
 			from
 				last_iterator.start
 			until
-				last_iterator.after
+				last_iterator.is_error or else last_iterator.after
 			loop
 				a_receiver.append_item (last_iterator.item)
 				last_iterator.forth
+			end
+			if last_iterator.is_error then
+				create an_item.make (last_iterator.error_value)
+				a_receiver.append_item (an_item)
 			end
 		end
 

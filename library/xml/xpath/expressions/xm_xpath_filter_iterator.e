@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_filter: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant.
 		require
-			base_iterator_not_void: a_base_iterator /= Void
+			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
 			filter_not_void: a_filter /= Void
 			context_not_void: a_context /= Void
 		do
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 	make_non_numeric (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_filter: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant for non-numeric results.
 		require
-			base_iterator_not_void: a_base_iterator /= Void
+			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
 			filter_not_void: a_filter /= Void
 			context_not_void: a_context /= Void
 		do
@@ -121,6 +121,7 @@ feature {NONE} -- Implementation
 			from
 				matched := False
 				if base_iterator.before then base_iterator.start end
+				if base_iterator.is_error then set_last_error (base_iterator.error_value) end
 			until
 				is_error or else matched or else base_iterator.after
 			loop
@@ -128,8 +129,8 @@ feature {NONE} -- Implementation
 				test_match
 				matched := last_match_test
 				if not base_iterator.after then base_iterator.forth end
+				if base_iterator.is_error then set_last_error (base_iterator.error_value) end
 			end
-
 			if is_error then
 				create {XM_XPATH_BOOLEAN_VALUE} current_item.make (False) -- we need SOMETHING to set an error upon!
 				current_item.set_last_error (error_value)
@@ -168,7 +169,10 @@ feature {NONE} -- Implementation
 				an_iterator := filter.last_iterator
 				if not an_iterator.is_error then
 					an_iterator.start
-					if not an_iterator.after then
+					if an_iterator.is_error then
+						last_match_test := False
+						set_last_error (an_iterator.error_value)
+					elseif not an_iterator.after then
 						an_item := an_iterator.item
 						if an_item.is_node then
 							last_match_test := True

@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			set_argument_error_code ("FORG0005")
 			initialized := True
 		end

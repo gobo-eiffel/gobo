@@ -53,7 +53,6 @@ feature {NONE} -- Initialization
 			algorithm := an_algorithm
 			sort_keys := some_sort_keys
 			collation_name := a_collation_name
-			instruction_name := "xsl:for-each-group"
 			default_collation_name := a_default_collation_name
 			compute_static_properties
 			initialized := True
@@ -93,7 +92,6 @@ feature {NONE} -- Initialization
 			algorithm := an_algorithm
 			sort_keys := some_sort_keys
 			collation_name := a_collation_name
-			instruction_name := "xsl:for-each-group"
 			default_collation_name := a_default_collation_name
 			compute_static_properties
 			initialized := True
@@ -110,9 +108,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
-
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
@@ -321,26 +316,33 @@ feature -- Evaluation
 			a_transformer := a_context.transformer
 			create_group_iterator (a_context)
 			a_group_iterator := last_group_iterator
-			a_new_context := a_context.new_context
-			a_new_context.set_current_template (Void)
-			a_new_context.set_current_iterator (a_group_iterator)
-			a_new_context.set_current_group_iterator (a_group_iterator)
-			if a_transformer.is_tracing then
-				a_trace_listener := a_transformer.trace_listener
-			end
-			from
-				a_group_iterator.start
-			until
-				a_transformer.is_error or else a_group_iterator.after
-			loop
+			if a_group_iterator.is_error then
+				a_transformer.report_fatal_error (a_group_iterator.error_value, Current)
+			else
+				a_new_context := a_context.new_context
+				a_new_context.set_current_template (Void)
+				a_new_context.set_current_iterator (a_group_iterator)
+				a_new_context.set_current_group_iterator (a_group_iterator)
 				if a_transformer.is_tracing then
-					a_trace_listener.trace_current_item_start (a_group_iterator.item)
+					a_trace_listener := a_transformer.trace_listener
 				end
-				action.process (a_new_context)
-				if a_transformer.is_tracing then
-					a_trace_listener.trace_current_item_finish (a_group_iterator.item)
+				from
+					a_group_iterator.start
+				until
+					a_transformer.is_error or else a_group_iterator.after
+				loop
+					if a_transformer.is_tracing then
+						a_trace_listener.trace_current_item_start (a_group_iterator.item)
+					end
+					action.process (a_new_context)
+					if a_transformer.is_tracing then
+						a_trace_listener.trace_current_item_finish (a_group_iterator.item)
+					end
+					a_group_iterator.forth
+					if a_group_iterator.is_error then
+						a_transformer.report_fatal_error (a_group_iterator.error_value, Current)
+					end
 				end
-				a_group_iterator.forth
 			end
 			last_tail_call := Void
 		end
@@ -362,8 +364,11 @@ feature -- Evaluation
 			a_new_context.set_current_template (Void)
 			a_new_context.set_current_iterator (a_group_iterator)
 			a_new_context.set_current_group_iterator (a_group_iterator)
-			create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_group_iterator, Current, a_new_context)
-			
+			if a_group_iterator.is_error then
+				an_evaluation_context.transformer.report_fatal_error (a_group_iterator.error_value, Current)
+			else
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_group_iterator, Current, a_new_context)
+			end
 		end
 	
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
@@ -443,49 +448,53 @@ feature {NONE} -- Implementation
 		do
 			select_expression.create_iterator (a_context)
 			a_population := select_expression.last_iterator
-						
-			-- Obtain am iterator over the groups in order of first appearance
-
-			inspect
-				algorithm
-			when Group_by_algorithm then
-				a_new_context := a_context.new_minor_context
-				a_new_context.set_current_iterator (a_population)
-				create {XM_XSLT_GROUP_BY_ITERATOR} a_group_iterator.make (a_population, key_expression, a_new_context, collator (a_new_context))
-			when Group_adjacent_algorithm then
-				check
-					croup_adjacent_NYI: False
-				end
-				--				create {XM_XSLT_GROUP_ADJACENT_ITERATOR} a_group_iterator.make (a_population, key_expression, a_context, collator)
-			when Group_starting_with_algorithm then
-				create {XM_XSLT_GROUP_STARTING_WITH_ITERATOR} a_group_iterator.make (a_population, key_pattern, a_context, Current)
-			when Group_ending_with_algorithm then
-				check
-					group_ending_with_NYI: False
-				end
-				--create {XM_XSLT_GROUP_ENDING_WITH_ITERATOR} a_group_iterator.make (a_population, key_expression.pattern, a_context)
-			end
-
-			-- Now iterate over the leading nodes of the groups.
-
-			if sort_keys.count > 0 then
-				create reduced_sort_keys.make (sort_keys.count)
-				a_new_context := a_context.new_minor_context
-				from
-					a_cursor := sort_keys.new_cursor; a_cursor.start
-				variant
-					sort_keys.count + 1 - a_cursor.index
-				until
-					a_cursor.after
-				loop
-					a_cursor.item.evaluate_expressions (a_new_context)
-					a_fixed_sort_key:= a_cursor.item.reduced_definition (a_new_context)
-					reduced_sort_keys.put_last (a_fixed_sort_key)
-					a_cursor.forth
-				end
-				create {XM_XSLT_SORTED_GROUP_ITERATOR} last_group_iterator.make (a_new_context, a_group_iterator, reduced_sort_keys)
+			if a_population.is_error then
+				a_context.transformer.report_fatal_error (a_population.error_value, Current)
 			else
-				last_group_iterator := a_group_iterator
+			
+				-- Obtain am iterator over the groups in order of first appearance
+				
+				inspect
+					algorithm
+				when Group_by_algorithm then
+					a_new_context := a_context.new_minor_context
+					a_new_context.set_current_iterator (a_population)
+					create {XM_XSLT_GROUP_BY_ITERATOR} a_group_iterator.make (a_population, key_expression, a_new_context, collator (a_new_context))
+				when Group_adjacent_algorithm then
+					check
+						croup_adjacent_NYI: False
+					end
+					--				create {XM_XSLT_GROUP_ADJACENT_ITERATOR} a_group_iterator.make (a_population, key_expression, a_context, collator)
+				when Group_starting_with_algorithm then
+					create {XM_XSLT_GROUP_STARTING_WITH_ITERATOR} a_group_iterator.make (a_population, key_pattern, a_context, Current)
+				when Group_ending_with_algorithm then
+					check
+						group_ending_with_NYI: False
+					end
+					--create {XM_XSLT_GROUP_ENDING_WITH_ITERATOR} a_group_iterator.make (a_population, key_expression.pattern, a_context)
+				end
+				
+				-- Now iterate over the leading nodes of the groups.
+				
+				if sort_keys.count > 0 then
+					create reduced_sort_keys.make (sort_keys.count)
+					a_new_context := a_context.new_minor_context
+					from
+						a_cursor := sort_keys.new_cursor; a_cursor.start
+					variant
+						sort_keys.count + 1 - a_cursor.index
+					until
+						a_cursor.after
+					loop
+						a_cursor.item.evaluate_expressions (a_new_context)
+						a_fixed_sort_key:= a_cursor.item.reduced_definition (a_new_context)
+						reduced_sort_keys.put_last (a_fixed_sort_key)
+						a_cursor.forth
+					end
+					create {XM_XSLT_SORTED_GROUP_ITERATOR} last_group_iterator.make (a_new_context, a_group_iterator, reduced_sort_keys)
+				else
+					last_group_iterator := a_group_iterator
+				end
 			end
 		ensure
 			result_not_void: last_group_iterator /= Void

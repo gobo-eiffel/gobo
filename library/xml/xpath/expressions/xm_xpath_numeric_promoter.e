@@ -92,8 +92,6 @@ feature -- Optimization
 	
 	simplify is
 			-- Perform context-independent static optimizations.
-		local
-			an_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			base_expression.simplify
 			if base_expression.was_expression_replaced then
@@ -104,8 +102,8 @@ feature -- Optimization
 					if last_iterator.is_error then
 						set_last_error (last_iterator.error_value)
 					else
-						create an_extent.make (last_iterator)
-						set_replacement (an_extent)
+						expression_factory.create_sequence_extent (last_iterator)
+						set_replacement (expression_factory.last_created_closure)
 					end
 				end
 			end
@@ -147,7 +145,9 @@ feature -- Evaluation
 			elseif base_expression.last_evaluated_item.is_error then
 				last_evaluated_item := base_expression.last_evaluated_item
 			else
-				if base_expression.last_evaluated_item.is_atomic_value then
+				if base_expression.last_evaluated_item.is_error then
+					last_evaluated_item := base_expression.last_evaluated_item
+				elseif base_expression.last_evaluated_item.is_atomic_value then
 					promote_number (base_expression.last_evaluated_item.as_atomic_value)
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",
@@ -173,7 +173,9 @@ feature -- Evaluation
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
 			-- Map `an_item' to a sequence
 		do
-			if an_item.is_atomic_value then
+			if an_item.is_error then
+				last_evaluated_item := an_item
+			elseif an_item.is_atomic_value then
 				promote_number (an_item.as_atomic_value)
 			else
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot numerically promote a node",

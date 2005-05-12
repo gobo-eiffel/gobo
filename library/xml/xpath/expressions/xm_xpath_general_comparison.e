@@ -117,8 +117,8 @@ feature -- Evaluation
 			-- Effective boolean value
 		local
 			an_iterator, another_iterator, a_third_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 			a_count: INTEGER
+			a_value: XM_XPATH_VALUE
 			finished: BOOLEAN
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
@@ -140,12 +140,13 @@ feature -- Evaluation
 						
 						-- The second operand is more likely to be a singleton than the first so:
 						
-						create a_sequence_extent.make (another_iterator)
-						a_count := a_sequence_extent.count
+						expression_factory.create_sequence_extent (another_iterator)
+						a_value := expression_factory.last_created_closure
+						a_count := a_value.count
 						if a_count = 0 then
 							create last_boolean_value.make (False)
 						elseif a_count = 1 then
-							calculate_effective_boolean_value_with_second_operand_singleton (a_context, a_sequence_extent.item_at (1), an_iterator)
+							calculate_effective_boolean_value_with_second_operand_singleton (a_context, a_value.item_at (1), an_iterator)
 						else -- a_count > 1 - so nested loop comparison
 							from
 								an_iterator.start
@@ -157,11 +158,11 @@ feature -- Evaluation
 									finished := True
 								else
 									from
-										a_sequence_extent.create_iterator (Void)
-										a_third_iterator := a_sequence_extent.last_iterator
-										a_third_iterator.start
+										a_value.create_iterator (Void)
+										a_third_iterator := a_value.last_iterator
+										if not a_third_iterator.is_error then a_third_iterator.start end
 									until
-										finished or else a_third_iterator.after
+										finished or else a_third_iterator.is_error or else a_third_iterator.after
 									loop
 										if not a_third_iterator.item.is_atomic_value then
 											set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
@@ -246,7 +247,7 @@ feature {NONE} -- Implementation
 			from
 				an_iterator.forth
 			until
-				finished or else an_iterator.after
+				finished or else an_iterator.is_error or else an_iterator.after
 			loop
 				if not an_iterator.item.is_atomic_value then
 					create last_boolean_value.make (False)
@@ -265,7 +266,12 @@ feature {NONE} -- Implementation
 				end
 				an_iterator.forth
 			end
-			if last_boolean_value = Void then create last_boolean_value.make (False) end
+			if an_iterator.is_error then
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (an_iterator.error_value)
+			elseif last_boolean_value = Void then
+				create last_boolean_value.make (False)
+			end
 		ensure
 			last_boolean_value_not_void: last_boolean_value /= Void			
 		end
@@ -353,9 +359,7 @@ feature {NONE} -- Implementation
 					if not is_error and then not (a_type = type_factory.any_atomic_type or else a_type = type_factory.untyped_atomic_type
 															or else another_type = type_factory.any_atomic_type or else another_type = type_factory.untyped_atomic_type) then
 						if a_type.primitive_type /= another_type.primitive_type and then
-							not (is_sub_type (a_type, type_factory.numeric_type) and then
-								  is_sub_type (another_type, type_factory.numeric_type))
-						 then
+							not are_types_comparable (a_type.fingerprint, another_type.fingerprint) then
 							a_message := STRING_.appended_string ("Cannot compare ", a_type.conventional_name)
 							a_message := STRING_.appended_string (a_message, " with ")
 							a_message := STRING_.appended_string (a_message, another_type.conventional_name)

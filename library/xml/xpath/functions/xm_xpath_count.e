@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -81,13 +80,15 @@ feature -- Evaluation
 		do
 			arguments.item (1).create_iterator (a_context)
 			an_iterator := arguments.item (1).last_iterator
-			if an_iterator.is_last_position_finder then
+			if an_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+			elseif an_iterator.is_last_position_finder then
 				create an_integer_value.make_from_integer (an_iterator.as_last_position_finder.last_position)
 				last_evaluated_item := an_integer_value
 			else
 				from
 					an_integer := 0
-					if not an_iterator.is_error then	an_iterator.start end
+					an_iterator.start
 				until
 					an_iterator.is_error or else an_iterator.after
 				loop

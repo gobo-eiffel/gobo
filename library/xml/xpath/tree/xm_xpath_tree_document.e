@@ -121,7 +121,6 @@ feature -- Access
 			--  element type, it remembers the result for next time.
 				local
 			a_list: DS_ARRAYED_LIST [XM_XPATH_TREE_ELEMENT]
-			an_element: XM_XPATH_TREE_ELEMENT
 			a_node: XM_XPATH_TREE_NODE
 		do
 			if element_list = Void then

@@ -93,16 +93,12 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "instance-of ")
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				base_expression.display (a_level + 1)
-				a_string := STRING_.appended_string (indentation (a_level + 1), target_type.primary_type.conventional_name)
-				a_string := STRING_.appended_string (a_string, target_type.occurence_indicator)			
-				std.error.put_string (a_string)
-				std.error.put_new_line
-			end
+			std.error.put_new_line
+			base_expression.display (a_level + 1)
+			a_string := STRING_.appended_string (indentation (a_level + 1), target_type.primary_type.conventional_name)
+			a_string := STRING_.appended_string (a_string, target_type.occurence_indicator)			
+			std.error.put_string (a_string)
+			std.error.put_new_line
 		end
 
 feature -- Optimization

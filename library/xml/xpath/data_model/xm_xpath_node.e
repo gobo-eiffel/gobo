@@ -167,7 +167,7 @@ feature -- Access
 		end
 
 	type_annotation: INTEGER is
-			--Type annotation of this node
+			-- Type annotation of this node
 		require
 			not_in_error: not is_error
 		do
@@ -292,7 +292,10 @@ feature -- Access
 		end
 
 	simple_number: STRING is
-			-- Position of `Current' amongst it's siblings
+			-- Position of `Current' amongst it's siblings;
+			-- Not 100% pure - may put `Current' into error status.
+		require
+			no_previous_error: not is_error
 		local
 			a_node_test: XM_XPATH_NODE_TEST
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
@@ -308,14 +311,19 @@ feature -- Access
 				a_position := 1
 				an_iterator.start
 			until
-				an_iterator.after
+				an_iterator.is_error or else an_iterator.after
 			loop
 				a_position := a_position + 1
 				an_iterator.forth
 			end
-			Result := a_position.out
+			if an_iterator.is_error then
+				Result := an_iterator.error_value.error_message
+				set_last_error (an_iterator.error_value)
+			else
+				Result := a_position.out
+			end
 		ensure
-			strictly_positive_integer: Result /= Void and then Result.is_integer and then Result.to_integer > 0
+			strictly_positive_integer: not is_error implies Result /= Void and then Result.is_integer and then Result.to_integer > 0
 		end
 
 	document_root: XM_XPATH_DOCUMENT is
@@ -346,7 +354,7 @@ feature -- Access
 
 	previous_sibling: XM_XPATH_NODE is
 			-- The previous sibling of this node;
-			-- If there is no such node, return `Void'
+			-- If there is no such node, return `Void'.
 		require
 			not_in_error: not is_error
 		local
@@ -354,12 +362,14 @@ feature -- Access
 		do
 			an_iterator := new_axis_iterator (Preceding_sibling_axis)
 			an_iterator.start
-			if not an_iterator.after then Result := an_iterator.item end
+			if not an_iterator.after then
+				Result := an_iterator.item
+			end
 		end
 	
 	next_sibling: XM_XPATH_NODE is
 			-- The next sibling of this node;
-			-- If there is no such node, return `Void'
+			-- If there is no such node, return `Void'.
 		require
 			not_in_error: not is_error
 		local
@@ -367,7 +377,9 @@ feature -- Access
 		do
 			an_iterator := new_axis_iterator (Following_sibling_axis)
 			an_iterator.start
-			if not an_iterator.after then Result := an_iterator.item end
+			if not an_iterator.after then
+				Result := an_iterator.item
+			end
 		end
 	
 	document_element: XM_XPATH_ELEMENT is
@@ -384,23 +396,10 @@ feature -- Access
 		do
 			a_root := document_root
 			if a_root = Void or else a_root.is_error then
-				debug ("XPath abstract node")
-					if a_root = Void then
-						std.error.put_string ("Document root is void%N")
-					else
-						std.error.put_string (a_root.error_value.error_message)
-						std.error.put_new_line
-					end
-				end
 				Result := Void
 			else
 				create an_element_node_test.make (Element_node)
 				an_iterator := a_root.new_axis_iterator_with_node_test (Child_axis, an_element_node_test)
-				debug ("XPath abstract node")
-					std.error.put_string ("Document element: iterator is after? ")
-					std.error.put_string (an_iterator.after.out)
-					std.error.put_new_line
-				end
 				an_iterator.start
 				if an_iterator.item.is_element then
 					Result := an_iterator.item.as_element
@@ -426,7 +425,6 @@ feature -- Access
 				todo ("typed_value", True)
 			end
 		end
-
 	
 	type_name: STRING is
 			-- Type name for diagnostic purposes
@@ -465,6 +463,7 @@ feature -- Access
 		deferred
 		ensure
 			result_not_in_error: Result /= Void and then not Result.is_error
+			invulnerable: Result.is_invulnerable
 		end
 
 	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
@@ -477,6 +476,7 @@ feature -- Access
 		deferred
 		ensure
 			result_not_in_error: Result /= Void and then not Result.is_error
+			invulnerable: Result.is_invulnerable
 		end
 
 	generated_id: STRING

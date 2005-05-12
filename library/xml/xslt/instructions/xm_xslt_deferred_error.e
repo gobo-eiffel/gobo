@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	instruction_name: STRING
-			-- Name of instruction, for diagnostics
+			-- Name of instruction, for diagnostics (??)
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known;

@@ -16,14 +16,27 @@ inherit
 
 	XM_XPATH_REVERSIBLE_ITERATOR [G]
 		undefine
-			is_last_position_finder, as_last_position_finder, is_singleton_iterator, as_singleton_iterator
+			is_last_position_finder, as_last_position_finder,
+			is_singleton_iterator, as_singleton_iterator,
+			is_realizable_iterator, as_realizable_iterator,
+			is_invulnerable
 		end
 
 	XM_XPATH_LAST_POSITION_FINDER [G]
 		undefine
-			is_reversible_iterator, as_reversible_iterator
+			is_reversible_iterator, as_reversible_iterator,
+			is_realizable_iterator, as_realizable_iterator,
+			is_invulnerable
 		redefine
 			is_singleton_iterator, as_singleton_iterator
+		end
+
+	XM_XPATH_REALIZABLE_ITERATOR [G]
+		undefine
+			is_reversible_iterator, as_reversible_iterator,
+			is_singleton_iterator, as_singleton_iterator,
+			is_last_position_finder, as_last_position_finder,
+			is_invulnerable
 		end
 
 creation
@@ -80,6 +93,12 @@ feature -- Access
 		end
 
 feature -- Status report
+	
+	is_invulnerable: BOOLEAN is
+			-- Is `Current' guarenteed free of implicit errors?
+		do
+			Result := True
+		end
 
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
@@ -95,6 +114,21 @@ feature -- Cursor movement
 			index := index + 1
 			if index > 1 then
 				gone := True
+			end
+		end
+
+feature -- Evaluation
+
+	realize is
+			-- Realize the sequence as a value.
+		do
+			if value.is_atomic_value then
+				last_realized_value := value.as_atomic_value
+			else
+				check
+					node: item.is_node
+				end
+				create {XM_XPATH_SINGLETON_NODE} last_realized_value.make (item.as_node)
 			end
 		end
 

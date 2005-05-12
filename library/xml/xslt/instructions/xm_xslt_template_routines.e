@@ -74,9 +74,9 @@ feature -- Evaluation
 						else
 							if some_tunnel_parameters /= Void and then some_tunnel_parameters.count > 0
 								or else a_node_handler.is_stack_frame_needed then
+								a_context.open_stack_frame (a_node_handler.slot_manager)
 								a_context.set_local_parameters (some_parameters)
 								a_context.set_tunnel_parameters (some_tunnel_parameters)
-								a_context.open_stack_frame (a_node_handler.slot_manager)
 								if a_transformer.is_tracing then
 									a_transformer.trace_listener.trace_current_item_start (a_node)
 								end
@@ -109,6 +109,9 @@ feature -- Evaluation
 					a_last_tail_call := a_last_tail_call.last_tail_call
 				end
 				if not an_iterator.after then an_iterator.forth end
+				if an_iterator.is_error then
+					a_transformer.report_fatal_error (an_iterator.error_value, Void)
+				end
 			end
 			set_last_tail_call (a_last_tail_call)
 		end

@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		do
 			a_declaration.register_reference (Current)
 			display_name := a_declaration.variable_name
-			compute_static_properties
+			if not are_static_properties_computed then compute_static_properties end
 			initialized := True
 		end
 
@@ -107,20 +107,12 @@ feature -- Status report
 			if display_name = Void then
 				a_string := STRING_.appended_string (indentation (a_level), "$(unbound variable)")
 				std.error.put_string (a_string)
-				if is_error then
-					std.error.put_string (" in error%N")
-				else
-					std.error.put_new_line
-				end
+				std.error.put_new_line
 			else
 				a_string := STRING_.appended_string (indentation (a_level), "$")
 				a_string := STRING_.appended_string (a_string, display_name)				
 				std.error.put_string (a_string)
-				if is_error then
-					std.error.put_string (" in error%N")
-				else
-					std.error.put_new_line
-				end
+				std.error.put_new_line
 			end
 		end
 
@@ -193,6 +185,7 @@ feature -- Evaluation
 			-- Evaluate variable
 		require
 			binding_not_void: binding /= Void
+			not_replaced: not was_expression_replaced
 		do
 			binding.evaluate_variable (a_context)
 			last_evaluated_binding := binding.last_evaluated_binding
@@ -216,17 +209,24 @@ feature -- Element change
 			--  for example whether it is an ordered node-set.
 		require
 			static_type_not_void: a_type /= Void
+			not_replaced: not was_expression_replaced
 		do
 			static_type := a_type
+			reset_static_properties
 			constant_value := a_constant_value
 			if	a_dependencies_set /= Void then
-				set_dependencies (a_dependencies_set)
+				merge_dependencies (a_dependencies_set)
 			end
 			if a_cardinalities_set /= Void then
 				set_cardinalities (a_type.merged_cardinality (a_cardinalities_set))
 			end
 			if a_special_properties_set /= Void then
 				set_special_properties (a_special_properties_set)
+
+				-- Although the variable may be a context document node-set at the point it is defined,
+            --  the context at the point of use may be different, so this property cannot be transferred.
+
+				reset_context_document_nodeset
 			end
 		end
 
@@ -234,6 +234,7 @@ feature -- Element change
 			-- Fix up this binding reference to a binding.
 		require
 			binding_not_void: a_required_binding /= Void
+			not_replaced: not was_expression_replaced
 		do
 			binding := a_required_binding
 		end

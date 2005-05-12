@@ -106,7 +106,9 @@ feature -- Element change
 				a_cursor.after
 			loop
 				a_binding_reference := a_cursor.item
-				a_binding_reference.set_static_type (required_type, a_constant_value, a_dependencies_set, a_cardinalities_set, a_special_properties_set) 
+				if not a_binding_reference.was_expression_replaced then
+					a_binding_reference.set_static_type (required_type, a_constant_value, a_dependencies_set, a_cardinalities_set, a_special_properties_set)
+				end
 				a_cursor.forth
 			end
 			Precursor
@@ -162,7 +164,9 @@ feature -- Element change
 			until
 				a_cursor.after
 			loop
-				a_cursor.item.fix_up (a_binding)
+				if not a_cursor.item.was_expression_replaced then
+					a_cursor.item.fix_up (a_binding)
+				end
 				a_cursor.forth
 			end
 		end
@@ -189,7 +193,6 @@ feature {NONE} -- Implementation
 invariant
 
 	references: references /= Void
-	instruction: is_instruction
 
 end
 

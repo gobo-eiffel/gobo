@@ -227,58 +227,6 @@ feature -- Optimization
 	
 feature -- Evaluation
 
-	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
-			-- Effective boolean value
-		local
-			an_item: XM_XPATH_ITEM
-			a_number: XM_XPATH_NUMERIC_VALUE
-		do
-			create_iterator (a_context)
-			if not last_iterator.is_error then
-				last_iterator.start
-				if not last_iterator.after then
-					an_item := last_iterator.item
-					if an_item.is_node then
-						create last_boolean_value.make (True)
-					else
-						if an_item.is_boolean_value then
-							last_iterator.forth
-							if last_iterator.after then
-								create last_boolean_value.make (an_item.as_boolean_value.value)
-							else
-								last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
-							end
-						else
-							if an_item.is_string_value then
-								last_iterator.forth
-								if last_iterator.after then
-									create last_boolean_value.make (an_item.as_string_value.string_value.count /= 0)
-								else
-									last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
-								end
-							else
-								if an_item.is_numeric_value then
-									last_iterator.forth
-									if last_iterator.after then
-										a_number.calculate_effective_boolean_value (a_context)
-										last_boolean_value := an_item.as_numeric_value.last_boolean_value
-									else
-										last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
-									end
-								else
-									last_boolean_value := effective_boolean_value_in_error ("sequence starting with an atomic value other than a boolean, number, or string")
-								end
-							end
-						end
-					end
-				end
-				if last_boolean_value = Void then create last_boolean_value.make (False) end			
-			else
-				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error (last_iterator.error_value)
-			end
-		end
-
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		do
@@ -305,7 +253,8 @@ feature -- Evaluation
 			if last_evaluated_item = Void then
 				create last_evaluated_string.make ("")
 			elseif last_evaluated_item.is_error then
-				todo ("Logic error in {XM_XPATH_COMPUTED_EXPRESSION}.evaluate_as_string", True)
+				create last_evaluated_string.make ("")
+				last_evaluated_string.set_last_error (last_evaluated_item.error_value)
 			elseif not last_evaluated_item.is_string_value then
 				create last_evaluated_string.make ("")
 			else
@@ -480,15 +429,6 @@ feature {NONE} -- Implementation
 
 	initialized: BOOLEAN
 			-- Has creation procedure completed?
-
-	effective_boolean_value_in_error (a_reason: STRING): XM_XPATH_BOOLEAN_VALUE is
-			-- Type error for `calculate_effective_boolean_value'
-		require
-			reason_not_empty: a_reason /= Void and then a_reason.count > 0
-		do
-			create Result.make (False)
-			Result.set_last_error_from_string ("Effective boolean value is not defined for a " + a_reason, Gexslt_eiffel_type_uri, "EFFECTIVE_BOOLEAN_VALUE", Type_error)
-		end
 
 	line_number_mask: INTEGER is
 			-- Bit mask for extracting line number from `location_identifer'

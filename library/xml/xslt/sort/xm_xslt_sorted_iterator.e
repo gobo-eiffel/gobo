@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		require
 			context_not_void: a_context /= Void
-			base_iterator_not_void: a_base_iterator /= Void
+			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
 			at_least_one_sort_key: some_sort_keys /= Void and then some_sort_keys.count > 0
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_FIXED_SORT_KEY_DEFINITION]
@@ -160,8 +160,7 @@ feature -- Cursor movement
 feature -- Duplication
 
 	another: like Current is
-			-- Another iterator that iterates over the same items as the original;
-			-- The new iterator will be repositioned at the start of the sequence
+			-- Another iterator that iterates over the same items as the original
 		do
 
 			-- Make sure the sort has been done, so that multiple iterators over the
@@ -292,6 +291,9 @@ feature {NONE} -- Implementation
 					create a_sort_record.make (base_iterator.item, a_key_list, count)
 					node_keys.put_last (a_sort_record)
 					base_iterator.forth
+				end
+				if base_iterator.is_error then
+					context.transformer.report_fatal_error (base_iterator.error_value, Void)
 				end
 			end
 			count_determined := True

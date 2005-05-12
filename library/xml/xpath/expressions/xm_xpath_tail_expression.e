@@ -143,7 +143,9 @@ feature -- Evaluation
 		do
 			base_expression.create_iterator (a_context)
 			an_iterator := base_expression.last_iterator
-			if an_iterator.is_array_iterator then
+			if an_iterator.is_error then
+				last_iterator := an_iterator
+			elseif an_iterator.is_array_iterator then
 
 				-- Hm. This is theoretically insufficient, but in practice memory will get
 				--  exhausted before the problem manifests itself

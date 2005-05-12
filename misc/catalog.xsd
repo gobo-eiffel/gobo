@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 
-           xmlns:er='urn:oasis:names:tc:entity:xmlns:xml:catalog'
+           xmlns:er="urn:oasis:names:tc:entity:xmlns:xml:catalog"
 
-           targetNamespace='urn:oasis:names:tc:entity:xmlns:xml:catalog'
+           targetNamespace="urn:oasis:names:tc:entity:xmlns:xml:catalog"
 
-           elementFormDefault='qualified'>
+           elementFormDefault="qualified">
 
 
 
@@ -14,7 +14,11 @@
 
 
 
-  <xs:simpleType name='pubIdChars'>
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
+
+
+
+  <xs:simpleType name="pubIdChars">
 
     <!-- A string of the characters defined as pubIdChar in production 13
 
@@ -22,9 +26,9 @@
 
          the whitespace characters because they're normalized by XML parsing. -->
 
-    <xs:restriction base='xs:string'>
+    <xs:restriction base="xs:string">
 
-      <xs:pattern value="[a-zA-Z0-9-'()+,./:=?;!*#@$_%]*"/>
+      <xs:pattern value="[a-zA-Z0-9\-'\(\)+,./:=?;!*#@$_%]*"/>
 
     </xs:restriction>
 
@@ -32,29 +36,29 @@
 
 
 
-  <xs:simpleType name='publicIdentifier'>
+  <xs:simpleType name="publicIdentifier">
 
-    <xs:restriction base='er:pubIdChars'/>
-
-  </xs:simpleType>
-
-
-
-  <xs:simpleType name='partialPublicIdentifier'>
-
-    <xs:restriction base='er:pubIdChars'/>
+    <xs:restriction base="er:pubIdChars"/>
 
   </xs:simpleType>
 
 
 
-  <xs:simpleType name='systemOrPublic'>
+  <xs:simpleType name="partialPublicIdentifier">
 
-    <xs:restriction base='xs:string'>
+    <xs:restriction base="er:pubIdChars"/>
 
-      <xs:enumeration value='system'/>
+  </xs:simpleType>
 
-      <xs:enumeration value='public'/>
+
+
+  <xs:simpleType name="systemOrPublic">
+
+    <xs:restriction base="xs:string">
+
+      <xs:enumeration value="system"/>
+
+      <xs:enumeration value="public"/>
 
     </xs:restriction>
 
@@ -68,37 +72,41 @@
 
 
 
-  <xs:complexType name='catalog'>
+  <xs:complexType name="catalog">
 
-    <xs:choice minOccurs='1' maxOccurs='unbounded'>
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
 
-      <xs:element ref='er:public'/>
+      <xs:element ref="er:public"/>
 
-      <xs:element ref='er:system'/>
+      <xs:element ref="er:system"/>
 
-      <xs:element ref='er:uri'/>
+      <xs:element ref="er:uri"/>
 
-      <xs:element ref='er:rewriteSystem'/>
+      <xs:element ref="er:rewriteSystem"/>
 
-      <xs:element ref='er:rewriteURI'/>
+      <xs:element ref="er:rewriteURI"/>
 
-      <xs:element ref='er:delegatePublic'/>
+      <xs:element ref="er:uriSuffix"/>
 
-      <xs:element ref='er:delegateSystem'/>
+      <xs:element ref="er:systemSuffix"/>
 
-      <xs:element ref='er:delegateURI'/>
+      <xs:element ref="er:delegatePublic"/>
 
-      <xs:element ref='er:nextCatalog'/>
+      <xs:element ref="er:delegateSystem"/>
 
-      <xs:element ref='er:group'/>
+      <xs:element ref="er:delegateURI"/>
 
-      <xs:any namespace='##other' processContents='skip'/>
+      <xs:element ref="er:nextCatalog"/>
+
+      <xs:element ref="er:group"/>
+
+      <xs:any namespace="##other" processContents="skip"/>
 
     </xs:choice>
 
-    <xs:attribute name='id' type='xs:ID'/>
+    <xs:attribute ref="id"/>
 
-    <xs:attribute name='prefer' type='er:systemOrPublic'/>
+    <xs:attribute name="prefer" type="er:systemOrPublic"/>
 
     <xs:anyAttribute namespace="##other" processContents="lax"/>
 
@@ -106,7 +114,7 @@
 
 
 
-  <xs:complexType name='public'>
+  <xs:complexType name="public">
 
     <xs:complexContent>
 
@@ -118,7 +126,7 @@
 
         <xs:attribute name="uri" type="xs:anyURI" use="required"/>
 
-        <xs:attribute name='id' type='xs:ID'/>
+        <xs:attribute ref="id"/>
 
         <xs:anyAttribute namespace="##other" processContents="lax"/>
 
@@ -130,7 +138,7 @@
 
 
 
-  <xs:complexType name='system'>
+  <xs:complexType name="system">
 
     <xs:complexContent>
 
@@ -142,7 +150,7 @@
 
         <xs:attribute name="uri" type="xs:anyURI" use="required"/>
 
-        <xs:attribute name='id' type='xs:ID'/>
+        <xs:attribute ref="id"/>
 
         <xs:anyAttribute namespace="##other" processContents="lax"/>
 
@@ -154,7 +162,7 @@
 
 
 
-  <xs:complexType name='uri'>
+  <xs:complexType name="uri">
 
     <xs:complexContent>
 
@@ -166,7 +174,7 @@
 
         <xs:attribute name="uri" type="xs:anyURI" use="required"/>
 
-        <xs:attribute name='id' type='xs:ID'/>
+        <xs:attribute ref="id"/>
 
         <xs:anyAttribute namespace="##other" processContents="lax"/>
 
@@ -178,7 +186,7 @@
 
 
 
-  <xs:complexType name='rewriteSystem'>
+  <xs:complexType name="rewriteSystem">
 
     <xs:complexContent>
 
@@ -192,7 +200,7 @@
 
         <xs:attribute name="rewritePrefix" type="xs:string" use="required"/>
 
-        <xs:attribute name='id' type='xs:ID'/>
+        <xs:attribute ref="id"/>
 
         <xs:anyAttribute namespace="##other" processContents="lax"/>
 
@@ -204,7 +212,7 @@
 
 
 
-  <xs:complexType name='rewriteURI'>
+  <xs:complexType name="rewriteURI">
 
     <xs:complexContent>
 
@@ -218,7 +226,7 @@
 
         <xs:attribute name="rewritePrefix" type="xs:string" use="required"/>
 
-        <xs:attribute name='id' type='xs:ID'/>
+        <xs:attribute ref="id"/>
 
         <xs:anyAttribute namespace="##other" processContents="lax"/>
 
@@ -230,7 +238,59 @@
 
 
 
-  <xs:complexType name='delegatePublic'>
+  <xs:complexType name="systemSuffix">
+
+    <xs:complexContent>
+
+      <xs:restriction base="xs:anyType">
+
+        <xs:attribute name="systemIdSuffix"
+
+                       type="xs:string"
+
+                       use="required"/>
+
+        <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+
+        <xs:attribute ref="id"/>
+
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+
+      </xs:restriction>
+
+    </xs:complexContent>
+
+  </xs:complexType>
+
+
+
+  <xs:complexType name="uriSuffix">
+
+    <xs:complexContent>
+
+      <xs:restriction base="xs:anyType">
+
+        <xs:attribute name="uriSuffix"
+
+                       type="xs:string"
+
+                       use="required"/>
+
+        <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+
+        <xs:attribute ref="id"/>
+
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+
+      </xs:restriction>
+
+    </xs:complexContent>
+
+  </xs:complexType>
+
+
+
+  <xs:complexType name="delegatePublic">
 
     <xs:complexContent>
 
@@ -244,7 +304,7 @@
 
         <xs:attribute name="catalog" type="xs:anyURI" use="required"/>
 
-        <xs:attribute name='id' type='xs:ID'/>
+        <xs:attribute ref="id"/>
 
         <xs:anyAttribute namespace="##other" processContents="lax"/>
 
@@ -256,7 +316,7 @@
 
 
 
-  <xs:complexType name='delegateSystem'>
+  <xs:complexType name="delegateSystem">
 
     <xs:complexContent>
 
@@ -270,7 +330,7 @@
 
         <xs:attribute name="catalog" type="xs:anyURI" use="required"/>
 
-        <xs:attribute name='id' type='xs:ID'/>
+        <xs:attribute ref="id"/>
 
         <xs:anyAttribute namespace="##other" processContents="lax"/>
 
@@ -282,7 +342,7 @@
 
 
 
-  <xs:complexType name='delegateURI'>
+  <xs:complexType name="delegateURI">
 
     <xs:complexContent>
 
@@ -296,7 +356,7 @@
 
         <xs:attribute name="catalog" type="xs:anyURI" use="required"/>
 
-        <xs:attribute name='id' type='xs:ID'/>
+        <xs:attribute ref="id"/>
 
         <xs:anyAttribute namespace="##other" processContents="lax"/>
 
@@ -308,7 +368,7 @@
 
 
 
-  <xs:complexType name='nextCatalog'>
+  <xs:complexType name="nextCatalog">
 
     <xs:complexContent>
 
@@ -316,7 +376,7 @@
 
         <xs:attribute name="catalog" type="xs:anyURI" use="required"/>
 
-        <xs:attribute name='id' type='xs:ID'/>
+        <xs:attribute ref="id"/>
 
         <xs:anyAttribute namespace="##other" processContents="lax"/>
 
@@ -328,35 +388,39 @@
 
 
 
-  <xs:complexType name='group'>
+  <xs:complexType name="group">
 
-    <xs:choice minOccurs='1' maxOccurs='unbounded'>
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
 
-      <xs:element ref='er:public'/>
+      <xs:element ref="er:public"/>
 
-      <xs:element ref='er:system'/>
+      <xs:element ref="er:system"/>
 
-      <xs:element ref='er:uri'/>
+      <xs:element ref="er:uri"/>
 
-      <xs:element ref='er:rewriteSystem'/>
+      <xs:element ref="er:rewriteSystem"/>
 
-      <xs:element ref='er:rewriteURI'/>
+      <xs:element ref="er:rewriteURI"/>
 
-      <xs:element ref='er:delegatePublic'/>
+      <xs:element ref="er:uriSuffix"/>
 
-      <xs:element ref='er:delegateSystem'/>
+      <xs:element ref="er:systemSuffix"/>
 
-      <xs:element ref='er:delegateURI'/>
+      <xs:element ref="er:delegatePublic"/>
 
-      <xs:element ref='er:nextCatalog'/>
+      <xs:element ref="er:delegateSystem"/>
 
-      <xs:any namespace='##other' processContents='skip'/>
+      <xs:element ref="er:delegateURI"/>
+
+      <xs:element ref="er:nextCatalog"/>
+
+      <xs:any namespace="##other" processContents="skip"/>
 
     </xs:choice>
 
-    <xs:attribute name='prefer' type='er:systemOrPublic'/>
+    <xs:attribute name="prefer" type="er:systemOrPublic"/>
 
-    <xs:attribute name='id' type='xs:ID'/>
+    <xs:attribute ref="id"/>
 
     <xs:anyAttribute namespace="##other" processContents="lax"/>
 
@@ -375,6 +439,10 @@
   <xs:element name="rewriteSystem" type="er:rewriteSystem"/>
 
   <xs:element name="rewriteURI" type="er:rewriteURI"/>
+
+  <xs:element name="systemSuffix" type="er:systemSuffix"/>
+
+  <xs:element name="uriSuffix" type="er:uriSuffix"/>
 
   <xs:element name="delegatePublic" type="er:delegatePublic"/>
 

@@ -30,12 +30,19 @@ feature {NONE} -- Initialization
 		do
 			base_iterator := a_base_iterator
 			second_iterator := a_second_iterator
-			second_iterator.start
+			if base_iterator.is_error then
+				set_last_error (base_iterator.error_value)
+			elseif second_iterator.is_error then
+				set_last_error (second_iterator.error_value)
+			else
+				second_iterator.start
+			end
 			context := a_context
 			current_iterator := base_iterator
 			if current_iterator.is_error then
 				set_last_error (current_iterator.error_value)
 			end
+			initialized := True
 		ensure
 			base_set: base_iterator = a_base_iterator
 			second_iterator_set: second_iterator = a_second_iterator
@@ -92,6 +99,9 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
+	initialized: BOOLEAN
+			-- Has creation procedure completed?
+
 	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			-- The underlying iterator
 
@@ -107,7 +117,7 @@ feature {NONE} -- Implementation
 invariant
 
 	base_iterator_not_void: base_iterator /= Void
-	second_iterator_not_befoe: second_iterator /= Void and then not second_iterator.before
+	second_iterator_not_before: initialized and then second_iterator /= Void and then not second_iterator.is_error implies not second_iterator.before
 	current_iterator_not_void: current_iterator /= Void
 
 end

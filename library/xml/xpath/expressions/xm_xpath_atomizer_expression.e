@@ -58,7 +58,6 @@ feature -- Optimization
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			finished: BOOLEAN
-			a_node: XM_XPATH_NODE
 		do
 			base_expression.simplify
 			if base_expression.is_error then
@@ -132,8 +131,16 @@ feature -- Evaluation
 			else
 				if base_expression.last_evaluated_item.is_node then
 					an_iterator := base_expression.last_evaluated_item.as_node.typed_value
-					an_iterator.start
-					last_evaluated_item := an_iterator.item
+					if an_iterator.is_error then
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+					else
+						an_iterator.start
+						if an_iterator.is_error then
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+						else
+							last_evaluated_item := an_iterator.item
+						end
+					end
 				else
 					last_evaluated_item := base_expression.last_evaluated_item
 				end

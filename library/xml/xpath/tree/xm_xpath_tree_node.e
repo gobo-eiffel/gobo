@@ -506,8 +506,6 @@ feature {NONE} -- Implementation
 			-- New descendant axis iterator
 		require
 			node_test_not_void: a_node_test /= Void		
-		local
-			a_document: XM_XPATH_TREE_DOCUMENT
 		do
 			if node_type = Document_node and then a_node_test.is_name_test and then a_node_test.as_name_test.node_kind = Element_node then
 				check

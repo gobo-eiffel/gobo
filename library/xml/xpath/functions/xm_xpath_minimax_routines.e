@@ -52,116 +52,49 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			a_primitive_type, another_primitive_type: INTEGER
-			already_finished: BOOLEAN
 		do
 			last_evaluated_item := Void
-			a_comparer := atomic_comparer (2, a_context)
-			if a_comparer = Void then
+			local_comparer := atomic_comparer (2, a_context)
+			if local_comparer = Void then
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
 			else
-				if is_max then create {XM_XPATH_DESCENDING_COMPARER} a_comparer.make (a_comparer) end
+				if is_max then create {XM_XPATH_DESCENDING_COMPARER} local_comparer.make (local_comparer) end
 				arguments.item (1).create_iterator (a_context)
 				an_iterator := arguments.item (1).last_iterator
-				an_iterator.start
-				if not an_iterator.after then
-					check
-						atomic_item: an_iterator.item.is_atomic_value
-						-- static typing
-					end
-					an_atomic_value := an_iterator.item.as_atomic_value
-					a_primitive_type := an_atomic_value.item_type.primitive_type
-					if a_primitive_type = Untyped_atomic_type_code then
-						a_primitive_type := Numeric_type_code
-						if an_atomic_value.is_convertible (type_factory.double_type) then
-							an_atomic_value := an_atomic_value.convert_to_type (type_factory.double_type)
-						else
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot convert xdt:untypedAtomic value to xs:double", Xpath_errors_uri, "FORG0007", Dynamic_error)
-							already_finished := True
+				if an_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				else
+					an_iterator.start
+					if an_iterator.is_error then
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+					elseif not an_iterator.after then
+						already_finished := False
+						check
+							atomic_item: an_iterator.item.is_atomic_value
+							-- static typing
 						end
-					else
-						inspect
-							a_primitive_type
-						when Integer_type_code, Double_type_code, Decimal_type_code then
-							a_primitive_type := Numeric_type_code
-						else
-						end
-					end
-					if not already_finished then
-						inspect
-							a_primitive_type
-						when Numeric_type_code then
-							a_numeric_value := an_atomic_value.as_numeric_value
-							if a_numeric_value.is_nan then
-								already_finished := True
-								last_evaluated_item := a_numeric_value
-							end
-						when Boolean_type_code, String_type_code, Year_month_duration_type_code, Day_time_duration_type_code then
-							-- No problems
-						when Date_time_type_code, Time_type_code, Date_type_code then
-							-- TODO: add implicit time-zone if needed
-						else
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.concat ("Invalid base type for fn:min/max(): ", an_atomic_value.item_type.conventional_name), Xpath_errors_uri, "FORG0007", Dynamic_error)
-							already_finished := True
-						end
-					end
-					from
-					until
-						already_finished or else an_iterator.after
-					loop
-						an_iterator.forth
-						if an_iterator.after then
-							last_evaluated_item := an_atomic_value
-						else
-							check
-								atomic_item: an_iterator.item.is_atomic_value
-								-- static typing
-							end
-							another_atomic_value := an_iterator.item.as_atomic_value
-							another_primitive_type := another_atomic_value.item_type.primitive_type
-							if another_primitive_type = Untyped_atomic_type_code then
-								another_primitive_type := Numeric_type_code
-								if another_atomic_value.is_convertible (type_factory.double_type) then
-									another_atomic_value := another_atomic_value.convert_to_type (type_factory.double_type)
-								else
-									create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot convert xdt:untypedAtomic value to xs:double", Xpath_errors_uri, "FORG0007", Dynamic_error)
-									already_finished := True
-								end
+						establish_first_primitive_type (an_iterator)
+						from
+						until
+							already_finished or else an_iterator.after or else an_iterator.is_error
+						loop
+							an_iterator.forth
+							if an_iterator.is_error then
+								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+							elseif an_iterator.after then
+								last_evaluated_item := atomic_value
 							else
-								inspect
-									another_primitive_type
-								when Integer_type_code, Double_type_code, Decimal_type_code then
-									another_primitive_type := Numeric_type_code
-								else
+								check
+									atomic_item: an_iterator.item.is_atomic_value
+									-- static typing
 								end
-							end
-							if not already_finished then
-								if another_primitive_type /= a_primitive_type then
-									create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Not all items have same base type for fn:min/max()", Xpath_errors_uri, "FORG0007", Dynamic_error)
-									already_finished := True
-								else
-									if a_primitive_type = Numeric_type_code then
-										a_numeric_value := another_atomic_value.as_numeric_value
-										if a_numeric_value.is_nan then
-											already_finished := True
-											last_evaluated_item := a_numeric_value
-										end
-									end
-									if not already_finished then
-										if a_comparer.less_equal (another_atomic_value, an_atomic_value) then
-											an_atomic_value := another_atomic_value
-										end
-									end
-								end
+								establish_next_primitive_type (an_iterator)
 							end
 						end
-					end
-					if not already_finished then
-						last_evaluated_item := an_atomic_value
+						if not already_finished then
+							last_evaluated_item := atomic_value
+						end
 					end
 				end
 			end
@@ -178,5 +111,106 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	is_max: BOOLEAN
 			-- max() or min()?
 
+feature {NONE} -- Implementation
+
+	local_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
+	atomic_value, second_atomic_value: XM_XPATH_ATOMIC_VALUE
+	primitive_type, second_primitive_type: INTEGER
+	already_finished: BOOLEAN
+			-- Used for communicating between `evaluate_item' and it's sub-routines
+
+
+	 establish_first_primitive_type (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+			--- Establish primitive type of first operand.
+		require
+			iterator_not_before: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.before
+		local
+			a_numeric_value: XM_XPATH_NUMERIC_VALUE
+		do
+			atomic_value := an_iterator.item.as_atomic_value
+			primitive_type := atomic_value.item_type.primitive_type
+			if primitive_type = Untyped_atomic_type_code then
+				primitive_type := Numeric_type_code
+				if atomic_value.is_convertible (type_factory.double_type) then
+					atomic_value := atomic_value.convert_to_type (type_factory.double_type)
+				else
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot convert xdt:untypedAtomic value to xs:double", Xpath_errors_uri, "FORG0007", Dynamic_error)
+					already_finished := True
+				end
+			else
+				inspect
+					primitive_type
+				when Integer_type_code, Double_type_code, Decimal_type_code then
+					primitive_type := Numeric_type_code
+				else
+				end
+			end
+			if not already_finished then
+				inspect
+					primitive_type
+				when Numeric_type_code then
+					a_numeric_value := atomic_value.as_numeric_value
+					if a_numeric_value.is_nan then
+						already_finished := True
+						last_evaluated_item := a_numeric_value
+					end
+				when Boolean_type_code, String_type_code, Year_month_duration_type_code, Day_time_duration_type_code then
+					-- No problems
+				when Date_time_type_code, Time_type_code, Date_type_code then
+					-- TODO: add implicit time-zone if needed
+				else
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.concat ("Invalid base type for fn:min/max(): ", atomic_value.item_type.conventional_name), Xpath_errors_uri, "FORG0007", Dynamic_error)
+					already_finished := True
+				end
+			end
+		end
+
+
+	establish_next_primitive_type (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+			--- Establish primitive type of next operand.
+		require
+			iterator_not_before: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.before
+		local
+			a_numeric_value: XM_XPATH_NUMERIC_VALUE
+		do
+			second_atomic_value := an_iterator.item.as_atomic_value
+			second_primitive_type := second_atomic_value.item_type.primitive_type
+			if second_primitive_type = Untyped_atomic_type_code then
+				second_primitive_type := Numeric_type_code
+				if second_atomic_value.is_convertible (type_factory.double_type) then
+					second_atomic_value := second_atomic_value.convert_to_type (type_factory.double_type)
+				else
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot convert xdt:untypedAtomic value to xs:double", Xpath_errors_uri, "FORG0007", Dynamic_error)
+					already_finished := True
+				end
+			else
+				inspect
+					second_primitive_type
+				when Integer_type_code, Double_type_code, Decimal_type_code then
+					second_primitive_type := Numeric_type_code
+				else
+				end
+			end
+			if not already_finished then
+				if second_primitive_type /= primitive_type then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Not all items have same base type for fn:min/max()", Xpath_errors_uri, "FORG0007", Dynamic_error)
+					already_finished := True
+				else
+					if primitive_type = Numeric_type_code then
+						a_numeric_value := second_atomic_value.as_numeric_value
+						if a_numeric_value.is_nan then
+							already_finished := True
+							last_evaluated_item := a_numeric_value
+						end
+					end
+					if not already_finished then
+						if local_comparer.less_equal (second_atomic_value, atomic_value) then
+							atomic_value := second_atomic_value
+						end
+					end
+				end
+			end
+		end
+	
 end
 	

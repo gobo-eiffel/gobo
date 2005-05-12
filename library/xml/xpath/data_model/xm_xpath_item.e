@@ -51,7 +51,7 @@ feature -- Access
 			item_not_in_error: not is_error
 		deferred
 		ensure
-			typed_value_not_void: Result /= Void
+			typed_value_invulnerable: Result /= Void and then Result.is_invulnerable
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
@@ -81,6 +81,12 @@ feature -- Access
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_function_package: BOOLEAN is
+			-- Is `Current' an XSLT function call package??
+		do
+			Result := False
 		end
 
 	is_element: BOOLEAN is

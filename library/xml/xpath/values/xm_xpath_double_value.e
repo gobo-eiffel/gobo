@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			make_atomic_value
 			set_value_from_string (a_value)
 		ensure
-			value_set: a_value.is_double implies value = a_value.to_double
+			value_set: not internal_is_nan and then not is_infinite and then a_value.is_double implies value = a_value.to_double
 		end
 
 	make_nan is
@@ -113,7 +113,7 @@ feature -- Access
 				create a_decimal.make_from_string (value.out)
 				Result := a_decimal.to_scientific_string
 			else
-				Result := value.out -- TODO - No good - but how to determine the result? us MA-DECIMAL rather than double 
+				Result := value.out -- TODO - No good - but how to determine the result? use MA-DECIMAL rather than double 
 			end
 		end
 
@@ -128,11 +128,7 @@ feature -- Status report
 			a_string := STRING_.appended_string (a_string, string_value)
 			a_string := STRING_.appended_string (a_string, ")")
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-			end
+			std.error.put_new_line
 		end
 	
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is

@@ -43,7 +43,6 @@ feature {NONE} -- Initialization
 			executable := an_executable
 			set_attribute_name (an_attribute_name)
 			set_namespace (a_namespace)
-			instruction_name := "xsl:attribute"
 			validation_action := a_validation_action
 			type := a_simple_type
 			type_annotation := a_type_annotation
@@ -63,9 +62,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
 	
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known

@@ -62,7 +62,6 @@ feature {NONE} -- Initialization
 			if value_expression /= Void and then is_sub_type (value_expression.item_type, type_factory.any_atomic_type) then
 				create {XM_XPATH_ATOMIZER_EXPRESSION} value_expression.make (value_expression)
 			end
-			instruction_name := "xsl:number"
 			compute_static_properties
 			initialized := True
 		ensure
@@ -85,9 +84,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
-		
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
@@ -489,10 +485,15 @@ feature {NONE} -- Implementation
 			if value_expression /= Void then
 				from
 					value_expression.create_iterator (a_context)
-					a_sequence_iterator := value_expression.last_iterator; a_sequence_iterator.start
+					a_sequence_iterator := value_expression.last_iterator
+					if a_sequence_iterator.is_error then
+						a_context.transformer.report_fatal_error (a_sequence_iterator.error_value, Current)
+					else
+						a_sequence_iterator.start
+					end
 					create integer_vector.make_default
 				until
-					finished or else a_sequence_iterator.after
+					finished or else a_sequence_iterator.is_error or else a_sequence_iterator.after
 				loop
 					an_atomic_value ?= a_sequence_iterator.item
 					if an_atomic_value = Void then
@@ -523,6 +524,9 @@ feature {NONE} -- Implementation
 						end
 					end
 					a_sequence_iterator.forth
+				end
+				if a_sequence_iterator.is_error then
+					a_context.transformer.report_fatal_error (a_sequence_iterator.error_value, Current)
 				end
 			else
 				if select_expression /= Void then

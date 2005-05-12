@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -90,6 +89,9 @@ feature -- Evaluation
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (another_iterator.error_value)
 					else
 						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (deep_equals (an_iterator, another_iterator, a_comparer))
+						if is_error then
+							last_evaluated_item.set_last_error (error_value)
+						end
 					end
 				end
 			end
@@ -107,6 +109,7 @@ feature {NONE} -- Implementation
 
 	deep_equals (an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_comparer: XM_XPATH_ATOMIC_COMPARER): BOOLEAN is
 			-- Are two sequences deep-equal?
+			-- Not 100% pure - may set `Current' into error status.
 		require
 			first_sequence_not_in_error: an_iterator /= Void and then not an_iterator.is_error
 			second_sequence_not_in_error: another_iterator /= Void and then not another_iterator.is_error
@@ -163,6 +166,15 @@ feature {NONE} -- Implementation
 					end
 					if not finished then
 						an_iterator.forth; another_iterator.forth
+						if an_iterator.is_error then
+							finished := True
+							Result := False
+							set_last_error (an_iterator.error_value)
+						elseif another_iterator.is_error then
+							finished := True
+							Result := False
+							set_last_error (another_iterator.error_value)
+						end
 					end
 				end
 			end

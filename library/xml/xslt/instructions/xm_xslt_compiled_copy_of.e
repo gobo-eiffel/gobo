@@ -39,7 +39,6 @@ feature {NONE} -- Initialization
 			select_expression := a_select_expression
 			adopt_child_expression (select_expression)
 			copy_namespaces := copy_ns
-			instruction_name := "xsl:copy-of"
 			compute_static_properties
 			initialized := True
 		ensure
@@ -50,9 +49,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
-
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
@@ -80,7 +76,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "copy of ")
+			a_string := STRING_.appended_string (indentation (a_level), "xsl:copy of ")
 			std.error.put_string (a_string);
 			std.error.put_new_line
 			select_expression.display (a_level + 1)
@@ -134,9 +130,15 @@ feature -- Evaluation
 		local
 			a_new_context: XM_XPATH_CONTEXT
 			a_receiver: XM_XSLT_SEQUENCE_OUTPUTTER
+			another_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			a_new_context := a_context.new_minor_context
-			create a_receiver.make
+			another_context ?= a_new_context
+			check
+				evaluation_context: another_context /= Void
+				-- this is XSLT
+			end
+			create a_receiver.make (another_context.transformer)
 			a_new_context.set_current_receiver (a_receiver)
 			process (a_new_context)
 			a_receiver.sequence.create_iterator (Void)
@@ -176,6 +178,9 @@ feature -- Evaluation
 					a_receiver.append_item (an_item)
 				end
 				a_sequence_iterator.forth
+				if a_sequence_iterator.is_error then
+					a_receiver.on_error (a_sequence_iterator.error_value.error_message)
+				end
 			end
 		end
 

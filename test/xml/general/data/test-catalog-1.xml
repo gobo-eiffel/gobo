@@ -5,5 +5,9 @@
   <delegatePublic publicIdStartString="-//OASIS//DTD DocBook XML" catalog="./test-catalog-4.xml"/>
   <delegateSystem systemIdStartString="http://www.colina.demon.co.uk/test/" catalog="./test-catalog-4.xml"/>
   <delegateUri uriStartString="http://www.colina.demon.co.uk/test/" catalog="./test-catalog-4.xml"/>
+  <systemSuffix systemIdSuffix="docbookx.dtd" uri="file:///share/doctypes/xml/4.4/docbookx.dtd"/>
+  <systemSuffix systemIdSuffix="4.3/docbookx.dtd" uri="file:///share/doctypes/xml/4.3/docbookx.dtd"/>
+  <uriSuffix uriSuffix="docbookx.dtd" uri="file:///share/doctypes/xml/4.4/docbookx.dtd"/>
+  <uriSuffix uriSuffix="4.3/docbookx.dtd" uri="file:///share/doctypes/xml/4.3/docbookx.dtd"/>
   <nextCatalog catalog="./test-catalog-2.xml" />
 </catalog>

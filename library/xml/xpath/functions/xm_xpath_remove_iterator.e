@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	make (a_base_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_removal_position: INTEGER) is
 			-- Establish invariant.
 		require
-			base_sequence_not_void: a_base_sequence /= Void
+			base_sequence_before: a_base_sequence /= Void and then not a_base_sequence.is_error and then a_base_sequence.before
 		do
 			base_sequence := a_base_sequence
 			removal_position := a_removal_position
@@ -61,10 +61,14 @@ feature -- Cursor movement
 			else
 				base_sequence.forth -- can't be after - see `after'
 			end
-			if not base_sequence.after then
+			if base_sequence.is_error then
+				set_last_error (base_sequence.error_value)
+			elseif not base_sequence.after then
 				if index = removal_position then
 					base_sequence.forth
-					if not base_sequence.after then
+					if base_sequence.is_error then
+						set_last_error (base_sequence.error_value)
+					elseif not base_sequence.after then
 						item := base_sequence.item
 					else
 						item := Void

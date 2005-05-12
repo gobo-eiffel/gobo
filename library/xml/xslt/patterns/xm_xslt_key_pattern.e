@@ -89,10 +89,11 @@ feature -- Matching
 
 	matches (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
 			-- Determine whether this Pattern matches the given Node;
-			-- N.B. This function is not 100% pure, as it may cause
+			-- TODO: This function is not 100% pure, as it may cause
 			--  an index to be built for a key, but this is only a 
 			--  performance-affecting side effect.
-			-- In addition, an iterator is created over `key_expression'.
+			-- In addition, an iterator is created over `key_expression',
+			--  and this might uncover an error.
 		local
 			a_doc: XM_XPATH_DOCUMENT
 			a_key_value: XM_XPATH_STRING_VALUE
@@ -109,35 +110,38 @@ feature -- Matching
 				a_km := a_context.transformer.key_manager
 				key_expression.create_iterator (a_context)
 				an_iter := key_expression.last_iterator
-				from
-					check
-						before: an_iter.before
-					end
-					an_iter.forth
-				until
-					finished or else an_iter.after
-				loop
-					a_key := an_iter.item.string_value
-					create a_key_value.make (a_key)
-					a_km.generate_keyed_sequence (key_fingerprint, a_doc, a_key_value, a_context)
-					if not a_context.transformer.is_error then
-						nodes := a_km.last_key_sequence
-						from
-							check
-								before: nodes.before
+				if an_iter.is_error then
+					set_error_value (an_iter.error_value)
+				else
+					from
+						an_iter.start
+					until
+						finished or else an_iter.is_error or else an_iter.after
+					loop
+						a_key := an_iter.item.string_value
+						create a_key_value.make (a_key)
+						a_km.generate_keyed_sequence (key_fingerprint, a_doc, a_key_value, a_context)
+						if not a_context.transformer.is_error then
+							nodes := a_km.last_key_sequence
+							from
+								nodes.start
+							until
+								finished or else nodes.is_error or else nodes.after
+							loop
+								if nodes.item.is_same_node (a_node) then
+									Result := True
+									finished := True
+								end
+								nodes.forth
 							end
-							nodes.forth
-						until
-							finished or else nodes.after
-						loop
-							if nodes.item.is_same_node (a_node) then
-								Result := True
-								finished := True
-							end
-							nodes.forth
 						end
+						an_iter.forth
 					end
-					an_iter.forth
+					if nodes.is_error then
+						set_error_value (nodes.error_value)
+					elseif an_iter.is_error then
+						set_error_value (an_iter.error_value)
+					end					
 				end
 			end
 		end

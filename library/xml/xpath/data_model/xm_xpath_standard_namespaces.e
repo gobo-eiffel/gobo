@@ -565,6 +565,12 @@ feature -- Access
 			Result := "{" + Gexslt_eiffel_type_uri + "}" + Gexslt_indent_spaces_name
 		end
 
+	Gexslt_name_pseudo_attribute: STRING is "gexslt-name"
+			-- Pseudo-attribute used in tracing
+
+	Gexslt_expression_name_pseudo_attribute: STRING is "gexslt-expression-name"
+			-- Pseudo-attribute used in tracing
+
 feature -- Status report
 
 	is_reserved_namespace (a_uri: STRING): BOOLEAN is

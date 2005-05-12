@@ -36,6 +36,10 @@
 
 <!ENTITY % rewriteURI "%p;rewriteURI">
 
+<!ENTITY % systemSuffix "%p;systemSuffix">
+
+<!ENTITY % uriSuffix "%p;uriSuffix">
+
 <!ENTITY % delegatePublic "%p;delegatePublic">
 
 <!ENTITY % delegateSystem "%p;delegateSystem">
@@ -58,21 +62,23 @@
 
                      |%rewriteSystem;|%rewriteURI;
 
+                     |%systemSuffix;|%uriSuffix;
+
                      |%delegatePublic;|%delegateSystem;|%delegateURI;
 
                      |%nextCatalog;|%group; %local.catalog.mix;)+>
 
 <!ATTLIST %catalog;
 
-	%nsdecl;	%uriReference;		#FIXED
+        %nsdecl;        %uriReference;          #FIXED
 
-		'urn:oasis:names:tc:entity:xmlns:xml:catalog'
+                'urn:oasis:names:tc:entity:xmlns:xml:catalog'
 
-	prefer		%systemOrPublic;	#IMPLIED
+        prefer          %systemOrPublic;        #IMPLIED
 
-	xml:base	%uriReference;		#IMPLIED
+        xml:base        %uriReference;          #IMPLIED
 
-	%local.catalog.attribs;
+        %local.catalog.attribs;
 
 >
 
@@ -86,13 +92,13 @@
 
 <!ATTLIST %public;
 
-	id		ID			#IMPLIED
+        id              ID                      #IMPLIED
 
-	publicId	%publicIdentifier;	#REQUIRED
+        publicId        %publicIdentifier;      #REQUIRED
 
-	uri		%uriReference;		#REQUIRED
+        uri             %uriReference;          #REQUIRED
 
-	xml:base	%uriReference;		#IMPLIED
+        xml:base        %uriReference;          #IMPLIED
 
         %local.public.attribs;
 
@@ -108,13 +114,13 @@
 
 <!ATTLIST %system;
 
-	id		ID			#IMPLIED
+        id              ID                      #IMPLIED
 
-	systemId	%string;		#REQUIRED
+        systemId        %string;                #REQUIRED
 
-	uri		%uriReference;		#REQUIRED
+        uri             %uriReference;          #REQUIRED
 
-	xml:base	%uriReference;		#IMPLIED
+        xml:base        %uriReference;          #IMPLIED
 
         %local.system.attribs;
 
@@ -130,13 +136,13 @@
 
 <!ATTLIST %uri;
 
-	id		ID			#IMPLIED
+        id              ID                      #IMPLIED
 
-	name		%string;		#REQUIRED
+        name            %string;                #REQUIRED
 
-	uri		%uriReference;		#REQUIRED
+        uri             %uriReference;          #REQUIRED
 
-	xml:base	%uriReference;		#IMPLIED
+        xml:base        %uriReference;          #IMPLIED
 
         %local.uri.attribs;
 
@@ -152,11 +158,11 @@
 
 <!ATTLIST %rewriteSystem;
 
-	id		ID			#IMPLIED
+        id              ID                      #IMPLIED
 
-	systemIdStartString	%string;	#REQUIRED
+        systemIdStartString     %string;        #REQUIRED
 
-	rewritePrefix		%string;		#REQUIRED
+        rewritePrefix           %string;                #REQUIRED
 
         %local.rewriteSystem.attribs;
 
@@ -172,13 +178,53 @@
 
 <!ATTLIST %rewriteURI;
 
-	id		ID			#IMPLIED
+        id              ID                      #IMPLIED
 
-	uriStartString	%string;		#REQUIRED
+        uriStartString  %string;                #REQUIRED
 
-	rewritePrefix	%string;		#REQUIRED
+        rewritePrefix   %string;                #REQUIRED
 
         %local.rewriteURI.attribs;
+
+>
+
+
+
+<!ENTITY % local.systemSuffix.attribs "">
+
+
+
+<!ELEMENT %systemSuffix; EMPTY>
+
+<!ATTLIST %systemSuffix;
+
+        id              ID                      #IMPLIED
+
+        systemIdSuffix          %string;        #REQUIRED
+
+        uri                     %string;        #REQUIRED
+
+        %local.systemSuffix.attribs;
+
+>
+
+
+
+<!ENTITY % local.uriSuffix.attribs "">
+
+
+
+<!ELEMENT %uriSuffix; EMPTY>
+
+<!ATTLIST %uriSuffix;
+
+        id              ID                      #IMPLIED
+
+        uriSuffix               %string;        #REQUIRED
+
+        uri                     %string;        #REQUIRED
+
+        %local.uriSuffix.attribs;
 
 >
 
@@ -192,13 +238,13 @@
 
 <!ATTLIST %delegatePublic;
 
-	id		ID			#IMPLIED
+        id              ID                      #IMPLIED
 
-	publicIdStartString	%partialPublicIdentifier;	#REQUIRED
+        publicIdStartString     %partialPublicIdentifier;       #REQUIRED
 
-	catalog		%uriReference;		#REQUIRED
+        catalog         %uriReference;          #REQUIRED
 
-	xml:base	%uriReference;		#IMPLIED
+        xml:base        %uriReference;          #IMPLIED
 
         %local.delegatePublic.attribs;
 
@@ -214,13 +260,13 @@
 
 <!ATTLIST %delegateSystem;
 
-	id		ID			#IMPLIED
+        id              ID                      #IMPLIED
 
-	systemIdStartString	%string;	#REQUIRED
+        systemIdStartString     %string;        #REQUIRED
 
-	catalog		%uriReference;		#REQUIRED
+        catalog         %uriReference;          #REQUIRED
 
-	xml:base	%uriReference;		#IMPLIED
+        xml:base        %uriReference;          #IMPLIED
 
         %local.delegateSystem.attribs;
 
@@ -236,13 +282,13 @@
 
 <!ATTLIST %delegateURI;
 
-	id		ID			#IMPLIED
+        id              ID                      #IMPLIED
 
-	uriStartString	%string;		#REQUIRED
+        uriStartString  %string;                #REQUIRED
 
-	catalog		%uriReference;		#REQUIRED
+        catalog         %uriReference;          #REQUIRED
 
-	xml:base	%uriReference;		#IMPLIED
+        xml:base        %uriReference;          #IMPLIED
 
         %local.delegateURI.attribs;
 
@@ -258,11 +304,11 @@
 
 <!ATTLIST %nextCatalog;
 
-	id		ID			#IMPLIED
+        id              ID                      #IMPLIED
 
-	catalog		%uriReference;		#REQUIRED
+        catalog         %uriReference;          #REQUIRED
 
-	xml:base	%uriReference;		#IMPLIED
+        xml:base        %uriReference;          #IMPLIED
 
         %local.nextCatalog.attribs;
 
@@ -280,17 +326,19 @@
 
                    |%rewriteSystem;|%rewriteURI;
 
+                   |%systemSuffix;|%uriSuffix;
+
                    |%delegatePublic;|%delegateSystem;|%delegateURI;
 
                    |%nextCatalog; %local.group.mix;)+>
 
 <!ATTLIST %group;
 
-	id		ID			#IMPLIED
+        id              ID                      #IMPLIED
 
-	prefer		%systemOrPublic;	#IMPLIED
+        prefer          %systemOrPublic;        #IMPLIED
 
-	xml:base	%uriReference;		#IMPLIED
+        xml:base        %uriReference;          #IMPLIED
 
         %local.group.attribs;
 

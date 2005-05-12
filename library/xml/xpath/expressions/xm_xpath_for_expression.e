@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_ASSIGNATION
 		redefine
-			create_iterator, is_repeated_sub_expression, native_implementations
+			create_iterator, is_repeated_sub_expression, native_implementations,
+			mark_tail_function_calls, is_tail_recursive
 		end
 
 	XM_XPATH_ROLE
@@ -73,6 +74,14 @@ feature -- Access
 			Result := a_child = action_expression
 		end
 
+	is_tail_recursive: BOOLEAN is
+			-- Is `Current' a tail recursive function call?
+		do
+			if not sequence.cardinality_allows_many then
+				Result := action_expression.is_tail_recursive
+			end
+		end
+	
 feature -- Status report
 
 	display (a_level: INTEGER) is
@@ -89,6 +98,16 @@ feature -- Status report
 			std.error.put_string (STRING_.appended_string (indentation (a_level), "return"))
 			std.error.put_new_line
 			action_expression.display (a_level + 1)
+		end
+
+feature -- Status setting
+	
+	mark_tail_function_calls is
+			-- Mark tail-recursive calls on stylesheet functions.
+		do
+			if not sequence.cardinality_allows_many then
+				action_expression.mark_tail_function_calls
+			end
 		end
 
 feature -- Optimization

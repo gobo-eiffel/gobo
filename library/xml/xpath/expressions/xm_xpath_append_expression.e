@@ -67,6 +67,7 @@ feature -- Optimization
 			an_append_expression, another_append_expression, a_third_append_expression: XM_XPATH_APPEND_EXPRESSION
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 			an_expression: XM_XPATH_EXPRESSION
+			an_invalid_value: XM_XPATH_INVALID_VALUE
 		do
 			first_operand.simplify
 			if first_operand.is_error then
@@ -96,8 +97,13 @@ feature -- Optimization
 
 						if is_atomic_sequence then
 							create_iterator (Void)
-							create a_sequence_extent.make (last_iterator)
-							set_replacement (a_sequence_extent)
+							if last_iterator.is_error then
+								create an_invalid_value.make (last_iterator.error_value)
+								set_replacement (an_invalid_value)
+							else
+								create a_sequence_extent.make (last_iterator)
+								set_replacement (a_sequence_extent)
+							end
 						else
 
 							-- An expression such as (1,2,$x) will be parsed as (1, (2, $x)). This can be
@@ -137,8 +143,16 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		do
 			first_operand.create_iterator (a_context)
-			second_operand.create_iterator (a_context)
-			create {XM_XPATH_APPEND_ITERATOR} last_iterator.make (first_operand.last_iterator, second_operand.last_iterator, a_context)
+			if first_operand.last_iterator.is_error then
+				last_iterator := first_operand.last_iterator
+			else
+				second_operand.create_iterator (a_context)
+				if second_operand.last_iterator.is_error then
+					last_iterator := second_operand.last_iterator
+				else
+					create {XM_XPATH_APPEND_ITERATOR} last_iterator.make (first_operand.last_iterator, second_operand.last_iterator, a_context)
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

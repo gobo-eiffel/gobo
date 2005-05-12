@@ -121,8 +121,6 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
-			a_string_value: XM_XPATH_STRING_VALUE
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			last_evaluated_item := Void
@@ -134,25 +132,23 @@ feature -- Evaluation
 				if select_expression.last_evaluated_item /= Void then
 					if select_expression.last_evaluated_item.is_error then
 						last_evaluated_item := select_expression.last_evaluated_item
+					elseif select_expression.last_evaluated_item.is_string_value then
+						last_evaluated_item := select_expression.last_evaluated_item.as_string_value
+					elseif select_expression.last_evaluated_item.is_atomic_value then
+						last_evaluated_item := select_expression.last_evaluated_item.as_atomic_value.convert_to_type (type_factory.string_type)
 					else
-						a_string_value ?= select_expression.last_evaluated_item
-						if a_string_value /= Void then
-							last_evaluated_item := a_string_value
-						else
-							an_atomic_value ?= select_expression.last_evaluated_item
-							if an_atomic_value /= Void then
-								last_evaluated_item := an_atomic_value.convert_to_type (type_factory.string_type)
-							else
-								create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} an_iterator.make (select_expression.last_evaluated_item)
-								evaluate_sequence (a_context, an_iterator)
-							end
-						end
+						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} an_iterator.make (select_expression.last_evaluated_item)
+						evaluate_sequence (a_context, an_iterator)
 					end
 				end
 			else
 				select_expression.create_iterator (a_context)
 				an_iterator := select_expression.last_iterator
-				evaluate_sequence (a_context, an_iterator)
+				if an_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				else
+					evaluate_sequence (a_context, an_iterator)
+				end
 			end
 		end
 
@@ -180,7 +176,7 @@ feature {NONE} -- Implementation
 		require
 			context_may_be_void: True
 			expression_not_in_error: not is_error
-			iterator_is_before: an_iterator /= Void and then an_iterator.before
+			iterator_is_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
 		local
 			a_buffer, a_separator, a_text: STRING
 			an_item: XM_XPATH_ITEM
@@ -188,11 +184,12 @@ feature {NONE} -- Implementation
 			is_first_item, was_previous_item_text: BOOLEAN
 			a_typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
+			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			from
 				is_first_item := True; a_buffer := ""; an_iterator.start
 			until
-				last_evaluated_item /= Void or else an_iterator.after
+				last_evaluated_item /= Void or else an_iterator.is_error or else an_iterator.after
 			loop
 				an_item := an_iterator.item
 				if an_item.is_error then
@@ -237,6 +234,10 @@ feature {NONE} -- Implementation
 					end
 				end
 				an_iterator.forth
+			end
+			if an_iterator.is_error then
+				an_evaluation_context ?= a_context
+				an_evaluation_context.transformer.report_fatal_error (an_iterator.error_value, Current)
 			end
 			if last_evaluated_item = Void then create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_buffer) end
 		ensure

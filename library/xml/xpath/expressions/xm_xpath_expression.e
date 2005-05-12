@@ -144,6 +144,12 @@ feature -- Access
 			Result := False
 		end
 
+	is_function_package: BOOLEAN is
+			-- Is `Current' an XSLT function call package??
+		do
+			Result := False
+		end
+
 	as_system_function: XM_XPATH_SYSTEM_FUNCTION is
 			-- `Current' seen as an XPath system function
 		require
@@ -346,6 +352,21 @@ feature -- Access
 			-- `Current' seen as an integer value
 		require
 			integer_value: is_integer_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_integer_range: BOOLEAN is
+			-- Is `Current' an integer range?
+		do
+			Result := False
+		end
+
+	as_integer_range: XM_XPATH_INTEGER_RANGE is
+			-- `Current' seen as an integer value
+		require
+			integer_range: is_integer_range
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
@@ -1034,6 +1055,12 @@ feature -- Status report
 	last_slot_number: INTEGER
 			-- Last allocated variable slot number
 
+	is_tail_recursive: BOOLEAN is
+			-- Is `Current' a tail recursive function call?
+		do
+			Result := False
+		end
+
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		require
@@ -1131,6 +1158,7 @@ feature -- Optimization
 		require
 			no_previous_error: not is_error
 			not_replaced: not was_expression_replaced
+			static_properties_computed: are_static_properties_computed
 		deferred
 		ensure
 			simplified_expression_not_void: was_expression_replaced implies replacement_expression /= Void
@@ -1149,6 +1177,7 @@ feature -- Optimization
 			context_not_void: a_context /= Void
 			no_previous_error: not is_error
 			not_replaced: not was_expression_replaced
+			static_properties_computed: are_static_properties_computed
 		deferred
 		ensure
 			expression_may_be_replaced: was_expression_replaced implies replacement_expression /= Void
@@ -1165,6 +1194,7 @@ feature -- Optimization
 			offer_not_void: an_offer /= Void
 			no_previous_error: not is_error
 			not_replaced: not was_expression_replaced
+			static_properties_computed: are_static_properties_computed
 		deferred
 		end
 
@@ -1179,7 +1209,65 @@ feature -- Evaluation
 			context_may_be_void: True
 			not_in_error: not is_error
 			not_replaced: not was_expression_replaced
-		deferred
+		local
+			an_item: XM_XPATH_ITEM
+		do
+			create_iterator (a_context)
+			if not last_iterator.is_error then
+				last_iterator.start
+				if last_iterator.is_error then
+					create last_boolean_value.make (False)
+					last_boolean_value.set_last_error (last_iterator.error_value)
+				elseif not last_iterator.after then
+					an_item := last_iterator.item
+					if an_item.is_node then
+						create last_boolean_value.make (True)
+					else
+						if an_item.is_boolean_value then
+							last_iterator.forth
+							if last_iterator.is_error then
+								create last_boolean_value.make (False)
+								last_boolean_value.set_last_error (last_iterator.error_value)
+							elseif last_iterator.after then
+								create last_boolean_value.make (an_item.as_boolean_value.value)
+							else
+								last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
+							end
+						else
+							if an_item.is_string_value then
+								last_iterator.forth
+								if last_iterator.is_error then
+									create last_boolean_value.make (False)
+									last_boolean_value.set_last_error (last_iterator.error_value)
+								elseif last_iterator.after then
+									create last_boolean_value.make (an_item.as_string_value.string_value.count /= 0)
+								else
+									last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
+								end
+							else
+								if an_item.is_numeric_value then
+									last_iterator.forth
+									if last_iterator.is_error then
+										create last_boolean_value.make (False)
+										last_boolean_value.set_last_error (last_iterator.error_value)
+									elseif last_iterator.after then
+										an_item.as_numeric_value.calculate_effective_boolean_value (a_context)
+										last_boolean_value := an_item.as_numeric_value.last_boolean_value
+									else
+										last_boolean_value := effective_boolean_value_in_error ("sequence of two or more items starting with an atomic value")
+									end
+								else
+									last_boolean_value := effective_boolean_value_in_error ("sequence starting with an atomic value other than a boolean, number, or string")
+								end
+							end
+						end
+					end
+				end
+				if last_boolean_value = Void then create last_boolean_value.make (False) end			
+			else
+				create last_boolean_value.make (False)
+				last_boolean_value.set_last_error (last_iterator.error_value)
+			end
 		ensure
 			value_not_void_but_may_be_in_error: last_boolean_value /= Void
 		end
@@ -1252,7 +1340,6 @@ feature -- Evaluation
 			an_item: XM_XPATH_ITEM
 			a_binding: XM_XPATH_VALUE
 			a_closure: XM_XPATH_CLOSURE
-			an_extent: XM_XPATH_SEQUENCE_EXTENT
 			a_singleton_iterator: XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]
 			a_variable_reference: XM_XPATH_VARIABLE_REFERENCE
 		do
@@ -1267,8 +1354,12 @@ feature -- Evaluation
 					if a_binding.is_closure then
 						a_closure := a_binding.as_closure
 						a_closure.create_iterator (Void)
-						create an_extent.make (a_closure.last_iterator)
-						last_evaluation := an_extent
+						if a_closure.last_iterator.is_error then
+							create {XM_XPATH_INVALID_VALUE} last_evaluation.make (a_closure.last_iterator.error_value)
+						else
+							expression_factory.create_sequence_extent (a_closure.last_iterator)
+							last_evaluation := expression_factory.last_created_closure
+						end
 					else
 						last_evaluation := a_binding
 					end
@@ -1282,28 +1373,31 @@ feature -- Evaluation
 							elseif last_iterator.is_singleton_iterator then
 								a_singleton_iterator := last_iterator.as_singleton_iterator
 								a_singleton_iterator.forth
-								if not a_singleton_iterator.off then an_item := a_singleton_iterator.item end
-								if an_item = Void then
-									create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
-								elseif an_item.is_error then
-									create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
+								if a_singleton_iterator.is_error then
+									create {XM_XPATH_INVALID_VALUE} last_evaluation.make (a_singleton_iterator.error_value)
 								else
-									last_evaluation := an_item.as_item_value -- May still be `Void'
+									if not a_singleton_iterator.off then an_item := a_singleton_iterator.item end
+									if an_item = Void then
+										create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
+									elseif an_item.is_error then
+										create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
+									else
+										last_evaluation := an_item.as_item_value -- May still be `Void'
+									end
 								end
 							else
-								create an_extent.make (last_iterator)
-								a_length := an_extent.count
+								expression_factory.create_sequence_extent (last_iterator)
+								last_evaluation := expression_factory.last_created_closure								
+								a_length := last_evaluation.count
 								if a_length = 0 then
 									create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
 								elseif a_length = 1 then
-									an_item := an_extent.item_at (1)
+									an_item := last_evaluation.item_at (1)
 									if an_item.is_error then
 										create {XM_XPATH_INVALID_VALUE} last_evaluation.make (an_item.error_value)
 									else
 										last_evaluation := an_item.as_item_value
 									end
-								else
-									last_evaluation := an_extent
 								end
 							end
 						else
@@ -1357,13 +1451,13 @@ feature -- Evaluation
 				-- We are not evaluating a value, as XM_XPATH_VALUE redefines this routine
 			end
 			if not cardinality_allows_many then
-				
+
 				-- Singletons are always evaluated eagerly
 				
 				eagerly_evaluate (a_context)
 			elseif depends_upon_position or else depends_upon_last
-				or else depends_upon_current_item or else depends_upon_current_group then
-				-- TODO when implemented or else depends_upon_regexp_group then
+				or else depends_upon_current_item or else depends_upon_current_group
+				or else depends_upon_regexp_group then
 				
 				-- We can't save these values in the closure, so we evaluate
 				-- the expression now if they are needed
@@ -1373,7 +1467,8 @@ feature -- Evaluation
 				
 				-- Create a Closure, a wrapper for the expression and its context
 				
-				last_evaluation := expression_factory.created_closure (Current, a_context, save_values)
+				expression_factory.create_closure (Current, a_context, save_values)
+				last_evaluation := expression_factory.last_created_closure
 			end
 		ensure
 			evaluated: last_evaluation /= Void
@@ -1502,6 +1597,15 @@ feature {XM_XPATH_EXPRESSION} -- Local
 			end
 		end
 
+	effective_boolean_value_in_error (a_reason: STRING): XM_XPATH_BOOLEAN_VALUE is
+			-- Type error for `calculate_effective_boolean_value'
+		require
+			reason_not_empty: a_reason /= Void and then a_reason.count > 0
+		do
+			create Result.make (False)
+			Result.set_last_error_from_string ("Effective boolean value is not defined for a " + a_reason, Gexslt_eiffel_type_uri, "EFFECTIVE_BOOLEAN_VALUE", Type_error)
+		end
+		
 invariant
 
 	replacement_expression: was_expression_replaced implies replacement_expression /= Void

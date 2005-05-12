@@ -951,7 +951,7 @@ feature -- Duplication
 			from
 				an_iterator := new_axis_iterator (Child_axis); an_iterator.start
 			until
-				an_iterator.after
+				an_iterator.is_error or else an_iterator.after
 			loop
 				an_iterator.item.copy_node (a_receiver, which_namespaces, copy_annotations)
 				an_iterator.forth

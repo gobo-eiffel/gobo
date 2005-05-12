@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -87,7 +86,9 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
 			else
 				an_iterator.start
-				if an_iterator.after then
+				if an_iterator.is_error then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				elseif an_iterator.after then
 					last_evaluated_item := Void
 				else
 					an_item := an_iterator.item
@@ -149,7 +150,7 @@ feature {NONE} -- Implementation
 			-- Evaluate average of a sequence of numeric values.
 		require
 			first_value_not_void: a_first_value /= Void
-			sequence_on_first_position: an_iterator /= Void and then not an_iterator.off and then an_iterator.index = 1
+			sequence_on_first_position: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.off and then an_iterator.index = 1
 		local
 			a_sum, a_numeric_value: XM_XPATH_NUMERIC_VALUE
 			an_integer_value: XM_XPATH_INTEGER_VALUE
@@ -163,7 +164,7 @@ feature {NONE} -- Implementation
 				a_sum := a_first_value
 				an_iterator.forth
 			until
-				an_iterator.after or else last_evaluated_item /= Void
+				an_iterator.is_error or else an_iterator.after or else last_evaluated_item /= Void
 			loop
 				an_item := an_iterator.item
 				if an_item.is_error then
@@ -197,7 +198,9 @@ feature {NONE} -- Implementation
 				count := count + 1
 				an_iterator.forth
 			end
-			if last_evaluated_item = Void then -- no error
+			if an_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+			elseif last_evaluated_item = Void then -- no error
 				create an_integer_value.make_from_integer (count)
 				last_evaluated_item := a_sum.arithmetic (Division_token, an_integer_value)
 			end

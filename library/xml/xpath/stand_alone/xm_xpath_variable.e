@@ -86,6 +86,9 @@ feature -- Element change
 		local
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 		do
+			if not a_reference.are_static_properties_computed then
+				a_reference.compute_static_properties
+			end
 			create a_sequence_type.make_any_sequence
 			a_reference.set_static_type (a_sequence_type, Void, Void, Void, Void)
 			a_reference.fix_up (Current)

@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 2
 			create arguments.make (2)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -100,6 +99,10 @@ feature -- Evaluation
 			else
 				arguments.item (2).evaluate_item (a_context)
 				an_item := arguments.item (2).last_evaluated_item
+				check
+					position_not_void: an_item /= Void
+					-- Static typing
+				end
 				if an_item.is_error then
 					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 				else

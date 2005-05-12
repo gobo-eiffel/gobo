@@ -67,15 +67,20 @@ feature -- Access
 
 	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
+		local
+			a_node_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
 		do
 			inspect
 				an_axis_type
 			when Self_axis, Ancestor_or_self_axis then
 				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 			when Child_axis, Descendant_axis then
-				todo ("new_axis_iterator", True)
+				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (child_text_node)
 			when Descendant_or_self_axis then
-				todo ("new_axis_iterator", True)
+				create a_node_list.make (2)
+				a_node_list.put (Current, 1)
+				a_node_list.put (child_text_node, 2)
+				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (a_node_list)
 			else
 				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			end
@@ -84,15 +89,31 @@ feature -- Access
 	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
+		local
+			a_node: XM_XPATH_NODE
+			a_node_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
 		do
 			inspect
 				an_axis_type
 			when Self_axis, Ancestor_or_self_axis then
 				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 			when Child_axis, Descendant_axis then
-				todo ("new_axis_iterator", True)
+				a_node := child_text_node
+				if a_node_test.matches_item (a_node) then
+					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (child_text_node)
+				else
+					create {XM_XPATH_EMPTY_ITERATOR} Result.make
+				end
 			when Descendant_or_self_axis then
-				todo ("new_axis_iterator", True)
+				a_node := child_text_node
+				if a_node_test.matches_item (a_node) then
+					create a_node_list.make (2)
+					a_node_list.put (Current, 1)
+					a_node_list.put (child_text_node, 2)
+					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (a_node_list)
+				else
+					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
+				end
 			else
 				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			end	
@@ -196,6 +217,20 @@ feature {NONE} -- Implementation
 
 	text: STRING
 			--  Text value
+
+	cached_text_node: XM_XPATH_TEXT_FRAGMENT_NODE
+			-- Sole text node
+
+	child_text_node: XM_XPATH_TEXT_FRAGMENT_NODE is
+			-- Sole text node
+		do
+			if cached_text_node = Void then
+				create cached_text_node.make (text, Current, system_id)
+			end
+			Result := cached_text_node
+		ensure
+			result_not_void: Result /= Void
+		end
 
 invariant
 

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			configuration := a_configuration
 			error_listener := configuration.error_listener
-			create node_factory.make (error_listener, configuration.are_external_functions_allowed)
+			create node_factory.make (error_listener, configuration)
 		ensure
 			configuration_set: configuration = a_configuration
 			stylesheet_not_yet_compiled: executable = Void

@@ -71,5 +71,14 @@ feature -- Events
 		deferred
 		end
 
+	trace_user_entry (a_label, a_value: STRING) is
+			-- Trace user entry (e.g. XPath trace() function).
+		require
+			tracing_enabled: is_tracing
+			value_not_void: a_value /= Void
+			label_not_void: a_label /= Void
+		deferred
+		end
+
 end
 	

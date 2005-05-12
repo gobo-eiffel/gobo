@@ -63,10 +63,7 @@ feature -- Element change
 		require
 			valid_local_variable: a_slot_number > 0
 		do
-			if a_slot_number > variables.count then
-				variables.resize (1, 2 * variables.count)
-			end
-			variables.put (a_value, a_slot_number)
+			variables.force (a_value, a_slot_number)
 		end
 
 invariant

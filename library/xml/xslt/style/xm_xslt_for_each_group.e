@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, may_contain_sequence_constructor,
+			validate, may_contain_sequence_constructor,
 			is_permitted_child, is_for_each_group
 		end
 
@@ -28,17 +28,6 @@ creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 
-feature {NONE} -- Initialization
-	
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
-		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
-			-- Establish invariant.
-		do
-			is_instruction := True
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-		end
-
 feature -- Status report
 
 	may_contain_sequence_constructor: BOOLEAN is
@@ -49,8 +38,6 @@ feature -- Status report
 
 	is_permitted_child (a_style_element: XM_XSLT_STYLE_ELEMENT): BOOLEAN is
 			-- Is `a_style_element' a permitted child of `Current'?
-		local
-			a_sort: XM_XSLT_SORT
 		do
 			Result := a_style_element.is_sort
 		end
@@ -307,7 +294,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	instruction: is_instruction = True
 	only_one_algorithm: validated implies group_by /= Void xor group_adjacent /= Void xor group_starting_with /= Void xor group_ending_with /= Void
 	collation_name: collation_name /= Void implies group_by /= Void xor group_adjacent /= Void
 

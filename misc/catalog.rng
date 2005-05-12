@@ -28,7 +28,7 @@
 
     <data type="string">
 
-      <param name="pattern">[a-zA-Z0-9-'()+,./:=?;!*#@$_%]*</param>
+      <param name="pattern">[a-zA-Z0-9\-'\(\)+,./:=?;!*#@$_% ]*</param>
 
     </data>
 
@@ -80,7 +80,7 @@
 
       <attribute name="id">
 
-	<data type="ID"/>
+        <data type="ID"/>
 
       </attribute>
 
@@ -150,6 +150,10 @@
 
           <ref name="RewriteURI"/>
 
+          <ref name="SystemSuffix"/>
+
+          <ref name="UriSuffix"/>
+
           <ref name="DelegatePublic"/>
 
           <ref name="DelegateSystem"/>
@@ -196,6 +200,10 @@
 
           <ref name="RewriteURI"/>
 
+          <ref name="SystemSuffix"/>
+
+          <ref name="UriSuffix"/>
+
           <ref name="DelegatePublic"/>
 
           <ref name="DelegateSystem"/>
@@ -222,13 +230,13 @@
 
       <attribute name="publicId">
 
-	<ref name="publicIdentifier"/>
+        <ref name="publicIdentifier"/>
 
       </attribute>
 
       <attribute name="uri">
 
-	<ref name="uriReference"/>
+        <ref name="uriReference"/>
 
       </attribute>
 
@@ -250,7 +258,7 @@
 
       <attribute name="uri">
 
-	<ref name="uriReference"/>
+        <ref name="uriReference"/>
 
       </attribute>
 
@@ -272,7 +280,7 @@
 
       <attribute name="uri">
 
-	<ref name="uriReference"/>
+        <ref name="uriReference"/>
 
       </attribute>
 
@@ -311,6 +319,50 @@
       <attribute name="uriStartString"/>
 
       <attribute name="rewritePrefix"/>
+
+      <ref name="OptionalAttributes"/>
+
+      <empty/>
+
+    </element>
+
+  </define>
+
+
+
+  <define name="SystemSuffix">
+
+    <element name="systemSuffix">
+
+      <attribute name="systemIdSuffix"/>
+
+      <attribute name="uri">
+
+        <ref name="uriReference"/>
+
+      </attribute>
+
+      <ref name="OptionalAttributes"/>
+
+      <empty/>
+
+    </element>
+
+  </define>
+
+
+
+  <define name="UriSuffix">
+
+    <element name="uriSuffix">
+
+      <attribute name="uriSuffix"/>
+
+      <attribute name="uri">
+
+        <ref name="uriReference"/>
+
+      </attribute>
 
       <ref name="OptionalAttributes"/>
 
@@ -394,75 +446,39 @@
 
   <define name="AnyOtherElement">
 
-    <choice>
+    <element>
 
-      <element>
+      <anyName>
 
-        <anyName>
+        <except>
 
-          <except>
+          <nsName ns=""/>
 
-            <nsName ns=""/>
+          <nsName/>
 
-            <nsName/>
+        </except>
 
-          </except>
-
-        </anyName>
-
-        <zeroOrMore>
-
-          <attribute>
-
-            <anyName/>
-
-          </attribute>
-
-        </zeroOrMore>
-
-        <ref name="AnyContent"/>
-
-      </element>
-
-      <text/>
-
-    </choice>
-
-  </define>
-
-
-
-  <define name="AnyContent">
-
-    <mixed>
+      </anyName>
 
       <zeroOrMore>
 
-        <element>
+        <attribute>
 
           <anyName/>
 
-          <zeroOrMore>
-
-            <attribute>
-
-              <anyName/>
-
-            </attribute>
-
-          </zeroOrMore>
-
-          <zeroOrMore>
-
-            <ref name="AnyContent"/>
-
-          </zeroOrMore>
-
-        </element>
+        </attribute>
 
       </zeroOrMore>
 
-    </mixed>
+      <choice>
+
+        <text/>
+
+        <ref name="AnyOtherElement"/>
+
+      </choice>
+
+    </element>
 
   </define>
 

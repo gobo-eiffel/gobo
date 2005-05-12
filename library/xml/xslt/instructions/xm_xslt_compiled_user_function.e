@@ -13,6 +13,8 @@ class XM_XSLT_COMPILED_USER_FUNCTION
 
 inherit
 
+	ANY -- for SE 2.1
+
 	XM_XSLT_COMPILED_PROCEDURE
 
 	XM_XSLT_SHARED_EMPTY_PROPERTIES
@@ -43,7 +45,7 @@ feature {NONE} -- Initialization
 			function_name := a_function_name
 			result_type := a_result_type
 			is_memo_function := memo_function
-			create details.make ("xsl:function", a_system_id, a_line_number, empty_property_set)
+			contains_tail_calls := a_body.is_tail_recursive
 		ensure
 			executable_set: executable = an_executable
 			body_set: body = a_body
@@ -57,9 +59,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	details: XM_XSLT_TRACE_DETAILS
-			-- Trace details
-
 	function_name: STRING
 			-- QName of function
 
@@ -70,7 +69,10 @@ feature -- Access
 			-- Parameters to the call
 
 	last_called_value: XM_XPATH_VALUE
-			-- Result of last call
+			-- Result of `call'
+
+	parameter_count: INTEGER
+			-- Number of parameters passed
 
 	hash_code: INTEGER is
 			-- hash code
@@ -89,12 +91,19 @@ feature -- Status report
 			Result := True
 		end
 
+	contains_tail_calls: BOOLEAN
+			-- Does `Current' contain tail calls?
+
+	last_combined_key: STRING
+			-- Result from `calculate_combined_key'
+
 feature -- Evaluation
 
-	call (some_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT; evaluate_tail_calls: BOOLEAN) is
+	call (some_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_parameter_count: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; evaluate_tail_calls: BOOLEAN) is
 			-- Evaluate function call.
 		require
 			arguments_not_void: some_actual_arguments /= Void
+			positive_parameter_count: a_parameter_count >= 0
 			major_context_not_void: a_context /= Void and then not a_context.is_minor
 		local
 			an_object_value: XM_XPATH_OBJECT_VALUE
@@ -102,23 +111,30 @@ feature -- Evaluation
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_stack_frame: XM_XPATH_STACK_FRAME
 		do
+			last_called_value := Void
+			parameter_count := a_parameter_count
 			a_transformer := a_context.transformer
-			if a_transformer.is_tracing then
-				a_transformer.trace_listener.trace_instruction_entry (details)
-			end
 			if is_memo_function then
-				last_called_value := cached_value (a_transformer, some_actual_arguments)
+				fetch_cached_value (a_transformer, some_actual_arguments)
 			end
 			if last_called_value = Void then
 				create a_stack_frame.make (slot_manager, some_actual_arguments)
 				a_context.set_stack_frame (a_stack_frame)
-				body.lazily_evaluate (a_context, False)
+				if contains_tail_calls then
+
+					-- we cannot risk evaluating to an XM_XPATH_CLOSURE,
+					-- as the tail call will escape, and might reappear anywhere
+
+					body.eagerly_evaluate (a_context)
+				else
+					body.lazily_evaluate (a_context, False)
+				end
 				last_called_value := body.last_evaluation
 				if evaluate_tail_calls then
 					an_object_value ?= last_called_value
 					if an_object_value /= Void then
 						from
-							a_function_package ?= an_object_value.value -- TODO: as_function_package (? - cluster dependency)
+							a_function_package ?= an_object_value.value
 						until
 							a_function_package = Void
 						loop
@@ -134,9 +150,6 @@ feature -- Evaluation
 				if is_memo_function then
 					put_cached_value (a_transformer, some_actual_arguments, last_called_value)
 				end
-			end
-			if a_transformer.is_tracing then
-				a_transformer.trace_listener.trace_instruction_exit (details)
 			end
 		ensure
 			called_value_not_void: last_called_value /= Void -- but may be an error value
@@ -171,12 +184,18 @@ feature {NONE} -- Implementation
 				create a_function_cache.make_with_equality_testers (10, Void, string_equality_tester)
 				a_transformer.save_function_results (a_function_cache, Current)
 			end
-			a_key := combined_key (some_actual_arguments)
-			a_function_cache.force (a_cached_result, a_key)
+			calculate_combined_key (some_actual_arguments, a_transformer)
+			if last_called_value = Void then
+				a_key := last_combined_key
+				a_function_cache.force (a_cached_result, a_key)
+				last_called_value := a_cached_result
+			end
+		ensure
+			last_called_value_not_void: last_called_value /= Void
 		end
 
-	cached_value (a_transformer: XM_XSLT_TRANSFORMER; some_actual_arguments: ARRAY [XM_XPATH_VALUE]): XM_XPATH_VALUE is
-			-- Saved value from cache
+	fetch_cached_value (a_transformer: XM_XSLT_TRANSFORMER; some_actual_arguments: ARRAY [XM_XPATH_VALUE]) is
+			-- Save value from cache into `last_called_value'.
 		require
 			memo_function: is_memo_function
 			transformer_not_void: a_transformer /= Void
@@ -187,18 +206,22 @@ feature {NONE} -- Implementation
 		do
 			a_function_cache := a_transformer.function_results_cache (Current)
 			if a_function_cache /= Void then
-				a_key := combined_key (some_actual_arguments)
-				if a_function_cache.has (a_key) then
-					Result := a_function_cache.item (a_key)
+				calculate_combined_key (some_actual_arguments, a_transformer)
+				if last_called_value = Void then
+					if a_function_cache.has (a_key) then
+						last_called_value := a_function_cache.item (a_key)
+					end
 				end
+			else
+				last_called_value := Void
 			end
 		end
 
-	combined_key (some_actual_arguments: ARRAY [XM_XPATH_VALUE]): STRING is
-			-- Representation of all argument values;
-			-- Not 100% pure as it creates an iterator on each actual argument.
+	calculate_combined_key (some_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_transformer: XM_XSLT_TRANSFORMER) is
+			-- Calculate representation of all argument values.
 		require
 			arguments_not_void: some_actual_arguments /= Void
+			transformer_not_void: a_transformer /= Void
 		local
 			a_value: XM_XPATH_VALUE
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
@@ -206,42 +229,56 @@ feature {NONE} -- Implementation
 			a_node: XM_XPATH_NODE
 			an_index: INTEGER
 		do
-			create Result.make (0)
+			last_called_value := Void
+			create last_combined_key.make (0)
 			from
 				an_index := 1
 			variant
-				some_actual_arguments.count + 1
+				parameter_count + 1 - an_index
 			until
-				an_index > some_actual_arguments.count
+				a_transformer.is_error or else an_index > parameter_count
 			loop
 				a_value := some_actual_arguments.item (an_index)
-				from
-					a_value.create_iterator (Void)
-					an_iterator := a_value.last_iterator; an_iterator.start
-				until
-					an_iterator.after
-				loop
-					an_item := an_iterator.item
-					if an_item.is_node then
-						a_node := an_item.as_node
-						if a_node.generated_id = Void then
-							a_node.generate_id
+				if a_value.is_error then
+					last_called_value := a_value
+					an_index := an_index + 1
+				else
+					from
+						a_value.create_iterator (Void)
+						an_iterator := a_value.last_iterator
+						if an_iterator.is_error then
+							a_transformer.report_fatal_error (an_iterator.error_value, Void)
+						else
+							an_iterator.start
 						end
-						Result.append_string (a_node.generated_id)
-					else
-						Result.append_string (an_item.item_type.conventional_name)
-						Result.append_string ("/")
-						Result.append_string (an_item.string_value)
+					until
+						an_iterator.is_error or else an_iterator.after
+					loop
+						an_item := an_iterator.item
+						if an_item.is_node then
+							a_node := an_item.as_node
+							if a_node.generated_id = Void then
+								a_node.generate_id
+							end
+							last_combined_key.append_string (a_node.generated_id)
+						else
+							last_combined_key.append_string (an_item.item_type.conventional_name)
+							last_combined_key.append_string ("/")
+							last_combined_key.append_string (an_item.string_value)
+						end
+						last_combined_key.append_character (code_one)
+						an_iterator.forth
 					end
-					Result.append_character (code_one)
-					an_iterator.forth
+					if an_iterator.is_error then
+						a_transformer.report_fatal_error (an_iterator.error_value, Void)
+					else
+						last_combined_key.append_character (code_two)
+					end
+					an_index := an_index + 1
 				end
-				Result.append_character (code_two)
-				an_index := an_index + 1
 			end
-				
 		ensure
-			combined_key_not_void: Result /= Void
+			error_or_combined_key_set: last_called_value = Void implies last_combined_key /= Void
 		end
 
 	code_one: CHARACTER is
@@ -264,7 +301,6 @@ invariant
 
 	function_name_void: function_name /= Void
 	body_not_void: body /= Void
-	trace_details_not_void: details /= Void
 	result_type_not_void: result_type /= Void
 	
 end

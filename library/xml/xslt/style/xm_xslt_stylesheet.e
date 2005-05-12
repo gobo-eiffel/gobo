@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 	
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
 			-- Establish invariant.
 		local
 			a_code_point_collator: ST_COLLATOR
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			create slot_manager.make
 			create executable.make (rule_manager, key_manager, decimal_format_manager,
 											collation_map, module_list, function_library)
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
 		end
 
 feature -- Access
@@ -748,7 +748,7 @@ feature -- Element change
 			a_message, a_system_id: STRING
 			a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
 			a_character_code_map: DS_HASH_TABLE [STRING, INTEGER]
-			a_fingerprint: INTEGER
+			a_fingerprint, a_level: INTEGER
 			a_function_library: XM_XPATH_FUNCTION_LIBRARY
 			an_error: XM_XPATH_ERROR_VALUE
 			explaining: BOOLEAN
@@ -773,7 +773,21 @@ feature -- Element change
 						a_cursor.item.last_generated_expression.as_computed_expression.set_source_location (module_number (a_system_id), a_cursor.item.line_number)
 					end
 					if explaining and then a_cursor.item.last_generated_expression /= Void then
-						a_cursor.item.last_generated_expression.display (1)
+						if a_cursor.item.is_xslt_function then
+							a_level := 2
+							std.error.put_string ("xsl:function name=")
+							std.error.put_string (a_cursor.item.as_xslt_function.function_name)
+							if a_cursor.item.as_xslt_function.arity > 0 then
+								std.error.put_string (" taking ")
+								std.error.put_string (a_cursor.item.as_xslt_function.arity.out)
+								std.error.put_string (" parameter")
+								if a_cursor.item.as_xslt_function.arity > 1 then
+									std.error.put_string ("s")
+								end
+							end
+							std.error.put_string ("%N")
+						end
+						a_cursor.item.last_generated_expression.display (a_level)
 					end
 				end
 				a_cursor.forth

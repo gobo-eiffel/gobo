@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
+			initialized := True
 		end
 
 feature -- Access
@@ -129,7 +129,8 @@ feature -- Evaluation
 			if arguments.count = 3 then
 				arguments.item (3).create_iterator (a_context)
 				an_iterator := arguments.item (3).last_iterator
-				create {XM_XPATH_SEQUENCE_EXTENT} an_error_sequence.make (an_iterator)
+				expression_factory.create_sequence_extent (an_iterator)
+				an_error_sequence := expression_factory.last_created_closure
 			end
 			create an_error_value.make (a_description, a_namespace_uri, an_error_code, an_error_sequence, Dynamic_error)
 			create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_error_value)

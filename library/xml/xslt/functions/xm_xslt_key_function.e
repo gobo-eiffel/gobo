@@ -38,7 +38,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 2
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -159,10 +158,14 @@ feature -- Evaluation
 					else
 						create a_key_context_information.make (a_context_document, an_evaluation_context, a_fingerprint)
 						an_expression.create_iterator (a_context)
-						a_key_iterator := an_expression.last_iterator
-						create all_values_iterator.make (a_key_iterator, a_key_context_information, Void)
-						create a_local_order_comparer
-						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (all_values_iterator, a_local_order_comparer)
+						if an_expression.last_iterator.is_error then
+							last_iterator := an_expression.last_iterator
+						else
+							a_key_iterator := an_expression.last_iterator
+							create all_values_iterator.make (a_key_iterator, a_key_context_information, Void)
+							create a_local_order_comparer
+							create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} last_iterator.make (all_values_iterator, a_local_order_comparer)
+						end
 					end
 				else
 					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Non-recoverable error already reported",  Xpath_errors_uri, "FOER0000", Dynamic_error)

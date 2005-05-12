@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 	make (a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_mapping_function: XM_XPATH_NODE_MAPPING_FUNCTION; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant.
 		require
-			base_iterator_not_void: a_base_iterator /= Void
+			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
 			mapping_function_not_void: a_mapping_function /= void
 		do
 			base_iterator := a_base_iterator
@@ -157,7 +157,10 @@ feature {NONE} -- Implementation
 					elseif not base_iterator.after then
 						base_iterator.forth
 					end
-					if not base_iterator.after then
+					if base_iterator.is_error then
+						set_last_error (base_iterator.error_value)
+						finished := True
+					elseif not base_iterator.after then
 						next_source := base_iterator.item
 						
 						-- Call the supplied mapping function

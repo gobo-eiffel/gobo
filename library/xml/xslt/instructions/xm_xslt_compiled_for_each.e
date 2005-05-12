@@ -40,7 +40,6 @@ feature {NONE} -- Initialization
 			adopt_child_expression (select_expression)
 			action := an_action
 			adopt_child_expression (action)
-			instruction_name := "xsl:for-each"
 			compute_static_properties
 			initialized := True
 		ensure
@@ -51,9 +50,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
-
 	action: XM_XPATH_EXPRESSION
 			-- Action to be performed within the loop
 	
@@ -85,7 +81,7 @@ feature -- Status report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "for-each")
+			a_string := STRING_.appended_string (indentation (a_level), "xsl:for-each")
 			std.error.put_string (a_string); std.error.put_new_line
 			select_expression.display (a_level + 1)
 			a_string := STRING_.appended_string (indentation (a_level), "return")
@@ -235,6 +231,9 @@ feature -- Evaluation
 						a_trace_listener.trace_current_item_finish (an_iterator.item)
 					end
 					an_iterator.forth
+					if an_iterator.is_error then
+						a_transformer.report_fatal_error (an_iterator.error_value, Current)
+					end
 				end
 			end
 		end
@@ -253,7 +252,9 @@ feature -- Evaluation
 			end
 			a_new_context.set_current_template (Void)
 			a_new_context.set_current_iterator (last_iterator)
-			create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (last_iterator, Current, a_new_context)
+			if not last_iterator.is_error then
+				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (last_iterator, Current, a_new_context)
+			end
 		end
 	
 	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is

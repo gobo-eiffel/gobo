@@ -31,13 +31,12 @@ feature {NONE} -- Initialization
 			-- establish invariant.
 		require
 			comparer_not_void: a_comparer /= Void
-			iterator_not_void: an_iterator /= Void
+			iterator_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
 		local
 			a_sorter: DS_QUICK_SORTER [XM_XPATH_NODE]
 		do
 			comparer := a_comparer
 			create sequence.make_default
-			-- TODO: do I need a node equality tester? I think so
 			from
 				an_iterator.start
 			until
@@ -48,6 +47,9 @@ feature {NONE} -- Initialization
 			end
 			create a_sorter.make (a_comparer)
 			sequence.sort (a_sorter)
+			if an_iterator.is_error then
+				set_last_error (an_iterator.error_value)
+			end
 		ensure
 			comparer_set: comparer = a_comparer
 		end

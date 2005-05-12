@@ -111,7 +111,7 @@ feature -- Access
 		do
 			create {XM_XPATH_TREE_CHILD_ENUMERATION} Result.make (Current, a_node_test)
 		ensure
-			child_iterator_not_void: Result /= Void
+			child_iterator_invulnerable: Result /= Void
 		end
 
 feature -- Status report

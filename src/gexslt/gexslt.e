@@ -405,6 +405,7 @@ feature -- Error handling
 									  "       --catalog-debug-level=[0-10]%N" +
 									  "       --trace=local-file-name%N" +
 									  "       --timed-trace=local-file-name%N" +
+									  "       --suppress-xpath-tracing%N" +
 									  "       --tiny-tree%N" +
 									  "       --no-xpointer%N" +
 									  "       --html-text-ok%N" +
@@ -520,6 +521,8 @@ feature {NONE} -- Implementation
 				else
 					set_errors_and_warnings (an_option.substring (21, an_option.count))
 				end
+			elseif an_option.substring_index ("suppress-xpath-tracing", 1) = 1 then
+				configuration.suppress_trace_output (True)
 			elseif an_option.substring_index ("trace", 1) = 1 then
 				is_tracing := True
 				is_timed_tracing := False
@@ -528,7 +531,7 @@ feature {NONE} -- Implementation
 				elseif an_option.count > 5 then
 					report_usage_message
 					Exceptions.die (1)
-				end
+				end				
 			elseif an_option.substring_index ("timed-trace", 1) = 1 then
 				is_tracing := True
 				is_timed_tracing := True

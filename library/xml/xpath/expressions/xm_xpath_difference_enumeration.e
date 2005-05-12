@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			comparer_not_void: a_comparer /= Void
-			first_iterator_not_void: an_iterator /= Void
-			second_iterator_not_void: another_iterator /= Void
+			first_iterator_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
+			second_iterator_before: another_iterator /= Void and then not another_iterator.is_error and then another_iterator.before
 		do
 			comparer := a_comparer
 			first_iterator := an_iterator
@@ -109,7 +109,13 @@ feature {NONE} -- Implementation
 				first_iterator.forth
 			end
 
-			if first_iterator.after then
+			if first_iterator.is_error then
+				set_last_error (first_iterator.error_value)
+				current_node := Void
+			elseif first_iterator.after then
+				current_node := Void
+			elseif second_iterator.is_error then
+				set_last_error (second_iterator.error_value)
 				current_node := Void
 			elseif second_iterator.after then
 				current_node := first_iterator.item
@@ -121,8 +127,8 @@ feature {NONE} -- Implementation
 	advance_both_iterators is
 			-- Move to next item.
 		require
-			first_iterator_not_off: not first_iterator.off
-			second_iterator_not_off: not second_iterator.off
+			first_iterator_not_off: not first_iterator.is_error and then not first_iterator.off
+			second_iterator_not_off: not second_iterator.is_error and then not second_iterator.off
 		local
 			finished: BOOLEAN
 			comparison: INTEGER
@@ -141,19 +147,31 @@ feature {NONE} -- Implementation
 					current_node := first_node
 				elseif comparison = 0 then
 					first_iterator.forth
-					if first_iterator.after then
+					if first_iterator.is_error then
+						set_last_error (first_iterator.error_value)
+						finished := True
+						current_node := Void
+					elseif first_iterator.after then
 						finished := True
 						current_node := Void
 					else
 						second_iterator.forth
-						if second_iterator.after then
+						if second_iterator.is_error then
+							set_last_error (second_iterator.error_value)
+							finished := True
+							current_node := Void
+						elseif second_iterator.after then
 							finished := True
 							current_node := first_node
 						end
 					end
 				else
 					second_iterator.forth
-					if second_iterator.after then
+					if second_iterator.is_error then
+						set_last_error (second_iterator.error_value)
+						finished := True
+						current_node := Void
+					elseif second_iterator.after then
 						finished := True
 						current_node := first_node
 					end

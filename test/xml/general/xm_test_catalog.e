@@ -71,6 +71,26 @@ feature -- Tests
 			assert ("SYSTEM resolved via rewrite", a_uri /= Void and then STRING_.same_string (a_uri, "ftp://ftp.gobosoft.com/pub/xml-dtd-4.1.2-1.0-24/test.system"))
 		end
 
+	test_system_suffix is
+			-- Test resolving an fsi based on systemSuffix records.
+		local
+			a_uri: STRING
+		do
+			shared_catalog_manager.set_debug_level (0)
+			a_uri := shared_catalog_manager.resolved_fsi ("file:///local/backup/4.3/docbookx.dtd")
+			assert ("SYSTEM resolved via suffix", a_uri /= Void and then STRING_.same_string (a_uri, "file:///share/doctypes/xml/4.3/docbookx.dtd"))
+		end
+
+	test_uri_suffix is
+			-- Test resolving a uri reference based on uriSuffix records.
+		local
+			a_uri: STRING
+		do
+			shared_catalog_manager.set_debug_level (0)
+			a_uri := shared_catalog_manager.resolved_uri ("file:///local/backup/4.3/docbookx.dtd")
+			assert ("SYSTEM resolved via suffix", a_uri /= Void and then STRING_.same_string (a_uri, "file:///share/doctypes/xml/4.3/docbookx.dtd"))
+		end
+
 	test_resolve_system_delegate is
 			-- Test resolving an fsi via delegated catalog
 		local

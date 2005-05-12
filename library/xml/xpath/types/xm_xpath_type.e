@@ -85,7 +85,7 @@ feature -- Access
 		end
 
 	node_type_name (a_node_type: INTEGER): STRING is
-			-- name of `a_node_type'
+			-- Name of `a_node_type'
 		require
 			valid_node_type: is_node_type (a_node_type)
 		do
@@ -285,6 +285,12 @@ feature -- Status report
 					t1 := String_type_code
 				end
 				if t2 = Untyped_atomic_type_code then
+					t2 := String_type_code
+				end
+				if t1 = Any_uri_type_code then
+					t1 := String_type_code
+				end
+				if t2 = Any_uri_type_code then
 					t2 := String_type_code
 				end
 				if t1 = Double_type_code or else

@@ -17,7 +17,8 @@ inherit
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
 			simplify, evaluate_item, promote, create_iterator,
-			sub_expressions, mark_tail_function_calls, compute_special_properties
+			sub_expressions, mark_tail_function_calls,
+			compute_special_properties, is_tail_recursive
 		end
 
 creation
@@ -76,6 +77,12 @@ feature -- Access
 			Result.put (else_expression, 3)
 		end
 
+	is_tail_recursive: BOOLEAN is
+			-- Is `Current' a tail recursive function call?
+		do
+			Result := then_expression.is_tail_recursive or else
+			else_expression.is_tail_recursive
+		end
 
 feature -- Status report
 
@@ -92,11 +99,11 @@ feature -- Status report
 			std.error.put_string (a_string)
 			std.error.put_new_line
 			then_expression.display (a_level + 1)
-			  a_string := STRING_.appended_string (indentation (a_level), "else")
-			  std.error.put_string (a_string)
-			  std.error.put_new_line
-			  else_expression.display (a_level + 1)				
-			end
+			a_string := STRING_.appended_string (indentation (a_level), "else")
+			std.error.put_string (a_string)
+			std.error.put_new_line
+			else_expression.display (a_level + 1)				
+		end
 
 feature -- Status setting
 	

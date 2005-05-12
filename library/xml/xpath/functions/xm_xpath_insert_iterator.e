@@ -25,8 +25,8 @@ feature {NONE} -- Initialization
 	make (a_base_iterator, an_insertion_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; an_insert_position: INTEGER) is
 			-- Establish invariant.
 		require
-			base_iterator_not_void: a_base_iterator /= Void
-			insertion_iterator_not_void: an_insertion_iterator /= Void
+			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
+			insertion_iterator_before: an_insertion_iterator /= Void and then not an_insertion_iterator.is_error and then an_insertion_iterator.before
 			strictly_positive_insert_position: an_insert_position > 0
 		do
 			base_iterator := a_base_iterator
@@ -67,13 +67,19 @@ feature -- Cursor movement
 				else
 					insertion_iterator.forth
 				end
-				if insertion_iterator.after then
+				if insertion_iterator.is_error then
+					set_last_error (insertion_iterator.error_value)
+					item := Void
+				elseif insertion_iterator.after then
 					is_inserting := False
 					if base_iterator.after then
 						item := Void
 					else
 						base_iterator.start
-						if base_iterator.after then
+						if base_iterator.is_error then
+							set_last_error (base_iterator.error_value)
+							item := Void
+						elseif base_iterator.after then
 							item := Void
 						else
 							item := base_iterator.item
@@ -88,13 +94,19 @@ feature -- Cursor movement
 				else
 					base_iterator.forth
 				end
-				if base_iterator.after then
+				if base_iterator.is_error then
+					set_last_error (base_iterator.error_value)
+					item := Void
+				elseif base_iterator.after then
 					if insertion_iterator.after then
 						item := Void
 					else
 						is_inserting := True
 						insertion_iterator.start
-						if insertion_iterator.after then
+						if insertion_iterator.is_error then
+							set_last_error (insertion_iterator.error_value)
+							item := Void
+						elseif insertion_iterator.after then
 							item := Void
 						else
 							item := insertion_iterator.item

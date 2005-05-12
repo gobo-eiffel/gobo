@@ -85,11 +85,7 @@ feature -- Status report
 			a_string := STRING_.appended_string (a_string, maximum_position.out)
 			a_string := STRING_.appended_string (a_string, ")")
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-			end
+			std.error.put_new_line
 		end
 
 feature -- Status setting

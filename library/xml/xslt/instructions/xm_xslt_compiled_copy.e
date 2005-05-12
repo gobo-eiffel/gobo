@@ -55,16 +55,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	instruction_name: STRING is
-			-- Name of instruction, for diagnostics
-		do
-			Result := "xsl:copy"
-		end
-
 	name_code (a_context: XM_XSLT_EVALUATION_CONTEXT): INTEGER is
 			-- Name code
-		local
-			a_node: XM_XPATH_NODE
 		do
 			check
 				context_item_is_node: a_context.context_item.is_node
@@ -77,7 +69,7 @@ feature -- Status report
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		do
-			std.error.put_string ("copy%N")
+			std.error.put_string ("xsl:copy%N")
 		end
 
 feature -- Evaluation
@@ -87,9 +79,15 @@ feature -- Evaluation
 		local
 			a_new_context: XM_XPATH_CONTEXT
 			an_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
+			another_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			a_new_context := a_context.new_minor_context
-			create an_outputter.make_with_size (1)
+			another_context ?= a_new_context
+			check
+				evaluation_context: another_context /= Void
+				-- this is XSLT
+			end
+			create an_outputter.make_with_size (1, another_context.transformer)
 			a_new_context.change_to_sequence_output_destination (an_outputter)
 			an_outputter.start_document
 			an_outputter.start_document

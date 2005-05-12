@@ -44,10 +44,10 @@
 	      The tree structure is represented by indentation.
 	    </para>
 	    <para>
-	      The value of "all" only takes effect on xsl:stylesheet and xsl:transform elements. In this case, instructions and literal result elements that are descendants of the element,
-	      as well as the element itself, are treated as if "yes" was coded, until a descendant is encountered 
-	      that has "no" coded. Additionally, if this is the prinicpal stylesheet, then the instructions themselves, when compiled to an expression,
-	      have their compiled form displayed. 
+	      The value of "all" only takes effect on xsl:stylesheet and xsl:transform elements. It is treated as if "yes" was coded.
+	      Additionally, if this is the prinicpal stylesheet, then the instructions themselves, when compiled to an expression,
+	      have their compiled form displayed. (Only xsl:templates, top-level xsl:variables and xsl:params, and xsl:function definitions
+	      are displayed.)
 	      <warning>This can produce a lot of output.</warning>
 	    </para>
 	  </listitem>

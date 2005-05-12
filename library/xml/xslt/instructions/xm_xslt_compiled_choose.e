@@ -36,16 +36,6 @@ feature {NONE} -- Initialization
 			executable := an_executable
 			conditions := some_conditions
 			actions := some_actions
-			if some_conditions.count = 1 then
-
-				-- We assume that if there was only one condition
-				--  then it was an xsl:if;
-				-- this is not necessarily so, but it's adequate for tracing purposes.
-
-				instruction_name := "xsl:if"
-			else				
-				instruction_name := "xsl:choose"
-			end
 			from
 				a_cursor := conditions.new_cursor; a_cursor.start
 			until
@@ -71,9 +61,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
 	
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
@@ -252,6 +239,7 @@ feature -- Evaluation
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
+			last_iterator := Void
 			a_new_context ?= a_context
 			check
 				evaluation_context: a_new_context /= Void

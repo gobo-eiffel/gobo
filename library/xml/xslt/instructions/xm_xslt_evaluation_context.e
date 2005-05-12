@@ -50,16 +50,18 @@ feature {NONE} -- Initialization
 			cached_last := -1
 			collation_map := transformer.executable.collation_map
 			is_minor := True
+			configuration := transformer.configuration
 		ensure
 			transformer_set: transformer = a_transformer
 			not_restricted: not is_restricted
 		end
 
-	make_restricted (a_static_context: XM_XSLT_EXPRESSION_CONTEXT; a_collation_map: like collation_map) is
+	make_restricted (a_static_context: XM_XSLT_EXPRESSION_CONTEXT; a_collation_map: like collation_map; a_configuration: like configuration) is
 			-- Create a restricted context for [xsl:]use-when.
 		require
 			static_context_not_void: a_static_context /= Void
 		do
+			configuration := a_configuration
 			is_restricted := True
 			static_context := a_static_context
 			collation_map := a_collation_map
@@ -73,6 +75,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	configuration: XM_XSLT_CONFIGURATION
+			-- System configuration
 
 	caller: like Current
 			-- Calling context
@@ -215,7 +220,7 @@ feature -- Access
 			-- May `current()' be called without error?
 		do
 			if not is_restricted then
-				Result := current_iterator /= Void and then not current_iterator.off
+				Result := current_iterator /= Void and then not current_iterator.is_error and then not current_iterator.off
 			end
 		end
 

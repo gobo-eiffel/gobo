@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 0
 			create arguments.make (0)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 

@@ -111,28 +111,14 @@ feature -- Status report
 		do
 			if node_test = Void then
 				test_string := "node()"
-				debug ("XPath Axis Expression")
-					std.error.put_string ("Axis expression: - no node-test present")
-					std.error.put_new_line
-				end
 			else
 				test_string := node_test.original_text
-				debug ("XPath Axis Expression")
-					std.error.put_string ("Axis expression: - test string is")
-					std.error.put_string (test_string)
-					std.error.put_new_line
-				end
 			end
-
 			a_string := STRING_.appended_string (indentation (a_level), axis_name (axis))
 			a_string := STRING_.appended_string (a_string, "::")
 			a_string := STRING_.appended_string (a_string, test_string)
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-			end
+			std.error.put_new_line
 		end
 
 feature -- Status setting

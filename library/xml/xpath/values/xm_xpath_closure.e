@@ -16,9 +16,10 @@ inherit
 	
 	XM_XPATH_SEQUENCE_VALUE
 		redefine
-			evaluate_item, display, item_type, is_convertible_to_item, as_item, process, is_closure, as_closure
+			evaluate_item, display, item_type, is_convertible_to_item, as_item, process,
+			is_closure, as_closure, reduce
 		end
-
+	
 creation {XM_XPATH_EXPRESSION_FACTORY}
 
 	make
@@ -47,7 +48,6 @@ feature {NONE} -- Initialization
 
 	make (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant.
-			-- Do not call directly. Use {XM_XPATH_EXPRESSION_FACTORY}.make_closure.
 		require
 			valid_expression: an_expression /= Void and then not (an_expression.depends_upon_position or else an_expression.depends_upon_last)
 			context_not_void: a_context /= Void
@@ -65,7 +65,21 @@ feature {NONE} -- Initialization
 
 			an_iterator := a_context.current_iterator
 			if an_iterator /= Void then
-				if an_iterator.off then
+				if an_iterator.is_error then
+					-- do nothing
+				elseif an_iterator.before then
+					an_iterator := an_iterator.another
+					an_iterator.start
+					if an_iterator.is_error then
+						-- do nothing
+					elseif an_iterator.after then
+						create {XM_XPATH_EMPTY_ITERATOR} an_iterator.make
+					elseif an_iterator.is_node_iterator then
+						create {XM_XPATH_SINGLETON_NODE_ITERATOR} an_iterator.make (an_iterator.item.as_node)
+					else
+						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} an_iterator.make (an_iterator.item)
+					end
+				elseif an_iterator.after then
 					create {XM_XPATH_EMPTY_ITERATOR} an_iterator.make
 				else
 					if an_iterator.is_node_iterator then
@@ -129,13 +143,32 @@ feature -- Status report
 			base_expression.display (a_level + 1)
 		end
 
+feature -- Optimization
+
+	reduce is
+			-- Reduce a value to its simplest form.
+		local
+			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
+		do
+			create_iterator (Void)
+			if last_iterator.is_error then
+				create {XM_XPATH_INVALID_VALUE} last_reduced_value.make (last_iterator.error_value)
+			else
+				create a_sequence_extent.make (last_iterator)
+				a_sequence_extent.reduce
+				last_reduced_value := a_sequence_extent.last_reduced_value
+			end
+		end
+
 feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		do
 			create_iterator (a_context); last_iterator.start
-			if not last_iterator.after then
+			if last_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (last_iterator.error_value)
+			elseif not last_iterator.after then
 				last_evaluated_item := last_iterator.item
 			end
 		end
@@ -147,8 +180,13 @@ feature -- Evaluation
 				base_expression.create_iterator (saved_xpath_context)
 				input_iterator := base_expression.last_iterator
 				last_iterator := input_iterator
+			elseif input_iterator.is_error then
+				last_iterator := input_iterator
 			else
 				last_iterator := input_iterator.another
+			end
+			check
+				before: not last_iterator.is_error implies last_iterator.before
 			end
 		end
 
@@ -216,16 +254,20 @@ feature {NONE} -- Implementation
 					variant
 						a_local_variable_frame.variables.count + 1 - an_index
 					until
-						an_index > a_local_variable_frame.variables.count
+						is_error or else an_index > a_local_variable_frame.variables.count
 					loop
 						a_value := a_local_variable_frame.variables.item (an_index)
-						if a_value.is_closure then
+						if a_value /= Void and then a_value.is_closure then
 							a_closure := a_value.as_closure
 							a_depth := a_closure.depth
 							if a_depth >= Maximum_closure_nesting_depth then
 								a_closure.eagerly_evaluate (a_context)
 								a_value := a_closure.last_evaluation
-								a_saved_local_variable_frame.set_variable (a_value, an_index)
+								if a_value.is_error then
+									set_last_error (a_value.error_value)
+								else
+									a_saved_local_variable_frame.set_variable (a_value, an_index)
+								end
 							else
 								if a_depth + 1 > depth then
 									depth := a_depth + 1

@@ -15,8 +15,6 @@ indexing
 
 deferred class XM_XPATH_MAPPING_FUNCTION
 
-	-- TODO: drop the information object
-
 feature -- Access
 
 	last_mapped_item: XM_XPATH_MAPPED_ITEM

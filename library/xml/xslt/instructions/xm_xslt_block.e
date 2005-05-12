@@ -92,12 +92,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	instruction_name: STRING is
-			-- Name of instruction, for diagnostics
-		do
-			Result := "[xsl:block]"
-		end
-
 	children: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			-- Child expressions
 
@@ -301,6 +295,8 @@ feature -- Evaluation
 			elseif children.count = 1 then
 				children.item (1).create_iterator (a_context)
 				last_iterator := children.item (1).last_iterator
+			elseif is_node_item_type (item_type) then
+				create {XM_XSLT_BLOCK_NODE_ITERATOR} last_iterator.make (children, a_context)
 			else
 				create {XM_XSLT_BLOCK_ITERATOR} last_iterator.make (children, a_context)
 			end

@@ -1864,26 +1864,28 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
-					next_token ("In parse_function_call after loop: current token is ")
-					if tokenizer.is_lexical_error then
-						report_parse_error (tokenizer.last_lexical_error, "XPST0003")
-					else
-						create a_splitter.make
-						a_splitter.set_separators (":")
-						qname_parts := a_splitter.split (a_function_name)
-						if qname_parts.count = 1 then
-							a_uri := Xpath_standard_functions_uri
-							a_local_name := qname_parts.item (1)
-							an_xml_prefix := ""
+					if not is_parse_error then
+						next_token ("In parse_function_call after loop: current token is ")
+						if tokenizer.is_lexical_error then
+							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 						else
-							an_xml_prefix := qname_parts.item (1)
-							a_local_name := qname_parts.item (2)
-							if environment.is_prefix_declared (an_xml_prefix) then
-								a_uri := environment.uri_for_prefix (an_xml_prefix)
+							create a_splitter.make
+							a_splitter.set_separators (":")
+							qname_parts := a_splitter.split (a_function_name)
+							if qname_parts.count = 1 then
+								a_uri := Xpath_standard_functions_uri
+								a_local_name := qname_parts.item (1)
+								an_xml_prefix := ""
 							else
-								a_message := STRING_.concat ("Prefix ", an_xml_prefix)
-								a_message := STRING_.appended_string (a_message, " has not been declared as an in-scope namespace.")
-								report_parse_error (a_message, "XPST0003")
+								an_xml_prefix := qname_parts.item (1)
+								a_local_name := qname_parts.item (2)
+								if environment.is_prefix_declared (an_xml_prefix) then
+									a_uri := environment.uri_for_prefix (an_xml_prefix)
+								else
+									a_message := STRING_.concat ("Prefix ", an_xml_prefix)
+									a_message := STRING_.appended_string (a_message, " has not been declared as an in-scope namespace.")
+									report_parse_error (a_message, "XPST0003")
+								end
 							end
 						end
 						if not is_parse_error then

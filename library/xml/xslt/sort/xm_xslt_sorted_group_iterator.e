@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		require
 			context_not_void: a_context /= Void
-			base_iterator_not_void: a_base_iterator /= Void
+			base_iterator_before: a_base_iterator /= Void and then not a_base_iterator.is_error and then a_base_iterator.before
 			at_least_one_sort_key: some_sort_keys /= Void and then some_sort_keys.count > 0
 		do
 			make_sorted_iterator (a_context, a_base_iterator, some_sort_keys)
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			from
 				group_iterator.start
 			until
-				group_iterator.after
+				group_iterator.is_error or else group_iterator.after
 			loop
 				if node_keys.is_full then
 					node_keys.resize (node_keys.count * 2)
@@ -127,6 +127,9 @@ feature {NONE} -- Implementation
 				create a_sort_record.make (group_iterator.item, a_key_list, count,group_iterator.current_grouping_key, group_iterator.current_group_iterator)
 				node_keys.put_last (a_sort_record)
 				group_iterator.forth
+			end
+			if group_iterator.is_error then
+				context.transformer.report_fatal_error (group_iterator.error_value, Void)
 			end
 			count_determined := True
 		end

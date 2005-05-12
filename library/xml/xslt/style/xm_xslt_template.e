@@ -35,12 +35,12 @@ feature {NONE} -- Initialization
 		
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
 			-- Establish invariant.
 		do
 			internal_fingerprint := -1 -- Not yet calculated, or not a named template
 			create slot_manager.make
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
 		end
 
 feature -- Access
@@ -221,6 +221,7 @@ feature -- Element change
 			a_content: XM_XPATH_EXPRESSION
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_role: XM_XPATH_ROLE_LOCATOR
+			a_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
 		do
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
 			if last_generated_expression = Void then
@@ -250,6 +251,12 @@ feature -- Element change
 					report_compile_error (a_content.error_value)
 				else
 					if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
+					if configuration.is_tracing then
+						create a_trace_wrapper.make (a_content, an_executable, Current)
+						a_trace_wrapper.set_source_location (containing_stylesheet.module_number (system_id), line_number)
+						-- TODO: sort out - a_trace_wrapper.set_parent (compiled_template)
+						a_content := a_trace_wrapper
+					end
 					compiled_template.initialize (an_executable, a_content, template_fingerprint, precedence, minimum_import_precedence, system_id, line_number, slot_manager)
 					style_element_allocate_slots (a_content, slot_manager)
 					if match /= Void then
@@ -289,6 +296,7 @@ feature -- Element change
 						std.error.put_new_line
 						-- TODO - add mode names
 						std.error.put_string (" Optimized template body:%N")
+						compiled_template.body.display (2)
 					end
 
 				end

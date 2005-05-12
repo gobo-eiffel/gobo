@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -61,9 +60,6 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
-		local
-			an_atomic_value: XM_XPATH_ATOMIC_VALUE
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
 			arguments.item (1).evaluate_item (a_context)
 			last_evaluated_item := arguments.item (1).last_evaluated_item

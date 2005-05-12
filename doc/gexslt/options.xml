@@ -264,6 +264,14 @@
 	    </para>
 	  </listitem>
 	</varlistentry>      
+	<varlistentry>
+	  <term>--suppress-xpath-tracing</term>
+	  <listitem>
+	    <para>
+	      Suppress output from the XPath <xpath>fn:trace()</xpath> function.
+	    </para>
+	  </listitem>
+	</varlistentry>      
       </variablelist>
       </para>
     </section>

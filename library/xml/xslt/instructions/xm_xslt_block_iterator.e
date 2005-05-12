@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent a hypothetical xsl:block instruction"
+		"Objects that iterate over a hypothetical xsl:block instruction"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

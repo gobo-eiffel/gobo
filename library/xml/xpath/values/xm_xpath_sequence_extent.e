@@ -21,9 +21,10 @@ inherit
 
 	XM_XPATH_SEQUENCE_VALUE
 		undefine
-			copy, is_equal, item
+			copy, is_equal, count
 		redefine
-			item_type, calculate_effective_boolean_value, is_sequence_extent, as_sequence_extent
+			item_type, calculate_effective_boolean_value, is_sequence_extent, as_sequence_extent,
+			item_at, simplify, reduce
 		end
 
 	DS_ARRAYED_LIST [XM_XPATH_ITEM]
@@ -43,10 +44,11 @@ feature {NONE} -- Initialization
 	make (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Create from an iterator.
 		require
-			iterator_before: an_iterator /= Void and then an_iterator.before
+			iterator_before: an_iterator /= Void and then an_iterator.before and then not an_iterator.is_error
 		local
 			counter, another_counter: INTEGER
 			a_value: DS_ARRAYED_LIST [XM_XPATH_ITEM]
+			an_invalid_item: XM_XPATH_INVALID_ITEM
 		do
 			make_value
 			create a_value.make (Estimated_item_count)
@@ -54,12 +56,16 @@ feature {NONE} -- Initialization
 				counter := 1
 				an_iterator.start
 			until
-				an_iterator.after
+				an_iterator.is_error or else an_iterator.after
 			loop
 				a_value.force_last (an_iterator.item)
 
 				counter := counter + 1
 				an_iterator.forth
+			end
+			if an_iterator.is_error then
+				create an_invalid_item.make (an_iterator.error_value)
+				a_value.force_last (an_invalid_item)
 			end
 
 			-- Drop all trailing `Void' entries to preserve semantics of item_at and iterator
@@ -83,8 +89,9 @@ feature {NONE} -- Initialization
 		end
 
 	make_as_view (an_extent: XM_XPATH_SEQUENCE_EXTENT; a_start, a_length: INTEGER) is
-			-- TODO
+			-- Create as a view over `an_extent'.
 		do
+			make_value
 			make_from_linear (an_extent)
 			if a_start > 1 then
 				prune_first (a_start - 1)
@@ -99,6 +106,7 @@ feature {NONE} -- Initialization
 		require
 			list_not_void: a_list /= Void
 		do
+			make_value
 			make_from_linear (a_list)
 		end
 
@@ -158,12 +166,8 @@ feature -- Access
 
 	item_at (an_index: INTEGER) :XM_XPATH_ITEM is
 			-- Item at `an_index'
-		require
-			index_in_range: an_index > 0 and then an_index <= count
 		do
 			Result := item (an_index)
-		ensure
-			item_not_void: Result /= void
 		end
 
 feature -- Comparison
@@ -180,7 +184,6 @@ feature -- Comparison
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 			counter: INTEGER
 			an_item, another_item: XM_XPATH_ITEM
-			a_value, another_value: XM_XPATH_ATOMIC_VALUE
 		do
 			if other.is_sequence_extent then
 				a_sequence_extent := other.as_sequence_extent
@@ -235,6 +238,39 @@ feature -- Status report
 			end
 		end
 
+feature -- Optimization
+
+	simplify is
+			-- Perform context-independent static optimizations.
+		local
+			a_count: INTEGER
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+		do
+			a_count := count
+			if a_count = 0 then
+				create an_empty_sequence.make
+				set_replacement (an_empty_sequence)
+			elseif a_count = 1 then
+				set_replacement (item_at (1).as_atomic_value)
+			end
+		end
+
+	reduce is
+			-- Reduce a value to its simplest form.
+		do
+			simplify
+			if was_expression_replaced then
+				check
+					still_a_value: replacement_expression.is_value
+					-- Values never become non-values
+				end
+				last_reduced_value := replacement_expression.as_value
+			else
+				last_reduced_value := Current
+			end
+		end
+
+
 feature -- Evaluation
 
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
@@ -246,25 +282,7 @@ feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- An iterator over the values of a sequence
-		local
-			counter: INTEGER
-			an_item: XM_XPATH_ITEM
 		do
-			debug ("Xpath sequence extent")
-				from
-					counter := 1
-				until
-					counter > count
-				loop
-					an_item := item (counter)
-					if an_item = Void then
-						std.error.put_string ("Item number ")
-						std.error.put_string (counter.out)
-						std.error.put_string (" was void.%N")
-					end
-					counter := counter + 1
-				end
-			end
 			if count = 0 then
 				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
 			else

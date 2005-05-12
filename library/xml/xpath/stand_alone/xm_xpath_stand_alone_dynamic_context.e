@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			a_file_resolver: XM_FILE_URI_RESOLVER
 			a_collator: ST_COLLATOR
 		do
+			create configuration.make_configuration
 			make_dynamic_context (a_context_item)
 			available_documents := a_document_pool
 			available_functions := a_function_library
@@ -54,6 +55,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	configuration: XM_XPATH_CONFIGURATION
+			-- System configuration
 
 	local_variable_frame: XM_XPATH_STACK_FRAME
 			-- Local variables in scope

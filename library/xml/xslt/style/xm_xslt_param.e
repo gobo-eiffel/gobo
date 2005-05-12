@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 	
 	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
 		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
+		a_name_code: INTEGER; a_sequence_number: INTEGER; a_configuration: like configuration) is
 			-- Establish invariant.
 		do
 			cached_variable_fingerprint := -1
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			allows_tunnel := True
 			create slot_manager.make
 			is_instruction := True
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
+			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, a_configuration)
 		end
 
 feature -- Access
@@ -157,14 +157,13 @@ feature -- Element change
 			a_param: XM_XSLT_COMPILED_GENERAL_VARIABLE
 			a_global_param: XM_XSLT_GLOBAL_PARAM
 			a_local_param: XM_XSLT_LOCAL_PARAM
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			last_generated_expression := Void
 			a_function ?= parent
 			if a_function /= Void then
 				
 				-- For Function arguments, the XM_XSLT_USER_FUNCTION_PARAMETER is more efficient than
-            --  the general-purpose XM_XSLT_COMPILED_PARAM object, and this has been compiled
+            --  the general-purpose XM_XSLT_COMPILED_PARAM object, and these are compiled
 				--  when compiling the parent xsl:function
 
 				last_generated_expression := Void

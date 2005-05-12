@@ -16,23 +16,12 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			make_style_element, validate, returned_item_type, mark_tail_calls
+			validate, returned_item_type, mark_tail_calls
 		end
 
 creation {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
-
-feature {NONE} -- Initialization
-	
-	make_style_element (an_error_listener: XM_XSLT_ERROR_LISTENER; a_document: XM_XPATH_TREE_DOCUMENT;  a_parent: XM_XPATH_TREE_COMPOSITE_NODE;
-		an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];
-		a_name_code: INTEGER; a_sequence_number: INTEGER) is
-			-- Establish invariant.
-		do
-			is_instruction := True
-			Precursor (an_error_listener, a_document, a_parent, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number)
-		end
 
 feature -- Status setting
 
@@ -136,6 +125,7 @@ feature -- Element change
 			an_otherwise: XM_XSLT_OTHERWISE
 			a_condition: XM_XPATH_EXPRESSION
 			an_action: XM_XPATH_EXPRESSION
+			a_trace_wrapper: XM_XSLT_TRACE_WRAPPER
 		do
 			top_stylesheet := principal_stylesheet
 			compiled_actions_count := number_of_whens
@@ -169,7 +159,12 @@ feature -- Element change
 					if an_action.was_expression_replaced then an_action := an_action.replacement_expression end
 					if an_action.is_error then
 						report_compile_error (an_action.error_value)
-					else					
+					else
+						if configuration.is_tracing then
+							a_trace_wrapper := new_trace_wrapper (an_action, an_executable, an_otherwise)
+							a_trace_wrapper.set_parent (an_otherwise)
+							an_action := a_trace_wrapper
+						end
 						compiled_actions.put_last (an_action)
 						has_compile_loop_finished := True
 					end
@@ -238,6 +233,7 @@ feature {NONE} -- Implementation
 			when_clause_not_void: a_when /= Void
 		local
 			a_condition, an_action: XM_XPATH_EXPRESSION
+			a_trace_wrapper: XM_XSLT_TRACE_WRAPPER
 		do
 			a_condition := a_when.condition
 			compile_sequence_constructor (an_executable, a_when.new_axis_iterator (Child_axis), True)
@@ -248,7 +244,12 @@ feature {NONE} -- Implementation
 			if an_action.is_error then
 				report_compile_error (an_action.error_value)
 			else
-				
+				if configuration.is_tracing then
+					a_trace_wrapper := new_trace_wrapper (an_action, an_executable, a_when)
+					a_trace_wrapper.set_parent (a_when)
+					an_action := a_trace_wrapper
+				end
+
 				-- Optimize for constant conditions (true or false)
 				
 				if a_condition.is_boolean_value then
@@ -269,9 +270,5 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-invariant
-
-	instruction: is_instruction = True
 
 end

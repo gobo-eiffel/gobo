@@ -71,12 +71,16 @@ feature -- Evaluation
 		do
 			last_tail_call := Void
 			selected_nodes.create_iterator (Void)
-			apply_templates (selected_nodes.last_iterator,
-								  mode,
-								  actual_parameters,
-								  tunnel_parameters,
-								  execution_context
-								  )
+			if selected_nodes.last_iterator.is_error then
+				a_context.transformer.report_fatal_error (selected_nodes.last_iterator.error_value, Void)
+			else
+				apply_templates (selected_nodes.last_iterator,
+									  mode,
+									  actual_parameters,
+									  tunnel_parameters,
+									  execution_context
+									  )
+			end
 		end
 
 feature {NONE} -- Implementation

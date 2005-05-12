@@ -49,6 +49,21 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
+	is_realizable_iterator: BOOLEAN is
+			-- Is `Current' a realizable iterator?
+		do
+			Result := False
+		end
+
+	as_realizable_iterator: XM_XPATH_REALIZABLE_ITERATOR [G] is
+			-- `Current' seen as a realizable iterator
+		require
+			realizable_iterator: is_realizable_iterator
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 	is_node_iterator: BOOLEAN is
 			-- Does `Current' yield a node sequence?
 		do
@@ -74,6 +89,21 @@ feature -- Access
 			-- `Current' seen as a array iterator
 		require
 			array_iterator: is_array_iterator
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_empty_iterator: BOOLEAN is
+			-- Is `Current' an iterator over a guarenteed empty sequence?
+		do
+			Result := False
+		end
+
+	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR is
+			-- `Current' seen as an empty iterator
+		require
+			empty_iterator: is_empty_iterator
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
@@ -137,10 +167,18 @@ feature -- Status report
 			Result := before or else after
 		end
 
-	is_empty_iterator: BOOLEAN is
-			-- Is `Current' an iterator over a guarenteed empty sequence?
+	is_invulnerable: BOOLEAN is
+			-- Is `Current' guarenteed free of implicit errors?
 		do
 			Result := False
+
+			-- If `True', then `is_error' can only be as a result of
+			--  calling `set_last_error'.
+			-- This is exploited by callers of `{XM_XPATH_NODE}.new_axis_iterator',
+			--  which can then avoid error-checking code.
+			-- In addition, routines such as `{XM_XPATH_NODE}.previous_sibling'
+			--  are able to maintain purity.
+
 		end
 
 	is_error: BOOLEAN
@@ -174,6 +212,7 @@ feature -- Cursor movement
 			forth
 		ensure
 			not_before: not is_error implies not before
+			error_free: is_invulnerable implies not is_error
 		end
 			
 	forth is
@@ -184,6 +223,7 @@ feature -- Cursor movement
 		deferred
 		ensure
 			one_more: index = old index + 1
+			error_free: is_invulnerable implies not is_error
 		end
 
 feature -- Duplication
@@ -194,6 +234,9 @@ feature -- Duplication
 		require
 			not_in_error: not is_error
 		deferred
+		ensure
+			result_not_in_error: Result /= Void and then not Result.is_error
+			invulnerable: is_invulnerable implies Result.is_invulnerable
 		end
 
 invariant

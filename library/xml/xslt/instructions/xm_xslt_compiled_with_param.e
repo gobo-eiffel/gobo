@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			variable_name_not_void: a_variable_name /= Void
 		do
 			executable := an_executable
-			instruction_name := "xsl:with-param"
 			variable_name := a_variable_name
 			compute_static_properties
 			initialized := True
@@ -44,8 +43,14 @@ feature -- Status report
 
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
+		local
+			a_string: STRING
 		do
-			todo ("display", False)
+			a_string := STRING_.appended_string (indentation (a_level), "Passed parameter: ")
+			std.error.put_string (a_string);
+			std.error.put_string (variable_name);
+			std.error.put_new_line
+			if select_expression /= Void then select_expression.display (a_level + 1) end
 		end
 
 feature -- Evaluation

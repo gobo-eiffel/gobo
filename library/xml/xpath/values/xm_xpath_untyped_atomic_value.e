@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_STRING_VALUE
 		redefine
-			display, convert_to_type, item_type, is_comparable, is_string_value, as_string_value, is_untyped_atomic, as_untyped_atomic
+			display, convert_to_type, item_type, is_comparable, is_string_value, as_string_value, is_untyped_atomic, as_untyped_atomic,
+			same_expression
 		end
 
 	-- N.B. Inheritance from XM_XPATH_STRING_VALUE is an implementation convenience;
@@ -64,6 +65,14 @@ feature -- Access
 
 feature -- Comparison
 
+	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
+			-- Are `Current' and `other' the same expression?
+		do
+			if other.is_untyped_atomic then
+				Result := STRING_.same_string (string_value, other.as_untyped_atomic.string_value)
+			end
+		end
+
 	three_way_comparison_using_collator (other: XM_XPATH_ATOMIC_VALUE; a_collator: ST_COLLATOR): INTEGER is
 			-- Comparison with `an_atomic_value'
 		require
@@ -107,11 +116,7 @@ feature -- Status report
 			a_string := STRING_.appended_string (a_string, value)
 			a_string := STRING_.appended_string (a_string, "%")")
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-			end
+			std.error.put_new_line
 		end
 	
 feature -- Conversion

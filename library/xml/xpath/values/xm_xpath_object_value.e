@@ -61,7 +61,7 @@ feature -- Access
 		end
 
 	string_value: STRING is
-			--Value of the item as a string
+			-- Value of the item as a string
 		do
 			if value = Void then
 				Result := ""
@@ -127,11 +127,7 @@ feature -- Status report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "** external object **")
 			std.error.put_string (a_string)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else			
-				std.error.put_new_line
-			end
+			std.error.put_new_line
 		end
 
 feature -- Conversions

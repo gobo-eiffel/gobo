@@ -67,21 +67,17 @@ feature -- Status report
 				std.error.put_string ("}")
 			end
 			std.error.put_string (name)
-			if is_error then
-				std.error.put_string (" in error%N")
-			else
-				std.error.put_new_line
-				a_cursor := arguments.new_cursor
-				from
-					a_cursor.start
-				variant
-					arguments.count + 1 - a_cursor.index				
-				until
-					a_cursor.after
-				loop
-					a_cursor.item.display (a_level + 1)
-					a_cursor.forth
-				end
+			std.error.put_new_line
+			a_cursor := arguments.new_cursor
+			from
+				a_cursor.start
+			variant
+				arguments.count + 1 - a_cursor.index				
+			until
+				a_cursor.after
+			loop
+				a_cursor.item.display (a_level + 1)
+				a_cursor.forth
 			end
 		end
 
@@ -106,8 +102,10 @@ feature -- Status setting
 				adopt_child_expression (a_cursor.item)
 				a_cursor.forth
 			end
+			compute_static_properties
 		ensure
 			arguments_set: arguments = args
+			static_properties_computed: are_static_properties_computed
 		end
 	
 feature -- Optimization
@@ -135,6 +133,11 @@ feature -- Optimization
 				is_error or else arguments_cursor.after
 			loop
 				an_argument := arguments_cursor.item
+				if an_argument.was_expression_replaced then
+					an_argument := an_argument.replacement_expression
+					adopt_child_expression (an_argument)
+					arguments_cursor.replace (an_argument)
+				end
 				an_argument.simplify
 				if an_argument.is_error then
 					set_last_error (an_argument.error_value)

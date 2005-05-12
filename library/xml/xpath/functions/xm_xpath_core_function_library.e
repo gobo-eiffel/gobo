@@ -148,8 +148,10 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1  or else an_arity = 2
 			elseif a_fingerprint = Tokenize_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2  or else an_arity = 3				
+			elseif a_fingerprint = Trace_function_type_code then
+				Result := an_arity = -1 or else an_arity = 2
 			elseif a_fingerprint = Translate_function_type_code then
-				Result := an_arity = -1 or else an_arity = 3
+				Result := an_arity = -1 or else an_arity = 3				
 			elseif a_fingerprint = True_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0
 			elseif a_fingerprint = Unordered_function_type_code then
@@ -282,6 +284,8 @@ feature -- Element change
 				create {XM_XPATH_SUM} a_function_call.make								
 			elseif a_fingerprint = Tokenize_function_type_code then
 				create {XM_XPATH_TOKENIZE} a_function_call.make								
+			elseif a_fingerprint = Trace_function_type_code then
+				create {XM_XPATH_TRACE} a_function_call.make								
 			elseif a_fingerprint = Translate_function_type_code then
 				create {XM_XPATH_TRANSLATE} a_function_call.make								
 			elseif a_fingerprint = True_function_type_code then

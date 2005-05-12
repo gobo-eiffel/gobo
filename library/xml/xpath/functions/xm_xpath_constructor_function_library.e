@@ -53,8 +53,6 @@ feature -- Element change
 
 	bind_function (a_fingerprint: INTEGER; some_arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]; is_restricted: BOOLEAN) is
 			-- Bind `a_fingerprint' to it's definition as `last_bound_function'.
-		local
-			an_atomic_type: XM_XPATH_ATOMIC_TYPE
 		do
 			check
 				atomic_type: type_factory.schema_type (a_fingerprint).is_atomic_type

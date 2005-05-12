@@ -38,7 +38,6 @@ feature {NONE} -- Initialization
 			validation: a_validation_action >= Validation_strict  and then Validation_strip >= a_validation_action
 		do
 			executable := an_executable
-			instruction_name := "xsl:attribute"
 			name_code := a_name_code
 			validation_action := a_validation_action
 			type := a_simple_type
@@ -57,9 +56,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
-	
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
@@ -73,7 +69,7 @@ feature -- Status_report
 		local
 			a_string: STRING
 		do
-			a_string := STRING_.appended_string (indentation (a_level), "attribute")
+			a_string := STRING_.appended_string (indentation (a_level), "xsl:attribute")
 			std.error.put_string (a_string); std.error.put_new_line
 			a_string := STRING_.appended_string (indentation (a_level + 1), "name ")
 			std.error.put_string (a_string)

@@ -62,7 +62,7 @@ feature -- Optimization
 			-- Perform static analysis of an expression and its subexpressions
 		local
 			a_type: XM_XPATH_ITEM_TYPE
-			an_extent: XM_XPATH_SEQUENCE_EXTENT
+			a_value: XM_XPATH_VALUE
 		do
 			mark_unreplaced
 			base_expression.analyze (a_context)
@@ -76,8 +76,14 @@ feature -- Optimization
 				if last_iterator.is_error then
 					set_last_error (last_iterator.error_value)
 				else
-					create an_extent.make (last_iterator)
-					set_replacement (an_extent)
+					expression_factory.create_sequence_extent (last_iterator)
+					a_value := expression_factory.last_created_closure
+					a_value.simplify
+					if a_value.was_expression_replaced then
+						set_replacement (a_value.replacement_expression)
+					else
+						set_replacement (a_value)
+					end
 				end
 			else
 				a_type := base_expression.item_type
@@ -97,6 +103,8 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
+		local
+			a_message: STRING
 		do
 			base_expression.evaluate_item (a_context)
 			if base_expression.last_evaluated_item = Void then
@@ -104,7 +112,12 @@ feature -- Evaluation
 			elseif base_expression.last_evaluated_item.is_error then
 				last_evaluated_item := base_expression.last_evaluated_item
 			elseif base_expression.last_evaluated_item.is_untyped_atomic then
-				last_evaluated_item := base_expression.last_evaluated_item.as_untyped_atomic.convert_to_type (target_type)
+				if base_expression.last_evaluated_item.as_untyped_atomic.is_convertible (target_type) then
+					last_evaluated_item := base_expression.last_evaluated_item.as_untyped_atomic.convert_to_type (target_type)
+				else
+					a_message := STRING_.concat ("Unable to convert an xdt:untypedAtomic value to type ", target_type.conventional_name)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "FORG0001", Type_error)
+				end
 			else
 				last_evaluated_item := base_expression.last_evaluated_item
 			end

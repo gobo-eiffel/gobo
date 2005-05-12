@@ -26,6 +26,9 @@ inherit
 
 	XM_XPATH_COMPARISON_ROUTINES
 
+		-- TODO: Value Comparisons no longer use this class, as they have different semantics.
+		-- Check this logic is still correct for General Comparisons
+
 feature -- Comparison
 
 	check_correct_general_relation (an_atomic_value: XM_XPATH_ATOMIC_VALUE; an_operator: INTEGER;
@@ -38,8 +41,6 @@ feature -- Comparison
 			comparer_not_void: an_atomic_comparer /= Void
 		local
 			an_atomic_value_one, an_atomic_value_two: XM_XPATH_ATOMIC_VALUE
-			an_untyped_value: XM_XPATH_UNTYPED_ATOMIC_VALUE
-			a_numeric_value, another_numeric_value: XM_XPATH_NUMERIC_VALUE
 		do
 			is_comparison_type_error := False
 			an_atomic_value_one := an_atomic_value

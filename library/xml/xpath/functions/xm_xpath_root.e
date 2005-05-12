@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
-			compute_static_properties
 			initialized := True
 		end
 
@@ -64,9 +63,6 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations
 		do
-			if arguments.count = 0 or else arguments.item (1).context_document_nodeset then
-				set_context_document_nodeset
-			end
 			Precursor
 			add_context_document_argument (0, "root+")
 		end
@@ -109,6 +105,10 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			set_ordered_nodeset
 			set_single_document_nodeset
 			set_non_creating
+			if arguments.count = 0 or else arguments.item (1).context_document_nodeset then
+				set_context_document_nodeset
+			end
+
 		end
 
 end

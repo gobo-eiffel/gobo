@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			executable_not_void: an_executable /= Void
 		do
 			executable := an_executable
-			instruction_name := "xsl:comment"
 			compute_static_properties
 			initialized := True
 		ensure
@@ -42,9 +41,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	instruction_name: STRING
-			-- Name of instruction, for diagnostics
-	
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
