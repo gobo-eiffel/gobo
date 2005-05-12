@@ -140,16 +140,23 @@ feature -- Execution
 					end
 					if a_universe /= Void then
 						process_universe (a_universe)
+						debug ("stop")
+							std.output.put_line ("Press Enter...")
+							io.read_line
+						end
+						if a_universe.error_handler.has_error then
+							Exceptions.die (2)
+						end
+					else
+						Exceptions.die (3)
 					end
 				else
 					report_cannot_read_error (a_filename)
 					Exceptions.die (1)
 				end
 			end
-			debug ("stop")
-				std.output.put_line ("Press Enter...")
-				io.read_line
-			end
+		rescue
+			Exceptions.die (4)
 		end
 
 feature -- Status report

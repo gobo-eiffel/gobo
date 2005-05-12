@@ -15,6 +15,9 @@ class ET_ERROR_HANDLER
 inherit
 
 	UT_ERROR_HANDLER
+		redefine
+			report_error_message
+		end
 
 creation
 
@@ -33,6 +36,9 @@ feature -- Status report
 	is_etl: BOOLEAN
 
 	is_pedantic: BOOLEAN
+
+	has_error: BOOLEAN
+			-- Has an error been reported?
 
 	set_ise is
 		do
@@ -9298,6 +9304,15 @@ feature -- Internal errors
 		do
 			create an_error.make_gibiz
 			report_internal_error (an_error)
+		end
+
+feature -- Reporting
+
+	report_error_message (an_error: STRING) is
+			-- Report `an_error'.
+		do
+			precursor (an_error)
+			has_error := True
 		end
 
 --Error codes not used:
