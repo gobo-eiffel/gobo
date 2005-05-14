@@ -987,7 +987,11 @@ feature {NONE} -- Implementation
 						parse_range_expression
 						if not is_parse_error then
 							a_default_collator := environment.collator (environment.default_collation_name)
-							create {XM_XPATH_GENERAL_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, internal_last_parsed_expression, a_default_collator)
+							if environment.is_backwards_compatible_mode then
+								create {XM_XPATH_COMPATIBLE_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, internal_last_parsed_expression, a_default_collator)
+							else
+								create {XM_XPATH_GENERAL_COMPARISON} internal_last_parsed_expression.make (an_expression, an_operator, internal_last_parsed_expression, a_default_collator)
+							end
 						end
 					end
 

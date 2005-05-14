@@ -812,10 +812,10 @@ feature -- Implementation
 			fragment_identifier_not_void: a_fragment_identifier /= Void
 			-- Also, it has had all encodings removed (i.e. it is fit to pass direct to XPointer)
 		local
-			an_xpointer_processor: XM_XPOINTER_XPATH
-			an_element_scheme: XM_XPOINTER_XPATH_ELEMENT_SCHEME
-			an_xpath_scheme: XM_XPOINTER_XPATH_XPATH_SCHEME
-			an_xmlns_scheme: XM_XPOINTER_XPATH_XMLNS_SCHEME
+			an_xpointer_processor: XM_XPATH_XPOINTER
+			an_element_scheme: XM_XPATH_XPOINTER_ELEMENT_SCHEME
+			an_xpath_scheme: XM_XPATH_XPOINTER_XPATH_SCHEME
+			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
 			a_value: XM_XPATH_VALUE
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT

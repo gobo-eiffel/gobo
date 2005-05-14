@@ -68,7 +68,7 @@
 	    </para>
 	    <para>
 	      <warning>
-		If the function constructs and returns a temporary tree, the same tree will be rteurned each time. The only consequence
+		If the function constructs and returns a temporary tree, the same tree will be returned each time. The only consequence
 		of this is if you compare node identities on that tree. 
 	      </warning>
 	    </para>

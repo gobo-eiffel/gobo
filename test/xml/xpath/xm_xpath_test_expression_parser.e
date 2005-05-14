@@ -35,7 +35,7 @@ feature -- Test
 			an_axis: XM_XPATH_AXIS_EXPRESSION
 			a_filter: XM_XPATH_FILTER_EXPRESSION
 			a_root: XM_XPATH_ROOT_EXPRESSION
-			a_comparison: XM_XPATH_GENERAL_COMPARISON
+			a_comparison: XM_XPATH_COMPATIBLE_COMPARISON
 			sub_exprs, sub_exprs_2, sub_exprs_3, sub_exprs_4: DS_LIST [XM_XPATH_EXPRESSION]
 			a_context: XM_XPATH_STAND_ALONE_CONTEXT
 			a_string: STRING

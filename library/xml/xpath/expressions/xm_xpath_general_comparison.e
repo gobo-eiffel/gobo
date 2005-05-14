@@ -18,7 +18,8 @@ inherit
 		rename
 			make as make_binary_expression
 		redefine
-			display_operator, evaluate_item, analyze, calculate_effective_boolean_value
+			display_operator, evaluate_item, analyze, calculate_effective_boolean_value,
+			compute_cardinality
 		end
 
 	XM_XPATH_CARDINALITY
@@ -44,6 +45,7 @@ feature {NONE} -- Initialization
 		do
 			make_binary_expression (an_operand_one, a_token, an_operand_two)
 			create atomic_comparer.make (a_collator)
+			singleton_operator := singleton_value_operator (operator)
 			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed
@@ -72,10 +74,9 @@ feature -- Optimization
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			mark_unreplaced
-			is_backwards_compatible_mode := a_context.is_backwards_compatible_mode
-
+			
 			-- Analysis proceeds top-down through the sub-expressions
-
+			
 			first_operand.analyze (a_context)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
@@ -91,9 +92,8 @@ feature -- Optimization
 					set_last_error (second_operand.error_value)
 				end
 				if not is_error then
-					if not is_backwards_compatible_mode
-						and then first_operand.cardinality_is_empty
-						and then second_operand.cardinality_is_empty then
+					if first_operand.is_empty_sequence
+						and then second_operand.is_empty_sequence then
 						create a_boolean_value.make (False)
 						set_replacement (a_boolean_value)
 					else
@@ -101,11 +101,7 @@ feature -- Optimization
 						if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
 						second_operand.set_unsorted (False)
 						if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
-						if is_backwards_compatible_mode then
-							analyze_backwards_compatible (a_context)
-						else
-							operands_not_in_error_so_analyze (a_context)
-						end
+						operands_not_in_error_so_analyze (a_context)
 					end
 				end
 			end
@@ -122,71 +118,73 @@ feature -- Evaluation
 			finished: BOOLEAN
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
-			if is_backwards_compatible_mode then
-				calculate_effective_boolean_value_xpath_1 (a_context)
+			first_operand.create_iterator (a_context)
+			an_iterator := first_operand.last_iterator
+			if an_iterator.is_error then
+				create last_boolean_value.make (False); last_boolean_value.set_last_error (an_iterator.error_value); set_last_error (an_iterator.error_value)
 			else
-				first_operand.create_iterator (a_context)
-				an_iterator := first_operand.last_iterator
-				if an_iterator.is_error then
-					create last_boolean_value.make (False)
-					last_boolean_value.set_last_error (an_iterator.error_value)
+				second_operand.create_iterator (a_context)
+				another_iterator := second_operand.last_iterator
+				if another_iterator.is_error then
+					create last_boolean_value.make (False); last_boolean_value.set_last_error (another_iterator.error_value); set_last_error (another_iterator.error_value)
 				else
-					second_operand.create_iterator (a_context)
-					another_iterator := second_operand.last_iterator
-					if another_iterator.is_error then
+					
+					-- The second operand is more likely to be a singleton than the first so:
+					
+					expression_factory.create_sequence_extent (another_iterator)
+					a_value := expression_factory.last_created_closure
+					a_count := a_value.count
+					if a_count = 0 then
 						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error (another_iterator.error_value)
-					else
-						
-						-- The second operand is more likely to be a singleton than the first so:
-						
-						expression_factory.create_sequence_extent (another_iterator)
-						a_value := expression_factory.last_created_closure
-						a_count := a_value.count
-						if a_count = 0 then
-							create last_boolean_value.make (False)
-						elseif a_count = 1 then
-							calculate_effective_boolean_value_with_second_operand_singleton (a_context, a_value.item_at (1), an_iterator)
-						else -- a_count > 1 - so nested loop comparison
-							from
-								an_iterator.start
-							until
-								finished or else is_error or else an_iterator.after
-							loop
-								if not an_iterator.item.is_atomic_value then
-									set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
-									finished := True
-								else
-									from
-										a_value.create_iterator (Void)
-										a_third_iterator := a_value.last_iterator
-										if not a_third_iterator.is_error then a_third_iterator.start end
-									until
-										finished or else a_third_iterator.is_error or else a_third_iterator.after
-									loop
-										if not a_third_iterator.item.is_atomic_value then
-											set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+					elseif a_count = 1 then
+						calculate_effective_boolean_value_with_second_operand_singleton (a_context, a_value.item_at (1), an_iterator)
+					else -- a_count > 1 - so nested loop comparison
+						from
+							an_iterator.start
+						until
+							finished or else is_error or else an_iterator.after
+						loop
+							if an_iterator.is_error then
+								create last_boolean_value.make (False)
+								last_boolean_value.set_last_error (an_iterator.error_value)
+								set_last_error (an_iterator.error_value)
+							elseif not an_iterator.item.is_atomic_value then
+								create last_boolean_value.make (False)
+								last_boolean_value.set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+								set_last_error (last_boolean_value.error_value)
+								finished := True
+							else
+								from
+									a_value.create_iterator (Void)
+									a_third_iterator := a_value.last_iterator
+									if not a_third_iterator.is_error then a_third_iterator.start end
+								until
+									finished or else a_third_iterator.is_error or else a_third_iterator.after
+								loop
+									if not a_third_iterator.item.is_atomic_value then
+										create last_boolean_value.make (False)
+										last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+										set_last_error (last_boolean_value.error_value)
+										finished := True
+									else
+										create a_comparison_checker
+										a_comparison_checker.check_correct_general_relation (an_iterator.item.as_atomic_value, singleton_operator,
+																											  atomic_comparer, a_third_iterator.item.as_atomic_value, False)
+										if a_comparison_checker.is_comparison_type_error then
+											create last_boolean_value.make (False); last_boolean_value.set_last_error (a_comparison_checker.last_type_error); set_last_error (last_boolean_value.error_value)
 											finished := True
-										else
-											create a_comparison_checker
-											a_comparison_checker.check_correct_general_relation (an_iterator.item.as_atomic_value,
-																												  singleton_value_operator (operator), atomic_comparer, a_third_iterator.item.as_atomic_value, is_backwards_compatible_mode)
-											if a_comparison_checker.is_comparison_type_error then
-												set_last_error (a_comparison_checker.last_type_error)
-												finished := True
-											elseif a_comparison_checker.last_check_result then
-												create last_boolean_value.make (True)
-												finished := True
-											end
+										elseif a_comparison_checker.last_check_result then
+											create last_boolean_value.make (True)
+											finished := True
 										end
-										a_third_iterator.forth
 									end
+									a_third_iterator.forth
 								end
-								an_iterator.forth
 							end
+							an_iterator.forth
 						end
-						if last_boolean_value = Void then create last_boolean_value.make (False) end
 					end
+					if last_boolean_value = Void then create last_boolean_value.make (False) end
 				end
 			end
 		end
@@ -198,13 +196,18 @@ feature -- Evaluation
 			last_evaluated_item := last_boolean_value
 		end
 
+feature {XM_XSLT_EXPRESSION} -- Restricted
+
+	compute_cardinality is
+			-- Compute cardinality.
+		do
+			set_cardinality_exactly_one
+		end
+
 feature {NONE} -- Implementation
 
-	is_backwards_compatible_mode: BOOLEAN
-			-- Are we in XPath 1.0 compatibility mode?
-
-	atomize_first_operand, atomize_second_operand: BOOLEAN
-			-- For use in XPath 1.0 compatibility mode
+	singleton_operator: INTEGER
+			-- Singleton version of `operator'
 
 	atomic_comparer: XM_XPATH_ATOMIC_COMPARER
 			-- Comparer for atomic values
@@ -213,24 +216,6 @@ feature {NONE} -- Implementation
 			-- Format `operator' for display
 		do
 			Result := STRING_.appended_string ("many-to-many ", Precursor)
-		end
-
-	issue_warnings (a_type, another_type: XM_XPATH_ITEM_TYPE; a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Issue warnings about backwards compatibility.
-		require
-			context_not_void: a_context /= Void
-		do
-			if is_sub_type (a_type, any_node_test) and then is_sub_type (another_type, type_factory.boolean_type) then
-				a_context.issue_warning ("Comparison of a node-set to a boolean has changed since XPath 1.0")
-			elseif is_sub_type (a_type, type_factory.boolean_type) and then is_sub_type (another_type, any_node_test) then
-				a_context.issue_warning ("Comparison of a boolean to a node-set has changed since XPath 1.0")
-			elseif (is_sub_type (a_type, any_node_test) or else is_sub_type (a_type, type_factory.string_type))
-				and then (is_sub_type (another_type, any_node_test) or else is_sub_type (another_type, type_factory.string_type))
-				and then (operator = Less_than_token or else operator = Less_equal_token
-							 or else operator = Greater_than_token or else operator = Greater_equal_token)
-			then
-				a_context.issue_warning ("Less-than and greater-than comparisons between strings have changed since XPath 1.0")
-			end
 		end
 
 	calculate_effective_boolean_value_with_second_operand_singleton (a_context: XM_XPATH_CONTEXT; an_item: XM_XPATH_ITEM; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
@@ -252,10 +237,11 @@ feature {NONE} -- Implementation
 				if not an_iterator.item.is_atomic_value then
 					create last_boolean_value.make (False)
 					last_boolean_value.set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+					set_last_error (last_boolean_value.error_value)
 					finished := True
 				else
 					create a_comparison_checker
-					a_comparison_checker.check_correct_general_relation (an_iterator.item.as_atomic_value, singleton_value_operator (operator), atomic_comparer, an_item.as_atomic_value, is_backwards_compatible_mode)
+					a_comparison_checker.check_correct_general_relation (an_iterator.item.as_atomic_value, singleton_operator, atomic_comparer, an_item.as_atomic_value, False)
 					if a_comparison_checker.is_comparison_type_error then
 						create last_boolean_value.make (False)
 						last_boolean_value.set_last_error (a_comparison_checker.last_type_error)
@@ -276,13 +262,12 @@ feature {NONE} -- Implementation
 			last_boolean_value_not_void: last_boolean_value /= Void			
 		end
 
-	analyze_two_singletons_two_point_zero (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE) is
+	analyze_two_singletons (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE) is
 			-- Use a value comparison if both arguments are singletons
 		require
 			context_not_void: a_context /= Void
 			first_type_not_void: a_type /= Void
 			second_type_not_void: another_type /= Void
-			xpath_2_mode: not is_backwards_compatible_mode	
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
@@ -310,7 +295,7 @@ feature {NONE} -- Implementation
 				end	
 			end
 			
-			create {XM_XPATH_VALUE_COMPARISON} a_computed_expression.make (first_operand, singleton_value_operator (operator), second_operand, atomic_comparer.collator)
+			create {XM_XPATH_VALUE_COMPARISON} a_computed_expression.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
 			a_computed_expression.set_parent (container)
 			a_computed_expression.simplify
 			if not a_computed_expression.is_error then
@@ -332,7 +317,6 @@ feature {NONE} -- Implementation
 			-- Analyze after operands have been analyzed.
 		require
 			context_not_void: a_context /= Void
-			xpath_2_mode: not is_backwards_compatible_mode	
 		local
 			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
@@ -367,30 +351,22 @@ feature {NONE} -- Implementation
 						end
 					end
 					if not is_error then
-						if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one then
-							check
-								first_type_atomic: a_type.is_atomic_type
-								second_type_atomic: another_type.is_atomic_type
-								-- from earlier static type checking
+						if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one and then
+							a_type /= type_factory.any_atomic_type and then another_type /= type_factory.any_atomic_type then
+							analyze_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type)
+						elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
+							analyze_singleton_and_empty_sequence (a_context)
+						elseif not first_operand.cardinality_allows_many then
+							analyze_first_operand_single (a_context)
+						elseif first_operand.is_range_expression and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
+							analyze_n_to_m_equals_i (a_context, first_operand.as_range_expression)
+						else
+							if operator /= Equals_token and then operator /= Not_equal_token	and then (is_sub_type (a_type, type_factory.numeric_type)
+																																 or else is_sub_type (another_type, type_factory.numeric_type)) then
+								analyze_inequalities (a_context, a_type, another_type)
 							end
-							analyze_two_singletons_two_point_zero (a_context, a_type.as_atomic_type, another_type.as_atomic_type)
-						else -- one or both arguments are not singletons
-							if	not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
-								analyze_singleton_and_empty_sequence (a_context)
-							elseif not first_operand.cardinality_allows_many then
-								analyze_first_operand_single (a_context)
-							else
-								if first_operand.is_range_expression and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
-									analyze_n_to_m_equals_i (a_context, first_operand.as_range_expression)
-								else
-									if operator /= Equals_token and then operator /= Not_equal_token	and then (is_sub_type (a_type, type_factory.numeric_type)
-																																		 or else is_sub_type (another_type, type_factory.numeric_type)) then
-										analyze_inequalities (a_context, a_type, another_type)
-									end
-									if not was_expression_replaced then
-										evaluate_two_constants
-									end
-								end
+							if not was_expression_replaced then
+								evaluate_two_constants
 							end
 						end
 					end
@@ -402,11 +378,10 @@ feature {NONE} -- Implementation
 			-- Analyze when neither argument allows a sequence of >1
 		require
 			context_not_void: a_context /= Void
-			xpath_2_mode: not is_backwards_compatible_mode
 		local
 			a_singleton_comparison: XM_XPATH_SINGLETON_COMPARISON
 		do
-			create a_singleton_comparison.make (first_operand, singleton_value_operator (operator), second_operand, atomic_comparer.collator)
+			create a_singleton_comparison.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
 			a_singleton_comparison.analyze (a_context)
 			if a_singleton_comparison.was_expression_replaced then
 				set_replacement (a_singleton_comparison.replacement_expression)
@@ -437,7 +412,6 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 			range_expression_not_void: a_range_expression /= void
-			xpath_2_mode: not is_backwards_compatible_mode
 		local
 			an_expression: XM_XPATH_EXPRESSION
 		do
@@ -462,7 +436,6 @@ feature {NONE} -- Implementation
 		require
 			context_not_void: a_context /= Void
 			type_not_void: another_type /= Void
-			xpath_2_mode: not is_backwards_compatible_mode
 		local
 			a_numeric_type: XM_XPATH_SEQUENCE_TYPE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
@@ -471,32 +444,24 @@ feature {NONE} -- Implementation
 		do
 			create a_type_checker
 			if not is_sub_type (a_type, type_factory.numeric_type) then
-				if is_backwards_compatible_mode then
-					todo ("analyze-inequalities - need atomic sequence converter - BUG!", True)
+				create a_numeric_type.make_numeric_sequence
+				create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
+				a_type_checker.static_type_check (a_context, first_operand, a_numeric_type, False, a_role)
+				if a_type_checker.is_static_type_check_error then
+					set_last_error (a_type_checker.static_type_check_error)
 				else
-					create a_numeric_type.make_numeric_sequence
-					create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-					a_type_checker.static_type_check (a_context, first_operand, a_numeric_type, False, a_role)
-					if a_type_checker.is_static_type_check_error then
-						set_last_error (a_type_checker.static_type_check_error)
-					else
-						set_first_operand (a_type_checker.checked_expression)
-					end
+					set_first_operand (a_type_checker.checked_expression)
 				end
 			end
 			if not is_error and then not is_sub_type (another_type, type_factory.numeric_type) then
 				create a_type_checker
 				create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-				if is_backwards_compatible_mode then
-					todo ("analyze-inequalities - need atomic sequence converter - BUG!", True)
+				create a_numeric_type.make_numeric_sequence
+				a_type_checker.static_type_check (a_context, second_operand, a_numeric_type, False, another_role)
+				if a_type_checker.is_static_type_check_error then
+					set_last_error (a_type_checker.static_type_check_error)
 				else
-					create a_numeric_type.make_numeric_sequence
-					a_type_checker.static_type_check (a_context, second_operand, a_numeric_type, False, another_role)
-					if a_type_checker.is_static_type_check_error then
-						set_last_error (a_type_checker.static_type_check_error)
-					else
-						set_second_operand (a_type_checker.checked_expression)
-					end
+					set_second_operand (a_type_checker.checked_expression)
 				end
 			end
 			if not is_error then
@@ -523,77 +488,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	analyze_backwards_compatible (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Analyze further when in XPath 1.0 compatibility mode.
-		require
-			context_not_void: a_context /= Void
-			backwards_compatible_mode: is_backwards_compatible_mode
-		local
-			a_type, another_type: XM_XPATH_ITEM_TYPE
-			maybe_first_operand_boolean, maybe_second_operand_boolean: BOOLEAN
-			maybe_first_operand_numeric, maybe_second_operand_numeric: BOOLEAN
-			a_general_comparison: XM_XPATH_GENERAL_COMPARISON
-		do
-			
-			-- If both operands are values, then evaluate now
-			
-			if first_operand.is_value and then second_operand.is_value then
-				evaluate_item (Void)
-				check
-					value_is_boolean: last_evaluated_item.is_boolean_value
-				end
-				set_replacement (last_evaluated_item.as_boolean_value)
-			else
-				a_type := first_operand.item_type
-				another_type := second_operand.item_type
-				if not a_type.is_atomic_type then
-					atomize_first_operand  := True
-				else
-					atomize_first_operand  := False
-				end
-				if not another_type.is_atomic_type then
-					atomize_second_operand  := True
-				else
-					atomize_second_operand  := False
-				end
-				maybe_first_operand_boolean := type_relationship (a_type, type_factory.boolean_type) /= Disjoint_types
-				maybe_second_operand_boolean := type_relationship (another_type, type_factory.boolean_type) /= Disjoint_types
-				if not maybe_first_operand_boolean and then not maybe_second_operand_boolean then
-					maybe_first_operand_numeric := type_relationship (a_type, type_factory.numeric_type) /= Disjoint_types
-					maybe_second_operand_numeric := type_relationship (another_type, type_factory.numeric_type) /= Disjoint_types
-					if not maybe_first_operand_numeric and then not maybe_second_operand_numeric then
-						
-						-- Use the XPath 2.0 route if we don't have to deal with the possibility of boolean values,
-						--  or the complications of converting values to numbers
-						
-						create a_general_comparison.make (first_operand, operator, second_operand, atomic_comparer.collator)
-						a_general_comparison.analyze (a_context)
-						if a_general_comparison.is_error then
-							set_last_error (a_general_comparison.error_value)
-						elseif a_general_comparison.was_expression_replaced then
-							set_replacement (a_general_comparison.replacement_expression)
-						else
-							set_replacement (a_general_comparison)
-						end
-					end
-				end
-			end
-		end
-
-	calculate_effective_boolean_value_xpath_1 (a_context: XM_XPATH_CONTEXT) is
-			-- Effective boolean value for XPath 1.0 compatibility
-		require
-			backwards_compatible_mode: is_backwards_compatible_mode		
-		do
-			todo ("calculate_effective_boolean_value (1.0 compatibility)", True)
-		ensure
-			last_boolean_value_not_void: last_boolean_value /= Void
-		end
-
 invariant
 	
 	general_comparison: is_general_comparison_operator (operator)
 	atomic_comparer_not_void: initialized implies atomic_comparer /= Void
-	
+	value_comparison: initialized implies is_value_comparison_operator (singleton_operator)
+
 end
 	

@@ -17,7 +17,8 @@ inherit
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
 			simplify, analyze, compute_special_properties, promote, create_iterator,
-			calculate_effective_boolean_value, is_document_sorter, as_document_sorter
+			calculate_effective_boolean_value, is_document_sorter, as_document_sorter,
+			item_type
 		end
 
 creation
@@ -57,6 +58,14 @@ feature -- Access
 			Result := Current
 		end
 
+	item_type: XM_XPATH_ITEM_TYPE is
+			-- Data type of the expression, when known
+		do
+			if base_expression.was_expression_replaced and then base_expression.replacement_expression = Current then
+				base_expression.mark_unreplaced
+			end
+			Result := base_expression.item_type
+		end
 feature -- Optimization
 
 	simplify is
@@ -133,6 +142,7 @@ feature -- Evaluation
 	calculate_effective_boolean_value (a_context: XM_XPATH_CONTEXT) is
 			-- Effective boolean value
 		do
+			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
 			base_expression.calculate_effective_boolean_value (a_context)
 			last_boolean_value := base_expression.last_boolean_value
 		end

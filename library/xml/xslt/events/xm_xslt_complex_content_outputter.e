@@ -222,9 +222,9 @@ feature -- Events
 							if are_duplicates_rejected (properties) then
 								on_error (STRING_.concat ("Duplicate attribute: ", shared_name_pool.display_name_from_name_code (a_name_code)))
 							else
-								pending_attribute_type_codes.put (a_type_code, a_cursor.index)
-								pending_attribute_values.put (a_value, a_cursor.index)
-								pending_attribute_properties.put (properties, a_cursor.index)
+								pending_attribute_type_codes.replace (a_type_code, a_cursor.index)
+								pending_attribute_values.replace (a_value, a_cursor.index)
+								pending_attribute_properties.replace (properties, a_cursor.index)
 							end
 							duplicate_found := True
 							a_cursor.go_after
@@ -234,10 +234,10 @@ feature -- Events
 					end
 
 					if not duplicate_found then
-						pending_attribute_name_codes.put_last (a_name_code)
-						pending_attribute_type_codes.put_last (a_type_code)
-						pending_attribute_values.put_last (a_value)
-						pending_attribute_properties.put_last (properties)
+						pending_attribute_name_codes.force_last (a_name_code)
+						pending_attribute_type_codes.force_last (a_type_code)
+						pending_attribute_values.force_last (a_value)
+						pending_attribute_properties.force_last (properties)
 						previous_atomic := False
 					end
 				end

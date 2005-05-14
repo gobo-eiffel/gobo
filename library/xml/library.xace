@@ -13,6 +13,5 @@
 	<mount location="${GOBO}/library/xml/library_core.xace"/>
 	<mount location="${GOBO}/library/xml/xslt/library.xace"/>
 	<mount location="${GOBO}/library/xml/xpath/library.xace"/>
-	<mount location="${GOBO}/library/xml/xpointer/library.xace"/>
 
 </library>

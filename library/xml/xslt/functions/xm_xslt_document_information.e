@@ -160,10 +160,10 @@ feature {NONE} -- Implementation
 			transformer_not_void: transformer /= Void
 			configuration_not_void: configuration /= Void
 		local
-			an_xpointer_processor: XM_XPOINTER_XPATH
-			an_element_scheme: XM_XPOINTER_XPATH_ELEMENT_SCHEME
-			an_xpath_scheme: XM_XPOINTER_XPATH_XPATH_SCHEME
-			an_xmlns_scheme: XM_XPOINTER_XPATH_XMLNS_SCHEME
+			an_xpointer_processor: XM_XPATH_XPOINTER
+			an_element_scheme: XM_XPATH_XPOINTER_ELEMENT_SCHEME
+			an_xpath_scheme: XM_XPATH_XPOINTER_XPATH_SCHEME
+			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
 			a_value: XM_XPATH_VALUE
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 			a_node: XM_XPATH_NODE

@@ -35,6 +35,7 @@
 	<option name="profile" value="false"/>
 	<option name="split" value="false"/>
 
+	<!-- <option name="debug_tag" value="XSLT content output"/> -->
 	<!-- <option name="debug_tag" value="XPath content emitter"/> -->
 	<!-- <option name="debug_tag" value="XPath name pool - URIs"/>  -->
 	<!-- <option name="debug_tag" value="XPath name pool - namespaces"/> -->

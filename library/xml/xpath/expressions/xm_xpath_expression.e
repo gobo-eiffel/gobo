@@ -1212,6 +1212,7 @@ feature -- Evaluation
 		local
 			an_item: XM_XPATH_ITEM
 		do
+			last_boolean_value := Void
 			create_iterator (a_context)
 			if not last_iterator.is_error then
 				last_iterator.start

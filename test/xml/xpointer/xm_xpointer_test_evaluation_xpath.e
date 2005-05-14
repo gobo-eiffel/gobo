@@ -31,7 +31,7 @@ feature -- Test
 	test_shorthand is
 			-- Test parsing shorthand pointer
 		local
-			a_processor: XM_XPOINTER_XPATH
+			a_processor: XM_XPATH_XPOINTER
 			a_document: XM_XPATH_DOCUMENT
 			system_id: STRING
 			a_node_value: XM_XPATH_SINGLETON_NODE
@@ -60,14 +60,14 @@ feature -- Test
 	test_element_scheme is
 			-- Test element() scheme and xmlns scheme gives no error
 		local
-			a_processor: XM_XPOINTER_XPATH
+			a_processor: XM_XPATH_XPOINTER
 			a_document: XM_XPATH_DOCUMENT
 			system_id: STRING
 			a_node_value: XM_XPATH_SINGLETON_NODE
 			a_node: XM_XPATH_NODE
 			an_element: XM_XPATH_ELEMENT
-			an_element_scheme: XM_XPOINTER_XPATH_ELEMENT_SCHEME
-			an_xmlns_scheme: XM_XPOINTER_XPATH_XMLNS_SCHEME
+			an_element_scheme: XM_XPATH_XPOINTER_ELEMENT_SCHEME
+			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
 		do
 			conformance.set_basic_xslt_processor
 			system_id := "../xpath/data/books.xml"
@@ -95,13 +95,13 @@ feature -- Test
 	test_gexslt_xpath_scheme is
 			-- Test gexslt:xpath() scheme.
 			local
-			a_processor: XM_XPOINTER_XPATH
+			a_processor: XM_XPATH_XPOINTER
 			a_document: XM_XPATH_DOCUMENT
 			system_id: STRING
 			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
 			an_element: XM_XPATH_ELEMENT
-			an_xpath_scheme: XM_XPOINTER_XPATH_XPATH_SCHEME
-			an_xmlns_scheme: XM_XPOINTER_XPATH_XMLNS_SCHEME
+			an_xpath_scheme: XM_XPATH_XPOINTER_XPATH_SCHEME
+			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
 		do
 			conformance.set_basic_xslt_processor
 			system_id := "../xpath/data/books.xml"

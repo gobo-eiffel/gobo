@@ -69,6 +69,8 @@ feature -- Conversion
 
 				Result := an_operator
 			end
+		ensure
+			value_comparsion: is_value_comparison_operator (Result)
 		end
 
 	inverse_operator (an_operator: INTEGER): INTEGER is
