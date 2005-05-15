@@ -88,7 +88,7 @@ feature -- Comparison
 			-- Are `Current' and `other' the same expression?
 		do
 			if other.is_tail_expression then
-				Result := base_expression.same_expression (other.as_tail_expression.base_expression)
+				Result := base_expression.same_expression (other.as_tail_expression.base_expression) and then start = other.as_tail_expression.start
 			end
 		end
 
@@ -112,9 +112,10 @@ feature -- Optimization
 			-- Perform static analysis of `Current' and its subexpressions
 		do
 			mark_unreplaced
-
-			-- By the time we get here, the analysis has all been done.
-
+			base_expression.analyze (a_context)
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
+			end
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is

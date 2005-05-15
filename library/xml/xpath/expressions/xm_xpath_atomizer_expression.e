@@ -19,7 +19,7 @@ inherit
 			item_type, simplify, analyze, create_iterator, evaluate_item, compute_cardinality, compute_special_properties
 		end
 
-	XM_XPATH_MAPPING_FUNCTION
+	XM_XPATH_SHARED_ATOMIZING_FUNCTION
 
 creation
 
@@ -157,17 +157,7 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			else
-				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (an_iterator, Current, Void)
-			end
-		end
-
-	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
-			-- Map `an_item' to a sequence
-		do
-			if an_item.is_node then
-				create last_mapped_item.make_sequence (an_item.as_node.typed_value)
-			else
-				create last_mapped_item.make_item (an_item)
+				last_iterator := shared_atomizing_function.new_atomizing_iterator (an_iterator)
 			end
 		end
 

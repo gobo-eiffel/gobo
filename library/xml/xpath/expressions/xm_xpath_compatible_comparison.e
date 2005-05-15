@@ -30,6 +30,12 @@ inherit
 	
 	XM_XPATH_COMPARISON_ROUTINES
 
+	XM_XPATH_SHARED_ATOMIZING_FUNCTION
+
+	XM_XPATH_MAPPING_FUNCTION
+
+	XM_XPATH_NUMERIC_ROUTINES
+
 creation
 
 	make
@@ -202,6 +208,13 @@ feature -- Evaluation
 			last_evaluated_item := last_boolean_value
 		end
 
+		
+	map (an_item: XM_XPATH_ITEM; a_context: XM_XPATH_CONTEXT) is
+			-- Map `an_item' to a sequence
+		do
+			create last_mapped_item.make_item (item_to_double (an_item))
+		end
+
 feature {XM_XSLT_EXPRESSION} -- Restricted
 
 	compute_cardinality is
@@ -298,24 +311,120 @@ feature {NONE} -- Implementation
 		require
 			first_iterator_before: an_iterator /= Void and then an_iterator.is_error or else an_iterator.before
 			second_iterator_before: another_iterator /= Void and then another_iterator.is_error or else another_iterator.before
+		local
+			a_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_ATOMIC_VALUE]
+			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
+			a_sequence, another_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 		do
 			last_boolean_value := Void
-			if not an_iterator.is_error then
-				an_iterator.start
-			end
 			if an_iterator.is_error then
 				create last_boolean_value.make (False); last_boolean_value.set_last_error (an_iterator.error_value); set_last_error (last_boolean_value.error_value)
-			elseif not another_iterator.is_error then
-				another_iterator.start
 			end
 			if another_iterator.is_error then
 				create last_boolean_value.make (False); last_boolean_value.set_last_error (an_iterator.error_value); set_last_error (last_boolean_value.error_value)
 			end
 			if last_boolean_value = Void then
-				todo ("calculate_effective_boolean_value_not_booleans", True)
+				if atomize_first_operand then
+					a_sequence := shared_atomizing_function.new_atomizing_iterator (an_iterator)
+				else
+					a_sequence := an_iterator
+				end
+				if atomize_second_operand then
+					another_sequence := shared_atomizing_function.new_atomizing_iterator (another_iterator)
+				else
+					another_sequence := another_iterator
+				end
+
+				-- If the operator is one of <, >, <=, >=, then convert both operands to sequences of xs:double
+				--  using the number() function
+
+				if operator = Less_than_token or else operator = Less_equal_token or else
+					operator = Greater_than_token or else operator = Greater_equal_token then
+					create {XM_XPATH_MAPPING_ITERATOR} a_sequence.make (a_sequence, Current, Void)
+					create {XM_XPATH_MAPPING_ITERATOR} another_sequence.make (another_sequence, Current, Void)
+				end
+
+				-- Compare all pairs of atomic values in the two atomized sequences
+
+				from
+					create a_list.make_default; a_sequence.start
+				until
+					last_boolean_value /= Void or else a_sequence.after
+				loop
+					if a_sequence.is_error then
+						create last_boolean_value.make (False); last_boolean_value.set_last_error (a_sequence.error_value); set_last_error (last_boolean_value.error_value)
+					else
+						an_atomic_value := a_sequence.item.as_atomic_value
+						if an_atomic_value.is_error then
+							create last_boolean_value.make (False); last_boolean_value.set_last_error (an_atomic_value.error_value); set_last_error (last_boolean_value.error_value)
+						elseif not another_sequence.before and then another_sequence.after then
+							from
+								create a_comparison_checker
+								a_cursor := a_list.new_cursor; a_cursor.start
+							variant
+								a_list.count + 1 - a_cursor.index
+							until
+								a_cursor.after
+							loop
+								a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_operator, atomic_comparer, a_cursor.item, True)
+								if a_comparison_checker.is_comparison_type_error then
+									create last_boolean_value.make (False); last_boolean_value.set_last_error (a_comparison_checker.last_type_error); set_last_error (last_boolean_value.error_value)
+									a_cursor.go_after
+								elseif a_comparison_checker.last_check_result then
+									create last_boolean_value.make (True); a_cursor.go_after
+								else
+									a_cursor.forth
+								end
+							end
+						else
+							compare_value_with_sequence (an_atomic_value, another_sequence, a_list)
+						end
+					end
+					if last_boolean_value = Void and then not a_sequence.is_error and then not a_sequence.after then a_sequence.forth end
+				end
+				if last_boolean_value = Void then create last_boolean_value.make (False) end
 			end
 		ensure
 			value_not_void_but_may_be_in_error: last_boolean_value /= Void
+		end
+
+	compare_value_with_sequence (an_atomic_value: XM_XPATH_ATOMIC_VALUE; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_list: DS_ARRAYED_LIST [XM_XPATH_ATOMIC_VALUE]) is
+			-- Compare `an_atomic_value' with all of `an_iterator'.
+		require
+			last_boolean_value_not_set: last_boolean_value = Void
+			atomic_value_not_in_error: an_atomic_value /= Void and then not an_atomic_value.is_error
+			sequence_not_after: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.after
+			list_not_void: a_list /= Void
+		local
+			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
+			another_atomic_value: XM_XPATH_ATOMIC_VALUE
+		do
+			from
+				create a_comparison_checker
+				if an_iterator.before then
+					an_iterator.start
+				else
+					an_iterator.forth
+				end
+			until
+				last_boolean_value /= Void or else an_iterator.after
+			loop
+				another_atomic_value := an_iterator.item.as_atomic_value
+				a_comparison_checker.check_correct_general_relation (an_atomic_value, singleton_operator, atomic_comparer, another_atomic_value, True)
+				if a_comparison_checker.is_comparison_type_error then
+					create last_boolean_value.make (False); last_boolean_value.set_last_error (a_comparison_checker.last_type_error); set_last_error (last_boolean_value.error_value)
+				elseif a_comparison_checker.last_check_result then
+					create last_boolean_value.make (True)
+				else
+
+					-- cache the atomic value to avoid re-creating the iterator
+
+					a_list.force_last (another_atomic_value)
+				end
+				if not an_iterator.after then an_iterator.forth end
+			end
 		end
 
 invariant

@@ -194,8 +194,8 @@ feature -- Creation
 					elseif a_value.is_sequence_extent then
 						a_sequence_extent := a_value.as_sequence_extent
 						create {XM_XPATH_SEQUENCE_EXTENT} last_created_closure.make_as_view (a_sequence_extent, a_tail_expression.start, a_sequence_extent.count -  a_tail_expression.start + 1)
-					else
-						last_created_closure := a_value
+					-- commented out on 14/May/2005 - DELETE unconditionally after 21/May/2005: else
+					--	last_created_closure := a_value
 					end
 				end
 			end
