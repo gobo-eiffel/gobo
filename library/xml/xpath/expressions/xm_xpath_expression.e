@@ -1373,7 +1373,7 @@ feature -- Evaluation
 								create {XM_XPATH_EMPTY_SEQUENCE} last_evaluation.make
 							elseif last_iterator.is_singleton_iterator then
 								a_singleton_iterator := last_iterator.as_singleton_iterator
-								a_singleton_iterator.forth
+								a_singleton_iterator.start
 								if a_singleton_iterator.is_error then
 									create {XM_XPATH_INVALID_VALUE} last_evaluation.make (a_singleton_iterator.error_value)
 								else

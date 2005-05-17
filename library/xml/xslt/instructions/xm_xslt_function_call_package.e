@@ -85,8 +85,8 @@ feature -- Access
 			if last_reduced_value.is_atomic_value then
 				Result := last_reduced_value.as_atomic_value.string_value
 			else
-				evaluate_as_string (Void)
-				Result := last_evaluated_string.string_value
+				last_reduced_value.evaluate_as_string (Void)
+				Result := last_reduced_value.last_evaluated_string.string_value
 			end
 		end
 

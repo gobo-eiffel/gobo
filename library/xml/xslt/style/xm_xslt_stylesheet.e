@@ -786,6 +786,8 @@ feature -- Element change
 								end
 							end
 							std.error.put_string ("%N")
+						else
+							a_level := 1
 						end
 						a_cursor.item.last_generated_expression.display (a_level)
 					end

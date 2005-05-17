@@ -91,7 +91,7 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "xsl:element ")
 			std.error.put_string (a_string)
 			std.error.put_new_line
-			a_string := STRING_.appended_string (indentation (a_level + 1), "name ")
+			a_string := STRING_.appended_string (indentation (a_level + 1), "fixed name ")
 			a_string := STRING_.appended_string (a_string, shared_name_pool.display_name_from_name_code (fixed_name_code))
 			std.error.put_string (a_string)
 			std.error.put_new_line			

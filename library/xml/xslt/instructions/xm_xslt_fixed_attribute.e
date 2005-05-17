@@ -71,7 +71,7 @@ feature -- Status_report
 		do
 			a_string := STRING_.appended_string (indentation (a_level), "xsl:attribute")
 			std.error.put_string (a_string); std.error.put_new_line
-			a_string := STRING_.appended_string (indentation (a_level + 1), "name ")
+			a_string := STRING_.appended_string (indentation (a_level + 1), "fixed name ")
 			std.error.put_string (a_string)
 			std.error.put_string (shared_name_pool.display_name_from_name_code (name_code)); std.error.put_new_line
 		end

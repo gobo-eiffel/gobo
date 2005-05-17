@@ -167,6 +167,9 @@ feature -- Status report
 	is_error: BOOLEAN
 			-- Has an error occured
 
+	last_error: XM_XPATH_ERROR_VALUE
+			-- Last reported fatal error
+
 	last_set_tail_call: XM_XSLT_TAIL_CALL is
 			-- Last tail call set by `set_last_tail_call'
 		do
@@ -214,8 +217,15 @@ feature -- Status setting
 		require
 			error_not_void: an_error /= Void
 		do
-			error_listener.fatal_error (an_error, a_locator)
-			is_error := True
+			if not is_error then
+
+				-- We only report the first error;
+				-- Otherwise, an error can get reported twice.
+				
+				error_listener.fatal_error (an_error, a_locator)
+				is_error := True
+				last_error := an_error
+			end
 		end
 
 	set_remembered_number (a_number: MA_DECIMAL; a_node: XM_XPATH_NODE) is

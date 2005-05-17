@@ -401,6 +401,9 @@ feature {NONE} -- Implementation
 								else
 									mode_name_codes.put_last (All_modes)
 								end
+							elseif not is_qname (a_mode) then
+								create an_error.make_from_string ("Mode names must be QNames or the token '#default' or the token '#all'", "", "XTSE0550", Static_error)
+								report_compile_error (an_error)
 							else
 								generate_name_code (a_mode)
 								if last_generated_name_code = -1 then

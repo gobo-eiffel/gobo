@@ -243,8 +243,12 @@ feature -- Evaluation
 				another_context.change_to_sequence_output_destination (a_receiver)
 				process (another_context)
 				a_receiver.end_document
-				a_receiver.sequence.create_iterator (a_context)
-				last_iterator := a_receiver.sequence.last_iterator
+				if not another_context.transformer.is_error then
+					a_receiver.sequence.create_iterator (another_context)
+					last_iterator := a_receiver.sequence.last_iterator
+				else
+					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (another_context.transformer.last_error)
+				end
 			end
 		end
 

@@ -430,7 +430,7 @@ feature -- Element change
 		require
 			major_context: not is_minor
 		do
-			if a_mode /= Void and then (not a_mode.is_default_mode	or else  internal_current_mode = Void) then
+			if (a_mode /= Void and then not a_mode.is_default_mode) or else  internal_current_mode /= Void then
 				internal_current_mode := a_mode
 			end
 		end
