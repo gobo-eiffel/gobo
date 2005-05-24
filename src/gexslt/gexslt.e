@@ -412,9 +412,18 @@ feature -- Error handling
 									  "       --mode=[{namespace-uri}]local-name%N" +
 									  "       --template=[{namespace-uri}]local-name%N" +									  
 									  "       --param=name=string-value%N" +
-									  "       --xpath-param=name=xpath-expression%N")
+									  "       --xpath-param=name=xpath-expression%N" +
+									  additional_options)
 		ensure
 			usage_message_not_void: Result /= Void
+		end
+
+	additional_options: STRING is
+			-- Additional supported options
+		do
+			Result := ""
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -502,6 +511,10 @@ feature {NONE} -- Implementation
 				shared_catalog_manager.suppress_default_system_catalog_file
 			elseif an_option.is_equal ("prefer-system") then
 				shared_catalog_manager.set_prefer_system
+			elseif an_option.substring_index ("error-script=", 1) = 1 then
+				if an_option.count > 13 then
+					set_error_script (an_option.substring (14, an_option.count))
+				end
 			elseif an_option.substring_index ("warnings=", 1) = 1 then
 				if an_option.count = 9 then
 					error_handler.set_warning_null
@@ -758,6 +771,15 @@ feature {NONE} -- Implementation
 					a_cursor.forth
 				end
 			end			
+		end
+				
+	set_error_script (a_script: STRING) is
+			-- Set error script to `a_script'.
+		require
+			script_not_void: a_script /= Void
+		do
+			report_general_message ("Error-listener scripts are not supported in " + program_name)
+			Exceptions.die (1)			
 		end
 
 	set_warning_file (a_filename: STRING) is

@@ -58,10 +58,7 @@ feature {NONE} -- Initialization
 			entity_resolver := an_entity_resolver
 			uri_resolver := a_uri_resolver
 			output_resolver := an_output_resolver
-			pristine_error_listener := an_error_listener
-			if pristine_error_listener.is_impure then
-				pristine_error_listener.set_recovery_policy (Recover_with_warnings)
-			end
+			set_error_listener (an_error_listener)
 			shared_decimal_context.set_digits (18)
 			saved_base_uri := entity_resolver.uri
 			create extension_functions.make_default
@@ -72,7 +69,7 @@ feature {NONE} -- Initialization
 			entity_resolver_set: entity_resolver = an_entity_resolver
 			uri_resolver_set: uri_resolver = a_uri_resolver
 			output_resolver_set: output_resolver = an_output_resolver
-			error_listener_set: pristine_error_listener = an_error_listener
+			error_listener_set: error_listener = an_error_listener
 			encoder_factory_set: encoder_factory = an_encoder_factory
 		end
 
@@ -141,17 +138,8 @@ feature -- Access
 			Result := trace_listener /= Void
 		end
 
-	error_listener: XM_XSLT_ERROR_LISTENER is
+	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
-		do
-			if pristine_error_listener.is_impure then
-				Result := pristine_error_listener.another
-			else
-				Result := pristine_error_listener
-			end
-		ensure
-			error_listener_not_void: Result /= Void
-		end
 
 	default_media_type (a_uri: STRING): UT_MEDIA_TYPE is
 			-- Media-type associated with `a_uri' (only used when resolver returns no information)
@@ -238,17 +226,34 @@ feature -- Element change
 			uri_resolver_set: uri_resolver = a_uri_resolver
 		end
 
+	set_output_resolver (an_output_resolver: like output_resolver) is
+			-- Set `output_resolver'.
+		require
+			output_resolver_not_void: an_output_resolver /= Void
+		do
+			output_resolver := an_output_resolver
+		ensure
+			output_resolver_set: output_resolver = an_output_resolver
+		end
+
 	set_recovery_policy (a_recovery_policy: INTEGER) is
 			-- Set recovery policy.
 		require
 			valid_recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
 		do
 			recovery_policy := a_recovery_policy
-			if pristine_error_listener.is_impure then
-				pristine_error_listener.set_recovery_policy (recovery_policy)
-			end
+			error_listener.set_recovery_policy (recovery_policy)
 		ensure
 			recovery_policy_set: recovery_policy = a_recovery_policy
+		end
+
+	set_error_listener (an_error_listener: like error_listener) is
+			-- Set error listener.
+		require
+			error_listener_not_void: an_error_listener /= Void
+		do
+			error_listener := an_error_listener
+			error_listener.set_recovery_policy (recovery_policy)
 		end
 
 	use_tiny_tree_model (true_or_false: BOOLEAN) is
@@ -331,9 +336,6 @@ feature {XM_XSLT_EXPRESSION_CONTEXT} -- Debugging
 	
 feature {NONE} -- Implementation
 
-	pristine_error_listener: XM_XSLT_ERROR_LISTENER
-			-- Error listener
-	
 	saved_base_uri: UT_URI
 			-- Bodge - saved base URI from `entity_resolver'`
 
@@ -341,7 +343,7 @@ invariant
 
 	entity_resolver_not_void: entity_resolver /= Void
 	output_resolver_not_void: output_resolver /= Void
-	error_listener_not_void: pristine_error_listener /= Void
+	error_listener_not_void: error_listener /= Void
 	error_reporter_not_void: error_reporter /= Void
 	encoder_factory_not_void: encoder_factory /= Void
 	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover

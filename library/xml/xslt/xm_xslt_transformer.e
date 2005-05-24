@@ -184,8 +184,6 @@ feature -- Status setting
 			last_tail_call := a_tail_call
 		end
 
-feature -- Status setting
-
 	report_warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
 			-- Report a warning.
 		require
@@ -339,11 +337,17 @@ feature -- Element change
 		require
 			mode_name_not_void: a_mode_name /= Void
 			expanded_name: is_valid_expanded_name (a_mode_name)
+		local
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if not shared_name_pool.is_expanded_name_allocated (a_mode_name) then
 				shared_name_pool.allocate_expanded_name (a_mode_name)
 			end
 			initial_mode := shared_name_pool.fingerprint_from_expanded_name (a_mode_name)
+			if not rule_manager.is_mode_registered (initial_mode) then
+				create an_error.make_from_string (STRING_.concat (a_mode_name, " is not a mode within the stylesheet"), Gexslt_eiffel_type_uri, "INVALID_INITIAL_MODE", Dynamic_error)
+				report_fatal_error (an_error, Void)
+			end
 		end
 			
 	clear_document_pool is

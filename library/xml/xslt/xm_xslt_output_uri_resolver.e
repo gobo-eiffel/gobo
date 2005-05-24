@@ -29,6 +29,18 @@ feature -- Status report
 	error_message: STRING
 			-- Error message from `resolve'
 
+feature -- Element change
+
+	set_security_manager (a_security_manager: like security_manager) is
+			-- Set `security_manager'.
+		require
+			security_manager_not_void: a_security_manager /= Void
+		do
+			security_manager := a_security_manager
+		ensure
+			security_manager_set: security_manager = a_security_manager
+		end
+
 feature -- Action
 
 	resolve (a_uri: UT_URI) is

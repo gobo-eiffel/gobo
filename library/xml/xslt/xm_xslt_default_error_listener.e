@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 			recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover			
 			error_reporter_not_void: an_error_reporter /= Void
 		do
-			is_impure := True
 			recovery_policy := a_recovery_policy
 			error_reporter := an_error_reporter
 			warning_threshold := 25
@@ -47,9 +46,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	recovery_policy: INTEGER
-			-- Recovery policy when warnings or errors are encountered
-
 	warnings, errors, fatal_errors: INTEGER
 			-- Error counts
 
@@ -58,14 +54,6 @@ feature -- Access
 		do
 			Result := warnings + errors + fatal_errors
 		end
-
-feature -- Status report
-
-	recovered: BOOLEAN
-			-- Did `Current' recover from the last recoverable error?
-
-	warnings_are_recoverable_errors: BOOLEAN
-			-- Are warnings treated as recoverable errors?
 
 feature -- Events
 
@@ -120,40 +108,6 @@ feature -- Events
 			fatal_errors := fatal_errors + 1
 		end
 
-feature -- Element change
-
-	set_recovery_policy (a_recovery_policy: like recovery_policy) is
-			-- Set recovery policy.
-		do
-			recovery_policy := a_recovery_policy
-		end
-
-	set_warning_threshold (a_warning_threshold: like warning_threshold) is
-			-- Set `warning_threshold'.
-		do
-			warning_threshold := a_warning_threshold
-		end
-
-	set_recoverable_error_threshold (a_recoverable_error_threshold: like recoverable_error_threshold) is
-			-- Set `recoverable_error_threshold'.
-		do
-			recoverable_error_threshold := a_recoverable_error_threshold
-		end
-
-	treat_warnings_as_recoverable_errors is
-			-- Treat warnings as recoverable errors.
-		do
-			warnings_are_recoverable_errors := True
-		end
-
-feature -- Duplication
-
-	another: like Current is
-			-- Pristine instance of `Current'
-		do
-			create Result.make (recovery_policy, error_reporter)
-		end
-
 feature {NONE} -- Implementation
 
 	error_reporter: UT_ERROR_HANDLER
@@ -180,7 +134,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
 	error_reporter_not_void: error_reporter /= Void
 
 end

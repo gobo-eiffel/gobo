@@ -16,6 +16,7 @@
  <!ENTITY title "Gobo Eiffel XSLT Command-line usage and options">
  <!ENTITY program_name "gexslt">
  <!ENTITY program_name_cased "Gexslt">
+ <!ENTITY additional_options "">
  <!ENTITY inclusion SYSTEM "options.xml" >
 ]>
 <chapter  xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_options">

@@ -18,28 +18,22 @@ inherit
 	
 feature -- Access
 
-	recovery_policy: INTEGER is
+	recovery_policy: INTEGER
 		-- Recovery policy when warnings or errors are encountered
-		deferred
-		ensure
-			in_range: Result >= Recover_silently and then Result <= Do_not_recover
-		end
-
-feature -- Status report
-
-	is_impure: BOOLEAN
-			-- Does `Current' have state?
-
-	recovered: BOOLEAN is
-			-- Did `Current' recover from the last recoverable error?
-		deferred
-		end
 
 	warning_threshold: INTEGER
 			-- Limit on number of warnings to be displayed
 
 	recoverable_error_threshold: INTEGER
 			-- Limit on number of recoverable errors to be displayed
+
+	warnings_are_recoverable_errors: BOOLEAN
+			-- Are warnings treated as recoverable errors?
+
+feature -- Status report
+
+	recovered: BOOLEAN
+			-- Did `Current' recover from the last recoverable error?
 	
 feature -- Events
 
@@ -70,47 +64,37 @@ feature -- Element change
 			-- Set recovery policy.
 		require
 			valid_recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover
-			impure_handler: is_impure
-		deferred
+		do
+			recovery_policy := a_recovery_policy
 		ensure
 			recovery_policy_set: recovery_policy = a_recovery_policy
 		end
 
 	set_warning_threshold (a_warning_threshold: like warning_threshold) is
 			-- Set `warning_threshold'.
-		require
-			impure_handler: is_impure
-		deferred
+		do
+			warning_threshold := a_warning_threshold
 		ensure
 			threshold_set: warning_threshold = a_warning_threshold
 		end
 
 	set_recoverable_error_threshold (a_recoverable_error_threshold: like recoverable_error_threshold) is
 			-- Set `recoverable_error_threshold'.
-		require
-			impure_handler: is_impure
-		deferred
+		do
+			recoverable_error_threshold := a_recoverable_error_threshold
 		ensure
 			threshold_set: recoverable_error_threshold = a_recoverable_error_threshold
 		end
 
 	treat_warnings_as_recoverable_errors is
 			-- Treat warnings as recoverable errors.
-		require
-			impure_handler: is_impure
-		deferred
+		do
+			warnings_are_recoverable_errors := True
 		end
 
-feature -- Duplication
+invariant
 
-	another: like Current is
-			-- Pristine instance of `Current'
-		require
-			impure_handler: is_impure
-		deferred
-		ensure
-			instance_not_void: Result /= Void
-		end
+	recovery_policy_in_range: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
 
 end
 	

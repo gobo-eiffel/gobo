@@ -16,6 +16,21 @@
  <!ENTITY title "Gestalt Command-line usage and options">
  <!ENTITY program_name "gestalt">
  <!ENTITY program_name_cased "Gestalt">
+ <!ENTITY additional_options "<section>
+    <title>Additional options</title>
+    <variablelist>
+      <varlistentry>
+	<term>--error-script=&lt;error-listener-script-name&gt;</term>
+	<listitem>
+	  <para>
+            Names a script which will receive error and warning messages.
+            Currently, this must be the name of a Parrot VM byte-code file (.pbc).
+            In future, source files for selected languages will be supported.
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </section>">
  <!ENTITY inclusion SYSTEM "options.xml" >
 ]>
 <chapter  xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexslt_options">
