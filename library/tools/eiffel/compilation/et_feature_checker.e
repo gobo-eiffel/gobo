@@ -3094,6 +3094,8 @@ feature {NONE} -- Expression validity
 			a_class_impl: ET_CLASS
 			left_named_type: ET_NAMED_TYPE
 			right_named_type: ET_NAMED_TYPE
+			left_class: ET_CLASS
+			right_class: ET_CLASS
 			any_type: ET_CLASS_TYPE
 		do
 			has_fatal_error := False
@@ -3128,14 +3130,42 @@ feature {NONE} -- Expression validity
 							-- OK.
 						report_equality_expression (an_expression)
 					else
-						set_fatal_error
 						left_named_type := left_context.named_type (universe)
 						right_named_type := right_context.named_type (universe)
-						a_class_impl := feature_impl.implementation_class
-						if a_class_impl = current_class then
-							error_handler.report_vweq0a_error (current_class, an_expression, left_named_type, right_named_type)
+						left_class := left_named_type.direct_base_class (universe)
+						right_class := right_named_type.direct_base_class (universe)
+						if 
+							(left_class = universe.integer_8_class or
+							left_class = universe.integer_16_class or
+							left_class = universe.integer_class or
+							left_class = universe.integer_32_class or
+							left_class = universe.integer_64_class or
+							left_class = universe.natural_8_class or
+							left_class = universe.natural_16_class or
+							left_class = universe.natural_class or
+							left_class = universe.natural_32_class or
+							left_class = universe.natural_64_class) and
+							(right_class = universe.integer_8_class or
+							right_class = universe.integer_16_class or
+							right_class = universe.integer_class or
+							right_class = universe.integer_32_class or
+							right_class = universe.integer_64_class or
+							right_class = universe.natural_8_class or
+							right_class = universe.natural_16_class or
+							right_class = universe.natural_class or
+							right_class = universe.natural_32_class or
+							right_class = universe.natural_64_class)
+						then
+								-- It is OK to compare integer values of various size.
+							report_equality_expression (an_expression)
 						else
-							error_handler.report_vweq0b_error (current_class, a_class_impl, an_expression, left_named_type, right_named_type)
+							set_fatal_error
+							a_class_impl := feature_impl.implementation_class
+							if a_class_impl = current_class then
+								error_handler.report_vweq0a_error (current_class, an_expression, left_named_type, right_named_type)
+							else
+								error_handler.report_vweq0b_error (current_class, a_class_impl, an_expression, left_named_type, right_named_type)
+							end
 						end
 					end
 					if not has_fatal_error then
@@ -3588,37 +3618,97 @@ feature {NONE} -- Expression validity
 			a_constant_not_void: a_constant /= Void
 			a_context_not_void: a_context /= Void
 		local
+			a_class_type: ET_CLASS_TYPE
+			a_class: ET_CLASS
+			a_type: ET_TYPE
 			a_literal: STRING
+			a_cast_type: ET_TYPE
 		do
 			has_fatal_error := False
-			a_literal := a_constant.literal
-			inspect a_literal.count
-			when 4 then
-					-- 0[xX][a-fA-F0-9]{2}
-				a_context.force_last (universe.integer_8_class)
-				a_constant.set_integer_8
-				report_integer_8_constant (a_constant)
-			when 6 then
-					-- 0[xX][a-fA-F0-9]{4}
-				a_context.force_last (universe.integer_16_class)
-				a_constant.set_integer_16
-				report_integer_16_constant (a_constant)
-			when 10 then
-					-- 0[xX][a-fA-F0-9]{8}
-				a_context.force_last (universe.integer_class)
--- TODO: should probably be INTEGER_32, but stay compatible with ISE
-				a_constant.set_integer
-				report_integer_constant (a_constant)
-			when 18 then
-					-- 0[xX][a-fA-F0-9]{16}
-				a_context.force_last (universe.integer_64_class)
-				a_constant.set_integer_64
-				report_integer_64_constant (a_constant)
+			a_cast_type := a_constant.type
+			if a_cast_type /= Void then
+				a_class_type ?= a_cast_type.named_type (a_context, universe)
 			else
-				a_context.force_last (universe.integer_class)
-				a_constant.set_integer
-				report_integer_constant (a_constant)
+				a_class_type ?= current_target_type.named_type (universe)
 			end
+			if a_class_type /= Void then
+				a_class := a_class_type.direct_base_class (universe)
+				if a_class = universe.integer_8_class then
+					a_type := a_class
+					a_constant.set_integer_8
+					report_integer_8_constant (a_constant)
+				elseif a_class = universe.integer_16_class then
+					a_type := a_class
+					a_constant.set_integer_16
+					report_integer_16_constant (a_constant)
+				elseif a_class = universe.integer_class then
+					a_type := a_class
+					a_constant.set_integer
+					report_integer_constant (a_constant)
+				elseif a_class = universe.integer_32_class then
+					a_type := a_class
+					a_constant.set_integer_32
+					report_integer_32_constant (a_constant)
+				elseif a_class = universe.integer_64_class then
+					a_type := a_class
+					a_constant.set_integer_64
+					report_integer_64_constant (a_constant)
+				elseif a_class = universe.natural_class then
+					a_type := a_class
+					a_constant.set_natural
+					report_natural_constant (a_constant)
+				elseif a_class = universe.natural_8_class then
+					a_type := a_class
+					a_constant.set_natural_8
+					report_natural_8_constant (a_constant)
+				elseif a_class = universe.natural_16_class then
+					a_type := a_class
+					a_constant.set_natural_16
+					report_natural_16_constant (a_constant)
+				elseif a_class = universe.natural_32_class then
+					a_type := a_class
+					a_constant.set_natural_32
+					report_natural_32_constant (a_constant)
+				elseif a_class = universe.natural_64_class then
+					a_type := a_class
+					a_constant.set_natural_64
+					report_natural_64_constant (a_constant)
+				end
+			end
+			if a_type = Void then
+				if a_cast_type /= Void then
+-- TODO: error
+				end
+				a_literal := a_constant.literal
+				inspect a_literal.count
+				when 4 then
+						-- 0[xX][a-fA-F0-9]{2}
+					a_type := universe.integer_8_class
+					a_constant.set_integer_8
+					report_integer_8_constant (a_constant)
+				when 6 then
+						-- 0[xX][a-fA-F0-9]{4}
+					a_type := universe.integer_16_class
+					a_constant.set_integer_16
+					report_integer_16_constant (a_constant)
+				when 10 then
+						-- 0[xX][a-fA-F0-9]{8}
+					a_type := universe.integer_class
+-- TODO: should probably be INTEGER_32, but stay compatible with ISE
+					a_constant.set_integer
+					report_integer_constant (a_constant)
+				when 18 then
+						-- 0[xX][a-fA-F0-9]{16}
+					a_type := universe.integer_64_class
+					a_constant.set_integer_64
+					report_integer_64_constant (a_constant)
+				else
+					a_type := universe.integer_class
+					a_constant.set_integer
+					report_integer_constant (a_constant)
+				end
+			end
+			a_context.force_last (a_type)
 		end
 
 	check_infix_cast_expression_validity (an_expression: ET_INFIX_CAST_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -4629,10 +4719,16 @@ feature {NONE} -- Expression validity
 			a_class_type: ET_CLASS_TYPE
 			a_class: ET_CLASS
 			a_type: ET_TYPE
+			a_cast_type: ET_TYPE
 		do
 			has_fatal_error := False
 			a_type := universe.integer_class
-			a_class_type ?= current_target_type.named_type (universe)
+			a_cast_type := a_constant.type
+			if a_cast_type /= Void then
+				a_class_type ?= a_cast_type.named_type (a_context, universe)
+			else
+				a_class_type ?= current_target_type.named_type (universe)
+			end
 			if a_class_type /= Void then
 				a_class := a_class_type.direct_base_class (universe)
 				if a_class = universe.integer_8_class then
@@ -4672,10 +4768,16 @@ feature {NONE} -- Expression validity
 					a_constant.set_natural_64
 					report_natural_64_constant (a_constant)
 				else
+					if a_cast_type /= Void then
+-- TODO: error
+					end
 					a_constant.set_integer
 					report_integer_constant (a_constant)
 				end
 			else
+				if a_cast_type /= Void then
+-- TODO: error
+				end
 				a_constant.set_integer
 				report_integer_constant (a_constant)
 			end
@@ -5290,10 +5392,16 @@ feature {NONE} -- Expression validity
 			a_class_type: ET_CLASS_TYPE
 			a_class: ET_CLASS
 			a_type: ET_TYPE
+			a_cast_type: ET_TYPE
 		do
 			has_fatal_error := False
 			a_type := universe.integer_class
-			a_class_type ?= current_target_type.named_type (universe)
+			a_cast_type := a_constant.type
+			if a_cast_type /= Void then
+				a_class_type ?= a_cast_type.named_type (a_context, universe)
+			else
+				a_class_type ?= current_target_type.named_type (universe)
+			end
 			if a_class_type /= Void then
 				a_class := a_class_type.direct_base_class (universe)
 				if a_class = universe.integer_8_class then
@@ -5333,10 +5441,16 @@ feature {NONE} -- Expression validity
 					a_constant.set_natural_64
 					report_natural_64_constant (a_constant)
 				else
+					if a_cast_type /= Void then
+-- TODO: error
+					end
 					a_constant.set_integer
 					report_integer_constant (a_constant)
 				end
 			else
+				if a_cast_type /= Void then
+-- TODO: error
+				end
 				a_constant.set_integer
 				report_integer_constant (a_constant)
 			end

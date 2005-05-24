@@ -198,7 +198,7 @@ creation
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 55
+%expect 98
 %start Class_declarations
 
 %%
@@ -2502,9 +2502,7 @@ Call_instruction: Identifier Actuals_opt
 		{ $$ := ast_factory.new_precursor_instruction (False, $1, ast_factory.new_precursor_class_name ($2, $3, $4), $5) }
 	| E_FEATURE '{' Type '}' '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_static_call_instruction ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6), $7) }
-	| '{' Class_name '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_static_call_instruction (Void, ast_factory.new_target_type ($1, new_named_type (Void, $2, Void), $3), ast_factory.new_dot_feature_name ($4, $5), $6) }
-	| '{' Type_no_class_name '}' '.' Identifier Actuals_opt
+	| '{' Type '}' '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_static_call_instruction (Void, ast_factory.new_target_type ($1, $2, $3), ast_factory.new_dot_feature_name ($4, $5), $6) }
 	;
 
@@ -2526,9 +2524,7 @@ Qualified_call_expression: Call_chain_without_static '.' Identifier Actuals_opt
 
 Static_call_expression: E_FEATURE '{' Type '}' '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_static_call_expression ($1, ast_factory.new_target_type ($2, $3, $4), ast_factory.new_dot_feature_name ($5, $6), $7) }
-	| '{' Class_name '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_static_call_expression (Void, ast_factory.new_target_type ($1, new_named_type (Void, $2, Void), $3), ast_factory.new_dot_feature_name ($4, $5), $6) }
-	| '{' Type_no_class_name '}' '.' Identifier Actuals_opt
+	| '{' Type '}' '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_static_call_expression (Void, ast_factory.new_target_type ($1, $2, $3), ast_factory.new_dot_feature_name ($4, $5), $6) }
 	;
 
@@ -2780,9 +2776,7 @@ Parenthesized_expression: '(' Expression ')'
 		{ $$ := ast_factory.new_parenthesized_expression ($1, $2, $3) }
 	;
 
-Manifest_type: '{' Class_name '}'
-		{ $$ := ast_factory.new_manifest_type ($1, new_named_type (Void, $2, Void), $3) }
-	| '{' Type_no_class_name '}'
+Manifest_type: '{' Type '}'
 		{ $$ := ast_factory.new_manifest_type ($1, $2, $3) }
 	;
 
@@ -2949,9 +2943,7 @@ Tilde_call_agent: '~' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
 	| E_CURRENT '~' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($2, $1, $3, $4) }
-	| '{' Class_name '}' '~' Feature_name Agent_actuals_opt
-		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_agent_open_target ($1, new_named_type (Void, $2, Void), $3), $5, $6) }
-	| '{' Type_no_class_name '}' '~' Feature_name Agent_actuals_opt
+	| '{' Type '}' '~' Feature_name Agent_actuals_opt
 		{ $$ := ast_factory.new_call_agent ($4, ast_factory.new_agent_open_target ($1, $2, $3), $5, $6) }
 	;
 
