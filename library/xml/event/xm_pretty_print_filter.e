@@ -114,6 +114,7 @@ feature {NONE} -- Escaped
 			Result := a_char = Lt_char.code
 				or a_char = Gt_char.code
 				or a_char = Amp_char.code
+				or a_char >= 128
 		end
 
 	escaped_char (a_char: INTEGER): STRING is
@@ -127,8 +128,6 @@ feature {NONE} -- Escaped
 				Result := Gt_entity
 			elseif a_char = Amp_char.code then
 				Result := Amp_entity
-			elseif a_char = Quot_char.code then
-				Result := Quot_entity
 			else
 				Result := STRING_.concat ("&#", a_char.out)
 				Result := STRING_.concat (Result, ";")
