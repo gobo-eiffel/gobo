@@ -944,6 +944,9 @@ feature {NONE} -- Precursor validity
 			a_feature_not_void: a_feature /= Void
 		do
 			precursor_checker.check_feature_validity (a_feature, current_class)
+			if precursor_checker.has_fatal_error then
+				set_fatal_error (current_class)
+			end
 		end
 
 	precursor_checker: ET_PRECURSOR_CHECKER
