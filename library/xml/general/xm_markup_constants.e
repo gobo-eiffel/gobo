@@ -68,4 +68,10 @@ feature -- Constants
 	Xml_id: STRING is once Result := "id" end
 	Xml_id_with_prefix: STRING is once Result := "xml:id" end
 
+	Xml_lang: STRING is once Result := "lang" end
+	Xml_lang_with_prefix: STRING is once Result := "xml:lang" end
+
+	Xml_base: STRING is once Result := "base" end
+	Xml_base_with_prefix: STRING is once Result := "xml:base" end
+
 end
