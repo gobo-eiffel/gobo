@@ -21,6 +21,8 @@ inherit
 
 	XM_XPATH_SHARED_DECIMAL_CONTEXTS
 
+	KL_IMPORTED_DOUBLE_ROUTINES
+
 creation
 
 	make, make_from_string, make_nan
@@ -77,7 +79,7 @@ feature -- Access
 	
 	as_integer: INTEGER is -- TODO should be INTEGER_64, or EDA_INTEGER or something
 		do
-			Result := value.truncated_to_integer
+			Result := DOUBLE_.truncated_to_integer (value)
 		end
 
 	as_double: DOUBLE is
@@ -152,7 +154,7 @@ feature -- Status report
 	is_whole_number: BOOLEAN is
 			-- Is value integral?
 		do
-			Result := value = value.truncated_to_integer
+			Result := value = DOUBLE_.truncated_to_integer (value)
 		end
 
 	is_platform_integer: BOOLEAN is
@@ -208,7 +210,7 @@ feature -- Conversion
 			elseif a_required_type = any_item  then
 				Result := Current
 			elseif  a_required_type = type_factory.integer_type then
-				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (value.truncated_to_integer)
+				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value))
 			elseif  a_required_type = type_factory.double_type then
 				Result := Current
 			elseif  a_required_type = type_factory.decimal_type then
@@ -314,7 +316,7 @@ feature -- Basic operations
 			when Division_token then
 				create {XM_XPATH_DOUBLE_VALUE} Result.make (value / other.as_double)
 			when Integer_division_token then
-				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer ((value / other.as_double).truncated_to_integer)
+				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value / other.as_double))
 			when Modulus_token then
 				a_double := other.as_double
 				if is_whole_number and then other.is_whole_number then

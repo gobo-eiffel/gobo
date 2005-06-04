@@ -19,6 +19,8 @@ inherit
 			evaluate_item
 		end
 
+	KL_IMPORTED_DOUBLE_ROUTINES
+
 creation
 
 	make
@@ -86,7 +88,7 @@ feature -- Evaluation
 						-- static typing
 					end
 					a_double_value := an_item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value
-					a_starting_position := a_double_value.rounded_value.value.truncated_to_integer
+					a_starting_position := DOUBLE_.truncated_to_integer (a_double_value.rounded_value.value)
 					if arguments.count = 3 then
 						arguments.item (3).evaluate_item (a_context)
 						if arguments.item (3).last_evaluated_item.is_error then
@@ -94,11 +96,11 @@ feature -- Evaluation
 						else
 							an_item := arguments.item (3).last_evaluated_item
 							check
-								third_argument_convertible_to_double:	an_item.is_atomic_value and then	an_item.as_atomic_value.is_convertible (type_factory.double_type)
+								third_argument_convertible_to_double: an_item.is_atomic_value and then an_item.as_atomic_value.is_convertible (type_factory.double_type)
 								-- static typing
 							end
 							a_double_value := an_item.as_atomic_value.convert_to_type (type_factory.double_type).as_double_value
-							a_count := a_double_value.rounded_value.value.truncated_to_integer
+							a_count := DOUBLE_.truncated_to_integer (a_double_value.rounded_value.value)
 							if a_count < 1 then
 								a_count := 0
 							end
