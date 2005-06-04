@@ -571,7 +571,7 @@ feature {NONE} -- Compression
 						put_entry (state.id, default_id,
 							transitions.difference (template, null_state))
 					else
-						protos.put (state.id, clone (transitions), common_state)
+						protos.put (state.id, transitions.cloned_object, common_state)
 						put_entry (state.id, Jam_id, transitions)
 					end
 				else
@@ -582,7 +582,7 @@ feature {NONE} -- Compression
 						-- If this state was sufficiently different from
 						-- the proto we built it from, make it a proto too.
 					if min_diff * 100 >= trans_nb * New_proto_diff_percentage then
-						protos.put (state.id, clone (transitions), common_state)
+						protos.put (state.id, transitions.cloned_object, common_state)
 					end
 				end
 				proto_cursor.go_after -- Release cursor to GC.

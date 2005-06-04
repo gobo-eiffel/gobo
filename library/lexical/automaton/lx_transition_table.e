@@ -19,6 +19,11 @@ inherit
 			copy, is_equal
 		end
 
+	KL_CLONABLE
+		undefine
+			copy, is_equal
+		end
+
 	KL_IMPORTED_ANY_ROUTINES
 		undefine
 			copy, is_equal
@@ -35,6 +40,7 @@ feature {NONE} -- Initialization
 			-- between `min' and `max'.
 		do
 			create storage.make (min, max)
+			create array_routines
 		end
 
 feature -- Status report
@@ -208,7 +214,7 @@ feature -- Duplication
 			-- Copy `other' to current transition table.
 		do
 			standard_copy (other)
-			storage := clone (storage)
+			storage := array_routines.cloned_array (storage)
 		end
 
 feature -- Comparison
@@ -233,9 +239,15 @@ feature {LX_TRANSITION_TABLE} -- Implementation
 	storage: ARRAY [G]
 			-- Transitions indexed by labels
 
+feature {NONE} -- Implementation
+
+	array_routines: KL_ARRAY_ROUTINES [G]
+			-- Routines that ought to be in class ARRAY
+
 invariant
 
 	storage_not_void: storage /= Void
 	positive_count: count >= 0
+	array_routines_not_void: array_routines /= Void
 
 end

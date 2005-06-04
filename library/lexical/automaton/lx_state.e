@@ -16,6 +16,8 @@ inherit
 
 	ANY -- Needed for SE 2.1b1.
 
+	KL_CLONABLE
+
 feature -- Status report
 
 	is_accepting: BOOLEAN is

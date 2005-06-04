@@ -158,21 +158,21 @@ feature -- Duplication
 			from i := 1 until i > nb loop
 				old_state := old_states.item (i)
 				old_state.set_id (i)
-				states.put_last (clone (old_state))
+				states.put_last (old_state.cloned_object)
 				i := i + 1
 			end
 			from i := 1 until i > nb loop
 				new_state := states.item (i)
 				transition := new_state.transition
 				if transition /= Void then
-					transition := clone (transition)
+					transition := transition.cloned_object
 					old_state := transition.target
 					transition.set_target (states.item (old_state.id))
 					new_state.set_transition (transition)
 				end
 				epsilon_transition := new_state.epsilon_transition
 				if epsilon_transition /= Void then
-					epsilon_transition := clone (epsilon_transition)
+					epsilon_transition := epsilon_transition.cloned_object
 					old_state := epsilon_transition.target
 					epsilon_transition.set_target (states.item (old_state.id))
 					new_state.set_epsilon_transition (epsilon_transition)
@@ -355,9 +355,9 @@ feature -- Operations
 			a_nfa: like Current
 		do
 			if nb /= 1 then
-				a_nfa := clone (Current)
+				a_nfa := cloned_object
 				from i := 2 until i >= nb loop
-					a_nfa.build_concatenation (clone (Current))
+					a_nfa.build_concatenation (cloned_object)
 					i := i + 1
 				end
 				build_concatenation (a_nfa)
@@ -373,7 +373,7 @@ feature -- Operations
 		local
 			a_nfa: like Current
 		do
-			a_nfa := clone (Current)
+			a_nfa := cloned_object
 			a_nfa.build_closure
 			build_iteration (nb)
 			build_concatenation (a_nfa)
@@ -393,10 +393,10 @@ feature -- Operations
 			if lb = ub then
 				build_iteration (lb)
 			else
-				a_nfa1 := clone (Current)
+				a_nfa1 := cloned_object
 				a_nfa1.build_optional
 				from i := lb + 1 until i >= ub loop
-					a_nfa2 := clone (Current)
+					a_nfa2 := cloned_object
 					a_nfa2.build_concatenation (a_nfa1)
 					a_nfa2.build_optional
 					a_nfa1 := a_nfa2

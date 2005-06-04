@@ -30,6 +30,8 @@ inherit
 
 	KL_IMPORTED_INTEGER_ROUTINES
 
+	KL_IMPORTED_STRING_ROUTINES
+
 	UT_IMPORTED_FORMATTERS
 
 feature {NONE} -- Initialization
@@ -904,7 +906,7 @@ feature {NONE} -- Generation
 					until
 						j = 0
 					loop
-						tmp := clone ((j \\ 8).out)
+						tmp := STRING_.cloned_string ((j \\ 8).out)
 						tmp.append_string (octal)
 						octal := tmp
 						j := j // 8
