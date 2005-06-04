@@ -248,7 +248,7 @@ feature -- Access
 				if uc_string /= Void then
 					Result := uc_string.new_empty_string (n)
 				else
-					Result := clone (a_string)
+					Result := cloned_string (a_string)
 					Result.wipe_out
 				end
 			end
@@ -814,6 +814,24 @@ feature -- Comparison
 			end
 		end
 
+feature -- Duplication
+
+	cloned_string (a_string: STRING): STRING is
+			-- Clone of `a_string'
+		require
+			a_string_not_void: a_string /= Void
+		do
+#ifdef VE
+			Result := clone (a_string)
+#else
+			Result := a_string.twin
+#endif
+		ensure
+			cloned_not_void: Result /= Void
+			same_type: ANY_.same_types (Result, a_string)
+			is_equal: Result.is_equal (a_string)
+		end
+
 feature -- Element change
 
 	appended_string (a_string, other: STRING): STRING is
@@ -852,8 +870,8 @@ feature -- Element change
 			append_not_void: Result /= Void
 			type_if_not_aliased: Result /= a_string implies ANY_.same_types (Result, other)
 			new_count: Result.count = old a_string.count + old other.count
-			initial: same_string (Result.substring (1, old a_string.count), old clone (a_string))
-			final: same_string (Result.substring (old a_string.count + 1, Result.count), old clone (other))
+			initial: same_string (Result.substring (1, old a_string.count), old cloned_string (a_string))
+			final: same_string (Result.substring (old a_string.count + 1, Result.count), old cloned_string (other))
 		end
 
 	appended_substring (a_string, other: STRING; s, e: INTEGER): STRING is
@@ -904,7 +922,7 @@ feature -- Element change
 			append_not_void: Result /= Void
 			type_if_not_aliased: Result /= a_string implies ANY_.same_types (Result, other)
 			new_count: Result.count = old a_string.count + e - s + 1
-			initial: same_string (Result.substring (1, old a_string.count), old clone (a_string))
+			initial: same_string (Result.substring (1, old a_string.count), old cloned_string (a_string))
 			final: same_string (Result.substring (old a_string.count + 1, Result.count), old other.substring (s, e))
 		end
 
@@ -973,7 +991,7 @@ feature -- Element change
 				end
 			end
 		ensure
-			appended: a_string.is_equal (old clone (a_string) + old other.substring (s, e))
+			appended: a_string.is_equal (old cloned_string (a_string) + old other.substring (s, e))
 		end
 
 	replaced_all_substrings (a_text, a_old, a_new: STRING): STRING is
