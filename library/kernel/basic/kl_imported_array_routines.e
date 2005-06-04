@@ -46,4 +46,12 @@ feature -- Access
 			string_array_routines_not_void: Result /= Void
 		end
 
+	ARRAY_SPECIAL_INTEGER_: KL_ARRAY_ROUTINES [SPECIAL [INTEGER]] is
+			-- Routines that ought to be in class ARRAY
+		once
+			create Result
+		ensure
+			special_integer_array_routines_not_void: Result /= Void
+		end
+
 end

@@ -24,6 +24,15 @@ inherit
 		end
 
 #endif
+#ifdef VE
+inherit
+
+	ANY
+		redefine
+			copy, is_equal
+		end
+
+#endif
 creation
 
 	make, make_from_array
@@ -135,6 +144,32 @@ feature -- Resizing
 		end
 
 #ifdef VE
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is current special equal to `other'?
+		do
+			Result := storage.is_equal (other.storage)
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Copy `other' to `Current'.
+		do
+			standard_copy (other)
+			storage := clone (storage)
+		end
+
+	twin: like Current is
+			-- New object equal to `Current'
+		do
+			Result := clone (Current)
+		ensure
+			twin_not_void: Result /= Void
+			is_equal: Result.is_equal (Current)
+		end
+
 feature -- Removal
 
 	clear_all is
@@ -145,7 +180,7 @@ feature -- Removal
 			-- all_cleared: forall i in 0..(count - 1), item (i) = Void or else item (i) = item (i).default
 		end
 
-feature {NONE} -- Implementation
+feature {SPECIAL} -- Implementation
 
 	storage: ARRAY [G]
 			-- Storage

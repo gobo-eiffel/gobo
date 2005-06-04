@@ -491,7 +491,7 @@ feature -- Element change
 		ensure
 			new_count: count = old count + 1
 			appended: item (count) = c
-			stable_before: substring (1, count - 1).is_equal (old clone (Current))
+			stable_before: substring (1, count - 1).current_string.is_equal (old STRING_.cloned_string (current_string))
 		end
 
 	append_string (s: STRING) is
@@ -507,7 +507,7 @@ feature -- Element change
 			s_not_void: s /= Void
 		deferred
 		ensure
-			appended: is_equal (old clone (Current) + old clone (s))
+			appended: current_string.is_equal (old STRING_.cloned_string (current_string) + old STRING_.cloned_string (s))
 		end
 
 	fill_with (c: CHARACTER) is
@@ -552,7 +552,7 @@ feature -- Element change
 			not_current: s /= current_string
 		deferred
 		ensure
-			inserted: is_equal (old substring (1, i - 1) + old clone (s) + old substring (i, count).current_string)
+			inserted: is_equal (old substring (1, i - 1) + old STRING_.cloned_string (s) + old substring (i, count).current_string)
 		end
 
 	replace_substring (s: like Current; start_index, end_index: INTEGER) is

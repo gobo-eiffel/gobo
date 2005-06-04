@@ -19,6 +19,11 @@ inherit
 			is_equal
 		end
 
+	KL_CLONABLE
+		undefine
+			is_equal
+		end
+
 	KL_IMPORTED_STRING_ROUTINES
 		undefine
 			is_equal

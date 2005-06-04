@@ -511,7 +511,7 @@ feature -- Input
 #endif
 #ifdef SE
 				basic_directory.read_entry
-				last_entry := clone (basic_directory.last_entry)
+				last_entry := basic_directory.last_entry.twin
 #endif
 #ifdef VE
 #ifdef VE_4_1

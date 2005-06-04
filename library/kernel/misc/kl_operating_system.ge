@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 		do
 #ifdef SE
 			basic_directory.connect_to_current_working_directory
-			Result := clone (basic_directory.last_entry)
+			Result := basic_directory.last_entry.twin
 			basic_directory.disconnect
 #endif
 #ifdef ISE

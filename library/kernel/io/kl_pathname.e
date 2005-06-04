@@ -19,6 +19,13 @@ inherit
 			copy
 		end
 
+	KL_IMPORTED_ARRAY_ROUTINES
+		export
+			{NONE} all
+		undefine
+			is_equal, copy
+		end
+
 creation
 
 	make
@@ -196,7 +203,7 @@ feature -- Duplication
 			-- Copy `other' to current pathname.
 		do
 			standard_copy (other)
-			components := clone (components)
+			components := STRING_ARRAY_.cloned_array (components)
 		end
 
 feature {KL_PATHNAME} -- Implementation

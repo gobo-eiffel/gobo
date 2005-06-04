@@ -182,7 +182,7 @@ feature -- Pathname handling
 		local
 			nb: INTEGER
 		do
-			Result := clone (a_dirname)
+			Result := STRING_.cloned_string (a_dirname)
 			if a_pathname.count > 0 then
 				nb := Result.count
 				if nb > 0 and then Result.item (nb) /= directory_separator then
@@ -202,7 +202,7 @@ feature -- Pathname handling
 			i, nb, k: INTEGER
 			a_pathname: STRING
 		do
-			Result := clone (a_dirname)
+			Result := STRING_.cloned_string (a_dirname)
 			i := a_pathnames.lower
 			nb := a_pathnames.upper
 			from until i > nb loop
