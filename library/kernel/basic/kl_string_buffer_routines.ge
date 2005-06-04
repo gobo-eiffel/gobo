@@ -34,18 +34,13 @@ feature -- Initialization
 			-- to contain `n' characters.
 		require
 			non_negative_n: n >= 0
-#ifdef ISE
 		do
+#ifdef ISE
 			create Result.make (n)
 			Result.set_count (n)
 #endif
-#ifdef VE
-		do
+#ifdef VE || SE
 			create Result.make_filled ('%U', n)
-#endif
-#ifdef SE
-		do
-			create Result.blank (n)
 #endif
 		ensure
 			string_buffer_not_void: Result /= Void
@@ -63,7 +58,7 @@ feature -- Initialization
 		ensure
 			string_buffer_not_void: Result /= Void
 			count_set: Result.count = a_string.count
-			charaters_set: equal (substring (Result, lower, a_string.count + lower - 1), a_string)
+			charaters_set: substring (Result, lower, a_string.count + lower - 1).is_equal (a_string)
 		end
 
 feature -- Conversion
@@ -80,7 +75,7 @@ feature -- Conversion
 		ensure
 			string_buffer_not_void: Result /= Void
 			count_set: Result.count >= a_string.count
-			charaters_set: equal (substring (Result, lower, a_string.count + lower - 1), a_string)
+			charaters_set: substring (Result, lower, a_string.count + lower - 1).is_equal (a_string)
 		end
 
 feature -- Access
@@ -144,7 +139,7 @@ feature -- Element change
 			end
 		ensure
 			count_set: a_string.count = old (a_string.count) + (e - s + 1)
-			characters_set: s <= e implies equal (a_string.substring (old (a_string.count) + 1, a_string.count), substring (a_buffer, s, e))
+			characters_set: s <= e implies a_string.substring (old (a_string.count) + 1, a_string.count).is_equal (substring (a_buffer, s, e))
 		end
 
 	copy_from_string (a_buffer: like STRING_BUFFER_TYPE; pos: INTEGER; a_string: STRING) is
@@ -171,7 +166,7 @@ feature -- Element change
 				end
 			end
 		ensure
-			charaters_set: equal (substring (a_buffer, pos, a_string.count + pos - 1), a_string)
+			charaters_set: substring (a_buffer, pos, a_string.count + pos - 1).is_equal (a_string)
 		end
 
 	copy_from_stream (a_buffer: like STRING_BUFFER_TYPE; pos: INTEGER; a_stream: like INPUT_STREAM_TYPE; nb_char: INTEGER): INTEGER is
