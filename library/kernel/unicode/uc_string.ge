@@ -95,7 +95,7 @@ inherit
 			make, make_from_string, make_empty, make_filled,
 			put, append_character, item,
 			substring, append_string, replace_substring,
-			index_of, has, occurrences, head, tail,
+			index_of, has, occurrences,
 			hash_code, remove, to_lower, to_upper,
 			three_way_comparison, item_code,
 #ifdef ISE
@@ -111,6 +111,11 @@ inherit
 #ifdef SE
 			is_equal, infix "<",
 			old_prepend, old_remove_prefix,
+#else
+			head, tail,
+#endif
+#ifndef (SE && ! SE_1_0)
+			infix "@",
 #endif
 #ifdef ISE
 			count,
@@ -123,7 +128,7 @@ inherit
 #endif
 			substring_index,
 			infix "+",
-			copy, infix "@"
+			copy
 #ifdef ISE
 		select
 			put, item
@@ -352,7 +357,7 @@ feature {NONE} -- Initialization
 					make (0)
 				else
 					if a_string = Current then
-						str := clone (a_string)
+						str := cloned_string
 					else
 						str := a_string
 					end
@@ -502,6 +507,7 @@ feature -- Access
 			end
 		end
 
+#ifndef (SE && ! SE_1_0)
 	infix "@" (i: INTEGER): CHARACTER is
 			-- Character at index `i'
 			-- (ELKS 2001 STRING)
@@ -509,6 +515,7 @@ feature -- Access
 			Result := item (i)
 		end
 
+#endif
 	substring (start_index, end_index: INTEGER): like Current is
 			-- New object containing all characters
 			-- from `start_index' to `end_index' inclusive
@@ -1501,7 +1508,7 @@ feature -- Element change
 		ensure
 			new_count: count = old count + 1
 			appended: item_code (count) = c.code
-			stable_before: substring (1, count - 1).is_equal (old clone (Current))
+			stable_before: substring (1, count - 1).is_equal (old cloned_string)
 		end
 
 	append_code (a_code: INTEGER) is
@@ -1524,7 +1531,7 @@ feature -- Element change
 		ensure
 			new_count: count = old count + 1
 			appended: item_code (count) = a_code
-			stable_before: substring (1, count - 1).is_equal (old clone (Current))
+			stable_before: substring (1, count - 1).is_equal (old cloned_string)
 		end
 
 	append_character (c: CHARACTER) is
@@ -1658,7 +1665,7 @@ feature -- Element change
 			a_substring_count := e - s + 1
 			if a_substring_count /= 0 then
 				if a_string = Current then
-					str := clone (a_string)
+					str := cloned_string
 				else
 					str := a_string
 				end
@@ -1673,7 +1680,7 @@ feature -- Element change
 				put_substring_at_byte_index (str, s, e, nb, k)
 			end
 		ensure then
-			appended: is_equal (old clone (Current) + old a_string.substring (s, e))
+			appended: is_equal (old cloned_string + old a_string.substring (s, e))
 		end
 
 	append_utf8 (s: STRING) is
@@ -1932,7 +1939,7 @@ feature -- Element change
 					append_string (a_string)
 				else
 					if a_string = Current then
-						str := clone (a_string)
+						str := cloned_string
 					else
 						str := a_string
 					end
@@ -1983,7 +1990,7 @@ feature -- Element change
 					append_string (a_string)
 				else
 					if a_string = Current then
-						str := clone (a_string)
+						str := cloned_string
 					else
 						str := a_string
 					end
@@ -2189,6 +2196,19 @@ feature -- Duplication
 			end
 		end
 
+	cloned_string: like Current is
+			-- New object equal to `Current'
+		do
+#ifdef VE
+			Result := clone (Current)
+#else
+			Result := twin
+#endif
+		ensure
+			twin_not_void: Result /= Void
+			is_equal: Result.is_equal (Current)
+		end
+
 feature -- Output
 
 	out: STRING is
@@ -2249,7 +2269,7 @@ feature -- Conversion
 			-- New object with all letters in lower case
 			-- (Extended from ELKS 2001 STRING)
 		do
-			Result := clone (Current)
+			Result := cloned_string
 			Result.to_lower
 		ensure then
 			unicode_anchor: count > 0 implies Result.unicode_item (1).is_equal (unicode_item (1).as_lower)
@@ -2260,7 +2280,7 @@ feature -- Conversion
 			-- New object with all letters in upper case
 			-- (Extended from ELKS 2001 STRING)
 		do
-			Result := clone (Current)
+			Result := cloned_string
 			Result.to_upper
 		ensure then
 			unicode_anchor: count > 0 implies Result.unicode_item (1).is_equal (unicode_item (1).as_upper)
@@ -2573,6 +2593,7 @@ feature -- Obsolete
 			Result := is_empty
 		end
 
+#ifndef SE
 	head (n: INTEGER) is
 			-- Remove all the characters except for the first `n';
 			-- if `n' > `count', do nothing.
@@ -2591,6 +2612,7 @@ feature -- Obsolete
 			keep_tail (n)
 		end
 
+#endif
 	append_uc_string (a_string: UC_STRING) is
 			-- Append a copy of `a_string' at end.
 		obsolete
@@ -3092,7 +3114,7 @@ feature {NONE} -- Inapplicable
 		local
 			a_string: UC_STRING
 		do
-			a_string := clone (Current)
+			a_string := twin
 			wipe_out
 			append_string (other)
 			append_string (a_string)
