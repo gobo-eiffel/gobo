@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		do
 			directory_separators := "/\"
 		ensure
-			directory_separators_set: equal (directory_separators, "/\")
+			directory_separators_set: directory_separators.is_equal ("/\")
 		end
 
 feature -- Access
