@@ -131,7 +131,8 @@ feature {NONE} -- Implementation
 		local
 			a_message: STRING
 		once
-			a_message := clone ("(")
+			create a_message.make (31)
+			a_message.append_character ('(')
 			if fact.is_expat_parser_available then
 				a_message.append_string ("--expat|")
 			end
