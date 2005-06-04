@@ -19,6 +19,7 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 
 feature -- Access
 
@@ -52,7 +53,7 @@ feature -- Equality
 			a_message: STRING
 		do
 			assertions.add_assertion
-			if not equal (expected, actual) then
+			if not ANY_.equal_objects (expected, actual) then
 				a_message := assert_equal_message (a_tag, expected, actual)
 				assertions.report_error (a_message)
 			end
@@ -66,7 +67,7 @@ feature -- Equality
 			a_message: STRING
 		do
 			assertions.add_assertion
-			if equal (expected, actual) then
+			if ANY_.equal_objects (expected, actual) then
 				a_message := assert_not_equal_message (a_tag, expected, actual)
 				assertions.report_error (a_message)
 			end
@@ -382,7 +383,7 @@ feature -- Containers
 				from i := 1 until i > nb loop
 					expected_item := expected.item (i1)
 					actual_item := actual.item (i1)
-					if not equal (expected_item, actual_item) then
+					if not ANY_.equal_objects (expected_item, actual_item) then
 						create new_tag.make (15)
 						new_tag.append_string (a_tag)
 						new_tag.append_string ("-item #")
