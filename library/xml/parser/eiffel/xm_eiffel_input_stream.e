@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 		do
 			impl := a_stream
 			create utf_queue.make
-			last_string := clone ("")
+			create last_string.make (0)
 			encoding := Undetected
 		ensure
 			impl_set: impl = a_stream

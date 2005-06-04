@@ -163,7 +163,7 @@ feature -- Basic operations
 					end
 				else
 					if a_library.is_root then
-						a_library := clone (a_library)
+						a_library := a_library.cloned_object
 						a_library.set_root (False)
 					end
 					a_libraries.put_last (a_library)

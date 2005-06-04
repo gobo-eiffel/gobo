@@ -47,7 +47,7 @@ feature -- Conversion
 		require
 			a_date_time_not_void: a_date_time /= Void
 		do
-			Result := clone (a_date_time)
+			Result := a_date_time.cloned_object
 			convert_to_utc (Result)
 		ensure
 			date_time_not_void: Result /= Void
@@ -60,7 +60,7 @@ feature -- Conversion
 		require
 			a_date_time_not_void: a_date_time /= Void
 		do
-			Result := clone (a_date_time)
+			Result := a_date_time.cloned_object
 			convert_from_utc (Result)
 		ensure
 			date_time_not_void: Result /= Void
@@ -74,7 +74,7 @@ feature -- Conversion
 			a_date_time_not_void: a_date_time /= Void
 			a_time_zone_not_void: a_time_zone /= Void
 		do
-			Result := clone (a_date_time)
+			Result := a_date_time.cloned_object
 			if a_time_zone /= Current then
 				a_time_zone.convert_to_utc (Result)
 				convert_from_utc (Result)

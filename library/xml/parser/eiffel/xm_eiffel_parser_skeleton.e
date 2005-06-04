@@ -270,7 +270,7 @@ feature -- Error
 			-- Header for error message
 			-- (<filename>:<line>:<column>:)
 		do
-			Result := clone (scanner.input_name)
+			Result := STRING_.cloned_string (scanner.input_name)
 			Result.append_character (':')
 			Result := STRING_.appended_string (Result, line.out)
 			Result.append_character (':')

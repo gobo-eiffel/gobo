@@ -29,6 +29,11 @@ inherit
 			is_equal, copy
 		end
 
+	KL_IMPORTED_ARRAY_ROUTINES
+		undefine
+			is_equal, copy
+		end
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
@@ -319,6 +324,7 @@ feature {NONE} -- Implementation
 			-- Create `items'.
 		do
 			create special_item_routines
+			create array_special_item_routines
 			create items.make (0, ((n - 1) // chunk_size))
 		end
 
@@ -326,11 +332,15 @@ feature {NONE} -- Implementation
 			-- Clone `items'.
 		local
 			i, nb: INTEGER
+			subitems: SPECIAL [G]
 		do
-			items := clone (items)
+			items := array_special_item_routines.cloned_array (items)
 			nb := items.upper
 			from i := 0 until i > nb loop
-				items.put (clone (items.item (i)), i)
+				subitems := items.item (i)
+				if subitems /= Void then
+					items.put (subitems.twin, i)
+				end
 				i := i + 1
 			end
 		end
@@ -360,6 +370,7 @@ feature {NONE} -- Implementation
 			-- Create `keys'.
 		do
 			create special_key_routines
+			create array_special_key_routines
 			create keys.make (0, ((n - 1) // chunk_size))
 		end
 
@@ -382,11 +393,15 @@ feature {NONE} -- Implementation
 			-- Clone `keys'.
 		local
 			i, nb: INTEGER
+			subkeys: SPECIAL [K]
 		do
-			keys := clone (keys)
+			keys := array_special_key_routines.cloned_array (keys)
 			nb := keys.upper
 			from i := 0 until i > nb loop
-				keys.put (clone (keys.item (i)), i)
+				subkeys := keys.item (i)
+				if subkeys /= Void then
+					keys.put (subkeys.twin, i)
+				end
 				i := i + 1
 			end
 		end
@@ -441,11 +456,15 @@ feature {NONE} -- Implementation
 			-- Clone `clashes'.
 		local
 			i, nb: INTEGER
+			subclashes: SPECIAL [INTEGER]
 		do
-			clashes := clone (clashes)
+			clashes := ARRAY_SPECIAL_INTEGER_.cloned_array (clashes)
 			nb := clashes.upper
 			from i := 0 until i > nb loop
-				clashes.put (clone (clashes.item (i)), i)
+				subclashes := clashes.item (i)
+				if subclashes /= Void then
+					clashes.put (subclashes.twin, i)
+				end
 				i := i + 1
 			end
 		end
@@ -509,11 +528,15 @@ feature {NONE} -- Implementation
 			-- Clone `slots'.
 		local
 			i, nb: INTEGER
+			subslots: SPECIAL [INTEGER]
 		do
-			slots := clone (slots)
+			slots := ARRAY_SPECIAL_INTEGER_.cloned_array (slots)
 			nb := slots.upper
 			from i := 0 until i > nb loop
-				slots.put (clone (slots.item (i)), i)
+				subslots := slots.item (i)
+				if subslots /= Void then
+					slots.put (subslots.twin, i)
+				end
 				i := i + 1
 			end
 		end
@@ -539,8 +562,14 @@ feature {NONE} -- Implementation
 	special_item_routines: KL_SPECIAL_ROUTINES [G]
 			-- Routines that ought to be in SPECIAL
 
+	array_special_item_routines: KL_ARRAY_ROUTINES [SPECIAL [G]]
+			-- Routines that ought to be in ARRAY
+
 	special_key_routines: KL_SPECIAL_ROUTINES [K]
 			-- Routines that ought to be in SPECIAL
+
+	array_special_key_routines: KL_ARRAY_ROUTINES [SPECIAL [K]]
+			-- Routines that ought to be in ARRAY
 
 invariant
 
@@ -548,9 +577,13 @@ invariant
 	items_not_void: items /= Void
 	items_count1: capacity = 0 implies items.count = 0
 	items_count2: capacity > 0 implies (items.count = ((capacity) // chunk_size) + 1)
+	special_item_routines_not_void: special_item_routines /= Void
+	array_special_item_routines_not_void: array_special_item_routines /= Void
 	keys_not_void: keys /= Void
 	keys_count1: capacity = 0 implies keys.count = 0
 	keys_count2: capacity > 0 implies (keys.count = ((capacity) // chunk_size) + 1)
+	special_key_routines_not_void: special_key_routines /= Void
+	array_special_key_routines_not_void: array_special_key_routines /= Void
 	clashes_not_void: clashes /= Void
 	clashes_count1: capacity = 0 implies clashes.count = 0
 	clashes_count2: capacity > 0 implies (clashes.count = ((capacity) // chunk_size) + 1)

@@ -65,9 +65,9 @@ feature -- Output
 		do
 				-- Name.
 			if has_name then
-				Result := clone (STRING_.as_string (name))
+				Result := STRING_.cloned_string (STRING_.as_string (name))
 			else
-				Result := clone ("?")
+				Result := STRING_.cloned_string ("?")
 			end
 				-- Type.
 			Result.append_character (' ')

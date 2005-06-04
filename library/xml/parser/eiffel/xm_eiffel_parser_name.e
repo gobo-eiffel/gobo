@@ -137,7 +137,7 @@ feature -- Access
 				check count_for_namespaces: count <= 2 end
 				Result := last
 			else
-				Result := clone (first)
+				Result := STRING_.cloned_string (first)
 				if (count > 1) then
 					Result.append_character (':')
 					Result := STRING_.appended_string (Result, second)
@@ -300,7 +300,7 @@ feature -- Output
 		do
 			nb := count
 			if nb > 0 then
-				Result := clone (item (1))
+				Result := STRING_.cloned_string (item (1))
 			end
 			from
 				i := 2

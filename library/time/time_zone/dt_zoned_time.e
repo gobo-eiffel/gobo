@@ -97,7 +97,7 @@ feature -- Conversion
 			-- Convert `time' into the same time but relative to UTC.
 			-- (Create a new time object at each call.)
 		do
-			Result := clone (time)
+			Result := time.cloned_object
 			Result.add_milliseconds (-(time_zone.fixed_offset.millisecond_count))
 		ensure
 			time_not_void: Result /= Void

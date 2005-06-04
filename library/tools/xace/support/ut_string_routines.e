@@ -105,7 +105,7 @@ feature -- Basic operations
 		local
 			i, nb: INTEGER
 		do
-			Result := clone (str)
+			Result := STRING_.cloned_string (str)
 			nb := Result.count
 			from i := 1 until i > nb loop
 				if Result.item (i) = old_char then
@@ -125,7 +125,7 @@ feature -- Basic operations
 		local
 			i, j, nb: INTEGER
 		do
-			Result := clone (str)
+			Result := STRING_.cloned_string (str)
 			nb := str.count
 			j := 1
 			from i := 1 until i > nb loop

@@ -509,7 +509,7 @@ feature -- Basic operations
 	infix "+" (other: like Current): like Current is
 			-- Sum of current duration with `other'
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.add_years_months_days (other.year, other.month, other.day)
 			Result.add_precise_hours_minutes_seconds (other.hour, other.minute,
 				other.second, other.millisecond)
@@ -518,7 +518,7 @@ feature -- Basic operations
 	infix "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.add_years_months_days (-other.year, -other.month, -other.day)
 			Result.add_precise_hours_minutes_seconds (-other.hour, -other.minute,
 				-other.second, -other.millisecond)
@@ -527,7 +527,7 @@ feature -- Basic operations
 	prefix "-": like Current is
 			-- Unary minus
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.set_year_month_day (-year, -month, -day)
 			Result.set_precise_hour_minute_second (-hour, -minute, -second, -millisecond)
 		end
@@ -606,7 +606,7 @@ feature -- Conversion
 			-- Version of current duration where the time part
 			-- is canonical and has the same sign as the day part
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.set_time_canonical
 		ensure then
 			same_year: Result.year = year

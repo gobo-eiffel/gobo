@@ -646,7 +646,7 @@ feature {NONE} -- Replication
 				if not l_seeds_done then
 					l_need_twin := a_feature.is_other_seeds_shared
 					if l_need_twin then
-						l_other_seeds := clone (l_other_seeds)
+						l_other_seeds := l_other_seeds.cloned_object
 					end
 					i := 1
 					if l_first_seed /= a_new_seed then

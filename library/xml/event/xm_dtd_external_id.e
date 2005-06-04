@@ -104,13 +104,13 @@ feature -- Output
 			-- Print as in input.
 		do
 			if public_id /= Void then
-				Result := clone ("PUBLIC ")
+				Result := STRING_.cloned_string ("PUBLIC ")
 				Result := STRING_.appended_string (Result, public_id)
 			end
 			
 			if system_id /= Void then
 				if Result = Void then
-					Result := clone ("SYSTEM")
+					Result := STRING_.cloned_string ("SYSTEM")
 				end
 				Result.append_character (' ')
 				Result := STRING_.appended_string (Result, system_id)

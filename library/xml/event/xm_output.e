@@ -41,7 +41,7 @@ feature -- Output
 		require
 			a_string_not_void: a_string /= Void
 		do
-			last_output := clone (a_string)
+			last_output := STRING_.cloned_string (a_string)
 			output_stream := Void
 		end
 

@@ -23,6 +23,8 @@ inherit
 
 	HASHABLE
 
+	KL_CLONABLE
+
 feature -- Access
 
 	infix "-" (other: like Current): like duration is
@@ -42,7 +44,7 @@ feature -- Access
 		require
 			a_duration_not_void: a_duration /= Void
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.add_duration (a_duration)
 		ensure
 			addition_not_void: Result /= Void

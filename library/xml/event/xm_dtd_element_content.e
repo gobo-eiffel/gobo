@@ -174,7 +174,7 @@ feature -- Output
 			elseif is_content_empty then
 				Result := "EMPTY"
 			else
-				Result := clone ("(")
+				Result := STRING_.cloned_string ("(")
 				a_cursor := items.new_cursor
 				from a_cursor.start until a_cursor.after loop
 					Result := STRING_.appended_string (Result, a_cursor.item.out)

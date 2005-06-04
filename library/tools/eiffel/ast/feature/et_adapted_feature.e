@@ -248,7 +248,7 @@ feature -- Element change
 					need_twin := False
 				else
 					if need_twin then
-						other_seeds := clone (other_seeds)
+						other_seeds := other_seeds.cloned_object
 						need_twin := False
 					end
 					other_seeds.put (a_seed)
@@ -265,7 +265,7 @@ feature -- Element change
 							need_twin := False
 						else
 							if need_twin then
-								other_seeds := clone (other_seeds)
+								other_seeds := other_seeds.cloned_object
 								need_twin := False
 							end
 							other_seeds.put (a_seed)

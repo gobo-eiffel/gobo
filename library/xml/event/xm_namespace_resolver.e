@@ -120,7 +120,7 @@ feature -- Element
 							element_prefix, element_local_part)
 					on_delayed_attributes
 				else
-					error_msg := clone (Undeclared_namespace_error)
+					error_msg := STRING_.cloned_string (Undeclared_namespace_error)
 					error_msg := STRING_.appended_string (error_msg, " in tag <")
 					error_msg := STRING_.appended_string (error_msg, element_prefix)
 					error_msg := STRING_.appended_string (error_msg, ":")

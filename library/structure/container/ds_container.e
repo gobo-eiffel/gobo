@@ -21,6 +21,13 @@ inherit
 			is_equal
 		end
 
+	KL_CLONABLE
+		undefine
+			copy, is_equal
+		redefine
+			is_equal
+		end
+
 feature {NONE} -- Initialization
 
 	make_default is

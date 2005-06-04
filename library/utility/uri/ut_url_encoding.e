@@ -36,7 +36,7 @@ feature -- Escape/unescape data characters
 			c: CHARACTER
 			d: STRING
 		do
-			Result := clone (a_string)
+			Result := STRING_.cloned_string (a_string)
 			nb := Result.count
 			from i := 1 until i > nb loop
 				c := Result.item (i)
@@ -113,7 +113,7 @@ feature -- Escape/unescape data characters
 			i, nb: INTEGER
 			c: CHARACTER
 		do
-			Result := clone (a_string)
+			Result := STRING_.cloned_string (a_string)
 			nb := Result.count
 			from i := 1 until i > nb loop
 				c := Result.item (i)

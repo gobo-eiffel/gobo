@@ -55,7 +55,7 @@ feature -- Content
 			-- never follow each other.
 		do
 			if last_content = Void then
-				last_content := clone (a_content)
+				last_content := STRING_.cloned_string (a_content)
 			else
 				last_content := STRING_.appended_string (last_content, a_content)
 			end

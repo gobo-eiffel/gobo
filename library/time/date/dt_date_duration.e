@@ -213,7 +213,7 @@ feature -- Status setting
 			end
 		ensure
 			is_definite: is_definite
-			same_duration: (a_date + Current).is_equal (a_date + old clone (Current))
+			same_duration: (a_date + Current).is_equal (a_date + old cloned_object)
 		end
 
 	set_canonical (a_date: like date) is
@@ -230,7 +230,7 @@ feature -- Status setting
 			make_canonical_from_dates (a_date, final_date)
 		ensure
 			is_canonical: is_canonical (a_date)
-			same_duration: (a_date + Current).is_equal (a_date + old clone (Current))
+			same_duration: (a_date + Current).is_equal (a_date + old cloned_object)
 		end
 
 feature -- Setting
@@ -321,21 +321,21 @@ feature -- Basic operations
 	infix "+" (other: like Current): like Current is
 			-- Sum of current duration with `other'
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.add_years_months_days (other.year, other.month, other.day)
 		end
 	
 	infix "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.add_years_months_days (-other.year, -other.month, -other.day)
 		end
 
 	prefix "-": like Current is
 			-- Unary minus
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.set_year_month_day (-year, -month, -day)
 		end
 
@@ -399,7 +399,7 @@ feature -- Conversion
 		require
 			a_date_not_void: a_date /= Void
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.set_canonical (a_date)
 		ensure
 			canonical_duration_not_void: Result /= Void
@@ -413,7 +413,7 @@ feature -- Conversion
 		require
 			a_date_not_void: a_date /= Void
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.set_definite (a_date)
 		ensure
 			definite_duration_not_void: Result /= Void

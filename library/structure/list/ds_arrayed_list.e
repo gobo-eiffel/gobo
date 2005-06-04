@@ -266,7 +266,7 @@ feature -- Duplication
 					internal_cursor := Void
 					internal_cursor := new_cursor
 				end
-				storage := clone (storage)
+				storage := storage.twin
 			end
 		end
 

@@ -120,7 +120,7 @@ feature -- Access
 			other_not_void: other /= Void
 			same_equality_tester: same_equality_tester (other)
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.merge (other)
 		ensure
 			union_not_void: Result /= Void
@@ -136,7 +136,7 @@ feature -- Access
 			other_not_void: other /= Void
 			same_equality_tester: same_equality_tester (other)
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.intersect (other)
 		ensure
 			intersection_not_void: Result /= Void
@@ -152,7 +152,7 @@ feature -- Access
 			other_not_void: other /= Void
 			same_equality_tester: same_equality_tester (other)
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.subtract (other)
 		ensure
 			subtraction_not_void: Result /= Void
@@ -170,7 +170,7 @@ feature -- Access
 			other_not_void: other /= Void
 			same_equality_tester: same_equality_tester (other)
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.symdif (other)
 		ensure
 			symdifference_not_void: Result /= Void

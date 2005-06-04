@@ -16,6 +16,8 @@ inherit
 
 	ANY -- Needed by SE 2.1.
 
+	KL_CLONABLE
+
 creation
 
 	make

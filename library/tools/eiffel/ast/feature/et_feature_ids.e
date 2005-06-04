@@ -19,7 +19,17 @@ inherit
 			copy, is_equal
 		end
 
+	KL_CLONABLE
+		undefine
+			copy, is_equal
+		end
+
 	KL_IMPORTED_ANY_ROUTINES
+		undefine
+			copy, is_equal
+		end
+
+	KL_IMPORTED_ARRAY_ROUTINES
 		undefine
 			copy, is_equal
 		end
@@ -176,7 +186,7 @@ feature -- Duplication
 			-- Copy `other' to `Current'.
 		do
 			standard_copy (other)
-			feature_ids := clone (feature_ids)
+			feature_ids := INTEGER_ARRAY_.cloned_array (feature_ids)
 		end
 
 feature -- Comparison

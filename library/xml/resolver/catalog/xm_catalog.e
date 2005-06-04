@@ -156,7 +156,7 @@ feature -- Access
 					a_rewrite_rule := another_cursor.item
 					shared_catalog_manager.debug_message (9, "Next rewrite rule matches", a_rewrite_rule.start_string)
 					if a_system_id.substring_index (a_rewrite_rule.start_string, 1) = 1 then
-						Result := clone (a_system_id)
+						Result := STRING_.cloned_string (a_system_id)
 						Result := STRING_.replaced_substring (Result, a_rewrite_rule.target, 1, a_rewrite_rule.count)
 						shared_catalog_manager.debug_message (5, "Rewrite rule resolved to", Result)
 						another_cursor.go_after
@@ -231,7 +231,7 @@ feature -- Access
 					a_rewrite_rule := another_cursor.item
 					shared_catalog_manager.debug_message (9, "Next rewrite rule matches", a_rewrite_rule.start_string)
 					if a_uri_reference.substring_index (a_rewrite_rule.start_string, 1) = 1 then
-						Result := clone (a_uri_reference)
+						Result := STRING_.cloned_string (a_uri_reference)
 						Result := STRING_.replaced_substring (Result, a_rewrite_rule.target, 1, a_rewrite_rule.count)
 						shared_catalog_manager.debug_message (5, "Rewrite rule resolved to", Result)
 						another_cursor.go_after
@@ -247,7 +247,7 @@ feature -- Access
 			if Result = Void then
 				shared_catalog_manager.debug_message (9, "Checking for uri delegates for", a_uri_reference)
 				Result := resolved_delegated_uri (a_uri_reference)
-			end			
+			end
 			if Result = Void and then not delegated then
 				shared_catalog_manager.debug_message (9, "Checking next catalogs for", a_uri_reference)
 				from

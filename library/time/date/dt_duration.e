@@ -18,6 +18,8 @@ inherit
 
 	HASHABLE
 
+	KL_CLONABLE
+
 feature -- Access
 
 	absolute_time (a_time: DT_ABSOLUTE_TIME): DT_ABSOLUTE_TIME is

@@ -215,7 +215,7 @@ feature -- Status setting
 			make_precise_canonical (millisecond_count)
 		ensure
 			is_canonical: is_canonical
-			same_duration: is_equal (old clone (Current))
+			same_duration: is_equal (old cloned_object)
 		end
 
 feature -- Setting
@@ -360,7 +360,7 @@ feature -- Basic operations
 	infix "+" (other: like Current): like Current is
 			-- Sum of current duration with `other'
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.add_precise_hours_minutes_seconds (other.hour, other.minute,
 				other.second, other.millisecond)
 		end
@@ -368,7 +368,7 @@ feature -- Basic operations
 	infix "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.add_precise_hours_minutes_seconds (-other.hour, -other.minute,
 				-other.second, -other.millisecond)
 		end
@@ -376,7 +376,7 @@ feature -- Basic operations
 	prefix "-": like Current is
 			-- Unary minus
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.set_precise_hour_minute_second (-hour, -minute, -second, -millisecond)
 		end
 

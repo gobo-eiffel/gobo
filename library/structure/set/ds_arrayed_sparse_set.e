@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	clone_items is
 			-- Clone `items'.
 		do
-			items := clone (items)
+			items := items.twin
 		end
 
 	items_resize (n: INTEGER) is
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 	clone_clashes is
 			-- Clone `clashes'.
 		do
-			clashes := clone (clashes)
+			clashes := clashes.twin
 		end
 
 	clashes_resize (n: INTEGER) is
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 	clone_slots is
 			-- Clone `slots'.
 		do
-			slots := clone (slots)
+			slots := slots.twin
 		end
 
 	slots_resize (n: INTEGER) is

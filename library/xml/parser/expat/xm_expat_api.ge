@@ -1862,7 +1862,7 @@ feature -- Conversion: C Strings to STRING
 #endif
 		do
 			if length = 0 then
-				Result := clone ("")
+				create Result.make (0)
 			else
 #ifdef SE
 				storage := storage.from_pointer (ps)

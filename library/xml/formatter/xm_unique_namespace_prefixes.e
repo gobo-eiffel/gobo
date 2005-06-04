@@ -120,7 +120,7 @@ feature -- Result
 		require
 			a_ns_not_void: a_ns /= Void
 		do
-			Result := clone (Xmlns)
+			Result := STRING_.cloned_string (Xmlns)
 			if a_ns.has_prefix then
 				Result := STRING_.appended_string (Result, Prefix_separator)
 				Result := STRING_.appended_string (Result, a_ns.ns_prefix)

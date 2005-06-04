@@ -170,7 +170,7 @@ feature -- Duplication
 		do
 			if other /= Current then
 				standard_copy (other)
-				storage := clone (storage)
+				storage := storage.twin
 			end
 		end
 

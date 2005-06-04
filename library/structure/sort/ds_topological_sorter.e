@@ -365,8 +365,8 @@ feature -- Sort
 			reset
 				-- Clone `counts' and `successors' because they
 				-- are overwritten during the sort.
-			a_counts := clone (counts)
-			a_successors := clone (successors)
+			a_counts := counts.cloned_object
+			a_successors := successors.cloned_object
 			nb := items.count
 			create sorted_items.make (nb)
 				-- T4. Scan for zeros.

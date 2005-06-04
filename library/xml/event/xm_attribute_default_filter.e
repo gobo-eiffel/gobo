@@ -334,6 +334,8 @@ feature {NONE} -- Tokens implementation
 	forward_attribute (a_ns, a_prefix, a_local, a_value: STRING) is
 			-- Push attributes, if attribute name already
 			-- in list overwrite the value.
+		require
+			a_value_not_void: a_value /= Void
 		local
 			a_string: STRING
 			i, nb: INTEGER
@@ -344,7 +346,7 @@ feature {NONE} -- Tokens implementation
 				element_tokens.item (dtd_name (a_prefix, a_local))
 			then
 					-- Normalize value.
-				a_string := clone (a_value)
+				a_string := STRING_.cloned_string (a_value)
 					-- Within string
 					-- Keep the first space of a repetition
 					-- Should we also replace with a space character?
