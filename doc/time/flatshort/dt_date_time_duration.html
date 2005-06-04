@@ -53,6 +53,7 @@ color="#800000"><em>&gt;&quot;
         KL_PART_COMPARABLE
         </em><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><em>HASHABLE</em></a><em>
+        KL_CLONABLE
     </em><a href="dt_date_value.html"><em>DT_DATE_VALUE</em></a><em>
     </em><a href="dt_gregorian_calendar.html"><em>DT_GREGORIAN_CALENDAR</em></a><em>
 </em><a href="dt_time_duration.html"><em>DT_TIME_DURATION</em></a><em>
@@ -60,6 +61,7 @@ href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><em>HASHABLE</em
         KL_PART_COMPARABLE
         </em><a
 href="http://www.gobosoft.com/eiffel/nice/elks95/hashable.html"><em>HASHABLE</em></a><em>
+        KL_CLONABLE
     </em><a href="dt_time_value.html"><em>DT_TIME_VALUE</em></a><em>
     </em><a href="dt_gregorian_calendar.html"><em>DT_GREGORIAN_CALENDAR</em></a><em>
 </em><a href="dt_date_time_value.html"><em>DT_DATE_TIME_VALUE</em></a><em>
@@ -560,8 +562,7 @@ href="dt_date_time.html#infix_plus">+</a><em> </em><font
 color="#008080"><em>Current</em></font>).<a
 href="dt_date_time.html#is_equal"><em>is_equal</em></a><em> </em>(<em>a_date_time </em><a
 href="dt_date_time.html#infix_plus">+</a><em> </em><font
-color="#000080"><em><strong>old</strong></em></font><em> clone </em>(<font
-color="#008080"><em>Current</em></font>))</pre>
+color="#000080"><em><strong>old</strong></em></font><em> cloned_object</em>)</pre>
     <pre><a name="set_canonical"><em>set_canonical</em></a><em> </em>(<em>a_date_time</em>:<em> </em><font
 color="#000080"><em><strong>like</strong></em></font><em> </em><a
 href="#date_time"><em>date_time</em></a>)<em>
@@ -581,8 +582,7 @@ href="dt_date_time.html#infix_plus">+</a><em> </em><font
 color="#008080"><em>Current</em></font>).<a
 href="dt_date_time.html#is_equal"><em>is_equal</em></a><em> </em>(<em>a_date_time </em><a
 href="dt_date_time.html#infix_plus">+</a><em> </em><font
-color="#000080"><em><strong>old</strong></em></font><em> clone </em>(<font
-color="#008080"><em>Current</em></font>))</pre>
+color="#000080"><em><strong>old</strong></em></font><em> cloned_object</em>)</pre>
     <pre><a name="set_time_canonical"><em>set_time_canonical</em></a><em>
 </em><font color="#008000">        -- Set duration with its time part canonical
         -- and with the same sign as its day part.</font><em>
@@ -594,8 +594,7 @@ color="#008000">.)</font><em>
 </em><font color="#000080">    <em><strong>ensure</strong></em></font><em>
         is_canonical</em>:<em> </em><a href="#is_canonical"><em>is_canonical</em></a><em>
         same_duration</em>: <a href="#is_equal"><em>is_equal</em></a><em> </em>(<font
-color="#000080"><em><strong>old</strong></em></font><em> clone </em>(<font
-color="#008080"><em>Current</em></font>))
+color="#000080"><em><strong>old</strong></em></font><em> cloned_object</em>)
 <em>        same_year</em>:<em> </em><a href="#year"><em>year</em></a><em> </em>=<em> </em><font
 color="#000080"><em><strong>old</strong></em></font><em> </em><a
 href="#year"><em>year</em></a><em>
@@ -1841,7 +1840,8 @@ color="#008000"> -- class DT_DATE_TIME_DURATION</font></pre>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
-$Revision$" --> 
+$Revision$"
+            --> 
         </address>
         </td>
         <td align="right" valign="top"><a

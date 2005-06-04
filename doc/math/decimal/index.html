@@ -293,7 +293,7 @@ is_trapped (Signal_invalid_operation),is_trapped (Signal_overflow), is_trapped (
 create price_context.make_double
 price_context.set_digits (31)
 price_context.set_rounding_mode (price_context.Round_half_even)
-tax_context := clone (price_context)
+tax_context := price_context.cloned_object
 tax_context.set_rounding_mode (tax_context.Round_down)
 create default_context.make_double
 default_context.set_digits (31)
