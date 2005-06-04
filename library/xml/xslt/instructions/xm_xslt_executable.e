@@ -203,7 +203,7 @@ feature -- Element change
 
 feature {XM_XSLT_EVALUATION_CONTEXT} -- Access
 
-		collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
+	collation_map: DS_HASH_TABLE [ST_COLLATOR, STRING]
 			-- Map of collation names to collators
 
 feature {NONE} -- Implementation

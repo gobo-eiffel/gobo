@@ -163,7 +163,7 @@ feature -- Element change
 			if a_function /= Void then
 				
 				-- For Function arguments, the XM_XSLT_USER_FUNCTION_PARAMETER is more efficient than
-            --  the general-purpose XM_XSLT_COMPILED_PARAM object, and these are compiled
+				--  the general-purpose XM_XSLT_COMPILED_PARAM object, and these are compiled
 				--  when compiling the parent xsl:function
 
 				last_generated_expression := Void
