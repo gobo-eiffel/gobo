@@ -45,7 +45,7 @@ feature -- Access
 	common_atomic_type: XM_XPATH_ATOMIC_TYPE is
 			-- Lowest common super-type
 		do
-			Result := Type_factory.any_atomic_type
+			Result := type_factory.any_atomic_type
 		end
 
 	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
