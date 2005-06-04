@@ -46,6 +46,13 @@ inherit
 			out, is_equal, copy
 		end
 
+	KL_IMPORTED_DOUBLE_ROUTINES
+		export
+			{NONE} all
+		undefine
+			out, is_equal, copy
+		end
+
 	KL_IMPORTED_STRING_ROUTINES
 		export
 			{NONE} all
@@ -212,7 +219,7 @@ feature {NONE} -- Initialization
 						if a_decimal_parser.exponent_as_double > Platform.Maximum_integer then
 							exponent := a_context.Maximum_exponent + a_context.digits + a_decimal_parser.exponent_count + 2
 						else
-							exponent := a_decimal_parser.exponent_as_double.truncated_to_integer
+							exponent := DOUBLE_.truncated_to_integer (a_decimal_parser.exponent_as_double)
 						end
 						if parser.exponent_sign < 0 then
 							exponent := -exponent
@@ -1319,7 +1326,7 @@ feature -- Basic operations
 						end
 					end
 				end
-				temp_ctx := clone (ctx)
+				temp_ctx := ctx.cloned_object
 				temp_ctx.reset_flags
 				Result := operand_a.subtract (operand_b, temp_ctx)
 				if Result.is_zero and then not temp_ctx.is_flagged (Signal_subnormal) then
