@@ -73,10 +73,9 @@ is called, rules with the given start condition will be active
 and rules with other start conditions will be inactive. If the
 start condition is inclusive, then rules with no start conditions
 at all will also be active. If it is exclusive, then only rules
-qualified with the start condition will be active. The original 
-state where only the rules with no start conditions are active 
-is referred to as the start condition <font 
-color="#800000"><tt>INITIAL</tt></font>.</p>
+qualified with the start condition will be active. The original
+state where only the rules with no start conditions are active is
+referred to as the start condition <font color="#800000"><tt>INITIAL</tt></font>.</p>
 
 <p>A set of rules contingent on the same exclusive start
 condition describe a scanner which is independent of any of the
@@ -328,7 +327,7 @@ color="#008080"><em>line_nb</em> := <em>line_nb</em> + <em>1</em></font>
 color="#0000FF">{</font>
                  <font color="#008080"><em>set_start_condition</em> (<em>INITIAL</em>)
                  -- Pass string value to parser.
-                 <em>last_value</em> := <em>clone</em> (<em>buffer</em>)
+                 <em>last_value</em> := <em>cloned_string</em> (<em>buffer</em>)
                  <em>last_token</em> := <em>E_STRING</em></font>
             <font color="#0000FF">}</font>
 <font color="#800000">&lt;str&gt;</font><font color="#FF0000">.|\n </font>               <font
@@ -405,7 +404,7 @@ color="#008080"><em>last_token</em> := '<em>%U</em>'</font></pre>
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 21 February 2005</font><br>
+            <strong>Last Updated:</strong> 29 May 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 
