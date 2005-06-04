@@ -133,6 +133,19 @@ feature -- Exponent
 #endif
 		end
 
+feature -- Conversion
+
+	truncated_to_integer (d: DOUBLE): INTEGER is
+			-- Integer part (Same sign, largest absolute
+			-- value no greater than current object's)
+		do
+#ifdef (SE && ! SE_1_0)
+			Result := d.force_to_integer_32
+#else
+			Result := d.truncated_to_integer
+#endif
+		end
+
 	floor_to_integer (d: DOUBLE): INTEGER is
 			-- INTEGER floor
 			-- (floor returns integer in ELKS, but a floating point value with SE2)
@@ -140,7 +153,11 @@ feature -- Exponent
 			d_large_enough: d >= Platform.Minimum_integer
 			d_small_enough: d < (Platform.Maximum_integer + 1.0)
 		do
+#ifdef (SE && ! SE_1_0)
+			Result := d.force_to_integer_32
+#else
 			Result := d.truncated_to_integer
+#endif
 			if d.floor /= Result then
 				Result := Result - 1
 			end
