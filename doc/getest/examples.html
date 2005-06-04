@@ -56,7 +56,9 @@ color="#008080"><em>Void</em></font><em>
             s2_not_void</em>:<em> s2 </em>/=<em> </em><font
 color="#008080"><em>Void</em></font><em>
         </em><font color="#000080"><em><strong>do</strong></em></font><em>
-            </em><font color="#008080"><em>Result</em></font><em> </em>:=<em> clone </em>(<em>s1</em>)<em>
+            </em><font color="#000080"><em><strong>create</strong></em></font><em> </em><font
+color="#008080"><em>Result</em></font>.<em>make </em>(<em>s1</em>.<em>count </em>+<em> s2</em>.<em>count</em>)<em>
+            </em><font color="#008080"><em>Result</em></font>.<em>append_string </em>(<em>s1</em>)<em>
             </em><font color="#008080"><em>Result</em></font>.<em>append_string </em>(<em>s1</em>)<em>
         </em><font color="#000080"><em><strong>ensure</strong></em></font><em>
             concat_string_not_void: </em><font color="#008080"><em>Result</em></font><em> </em>/=<em> </em><font
@@ -154,7 +156,7 @@ FAIL:  [TEST_CONCAT1.test_concat] foobar
 </blockquote>
 
 <p>Oh well, it looks like we have just found a bug! We can easily
-see that the second line in the routine <font color="#008080"><em><tt>concat</tt></em></font>
+see that the third line in the routine <font color="#008080"><em><tt>concat</tt></em></font>
 from class <font color="#008080"><em><tt>CONCAT1</tt></em></font>
 should have been:</p>
 
@@ -198,7 +200,7 @@ Test Summary for xconcat2
             <strong>http:</strong></font><a
             href="http://www.gobosoft.com"><font size="2">//www.gobosoft.com</font></a><font
             size="2"><br>
-            <strong>Last Updated:</strong> 16 February 2005</font><br>
+            <strong>Last Updated:</strong> 29 May 2005</font><br>
             <!--webbot bot="PurpleText"
             preview="
 $Date$ 

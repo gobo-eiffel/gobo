@@ -30,7 +30,8 @@ feature -- Basic operations
 			s1_not_void: s1 /= Void
 			s2_not_void: s2 /= Void
 		do
-			Result := clone (s1)
+			create Result.make (s1.count + s2.count)
+			Result.append_string (s1)
 			Result.append_string (s2)
 		ensure
 			concat_string_not_void: Result /= Void
