@@ -18,6 +18,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
+	KL_IMPORTED_ANY_ROUTINES
 
 creation
 
@@ -255,7 +256,7 @@ feature -- Setting
 							if action_position /= Void then
 								an_action := a_position.error_action
 								other_action := action_position.error_action
-								if not equal (an_action, other_action) then
+								if not ANY_.equal_objects (an_action, other_action) then
 									has_conflict := True
 								end
 								if an_action /= Void then
@@ -300,7 +301,7 @@ feature -- Setting
 						if action_position /= Void then
 							an_action := a_position.error_action
 							other_action := action_position.error_action
-							if not equal (an_action, other_action) then
+							if not ANY_.equal_objects (an_action, other_action) then
 								has_conflict := True
 							end
 							if an_action /= Void then
@@ -384,7 +385,7 @@ feature -- Setting
 							if action_position /= Void then
 								an_action := a_position.error_action
 								other_action := action_position.error_action
-								if not equal (an_action, other_action) then
+								if not ANY_.equal_objects (an_action, other_action) then
 									if conflicts = Void then
 										create conflicts.make (nb2)
 										conflicts.put_last (action_position)
@@ -433,7 +434,7 @@ feature -- Setting
 						if action_position /= Void then
 							an_action := a_position.error_action
 							other_action := action_position.error_action
-							if not equal (an_action, other_action) then
+							if not ANY_.equal_objects (an_action, other_action) then
 								if conflicts = Void then
 									create conflicts.make (nb2)
 									conflicts.put_last (action_position)

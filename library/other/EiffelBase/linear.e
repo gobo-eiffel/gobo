@@ -19,6 +19,8 @@ inherit
 			count as ds_count
 		end
 
+	KL_IMPORTED_ANY_ROUTINES
+
 feature -- Access
 
 	item: G is
@@ -97,7 +99,7 @@ feature -- Access
 			end
 		ensure
 			object_found: (not exhausted and object_comparison)
-				 implies equal (v, item)
+				 implies ANY_.equal_objects (v, item)
 			item_found: (not exhausted and not object_comparison)
 				 implies v = item
 		end
