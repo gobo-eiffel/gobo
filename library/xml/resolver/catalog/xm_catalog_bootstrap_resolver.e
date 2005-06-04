@@ -675,7 +675,7 @@ feature -- Access
 			xml_catalog_xsd_not_void: Result /= Void
 		end
 
-		Xml_catalog_xsd_1_0: STRING is
+	Xml_catalog_xsd_1_0: STRING is
 			-- OASIS XML Catalogs W3C schema, version 1.0
 		once
 			Result := "[
@@ -1372,7 +1372,7 @@ feature -- Access
     </mixed>
   </define>
 </grammar>
-						  ]"
+]"
 		ensure
 			xml_catalog_rng_not_void: Result /= Void
 		end
