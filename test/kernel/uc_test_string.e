@@ -15,8 +15,10 @@ deferred class UC_TEST_STRING
 inherit
 
 	KL_TEST_CASE
+	KL_SHARED_EIFFEL_COMPILER
 	KL_SHARED_PLATFORM
 	KL_IMPORTED_INTEGER_ROUTINES
+	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Test
 
@@ -336,12 +338,17 @@ feature -- Test
 		local
 			a_string: UC_STRING
 		do
-			create a_string.make_from_string ("bar")
-			assert_characters_equal ("item1", 'b', a_string @ 1) 
-			assert_characters_equal ("item2", 'a', a_string @ 2) 
-			assert_characters_equal ("item3", 'r', a_string @ 3) 
-			a_string.put_code (too_big_character, 2)
-			assert_characters_equal ("item4", '%U', a_string @ 2) 
+			if not eiffel_compiler.is_se then
+					-- `infix @' in STRING has been made frozen in SE 2.2b1.
+					-- As a consequence it does not work in UC_STRING for
+					-- SE 2.1 (it works for SE 1.0 and 2.2b1).
+				create a_string.make_from_string ("bar")
+				assert_characters_equal ("item1", 'b', a_string @ 1) 
+				assert_characters_equal ("item2", 'a', a_string @ 2) 
+				assert_characters_equal ("item3", 'r', a_string @ 3) 
+				a_string.put_code (too_big_character, 2)
+				assert_characters_equal ("item4", '%U', a_string @ 2) 
+			end
 		end
 
 	test_infix_at2 is
@@ -350,14 +357,19 @@ feature -- Test
 			a_string: STRING
 			uc_string: UC_STRING
 		do
-			create {UC_STRING} a_string.make_from_string ("bar")
-			assert_characters_equal ("item1", 'b', a_string @ 1) 
-			assert_characters_equal ("item2", 'a', a_string @ 2) 
-			assert_characters_equal ("item3", 'r', a_string @ 3) 
-			uc_string ?= a_string
-			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (too_big_character, 2)
-			assert_characters_equal ("item4", '%U', a_string @ 2) 
+			if not eiffel_compiler.is_se then
+					-- `infix @' in STRING has been made frozen in SE 2.2b1.
+					-- As a consequence it does not work in UC_STRING for
+					-- SE 2.1 (it works for SE 1.0 and 2.2b1).
+				create {UC_STRING} a_string.make_from_string ("bar")
+				assert_characters_equal ("item1", 'b', a_string @ 1) 
+				assert_characters_equal ("item2", 'a', a_string @ 2) 
+				assert_characters_equal ("item3", 'r', a_string @ 3) 
+				uc_string ?= a_string
+				assert ("uc_string", uc_string /= Void)
+				uc_string.put_code (too_big_character, 2)
+				assert_characters_equal ("item4", '%U', a_string @ 2) 
+			end
 		end
 
 	test_put_unicode1 is
@@ -1074,44 +1086,45 @@ feature -- Test
 			assert_integers_equal ("null", 0, a_string.occurrences ('%U')) 
 		end
 
-	obsolete_test_head1 is
-			-- Test feature `head'.
-		local
-			a_string: UC_STRING
-		do
-			create a_string.make_from_string ("foobar")
-			a_string.put_code (333, 3)
-			a_string.put_code (444, 4)
-			a_string.head (10)
-			assert_equal ("head_10", "fo%%/333/%%/444/ar", a_string.out) 
-			a_string.head (6)
-			assert_equal ("head_6", "fo%%/333/%%/444/ar", a_string.out) 
-			a_string.head (3)
-			assert_equal ("head_3", "fo%%/333/", a_string.out) 
-			a_string.head (0)
-			assert_equal ("head_0", "", a_string.out) 
-		end
+-- Not supported in SE 2.2b1.
+--	obsolete_test_head1 is
+--			-- Test feature `head'.
+--		local
+--			a_string: UC_STRING
+--		do
+--			create a_string.make_from_string ("foobar")
+--			a_string.put_code (333, 3)
+--			a_string.put_code (444, 4)
+--			a_string.head (10)
+--			assert_equal ("head_10", "fo%%/333/%%/444/ar", a_string.out) 
+--			a_string.head (6)
+--			assert_equal ("head_6", "fo%%/333/%%/444/ar", a_string.out) 
+--			a_string.head (3)
+--			assert_equal ("head_3", "fo%%/333/", a_string.out) 
+--			a_string.head (0)
+--			assert_equal ("head_0", "", a_string.out) 
+--		end
 
-	obsolete_test_head2 is
-			-- Test feature `head'.
-		local
-			a_string: STRING
-			uc_string: UC_STRING
-		do
-			create {UC_STRING} a_string.make_from_string ("foobar")
-			uc_string ?= a_string
-			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (333, 3)
-			uc_string.put_code (444, 4)
-			a_string.head (10)
-			assert_equal ("head_10", "fo%%/333/%%/444/ar", a_string.out) 
-			a_string.head (6)
-			assert_equal ("head_6", "fo%%/333/%%/444/ar", a_string.out) 
-			a_string.head (3)
-			assert_equal ("head_3", "fo%%/333/", a_string.out) 
-			a_string.head (0)
-			assert_equal ("head_0", "", a_string.out) 
-		end
+--	obsolete_test_head2 is
+--			-- Test feature `head'.
+--		local
+--			a_string: STRING
+--			uc_string: UC_STRING
+--		do
+--			create {UC_STRING} a_string.make_from_string ("foobar")
+--			uc_string ?= a_string
+--			assert ("uc_string", uc_string /= Void)
+--			uc_string.put_code (333, 3)
+--			uc_string.put_code (444, 4)
+--			a_string.head (10)
+--			assert_equal ("head_10", "fo%%/333/%%/444/ar", a_string.out) 
+--			a_string.head (6)
+--			assert_equal ("head_6", "fo%%/333/%%/444/ar", a_string.out) 
+--			a_string.head (3)
+--			assert_equal ("head_3", "fo%%/333/", a_string.out) 
+--			a_string.head (0)
+--			assert_equal ("head_0", "", a_string.out) 
+--		end
 
 	test_keep_head1 is
 			-- Test feature `keep_head'.
@@ -1131,44 +1144,45 @@ feature -- Test
 			assert_equal ("head_0", "", a_string.out) 
 		end
 
-	obsolete_test_tail1 is
-			-- Test feature `tail'.
-		local
-			a_string: UC_STRING
-		do
-			create a_string.make_from_string ("foobar")
-			a_string.put_code (333, 3)
-			a_string.put_code (444, 4)
-			a_string.tail (10)
-			assert_equal ("tail_10", "fo%%/333/%%/444/ar", a_string.out) 
-			a_string.tail (6)
-			assert_equal ("tail_6", "fo%%/333/%%/444/ar", a_string.out) 
-			a_string.tail (3)
-			assert_equal ("tail_3", "%%/444/ar", a_string.out) 
-			a_string.tail (0)
-			assert_equal ("tail_0", "", a_string.out) 
-		end
-
-	obsolete_test_tail2 is
-			-- Test feature `tail'.
-		local
-			a_string: STRING
-			uc_string: UC_STRING
-		do
-			create {UC_STRING} a_string.make_from_string ("foobar")
-			uc_string ?= a_string
-			assert ("uc_string", uc_string /= Void)
-			uc_string.put_code (333, 3)
-			uc_string.put_code (444, 4)
-			a_string.tail (10)
-			assert_equal ("tail_10", "fo%%/333/%%/444/ar", a_string.out) 
-			a_string.tail (6)
-			assert_equal ("tail_6", "fo%%/333/%%/444/ar", a_string.out) 
-			a_string.tail (3)
-			assert_equal ("tail_3", "%%/444/ar", a_string.out) 
-			a_string.tail (0)
-			assert_equal ("tail_0", "", a_string.out) 
-		end
+-- Not supported in SE 2.2b1.
+--	obsolete_test_tail1 is
+--			-- Test feature `tail'.
+--		local
+--			a_string: UC_STRING
+--		do
+--			create a_string.make_from_string ("foobar")
+--			a_string.put_code (333, 3)
+--			a_string.put_code (444, 4)
+--			a_string.tail (10)
+--			assert_equal ("tail_10", "fo%%/333/%%/444/ar", a_string.out) 
+--			a_string.tail (6)
+--			assert_equal ("tail_6", "fo%%/333/%%/444/ar", a_string.out) 
+--			a_string.tail (3)
+--			assert_equal ("tail_3", "%%/444/ar", a_string.out) 
+--			a_string.tail (0)
+--			assert_equal ("tail_0", "", a_string.out) 
+--		end
+--
+--	obsolete_test_tail2 is
+--			-- Test feature `tail'.
+--		local
+--			a_string: STRING
+--			uc_string: UC_STRING
+--		do
+--			create {UC_STRING} a_string.make_from_string ("foobar")
+--			uc_string ?= a_string
+--			assert ("uc_string", uc_string /= Void)
+--			uc_string.put_code (333, 3)
+--			uc_string.put_code (444, 4)
+--			a_string.tail (10)
+--			assert_equal ("tail_10", "fo%%/333/%%/444/ar", a_string.out) 
+--			a_string.tail (6)
+--			assert_equal ("tail_6", "fo%%/333/%%/444/ar", a_string.out) 
+--			a_string.tail (3)
+--			assert_equal ("tail_3", "%%/444/ar", a_string.out) 
+--			a_string.tail (0)
+--			assert_equal ("tail_0", "", a_string.out) 
+--		end
 
 	test_keep_tail1 is
 			-- Test feature `keep_tail'.
@@ -1244,18 +1258,18 @@ feature -- Test
 			a_string2.append_code (978)
 			assert ("hash_code2", a_string.hash_code = a_string2.hash_code) 
 			s := "foobar"
-			create a_string.make_from_string (clone (s))
+			create a_string.make_from_string (STRING_.cloned_string (s))
 			assert ("same_string1", a_string.same_string (s))
 			assert_integers_equal ("same_hash_code1", s.hash_code, a_string.hash_code)
 			s := ""
-			create a_string.make_from_string (clone (s))
+			create a_string.make_from_string (STRING_.cloned_string (s))
 			assert ("same_string2", a_string.same_string (s))
 			assert_integers_equal ("same_hash_code2", s.hash_code, a_string.hash_code)
 			s := "foo"
 			c := INTEGER_.to_character (Platform.Maximum_character_code)
 			s.append_character (c)
 			s.append_string ("bar")
-			create a_string.make_from_string (clone (s))
+			create a_string.make_from_string (STRING_.cloned_string (s))
 			assert ("same_string3", a_string.same_string (s))
 			assert_integers_equal ("same_hash_code3", s.hash_code, a_string.hash_code)
 		end
@@ -1279,13 +1293,13 @@ feature -- Test
 			uc_string.append_code (978)
 			assert ("hash_code2", a_string.hash_code = a_string2.hash_code) 
 			s := "foobar"
-			create {UC_STRING} a_string.make_from_string (clone (s))
+			create {UC_STRING} a_string.make_from_string (STRING_.cloned_string (s))
 			uc_string ?= a_string
 			assert ("uc_string3", uc_string /= Void)
 			assert ("same_string1", uc_string.same_string (s))
 			assert_integers_equal ("same_hash_code1", s.hash_code, a_string.hash_code)
 			s := ""
-			create {UC_STRING} a_string.make_from_string (clone (s))
+			create {UC_STRING} a_string.make_from_string (STRING_.cloned_string (s))
 			uc_string ?= a_string
 			assert ("uc_string4", uc_string /= Void)
 			assert ("same_string2", uc_string.same_string (s))
@@ -1294,7 +1308,7 @@ feature -- Test
 			c := INTEGER_.to_character (Platform.Maximum_character_code)
 			s.append_character (c)
 			s.append_string ("bar")
-			create {UC_STRING} a_string.make_from_string (clone (s))
+			create {UC_STRING} a_string.make_from_string (STRING_.cloned_string (s))
 			uc_string ?= a_string
 			assert ("uc_string5", uc_string /= Void)
 			assert ("same_string3", uc_string.same_string (s))
