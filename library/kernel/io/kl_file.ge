@@ -56,6 +56,8 @@ inherit
 			tmp_string as old_tmp_string
 		export
 			{NONE} all
+		undefine
+			file_exists
 		end
 
 	KL_GREGORIAN_CALENDAR
