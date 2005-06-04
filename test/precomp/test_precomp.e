@@ -192,6 +192,7 @@ feature {NONE} -- Precompilation
 									if se_1_0 /= Void and then se_1_0.count > 0 then
 										assert_execute ("short -plain -no_style_warning -no_warning " + a_filename + output_log)
 									else
+										-- 'class_check' takes more than 7 hours to run!
 										assert_execute ("class_check -no_style_warning -no_warning -loadpath loadpath.se " + a_filename + output_log)
 									end
 									assert_integers_equal ("no_error_log", 0, file_system.file_count (error_log_filename))
