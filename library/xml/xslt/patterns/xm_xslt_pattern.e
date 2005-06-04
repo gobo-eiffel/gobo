@@ -105,7 +105,7 @@ feature -- Status setting
 		require
 			system_id_not_void: a_system_id /= Void
 		do
-			system_id := clone (a_system_id)
+			system_id := STRING_.cloned_string (a_system_id)
 		ensure
 			system_id_set: system_id /= Void and then STRING_.same_string (system_id, a_system_id)
 		end

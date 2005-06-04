@@ -323,7 +323,7 @@ feature --Element change
 						end
 
 						if not finished then
-							composite := clone (current_token_value)
+							composite := STRING_.cloned_string (current_token_value)
 							composite := STRING_.appended_string (composite, " ")
 							composite := STRING_.appended_string (composite, next_token_value)
 							
@@ -705,7 +705,7 @@ feature {NONE} -- Status setting
 								i := i + 1
 							end
 						end
-						next_token_value := clone (next_token_value)
+						next_token_value := STRING_.cloned_string (next_token_value)
 						next_token  := String_literal_token
 						finished := True
 						

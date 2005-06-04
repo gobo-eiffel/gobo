@@ -50,7 +50,7 @@ feature -- XML Callback handling
 			-- them through to the dispatcher, as they should not
 			-- appear in any of the output documents.
 		do
-			current_element_name := clone (a_local_part)
+			current_element_name := STRING_.cloned_string (a_local_part)
 			current_href_value := Void
 
 			if not STRING_.same_string (a_local_part, uc_document) then
@@ -66,7 +66,7 @@ feature -- XML Callback handling
 		do
 			if STRING_.same_string (current_element_name, uc_document) then
 				if STRING_.same_string (a_local_part, uc_href) then
-					current_href_value := clone (a_value)
+					current_href_value := STRING_.cloned_string (a_value)
 				end
 			else
 				Precursor (a_namespace, a_prefix, a_local_part, a_value)

@@ -16,12 +16,13 @@ inherit
 
 	ANY -- required by SE 2.1b1
 
+	KL_CLONABLE
+
 	DT_SHARED_SYSTEM_CLOCK
 
 	XM_XPATH_STANDARD_NAMESPACES
 
 	KL_IMPORTED_STRING_ROUTINES
-
 
 feature {NONE} -- Initialization
 
@@ -263,7 +264,7 @@ feature -- Creation
 
 			-- Default implementation for non-minor contexts
 
-			Result := clone (Current)
+			Result := cloned_object
 		ensure
 			major_context: Result /= Void and then not Result.is_minor
 		end

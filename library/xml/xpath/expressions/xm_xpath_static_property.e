@@ -18,6 +18,8 @@ inherit
 
 	KL_IMPORTED_INTEGER_ROUTINES
 
+	KL_IMPORTED_ARRAY_ROUTINES
+
 	KL_SHARED_STANDARD_FILES
 
 feature -- Status report
@@ -663,7 +665,7 @@ feature -- Setting cardinality
 		require
 			other_cardinalities: other /= Void and then other.are_cardinalities_computed
 		do
-			cardinalities := clone (other.cardinalities)
+			cardinalities := BOOLEAN_ARRAY_.cloned_array (other.cardinalities)
 			are_cardinalities_computed := True
 		ensure
 			-- TODO - check equality set: cardinalities = other.cardinalities
@@ -907,7 +909,7 @@ feature -- Setting special properties
 		require
 			other_special_properties: other /= Void and then other.are_special_properties_computed
 		do
-			special_properties := clone (other.special_properties)
+			special_properties := BOOLEAN_ARRAY_.cloned_array (other.special_properties)
 			are_special_properties_computed := True
 		ensure
 			-- TODO - equality check set: special_properties = other.special_properties

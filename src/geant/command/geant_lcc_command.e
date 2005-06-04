@@ -74,7 +74,8 @@ feature -- Execution
 			cmd: STRING
 			a_filename: STRING
 		do
-			cmd := clone ("lcc")
+			create cmd.make (128)
+			cmd.append_string ("lcc")
 			cmd.append_string (" -Fo")
 			a_filename := file_system.pathname_from_file_system (executable, unix_file_system)
 			cmd := STRING_.appended_string (cmd, a_filename)

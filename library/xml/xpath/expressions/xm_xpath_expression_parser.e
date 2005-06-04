@@ -2336,7 +2336,7 @@ feature {NONE} -- Implementation
 					line_info := STRING_.appended_string ("on line ", l.out)
 					line_info := STRING_.appended_string (line_info, " ")
 				end
-				a_language := clone (language)
+				a_language := STRING_.cloned_string (language)
 				s := STRING_.appended_string (a_language, " syntax error ")
 				s := STRING_.appended_string (s, line_info)
 				if a_message.count > 2 and then STRING_.same_string (a_message.substring (1, 3), "...") then

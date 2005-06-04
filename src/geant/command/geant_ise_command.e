@@ -147,7 +147,8 @@ feature -- Execution
 			eifgen, project_dir: STRING
 			a_filename: STRING
 		do
-			cmd := clone ("ec -batch")
+			create cmd.make (128)
+			cmd.append_string ("ec -batch")
 			if ace_filename /= Void and then ace_filename.count > 0 then
 				cmd.append_string (" -ace ")
 				a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
@@ -177,7 +178,8 @@ feature -- Execution
 				project.trace (<<"  [ise] cd ", project_dir>>)
 				old_cwd := file_system.cwd
 				file_system.cd (project_dir)
-				cmd := clone ("finish_freezing -silent")
+				create cmd.make (128)
+				cmd.append_string ("finish_freezing -silent")
 				project.trace (<<"  [ise] ", cmd>>)
 				execute_shell (cmd)
 				if exit_code_variable_name /= Void then

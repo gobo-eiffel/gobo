@@ -137,11 +137,11 @@ feature -- Optimization
 			-- Detect the simple cases: no parent or ancestor pattern, no predicates
 			
 			if parent_pattern = Void and then ancestor_pattern = Void and then filters = Void then
-				Result := clone (node_test)
+				Result := node_test.cloned_object
 				-- TODO Result.set_system_id (system_id)
 				Result.set_line_number (line_number)
 			else
-				a_result_pattern := clone (Current)
+				a_result_pattern := cloned_object
 				
 				-- Simplify each component of the pattern
 				

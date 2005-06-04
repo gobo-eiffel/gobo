@@ -222,7 +222,7 @@ feature -- Processing
 				end
 			end
 			if not stop then
-				s := clone ("")
+				s := STRING_.cloned_string ("")
 			else
 				from
 					stop := False
@@ -365,7 +365,7 @@ feature -- Processing
 		do
 			i1 := a_star_string.index_of ('*', 1)
 			if i1 = 0 then
-				Result := clone (a_star_string)
+				Result := STRING_.cloned_string (a_star_string)
 			elseif i1 > 1 then
 				Result := a_star_string.substring (1, i1 - 1)
 			else
@@ -388,12 +388,12 @@ feature -- Processing
 		do
 			i1 := a_star_string.index_of ('*', 1)
 			if i1 = 0 then
-				Result := clone (a_star_string)
+				Result := STRING_.cloned_string (a_star_string)
 			else
 				if i1 = a_star_string.count then
 					Result := STRING_.new_empty_string (a_star_string, 0)
 				else
-					Result := clone (a_star_string.substring (i1 + 1, a_star_string.count))
+					Result := a_star_string.substring (i1 + 1, a_star_string.count)
 				end
 			end
 		ensure

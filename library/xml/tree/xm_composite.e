@@ -111,7 +111,7 @@ feature -- Text
 				a_cursor.item.process (typer)
 				if typer.is_character_data then
 					if Result = Void then
-						Result := clone (typer.character_data.content)
+						Result := STRING_.cloned_string (typer.character_data.content)
 					else
 						Result := STRING_.appended_string (Result, typer.character_data.content)
 					end

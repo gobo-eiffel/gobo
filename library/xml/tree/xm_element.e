@@ -567,7 +567,7 @@ feature -- Removal
 						-- Found a text node.
 						-- Now join all text-nodes that are following it
 						-- until there is a node that is no text-node.
-					joint_text_node := clone (text_node)
+					joint_text_node := text_node.cloned_object
 					remove_at_cursor (a_cursor)
 					from
 					until

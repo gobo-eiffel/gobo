@@ -163,7 +163,8 @@ feature -- Execution
 			cmd: STRING
 			i, nb: INTEGER
 		do
-			cmd_template := clone ("gepp")
+			create cmd_template.make (128)
+			cmd_template.append_string ("gepp")
 				-- Add defines:
 			nb := defines.count
 			from i := 1 until i > nb loop
@@ -179,7 +180,8 @@ feature -- Execution
 				create_directory (to_directory)
 			end
 			if is_file_executable then
-				cmd := clone (cmd_template)
+				create cmd.make (128)
+				cmd.append_string (cmd_template)
 				cmd.append_string (" ")
 				a_from_file := file_system.pathname_from_file_system (input_filename, unix_file_system)
 				if not file_system.file_exists (a_from_file) then
@@ -236,7 +238,8 @@ feature -- Execution
 						if exit_code = 0 then
 							a_to_file := file_system.pathname_from_file_system (a_to_file, unix_file_system)
 							if force or else is_file_outofdate (a_from_file, a_to_file) then
-								cmd := clone (cmd_template)
+								create cmd.make (128)
+								cmd.append_string (cmd_template)
 								cmd.append_string (" ")
 								cmd := STRING_.appended_string (cmd, a_from_file)
 								cmd.append_string (" ")

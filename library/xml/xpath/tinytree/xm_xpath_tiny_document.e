@@ -776,7 +776,7 @@ feature -- Element change
 			characters_not_void: characters /= Void
 		do
 			if character_buffer = void then
-				character_buffer := clone (characters)
+				character_buffer := STRING_.cloned_string (characters)
 			else
 				character_buffer := STRING_.appended_string (character_buffer, characters)
 			end
@@ -902,7 +902,7 @@ feature -- Element change
 			data_not_void: a_comment_string /= Void
 		do
 			if comment_buffer = Void then
-				comment_buffer := clone (a_comment_string)
+				comment_buffer := STRING_.cloned_string (a_comment_string)
 			else
 				comment_buffer := STRING_.appended_string (comment_buffer, a_comment_string)
 			end

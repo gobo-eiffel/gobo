@@ -173,7 +173,7 @@ feature -- Status setting
 			-- Compute dependencies on context.
 		do
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
-			dependencies := clone (start.dependencies)
+			dependencies := BOOLEAN_ARRAY_.cloned_array (start.dependencies)
 			if step.depends_upon_xslt_context then
 				set_depends_upon_xslt_context
 			end

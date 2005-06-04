@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 			else
 				is_open := True
 
-				media_type := clone (output_properties.media_type)
+				media_type := STRING_.cloned_string (output_properties.media_type)
 
 				if output_properties.byte_order_mark_required then
 					output_ignoring_error (byte_order_mark)

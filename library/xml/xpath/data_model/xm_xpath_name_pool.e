@@ -972,7 +972,7 @@ feature -- Element change
 			-- Ensure the prefix is in the list of prefixes used with this URI
 
 			a_key2 := prefixes_for_uri.item (a_uri_code + 1)
-			a_key := clone (an_xml_prefix)
+			a_key := STRING_.cloned_string (an_xml_prefix)
 			a_key := STRING_.appended_string (a_key, " ")
 			a_key := STRING_.appended_string (a_key, a_key2)
 			prefixes_for_uri.replace (a_key, a_uri_code + 1)
@@ -1581,7 +1581,7 @@ feature {NONE} -- Implementation
 			end
 
 			a_key2 := prefixes_for_uri.item (a_uri_code + 1)
-			a_key := clone (an_xml_prefix)
+			a_key := STRING_.cloned_string (an_xml_prefix)
 			a_key := STRING_.appended_string (a_key, " ")
 			a_key := STRING_.appended_string (a_key, a_key2)
 			prefixes_for_uri.replace (a_key, a_uri_code + 1)

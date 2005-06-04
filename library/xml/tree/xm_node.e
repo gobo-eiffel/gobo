@@ -16,6 +16,8 @@ inherit
 
 	ANY
 
+	KL_CLONABLE
+
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
 

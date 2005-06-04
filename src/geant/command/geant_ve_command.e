@@ -160,7 +160,8 @@ feature -- Execution
 		do
 			exit_code := 0
 			if is_compilable then
-				cmd := clone ("vec")
+				create cmd.make (128)
+				cmd.append_string ("vec")
 				if not project.options.verbose then
 					cmd.append_string (" -no")
 				end
@@ -261,7 +262,8 @@ feature -- Execution
 			if file_system.directory_exists ("eCluster") then
 					-- Execute the command only if the Visual Eiffel
 					-- compiler has been used to compile this system.
-				cmd := clone ("vec -dc -y -no")
+				create cmd.make (128)
+				cmd.append_string ("vec -dc -y -no")
 				if recursive_clean then
 					project.trace (<<"  [ve] [", old_cwd, "] ", cmd>>)
 				else

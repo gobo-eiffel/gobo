@@ -233,7 +233,8 @@ feature -- Execution
 			i, nb: INTEGER
 			a_filename: STRING
 		do
-			cmd := clone ("Xalan ")
+			create cmd.make (128)
+			cmd.append_string ("Xalan ")
 				-- Append option for indentation:
 			cmd.append_string (" -i ")
 			cmd := STRING_.appended_string (cmd, indent)
@@ -274,7 +275,8 @@ feature -- Execution
 			i, nb: INTEGER
 			a_filename: STRING
 		do
-			cmd := clone ("java")
+			create cmd.make (128)
+			cmd.append_string ("java")
 			if extdirs /= Void and then extdirs.count > 0 then
 				cmd.append_string (" -Djava.ext.dirs=")
 				cmd := STRING_.appended_string (cmd, extdirs)
@@ -328,7 +330,8 @@ feature -- Execution
 			i, nb: INTEGER
 			a_filename: STRING
 		do
-			cmd := clone ("xsltproc ")
+			create cmd.make (128)
+			cmd.append_string ("xsltproc ")
 
 				-- Append option for outputfile:
 			cmd.append_string (" -o ")
@@ -367,7 +370,8 @@ feature -- Execution
 			i, nb: INTEGER
 			a_filename: STRING
 		do
-			cmd := clone ("gexslt ")
+			create cmd.make (128)
+			cmd.append_string ("gexslt ")
 
 				-- Append option for outputfile:
 			cmd.append_string (" --output=")

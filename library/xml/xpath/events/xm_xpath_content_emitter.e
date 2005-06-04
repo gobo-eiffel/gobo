@@ -256,7 +256,7 @@ feature -- Tag
 			end
 			if a_local_part = Void then
 				on_error ("XM_XPATH_CONTENT_EMITTER requires a_local_part to be non-void")
-			end			
+			end
 			if an_ns_prefix = Void then
 				a_prefix := ""
 			else
@@ -282,7 +282,7 @@ feature -- Tag
 			if a_prefix.count = 0 then
 				an_element_qname := a_local_part
 			else
-				an_element_qname := clone (a_prefix)
+				an_element_qname := STRING_.cloned_string (a_prefix)
 				an_element_qname := STRING_.appended_string (an_element_qname, ":")
 				an_element_qname := STRING_.appended_string (an_element_qname, a_local_part)
 			end
@@ -461,9 +461,9 @@ feature {NONE} -- Implementation
 					-- because `has' returned `True'
 				end
 				if a_prefix.count = 0 then
-					an_attribute_qname := clone (a_local_part)
+					an_attribute_qname := STRING_.cloned_string (a_local_part)
 				else
-					an_attribute_qname := clone (a_prefix)
+					an_attribute_qname := STRING_.cloned_string (a_prefix)
 					an_attribute_qname := STRING_.appended_string (an_attribute_qname, ":")
 					an_attribute_qname := STRING_.appended_string (an_attribute_qname, a_local_part)
 				end

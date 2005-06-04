@@ -12,6 +12,10 @@ indexing
 
 deferred class XM_XPATH_LOCATOR
 
+inherit
+	
+	ANY
+
 feature -- Access
 
 	system_id: STRING is

@@ -69,7 +69,8 @@ feature -- Execution
 			cmd: STRING
 			a_filename: STRING
 		do
-			cmd := clone ("gexmlsplit ")
+			create cmd.make (128)
+			cmd.append_string ("gexmlsplit ")
 			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
 			cmd := STRING_.appended_string (cmd, a_filename)
 			project.trace (<<"  [gexmlsplit] ", cmd>>)

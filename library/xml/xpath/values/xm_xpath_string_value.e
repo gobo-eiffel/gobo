@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			value_not_void: a_value /= Void
 		do
 			make_atomic_value
-			value := clone (a_value)
+			value := STRING_.cloned_string (a_value)
 		ensure
 			value_set: STRING_.same_string (value, a_value)
 			static_properties_computed: are_static_properties_computed
@@ -178,7 +178,7 @@ feature -- Conversion
 		local
 			a_value: STRING
 		do
-			a_value := clone (value)
+			a_value := STRING_.cloned_string (value)
 			STRING_.left_adjust (a_value)
 			STRING_.right_adjust (a_value)
 			if a_required_type = type_factory.boolean_type then
@@ -221,6 +221,7 @@ feature {NONE} -- Implementation
 			-- Cached value from `is_convertible (type_factory.decimal_type)'
 	
 invariant
+
 	value_not_void: value /= Void
 
 end

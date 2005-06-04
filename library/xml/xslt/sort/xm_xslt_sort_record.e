@@ -14,6 +14,8 @@ class	XM_XSLT_SORT_RECORD
 
 inherit
 
+	ANY
+
 	KL_IMPORTED_ANY_ROUTINES
 
 creation

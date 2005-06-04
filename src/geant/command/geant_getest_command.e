@@ -179,7 +179,8 @@ feature -- Execution
 					-- Nothing to be done.
 				project.trace (<<"  [getest] ", "no generation, no compilation, no execution">>)
 			else
-				cmd := clone ("getest ")
+				create cmd.make (128)
+				cmd.append_string ("getest ")
 				if verbose then
 					cmd.append_string ("--verbose ")
 				end

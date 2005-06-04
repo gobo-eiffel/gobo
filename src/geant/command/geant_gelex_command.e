@@ -194,7 +194,8 @@ feature -- Execution
 			cmd: STRING
 			a_filename: STRING
 		do
-			cmd := clone ("gelex ")
+			create cmd.make (128)
+			cmd.append_string ("gelex ")
 				-- Option -a
 			if size /= Void and then size.count > 0 then
 				cmd.append_string ("-a ")

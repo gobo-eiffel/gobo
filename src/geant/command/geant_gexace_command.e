@@ -172,7 +172,8 @@ feature -- Execution
 			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 			a_filename: STRING
 		do
-			cmd := clone ("gexace ")
+			create cmd.make (128)
+			cmd.append_string ("gexace ")
 				-- Add defines if they exist:
 			if defines.count > 0 then
 				cmd.append_string ("--define=%"")

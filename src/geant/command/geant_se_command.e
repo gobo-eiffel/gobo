@@ -208,7 +208,7 @@ feature -- Command-line
 		local
 			a_filename: STRING
 		do
-			Result := clone ("compile ")
+			Result := STRING_.cloned_string ("compile ")
 			if project.options.verbose then
 				Result.append_string (" -verbose ")
 			end
@@ -226,7 +226,7 @@ feature -- Command-line
 		local
 			a_filename: STRING
 		do
-			Result := clone ("compile")
+			Result := STRING_.cloned_string ("compile")
 			Result.append_string (" -o ")
 			a_filename := file_system.pathname_from_file_system (executable, unix_file_system)
 			Result := STRING_.appended_string (Result, a_filename)
@@ -254,7 +254,7 @@ feature -- Command-line
 		require
 			is_cleanable: is_cleanable
 		do
-			Result := clone ("clean ")
+			Result := STRING_.cloned_string ("clean ")
 			Result := STRING_.appended_string (Result, clean)
 		ensure
 			command_line_not_void: Result /= Void

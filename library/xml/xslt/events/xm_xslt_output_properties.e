@@ -16,6 +16,8 @@ inherit
 
 	ANY  -- for SE 2.1
 
+	KL_CLONABLE
+
 	XM_XSLT_OUTPUT_ROUTINES
 
 	UC_SHARED_STRING_EQUALITY_TESTER
@@ -630,7 +632,7 @@ feature -- Duplication
 	another: like Current is
 			-- Deep clone of `Current'
 		do
-			Result := clone (Current)
+			Result := cloned_object
 			Result.clone_string_property_map (string_property_map)
 			Result.clone_boolean_property_map (boolean_property_map)
 			Result.clone_precedence_property_map (precedence_property_map)
@@ -649,15 +651,12 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 		do
 			create cdata_section_elements.make (some_cdata_section_elements.count)
 			cdata_section_elements.set_equality_tester (string_equality_tester)
-			from
-				a_cursor := some_cdata_section_elements.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				cdata_section_elements.put (clone (a_cursor.item))
+			a_cursor := some_cdata_section_elements.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				cdata_section_elements.put (STRING_.cloned_string (a_cursor.item))
 				a_cursor.forth
 			end
-		end	
+		end
 
 	clone_used_character_maps (some_used_character_maps: like used_character_maps) is
 			-- Deeply clone `used_character_maps'.
@@ -666,12 +665,9 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 		do
 			create used_character_maps.make (some_used_character_maps.count)
 			used_character_maps.set_equality_tester (string_equality_tester)
-			from
-				a_cursor := some_used_character_maps.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				used_character_maps.put_last (clone (a_cursor.item))
+			a_cursor := some_used_character_maps.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				used_character_maps.put_last (STRING_.cloned_string (a_cursor.item))
 				a_cursor.forth
 			end
 		end
@@ -682,12 +678,9 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			a_cursor: DS_HASH_TABLE_CURSOR [STRING, STRING]
 		do
 			create string_property_map.make_with_equality_testers (a_string_property_map.count, string_equality_tester, string_equality_tester)
-			from
-				a_cursor := a_string_property_map.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				string_property_map.put (clone (a_cursor.item), clone (a_cursor.key))
+			a_cursor := a_string_property_map.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				string_property_map.put (STRING_.cloned_string (a_cursor.item), STRING_.cloned_string (a_cursor.key))
 				a_cursor.forth
 			end
 		end
@@ -698,12 +691,9 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			a_cursor: DS_HASH_TABLE_CURSOR [BOOLEAN, STRING]
 		do
 			create boolean_property_map.make_with_equality_testers (a_boolean_property_map.count, Void, string_equality_tester)
-			from
-				a_cursor := a_boolean_property_map.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				boolean_property_map.put (a_cursor.item, clone (a_cursor.key))
+			a_cursor := a_boolean_property_map.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				boolean_property_map.put (a_cursor.item, STRING_.cloned_string (a_cursor.key))
 				a_cursor.forth
 			end
 		end
@@ -714,12 +704,9 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			a_cursor: DS_HASH_TABLE_CURSOR [INTEGER, STRING]
 		do
 			create precedence_property_map.make_with_equality_testers (a_precedence_property_map.count, Void, string_equality_tester)
-			from
-				a_cursor := a_precedence_property_map.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				precedence_property_map.put (a_cursor.item, clone (a_cursor.key))
+			a_cursor := a_precedence_property_map.new_cursor
+			from a_cursor.start until a_cursor.after loop
+				precedence_property_map.put (a_cursor.item, STRING_.cloned_string (a_cursor.key))
 				a_cursor.forth
 			end
 		end

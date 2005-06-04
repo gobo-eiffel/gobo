@@ -159,7 +159,8 @@ feature -- Execution
 			cmd: STRING
 			a_filename: STRING
 		do
-			cmd := clone ("geyacc ")
+			create cmd.make (128)
+			cmd.append_string ("geyacc ")
 				-- Option -v
 			if verbose_filename /= Void and then verbose_filename.count > 0 then
 				a_filename := file_system.pathname_from_file_system (verbose_filename, unix_file_system)

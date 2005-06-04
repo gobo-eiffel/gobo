@@ -35,6 +35,8 @@ inherit
 			as_computed_expression
 		end
 
+	KL_IMPORTED_ARRAY_ROUTINES
+
 feature -- Access
 	
 	is_computed_expression: BOOLEAN is
@@ -181,7 +183,7 @@ feature -- Status setting
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
-			dependencies := clone (intrinsic_dependencies)
+			dependencies := BOOLEAN_ARRAY_.cloned_array (intrinsic_dependencies)
 			are_dependencies_computed := True
 			from
 				a_cursor := sub_expressions.new_cursor
@@ -193,7 +195,7 @@ feature -- Status setting
 			loop
 				merge_dependencies (a_cursor.item.dependencies)
 				a_cursor.forth
-			end			
+			end
 		ensure
 			intrinsic_computed: are_intrinsic_dependencies_computed and then intrinsic_dependencies /= Void
 			computed: are_dependencies_computed and then dependencies /= Void

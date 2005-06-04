@@ -186,18 +186,18 @@ feature -- Access
 					source_postfix := glob_postfix (source_pattern)
 					target_prefix := glob_prefix (target_pattern)
 					target_postfix := glob_postfix (target_pattern)
-					filename_prefix := clone (a_map_filename)
+					filename_prefix := STRING_.cloned_string (a_map_filename)
 					filename_prefix.keep_head (source_prefix.count)
-					filename_postfix := clone (a_map_filename)
+					filename_postfix := STRING_.cloned_string (a_map_filename)
 					filename_postfix.keep_tail (source_postfix.count)
 					if
 						STRING_.same_string (filename_prefix, source_prefix) and
 						STRING_.same_string (filename_postfix, source_postfix)
 					then
-						s := clone (a_map_filename)
+						s := STRING_.cloned_string (a_map_filename)
 						s.remove_head (filename_prefix.count)
 						s.remove_tail (filename_postfix.count)
-						Result := clone (target_prefix)
+						Result := STRING_.cloned_string (target_prefix)
 						Result := STRING_.appended_string (Result, s)
 						Result := STRING_.appended_string (Result, target_postfix)
 					else

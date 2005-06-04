@@ -331,7 +331,7 @@ feature -- Tag
 					if an_xml_prefix.count = 0 then
 						an_element_qname := a_local_part
 					else
-						an_element_qname := clone (an_xml_prefix)
+						an_element_qname := STRING_.cloned_string (an_xml_prefix)
 						an_element_qname := STRING_.appended_string (an_element_qname, ":")
 						an_element_qname := STRING_.appended_string (an_element_qname, a_local_part)
 					end
@@ -367,9 +367,9 @@ feature -- Tag
 							an_xml_prefix := a_prefix
 						end
 						if an_xml_prefix.count = 0 then
-							an_attribute_qname := clone (a_local_part)
+							an_attribute_qname := STRING_.cloned_string (a_local_part)
 						else
-							an_attribute_qname := clone (an_xml_prefix)
+							an_attribute_qname := STRING_.cloned_string (an_xml_prefix)
 							an_attribute_qname := STRING_.appended_string (an_attribute_qname, ":")
 							an_attribute_qname := STRING_.appended_string (an_attribute_qname, a_local_part)
 						end
@@ -412,7 +412,7 @@ feature -- Tag
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
 			-- End tag.
 		local
-			an_element_qname, an_xml_prefix: STRING		
+			an_element_qname, an_xml_prefix: STRING
 		do
 			if not is_filtering then
 				Precursor (a_namespace, a_prefix, a_local_part)
@@ -426,7 +426,7 @@ feature -- Tag
 				if an_xml_prefix.count = 0 then
 					an_element_qname := a_local_part
 				else
-					an_element_qname := clone (an_xml_prefix)
+					an_element_qname := STRING_.cloned_string (an_xml_prefix)
 					an_element_qname := STRING_.appended_string (an_element_qname, ":")
 					an_element_qname := STRING_.appended_string (an_element_qname, a_local_part)
 				end

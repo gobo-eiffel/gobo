@@ -679,14 +679,14 @@ feature -- Implementation
 			-- Cached static context from `executable'
 
 	static_context: XM_XSLT_EXPRESSION_CONTEXT is
-			-- Static context from `executable'		
+			-- Static context from `executable'
 		do
 
 			-- The purpose of the clone is to keep compiled stylesheets read-only,
 			--  so they can be safely cached
 
 			if cached_static_context = Void then
-				cached_static_context := clone (executable.static_context)
+				cached_static_context := executable.static_context.cloned_object
 			end
 			Result := cached_static_context
 		ensure

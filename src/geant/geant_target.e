@@ -142,8 +142,8 @@ feature -- Access
 	full_name: STRING is
 			-- `Name' prepended with (`project.name' + ".")
 		do
-			Result := clone (project.name)
-			Result.append_string (".")
+			Result := STRING_.cloned_string (project.name)
+			Result.append_character ('.')
 			Result := STRING_.appended_string (Result, name)
 		ensure
 			full_name_not_void: Result /= Void

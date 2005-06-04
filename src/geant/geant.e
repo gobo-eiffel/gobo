@@ -160,12 +160,12 @@ feature -- Access
 					p := arg.index_of('=', 1)
 					if p > 3 and p < arg.count then
 							-- define commandline variable with value:
-						a_variable_name := clone (arg.substring (3, p - 1))
-						a_variable_value := clone (arg.substring (p + 1, arg.count))
+						a_variable_name := arg.substring (3, p - 1)
+						a_variable_value := arg.substring (p + 1, arg.count)
 						Commandline_variables.force (a_variable_value, a_variable_name)
 					elseif arg.count > 2 and then p = 0 then
 							-- define commandline variable:
-						a_variable_name := clone (arg.substring (3, arg.count))
+						a_variable_name := arg.substring (3, arg.count)
 						Commandline_variables.force ("true", a_variable_name)
 					end
 				elseif i = nb then
@@ -243,7 +243,7 @@ feature {NONE} -- Error handling
 		local
 			s: STRING
 		once
-			s := clone ("[-options] [target]")
+			s := STRING_.cloned_string ("[-options] [target]")
 			s.append_string ("%N")
 			s.append_string ("where options include:%N")
 			s.append_string ("  --version : Show version%N")

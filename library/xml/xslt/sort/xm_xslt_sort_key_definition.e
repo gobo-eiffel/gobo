@@ -21,6 +21,8 @@ class XM_XSLT_SORT_KEY_DEFINITION
 
 inherit
 
+	ANY
+
 	KL_IMPORTED_ANY_ROUTINES
 
 creation

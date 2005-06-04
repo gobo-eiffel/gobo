@@ -14,6 +14,8 @@ deferred class XM_XPATH_ITEM_TYPE
 
 inherit
 
+	ANY
+
 	KL_IMPORTED_ANY_ROUTINES
 
 feature -- Access
