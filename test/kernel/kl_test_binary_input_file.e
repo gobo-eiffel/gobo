@@ -212,7 +212,7 @@ feature -- Test
 			out_file.close
 			dt1 := utc_system_clock.date_time_now
 			assert ("is_closed", out_file.is_closed)
-			dt3 := clone (dt1)
+			dt3 := dt1.cloned_object
 			dt1.add_seconds (-5)
 			dt3.add_seconds (5)
 			create a_file.make (a_name)

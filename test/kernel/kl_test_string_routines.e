@@ -44,7 +44,7 @@ feature -- Test
 			uc_string: UC_UTF8_STRING
 			bnullr: STRING
 		do
-			foo := clone ("foo")
+			foo := STRING_.cloned_string ("foo")
 			a_string := STRING_.make_from_string (foo)
 			assert ("not_void1", a_string /= Void) 
 			assert ("string_type1", ANY_.same_types (a_string, "")) 
@@ -61,7 +61,7 @@ feature -- Test
 			assert ("not_void3", a_string /= Void) 
 			assert ("string_type3", ANY_.same_types (a_string, "")) 
 			assert ("new_string3", a_string /= uc_string) 
-			bnullr := clone ("b%Ur")
+			bnullr := STRING_.cloned_string ("b%Ur")
 			assert_equal ("same_string3", bnullr, a_string) 
 		end
 
@@ -112,7 +112,7 @@ feature -- Test
 			a_string1: STRING
 			uc_string1, uc_string2: UC_UTF8_STRING
 		do
-			a_string1 := clone ("foobar")
+			a_string1 := STRING_.cloned_string ("foobar")
 			assert ("has1", STRING_.has_substring (a_string1, "oo")) 
 			assert ("has2", STRING_.has_substring (a_string1, "foobar")) 
 			assert ("has3", STRING_.has_substring (a_string1, a_string1)) 
@@ -175,7 +175,7 @@ feature -- Test
 			a_string1, a_string2: STRING
 			uc_string: UC_UTF8_STRING
 		do
-			a_string1 := clone ("foo")
+			a_string1 := STRING_.cloned_string ("foo")
 			a_string2 := STRING_.string (a_string1)
 			assert ("not_void1", a_string2 /= Void)
 			assert ("string_type1", ANY_.same_types (a_string2, "")) 
@@ -190,7 +190,7 @@ feature -- Test
 			a_string2 := STRING_.string (uc_string)
 			assert ("not_void3", a_string2 /= Void)
 			assert ("string_type3", ANY_.same_types (a_string2, "")) 
-			a_string1 := clone ("b%Ur")
+			a_string1 := STRING_.cloned_string ("b%Ur")
 			assert_equal ("value3", a_string1, a_string2) 
 		end
 
@@ -201,7 +201,7 @@ feature -- Test
 			uc_string1: UC_UTF8_STRING
 			uc_string2: STRING
 		do
-			a_string1 := clone ("foobar")
+			a_string1 := STRING_.cloned_string ("foobar")
 			a_string2 := STRING_.substring (a_string1, 2, 1)
 			assert ("not_void1", a_string2 /= Void)
 			assert ("same_type1", ANY_.same_types (a_string2, a_string1)) 
@@ -227,7 +227,7 @@ feature -- Test
 			a_string1: STRING
 			uc_string1, uc_string2: UC_UTF8_STRING
 		do
-			a_string1 := clone ("foobar")
+			a_string1 := STRING_.cloned_string ("foobar")
 			assert_integers_equal ("index1", 4, STRING_.substring_index (a_string1, "bar", 1))
 			assert_integers_equal ("index2", 0, STRING_.substring_index (a_string1, "bar", 5))
 			assert_integers_equal ("index3", 0, STRING_.substring_index (a_string1, "bar", 7))
@@ -250,9 +250,9 @@ feature -- Test
 		local
 			a_string, a_string2: STRING
 		do
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			assert ("hash_code1", STRING_.case_insensitive_hash_code (a_string) = STRING_.case_insensitive_hash_code (a_string)) 
-			a_string2 := clone ("fOoBaR")
+			a_string2 := STRING_.cloned_string ("fOoBaR")
 			assert ("hash_code2", STRING_.case_insensitive_hash_code (a_string) = STRING_.case_insensitive_hash_code (a_string2)) 
 		end
 
@@ -262,8 +262,8 @@ feature -- Test
 			a_string, a_string1, a_string2: STRING
 			uc_string1, uc_string2, uc_string3: UC_UTF8_STRING
 		do
-			a_string1 := clone ("foo")
-			a_string2 := clone ("bar")
+			a_string1 := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("bar")
 			a_string := STRING_.concat (a_string1, a_string2)
 			assert_equal ("concat1", "foobar", a_string)
 			assert ("new_string1", a_string /= a_string1)
@@ -1315,11 +1315,11 @@ feature -- Test
 			a_string1, a_string2: STRING
 			uc_string1, uc_string2: UC_UTF8_STRING
 		do
-			a_string1 := clone ("foo")
+			a_string1 := STRING_.cloned_string ("foo")
 			assert ("same1", STRING_.elks_same_string (a_string1, a_string1))
-			a_string2 := clone ("foo")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("same2", STRING_.elks_same_string (a_string1, a_string2))
-			a_string2 := clone ("bar")
+			a_string2 := STRING_.cloned_string ("bar")
 			assert ("not_same1", not STRING_.elks_same_string (a_string1, a_string2))
 			create uc_string1.make_from_string ("foo")
 			assert ("same3", STRING_.elks_same_string (a_string1, uc_string1))
@@ -1339,11 +1339,11 @@ feature -- Test
 			a_string1, a_string2: STRING
 			uc_string1, uc_string2: UC_UTF8_STRING
 		do
-			a_string1 := clone ("foo")
+			a_string1 := STRING_.cloned_string ("foo")
 			assert ("same1", STRING_.same_string (a_string1, a_string1))
-			a_string2 := clone ("foo")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("same2", STRING_.same_string (a_string1, a_string2))
-			a_string2 := clone ("bar")
+			a_string2 := STRING_.cloned_string ("bar")
 			assert ("not_same1", not STRING_.same_string (a_string1, a_string2))
 			create uc_string1.make_from_string ("foo")
 			assert ("same3", STRING_.same_string (a_string1, uc_string1))
@@ -1365,7 +1365,7 @@ feature -- Test
 			a_string: STRING
 			uc_string: UC_UTF8_STRING
 		do
-			a_string := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
 			STRING_.fill_with (a_string, 'a')
 			assert_equal ("fill1", "aaa", a_string)
 			create uc_string.make_from_string ("bar")
@@ -1380,7 +1380,7 @@ feature -- Test
 			a_string: STRING
 			uc_string: UC_UTF8_STRING
 		do
-			a_string := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
 			STRING_.insert_character (a_string, 'a', 2)
 			assert_equal ("insert1", "faoo", a_string)
 			create uc_string.make_from_string ("bar")
@@ -1396,7 +1396,7 @@ feature -- Test
 			uc_string: UC_UTF8_STRING
 			uc_string2: STRING
 		do
-			a_string := clone ("FoO")
+			a_string := STRING_.cloned_string ("FoO")
 			a_string2 := STRING_.to_lower (a_string)
 			assert ("new_string1", a_string2 /= a_string)
 			assert_equal ("lower1", "foo", a_string2)
@@ -1413,7 +1413,7 @@ feature -- Test
 			uc_string: UC_UTF8_STRING
 			uc_string2: STRING
 		do
-			a_string := clone ("Foo")
+			a_string := STRING_.cloned_string ("Foo")
 			a_string2 := STRING_.to_upper (a_string)
 			assert ("new_string1", a_string2 /= a_string)
 			assert_equal ("upper1", "FOO", a_string2)
@@ -1430,7 +1430,7 @@ feature -- Test
 			uc_string: UC_UTF8_STRING
 			uc_string2: STRING
 		do
-			a_string := clone ("FoO")
+			a_string := STRING_.cloned_string ("FoO")
 			a_string2 := STRING_.as_lower (a_string)
 			assert ("new_string1", a_string2 /= a_string)
 			assert_equal ("lower1", "foo", a_string2)
@@ -1447,7 +1447,7 @@ feature -- Test
 			uc_string: UC_UTF8_STRING
 			uc_string2: STRING
 		do
-			a_string := clone ("Foo")
+			a_string := STRING_.cloned_string ("Foo")
 			a_string2 := STRING_.as_upper (a_string)
 			assert ("new_string1", a_string2 /= a_string)
 			assert_equal ("upper1", "FOO", a_string2)
@@ -1463,7 +1463,7 @@ feature -- Test
 			a_string: STRING
 			uc_string: UC_UTF8_STRING
 		do
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			STRING_.left_adjust (a_string)
 			assert_equal ("left_adjust1", "foobar", a_string) 
 			a_string.put (' ', 1)
@@ -1491,7 +1491,7 @@ feature -- Test
 			a_string: STRING
 			uc_string: UC_UTF8_STRING
 		do
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			STRING_.right_adjust (a_string)
 			assert_equal ("right_adjust1", "foobar", a_string) 
 			a_string.put (' ', 3)
@@ -1519,7 +1519,7 @@ feature -- Test
 			a_string: STRING
 			uc_string: UC_UTF8_STRING
 		do
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			STRING_.keep_head (a_string, 10)
 			assert_equal ("head1", "foobar", a_string) 
 			STRING_.keep_head (a_string, 6)
@@ -1546,7 +1546,7 @@ feature -- Test
 			a_string: STRING
 			uc_string: UC_UTF8_STRING
 		do
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			STRING_.keep_tail (a_string, 10)
 			assert_equal ("tail1", "foobar", a_string) 
 			STRING_.keep_tail (a_string, 6)
@@ -1573,7 +1573,7 @@ feature -- Test
 			a_string: STRING
 			uc_string: UC_UTF8_STRING
 		do
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			STRING_.remove_substring (a_string, 2, 4)
 			assert_equal ("remove1", "far", a_string)
 			create uc_string.make_from_string ("foobar")
@@ -1588,7 +1588,7 @@ feature -- Test
 			a_string: STRING
 			uc_string: UC_UTF8_STRING
 		do
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			STRING_.wipe_out (a_string)
 			assert_integers_equal ("wiped_out1", 0, a_string.count)
 			create uc_string.make_from_string ("foobar")
@@ -1616,7 +1616,7 @@ feature -- Test
 			a_string: STRING
 			uc_string: UC_UTF8_STRING
 		do
-			a_string := clone ("1A")
+			a_string := STRING_.cloned_string ("1A")
 			assert_integers_equal ("hexa1", 26,  STRING_.hexadecimal_to_integer (a_string))
 			create uc_string.make_from_string ("B5")
 			assert_integers_equal ("hexa2", 181,  STRING_.hexadecimal_to_integer (uc_string))
@@ -1628,12 +1628,12 @@ feature -- Test
 			a_string1, a_string2: STRING
 			uc_string1, uc_string2: UC_UTF8_STRING
 		do
-			a_string1 := clone ("foo")
-			a_string2 := clone ("FOO")
+			a_string1 := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("FOO")
 			assert ("same1", STRING_.same_case_insensitive (a_string1, a_string2))
 			assert ("same2", STRING_.same_case_insensitive (a_string2, a_string1))
 			assert ("same3", STRING_.same_case_insensitive (a_string1, a_string1))
-			a_string2 := clone ("bar")
+			a_string2 := STRING_.cloned_string ("bar")
 			assert ("not_same1", not STRING_.same_case_insensitive (a_string1, a_string2))
 			create uc_string1.make_from_string ("foo")
 			create uc_string2.make_from_string ("FOO")

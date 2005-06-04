@@ -61,7 +61,7 @@ feature
 			assert ("Test file readable", a_test_file.is_open_read)
 			from
 				a_test_file.read_string (8000)
-				a_test_string := clone (a_test_file.last_string)
+				a_test_string := STRING_.cloned_string (a_test_file.last_string)
 			until
 				a_test_file.end_of_input
 			loop

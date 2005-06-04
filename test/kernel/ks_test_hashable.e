@@ -16,6 +16,8 @@ inherit
 
 	KL_TEST_CASE
 
+	KL_IMPORTED_STRING_ROUTINES
+
 feature -- Test
 
 	test_hash_code1 is
@@ -23,9 +25,9 @@ feature -- Test
 		local
 			a_hashable, a_hashable2: HASHABLE
 		do
-			a_hashable := clone ("foobar")
+			a_hashable := STRING_.cloned_string ("foobar")
 			assert ("hash_code1", a_hashable.hash_code = a_hashable.hash_code) 
-			a_hashable2 := clone ("foobar")
+			a_hashable2 := STRING_.cloned_string ("foobar")
 			assert ("hash_code2", a_hashable.hash_code = a_hashable2.hash_code) 
 		end
 

@@ -476,7 +476,7 @@ feature -- Test
 			assert ("same_pathname2", a_pathname1.same_pathname (a_pathname2))
 			a_pathname2.append_name ("gobo")
 			assert ("not_same_pathname1", not a_pathname1.same_pathname (a_pathname2))
-			a_pathname2 := clone (a_pathname1)
+			a_pathname2 := a_pathname1.cloned_object
 			assert ("same_pathname3", a_pathname1.same_pathname (a_pathname2))
 			a_pathname2.set_drive ("c:")
 			assert ("not_same_pathname2", not a_pathname1.same_pathname (a_pathname2))

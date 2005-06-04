@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			assert_iarrays_same ("items11", <<INTEGER_.to_integer (1), 2, 4, 44, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, a_list.to_array)
 			assert_integers_equal ("index10", 5, a_list.index)
 			assert_integers_equal ("item9", 66, a_list.item_for_iteration)
-			assert_iarrays_same ("cloned_items1", <<INTEGER_.to_integer (1), 2, 4, 44, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, clone (a_list).to_array)
+			assert_iarrays_same ("cloned_items1", <<INTEGER_.to_integer (1), 2, 4, 44, 66, 77, 88, 99, 6, 7, 8, 9, 10>>, a_list.cloned_object.to_array)
 
 			a_list.wipe_out
 			assert ("is_empty1", a_list.is_empty)

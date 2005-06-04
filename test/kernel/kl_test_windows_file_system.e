@@ -314,7 +314,7 @@ feature -- File handling
 		do
 			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
-			new_name := clone (old_name)
+			new_name := STRING_.cloned_string (old_name)
 				-- Create old file.
 			create a_file.make (old_name)
 			a_file.open_write
@@ -653,7 +653,7 @@ feature -- File handling
 		do
 			create a_file_system.make
 			old_name := new_filename ("gobo", ".tmp")
-			new_name := clone (old_name)
+			new_name := STRING_.cloned_string (old_name)
 				-- Create old file.
 			create a_file.make (old_name)
 			a_file.open_write

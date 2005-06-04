@@ -111,7 +111,7 @@ feature -- Test
 			map.set_type ("glob")
 			map.set_source_pattern ("*.ge")
 			map.set_target_pattern ("*.e")
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			assert_equal ("mapped_filename1", "foobar", map.mapped_filename ("foobar")) 
 
 			assert_equal ("mapped_filename2", "foobar.e", map.mapped_filename ("foobar.ge")) 

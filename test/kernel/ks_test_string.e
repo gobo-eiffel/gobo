@@ -19,6 +19,9 @@ inherit
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 	KL_SHARED_EIFFEL_COMPILER
 		export {NONE} all end
 
@@ -129,11 +132,11 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
 			assert_integers_equal ("count1", 3, a_string.count)
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			assert_integers_equal ("count2", 0, a_string.count)
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			assert_integers_equal ("count3", 6, a_string.count)
 		end
 
@@ -142,13 +145,13 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
 			assert ("valid1", a_string.valid_index (1)) 
 			assert ("valid2", a_string.valid_index (2)) 
 			assert ("valid3", a_string.valid_index (3)) 
 			assert ("not_valid1", not a_string.valid_index (0)) 
 			assert ("not_valid2", not a_string.valid_index (4)) 
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			assert ("not_valid3", not a_string.valid_index (0)) 
 			assert ("not_valid4", not a_string.valid_index (1)) 
 		end
@@ -158,7 +161,7 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("bar")
+			a_string := STRING_.cloned_string ("bar")
 			assert_characters_equal ("item1", 'b', a_string.item (1)) 
 			assert_characters_equal ("item2", 'a', a_string.item (2)) 
 			assert_characters_equal ("item3", 'r', a_string.item (3)) 
@@ -169,7 +172,7 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("bar")
+			a_string := STRING_.cloned_string ("bar")
 			assert_integers_equal ("item_code1", ('b').code, a_string.item_code (1)) 
 			assert_integers_equal ("item_code2", ('a').code, a_string.item_code (2)) 
 			assert_integers_equal ("item_code3", ('r').code, a_string.item_code (3)) 
@@ -180,7 +183,7 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("bar")
+			a_string := STRING_.cloned_string ("bar")
 			assert_characters_equal ("item1", 'b', a_string @ 1) 
 			assert_characters_equal ("item2", 'a', a_string @ 2) 
 			assert_characters_equal ("item3", 'r', a_string @ 3) 
@@ -191,7 +194,7 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("bar")
+			a_string := STRING_.cloned_string ("bar")
 			a_string.put ('f', 1)
 			assert_characters_equal ("item1", 'f', a_string.item (1)) 
 			assert_characters_equal ("item2", 'a', a_string.item (2)) 
@@ -231,12 +234,12 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("bar")
+			a_string := STRING_.cloned_string ("bar")
 			assert_equal ("substring1", "bar", a_string.substring (1, 3)) 
 			assert_equal ("substring2", "ba", a_string.substring (1, 2)) 
 			assert_equal ("substring3", "a", a_string.substring (2, 2)) 
 			assert_equal ("substring4", "", a_string.substring (2, 1)) 
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			assert_equal ("substring5", "", a_string.substring (1, 0)) 
 		end
 
@@ -245,12 +248,12 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("bar")
+			a_string := STRING_.cloned_string ("bar")
 			assert ("is_equal1", a_string.is_equal ("bar")) 
 			assert ("not_is_equal1", not a_string.is_equal ("foo")) 
 			assert ("not_is_equal2", not a_string.is_equal ("ba")) 
 			assert ("not_is_equal3", not a_string.is_equal ("bart")) 
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			assert ("is_equal2", a_string.is_equal ("")) 
 			assert ("not_is_equal4", not a_string.is_equal ("foo")) 
 		end
@@ -283,9 +286,9 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("bar")
+			a_string := STRING_.cloned_string ("bar")
 			assert_equal ("out1", "bar", a_string.out) 
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			assert_equal ("out2", "", a_string.out) 
 		end
 
@@ -294,16 +297,16 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("zx")
+			a_string := STRING_.cloned_string ("zx")
 			a_string.copy ("foobar")
 			assert_equal ("copy1", "foobar", a_string) 
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			a_string.copy ("bar")
 			assert_equal ("copy2", "bar", a_string) 
-			a_string := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
 			a_string.copy ("")
 			assert_equal ("copy3", "", a_string) 
-			a_string := clone ("toto")
+			a_string := STRING_.cloned_string ("toto")
 			a_string.copy (a_string)
 			assert_equal ("copy4", "toto", a_string) 
 		end
@@ -326,10 +329,10 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("bar")
+			a_string := STRING_.cloned_string ("bar")
 			a_string.append_character ('f')
 			assert_equal ("append_character1", "barf", a_string) 
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			a_string.append_character ('z')
 			assert_equal ("append_character2", "z", a_string) 
 		end
@@ -339,16 +342,16 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
 			a_string.append_string ("bar")
 			assert_equal ("append_string1", "foobar", a_string) 
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			a_string.append_string ("bar")
 			assert_equal ("append_string2", "bar", a_string) 
-			a_string := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
 			a_string.append_string ("")
 			assert_equal ("append_string3", "foo", a_string) 
-			a_string := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
 			a_string.append_string (a_string)
 			assert_equal ("append_string4", "foofoo", a_string) 
 		end
@@ -358,18 +361,18 @@ feature -- Test
 		local
 			a_string, a_string2: STRING
 		do
-			a_string := clone ("foo")
-			a_string2 := clone ("bar")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("bar")
 			assert_equal ("append_string1", "foobar", a_string + a_string2) 
 			assert ("new_string1", (a_string + a_string2) /= a_string) 
 			assert ("new_string2", (a_string + a_string2) /= a_string2) 
-			a_string := clone ("")
-			a_string2 := clone ("bar")
+			a_string := STRING_.cloned_string ("")
+			a_string2 := STRING_.cloned_string ("bar")
 			assert_equal ("append_string2", "bar", a_string + a_string2) 
-			a_string := clone ("foo")
-			a_string2 := clone ("")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("")
 			assert_equal ("append_string3", "foo", a_string + a_string2) 
-			a_string := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
 			assert_equal ("append_string4", "foofoo", a_string + a_string) 
 		end
 
@@ -423,7 +426,7 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("bar")
+			a_string := STRING_.cloned_string ("bar")
 			assert_integers_equal ("index_of_b1", 1, a_string.index_of ('b', 1)) 
 			assert_integers_equal ("index_of_b2", 0, a_string.index_of ('b', 2)) 
 			assert_integers_equal ("index_of_b3", 0, a_string.index_of ('b', 3)) 
@@ -440,7 +443,7 @@ feature -- Test
 			assert_integers_equal ("index_of_z2", 0, a_string.index_of ('z', 2)) 
 			assert_integers_equal ("index_of_z3", 0, a_string.index_of ('z', 3)) 
 			assert_integers_equal ("index_of_z4", 0, a_string.index_of ('z', 4)) 
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			assert_integers_equal ("index_of_o1", 0, a_string.index_of ('o', 1)) 
 		end
 
@@ -504,12 +507,12 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("bar")
+			a_string := STRING_.cloned_string ("bar")
 			assert ("has_b", a_string.has ('b')) 
 			assert ("has_a", a_string.has ('a')) 
 			assert ("has_r", a_string.has ('r')) 
 			assert ("not_has_o", not a_string.has ('o')) 
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			assert ("not_has_f", not a_string.has ('f')) 
 		end
 
@@ -538,14 +541,14 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			assert_integers_equal ("b", 1, a_string.occurrences ('b')) 
 			assert_integers_equal ("a", 1, a_string.occurrences ('a')) 
 			assert_integers_equal ("r", 1, a_string.occurrences ('r')) 
 			assert_integers_equal ("o", 2, a_string.occurrences ('o')) 
 			assert_integers_equal ("f", 1, a_string.occurrences ('f')) 
 			assert_integers_equal ("z", 0, a_string.occurrences ('z')) 
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			assert_integers_equal ("x", 0, a_string.occurrences ('x')) 
 		end
 
@@ -587,9 +590,9 @@ feature -- Test
 			assert_equal ("tail_0", "", a_string) 
 				-- Empty string.
 			a_string := ""
-			a_string.keep_head (0)
+			a_string.keep_tail (0)
 			assert_equal ("tail2_0", "", a_string) 
-			a_string.keep_head (5)
+			a_string.keep_tail (5)
 			assert_equal ("tail2_5", "", a_string) 
 		end
 
@@ -667,9 +670,9 @@ feature -- Test
 		local
 			a_string, a_string2: STRING
 		do
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			assert ("hash_code1", a_string.hash_code = a_string.hash_code) 
-			a_string2 := clone ("foobar")
+			a_string2 := STRING_.cloned_string ("foobar")
 			assert ("hash_code2", a_string.hash_code = a_string2.hash_code) 
 		end
 
@@ -718,10 +721,10 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			a_string.wipe_out
 			assert_equal ("wiped_out1", "", a_string) 
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			a_string.wipe_out
 			assert_equal ("wiped_out2", "", a_string) 
 		end
@@ -731,7 +734,7 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("foobar")
+			a_string := STRING_.cloned_string ("foobar")
 			a_string.remove (1)
 			assert_equal ("removed1", "oobar", a_string) 
 			a_string.remove (5)
@@ -745,10 +748,10 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("foo.BAR")
+			a_string := STRING_.cloned_string ("foo.BAR")
 			a_string.to_lower
 			assert_equal ("to_lower1", "foo.bar", a_string)
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			a_string.to_lower
 			assert_equal ("to_lower2", "", a_string)
 		end
@@ -758,10 +761,10 @@ feature -- Test
 		local
 			a_string: STRING
 		do
-			a_string := clone ("foo.BAR")
+			a_string := STRING_.cloned_string ("foo.BAR")
 			a_string.to_upper
 			assert_equal ("to_upper1", "FOO.BAR", a_string)
-			a_string := clone ("")
+			a_string := STRING_.cloned_string ("")
 			a_string.to_upper
 			assert_equal ("to_upper2", "", a_string)
 		end
@@ -803,21 +806,21 @@ feature -- Test
 		local
 			a_string, a_string2: STRING
 		do
-			a_string := clone ("foo")
-			a_string2 := clone ("bar")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("bar")
 			assert ("not_less1", not (a_string < a_string2))
 			assert ("not_less2", not (a_string < a_string))
 			assert ("less1", a_string2 < a_string)
-			a_string := clone ("fo")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("fo")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("less2", a_string < a_string2)
 			assert ("not_less3", not (a_string2 < a_string))
-			a_string := clone ("")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("less3", a_string < a_string2)
 			assert ("not_less4", not (a_string2 < a_string))
-			a_string := clone ("foo")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("not_less5", not (a_string < a_string2))
 			assert ("not_less6", not (a_string2 < a_string))
 		end
@@ -827,21 +830,21 @@ feature -- Test
 		local
 			a_string, a_string2: STRING
 		do
-			a_string := clone ("foo")
-			a_string2 := clone ("bar")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("bar")
 			assert ("not_less1", not (a_string <= a_string2))
 			assert ("less1", a_string <= a_string)
 			assert ("less2", a_string2 <= a_string)
-			a_string := clone ("fo")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("fo")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("less3", a_string <= a_string2)
 			assert ("not_less3", not (a_string2 <= a_string))
-			a_string := clone ("")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("less4", a_string <= a_string2)
 			assert ("not_less4", not (a_string2 <= a_string))
-			a_string := clone ("foo")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("less5", a_string <= a_string2)
 			assert ("less6", a_string2 <= a_string)
 		end
@@ -851,21 +854,21 @@ feature -- Test
 		local
 			a_string, a_string2: STRING
 		do
-			a_string := clone ("bar")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("bar")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("not_greater1", not (a_string > a_string2))
 			assert ("not_greater2", not (a_string > a_string))
 			assert ("greater1", a_string2 > a_string)
-			a_string := clone ("foo")
-			a_string2 := clone ("fo")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("fo")
 			assert ("greater2", a_string > a_string2)
 			assert ("not_greater3", not (a_string2 > a_string))
-			a_string := clone ("foo")
-			a_string2 := clone ("")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("")
 			assert ("greater3", a_string > a_string2)
 			assert ("not_greater4", not (a_string2 > a_string))
-			a_string := clone ("foo")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("not_greater5", not (a_string > a_string2))
 			assert ("not_greater6", not (a_string2 > a_string))
 		end
@@ -875,21 +878,21 @@ feature -- Test
 		local
 			a_string, a_string2: STRING
 		do
-			a_string := clone ("bar")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("bar")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("not_greater1", not (a_string >= a_string2))
 			assert ("greater1", a_string >= a_string)
 			assert ("greater2", a_string2 >= a_string)
-			a_string := clone ("foo")
-			a_string2 := clone ("fo")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("fo")
 			assert ("greater3", a_string >= a_string2)
 			assert ("not_greater3", not (a_string2 >= a_string))
-			a_string := clone ("foo")
-			a_string2 := clone ("")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("")
 			assert ("greater4", a_string >= a_string2)
 			assert ("not_greater4", not (a_string2 >= a_string))
-			a_string := clone ("foo")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert ("greater5", a_string >= a_string2)
 			assert ("greater6", a_string2 >= a_string)
 		end
@@ -899,17 +902,17 @@ feature -- Test
 		local
 			a_string, a_string2: STRING
 		do
-			a_string := clone ("bar")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("bar")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert_same ("min1", a_string, a_string.min (a_string2))
 			assert_same ("min2", a_string, a_string.min (a_string))
 			assert_same ("min3", a_string, a_string2.min (a_string))
-			a_string := clone ("foo")
-			a_string2 := clone ("")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("")
 			assert_same ("min4", a_string2, a_string.min (a_string2))
 			assert_same ("min5", a_string2, a_string2.min (a_string))
-			a_string := clone ("foo")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert_same ("min6", a_string, a_string.min (a_string2))
 			assert_same ("min7", a_string2, a_string2.min (a_string))
 		end
@@ -919,17 +922,17 @@ feature -- Test
 		local
 			a_string, a_string2: STRING
 		do
-			a_string := clone ("foo")
-			a_string2 := clone ("bar")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("bar")
 			assert_same ("max1", a_string, a_string.max (a_string2))
 			assert_same ("max2", a_string, a_string.max (a_string))
 			assert_same ("max3", a_string, a_string2.max (a_string))
-			a_string := clone ("")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert_same ("max4", a_string2, a_string.max (a_string2))
 			assert_same ("max5", a_string2, a_string2.max (a_string))
-			a_string := clone ("foo")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert_same ("max6", a_string, a_string.max (a_string2))
 			assert_same ("max7", a_string2, a_string2.max (a_string))
 		end
@@ -939,17 +942,17 @@ feature -- Test
 		local
 			a_string, a_string2: STRING
 		do
-			a_string := clone ("foo")
-			a_string2 := clone ("bar")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("bar")
 			assert_integers_equal ("compare1", 1, a_string.three_way_comparison (a_string2))
 			assert_integers_equal ("compare2", 0, a_string.three_way_comparison (a_string))
 			assert_integers_equal ("compare3", -1, a_string2.three_way_comparison (a_string))
-			a_string := clone ("")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert_integers_equal ("compare4", -1, a_string.three_way_comparison (a_string2))
 			assert_integers_equal ("compare5", 1, a_string2.three_way_comparison (a_string))
-			a_string := clone ("foo")
-			a_string2 := clone ("foo")
+			a_string := STRING_.cloned_string ("foo")
+			a_string2 := STRING_.cloned_string ("foo")
 			assert_integers_equal ("compare6", 0, a_string.three_way_comparison (a_string2))
 			assert_integers_equal ("compare7", 0, a_string2.three_way_comparison (a_string))
 		end
