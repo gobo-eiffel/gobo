@@ -40,6 +40,22 @@ feature -- Status report
 			definition: Result = (obj1 = obj2)
 		end
 
+	equal_objects (obj1, obj2: ANY): BOOLEAN is
+			-- Are `obj1' and `obj2' considered equal?
+		do
+			if obj1 = obj2 then
+				Result := True
+			elseif obj1 = Void then
+				Result := False
+			elseif obj2 = Void then
+				Result := False
+			elseif same_types (obj1, obj2) then
+				Result := obj1.is_equal (obj2)
+			end
+		ensure
+			same_types: Result and (obj1 /= Void and obj2 /= Void) implies same_types (obj1, obj2)
+		end
+
 feature -- Conversion
 
 	to_any (an_any: ANY): ANY is
