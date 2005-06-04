@@ -106,7 +106,7 @@ feature -- Formatting
 			a_stream: KI_CHARACTER_OUTPUT_STREAM
 		do
 			Result := STRING_.new_empty_string (a_format, a_format.count)
-			a_stream ?= Result
+			a_stream ?= ANY_.to_any (Result)
 			if a_stream /= Void then
 				do_format_to (a_format, a_parameters, a_stream)
 			else
@@ -134,7 +134,7 @@ feature -- Formatting
 		do
 			single_parameter.put (a_parameter, 1)
 			Result := STRING_.new_empty_string (a_format, a_format.count)
-			a_stream ?= Result
+			a_stream ?= ANY_.to_any (Result)
 			if a_stream /= Void then
 				do_format_to (a_format, single_parameter, a_stream)
 			else
