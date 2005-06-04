@@ -140,11 +140,11 @@ feature -- Processing
 				-- Read filenames.
 			inspect args_count - i + 1
 			when 0 then
-				check equal (in_filename, "-") end
-				check equal (out_filename, "-") end
+				check in_filename.is_equal ("-") end
+				check out_filename.is_equal ("-") end
 			when 1 then
 				in_filename := Arguments.argument (i)
-				check equal (out_filename, "-") end
+				check out_filename.is_equal ("-") end
 			when 2 then
 				in_filename := Arguments.argument (i)
 				out_filename := Arguments.argument (i + 1)

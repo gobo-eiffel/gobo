@@ -38,13 +38,13 @@ feature {NONE} -- Test
 			tested_eiffel_tool: STRING
 		do
 			tested_eiffel_tool := eiffel_compiler.vendor
-			if equal (tested_eiffel_tool, "se") then
+			if tested_eiffel_tool.is_equal ("se") then
 				compile_and_test_se (a_test_name)
-			elseif equal (tested_eiffel_tool, "ise") then
+			elseif tested_eiffel_tool.is_equal ("ise") then
 				compile_and_test_ise (a_test_name)
-			elseif equal (tested_eiffel_tool, "ve") then
+			elseif tested_eiffel_tool.is_equal ("ve") then
 				compile_and_test_ve (a_test_name)
-			elseif equal (tested_eiffel_tool, "gelint") then
+			elseif tested_eiffel_tool.is_equal ("gelint") then
 				compile_and_test_gelint (a_test_name)
 			else
 				assert ("unknown eiffel tool: " + tested_eiffel_tool, False)
