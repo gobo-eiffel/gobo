@@ -18,12 +18,22 @@ inherit
 			out, copy, is_equal
 		end
 
+	KL_CLONABLE
+		undefine
+			out, copy, is_equal
+		end
+
 	MA_DECIMAL_CONSTANTS
 		undefine
 			out, copy, is_equal
 		end
 
 	KL_SHARED_EXCEPTIONS
+		undefine
+			out, copy, is_equal
+		end
+
+	KL_IMPORTED_STRING_ROUTINES
 		undefine
 			out, copy, is_equal
 		end
@@ -338,7 +348,7 @@ feature -- Basic operations
 			set_flag (a_signal)
 			reason := a_message
 			if is_trapped (a_signal) and then exception_on_trap then
-				exception_message := clone (Signal_words.item (a_signal))
+				exception_message := STRING_.cloned_string (Signal_words.item (a_signal))
 				exception_message.append_string (" : ")
 				exception_message.append_string (a_message)
 				Exceptions.raise (exception_message)

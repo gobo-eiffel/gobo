@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			a_string_not_void: a_string /= Void
 		do
 				-- Clone `a_string' in case it is altered later.
-			source := clone (a_string)
+			source := STRING_.cloned_string (a_string)
 		ensure
 			source_set: STRING_.same_string (source, a_string)
 		end

@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			create byte_code.make (1024)
 			set_character_case_mapping (default_character_case_mapping)
 			set_word_set (default_word_set)
-			pattern := clone (empty_pattern)
+			pattern := STRING_.cloned_string (empty_pattern)
 			reset
 			set_default_options
 		ensure

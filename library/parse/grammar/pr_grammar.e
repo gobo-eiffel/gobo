@@ -302,8 +302,8 @@ feature -- Processing
 			rhs: DS_ARRAYED_LIST [PR_SYMBOL]
 			i, j, nb, nb_rhs: INTEGER
 		do
-			old_variables := clone (variables)
-			old_rules := clone (rules)
+			old_variables := variables.cloned_object
+			old_rules := rules.cloned_object
 			reduce (error_handler)
 			useless_variables := old_variables.count - variables.count
 			useless_rules := old_rules.count - rules.count
