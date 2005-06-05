@@ -76,8 +76,6 @@ feature -- Optimization
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
-		local
-			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			check
 				backwards_compatible_mode: a_context.is_backwards_compatible_mode

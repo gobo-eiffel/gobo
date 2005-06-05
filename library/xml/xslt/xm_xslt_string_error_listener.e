@@ -48,8 +48,6 @@ feature -- Events
 
 	warning (a_message: STRING; a_locator: XM_XPATH_LOCATOR) is
 			-- Receive notification of a warning.
-		local
-			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if warnings_are_recoverable_errors then
 				if recovery_policy = Do_not_recover then
