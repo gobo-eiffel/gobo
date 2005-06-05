@@ -145,6 +145,54 @@ feature -- Status report
 			-- `False'
 		end
 
+	sub_expressions_have_cardinality: BOOLEAN is
+			-- Is `are_cardinalities_computed' satisfied for all `sub_expressions'?
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			Result := True
+			from a_cursor := sub_expressions.new_cursor; a_cursor.start; until a_cursor.after loop
+				Result := a_cursor.item.are_cardinalities_computed
+				if Result then	a_cursor.forth else a_cursor.go_after end
+			end
+		end
+
+	sub_expressions_have_intrinsic_dependencies: BOOLEAN is
+			-- Is `are_intrinsic_dependencies_computed' satisfied for all `sub_expressions'?
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			Result := True
+			from a_cursor := sub_expressions.new_cursor; a_cursor.start; until a_cursor.after loop
+				Result := a_cursor.item.are_intrinsic_dependencies_computed
+				if Result then	a_cursor.forth else a_cursor.go_after end
+			end
+		end
+
+	sub_expressions_have_dependencies: BOOLEAN is
+			-- Is `are_dependencies_computed' satisfied for all `sub_expressions'?
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			Result := True
+			from a_cursor := sub_expressions.new_cursor; a_cursor.start; until a_cursor.after loop
+				Result := a_cursor.item.are_dependencies_computed
+				if Result then	a_cursor.forth else a_cursor.go_after end
+			end
+		end
+
+	sub_expressions_have_special_properties: BOOLEAN is
+			-- Is `are_special_properties_computed' satisfied for all `sub_expressions'?
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			Result := True
+			from a_cursor := sub_expressions.new_cursor; a_cursor.start; until a_cursor.after loop
+				Result := a_cursor.item.are_special_properties_computed
+				if Result then	a_cursor.forth else a_cursor.go_after end
+			end
+		end
+
 feature -- Status setting
 
 	frozen compute_static_properties is
@@ -166,7 +214,9 @@ feature -- Status setting
 
 	compute_intrinsic_dependencies is
 			-- Determine the intrinsic dependencies of an expression.
-		require	not_yet_computed: not are_intrinsic_dependencies_computed
+		require
+			not_yet_computed: not are_intrinsic_dependencies_computed
+			all_sub_expressions_computed: sub_expressions_have_intrinsic_dependencies
 		do
 			initialize_intrinsic_dependencies
 		ensure
@@ -179,6 +229,7 @@ feature -- Status setting
 			-- the union of the sub-expressions' dependencies.
 		require
 			not_yet_computed: not are_dependencies_computed
+			all_sub_expressions_computed: sub_expressions_have_dependencies
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
@@ -405,7 +456,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		require
-			not_yet_computed: not are_cardinalities_computed			
+			not_yet_computed: not are_cardinalities_computed
+			all_sub_expressions_computed: sub_expressions_have_cardinality
 		deferred
 		ensure
 			computed: are_cardinalities_computed and then cardinalities /= Void
@@ -414,7 +466,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_special_properties is
 			-- Compute special properties.
 		require
-			not_yet_computed: not are_special_properties_computed			
+			not_yet_computed: not are_special_properties_computed
+			all_sub_expressions_computed: sub_expressions_have_special_properties
 		do
 			initialize_special_properties
 		ensure

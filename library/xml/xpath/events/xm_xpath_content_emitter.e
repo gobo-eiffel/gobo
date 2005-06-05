@@ -420,10 +420,10 @@ feature {NONE} -- Implementation
 			-- Has DTD been seen yet?
 
 	is_namespace_declaration (an_ns_prefix, a_local_part: STRING): BOOLEAN is
-			-- xmlns= or xmlns
+			-- Is attribute of form xmlns= or xmlns:prefix?
 		require
 			prefix_not_void: an_ns_prefix /= Void
-			local_part_not_void: a_local_part /= Void
+			local_part_not_empty: a_local_part /= Void and then not a_local_part.is_empty
 		do
 			debug ("XPath content emitter")
 				std.error.put_string ("Is_namespace_declaration: local name is ")
@@ -446,6 +446,9 @@ feature {NONE} -- Implementation
 
 	notify_attribute (a_name_code: INTEGER; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Notify an attribute
+		require
+			prefix_exists: a_prefix /= Void
+			local_part_not_empty: a_local_part /= Void and then not a_local_part.is_empty
 		local
 			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]
 			an_attribute_model: XM_DTD_ATTRIBUTE_CONTENT
