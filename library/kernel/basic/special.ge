@@ -18,7 +18,11 @@ class SPECIAL [G]
 #ifdef SE
 inherit
 
+#ifdef SE_1_0
 	FIXED_ARRAY [G]
+#else
+	FAST_ARRAY [G]
+#endif
 		rename
 			resize as array_resize
 		end
