@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		require
 			recovery_policy: a_recovery_policy >= Recover_silently and then a_recovery_policy <= Do_not_recover			
 		do
-			Recovered := True
+			recovered := True
 			recovery_policy := a_recovery_policy
 		ensure
 			recovery_policy_set: recovery_policy = a_recovery_policy
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	error_text: not Recovered implies error_text /= Void
+	error_text: not recovered implies error_text /= Void
 
 end
 	
