@@ -368,7 +368,7 @@ feature -- Basic operations
 			traps.copy (other.traps)
 		end
 
-feature {DECIMAL_TESTER, MA_DECIMAL_CONTEXT}
+feature {MA_DECIMAL_HANDLER, MA_DECIMAL_CONTEXT}
 
 	flags: ARRAY [BOOLEAN]
 			-- Signals flagged
