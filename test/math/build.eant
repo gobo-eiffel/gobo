@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="test" default="help">
+<project name="math" default="help">
 
 	<description>
-		description: "Eiffel Ant file for Gobo Eiffel tests"
-		copyright: "Copyright (c) 2001, Eric Bezault and others"
+		system: "Gobo Eiffel Math Library Tester"
+		copyright: "Copyright (c) 2005, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -27,7 +27,7 @@
 
 	<target name="install" depend="init">
 		<description>
-			Install the Gobo Eiffel tests.
+			Install the Gobo Eiffel Math Library testers.
 		</description>
 
 		<set name="target" value="install"/>
@@ -36,7 +36,7 @@
 
 	<target name="test" depend="init">
 		<description>
-			Run Gobo tests.
+			Test the Gobo Eiffel Math Library.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
 			or 'se' if this variable is not defined.
 		</description>
@@ -48,7 +48,7 @@
 
 	<target name="test_ise" depend="init">
 		<description>
-			Run Gobo tests with ISE Eiffel.
+			Test the Gobo Eiffel Math Library with ISE Eiffel.
 		</description>
 
 		<set name="target" value="test_ise"/>
@@ -58,7 +58,7 @@
 
 	<target name="test_ve" depend="init">
 		<description>
-			Run Gobo tests with Visual Eiffel.
+			Test the Gobo Eiffel Math Library with Visual Eiffel.
 		</description>
 
 		<set name="target" value="test_ve"/>
@@ -68,7 +68,7 @@
 
 	<target name="test_se" depend="init">
 		<description>
-			Run Gobo tests with SmartEiffel.
+			Test the Gobo Eiffel Math Library with SmartEiffel.
 		</description>
 
 		<set name="target" value="test_se"/>
@@ -78,7 +78,7 @@
 
 	<target name="test_debug" depend="init">
 		<description>
-			Run Gobo tests in debug mode.
+			Test the Gobo Eiffel Math Library in debug mode.
 			Use Eiffel compiler set in ${GOBO_EIFFEL}
 			or 'se' if this variable is not defined.
 		</description>
@@ -90,7 +90,7 @@
 
 	<target name="test_debug_ise" depend="init">
 		<description>
-			Run Gobo tests with ISE Eiffel in debug mode.
+			Test the Gobo Eiffel Math Library with ISE Eiffel in debug mode.
 		</description>
 
 		<set name="target" value="test_debug_ise"/>
@@ -100,7 +100,7 @@
 
 	<target name="test_debug_ve" depend="init">
 		<description>
-			Run Gobo tests with Visual Eiffel in debug mode.
+			Test the Gobo Eiffel Math Library with Visual Eiffel in debug mode.
 		</description>
 
 		<set name="target" value="test_debug_ve"/>
@@ -110,7 +110,7 @@
 
 	<target name="test_debug_se" depend="init">
 		<description>
-			Run Gobo tests with SmartEiffel in debug mode.
+			Test the Gobo Eiffel Math Library with SmartEiffel in debug mode.
 		</description>
 
 		<set name="target" value="test_debug_se"/>
@@ -149,34 +149,8 @@
 			in all subdirectories.
 		</description>
 
-		<geant file="build.eant" target="${target}" dir="lexical"/>
-		<geant file="build.eant" target="clean" dir="lexical" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="kernel"/>
-		<geant file="build.eant" target="clean" dir="kernel" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="math"/>
-		<geant file="build.eant" target="clean" dir="math" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="pattern"/>
-		<geant file="build.eant" target="clean" dir="pattern" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="regexp"/>
-		<geant file="build.eant" target="clean" dir="regexp" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="string"/>
-		<geant file="build.eant" target="clean" dir="string" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="structure"/>
-		<geant file="build.eant" target="clean" dir="structure" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="time"/>
-		<geant file="build.eant" target="clean" dir="time" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="tools"/>
-		<geant file="build.eant" target="clean" dir="tools" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="utility"/>
-		<geant file="build.eant" target="clean" dir="utility" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="xml"/>
-		<geant file="build.eant" target="clean" dir="xml" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="example"/>
-		<geant file="build.eant" target="clean" dir="example" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="src"/>
-		<geant file="build.eant" target="clean" dir="src" if="${do_clean}"/>
-		<geant file="build.eant" target="${target}" dir="precomp"/>
-		<geant file="build.eant" target="clean" dir="precomp" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="decimal"/>
+		<geant file="build.eant" target="clean" dir="decimal" if="${do_clean}"/>
 	</target>
 
 </project>

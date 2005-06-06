@@ -1,0 +1,189 @@
+------------------------------------------------------------------------
+-- double.decTest -- decimal 'double precision' testcases             --
+-- Copyright (c) IBM Corporation, 1981, 2002.  All rights reserved.   --
+------------------------------------------------------------------------
+-- Please see the document "General Decimal Arithmetic Testcases"     --
+-- at http://www2.hursley.ibm.com/decimal for the description of      --
+-- these testcases.                                                   --
+--                                                                    --
+-- These testcases are experimental ('beta' versions), and they       --
+-- may contain errors.  They are offered on an as-is basis.  In       --
+-- particular, achieving the same results as the tests here is not    --
+-- a guarantee that an implementation complies with any Standard      --
+-- or specification.  The tests are not exhaustive.                   --
+--                                                                    --
+-- Please send comments, suggestions, and corrections to the author:  --
+--   Mike Cowlishaw, IBM Fellow                                       --
+--   IBM UK, PO Box 31, Birmingham Road, Warwick CV34 5JL, UK         --
+--   mfc@uk.ibm.com                                                   --
+------------------------------------------------------------------------
+version: 2.15
+
+-- This set of tests is for double (33 digit) concrete representations,
+-- testing overflow and underflow with 4-digit exponents (and subnormals
+-- for underflow, if extended)
+
+extended: 1
+precision:   33
+rounding:    half_up
+maxExponent: 9999
+
+basx921 toSci '99e999'          -> '9.9E+1000'
+basx922 toSci '999e999'         -> '9.99E+1001'
+basx923 toSci '0.9e-999'        -> '9E-1000'
+basx924 toSci '0.09e-999'       -> '9E-1001'
+basx925 toSci '0.1e1001'        -> '1E+1000'
+basx926 toSci '10e-1001'        -> '1.0E-1000'
+basx927 toSci '0.9e9999'        -> '9E+9998'
+basx928 toSci '99e-9999'        -> '9.9E-9998'
+basx929 toSci '111e9997'        -> '1.11E+9999'
+basx930 toSci '1111e-9999'      -> '1.111E-9996'
+basx931 toSci '99e9999'          -> Infinity Overflow Inexact Rounded
+basx932 toSci '999e9999'         -> Infinity Overflow Inexact Rounded
+basx933 toSci '0.9e-10031'       -> 1E-10031 Underflow Subnormal Inexact Rounded
+basx934 toSci '0.09e-10030'      -> 1E-10031 Underflow Subnormal Inexact Rounded
+basx935 toSci '0.1e10001'        -> Infinity Overflow Inexact Rounded
+basx936 toSci '10e-10032'        -> 1E-10031 Subnormal Rounded
+basx937 toSci '0.9e99999'        -> Infinity Overflow Inexact Rounded
+basx938 toSci '99e-99999'        -> 0E-10031 Underflow Subnormal Inexact Rounded
+basx939 toSci '111e99999'        -> Infinity Overflow Inexact Rounded
+basx940 toSci '1111e-99999'      -> 0E-10031 Underflow Subnormal Inexact Rounded
+-- signed
+basx941 toSci '-99e9999'         -> -Infinity Overflow Inexact Rounded
+basx942 toSci '-999e9999'        -> -Infinity Overflow Inexact Rounded
+basx943 toSci '-0.9e-10031'      -> -1E-10031 Underflow Subnormal Inexact Rounded
+basx944 toSci '-0.09e-10030'     -> -1E-10031 Underflow Subnormal Inexact Rounded
+basx945 toSci '-0.1e10001'       -> -Infinity Overflow Inexact Rounded
+basx946 toSci '-10e-10032'       -> -1E-10031 Subnormal Rounded
+basx947 toSci '-0.9e99999'       -> -Infinity Overflow Inexact Rounded
+basx948 toSci '-99e-99999'       -> -0E-10031 Underflow Subnormal Inexact Rounded
+basx949 toSci '-111e99999'       -> -Infinity Overflow Inexact Rounded
+basx950 toSci '-1111e-99999'     -> -0E-10031 Underflow Subnormal Inexact Rounded
+
+precision: 4
+powx260 power  9            9999 -> 2.957E+9541 Inexact Rounded
+powx261 power 10            9999 -> 1.000E+9999 Rounded
+powx262 power 10.01         9999 -> Infinity Inexact Overflow Rounded
+powx263 power 10.1          9999 -> Infinity Inexact Overflow Rounded
+powx264 power 11            9999 -> Infinity Inexact Overflow Rounded
+powx265 power 12            9999 -> Infinity Inexact Overflow Rounded
+powx266 power 999           9999 -> Infinity Inexact Overflow Rounded
+powx267 power 999999        9999 -> Infinity Inexact Overflow Rounded
+powx268 power 999999999     9999 -> Infinity Inexact Overflow Rounded
+powx269 power 9.9E9999      9999 -> Infinity Inexact Overflow Rounded
+-- signs
+powx282 power -101          9999 -> -Infinity Overflow Inexact Rounded
+powx283 power -101          9998 ->  Infinity Overflow Inexact Rounded
+
+powx270 power 0.5           9999 -> 1.002E-3010 Inexact Rounded
+powx271 power 0.1           9999 -> 1E-9999
+powx272 power 0.09          9999 -> 0E-10002 Underflow Subnormal Inexact Rounded
+powx273 power 0.05          9999 -> 0E-10002 Underflow Subnormal Inexact Rounded
+powx274 power 0.01          9999 -> 0E-10002 Underflow Subnormal Inexact Rounded
+powx275 power 0.0001        9999 -> 0E-10002 Underflow Subnormal Inexact Rounded
+powx277 power 0.0000001     9999 -> 0E-10002 Underflow Subnormal Inexact Rounded
+powx278 power 0.0000000001  9999 -> 0E-10002 Underflow Subnormal Inexact Rounded
+powx279 power 1E-9999       9999 -> 0E-10002 Underflow Subnormal Inexact Rounded
+-- signs
+powx280 power -1E-9999      9999 -> -0E-10002 Underflow Subnormal Inexact Rounded
+powx281 power -1E-9999      9998 ->  0E-10002 Underflow Subnormal Inexact Rounded
+
+divx320 divide +1.23456789012345E-33 9E+9999 -> 0E-10002 Inexact Rounded Underflow Subnormal
+divx321 divide 9E+9999 +0.23456789012345E-0 -> Infinity Inexact Overflow Rounded
+divx322 divide +0.100E-32 9E+9999 -> 0E-10002 Inexact Rounded Underflow Subnormal
+divx323 divide 9E-9999 +9.100E+33 -> 0E-10002 Inexact Rounded Underflow Subnormal
+divx325 divide -1.23456789012345E-33 9E+9999 -> -0E-10002 Inexact Rounded Underflow Subnormal
+divx326 divide 9E+9999 -0.83456789012345E-0 -> -Infinity Inexact Overflow Rounded
+divx327 divide -0.100E-33 9E+9999 -> -0E-10002 Inexact Rounded Underflow Subnormal
+divx328 divide 9E-9999 -9.100E+33 -> -0E-10002 Inexact Rounded Underflow Subnormal
+precision: 9
+addx320 add 1E+9999     9E+9999   -> Infinity Overflow Inexact Rounded
+addx321 add 9E+9999     1E+9999   -> Infinity Overflow Inexact Rounded
+addx324 add -1E+9999   -9E+9999   -> -Infinity Overflow Inexact Rounded
+addx325 add -9E+9999   -1E+9999   -> -Infinity Overflow Inexact Rounded
+precision: 3
+addx328 add 9.999E+9999 0 -> Infinity Inexact Overflow Rounded
+addx329 add 0 9.999E+9999 -> Infinity Inexact Overflow Rounded
+
+precision: 9
+maxexponent: 9999
+remx420 remainder +1.23456789012345E-0 9E+9999 -> 1.23456789 Inexact Rounded
+remx421 remainder 9E+9999 +0.23456789012345E-0 -> NaN Division_impossible
+remx422 remainder +0.100 9E+9999               -> 0.100
+remx423 remainder 9E-9999 +9.100               -> 9E-9999
+remx425 remainder -1.23456789012345E-0 9E+9999 -> -1.23456789 Inexact Rounded
+remx426 remainder 9E+9999 -0.83456789012345E-0 -> NaN Division_impossible
+remx427 remainder -0.100 9E+9999               -> -0.100
+remx428 remainder 9E-9999 -9.100               -> 9E-9999
+dvix320 divideint +1.23456789012345E-0 9E+9999    -> 0
+dvix321 divideint 9E+9999 +0.23456789012345E-0 -> NaN Division_impossible
+dvix322 divideint +0.100 9E+9999    -> 0
+dvix323 divideint 9E-9999 +9.100    -> 0
+dvix325 divideint -1.23456789012345E-0 9E+9999    -> -0
+dvix326 divideint 9E+9999 -0.83456789012345E-0 -> NaN Division_impossible
+dvix327 divideint -0.100 9E+9999    -> -0
+dvix328 divideint 9E-9999 -9.100    -> -0
+
+subx720 subtract 1E+9999    -9E+9999   -> Infinity Overflow Inexact Rounded
+subx721 subtract 9E+9999    -1E+9999   -> Infinity Overflow Inexact Rounded
+subx724 subtract -1E+9999    9E+9999   -> -Infinity Overflow Inexact Rounded
+subx725 subtract -9E+9999    1E+9999   -> -Infinity Overflow Inexact Rounded
+
+precision: 3
+plux110 plus 9.999E+9999 -> Infinity Inexact Overflow Rounded
+precision: 3
+minx110 minus 9.999E+9999 -> -Infinity Inexact Overflow Rounded
+
+precision: 9
+-- test some cases that are close to exponent overflow
+mulx070 multiply 1 9e9999       -> 9E+9999
+mulx071 multiply 1 9.9e9999     -> 9.9E+9999
+mulx072 multiply 1 9.99e9999    -> 9.99E+9999
+mulx073 multiply 1 9e9999       -> 9E+9999
+mulx074 multiply 1 9.9e9999     -> 9.9E+9999
+
+mulx075 multiply 0.1 0.09e-9996 -> 9E-9999
+mulx076 multiply 0.1 0.9e-9997  -> 9E-9999
+mulx077 multiply 0.1 9e-9998    -> 9E-9999
+mulx078 multiply 0.1 99e-9998   -> 9.9E-9998
+mulx079 multiply 0.1 999e-9998  -> 9.99E-9997
+
+-- .. and some that cross the boundary
+mulx220 multiply +1.23456789012345E-0 9E+9999 -> Infinity Inexact Overflow Rounded
+mulx221 multiply 9E+9999 +1.23456789012345E-0 -> Infinity Inexact Overflow Rounded
+mulx222 multiply +0.100E-33 9E-9999 -> 0E-10007 Underflow Subnormal Inexact Rounded
+mulx223 multiply 9E-9999 +0.100E-33 -> 0E-10007 Underflow Subnormal Inexact Rounded
+mulx225 multiply -1.23456789012345E-0 9E+9999 -> -Infinity Inexact Overflow Rounded
+mulx226 multiply 9E+9999 -1.23456789012345E-0 -> -Infinity Inexact Overflow Rounded
+mulx227 multiply -0.100E-33 9E-9999 -> -0E-10007 Underflow Subnormal Inexact Rounded
+mulx228 multiply 9E-9999 -0.100E-33 -> -0E-10007 Underflow Subnormal Inexact Rounded
+
+-- overflow on input rounding
+precision: 5
+addx400 add  9.9999e+9999    0  -> 9.9999E+9999 Rounded
+addx401 add  9.99996e+9999   0  -> Infinity Overflow Inexact Rounded
+addx402 add  9.99999e+9999   0  -> Infinity Overflow Inexact Rounded
+addx403 add  0 9.9999e+9999     -> 9.9999E+9999 Rounded
+addx404 add  0 9.99996e+9999    -> Infinity Overflow Inexact Rounded
+addx405 add  0 9.99999e+9999    -> Infinity Overflow Inexact Rounded
+-- non-zero both
+addx410 add  9.9999e+9999    1  -> 9.9999E+9999 Inexact Rounded
+addx411 add  9.99996e+9999   1  -> Infinity Overflow Inexact Rounded
+addx412 add  9.99999e+9999   1  -> Infinity Overflow Inexact Rounded
+addx413 add  1 9.9999e+9999     -> 9.9999E+9999 Inexact Rounded
+addx414 add  1 9.99996e+9999    -> Infinity Overflow Inexact Rounded
+addx415 add  1 9.99999e+9999    -> Infinity Overflow Inexact Rounded
+-- same again, signed
+addx420 add  -9.9999e+9999    0  -> -9.9999E+9999 Rounded
+addx421 add  -9.99996e+9999   0  -> -Infinity Overflow Inexact Rounded
+addx422 add  -9.99999e+9999   0  -> -Infinity Overflow Inexact Rounded
+addx423 add  0 -9.9999e+9999     -> -9.9999E+9999 Rounded
+addx424 add  0 -9.99996e+9999    -> -Infinity Overflow Inexact Rounded
+addx425 add  0 -9.99999e+9999    -> -Infinity Overflow Inexact Rounded
+-- non-zero both
+addx430 add  -9.9999e+9999    1  -> -9.9999E+9999 Inexact Rounded
+addx431 add  -9.99996e+9999   1  -> -Infinity Overflow Inexact Rounded
+addx432 add  -9.99999e+9999   1  -> -Infinity Overflow Inexact Rounded
+addx433 add  1 -9.9999e+9999     -> -9.9999E+9999 Inexact Rounded
+addx434 add  1 -9.99996e+9999    -> -Infinity Overflow Inexact Rounded
+addx435 add  1 -9.99999e+9999    -> -Infinity Overflow Inexact Rounded

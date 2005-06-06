@@ -1,0 +1,235 @@
+------------------------------------------------------------------------
+-- new.decTest -- pending tests                                       --
+------------------------------------------------------------------------
+version: 2.15
+precision:   9
+rounding:    half_up
+maxExponent: 999999999
+extended:    1
+
+
+-- NB add tests from tryzeros
+
+
+-- Exponents with insignificant leading zeros
+-- [to base]
+basx.01 toSci  1e999999999 -> 1E+999999999
+basx.02 toSci  1e0999999999 -> 1E+999999999
+basx.03 toSci  1e00999999999 -> 1E+999999999
+basx.04 toSci  1e000999999999 -> 1E+999999999
+basx.05 toSci  1e000000000000999999999 -> 1E+999999999
+basx.06 toSci  1e000000000001000000007 -> Infinity Overflow Inexact Rounded
+basx.07 toSci  1e-999999999 -> 1E-999999999
+basx.08 toSci  1e-0999999999 -> 1E-999999999
+basx.09 toSci  1e-00999999999 -> 1E-999999999
+basx.10 toSci  1e-000999999999 -> 1E-999999999
+basx.11 toSci  1e-000000000000999999999 -> 1E-999999999
+basx.12 toSci  1e-000000000001000000007 -> 1E-1000000007 Subnormal
+
+
+-- Divide into 0 tests
+
+divx301 divide    0    7     -> 0
+divx302 divide    0    7E-5  -> 0E+5
+divx303 divide    0    7E-1  -> 0E+1
+divx304 divide    0    7E+1  -> 0.0
+divx305 divide    0    7E+5  -> 0.00000
+divx306 divide    0    7E+6  -> 0.000000
+divx307 divide    0    7E+7  -> 0E-7
+divx308 divide    0   70E-5  -> 0E+4
+divx309 divide    0   70E-1  -> 0
+divx310 divide    0   70E+0  -> 0.0
+divx311 divide    0   70E+1  -> 0.00
+divx312 divide    0   70E+5  -> 0.000000
+divx313 divide    0   70E+6  -> 0E-7
+divx314 divide    0   70E+7  -> 0E-8
+divx315 divide    0  700E-5  -> 0E+3
+divx316 divide    0  700E-1  -> 0.0
+divx317 divide    0  700E+0  -> 0.00
+divx318 divide    0  700E+1  -> 0.000
+divx319 divide    0  700E+5  -> 0E-7
+divx320 divide    0  700E+6  -> 0E-8
+divx321 divide    0  700E+7  -> 0E-9
+
+divx331 divide 0E-3    7E-5  -> 0E+2
+divx332 divide 0E-3    7E-1  -> 0.00
+divx333 divide 0E-3    7E+1  -> 0.0000
+divx334 divide 0E-3    7E+5  -> 0E-8
+divx335 divide 0E-1    7E-5  -> 0E+4
+divx336 divide 0E-1    7E-1  -> 0
+divx337 divide 0E-1    7E+1  -> 0.00
+divx338 divide 0E-1    7E+5  -> 0.000000
+divx339 divide 0E+1    7E-5  -> 0E+6
+divx340 divide 0E+1    7E-1  -> 0E+2
+divx341 divide 0E+1    7E+1  -> 0
+divx342 divide 0E+1    7E+5  -> 0.0000
+divx343 divide 0E+3    7E-5  -> 0E+8
+divx344 divide 0E+3    7E-1  -> 0E+4
+divx345 divide 0E+3    7E+1  -> 0E+2
+divx346 divide 0E+3    7E+5  -> 0.00
+
+maxexponent: 92
+precision:    7
+divx351 divide 0E-92   7E-1  -> 0E-91
+divx352 divide 0E-92   7E+1  -> 0E-93
+divx353 divide 0E-92   7E+5  -> 0E-97
+divx354 divide 0E-92   7E+6  -> 0E-98
+divx355 divide 0E-92   7E+7  -> 0E-98
+divx356 divide 0E-92 777E-1  -> 0E-93
+divx357 divide 0E-92 777E+1  -> 0E-95
+divx358 divide 0E-92 777E+3  -> 0E-97
+divx359 divide 0E-92 777E+4  -> 0E-98
+divx360 divide 0E-92 777E+5  -> 0E-98
+
+divx361 divide 0E+92   7E+1  -> 0E+91
+divx362 divide 0E+92   7E+0  -> 0E+92
+divx363 divide 0E+92   7E-1  -> 0E+92
+divx364 divide 0E+92 777E+1  -> 0E+89
+divx365 divide 0E+92 777E-1  -> 0E+91
+divx366 divide 0E+92 777E-2  -> 0E+92
+divx367 divide 0E+92 777E-3  -> 0E+92
+divx368 divide 0E+92 777E-4  -> 0E+92
+
+
+precision:   9
+maxExponent: 999999999
+
+-- getInt worries
+resx0001 rescale   0   1000000000 -> NaN Invalid_operation
+resx0002 rescale   0  -1000000000 -> 0E-1000000000
+resx0003 rescale   0   2000000000 -> NaN Invalid_operation
+resx0004 rescale   0  -2000000000 -> NaN Invalid_operation
+resx0005 rescale   0   3000000000 -> NaN Invalid_operation
+resx0006 rescale   0  -3000000000 -> NaN Invalid_operation
+resx0007 rescale   0   4000000000 -> NaN Invalid_operation
+resx0008 rescale   0  -4000000000 -> NaN Invalid_operation
+resx0009 rescale   0   5000000000 -> NaN Invalid_operation
+resx0010 rescale   0  -5000000000 -> NaN Invalid_operation
+resx0011 rescale   0   6000000000 -> NaN Invalid_operation
+resx0012 rescale   0  -6000000000 -> NaN Invalid_operation
+resx0013 rescale   0   7000000000 -> NaN Invalid_operation
+resx0014 rescale   0  -7000000000 -> NaN Invalid_operation
+resx0015 rescale   0   8000000000 -> NaN Invalid_operation
+resx0016 rescale   0  -8000000000 -> NaN Invalid_operation
+resx0017 rescale   0   9000000000 -> NaN Invalid_operation
+resx0018 rescale   0  -9000000000 -> NaN Invalid_operation
+resx0019 rescale   0   9999999999 -> NaN Invalid_operation
+resx0020 rescale   0  -9999999999 -> NaN Invalid_operation
+resx0021 rescale   0   10000000000 -> NaN Invalid_operation
+resx0022 rescale   0  -10000000000 -> NaN Invalid_operation
+
+resx0031 rescale   1   0E-1       -> 1
+resx0032 rescale   1   0E-2       -> 1
+resx0033 rescale   1   0E-3       -> 1
+resx0034 rescale   1   0E-4       -> 1
+resx0035 rescale   1   0E-100     -> 1
+resx0036 rescale   1   0E-100000  -> 1
+resx0037 rescale   1   0E+100     -> 1
+resx0038 rescale   1   0E+100000  -> 1
+
+resx0041 rescale   0   5E-1000000 -> NaN Invalid_operation
+resx0042 rescale   0   5E-1000000 -> NaN Invalid_operation
+resx0043 rescale   0    999999999 -> 0E+999999999
+resx0044 rescale   0   1000000000 -> NaN Invalid_operation
+resx0045 rescale   0   -999999999 -> 0E-999999999
+resx0046 rescale   0  -1000000000 -> 0E-1000000000
+resx0047 rescale   0  -1000000001 -> 0E-1000000001
+resx0048 rescale   0  -1000000002 -> 0E-1000000002
+resx0049 rescale   0  -1000000003 -> 0E-1000000003
+resx0050 rescale   0  -1000000004 -> 0E-1000000004
+resx0051 rescale   0  -1000000005 -> 0E-1000000005
+resx0052 rescale   0  -1000000006 -> 0E-1000000006
+resx0053 rescale   0  -1000000007 -> 0E-1000000007
+resx0054 rescale   0  -1000000008 -> NaN Invalid_operation
+
+resx0061 rescale   1  +2147483649 -> NaN Invalid_operation
+resx0062 rescale   1  +2147483648 -> NaN Invalid_operation
+resx0063 rescale   1  +2147483647 -> NaN Invalid_operation
+resx0064 rescale   1  -2147483647 -> NaN Invalid_operation
+resx0065 rescale   1  -2147483648 -> NaN Invalid_operation
+resx0066 rescale   1  -2147483649 -> NaN Invalid_operation
+
+-- check for double-rounded subnormals
+precision:   5
+maxexponent: 79
+basx0001 toSci     1.52444E-80  ->  1.524E-80 Inexact Rounded Subnormal Underflow
+basx0002 toSci     1.52445E-80  ->  1.524E-80 Inexact Rounded Subnormal Underflow
+basx0003 toSci     1.52446E-80  ->  1.524E-80 Inexact Rounded Subnormal Underflow
+
+-- check for double-rounded subnormals
+precision:   5
+maxexponent: 79
+-- Add: lhs and rhs 0
+addx0001 add       1.52444E-80 0 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+addx0002 add       1.52445E-80 0 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+addx0003 add       1.52446E-80 0 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+addx0004 add       0 1.52444E-80 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+addx0005 add       0 1.52445E-80 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+addx0006 add       0 1.52446E-80 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+
+-- Add: lhs >> rhs and vice versa
+addx0011 add       1.52444E-80 1E-100 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+addx0012 add       1.52445E-80 1E-100 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+addx0013 add       1.52446E-80 1E-100 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+addx0014 add       1E-100 1.52444E-80 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+addx0015 add       1E-100 1.52445E-80 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+addx0016 add       1E-100 1.52446E-80 -> 1.524E-80 Inexact Rounded Subnormal Underflow
+
+-- Add: lhs + rhs addition carried out
+addx0021 add       1.52443E-80 1.00001E-80  -> 2.524E-80 Inexact Rounded Subnormal Underflow
+addx0022 add       1.52444E-80 1.00001E-80  -> 2.524E-80 Inexact Rounded Subnormal Underflow
+addx0023 add       1.52445E-80 1.00001E-80  -> 2.524E-80 Inexact Rounded Subnormal Underflow
+addx0024 add       1.00001E-80  1.52443E-80 -> 2.524E-80 Inexact Rounded Subnormal Underflow
+addx0025 add       1.00001E-80  1.52444E-80 -> 2.524E-80 Inexact Rounded Subnormal Underflow
+addx0026 add       1.00001E-80  1.52445E-80 -> 2.524E-80 Inexact Rounded Subnormal Underflow
+
+-- check for double-rounded subnormals
+precision:   5
+maxexponent: 79
+subx0001 subtract  0 1.52444E-80 -> -1.524E-80 Inexact Rounded Subnormal Underflow
+subx0002 subtract  0 1.52445E-80 -> -1.524E-80 Inexact Rounded Subnormal Underflow
+subx0003 subtract  0 1.52446E-80 -> -1.524E-80 Inexact Rounded Subnormal Underflow
+subx0004 subtract  1.52444E-80 0 ->  1.524E-80 Inexact Rounded Subnormal Underflow
+subx0005 subtract  1.52445E-80 0 ->  1.524E-80 Inexact Rounded Subnormal Underflow
+subx0006 subtract  1.52446E-80 0 ->  1.524E-80 Inexact Rounded Subnormal Underflow
+
+subx0011 subtract  1.2345678E-80  1.2345671E-80 ->  0E-83 Inexact Rounded Subnormal Underflow
+subx0012 subtract  1.2345678E-80  1.2345618E-80 ->  0E-83 Inexact Rounded Subnormal Underflow
+subx0013 subtract  1.2345678E-80  1.2345178E-80 ->  0E-83 Inexact Rounded Subnormal Underflow
+subx0014 subtract  1.2345678E-80  1.2341678E-80 ->  0E-83 Inexact Rounded Subnormal Underflow
+subx0015 subtract  1.2345678E-80  1.2315678E-80 ->  3E-83         Rounded Subnormal
+subx0016 subtract  1.2345678E-80  1.2145678E-80 ->  2.0E-82       Rounded Subnormal
+subx0017 subtract  1.2345678E-80  1.1345678E-80 ->  1.00E-81      Rounded Subnormal
+subx0018 subtract  1.2345678E-80  0.2345678E-80 ->  1.000E-80     Rounded Subnormal
+
+-- check for double-rounded subnormals
+precision:   5
+maxexponent: 79
+mulx0001 multiply  1.2347E-40  1.2347E-40  ->  1.524E-80 Inexact Rounded Subnormal Underflow
+mulx0002 multiply  1.234E-40  1.234E-40  ->  1.523E-80 Inexact Rounded Subnormal Underflow
+mulx0003 multiply  1.23E-40   1.23E-40   ->  1.513E-80 Inexact Rounded Subnormal Underflow
+mulx0004 multiply  1.2E-40    1.2E-40    ->  1.44E-80  Subnormal
+mulx0005 multiply  1.2E-40    1.2E-41    ->  1.44E-81  Subnormal
+mulx0006 multiply  1.2E-40    1.2E-42    ->  1.4E-82   Subnormal Inexact Rounded Underflow
+mulx0007 multiply  1.2E-40    1.3E-42    ->  1.6E-82   Subnormal Inexact Rounded Underflow
+mulx0008 multiply  1.3E-40    1.3E-42    ->  1.7E-82   Subnormal Inexact Rounded Underflow
+
+mulx0011 multiply  1.2345E-39   1.234E-40  ->  1.5234E-79 Inexact Rounded
+mulx0012 multiply  1.23456E-39  1.234E-40  ->  1.5234E-79 Inexact Rounded
+mulx0013 multiply  1.2345E-40   1.234E-40  ->  1.523E-80  Inexact Rounded Subnormal Underflow
+mulx0014 multiply  1.23456E-40  1.234E-40  ->  1.523E-80  Inexact Rounded Subnormal Underflow
+mulx0015 multiply  1.2345E-41   1.234E-40  ->  1.52E-81   Inexact Rounded Subnormal Underflow
+mulx0016 multiply  1.23456E-41  1.234E-40  ->  1.52E-81   Inexact Rounded Subnormal Underflow
+
+-- check for double-rounded subnormals
+precision:   5
+maxexponent: 79
+divx0001 divide    1.52444E-80 1      -> 1.524E-80 Inexact Rounded Subnormal Underflow
+divx0002 divide    1.52445E-80 1      -> 1.524E-80 Inexact Rounded Subnormal Underflow
+divx0003 divide    1.52446E-80 1      -> 1.524E-80 Inexact Rounded Subnormal Underflow
+
+-- check for double-rounded subnormals
+precision:   5
+maxexponent: 79
+powx0001 power     1.2347E-40  2      ->  1.524E-80 Inexact Rounded Subnormal Underflow
+
