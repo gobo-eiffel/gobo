@@ -447,11 +447,9 @@ feature {NONE} -- Implementation
 							assert_strings_equal (l_tag, l_expected_result, c.to_scientific_string)
 							check_flags (l_tag, l_flags, l_ctx.flags)
 						elseif l_operation.is_equal ("rescale") then
-if a_test_name.is_equal ("rescale.decTest") then
 							c := a.rescale_decimal (b, l_ctx)
 							assert_strings_equal (l_tag, l_expected_result, c.to_scientific_string)
 							check_flags (l_tag, l_flags, l_ctx.flags)
-end
 						elseif l_operation.is_equal ("subtract") then
 							c := a.subtract (b, l_ctx)
 							assert_strings_equal (l_tag, l_expected_result, c.to_scientific_string)

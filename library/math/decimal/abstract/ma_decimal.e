@@ -404,7 +404,9 @@ feature -- Status report
 		local
 			fractional_count, index: INTEGER
 		do
-			if exponent < 0 then
+			if is_zero then
+				Result := True
+			elseif exponent < 0 then
 				if adjusted_exponent >= 0 then
 					fractional_count := -exponent
 					from
