@@ -2,7 +2,7 @@ indexing
 
 	description:
 	
-		"Type down an XML node object without reverse assignment"
+		"Get static type of an XML node object without a reverse assignment"
 		
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2001, Andreas Leitner and others"
