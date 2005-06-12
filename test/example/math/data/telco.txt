@@ -1,0 +1,13 @@
+-- telco application
+--
+-- Benchmark for Decimal Arithmetic
+--
+-- Eiffel implementation - Gobo Eiffel Decimal Arithmetic Library
+--
+10 Numbers processed, with 3 long distance calls
+
+Duration: 0:0:0.0  - hour:minute:second.millisecond
+
+	sum_t = 8.91
+	sum_b = 0.50
+	sum_d = 0.22

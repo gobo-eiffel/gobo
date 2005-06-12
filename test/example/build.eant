@@ -153,6 +153,8 @@
 
 		<geant file="build.eant" target="${target}" dir="lexical"/>
 		<geant file="build.eant" target="clean" dir="lexical" if="${do_clean}"/>
+		<geant file="build.eant" target="${target}" dir="math"/>
+		<geant file="build.eant" target="clean" dir="math" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="parse"/>
 		<geant file="build.eant" target="clean" dir="parse" if="${do_clean}"/>
 		<geant file="build.eant" target="${target}" dir="pattern"/>
