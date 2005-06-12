@@ -54,15 +54,16 @@ feature -- Test
 			assert ("more_than_byte", a_platform.Character_bits >= a_platform.Byte_bits)
 		end
 
-	test_double_bits is
-			-- Test feature `Double_bits'.
-		local
-			a_platform: KL_PLATFORM
-		do
-			create a_platform
-			assert_integers_equal ("definition", a_platform.Double_bytes * a_platform.Byte_bits, a_platform.Double_bits)
-			assert ("more_than_real", a_platform.Double_bits >= a_platform.Real_bits)
-		end
+-- Not supported with SE 2.1 and 2.2.
+--	test_double_bits is
+--			-- Test feature `Double_bits'.
+--		local
+--			a_platform: KL_PLATFORM
+--		do
+--			create a_platform
+--			assert_integers_equal ("definition", a_platform.Double_bytes * a_platform.Byte_bits, a_platform.Double_bits)
+--			assert ("more_than_real", a_platform.Double_bits >= a_platform.Real_bits)
+--		end
 
 	test_integer_bits is
 			-- Test feature `Integer_bits'.
