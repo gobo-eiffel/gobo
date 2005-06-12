@@ -30,7 +30,13 @@ Version ?
 	  the code generated for the semantic actions to contain or
 	  not indication about the line number where it originally
 	  appeared in the input description file.
-	* Fixed bug in '%option line'.
+	* Fixed bug in '%option line' with the -z option when two rules
+	  were sharing the same semantic actions (with | separator).
+	* When not appearing in a character class, an unescaped [ character
+	  is now considered to be the open character of a character class
+	  and reports an error if there is no matching ] character. It used
+	  to be considered as a non-special character when there was no
+	  matching ] character.
 
 	geyacc:
 
@@ -76,9 +82,27 @@ Version ?
 
 	Gobo Eiffel Kernel Library:
 
-	* Added feature `log2' to KL_DOUBLE_ROUTINES.
-	* Added features `power', `div' and `mod' to KL_INTEGER_ROUTINES.
+	* Fixed bug in KL_PATHNAME.set_canonical.
 	* Added bit operation features to KL_INTEGER_ROUTINES.
+	* Added features `power', `div' and `mod' to KL_INTEGER_ROUTINES.
+	* Added feature `log2' to KL_DOUBLE_ROUTINES.
+	* Added feature `truncated_to_integer' to KL_DOUBLE_ROUTINES because
+	  this routine is not supported anymore in SE 2.2b1.
+	* Added class KL_CLONABLE. This class should be used whenever
+	  the corresponding objects need to be cloned. This is the 
+	  consequence of `clone' not being supported anymore in SE 2.2b1.
+	  If you need to clone strings or arrays, use `cloned_string'
+	  by inheriting from KL_IMPORTED_STRING_ROUTINES and `cloned_array'
+	  by inheriting from KL_IMPORTED_ARRAY_ROUTINES. To a clone a
+	  SPECIAL object, just call `twin' on it (does not work with
+	  ISE 5.4, but works with ISE 5.5).
+	* KL_PLATFORM.Double_bits is not supported with SE 2.1 and 2.2b1
+	  anymore. This is a consequence of DOUBLE being deprecated in
+	  SmartEiffel and hence not supporting the required features.
+	* UC_STRING.infix "@" does not work as expected with SE 2.1. It
+	  works well with the SE 2.2b and SE 1.0 though. This is the
+	  consequence of the fact that STRING.infix "@" as been marked
+	  as frozen in SE 2.2b1.
 
 	Gobo Eiffel Math/Decimal Library:
 	
