@@ -15,7 +15,7 @@ deferred class KI_PLATFORM
 #ifdef SE
 inherit
 
-	ANY
+	PLATFORM
 		rename
 #ifdef SE
 			Minimum_character_code as old_minimum_character_code,
