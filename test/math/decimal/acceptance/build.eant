@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="decimal" default="help">
+<project name="acceptance" default="help">
 
 	<description>
 		system: "Gobo Eiffel Math Library Tester"
@@ -20,9 +20,9 @@
 <!-- Implementation -->
 
 	<target name="init_system">
-		<set name="system" value="xdecimal"/>
+		<set name="system" value="xacceptance"/>
 		<set name="library" value="math"/>
-		<set name="system_dir" value="${GOBO}/test/${library}/decimal"/>
+		<set name="system_dir" value="${GOBO}/test/${library}/decimal/acceptance"/>
 	</target>
 
 </project>

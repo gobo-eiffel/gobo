@@ -574,7 +574,7 @@ feature {NONE} -- Constants
 	data_dirname: STRING is
 			-- Full directory name of "$GOBO/test/math/decimal/data"
 		once
-			Result := file_system.nested_pathname ("$GOBO", <<"test", "math", "decimal", "data">>)
+			Result := file_system.nested_pathname ("$GOBO", <<"test", "math", "decimal", "acceptance", "data">>)
 		ensure
 			data_dirname_not_void: Result /= Void
 		end
