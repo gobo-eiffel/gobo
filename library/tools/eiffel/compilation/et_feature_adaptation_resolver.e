@@ -36,11 +36,11 @@ feature {NONE} -- Initialization
 			create export_table.make (10)
 			export_table.set_equality_tester (feature_name_tester)
 			create undefine_table.make (10)
-			undefine_table.set_equality_tester (feature_name_tester)
+			undefine_table.set_key_equality_tester (feature_name_tester)
 			create redefine_table.make (10)
-			redefine_table.set_equality_tester (feature_name_tester)
+			redefine_table.set_key_equality_tester (feature_name_tester)
 			create select_table.make (10)
-			select_table.set_equality_tester (feature_name_tester)
+			select_table.set_key_equality_tester (feature_name_tester)
 			create replicable_features.make_map (400)
 		ensure
 			universe_set: universe = a_universe
@@ -165,6 +165,9 @@ feature {NONE} -- Feature recording
 			has_redefine: BOOLEAN
 			has_undefine: BOOLEAN
 			has_select: BOOLEAN
+			nb_redefine: INTEGER
+			nb_undefine: INTEGER
+			nb_select: INTEGER
 			class_features: ET_FEATURE_LIST
 			a_feature: ET_FEATURE
 			a_named_feature: ET_FLATTENED_FEATURE
@@ -185,15 +188,18 @@ feature {NONE} -- Feature recording
 			end
 			if a_parent.undefines /= Void then
 				fill_undefine_table (a_parent)
-				has_undefine := not undefine_table.is_empty
+				nb_undefine := undefine_table.count
+				has_undefine := nb_undefine > 0
 			end
 			if a_parent.redefines /= Void then
 				fill_redefine_table (a_parent)
-				has_redefine := not redefine_table.is_empty
+				nb_redefine := redefine_table.count
+				has_redefine := nb_redefine > 0
 			end
 			if a_parent.selects /= Void then
 				fill_select_table (a_parent)
-				has_select := not select_table.is_empty
+				nb_select := select_table.count
+				has_select := nb_select > 0
 			end
 			a_class := a_parent.type.direct_base_class (universe)
 			class_features := a_class.features
@@ -226,25 +232,31 @@ feature {NONE} -- Feature recording
 				if has_undefine then
 					undefine_table.search (a_name)
 					if undefine_table.found then
-						a_parent_feature.set_undefine_name (undefine_table.found_item)
-						undefine_table.remove_found_item
-						has_undefine := not undefine_table.is_empty
+						a_parent_feature.set_undefine_name (undefine_table.found_key)
+						if not undefine_table.found_item then
+							undefine_table.replace_found_item (True)
+							nb_undefine := nb_undefine - 1
+						end
 					end
 				end
 				if has_redefine then
 					redefine_table.search (a_name)
 					if redefine_table.found then
-						a_parent_feature.set_redefine_name (redefine_table.found_item)
-						redefine_table.remove_found_item
-						has_redefine := not redefine_table.is_empty
+						a_parent_feature.set_redefine_name (redefine_table.found_key)
+						if not redefine_table.found_item then
+							redefine_table.replace_found_item (True)
+							nb_redefine := nb_redefine - 1
+						end
 					end
 				end
 				if has_select then
 					select_table.search (a_name)
 					if select_table.found then
-						a_parent_feature.set_select_name (select_table.found_item)
-						select_table.remove_found_item
-						has_select := not select_table.is_empty
+						a_parent_feature.set_select_name (select_table.found_key)
+						if not select_table.found_item then
+							select_table.replace_found_item (True)
+							nb_select := nb_select - 1
+						end
 					end
 				end
 				a_features.search (a_name)
@@ -285,29 +297,41 @@ feature {NONE} -- Feature recording
 				export_table.wipe_out
 			end
 			if has_undefine then
-				from undefine_table.start until undefine_table.after loop
-					set_fatal_error
-					a_name := undefine_table.item_for_iteration
-					error_handler.report_vdus1a_error (current_class, a_parent, a_name)
-					undefine_table.forth
+				if nb_undefine > 0 then
+					from undefine_table.start until undefine_table.after loop
+						if not undefine_table.item_for_iteration then
+							set_fatal_error
+							a_name := undefine_table.key_for_iteration
+							error_handler.report_vdus1a_error (current_class, a_parent, a_name)
+						end
+						undefine_table.forth
+					end
 				end
 				undefine_table.wipe_out
 			end
 			if has_redefine then
-				from redefine_table.start until redefine_table.after loop
-					set_fatal_error
-					a_name := redefine_table.item_for_iteration
-					error_handler.report_vdrs1a_error (current_class, a_parent, a_name)
-					redefine_table.forth
+				if nb_redefine > 0 then
+					from redefine_table.start until redefine_table.after loop
+						if not redefine_table.item_for_iteration then
+							set_fatal_error
+							a_name := redefine_table.key_for_iteration
+							error_handler.report_vdrs1a_error (current_class, a_parent, a_name)
+						end
+						redefine_table.forth
+					end
 				end
 				redefine_table.wipe_out
 			end
 			if has_select then
-				from select_table.start until select_table.after loop
-					set_fatal_error
-					a_name := select_table.item_for_iteration
-					error_handler.report_vmss1a_error (current_class, a_parent, a_name)
-					select_table.forth
+				if nb_select > 0 then
+					from select_table.start until select_table.after loop
+						if not select_table.item_for_iteration then
+							set_fatal_error
+							a_name := select_table.key_for_iteration
+							error_handler.report_vmss1a_error (current_class, a_parent, a_name)
+						end
+						select_table.forth
+					end
 				end
 				select_table.wipe_out
 			end
@@ -323,14 +347,14 @@ feature {NONE} -- Feature adaptation
 	export_table: DS_HASH_SET [ET_FEATURE_NAME]
 			-- Export table
 
-	undefine_table: DS_HASH_SET [ET_FEATURE_NAME]
-			-- Undefine table
+	undefine_table: DS_HASH_TABLE [BOOLEAN, ET_FEATURE_NAME]
+			-- Undefine table (the boolean indicates whether a feature with that name has been found)
 
-	redefine_table: DS_HASH_SET [ET_FEATURE_NAME]
-			-- Redefine table
+	redefine_table: DS_HASH_TABLE [BOOLEAN, ET_FEATURE_NAME]
+			-- Redefine table (the boolean indicates whether a feature with that name has been found)
 
-	select_table: DS_HASH_SET [ET_FEATURE_NAME]
-			-- Select table
+	select_table: DS_HASH_TABLE [BOOLEAN, ET_FEATURE_NAME]
+			-- Select table (the boolean indicates whether a feature with that name has been found)
 
 	fill_rename_table (a_parent: ET_PARENT) is
 			-- Fill `rename_table' with rename pairs of `a_parent'
@@ -444,12 +468,12 @@ feature {NONE} -- Feature adaptation
 				a_name := a_undefines.feature_name (i)
 				undefine_table.search (a_name)
 				if not undefine_table.found then
-					undefine_table.put_new (a_name)
+					undefine_table.put_new (False, a_name)
 				else
 						-- Feature name `a_name' appears twice in the
 						-- Undefine clause. This is not considered as
 						-- a fatal error by gelint.
-					error_handler.report_vdus4a_error (current_class, a_parent, undefine_table.found_item, a_name)
+					error_handler.report_vdus4a_error (current_class, a_parent, undefine_table.found_key, a_name)
 				end
 				i := i + 1
 			end
@@ -474,12 +498,12 @@ feature {NONE} -- Feature adaptation
 				a_name := a_redefines.feature_name (i)
 				redefine_table.search (a_name)
 				if not redefine_table.found then
-					redefine_table.put_new (a_name)
+					redefine_table.put_new (False, a_name)
 				else
 						-- Feature name `a_name' appears twice in the
 						-- Redefine clause. This is not considered as
 						-- a fatal error by gelint.
-					error_handler.report_vdrs3a_error (current_class, a_parent, redefine_table.found_item, a_name)
+					error_handler.report_vdrs3a_error (current_class, a_parent, redefine_table.found_key, a_name)
 				end
 				i := i + 1
 			end
@@ -504,12 +528,12 @@ feature {NONE} -- Feature adaptation
 				a_name := a_selects.feature_name (i)
 				select_table.search (a_name)
 				if not select_table.found then
-					select_table.put_new (a_name)
+					select_table.put_new (False, a_name)
 				else
 						-- Feature name `a_name' appears twice in the
 						-- Select clause. This is not considered as
 						-- a fatal error by gelint.
-					error_handler.report_vmss2a_error (current_class, a_parent, select_table.found_item, a_name)
+					error_handler.report_vmss2a_error (current_class, a_parent, select_table.found_key, a_name)
 				end
 				i := i + 1
 			end
