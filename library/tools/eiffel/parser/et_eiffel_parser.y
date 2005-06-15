@@ -1006,6 +1006,11 @@ New_export_item: Clients E_ALL
 		{
 			$$ := ast_factory.new_all_export ($1, $2)
 		}
+	| Clients -- Empty feature list allowed in ETL2 page 101 and in ISE 5.6.
+		{
+			last_export_clients := $1
+			$$ := ast_factory.new_feature_export (last_export_clients, 0)
+		}
 	| Clients
 		{
 			last_export_clients := $1
