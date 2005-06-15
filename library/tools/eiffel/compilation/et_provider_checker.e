@@ -101,15 +101,17 @@ feature {NONE} -- Cluster dependence constraints
 			l_overridden_class: ET_CLASS
 		do
 			if current_class.is_preparsed then
+				l_cluster := current_class.cluster
+				l_provider_constraint := l_cluster.provider_constraint
 				l_overridden_class := current_class.overridden_class
 				if l_overridden_class /= Void and then l_overridden_class.cluster /= Void then
 					l_cluster := l_overridden_class.cluster
-				else
-					l_cluster := current_class.cluster
-				end 
+					if l_provider_constraint = Void then
+						l_provider_constraint := l_cluster.provider_constraint
+					end
+				end
 				l_providers := current_class.providers
 				if l_providers /= Void then
-					l_provider_constraint := l_cluster.provider_constraint
 					l_providers_cursor := l_providers.new_cursor
 					from l_providers_cursor.start until l_providers_cursor.after loop
 						l_provider := l_providers_cursor.item
@@ -117,17 +119,19 @@ feature {NONE} -- Cluster dependence constraints
 							universe.preparse
 						end
 						if l_provider.is_preparsed then
+							l_provider_cluster := l_provider.cluster
+							l_dependant_constraint := l_provider_cluster.dependant_constraint
 							l_overridden_class := l_provider.overridden_class
 							if l_overridden_class /= Void and then l_overridden_class.cluster /= Void then
 								l_provider_cluster := l_overridden_class.cluster
-							else
-								l_provider_cluster := l_provider.cluster
+								if l_dependant_constraint = Void then
+									l_dependant_constraint := l_provider_cluster.dependant_constraint
+								end
 							end 
 							if l_provider_constraint /= Void and then not l_provider_constraint.has_cluster (l_provider_cluster) then
 								set_fatal_error (current_class)
 								error_handler.report_gcpro_error (l_provider_constraint.current_cluster, current_class, l_provider, l_provider_constraint)
 							end
-							l_dependant_constraint := l_provider_cluster.dependant_constraint
 							if l_dependant_constraint /= Void and then not l_dependant_constraint.has_cluster (l_cluster) then
 								set_fatal_error (current_class)
 								error_handler.report_gcdep_error (l_dependant_constraint.current_cluster, l_provider, current_class, l_dependant_constraint)
