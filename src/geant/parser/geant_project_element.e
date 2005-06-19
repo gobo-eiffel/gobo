@@ -51,20 +51,21 @@ feature {NONE} -- Initialization
 			a_tester: UC_STRING_EQUALITY_TESTER
 			s: STRING
 			s1: STRING
+			trace_project: GEANT_PROJECT -- TODO: move tracing out of GEANT_PROJECT
 		do
 			element_make (a_xml_element)
-			create project.make (a_variables, a_options)
-			project.trace (<<"Loading Project's configuration from ", a_build_filename>>)
-				-- Determine description if available:
-			if xml_element.has_element_by_name (Description_element_name) then
-				project.set_description (xml_element.element_by_name (Description_element_name).text)
-			end
+			create trace_project.make (a_variables, a_options, "trace_project")
+			trace_project.trace (<<"Loading Project's configuration from ", a_build_filename>>)
 				-- Handle project name:
 			if not has_attribute (Name_attribute_name) then
 				exit_application (1, <<"%NLOAD ERROR:%N", "  Project in file '", a_build_filename,
 					"' does not have a name.%N", "  Please specify a name for this project.">>)
 			end
-			project.set_name (attribute_value (Name_attribute_name))
+			create project.make (a_variables, a_options, attribute_value (Name_attribute_name))
+				-- Determine description if available:
+			if xml_element.has_element_by_name (Description_element_name) then
+				project.set_description (xml_element.element_by_name (Description_element_name).text)
+			end
 
 				-- Store absolute pathname of buildfile in project variable:
 			s1 := file_system.pathname_from_file_system (a_build_filename, unix_file_system)

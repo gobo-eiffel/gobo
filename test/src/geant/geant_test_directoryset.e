@@ -98,7 +98,7 @@ feature -- Execution
 			create a_variables.make
 			create an_options.make
 --			an_options.set_debug_mode (True)
-			create project.make (a_variables, an_options)
+			create project.make (a_variables, an_options, "test_project")
 			project.set_output_file (null_output_stream)
 			create ds.make (project)
 		end

@@ -32,14 +32,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_variables: GEANT_PROJECT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS) is
+	make (a_variables: GEANT_PROJECT_VARIABLES; a_options: GEANT_PROJECT_OPTIONS; a_name: STRING) is
 			-- Create a new project.
 		require
 			a_variables_not_void: a_variables /= Void
 			a_options_not_void: a_options /= Void
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
 		local
 			a_tester: UC_STRING_EQUALITY_TESTER
 		do
+			name := a_name
 			output_file := std.output
 			if a_variables = Void then
 				create variables.make
@@ -57,6 +60,7 @@ feature {NONE} -- Initialization
 			variables_created: a_variables = Void implies variables /= Void
 			options_set: a_options /= Void implies options = a_options
 			selected_targets_not_void: selected_targets /= Void
+			name_set: name = a_name
 		end
 
 feature -- Access
@@ -523,6 +527,8 @@ feature {GEANT_COMMAND} -- Access GEANT_COMMAND
 
 invariant
 
+	name_not_void: name /= Void
+	name_not_empty: not name.is_empty
 	no_void_target: targets /= Void implies not targets.has (Void)
 	output_file_not_void: output_file /= Void
 	output_file_open_write: output_file.is_open_write
