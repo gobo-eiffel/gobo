@@ -88,8 +88,19 @@
 			Remove all generated files.
 		</description>
 
-			<!-- Concepts: -->
-		<delete file="guidelines.html"/>
+			<!-- HTML files: -->
+      <delete file="class_layout.html"/>
+      <delete file="cvs_repository.html"/>
+      <delete file="documentation.html"/>
+      <delete file="examples.html"/>
+      <delete file="index.html"/>
+      <delete file="installation_procedure.html"/>
+      <delete file="language_constructs.html"/>
+      <delete file="license.html"/>
+      <delete file="naming_conventions.html"/>
+      <delete file="programming_style.html"/>
+      <delete file="supported_compilers.html"/>
+      <delete file="test_suite.html"/>
 	</target>
 
 
