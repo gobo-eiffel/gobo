@@ -1560,7 +1560,15 @@ feature -- Element change
 			if nb = 1 then
 				old_count := count + 1
 				set_count (byte_count)
+#ifdef ISE
 				old_put (c, k)
+#endif
+#ifdef VE
+				storage.put (c, k)
+#endif
+#ifdef SE
+				storage.put (c, k - 1)
+#endif
 				set_count (old_count)
 			else
 				set_count (count + 1)
