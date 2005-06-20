@@ -218,15 +218,47 @@ feature -- Measurement
 			valid_end_index: end_index <= a_string.count
 			meaningful_interval: start_index <= end_index + 1
 		local
-			a_utf8: UC_UTF8_STRING
+			a_utf8: UC_STRING
 			s, e: INTEGER
 			i: INTEGER
+			even_end_index: INTEGER
+			c: CHARACTER
 		do
 			if start_index <= end_index then
 				if ANY_.same_types (a_string, dummy_string) then
-					from i := start_index until i > end_index loop
-						Result := Result + character_byte_count (a_string.item (i))
-						i := i + 1
+					-- This is the original code
+-- 					from i := start_index until i > end_index loop
+-- 						Result := Result + character_byte_count (a_string.item (i))
+-- 						i := i + 1
+-- 					end
+					-- But this loop has been unrolled to get a more than
+					-- 50% improvement in performance (measured with ISE
+					-- Eiffel 5.5, Borland C, array optimisations and
+					-- inlining (4) enabled). It assumes that US ASCII
+					-- characters are far more common in STRINGs then other
+					-- characters.
+					if end_index \\ 2 = 0 then
+						even_end_index := end_index
+					else
+						even_end_index := end_index - 1
+					end
+					from i := start_index until i > even_end_index loop
+						c := a_string.item (i)
+						if c <= byte_127  then
+							Result := Result + 1
+						else
+							Result := Result + character_byte_count (c)
+						end
+						c := a_string.item (i+1)
+						if c <= byte_127  then
+							Result := Result + 1
+						else
+							Result := Result + character_byte_count (c)
+						end
+						i := i + 2
+					end
+					if even_end_index < end_index then
+						Result := Result + character_byte_count (a_string.item (end_index))
 					end
 				else
 					a_utf8 ?= a_string
@@ -266,7 +298,7 @@ feature -- Measurement
 				Result := 1
 			elseif a_code < 2048 then
 					-- 2^11
-					-- 110xxxxx 10xxxxxx 
+					-- 110xxxxx 10xxxxxx
 				Result := 2
 			elseif a_code < 65536 then
 					-- 2^16
@@ -301,13 +333,13 @@ feature -- Measurement
 					-- 0xxxxxxx
 				Result := 1
 			elseif c <= byte_255 then
-					-- 110xxxxx 10xxxxxx 
+					-- 110xxxxx 10xxxxxx
 				Result := 2
 			else
 				a_code := c.code
 				if a_code < 2048 then
 						-- 2^11
-						-- 110xxxxx 10xxxxxx 
+						-- 110xxxxx 10xxxxxx
 					Result := 2
 				elseif a_code < 65536 then
 						-- 2^16
