@@ -18,7 +18,7 @@ inherit
 			out, three_way_comparison
 		end
 
-	KL_INTEGER_ROUTINES
+	KL_IMPORTED_INTEGER_ROUTINES
 		export
 			{NONE} all
 		undefine
@@ -51,11 +51,7 @@ feature -- Access
 	item (index: INTEGER): INTEGER is
 			-- Item at `index'
 		do
-#ifdef VE
-		Result := digits.item (index).code
-#else
 		Result := digits.item (index)
-#endif
 		end
 
 	msd_index: INTEGER is
@@ -67,11 +63,7 @@ feature -- Access
 			from
 				l_digits := digits
 			until
-#ifdef VE
-				Result = 0 or else l_digits.item (Result - 1) /= '%U' 
-#else
 				Result = 0 or else l_digits.item (Result - 1) /= 0
-#endif
 			loop
 				Result := Result - 1
 			end
@@ -140,11 +132,7 @@ feature -- Element change
 				c := s.item (i)
 				inspect c
 				when '0'..'9' then
-#ifdef VE
-					l_digits.put (to_character ((c.code - ('0').code)), k) 
-#else
-					put ((c.code - ('0').code).to_integer_8, k)
-#endif
+					put (INTEGER_.to_integer_8 (c.code - ('0').code), k)
 					k := k + 1
 				else
 					-- Do nothing.
@@ -172,11 +160,7 @@ feature -- Element change
 			until
 				index > new_upper
 			loop
-#ifdef VE
-				l_digits.put ('%U', index) 
-#else
 				put (0, index)
-#endif
 				index := index + 1
 			end
 			set_count (a_capacity)
@@ -185,11 +169,7 @@ feature -- Element change
 	put (v, index: INTEGER) is
 			-- Put `v' at `index'-th item.
 		do
-#ifdef VE
-			digits.put (to_character (v), index)
-#else
-			digits.put (v.to_integer_8, index)
-#endif
+			digits.put (INTEGER_.to_integer_8 (v), index)
 			if index > count - 1 then
 				set_count (index + 1)
 			end
@@ -219,11 +199,7 @@ feature -- Comparison
 				until
 					index < 0 or else local_difference /= 0
 				loop
-#ifdef VE
-					local_difference := l_digits.item (index).code - l_other_digits.item (index).code 
-#else
 					local_difference := l_digits.item (index) - l_other_digits.item (index)
-#endif
 					index := index - 1
 				end
 				Result := local_difference.sign
@@ -299,11 +275,7 @@ feature -- Basic operations
 			until
 				index > upper
 			loop
-#ifdef VE
-				l_digits.put ('%U', index) 
-#else
-				l_digits.put (0, index)
-#endif
+				l_digits.put (INTEGER_.to_integer_8 (0), index)
 				index := index + 1
 			end
 				-- Keep values [0..a_count-1].
@@ -324,11 +296,7 @@ feature -- Basic operations
 				variant
 					index + 1
 				until
-#ifdef VE
-					index < lower or else l_digits.item (index).code /= l_other_digits.item (index).code
-#else
 					index < lower or else l_digits.item (index) /= l_other_digits.item (index)
-#endif
 				loop
 					index := index - 1
 				end
@@ -358,11 +326,7 @@ feature -- Basic operations
 			until
 				index < 0
 			loop
-#ifdef VE
-				l_digits.put ('%U', index)
-#else
-				l_digits.put (0, index)
-#endif
+				l_digits.put (INTEGER_.to_integer_8 (0), index)
 				index := index - 1
 			end
 		end
@@ -390,11 +354,7 @@ feature -- Basic operations
 			until
 				index >= count
 			loop
-#ifdef VE
-				l_digits.put ('%U', index) 
-#else
-				l_digits.put (0, index)
-#endif
+				l_digits.put (INTEGER_.to_integer_8 (0), index)
 				index := index + 1
 			end
 		end
@@ -415,27 +375,15 @@ feature -- Basic operations
 			until
 				index = count
 			loop
-#ifdef VE
-				carry := carry + l_digits.item (index).code + l_other_digits.item (index).code 
-#else
 				carry := carry +  l_digits.item (index) + l_other_digits.item (index)
-#endif
 				digit := carry \\ 10
-#ifdef VE
-				l_digits.put (to_character (digit), index) 
-#else
-				l_digits.put (digit.to_integer_8, index)
-#endif
+				l_digits.put (INTEGER_.to_integer_8 (digit), index)
 				carry := carry // 10
 				index := index + 1
 			end
 			if carry /= 0 then
 				grow (count + 1)
-#ifdef VE
-				l_digits.put (to_character (carry), index)
-#else
-				l_digits.put (carry.to_integer_8, index)
-#endif
+				l_digits.put (INTEGER_.to_integer_8 (carry), index)
 			end
 		end
 
@@ -456,11 +404,7 @@ feature -- Basic operations
 				l_digits := digits
 			until i >= count
 			loop
-#ifdef VE
-				l_digits.put ('%U', 0) 
-#else
-				l_digits.put (0, i)
-#endif
+				l_digits.put (INTEGER_.to_integer_8 (0), i)
 				i := i + 1
 			end
 				-- Multiplication.
@@ -480,11 +424,7 @@ feature -- Basic operations
 			until
 				i >= l_b_count -- local_b.count
 			loop
-#ifdef VE
-				digit := l_b_digits.item (i).code --local_b.item (i)
-#else
 				digit := l_b_digits.item (i)
-#endif
 				carry := 0
 				from
 					j := 0
@@ -492,23 +432,14 @@ feature -- Basic operations
 				until
 					j >= l_a_count -- local_a.count
 				loop
-#ifdef VE
-					carry := carry + digit * l_a_digits.item (j).code + l_digits.item (i_plus_j).code
-					l_digits.put (to_character (carry \\ 10), i_plus_j)
-#else
 					carry := carry + digit * l_a_digits.item (j) + l_digits.item (i_plus_j)
-					l_digits.put ((carry \\ 10).to_integer_8, i_plus_j)
-#endif
+					l_digits.put (INTEGER_.to_integer_8 (carry \\ 10), i_plus_j)
 					carry := carry // 10
 					j := j + 1
 					i_plus_j := i_plus_j + 1
 				end
 				if carry > 0 then
-#ifdef VE
-					l_digits.put (to_character (carry), i_plus_j)
-#else
-					l_digits.put (carry.to_integer_8, i_plus_j)
-#endif
+					l_digits.put (INTEGER_.to_integer_8 (carry), i_plus_j)
 				end
 				i := i + 1
 			end
@@ -536,26 +467,14 @@ feature -- Basic operations
 			until
 				index >= l_count
 			loop
-#ifdef VE
-				carry := carry + l_digits.item (index).code 
-#else
 				carry := carry + l_digits.item (index)
-#endif
 				digit := carry \\ 10
-#ifdef VE
-				l_digits.put (to_character (digit), index - start) 
-#else
-				l_digits.put (digit.to_integer_8, index - start)
-#endif
+				l_digits.put (INTEGER_.to_integer_8 (digit), index - start)
 				carry := carry // 10
 				index := index + 1
 			end
 			if carry /= 0 then
-#ifdef VE
-				l_digits.put (to_character (carry), index - start) --put (carry, index - count + digits_count)
-#else
-				l_digits.put (carry.to_integer_8, index - start)
-#endif
+				l_digits.put (INTEGER_.to_integer_8 (carry), index - start)
 				set_count (digits_count + 1)
 			else
 				set_count (digits_count)
@@ -580,24 +499,12 @@ feature -- Basic operations
 			until
 				index = l_count
 			loop
-#ifdef VE
-				borrow := borrow + l_digits.item (index).code - l_other_digits.item (index).code --item (index) - other.item (index)
-#else
 				borrow := borrow + l_digits.item (index) - l_other_digits.item (index)
-#endif
 				if borrow < 0 then
-#ifdef VE
-					l_digits.put (to_character (10 + borrow), index) --put (10 + borrow, index)
-#else
-					l_digits.put ((10 + borrow).to_integer_8, index)
-#endif
+					l_digits.put (INTEGER_.to_integer_8 (10 + borrow), index)
 					borrow := -1
 				else
-#ifdef VE
-					l_digits.put (to_character (borrow), index) -- put (borrow, index)
-#else
-					l_digits.put (borrow.to_integer_8, index)
-#endif
+					l_digits.put (INTEGER_.to_integer_8 (borrow), index)
 					borrow := 0
 				end
 				index := index + 1
@@ -606,24 +513,12 @@ feature -- Basic operations
 			until
 				index = count
 			loop
-#ifdef VE
-				borrow := borrow + l_digits.item (index).code --item (index)
-#else
 				borrow := borrow + l_digits.item (index)
-#endif
 				if borrow < 0 then
-#ifdef VE				
-					l_digits.put (to_character (10 + borrow), index) --put (10 + borrow, index)
-#else
-					l_digits.put ((10 + borrow).to_integer_8, index)
-#endif
+					l_digits.put (INTEGER_.to_integer_8 (10 + borrow), index)
 					borrow := -1
 				else
-#ifdef VE
-					l_digits.put (to_character (borrow), index) -- put (borrow, index)
-#else
-					l_digits.put (borrow.to_integer_8, index)
-#endif
+					l_digits.put (INTEGER_.to_integer_8 (borrow), index)
 					borrow := 0
 				end
 				index := index + 1
@@ -648,24 +543,12 @@ feature -- Basic operations
 			until
 				index = l_count
 			loop
-#ifdef VE
-				borrow := borrow + l_digits.item (index).code
-#else
 				borrow := borrow + l_digits.item (index)
-#endif
 				if borrow < 0 then
-#ifdef VE
-					l_digits.put (to_character (10 + borrow), index - start) -- count + digits_count)
-#else
-					l_digits.put ((10 + borrow).to_integer_8, index - start) -- count + digits_count)
-#endif
+					l_digits.put (INTEGER_.to_integer_8 (10 + borrow), index - start) -- count + digits_count)
 					borrow := -1
 				else
-#ifdef VE
-					l_digits.put (to_character (borrow), index)
-#else
-					l_digits.put (borrow.to_integer_8, index)
-#endif
+					l_digits.put (INTEGER_.to_integer_8 (borrow), index)
 					borrow := 0
 				end
 				index := index + 1
@@ -675,17 +558,10 @@ feature -- Basic operations
 
 feature {MA_DECIMAL_COEFFICIENT_IMP} -- Implementation
 
-#ifdef ISE || SE
 	digits: SPECIAL [INTEGER_8]
 			-- Array of digits (with the least significant first)
 
 	SPECIAL_DIGITS_: KL_SPECIAL_ROUTINES [INTEGER_8] is
-#else
-	digits: SPECIAL [CHARACTER]
-			-- Array of digits (with the least significant first)
-
-	SPECIAL_DIGITS_: KL_SPECIAL_ROUTINES [CHARACTER] is
-#endif
 			-- Routines that ought to be in class SPECIAL
 		once
 			create Result
