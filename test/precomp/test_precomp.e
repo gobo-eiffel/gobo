@@ -121,25 +121,15 @@ feature {NONE} -- Precompilation
 
 	precomp_ve is
 			-- Test precompilation with Visual Eiffel.
-		local
-			ve_4_1: STRING
 		do
 			old_cwd := file_system.cwd
 			file_system.create_directory (testdir)
 			assert (testdir + "_exists", file_system.directory_exists (testdir))
 			file_system.cd (testdir)
-			ve_4_1 := Execution_environment.variable_value ("VE_4_1")
-			if ve_4_1 /= Void and then ve_4_1.count > 0 then
-					-- Generate ELD file.
-				assert_execute ("gexace --define=%"VE_4_1%" --library=ve41 " + xace_filename + output_log)
-					-- Eiffel precompilation.
-				assert_execute ("vec -no -p:ve.eld" + output_log)
-			else
-					-- Generate Xace file.
-				assert_execute ("gexace --library=ve " + xace_filename + output_log)
-					-- Eiffel precompilation.
-				assert_execute ("vec -no -p:ve.xace" + output_log)
-			end
+				-- Generate Xace file.
+			assert_execute ("gexace --library=ve " + xace_filename + output_log)
+				-- Eiffel precompilation.
+			assert_execute ("vec -no -p:ve.xace" + output_log)
 			assert ("no_output", not file_system.file_exists ("Result.out"))
 				-- Done.
 			assert_execute ("vec -no -dc -y" + output_log)

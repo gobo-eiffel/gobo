@@ -42,7 +42,6 @@
 		<set name="eiffel" value="se"/>
 		<geant target="xace"/>
 		<set name="eiffel" value="ve"/>
-		<set name="gexace_system" value="ve41" if="${VE_4_1}"/>
 		<geant target="xace"/>
 		<unset name="gexace_output"/>
 		<unset name="gexace_system"/>
@@ -109,16 +108,13 @@
 		</description>
 
 		<set name="eiffel" value="ve"/>
-		<set name="gexace_output" value="compile_ve.esd" if="${VE_4_1}"/>
-		<set name="gexace_output" value="compile_ve.xace" unless="${VE_4_1}"/>
-		<set name="gexace_system" value="ve41" if="${VE_4_1}"/>
-		<set name="gexace_system" value="ve" unless="${VE_4_1}"/>
+		<set name="gexace_output" value="compile_ve.xace"/>
+		<set name="gexace_system" value="ve"/>
 		<geant target="xace"/>
 		<unset name="gexace_output"/>
 		<unset name="gexace_system"/>
 		<delete file="${system}${exe}"/>
-		<ve esd="compile_ve.esd" if="${VE_4_1}"/>
-		<ve xace="compile_ve.xace" unless="${VE_4_1}"/>
+		<ve xace="compile_ve.xace"/>
 		<ve tune="${system}${exe}" level="${vetuner}" if="${vetuner}"/>
 	</target>
 
@@ -243,7 +239,6 @@
 			Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
 			Pass $GOBO_DOTNET option to 'gexace' if defined.
 			Pass $SE_1_0 option to 'gexace' if defined.
-			Pass $VE_4_1 option to 'gexace' if defined.
 			To be redefined in descendant if additional options are
 			necessary.
 		</description>
@@ -261,7 +256,6 @@
 			<define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
 			<define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
 			<define name="SE_1_0" value="true" if="${SE_1_0}"/>
-			<define name="VE_4_1" value="true" if="${VE_4_1}"/>
 		</gexace>
 	</target>
 
