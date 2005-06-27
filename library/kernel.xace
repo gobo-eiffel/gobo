@@ -75,20 +75,10 @@
 
 	<cluster name="ve" location="${VE_Lib}" if="${GOBO_EIFFEL}=ve">
 		<option name="abstract" value="true"/>
-		<cluster name="Kernel" if="${VE_4_1}"/>
-		<cluster name="Misc" if="${VE_4_1}">
-			<option name="abstract" value="true"/>
-			<cluster name="Pool"/>
-		</cluster>
-		<cluster name="Tools" if="${VE_4_1}">
-			<option name="abstract" value="true"/>
-			<cluster name="gArgs"/>
-		</cluster>
-		<cluster name="TimeDate" if="${VE_4_1}"/>
-		<mount location="${VE_Lib}/kernel/library.xace" unless="${VE_4_1}"/>
-		<mount location="${VE_Lib}/misc/pool/library.xace" unless="${VE_4_1}"/>
-		<mount location="${VE_Lib}/tool/gargs/library.xace" unless="${VE_4_1}"/>
-		<mount location="${VE_Lib}/timedate/library.xace" unless="${VE_4_1}"/>
+		<mount location="${VE_Lib}/kernel/library.xace"/>
+		<mount location="${VE_Lib}/misc/pool/library.xace"/>
+		<mount location="${VE_Lib}/tool/gargs/library.xace"/>
+		<mount location="${VE_Lib}/timedate/library.xace"/>
 	</cluster>
 
 </library>
