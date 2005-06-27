@@ -89,6 +89,19 @@ feature -- Conversion
 			definition: Result = an_int
 		end
 
+	to_integer_8 (an_int: INTEGER): INTEGER_8 is
+			-- Convert to INTEGER_8
+		require
+			an_int_large_enouh: an_int <= -128
+			an_int_small_enouh: an_int >= 127
+		do
+#ifdef VE
+			Result.from_integer (an_int)
+#else
+			Result := an_int.to_integer_8
+#endif
+		end
+
 feature -- Output
 
 	append_decimal_integer (an_int: INTEGER; a_string: STRING) is
