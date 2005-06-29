@@ -1540,10 +1540,10 @@ feature -- Element change
 		local
 			k, nb: INTEGER
 			new_byte_count: INTEGER
-			old_count: INTEGER
+			new_count: INTEGER
 		do
-			-- Checking if `c' is a US-ASCII character here and below,
-			-- makes this almost 30% faster for the most common case.
+				-- Checking if `c' is an ASCII character here and below,
+				-- makes this almost 30% faster for the most common case.
 			if c <= '%/127/'  then
 				nb := 1
 			else
@@ -1555,10 +1555,10 @@ feature -- Element change
 				resize_byte_storage (new_byte_count)
 			end
 			byte_count := new_byte_count
-			-- And we check here for a single byte as well to get that
-			-- 30% improvement.
+				-- And we check here for a single byte as well to get that
+				-- 30% improvement.
 			if nb = 1 then
-				old_count := count + 1
+				new_count := count + 1
 				set_count (byte_count)
 #ifdef ISE
 				old_put (c, k)
@@ -1569,7 +1569,7 @@ feature -- Element change
 #ifdef SE
 				storage.put (c, k - 1)
 #endif
-				set_count (old_count)
+				set_count (new_count)
 			else
 				set_count (count + 1)
 				put_character_at_byte_index (c, nb, k)
