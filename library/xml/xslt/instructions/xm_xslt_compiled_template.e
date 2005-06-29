@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create un-initialized so compiling xsl:call-template instructions can forward-reference `Current'.
 		do
-			do_nothing
+			-- do nothing
 		end
 
 feature -- Initialization

@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			starting_depth := a_document.depth_of (next_node_number)
 
 			if include_self then
-				do_nothing
+				-- do nothing
 			else
 				next_node_number := next_node_number + 1
 				if document.depth_of (next_node_number) <= starting_depth then

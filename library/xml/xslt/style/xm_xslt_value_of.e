@@ -67,7 +67,7 @@ feature -- Element change
 			end
 			if a_disable_attribute /= Void then
 				if STRING_.same_string (a_disable_attribute, "no") then
-					do_nothing
+					-- do nothing
 				elseif STRING_.same_string (a_disable_attribute, "yes") then
 					if STRING_.same_string (a_disable_attribute, "yes") then
 						report_compile_warning ("Disable Output Escaping is not supported by this implementation (ignored).%NUse character maps instead if you really need this feature.")

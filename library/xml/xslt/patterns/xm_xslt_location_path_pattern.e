@@ -223,7 +223,7 @@ feature -- Optimization
 						-- If the last filter is constant true, remove it.
 					
 						if a_filter_expression.is_boolean_value and then a_filter_expression.as_boolean_value.value then
-							do_nothing
+							-- do nothing
 						else
 							a_cursor.replace (a_filter_expression)
 						end

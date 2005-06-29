@@ -87,7 +87,7 @@ feature -- Element change
 				if STRING_.same_string (a_mode_attribute, "#current") then
 					use_current_mode := True
 				elseif STRING_.same_string (a_mode_attribute, "#default") then
-					do_nothing
+					-- do nothing
 				else
 					generate_name_code (a_mode_attribute)
 					if last_generated_name_code = -1 then
@@ -133,11 +133,11 @@ feature -- Element change
 				a_node := a_child_iterator.item
 				a_sort ?= a_node
 				if a_sort /= Void then
-					do_nothing
+					-- do nothing
 				else
 					a_param ?= a_node
 					if a_param /= Void then
-						do_nothing
+						-- do nothing
 					elseif a_node.node_type = Text_node then
 						if not is_all_whitespace (a_node.string_value) then
 							create an_error.make_from_string ("No character data allowed within xsl:apply-templates", "", "XTSE0010", Static_error)

@@ -220,7 +220,7 @@ feature -- Element change
 	ensure_namespace_nodes is
 			-- Ensure `namespace_codes_in_scope' may be called.
 		do
-			-- do_nothing
+			-- do nothing
 		end
 
 	accumulate_namespace_codes (a_list: DS_ARRAYED_LIST [INTEGER]) is
@@ -304,7 +304,7 @@ feature -- Duplication
 					a_node := document.retrieve_node (a_next_node)
 					a_receiver.notify_processing_instruction (a_node.local_part, a_node.string_value, 0)
 				else
-					do_nothing
+					-- do nothing
 				end
 				a_next_node := a_next_node + 1
 				finished := a_next_node > document.number_of_nodes or else document.depth_of (a_next_node) > a_start_level

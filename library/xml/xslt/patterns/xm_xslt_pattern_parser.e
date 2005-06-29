@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 					root_only := False
 				end
 			else
-				do_nothing
+				-- do nothing
 			end
 
 			if not is_parse_error then

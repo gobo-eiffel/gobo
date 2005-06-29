@@ -750,7 +750,7 @@ feature -- Element change
 		require
 			valid_current_node: which_node > 0
 		do
-			do_nothing -- Not needed for a basic XSLT processor
+			-- Not needed for a basic XSLT processor
 		end
 
 	set_next_sibling (a_next_node: INTEGER; which_node: INTEGER) is

@@ -131,25 +131,25 @@ feature -- Document type definition callbacks
 	on_notation_declaration (a_notation_name: STRING; an_id: XM_DTD_EXTERNAL_ID) is
 			-- Notation declaration.
 		do
-			do_nothing
+			-- do nothing
 		end
 
 	on_dtd_processing_instruction (a_name: STRING; a_content: STRING) is
 			-- Processing instruction within DTD.
 		do
-			do_nothing
+			-- do nothing
 		end
 
 	on_dtd_comment (a_content: STRING) is
 			-- Processing a comment within DTD.
 		do
-			do_nothing
+			-- do nothing
 		end
 
 	on_dtd_end is
 			-- End of DTD (last event in a document type).
 		do
-			do_nothing
+			-- do nothing
 		end
 		
 feature -- Document events

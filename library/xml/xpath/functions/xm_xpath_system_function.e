@@ -84,8 +84,8 @@ feature -- Element change
 			if supplied_argument_count > a_position then
 
 				-- This happens during expression reduction, when the extra argument is already present
-
-				do_nothing
+				-- do nothing
+			
 			else
 				check
 					correct_number_of_arguments: supplied_argument_count = a_position

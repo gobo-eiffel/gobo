@@ -760,7 +760,7 @@ feature -- Status setting
 	mark_tail_calls is
 			-- Mark tail-recursive calls on templates and functions.
 		do
-			do_nothing
+			-- do nothing
 		end
 
 	check_unknown_attribute (a_name_code: INTEGER) is
@@ -787,7 +787,7 @@ feature -- Status setting
 					 STRING_.same_string (a_local_name, Version_attribute) or else
 					 STRING_.same_string (a_local_name, Default_collation_attribute)
 					 ) then
-					do_nothing
+					-- do nothing
 
 					-- Allow standard attributes on an XSLT element.
 
@@ -801,7 +801,7 @@ feature -- Status setting
 					 STRING_.same_string (a_local_name, Version_attribute) or else
 					 STRING_.same_string (a_local_name, Default_collation_attribute)
 					 ) then
-					do_nothing
+					-- do nothing
 				elseif STRING_.same_string (an_attribute_uri, "") or else
 					STRING_.same_string (an_attribute_uri, Xslt_uri) then
 					a_message := STRING_.appended_string ("Attribute ", shared_name_pool.display_name_from_name_code (a_name_code))
@@ -1059,7 +1059,7 @@ feature -- Status setting
 						-- may be a whitespace text node or xsl:fallback
 
 						if a_child_iterator.item.node_type = Text_node and then is_all_whitespace (a_child_iterator.item.string_value) then
-							do_nothing
+							-- do nothing
 						elseif may_contain_fallback then
 							a_fallback ?= a_child_iterator.item
 							if a_fallback = Void then

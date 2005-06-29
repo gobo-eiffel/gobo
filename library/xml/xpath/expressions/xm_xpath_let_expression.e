@@ -138,7 +138,7 @@ feature -- Optimization
 		do
 			mark_unreplaced
 			if	declaration = Void then
-				do_nothing
+				-- do nothing
 			else
 
 				if not simplified then simplify end

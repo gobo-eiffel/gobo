@@ -328,7 +328,7 @@ feature -- Element change
 	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
 			-- Set the locator.
 		do
-			do_nothing
+			-- do nothing
 		end
 
 feature {NONE} -- Implementation

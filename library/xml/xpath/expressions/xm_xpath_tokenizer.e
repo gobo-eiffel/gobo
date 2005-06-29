@@ -162,7 +162,7 @@ feature -- Status setting
 			when Star_token then
 				current_token := Multiply_token
 			else
-				do_nothing
+				-- do nothing
 			end
 		end
 	
@@ -217,15 +217,15 @@ feature --Element change
 			when Star_token then
 				if not is_operator then current_token := Multiply_token end
 			else
-				do_nothing
+				-- do nothing
 			end
 				
 			if current_token = Tag_token or else current_token = Right_curly_token then
-				do_nothing -- finished
-					
+
 				-- No lookahead after encountering "<" at the start of an XML-like tag.
 				-- After an `Right_curly_token', the parser must do an explicit `look_ahead' to continue
 				-- tokenizing; otherwise it can continue with direct character reading
+
 			elseif not is_lexical_error and then not is_input_stream_exhausted then
 				look_ahead
 					
@@ -334,7 +334,7 @@ feature --Element change
 							end
 						end
 					else
-						do_nothing
+						-- do nothing
 					end
 				end
 				debug ("XPath tokens")
@@ -760,7 +760,7 @@ feature {NONE} -- Status setting
 									end
 								end
 							when '-', '_','.'  then
-								do_nothing
+								-- do nothing
 							else
 								if c.code < 128 then
 									if c < '0' or else ( c > '9' and then c < 'A') or else (c > 'Z' and c < 'a') or else c > 'z' then
@@ -892,7 +892,7 @@ feature {NONE} -- Implementation
 					Result := Satisfies_token
 				end				
 			else
-				do_nothing
+				-- do nothing
 			end
 		end
 	

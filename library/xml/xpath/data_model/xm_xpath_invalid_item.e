@@ -53,19 +53,19 @@ feature -- Access
 	string_value: STRING is
 			--Value of the item as a string
 		do
-			do_nothing -- pre-condition cannot be met
+			-- pre-condition cannot be met
 		end
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Type
 		do
-			do_nothing -- pre-condition cannot be met
+			-- pre-condition cannot be met
 		end
 	
 	typed_value: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE] is
 			-- Typed value
 		do
-			do_nothing -- pre-condition cannot be met
+			-- pre-condition cannot be met
 		end
 
 		type_name: STRING is

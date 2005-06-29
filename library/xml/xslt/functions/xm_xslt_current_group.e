@@ -53,7 +53,7 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			do_nothing -- will never be called
+			-- will never be called
 		end
 
 feature -- Status setting

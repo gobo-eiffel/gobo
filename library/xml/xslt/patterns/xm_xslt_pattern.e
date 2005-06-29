@@ -147,7 +147,7 @@ feature -- Optimization
 		require
 			context_not_void: a_context /= Void
 		do
-			do_nothing
+			-- do nothing
 		end
 
 feature -- Matching

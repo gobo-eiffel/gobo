@@ -222,7 +222,7 @@ feature -- Element change
 		do
 			a_fingerprint := qname_to_fingerprint (a_qname)
 			if a_fingerprint = -1 then
-				do_nothing
+				-- do nothing
 
 				-- TODO - how to get allocation faliure message, and raise a dynamic error?
 				--  We will get a post-condition failed exception. Not good enough

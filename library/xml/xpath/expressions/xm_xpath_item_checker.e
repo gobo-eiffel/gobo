@@ -143,9 +143,9 @@ feature -- Evaluation
 			base_expression.evaluate_item (a_context)
 			last_evaluated_item := base_expression.last_evaluated_item
 			if last_evaluated_item = Void then
-				do_nothing  -- can this occur?
+				-- do nothing - can this occur?
 			elseif last_evaluated_item.is_error then
-				do_nothing
+				-- do nothing
 			else
 				test_conformance (last_evaluated_item)
 			end

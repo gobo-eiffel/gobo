@@ -66,13 +66,13 @@ feature -- Events
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
 		do
-			do_nothing
+			-- strip
 		end
 
 	notify_processing_instruction (a_name: STRING; a_data_string: STRING; properties: INTEGER) is
 			-- Notify a processing instruction.
 		do
-			do_nothing
+			-- strip
 		end
 	
 feature {NONE} -- Implementation

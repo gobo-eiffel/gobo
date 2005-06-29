@@ -397,13 +397,13 @@ feature -- Element change
 	set_system_id (a_system_id: STRING) is
 			-- Set the system-id of the destination tree.
 		do
-			do_nothing
+			-- do nothing
 		end
 
 	set_document_locator (a_locator: XM_XPATH_LOCATOR) is
 			-- Set the locator.
 		do
-			do_nothing
+			-- do nothing
 		end
 
 feature {NONE} -- Implementation

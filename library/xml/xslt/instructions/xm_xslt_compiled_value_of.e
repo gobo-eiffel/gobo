@@ -85,7 +85,7 @@ feature -- Optimization
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static type checking
 		do
-			do_nothing
+			-- do nothing
 		end
 
 feature -- Evaluation

@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 				if format.is_string_value then
 					create formatter.make (format.as_string_value.string_value)
 				else
-					do_nothing -- We must allocate the formatter at run time
+					-- We must allocate the formatter at run time
 				end
 			else
 				create formatter.make ("1") -- default
@@ -325,8 +325,6 @@ feature {NONE} -- Implementation
 						numberer := selected_numberer ("en")
 					end
 				else
-					do_nothing
-					
 					-- we allocate the numberer at run-time
 				end
 			end

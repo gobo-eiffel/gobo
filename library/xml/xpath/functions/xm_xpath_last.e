@@ -60,11 +60,11 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
+
 			-- This cannot be called for `Current', as it has no arguments.
 			-- Therefore the pre-condition cannot be met, so we will not
 			--  attempt to meet the post-condition.
 
-			do_nothing
 		end
 
 feature -- Status setting

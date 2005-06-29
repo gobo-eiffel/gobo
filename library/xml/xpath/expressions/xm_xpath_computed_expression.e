@@ -267,15 +267,15 @@ feature -- Status setting
 feature -- Optimization
 
 	simplify is
-			-- Preform context-independent static optimizations
+			-- Perform context-independent static optimizations
 		do
-			-- do_nothing
+			-- do nothing
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		do
-			do_nothing
+			-- do nothing
 		end
 	
 feature -- Evaluation

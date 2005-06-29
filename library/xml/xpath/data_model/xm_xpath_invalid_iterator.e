@@ -76,7 +76,7 @@ feature -- Cursor movement
 		forth is
 			-- Move to next position
 		do
-			do_nothing -- (pre-condition can't be met)
+			-- (pre-condition can't be met)
 		end
 
 feature -- Duplication
@@ -85,7 +85,7 @@ feature -- Duplication
 			-- Another iterator that iterates over the same items as the original;
 			-- The new iterator will be repositioned at the start of the sequence
 		do
-			do_nothing -- (pre-condition can't be met)
+			-- (pre-condition can't be met)
 		end
 
 invariant

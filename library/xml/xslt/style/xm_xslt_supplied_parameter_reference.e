@@ -65,7 +65,7 @@ feature -- Optimization
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions.
 		do
-			do_nothing
+			-- do nothing
 		end
 
 feature -- Evaluation

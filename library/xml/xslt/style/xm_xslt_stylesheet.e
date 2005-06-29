@@ -473,13 +473,13 @@ feature -- Element change
 				a_name_code := a_cursor.item
 				an_expanded_name := shared_name_pool.expanded_name_from_name_code (a_name_code)
 				if STRING_.same_string (an_expanded_name, Version_attribute) then
-					do_nothing
+					-- do nothing
 				elseif STRING_.same_string (an_expanded_name, Extension_element_prefixes_attribute) then
-					do_nothing
+					-- do nothing
 				elseif STRING_.same_string (an_expanded_name, Exclude_result_prefixes_attribute) then
-					do_nothing
+					-- do nothing
 				elseif STRING_.same_string (an_expanded_name, Id_attribute) then
-					do_nothing
+					-- do nothing
 				elseif STRING_.same_string (an_expanded_name, Default_validation_attribute) then
 					default_validation := validation_code (attribute_value_by_index (a_cursor.index))
 					if default_validation = Validation_invalid then

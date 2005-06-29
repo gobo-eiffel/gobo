@@ -110,7 +110,7 @@ feature -- Optimization
 		do
 			mark_unreplaced
 			if	declaration = Void then
-				do_nothing
+				-- do nothing
 			else
 
 				-- The order of events is critical here. First we ensure that the type of the

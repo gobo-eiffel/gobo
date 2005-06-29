@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 						(a_rule.precedence = a_current_precedence and then
 						 (a_rule.priority > a_current_priority or else
 						  (a_rule.priority.is_equal (a_current_priority) and then a_rule.sequence_number >= a_current_sequence_number))) then
-						do_nothing -- skip rule
+						-- skip rule
 					else
 
 						-- Quit the search on finding the second (recoverable error) match.
@@ -661,7 +661,7 @@ feature {NONE} -- Implementation
 					(a_rule.precedence = a_current_precedence and then
 					 (a_rule.priority > a_current_priority or else
 					  (a_rule.priority.is_equal (a_current_priority) and then a_rule.sequence_number >= a_current_sequence_number))) then
-					do_nothing -- skip rule
+					-- skip rule
 				else
 					if a_rule.precedence < a_specific_precedence or else
 						(a_rule.precedence = a_specific_precedence and then a_rule.priority < a_specific_priority) then

@@ -149,7 +149,7 @@ feature -- Optimization
 	simplify is
 			-- Perform context-independent static optimizations.
 		do
-			-- do_nothing
+			-- do nothing
 		end
 
 	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -162,7 +162,7 @@ feature -- Optimization
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		do
-			do_nothing
+			-- do nothing
 		end
 
 	reduce is

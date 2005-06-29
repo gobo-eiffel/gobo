@@ -52,7 +52,7 @@ feature -- Access
 	super_type: XM_XPATH_ITEM_TYPE is
 			-- Type from which this item type is derived by restriction
 		do
-			do_nothing
+			-- do nothing
 		end
 
 	primitive_type: INTEGER is

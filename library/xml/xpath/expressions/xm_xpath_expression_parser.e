@@ -47,8 +47,8 @@ creation
 feature {NONE} -- Initialization
 
 	make is
+			-- Nothing to do.
 		do
-			do_nothing
 		end
 
 feature -- Status report
