@@ -131,7 +131,7 @@ feature -- Measurement
 	default_chunk_size: INTEGER is
 			-- Default value for `chunk_size'
 			-- (Default vale: 30000)
-		once
+		do
 			Result := 30000
 		ensure 
 			default_chunk_size_positive: Result > 0

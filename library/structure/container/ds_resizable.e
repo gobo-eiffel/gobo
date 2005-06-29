@@ -39,7 +39,7 @@ feature -- Measurement
 	default_capacity: INTEGER is
 			-- Initial capacity in `make_default'
 			-- (Default value: 10)
-		once
+		do
 			Result := 10
 		ensure
 			default_capacity_positive: Result >= 0
