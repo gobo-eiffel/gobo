@@ -284,6 +284,7 @@ feature {NONE} -- Implementation
 			a, b, c: MA_DECIMAL
 			l_flag: STRING
 			nb_line: INTEGER
+			l_match_count: INTEGER
 		do
 			create l_ctx.make_default
 			create l_flags.make (1, Signal_subnormal)
@@ -351,13 +352,17 @@ feature {NONE} -- Implementation
 					end
 				elseif l_operand_regexp.recognizes (l_line) then
 						-- Execute test.
+					l_match_count := l_operand_regexp.match_count
+					if l_match_count <= 9 then
+						assert ("unknown_operands", False)
+					end
 					l_tag := l_operand_regexp.captured_substring (1)
 					l_operation := l_operand_regexp.captured_substring (2).as_lower
 					l_operand_a := unquoted_operand (l_operand_regexp.captured_substring (3))
 					l_operand_b := unquoted_operand (l_operand_regexp.captured_substring (6))
 					l_expected_result := unquoted_operand (l_operand_regexp.captured_substring (9))
 					l_flags.clear_all
-					from i := 13 until i > 31 loop
+					from i := 13 until i > 31 or i >= l_match_count loop
 						l_flag := l_operand_regexp.captured_substring (i).as_lower
 						if l_flag.is_empty then
 						elseif l_flag.is_equal ("inexact") then
