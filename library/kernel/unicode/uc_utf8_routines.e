@@ -218,7 +218,8 @@ feature -- Measurement
 			valid_end_index: end_index <= a_string.count
 			meaningful_interval: start_index <= end_index + 1
 		local
-			a_utf8: UC_STRING
+			a_utf8: UC_UTF8_STRING
+			a_uc_string: UC_STRING
 			s, e: INTEGER
 			i: INTEGER
 			even_end_index: INTEGER
@@ -226,17 +227,17 @@ feature -- Measurement
 		do
 			if start_index <= end_index then
 				if ANY_.same_types (a_string, dummy_string) then
-					-- This is the original code
+						-- This is the original code
 -- 					from i := start_index until i > end_index loop
 -- 						Result := Result + character_byte_count (a_string.item (i))
 -- 						i := i + 1
 -- 					end
-					-- But this loop has been unrolled to get a more than
-					-- 50% improvement in performance (measured with ISE
-					-- Eiffel 5.5, Borland C, array optimisations and
-					-- inlining (4) enabled). It assumes that US ASCII
-					-- characters are far more common in STRINGs then other
-					-- characters.
+						-- This loop has been unrolled to get a more than
+						-- 50% improvement in performance (measured with ISE
+						-- Eiffel 5.5, Borland C, array optimisations and
+						-- inlining (4) enabled). It assumes that ASCII
+						-- characters are far more common in STRINGs then other
+						-- characters.
 					if end_index \\ 2 = 0 then
 						even_end_index := end_index
 					else
@@ -244,13 +245,13 @@ feature -- Measurement
 					end
 					from i := start_index until i > even_end_index loop
 						c := a_string.item (i)
-						if c <= byte_127  then
+						if c <= byte_127 then
 							Result := Result + 1
 						else
 							Result := Result + character_byte_count (c)
 						end
-						c := a_string.item (i+1)
-						if c <= byte_127  then
+						c := a_string.item (i + 1)
+						if c <= byte_127 then
 							Result := Result + 1
 						else
 							Result := Result + character_byte_count (c)
@@ -259,6 +260,20 @@ feature -- Measurement
 					end
 					if even_end_index < end_index then
 						Result := Result + character_byte_count (a_string.item (end_index))
+					end
+				elseif ANY_.same_types (a_string, dummy_uc_string) then
+					a_uc_string ?= a_string
+					check is_uc_string: a_uc_string /= Void end
+					if start_index = 1 and end_index = a_uc_string.count then
+						Result := a_uc_string.byte_count
+					else
+						s := a_uc_string.byte_index (start_index)
+						if end_index = a_uc_string.count then
+							Result := a_uc_string.byte_count - s + 1
+						else
+							e := a_uc_string.shifted_byte_index (s, end_index - start_index + 1)
+							Result := e - s
+						end
 					end
 				else
 					a_utf8 ?= a_string
@@ -537,5 +552,13 @@ feature {NONE} -- Implementation
 
 	dummy_string: STRING is ""
 			-- Dummy string
+
+	dummy_uc_string: UC_STRING is
+			-- Dummy UC_STRING
+		once
+			create Result.make_empty
+		ensure
+			dummy_uc_string_not_void: Result /= Void
+		end
 
 end
