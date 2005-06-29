@@ -42,6 +42,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_IMPORTED_ARRAY_ROUTINES
+
 	KL_SHARED_STANDARD_FILES
 
 	UT_STRING_FORMATTER
@@ -666,11 +668,11 @@ feature -- Element change
 			number_of_nodes := number_of_nodes + 1
 			if number_of_nodes > node_kinds.count then
 				a_new_size := node_kinds.count * 2
-				node_kinds.resize (1, a_new_size)
-				depth.resize (1, a_new_size)
-				alpha.resize (1, a_new_size)
-				beta.resize (1, a_new_size)
-				name_codes.resize (1, a_new_size)
+				INTEGER_ARRAY_.resize (node_kinds, 1, a_new_size)
+				INTEGER_ARRAY_.resize (depth, 1, a_new_size)
+				INTEGER_ARRAY_.resize (alpha, 1, a_new_size)
+				INTEGER_ARRAY_.resize (beta, 1, a_new_size)
+				INTEGER_ARRAY_.resize (name_codes, 1, a_new_size)
 			end
 			node_kinds.put (a_new_node_type, number_of_nodes)
 			depth.put (a_depth_value, number_of_nodes)
@@ -764,7 +766,9 @@ feature -- Element change
 				std.error.put_string (a_next_node.out)
 				std.error.put_new_line
 			end
-			if which_node > next_sibling_indices.count then next_sibling_indices.resize (1, 2 * next_sibling_indices.count) end
+			if which_node > next_sibling_indices.count then
+				INTEGER_ARRAY_.resize (next_sibling_indices, 1, 2 * next_sibling_indices.count)
+			end
 			next_sibling_indices.put (a_next_node, which_node)
 		ensure
 			next_sibling_set: next_sibling_indices.item (which_node) = a_next_node
@@ -861,7 +865,7 @@ feature -- Element change
 			if attribute_type_codes /= Void then
 				if attribute_type_codes.count < a_parent then
 					a_new_size := last_node_added.max (attribute_type_codes.count * 2)
-					attribute_type_codes.resize (1, a_new_size)
+					INTEGER_ARRAY_.resize (attribute_type_codes, 1, a_new_size)
 				end
 				attribute_type_codes.put (another_type_code, attribute_parents.count)
 			end

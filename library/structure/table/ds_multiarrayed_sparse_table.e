@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 	items_resize (n: INTEGER) is
 			-- Resize `items'.
 		do
-			items.resize (0, ((n - 1) // chunk_size))
+			array_special_item_routines.resize (items, 0, ((n - 1) // chunk_size))
 		end
 
 	items_wipe_out is
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 	keys_resize (n: INTEGER) is
 			-- Resize `keys'.
 		do
-			keys.resize (0, ((n - 1) // chunk_size))
+			array_special_key_routines.resize (keys, 0, ((n - 1) // chunk_size))
 		end
 
 	keys_wipe_out is
@@ -472,7 +472,7 @@ feature {NONE} -- Implementation
 	clashes_resize (n: INTEGER) is
 			-- Resize `clashes'.
 		do
-			clashes.resize (0, ((n - 1) // chunk_size))
+			ARRAY_SPECIAL_INTEGER_.resize (clashes, 0, ((n - 1) // chunk_size))
 		end
 
 	clashes_wipe_out is
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 	slots_resize (n: INTEGER) is
 			-- Resize `slots'.
 		do
-			slots.resize (0, ((n - 1) // chunk_size))
+			ARRAY_SPECIAL_INTEGER_.resize (slots, 0, ((n - 1) // chunk_size))
 		end
 
 	slots_wipe_out is

@@ -430,8 +430,8 @@ feature {NONE} -- Resizing
 			-- contain upto `n' states. Do not lose any states.
 		do
 			states.resize (n)
-			yy_base.resize (0, n)
-			yy_def.resize (0, n)
+			INTEGER_ARRAY_.resize (yy_base, 0, n)
+			INTEGER_ARRAY_.resize (yy_def, 0, n)
 		end
 
 feature {NONE} -- Compression
@@ -659,8 +659,8 @@ feature {NONE} -- Compression
 					max_index := base_addr + max_label - min_label + 1
 					if max_index >= yy_nxt_.upper then
 						max_index := max_index + Max_xpairs_increment
-						yy_nxt_.resize (0, max_index)
-						yy_chk_.resize (0, max_index)
+						INTEGER_ARRAY_.resize (yy_nxt_, 0, max_index)
+						INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
 					end
 					from i := min_label until i > max_label loop
 						if
@@ -680,8 +680,8 @@ feature {NONE} -- Compression
 							max_index := base_addr + max_label - min_label + 1
 							if max_index >= yy_nxt_.upper then
 								max_index := max_index + Max_xpairs_increment
-								yy_nxt_.resize (0, max_index)
-								yy_chk_.resize (0, max_index)
+								INTEGER_ARRAY_.resize (yy_nxt_, 0, max_index)
+								INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
 							end
 								-- Reset the loop counter so we'll start
 								-- all over again.
@@ -700,8 +700,8 @@ feature {NONE} -- Compression
 				max_index := table_last + 1
 				if max_index >= yy_nxt_.upper then
 					max_index := max_index + Max_xpairs_increment
-					yy_nxt_.resize (0, max_index)
-					yy_chk_.resize (0, max_index)
+					INTEGER_ARRAY_.resize (yy_nxt_, 0, max_index)
+					INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
 				end
 				yy_base.put (table_base, state_id)
 				yy_def.put (default_id, state_id)
@@ -754,8 +754,8 @@ feature {NONE} -- Compression
 			end
 			if first_free > max_index then
 				max_index := max_index + Max_xpairs_increment
-				yy_nxt.resize (0, max_index)
-				yy_chk_.resize (0, max_index)
+				INTEGER_ARRAY_.resize (yy_nxt, 0, max_index)
+				INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
 			end
 			yy_base.put (first_free - symbol, state_id)
 			yy_def.put (singleton.default_id, state_id)
@@ -767,8 +767,8 @@ feature {NONE} -- Compression
 				max_index := yy_nxt.upper
 				if first_free > max_index then
 					max_index := max_index + Max_xpairs_increment
-					yy_nxt.resize (0, max_index)
-					yy_chk_.resize (0, max_index)
+					INTEGER_ARRAY_.resize (yy_nxt, 0, max_index)
+					INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
 				end
 			end
 		end
@@ -793,8 +793,8 @@ feature {NONE} -- Compression
 			templates_count := templates.count + 1
 			max_index := states.count + templates_count
 			if states.capacity < max_index then
-				yy_base.resize (0, max_index)
-				yy_def.resize (0, max_index)
+				INTEGER_ARRAY_.resize (yy_base, 0, max_index)
+				INTEGER_ARRAY_.resize (yy_def, 0, max_index)
 			end
 				-- Leave room for the jam-state after the last real state.
 			i := states.count + 2
@@ -868,8 +868,8 @@ feature {NONE} -- Compression
 			yy_chk_ := yy_chk
 			max_index := table_end + maximum_symbol - minimum_symbol + 2
 			if max_index > yy_nxt_.upper then
-				yy_nxt_.resize (0, max_index)
-				yy_chk_.resize (0, max_index)
+				INTEGER_ARRAY_.resize (yy_nxt_, 0, max_index)
+				INTEGER_ARRAY_.resize (yy_chk_, 0, max_index)
 			end
 			nb := table_end
 			from i := 1 until i > nb loop

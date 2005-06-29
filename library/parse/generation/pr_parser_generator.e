@@ -1363,8 +1363,8 @@ feature {NONE} -- Building
 							if loc > yytable.upper then
 								ii := yycheck.upper + 1
 								nb2 := loc + Max_table_size_increment
-								yytable.resize (0, nb2)
-								yycheck.resize (0, nb2)
+								INTEGER_ARRAY_.resize (yytable, 0, nb2)
+								INTEGER_ARRAY_.resize (yycheck, 0, nb2)
 								from until ii > nb2 loop
 									yycheck.put (-1, ii)
 									ii := ii + 1

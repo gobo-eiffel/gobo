@@ -24,6 +24,8 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
+	KL_IMPORTED_ARRAY_ROUTINES
+
 creation
 
 	make
@@ -120,7 +122,7 @@ feature -- Events
 			previously_at_depth.put (node_number, current_depth)
 			current_depth := current_depth + 1
 			if current_depth > previously_at_depth.count then
-				previously_at_depth.resize (1, previously_at_depth.count)
+				INTEGER_ARRAY_.resize (previously_at_depth, 1, previously_at_depth.count)
 			end
 			previously_at_depth.put (-1, current_depth) -- no previous sibling
 

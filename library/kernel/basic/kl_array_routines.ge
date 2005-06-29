@@ -161,4 +161,29 @@ feature -- Removal
 			-- all_cleared: forall i in an_array.lower .. an_array.upper, an_array.item (i) = Void or else an_array.item (i) = an_array.item (i).default
 		end
 
+feature -- Resizing
+
+	resize (an_array: ARRAY [G]; min_index, max_index: INTEGER) is
+			-- Rearrange array so that it can accommodate
+			-- indices down to `min_index' and up to `max_index'.
+			-- Do not lose any previously entered item.
+		require
+			an_array_not_void: an_array /= Void
+			valid_min_index: min_index <= an_array.lower
+			valid_max_index: max_index >= an_array.upper
+		do
+				-- If "`min_index' = `max_index' + 1", this means that the
+				-- array was already empty. No need to resize in that case.
+			if min_index <= max_index then
+#ifdef ISE
+				an_array.conservative_resize (min_index, max_index)
+#else
+				an_array.resize (min_index, max_index)
+#endif
+			end
+		ensure
+			lower_set: an_array.lower = min_index
+			upper_set: an_array.upper = max_index
+		end
+
 end

@@ -121,7 +121,7 @@ feature -- Element change
 		do
 			count := count + 1
 			if feature_ids.upper < count then
-				feature_ids.resize (1, count)
+				INTEGER_ARRAY_.resize (feature_ids, 1, count)
 			end
 			feature_ids.put (an_id, count)
 		ensure
