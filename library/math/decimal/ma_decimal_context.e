@@ -126,7 +126,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	digits: INTEGER
-			-- The number of digits (precision) to be used for an operation.
+			-- Number of digits (precision) to be used for an operation.
 			-- The DECIMAL operators use this value to determine the precision of results.
 			-- Note that leading zeros (in the integer part of a number) are never significant.
 
@@ -168,7 +168,7 @@ feature -- Access
 feature -- Status report
 
 	is_flagged (a_signal: INTEGER): BOOLEAN is
-			-- Is `a_signal' flagged ?
+			-- Is `a_signal' flagged?
 		require
 			valid_signal: valid_signal (a_signal)
 		do
@@ -176,7 +176,7 @@ feature -- Status report
 		end
 
 	is_trapped (a_signal: INTEGER): BOOLEAN is
-			-- Is `a_signal' trapped ?
+			-- Is `a_signal' trapped?
 		require
 			valid_signal: valid_signal (a_signal)
 		do
@@ -190,6 +190,7 @@ feature -- Status report
 		end
 
 	is_extended: BOOLEAN
+			-- Is current context extended?
 
 	exception_on_trap: BOOLEAN
 			-- Should an exception be raised when trap occurs?
@@ -271,15 +272,16 @@ feature -- Element change
 	reset_flags is
 			-- Reset all signals to zero.
 		local
-			index: INTEGER
+			i, nb: INTEGER
 		do
 			from
-				index := flags.lower
+				i := flags.lower
+				nb := flags.upper
 			until
-				index > flags.upper
+				i > nb
 			loop
-				flags.put (False, index)
-				index := index + 1
+				flags.put (False, i)
+				i := i + 1
 			end
 		end
 
@@ -311,7 +313,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	out : STRING is
+	out: STRING is
 			-- Printable representation
 		do
 			create Result.make (30)
@@ -323,7 +325,7 @@ feature -- Conversion
 
 feature -- Comparison
 
-	is_equal (other : like Current) : BOOLEAN is
+	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' equal to Current?
 		do
 			Result := digits = other.digits
@@ -358,17 +360,17 @@ feature -- Basic operations
 			reason_set: reason = a_message
 		end
 
+feature -- Duplication
+
 	copy (other: like Current) is
 			-- Copy `other'.
 		do
 			standard_copy (other)
-			create flags.make (other.flags.lower, other.flags.upper)
-			flags.copy (other.flags)
-			create traps.make (other.traps.lower, other.traps.upper)
-			traps.copy (other.traps)
+			flags := BOOLEAN_ARRAY_.cloned_array (other.flags)
+			traps := BOOLEAN_ARRAY_.cloned_array (other.traps)
 		end
 
-feature {MA_DECIMAL_HANDLER, MA_DECIMAL_CONTEXT}
+feature {MA_DECIMAL_HANDLER, MA_DECIMAL_CONTEXT} -- Signals
 
 	flags: ARRAY [BOOLEAN]
 			-- Signals flagged
@@ -387,7 +389,7 @@ feature {MA_DECIMAL} -- Implementation
 		ensure
 			digits_set: digits = d
 		end
-		
+
 invariant
 
 	positive_digits: digits >= 0
@@ -395,12 +397,11 @@ invariant
 		or rounding_mode = Round_floor or rounding_mode = Round_half_down
 		or rounding_mode = Round_half_even or rounding_mode = Round_half_up
 		or rounding_mode = Round_unnecessary or rounding_mode = Round_up
-
 	flags_not_void: flags /= Void
 	flags_lower: flags.lower = Signal_division_by_zero
 	flags_upper: flags.upper = Signal_subnormal
 	traps_not_void: traps /= Void
 	traps_lower: traps.lower = Signal_division_by_zero
 	traps_upper: traps.upper = Signal_subnormal
-	
+
 end

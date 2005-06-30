@@ -18,7 +18,7 @@ feature -- Access
 
 feature -- Status report
 
-	error : BOOLEAN is
+	error: BOOLEAN is
 			-- Has an error occurred during the last call to `parse'?
 		deferred
 		end

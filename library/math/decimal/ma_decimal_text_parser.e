@@ -14,7 +14,7 @@ indexing
 		% nan ::= 'NaN' | 'sNaN' %N%
 		% numeric-value ::= decimal-part [exponent-part] | infinity %N%
 		% numeric-string ::= [sign] numeric-value | nan%N"
-	
+
 	library: "Gobo Eiffel Decimal Arithmetic Library"
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -25,12 +25,12 @@ class MA_DECIMAL_TEXT_PARSER
 inherit
 
 	MA_DECIMAL_PARSER
+
 	MA_SHARED_DECIMAL_CONTEXT
-		export
-			{NONE} all
-		end
-		
+		export {NONE} all end
+
 	KL_IMPORTED_CHARACTER_ROUTINES
+
 	KL_IMPORTED_STRING_ROUTINES
 
 feature -- Access
@@ -87,11 +87,11 @@ feature -- Access
 		end
 
 	decimal_point_index: INTEGER
-			-- Index of decimal point if any.
+			-- Index of decimal point if any
 
 	last_parsed : STRING
-			-- Last parsed string.
-			
+			-- Last parsed string
+
 feature -- Status report
 
 	error: BOOLEAN is 
@@ -159,13 +159,13 @@ feature -- Basic operations
 			last_decimal_not_void_when_no_error: not error implies last_decimal /= Void
 		end
 
-	parse_ctx (s : STRING; ctx : MA_DECIMAL_CONTEXT; parse_comma_as_decimal_point : BOOLEAN) is
+	parse_ctx (s: STRING; ctx: MA_DECIMAL_CONTEXT; parse_comma_as_decimal_point: BOOLEAN) is
 			-- Parse `s' using `ctx' wrt `parse_comma_as_decimal_point'.
 		require
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
 		local
-			old_allowed : BOOLEAN
+			old_allowed: BOOLEAN
 		do
 			old_allowed := is_comma_allowed
 			is_comma_allowed := parse_comma_as_decimal_point
@@ -176,11 +176,11 @@ feature -- Basic operations
 			last_parsed_string_affected: last_parsed = s
 			last_decimal_not_void_when_no_error: not error implies last_decimal /= Void
 		end
-		
+
 feature {MA_DECIMAL} -- Basic operations
 
-	parse_and_create_last_decimal (s : STRING; ctx : MA_DECIMAL_CONTEXT) is
-			-- parse `s' and create `last_decimal' using `ctx'.
+	parse_and_create_last_decimal (s: STRING; ctx: MA_DECIMAL_CONTEXT) is
+			-- Parse `s' and create `last_decimal' using `ctx'.
 		do
 			decimal_parse (s)
 			if not error then
@@ -192,14 +192,14 @@ feature {MA_DECIMAL} -- Basic operations
 			last_parsed_is_s: last_parsed = s
 			last_decimal_created_if_no_error: not error implies last_decimal /= Void
 		end
-		
+
 	decimal_parse (s: STRING) is
 			-- Effective parse of `s'.
 		require
 			s_not_void: s /= Void
 		local
 			c: CHARACTER
-			index: INTEGER
+			i, nb: INTEGER
 		do
 			from
 					-- Initializations.
@@ -207,7 +207,8 @@ feature {MA_DECIMAL} -- Basic operations
 				sign := 1
 				exponent_sign := 1
 				exponent_as_double := 0
-				index := 1
+				i := 1
+				nb := s.count
 				coefficient_begin := 0
 				coefficient_end := 0
 				exponent_begin := 0
@@ -216,36 +217,36 @@ feature {MA_DECIMAL} -- Basic operations
 				decimal_point_index := 0
 				decimal_point_is_comma := False
 			until
-				state = State_error or else index > s.count
+				state = State_error or else i > nb
 			loop
-				c := s.item (index)
+				c := s.item (i)
 				inspect state
 				when State_start then
-					process_start (c, index, s)
+					process_start (c, i, s)
 				when State_sign then
-					process_sign (c, index, s)
+					process_sign (c, i, s)
 				when State_integer_part then
-					process_integer_part (c, index)
+					process_integer_part (c, i)
 				when State_starting_point then
-					process_starting_point (c, index)
+					process_starting_point (c, i)
 				when State_point then
-					process_point (c, index)
+					process_point (c, i)
 				when State_comma then
-					process_comma (c, index)
+					process_comma (c, i)
 				when State_fractional_part then
-					process_fractional_part (c, index)
+					process_fractional_part (c, i)
 				when State_start_exponent then
-					process_start_exponent (c, index)
+					process_start_exponent (c, i)
 				when State_exponent_sign then
-					process_exponent_sign (c, index)
+					process_exponent_sign (c, i)
 				when State_exponent then
-					process_exponent (c, index)
+					process_exponent (c, i)
 				when State_infinity, State_snan, State_nan then
-					index := s.count
+					i := nb
 				else
 					state := State_error
 				end
-				index := index + 1
+				i := i + 1
 			end
 			inspect state
 			when State_start, State_sign, State_comma, State_start_exponent, State_exponent_sign, State_starting_point then
@@ -413,7 +414,7 @@ feature {MA_DECIMAL} -- Basic operations
 			end
 		end
 
-	process_comma (c: CHARACTER;index : INTEGER) is 
+	process_comma (c: CHARACTER; index: INTEGER) is 
 			-- Process `c' at `index' when in `state_comma'.
 		require
 			state_comma: state = State_comma

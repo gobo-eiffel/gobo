@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Constants for the EDA library"
+		"Constants for the Decimal Arithmetic library"
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
@@ -16,13 +16,11 @@ inherit
 	ANY
 
 	KL_SHARED_PLATFORM
-		export
-			{NONE} all
-		end
+		export {NONE} all end
 
 	KL_IMPORTED_ARRAY_ROUTINES
-	
-feature -- Constants : rounding modes
+
+feature -- Constants: rounding modes
 
 	Round_up: INTEGER is 0 
 			-- Rounding mode to round away from zero;
@@ -65,7 +63,7 @@ feature -- Constants : rounding modes
 			-- Rounding (potential loss of information) is not permitted.
 			-- If any of the discarded digits are non-zero then an 'ArithmeticException'should be thrown.
 
-feature -- Constants : signals
+feature -- Constants: signals
 
 	Signal_division_by_zero: INTEGER is 1
 			-- Non Zero dividend is divided by zero
@@ -90,7 +88,7 @@ feature -- Constants : signals
 
 	Signal_subnormal: INTEGER is 8
 
-feature -- Constants : limits
+feature -- Constants: limits
 
 	Minimum_digits: INTEGER is 1
 	Maximum_digits: INTEGER is 999_999_999
@@ -98,13 +96,13 @@ feature -- Constants : limits
 	Minimum_exponent: INTEGER is -999_999_999 
 			-- Minimum exponent allowed
 
-	Maximum_exponent : INTEGER is 999_999_999
+	Maximum_exponent: INTEGER is 999_999_999
 			-- Maximum exponent allowed
 
 	Minimum_integer_as_decimal: MA_DECIMAL is
 			-- Minimum value convertible to integer
 		local
-			ctx : MA_DECIMAL_CONTEXT
+			ctx: MA_DECIMAL_CONTEXT
 		once
 			create ctx.make_double_extended
 			create Result.make_from_string_ctx (Platform.Minimum_integer.out, ctx)
@@ -115,7 +113,7 @@ feature -- Constants : limits
 	Maximum_integer_as_decimal: MA_DECIMAL is
 			-- Maximum value convertible to integer
 		local
-			ctx : MA_DECIMAL_CONTEXT
+			ctx: MA_DECIMAL_CONTEXT
 		once
 			create ctx.make_double_extended
 			create Result.make_from_string_ctx (Platform.Maximum_integer.out, ctx)
@@ -123,7 +121,7 @@ feature -- Constants : limits
 			maximum_integer_not_void: Result /= Void
 		end
 
-feature -- Constants : defaults
+feature -- Constants: defaults
 
 	Default_digits: INTEGER is 9
 
@@ -150,14 +148,14 @@ feature -- Constants : defaults
 			definition: Result = Round_half_up
 		end
 
-feature -- Constants : special flags
+feature -- Constants: special flags
 
 	Special_none: INTEGER is 0
 	Special_infinity: INTEGER is 1
 	Special_signaling_nan: INTEGER is 2
 	Special_quiet_nan: INTEGER is 3
 
-feature -- Constants : support
+feature -- Constants: support
 
 	Rounds: ARRAY [INTEGER] is
 			-- Rounding modes

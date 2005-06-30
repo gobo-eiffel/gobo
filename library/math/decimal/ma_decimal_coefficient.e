@@ -2,11 +2,11 @@ indexing
 
 	description:
 
-		"Decimal coefficients. They hold the significant digits.%
-		% Can be seen as arrays of decimal values.%
-		% Zero-based index.%
-		% - Index '0' is the least significant digit,%
-		% - index 'count-'1 is the most significant digit."
+		"Decimal coefficients. They hold the significant digits. %
+		%Can be seen as arrays of decimal values. %
+		%Zero-based index. %
+		%- Index '0' is the least significant digit, %
+		%- index 'count-'1 is the most significant digit."
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
@@ -94,17 +94,17 @@ feature -- Measurement
 			definition: capacity >= count
 		end
 
-	subcoefficient (index_start, index_end : INTEGER) : MA_DECIMAL_COEFFICIENT is
-			-- subcoefficient made of digits in range [index_start..index_end]
+	subcoefficient (index_start, index_end: INTEGER): MA_DECIMAL_COEFFICIENT is
+			-- Subcoefficient made of digits in range [index_start..index_end]
 		require
 			index_start_big_enough: index_start >= 0
 			index_end_big_enough: index_end >= index_start
 			index_end_small_enough: index_end <= count - 1
 		deferred
 		ensure
-			result_not_void: Result /= Void
+			subcoefficient_not_void: Result /= Void
 		end
-		
+
 feature -- Status report
 
 	valid_index (index: INTEGER): BOOLEAN is
@@ -116,48 +116,49 @@ feature -- Status report
 		end
 
 	is_zero: BOOLEAN is
-			-- Is this composed of all zeros?
+			-- Is this coefficient only composed of zeros?
 		local
-			index: INTEGER
+			i: INTEGER
 		do
-			from
-				index := 0
-			until
-				index = count or else item (index) /= 0
-			loop
-				index := index + 1
+			Result := True
+			from i := count - 1 until i < 0 loop
+				if item (i) /= 0 then
+					Result := False
+					i := -1
+				else
+					i := i - 1
+				end
 			end
-			Result := (index = count)
 		end
 
-	is_one : BOOLEAN is
-			-- Is Current one ?
+	is_one: BOOLEAN is
+			-- Is `Current' one?
 		do
 			Result := (msd_index = 0 and then item (0) = 1)
 		ensure
 			definition: Result = (msd_index = 0 and then item (0) = 1)
 		end
-		
-	is_significant : BOOLEAN is
-			-- Has current any non-zero digit?
+
+	is_significant: BOOLEAN is
+			-- Has `Current' any non-zero digit?
 		do
 			Result := not is_zero
 		ensure
 			definition: Result = not is_zero
 		end
-		
+
 feature {MA_DECIMAL} -- Status setting
 
 	set_from_substring (s: STRING; coefficient_begin, coefficient_end: INTEGER) is
 			-- Set from `s', skip the decimal point if it is present.
 		require
 			s_not_void: s /= Void
-			coefficient_begin: coefficient_begin > 0 and then coefficient_begin <= s.count
-			coefficient_end: coefficient_end > 0 and then coefficient_end <= s.count
+			coefficient_begin: coefficient_begin >= 1
+			coefficient_end: coefficient_end <= s.count
 			coefficient_end_ge_begin: coefficient_end >= coefficient_begin
 		deferred
 		ensure
-			definition: True -- all digits in s are in Current at the right position
+			definition: True -- All digits in s are in Current at the right position.
 		end
 
 feature -- Comparison
@@ -173,18 +174,6 @@ feature -- Comparison
 		do
 			Result := (three_way_comparison (other) = 1)
 		end
-
---	three_way_comparison (other: like Current): INTEGER is
---			-- Compare `other'; Result is [-1,0,+1] if [Current < other, Current = other, Current > other] respectively
---		require
---			other_not_void: other /= Void
---		deferred
---		ensure
---			definition: Result >= -1 and Result <= 1
---			lower: True -- Result = -1 implies Current < other
---			equal: True -- Result = 0 implies Current.is_equal (other)
---			greater: True -- Result = -1 implies Current > other
---		end
 
 feature {MA_DECIMAL, MA_DECIMAL_PARSER, MA_DECIMAL_COEFFICIENT} -- Element change
 
@@ -347,5 +336,5 @@ invariant
 	count_less_or_equal_capacity: count <= capacity
 	count_not_negative: count >= 0
 	lower_upper_consistent: lower <= upper
-	
+
 end

@@ -32,9 +32,6 @@ inherit
 		end
 
 	MA_SHARED_DECIMAL_CONTEXT
-		export
-			{NONE} all;
-			{ANY} shared_decimal_context, set_shared_decimal_context
 		undefine
 			out, is_equal, copy
 		end
@@ -75,9 +72,9 @@ creation {MA_DECIMAL}
 	make_infinity, make_nan, make_snan, make_special
 
 creation {MA_DECIMAL_TEXT_PARSER}
-	
+
 	make_from_parser
-	
+
 feature {NONE} -- Initialization
 
 	make (a_precision: INTEGER) is
@@ -190,10 +187,10 @@ feature {NONE} -- Initialization
 			make_from_parser (l_parser, ctx)
 		end
 
-	make_from_parser (a_decimal_parser : MA_DECIMAL_TEXT_PARSER; a_context : MA_DECIMAL_CONTEXT) is
+	make_from_parser (a_decimal_parser: MA_DECIMAL_TEXT_PARSER; a_context: MA_DECIMAL_CONTEXT) is
 			-- Make from `a_decimal_parser', relative to `a_context'.
 		require
-			a_parser_not_void: a_decimal_parser /= Void
+			a_decimal_parser_not_void: a_decimal_parser /= Void
 			a_context_not_void: a_context /= Void
 		do
 			if a_decimal_parser.error then
@@ -236,7 +233,7 @@ feature {NONE} -- Initialization
 				end
 			end
 		end
-		
+
 	make_from_string (value_string: STRING) is
 			-- Make a new decimal from string `value_string' relative to `shared_decimal_context'.
 		require
@@ -472,7 +469,7 @@ feature -- Status report
 	is_special: BOOLEAN is
 			-- Is this a special value?
 		do
-			Result := (special /= Special_none) --is_nan or else is_infinity
+			Result := (special /= Special_none)
 		ensure
 			definition: Result = (is_nan or else is_infinity)
 		end
@@ -505,7 +502,7 @@ feature -- Status report
 			definition: Result = (not is_special and then coefficient.is_zero)
 		end
 
-	is_one : BOOLEAN is
+	is_one: BOOLEAN is
 			-- Is this a One ?
 		do
 			if not is_special and then exponent = 0 and then coefficient.is_one then
@@ -514,7 +511,7 @@ feature -- Status report
 		ensure
 			definition: Result = (not is_special and then exponent = 0 and then coefficient.is_one)
 		end
-		
+
 feature -- Basic operations
 
 	infix "*" (other: like Current): like Current is
@@ -764,7 +761,7 @@ feature -- Basic operations
 				Result := add_special (other, ctx)
 			else
 					-- Addition of non-special values.
-					-- Instantiate "registers" for destructive operations: operand_a and operand_b .
+					-- Instantiate "registers" for destructive operations: operand_a and operand_b.
 				create operand_a.make (ctx.digits + 1)
 				operand_a.copy (Current)
 				create operand_b.make (ctx.digits + 1)
@@ -814,7 +811,7 @@ feature -- Basic operations
 				Result := subtract_special (other, ctx)
 			else
 					-- a + b = a + (-b)
-				create operand_b.make_copy (other) -- := clone (other)
+				create operand_b.make_copy (other)
 				if operand_b.is_positive then
 					operand_b.set_negative
 				else
@@ -960,7 +957,6 @@ feature -- Basic operations
 			shared_digits, digits_upto_new_exponent, exponent_delta: INTEGER
 			saved_exponent_limit, result_count: INTEGER
 		do
-			-- create Result.make_copy (Current)
 			if not (new_exponent <= ctx.exponent_limit and then new_exponent >= ctx.e_tiny) then
 				ctx.signal (Signal_invalid_operation, "new exponent is not within limits [Etiny..Emax]")
 				Result := nan
@@ -1147,7 +1143,7 @@ feature -- Basic operations
 	normalize: like Current is
 			-- Normalized version of current decimal
 		local
-			l_count, trailing_zeroes :INTEGER
+			l_count, trailing_zeroes: INTEGER
 		do
 			Result := plus (shared_decimal_context)
 			if Result.is_zero then
@@ -1348,16 +1344,6 @@ feature -- Basic operations
 
 feature {MA_DECIMAL, MA_DECIMAL_PARSER} -- Element change
 
---	set_coefficient (m: like coefficient) is
---			-- Set `coefficient' to `m'.
---		require
---			m_not_void: m /= Void
---		do
---			coefficient := m
---		ensure
---			coefficient_set: coefficient = m
---		end
-
 	set_exponent (e: like exponent) is
 			-- Set `exponent' to `e'.
 		do
@@ -1395,26 +1381,9 @@ feature {MA_DECIMAL} -- Status setting
 	special: INTEGER
 			-- Special status
 
---	set_infinity is
---			-- Set to infinity.
---		do
---			special := Special_infinity
---		ensure
---			infinity: is_infinity
---		end
-
---	set_signaling_nan is
---			-- Set to sNaN.
---		do
---			special := Special_signaling_nan
---		ensure
---			snan: is_signaling_nan
---		end
-
 	set_quiet_nan is
 			-- Set to qNaN.
 		do
---	FIXME:delete--		special := Special_quiet_nan
 			make_nan
 		ensure
 			qnan: is_quiet_nan
@@ -1524,8 +1493,8 @@ feature {MA_DECIMAL} -- Basic operations
 			align_hint: INTEGER
 			msd: INTEGER
 		do
-			-- Avoid costly operations
-			-- Align
+				-- Avoid costly operations.
+				-- Align.
 			align_hint := align_and_hint (other, ctx.digits)
 			if align_hint = Align_hint_current then
 					-- Keep `Current'.
@@ -1557,8 +1526,8 @@ feature {MA_DECIMAL} -- Basic operations
 		local
 			test, align_hint: INTEGER
 		do
-				-- Avoid costly operations
-				-- Align
+				-- Avoid costly operations.
+				-- Align.
 			align_hint := align_and_hint (other, ctx.digits)
 			if align_hint = Align_hint_current then
 					-- Keep `Current', but subtract -1E-precision
@@ -2152,7 +2121,6 @@ feature {MA_DECIMAL} -- Basic operations
 						value := 1
 					when Round_ceiling then
 						if is_positive and then lost_digits (ctx) then
-						--not (is_negative or else not lost_digits (ctx)) then
 							value := 1
 						end
 					when Round_floor then
@@ -2174,9 +2142,8 @@ feature {MA_DECIMAL} -- Basic operations
 				else
 					if shared_digits = 0 then
 							-- msd at e_tiny - 1. See if rounding shall carry some e_tiny digit.
-						-- local_context := underflowing_context (1, ctx.rounding_mode)
 						ctx.set_digits (1)
-						grow (count+1)
+						grow (count + 1)
 					else  -- shared_digits > 0 (and shared_digits <= ctx.digits)
 						count_upto_elimit := -ctx.exponent_limit - exponent + 1
 						if count < count_upto_elimit then
@@ -2217,7 +2184,7 @@ feature {MA_DECIMAL} -- Basic operations
 			other_not_void: other /= Void
 			ctx_not_void: ctx /= Void
 		local
-			integer_division : BOOLEAN
+			integer_division: BOOLEAN
 		do
 			integer_division := (division_type = division_integer) or else (division_type = division_remainder)
 			if is_special or else other.is_special then
@@ -2346,7 +2313,7 @@ feature {MA_DECIMAL} -- Basic operations
 			check
 				dividend.coefficient < divisor.coefficient
 			end
-				-- Get back to divisor : undo 'init'.
+				-- Get back to divisor: undo 'init'.
 			divisor.shift_right (1)
 			divisor.coefficient.keep_head (divisor.coefficient.count - 1)
 				-- Do divide.
@@ -2619,16 +2586,16 @@ feature {NONE} -- Implementation
 	special_coefficient : MA_DECIMAL_COEFFICIENT is
 		once
 			create {MA_DECIMAL_COEFFICIENT_IMP}Result.make (1)
-			Result.put (0,0)
+			Result.put (0, 0)
 		ensure
 			special_coefficient_not_void: Result /= Void
 			zero: Result.is_zero
 		end
-		
+
 invariant
 
 	special_values: special >= Special_none and then special <= Special_quiet_nan
 	coefficient_not_void: coefficient /= Void
 	specials_share_coefficient: is_special implies coefficient = special_coefficient
-	
+
 end

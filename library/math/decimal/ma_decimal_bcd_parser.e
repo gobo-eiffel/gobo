@@ -62,10 +62,11 @@ feature -- Basic operations
 					last_nibble := lo
 				else
 					inspect lo
-					when 11,13 then
+					when 11, 13 then
 						-- number_string.put ('-', 1)
 						last_decimal.set_negative
-					when 10,12,14,15 then
+					when 10, 12, 14, 15 then
+						-- Do nothing.
 					else
 						-- create e
 						-- e.raise ("Invalid file format : need 8 bytes packed decimal")

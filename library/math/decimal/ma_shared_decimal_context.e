@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Accesses to the shared decimal context; used to be a singleton"
+		"Access to the shared decimal context; used to be a singleton"
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
@@ -21,7 +21,7 @@ feature -- Access
 			shared_decimal_context_not_void: Result /= Void
 		end
 
-feature -- Element change
+feature -- Setting
 
 	set_shared_decimal_context (new_context: MA_DECIMAL_CONTEXT) is
 			-- Set `shared_decimal_context' to `new_context'.

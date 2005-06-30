@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-	
+
 		"Simple implementation of coefficients using a native array of characters"
 
 	library: "Gobo Eiffel Decimal Arithmetic Library"
@@ -51,7 +51,7 @@ feature -- Access
 	item (index: INTEGER): INTEGER is
 			-- Item at `index'
 		do
-		Result := digits.item (index)
+			Result := digits.item (index)
 		end
 
 	msd_index: INTEGER is
@@ -73,7 +73,7 @@ feature -- Access
 		end
 
 	subcoefficient (index_start, index_end : INTEGER) : MA_DECIMAL_COEFFICIENT is
-			-- subcoefficient made of digits in range [index_start..index_end]
+			-- Subcoefficient made of digits in range [index_start..index_end]
 		local
 			index : INTEGER
 		do
@@ -150,7 +150,7 @@ feature -- Element change
 		do
 			new_upper := a_capacity - 1
 			if a_capacity > capacity then
-				digits := SPECIAL_DIGITS_.resize (digits, new_upper + 1) --; old_size: INTEGER; new_size: INTEGER) digits.resize (0, new_upper)
+				digits := SPECIAL_DIGITS_.resize (digits, new_upper + 1)
 				capacity := new_upper + 1
 			end
 				-- Zero msd.
@@ -233,7 +233,7 @@ feature -- Duplication
 			l_digits, l_other_digits: like digits
 		do
 			if Current /= other then
-				l_upper := other.count -1
+				l_upper := other.count - 1
 				if digits = Void then
 					make (l_upper + 1)
 				elseif capacity < other.capacity then
@@ -246,7 +246,7 @@ feature -- Duplication
 				until
 					index > l_upper
 				loop
-					l_digits.put (l_other_digits.item (index), index) --put (other.item (index), index)
+					l_digits.put (l_other_digits.item (index), index)
 					index := index + 1
 				end
 				set_count (index)
@@ -318,7 +318,7 @@ feature -- Basic operations
 			until
 				index < a_count
 			loop
-				l_digits.put (l_digits.item (index - a_count), index) --put (item (index - a_count), index)
+				l_digits.put (l_digits.item (index - a_count), index)
 				index := index - 1
 			end
 				-- Set zeroes as lsb.
@@ -345,7 +345,7 @@ feature -- Basic operations
 			until
 				index >= count
 			loop
-				l_digits.put (l_digits.item (index), index - a_count) --put (item (index), index - a_count)
+				l_digits.put (l_digits.item (index), index - a_count)
 				index := index + 1
 			end
 				-- Set zeroes as msb.
