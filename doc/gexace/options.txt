@@ -203,7 +203,7 @@ VE:
   N/A
 SE:
   true -> case_insensitive (yes)
-  false -> case_insensitive (no)
+  false -> nothing (this is the default)
 -------------------------------------------------------------
 NAME: check_vape
 

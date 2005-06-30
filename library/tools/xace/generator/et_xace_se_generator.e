@@ -181,8 +181,7 @@ feature {NONE} -- Output
 				print_indentation (indent, a_file)
 				a_file.put_line ("case_insensitive (yes)")
 			else
-				print_indentation (indent, a_file)
-				a_file.put_line ("case_insensitive (no)")
+				-- This is the default.
 			end
 			if an_option.debug_option then
 				print_indentation (indent, a_file)
