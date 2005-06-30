@@ -56,6 +56,7 @@
 	</option>
 	<option if="${GOBO_EIFFEL}=se">
 		<option name="warning" value="none"/>
+		<option name="case_insensitive" value="false"/>
 	</option>
 
 	<cluster name="xpath_tester_ve" location="." if="${GOBO_EIFFEL}=ve"/>
