@@ -17,7 +17,8 @@ inherit
 	XM_PRETTY_PRINT_FILTER
 		redefine
 			on_comment,
-			is_escaped
+			is_escaped,
+			escaped_char
 		end
 
 creation
@@ -36,13 +37,26 @@ feature -- Meta
 feature {NONE} -- Escaped
 
 	is_escaped (a_char: INTEGER): BOOLEAN is
-			-- Is this escaped, including line separators and tab?
+			-- Is this character to be escaped? 
+			-- Include line separators and tab, quote, but not non-ascii characters.
 		do
-			Result := Precursor (a_char)
+			Result := a_char = Lt_char.code
+				or a_char = Gt_char.code
+				or a_char = Amp_char.code
 				or a_char = 9
 				or a_char = 10
 				or a_char = 13
 				or a_char = Quot_char.code -- always escape quote
 		end
 
+	escaped_char (a_char: INTEGER): STRING is
+			-- Add quote escaping to Precursor version.
+		do
+			if a_char = Quot_char.code then
+				Result := quot_entity
+			else
+				Result := Precursor (a_char)
+			end
+		end
+		
 end

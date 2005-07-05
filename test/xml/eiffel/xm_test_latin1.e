@@ -78,7 +78,7 @@ feature {NONE}
 			a_out_utf8_not_void: a_out_utf8 /= Void
 		local
 			a_parser: XM_EIFFEL_PARSER
-			a_sink: XM_PRETTY_PRINT_FILTER
+			a_sink: XM_CANONICAL_PRETTY_PRINT_FILTER
 		do
 			create a_sink.make_null
 			a_sink.set_output_to_string
