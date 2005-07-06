@@ -50,7 +50,7 @@
 	<cluster name="gexslt_ve" location="." if="${GOBO_EIFFEL}=ve"/>
 	<cluster name="gexslt" location="${GOBO}/src/gexslt"/>
 	<mount location="${GOBO}/library/xml/library.xace"/>
-	<mount location="${GOBO}/library/math/decimal/library.xace"/>
+	<mount location="${GOBO}/library/math/library.xace"/>
 	<mount location="${GOBO}/library/string/library.xace"/>
 	<mount location="${GOBO}/library/lexical/library.xace"/>
 	<mount location="${GOBO}/library/parse/library.xace"/>
