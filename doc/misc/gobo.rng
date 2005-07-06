@@ -11,7 +11,7 @@
 
 <grammar
 	xmlns="http://relaxng.org/ns/structure/1.0"
-	 ns="http://www.gobosoft.com/eiffel/gobo/documentation"
+	ns="http://www.gobosoft.com/eiffel/gobo/documentation"
 >
 
 <start>
@@ -46,16 +46,16 @@
 </define>
 
 <define name="section">
-  <element name="section">
-    <optional>
-      <attribute name="id"/>
-    </optional>
-    <ref name="title"/>
-    <ref name="paras"/>
-    <zeroOrMore>
-      <ref name="section"/>
-    </zeroOrMore>
-  </element>
+	<element name="section">
+		<optional>
+			<attribute name="id"/>
+		</optional>
+		<ref name="title"/>
+		<ref name="paras"/>
+		<zeroOrMore>
+			<ref name="section"/>
+		</zeroOrMore>
+	</element>
 </define>
 
 <define name="title">
@@ -100,6 +100,7 @@
 			</element>
 			<ref name="variablelist"/>
 			<ref name="orderedlist"/>
+			<ref name="itemizedlist"/>
 			<ref name="table"/>
 			<ref name="synopsis"/>
 		</choice>

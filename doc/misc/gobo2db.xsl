@@ -247,6 +247,10 @@
 	</xsl:choose>
 </xsl:template>
 
+<xsl:template match="entry">
+	<entry><xsl:apply-templates/></entry>
+</xsl:template>
+
 <xsl:template match="equal">
 	<xsl:choose>
 		<xsl:when test="ancestor::programlisting">
@@ -785,6 +789,10 @@
 	<quote><xsl:apply-templates/></quote>
 </xsl:template>
 
+<xsl:template match="row">
+	<row><xsl:apply-templates/></row>
+</xsl:template>
+
 <xsl:template match="sect1">
 	<sect1>
 		<xsl:if test="@id">
@@ -798,6 +806,14 @@
 
 <xsl:template match="surname">
 	<surname><xsl:apply-templates/></surname>
+</xsl:template>
+
+<xsl:template match="synopsis">
+	<synopsis><xsl:apply-templates/></synopsis>
+</xsl:template>
+
+<xsl:template match="table">
+	<table><xsl:apply-templates/></table>
 </xsl:template>
 
 <xsl:template match="target">
@@ -821,8 +837,24 @@
 	<xsl:apply-templates mode="inline"/>
 </xsl:template>
 
+<xsl:template match="tbody">
+	<tbody><xsl:apply-templates/></tbody>
+</xsl:template>
+
 <xsl:template match="term">
 	<term><xsl:apply-templates/></term>
+</xsl:template>
+
+<xsl:template match="tfoot">
+	<tfoot><xsl:apply-templates/></tfoot>
+</xsl:template>
+
+<xsl:template match="tgroup">
+	<tgroup><xsl:apply-templates/></tgroup>
+</xsl:template>
+
+<xsl:template match="thead">
+	<thead><xsl:apply-templates/></thead>
 </xsl:template>
 
 <xsl:template match="title">
