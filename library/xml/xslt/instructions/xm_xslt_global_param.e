@@ -78,7 +78,12 @@ feature -- Evaluation
 					if a_bindery.is_circularity_error then
 						create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("Circular definition of global parameter: ", variable_name), "", "XTDE0640", Dynamic_error)
 					else
-						last_evaluated_binding := select_value (an_evaluation_context)
+						if was_supplied then
+							a_bindery.set_supplied_global_variable (variable_fingerprint, slot_number)
+							last_evaluated_binding := a_bindery.global_variable_value (slot_number)
+						else
+							last_evaluated_binding := select_value (an_evaluation_context)
+						end
 						a_bindery.define_global_variable (slot_number, last_evaluated_binding)
 						a_bindery.set_executing (slot_number, False)
 					end

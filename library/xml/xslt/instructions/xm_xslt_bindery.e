@@ -106,6 +106,15 @@ feature -- Element change
 			global_parameters_set: global_parameters = a_parameter_set
 		end
 
+	set_supplied_global_variable (a_fingerprint, a_slot_number: INTEGER) is
+			-- Set global variable to it's supplied parameter value.
+		require
+			value_supplied: is_global_parameter_supplied (a_fingerprint)	
+			valid_slot_number: a_slot_number > 0 and then a_slot_number <= global_variable_count
+		do
+			global_variables.put (global_parameters.value (a_fingerprint), a_slot_number)
+		end
+
 feature -- Evaluation
 
 	global_variable_value (a_slot_number: INTEGER): XM_XPATH_VALUE is

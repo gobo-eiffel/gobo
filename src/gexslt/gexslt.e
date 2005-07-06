@@ -754,7 +754,7 @@ feature {NONE} -- Implementation
 
 						-- Strip off surrounding single quotes
 
-						a_string := a_string.substring (1, a_string.count - 1)
+						a_string := a_string.substring (2, a_string.count - 1)
 					end
 					a_transformer.set_string_parameter (a_string, a_cursor.key)
 					a_cursor.forth
