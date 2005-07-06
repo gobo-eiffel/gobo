@@ -34,9 +34,13 @@ The formatting specifications, which consist of optional and required fields, ha
 the following form:
 </para>
 
+<para>
+<blockquote>
 <synopsis>
 $[flags][minimum width][.precision]typechar
 </synopsis>
+</blockquote>
+</para>
 
 <para>
 Each field of the formatting specification is a single character or a number 
@@ -62,115 +66,113 @@ interpreted as a character, as a string, or as a number.
 The following typechars are available in class <classname>ST_SCIENTIFIC_FORMATTER</classname>:
 </para>
 
-<para>
 <table>
-<title>Recognized type characters</title>
-<tgroup cols="3">
-<thead>
-<tablerow>
-	<entry>Typechar</entry>
-	<entry>Class</entry>
-	<entry>Description</entry>
-</tablerow>
-</thead>
-<tbody>
-<tablerow>
-	<entry>c</entry>
-	<entry><classname>CHARACTER</classname></entry>
-	<entry>Single character.</entry>
-</tablerow>
-<tablerow>
-	<entry>b</entry>
-	<entry><classname>BOOLEAN</classname></entry>
-	<entry><quote>true</quote> or <quote>false</quote> strings.</entry>
-</tablerow>
-<tablerow>
-	<entry>B</entry>
-	<entry><classname>BOOLEAN</classname></entry>
-	<entry><quote>True</quote> or <quote>False</quote> strings.</entry>
-</tablerow>
-<tablerow>
-	<entry>d</entry>
-	<entry><classname>INTEGER</classname></entry>
-	<entry>Signed decimal integer.</entry>
-</tablerow>
-<tablerow>
-	<entry>e</entry>
-	<entry><classname>DOUBLE</classname></entry>
-	<entry>Signed value having the form <quote>[-]d.dddde[sign]ddd</quote> 
-		where d is a single decimal digit, dddd is one or more decimal 
-		digits, ddd is exactly three decimal digits, and sign is 
-		'+' or '-'.</entry>
-</tablerow>
-<tablerow>
-	<entry>E</entry>
-	<entry><classname>DOUBLE</classname></entry>
-	<entry>As 'e', but using the uppercase character 'E'.</entry>
-</tablerow>
-<tablerow>
-	<entry>f</entry>
-	<entry><classname>DOUBLE</classname></entry>
-	<entry>Signed value having the form <quote>[-]dddd.dddd</quote>, where
-		<quote>dddd</quote> is one or more decimal digits. The number of 
-		digits before the decimal point depends on the magnitude of the
-		number, and the number of digits after the decimal point
-		depends on the requested precision.</entry>
-</tablerow>
-<tablerow>
-	<entry>g</entry>
-	<entry><classname>DOUBLE</classname></entry>
-	<entry>Signed value printed in 'f' or 'e' format, whichever
-		is more compact for the given value and precision. The e
-		format is used only when the exponent of the value is
-		less than -4 or greater than or equal to the precision
-		option. Trailing zeros are truncated, and the decimal
-		point appears only if one or more digits follow it.</entry>
-</tablerow>
-<tablerow>
-	<entry>G</entry>
-	<entry><classname>DOUBLE</classname></entry>
-	<entry>As 'g', but using the 'E' instead of 'e'.</entry>
-</tablerow>
-<tablerow>
-	<entry>i</entry>
-	<entry><classname>INTEGER</classname></entry>
-	<entry>Signed decimal integer.</entry>
-</tablerow>
-<tablerow>
-	<entry>o</entry>
-	<entry><classname>INTEGER</classname></entry>
-	<entry>Unsigned octal integer.</entry>
-</tablerow>
-<tablerow>
-	<entry>p</entry>
-	<entry><classname>POINTER</classname></entry>
-	<entry>Hexadecimal pointer output.</entry>
-</tablerow>
-<tablerow>
-	<entry>s</entry>
-	<entry><classname>STRING</classname></entry>
-	<entry>Character string; Characters are printed up to the end of string 
-		or until the precision value is reached.</entry>
-</tablerow>
-<tablerow>
-	<entry>u</entry>
-	<entry><classname>INTEGER</classname></entry>
-	<entry>Unsigned decimal integer.</entry>
-</tablerow>
-<tablerow>
-	<entry>x</entry>
-	<entry><classname>INTEGER</classname></entry>
-	<entry>Unsigned hexadecimal integer, using <quote>abcdef</quote>.</entry>
-</tablerow>
-<tablerow>
-	<entry>X</entry>
-	<entry><classname>INTEGER</classname></entry>
-	<entry>Unsigned hexadecimal integer, using <quote>ABCDEF</quote>.</entry>
-</tablerow>
-</tbody>
-</tgroup>
+	<title>Recognized type characters</title>
+	<tgroup cols="3">
+	<thead>
+		<row>
+			<entry>Typechar</entry>
+			<entry>Class</entry>
+			<entry>Description</entry>
+		</row>
+	</thead>
+	<tbody>
+		<row>
+			<entry>c</entry>
+			<entry><classname>CHARACTER</classname></entry>
+			<entry>Single character.</entry>
+		</row>
+		<row>
+			<entry>b</entry>
+			<entry><classname>BOOLEAN</classname></entry>
+			<entry><quote>true</quote> or <quote>false</quote> strings.</entry>
+		</row>
+		<row>
+			<entry>B</entry>
+			<entry><classname>BOOLEAN</classname></entry>
+			<entry><quote>True</quote> or <quote>False</quote> strings.</entry>
+		</row>
+		<row>
+			<entry>d</entry>
+			<entry><classname>INTEGER</classname></entry>
+			<entry>Signed decimal integer.</entry>
+		</row>
+		<row>
+			<entry>e</entry>
+			<entry><classname>DOUBLE</classname></entry>
+			<entry>Signed value having the form <quote>[-]d.dddde[sign]ddd</quote> 
+				where d is a single decimal digit, dddd is one or more decimal 
+				digits, ddd is exactly three decimal digits, and sign is 
+				'+' or '-'.</entry>
+		</row>
+		<row>
+			<entry>E</entry>
+			<entry><classname>DOUBLE</classname></entry>
+			<entry>As 'e', but using the uppercase character 'E'.</entry>
+		</row>
+		<row>
+			<entry>f</entry>
+			<entry><classname>DOUBLE</classname></entry>
+			<entry>Signed value having the form <quote>[-]dddd.dddd</quote>, where
+				<quote>dddd</quote> is one or more decimal digits. The number of 
+				digits before the decimal point depends on the magnitude of the
+				number, and the number of digits after the decimal point
+				depends on the requested precision.</entry>
+		</row>
+		<row>
+			<entry>g</entry>
+			<entry><classname>DOUBLE</classname></entry>
+			<entry>Signed value printed in 'f' or 'e' format, whichever
+				is more compact for the given value and precision. The e
+				format is used only when the exponent of the value is
+				less than -4 or greater than or equal to the precision
+				option. Trailing zeros are truncated, and the decimal
+				point appears only if one or more digits follow it.</entry>
+		</row>
+		<row>
+			<entry>G</entry>
+			<entry><classname>DOUBLE</classname></entry>
+			<entry>As 'g', but using the 'E' instead of 'e'.</entry>
+		</row>
+		<row>
+			<entry>i</entry>
+			<entry><classname>INTEGER</classname></entry>
+			<entry>Signed decimal integer.</entry>
+		</row>
+		<row>
+			<entry>o</entry>
+			<entry><classname>INTEGER</classname></entry>
+			<entry>Unsigned octal integer.</entry>
+		</row>
+		<row>
+			<entry>p</entry>
+			<entry><classname>POINTER</classname></entry>
+			<entry>Hexadecimal pointer output.</entry>
+		</row>
+		<row>
+			<entry>s</entry>
+			<entry><classname>STRING</classname></entry>
+			<entry>Character string; Characters are printed up to the end of string 
+				or until the precision value is reached.</entry>
+		</row>
+		<row>
+			<entry>u</entry>
+			<entry><classname>INTEGER</classname></entry>
+			<entry>Unsigned decimal integer.</entry>
+		</row>
+		<row>
+			<entry>x</entry>
+			<entry><classname>INTEGER</classname></entry>
+			<entry>Unsigned hexadecimal integer, using <quote>abcdef</quote>.</entry>
+		</row>
+		<row>
+			<entry>X</entry>
+			<entry><classname>INTEGER</classname></entry>
+			<entry>Unsigned hexadecimal integer, using <quote>ABCDEF</quote>.</entry>
+		</row>
+	</tbody>
+	</tgroup>
 </table>
-</para>
 
 <para>
 Note that this list can be extended. Also note that only letters between a..z and 
@@ -187,53 +189,47 @@ and printing of signs, blanks. More than one flag can appear in a formatting
 specification, but they must be compatible with each other.
 </para>
 
-
-<para>
-
 <table>
-<title>Flags overview</title>
-<tgroup cols="3">
-<thead>
-<tablerow>
-	<entry>Flag</entry>
-	<entry>Meaning</entry>
-	<entry>Default</entry>
-</tablerow>
-</thead>
-
-<tbody>
-<tablerow>
-	<entry>^&#x2003;&#x2003;</entry>
-	<entry>Center the formatted parameter within the given field width</entry>
-	<entry>Right align</entry>
-</tablerow>
-<tablerow>
-	<entry>-</entry>
-	<entry>Left align the formatted parameter within the given field width.</entry>
-	<entry>Right align</entry>
-</tablerow>
-<tablerow>
-	<entry>+</entry>
-	<entry>Prefix the formatted parameter with a sign (+ or -) if it has 
-		a signed type.</entry>
-	<entry>Sign appears only for negative values (-).</entry>
-</tablerow>
-<tablerow>
-	<entry>0</entry>
-	<entry>Zeros are added until the minimum width is reached.</entry>
-	<entry>No padding.</entry>
-</tablerow>
-<tablerow>
-	<entry>_&#x2003;</entry>
-	<entry>Prefix the formatted parameter with a blank (shown with an underscore here) if 
-		it is signed and positive.</entry>
-	<entry>No blank appears.</entry>
-</tablerow>
-</tbody> 
-</tgroup>
+	<title>Flags overview</title>
+	<tgroup cols="3">
+	<thead>
+		<row>
+			<entry>Flag</entry>
+			<entry>Meaning</entry>
+			<entry>Default</entry>
+		</row>
+	</thead>
+	<tbody>
+		<row>
+			<entry>^&#x2003;&#x2003;</entry>
+			<entry>Center the formatted parameter within the given field width</entry>
+			<entry>Right align</entry>
+		</row>
+		<row>
+			<entry>-</entry>
+			<entry>Left align the formatted parameter within the given field width.</entry>
+			<entry>Right align</entry>
+		</row>
+		<row>
+			<entry>+</entry>
+			<entry>Prefix the formatted parameter with a sign (+ or -) if it has 
+				a signed type.</entry>
+			<entry>Sign appears only for negative values (-).</entry>
+		</row>
+		<row>
+			<entry>0</entry>
+			<entry>Zeros are added until the minimum width is reached.</entry>
+			<entry>No padding.</entry>
+		</row>
+		<row>
+			<entry>_&#x2003;</entry>
+			<entry>Prefix the formatted parameter with a blank (shown with an underscore here) if 
+				it is signed and positive.</entry>
+			<entry>No blank appears.</entry>
+		</row>
+	</tbody> 
+	</tgroup>
 </table>
-
-</para>
 
 <para>
 The following flag combinations: 
@@ -260,7 +256,7 @@ are not allowed.
 
 <para>
 The width is an optional number that specifies the minimum number of 
-characters in the formatted paramter.
+characters in the formatted parameter.
 </para>
 
 <para>
@@ -311,8 +307,11 @@ the result is no characters output:
 		<argument><featurecall>
 			<featurename>format</featurename> 
 			<arguments>
-				<argument><quote>$.0d</quote></argument>
-				<argument>&lt;&lt;integer_cell (0)&gt;&gt;</argument>
+				<argument>"$.0d"</argument>
+				<argument>&lt;&lt;<featurecall>
+					<featurename>integer_cell</featurename>
+					<arguments><argument><integer>0</integer></argument></arguments>
+				</featurecall>&gt;&gt;</argument>
 			</arguments>
 		</featurecall></argument>
 	</arguments>
@@ -331,87 +330,68 @@ parameter being formatted in the parameter list.
 The table below details how precision affects type:
 </para>
 
-<para>
 <table>
-<title>How precision affects type</title>
-<tgroup cols="3">
-<thead>
-<tablerow>
-	<entry>Type</entry>
-	<entry>Meaning</entry>
-	<entry>Default</entry>
-</tablerow>
-</thead>
-<tbody>
-<tablerow>
-	<entry>c</entry>
-	<entry>The precision has no effect.</entry>
-	<entry>Character is printed.</entry>
-</tablerow>
-<tablerow>
-	<entry>b, B</entry>
-	<entry>The precision has no effect.</entry>
-	<entry>"[tT]rue"/"[fF]alse" is printed.</entry>
-</tablerow>
-<tablerow>
-	<entry>d, i, u, o, x</entry>
-	<entry>The precision specifies the minimum number of digits to be 
-		printed. If the number of digits in the parameter is less than 
-		precision, the output value is padded on the left with zeros.</entry>
-	<entry>The value is not truncated when the number of digits exceeds 
-		precision. Default precision is <integer>1</integer>.</entry>
-</tablerow>
-<tablerow>
-	<entry>e</entry>
-	<entry>The precision specifies the number of digits to
-		be printed after the decimal point. The last printed
-		digit is rounded.</entry>
-	<entry>Default precision is <integer>6</integer>; if precision is 
-		<integer>0</integer>, no decimal point is printed.</entry>
-</tablerow>
-<tablerow>
-	<entry>f</entry>
-	<entry>The precision value specifies the number of digits after the 
-		decimal point. If a decimal point appears, at least one digit 
-		appears before it. The value is rounded to the appropriate 
-		number of digits.</entry>
-	<entry>Default precision is <integer>6</integer>; if precision is 
-		<integer>0</integer>, no decimal point is printed.</entry>
-</tablerow>
-<tablerow>
-	<entry>g</entry>
-	<entry>The precision specifies the maximum number of significant 
-		digits printed.</entry>
-	<entry>Six significant digits are printed, with any trailing zeros 
-		truncated.</entry>
-</tablerow>
-<tablerow>
-	<entry>s</entry>
-	<entry>The precision specifies the maximum number of characters to be 
-		printed. Characters in excess of precision are not printed.</entry>
-	<entry>Characters are printed until end of string.</entry>
-</tablerow>
-            
-            
-<!--             <row> -->
-<!--               <entry>a, t</entry> -->
-<!--               <entry>The precision specifies how many characters of -->
-<!--               time/date printed. e.g. -->
-<!--               <programlisting> -->
-<!-- "!.0a", "!.1a"            print "" -->
-<!-- "!.2a", "!.3a","!.4a" print "13" -->
-<!-- "!.5a", "!.6a","!.7a" print "13/01" -->
-<!-- "!.8a", "!.9a",..        print "13/01/95" -->
-<!--               </programlisting> -->
-<!--               </entry> -->
-<!--               <entry>Full 8-character string. (e.g. "13/01/95")</entry> -->
-<!--             </row> -->
- 
- 
-</tbody>
-</tgroup>
+	<title>How precision affects type</title>
+	<tgroup cols="3">
+	<thead>
+		<row>
+			<entry>Type</entry>
+			<entry>Meaning</entry>
+			<entry>Default</entry>
+		</row>
+	</thead>
+	<tbody>
+		<row>
+			<entry>c</entry>
+			<entry>The precision has no effect.</entry>
+			<entry>Character is printed.</entry>
+		</row>
+		<row>
+			<entry>b, B</entry>
+			<entry>The precision has no effect.</entry>
+			<entry>"[tT]rue"/"[fF]alse" is printed.</entry>
+		</row>
+		<row>
+			<entry>d, i, u, o, x</entry>
+			<entry>The precision specifies the minimum number of digits to be 
+				printed. If the number of digits in the parameter is less than 
+				precision, the output value is padded on the left with zeros.</entry>
+			<entry>The value is not truncated when the number of digits exceeds 
+				precision. Default precision is <integer>1</integer>.</entry>
+		</row>
+		<row>
+			<entry>e</entry>
+			<entry>The precision specifies the number of digits to
+				be printed after the decimal point. The last printed
+				digit is rounded.</entry>
+			<entry>Default precision is <integer>6</integer>; if precision is 
+				<integer>0</integer>, no decimal point is printed.</entry>
+		</row>
+		<row>
+			<entry>f</entry>
+			<entry>The precision value specifies the number of digits after the 
+				decimal point. If a decimal point appears, at least one digit 
+				appears before it. The value is rounded to the appropriate 
+				number of digits.</entry>
+			<entry>Default precision is <integer>6</integer>; if precision is 
+				<integer>0</integer>, no decimal point is printed.</entry>
+		</row>
+		<row>
+			<entry>g</entry>
+			<entry>The precision specifies the maximum number of significant 
+				digits printed.</entry>
+			<entry>Six significant digits are printed, with any trailing zeros 
+				truncated.</entry>
+		</row>
+		<row>
+			<entry>s</entry>
+			<entry>The precision specifies the maximum number of characters to be 
+				printed. Characters in excess of precision are not printed.</entry>
+			<entry>Characters are printed until end of string.</entry>
+		</row>
+	</tbody>
+	</tgroup>
 </table>
-</para>
 
 </sect1>
 

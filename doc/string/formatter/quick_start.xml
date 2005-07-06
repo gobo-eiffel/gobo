@@ -36,8 +36,8 @@ Inheriting from <classname>ST_FORMATTING_ROUTINES</classname> adds the feature
 parameters. This array must be an array of references. For example 
 <classname>ARRAY</classname> [<classname>BOOLEAN</classname>] does
 not work with <ulink url="http://smarteiffel.loria.fr/">SmartEiffel</ulink>.
-Because BOOLEAN does not conform to ANY is SmartEiffel 2.1, we need to use 
-<classname>ARRAY</classname> [<classname>DS_CELL</classname> [<classname>BOOLEAN_REF</classname>]]
+Because <classname>BOOLEAN</classname> does not conform to <classname>ANY</classname> is SmartEiffel 2.1, we need to use 
+<classname>ARRAY</classname> [<classname>DS_CELL</classname> [<classname>BOOLEAN</classname>]]
 in that case.
 </para>
 
@@ -53,18 +53,18 @@ class TEST
 
 inherit
 
-  ST_FORMATTING_ROUTINES
+    ST_FORMATTING_ROUTINES
 
 creation
 
-  make
+    make
 
 feature -- Initialization
 
-  make is
-    do
-      print (format ("$s $i", &lt;&lt;"hello", integer_cell (2)>>))
-    end
+    make is
+        do
+            print (format ("$s $i", &lt;&lt;"hello", integer_cell (2)>>))
+        end
 
 end
 </programlisting>

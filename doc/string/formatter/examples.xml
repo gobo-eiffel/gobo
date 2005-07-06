@@ -33,71 +33,59 @@ The following table gives a number of examples. (Underscores are meant to
 represent spaces.)
 </para>
 
-<para>
-
 <table>
-<title>Examples</title>
-<tgroup cols="3">
-<thead>
-<tablerow>
-	<entry>Value</entry>
-	<entry>Format</entry>
-	<entry>Result</entry>
-</tablerow>
-</thead>
-
-<tbody>
-<tablerow>
-	<entry>Hello,_John</entry>
-	<entry>10s</entry>
-	<entry>Hello,_John</entry>
-</tablerow>
-
-<tablerow>
-	<entry>"</entry>
-	<entry>-10.5s</entry>
-	<entry>Hello_____</entry>
-</tablerow>
-
-<tablerow>
-	<entry>"</entry>
-	<entry>^10.5s</entry>
-	<entry>__Hello___</entry>
-</tablerow>
-
-<tablerow>
-	<entry>"</entry>
-	<entry>s</entry>
-	<entry>Hello,_John</entry>
-</tablerow>
-
-<tablerow>
-	<entry>3.1245621</entry>
-	<entry>5.0f</entry>
-	<entry>____3</entry>
-</tablerow>
-
-<tablerow>
-	<entry>3.1245621</entry>
-	<entry>-3.0f</entry>
-	<entry>3__</entry>
-</tablerow>
-
-<tablerow>
-	<entry>3.1245621</entry>
-	<entry>6.3f</entry>
-	<entry>_3.125</entry>
-</tablerow>
-
-<tablerow>
-	<entry>3.1245621</entry>
-	<entry>8e</entry>
-	<entry>3.124562e+00</entry>
-</tablerow>
-</tbody>
-</tgroup>
+	<title>Examples</title>
+	<tgroup cols="3">
+	<thead>
+		<row>
+			<entry>Value</entry>
+			<entry>Format</entry>
+			<entry>Result</entry>
+		</row>
+	</thead>
+	<tbody>
+		<row>
+			<entry>Hello,_John</entry>
+			<entry>10s</entry>
+			<entry>Hello,_John</entry>
+		</row>
+		<row>
+			<entry>"</entry>
+			<entry>-10.5s</entry>
+			<entry>Hello_____</entry>
+		</row>
+		<row>
+			<entry>"</entry>
+			<entry>^10.5s</entry>
+			<entry>__Hello___</entry>
+		</row>
+		<row>
+			<entry>"</entry>
+			<entry>s</entry>
+			<entry>Hello,_John</entry>
+		</row>
+		<row>
+			<entry>3.1245621</entry>
+			<entry>5.0f</entry>
+			<entry>____3</entry>
+		</row>
+		<row>
+			<entry>3.1245621</entry>
+			<entry>-3.0f</entry>
+			<entry>3__</entry>
+		</row>
+		<row>
+			<entry>3.1245621</entry>
+			<entry>6.3f</entry>
+			<entry>_3.125</entry>
+		</row>
+		<row>
+			<entry>3.1245621</entry>
+			<entry>8e</entry>
+			<entry>3.124562e+00</entry>
+		</row>
+	</tbody>
+	</tgroup>
 </table>
-
-</para>
 
 </chapter>

@@ -26,38 +26,22 @@
 		<set name="xslt_processor" value="xsltproc" unless="$GOBO_XSLT_PROCESSOR"/>
 		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="$GOBO_XSLT_PROCESSOR"/>
 
-			<!-- Concepts: -->
-		<xslt
-			processor="${xslt_processor}"
-			input="quick_start.xml"
-			output="quick_start.html"
-			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
-		/>
-
 		<set name="input" value="index"/>
 		<set name="next" value="index"/>
-
 		<set name="next_chapter" value="index"/>
 		<geant target="xslt"/>
-
 		<set name="next_chapter" value="quick_start"/>
 		<geant target="xslt"/>
-
 		<set name="next_chapter" value="examples"/>
 		<geant target="xslt"/>
-
 		<set name="next_chapter" value="correctness"/>
 		<geant target="xslt"/>
-
 		<set name="next_chapter" value="scientific_format"/>
 		<geant target="xslt"/>
-
 		<set name="next_chapter" value="see_also"/>
 		<geant target="xslt"/>
-
 		<set name="next_chapter" value="index"/>
 		<geant target="xslt"/>
-
 	</target>
 
 	<target name="clean">
@@ -73,21 +57,20 @@
 			Remove all generated files.
 		</description>
 
-			<!-- Concepts: -->
 		<delete file="index.html"/>
 		<delete file="quick_start.html"/>
-		<delete file="examples.html"/>		
+		<delete file="examples.html"/>
 		<delete file="correctness.html"/>
 		<delete file="scientific_format.html"/>
 		<delete file="see_also.html"/>
 	</target>
 
-
 <!-- Implementation -->
 
 	<target name="xslt">
 		<description>
-			Execute XSL Transformation for argument ${input}, ${previous} and ${next} using processor ${xslt_processor}.
+			Execute XSL Transformation for argument ${input}, ${previous}
+			and ${next} using processor ${xslt_processor}.
 		</description>
 
 		<set name="previous" value="${input}"/>
@@ -98,13 +81,12 @@
 			processor="${xslt_processor}"
 			input="${input}.xml"
 			output="${input}.html"
-			stylesheet="${GOBO}/doc/misc/gobo2xhtml.xsl"
+			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
 		>
 			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
 			<parameter name="next" value="&quot;'${next}.html'&quot;"/>
 			<parameter name="toc" value="&quot;'index.html'&quot;"/>
 		</xslt>
 	</target>
-
 
 </project>
