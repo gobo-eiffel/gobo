@@ -3,9 +3,8 @@
 <!--
 	description:
 
-		"Gobo Eiffel Developer Guidelines on Documentation"
+		"Documentation"
 
-	library: "Gobo Eiffel Developer Guidelines"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -13,38 +12,51 @@
 
 -->
 
-<chapter id="documentation">
-	<title>Documentation</title>
+<chapter id="guidelines/documentation">
+<chapterinfo>
+	<copyright>
+		<year>2001-2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>8 March 2005</date>
+</chapterinfo>
 
-  <para>
-    Each Eiffel library or tool should come with some documentation to
-    be placed in
-    <filename>$GOBO/doc/[library-or-tool-name]</filename>. Documentation
-    should be written in American English. It is possible to provide
-    the documentation in other languages (French, Spanish, Dutch,
-    German, ...), but it should at least be available in American
-    English.
-  </para>
+<title>Documentation</title>
 
-  <para>
-    The format of the documentation is XML using the DocBook
-    schema. There is a free book, <ulink
-    url="http://www.oreilly.com/catalog/docbook/chapter/book/docbook.html">DocBook:
-    The Definitive Guide</ulink>, that explains DocBook very clearly.
-  </para>
+<para>
+Each Eiffel library or tool should come with some documentation to be placed in 
+<filename>$GOBO/doc/&lt;library-or-tool-name&gt;</filename>. Documentation should 
+be written in American English. It is possible to provide the documentation in 
+other languages (French, Spanish, Dutch, German, ...), but it should at least be 
+available in American English.
+</para>
 
-  <para>
-    <ulink
-    url="http://www.research.att.com/sw/tools/graphviz/">Graphviz</ulink>
-    could probably be used to generate class inheritance
-    graphs. Graphiz is an open source graph drawing software.
-  </para>
+<para>
+Documentation format: 
+<ulink url="http://www.oreilly.com/catalog/docbook/chapter/book/docbook.html">DocBook</ulink> 
+XML DTD?
+...
+</para>
 
-  <para>
-    For example, with the following <filename>list.dot</filename> file:
-  </para>
+<para>
+Graphviz could probably be used to generate class inheritance graphs. Graphiz is 
+an open source graph drawing software. Have a look at:
+<blockquote>
+<ulink url="http://www.graphviz.org">http://www.graphviz.org</ulink>
+</blockquote>
+</para>
 
-  <programlisting>
+<para>
+For example, with the following <filename>list.dot</filename> file:
+</para>
+
+<para>
+<informalexample>
+<programlisting>
 digraph G {
 	edge [dir=back, color=maroon];
 	node [height=0.35, fontsize=8, style=filled, color=paleturquoise3];
@@ -57,21 +69,31 @@ digraph G {
 	ds_list -> ds_linked_list -> ds_bilinked_list;
 	ds_list -> ds_arrayed_list;
 }
-  </programlisting>
+</programlisting>
+</informalexample>
+</para>
 
-  <para>
-    I managed to generate a <filename>list.gif</filename> file similar
-    to those used in the existing Gobo Eiffel documentation with the
-    command-line:
-  </para>
+<para>
+I managed to generate a <filename>list.gif</filename> file similar to those used 
+in the existing <projectname>Gobo Eiffel</projectname> documentation with the 
+command-line:
+</para>
 
-  <programlisting>
-dot -Tgif -o list.gif list.dot
-  </programlisting>
+<para>
+<informalexample>
+<programlisting>
+  dot -Tgif -o <filename>list.gif</filename> <filename>list.dot</filename>
+</programlisting>
+</informalexample>
+</para>
 
-  <para>
-    I don't know yet how to simulate the client relationship
-    double-arrow with graphviz though.
-  </para>
+<para>
+I don't know yet how to simulate the client relationship double-arrow with 
+graphviz though.
+</para>
+
+<para>
+(Thank you to Franck Arnaud for letting me know about this graphviz tool.)
+</para>
 
 </chapter>

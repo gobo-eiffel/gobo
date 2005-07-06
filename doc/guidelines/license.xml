@@ -3,9 +3,8 @@
 <!--
 	description:
 
-		"Gobo Eiffel Developer Guidelines License"
+		"License"
 
-	library: "Gobo Eiffel Developer Guidelines"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -13,43 +12,69 @@
 
 -->
 
-<chapter id="license">
-	<title>License</title>
+<chapter id="guidelines/license">
+<chapterinfo>
+	<copyright>
+		<year>2001-2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>8 March 2005</date>
+</chapterinfo>
 
-  <para>
-    The files in the Gobo Eiffel package are released under the <ulink
-    url="http://www.eiffel-nice.org/license/">Eiffel Forum Freeware
-    License version 2</ulink>. This license is compatible with the GNU
-    GPL and approved by OSI.
-  </para>
+<title>License</title>
 
-  <para>
-    The full text of this license is:
-  </para>
+<para>
+The files in the <projectname>Gobo Eiffel</projectname> package are released 
+under the 
+<ulink url="http://opensource.org/licenses/ver2_eiffel.php">Eiffel Forum 
+Freeware License</ulink>: 
+</para>
 
-  <screen>
-  Eiffel Forum License, version 2
+<para>
+<blockquote>
+<para>
+	<emphasis role="strong">Eiffel Forum License, version 2</emphasis>
+</para>
 
-   1. Permission is hereby granted to use, copy, modify and/or
-      distribute this package, provided that:
-          * copyright notices are retained unchanged,
-          * any distribution of this package, whether modified or not,
-      includes this license text.
-   2. Permission is hereby also granted to distribute binary programs
-      which depend on this package. If the binary program depends on a
-      modified version of this package, you are encouraged to publicly
-      release the modified version of this package.
+<para>
+<orderedlist>
+	<listitem><para>Permission is hereby granted to use, copy, modify and/or
+	distribute this package, provided that:
+	<itemizedlist>
+		<listitem><para>copyright notices are retained unchanged,</para></listitem>
+		<listitem><para>any distribution of this package, whether 
+		modified or not, includes this license text.</para></listitem>
+	</itemizedlist></para>
+	</listitem>
+	
+	<listitem><para>Permission is hereby also granted to distribute binary 
+	programs which depend on this package. If the binary program depends on 
+	a modified version of this package, you are encouraged to publicly 
+	release the modified version of this package.</para></listitem>
+</orderedlist>
+</para>
 
-***********************
+<para>
+THIS PACKAGE IS PROVIDED <quote>AS IS</quote> AND WITHOUT WARRANTY. ANY EXPRESS 
+OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
+SHALL THE AUTHORS BE LIABLE TO ANY PARTY FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE 
+OF THIS PACKAGE.
+</para>
+</blockquote>
+</para>
 
-THIS PACKAGE IS PROVIDED "AS IS" AND WITHOUT WARRANTY. ANY EXPRESS OR
-IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE AUTHORS BE LIABLE TO ANY PARTY FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THIS PACKAGE.
-
-***********************
-  </screen>
+<para>
+This license is an 
+<ulink url="http://opensource.org/licenses/ver2_eiffel.php">OSI Approved 
+License</ulink> and a 
+<ulink url="http://www.gnu.org/licenses/eiffel-forum-license-2.html">GPL-Compatible, 
+Free Software License</ulink>.
+</para>
 
 </chapter>

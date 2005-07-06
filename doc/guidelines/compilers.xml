@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Supported Eiffel Compilers"
+
+	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter id="guidelines/compilers">
+<chapterinfo>
+	<copyright>
+		<year>2001-2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>8 March 2005</date>
+</chapterinfo>
+
+<title>Supported Eiffel Compilers</title>
+
+<para>
+The classes provided in the <projectname>Gobo Eiffel</projectname> package should 
+compile and work without any change on the three currently maintained Eiffel 
+compilers: <ulink url="http://www.eiffel.com">ISE Eiffel</ulink>, 
+<ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink> and 
+<ulink url="http://www.object-tools.com/products/VisualEiffel.html">Visual Eiffel</ulink>. 
+In order to make things easier, only the latest public release of each compiler 
+will be supported. This latest release can be a beta version provided that it is 
+deemed stable enough, as it is often the case for SmartEiffel for example.
+</para>
+
+<para>
+The currently supported Eiffel compilers are:
+</para>
+
+<para>
+<itemizedlist>
+    <listitem><para>
+    	<ulink url="http://www.eiffel.com/downloads/index.html#studio">ISE Eiffel 5.4 / 5.5 / 5.6</ulink>
+    </para></listitem>
+    <listitem><para>
+    	<ulink url="http://smarteiffel.loria.fr/general/download.html">SmartEiffel 1.0 / 2.1</ulink>
+    </para></listitem>    
+    <listitem><para>
+    	<ulink url="http://www.object-tools.com/products/VisualEiffel.html">VisualEiffel 4.1 / 5.0a</ulink>
+    </para></listitem> 
+</itemizedlist>
+</para>
+
+<para>
+Developers should use these compilers when <link linkend="test">testing</link> 
+their libraries.
+</para>
+
+</chapter>

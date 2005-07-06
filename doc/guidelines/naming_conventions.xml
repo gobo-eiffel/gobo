@@ -3,7 +3,7 @@
 <!--
 	description:
 
-		"Gobo Eiffel Developer Guidelines Naming Conventions"
+		"Naming Conventions"
 
 	library: "Gobo Eiffel Developer Guidelines"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
@@ -13,298 +13,429 @@
 
 -->
 
-<chapter id="naming_conventions">
-	<title>Naming Conventions</title>
+<chapter id="guidelines/naming_conventions">
+<chapterinfo>
+	<copyright>
+		<year>2001-2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>8 March 2005</date>
+</chapterinfo>
 
-  <para>
-    All names appearing in the software, comments, directory names,
-    documentations, etc. should be written in American English.
-  </para>
+<title>Naming Conventions</title>
 
-  <sect1>
-    <title>Class Names</title>
+<para>
+All names appearing in the software, comments, directory names, 
+<link linkend="documentation">documentations</link>, etc. should be written in 
+American English.
+</para>
 
-    <para>
-      In order to avoid class name clashes between different
-      libraries, some Eiffel compilers support class renaming in the
-      Ace file or equivalent. But some don't. Therefore the name of
-      the classes should systematically be prefixed with a two-letter
-      library code followed by an underscore. For example the classes
-      from the Gobo Eiffel Structure Library have been prefixed by DS
-      (which stands for Data Structures), as in
-      <classname>DS_CONTAINER</classname>, whereas classes from the
-      Gobo Eiffel Lexical Library have been prefixed by LX, as in
-      <classname>LX_SCANNER</classname>.  Some libraries may use
-      several prefixes, provided that they are not already used by
-      other libraries. The list of already used prefixes per library
-      will be available on-line.
-    </para>
+<sect1 id="class_names"><title>Class Names</title>
 
-    <para>
-      Class names should usually be singular nouns, such as
-      <classname>DS_STACK</classname>.  If the noun is qualified,
-      words should be separated by underscores, as in
-      <classname>DS_LINKED_LIST</classname>. Class names in Eiffel are
-      written in upper-case letters and it is considered bad style to
-      use letter-case difference to concatenate words such as
-      LinkedList for example. The name of deferred classes can also be
-      adjective when they describe a property, such as
-      <classname>DS_SORTABLE</classname>. It is suspicious to have
-      verbs as class names since classes should describe objects
-      rather that actions.
-    </para>
+<para>
+In order to avoid class name clashes between different libraries, some Eiffel 
+compilers support class renaming in the Ace file or equivalent. But some don't. 
+Therefore the name of the classes should systematically be prefixed with a 
+two-letter library code followed by an underscore. For example the classes from 
+the <libraryname>Gobo Eiffel Structure Library</libraryname> have been prefixed 
+by <classname>DS</classname> (which stands for <classname>D</classname>ata 
+<classname>S</classname>tructures), as in <classname>DS_CONTAINER</classname>, 
+whereas classes from the <libraryname>Gobo Eiffel Lexical Library</libraryname> 
+have been prefixed by <classname>LX</classname>, as in 
+<classname>LX_SCANNER</classname>. Some libraries may use several prefixes, 
+provided that they are not already used by other libraries. The list of already 
+used prefixes per library will be available on-line.
+</para>
 
-    <para>
-      Classes containing only constants can have the suffix _CONSTANTS
-      and those containing only facility routines can have the suffix
-      _ROUTINES. Some classes are used as a means to share objects
-      using once functions. These classes can have the word SHARED
-      just after the prefix of the class. For example the class used
-      to share a singleton object of type
-      <classname>KL_ARGUMENTS</classname> is called
-      <classname>KL_SHARED_ARGUMENTS</classname>.  An alternative is
-      to use IMPORTED instead of SHARED when the purpose of the class
-      is not to give access to an object but rather to routines or
-      constants without the inconvenience of polluting the feature
-      name space with mixin classes. Have a look at
-      <classname>KL_IMPORTED_STRING_ROUTINES</classname> as an
-      example.
-    </para>
+<para>
+Class names should usually be singular nouns, such as 
+<classname>DS_STACK</classname>. If the noun is qualified, words should be 
+separated by underscores, as in <classname>DS_LINKED_LIST</classname>. Class 
+names in Eiffel are written in upper-case letters and it is considered bad style 
+to use letter-case difference to concatenate words such as 
+<classname>LinkedList</classname> for example. The name of deferred classes can 
+also be adjective when they describe a property, such as 
+<classname>DS_SORTABLE</classname>. It is suspicious to have verbs as class names
+since classes should describe objects rather than actions.
+</para>
 
-    <para>
-      In Eiffel it is considered bad practice to use abbreviations in
-      class and feature names. However this can be accepted when the
-      abbreviation is commonly used in the domain of expertise such as
-      <classname>LX_DFA</classname> for example, which stands for
-      Deterministic Finite state Automaton and is used for compiling
-      regular expressions.
-    </para>
+<para>
+Classes containing only constants can have the suffix 
+<classname>_CONSTANTS</classname> and those containing only facility routines 
+can have the suffix <classname>_ROUTINES</classname>. Some classes are used as a 
+means to share objects using once functions. These classes can have the word 
+<classname>SHARED</classname> just after the prefix of the class. For example the 
+class used to share a singleton object of type <classname>KL_ARGUMENTS</classname> 
+is called <classname>KL_SHARED_ARGUMENTS</classname>. An alternative is to use 
+<classname>IMPORTED</classname> instead of <classname>SHARED</classname> when the
+purpose of the class is not to give access to an object but rather to routines or 
+constants without the inconvenience of polluting the feature name space with 
+mixin classes. Have a look at <classname>KL_IMPORTED_STRING_ROUTINES</classname> 
+as an example.
+</para>
 
-  </sect1>
+<para>
+In Eiffel it is considered bad practice to use abbreviations in class and feature 
+names. However this can be accepted when the abbreviation is commonly used in the 
+domain of expertise such as <classname>LX_DFA</classname> for example, which 
+stands for <classname>D</classname>eterministic <classname>F</classname>inite 
+state <classname>A</classname>utomaton and is used for compiling regular 
+expressions.
+</para>
 
-  <sect1>
-    <title>Filenames</title>
+</sect1>
 
-    <para>
-      Visual Eiffel allows to have several classes in the same file,
-      but the other Eiffel compilers don't. So each file should
-      contain only one class.
-    </para>
+<sect1 id="filenames"><title>Filenames</title>
 
-    <para>
-      Likewise, SmartEiffel expects by default to have a one-to-one
-      relation between the name of the class and the name of the
-      enclosing file. Therefore the name of the file should be the
-      name of the class followed by the extension
-      <filename>.e</filename>, all in lower case. For example file
-      <filename>ds_list.e</filename> contains class
-      <classname>DS_LIST</classname>.
-    </para>
+<para>
+<ulink url="http://www.object-tools.com/products/VisualEiffel.html">Visual Eiffel</ulink> 
+allows to have several classes in the same file, but the other Eiffel compilers 
+don't. So each file should contain only one class.
+</para>
 
-  </sect1>
+<para>
+Likewise, <ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink> expects by 
+default to have a one-to-one relation between the name of the class and the name 
+of the enclosing file. Therefore the name of the file should be the name of the 
+class followed by the extension <filename>.e</filename>, all in lower case. For 
+example file <filename>ds_list.e</filename> contains class <classname>DS_LIST</classname>.
+</para>
 
-  <sect1>
-    <title>Cluster Names</title>
+</sect1>
 
-    <para>
-      Library classes should be organized in clusters in
-      <filename>$GOBO/ library/[library-name]</filename>. Likewise the
-      source code of tools should be put in
-      <filename>$GOBO/src/[tool-name]</filename>.
-    </para>
+<sect1 id="cluster_names"><title>Cluster Names</title>
 
-    <para>
-      Cluster names should be in lower-case and words should be
-      separated by underscores. Abbreviations should be avoided unless
-      well accepted and understood in the domain of expertise of the
-      underlying library. Exceptions to this rule are
-      <filename>spec</filename> for Eiffel compiler dependent clusters
-      and <filename>impl</filename> which stands for
-      "implementation". For the cluster <filename>spec</filename>,
-      compiler-dependent classes should have the same name and put
-      into the four following clusters:
-    </para>
+<para>
+Library classes should be organized in clusters in 
+<filename>$GOBO/library/&lt;library-name&gt;</filename>. Likewise the source code 
+of tools should be put in <filename>$GOBO/src/&lt;tool-name&gt;</filename>.
+</para>
 
-    <itemizedlist>
-      <listitem>
-        <para><filename>spec/ise</filename>: Implementation for ISE
-        Eiffel</para>
-      </listitem>
-      <listitem>
-        <para><filename>spec/se</filename>: Implementation for
-        SmartEiffel</para>
-      </listitem>
-      <listitem>
-        <para><filename>spec/ve</filename>: Implementation for Visual Eiffel</para>
-        </listitem>
-    </itemizedlist>
+<para>
+Cluster names should be in lower-case and words should be separated by 
+underscores. Abbreviations should be avoided unless well accepted and understood 
+in the domain of expertise of the underlying library. Exceptions to this rule are 
+<filename class="directory">spec</filename> for Eiffel compiler dependent 
+clusters and <filename class="directory">impl</filename> which stands for 
+<quote>implementation</quote>. For the cluster 
+<filename class="directory">spec</filename>, compiler-dependent classes should 
+have the same name and put into the three following clusters:
+</para>
 
-    <para>
-      Only one of these clusters will be included in the Ace file,
-      loadpath file or ESD file of the application depending on the
-      Eiffel compiler used. These clusters can be automatically
-      generated with the tool <command>gepp</command> if the different
-      implementations are put in a single file whose extension is
-      <filename>.ge</filename> instead of the Eiffel extension
-      <filename>.e.</filename> I usually find it easier for
-      development and maintenance to have these
-      <filename>.ge</filename> files.
-    </para>
+<para>
 
-    <para>
-      For <filename>impl</filename> cluster, it can be used to provide
-      several implementations of a common interface. For example:
-    </para>
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term><filename class="directory">spec/ise</filename>
+			<text>        </text>
+			<comment>Implementation for ISE Eiffel</comment></term>
+	</varlistentry>
+	<varlistentry>
+		<term><filename class="directory">spec/se</filename>
+			<text>         </text>
+			<comment>Implementation for SmartEiffel</comment></term>
+	</varlistentry>
+	<varlistentry>
+		<term><filename class="directory">spec/ve</filename>
+			<text>         </text>
+			<comment>Implementation for Visual Eiffel</comment></term>
+	</varlistentry>
+</variablelist>
+</blockquote>
 
-    <itemizedlist>
-      <listitem><para>interface</para></listitem>
-      <listitem><para>impl/c</para></listitem>
-      <listitem><para>impl/dotnet</para></listitem>
-      <listitem><para>impl/eiffel</para></listitem>
-      <listitem><para>impl/jvm</para></listitem>
-      <listitem><para>impl/posix</para></listitem>
-    </itemizedlist>
+</para>
 
-    <para>
-      Here again the names of the classes in the different subclusters
-      of <filename>impl</filename> will be the same, and only one of
-      these subclusters will be included in the Ace file or equivalent
-      in order to provide a concrete implementation of the deferred
-      classes in cluster <filename>interface</filename>.
-    </para>
+<para>
+Only one of these clusters will be included in the Ace file, loadpath file or 
+ESD/Xace file of the application depending on the 
+<link linkend="compilers">Eiffel compiler</link> used. These clusters can be
+automatically generated with the tool <emphasis>gepp</emphasis> if the different 
+implementations are put in a single file whose extension is 
+<filename>.ge</filename> instead of the Eiffel extension <filename>.e</filename>. 
+I usually find it easier for development and maintenance to have these 
+<filename>.ge</filename> files.
+</para>
 
-    <para>
-      Cluster <filename>impl</filename> can also be used with the
-      bridge pattern.  In that case the cluster structure will look
-      like this:
-    </para>
+<para>
+For <filename class="directory">impl</filename> cluster, it can be used to 
+provide several implementations of a common interface. For example:
+</para>
+
+<para>
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term><filename>interface</filename></term>
+	</varlistentry>
+	<varlistentry>
+		<term><filename>impl/c</filename></term>
+	</varlistentry>	
+	<varlistentry>
+		<term><filename>impl/dotnet</filename></term>
+	</varlistentry>	
+	<varlistentry>
+		<term><filename>impl/eiffel</filename></term>
+	</varlistentry>	
+	<varlistentry>
+		<term><filename>impl/jvm</filename></term>
+	</varlistentry>	
+	<varlistentry>
+		<term><filename>impl/posix</filename></term>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
+<para>
+Here again the names of the classes in the different subclusters of 
+<filename class="directory">impl</filename> will be the same, and only one of 
+these subclusters will be included in the Ace file or equivalent in order to 
+provide a concrete implementation of the deferred classes in cluster 
+<filename class="directory">interface</filename>.
+</para>
+
+<para>
+Cluster <filename class="directory">impl</filename> can also be used with the bridge pattern.
+In that case the cluster structure will look like this:
+</para>
+
+<para>
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term><filename>foo</filename></term>
+	</varlistentry>
+	<varlistentry>
+		<term><filename>bar</filename></term>
+	</varlistentry>
+	<varlistentry>
+		<term><filename>impl/interface/foo</filename></term>
+	</varlistentry>
+	<varlistentry>
+		<term><filename>impl/interface/bar</filename></term>
+	</varlistentry>
+	<varlistentry>
+		<term><filename>impl/gtk/foo</filename></term>
+	</varlistentry>
+	<varlistentry>
+		<term><filename>impl/gtk/bar</filename></term>
+	</varlistentry>
+	<varlistentry>
+		<term><filename>impl/motif/foo</filename></term>
+	</varlistentry>
+	<varlistentry>
+		<term><filename>impl/motif/bar</filename></term>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
+<para>
+The classes in <filename class="directory">gtk</filename> and 
+<filename class="directory">motif</filename> implement the deferred classes in 
+<filename class="directory">interface</filename>, and in the Ace file or 
+equivalent the clusters with <filename class="directory">gtk</filename> or with 
+<filename class="directory">motif</filename> will be included depending on the 
+fact that GTK+ or Motif has been chosen to build the graphical interface for example.
+</para>
+
+</sect1>
+
+<sect1 id="feature_names"><title>Feature Names</title>
+
+<para>
+Feature names should be in lower-case and words should be separated by 
+underscores. Abbreviations should be avoided unless well accepted and understood 
+in the domain of expertise of the class. Names of constants can possibly have 
+upper-case letters, but in that case please make sure that all calls to this 
+constant use the same letter-case in order to be compilable by 
+<ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink> without requiring
+the -no_case_sensitive command-line option.
+</para>
+
+<para>
+Names of procedures should be verbs as they describe actions or commands. On the 
+other hand names of functions or attributes should be nouns, possibly qualified, 
+as they describe entities. The names of boolean queries should have an 
+interrogative form as in <featurename>is_empty</featurename>, 
+<featurename>is_closed</featurename> or <featurename>has_error</featurename>. 
+They can also be simple adjectives such as <featurename>closable</featurename>, 
+or past participles as in <featurename>found</featurename>.
+</para>
+
+<para>
+Names of creation procedures usually start with <featurename>make</featurename> 
+in Eiffel, for example <featurename>make</featurename> or 
+<featurename>make_from_string</featurename>.
+</para>
+
+<para>
+Names of factory functions can have the prefix <featurename>new_*</featurename>, 
+as in the following example:
+</para>
+
+<para>
 
 <programlisting>
-  foo
-  bar
-  impl/interface/foo
-  impl/interface/bar
-  impl/gtk/foo
-  impl/gtk/bar
-  impl/motif/foo
-  impl/motif/bar
+<text>_   </text><featurename>new_foo</featurename> (<argument>a_string</argument>: <classname>STRING</classname>): <returnvalue><classname>FOO</classname></returnvalue> is
+<text>_   _   _   </text><comment>Foo made up of characters of <argument>a_string</argument></comment>
+<text>_   _   _   </text><comment>(Create a new objet at each call.)</comment>
+<text>_   _   </text>require
+<text>_   _   _   </text>a_string_not_void: <argument>a_string</argument> /= Void
+<text>_   _   </text>do
+<text>_   _   _   </text>create <featurecall>
+				<target>Result</target>
+				<featurename>make_from_string</featurename>
+				<arguments><argument>a_string</argument></arguments>
+			</featurecall>
+<text>_   _   </text>ensure
+<text>_   _   _   </text>new_foo_not_void: Result /= Void
+<text>_   _   </text>end
 </programlisting>
 
-    <para>
-      The classes in <filename>gtk</filename> and
-      <filename>motif</filename> implement the deferred classes in
-      <filename>interface</filename>, and in the Ace file or
-      equivalent the clusters with <filename>tk</filename> or with
-      <filename>motif</filename> will be included depending on the
-      fact that GTK+ or Motif has been chosen to build the graphical
-      interface for example.
-    </para>
+</para>
 
-  </sect1>
+</sect1>
 
-  <sect1>
-    <title>Feature Names</title>
+<sect1 id="feature_category_names"><title>Feature Category names</title>
 
-    <para>
-      Feature names should be in lower-case and words should be
-      separated by underscores. Abbreviations should be avoided unless
-      well accepted and understood in the domain of expertise of the
-      class. Names of constants can possibly have upper-case letters,
-      but in that case please make sure that all calls to this
-      constant use the same letter-case in order to be compilable by
-      SmartEiffel without requiring the -no_case_sensitive
-      command-line option.
-    </para>
+<para>
+All feature clauses should be equipped with a comment, as in the following 
+example:
+</para>
 
-    <para>
-      Names of procedures should be verbs as they describe actions or
-      commands. On the other hand names of functions or attributes
-      should be nouns, possibly qualified, as they describe entities.
-      The names of boolean queries should have an interrogative form
-      as in <featurename>is_empty</featurename>,
-      <featurename>is_closed</featurename> or
-      <featurename>has_error</featurename>. They can also be simple
-      adjectives such as <featurename>closable</featurename>, or past
-      participles as in <featurename>found</featurename>.
-    </para>
+<para>
 
-    <para>
-      Names of creation procedures usually start with
-      <featurename>make</featurename> in Eiffel, for example
-      <featurename>make</featurename> or
-      <featurename>make_from_string</featurename>.
-    </para>
-
-    <para>
-      Names of factory functions can have the prefix `new_*', as
-      in the following example:
-    </para>
-
+<informalexample>
 <programlisting>
-_   new_foo (a_string: STRING): FOO is
-_   _   _   -- Foo made up fo characters of `a_string'
-_   _   _   -- (Create a new objet at each call.)
-_   _   require
-_   _   _   a_string_not_void: a_string /= Void
-_   _   do
-_   _   _   !! Result.make_from_string (a_string)
-_   _   ensure
-_   _   _   new_foo_not_void: Result /= Void
-_   _   end
+feature <comment>Access</comment>
+feature {<classname>NONE</classname>} <comment>Initialization</comment>
 </programlisting>
+</informalexample>
 
-  </sect1>
+</para>
 
-  <sect1>
-    <title>Feature Category Names</title>
+<para>
+Here are some examples of feature category names, taken from the 
+<link linkend="../structure/index">
+<libraryname>Gobo Eiffel Structure Library</libraryname> documentation</link>:
+</para>
 
-    <para>
-      All feature clauses should be equipped with a comment, as in the
-      following example:
-    </para>
+<para>
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<comment>Initialization</comment>
+		</term>
+		<listitem><para>
+			Creation procedures.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Access</comment>
+		</term>
+		<listitem><para>
+			Queries used to get elements or properties about the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Measurement</comment>
+		</term>
+		<listitem><para>
+			Queries concerning the number of elements and size of
+			the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Status report</comment>
+		</term>
+		<listitem><para>
+			Queries used to determine general boolean properties
+			of the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Comparison</comment>
+		</term>
+		<listitem><para>
+			Equality tests between containers.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Duplication</comment>
+		</term>
+		<listitem><para>
+			Features which produce copies of the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Setting</comment>
+		</term>
+		<listitem><para>
+			Procedures which change the general properties of the
+			container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Cursor movement</comment>
+		</term>
+		<listitem><para>
+			Procedures that change the cursor position.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Element change</comment>
+		</term>
+		<listitem><para>
+			Commands which add or change items in the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Removal</comment>
+		</term>
+		<listitem><para>
+			Commands which remove items from the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Resizing</comment>
+		</term>
+		<listitem><para>
+			Commands which change the size of the container.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<comment>Implementation</comment>
+		</term>
+		<listitem><para>
+			Secret features used for implementation purposes.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+</para>
 
-    <programlisting>
-feature -- Access
-feature {NONE} -- Initialization
-    </programlisting>
-
-    <para>
-      Here are some examples of feature category names, taken from the
-      Gobo Eiffel Structure Library documentation:
-    </para>
-
-    <programlisting>
-  -- Initialization
-       Creation procedures.
-  -- Access
-       Queries used to get elements or properties
-       about the container.
-  -- Measurement
-       Queries concerning the number of elements
-       and size of the container.
-  -- Status report
-       Queries used to determine general boolean
-       properties of the container.
-  -- Comparison
-       Equality tests between containers.
-  -- Duplication
-       Features which produce copies of the container.
-  -- Setting
-       Procedures which change the general properties
-       of the container.
-  -- Cursor movement
-       Procedures that change the cursor position.
-  -- Element change
-       Commands which add or change items in the
-       container.
-  -- Removal
-       Commands which remove items from the container.
-  -- Resizing
-       Commands which change the size of the container.
-  -- Implementation
-       Secret features used for implementation purposes.
-    </programlisting>
-
-  </sect1>
+</sect1>
 
 </chapter>

@@ -37,10 +37,10 @@
 		<set name="input" value="index"/>
 		<set name="next" value="index"/>
 
-		<set name="next_chapter" value="supported_compilers"/>
+		<set name="next_chapter" value="compilers"/>
 		<geant target="xslt"/>
 
-		<set name="next_chapter" value="language_constructs"/>
+		<set name="next_chapter" value="language"/>
 		<geant target="xslt"/>
 
 		<set name="next_chapter" value="naming_conventions"/>
@@ -58,13 +58,13 @@
 		<set name="next_chapter" value="examples"/>
 		<geant target="xslt"/>
 
-		<set name="next_chapter" value="test_suite"/>
+		<set name="next_chapter" value="test"/>
 		<geant target="xslt"/>
 
-		<set name="next_chapter" value="cvs_repository"/>
+		<set name="next_chapter" value="cvs"/>
 		<geant target="xslt"/>
 
-		<set name="next_chapter" value="installation_procedure"/>
+		<set name="next_chapter" value="installation"/>
 		<geant target="xslt"/>
 
 		<set name="next_chapter" value="license"/>
@@ -88,19 +88,18 @@
 			Remove all generated files.
 		</description>
 
-			<!-- HTML files: -->
-      <delete file="class_layout.html"/>
-      <delete file="cvs_repository.html"/>
-      <delete file="documentation.html"/>
-      <delete file="examples.html"/>
-      <delete file="index.html"/>
-      <delete file="installation_procedure.html"/>
-      <delete file="language_constructs.html"/>
-      <delete file="license.html"/>
-      <delete file="naming_conventions.html"/>
-      <delete file="programming_style.html"/>
-      <delete file="supported_compilers.html"/>
-      <delete file="test_suite.html"/>
+		<delete file="compilers.html"/>
+		<delete file="language.html"/>
+		<delete file="naming_conventions.html"/>
+		<delete file="class_layout.html"/>
+		<delete file="programming_style.html"/>
+		<delete file="documentation.html"/>
+		<delete file="examples.html"/>
+		<delete file="test.html"/>
+		<delete file="cvs.html"/>
+		<delete file="installation.html"/>
+		<delete file="license.html"/>
+		<delete file="index.html"/>
 	</target>
 
 
@@ -119,7 +118,7 @@
 			processor="${xslt_processor}"
 			input="${input}.xml"
 			output="${input}.html"
-			stylesheet="${GOBO}/doc/misc/gobo2xhtml.xsl"
+			stylesheet="${GOBO}/doc/misc/gobo2html.xsl"
 		>
 			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
 			<parameter name="next" value="&quot;'${next}.html'&quot;"/>

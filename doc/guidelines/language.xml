@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Eiffel Language"
+
+	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+-->
+
+<chapter id="guidelines/language">
+<chapterinfo>
+	<copyright>
+		<year>2001-2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>8 March 2005</date>
+</chapterinfo>
+
+<title>Eiffel Language</title>
+
+<para>
+In order to achieve Eiffel compiler interoperability, it is not necessarily 
+required to strictly follow the Eiffel standard. Some compilers indeed have bugs, 
+do not interpret the standard in the same way as others (be it because of 
+ambiguities in the standard itself or not), or have implementation limitations.
+Therefore the Eiffel dialect used in <projectname>Gobo Eiffel</projectname> is 
+likely to be a subset of the official Eiffel standard.
+</para>
+
+<para>
+On the contrary, constructs which have not been officially adopted by 
+<ulink url="http://www.eiffel-nice.org/">NICE</ulink> yet but which are already 
+supported by all Eiffel compilers can be used in 
+<projectname>Gobo Eiffel</projectname>. This is for example the case for the
+<constructname>Precursor</constructname> construct. However it is clear that an 
+Eiffel extension can be used in <projectname>Gobo Eiffel</projectname> only if it 
+is supported by all <link linkend="compilers">Eiffel compilers</link>. Therefore 
+the <constructname>agent</constructname> construct introduced in 
+<ulink url="http://www.eiffel.com">ISE Eiffel</ulink> should not be used at the 
+moment.
+</para>
+
+<para>
+Differences between the <link linkend="compilers">supported Eiffel compilers</link> 
+which have been already noticed, along with workarounds when available, will be 
+listed on-line in order to help others to avoid making the same mistakes by using 
+these non-portable Eiffel constructs.
+</para>
+
+</chapter>

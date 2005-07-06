@@ -3,7 +3,7 @@
 <!--
 	description:
 
-		"Examples"
+		"CVS Repository"
 
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -12,7 +12,7 @@
 
 -->
 
-<chapter id="guidelines/examples">
+<chapter id="guidelines/cvs">
 <chapterinfo>
 	<copyright>
 		<year>2001-2005</year>
@@ -25,11 +25,12 @@
 	<date>8 March 2005</date>
 </chapterinfo>
 
-<title>Examples</title>
+<title>CVS Repository</title>
 
 <para>
-Eiffel libraries or tools may be provided with a set of examples. These examples 
-should be put in <filename>$GOBO/example/&lt;library-or-tool-name&gt;</filename>.
+The CVS repository should not include generated files. These files should be 
+generated either when building the package or when running the 
+<link linkend="installation">installation procedure</link>.
 </para>
 
 </chapter>

@@ -3,70 +3,150 @@
 <!--
 	description:
 
-		"Index to Gobo Eiffel Developer Guidelines"
+		"Gobo Eiffel Developer Guidelines"
 
-	library: "Gobo Eiffel Developer Guidelines"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-
-TODO:
-- cluster prefix naming
-- bubbling exceptions
-- once routines/accessor classes
 -->
 
-<chapter id="guidelines_index">
-	<title>Table of Contents</title>
+<chapter id="guidelines/index">
+<chapterinfo>
+	<copyright>
+		<year>2001-2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>8 March 2005</date>
+</chapterinfo>
 
-  <para>
-    This document describes the developer guidelines that MUST be
-    followed by all contributions to the Gobo Eiffel library. The
-    guidelines are based on the rules laid out in OOSC2 and clarified
-    or amended where necessary.
-  </para>
+<title>Gobo Eiffel Developer Guidelines</title>
 
-  <para>
-    We hope these guidelines will be widely followed by other Eiffel
-    libraries as well as this will facilitate code sharing and code
-    reading.
-  </para>
+<para>
+This document describes the guidelines that <emphasis role="strong">must</emphasis> 
+be followed by all contributions to the 
+<projectname>Gobo Eiffel Project</projectname>. The guidelines are based on the 
+rules laid out in OOSC2 and clarified or amended where necessary. We hope that 
+these guidelines will be widely followed, also by Eiffel libraries other than the 
+<libraryname>Gobo Eiffel libraries</libraryname>, and that they will facilitate 
+code sharing and code reading.
+</para>
+<para><emphasis>
+Note that this document is far from complete. It is only the first
+draft, more sections will be added and some existing sections need
+some more work.
+</emphasis></para>
 
-	<sect1>
-		<title>Overview</title>
-		<para>
-			<link linkend="supported_compilers">Eiffel compilers that MUST be supported</link>
-		</para>
-		<para>
-			<link linkend="language_constructs">Eiffel language constructs</link>
-		</para>
-		<para>
-			<link linkend="naming_conventions">Naming conventions</link>
-		</para>
-		<para>
-			<link linkend="class_layout">Class layout</link>
-		</para>
-		<para>
-			<link linkend="programming_style">Programming style</link>
-		</para>
-		<para>
+<para>
+This document is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<link linkend="compilers">Supported Eiffel Compilers</link>
+		</term>
+		<listitem><para>
+			The Eiffel compilers that must be supported.
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<link linkend="language">Eiffel Language</link>
+		</term>
+		<listitem><para>
+			The version of the Eiffel Language that must be used.
+		</para></listitem>
+	</varlistentry>	
+
+	<varlistentry>
+		<term>
+			<link linkend="naming_conventions">Naming Conventions</link>
+		</term>
+		<listitem><para>
+			The naming conventions that code must follow.
+		</para></listitem>
+	</varlistentry>	
+	
+	<varlistentry>
+		<term>
+			<link linkend="class_layout">Class Layout</link>
+		</term>
+		<listitem><para>
+			How class texts must be formatted.
+		</para></listitem>
+	</varlistentry>	
+	
+	<varlistentry>
+		<term>
+			<link linkend="programming_style">Programming Style</link>
+		</term>
+		<listitem><para>
+			The programming style that must be used.
+		</para></listitem>
+	</varlistentry>	
+	
+	<varlistentry>
+		<term>
 			<link linkend="documentation">Documentation</link>
-		</para>
-		<para>
+		</term>
+		<listitem><para>
+			How to write documentation.
+		</para></listitem>
+	</varlistentry>	
+	
+	<varlistentry>
+		<term>
 			<link linkend="examples">Examples</link>
-		</para>
-		<para>
-			<link linkend="test_suite">Test suite</link>
-		</para>
-		<para>
-			<link linkend="cvs_repository">CVS repository</link>
-		</para>
-		<para>
-			<link linkend="installation_procedure">Installation procedure</link>
-		</para>
-		<para>
+		</term>
+		<listitem><para>
+			The kind of examples that must be provided.
+		</para></listitem>
+	</varlistentry>	
+	
+	<varlistentry>
+		<term>
+			<link linkend="test">Test Suite</link>
+		</term>
+		<listitem><para>
+			How to write a test suite.
+		</para></listitem>
+	</varlistentry>	
+	
+	<varlistentry>
+		<term>
+			<link linkend="cvs">CVS Repository</link>
+		</term>
+		<listitem><para>
+			How to use the CVS Repository.
+		</para></listitem>
+	</varlistentry>	
+	
+	<varlistentry>
+		<term>
+			<link linkend="installation">Installation Procedure</link>
+		</term>
+		<listitem><para>
+			The installation files to provide.
+		</para></listitem>
+	</varlistentry>	
+	
+	<varlistentry>
+		<term>
 			<link linkend="license">License</link>
-		</para>
-	</sect1>
+		</term>
+		<listitem><para>
+			The license under which <projectname>Gobo Eiffel</projectname> code is released.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
 </chapter>

@@ -3,9 +3,8 @@
 <!--
 	description:
 
-		"Gobo Eiffel Developer Guidelines programming style"
+		"Programming Style"
 
-	library: "Gobo Eiffel Developer Guidelines"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -13,201 +12,203 @@
 
 -->
 
-<chapter id="programming_style">
-	<title>Programming Style</title>
+<chapter id="guidelines/programming_style">
+<chapterinfo>
+	<copyright>
+		<year>2001-2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>9 March 2005</date>
+</chapterinfo>
 
-  <sect1>
-    <title>Assertions</title>
+<title>Programming Style</title>
 
-    <para>
-      Routines should be properly equipped with pre- and
-      postconditions and classes with invariants. This is useful as
-      documentation in addition to the header comments to make sure
-      that the routines and class instances are correctly used. These
-      assertions can also be enabled when running the test suite in
-      <filename>$GOBO/test/[library-name]</filename> in order to check
-      the correctness of the library classes.
-    </para>
+<sect1 id="assertions"><title>Assertions</title>
 
-    <para>
-      All assertions should have a tag, as in the following example:
-    </para>
+<para>
+Routines should be properly equipped with pre- and postconditions and classes 
+with invariants. This is useful as documentation in addition to the header 
+comments to make sure that the routines and class instances are correctly used. 
+These assertions can also be enabled when running the 
+<link linkend="test">test suite</link> in 
+<filename>$GOBO/test/&lt;library-name&gt;</filename> in order to check the 
+correctness of the library classes.
+</para>
 
-    <programlisting>
-_   foo_not_void: foo /= Void
-    </programlisting>
+<para>
+All assertions should have a tag, as in the following example:
+</para>
 
-    <para>
-      Note that in the example above the tag
-      <tagname>foo_not_void</tagname> is preferred to
-      <tagname>foo_exists</tagname> as it may cause confusion when
-      <featurename>exists</featurename> is a feature of the class of
-      <featurename>foo</featurename>. So using systematically
-      '*_not_void' is a good way to avoid such possible confusion.
-    </para>
+<para>
+<programlisting>
+<text>_   </text>foo_not_void: <featurename>foo</featurename> /= Void
+</programlisting>
+</para>
 
-  </sect1>
+<para>
+Note that in the example above the tag <quote>foo_not_void</quote> is preferred
+to <quote>foo_exists</quote> as it may cause confusion when 
+<featurename>exists</featurename> is a feature of the class of 
+<featurename>foo</featurename>. So using systematically <quote>*_not_void</quote> 
+is a good way to avoid such possible confusion.
+</para>
 
-  <sect1>
-    <title>Indexing Clause</title>
+</sect1>
 
-    <para>
-      Each class should have an indexing clause at the top of the file
-      which looks like that:
-    </para>
+<sect1 id="indexing_clause"><title>Indexing Clause</title>
 
-    <programlisting>
+<para>
+Each class should have an indexing clause at the top of the file which looks like 
+that:
+</para>
+
+<para>
+<programlisting>
 indexing
+<text>
+_   </text>description:
+<text>
+_   _   </text>"Short description of the class"
+<text>
+_   </text>library:    "Gobo Eiffel Lexical Library"
+<text>_   </text>author:     "Eric Bezault &lt;ericb@gobosoft.com&gt;"
+<text>_   </text>copyright:  "Copyright (c) 2000, Eric Bezault and others"
+<text>_   </text>license:    "Eiffel Forum License v2 (see forum.txt)"
+<text>_   </text>date:       "$Date$"
+<text>_   </text>revision:   "$Revision$"
+</programlisting>
+</para>
 
-_   description:
+<para>
+Put a short description of the class in the <quote>description</quote> field.
+Replace <quote>Lexical</quote> in the <quote>library</quote> field by the name 
+of your library. Replace <quote>Eric Bezault</quote> by your name in the 
+<quote>author</quote> and <quote>copyright</quote> fields and put your e-mail 
+address in the <quote>author</quote> field. The fields <quote>date</quote> and 
+<quote>revision</quote> are automatically expanded by <link linkend="cvs">CVS</link>.
+</para>
 
-_   _   "Short description of the class"
+</sect1>
 
-_   library:    "Gobo Eiffel Lexical Library"
-_   author:     "Eric Bezault &lt;ericb@gobosoft.com>"
-_   copyright:  "Copyright (c) 2000, Eric Bezault and others"
-_   license:    "Eiffel Forum License v2 (see forum.txt)"
-_   date:       "$Date$"
-_   revision:   "$Revision$"
-    </programlisting>
+<sect1 id="header_comments"><title>Header Comments</title>
 
-    <para>
-      Put a short description of the class in the
-      <tagname>description</tagname> field.  Replace "Lexical" in the
-      <tagname>library</tagname> field by the name of your
-      library. Replace "Eric Bezault" by your name in the
-      <tagname>author</tagname> and <tagname>copyright</tagname>
-      fields and put your e-mail address in the
-      <tagname>author</tagname> field.  The fields <tagname>date</tagname> and
-      <tagname>revision</tagname> are automatically expanded by CVS.
-    </para>
+<para>
+Every feature and feature clause should have a header comment such as:
+</para>
 
-  </sect1>
+<para>
+<programlisting>
+feature <comment>Access</comment>
+<text>
+_   </text><featurename>title</featurename>: <classname>STRING</classname>
+<text>_   _   _   </text><comment>Title displayed in the title bar</comment>
+<text>
+</text>feature <comment>Setting</comment>
+<text>
+_   </text><featurename>set_title</featurename> (<argument>a_title</argument>: like <featurename>title</featurename>) is
+<text>_   _   _   </text><comment>Set <featurename>title</featurename> to <argument>a_title</argument>.</comment>
+<text>_   _   </text>require
+<text>_   _   _   </text>a_title_not_void: <argument>a_title</argument> /= Void
+<text>_   _   </text>do
+<text>_   _   _   </text><assign><target><featurename>title</featurename></target>
+				<expression><argument>a_title</argument></expression></assign>
+<text>_   _   </text>ensure
+<text>_   _   _   </text>title_set: <equal><expression><featurename>title</featurename></expression>
+					<expression><argument>a_title</argument></expression></equal>
+<text>_   _   </text>end
+</programlisting>
+</para>
 
-  <sect1>
-    <title>Header Comments</title>
+<para>
+(Borrow guidelines to write good header comments from OOSC2 section 26.4 
+page 886-888.)
+</para>
 
-    <para>
-      Every feature and feature clause should have a header comment
-      such as:
-    </para>
+</sect1>
 
-    <programlisting>
-feature -- Access
+<sect1 id="free_comments"><title>Free Comments</title>
 
-_   title: STRING
-_   _   _   -- Title displayed in the title bar
+<para>
+They should give useful information and not just paraphrase the software text. 
+They should appear on the line before the instruction(s) to be explained and 
+should have one more indentation level to the right than the instruction(s).
+</para>
 
-feature -- Setting
+</sect1>
 
-_   set_title (a_title: like title) is
-_   _   _   -- Set `title' to `a_title'.
-_   _   require
-_   _   _   a_title_not_void: a_title /= Void
-_   _   do
-_   _   _   title := a_title
-_   _   ensure
-_   _   _   title_set: title = a_title
-_   _   end
-    </programlisting>
+<sect1 id="semicolons"><title>Semicolons</title>
 
-    <para>
-      (Borrow guidelines to write good header comments from
-      OOSC2 section 26.4 page 886-888.)
-    </para>
+<para>
+Semicolons are optional in Eiffel. For consistency reason, they should not be 
+used in the <projectname>Gobo Eiffel</projectname> classes. The only places where 
+they are used are:
 
-  </sect1>
+<itemizedlist>
+	<listitem><para>to separate formal arguments of routines:
+		<informalexample><programlisting>
+<featurename>f</featurename> (<argument>a_foo</argument>: <classname>FOO</classname>; <argument>a_bar</argument>: <classname>BAR</classname>) is</programlisting></informalexample>
+	</para></listitem>
+	
+	<listitem><para>to separate several instructions on the same line, 
+		although this programming style is not recommended:
+		<informalexample><programlisting>
+<featurecall>
+	<featurename>print</featurename>
+	<arguments><argument>"Hello "</argument></arguments>
+</featurecall>; <featurecall>
+	<featurename>print</featurename> 
+	<arguments><argument><featurecall>
+		<target><featurename>you</featurename></target>
+		<featurename>name</featurename></featurecall></argument></arguments>
+</featurecall></programlisting></informalexample>
+	</para></listitem>
 
-  <sect1>
-    <title>Free Comments</title>
+	<listitem><para>to remove parsing ambiguity:
+		<informalexample><programlisting>
+<featurecall>
+	<target><featurename>foo</featurename></target>
+	<featurename>bar</featurename></featurecall>; <featurecall>
+<target>(<featurename>baz</featurename>)</target>
+<featurename>do_something</featurename></featurecall></programlisting></informalexample>
+		
+	</para></listitem>	
+	<listitem><para><ulink url="http://smarteiffel.loria.fr">SmartEiffel</ulink> 
+		emits a warning when semicolons are missing in the Export 
+		subclause of the Feature_adaptation clause. Semicolons can be 
+		added here in order to keep SmartEiffel quiet.
+	</para></listitem>
+</itemizedlist>
 
-    <para>
-      They should give useful information and not just paraphrase
-      the software text. They should appear on the line before
-      the instruction(s) to be explained and should have one
-      more indentation level to the right than the instruction(s).
-    </para>
+</para>
 
-  </sect1>
+</sect1>
 
-  <sect1>
-    <title>Semicolons</title>
+<sect1 id="exceptions"><title>Exceptions</title>
 
-    <para>
-      Semicolons are optional in Eiffel. For consistency reason,
-      they should not be used in the Gobo Eiffel classes. The
-      only places where they are used are:
+<para>
+Exceptions should only be raised when an unexpected behavior occurs. Reading an 
+integer from the standard input when the user actually typed <quote>hello</quote>, 
+or trying to open a file in read mode when the file does not exist (it could just 
+have been deleted) are not considered as unexpected behaviors in my point of view.
+</para>
 
-      <itemizedlist>
-        <listitem>
-          <para>
-            to separate formal arguments of routines:
-          </para>
+<para>
+Also raising exceptions in the creation routine should be avoided since it is not 
+clear (unless I'm proven otherwise) that ETL describes precisely what should 
+happen in that particular case. It is preferred to properly create the objects 
+and  then call the routines which may raise the exception.
+</para>
 
-          <programlisting>
-       f (a_foo: FOO; a_bar: BAR) is
-          </programlisting>
-        </listitem>
-        <listitem>
-          <para>
-            to separate several instructions on the same line,
-            although this programming style is not recommended:
-          </para>
+<para>
+Routines which may raise exceptions should make it clear in their header comment. 
+(There is no need to report the fact that a No_more_memory exception can be 
+raised in each routine creating objects though ;-))
+</para>
 
-          <programlisting>
-       print ("Hello "); print (you.name)
-          </programlisting>
-        </listitem>
-        <listitem>
-          <para>
-            to remove parsing ambiguity:
-          </para>
-
-          <programlisting>
-            foo.bar;
-            (baz).do_something
-          </programlisting>
-        </listitem>
-        <listitem>
-          <para>
-            SmartEiffel emits a warning when semicolons are missing
-            in the Export subclause of the Feature_adaptation clause.
-            Semicolons can be added here in order to keep SmartEiffel
-            quiet.
-          </para>
-        </listitem>
-      </itemizedlist>
-    </para>
-
-  </sect1>
-
-  <sect1>
-    <title>Exceptions</title>
-
-    <para>
-      Exceptions should only be raised when an unexpected behavior
-      occurs. Reading an integer from the standard input when the user
-      actually typed "hello", or trying to open a file in read mode
-      when the file does not exist (it could just have been deleted)
-      are not considered unexpected behaviors by Eiffel programmers.
-    </para>
-
-    <para>
-      Also raising exceptions in the creation routine should be
-      avoided since it is not clear (unless I'm proven otherwise)
-      that ETL describes precisely what should happen in that
-      particular case. It is preferred to properly create the
-      objects and then call the routines which may raise the
-      exception.
-    </para>
-
-    <para>
-      Routines which may raise exceptions should make it clear
-      in their header comment. (There is no need to report the
-      fact that a No_more_memory exception can be raised in each
-      routine creating objects though ;-))
-    </para>
-
-  </sect1>
+</sect1>
 
 </chapter>

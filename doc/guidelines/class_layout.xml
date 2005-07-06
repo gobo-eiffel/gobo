@@ -3,9 +3,8 @@
 <!--
 	description:
 
-		"Gobo Eiffel Developer Guidelines class layout"
+		"Class Layout"
 
-	library: "Gobo Eiffel Developer Guidelines"
 	copyright: "Copyright (c) 2004, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -13,136 +12,163 @@
 
 -->
 
-<chapter id="class_layout">
-	<title>Class Layout</title>
+<chapter id="guidelines/class_layout">
+<chapterinfo>
+	<copyright>
+		<year>2001-2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>9 March 2005</date>
+</chapterinfo>
 
-  <sect1>
-    <title>Indentations</title>
+<title>Class Layout</title>
 
-    <para>
-      Indentations from the left margin should be made up of tabs.
-      Please to not use space characters as mixing spaces and tabs
-      gives ugly results when people use different sizes for tabs.
-      Throughout this documentation tabs will be represented by an
-      underscore followed by three spaces in order to make them
-      clearly visible on the page. Here is a example:
-    </para>
+<sect1 id="indentations"><title>Indentations</title>
 
-    <programlisting>
-_   set_foo (a_foo: like foo) is
-_   _   _   -- Set `foo' to `a_foo'.
-_   _   require
-_   _   _   a_foo_not_void: a_foo /= Void
-_   _   do
-_   _   _   foo := a_foo
-_   _   ensure
-_   _   _   foo_set: foo = a_foo
-_   _   end
-    </programlisting>
+<para>
+Indentations from the left margin should be made up of tabs. Please to not use 
+space characters as mixing spaces and tabs gives ugly results when people use 
+different sizes for tabs. Throughout this documentation tabs will be represented 
+by an underscore followed by three spaces in order to make them clearly visible 
+on the page. Here is a example:
+</para>
 
-    <para>
-      Some text editors provide a means similiar to the one described
-      above in order to make tabs visible. It is recommended that you
-      enable such facility if you use one of those editors.
-    </para>
+<para>
+<programlisting>
+<text>_   </text><featurename>set_foo</featurename> (<argument>a_foo</argument>: like <featurename>foo</featurename>) is
+<text>_   _   _   </text><comment>Set <featurename>foo</featurename> to <argument>a_foo</argument>.</comment>
+<text>_   _   </text>require
+<text>_   _   _   </text>a_foo_not_void: <argument>a_foo</argument> /= Void
+<text>_   _   </text>do
+<text>_   _   _   </text><assign><target><featurename>foo</featurename></target>
+			<expression><argument>a_foo</argument></expression></assign>
+<text>_   _   </text>ensure
+<text>_   _   _   </text>foo_set: <equal><expression><featurename>foo</featurename></expression>
+					<expression><argument>a_foo</argument></expression></equal>
+<text>_   _   </text>end
+</programlisting>
+</para>
 
-  </sect1>
+<para>
+Some text editors provide a means similar to the one described above in order to 
+make tabs visible. It is recommended that you enable such facility if you use one 
+of those editors.
+</para>
 
-  <sect1>
-    <title>General Layout</title>
+</sect1>
 
-    <para>
-      Here is how a class text should look like:
-    </para>
+<sect1 id="general_layout"><title>General Layout</title>
 
-    <programlisting>
+<para>
+Here is how a class text should look like:
+</para>
+
+<para>
+
+<programlisting>
 indexing
+<text>
+_   </text>description:
+<text>
+_   _   </text>"Short description of the class"
+<text>
+_   </text>library:    "Gobo Eiffel Lexical Library"
+<text>_   </text>author:     "Eric Bezault &lt;ericb@gobosoft.com&gt;"
+<text>_   </text>copyright:  "Copyright (c) 2000, Eric Bezault and others"
+<text>_   </text>license:    "Eiffel Forum License v2 (see forum.txt)"
+<text>_   </text>date:       "$Date$"
+<text>_   </text>revision:   "$Revision$"
+<text>
+</text>class <classname>BAR</classname> [G -> <classname>TOTO</classname>]
+<text>
+</text>inherit
+<text>
+_   </text><classname>BAZ</classname>
+<text>_   _   </text>rename
+<text>_   _   _   </text><featurename>oof</featurename> as <featurename>foo</featurename>,
+<text>_   _   _   </text><featurename>f</featurename> as <featurename>g</featurename>
+<text>_   _   </text>redefine
+<text>_   _   _   </text>foo, bar
+<text>_   _   </text>end
+<text>
+</text>creation
+<text>
+_   </text><featurename>make</featurename>, <featurename>make_from_string</featurename>
+<text>
+</text>feature {<classname>NONE</classname>} <comment>Initialization</comment>
+<text>
+_   </text><featurename>make</featurename> (<argument>a_foo</argument>: <classname>FOO</classname>) is
+<text>_   _   _   </text><comment>Create a new bar.</comment>
+<text>_   _   </text>require
+<text>_   _   _   </text>a_foo_not_void: <argument>a_foo</argument> /= Void
+<text>_   _   </text>do
+<text>_   _   _   </text><featurecall>
+				<featurename>set_foo</featurename>
+				<arguments><argument>a_foo</argument></arguments>
+			</featurecall>
+<text>_   _   </text>ensure
+<text>_   _   _   </text>foo_set: <equal><expression><featurename>foo</featurename></expression>
+					<expression><argument>a_foo</argument></expression></equal>
+<text>_   _   </text>end
+<text>
+_   </text><featurename>make_from_string</featurename> (<argument>a_string</argument>: <classname>STRING</classname>) is
+<text>_   _   _   </text><comment>Create a new bar from <argument>a_string</argument>.</comment>
+<text>_   _   </text>require
+<text>_   _   _   </text>a_string_not_void: <argument>a_string</argument> /= Void
+<text>_   _   </text>do
+<text>_   _   _   </text>create <featurecall>
+					<target><featurename>foo</featurename></target>
+					<featurename>make_from_string</featurename> 
+					<arguments><argument>a_string</argument></arguments>
+				</featurecall>
+<text>_   _   </text>end
+<text>
+</text>feature <comment>Access</comment>
+<text>
+_   </text><featurename>foo</featurename>: <classname>FOO</classname>
+<text>_   _   _   </text><comment>Foo</comment>
+<text>
+</text>feature <comment>Setting</comment>
+<text>
+_   </text><featurename>set_foo</featurename> (<argument>a_foo</argument>: like <featurename>foo</featurename>) is
+<text>_   _   _   </text><comment>Set <featurename>foo</featurename> to <argument>a_foo</argument>.</comment>
+<text>_   _   </text>require
+<text>_   _   _   </text>a_foo_not_void: <argument>a_foo</argument> /= Void
+<text>_   _   </text>do
+<text>_   _   _   </text><assign><target><featurename>foo</featurename></target>
+				<expression><argument>a_foo</argument></expression></assign>		
+<text>_   _   </text>ensure
+<text>_   _   _   </text>foo_set: <equal><expression><featurename>foo</featurename></expression>
+					<expression><argument>a_foo</argument></expression></equal>
+<text>_   _   </text>end
+<text>
+</text>invariant
+<text>
+_   </text>foo_not_void: <featurename>foo</featurename> /= Void
+<text>
+</text>end
+</programlisting>
 
-_   description:
+</para>
 
-_   _   "Short description of the class"
+<para>
+Apart from the indentation, please notice that there is one and only one empty 
+line between each top-level construct of the class, and also between features in
+feature clauses.
+</para>
 
-_   library:    "Gobo Eiffel Lexical Library"
-_   author:     "Eric Bezault &lt;ericb@gobosoft.com>"
-_   copyright:  "Copyright (c) 2000, Eric Bezault and others"
-_   license:    "Eiffel Forum License v2 (see forum.txt)"
-_   date:       "$Date$"
-_   revision:   "$Revision$"
+<para>
+(Borrow the guidelines from OOSC2 section 26.5 page 891. Note that contrary to 
+the guidelines in OOSC2, the recommended layout for 
+<projectname>Gobo Eiffel</projectname> classes in to put the class name on the 
+same line as the <constructname>class</constructname> keyword 
+&#x2014; see class <classname>BAR</classname> above.)
+</para>
 
-class BAR [G -> TOTO]
-
-inherit
-
-_   BAZ
-_   _   rename
-_   _   _   oof as foo,
-_   _   _   f as g
-_   _   redefine
-_   _   _   foo, bar
-_   _   end
-
-creation
-
-_   make, make_from_string
-
-feature {NONE} -- Initialization
-
-_   make (a_foo: FOO) is
-_   _   _   -- Create a new bar.
-_   _   require
-_   _   _   a_foo_not_void: a_foo /= Void
-_   _   do
-_   _   _   set_foo (a_foo)
-_   _   ensure
-_   _   _   foo_set: foo = a_foo
-_   _   end
-
-_   make_from_string (a_string: STRING) is
-_   _   _   -- Create a new bar from `a_string'.
-_   _   require
-_   _   _   a_string_not_void: a_string /= Void
-_   _   do
-_   _   _   !! foo.make_from_string (a_string)
-_   _   end
-
-feature -- Access
-
-_   foo: FOO
-_   _   _   -- Foo
-
-feature -- Setting
-
-_   set_foo (a_foo: like foo) is
-_   _   _   -- Set `foo' to `a_foo'.
-_   _   require
-_   _   _   a_foo_not_void: a_foo /= Void
-_   _   do
-_   _   _   foo := a_foo
-_   _   ensure
-_   _   _   foo_set: foo = a_foo
-_   _   end
-
-invariant
-
-_   foo_not_void: foo /= Void
-
-end -- class BAR
-    </programlisting>
-
-    <para>
-      Apart from the indentation, please notice that there is one and
-      only one empty line between each top-level construct of the
-      class, and also between features in feature clauses.
-    </para>
-
-    <para>
-      (Borrow the guidelines from OOSC2 section 26.5 page 891.  Note
-      that contrary to the guidelines in OOSC2, the recommended layout
-      for Gobo Eiffel classes in to put the class name on the same
-      line as the <constructname>class</constructname> keyword &#x2014; see
-      class <classname>BAR</classname> above.)
-    </para>
-
-  </sect1>
+</sect1>
 
 </chapter>
