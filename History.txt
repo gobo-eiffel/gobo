@@ -105,7 +105,7 @@ Version ?
 	  as frozen in SE 2.2b1.
 
 	Gobo Eiffel Math/Decimal Library:
-	
+
 	* New library, incorporated from the SAFE project (http://safe.sf.net).
 	* Contains MA_DECIMAL, which provides Decimal floating-point arithmetic, 
 	  with unrounded and integer arithmetic as a subset 
