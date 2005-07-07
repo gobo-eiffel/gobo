@@ -1,4 +1,4 @@
-Version ?
+Version 3.4 - 10 July 2005
 
 	geant:
 

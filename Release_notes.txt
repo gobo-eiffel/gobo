@@ -20,19 +20,11 @@ SE 2.2b1 (SmartEiffel)
 	  consequence of DOUBLE being deprecated in SmartEiffel and
 	  hence not supporting the required features.
 
-SE 2.1 (SmartEiffel)
-
 	* The millisecond part of KL_SYSTEM_CLOCK, DT_SYSTEM_CLOCK and
 	  DT_UTC_SYSTEM_CLOCK may be stuck to zero under Windows.
 
-	* KL_PLATFORM.Double_bits is not supported anymore. This is a 
-	  consequence of DOUBLE being deprecated in SmartEiffel and
-	  hence not supporting the required features.
-
-	* UC_STRING.infix "@" does not work as expected. It works well
-	  with the SE 2.2b and SE 1.0 though. This is the consequence
-	  of the fact that STRING.infix "@" as been marked as frozen in
-	  SE 2.2b1.
+	*  The compiler crashes when compiling gexslt and some of the
+	   XML tests in boost mode with GC included.
 
 	* Although this is perfectly correct Eiffel, SmartEiffel complains about
 	  Eiffel identifiers containing upper-case letters. There is a lot of
@@ -49,6 +41,15 @@ SE 2.1 (SmartEiffel)
 	  warnings will become fatal errors and Gobo will not be able to
 	  support SmartEiffel anymore; this is what already happened
 	  with ANY.same_type).
+
+SE 2.1 (SmartEiffel)
+
+	* Same remarks as with SE 2.2b1 above.
+
+	* UC_STRING.infix "@" does not work as expected. It works well
+	  with the SE 2.2b1 and SE 1.0 though. This is the consequence
+	  of the fact that STRING.infix "@" as been marked as frozen in
+	  SE 2.2b1.
 
 SE 1.0 (SmartEiffel)
 

@@ -17,6 +17,6 @@ inherit
 
 feature -- Constants
 
-	Version_number: STRING is "3.3"
+	Version_number: STRING is "3.4"
 
 end
