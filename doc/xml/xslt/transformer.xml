@@ -55,7 +55,7 @@
   </para>
   <para>
     The compiled stylesheets are re-usable (which is why they are cached). To re-use one, simply call  <featurename>create_new_transformer</featurename>
-    again with a <classname>XM_XSLT_SOURCE</classname> that has the same <exmlsyntax>URI</exmlsyntax>.
+    again with an <classname>XM_XSLT_SOURCE</classname> that has the same <exmlsyntax>URI</exmlsyntax>.
   </para>
   <para>
     However, you should <emphasis>not</emphasis> attempt to run two transformations at once (not even if they involve different stylesheets).

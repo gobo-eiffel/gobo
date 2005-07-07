@@ -72,8 +72,8 @@
 	    against the output from the first transformation.
 	  </para>
 	  <para>
-	    I do have plans to add an extension attribute to <xslt>xsl:output/xsl:result-document</xslt> so
-	    that you will be able to specify a next transformation to run automatically. But even when this is in place,
+	    I have added an extension attribute to <xslt>xsl:output/xsl:result-document</xslt> so
+	    that you will be able to specify a next transformation to run automatically. But even so,
 	    this option might be useful in some circumstances.
 	  </para>
 	</listitem>
@@ -93,7 +93,7 @@
 	    <xslt>xsl:output</xslt> in the first stylesheet (rather than the last, which is the normal situation). In which
 	    case you could create an emitter based on the initial <xslt>xsl:output</xslt>, and then pass it to this creation
 	    procedure. You would then pass the created transformation result to the last transform in the chain (and use 
-	    <featurename>make_receiver</featurename> for the prevoius steps in the chain).
+	    <featurename>make_receiver</featurename> for the previous steps in the chain).
 	  </para>
 	</listitem>
      </varlistentry>

@@ -133,7 +133,7 @@
 	      the stylesheet.
 	    </para>
 	    <para>
-	      &program_name_cased; has to parse the source document twice. Once to find the processing instructiuon, and again, 
+	      &program_name_cased; has to parse the source document twice. Once to find the processing instruction, and again, 
 	      after the stylesheet has been compiled (as it may contain xsl:preserve-space or xsl:strip-space commands).
 	      Although the first parse is quick (as the processing instruction must occur in the prolog of the XML document), 
 	      this does mean that a stream that can only be read once may not be used with this option.

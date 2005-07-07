@@ -130,7 +130,7 @@
 	      </para>
 	      <para>
 		Next, the example creates the emitter (you will write your emitter in the next step). Typically, it passes through the values for the transformer, the result stream, and
-		the output properties. You will almost certainly need to do the same. It also passes a <classname>XM_XSLT_CHARACTER_MAP_EXPANDER</classname>,
+		the output properties. You will almost certainly need to do the same. It also passes an <classname>XM_XSLT_CHARACTER_MAP_EXPANDER</classname>,
 		which it gets from the helper routine <featurename>character_map_expander</featurename> in
 		<classname>XM_XSLT_EMITTER_FACTORY_ROUTINES</classname>. If you wish to support <xslt>xsl:output</xslt>'s <xslt>use-character-maps</xslt>
 		parameter, then you should do the same. Note that the third parameter to that routine says whether or not the <classname>XM_XSLT_CHARACTER_MAP_EXPANDER</classname>
@@ -146,7 +146,7 @@
 		or <classname>XM_XSLT_HTML_INDENTER</classname>), or write your own (which must be a descendant of <classname>XM_XPATH_PROXY_RECEIVER</classname>).
 	      </para>
 	      <para>
-		Next the example checks whether and <xslt>cdata-section-elements</xslt> have been requested, and if so, adds a <classname>XM_XSLT_CDATA_FILTER</classname>.
+		Next the example checks whether any <xslt>cdata-section-elements</xslt> have been requested, and if so, adds a <classname>XM_XSLT_CDATA_FILTER</classname>.
 		Again, it is up to you whether or not you want to implement this parameter in your method(s). If you chose to do so, then I suggest using the
 		standard filter.
 	      </para>

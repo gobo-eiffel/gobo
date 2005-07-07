@@ -45,7 +45,7 @@
       You can disable the actual catalog lookup by inheriting from  <classname>XM_SHARED_CATALOG_MANAGER</classname>
       and calling <featurecall><featurename>shared_catalog_manager.suppress_catalogs</featurename></featurecall>. In which case
       you will get resolution of the <exmlsyntax>SYSTEM</exmlsyntax> identifier, providing it's URI scheme is one of the registered
-      schemes. By default, only <uri>file</uri> is registered. You can register handlers for additional
+      schemes. By default, only <uri>file</uri> and <uri>data</uri> are registered. You can register handlers for additional
       URI schemes by creating a descendant of <classname>XM_URI_RESOLVER</classname> and passing it as the sole argument to
       <featurecall><featurename>shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme</featurename></featurecall>.
       You can do this even if you don't disable the catalog lookup.
@@ -92,7 +92,7 @@
     <title>The Encoder Factory</title>
     <para>
       The fifth argument is an <classname>XM_XSLT_ENCODER_FACTORY</classname>. This creates
-      output encoders for the various character encoding supported by the library.
+      output encoders for the various character encodings supported by the library.
     </para>
     <para>
       If you need to create output files in an encoding which is <emphasis>not</emphasis> supported
@@ -139,8 +139,7 @@
 	  <listitem>
 	    <para>
 	      Sets the number of digits to be used when performing decimal arithmetic with
-	      XPath expressions. The default is 18 digits, and it may not be set lower than this,
-	      except that a value of zero means infinite precision.
+	      XPath expressions. The default is 18 digits, and it may not be set lower than this.
 	    </para>
 	  </listitem>
 	</varlistentry>

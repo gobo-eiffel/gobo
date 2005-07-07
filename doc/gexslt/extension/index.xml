@@ -122,7 +122,7 @@
 	  <term><exmlsyntax>next-in-chain</exmlsyntax></term>
 	  <listitem>
 	    <para>
-	      TODO
+	      To be documented. (See the programs in $GOBO/test/xml/xslt for an example of how to use it).
 	    </para>
 	  </listitem>
 	</varlistentry>
