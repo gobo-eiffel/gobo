@@ -38,7 +38,7 @@ This document is structured as follows:
 <variablelist>
 	<varlistentry>
 		<term>
-			<ulink url="decimal/index.html">String Formatter</ulink>
+			<ulink url="formatter/index.html">String Formatter</ulink>
 		</term>
 		<listitem><para>
 			Formatting functionalities of the Standard C library 
