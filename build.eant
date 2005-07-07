@@ -26,6 +26,7 @@
 			Install the Gobo Eiffel package.
 		</description>
 
+		<geant file="build.eant" target="install" dir="doc"/>
 		<geant file="build.eant" target="install" dir="library"/>
 		<geant file="build.eant" target="install" dir="src"/>
 		<geant file="build.eant" target="install" dir="example"/>
@@ -83,7 +84,6 @@
 		<delete>
 			<directoryset directory="." include="@(**/CVS)"/>
 		</delete>
-		<delete file="bin/gelint${exe}"/>
 	</target>
 
 	<target name="bootstrap1" depend="init">
@@ -123,8 +123,11 @@
 		<geant file="../src/getest/build.eant" target="clean" dir="bin"/>
 		<geant file="../src/gelint/build.eant" target="compile" dir="bin"/>
 		<geant file="../src/gelint/build.eant" target="clean" dir="bin"/>
+		<geant file="../src/gexslt/build.eant" target="compile" dir="bin"/>
+		<geant file="../src/gexslt/build.eant" target="clean" dir="bin"/>
 		<geant file="build.eant" target="install" dir="example"/>
 		<geant file="build.eant" target="install" dir="test"/>
+		<geant file="build.eant" target="install" dir="doc"/>
 		<geant target="clean"/>
 	</target>
 
