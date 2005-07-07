@@ -13,7 +13,7 @@
 
 -->
 
-<chapter id="guidelines/naming_conventions">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/naming_conventions">
 <chapterinfo>
 	<copyright>
 		<year>2001-2005</year>
@@ -34,7 +34,7 @@ All names appearing in the software, comments, directory names,
 American English.
 </para>
 
-<sect1 id="class_names"><title>Class Names</title>
+<section id="class_names"><title>Class Names</title>
 
 <para>
 In order to avoid class name clashes between different libraries, some Eiffel 
@@ -87,9 +87,9 @@ state <classname>A</classname>utomaton and is used for compiling regular
 expressions.
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="filenames"><title>Filenames</title>
+<section id="filenames"><title>Filenames</title>
 
 <para>
 <ulink url="http://www.object-tools.com/products/VisualEiffel.html">Visual Eiffel</ulink> 
@@ -105,9 +105,9 @@ class followed by the extension <filename>.e</filename>, all in lower case. For
 example file <filename>ds_list.e</filename> contains class <classname>DS_LIST</classname>.
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="cluster_names"><title>Cluster Names</title>
+<section id="cluster_names"><title>Cluster Names</title>
 
 <para>
 Library classes should be organized in clusters in 
@@ -248,9 +248,9 @@ equivalent the clusters with <filename class="directory">gtk</filename> or with
 fact that GTK+ or Motif has been chosen to build the graphical interface for example.
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="feature_names"><title>Feature Names</title>
+<section id="feature_names"><title>Feature Names</title>
 
 <para>
 Feature names should be in lower-case and words should be separated by 
@@ -304,9 +304,9 @@ as in the following example:
 
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="feature_category_names"><title>Feature Category names</title>
+<section id="feature_category_names"><title>Feature Category names</title>
 
 <para>
 All feature clauses should be equipped with a comment, as in the following 
@@ -436,6 +436,6 @@ Here are some examples of feature category names, taken from the
 </blockquote>
 </para>
 
-</sect1>
+</section>
 
 </chapter>

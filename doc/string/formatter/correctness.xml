@@ -12,7 +12,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="string/formatter/correctness">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/formatter/correctness">
 
 <chapterinfo>
 	<copyright>

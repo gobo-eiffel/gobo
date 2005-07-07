@@ -12,7 +12,7 @@
 
 -->
 
-<chapter id="guidelines/compilers">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/compilers">
 <chapterinfo>
 	<copyright>
 		<year>2001-2005</year>
@@ -45,13 +45,13 @@ The currently supported Eiffel compilers are:
 <para>
 <itemizedlist>
     <listitem><para>
-    	<ulink url="http://www.eiffel.com/downloads/index.html#studio">ISE Eiffel 5.4 / 5.5 / 5.6</ulink>
+    	<ulink url="http://www.eiffel.com/downloads/index.html#studio">ISE Eiffel 5.5/5.6</ulink>
     </para></listitem>
     <listitem><para>
-    	<ulink url="http://smarteiffel.loria.fr/general/download.html">SmartEiffel 1.0 / 2.1</ulink>
+    	<ulink url="http://smarteiffel.loria.fr/general/download.html">SmartEiffel 1.0/2.1/2.2b1</ulink>
     </para></listitem>    
     <listitem><para>
-    	<ulink url="http://www.object-tools.com/products/VisualEiffel.html">VisualEiffel 4.1 / 5.0a</ulink>
+    	<ulink url="http://www.object-tools.com/products/VisualEiffel.html">VisualEiffel 5.0b</ulink>
     </para></listitem> 
 </itemizedlist>
 </para>

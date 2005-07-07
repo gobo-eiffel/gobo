@@ -12,7 +12,7 @@
 
 -->
 
-<chapter id="guidelines/programming_style">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/programming_style">
 <chapterinfo>
 	<copyright>
 		<year>2001-2005</year>
@@ -27,7 +27,7 @@
 
 <title>Programming Style</title>
 
-<sect1 id="assertions"><title>Assertions</title>
+<section id="assertions"><title>Assertions</title>
 
 <para>
 Routines should be properly equipped with pre- and postconditions and classes 
@@ -57,9 +57,9 @@ to <quote>foo_exists</quote> as it may cause confusion when
 is a good way to avoid such possible confusion.
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="indexing_clause"><title>Indexing Clause</title>
+<section id="indexing_clause"><title>Indexing Clause</title>
 
 <para>
 Each class should have an indexing clause at the top of the file which looks like 
@@ -92,9 +92,9 @@ address in the <quote>author</quote> field. The fields <quote>date</quote> and
 <quote>revision</quote> are automatically expanded by <link linkend="cvs">CVS</link>.
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="header_comments"><title>Header Comments</title>
+<section id="header_comments"><title>Header Comments</title>
 
 <para>
 Every feature and feature clause should have a header comment such as:
@@ -128,9 +128,9 @@ _   </text><featurename>set_title</featurename> (<argument>a_title</argument>: l
 page 886-888.)
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="free_comments"><title>Free Comments</title>
+<section id="free_comments"><title>Free Comments</title>
 
 <para>
 They should give useful information and not just paraphrase the software text. 
@@ -138,9 +138,9 @@ They should appear on the line before the instruction(s) to be explained and
 should have one more indentation level to the right than the instruction(s).
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="semicolons"><title>Semicolons</title>
+<section id="semicolons"><title>Semicolons</title>
 
 <para>
 Semicolons are optional in Eiffel. For consistency reason, they should not be 
@@ -185,9 +185,9 @@ they are used are:
 
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="exceptions"><title>Exceptions</title>
+<section id="exceptions"><title>Exceptions</title>
 
 <para>
 Exceptions should only be raised when an unexpected behavior occurs. Reading an 
@@ -209,6 +209,6 @@ Routines which may raise exceptions should make it clear in their header comment
 raised in each routine creating objects though ;-))
 </para>
 
-</sect1>
+</section>
 
 </chapter>

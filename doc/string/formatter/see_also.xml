@@ -12,7 +12,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="string/formatter/see_also">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/formatter/see_also">
 
 <chapterinfo>
 	<copyright>
@@ -28,7 +28,7 @@
 
 <title>See Also</title>
 
-<sect1 id="related_resources"><title>Related Resources</title>
+<section id="related_resources"><title>Related Resources</title>
 
 <para>
 The <libraryname>Gobo Eiffel String Formatter Library</libraryname> is based on the
@@ -44,6 +44,6 @@ on Friedrich Dominicus's work, which can be
 from the <ulink url="http://www.eiffelzone.com">Eiffel Zone</ulink> page.
 </para>
 
-</sect1>
+</section>
 
 </chapter>

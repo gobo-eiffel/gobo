@@ -12,7 +12,7 @@
 
 -->
 
-<chapter id="guidelines/documentation">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/documentation">
 <chapterinfo>
 	<copyright>
 		<year>2001-2005</year>

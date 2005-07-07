@@ -12,7 +12,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="string/formatter/index">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/formatter/index">
 
 <chapterinfo>
 	<copyright>
@@ -67,7 +67,7 @@ This documentation is structured as follows:
 			How format correctness is checked.
 		</para></listitem>
 	</varlistentry>
-	
+
 	<varlistentry>
 		<term>
 			<link linkend="scientific_format">Scientific Format</link>
@@ -76,7 +76,7 @@ This documentation is structured as follows:
 			Definition of the scientific format.
 		</para></listitem>
 	</varlistentry>
-	
+
 	<varlistentry>
 		<term>
 			<link linkend="see_also">See Also</link>
@@ -95,7 +95,7 @@ This documentation is structured as follows:
 			License agreement and downloading instructions.
 		</para></listitem>
 	</varlistentry>
-	
+
 </variablelist>
 </blockquote>
 

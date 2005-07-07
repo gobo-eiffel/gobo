@@ -13,7 +13,7 @@
 
 -->
 
-<chapter id="string/formatter/scientific_format">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="string/formatter/scientific_format">
 
 <chapterinfo>
 	<copyright>
@@ -55,7 +55,7 @@ The optional fields, which appear before the type character, control other
 aspects of the formatting:
 </para>
 
-<sect1 id="type_character"><title>Type character</title>
+<section id="type_character"><title>Type character</title>
 
 <para>
 The type character is required. It determines whether the associated parameter is 
@@ -179,9 +179,9 @@ Note that this list can be extended. Also note that only letters between a..z an
 A..Z are legal.
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="flags"><title>Flags</title>
+<section id="flags"><title>Flags</title>
 
 <para>
 Flags are optional character or characters that control justification of output 
@@ -250,9 +250,9 @@ The following flag combinations:
 are not allowed.
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="precision"><title>Minimum width</title>
+<section id="precision"><title>Minimum width</title>
 
 <para>
 The width is an optional number that specifies the minimum number of 
@@ -283,9 +283,9 @@ the truncation of a field; if the formatted parameter is wider than the field
 width, the field expands to contain all characters.
 </para>
 
-</sect1>
+</section>
 
-<sect1 id="precision"><title>Precision</title>
+<section id="precision"><title>Precision</title>
 
 <para>
 The third optional field of the format specification is the precision 
@@ -393,6 +393,6 @@ The table below details how precision affects type:
 	</tgroup>
 </table>
 
-</sect1>
+</section>
 
 </chapter>

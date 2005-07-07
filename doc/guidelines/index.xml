@@ -11,7 +11,7 @@
 	revision: "$Revision$"
 -->
 
-<chapter id="guidelines/index">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="guidelines/index">
 <chapterinfo>
 	<copyright>
 		<year>2001-2005</year>
@@ -62,7 +62,7 @@ This document is structured as follows:
 		<listitem><para>
 			The version of the Eiffel Language that must be used.
 		</para></listitem>
-	</varlistentry>	
+	</varlistentry>
 
 	<varlistentry>
 		<term>
@@ -71,7 +71,7 @@ This document is structured as follows:
 		<listitem><para>
 			The naming conventions that code must follow.
 		</para></listitem>
-	</varlistentry>	
+	</varlistentry>
 	
 	<varlistentry>
 		<term>
@@ -80,7 +80,7 @@ This document is structured as follows:
 		<listitem><para>
 			How class texts must be formatted.
 		</para></listitem>
-	</varlistentry>	
+	</varlistentry>
 	
 	<varlistentry>
 		<term>
@@ -89,7 +89,7 @@ This document is structured as follows:
 		<listitem><para>
 			The programming style that must be used.
 		</para></listitem>
-	</varlistentry>	
+	</varlistentry>
 	
 	<varlistentry>
 		<term>
@@ -98,7 +98,7 @@ This document is structured as follows:
 		<listitem><para>
 			How to write documentation.
 		</para></listitem>
-	</varlistentry>	
+	</varlistentry>
 	
 	<varlistentry>
 		<term>
@@ -107,7 +107,7 @@ This document is structured as follows:
 		<listitem><para>
 			The kind of examples that must be provided.
 		</para></listitem>
-	</varlistentry>	
+	</varlistentry>
 	
 	<varlistentry>
 		<term>
@@ -116,7 +116,7 @@ This document is structured as follows:
 		<listitem><para>
 			How to write a test suite.
 		</para></listitem>
-	</varlistentry>	
+	</varlistentry>
 	
 	<varlistentry>
 		<term>
@@ -125,7 +125,7 @@ This document is structured as follows:
 		<listitem><para>
 			How to use the CVS Repository.
 		</para></listitem>
-	</varlistentry>	
+	</varlistentry>
 	
 	<varlistentry>
 		<term>
@@ -134,7 +134,7 @@ This document is structured as follows:
 		<listitem><para>
 			The installation files to provide.
 		</para></listitem>
-	</varlistentry>	
+	</varlistentry>
 	
 	<varlistentry>
 		<term>
