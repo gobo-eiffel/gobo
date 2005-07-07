@@ -13,7 +13,8 @@
 	<option name="console_application" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
-		<option name="garbage_collector" value="internal"/>
+			<!-- SE 2.1 and 2.2b1 crash when compiling gexslt in boost mode with GC -->
+		<option name="garbage_collector" value="none"/>
 		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
 		<option name="inlining" value="all"/>
 	</option>
@@ -32,10 +33,6 @@
 		<option name="case_insensitive" value="false"/>
 		<option name="split" value="true"/>
 	</option>
-	<option name="exception_trace" value="true"/>
-	<option name="trace" value="false"/>
-	<option name="profile" value="false"/>
-	<!-- <option name="split" value="false"/> -->
 
 	<!-- <option name="debug_tag" value="XSLT content output"/> -->
 	<!-- <option name="debug_tag" value="XPath content emitter"/> -->
@@ -45,7 +42,7 @@
 	<!-- <option name="debug_tag" value="XSLT key function"/> -->
 	<!-- <option name="debug_tag" value="XPath expression factory"/>-->
 	<!-- <option name="debug_tag" value="XSLT template rules"/> -->
-	<!--<option name="debug_tag" value="XSLT pattern parsing"/>-->
+	<!-- <option name="debug_tag" value="XSLT pattern parsing"/>-->
 	<!-- <option name="debug_tag" value="XSLT memo function"/>-->
 
 	<cluster name="gexslt_ve" location="." if="${GOBO_EIFFEL}=ve"/>
