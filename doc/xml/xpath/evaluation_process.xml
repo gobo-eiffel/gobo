@@ -1,0 +1,329 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"A description of the evaluation process"
+
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xpath_stand_alone_evaluation_process">
+ <chapterinfo>
+    <copyright>
+      <year>2004</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Thursday, April 15th, 2004</date>
+  </chapterinfo>
+  <title>A description of the evaluation process</title>
+  <para>This chapter describes the process by which the evaluator turns a
+  text string representing an XPath expression, into a sequence of items. This description should act
+  as a guide for anyone interested in examining the code, and that includes the author (I'm writing it right now
+  to help me check I am being consistent throughout).
+  </para>
+  <para>Conceptually, the process proceeds in a series of phases. In practice, there 
+  is some limited overlapping of these phases. To get a good picture of how an
+  XPath evaluation is supposed to work, see <ulink url="http://www.w3.org/TR/xpath20/#id-processing-model">XML Path Language (XPath) 2.0</ulink>.
+  </para>
+  <para>The steps taken by the Gobo XPath evaluation engine are as follows:
+  <itemizedlist>
+    <listitem><para><ulink url="#xpath_stand_alone_evaluation_process_parsing">Parsing the expression text.</ulink></para></listitem>
+    <listitem><para><ulink url="#xpath_stand_alone_evaluation_process_simplifying">Simplifying the parsed expression.</ulink></para></listitem>
+    <listitem><para><ulink url="#xpath_stand_alone_evaluation_process_analysis">Performing static type checking and optimization.</ulink></para></listitem>
+    <listitem><para><ulink url="#xpath_stand_alone_evaluation_process_evaluation">Evaluating the expression.</ulink></para></listitem>
+  </itemizedlist>
+  </para>
+  <section>
+    <title>Items, Nodes, Values, Sequences, Iterators and Expressions</title>
+    <para>The input to the evaluation process is a text string, representing an XPath Expression, and a Context Item.
+    First then, some definitions:
+    <variablelist>
+      <varlistentry>
+	<term>Sequence</term>
+	<listitem>
+	  <para>The result of evaluation is a sequence of zero or more <emphasis role="term">Item</emphasis>s. A sequence is a <emphasis role="term">Value</emphasis>, 
+	  but in the data model, it can also be represented as an <emphasis role="term">Iterator</emphasis>.
+	  </para>
+	  <para>A sequence of one item is completely interchangeable with the item itself.</para>
+	  <para>The class for a sequence is <classname>XM_XPATH_SEQUENCE_VALUE</classname>.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>Item</term>
+	<listitem>
+	  <para>The basic unit of information coming out of the evaluation process. An item is either an <emphasis role="term">Atomic Value</emphasis>
+	  or else it is a <emphasis role="term">Node</emphasis>.
+	  </para>
+	  <para>The class for an item is <classname>XM_XPATH_ITEM</classname>.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>Node</term>
+	<listitem>
+	  <para>A node is a constituent of the XML input tree. It is one of:
+	  <itemizedlist>
+	    <listitem><para>Document</para></listitem>
+	    <listitem><para>Element</para></listitem>
+	    <listitem><para>Attribute</para></listitem>
+	    <listitem><para>Namespace</para></listitem>
+	    <listitem><para>Text</para></listitem>
+	    <listitem><para>Comment</para></listitem>
+	    <listitem><para>Processing instruction</para></listitem>
+	  </itemizedlist>
+	  </para>
+	  <para>The class for a node is <classname>XM_XPATH_NODE</classname>.</para>
+	  <para>The architecture supports multiple implementations of the data model's tree structure. The only 
+	  implementations at present are the standard tree implementation and the tiny tree implementation. In these implementation, the 
+	  class for a node is <classname>XM_XPATH_TREE_NODE</classname> and <classname>XM_XPATH_TINY_NODE</classname> respectively.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>Value</term>
+	<listitem>
+	  <para>A value is the result of evaluating an <emphasis role="term">Expression</emphasis>, but
+	  it is also an expression in it's own right. However, it never has sub-expressions.
+	  </para>
+	  <para>A value can be regarded as a <emphasis role="term">Sequence</emphasis>, although sometimes
+	  it is a sequence of length one, or even zero.
+	  </para>
+	  <para>The class for a value is <classname>XM_XPATH_VALUE</classname>.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>Atomic Value</term>
+	<listitem>
+	  <para>An atomic value is a value consisting of a single <emphasis role="term">Item</emphasis>.</para>
+	  <para>The class for an atomic value is <classname>XM_XPATH_ATOMIC_VALUE</classname>.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>Expression</term>
+	<listitem>
+	  <para>An expression is the basic building block of Xpath. 
+	  Expressions can be nested with full generality (<featurename>sub_expressions</featurename> lists the sub-expressions). Expressions evaluate
+	  to a <emphasis role="term">Sequence</emphasis> of <emphasis role="term">Item</emphasis>s.
+	  </para>
+	  <para>The class for an expression is <classname>XM_XPATH_EXPRESSION</classname>.</para>
+	  <para>An expression is either a <emphasis role="term">Value</emphasis> or an instance of
+	  <classname>XM_XPATH_COMPUTED_EXPRESSION</classname>.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>Iterator</term>
+	<listitem>
+	  <para>An iterator is a construct within the programming model for traversing a <emphasis role="term">Sequence</emphasis>
+	  of <emphasis role="term">Item</emphasis>s.
+	  </para>
+	  <para>The class for an iterator is <classname>XM_XPATH_SEQUENCE_ITERATOR</classname>.</para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    </para>
+  </section>
+  <section id="xpath_stand_alone_evaluation_process_parsing">
+    <title>Parsing the expression text</title>
+    <para><classname>XM_XPATH_EXPRESSION_FACTORY</classname> has a routine <featurename>make_expression</featurename>
+    which takes a <classname>STRING</classname> (holding the text of the expression to be parsed) and an <classname>XM_XPATH_STATIC_CONTEXT</classname>.
+    The result of calling <featurename>make_expression</featurename> is an optimized <classname>XM_XPATH_EXPRESSION</classname> in <featurename>parsed_expression</featurename>. If a parse error
+    has occured though, this will be Void. In this case <featurename>is_parse_error</featurename> will be set to True, 
+    and <featurename>parsed_error_value</featurename> will be set to an instance of <classname>XM_XPATH_ERROR_VALUE</classname>.
+    <warning>A side-effect is that functions and variables may well be bound in the static context.</warning>
+    </para>
+    <para>Setting the debug-key "XPath expression factory" will cause <featurename>make_expression</featurename> to print
+    a textual representation of the expression tree to the standard error stream, immediately after parsing is sucessfull.
+    </para>
+  </section>
+  <section id="xpath_stand_alone_evaluation_process_simplifying">
+    <title>Simplifying the parsed expression</title>
+    <para>If parsing is sucessful <classname>XM_XPATH_EXPRESSION_FACTORY</classname>'s <featurename>make_expression</featurename> routine goes on to
+    call <featurename>simplify</featurename> on the expression. This performs context-independent optimizations on the expression
+    and (recusively) it's sub-expressions. Current may be marked
+    in error (So the caller of <featurename>simplify</featurename> <emphasis>must</emphasis> test <featurename>is_error</featurename>. 
+    If it is True, you can access <featurename>error_value</featurename>).
+    </para>
+    <para>Note that if a simplification error occurs, <featurename>make_expression</featurename> treats it the same way as a parse error.</para>
+    <para>Setting the debug-key "XPath expression factory" will cause <featurename>make_expression</featurename> to print
+    a textual representation of the simplified expression tree to the standard error stream, immediately after simplification.
+    </para>
+
+  </section>
+  <section id="xpath_stand_alone_evaluation_process_analysis">
+    <title>Performing static type checking and context-dependent optimizations</title>
+    <para>After the simplication process is complete (the picture here is itself simplified, as <featurename>simplify</featurename>
+    may itself be called by later phases, especially if static analysis is unable to completely determine the type of an
+    operand), the next phase is static analysis of the expression, to determine the types of all expressions. This is accomplished by
+    calling <featurename>analyze</featurename> on the expression.
+    </para>
+    <para><featurename>Analyze</featurename> takes an <classname>XM_XPATH_STATIC_CONTEXT</classname> as it's sole parameter. <warning>It may change the static context (?? check this some time).</warning>
+    As a command, is quite likely change the expression in one of several ways: 
+    <itemizedlist>
+      <listitem>
+	<para>It may mark Current as being in error (this is the chief purpose of static analysis). This is achieved by calling either <featurename>set_last_error</featurename> or 
+	<featurename>set_last_error_from_string</featurename>. Callers of <featurename>analyze</featurename> <emphasis>must</emphasis>
+	check <featurename>is_error</featurename> afterwards.
+	</para>
+      </listitem>
+      <listitem>
+	<para>It may promote sub-expressions, via <featurename>promoted_expression</featurename>, or alter or replace them in some other way.</para>
+      </listitem>
+      <listitem>
+	<para>It may replace Current with an alternative expression. In this case <featurename>was_expression_replaced</featurename>
+	is set to True, and <featurename>replacement_expression</featurename> is set. Callers of <featurename>analyze</featurename> <emphasis>must</emphasis>
+	check for this.
+	</para>
+	<para>Replacement may be done, for instance, because static analysis can show that the expression is in fact a constant value. In that case
+	the expression can be pre-evaluated.</para>
+	<para>Another reason for replacement is exactly the opposite: static analysis is unable to determine if the type or cardinality of the
+	expression is correct or incorrect. In this case, the expression is wrapped in an <classname>XM_XPATH_ITEM_CHECKER</classname> or
+	an <classname>XM_XPATH_CARDINALITY_CHECKER</classname> respectively. These classes postpone the checks until evaluation time.
+	</para>
+      </listitem>
+    </itemizedlist>
+    </para>
+    <para>Setting the debug-key "XPath evaluator" will cause <featurename>evaluate</featurename> to print
+    a textual representation of the expression tree to the standard error stream, immediately after static analysis is sucessfull.
+    </para>
+  </section>
+  <section id="xpath_stand_alone_evaluation_process_evaluation">
+    <title>Evaluating the expression</title>
+    <para>If static analysis is sucessfull, <featurename>evaluate</featurename> proceeds to the evaluation stage. <classname>XM_XPATH_EXPRESSION</classname>
+    has no fewer than six routines for performing evaluation. All of them take an <classname>XM_XPATH_CONTEXT</classname> as sole parameter, though this
+    may be Void on occaisions. If it is not Void, then it is liable to be altered by any of these routines (as the <featurename>context_item</featurename>
+    is liable to change), so none of them are pure functions.
+    <itemizedlist>
+      <listitem>
+	<para><featurename>Effective_boolean_value</featurename> is called whenever an
+	xs:boolean is expected. It always returns an <classname>XM_XPATH_BOOLEAN_VALUE</classname>, but the caller
+	<emphasis>must</emphasis> check <featurename>is_error</featurename> upon return.
+	<warning>TODO: pre-condition of analyzed - check if this is always checked for, as other
+	evaluation routines cannot have it (because of cardinality-checker/item-checker)</warning>
+	</para>
+	<para>This is a function, so it does not change Current (but may change the evaluation context).</para>
+      </listitem>
+      <listitem>
+	<para><featurename>Evaluate_item</featurename> is called when a single <classname>XM_XPATH_ITEM</classname> is expected,
+	although there exists the possibility of an empty sequence - denoted by Void.
+	</para>
+	<para>The result of evaluation is set in <featurename>last_evaluated_item</featurename>. This is Void if Current evaluates without
+	error to an empty sequence.
+	</para>
+	<para>If an error is detected, then <featurename>last_evaluated_item</featurename>'s <featurename>is_error</featurename> will
+	be set to True. Callers of <featurename>evaluate_item</featurename> <emphasis>must</emphasis> check for this possibility (after first checking for Void).
+	The error value can be accessed via <featurename>error_value</featurename>. A class <classname>XM_XPATH_INVALID_ITEM</classname>
+	is available for returning an error.
+	</para>
+      </listitem>
+      <listitem>
+	<para><featurename>Evaluate_as_string</featurename> is used when it is known that Current can be evaluated
+	to a single string (or an empty sequence, which can be represented by a zero-length string).
+	</para>
+      </listitem>
+      <listitem>
+	<para><featurename>Iterator</featurename> is the usual routine called for evaluating a sequence. It always
+	returns a result of type <classname>XM_XPATH_SEQUENCE_ITERATOR[XM_XPATH_ITEM]</classname>, althouh it may be
+	marked as in error (callers <emphasis>must</emphasis> check <featurename>is_error</featurename> - if True, the error value
+	is available in <featurename>error_value</featurename>).
+	</para>
+	<para><classname>XM_XPATH_SEQUENCE_ITERATOR[G -> XM_XPATH_ITEM]</classname> is modelled on  <classname>DS_LIST_CURSOR</classname>,
+	although it only has a subset of the features (<featurename>before</featurename>, <featurename>after</featurename>,
+	<featurename>off</featurename>, <featurename>item</featurename>, <featurename>start</featurename> and <featurename>forth</featurename>. It also has
+	routine <featurename>another</featurename>, which produces another iterator which will iterate over the same items as
+	the original would have initially done).
+	</para>
+	<para>Another difference is that <classname>XM_XPATH_SEQUENCE_ITERATOR[G -> XM_XPATH_ITEM]</classname> does not iterate
+	over a physical list object - the sequences are only conceptual. Ususally the next <classname>XM_XPATH_ITEM</classname> will
+	be evaluated (possibly changing the evaluation context as a side effect) when <featurename>start/forth</featurename> is called.
+	</para>
+	<para><classname>XM_XPATH_SEQUENCE_ITERATOR[G -> XM_XPATH_ITEM]</classname> is a deferred class. A number of descendants
+	are available for actual use:
+	<itemizedlist>
+	  <listitem>
+	    <para><classname>XM_XPATH_LAST_POSITION_FINDER [G-> XM_XPATH_ITEM]</classname> is a deferred class that adds
+	    the routine <featurename>last_position</featurename> to it's descndants.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_REVERSIBLE_ITERATOR [G-> XM_XPATH_ITEM]</classname> is a deferred class that adds
+	    the routine <featurename>reverse_iterator</featurename> to it's descndants.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_AXIS_ITERATOR [G -> XM_XPATH_NODE]</classname> is also deferred. An instance is
+	    used for traversing an XPath Axis. Implementations for the tiny-tree implementation of the data model are:
+	    <itemizedlist>
+	      <listitem><para><classname>XM_XPATH_ANCESTOR_ENUMERATION</classname></para></listitem>
+	      <listitem><para><classname>XM_XPATH_ATTRIBUTE_ENUMERATION</classname></para></listitem>
+	      <listitem><para><classname>XM_XPATH_DESCENDANT_ENUMERATION</classname></para></listitem>
+	      <listitem><para><classname>XM_XPATH_FOLLOWING_ENUMERATION</classname></para></listitem>
+	      <listitem><para><classname>XM_XPATH_PRECEDING_ENUMERATION</classname></para></listitem>
+	      <listitem><para><classname>XM_XPATH_PRECEDING_SIBLING_ENUMERATION</classname></para></listitem>
+	      <listitem><para><classname>XM_XPATH_SIBLING_ENUMERATION</classname></para></listitem>
+	    </itemizedlist>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_ARRAY_ITERATOR [G -> XM_XPATH_ITEM]</classname> iterates across an <classname>ARRAY [XM_XPATH_ITEM]</classname>.</para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_ARRAY_LIST_ITERATOR [G -> XM_XPATH_ITEM]</classname> iterates across a <classname>DS_ARRAYED_LIST [XM_XPATH_ITEM]</classname>.</para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_EMPTY_ITERATOR [G -> XM_XPATH_ITEM]</classname> iterates across an  empty sequence.</para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_INVALID_ITERATOR</classname> is useful as a Result when an error is detected.</para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_SINGLETON_ITERATOR [G -> XM_XPATH_ITEM]</classname> is used when only zero or one <classname>XM_XPATH_ITEM</classname>s are allowed.</para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_ARRAY_ITERATOR [G -> XM_XPATH_ITEM]</classname> iterates across an <classname>ARRAY [XM_XPATH_ITEM]</classname>.</para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_FILTER_ITERATOR</classname> provides filtered iteration across a sequence of <classname>XM_XPATH_ITEM</classname>s.</para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_MAPPING_ITERATOR</classname> is used to flatten sequences of sequences of <classname>XM_XPATH_ITEM</classname>s, as
+	    XPath does not permit nested sequences.
+	    </para>
+	    <para>Classes that return an<classname>XM_XPATH_MAPPING_ITERATOR</classname> from their <featurename>iterator</featurename> routine
+	    need to implement <classname>XM_XPATH_MAPPING_FUNCTION</classname>. This has a single feature <featurename>map</featurename>, which returns
+	    an<classname>XM_XPATH_MAPPED_ITEM</classname>. This is either Void, or an <classname>XM_XPATH_ITEM</classname>, 
+	    or an<classname>XM_XPATH_SEQUENCE_ITERATOR[G -> XM_XPATH_ITEM]</classname>. If <featurename>map</featurename> detects an error, then it's
+	    return value <emphasis>must</emphasis> encapsulate an <classname>XM_XPATH_ITEM</classname> in error.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_POSITION_ITERATOR</classname> iterates across a sub-sequence.</para>
+	  </listitem>
+	  <listitem>
+	    <para><classname>XM_XPATH_RANGE_ITERATOR</classname> iterates across a monotonically increasing sequence of integers.</para>
+	  </listitem>
+	</itemizedlist>
+	</para>
+      </listitem>
+      <listitem>
+	<para><featurename>Eagerly_evaluate</featurename> is called to perform pre-evaluation, when static analysis
+	of an <classname>XM_XPATH_BINARY_EXPRESSION</classname> has determined that both operands are constants.<classname>XM_XPATH_FUNCTION_CALL</classname>
+	may also call this, to pre-evaluate arguments to a function call.
+	</para>
+      </listitem>
+      <listitem>
+	<para><featurename>Lazily_evaluate</featurename> is called to create an <classname>XM_XPATH_CLOSURE</classname>.</para>
+      </listitem>
+    </itemizedlist>
+    </para>
+  </section>
+</chapter>
