@@ -1,153 +1,163 @@
-<chapter  xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xml_resolvers">
-  <title>External entity and URI reference resolvers</title>
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xml_resolvers">
+<chapterinfo>
+	<copyright>
+		<year>2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
 
-  <section id="external_resolvers">
-    <title>Resolution of external entities</title>
+<title>External entity and URI reference resolvers</title>
 
-    <para>
-      By default, the parsers do not resolve external entities and produce an error if an external entity or an external DTD is used. 
-      These external references are loosely defined as a URI reference (although no fragment identifier is allowed) in the XML specification, 
-      and thus can be virtually anything, so a customisable resolving facility is provided.
-    </para>
+<section id="external_resolvers">
+<title>Resolution of external entities</title>
 
-    <para>
-      To use entities, an external resolver must be set, using the parser's <featurename>set_resolver</featurename> routine. 
-      It sets a single resolver for use both for external DTDs and entities, there are routines to set each of these separately, 
-      <featurename>set_entity_resolver</featurename> and  <featurename>set_dtd_resolver</featurename>.
-    </para>
+<para>
+By default, the parsers do not resolve external entities and produce an error if an external entity or an external DTD is used. 
+These external references are loosely defined as a URI reference (although no fragment identifier is allowed) in the XML specification, 
+and thus can be virtually anything, so a customisable resolving facility is provided.
+</para>
 
-    <para>
-      An external resolver is a class that opens a <classname>KI_CHARACTER_INPUT_STREAM</classname> given a <exmlsyntax>SYSTEM</exmlsyntax> identifier (a string) or 
-      a <exmlsyntax>PUBLIC</exmlsyntax> identifier (another string - but not a URI). 
-      An error is produced if no corresponding stream can be found. It is the responsibility of the client to close the stream.
-    </para>
+<para>
+To use entities, an external resolver must be set, using the parser's <featurename>set_resolver</featurename> routine. 
+It sets a single resolver for use both for external DTDs and entities, there are routines to set each of these separately, 
+<featurename>set_entity_resolver</featurename> and  <featurename>set_dtd_resolver</featurename>.
+</para>
 
-    <para>
-      All external entity resolvers are descendants of <classname>XM_EXTERNAL_RESOLVER</classname>.
-    </para>
+<para>
+An external resolver is a class that opens a <classname>KI_CHARACTER_INPUT_STREAM</classname> given a <exmlsyntax>SYSTEM</exmlsyntax> identifier (a string) or 
+a <exmlsyntax>PUBLIC</exmlsyntax> identifier (another string - but not a URI). 
+An error is produced if no corresponding stream can be found. It is the responsibility of the client to close the stream.
+</para>
 
-  </section>
+<para>
+All external entity resolvers are descendants of <classname>XM_EXTERNAL_RESOLVER</classname>.
+</para>
 
-  <section id="uri_reference_resolvers">
-    <title>Resolution of URI references</title>    
+</section>
 
-    <para>
-      As well as external entities, xml applications (but <emphasis>not</emphasis> the parser), may
-      encounter other URI references that they need to process. A typical example is the <xpath>document()</xpath>
-      function in XPath/XSLT. The contents of this is a URI reference. This too, will need to be opened for processing.
-    </para>
+<section id="uri_reference_resolvers">
+<title>Resolution of URI references</title>    
+
+<para>
+As well as external entities, xml applications (but <emphasis>not</emphasis> the parser), may
+encounter other URI references that they need to process. A typical example is the <xpath>document()</xpath>
+function in XPath/XSLT. The contents of this is a URI reference. This too, will need to be opened for processing.
+</para>
     
-    <para>
-      All URI reference resolvers are descendants of <classname>XM_URI_REFERENCE_RESOLVER</classname>. To resolve a URI
-      reference, create such a resolver then call it's <featurename>resolve_uri</featurename> routine, passing
-      it the name of the URI reference to open. You will get back a <classname>KI_CHARACTER_INPUT_STREAM</classname>.
-    </para>
+<para>
+All URI reference resolvers are descendants of <classname>XM_URI_REFERENCE_RESOLVER</classname>. To resolve a URI
+reference, create such a resolver then call it's <featurename>resolve_uri</featurename> routine, passing
+it the name of the URI reference to open. You will get back a <classname>KI_CHARACTER_INPUT_STREAM</classname>.
+</para>
 
-  </section>
+</section>
 
-  <section id="concrete_resolvers">
-    <title>Concrete resolvers</title>
+<section id="concrete_resolvers">
+<title>Concrete resolvers</title>
 
-    <para>
-      Here is a list of some available external entity resolvers supplied with the library, in order
-      of increasing power. If none of these meets your needs, then you may write your own.
+<para>
+Here is a list of some available external entity resolvers supplied with the library, in order
+of increasing power. If none of these meets your needs, then you may write your own.
 
-      <variablelist>
-
+<variablelist>
 	<varlistentry>
-	  <term><classname>XM_NULL_EXTERNAL_RESOLVER</classname></term>
-	  <listitem>
-	    <para>
-	      This resolver does nothing. It is the default used by the xml parser if you do not call 
-	      <featurename>set_resolver</featurename>. Sutiable for stand-alone documents only.
-	    </para>
-	  </listitem>
+		<term><classname>XM_NULL_EXTERNAL_RESOLVER</classname></term>
+		<listitem>
+		<para>
+			This resolver does nothing. It is the default used by the xml parser if you do not call 
+			<featurename>set_resolver</featurename>. Sutiable for stand-alone documents only.
+		</para>
+		</listitem>
 	</varlistentry>
 
 	<varlistentry>
-	  <term><classname>XM_FILE_EXTERNAL_RESOLVER</classname></term>
-	  <listitem>
-	    <para>
-	      This resolver takes the supplied <exmlsyntax>SYSTEM</exmlsyntax> id, and treats it as a file in the
-	      current working directory. It is therefore of only extremely limited use, and
-	      should be considered obsolete. Use <classname>XM_URI_EXTERNAL_RESOLVER</classname> instead.
-	    </para>
-	  </listitem>
+		<term><classname>XM_FILE_EXTERNAL_RESOLVER</classname></term>
+		<listitem>
+		<para>
+			This resolver takes the supplied <exmlsyntax>SYSTEM</exmlsyntax> id, and treats it as a file in the
+			current working directory. It is therefore of only extremely limited use, and
+			should be considered obsolete. Use <classname>XM_URI_EXTERNAL_RESOLVER</classname> instead.
+		</para>
+		</listitem>
 	</varlistentry>
 
 	<varlistentry>
-	  <term><classname>XM_STRING_EXTERNAL_RESOLVER</classname></term>
-	  <listitem>
-	    <para>
-	      This resolver resolves by mapping <exmlsyntax>SYSTEM</exmlsyntax> ids to in-memory strings. It must
-	      be configured by the programmer for every single <exmlsyntax>SYSTEM</exmlsyntax> id that will be
-	      encountered.
-	    </para>
-	  </listitem>
+		<term><classname>XM_STRING_EXTERNAL_RESOLVER</classname></term>
+		<listitem>
+		<para>
+			This resolver resolves by mapping <exmlsyntax>SYSTEM</exmlsyntax> ids to in-memory strings. It must
+			be configured by the programmer for every single <exmlsyntax>SYSTEM</exmlsyntax> id that will be
+			encountered.
+		</para>
+		</listitem>
 	</varlistentry>
 
 	<varlistentry>
-	  <term><classname>XM_URI_EXTERNAL_RESOLVER</classname></term>
-	  <listitem>
-	    <para>
-	      This resolver handles any <exmlsyntax>SYSTEM</exmlsyntax> id by examining it's URI scheme, and
-	      delegating it to a descendant of <classname>XM_URI_RESOLVER</classname>,
-	      whose purpose is to open URIs for that particular scheme.
-	    </para>	    
-	    <para>
-	      The library provides <classname>XM_FILE_URI_RESOLVER</classname> and <classname>XM_DATA_URI_RESOLVER</classname>
-	      to handle the file and data protocols. If you need to handle other protocols, such as http or ftp,
-	      then you may be able to find them in other libraries (such as ePOSIX for http and ftp), or
-	      you can write one yourself. After creating such a resolver, you need to register it
-	      by calling <featurename>register_scheme</featurename> on the <classname>XM_URI_EXTERNAL_RESOLVER</classname>. 
-	      You can inherit from <classname>XM_RESOLVER_FACTORY</classname>, and use the <featurename>new_resolver*</featurename>
-	      routines to create these resolvers.
-	    </para>
-	    <para>
-	      There is also <classname>XM_STRING_URI_RESOLVER</classname>, which resolves URIs in the <uri>string</uri> scheme
-	      for naming <classname>STRING</classname>s. This is designed to work with the <classname>XM_CATALOG_BOOTSTRAP_RESOLVER</classname>
-	      (see below).
-	    </para>
-	  </listitem>
+		<term><classname>XM_URI_EXTERNAL_RESOLVER</classname></term>
+		<listitem>
+		<para>
+			This resolver handles any <exmlsyntax>SYSTEM</exmlsyntax> id by examining it's URI scheme, and
+			delegating it to a descendant of <classname>XM_URI_RESOLVER</classname>,
+			whose purpose is to open URIs for that particular scheme.
+		</para>
+		<para>
+			The library provides <classname>XM_FILE_URI_RESOLVER</classname> and <classname>XM_DATA_URI_RESOLVER</classname>
+			to handle the file and data protocols. If you need to handle other protocols, such as http or ftp,
+			then you may be able to find them in other libraries (such as ePOSIX for http and ftp), or
+			you can write one yourself. After creating such a resolver, you need to register it
+			by calling <featurename>register_scheme</featurename> on the <classname>XM_URI_EXTERNAL_RESOLVER</classname>. 
+			You can inherit from <classname>XM_RESOLVER_FACTORY</classname>, and use the <featurename>new_resolver*</featurename>
+			routines to create these resolvers.
+		</para>
+		<para>
+			There is also <classname>XM_STRING_URI_RESOLVER</classname>, which resolves URIs in the <uri>string</uri> scheme
+			for naming <classname>STRING</classname>s. This is designed to work with the <classname>XM_CATALOG_BOOTSTRAP_RESOLVER</classname>
+			(see below).
+		</para>
+		</listitem>
 	</varlistentry>
 
 	<varlistentry>
-	  <term><classname>XM_CATALOG_BOOTSTRAP_RESOLVER</classname></term>
-	  <listitem>
-	    <para>
-	      This resolver combines the features of <classname>XM_STRING_EXTERNAL_RESOLVER</classname>
-	      and <classname>XM_URI_EXTERNAL_RESOLVER</classname>, and extends them further, in as much
-	      as it deals with resolution of <exmlsyntax>PUBLIC</exmlsyntax> ids and URI references also.
-	    </para>
+		<term><classname>XM_CATALOG_BOOTSTRAP_RESOLVER</classname></term>
+		<listitem>
+		<para>
+			This resolver combines the features of <classname>XM_STRING_EXTERNAL_RESOLVER</classname>
+			and <classname>XM_URI_EXTERNAL_RESOLVER</classname>, and extends them further, in as much
+			as it deals with resolution of <exmlsyntax>PUBLIC</exmlsyntax> ids and URI references also.
+		</para>
 
-	    <para>
-	      The resolver comes pre-configured with strings for resolving DTDs and schemas associated with
-	      OASIS ETRC XML Catalog files. Hence it's name - it is designed for use by 
-	      <classname>XM_CATALOG__RESOLVER</classname> so that it has a way of resolving references within 
-	      the catalog files that it uses to carry out the resolution process. But you can configure it to
-	      handle additional <exmlsyntax>SYSTEM</exmlsyntax> and <exmlsyntax>PUBLIC</exmlsyntax> ids,
-	      and URI references (there are separate lists for each type).
-	    </para>
-	    <para>
-	      There is also an <classname>XM_STRING_URI_RESOLVER</classname>, which maps URIs in a string scheme
-	      to Eiffel <classname>STRING</classname>s. To use this, you must add additional <exmlsyntax>SYSTEM</exmlsyntax>
-	      ids to the bootstrap resolver's list of well-known <exmlsyntax>SYSTEM</exmlsyntax> ids, along with the
-	      contents of an Eiffel <classname>STRING</classname>. Then you must register the resolver with the bootstrap
-	      resolver's <featurename>uri_scheme_resolver</featurename>. Once this has been done, the catalog resolver will be 
-	      able to resolve your string URIs.
-	    </para>
-	  </listitem>
+		<para>
+			The resolver comes pre-configured with strings for resolving DTDs and schemas associated with
+			OASIS ETRC XML Catalog files. Hence it's name - it is designed for use by 
+			<classname>XM_CATALOG__RESOLVER</classname> so that it has a way of resolving references within 
+			the catalog files that it uses to carry out the resolution process. But you can configure it to
+			handle additional <exmlsyntax>SYSTEM</exmlsyntax> and <exmlsyntax>PUBLIC</exmlsyntax> ids,
+			and URI references (there are separate lists for each type).
+		</para>
+		<para>
+			There is also an <classname>XM_STRING_URI_RESOLVER</classname>, which maps URIs in a string scheme
+			to Eiffel <classname>STRING</classname>s. To use this, you must add additional <exmlsyntax>SYSTEM</exmlsyntax>
+			ids to the bootstrap resolver's list of well-known <exmlsyntax>SYSTEM</exmlsyntax> ids, along with the
+			contents of an Eiffel <classname>STRING</classname>. Then you must register the resolver with the bootstrap
+			resolver's <featurename>uri_scheme_resolver</featurename>. Once this has been done, the catalog resolver will be 
+			able to resolve your string URIs.
+		</para>
+		</listitem>
 	</varlistentry>
+</variablelist>
 
-      </variablelist>
+</para>
 
-    </para>
+<para>
+Briefly mentioned in passing was <link linkend="catalogs"><classname>XM_CATALOG_RESOLVER</classname></link>. This is such a powerful
+and complex resolver, that it gets a chapter all of it's own.
+</para>
 
-    <para>
-      Briefly mentioned in passing was <link linkend="catalogs"><classname>XM_CATALOG_RESOLVER</classname></link>. This is such a powerful
-      and complex resolver, that it gets a chapter all of it's own.
-    </para>
-
-  </section>
+</section>
 
 </chapter>

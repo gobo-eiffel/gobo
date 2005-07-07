@@ -1,4 +1,16 @@
-<chapter  xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="using_xml_parser">
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="using_xml_parser">
+<chapterinfo>
+	<copyright>
+		<year>2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
 <title>Using the XML parser</title>
 
 <section id="first_xml_example">
