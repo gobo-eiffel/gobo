@@ -25,10 +25,14 @@ creation
 
 	make
 
+creation {XM_XPATH_DOCUMENT_ORDER_ITERATOR}
+
+	make_another
+
 feature {NONE} -- Initialization
 
 	make (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_NODE_ORDER_COMPARER) is
-			-- establish invariant.
+			-- Establish invariant.
 		require
 			comparer_not_void: a_comparer /= Void
 			iterator_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
@@ -50,6 +54,21 @@ feature {NONE} -- Initialization
 			if an_iterator.is_error then
 				set_last_error (an_iterator.error_value)
 			end
+		ensure
+			comparer_set: comparer = a_comparer
+		end
+
+	make_another (a_sequence: like sequence; a_comparer: XM_XPATH_NODE_ORDER_COMPARER) is
+			-- Create another document order iterator (used by `another').
+		require
+			comparer_not_void: a_comparer /= Void
+			sequence_not_void: a_sequence /= Void
+		do
+			
+			-- No need to repeat the sort
+
+			create sequence.make_from_linear (a_sequence)
+			comparer := a_comparer
 		ensure
 			comparer_set: comparer = a_comparer
 		end
@@ -128,7 +147,7 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			todo ("another", False)
+			create Result.make_another (sequence, comparer)
 		end
 
 feature {NONE} -- Implementation
