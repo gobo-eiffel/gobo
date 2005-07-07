@@ -53,7 +53,7 @@ feature {NONE} -- Escaped
 			-- Add quote escaping to Precursor version.
 		do
 			if a_char = Quot_char.code then
-				Result := quot_entity
+				Result := Quot_entity
 			else
 				Result := Precursor (a_char)
 			end
