@@ -29,7 +29,7 @@
 		<set name="previous" value="invoking"/>
 		<set name="current" value="invoking"/>
 		<set name="input_wrapper" value=""/>
-		<!-- <geant target="xslt_and_shift" arguments="evaluation_process"/> -->
+		<geant target="xslt_and_shift" arguments="evaluation_process"/>
 		<geant target="xslt_and_shift" arguments="implemented_functions"/>
 		<geant target="xslt_and_shift" arguments="xpointer"/>
 		<set name="input_wrapper" value="_wrapper" unless="${GESTALT}"/>
