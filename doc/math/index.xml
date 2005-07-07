@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<!--
+	description:
+
+		"Gobo Eiffel Math Library documentation"
+
+	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="math/index">
+<chapterinfo>
+	<copyright>
+		<year>2001-2005</year>
+		<holder>Eric Bezault</holder>
+	</copyright>
+	<author>
+		<firstname>Eric</firstname><surname>Bezault</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
+<title>Gobo Eiffel Math Library</title>
+
+<para>
+The <libraryname>Gobo Eiffel Math Library</libraryname> gives Eiffel 
+programmers access to math functionalities.
+</para>
+
+<para>
+This document is structured as follows:
+
+<blockquote>
+<variablelist>
+	<varlistentry>
+		<term>
+			<ulink url="decimal/index.html">Decimal Arithmetic</ulink>
+		</term>
+		<listitem><para>
+			Eiffel implementation of the "General Decimal Arithmetic Specification"
+		</para></listitem>
+	</varlistentry>
+
+	<varlistentry>
+		<term>
+			<ulink url="http://www.gobosoft.com/eiffel/gobo/download.html">Downloading
+			Instructions</ulink>
+		</term>
+		<listitem><para>
+			License agreement and downloading instructions.
+		</para></listitem>
+	</varlistentry>
+</variablelist>
+</blockquote>
+
+</para>
+
+</chapter>
