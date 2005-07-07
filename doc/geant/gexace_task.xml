@@ -13,6 +13,18 @@
 -->
 
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gexace_task">
+<chapterinfo>
+	<copyright>
+		<year>2002-2005</year>
+		<holder>Sven Ehrke</holder>
+	</copyright>
+	<author>
+		<firstname>Sven</firstname><surname>Ehrke</surname>
+	</author>
+	<email>ericb@gobosoft.com</email>
+	<date>7 July 2005</date>
+</chapterinfo>
+
 	<title>gexace</title>
 
 	<section id="gexace_description">
