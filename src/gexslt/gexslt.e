@@ -389,7 +389,7 @@ feature -- Error handling
 									  "       --warnings=[local-file-name]%N" +
 									  "       --errors-and-warnings=[local-file-name]%N" +
 									  "       --warning-threshold=number%N" +
-									  "       --error-threshold=number%N" +									  
+									  "       --error-threshold=number%N" +
 									  "       --treat-warnings-as-errors%N" +
 									  "       --secure%N" +
 									  "       --recover-silently%N" +
@@ -398,7 +398,7 @@ feature -- Error handling
 									  "       --no-output-extensions%N" +
 									  "       --no-gc%N" +
 									  "       --no-network-protocols%N" +
-									  "       --no-catalogs%N" +									  
+									  "       --no-catalogs%N" +
 									  "       --no-catalog-pi%N" +
 									  "       --prefer-system%N" +
 									  "       --no-default-catalog%N" +
@@ -410,7 +410,7 @@ feature -- Error handling
 									  "       --no-xpointer%N" +
 									  "       --html-text-ok%N" +
 									  "       --mode=[{namespace-uri}]local-name%N" +
-									  "       --template=[{namespace-uri}]local-name%N" +									  
+									  "       --template=[{namespace-uri}]local-name%N" +
 									  "       --param=name=string-value%N" +
 									  "       --xpath-param=name=xpath-expression%N" +
 									  additional_options)
@@ -744,16 +744,11 @@ feature {NONE} -- Implementation
 			a_string: STRING
 		do
 			if parameters /= Void then
-				from
-					a_cursor := parameters.new_cursor; a_cursor.start
-				until
-					a_cursor.after
-				loop
+				a_cursor := parameters.new_cursor
+				from a_cursor.start until a_cursor.after loop
 					a_string := a_cursor.item
-					if a_string.count > 1 and then a_string.index_of ('%'', 1) = 1 and then a_string.index_of ('%'', a_string.count) > 0 then
-
-						-- Strip off surrounding single quotes
-
+					if a_string.count > 1 and then a_string.item (1) = '%'' and then a_string.item (a_string.count) = '%'' then
+							-- Strip off surrounding single quotes.
 						a_string := a_string.substring (2, a_string.count - 1)
 					end
 					a_transformer.set_string_parameter (a_string, a_cursor.key)
@@ -761,25 +756,22 @@ feature {NONE} -- Implementation
 				end
 			end
 			if xpath_parameters /= Void then
-				from
-					a_cursor := xpath_parameters.new_cursor; a_cursor.start
-				until
-					a_cursor.after
-				loop
+				a_cursor := xpath_parameters.new_cursor
+				from a_cursor.start until a_cursor.after loop
 					a_string := a_cursor.item
 					a_transformer.set_xpath_parameter (a_string, a_cursor.key)
 					a_cursor.forth
 				end
-			end			
+			end
 		end
-				
+
 	set_error_script (a_script: STRING) is
 			-- Set error script to `a_script'.
 		require
 			script_not_void: a_script /= Void
 		do
 			report_general_message ("Error-listener scripts are not supported in " + program_name)
-			Exceptions.die (1)			
+			Exceptions.die (1)
 		end
 
 	set_warning_file (a_filename: STRING) is
