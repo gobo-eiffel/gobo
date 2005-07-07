@@ -1,32 +1,30 @@
 <?xml version="1.0"?>
 
 <xsl:stylesheet
- xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
- xmlns="http://www.w3.org/1999/xhtml"
- xmlns:xs="http://www.w3.org/2001/XMLSchema"
- xmlns:gexslt="http://www.gobosoft.com/eiffel/gobo/gexslt/extension"
- xmlns:gobodoc="http://www.gobosoft.com/eiffel/gobo/documentation"
- gexslt:explain="no"
- exclude-result-prefixes="xs gexslt gobodoc"
- version="2.0">
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:gexslt="http://www.gobosoft.com/eiffel/gobo/gexslt/extension"
+	xmlns:gobodoc="http://www.gobosoft.com/eiffel/gobo/documentation"
+	gexslt:explain="no"
+	exclude-result-prefixes="xs gexslt gobodoc"
+	version="2.0">
 
-  <xsl:param name="previous"/>
-  <xsl:param name="next"/>
-  <xsl:param name="toc"/>
-  <xsl:param name="images" select="'../image/'" />
+<xsl:param name="previous"/>
+<xsl:param name="next"/>
+<xsl:param name="toc"/>
+<xsl:param name="images" select="'../image/'"/>
 
-  <xsl:output
-   method="xhtml"
-   indent="yes"
-   gexslt:indent-spaces="1"
-   gexslt:byte-order-mark="no"
-   gexslt:character-representation="entity;decimal"
-   version="1.0"
-   include-content-type="yes"
-   omit-xml-declaration="no"
-   encoding="ISO-8859-1"
-   doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
-   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
+<xsl:output
+	method="xhtml"
+	indent="yes"
+	gexslt:indent-spaces="1"
+	gexslt:byte-order-mark="no"
+	gexslt:character-representation="entity;decimal"
+	version="1.0"
+	include-content-type="yes"
+	omit-xml-declaration="no"
+	encoding="ISO-8859-1"
    />
 
 <xsl:template match="gobodoc:anchor">
@@ -91,119 +89,25 @@
 </xsl:template>
 
 <xsl:template match="gobodoc:chapter">
-  <html lang="en" xml:lang="en">
-    <head>
-      <title>
-	<xsl:value-of select="gobodoc:title"/>
-      </title>
-      <style type="text/css">
-body {
-  background-color: white;
-  color: black;
-}
-
-address {
- font-size: smaller;
-}
-
-hr {
-  height: 1;
-}
-
-img {
-  border: none;
-}
-
-span.classname-inline {
-  color: #008080;
-  font-family: monospace;
-  font-style: italic;
-}
-
-span.featurename-inline {
-  color: #008080;
-  font-family: monospace;
-  font-style: italic;
-}
-
-span.returnvalue-inline {
-  color: #008080;
-  font-family: monospace;
-  font-style: italic;
-}
-
-
-span.xml_syntax {
-  color: #008080;
-}
-
-span.environment_variable {
-  color: #008080;
-}
-
-span.xslt {
-  color: #008080;
-}
-
-span.xpath {
-  color: #008080;
-}
-
-span.uri {
-  color: #008080;
-}
-
-table {
-  empty-cells: show;
-  border-spacing: 0;
-  border-collapse: collapse;
-  margin-left: 2em;
-  margin-right: 2em;
-}
-
-table tbody tr td {
-  padding-right: 1em;
-  border: 1pt solid black;
-}
-
-table thead tr td {
-  border: 1pt solid black;
-}
-
-/* Documentation's footer is formatted with a table */
-table.footer {
-  border: none;
-  width: 100%;
-}
-
-table.footer tbody tr td {
-  border: none;
-}
-
-/* Documentation's header is formatted with a table */
-table.header {
-  border: none;
-  width: 100%;
-}
-
-table.header tbody tr td {
-  border: none;
-}
-    </style>
+	<html lang="en" xml:lang="en">
+	<head>
+		<title>
+			<xsl:value-of select="gobodoc:title"/>
+		</title>
 	</head>
-	<body>
+	<body bgcolor="#FFFFFF">
 		<xsl:apply-templates select="." mode="header"/>
-		<xsl:apply-templates select="gobodoc:itemizedlist|gobodoc:orderedlist|gobodoc:para|gobodoc:programlisting|gobodoc:section|gobodoc:synopsis|gobodoc:table"/>
+		<xsl:apply-templates select="gobodoc:variablelist|gobodoc:itemizedlist|gobodoc:orderedlist|gobodoc:para|gobodoc:programlisting|gobodoc:section|gobodoc:synopsis|gobodoc:table"/>
 		<xsl:apply-templates select="." mode="footer"/>
 	</body>
 	</html>
 </xsl:template>
 
 <xsl:template match="gobodoc:chapter" mode="header">
-	<table class="header">
+	<table border="0" width="100%">
 	<tr>
 		<td>
-      <h1><xsl:value-of select="gobodoc:title"/></h1>
+			<h1><xsl:value-of select="gobodoc:title"/></h1>
 		</td>
 		<td align="right">
 			<xsl:choose>
@@ -212,11 +116,11 @@ table.header tbody tr td {
 						<xsl:attribute name="href">
 							<xsl:value-of select="$previous"/>
 						</xsl:attribute>
-						<img src="{$images}previous.gif" alt="Previous"/>
+						<img src="{$images}previous.gif" alt="Previous" border="0"/>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$images}previous.gif" alt="Previous"/>
+					<img src="{$images}previous.gif" alt="Previous" border="0"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:choose>
@@ -225,25 +129,25 @@ table.header tbody tr td {
 						<xsl:attribute name="href">
 							<xsl:value-of select="$next"/>
 						</xsl:attribute>
-						<img src="{$images}next.gif" alt="Next"/>
+						<img src="{$images}next.gif" alt="Next" border="0"/>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$images}next.gif" alt="Next"/>
+					<img src="{$images}next.gif" alt="Next" border="0"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</td>
 	</tr>
 	</table>
-	<hr/>
+	<hr size="1"/>
 </xsl:template>
 
 <xsl:template match="gobodoc:chapter" mode="footer">
-	<hr/>
-	<table class="footer">
+	<hr size="1"/>
+	<table border="0" width="100%">
 	<tr>
 		<td>
-			<address>
+			<address><font size="2">
 				<xsl:apply-templates select="gobodoc:chapterinfo/gobodoc:copyright" mode="footer"/>
 				<br/>
 				<xsl:apply-templates select="gobodoc:chapterinfo/gobodoc:email" mode="footer"/>
@@ -251,11 +155,11 @@ table.header tbody tr td {
 				<b>http://</b><a href="http://www.gobosoft.com">www.gobosoft.com</a>
 				<br/>
 				<xsl:apply-templates select="gobodoc:chapterinfo/gobodoc:date" mode="footer"/>
-			</address>
+			</font></address>
 		</td>
 		<td align="right" valign="top">
 			<a href="http://www.gobosoft.com">
-				<img src="{$images}home.gif" alt="Home"/>
+				<img src="{$images}home.gif" alt="Home" border="0"/>
 			</a>
 			<xsl:choose>
 				<xsl:when test="$toc!=''">
@@ -263,11 +167,11 @@ table.header tbody tr td {
 						<xsl:attribute name="href">
 							<xsl:value-of select="$toc"/>
 						</xsl:attribute>
-						<img src="{$images}toc.gif" alt="Toc"/>
+						<img src="{$images}toc.gif" alt="Toc" border="0"/>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$images}toc.gif" alt="Toc"/>
+					<img src="{$images}toc.gif" alt="Toc" border="0"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:choose>
@@ -276,11 +180,11 @@ table.header tbody tr td {
 						<xsl:attribute name="href">
 							<xsl:value-of select="$previous"/>
 						</xsl:attribute>
-						<img src="{$images}previous.gif" alt="Previous"/>
+						<img src="{$images}previous.gif" alt="Previous" border="0"/>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$images}previous.gif" alt="Previous"/>
+					<img src="{$images}previous.gif" alt="Previous" border="0"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:choose>
@@ -289,11 +193,11 @@ table.header tbody tr td {
 						<xsl:attribute name="href">
 							<xsl:value-of select="$next"/>
 						</xsl:attribute>
-						<img src="{$images}next.gif" alt="Next"/>
+						<img src="{$images}next.gif" alt="Next" border="0"/>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$images}next.gif" alt="Next"/>
+					<img src="{$images}next.gif" alt="Next" border="0"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</td>
@@ -365,7 +269,9 @@ table.header tbody tr td {
 					<xsl:apply-templates select="." mode="inline"/>
 				</xsl:when>
 				<xsl:otherwise>
-          <xsl:apply-templates select="." mode="inline"/>
+					<font color="#008080">
+						<xsl:apply-templates select="." mode="inline"/>
+					</font>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:otherwise>
@@ -377,7 +283,7 @@ table.header tbody tr td {
 </xsl:template>
 
 <xsl:template match="gobodoc:classname" mode="inline">
-<span class="classname-inline"><xsl:apply-templates mode="inline"/></span>
+	<i><tt><xsl:apply-templates mode="inline"/></tt></i>
 </xsl:template>
 
 <xsl:template match="gobodoc:comment">
@@ -479,8 +385,16 @@ table.header tbody tr td {
 	</xsl:choose>
 </xsl:template>
 
-<xsl:template match="gobodoc:entry" mode="tbody tfoot thead">
-<td><xsl:value-of select="."/></td>
+<xsl:template match="gobodoc:entry" mode="tbody">
+	<td><xsl:apply-templates/></td>
+</xsl:template>
+
+<xsl:template match="gobodoc:entry" mode="tfoot">
+	<td><xsl:apply-templates/></td>
+</xsl:template>
+
+<xsl:template match="gobodoc:entry" mode="thead">
+	<td><xsl:apply-templates/></td>
 </xsl:template>
 
 <xsl:template match="gobodoc:equal">
@@ -526,7 +440,7 @@ table.header tbody tr td {
 
 <xsl:template match="gobodoc:expression">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
+		<xsl:when test="ancestor::gobodoc:programlisting">
 			<xsl:apply-templates select="." mode="listing"/>
 		</xsl:when>
 		<xsl:otherwise>
@@ -547,7 +461,7 @@ table.header tbody tr td {
 
 <xsl:template match="gobodoc:featurecall">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
+		<xsl:when test="ancestor::gobodoc:programlisting">
 			<xsl:apply-templates select="." mode="listing"/>
 		</xsl:when>
 		<xsl:otherwise>
@@ -559,12 +473,12 @@ table.header tbody tr td {
 </xsl:template>
 
 <xsl:template match="gobodoc:featurecall" mode="listing">
-	<xsl:if test="target">
+	<xsl:if test="gobodoc:target">
 		<xsl:apply-templates select="gobodoc:target" mode="listing"/>
 		<tt><xsl:text>.</xsl:text></tt>
 	</xsl:if>
 	<xsl:apply-templates select="gobodoc:featurename" mode="listing"/>
-	<xsl:if test="arguments">
+	<xsl:if test="gobodoc:arguments">
 		<tt><xsl:text> (</xsl:text></tt>
 		<xsl:for-each select="gobodoc:arguments/*">
 			<xsl:apply-templates select="." mode="listing"/>
@@ -577,12 +491,12 @@ table.header tbody tr td {
 </xsl:template>
 
 <xsl:template match="gobodoc:featurecall" mode="inline">
-	<xsl:if test="target">
+	<xsl:if test="gobodoc:target">
 		<xsl:apply-templates select="gobodoc:target" mode="inline"/>
 		<tt><xsl:text>.</xsl:text></tt>
 	</xsl:if>
 	<xsl:apply-templates select="gobodoc:featurename" mode="inline"/>
-	<xsl:if test="arguments">
+	<xsl:if test="gobodoc:arguments">
 		<tt><xsl:text> (</xsl:text></tt>
 		<xsl:for-each select="gobodoc:arguments/*">
 			<xsl:apply-templates select="." mode="inline"/>
@@ -606,7 +520,7 @@ table.header tbody tr td {
 					</xsl:call-template>
 				</xsl:attribute>
 				<xsl:choose>
-					<xsl:when test="ancestor::programlisting">
+					<xsl:when test="ancestor::gobodoc:programlisting">
 						<xsl:apply-templates select="." mode="listing"/>
 					</xsl:when>
 					<xsl:otherwise>
@@ -630,7 +544,7 @@ table.header tbody tr td {
 					</xsl:call-template>
 				</xsl:attribute>
 				<xsl:choose>
-					<xsl:when test="ancestor::programlisting">
+					<xsl:when test="ancestor::gobodoc:programlisting">
 						<xsl:apply-templates select="." mode="listing"/>
 					</xsl:when>
 					<xsl:otherwise>
@@ -643,7 +557,7 @@ table.header tbody tr td {
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:choose>
-				<xsl:when test="ancestor::programlisting">
+				<xsl:when test="ancestor::gobodoc:programlisting">
 					<xsl:apply-templates select="." mode="listing"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -664,11 +578,6 @@ table.header tbody tr td {
 	<i><tt><xsl:apply-templates mode="inline"/></tt></i>
 </xsl:template>
 
-<!-- berend: full support for function perhaps missing? -->
-<xsl:template match="gobodoc:function">
-  <span class="featurename-inline"><xsl:apply-templates mode="inline"/></span>
-</xsl:template>
-
 <xsl:template match="gobodoc:filename">
 	<font color="#800000"><i><tt>
 		<xsl:apply-templates/>
@@ -676,38 +585,38 @@ table.header tbody tr td {
 </xsl:template>
 
 <xsl:template match="gobodoc:exmlsyntax">
-  <span class="xml_syntax">
-    <xsl:apply-templates/>
-  </span>
+	<font color="#008080">
+		<xsl:apply-templates/>
+	</font>
 </xsl:template>
 
 <xsl:template match="gobodoc:envar">
-  <span class="environment_variable">
-    <xsl:apply-templates/>
-  </span>
+	<font color="#008080">
+		<xsl:apply-templates/>
+	</font>
 </xsl:template>
 
 <xsl:template match="gobodoc:uri">
-  <span class="uri">
-    <xsl:apply-templates/>
-  </span>
+	<font color="#008080">
+		<xsl:apply-templates/>
+	</font>
 </xsl:template>
 
 <xsl:template match="gobodoc:xpath">
-  <span class="xpath">
-    <xsl:apply-templates/>
-  </span>
+	<font color="#008080">
+		<xsl:apply-templates/>
+	</font>
 </xsl:template>
 
 <xsl:template match="gobodoc:xslt">
-  <span class="xslt">
-    <xsl:apply-templates/>
-  </span>
+	<font color="#008080">
+		<xsl:apply-templates/>
+	</font>
 </xsl:template>
 
 <xsl:template match="gobodoc:if">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
+		<xsl:when test="ancestor::gobodoc:programlisting">
 			<xsl:apply-templates select="." mode="listing"/>
 		</xsl:when>
 		<xsl:otherwise>
@@ -772,7 +681,7 @@ table.header tbody tr td {
 
 <xsl:template match="gobodoc:mediaobjectco/imageobjectco">
 	<p>
-		<xsl:if test="imageobject/imagedata/@align">
+		<xsl:if test="gobodoc:imageobject/gobodoc:imagedata/@align">
 			<xsl:attribute name="align">
 				<xsl:value-of select="gobodoc:imageobject/gobodoc:imagedata/@align"/>
 			</xsl:attribute>
@@ -781,7 +690,7 @@ table.header tbody tr td {
 			<xsl:attribute name="name">
 				<xsl:value-of select="generate-id(.)"/>
 			</xsl:attribute>
-			<xsl:for-each select="gobodoc:areaspec/area">
+			<xsl:for-each select="gobodoc:areaspec/gobodoc:area">
 				<area shape="rect">
 					<xsl:attribute name="coords">
 						<xsl:value-of select="@coords"/>
@@ -796,7 +705,7 @@ table.header tbody tr td {
 				</area>
 			</xsl:for-each>
 		</map>
-		<img>
+		<img border="0">
 			<xsl:attribute name="src">
 				<xsl:value-of select="gobodoc:imageobject/gobodoc:imagedata/@fileref"/>
 			</xsl:attribute>
@@ -809,7 +718,7 @@ table.header tbody tr td {
 
 <xsl:template match="gobodoc:infixname">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
+		<xsl:when test="ancestor::gobodoc:programlisting">
 			<xsl:apply-templates select="." mode="listing"/>
 		</xsl:when>
 		<xsl:otherwise>
@@ -840,7 +749,7 @@ table.header tbody tr td {
 
 <xsl:template match="gobodoc:integer">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
+		<xsl:when test="ancestor::gobodoc:programlisting">
 			<xsl:apply-templates select="." mode="listing"/>
 		</xsl:when>
 		<xsl:otherwise>
@@ -901,7 +810,7 @@ table.header tbody tr td {
 
 <xsl:template match="gobodoc:local">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
+		<xsl:when test="ancestor::gobodoc:programlisting">
 			<xsl:apply-templates select="." mode="listing"/>
 		</xsl:when>
 		<xsl:otherwise>
@@ -922,7 +831,7 @@ table.header tbody tr td {
 
 <xsl:template match="gobodoc:loop">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
+		<xsl:when test="ancestor::gobodoc:programlisting">
 			<xsl:apply-templates select="." mode="listing"/>
 		</xsl:when>
 		<xsl:otherwise>
@@ -1080,12 +989,8 @@ table.header tbody tr td {
 	<xsl:text>&#147;</xsl:text><xsl:apply-templates/><xsl:text>&#148;</xsl:text>
 </xsl:template>
 
-<xsl:template match="gobodoc:returnvalue">
-  <span class="returnvalue-inline"><xsl:apply-templates/></span>
-</xsl:template>
-
 <xsl:template match="gobodoc:section">
-  <div>
+	<div>
 	<xsl:if test="@id">
 		<a>
 			<xsl:attribute name="name">
@@ -1094,28 +999,39 @@ table.header tbody tr td {
 		</a>
 	</xsl:if>
 	<xsl:apply-templates/>
-  </div>
+	</div>
 </xsl:template>
 
-<xsl:template match="gobodoc:row" mode="tbody tfoot thead">
-<tr>
-  <xsl:apply-templates select="gobodoc:entry" mode="#current"/>
-</tr>
+<xsl:template match="gobodoc:row" mode="tbody">
+	<tr>
+		<xsl:apply-templates select="gobodoc:entry" mode="tbody"/>
+	</tr>
+</xsl:template>
+
+<xsl:template match="gobodoc:row" mode="tfoot">
+	<tr>
+		<xsl:apply-templates select="gobodoc:entry" mode="tfoot"/>
+	</tr>
+</xsl:template>
+
+<xsl:template match="gobodoc:row" mode="thead">
+	<tr>
+		<xsl:apply-templates select="gobodoc:entry" mode="thead"/>
+	</tr>
 </xsl:template>
 
 <xsl:template match="gobodoc:section/gobodoc:title">
-  <xsl:variable  gexslt:explain="no" name="section_level" select="count(ancestor::gobodoc:section) + 1"/>
-  <xsl:variable name="header_name">
-    <xsl:choose>
-      <xsl:when test="$section_level &lt; 7">h<xsl:value-of select="string($section_level)"/></xsl:when>
-      <xsl:otherwise>p</xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-  <xsl:element name="{$header_name}" namespace="http://www.w3.org/1999/xhtml">
-    <xsl:apply-templates/>
-  </xsl:element>
+	<xsl:variable gexslt:explain="no" name="section_level" select="count(ancestor::gobodoc:section) + 1"/>
+	<xsl:variable name="header_name">
+		<xsl:choose>
+			<xsl:when test="$section_level &lt; 7">h<xsl:value-of select="string($section_level)"/></xsl:when>
+			<xsl:otherwise>p</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:element name="{$header_name}" namespace="http://www.w3.org/1999/xhtml">
+		<xsl:apply-templates/>
+	</xsl:element>
 </xsl:template>
-
 
 <xsl:template match="gobodoc:synopsis">
 <pre>
@@ -1124,19 +1040,19 @@ table.header tbody tr td {
 </xsl:template>
 
 <xsl:template match="gobodoc:table">
-<table alt="{title}">
-  <caption><xsl:value-of select="gobodoc:title"/></caption>
-  <col span="{tgroup/cols}"/>
-  <!-- support only one group... -->
-  <xsl:apply-templates select="gobodoc:tgroup/gobodoc:thead"/>
-  <xsl:apply-templates select="gobodoc:tgroup/gobodoc:tfoot"/>
-  <xsl:apply-templates select="gobodoc:tgroup/gobodoc:tbody"/>
-</table>
+	<table border="2" alt="{gobodoc:title}">
+		<caption><xsl:value-of select="gobodoc:title"/></caption>
+		<col span="{gobodoc:tgroup/@cols}"/>
+		<!-- support only one group... -->
+		<xsl:apply-templates select="gobodoc:tgroup/gobodoc:thead"/>
+		<xsl:apply-templates select="gobodoc:tgroup/gobodoc:tfoot"/>
+		<xsl:apply-templates select="gobodoc:tgroup/gobodoc:tbody"/>
+	</table>
 </xsl:template>
 
 <xsl:template match="gobodoc:target">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
+		<xsl:when test="ancestor::gobodoc:programlisting">
 			<xsl:apply-templates select="." mode="listing"/>
 		</xsl:when>
 		<xsl:otherwise>
@@ -1156,26 +1072,26 @@ table.header tbody tr td {
 </xsl:template>
 
 <xsl:template match="gobodoc:tbody">
-<tbody>
-  <xsl:apply-templates select="gobodoc:row" mode="tbody"/>
-</tbody>
+	<tbody>
+		<xsl:apply-templates select="gobodoc:row" mode="tbody"/>
+	</tbody>
 </xsl:template>
 
 <xsl:template match="gobodoc:tfoot">
-<tfoot>
-  <xsl:apply-templates select="gobodoc:row" mode="tfoot"/>
-</tfoot>
+	<tfoot>
+		<xsl:apply-templates select="gobodoc:row" mode="tfoot"/>
+	</tfoot>
 </xsl:template>
 
 <xsl:template match="gobodoc:thead">
-<thead>
-  <xsl:apply-templates select="gobodoc:row" mode="thead"/>
-</thead>
+	<thead>
+		<xsl:apply-templates select="gobodoc:row" mode="thead"/>
+	</thead>
 </xsl:template>
 
 <xsl:template match="gobodoc:true">
 	<xsl:choose>
-		<xsl:when test="ancestor::programlisting">
+		<xsl:when test="ancestor::gobodoc:programlisting">
 			<xsl:apply-templates select="." mode="listing"/>
 		</xsl:when>
 		<xsl:otherwise>
