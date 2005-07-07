@@ -57,9 +57,11 @@
 		</description>
 
 		<geant file="build.eant" target="${target}" dir="geant"/>
+		<geant file="build.eant" target="${target}" dir="gexslt"/>
 		<geant file="build.eant" target="${target}" dir="guidelines"/>
 		<geant file="build.eant" target="${target}" dir="math"/>
 		<geant file="build.eant" target="${target}" dir="string"/>
+		<geant file="build.eant" target="${target}" dir="xml"/>
 	</target>
 
 </project>
