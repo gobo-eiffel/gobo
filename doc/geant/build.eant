@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="geant_documentation" default="help">
+<project name="geant_doc" default="help">
 
 	<description>
-		description: "Eiffel Ant file for Gobo Eiffel Ant Documentation"
-		system: "Gobo Eiffel Ant Documentation"
+		description: "Gobo Eiffel Ant Documentation"
 		copyright: "Copyright (c) 2002-2003, Sven Ehrke and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
@@ -23,14 +22,11 @@
 			Install the Gobo Eiffel Ant Documentation.
 		</description>
 
-		<set name="xslt_processor" value="gexslt" />
-		<!-- <set name="xslt_processor" value="xsltproc" unless="$GOBO_XSLT_PROCESSOR"/>
-		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="$GOBO_XSLT_PROCESSOR"/> -->
+		<set name="xslt_processor" value="gexslt" unless="$GOBO_XSLT_PROCESSOR"/>
+		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="${GOBO_XSLT_PROCESSOR}"/>
 
-			<!-- Concepts: -->
-		<set name="previous" value="xslt_task"/>
+		<set name="previous" value="overview"/>
 		<set name="current" value="overview"/>
-
 		<geant target="xslt_and_shift" arguments="introduction"/>
 		<geant target="xslt_and_shift" arguments="examples"/>
 		<geant target="xslt_and_shift" arguments="builtin_variables"/>
@@ -78,17 +74,14 @@
 			Remove all generated files.
 		</description>
 
-			<!-- Concepts: -->
 		<delete file="overview.html"/>
 		<delete file="introduction.html"/>
 		<delete file="examples.html"/>
 		<delete file="builtin_variables.html"/>
+		<delete file="target.html"/>
 		<delete file="tasks.html"/>
-
-			<!-- Elements: -->
 		<delete file="fileset_element.html"/>
 		<delete file="map_element.html"/>
-
 		<delete file="available_task.html"/>
 		<delete file="copy_task.html"/>
 		<delete file="delete_task.html"/>
@@ -115,7 +108,6 @@
 		<delete file="xslt_task.html"/>
 	</target>
 
-
 <!-- Implementation -->
 
 	<target name="xslt_and_shift" export="NONE">
@@ -125,15 +117,15 @@
 		<argument name="a_next"/>
 
 		<geant target="xslt" arguments="${previous},${current},${a_next}"/>
-
-			<!-- Shift parameters: -->
+			<!-- Shift parameters -->
 		<set name="previous" value="${current}"/>
 		<set name="current" value="${a_next}"/>
 	</target>
 
 	<target name="xslt" export="NONE">
 		<description>
-			Execute XSL Transformation for argument ${a_file}, ${a_previous} and ${a_next} using processor ${xslt_processor}.
+			Execute XSL Transformation for argument ${a_file}, ${a_previous}
+			and ${a_next} using processor ${xslt_processor}.
 		</description>
 		<argument name="a_previous"/>
 		<argument name="a_file"/>

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="xslt" default="help">
+<project name="xslt_doc" default="help">
 
 	<description>
-		description: "Eiffel Ant file for Gobo Eiffel XSLT Library Doc"
+		description: "Gobo Eiffel XSLT Library documentation"
 		library: "Gobo Eiffel XSLT Library"
 		copyright: "Copyright (c) 2004, Colin Adams and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
@@ -20,44 +20,25 @@
 
 	<target name="install">
 		<description>
-			Install the Gobo Eiffel XSLT Library Documentation.
+			Install the Gobo Eiffel XSLT Library documentation.
 		</description>
 
-		<set name="xslt_processor" value="gexslt" />
+		<set name="xslt_processor" value="gexslt" unless="$GOBO_XSLT_PROCESSOR"/>
+		<set name="xslt_processor" value="${GOBO_XSLT_PROCESSOR}" if="${GOBO_XSLT_PROCESSOR}"/>
 
-		<set name="next" value="overview"/>
-		<set name="next_chapter" value="configuration"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="output_resolver"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="transformer"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="transforming"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="results"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="error_listener"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="tracing"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="transformation_result"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="transformation_source"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="output_extensions"/>
-		<geant target="xslt"/>
-
-		<set name="next_chapter" value="overview"/>
-		<geant target="xslt"/>
+		<set name="previous" value="overview"/>
+		<set name="current" value="overview"/>
+		<geant target="xslt_and_shift" arguments="configuration"/>
+		<geant target="xslt_and_shift" arguments="output_resolver"/>
+		<geant target="xslt_and_shift" arguments="transformer"/>
+		<geant target="xslt_and_shift" arguments="transforming"/>
+		<geant target="xslt_and_shift" arguments="results"/>
+		<geant target="xslt_and_shift" arguments="error_listener"/>
+		<geant target="xslt_and_shift" arguments="tracing"/>
+		<geant target="xslt_and_shift" arguments="transformation_result"/>
+		<geant target="xslt_and_shift" arguments="transformation_source"/>
+		<geant target="xslt_and_shift" arguments="output_extensions"/>
+		<geant target="xslt_and_shift" arguments="overview"/>
 	</target>
 
 	<target name="clean">
@@ -74,27 +55,44 @@
 		</description>
 
 		<delete file="overview.html"/>
+		<delete file="configuration.html"/>
+		<delete file="output_resolver.html"/>
+		<delete file="transformer.html"/>
+		<delete file="transforming.html"/>
+		<delete file="results.html"/>
+		<delete file="error_listener.html"/>
+		<delete file="tracing.html"/>
+		<delete file="transformation_result.html"/>
+		<delete file="transformation_source.html"/>
+		<delete file="output_extensions.html"/>
 	</target>
 
 <!-- Implementation -->
 
-	<target name="xslt">
+	<target name="xslt_and_shift" export="NONE">
 		<description>
-			Execute XSL Transformation for argument ${input}, ${previous} and ${next} using processor ${xslt_processor}.
+			Call `xslt' and shift variables `previous' and `current' one chapter forward.
 		</description>
+		<argument name="a_next"/>
 
-		<set name="previous" value="${input}"/>
-		<set name="input" value="${next}"/>
-		<set name="next" value="${next_chapter}"/>
+		<geant target="xslt" arguments="${previous},${current},${a_next}"/>
+			<!-- Shift parameters -->
+		<set name="previous" value="${current}"/>
+		<set name="current" value="${a_next}"/>
+	</target>
 
-		<xslt
-			processor="${xslt_processor}"
-			input="${input}.xml"
-			output="${input}.html"
-			stylesheet="${GOBO}/doc/misc/gobo2html2.xsl"
-		>
-			<parameter name="previous" value="&quot;'${previous}.html'&quot;"/>
-			<parameter name="next" value="&quot;'${next}.html'&quot;"/>
+	<target name="xslt" export="NONE">
+		<description>
+			Execute XSL Transformation for argument ${a_file}, ${a_previous}
+			and ${a_next} using processor ${xslt_processor}.
+		</description>
+		<argument name="a_previous"/>
+		<argument name="a_file"/>
+		<argument name="a_next"/>
+
+		<xslt processor="${xslt_processor}" input="${a_file}.xml" output="${a_file}.html" stylesheet="${GOBO}/doc/misc/gobo2html2.xsl">
+			<parameter name="previous" value="&quot;'${a_previous}.html'&quot;"/>
+			<parameter name="next" value="&quot;'${a_next}.html'&quot;"/>
 			<parameter name="toc" value="&quot;'overview.html'&quot;"/>
 			<parameter name="images" value="'../../image/'"/>
 		</xslt>
