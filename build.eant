@@ -26,11 +26,11 @@
 			Install the Gobo Eiffel package.
 		</description>
 
-		<geant file="build.eant" target="install" dir="doc"/>
 		<geant file="build.eant" target="install" dir="library"/>
 		<geant file="build.eant" target="install" dir="src"/>
 		<geant file="build.eant" target="install" dir="example"/>
 		<geant file="build.eant" target="install" dir="test"/>
+		<geant file="build.eant" target="install" dir="doc" unless="${SE_1_0}"/>
 	</target>
 
 	<target name="clean" depend="init">
@@ -42,6 +42,7 @@
 		<geant file="build.eant" target="clean" dir="src"/>
 		<geant file="build.eant" target="clean" dir="example"/>
 		<geant file="build.eant" target="clean" dir="test"/>
+		<geant file="build.eant" target="clean" dir="doc"/>
 	</target>
 
 	<target name="clobber" depend="init">
@@ -53,6 +54,7 @@
 		<geant file="build.eant" target="clobber" dir="src"/>
 		<geant file="build.eant" target="clobber" dir="example"/>
 		<geant file="build.eant" target="clobber" dir="test"/>
+		<geant file="build.eant" target="clobber" dir="doc"/>
 	</target>
 
 	<target name="develop" depend="init">
@@ -127,7 +129,7 @@
 		<geant file="../src/gexslt/build.eant" target="clean" dir="bin"/>
 		<geant file="build.eant" target="install" dir="example"/>
 		<geant file="build.eant" target="install" dir="test"/>
-		<geant file="build.eant" target="install" dir="doc"/>
+		<geant file="build.eant" target="install" dir="doc" unless="${SE_1_0}"/>
 		<geant target="clean"/>
 	</target>
 
