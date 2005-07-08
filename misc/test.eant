@@ -152,8 +152,9 @@
 		<delete file="${system}.melted"/>
 		<delete file="lib${system}.dll"/>
 		<delete>
-			<fileset include="@(${system}_module_*.dll)"/>
+			<fileset include="?(${system}_)module_*.dll"/>
 		</delete>
+		<delete file="EiffelSoftware.Runtime.dll"/>
 		<delete file="${system}.h2o"/>
 		<delete directory="TESTGEN"/>
 		<delete file="xcompile.log"/>

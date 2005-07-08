@@ -218,7 +218,7 @@
 		<delete>
 			<fileset include="?(${system}_)module_*.dll"/>
 		</delete>
-		<delete directory="EiffelSoftware.Runtime.exe"/>
+		<delete file="EiffelSoftware.Runtime.dll"/>
 		<delete file="${system}.h2o"/>
 		<geant target="other_clobber"/>
 	</target>
