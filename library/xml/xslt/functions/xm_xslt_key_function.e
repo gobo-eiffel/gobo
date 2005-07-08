@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			key_fingerprint := -1
 			name := "key"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 2
-			maximum_argument_count := 2
+			maximum_argument_count := 3
 			create arguments.make (3)
 			arguments.set_equality_tester (expression_tester)
 			initialized := True
@@ -190,6 +190,9 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 				arguments_checked := True
 				Precursor (a_context)
 				arguments.item (2).set_unsorted (False)
+				if arguments.item (2).was_expression_replaced then
+					arguments.replace (arguments.item (2).replacement_expression, 1)
+				end
 				a_string_value ?= arguments.item (1)
 				an_xslt_context ?= a_context
 				check

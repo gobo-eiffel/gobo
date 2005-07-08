@@ -69,6 +69,9 @@ feature -- Optimization
 			Precursor (a_context)
 			if not was_expression_replaced then
 				arguments.item (1).set_unsorted (True)
+				if arguments.item (1).was_expression_replaced then
+					arguments.replace (arguments.item (1).replacement_expression, 1)
+				end
 			elseif replacement_expression.is_unordered_function then
 				replacement_expression.as_unordered_function.arguments.item (1).set_unsorted (True)
 			end

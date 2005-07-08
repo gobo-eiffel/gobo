@@ -143,6 +143,9 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 		do
 			Precursor (a_context)
 			arguments.item (1).set_unsorted (False)
+			if arguments.item (1).was_expression_replaced then
+				arguments.replace (arguments.item (1).replacement_expression, 1)
+			end
 			is_singleton_id := not arguments.item (1).cardinality_allows_many
 		end
 

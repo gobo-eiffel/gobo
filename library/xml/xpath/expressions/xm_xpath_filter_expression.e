@@ -519,7 +519,10 @@ feature {NONE} -- Implementation
 			--	The filter expression usually need not be sorted.
 			
 			filter.set_unsorted_if_homogeneous (False)
-						
+			if filter.was_expression_replaced then
+				set_filter (filter.replacement_expression)
+			end
+
 			-- Detect head expressions (E[1]) and tail expressions (E[position()!=1])
 			-- and treat them specially.
 

@@ -2,21 +2,21 @@ indexing
 
 	description:
 
-		"Objects that implement the XSLT current-group() function"
+		"Objects that implement the XSLT current-grouping-key() function"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_CURRENT_GROUP
+class XM_XSLT_CURRENT_GROUPING_KEY
 
 inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, create_iterator, compute_intrinsic_dependencies
+			pre_evaluate, evaluate_item, compute_intrinsic_dependencies
 		end
 
 creation
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "current-group"; namespace_uri := Xpath_standard_functions_uri
+			name := "current-grouping-key"; namespace_uri := Xpath_standard_functions_uri
 			minimum_argument_count := 0
 			maximum_argument_count := 0
 			create arguments.make (0)
@@ -41,7 +41,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
-			Result := any_item
+			Result := type_factory.any_atomic_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -66,8 +66,8 @@ feature -- Status setting
 
 feature -- Evaluation
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Iterator over the values of a sequence
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate `Current' as a single item
 		local
 			a_group_iterator: XM_XSLT_GROUP_ITERATOR
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
@@ -79,9 +79,9 @@ feature -- Evaluation
 			end
 			a_group_iterator := an_evaluation_context.current_group_iterator
 			if a_group_iterator = Void then
-				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+				last_evaluated_item := Void
 			else
-				last_iterator := a_group_iterator.current_group_iterator
+				last_evaluated_item := a_group_iterator.current_grouping_key
 			end
 		end
 

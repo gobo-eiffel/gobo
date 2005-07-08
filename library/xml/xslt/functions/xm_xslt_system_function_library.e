@@ -32,6 +32,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 0
 			elseif a_fingerprint = Current_group_function_type_code and then not is_restricted then
 				Result := an_arity = -1 or else an_arity = 0
+			elseif a_fingerprint = Current_grouping_key_function_type_code and then not is_restricted then
+				Result := an_arity = -1 or else an_arity = 0
 			elseif a_fingerprint = Document_function_type_code and then not is_restricted then
 				Result := an_arity = -1 or else an_arity = 1 or else an_arity = 2
 			elseif a_fingerprint = Format_number_function_type_code and then not is_restricted then
@@ -41,7 +43,7 @@ feature -- Access
 			elseif a_fingerprint = Generate_id_function_type_code and then not is_restricted then
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
 			elseif a_fingerprint = Key_function_type_code and then not is_restricted then
-				Result := an_arity = -1 or else an_arity = 2
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
 			elseif a_fingerprint = System_property_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Unparsed_entity_uri_function_type_code and then not is_restricted then
@@ -63,6 +65,8 @@ feature -- Element change
 				create {XM_XSLT_CURRENT} a_function_call.make
 			elseif a_fingerprint = Current_group_function_type_code then
 				create {XM_XSLT_CURRENT_GROUP} a_function_call.make
+			elseif a_fingerprint = Current_grouping_key_function_type_code then
+				create {XM_XSLT_CURRENT_GROUPING_KEY} a_function_call.make
 			elseif a_fingerprint = Document_function_type_code then
 				create {XM_XSLT_DOCUMENT_FUNCTION} a_function_call.make
 			elseif a_fingerprint = Format_number_function_type_code then

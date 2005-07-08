@@ -72,7 +72,7 @@ feature
 				catalog_resolver: a_catalog_resolver /= Void
 				-- because `make_with_defaults'
 			end
-			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.resize (2)
+			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.resize (2 * shared_catalog_manager.bootstrap_resolver.well_known_system_ids.count)
 			shared_catalog_manager.bootstrap_resolver.well_known_system_ids.put (an_output.last_output, "string:/transform")
 
 			-- now use the generated transform to produce a report

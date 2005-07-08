@@ -142,6 +142,9 @@ feature {XM_XPATH_FUNCTION_CALL} -- Local
 		do
 			Precursor (a_context)
 			arguments.item (1).set_unsorted (True)
+			if arguments.item (1).was_expression_replaced then
+				arguments.replace (arguments.item (1).replacement_expression, 1)
+			end
 		end
 
 feature {NONE} -- Implementation

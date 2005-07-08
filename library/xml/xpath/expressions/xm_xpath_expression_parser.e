@@ -249,6 +249,9 @@ feature {NONE} -- Implementation
 					a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
 					if a_fingerprint /= -1 then
 						a_primary_type := type_factory.schema_type (a_fingerprint)
+						check
+							primary_type_exists: a_primary_type /= Void
+						end
 						next_token ("In parse_sequence: current token is ")
 						if tokenizer.is_lexical_error then
 							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
@@ -282,6 +285,9 @@ feature {NONE} -- Implementation
 					parse_node_kind_test
 					if not is_parse_error then
 						a_primary_type := internal_last_parsed_node_test
+						check
+							node_test_primary_type_exists: a_primary_type /= Void
+						end
 					end
 				end
 			else
@@ -296,7 +302,9 @@ feature {NONE} -- Implementation
 		end
 
 	set_occurence_flag (a_primary_type: XM_XPATH_ITEM_TYPE) is
-			-- Set occurrence flag.
+			-- Set occurrence flag
+		require
+			primary_type_exists: a_primary_type /= Void
 		local
 			an_occurrence_flag: INTEGER
 		do
@@ -1899,7 +1907,7 @@ feature {NONE} -- Implementation
 								a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
 							end
 							if a_fingerprint = -1 or else not function_library.is_function_available (a_fingerprint, arguments.count, environment.is_restricted) then
-								a_message := STRING_.concat ("Unknown function: ", a_function_name)
+								a_message := STRING_.concat ("Unknown function (or wrong number of arguments to function): ", a_function_name)
 								report_parse_error (a_message, "XPST0017")
 							else
 								function_library.bind_function (a_fingerprint, arguments, environment.is_restricted)

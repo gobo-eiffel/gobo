@@ -191,7 +191,7 @@ feature -- Access
 			-- xs:gYear
 		deferred
 		ensure
-			g_year_type_not_necessarily_present: Result /= Void implies is_built_in_fingerprint (Result.fingerprint)
+			g_year_type_not_necessarily_present: Result /= Void implies is_built_in_fingerprint (Result.fingerprint) -- TODO: NOT TRUE!
 		end
 
 	g_day_type: XM_XPATH_ATOMIC_TYPE is
