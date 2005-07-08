@@ -65,7 +65,7 @@ SE 1.0 (SmartEiffel)
 
 VE 5.0b build 2508 (Visual Eiffel)
 
-	* The decimal classes violate an invariant inherited from class
+	* The decimal classes violate invariants inherited from class
 	  NUMERIC. You should compile them with invariant monitoring off.
 
 	* Some Eiffel distributions such as Visual Eiffel may provide older
