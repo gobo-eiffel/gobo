@@ -94,8 +94,15 @@ feature -- Escape/unescape data characters
 			-- representation before being encoded.
 		require
 			a_string_not_void: a_string /= Void
+		local
+			l_default_unescaped: DS_HASH_SET [CHARACTER]
 		do
-			Result := escape_custom (utf8.to_utf8 (a_string), Default_unescaped, True)
+				-- Bug in ISE 5.6.1103 for .NET: if we don't put
+				-- `Default_unescaped' in a local variable before
+				-- passing it to `escape_custom' then Void is
+				-- passed instead.
+			l_default_unescaped := Default_unescaped
+			Result := escape_custom (utf8.to_utf8 (a_string), l_default_unescaped, True)
 		ensure
 			escape_utf8_not_void: Result /= Void
 			no_spaces: not Result.has (' ')
