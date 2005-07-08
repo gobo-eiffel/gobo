@@ -13,8 +13,7 @@
 	<option name="console_application" value="true"/>
 	<option unless="${DEBUG}">
 		<option name="assertion" value="none"/>
-			<!-- SE 2.1 and 2.2b1 crash when compiling gexslt in boost mode with GC -->
-		<option name="garbage_collector" value="none"/>
+		<option name="garbage_collector" value="internal"/>
 		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
 		<option name="inlining" value="all"/>
 	</option>
@@ -31,7 +30,10 @@
 	<option if="${GOBO_EIFFEL}=se">
 		<option name="warning" value="none"/>
 		<option name="case_insensitive" value="false"/>
-		<option name="split" value="true"/>
+			<!-- SE 2.1 and 2.2b1 generate too big C files to be compiled by Visual C -->
+		<option name="split" value="true" unless="${SE_1_0}"/>
+			<!-- SE 2.1 and 2.2b1 crash when compiling gexslt in boost mode with GC -->
+		<option name="garbage_collector" value="none" unless="${SE_1_0}"/>
 	</option>
 
 	<!-- <option name="debug_tag" value="XSLT content output"/> -->
