@@ -167,10 +167,10 @@ feature -- Values
 		deferred
 		ensure
 			meaningful: Result >= Maximum_byte_code
-#ifdef ISE || VE
+#ifdef VE
 			definition: Result = (2 ^ Character_bits) - 1
 #else
-			-- Problem with ^ in SE 2.1b1:
+			-- Problem with ^ in SE 2.1b1, and with ISE 5.6 for .NET:
 			-- definition: Result = (2 ^ Character_bits) - 1
 #endif
 		end
