@@ -14,6 +14,8 @@ ISE 5.5/5.6 (ISE Eiffel)
 	    geant clobber
 	    geant install
 
+	* The decimal tests fail when compiled with ISE 5.5 for .NET.
+
 SE 2.2b1 (SmartEiffel)
 
 	* KL_PLATFORM.Double_bits is not supported anymore. This is a 
