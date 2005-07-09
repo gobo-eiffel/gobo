@@ -80,8 +80,15 @@ feature -- Escape/unescape data characters
 		require
 			a_string_not_void: a_string /= Void
 			no_high_characters: maximum_character_code_in_string (a_string) < 256
+		local
+			l_default_unescaped: DS_HASH_SET [CHARACTER]
 		do
-			Result := escape_custom (a_string, Default_unescaped, True)
+				-- Bug in ISE 5.6.1103 for .NET: if we don't put
+				-- `Default_unescaped' in a local variable before
+				-- passing it to `escape_custom' then Void is
+				-- passed instead.
+			l_default_unescaped := Default_unescaped
+			Result := escape_custom (a_string, l_default_unescaped, True)
 		ensure
 			escape_string_not_void: Result /= Void
 			no_spaces: not Result.has (' ')
@@ -188,10 +195,15 @@ feature -- Character sets
 
 	Default_unescaped: DS_HASH_SET [CHARACTER] is
 			-- Default character set not to escape
+		local
+			l_default_unescaped: DS_HASH_SET [CHARACTER]
 		once
-			Result := new_character_set (STRING_.concat (
+				-- Bug in ISE 5.6 for .NET: use a local variable rather
+				-- than directly `Result', otherwise Result is set to Void.
+			l_default_unescaped := new_character_set (STRING_.concat (
 				STRING_.concat (Rfc_lowalpha_characters, Rfc_upalpha_characters),
 				STRING_.concat (Rfc_digit_characters, Rfc_mark_characters)))
+			Result := l_default_unescaped
 		end
 
 	Rfc_lowalpha_characters: STRING is "abcdefghijklmnopqrstuvwxyz"
