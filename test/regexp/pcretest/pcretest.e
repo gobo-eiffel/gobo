@@ -982,7 +982,10 @@ feature {NONE} -- Filenames
 
 	data_dirname: STRING is
 			-- Name of directory containing input files
-		once
+		do
+				-- Bug in ISE 5.6 for .NET: use a do-function rather than
+				-- a once-function, otherwise ${GOBO} is not replaced by
+				-- its value in `interpreted_string'.
 			Result := file_system.nested_pathname ("${GOBO}", <<"test", "regexp", "pcretest", "data">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure

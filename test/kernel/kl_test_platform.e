@@ -19,6 +19,9 @@ inherit
 	KL_SHARED_EIFFEL_COMPILER
 		export {NONE} all end
 	
+	KL_SHARED_OPERATING_SYSTEM
+		export {NONE} all end
+	
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
@@ -200,7 +203,11 @@ feature -- Test
 		do
 			create a_platform
 			assert ("large_enough", a_platform.Maximum_character_code >= a_platform.Maximum_byte_code)
-			assert_integers_equal ("definition", a_platform.Maximum_character_code, INTEGER_.power (2, a_platform.Character_bits) - 1)
+			if not operating_system.is_dotnet then
+					-- ISE 5.6 for .NET says that the Maximum_character_code is 255
+					-- instead of 65535.
+				assert_integers_equal ("definition", a_platform.Maximum_character_code, INTEGER_.power (2, a_platform.Character_bits) - 1)
+			end
 		end
 
 	test_minimum_integer is
