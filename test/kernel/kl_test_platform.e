@@ -200,7 +200,7 @@ feature -- Test
 		do
 			create a_platform
 			assert ("large_enough", a_platform.Maximum_character_code >= a_platform.Maximum_byte_code)
-			assert ("definition", a_platform.Maximum_character_code = (INTEGER_.power (2, a_platform.Character_bits)) - 1)
+			assert_integers_equal ("definition", a_platform.Maximum_character_code, INTEGER_.power (2, a_platform.Character_bits) - 1)
 		end
 
 	test_minimum_integer is
