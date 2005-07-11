@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
-
 <languages xml:lang="de">
-
   <para xml:lang="en"/>
-
   <div xml:lang="en">
-
     <para>And now, and forever!</para>
-
   </div>
-
   <para xml:lang="EN"/>
-
   <para xml:lang="en-us"/>
-
   <para />
-
 </languages>
-
