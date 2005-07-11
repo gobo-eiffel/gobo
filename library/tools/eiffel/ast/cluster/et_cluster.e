@@ -235,6 +235,32 @@ feature -- Access
 			full_pathname_not_empty: Result.count > 0
 		end
 
+	full_unix_pathname: STRING is
+			-- Full Unix directory pathname
+		local
+			a_pathname: STRING
+			parent_pathname: STRING
+			a_basename: STRING
+		do
+			a_pathname := pathname
+			if is_relative and parent /= Void then
+				parent_pathname := parent.full_unix_pathname
+				if a_pathname /= Void and then a_pathname.count > 0 then
+					a_basename := a_pathname
+				else
+					a_basename := name
+				end
+				Result := unix_file_system.pathname (parent_pathname, a_basename)
+			elseif a_pathname /= Void and then a_pathname.count > 0 then
+				Result := a_pathname
+			else
+				Result := name
+			end
+		ensure
+			full_unix_pathname_not_void: Result /= Void
+			full_unix_pathname_not_empty: Result.count > 0
+		end
+
 	hash_code: INTEGER is
 			-- Hash code value
 		do
