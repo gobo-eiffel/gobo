@@ -679,7 +679,7 @@
 	<i><b><tt><xsl:text>end</xsl:text></tt></b></i>
 </xsl:template>
 
-<xsl:template match="gobodoc:mediaobjectco/imageobjectco">
+<xsl:template match="gobodoc:mediaobjectco/gobodoc:imageobjectco">
 	<p>
 		<xsl:if test="gobodoc:imageobject/gobodoc:imagedata/@align">
 			<xsl:attribute name="align">
