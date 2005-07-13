@@ -21,7 +21,7 @@ inherit
 
 	RX_PCRE_MATCHER
 
-creation
+create
 
 	make
 

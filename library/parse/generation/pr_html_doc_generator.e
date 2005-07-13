@@ -16,7 +16,7 @@ inherit
 
 	PR_DOC_GENERATOR
 
-creation
+create
 
 	make
 

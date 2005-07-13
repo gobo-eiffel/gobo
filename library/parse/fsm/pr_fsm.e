@@ -20,7 +20,7 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 	KL_IMPORTED_ANY_ROUTINES
 
-creation
+create
 
 	make, make_verbose, make_default
 

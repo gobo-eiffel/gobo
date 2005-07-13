@@ -17,7 +17,7 @@ inherit
 
 	PR_YACC_SCANNER_SKELETON
 
-creation
+create
 
 	make
 %}

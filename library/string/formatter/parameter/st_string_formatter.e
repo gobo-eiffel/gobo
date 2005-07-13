@@ -16,7 +16,7 @@ inherit
 
 	ST_PARAMETER_FORMATTER
 
-creation
+create
 
 	make
 

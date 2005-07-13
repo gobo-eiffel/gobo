@@ -17,7 +17,7 @@ inherit
 	DP_COMMAND
 	KL_SHELL_COMMAND
 
-creation
+create
 
 	make
 

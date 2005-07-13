@@ -22,7 +22,7 @@ inherit
 			add_local_item as add_following_token
 		end
 
-creation
+create
 
 	make
 

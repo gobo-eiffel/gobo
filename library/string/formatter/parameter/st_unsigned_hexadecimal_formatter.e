@@ -16,7 +16,7 @@ inherit
 
 	ST_UNSIGNED_INTEGER_FORMATTER
 
-creation
+create
 
 	make
 

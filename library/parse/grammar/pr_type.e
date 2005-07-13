@@ -22,7 +22,7 @@ inherit
 	KL_IMPORTED_CHARACTER_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
 
-creation
+create
 
 	make, make_generic, make_anchored
 

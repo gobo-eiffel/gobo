@@ -27,7 +27,7 @@ inherit
 
 	ST_DOUBLE_FORMATTER
 
-creation
+create
 
 	make
 

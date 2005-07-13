@@ -22,7 +22,7 @@ inherit
 
 	COMPARABLE
 
-creation
+create
 
 	make
 

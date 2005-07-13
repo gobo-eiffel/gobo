@@ -55,7 +55,7 @@ inherit
 	KL_SHARED_PLATFORM
 		export {NONE} all end
 
-creation
+create
 
 	make
 

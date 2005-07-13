@@ -30,7 +30,7 @@ inherit
 			add_local_item as add_derive
 		end
 
-creation
+create
 
 	make
 

@@ -27,7 +27,7 @@ inherit
 	KL_IMPORTED_SPECIAL_ROUTINES
 		export {NONE} all end
 
-creation
+create
 
 	make
 

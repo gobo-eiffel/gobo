@@ -23,7 +23,7 @@ inherit
 			make_with_escape
 		end
 
-creation
+create
 
 	make, make_with_escape
 

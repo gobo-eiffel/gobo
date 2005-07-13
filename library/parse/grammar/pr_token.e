@@ -20,7 +20,7 @@ inherit
 			print_symbol as print_token
 		end
 
-creation
+create
 
 	make
 

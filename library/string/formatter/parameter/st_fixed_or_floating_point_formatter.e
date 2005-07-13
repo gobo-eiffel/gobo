@@ -33,7 +33,7 @@ inherit
 			double_format_to
 		end
 
-creation
+create
 
 	make
 

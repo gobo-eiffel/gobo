@@ -16,7 +16,7 @@ inherit
 
 	DP_COMMAND
 
-creation
+create
 
 	make
 

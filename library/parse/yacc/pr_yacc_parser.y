@@ -23,7 +23,7 @@ inherit
 			reset as reset_yacc_scanner
 		end
 
-creation
+create
 
 	make
 
