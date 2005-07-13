@@ -20,7 +20,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
-creation
+create
 
 	make, make_empty, make_from_string, make_unknown
 

@@ -26,7 +26,7 @@ inherit
 			create_iterator
 		end
 
-creation
+create
 
 	make
 

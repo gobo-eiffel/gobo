@@ -26,7 +26,7 @@ inherit
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
 
-creation
+create
 
 	make, make_with_copy
 

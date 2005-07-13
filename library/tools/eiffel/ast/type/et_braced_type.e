@@ -16,7 +16,7 @@ inherit
 
 	ET_TARGET_TYPE
 
-creation
+create
 
 	make
 

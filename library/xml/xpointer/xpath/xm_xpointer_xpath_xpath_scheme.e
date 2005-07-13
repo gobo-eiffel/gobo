@@ -24,7 +24,7 @@ inherit
 
 	XM_XPATH_TOKENS
 
-creation
+create
 
 	make
 

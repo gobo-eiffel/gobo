@@ -32,7 +32,7 @@ inherit
 		--  or they are for a user-implemented (QName) output method.
 		-- So this class is being written as the latter, as an example of what need to be done.
 
-creation
+create
 
 	make
 

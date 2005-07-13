@@ -19,7 +19,7 @@ inherit
 			is_once
 		end
 
-creation
+create
 
 	make
 

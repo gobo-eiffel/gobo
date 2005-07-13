@@ -25,7 +25,7 @@ inherit
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
 
-creation
+create
 
 	make, make_with_capacity
 

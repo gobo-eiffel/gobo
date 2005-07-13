@@ -21,7 +21,7 @@ inherit
 	UT_COMMAND
 	DP_SHELL_COMMAND
 
-creation
+create
 
 	make
 

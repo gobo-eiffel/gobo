@@ -12,7 +12,7 @@ indexing
 
 class XM_XPATH_CONFIGURATION
 
-creation
+create
 
 	make_configuration
 

@@ -40,7 +40,7 @@ inherit
 
 	XM_XSLT_TEMPLATE_ROUTINES
 
-creation
+create
 
 	make
 

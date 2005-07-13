@@ -21,7 +21,7 @@ inherit
 			is_group_sort_record, as_group_sort_record
 		end
 
-creation
+create
 
 	make
 

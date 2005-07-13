@@ -16,7 +16,7 @@ inherit
 
 	ET_CREATION_INSTRUCTION
 
-creation
+create
 
 	make
 

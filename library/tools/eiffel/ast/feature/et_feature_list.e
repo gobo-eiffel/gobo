@@ -16,7 +16,7 @@ inherit
 
 	ET_HEAD_LIST [ET_FEATURE]
 
-creation
+create
 
 	make, make_with_capacity
 

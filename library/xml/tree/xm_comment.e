@@ -18,7 +18,7 @@ inherit
 
 	XM_ELEMENT_NODE
 	
-creation
+create
 
 	make,
 	make_last,

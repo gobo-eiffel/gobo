@@ -23,7 +23,7 @@ inherit
 
 	XM_XPATH_SHARED_NAME_POOL
 
-creation
+create
 
 	make
 

@@ -30,7 +30,7 @@ inherit
 
 	XM_XPATH_RECEIVER_OPTIONS
 
-creation
+create
 
 	make
 

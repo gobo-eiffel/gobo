@@ -18,7 +18,7 @@ inherit
 
 	SHARED_SINGLETON4
 
-creation
+create
 
 	make
 

@@ -12,7 +12,7 @@ indexing
 
 class	XM_XSLT_RULE_VALUE
 
-creation
+create
 
 	make, make_boolean
 

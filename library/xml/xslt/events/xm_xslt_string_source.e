@@ -24,7 +24,7 @@ inherit
 		--  (for that, use an XM_XSLT_URI_SOURCE). Rather it is designed for creating
 		--  composite stylesheets (see XM_XSLT_TRANSFORMER_FACTORY)
 
-creation
+create
 
 	make
 

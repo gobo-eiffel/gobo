@@ -19,7 +19,7 @@ inherit
 			end_document
 		end
 
-creation
+create
 
 	make
 

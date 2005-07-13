@@ -22,7 +22,7 @@ inherit
 		-- Instead, use XM_XPATH_POSITION_ITERATOR, so this class does not
 		--  need to do optimization for numeric predicates.
 
-creation
+create
 
 	make, make_non_numeric
 

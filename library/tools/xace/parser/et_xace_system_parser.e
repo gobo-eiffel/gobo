@@ -19,7 +19,7 @@ inherit
 			parse_file
 		end
 
-creation
+create
 
 	make, make_with_factory, make_with_variables,
 	make_with_variables_and_factory, make_standard

@@ -20,7 +20,7 @@ inherit
 			is_last_function
 		end
 
-creation
+create
 
 	make
 

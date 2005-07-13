@@ -23,7 +23,7 @@ inherit
 			is_empty
 		end
 
-creation
+create
 
 	make, make_with_capacity
 

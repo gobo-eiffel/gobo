@@ -97,11 +97,11 @@ inherit
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
-creation
+create
 
 	make
 
-creation {ET_FEATURE_CHECKER}
+create {ET_FEATURE_CHECKER}
 
 	make_from_checker
 

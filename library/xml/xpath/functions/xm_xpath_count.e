@@ -19,7 +19,7 @@ inherit
 			evaluate_item, check_arguments, is_count_function, as_count_function
 		end
 
-creation
+create
 
 	make
 

@@ -33,7 +33,7 @@ inherit
 			text as free_operator_name
 		end
 
-creation
+create
 
 	make_infix,
 	make_prefix

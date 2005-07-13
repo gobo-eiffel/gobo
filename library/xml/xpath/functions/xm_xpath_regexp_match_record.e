@@ -12,7 +12,7 @@ indexing
 
 class XM_XPATH_REGEXP_MATCH_RECORD
 
-creation
+create
 
 	make
 

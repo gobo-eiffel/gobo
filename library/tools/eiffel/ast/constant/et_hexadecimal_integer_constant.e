@@ -16,7 +16,7 @@ inherit
 
 	ET_INTEGER_CONSTANT
 
-creation
+create
 
 	make
 

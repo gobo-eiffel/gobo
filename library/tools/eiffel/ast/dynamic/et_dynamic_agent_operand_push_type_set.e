@@ -16,7 +16,7 @@ inherit
 
 	ET_DYNAMIC_TYPE_SET
 
-creation
+create
 
 	make
 

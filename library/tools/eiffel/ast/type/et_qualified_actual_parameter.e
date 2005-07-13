@@ -19,7 +19,7 @@ inherit
 			resolved_formal_parameters
 		end
 
-creation
+create
 
 	make
 

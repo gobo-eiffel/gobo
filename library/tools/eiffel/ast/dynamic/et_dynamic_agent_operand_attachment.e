@@ -19,7 +19,7 @@ inherit
 			attachment as tuple_argument
 		end
 
-creation
+create
 
 	make
 

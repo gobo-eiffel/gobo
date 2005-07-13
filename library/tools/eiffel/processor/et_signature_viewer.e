@@ -22,7 +22,7 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
-creation
+create
 
 	make
 

@@ -20,7 +20,7 @@ inherit
 			read_token
 		end
 
-creation
+create
 
 	make, make_with_factory
 %}

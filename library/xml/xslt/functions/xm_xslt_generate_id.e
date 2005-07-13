@@ -19,7 +19,7 @@ inherit
 			simplify, evaluate_item, is_generate_id_function
 		end
 
-creation
+create
 
 	make
 

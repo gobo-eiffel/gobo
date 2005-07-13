@@ -37,7 +37,7 @@ inherit
 		--  will have to be parsed again, later, without this filter, once the
 		--  stylesheet has been compiled.
 
-creation
+create
 
 	make
 

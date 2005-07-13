@@ -41,7 +41,7 @@ inherit
 		--  compiler-specific weak references (e.g. IDENTIFIED in ISE).
 		-- That way, we can avoid locking multiple documents in memory.
 
-creation
+create
 
 	make
 

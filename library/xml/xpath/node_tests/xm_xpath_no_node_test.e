@@ -19,7 +19,7 @@ inherit
 			is_no_node_test
 		end
 
-creation {XM_XPATH_SHARED_NO_NODE_TEST}
+create {XM_XPATH_SHARED_NO_NODE_TEST}
 
 	make
 

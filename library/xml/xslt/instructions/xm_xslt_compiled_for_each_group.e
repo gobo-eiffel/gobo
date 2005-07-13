@@ -24,7 +24,7 @@ inherit
 
 		-- TODO: use XM_XSLT_PATTERN_EXPRESSION, when it is completed
 
-creation
+create
 
 	make, make_pattern
 

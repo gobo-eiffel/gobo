@@ -16,7 +16,7 @@ inherit
 
 	GEANT_COMMAND
 
-creation
+create
 
 	make
 

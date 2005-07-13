@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_TRACE_ROUTINES
 
-creation
+create
 
 	make
 

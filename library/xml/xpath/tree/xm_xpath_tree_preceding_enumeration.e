@@ -24,7 +24,7 @@ inherit
 			is_conforming, advance
 		end
 
-creation
+create
 
 	make
 	

@@ -32,7 +32,7 @@ inherit
 		--  path expressions are evaluated, as well as sequence expressions. It is also
 		--  used in the implementation of the XSLT document(), key(), and id() functions.
 
-creation
+create
 
 	make
 

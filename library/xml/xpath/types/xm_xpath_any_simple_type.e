@@ -19,7 +19,7 @@ inherit
 			is_any_simple_type
 		end
 
-creation
+create
 
 	make
 	

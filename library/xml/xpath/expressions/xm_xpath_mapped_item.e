@@ -12,7 +12,7 @@ indexing
 
 class XM_XPATH_MAPPED_ITEM
 
-creation
+create
 
 	make_item, make_sequence
 

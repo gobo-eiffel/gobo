@@ -18,7 +18,7 @@ inherit
 
 	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
 
-creation
+create
 
 	make
 

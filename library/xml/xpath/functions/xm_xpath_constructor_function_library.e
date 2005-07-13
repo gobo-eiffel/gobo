@@ -22,7 +22,7 @@ inherit
 
 	XM_XPATH_SHARED_TYPE_FACTORY
 
-creation
+create
 
 	make
 

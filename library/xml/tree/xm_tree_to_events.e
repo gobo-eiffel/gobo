@@ -24,7 +24,7 @@ inherit
 			process_attribute
 		end
 
-creation
+create
 
 	make
 	

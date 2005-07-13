@@ -24,7 +24,7 @@ inherit
 	UT_STRING_ROUTINES
 		export {NONE} all end
 
-creation
+create
 
 	make
 

@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_NUMERIC_ROUTINES
 
-creation
+create
 
 	make
 

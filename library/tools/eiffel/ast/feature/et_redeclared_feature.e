@@ -20,7 +20,7 @@ inherit
 			redeclared_feature
 		end
 
-creation
+create
 
 	make
 

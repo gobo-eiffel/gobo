@@ -17,7 +17,7 @@ inherit
 	ET_LOCAL_NAME
 	ET_ARGUMENT_NAME
 
-creation
+create
 
 	make
 

@@ -19,7 +19,7 @@ inherit
 			same_expression, is_parent_node_expression, as_parent_node_expression
 		end
 
-creation
+create
 
 	make
 

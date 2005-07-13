@@ -22,7 +22,7 @@ inherit
 			make_with_capacity as make_ast_list_with_capacity
 		end
 
-creation
+create
 
 	make, make_with_capacity
 

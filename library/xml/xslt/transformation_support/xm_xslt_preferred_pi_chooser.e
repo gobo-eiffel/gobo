@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PI_CHOOSER
 
-creation
+create
 
 	make
 

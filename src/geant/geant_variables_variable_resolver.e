@@ -16,7 +16,7 @@ inherit
 
 	GEANT_VARIABLE_RESOLVER
 
-creation
+create
 
 	make
 

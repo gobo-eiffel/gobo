@@ -26,7 +26,7 @@ inherit
 
 		-- A gexslt-specific extension attribute is implemented - gexslt:memo-function=yes|no
 
-creation
+create
 
 	make_style_element
 

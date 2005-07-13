@@ -22,7 +22,7 @@ inherit
 			append_to_string
 		end
 
-creation
+create
 
 	make, make_default
 

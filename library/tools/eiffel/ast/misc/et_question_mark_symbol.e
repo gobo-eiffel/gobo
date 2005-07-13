@@ -28,7 +28,7 @@ inherit
 			is_open_operand
 		end
 
-creation
+create
 
 	make
 

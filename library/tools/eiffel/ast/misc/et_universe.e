@@ -22,7 +22,7 @@ inherit
 	ET_SHARED_CLASS_NAME_TESTER
 	ET_SHARED_TOKEN_CONSTANTS
 
-creation
+create
 
 	make, make_standard, make_with_factory
 

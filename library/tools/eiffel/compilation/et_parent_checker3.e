@@ -22,7 +22,7 @@ inherit
 			process_generic_class_type
 		end
 
-creation
+create
 
 	make
 

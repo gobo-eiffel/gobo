@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_REGEXP_ROUTINES
 
-creation
+create
 
 	make
 

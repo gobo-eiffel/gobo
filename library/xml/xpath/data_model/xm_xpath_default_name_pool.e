@@ -12,7 +12,7 @@ indexing
 
 class XM_XPATH_DEFAULT_NAME_POOL
 
-creation {XM_XPATH_SHARED_NAME_POOL}
+create {XM_XPATH_SHARED_NAME_POOL}
 
 	make
 

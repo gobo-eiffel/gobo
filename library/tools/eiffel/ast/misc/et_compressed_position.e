@@ -16,7 +16,7 @@ inherit
 
 	ET_POSITION
 
-creation
+create
 
 	make, make_default
 

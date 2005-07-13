@@ -24,7 +24,7 @@ inherit
 			target as expression
 		end
 
-creation
+create
 
 	make
 

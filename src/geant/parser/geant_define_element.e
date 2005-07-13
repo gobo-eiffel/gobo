@@ -24,7 +24,7 @@ inherit
 			attribute_value_or_default
 		end
 
-creation
+create
 
 	make
 

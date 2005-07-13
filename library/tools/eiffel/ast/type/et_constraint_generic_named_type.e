@@ -24,7 +24,7 @@ inherit
 			resolved_syntactical_constraint
 		end
 
-creation
+create
 
 	make
 

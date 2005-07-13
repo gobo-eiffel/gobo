@@ -16,7 +16,7 @@ inherit
 
 	ET_REAL_CONSTANT
 
-creation
+create
 
 	make
 

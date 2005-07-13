@@ -30,7 +30,7 @@ inherit
 
 	XM_XPATH_ERROR_TYPES
 
-creation {XM_XPATH_NODE_FACTORY}
+create {XM_XPATH_NODE_FACTORY}
 
 	make, make_in_error_state
 

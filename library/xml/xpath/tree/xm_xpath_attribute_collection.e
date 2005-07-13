@@ -20,7 +20,7 @@ inherit
 
 	XM_UNICODE_CHARACTERS_1_1
 
-creation
+create
 
 	make
 

@@ -21,7 +21,7 @@ inherit
 			compute_special_properties, is_tail_recursive
 		end
 
-creation
+create
 
 	make
 

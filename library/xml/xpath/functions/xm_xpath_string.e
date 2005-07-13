@@ -19,7 +19,7 @@ inherit
 			simplify, analyze, evaluate_item, is_string_function, as_string_function
 		end
 
-creation
+create
 
 	make
 

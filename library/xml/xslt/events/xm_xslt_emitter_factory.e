@@ -20,7 +20,7 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
-creation
+create
 
 	make
 

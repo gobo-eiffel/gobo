@@ -23,7 +23,7 @@ inherit
 			process_tuple_type
 		end
 
-creation
+create
 
 	make
 

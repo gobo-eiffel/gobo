@@ -21,7 +21,7 @@ inherit
 			process_document
 		end
 		
-creation
+create
 
 	make
 	

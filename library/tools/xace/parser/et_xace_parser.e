@@ -20,7 +20,7 @@ inherit
 			make_with_factory as make_skeleton_with_factory
 		end
 
-creation
+create
 
 	make, make_with_factory, make_with_variables,
 	make_with_variables_and_factory, make_standard

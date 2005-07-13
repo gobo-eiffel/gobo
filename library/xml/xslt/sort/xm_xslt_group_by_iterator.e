@@ -31,7 +31,7 @@ inherit
 		--  this underpins the current-group() function in XSLT. The grouping key for the
 		--  current group is available via the `current_grouping_key' routine.
 
-creation
+create
 
 	make
 

@@ -20,7 +20,7 @@ inherit
 			default_priority
 		end
 
-creation
+create
 
 	make
 

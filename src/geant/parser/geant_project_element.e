@@ -25,7 +25,7 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
-creation
+create
 
 	make
 

@@ -21,7 +21,7 @@ inherit
 
 	DEBUG_OUTPUT
 
-creation
+create
 
 	make
 

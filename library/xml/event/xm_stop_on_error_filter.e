@@ -28,7 +28,7 @@ inherit
 			on_content
 		end
 
-creation
+create
 
 	set_next,
 	make_null

@@ -31,7 +31,7 @@ inherit
 			close, is_closable
 		end
 
-creation
+create
 
 	make
 

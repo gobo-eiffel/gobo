@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_GROUP_ITERATOR
 
-creation
+create
 
 	make
 

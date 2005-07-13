@@ -19,7 +19,7 @@ inherit
 			is_global, select_value, is_global_variable, as_global_variable
 		end
 
-creation
+create
 
 	make_global_variable
 

@@ -16,7 +16,7 @@ inherit
 
 	ET_FEATURE_NAME_ITEM
 
-creation
+create
 
 	make
 

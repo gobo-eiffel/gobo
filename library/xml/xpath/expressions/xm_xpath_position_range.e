@@ -20,7 +20,7 @@ inherit
 			is_position_range, as_position_range
 		end
 
-creation
+create
 
 	make
 

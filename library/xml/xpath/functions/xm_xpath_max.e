@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_MINIMAX_ROUTINES
 
-creation
+create
 
 	make
 

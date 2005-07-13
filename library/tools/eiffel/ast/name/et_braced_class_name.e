@@ -16,7 +16,7 @@ inherit
 
 	ET_PRECURSOR_CLASS_NAME
 
-creation
+create
 
 	make
 

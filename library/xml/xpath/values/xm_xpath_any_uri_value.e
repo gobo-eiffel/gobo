@@ -27,7 +27,7 @@ inherit
 		-- Although anyURI is not a sub-type of xs:string, it is convenient
 		-- to implement it as such.
 
-creation
+create
 
 	make
 

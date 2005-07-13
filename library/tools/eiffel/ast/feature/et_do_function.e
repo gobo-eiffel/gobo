@@ -16,7 +16,7 @@ inherit
 
 	ET_INTERNAL_FUNCTION
 
-creation
+create
 
 	make
 

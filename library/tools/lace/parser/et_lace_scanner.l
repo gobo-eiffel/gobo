@@ -17,7 +17,7 @@ inherit
 
 	ET_LACE_SCANNER_SKELETON
 
-creation
+create
 
 	make
 %}

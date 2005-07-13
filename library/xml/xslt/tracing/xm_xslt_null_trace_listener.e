@@ -30,7 +30,7 @@ inherit
 
 		-- This class is used to measure the impact of tracing, ignoring the I/O aspect.
 
-creation
+create
 
 	make
 

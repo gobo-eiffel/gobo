@@ -19,7 +19,7 @@ inherit
 
 	XM_XPATH_AXIS
 
-creation
+create
 
 	make
 

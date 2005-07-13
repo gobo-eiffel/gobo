@@ -55,7 +55,7 @@ inherit
 		--      This is a normal consequence of using DTDs with namespaces.
 		--      Roll on a RELAX-NG validator!
 
-creation
+create
 
 	make
 

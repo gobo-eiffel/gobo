@@ -16,7 +16,7 @@ inherit
 
 	ET_ERROR
 
-creation
+create
 
 	make_vsrc1a,
 	make_gvsrc3a,

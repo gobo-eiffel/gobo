@@ -20,7 +20,7 @@ inherit
 			analyze, create_iterator, evaluate_item, compute_cardinality
 		end
 
-creation
+create
 
 	make
 

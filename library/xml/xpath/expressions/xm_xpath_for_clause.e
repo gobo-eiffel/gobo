@@ -12,7 +12,7 @@ indexing
 
 class XM_XPATH_FOR_CLAUSE
 
-creation
+create
 
 	make
 

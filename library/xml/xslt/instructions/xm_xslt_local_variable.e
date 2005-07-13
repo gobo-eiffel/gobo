@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_COMPILED_VARIABLE
 
-creation
+create
 
 	make
 

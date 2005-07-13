@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_TRACE_WRAPPER
 
-creation
+create
 
 	make
 

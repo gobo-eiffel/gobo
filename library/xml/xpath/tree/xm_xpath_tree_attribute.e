@@ -26,7 +26,7 @@ inherit
 			is_tree_attribute, as_tree_attribute
 		end
 
-creation
+create
 
 	make
 

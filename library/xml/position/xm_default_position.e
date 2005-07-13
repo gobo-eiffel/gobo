@@ -18,7 +18,7 @@ inherit
 	
 	XM_STREAM_POSITION -- obsolete
 		
-creation
+create
 
 	make
 

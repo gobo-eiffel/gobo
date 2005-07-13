@@ -19,7 +19,7 @@ inherit
 			attachment as actual_argument
 		end
 
-creation
+create
 
 	make
 

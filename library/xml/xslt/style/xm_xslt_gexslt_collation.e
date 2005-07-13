@@ -28,7 +28,7 @@ inherit
 	--  then the code will be updated so that it will work for real, providing
 	--  named tailored collations.
 
-creation {XM_XSLT_NODE_FACTORY}
+create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 

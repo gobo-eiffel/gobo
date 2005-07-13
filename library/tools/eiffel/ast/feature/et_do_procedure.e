@@ -16,7 +16,7 @@ inherit
 
 	ET_INTERNAL_PROCEDURE
 
-creation
+create
 
 	make
 

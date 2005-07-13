@@ -19,7 +19,7 @@ inherit
 			on_xml_declaration
 		end
 
-creation
+create
 
 	make_null, set_next
 

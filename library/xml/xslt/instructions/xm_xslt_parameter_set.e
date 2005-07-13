@@ -12,7 +12,7 @@ indexing
 
 class XM_XSLT_PARAMETER_SET
 
-creation
+create
 
 	make, make_empty
 

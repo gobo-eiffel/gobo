@@ -19,7 +19,7 @@ inherit
 			is_untyped
 		end
 
-creation
+create
 
 	make
 	

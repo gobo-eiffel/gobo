@@ -35,7 +35,7 @@ inherit
 	-- The same XM_XSLT_COMPLEX_CONTENT_OUTPUTTER may be used for generating an entire XML
 	--  document; it is not necessary to create a new outputter for each element node.
 
-creation
+create
 
 	make
 

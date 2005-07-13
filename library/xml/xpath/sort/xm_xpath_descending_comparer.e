@@ -16,7 +16,7 @@ inherit
 	
 	KL_COMPARATOR [XM_XPATH_ITEM]
 
-creation
+create
 
 	make
 

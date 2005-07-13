@@ -33,7 +33,7 @@ inherit
 			is_semicolon
 		end
 
-creation
+create
 
 	make
 

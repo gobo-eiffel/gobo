@@ -23,7 +23,7 @@ inherit
 
 	XM_XPATH_ROLE
 
-creation {XM_XSLT_NODE_FACTORY}
+create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 

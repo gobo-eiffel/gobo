@@ -26,7 +26,7 @@ inherit
 			name_code, sequence_number, parent, line_number
 		end
 	
-creation
+create
 
 	make
 

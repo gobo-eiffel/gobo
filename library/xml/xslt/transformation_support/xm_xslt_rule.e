@@ -12,7 +12,7 @@ indexing
 
 class	XM_XSLT_RULE
 
-creation
+create
 
 	make, make_with_copy
 

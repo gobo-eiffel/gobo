@@ -36,7 +36,7 @@ inherit
 	UC_IMPORTED_UTF16_ROUTINES
 		export {NONE} all end
 
-creation
+create
 
 	make, make_from_stream
 

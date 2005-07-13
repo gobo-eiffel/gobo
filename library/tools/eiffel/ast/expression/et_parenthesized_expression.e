@@ -26,7 +26,7 @@ inherit
 			index
 		end
 
-creation
+create
 
 	make
 

@@ -19,7 +19,7 @@ inherit
 	KL_SHARED_STANDARD_FILES
 	KL_SHARED_STREAMS
 
-creation
+create
 
 	make_standard, make_null
 

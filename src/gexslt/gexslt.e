@@ -45,7 +45,7 @@ inherit
 
 	MEMORY
 
-creation
+create
 
 	execute
 

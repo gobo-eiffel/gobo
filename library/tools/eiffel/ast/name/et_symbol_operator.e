@@ -24,7 +24,7 @@ inherit
 			is_semicolon, first_position, last_position
 		end
 
-creation
+create
 
 	make_div,
 	make_divide,

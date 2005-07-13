@@ -19,7 +19,7 @@ inherit
 			class_impl
 		end
 
-creation
+create
 
 	make,
 	make_vaol1a,

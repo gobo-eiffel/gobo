@@ -20,7 +20,7 @@ inherit
 			is_not_function, as_not_function
 		end
 
-creation
+create
 
 	make
 

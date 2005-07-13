@@ -19,7 +19,7 @@ inherit
 			validate, is_character_map, as_character_map
 		end
 
-creation
+create
 
 	make_style_element
 

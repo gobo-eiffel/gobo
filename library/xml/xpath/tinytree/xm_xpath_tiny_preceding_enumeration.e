@@ -24,7 +24,7 @@ inherit
 		-- This class also implements an extra Axis, preceding-or-ancestor,
 		-- which is used internally by xsl:number level="any"
 	
-creation
+create
 
 	make
 	

@@ -20,7 +20,7 @@ inherit
 			is_reverser, as_reverser
 		end
 
-creation
+create
 
 	make
 

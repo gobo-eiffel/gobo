@@ -21,7 +21,7 @@ inherit
 			is_valid_directory_name
 		end
 
-creation
+create
 
 	make
 

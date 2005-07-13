@@ -27,7 +27,7 @@ inherit
 
 	XM_XPATH_NAME_UTILITIES
 
-creation
+create
 
 	make
 

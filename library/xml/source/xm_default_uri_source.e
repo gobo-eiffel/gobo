@@ -16,7 +16,7 @@ inherit
 
 	XM_URI_SOURCE
 
-creation
+create
 
 	make
 

@@ -50,7 +50,7 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
-creation
+create
 
 	make, make_with_defaults
 

@@ -21,7 +21,7 @@ inherit
 	UT_COMMAND
 	DP_DO_NOTHING_COMMAND
 
-creation
+create
 
 	make
 

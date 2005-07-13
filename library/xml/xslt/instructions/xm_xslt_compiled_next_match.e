@@ -17,7 +17,7 @@ inherit
 			process_leaving_tail, make
 		end
 
-creation
+create
 
 	make
 

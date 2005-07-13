@@ -12,7 +12,7 @@ indexing
 
 class ET_XACE_LIBRARY
 
-creation
+create
 
 	make
 

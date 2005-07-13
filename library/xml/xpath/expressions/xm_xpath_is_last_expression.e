@@ -20,7 +20,7 @@ inherit
 			is_last_expression, as_last_expression
 		end
 
-creation
+create
 
 	make
 

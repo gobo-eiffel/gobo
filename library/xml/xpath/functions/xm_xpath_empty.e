@@ -20,7 +20,7 @@ inherit
 			is_empty_function, as_empty_function
 		end
 
-creation
+create
 
 	make
 

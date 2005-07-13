@@ -21,7 +21,7 @@ inherit
 			escaped_char
 		end
 
-creation
+create
 
 	make_null,
 	set_next

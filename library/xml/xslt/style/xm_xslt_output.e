@@ -25,7 +25,7 @@ inherit
 
 	XM_XSLT_SHARED_EMITTER_FACTORY
 
-creation {XM_XSLT_NODE_FACTORY}
+create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 

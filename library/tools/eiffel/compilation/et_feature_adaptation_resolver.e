@@ -18,7 +18,7 @@ inherit
 
 	ET_SHARED_CLASS_NAME_TESTER
 
-creation
+create
 
 	make
 

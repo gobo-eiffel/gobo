@@ -35,7 +35,7 @@ inherit
 
 		-- TODO - the rules for a value comparison have changed a little - stop using the comparison checker
 
-creation
+create
 
 	make
 

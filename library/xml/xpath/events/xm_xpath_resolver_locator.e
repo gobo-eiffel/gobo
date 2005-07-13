@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_LOCATOR
 
-creation
+create
 
 	make
 

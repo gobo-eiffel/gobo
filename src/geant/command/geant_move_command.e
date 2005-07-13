@@ -16,7 +16,7 @@ inherit
 
 	GEANT_FILESYSTEM_COMMAND
 
-creation
+create
 
 	make
 

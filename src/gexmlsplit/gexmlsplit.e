@@ -21,7 +21,7 @@ inherit
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
 
-creation
+create
 
 	make
 

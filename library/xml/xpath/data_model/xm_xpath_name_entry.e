@@ -12,7 +12,7 @@ indexing
 
 class XM_XPATH_NAME_ENTRY
 
-creation
+create
 
 	make
 

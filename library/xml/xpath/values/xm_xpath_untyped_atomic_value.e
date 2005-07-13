@@ -24,7 +24,7 @@ inherit
 	-- xdt:untypedAtomic is NOT a sub-type of xs:string
 	-- TODO - factor out the common implementation (all of string-value??) to remove the sub-typing relationship ? - maybe not, as is_string_value = False
 	
-creation
+create
 
 	make
 

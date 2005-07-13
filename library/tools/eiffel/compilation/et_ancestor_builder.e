@@ -20,7 +20,7 @@ inherit
 			process_class
 		end
 
-creation
+create
 
 	make
 

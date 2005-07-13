@@ -19,7 +19,7 @@ inherit
 			is_invalid_value, as_invalid_value
 		end
 
-creation
+create
 
 	make, make_from_string
 	

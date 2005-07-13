@@ -19,7 +19,7 @@ inherit
 			break, process
 		end
 
-creation
+create
 
 	make
 

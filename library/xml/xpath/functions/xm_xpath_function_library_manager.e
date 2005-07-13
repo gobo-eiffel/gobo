@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_FUNCTION_LIBRARY
 
-creation
+create
 
 	make
 

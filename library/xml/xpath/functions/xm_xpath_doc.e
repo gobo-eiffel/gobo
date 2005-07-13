@@ -23,7 +23,7 @@ inherit
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 
-creation
+create
 
 	make
 

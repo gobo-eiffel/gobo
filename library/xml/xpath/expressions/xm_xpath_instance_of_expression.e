@@ -21,7 +21,7 @@ inherit
 			as_instance_of_expression
 		end
 
-creation
+create
 
 	make
 

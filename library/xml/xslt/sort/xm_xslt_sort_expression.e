@@ -19,7 +19,7 @@ inherit
 			simplify, create_iterator, compute_special_properties, is_repeated_sub_expression 
 		end
 
-creation
+create
 
 	make
 

@@ -27,7 +27,7 @@ inherit
 			make_same_type as make_same_type_xpath
 		end
 
-creation
+create
 
 	make, make_same_type
 

@@ -22,7 +22,7 @@ inherit
 			make as make_lace_scanner
 		end
 
-creation
+create
 
 	make, make_standard, make_with_factory
 

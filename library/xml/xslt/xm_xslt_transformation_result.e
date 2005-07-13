@@ -12,11 +12,11 @@ indexing
 
 class XM_XSLT_TRANSFORMATION_RESULT
 
-creation
+create
 
 	make, make_emitter, make_receiver
 
-creation {XM_XSLT_OUTPUT_URI_RESOLVER, XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER}
+create {XM_XSLT_OUTPUT_URI_RESOLVER, XM_XSLT_OUTPUT_URI_SCHEME_RESOLVER}
 
 	make_secondary_stream
 

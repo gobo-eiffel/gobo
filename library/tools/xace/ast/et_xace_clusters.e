@@ -19,7 +19,7 @@ inherit
 			cluster
 		end
 
-creation
+create
 
 	make, make_empty
 

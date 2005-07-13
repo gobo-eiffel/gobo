@@ -20,7 +20,7 @@ inherit
 			is_exists_function, as_exists_function
 		end
 
-creation
+create
 
 	make
 

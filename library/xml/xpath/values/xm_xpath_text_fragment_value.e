@@ -19,7 +19,7 @@ inherit
 			hash_code
 		end
 
-creation
+create
 
 	make
 

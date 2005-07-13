@@ -23,7 +23,7 @@ inherit
 
 	KL_IMPORTED_DOUBLE_ROUTINES
 
-creation
+create
 
 	make, make_from_string, make_nan
 

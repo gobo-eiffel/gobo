@@ -36,7 +36,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
-creation
+create
 
 	set_next
 

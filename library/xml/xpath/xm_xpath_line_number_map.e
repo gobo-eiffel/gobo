@@ -12,7 +12,7 @@ indexing
 
 class XM_XPATH_LINE_NUMBER_MAP
 
-creation
+create
 
 	make
 

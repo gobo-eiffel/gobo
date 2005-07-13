@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMMON_TYPE_FACTORY
 
-creation
+create
 
 	make
 

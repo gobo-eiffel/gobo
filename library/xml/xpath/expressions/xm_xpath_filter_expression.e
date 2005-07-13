@@ -29,7 +29,7 @@ inherit
 
 	KL_SHARED_PLATFORM
 
-creation
+create
 
 	make
 

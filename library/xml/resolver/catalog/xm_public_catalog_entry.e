@@ -19,7 +19,7 @@ inherit
 			make as make_core
 		end
 
-creation
+create
 
 	make
 

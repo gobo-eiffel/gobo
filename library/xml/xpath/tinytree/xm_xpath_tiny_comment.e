@@ -24,7 +24,7 @@ inherit
 			local_part
 		end
 
-creation
+create
 
 	make
 

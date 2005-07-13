@@ -18,7 +18,7 @@ inherit
 			simplify, analyze, sub_expressions, promote_instruction, item_type
 		end
 
-creation
+create
 
 	make
 

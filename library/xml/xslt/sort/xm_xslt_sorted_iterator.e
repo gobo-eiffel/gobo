@@ -18,7 +18,7 @@ inherit
 
 	KL_COMPARATOR [XM_XSLT_SORT_RECORD]
 
-creation
+create
 
 	make
 

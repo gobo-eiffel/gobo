@@ -21,7 +21,7 @@ inherit
 
 	KL_IMPORTED_INTEGER_ROUTINES
 
-creation
+create
 
 	make, make_document_test, make_element_test, make_attribute_test, make_text_test,
 	make_processing_instruction_test, make_comment_test, make_namespace_test

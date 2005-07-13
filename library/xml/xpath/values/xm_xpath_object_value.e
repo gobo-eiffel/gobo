@@ -19,7 +19,7 @@ inherit
 			is_object_value, as_object_value
 		end
 
-creation
+create
 
 	make
 

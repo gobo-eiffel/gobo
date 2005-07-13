@@ -12,7 +12,7 @@ indexing
 
 class ET_XACE_CLASS_OPTIONS
 
-creation
+create
 
 	make
 

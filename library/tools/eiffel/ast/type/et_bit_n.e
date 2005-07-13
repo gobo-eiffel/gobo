@@ -16,7 +16,7 @@ inherit
 
 	ET_BIT_TYPE
 
-creation
+create
 
 	make
 

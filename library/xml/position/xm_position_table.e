@@ -12,7 +12,7 @@ indexing
 
 class XM_POSITION_TABLE
 
-creation
+create
 
 	make
 

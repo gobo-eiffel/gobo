@@ -21,7 +21,7 @@ inherit
 			start_element, end_element, notify_characters, notify_comment
 		end
 
-creation
+create
 
 	make
 

@@ -23,7 +23,7 @@ inherit
 	
 	XM_XSLT_SHARED_ANY_NODE_TEST
 
-creation {XM_XSLT_NODE_FACTORY}
+create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 

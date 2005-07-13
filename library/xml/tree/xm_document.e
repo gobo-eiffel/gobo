@@ -19,7 +19,7 @@ inherit
 			root_node
 		end
 		
-creation
+create
 
 	make,
 	make_with_root_named

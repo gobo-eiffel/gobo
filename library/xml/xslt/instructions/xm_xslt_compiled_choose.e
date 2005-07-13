@@ -18,7 +18,7 @@ inherit
 			native_implementations, promote_instruction
 		end
 
-creation
+create
 
 	make
 

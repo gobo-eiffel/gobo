@@ -19,7 +19,7 @@ inherit
 			simplify
 		end
 
-creation
+create
 
 	make
 

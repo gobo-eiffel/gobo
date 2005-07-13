@@ -20,7 +20,7 @@ inherit
 			test_conformance
 		end
 
-creation
+create
 
 	make
 

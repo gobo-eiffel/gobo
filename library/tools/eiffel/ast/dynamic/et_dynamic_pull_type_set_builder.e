@@ -43,11 +43,11 @@ inherit
 			report_builtin_any_twin
 		end
 
-creation
+create
 
 	make
 
-creation {ET_FEATURE_CHECKER}
+create {ET_FEATURE_CHECKER}
 
 	make_from_checker
 

@@ -25,7 +25,7 @@ inherit
 	
 	XM_OUTPUT
 	
-creation
+create
 
 	make_null,
 	set_next

@@ -24,7 +24,7 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 		
-creation
+create
 
 	make_null, set_next
 	

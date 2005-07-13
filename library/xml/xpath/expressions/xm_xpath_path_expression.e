@@ -31,7 +31,7 @@ inherit
 
 	XM_XPATH_PROMOTION_ACTIONS
 
-creation
+create
 
 	make
 

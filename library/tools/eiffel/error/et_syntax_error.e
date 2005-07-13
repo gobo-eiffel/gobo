@@ -16,7 +16,7 @@ inherit
 
 	ET_EIFFEL_ERROR
 
-creation
+create
 
 	make
 

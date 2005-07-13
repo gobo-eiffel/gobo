@@ -41,7 +41,7 @@ inherit
 			reference_conforms_from_tuple_type
 		end
 
-creation
+create
 
 	make, make_with_seed
 

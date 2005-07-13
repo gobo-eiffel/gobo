@@ -22,7 +22,7 @@ inherit
 			output_name
 		end
 
-creation
+create
 
 	make_null,
 	set_next

@@ -12,7 +12,7 @@ indexing
 
 class ET_XACE_AST_FACTORY
 
-creation
+create
 
 	make
 

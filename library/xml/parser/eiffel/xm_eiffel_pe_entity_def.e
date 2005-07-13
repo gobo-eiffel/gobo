@@ -19,7 +19,7 @@ inherit
 			read_token, reset
 		end
 
-creation
+create
 
 	make_literal,
 	make_external,

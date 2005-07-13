@@ -21,7 +21,7 @@ inherit
 
 	ET_CALL_COMPONENT
 
-creation
+create
 
 	make
 

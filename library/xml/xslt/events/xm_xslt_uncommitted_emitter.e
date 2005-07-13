@@ -27,7 +27,7 @@ inherit
 
 	XM_XSLT_STRING_ROUTINES
 
-creation
+create
 
 	make
 

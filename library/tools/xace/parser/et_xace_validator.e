@@ -25,7 +25,7 @@ inherit
 	ET_SHARED_XACE_OPTION_NAMES
 		export {NONE} all end
 
-creation
+create
 
 	make
 

@@ -17,7 +17,7 @@ inherit
 
 	ET_EIFFEL_PREPARSER_SKELETON
 
-creation
+create
 
 	make, make_with_factory
 %}

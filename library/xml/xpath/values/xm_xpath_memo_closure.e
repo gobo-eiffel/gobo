@@ -19,7 +19,7 @@ inherit
 			make, create_iterator, same_expression, process, is_memo_closure, as_memo_closure, count, item_at
 		end
 
-creation {XM_XPATH_EXPRESSION_FACTORY}
+create {XM_XPATH_EXPRESSION_FACTORY}
 
 	make
 

@@ -26,7 +26,7 @@ inherit
 
 	XM_XPATH_SHARED_NO_NODE_TEST
 
-creation
+create
 
 	make, make_any_sequence, make_single_item, make_optional_item, make_single_atomic, make_optional_atomic, make_optional_integer,
 	make_single_string, make_optional_string, make_single_integer, make_single_double, make_single_node, make_optional_node, make_node_sequence,

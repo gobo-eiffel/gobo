@@ -16,7 +16,7 @@ inherit
 
 	ET_MANIFEST_STRING_ITEM
 
-creation
+create
 
 	make
 

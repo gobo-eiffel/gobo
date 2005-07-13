@@ -94,7 +94,7 @@ inherit
 			process_when_part_list
 		end
 
-creation
+create
 
 	make
 

@@ -23,7 +23,7 @@ inherit
 			last_universe, new_universe
 		end
 
-creation
+create
 
 	make, make_with_factory, make_with_variables,
 	make_with_variables_and_factory, make_standard

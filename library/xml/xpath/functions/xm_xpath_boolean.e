@@ -19,7 +19,7 @@ inherit
 			check_arguments, evaluate_item, calculate_effective_boolean_value
 		end
 
-creation
+create
 
 	make
 

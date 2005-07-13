@@ -38,7 +38,7 @@ inherit
 
 	KL_SHARED_STREAMS
 
-creation
+create
 
 	make, make_null
 

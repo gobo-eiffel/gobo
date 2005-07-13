@@ -19,7 +19,7 @@ inherit
 			validate, is_namespace_alias, as_namespace_alias
 		end
 
-creation {XM_XSLT_NODE_FACTORY}
+create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 

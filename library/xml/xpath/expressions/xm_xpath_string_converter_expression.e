@@ -20,7 +20,7 @@ inherit
 			is_string_converter_expression, as_string_converter_expression
 		end
 
-creation
+create
 
 	make
 

@@ -97,7 +97,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 
 	make, make_with_hash_code
 

@@ -20,7 +20,7 @@ inherit
 		-- This class is used for User-defined Data Elements whose namespace
 		--  is not recognized by the implementation.
 
-creation {XM_XSLT_NODE_FACTORY}
+create {XM_XSLT_NODE_FACTORY}
 
 	make
 

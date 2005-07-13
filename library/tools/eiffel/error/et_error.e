@@ -16,7 +16,7 @@ inherit
 
 	UT_ERROR
 
-creation
+create
 
 	-- This class should be declared as deferred,
 	-- but it has no deferred feature. The workaround

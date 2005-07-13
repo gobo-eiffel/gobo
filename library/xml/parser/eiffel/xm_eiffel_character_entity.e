@@ -21,7 +21,7 @@ inherit
 	UC_IMPORTED_UTF8_ROUTINES
 	UC_IMPORTED_UNICODE_ROUTINES
 
-creation
+create
 
 	make
 

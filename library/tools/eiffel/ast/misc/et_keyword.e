@@ -19,7 +19,7 @@ inherit
 			make as make_token
 		end
 
-creation
+create
 
 	make_agent,
 	make_alias,

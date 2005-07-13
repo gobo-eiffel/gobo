@@ -23,7 +23,7 @@ inherit
 
 	XM_XPATH_MAPPING_FUNCTION
 
-creation
+create
 
 	make
 

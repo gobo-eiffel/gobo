@@ -123,7 +123,7 @@ inherit
 			reportable_gvuil_error
 		end
 
-creation
+create
 
 	make_standard, make_null
 

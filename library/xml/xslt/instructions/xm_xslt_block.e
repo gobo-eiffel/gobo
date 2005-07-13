@@ -26,7 +26,7 @@ inherit
 		-- Implements an imaginary xsl:block instruction which simply evaluates
 		--  it's contents. Used for top-level templates, xsl:otherwise, etc.
 
-creation
+create
 
 	make
 

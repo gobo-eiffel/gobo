@@ -34,7 +34,7 @@ inherit
 	UC_IMPORTED_UTF8_ROUTINES
 		export {NONE} all end
 
-creation
+create
 
 	make_literal,
 	make_external,

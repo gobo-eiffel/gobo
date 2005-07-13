@@ -25,7 +25,7 @@ inherit
 			reset
 		end
 
-creation
+create
 
 	make
 

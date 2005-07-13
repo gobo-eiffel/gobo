@@ -21,7 +21,7 @@ inherit
 			is_variable_reference, as_variable_reference
 		end
 
-creation
+create
 
 	make
 

@@ -23,7 +23,7 @@ inherit
 	ET_TOKEN_CODES
 		export {NONE} all end
 
-creation
+create
 
 	make_arrow,
 	make_assign,

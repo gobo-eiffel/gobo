@@ -16,7 +16,7 @@ inherit
 
 	ET_CLASS_NAME_ITEM
 
-creation
+create
 
 	make
 

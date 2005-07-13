@@ -19,7 +19,7 @@ inherit
 			validate
 		end
 
-creation
+create
 
 	make_style_element
 

@@ -26,7 +26,7 @@ inherit
 	KL_SHARED_EXCEPTIONS
 		export {NONE} all end
 
-creation
+create
 
 	make
 

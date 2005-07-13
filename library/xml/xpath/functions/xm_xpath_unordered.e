@@ -19,7 +19,7 @@ inherit
 			analyze, pre_evaluate, is_unordered_function, as_unordered_function
 		end
 
-creation
+create
 
 	make
 

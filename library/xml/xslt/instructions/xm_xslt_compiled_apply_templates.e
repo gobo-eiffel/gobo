@@ -21,7 +21,7 @@ inherit
 
 	XM_XSLT_WITH_PARAM_ROUTINES
 
-creation
+create
 
 	make
 

@@ -39,7 +39,7 @@ inherit
  
 	-- This class is not used to build temporary trees. For that, the XM_XSLT_COMPLEX_CONTENT_OUTPUTTER is used.
 
-creation
+create
 
 	make, make_with_size
 

@@ -23,7 +23,7 @@ inherit
 			make, make_with_capacity
 		end
 
-creation
+create
 
 	make, make_with_capacity
 

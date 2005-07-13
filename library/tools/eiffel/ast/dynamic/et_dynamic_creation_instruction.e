@@ -19,7 +19,7 @@ inherit
 			attachment as creation_instruction
 		end
 
-creation
+create
 
 	make
 

@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_SHARED_DECIMAL_CONTEXTS
 
-creation
+create
 
 	make, make_from_string, make_from_integer, make_error
 

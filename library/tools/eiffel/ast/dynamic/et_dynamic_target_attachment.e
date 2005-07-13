@@ -19,7 +19,7 @@ inherit
 			attachment as target
 		end
 
-creation
+create
 
 	make
 

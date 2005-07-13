@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_ERROR_TYPES
 
-creation
+create
 
 	make, make_restricted, make_minor
 

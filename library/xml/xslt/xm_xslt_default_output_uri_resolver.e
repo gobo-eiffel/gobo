@@ -20,7 +20,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
-creation
+create
 
 	make
 

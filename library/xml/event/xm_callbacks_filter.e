@@ -29,7 +29,7 @@ inherit
 			set_callbacks as set_next
 		end
 
-creation
+create
 
 	make_null,
 	set_next

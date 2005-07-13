@@ -23,7 +23,7 @@ inherit
 
 	ET_REPLICABLE_FEATURE
 
-creation
+create
 
 	-- This is a deferred class but it has no deferred
 	-- features (allowed in ETL3 but not supported yet

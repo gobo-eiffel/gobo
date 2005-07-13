@@ -19,7 +19,7 @@ inherit
 	-- CAUTION: this implementation is limited to no more than 2x Platform.Maximum_integer
 	--          differing ids
 
-creation {XM_XPATH_SHARED_SERIAL_NUMBER_GENERATOR}
+create {XM_XPATH_SHARED_SERIAL_NUMBER_GENERATOR}
 
 	make
 

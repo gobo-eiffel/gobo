@@ -19,7 +19,7 @@ inherit
 			pre_evaluate, evaluate_item, compute_intrinsic_dependencies, is_position_function
 		end
 
-	creation
+create
 
 	make
 

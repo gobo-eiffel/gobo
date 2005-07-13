@@ -12,7 +12,7 @@ indexing
 
 class GEANT_PROJECT_OPTIONS
 
-creation
+create
 
 	make
 

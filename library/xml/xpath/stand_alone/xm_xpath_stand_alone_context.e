@@ -30,7 +30,7 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 
-creation
+create
 
 	make, make_upon_node
 

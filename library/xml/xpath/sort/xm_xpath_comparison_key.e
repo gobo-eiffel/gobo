@@ -18,7 +18,7 @@ inherit
 
 	XM_XPATH_TYPE
 
-creation
+create
 
 	make, make_nan, make_numeric, make_with_collation_key
 

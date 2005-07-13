@@ -22,7 +22,7 @@ inherit
 		--       for the match records. Make this some kind of finite-memory
 		--       cache.
 
-creation
+create
 
 	make
 

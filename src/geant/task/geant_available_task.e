@@ -23,7 +23,7 @@ inherit
 
 	GEANT_SHARED_PROPERTIES
 
-creation
+create
 
 	make
 

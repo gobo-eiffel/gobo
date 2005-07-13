@@ -22,7 +22,7 @@ inherit
 
 	ET_SHARED_FEATURE_NAME_TESTER
 
-creation
+create
 
 	make
 

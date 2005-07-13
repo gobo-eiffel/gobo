@@ -26,7 +26,7 @@ inherit
 
 	XM_RESOLVER_FACTORY
 
-creation
+create
 
 	make
 

@@ -47,7 +47,7 @@ inherit
 			out
 		end
 
-creation
+create
 
 	make_name, make_list,
 	make_choice, make_sequence, make_mixed,

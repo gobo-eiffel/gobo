@@ -30,7 +30,7 @@ inherit
 			first_position, last_position
 		end
 
-creation
+create
 
 	make_and,
 	make_implies,

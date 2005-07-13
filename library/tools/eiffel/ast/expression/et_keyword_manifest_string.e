@@ -18,7 +18,7 @@ inherit
 	ET_EXTERNAL_ALIAS
 	ET_OBSOLETE
 
-creation
+create
 
 	make
 

@@ -28,7 +28,7 @@ inherit
 
 	XM_XPATH_SHARED_DECIMAL_CONTEXTS
 
-creation
+create
 
 	make
 

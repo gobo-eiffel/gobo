@@ -18,7 +18,7 @@ inherit
 
 	XM_XSLT_ATTRIBUTE_SET_ROUTINES
 
-creation
+create
 
 	make
 

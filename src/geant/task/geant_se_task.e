@@ -21,7 +21,7 @@ inherit
 			command
 		end
 
-creation
+create
 
 	make
 

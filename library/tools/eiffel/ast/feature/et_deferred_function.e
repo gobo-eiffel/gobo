@@ -24,7 +24,7 @@ inherit
 			type, is_prefixable, is_infixable, is_function
 		end
 
-creation
+create
 
 	make
 

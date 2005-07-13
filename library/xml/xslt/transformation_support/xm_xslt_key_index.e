@@ -12,7 +12,7 @@ indexing
 
 class XM_XSLT_KEY_INDEX
 
-creation
+create
 
 	make, make_under_construction
 

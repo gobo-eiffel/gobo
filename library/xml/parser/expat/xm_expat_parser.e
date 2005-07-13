@@ -44,7 +44,7 @@ inherit
 	XM_UNICODE_STRUCTURE_FACTORY
 		export {NONE} all end
 
-creation
+create
 
 	make
 

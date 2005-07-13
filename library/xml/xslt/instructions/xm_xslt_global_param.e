@@ -19,7 +19,7 @@ inherit
 			make, evaluate_variable, display
 		end
 
-creation
+create
 
 	make_global_variable
 

@@ -21,11 +21,11 @@ inherit
 			start, is_node_iterator, as_node_iterator
 		end
 
-creation
+create
 
 	make
 
-creation {XM_XPATH_DOCUMENT_ORDER_ITERATOR}
+create {XM_XPATH_DOCUMENT_ORDER_ITERATOR}
 
 	make_another
 

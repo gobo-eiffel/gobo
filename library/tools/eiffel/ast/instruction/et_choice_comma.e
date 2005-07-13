@@ -16,7 +16,7 @@ inherit
 
 	ET_CHOICE_ITEM
 
-creation
+create
 
 	make
 

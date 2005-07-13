@@ -274,7 +274,7 @@ inherit
 			new_variant
 		end
 
-creation
+create
 
 	make
 

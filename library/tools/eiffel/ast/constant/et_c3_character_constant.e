@@ -16,7 +16,7 @@ inherit
 
 	ET_CHARACTER_CONSTANT
 
-creation
+create
 
 	make
 

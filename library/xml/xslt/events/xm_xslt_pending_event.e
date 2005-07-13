@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_TYPE
 
-creation
+create
 
 	make
 

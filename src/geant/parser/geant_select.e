@@ -12,7 +12,7 @@ indexing
 
 class GEANT_SELECT
 
-creation
+create
 
 	make
 

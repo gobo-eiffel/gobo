@@ -19,7 +19,7 @@ inherit
 			attachment as assignment
 		end
 
-creation
+create
 
 	make
 

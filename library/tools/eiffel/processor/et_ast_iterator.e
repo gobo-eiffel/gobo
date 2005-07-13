@@ -16,7 +16,7 @@ inherit
 
 	ET_AST_PROCESSOR
 
-creation
+create
 
 	make
 

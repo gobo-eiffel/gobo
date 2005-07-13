@@ -12,7 +12,7 @@ indexing
 
 class XM_XSLT_COMPILED_PROCEDURE
 
-creation
+create
 
 	make_procedure
 

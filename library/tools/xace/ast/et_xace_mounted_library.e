@@ -18,7 +18,7 @@ inherit
 
 	KL_CLONABLE
 
-creation
+create
 
 	make
 

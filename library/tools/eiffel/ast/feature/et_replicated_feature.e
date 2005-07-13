@@ -20,7 +20,7 @@ inherit
 			replicated_feature
 		end
 
-creation
+create
 
 	make
 

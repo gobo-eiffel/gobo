@@ -21,7 +21,7 @@ inherit
 			another, space_preserving_mode, is_local_invariant_met
 		end
 
-creation
+create
 
 	make, make_another
 

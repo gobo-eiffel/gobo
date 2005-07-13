@@ -21,7 +21,7 @@ inherit
 	
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
 
-creation
+create
 
 	make
 

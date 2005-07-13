@@ -30,7 +30,7 @@ inherit
 	-- It can also be subclassed, in which case the subclass can use it's services to resolve QNames.
 	-- It also validates namespace-sensitive content.
 
-creation
+create
 
 	make
 

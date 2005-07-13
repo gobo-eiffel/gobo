@@ -20,7 +20,7 @@ inherit
 	--  when called twice with the same URI, returns the same document each time.
 	-- For this purpose we use a hash table from URI to Document object.
 
-creation
+create
 
 	make
 

@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_MODULE
 
-creation
+create
 
 	make_style_element
 

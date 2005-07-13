@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_SHARED_ATOMIZING_FUNCTION
 
-creation
+create
 
 	make
 

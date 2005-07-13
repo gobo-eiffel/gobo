@@ -21,7 +21,7 @@ inherit
 			process_class
 		end
 
-creation
+create
 
 	make, make_with_feature_checker
 

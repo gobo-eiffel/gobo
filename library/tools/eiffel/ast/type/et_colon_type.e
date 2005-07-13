@@ -16,7 +16,7 @@ inherit
 
 	ET_DECLARED_TYPE
 
-creation
+create
 
 	make
 

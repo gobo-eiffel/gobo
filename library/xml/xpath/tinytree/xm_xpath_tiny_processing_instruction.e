@@ -24,7 +24,7 @@ inherit
 			base_uri
 		end
 
-creation
+create
 
 	make
 

@@ -16,7 +16,7 @@ inherit
 
 	ET_TAIL_LIST [ET_DYNAMIC_TYPE_SET]
 
-creation
+create
 
 	make, make_with_capacity
 

@@ -19,7 +19,7 @@ inherit
 			simplify, evaluate_item, is_string_length_function, as_string_length_function
 		end
 
-creation
+create
 
 	make
 

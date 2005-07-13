@@ -22,7 +22,7 @@ inherit
 			print_mounted_libraries
 		end
 
-creation
+create
 
 	make
 

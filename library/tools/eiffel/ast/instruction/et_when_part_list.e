@@ -18,7 +18,7 @@ inherit
 
 	ET_HEAD_LIST [ET_WHEN_PART]
 
-creation
+create
 
 	make, make_with_capacity
 

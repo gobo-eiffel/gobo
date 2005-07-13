@@ -26,7 +26,7 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 		export {NONE} all end
 
-creation
+create
 
 	make
 

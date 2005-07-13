@@ -22,7 +22,7 @@ inherit
 			string_value
 		end
 
-creation
+create
 
 	make
 

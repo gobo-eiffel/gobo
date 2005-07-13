@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class	XM_XPATH_64BIT_NUMERIC_CODE
+class XM_XPATH_64BIT_NUMERIC_CODE
 
 inherit
 
@@ -18,7 +18,7 @@ inherit
 
 	KL_SHARED_PLATFORM
 
-creation
+create
 
 	make, make_from_integer, make_with_offset, make_with_large_offset,
 	make_from_sequence_number_with_double_offset

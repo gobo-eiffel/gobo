@@ -21,7 +21,7 @@ inherit
 		
 	ET_SHARED_TOKEN_CONSTANTS
 
-creation
+create
 
 	make, make_with_capacity
 

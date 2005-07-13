@@ -19,7 +19,7 @@ inherit
 			attachment as feature_name
 		end
 
-creation
+create
 
 	make
 

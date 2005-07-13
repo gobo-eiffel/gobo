@@ -23,7 +23,7 @@ inherit
 
 	-- This class also concatenates text nodes split by comments and processing instructions
 
-creation
+create
 
 	make
 

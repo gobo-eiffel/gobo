@@ -16,7 +16,7 @@ inherit
 
 	GEANT_NAME_VALUE_ELEMENT
 
-creation
+create
 
 	make
 

@@ -23,7 +23,7 @@ inherit
 
 	XM_XSLT_MODE_CONSTANTS
 
-creation
+create
 
 	make
 

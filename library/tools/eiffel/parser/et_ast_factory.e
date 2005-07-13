@@ -22,7 +22,7 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
-creation
+create
 
 	make
 

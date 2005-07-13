@@ -12,7 +12,7 @@ indexing
 
 class XM_EIFFEL_DECLARATION
 
-creation
+create
 
 	make
 	

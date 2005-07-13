@@ -21,7 +21,7 @@ inherit
 			item_type
 		end
 
-creation
+create
 
 	make
 

@@ -29,7 +29,7 @@ inherit
 			document_element, next_sibling, previous_sibling, root, document_root, is_tree_document, as_tree_document
 		end
 
-creation
+create
 
 	make
 

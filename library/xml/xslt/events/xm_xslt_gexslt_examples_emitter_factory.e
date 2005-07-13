@@ -18,7 +18,7 @@ inherit
 
 	XM_XSLT_EMITTER_FACTORY_ROUTINES
 
-creation
+create
 
 	make
 

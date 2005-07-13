@@ -12,7 +12,7 @@ indexing
 
 class XM_XSLT_EXECUTABLE
 
-creation
+create
 
 	make
 

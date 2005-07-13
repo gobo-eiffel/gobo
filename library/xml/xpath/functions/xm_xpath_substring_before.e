@@ -23,7 +23,7 @@ inherit
 
 	XM_XPATH_COLLATING_FUNCTION
 
-creation
+create
 
 	make
 

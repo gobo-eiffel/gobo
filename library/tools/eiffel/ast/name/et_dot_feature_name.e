@@ -16,7 +16,7 @@ inherit
 
 	ET_QUALIFIED_FEATURE_NAME
 
-creation
+create
 
 	make
 

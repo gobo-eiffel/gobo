@@ -16,7 +16,7 @@ inherit
 
 	XM_DTD_CALLBACKS
 
-creation
+create
 
 	make
 

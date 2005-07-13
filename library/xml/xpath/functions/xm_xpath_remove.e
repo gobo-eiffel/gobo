@@ -19,7 +19,7 @@ inherit
 			create_iterator, simplify
 		end
 
-creation
+create
 
 	make
 

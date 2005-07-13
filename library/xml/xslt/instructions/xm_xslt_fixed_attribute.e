@@ -25,7 +25,7 @@ inherit
 
 	XM_XSLT_VALIDATION
 
-creation
+create
 
 	make
 

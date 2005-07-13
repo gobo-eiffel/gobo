@@ -19,7 +19,7 @@ inherit
 
 	XM_URI_RESOLVER
 
-creation
+create
 
 	make
 

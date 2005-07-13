@@ -20,7 +20,7 @@ inherit
 			is_closure, as_closure, reduce
 		end
 	
-creation {XM_XPATH_EXPRESSION_FACTORY}
+create {XM_XPATH_EXPRESSION_FACTORY}
 
 	make
 

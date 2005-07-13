@@ -12,7 +12,7 @@ indexing
 
 class XM_XSLT_DECIMAL_FORMAT_MANAGER_ENTRY
 
-creation
+create
 
 	make, make_list
 

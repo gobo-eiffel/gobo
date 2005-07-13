@@ -27,7 +27,7 @@ inherit
 			read_token
 		end
 
-creation
+create
 
 	make_scanner
 

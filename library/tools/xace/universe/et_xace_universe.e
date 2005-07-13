@@ -29,7 +29,7 @@ inherit
 			set_creation_procedure_name, system_name
 		end
 
-creation
+create
 
 	make, make_standard, make_with_factory
 

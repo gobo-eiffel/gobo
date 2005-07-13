@@ -16,7 +16,7 @@ inherit
 
 	XM_CALLBACKS
 
-creation
+create
 
 	make
 

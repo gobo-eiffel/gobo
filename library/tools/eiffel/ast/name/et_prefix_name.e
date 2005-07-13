@@ -16,7 +16,7 @@ inherit
 
 	ET_OPERATOR
 
-creation
+create
 
 	make_minus,
 	make_plus,

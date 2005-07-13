@@ -19,7 +19,7 @@ inherit
 			simplified_pattern, type_check
 		end
 
-creation
+create
 
 	make
 

@@ -35,7 +35,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 
 	make, make_as_view, make_from_list, make_default
 

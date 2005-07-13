@@ -22,7 +22,7 @@ inherit
 			parse
 		end
 
-creation
+create
 
 	make
 

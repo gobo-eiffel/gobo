@@ -20,7 +20,7 @@ inherit
 			is_prefixable
 		end
 
-creation
+create
 
 	make
 

@@ -19,7 +19,7 @@ inherit
 			reset, is_range
 		end
 
-creation
+create
 
 	make
 

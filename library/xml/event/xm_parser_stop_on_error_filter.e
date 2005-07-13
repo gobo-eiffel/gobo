@@ -19,7 +19,7 @@ inherit
 			on_error
 		end
 
-creation
+create
 
 	make,
 	make_next

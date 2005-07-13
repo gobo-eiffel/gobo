@@ -25,7 +25,7 @@ inherit
 	XM_MARKUP_CONSTANTS
 		export {NONE} all end
 
-creation
+create
 
 	make
 

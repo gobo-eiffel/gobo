@@ -16,7 +16,7 @@ inherit
 
 	GEXACE_BUILD_COMMAND
 
-creation
+create
 
 	make
 

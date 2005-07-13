@@ -23,7 +23,7 @@ inherit
 			analyze, evaluate_item, calculate_effective_boolean_value, make
 		end
 
-creation
+create
 
 	make
 

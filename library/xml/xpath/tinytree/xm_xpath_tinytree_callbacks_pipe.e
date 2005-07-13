@@ -26,7 +26,7 @@ inherit
 		-- XSLT, as XSLT has more stringent white-space stripping rules, and
 		-- in addition, stylesheets must have their comments and PIs stripped.
 		
-creation
+create
 
 	make
 

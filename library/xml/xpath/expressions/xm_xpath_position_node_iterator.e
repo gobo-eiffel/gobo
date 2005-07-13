@@ -19,7 +19,7 @@ inherit
 			before, start, is_node_iterator, as_node_iterator
 		end
 
-creation
+create
 
 	make
 

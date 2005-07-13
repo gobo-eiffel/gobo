@@ -22,7 +22,7 @@ inherit
 			dynamic_precursor
 		end
 
-creation
+create
 
 	make
 

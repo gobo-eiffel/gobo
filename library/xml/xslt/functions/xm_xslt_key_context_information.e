@@ -18,7 +18,7 @@ inherit
 
 	XM_XPATH_NODE_MAPPING_FUNCTION
 
-creation
+create
 
 	make
 

@@ -25,7 +25,7 @@ inherit
 
 	XM_XPATH_CARDINALITY
 
-creation
+create
 
 	make
 

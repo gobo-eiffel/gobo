@@ -26,7 +26,7 @@ inherit
 			build_array
 		end
 
-creation
+create
 
 	make, make_sorted_iterator
 

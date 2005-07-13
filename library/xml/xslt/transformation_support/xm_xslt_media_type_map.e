@@ -16,7 +16,7 @@ class	XM_XSLT_MEDIA_TYPE_MAP
 	-- TODO: This will implement mapping URIs expressed as regular expressions,
 	-- to media types, for when the resolver does not provide the information.
 
-creation
+create
 
 	make
 

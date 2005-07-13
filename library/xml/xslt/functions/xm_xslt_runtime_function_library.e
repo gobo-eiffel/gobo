@@ -20,7 +20,7 @@ inherit
 		--  the function name is not known at compile time.
 		-- As a result, `bind_function' is never called on `Current'
 
-creation
+create
 
 	make
 

@@ -1,6 +1,6 @@
 class AA
 
-creation
+create
 
 	make
 

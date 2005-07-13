@@ -28,7 +28,7 @@ inherit
 		
 	XM_SHARED_CATALOG_MANAGER
 
-creation
+create
 
 	make
 

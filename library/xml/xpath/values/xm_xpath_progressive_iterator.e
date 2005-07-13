@@ -17,7 +17,7 @@ inherit
 	
 	XM_XPATH_REALIZABLE_ITERATOR [XM_XPATH_ITEM]
 
-creation
+create
 
 	make
 

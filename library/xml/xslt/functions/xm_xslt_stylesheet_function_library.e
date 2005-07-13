@@ -21,7 +21,7 @@ inherit
 		--  for functions defined with override="no". These two objects
 		--  will bracket all the extension-function libraries in the serach order.
 
-creation
+create
 
 	make
 

@@ -23,7 +23,7 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 
-creation make
+create make
 
 	
 feature {NONE} -- Initialization

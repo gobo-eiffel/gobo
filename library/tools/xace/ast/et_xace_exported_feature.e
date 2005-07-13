@@ -12,7 +12,7 @@ indexing
 
 class ET_XACE_EXPORTED_FEATURE
 
-creation
+create
 
 	make
 

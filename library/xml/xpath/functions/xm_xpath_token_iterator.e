@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 
-creation
+create
 
 	make
 

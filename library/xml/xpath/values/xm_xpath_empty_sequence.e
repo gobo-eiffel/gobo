@@ -20,7 +20,7 @@ inherit
 			is_convertible_to_item, is_empty_sequence, as_empty_sequence, count
 		end
 
-creation
+create
 
 	make
 

@@ -12,7 +12,7 @@ indexing
 
 class XM_XPATH_SLOT_MANAGER
 
-creation
+create
 
 	make
 

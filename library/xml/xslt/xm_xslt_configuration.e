@@ -33,7 +33,7 @@ inherit
 
 	MA_DECIMAL_CONSTANTS
 
-creation
+create
 
 	make, make_with_defaults
 

@@ -19,7 +19,7 @@ inherit
 			base_uri, typed_value
 		end
 
-creation
+create
 
 	make
 

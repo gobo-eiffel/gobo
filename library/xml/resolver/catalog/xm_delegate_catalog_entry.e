@@ -12,7 +12,7 @@ indexing
 
 class XM_DELEGATE_CATALOG_ENTRY
 
-creation
+create
 
 	make
 

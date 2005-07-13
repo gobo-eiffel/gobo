@@ -19,7 +19,7 @@ inherit
 			calculate_effective_boolean_value, is_boolean_value, as_boolean_value
 		end
 
-creation
+create
 
 	make
 

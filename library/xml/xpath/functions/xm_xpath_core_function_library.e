@@ -18,7 +18,7 @@ inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
 
-creation
+create
 
 	make
 

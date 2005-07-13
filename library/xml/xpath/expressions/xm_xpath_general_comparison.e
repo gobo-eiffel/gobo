@@ -30,7 +30,7 @@ inherit
 	
 	XM_XPATH_COMPARISON_ROUTINES
 
-creation
+create
 
 	make
 

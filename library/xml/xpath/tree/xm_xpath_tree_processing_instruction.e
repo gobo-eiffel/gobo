@@ -24,7 +24,7 @@ inherit
 			name_code, base_uri, system_id, line_number
 		end
 
-creation
+create
 
 	make
 

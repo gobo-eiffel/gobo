@@ -25,7 +25,7 @@ inherit
 	XM_XPATH_DEBUGGING_ROUTINES
 
 	-- TODO: Add XSLT Pattern as host language
-creation
+create
 
 	make
 

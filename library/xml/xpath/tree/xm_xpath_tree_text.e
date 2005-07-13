@@ -24,7 +24,7 @@ inherit
 			is_tree_text, as_tree_text
 		end
 
-creation
+create
 
 	make
 

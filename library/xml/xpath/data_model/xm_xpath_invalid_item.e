@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ITEM
 
-creation
+create
 
 	make, make_from_string
 

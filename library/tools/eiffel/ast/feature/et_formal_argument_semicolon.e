@@ -16,7 +16,7 @@ inherit
 
 	ET_FORMAL_ARGUMENT_ITEM
 
-creation
+create
 
 	make
 

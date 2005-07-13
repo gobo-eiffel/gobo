@@ -26,7 +26,7 @@ inherit
 			make as make_xpath
 		end
 
-creation
+create
 
 	make
 

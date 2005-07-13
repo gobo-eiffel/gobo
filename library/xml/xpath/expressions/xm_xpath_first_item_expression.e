@@ -19,7 +19,7 @@ inherit
 			analyze, promote, compute_cardinality, evaluate_item
 		end
 
-creation
+create
 
 	make
 

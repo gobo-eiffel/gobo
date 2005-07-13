@@ -19,7 +19,7 @@ inherit
 			output
 		end
 
-creation
+create
 
 	make
 

@@ -25,7 +25,7 @@ inherit
 
 	KL_IMPORTED_INTEGER_ROUTINES
 
-creation
+create
 
 	make
 

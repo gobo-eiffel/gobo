@@ -34,7 +34,7 @@ inherit
 	GEANT_ELEMENT_NAMES
 		export {NONE} all end
 
-creation
+create
 
 	make
 

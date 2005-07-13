@@ -21,7 +21,7 @@ inherit
 			put_type_from_attachment
 		end
 
-creation
+create
 
 	make
 

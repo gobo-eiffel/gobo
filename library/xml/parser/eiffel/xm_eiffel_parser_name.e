@@ -42,7 +42,7 @@ inherit
 			is_equal, out
 		end
 
-creation
+create
 
 	make_namespaces, make_no_namespaces
 

@@ -29,7 +29,7 @@ inherit
 		export {NONE} all end
 		
 
-creation
+create
 	
 	make_null,
 	set_next

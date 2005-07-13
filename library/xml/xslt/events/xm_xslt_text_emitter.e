@@ -21,7 +21,7 @@ inherit
 			notify_processing_instruction, notify_comment
 		end
 
-creation
+create
 
 	make
 

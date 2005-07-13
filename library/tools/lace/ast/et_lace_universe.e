@@ -19,7 +19,7 @@ inherit
 			clusters
 		end
 
-creation
+create
 
 	make, make_standard, make_with_factory
 

@@ -16,7 +16,7 @@ inherit
 
 	ANY -- Needed for SE 2.1b1.
 
-creation
+create
 
 	make_true, make_false, make_undefined
 

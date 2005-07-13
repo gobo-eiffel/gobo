@@ -20,7 +20,7 @@ inherit
 			may_contain_sequence_constructor, may_contain_fallback
 		end
 
-creation {XM_XSLT_NODE_FACTORY}
+create {XM_XSLT_NODE_FACTORY}
 
 	make_style_element
 

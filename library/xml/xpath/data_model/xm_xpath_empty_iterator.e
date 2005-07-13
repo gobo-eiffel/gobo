@@ -30,7 +30,7 @@ inherit
 			is_invulnerable
 		end
 
-creation
+create
 
 	make
 

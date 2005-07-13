@@ -19,7 +19,7 @@ inherit
 			is_function_available, bind_function
 		end
 
-creation
+create
 
 	make
 

@@ -22,7 +22,7 @@ inherit
 	GEANT_SHARED_PROPERTIES
 		export {NONE} all end
 
-creation
+create
 
 	make
 

@@ -20,7 +20,7 @@ inherit
 
 	XM_XPATH_DOC_ROUTINES
 
-creation
+create
 
 	make
 

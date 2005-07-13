@@ -23,7 +23,7 @@ inherit
 
 	XM_XPATH_SHARED_GLOBAL_ORDER_COMPARER
 
-creation
+create
 
 	make
 

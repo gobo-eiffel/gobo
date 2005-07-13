@@ -19,7 +19,7 @@ inherit
 			simplify, evaluate_item
 		end
 
-creation
+create
 
 	make
 

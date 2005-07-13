@@ -20,7 +20,7 @@ inherit
 			resolve_finish
 		end
 
-creation
+create
 	
 	make
 		

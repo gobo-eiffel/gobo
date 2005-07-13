@@ -19,7 +19,7 @@ inherit
 			on_comment
 		end
 		
-creation
+create
 
 	make_null,
 	set_next

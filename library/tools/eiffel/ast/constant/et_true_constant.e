@@ -19,7 +19,7 @@ inherit
 			make_true as make
 		end
 
-creation
+create
 
 	make
 

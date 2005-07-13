@@ -12,7 +12,7 @@ indexing
 
 class ET_XACE_COMPONENT
 
-creation
+create
 
 	make
 

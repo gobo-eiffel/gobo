@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_ROLE
 
-creation
+create
 
 	make
 

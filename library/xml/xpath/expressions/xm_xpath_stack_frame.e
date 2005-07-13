@@ -12,7 +12,7 @@ indexing
 
 class XM_XPATH_STACK_FRAME
 
-creation
+create
 
 	make, make_empty, make_fixed_size
 

@@ -20,7 +20,7 @@ inherit
 			inherited_feature
 		end
 
-creation
+create
 
 	make
 

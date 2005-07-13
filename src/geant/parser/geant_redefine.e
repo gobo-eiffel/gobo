@@ -12,7 +12,7 @@ indexing
 
 class GEANT_REDEFINE
 
-creation
+create
 
 	make
 

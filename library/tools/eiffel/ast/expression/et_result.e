@@ -31,7 +31,7 @@ inherit
 			process
 		end
 
-creation
+create
 
 	make
 

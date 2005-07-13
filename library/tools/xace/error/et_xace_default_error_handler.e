@@ -22,7 +22,7 @@ inherit
 
 	ET_XACE_ERROR_HANDLER
 
-creation
+create
 
 	make, make_standard, make_null
 

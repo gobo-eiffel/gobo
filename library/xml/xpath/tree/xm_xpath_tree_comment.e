@@ -21,7 +21,7 @@ inherit
 
 	XM_XPATH_TREE_NODE
 
-creation
+create
 
 	make
 
