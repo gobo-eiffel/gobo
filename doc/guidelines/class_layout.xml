@@ -95,7 +95,7 @@ _   </text><classname>BAZ</classname>
 <text>_   _   _   </text>foo, bar
 <text>_   _   </text>end
 <text>
-</text>creation
+</text>create
 <text>
 _   </text><featurename>make</featurename>, <featurename>make_from_string</featurename>
 <text>

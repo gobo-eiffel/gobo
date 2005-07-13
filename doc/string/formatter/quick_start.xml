@@ -55,7 +55,7 @@ inherit
 
     ST_FORMATTING_ROUTINES
 
-creation
+create
 
     make
 
