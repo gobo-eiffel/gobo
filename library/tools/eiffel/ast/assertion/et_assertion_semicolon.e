@@ -16,7 +16,7 @@ inherit
 
 	ET_ASSERTION_ITEM
 
-creation
+create
 
 	make
 

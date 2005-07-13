@@ -18,7 +18,7 @@ inherit
 
 	ET_HEAD_LIST [ET_INDEXING_TERM_ITEM]
 
-creation
+create
 
 	make, make_with_capacity
 

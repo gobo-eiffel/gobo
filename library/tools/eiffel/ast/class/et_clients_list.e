@@ -16,7 +16,7 @@ inherit
 
 	KL_IMPORTED_SPECIAL_ROUTINES
 
-creation
+create
 
 	make, make_with_capacity
 

@@ -22,7 +22,7 @@ inherit
 			constraint_base_type, set_constraint_base_type
 		end
 
-creation
+create
 
 	make
 

@@ -19,7 +19,7 @@ inherit
 			is_convert_to
 		end
 
-creation
+create
 
 	make
 

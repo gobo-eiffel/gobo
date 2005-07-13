@@ -20,7 +20,7 @@ inherit
 			make_with_capacity as make_feature_name_list_with_capacity
 		end
 
-creation
+create
 
 	make, make_with_capacity
 

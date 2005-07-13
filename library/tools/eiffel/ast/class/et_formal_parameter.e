@@ -27,7 +27,7 @@ inherit
 
 	HASHABLE
 
-creation
+create
 
 	make
 

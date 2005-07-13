@@ -16,7 +16,7 @@ inherit
 
 	ET_INDEXING_TERM_ITEM
 
-creation
+create
 
 	make
 

@@ -25,7 +25,7 @@ inherit
 			reset, position, first_leaf
 		end
 
-creation
+create
 
 	make, make_with_capacity
 

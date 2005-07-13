@@ -21,7 +21,7 @@ inherit
 			tag, process
 		end
 
-creation
+create
 
 	make
 

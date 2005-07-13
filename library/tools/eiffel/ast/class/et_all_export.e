@@ -16,7 +16,7 @@ inherit
 
 	ET_EXPORT
 
-creation
+create
 
 	make
 

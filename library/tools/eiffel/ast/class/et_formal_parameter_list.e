@@ -21,7 +21,7 @@ inherit
 			named_types, fixed_array
 		end
 
-creation
+create
 
 	make, make_with_capacity
 
