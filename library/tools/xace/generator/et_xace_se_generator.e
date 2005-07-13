@@ -19,7 +19,7 @@ inherit
 			print_escaped_name
 		end
 
-creation
+create
 
 	make
 
@@ -349,7 +349,7 @@ feature {NONE} -- Output
 				print_indentation (1, a_file)
 				print_escaped_name (a_cluster.prefixed_name, a_file)
 				a_file.put_string (": %"")
-				a_pathname := a_cluster.full_unix_pathname
+				a_pathname := a_cluster.full_pathname
 				a_file.put_string (a_pathname)
 				a_file.put_character ('%"')
 				a_file.put_new_line
@@ -405,7 +405,7 @@ feature {NONE} -- Output
 			subclusters: ET_XACE_CLUSTERS
 		do
 			if not a_cluster.is_abstract then
-				a_file.put_line (a_cluster.full_unix_pathname)
+				a_file.put_line (a_cluster.full_pathname)
 			end
 			subclusters := a_cluster.subclusters
 			if subclusters /= Void then
