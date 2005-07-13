@@ -20,7 +20,7 @@ inherit
 			same_position, next_cursor
 		end
 
-creation
+create
 
 	make
 

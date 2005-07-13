@@ -39,11 +39,11 @@ inherit
 			out, is_equal
 		end
 
-creation
+create
 
 	make, make_definite
 
-creation {DT_DATE}
+create {DT_DATE}
 
 	make_canonical_from_dates
 

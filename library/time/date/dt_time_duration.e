@@ -39,7 +39,7 @@ inherit
 			out, is_equal
 		end
 
-creation
+create
 
 	make, make_precise, make_canonical, make_precise_canonical
 

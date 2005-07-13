@@ -24,7 +24,7 @@ inherit
 			cursor_back, cursor_search_back, cursor_go_i_th
 		end
 
-creation
+create
 
 	make, make_equal, make_from_linear,
 	make_from_array, make_default

@@ -16,7 +16,7 @@ inherit
 
 	TS_TEST
 
-creation
+create
 
 	make
 

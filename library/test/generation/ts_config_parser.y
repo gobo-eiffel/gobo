@@ -22,7 +22,7 @@ inherit
 			make as make_config_scanner
 		end
 
-creation
+create
 
 	make
 

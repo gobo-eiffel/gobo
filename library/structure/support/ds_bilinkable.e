@@ -19,7 +19,7 @@ inherit
 			put_right
 		end
 
-creation
+create
 
 	make
 

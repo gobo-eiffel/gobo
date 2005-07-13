@@ -20,7 +20,7 @@ inherit
 	KL_SHARED_EXECUTION_ENVIRONMENT
 	KL_IMPORTED_STRING_ROUTINES
 
-creation
+create
 
 	make
 
@@ -116,7 +116,7 @@ feature -- Generation
 				a_file.put_string ("%T")
 				a_file.put_line (class_name)
 				a_file.put_new_line
-				a_file.put_line ("creation")
+				a_file.put_line ("create")
 				a_file.put_new_line
 				a_file.put_line ("%Tmake_test")
 				a_file.put_new_line
@@ -216,7 +216,7 @@ feature -- Generation
 				a_file.put_string ("%T")
 				a_file.put_line ("TS_TESTER")
 				a_file.put_new_line
-				a_file.put_line ("creation")
+				a_file.put_line ("create")
 				a_file.put_new_line
 				a_file.put_line ("%Tmake, make_default")
 				a_file.put_new_line

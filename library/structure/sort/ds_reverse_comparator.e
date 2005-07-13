@@ -30,7 +30,7 @@ inherit
 
 	DS_COMPARATOR [G]
 
-creation
+create
 
 	make
 

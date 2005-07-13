@@ -19,7 +19,7 @@ inherit
 			report_error
 		end
 
-creation
+create
 
 	make_standard, make_null
 

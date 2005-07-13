@@ -19,7 +19,7 @@ inherit
 			failed
 		end
 
-creation
+create
 
 	make
 

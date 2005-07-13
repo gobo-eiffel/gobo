@@ -28,7 +28,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 
 	make, make_equal, make_default,
 	make_from_linear, make_from_array

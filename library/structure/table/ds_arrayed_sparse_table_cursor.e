@@ -19,7 +19,7 @@ inherit
 			container, next_cursor
 		end
 
-creation
+create
 
 	make
 

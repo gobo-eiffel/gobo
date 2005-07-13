@@ -23,7 +23,7 @@ inherit
 			{NONE} make_first
 		end
 
-creation
+create
 
 	make
 

@@ -16,7 +16,7 @@ inherit
 
 	DS_ARRAY_SORTER [G]
 
-creation
+create
 
 	make
 

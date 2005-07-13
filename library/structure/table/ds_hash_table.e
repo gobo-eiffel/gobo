@@ -20,7 +20,7 @@ inherit
 			new_cursor
 		end
 
-creation
+create
 
 	make, make_equal, make_default,
 	make_map, make_map_equal, make_map_default,

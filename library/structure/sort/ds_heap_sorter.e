@@ -16,7 +16,7 @@ inherit
 
 	DS_INDEXABLE_SORTER [G]
 
-creation
+create
 
 	make
 

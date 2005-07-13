@@ -19,7 +19,7 @@ inherit
 			passed
 		end
 
-creation
+create
 
 	make
 

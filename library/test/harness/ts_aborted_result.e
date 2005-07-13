@@ -19,7 +19,7 @@ inherit
 			aborted
 		end
 
-creation
+create
 
 	make
 

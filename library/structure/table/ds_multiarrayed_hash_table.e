@@ -20,7 +20,7 @@ inherit
 			new_cursor
 		end
 
-creation
+create
 
 	make, make_equal, make_default,
 	make_with_chunk_size, make_equal_with_chunk_size,

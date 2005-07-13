@@ -24,7 +24,7 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
-creation
+create
 
 	make, make_hours_minutes, make_hours_minutes_seconds,
 	make_named, make_named_hours_minutes, make_named_hours_minutes_seconds

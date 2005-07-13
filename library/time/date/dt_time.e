@@ -35,13 +35,13 @@ inherit
 			out
 		end
 
-creation
+create
 
 	make, make_precise,
 	make_from_second_count,
 	make_from_millisecond_count
 
-creation {DT_TIME_HANDLER}
+create {DT_TIME_HANDLER}
 
 	make_from_storage
 

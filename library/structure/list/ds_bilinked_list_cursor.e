@@ -19,7 +19,7 @@ inherit
 			container, current_cell, next_cursor
 		end
 
-creation
+create
 
 	make
 

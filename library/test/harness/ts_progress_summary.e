@@ -21,7 +21,7 @@ inherit
 			put_failure, put_abort, start_test
 		end
 
-creation
+create
 
 	make
 

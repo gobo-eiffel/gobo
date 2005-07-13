@@ -60,12 +60,12 @@ inherit
 			out
 		end
 
-creation
+create
 
 	make, make_precise, make_from_date_time,
 	make_from_date, make_from_epoch
 
-creation {DT_DATE_TIME_HANDLER}
+create {DT_DATE_TIME_HANDLER}
 
 	make_from_storage
 

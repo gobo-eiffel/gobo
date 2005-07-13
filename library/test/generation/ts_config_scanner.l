@@ -17,7 +17,7 @@ inherit
 
 	TS_CONFIG_SCANNER_SKELETON
 
-creation
+create
 
 	make
 %}

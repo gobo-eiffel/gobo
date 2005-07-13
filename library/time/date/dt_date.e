@@ -42,11 +42,11 @@ inherit
 			out
 		end
 
-creation
+create
 
 	make, make_from_day_count
 
-creation {DT_DATE_HANDLER}
+create {DT_DATE_HANDLER}
 
 	make_from_storage
 

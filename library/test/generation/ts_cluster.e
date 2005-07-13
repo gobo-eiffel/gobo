@@ -19,7 +19,7 @@ inherit
 	TS_CONFIG_CONSTANTS
 		export {NONE} all end
 
-creation
+create
 
 	make, make_default
 

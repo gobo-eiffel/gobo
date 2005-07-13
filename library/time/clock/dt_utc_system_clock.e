@@ -26,7 +26,7 @@ inherit
 	KL_SYSTEM_CLOCK
 		export {NONE} all end
 
-creation
+create
 
 	make
 

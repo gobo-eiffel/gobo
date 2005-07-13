@@ -28,7 +28,7 @@ inherit
 			remove
 		end
 
-creation
+create
 
 	make, make_default
 

@@ -31,7 +31,7 @@ inherit
 			is_equal
 		end
 
-creation {DT_WEEK_DAYS_FROM_SUNDAY}
+create {DT_WEEK_DAYS_FROM_SUNDAY}
 
 	make_monday, make_tuesday, make_wednesday, make_thursday,
 	make_friday, make_saturday, make_sunday

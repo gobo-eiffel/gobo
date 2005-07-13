@@ -21,7 +21,7 @@ inherit
 	KL_REVERSE_PART_COMPARATOR [G]
 	DS_PART_COMPARATOR [G]
 
-creation
+create
 
 	make
 
