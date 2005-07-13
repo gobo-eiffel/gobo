@@ -53,7 +53,7 @@ inherit
 
 	LX_DFA_PATTERN_MATCHER
 
-creation
+create
 
 	make, compile, compile_case_insensitive, compile_case_sensitive
 

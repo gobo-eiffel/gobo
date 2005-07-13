@@ -35,11 +35,11 @@ inherit
 			date, tmp_date
 		end
 
-creation
+create
 
 	make, make_definite, make_by_days
 
-creation {DATE}
+create {DATE}
 
 	make_canonical_from_dates
 

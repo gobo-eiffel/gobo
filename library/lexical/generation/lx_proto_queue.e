@@ -33,7 +33,7 @@ inherit
 				append, append_first, append_last, append_left, append_right
 		end
 
-creation
+create
 
 	make
 

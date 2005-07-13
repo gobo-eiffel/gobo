@@ -16,7 +16,7 @@ inherit
 
 	CURSOR
 
-creation
+create
 
 	make
 

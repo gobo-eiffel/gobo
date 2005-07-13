@@ -23,7 +23,7 @@ inherit
 
 	COMPARABLE
 
-creation
+create
 
 	make, make_default
 

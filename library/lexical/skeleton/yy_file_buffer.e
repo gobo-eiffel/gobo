@@ -21,7 +21,7 @@ inherit
 			name, fill, wipe_out
 		end
 
-creation
+create
 
 	make, make_with_size
 

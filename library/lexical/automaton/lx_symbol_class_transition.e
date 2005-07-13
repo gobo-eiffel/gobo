@@ -21,7 +21,7 @@ inherit
 			labeled, record, recordable
 		end
 
-creation
+create
 
 	make
 

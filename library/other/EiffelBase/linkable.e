@@ -18,7 +18,7 @@ inherit
 
 	DS_LINKABLE [G]
 
-creation
+create
 
 	make
 

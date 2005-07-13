@@ -17,7 +17,7 @@ inherit
 	KI_TEXT_OUTPUT_STREAM
 	KL_IMPORTED_STRING_ROUTINES
 
-creation
+create
 
 	make, make_empty
 

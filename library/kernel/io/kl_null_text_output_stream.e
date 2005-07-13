@@ -16,7 +16,7 @@ inherit
 
 	KI_TEXT_OUTPUT_STREAM
 
-creation
+create
 
 	make
 

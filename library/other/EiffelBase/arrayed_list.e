@@ -56,7 +56,7 @@ inherit
 			{ANY} make
 		end
 
-creation
+create
 
 	make, make_filled
 

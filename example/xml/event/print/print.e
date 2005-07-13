@@ -22,7 +22,7 @@ inherit
 	XM_RESOLVER_FACTORY
 		export {NONE} all end
 		
-creation
+create
 
 	make
 

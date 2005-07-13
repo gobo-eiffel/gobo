@@ -22,7 +22,7 @@ inherit
 
 	SHARED_NULL_SINGLETON
 
-creation
+create
 
 	make
 

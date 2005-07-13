@@ -61,7 +61,7 @@ inherit
 			first_cell
 		end
 
-creation
+create
 
 	make
 

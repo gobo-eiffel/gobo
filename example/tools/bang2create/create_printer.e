@@ -18,7 +18,7 @@ inherit
 			process_bang_instruction
 		end
 
-creation
+create
 
 	make, make_null
 

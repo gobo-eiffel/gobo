@@ -83,7 +83,7 @@ inherit
 			tmp_date_time, copy
 		end
 
-creation
+create
 
 	make, make_fine, make_by_date_time, make_definite,
 	make_precise, make_precise_definite,
@@ -92,7 +92,7 @@ creation
 	make_from_date_duration,
 	make_from_date_time_duration
 
-creation {DATE_TIME}
+create {DATE_TIME}
 
 	make_canonical_from_dates
 

@@ -91,7 +91,7 @@ inherit
 		end
 
 #endif
-creation
+create
 
 	make
 

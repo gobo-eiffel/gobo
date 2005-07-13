@@ -88,7 +88,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 
 	make, make_fine, make_by_date_time, make_by_date,
 	make_precise, make_from_date_time, make_from_date

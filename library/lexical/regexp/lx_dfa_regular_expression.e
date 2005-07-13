@@ -81,7 +81,7 @@ inherit
 			matches, match_substring
 		end
 
-creation
+create
 
 	make, compile, compile_case_insensitive, compile_case_sensitive
 

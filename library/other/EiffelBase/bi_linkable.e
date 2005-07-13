@@ -21,7 +21,7 @@ inherit
 
 	DS_BILINKABLE [G]
 
-creation
+create
 
 	make
 

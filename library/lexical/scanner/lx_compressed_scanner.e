@@ -46,7 +46,7 @@ inherit
 			{ANY} to_tables, from_tables
 		end
 
-creation
+create
 
 	make, make_with_file, make_with_buffer
 

@@ -16,7 +16,7 @@ inherit
 
 	LX_TRANSITION [G]
 
-creation
+create
 
 	make
 

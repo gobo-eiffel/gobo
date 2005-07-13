@@ -35,7 +35,7 @@ inherit
 			time
 		end
 
-creation
+create
 
 	make, make_fine, make_by_seconds, make_by_fine_seconds,
 	make_precise, make_canonical, make_precise_canonical

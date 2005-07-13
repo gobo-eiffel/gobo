@@ -38,13 +38,13 @@ inherit
 			relative_duration, relative_time_duration
 		end
 
-creation
+create
 
 	make, make_fine, make_by_fine_seconds,
 	make_precise, make_from_second_count,
 	make_from_millisecond_count, make_by_seconds
 
-creation {DATE_TIME}
+create {DATE_TIME}
 
 	make_from_storage
 

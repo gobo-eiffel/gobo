@@ -30,7 +30,7 @@ inherit
 
 	MA_DECIMAL_MATH
 	
-creation
+create
 
 	make
 

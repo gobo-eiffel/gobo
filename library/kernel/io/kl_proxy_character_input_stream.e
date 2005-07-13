@@ -19,7 +19,7 @@ inherit
 			is_rewindable, is_closable, rewind, close, valid_unread_character
 		end
 
-creation
+create
 
 	make
 

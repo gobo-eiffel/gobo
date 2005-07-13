@@ -16,7 +16,7 @@ inherit
 
 	ANY -- Needed for SE 2.1b1.
 
-creation
+create
 
 	make, make_from_buffer
 

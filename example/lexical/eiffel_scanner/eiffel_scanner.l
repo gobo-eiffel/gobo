@@ -36,7 +36,7 @@ inherit
 	KL_SHARED_EXCEPTIONS
 	KL_SHARED_ARGUMENTS
 
-creation
+create
 
 	make, execute, benchmark
 %}

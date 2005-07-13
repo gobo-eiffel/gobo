@@ -16,7 +16,7 @@ inherit
 
 	LX_AUTOMATON
 
-creation
+create
 
 	make
 

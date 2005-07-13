@@ -19,7 +19,7 @@ inherit
 			current_cell
 		end
 
-creation
+create
 
 	make
 

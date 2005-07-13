@@ -38,11 +38,11 @@ inherit
 			relative_duration, relative_date_duration
 		end
 
-creation
+create
 
 	make, make_by_days, make_from_day_count
 
-creation {DATE_TIME}
+create {DATE_TIME}
 
 	make_from_storage
 

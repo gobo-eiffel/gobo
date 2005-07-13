@@ -20,7 +20,7 @@ inherit
 			make, initialize, put, add
 		end
 
-creation
+create
 
 	make
 

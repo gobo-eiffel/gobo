@@ -16,7 +16,7 @@ inherit
 
 	KL_PART_COMPARATOR [G]
 
-creation
+create
 
 	make
 

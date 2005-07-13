@@ -27,7 +27,7 @@ inherit
 			{ANY} argument, argument_count
 		end
 
-creation {KL_SHARED_ARGUMENTS}
+create {KL_SHARED_ARGUMENTS}
 
 	make
 

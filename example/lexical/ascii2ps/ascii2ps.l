@@ -25,7 +25,7 @@ inherit
 	KL_SHARED_ARGUMENTS
 	KL_SHARED_EXCEPTIONS
 
-creation
+create
 
 	make
 %}

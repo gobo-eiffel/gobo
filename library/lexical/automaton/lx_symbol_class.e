@@ -28,7 +28,7 @@ inherit
 				replace, swap
 		end
 
-creation
+create
 
 	make
 

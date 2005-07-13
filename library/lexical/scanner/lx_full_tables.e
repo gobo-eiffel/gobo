@@ -16,7 +16,7 @@ inherit
 
 	LX_TABLES
 
-creation
+create
 
 	make_from_tables
 

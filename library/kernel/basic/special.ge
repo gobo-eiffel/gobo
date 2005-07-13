@@ -37,7 +37,7 @@ inherit
 		end
 
 #endif
-creation
+create
 
 	make, make_from_array
 

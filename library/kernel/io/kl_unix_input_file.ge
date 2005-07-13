@@ -39,7 +39,7 @@ inherit
 #endif
 		end
 
-creation
+create
 
 	make
 

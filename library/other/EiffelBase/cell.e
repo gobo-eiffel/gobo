@@ -16,7 +16,7 @@ inherit
 
 	DS_CELL [G]
 
-creation
+create
 
 	put
 

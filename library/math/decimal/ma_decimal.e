@@ -57,7 +57,7 @@ inherit
 			out, is_equal, copy
 		end
 
-creation
+create
 
 	make_from_integer,
 	make_from_string,
@@ -67,11 +67,11 @@ creation
 	make_one,
 	make
 
-creation {MA_DECIMAL}
+create {MA_DECIMAL}
 
 	make_infinity, make_nan, make_snan, make_special
 
-creation {MA_DECIMAL_TEXT_PARSER}
+create {MA_DECIMAL_TEXT_PARSER}
 
 	make_from_parser
 

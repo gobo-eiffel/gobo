@@ -43,7 +43,7 @@ inherit
 			out, copy, is_equal
 		end
 
-creation
+create
 
 	make_default, make_double, make_extended, make_double_extended, make
 

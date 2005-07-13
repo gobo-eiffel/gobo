@@ -16,7 +16,7 @@ inherit
 
 	KL_CELL [G]
 
-creation
+create
 
 	make
 

@@ -51,7 +51,7 @@ inherit
 			{ANY} make
 		end
 
-creation
+create
 
 	make
 

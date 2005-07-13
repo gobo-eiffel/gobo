@@ -49,7 +49,7 @@ inherit
 			is_equal, out
 		end
 
-creation
+create
 
 	make_from_character, make_from_code
 

@@ -24,7 +24,7 @@ inherit
 			copy, is_equal
 		end
 
-creation
+create
 
 	make, make_symbol, make_epsilon, make_symbol_class
 

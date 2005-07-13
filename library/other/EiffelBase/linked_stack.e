@@ -27,7 +27,7 @@ inherit
 			extendible as ds_extendible
 		end
 
-creation
+create
 
 	make
 

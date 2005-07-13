@@ -21,7 +21,7 @@ inherit
 			is_equal, copy
 		end
 
-creation
+create
 
 	make, make_with_initial
 

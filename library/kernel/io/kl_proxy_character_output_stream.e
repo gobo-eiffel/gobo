@@ -27,7 +27,7 @@ inherit
 			is_closable, close
 		end
 
-creation
+create
 
 	make
 

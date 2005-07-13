@@ -19,7 +19,7 @@ inherit
 			less_than
 		end
 
-creation
+create
 
 	make
 

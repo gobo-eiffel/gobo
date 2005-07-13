@@ -21,7 +21,7 @@ inherit
 			refill
 		end
 
-creation
+create
 
 	make
 
