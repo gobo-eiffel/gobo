@@ -445,8 +445,6 @@ feature {NONE} -- Feature processing
 			l_duplication_needed: BOOLEAN
 			l_feature_found: BOOLEAN
 			l_duplicated: BOOLEAN
-			l_name: ET_FEATURE_NAME
-			l_parent: ET_PARENT
 			l_clients: ET_CLASS_NAME_LIST
 			nb_precursors: INTEGER
 			l_precursor: ET_FEATURE
@@ -549,10 +547,8 @@ feature {NONE} -- Feature processing
 				l_parent_feature := l_deferred
 			end
 			l_flattened_feature := l_parent_feature.precursor_feature
-			l_name := l_parent_feature.name
-			l_parent := l_parent_feature.parent
 			if l_parent_feature.has_undefine then
-				l_flattened_feature := l_flattened_feature.undefined_feature (l_name)
+				l_flattened_feature := l_flattened_feature.undefined_feature (l_parent_feature.undefine_name)
 				l_flattened_feature.reset_preconditions
 				l_flattened_feature.reset_postconditions
 				l_flattened_feature.set_implementation_feature (l_flattened_feature)
@@ -561,7 +557,7 @@ feature {NONE} -- Feature processing
 				l_flattened_feature.set_other_precursors (l_other_precursors)
 				l_duplicated := True
 			elseif l_duplication_needed or not l_feature_found then
-				l_flattened_feature := l_flattened_feature.renamed_feature (l_name)
+				l_flattened_feature := l_flattened_feature.renamed_feature (l_parent_feature.name)
 				if l_other_precursors /= Void then
 						-- Merge or Join.
 						-- Otherwise it would have been a simple inheritance or sharing
@@ -582,7 +578,7 @@ feature {NONE} -- Feature processing
 				elseif l_keep_same_version then
 					l_flattened_feature.set_version (l_parent_feature.precursor_feature.version)
 				end
-				l_flattened_feature.resolve_inherited_signature (l_parent)
+				l_flattened_feature.resolve_inherited_signature (l_parent_feature.parent)
 				l_flattened_feature.set_clients (l_clients)
 				l_flattened_feature.set_first_seed (a_feature.first_seed)
 				l_flattened_feature.set_other_seeds (a_feature.other_seeds)
