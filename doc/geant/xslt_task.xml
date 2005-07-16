@@ -91,6 +91,22 @@
 			</varlistentry>
 
 			<varlistentry>
+				<term>force</term>
+				<listitem>
+					<para>
+						<emphasis>Description: </emphasis>Execute even if it would not be
+						necessary since the outputfile is newer than both the input and the xsl file
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Domain: </emphasis>Boolean (true|false)</para>
+				</listitem>
+				<listitem>
+					<para><emphasis>Default: </emphasis>false</para>
+				</listitem>
+			</varlistentry>
+			
+			<varlistentry>
 				<term>indent</term>
 				<listitem>
 					<para><emphasis>Description: </emphasis>Number of spaces for indentation of child elements</para>
@@ -128,6 +144,16 @@
         </attribute>
       </optional>
       <optional>
+        <attribute name="force">
+          <!-- runtime evaluation
+          <choice>
+            <value>true</value>
+            <value>false</value>
+          </choice>
+          -->
+        </attribute>
+      </optional>
+      <optional>
         <attribute name="indent"/> <!-- if attribute 'processor' equals 'xalan_java' or 'xalan_cpp'--><-- TODO - implement for gexslt -->
       </optional>
       <optional>
@@ -148,12 +174,12 @@
     </element>
   </define>
 ]]>
-	</programlisting>
+  </programlisting>
 
-	</section>
+  </section>
 
-	<section id="xslt_examples">
-		<title>Examples</title>
+  <section id="xslt_examples">
+    <title>Examples</title>
 
     <para>
       Note that string parameters must be surrounded by a single quote
@@ -168,7 +194,7 @@
       is not possible via geant.
     </para>
 
-	<programlisting><![CDATA[
+  <programlisting><![CDATA[
   <xslt
     input="${GOBO}/doc/structure/index.xml"
     stylesheet="${GOBO}/doc/misc/gobo2db.xsl"
@@ -185,7 +211,7 @@
     <parameter name="toc" value="&quot;'../index.html'&quot;"/>
   </xslt>
 ]]>
-	</programlisting>
-	</section>
+  </programlisting>
+  </section>
 
 </chapter>

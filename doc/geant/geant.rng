@@ -623,6 +623,16 @@
 				</attribute>
 			</optional>
 			<optional>
+				<attribute name="force">
+					<!-- runtime evaluation
+					<choice>
+						<value>true</value>
+						<value>false</value>
+					</choice>
+					-->
+				</attribute>
+			</optional>
+			<optional>
 				<attribute name="indent"/> <!-- if attribute 'processor' equals 'xalan_java' or 'xalan_cpp'-->
 			</optional>
 			<optional>
