@@ -14,7 +14,7 @@ class GEANT_XSLT_COMMAND
 
 inherit
 
-	GEANT_COMMAND
+	GEANT_FILESYSTEM_COMMAND
 		redefine
 			make
 		end
@@ -82,6 +82,11 @@ feature -- Access
 
 	classpath: STRING
 			-- classpath for java processors
+
+	force: BOOLEAN
+			-- Should xsl transformation be invoked even if it would
+			-- not be necessary since the outputfile is newer
+			-- than both the input and the xsl file?
 
 feature -- Setting
 
@@ -195,6 +200,14 @@ feature -- Setting
 			classpath_set: classpath = a_classpath
 		end
 
+	set_force (b: BOOLEAN) is
+			-- Set `force' to `b'.
+		do
+			force := b
+		ensure
+			force_set: force = b
+		end
+
 feature -- Setting / Implementation
 
 	set_processor (a_processor: INTEGER) is
@@ -211,27 +224,46 @@ feature -- Execution
 
 	execute is
 			-- Execute command.
+		local
+			a_input_filename: STRING
+			a_stylesheet_filename: STRING
+			a_output_filename: STRING
+			a_execute: BOOLEAN
 		do
-			if processor = Processor_xalan_cpp then
-				execute_xalan_cpp
-			elseif processor = Processor_xalan_java then
-				execute_xalan_java
-			elseif processor = Processor_xsltproc then
-				execute_xsltproc
-			elseif processor = Processor_gexslt then
-				execute_gexslt
-			else
-				project.log (<<"  [xslt]: unknown processor">>)
-				exit_code := 1
+			a_input_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
+			a_stylesheet_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
+			a_output_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
+
+			a_execute := force
+			if not a_execute then
+				a_execute := is_file_outofdate (a_input_filename, a_output_filename)
+				a_execute := a_execute or else is_file_outofdate (a_stylesheet_filename, a_output_filename)
+				if not a_execute then
+					project.trace_debug (<<"  [*xslt] not necessary to transform '",
+						a_input_filename, "' + '", a_stylesheet_filename, "' to '", a_output_filename, "'">>)
+				end
+			end
+			if a_execute then
+				if processor = Processor_xalan_cpp then
+					execute_xalan_cpp (a_input_filename, a_stylesheet_filename, a_output_filename)
+				elseif processor = Processor_xalan_java then
+					execute_xalan_java (a_input_filename, a_stylesheet_filename, a_output_filename)
+				elseif processor = Processor_xsltproc then
+					execute_xsltproc (a_input_filename, a_stylesheet_filename, a_output_filename)
+				elseif processor = Processor_gexslt then
+					execute_gexslt (a_input_filename, a_stylesheet_filename, a_output_filename)
+				else
+					project.log (<<"  [xslt]: unknown processor">>)
+					exit_code := 1
+				end
 			end
 		end
 
-	execute_xalan_cpp is
+	execute_xalan_cpp (a_input_filename, a_stylesheet_filename, a_output_filename: STRING) is
 			-- Execute command using xalan C++ processor.
 		local
 			cmd: STRING
 			i, nb: INTEGER
-			a_filename: STRING
 		do
 			create cmd.make (128)
 			cmd.append_string ("Xalan ")
@@ -241,8 +273,7 @@ feature -- Execution
 
 				-- Append option for outputfile:
 			cmd.append_string (" -o ")
-			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_output_filename)
 
 				-- Add parameters:
 			nb := parameters.count
@@ -256,24 +287,21 @@ feature -- Execution
 
 				-- Append source argument:
 			cmd.append_string (" ")
-			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_input_filename)
 
 				-- Append stylesheet argument:
 			cmd.append_string (" ")
-			a_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_stylesheet_filename)
 
 			project.trace (<<"  [xslt] ", cmd>>)
 			execute_shell (cmd)
 		end
 
-	execute_xalan_java is
+	execute_xalan_java (a_input_filename, a_stylesheet_filename, a_output_filename: STRING) is
 			-- Execute command using xalan java processor.
 		local
 			cmd: STRING
 			i, nb: INTEGER
-			a_filename: STRING
 		do
 			create cmd.make (128)
 			cmd.append_string ("java")
@@ -290,16 +318,13 @@ feature -- Execution
 			cmd.append_string (" org.apache.xalan.xslt.Process")
 
 			cmd.append_string (" -in ")
-			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_input_filename)
 
 			cmd.append_string (" -xsl ")
-			a_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_stylesheet_filename)
 
 			cmd.append_string (" -out ")
-			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_output_filename)
 
 			cmd.append_string (" -INDENT ")
 			cmd := STRING_.appended_string (cmd, indent)
@@ -323,20 +348,18 @@ feature -- Execution
 			execute_shell (cmd)
 		end
 
-	execute_xsltproc is
+	execute_xsltproc (a_input_filename, a_stylesheet_filename, a_output_filename: STRING) is
 			-- Execute command using libxslt processor.
 		local
 			cmd: STRING
 			i, nb: INTEGER
-			a_filename: STRING
 		do
 			create cmd.make (128)
 			cmd.append_string ("xsltproc ")
 
 				-- Append option for outputfile:
 			cmd.append_string (" -o ")
-			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_output_filename)
 
 				-- Add parameters:
 			nb := parameters.count
@@ -350,33 +373,29 @@ feature -- Execution
 
 				-- Append stylesheet argument:
 			cmd.append_string (" ")
-			a_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_stylesheet_filename)
 
 				-- Append source argument:
 			cmd.append_string (" ")
-			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_input_filename)
 
 			project.trace (<<"  [xslt] ", cmd>>)
 			execute_shell (cmd)
 		end
 
 
-	execute_gexslt is
+	execute_gexslt (a_input_filename, a_stylesheet_filename, a_output_filename: STRING) is
 			-- Execute command using Gobo Eiffel xslt processor.
 		local
 			cmd: STRING
 			i, nb: INTEGER
-			a_filename: STRING
 		do
 			create cmd.make (128)
 			cmd.append_string ("gexslt ")
 
 				-- Append option for outputfile:
 			cmd.append_string (" --output=")
-			a_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_output_filename)
 
 				-- Add parameters:
 			nb := parameters.count
@@ -390,13 +409,11 @@ feature -- Execution
 
 				-- Append stylesheet argument:
 			cmd.append_string (" --file=")
-			a_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_stylesheet_filename)
 
 				-- Append source argument:
 			cmd.append_string (" --file=")
-			a_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
-			cmd := STRING_.appended_string (cmd, a_filename)
+			cmd := STRING_.appended_string (cmd, a_input_filename)
 
 			project.trace (<<"  [xslt] ", cmd>>)
 			execute_shell (cmd)

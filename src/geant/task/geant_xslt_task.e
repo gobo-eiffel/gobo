@@ -87,6 +87,9 @@ feature {NONE} -- Initialization
 					command.set_stylesheet_filename (a_value)
 				end
 			end
+			if has_attribute (Force_attribute_name) then
+				command.set_force (boolean_value (Force_attribute_name))
+			end
 			if a_is_xalan_java_processor or a_is_xalan_cpp_processor then
 				-- TODO: add support for gexslt when it supports this
 				if has_attribute (Indent_attribute_name) then
@@ -167,6 +170,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for stylesheet_filename
 		once
 			Result := "stylesheet"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Force_attribute_name: STRING is
+			-- Name of xml attribute for force
+		once
+			Result := "force"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
