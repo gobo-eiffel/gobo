@@ -101,6 +101,27 @@ feature {ET_AST_NODE} -- Processing
 			a_target.right_brace.process (Current)
 		end
 
+	process_alias_free_name (a_name: ET_ALIAS_FREE_NAME) is
+			-- Process `a_name'.
+		do
+			an_name.alias_keyword.process (Current)
+			an_name.alias_string.process (Current)
+		end
+
+	process_alias_name (a_name: ET_ALIAS_NAME) is
+			-- Process `a_name'.
+		do
+			an_name.alias_keyword.process (Current)
+			an_name.alias_string.process (Current)
+		end
+
+	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME) is
+			-- Process `a_name'.
+		do
+			a_name.feature_name.process (Current)
+			a_name.alias_name.process (Current)
+		end
+
 	process_all_export (an_export: ET_ALL_EXPORT) is
 			-- Process `an_export'.
 		do
@@ -113,6 +134,13 @@ feature {ET_AST_NODE} -- Processing
 		do
 			an_assertion.assertion.process (Current)
 			an_assertion.semicolon.process (Current)
+		end
+
+	process_assigner (an_assigner: ET_ASSIGNER) is
+			-- Process `an_assigner'.
+		do
+			an_assigner.assign_keyword.process (Current)
+			an_assigner.feature_name.process (Current)
 		end
 
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
@@ -137,6 +165,7 @@ feature {ET_AST_NODE} -- Processing
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -156,6 +185,10 @@ feature {ET_AST_NODE} -- Processing
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
+			an_assigner := a_feature.assigner
+			if an_assigner /= Void then
+				an_assigner.process (Current)
+			end
 			a_semicolon := a_feature.semicolon
 			if a_semicolon /= Void then
 				a_semicolon.process (Current)
@@ -473,6 +506,7 @@ feature {ET_AST_NODE} -- Processing
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -492,6 +526,10 @@ feature {ET_AST_NODE} -- Processing
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
+			an_assigner := a_feature.assigner
+			if an_assigner /= Void then
+				an_assigner.process (Current)
+			end
 			a_feature.is_keyword.process (Current)
 			a_feature.constant.process (Current)
 			a_semicolon := a_feature.semicolon
@@ -705,6 +743,7 @@ feature {ET_AST_NODE} -- Processing
 			a_preconditions: ET_PRECONDITIONS
 			a_postconditions: ET_POSTCONDITIONS
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -728,6 +767,10 @@ feature {ET_AST_NODE} -- Processing
 				an_arguments.process (Current)
 			end
 			a_feature.declared_type.process (Current)
+			an_assigner := a_feature.assigner
+			if an_assigner /= Void then
+				an_assigner.process (Current)
+			end
 			a_feature.is_keyword.process (Current)
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
@@ -824,6 +867,7 @@ feature {ET_AST_NODE} -- Processing
 			a_postconditions: ET_POSTCONDITIONS
 			a_compound: ET_COMPOUND
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -847,6 +891,10 @@ feature {ET_AST_NODE} -- Processing
 				an_arguments.process (Current)
 			end
 			a_feature.declared_type.process (Current)
+			an_assigner := a_feature.assigner
+			if an_assigner /= Void then
+				an_assigner.process (Current)
+			end
 			a_feature.is_keyword.process (Current)
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
@@ -1020,6 +1068,13 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.comma.process (Current)
 		end
 
+	process_extended_feature_name_comma (a_name: ET_EXTENDED_FEATURE_NAME_COMMA) is
+			-- Process `a_name'.
+		do
+			a_name.extended_feature_name.process (Current)
+			a_name.comma.process (Current)
+		end
+
 	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Process `a_feature'.
 		local
@@ -1032,6 +1087,7 @@ feature {ET_AST_NODE} -- Processing
 			an_alias_clause: ET_EXTERNAL_ALIAS
 			a_postconditions: ET_POSTCONDITIONS
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -1055,6 +1111,10 @@ feature {ET_AST_NODE} -- Processing
 				an_arguments.process (Current)
 			end
 			a_feature.declared_type.process (Current)
+			an_assigner := a_feature.assigner
+			if an_assigner /= Void then
+				an_assigner.process (Current)
+			end
 			a_feature.is_keyword.process (Current)
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
@@ -1706,6 +1766,7 @@ feature {ET_AST_NODE} -- Processing
 			a_postconditions: ET_POSTCONDITIONS
 			a_compound: ET_COMPOUND
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -1729,6 +1790,10 @@ feature {ET_AST_NODE} -- Processing
 				an_arguments.process (Current)
 			end
 			a_feature.declared_type.process (Current)
+			an_assigner := a_feature.assigner
+			if an_assigner /= Void then
+				an_assigner.process (Current)
+			end
 			a_feature.is_keyword.process (Current)
 			an_indexing := a_feature.first_indexing
 			if an_indexing /= Void then
@@ -2253,6 +2318,7 @@ feature {ET_AST_NODE} -- Processing
 			a_frozen_keyword: ET_TOKEN
 			a_synonym: ET_FEATURE
 			a_semicolon: ET_SEMICOLON_SYMBOL
+			an_assigner: ET_ASSIGNER
 		do
 			a_frozen_keyword := a_feature.frozen_keyword
 			if a_frozen_keyword /= Void then
@@ -2272,6 +2338,10 @@ feature {ET_AST_NODE} -- Processing
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
+			an_assigner := a_feature.assigner
+			if an_assigner /= Void then
+				an_assigner.process (Current)
+			end
 			a_feature.is_keyword.process (Current)
 			a_feature.unique_keyword.process (Current)
 			a_semicolon := a_feature.semicolon

@@ -101,6 +101,27 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_alias_free_name (a_name: ET_ALIAS_FREE_NAME) is
+			-- Process `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		deferred
+		end
+
+	process_alias_name (a_name: ET_ALIAS_NAME) is
+			-- Process `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		deferred
+		end
+
+	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME) is
+			-- Process `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		deferred
+		end
+
 	process_all_export (an_export: ET_ALL_EXPORT) is
 			-- Process `an_export'.
 		require
@@ -112,6 +133,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_assertion'.
 		require
 			an_assertion_not_void: an_assertion /= Void
+		deferred
+		end
+
+	process_assigner (an_assigner: ET_ASSIGNER) is
+			-- Process `an_assigner'.
+		require
+			an_assigner_not_void: an_assigner /= Void
 		deferred
 		end
 
@@ -490,6 +518,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		require
 			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
+	process_extended_feature_name_comma (a_name: ET_EXTENDED_FEATURE_NAME_COMMA) is
+			-- Process `a_name'.
+		require
+			a_name_not_void: a_name /= Void
 		deferred
 		end
 

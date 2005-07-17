@@ -27,8 +27,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name_item; args: like arguments; a_type: like declared_type;
-		an_obsolete: like obsolete_message; a_preconditions: like preconditions;
+	make (a_name: like extended_name; args: like arguments; a_type: like declared_type;
+		an_assigner: like assigner; an_obsolete: like obsolete_message;
+		a_preconditions: like preconditions;
 		a_language: like language; an_alias: like alias_clause;
 		a_postconditions: like postconditions; a_clients: like clients;
 		a_class: like implementation_class) is
@@ -40,10 +41,11 @@ feature {NONE} -- Initialization
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
 		do
-			name_item := a_name
+			extended_name := a_name
 			hash_code := name.hash_code
 			arguments := args
 			declared_type := a_type
+			assigner := an_assigner
 			is_keyword := tokens.is_keyword
 			obsolete_message := an_obsolete
 			preconditions := a_preconditions
@@ -56,9 +58,10 @@ feature {NONE} -- Initialization
 			implementation_feature := Current
 			builtin_code := tokens.builtin_not_builtin
 		ensure
-			name_item_set: name_item = a_name
+			extended_name_set: extended_name = a_name
 			arguments_set: arguments = args
 			declared_type_set: declared_type = a_type
+			assigner_set: assigner = an_assigner
 			obsolete_message_set: obsolete_message = an_obsolete
 			preconditions_set: preconditions = a_preconditions
 			language_set: language = a_language
@@ -71,12 +74,12 @@ feature {NONE} -- Initialization
 
 feature -- Duplication
 
-	new_synonym (a_name: like name_item): like Current is
+	new_synonym (a_name: like extended_name): like Current is
 			-- Synonym feature
 		do
-			create Result.make (a_name, arguments, declared_type, obsolete_message,
-				preconditions, language, alias_clause, postconditions, clients,
-				implementation_class)
+			create Result.make (a_name, arguments, declared_type, assigner,
+				obsolete_message, preconditions, language, alias_clause,
+				postconditions, clients, implementation_class)
 			Result.set_is_keyword (is_keyword)
 			Result.set_end_keyword (end_keyword)
 			Result.set_semicolon (semicolon)
@@ -93,9 +96,9 @@ feature -- Conversion
 	renamed_feature (a_name: like name): like Current is
 			-- Renamed version of current feature
 		do
-			create Result.make (a_name, arguments, declared_type, obsolete_message,
-				preconditions, language, alias_clause, postconditions, clients,
-				implementation_class)
+			create Result.make (a_name, arguments, declared_type, assigner,
+				obsolete_message, preconditions, language, alias_clause,
+				postconditions, clients, implementation_class)
 			Result.set_implementation_feature (implementation_feature)
 			Result.set_first_precursor (first_precursor)
 			Result.set_other_precursors (other_precursors)

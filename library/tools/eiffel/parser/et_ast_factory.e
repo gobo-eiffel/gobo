@@ -1284,6 +1284,247 @@ feature -- AST nodes
 			end
 		end
 
+	new_alias_and_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "and" feature name
+		do
+			if a_string /= Void then
+				create Result.make_and (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_and_then_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "and then" feature name
+		do
+			if a_string /= Void then
+				create Result.make_and_then (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_bracket_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "[]" feature name
+		do
+			if a_string /= Void then
+				create Result.make_bracket (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_div_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "//" feature name
+		do
+			if a_string /= Void then
+				create Result.make_div (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_divide_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "//" feature name
+		do
+			if a_string /= Void then
+				create Result.make_divide (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_dotdot_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias ".." feature name
+		do
+			if a_string /= Void then
+				create Result.make_dotdot (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_free_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME is
+			-- New alias free feature name
+		require
+			a_string_computed: a_string /= Void implies a_string.value.count > 0
+		do
+			if a_string /= Void then
+				create Result.make_infix (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_ge_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias ">=" feature name
+		do
+			if a_string /= Void then
+				create Result.make_ge (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_gt_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias ">" feature name
+		do
+			if a_string /= Void then
+				create Result.make_gt (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_implies_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "implies" feature name
+		do
+			if a_string /= Void then
+				create Result.make_implies (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_le_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "<=" feature name
+		do
+			if a_string /= Void then
+				create Result.make_le (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_lt_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "<" feature name
+		do
+			if a_string /= Void then
+				create Result.make_lt (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_minus_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "-" feature name
+		do
+			if a_string /= Void then
+				create Result.make_minus (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_mod_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "\\" feature name
+		do
+			if a_string /= Void then
+				create Result.make_mod (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_not_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "not" feature name
+		do
+			if a_string /= Void then
+				create Result.make_not (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_or_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "or" feature name
+		do
+			if a_string /= Void then
+				create Result.make_or (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_or_else_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "or else" feature name
+		do
+			if a_string /= Void then
+				create Result.make_or_else (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_plus_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "+" feature name
+		do
+			if a_string /= Void then
+				create Result.make_plus (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_power_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "^" feature name
+		do
+			if a_string /= Void then
+				create Result.make_power (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_times_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "*" feature name
+		do
+			if a_string /= Void then
+				create Result.make_times (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_alias_xor_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_NAME is
+			-- New alias "xor" feature name
+		do
+			if a_string /= Void then
+				create Result.make_xor (a_string)
+				if an_alias /= Void and then not an_alias.position.is_null then
+					Result.set_alias_keyword (an_alias)
+				end
+			end
+		end
+
+	new_aliased_feature_name (a_name: ET_FEATURE_NAME; an_alias: ET_ALIAS_NAME): ET_ALIASED_FEATURE_NAME is
+			-- New aliased feature name
+		do
+			if a_name /= Void and an_alias /= Void then
+				create Result.make (a_name, an_alias)
+			end
+		end
+
 	new_all_export (a_clients: ET_CLIENTS; an_all: ET_KEYWORD): ET_ALL_EXPORT is
 			-- New 'all' export clause
 		do
@@ -1322,6 +1563,14 @@ feature -- AST nodes
 			Result := an_assertion
 		end
 
+	new_assigner (an_assign: ET_KEYWORD; a_feature_name: ET_FEATURE_NAME): ET_ASSIGNER is
+			-- New assigner
+		do
+			if a_feature_name /= Void then
+				create Result.make (a_feature_name)
+			end
+		end
+
 	new_assignment (a_target: ET_WRITABLE; an_assign: ET_SYMBOL; a_source: ET_EXPRESSION): ET_ASSIGNMENT is
 			-- New assignment instruction
 		do
@@ -1338,13 +1587,13 @@ feature -- AST nodes
 			end
 		end
 
-	new_attribute (a_name: ET_FEATURE_NAME_ITEM; a_type: ET_DECLARED_TYPE;
+	new_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER;
 		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_ATTRIBUTE is
 			-- New attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, a_type, a_clients, a_class)
+				create Result.make (a_name, a_type, an_assigner, a_clients, a_class)
 			end
 		end
 
@@ -1498,14 +1747,14 @@ feature -- AST nodes
 			end
 		end
 
-	new_constant_attribute (a_name: ET_FEATURE_NAME_ITEM; a_type: ET_DECLARED_TYPE;
+	new_constant_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER;
 		an_is: ET_KEYWORD; a_constant: ET_CONSTANT; a_semicolon: ET_SEMICOLON_SYMBOL;
 		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
 		a_class: ET_CLASS): ET_CONSTANT_ATTRIBUTE is
 			-- New constant attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_constant /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, a_type, a_constant, a_clients, a_class)
+				create Result.make (a_name, a_type, an_assigner, a_constant, a_clients, a_class)
 			end
 		end
 
@@ -1697,8 +1946,8 @@ feature -- AST nodes
 			create Result.make (a_keys, a_compound)
 		end
 
-	new_deferred_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
-		a_type: ET_DECLARED_TYPE; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
+	new_deferred_function (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
+		a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
 		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_deferred: ET_KEYWORD;
 		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
 		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
@@ -1706,13 +1955,13 @@ feature -- AST nodes
 			-- New deferred function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
+				create Result.make (a_name, args, a_type, an_assigner, an_obsolete, a_preconditions,
 					a_postconditions, a_clients, a_class)
 				Result.set_first_indexing (a_first_indexing)
 			end
 		end
 
-	new_deferred_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
+	new_deferred_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
 		a_preconditions: ET_PRECONDITIONS; a_deferred: ET_KEYWORD; a_postconditions: ET_POSTCONDITIONS;
 		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
@@ -1735,7 +1984,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_do_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
+	new_do_function (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER;
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
 		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
@@ -1744,13 +1993,13 @@ feature -- AST nodes
 			-- New do function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
+				create Result.make (a_name, args, a_type, an_assigner, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
 				Result.set_first_indexing (a_first_indexing)
 			end
 		end
 
-	new_do_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
+	new_do_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
 		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST;
 		a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
@@ -1832,14 +2081,20 @@ feature -- AST nodes
 			Result := an_expression
 		end
 
+	new_extended_feature_name_comma (a_name: ET_EXTENDED_FEATURE_NAME; a_comma: ET_SYMBOL): ET_EXTENDED_FEATURE_NAME is
+			-- New extended_feature_name-comma
+		do
+			Result := a_name
+		end
+
 	new_external_alias (a_keyword: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_EXTERNAL_ALIAS is
 			-- New external alias
 		do
 			Result := a_string
 		end
 
-	new_external_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
-		a_type: ET_DECLARED_TYPE; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
+	new_external_function (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
+		a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
 		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
 		an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
 		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
@@ -1847,7 +2102,7 @@ feature -- AST nodes
 			-- New external function
 		do
 			if a_name /= Void and a_type /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions,
+				create Result.make (a_name, args, a_type, an_assigner, an_obsolete, a_preconditions,
 					a_language, an_alias, a_postconditions, a_clients, a_class)
 				Result.set_first_indexing (a_first_indexing)
 			end
@@ -1859,7 +2114,7 @@ feature -- AST nodes
 			Result := a_string
 		end
 
-	new_external_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
+	new_external_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
 		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
 		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
@@ -2529,8 +2784,8 @@ feature -- AST nodes
 			end
 		end
 
-	new_once_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
-		a_type: ET_DECLARED_TYPE; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
+	new_once_function (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST; a_type: ET_DECLARED_TYPE;
+		an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
 		a_preconditions: ET_PRECONDITIONS; a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND;
 		a_postconditions: ET_POSTCONDITIONS; a_rescue: ET_COMPOUND; an_end: ET_KEYWORD;
 		a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
@@ -2538,7 +2793,7 @@ feature -- AST nodes
 			-- New once function
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, args, a_type, an_obsolete, a_preconditions, a_locals,
+				create Result.make (a_name, args, a_type, an_assigner, an_obsolete, a_preconditions, a_locals,
 					a_compound, a_postconditions, a_rescue, a_clients, a_class)
 				Result.set_first_indexing (a_first_indexing)
 			end
@@ -2555,7 +2810,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_once_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
+	new_once_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS;
 		a_locals: ET_LOCAL_VARIABLE_LIST; a_compound: ET_COMPOUND; a_postconditions: ET_POSTCONDITIONS;
 		a_rescue: ET_COMPOUND; an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
@@ -2749,7 +3004,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_rename (old_name: ET_FEATURE_NAME; an_as: ET_KEYWORD; new_name: ET_FEATURE_NAME): ET_RENAME is
+	new_rename (old_name: ET_FEATURE_NAME; an_as: ET_KEYWORD; new_name: ET_EXTENDED_FEATURE_NAME): ET_RENAME is
 			-- New rename pair
 		do
 			if old_name /= Void and new_name /= Void then
@@ -2758,7 +3013,7 @@ feature -- AST nodes
 		end
 
 	new_rename_comma (old_name: ET_FEATURE_NAME; an_as: ET_KEYWORD;
-		new_name: ET_FEATURE_NAME; a_comma: ET_SYMBOL): ET_RENAME_ITEM is
+		new_name: ET_EXTENDED_FEATURE_NAME; a_comma: ET_SYMBOL): ET_RENAME_ITEM is
 			-- New rename pair followed by a comma
 		do
 			if old_name /= Void and new_name /= Void then
@@ -2885,14 +3140,14 @@ feature -- AST nodes
 			end
 		end
 
-	new_unique_attribute (a_name: ET_FEATURE_NAME_ITEM; a_type: ET_DECLARED_TYPE;
-		an_is, a_unique: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
+	new_unique_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE;
+		an_assigner: ET_ASSIGNER; an_is, a_unique: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
 		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;
 		a_class: ET_CLASS): ET_UNIQUE_ATTRIBUTE is
 			-- New unique attribute declaration
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
-				create Result.make (a_name, a_type, a_clients, a_class)
+				create Result.make (a_name, a_type, an_assigner, a_clients, a_class)
 			end
 		end
 

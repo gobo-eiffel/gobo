@@ -62,6 +62,21 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_alias_free_name (a_name: ET_ALIAS_FREE_NAME) is
+			-- Process `a_name'.
+		do
+		end
+
+	process_alias_name (a_name: ET_ALIAS_NAME) is
+			-- Process `a_name'.
+		do
+		end
+
+	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME) is
+			-- Process `a_name'.
+		do
+		end
+
 	process_all_export (an_export: ET_ALL_EXPORT) is
 			-- Process `an_export'.
 		do
@@ -69,6 +84,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_assertion_semicolon (an_assertion: ET_ASSERTION_SEMICOLON) is
 			-- Process `an_assertion'.
+		do
+		end
+
+	process_assigner (an_assigner: ET_ASSIGNER) is
+			-- Process `an_assigner'.
 		do
 		end
 
@@ -339,6 +359,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_expression_comma (an_expression: ET_EXPRESSION_COMMA) is
 			-- Process `an_expression'.
+		do
+		end
+
+	process_extended_feature_name_comma (a_name: ET_EXTENDED_FEATURE_NAME_COMMA) is
+			-- Process `a_name'.
 		do
 		end
 
