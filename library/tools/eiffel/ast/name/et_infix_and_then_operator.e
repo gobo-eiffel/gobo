@@ -15,6 +15,10 @@ class ET_INFIX_AND_THEN_OPERATOR
 inherit
 
 	ET_OPERATOR
+		redefine
+			is_infix,
+			is_infix_and_then
+		end
 
 create
 
@@ -27,16 +31,35 @@ feature {NONE} -- Initialization
 		do
 			and_keyword := tokens.and_keyword
 			then_keyword := tokens.then_keyword
-			code := tokens.infix_and_then_code
 		end
 
+feature -- Status report
+
+	is_infix: BOOLEAN is True
+			-- Is current feature name of the form 'infix ...'?
+
+	is_infix_and_then: BOOLEAN is True
+			-- Is current feature name of the form 'infix "and then"'?
+
 feature -- Access
+
+	name: STRING is
+			-- Name of feature call
+		do
+			Result := tokens.infix_and_then_name
+		end
 
 	and_keyword: ET_TOKEN
 			-- 'and' keyword
 
 	then_keyword: ET_TOKEN
 			-- 'then' keyword
+
+	hash_code: INTEGER is
+			-- Hash code
+		do
+			Result := tokens.infix_and_then_code.code
+		end
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -85,6 +108,15 @@ feature -- Setting
 			then_keyword_set: then_keyword = a_then
 		end
 
+feature -- Comparison
+
+	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+			-- Are `Current' and `other' the same feature call name?
+			-- (case insensitive)
+		do
+			Result := other.is_infix_and_then
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
@@ -92,11 +124,6 @@ feature -- Processing
 		do
 			a_processor.process_infix_and_then_operator (Current)
 		end
-
-feature {NONE} -- Implementation
-
-	code: CHARACTER
-			-- Operator code
 
 invariant
 

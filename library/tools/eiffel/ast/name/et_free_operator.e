@@ -5,7 +5,7 @@ indexing
 		"Eiffel free operators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,17 +14,23 @@ class ET_FREE_OPERATOR
 
 inherit
 
-	ET_INFIX_FREE
+	ET_OPERATOR
+		undefine
+			lower_name,
+			is_infix_freeop,
+			is_prefix_freeop,
+			is_infix, is_prefix,
+			first_position,
+			last_position
+		end
+
+	ET_FREE_NAME
 		undefine
 			first_position, last_position
 		redefine
-			name, same_feature_name
-		end
-
-	ET_PREFIX_FREE
-		undefine
-			first_position, last_position,
-			name, lower_name, same_feature_name
+			is_infix_freeop,
+			is_prefix_freeop,
+			is_infix, is_prefix
 		end
 
 	ET_TOKEN
@@ -60,6 +66,32 @@ feature {NONE} -- Initialization
 			is_prefix_freeop: is_prefix_freeop
 		end
 
+feature -- Status report
+
+	is_prefix: BOOLEAN is
+			-- Is current feature name of the form 'prefix ...'?
+		do
+			Result := (code = tokens.prefix_freeop_code)
+		end
+
+	is_infix: BOOLEAN is
+			-- Is current feature name of the form 'infix ...'?
+		do
+			Result := (code = tokens.infix_freeop_code)
+		end
+
+	is_prefix_freeop: BOOLEAN is
+			-- Is current feature name of the form 'prefix "free-operator"'?
+		do
+			Result := (code = tokens.prefix_freeop_code)
+		end
+
+	is_infix_freeop: BOOLEAN is
+			-- Is current feature name of the form 'infix "free-operator"'?
+		do
+			Result := (code = tokens.infix_freeop_code)
+		end
+
 feature -- Access
 
 	name: STRING is
@@ -75,9 +107,6 @@ feature -- Access
 			Result.append_string (free_operator_name)
 			Result.append_character ('%"')
 		end
-
-	hash_code: INTEGER
-			-- Hash code value
 
 feature -- Status setting
 
@@ -97,42 +126,6 @@ feature -- Status setting
 			is_prefix_freeop: is_prefix_freeop
 		end
 
-feature -- Comparison
-
-	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
-			-- Are feature name and `other' the same feature name?
-			-- (case insensitive)
-		local
-			an_infix_op: ET_INFIX_FREE
-			a_prefix_op: ET_PREFIX_FREE
-		do
-			if other = Current then
-				Result := True
-			elseif is_infix_freeop then
-				an_infix_op ?= other
-				if an_infix_op /= Void and then an_infix_op.is_infix_freeop then
-					if hash_code = an_infix_op.hash_code then
-						if an_infix_op.free_operator_name = free_operator_name then
-							Result := True
-						else
-							Result := STRING_.same_case_insensitive (free_operator_name, an_infix_op.free_operator_name)
-						end
-					end
-				end
-			else
-				a_prefix_op ?= other
-				if a_prefix_op /= Void and then a_prefix_op.is_prefix_freeop then
-					if hash_code = a_prefix_op.hash_code then
-						if a_prefix_op.free_operator_name = free_operator_name then
-							Result := True
-						else
-							Result := STRING_.same_case_insensitive (free_operator_name, a_prefix_op.free_operator_name)
-						end
-					end
-				end
-			end
-		end
-
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
@@ -146,8 +139,9 @@ feature {NONE} -- Implementation
 	code: CHARACTER
 			-- Operator code
 
-invariant
+feature {NONE} -- Constants
 
-	is_freeop: is_infix_freeop or is_prefix_freeop
+	prefix_double_quote: STRING is "prefix %""
+	infix_double_quote: STRING is "infix %""
 
 end

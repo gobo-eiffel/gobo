@@ -978,7 +978,7 @@ feature -- Feature clauses
 
 feature -- Features
 
-	named_feature (a_name: ET_FEATURE_NAME): ET_FEATURE is
+	named_feature (a_name: ET_CALL_NAME): ET_FEATURE is
 			-- Feature named `a_name';
 			-- Void if no such feature
 		require

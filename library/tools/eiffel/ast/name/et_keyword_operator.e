@@ -29,6 +29,14 @@ inherit
 	ET_OPERATOR
 		undefine
 			first_position, last_position
+		redefine
+			is_infix,
+			is_prefix,
+			is_infix_and,
+			is_infix_implies,
+			is_infix_or,
+			is_infix_xor,
+			is_prefix_not
 		end
 
 create
@@ -38,6 +46,100 @@ create
 	make_or,
 	make_xor,
 	make_not
+
+feature -- Status report
+
+	is_infix: BOOLEAN is
+			-- Is current feature name of the form 'infix ...'?
+		do
+			Result := (code >= tokens.min_infix_code and code <= tokens.max_infix_code)
+		end
+
+	is_infix_and: BOOLEAN is
+			-- Is current feature name of the form 'infix "and"'?
+		do
+			Result := (code = tokens.infix_and_code)
+		end
+
+	is_infix_implies: BOOLEAN is
+			-- Is current feature name of the form 'infix "implies"'?
+		do
+			Result := (code = tokens.infix_implies_code)
+		end
+
+	is_infix_or: BOOLEAN is
+			-- Is current feature name of the form 'infix "or"'?
+		do
+			Result := (code = tokens.infix_or_code)
+		end
+
+	is_infix_xor: BOOLEAN is
+			-- Is current feature name of the form 'infix "xor"'?
+		do
+			Result := (code = tokens.infix_xor_code)
+		end
+
+	is_prefix: BOOLEAN is
+			-- Is current feature name of the form 'prefix ...'?
+		do
+			Result := (code >= tokens.min_prefix_code and code <= tokens.max_prefix_code)
+		end
+
+	is_prefix_not: BOOLEAN is
+			-- Is current feature name of the form 'prefix "not"'?
+		do
+			Result := (code = tokens.prefix_not_code)
+		end
+
+feature -- Access
+
+	name: STRING is
+			-- Name of feature call
+		do
+			inspect code
+			when infix_and_code then
+				Result := tokens.infix_and_name
+			when infix_implies_code then
+				Result := tokens.infix_implies_name
+			when infix_or_code then
+				Result := tokens.infix_or_name
+			when infix_xor_code then
+				Result := tokens.infix_xor_name
+			when prefix_not_code then
+				Result := tokens.prefix_not_name
+			else
+					-- Should never happen.
+				Result := tokens.unknown_name
+			end
+		end
+
+	hash_code: INTEGER is
+			-- Hash code
+		do
+			Result := code.code
+		end
+
+feature -- Comparison
+
+	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+			-- Are `Current' and `other' the same feature call name?
+			-- (case insensitive)
+		do
+			inspect code
+			when infix_and_code then
+				Result := other.is_infix_and
+			when infix_implies_code then
+				Result := other.is_infix_implies
+			when infix_or_code then
+				Result := other.is_infix_or
+			when infix_xor_code then
+				Result := other.is_infix_xor
+			when prefix_not_code then
+				Result := other.is_prefix_not
+			else
+				-- Result := False
+			end
+		end
 
 feature -- Processing
 

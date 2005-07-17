@@ -16,22 +16,44 @@ inherit
 
 	ET_ALIAS_NAME
 		undefine
-			lower_name
+			hash_code,
+			lower_name,
+			same_call_name,
+			is_bracket,
+			is_infix_and,
+			is_infix_and_then,
+			is_infix_div,
+			is_infix_divide,
+			is_infix_ge,
+			is_infix_gt,
+			is_infix_implies,
+			is_infix_le,
+			is_infix_lt,
+			is_infix_minus,
+			is_infix_mod,
+			is_infix_or,
+			is_infix_or_else,
+			is_infix_plus,
+			is_infix_power,
+			is_infix_times,
+			is_infix_xor,
+			is_infix_dotdot,
+			is_prefix_minus,
+			is_prefix_plus,
+			is_prefix_not
 		redefine
-			name, hash_code, process,
+			name, process,
+			is_infix, is_infix_freeop,
+			is_prefix, is_prefix_freeop,
 			is_prefixable, is_infixable,
 			set_prefix, set_infix,
-			same_feature_name, same_alias_name
+			same_alias_name
 		end
 
-	ET_INFIX_FREE
+	ET_FREE_NAME
 		undefine
-			name, same_feature_name, is_alias
-		end
-
-	ET_PREFIX_FREE
-		undefine
-			name, lower_name, same_feature_name, is_alias
+			is_alias, is_infix, is_prefix,
+			is_prefix_freeop, is_infix_freeop
 		end
 
 create
@@ -46,7 +68,7 @@ feature {NONE} -- Initialization
 			a_string_not_void: a_string /= Void
 			a_string_not_empty: a_string.value.count > 0
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_freeop_code
 			hash_code := STRING_.case_insensitive_hash_code (free_operator_name)
@@ -61,7 +83,7 @@ feature {NONE} -- Initialization
 			a_string_not_void: a_string /= Void
 			a_string_not_empty: a_string.value.count > 0
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.prefix_freeop_code
 			hash_code := STRING_.case_insensitive_hash_code (free_operator_name)
@@ -71,6 +93,30 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
+
+	is_prefix: BOOLEAN is
+			-- Is current feature name of the form 'prefix ...'?
+		do
+			Result := (code = tokens.prefix_freeop_code)
+		end
+
+	is_infix: BOOLEAN is
+			-- Is current feature name of the form 'infix ...'?
+		do
+			Result := (code = tokens.infix_freeop_code)
+		end
+
+	is_prefix_freeop: BOOLEAN is
+			-- Is current feature name of the form 'prefix "free-operator"'?
+		do
+			Result := (code = tokens.prefix_freeop_code)
+		end
+
+	is_infix_freeop: BOOLEAN is
+			-- Is current feature name of the form 'infix "free-operator"'?
+		do
+			Result := (code = tokens.infix_freeop_code)
+		end
 
 	is_prefixable: BOOLEAN is
 			-- Can current alias be used as the name of a prefix feature?
@@ -101,9 +147,6 @@ feature -- Access
 			Result := alias_string.value
 		end
 
-	hash_code: INTEGER
-			-- Hash code value
-
 feature -- Status setting
 
 	set_infix is
@@ -124,56 +167,22 @@ feature -- Status setting
 
 feature -- Comparison
 
-	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
-			-- Are feature name and `other' the same feature name?
-			-- (case insensitive)
-		local
-			an_infix_op: ET_INFIX_FREE
-			a_prefix_op: ET_PREFIX_FREE
-		do
-			if other = Current then
-				Result := True
-			elseif is_infix_freeop then
-				an_infix_op ?= other
-				if an_infix_op /= Void and then an_infix_op.is_infix_freeop then
-					if hash_code = an_infix_op.hash_code then
-						if an_infix_op.free_operator_name = free_operator_name then
-							Result := True
-						else
-							Result := STRING_.same_case_insensitive (free_operator_name, an_infix_op.free_operator_name)
-						end
-					end
-				end
-			else
-				a_prefix_op ?= other
-				if a_prefix_op /= Void and then a_prefix_op.is_prefix_freeop then
-					if hash_code = a_prefix_op.hash_code then
-						if a_prefix_op.free_operator_name = free_operator_name then
-							Result := True
-						else
-							Result := STRING_.same_case_insensitive (free_operator_name, a_prefix_op.free_operator_name)
-						end
-					end
-				end
-			end
-		end
-
 	same_alias_name (other: ET_ALIAS_NAME): BOOLEAN is
 			-- Are `Current' and `other' the same alias name?
 			-- Do not take "infix" and "prefix" properties into account.
 		local
-			l_freeop: ET_ALIAS_FREE_NAME
+			op: ET_FREE_NAME
 		do
 			if other = Current then
 				Result := True
 			else
-				l_freeop ?= other
-				if l_freeop /= Void then
-					if hash_code = l_freeop.hash_code then
-						if l_freeop.free_operator_name = free_operator_name then
+				op ?= other
+				if op /= Void then
+					if hash_code = op.hash_code then
+						if op.free_operator_name = free_operator_name then
 							Result := True
 						else
-							Result := STRING_.same_case_insensitive (free_operator_name, l_freeop.free_operator_name)
+							Result := STRING_.same_case_insensitive (free_operator_name, op.free_operator_name)
 						end
 					end
 				end
@@ -195,6 +204,5 @@ feature {NONE} -- Constants
 invariant
 
 	alias_string_not_empty: alias_string.value.count > 0
-	is_freeop: is_infix_freeop or is_prefix_freeop
 
 end

@@ -232,6 +232,30 @@ feature -- Status setting
 
 feature -- Comparison
 
+	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+			-- Are `Current' and `other' the same feature call name?
+			-- (case insensitive)
+		local
+			an_id: ET_IDENTIFIER
+			l_name: STRING
+		do
+			if other = Current then
+				Result := True
+			else
+				an_id ?= other
+				if an_id /= Void then
+					if hash_code = an_id.hash_code then
+						l_name := an_id.name
+						if l_name = name then
+							Result := True
+						else
+							Result := STRING_.same_case_insensitive (name, l_name)
+						end
+					end
+				end
+			end
+		end
+
 	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
 			-- Are feature name and `other' the same feature name?
 			-- (case insensitive)
@@ -285,13 +309,18 @@ feature -- Comparison
 			-- (case insensitive)
 		require
 			other_not_void: other /= Void
+		local
+			l_name: STRING
 		do
 			if other = Current then
 				Result := True
-			elseif other.name = name then
-				Result := True
 			elseif hash_code = other.hash_code then
-				Result := STRING_.same_case_insensitive (name, other.name)
+				l_name := other.name
+				if l_name = name then
+					Result := True
+				else
+					Result := STRING_.same_case_insensitive (name, l_name)
+				end
 			end
 		end
 

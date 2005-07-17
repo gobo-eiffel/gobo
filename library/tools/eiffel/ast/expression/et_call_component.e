@@ -23,7 +23,7 @@ feature -- Access
 		deferred
 		end
 
-	name: ET_FEATURE_NAME is
+	name: ET_CALL_NAME is
 			-- Feature name
 		deferred
 		ensure

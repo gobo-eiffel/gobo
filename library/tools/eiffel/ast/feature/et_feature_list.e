@@ -22,7 +22,7 @@ create
 
 feature -- Access
 
-	named_feature (a_name: ET_FEATURE_NAME): ET_FEATURE is
+	named_feature (a_name: ET_CALL_NAME): ET_FEATURE is
 			-- Feature named `a_name';
 			-- Void if no such feature
 		require
@@ -55,17 +55,12 @@ feature -- Access
 			else
 				from i := count - 1 until i < 0 loop
 					a_feature := storage.item (i)
-					if a_feature.name.same_feature_name (a_name) then
+					an_alias_name := a_feature.alias_name
+					if an_alias_name /= Void and then an_alias_name.same_call_name (a_name) then
 						Result := a_feature
 						i := -1 -- Jump out of the loop
 					else
-						an_alias_name := a_feature.alias_name
-						if an_alias_name /= Void and then an_alias_name.same_feature_name (a_name) then
-							Result := a_feature
-							i := -1 -- Jump out of the loop
-						else
-							i := i - 1
-						end
+						i := i - 1
 					end
 				end
 			end

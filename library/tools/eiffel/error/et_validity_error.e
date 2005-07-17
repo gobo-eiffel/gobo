@@ -305,7 +305,7 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 		end
 
-	make_vape0a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	make_vape0a (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
 			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class', is not exported to
@@ -354,7 +354,7 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = name of client of feature `$8'
 		end
 
-	make_vape0b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	make_vape0b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
 			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
@@ -407,7 +407,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = name of client of feature `$9'
 		end
 
-	make_vape0c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	make_vape0c (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
 			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
@@ -460,7 +460,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = name of client of feature `$8'
 		end
 
-	make_vape0d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	make_vape0d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
 			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
@@ -517,7 +517,7 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = name of client of feature `$9'
 		end
 
-	make_vape0e (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	make_vape0e (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
 			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class', is not exported to
@@ -566,7 +566,7 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = name of client of feature `$8'
 		end
 
-	make_vape0f (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
+	make_vape0f (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_CALL_NAME;
 		a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
 			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
@@ -619,7 +619,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = name of client of feature `$9'
 		end
 
-	make_vape0g (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	make_vape0g (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
 			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
@@ -672,7 +672,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = name of client of feature `$8'
 		end
 
-	make_vape0h (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	make_vape0h (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
 			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
@@ -5165,7 +5165,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = target type
 		end
 
-	make_vkcn1a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	make_vkcn1a (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VKCN-1 error: `a_feature' of class `a_target', appearing
 			-- in the qualified instruction call `a_name' in `a_class', is not
 			-- a procedure.
@@ -5210,7 +5210,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vkcn1c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	make_vkcn1c (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
 			-- Create a new VKCN-1 error: `a_feature' of `a_class', appearing
 			-- in the unqualified instruction call `a_name' in `a_class', is not
 			-- a procedure.
@@ -5252,7 +5252,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = name of corresponding feature in class $5
 		end
 
-	make_vkcn2a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	make_vkcn2a (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VKCN-2 error: `a_feature' of class `a_target', appearing
 			-- in the qualified expression call `a_name' in `a_class', is not
 			-- an attribute or a function.
@@ -5297,7 +5297,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vkcn2c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	make_vkcn2c (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
 			-- Create a new VKCN-2 error: `a_feature' of `a_class', appearing
 			-- in the unqualified expression call `a_name' in `a_class', is not
 			-- an attribute or a function.
@@ -8475,7 +8475,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = invalid type
 		end
 
-	make_vuar1a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	make_vuar1a (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new  VUAR-1 error: the number of actual arguments in
 			-- the qualified call `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in
@@ -8521,7 +8521,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vuar1c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	make_vuar1c (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
 			-- Create a new  VUAR-1 error: the number of actual arguments in
 			-- the unqualified call `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in `a_class'.
@@ -8563,7 +8563,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = name of corresponding feature in class $5
 		end
 
-	make_vuar2a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	make_vuar2a (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Create a new VUAR-2 error: the `arg'-th actual argument in the qualified
 			-- call `a_name' appearing in `a_class' does not conform to the corresponding
@@ -8619,7 +8619,7 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = formal type
 		end
 
-	make_vuar2b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
+	make_vuar2b (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_CALL_NAME;
 		a_feature: ET_FEATURE; a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Create a new VUAR-2 error: the `arg'-th actual argument in the qualified
 			-- call `a_name' appearing in `a_class_impl' and viewed from one of its descendants
@@ -8679,7 +8679,7 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = formal type
 		end
 
-	make_vuar2c (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	make_vuar2c (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Create a new VUAR-2 error: the `arg'-th actual argument in the unqualified
 			-- call `a_name' appearing in `a_class' does not conform to the corresponding
@@ -8732,7 +8732,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = formal type
 		end
 
-	make_vuar2d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
+	make_vuar2d (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_CALL_NAME;
 		a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Create a new VUAR-2 error: the `arg'-th actual argument in the unqualified
 			-- call `a_name' appearing in `a_class_imple' and viewed from one of its descendants
@@ -8828,7 +8828,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name in the Address form
 		end
 
-	make_vuex1a (a_class: like current_class; a_name: ET_FEATURE_NAME) is
+	make_vuex1a (a_class: like current_class; a_name: ET_CALL_NAME) is
 			-- Create a new VUEX-1 error: `a_name', appearing in an unqualified
 			-- call in `a_class', is not the final name of a feature
 			-- in `a_class'.
@@ -8867,7 +8867,7 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name of the call
 		end
 
-	make_vuex2a (a_class: like current_class; a_name: ET_FEATURE_NAME; a_target: ET_CLASS) is
+	make_vuex2a (a_class: like current_class; a_name: ET_CALL_NAME; a_target: ET_CLASS) is
 			-- Create a new VUEX-2 error: `a_name', appearing in a qualified
 			-- call in `a_class', is not the final name of a feature
 			-- in class `a_target'.
@@ -8909,7 +8909,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = base class of target of the call
 		end
 
-	make_vuex2b (a_class: like current_class; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	make_vuex2b (a_class: like current_class; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VUEX-2 error: `a_feature' of class `a_target',
 			-- is not exported to `a_class' where the qualified call 
 			-- `a_name' appears.
@@ -8954,7 +8954,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = base class of target of the call
 		end
 
-	make_vuex2c (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	make_vuex2c (a_class: like current_class; a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Create a new VUEX-2 error: `a_feature' of class `a_target'
 			-- is not exported to `a_class', one of the descendants of
 			-- `a_class_impl' where the qualified call `a_name' appears.

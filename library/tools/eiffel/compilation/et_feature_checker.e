@@ -391,7 +391,7 @@ feature -- Validity checking
 		end
 
 	check_actual_arguments_validity (an_actuals: ET_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT;
-		a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS;
+		a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS;
 		a_feature_impl, a_current_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE) is
 			-- Check actual arguments validity when calling `a_feature' named `a_name'
 			-- in context of its target `a_context'. `a_class' is the base class of the
@@ -3736,7 +3736,7 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		local
-			a_name: ET_FEATURE_NAME
+			a_name: ET_CALL_NAME
 			a_target: ET_EXPRESSION
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
@@ -4541,7 +4541,7 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		local
 			a_target: ET_EXPRESSION
-			a_name: ET_FEATURE_NAME
+			a_name: ET_CALL_NAME
 			an_actuals: ET_ACTUAL_ARGUMENTS
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
@@ -5479,7 +5479,7 @@ feature {NONE} -- Expression validity
 			is_expression: an_expression /= Void implies ANY_.same_objects (a_call, an_expression)
 			a_context_not_void: a_context /= Void
 		local
-			a_name: ET_FEATURE_NAME
+			a_name: ET_CALL_NAME
 			an_actuals: ET_ACTUAL_ARGUMENTS
 			a_class_impl: ET_CLASS
 			a_feature: ET_FEATURE
@@ -5724,7 +5724,7 @@ feature {NONE} -- Expression validity
 			report_void_constant (an_expression)
 		end
 
-	check_vape_validity (a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS) is
+	check_vape_validity (a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS) is
 			-- Check VAPE validity rule when calling `a_feature' named `a_name'
 			-- in a precondition of `current_feature' in `current_class'.
 			-- `a_class' is the base class of the target, or void in case of
@@ -5835,7 +5835,7 @@ feature {NONE} -- Expression validity
 		end
 
 	check_sub_actual_arguments_validity (an_actuals: ET_ACTUAL_ARGUMENTS; a_context: ET_NESTED_TYPE_CONTEXT;
-		a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS) is
+		a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_class: ET_CLASS) is
 			-- Check actual arguments validity when calling `a_feature' named `a_name'
 			-- in context of its target `a_context'. `a_class' is the base class of the
 			-- target, or void in case of an unqualified call.

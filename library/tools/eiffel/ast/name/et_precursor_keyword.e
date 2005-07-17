@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'precursor' keywords"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,20 +22,13 @@ inherit
 			process, is_equal
 		end
 
-	ET_FEATURE_NAME
+	ET_CALL_NAME
 		undefine
 			first_position, last_position,
 			is_equal, is_precursor, is_local,
 			is_infix, is_prefix, is_alias
 		redefine
 			precursor_keyword
-		end
-
-	KL_IMPORTED_ANY_ROUTINES
-		export
-			{NONE} all
-		undefine
-			is_equal
 		end
 
 create
@@ -45,7 +38,7 @@ create
 feature -- Access
 
 	lower_name: STRING is
-			-- Lower-name of feature
+			-- Lower-name of feature call
 			-- (May return the same object as `name' if already in lower case.)
 		do
 			Result := tokens.precursor_keyword_name
@@ -59,8 +52,8 @@ feature -- Access
 
 feature -- Comparison
 
-	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
-			-- Are feature name and `other' the same feature name?
+	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+			-- Are `Current' and `other' the same feature call name?
 			-- (case insensitive)
 		do
 			Result := other.is_precursor

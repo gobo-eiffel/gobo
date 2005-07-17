@@ -432,8 +432,11 @@ feature -- Feature names
 
 	infix_at_feature_name: ET_FEATURE_NAME is
 			-- 'infix "@"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
 		once
-			create {ET_FREE_OPERATOR} Result.make_infix (at_symbol_name)
+			create l_string.make (at_symbol_name)
+			create {ET_INFIX_FREE_NAME} Result.make (l_string)
 		ensure
 			infix_at_feature_name_not_void: Result /= Void
 		end

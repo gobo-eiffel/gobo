@@ -1745,7 +1745,7 @@ Feature_name: Identifier
 
 Extended_feature_name: Feature_name
 		{ $$ := $1 }
-	| Feature_name Alias_name
+	| Identifier Alias_name
 		{ $$ := ast_factory.new_aliased_feature_name ($1, $2) }
 	;
 

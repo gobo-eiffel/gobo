@@ -611,7 +611,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	report_vape0a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class', is not exported to
@@ -634,7 +634,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	report_vape0b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
@@ -659,7 +659,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	report_vape0c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
@@ -684,7 +684,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	report_vape0d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
@@ -711,7 +711,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0e_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	report_vape0e_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class', is not exported to
@@ -734,7 +734,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0f_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	report_vape0f_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in an unqualified
 			-- call in a precondition of `a_pre_feature' in `a_class_impl' and view from
@@ -759,7 +759,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0g_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	report_vape0g_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
@@ -784,7 +784,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vape0h_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	report_vape0h_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLASS_NAME) is
 			-- Report VAPE error: `a_feature' named `a_name', appearing in a qualified
 			-- call with target's base class `a_target_class' in a precondition of
@@ -3073,7 +3073,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vkcn1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vkcn1a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VKCN-1 error: `a_feature' of class `a_target', appearing
 			-- in the qualified instruction call `a_name' in `a_class', is not
 			-- a procedure.
@@ -3094,7 +3094,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vkcn1c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	report_vkcn1c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
 			-- Report VKCN-1 error: `a_feature' of `a_class', appearing
 			-- in the unqualified instruction call `a_name' in `a_class',
 			-- is not a procedure.
@@ -3114,7 +3114,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vkcn2a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vkcn2a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VKCN-2 error: `a_feature' of class `a_target', appearing
 			-- in the qualified expression call `a_name' in `a_class', is not
 			-- an attribute or a function.
@@ -3135,7 +3135,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vkcn2c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	report_vkcn2c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
 			-- Report VKCN-2 error: `a_feature' of `a_class', appearing
 			-- in the unqualified expression call `a_name' in `a_class', is not
 			-- an attribute or a function.
@@ -4577,7 +4577,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vuar1a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VUAR-1 error: the number of actual arguments in
 			-- the qualified call `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in
@@ -4599,7 +4599,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar1c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE) is
+	report_vuar1c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE) is
 			-- Report VUAR-1 error: the number of actual arguments in
 			-- the unqualified call `a_name' appearing in `a_class' is not the
 			-- same as the number of formal arguments of `a_feature' in `a_class'.
@@ -4619,7 +4619,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar2a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	report_vuar2a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Report VUAR-2 error: the `arg'-th actual argument in the qualified
 			-- call `a_name' appearing in `a_class' does not conform to the corresponding
@@ -4645,7 +4645,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	report_vuar2b_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		a_target: ET_CLASS; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Report VUAR-2 error: the `arg'-th actual argument in the qualified
 			-- call `a_name' appearing in `a_class_impl' and viewed from one of its
@@ -4673,7 +4673,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar2c_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE;
+	report_vuar2c_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE;
 		arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Report VUAR-2 error: the `arg'-th actual argument in the unqualified
 			-- call `a_name' appearing in `a_class' does not conform to the corresponding
@@ -4698,7 +4698,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuar2d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME;
+	report_vuar2d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME;
 		a_feature: ET_FEATURE; arg: INTEGER; an_actual, a_formal: ET_NAMED_TYPE) is
 			-- Report VUAR-2 error: the `arg'-th actual argument in the unqualified
 			-- call `a_name' appearing in `a_class_impl' and viewed from one of its
@@ -4744,7 +4744,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuex1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
+	report_vuex1a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME) is
 			-- Report VUEX-1 error: `a_name', appearing in an unqualified
 			-- call in `a_class', is not the final name of a feature
 			-- in `a_class'.
@@ -4765,7 +4765,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuex2a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_target: ET_CLASS) is
+	report_vuex2a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_target: ET_CLASS) is
 			-- Report VUEX-2 error: `a_name', appearing in a qualified
 			-- call in `a_class', is not the final name of a feature
 			-- in class `a_target'.
@@ -4787,7 +4787,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuex2b_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vuex2b_error (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VUEX-2 error: `a_feature' of class `a_target',
 			-- is not exported to `a_class' where the qualified call 
 			-- `a_name' appears.
@@ -4808,7 +4808,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuex2c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
+	report_vuex2c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS) is
 			-- Report VUEX-2 error: `a_feature' of class `a_target'
 			-- is not exported to `a_class', one of the descendants
 			-- of `a_class_impl' where the qualified call `a_name' appears.

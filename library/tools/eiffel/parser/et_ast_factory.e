@@ -1517,7 +1517,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_aliased_feature_name (a_name: ET_FEATURE_NAME; an_alias: ET_ALIAS_NAME): ET_ALIASED_FEATURE_NAME is
+	new_aliased_feature_name (a_name: ET_IDENTIFIER; an_alias: ET_ALIAS_NAME): ET_ALIASED_FEATURE_NAME is
 			-- New aliased feature name
 		do
 			if a_name /= Void and an_alias /= Void then

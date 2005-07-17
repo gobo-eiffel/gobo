@@ -46,7 +46,7 @@ feature -- Initialization
 
 feature -- Access
 
-	feature_name: ET_FEATURE_NAME
+	feature_name: ET_IDENTIFIER
 			-- Feature name
 
 	alias_name: ET_ALIAS_NAME

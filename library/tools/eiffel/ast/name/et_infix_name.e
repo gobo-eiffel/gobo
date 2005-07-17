@@ -5,7 +5,7 @@ indexing
 		"Names of Eiffel infix features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,49 @@ class ET_INFIX_NAME
 
 inherit
 
-	ET_OPERATOR
+	ET_FEATURE_NAME
+		undefine
+			is_alias,
+			is_infix,
+			is_infix_and,
+			is_infix_and_then,
+			is_infix_div,
+			is_infix_divide,
+			is_infix_ge,
+			is_infix_gt,
+			is_infix_implies,
+			is_infix_le,
+			is_infix_lt,
+			is_infix_minus,
+			is_infix_mod,
+			is_infix_or,
+			is_infix_or_else,
+			is_infix_plus,
+			is_infix_power,
+			is_infix_times,
+			is_infix_xor,
+			is_infix_dotdot
+		redefine
+			alias_name
+		end
+
+	ET_ALIAS_NAME
+		rename
+			alias_keyword as infix_keyword,
+			set_alias_keyword as set_infix_keyword,
+			alias_string as operator_name
+		undefine
+			is_bracket,
+			is_prefix_minus,
+			is_prefix_plus,
+			is_prefix_not,
+			is_prefix
+		redefine
+			is_prefixable, is_infix,
+			is_infixable, set_infix, name,
+			default_keyword, process,
+			same_call_name
+		end
 
 create
 
@@ -36,276 +78,130 @@ create
 	make_and_then,
 	make_or_else
 
-feature {NONE} -- Initialization
+feature -- Status report
 
-	make_and (an_operator: like operator_name) is
-			-- Create a new 'infix "and"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_and_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_and: is_infix_and
-		end
+	is_infix: BOOLEAN is True
+			-- Is current feature name of the form 'infix ...'?
 
-	make_implies (an_operator: like operator_name) is
-			-- Create a new 'infix "implies"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_implies_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_implies: is_infix_implies
-		end
+	is_prefixable: BOOLEAN is False
+			-- Can current alias be used as the name of a prefix feature?
 
-	make_or (an_operator: like operator_name) is
-			-- Create a new 'infix "or"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_or_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_or: is_infix_or
-		end
+	is_infixable: BOOLEAN is True
+			-- Can current alias be used as the name of an infix feature?
 
-	make_xor (an_operator: like operator_name) is
-			-- Create a new 'infix "xor"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_xor_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_xor: is_infix_xor
-		end
+feature -- Status setting
 
-	make_div (an_operator: like operator_name) is
-			-- Create a new 'infix "//"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
+	set_infix is
+			-- Set current alias to infix.
 		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_div_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_div: is_infix_div
-		end
-
-	make_divide (an_operator: like operator_name) is
-			-- Create a new 'infix "/"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_divide_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_divide: is_infix_divide
-		end
-
-	make_ge (an_operator: like operator_name) is
-			-- Create a new 'infix ">="' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_ge_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_ge: is_infix_ge
-		end
-
-	make_gt (an_operator: like operator_name) is
-			-- Create a new 'infix ">"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_gt_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_gt: is_infix_gt
-		end
-
-	make_le (an_operator: like operator_name) is
-			-- Create a new 'infix "<="' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_le_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_le: is_infix_le
-		end
-
-	make_lt (an_operator: like operator_name) is
-			-- Create a new 'infix "<"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_lt_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_lt: is_infix_lt
-		end
-
-	make_minus (an_operator: like operator_name) is
-			-- Create a new 'infix "-"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_minus_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_minus: is_infix_minus
-		end
-
-	make_mod (an_operator: like operator_name) is
-			-- Create a new 'infix "\\"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_mod_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_mod: is_infix_mod
-		end
-
-	make_plus (an_operator: like operator_name) is
-			-- Create a new 'infix "+"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_plus_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_plus: is_infix_plus
-		end
-
-	make_power (an_operator: like operator_name) is
-			-- Create a new 'infix "^"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_power_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_power: is_infix_power
-		end
-
-	make_times (an_operator: like operator_name) is
-			-- Create a new 'infix "*"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_times_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_times: is_infix_times
-		end
-
-	make_and_then (an_operator: like operator_name) is
-			-- Create a new 'infix "and then"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_and_then_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_and_then: is_infix_and_then
-		end
-
-	make_or_else (an_operator: like operator_name) is
-			-- Create a new 'infix "or else"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_or_else_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_infix_or_else: is_infix_or_else
+			-- Do nothing.
 		end
 
 feature -- Access
 
-	infix_keyword: ET_KEYWORD
-			-- Infix keyword
-
-	operator_name: ET_MANIFEST_STRING
-			-- Name of infix operator
-
-	position: ET_POSITION is
-			-- Position of first character of
-			-- current node in source code
+	name: STRING is
+			-- Name of feature call
 		do
-			if not infix_keyword.position.is_null then
-				Result := infix_keyword.position
+			inspect code
+			when infix_and_code then
+				Result := tokens.infix_and_name
+			when infix_and_then_code then
+				Result := tokens.infix_and_then_name
+			when infix_div_code then
+				Result := tokens.infix_div_name
+			when infix_divide_code then
+				Result := tokens.infix_divide_name
+			when infix_ge_code then
+				Result := tokens.infix_ge_name
+			when infix_gt_code then
+				Result := tokens.infix_gt_name
+			when infix_implies_code then
+				Result := tokens.infix_implies_name
+			when infix_le_code then
+				Result := tokens.infix_le_name
+			when infix_lt_code then
+				Result := tokens.infix_lt_name
+			when infix_minus_code then
+				Result := tokens.infix_minus_name
+			when infix_mod_code then
+				Result := tokens.infix_mod_name
+			when infix_or_code then
+				Result := tokens.infix_or_name
+			when infix_or_else_code then
+				Result := tokens.infix_or_else_name
+			when infix_plus_code then
+				Result := tokens.infix_plus_name
+			when infix_power_code then
+				Result := tokens.infix_power_name
+			when infix_times_code then
+				Result := tokens.infix_times_name
+			when infix_xor_code then
+				Result := tokens.infix_xor_name
 			else
-				Result := operator_name.position
+					-- Should never happen.
+				Result := tokens.unknown_name
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
-			-- First leaf node in current node
+	alias_name: ET_ALIAS_NAME is
+			-- Alias name, if any
 		do
-			Result := infix_keyword
+			Result := Current
+		ensure then
+			definition: Result = Current
 		end
 
-	last_leaf: ET_AST_LEAF is
-			-- Last leaf node in current node
+feature -- Comparison
+
+	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+			-- Are `Current' and `other' the same names of the same feature?
+			-- (case insensitive)
 		do
-			Result := operator_name
+			inspect code
+			when infix_and_code then
+				Result := other.is_infix_and
+			when infix_and_then_code then
+				Result := other.is_infix_and_then
+			when infix_div_code then
+				Result := other.is_infix_div
+			when infix_divide_code then
+				Result := other.is_infix_divide
+			when infix_ge_code then
+				Result := other.is_infix_ge
+			when infix_gt_code then
+				Result := other.is_infix_gt
+			when infix_implies_code then
+				Result := other.is_infix_implies
+			when infix_le_code then
+				Result := other.is_infix_le
+			when infix_lt_code then
+				Result := other.is_infix_lt
+			when infix_minus_code then
+				Result := other.is_infix_minus
+			when infix_mod_code then
+				Result := other.is_infix_mod
+			when infix_or_code then
+				Result := other.is_infix_or
+			when infix_or_else_code then
+				Result := other.is_infix_or_else
+			when infix_plus_code then
+				Result := other.is_infix_plus
+			when infix_power_code then
+				Result := other.is_infix_power
+			when infix_times_code then
+				Result := other.is_infix_times
+			when infix_xor_code then
+				Result := other.is_infix_xor
+			else
+				-- Result := False
+			end
 		end
 
-	break: ET_BREAK is
-			-- Break which appears just after current node
+	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
+			-- Are feature name and `other' the same feature name?
+			-- (case insensitive)
 		do
-			Result := operator_name.break
-		end
-
-feature -- Setting
-
-	set_infix_keyword (an_infix: like infix_keyword) is
-			-- Set `infix_keyword' to `an_infix'.
-		require
-			an_infix_not_void: an_infix /= Void
-		do
-			infix_keyword := an_infix
-		ensure
-			infix_keyword_set: infix_keyword = an_infix
+			Result := same_call_name (other)
 		end
 
 feature -- Processing
@@ -318,13 +214,14 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	code: CHARACTER
-			-- Operator code
+	default_keyword: ET_KEYWORD is
+			-- Default keyword
+		once
+			Result := tokens.prefix_keyword
+		end
 
 invariant
 
 	is_infix: is_infix
-	infix_keyword_not_void: infix_keyword /= Void
-	operator_name_not_void: operator_name /= Void
 
 end

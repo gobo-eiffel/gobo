@@ -15,6 +15,10 @@ class ET_INFIX_OR_ELSE_OPERATOR
 inherit
 
 	ET_OPERATOR
+		redefine
+			is_infix,
+			is_infix_or_else
+		end
 
 create
 
@@ -27,16 +31,35 @@ feature {NONE} -- Initialization
 		do
 			or_keyword := tokens.or_keyword
 			else_keyword := tokens.else_keyword
-			code := tokens.infix_or_else_code
 		end
 
+feature -- Status report
+
+	is_infix: BOOLEAN is True
+			-- Is current feature name of the form 'infix ...'?
+
+	is_infix_or_else: BOOLEAN is True
+			-- Is current feature name of the form 'infix "or else"'?
+
 feature -- Access
+
+	name: STRING is
+			-- Name of feature call
+		do
+			Result := tokens.infix_or_else_name
+		end
 
 	or_keyword: ET_TOKEN
 			-- 'or' keyword
 
 	else_keyword: ET_TOKEN
 			-- 'else' keyword
+
+	hash_code: INTEGER is
+			-- Hash code
+		do
+			Result := tokens.infix_or_else_code.code
+		end
 
 	position: ET_POSITION is
 			-- Position of first character of
@@ -85,6 +108,15 @@ feature -- Setting
 			else_keyword_set: else_keyword = an_else
 		end
 
+feature -- Comparison
+
+	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+			-- Are `Current' and `other' the same feature call name?
+			-- (case insensitive)
+		do
+			Result := other.is_infix_or_else
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
@@ -92,11 +124,6 @@ feature -- Processing
 		do
 			a_processor.process_infix_or_else_operator (Current)
 		end
-
-feature {NONE} -- Implementation
-
-	code: CHARACTER
-			-- Operator code
 
 invariant
 

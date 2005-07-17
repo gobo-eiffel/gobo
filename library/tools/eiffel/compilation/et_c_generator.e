@@ -2330,7 +2330,7 @@ feature {NONE} -- Expression generation
 			a_call_not_void: a_call /= Void
 			qualified_call: a_call.is_qualified_call
 		local
-			a_name: ET_FEATURE_NAME
+			a_name: ET_CALL_NAME
 			a_target: ET_EXPRESSION
 			a_target_type_set: ET_DYNAMIC_TYPE_SET
 			an_actuals: ET_ACTUAL_ARGUMENTS
@@ -3094,7 +3094,7 @@ feature {NONE} -- Expression generation
 			a_call_not_void: a_call /= Void
 			unqualified_call: not a_call.is_qualified_call
 		local
-			a_name: ET_FEATURE_NAME
+			a_name: ET_CALL_NAME
 			an_actuals: ET_ACTUAL_ARGUMENTS
 			a_feature: ET_FEATURE
 			a_constant_attribute: ET_CONSTANT_ATTRIBUTE

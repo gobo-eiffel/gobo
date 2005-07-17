@@ -5,7 +5,7 @@ indexing
 		"Names of Eiffel infix 'free-operator' features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,45 +14,72 @@ class ET_INFIX_FREE_NAME
 
 inherit
 
-	ET_INFIX_FREE
-
 	ET_INFIX_NAME
 		undefine
-			name, lower_name, hash_code, same_feature_name
+			name, lower_name, hash_code, same_call_name,
+			process, same_alias_name,
+			is_infix_freeop,
+			is_infix_and,
+			is_infix_and_then,
+			is_infix_div,
+			is_infix_divide,
+			is_infix_ge,
+			is_infix_gt,
+			is_infix_implies,
+			is_infix_le,
+			is_infix_lt,
+			is_infix_minus,
+			is_infix_mod,
+			is_infix_or,
+			is_infix_or_else,
+			is_infix_plus,
+			is_infix_power,
+			is_infix_times,
+			is_infix_xor,
+			is_infix_dotdot
+		end
+
+	ET_ALIAS_FREE_NAME
+		rename
+			make_infix as make,
+			alias_keyword as infix_keyword,
+			set_alias_keyword as set_infix_keyword,
+			alias_string as operator_name
+		undefine
+			set_infix, set_prefix,
+			is_infixable, is_prefixable,
+			is_prefix_freeop,
+			default_keyword,
+			is_bracket,
+			is_infix,
+			is_prefix,
+			is_prefix_minus,
+			is_prefix_plus,
+			is_prefix_not
 		redefine
-			process
+			name, process,
+			is_infix_freeop
 		end
 
 create
 
 	make
 
-feature {NONE} -- Initialization
+feature -- Status report
 
-	make (an_operator: like operator_name) is
-			-- Create a new 'infix "<free-operator>"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-			an_operator_not_empty: an_operator.value.count > 0
-		do
-			infix_keyword := tokens.infix_keyword
-			operator_name := an_operator
-			code := tokens.infix_freeop_code
-			hash_code := STRING_.case_insensitive_hash_code (free_operator_name)
-		ensure
-			operator_name_set: operator_name = an_operator
-		end
+	is_infix_freeop: BOOLEAN is True
+			-- Is current feature name of the form 'infix "free-operator"'?
 
 feature -- Access
 
-	free_operator_name: STRING is
-			-- Name of free operator
+	name: STRING is
+			-- Name of feature
 		do
-			Result := operator_name.value
+			create Result.make (free_operator_name.count + 8)
+			Result.append_string (infix_double_quote)
+			Result.append_string (free_operator_name)
+			Result.append_character ('%"')
 		end
-
-	hash_code: INTEGER
-			-- Hash code value
 
 feature -- Processing
 
@@ -62,9 +89,12 @@ feature -- Processing
 			a_processor.process_infix_free_name (Current)
 		end
 
+feature {NONE} -- Constants
+
+	infix_double_quote: STRING is "infix %""
+
 invariant
 
 	is_infix_freeop: is_infix_freeop
-	operator_name_not_empty: operator_name.value.count > 0
 
 end

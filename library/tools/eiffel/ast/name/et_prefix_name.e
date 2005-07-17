@@ -5,7 +5,7 @@ indexing
 		"Names of Eiffel prefix features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,52 @@ class ET_PREFIX_NAME
 
 inherit
 
-	ET_OPERATOR
+	ET_FEATURE_NAME
+		undefine
+			is_alias,
+			is_prefix_minus,
+			is_prefix_plus,
+			is_prefix_not,
+			is_prefix
+		redefine
+			alias_name
+		end
+
+	ET_ALIAS_NAME
+		rename
+			make_plus as make_infix_plus,
+			make_minus as make_infix_minus,
+			alias_keyword as prefix_keyword,
+			set_alias_keyword as set_prefix_keyword,
+			alias_string as operator_name
+		undefine
+			is_bracket,
+			is_infix,
+			is_infix_and,
+			is_infix_and_then,
+			is_infix_div,
+			is_infix_divide,
+			is_infix_ge,
+			is_infix_gt,
+			is_infix_implies,
+			is_infix_le,
+			is_infix_lt,
+			is_infix_minus,
+			is_infix_mod,
+			is_infix_or,
+			is_infix_or_else,
+			is_infix_plus,
+			is_infix_power,
+			is_infix_times,
+			is_infix_xor,
+			is_infix_dotdot
+		redefine
+			is_infixable, is_prefix,
+			is_prefixable, set_prefix,
+			name, default_keyword,
+			same_call_name,
+			process
+		end
 
 create
 
@@ -29,7 +74,7 @@ feature {NONE} -- Initialization
 		require
 			an_operator_not_void: an_operator /= Void
 		do
-			prefix_keyword := tokens.prefix_keyword
+			prefix_keyword := default_keyword
 			operator_name := an_operator
 			code := tokens.prefix_minus_code
 		ensure
@@ -42,7 +87,7 @@ feature {NONE} -- Initialization
 		require
 			an_operator_not_void: an_operator /= Void
 		do
-			prefix_keyword := tokens.prefix_keyword
+			prefix_keyword := default_keyword
 			operator_name := an_operator
 			code := tokens.prefix_plus_code
 		ensure
@@ -50,66 +95,74 @@ feature {NONE} -- Initialization
 			is_prefix_plus: is_prefix_plus
 		end
 
-	make_not (an_operator: like operator_name) is
-			-- Create a new 'prefix "not"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
+feature -- Status report
+
+	is_prefix: BOOLEAN is True
+			-- Is current feature name of the form 'prefix ...'?
+
+	is_infixable: BOOLEAN is False
+			-- Can current alias be used as the name of an infix feature?
+
+	is_prefixable: BOOLEAN is True
+			-- Can current alias be used as the name of a prefix feature?
+
+feature -- Status setting
+
+	set_prefix is
+			-- Set current alias to prefix.
 		do
-			prefix_keyword := tokens.prefix_keyword
-			operator_name := an_operator
-			code := tokens.prefix_not_code
-		ensure
-			operator_name_set: operator_name = an_operator
-			is_prefix_not: is_prefix_not
+			-- Do nothing.
 		end
 
 feature -- Access
 
-	prefix_keyword: ET_KEYWORD
-			-- Prefix keyword
-
-	operator_name: ET_MANIFEST_STRING
-			-- Name of prefix operator
-
-	position: ET_POSITION is
-			-- Position of first character of
-			-- current node in source code
+	name: STRING is
+			-- Name of feature call
 		do
-			if not prefix_keyword.position.is_null then
-				Result := prefix_keyword.position
+			inspect code
+			when prefix_minus_code then
+				Result := tokens.prefix_minus_name
+			when prefix_plus_code then
+				Result := tokens.prefix_plus_name
+			when prefix_not_code then
+				Result := tokens.prefix_not_name
 			else
-				Result := operator_name.position
+					-- Should never happen.
+				Result := tokens.unknown_name
 			end
 		end
 
-	first_leaf: ET_AST_LEAF is
-			-- First leaf node in current node
+	alias_name: ET_ALIAS_NAME is
+			-- Alias name, if any
 		do
-			Result := prefix_keyword
+			Result := Current
+		ensure then
+			definition: Result = Current
 		end
 
-	last_leaf: ET_AST_LEAF is
-			-- Last leaf node in current node
+feature -- Comparison
+
+	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+			-- Are `Current' and `other' the same names of the same feature?
+			-- (case insensitive)
 		do
-			Result := operator_name
+			inspect code
+			when prefix_minus_code then
+				Result := other.is_prefix_minus
+			when prefix_plus_code then
+				Result := other.is_prefix_plus
+			when prefix_not_code then
+				Result := other.is_prefix_not
+			else
+				-- Result := False
+			end
 		end
 
-	break: ET_BREAK is
-			-- Break which appears just after current node
+	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
+			-- Are feature name and `other' the same feature name?
+			-- (case insensitive)
 		do
-			Result := operator_name.break
-		end
-
-feature -- Setting
-
-	set_prefix_keyword (a_prefix: like prefix_keyword) is
-			-- Set `prefix_keyword' to `a_prefix'.
-		require
-			a_prefix_not_void: a_prefix /= Void
-		do
-			prefix_keyword := a_prefix
-		ensure
-			prefix_keyword_set: prefix_keyword = a_prefix
+			Result := same_call_name (other)
 		end
 
 feature -- Processing
@@ -122,13 +175,14 @@ feature -- Processing
 
 feature {NONE} -- Implementation
 
-	code: CHARACTER
-			-- Operator code
+	default_keyword: ET_KEYWORD is
+			-- Default keyword
+		once
+			Result := tokens.prefix_keyword
+		end
 
 invariant
 
 	is_prefix: is_prefix
-	prefix_keyword_not_void: prefix_keyword /= Void
-	operator_name_not_void: operator_name /= Void
 
 end

@@ -46,9 +46,6 @@ feature -- Keyword and symbol codes
 			-- Prefix operator codes
 
 	alias_bracket_code: CHARACTER is '%/20/'
-	alias_minus_code: CHARACTER is '%/21/'
-	alias_plus_code: CHARACTER is '%/22/'
-	alias_freeop_code: CHARACTER is '%/23/'
 			-- Alias operator codes
 
 	agent_keyword_code: CHARACTER is '%/101/'

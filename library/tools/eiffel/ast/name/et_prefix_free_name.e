@@ -14,45 +14,74 @@ class ET_PREFIX_FREE_NAME
 
 inherit
 
-	ET_PREFIX_FREE
-
 	ET_PREFIX_NAME
 		undefine
-			name, lower_name, hash_code, same_feature_name
+			name, lower_name, hash_code, same_call_name,
+			process, same_alias_name,
+			is_prefix_freeop,
+			is_prefix_minus,
+			is_prefix_plus,
+			is_prefix_not
+		end
+
+	ET_ALIAS_FREE_NAME
+		rename
+			make_prefix as make,
+			make_plus as make_infix_plus,
+			make_minus as make_infix_minus,
+			alias_keyword as prefix_keyword,
+			set_alias_keyword as set_prefix_keyword,
+			alias_string as operator_name
+		undefine
+			set_infix, set_prefix,
+			is_infixable, is_prefixable,
+			is_infix_freeop, 
+			default_keyword,
+			is_bracket,
+			is_infix,
+			is_infix_and,
+			is_infix_and_then,
+			is_infix_div,
+			is_infix_divide,
+			is_infix_ge,
+			is_infix_gt,
+			is_infix_implies,
+			is_infix_le,
+			is_infix_lt,
+			is_infix_minus,
+			is_infix_mod,
+			is_infix_or,
+			is_infix_or_else,
+			is_infix_plus,
+			is_infix_power,
+			is_infix_times,
+			is_infix_xor,
+			is_infix_dotdot,
+			is_prefix
 		redefine
-			process
+			is_prefix_freeop,
+			name, process
 		end
 
 create
 
 	make
 
-feature {NONE} -- Initialization
+feature -- Status report
 
-	make (an_operator: like operator_name) is
-			-- Create a new 'prefix "<free-operator>"' feature name.
-		require
-			an_operator_not_void: an_operator /= Void
-			an_operator_not_empty: an_operator.value.count > 0
-		do
-			prefix_keyword := tokens.prefix_keyword
-			operator_name := an_operator
-			code := tokens.prefix_freeop_code
-			hash_code := STRING_.case_insensitive_hash_code (free_operator_name)
-		ensure
-			operator_name_set: operator_name = an_operator
-		end
+	is_prefix_freeop: BOOLEAN is True
+			-- Is current feature name of the form 'prefix "free-operator"'?
 
 feature -- Access
 
-	free_operator_name: STRING is
-			-- Name of free operator
+	name: STRING is
+			-- Name of feature
 		do
-			Result := operator_name.value
+			create Result.make (free_operator_name.count + 9)
+			Result.append_string (prefix_double_quote)
+			Result.append_string (free_operator_name)
+			Result.append_character ('%"')
 		end
-
-	hash_code: INTEGER
-			-- Hash code value
 
 feature -- Processing
 
@@ -62,9 +91,12 @@ feature -- Processing
 			a_processor.process_prefix_free_name (Current)
 		end
 
+feature {NONE} -- Constants
+
+	prefix_double_quote: STRING is "prefix %""
+
 invariant
 
 	is_prefix_freeop: is_prefix_freeop
-	operator_name_not_empty: operator_name.value.count > 0
 
 end

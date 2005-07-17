@@ -14,10 +14,38 @@ class ET_ALIAS_NAME
 
 inherit
 
-	ET_OPERATOR
+	ET_CALL_NAME
 		redefine
-			name, is_alias
+			name,
+			is_alias,
+			is_bracket,
+			is_infix,
+			is_infix_and,
+			is_infix_and_then,
+			is_infix_div,
+			is_infix_divide,
+			is_infix_ge,
+			is_infix_gt,
+			is_infix_implies,
+			is_infix_le,
+			is_infix_lt,
+			is_infix_minus,
+			is_infix_mod,
+			is_infix_or,
+			is_infix_or_else,
+			is_infix_plus,
+			is_infix_power,
+			is_infix_times,
+			is_infix_xor,
+			is_infix_dotdot,
+			is_prefix,
+			is_prefix_minus,
+			is_prefix_plus,
+			is_prefix_not
 		end
+
+	ET_TOKEN_CODES
+		export {NONE} all end
 
 create
 
@@ -49,7 +77,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_and_code
 		ensure
@@ -62,7 +90,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_implies_code
 		ensure
@@ -75,7 +103,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_or_code
 		ensure
@@ -88,7 +116,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_xor_code
 		ensure
@@ -101,7 +129,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_div_code
 		ensure
@@ -114,7 +142,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_divide_code
 		ensure
@@ -127,7 +155,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_ge_code
 		ensure
@@ -140,7 +168,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_gt_code
 		ensure
@@ -153,7 +181,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_le_code
 		ensure
@@ -166,7 +194,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_lt_code
 		ensure
@@ -179,7 +207,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_minus_code
 		ensure
@@ -192,7 +220,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_mod_code
 		ensure
@@ -205,7 +233,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_plus_code
 		ensure
@@ -218,7 +246,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_power_code
 		ensure
@@ -231,7 +259,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_times_code
 		ensure
@@ -244,7 +272,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_and_then_code
 		ensure
@@ -257,7 +285,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_or_else_code
 		ensure
@@ -270,7 +298,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.infix_dotdot_code
 		ensure
@@ -283,7 +311,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.prefix_not_code
 		ensure
@@ -296,7 +324,7 @@ feature {NONE} -- Initialization
 		require
 			a_string_not_void: a_string /= Void
 		do
-			alias_keyword := tokens.alias_keyword
+			alias_keyword := default_keyword
 			alias_string := a_string
 			code := tokens.alias_bracket_code
 		ensure
@@ -310,6 +338,150 @@ feature -- Status report
 			-- Is current feature name of the form 'alias "..."'?
 		do
 			Result := True
+		end
+
+	is_bracket: BOOLEAN is
+			-- Is current feature name of the form 'alias "[]"'?
+		do
+			Result := (code = tokens.alias_bracket_code)
+		end
+
+	is_infix: BOOLEAN is
+			-- Is current feature name of the form 'infix ...'?
+		do
+			Result := (code >= tokens.min_infix_code and code <= tokens.max_infix_code)
+		end
+
+	is_infix_and: BOOLEAN is
+			-- Is current feature name of the form 'infix "and"'?
+		do
+			Result := (code = tokens.infix_and_code)
+		end
+
+	is_infix_and_then: BOOLEAN is
+			-- Is current feature name of the form 'infix "and then"'?
+		do
+			Result := (code = tokens.infix_and_then_code)
+		end
+
+	is_infix_div: BOOLEAN is
+			-- Is current feature name of the form 'infix "//"'?
+		do
+			Result := (code = tokens.infix_div_code)
+		end
+
+	is_infix_divide: BOOLEAN is
+			-- Is current feature name of the form 'infix "/"'?
+		do
+			Result := (code = tokens.infix_divide_code)
+		end
+
+	is_infix_dotdot: BOOLEAN is
+			-- Is current feature name of the form 'infix ".."'?
+		do
+			Result := (code = tokens.infix_dotdot_code)
+		end
+
+	is_infix_ge: BOOLEAN is
+			-- Is current feature name of the form 'infix ">="'?
+		do
+			Result := (code = tokens.infix_ge_code)
+		end
+
+	is_infix_gt: BOOLEAN is
+			-- Is current feature name of the form 'infix ">"'?
+		do
+			Result := (code = tokens.infix_gt_code)
+		end
+
+	is_infix_implies: BOOLEAN is
+			-- Is current feature name of the form 'infix "implies"'?
+		do
+			Result := (code = tokens.infix_implies_code)
+		end
+
+	is_infix_le: BOOLEAN is
+			-- Is current feature name of the form 'infix "<="'?
+		do
+			Result := (code = tokens.infix_le_code)
+		end
+
+	is_infix_lt: BOOLEAN is
+			-- Is current feature name of the form 'infix "<"'?
+		do
+			Result := (code = tokens.infix_lt_code)
+		end
+
+	is_infix_minus: BOOLEAN is
+			-- Is current feature name of the form 'infix "-"'?
+		do
+			Result := (code = tokens.infix_minus_code)
+		end
+
+	is_infix_mod: BOOLEAN is
+			-- Is current feature name of the form 'infix "\\"'?
+		do
+			Result := (code = tokens.infix_mod_code)
+		end
+
+	is_infix_or: BOOLEAN is
+			-- Is current feature name of the form 'infix "or"'?
+		do
+			Result := (code = tokens.infix_or_code)
+		end
+
+	is_infix_or_else: BOOLEAN is
+			-- Is current feature name of the form 'infix "or else"'?
+		do
+			Result := (code = tokens.infix_or_else_code)
+		end
+
+	is_infix_plus: BOOLEAN is
+			-- Is current feature name of the form 'infix "+"'?
+		do
+			Result := (code = tokens.infix_plus_code)
+		end
+
+	is_infix_power: BOOLEAN is
+			-- Is current feature name of the form 'infix "^"'?
+		do
+			Result := (code = tokens.infix_power_code)
+		end
+
+	is_infix_times: BOOLEAN is
+			-- Is current feature name of the form 'infix "*"'?
+		do
+			Result := (code = tokens.infix_times_code)
+		end
+
+	is_infix_xor: BOOLEAN is
+			-- Is current feature name of the form 'infix "xor"'?
+		do
+			Result := (code = tokens.infix_xor_code)
+		end
+
+	is_prefix: BOOLEAN is
+			-- Is current feature name of the form 'prefix ...'?
+		do
+			Result := (code >= tokens.min_prefix_code and code <= tokens.max_prefix_code)
+		end
+
+	is_prefix_minus: BOOLEAN is
+			-- Is current feature name of the form 'prefix "-"'?
+		do
+			Result := (code = tokens.prefix_minus_code)
+		end
+
+	is_prefix_plus: BOOLEAN is
+			-- Is current feature name of the form 'prefix "+"'?
+		do
+			Result := (code = tokens.prefix_plus_code)
+		end
+
+	is_prefix_not: BOOLEAN is
+			-- Is current feature name of the form 'prefix "not"'?
+		do
+			Result := (code = tokens.prefix_not_code)
 		end
 
 	is_prefixable: BOOLEAN is
@@ -378,6 +550,19 @@ feature -- Access
 					-- Should never happen.
 				Result := tokens.unknown_name
 			end
+		end
+
+	lower_name: STRING is
+			-- Lower-name of feature call
+			-- (May return the same object as `name' if already in lower case.)
+		do
+			Result := name
+		end
+
+	hash_code: INTEGER is
+			-- Hash code
+		do
+			Result := code.code
 		end
 
 	alias_keyword: ET_KEYWORD
@@ -464,6 +649,60 @@ feature -- Status setting
 
 feature -- Comparison
 
+	same_call_name (other: ET_CALL_NAME): BOOLEAN is
+			-- Are `Current' and `other' the same names of the same feature?
+			-- (case insensitive)
+		do
+			inspect code
+			when alias_bracket_code then
+				Result := other.is_bracket
+			when infix_and_code then
+				Result := other.is_infix_and
+			when infix_and_then_code then
+				Result := other.is_infix_and_then
+			when infix_div_code then
+				Result := other.is_infix_div
+			when infix_divide_code then
+				Result := other.is_infix_divide
+			when infix_ge_code then
+				Result := other.is_infix_ge
+			when infix_gt_code then
+				Result := other.is_infix_gt
+			when infix_implies_code then
+				Result := other.is_infix_implies
+			when infix_le_code then
+				Result := other.is_infix_le
+			when infix_lt_code then
+				Result := other.is_infix_lt
+			when infix_minus_code then
+				Result := other.is_infix_minus
+			when infix_mod_code then
+				Result := other.is_infix_mod
+			when infix_or_code then
+				Result := other.is_infix_or
+			when infix_or_else_code then
+				Result := other.is_infix_or_else
+			when infix_plus_code then
+				Result := other.is_infix_plus
+			when infix_power_code then
+				Result := other.is_infix_power
+			when infix_times_code then
+				Result := other.is_infix_times
+			when infix_xor_code then
+				Result := other.is_infix_xor
+			when infix_dotdot_code then
+				Result := other.is_infix_dotdot
+			when prefix_minus_code then
+				Result := other.is_prefix_minus
+			when prefix_plus_code then
+				Result := other.is_prefix_plus
+			when prefix_not_code then
+				Result := other.is_prefix_not
+			else
+				-- Result := False
+			end
+		end
+
 	same_alias_name (other: ET_ALIAS_NAME): BOOLEAN is
 			-- Are `Current' and `other' the same alias name?
 			-- Do not take "infix" and "prefix" properties into account.
@@ -473,7 +712,7 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			elseif ANY_.same_types (Current, other) then
-				if same_feature_name (other) then
+				if same_call_name (other) then
 					Result := True
 				else
 					inspect code
@@ -501,6 +740,14 @@ feature -- Processing
 		end
 
 feature {NONE} -- Implementation
+
+	default_keyword: ET_KEYWORD is
+			-- Default keyword
+		once
+			Result := tokens.alias_keyword
+		ensure
+			default_keyword_not_void: Result /= Void
+		end
 
 	code: CHARACTER
 			-- Operator code
