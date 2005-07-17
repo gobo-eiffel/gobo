@@ -204,7 +204,7 @@ feature {NONE} -- Processing
 			if not is_verbose then
 				a_universe.error_handler.set_info_null
 			end
-			a_universe.set_use_assign_keyword (False)
+			a_universe.set_use_assign_keyword (True)
 			a_universe.set_use_attribute_keyword (False)
 			a_universe.set_use_convert_keyword (True)
 			a_universe.set_use_recast_keyword (False)

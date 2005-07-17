@@ -60,7 +60,7 @@ feature -- Conversion
 	undefined_feature (a_name: like name): ET_DEFERRED_FUNCTION is
 			-- Undefined version of current feature
 		do
-			create Result.make (a_name, arguments, declared_type, obsolete_message,
+			create Result.make (a_name, arguments, declared_type, assigner, obsolete_message,
 				preconditions, postconditions, clients, implementation_class)
 			Result.set_implementation_feature (implementation_feature)
 			Result.set_first_precursor (Current)

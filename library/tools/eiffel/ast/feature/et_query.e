@@ -32,12 +32,15 @@ feature -- Access
 	declared_type: ET_DECLARED_TYPE
 			-- Declared type (type preceded by a colon)
 
+	assigner: ET_ASSIGNER
+			-- Assigner procedure
+
 feature -- Conversion
 
 	undefined_feature (a_name: like name): ET_DEFERRED_FUNCTION is
 			-- Undefined version of current feature
 		do
-			create Result.make (a_name, Void, declared_type, Void, Void, Void, clients, implementation_class)
+			create Result.make (a_name, Void, declared_type, assigner, Void, Void, Void, clients, implementation_class)
 			Result.set_implementation_feature (implementation_feature)
 			Result.set_first_precursor (Current)
 			Result.set_semicolon (semicolon)
