@@ -26,7 +26,7 @@ inherit
 		undefine
 			first_position, last_position,
 			is_equal, is_precursor, is_local,
-			is_infix, is_prefix
+			is_infix, is_prefix, is_alias
 		redefine
 			precursor_keyword
 		end

@@ -69,8 +69,17 @@ feature -- Access
 	name: ET_FEATURE_NAME is
 			-- Feature name
 		do
-			Result := name_item.feature_name
+			Result := extended_name.feature_name
 		end
+
+	alias_name: ET_ALIAS_NAME is
+			-- Alias name, if any
+		do
+			Result := extended_name.alias_name
+		end
+
+	extended_name: ET_EXTENDED_FEATURE_NAME
+			-- Extended feature name (possibly followed by comma for synomyms)
 
 	type: ET_TYPE is
 			-- Return type;
@@ -152,9 +161,6 @@ feature -- Access
 			-- Note that the signature has already been resolved
 			-- in the context of the current class.
 
-	name_item: ET_FEATURE_NAME_ITEM
-			-- Feature name (possibly followed by comma for synomyms)
-
 	frozen_keyword: ET_KEYWORD
 			-- 'frozen' keyword
 
@@ -175,11 +181,11 @@ feature -- Access
 			-- current node in source code
 		do
 			if not is_frozen then
-				Result := name_item.position
+				Result := extended_name.position
 			else
 				Result := frozen_keyword.position
 				if Result.is_null then
-					Result := name_item.position
+					Result := extended_name.position
 				end
 			end
 		end
@@ -188,7 +194,7 @@ feature -- Access
 			-- First leaf node in current node
 		do
 			if not is_frozen then
-				Result := name_item.first_leaf
+				Result := extended_name.first_leaf
 			else
 				Result := frozen_keyword
 			end
@@ -546,14 +552,14 @@ feature -- Setting
 		
 feature -- Duplication
 
-	new_synonym (a_name: like name_item): like Current is
+	new_synonym (a_name: like extended_name): like Current is
 			-- Synonym feature
 		require
 			a_name_not_void: a_name /= Void
 		deferred
 		ensure
 			new_synonym_not_void: Result /= Void
-			name_item_set: Result.name_item = a_name
+			extended_name_set: Result.extended_name = a_name
 		end
 
 feature -- Conversion
@@ -622,7 +628,7 @@ feature -- Output
 
 invariant
 
-	name_item_not_void: name_item /= Void
+	extended_name_not_void: extended_name /= Void
 	clients_not_void: clients /= Void
 	hash_code_definition: hash_code = name.hash_code
 	first_seed_positive: is_registered implies first_seed > 0

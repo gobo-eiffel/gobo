@@ -25,6 +25,8 @@ inherit
 			reset
 		end
 
+	ET_EXTENDED_FEATURE_NAME
+
 	ET_EXPRESSION
 		redefine
 			reset
@@ -65,6 +67,11 @@ feature -- Access
 			lower_name_not_void: Result /= Void
 			lower_name_not_empty: Result.count > 0
 			definition: Result.is_equal (name.as_lower)
+		end
+
+	alias_name: ET_ALIAS_NAME is
+			-- Alias name, if any
+		do
 		end
 
 	seed: INTEGER
@@ -220,6 +227,12 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_infix_dotdot: BOOLEAN is
+			-- Is current feature name of the form 'infix ".."'?
+		do
+			-- Result := False
+		end
+
 	is_prefix: BOOLEAN is
 			-- Is current feature name of the form 'prefix ...'?
 		do
@@ -246,6 +259,18 @@ feature -- Status report
 
 	is_prefix_not: BOOLEAN is
 			-- Is current feature name of the form 'prefix "not"'?
+		do
+			-- Result := False
+		end
+
+	is_bracket: BOOLEAN is
+			-- Is current feature name of the form 'alias "[]"'?
+		do
+			-- Result := False
+		end
+
+	is_alias: BOOLEAN is
+			-- Is current feature name of the form 'alias "..."'?
 		do
 			-- Result := False
 		end

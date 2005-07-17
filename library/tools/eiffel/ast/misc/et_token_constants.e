@@ -1373,7 +1373,7 @@ feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be
 	capitalized_hashable_name: STRING is "HASHABLE"
 		-- Eiffel class names
 
-feature -- Infix and prefix feature names
+feature -- Infix, prefix and alias feature names
 
 	infix_and_name: STRING is "infix %"and%""
 	infix_implies_name: STRING is "infix %"implies%""
@@ -1390,6 +1390,7 @@ feature -- Infix and prefix feature names
 	infix_plus_name: STRING is "infix %"+%""
 	infix_power_name: STRING is "infix %"^%""
 	infix_times_name: STRING is "infix %"*%""
+	infix_dotdot_name: STRING is "infix %"..%""
 	infix_and_then_name: STRING is "infix %"and then%""
 	infix_or_else_name: STRING is "infix %"or else%""
 			-- Infix feature names
@@ -1398,6 +1399,28 @@ feature -- Infix and prefix feature names
 	prefix_minus_name: STRING is "prefix %"-%""
 	prefix_plus_name: STRING is "prefix %"+%""
 			-- Prefix feature names
+
+	alias_and_name: STRING is "alias %"and%""
+	alias_implies_name: STRING is "alias %"implies%""
+	alias_or_name: STRING is "alias %"or%""
+	alias_xor_name: STRING is "alias %"xor%""
+	alias_div_name: STRING is "alias %"//%""
+	alias_divide_name: STRING is "alias %"/%""
+	alias_ge_name: STRING is "alias %">=%""
+	alias_gt_name: STRING is "alias %">%""
+	alias_le_name: STRING is "alias %"<=%""
+	alias_lt_name: STRING is "alias %"<%""
+	alias_minus_name: STRING is "alias %"-%""
+	alias_mod_name: STRING is "alias %"\\%""
+	alias_plus_name: STRING is "alias %"+%""
+	alias_power_name: STRING is "alias %"^%""
+	alias_times_name: STRING is "alias %"*%""
+	alias_dotdot_name: STRING is "alias %"..%""
+	alias_and_then_name: STRING is "alias %"and then%""
+	alias_or_else_name: STRING is "alias %"or else%""
+	alias_not_name: STRING is "alias %"not%""
+	alias_bracket_name: STRING is "alias %"[]%""
+			-- Alias feature names
 
 feature -- Built-in
 

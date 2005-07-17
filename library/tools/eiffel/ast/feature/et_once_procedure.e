@@ -30,7 +30,7 @@ feature -- Status report
 
 feature -- Duplication
 
-	new_synonym (a_name: like name_item): like Current is
+	new_synonym (a_name: like extended_name): like Current is
 			-- Synonym feature
 		do
 			create Result.make (a_name, arguments, obsolete_message, preconditions,

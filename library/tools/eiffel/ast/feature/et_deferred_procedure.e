@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name_item; args: like arguments; an_obsolete: like obsolete_message;
+	make (a_name: like extended_name; args: like arguments; an_obsolete: like obsolete_message;
 		a_preconditions: like preconditions; a_postconditions: like postconditions;
 		a_clients: like clients; a_class: like implementation_class) is
 			-- Create a new deferred procedure.
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			a_clients_not_void: a_clients /= Void
 			a_class_not_void: a_class /= Void
 		do
-			name_item := a_name
+			extended_name := a_name
 			hash_code := name.hash_code
 			arguments := args
 			is_keyword := tokens.is_keyword
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			implementation_class := a_class
 			implementation_feature := Current
 		ensure
-			name_item_set: name_item = a_name
+			extended_name_set: extended_name = a_name
 			arguments_set: arguments = args
 			obsolete_message_set: obsolete_message = an_obsolete
 			preconditions_set: preconditions = a_preconditions
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Duplication
 
-	new_synonym (a_name: like name_item): like Current is
+	new_synonym (a_name: like extended_name): like Current is
 			-- Synonym feature
 		do
 			create Result.make (a_name, arguments, obsolete_message, preconditions,

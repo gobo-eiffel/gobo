@@ -107,7 +107,7 @@ feature -- Access
 			-- Feature name
 		do
 			if new_name /= Void then
-				Result := new_name.new_name
+				Result := new_name.new_name.feature_name
 			else
 				Result := precursor_feature.name
 			end

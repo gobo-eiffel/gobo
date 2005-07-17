@@ -50,7 +50,7 @@ feature -- Access
 	old_name: ET_FEATURE_NAME
 			-- Old name
 
-	new_name: ET_FEATURE_NAME
+	new_name: ET_EXTENDED_FEATURE_NAME
 			-- New name
 
 	as_keyword: ET_KEYWORD

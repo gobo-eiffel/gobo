@@ -35,11 +35,13 @@ inherit
 			is_infix_power,
 			is_infix_times,
 			is_infix_xor,
+			is_infix_dotdot,
 			is_prefix,
 			is_prefix_minus,
 			is_prefix_plus,
 			is_prefix_freeop,
-			is_prefix_not
+			is_prefix_not,
+			is_bracket
 		end
 
 	ET_TOKEN_CODES
@@ -51,6 +53,8 @@ feature -- Access
 			-- Name of feature
 		do
 			inspect code
+			when alias_bracket_code then
+				Result := tokens.alias_bracket_name
 			when infix_and_code then
 				Result := tokens.infix_and_name
 			when infix_and_then_code then
@@ -85,6 +89,8 @@ feature -- Access
 				Result := tokens.infix_times_name
 			when infix_xor_code then
 				Result := tokens.infix_xor_name
+			when infix_dotdot_code then
+				Result := tokens.infix_dotdot_name
 			when prefix_minus_code then
 				Result := tokens.prefix_minus_name
 			when prefix_plus_code then
@@ -226,6 +232,12 @@ feature -- Status report
 			Result := (code = tokens.infix_xor_code)
 		end
 
+	is_infix_dotdot: BOOLEAN is
+			-- Is current feature name of the form 'infix ".."'?
+		do
+			Result := (code = tokens.infix_dotdot_code)
+		end
+
 	is_prefix: BOOLEAN is
 			-- Is current feature name of the form 'prefix ...'?
 		do
@@ -256,6 +268,12 @@ feature -- Status report
 			Result := (code = tokens.prefix_not_code)
 		end
 
+	is_bracket: BOOLEAN is
+			-- Is current feature name of the form 'alias "[]"'?
+		do
+			Result := (code = tokens.alias_bracket_code)
+		end
+
 feature -- Comparison
 
 	same_feature_name (other: ET_FEATURE_NAME): BOOLEAN is
@@ -263,6 +281,8 @@ feature -- Comparison
 			-- (case insensitive)
 		do
 			inspect code
+			when alias_bracket_code then
+				Result := other.is_bracket
 			when infix_and_code then
 				Result := other.is_infix_and
 			when infix_and_then_code then
@@ -297,6 +317,8 @@ feature -- Comparison
 				Result := other.is_infix_times
 			when infix_xor_code then
 				Result := other.is_infix_xor
+			when infix_dotdot_code then
+				Result := other.is_infix_dotdot
 			when prefix_minus_code then
 				Result := other.is_prefix_minus
 			when prefix_plus_code then

@@ -32,6 +32,7 @@ feature -- Access
 			a_feature: ET_FEATURE
 			an_id: ET_IDENTIFIER
 			a_hash_code: INTEGER
+			an_alias_name: ET_ALIAS_NAME
 		do
 				-- This assignment attempt is to avoid too many polymorphic
 				-- calls to `same_feature_name'.
@@ -58,7 +59,13 @@ feature -- Access
 						Result := a_feature
 						i := -1 -- Jump out of the loop
 					else
-						i := i - 1
+						an_alias_name := a_feature.alias_name
+						if an_alias_name /= Void and then an_alias_name.same_feature_name (a_name) then
+							Result := a_feature
+							i := -1 -- Jump out of the loop
+						else
+							i := i - 1
+						end
 					end
 				end
 			end

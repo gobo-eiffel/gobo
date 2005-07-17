@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 		do
-			name_item := tokens.invariant_feature_name
+			extended_name := tokens.invariant_feature_name
 			hash_code := name.hash_code
 			clients := tokens.any_clients
 			implementation_class := a_class
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 		do
-			name_item := tokens.invariant_feature_name
+			extended_name := tokens.invariant_feature_name
 			hash_code := name.hash_code
 			clients := tokens.any_clients
 			implementation_class := a_class
@@ -124,20 +124,20 @@ feature -- Setting
 
 feature {ET_INVARIANTS} -- Setting
 
-	set_name (a_name: like name_item) is
+	set_name (a_name: like extended_name) is
 			-- Set `name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
 		do
-			name_item := a_name
+			extended_name := a_name
 		ensure
-			name_set: name = a_name
-			name_item_set: name_item = a_name
+			name_set: name = a_name.feature_name
+			extended_name_set: extended_name = a_name
 		end
 
 feature -- Duplication
 
-	new_synonym (a_name: like name_item): like Current is
+	new_synonym (a_name: like extended_name): like Current is
 			-- Synonym feature
 		do
 			create Result.make (implementation_class)

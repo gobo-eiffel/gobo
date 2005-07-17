@@ -32,8 +32,9 @@ feature -- Keyword and symbol codes
 	infix_freeop_code: CHARACTER is '%/16/'
 	infix_and_then_code: CHARACTER is '%/17/'
 	infix_or_else_code: CHARACTER is '%/18/'
+	infix_dotdot_code: CHARACTER is '%/19/'
 	min_infix_code: CHARACTER is '%/1/'
-	max_infix_code: CHARACTER is '%/18/'
+	max_infix_code: CHARACTER is '%/19/'
 			-- Infix operator codes
 
 	prefix_not_code: CHARACTER is '%/62/'
@@ -43,6 +44,12 @@ feature -- Keyword and symbol codes
 	min_prefix_code: CHARACTER is '%/62/'
 	max_prefix_code: CHARACTER is '%/65/'
 			-- Prefix operator codes
+
+	alias_bracket_code: CHARACTER is '%/20/'
+	alias_minus_code: CHARACTER is '%/21/'
+	alias_plus_code: CHARACTER is '%/22/'
+	alias_freeop_code: CHARACTER is '%/23/'
+			-- Alias operator codes
 
 	agent_keyword_code: CHARACTER is '%/101/'
 	alias_keyword_code: CHARACTER is '%/102/'

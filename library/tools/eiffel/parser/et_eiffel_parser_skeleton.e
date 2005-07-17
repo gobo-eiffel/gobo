@@ -996,6 +996,20 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_alias_free_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME is
+			-- New alias free feature name
+		do
+			if a_string /= Void then
+				if a_string.value.count > 0 then
+					Result := ast_factory.new_alias_free_name (an_alias, a_string)
+				else
+					-- TODO: error.
+				end
+			else
+				Result := ast_factory.new_alias_free_name (an_alias, a_string)
+			end
+		end
+
 	new_bit_n (a_bit: ET_IDENTIFIER; an_int: ET_INTEGER_CONSTANT): ET_BIT_N is
 			-- New 'BIT N' type
 		do
@@ -1065,15 +1079,15 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_function (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
-		a_type: ET_DECLARED_TYPE; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
+	new_external_function (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
+		a_type: ET_DECLARED_TYPE; an_assigner: ET_ASSIGNER; an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST;
 		an_obsolete: ET_OBSOLETE; a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE;
 		an_alias: ET_EXTERNAL_ALIAS; a_postconditions: ET_POSTCONDITIONS;
 		an_end: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL; a_clients: ET_CLASS_NAME_LIST;
 		a_feature_clause: ET_FEATURE_CLAUSE; a_class: ET_CLASS): ET_EXTERNAL_FUNCTION is
 			-- New external function
 		do
-			Result := ast_factory.new_external_function (a_name, args, a_type, an_is, a_first_indexing,
+			Result := ast_factory.new_external_function (a_name, args, a_type, an_assigner, an_is, a_first_indexing,
 				an_obsolete, a_preconditions, a_language, an_alias, a_postconditions,
 				an_end, a_semicolon, a_clients, a_feature_clause, a_class)
 			if Result /= Void then
@@ -1083,7 +1097,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_external_procedure (a_name: ET_FEATURE_NAME_ITEM; args: ET_FORMAL_ARGUMENT_LIST;
+	new_external_procedure (a_name: ET_EXTENDED_FEATURE_NAME; args: ET_FORMAL_ARGUMENT_LIST;
 		an_is: ET_KEYWORD; a_first_indexing: ET_INDEXING_LIST; an_obsolete: ET_OBSOLETE;
 		a_preconditions: ET_PRECONDITIONS; a_language: ET_EXTERNAL_LANGUAGE; an_alias: ET_EXTERNAL_ALIAS;
 		a_postconditions: ET_POSTCONDITIONS; an_end: ET_KEYWORD;
@@ -1116,6 +1130,13 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_formal_parameter (a_type_mark, a_name)
 		end
 
+	new_invalid_alias_name (an_alias: ET_KEYWORD; a_string: ET_MANIFEST_STRING): ET_ALIAS_FREE_NAME is
+			-- New invalid alias feature name
+		do
+-- ERROR
+			Result := new_alias_free_name (an_alias, a_string)
+		end
+
 	new_invalid_infix_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME is
 			-- New invalid infix feature name
 		do
@@ -1130,17 +1151,17 @@ feature {NONE} -- AST factory
 			Result := new_prefix_free_name (a_prefix, an_operator)
 		end
 
-	new_infix_free_name (a_prefix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME is
+	new_infix_free_name (an_infix: ET_KEYWORD; an_operator: ET_MANIFEST_STRING): ET_INFIX_FREE_NAME is
 			-- New infix free feature name
 		do
 			if an_operator /= Void then
 				if an_operator.value.count > 0 then
-					Result := ast_factory.new_infix_free_name (a_prefix, an_operator)
+					Result := ast_factory.new_infix_free_name (an_infix, an_operator)
 				else
 					-- TODO: error.
 				end
 			else
-				Result := ast_factory.new_infix_free_name (a_prefix, an_operator)
+				Result := ast_factory.new_infix_free_name (an_infix, an_operator)
 			end
 		end
 
@@ -1451,7 +1472,7 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_synonym_feature (a_name: ET_FEATURE_NAME_ITEM; a_feature: ET_FEATURE): ET_FEATURE is
+	new_synonym_feature (a_name: ET_EXTENDED_FEATURE_NAME; a_feature: ET_FEATURE): ET_FEATURE is
 			-- New synomym for feature `a_feature'
 		require
 			a_name_not_void: a_name /= Void

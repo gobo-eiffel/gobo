@@ -35,11 +35,11 @@ feature {NONE} -- Initialization
 			rename_table.set_key_equality_tester (feature_name_tester)
 			create export_table.make (10)
 			export_table.set_equality_tester (feature_name_tester)
-			create undefine_table.make (10)
+			create undefine_table.make_map (10)
 			undefine_table.set_key_equality_tester (feature_name_tester)
-			create redefine_table.make (10)
+			create redefine_table.make_map (10)
 			redefine_table.set_key_equality_tester (feature_name_tester)
-			create select_table.make (10)
+			create select_table.make_map (10)
 			select_table.set_key_equality_tester (feature_name_tester)
 			create replicable_features.make_map (400)
 		ensure
@@ -219,7 +219,7 @@ feature {NONE} -- Feature recording
 						rename_table.remove_found_item
 						has_rename := not rename_table.is_empty
 						a_parent_feature.set_new_name (a_rename)
-						a_name := a_rename.new_name
+						a_name := a_rename.new_name.feature_name
 					end
 				end
 				if has_export then
@@ -383,7 +383,7 @@ feature {NONE} -- Feature adaptation
 						-- Feature name `a_name' appears twice on the
 						-- left-hand-side of a Rename_pair in the Rename
 						-- clause.
-					if not rename_table.found_item.new_name.same_feature_name (a_rename.new_name) then
+					if not rename_table.found_item.new_name.same_extended_feature_name (a_rename.new_name) then
 							-- The two Rename_pairs have a different `new_name'.
 							-- The flatten process will have to fail.
 						set_fatal_error

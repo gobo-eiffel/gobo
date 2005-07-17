@@ -2743,6 +2743,20 @@ feature {NONE} -- Processing
 				end
 			when 4 then
 				inspect text_item (2)
+				when '[' then
+					inspect text_item (3)
+					when ']' then
+						last_token := E_STRBRACKET
+					else
+						-- Do nothing.
+					end
+				when '.' then
+					inspect text_item (3)
+					when '.' then
+						last_token := E_STRDOTDOT
+					else
+						-- Do nothing.
+					end
 				when '/' then
 					inspect text_item (3)
 					when '/' then

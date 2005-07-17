@@ -866,7 +866,7 @@ feature {NONE} -- Feature adaptation validity
 		do
 			if a_parent_feature.has_rename then
 				l_precursor_feature := a_parent_feature.precursor_feature
-				l_name := a_parent_feature.new_name.new_name
+				l_name := a_parent_feature.new_name.new_name.feature_name
 				if l_name.is_infix then
 					if not l_precursor_feature.is_infixable then
 						set_fatal_error (current_class)
