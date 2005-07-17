@@ -104,15 +104,15 @@ feature {ET_AST_NODE} -- Processing
 	process_alias_free_name (a_name: ET_ALIAS_FREE_NAME) is
 			-- Process `a_name'.
 		do
-			an_name.alias_keyword.process (Current)
-			an_name.alias_string.process (Current)
+			a_name.alias_keyword.process (Current)
+			a_name.alias_string.process (Current)
 		end
 
 	process_alias_name (a_name: ET_ALIAS_NAME) is
 			-- Process `a_name'.
 		do
-			an_name.alias_keyword.process (Current)
-			an_name.alias_string.process (Current)
+			a_name.alias_keyword.process (Current)
+			a_name.alias_string.process (Current)
 		end
 
 	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME) is
@@ -171,7 +171,7 @@ feature {ET_AST_NODE} -- Processing
 			if a_frozen_keyword /= Void then
 				a_frozen_keyword.process (Current)
 			end
-			a_feature.name_item.process (Current)
+			a_feature.extended_name.process (Current)
 			from
 				a_synonym := a_feature.synonym
 			until
@@ -181,7 +181,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_frozen_keyword /= Void then
 					a_frozen_keyword.process (Current)
 				end
-				a_synonym.name_item.process (Current)
+				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
@@ -512,7 +512,7 @@ feature {ET_AST_NODE} -- Processing
 			if a_frozen_keyword /= Void then
 				a_frozen_keyword.process (Current)
 			end
-			a_feature.name_item.process (Current)
+			a_feature.extended_name.process (Current)
 			from
 				a_synonym := a_feature.synonym
 			until
@@ -522,7 +522,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_frozen_keyword /= Void then
 					a_frozen_keyword.process (Current)
 				end
-				a_synonym.name_item.process (Current)
+				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
@@ -749,7 +749,7 @@ feature {ET_AST_NODE} -- Processing
 			if a_frozen_keyword /= Void then
 				a_frozen_keyword.process (Current)
 			end
-			a_feature.name_item.process (Current)
+			a_feature.extended_name.process (Current)
 			from
 				a_synonym := a_feature.synonym
 			until
@@ -759,7 +759,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_frozen_keyword /= Void then
 					a_frozen_keyword.process (Current)
 				end
-				a_synonym.name_item.process (Current)
+				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			an_arguments := a_feature.arguments
@@ -812,7 +812,7 @@ feature {ET_AST_NODE} -- Processing
 			if a_frozen_keyword /= Void then
 				a_frozen_keyword.process (Current)
 			end
-			a_feature.name_item.process (Current)
+			a_feature.extended_name.process (Current)
 			from
 				a_synonym := a_feature.synonym
 			until
@@ -822,7 +822,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_frozen_keyword /= Void then
 					a_frozen_keyword.process (Current)
 				end
-				a_synonym.name_item.process (Current)
+				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			an_arguments := a_feature.arguments
@@ -873,7 +873,7 @@ feature {ET_AST_NODE} -- Processing
 			if a_frozen_keyword /= Void then
 				a_frozen_keyword.process (Current)
 			end
-			a_feature.name_item.process (Current)
+			a_feature.extended_name.process (Current)
 			from
 				a_synonym := a_feature.synonym
 			until
@@ -883,7 +883,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_frozen_keyword /= Void then
 					a_frozen_keyword.process (Current)
 				end
-				a_synonym.name_item.process (Current)
+				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			an_arguments := a_feature.arguments
@@ -949,7 +949,7 @@ feature {ET_AST_NODE} -- Processing
 			if a_frozen_keyword /= Void then
 				a_frozen_keyword.process (Current)
 			end
-			a_feature.name_item.process (Current)
+			a_feature.extended_name.process (Current)
 			from
 				a_synonym := a_feature.synonym
 			until
@@ -959,7 +959,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_frozen_keyword /= Void then
 					a_frozen_keyword.process (Current)
 				end
-				a_synonym.name_item.process (Current)
+				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			an_arguments := a_feature.arguments
@@ -1093,7 +1093,7 @@ feature {ET_AST_NODE} -- Processing
 			if a_frozen_keyword /= Void then
 				a_frozen_keyword.process (Current)
 			end
-			a_feature.name_item.process (Current)
+			a_feature.extended_name.process (Current)
 			from
 				a_synonym := a_feature.synonym
 			until
@@ -1103,7 +1103,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_frozen_keyword /= Void then
 					a_frozen_keyword.process (Current)
 				end
-				a_synonym.name_item.process (Current)
+				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			an_arguments := a_feature.arguments
@@ -1161,7 +1161,7 @@ feature {ET_AST_NODE} -- Processing
 			if a_frozen_keyword /= Void then
 				a_frozen_keyword.process (Current)
 			end
-			a_feature.name_item.process (Current)
+			a_feature.extended_name.process (Current)
 			from
 				a_synonym := a_feature.synonym
 			until
@@ -1171,7 +1171,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_frozen_keyword /= Void then
 					a_frozen_keyword.process (Current)
 				end
-				a_synonym.name_item.process (Current)
+				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			an_arguments := a_feature.arguments
@@ -1772,7 +1772,7 @@ feature {ET_AST_NODE} -- Processing
 			if a_frozen_keyword /= Void then
 				a_frozen_keyword.process (Current)
 			end
-			a_feature.name_item.process (Current)
+			a_feature.extended_name.process (Current)
 			from
 				a_synonym := a_feature.synonym
 			until
@@ -1782,7 +1782,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_frozen_keyword /= Void then
 					a_frozen_keyword.process (Current)
 				end
-				a_synonym.name_item.process (Current)
+				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			an_arguments := a_feature.arguments
@@ -1855,7 +1855,7 @@ feature {ET_AST_NODE} -- Processing
 			if a_frozen_keyword /= Void then
 				a_frozen_keyword.process (Current)
 			end
-			a_feature.name_item.process (Current)
+			a_feature.extended_name.process (Current)
 			from
 				a_synonym := a_feature.synonym
 			until
@@ -1865,7 +1865,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_frozen_keyword /= Void then
 					a_frozen_keyword.process (Current)
 				end
-				a_synonym.name_item.process (Current)
+				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			an_arguments := a_feature.arguments
@@ -2324,7 +2324,7 @@ feature {ET_AST_NODE} -- Processing
 			if a_frozen_keyword /= Void then
 				a_frozen_keyword.process (Current)
 			end
-			a_feature.name_item.process (Current)
+			a_feature.extended_name.process (Current)
 			from
 				a_synonym := a_feature.synonym
 			until
@@ -2334,7 +2334,7 @@ feature {ET_AST_NODE} -- Processing
 				if a_frozen_keyword /= Void then
 					a_frozen_keyword.process (Current)
 				end
-				a_synonym.name_item.process (Current)
+				a_synonym.extended_name.process (Current)
 				a_synonym := a_synonym.synonym
 			end
 			a_feature.declared_type.process (Current)
