@@ -18,7 +18,7 @@ inherit
 		redefine
 			simplify, promote, compute_dependencies, compute_special_properties, sub_expressions,
 			same_expression, create_iterator, is_repeated_sub_expression, is_path_expression,
-			as_path_expression
+			as_path_expression, is_error
 		end
 
 	XM_XPATH_MAPPING_FUNCTION
@@ -154,6 +154,18 @@ feature -- Comparison
 		end
 
 feature -- Status report
+
+	is_error: BOOLEAN is
+			-- Is `Current' in error?
+			-- Note: this is exactly the same implementation as in
+			-- XM_XPATH_EXPRESSION but it works around a bug in
+			-- the optimizer of SE 1.0/1.2 which was binding 
+			-- XM_XPATH_EXPRESSION.is_error statically in
+			-- XM_XPATH_EXPRESSION_FACTORY.make_expression whereas
+			-- it should have been dynamically bound.
+		do
+			Result := error_value /= Void
+		end
 
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
