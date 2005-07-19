@@ -25,16 +25,20 @@ inherit
 	XM_XPATH_LOCATOR
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	XM_XPATH_ROLE
 
 	XM_XPATH_ERROR_TYPES
 	
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
+		export {NONE} all end
 
 feature -- Access
 

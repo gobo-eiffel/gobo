@@ -22,6 +22,7 @@ inherit
 		end
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
+		export {NONE} all end
 
 		-- Implements an imaginary xsl:block instruction which simply evaluates
 		--  it's contents. Used for top-level templates, xsl:otherwise, etc.

@@ -17,8 +17,10 @@ inherit
 	XM_XSLT_SOURCE
 
 	XM_SHARED_CATALOG_MANAGER
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 		-- This class is NOT intended to be used for system-ids of the string: protocol
 		--  (for that, use an XM_XSLT_URI_SOURCE). Rather it is designed for creating

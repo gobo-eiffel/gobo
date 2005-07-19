@@ -15,12 +15,16 @@ class XM_XSLT_TRANSFORMER_FACTORY
 inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_EIFFEL_PARSER_FACTORY
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 create
 

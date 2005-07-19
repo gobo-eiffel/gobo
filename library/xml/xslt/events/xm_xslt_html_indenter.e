@@ -15,6 +15,7 @@ class XM_XSLT_HTML_INDENTER
 inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 	XM_XPATH_PROXY_RECEIVER
 		redefine

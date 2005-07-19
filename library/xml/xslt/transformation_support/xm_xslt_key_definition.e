@@ -17,6 +17,7 @@ inherit
 	XM_XSLT_COMPILED_PROCEDURE
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 create
 

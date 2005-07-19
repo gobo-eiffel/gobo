@@ -18,9 +18,11 @@ inherit
 
 	XM_XPATH_NAME_UTILITIES
 
-	XM_XPATH_DEBUGGING_ROUTINES
-
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
+
+	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 create
 

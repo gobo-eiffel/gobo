@@ -20,12 +20,14 @@ inherit
 		end
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_AXIS
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 	-- This outputter is used when writing a sequence of atomic values and nodes,
 	--  e.g. when xsl:variable is used with content and an "as" attribute. The outputter

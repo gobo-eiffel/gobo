@@ -17,10 +17,13 @@ inherit
 	XM_XPATH_TYPE
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
 
 feature -- Access
 

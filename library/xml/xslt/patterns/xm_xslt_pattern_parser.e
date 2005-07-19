@@ -17,12 +17,16 @@ inherit
 	XM_XPATH_EXPRESSION_PARSER
 
 	XM_XSLT_SHARED_ANY_NODE_TEST
+		export {NONE} all end
 
 	XM_XSLT_SHARED_NO_NODE_TEST
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NO_NODE_TEST
+		export {NONE} all end
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 	-- TODO: Add XSLT Pattern as host language
 create

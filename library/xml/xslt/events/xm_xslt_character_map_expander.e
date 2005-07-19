@@ -15,8 +15,10 @@ class	XM_XSLT_CHARACTER_MAP_EXPANDER
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 create
 

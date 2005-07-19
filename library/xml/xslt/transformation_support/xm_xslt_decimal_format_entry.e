@@ -15,6 +15,7 @@ class XM_XSLT_DECIMAL_FORMAT_ENTRY
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 create
 

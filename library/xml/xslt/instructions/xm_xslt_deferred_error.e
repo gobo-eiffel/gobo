@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent a deferred error, to be raised if executed"
+		"Objects that represent a deferred error, to be raised only if executed"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

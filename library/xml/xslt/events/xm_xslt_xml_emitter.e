@@ -22,14 +22,19 @@ inherit
 	XM_UNICODE_CHARACTERS_1_1
 
 	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
-
-	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
+
+	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 	UT_URL_ENCODING
+		export {NONE} all end
 
 create
 

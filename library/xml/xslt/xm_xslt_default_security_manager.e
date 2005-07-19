@@ -19,6 +19,7 @@ inherit
 	XM_XPATH_DEFAULT_SECURITY_MANAGER
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 create
 

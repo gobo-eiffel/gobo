@@ -15,8 +15,10 @@ deferred class XM_XSLT_EXTENSION_EMITTER_FACTORY
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 	
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 feature -- Access
 

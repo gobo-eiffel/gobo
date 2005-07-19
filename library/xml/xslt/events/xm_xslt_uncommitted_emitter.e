@@ -15,6 +15,7 @@ class XM_XSLT_UNCOMMITTED_EMITTER
 inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 	XM_XSLT_EMITTER
 		rename
@@ -22,6 +23,7 @@ inherit
 		end
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_TYPE
 

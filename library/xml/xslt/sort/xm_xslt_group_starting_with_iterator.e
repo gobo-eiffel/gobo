@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"TBA"
+		"Group iterator implementing group-strating-with algorithm"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

@@ -22,16 +22,20 @@ inherit
 	XM_STRING_MODE
 
 	XM_RESOLVER_FACTORY
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
 
 	XM_XSLT_VALIDATION
 
 	MA_SHARED_DECIMAL_CONTEXT
+		export {NONE} all end
 
 	MA_DECIMAL_CONSTANTS
+		export {NONE} all end
 
 create
 

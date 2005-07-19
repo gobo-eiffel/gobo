@@ -17,6 +17,7 @@ inherit
 	XM_XSLT_GROUP_ITERATOR
 
 	XM_XPATH_SHARED_COMPARISON_KEY_TESTER
+		export {NONE} all end
 
 		-- Objects of this class iterate over a sequence of groups defined by
 		--  xsl:for-each-group group-by="x". The groups are returned in

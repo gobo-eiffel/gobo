@@ -14,9 +14,8 @@ class XM_XSLT_TRANSFORMER
 
 inherit
 
-	XM_XPATH_DEBUGGING_ROUTINES
-
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 	XM_XPATH_NAME_UTILITIES
 
@@ -31,14 +30,19 @@ inherit
 	XM_XSLT_VALIDATION
 	
 	DT_SHARED_SYSTEM_CLOCK
+		export {NONE} all end
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
+		export {NONE} all end
 
 	XM_XSLT_SHARED_EMITTER_FACTORY
+		export {NONE} all end
 
 	XM_XSLT_TEMPLATE_ROUTINES
+		export {NONE} all end
 
 create
 

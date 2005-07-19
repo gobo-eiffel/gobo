@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Compiled XSLT objects that may contain lovcal variables"
+		"Compiled XSLT objects that may contain local variables"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"

@@ -23,8 +23,6 @@ inherit
 
 	XM_XPATH_ROLE
 
-	XM_XPATH_DEBUGGING_ROUTINES
-
 create
 
 	make

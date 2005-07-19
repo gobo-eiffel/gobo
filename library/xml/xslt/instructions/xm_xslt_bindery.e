@@ -15,6 +15,7 @@ class XM_XSLT_BINDERY
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	XM_XPATH_TYPE
 

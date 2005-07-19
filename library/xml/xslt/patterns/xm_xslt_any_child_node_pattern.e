@@ -3,7 +3,7 @@ indexing
 	description:
 
 	"XSLT patterns that matches any child node%
-   %i.e. node() but not root, attribute or namespace nodes"
+   % i.e. node() but not root, attribute or namespace nodes"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

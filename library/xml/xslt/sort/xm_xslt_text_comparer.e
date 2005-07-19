@@ -17,6 +17,7 @@ inherit
 	KL_COMPARATOR [XM_XPATH_ITEM]
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 create
 
@@ -27,7 +28,7 @@ feature {NONE} -- Initialiaztion
 	make (a_comparer: KL_COMPARATOR [XM_XPATH_ITEM]) is
 			-- Establish invariant.
 		require
-			comparer_mot_void: a_comparer /= Void
+			comparer_not_void: a_comparer /= Void
 		do
 			todo ("make", False)
 		end

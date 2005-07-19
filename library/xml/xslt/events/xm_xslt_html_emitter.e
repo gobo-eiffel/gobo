@@ -13,9 +13,10 @@ revision: "$Revision$"
 class XM_XSLT_HTML_EMITTER
 
 inherit
-
+	
 	UC_SHARED_STRING_EQUALITY_TESTER
-
+		export {NONE} all end
+		
 	XM_XSLT_XML_EMITTER
 		rename
 			make as make_xml
@@ -26,6 +27,10 @@ inherit
 		end
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
+		
+	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 create
 

@@ -21,10 +21,13 @@ inherit
 	XM_XPATH_NAME_UTILITIES
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 	DT_SHARED_SYSTEM_CLOCK
+		export {NONE} all end
 
 create
 

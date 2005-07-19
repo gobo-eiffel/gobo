@@ -15,6 +15,7 @@ class	XM_XSLT_EMITTER_FACTORY_ROUTINES
 inherit
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 feature {NONE} -- Implementation
 

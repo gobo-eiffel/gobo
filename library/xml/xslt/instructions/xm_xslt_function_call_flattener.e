@@ -1,7 +1,7 @@
 indexing
 	description:
 
-		"Objects that represent tail-recusive calls to xsl:functions"
+		"Objects that flatten recusive calls to xsl:functions"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

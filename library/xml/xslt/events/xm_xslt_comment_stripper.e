@@ -20,6 +20,7 @@ inherit
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	-- This class also concatenates text nodes split by comments and processing instructions
 

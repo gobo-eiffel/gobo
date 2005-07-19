@@ -17,8 +17,10 @@ inherit
 	XM_XSLT_EMITTER_FACTORY_ROUTINES
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 create
 

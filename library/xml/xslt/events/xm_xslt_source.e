@@ -15,6 +15,7 @@ deferred class	XM_XSLT_SOURCE
 inherit
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 feature -- Access
 

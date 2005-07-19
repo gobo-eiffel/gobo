@@ -29,8 +29,10 @@ inherit
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 		-- This filter is designed to extract xml-stylesheet PI's from an XML source file.
 		-- When the document element is found, parsing is terminated early. The document

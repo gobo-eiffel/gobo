@@ -14,6 +14,7 @@ class XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
 inherit
 	
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 	XM_XSLT_OUTPUTTER	
 		redefine
@@ -25,6 +26,7 @@ inherit
 	XM_XPATH_AXIS
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	-- This class is used for generating complex content, that is, the content of an
 	--  element or document node. It enforces the rules on the order of events within

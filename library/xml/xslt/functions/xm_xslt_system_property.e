@@ -20,8 +20,10 @@ inherit
 		end
 
 	KL_GOBO_VERSION
+		export {NONE} all end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
+		export {NONE} all end
 
 create
 

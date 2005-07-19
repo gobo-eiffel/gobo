@@ -15,12 +15,15 @@ class XM_XSLT_STYLESHEET_COMPILER
 inherit
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
 	
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 	MA_DECIMAL_MATH
+		export {NONE} all end
 
 create
 

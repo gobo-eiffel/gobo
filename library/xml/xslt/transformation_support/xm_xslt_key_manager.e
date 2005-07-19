@@ -15,18 +15,25 @@ class XM_XSLT_KEY_MANAGER
 inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_TYPE_FACTORY
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ATOMIC_VALUE_TESTER
+		export {NONE} all end
 
 	XM_XPATH_SHARED_64BIT_TESTER
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 	XM_XPATH_TYPE
 

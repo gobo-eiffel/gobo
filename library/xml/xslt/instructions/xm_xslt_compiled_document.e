@@ -23,6 +23,7 @@ inherit
 	XM_XSLT_VALIDATION
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
+		export {NONE} all end
 
 create
 

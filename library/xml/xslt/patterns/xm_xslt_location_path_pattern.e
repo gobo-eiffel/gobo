@@ -25,12 +25,16 @@ inherit
 	XM_XPATH_TYPE
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
+		export {NONE} all end
 
 	XM_XSLT_SHARED_ANY_NODE_TEST
+		export {NONE} all end
 
 	MA_DECIMAL_MATH
+		export {NONE} all end
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 create
 

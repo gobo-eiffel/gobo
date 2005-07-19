@@ -22,6 +22,7 @@ inherit
 	XM_XPATH_NAME_UTILITIES
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 create
 

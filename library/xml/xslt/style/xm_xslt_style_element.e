@@ -23,22 +23,29 @@ inherit
 	XM_XSLT_STRING_ROUTINES
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
+		export {NONE} all end
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NO_NODE_TEST
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
+		export {NONE} all end
 
 	XM_XPATH_TYPE
 
 	XM_XPATH_TOKENS
+		export {NONE} all end
 
 	XM_XPATH_EXPRESSION_CONTAINER
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 

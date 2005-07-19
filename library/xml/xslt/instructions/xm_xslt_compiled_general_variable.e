@@ -23,6 +23,7 @@ inherit
 	XM_XPATH_BINDING
 
 	XM_XPATH_SHARED_NO_NODE_TEST
+		export {NONE} all end
 
 	XM_XPATH_ROLE
 

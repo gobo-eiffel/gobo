@@ -20,8 +20,10 @@ inherit
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS
+		export {NONE} all end
 		
 	XM_XPATH_SHARED_NODE_KIND_TESTS
+		export {NONE} all end
 
 	XM_XSLT_VALIDATION
 

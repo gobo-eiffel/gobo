@@ -20,6 +20,7 @@ inherit
 		end
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_TYPE
 

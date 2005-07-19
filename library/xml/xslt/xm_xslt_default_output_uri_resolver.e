@@ -17,8 +17,10 @@ inherit
 	XM_XSLT_OUTPUT_URI_RESOLVER
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 create
 

@@ -27,6 +27,7 @@ inherit
 	XM_XSLT_NUMBER_ROUTINES
 
 	MA_DECIMAL_MATH
+		export {NONE} all end
 
 create
 

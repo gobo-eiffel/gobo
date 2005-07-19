@@ -17,6 +17,7 @@ inherit
 	XM_XSLT_SOURCE
 
 	XM_SHARED_CATALOG_MANAGER
+		export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end

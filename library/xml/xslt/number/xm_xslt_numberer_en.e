@@ -17,11 +17,14 @@ inherit
 	XM_XSLT_STRING_ROUTINES
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	MA_DECIMAL_MATH
+		export {NONE} all end
 
 	XM_XPATH_DEBUGGING_ROUTINES
-	
+		export {NONE} all end
+
 feature -- Access
 
 	formatted_string (a_number: MA_DECIMAL; a_picture: STRING; a_group_size: INTEGER;

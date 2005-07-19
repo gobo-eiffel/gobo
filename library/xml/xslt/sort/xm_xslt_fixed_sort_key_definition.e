@@ -22,10 +22,12 @@ inherit
 		end
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_ERROR_TYPES
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	XM_UNICODE_CHARACTERS_1_1
 
@@ -34,6 +36,7 @@ inherit
 	XM_XPATH_CARDINALITY
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 create
 

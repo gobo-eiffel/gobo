@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"TBA"
+		"Objects that render a sorted iteration of groups"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

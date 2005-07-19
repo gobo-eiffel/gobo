@@ -20,10 +20,12 @@ inherit
 		end
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_NAME_UTILITIES
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 	-- This class also ensures that an xmlns="" undeclaration is output when necessary.
 	-- Used on its own, it simply eliminates unwanted namespace declarations.

@@ -16,8 +16,6 @@ inherit
 
 	XM_XSLT_TAIL_CALL
 
-	XM_XPATH_DEBUGGING_ROUTINES
-
 create
 
 	make
