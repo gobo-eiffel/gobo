@@ -79,12 +79,13 @@ create
 
 %token <ET_KEYWORD> E_OLD
 %token <ET_SYMBOL> '{' '}'
-%token <ET_SYMBOL> '(' ')' ':' ',' '[' ']' '$' '.' '!' '~'
+%token <ET_SYMBOL> '(' ')' ':' ',' ']' '$' '.' '!' '~'
 %token <ET_SYMBOL_OPERATOR> '-'
 %token <ET_SYMBOL_OPERATOR> '+'
 %token <ET_SYMBOL> '='
 %token <ET_SYMBOL> E_NE
 %token <ET_SEMICOLON_SYMBOL> ';'
+%token <ET_BRACKET_SYMBOL> '['
 %token <ET_QUESTION_MARK_SYMBOL> '?'
 
 %left E_IMPLIES
@@ -108,6 +109,7 @@ create
 %type <ET_ALIAS_NAME> Alias_name
 %type <ET_ASSIGNER> Assigner_opt
 %type <ET_BOOLEAN_CONSTANT> Boolean_constant
+%type <ET_BRACKET_ARGUMENT_LIST> Bracket_actual_list
 %type <ET_CALL_AGENT> Call_agent Tilde_call_agent
 %type <ET_CALL_EXPRESSION> Qualified_call_expression
 %type <ET_CHARACTER_CONSTANT> Character_constant
@@ -137,11 +139,10 @@ create
 %type <ET_ELSEIF_PART_LIST> Elseif_list Elseif_part_list
 %type <ET_EXPORT> New_export_item
 %type <ET_EXPORT_LIST> New_exports New_exports_opt New_export_list
-%type <ET_EXPRESSION> Expression Call_chain_without_static Call_chain_with_static
+%type <ET_EXPRESSION> Expression Call_chain
 %type <ET_EXPRESSION> Precursor_expression Manifest_type Address_mark
-%type <ET_EXPRESSION> Call_expression_without_static Call_expression_with_static
-%type <ET_EXPRESSION> Typed_expression Typable_expression Binary_expression Non_binary_expression
-%type <ET_EXPRESSION> Non_binary_expression_without_unsigned_numeric
+%type <ET_EXPRESSION> Call_expression Bracket_target Bracket_expression
+%type <ET_EXPRESSION> Binary_expression Non_binary_expression
 %type <ET_EXPRESSION_ITEM> Expression_comma
 %type <ET_EXTENDED_FEATURE_NAME> Extended_feature_name
 %type <ET_EXTERNAL_ALIAS> External_name_opt
@@ -202,7 +203,7 @@ create
 %type <ET_WHEN_PART_LIST> When_list When_list_opt
 %type <ET_WRITABLE> Writable
 
-%expect 100
+%expect 52
 %start Class_declarations
 
 %%
@@ -1790,7 +1791,7 @@ Alias_name: E_ALIAS E_STRNOT
 	| E_ALIAS E_STRFREEOP
 		{ $$ := ast_factory.new_alias_free_name ($1, $2) }
 	| E_ALIAS E_STRBRACKET
-		{ $$ := ast_factory.new_alias_free_name ($1, $2) }
+		{ $$ := ast_factory.new_alias_bracket_name ($1, $2) }
 
 	| E_ALIAS E_STRING
 		{ $$ := new_invalid_alias_name ($1, $2) }
@@ -2286,9 +2287,13 @@ Instruction: Creation_instruction
 		{ $$ := $1 }
 	| Call_instruction
 		{ $$ := $1 }
+	| Qualified_call_expression E_ASSIGN_SYMBOL Expression
+-- TODO
+	| Bracket_expression E_ASSIGN_SYMBOL Expression
+-- TODO
 	| Writable E_ASSIGN_SYMBOL Expression
 		{ $$ := ast_factory.new_assignment ($1, $2, $3) }
- 	| Writable E_REVERSE Expression
+	| Writable E_REVERSE Expression
 		{ $$ := ast_factory.new_assignment_attempt ($1, $2, $3) }
 	| Conditional
 		{ $$ := $1 }
@@ -2560,9 +2565,7 @@ Manifest_string_comma: Manifest_string ','
 
 Call_instruction: Identifier Actuals_opt
 		{ $$ := new_unqualified_call_instruction ($1, $2) }
-	| Call_chain_without_static '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_instruction ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
-	| Call_chain_with_static '.' Identifier Actuals_opt
+	| Call_chain '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_call_instruction ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	| E_PRECURSOR Actuals_opt
 		{ $$ := ast_factory.new_precursor_instruction (False, $1, Void, $2) }
@@ -2574,19 +2577,13 @@ Call_instruction: Identifier Actuals_opt
 		{ $$ := ast_factory.new_static_call_instruction (Void, ast_factory.new_target_type ($1, $2, $3), ast_factory.new_dot_feature_name ($4, $5), $6) }
 	;
 
-Call_expression_without_static: Identifier Actuals_opt
+Call_expression: Identifier Actuals_opt
 		{ $$ := new_unqualified_call_expression ($1, $2) }
-	| Call_chain_without_static '.' Identifier Actuals_opt
+	| Call_chain '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 
-Call_expression_with_static: Call_chain_with_static '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
-	;
-
-Qualified_call_expression: Call_chain_without_static '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
-	| Call_chain_with_static '.' Identifier Actuals_opt
+Qualified_call_expression: Call_chain '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 
@@ -2602,7 +2599,7 @@ Precursor_expression: E_PRECURSOR Actuals_opt
 		{ $$ := ast_factory.new_precursor_expression (False, $1, ast_factory.new_precursor_class_name ($2, $3, $4), $5) }
 	;
 
-Call_chain_without_static: Identifier Actuals_opt
+Call_chain: Identifier Actuals_opt
 		{ $$ := new_unqualified_call_expression ($1, $2) }
 	| E_RESULT
 		{ $$ := $1 }
@@ -2612,13 +2609,9 @@ Call_chain_without_static: Identifier Actuals_opt
 		{ $$ := $1 }
 	| Precursor_expression
 		{ $$ := $1 }
-	| Call_chain_without_static '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
-	;
-
-Call_chain_with_static: Static_call_expression
+	| Static_call_expression
 		{ $$ := $1 }
-	| Call_chain_with_static '.' Identifier Actuals_opt
+	| Call_chain '.' Identifier Actuals_opt
 		{ $$ := ast_factory.new_call_expression ($1, ast_factory.new_dot_feature_name ($2, $3), $4) }
 	;
 
@@ -2747,53 +2740,55 @@ Binary_expression: Expression E_FREEOP Expression
 		{ $$ := ast_factory.new_infix_expression ($1, $2, $3) }
 	;
 
-Non_binary_expression: Non_binary_expression_without_unsigned_numeric
+Non_binary_expression: Bracket_target
 		{ $$ := $1 }
-	| E_INTEGER
-		{ $$ := $1 }
-	| E_REAL
-		{ $$ := $1 }
-	;
-
-Non_binary_expression_without_unsigned_numeric: Typable_expression
-		{ $$ := $1 }
-	| Typed_expression
-		{ $$ := $1 }
-	| Typed_integer_constant
-		{ $$ := $1 }
-	| Typed_real_constant
-		{ $$ := $1 }
-	| Signed_integer_constant
-		{ $$ := $1 }
-	| Signed_real_constant
-		{ $$ := $1 }
-	| Manifest_type
-		{ $$ := $1 }
-	| Tilde_call_agent
-		{ $$ := $1 }
-	| Static_call_expression
-		{ $$ := $1 }
-	| Call_expression_with_static
-		{ $$ := $1 }
-	;
-
-Typable_expression: Call_expression_without_static
-		{ $$ := $1 }
-	| Precursor_expression
+	| Bracket_expression
 		{ $$ := $1 }
 	| Create_expression
 		{ $$ := $1 }
-	| Call_agent
+	| Manifest_tuple
+		{ $$ := $1 }
+	| '+' Non_binary_expression %prec E_NOT
+		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_plus_operator ($1), $2) }
+	| '-' Non_binary_expression %prec E_NOT
+		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_minus_operator ($1), $2) }
+	| E_NOT Non_binary_expression
+		{ $$ := ast_factory.new_prefix_expression ($1, $2) }
+	| E_FREEOP Non_binary_expression %prec E_NOT
+		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_free_operator ($1), $2) }
+	| E_OLD Non_binary_expression
+		{ $$ := ast_factory.new_old_expression ($1, $2) }
+	;
+
+Bracket_target: Call_expression
+		{ $$ := $1 }
+	| Static_call_expression
+		{ $$ := $1 }
+	| Precursor_expression
 		{ $$ := $1 }
 	| E_RESULT
 		{ $$ := $1 }
 	| E_CURRENT
 		{ $$ := $1 }
-	| E_VOID
-		{ $$ := $1 }
 	| Parenthesized_expression
 		{ $$ := $1 }
 	| Boolean_constant
+		{ $$ := $1 }
+	| E_INTEGER
+	 	{ $$ := $1 }
+	| E_REAL
+		{ $$ := $1 }
+	| Typed_integer_constant
+		{ $$ := $1 }
+	| Typed_real_constant
+		{ $$ := $1 }
+	| Manifest_type
+		{ $$ := $1 }
+	| Tilde_call_agent
+		{ $$ := $1 }
+	| Call_agent
+		{ $$ := $1 }
+	| E_VOID
 		{ $$ := $1 }
 	| Character_constant
 		{ $$ := $1 }
@@ -2818,26 +2813,51 @@ Typable_expression: Call_expression_without_static
 		{ $$ := $1 }
 	| Manifest_array
 		{ $$ := $1 }
-	| Manifest_tuple
-		{ $$ := $1 }
 	| Strip_expression
 		{ $$ := $1 }
 	| Address_mark
 		{ $$ := $1 }
-	| '+' Non_binary_expression_without_unsigned_numeric
-		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_plus_operator ($1), $2) }
-	| '-' Non_binary_expression_without_unsigned_numeric
-		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_minus_operator ($1), $2) }
-	| E_NOT Non_binary_expression
-		{ $$ := ast_factory.new_prefix_expression ($1, $2) }
-	| E_FREEOP Non_binary_expression
-		{ $$ := ast_factory.new_prefix_expression (ast_factory.new_prefix_free_operator ($1), $2) }
-	| E_OLD Non_binary_expression
-		{ $$ := ast_factory.new_old_expression ($1, $2) }
 	;
 
-Typed_expression: '{' Type '}' Typable_expression
-		{ $$ := ast_factory.new_typed_expression (ast_factory.new_target_type ($1, $2, $3), $4) }
+Bracket_expression: Bracket_target '['
+		{
+			add_symbol ($2)
+			add_counter
+		}
+	  Bracket_actual_list
+		{
+			$$ := ast_factory.new_bracket_expression ($1, $2, $4)
+			remove_symbol
+			remove_counter
+		}
+	;
+
+Bracket_actual_list: Expression ']'
+		{
+			if $1 /= Void then
+				$$ := ast_factory.new_bracket_arguments (last_symbol, $2, counter_value + 1)
+				if $$ /= Void then
+					$$.put_first ($1)
+				end
+			else
+				$$ := ast_factory.new_bracket_arguments (last_symbol, $2, counter_value)
+			end
+		}
+	| Expression_comma ']'
+		-- TODO: syntax error.
+		{
+			$$ := ast_factory.new_bracket_arguments (last_symbol, $2, counter_value)
+			if $$ /= Void and $1 /= Void then
+				$$.put_first ($1)
+			end
+		}
+	| Expression_comma Bracket_actual_list
+		{
+			$$ := $2
+			if $$ /= Void and $1 /= Void then
+				$$.put_first ($1)
+			end
+		}
 	;
 
 Parenthesized_expression: '(' Expression ')'
