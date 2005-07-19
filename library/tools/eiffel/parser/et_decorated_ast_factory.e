@@ -168,6 +168,7 @@ inherit
 			new_bang_instruction,
 			new_bit_feature,
 			new_bit_n,
+			new_bracket_arguments,
 			new_check_instruction,
 			new_choice_comma,
 			new_choice_list,
@@ -1049,10 +1050,10 @@ feature -- Eiffel symbols
 			Result.set_break (last_break (False, a_scanner))
 		end
 
-	new_left_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+	new_left_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BRACKET_SYMBOL is
 			-- New '[' symbol
 		do
-			create Result.make_left_bracket
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 			Result.set_break (last_break (False, a_scanner))
 		end
@@ -1734,6 +1735,18 @@ feature -- AST nodes
 				if a_bit /= Void then
 					Result.set_bit_keyword (a_bit)
 				end
+			end
+		end
+
+	new_bracket_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_BRACKET_ARGUMENT_LIST is
+			-- New bracket argument list with given capacity
+		do
+			create Result.make_with_capacity (nb)
+			if a_left /= Void then
+				Result.set_left_symbol (a_left)
+			end
+			if a_right /= Void then
+				Result.set_right_symbol (a_right)
 			end
 		end
 

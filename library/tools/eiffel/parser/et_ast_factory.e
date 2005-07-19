@@ -790,12 +790,12 @@ feature -- Eiffel symbols
 			Result := tokens.left_brace_symbol
 		end
 
-	new_left_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_SYMBOL is
+	new_left_bracket_symbol (a_scanner: ET_EIFFEL_SCANNER_SKELETON): ET_BRACKET_SYMBOL is
 			-- New '[' symbol
 		require
 			a_scanner_not_void: a_scanner /= Void
 		do
-			create Result.make_left_bracket
+			create Result.make
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1627,6 +1627,24 @@ feature -- AST nodes
 				if a_bit /= Void and then not a_bit.position.is_null then
 					Result.set_bit_keyword (a_bit)
 				end
+			end
+		end
+
+	new_bracket_arguments (a_left, a_right: ET_SYMBOL; nb: INTEGER): ET_BRACKET_ARGUMENT_LIST is
+			-- New bracket argument list with given capacity
+		require
+			nb_positive: nb >= 0
+		do
+			if nb > 0 then
+				create Result.make_with_capacity (nb)
+			end
+		end
+
+	new_bracket_expression (a_target: ET_EXPRESSION; a_name: ET_BRACKET_SYMBOL; args: ET_BRACKET_ARGUMENT_LIST): ET_BRACKET_EXPRESSION is
+			-- New bracket expression
+		do
+			if a_target /= Void and a_name /= Void then
+				create Result.make (a_target, a_name, args)
 			end
 		end
 
