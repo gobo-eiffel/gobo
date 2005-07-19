@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			-- Create a new assigner instruction.
 		require
 			a_target_not_void: a_target /= Void
-			a_target_qualified: a_target.is_qualified_call
 			a_source_not_void: a_source /= Void
 		do
 			target := a_target
@@ -124,7 +123,6 @@ feature -- Processing
 invariant
 
 	target_not_void: target /= Void
-	target_qualified: target.is_qualified_call
 	source_not_void: source /= Void
 	assign_symbol_not_void: assign_symbol /= Void
 

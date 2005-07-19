@@ -534,7 +534,7 @@ feature -- Validity checking
 									a_convert_name := a_convert_feature.name
 									a_conversion_feature := a_convert_class.seeded_feature (a_convert_name.seed)
 									if a_conversion_feature /= Void then
-										report_qualified_call_expression (a_convert_to_expression, a_convert_to_expression, actual_context, a_conversion_feature)
+										report_qualified_call_expression (a_convert_to_expression, actual_context, a_conversion_feature)
 									else
 											-- Internal error: the seed of the convert feature should correspond
 											-- to a feature of `a_convert_class'.
@@ -1643,7 +1643,7 @@ feature {NONE} -- Instruction validity
 								a_convert_name := a_convert_feature.name
 								a_conversion_feature := a_convert_class.seeded_feature (a_convert_name.seed)
 								if a_conversion_feature /= Void then
-									report_qualified_call_expression (a_convert_to_expression, a_convert_to_expression, a_source_context, a_conversion_feature)
+									report_qualified_call_expression (a_convert_to_expression, a_source_context, a_conversion_feature)
 								else
 										-- Internal error: the seed of the convert feature should correspond
 										-- to a feature of `a_convert_class'.
@@ -1776,9 +1776,9 @@ feature {NONE} -- Instruction validity
 		do
 			instruction_context.reset (current_type)
 			if an_instruction.is_qualified_call then
-				check_qualified_call_validity (Void, an_instruction, instruction_context)
+				check_qualified_call_validity (an_instruction, instruction_context)
 			else
-				check_unqualified_call_validity (Void, an_instruction, instruction_context)
+				check_unqualified_call_validity (an_instruction, False, instruction_context)
 			end
 		end
 
@@ -2591,7 +2591,7 @@ feature {NONE} -- Instruction validity
 			an_instruction_not_void: an_instruction /= Void
 		do
 			instruction_context.reset (current_type)
-			check_static_call_validity (Void, an_instruction, instruction_context)
+			check_static_call_validity (an_instruction, instruction_context)
 		end
 
 	check_writable_validity (a_writable: ET_WRITABLE; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -2781,7 +2781,7 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		do
-			check_qualified_call_validity (an_expression, an_expression, a_context)
+			check_qualified_call_validity (an_expression, a_context)
 		end
 
 	check_c1_character_constant_validity (a_constant: ET_C1_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -2828,9 +2828,9 @@ feature {NONE} -- Expression validity
 			a_context_not_void: a_context /= Void
 		do
 			if an_expression.is_qualified_call then
-				check_qualified_call_validity (an_expression, an_expression, a_context)
+				check_qualified_call_validity (an_expression, a_context)
 			else
-				check_unqualified_call_validity (an_expression, an_expression, a_context)
+				check_unqualified_call_validity (an_expression, True, a_context)
 			end
 		end
 
@@ -2864,7 +2864,7 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		do
-			check_qualified_call_validity (an_expression, an_expression, a_context)
+			check_qualified_call_validity (an_expression, a_context)
 		end
 
 	check_create_expression_validity (an_expression: ET_CREATE_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -3935,7 +3935,7 @@ feature {NONE} -- Expression validity
 											a_convert_name := a_convert_feature.name
 											a_conversion_feature := a_convert_class.seeded_feature (a_convert_name.seed)
 											if a_conversion_feature /= Void then
-												report_qualified_call_expression (a_convert_to_expression, a_convert_to_expression, l_actual_context, a_conversion_feature)
+												report_qualified_call_expression (a_convert_to_expression, l_actual_context, a_conversion_feature)
 											else
 													-- Internal error: the seed of the convert function should correspond
 													-- to a feature of `a_convert_class'.
@@ -4007,7 +4007,7 @@ feature {NONE} -- Expression validity
 															a_convert_name := a_convert_feature.name
 															a_conversion_feature := a_convert_class.seeded_feature (a_convert_name.seed)
 															if a_conversion_feature /= Void then
-																report_qualified_call_expression (a_convert_to_expression, a_convert_to_expression, l_actual_context, a_conversion_feature)
+																report_qualified_call_expression (a_convert_to_expression, l_actual_context, a_conversion_feature)
 																create a_cast_expression.make (a_convert_to_expression, l_actual_context.named_type (universe))
 																a_cast_expression.set_index (a_convert_to_expression.index)
 															else
@@ -4119,10 +4119,10 @@ feature {NONE} -- Expression validity
 									end
 								end
 								formal_context.remove_last
-								report_qualified_call_expression (an_expression, an_expression, formal_context, a_feature)
+								report_qualified_call_expression (an_expression, formal_context, a_feature)
 							end
 						else
-							report_qualified_call_expression (an_expression, an_expression, a_context, a_feature)
+							report_qualified_call_expression (an_expression, a_context, a_feature)
 							a_context.force_last (a_type)
 						end
 					end
@@ -4550,16 +4550,15 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		do
-			check_qualified_call_validity (an_expression, an_expression, a_context)
+			check_qualified_call_validity (an_expression, a_context)
 		end
 
-	check_qualified_call_validity (an_expression: ET_EXPRESSION; a_call: ET_FEATURE_CALL; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_qualified_call_validity (a_call: ET_FEATURE_CALL; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of qualified call.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
 			qualified_call: a_call.is_qualified_call
-			is_expression: an_expression /= Void implies ANY_.same_objects (a_call, an_expression)
 			a_context_not_void: a_context /= Void
 		local
 			a_target: ET_EXPRESSION
@@ -4659,7 +4658,7 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 					end
 					a_type := a_feature.type
-					if an_expression /= Void then
+					if a_call.is_expression then
 						if a_type = Void then
 								-- In a call expression, `a_feature' has to be a query.
 							set_fatal_error
@@ -4698,14 +4697,14 @@ feature {NONE} -- Expression validity
 											end
 										end
 										formal_context.remove_last
-										report_qualified_call_expression (an_expression, a_call, formal_context, a_feature)
+										report_qualified_call_expression (a_call.as_expression, formal_context, a_feature)
 									end
 								else
-									report_qualified_call_expression (an_expression, a_call, a_context, a_feature)
+									report_qualified_call_expression (a_call.as_expression, a_context, a_feature)
 									a_context.force_last (a_type)
 								end
 							else
-								report_qualified_call_expression (an_expression, a_call, a_context, a_feature)
+								report_qualified_call_expression (a_call.as_expression, a_context, a_feature)
 								a_context.force_last (a_type)
 							end
 						end
@@ -4724,7 +4723,7 @@ feature {NONE} -- Expression validity
 								error_handler.report_giach_error
 							end
 						elseif not has_fatal_error then
-							report_qualified_call_instruction (a_call, a_context, a_feature)
+							report_qualified_call_instruction (a_call.as_instruction, a_context, a_feature)
 						end
 					end
 				end
@@ -5038,15 +5037,14 @@ feature {NONE} -- Expression validity
 			an_expression_not_void: an_expression /= Void
 			a_context_not_void: a_context /= Void
 		do
-			check_static_call_validity (an_expression, an_expression, a_context)
+			check_static_call_validity (an_expression, a_context)
 		end
 
-	check_static_call_validity (an_expression: ET_STATIC_CALL_EXPRESSION; a_call: ET_STATIC_FEATURE_CALL; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_static_call_validity (a_call: ET_STATIC_FEATURE_CALL; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `a_call'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
-			is_expression: an_expression /= Void implies a_call = an_expression
 			a_context_not_void: a_context /= Void
 		local
 			a_class_impl: ET_CLASS
@@ -5140,7 +5138,7 @@ feature {NONE} -- Expression validity
 							set_fatal_error
 						end
 						a_result_type := a_feature.type
-						if an_expression /= Void then
+						if a_call.is_expression then
 -- TODO: check that `a_feature' is a constant attribute or an external function.
 							if a_result_type = Void then
 									-- In a call expression, `a_feature' has to be a query.
@@ -5158,7 +5156,7 @@ feature {NONE} -- Expression validity
 							elseif not has_fatal_error then
 -- TODO: like argument.
 								a_context.force_last (a_result_type)
-								report_static_call_expression (an_expression, a_type, a_feature)
+								report_static_call_expression (a_call.as_expression, a_type, a_feature)
 							end
 						else
 -- TODO: check that `a_feature' is an external procedure.
@@ -5176,7 +5174,7 @@ feature {NONE} -- Expression validity
 									error_handler.report_giacn_error
 								end
 							elseif not has_fatal_error then
-								report_static_call_instruction (a_call, a_type, a_feature)
+								report_static_call_instruction (a_call.as_instruction, a_type, a_feature)
 							end
 						end
 					end
@@ -5362,7 +5360,7 @@ feature {NONE} -- Expression validity
 									a_convert_name := a_convert_feature.name
 									a_conversion_feature := a_convert_class.seeded_feature (a_convert_name.seed)
 									if a_conversion_feature /= Void then
-										report_qualified_call_expression (a_convert_to_expression, a_convert_to_expression, a_source_context, a_conversion_feature)
+										report_qualified_call_expression (a_convert_to_expression, a_source_context, a_conversion_feature)
 									else
 											-- Internal error: the seed of the convert feature should correspond
 											-- to a feature of `a_convert_class'.
@@ -5492,13 +5490,14 @@ feature {NONE} -- Expression validity
 			report_double_constant (a_constant)
 		end
 
-	check_unqualified_call_validity (an_expression: ET_EXPRESSION; a_call: ET_FEATURE_CALL; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_unqualified_call_validity (a_call: ET_FEATURE_CALL; is_expression: BOOLEAN; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of unqualified call.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_call_not_void: a_call /= Void
 			unqualified_call: not a_call.is_qualified_call
-			is_expression: an_expression /= Void implies ANY_.same_objects (a_call, an_expression)
+			is_expression: is_expression implies a_call.is_expression
+			is_instruction: not is_expression implies a_call.is_instruction
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_CALL_NAME
@@ -5557,7 +5556,7 @@ feature {NONE} -- Expression validity
 											-- Do not set the seed of `an_identifier' so that we report
 											-- this error again when checked in a descendant class.
 										an_identifier.set_argument (True)
-										if an_expression = Void then
+										if not is_expression then
 												-- Syntax error: a formal argument cannot be an instruction.
 											set_fatal_error
 												-- Note: ISE 5.4 reports a VKCN-1 here. However
@@ -5594,7 +5593,7 @@ feature {NONE} -- Expression validity
 												-- Do not set the seed of `an_identifier' so that we report
 												-- this error again when checked in a descendant class.
 											an_identifier.set_local (True)
-											if an_expression = Void then
+											if not is_expression then
 													-- Syntax error: a local variable cannot be an instruction.
 												set_fatal_error
 													-- Note: ISE 5.4 reports a VKCN-1 here. However
@@ -5655,7 +5654,7 @@ feature {NONE} -- Expression validity
 						set_fatal_error
 					end
 					a_type := a_feature.type
-					if an_expression /= Void then
+					if is_expression then
 						if a_type = Void then
 								-- In a call expression, `a_feature' has to be a query.
 							set_fatal_error
@@ -5698,7 +5697,7 @@ feature {NONE} -- Expression validity
 							else
 								a_context.force_last (a_type)
 							end
-							report_unqualified_call_expression (an_expression, a_call, a_feature)
+							report_unqualified_call_expression (a_call.as_expression, a_feature)
 						end
 					else
 						if a_type /= Void then
@@ -5715,7 +5714,7 @@ feature {NONE} -- Expression validity
 								error_handler.report_giack_error
 							end
 						elseif not has_fatal_error then
-							report_unqualified_call_instruction (a_call, a_feature)
+							report_unqualified_call_instruction (a_call.as_instruction, a_feature)
 						end
 					end
 				end
@@ -6539,7 +6538,7 @@ feature {NONE} -- Agent validity
 											a_convert_name := a_convert_feature.name
 											a_conversion_feature := a_convert_class.seeded_feature (a_convert_name.seed)
 											if a_conversion_feature /= Void then
-												report_qualified_call_expression (a_convert_to_expression, a_convert_to_expression, l_actual_context, a_conversion_feature)
+												report_qualified_call_expression (a_convert_to_expression, l_actual_context, a_conversion_feature)
 											else
 													-- Internal error: the seed of the convert feature should correspond
 													-- to a feature of `a_convert_class'.
@@ -6973,26 +6972,24 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_qualified_call_expression (an_expression: ET_EXPRESSION; a_call: ET_FEATURE_CALL; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
+	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
 			-- Report that a qualified call expression has been processed.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
-			a_call_not_void: a_call /= Void
-			a_call_expression: ANY_.same_objects (a_call, an_expression)
-			qualified_call: a_call.is_qualified_call
+			qualified_call: an_expression.is_qualified_call
 			a_target_type_not_void: a_target_type /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_query: not a_feature.is_procedure
 		do
 		end
 
-	report_qualified_call_instruction (a_call: ET_FEATURE_CALL; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
+	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
 			-- Report that a qualified call instruction has been processed.
 		require
 			no_error: not has_fatal_error
-			a_call_not_void: a_call /= Void
-			qualified_call: a_call.is_qualified_call
+			an_instruction_not_void: an_instruction /= Void
+			qualified_call: an_instruction.is_qualified_call
 			a_target_type_not_void: a_target_type /= Void
 			a_feature_not_void: a_feature /= Void
 			a_feature_procedure: a_feature.is_procedure
@@ -7036,7 +7033,7 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_static_call_instruction (an_instruction: ET_STATIC_FEATURE_CALL; a_type: ET_TYPE; a_feature: ET_FEATURE) is
+	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a static call instruction has been processed.
 		require
 			no_error: not has_fatal_error
@@ -7093,25 +7090,23 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_unqualified_call_expression (an_expression: ET_EXPRESSION; a_call: ET_FEATURE_CALL; a_feature: ET_FEATURE) is
+	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_feature: ET_FEATURE) is
 			-- Report that an unqualified call expression has been processed.
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
-			a_call_not_void: a_call /= Void
-			a_call_expression: ANY_.same_objects (a_call, an_expression)
-			unqualified_call: not a_call.is_qualified_call
+			unqualified_call: not an_expression.is_qualified_call
 			a_feature_not_void: a_feature /= Void
 			a_feature_query: not a_feature.is_procedure
 		do
 		end
 
-	report_unqualified_call_instruction (a_call: ET_FEATURE_CALL; a_feature: ET_FEATURE) is
+	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_feature: ET_FEATURE) is
 			-- Report that an unqualified call instruction has been processed.
 		require
 			no_error: not has_fatal_error
-			a_call_not_void: a_call /= Void
-			unqualified_call: not a_call.is_qualified_call
+			an_instruction_not_void: an_instruction /= Void
+			unqualified_call: not an_instruction.is_qualified_call
 			a_feature_not_void: a_feature /= Void
 			a_feature_procedure: a_feature.is_procedure
 		do
@@ -7440,13 +7435,13 @@ feature {ET_AST_NODE} -- Processing
 				if in_instruction then
 					in_instruction := False
 					instruction_context.reset (current_type)
-					check_unqualified_call_validity (Void, an_identifier, instruction_context)
+					check_unqualified_call_validity (an_identifier, False, instruction_context)
 				elseif an_identifier.is_argument then
 					check_formal_argument_validity (an_identifier, current_context)
 				elseif an_identifier.is_local then
 					check_local_variable_validity (an_identifier, current_context)
 				else
-					check_unqualified_call_validity (an_identifier, an_identifier, current_context)
+					check_unqualified_call_validity (an_identifier, True, current_context)
 				end
 			end
 		end

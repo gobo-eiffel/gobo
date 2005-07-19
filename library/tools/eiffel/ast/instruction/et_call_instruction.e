@@ -15,6 +15,9 @@ class ET_CALL_INSTRUCTION
 inherit
 
 	ET_REGULAR_FEATURE_CALL
+		undefine
+			is_instruction
+		end
 
 	ET_FEATURE_CALL_INSTRUCTION
 		undefine

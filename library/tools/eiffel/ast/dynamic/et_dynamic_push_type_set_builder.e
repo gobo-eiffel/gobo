@@ -735,7 +735,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_expression (an_expression: ET_EXPRESSION; a_call: ET_FEATURE_CALL; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
+	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
 			-- Report that a qualified call expression has been processed.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
@@ -746,7 +746,7 @@ feature {NONE} -- Event handling
 			l_dynamic_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_target := a_call.target
+				l_target := an_expression.target
 				l_target_type_set := dynamic_type_set (l_target)
 				if l_target_type_set = Void then
 						-- Internal error: the dynamic type sets of the
@@ -754,7 +754,7 @@ feature {NONE} -- Event handling
 					set_fatal_error
 					error_handler.report_gibew_error
 				else
-					create l_dynamic_call.make (a_call, l_target_type_set, current_dynamic_feature, current_dynamic_type)
+					create l_dynamic_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
 					dynamic_qualified_calls.force_last (l_dynamic_call)
 					l_type := a_feature.type
 					if l_type = Void then
@@ -772,7 +772,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_instruction (a_call: ET_FEATURE_CALL; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
+	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
 			-- Report that a qualified call instruction has been processed.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
@@ -780,7 +780,7 @@ feature {NONE} -- Event handling
 			l_target: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_target := a_call.target
+				l_target := an_instruction.target
 				l_target_type_set := dynamic_type_set (l_target)
 				if l_target_type_set = Void then
 						-- Internal error: the dynamic type sets of the
@@ -788,7 +788,7 @@ feature {NONE} -- Event handling
 					set_fatal_error
 					error_handler.report_gibez_error
 				else
-					create l_dynamic_call.make (a_call, l_target_type_set, current_dynamic_feature, current_dynamic_type)
+					create l_dynamic_call.make (an_instruction, l_target_type_set, current_dynamic_feature, current_dynamic_type)
 					dynamic_qualified_calls.force_last (l_dynamic_call)
 					l_target_type_set.put_target (l_dynamic_call, current_system)
 				end
@@ -851,7 +851,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_static_call_instruction (an_instruction: ET_STATIC_FEATURE_CALL; a_type: ET_TYPE; a_feature: ET_FEATURE) is
+	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_feature: ET_FEATURE) is
 			-- Report that a static call instruction has been processed.
 		local
 			i, nb: INTEGER
@@ -1095,7 +1095,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_expression (an_expression: ET_EXPRESSION; a_call: ET_FEATURE_CALL; a_feature: ET_FEATURE) is
+	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_feature: ET_FEATURE) is
 			-- Report that an unqualified call expression has been processed.
 		local
 			i, nb: INTEGER
@@ -1111,7 +1111,7 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_query := current_dynamic_type.dynamic_feature (a_feature, current_system)
 				l_query.set_regular (True)
-				l_actuals := a_call.arguments
+				l_actuals := an_expression.arguments
 				if l_actuals /= Void then
 						-- Dynamic type sets for arguments are stored first
 						-- in `dynamic_type_sets'.
@@ -1204,7 +1204,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_instruction (a_call: ET_FEATURE_CALL; a_feature: ET_FEATURE) is
+	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_feature: ET_FEATURE) is
 			-- Report that an unqualified call instruction has been processed.
 		local
 			i, nb: INTEGER
@@ -1220,7 +1220,7 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_procedure := current_dynamic_type.dynamic_feature (a_feature, current_system)
 				l_procedure.set_regular (True)
-				l_actuals := a_call.arguments
+				l_actuals := an_instruction.arguments
 				if l_actuals /= Void then
 						-- Dynamic type sets for arguments are stored first
 						-- in `dynamic_type_sets'.

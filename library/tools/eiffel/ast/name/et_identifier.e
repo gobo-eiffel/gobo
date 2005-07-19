@@ -73,7 +73,8 @@ inherit
 			name as identifier
 		undefine
 			first_position, last_position,
-			reset, is_equal
+			reset, is_equal, is_instruction,
+			as_instruction
 		end
 
 	ET_FEATURE_CALL_INSTRUCTION
@@ -81,7 +82,8 @@ inherit
 			name as identifier
 		undefine
 			first_position, last_position,
-			reset, is_equal
+			reset, is_equal, is_expression,
+			as_expression
 		end
 
 	KL_IMPORTED_STRING_ROUTINES

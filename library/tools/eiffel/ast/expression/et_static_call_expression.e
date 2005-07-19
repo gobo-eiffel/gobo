@@ -15,6 +15,9 @@ class ET_STATIC_CALL_EXPRESSION
 inherit
 
 	ET_STATIC_FEATURE_CALL
+		redefine
+			is_expression
+		end
 
 	ET_EXPRESSION
 		undefine
@@ -31,6 +34,25 @@ inherit
 create
 
 	make
+
+feature -- Status report
+
+	is_expression: BOOLEAN is True
+			-- Is current call an expression?
+
+feature -- Conversion
+
+	as_expression: ET_STATIC_CALL_EXPRESSION is
+			-- `Current' viewed as an expression
+		do
+			Result := Current
+		end
+
+	as_instruction: ET_STATIC_CALL_INSTRUCTION is
+			-- `Current' viewed as an instruction
+		do
+			check not_instruction: False end
+		end
 
 feature -- Processing
 
