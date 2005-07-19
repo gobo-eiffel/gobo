@@ -286,6 +286,15 @@ feature -- Status report
 			definition: type /= Void and (arguments = Void or else arguments.count = 0)
 		end
 
+	is_bracketable: BOOLEAN is
+			-- Can current feature have a name of
+			-- the form 'alias "[]"'?
+		do
+			-- Result := False
+		ensure
+			definition: type /= Void and (arguments /= Void and then arguments.count > 0)
+		end
+
 	is_immediate: BOOLEAN is True
 			-- Is current feature immediate?
 
@@ -564,26 +573,26 @@ feature -- Duplication
 
 feature -- Conversion
 
-	renamed_feature (a_name: like name): like Current is
+	renamed_feature (a_name: like extended_name): like Current is
 			-- Renamed version of current feature
 		require
 			a_name_not_void: a_name /= Void
 		deferred
 		ensure
 			renamed_feature_not_void: Result /= Void
-			name_set: Result.name = a_name
+			extended_name_set: Result.extended_name = a_name
 			first_precursor_set: Result.first_precursor = first_precursor
 			other_precursors_set: Result.other_precursors = other_precursors
 		end
 
-	undefined_feature (a_name: like name): ET_DEFERRED_ROUTINE is
+	undefined_feature (a_name: like extended_name): ET_DEFERRED_ROUTINE is
 			-- Undefined version of current feature
 		require
 			a_name_not_void: a_name /= Void
 		deferred
 		ensure
 			undefined_feature_not_void: Result /= Void
-			name_set: Result.name = a_name
+			extended_name_set: Result.extended_name = a_name
 			version_set: Result.version = Result.id
 			first_precursor_set: Result.first_precursor = Current
 			other_precursors_set: Result.other_precursors = Void

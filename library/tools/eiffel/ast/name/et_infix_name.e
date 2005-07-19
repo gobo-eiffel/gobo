@@ -157,43 +157,47 @@ feature -- Comparison
 			-- Are `Current' and `other' the same names of the same feature?
 			-- (case insensitive)
 		do
-			inspect code
-			when infix_and_code then
-				Result := other.is_infix_and
-			when infix_and_then_code then
-				Result := other.is_infix_and_then
-			when infix_div_code then
-				Result := other.is_infix_div
-			when infix_divide_code then
-				Result := other.is_infix_divide
-			when infix_ge_code then
-				Result := other.is_infix_ge
-			when infix_gt_code then
-				Result := other.is_infix_gt
-			when infix_implies_code then
-				Result := other.is_infix_implies
-			when infix_le_code then
-				Result := other.is_infix_le
-			when infix_lt_code then
-				Result := other.is_infix_lt
-			when infix_minus_code then
-				Result := other.is_infix_minus
-			when infix_mod_code then
-				Result := other.is_infix_mod
-			when infix_or_code then
-				Result := other.is_infix_or
-			when infix_or_else_code then
-				Result := other.is_infix_or_else
-			when infix_plus_code then
-				Result := other.is_infix_plus
-			when infix_power_code then
-				Result := other.is_infix_power
-			when infix_times_code then
-				Result := other.is_infix_times
-			when infix_xor_code then
-				Result := other.is_infix_xor
+			if other = Current then
+				Result := True
 			else
-				-- Result := False
+				inspect code
+				when infix_and_code then
+					Result := other.is_infix_and
+				when infix_and_then_code then
+					Result := other.is_infix_and_then
+				when infix_div_code then
+					Result := other.is_infix_div
+				when infix_divide_code then
+					Result := other.is_infix_divide
+				when infix_ge_code then
+					Result := other.is_infix_ge
+				when infix_gt_code then
+					Result := other.is_infix_gt
+				when infix_implies_code then
+					Result := other.is_infix_implies
+				when infix_le_code then
+					Result := other.is_infix_le
+				when infix_lt_code then
+					Result := other.is_infix_lt
+				when infix_minus_code then
+					Result := other.is_infix_minus
+				when infix_mod_code then
+					Result := other.is_infix_mod
+				when infix_or_code then
+					Result := other.is_infix_or
+				when infix_or_else_code then
+					Result := other.is_infix_or_else
+				when infix_plus_code then
+					Result := other.is_infix_plus
+				when infix_power_code then
+					Result := other.is_infix_power
+				when infix_times_code then
+					Result := other.is_infix_times
+				when infix_xor_code then
+					Result := other.is_infix_xor
+				else
+					-- Result := False
+				end
 			end
 		end
 
@@ -201,7 +205,11 @@ feature -- Comparison
 			-- Are feature name and `other' the same feature name?
 			-- (case insensitive)
 		do
-			Result := same_call_name (other)
+			if other = Current then
+				Result := True
+			elseif ANY_.same_types (Current, other) then
+				Result := same_call_name (other)
+			end
 		end
 
 feature -- Processing

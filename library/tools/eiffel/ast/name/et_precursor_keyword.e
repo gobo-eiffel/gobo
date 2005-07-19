@@ -56,7 +56,11 @@ feature -- Comparison
 			-- Are `Current' and `other' the same feature call name?
 			-- (case insensitive)
 		do
-			Result := other.is_precursor
+			if Current = other then
+				Result := True
+			else
+				Result := other.is_precursor
+			end
 		end
 
 	is_equal (other: like Current): BOOLEAN is

@@ -16,6 +16,9 @@ inherit
 
 	ET_AST_NODE
 
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
 feature -- Initialization
 
 	reset is
@@ -50,8 +53,13 @@ feature -- Comparison
 					Result := feature_name.same_feature_name (other.feature_name)
 				end
 			elseif other.alias_name /= Void then
-				if alias_name.same_alias_name (other.alias_name) then
-					Result := feature_name.same_feature_name (other.feature_name)
+				if feature_name.same_feature_name (other.feature_name) then
+					if ANY_.same_objects (alias_name, feature_name) then
+							-- This is a 'prefix "..."' or 'infix "..."'.
+						Result := True
+					elseif alias_name.same_alias_name (other.alias_name) then
+						Result := True
+					end
 				end
 			end
 		end

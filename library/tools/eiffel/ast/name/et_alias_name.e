@@ -488,12 +488,16 @@ feature -- Status report
 			-- Can current alias be used as the name of a prefix feature?
 		do
 			Result := is_prefix or is_infix_plus or is_infix_minus
+		ensure
+			is_prefix: is_prefix implies Result
 		end
 
 	is_infixable: BOOLEAN is
 			-- Can current alias be used as the name of an infix feature?
 		do
 			Result := is_infix or is_prefix_plus or is_prefix_minus
+		ensure
+			is_infix: is_infix implies Result
 		end
 
 feature -- Access
@@ -653,53 +657,57 @@ feature -- Comparison
 			-- Are `Current' and `other' the same names of the same feature?
 			-- (case insensitive)
 		do
-			inspect code
-			when alias_bracket_code then
-				Result := other.is_bracket
-			when infix_and_code then
-				Result := other.is_infix_and
-			when infix_and_then_code then
-				Result := other.is_infix_and_then
-			when infix_div_code then
-				Result := other.is_infix_div
-			when infix_divide_code then
-				Result := other.is_infix_divide
-			when infix_ge_code then
-				Result := other.is_infix_ge
-			when infix_gt_code then
-				Result := other.is_infix_gt
-			when infix_implies_code then
-				Result := other.is_infix_implies
-			when infix_le_code then
-				Result := other.is_infix_le
-			when infix_lt_code then
-				Result := other.is_infix_lt
-			when infix_minus_code then
-				Result := other.is_infix_minus
-			when infix_mod_code then
-				Result := other.is_infix_mod
-			when infix_or_code then
-				Result := other.is_infix_or
-			when infix_or_else_code then
-				Result := other.is_infix_or_else
-			when infix_plus_code then
-				Result := other.is_infix_plus
-			when infix_power_code then
-				Result := other.is_infix_power
-			when infix_times_code then
-				Result := other.is_infix_times
-			when infix_xor_code then
-				Result := other.is_infix_xor
-			when infix_dotdot_code then
-				Result := other.is_infix_dotdot
-			when prefix_minus_code then
-				Result := other.is_prefix_minus
-			when prefix_plus_code then
-				Result := other.is_prefix_plus
-			when prefix_not_code then
-				Result := other.is_prefix_not
+			if other = Current then
+				Result := True
 			else
-				-- Result := False
+				inspect code
+				when alias_bracket_code then
+					Result := other.is_bracket
+				when infix_and_code then
+					Result := other.is_infix_and
+				when infix_and_then_code then
+					Result := other.is_infix_and_then
+				when infix_div_code then
+					Result := other.is_infix_div
+				when infix_divide_code then
+					Result := other.is_infix_divide
+				when infix_ge_code then
+					Result := other.is_infix_ge
+				when infix_gt_code then
+					Result := other.is_infix_gt
+				when infix_implies_code then
+					Result := other.is_infix_implies
+				when infix_le_code then
+					Result := other.is_infix_le
+				when infix_lt_code then
+					Result := other.is_infix_lt
+				when infix_minus_code then
+					Result := other.is_infix_minus
+				when infix_mod_code then
+					Result := other.is_infix_mod
+				when infix_or_code then
+					Result := other.is_infix_or
+				when infix_or_else_code then
+					Result := other.is_infix_or_else
+				when infix_plus_code then
+					Result := other.is_infix_plus
+				when infix_power_code then
+					Result := other.is_infix_power
+				when infix_times_code then
+					Result := other.is_infix_times
+				when infix_xor_code then
+					Result := other.is_infix_xor
+				when infix_dotdot_code then
+					Result := other.is_infix_dotdot
+				when prefix_minus_code then
+					Result := other.is_prefix_minus
+				when prefix_plus_code then
+					Result := other.is_prefix_plus
+				when prefix_not_code then
+					Result := other.is_prefix_not
+				else
+					-- Result := False
+				end
 			end
 		end
 
@@ -711,22 +719,20 @@ feature -- Comparison
 		do
 			if other = Current then
 				Result := True
-			elseif ANY_.same_types (Current, other) then
-				if same_call_name (other) then
-					Result := True
+			elseif same_call_name (other) then
+				Result := True
+			else
+				inspect code
+				when infix_plus_code then
+					Result := other.is_prefix_plus
+				when infix_minus_code then
+					Result := other.is_prefix_minus
+				when prefix_plus_code then
+					Result := other.is_infix_plus
+				when prefix_minus_code then
+					Result := other.is_infix_minus
 				else
-					inspect code
-					when infix_plus_code then
-						Result := other.is_prefix_plus
-					when infix_minus_code then
-						Result := other.is_prefix_minus
-					when prefix_plus_code then
-						Result := other.is_infix_plus
-					when prefix_minus_code then
-						Result := other.is_infix_minus
-					else
-						Result := False
-					end
+					Result := False
 				end
 			end
 		end
@@ -754,7 +760,9 @@ feature {NONE} -- Implementation
 
 invariant
 
+	is_alias: is_alias
 	alias_keyword_not_void: alias_keyword /= Void
 	alias_string_not_void: alias_string /= Void
+	alias_kinds: is_infix or is_prefix or is_bracket
 
 end

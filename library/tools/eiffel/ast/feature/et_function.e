@@ -25,13 +25,13 @@ inherit
 		redefine
 			is_function,
 			is_prefixable, is_infixable,
-			undefined_feature,
+			is_bracketable, undefined_feature,
 			resolve_inherited_signature
 		end
 
 	ET_ROUTINE
 		undefine
-			type, is_prefixable, is_infixable
+			type, is_prefixable, is_infixable, is_bracketable
 		redefine
 			is_function
 		end
@@ -55,9 +55,16 @@ feature -- Status report
 			Result := arguments = Void or else arguments.count = 0
 		end
 
+	is_bracketable: BOOLEAN is
+			-- Can current feature have a name of
+			-- the form 'alias "[]"'?
+		do
+			Result := arguments /= Void and then arguments.count > 0
+		end
+
 feature -- Conversion
 
-	undefined_feature (a_name: like name): ET_DEFERRED_FUNCTION is
+	undefined_feature (a_name: like extended_name): ET_DEFERRED_FUNCTION is
 			-- Undefined version of current feature
 		do
 			create Result.make (a_name, arguments, declared_type, assigner, obsolete_message,

@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Conversion
 
-	undefined_feature (a_name: like name): ET_DEFERRED_FUNCTION is
+	undefined_feature (a_name: like extended_name): ET_DEFERRED_FUNCTION is
 			-- Undefined version of current feature
 		do
 			create Result.make (a_name, Void, declared_type, assigner, Void, Void, Void, clients, implementation_class)

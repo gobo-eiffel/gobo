@@ -49,6 +49,8 @@ create
 	make_vdjr0a,
 	make_vdjr0b,
 	make_vdjr0c,
+	make_vdjr2a,
+	make_vdjr2b,
 	make_vdpr1a,
 	make_vdpr1b,
 	make_vdpr2a,
@@ -71,6 +73,9 @@ create
 	make_vdrd5a,
 	make_vdrd6a,
 	make_vdrd6b,
+	make_vdrd7a,
+	make_vdrd7b,
+	make_vdrd7c,
 	make_vdrs1a,
 	make_vdrs2a,
 	make_vdrs2b,
@@ -87,6 +92,18 @@ create
 	make_veen2b,
 	make_veen2c,
 	make_veen2d,
+	make_vfav1a,
+	make_vfav1b,
+	make_vfav1c,
+	make_vfav1d,
+	make_vfav1e,
+	make_vfav1f,
+	make_vfav1g,
+	make_vfav1h,
+	make_vfav2a,
+	make_vfav2b,
+	make_vfav2c,
+	make_vfav2d,
 	make_vffd4a,
 	make_vffd5a,
 	make_vffd6a,
@@ -124,6 +141,9 @@ create
 	make_vhrc1a,
 	make_vhrc2a,
 	make_vhrc4a,
+	make_vhrc4b,
+	make_vhrc4c,
+	make_vhrc4d,
 	make_vhrc5a,
 	make_vjar0a,
 	make_vjar0b,
@@ -143,6 +163,8 @@ create
 	make_vmfn0a,
 	make_vmfn0b,
 	make_vmfn0c,
+	make_vmfn2a,
+	make_vmfn2b,
 	make_vmrc2a,
 	make_vmrc2b,
 	make_vmss1a,
@@ -1513,6 +1535,103 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = second parent base class
 		end
 
+	make_vdjr2a (a_class: like current_class; f1, f2: ET_PARENT_FEATURE) is
+			-- Create a new VDJR-2 error: features `f1' and `f2' are joined/merged,
+			-- but `f1' has an alias and not `f2'.
+			--
+			-- ECMA: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_no_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name = Void
+		do
+			code := vdjr2a_template_code
+			etl_code := vdjr2_etl_code
+			default_template := vdjr2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f1.parent.type.name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.alias_name.name, 7)
+			parameters.put (f1.parent.type.name.name, 8)
+			parameters.put (f2.parent.type.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = first parent base class
+			-- dollar9: $9 = second parent base class
+		end
+
+	make_vdjr2b (a_class: like current_class; f1, f2: ET_PARENT_FEATURE) is
+			-- Create a new VDJR-2 error: features `f1' and `f2' are joined/merged,
+			-- they both have an alias but it is not the same.
+			--
+			-- ECMA: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name /= Void
+			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+		do
+			code := vdjr2b_template_code
+			etl_code := vdjr2_etl_code
+			default_template := vdjr2b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f1.parent.type.name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.alias_name.name, 7)
+			parameters.put (f1.parent.type.name.name, 8)
+			parameters.put (f2.alias_name.name, 9)
+			parameters.put (f2.parent.type.name.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = first parent base class
+			-- dollar9: $9 = second alias name
+			-- dollar10: $10 = second parent base class
+		end
+
 	make_vdpr1a (a_class: like current_class; a_precursor: ET_PRECURSOR_INSTRUCTION) is
 			-- Create a new VDPR-1 error: instruction `a_precursor' does not 
 			-- appear in a routine body in `a_class'.
@@ -2495,6 +2614,150 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = redeclared attribute name
 		end
 
+	make_vdrd7a (a_class: like current_class; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+			-- Create a new VDRD-7 error: `f1' has no alias but its redeclared version
+			-- `f2' has one.
+			--
+			-- ECMA: p.68
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_no_alias: f1.alias_name = Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name /= Void
+		do
+			code := vdrd7a_template_code
+			etl_code := vdrd7_etl_code
+			default_template := vdrd7a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f2.alias_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.parent.type.name.name, 7)
+			parameters.put (f2.name.name, 8)
+			parameters.put (f2.alias_name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = inherited feature name
+			-- dollar7: $7 = parent base class
+			-- dollar8: $8 = redeclared feature name
+			-- dollar9: $9 = redeclared alias name
+		end
+
+	make_vdrd7b (a_class: like current_class; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+			-- Create a new VDRD-7 error: `f1' has an alias but its redeclared version
+			-- `f2' has none.
+			--
+			-- ECMA: p.68
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_no_alias: f2.alias_name = Void
+		do
+			code := vdrd7b_template_code
+			etl_code := vdrd7_etl_code
+			default_template := vdrd7b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f2.name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.alias_name.name, 7)
+			parameters.put (f1.parent.type.name.name, 8)
+			parameters.put (f2.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = inherited feature name
+			-- dollar7: $7 = inherited alias name
+			-- dollar8: $8 = parent base class
+			-- dollar9: $9 = redeclared feature name
+		end
+
+	make_vdrd7c (a_class: like current_class; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+			-- Create a new VDRD-7 error: `f1' and its redeclared version `f2'
+			-- have both an alias, but it is not the same.
+			--
+			-- ECMA: p.68
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name /= Void
+			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+		do
+			code := vdrd7c_template_code
+			etl_code := vdrd7_etl_code
+			default_template := vdrd7c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f2.alias_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.alias_name.name, 7)
+			parameters.put (f1.parent.type.name.name, 8)
+			parameters.put (f2.name.name, 9)
+			parameters.put (f2.alias_name.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = inherited feature name
+			-- dollar7: $7 = inherited alias name
+			-- dollar8: $8 = parent base class
+			-- dollar9: $9 = redeclared feature name
+			-- dollar10: $10 = redeclared alias name
+		end
+
 	make_vdrs1a (a_class: like current_class; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
 			-- Create a new VDRS-1 error: the Redefine subclause of
 			-- `a_parent' in `a_class' lists `f' which is not the final
@@ -2973,205 +3236,6 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = parent base class
 		end
 
-	make_vffd4a (a_class: like current_class; a_feature: ET_FEATURE) is
-			-- Create a new VFFD-4 error: deferred `a_feature' is marked as frozen.
-			--
-			-- ETL2: p.69
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_deferred: a_feature.is_deferred
-			a_feature_frozen: a_feature.is_frozen
-		do
-			code := vffd4a_template_code
-			etl_code := vffd4_etl_code
-			default_template := vffd4a_default_template
-			current_class := a_class
-			class_impl := a_class
-			position := a_feature.name.position
-			create parameters.make (1, 6)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_feature.name.name, 6)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = feature name
-		end
-
-	make_vffd5a (a_class: like current_class; a_feature: ET_FEATURE) is
-			-- Create a new VFFD-5 error: `a_feature' has a prefix name but is
-			-- not an attribute or a function with no argument.
-			--
-			-- ETL2: p.69
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_prefix: a_feature.name.is_prefix
-			a_feature_not_prefixable: not a_feature.is_prefixable
-		do
-			code := vffd5a_template_code
-			etl_code := vffd5_etl_code
-			default_template := vffd5a_default_template
-			current_class := a_class
-			class_impl := a_class
-			position := a_feature.name.position
-			create parameters.make (1, 6)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_feature.name.name, 6)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = feature name
-		end
-
-	make_vffd6a (a_class: like current_class; a_feature: ET_FEATURE) is
-			-- Create a new VFFD-6 error: `a_feature' has an infix name but is
-			-- not a function with exactly one argument.
-			--
-			-- ETL2: p.69
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_infix: a_feature.name.is_infix
-			a_feature_not_infixable: not a_feature.is_infixable
-		do
-			code := vffd6a_template_code
-			etl_code := vffd6_etl_code
-			default_template := vffd6a_default_template
-			current_class := a_class
-			class_impl := a_class
-			position := a_feature.name.position
-			create parameters.make (1, 6)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_feature.name.name, 6)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = feature name
-		end
-
-	make_vffd7a (a_class: like current_class; a_feature: ET_FEATURE) is
-			-- Create a new VFFD-7 error: the type of the once function `a_feature'
-			-- contains an anchored type.
-			--
-			-- ETL2: p.69
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_once: a_feature.is_once
-			a_feature_function: a_feature.type /= Void
-		do
-			code := vffd7a_template_code
-			etl_code := vffd7_etl_code
-			default_template := vffd7a_default_template
-			current_class := a_class
-			class_impl := a_class
-			position := a_feature.name.position
-			create parameters.make (1, 6)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_feature.name.name, 6)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = feature name
-		end
-
-	make_vffd7b (a_class: like current_class; a_feature: ET_FEATURE) is
-			-- Create a new VFFD-7 error: the type of the once function `a_feature'
-			-- contains an formal generic parameter.
-			--
-			-- ETL2: p.69
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_once: a_feature.is_once
-			a_feature_function: a_feature.type /= Void
-		do
-			code := vffd7b_template_code
-			etl_code := vffd7_etl_code
-			default_template := vffd7b_default_template
-			current_class := a_class
-			class_impl := a_class
-			position := a_feature.name.position
-			create parameters.make (1, 6)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_feature.name.name, 6)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = feature name
-		end
-
 	make_veen0a (a_class: like current_class; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE) is
 			-- Create a new VEEN error: `an_identifier', appearing in `a_feature'
 			-- of `class', is not the final name of a feature in `a_class'
@@ -3372,6 +3436,793 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
+		end
+
+	make_vfav1a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFAV-1 error: `a_feature' has an infix operator alias
+			-- but is not a function with exactly one argument.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_alias: a_feature.alias_name /= Void
+			a_feature_alias_infix: a_feature.alias_name.is_infix
+			a_feature_not_infixable: not a_feature.is_infixable
+		do
+			code := vfav1a_template_code
+			etl_code := vfav1_etl_code
+			default_template := vfav1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.alias_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			parameters.put (a_feature.alias_name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = alias name
+		end
+
+	make_vfav1b (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFAV-1 error: `a_feature' has a prefix operator alias
+			-- but is not a query with no argument.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_alias: a_feature.alias_name /= Void
+			a_feature_alias_prefix: a_feature.alias_name.is_prefix
+			a_feature_not_prefixable: not a_feature.is_prefixable
+		do
+			code := vfav1b_template_code
+			etl_code := vfav1_etl_code
+			default_template := vfav1b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.alias_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			parameters.put (a_feature.alias_name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = alias name
+		end
+
+	make_vfav1c (a_class: like current_class; a_feature1, a_feature2: ET_FEATURE) is
+			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same unary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+		do
+			code := vfav1c_template_code
+			etl_code := vfav1_etl_code
+			default_template := vfav1c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.alias_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature1.name.name, 6)
+			parameters.put (a_feature1.alias_name.name, 7)
+			parameters.put (a_feature2.name.name, 8)
+			parameters.put (a_feature2.alias_name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = second feature name
+			-- dollar9: $9 = second alias name
+		end
+
+	make_vfav1d (a_class: like current_class; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE) is
+			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same unary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+		do
+			code := vfav1d_template_code
+			etl_code := vfav1_etl_code
+			default_template := vfav1d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.alias_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature1.name.name, 6)
+			parameters.put (a_feature1.alias_name.name, 7)
+			parameters.put (a_feature2.name.name, 8)
+			parameters.put (a_feature2.alias_name.name, 9)
+			parameters.put (a_feature2.parent.type.name.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = second feature name
+			-- dollar9: $9 = second alias name
+			-- dollar10: $10 = second parent base class
+		end
+
+	make_vfav1e (a_class: like current_class; a_feature1, a_feature2: ET_PARENT_FEATURE) is
+			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same unary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+		do
+			code := vfav1e_template_code
+			etl_code := vfav1_etl_code
+			default_template := vfav1e_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.parent.type.name.position
+			create parameters.make (1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature1.name.name, 6)
+			parameters.put (a_feature1.alias_name.name, 7)
+			parameters.put (a_feature1.parent.type.name.name, 8)
+			parameters.put (a_feature2.name.name, 9)
+			parameters.put (a_feature2.alias_name.name, 10)
+			parameters.put (a_feature2.parent.type.name.name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = first parent base class
+			-- dollar9: $9 = second feature name
+			-- dollar10: $10 = second alias name
+			-- dollar11: $11 = second parent base class
+		end
+
+	make_vfav1f (a_class: like current_class; a_feature1, a_feature2: ET_FEATURE) is
+			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same binary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+		do
+			code := vfav1f_template_code
+			etl_code := vfav1_etl_code
+			default_template := vfav1f_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.alias_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature1.name.name, 6)
+			parameters.put (a_feature1.alias_name.name, 7)
+			parameters.put (a_feature2.name.name, 8)
+			parameters.put (a_feature2.alias_name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = second feature name
+			-- dollar9: $9 = second alias name
+		end
+
+	make_vfav1g (a_class: like current_class; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE) is
+			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same binary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+		do
+			code := vfav1g_template_code
+			etl_code := vfav1_etl_code
+			default_template := vfav1g_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.alias_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature1.name.name, 6)
+			parameters.put (a_feature1.alias_name.name, 7)
+			parameters.put (a_feature2.name.name, 8)
+			parameters.put (a_feature2.alias_name.name, 9)
+			parameters.put (a_feature2.parent.type.name.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = second feature name
+			-- dollar9: $9 = second alias name
+			-- dollar10: $10 = second parent base class
+		end
+
+	make_vfav1h (a_class: like current_class; a_feature1, a_feature2: ET_PARENT_FEATURE) is
+			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same binary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+		do
+			code := vfav1h_template_code
+			etl_code := vfav1_etl_code
+			default_template := vfav1h_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.parent.type.name.position
+			create parameters.make (1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature1.name.name, 6)
+			parameters.put (a_feature1.alias_name.name, 7)
+			parameters.put (a_feature1.parent.type.name.name, 8)
+			parameters.put (a_feature2.name.name, 9)
+			parameters.put (a_feature2.alias_name.name, 10)
+			parameters.put (a_feature2.parent.type.name.name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = first parent base class
+			-- dollar9: $9 = second feature name
+			-- dollar10: $10 = second alias name
+			-- dollar11: $11 = second parent base class
+		end
+
+	make_vfav2a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFAV-2 error: `a_feature' has a bracket alias
+			-- but is not a function with at least one argument.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_alias: a_feature.alias_name /= Void
+			a_feature_alias_bracket: a_feature.alias_name.is_bracket
+			a_feature_not_bracketable: not a_feature.is_bracketable
+		do
+			code := vfav2a_template_code
+			etl_code := vfav2_etl_code
+			default_template := vfav2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.alias_name.position
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			parameters.put (a_feature.alias_name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = alias name
+		end
+
+	make_vfav2b (a_class: like current_class; a_feature1, a_feature2: ET_FEATURE) is
+			-- Create a new VFAV-2 error: `a_feature1' and `a_feature2' have both
+			-- a bracket alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+		do
+			code := vfav2b_template_code
+			etl_code := vfav2_etl_code
+			default_template := vfav2b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.alias_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature1.name.name, 6)
+			parameters.put (a_feature1.alias_name.name, 7)
+			parameters.put (a_feature2.name.name, 8)
+			parameters.put (a_feature2.alias_name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = second feature name
+			-- dollar9: $9 = second alias name
+		end
+
+	make_vfav2c (a_class: like current_class; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE) is
+			-- Create a new VFAV-2 error: `a_feature1' and `a_feature2' have both
+			-- a bracket alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+		do
+			code := vfav2c_template_code
+			etl_code := vfav2_etl_code
+			default_template := vfav2c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.alias_name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature1.name.name, 6)
+			parameters.put (a_feature1.alias_name.name, 7)
+			parameters.put (a_feature2.name.name, 8)
+			parameters.put (a_feature2.alias_name.name, 9)
+			parameters.put (a_feature2.parent.type.name.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = second feature name
+			-- dollar9: $9 = second alias name
+			-- dollar10: $10 = second parent base class
+		end
+
+	make_vfav2d (a_class: like current_class; a_feature1, a_feature2: ET_PARENT_FEATURE) is
+			-- Create a new VFAV-2 error: `a_feature1' and `a_feature2' have both
+			-- a bracket alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+		do
+			code := vfav2d_template_code
+			etl_code := vfav2_etl_code
+			default_template := vfav2d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature1.parent.type.name.position
+			create parameters.make (1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature1.name.name, 6)
+			parameters.put (a_feature1.alias_name.name, 7)
+			parameters.put (a_feature1.parent.type.name.name, 8)
+			parameters.put (a_feature2.name.name, 9)
+			parameters.put (a_feature2.alias_name.name, 10)
+			parameters.put (a_feature2.parent.type.name.name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = first parent base class
+			-- dollar9: $9 = second feature name
+			-- dollar10: $10 = second alias name
+			-- dollar11: $11 = second parent base class
+		end
+
+	make_vffd4a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFFD-4 error: deferred `a_feature' is marked as frozen.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_deferred: a_feature.is_deferred
+			a_feature_frozen: a_feature.is_frozen
+		do
+			code := vffd4a_template_code
+			etl_code := vffd4_etl_code
+			default_template := vffd4a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_vffd5a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFFD-5 error: `a_feature' has a prefix name but is
+			-- not an attribute or a function with no argument.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_name_prefix: a_feature.name.is_prefix
+			a_feature_not_prefixable: not a_feature.is_prefixable
+		do
+			code := vffd5a_template_code
+			etl_code := vffd5_etl_code
+			default_template := vffd5a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_vffd6a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFFD-6 error: `a_feature' has an infix name but is
+			-- not a function with exactly one argument.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_name_infix: a_feature.name.is_infix
+			a_feature_not_infixable: not a_feature.is_infixable
+		do
+			code := vffd6a_template_code
+			etl_code := vffd6_etl_code
+			default_template := vffd6a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_vffd7a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFFD-7 error: the type of the once function `a_feature'
+			-- contains an anchored type.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_once: a_feature.is_once
+			a_feature_function: a_feature.type /= Void
+		do
+			code := vffd7a_template_code
+			etl_code := vffd7_etl_code
+			default_template := vffd7a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_vffd7b (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new VFFD-7 error: the type of the once function `a_feature'
+			-- contains an formal generic parameter.
+			--
+			-- ETL2: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_once: a_feature.is_once
+			a_feature_function: a_feature.type /= Void
+		do
+			code := vffd7b_template_code
+			etl_code := vffd7_etl_code
+			default_template := vffd7b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
 		end
 
 	make_vgcc3a (a_class: like current_class; a_creation: ET_CREATION_INSTRUCTION;
@@ -4768,6 +5619,159 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = parent base class
 		end
 
+	make_vhrc4b (a_class: like current_class; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
+			-- Create a new VHRC-4 error: the Rename_pair
+			-- `a_rename' has a new_name with a bracket alias,
+			-- but the corresponding feature `f' is not a
+			-- function with at least one argument.
+			--
+			-- ECMA: p.46
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: a_rename.new_name.alias_name /= Void
+			a_rename_alias_bracket: a_rename.new_name.alias_name.is_bracket
+			f_not_void: f /= Void
+			f_not_brackable: not f.is_bracketable
+		do
+			code := vhrc4b_template_code
+			etl_code := vhrc4_etl_code
+			default_template := vhrc4b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename.new_name.alias_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_rename.new_name.feature_name.name, 6)
+			parameters.put (a_rename.new_name.alias_name.name, 7)
+			parameters.put (f.name.name, 8)
+			parameters.put (a_parent.type.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = new feature name
+			-- dollar7: $7 = new alias name
+			-- dollar8: $8 = old feature name
+			-- dollar9: $9 = parent base class
+		end
+
+	make_vhrc4c (a_class: like current_class; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
+			-- Create a new VHRC-4 error: the Rename_pair `a_rename' has
+			-- a new_name with a binary operator alias,
+			-- but the corresponding feature `f' is not a
+			-- function with exactly one argument.
+			--
+			-- ECMA: p.46
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: a_rename.new_name.alias_name /= Void
+			a_rename_alias_infix: a_rename.new_name.alias_name.is_infix
+			f_not_void: f /= Void
+			f_not_infixable: not f.is_infixable
+		do
+			code := vhrc4c_template_code
+			etl_code := vhrc4_etl_code
+			default_template := vhrc4c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename.new_name.alias_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_rename.new_name.feature_name.name, 6)
+			parameters.put (a_rename.new_name.alias_name.name, 7)
+			parameters.put (f.name.name, 8)
+			parameters.put (a_parent.type.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = new feature name
+			-- dollar7: $7 = new alias name
+			-- dollar8: $8 = old feature name
+			-- dollar9: $9 = parent base class
+		end
+
+	make_vhrc4d (a_class: like current_class; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
+			-- Create a new VHRC-4 error: the Rename_pair `a_rename' has
+			-- a new_name with a unary operator alias,
+			-- but the corresponding feature `f' is not a
+			-- query with no argument.
+			--
+			-- ECMA: p.46
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: a_rename.new_name.alias_name /= Void
+			a_rename_alias_prefix: a_rename.new_name.alias_name.is_prefix
+			f_not_void: f /= Void
+			f_not_prefixable: not f.is_prefixable
+		do
+			code := vhrc4d_template_code
+			etl_code := vhrc4_etl_code
+			default_template := vhrc4d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename.new_name.alias_name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_rename.new_name.feature_name.name, 6)
+			parameters.put (a_rename.new_name.alias_name.name, 7)
+			parameters.put (f.name.name, 8)
+			parameters.put (a_parent.type.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = new feature name
+			-- dollar7: $7 = new alias name
+			-- dollar8: $8 = old feature name
+			-- dollar9: $9 = parent base class
+		end
+
 	make_vhrc5a (a_class: like current_class; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
 			-- Create a new VHRC-5 error: the Rename_pair `a_rename' has
 			-- a new_name of the Infix form, but the corresponding feature
@@ -5597,6 +6601,103 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = first parent base class
 			-- dollar8: $8 = second feature name
 			-- dollar9: $9 = second parent base class
+		end
+
+	make_vmfn2a (a_class: like current_class; f1, f2: ET_PARENT_FEATURE) is
+			-- Create a new VMFN-2 error: features `f1' and `f2' are shared,
+			-- but `f1' has an alias and not `f2'.
+			--
+			-- ECMA: p.93
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_no_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name = Void
+		do
+			code := vmfn2a_template_code
+			etl_code := vmfn2_etl_code
+			default_template := vmfn2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f1.parent.type.name.position
+			create parameters.make (1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.alias_name.name, 7)
+			parameters.put (f1.parent.type.name.name, 8)
+			parameters.put (f2.parent.type.name.name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = first parent base class
+			-- dollar9: $9 = second parent base class
+		end
+
+	make_vmfn2b (a_class: like current_class; f1, f2: ET_PARENT_FEATURE) is
+			-- Create a new VMFN-2 error: features `f1' and `f2' are shared,
+			-- they both have an alias but it is not the same.
+			--
+			-- ECMA: p.93
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name /= Void
+			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+		do
+			code := vmfn2b_template_code
+			etl_code := vmfn2_etl_code
+			default_template := vmfn2b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := f1.parent.type.name.position
+			create parameters.make (1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (f1.name.name, 6)
+			parameters.put (f1.alias_name.name, 7)
+			parameters.put (f1.parent.type.name.name, 8)
+			parameters.put (f2.alias_name.name, 9)
+			parameters.put (f2.parent.type.name.name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+			-- dollar7: $7 = first alias name
+			-- dollar8: $8 = first parent base class
+			-- dollar9: $9 = second alias name
+			-- dollar10: $10 = second parent base class
 		end
 
 	make_vmrc2a (a_class: like current_class; replicated_features: DS_LIST [ET_PARENT_FEATURE]) is
@@ -9768,6 +10869,8 @@ feature {NONE} -- Implementation
 	vdjr0a_default_template: STRING is "[$1] class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Different number of arguments."
 	vdjr0b_default_template: STRING is "[$1] class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of argument number $9 differs."
 	vdjr0c_default_template: STRING is "[$1] class $5 ($3,$4): joined deferred features `$6' inherited from $7 and $8 don't have the same signature. Type of result differs."
+	vdjr2a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' inherited from $8 has an alias `$7' but the version inherited from $9 has none."
+	vdjr2b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' inherited from $8 has an alias `$7' but the version inherited from $10 has a different one `$9'."
 	vdpr1a_default_template: STRING is "[$1] class $5 ($3,$4): Precursor instruction does not appear in a Routine_body."
 	vdpr1b_default_template: STRING is "[$1] class $5 ($3,$4): Precursor expression does not appear in a Routine_body."
 	vdpr2a_default_template: STRING is "[$1] class $5 ($3,$4): class $6 in Precursor construct is not a parent of class $5."
@@ -9790,6 +10893,9 @@ feature {NONE} -- Implementation
 	vdrd5a_default_template: STRING is "[$1] class $5 ($3,$4): effective feature `$6' inherited from $7 is redefined into a deferred one."
 	vdrd6a_default_template: STRING is "[$1] class $5 ($3,$4): attribute `$6' inherited from $7 is not redeclared into an attribute."
 	vdrd6b_default_template: STRING is "[$1] class $5 ($3,$4): attribute `$6' inherited from $7 and its redeclared version don't have the same type expandedness."
+	vdrd7a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' inherited from $7 has no alias but its redeclared version has one `$9'."
+	vdrd7b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' inherited from $8 has an alias `$7' but its redeclared version has none."
+	vdrd7c_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' inherited from $8 has an alias `$7' but its redeclared version has a different one `$10'."
 	vdrs1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
 	vdrs2a_default_template: STRING is "[$1] class $5 ($3,$4): cannot redefine the frozen feature `$6'."
 	vdrs2b_default_template: STRING is "[$1] class $5 ($3,$4): cannot redefine the constant attribute `$6'."
@@ -9806,6 +10912,18 @@ feature {NONE} -- Implementation
 	veen2b_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the precondition of feature `$6'."
 	veen2c_default_template: STRING is "[$1] class $5 ($3,$4): local entity `$6' appears in the precondition or postcondition of feature `$7'."
 	veen2d_default_template: STRING is "[$1] class $5 ($3,$4): entity 'Result' appears in the invariant of the class."
+	vfav1a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' has a binary Operator alias `$7' but is not a query with at exactly one argument."
+	vfav1b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' has a unary Operator alias `$7' but is not a query with no argument."
+	vfav1c_default_template: STRING is "[$1] class $5 ($3,$4): features `$6' and `$8' have both the same unary Operator alias `$7'."
+	vfav1d_default_template: STRING is "[$1] class $5 ($3,$4): features `$6' and `$8' inherited from $10 have both the same unary Operator alias `$7'."
+	vfav1e_default_template: STRING is "[$1] class $5 ($3,$4): features `$6' inherited from $8 and `$9' inherited from $11 have both the same unary Operator alias `$7'."
+	vfav1f_default_template: STRING is "[$1] class $5 ($3,$4): features `$6' and `$8' have both the same binary Operator alias `$7'."
+	vfav1g_default_template: STRING is "[$1] class $5 ($3,$4): features `$6' and `$8' inherited from $10 have both the same binary Operator alias `$7'."
+	vfav1h_default_template: STRING is "[$1] class $5 ($3,$4): features `$6' inherited from $8 and `$9' inherited from $11 have both the same binary Operator alias `$7'."
+	vfav2a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' has a Bracket alias `$7' but is not a query with at least one argument."
+	vfav2b_default_template: STRING is "[$1] class $5 ($3,$4): features `$6' and `$8' have both the same Bracket alias `$7'."
+	vfav2c_default_template: STRING is "[$1] class $5 ($3,$4): features `$6' and `$8' inherited from $10 have both the same Bracket alias `$7'."
+	vfav2d_default_template: STRING is "[$1] class $5 ($3,$4): features `$6' inherited from $8 and `$9' inherited from $11 have both the same Bracket alias `$7'."
 	vffd4a_default_template: STRING is "[$1] class $5 ($3,$4): deferred feature `$6' is marked as frozen."
 	vffd5a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' has a Prefix name but is not an attribute or a function with no argument."
 	vffd6a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' has an Infix name but is not a function with exactly one argument."
@@ -9843,6 +10961,9 @@ feature {NONE} -- Implementation
 	vhrc1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
 	vhrc2a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears as first element of two Rename_pairs."
 	vhrc4a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is of the Prefix form but `$7' in $8 is not an attribute nor a function with no argument."
+	vhrc4b_default_template: STRING is "[$1] class $5 ($3,$4): `$6' has a Bracket alias `$7' but `$8' in $9 is not a query with at least one argument."
+	vhrc4c_default_template: STRING is "[$1] class $5 ($3,$4): `$6' has a binary Operator alias `$7' but `$8' in $9 is not a query with exactly one argument."
+	vhrc4d_default_template: STRING is "[$1] class $5 ($3,$4): `$6' has a unary Operator alias `$7' but `$8' in $9 is not a query with no argument."
 	vhrc5a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is of the Infix form but `$7' in $8 is not a function with one argument."
 	vjar0a_default_template: STRING is "[$1] class $5 ($3,$4): the source of the assignment (of type '$6') does not conform to its target entity (of type '$7')."
 	vjar0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the source of the assignment (of type '$7') does not conform to its target entity (of type '$8')."
@@ -9862,6 +10983,8 @@ feature {NONE} -- Implementation
 	vmfn0a_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6'."
 	vmfn0b_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6' in current class and `$7' inherited from $8."
 	vmfn0c_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6' inherited from $7 and `$8' inherited from $9."
+	vmfn2a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' inherited from $8 has an alias `$7' but the version inherited from $9 has none."
+	vmfn2b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' inherited from $8 has an alias `$7' but the version inherited from $10 has a different one `$9'."
 	vmrc2a_default_template: STRING is "[$1] class $5 ($3,$4): replicated features $6 have not been selected."
 	vmrc2b_default_template: STRING is "[$1] class $5 ($3,$4): replicated features $6 have been selected more than once."
 	vmss1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
@@ -9963,6 +11086,7 @@ feature {NONE} -- Implementation
 	vcfg2_etl_code: STRING is "VCFG-2"
 	vcfg3_etl_code: STRING is "VCFG-3"
 	vdjr_etl_code: STRING is "VDJR"
+	vdjr2_etl_code: STRING is "VDJR-2"
 	vdpr1_etl_code: STRING is "VDPR-1"
 	vdpr2_etl_code: STRING is "VDPR-2"
 	vdpr3_etl_code: STRING is "VDPR-3"
@@ -9973,6 +11097,7 @@ feature {NONE} -- Implementation
 	vdrd4_etl_code: STRING is "VDRD-4"
 	vdrd5_etl_code: STRING is "VDRD-5"
 	vdrd6_etl_code: STRING is "VDRD-6"
+	vdrd7_etl_code: STRING is "VDRD-7"
 	vdrs1_etl_code: STRING is "VDRS-1"
 	vdrs2_etl_code: STRING is "VDRS-2"
 	vdrs3_etl_code: STRING is "VDRS-3"
@@ -9983,6 +11108,8 @@ feature {NONE} -- Implementation
 	vdus4_etl_code: STRING is "VDUS-4"
 	veen_etl_code: STRING is "VEEN"
 	veen2_etl_code: STRING is "VEEN-2"
+	vfav1_etl_code: STRING is "VFAV-1"
+	vfav2_etl_code: STRING is "VFAV-2"
 	vffd4_etl_code: STRING is "VFFD-4"
 	vffd5_etl_code: STRING is "VFFD-5"
 	vffd6_etl_code: STRING is "VFFD-6"
@@ -10010,6 +11137,7 @@ feature {NONE} -- Implementation
 	vlel2_etl_code: STRING is "VLEL-2"
 	vlel3_etl_code: STRING is "VLEL-3"
 	vmfn_etl_code: STRING is "VMFN"
+	vmfn2_etl_code: STRING is "VMFN-2"
 	vmrc2_etl_code: STRING is "VMRC-2"
 	vmss1_etl_code: STRING is "VMSS-1"
 	vmss2_etl_code: STRING is "VMSS-2"
@@ -10090,6 +11218,8 @@ feature {NONE} -- Implementation
 	vdjr0a_template_code: STRING is "vdjr0a"
 	vdjr0b_template_code: STRING is "vdjr0b"
 	vdjr0c_template_code: STRING is "vdjr0c"
+	vdjr2a_template_code: STRING is "vdjr2a"
+	vdjr2b_template_code: STRING is "vdjr2b"
 	vdpr1a_template_code: STRING is "vdpr1a"
 	vdpr1b_template_code: STRING is "vdpr1b"
 	vdpr2a_template_code: STRING is "vdpr2a"
@@ -10112,6 +11242,9 @@ feature {NONE} -- Implementation
 	vdrd5a_template_code: STRING is "vdrd5a"
 	vdrd6a_template_code: STRING is "vdrd6a"
 	vdrd6b_template_code: STRING is "vdrd6b"
+	vdrd7a_template_code: STRING is "vdrd7a"
+	vdrd7b_template_code: STRING is "vdrd7b"
+	vdrd7c_template_code: STRING is "vdrd7c"
 	vdrs1a_template_code: STRING is "vdrs1a"
 	vdrs2a_template_code: STRING is "vdrs2a"
 	vdrs2b_template_code: STRING is "vdrs2b"
@@ -10128,6 +11261,18 @@ feature {NONE} -- Implementation
 	veen2b_template_code: STRING is "veen2b"
 	veen2c_template_code: STRING is "veen2c"
 	veen2d_template_code: STRING is "veen2d"
+	vfav1a_template_code: STRING is "vfav1a"
+	vfav1b_template_code: STRING is "vfav1b"
+	vfav1c_template_code: STRING is "vfav1c"
+	vfav1d_template_code: STRING is "vfav1d"
+	vfav1e_template_code: STRING is "vfav1e"
+	vfav1f_template_code: STRING is "vfav1f"
+	vfav1g_template_code: STRING is "vfav1g"
+	vfav1h_template_code: STRING is "vfav1h"
+	vfav2a_template_code: STRING is "vfav2a"
+	vfav2b_template_code: STRING is "vfav2b"
+	vfav2c_template_code: STRING is "vfav2c"
+	vfav2d_template_code: STRING is "vfav2d"
 	vffd4a_template_code: STRING is "vffd4a"
 	vffd5a_template_code: STRING is "vffd5a"
 	vffd6a_template_code: STRING is "vffd6a"
@@ -10165,6 +11310,9 @@ feature {NONE} -- Implementation
 	vhrc1a_template_code: STRING is "vhrc1a"
 	vhrc2a_template_code: STRING is "vhrc2a"
 	vhrc4a_template_code: STRING is "vhrc4a"
+	vhrc4b_template_code: STRING is "vhrc4b"
+	vhrc4c_template_code: STRING is "vhrc4c"
+	vhrc4d_template_code: STRING is "vhrc4d"
 	vhrc5a_template_code: STRING is "vhrc5a"
 	vjar0a_template_code: STRING is "vjar0a"
 	vjar0b_template_code: STRING is "vjar0b"
@@ -10184,6 +11332,8 @@ feature {NONE} -- Implementation
 	vmfn0a_template_code: STRING is "vmfn0a"
 	vmfn0b_template_code: STRING is "vmfn0b"
 	vmfn0c_template_code: STRING is "vmfn0c"
+	vmfn2a_template_code: STRING is "vmfn2a"
+	vmfn2b_template_code: STRING is "vmfn2b"
 	vmrc2a_template_code: STRING is "vmrc2a"
 	vmrc2b_template_code: STRING is "vmrc2b"
 	vmss1a_template_code: STRING is "vmss1a"

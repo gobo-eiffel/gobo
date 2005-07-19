@@ -76,6 +76,14 @@ feature -- Access
 			definition: Result = parent_feature.name
 		end
 
+	alias_name: ET_ALIAS_NAME is
+			-- Alias name, if any
+		do
+			Result := parent_feature.alias_name
+		ensure then
+			definition: Result = parent_feature.alias_name
+		end
+
 	type: ET_TYPE is
 			-- Return type;
 			-- Void for procedures
@@ -275,7 +283,6 @@ feature -- Element change
 				end
 			end
 		end
-
 
 	add_replicated_feature (a_feature: ET_PARENT_FEATURE) is
 			-- Add `a_feature' to `replicated_features'.

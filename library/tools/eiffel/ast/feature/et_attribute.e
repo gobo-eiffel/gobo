@@ -88,7 +88,7 @@ feature -- Duplication
 
 feature -- Conversion
 
-	renamed_feature (a_name: like name): like Current is
+	renamed_feature (a_name: like extended_name): like Current is
 			-- Renamed version of current feature
 		do
 			create Result.make (a_name, declared_type, assigner, clients, implementation_class)

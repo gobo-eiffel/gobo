@@ -1275,6 +1275,49 @@ feature -- Validity errors
 			end
 		end
 
+	report_vdjr2a_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+			-- Report VDJR-2 error: features `f1' and `f2' are joined/merged,
+			-- but `f1' has an alias and not `f2'.
+			--
+			-- ECMA: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_no_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name = Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdjr2_error (a_class) then
+				create an_error.make_vdjr2a (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdjr2b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+			-- Report VDJR-2 error: features `f1' and `f2' are joined/merged,
+			-- they both have an alias but it is not the same.
+			--
+			-- ECMA: p.69
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name /= Void
+			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdjr2_error (a_class) then
+				create an_error.make_vdjr2b (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vdpr1a_error (a_class: ET_CLASS; a_precursor: ET_PRECURSOR_INSTRUCTION) is
 			-- Report VDPR-1 error: instruction `a_precursor' does not 
 			-- appear in a routine body in `a_class'.
@@ -1763,6 +1806,70 @@ feature -- Validity errors
 			end
 		end
 
+	report_vdrd7a_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+			-- Report VDRD-7 error: `f1' has no alias but its redeclared version
+			-- `f2' has one.
+			--
+			-- ECMA: p.68
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_no_alias: f1.alias_name = Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdrd7_error (a_class) then
+				create an_error.make_vdrd7a (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdrd7b_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+			-- Report VDRD-7 error: `f1' has an alias but its redeclared version
+			-- `f2' has none.
+			--
+			-- ECMA: p.68
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_no_alias: f2.alias_name = Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdrd7_error (a_class) then
+				create an_error.make_vdrd7b (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vdrd7c_error (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE) is
+			-- Report VDRD-7 error: `f1' and its redeclared version `f2'
+			-- have both an alias, but it is not the same.
+			--
+			-- ECMA: p.68
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name /= Void
+			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vdrd7_error (a_class) then
+				create an_error.make_vdrd7c (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vdrs1a_error (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME) is
 			-- Report VDRS-1 error: the Redefine subclause of `a_parent'
 			-- in `a_class' lists `f' which is not the final name in
@@ -2099,6 +2206,276 @@ feature -- Validity errors
 		do
 			if reportable_veen2_error (a_class) then
 				create an_error.make_veen2d (a_class, a_result)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+			-- Report VFAV-1 error: `a_feature' has an infix operator alias
+			-- but is not a function with exactly one argument.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_alias: a_feature.alias_name /= Void
+			a_feature_alias_infix: a_feature.alias_name.is_infix
+			a_feature_not_infixable: not a_feature.is_infixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1b_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+			-- Report VFAV-1 error: `a_feature' has a prefix operator alias
+			-- but is not a query with no argument.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_alias: a_feature.alias_name /= Void
+			a_feature_alias_prefix: a_feature.alias_name.is_prefix
+			a_feature_not_prefixable: not a_feature.is_prefixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1b (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1c_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE) is
+			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same unary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1c (a_class, a_feature1, a_feature2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1d_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE) is
+			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same unary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1d (a_class, a_feature1, a_feature2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1e_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE) is
+			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same unary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_prefix: a_feature1.alias_name.is_prefix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_prefix: a_feature2.alias_name.is_prefix
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1e (a_class, a_feature1, a_feature2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1f_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE) is
+			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same binary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1f (a_class, a_feature1, a_feature2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1g_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE) is
+			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same binary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1g (a_class, a_feature1, a_feature2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav1h_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE) is
+			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
+			-- the same binary operator alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_infix: a_feature1.alias_name.is_infix
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_infix: a_feature2.alias_name.is_infix
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav1_error (a_class) then
+				create an_error.make_vfav1h (a_class, a_feature1, a_feature2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav2a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+			-- Report VFAV-2 error: `a_feature' has a bracket alias
+			-- but is not a function with at least one argument.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_alias: a_feature.alias_name /= Void
+			a_feature_alias_bracket: a_feature.alias_name.is_bracket
+			a_feature_not_bracketable: not a_feature.is_bracketable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav2_error (a_class) then
+				create an_error.make_vfav2a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav2b_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE) is
+			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
+			-- a bracket alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav2_error (a_class) then
+				create an_error.make_vfav2b (a_class, a_feature1, a_feature2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav2c_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE) is
+			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
+			-- a bracket alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav2_error (a_class) then
+				create an_error.make_vfav2c (a_class, a_feature1, a_feature2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vfav2d_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE) is
+			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
+			-- a bracket alias.
+			--
+			-- ECMA: p.42
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature1_not_void: a_feature1 /= Void
+			a_feature1_has_alias: a_feature1.alias_name /= Void
+			a_feature1_alias_bracket: a_feature1.alias_name.is_bracket
+			a_feature2_not_void: a_feature2 /= Void
+			a_feature2_has_alias: a_feature2.alias_name /= Void
+			a_feature2_alias_bracket: a_feature2.alias_name.is_bracket
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vfav2_error (a_class) then
+				create an_error.make_vfav2d (a_class, a_feature1, a_feature2)
 				report_validity_error (an_error)
 			end
 		end
@@ -2879,6 +3256,81 @@ feature -- Validity errors
 				report_validity_error (an_error)
 			end
 		end
+			
+	report_vhrc4b_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
+			-- Report VHRC-4 error: the Rename_pair
+			-- `a_rename' has a new_name with a bracket alias,
+			-- but the corresponding feature `f' is not a
+			-- function with at least one argument.
+			--
+			-- ECMA: p.46
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: a_rename.new_name.alias_name /= Void
+			a_rename_alias_bracket: a_rename.new_name.alias_name.is_bracket
+			f_not_void: f /= Void
+			f_not_brackable: not f.is_bracketable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vhrc4_error (a_class) then
+				create an_error.make_vhrc4b (a_class, a_parent, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vhrc4c_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
+			-- Report VHRC-4 error: the Rename_pair `a_rename' has
+			-- a new_name with a binary operator alias,
+			-- but the corresponding feature `f' is not a
+			-- function with exactly one argument.
+			--
+			-- ECMA: p.46
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: a_rename.new_name.alias_name /= Void
+			a_rename_alias_infix: a_rename.new_name.alias_name.is_infix
+			f_not_void: f /= Void
+			f_not_infixable: not f.is_infixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vhrc4_error (a_class) then
+				create an_error.make_vhrc4c (a_class, a_parent, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vhrc4d_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
+			-- Report VHRC-4 error: the Rename_pair `a_rename' has
+			-- a new_name with a unary operator alias,
+			-- but the corresponding feature `f' is not a
+			-- query with no argument.
+			--
+			-- ECMA: p.46
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: a_rename.new_name.alias_name /= Void
+			a_rename_alias_prefix: a_rename.new_name.alias_name.is_prefix
+			f_not_void: f /= Void
+			f_not_prefixable: not f.is_prefixable
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vhrc4_error (a_class) then
+				create an_error.make_vhrc4d (a_class, a_parent, a_rename, f)
+				report_validity_error (an_error)
+			end
+		end
 
 	report_vhrc5a_error (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE) is
 			-- Report VHRC-5 error: the Rename_pair `a_rename' has
@@ -3282,6 +3734,49 @@ feature -- Validity errors
 		do
 			if reportable_vmfn_error (a_class) then
 				create an_error.make_vmfn0c (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vmfn2a_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+			-- Report VMFN-2 error: features `f1' and `f2' are shared,
+			-- but `f1' has an alias and not `f2'.
+			--
+			-- ECMA: p.93
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_no_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name = Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vmfn2_error (a_class) then
+				create an_error.make_vmfn2a (a_class, f1, f2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vmfn2b_error (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE) is
+			-- Report VMFN-2 error: features `f1' and `f2' are shared,
+			-- they both have an alias but it is not the same.
+			--
+			-- ECMA: p.93
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			f1_not_void: f1 /= Void
+			f1_alias: f1.alias_name /= Void
+			f2_not_void: f2 /= Void
+			f2_alias: f2.alias_name /= Void
+			not_same_alias: not f1.alias_name.same_alias_name (f2.alias_name)
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vmfn2_error (a_class) then
+				create an_error.make_vmfn2b (a_class, f1, f2)
 				report_validity_error (an_error)
 			end
 		end
@@ -5265,6 +5760,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vdjr2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VDJR-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vdpr1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VDPR-1 error be reported when it
 			-- appears in `a_class'?
@@ -5355,6 +5860,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vdrd7_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VDRD-7 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vdrs1_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VDRS-1 error be reported when it
 			-- appears in `a_class'?
@@ -5435,6 +5950,46 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_veen_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VEEN error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_veen2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VEEN-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vfav1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VFAV-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vfav2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VFAV-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vffd4_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VFFD-4 error be reported when it
 			-- appears in `a_class'?
@@ -5467,26 +6022,6 @@ feature -- Validity error status
 
 	reportable_vffd7_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VFFD-7 error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_veen_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a VEEN error be reported when it
-			-- appears in `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-		do
-			Result := True
-		end
-
-	reportable_veen2_error (a_class: ET_CLASS): BOOLEAN is
-			-- Can a VEEN-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -5717,6 +6252,16 @@ feature -- Validity error status
 
 	reportable_vmfn_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a VMFN error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vmfn2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a VMFN-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void

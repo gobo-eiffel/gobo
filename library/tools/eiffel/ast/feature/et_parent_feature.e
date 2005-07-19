@@ -103,6 +103,18 @@ feature -- Status report
 
 feature -- Access
 
+	extended_name: ET_EXTENDED_FEATURE_NAME is
+			-- Extended feature name
+		do
+			if new_name /= Void then
+				Result := new_name.new_name
+			else
+				Result := precursor_feature.extended_name
+			end
+		ensure
+			extended_name_not_void: Result /= Void
+		end
+
 	name: ET_FEATURE_NAME is
 			-- Feature name
 		do
@@ -110,6 +122,18 @@ feature -- Access
 				Result := new_name.new_name.feature_name
 			else
 				Result := precursor_feature.name
+			end
+		ensure
+			name_not_void: Result /= Void
+		end
+
+	alias_name: ET_ALIAS_NAME is
+			-- Alias name, if any
+		do
+			if new_name /= Void then
+				Result := new_name.new_name.alias_name
+			else
+				Result := precursor_feature.alias_name
 			end
 		end
 

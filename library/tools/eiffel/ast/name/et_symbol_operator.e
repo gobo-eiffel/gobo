@@ -239,37 +239,41 @@ feature -- Comparison
 			-- Are `Current' and `other' the same feature call name?
 			-- (case insensitive)
 		do
-			inspect code
-			when infix_div_code then
-				Result := other.is_infix_div
-			when infix_divide_code then
-				Result := other.is_infix_divide
-			when infix_ge_code then
-				Result := other.is_infix_ge
-			when infix_gt_code then
-				Result := other.is_infix_gt
-			when infix_le_code then
-				Result := other.is_infix_le
-			when infix_lt_code then
-				Result := other.is_infix_lt
-			when infix_minus_code then
-				Result := other.is_infix_minus
-			when infix_mod_code then
-				Result := other.is_infix_mod
-			when infix_plus_code then
-				Result := other.is_infix_plus
-			when infix_power_code then
-				Result := other.is_infix_power
-			when infix_times_code then
-				Result := other.is_infix_times
-			when infix_dotdot_code then
-				Result := other.is_infix_dotdot
-			when prefix_minus_code then
-				Result := other.is_prefix_minus
-			when prefix_plus_code then
-				Result := other.is_prefix_plus
+			if Current = other then
+				Result := True
 			else
-				-- Result := False
+				inspect code
+				when infix_div_code then
+					Result := other.is_infix_div
+				when infix_divide_code then
+					Result := other.is_infix_divide
+				when infix_ge_code then
+					Result := other.is_infix_ge
+				when infix_gt_code then
+					Result := other.is_infix_gt
+				when infix_le_code then
+					Result := other.is_infix_le
+				when infix_lt_code then
+					Result := other.is_infix_lt
+				when infix_minus_code then
+					Result := other.is_infix_minus
+				when infix_mod_code then
+					Result := other.is_infix_mod
+				when infix_plus_code then
+					Result := other.is_infix_plus
+				when infix_power_code then
+					Result := other.is_infix_power
+				when infix_times_code then
+					Result := other.is_infix_times
+				when infix_dotdot_code then
+					Result := other.is_infix_dotdot
+				when prefix_minus_code then
+					Result := other.is_prefix_minus
+				when prefix_plus_code then
+					Result := other.is_prefix_plus
+				else
+					-- Result := False
+				end
 			end
 		end
 

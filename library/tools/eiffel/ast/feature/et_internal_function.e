@@ -21,7 +21,8 @@ inherit
 
 	ET_INTERNAL_ROUTINE
 		undefine
-			type, is_prefixable, is_infixable, is_function
+			type, is_prefixable, is_infixable,
+			is_bracketable, is_function
 		end
 
 feature {NONE} -- Initialization

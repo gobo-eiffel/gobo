@@ -114,7 +114,11 @@ feature -- Comparison
 			-- Are `Current' and `other' the same feature call name?
 			-- (case insensitive)
 		do
-			Result := other.is_infix_and_then
+			if Current = other then
+				Result := True
+			else
+				Result := other.is_infix_and_then
+			end
 		end
 
 feature -- Processing

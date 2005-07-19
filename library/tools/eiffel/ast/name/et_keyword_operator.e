@@ -125,19 +125,23 @@ feature -- Comparison
 			-- Are `Current' and `other' the same feature call name?
 			-- (case insensitive)
 		do
-			inspect code
-			when infix_and_code then
-				Result := other.is_infix_and
-			when infix_implies_code then
-				Result := other.is_infix_implies
-			when infix_or_code then
-				Result := other.is_infix_or
-			when infix_xor_code then
-				Result := other.is_infix_xor
-			when prefix_not_code then
-				Result := other.is_prefix_not
+			if Current = other then
+				Result := True
 			else
-				-- Result := False
+				inspect code
+				when infix_and_code then
+					Result := other.is_infix_and
+				when infix_implies_code then
+					Result := other.is_infix_implies
+				when infix_or_code then
+					Result := other.is_infix_or
+				when infix_xor_code then
+					Result := other.is_infix_xor
+				when prefix_not_code then
+					Result := other.is_prefix_not
+				else
+					-- Result := False
+				end
 			end
 		end
 

@@ -146,15 +146,19 @@ feature -- Comparison
 			-- Are `Current' and `other' the same names of the same feature?
 			-- (case insensitive)
 		do
-			inspect code
-			when prefix_minus_code then
-				Result := other.is_prefix_minus
-			when prefix_plus_code then
-				Result := other.is_prefix_plus
-			when prefix_not_code then
-				Result := other.is_prefix_not
+			if other = Current then
+				Result := True
 			else
-				-- Result := False
+				inspect code
+				when prefix_minus_code then
+					Result := other.is_prefix_minus
+				when prefix_plus_code then
+					Result := other.is_prefix_plus
+				when prefix_not_code then
+					Result := other.is_prefix_not
+				else
+					-- Result := False
+				end
 			end
 		end
 
@@ -162,7 +166,11 @@ feature -- Comparison
 			-- Are feature name and `other' the same feature name?
 			-- (case insensitive)
 		do
-			Result := same_call_name (other)
+			if other = Current then
+				Result := True
+			elseif ANY_.same_types (Current, other) then
+				Result := same_call_name (other)
+			end
 		end
 
 feature -- Processing
