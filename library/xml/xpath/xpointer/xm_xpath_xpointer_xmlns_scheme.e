@@ -21,6 +21,7 @@ inherit
 	XM_UNICODE_CHARACTERS_1_0
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 create
 

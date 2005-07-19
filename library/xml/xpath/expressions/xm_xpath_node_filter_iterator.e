@@ -22,6 +22,7 @@ inherit
 	XM_XPATH_TYPE
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 		-- This class is not used where the filter is a constant number.
 		-- Instead, use XM_XPATH_POSITION_NODE_ITERATOR, so this class does not

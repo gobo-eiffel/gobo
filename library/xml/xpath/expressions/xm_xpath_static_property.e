@@ -17,10 +17,10 @@ inherit
 	XM_XPATH_CARDINALITY
 
 	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
 
 	KL_IMPORTED_ARRAY_ROUTINES
-
-	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 feature -- Status report
 

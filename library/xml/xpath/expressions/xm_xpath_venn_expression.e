@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"XPath Venn exxpressions"
+		"XPath Venn expressions"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -22,10 +22,13 @@ inherit
 		end
 
 	XM_XPATH_SHARED_GLOBAL_ORDER_COMPARER
+		export {NONE} all end
 
 	XM_XPATH_ROLE
+		export {NONE} all end
 
 	XM_XPATH_NAME_UTILITIES
+		export {NONE} all end
 
 create
 

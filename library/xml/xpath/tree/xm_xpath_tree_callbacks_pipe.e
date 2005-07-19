@@ -17,9 +17,7 @@ inherit
 	ANY
 
 	XM_CALLBACKS_FILTER_FACTORY
-		export {NONE}
-			all
-		end
+		export {NONE} all	end
 
 		-- This pipeline is suitable for use by a stand-alone XPath evaluator.
 		-- It is not particularly suitable for use by documents to be used as input to

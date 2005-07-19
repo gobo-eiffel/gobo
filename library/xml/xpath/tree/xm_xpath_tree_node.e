@@ -20,12 +20,16 @@ inherit
 		end
 
 	XM_XPATH_TYPE
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
+		export {NONE} all end
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 feature -- Access
 

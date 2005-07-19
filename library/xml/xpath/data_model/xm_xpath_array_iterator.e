@@ -39,6 +39,7 @@ inherit
 		end
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 create
 

@@ -16,8 +16,6 @@ inherit
 
 	KL_COMPARATOR  [XM_XPATH_ATOMIC_VALUE]
 
-	XM_XPATH_DEBUGGING_ROUTINES
-
 create
 
 	make

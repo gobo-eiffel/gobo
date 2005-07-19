@@ -21,6 +21,7 @@ inherit
 		end
 
 	XM_XPATH_TOKENS
+		export {NONE} all end
 	
 create
 

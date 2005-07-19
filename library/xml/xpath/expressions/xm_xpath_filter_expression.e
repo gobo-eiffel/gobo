@@ -22,12 +22,16 @@ inherit
 		end
 
 	XM_XPATH_TOKENS
+		export {NONE} all end
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
+		export {NONE} all end
 	
 	XM_XPATH_NAME_UTILITIES
+		export {NONE} all end
 
 	KL_SHARED_PLATFORM
+		export {NONE} all end
 
 create
 

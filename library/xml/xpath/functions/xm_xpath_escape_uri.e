@@ -20,6 +20,7 @@ inherit
 		end
 
 	UT_URL_ENCODING
+		export {NONE} all end
 
 create
 

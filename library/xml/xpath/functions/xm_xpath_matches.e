@@ -20,6 +20,7 @@ inherit
 		end
 
 	XM_XPATH_REGEXP_ROUTINES
+		export {NONE} all end
 
 create
 

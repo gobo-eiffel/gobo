@@ -3,7 +3,7 @@ indexing
 	description:
 
 	"Objects that iterate over a node sequence consisting of a reservoir%
-% of items that have already been read, and an base iterator, "
+% of items that have already been read, and a base iterator, "
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"

@@ -17,12 +17,16 @@ inherit
 	XM_XPATH_XPOINTER_SCHEME
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
+		export {NONE} all end
 
 	XM_XPATH_SHARED_CONFORMANCE
+		export {NONE} all end
 
 	XM_XPATH_TOKENS
+		export {NONE} all end
 
 create
 

@@ -20,6 +20,7 @@ inherit
 		end
 
 	XM_XPATH_TREE_ENUMERATION
+
 create
 
 	make

@@ -15,6 +15,7 @@ class XM_XPATH_COMPARISON_ROUTINES
 inherit
 
 	XM_XPATH_TOKENS
+		export {NONE} all end
 
 feature -- Status report
 

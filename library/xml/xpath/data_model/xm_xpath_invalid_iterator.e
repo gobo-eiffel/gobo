@@ -16,12 +16,15 @@ class XM_XPATH_INVALID_ITERATOR
 inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 
 	XM_XPATH_ERROR_TYPES
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 create
 

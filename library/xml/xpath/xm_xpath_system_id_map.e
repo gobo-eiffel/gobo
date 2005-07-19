@@ -15,8 +15,10 @@ class XM_XPATH_SYSTEM_ID_MAP
 inherit
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 create
 
@@ -24,7 +26,7 @@ create
 
 	-- SYSTEM IDs are not held in nodes in the tree, because they are usually the same
 	--  for a whole document.
-	-- This class provides a map from element sequence numbers to SSYSTEM IDs:
+	-- This class provides a map from element sequence numbers to SYSTEM IDs:
 	--  it is linked to the root node of the tree.
 	-- Note that the SYSTEM ID is not necessarily the same as the Base URI. The SYSTEM ID relates
 	--  to the external entity in which a node was physically located; this provides a default for

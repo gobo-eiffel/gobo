@@ -15,6 +15,7 @@ class	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
 inherit
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 feature -- Access
 

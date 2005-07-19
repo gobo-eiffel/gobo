@@ -15,8 +15,10 @@ deferred class XM_XPATH_RECEIVER
 inherit
 
 	XM_XPATH_RECEIVER_OPTIONS
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 	-- This is an interface to receive XML events.
 	-- It is based on XM_CALLBACKS, XM_DTD_CALLBACKS and XM_DTD_ATTRIBUTE_CONTENT,

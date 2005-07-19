@@ -20,8 +20,10 @@ inherit
 		end
 
 	XM_XPATH_SHARED_DECIMAL_CONTEXTS
+		export {NONE} all end
 
 	KL_IMPORTED_DOUBLE_ROUTINES
+		export {NONE} all end
 
 create
 

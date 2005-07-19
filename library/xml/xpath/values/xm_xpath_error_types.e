@@ -15,6 +15,7 @@ class XM_XPATH_ERROR_TYPES
 inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 feature -- Access
 

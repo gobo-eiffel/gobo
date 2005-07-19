@@ -20,6 +20,7 @@ inherit
 		end
 
 	XM_XPATH_TYPE
+		export {NONE} all end
 
 create
 

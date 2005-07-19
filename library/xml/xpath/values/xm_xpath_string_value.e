@@ -20,8 +20,10 @@ inherit
 		end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 create
 

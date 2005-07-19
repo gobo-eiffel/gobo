@@ -17,8 +17,10 @@ inherit
 	ANY -- required by SE 2.1b1
 
 	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 feature -- Access
 

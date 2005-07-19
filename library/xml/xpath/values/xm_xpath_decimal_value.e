@@ -20,6 +20,7 @@ inherit
 		end
 
 	XM_XPATH_SHARED_DECIMAL_CONTEXTS
+		export {NONE} all end
 
 create
 

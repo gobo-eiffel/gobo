@@ -23,6 +23,7 @@ inherit
 	XM_UNICODE_CHARACTERS_1_0
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
+		export {NONE} all end
 
 create
 

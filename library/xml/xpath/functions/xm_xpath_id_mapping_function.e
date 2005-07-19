@@ -17,6 +17,7 @@ inherit
 	XM_XPATH_NODE_MAPPING_FUNCTION
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 create
 

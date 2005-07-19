@@ -17,8 +17,10 @@ inherit
 	XM_XPATH_SHARED_NAME_POOL
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_UNICODE_CHARACTERS_1_1
+		export {NONE} all end
 
 create
 

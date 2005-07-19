@@ -48,5 +48,5 @@
 	<mount location="${GOBO}/library/xml/library.xace"/>
 	<mount location="${GOBO}/library/kernel.xace" />
 	<mount location="${GOBO}/library/string/library.xace"/>
-	<mount location="${GOBO}/library/math/decimal/library.xace"/>
+	<mount location="${GOBO}/library/math/library.xace"/>
 </system>

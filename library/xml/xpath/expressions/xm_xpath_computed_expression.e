@@ -36,6 +36,7 @@ inherit
 		end
 
 	KL_IMPORTED_ARRAY_ROUTINES
+		export {NONE} all end
 
 feature -- Access
 	

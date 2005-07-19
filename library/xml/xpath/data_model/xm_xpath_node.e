@@ -20,20 +20,29 @@ inherit
 		end
 
 	XM_XPATH_SHARED_TYPE_FACTORY
+		export {NONE} all end
 
 	XM_XPATH_AXIS
 
 	XM_XPATH_NAME_UTILITIES
+		export {NONE} all end
 
 	XM_XPATH_LOCATOR
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export
+			{NONE} all
+			{ANY} No_namespaces, Local_namespaces, All_namespaces
+		end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_SERIAL_NUMBER_GENERATOR
+		export {NONE} all end
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 		-- This class represents a node in gexslt's object model.
 		-- It combines the features of the XPath data model, 

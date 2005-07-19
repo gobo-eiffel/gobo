@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that mplement the XPath position() function"
+		"Objects that implement the XPath position() function"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

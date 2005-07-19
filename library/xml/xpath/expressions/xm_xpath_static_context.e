@@ -15,14 +15,15 @@ deferred class XM_XPATH_STATIC_CONTEXT
 inherit
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 	XM_UNICODE_CHARACTERS_1_1
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
-
-	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 	-- A StaticContext contains the information needed while an expression or pattern is being parsed;
 	-- The information is also sometimes needed at run-time.

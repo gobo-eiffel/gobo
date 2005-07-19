@@ -16,22 +16,31 @@ inherit
 	GEXSLT_VERSION
 
 	KL_SHARED_EXCEPTIONS
+		export {NONE} all end
 
 	KL_SHARED_ARGUMENTS
+		export {NONE} all end
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 	XM_XPATH_SHARED_CONFORMANCE
+		export {NONE} all end
 
 	XM_XSLT_SHARED_EMITTER_FACTORY
+		export {NONE} all end
 
 	XM_XPATH_NAME_UTILITIES
+		export {NONE} all end
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_SHARED_CATALOG_MANAGER
+		export {NONE} all end
 
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
@@ -40,10 +49,13 @@ inherit
 		export {NONE} all end
 		
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
+		export {NONE} all end
 
 	MEMORY
+		export {NONE} all end
 
 create
 

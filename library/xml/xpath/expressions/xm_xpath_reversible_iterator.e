@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Sequence iterators than can find the last position in the sequence"
+		"Objects that iterate a sequence in reverse order"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

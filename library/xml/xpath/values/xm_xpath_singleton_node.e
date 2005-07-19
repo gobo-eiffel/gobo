@@ -21,6 +21,7 @@ inherit
 		end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
+		export {NONE} all end
 
 create
 

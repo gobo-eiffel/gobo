@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that available documents in the dynamic context"
+		"Objects that hold available documents in the dynamic context"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -15,10 +15,10 @@ class	XM_XPATH_DOCUMENT_POOL
 inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 	-- The document pool ensures that the doc() function,
 	--  when called twice with the same URI, returns the same document each time.
-	-- For this purpose we use a hash table from URI to Document object.
 
 create
 

@@ -17,6 +17,7 @@ inherit
 	HASHABLE
 
 	KL_SHARED_PLATFORM
+		export {NONE} all end
 
 create
 

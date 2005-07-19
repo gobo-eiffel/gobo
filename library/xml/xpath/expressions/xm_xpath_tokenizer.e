@@ -16,12 +16,15 @@ class XM_XPATH_TOKENIZER
 inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 	XM_XPATH_TOKENS
 	
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 create
 

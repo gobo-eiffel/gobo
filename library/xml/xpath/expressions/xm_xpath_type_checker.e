@@ -21,16 +21,22 @@ inherit
 	XM_XPATH_CARDINALITY
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_CONFORMANCE
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 	XM_XPATH_NAME_UTILITIES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
+		export {NONE} all end
 
 		-- This class provides a single feature to perform static type-checking of an expression.
 		-- The routine takes a `supplied' expression,  and checks to see whether it is

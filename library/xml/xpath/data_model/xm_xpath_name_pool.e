@@ -54,16 +54,21 @@ class XM_XPATH_NAME_POOL
 inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 	XM_XPATH_NAME_UTILITIES
 
 	XM_XPATH_SHARED_TYPE_FACTORY
+		export {NONE} all end
 
 create
 	make

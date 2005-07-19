@@ -19,8 +19,6 @@ inherit
 			three_way_comparison
 		end
 
-	XM_XPATH_DEBUGGING_ROUTINES
-
 create
 
 	make

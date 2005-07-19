@@ -19,10 +19,13 @@ inherit
 	KL_CLONABLE
 
 	DT_SHARED_SYSTEM_CLOCK
+		export {NONE} all end
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 

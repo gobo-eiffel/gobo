@@ -15,6 +15,7 @@ class XM_XPATH_CONTENT_EMITTER
 inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 	XM_CALLBACKS_FILTER
 		redefine
@@ -28,14 +29,18 @@ inherit
 	XM_XPATH_TYPE
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_NAME_UTILITIES
+		export {NONE} all end
 
 	KL_SHARED_STANDARD_FILES
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 		-- XM_XPATH_CONTENT_EMITTER should come at the end of the event
 		--  filter and dtd event filter chains, except an

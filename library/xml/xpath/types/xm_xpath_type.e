@@ -19,18 +19,25 @@ inherit
 	KL_CLONABLE
 
 	XM_XPATH_SHARED_TYPE_FACTORY
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NO_NODE_TEST
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
+		export {NONE} all end
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 feature -- Access
 

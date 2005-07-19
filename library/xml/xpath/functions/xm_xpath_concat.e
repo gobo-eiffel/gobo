@@ -20,6 +20,7 @@ inherit
 		end
 
 	KL_SHARED_PLATFORM
+		export {NONE} all end
 
 create
 

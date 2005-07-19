@@ -17,6 +17,7 @@ inherit
 	XM_XPATH_ROLE
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 create
 

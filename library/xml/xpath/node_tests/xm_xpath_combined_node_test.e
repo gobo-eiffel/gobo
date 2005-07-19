@@ -21,10 +21,13 @@ inherit
 		end
 
 	XM_XPATH_TOKENS
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
 
 create
 

@@ -37,18 +37,24 @@ inherit
 		end
 	
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_TYPE
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	KL_IMPORTED_ARRAY_ROUTINES
+		export {NONE} all end
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 	UT_STRING_FORMATTER
+		export {NONE} all end
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 create
 

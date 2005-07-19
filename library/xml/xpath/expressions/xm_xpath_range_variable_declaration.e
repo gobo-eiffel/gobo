@@ -5,7 +5,7 @@ indexing
 	"Objects that represent the defining occurrence of a %
 	%variable declared for local use within an expression,%
 	%for example the $x in 'for $x in ...'. %
-	%This object is used	only at compile-time."
+	% This object is used	only at compile-time."
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"

@@ -27,6 +27,7 @@ inherit
 		end
 
 	XM_XPATH_RECEIVER_OPTIONS
+		export {NONE} all end
 
 create
 

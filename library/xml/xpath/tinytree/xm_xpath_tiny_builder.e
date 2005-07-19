@@ -17,14 +17,19 @@ inherit
 	XM_XPATH_BUILDER
 
 	XM_XPATH_TYPE
+		export {NONE} all end
 
 	XM_XPATH_SHARED_CONFORMANCE
+		export {NONE} all end
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	KL_IMPORTED_ARRAY_ROUTINES
+		export {NONE} all end
 
 create
 

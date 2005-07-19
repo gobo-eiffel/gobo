@@ -17,14 +17,18 @@ inherit
 	ANY -- required by SE 2.1b1
 	
 	XM_XPATH_TYPE
+		export {NONE} all end
 
 	XM_XPATH_ERROR_TYPES
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NAME_POOL
 

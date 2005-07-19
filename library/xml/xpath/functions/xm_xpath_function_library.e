@@ -15,8 +15,10 @@ deferred class XM_XPATH_FUNCTION_LIBRARY
 inherit
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 	XM_XPATH_NAME_UTILITIES
+		export {NONE} all end
 
 		-- In all cases, an arity value of -1 means ignore the arity
 		-- In all cases, if `is_restricted' is set to `True', then

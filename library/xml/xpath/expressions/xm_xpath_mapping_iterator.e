@@ -16,8 +16,6 @@ inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 
-	KL_SHARED_STANDARD_FILES
-
 		-- This class merges a sequence of sequences into a single flat
 		--  sequence. It takes as inputs an iteration, and a mapping function to be
 		--  applied to each Item returned by that iteration. The mapping function itself

@@ -22,6 +22,7 @@ inherit
 	XM_XPATH_TYPE
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
+		export {NONE} all end
 
 create
 

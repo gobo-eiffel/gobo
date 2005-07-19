@@ -17,10 +17,13 @@ inherit
 	XM_XPATH_FUNCTION_LIBRARY
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 	XM_XPATH_SHARED_TYPE_FACTORY
+		export {NONE} all end
 
 create
 

@@ -15,12 +15,15 @@ class XM_XPATH_EXPRESSION_FACTORY
 inherit
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_DEBUGGING_ROUTINES
+		export {NONE} all end
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 feature -- Access
 

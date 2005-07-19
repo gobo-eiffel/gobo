@@ -19,8 +19,6 @@ inherit
 			start, as_node_iterator
 		end
 
-	KL_SHARED_STANDARD_FILES
-
 		-- This class also implements an extra Axis, preceding-or-ancestor,
 		-- which is used internally by xsl:number level="any"
 	
@@ -44,18 +42,7 @@ feature {NONE} -- Initialization
 			include_ancestors := ancestors
 
 			next_ancestor_depth := a_document.depth_of (next_node_number) - 1
-			debug ("XPath preceding enumeration")
-				std.error.put_string ("Starting node number is ")
-				std.error.put_string (next_node_number.out)
-				std.error.put_string ("%NNext ancestor's depth is ")
-				std.error.put_string (next_ancestor_depth.out)
-			end
 			advance
-			debug ("XPath preceding enumeration")
-				std.error.put_string ("%Nprior to calling forth, next node number is ")
-				std.error.put_string (next_node_number.out)
-				std.error.put_new_line
-			end	
 		ensure
 			document_set: document = a_document
 			starting_node_set: starting_node = a_starting_node
@@ -136,25 +123,12 @@ feature {NONE} -- Implementation
 				finished
 			loop
 				next_node_number := next_node_number - 1
-				debug ("XPath preceding enumeration")
-					std.error.put_string ("Next node number is now ")
-					std.error.put_string (next_node_number.out)
-					std.error.put_new_line
-				end
 				if not include_ancestors then
 				-- skip over ancestors
 					from
 					until
 						not document.is_node_number_valid (next_node_number) or else document.depth_of (next_node_number) /= next_ancestor_depth
 					loop
-						debug ("XPath preceding enumeration")
-							std.error.put_string ("Next node depth is now ")
-							std.error.put_string (document.depth_of (next_node_number).out)
-							std.error.put_new_line
-							std.error.put_string ("Next ancestor depth is now ")
-							std.error.put_string (next_ancestor_depth.out)
-							std.error.put_new_line
-						end
 						next_ancestor_depth := next_ancestor_depth - 1
 						next_node_number := next_node_number - 1
 					end

@@ -22,6 +22,7 @@ inherit
 	XM_XPATH_TREE_ENUMERATION
 
 	XM_XPATH_TYPE
+		export {NONE} all end
 
 create
 

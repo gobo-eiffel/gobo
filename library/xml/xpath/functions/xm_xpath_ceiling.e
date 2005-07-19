@@ -20,8 +20,10 @@ inherit
 		end
 
 	MA_DECIMAL_MATH
+		export {NONE} all end
 
 	XM_XPATH_TOKENS
+		export {NONE} all end
 
 create
 

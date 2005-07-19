@@ -15,8 +15,10 @@ class XM_XPATH_DEBUGGING_ROUTINES
 inherit
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 feature -- Output
 	

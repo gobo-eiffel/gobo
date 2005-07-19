@@ -17,14 +17,18 @@ inherit
 	XM_XPATH_STATIC_PROPERTY
 
 	XM_XPATH_TYPE
+		export {NONE} all end
 
 	XM_XPATH_CARDINALITY
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NO_NODE_TEST
+		export {NONE} all end
 
 create
 

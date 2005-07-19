@@ -29,6 +29,7 @@ inherit
 		end
 
 	XM_XPATH_ERROR_TYPES
+		export {NONE} all end
 
 create {XM_XPATH_NODE_FACTORY}
 

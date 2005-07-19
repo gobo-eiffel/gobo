@@ -15,28 +15,39 @@ class XM_XPATH_EXPRESSION_PARSER
 inherit
 
 	XM_XPATH_TOKENS
+		export {NONE} all end
 
 	XM_XPATH_CARDINALITY
+		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_EXPRESSION_TESTER
+		export {NONE} all end
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 	
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
+		export {NONE} all end
 
 	XM_XPATH_SHARED_NO_NODE_TEST
+		export {NONE} all end
 
 	XM_XPATH_TYPE
 
 	XM_XPATH_AXIS
+		export {NONE} all end
 
 	XM_UNICODE_CHARACTERS_1_1
 

@@ -17,6 +17,7 @@ inherit
 	XM_XPATH_TYPE_FACTORY
 
 	UC_SHARED_STRING_EQUALITY_TESTER
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 

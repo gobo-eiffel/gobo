@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath NodeTest production"
+		"Objects that represent the XPath NodeTest production"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -22,8 +22,10 @@ inherit
 	XM_XPATH_TYPE
 
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
+		export {NONE} all end
 
 feature -- Access
 

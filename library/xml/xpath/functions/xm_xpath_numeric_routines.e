@@ -15,6 +15,7 @@ class XM_XPATH_NUMERIC_ROUTINES
 inherit
 
 	XM_XPATH_SHARED_TYPE_FACTORY
+		export {NONE} all end
 
 feature -- Conversion
 

@@ -17,10 +17,12 @@ inherit
 	XM_XPATH_ITEM_TYPE
 
 	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_TYPE_FACTORY
 	
 	XM_XPATH_SHARED_NAME_POOL
+		export {NONE} all end
 
 feature -- Access
 

@@ -19,8 +19,6 @@ inherit
 			as_node_iterator
 		end
 
-	KL_SHARED_STANDARD_FILES
-
 create
 
 	make
@@ -57,11 +55,6 @@ feature {NONE} -- Initialization
 					need_to_advance := True
 				end
 			end
-			debug ("XPath tiny sibling enumeration")
-				std.error.put_string ("Next node number is ")
-				std.error.put_string (next_node_number.out)
-				std.error.put_new_line
-			end
 		ensure
 			document_set: document = a_document
 			starting_node_set: starting_node = a_starting_node
@@ -87,11 +80,6 @@ feature -- Cursor movement
 		do
 			if need_to_advance then advance end
 			index := index + 1
-			debug ("XPath tiny sibling enumeration")
-				std.error.put_string ("{XM_XPATH_TINY_SIBLING_ENUMERATION}.forth: next node number is ")
-				std.error.put_string (next_node_number.out)
-				std.error.put_new_line
-			end			
 			if document.is_node_number_valid (next_node_number) then
 				current_item := document.retrieve_node (next_node_number)
 			else

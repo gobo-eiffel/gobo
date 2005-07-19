@@ -29,12 +29,15 @@ inherit
 	XM_XPATH_TYPE
 	
 	XM_XPATH_COMPARISON_ROUTINES
+		export {NONE} all end
 
 	XM_XPATH_SHARED_ATOMIZING_FUNCTION
+		export {NONE} all end
 
 	XM_XPATH_MAPPING_FUNCTION
 
 	XM_XPATH_NUMERIC_ROUTINES
+		export {NONE} all end
 
 create
 
