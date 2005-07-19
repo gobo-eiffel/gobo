@@ -91,35 +91,39 @@ feature -- Signature validity
 				end
 			elseif a_feature.is_inherited then
 				an_inherited_feature := a_feature.inherited_feature
-				a_flattened_feature := an_inherited_feature.flattened_feature
---				an_inherited_flattened_feature := an_inherited_feature.flattened_parent
-				if a_flattened_feature.is_deferred then
-						-- Joining (merging deferred features together).
-					from
-						a_parent_feature := an_inherited_feature.parent_feature
-					until
-						a_parent_feature = Void
-					loop
---						if not a_parent_feature.same_version (an_inherited_flattened_feature) then
-							check_joined_signature_validity (an_inherited_feature, a_parent_feature)
---						end
-						a_parent_feature := a_parent_feature.merged_feature
-					end
-				else
-						-- Redeclaration (merging deferred features into an effective one).
-					from
-						a_parent_feature := an_inherited_feature.parent_feature
-					until
-						a_parent_feature = Void
-					loop
-						if a_parent_feature.is_deferred then
-							check_redeclared_signature_validity (an_inherited_feature, a_parent_feature)
+				if an_inherited_feature.parent_feature.merged_feature /= Void then
+						-- No need to check the signature when there is no
+						-- Joining nor merging.
+					a_flattened_feature := an_inherited_feature.flattened_feature
+--					an_inherited_flattened_feature := an_inherited_feature.flattened_parent
+					if a_flattened_feature.is_deferred then
+							-- Joining (merging deferred features together).
+						from
+							a_parent_feature := an_inherited_feature.parent_feature
+						until
+							a_parent_feature = Void
+						loop
+--							if not a_parent_feature.same_version (an_inherited_flattened_feature) then
+								check_joined_signature_validity (an_inherited_feature, a_parent_feature)
+--							end
+							a_parent_feature := a_parent_feature.merged_feature
 						end
-						a_parent_feature := a_parent_feature.merged_feature
+					else
+							-- Redeclaration (merging deferred features into an effective one).
+						from
+							a_parent_feature := an_inherited_feature.parent_feature
+						until
+							a_parent_feature = Void
+						loop
+							if a_parent_feature.is_deferred then
+								check_redeclared_signature_validity (an_inherited_feature, a_parent_feature)
+							end
+							a_parent_feature := a_parent_feature.merged_feature
+						end
 					end
 				end
 			else
-				check_immediate_signature_validity (a_feature.flattened_feature)
+				-- check_immediate_signature_validity (a_feature.flattened_feature)
 			end
 			if a_feature.is_adapted then
 				an_adapted_feature := a_feature.adapted_feature
