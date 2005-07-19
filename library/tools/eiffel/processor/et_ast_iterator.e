@@ -143,6 +143,14 @@ feature {ET_AST_NODE} -- Processing
 			an_assigner.feature_name.process (Current)
 		end
 
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+			-- Process `an_instruction'.
+		do
+			an_instruction.target.process (Current)
+			an_instruction.assign_symbol.process (Current)
+			an_instruction.source.process (Current)
+		end
+
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Process `an_instruction'.
 		do
@@ -261,6 +269,38 @@ feature {ET_AST_NODE} -- Processing
 				i := i + 1
 			end
 			a_list.right_brace.process (Current)
+		end
+
+	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST) is
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.left_symbol.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+			a_list.right_symbol.process (Current)
+		end
+
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+			-- Process `an_expression'.
+		local
+			l_arguments: ET_BRACKET_ARGUMENT_LIST
+		do
+			an_expression.target.process (Current)
+			l_arguments := an_expression.arguments
+			if l_arguments /= Void then
+				l_arguments.process (Current)
+			end
+		end
+
+	process_bracket_symbol (a_symbol: ET_BRACKET_SYMBOL) is
+			-- Process `a_symbol'.
+		do
+			process_symbol (a_symbol)
 		end
 
 	process_break (a_break: ET_BREAK) is

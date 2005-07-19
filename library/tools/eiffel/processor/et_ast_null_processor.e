@@ -92,6 +92,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+			-- Process `an_instruction'.
+		do
+		end
+
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Process `an_instruction'.
 		do
@@ -139,6 +144,21 @@ feature {ET_AST_NODE} -- Processing
 
 	process_braced_type_list (a_list: ET_BRACED_TYPE_LIST) is
 			-- Process `a_list'.
+		do
+		end
+
+	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST) is
+			-- Process `a_list'.
+		do
+		end
+
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+		end
+
+	process_bracket_symbol (a_symbol: ET_BRACKET_SYMBOL) is
+			-- Process `a_symbol'.
 		do
 		end
 

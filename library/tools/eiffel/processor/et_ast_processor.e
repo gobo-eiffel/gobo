@@ -143,6 +143,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+			-- Process `an_instruction'.
+		require
+			an_instruction_not_void: an_instruction /= Void
+		deferred
+		end
+
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Process `an_instruction'.
 		require
@@ -210,6 +217,27 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST) is
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+			-- Process `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		deferred
+		end
+
+	process_bracket_symbol (a_symbol: ET_BRACKET_SYMBOL) is
+			-- Process `a_symbol'.
+		require
+			a_symbol_not_void: a_symbol /= Void
 		deferred
 		end
 
