@@ -5,7 +5,7 @@ indexing
 		"Eiffel precursor validity checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,10 +19,13 @@ inherit
 			make,
 			process_actual_argument_list,
 			process_agent_argument_operand_list,
+			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
 			process_attribute,
 			process_bang_instruction,
+			process_bracket_argument_list,
+			process_bracket_expression,
 			process_call_agent,
 			process_call_expression,
 			process_call_instruction,
@@ -358,6 +361,15 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+			-- Process `an_instruction'.
+		do
+			if internal_call then
+				an_instruction.target.process (Current)
+				an_instruction.source.process (Current)
+			end
+		end
+
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Process `an_instruction'.
 		do
@@ -393,6 +405,34 @@ feature {ET_AST_NODE} -- Processing
 					if an_arguments /= Void then
 						process_actual_argument_list (an_arguments)
 					end
+				end
+			end
+		end
+
+	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST) is
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			if internal_call then
+				nb := a_list.count
+				from i := 1 until i > nb loop
+					a_list.actual_argument (i).process (Current)
+					i := i + 1
+				end
+			end
+		end
+
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+			-- Process `an_expression'.
+		local
+			l_arguments: ET_BRACKET_ARGUMENT_LIST
+		do
+			if internal_call then
+				an_expression.target.process (Current)
+				l_arguments := an_expression.arguments
+				if l_arguments /= Void then
+					l_arguments.process (Current)
 				end
 			end
 		end

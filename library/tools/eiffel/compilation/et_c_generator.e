@@ -18,11 +18,13 @@ inherit
 		rename
 			make as make_processor
 		redefine
+			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
 			process_attribute,
 			process_bang_instruction,
 			process_bit_constant,
+			process_bracket_expression,
 			process_c1_character_constant,
 			process_c2_character_constant,
 			process_c3_character_constant,
@@ -1135,6 +1137,14 @@ feature {NONE} -- Feature generation
 
 feature {NONE} -- Instruction generation
 
+	print_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+			-- Print `an_instruction'.
+		require
+			an_instruction_not_void: an_instruction /= Void
+		do
+-- TODO:
+		end
+
 	print_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Print `an_instruction'.
 		require
@@ -1782,6 +1792,14 @@ feature {NONE} -- Expression generation
 			a_constant_not_void: a_constant /= Void
 		do
 -- TODO.
+		end
+
+	print_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+			-- Print `an_expression'.
+		require
+			an_expression_not_void: an_expression /= Void
+		do
+			print_qualified_call (an_expression)
 		end
 
 	print_character (a_character: CHARACTER) is
@@ -3754,6 +3772,12 @@ feature {NONE} -- Indentation
 
 feature {ET_AST_NODE} -- Processing
 
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+			-- Process `an_instruction'.
+		do
+			print_assigner_instruction (an_instruction)
+		end
+
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Process `an_instruction'.
 		do
@@ -3782,6 +3806,12 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			print_bit_constant (a_constant)
+		end
+
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			print_bracket_expression (an_expression)
 		end
 
 	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is

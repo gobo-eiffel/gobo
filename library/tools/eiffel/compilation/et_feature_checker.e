@@ -17,11 +17,13 @@ inherit
 	ET_AST_NULL_PROCESSOR
 		redefine
 			make,
+			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
 			process_attribute,
 			process_bang_instruction,
 			process_bit_constant,
+			process_bracket_expression,
 			process_c1_character_constant,
 			process_c2_character_constant,
 			process_c3_character_constant,
@@ -1558,6 +1560,16 @@ feature {NONE} -- Type checking
 
 feature {NONE} -- Instruction validity
 
+	check_assigner_instruction_validity (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+			-- Check validity of `an_instruction'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_instruction_not_void: an_instruction /= Void
+		do
+			has_fatal_error := False
+-- TODO:
+		end
+
 	check_assignment_validity (an_instruction: ET_ASSIGNMENT) is
 			-- Check validity of `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -2760,6 +2772,16 @@ feature {NONE} -- Expression validity
 			create a_type.make (an_integer_constant)
 			a_context.force_last (a_type)
 			report_bit_constant (a_constant)
+		end
+
+	check_bracket_expression_validity (an_expression: ET_BRACKET_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of `an_expression'.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_context_not_void: a_context /= Void
+		do
+			check_qualified_call_validity (an_expression, an_expression, a_context)
 		end
 
 	check_c1_character_constant_validity (a_constant: ET_C1_CHARACTER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
@@ -7105,6 +7127,16 @@ feature {NONE} -- Event handling
 
 feature {ET_AST_NODE} -- Processing
 
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+			-- Process `an_instruction'.
+		do
+			if internal_call then
+				internal_call := False
+				in_instruction := False
+				check_assigner_instruction_validity (an_instruction)
+			end
+		end
+
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Process `an_instruction'.
 		do
@@ -7150,6 +7182,15 @@ feature {ET_AST_NODE} -- Processing
 			if internal_call then
 				internal_call := False
 				check_bit_constant_validity (a_constant, current_context)
+			end
+		end
+
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+			-- Process `an_expression'.
+		do
+			if internal_call then
+				internal_call := False
+				check_bracket_expression_validity (an_expression, current_context)
 			end
 		end
 

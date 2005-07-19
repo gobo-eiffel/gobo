@@ -21,12 +21,15 @@ inherit
 			process_agent_argument_operand_list,
 			process_agent_typed_open_argument,
 			process_agent_open_target,
+			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
 			process_attribute,
 			process_bang_instruction,
 			process_braced_type,
 			process_braced_type_list,
+			process_bracket_argument_list,
+			process_bracket_expression,
 			process_call_agent,
 			process_call_expression,
 			process_call_instruction,
@@ -204,6 +207,13 @@ feature {ET_AST_NODE} -- Processing
 			a_target.type.process (Current)
 		end
 
+	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
+			-- Process `an_instruction'.
+		do
+			an_instruction.target.process (Current)
+			an_instruction.source.process (Current)
+		end
+
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Process `an_instruction'.
 		do
@@ -257,6 +267,30 @@ feature {ET_AST_NODE} -- Processing
 			from i := 1 until i > nb loop
 				a_list.type (i).process (Current)
 				i := i + 1
+			end
+		end
+
+	process_bracket_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST) is
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.actual_argument (i).process (Current)
+				i := i + 1
+			end
+		end
+
+	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
+			-- Process `an_expression'.
+		local
+			l_arguments: ET_BRACKET_ARGUMENT_LIST
+		do
+			an_expression.target.process (Current)
+			l_arguments := an_expression.arguments
+			if l_arguments /= Void then
+				l_arguments.process (Current)
 			end
 		end
 
