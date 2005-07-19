@@ -37,7 +37,6 @@ create
 	make_equal,
 	make_left_array,
 	make_left_brace,
-	make_left_bracket,
 	make_left_parenthesis,
 	make_not_equal,
 	make_right_array,

@@ -637,10 +637,10 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
-	left_bracket_symbol: ET_SYMBOL is
+	left_bracket_symbol: ET_BRACKET_SYMBOL is
 			-- '[' symbol
 		once
-			create Result.make_left_bracket
+			create Result.make
 		ensure
 			symbol_not_void: Result /= Void
 		end
