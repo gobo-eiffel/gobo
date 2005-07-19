@@ -21,8 +21,13 @@ inherit
 		end
 
 	ET_SHARED_FEATURE_NAME_TESTER
+		export {NONE} all end
+
+	ET_SHARED_ALIAS_NAME_TESTER
+		export {NONE} all end
 
 	ET_SHARED_CLASS_NAME_TESTER
+		export {NONE} all end
 
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
@@ -39,6 +44,8 @@ feature {NONE} -- Initialization
 			precursor (a_universe)
 			create named_features.make_map (400)
 			named_features.set_key_equality_tester (feature_name_tester)
+			create aliased_features.make_map (50)
+			aliased_features.set_key_equality_tester (alias_name_tester)
 			create clients_list.make (20)
 			create client_names.make (20)
 			client_names.set_equality_tester (class_name_tester)
@@ -166,6 +173,9 @@ feature {NONE} -- Feature adaptation
 	named_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
 
+	aliased_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_ALIAS_NAME]
+			-- Features indexed by alias name
+
 	resolve_feature_adaptations is
 			-- Resolve the feature adaptations of the inheritance clause of
 			-- `current_class' and put resulting features in `named_features'.
@@ -188,6 +198,10 @@ feature {NONE} -- Feature flattening
 			i, nb: INTEGER
 			a_type: ET_TYPE
 			l_declared_feature_count: INTEGER
+			l_alias_name: ET_ALIAS_NAME
+			l_other_feature: ET_FLATTENED_FEATURE
+			l_parent_feature: ET_PARENT_FEATURE
+			l_other_parent_feature: ET_PARENT_FEATURE
 		do
 			resolve_feature_adaptations
 			if not current_class.has_flattening_error then
@@ -224,17 +238,63 @@ feature {NONE} -- Feature flattening
 						set_fatal_error (current_class)
 						error_handler.report_vffd4a_error (current_class, a_feature)
 					end
-					if a_feature.name.is_prefix and then not a_feature.is_prefixable then
-							-- A feature with a Prefix name should be either
-							-- an attribute or a function with no argument.
-						set_fatal_error (current_class)
-						error_handler.report_vffd5a_error (current_class, a_feature)
-					end
-					if a_feature.name.is_infix and then not a_feature.is_infixable then
-							-- A feature with a Infix name should be 
-							-- a function with exactly one argument.
-						set_fatal_error (current_class)
-						error_handler.report_vffd6a_error (current_class, a_feature)
+						-- Check validity of 'infix "..."', 'prefix "..."'
+						-- and 'alias "..."' names.
+					if a_feature.name.is_prefix then
+						if not a_feature.is_prefixable then
+								-- A feature with a Prefix name should be either
+								-- an attribute or a function with no argument.
+							set_fatal_error (current_class)
+							error_handler.report_vffd5a_error (current_class, a_feature)
+						end
+					elseif a_feature.name.is_infix then
+						if not a_feature.is_infixable then
+								-- A feature with a Infix name should be 
+								-- a function with exactly one argument.
+							set_fatal_error (current_class)
+							error_handler.report_vffd6a_error (current_class, a_feature)
+						end
+					else
+						l_alias_name := a_feature.alias_name
+						if l_alias_name /= Void then
+							if l_alias_name.is_bracket then
+								if not a_feature.is_bracketable then
+										-- A feature with a Bracket alias should be 
+										-- a function with one or more argument.
+									set_fatal_error (current_class)
+									error_handler.report_vfav2a_error (current_class, a_feature)
+								end
+							elseif a_feature.is_prefixable then
+								if l_alias_name.is_prefixable then
+									l_alias_name.set_prefix
+								else
+										-- A feature with a binary Operator alias should be 
+										-- a function with exactly one argument.
+									set_fatal_error (current_class)
+									error_handler.report_vfav1a_error (current_class, a_feature)
+								end
+							elseif a_feature.is_infixable then
+								if l_alias_name.is_infixable then
+									l_alias_name.set_infix
+								else
+										-- A feature with a unary Operator alias should be 
+										-- a query with no argument.
+									set_fatal_error (current_class)
+									error_handler.report_vfav1b_error (current_class, a_feature)
+								end
+							elseif l_alias_name.is_infix then
+									-- A feature with a binary Operator alias should be 
+									-- a function with exactly one argument.
+								set_fatal_error (current_class)
+								error_handler.report_vfav1a_error (current_class, a_feature)
+							else
+								check is_prefix: l_alias_name.is_prefix end
+									-- A feature with a unary Operator alias should be 
+									-- a query with no argument.
+								set_fatal_error (current_class)
+								error_handler.report_vfav1b_error (current_class, a_feature)
+							end
+						end
 					end
 					if a_feature.is_once then
 						a_type := a_feature.type
@@ -255,14 +315,71 @@ feature {NONE} -- Feature flattening
 				check_anchored_signatures
 				from named_features.start until named_features.after loop
 					a_named_feature := named_features.item_for_iteration
+						-- Check that two features have not the same alias. Take into account
+						-- the infix and prefix properties to differentiate two alias names.
+						-- See VFAV-1 and VFAV-2, ECMA p.42.
+					a_feature := a_named_feature.flattened_feature
+					l_alias_name := a_feature.alias_name
+					if l_alias_name /= Void then
+						aliased_features.search (l_alias_name)
+						if aliased_features.found then
+							set_fatal_error (current_class)
+							l_other_feature := aliased_features.found_item
+							if l_other_feature.is_inherited then
+								l_other_parent_feature := l_other_feature.inherited_feature.flattened_parent
+								if a_named_feature.is_inherited then
+										-- Both features are inherited with no redeclaration in current class.
+									l_parent_feature := a_named_feature.inherited_feature.flattened_parent
+									if l_alias_name.is_bracket then
+										error_handler.report_vfav2d_error (current_class, l_parent_feature, l_other_parent_feature)
+									elseif l_alias_name.is_prefix then
+										error_handler.report_vfav1e_error (current_class, l_parent_feature, l_other_parent_feature)
+									else
+										error_handler.report_vfav1h_error (current_class, l_parent_feature, l_other_parent_feature)
+									end
+								else
+										-- Only `l_other_feature' is inherited with no redeclaration in current class.
+									if l_alias_name.is_bracket then
+										error_handler.report_vfav2c_error (current_class, a_feature, l_other_parent_feature)
+									elseif l_alias_name.is_prefix then
+										error_handler.report_vfav1d_error (current_class, a_feature, l_other_parent_feature)
+									else
+										error_handler.report_vfav1g_error (current_class, a_feature, l_other_parent_feature)
+									end
+								end
+							elseif a_named_feature.is_inherited then
+									-- Only `a_named_feature' is inherited with no redeclaration in current class.
+								l_parent_feature := a_named_feature.inherited_feature.flattened_parent
+								if l_alias_name.is_bracket then
+									error_handler.report_vfav2c_error (current_class, l_other_feature.flattened_feature, l_parent_feature)
+								elseif l_alias_name.is_prefix then
+									error_handler.report_vfav1d_error (current_class, l_other_feature.flattened_feature, l_parent_feature)
+								else
+									error_handler.report_vfav1g_error (current_class, l_other_feature.flattened_feature, l_parent_feature)
+								end
+							else
+									-- Both features are either immediate or redeclared in current class.
+								if l_alias_name.is_bracket then
+									error_handler.report_vfav2b_error (current_class, a_feature, l_other_feature.flattened_feature)
+								elseif l_alias_name.is_prefix then
+									error_handler.report_vfav1c_error (current_class, a_feature, l_other_feature.flattened_feature)
+								else
+									error_handler.report_vfav1f_error (current_class, a_feature, l_other_feature.flattened_feature)
+								end
+							end
+						else
+							aliased_features.force_last (a_named_feature, l_alias_name)
+						end
+					end
 					if a_deferred_feature = Void then
-						if a_named_feature.flattened_feature.is_deferred then
+						if a_feature.is_deferred then
 							a_deferred_feature := a_named_feature
 						end
 					end
 					check_signature_validity (a_named_feature)
 					named_features.forth
 				end
+				aliased_features.wipe_out
 				if a_deferred_feature /= Void then
 					current_class.set_has_deferred_features (True)
 					if not current_class.has_deferred_mark then
@@ -305,6 +422,7 @@ feature {NONE} -- Feature flattening
 			named_features.wipe_out
 		ensure
 			named_features_wiped_out: named_features.is_empty
+			aliased_features_wiped_out: aliased_features.is_empty
 		end
 
 feature {NONE} -- Feature processing
@@ -443,6 +561,8 @@ feature {NONE} -- Feature processing
 			l_other_seeds: ET_FEATURE_IDS
 			l_keep_same_version: BOOLEAN
 			l_duplication_needed: BOOLEAN
+			l_alias_name: ET_ALIAS_NAME
+			l_parent_alias_name: ET_ALIAS_NAME
 			l_feature_found: BOOLEAN
 			l_duplicated: BOOLEAN
 			l_clients: ET_CLASS_NAME_LIST
@@ -452,6 +572,8 @@ feature {NONE} -- Feature processing
 			l_other_precursors: ET_FEATURE_LIST
 			l_found: BOOLEAN
 			i, nb: INTEGER
+			l_extended_name: ET_EXTENDED_FEATURE_NAME
+			l_identifier: ET_IDENTIFIER
 		do
 			l_clients := inherited_clients (a_feature)
 			l_first_seed := a_feature.first_seed
@@ -548,7 +670,15 @@ feature {NONE} -- Feature processing
 			end
 			l_flattened_feature := l_parent_feature.precursor_feature
 			if l_parent_feature.has_undefine then
-				l_flattened_feature := l_flattened_feature.undefined_feature (l_parent_feature.undefine_name)
+				l_extended_name := l_parent_feature.undefine_name
+				l_alias_name := l_parent_feature.alias_name
+				if l_alias_name /= Void then
+					l_identifier ?= l_parent_feature.undefine_name
+					if l_identifier /= Void then
+						create {ET_ALIASED_FEATURE_NAME} l_extended_name.make (l_identifier, l_alias_name)
+					end
+				end
+				l_flattened_feature := l_flattened_feature.undefined_feature (l_extended_name)
 				l_flattened_feature.reset_preconditions
 				l_flattened_feature.reset_postconditions
 				l_flattened_feature.set_implementation_feature (l_flattened_feature)
@@ -557,7 +687,7 @@ feature {NONE} -- Feature processing
 				l_flattened_feature.set_other_precursors (l_other_precursors)
 				l_duplicated := True
 			elseif l_duplication_needed or not l_feature_found then
-				l_flattened_feature := l_flattened_feature.renamed_feature (l_parent_feature.name)
+				l_flattened_feature := l_flattened_feature.renamed_feature (l_parent_feature.extended_name)
 				if l_other_precursors /= Void then
 						-- Merge or Join.
 						-- Otherwise it would have been a simple inheritance or sharing
@@ -585,6 +715,50 @@ feature {NONE} -- Feature processing
 			end
 			a_feature.set_flattened_feature (l_flattened_feature)
 			a_feature.set_flattened_parent (l_parent_feature)
+				-- Check validity of alias name.
+			if a_feature.parent_feature.merged_feature /= Void then
+					-- Joining/Merging or Sharing.
+				from
+					l_parent_feature := a_feature.parent_feature
+					l_alias_name := l_parent_feature.alias_name
+					l_parent_feature := l_parent_feature.merged_feature
+				until
+					l_parent_feature = Void
+				loop
+					l_parent_alias_name := l_parent_feature.alias_name
+					if l_alias_name = Void then
+						if l_parent_alias_name /= Void then
+							set_fatal_error (current_class)
+							if l_other_precursors = Void then
+									-- Sharing.
+								error_handler.report_vmfn2a_error (current_class, l_parent_feature, a_feature.parent_feature)
+							elseif l_flattened_feature.is_deferred then
+									-- Joining/Merging.
+								error_handler.report_vdjr2a_error (current_class, l_parent_feature, a_feature.parent_feature)
+							end
+						end
+					elseif l_parent_alias_name = Void then
+						set_fatal_error (current_class)
+						if l_other_precursors = Void then
+								-- Sharing.
+							error_handler.report_vmfn2a_error (current_class, a_feature.parent_feature, l_parent_feature)
+						else
+								-- Joining/Merging.
+							error_handler.report_vdjr2a_error (current_class, a_feature.parent_feature, l_parent_feature)
+						end
+					elseif not l_alias_name.same_alias_name (l_parent_alias_name) then
+						set_fatal_error (current_class)
+						if l_other_precursors = Void then
+								-- Sharing.
+							error_handler.report_vmfn2b_error (current_class, l_parent_feature, a_feature.parent_feature)
+						else
+								-- Joining/Merging
+							error_handler.report_vdjr2b_error (current_class, l_parent_feature, a_feature.parent_feature)
+						end
+					end
+					l_parent_feature := l_parent_feature.merged_feature
+				end
+			end
 		end
 
 feature {NONE} -- Replication
@@ -788,10 +962,27 @@ feature {NONE} -- Feature adaptation validity
 			a_redeclared_feature_not_void: a_redeclared_feature /= Void
 		local
 			l_precursor_feature: ET_FEATURE
+			l_parent_alias_name: ET_ALIAS_NAME
+			l_alias_name: ET_ALIAS_NAME
 		do
 			check_rename_clause_validity (a_parent_feature)
 			check_undefine_clause_validity (a_parent_feature)
 			check_redefine_clause_validity (a_parent_feature)
+				-- Check VDRD-7, ECMA p.68.
+			l_alias_name := a_redeclared_feature.alias_name
+			l_parent_alias_name := a_parent_feature.alias_name
+			if l_alias_name = Void then
+				if l_parent_alias_name /= Void then
+					set_fatal_error (current_class)
+					error_handler.report_vdrd7b_error (current_class, a_parent_feature, a_redeclared_feature)
+				end
+			elseif l_parent_alias_name = Void then
+				set_fatal_error (current_class)
+				error_handler.report_vdrd7a_error (current_class, a_parent_feature, a_redeclared_feature)
+			elseif not l_alias_name.same_alias_name (l_parent_alias_name) then
+				set_fatal_error (current_class)
+				error_handler.report_vdrd7c_error (current_class, a_parent_feature, a_redeclared_feature)
+			end
 			if a_parent_feature.has_redefine then
 				if a_redeclared_feature.is_deferred /= a_parent_feature.is_deferred then
 					if a_redeclared_feature.is_deferred then
@@ -862,11 +1053,14 @@ feature {NONE} -- Feature adaptation validity
 			a_parent_feature_not_void: a_parent_feature /= Void
 		local
 			l_precursor_feature: ET_FEATURE
+			l_extended_name: ET_EXTENDED_FEATURE_NAME
 			l_name: ET_FEATURE_NAME
+			l_alias_name: ET_ALIAS_NAME
 		do
 			if a_parent_feature.has_rename then
 				l_precursor_feature := a_parent_feature.precursor_feature
-				l_name := a_parent_feature.new_name.new_name.feature_name
+				l_extended_name := a_parent_feature.new_name.new_name
+				l_name := l_extended_name.feature_name
 				if l_name.is_infix then
 					if not l_precursor_feature.is_infixable then
 						set_fatal_error (current_class)
@@ -876,6 +1070,48 @@ feature {NONE} -- Feature adaptation validity
 					if not l_precursor_feature.is_prefixable then
 						set_fatal_error (current_class)
 						error_handler.report_vhrc4a_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+					end
+				else
+					l_alias_name := l_extended_name.alias_name
+					if l_alias_name /= Void then
+							-- Check VHRC-4, ECMA p. 46.
+						if l_alias_name.is_bracket then
+							if not l_precursor_feature.is_bracketable then
+									-- A feature with a Bracket alias should be 
+									-- a function with one or more argument.
+								set_fatal_error (current_class)
+								error_handler.report_vhrc4b_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+							end
+						elseif l_precursor_feature.is_prefixable then
+							if l_alias_name.is_prefixable then
+								l_alias_name.set_prefix
+							else
+									-- A feature with a binary Operator alias should be 
+									-- a function with exactly one argument.
+								set_fatal_error (current_class)
+								error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+							end
+						elseif l_precursor_feature.is_infixable then
+							if l_alias_name.is_infixable then
+								l_alias_name.set_infix
+							else
+									-- A feature with a unary Operator alias should be 
+									-- a query with no argument.
+								set_fatal_error (current_class)
+								error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+							end
+						elseif l_alias_name.is_infix then
+								-- A feature with a binary Operator alias should be 
+								-- a function with exactly one argument.
+							set_fatal_error (current_class)
+							error_handler.report_vhrc4c_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+						else
+							check is_prefix: l_alias_name.is_prefix end
+								-- A feature with a unary Operator alias should be 
+								-- a query with no argument.
+							set_fatal_error (current_class)
+							error_handler.report_vhrc4d_error (current_class, a_parent_feature.parent, a_parent_feature.new_name, l_precursor_feature)
+						end
 					end
 				end
 			end
@@ -1187,6 +1423,8 @@ invariant
 
 	named_features_not_void: named_features /= Void
 	no_void_named_feature: not named_features.has_item (Void)
+	aliased_features_not_void: aliased_features /= Void
+	no_void_aliased_feature: not aliased_features.has_item (Void)
 	clients_list_not_void: clients_list /= Void
 	not_void_clients: not clients_list.has (Void)
 	client_names_not_void: client_names /= Void
