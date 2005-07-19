@@ -1571,6 +1571,14 @@ feature -- AST nodes
 			end
 		end
 
+	new_assigner_instruction (a_target: ET_FEATURE_CALL_EXPRESSION; an_assign: ET_SYMBOL; a_source: ET_EXPRESSION): ET_ASSIGNER_INSTRUCTION is
+			-- New assigner instruction
+		do
+			if a_target /= Void and a_source /= Void then
+				create Result.make (a_target, a_source)
+			end
+		end
+
 	new_assignment (a_target: ET_WRITABLE; an_assign: ET_SYMBOL; a_source: ET_EXPRESSION): ET_ASSIGNMENT is
 			-- New assignment instruction
 		do

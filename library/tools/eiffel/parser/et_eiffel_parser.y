@@ -110,6 +110,7 @@ create
 %type <ET_ASSIGNER> Assigner_opt
 %type <ET_BOOLEAN_CONSTANT> Boolean_constant
 %type <ET_BRACKET_ARGUMENT_LIST> Bracket_actual_list
+%type <ET_BRACKET_EXPRESSION> Bracket_expression
 %type <ET_CALL_AGENT> Call_agent Tilde_call_agent
 %type <ET_CALL_EXPRESSION> Qualified_call_expression
 %type <ET_CHARACTER_CONSTANT> Character_constant
@@ -141,7 +142,7 @@ create
 %type <ET_EXPORT_LIST> New_exports New_exports_opt New_export_list
 %type <ET_EXPRESSION> Expression Call_chain
 %type <ET_EXPRESSION> Precursor_expression Manifest_type Address_mark
-%type <ET_EXPRESSION> Call_expression Bracket_target Bracket_expression
+%type <ET_EXPRESSION> Call_expression Bracket_target
 %type <ET_EXPRESSION> Binary_expression Non_binary_expression
 %type <ET_EXPRESSION_ITEM> Expression_comma
 %type <ET_EXTENDED_FEATURE_NAME> Extended_feature_name
@@ -2288,9 +2289,9 @@ Instruction: Creation_instruction
 	| Call_instruction
 		{ $$ := $1 }
 	| Qualified_call_expression E_ASSIGN_SYMBOL Expression
--- TODO
+		{ $$ := ast_factory.new_assigner_instruction ($1, $2, $3) }
 	| Bracket_expression E_ASSIGN_SYMBOL Expression
--- TODO
+		{ $$ := ast_factory.new_assigner_instruction ($1, $2, $3) }
 	| Writable E_ASSIGN_SYMBOL Expression
 		{ $$ := ast_factory.new_assignment ($1, $2, $3) }
 	| Writable E_REVERSE Expression

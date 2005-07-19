@@ -162,6 +162,7 @@ inherit
 			new_argument_name_comma,
 			new_assertion_semicolon,
 			new_assigner,
+			new_assigner_instruction,
 			new_assignment,
 			new_assignment_attempt,
 			new_attribute,
@@ -1664,6 +1665,17 @@ feature -- AST nodes
 				create Result.make (a_feature_name)
 				if an_assign /= Void then
 					Result.set_assign_keyword (an_assign)
+				end
+			end
+		end
+
+	new_assigner_instruction (a_target: ET_FEATURE_CALL_EXPRESSION; an_assign: ET_SYMBOL; a_source: ET_EXPRESSION): ET_ASSIGNER_INSTRUCTION is
+			-- New assigner instruction
+		do
+			if a_target /= Void and a_source /= Void then
+				create Result.make (a_target, a_source)
+				if an_assign /= Void then
+					Result.set_assign_symbol (an_assign)
 				end
 			end
 		end
