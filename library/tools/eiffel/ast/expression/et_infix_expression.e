@@ -14,10 +14,12 @@ class ET_INFIX_EXPRESSION
 
 inherit
 
-	ET_FEATURE_CALL
+	ET_FEATURE_CALL_EXPRESSION
 		rename
 			target as left,
 			arguments as right
+		undefine
+			reset
 		end
 
 	ET_BINARY_EXPRESSION

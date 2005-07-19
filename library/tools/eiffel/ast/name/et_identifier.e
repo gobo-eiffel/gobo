@@ -68,12 +68,20 @@ inherit
 			make
 		end
 
-	ET_FEATURE_CALL
+	ET_FEATURE_CALL_EXPRESSION
 		rename
 			name as identifier
 		undefine
 			first_position, last_position,
-			is_equal
+			reset, is_equal
+		end
+
+	ET_FEATURE_CALL_INSTRUCTION
+		rename
+			name as identifier
+		undefine
+			first_position, last_position,
+			reset, is_equal
 		end
 
 	KL_IMPORTED_STRING_ROUTINES

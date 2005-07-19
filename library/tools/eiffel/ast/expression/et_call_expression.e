@@ -16,7 +16,7 @@ inherit
 
 	ET_REGULAR_FEATURE_CALL
 
-	ET_EXPRESSION
+	ET_FEATURE_CALL_EXPRESSION
 		undefine
 			reset
 		end

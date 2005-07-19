@@ -19,7 +19,7 @@ inherit
 			process
 		end
 
-	ET_FEATURE_CALL
+	ET_FEATURE_CALL_EXPRESSION
 		rename
 			target as expression
 		end

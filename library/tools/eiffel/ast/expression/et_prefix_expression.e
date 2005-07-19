@@ -14,9 +14,11 @@ class ET_PREFIX_EXPRESSION
 
 inherit
 
-	ET_FEATURE_CALL
+	ET_FEATURE_CALL_EXPRESSION
 		rename
 			target as expression
+		undefine
+			reset
 		end
 
 	ET_UNARY_EXPRESSION
