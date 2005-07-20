@@ -207,6 +207,7 @@ feature {NONE} -- Processing
 			a_universe.set_use_assign_keyword (True)
 			a_universe.set_use_attribute_keyword (False)
 			a_universe.set_use_convert_keyword (True)
+			a_universe.set_use_create_keyword (True)
 			a_universe.set_use_recast_keyword (False)
 			a_universe.set_use_reference_keyword (True)
 			if void_feature then

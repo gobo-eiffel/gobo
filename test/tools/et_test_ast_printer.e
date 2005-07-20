@@ -90,7 +90,8 @@ feature -- Test
 			a_universe.set_use_assign_keyword (True)
 			a_universe.set_use_attribute_keyword (False)
 			a_universe.set_use_convert_keyword (True)
-			a_universe.set_use_recast_keyword (True)
+			a_universe.set_use_create_keyword (True)
+			a_universe.set_use_recast_keyword (False)
 			a_universe.set_use_reference_keyword (True)
 			if eiffel_compiler.is_ve then
 				a_universe.set_use_void_keyword (False)
