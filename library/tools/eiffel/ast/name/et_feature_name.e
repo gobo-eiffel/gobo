@@ -14,11 +14,9 @@ deferred class ET_FEATURE_NAME
 
 inherit
 
-	ET_FEATURE_NAME_ITEM
-
 	ET_CALL_NAME
 
-	ET_EXTENDED_FEATURE_NAME
+	ET_FEATURE_NAME_ITEM
 
 	ET_QUALIFIED_FEATURE_NAME
 
@@ -30,11 +28,6 @@ inherit
 		end
 
 feature -- Access
-
-	alias_name: ET_ALIAS_NAME is
-			-- Alias name, if any
-		do
-		end
 
 	feature_name: ET_FEATURE_NAME is
 			-- Feature name

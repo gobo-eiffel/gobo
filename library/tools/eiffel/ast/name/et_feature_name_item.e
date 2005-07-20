@@ -5,7 +5,7 @@ indexing
 		"Eiffel feature names which appear in a comma-separated list of feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,15 +14,13 @@ deferred class ET_FEATURE_NAME_ITEM
 
 inherit
 
-	ET_AST_NODE
+	ET_EXTENDED_FEATURE_NAME
 
 feature -- Access
 
-	feature_name: ET_FEATURE_NAME is
-			-- Feature name in comma-separated list
-		deferred
-		ensure
-			feature_name_not_void: Result /= Void
+	alias_name: ET_ALIAS_NAME is
+			-- Alias name, if any
+		do
 		end
 
 end

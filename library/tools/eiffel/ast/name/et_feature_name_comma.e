@@ -35,6 +35,14 @@ feature {NONE} -- Initialization
 			comma_set: comma = a_comma
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset feature name as it was when it was first parsed.
+		do
+			-- Do nothing.
+		end
+
 feature -- Access
 
 	feature_name: ET_FEATURE_NAME
