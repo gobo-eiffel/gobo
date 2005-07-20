@@ -270,7 +270,7 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_bracket_argument_list (a_list: ET_ACTUAL_ARGUMENT_LIST) is
+	process_bracket_argument_list (a_list: ET_BRACKET_ARGUMENT_LIST) is
 			-- Process `a_list'.
 		local
 			i, nb: INTEGER
