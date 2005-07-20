@@ -15,7 +15,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class YY_NEW_PARSER_SKELETON [G]
+deferred class YY_NEW_PARSER_SKELETON
 
 obsolete
 
