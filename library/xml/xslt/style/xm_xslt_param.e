@@ -188,6 +188,7 @@ feature -- Element change
 				else
 					if is_global_variable then
 						create a_global_param.make_global_variable (an_executable, variable_name, a_slot_number, slot_manager)
+						a_global_param.set_static_context (static_context)
 						if select_expression /= Void and then select_expression.is_computed_expression then select_expression.as_computed_expression.set_parent (a_global_param) end
 						a_param := a_global_param
 					else

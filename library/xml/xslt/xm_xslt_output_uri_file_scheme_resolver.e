@@ -52,6 +52,7 @@ feature -- Action
 				-- as `a_uri' is absolute, and scheme is "file"
 			end
 			create a_stream.make (a_uri.path)
+			a_stream.open_write
 			if a_stream.is_open_write then
 				create an_output
 				an_output.set_output_stream (a_stream)

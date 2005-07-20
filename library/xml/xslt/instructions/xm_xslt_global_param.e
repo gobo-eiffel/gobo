@@ -32,6 +32,11 @@ feature {NONE} -- Initialization
 			-- TODO: remove this re-defintion (?) instruction_name := "xsl:param"
 		end
 
+feature -- Access
+
+	static_context: XM_XPATH_STATIC_CONTEXT
+			-- Static context
+
 feature -- Status report
 
 	display (a_level: INTEGER) is
@@ -44,6 +49,18 @@ feature -- Status report
 			std.error.put_string (variable_name);
 			std.error.put_new_line
 			if select_expression /= Void and then not select_expression.is_error then select_expression.display (a_level + 1) end
+		end
+
+feature -- Element change
+
+	set_static_context (a_static_context: like static_context) is
+			-- Set `static_context'.
+		require
+			static_context_not_void: a_static_context /= Void
+		do
+			static_context := a_static_context
+		ensure
+			static_context_set: static_context = a_static_context
 		end
 
 feature -- Evaluation
@@ -79,14 +96,32 @@ feature -- Evaluation
 						create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("Circular definition of global parameter: ", variable_name), "", "XTDE0640", Dynamic_error)
 					else
 						if was_supplied then
-							a_bindery.set_supplied_global_variable (variable_fingerprint, slot_number)
-							last_evaluated_binding := a_bindery.global_variable_value (slot_number)
-						else
-							last_evaluated_binding := select_value (an_evaluation_context)
+							select_expression := a_bindery.global_parameter_value (variable_fingerprint)
+							check
+								static_context_not_void: static_context /= Void
+								-- set at compile time
+							end
+							if required_type /= Void then
+								if select_expression.is_atomic_value and then select_expression.as_atomic_value.is_convertible (required_type.primary_type) then
+									select_expression := select_expression.as_atomic_value.convert_to_type (required_type.primary_type)
+									-- TODO: how to handle non-atomic types?
+								end
+								check_against_required_type (static_context)
+								if is_error then
+									an_evaluation_context.transformer.report_fatal_error (error_value, Current)
+								end
+							end
 						end
-						a_bindery.define_global_variable (slot_number, last_evaluated_binding)
-						a_bindery.set_executing (slot_number, False)
+						check
+							select_expression_exists: select_expression /= Void
+							-- either supplied parameter or default value or empty sequence has been assumed
+						end
+						last_evaluated_binding := select_value (an_evaluation_context)
+						if not a_bindery.is_evaluated (slot_number) then
+							a_bindery.define_global_variable (slot_number, last_evaluated_binding)
+						end
 					end
+					a_bindery.set_executing (slot_number, False)
 				end
 			end
 		end

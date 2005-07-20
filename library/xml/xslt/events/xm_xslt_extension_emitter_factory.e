@@ -14,6 +14,8 @@ deferred class XM_XSLT_EXTENSION_EMITTER_FACTORY
 
 inherit
 
+	ANY -- For SE 2.x, so that `is_equal' is exported
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 	

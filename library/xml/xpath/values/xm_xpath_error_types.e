@@ -14,6 +14,8 @@ class XM_XPATH_ERROR_TYPES
 
 inherit
 
+	ANY -- For SE 2.x, so that `is_equal' is exported
+
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 

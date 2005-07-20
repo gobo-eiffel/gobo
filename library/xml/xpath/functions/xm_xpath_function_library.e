@@ -14,6 +14,8 @@ deferred class XM_XPATH_FUNCTION_LIBRARY
 
 inherit
 
+	ANY -- For SE 2.x, so that `is_equal' is exported
+	
 	XM_XPATH_SHARED_NAME_POOL
 		export {NONE} all end
 
