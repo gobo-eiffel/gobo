@@ -5,7 +5,7 @@ indexing
 		"Common properties for GEANT"
 
 	library: "Gobo Eiffel Ant"
-	copyright:"Copyright (c) 2001-2004, Sven Ehrke and others"
+	copyright:"Copyright (c) 2001-2005, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,6 +52,14 @@ feature -- Access
 			create Result.make
 		ensure
 			Empty_variables_not_void: Result /= Void
+		end
+
+	Empty_argument_variables: GEANT_ARGUMENT_VARIABLES is
+			-- Argument variables with no entries
+		once
+			create Result.make
+		ensure
+			Empty_argument_variables_not_void: Result /= Void
 		end
 
 	Default_builtin_variables: GEANT_VARIABLES is

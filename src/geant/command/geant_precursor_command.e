@@ -5,7 +5,7 @@ indexing
 		"Precursor commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2005, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,7 +54,7 @@ feature -- Access
 	parent: STRING
 			-- Parent on which precursor command should be applied
 
-	arguments: GEANT_VARIABLES
+	arguments: GEANT_ARGUMENT_VARIABLES
 			-- Actual arguments
 
 feature -- Setting

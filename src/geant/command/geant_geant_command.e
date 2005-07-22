@@ -5,7 +5,7 @@ indexing
 		"Geant commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2005, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,7 @@ feature -- Access
 	start_target_name: STRING
 			-- Name of target the build process starts with
 
-	arguments: GEANT_VARIABLES
+	arguments: GEANT_ARGUMENT_VARIABLES
 			-- Actual arguments
 
 feature -- Status report

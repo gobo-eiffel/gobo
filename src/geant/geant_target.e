@@ -5,7 +5,7 @@ indexing
 		"Target of geant build file"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2005, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			end
 
 				-- formal arguments:
-			formal_arguments := Empty_variables
+			formal_arguments := Empty_argument_variables
 			a_argument_elements := elements_by_name (Argument_element_name)
 			if a_argument_elements.count /= 0 then
 				create formal_arguments.make
@@ -192,10 +192,10 @@ feature -- Access
 			final_target_has_no_redefining_target: Result.redefining_target = Void
 		end
 
-	formal_arguments: GEANT_VARIABLES
+	formal_arguments: GEANT_ARGUMENT_VARIABLES
 			-- Formal arguments of this target
 
-	prepared_arguments_from_formal_arguments (a_arguments: GEANT_VARIABLES): GEANT_VARIABLES is
+	prepared_arguments_from_formal_arguments (a_arguments: GEANT_ARGUMENT_VARIABLES): GEANT_ARGUMENT_VARIABLES is
 			-- Prepared actual arguments arguments for `formal_arguments';
 			-- Numbered arguments are replaced by their associated named arguments according
 			-- to `formal_arguments';
@@ -220,7 +220,7 @@ feature -- Access
 			end
 		end
 
-	named_from_numbered_arguments (a_arguments: GEANT_VARIABLES): GEANT_VARIABLES is
+	named_from_numbered_arguments (a_arguments: GEANT_ARGUMENT_VARIABLES): GEANT_ARGUMENT_VARIABLES is
 			-- Clone of `a_arguments' where number keys have been replaced by their
 			-- corresponding names from `formal_arguments'
 		require

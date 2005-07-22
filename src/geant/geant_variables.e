@@ -5,7 +5,7 @@ indexing
 		"Variables for GEANT"
 
 	library: "Gobo Eiffel Ant"
-	copyright:"Copyright (c) 2004, Sven Ehrke and others"
+	copyright:"Copyright (c) 2004-2005, Sven Ehrke and others"
 	license:"Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision:"$Revision$"
@@ -43,14 +43,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
-
-	has_numbered_keys: BOOLEAN is
-			-- Do entries exist which indicate that Current contains only numbered entries?
-		do
-			Result := has ("1")
-		ensure
-			definition: Result implies has ("1")
-		end
 
 	has_same_keys (a_other: like Current): BOOLEAN is
 			-- Has `a_other' the same key entries?
