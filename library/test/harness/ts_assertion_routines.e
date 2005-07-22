@@ -17,11 +17,18 @@ inherit
 	ANY
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
-	KL_IMPORTED_STRING_ROUTINES
-	KL_IMPORTED_INTEGER_ROUTINES
-	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
 
-feature -- Access
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
+	KL_IMPORTED_ANY_ROUTINES
+		export {NONE} all end
+
+feature {TS_TEST_HANDLER} -- Access
 
 	assertions: TS_ASSERTIONS is
 			-- Assertions
@@ -30,7 +37,7 @@ feature -- Access
 			assertions_not_void: Result /= Void
 		end
 
-feature -- Basic operations
+feature {TS_TEST_HANDLER} -- Basic operations
 
 	assert (a_tag: STRING; a_condition: BOOLEAN) is
 			-- Assert `a_condition'.
@@ -43,7 +50,7 @@ feature -- Basic operations
 			end
 		end
 
-feature -- Equality
+feature {TS_TEST_HANDLER} -- Equality
 
 	assert_equal (a_tag: STRING; expected, actual: ANY) is
 			-- Assert that `equal (expected, actual)'.
@@ -171,7 +178,7 @@ feature -- Equality
 			end
 		end
 
-feature -- Files
+feature {TS_TEST_HANDLER} -- Files
 
 	assert_files_equal (a_tag: STRING; a_filename1, a_filename2: STRING) is
 			-- Assert that there is no difference between the
@@ -312,7 +319,7 @@ feature -- Files
 			end
 		end
 
-feature -- Containers
+feature {TS_TEST_HANDLER} -- Containers
 
 	assert_array (a_tag: STRING; expected, actual: ARRAY [ANY]) is
 			-- Assert that `expected' and `actual' have the same items
@@ -469,7 +476,7 @@ feature -- Containers
 			end
 		end
 
-feature -- Execution
+feature {TS_TEST_HANDLER} -- Execution
 
 	assert_execute (a_shell_command: STRING) is
 			-- Execute `a_shell_command' and check whether the
@@ -518,7 +525,7 @@ feature {NONE} -- Messages
 				Result := an_any.out
 			end
 		end
-		
+
 	assert_equal_message (a_tag: STRING; expected, actual: ANY): STRING is
 			-- Message stating that `expected' and `actual' should be equal.
 		require
@@ -534,12 +541,11 @@ feature {NONE} -- Messages
 		do
 			Result := assert_strings_equal_message (a_tag, expected.out, actual.out)
 		end
-	
+
 	assert_strings_equal_message (a_tag: STRING; expected, actual: STRING): STRING is
 			-- Message stating that `expected' and `actual' should be equal.
 		require
 			a_tag_not_void: a_tag /= Void
-
 		do
 			create Result.make (50)
 			Result.append_string (a_tag)
@@ -558,7 +564,7 @@ feature {NONE} -- Messages
 		ensure
 			message_not_void: Result /= Void
 		end
-	
+
 	assert_not_equal_message (a_tag: STRING; expected, actual: ANY): STRING is
 			-- Message stating that `expected' and `actual' should not be equal.
 		require
@@ -566,7 +572,7 @@ feature {NONE} -- Messages
 		do
 			Result := assert_strings_not_equal_message (a_tag, void_or_out (expected), void_or_out (actual))
 		end
-		
+
 	assert_integers_not_equal_message (a_tag: STRING; expected, actual: INTEGER): STRING is
 			-- Message stating that `expected' and `actual' should not be equal.
 		require
@@ -574,7 +580,7 @@ feature {NONE} -- Messages
 		do
 			Result := assert_strings_not_equal_message (a_tag, expected.out, actual.out)
 		end
-		
+
 	assert_strings_not_equal_message (a_tag: STRING; expected, actual: STRING): STRING is
 			-- Message stating that `expected' and `actual' should not be equal.
 		require

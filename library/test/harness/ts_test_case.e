@@ -17,7 +17,6 @@ inherit
 	TS_TEST
 
 	TS_ASSERTION_ROUTINES
-		export {NONE} all end
 
 feature {NONE} -- Initialization
 
