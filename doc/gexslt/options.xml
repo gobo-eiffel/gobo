@@ -484,13 +484,9 @@
 	  <listitem>
 	    <para>
 	      The source document is built using the tiny-tree model, rather than
-	      the standard tree model. This saves on memory, but will usually result
-	      in slower execution, except for very simple tranformations, such as the 
-	      identity transform, where it may actually improve execution speed.
-	      <warning>
-		This seems to have a memory leak at the moment, so it is probably
-		best to avoid using it.
-	      </warning>
+	      the standard tree model. This saves on memory, but will often result
+	      in slower execution. But with some tranformations, such as the 
+	      identity transform, it may actually improve execution speed.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -564,6 +560,29 @@
 	    Disables use of any URI schemes that imply access
 	    to the outside world (e.g. <uri>http</uri>, <uri>ftp</uri>
 	    and <uri>telnet</uri>) that might otherwise be registered.
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+  <section>
+    <title>Execution phases</title>
+    <variablelist>
+      <varlistentry>
+	<term>--stop-after-compilation</term>
+	<listitem>
+	  <para>
+	    Compile the stylesheet, but do not parse the principal
+	    source document, and do not execute the transformation.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>--stop-after-source-document</term>
+	<listitem>
+	  <para>
+	    Compile the stylesheet, and parse the principal
+	    source document, but do not execute the transformation.
 	  </para>
 	</listitem>
       </varlistentry>

@@ -59,15 +59,15 @@ feature -- Test
 			
 			shared_name_pool.allocate_namespace_code ("test", testing_namespace)
 			namespace_code := shared_name_pool.last_namespace_code
-			assert ("Namespace code", namespace_code = 655475)
+			assert ("Namespace code", namespace_code = 721012)
 			namespace_code := shared_name_pool.namespace_code ("test", testing_namespace)
-			assert ("Namespace code 2", namespace_code = 655475)
+			assert ("Namespace code 2", namespace_code = 721012)
 
 			shared_name_pool.allocate_code_for_prefix ("test2")
 			prefix_code := shared_name_pool.last_prefix_code
-			assert ("Prefix code", prefix_code = 11)
+			assert ("Prefix code", prefix_code = 12)
 			prefix_code := shared_name_pool.code_for_prefix ("test2")
-			assert ("Prefix code", prefix_code = 11)
+			assert ("Prefix code", prefix_code = 12)
 		end
 	
 	test_conversions is

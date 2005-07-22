@@ -425,6 +425,8 @@ feature -- Error handling
 									  "       --template=[{namespace-uri}]local-name%N" +
 									  "       --param=name=string-value%N" +
 									  "       --xpath-param=name=xpath-expression%N" +
+									  "       --stop-after-compilation%N" +
+									  "       --stop-after-source-document%N" +
 									  additional_options)
 		ensure
 			usage_message_not_void: Result /= Void
@@ -501,6 +503,10 @@ feature {NONE} -- Implementation
 				configuration.set_recovery_policy (Do_not_recover)
 			elseif an_option.is_equal ("recover-silently") then
 				configuration.set_recovery_policy (Recover_silently)				
+			elseif an_option.is_equal ("stop-after-source-document") then
+				configuration.set_final_execution_phase (Stop_after_principal_source)				
+			elseif an_option.is_equal ("stop-after-compilation") then
+				configuration.set_final_execution_phase (Stop_after_compilation)				
 			elseif an_option.substring_index ("warning-threshold=", 1) = 1 and then an_option.count > 18 then
 				set_warning_threshold (an_option.substring (19, an_option.count))
 			elseif an_option.substring_index ("error-threshold=", 1) = 1 and then an_option.count > 16 then
@@ -697,7 +703,7 @@ feature {NONE} -- Implementation
 			if a_transformer_factory.was_error then
 				report_processing_error ("Could not compile stylesheet", a_transformer_factory.last_error_message)
 				Exceptions.die (2)
-			else
+			elseif configuration.final_execution_phase > Stop_after_compilation then
 				a_transformer := a_transformer_factory.created_transformer
 				process_parameters (a_transformer)
 				if uris.count = 2 then

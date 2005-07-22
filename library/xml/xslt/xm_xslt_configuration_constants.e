@@ -19,5 +19,10 @@ feature -- Access
 	Do_not_recover: INTEGER is 3
 			-- Recovery policies
 
+	Run_to_completion: INTEGER is 0
+	Stop_after_principal_source: INTEGER is -1
+	Stop_after_compilation: INTEGER is -2
+			-- Execution phases
+
 end
 	

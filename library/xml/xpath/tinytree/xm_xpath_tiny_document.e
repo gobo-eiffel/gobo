@@ -826,15 +826,9 @@ feature -- Element change
 			a_new_size, an_index, another_type_code: INTEGER
 			a_node: XM_XPATH_TINY_NODE
 		do
-			if attribute_parents.capacity < a_parent  then
-				a_new_size := last_node_added.max (attribute_parents.count * 2)
-				attribute_parents.resize (a_new_size)
-				attribute_values.resize (a_new_size)
-				attribute_codes.resize (a_new_size)
-			end
-			attribute_parents.put_last (a_parent)
-			attribute_values.put_last (a_value)
-			attribute_codes.put_last (a_name_code)
+			attribute_parents.force_last (a_parent)
+			attribute_values.force_last (a_value)
+			attribute_codes.force_last (a_name_code)
 
 			debug ("XPath tiny document")
 				std.error.put_string ("Add_attribute: name code is ")
@@ -869,7 +863,7 @@ feature -- Element change
 				end
 			end
 			if attribute_type_codes /= Void then
-				if attribute_type_codes.count < a_parent then
+				if attribute_type_codes.count < attribute_parents.count then
 					a_new_size := last_node_added.max (attribute_type_codes.count * 2)
 					INTEGER_ARRAY_.resize (attribute_type_codes, 1, a_new_size)
 				end

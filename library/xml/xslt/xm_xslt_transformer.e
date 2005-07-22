@@ -552,7 +552,7 @@ feature -- Transformation
 				end
 			end
 
-			if not is_error then
+			if not is_error and then configuration.final_execution_phase = Run_to_completion then
 				transform_document (a_start_node, a_result)
 			end
 			configuration.reset_entity_resolver

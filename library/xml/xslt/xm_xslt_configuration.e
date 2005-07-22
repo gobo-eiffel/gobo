@@ -156,6 +156,9 @@ feature -- Access
 			create Result.make ("application", "xml")
 		end
 
+	final_execution_phase: INTEGER
+			-- Last phase to be executed
+
 feature -- Element change
 
 	add_extension_function_library (a_function_library: XM_XPATH_FUNCTION_LIBRARY) is
@@ -292,6 +295,16 @@ feature -- Element change
 			end
 		end
 
+	set_final_execution_phase (a_phase: INTEGER) is
+			-- Set last phase to be executed.
+		require
+			final_execution_phase_in_range: a_phase <= Run_to_completion and then a_phase >= Stop_after_principal_source
+		do
+			final_execution_phase := a_phase
+		ensure
+			phase_set: final_execution_phase = a_phase
+		end
+			
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation
 
 	element_validator (a_receiver: XM_XPATH_RECEIVER; a_name_code: INTEGER; a_schema_type: XM_XPATH_SCHEMA_TYPE;
@@ -353,5 +366,6 @@ invariant
 	recovery_policy: recovery_policy >= Recover_silently and then recovery_policy <= Do_not_recover
 	extension_functions_not_void: extension_functions /= Void
 	media_type_map_not_void: media_type_map /= Void
+	final_execution_phase_in_range: final_execution_phase <= Run_to_completion and then final_execution_phase >= Stop_after_principal_source
 
 end

@@ -1599,7 +1599,7 @@ feature {NONE} -- Implementation
 	
 	hash_slots: ARRAY [XM_XPATH_NAME_ENTRY]
 			-- Fixed size hash table
-	
+feature
 	prefixes: DS_ARRAYED_LIST [STRING]
 			-- The XML prefixes in use
 	
