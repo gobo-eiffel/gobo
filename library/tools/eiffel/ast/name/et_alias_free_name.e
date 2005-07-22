@@ -176,7 +176,7 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			else
-				op ?= other
+				op ?= ANY_.to_any (other)
 				if op /= Void then
 					if hash_code = op.hash_code then
 						if op.free_operator_name = free_operator_name then
