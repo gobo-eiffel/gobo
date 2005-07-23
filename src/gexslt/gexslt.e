@@ -882,10 +882,13 @@ feature {NONE} -- Implementation
 		require
 			output_extensions_not_suppressed: not suppress_output_extensions
 		local
-			an_emitter_factory: XM_XSLT_GEXSLT_EXAMPLES_EMITTER_FACTORY
+			another_emitter_factory: XM_XSLT_GEXSLT_EXAMPLES_EMITTER_FACTORY
+			an_emitter_factory: XM_XSLT_GEXSLT_EMITTER_FACTORY
 		do
 			create an_emitter_factory.make
 			emitter_factory.register_extension_emitter_factory (an_emitter_factory)
+			create another_emitter_factory.make
+			emitter_factory.register_extension_emitter_factory (another_emitter_factory)
 		end
 
 	register_non_network_protocols is

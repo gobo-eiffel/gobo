@@ -30,7 +30,7 @@ feature -- Access
 		ensure
 			valid_namespace_uri: Result /= Void and then Result.count > 0
 				and then not STRING_.same_string (Result, Xslt_uri)
-				and then not STRING_.same_string (Result, Gexslt_eiffel_type_uri)
+				-- removed to allow in-built extension emitter factory - 23/07/2005: and then not STRING_.same_string (Result, Gexslt_eiffel_type_uri)
 		end
 
 	is_valid_output_method (a_method_local_name: STRING): BOOLEAN is

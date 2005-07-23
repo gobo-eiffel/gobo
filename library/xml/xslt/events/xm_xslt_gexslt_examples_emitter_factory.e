@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that create emitters for gexslt:methods."
+		"Objects that create emitters for gexslt-examples:methods."
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
