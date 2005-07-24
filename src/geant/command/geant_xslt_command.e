@@ -5,7 +5,7 @@ indexing
 		"XSLT commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2005, Sven Ehrke and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -229,10 +229,16 @@ feature -- Execution
 			a_stylesheet_filename: STRING
 			a_output_filename: STRING
 			a_execute: BOOLEAN
+			a_variables: GEANT_VARIABLES
 		do
 			a_input_filename := file_system.pathname_from_file_system (input_filename, unix_file_system)
 			a_stylesheet_filename := file_system.pathname_from_file_system (stylesheet_filename, unix_file_system)
 			a_output_filename := file_system.pathname_from_file_system (output_filename, unix_file_system)
+			create a_variables.make
+			a_variables.put (a_output_filename, "output_filename")
+			a_variables.put (a_stylesheet_filename, "stylesheet_filename")
+			a_variables.put (a_input_filename, "input_filename")
+			a_variables.put (indent, "indent")
 
 			a_execute := force
 			if not a_execute then
@@ -245,13 +251,13 @@ feature -- Execution
 			end
 			if a_execute then
 				if processor = Processor_xalan_cpp then
-					execute_xalan_cpp (a_input_filename, a_stylesheet_filename, a_output_filename)
+					execute_xalan_cpp (a_variables)
 				elseif processor = Processor_xalan_java then
-					execute_xalan_java (a_input_filename, a_stylesheet_filename, a_output_filename)
+					execute_xalan_java (a_variables)
 				elseif processor = Processor_xsltproc then
-					execute_xsltproc (a_input_filename, a_stylesheet_filename, a_output_filename)
+					execute_xsltproc (a_variables)
 				elseif processor = Processor_gexslt then
-					execute_gexslt (a_input_filename, a_stylesheet_filename, a_output_filename)
+					execute_gexslt (a_variables)
 				else
 					project.log (<<"  [xslt]: unknown processor">>)
 					exit_code := 1
@@ -259,161 +265,152 @@ feature -- Execution
 			end
 		end
 
-	execute_xalan_cpp (a_input_filename, a_stylesheet_filename, a_output_filename: STRING) is
+	execute_xalan_cpp (a_variables: GEANT_VARIABLES) is
 			-- Execute command using xalan C++ processor.
 		local
 			cmd: STRING
 			i, nb: INTEGER
+			si: GEANT_STRING_INTERPRETER
+			vr: GEANT_VARIABLES_VARIABLE_RESOLVER
+			template: STRING
 		do
-			create cmd.make (128)
-			cmd.append_string ("Xalan ")
-				-- Append option for indentation:
-			cmd.append_string (" -i ")
-			cmd := STRING_.appended_string (cmd, indent)
+			create si.make
+			create vr.make
+			si.set_variable_resolver (vr)
+			vr.set_variables (a_variables)
 
-				-- Append option for outputfile:
-			cmd.append_string (" -o ")
-			cmd := STRING_.appended_string (cmd, a_output_filename)
+			create template.make (128)
+
+			template.append_string ("Xalan -i ${indent} -o ${output_filename}")
 
 				-- Add parameters:
 			nb := parameters.count
 			from i := 1 until i > nb loop
-				cmd.append_string (" -p ")
-				cmd := STRING_.appended_string (cmd, parameters.item (i).first)
-				cmd.append_string (" ")
-				cmd := STRING_.appended_string (cmd, parameters.item (i).second)
+				template.append_string (" -p ")
+				template := STRING_.appended_string (template, parameters.item (i).first)
+				template.append_string (" ")
+				template := STRING_.appended_string (template, parameters.item (i).second)
 				i := i + 1
 			end
 
-				-- Append source argument:
-			cmd.append_string (" ")
-			cmd := STRING_.appended_string (cmd, a_input_filename)
-
-				-- Append stylesheet argument:
-			cmd.append_string (" ")
-			cmd := STRING_.appended_string (cmd, a_stylesheet_filename)
+			template.append_string (" ${input_filename} ${stylesheet_filename}")
+			cmd := si.interpreted_string (template)
 
 			project.trace (<<"  [xslt] ", cmd>>)
 			execute_shell (cmd)
 		end
 
-	execute_xalan_java (a_input_filename, a_stylesheet_filename, a_output_filename: STRING) is
+	execute_xalan_java (a_variables: GEANT_VARIABLES) is
 			-- Execute command using xalan java processor.
 		local
 			cmd: STRING
 			i, nb: INTEGER
+			si: GEANT_STRING_INTERPRETER
+			vr: GEANT_VARIABLES_VARIABLE_RESOLVER
+			template: STRING
 		do
-			create cmd.make (128)
-			cmd.append_string ("java")
+			create si.make
+			create vr.make
+			si.set_variable_resolver (vr)
+			vr.set_variables (a_variables)
+
+			create template.make (128)
+
+			template.append_string ("java")
 			if extdirs /= Void and then extdirs.count > 0 then
-				cmd.append_string (" -Djava.ext.dirs=")
-				cmd := STRING_.appended_string (cmd, extdirs)
+				template.append_string (" -Djava.ext.dirs=")
+				template := STRING_.appended_string (template, extdirs)
 			end
 
 			if classpath /= Void and then classpath.count > 0 then
-				cmd.append_string (" -classpath=")
-				cmd := STRING_.appended_string (cmd, classpath)
+				template.append_string (" -classpath=")
+				template := STRING_.appended_string (template, classpath)
 			end
-
-			cmd.append_string (" org.apache.xalan.xslt.Process")
-
-			cmd.append_string (" -in ")
-			cmd := STRING_.appended_string (cmd, a_input_filename)
-
-			cmd.append_string (" -xsl ")
-			cmd := STRING_.appended_string (cmd, a_stylesheet_filename)
-
-			cmd.append_string (" -out ")
-			cmd := STRING_.appended_string (cmd, a_output_filename)
-
-			cmd.append_string (" -INDENT ")
-			cmd := STRING_.appended_string (cmd, indent)
+			template.append_string (" org.apache.xalan.xslt.Process -in ${input_filename} -xsl ${stylesheet_filename} -out ${output_filename} -INDENT ${indent}")
 
 			if format /= Void and then format.count > 0 then
-				cmd.append_string (" -")
-				cmd := STRING_.appended_string (cmd, format)
+				template.append_string (" -")
+				template := STRING_.appended_string (template, format)
 			end
 
 				-- Add parameters:
 			nb := parameters.count
 			from i := 1 until i > nb loop
-				cmd.append_string (" -PARAM ")
-				cmd := STRING_.appended_string (cmd, parameters.item (i).first)
-				cmd.append_string (" ")
-				cmd := STRING_.appended_string (cmd, parameters.item (i).second)
+				template.append_string (" -PARAM ")
+				template := STRING_.appended_string (template, parameters.item (i).first)
+				template.append_string (" ")
+				template := STRING_.appended_string (template, parameters.item (i).second)
 				i := i + 1
 			end
-
+			cmd := si.interpreted_string (template)
 			project.trace (<<"  [xslt] ", cmd>>)
 			execute_shell (cmd)
 		end
 
-	execute_xsltproc (a_input_filename, a_stylesheet_filename, a_output_filename: STRING) is
+	execute_xsltproc (a_variables: GEANT_VARIABLES) is
 			-- Execute command using libxslt processor.
 		local
 			cmd: STRING
 			i, nb: INTEGER
+			si: GEANT_STRING_INTERPRETER
+			vr: GEANT_VARIABLES_VARIABLE_RESOLVER
+			template: STRING
 		do
-			create cmd.make (128)
-			cmd.append_string ("xsltproc ")
+			create si.make
+			create vr.make
+			si.set_variable_resolver (vr)
+			vr.set_variables (a_variables)
 
-				-- Append option for outputfile:
-			cmd.append_string (" -o ")
-			cmd := STRING_.appended_string (cmd, a_output_filename)
+			create template.make (128)
+			template.append_string ("xsltproc -o ${output_filename}")
 
 				-- Add parameters:
 			nb := parameters.count
 			from i := 1 until i > nb loop
-				cmd.append_string (" -param ")
-				cmd := STRING_.appended_string (cmd, parameters.item (i).first)
-				cmd.append_string (" ")
-				cmd := STRING_.appended_string (cmd, parameters.item (i).second)
+				template.append_string (" -param ")
+				template := STRING_.appended_string (template, parameters.item (i).first)
+				template.append_string (" ")
+				template := STRING_.appended_string (template, parameters.item (i).second)
 				i := i + 1
 			end
 
-				-- Append stylesheet argument:
-			cmd.append_string (" ")
-			cmd := STRING_.appended_string (cmd, a_stylesheet_filename)
-
-				-- Append source argument:
-			cmd.append_string (" ")
-			cmd := STRING_.appended_string (cmd, a_input_filename)
+			template.append_string (" ${stylesheet_filename} ${input_filename}")
+			cmd := si.interpreted_string (template)
 
 			project.trace (<<"  [xslt] ", cmd>>)
 			execute_shell (cmd)
 		end
 
 
-	execute_gexslt (a_input_filename, a_stylesheet_filename, a_output_filename: STRING) is
+	execute_gexslt (a_variables: GEANT_VARIABLES) is
 			-- Execute command using Gobo Eiffel xslt processor.
 		local
 			cmd: STRING
+			template: STRING
 			i, nb: INTEGER
+			si: GEANT_STRING_INTERPRETER
+			vr: GEANT_VARIABLES_VARIABLE_RESOLVER
 		do
-			create cmd.make (128)
-			cmd.append_string ("gexslt ")
+			create si.make
+			create vr.make
+			si.set_variable_resolver (vr)
+			vr.set_variables (a_variables)
 
-				-- Append option for outputfile:
-			cmd.append_string (" --output=")
-			cmd := STRING_.appended_string (cmd, a_output_filename)
+			create template.make (128)
+			template.append_string ("gexslt --output=${output_filename}")
 
 				-- Add parameters:
 			nb := parameters.count
 			from i := 1 until i > nb loop
-				cmd.append_string (" --param=")
-				cmd := STRING_.appended_string (cmd, parameters.item (i).first)
-				cmd.append_string ("=")
-				cmd := STRING_.appended_string (cmd, parameters.item (i).second)
+				template.append_string (" --param=")
+				template := STRING_.appended_string (template, parameters.item (i).first)
+				template.append_string ("=")
+				template := STRING_.appended_string (template, parameters.item (i).second)
 				i := i + 1
 			end
 
-				-- Append stylesheet argument:
-			cmd.append_string (" --file=")
-			cmd := STRING_.appended_string (cmd, a_stylesheet_filename)
-
-				-- Append source argument:
-			cmd.append_string (" --file=")
-			cmd := STRING_.appended_string (cmd, a_input_filename)
+			template.append_string (" --file=${stylesheet_filename} --file=${input_filename}")
+			cmd := si.interpreted_string (template)
 
 			project.trace (<<"  [xslt] ", cmd>>)
 			execute_shell (cmd)
