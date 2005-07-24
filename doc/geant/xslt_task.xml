@@ -41,7 +41,7 @@
 			<varlistentry>
 				<term>processor</term>
 				<listitem>
-					<para><emphasis>Description: </emphasis>Name XSLT processor</para>
+					<para><emphasis>Description: </emphasis>Name of XSLT processor</para>
 				</listitem>
 				<listitem>
 					<para><emphasis>Domain: </emphasis>xalan_cpp|xalan_java|xsltproc|gexslt</para>
@@ -49,6 +49,31 @@
 				<listitem>
 					<para><emphasis>Default: </emphasis>xalan_cpp</para>
 				</listitem>
+				<listitem>
+					<para>
+						<emphasis>JDK 1.4 notes: </emphasis>Since with JDK 1.4 Xalan is included
+						you do not have to make any additional configuration like putting Xalan, Xerces
+						into the classpath. On how to use newer versions of Xalan than the one coming
+						with the JDK 1.4 refer to the Xalan homepage on http://xml.apache.org/xalan-j.
+						In JDK 1.5 it changed again and by default there is no possibility anymore to invoke
+						xalan from the commandline (see http://www.biglist.com/lists/xsl-list/archives/200503/msg01112.html
+						for more information) and in addition the packagenames in the JDK changed (from org.apache.xalan.xslt.Process
+						to com.sun.org.apache.xalan.internal.xslt.Process). Probably the easies way with JDK 1.5 is to put Xalan again
+						in the classpath as it was done with JDK1.3 but I did not spend very much time yet to investigate further.
+					</para>
+				</listitem>
+				
+				<listitem>
+					<para>
+						<emphasis>Java 5 notes: </emphasis>In Java 5 it changed again and by default there is
+						no possibility anymore to invoke
+						xalan from the commandline (see http://www.biglist.com/lists/xsl-list/archives/200503/msg01112.html
+						for more information) and in addition the packagenames in the JDK changed (from org.apache.xalan.xslt.Process
+						to com.sun.org.apache.xalan.internal.xslt.Process). Probably the easies way with Java 5 is to put Xalan again
+						in the classpath as it was done with JDK 1.3 but I did not spend a lot of time to investigate further.
+					</para>
+				</listitem>
+				
 			</varlistentry>
 
 			<varlistentry>
