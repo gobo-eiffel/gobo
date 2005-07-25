@@ -113,7 +113,16 @@ feature -- Status report
 	is_convertible (a_required_type: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `Current' convertible to `a_required_type'?
 		do
-			todo ("is-convertible", False)
+			inspect
+				a_required_type.primitive_type
+			when
+				Any_atomic_type_code, Any_item_fingerprint, Any_uri_type_code,
+				Untyped_atomic_type_code, String_type_code, Normalized_string_type_code,
+				Token_type_code, Language_type_code, Nmtoken_type_code, Ncname_type_code,
+				Id_type_code, Idref_type_code, Entity_type_code
+			 then
+				Result := True
+			end
 		end
 
 feature -- Conversion
@@ -121,10 +130,21 @@ feature -- Conversion
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `a_required_type'
 		do
-				todo ("convert-to-type", False)				
+			inspect
+				a_required_type.primitive_type
+			when Any_atomic_type_code, Any_item_fingerprint, Any_uri_type_code then
+				Result := Current
+			when Untyped_atomic_type_code then
+				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (value)
+			when String_type_code then
+				create {XM_XPATH_STRING_VALUE} Result.make (value)
+			else
+				todo ("convert_to_type (restricted string types)", True)
+			end
 		end
 
 invariant
+
 	value_not_void: value /= Void
 
 end
