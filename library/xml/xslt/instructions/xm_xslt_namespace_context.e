@@ -47,7 +47,7 @@ feature -- Access
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
-			if STRING_.same_string (a_prefix, "") and then not use_default_namespace then
+			if not use_default_namespace and then a_prefix.count = 0 then
 				Result := ""
 			else
 				from
@@ -71,7 +71,7 @@ feature -- Access
 				-- There remains the possibility that a default namespace has not been declared,
 				--  in which case we use the default default namespace - ""
 
-				if STRING_.same_string (a_prefix, "") and then use_default_namespace then
+				if use_default_namespace and then a_prefix.count = 0 then
 					Result := ""
 				end
 			end
