@@ -203,6 +203,8 @@ feature {NONE} -- Implementation
 			when Xslt_if_type_code then
 				create {XM_XSLT_IF} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction
+			when Xslt_import_schema_type_code then
+				create {XM_XSLT_IMPORT_SCHEMA} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_import_type_code then
 				create {XM_XSLT_IMPORT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_include_type_code then
@@ -214,6 +216,8 @@ feature {NONE} -- Implementation
 				Result.flag_as_instruction
 			when Xslt_namespace_alias_type_code then
 				create {XM_XSLT_NAMESPACE_ALIAS} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
+			when Xslt_namespace_type_code then
+				create {XM_XSLT_NAMESPACE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_next_match_type_code then
 				create {XM_XSLT_NEXT_MATCH} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction

@@ -126,7 +126,7 @@ feature -- Events
 		do
 			if not suppress_attributes then
 				if pending_start_tag = -1 then
-					on_error ("Cannot write a namespace declaration when there is no open start tag")
+					on_error ("XTDE????: (TODO - code) Cannot write a namespace declaration when there is no open start tag")
 				else
 					debug ("XSLT content output")
 						std.error.put_string ("Namespace declaration " + shared_name_pool.uri_from_namespace_code (a_namespace_code))
@@ -158,7 +158,7 @@ feature -- Events
 								-- same prefix
 
 								if reject_these_duplicates then
-									on_error ("Cannot create two namespace nodes with the same name")
+									on_error ("XTDE0430: Cannot create two namespace nodes with the same name")
 								end
 								reject := True
 								a_cursor.go_after
@@ -175,7 +175,7 @@ feature -- Events
 						if a_prefix_code = 0 and then a_uri_code /= 0 then
 							another_namespace_code := shared_name_pool.namespace_code_from_name_code (pending_start_tag)
 							if another_namespace_code = 0 then
-								on_error ("Cannot output a namespace node for the default namespace when the element is in no namespace")
+								on_error ("XTDE????: TODO (code) Cannot output a namespace node for the default namespace when the element is in no namespace")
 								reject := True
 							end
 						end
@@ -203,7 +203,7 @@ feature -- Events
 						std.error.put_string ("Failing attribute is " + shared_name_pool.display_name_from_name_code (a_name_code))
 						std.error.put_new_line
 					end
-					on_error ("Cannot write an attribute when there is no open start tag")
+					on_error ("XTDE????: TODO (code) Cannot write an attribute when there is no open start tag")
 				else
 					debug ("XSLT content output")
 						std.error.put_string ("Notifying attribute " + shared_name_pool.display_name_from_name_code (a_name_code))
@@ -222,7 +222,7 @@ feature -- Events
 					loop
 						if a_cursor.item = a_name_code then
 							if are_duplicates_rejected (properties) then
-								on_error (STRING_.concat ("Duplicate attribute: ", shared_name_pool.display_name_from_name_code (a_name_code)))
+								on_error (STRING_.concat ("XTDE????: TODO (code) Duplicate attribute: ", shared_name_pool.display_name_from_name_code (a_name_code)))
 							else
 								pending_attribute_type_codes.replace (a_type_code, a_cursor.index)
 								pending_attribute_values.replace (a_value, a_cursor.index)
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 						finished := True
 						a_cursor.go_after
 					else
-						a_prefix := substituted_prefix (a_name_code, a_sequence_number)
+						a_prefix := substituted_prefix (a_namespace_code, a_sequence_number)
 						shared_name_pool.allocate_name_using_uri_code (a_prefix,
 																					  shared_name_pool.uri_code_from_name_code (a_name_code),
 																					  shared_name_pool.local_name_from_name_code (a_name_code))

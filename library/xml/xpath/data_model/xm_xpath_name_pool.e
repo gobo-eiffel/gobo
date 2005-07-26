@@ -1174,8 +1174,6 @@ feature -- Element change
 			else
 				a_name_entry := hash_slots.item (a_hash_code)
 				from
-				variant
-					1023 - a_depth
 				until
 					finished = True
 				loop

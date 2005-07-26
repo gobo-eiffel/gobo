@@ -80,11 +80,7 @@ feature -- Events
 		do
 			an_index := a_message.index_of (':', 1)
 			if a_message.count > an_index + 1 and then STRING_.same_string (a_message.substring (1, 1), "X") and then an_index > 0 then
-				if STRING_.same_string (a_message.substring (1, 2), "XT") then
-					a_uri := ""
-				else
-					a_uri := Xpath_errors_uri
-				end
+				a_uri := Xpath_errors_uri
 				a_code := a_message.substring (1, an_index - 1)
 				a_text := a_message.substring (an_index + 2, a_message.count)
 			elseif a_message.count > 0 and then STRING_.same_string (a_message.substring (1, 1), "{") then
