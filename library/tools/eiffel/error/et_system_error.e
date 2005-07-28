@@ -19,6 +19,7 @@ inherit
 create
 
 	make_vsrc1a,
+	make_gvknl1a,
 	make_gvsrc3a,
 	make_gvsrc4a,
 	make_gvsrc5a,
@@ -43,6 +44,26 @@ feature {NONE} -- Initialization
 			-- dollar0: $0 = program name
 			-- dollar1: $1 = ETL code
 			-- dollar2: $2 = root class name
+		end
+
+	make_gvknl1a (a_class: ET_CLASS) is
+			-- Create a new GVKNL-1 error: unknown kernel class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKNL: Gobo Validity KerNeL
+		require
+			a_class_not_void: a_class /= Void
+		do
+			code := gvknl1a_template_code
+			etl_code := gvknl1_etl_code
+			default_template := gvknl1a_default_template
+			create parameters.make (1, 2)
+			parameters.put (etl_code, 1)
+			parameters.put (a_class.name.name, 2)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = kernel class name
 		end
 
 	make_gvsrc3a is
@@ -133,6 +154,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	vsrc1a_default_template: STRING is "[$1] root class $2 should not be generic."
+	gvknl1a_default_template: STRING is "[$1] missing kernel class $2."
 	gvsrc3a_default_template: STRING is "[$1] missing root class."
 	gvsrc4a_default_template: STRING is "[$1] unknown root class $2."
 	gvsrc5a_default_template: STRING is "[$1] root creation procedure `$3' is not a feature of root class $2."
@@ -140,6 +162,7 @@ feature {NONE} -- Implementation
 			-- Default templates
 
 	vsrc1_etl_code: STRING is "VSRC1"
+	gvknl1_etl_code: STRING is "GVKNL1"
 	gvsrc3_etl_code: STRING is "GVSRC3"
 	gvsrc4_etl_code: STRING is "GVSRC4"
 	gvsrc5_etl_code: STRING is "GVSRC5"
@@ -147,6 +170,7 @@ feature {NONE} -- Implementation
 			-- ETL validity codes
 
 	vsrc1a_template_code: STRING is "vsrc1a"
+	gvknl1a_template_code: STRING is "gvknl1a"
 	gvsrc3a_template_code: STRING is "gvsrc3a"
 	gvsrc4a_template_code: STRING is "gvsrc4a"
 	gvsrc5a_template_code: STRING is "gvsrc5a"

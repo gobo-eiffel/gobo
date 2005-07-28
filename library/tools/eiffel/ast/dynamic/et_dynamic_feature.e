@@ -240,6 +240,21 @@ feature -- Status report
 			-- Result := False
 		end
 
+	is_semistrict: BOOLEAN is
+			-- Is current feature semistrict?
+		do
+			if builtin_code = tokens.builtin_boolean_and_then then
+				Result := True
+			elseif builtin_code = tokens.builtin_boolean_or_else then
+				Result := True
+			elseif builtin_code = tokens.builtin_boolean_implies then
+				Result := True
+			end
+		end
+		
+	is_inlined: BOOLEAN
+			-- Is current feature inlined?
+
 	is_builtin: BOOLEAN is
 			-- Is current feature built-in?
 		do
@@ -337,6 +352,14 @@ feature -- Status setting
 			end
 		ensure
 			static_set: is_static = b
+		end
+
+	set_inlined (b: BOOLEAN) is
+			-- Set `is_inlined' to `b'.
+		do
+			is_inlined := b
+		ensure
+			inlined_set: is_inlined = b
 		end
 
 	set_builtin_code (a_code: INTEGER) is

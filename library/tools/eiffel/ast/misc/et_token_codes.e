@@ -138,9 +138,31 @@ feature -- Built-in codes
 
 	builtin_not_builtin: INTEGER is 0
 	builtin_unknown: INTEGER is 1
-	builtin_any_twin: INTEGER is 2
-	builtin_function_item: INTEGER is 3
-	builtin_routine_call: INTEGER is 4
+	builtin_any_twin: INTEGER is 101
+	builtin_any_standard_copy: INTEGER is 102
+	builtin_any_standard_is_equal: INTEGER is 103
+	builtin_any_same_type: INTEGER is 104
+	builtin_special_make: INTEGER is 201
+	builtin_special_item: INTEGER is 202
+	builtin_special_put: INTEGER is 203
+	builtin_special_count: INTEGER is 204
+	builtin_character_code: INTEGER is 301
+	builtin_integer_plus: INTEGER is 401
+	builtin_integer_minus: INTEGER is 402
+	builtin_integer_times: INTEGER is 403
+	builtin_integer_divide: INTEGER is 404
+	builtin_integer_div: INTEGER is 405
+	builtin_integer_mod: INTEGER is 406
+	builtin_integer_opposite: INTEGER is 407
+	builtin_integer_lt: INTEGER is 408
+	builtin_integer_to_character: INTEGER is 409
+	builtin_integer_bit_or: INTEGER is 410
+	builtin_integer_bit_shift_left: INTEGER is 411
+	builtin_boolean_and_then: INTEGER is 501
+	builtin_boolean_or_else: INTEGER is 502
+	builtin_boolean_implies: INTEGER is 503
+	builtin_function_item: INTEGER is 1001
+	builtin_routine_call: INTEGER is 1101
 			-- Built-in feature codes
 
 end

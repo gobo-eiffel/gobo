@@ -481,6 +481,22 @@ feature -- System errors
 			end
 		end
 
+	report_gvknl1a_error (a_class: ET_CLASS) is
+			-- Report GVKNL-1 error: unknown kernel class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKNL: Gobo Validity KerNeL
+		require
+			a_class_not_void: a_class /= Void
+		local
+			an_error: ET_SYSTEM_ERROR
+		do
+			if reportable_gvknl1_error then
+				create an_error.make_gvknl1a (a_class)
+				report_system_error (an_error)
+			end
+		end
+
 	report_gvsrc3a_error is
 			-- Report GVSRC-3 error: missing root class.
 			--
@@ -556,6 +572,12 @@ feature -- System error status
 			Result := True
 		end
 
+	reportable_gvknl1_error: BOOLEAN is
+			-- Can a GVKNL-1 error be reported?
+		do
+			Result := True
+		end
+		
 	reportable_gvsrc3_error: BOOLEAN is
 			-- Can a GVSRC-3 error be reported?
 		do
@@ -5546,6 +5568,547 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvkbs1a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.twin' built-in
+			-- routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs1b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.standard_is_equal'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1b (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs1c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.standard_copy'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1c (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs1d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-1 error: wrong signature for 'ANY.same_type'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs1_error (a_class) then
+				create an_error.make_gvkbs1d (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs2a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.item'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs2_error (a_class) then
+				create an_error.make_gvkbs2a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs2b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.put'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs2_error (a_class) then
+				create an_error.make_gvkbs2b (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs2c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.make'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs2_error (a_class) then
+				create an_error.make_gvkbs2c (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs2d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-2 error: wrong signature for 'SPECIAL.count'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs2_error (a_class) then
+				create an_error.make_gvkbs2d (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs3a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.code'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs3_error (a_class) then
+				create an_error.make_gvkbs3a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "+"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "-"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4b (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "*"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4c (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4d_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "/"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4d (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4e_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "//"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4e (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4f_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "\\"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4f (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4g_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.prefix "-"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4g (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4h_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.infix "<"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4h (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4i_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.to_character'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4i (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4j_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_or'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4j (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs4k_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-4 error: wrong signature for 'INTEGER.bit_shift_left'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs4_error (a_class) then
+				create an_error.make_gvkbs4k (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs5a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN.infix "and then"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs5_error (a_class) then
+				create an_error.make_gvkbs5a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs5b_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN.infix "or else"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs5_error (a_class) then
+				create an_error.make_gvkbs5b (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbs5c_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-5 error: wrong signature for 'BOOLEAN.infix "implies"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbs5_error (a_class) then
+				create an_error.make_gvkbs5c (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkbu1a_error (a_class: ET_CLASS; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBU-1 error: unknown built-in routine `a_feature'
+			-- in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBU: Gobo Validity Kernel Built-in routine Unknown
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkbu1_error (a_class) then
+				create an_error.make_gvkbu1a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkfe1a_error (a_class: ET_CLASS; a_name: ET_FEATURE_NAME) is
+			-- Report GVKFE-1 error: feature `a_name' is missing
+			-- in kernel class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkfe1_error (a_class) then
+				create an_error.make_gvkfe1a (a_class, a_name)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkfe2a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+			-- Report GVKFE-2 error: feature `a_feature' in kernel
+			-- class `a_class' is not an attribute.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_attribute: not a_feature.is_attribute
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkfe2_error (a_class) then
+				create an_error.make_gvkfe2a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkfe3a_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_type: ET_BASE_TYPE) is
+			-- Report GVKFE-3 error: attribute `a_feature' in kernel
+			-- class `a_class' has not the expected type `a_type'.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_attribute: a_feature.is_attribute
+			a_type_not_void: a_type /= Void
+			a_type_is_named_type: a_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkfe3_error (a_class) then
+				create an_error.make_gvkfe3a (a_class, a_feature, a_type)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvtcg5a_error (a_class: ET_CLASS; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
 			-- Report GVTCG-5 error: actual generic paramater `an_actual' in
 			-- `a_class' is not a reference type but the corresponding formal parameter
@@ -6702,6 +7265,96 @@ feature -- Validity error status
 
 	reportable_gvhpr5_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVHPR-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkbs1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBS-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkbs2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBS-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkbs3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBS-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkbs4_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBS-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkbs5_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBS-5 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkbu1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKBU-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkfe1_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKFE-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkfe2_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKFE-2 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkfe3_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKFE-3 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -9862,13 +10515,6 @@ feature -- Reporting
 
 --Error codes not used:
 
-	-- report_gibig_error
-	-- report_gibih_error
-	-- report_gibii_error
-	-- report_gibij_error
-	-- report_gibik_error
-	-- report_gibil_error
-	-- report_gibim_error
 	-- report_gibin_error
 	-- report_gibio_error
 	-- report_gibip_error

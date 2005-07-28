@@ -398,12 +398,36 @@ feature -- Feature names
 			area_feature_name_not_void: Result /= Void
 		end
 
+	bit_or_feature_name: ET_FEATURE_NAME is
+			-- 'bit_or' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (bit_or_name)
+		ensure
+			bit_or_feature_name_not_void: Result /= Void
+		end
+
+	bit_shift_left_feature_name: ET_FEATURE_NAME is
+			-- 'bit_shift_left' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (bit_shift_left_name)
+		ensure
+			bit_shift_left_feature_name_not_void: Result /= Void
+		end
+
 	call_feature_name: ET_FEATURE_NAME is
 			-- 'call' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (call_name)
 		ensure
 			call_feature_name_not_void: Result /= Void
+		end
+
+	code_feature_name: ET_FEATURE_NAME is
+			-- 'code' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (code_name)
+		ensure
+			code_feature_name_not_void: Result /= Void
 		end
 
 	copy_feature_name: ET_FEATURE_NAME is
@@ -430,6 +454,17 @@ feature -- Feature names
 			default_create_feature_name_not_void: Result /= Void
 		end
 
+	infix_and_then_feature_name: ET_FEATURE_NAME is
+			-- 'infix "and then"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (and_then_keywords_name)
+			create {ET_INFIX_NAME} Result.make_and_then (l_string)
+		ensure
+			infix_and_then_feature_name_not_void: Result /= Void
+		end
+
 	infix_at_feature_name: ET_FEATURE_NAME is
 			-- 'infix "@"' feature name
 		local
@@ -439,6 +474,105 @@ feature -- Feature names
 			create {ET_INFIX_FREE_NAME} Result.make (l_string)
 		ensure
 			infix_at_feature_name_not_void: Result /= Void
+		end
+
+	infix_div_feature_name: ET_FEATURE_NAME is
+			-- 'infix "//"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (div_symbol_name)
+			create {ET_INFIX_NAME} Result.make_div (l_string)
+		ensure
+			infix_div_feature_name_not_void: Result /= Void
+		end
+
+	infix_divide_feature_name: ET_FEATURE_NAME is
+			-- 'infix "/"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (divide_symbol_name)
+			create {ET_INFIX_NAME} Result.make_divide (l_string)
+		ensure
+			infix_divide_feature_name_not_void: Result /= Void
+		end
+
+	infix_implies_feature_name: ET_FEATURE_NAME is
+			-- 'infix "implies"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (implies_keyword_name)
+			create {ET_INFIX_NAME} Result.make_implies (l_string)
+		ensure
+			infix_implies_feature_name_not_void: Result /= Void
+		end
+
+	infix_lt_feature_name: ET_FEATURE_NAME is
+			-- 'infix "<"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (lt_symbol_name)
+			create {ET_INFIX_NAME} Result.make_lt (l_string)
+		ensure
+			infix_lt_feature_name_not_void: Result /= Void
+		end
+
+	infix_minus_feature_name: ET_FEATURE_NAME is
+			-- 'infix "-"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (minus_symbol_name)
+			create {ET_INFIX_NAME} Result.make_minus (l_string)
+		ensure
+			infix_minus_feature_name_not_void: Result /= Void
+		end
+
+	infix_mod_feature_name: ET_FEATURE_NAME is
+			-- 'infix "\\"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (mod_symbol_name)
+			create {ET_INFIX_NAME} Result.make_mod (l_string)
+		ensure
+			infix_mod_feature_name_not_void: Result /= Void
+		end
+
+	infix_or_else_feature_name: ET_FEATURE_NAME is
+			-- 'infix "or else"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (or_else_keywords_name)
+			create {ET_INFIX_NAME} Result.make_or_else (l_string)
+		ensure
+			infix_or_else_feature_name_not_void: Result /= Void
+		end
+
+	infix_plus_feature_name: ET_FEATURE_NAME is
+			-- 'infix "+"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (plus_symbol_name)
+			create {ET_INFIX_NAME} Result.make_plus (l_string)
+		ensure
+			infix_plus_feature_name_not_void: Result /= Void
+		end
+
+	infix_times_feature_name: ET_FEATURE_NAME is
+			-- 'infix "*"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (times_symbol_name)
+			create {ET_INFIX_NAME} Result.make_times (l_string)
+		ensure
+			infix_times_feature_name_not_void: Result /= Void
 		end
 
 	invariant_feature_name: ET_FEATURE_NAME is
@@ -473,6 +607,25 @@ feature -- Feature names
 			lower_feature_name_not_void: Result /= Void
 		end
 
+	make_feature_name: ET_FEATURE_NAME is
+			-- 'make' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (make_name)
+		ensure
+			make_feature_name_not_void: Result /= Void
+		end
+
+	prefix_minus_feature_name: ET_FEATURE_NAME is
+			-- 'prefix "-"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (minus_symbol_name)
+			create {ET_PREFIX_NAME} Result.make_minus (l_string)
+		ensure
+			prefix_minus_feature_name_not_void: Result /= Void
+		end
+
 	put_feature_name: ET_FEATURE_NAME is
 			-- 'put' feature name
 		once
@@ -497,12 +650,44 @@ feature -- Feature names
 			reference_item_feature_name_not_void: Result /= Void
 		end
 
+	same_type_feature_name: ET_FEATURE_NAME is
+			-- 'same_type' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (same_type_name)
+		ensure
+			same_type_feature_name_not_void: Result /= Void
+		end
+
 	set_operands_feature_name: ET_FEATURE_NAME is
 			-- 'set_operands' feature name
 		once
 			create {ET_IDENTIFIER} Result.make (set_operands_name)
 		ensure
 			set_operands_feature_name_not_void: Result /= Void
+		end
+
+	standard_copy_feature_name: ET_FEATURE_NAME is
+			-- 'standard_copy' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (standard_copy_name)
+		ensure
+			standard_copy_feature_name_not_void: Result /= Void
+		end
+
+	standard_is_equal_feature_name: ET_FEATURE_NAME is
+			-- 'standard_is_equal' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (standard_is_equal_name)
+		ensure
+			standard_is_equal_feature_name_not_void: Result /= Void
+		end
+
+	to_character_feature_name: ET_FEATURE_NAME is
+			-- 'to_character' feature name
+		once
+			create {ET_IDENTIFIER} Result.make (to_character_name)
+		ensure
+			to_character_feature_name_not_void: Result /= Void
 		end
 
 	twin_feature_name: ET_FEATURE_NAME is
@@ -537,6 +722,17 @@ feature -- Types
 			create Result.make
 		ensure
 			like_current_not_void: Result /= Void
+		end
+
+	formal_parameter_1: ET_FORMAL_PARAMETER_TYPE is
+			-- Type 'G#1'
+		local
+			l_name: ET_IDENTIFIER
+		once
+			create l_name.make ("G")
+			create Result.make (l_name, 1)
+		ensure
+			formal_parameter_not_void: Result /= Void
 		end
 
 feature -- Symbols
@@ -1228,17 +1424,25 @@ feature -- Keyword and symbol names
 		-- Eiffel class names
 
 	area_name: STRING is "area"
+	bit_or_name: STRING is "bit_or"
+	bit_shift_left_name: STRING is "bit_shift_left"
 	call_name: STRING is "call"
+	code_name: STRING is "code"
 	copy_name: STRING is "copy"
 	count_name: STRING is "count"
 	default_create_name: STRING is "default_create"
 	item_name: STRING is "item"
 	last_result_name: STRING is "last_result"
 	lower_name: STRING is "lower"
+	make_name: STRING is "make"
 	put_name: STRING is "put"
 	put_reference_name: STRING is "put_reference"
 	reference_item_name: STRING is "reference_item"
+	same_type_name: STRING is "same_type"
 	set_operands_name: STRING is "set_operands"
+	standard_copy_name: STRING is "standard_copy"
+	standard_is_equal_name: STRING is "standard_is_equal"
+	to_character_name: STRING is "to_character"
 	twin_name: STRING is "twin"
 	upper_name: STRING is "upper"
 		-- Eiffel feature names
@@ -1256,6 +1460,7 @@ feature -- Keyword and symbol names
 	alias_keyword_name: STRING is "alias"
 	all_keyword_name: STRING is "all"
 	and_keyword_name: STRING is "and"
+	and_then_keywords_name: STRING is "and then"
 	as_keyword_name: STRING is "as"
 	assign_keyword_name: STRING is "assign"
 	attribute_keyword_name: STRING is "attribute"
@@ -1295,6 +1500,7 @@ feature -- Keyword and symbol names
 	old_keyword_name: STRING is "old"
 	once_keyword_name: STRING is "once"
 	or_keyword_name: STRING is "or"
+	or_else_keywords_name: STRING is "or else"
 	precursor_keyword_name: STRING is "precursor"
 	prefix_keyword_name: STRING is "prefix"
 	redefine_keyword_name: STRING is "redefine"

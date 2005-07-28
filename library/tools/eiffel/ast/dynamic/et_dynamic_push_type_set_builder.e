@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type set builders where types are pushed to supersets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -1308,7 +1308,7 @@ feature {NONE} -- Event handling
 feature {NONE} -- Built-in features
 
 	report_builtin_any_twin (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature ANY.twin is being analyzed.
+			-- Report that built-in feature 'ANY.twin' is being analyzed.
 		local
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_copy_feature: ET_FEATURE
@@ -1320,6 +1320,8 @@ feature {NONE} -- Built-in features
 				current_dynamic_feature.set_builtin_code (builtin_any_twin)
 				l_result_type_set := current_dynamic_feature.result_type_set
 				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'twin: like Current'.
 					set_fatal_error
 					error_handler.report_giaac_error
 				else
@@ -1327,12 +1329,11 @@ feature {NONE} -- Built-in features
 						-- Feature `copy' is called internally.
 					l_copy_feature := current_class.seeded_feature (universe.copy_seed)
 					if l_copy_feature = Void then
+							-- Internal error: all classes should have a feature
+							-- 'copy'. Otherwise we get an error when parsing
+							-- class ANY if there is no such feature.
 						set_fatal_error
-						if universe.copy_seed = 0 then
--- TODO: error
-						else
-							error_handler.report_gibgq_error
-						end
+						error_handler.report_gibgq_error
 					else
 						l_dynamic_feature := current_dynamic_type.dynamic_feature (l_copy_feature, current_system)
 						l_dynamic_feature.set_regular (True)

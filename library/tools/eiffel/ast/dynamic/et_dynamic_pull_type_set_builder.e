@@ -1841,6 +1841,8 @@ feature {NONE} -- Built-in features
 				current_dynamic_feature.set_builtin_code (builtin_any_twin)
 				l_result_type_set := current_dynamic_feature.result_type_set
 				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'twin: like Current'.
 					set_fatal_error
 					error_handler.report_gibgo_error
 				else
@@ -1851,12 +1853,11 @@ feature {NONE} -- Built-in features
 						-- Feature `copy' is called internally.
 					l_copy_feature := current_class.seeded_feature (universe.copy_seed)
 					if l_copy_feature = Void then
+							-- Internal error: all classes should have a feature
+							-- 'copy'. Otherwise we get an error when parsing
+							-- class ANY if there is no such feature.
 						set_fatal_error
-						if universe.copy_seed = 0 then
--- TODO: error
-						else
-							error_handler.report_gibgp_error
-						end
+						error_handler.report_gibgp_error
 					else
 						l_dynamic_feature := current_dynamic_type.dynamic_feature (l_copy_feature, current_system)
 						l_dynamic_feature.set_regular (True)

@@ -248,6 +248,33 @@ create
 	make_gvagp0a,
 	make_gvhpr4a,
 	make_gvhpr5a,
+	make_gvkbs1a,
+	make_gvkbs1b,
+	make_gvkbs1c,
+	make_gvkbs1d,
+	make_gvkbs2a,
+	make_gvkbs2b,
+	make_gvkbs2c,
+	make_gvkbs2d,
+	make_gvkbs3a,
+	make_gvkbs4a,
+	make_gvkbs4b,
+	make_gvkbs4c,
+	make_gvkbs4d,
+	make_gvkbs4e,
+	make_gvkbs4f,
+	make_gvkbs4g,
+	make_gvkbs4h,
+	make_gvkbs4i,
+	make_gvkbs4j,
+	make_gvkbs4k,
+	make_gvkbs5a,
+	make_gvkbs5b,
+	make_gvkbs5c,
+	make_gvkbu1a,
+	make_gvkfe1a,
+	make_gvkfe2a,
+	make_gvkfe3a,
 	make_gvtcg5a,
 	make_gvtcg5b,
 	make_gvuaa0a,
@@ -10556,6 +10583,1096 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = parent
 		end
 
+	make_gvkbs1a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-1 error: wrong signature for 'ANY.twin' built-in
+			-- routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs1a_template_code
+			etl_code := gvkbs1_etl_code
+			default_template := gvkbs1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs1b (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-1 error: wrong signature for 'ANY.standard_is_equal'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs1b_template_code
+			etl_code := gvkbs1_etl_code
+			default_template := gvkbs1b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs1c (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-1 error: wrong signature for 'ANY.standard_copy'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs1c_template_code
+			etl_code := gvkbs1_etl_code
+			default_template := gvkbs1c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs1d (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-1 error: wrong signature for 'ANY.same_type'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs1d_template_code
+			etl_code := gvkbs1_etl_code
+			default_template := gvkbs1d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs2a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-2 error: wrong signature for 'SPECIAL.item'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs2a_template_code
+			etl_code := gvkbs2_etl_code
+			default_template := gvkbs2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs2b (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-2 error: wrong signature for 'SPECIAL.put'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs2b_template_code
+			etl_code := gvkbs2_etl_code
+			default_template := gvkbs2b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs2c (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-2 error: wrong signature for 'SPECIAL.make'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs2c_template_code
+			etl_code := gvkbs2_etl_code
+			default_template := gvkbs2c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs2d (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-2 error: wrong signature for 'SPECIAL.count'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs2d_template_code
+			etl_code := gvkbs2_etl_code
+			default_template := gvkbs2d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs3a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Report GVKBS-3 error: wrong signature for 'CHARACTER.code'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs3a_template_code
+			etl_code := gvkbs3_etl_code
+			default_template := gvkbs3a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.infix "+"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4a_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4b (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.infix "-"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4b_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4c (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.infix "*"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4c_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4d (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.infix "/"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4d_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4d_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4e (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.infix "//"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4e_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4e_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4f (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.infix "\\"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4f_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4f_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4g (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.prefix "-"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4g_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4g_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4h (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.infix "<"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4h_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4h_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4i (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.to_character'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4i_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4i_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4j (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.bit_or'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4j_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4j_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs4k (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-4 error: wrong signature for 'INTEGER.bit_shift_left'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs4k_template_code
+			etl_code := gvkbs4_etl_code
+			default_template := gvkbs4k_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs5a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-5 error: wrong signature for 'BOOLEAN.infix "and then"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs5a_template_code
+			etl_code := gvkbs5_etl_code
+			default_template := gvkbs5a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs5b (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-5 error: wrong signature for 'BOOLEAN.infix "or else"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs5b_template_code
+			etl_code := gvkbs5_etl_code
+			default_template := gvkbs5b_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbs5c (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBS-5 error: wrong signature for 'BOOLEAN.infix "implies"'
+			-- built-in routine `a_feature' in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBS: Gobo Validity Kernel Built-in routine wrong Signature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbs5c_template_code
+			etl_code := gvkbs5_etl_code
+			default_template := gvkbs5c_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkbu1a (a_class: like current_class; a_feature: ET_EXTERNAL_ROUTINE) is
+			-- Create a new GVKBU-1 error: unknown built-in routine `a_feature'
+			-- in class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKBU: Gobo Validity Kernel Built-in routine Unknown
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_builtin: a_feature.is_builtin
+		do
+			code := gvkbu1a_template_code
+			etl_code := gvkbu1_etl_code
+			default_template := gvkbu1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkfe1a (a_class: like current_class; a_name: ET_FEATURE_NAME) is
+			-- Create a new GVKFE-1 error: feature `a_name' is missing
+			-- in kernel class `a_class'.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+		do
+			code := gvkfe1a_template_code
+			etl_code := gvkfe1_etl_code
+			default_template := gvkfe1a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_class.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkfe2a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new GVKFE-2 error: feature `a_feature' in kernel
+			-- class `a_class' is not an attribute.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_attribute: not a_feature.is_attribute
+		do
+			code := gvkfe2a_template_code
+			etl_code := gvkfe2_etl_code
+			default_template := gvkfe2a_default_template
+			current_class := a_class
+			class_impl := a_class
+			if a_feature.implementation_class = a_class then
+				position := a_feature.name.position
+			else
+				position := a_class.name.position
+			end
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkfe3a (a_class: like current_class; a_feature: ET_FEATURE; a_type: ET_BASE_TYPE) is
+			-- Create a new GVKFE-3 error: attribute `a_feature' in kernel
+			-- class `a_class' has not the expected type `a_type'.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_is_attribute: a_feature.is_attribute
+			a_type_not_void: a_type /= Void
+			a_type_is_named_type: a_type.is_named_type
+		do
+			code := gvkfe3a_template_code
+			etl_code := gvkfe3_etl_code
+			default_template := gvkfe3a_default_template
+			current_class := a_class
+			class_impl := a_class
+			if a_feature.implementation_class = a_class then
+				position := a_feature.name.position
+			else
+				position := a_class.name.position
+			end
+			create parameters.make (1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			parameters.put (a_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
 	make_gvtcg5a (a_class: like current_class; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
 			-- Create a new GVTCG-5 error: actual generic paramater `an_actual' in
 			-- `a_class' is not a reference type but the corresponding formal parameter
@@ -10896,13 +12013,13 @@ feature {NONE} -- Implementation
 	vdrd7a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' inherited from $7 has no alias but its redeclared version has one `$9'."
 	vdrd7b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' inherited from $8 has an alias `$7' but its redeclared version has none."
 	vdrd7c_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' inherited from $8 has an alias `$7' but its redeclared version has a different one `$10'."
-	vdrs1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vdrs1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature inherited from $7."
 	vdrs2a_default_template: STRING is "[$1] class $5 ($3,$4): cannot redefine the frozen feature `$6'."
 	vdrs2b_default_template: STRING is "[$1] class $5 ($3,$4): cannot redefine the constant attribute `$6'."
 	vdrs3a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Redefine subclause of parent $7."
 	vdrs4a_default_template: STRING is "[$1] class $5 ($3,$4): Redefine subclause of $7 lists feature `$6' but it is not redefined."
 	vdrs4b_default_template: STRING is "[$1] class $5 ($3,$4): redeclaration of feature `$6' from $7 is an effecting and should not appear in the Redefine subclause."
-	vdus1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vdus1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature inherited from $7."
 	vdus2a_default_template: STRING is "[$1] class $5 ($3,$4): cannot undefine the frozen feature `$6'."
 	vdus2b_default_template: STRING is "[$1] class $5 ($3,$4): cannot undefine the attribute `$6'."
 	vdus3a_default_template: STRING is "[$1] class $5 ($3,$4): cannot undefine the deferred feature `$6'."
@@ -10978,7 +12095,7 @@ feature {NONE} -- Implementation
 	vkcn2a_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$7' of class $8 appears in a call expression."
 	vkcn2c_default_template: STRING is "[$1] class $5 ($3,$4): procedure `$7' appears in a call expression."
 	vlel1a_default_template: STRING is "[$1] class $5 ($3,$4): 'all' keyword appears twice in the Export subclause of parent $6."
-	vlel2a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vlel2a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature inherited from $7."
 	vlel3a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Export subclause of parent $7."
 	vmfn0a_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6'."
 	vmfn0b_default_template: STRING is "[$1] class $5 ($3,$4): two features with the same name `$6' in current class and `$7' inherited from $8."
@@ -10987,7 +12104,7 @@ feature {NONE} -- Implementation
 	vmfn2b_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' inherited from $8 has an alias `$7' but the version inherited from $10 has a different one `$9'."
 	vmrc2a_default_template: STRING is "[$1] class $5 ($3,$4): replicated features $6 have not been selected."
 	vmrc2b_default_template: STRING is "[$1] class $5 ($3,$4): replicated features $6 have been selected more than once."
-	vmss1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature in $7."
+	vmss1a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is not the final name of a feature inherited from $7."
 	vmss2a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears twice in the Select subclause of parent $7."
 	vmss3a_default_template: STRING is "[$1] class $5 ($3,$4): feature name `$6' appears in the Select subclause of parent $7 but is not replicated."
 	vomb1a_default_template: STRING is "[$1] class $5 ($3,$4): inspect expression of type '$6' different from INTEGER or CHARACTER."
@@ -11068,6 +12185,33 @@ feature {NONE} -- Implementation
 	gvagp0a_default_template: STRING is "[$1] class $5: ancestors with generic parameter mismatch: '$6' and '$7'."
 	gvhpr4a_default_template: STRING is "[$1] class $5: cannot inherit from Bit_type '$6'."
 	gvhpr5a_default_template: STRING is "[$1] class $5: cannot inherit from Tuple_type '$6'."
+	gvkbs1a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'twin: like Current'."
+	gvkbs1b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'standard_is_equal (other: like Current): BOOLEAN'."
+	gvkbs1c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'standard_copy (other: like Current)'."
+	gvkbs1d_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'same_type (other: ANY): BOOLEAN'."
+	gvkbs2a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'item (i: INTEGER): G'."
+	gvkbs2b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'put (v: G; i: INTEGER)'."
+	gvkbs2c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'make (nb: INTEGER)'."
+	gvkbs2d_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'count: INTEGER'."
+	gvkbs3a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'code: INTEGER'."
+	gvkbs4a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"+%" (other: like Current): like Current'."
+	gvkbs4b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"-%" (other: like Current): like Current'."
+	gvkbs4c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"*%" (other: like Current): like Current'."
+	gvkbs4d_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"/%" (other: like Current): DOUBLE'."
+	gvkbs4e_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"//%" (other: like Current): like Current'."
+	gvkbs4f_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"\\%" (other: like Current): like Current'."
+	gvkbs4g_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'prefix %"-%": like Current'."
+	gvkbs4h_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"<%" (other: like Current): BOOLEAN'."
+	gvkbs4i_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'to_character: CHARACTER'."
+	gvkbs4j_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'bit_or (other: like Current): like Current'."
+	gvkbs4k_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'bit_shift_left (other: INTEGER): like Current'."
+	gvkbs5a_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"and then%" (other: like Current): like Current'."
+	gvkbs5b_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"or else%" (other: like Current): like Current'."
+	gvkbs5c_default_template: STRING is "[$1] class $5: built-in routine `$6' in class $5 has not the expected signature 'infix %"implies%" (other: like Current): like Current'."
+	gvkbu1a_default_template: STRING is "[$1] class $5: unknown built-in routine `$6' in class $5."
+	gvkfe1a_default_template: STRING is "[$1] class $5: feature `$6' is missing in kernel class $5."
+	gvkfe2a_default_template: STRING is "[$1] class $5: feature `$6' in kernel class $5 is not an attribute."
+	gvkfe3a_default_template: STRING is "[$1] class $5: attribute `$6' in kernel class $5 has not the expected type '$7'."
 	gvtcg5a_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' is not a reference type but the corresponding formal parameter is marked as reference."
 	gvtcg5b_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' is not expanded type but the corresponding formal parameter is marked as expanded."
 	gvuaa0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot have actual arguments."
@@ -11183,6 +12327,15 @@ feature {NONE} -- Implementation
 	gvagp_etl_code: STRING is "GVAGP"
 	gvhpr4_etl_code: STRING is "GVHPR-4"
 	gvhpr5_etl_code: STRING is "GVHPR-5"
+	gvkbs1_etl_code: STRING is "GVKBS-1"
+	gvkbs2_etl_code: STRING is "GVKBS-2"
+	gvkbs3_etl_code: STRING is "GVKBS-3"
+	gvkbs4_etl_code: STRING is "GVKBS-4"
+	gvkbs5_etl_code: STRING is "GVKBS-5"
+	gvkbu1_etl_code: STRING is "GVKBU-1"
+	gvkfe1_etl_code: STRING is "GVKFE-1"
+	gvkfe2_etl_code: STRING is "GVKFE-2"
+	gvkfe3_etl_code: STRING is "GVKFE-3"
 	gvtcg5_etl_code: STRING is "GVTCG-5"
 	gvuaa_etl_code: STRING is "GVUAA"
 	gvual_etl_code: STRING is "GVUAL"
@@ -11417,6 +12570,33 @@ feature {NONE} -- Implementation
 	gvagp0a_template_code: STRING is "gvagp0a"
 	gvhpr4a_template_code: STRING is "gvhpr4a"
 	gvhpr5a_template_code: STRING is "gvhpr5a"
+	gvkbs1a_template_code: STRING is "gvkbs1a"
+	gvkbs1b_template_code: STRING is "gvkbs1b"
+	gvkbs1c_template_code: STRING is "gvkbs1c"
+	gvkbs1d_template_code: STRING is "gvkbs1d"
+	gvkbs2a_template_code: STRING is "gvkbs2a"
+	gvkbs2b_template_code: STRING is "gvkbs2b"
+	gvkbs2c_template_code: STRING is "gvkbs2c"
+	gvkbs2d_template_code: STRING is "gvkbs2d"
+	gvkbs3a_template_code: STRING is "gvkbs3a"
+	gvkbs4a_template_code: STRING is "gvkbs4a"
+	gvkbs4b_template_code: STRING is "gvkbs4b"
+	gvkbs4c_template_code: STRING is "gvkbs4c"
+	gvkbs4d_template_code: STRING is "gvkbs4d"
+	gvkbs4e_template_code: STRING is "gvkbs4e"
+	gvkbs4f_template_code: STRING is "gvkbs4f"
+	gvkbs4g_template_code: STRING is "gvkbs4g"
+	gvkbs4h_template_code: STRING is "gvkbs4h"
+	gvkbs4i_template_code: STRING is "gvkbs4i"
+	gvkbs4j_template_code: STRING is "gvkbs4j"
+	gvkbs4k_template_code: STRING is "gvkbs4k"
+	gvkbs5a_template_code: STRING is "gvkbs5a"
+	gvkbs5b_template_code: STRING is "gvkbs5b"
+	gvkbs5c_template_code: STRING is "gvkbs5c"
+	gvkbu1a_template_code: STRING is "gvkbu1a"
+	gvkfe1a_template_code: STRING is "gvkfe1a"
+	gvkfe2a_template_code: STRING is "gvkfe2a"
+	gvkfe3a_template_code: STRING is "gvkfe3a"
 	gvtcg5a_template_code: STRING is "gvtcg5a"
 	gvtcg5b_template_code: STRING is "gvtcg5b"
 	gvuaa0a_template_code: STRING is "gvuaa0a"

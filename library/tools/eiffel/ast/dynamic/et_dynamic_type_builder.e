@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -618,22 +618,56 @@ feature {NONE} -- Feature validity
 	check_external_function_validity (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
-		local
-			l_formals: ET_FORMAL_ARGUMENT_LIST
 		do
+			Precursor (a_feature)
 			if not has_fatal_error then
 				if a_feature.is_builtin then
 					inspect a_feature.builtin_code
 					when builtin_any_twin then
-						l_formals := a_feature.arguments
-						if l_formals /= Void and then l_formals.count /= 0 then
--- TODO: report error
-							set_fatal_error
-						else
-							report_builtin_any_twin (a_feature)
-						end
+						report_builtin_any_twin (a_feature)
+					when builtin_any_same_type then
+						report_builtin_any_same_type (a_feature)
+					when builtin_any_standard_is_equal then
+						report_builtin_any_standard_is_equal (a_feature)
+					when builtin_special_item then
+						report_builtin_special_item (a_feature)
+					when builtin_special_count then
+						report_builtin_special_count (a_feature)
+					when builtin_character_code then
+						report_builtin_character_code (a_feature)
+					when builtin_integer_plus then
+						report_builtin_integer_plus (a_feature)
+					when builtin_integer_minus then
+						report_builtin_integer_minus (a_feature)
+					when builtin_integer_times then
+						report_builtin_integer_times (a_feature)
+					when builtin_integer_divide then
+						report_builtin_integer_divide (a_feature)
+					when builtin_integer_div then
+						report_builtin_integer_div (a_feature)
+					when builtin_integer_mod then
+						report_builtin_integer_mod (a_feature)
+					when builtin_integer_opposite then
+						report_builtin_integer_opposite (a_feature)
+					when builtin_integer_lt then
+						report_builtin_integer_lt (a_feature)
+					when builtin_integer_to_character then
+						report_builtin_integer_to_character (a_feature)
+					when builtin_integer_bit_or then
+						report_builtin_integer_bit_or (a_feature)
+					when builtin_integer_bit_shift_left then
+						report_builtin_integer_bit_shift_left (a_feature)
+					when builtin_boolean_and_then then
+						report_builtin_boolean_and_then (a_feature)
+					when builtin_boolean_or_else then
+						report_builtin_boolean_or_else (a_feature)
+					when builtin_boolean_implies then
+						report_builtin_boolean_implies (a_feature)
 					else
--- TODO: unknown built-in feature.
+							-- Internal error: invalid built-in feature.
+							-- Error already reported during parsing.
+						set_fatal_error
+						error_handler.report_gibii_error
 					end
 				end
 			end
@@ -643,14 +677,21 @@ feature {NONE} -- Feature validity
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		do
+			Precursor (a_feature)
 			if not has_fatal_error then
 				if a_feature.is_builtin then
 					inspect a_feature.builtin_code
-					when builtin_any_twin then
--- TODO: report error
-						set_fatal_error
+					when builtin_any_standard_copy then
+						report_builtin_any_standard_copy (a_feature)
+					when builtin_special_make then
+						report_builtin_special_make (a_feature)
+					when builtin_special_put then
+						report_builtin_special_put (a_feature)
 					else
--- TODO: unknown built-in feature.
+							-- Internal error: invalid built-in feature.
+							-- Error already reported during parsing.
+						set_fatal_error
+						error_handler.report_gibij_error
 					end
 				end
 			end
@@ -1052,11 +1093,13 @@ feature {NONE} -- Event handling
 				if l_features.is_empty then
 						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 					set_fatal_error
+-- TODO: internal error
 				else
 					l_area_type_set := l_features.item (1).result_type_set
 					if l_area_type_set = Void then
 							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 						set_fatal_error
+-- TODO: internal error
 					else
 						l_area_type_set.static_type.set_alive
 					end
@@ -1662,7 +1705,7 @@ feature {NONE} -- Event handling
 feature {NONE} -- Built-in features
 
 	report_builtin_any_twin (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Report that built-in feature ANY.twin is being analyzed.
+			-- Report that built-in feature 'ANY.twin' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
@@ -1675,16 +1718,286 @@ feature {NONE} -- Built-in features
 					-- Feature `copy' is called internally.
 				l_copy_feature := current_class.seeded_feature (universe.copy_seed)
 				if l_copy_feature = Void then
+						-- Internal error: all classes should have a feature
+						-- 'copy'. Otherwise we get an error when parsing
+						-- class ANY if there is no such feature.
 					set_fatal_error
-					if universe.copy_seed = 0 then
--- TODO: error
-					else
-						error_handler.report_gibia_error
-					end
+					error_handler.report_gibia_error
 				else
 					l_dynamic_feature := current_dynamic_type.dynamic_feature (l_copy_feature, current_system)
 					l_dynamic_feature.set_regular (True)
 				end
+			end
+		end
+
+	report_builtin_any_same_type (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ANY.same_type' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_same_type)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_any_standard_is_equal (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'ANY.standard_is_equal' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_standard_is_equal)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_any_standard_copy (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'ANY.standard_copy' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_any_standard_copy)
+			end
+		end
+
+	report_builtin_special_item (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'SPECIAL.item' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		local
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_special_item)
+				l_result_type_set := current_dynamic_feature.result_type_set
+				if l_result_type_set = Void then
+						-- Internal error: it was already checked during parsing
+						-- that the signature should be 'item (i: INTEGER): G'.
+					set_fatal_error
+					error_handler.report_gibik_error
+				elseif l_result_type_set.is_expanded then
+					l_result_type_set.static_type.set_alive
+				end
+			end
+		end
+
+	report_builtin_special_count (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'SPECIAL.count' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_special_count)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_special_make (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'SPECIAL.make' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_special_make)
+			end
+		end
+
+	report_builtin_special_put (a_feature: ET_EXTERNAL_PROCEDURE) is
+			-- Report that built-in feature 'SPECIAL.put' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_special_put)
+			end
+		end
+
+	report_builtin_character_code (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'CHARACTER.code' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_character_code)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_integer_plus (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.infix "+"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_plus)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_integer_minus (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.infix "-"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_minus)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_integer_times (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.infix "*"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_times)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_integer_divide (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.infix "/"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_divide)
+				current_system.double_type.set_alive
+			end
+		end
+
+	report_builtin_integer_div (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.infix "//"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_div)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_integer_mod (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.infix "\\"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_mod)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_integer_opposite (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.prefix "-"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_opposite)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_integer_lt (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.infix "<"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_lt)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_integer_to_character (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.to_character' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_to_character)
+				current_system.character_type.set_alive
+			end
+		end
+
+	report_builtin_integer_bit_or (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.bit_or' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_bit_or)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_integer_bit_shift_left (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.bit_shift_left' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_bit_shift_left)
+				current_system.integer_type.set_alive
+			end
+		end
+
+	report_builtin_boolean_and_then (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'BOOLEAN.infix "and then"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_boolean_and_then)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_boolean_or_else (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'BOOLEAN.infix "or else"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_boolean_or_else)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_boolean_implies (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'BOOLEAN.infix "implies"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_boolean_implies)
+				current_system.boolean_type.set_alive
 			end
 		end
 

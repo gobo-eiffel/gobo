@@ -88,6 +88,9 @@ feature -- Duplication
 			Result.set_first_indexing (first_indexing)
 			Result.set_synonym (Current)
 			if is_builtin then
+					-- Reset the built-in marker because they are
+					-- two different features with different names,
+					-- and hence are not the same built-in feature.
 				Result.set_builtin_code (tokens.builtin_unknown)
 			end
 		end
