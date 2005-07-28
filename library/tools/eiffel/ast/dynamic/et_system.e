@@ -5,7 +5,7 @@ indexing
 		"Eiffel systems"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,10 @@ class ET_SYSTEM
 
 inherit
 
+	ANY
+
 	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
 
 	ET_SHARED_TOKEN_CONSTANTS
 		export {NONE} all end
@@ -649,30 +652,122 @@ feature {NONE} -- Compilation
 		do
 			dynamic_types.wipe_out
 			l_any := universe.any_class
-			character_type := dynamic_type (universe.character_class, l_any)
-			boolean_type := dynamic_type (universe.boolean_class, l_any)
-			wide_character_type := dynamic_type (universe.wide_character_class, l_any)
-			integer_type := dynamic_type (universe.integer_class, l_any)
-			integer_8_type := dynamic_type (universe.integer_8_class, l_any)
-			integer_16_type := dynamic_type (universe.integer_16_class, l_any)
+				-- Type "CHARACTER".
+			l_class := universe.character_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			character_type := dynamic_type (l_class, l_any)
+				-- Type "BOOLEAN".
+			l_class := universe.boolean_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			boolean_type := dynamic_type (l_class, l_any)
+				-- Type "WIDE_CHARACTER".
+			l_class := universe.wide_character_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			wide_character_type := dynamic_type (l_class, l_any)
+				-- Type "INTEGER".
+			l_class := universe.integer_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			integer_type := dynamic_type (l_class, l_any)
+				-- Type "INTEGER_8".
+			l_class := universe.integer_8_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			integer_8_type := dynamic_type (l_class, l_any)
+				-- Type "INTEGER_16".
+			l_class := universe.integer_16_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			integer_16_type := dynamic_type (l_class, l_any)
 --			integer_32_type := dynamic_type (universe.integer_32_class, l_any)
-			integer_64_type := dynamic_type (universe.integer_64_class, l_any)
+				-- Type "INTEGER_64".
+			l_class := universe.integer_64_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			integer_64_type := dynamic_type (l_class, l_any)
 --			natural_type := dynamic_type (universe.natural_class, l_any)
-			natural_8_type := dynamic_type (universe.natural_8_class, l_any)
-			natural_16_type := dynamic_type (universe.natural_16_class, l_any)
-			natural_32_type := dynamic_type (universe.natural_32_class, l_any)
-			natural_64_type := dynamic_type (universe.natural_64_class, l_any)
-			real_type := dynamic_type (universe.real_class, l_any)
-			double_type := dynamic_type (universe.double_class, l_any)
-			pointer_type := dynamic_type (universe.pointer_class, l_any)
+				-- Type "NATURAL_8".
+			l_class := universe.natural_8_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			natural_8_type := dynamic_type (l_class, l_any)
+				-- Type "NATURAL_16".
+			l_class := universe.natural_16_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			natural_16_type := dynamic_type (l_class, l_any)
+				-- Type "NATURAL_32".
+			l_class := universe.natural_32_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			natural_32_type := dynamic_type (l_class, l_any)
+				-- Type "NATURAL_64".
+			l_class := universe.natural_64_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			natural_64_type := dynamic_type (l_class, l_any)
+				-- Type "REAL".
+			l_class := universe.real_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			real_type := dynamic_type (l_class, l_any)
+				-- Type "DOUBLE".
+			l_class := universe.double_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			double_type := dynamic_type (l_class, l_any)
+				-- Type "POINTER".
+			l_class := universe.pointer_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
+			pointer_type := dynamic_type (l_class, l_any)
 				-- Type "SPECIAL[CHARACTER]"
 			l_class := universe.special_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
 			create l_actual_parameters.make_with_capacity (1)
 			l_actual_parameters.put_first (universe.character_class)
 			create l_generic_class_type.make (Void, l_class.name, l_actual_parameters, l_class)
 			special_character_type := dynamic_type (l_generic_class_type, l_any)
 				-- Type "STRING".
 			l_class := universe.string_class
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			end
 			string_type := dynamic_type (l_class, l_any)
 			if l_class.has_interface_error then
 					-- Error already reported.
@@ -682,38 +777,40 @@ feature {NONE} -- Compilation
 					-- two positions in the feature list of the STRING type.
 				l_area_feature := l_class.named_feature (tokens.area_feature_name)
 				if l_area_feature = Void then
--- TODO
 					set_fatal_error
+					error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
 				elseif not l_area_feature.is_attribute then
--- TODO
 					set_fatal_error
+					error_handler.report_gvkfe2a_error (l_class, l_area_feature)
 				else
 					l_dynamic_feature := string_type.dynamic_feature (l_area_feature, Current)
 					l_result_type_set := l_dynamic_feature.result_type_set
 					if l_result_type_set = Void then
--- TODO
+							-- Internal error: an attribute should have a result type.
 						set_fatal_error
+						error_handler.report_gibig_error
 					elseif l_result_type_set.static_type /= special_character_type then
--- TODO
 						set_fatal_error
+						error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_type.base_type)
 					end
 				end
 				l_count_feature := l_class.named_feature (tokens.count_feature_name)
 				if l_count_feature = Void then
--- TODO
 					set_fatal_error
+					error_handler.report_gvkfe1a_error (l_class, tokens.count_feature_name)
 				elseif not l_count_feature.is_attribute then
--- TODO
 					set_fatal_error
+					error_handler.report_gvkfe2a_error (l_class, l_count_feature)
 				else
 					l_dynamic_feature := string_type.dynamic_feature (l_count_feature, Current)
 					l_result_type_set := l_dynamic_feature.result_type_set
 					if l_result_type_set = Void then
--- TODO
+							-- Internal error: an attribute should have a result type.
 						set_fatal_error
+						error_handler.report_gibih_error
 					elseif l_result_type_set.static_type /= integer_type then
--- TODO
 						set_fatal_error
+						error_handler.report_gvkfe3a_error (l_class, l_count_feature, integer_type.base_type)
 					end
 				end
 			end
@@ -722,54 +819,59 @@ feature {NONE} -- Compilation
 			array_lower_feature := Void
 			array_upper_feature := Void
 			l_class := universe.array_class
-			if l_class.is_preparsed then
+			if not l_class.is_preparsed then
+				set_fatal_error
+				error_handler.report_gvknl1a_error (l_class)
+			else
 				l_class.process (universe.interface_checker)
 				if not l_class.interface_checked or else l_class.has_interface_error then
+						-- Error already reported by the previous
+						-- processing on `l_class'.
 					set_fatal_error
 				else
 						-- Check features `area', and `lower' and `upper' of class ARRAY.
 					array_area_feature := l_class.named_feature (tokens.area_feature_name)
 					if array_area_feature = Void then
--- TODO
 						set_fatal_error
+						error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
 					elseif not array_area_feature.is_attribute then
--- TODO
-						array_area_feature := Void
 						set_fatal_error
+						error_handler.report_gvkfe2a_error (l_class, array_area_feature)
+						array_area_feature := Void
 					elseif not array_area_feature.type.same_named_type (universe.special_class, l_class, l_class, universe) then
--- TODO
-						array_area_feature := Void
 						set_fatal_error
-					else
+						error_handler.report_gvkfe3a_error (l_class, array_area_feature, universe.special_class)
+						array_area_feature := Void
 					end
 					array_lower_feature := l_class.named_feature (tokens.lower_feature_name)
 					if array_lower_feature = Void then
--- TODO
 						set_fatal_error
+						error_handler.report_gvkfe1a_error (l_class, tokens.lower_feature_name)
 					elseif not array_lower_feature.is_attribute then
--- TODO
-						array_lower_feature := Void
 						set_fatal_error
+						error_handler.report_gvkfe2a_error (l_class, array_lower_feature)
+						array_lower_feature := Void
 					elseif not array_lower_feature.type.same_named_type (universe.integer_class, l_class, l_class, universe) then
--- TODO
-						array_lower_feature := Void
 						set_fatal_error
+						error_handler.report_gvkfe3a_error (l_class, array_lower_feature, universe.integer_class)
+						array_lower_feature := Void
 					end
 					array_upper_feature := l_class.named_feature (tokens.upper_feature_name)
 					if array_upper_feature = Void then
--- TODO
 						set_fatal_error
+						error_handler.report_gvkfe1a_error (l_class, tokens.upper_feature_name)
 					elseif not array_upper_feature.is_attribute then
--- TODO
-						array_upper_feature := Void
 						set_fatal_error
+						error_handler.report_gvkfe2a_error (l_class, array_upper_feature)
+						array_upper_feature := Void
 					elseif not array_upper_feature.type.same_named_type (universe.integer_class, l_class, l_class, universe) then
--- TODO
-						array_upper_feature := Void
 						set_fatal_error
+						error_handler.report_gvkfe3a_error (l_class, array_upper_feature, universe.integer_class)
+						array_upper_feature := Void
 					end
 				end
 			end
+				-- Type "NONE".
 			none_type := dynamic_type (universe.none_class, l_any)
 		end
 
