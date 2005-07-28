@@ -3100,7 +3100,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_rename (old_name: ET_FEATURE_NAME; an_as: ET_KEYWORD; new_name: ET_FEATURE_NAME): ET_RENAME is
+	new_rename (old_name: ET_FEATURE_NAME; an_as: ET_KEYWORD; new_name: ET_EXTENDED_FEATURE_NAME): ET_RENAME is
 			-- New rename pair
 		do
 			if old_name /= Void and new_name /= Void then
@@ -3112,7 +3112,7 @@ feature -- AST nodes
 		end
 
 	new_rename_comma (old_name: ET_FEATURE_NAME; an_as: ET_KEYWORD;
-		new_name: ET_FEATURE_NAME; a_comma: ET_SYMBOL): ET_RENAME_ITEM is
+		new_name: ET_EXTENDED_FEATURE_NAME; a_comma: ET_SYMBOL): ET_RENAME_ITEM is
 			-- New rename pair followed by a comma
 		local
 			a_rename: ET_RENAME
