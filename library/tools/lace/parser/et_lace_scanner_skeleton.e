@@ -55,7 +55,7 @@ feature -- Initialization
 		do
 			reset_compressed_scanner_skeleton
 			eif_lineno := 1
-			eif_buffer.wipe_out
+			STRING_.wipe_out (eif_buffer)
 		end
 
 feature -- Access

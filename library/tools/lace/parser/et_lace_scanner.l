@@ -135,7 +135,7 @@ create
 				last_token := L_STRING
 				create str_.make (eif_buffer.count)
 				str_.append_string (eif_buffer)
-				eif_buffer.wipe_out
+				STRING_.wipe_out (eif_buffer)
 				last_et_identifier_value := new_identifier (str_)
 			else
 				last_token := L_STRERR
