@@ -34,12 +34,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_DOCUMENT; a_node_number: INTEGER) is
+	make (a_document: XM_XPATH_TINY_FOREST; a_node_number: INTEGER) is
 		require
 			valid_document: a_document /= Void
 			valid_node_number: a_node_number > 1 and a_node_number <= a_document.last_node_added
 		do
-			document := a_document
+			tree := a_document
 			node_number := a_node_number
 			node_type := Namespace_node
 			if shared_name_pool.is_name_code_allocated ("", "", local_part) then
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 				name_code := shared_name_pool.last_name_code
 			end
 		ensure
-			document_set: document = a_document
+			tree_set: tree = a_document
 			node_number_set: node_number = a_node_number
 		end
 
@@ -79,7 +79,7 @@ feature -- Access
 	local_part: STRING is
 			-- Local name for this node. i.e. Namespace prefix
 		do
-			Result := shared_name_pool.prefix_from_namespace_code (document.namespace_code_for_node (node_number))
+			Result := shared_name_pool.prefix_from_namespace_code (tree.namespace_code_for_node (node_number))
 		end
 
 	parent: XM_XPATH_TINY_COMPOSITE_NODE is
@@ -94,13 +94,13 @@ feature -- Access
 	string_value: STRING is
 			-- String-value
 		do
-			Result := shared_name_pool.uri_from_namespace_code (document.namespace_code_for_node (node_number))
+			Result := shared_name_pool.uri_from_namespace_code (tree.namespace_code_for_node (node_number))
 		end
 
 	namespace_code: INTEGER is
 			-- Code for the namespace represented by `Current'
 		do
-			Result := document.namespace_code_for_node (node_number)
+			Result := tree.namespace_code_for_node (node_number)
 		end
 
 feature -- Comparison
@@ -115,7 +115,7 @@ feature -- Comparison
 			else
 				if other.is_tiny_namespace then
 					another_namespace := other.as_tiny_namespace
-					Result := document = another_namespace.document and then	node_number = another_namespace.node_number
+					Result := tree = another_namespace.tree and then	node_number = another_namespace.node_number
 				end
 			end
 		end

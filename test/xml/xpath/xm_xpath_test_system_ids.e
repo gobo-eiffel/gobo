@@ -118,7 +118,7 @@ feature
 			create element_test.make (Element_node, a_fingerprint, "ITEM")
 			if is_tiny then
 				a_tiny_element ?= document_element
-				create tiny_descendants.make (tiny_document, a_tiny_element, element_test, False)
+				create tiny_descendants.make (tiny_document.tree, a_tiny_element, element_test, False)
 				from
 					tiny_descendants.start
 					counter := 1

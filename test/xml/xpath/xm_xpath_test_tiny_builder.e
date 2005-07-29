@@ -162,7 +162,7 @@ feature
 
 			a_fingerprint := shared_name_pool.fingerprint ("", "ITEM")
 			create element_test.make (Element_node, a_fingerprint, "ITEM")
-			create descendants.make (document, document_element, element_test, False)
+			create descendants.make (document.tree, document_element, element_test, False)
 
 			from
 				descendants.start
@@ -178,7 +178,7 @@ feature
 			
 			-- Test ancestor axis - look for "BOOKLIST" ancestor of "ITEM"
 
-			create ancestors.make (document, item_element, any_node_test, False)
+			create ancestors.make (item_element, any_node_test, False)
 
 			ancestors.start
 			ancestors.forth
@@ -206,7 +206,7 @@ feature
 					categories_element_not_void: categories_element /= Void
 				end
 			create any_pi_test.make (Processing_instruction_node)
-			create preceding.make (document, categories_element, any_pi_test, False)
+			create preceding.make (document.tree, categories_element, any_pi_test, False)
 				check
 					preceding_before: preceding.before
 				end	
@@ -232,7 +232,7 @@ feature
 			-- Test following axis - look for elements following the BOOK element
 
 			create any_element_test.make (Element_node)
-			create following.make (document, books_element, any_element_test, False)
+			create following.make (document.tree, books_element, any_element_test, False)
 				check
 					following_before: following.before
 				end
@@ -261,7 +261,7 @@ feature
 			an_element := element_list_1.item (2)
 					
 			create attribute_test.make (Attribute_node, a_fingerprint, "NOTE")
-			create attributes.make (document, an_element.node_number, attribute_test)
+			create attributes.make (document.tree, an_element.node_number, attribute_test)
 				check
 					attributes_before: attributes.before
 				end

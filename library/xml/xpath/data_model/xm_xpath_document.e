@@ -95,7 +95,7 @@ feature -- Access
 		deferred
 		end
 
-feature {XM_XPATH_NAME_POOL} -- Restricted
+feature {XM_XPATH_NAME_POOL, XM_XPATH_TINY_FOREST} -- Restricted
 
 	set_document_number (a_number: INTEGER) is
 			-- Set `document_number' to `a_number'.

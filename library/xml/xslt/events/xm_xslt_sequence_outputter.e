@@ -167,14 +167,15 @@ feature -- Events
 		local
 			a_reducer: XM_XSLT_NAMESPACE_REDUCER
 			a_complex_outputter: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
-			a_node_factory: XM_XPATH_NODE_FACTORY
+			--a_node_factory: XM_XPATH_NODE_FACTORY
 		do
 			if in_start_tag then
 				start_content
 			end
 			if tree = Void then
-				create a_node_factory
-				create builder.make (a_node_factory)
+				-- 26/07/05 trying tiny tree: create a_node_factory
+				create builder.make -- 26/07/05 trying tiny tree (a_node_factory)
+				builder.set_defaults (50, 10, 5, 200)
 				create a_reducer.make (builder)
 				create a_complex_outputter.make (a_reducer)
 				tree := a_complex_outputter
@@ -192,7 +193,8 @@ feature -- Events
 	end_element is
 			-- Notify the end of an element.
 		local
-			a_document: XM_XPATH_TREE_DOCUMENT
+			a_document: XM_XPATH_TINY_DOCUMENT
+			an_element: XM_XPATH_ELEMENT
 		do
 			if in_start_tag then
 				start_content
@@ -201,10 +203,15 @@ feature -- Events
 			if level = 0 then
 				tree.end_element
 				tree.end_document
-				a_document := builder.tree_document
+				a_document := builder.tiny_document
 				tree := Void
 				builder := Void
-				append_item (a_document.document_element)
+				if not a_document.is_error then
+					an_element := a_document.document_element
+					if an_element /= Void then
+						append_item (an_element)
+					end
+				end
 
 				-- Now free the document from memory
 
@@ -344,7 +351,7 @@ feature {NONE} -- Implementation
 	tree: XM_XPATH_RECEIVER
 			-- Output tree
 
-	builder: XM_XPATH_TREE_BUILDER
+	builder: XM_XPATH_TINY_BUILDER
 			-- Tree builder
 
 	level: INTEGER

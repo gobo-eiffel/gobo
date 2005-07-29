@@ -47,7 +47,6 @@ feature -- Element change
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 			an_expanded_name, a_name_attribute, a_select_attribute: STRING
-			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
 				a_cursor := attribute_collection.name_code_cursor

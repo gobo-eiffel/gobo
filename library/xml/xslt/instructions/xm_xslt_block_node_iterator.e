@@ -67,6 +67,8 @@ feature -- Cursor movement
 
 	forth is
 			-- Move to next position
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			index := index + 1
 			if child_iterator = Void then
@@ -76,7 +78,15 @@ feature -- Cursor movement
 				loop
 					child_index := child_index + 1
 					child_list.item (child_index).create_iterator (context)
-					child_iterator := child_list.item (child_index).last_iterator.as_node_iterator
+					an_iterator := child_list.item (child_index).last_iterator
+					if an_iterator.is_node_iterator then
+						child_iterator := an_iterator.as_node_iterator
+					else
+						check
+							error: an_iterator.is_error
+						end
+						create {XM_XPATH_INVALID_NODE_ITERATOR} child_iterator.make (an_iterator.error_value)
+					end
 					if not child_iterator.is_error then child_iterator.start end
 				end
 			else

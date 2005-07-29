@@ -19,6 +19,9 @@ inherit
 			base_uri, next_sibling, previous_sibling
 		end
 
+	-- TODO: scrap namespace nodes completely
+	--     - add a namespace declarations interface instead
+
 feature -- Access
 
 	base_uri: STRING is

@@ -37,17 +37,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_DOCUMENT; a_node_number: INTEGER) is
+	make (a_document: XM_XPATH_TINY_FOREST; a_node_number: INTEGER) is
 		require
 			valid_document: a_document /= Void
 			valid_node_number: a_node_number > 1 and a_node_number <= a_document.last_node_added
 		do
-			document := a_document
+			tree := a_document
 			node_number := a_node_number
 			node_type := Element_node
 			are_namespaces_accumulated := True
 		ensure
-			document_set: document = a_document
+			document_set: tree = a_document
 			node_number_set: node_number = a_node_number
 		end
 
@@ -77,21 +77,21 @@ feature -- Access
 			an_alpha_value, a_name_code: INTEGER
 			finished: BOOLEAN
 		do
-			an_alpha_value := document.alpha_value (node_number)
+			an_alpha_value := tree.alpha_value (node_number)
 			if an_alpha_value = 0 then
 				Result := Void
 			else
 				from
 					finished := False
 				variant
-					document.number_of_attributes	+ 1 - an_alpha_value
+					tree.number_of_attributes	+ 1 - an_alpha_value
 				until
-					finished or else an_alpha_value > document.number_of_attributes
-						or else document.attribute_parent (an_alpha_value) /= node_number
+					finished or else an_alpha_value > tree.number_of_attributes
+						or else tree.attribute_parent (an_alpha_value) /= node_number
 				loop
-					a_name_code := document.attribute_name_code (an_alpha_value)
+					a_name_code := tree.attribute_name_code (an_alpha_value)
 					if fingerprint_from_name_code (a_name_code) = a_fingerprint then
-						Result := document.attribute_value (an_alpha_value)
+						Result := tree.attribute_value (an_alpha_value)
 						finished := True
 					end
 					an_alpha_value := an_alpha_value + 1
@@ -109,13 +109,13 @@ feature -- Access
 			if a_prefix_code = Xml_prefix_index - 1 then
 				Result := Xml_uri_code
 			else
-				a_namespace_node := document.beta_value (node_number)
+				a_namespace_node := tree.beta_value (node_number)
 				if a_namespace_node > 0 then
 					from
 					until
-						Result > -1 or else a_namespace_node > document.number_of_namespaces or else document.namespace_parent (a_namespace_node) /= node_number
+						Result > -1 or else a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number
 					loop
-						a_namespace_code := document.namespace_code_for_node (a_namespace_node)
+						a_namespace_code := tree.namespace_code_for_node (a_namespace_node)
 						if a_prefix_code = prefix_code_from_namespace_code (a_namespace_code) then
 							Result := uri_code_from_namespace_code (a_namespace_code)
 						end
@@ -148,13 +148,13 @@ feature -- Access
 			a_namespace_node: INTEGER
 			a_node: XM_XPATH_TINY_COMPOSITE_NODE
 		do
-			a_namespace_node := document.beta_value (node_number)
+			a_namespace_node := tree.beta_value (node_number)
 			if a_namespace_node > 0 then
 				from
 				until
-					a_namespace_node > document.number_of_namespaces or else document.namespace_parent (a_namespace_node) /= node_number
+					a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number
 				loop
-					a_receiver.notify_namespace (document.namespace_code_for_node (a_namespace_node), 0)
+					a_receiver.notify_namespace (tree.namespace_code_for_node (a_namespace_node), 0)
 					a_namespace_node := a_namespace_node + 1
 				end
 			end
@@ -177,13 +177,13 @@ feature -- Access
 			a_node: XM_XPATH_TINY_NODE
 		do
 			create Result.make (0)
-			a_namespace_node := document.beta_value (node_number)
+			a_namespace_node := tree.beta_value (node_number)
 			if a_namespace_node > 0 then
 				from
 				until
-					a_namespace_node > document.number_of_namespaces or else document.namespace_parent (a_namespace_node) /= node_number
+					a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number
 				loop
-					Result.force_last (document.namespace_code_for_node (a_namespace_node))
+					Result.force_last (tree.namespace_code_for_node (a_namespace_node))
 					a_namespace_node := a_namespace_node + 1
 				end
 			end
@@ -202,7 +202,7 @@ feature -- Status report
 	has_attributes: BOOLEAN is
 			-- Does `Current' have any attributes?
 		do
-			Result := document.alpha_value (node_number) > 0
+			Result := tree.alpha_value (node_number) > 0
 		end
 
 feature -- Status setting
@@ -211,9 +211,9 @@ feature -- Status setting
 			-- Set `name_code'.
 			-- Needed (indirectly, through `XM_XPATH_TINY_ELEMENT') by `XM_XSLT_STRIPPER'.
 		do
-			document.set_name_code_for_node (a_name_code, node_number)
+			tree.set_name_code_for_node (a_name_code, node_number)
 		ensure then
-			name_code_set: document.name_code_for_node (node_number) = a_name_code
+			name_code_set: tree.name_code_for_node (node_number) = a_name_code
 		end
 
 feature -- Element change
@@ -234,14 +234,14 @@ feature -- Element change
 			a_prefix_code_list: DS_ARRAYED_LIST [INTEGER] -- _16
 			a_node: XM_XPATH_TINY_NODE
 		do
-			a_namespace_node := document.beta_value (node_number)
+			a_namespace_node := tree.beta_value (node_number)
 			if a_namespace_node > 0 then
 				a_prefix_code_list := prefix_codes_from_namespace_codes (a_list)
 				from
 				until
-					a_namespace_node > document.number_of_namespaces or else document.namespace_parent (a_namespace_node) /= node_number
+					a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number
 				loop
-					a_namespace_code := document.namespace_code_for_node (a_namespace_node)
+					a_namespace_code := tree.namespace_code_for_node (a_namespace_node)
 					a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
 					if not is_in_list (a_prefix_code, a_prefix_code_list) then
 						a_list.force_last (a_namespace_code)
@@ -266,49 +266,50 @@ feature -- Duplication
 		do
 			from
 				a_level := -1; first := True; a_next_node := node_number;
-				a_start_level := document.depth_of (node_number)
+				a_start_level := tree.depth_of (node_number)
 			variant
-				document.number_of_nodes + 1 - a_next_node
+				tree.number_of_nodes + 1 - a_next_node
 			until
 				finished
 			loop
-				a_node_level := document.depth_of (a_next_node)
+				a_node_level := tree.depth_of (a_next_node)
 				if close_pending then a_level := a_level + 1 end
 				from
 				variant
-					a_level
+					1 + a_level
 				until
-					a_level = a_node_level
+					a_level <= a_node_level
 				loop
 					a_receiver.end_element
 					a_level := a_level - 1
 				end
+				a_level := a_node_level
 
 				-- output depends on node type
 
 				inspect
-					document.retrieve_node_kind (a_next_node)
+					tree.retrieve_node_kind (a_next_node)
 				when Element_node then
 					copy_element (first, a_next_node, a_receiver, which_namespaces, copy_annotations)
 					first := False
 					close_pending := True
 				when Text_node then
 					close_pending := False
-					a_start_index := document.alpha_value (a_next_node)
-					a_receiver.notify_characters (document.character_buffer.substring (a_start_index, a_start_index + document.beta_value (a_next_node)), 0)
+					a_start_index := tree.alpha_value (a_next_node)
+					a_receiver.notify_characters (tree.character_buffer.substring (a_start_index + 1, a_start_index + tree.beta_value (a_next_node)), 0)
 				when Comment_node then
 					close_pending := False
-					a_start_index := document.alpha_value (a_next_node)
-					a_receiver.notify_comment (document.comment_buffer.substring (a_start_index, a_start_index + document.beta_value (a_next_node)), 0)
+					a_start_index := tree.alpha_value (a_next_node)
+					a_receiver.notify_comment (tree.comment_buffer.substring (a_start_index + 1, a_start_index + tree.beta_value (a_next_node)), 0)
 				when Processing_instruction_node then
 					close_pending := False
-					a_node := document.retrieve_node (a_next_node)
+					a_node := tree.retrieve_node (a_next_node)
 					a_receiver.notify_processing_instruction (a_node.local_part, a_node.string_value, 0)
 				else
 					-- do nothing
 				end
 				a_next_node := a_next_node + 1
-				finished := a_next_node > document.number_of_nodes or else document.depth_of (a_next_node) > a_start_level
+				finished := a_next_node > tree.number_of_nodes or else tree.depth_of (a_next_node) <= a_start_level
 			end
 			if close_pending then a_level := a_level + 1 end
 			from
@@ -342,12 +343,12 @@ feature {NONE} -- Implementation
 			a_type_code, a_namespace, an_attribute, properties: INTEGER
 		do
 			if copy_annotations then
-				a_type_code := document.element_annotation (a_next_node)
+				a_type_code := tree.element_annotation (a_next_node)
 			else
 				a_type_code := -1
 			end
 			if first then properties := Disinherit_namespaces end
-			a_receiver.start_element (document.retrieve_name_code (a_next_node), a_type_code, properties)
+			a_receiver.start_element (tree.retrieve_name_code (a_next_node), a_type_code, properties)
 
 			-- output namespaces
 
@@ -355,13 +356,13 @@ feature {NONE} -- Implementation
 				if first then
 					output_namespace_nodes (a_receiver, which_namespaces = All_namespaces)
 				else
-					a_namespace := document.beta_value (a_next_node)
+					a_namespace := tree.beta_value (a_next_node)
 					if a_namespace > 0 then
 						from
 						until
-							a_namespace >= document.number_of_namespaces or else document.namespace_parent (a_namespace) /= a_next_node
+							a_namespace >= tree.number_of_namespaces or else tree.namespace_parent (a_namespace) /= a_next_node
 						loop
-							a_receiver.notify_namespace (document.namespace_code_for_node (a_namespace), 0)
+							a_receiver.notify_namespace (tree.namespace_code_for_node (a_namespace), 0)
 							a_namespace := a_namespace + 1
 						end
 					end
@@ -370,18 +371,18 @@ feature {NONE} -- Implementation
 
 			-- output attributes
 
-			an_attribute := document.alpha_value (a_next_node)
-			if an_attribute >= 0 then
+			an_attribute := tree.alpha_value (a_next_node)
+			if an_attribute > 0 then
 				from
 				until
-					an_attribute >= document.number_of_attributes or else document.attribute_parent (an_attribute) /= a_next_node
+					an_attribute > tree.number_of_attributes or else tree.attribute_parent (an_attribute) /= a_next_node
 				loop
 					if copy_annotations then
-						a_type_code := document.attribute_annotation (a_next_node)
+						a_type_code := tree.attribute_annotation (an_attribute)
 					else
 						a_type_code := -1
 					end	
-					a_receiver.notify_attribute (document.attribute_name_code (an_attribute), a_type_code, document.attribute_value (an_attribute), 0)
+					a_receiver.notify_attribute (tree.attribute_name_code (an_attribute), a_type_code, tree.attribute_value (an_attribute), 0)
 					an_attribute := an_attribute + 1
 				end
 			end

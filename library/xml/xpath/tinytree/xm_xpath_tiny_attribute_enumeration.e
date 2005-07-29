@@ -27,7 +27,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_DOCUMENT; an_element: INTEGER; a_node_test: XM_XPATH_NODE_TEST) is
+	make (a_document: XM_XPATH_TINY_FOREST; an_element: INTEGER; a_node_test: XM_XPATH_NODE_TEST) is
 			-- Establish invariant
 		require
 			document_not_void: a_document /= Void
@@ -93,7 +93,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	document: XM_XPATH_TINY_DOCUMENT
+	document: XM_XPATH_TINY_FOREST
 			-- The document within which we enumerate
 
 	parent_element: INTEGER

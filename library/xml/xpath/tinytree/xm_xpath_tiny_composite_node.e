@@ -52,7 +52,7 @@ feature -- Access
 			-- text-node descendants.
 			-- Actually, more complicated than the above description.
 
-			a_level := document.depth_of (node_number)
+			a_level := tree.depth_of (node_number)
 			
 			-- Note, we can't rely on the value being contiguously stored because of whitespace
 			-- nodes: the data for these may still be present
@@ -61,15 +61,15 @@ feature -- Access
 			from
 				a_next_node := node_number + 1
 			until
-				a_next_node > document.last_node_added or else document.depth_of (a_next_node) <= a_level
+				a_next_node > tree.last_node_added or else tree.depth_of (a_next_node) <= a_level
 			loop
-				if document.retrieve_node_kind (a_next_node) = Text_node then
-					a_length := document.beta_value (a_next_node)
-					a_start_position := document.alpha_value (a_next_node)
+				if tree.retrieve_node_kind (a_next_node) = Text_node then
+					a_length := tree.beta_value (a_next_node)
+					a_start_position := tree.alpha_value (a_next_node)
 					if a_buffer = Void then
-						a_buffer := document.character_buffer.substring (a_start_position + 1, a_start_position + a_length)
+						a_buffer := tree.character_buffer.substring (a_start_position + 1, a_start_position + a_length)
 					else
-						a_buffer := STRING_.appended_substring (a_buffer, document.character_buffer, a_start_position + 1,  a_start_position + a_length)
+						a_buffer := STRING_.appended_substring (a_buffer, tree.character_buffer, a_start_position + 1,  a_start_position + a_length)
 					end
 				end
 				a_next_node := a_next_node + 1
@@ -86,8 +86,8 @@ feature -- Status report
 	has_child_nodes: BOOLEAN is
 			-- Does `Current' have any children?
 		do
-			Result := node_number + 1 < document.last_node_added
-				and then document.depth_of (node_number + 1) > document.depth_of (node_number)
+			Result := node_number  < tree.number_of_nodes
+				and then tree.depth_of (node_number + 1) > tree.depth_of (node_number)
 		end
 
 end

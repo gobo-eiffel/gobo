@@ -25,7 +25,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_DOCUMENT; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; children: BOOLEAN) is
+	make (a_document: XM_XPATH_TINY_FOREST; a_starting_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; children: BOOLEAN) is
 			-- Establish invariant
 		require
 			document_not_void: a_document /= Void
@@ -98,7 +98,7 @@ feature -- Duplication
 	
 feature {NONE} -- Implementation
 
-	document: XM_XPATH_TINY_DOCUMENT
+	document: XM_XPATH_TINY_FOREST
 			-- The document within which we enumerate
 
 	starting_node: XM_XPATH_TINY_NODE

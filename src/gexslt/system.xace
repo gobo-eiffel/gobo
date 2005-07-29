@@ -36,6 +36,7 @@
 		<option name="garbage_collector" value="none" unless="${SE_1_0}"/> 
 <!--		<option name="garbage_collector" value="internal" /> -->
 	</option>
+	<option name="profile" value="false"/> 
 
 	<!-- <option name="debug_tag" value="XSLT content output"/> -->
 	<!-- <option name="debug_tag" value="XPath content emitter"/> -->

@@ -46,6 +46,9 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
+	tree: XM_XPATH_TINY_FOREST
+			-- Created document tree
+
 	tiny_document: XM_XPATH_TINY_DOCUMENT
 			-- Created document
 
@@ -68,32 +71,32 @@ feature -- Events
 			-- TODO add timing information
 
 			if system_id.count = 0 then system_id := locator.system_id end
-			if defaults_overridden then
-				create tiny_document.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count, system_id)
-			else
-				create tiny_document.make_with_defaults (system_id)
+			if tree = Void then
+				if defaults_overridden then
+					create tree.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count)
+				else
+					create tree.make_with_defaults
+				end
 			end
-			document := tiny_document
 			current_depth := 1
 			if is_line_numbering then
-				tiny_document.set_line_numbering
+				tree.set_line_numbering
 			end
-			tiny_document.add_node (Document_node, current_depth, 0, 0, -1)
-			node_number := tiny_document.last_node_added
-			check
-				document_node_number: node_number = 1
-			end
+			create tiny_document.make (tree, node_number + 1)
+			tiny_document.set_system_id (system_id)
+			tree.add_document_node (tiny_document)
+			node_number := tree.last_node_added
 			create previously_at_depth.make (1, 100)
 			previously_at_depth.put(1, 1) -- i.e. depth one is node 1 - the document node
 			previously_at_depth.put (0, 2) 
-			tiny_document.set_next_sibling (-1, 1) -- i.e. node one has next sibling 0 (no next sibling)
+			tree.set_next_sibling (-1, 1) -- i.e. node one has next sibling 0 (no next sibling)
 			current_depth := current_depth + 1
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
 			-- Notify an unparsed entity URI
 		do
-			-- TODO tiny_document.set_unparsed_entity (a_name, a_system_id, a_public_id)
+			-- TODO tree.set_unparsed_entity (a_name, a_system_id, a_public_id)
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
@@ -102,11 +105,11 @@ feature -- Events
 			an_owner_node, a_previous_sibling: INTEGER
 			a_new_type_code: like a_type_code
 		do
-			tiny_document.add_node (Element_node, current_depth, 0, 0, a_name_code)
-			node_number := tiny_document.last_node_added
+			tree.add_node (Element_node, current_depth, 0, 0, a_name_code)
+			node_number := tree.last_node_added
 			if conformance.basic_xslt_processor then
 				a_new_type_code := Untyped_type_code
-				tiny_document.set_element_annotation (node_number, a_new_type_code)
+				tree.set_element_annotation (node_number, a_new_type_code)
 			else
 					check
 						Only_basic_xslt_processors_are_supported: False
@@ -119,10 +122,10 @@ feature -- Events
 
 			an_owner_node := previously_at_depth.item (current_depth - 1)
 			if a_previous_sibling > 0 then
-				tiny_document.set_next_sibling (node_number, a_previous_sibling)
+				tree.set_next_sibling (node_number, a_previous_sibling)
 			end
 
-			tiny_document.set_next_sibling (an_owner_node, node_number) -- owner pointer in last sibling
+			tree.set_next_sibling (an_owner_node, node_number) -- owner pointer in last sibling
 			
 			previously_at_depth.put (node_number, current_depth)
 			current_depth := current_depth + 1
@@ -131,16 +134,16 @@ feature -- Events
 			end
 			previously_at_depth.put (-1, current_depth) -- no previous sibling
 
-			tiny_document.set_system_id_for_node (node_number, locator.system_id)
+			tree.set_system_id_for_node (node_number, locator.system_id)
 			if is_line_numbering then
-				tiny_document.set_line_number_for_node (node_number, locator.line_number)
+				tree.set_line_number_for_node (node_number, locator.line_number)
 			end
 		end
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
 			-- Notify a namespace.
 		do
-				tiny_document.add_namespace (node_number, a_namespace_code)			
+				tree.add_namespace (node_number, a_namespace_code)			
 		end
 
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
@@ -152,7 +155,7 @@ feature -- Events
 			if is_output_escaping_disabled (properties) then
 				on_error ("Cannot disable output escaping when writing to a tree")
 			else
-				tiny_document.add_attribute (node_number, a_name_code, a_new_type_code, a_value)
+				tree.add_attribute (tiny_document, node_number, a_name_code, a_new_type_code, a_value)
 			end
 		end
 
@@ -172,22 +175,30 @@ feature -- Events
 	notify_characters (a_character_string: STRING; properties: INTEGER) is
 			-- Notify character data.
 		local
-			a_buffer_start, a_previous_sibling: INTEGER
+			a_buffer_start, a_previous_sibling, a_previous_node: INTEGER
 		do
 			if is_output_escaping_disabled (properties) then
-					on_error ("Cannot disable output escaping when writing to a tree")
+				on_error ("Cannot disable output escaping when writing to a tree")
+			else
+				a_buffer_start := tree.character_buffer.count
+				tree.append_characters (a_character_string)
+				a_previous_node := tree.number_of_nodes
+				if tree.retrieve_node_kind (a_previous_node) = Text_node and then tree.depth_of (a_previous_node) = current_depth then
+
+					-- merge consecutive text nodes
+					
+					tree.increase_beta_value (a_character_string.count, a_previous_node)
 				else
-					a_buffer_start := tiny_document.character_buffer_length
-					tiny_document.append_characters (a_character_string)
-					tiny_document.add_node (Text_node, current_depth, a_buffer_start, a_character_string.count, -1)
-					node_number := tiny_document.last_node_added
+					tree.add_node (Text_node, current_depth, a_buffer_start, a_character_string.count, -1)
+					node_number := tree.last_node_added
 					
 					a_previous_sibling := previously_at_depth.item (current_depth)
-				if a_previous_sibling > 0 then
-					tiny_document.set_next_sibling (node_number, a_previous_sibling)
+					if a_previous_sibling > 0 then
+						tree.set_next_sibling (node_number, a_previous_sibling)
+					end
+					tree.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
+					previously_at_depth.put (node_number, current_depth)
 				end
-				tiny_document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
-				previously_at_depth.put (node_number, current_depth)
 			end
 		end
 	
@@ -205,20 +216,20 @@ feature -- Events
 			else
 				a_name_code := shared_name_pool.name_code ("", "", a_target) 
 			end
-			tiny_document.store_comment (a_data_string)
-			tiny_document.add_node (Processing_instruction_node, current_depth, tiny_document.comment_buffer_length, a_data_string.count, a_name_code)
-			node_number := tiny_document.last_node_added
+			tree.store_comment (a_data_string)
+			tree.add_node (Processing_instruction_node, current_depth, tree.comment_buffer.count, a_data_string.count, a_name_code)
+			node_number := tree.last_node_added
 
 			a_previous_sibling := previously_at_depth.item (current_depth)
 			if a_previous_sibling > 0 then
-				tiny_document.set_next_sibling (node_number, a_previous_sibling)
+				tree.set_next_sibling (node_number, a_previous_sibling)
 			end
-			tiny_document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
+			tree.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 
-			tiny_document.set_system_id_for_node (node_number, locator.system_id)
+			tree.set_system_id_for_node (node_number, locator.system_id)
 			if is_line_numbering then
-				tiny_document.set_line_number_for_node (node_number, locator.line_number)
+				tree.set_line_number_for_node (node_number, locator.line_number)
 			end
 		end
 
@@ -227,15 +238,15 @@ feature -- Events
 		local
 			a_previous_sibling: INTEGER
 		do
-			tiny_document.store_comment (a_content_string)
-			tiny_document.add_node (Comment_node, current_depth, tiny_document.comment_buffer_length, a_content_string.count, -1)
-			node_number := tiny_document.last_node_added
+			tree.store_comment (a_content_string)
+			tree.add_node (Comment_node, current_depth, tree.comment_buffer.count, a_content_string.count, -1)
+			node_number := tree.last_node_added
 
 			a_previous_sibling := previously_at_depth.item (current_depth)
 			if a_previous_sibling > 0 then
-				tiny_document.set_next_sibling (node_number, a_previous_sibling)
+				tree.set_next_sibling (node_number, a_previous_sibling)
 			end
-			tiny_document.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
+			tree.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 		end
 
@@ -243,13 +254,15 @@ feature -- Events
 			-- Parsing finished.
 		do
 			previously_at_depth := Void
---			tiny_document.diagnostic_dump
-
+			if is_reporting_sizes then tree.print_sizes end
+			document := tiny_document
+			tree.condense
+			
 			-- TODO add timing information
 
 		end
 
-feature -- Status setting
+feature -- Status report
 
 	estimated_node_count: INTEGER
 			-- An estimate of how many nodes there will be in the fully constructed tree
@@ -262,6 +275,11 @@ feature -- Status setting
 
 	estimated_character_count: INTEGER
 			-- An estimate of how many characters there are in the document contents
+
+	is_reporting_sizes: BOOLEAN
+			-- Do we report on sizes actually used?
+
+feature -- Status setting
 
 	reset_defaults is
 			-- Use the default tree implementation parameters

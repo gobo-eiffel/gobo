@@ -131,9 +131,13 @@ feature -- Evaluation
 			a_receiver.start_element (a_name_code, -1, some_properties)
 			output_namespace_nodes (a_new_context, a_receiver)
 			content.process (a_new_context)
-			a_receiver.end_element
-			a_receiver.end_document
-			last_evaluated_item := an_outputter.first_item
+			if not a_transformer.is_error then
+				a_receiver.end_element
+				a_receiver.end_document
+				last_evaluated_item := an_outputter.first_item
+			else
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (a_transformer.last_error)
+			end
 		end
 
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is

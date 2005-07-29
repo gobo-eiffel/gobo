@@ -25,14 +25,12 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_DOCUMENT; a_start_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; self: BOOLEAN) is
+	make (a_start_node: XM_XPATH_TINY_NODE; a_node_test: XM_XPATH_NODE_TEST; self: BOOLEAN) is
 			-- Establish invariant
 		require
-			document_not_void: a_document /= Void
 			starting_node_not_void: a_start_node /= Void
 			node_test_not_void: a_node_test /= Void
 		do
-			document := a_document
 			starting_node := a_start_node
 			node_test := a_node_test
 
@@ -47,7 +45,6 @@ feature {NONE} -- Initialization
 				advance
 			end
 		ensure
-			document_set: document = a_document
 			starting_node_set: starting_node = a_start_node
 			test_set: node_test = a_node_test
 		end
@@ -95,13 +92,10 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			create Result.make (document, starting_node, node_test, include_self)
+			create Result.make (starting_node, node_test, include_self)
 		end
 	
 feature {NONE} -- Implemnentation
-
-	document: XM_XPATH_TINY_DOCUMENT
-			-- The document within which we enumerate
 
 	starting_node: XM_XPATH_TINY_NODE
 			-- The starting node for the enumeration
@@ -132,7 +126,6 @@ feature {NONE} -- Implemnentation
 	
 invariant
 
-	document_not_void: document /= Void
 	starting_node_not_void: starting_node /= Void
 	node_test_not_void: node_test /= Void
 	

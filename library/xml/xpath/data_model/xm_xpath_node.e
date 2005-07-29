@@ -410,7 +410,7 @@ feature -- Access
 				create an_element_node_test.make (Element_node)
 				an_iterator := a_root.new_axis_iterator_with_node_test (Child_axis, an_element_node_test)
 				an_iterator.start
-				if an_iterator.item.is_element then
+				if not an_iterator.is_error and then not an_iterator.after and then an_iterator.item.is_element then
 					Result := an_iterator.item.as_element
 				end
 			end

@@ -32,13 +32,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_document: XM_XPATH_TINY_DOCUMENT; an_attribute_number: INTEGER) is
+	make (a_document: XM_XPATH_TINY_FOREST; an_attribute_number: INTEGER) is
 		do
-			document := a_document
+			tree := a_document
 			node_number := an_attribute_number
 			node_type := Attribute_node
 		ensure
-			document_set: document = a_document
+			document_set: tree = a_document
 			node_number_set: node_number = an_attribute_number
 		end
 
@@ -56,7 +56,7 @@ feature -- Access
 
 			-- Note - the offset is to allow room for namespace nodes
 			
-			create Result.make_with_offset (parent.sequence_number.high_word, node_number - document.alpha_value (document.attribute_parent (node_number)))
+			create Result.make_with_offset (parent.sequence_number.high_word, node_number - tree.alpha_value (tree.attribute_parent (node_number)))
 		end
 
 	parent: XM_XPATH_TINY_COMPOSITE_NODE is
@@ -65,20 +65,20 @@ feature -- Access
 		local
 			a_node: XM_XPATH_TINY_NODE
 		do		
-			a_node := document.retrieve_node (document.attribute_parent (node_number))
+			a_node := tree.retrieve_node (tree.attribute_parent (node_number))
 			if a_node.is_tiny_composite_node then Result := a_node.as_tiny_composite_node end
 		end
 
 	string_value: STRING is
 			--Value of the item as a string
 		do
-			Result := document.attribute_value (node_number)
+			Result := tree.attribute_value (node_number)
 		end
 
 	name_code: INTEGER is
 			-- Name code this node - used in displaying names;
 		do
-			Result := document.attribute_code_for_node (node_number)
+			Result := tree.attribute_code_for_node (node_number)
 		end
 
 feature -- Duplication
