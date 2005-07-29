@@ -10515,6 +10515,5 @@ feature -- Reporting
 
 --Error codes not used:
 
-	-- report_gibiz_error
 
 end
