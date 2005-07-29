@@ -131,6 +131,7 @@ feature {NONE} -- Initialization
 			create internal_local_name.make ("z")
 			create polymorphic_type_ids.make (100)
 			create polymorphic_types.make_map (100)
+			create manifest_array_types.make (100)
 		end
 
 feature -- Access
@@ -233,6 +234,15 @@ feature -- Generation
 					i := i + 1
 				end
 				print_polymorphic_features
+				polymorphic_calls.wipe_out
+					-- Print features which build manifest arrays.
+				from manifest_array_types.start until manifest_array_types.after loop
+					print_gema (manifest_array_types.item_for_iteration)
+					a_file.put_new_line
+					manifest_array_types.forth
+				end
+				manifest_array_types.wipe_out
+					-- Print 'main' function.
 				print_main
 				header_file := old_header_file
 				l_header_file.close
@@ -240,7 +250,6 @@ feature -- Generation
 				current_type := current_system.none_type
 				current_feature := dummy_feature
 				local_count := 0
-				polymorphic_calls.wipe_out
 			end
 		end
 
@@ -2495,13 +2504,8 @@ print ("ET_C_GENERATOR.print_infix_cast_expression%N")
 		require
 			an_expression_not_void: an_expression /= Void
 		local
-			l_array_index: INTEGER
-			l_special_index: INTEGER
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_features: ET_DYNAMIC_FEATURE_LIST
-			l_area_type_set: ET_DYNAMIC_TYPE_SET
-			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			i, nb: INTEGER
 		do
 			l_dynamic_type_set := current_feature.dynamic_type_set (an_expression)
@@ -2512,210 +2516,22 @@ print ("ET_C_GENERATOR.print_infix_cast_expression%N")
 -- TODO.
 --				error_handler.report_gibdg_error
 			else
--- TODO.
 				l_dynamic_type := l_dynamic_type_set.static_type
-				l_features := l_dynamic_type.features
-				if l_features.is_empty then
-						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
-					set_fatal_error
--- TODO: internal error
-				else
-					l_area_type_set := l_features.item (1).result_type_set
-					if l_area_type_set = Void then
-							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
-						set_fatal_error
--- TODO: internal error
-					else
-						l_special_type ?= l_area_type_set.static_type
-						if l_special_type = Void then
-								-- Internal error: it has already been checked in ET_SYSTEM.compile_kernel
-								-- that the attribute `area' is of SPECIAL type.
-							set_fatal_error
--- TODO: internal error
-						end
-					end
-				end
-			end
-			if not has_fatal_error then
+				manifest_array_types.force_last (l_dynamic_type)
 				nb := an_expression.count
-					-- Declare local variables.
-				local_count := local_count + 1
-				l_array_index := local_count
-				print_reference_local_declaration (l_array_index)
-				local_count := local_count + 1
-				l_special_index := local_count
-				print_reference_local_declaration (l_special_index)
-					-- Create `area'.
-				current_file.put_character ('(')
-				current_file.put_character ('z')
-				current_file.put_integer (l_special_index)
-				current_file.put_string (" = (T0*)")
-				current_file.put_string (c_eif_malloc)
-				current_file.put_character ('(')
-				current_file.put_string (c_sizeof)
-				current_file.put_character ('(')
-				print_type_name (l_special_type)
-				current_file.put_character (')')
-				current_file.put_character ('+')
-				current_file.put_integer (nb)
-				current_file.put_character ('*')
-				current_file.put_string (c_sizeof)
-				current_file.put_character ('(')
-				print_type_declaration (l_special_type.item_type_set.static_type, current_file)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- Set type id of `area'.
-				current_file.put_character ('(')
-				print_type_cast (l_special_type)
-				current_file.put_character ('(')
-				current_file.put_character ('z')
-				current_file.put_integer (l_special_index)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character ('-')
-				current_file.put_character ('>')
-				current_file.put_character ('i')
-				current_file.put_character ('d')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_integer (l_special_type.id)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- Set `count' of `area'.
-				current_file.put_character ('(')
-				print_type_cast (l_special_type)
-				current_file.put_character ('(')
-				current_file.put_character ('z')
-				current_file.put_integer (l_special_index)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character ('-')
-				current_file.put_character ('>')
+				current_file.put_character ('g')
+				current_file.put_character ('e')
+				current_file.put_character ('m')
 				current_file.put_character ('a')
-				current_file.put_character ('1')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
+				current_file.put_integer (l_dynamic_type.id)
+				current_file.put_character ('(')
 				current_file.put_integer (nb)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- Copy items to `area'.
 				from i := 1 until i > nb loop
-					current_file.put_character ('(')
-					print_type_cast (l_special_type)
-					current_file.put_character ('(')
-					current_file.put_character ('z')
-					current_file.put_integer (l_special_index)
-					current_file.put_character (')')
-					current_file.put_character (')')
-					current_file.put_character ('-')
-					current_file.put_character ('>')
-					current_file.put_character ('a')
-					current_file.put_character ('2')
-					current_file.put_character ('[')
-					current_file.put_integer (i - 1)
-					current_file.put_character (']')
-					current_file.put_character (' ')
-					current_file.put_character ('=')
-					current_file.put_character (' ')
-					current_file.put_character ('(')
-					print_expression (an_expression.expression (i))
-					current_file.put_character (')')
 					current_file.put_character (',')
 					current_file.put_character (' ')
+					print_expression (an_expression.expression (i))
 					i := i + 1
 				end
-					-- Create string object.
-				current_file.put_character ('z')
-				current_file.put_integer (l_array_index)
-				current_file.put_string (" = (T0*)")
-				current_file.put_string (c_eif_malloc)
-				current_file.put_character ('(')
-				current_file.put_string (c_sizeof)
-				current_file.put_character ('(')
-				print_type_name (l_dynamic_type)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- Set type id of array.
-				current_file.put_character ('(')
-				print_type_cast (l_dynamic_type)
-				current_file.put_character ('(')
-				current_file.put_character ('z')
-				current_file.put_integer (l_array_index)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character ('-')
-				current_file.put_character ('>')
-				current_file.put_character ('i')
-				current_file.put_character ('d')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_integer (l_dynamic_type.id)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- Set `area'.
-				current_file.put_character ('(')
-				print_type_cast (l_dynamic_type)
-				current_file.put_character ('(')
-				current_file.put_character ('z')
-				current_file.put_integer (l_array_index)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_string (c_arrow)
-				current_file.put_character ('a')
-				current_file.put_character ('1')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('z')
-				current_file.put_integer (l_special_index)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- Set `lower'.
-				current_file.put_character ('(')
-				print_type_cast (l_dynamic_type)
-				current_file.put_character ('(')
-				current_file.put_character ('z')
-				current_file.put_integer (l_array_index)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_string (c_arrow)
-				current_file.put_character ('a')
-				current_file.put_character ('2')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				print_type_cast (current_system.integer_type)
-				current_file.put_character ('1')
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- Set `upper'.
-				current_file.put_character ('(')
-				print_type_cast (l_dynamic_type)
-				current_file.put_character ('(')
-				current_file.put_character ('z')
-				current_file.put_integer (l_array_index)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_string (c_arrow)
-				current_file.put_character ('a')
-				current_file.put_character ('3')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				print_type_cast (current_system.integer_type)
-				current_file.put_integer (nb)
-				current_file.put_character (',')
-				current_file.put_character (' ')
-					-- Return the array.
-				current_file.put_character ('z')
-				current_file.put_integer (l_array_index)
 				current_file.put_character (')')
 			end
 		end
@@ -5835,6 +5651,257 @@ feature {NONE} -- C functions
 			current_file.put_new_line
 		end
 
+	print_gema (an_array_type: ET_DYNAMIC_TYPE) is
+			-- Print manifest array function.
+		require
+			an_array_type_not_void: an_array_type /= Void
+		local
+			l_features: ET_DYNAMIC_FEATURE_LIST
+			l_area_type_set: ET_DYNAMIC_TYPE_SET
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+			l_item_type: ET_DYNAMIC_TYPE
+		do
+			l_features := an_array_type.features
+			if l_features.is_empty then
+					-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+				set_fatal_error
+--- TODO: internal error
+			else
+				l_area_type_set := l_features.item (1).result_type_set
+				if l_area_type_set = Void then
+						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
+					set_fatal_error
+-- TODO: internal error
+				else
+					l_special_type ?= l_area_type_set.static_type
+					if l_special_type = Void then
+							-- Internal error: it has already been checked in ET_SYSTEM.compile_kernel
+							-- that the attribute `area' is of SPECIAL type.
+						set_fatal_error
+-- TODO: internal error
+					end
+				end
+			end
+			if l_special_type /= Void then
+				l_item_type := l_special_type.item_type_set.static_type
+					-- Print signature.
+				header_file.put_string (c_extern)
+				header_file.put_character (' ')
+				header_file.put_string ("T0* gema")
+				current_file.put_string ("T0* gema")
+				header_file.put_integer (an_array_type.id)
+				current_file.put_integer (an_array_type.id)
+				header_file.put_string ("(int c, ...)")
+				current_file.put_string ("(int c, ...)")
+				header_file.put_character (';')
+				header_file.put_new_line
+					-- Print body.
+				current_file.put_character ('{')
+				current_file.put_new_line
+				indent
+				print_indentation
+				current_file.put_line ("T0* R;")
+				print_indentation
+				current_file.put_line ("T0* a;")
+					-- Create `area'.
+				print_indentation
+				current_file.put_string ("a = (T0*)")
+				current_file.put_string (c_eif_malloc)
+				current_file.put_character ('(')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_name (l_special_type)
+				current_file.put_character (')')
+				current_file.put_character ('+')
+				current_file.put_character ('c')
+				current_file.put_character ('*')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_declaration (l_item_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set type id of `area'.
+				print_indentation
+				current_file.put_character ('(')
+				print_type_cast (l_special_type)
+				current_file.put_character ('(')
+				current_file.put_character ('a')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('i')
+				current_file.put_character ('d')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_integer (l_special_type.id)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set `count' of `area'.
+				print_indentation
+				current_file.put_character ('(')
+				print_type_cast (l_special_type)
+				current_file.put_character ('(')
+				current_file.put_character ('a')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('c')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Copy items to `area'.
+				print_indentation
+				current_file.put_line ("if (c!=0) {")
+				indent
+				print_indentation
+				current_file.put_line ("va_list v;")
+				print_indentation
+				current_file.put_line ("int n = c;")
+				print_indentation
+				print_type_declaration (l_item_type, current_file)
+				current_file.put_character (' ')
+				current_file.put_character ('*')
+				current_file.put_character ('i')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_type_cast (l_special_type)
+				current_file.put_character ('(')
+				current_file.put_character ('a')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('2')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_line ("va_start(v, c);")
+				print_indentation
+				current_file.put_line ("while (n--) {")
+				indent
+				print_indentation
+				current_file.put_string ("*(i++) = va_arg(v, ")
+				print_type_declaration (l_item_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_line ("va_end(v);")
+				dedent
+				print_indentation
+				current_file.put_character ('}')
+				current_file.put_new_line
+					-- Create array object.
+				print_indentation
+				current_file.put_string ("R = (T0*)")
+				current_file.put_string (c_eif_malloc)
+				current_file.put_character ('(')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_name (an_array_type)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set type id of array.
+				print_indentation
+				current_file.put_character ('(')
+				print_type_cast (an_array_type)
+				current_file.put_character ('(')
+				current_file.put_character ('R')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('i')
+				current_file.put_character ('d')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_integer (an_array_type.id)
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set `area'.
+				print_indentation
+				current_file.put_character ('(')
+				print_type_cast (an_array_type)
+				current_file.put_character ('(')
+				current_file.put_character ('R')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('a')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set `lower'.
+				print_indentation
+				current_file.put_character ('(')
+				print_type_cast (an_array_type)
+				current_file.put_character ('(')
+				current_file.put_character ('R')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+				current_file.put_character ('a')
+				current_file.put_character ('2')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('1')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Set `upper'.
+				print_indentation
+				current_file.put_character ('(')
+				print_type_cast (an_array_type)
+				current_file.put_character ('(')
+				current_file.put_character ('R')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_string (c_arrow)
+				current_file.put_character ('a')
+				current_file.put_character ('3')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				print_type_cast (current_system.integer_type)
+				current_file.put_character ('c')
+				current_file.put_character (';')
+				current_file.put_new_line
+					-- Return the array.
+				print_indentation
+				current_file.put_string (c_return)
+				current_file.put_character (' ')
+				current_file.put_character ('R')
+				current_file.put_character (';')
+				current_file.put_new_line
+				dedent
+				current_file.put_character ('}')
+				current_file.put_new_line
+			end
+		end
+
 feature {NONE} -- Type generation
 
 	print_types is
@@ -6810,6 +6877,9 @@ feature {NONE} -- Access
 	polymorphic_calls: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_CALL]
 			-- Polymorphic calls
 
+	manifest_array_types: DS_HASH_SET [ET_DYNAMIC_TYPE]
+			-- Types of manifest arrays
+
 	unique_count: INTEGER
 			-- Number of unique attributes found so far
 
@@ -6954,5 +7024,7 @@ invariant
 	polymorphic_type_ids_not_void: polymorphic_type_ids /= Void
 	polymorphic_types_not_void: polymorphic_types /= Void
 	no_void_polymorphic_type: not polymorphic_types.has_item (Void)
+	manifest_array_types_not_void: manifest_array_types /= Void
+	no_void_manifest_array_type: not manifest_array_types.has (Void)
 
 end

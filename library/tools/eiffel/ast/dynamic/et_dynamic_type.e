@@ -19,6 +19,8 @@ inherit
 			is_expanded
 		end
 
+	HASHABLE
+
 	DEBUG_OUTPUT
 
 create
@@ -166,6 +168,12 @@ feature -- Access
 
 	id: INTEGER
 			-- ID
+
+	hash_code: INTEGER is
+			-- Hash code
+		do
+			Result := base_class.hash_code
+		end
 
 feature -- Setting
 
