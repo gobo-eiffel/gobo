@@ -183,6 +183,7 @@ feature -- Generation
 				generate_ids
 				a_file.put_line ("#include <stdlib.h>")
 				a_file.put_line ("#include <stdio.h>")
+				a_file.put_line ("#include <stdarg.h>")
 				a_file.put_line ("#include %"gobo_directory.c%"")
 				a_file.put_line ("#if defined(_MSC_VER) && (_MSC_VER < 1400) /* MSVC older than v8 */")
 				a_file.put_line ("typedef signed char int8_t;")
@@ -5691,6 +5692,9 @@ feature {NONE} -- C functions
 				current_file.put_string ("T0* gema")
 				header_file.put_integer (an_array_type.id)
 				current_file.put_integer (an_array_type.id)
+					-- Use varargs instead of inlining the code, this
+					-- makes the C compilation with the -O2 faster and
+					-- the resulting application is not slower.
 				header_file.put_string ("(int c, ...)")
 				current_file.put_string ("(int c, ...)")
 				header_file.put_character (';')
