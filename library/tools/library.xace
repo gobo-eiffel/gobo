@@ -30,6 +30,7 @@
 			</cluster>
 			<cluster name="compilation"/>
 			<cluster name="error"/>
+			<cluster name="generation"/>
 			<cluster name="parser"/>
 			<cluster name="processor"/>
 		</cluster>

@@ -10515,18 +10515,6 @@ feature -- Reporting
 
 --Error codes not used:
 
-	-- report_gibin_error
-	-- report_gibio_error
-	-- report_gibip_error
-	-- report_gibiq_error
-	-- report_gibir_error
-	-- report_gibis_error
-	-- report_gibit_error
-	-- report_gibiu_error
-	-- report_gibiv_error
-	-- report_gibiw_error
-	-- report_gibix_error
-	-- report_gibiy_error
 	-- report_gibiz_error
 
 end

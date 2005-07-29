@@ -126,6 +126,7 @@ feature {NONE} -- Initialization
 			create current_local_buffer.make ("")
 			create accepted_types.make_with_capacity (15)
 			create denied_types.make_with_capacity (15)
+			create internal_local_name.make ("z")
 		end
 
 feature -- Access
@@ -787,39 +788,39 @@ feature {NONE} -- Feature generation
 						-- This is a built-in function.
 					inspect a_feature.builtin_code
 					when builtin_any_twin then
-						print_builtin_any_twin (a_feature)
+						print_builtin_any_twin_feature (a_feature)
 					when builtin_any_same_type then
-						print_builtin_any_same_type (a_feature)
+						print_builtin_any_same_type_feature (a_feature)
 					when builtin_any_standard_is_equal then
-						print_builtin_any_standard_is_equal (a_feature)
+						print_builtin_any_standard_is_equal_feature (a_feature)
 					when builtin_special_item then
-						print_builtin_special_item (a_feature)
+						print_builtin_special_item_feature (a_feature)
 					when builtin_special_count then
-						print_builtin_special_count (a_feature)
+						print_builtin_special_count_feature (a_feature)
 					when builtin_character_code then
-						print_builtin_character_code (a_feature)
+						print_builtin_character_code_feature (a_feature)
 					when builtin_integer_plus then
-						print_builtin_integer_plus (a_feature)
+						print_builtin_integer_plus_feature (a_feature)
 					when builtin_integer_minus then
-						print_builtin_integer_minus (a_feature)
+						print_builtin_integer_minus_feature (a_feature)
 					when builtin_integer_times then
-						print_builtin_integer_times (a_feature)
+						print_builtin_integer_times_feature (a_feature)
 					when builtin_integer_divide then
-						print_builtin_integer_divide (a_feature)
+						print_builtin_integer_divide_feature (a_feature)
 					when builtin_integer_div then
-						print_builtin_integer_div (a_feature)
+						print_builtin_integer_div_feature (a_feature)
 					when builtin_integer_mod then
-						print_builtin_integer_mod (a_feature)
+						print_builtin_integer_mod_feature (a_feature)
 					when builtin_integer_opposite then
-						print_builtin_integer_opposite (a_feature)
+						print_builtin_integer_opposite_feature (a_feature)
 					when builtin_integer_lt then
-						print_builtin_integer_lt (a_feature)
+						print_builtin_integer_lt_feature (a_feature)
 					when builtin_integer_to_character then
-						print_builtin_integer_to_character (a_feature)
+						print_builtin_integer_to_character_feature (a_feature)
 					when builtin_integer_bit_or then
-						print_builtin_integer_bit_or (a_feature)
+						print_builtin_integer_bit_or_feature (a_feature)
 					when builtin_integer_bit_shift_left then
-						print_builtin_integer_bit_shift_left (a_feature)
+						print_builtin_integer_bit_shift_left_feature (a_feature)
 					else
 							-- Unknown built-in feature.
 							-- This error should already have been reported during parsing.
@@ -831,11 +832,11 @@ feature {NONE} -- Feature generation
 						-- This is a built-in procedure.
 					inspect a_feature.builtin_code
 					when builtin_any_standard_copy then
-						print_builtin_any_standard_copy (a_feature)
+						print_builtin_any_standard_copy_feature (a_feature)
 					when builtin_special_make then
-						print_builtin_special_make (a_feature)
+						print_builtin_special_make_feature (a_feature)
 					when builtin_special_put then
-						print_builtin_special_put (a_feature)
+						print_builtin_special_put_feature (a_feature)
 					else
 							-- Unknown built-in feature.
 							-- This error should already have been reported during parsing.
@@ -2194,6 +2195,186 @@ print ("ET_C_GENERATOR.print_feature_address%N")
 			end
 		end
 
+	print_feature_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print feature call `a_call' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			an_actuals: ET_ACTUAL_ARGUMENTS
+			a_feature: ET_FEATURE
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
+			a_string_constant: ET_MANIFEST_STRING
+			a_seed: INTEGER
+			i, nb: INTEGER
+		do
+			an_actuals := a_call.arguments
+			a_seed := a_call.name.seed
+			a_feature := a_target_type.base_class.seeded_feature (a_seed)
+			if a_feature = Void then
+					-- Internal error: there should be a feature with `a_seed'.
+					-- It has been computed in ET_FEATURE_FLATTENER.
+				set_fatal_error
+				error_handler.report_gibdb_error
+			elseif a_feature.is_procedure then
+				l_dynamic_feature := a_target_type.dynamic_feature (a_feature, current_system)
+				inspect l_dynamic_feature.builtin_code
+				when builtin_any_standard_copy then
+					print_builtin_any_standard_copy_call (a_call, a_target, a_target_type)
+				when builtin_special_put then
+					print_builtin_special_put_call (a_call, a_target, a_target_type)
+				else
+					print_routine_name (l_dynamic_feature, a_target_type)
+					current_file.put_character ('(')
+					if a_target /= Void then
+						print_expression (a_target)
+					else
+						current_file.put_character ('C')
+					end
+					if an_actuals /= Void then
+						nb := an_actuals.count
+						from i := 1 until i > nb loop
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_expression (an_actuals.actual_argument (i))
+							i := i + 1
+						end
+					end
+					current_file.put_character (')')
+					current_file.put_character (';')
+				end
+			elseif a_feature.is_attribute then
+				if a_target /= Void then
+					print_attribute_name (a_target_type.dynamic_feature (a_feature, current_system), a_target, a_target_type)
+				else
+					print_current_attribute_name (a_target_type.dynamic_feature (a_feature, current_system))
+				end
+			elseif a_feature.is_unique_attribute then
+-- TODO.
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (',')
+					print_type_cast (current_system.integer_type)
+					current_file.put_character ('(')
+					unique_count := unique_count + 1
+					current_file.put_integer (unique_count)
+					current_file.put_character (')')
+					current_file.put_character (')')
+				else
+					print_type_cast (current_system.integer_type)
+					current_file.put_character ('(')
+					unique_count := unique_count + 1
+					current_file.put_integer (unique_count)
+					current_file.put_character (')')
+				end
+			elseif a_feature.is_constant_attribute then
+-- TODO.
+				a_constant_attribute ?= a_feature
+				if a_constant_attribute = Void then
+						-- Internal error.
+					set_fatal_error
+					error_handler.report_gibdc_error
+				else
+					a_string_constant ?= a_constant_attribute.constant
+					if a_string_constant /= Void then
+						print_routine_name (a_target_type.dynamic_feature (a_feature, current_system), a_target_type)
+						current_file.put_character ('(')
+						if a_target /= Void then
+							print_expression (a_target)
+						else
+							current_file.put_character ('C')
+						end
+						an_actuals := a_call.arguments
+						if an_actuals /= Void then
+							nb := an_actuals.count
+							from i := 1 until i > nb loop
+								current_file.put_character (',')
+								current_file.put_character (' ')
+								print_expression (an_actuals.actual_argument (i))
+								i := i + 1
+							end
+						end
+						current_file.put_character (')')
+					elseif a_target /= Void then
+						current_file.put_character ('(')
+						print_expression (a_target)
+						current_file.put_character (',')
+						a_constant_attribute.constant.process (Current)
+						current_file.put_character (')')
+					else
+						a_constant_attribute.constant.process (Current)
+					end
+				end
+			else
+				l_dynamic_feature := a_target_type.dynamic_feature (a_feature, current_system)
+				inspect l_dynamic_feature.builtin_code
+				when builtin_any_same_type then
+					print_builtin_any_same_type_call (a_call, a_target, a_target_type)
+				when builtin_any_standard_is_equal then
+					print_builtin_any_standard_is_equal_call (a_call, a_target, a_target_type)
+				when builtin_special_item then
+					print_builtin_special_item_call (a_call, a_target, a_target_type)
+				when builtin_special_count then
+					print_builtin_special_count_call (a_call, a_target, a_target_type)
+				when builtin_character_code then
+					print_builtin_character_code_call (a_call, a_target, a_target_type)
+				when builtin_integer_plus then
+					print_builtin_integer_plus_call (a_call, a_target, a_target_type)
+				when builtin_integer_minus then
+					print_builtin_integer_minus_call (a_call, a_target, a_target_type)
+				when builtin_integer_times then
+					print_builtin_integer_times_call (a_call, a_target, a_target_type)
+				when builtin_integer_divide then
+					print_builtin_integer_divide_call (a_call, a_target, a_target_type)
+				when builtin_integer_div then
+					print_builtin_integer_div_call (a_call, a_target, a_target_type)
+				when builtin_integer_mod then
+					print_builtin_integer_mod_call (a_call, a_target, a_target_type)
+				when builtin_integer_lt then
+					print_builtin_integer_lt_call (a_call, a_target, a_target_type)
+				when builtin_integer_opposite then
+					print_builtin_integer_opposite_call (a_call, a_target, a_target_type)
+				when builtin_integer_to_character then
+					print_builtin_integer_to_character_call (a_call, a_target, a_target_type)
+				when builtin_integer_bit_or then
+					print_builtin_integer_bit_or_call (a_call, a_target, a_target_type)
+				when builtin_integer_bit_shift_left then
+					print_builtin_integer_bit_shift_left_call (a_call, a_target, a_target_type)
+				when builtin_boolean_and_then then
+					print_builtin_boolean_and_then_call (a_call, a_target, a_target_type)
+				when builtin_boolean_or_else then
+					print_builtin_boolean_or_else_call (a_call, a_target, a_target_type)
+				when builtin_boolean_implies then
+					print_builtin_boolean_implies_call (a_call, a_target, a_target_type)
+				else
+					print_routine_name (l_dynamic_feature, a_target_type)
+					current_file.put_character ('(')
+					if a_target /= Void then
+						print_expression (a_target)
+					else
+						current_file.put_character ('C')
+					end
+					if an_actuals /= Void then
+						nb := an_actuals.count
+						from i := 1 until i > nb loop
+							current_file.put_character (',')
+							current_file.put_character (' ')
+							print_expression (an_actuals.actual_argument (i))
+							i := i + 1
+						end
+					end
+					current_file.put_character (')')
+				end
+			end
+		end
+
 	print_formal_argument (a_name: ET_IDENTIFIER) is
 			-- Print formal argument `a_name'.
 		require
@@ -2268,8 +2449,15 @@ print ("ET_C_GENERATOR.print_infix_cast_expression%N")
 		require
 			a_name_not_void: a_name /= Void
 			a_name_local: a_name.is_local
+		local
+			l_internal_local_name: ET_INTERNAL_LOCAL_NAME
 		do
-			current_file.put_character ('l')
+			l_internal_local_name ?= a_name
+			if l_internal_local_name /= Void then
+				current_file.put_character ('z')
+			else
+				current_file.put_character ('l')
+			end
 			current_file.put_integer (a_name.seed)
 		end
 
@@ -2684,8 +2872,6 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			a_target_type_set: ET_DYNAMIC_TYPE_SET
 			an_actuals: ET_ACTUAL_ARGUMENTS
 			a_feature: ET_FEATURE
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
---			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			a_seed: INTEGER
 			i, nb: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
@@ -2703,7 +2889,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 				set_fatal_error
 				error_handler.report_gibcy_error
 			else
-				a_seed := a_call.name.seed
+				a_seed := a_name.seed
 				l_dynamic_type := a_target_type_set.first_type
 				l_other_dynamic_types := a_target_type_set.other_types
 				if l_dynamic_type = Void then
@@ -2765,117 +2951,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					end
 				elseif l_other_dynamic_types = Void then
 						-- Static binding.
-					a_feature := l_dynamic_type.base_class.seeded_feature (a_seed)
-					if a_feature = Void then
-							-- Internal error: there should be a feature with `a_seed'.
-							-- It has been computed in ET_FEATURE_FLATTENER.
-						set_fatal_error
-						error_handler.report_gibdb_error
-					elseif a_feature.is_procedure then
-						print_routine_name (l_dynamic_type.dynamic_feature (a_feature, current_system), l_dynamic_type)
-						current_file.put_character ('(')
-						print_expression (a_target)
-						if an_actuals /= Void then
-							nb := an_actuals.count
-							from i := 1 until i > nb loop
-								current_file.put_character (',')
-								current_file.put_character (' ')
-								print_expression (an_actuals.actual_argument (i))
-								i := i + 1
-							end
-						end
-						current_file.put_character (')')
-						current_file.put_character (';')
-					elseif a_feature.is_attribute then
-						print_attribute_name (l_dynamic_type.dynamic_feature (a_feature, current_system), a_target, l_dynamic_type)
---					elseif a_feature.is_constant_attribute then
---						a_constant_attribute ?= a_feature
---						if a_constant_attribute = Void then
---								-- Internal error.
---							set_fatal_error
---							error_handler.report_gibdc_error
---						else
---							current_file.put_character ('(')
---							print_expression (a_target)
---							current_file.put_character (',')
---							a_constant_attribute.constant.process (Current)
---							current_file.put_character (')')
---						end
-					elseif a_feature.is_unique_attribute then
--- TODO.
-						current_file.put_character ('(')
-						print_expression (a_target)
-						current_file.put_character (',')
-						print_type_cast (current_system.integer_type)
-						current_file.put_character ('(')
-						unique_count := unique_count + 1
-						current_file.put_integer (unique_count)
-						current_file.put_character (')')
-						current_file.put_character (')')
-					else
-						l_dynamic_feature := l_dynamic_type.dynamic_feature (a_feature, current_system)
-						inspect l_dynamic_feature.builtin_code
-						when builtin_boolean_and_then then
-							current_file.put_character ('(')
-							print_expression (a_target)
-							current_file.put_character (')')
-							current_file.put_character ('&')
-							current_file.put_character ('&')
-							if an_actuals = Void or else an_actuals.count /= 1 then
-								set_fatal_error
--- TODO
-							else
-								current_file.put_character ('(')
-								print_expression (an_actuals.actual_argument (1))
-								current_file.put_character (')')
-							end
-						when builtin_boolean_or_else then
-							current_file.put_character ('(')
-							print_expression (a_target)
-							current_file.put_character (')')
-							current_file.put_character ('|')
-							current_file.put_character ('|')
-							if an_actuals = Void or else an_actuals.count /= 1 then
-								set_fatal_error
--- TODO
-							else
-								current_file.put_character ('(')
-								print_expression (an_actuals.actual_argument (1))
-								current_file.put_character (')')
-							end
-						when builtin_boolean_implies then
-							current_file.put_character ('(')
-							current_file.put_character ('!')
-							current_file.put_character ('(')
-							print_expression (a_target)
-							current_file.put_character (')')
-							current_file.put_character (')')
-							current_file.put_character ('|')
-							current_file.put_character ('|')
-							if an_actuals = Void or else an_actuals.count /= 1 then
-								set_fatal_error
--- TODO
-							else
-								current_file.put_character ('(')
-								print_expression (an_actuals.actual_argument (1))
-								current_file.put_character (')')
-							end
-						else
-							print_routine_name (l_dynamic_feature, l_dynamic_type)
-							current_file.put_character ('(')
-							print_expression (a_target)
-							if an_actuals /= Void then
-								nb := an_actuals.count
-								from i := 1 until i > nb loop
-									current_file.put_character (',')
-									current_file.put_character (' ')
-									print_expression (an_actuals.actual_argument (i))
-									i := i + 1
-								end
-							end
-							current_file.put_character (')')
-						end
-					end
+					print_feature_call (a_call, a_target, l_dynamic_type)
 				else
 						-- Dynamic binding.
 					a_feature := l_dynamic_type.base_class.seeded_feature (a_seed)
@@ -2923,30 +2999,13 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 							current_file.put_character (':')
 							current_file.put_new_line
 							indent
-							if a_feature = Void then
-									-- Internal error: there should be a feature with `a_seed'.
-									-- It has been computed in ET_FEATURE_FLATTENER.
-								set_fatal_error
-								error_handler.report_gibdf_error
-							else
-								print_indentation
-								print_routine_name (l_dynamic_type.dynamic_feature (a_feature, current_system), l_dynamic_type)
-								current_file.put_character ('(')
-								current_file.put_character ('z')
-								current_file.put_integer (l_local_index)
-								if an_actuals /= Void then
-									nb := an_actuals.count
-									from i := 1 until i > nb loop
-										current_file.put_character (',')
-										current_file.put_character (' ')
-										print_expression (an_actuals.actual_argument (i))
-										i := i + 1
-									end
-								end
-								current_file.put_character (')')
-								current_file.put_character (';')
-								current_file.put_new_line
-							end
+							print_indentation
+								-- Set index of `internal_local_name' again and again just before
+								-- calling `print_feature_call' because it might have been
+								-- overwritten inbetween when printing the arguments of the calls.
+							internal_local_name.set_seed (l_local_index)
+							print_feature_call (a_call, internal_local_name, l_dynamic_type)
+							current_file.put_new_line
 							print_indentation
 							current_file.put_string (c_break)
 							current_file.put_character (';')
@@ -2998,45 +3057,11 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 								current_file.put_character (')')
 								current_file.put_character ('?')
 							end
-							if a_feature = Void then
-									-- Internal error: there should be a feature with `a_seed'.
-									-- It has been computed in ET_FEATURE_FLATTENER.
-								set_fatal_error
-								error_handler.report_gibdh_error
-							elseif a_feature.is_attribute then
-								print_local_attribute_name (l_dynamic_type.dynamic_feature (a_feature, current_system), l_local_index, l_dynamic_type)
---							elseif a_feature.is_constant_attribute then
---								a_constant_attribute ?= a_feature
---								if a_constant_attribute = Void then
---										-- Internal error.
---									set_fatal_error
---									error_handler.report_gibdi_error
---								else
---									a_constant_attribute.constant.process (Current)
---								end
-							elseif a_feature.is_unique_attribute then
--- TODO.
-								print_type_cast (current_system.integer_type)
-								current_file.put_character ('(')
-								unique_count := unique_count + 1
-								current_file.put_integer (unique_count)
-								current_file.put_character (')')
-							else
-								print_routine_name (l_dynamic_type.dynamic_feature (a_feature, current_system), l_dynamic_type)
-								current_file.put_character ('(')
-								current_file.put_character ('z')
-								current_file.put_integer (l_local_index)
-								if an_actuals /= Void then
-									nb := an_actuals.count
-									from i := 1 until i > nb loop
-										current_file.put_character (',')
-										current_file.put_character (' ')
-										print_expression (an_actuals.actual_argument (i))
-										i := i + 1
-									end
-								end
-								current_file.put_character (')')
-							end
+								-- Set index of `internal_local_name' again and again just before
+								-- calling `print_feature_call' because it might have been
+								-- overwritten inbetween when printing the arguments of the calls.
+							internal_local_name.set_seed (l_local_index)
+							print_feature_call (a_call, internal_local_name, l_dynamic_type)
 							if j > nb2 then
 								l_dynamic_type := Void
 							else
@@ -3412,93 +3437,8 @@ print ("ET_C_GENERATOR.print_typed_expression%N")
 		require
 			a_call_not_void: a_call /= Void
 			unqualified_call: not a_call.is_qualified_call
-		local
-			a_name: ET_CALL_NAME
-			an_actuals: ET_ACTUAL_ARGUMENTS
-			a_feature: ET_FEATURE
-			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
-			a_string_constant: ET_MANIFEST_STRING
-			a_seed: INTEGER
-			i, nb: INTEGER
 		do
-			a_name := a_call.name
-			a_seed := a_name.seed
-			a_feature := current_type.base_class.seeded_feature (a_seed)
-			if a_feature = Void then
-					-- Internal error: there should be a feature with `a_seed'.
-					-- It has been computed in ET_FEATURE_CHECKER or else an
-					-- error should have already been reported.
-				set_fatal_error
-				error_handler.report_gibcz_error
-			elseif a_feature.is_procedure then
-				print_routine_name (current_type.dynamic_feature (a_feature, current_system), current_type)
-				current_file.put_character ('(')
-				current_file.put_character ('C')
-				an_actuals := a_call.arguments
-				if an_actuals /= Void then
-					nb := an_actuals.count
-					from i := 1 until i > nb loop
-						current_file.put_character (',')
-						current_file.put_character (' ')
-						print_expression (an_actuals.actual_argument (i))
-						i := i + 1
-					end
-				end
-				current_file.put_character (')')
-				current_file.put_character (';')
-			elseif a_feature.is_attribute then
-				print_current_attribute_name (current_type.dynamic_feature (a_feature, current_system))
-			elseif a_feature.is_constant_attribute then
--- TODO.
-				a_constant_attribute ?= a_feature
-				if a_constant_attribute = Void then
-						-- Internal error.
-					set_fatal_error
-					error_handler.report_gibda_error
-				else
-					a_string_constant ?= a_constant_attribute.constant
-					if a_string_constant /= Void then
-						print_routine_name (current_type.dynamic_feature (a_feature, current_system), current_type)
-						current_file.put_character ('(')
-						current_file.put_character ('C')
-						an_actuals := a_call.arguments
-						if an_actuals /= Void then
-							nb := an_actuals.count
-							from i := 1 until i > nb loop
-								current_file.put_character (',')
-								current_file.put_character (' ')
-								print_expression (an_actuals.actual_argument (i))
-								i := i + 1
-							end
-						end
-						current_file.put_character (')')
-					else
-						a_constant_attribute.constant.process (Current)
-					end
-				end
-			elseif a_feature.is_unique_attribute then
--- TODO.
-				print_type_cast (current_system.integer_type)
-				current_file.put_character ('(')
-				unique_count := unique_count + 1
-				current_file.put_integer (unique_count)
-				current_file.put_character (')')
-			else
-				print_routine_name (current_type.dynamic_feature (a_feature, current_system), current_type)
-				current_file.put_character ('(')
-				current_file.put_character ('C')
-				an_actuals := a_call.arguments
-				if an_actuals /= Void then
-					nb := an_actuals.count
-					from i := 1 until i > nb loop
-						current_file.put_character (',')
-						current_file.put_character (' ')
-						print_expression (an_actuals.actual_argument (i))
-						i := i + 1
-					end
-				end
-				current_file.put_character (')')
-			end
+			print_feature_call (a_call, Void, current_type)
 		end
 
 	print_verbatim_string (a_string: ET_VERBATIM_STRING) is
@@ -3735,7 +3675,7 @@ feature {NONE} -- Malloc
 
 feature {NONE} -- Built-in features
 
-	print_builtin_any_twin (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_any_twin_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'ANY.twin'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -3902,7 +3842,7 @@ feature {NONE} -- Built-in features
 				current_file.put_new_line
 				l_copy_feature := current_type.base_class.seeded_feature (universe.copy_seed)
 				if l_copy_feature = Void then
-						-- This error should already have been reported during parsing.
+						-- Internal error: this error should already have been reported during parsing.
 					set_fatal_error
 					error_handler.report_gibic_error
 				else
@@ -3920,7 +3860,7 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	print_builtin_any_same_type (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_any_same_type_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'ANY.same_type'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -3990,7 +3930,78 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	print_builtin_any_standard_is_equal (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_any_same_type_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'ANY.same_type' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibiw_error
+			elseif
+				a_target_type = current_system.character_type or
+				a_target_type = current_system.boolean_type or
+				a_target_type = current_system.integer_8_type or
+				a_target_type = current_system.integer_16_type or
+				a_target_type = current_system.integer_type or
+				a_target_type = current_system.integer_64_type or
+				a_target_type = current_system.real_type or
+				a_target_type = current_system.double_type or
+				a_target_type = current_system.pointer_type
+			then
+				current_file.put_string (c_eif_false)
+			else
+				print_type_cast (current_system.boolean_type)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_character ('T')
+				current_file.put_character ('0')
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				if a_target /= Void then
+					print_expression (a_target)
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('i')
+				current_file.put_character ('d')
+				current_file.put_character ('=')
+				current_file.put_character ('=')
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_character ('T')
+				current_file.put_character ('0')
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('i')
+				current_file.put_character ('d')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_any_standard_is_equal_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'ANY.standard_is_equal'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4059,7 +4070,83 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_is_equal - special%N")
 			end
 		end
 
-	print_builtin_any_standard_copy (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_any_standard_is_equal_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'ANY.standard_is_equal' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+		do
+			l_special_type ?= a_target_type
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibix_error
+			elseif l_special_type /= Void then
+-- TODO: compare items.
+print ("ET_C_GENERATOR.print_builtin_any_standard_is_equal_call - special%N")
+			elseif
+				a_target_type = current_system.character_type or
+				a_target_type = current_system.boolean_type or
+				a_target_type = current_system.integer_8_type or
+				a_target_type = current_system.integer_16_type or
+				a_target_type = current_system.integer_type or
+				a_target_type = current_system.integer_64_type or
+				a_target_type = current_system.real_type or
+				a_target_type = current_system.double_type or
+				a_target_type = current_system.pointer_type
+			then
+				print_type_cast (current_system.boolean_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character ('=')
+				current_file.put_character ('=')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			else
+				print_type_cast (current_system.boolean_type)
+				current_file.put_character ('(')
+				if not a_target_type.is_expanded then
+					current_file.put_character ('*')
+				end
+				print_type_cast (a_target_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					print_expression (a_target)
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character (')')
+				current_file.put_character ('=')
+				current_file.put_character ('=')
+				if not a_target_type.is_expanded then
+					current_file.put_character ('*')
+				end
+				print_type_cast (a_target_type)
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_any_standard_copy_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'ANY.standard_copy'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4083,7 +4170,15 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 				current_type = current_system.pointer_type
 			then
 				print_indentation
+				current_file.put_character ('*')
+				current_file.put_character ('(')
+				print_type_name (current_type)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				current_file.put_character ('&')
 				current_file.put_character ('C')
+				current_file.put_character (')')
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
@@ -4096,11 +4191,21 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 				print_indentation
 				if not current_type.is_expanded then
 					current_file.put_character ('*')
+					print_type_cast (current_type)
+					current_file.put_character ('(')
+					current_file.put_character ('C')
+					current_file.put_character (')')
+				else
+					current_file.put_character ('*')
+					current_file.put_character ('(')
+					print_type_name (current_type)
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					current_file.put_character ('(')
+					current_file.put_character ('&')
+					current_file.put_character ('C')
+					current_file.put_character (')')
 				end
-				print_type_cast (current_type)
-				current_file.put_character ('(')
-				current_file.put_character ('C')
-				current_file.put_character (')')
 				current_file.put_character (' ')
 				current_file.put_character ('=')
 				current_file.put_character (' ')
@@ -4117,7 +4222,109 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			end
 		end
 
-	print_builtin_special_make (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_any_standard_copy_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'ANY.standard_copy' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+		do
+			l_special_type ?= a_target_type
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibiy_error
+			elseif l_special_type /= Void then
+			-- TODO: what to do if Current is not large enough?
+print ("ET_C_GENERATOR.print_builtin_any_standard_copy_call - special%N")
+			elseif
+				a_target_type = current_system.character_type or
+				a_target_type = current_system.boolean_type or
+				a_target_type = current_system.integer_8_type or
+				a_target_type = current_system.integer_16_type or
+				a_target_type = current_system.integer_type or
+				a_target_type = current_system.integer_64_type or
+				a_target_type = current_system.real_type or
+				a_target_type = current_system.double_type or
+				a_target_type = current_system.pointer_type
+			then
+				print_indentation
+				current_file.put_character ('*')
+				current_file.put_character ('(')
+				print_type_name (a_target_type)
+				current_file.put_character ('*')
+				current_file.put_character (')')
+				current_file.put_character ('(')
+				current_file.put_character ('&')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character (')')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (';')
+			else
+-- TODO: both objects have to be of the same type.
+				print_indentation
+				if not a_target_type.is_expanded then
+					current_file.put_character ('*')
+					print_type_cast (a_target_type)
+					current_file.put_character ('(')
+					if a_target /= Void then
+						print_expression (a_target)
+					else
+						current_file.put_character ('C')
+					end
+					current_file.put_character (')')
+				else
+					current_file.put_character ('*')
+					current_file.put_character ('(')
+					print_type_name (a_target_type)
+					current_file.put_character ('*')
+					current_file.put_character (')')
+					current_file.put_character ('(')
+					current_file.put_character ('&')
+					if a_target /= Void then
+						current_file.put_character ('(')
+						print_expression (a_target)
+						current_file.put_character (')')
+					else
+						current_file.put_character ('C')
+					end
+					current_file.put_character (')')
+				end
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				if not a_target_type.is_expanded then
+					current_file.put_character ('*')
+				end
+				print_type_cast (a_target_type)
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+			end
+		end
+
+	print_builtin_special_make_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'SPECIAL.make'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4126,7 +4333,7 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			-- Do nothing: already done in `print_malloc_current'.
 		end
 
-	print_builtin_special_item (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_special_item_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'SPECIAL.item'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4155,7 +4362,46 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_special_put (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_special_item_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'SPECIAL.item' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibiv_error
+			else
+				current_file.put_character ('(')
+				print_type_cast (a_target_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					print_expression (a_target)
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('2')
+				current_file.put_character ('[')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (']')
+			end
+		end
+
+	print_builtin_special_put_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'SPECIAL.put'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4185,7 +4431,53 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_special_count (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_special_put_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'SPECIAL.put' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 2 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibiu_error
+			else
+				current_file.put_character ('(')
+				print_type_cast (a_target_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					print_expression (a_target)
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('2')
+				current_file.put_character ('[')
+				print_expression (l_actuals.actual_argument (2))
+				current_file.put_character (']')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (';')
+			end
+		end
+
+	print_builtin_special_count_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'SPECIAL.count'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4210,7 +4502,34 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_character_code (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_special_count_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'SPECIAL.count' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		do
+			current_file.put_character ('(')
+			print_type_cast (a_target_type)
+			current_file.put_character ('(')
+			if a_target /= Void then
+				print_expression (a_target)
+			else
+				current_file.put_character ('C')
+			end
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_character ('-')
+			current_file.put_character ('>')
+			current_file.put_character ('a')
+			current_file.put_character ('1')
+		end
+
+	print_builtin_character_code_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'CHARACTER.code'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4229,7 +4548,28 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_integer_plus (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_character_code_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'CHARACTER.code' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		do
+			print_type_cast (current_system.integer_type)
+			current_file.put_character ('(')
+			if a_target /= Void then
+				print_expression (a_target)
+			else
+				current_file.put_character ('C')
+			end
+			current_file.put_character (')')
+		end
+
+	print_builtin_integer_plus_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'INTEGER.infix "+"'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4251,7 +4591,43 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_integer_minus (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_integer_plus_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'INTEGER.infix "+"' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibda_error
+			else
+				print_type_cast (current_system.integer_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character ('+')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_integer_minus_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'INTEGER.infix "-"'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4273,7 +4649,43 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_integer_times (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_integer_minus_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'INTEGER.infix "-"' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibir_error
+			else
+				print_type_cast (current_system.integer_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character ('-')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_integer_times_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'INTEGER.infix "*"'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4295,7 +4707,43 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_integer_divide (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_integer_times_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'INTEGER.infix "*"' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibiq_error
+			else
+				print_type_cast (current_system.integer_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character ('*')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_integer_divide_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'INTEGER.infix "/"'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4323,7 +4771,45 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_integer_div (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_integer_divide_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'INTEGER.infix "/"' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibip_error
+			else
+				print_type_cast (current_system.double_type)
+				current_file.put_character ('(')
+				print_type_cast (current_system.double_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					print_expression (a_target)
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character (')')
+				current_file.put_character ('/')
+				print_type_cast (current_system.double_type)
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_integer_div_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'INTEGER.infix "//"'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4345,7 +4831,43 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_integer_mod (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_integer_div_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'INTEGER.infix "//"' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibio_error
+			else
+				print_type_cast (current_system.integer_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character ('/')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_integer_mod_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'INTEGER.infix "\\"'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4367,7 +4889,43 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_integer_opposite (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_integer_mod_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'INTEGER.infix "\\"' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibin_error
+			else
+				print_type_cast (current_system.integer_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character ('%%')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_integer_opposite_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'INTEGER.prefix "-"'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4387,7 +4945,31 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_integer_lt (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_integer_opposite_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'INTEGER.prefix "-"' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		do
+			print_type_cast (current_system.integer_type)
+			current_file.put_character ('(')
+			current_file.put_character ('-')
+			if a_target /= Void then
+				current_file.put_character ('(')
+				print_expression (a_target)
+				current_file.put_character (')')
+			else
+				current_file.put_character ('C')
+			end
+			current_file.put_character (')')
+		end
+
+	print_builtin_integer_lt_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'INTEGER.infix "<"'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4409,7 +4991,43 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_integer_to_character (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_integer_lt_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'INTEGER.infix "<"' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibcz_error
+			else
+				print_type_cast (current_system.boolean_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character ('<')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_integer_to_character_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'INTEGER.to_character'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4428,7 +5046,28 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_integer_bit_or (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_integer_to_character_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'INTEGER.to_character' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		do
+			print_type_cast (current_system.character_type)
+			current_file.put_character ('(')
+			if a_target /= Void then
+				print_expression (a_target)
+			else
+				current_file.put_character ('C')
+			end
+			current_file.put_character (')')
+		end
+
+	print_builtin_integer_bit_or_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'INTEGER.bit_or'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4450,7 +5089,43 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_new_line
 		end
 
-	print_builtin_integer_bit_shift_left (a_feature: ET_EXTERNAL_ROUTINE) is
+	print_builtin_integer_bit_or_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'INTEGER.bit_or' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibit_error
+			else
+				print_type_cast (current_system.integer_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character ('|')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_integer_bit_shift_left_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'INTEGER.bit_shift_left'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -4471,6 +5146,157 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy - special%N")
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
+		end
+
+	print_builtin_integer_bit_shift_left_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'INTEGER.bit_shift_left' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibis_error
+			else
+				print_type_cast (current_system.integer_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character ('<')
+				current_file.put_character ('<')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_boolean_and_then_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'BOOLEAN.infix "and then"' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibdf_error
+			else
+				print_type_cast (current_system.boolean_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character ('&')
+				current_file.put_character ('&')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_boolean_or_else_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'BOOLEAN.infix "or else"' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibdh_error
+			else
+				print_type_cast (current_system.boolean_type)
+				current_file.put_character ('(')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character ('|')
+				current_file.put_character ('|')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
+		end
+
+	print_builtin_boolean_implies_call (a_call: ET_FEATURE_CALL; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE) is
+			-- Print call to built-in feature 'BOOLEAN.infix "implies"' (static binding).
+			-- `a_target', which is Void in case of unqualified call, is not
+			-- necessarily the same as `a_call.target'. It might be a temporary
+			-- name used to hold the already computed value of `a_call.target'.
+			-- `a_target_type' is the dynamic type of the target, or
+			-- `current_type' for unqualified call.
+		require
+			a_call_not_void: a_call /= Void
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_actuals: ET_ACTUAL_ARGUMENTS
+		do
+			l_actuals := a_call.arguments
+			if l_actuals = Void or else l_actuals.count /= 1 then
+					-- Internal error: this was already reported during parsing.
+				set_fatal_error
+				error_handler.report_gibdi_error
+			else
+				print_type_cast (current_system.boolean_type)
+				current_file.put_character ('(')
+				current_file.put_character ('(')
+				current_file.put_character ('!')
+				if a_target /= Void then
+					current_file.put_character ('(')
+					print_expression (a_target)
+					current_file.put_character (')')
+				else
+					current_file.put_character ('C')
+				end
+				current_file.put_character (')')
+				current_file.put_character ('|')
+				current_file.put_character ('|')
+				current_file.put_character ('(')
+				print_expression (l_actuals.actual_argument (1))
+				current_file.put_character (')')
+				current_file.put_character (')')
+			end
 		end
 
 feature {NONE} -- C functions
@@ -4733,7 +5559,7 @@ feature {NONE} -- Type generation
 					elseif l_type = current_system.boolean_type then
 						current_file.put_string (c_typedef)
 						current_file.put_character (' ')
-						current_file.put_string (c_int)
+						current_file.put_string (c_char)
 						current_file.put_character (' ')
 						print_type_name (l_type)
 						current_file.put_character (';')
@@ -5012,25 +5838,6 @@ feature {NONE} -- Feature name generation
 			print_type_cast (current_type)
 			current_file.put_character ('(')
 			current_file.put_character ('C')
-			current_file.put_character (')')
-			current_file.put_character (')')
-			current_file.put_character ('-')
-			current_file.put_character ('>')
-			current_file.put_character ('a')
-			current_file.put_integer (an_attribute.id)
-		end
-
-	print_local_attribute_name (an_attribute: ET_DYNAMIC_FEATURE; i: INTEGER; a_type: ET_DYNAMIC_TYPE) is
-			-- Print name of `an_attribute' applied on `i'-th internal C local variabe of type `a_type'.
-		require
-			an_attribute_not_void: an_attribute /= Void
-			a_type_not_void: a_type /= Void
-		do
-			current_file.put_character ('(')
-			print_type_cast (a_type)
-			current_file.put_character ('(')
-			current_file.put_character ('z')
-			current_file.put_integer (i)
 			current_file.put_character (')')
 			current_file.put_character (')')
 			current_file.put_character ('-')
@@ -5678,7 +6485,10 @@ feature {NONE} -- Implementation
 			-- Types accepted by the current assignment attempt
 
 	denied_types: ET_DYNAMIC_TYPE_LIST
-			-- Types deined by the current assignment attempt
+			-- Types denied by the current assignment attempt
+
+	internal_local_name: ET_INTERNAL_LOCAL_NAME
+			-- Internal local name used to hold result of expressions
 
 	dummy_feature: ET_DYNAMIC_FEATURE is
 			-- Dummy feature
@@ -5741,5 +6551,6 @@ invariant
 	current_local_buffer_not_void: current_local_buffer /= Void
 	accepted_types_not_void: accepted_types /= Void
 	denied_types_not_void: denied_types /= Void
+	internal_local_name_not_void: internal_local_name /= Void
 
 end
