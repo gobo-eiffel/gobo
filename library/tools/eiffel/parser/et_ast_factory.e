@@ -3158,14 +3158,6 @@ feature -- AST nodes
 			Result := a_type
 		end
 
-	new_typed_expression (a_type: ET_TARGET_TYPE; an_expression: ET_EXPRESSION): ET_TYPED_EXPRESSION is
-			-- New typed expression
-		do
-			if a_type /= Void and an_expression /= Void then
-				create Result.make (a_type, an_expression)
-			end
-		end
-
 	new_unique_attribute (a_name: ET_EXTENDED_FEATURE_NAME; a_type: ET_DECLARED_TYPE;
 		an_assigner: ET_ASSIGNER; an_is, a_unique: ET_KEYWORD; a_semicolon: ET_SEMICOLON_SYMBOL;
 		a_clients: ET_CLASS_NAME_LIST; a_feature_clause: ET_FEATURE_CLAUSE;

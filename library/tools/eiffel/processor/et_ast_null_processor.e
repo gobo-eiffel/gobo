@@ -857,11 +857,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
-			-- Process `an_expression'.
-		do
-		end
-
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		do

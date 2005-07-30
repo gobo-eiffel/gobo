@@ -79,7 +79,6 @@ inherit
 			process_static_call_instruction,
 			process_strip_expression,
 			process_true_constant,
-			process_typed_expression,
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unique_attribute,
@@ -5295,113 +5294,6 @@ feature {NONE} -- Expression validity
 			report_boolean_constant (a_constant)
 		end
 
-	check_typed_expression_validity (an_expression: ET_TYPED_EXPRESSION; a_context: ET_NESTED_TYPE_CONTEXT) is
-			-- Check validity of `an_expression'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			an_expression_not_void: an_expression /= Void
-			a_context_not_void: a_context /= Void
-		local
-			a_source: ET_EXPRESSION
-			a_target_type: ET_TYPE
-			a_class_impl: ET_CLASS
-			a_source_context: ET_NESTED_TYPE_CONTEXT
-			a_target_context: ET_NESTED_TYPE_CONTEXT
-			a_convert_feature: ET_CONVERT_FEATURE
-			a_conversion_feature: ET_FEATURE
-			a_convert_expression: ET_CONVERT_EXPRESSION
-			a_convert_to_expression: ET_CONVERT_TO_EXPRESSION
-			a_convert_class: ET_CLASS
-			a_convert_name: ET_FEATURE_NAME
-			a_source_named_type: ET_NAMED_TYPE
-			a_target_named_type: ET_NAMED_TYPE
-		do
-			has_fatal_error := False
-			a_target_type := an_expression.type
-			check_type_validity (a_target_type)
-			if not has_fatal_error then
-				a_target_context := formal_context
-				a_target_context.reset (current_type)
-				a_target_context.force_last (a_target_type)
-				a_source_context := a_context
-				a_source := an_expression.expression
-				check_subexpression_validity (a_source, a_source_context, a_target_context)
-				an_expression.set_index (a_source.index)
-				if not has_fatal_error then
-					if not a_source_context.conforms_to_type (a_target_type, current_type, universe) then
-						a_class_impl := feature_impl.implementation_class
-						if current_class = a_class_impl then
-							a_convert_feature := type_checker.convert_feature (a_source_context, a_target_context)
-						else
-								-- Convertibility should be resolved in the implementation class.
-							a_convert_feature := Void
-						end
-						if a_convert_feature /= Void then
-							if a_convert_feature.is_convert_from then
-								a_convert_class := a_target_context.base_class (universe)
-							elseif a_convert_feature.is_convert_to then
-								a_convert_class := a_source_context.base_class (universe)
-							else
-								a_convert_class := Void
-							end
-							if a_convert_class /= Void then
-								a_convert_class.process (universe.feature_flattener)
-								if not a_convert_class.features_flattened or else a_convert_class.has_flattening_error then
-										-- Error already reported by the feature flattener.
-									set_fatal_error
-									a_convert_feature := Void
-								end
-							end
-							if a_convert_feature /= Void then
-									-- Insert the conversion feature call in the AST.
-								if a_convert_feature.is_convert_to then
-									create a_convert_to_expression.make (a_source, a_convert_feature)
-									a_convert_expression := a_convert_to_expression
-									a_convert_name := a_convert_feature.name
-									a_conversion_feature := a_convert_class.seeded_feature (a_convert_name.seed)
-									if a_conversion_feature /= Void then
-										report_qualified_call_expression (a_convert_to_expression, a_source_context, a_conversion_feature)
-									else
-											-- Internal error: the seed of the convert feature should correspond
-											-- to a feature of `a_convert_class'.
-										set_fatal_error
-										error_handler.report_gibid_error
-									end
-								elseif a_convert_feature.is_convert_from then
-									create a_convert_expression.make (a_source, a_convert_feature)
-									a_convert_name := a_convert_feature.name
-									a_conversion_feature := a_convert_class.seeded_feature (a_convert_name.seed)
-									if a_conversion_feature /= Void then
-										report_creation_expression (a_convert_expression, a_source_context.named_type (universe), a_conversion_feature, an_expression.expression)
-									else
-											-- Internal error: the seed of the convert feature should correspond
-											-- to a feature of `a_convert_class'.
-										set_fatal_error
-										error_handler.report_gibie_error
-									end
-								else
-									create a_convert_expression.make (a_source, a_convert_feature)
-									a_convert_expression.set_index (a_source.index)
-								end
-								an_expression.set_expression (a_convert_expression)
-							end
-						else
-							set_fatal_error
-							a_source_named_type := a_source_context.named_type (universe)
-							a_target_named_type := a_target_context.named_type (universe)
-							if current_class = a_class_impl then
-								error_handler.report_vjar0c_error (current_class, an_expression, a_source_named_type, a_target_named_type)
-							else
-								error_handler.report_vjar0d_error (current_class, a_class_impl, an_expression, a_source_named_type, a_target_named_type)
-							end
-						end
-					end
-				end
-			end
-			a_context.reset (current_type)
-			a_context.force_last (a_target_type)
-		end
-
 	check_underscored_integer_constant_validity (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of `a_constant'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -7702,15 +7594,6 @@ feature {ET_AST_NODE} -- Processing
 			if internal_call then
 				internal_call := False
 				check_true_constant_validity (a_constant, current_context)
-			end
-		end
-
-	process_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
-			-- Process `an_expression'.
-		do
-			if internal_call then
-				internal_call := False
-				check_typed_expression_validity (an_expression, current_context)
 			end
 		end
 

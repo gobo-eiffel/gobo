@@ -2329,13 +2329,6 @@ feature {ET_AST_NODE} -- Processing
 			a_type.comma.process (Current)
 		end
 
-	process_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
-			-- Process `an_expression'.
-		do
-			an_expression.cast_type.process (Current)
-			an_expression.expression.process (Current)
-		end
-
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		do

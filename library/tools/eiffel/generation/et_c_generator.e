@@ -80,7 +80,6 @@ inherit
 			process_static_call_instruction,
 			process_strip_expression,
 			process_true_constant,
-			process_typed_expression,
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unique_attribute,
@@ -3243,16 +3242,6 @@ print ("ET_C_GENERATOR.print_strip_expression%N")
 			a_constant_not_void: a_constant /= Void
 		do
 			current_file.put_string (c_eif_true)
-		end
-
-	print_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
-			-- Print `an_expression'.
-		require
-			an_expression_not_void: an_expression /= Void
-		do
--- TODO.
-print ("ET_C_GENERATOR.print_typed_expression%N")
-			print_expression (an_expression.expression)
 		end
 
 	print_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
@@ -7483,12 +7472,6 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			print_true_constant (a_constant)
-		end
-
-	process_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
-			-- Process `an_expression'.
-		do
-			print_typed_expression (an_expression)
 		end
 
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is

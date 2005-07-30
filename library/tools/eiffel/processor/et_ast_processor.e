@@ -1214,13 +1214,6 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_typed_expression (an_expression: ET_TYPED_EXPRESSION) is
-			-- Process `an_expression'.
-		require
-			an_expression_not_void: an_expression /= Void
-		deferred
-		end
-
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		require

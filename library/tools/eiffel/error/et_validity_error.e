@@ -147,8 +147,6 @@ create
 	make_vhrc5a,
 	make_vjar0a,
 	make_vjar0b,
-	make_vjar0c,
-	make_vjar0d,
 	make_vjaw0a,
 	make_vjaw0c,
 	make_vjrv0a,
@@ -5921,98 +5919,6 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class_impl
 			position := an_assignment.source.position
-			create parameters.make (1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_class_impl.name.name, 6)
-			parameters.put (a_source_type.to_text, 7)
-			parameters.put (a_target_type.to_text, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = source type
-			-- dollar8: $8 = target type
-		end
-
-	make_vjar0c (a_class: like current_class; a_typed_expression: ET_TYPED_EXPRESSION; a_source_type, a_target_type: ET_NAMED_TYPE) is
-			-- Create a new VJAR error: the source expression of `a_typed_expression' does
-			-- not conform to its target type.
-			--
-			-- ETL2: p. 311
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_typed_expression_not_void: a_typed_expression /= Void
-			a_source_type_not_void: a_source_type /= Void
-			a_source_type_is_named_type: a_source_type.is_named_type
-			a_target_type_not_void: a_target_type /= Void
-			a_target_type_is_named_type: a_target_type.is_named_type
-		do
-			code := vjar0c_template_code
-			etl_code := vjar_etl_code
-			default_template := vjar0c_default_template
-			current_class := a_class
-			class_impl := a_class
-			position := a_typed_expression.expression.position
-			create parameters.make (1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.name.name, 5)
-			parameters.put (a_source_type.to_text, 6)
-			parameters.put (a_target_type.to_text, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = source type
-			-- dollar7: $7 = target type
-		end
-
-	make_vjar0d (a_class: like current_class; a_class_impl: ET_CLASS; a_typed_expression: ET_TYPED_EXPRESSION;
-		a_source_type, a_target_type: ET_NAMED_TYPE) is
-			-- Create a new VJAR error: the source expression of `a_typed_expression' does
-			-- not conform to its target type when viewed from `a_class'.
-			--
-			-- ETL2: p. 311
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_typed_expression_not_void: a_typed_expression /= Void
-			a_source_type_not_void: a_source_type /= Void
-			a_source_type_is_named_type: a_source_type.is_named_type
-			a_target_type_not_void: a_target_type /= Void
-			a_target_type_is_named_type: a_target_type.is_named_type
-		do
-			code := vjar0d_template_code
-			etl_code := vjar_etl_code
-			default_template := vjar0d_default_template
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_typed_expression.expression.position
 			create parameters.make (1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -12535,8 +12441,6 @@ feature {NONE} -- Implementation
 	vhrc5a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is of the Infix form but `$7' in $8 is not a function with one argument."
 	vjar0a_default_template: STRING is "[$1] class $5 ($3,$4): the source of the assignment (of type '$6') does not conform to its target entity (of type '$7')."
 	vjar0b_default_template: STRING is "[$1] class $5 ($6,$3,$4): the source of the assignment (of type '$7') does not conform to its target entity (of type '$8')."
-	vjar0c_default_template: STRING is "[$1] class $5 ($3,$4): the expression (of type '$6') does not conform to type '$7'."
-	vjar0d_default_template: STRING is "[$1] class $5 ($6,$3,$4): the expression (of type '$7') does not conform to type '$8'."
 	vjaw0a_default_template: STRING is "[$1] class $5 ($3,$4): feature `$6' is not an attribute. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0c_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is the name of a formal argument of feature `$7'. A Writable is either a local variable (including Result) or an attribute."
 	vjrv0a_default_template: STRING is "[$1] class $5 ($3,$4): the type '$6' of the target entity of the assignment attempt is not a reference type."
@@ -12931,8 +12835,6 @@ feature {NONE} -- Implementation
 	vhrc5a_template_code: STRING is "vhrc5a"
 	vjar0a_template_code: STRING is "vjar0a"
 	vjar0b_template_code: STRING is "vjar0b"
-	vjar0c_template_code: STRING is "vjar0c"
-	vjar0d_template_code: STRING is "vjar0d"
 	vjaw0a_template_code: STRING is "vjaw0a"
 	vjaw0c_template_code: STRING is "vjaw0c"
 	vjrv0a_template_code: STRING is "vjrv0a"
