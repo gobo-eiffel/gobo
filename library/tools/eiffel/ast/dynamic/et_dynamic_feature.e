@@ -46,7 +46,12 @@ feature {NONE} -- Initialization
 			l_type := a_feature.type
 			if l_type /= Void then
 				l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
-				result_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
+				if a_feature.is_constant_attribute or a_feature.is_unique_attribute then
+					result_type_set := l_dynamic_type
+					l_dynamic_type.set_alive
+				else
+					result_type_set := l_dynamic_type_set_builder.new_dynamic_type_set (l_dynamic_type)
+				end
 			end
 			dynamic_type_sets := empty_dynamic_type_sets
 			args := a_feature.arguments
