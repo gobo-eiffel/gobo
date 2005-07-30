@@ -10924,6 +10924,11 @@ feature -- Reporting
 
 --Error codes not used:
 
+	-- report_gibar_error
+	-- report_giaed_error
+	-- report_giaec_error
+	-- report_gibcb_error
+	-- report_gibca_error
 	-- report_gibjq_error
 	-- report_gibjr_error
 	-- report_gibjs_error

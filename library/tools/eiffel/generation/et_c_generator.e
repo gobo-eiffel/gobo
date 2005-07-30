@@ -208,7 +208,7 @@ feature -- Generation
 				a_file.put_character ('%"')
 				a_file.put_new_line
 				a_file.put_new_line
-				print_gems
+				print_gems_function
 				a_file.put_new_line
 					-- Print Eiffel features.
 				l_dynamic_types := current_system.dynamic_types
@@ -225,15 +225,15 @@ feature -- Generation
 				polymorphic_calls.wipe_out
 					-- Print features which build manifest arrays.
 				from manifest_array_types.start until manifest_array_types.after loop
-					print_gema (manifest_array_types.item_for_iteration)
+					print_gema_function (manifest_array_types.item_for_iteration)
 					a_file.put_new_line
 					manifest_array_types.forth
 				end
 				manifest_array_types.wipe_out
 					-- Print call-on-void-target function.
-				print_gevoid
+				print_gevoid_function
 					-- Print 'main' function.
-				print_main
+				print_main_function
 				header_file := old_header_file
 				l_header_file.close
 				current_file := old_file
@@ -3258,7 +3258,7 @@ feature {NONE} -- Agent generation
 -- TODO.
 		end
 
-feature {NONE} -- Polymorphic calls
+feature {NONE} -- Polymorphic call generation
 
 	print_polymorphic_features is
 			-- Print polymorphic features.
@@ -3589,135 +3589,7 @@ feature {NONE} -- Polymorphic calls
 			sorter_not_void: Result /= Void
 		end
 
-feature {NONE} -- Locals
-
-	print_reference_local_declaration (i: INTEGER) is
-			-- Print declaration of reference local z`i'.
-		local
-			old_file: like current_file
-		do
-			old_file := current_file
-			current_file := current_local_buffer
-			print_indentation
-			current_file.put_character ('T')
-			current_file.put_character ('0')
-			current_file.put_character ('*')
-			current_file.put_character (' ')
-			current_file.put_character ('z')
-			current_file.put_integer (i)
-			current_file.put_character (';')
-			current_file.put_new_line
-			current_file := old_file
-		end
-
-	print_typed_pointer_local_declaration (i: INTEGER; a_type: ET_DYNAMIC_TYPE) is
-			-- Print declaration of typed pointer local z`i'.
-		require
-			a_type_not_void: a_type /= Void
-		local
-			old_file: like current_file
-		do
-			old_file := current_file
-			current_file := current_local_buffer
-			print_indentation
-			current_file.put_character ('T')
-			current_file.put_integer (a_type.id)
-			current_file.put_character (' ')
-			current_file.put_character ('z')
-			current_file.put_integer (i)
-			current_file.put_character (' ')
-			current_file.put_character ('=')
-			current_file.put_character (' ')
-			current_file.put_character ('{')
-			current_file.put_character ('0')
-			current_file.put_character ('}')
-			current_file.put_character (';')
-			current_file.put_new_line
-			current_file := old_file
-		end
-
-feature {NONE} -- Malloc
-
-	print_malloc_current is
-			-- Print memory allocation of 'Current'.
-		local
-			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
-		do
-			print_indentation
-			print_type_declaration (current_type, current_file)
-			current_file.put_character (' ')
-			current_file.put_character ('C')
-			current_file.put_character (';')
-			current_file.put_new_line
-			print_indentation
-			current_file.put_character ('C')
-			current_file.put_character (' ')
-			current_file.put_character ('=')
-			current_file.put_character (' ')
-			current_file.put_character ('(')
-			print_type_declaration (current_type, current_file)
-			current_file.put_character (')')
-			current_file.put_string (c_eif_malloc)
-			current_file.put_character ('(')
-			current_file.put_string (c_sizeof)
-			current_file.put_character ('(')
-			print_type_name (current_type, current_file)
-			current_file.put_character (')')
-			l_special_type ?= current_type
-			if l_special_type /= Void then
-				current_file.put_character ('+')
-				current_file.put_character ('a')
-				current_file.put_character ('1')
-				current_file.put_character ('*')
-				current_file.put_string (c_sizeof)
-				current_file.put_character ('(')
-				print_type_declaration (l_special_type.item_type_set.static_type, current_file)
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character (';')
-				current_file.put_new_line
-				print_indentation
-				current_file.put_character ('(')
-				print_type_cast (current_type, current_file)
-				current_file.put_character ('(')
-				current_file.put_character ('C')
-				current_file.put_character (')')
-				current_file.put_character (')')
-				current_file.put_character ('-')
-				current_file.put_character ('>')
-				current_file.put_character ('a')
-				current_file.put_character ('1')
-				current_file.put_character (' ')
-				current_file.put_character ('=')
-				current_file.put_character (' ')
-				current_file.put_character ('a')
-				current_file.put_character ('1')
--- TODO: initialize items.
-			else
-				current_file.put_character (')')
-			end
-			current_file.put_character (';')
-			current_file.put_new_line
-			print_indentation
-			current_file.put_character ('(')
-			print_type_cast (current_type, current_file)
-			current_file.put_character ('(')
-			current_file.put_character ('C')
-			current_file.put_character (')')
-			current_file.put_character (')')
-			current_file.put_character ('-')
-			current_file.put_character ('>')
-			current_file.put_character ('i')
-			current_file.put_character ('d')
-			current_file.put_character (' ')
-			current_file.put_character ('=')
-			current_file.put_character (' ')
-			current_file.put_integer (current_type.id)
-			current_file.put_character (';')
-			current_file.put_new_line
-		end
-
-feature {NONE} -- Built-in features
+feature {NONE} -- Built-in feature generation
 
 	print_builtin_any_twin_feature (a_feature: ET_EXTERNAL_ROUTINE) is
 			-- Print built-in feature 'ANY.twin'.
@@ -5950,26 +5822,20 @@ print ("ET_C_GENERATOR.print_builtin_any_standard_copy_call - special%N")
 			current_file.put_character (')')
 		end
 
-feature {NONE} -- C functions
+feature {NONE} -- C function generation
 
-	print_main is
-			-- Print 'main' function.
+	print_main_function is
+			-- Print 'main' function to `current_file'.
 		local
 			l_root_type: ET_DYNAMIC_TYPE
 			l_root_creation: ET_DYNAMIC_FEATURE
 		do
+			current_file.put_line ("int main(char** argv, int argc)")
+			current_file.put_character ('{')
+			current_file.put_new_line
 			l_root_type := current_system.root_type
 			l_root_creation := current_system.root_creation_procedure
-			if l_root_type = Void or l_root_creation = Void then
-				current_file.put_line ("main(char** argv, int argc)")
-				current_file.put_character ('{')
-				current_file.put_new_line
-				current_file.put_character ('}')
-				current_file.put_new_line
-			else
-				current_file.put_line ("main (char** argv, int argc)")
-				current_file.put_character ('{')
-				current_file.put_new_line
+			if l_root_type /= Void and l_root_creation /= Void then
 				indent
 				print_indentation
 				print_type_declaration (l_root_type, current_file)
@@ -5981,13 +5847,14 @@ feature {NONE} -- C functions
 				current_file.put_character (';')
 				current_file.put_new_line
 				dedent
-				current_file.put_character ('}')
-				current_file.put_new_line
 			end
+			current_file.put_character ('}')
+			current_file.put_new_line
 		end
 
-	print_gems is
-			-- Print manifest string function.
+	print_gems_function is
+			-- Print 'gems' function to `current_file'.
+			-- 'gems' is used to create manifest strings.
 		do
 			current_file.put_line ("T0* gems(char* s, int c)")
 			current_file.put_character ('{')
@@ -5997,7 +5864,7 @@ feature {NONE} -- C functions
 			current_file.put_line ("T0* a;")
 			print_indentation
 			current_file.put_line ("T0* R;")
-				-- Create `area'.
+				-- Create 'area'.
 			print_indentation
 			current_file.put_string ("a = (T0*)")
 			current_file.put_string (c_eif_malloc)
@@ -6020,7 +5887,7 @@ feature {NONE} -- C functions
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
-				-- Set type id of `area'.
+				-- Set type id of 'area'.
 			print_indentation
 			current_file.put_character ('(')
 			print_type_cast (current_system.special_character_type, current_file)
@@ -6038,7 +5905,7 @@ feature {NONE} -- C functions
 			current_file.put_integer (current_system.special_character_type.id)
 			current_file.put_character (';')
 			current_file.put_new_line
-				-- Set `count' of `area'.
+				-- Set 'count' of 'area'.
 			print_indentation
 			current_file.put_character ('(')
 			print_type_cast (current_system.special_character_type, current_file)
@@ -6060,7 +5927,7 @@ feature {NONE} -- C functions
 			current_file.put_character (')')
 			current_file.put_character (';')
 			current_file.put_new_line
-				-- Copy characters to `area'.
+				-- Copy characters to 'area'.
 			print_indentation
 			current_file.put_string ("memcpy(")
 			current_file.put_character ('(')
@@ -6104,7 +5971,7 @@ feature {NONE} -- C functions
 			current_file.put_integer (current_system.string_type.id)
 			current_file.put_character (';')
 			current_file.put_new_line
-				-- Set `area'.
+				-- Set 'area'.
 			print_indentation
 			current_file.put_character ('(')
 			print_type_cast (current_system.string_type, current_file)
@@ -6121,7 +5988,7 @@ feature {NONE} -- C functions
 			current_file.put_character ('a')
 			current_file.put_character (';')
 			current_file.put_new_line
-				-- Set `count'.
+				-- Set 'count'.
 			print_indentation
 			current_file.put_character ('(')
 			print_type_cast (current_system.string_type, current_file)
@@ -6151,8 +6018,9 @@ feature {NONE} -- C functions
 			current_file.put_new_line
 		end
 
-	print_gema (an_array_type: ET_DYNAMIC_TYPE) is
-			-- Print manifest array function.
+	print_gema_function (an_array_type: ET_DYNAMIC_TYPE) is
+			-- Print 'gema' function to `current_file' and its signature to `header_file'.
+			-- 'gema<type-id>' is used to create manifest arrays of type 'type-id'.
 		require
 			an_array_type_not_void: an_array_type /= Void
 		local
@@ -6184,7 +6052,7 @@ feature {NONE} -- C functions
 			end
 			if l_special_type /= Void then
 				l_item_type := l_special_type.item_type_set.static_type
-					-- Print signature.
+					-- Print signature to `header_file' and `current_file'.
 				header_file.put_string (c_extern)
 				header_file.put_character (' ')
 				header_file.put_string ("T0* gema")
@@ -6198,7 +6066,8 @@ feature {NONE} -- C functions
 				current_file.put_string ("(int c, ...)")
 				header_file.put_character (';')
 				header_file.put_new_line
-					-- Print body.
+				current_file.put_new_line
+					-- Print body to `current_file'.
 				current_file.put_character ('{')
 				current_file.put_new_line
 				indent
@@ -6206,7 +6075,7 @@ feature {NONE} -- C functions
 				current_file.put_line ("T0* R;")
 				print_indentation
 				current_file.put_line ("T0* a;")
-					-- Create `area'.
+					-- Create 'area'.
 				print_indentation
 				current_file.put_string ("a = (T0*)")
 				current_file.put_string (c_eif_malloc)
@@ -6225,7 +6094,7 @@ feature {NONE} -- C functions
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
-					-- Set type id of `area'.
+					-- Set type id of 'area'.
 				print_indentation
 				current_file.put_character ('(')
 				print_type_cast (l_special_type, current_file)
@@ -6243,7 +6112,7 @@ feature {NONE} -- C functions
 				current_file.put_integer (l_special_type.id)
 				current_file.put_character (';')
 				current_file.put_new_line
-					-- Set `count' of `area'.
+					-- Set 'count' of 'area'.
 				print_indentation
 				current_file.put_character ('(')
 				print_type_cast (l_special_type, current_file)
@@ -6261,7 +6130,7 @@ feature {NONE} -- C functions
 				current_file.put_character ('c')
 				current_file.put_character (';')
 				current_file.put_new_line
-					-- Copy items to `area'.
+					-- Copy items to 'area'.
 				print_indentation
 				current_file.put_line ("if (c!=0) {")
 				indent
@@ -6340,7 +6209,7 @@ feature {NONE} -- C functions
 				current_file.put_integer (an_array_type.id)
 				current_file.put_character (';')
 				current_file.put_new_line
-					-- Set `area'.
+					-- Set 'area'.
 				print_indentation
 				current_file.put_character ('(')
 				print_type_cast (an_array_type, current_file)
@@ -6357,7 +6226,7 @@ feature {NONE} -- C functions
 				current_file.put_character ('a')
 				current_file.put_character (';')
 				current_file.put_new_line
-					-- Set `lower'.
+					-- Set 'lower'.
 				print_indentation
 				current_file.put_character ('(')
 				print_type_cast (an_array_type, current_file)
@@ -6374,7 +6243,7 @@ feature {NONE} -- C functions
 				current_file.put_character ('1')
 				current_file.put_character (';')
 				current_file.put_new_line
-					-- Set `upper'.
+					-- Set 'upper'.
 				print_indentation
 				current_file.put_character ('(')
 				print_type_cast (an_array_type, current_file)
@@ -6405,10 +6274,12 @@ feature {NONE} -- C functions
 			end
 		end
 
-	print_gevoid is
-			-- Print call-on-void-target function.
+	print_gevoid_function is
+			-- Print 'gevoid' function to `current_file' and its signature to `header_file'.
+			-- `gevoid' is called when a feature call will always result
+			-- in a call-on-void-target.
 		do
-				-- Print signature.
+				-- Print signature to `header_file' and `current_file'.
 			header_file.put_string (c_extern)
 			header_file.put_character (' ')
 			header_file.put_string (c_int)
@@ -6419,7 +6290,7 @@ feature {NONE} -- C functions
 			current_file.put_string ("(T0* C, ...)")
 			header_file.put_character (';')
 			header_file.put_new_line
-				-- Print body.
+				-- Print body to `current_file'.
 			current_file.put_character ('{')
 			current_file.put_new_line
 			indent
@@ -6430,6 +6301,134 @@ feature {NONE} -- C functions
 			current_file.put_line ("exit(1);")
 			dedent
 			current_file.put_character ('}')
+			current_file.put_new_line
+		end
+
+feature {NONE} -- Locals
+
+	print_reference_local_declaration (i: INTEGER) is
+			-- Print declaration of reference local z`i'.
+		local
+			old_file: like current_file
+		do
+			old_file := current_file
+			current_file := current_local_buffer
+			print_indentation
+			current_file.put_character ('T')
+			current_file.put_character ('0')
+			current_file.put_character ('*')
+			current_file.put_character (' ')
+			current_file.put_character ('z')
+			current_file.put_integer (i)
+			current_file.put_character (';')
+			current_file.put_new_line
+			current_file := old_file
+		end
+
+	print_typed_pointer_local_declaration (i: INTEGER; a_type: ET_DYNAMIC_TYPE) is
+			-- Print declaration of typed pointer local z`i'.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			old_file: like current_file
+		do
+			old_file := current_file
+			current_file := current_local_buffer
+			print_indentation
+			current_file.put_character ('T')
+			current_file.put_integer (a_type.id)
+			current_file.put_character (' ')
+			current_file.put_character ('z')
+			current_file.put_integer (i)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_character ('0')
+			current_file.put_character ('}')
+			current_file.put_character (';')
+			current_file.put_new_line
+			current_file := old_file
+		end
+
+feature {NONE} -- Malloc
+
+	print_malloc_current is
+			-- Print memory allocation of 'Current'.
+		local
+			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
+		do
+			print_indentation
+			print_type_declaration (current_type, current_file)
+			current_file.put_character (' ')
+			current_file.put_character ('C')
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_character ('C')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			print_type_declaration (current_type, current_file)
+			current_file.put_character (')')
+			current_file.put_string (c_eif_malloc)
+			current_file.put_character ('(')
+			current_file.put_string (c_sizeof)
+			current_file.put_character ('(')
+			print_type_name (current_type, current_file)
+			current_file.put_character (')')
+			l_special_type ?= current_type
+			if l_special_type /= Void then
+				current_file.put_character ('+')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character ('*')
+				current_file.put_string (c_sizeof)
+				current_file.put_character ('(')
+				print_type_declaration (l_special_type.item_type_set.static_type, current_file)
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character (';')
+				current_file.put_new_line
+				print_indentation
+				current_file.put_character ('(')
+				print_type_cast (current_type, current_file)
+				current_file.put_character ('(')
+				current_file.put_character ('C')
+				current_file.put_character (')')
+				current_file.put_character (')')
+				current_file.put_character ('-')
+				current_file.put_character ('>')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+				current_file.put_character (' ')
+				current_file.put_character ('=')
+				current_file.put_character (' ')
+				current_file.put_character ('a')
+				current_file.put_character ('1')
+-- TODO: initialize items.
+			else
+				current_file.put_character (')')
+			end
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_character ('(')
+			print_type_cast (current_type, current_file)
+			current_file.put_character ('(')
+			current_file.put_character ('C')
+			current_file.put_character (')')
+			current_file.put_character (')')
+			current_file.put_character ('-')
+			current_file.put_character ('>')
+			current_file.put_character ('i')
+			current_file.put_character ('d')
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_integer (current_type.id)
+			current_file.put_character (';')
 			current_file.put_new_line
 		end
 
