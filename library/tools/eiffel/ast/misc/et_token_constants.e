@@ -454,6 +454,17 @@ feature -- Feature names
 			default_create_feature_name_not_void: Result /= Void
 		end
 
+	infix_and_feature_name: ET_FEATURE_NAME is
+			-- 'infix "and"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (and_keyword_name)
+			create {ET_INFIX_NAME} Result.make_and (l_string)
+		ensure
+			infix_and_feature_name_not_void: Result /= Void
+		end
+
 	infix_and_then_feature_name: ET_FEATURE_NAME is
 			-- 'infix "and then"' feature name
 		local
@@ -498,6 +509,28 @@ feature -- Feature names
 			infix_divide_feature_name_not_void: Result /= Void
 		end
 
+	infix_ge_feature_name: ET_FEATURE_NAME is
+			-- 'infix ">="' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (le_symbol_name)
+			create {ET_INFIX_NAME} Result.make_ge (l_string)
+		ensure
+			infix_ge_feature_name_not_void: Result /= Void
+		end
+
+	infix_gt_feature_name: ET_FEATURE_NAME is
+			-- 'infix ">"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (gt_symbol_name)
+			create {ET_INFIX_NAME} Result.make_gt (l_string)
+		ensure
+			infix_gt_feature_name_not_void: Result /= Void
+		end
+
 	infix_implies_feature_name: ET_FEATURE_NAME is
 			-- 'infix "implies"' feature name
 		local
@@ -507,6 +540,17 @@ feature -- Feature names
 			create {ET_INFIX_NAME} Result.make_implies (l_string)
 		ensure
 			infix_implies_feature_name_not_void: Result /= Void
+		end
+
+	infix_le_feature_name: ET_FEATURE_NAME is
+			-- 'infix "<="' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (le_symbol_name)
+			create {ET_INFIX_NAME} Result.make_le (l_string)
+		ensure
+			infix_le_feature_name_not_void: Result /= Void
 		end
 
 	infix_lt_feature_name: ET_FEATURE_NAME is
@@ -542,6 +586,17 @@ feature -- Feature names
 			infix_mod_feature_name_not_void: Result /= Void
 		end
 
+	infix_or_feature_name: ET_FEATURE_NAME is
+			-- 'infix "or"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (or_keyword_name)
+			create {ET_INFIX_NAME} Result.make_or (l_string)
+		ensure
+			infix_or_feature_name_not_void: Result /= Void
+		end
+
 	infix_or_else_feature_name: ET_FEATURE_NAME is
 			-- 'infix "or else"' feature name
 		local
@@ -573,6 +628,17 @@ feature -- Feature names
 			create {ET_INFIX_NAME} Result.make_times (l_string)
 		ensure
 			infix_times_feature_name_not_void: Result /= Void
+		end
+
+	infix_xor_feature_name: ET_FEATURE_NAME is
+			-- 'infix "xor"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (xor_keyword_name)
+			create {ET_INFIX_NAME} Result.make_xor (l_string)
+		ensure
+			infix_xor_feature_name_not_void: Result /= Void
 		end
 
 	invariant_feature_name: ET_FEATURE_NAME is
@@ -624,6 +690,17 @@ feature -- Feature names
 			create {ET_PREFIX_NAME} Result.make_minus (l_string)
 		ensure
 			prefix_minus_feature_name_not_void: Result /= Void
+		end
+
+	prefix_not_feature_name: ET_FEATURE_NAME is
+			-- 'prefix "not"' feature name
+		local
+			l_string: ET_REGULAR_MANIFEST_STRING
+		once
+			create l_string.make (not_keyword_name)
+			create {ET_PREFIX_NAME} Result.make_not (l_string)
+		ensure
+			prefix_not_feature_name_not_void: Result /= Void
 		end
 
 	put_feature_name: ET_FEATURE_NAME is

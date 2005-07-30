@@ -359,7 +359,33 @@ create
 	make_gibiw,
 	make_gibix,
 	make_gibiy,
-	make_gibiz
+	make_gibiz,
+	make_gibja,
+	make_gibjb,
+	make_gibjc,
+	make_gibjd,
+	make_gibje,
+	make_gibjf,
+	make_gibjg,
+	make_gibjh,
+	make_gibji,
+	make_gibjj,
+	make_gibjk,
+	make_gibjl,
+	make_gibjm,
+	make_gibjn,
+	make_gibjo,
+	make_gibjp,
+	make_gibjq,
+	make_gibjr,
+	make_gibjs,
+	make_gibjt,
+	make_gibju,
+	make_gibjv,
+	make_gibjw,
+	make_gibjx,
+	make_gibjy,
+	make_gibjz
 
 feature {NONE} -- Initialization
 
@@ -4809,6 +4835,344 @@ feature {NONE} -- Initialization
 			-- dollar1: $1 = ETL code
 		end
 
+	make_gibja is
+			-- Create a new GIBJA error.
+		do
+			code := gibja_template_code
+			etl_code := gibja_etl_code
+			default_template := gibja_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjb is
+			-- Create a new GIBJB error.
+		do
+			code := gibjb_template_code
+			etl_code := gibjb_etl_code
+			default_template := gibjb_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjc is
+			-- Create a new GIBJC error.
+		do
+			code := gibjc_template_code
+			etl_code := gibjc_etl_code
+			default_template := gibjc_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjd is
+			-- Create a new GIBJD error.
+		do
+			code := gibjd_template_code
+			etl_code := gibjd_etl_code
+			default_template := gibjd_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibje is
+			-- Create a new GIBJE error.
+		do
+			code := gibje_template_code
+			etl_code := gibje_etl_code
+			default_template := gibje_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjf is
+			-- Create a new GIBJF error.
+		do
+			code := gibjf_template_code
+			etl_code := gibjf_etl_code
+			default_template := gibjf_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjg is
+			-- Create a new GIBJG error.
+		do
+			code := gibjg_template_code
+			etl_code := gibjg_etl_code
+			default_template := gibjg_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjh is
+			-- Create a new GIBJH error.
+		do
+			code := gibjh_template_code
+			etl_code := gibjh_etl_code
+			default_template := gibjh_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibji is
+			-- Create a new GIBJI error.
+		do
+			code := gibji_template_code
+			etl_code := gibji_etl_code
+			default_template := gibji_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjj is
+			-- Create a new GIBJJ error.
+		do
+			code := gibjj_template_code
+			etl_code := gibjj_etl_code
+			default_template := gibjj_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjk is
+			-- Create a new GIBJK error.
+		do
+			code := gibjk_template_code
+			etl_code := gibjk_etl_code
+			default_template := gibjk_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjl is
+			-- Create a new GIBJL error.
+		do
+			code := gibjl_template_code
+			etl_code := gibjl_etl_code
+			default_template := gibjl_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjm is
+			-- Create a new GIBJM error.
+		do
+			code := gibjm_template_code
+			etl_code := gibjm_etl_code
+			default_template := gibjm_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjn is
+			-- Create a new GIBJN error.
+		do
+			code := gibjn_template_code
+			etl_code := gibjn_etl_code
+			default_template := gibjn_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjo is
+			-- Create a new GIBJO error.
+		do
+			code := gibjo_template_code
+			etl_code := gibjo_etl_code
+			default_template := gibjo_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjp is
+			-- Create a new GIBJP error.
+		do
+			code := gibjp_template_code
+			etl_code := gibjp_etl_code
+			default_template := gibjp_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjq is
+			-- Create a new GIBJQ error.
+		do
+			code := gibjq_template_code
+			etl_code := gibjq_etl_code
+			default_template := gibjq_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjr is
+			-- Create a new GIBJR error.
+		do
+			code := gibjr_template_code
+			etl_code := gibjr_etl_code
+			default_template := gibjr_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjs is
+			-- Create a new GIBJS error.
+		do
+			code := gibjs_template_code
+			etl_code := gibjs_etl_code
+			default_template := gibjs_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjt is
+			-- Create a new GIBJT error.
+		do
+			code := gibjt_template_code
+			etl_code := gibjt_etl_code
+			default_template := gibjt_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibju is
+			-- Create a new GIBJU error.
+		do
+			code := gibju_template_code
+			etl_code := gibju_etl_code
+			default_template := gibju_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjv is
+			-- Create a new GIBJV error.
+		do
+			code := gibjv_template_code
+			etl_code := gibjv_etl_code
+			default_template := gibjv_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjw is
+			-- Create a new GIBJW error.
+		do
+			code := gibjw_template_code
+			etl_code := gibjw_etl_code
+			default_template := gibjw_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjx is
+			-- Create a new GIBJX error.
+		do
+			code := gibjx_template_code
+			etl_code := gibjx_etl_code
+			default_template := gibjx_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjy is
+			-- Create a new GIBJY error.
+		do
+			code := gibjy_template_code
+			etl_code := gibjy_etl_code
+			default_template := gibjy_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
+	make_gibjz is
+			-- Create a new GIBJZ error.
+		do
+			code := gibjz_template_code
+			etl_code := gibjz_etl_code
+			default_template := gibjz_default_template
+			create parameters.make (1, 1)
+			parameters.put (etl_code, 1)
+		ensure
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+		end
+
 feature {NONE} -- Implementation
 
 	giaaa_default_template: STRING is "[$1] internal error."
@@ -5153,6 +5517,32 @@ feature {NONE} -- Implementation
 	gibix_default_template: STRING is "[$1] internal error."
 	gibiy_default_template: STRING is "[$1] internal error."
 	gibiz_default_template: STRING is "[$1] internal error."
+	gibja_default_template: STRING is "[$1] internal error."
+	gibjb_default_template: STRING is "[$1] internal error."
+	gibjc_default_template: STRING is "[$1] internal error."
+	gibjd_default_template: STRING is "[$1] internal error."
+	gibje_default_template: STRING is "[$1] internal error."
+	gibjf_default_template: STRING is "[$1] internal error."
+	gibjg_default_template: STRING is "[$1] internal error."
+	gibjh_default_template: STRING is "[$1] internal error."
+	gibji_default_template: STRING is "[$1] internal error."
+	gibjj_default_template: STRING is "[$1] internal error."
+	gibjk_default_template: STRING is "[$1] internal error."
+	gibjl_default_template: STRING is "[$1] internal error."
+	gibjm_default_template: STRING is "[$1] internal error."
+	gibjn_default_template: STRING is "[$1] internal error."
+	gibjo_default_template: STRING is "[$1] internal error."
+	gibjp_default_template: STRING is "[$1] internal error."
+	gibjq_default_template: STRING is "[$1] internal error."
+	gibjr_default_template: STRING is "[$1] internal error."
+	gibjs_default_template: STRING is "[$1] internal error."
+	gibjt_default_template: STRING is "[$1] internal error."
+	gibju_default_template: STRING is "[$1] internal error."
+	gibjv_default_template: STRING is "[$1] internal error."
+	gibjw_default_template: STRING is "[$1] internal error."
+	gibjx_default_template: STRING is "[$1] internal error."
+	gibjy_default_template: STRING is "[$1] internal error."
+	gibjz_default_template: STRING is "[$1] internal error."
 			-- Default templates
 
 	giaaa_etl_code: STRING is "GIAAA"
@@ -5497,6 +5887,32 @@ feature {NONE} -- Implementation
 	gibix_etl_code: STRING is "GIBIX"
 	gibiy_etl_code: STRING is "GIBIY"
 	gibiz_etl_code: STRING is "GIBIZ"
+	gibja_etl_code: STRING is "GIBJA"
+	gibjb_etl_code: STRING is "GIBJB"
+	gibjc_etl_code: STRING is "GIBJC"
+	gibjd_etl_code: STRING is "GIBJD"
+	gibje_etl_code: STRING is "GIBJE"
+	gibjf_etl_code: STRING is "GIBJF"
+	gibjg_etl_code: STRING is "GIBJG"
+	gibjh_etl_code: STRING is "GIBJH"
+	gibji_etl_code: STRING is "GIBJI"
+	gibjj_etl_code: STRING is "GIBJJ"
+	gibjk_etl_code: STRING is "GIBJK"
+	gibjl_etl_code: STRING is "GIBJL"
+	gibjm_etl_code: STRING is "GIBJM"
+	gibjn_etl_code: STRING is "GIBJN"
+	gibjo_etl_code: STRING is "GIBJO"
+	gibjp_etl_code: STRING is "GIBJP"
+	gibjq_etl_code: STRING is "GIBJQ"
+	gibjr_etl_code: STRING is "GIBJR"
+	gibjs_etl_code: STRING is "GIBJS"
+	gibjt_etl_code: STRING is "GIBJT"
+	gibju_etl_code: STRING is "GIBJU"
+	gibjv_etl_code: STRING is "GIBJV"
+	gibjw_etl_code: STRING is "GIBJW"
+	gibjx_etl_code: STRING is "GIBJX"
+	gibjy_etl_code: STRING is "GIBJY"
+	gibjz_etl_code: STRING is "GIBJZ"
 			-- ETL validity codes
 
 	giaaa_template_code: STRING is "giaaa"
@@ -5841,6 +6257,32 @@ feature {NONE} -- Implementation
 	gibix_template_code: STRING is "gibix"
 	gibiy_template_code: STRING is "gibiy"
 	gibiz_template_code: STRING is "gibiz"
+	gibja_template_code: STRING is "gibja"
+	gibjb_template_code: STRING is "gibjb"
+	gibjc_template_code: STRING is "gibjc"
+	gibjd_template_code: STRING is "gibjd"
+	gibje_template_code: STRING is "gibje"
+	gibjf_template_code: STRING is "gibjf"
+	gibjg_template_code: STRING is "gibjg"
+	gibjh_template_code: STRING is "gibjh"
+	gibji_template_code: STRING is "gibji"
+	gibjj_template_code: STRING is "gibjj"
+	gibjk_template_code: STRING is "gibjk"
+	gibjl_template_code: STRING is "gibjl"
+	gibjm_template_code: STRING is "gibjm"
+	gibjn_template_code: STRING is "gibjn"
+	gibjo_template_code: STRING is "gibjo"
+	gibjp_template_code: STRING is "gibjp"
+	gibjq_template_code: STRING is "gibjq"
+	gibjr_template_code: STRING is "gibjr"
+	gibjs_template_code: STRING is "gibjs"
+	gibjt_template_code: STRING is "gibjt"
+	gibju_template_code: STRING is "gibju"
+	gibjv_template_code: STRING is "gibjv"
+	gibjw_template_code: STRING is "gibjw"
+	gibjx_template_code: STRING is "gibjx"
+	gibjy_template_code: STRING is "gibjy"
+	gibjz_template_code: STRING is "gibjz"
 		-- Template error codes
 
 end

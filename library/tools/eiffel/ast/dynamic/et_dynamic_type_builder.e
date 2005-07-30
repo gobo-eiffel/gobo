@@ -635,6 +635,14 @@ feature {NONE} -- Feature validity
 						report_builtin_special_count (a_feature)
 					when builtin_character_code then
 						report_builtin_character_code (a_feature)
+					when builtin_character_lt then
+						report_builtin_character_lt (a_feature)
+					when builtin_character_gt then
+						report_builtin_character_gt (a_feature)
+					when builtin_character_le then
+						report_builtin_character_le (a_feature)
+					when builtin_character_ge then
+						report_builtin_character_ge (a_feature)
 					when builtin_integer_plus then
 						report_builtin_integer_plus (a_feature)
 					when builtin_integer_minus then
@@ -651,18 +659,32 @@ feature {NONE} -- Feature validity
 						report_builtin_integer_opposite (a_feature)
 					when builtin_integer_lt then
 						report_builtin_integer_lt (a_feature)
+					when builtin_integer_gt then
+						report_builtin_integer_gt (a_feature)
+					when builtin_integer_le then
+						report_builtin_integer_le (a_feature)
+					when builtin_integer_ge then
+						report_builtin_integer_ge (a_feature)
 					when builtin_integer_to_character then
 						report_builtin_integer_to_character (a_feature)
 					when builtin_integer_bit_or then
 						report_builtin_integer_bit_or (a_feature)
 					when builtin_integer_bit_shift_left then
 						report_builtin_integer_bit_shift_left (a_feature)
+					when builtin_boolean_and then
+						report_builtin_boolean_and (a_feature)
 					when builtin_boolean_and_then then
 						report_builtin_boolean_and_then (a_feature)
+					when builtin_boolean_or then
+						report_builtin_boolean_or (a_feature)
 					when builtin_boolean_or_else then
 						report_builtin_boolean_or_else (a_feature)
+					when builtin_boolean_not then
+						report_builtin_boolean_not (a_feature)
 					when builtin_boolean_implies then
 						report_builtin_boolean_implies (a_feature)
+					when builtin_boolean_xor then
+						report_builtin_boolean_xor (a_feature)
 					else
 							-- Internal error: invalid built-in feature.
 							-- Error already reported during parsing.
@@ -1833,6 +1855,54 @@ feature {NONE} -- Built-in features
 			end
 		end
 
+	report_builtin_character_lt (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'CHARACTER.infix "<"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_character_lt)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_character_gt (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'CHARACTER.infix ">"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_character_gt)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_character_le (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'CHARACTER.infix "<="' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_character_le)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_character_ge (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'CHARACTER.infix ">="' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_character_ge)
+				current_system.boolean_type.set_alive
+			end
+		end
+
 	report_builtin_integer_plus (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'INTEGER.infix "+"' is being analyzed.
 		require
@@ -1929,6 +1999,42 @@ feature {NONE} -- Built-in features
 			end
 		end
 
+	report_builtin_integer_gt (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.infix ">"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_gt)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_integer_le (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.infix "<="' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_le)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_integer_ge (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'INTEGER.infix ">="' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_integer_ge)
+				current_system.boolean_type.set_alive
+			end
+		end
+
 	report_builtin_integer_to_character (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'INTEGER.to_character' is being analyzed.
 		require
@@ -1965,6 +2071,18 @@ feature {NONE} -- Built-in features
 			end
 		end
 
+	report_builtin_boolean_and (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'BOOLEAN.infix "and"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_boolean_and)
+				current_system.boolean_type.set_alive
+			end
+		end
+
 	report_builtin_boolean_and_then (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Report that built-in feature 'BOOLEAN.infix "and then"' is being analyzed.
 		require
@@ -1973,6 +2091,18 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 				current_dynamic_feature.set_builtin_code (builtin_boolean_and_then)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_boolean_or (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'BOOLEAN.infix "or"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_boolean_or)
 				current_system.boolean_type.set_alive
 			end
 		end
@@ -1997,6 +2127,30 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 				current_dynamic_feature.set_builtin_code (builtin_boolean_implies)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_boolean_not (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'BOOLEAN.prefix "not"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_boolean_not)
+				current_system.boolean_type.set_alive
+			end
+		end
+
+	report_builtin_boolean_xor (a_feature: ET_EXTERNAL_FUNCTION) is
+			-- Report that built-in feature 'BOOLEAN.infix "xor"' is being analyzed.
+		require
+			no_error: not has_fatal_error
+			a_feature_not_void: a_feature /= Void
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_builtin_code (builtin_boolean_xor)
 				current_system.boolean_type.set_alive
 			end
 		end

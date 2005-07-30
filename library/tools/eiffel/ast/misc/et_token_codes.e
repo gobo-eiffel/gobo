@@ -147,6 +147,10 @@ feature -- Built-in codes
 	builtin_special_put: INTEGER is 203
 	builtin_special_count: INTEGER is 204
 	builtin_character_code: INTEGER is 301
+	builtin_character_lt: INTEGER is 302
+	builtin_character_gt: INTEGER is 303
+	builtin_character_le: INTEGER is 304
+	builtin_character_ge: INTEGER is 305
 	builtin_integer_plus: INTEGER is 401
 	builtin_integer_minus: INTEGER is 402
 	builtin_integer_times: INTEGER is 403
@@ -158,9 +162,16 @@ feature -- Built-in codes
 	builtin_integer_to_character: INTEGER is 409
 	builtin_integer_bit_or: INTEGER is 410
 	builtin_integer_bit_shift_left: INTEGER is 411
+	builtin_integer_gt: INTEGER is 412
+	builtin_integer_le: INTEGER is 413
+	builtin_integer_ge: INTEGER is 414
 	builtin_boolean_and_then: INTEGER is 501
 	builtin_boolean_or_else: INTEGER is 502
 	builtin_boolean_implies: INTEGER is 503
+	builtin_boolean_and: INTEGER is 504
+	builtin_boolean_or: INTEGER is 505
+	builtin_boolean_xor: INTEGER is 506
+	builtin_boolean_not: INTEGER is 507
 	builtin_function_item: INTEGER is 1001
 	builtin_routine_call: INTEGER is 1101
 			-- Built-in feature codes
