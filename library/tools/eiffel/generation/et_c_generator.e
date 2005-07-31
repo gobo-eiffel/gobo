@@ -202,6 +202,8 @@ feature -- Generation
 				header_file.put_string ("#define EIF_FALSE (")
 				print_type_cast (current_system.boolean_type, header_file)
 				header_file.put_line ("0)")
+				header_file.put_line ("extern int geargc;")
+				header_file.put_line ("extern char** geargv;")
 				header_file.put_new_line
 				a_file.put_string ("#include %"")
 				a_file.put_string (l_header_filename)
@@ -232,6 +234,11 @@ feature -- Generation
 				manifest_array_types.wipe_out
 					-- Print call-on-void-target function.
 				print_gevoid_function
+				a_file.put_new_line
+					-- Print arguments.
+				a_file.put_line ("int geargc;")
+				a_file.put_line ("char** geargv;")
+				a_file.put_new_line
 					-- Print 'main' function.
 				print_main_function
 				header_file := old_header_file
@@ -4948,7 +4955,7 @@ feature {NONE} -- C function generation
 			l_root_type: ET_DYNAMIC_TYPE
 			l_root_creation: ET_DYNAMIC_FEATURE
 		do
-			current_file.put_line ("int main(char** argv, int argc)")
+			current_file.put_line ("int main(int argc, char** argv)")
 			current_file.put_character ('{')
 			current_file.put_new_line
 			l_root_type := current_system.root_type
@@ -4959,6 +4966,10 @@ feature {NONE} -- C function generation
 				print_type_declaration (l_root_type, current_file)
 				current_file.put_string (" l1;")
 				current_file.put_new_line
+				print_indentation
+				current_file.put_line ("geargc = argc;")
+				print_indentation
+				current_file.put_line ("geargv = argv;")
 				print_indentation
 				current_file.put_string ("l1 = ")
 				print_creation_expression (l_root_type, l_root_creation, Void)
