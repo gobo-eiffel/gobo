@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			parent_type := a_parent_type
 			current_feature := a_current_feature
 			make_feature (a_feature, a_parent_type, a_system)
+			target_type := a_current_feature.target_type
 		ensure
 			static_feature_set: static_feature = a_feature
 			parent_type_set: parent_type = a_parent_type

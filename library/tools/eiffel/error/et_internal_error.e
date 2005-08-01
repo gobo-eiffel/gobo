@@ -5,7 +5,7 @@ indexing
 		"Internal errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -394,7 +394,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaaa_template_code
 			etl_code := giaaa_etl_code
-			default_template := giaaa_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -407,7 +407,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaab_template_code
 			etl_code := giaab_etl_code
-			default_template := giaab_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -420,7 +420,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaac_template_code
 			etl_code := giaac_etl_code
-			default_template := giaac_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -433,7 +433,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaad_template_code
 			etl_code := giaad_etl_code
-			default_template := giaad_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -446,7 +446,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaae_template_code
 			etl_code := giaae_etl_code
-			default_template := giaae_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -459,7 +459,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaaf_template_code
 			etl_code := giaaf_etl_code
-			default_template := giaaf_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -472,7 +472,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaag_template_code
 			etl_code := giaag_etl_code
-			default_template := giaag_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -485,7 +485,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaah_template_code
 			etl_code := giaah_etl_code
-			default_template := giaah_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -498,7 +498,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaai_template_code
 			etl_code := giaai_etl_code
-			default_template := giaai_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -511,7 +511,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaaj_template_code
 			etl_code := giaaj_etl_code
-			default_template := giaaj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -524,7 +524,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaak_template_code
 			etl_code := giaak_etl_code
-			default_template := giaak_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -537,7 +537,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaal_template_code
 			etl_code := giaal_etl_code
-			default_template := giaal_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -550,7 +550,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaam_template_code
 			etl_code := giaam_etl_code
-			default_template := giaam_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -563,7 +563,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaan_template_code
 			etl_code := giaan_etl_code
-			default_template := giaan_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -576,7 +576,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaao_template_code
 			etl_code := giaao_etl_code
-			default_template := giaao_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -589,7 +589,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaap_template_code
 			etl_code := giaap_etl_code
-			default_template := giaap_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -602,7 +602,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaaq_template_code
 			etl_code := giaaq_etl_code
-			default_template := giaaq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -615,7 +615,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaar_template_code
 			etl_code := giaar_etl_code
-			default_template := giaar_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -628,7 +628,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaas_template_code
 			etl_code := giaas_etl_code
-			default_template := giaas_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -641,7 +641,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaat_template_code
 			etl_code := giaat_etl_code
-			default_template := giaat_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -654,7 +654,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaau_template_code
 			etl_code := giaau_etl_code
-			default_template := giaau_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -667,7 +667,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaav_template_code
 			etl_code := giaav_etl_code
-			default_template := giaav_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -680,7 +680,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaaw_template_code
 			etl_code := giaaw_etl_code
-			default_template := giaaw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -693,7 +693,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaax_template_code
 			etl_code := giaax_etl_code
-			default_template := giaax_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -706,7 +706,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaay_template_code
 			etl_code := giaay_etl_code
-			default_template := giaay_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -719,7 +719,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaaz_template_code
 			etl_code := giaaz_etl_code
-			default_template := giaaz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -732,7 +732,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaba_template_code
 			etl_code := giaba_etl_code
-			default_template := giaba_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -745,7 +745,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabb_template_code
 			etl_code := giabb_etl_code
-			default_template := giabb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -758,7 +758,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabc_template_code
 			etl_code := giabc_etl_code
-			default_template := giabc_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -771,7 +771,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabd_template_code
 			etl_code := giabd_etl_code
-			default_template := giabd_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -784,7 +784,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabe_template_code
 			etl_code := giabe_etl_code
-			default_template := giabe_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -797,7 +797,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabf_template_code
 			etl_code := giabf_etl_code
-			default_template := giabf_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -810,7 +810,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabg_template_code
 			etl_code := giabg_etl_code
-			default_template := giabg_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -823,7 +823,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabh_template_code
 			etl_code := giabh_etl_code
-			default_template := giabh_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -836,7 +836,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabi_template_code
 			etl_code := giabi_etl_code
-			default_template := giabi_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -849,7 +849,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabj_template_code
 			etl_code := giabj_etl_code
-			default_template := giabj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -862,7 +862,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabk_template_code
 			etl_code := giabk_etl_code
-			default_template := giabk_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -875,7 +875,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabl_template_code
 			etl_code := giabl_etl_code
-			default_template := giabl_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -888,7 +888,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabm_template_code
 			etl_code := giabm_etl_code
-			default_template := giabm_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -901,7 +901,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabn_template_code
 			etl_code := giabn_etl_code
-			default_template := giabn_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -914,7 +914,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabo_template_code
 			etl_code := giabo_etl_code
-			default_template := giabo_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -927,7 +927,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabp_template_code
 			etl_code := giabp_etl_code
-			default_template := giabp_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -940,7 +940,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabq_template_code
 			etl_code := giabq_etl_code
-			default_template := giabq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -953,7 +953,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabr_template_code
 			etl_code := giabr_etl_code
-			default_template := giabr_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -966,7 +966,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabs_template_code
 			etl_code := giabs_etl_code
-			default_template := giabs_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -979,7 +979,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabt_template_code
 			etl_code := giabt_etl_code
-			default_template := giabt_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -992,7 +992,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabu_template_code
 			etl_code := giabu_etl_code
-			default_template := giabu_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1005,7 +1005,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabv_template_code
 			etl_code := giabv_etl_code
-			default_template := giabv_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1018,7 +1018,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabw_template_code
 			etl_code := giabw_etl_code
-			default_template := giabw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1031,7 +1031,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabx_template_code
 			etl_code := giabx_etl_code
-			default_template := giabx_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1044,7 +1044,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaby_template_code
 			etl_code := giaby_etl_code
-			default_template := giaby_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1057,7 +1057,7 @@ feature {NONE} -- Initialization
 		do
 			code := giabz_template_code
 			etl_code := giabz_etl_code
-			default_template := giabz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1070,7 +1070,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaca_template_code
 			etl_code := giaca_etl_code
-			default_template := giaca_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1083,7 +1083,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacb_template_code
 			etl_code := giacb_etl_code
-			default_template := giacb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1096,7 +1096,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacc_template_code
 			etl_code := giacc_etl_code
-			default_template := giacc_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1109,7 +1109,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacd_template_code
 			etl_code := giacd_etl_code
-			default_template := giacd_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1122,7 +1122,7 @@ feature {NONE} -- Initialization
 		do
 			code := giace_template_code
 			etl_code := giace_etl_code
-			default_template := giace_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1135,7 +1135,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacf_template_code
 			etl_code := giacf_etl_code
-			default_template := giacf_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1148,7 +1148,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacg_template_code
 			etl_code := giacg_etl_code
-			default_template := giacg_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1161,7 +1161,7 @@ feature {NONE} -- Initialization
 		do
 			code := giach_template_code
 			etl_code := giach_etl_code
-			default_template := giach_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1174,7 +1174,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaci_template_code
 			etl_code := giaci_etl_code
-			default_template := giaci_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1187,7 +1187,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacj_template_code
 			etl_code := giacj_etl_code
-			default_template := giacj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1200,7 +1200,7 @@ feature {NONE} -- Initialization
 		do
 			code := giack_template_code
 			etl_code := giack_etl_code
-			default_template := giack_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1213,7 +1213,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacl_template_code
 			etl_code := giacl_etl_code
-			default_template := giacl_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1226,7 +1226,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacm_template_code
 			etl_code := giacm_etl_code
-			default_template := giacm_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1239,7 +1239,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacn_template_code
 			etl_code := giacn_etl_code
-			default_template := giacn_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1252,7 +1252,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaco_template_code
 			etl_code := giaco_etl_code
-			default_template := giaco_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1265,7 +1265,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacp_template_code
 			etl_code := giacp_etl_code
-			default_template := giacp_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1278,7 +1278,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacq_template_code
 			etl_code := giacq_etl_code
-			default_template := giacq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1291,7 +1291,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacr_template_code
 			etl_code := giacr_etl_code
-			default_template := giacr_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1304,7 +1304,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacs_template_code
 			etl_code := giacs_etl_code
-			default_template := giacs_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1317,7 +1317,7 @@ feature {NONE} -- Initialization
 		do
 			code := giact_template_code
 			etl_code := giact_etl_code
-			default_template := giact_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1330,7 +1330,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacu_template_code
 			etl_code := giacu_etl_code
-			default_template := giacu_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1343,7 +1343,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacv_template_code
 			etl_code := giacv_etl_code
-			default_template := giacv_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1356,7 +1356,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacw_template_code
 			etl_code := giacw_etl_code
-			default_template := giacw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1369,7 +1369,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacx_template_code
 			etl_code := giacx_etl_code
-			default_template := giacx_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1382,7 +1382,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacy_template_code
 			etl_code := giacy_etl_code
-			default_template := giacy_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1395,7 +1395,7 @@ feature {NONE} -- Initialization
 		do
 			code := giacz_template_code
 			etl_code := giacz_etl_code
-			default_template := giacz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1408,7 +1408,7 @@ feature {NONE} -- Initialization
 		do
 			code := giada_template_code
 			etl_code := giada_etl_code
-			default_template := giada_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1421,7 +1421,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadb_template_code
 			etl_code := giadb_etl_code
-			default_template := giadb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1434,7 +1434,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadc_template_code
 			etl_code := giadc_etl_code
-			default_template := giadc_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1447,7 +1447,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadd_template_code
 			etl_code := giadd_etl_code
-			default_template := giadd_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1460,7 +1460,7 @@ feature {NONE} -- Initialization
 		do
 			code := giade_template_code
 			etl_code := giade_etl_code
-			default_template := giade_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1473,7 +1473,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadf_template_code
 			etl_code := giadf_etl_code
-			default_template := giadf_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1486,7 +1486,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadg_template_code
 			etl_code := giadg_etl_code
-			default_template := giadg_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1499,7 +1499,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadh_template_code
 			etl_code := giadh_etl_code
-			default_template := giadh_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1512,7 +1512,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadi_template_code
 			etl_code := giadi_etl_code
-			default_template := giadi_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1525,7 +1525,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadj_template_code
 			etl_code := giadj_etl_code
-			default_template := giadj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1538,7 +1538,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadk_template_code
 			etl_code := giadk_etl_code
-			default_template := giadk_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1551,7 +1551,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadl_template_code
 			etl_code := giadl_etl_code
-			default_template := giadl_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1564,7 +1564,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadm_template_code
 			etl_code := giadm_etl_code
-			default_template := giadm_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1577,7 +1577,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadn_template_code
 			etl_code := giadn_etl_code
-			default_template := giadn_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1590,7 +1590,7 @@ feature {NONE} -- Initialization
 		do
 			code := giado_template_code
 			etl_code := giado_etl_code
-			default_template := giado_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1603,7 +1603,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadp_template_code
 			etl_code := giadp_etl_code
-			default_template := giadp_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1616,7 +1616,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadq_template_code
 			etl_code := giadq_etl_code
-			default_template := giadq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1629,7 +1629,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadr_template_code
 			etl_code := giadr_etl_code
-			default_template := giadr_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1642,7 +1642,7 @@ feature {NONE} -- Initialization
 		do
 			code := giads_template_code
 			etl_code := giads_etl_code
-			default_template := giads_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1655,7 +1655,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadt_template_code
 			etl_code := giadt_etl_code
-			default_template := giadt_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1668,7 +1668,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadu_template_code
 			etl_code := giadu_etl_code
-			default_template := giadu_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1681,7 +1681,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadv_template_code
 			etl_code := giadv_etl_code
-			default_template := giadv_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1694,7 +1694,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadw_template_code
 			etl_code := giadw_etl_code
-			default_template := giadw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1707,7 +1707,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadx_template_code
 			etl_code := giadx_etl_code
-			default_template := giadx_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1720,7 +1720,7 @@ feature {NONE} -- Initialization
 		do
 			code := giady_template_code
 			etl_code := giady_etl_code
-			default_template := giady_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1733,7 +1733,7 @@ feature {NONE} -- Initialization
 		do
 			code := giadz_template_code
 			etl_code := giadz_etl_code
-			default_template := giadz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1746,7 +1746,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaea_template_code
 			etl_code := giaea_etl_code
-			default_template := giaea_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1759,7 +1759,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaeb_template_code
 			etl_code := giaeb_etl_code
-			default_template := giaeb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1772,7 +1772,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaec_template_code
 			etl_code := giaec_etl_code
-			default_template := giaec_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1785,7 +1785,7 @@ feature {NONE} -- Initialization
 		do
 			code := giaed_template_code
 			etl_code := giaed_etl_code
-			default_template := giaed_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1798,7 +1798,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibaa_template_code
 			etl_code := gibaa_etl_code
-			default_template := gibaa_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1811,7 +1811,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibab_template_code
 			etl_code := gibab_etl_code
-			default_template := gibab_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1824,7 +1824,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibac_template_code
 			etl_code := gibac_etl_code
-			default_template := gibac_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1837,7 +1837,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibad_template_code
 			etl_code := gibad_etl_code
-			default_template := gibad_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1850,7 +1850,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibae_template_code
 			etl_code := gibae_etl_code
-			default_template := gibae_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1863,7 +1863,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibaf_template_code
 			etl_code := gibaf_etl_code
-			default_template := gibaf_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1876,7 +1876,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibag_template_code
 			etl_code := gibag_etl_code
-			default_template := gibag_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1889,7 +1889,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibah_template_code
 			etl_code := gibah_etl_code
-			default_template := gibah_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1902,7 +1902,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibai_template_code
 			etl_code := gibai_etl_code
-			default_template := gibai_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1915,7 +1915,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibaj_template_code
 			etl_code := gibaj_etl_code
-			default_template := gibaj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1928,7 +1928,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibak_template_code
 			etl_code := gibak_etl_code
-			default_template := gibak_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1941,7 +1941,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibal_template_code
 			etl_code := gibal_etl_code
-			default_template := gibal_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1954,7 +1954,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibam_template_code
 			etl_code := gibam_etl_code
-			default_template := gibam_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1967,7 +1967,7 @@ feature {NONE} -- Initialization
 		do
 			code := giban_template_code
 			etl_code := giban_etl_code
-			default_template := giban_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1980,7 +1980,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibao_template_code
 			etl_code := gibao_etl_code
-			default_template := gibao_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -1993,7 +1993,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibap_template_code
 			etl_code := gibap_etl_code
-			default_template := gibap_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2006,7 +2006,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibaq_template_code
 			etl_code := gibaq_etl_code
-			default_template := gibaq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2019,7 +2019,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibar_template_code
 			etl_code := gibar_etl_code
-			default_template := gibar_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2032,7 +2032,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibas_template_code
 			etl_code := gibas_etl_code
-			default_template := gibas_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2045,7 +2045,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibat_template_code
 			etl_code := gibat_etl_code
-			default_template := gibat_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2058,7 +2058,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibau_template_code
 			etl_code := gibau_etl_code
-			default_template := gibau_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2071,7 +2071,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibav_template_code
 			etl_code := gibav_etl_code
-			default_template := gibav_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2084,7 +2084,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibaw_template_code
 			etl_code := gibaw_etl_code
-			default_template := gibaw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2097,7 +2097,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibax_template_code
 			etl_code := gibax_etl_code
-			default_template := gibax_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2110,7 +2110,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibay_template_code
 			etl_code := gibay_etl_code
-			default_template := gibay_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2123,7 +2123,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibaz_template_code
 			etl_code := gibaz_etl_code
-			default_template := gibaz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2136,7 +2136,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibba_template_code
 			etl_code := gibba_etl_code
-			default_template := gibba_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2149,7 +2149,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbb_template_code
 			etl_code := gibbb_etl_code
-			default_template := gibbb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2162,7 +2162,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbc_template_code
 			etl_code := gibbc_etl_code
-			default_template := gibbc_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2175,7 +2175,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbd_template_code
 			etl_code := gibbd_etl_code
-			default_template := gibbd_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2188,7 +2188,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbe_template_code
 			etl_code := gibbe_etl_code
-			default_template := gibbe_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2201,7 +2201,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbf_template_code
 			etl_code := gibbf_etl_code
-			default_template := gibbf_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2214,7 +2214,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbg_template_code
 			etl_code := gibbg_etl_code
-			default_template := gibbg_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2227,7 +2227,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbh_template_code
 			etl_code := gibbh_etl_code
-			default_template := gibbh_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2240,7 +2240,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbi_template_code
 			etl_code := gibbi_etl_code
-			default_template := gibbi_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2253,7 +2253,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbj_template_code
 			etl_code := gibbj_etl_code
-			default_template := gibbj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2266,7 +2266,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbk_template_code
 			etl_code := gibbk_etl_code
-			default_template := gibbk_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2279,7 +2279,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbl_template_code
 			etl_code := gibbl_etl_code
-			default_template := gibbl_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2292,7 +2292,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbm_template_code
 			etl_code := gibbm_etl_code
-			default_template := gibbm_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2305,7 +2305,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbn_template_code
 			etl_code := gibbn_etl_code
-			default_template := gibbn_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2318,7 +2318,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbo_template_code
 			etl_code := gibbo_etl_code
-			default_template := gibbo_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2331,7 +2331,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbp_template_code
 			etl_code := gibbp_etl_code
-			default_template := gibbp_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2344,7 +2344,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbq_template_code
 			etl_code := gibbq_etl_code
-			default_template := gibbq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2357,7 +2357,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbr_template_code
 			etl_code := gibbr_etl_code
-			default_template := gibbr_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2370,7 +2370,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbs_template_code
 			etl_code := gibbs_etl_code
-			default_template := gibbs_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2383,7 +2383,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbt_template_code
 			etl_code := gibbt_etl_code
-			default_template := gibbt_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2396,7 +2396,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbu_template_code
 			etl_code := gibbu_etl_code
-			default_template := gibbu_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2409,7 +2409,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbv_template_code
 			etl_code := gibbv_etl_code
-			default_template := gibbv_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2422,7 +2422,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbw_template_code
 			etl_code := gibbw_etl_code
-			default_template := gibbw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2435,7 +2435,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbx_template_code
 			etl_code := gibbx_etl_code
-			default_template := gibbx_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2448,7 +2448,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibby_template_code
 			etl_code := gibby_etl_code
-			default_template := gibby_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2461,7 +2461,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibbz_template_code
 			etl_code := gibbz_etl_code
-			default_template := gibbz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2474,7 +2474,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibca_template_code
 			etl_code := gibca_etl_code
-			default_template := gibca_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2487,7 +2487,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcb_template_code
 			etl_code := gibcb_etl_code
-			default_template := gibcb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2500,7 +2500,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcc_template_code
 			etl_code := gibcc_etl_code
-			default_template := gibcc_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2513,7 +2513,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcd_template_code
 			etl_code := gibcd_etl_code
-			default_template := gibcd_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2526,7 +2526,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibce_template_code
 			etl_code := gibce_etl_code
-			default_template := gibce_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2539,7 +2539,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcf_template_code
 			etl_code := gibcf_etl_code
-			default_template := gibcf_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2552,7 +2552,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcg_template_code
 			etl_code := gibcg_etl_code
-			default_template := gibcg_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2565,7 +2565,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibch_template_code
 			etl_code := gibch_etl_code
-			default_template := gibch_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2578,7 +2578,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibci_template_code
 			etl_code := gibci_etl_code
-			default_template := gibci_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2591,7 +2591,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcj_template_code
 			etl_code := gibcj_etl_code
-			default_template := gibcj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2604,7 +2604,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibck_template_code
 			etl_code := gibck_etl_code
-			default_template := gibck_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2617,7 +2617,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcl_template_code
 			etl_code := gibcl_etl_code
-			default_template := gibcl_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2630,7 +2630,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcm_template_code
 			etl_code := gibcm_etl_code
-			default_template := gibcm_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2643,7 +2643,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcn_template_code
 			etl_code := gibcn_etl_code
-			default_template := gibcn_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2656,7 +2656,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibco_template_code
 			etl_code := gibco_etl_code
-			default_template := gibco_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2669,7 +2669,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcp_template_code
 			etl_code := gibcp_etl_code
-			default_template := gibcp_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2682,7 +2682,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcq_template_code
 			etl_code := gibcq_etl_code
-			default_template := gibcq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2695,7 +2695,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcr_template_code
 			etl_code := gibcr_etl_code
-			default_template := gibcr_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2708,7 +2708,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcs_template_code
 			etl_code := gibcs_etl_code
-			default_template := gibcs_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2721,7 +2721,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibct_template_code
 			etl_code := gibct_etl_code
-			default_template := gibct_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2734,7 +2734,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcu_template_code
 			etl_code := gibcu_etl_code
-			default_template := gibcu_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2747,7 +2747,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcv_template_code
 			etl_code := gibcv_etl_code
-			default_template := gibcv_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2760,7 +2760,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcw_template_code
 			etl_code := gibcw_etl_code
-			default_template := gibcw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2773,7 +2773,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcx_template_code
 			etl_code := gibcx_etl_code
-			default_template := gibcx_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2786,7 +2786,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcy_template_code
 			etl_code := gibcy_etl_code
-			default_template := gibcy_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2799,7 +2799,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibcz_template_code
 			etl_code := gibcz_etl_code
-			default_template := gibcz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2812,7 +2812,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibda_template_code
 			etl_code := gibda_etl_code
-			default_template := gibda_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2825,7 +2825,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdb_template_code
 			etl_code := gibdb_etl_code
-			default_template := gibdb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2838,7 +2838,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdc_template_code
 			etl_code := gibdc_etl_code
-			default_template := gibdc_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2851,7 +2851,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdd_template_code
 			etl_code := gibdd_etl_code
-			default_template := gibdd_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2864,7 +2864,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibde_template_code
 			etl_code := gibde_etl_code
-			default_template := gibde_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2877,7 +2877,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdf_template_code
 			etl_code := gibdf_etl_code
-			default_template := gibdf_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2890,7 +2890,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdg_template_code
 			etl_code := gibdg_etl_code
-			default_template := gibdg_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2903,7 +2903,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdh_template_code
 			etl_code := gibdh_etl_code
-			default_template := gibdh_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2916,7 +2916,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdi_template_code
 			etl_code := gibdi_etl_code
-			default_template := gibdi_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2929,7 +2929,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdj_template_code
 			etl_code := gibdj_etl_code
-			default_template := gibdj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2942,7 +2942,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdk_template_code
 			etl_code := gibdk_etl_code
-			default_template := gibdk_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2955,7 +2955,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdl_template_code
 			etl_code := gibdl_etl_code
-			default_template := gibdl_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2968,7 +2968,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdm_template_code
 			etl_code := gibdm_etl_code
-			default_template := gibdm_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2981,7 +2981,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdn_template_code
 			etl_code := gibdn_etl_code
-			default_template := gibdn_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -2994,7 +2994,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdo_template_code
 			etl_code := gibdo_etl_code
-			default_template := gibdo_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3007,7 +3007,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdp_template_code
 			etl_code := gibdp_etl_code
-			default_template := gibdp_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3020,7 +3020,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdq_template_code
 			etl_code := gibdq_etl_code
-			default_template := gibdq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3033,7 +3033,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdr_template_code
 			etl_code := gibdr_etl_code
-			default_template := gibdr_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3046,7 +3046,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibds_template_code
 			etl_code := gibds_etl_code
-			default_template := gibds_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3059,7 +3059,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdt_template_code
 			etl_code := gibdt_etl_code
-			default_template := gibdt_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3072,7 +3072,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdu_template_code
 			etl_code := gibdu_etl_code
-			default_template := gibdu_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3085,7 +3085,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdv_template_code
 			etl_code := gibdv_etl_code
-			default_template := gibdv_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3098,7 +3098,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdw_template_code
 			etl_code := gibdw_etl_code
-			default_template := gibdw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3111,7 +3111,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdx_template_code
 			etl_code := gibdx_etl_code
-			default_template := gibdx_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3124,7 +3124,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdy_template_code
 			etl_code := gibdy_etl_code
-			default_template := gibdy_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3137,7 +3137,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibdz_template_code
 			etl_code := gibdz_etl_code
-			default_template := gibdz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3150,7 +3150,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibea_template_code
 			etl_code := gibea_etl_code
-			default_template := gibea_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3163,7 +3163,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibeb_template_code
 			etl_code := gibeb_etl_code
-			default_template := gibeb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3176,7 +3176,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibec_template_code
 			etl_code := gibec_etl_code
-			default_template := gibec_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3189,7 +3189,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibed_template_code
 			etl_code := gibed_etl_code
-			default_template := gibed_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3202,7 +3202,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibee_template_code
 			etl_code := gibee_etl_code
-			default_template := gibee_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3215,7 +3215,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibef_template_code
 			etl_code := gibef_etl_code
-			default_template := gibef_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3228,7 +3228,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibeg_template_code
 			etl_code := gibeg_etl_code
-			default_template := gibeg_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3241,7 +3241,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibeh_template_code
 			etl_code := gibeh_etl_code
-			default_template := gibeh_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3254,7 +3254,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibei_template_code
 			etl_code := gibei_etl_code
-			default_template := gibei_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3267,7 +3267,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibej_template_code
 			etl_code := gibej_etl_code
-			default_template := gibej_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3280,7 +3280,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibek_template_code
 			etl_code := gibek_etl_code
-			default_template := gibek_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3293,7 +3293,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibel_template_code
 			etl_code := gibel_etl_code
-			default_template := gibel_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3306,7 +3306,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibem_template_code
 			etl_code := gibem_etl_code
-			default_template := gibem_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3319,7 +3319,7 @@ feature {NONE} -- Initialization
 		do
 			code := giben_template_code
 			etl_code := giben_etl_code
-			default_template := giben_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3332,7 +3332,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibeo_template_code
 			etl_code := gibeo_etl_code
-			default_template := gibeo_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3345,7 +3345,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibep_template_code
 			etl_code := gibep_etl_code
-			default_template := gibep_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3358,7 +3358,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibeq_template_code
 			etl_code := gibeq_etl_code
-			default_template := gibeq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3371,7 +3371,7 @@ feature {NONE} -- Initialization
 		do
 			code := giber_template_code
 			etl_code := giber_etl_code
-			default_template := giber_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3384,7 +3384,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibes_template_code
 			etl_code := gibes_etl_code
-			default_template := gibes_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3397,7 +3397,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibet_template_code
 			etl_code := gibet_etl_code
-			default_template := gibet_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3410,7 +3410,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibeu_template_code
 			etl_code := gibeu_etl_code
-			default_template := gibeu_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3423,7 +3423,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibev_template_code
 			etl_code := gibev_etl_code
-			default_template := gibev_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3436,7 +3436,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibew_template_code
 			etl_code := gibew_etl_code
-			default_template := gibew_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3449,7 +3449,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibex_template_code
 			etl_code := gibex_etl_code
-			default_template := gibex_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3462,7 +3462,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibey_template_code
 			etl_code := gibey_etl_code
-			default_template := gibey_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3475,7 +3475,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibez_template_code
 			etl_code := gibez_etl_code
-			default_template := gibez_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3488,7 +3488,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfa_template_code
 			etl_code := gibfa_etl_code
-			default_template := gibfa_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3501,7 +3501,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfb_template_code
 			etl_code := gibfb_etl_code
-			default_template := gibfb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3514,7 +3514,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfc_template_code
 			etl_code := gibfc_etl_code
-			default_template := gibfc_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3527,7 +3527,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfd_template_code
 			etl_code := gibfd_etl_code
-			default_template := gibfd_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3540,7 +3540,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfe_template_code
 			etl_code := gibfe_etl_code
-			default_template := gibfe_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3553,7 +3553,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibff_template_code
 			etl_code := gibff_etl_code
-			default_template := gibff_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3566,7 +3566,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfg_template_code
 			etl_code := gibfg_etl_code
-			default_template := gibfg_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3579,7 +3579,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfh_template_code
 			etl_code := gibfh_etl_code
-			default_template := gibfh_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3592,7 +3592,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfi_template_code
 			etl_code := gibfi_etl_code
-			default_template := gibfi_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3605,7 +3605,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfj_template_code
 			etl_code := gibfj_etl_code
-			default_template := gibfj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3618,7 +3618,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfk_template_code
 			etl_code := gibfk_etl_code
-			default_template := gibfk_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3631,7 +3631,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfl_template_code
 			etl_code := gibfl_etl_code
-			default_template := gibfl_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3644,7 +3644,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfm_template_code
 			etl_code := gibfm_etl_code
-			default_template := gibfm_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3657,7 +3657,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfn_template_code
 			etl_code := gibfn_etl_code
-			default_template := gibfn_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3670,7 +3670,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfo_template_code
 			etl_code := gibfo_etl_code
-			default_template := gibfo_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3683,7 +3683,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfp_template_code
 			etl_code := gibfp_etl_code
-			default_template := gibfp_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3696,7 +3696,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfq_template_code
 			etl_code := gibfq_etl_code
-			default_template := gibeq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3709,7 +3709,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfr_template_code
 			etl_code := gibfr_etl_code
-			default_template := gibfr_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3722,7 +3722,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfs_template_code
 			etl_code := gibfs_etl_code
-			default_template := gibfs_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3735,7 +3735,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibft_template_code
 			etl_code := gibft_etl_code
-			default_template := gibft_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3748,7 +3748,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfu_template_code
 			etl_code := gibfu_etl_code
-			default_template := gibfu_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3761,7 +3761,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfv_template_code
 			etl_code := gibfv_etl_code
-			default_template := gibfv_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3774,7 +3774,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfw_template_code
 			etl_code := gibfw_etl_code
-			default_template := gibfw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3787,7 +3787,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfx_template_code
 			etl_code := gibfx_etl_code
-			default_template := gibfx_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3800,7 +3800,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfy_template_code
 			etl_code := gibfy_etl_code
-			default_template := gibfy_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3813,7 +3813,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibfz_template_code
 			etl_code := gibfz_etl_code
-			default_template := gibfz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3826,7 +3826,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibga_template_code
 			etl_code := gibga_etl_code
-			default_template := gibga_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3839,7 +3839,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgb_template_code
 			etl_code := gibgb_etl_code
-			default_template := gibgb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3852,7 +3852,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgc_template_code
 			etl_code := gibgc_etl_code
-			default_template := gibgc_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3865,7 +3865,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgd_template_code
 			etl_code := gibgd_etl_code
-			default_template := gibgd_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3878,7 +3878,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibge_template_code
 			etl_code := gibge_etl_code
-			default_template := gibge_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3891,7 +3891,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgf_template_code
 			etl_code := gibgf_etl_code
-			default_template := gibgf_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3904,7 +3904,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgg_template_code
 			etl_code := gibgg_etl_code
-			default_template := gibgg_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3917,7 +3917,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgh_template_code
 			etl_code := gibgh_etl_code
-			default_template := gibgh_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3930,7 +3930,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgi_template_code
 			etl_code := gibgi_etl_code
-			default_template := gibgi_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3943,7 +3943,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgj_template_code
 			etl_code := gibgj_etl_code
-			default_template := gibgj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3956,7 +3956,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgk_template_code
 			etl_code := gibgk_etl_code
-			default_template := gibgk_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3969,7 +3969,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgl_template_code
 			etl_code := gibgl_etl_code
-			default_template := gibgl_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3982,7 +3982,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgm_template_code
 			etl_code := gibgm_etl_code
-			default_template := gibgm_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -3995,7 +3995,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgn_template_code
 			etl_code := gibgn_etl_code
-			default_template := gibgn_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4008,7 +4008,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgo_template_code
 			etl_code := gibgo_etl_code
-			default_template := gibgo_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4021,7 +4021,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgp_template_code
 			etl_code := gibgp_etl_code
-			default_template := gibgp_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4034,7 +4034,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgq_template_code
 			etl_code := gibgq_etl_code
-			default_template := gibgq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4047,7 +4047,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgr_template_code
 			etl_code := gibgr_etl_code
-			default_template := gibgr_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4060,7 +4060,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgs_template_code
 			etl_code := gibgs_etl_code
-			default_template := gibgs_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4073,7 +4073,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgt_template_code
 			etl_code := gibgt_etl_code
-			default_template := gibgt_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4086,7 +4086,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgu_template_code
 			etl_code := gibgu_etl_code
-			default_template := gibgu_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4099,7 +4099,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgv_template_code
 			etl_code := gibgv_etl_code
-			default_template := gibgv_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4112,7 +4112,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgw_template_code
 			etl_code := gibgw_etl_code
-			default_template := gibgw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4125,7 +4125,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgx_template_code
 			etl_code := gibgx_etl_code
-			default_template := gibgx_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4138,7 +4138,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgy_template_code
 			etl_code := gibgy_etl_code
-			default_template := gibgy_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4151,7 +4151,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibgz_template_code
 			etl_code := gibgz_etl_code
-			default_template := gibgz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4164,7 +4164,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibha_template_code
 			etl_code := gibha_etl_code
-			default_template := gibha_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4177,7 +4177,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhb_template_code
 			etl_code := gibhb_etl_code
-			default_template := gibhb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4190,7 +4190,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhc_template_code
 			etl_code := gibhc_etl_code
-			default_template := gibhc_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4203,7 +4203,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhd_template_code
 			etl_code := gibhd_etl_code
-			default_template := gibhd_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4216,7 +4216,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhe_template_code
 			etl_code := gibhe_etl_code
-			default_template := gibhe_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4229,7 +4229,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhf_template_code
 			etl_code := gibhf_etl_code
-			default_template := gibhf_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4242,7 +4242,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhg_template_code
 			etl_code := gibhg_etl_code
-			default_template := gibhg_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4255,7 +4255,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhh_template_code
 			etl_code := gibhh_etl_code
-			default_template := gibhh_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4268,7 +4268,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhi_template_code
 			etl_code := gibhi_etl_code
-			default_template := gibhi_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4281,7 +4281,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhj_template_code
 			etl_code := gibhj_etl_code
-			default_template := gibhj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4294,7 +4294,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhk_template_code
 			etl_code := gibhk_etl_code
-			default_template := gibhk_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4307,7 +4307,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhl_template_code
 			etl_code := gibhl_etl_code
-			default_template := gibhl_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4320,7 +4320,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhm_template_code
 			etl_code := gibhm_etl_code
-			default_template := gibhm_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4333,7 +4333,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhn_template_code
 			etl_code := gibhn_etl_code
-			default_template := gibhn_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4346,7 +4346,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibho_template_code
 			etl_code := gibho_etl_code
-			default_template := gibho_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4359,7 +4359,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhp_template_code
 			etl_code := gibhp_etl_code
-			default_template := gibhp_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4372,7 +4372,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhq_template_code
 			etl_code := gibhq_etl_code
-			default_template := gibhq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4385,7 +4385,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhr_template_code
 			etl_code := gibhr_etl_code
-			default_template := gibhr_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4398,7 +4398,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhs_template_code
 			etl_code := gibhs_etl_code
-			default_template := gibhs_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4411,7 +4411,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibht_template_code
 			etl_code := gibht_etl_code
-			default_template := gibht_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4424,7 +4424,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhu_template_code
 			etl_code := gibhu_etl_code
-			default_template := gibhu_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4437,7 +4437,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhv_template_code
 			etl_code := gibhv_etl_code
-			default_template := gibhv_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4450,7 +4450,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhw_template_code
 			etl_code := gibhw_etl_code
-			default_template := gibhw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4463,7 +4463,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhx_template_code
 			etl_code := gibhx_etl_code
-			default_template := gibhx_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4476,7 +4476,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhy_template_code
 			etl_code := gibhy_etl_code
-			default_template := gibhy_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4489,7 +4489,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibhz_template_code
 			etl_code := gibhz_etl_code
-			default_template := gibhz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4502,7 +4502,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibia_template_code
 			etl_code := gibia_etl_code
-			default_template := gibia_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4515,7 +4515,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibib_template_code
 			etl_code := gibib_etl_code
-			default_template := gibib_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4528,7 +4528,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibic_template_code
 			etl_code := gibic_etl_code
-			default_template := gibic_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4541,7 +4541,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibid_template_code
 			etl_code := gibid_etl_code
-			default_template := gibid_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4554,7 +4554,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibie_template_code
 			etl_code := gibie_etl_code
-			default_template := gibie_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4567,7 +4567,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibif_template_code
 			etl_code := gibif_etl_code
-			default_template := gibif_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4580,7 +4580,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibig_template_code
 			etl_code := gibig_etl_code
-			default_template := gibig_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4593,7 +4593,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibih_template_code
 			etl_code := gibih_etl_code
-			default_template := gibih_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4606,7 +4606,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibii_template_code
 			etl_code := gibii_etl_code
-			default_template := gibii_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4619,7 +4619,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibij_template_code
 			etl_code := gibij_etl_code
-			default_template := gibij_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4632,7 +4632,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibik_template_code
 			etl_code := gibik_etl_code
-			default_template := gibik_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4645,7 +4645,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibil_template_code
 			etl_code := gibil_etl_code
-			default_template := gibil_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4658,7 +4658,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibim_template_code
 			etl_code := gibim_etl_code
-			default_template := gibim_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4671,7 +4671,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibin_template_code
 			etl_code := gibin_etl_code
-			default_template := gibin_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4684,7 +4684,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibio_template_code
 			etl_code := gibio_etl_code
-			default_template := gibio_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4697,7 +4697,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibip_template_code
 			etl_code := gibip_etl_code
-			default_template := gibip_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4710,7 +4710,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibiq_template_code
 			etl_code := gibiq_etl_code
-			default_template := gibiq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4723,7 +4723,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibir_template_code
 			etl_code := gibir_etl_code
-			default_template := gibir_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4736,7 +4736,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibis_template_code
 			etl_code := gibis_etl_code
-			default_template := gibis_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4749,7 +4749,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibit_template_code
 			etl_code := gibit_etl_code
-			default_template := gibit_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4762,7 +4762,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibiu_template_code
 			etl_code := gibiu_etl_code
-			default_template := gibiu_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4775,7 +4775,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibiv_template_code
 			etl_code := gibiv_etl_code
-			default_template := gibiv_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4788,7 +4788,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibiw_template_code
 			etl_code := gibiw_etl_code
-			default_template := gibiw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4801,7 +4801,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibix_template_code
 			etl_code := gibix_etl_code
-			default_template := gibix_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4814,7 +4814,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibiy_template_code
 			etl_code := gibiy_etl_code
-			default_template := gibiy_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4827,7 +4827,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibiz_template_code
 			etl_code := gibiz_etl_code
-			default_template := gibiz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4840,7 +4840,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibja_template_code
 			etl_code := gibja_etl_code
-			default_template := gibja_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4853,7 +4853,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjb_template_code
 			etl_code := gibjb_etl_code
-			default_template := gibjb_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4866,7 +4866,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjc_template_code
 			etl_code := gibjc_etl_code
-			default_template := gibjc_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4879,7 +4879,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjd_template_code
 			etl_code := gibjd_etl_code
-			default_template := gibjd_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4892,7 +4892,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibje_template_code
 			etl_code := gibje_etl_code
-			default_template := gibje_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4905,7 +4905,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjf_template_code
 			etl_code := gibjf_etl_code
-			default_template := gibjf_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4918,7 +4918,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjg_template_code
 			etl_code := gibjg_etl_code
-			default_template := gibjg_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4931,7 +4931,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjh_template_code
 			etl_code := gibjh_etl_code
-			default_template := gibjh_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4944,7 +4944,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibji_template_code
 			etl_code := gibji_etl_code
-			default_template := gibji_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4957,7 +4957,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjj_template_code
 			etl_code := gibjj_etl_code
-			default_template := gibjj_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4970,7 +4970,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjk_template_code
 			etl_code := gibjk_etl_code
-			default_template := gibjk_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4983,7 +4983,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjl_template_code
 			etl_code := gibjl_etl_code
-			default_template := gibjl_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -4996,7 +4996,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjm_template_code
 			etl_code := gibjm_etl_code
-			default_template := gibjm_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5009,7 +5009,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjn_template_code
 			etl_code := gibjn_etl_code
-			default_template := gibjn_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5022,7 +5022,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjo_template_code
 			etl_code := gibjo_etl_code
-			default_template := gibjo_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5035,7 +5035,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjp_template_code
 			etl_code := gibjp_etl_code
-			default_template := gibjp_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5048,7 +5048,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjq_template_code
 			etl_code := gibjq_etl_code
-			default_template := gibjq_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5061,7 +5061,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjr_template_code
 			etl_code := gibjr_etl_code
-			default_template := gibjr_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5074,7 +5074,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjs_template_code
 			etl_code := gibjs_etl_code
-			default_template := gibjs_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5087,7 +5087,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjt_template_code
 			etl_code := gibjt_etl_code
-			default_template := gibjt_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5100,7 +5100,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibju_template_code
 			etl_code := gibju_etl_code
-			default_template := gibju_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5113,7 +5113,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjv_template_code
 			etl_code := gibjv_etl_code
-			default_template := gibjv_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5126,7 +5126,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjw_template_code
 			etl_code := gibjw_etl_code
-			default_template := gibjw_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5139,7 +5139,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjx_template_code
 			etl_code := gibjx_etl_code
-			default_template := gibjx_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5152,7 +5152,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjy_template_code
 			etl_code := gibjy_etl_code
-			default_template := gibjy_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5165,7 +5165,7 @@ feature {NONE} -- Initialization
 		do
 			code := gibjz_template_code
 			etl_code := gibjz_etl_code
-			default_template := gibjz_default_template
+			default_template := gi_default_template
 			create parameters.make (1, 1)
 			parameters.put (etl_code, 1)
 		ensure
@@ -5175,374 +5175,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	giaaa_default_template: STRING is "[$1] internal error."
-	giaab_default_template: STRING is "[$1] internal error."
-	giaac_default_template: STRING is "[$1] internal error."
-	giaad_default_template: STRING is "[$1] internal error."
-	giaae_default_template: STRING is "[$1] internal error."
-	giaaf_default_template: STRING is "[$1] internal error."
-	giaag_default_template: STRING is "[$1] internal error."
-	giaah_default_template: STRING is "[$1] internal error."
-	giaai_default_template: STRING is "[$1] internal error."
-	giaaj_default_template: STRING is "[$1] internal error."
-	giaak_default_template: STRING is "[$1] internal error."
-	giaal_default_template: STRING is "[$1] internal error."
-	giaam_default_template: STRING is "[$1] internal error."
-	giaan_default_template: STRING is "[$1] internal error."
-	giaao_default_template: STRING is "[$1] internal error."
-	giaap_default_template: STRING is "[$1] internal error."
-	giaaq_default_template: STRING is "[$1] internal error."
-	giaar_default_template: STRING is "[$1] internal error."
-	giaas_default_template: STRING is "[$1] internal error."
-	giaat_default_template: STRING is "[$1] internal error."
-	giaau_default_template: STRING is "[$1] internal error."
-	giaav_default_template: STRING is "[$1] internal error."
-	giaaw_default_template: STRING is "[$1] internal error."
-	giaax_default_template: STRING is "[$1] internal error."
-	giaay_default_template: STRING is "[$1] internal error."
-	giaaz_default_template: STRING is "[$1] internal error."
-	giaba_default_template: STRING is "[$1] internal error."
-	giabb_default_template: STRING is "[$1] internal error."
-	giabc_default_template: STRING is "[$1] internal error."
-	giabd_default_template: STRING is "[$1] internal error."
-	giabe_default_template: STRING is "[$1] internal error."
-	giabf_default_template: STRING is "[$1] internal error."
-	giabg_default_template: STRING is "[$1] internal error."
-	giabh_default_template: STRING is "[$1] internal error."
-	giabi_default_template: STRING is "[$1] internal error."
-	giabj_default_template: STRING is "[$1] internal error."
-	giabk_default_template: STRING is "[$1] internal error."
-	giabl_default_template: STRING is "[$1] internal error."
-	giabm_default_template: STRING is "[$1] internal error."
-	giabn_default_template: STRING is "[$1] internal error."
-	giabo_default_template: STRING is "[$1] internal error."
-	giabp_default_template: STRING is "[$1] internal error."
-	giabq_default_template: STRING is "[$1] internal error."
-	giabr_default_template: STRING is "[$1] internal error."
-	giabs_default_template: STRING is "[$1] internal error."
-	giabt_default_template: STRING is "[$1] internal error."
-	giabu_default_template: STRING is "[$1] internal error."
-	giabv_default_template: STRING is "[$1] internal error."
-	giabw_default_template: STRING is "[$1] internal error."
-	giabx_default_template: STRING is "[$1] internal error."
-	giaby_default_template: STRING is "[$1] internal error."
-	giabz_default_template: STRING is "[$1] internal error."
-	giaca_default_template: STRING is "[$1] internal error."
-	giacb_default_template: STRING is "[$1] internal error."
-	giacc_default_template: STRING is "[$1] internal error."
-	giacd_default_template: STRING is "[$1] internal error."
-	giace_default_template: STRING is "[$1] internal error."
-	giacf_default_template: STRING is "[$1] internal error."
-	giacg_default_template: STRING is "[$1] internal error."
-	giach_default_template: STRING is "[$1] internal error."
-	giaci_default_template: STRING is "[$1] internal error."
-	giacj_default_template: STRING is "[$1] internal error."
-	giack_default_template: STRING is "[$1] internal error."
-	giacl_default_template: STRING is "[$1] internal error."
-	giacm_default_template: STRING is "[$1] internal error."
-	giacn_default_template: STRING is "[$1] internal error."
-	giaco_default_template: STRING is "[$1] internal error."
-	giacp_default_template: STRING is "[$1] internal error."
-	giacq_default_template: STRING is "[$1] internal error."
-	giacr_default_template: STRING is "[$1] internal error."
-	giacs_default_template: STRING is "[$1] internal error."
-	giact_default_template: STRING is "[$1] internal error."
-	giacu_default_template: STRING is "[$1] internal error."
-	giacv_default_template: STRING is "[$1] internal error."
-	giacw_default_template: STRING is "[$1] internal error."
-	giacx_default_template: STRING is "[$1] internal error."
-	giacy_default_template: STRING is "[$1] internal error."
-	giacz_default_template: STRING is "[$1] internal error."
-	giada_default_template: STRING is "[$1] internal error."
-	giadb_default_template: STRING is "[$1] internal error."
-	giadc_default_template: STRING is "[$1] internal error."
-	giadd_default_template: STRING is "[$1] internal error."
-	giade_default_template: STRING is "[$1] internal error."
-	giadf_default_template: STRING is "[$1] internal error."
-	giadg_default_template: STRING is "[$1] internal error."
-	giadh_default_template: STRING is "[$1] internal error."
-	giadi_default_template: STRING is "[$1] internal error."
-	giadj_default_template: STRING is "[$1] internal error."
-	giadk_default_template: STRING is "[$1] internal error."
-	giadl_default_template: STRING is "[$1] internal error."
-	giadm_default_template: STRING is "[$1] internal error."
-	giadn_default_template: STRING is "[$1] internal error."
-	giado_default_template: STRING is "[$1] internal error."
-	giadp_default_template: STRING is "[$1] internal error."
-	giadq_default_template: STRING is "[$1] internal error."
-	giadr_default_template: STRING is "[$1] internal error."
-	giads_default_template: STRING is "[$1] internal error."
-	giadt_default_template: STRING is "[$1] internal error."
-	giadu_default_template: STRING is "[$1] internal error."
-	giadv_default_template: STRING is "[$1] internal error."
-	giadw_default_template: STRING is "[$1] internal error."
-	giadx_default_template: STRING is "[$1] internal error."
-	giady_default_template: STRING is "[$1] internal error."
-	giadz_default_template: STRING is "[$1] internal error."
-	giaea_default_template: STRING is "[$1] internal error."
-	giaeb_default_template: STRING is "[$1] internal error."
-	giaec_default_template: STRING is "[$1] internal error."
-	giaed_default_template: STRING is "[$1] internal error."
-	gibaa_default_template: STRING is "[$1] internal error."
-	gibab_default_template: STRING is "[$1] internal error."
-	gibac_default_template: STRING is "[$1] internal error."
-	gibad_default_template: STRING is "[$1] internal error."
-	gibae_default_template: STRING is "[$1] internal error."
-	gibaf_default_template: STRING is "[$1] internal error."
-	gibag_default_template: STRING is "[$1] internal error."
-	gibah_default_template: STRING is "[$1] internal error."
-	gibai_default_template: STRING is "[$1] internal error."
-	gibaj_default_template: STRING is "[$1] internal error."
-	gibak_default_template: STRING is "[$1] internal error."
-	gibal_default_template: STRING is "[$1] internal error."
-	gibam_default_template: STRING is "[$1] internal error."
-	giban_default_template: STRING is "[$1] internal error."
-	gibao_default_template: STRING is "[$1] internal error."
-	gibap_default_template: STRING is "[$1] internal error."
-	gibaq_default_template: STRING is "[$1] internal error."
-	gibar_default_template: STRING is "[$1] internal error."
-	gibas_default_template: STRING is "[$1] internal error."
-	gibat_default_template: STRING is "[$1] internal error."
-	gibau_default_template: STRING is "[$1] internal error."
-	gibav_default_template: STRING is "[$1] internal error."
-	gibaw_default_template: STRING is "[$1] internal error."
-	gibax_default_template: STRING is "[$1] internal error."
-	gibay_default_template: STRING is "[$1] internal error."
-	gibaz_default_template: STRING is "[$1] internal error."
-	gibba_default_template: STRING is "[$1] internal error."
-	gibbb_default_template: STRING is "[$1] internal error."
-	gibbc_default_template: STRING is "[$1] internal error."
-	gibbd_default_template: STRING is "[$1] internal error."
-	gibbe_default_template: STRING is "[$1] internal error."
-	gibbf_default_template: STRING is "[$1] internal error."
-	gibbg_default_template: STRING is "[$1] internal error."
-	gibbh_default_template: STRING is "[$1] internal error."
-	gibbi_default_template: STRING is "[$1] internal error."
-	gibbj_default_template: STRING is "[$1] internal error."
-	gibbk_default_template: STRING is "[$1] internal error."
-	gibbl_default_template: STRING is "[$1] internal error."
-	gibbm_default_template: STRING is "[$1] internal error."
-	gibbn_default_template: STRING is "[$1] internal error."
-	gibbo_default_template: STRING is "[$1] internal error."
-	gibbp_default_template: STRING is "[$1] internal error."
-	gibbq_default_template: STRING is "[$1] internal error."
-	gibbr_default_template: STRING is "[$1] internal error."
-	gibbs_default_template: STRING is "[$1] internal error."
-	gibbt_default_template: STRING is "[$1] internal error."
-	gibbu_default_template: STRING is "[$1] internal error."
-	gibbv_default_template: STRING is "[$1] internal error."
-	gibbw_default_template: STRING is "[$1] internal error."
-	gibbx_default_template: STRING is "[$1] internal error."
-	gibby_default_template: STRING is "[$1] internal error."
-	gibbz_default_template: STRING is "[$1] internal error."
-	gibca_default_template: STRING is "[$1] internal error."
-	gibcb_default_template: STRING is "[$1] internal error."
-	gibcc_default_template: STRING is "[$1] internal error."
-	gibcd_default_template: STRING is "[$1] internal error."
-	gibce_default_template: STRING is "[$1] internal error."
-	gibcf_default_template: STRING is "[$1] internal error."
-	gibcg_default_template: STRING is "[$1] internal error."
-	gibch_default_template: STRING is "[$1] internal error."
-	gibci_default_template: STRING is "[$1] internal error."
-	gibcj_default_template: STRING is "[$1] internal error."
-	gibck_default_template: STRING is "[$1] internal error."
-	gibcl_default_template: STRING is "[$1] internal error."
-	gibcm_default_template: STRING is "[$1] internal error."
-	gibcn_default_template: STRING is "[$1] internal error."
-	gibco_default_template: STRING is "[$1] internal error."
-	gibcp_default_template: STRING is "[$1] internal error."
-	gibcq_default_template: STRING is "[$1] internal error."
-	gibcr_default_template: STRING is "[$1] internal error."
-	gibcs_default_template: STRING is "[$1] internal error."
-	gibct_default_template: STRING is "[$1] internal error."
-	gibcu_default_template: STRING is "[$1] internal error."
-	gibcv_default_template: STRING is "[$1] internal error."
-	gibcw_default_template: STRING is "[$1] internal error."
-	gibcx_default_template: STRING is "[$1] internal error."
-	gibcy_default_template: STRING is "[$1] internal error."
-	gibcz_default_template: STRING is "[$1] internal error."
-	gibda_default_template: STRING is "[$1] internal error."
-	gibdb_default_template: STRING is "[$1] internal error."
-	gibdc_default_template: STRING is "[$1] internal error."
-	gibdd_default_template: STRING is "[$1] internal error."
-	gibde_default_template: STRING is "[$1] internal error."
-	gibdf_default_template: STRING is "[$1] internal error."
-	gibdg_default_template: STRING is "[$1] internal error."
-	gibdh_default_template: STRING is "[$1] internal error."
-	gibdi_default_template: STRING is "[$1] internal error."
-	gibdj_default_template: STRING is "[$1] internal error."
-	gibdk_default_template: STRING is "[$1] internal error."
-	gibdl_default_template: STRING is "[$1] internal error."
-	gibdm_default_template: STRING is "[$1] internal error."
-	gibdn_default_template: STRING is "[$1] internal error."
-	gibdo_default_template: STRING is "[$1] internal error."
-	gibdp_default_template: STRING is "[$1] internal error."
-	gibdq_default_template: STRING is "[$1] internal error."
-	gibdr_default_template: STRING is "[$1] internal error."
-	gibds_default_template: STRING is "[$1] internal error."
-	gibdt_default_template: STRING is "[$1] internal error."
-	gibdu_default_template: STRING is "[$1] internal error."
-	gibdv_default_template: STRING is "[$1] internal error."
-	gibdw_default_template: STRING is "[$1] internal error."
-	gibdx_default_template: STRING is "[$1] internal error."
-	gibdy_default_template: STRING is "[$1] internal error."
-	gibdz_default_template: STRING is "[$1] internal error."
-	gibea_default_template: STRING is "[$1] internal error."
-	gibeb_default_template: STRING is "[$1] internal error."
-	gibec_default_template: STRING is "[$1] internal error."
-	gibed_default_template: STRING is "[$1] internal error."
-	gibee_default_template: STRING is "[$1] internal error."
-	gibef_default_template: STRING is "[$1] internal error."
-	gibeg_default_template: STRING is "[$1] internal error."
-	gibeh_default_template: STRING is "[$1] internal error."
-	gibei_default_template: STRING is "[$1] internal error."
-	gibej_default_template: STRING is "[$1] internal error."
-	gibek_default_template: STRING is "[$1] internal error."
-	gibel_default_template: STRING is "[$1] internal error."
-	gibem_default_template: STRING is "[$1] internal error."
-	giben_default_template: STRING is "[$1] internal error."
-	gibeo_default_template: STRING is "[$1] internal error."
-	gibep_default_template: STRING is "[$1] internal error."
-	gibeq_default_template: STRING is "[$1] internal error."
-	giber_default_template: STRING is "[$1] internal error."
-	gibes_default_template: STRING is "[$1] internal error."
-	gibet_default_template: STRING is "[$1] internal error."
-	gibeu_default_template: STRING is "[$1] internal error."
-	gibev_default_template: STRING is "[$1] internal error."
-	gibew_default_template: STRING is "[$1] internal error."
-	gibex_default_template: STRING is "[$1] internal error."
-	gibey_default_template: STRING is "[$1] internal error."
-	gibez_default_template: STRING is "[$1] internal error."
-	gibfa_default_template: STRING is "[$1] internal error."
-	gibfb_default_template: STRING is "[$1] internal error."
-	gibfc_default_template: STRING is "[$1] internal error."
-	gibfd_default_template: STRING is "[$1] internal error."
-	gibfe_default_template: STRING is "[$1] internal error."
-	gibff_default_template: STRING is "[$1] internal error."
-	gibfg_default_template: STRING is "[$1] internal error."
-	gibfh_default_template: STRING is "[$1] internal error."
-	gibfi_default_template: STRING is "[$1] internal error."
-	gibfj_default_template: STRING is "[$1] internal error."
-	gibfk_default_template: STRING is "[$1] internal error."
-	gibfl_default_template: STRING is "[$1] internal error."
-	gibfm_default_template: STRING is "[$1] internal error."
-	gibfn_default_template: STRING is "[$1] internal error."
-	gibfo_default_template: STRING is "[$1] internal error."
-	gibfp_default_template: STRING is "[$1] internal error."
-	gibfq_default_template: STRING is "[$1] internal error."
-	gibfr_default_template: STRING is "[$1] internal error."
-	gibfs_default_template: STRING is "[$1] internal error."
-	gibft_default_template: STRING is "[$1] internal error."
-	gibfu_default_template: STRING is "[$1] internal error."
-	gibfv_default_template: STRING is "[$1] internal error."
-	gibfw_default_template: STRING is "[$1] internal error."
-	gibfx_default_template: STRING is "[$1] internal error."
-	gibfy_default_template: STRING is "[$1] internal error."
-	gibfz_default_template: STRING is "[$1] internal error."
-	gibga_default_template: STRING is "[$1] internal error."
-	gibgb_default_template: STRING is "[$1] internal error."
-	gibgc_default_template: STRING is "[$1] internal error."
-	gibgd_default_template: STRING is "[$1] internal error."
-	gibge_default_template: STRING is "[$1] internal error."
-	gibgf_default_template: STRING is "[$1] internal error."
-	gibgg_default_template: STRING is "[$1] internal error."
-	gibgh_default_template: STRING is "[$1] internal error."
-	gibgi_default_template: STRING is "[$1] internal error."
-	gibgj_default_template: STRING is "[$1] internal error."
-	gibgk_default_template: STRING is "[$1] internal error."
-	gibgl_default_template: STRING is "[$1] internal error."
-	gibgm_default_template: STRING is "[$1] internal error."
-	gibgn_default_template: STRING is "[$1] internal error."
-	gibgo_default_template: STRING is "[$1] internal error."
-	gibgp_default_template: STRING is "[$1] internal error."
-	gibgq_default_template: STRING is "[$1] internal error."
-	gibgr_default_template: STRING is "[$1] internal error."
-	gibgs_default_template: STRING is "[$1] internal error."
-	gibgt_default_template: STRING is "[$1] internal error."
-	gibgu_default_template: STRING is "[$1] internal error."
-	gibgv_default_template: STRING is "[$1] internal error."
-	gibgw_default_template: STRING is "[$1] internal error."
-	gibgx_default_template: STRING is "[$1] internal error."
-	gibgy_default_template: STRING is "[$1] internal error."
-	gibgz_default_template: STRING is "[$1] internal error."
-	gibha_default_template: STRING is "[$1] internal error."
-	gibhb_default_template: STRING is "[$1] internal error."
-	gibhc_default_template: STRING is "[$1] internal error."
-	gibhd_default_template: STRING is "[$1] internal error."
-	gibhe_default_template: STRING is "[$1] internal error."
-	gibhf_default_template: STRING is "[$1] internal error."
-	gibhg_default_template: STRING is "[$1] internal error."
-	gibhh_default_template: STRING is "[$1] internal error."
-	gibhi_default_template: STRING is "[$1] internal error."
-	gibhj_default_template: STRING is "[$1] internal error."
-	gibhk_default_template: STRING is "[$1] internal error."
-	gibhl_default_template: STRING is "[$1] internal error."
-	gibhm_default_template: STRING is "[$1] internal error."
-	gibhn_default_template: STRING is "[$1] internal error."
-	gibho_default_template: STRING is "[$1] internal error."
-	gibhp_default_template: STRING is "[$1] internal error."
-	gibhq_default_template: STRING is "[$1] internal error."
-	gibhr_default_template: STRING is "[$1] internal error."
-	gibhs_default_template: STRING is "[$1] internal error."
-	gibht_default_template: STRING is "[$1] internal error."
-	gibhu_default_template: STRING is "[$1] internal error."
-	gibhv_default_template: STRING is "[$1] internal error."
-	gibhw_default_template: STRING is "[$1] internal error."
-	gibhx_default_template: STRING is "[$1] internal error."
-	gibhy_default_template: STRING is "[$1] internal error."
-	gibhz_default_template: STRING is "[$1] internal error."
-	gibia_default_template: STRING is "[$1] internal error."
-	gibib_default_template: STRING is "[$1] internal error."
-	gibic_default_template: STRING is "[$1] internal error."
-	gibid_default_template: STRING is "[$1] internal error."
-	gibie_default_template: STRING is "[$1] internal error."
-	gibif_default_template: STRING is "[$1] internal error."
-	gibig_default_template: STRING is "[$1] internal error."
-	gibih_default_template: STRING is "[$1] internal error."
-	gibii_default_template: STRING is "[$1] internal error."
-	gibij_default_template: STRING is "[$1] internal error."
-	gibik_default_template: STRING is "[$1] internal error."
-	gibil_default_template: STRING is "[$1] internal error."
-	gibim_default_template: STRING is "[$1] internal error."
-	gibin_default_template: STRING is "[$1] internal error."
-	gibio_default_template: STRING is "[$1] internal error."
-	gibip_default_template: STRING is "[$1] internal error."
-	gibiq_default_template: STRING is "[$1] internal error."
-	gibir_default_template: STRING is "[$1] internal error."
-	gibis_default_template: STRING is "[$1] internal error."
-	gibit_default_template: STRING is "[$1] internal error."
-	gibiu_default_template: STRING is "[$1] internal error."
-	gibiv_default_template: STRING is "[$1] internal error."
-	gibiw_default_template: STRING is "[$1] internal error."
-	gibix_default_template: STRING is "[$1] internal error."
-	gibiy_default_template: STRING is "[$1] internal error."
-	gibiz_default_template: STRING is "[$1] internal error."
-	gibja_default_template: STRING is "[$1] internal error."
-	gibjb_default_template: STRING is "[$1] internal error."
-	gibjc_default_template: STRING is "[$1] internal error."
-	gibjd_default_template: STRING is "[$1] internal error."
-	gibje_default_template: STRING is "[$1] internal error."
-	gibjf_default_template: STRING is "[$1] internal error."
-	gibjg_default_template: STRING is "[$1] internal error."
-	gibjh_default_template: STRING is "[$1] internal error."
-	gibji_default_template: STRING is "[$1] internal error."
-	gibjj_default_template: STRING is "[$1] internal error."
-	gibjk_default_template: STRING is "[$1] internal error."
-	gibjl_default_template: STRING is "[$1] internal error."
-	gibjm_default_template: STRING is "[$1] internal error."
-	gibjn_default_template: STRING is "[$1] internal error."
-	gibjo_default_template: STRING is "[$1] internal error."
-	gibjp_default_template: STRING is "[$1] internal error."
-	gibjq_default_template: STRING is "[$1] internal error."
-	gibjr_default_template: STRING is "[$1] internal error."
-	gibjs_default_template: STRING is "[$1] internal error."
-	gibjt_default_template: STRING is "[$1] internal error."
-	gibju_default_template: STRING is "[$1] internal error."
-	gibjv_default_template: STRING is "[$1] internal error."
-	gibjw_default_template: STRING is "[$1] internal error."
-	gibjx_default_template: STRING is "[$1] internal error."
-	gibjy_default_template: STRING is "[$1] internal error."
-	gibjz_default_template: STRING is "[$1] internal error."
+	gi_default_template: STRING is "[$1] internal error."
 			-- Default templates
 
 	giaaa_etl_code: STRING is "GIAAA"

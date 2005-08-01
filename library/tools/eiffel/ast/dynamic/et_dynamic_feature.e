@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 		do
 			l_dynamic_type_set_builder := a_system.dynamic_type_set_builder
 			static_feature := a_feature
+			target_type := a_target_type
 			l_type := a_feature.type
 			if l_type /= Void then
 				l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
@@ -71,12 +72,16 @@ feature {NONE} -- Initialization
 			builtin_code := tokens.builtin_not_builtin
 		ensure
 			static_feature_set: static_feature = a_feature
+			target_type_set: target_type = a_target_type
 		end
 
 feature -- Access
 
 	result_type_set: ET_DYNAMIC_TYPE_SET
 			-- Type of result, if any
+
+	target_type: ET_DYNAMIC_TYPE
+			-- Type of target
 
 	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Dynamic type sets of expressions within current feature;
@@ -190,6 +195,9 @@ feature -- Status report
 	is_built: BOOLEAN
 			-- Have dynamic type sets of current feature been built?
 
+	is_generated: BOOLEAN
+			-- Has code for current feature been generated?
+
 	is_creation: BOOLEAN
 			-- Is current feature used as a creation procedure?
 
@@ -295,6 +303,14 @@ feature -- Status setting
 			built_set: is_built = b
 		end
 
+	set_generated (b: BOOLEAN) is
+			-- Set `is_generated' to `b'.
+		do
+			is_generated := b
+		ensure
+			generated_set: is_generated = b
+		end
+
 	set_creation (b: BOOLEAN) is
 			-- Set `is_creation' to `b'.
 		local
@@ -397,6 +413,7 @@ feature {NONE} -- Constants
 invariant
 
 	static_feature_not_void: static_feature /= Void
+	target_type_not_void: target_type /= Void
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
 
 end
