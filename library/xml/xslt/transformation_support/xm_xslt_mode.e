@@ -21,9 +21,6 @@ inherit
 
 	XM_XPATH_ERROR_TYPES
 
-	MA_DECIMAL_MATH
-		export {NONE} all end
-
 	XM_XSLT_CONFIGURATION_CONSTANTS
 
 create
@@ -76,7 +73,7 @@ feature -- Access
 		local
 			a_key, a_specific_precedence: INTEGER
 			a_rule, a_specific_rule: XM_XSLT_RULE
-			a_specific_priority: MA_DECIMAL
+			a_specific_priority: INTEGER
 			finished: BOOLEAN
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
@@ -93,7 +90,7 @@ feature -- Access
 			end
 			a_key := rule_key (a_node.fingerprint, a_node.node_type)
 			a_specific_precedence := -1
-			a_specific_priority := negative_infinity
+			a_specific_priority := -1
 
 			-- Search the specific list for this node type / node name.
 
@@ -116,7 +113,7 @@ feature -- Access
 						std.error.put_string ("Searching for a specific rule ... found a candidate...%N")
 					end
 					if a_specific_rule /= Void and then (a_rule.precedence  < a_specific_precedence or else
-																	 (a_rule.precedence = a_specific_precedence and then a_rule.priority < a_specific_priority)) then
+																	 (a_rule.precedence = a_specific_precedence and then a_rule.priority_rank < a_specific_priority)) then
 						finished := True
 						debug ("XSLT template rules")
 							std.error.put_string ("Searching for a specific rule ... found best match.%N")
@@ -135,14 +132,14 @@ feature -- Access
 							-- Is this a second match?
 
 							if a_specific_rule /= Void then
-								if a_rule.precedence = a_specific_precedence and then a_rule.priority.is_equal (a_specific_priority) then
+								if a_rule.precedence = a_specific_precedence and then a_rule.priority_rank.is_equal (a_specific_priority) then
 									report_ambiguity (a_node, a_specific_rule, a_rule, a_new_context.transformer)
 									finished := True
 								end
 							end
 							a_specific_rule := a_rule
 							a_specific_precedence := a_rule.precedence
-							a_specific_priority := a_rule.priority
+							a_specific_priority := a_rule.priority_rank
 							if a_new_context.transformer.recovery_policy = Recover_silently then
 								finished := True -- Find the first; they are in priority order.
 							end
@@ -241,7 +238,7 @@ feature -- Access
 			a_key: INTEGER
 			a_rule: XM_XSLT_RULE
 			finished: BOOLEAN
-			a_current_priority: MA_DECIMAL
+			a_current_priority: INTEGER
 			a_current_precedence, a_current_sequence_number: INTEGER
 			a_handler: XM_XSLT_RULE_VALUE
 			a_template: XM_XSLT_COMPILED_TEMPLATE
@@ -249,7 +246,7 @@ feature -- Access
 			a_key := rule_key (a_node.fingerprint, a_node.node_type)
 			a_current_sequence_number := -1
 			a_current_precedence := -1
-			a_current_priority := minus_one
+			a_current_priority := -1
 
 			-- First find the rule corresponding to the current handler.
 
@@ -266,7 +263,7 @@ feature -- Access
 				end
 				if a_template /= Void and then a_template = a_current_template then
 					a_current_precedence := a_rule.precedence
-					a_current_priority := a_rule.priority
+					a_current_priority := a_rule.priority_rank
 					a_current_sequence_number := a_rule.sequence_number
 					finished := True
 				else
@@ -287,7 +284,7 @@ feature -- Access
 					end
 					if a_template /= Void and then a_template = a_current_template then
 						a_current_precedence := a_rule.precedence
-						a_current_priority := a_rule.priority
+						a_current_priority := a_rule.priority_rank
 						a_current_sequence_number := a_rule.sequence_number
 						finished := True
 					else
@@ -417,10 +414,12 @@ feature -- Element change
 
 		end
 
-feature {XM_XSLT_MODE} -- Local
+feature {XM_XSLT_MODE, XM_XSLT_RULE_MANAGER} -- Restricted
 	
 	rule_dictionary: ARRAY [XM_XSLT_RULE]
 			-- Rule dictionary
+
+feature {XM_XSLT_MODE} -- Local
 
 	sequence_number: INTEGER
 			-- Sequence number for next rule to be created
@@ -485,12 +484,11 @@ feature {NONE} -- Implementation
 		end
 
 	general_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT; a_specific_rule: XM_XSLT_RULE;
-		a_specific_precedence: INTEGER; a_specific_priority: MA_DECIMAL): XM_XSLT_RULE_VALUE is
+		a_specific_precedence: INTEGER; a_specific_priority: INTEGER): XM_XSLT_RULE_VALUE is
 			-- Rule on general list
 		require
 			node_not_void: a_node /= Void
 			context_not_void: a_context /= Void
-			priority_not_void: a_specific_priority /= Void
 		local
 			a_rule, a_general_rule: XM_XSLT_RULE
 			finished: BOOLEAN
@@ -507,7 +505,7 @@ feature {NONE} -- Implementation
 					std.error.put_string ("Searching for a general rule ... found one%N")
 				end
 				if a_rule.precedence < a_specific_precedence or else
-					(a_rule.precedence = a_specific_precedence and then a_rule.priority < a_specific_priority) then
+					(a_rule.precedence = a_specific_precedence and then a_rule.priority_rank < a_specific_priority) then
 
 					-- no point in looking at a lower priority rule than the one we've got
 
@@ -527,11 +525,11 @@ feature {NONE} -- Implementation
 							debug ("XSLT template rules")
 								std.error.put_string ("Searching for a possible second general rule ... found a second candidate...%N")
 								std.error.put_string ("First general rule has precedence of " + a_general_rule.precedence.out)
-								std.error.put_string (" and proprity of " + a_general_rule.priority.to_scientific_string)
+								std.error.put_string (" and prority of " + a_general_rule.priority.to_scientific_string)
 								std.error.put_string ("%NSecond general rule has precedence of " + a_rule.precedence.out)
-								std.error.put_string (" and proprity of " + a_rule.priority.to_scientific_string + "%N")
+								std.error.put_string (" and priority of " + a_rule.priority.to_scientific_string + "%N")
 							end
-							if a_rule.precedence = a_general_rule.precedence and then a_rule.priority.is_equal (a_general_rule.priority) then
+							if a_rule.precedence = a_general_rule.precedence and then a_rule.priority_rank.is_equal (a_general_rule.priority_rank) then
 								debug ("XSLT template rules")
 									std.error.put_string ("Searching for a possible second general rule ... found an ambiguity.%N")
 								end
@@ -553,21 +551,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	proper_next_matching_rule (a_node: XM_XPATH_NODE; a_key: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; a_current_priority: MA_DECIMAL; a_current_precedence, a_current_sequence_number: INTEGER): XM_XSLT_RULE_VALUE is
+	proper_next_matching_rule (a_node: XM_XPATH_NODE; a_key: INTEGER; a_context: XM_XSLT_EVALUATION_CONTEXT; a_current_priority: INTEGER; a_current_precedence, a_current_sequence_number: INTEGER): XM_XSLT_RULE_VALUE is
 			-- Next matching rule.
 		require
 			node_not_void: a_node /= Void
 			context_not_context: a_context /= Void
-			priority_not_void: a_current_priority /= Void
 			positive_sequence_number: a_current_sequence_number >= 0
 		local
 			a_rule, a_specific_rule: XM_XSLT_RULE
 			a_specific_precedence: INTEGER
-			a_specific_priority: MA_DECIMAL
+			a_specific_priority: INTEGER
 			finished: BOOLEAN
 		do
 			a_specific_precedence := -1
-			a_specific_priority := negative_infinity
+			a_specific_priority := -1
 
 			-- Search the specific list for this node type / node name.
 
@@ -582,8 +579,8 @@ feature {NONE} -- Implementation
 
 					if a_rule.precedence > a_current_precedence or else
 						(a_rule.precedence = a_current_precedence and then
-						 (a_rule.priority > a_current_priority or else
-						  (a_rule.priority.is_equal (a_current_priority) and then a_rule.sequence_number >= a_current_sequence_number))) then
+						 (a_rule.priority_rank > a_current_priority or else
+						  (a_rule.priority_rank.is_equal (a_current_priority) and then a_rule.sequence_number >= a_current_sequence_number))) then
 						-- skip rule
 					else
 
@@ -591,7 +588,7 @@ feature {NONE} -- Implementation
 
 						if a_specific_rule /= Void then
 							if a_rule.precedence < a_specific_precedence or else
-								(a_rule.precedence = a_specific_precedence and then a_rule.priority < a_specific_priority) then
+								(a_rule.precedence = a_specific_precedence and then a_rule.priority_rank < a_specific_priority) then
 								finished := True
 							end
 						end
@@ -600,7 +597,7 @@ feature {NONE} -- Implementation
 							-- Is this a second match?
 
 							if a_specific_rule /= Void then
-								if a_rule.precedence = a_specific_precedence and then a_rule.priority.is_equal (a_specific_priority) then
+								if a_rule.precedence = a_specific_precedence and then a_rule.priority_rank.is_equal (a_specific_priority) then
 									finished := True
 									report_ambiguity (a_node, a_specific_rule, a_rule, a_context.transformer)
 								end
@@ -609,7 +606,7 @@ feature {NONE} -- Implementation
 							if not finished then
 								a_specific_rule := a_rule
 								a_specific_precedence := a_rule.precedence
-								a_specific_priority := a_rule.priority
+								a_specific_priority := a_rule.priority_rank
 							end
 						end
 					end
@@ -629,25 +626,24 @@ feature {NONE} -- Implementation
 		end
 
 	general_next_matching_rule (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT; a_specific_rule: XM_XSLT_RULE;
-										 a_current_priority: MA_DECIMAL; a_current_precedence, a_current_sequence_number: INTEGER): XM_XSLT_RULE_VALUE is
+										 a_current_priority: INTEGER; a_current_precedence, a_current_sequence_number: INTEGER): XM_XSLT_RULE_VALUE is
 			-- Next matching rule.
 		require
 			node_not_void: a_node /= Void
 			context_not_void: a_context /= Void
-			priority_not_void: a_current_priority /= Void
 			positive_sequence_number: a_current_sequence_number >= 0
 		local
 			a_rule, a_general_rule: XM_XSLT_RULE
 			finished: BOOLEAN
 			a_specific_precedence: INTEGER
-			a_specific_priority: MA_DECIMAL
+			a_specific_priority: INTEGER
 		do
 			if a_specific_rule /= Void then
 				a_specific_precedence := -a_specific_rule.precedence
-				a_specific_priority := a_specific_rule.priority
+				a_specific_priority := a_specific_rule.priority_rank
 			else
 				a_specific_precedence := -1
-				a_specific_priority := negative_infinity
+				a_specific_priority := -1
 			end
 			from
 				a_rule := rule_dictionary.item (Any_node + 1)
@@ -659,12 +655,12 @@ feature {NONE} -- Implementation
 		
 				if a_rule.precedence > a_current_precedence or else
 					(a_rule.precedence = a_current_precedence and then
-					 (a_rule.priority > a_current_priority or else
-					  (a_rule.priority.is_equal (a_current_priority) and then a_rule.sequence_number >= a_current_sequence_number))) then
+					 (a_rule.priority_rank > a_current_priority or else
+					  (a_rule.priority_rank.is_equal (a_current_priority) and then a_rule.sequence_number >= a_current_sequence_number))) then
 					-- skip rule
 				else
 					if a_rule.precedence < a_specific_precedence or else
-						(a_rule.precedence = a_specific_precedence and then a_rule.priority < a_specific_priority) then
+						(a_rule.precedence = a_specific_precedence and then a_rule.priority_rank < a_specific_priority) then
 						finished := True -- no point in looking at a lower priority rule than the one we've got
 					end
 					if not finished and then a_rule.pattern.matches (a_node, a_context) then
@@ -672,7 +668,7 @@ feature {NONE} -- Implementation
 						-- Is this a second match?
 
 						if a_general_rule /= Void then
-							if a_rule.precedence = a_general_rule.precedence and then a_rule.priority.is_equal (a_general_rule.priority) then
+							if a_rule.precedence = a_general_rule.precedence and then a_rule.priority_rank.is_equal (a_general_rule.priority_rank) then
 								finished := True
 								report_ambiguity (a_node, a_specific_rule, a_rule, a_context.transformer)
 							end

@@ -165,12 +165,6 @@ feature -- Access
 			Node_not_void: Result /= Void
 		end
 
-	-- TODO: untyped_atomic_value (a_node_number: INTEGER): XM_XPATH_UNTYPED_ATOMIC_VALUE is
-	-- Typed value of `a_node_number'
-	-- require
-	--  untyped-atomic
-	--  A performance enhancement - avoids creating XM_XPATH_NODE
-
 	depth_of (a_node_number: INTEGER): INTEGER is
 			-- Depth of node within tree
 		require

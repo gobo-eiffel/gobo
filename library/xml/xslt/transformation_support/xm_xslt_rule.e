@@ -29,6 +29,7 @@ feature {NONE} -- Implementation
 			precedence := a_precedence
 			priority := a_priority
 			sequence_number := a_sequence_number
+			priority_rank := -1 -- not yet computed
 		ensure
 			no_next_rule: next_rule = Void
 			pattern_set: pattern = a_pattern
@@ -65,7 +66,10 @@ feature -- Access
 			-- Precedence
 
 	priority: MA_DECIMAL
-			-- priority
+			-- Priority
+
+	priority_rank: INTEGER
+			-- Ranked priority, so comparison can be done using integer binary arithmetic
 
 	sequence_number: INTEGER
 			-- Sequence number
@@ -81,6 +85,17 @@ feature -- Element change
 			next_rule := a_next_rule
 		ensure
 			next_rule_set: next_rule = a_next_rule
+		end
+
+	set_priority_rank (a_rank: INTEGER) is
+			-- Set `priority_rank'.
+		require
+			strictly_positive_rank: a_rank > 0
+			rank_not_set: priority_rank = -1
+		do
+			priority_rank := a_rank
+		ensure
+			rank_set: priority_rank = a_rank
 		end
 
 invariant

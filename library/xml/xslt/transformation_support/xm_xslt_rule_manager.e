@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 		do
 			create mode_for_default_mode.make
 			create mode_map.make_map (5)
+			create priority_ranks.make_equal
 		end
 
 feature -- Access
@@ -227,6 +228,7 @@ feature -- Element change
 			pattern_not_void: a_pattern /= Void
 			is_template_handler: a_handler /= Void and then a_handler.is_template
 			mode_not_void: a_mode /= Void
+			priority_not_void: a_priority /= Void
 		local
 			a_union_pattern: XM_XSLT_UNION_PATTERN
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_MODE, INTEGER]
@@ -239,7 +241,8 @@ feature -- Element change
 				set_handler (a_union_pattern.left_hand_side, a_handler, a_mode, a_precedence, a_priority)
 				set_handler (a_union_pattern.right_hand_side, a_handler, a_mode, a_precedence, a_priority)
 			else
-				a_mode.add_rule (a_pattern, a_handler,  a_precedence, a_priority)
+				a_mode.add_rule (a_pattern, a_handler, a_precedence, a_priority)
+				rank_priority (a_priority)
 
 				-- If adding a rule to the omni_mode (mode='all'),
 				--  then add it to all the other modes as well
@@ -260,6 +263,58 @@ feature -- Element change
 			end
 		end
 
+	rank_all_rules is
+			-- Set `priority_rank' for every rule in every mode.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [XM_XSLT_MODE, INTEGER]
+		do
+			rank_mode (mode_for_default_mode)
+			if omni_mode /= Void then rank_mode (omni_mode) end
+			from
+				a_cursor := mode_map.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				rank_mode (a_cursor.item)
+				a_cursor.forth
+			end
+		end
+
+	rank_mode (a_mode: XM_XSLT_MODE) is
+			-- Set `priority_rank' for every rule in `a_mode'
+		require
+			mode_exists: a_mode /= Void
+		local
+			an_index: INTEGER
+			a_rule: XM_XSLT_RULE
+			a_priority: MA_DECIMAL
+		do
+			from
+				an_index := a_mode.rule_dictionary.lower
+			variant
+				a_mode.rule_dictionary.count + 1 - an_index
+			until
+				an_index > a_mode.rule_dictionary.upper
+			loop
+				a_rule := a_mode.rule_dictionary.item (an_index)
+				from
+				until
+					a_rule = Void
+				loop
+					a_priority := a_rule.priority
+					priority_ranks.start
+					priority_ranks.search_forth (a_priority)
+					check
+						priority_found: not priority_ranks.off
+						-- `set_handler' always calls `rank_priority' to guarantee this
+					end
+					a_rule.set_priority_rank (priority_ranks.index)
+					a_rule := a_rule.next_rule
+				end
+				an_index := an_index + 1
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	mode_for_default_mode: XM_XSLT_MODE
@@ -271,10 +326,47 @@ feature {NONE} -- Implementation
 	mode_map: DS_HASH_TABLE [XM_XSLT_MODE, INTEGER]
 			-- Map of fingerprints to non-default modes
 
+	priority_ranks: DS_LINKED_LIST [MA_DECIMAL]
+			-- Rule priorities sorted in increasing order;
+			-- Hence, a rule's priority_rank is the position of it's priority within this list
+
+	rank_priority (a_priority: MA_DECIMAL) is
+			-- Rank `a_priority' by inserting it into `priority_ranks' maintaining an ascending order.
+		require
+			priority_not_void: a_priority /= Void
+		local
+			a_cursor: DS_LINKED_LIST_CURSOR [MA_DECIMAL]
+			found: BOOLEAN
+			a_decimal: MA_DECIMAL
+		do
+			from
+				a_cursor := priority_ranks.new_cursor; a_cursor.start
+			variant
+				priority_ranks.count + 1 - a_cursor.index
+			until
+				found or else a_cursor.after
+			loop
+				a_decimal := a_cursor.item
+				if a_decimal.is_equal (a_priority) then
+					found := True
+				elseif a_decimal > a_priority then
+					found := True
+					a_cursor.put_left (a_priority)
+				end
+				a_cursor.forth
+			end
+			if not found then
+				priority_ranks.put_last (a_priority)
+			end
+		ensure
+			priority_present: priority_ranks.has (a_priority)
+		end
+
 invariant
 
 	mode_map_not_void: mode_map /= Void
 	default_mode_not_void: mode_for_default_mode /= Void
+	priority_ranks_not_void: priority_ranks /= Void
 
 end
 	

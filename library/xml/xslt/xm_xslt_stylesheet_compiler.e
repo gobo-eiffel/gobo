@@ -206,6 +206,7 @@ feature -- Compilation
 					end
 					executable.set_whitespace_stripping (a_stylesheet.strips_whitespace)
 					executable.save_static_context (a_stylesheet.static_context)
+					executable.rule_manager.rank_all_rules
 				end
 			end
 		ensure
