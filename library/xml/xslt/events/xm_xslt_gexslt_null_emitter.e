@@ -38,6 +38,12 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
+	open is
+			-- Notify start of event stream.
+		do
+			is_open := True
+		end
+
 	start_document is
 			-- New document
 		do
@@ -50,6 +56,12 @@ feature -- Events
 			-- Notify the end of the document
 		do
 			is_document_started := False
+		end
+
+	close is
+			-- Notify end of event stream.
+		do
+			is_open := False
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is

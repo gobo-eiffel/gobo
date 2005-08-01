@@ -306,9 +306,10 @@ feature -- Evaluation
 				-- TODO - next-in-chain processing
 				a_new_context.change_output_destination (a_property_set, a_result, True, validation_action, schema_type)
 				a_receiver := a_new_context.current_receiver
-				if not a_receiver.is_document_started then a_receiver.start_document end
+				a_receiver.start_document
 				content.process (a_new_context)
 				a_receiver.end_document
+				a_receiver.close
 				an_output_resolver.close (a_result)
 			end
 			last_tail_call := Void

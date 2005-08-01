@@ -280,9 +280,13 @@ feature -- Creation
 		local
 			a_node_factory: XM_XPATH_NODE_FACTORY
 			a_locator: XM_XPATH_RESOLVER_LOCATOR
+			a_tiny_builder: XM_XPATH_TINY_BUILDER
 		do
 			if configuration.is_tiny_tree_model then
-				create {XM_XPATH_TINY_BUILDER} Result.make
+				create a_tiny_builder.make
+				a_tiny_builder.set_reporting_sizes (configuration.is_reporting_tiny_tree_statistics)
+				a_tiny_builder.set_defaults (configuration.estimated_nodes, configuration.estimated_attributes, configuration.estimated_namespaces, configuration.estimated_characters)
+				Result := a_tiny_builder
 			else
 				create a_node_factory
 				create {XM_XPATH_TREE_BUILDER} Result.make (a_node_factory)
@@ -519,7 +523,7 @@ feature -- Transformation
 						create an_error.make_from_string (a_builder.last_error, Gexslt_eiffel_type_uri, "BUILD_ERROR", Static_error)
 						report_fatal_error (an_error, Void)
 					else
-						a_document := a_builder.document
+						a_document := a_builder.current_root.as_document
 						register_document (a_document, a_media_type, a_source.system_id)
 						a_fragment_id := a_source.fragment_identifier
 						if a_fragment_id = Void then
@@ -591,7 +595,8 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER} -- Transformation in
 				end
 				if not is_error then
 					initial_context.change_output_destination (properties, a_transformation_result, True, Validation_preserve, Void)
-					
+					initial_context.current_receiver.start_document
+
 					-- Process the source document using the handlers that have been set up.
 					
 					if initial_template = Void then
@@ -610,7 +615,8 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_TRANSFORMER_RECEIVER} -- Transformation in
 						trace_listener.stop_tracing
 					end
 					
-					initial_context.current_receiver.end_document
+					if initial_context.current_receiver.is_document_started then initial_context.current_receiver.end_document end
+					if initial_context.current_receiver.is_open then initial_context.current_receiver.close end
 					std.output.flush
 				end
 			end

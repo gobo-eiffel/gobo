@@ -31,6 +31,13 @@ feature -- Events
 			base_receiver.on_error (a_message)
 		end
 
+	open is
+			-- Notify start of event stream.
+		do
+			is_open := True
+			base_receiver.open
+		end
+
 	start_document is
 			-- New document
 		do
@@ -96,6 +103,14 @@ feature -- Events
 			-- Notify the end of the document
 		do
 			base_receiver.end_document
+			is_document_started := False
+		end
+
+	close is
+			-- Notify end of event stream.
+		do
+			base_receiver.close
+			is_open := False
 		end
 
 feature -- Element change

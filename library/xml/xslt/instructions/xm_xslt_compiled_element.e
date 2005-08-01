@@ -100,7 +100,7 @@ feature -- Access
 			a_name_value := element_name.last_evaluated_item
 			if a_name_value = Void or else a_name_value.is_error then -- empty sequence
 				create an_error.make_from_string ("xsl:element has no 'name'", "","XTDE0820", Dynamic_error) 
-				a_context.transformer.report_recoverable_error (an_error, Current)
+				a_context.transformer.report_fatal_error (an_error, Current)
 				Result := -1
 			else
 				a_string_value ?= a_name_value

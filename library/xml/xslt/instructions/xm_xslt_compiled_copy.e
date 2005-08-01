@@ -89,10 +89,8 @@ feature -- Evaluation
 			end
 			create an_outputter.make_with_size (1, another_context.transformer)
 			a_new_context.change_to_sequence_output_destination (an_outputter)
-			an_outputter.start_document
-			an_outputter.start_document
 			process (a_new_context)
-			an_outputter.end_document
+			an_outputter.close
 			last_evaluated_item := an_outputter.first_item
 		end
 

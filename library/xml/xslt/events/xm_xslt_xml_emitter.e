@@ -82,6 +82,12 @@ feature -- Conversion
 		end
 
 feature -- Events
+	
+	open is
+			-- Notify start of event stream.
+		do
+			is_open := True
+		end
 
 	start_document is
 			-- New document
@@ -97,6 +103,12 @@ feature -- Events
 			is_document_started := False
 		end
 
+	close is
+			-- Notify end of event stream.
+		do
+			is_open := False
+		end
+
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
 		local
@@ -104,7 +116,7 @@ feature -- Events
 			a_bad_character_code: INTEGER
 		do
 			if not is_error then
-				if not is_open then
+				if not is_output_open then
 					open_document
 				end
 				
@@ -148,7 +160,7 @@ feature -- Events
 			a_namespace_prefix, a_namespace_uri: STRING
 			a_bad_character: INTEGER
 		do
-			if is_open and then not is_error then
+			if is_output_open and then not is_error then
 				a_namespace_prefix := shared_name_pool.prefix_from_namespace_code (a_namespace_code)
 				a_namespace_uri := shared_name_pool.uri_from_namespace_code (a_namespace_code)
 
@@ -176,7 +188,7 @@ feature -- Events
 			a_display_name: STRING
 			a_bad_character: INTEGER
 		do
-			if is_open and then not is_error then
+			if is_output_open and then not is_error then
 
 				-- Have we've seen this name before?
 
@@ -212,7 +224,7 @@ feature -- Events
 		local
 			a_display_name: STRING
 		do
-			if is_open and then not is_error then
+			if is_output_open and then not is_error then
 				a_display_name := element_qname_stack.item
 				element_qname_stack.remove
 				if is_open_start_tag then
@@ -236,7 +248,7 @@ feature -- Events
 				std.error.put_new_line
 			end
 			if not is_error then
-				if not is_open then
+				if not is_output_open then
 					open_document
 				end
 				if is_open_start_tag then
@@ -272,7 +284,7 @@ feature -- Events
 			a_string: STRING
 		do
 			if not is_error then
-				if not is_open then
+				if not is_output_open then
 					open_document
 				end
 				if is_open_start_tag then
@@ -292,7 +304,7 @@ feature -- Events
 			-- Notify a comment.
 		do
 			if not is_error then
-				if not is_open then
+				if not is_output_open then
 					open_document
 				end
 				if is_open_start_tag then
@@ -312,7 +324,7 @@ feature {XM_XSLT_HTML_INDENTER} -- Restricted
 
 feature {NONE} -- Implementation
 
-	is_open: BOOLEAN
+	is_output_open: BOOLEAN
 			-- Has the output document been opened yet
 
 	is_declaration_written: BOOLEAN
@@ -469,7 +481,7 @@ feature {NONE} -- Implementation
 	output (a_character_string: STRING) is
 			-- Output `a_character_string'.
 		require
-			document_opened: is_open
+			document_opened: is_output_open
 			valid_string: outputter.is_valid_string (a_character_string)
 		do
 			if not is_error then
@@ -484,7 +496,7 @@ feature {NONE} -- Implementation
 			-- Output `a_character_string', ignoring any error.
 		require
 			valid_string: outputter.is_valid_string (a_character_string)
-			document_opened: is_open
+			document_opened: is_output_open
 		do
 			outputter.output_ignoring_error (a_character_string)
 		end
@@ -494,7 +506,7 @@ feature {NONE} -- Implementation
 		require
 			attribute_name_is_qname: an_attribute_qname /= Void and then is_qname (an_attribute_qname)
 			value_not_void: a_value /= Void
-			document_opened: is_open
+			document_opened: is_output_open
 		local
 			a_delimiter, a_mapped_string: STRING
 		do
@@ -540,7 +552,7 @@ feature {NONE} -- Implementation
 			-- Output `a_character_string', escaping special characters.
 		require
 			string_not_void: a_character_string /= Void
-			document_opened: is_open
+			document_opened: is_output_open
 		local
 			disabled: BOOLEAN
 			a_start_index, a_beyond_index, a_code: INTEGER
@@ -604,7 +616,7 @@ feature {NONE} -- Implementation
 			string_not_void: a_character_string /= Void
 			special_characters_not_void: special_characters /= Void
 			strictly_positive_start_index: a_start_index > 0
-			document_opened: is_open
+			document_opened: is_output_open
 		local
 			an_index, a_code: INTEGER
 			finished: BOOLEAN
@@ -636,7 +648,7 @@ feature {NONE} -- Implementation
 			-- Output a character reference.
 		require
 			strictly_positive_code: a_code > 0
-			document_opened: is_open
+			document_opened: is_output_open
 		local
 			a_string: STRING
 		do
@@ -656,7 +668,7 @@ feature {NONE} -- Implementation
 	open_document is
 			-- Open output document.
 		require
-			document_not_yet_opened: not is_open
+			document_not_yet_opened: not is_output_open
 		local
 			a_character_representation: STRING
 		do
@@ -666,7 +678,7 @@ feature {NONE} -- Implementation
 			if outputter = Void then
 				on_error ("Unable to open output stream for encoding " + encoding)
 			else
-				is_open := True
+				is_output_open := True
 				if not is_declaration_written then write_declaration end
 			
 				a_character_representation := output_properties.character_representation
@@ -681,7 +693,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			document_opened: is_error or else is_open
+			document_opened: is_error or else is_output_open
 		end
 
 	byte_order_mark: STRING is
@@ -842,7 +854,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	outputter_not_void: is_open implies outputter /= Void
+	outputter_not_void: is_output_open implies outputter /= Void
 	encoder_factory_not_void: encoder_factory /= Void
 
 end

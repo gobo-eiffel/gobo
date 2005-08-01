@@ -16,7 +16,7 @@ inherit
 	
 	XM_XPATH_PROXY_RECEIVER
 		redefine
-			end_document
+			close
 		end
 
 create
@@ -57,13 +57,13 @@ feature -- Access
 
 feature -- Events
 	
-	end_document is
-			-- Notify the end of the document
+	close is
+			-- Notify the end of event stream.
 		local
 			a_document: XM_XPATH_DOCUMENT
 		do
 			Precursor
-			a_document := builder.document
+			a_document ?= builder.current_root
 			if a_document /= Void then
 				if transformer.document_pool.is_mapped (system_id) then
 

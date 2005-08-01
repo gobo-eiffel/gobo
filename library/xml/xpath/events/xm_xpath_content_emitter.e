@@ -165,6 +165,7 @@ feature -- Document events
 			debug ("XPath content emitter")
 				std.error.put_string ("On_start.%N")
 			end
+			receiver.open
 			receiver.start_document
 			Precursor
 		end
@@ -176,6 +177,7 @@ feature -- Document events
 				std.error.put_string ("On_finish.%N")
 			end
 			receiver.end_document
+			receiver.close
 			Precursor
 		end
 

@@ -25,5 +25,28 @@ feature -- Events
 		deferred
 		end
 
+	open is
+			-- Notify start of event stream.
+		do
+			previous_atomic := False
+			is_open := True
+		end
+
+	start_document is
+			-- New document
+		do
+			is_document_started := True
+		end
+
+	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
+			-- Notify an unparsed entity URI.
+		do
+			-- do nothing
+		end
+	
+feature {NONE} -- Implementation
+
+	previous_atomic: BOOLEAN
+
 end
 	

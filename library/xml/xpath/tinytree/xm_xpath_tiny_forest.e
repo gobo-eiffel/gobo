@@ -40,30 +40,50 @@ feature {NONE} -- Initialization
 			an_estimated_namespace_count, an_estimated_character_count: INTEGER) is
 			-- Establish invariant.
 		require
-			positive_node_count: an_estimated_node_count > 0
+			positive_node_count: an_estimated_node_count >= 0
 			attribute_count: an_estimated_attribute_count >= 0
 			namespace_count: an_estimated_namespace_count >= 0
 			character_count: an_estimated_character_count >= 0
 		do
 			create system_id_map.make
 			create document_list.make_default
-			create node_kinds.make (1, an_estimated_node_count)
-			create depth.make (1, an_estimated_node_count)
-			create next_sibling_indices.make (1, an_estimated_node_count)
-			create alpha.make (1, an_estimated_node_count)
-			create beta.make (1, an_estimated_node_count)
-			create name_codes.make (1, an_estimated_node_count)
+			if an_estimated_node_count = 0 then
+				estimated_node_count := Default_node_count
+			else
+				estimated_node_count := an_estimated_node_count
+			end
+			if an_estimated_attribute_count = 0 then
+				estimated_attribute_count := Default_attribute_count
+			else
+				estimated_attribute_count := an_estimated_attribute_count
+			end
+			if an_estimated_namespace_count = 0 then
+				estimated_namespace_count := Default_namespace_count
+			else
+				estimated_namespace_count := an_estimated_namespace_count
+			end
+			if an_estimated_character_count = 0 then
+				estimated_character_count := Default_character_count
+			else
+				estimated_character_count := an_estimated_character_count
+			end				
+			create node_kinds.make (1, estimated_node_count)
+			create depth.make (1, estimated_node_count)
+			create next_sibling_indices.make (1, estimated_node_count)
+			create alpha.make (1, estimated_node_count)
+			create beta.make (1, estimated_node_count)
+			create name_codes.make (1, estimated_node_count)
 
-			create attribute_parents.make (1, an_estimated_attribute_count)
-			create attribute_codes.make (1, an_estimated_attribute_count)
-			create attribute_values.make (1, an_estimated_attribute_count)
+			create attribute_parents.make (1, estimated_attribute_count)
+			create attribute_codes.make (1, estimated_attribute_count)
+			create attribute_values.make (1, estimated_attribute_count)
 
-			create namespace_parents.make (1, an_estimated_namespace_count)
-			create namespace_codes.make (1, an_estimated_namespace_count)
+			create namespace_parents.make (1, estimated_namespace_count)
+			create namespace_codes.make (1, estimated_namespace_count)
 
 			-- This is a problem - we don't know in advance if it will be ascii or not
 
-			create character_buffer.make (an_estimated_character_count)
+			create character_buffer.make (estimated_character_count)
 
 			create root_indices.make (1, 5)
 		end
@@ -71,10 +91,22 @@ feature {NONE} -- Initialization
 	make_with_defaults is
 			-- Create with default structure sizes
 		do
-			make (4000, 100, 20, 4000)
+			make (Default_node_count, Default_attribute_count, Default_namespace_count, Default_character_count)
 		end
 		
 feature -- Access
+
+	Default_node_count: INTEGER is 4000
+			-- Default number of nodes (other than attributes and namespaces)
+
+	Default_attribute_count: INTEGER is 100
+			-- Default number of attributes
+
+	Default_namespace_count: INTEGER is 20
+			-- Default number of namespaces
+
+	Default_character_count: INTEGER is 4000
+			-- Default number of characters
 
 	character_buffer: STRING
 			-- The charater contents of the contained documents
@@ -158,7 +190,7 @@ feature -- Access
 	beta_value (a_node_number: INTEGER): INTEGER is
 			-- Beta value for the node
 		require
-			node_number_is_valid: is_node_number_valid (a_node_number - 1) or else is_namespace_number_valid (a_node_number)
+			node_number_is_valid: is_node_number_valid (a_node_number) or else is_namespace_number_valid (a_node_number)
 		do
 			Result := beta.item (a_node_number)
 		end
@@ -174,7 +206,7 @@ feature -- Access
 	namespace_parent (an_index: INTEGER): INTEGER is
 			-- Index of parent element
 		require
-			index_is_valid: is_namespace_number_valid ( an_index )
+			index_is_valid: is_namespace_number_valid (an_index)
 		do
 			Result := namespace_parents.item (an_index)
 		end
@@ -182,7 +214,7 @@ feature -- Access
 	attribute_parent (an_index: INTEGER): INTEGER is
 			-- Index of parent element
 		require
-			index_is_valid: is_attribute_number_valid ( an_index )
+			index_is_valid: is_attribute_number_valid (an_index)
 		do
 			Result := attribute_parents.item (an_index)
 		end
@@ -190,7 +222,7 @@ feature -- Access
 	attribute_name_code  (an_index: INTEGER): INTEGER is
 			-- Attribute name code for `an_index'
 		require
-			index_is_valid: is_attribute_number_valid ( an_index )
+			index_is_valid: is_attribute_number_valid (an_index)
 		do
 			Result := attribute_codes.item (an_index)
 		end
@@ -304,6 +336,18 @@ feature -- Access
 
 
 feature -- Status report
+
+	estimated_node_count: INTEGER
+			-- An estimate of how many nodes there will be in the fully constructed tree
+
+	estimated_attribute_count: INTEGER
+			-- An estimate of how many attributes there will be in the fully constructed tree
+
+	estimated_namespace_count: INTEGER
+			-- An estimate of how many namespaces there will be in the fully constructed tree
+
+	estimated_character_count: INTEGER
+			-- An estimate of how many characters there are in the document contents
 
 	is_node_number_valid (a_node_number: INTEGER): BOOLEAN is
 			-- Does `a_node_number' represent a valid node?

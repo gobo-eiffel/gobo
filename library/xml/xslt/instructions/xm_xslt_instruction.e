@@ -210,7 +210,7 @@ feature -- Evaluation
 				create a_receiver.make_with_size (1, another_context.transformer)
 				another_context.change_to_sequence_output_destination (a_receiver)
 				process (another_context)
-				a_receiver.end_document
+				a_receiver.close
 				last_evaluated_item := a_receiver.first_item
 			end
 		end
@@ -246,7 +246,7 @@ feature -- Evaluation
 				create a_receiver.make (another_context.transformer)
 				another_context.change_to_sequence_output_destination (a_receiver)
 				process (another_context)
-				a_receiver.end_document
+				a_receiver.close
 				if not another_context.transformer.is_error then
 					a_receiver.sequence.create_iterator (another_context)
 					last_iterator := a_receiver.sequence.last_iterator
@@ -270,7 +270,8 @@ feature -- Evaluation
 			create a_receiver.make (another_context.transformer)
 			another_context.change_to_sequence_output_destination (a_receiver)
 			process (another_context)
-			a_receiver.end_document
+			if a_receiver.is_document_started then a_receiver.end_document end
+			if a_receiver.is_open then a_receiver.close end
 			Result := a_receiver.sequence
 		end
 

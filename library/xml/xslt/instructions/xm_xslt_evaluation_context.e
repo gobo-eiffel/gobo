@@ -471,7 +471,7 @@ feature -- Element change
 				if a_builder.has_error then
 					set_build_error (a_builder.last_error)
 				else
-					last_parsed_document	:= a_builder.document
+					last_parsed_document	?= a_builder.current_root
 				end
 			end
 			transformer.configuration.reset_entity_resolver
@@ -482,6 +482,7 @@ feature -- Element change
 		do
 			set_receiver (a_receiver)
 			is_temporary_destination := True
+			if not a_receiver.is_open then a_receiver.open end
 		end
 
 	change_output_destination (properties: XM_XSLT_OUTPUT_PROPERTIES; a_result: XM_XSLT_TRANSFORMATION_RESULT
@@ -516,7 +517,7 @@ feature -- Element change
 					
 					create a_namespace_reducer.make (a_receiver)
 					create a_complex_outputter.make (a_namespace_reducer)
-					a_complex_outputter.start_document
+					a_complex_outputter.open
 					current_receiver := a_complex_outputter
 				end
 			end

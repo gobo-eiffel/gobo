@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_XML_EMITTER
 		redefine
-			start_document, notify_characters, start_element,
+			open, start_document, notify_characters, start_element,
 			notify_namespace, notify_attribute, end_element,
 			notify_processing_instruction, notify_comment
 		end
@@ -31,7 +31,11 @@ feature -- Events
 			-- New document
 		do
 			is_document_started := True
+		end
 
+	open is
+			-- Notify start of event stream.
+		do
 			-- Prevent `open_document' from writing an XML declaration.
 
 			is_declaration_written := True
@@ -43,6 +47,7 @@ feature -- Events
 				output_ignoring_error (byte_order_mark)
 				is_empty := False
 			end
+			is_open := True
 		end
 
 	notify_characters (chars: STRING; properties: INTEGER) is
@@ -54,6 +59,7 @@ feature -- Events
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if not is_error then
+				if not is_output_open then open_document end
 				if not are_no_special_characters (properties) and then character_map_expander = Void then
 					a_bad_character := bad_character_code (chars)
 					if a_bad_character = 0 then

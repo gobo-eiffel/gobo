@@ -121,6 +121,9 @@ feature -- Access
 	is_tiny_tree_model: BOOLEAN
 			-- Should the tiny tree model be used for XML source?
 
+	is_reporting_tiny_tree_statistics: BOOLEAN
+			-- Do we report statistics on tiny-tree source documents?
+
 	recovery_policy: INTEGER
 			-- Recovery policy when warnings or errors are encountered
 
@@ -159,6 +162,9 @@ feature -- Access
 	final_execution_phase: INTEGER
 			-- Last phase to be executed
 
+	estimated_nodes, estimated_attributes, estimated_namespaces, estimated_characters: INTEGER
+		-- estimates for tiny-tree parameters
+	
 feature -- Element change
 
 	add_extension_function_library (a_function_library: XM_XPATH_FUNCTION_LIBRARY) is
@@ -271,6 +277,14 @@ feature -- Element change
 			set: is_tiny_tree_model = true_or_false
 		end
 
+	report_tiny_tree_statistics (true_or_false: BOOLEAN) is
+			-- Switch on/off reporting of tiny tree statistics for source XML.
+		do
+			is_reporting_tiny_tree_statistics := true_or_false
+		ensure
+			set: is_reporting_tiny_tree_statistics = true_or_false
+		end
+
 	do_not_assume_xhtml is
 			-- Do not assume that text/html is really application/xhtml+xml.
 		do
@@ -303,6 +317,25 @@ feature -- Element change
 			final_execution_phase := a_phase
 		ensure
 			phase_set: final_execution_phase = a_phase
+		end
+
+	set_tiny_tree_estimates (some_estimated_nodes, some_estimated_attributes, some_estimated_namespaces, some_estimated_characters: INTEGER) is
+			-- Set size parameters for tiny-tree source documents.
+		require
+			positive_nodes: some_estimated_nodes >= 0
+			positive_attributes: some_estimated_attributes >= 0
+			positive_namespaces: some_estimated_namespaces >= 0
+			positive_characters: some_estimated_characters >= 0
+		do
+			estimated_nodes := some_estimated_nodes
+			estimated_attributes := some_estimated_attributes
+			estimated_namespaces := some_estimated_namespaces
+			estimated_characters := some_estimated_characters
+		ensure
+			estimated_nodes_set: estimated_nodes = some_estimated_nodes
+			estimated_attributes_set: estimated_attributes = some_estimated_attributes
+			estimated_namespaces_set: estimated_namespaces = some_estimated_namespaces
+			estimated_characters_set: estimated_characters = some_estimated_characters
 		end
 			
 feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation

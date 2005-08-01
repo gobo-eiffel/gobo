@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 	make (a_document: XM_XPATH_TINY_FOREST; a_node_number: INTEGER) is
 		require
 			valid_document: a_document /= Void
-			valid_node_number: a_node_number > 1 and a_node_number <= a_document.last_node_added
+			valid_node_number: a_node_number > 0 and a_node_number <= a_document.last_node_added
 		do
 			tree := a_document
 			node_number := a_node_number
@@ -164,7 +164,7 @@ feature -- Access
 
 			if include_ancestors then
 				a_node := parent
-				if a_node.is_element then
+				if a_node /= Void and then a_node.is_element then
 					a_node.as_element.output_namespace_nodes (a_receiver, true)
 				end
 			end
@@ -188,7 +188,7 @@ feature -- Access
 				end
 			end
 			a_node := parent
-			if a_node.is_tiny_element then
+			if a_node /= Void and then a_node.is_tiny_element then
 				a_node.as_tiny_element.accumulate_namespace_codes (Result)
 			end
 
@@ -260,15 +260,18 @@ feature -- Duplication
 	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
 			-- Copy `Current' to `a_receiver'.
 		local
-			a_level, a_node_level, a_start_level, a_next_node, a_start_index: INTEGER
+			a_level, a_node_level, a_start_level, a_next_node, a_start_index, a_node_count: INTEGER
 			close_pending, first, finished: BOOLEAN
 			a_node: XM_XPATH_TINY_NODE
 		do
 			from
 				a_level := -1; first := True; a_next_node := node_number;
 				a_start_level := tree.depth_of (node_number)
+				
+				-- in case the target is another tree in the same forest:
+				a_node_count := tree.number_of_nodes 
 			variant
-				tree.number_of_nodes + 1 - a_next_node
+				a_node_count + 1 - a_next_node
 			until
 				finished
 			loop
@@ -309,7 +312,7 @@ feature -- Duplication
 					-- do nothing
 				end
 				a_next_node := a_next_node + 1
-				finished := a_next_node > tree.number_of_nodes or else tree.depth_of (a_next_node) <= a_start_level
+				finished := a_next_node > a_node_count or else tree.depth_of (a_next_node) <= a_start_level
 			end
 			if close_pending then a_level := a_level + 1 end
 			from

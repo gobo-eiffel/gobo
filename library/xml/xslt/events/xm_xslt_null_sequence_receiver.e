@@ -93,8 +93,16 @@ feature -- Events
 	end_document is
 			-- Notify the end of the document.
 		do
-			do_nothing
+			is_document_started := False
 		end
+
+	close is
+			-- Notify end of event stream.
+		do
+			previous_atomic := False
+			is_open := False
+		end
+
 feature -- Element change
 
 	set_system_id (a_system_id: STRING) is

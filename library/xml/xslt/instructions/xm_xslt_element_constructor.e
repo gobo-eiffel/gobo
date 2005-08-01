@@ -102,7 +102,7 @@ feature -- Evaluation
 			-- Evaluate as a single item.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
-			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
+			an_old_receiver, a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 			a_validator: XM_XPATH_RECEIVER
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 			an_outputter: XM_XSLT_SEQUENCE_OUTPUTTER
@@ -114,29 +114,36 @@ feature -- Evaluation
 				-- This is XSLT
 			end
 			a_transformer := a_new_context.transformer
-			create an_outputter.make_with_size (1, a_transformer)
+			an_old_receiver := a_new_context.current_receiver
+			an_outputter ?= an_old_receiver
+			if an_outputter = Void or else an_outputter.is_under_construction then
+				create an_outputter.make_with_size (1, a_transformer)
+			end
 			a_receiver := an_outputter
 			a_name_code := name_code (a_new_context)
-			a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
-			if a_validator = a_receiver then
-				a_new_context.change_to_sequence_output_destination (a_receiver)
-			else
-				check
-					schema_aware: False
-					-- Only Basic XSLT processor is supported now
-				end
-			end
-			a_receiver.start_document
-			if not is_inherit_namespaces then some_properties := Disinherit_namespaces  end
-			a_receiver.start_element (a_name_code, -1, some_properties)
-			output_namespace_nodes (a_new_context, a_receiver)
-			content.process (a_new_context)
 			if not a_transformer.is_error then
-				a_receiver.end_element
-				a_receiver.end_document
-				last_evaluated_item := an_outputter.first_item
-			else
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (a_transformer.last_error)
+				a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
+				if a_validator = a_receiver then
+					a_new_context.change_to_sequence_output_destination (a_receiver)
+				else
+					check
+						schema_aware: False
+						-- Only Basic XSLT processor is supported now
+					end
+				end
+				if not is_inherit_namespaces then some_properties := Disinherit_namespaces  end
+				-- N.B. The element is constructed as a parentless element
+				a_receiver.start_element (a_name_code, -1, some_properties)
+				output_namespace_nodes (a_new_context, a_receiver)
+				content.process (a_new_context)
+				if not a_transformer.is_error then
+					a_receiver.end_element
+					a_receiver.close
+					an_outputter.pop_last_item
+					last_evaluated_item := an_outputter.last_popped_item
+				else
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (a_transformer.last_error)
+				end
 			end
 		end
 
@@ -150,38 +157,39 @@ feature -- Evaluation
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			a_name_code := name_code (a_context)
-			if a_name_code = -1 then
-				-- TODO: this might be an XTDE0820
-				create an_error.make_from_string ("Name is not a valid QName", "", "XTDE0830", Dynamic_error)
-				a_context.transformer.report_fatal_error (an_error, Current)
-			else
-				a_transformer := a_context.transformer
-				a_receiver := a_context.current_receiver
-				a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
-				if a_validator /= a_receiver then
-					check
-						schema_aware: False
-						-- Only Basic XSLT processor is supported now
+			a_transformer := a_context.transformer
+			if not a_transformer.is_error then
+				if a_name_code = -1 then
+					create an_error.make_from_string ("Name is not a valid QName", "", "XTDE0830", Dynamic_error)
+					a_context.transformer.report_fatal_error (an_error, Current)
+				else
+					a_receiver := a_context.current_receiver
+					a_validator := a_transformer.configuration.element_validator (a_receiver, a_name_code, Void, validation_action)
+					if a_validator /= a_receiver then
+						check
+							schema_aware: False
+							-- Only Basic XSLT processor is supported now
+						end
 					end
-				end
-				if not is_inherit_namespaces then some_properties := Disinherit_namespaces  end
-				a_receiver.start_element (a_name_code, -1, some_properties)
-
-				-- Output the required namespace nodes via a call-back
-
-				output_namespace_nodes (a_context, a_receiver)
-				if not a_transformer.is_error then
-
-					-- Apply the content of any attribute sets mentioned in use-attribute-sets.
-
-					if attribute_sets /= Void then expand_attribute_sets (attribute_sets, a_context) end
-					content.process (a_context)
-
+					if not is_inherit_namespaces then some_properties := Disinherit_namespaces end
+					a_receiver.start_element (a_name_code, -1, some_properties)
+					
+					-- Output the required namespace nodes via a call-back
+					
+					output_namespace_nodes (a_context, a_receiver)
 					if not a_transformer.is_error then
 						
-						-- Output the element end tag (which will fail if validation fails)
-
-						a_receiver.end_element
+						-- Apply the content of any attribute sets mentioned in use-attribute-sets.
+						
+						if attribute_sets /= Void then expand_attribute_sets (attribute_sets, a_context) end
+						content.process (a_context)
+						
+						if not a_transformer.is_error then
+							
+							-- Output the element end tag (which will fail if validation fails)
+							
+							a_receiver.end_element
+						end
 					end
 				end
 			end

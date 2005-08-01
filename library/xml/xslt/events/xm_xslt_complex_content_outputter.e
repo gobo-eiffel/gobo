@@ -16,9 +16,9 @@ inherit
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
-	XM_XSLT_OUTPUTTER	
+	XM_XPATH_SEQUENCE_RECEIVER
 		redefine
-			start_document, is_name_code_ok_for_start_element
+			open, start_document, is_name_code_ok_for_start_element
 		end
 
 	XM_XPATH_NAME_UTILITIES
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			no_pending_start_tag: pending_start_tag = -1
 		end
 
-feature -- Events
+feature -- Status report
 	
 	is_name_code_ok_for_start_element (a_name_code: INTEGER): BOOLEAN is
 			-- Is `a_name_code' valid for `start_element'?
@@ -75,21 +75,31 @@ feature -- Events
 			next_receiver.on_error (a_message)
 		end
 
+	open is
+			-- Notify start of event stream.
+		do
+			is_open := True
+			is_top_level := True
+			next_receiver.open
+			previous_atomic := False
+		end
+
 	start_document is
 			-- New document
 		do
-			debug ("XSLT content output")
-				std.error.put_string ("Starting document.")
-				std.error.put_new_line
-			end
 			is_document_started := True
-			next_receiver.start_document
+			if pending_start_tag = -1 then
+				next_receiver.start_document
+			else
+				start_content
+			end
 			previous_atomic := False
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element.
 		do
+			is_top_level := False
 			if a_name_code = -10 then
 
 				-- This is used on error recovery when there is a bad element name. It is needed so that
@@ -111,6 +121,7 @@ feature -- Events
 				create pending_attribute_properties.make_default
 				create pending_namespaces.make_default
 				pending_start_tag := a_name_code
+				is_element_in_null_namespace := Void -- i.e. not yet computed
 				current_simple_type := a_type_code
 				previous_atomic := False
 			end
@@ -126,12 +137,12 @@ feature -- Events
 		do
 			if not suppress_attributes then
 				if pending_start_tag = -1 then
-					on_error ("XTDE????: (TODO - code) Cannot write a namespace declaration when there is no open start tag")
-				else
-					debug ("XSLT content output")
-						std.error.put_string ("Namespace declaration " + shared_name_pool.uri_from_namespace_code (a_namespace_code))
-						std.error.put_new_line
+					if is_top_level then
+						on_error ("XTDE0420: Cannot write a namespace declaration when the parent is a document node")
+					else
+						on_error ("XTDE0410: Namespace declarations must be created before the element's children")
 					end
+				else
 					
 					-- Handle declarations whose prefix is duplicated for this element.
 
@@ -173,9 +184,11 @@ feature -- Events
 						--  itself is in the null namespace, as the resulting element could not be serialized
 
 						if a_prefix_code = 0 and then a_uri_code /= 0 then
-							another_namespace_code := shared_name_pool.namespace_code_from_name_code (pending_start_tag)
-							if another_namespace_code = 0 then
-								on_error ("XTDE????: TODO (code) Cannot output a namespace node for the default namespace when the element is in no namespace")
+							if is_element_in_null_namespace = Void then
+								create is_element_in_null_namespace.make (shared_name_pool.namespace_code_from_name_code (pending_start_tag) = 0)
+							end
+							if is_element_in_null_namespace.item then
+								on_error ("XTDE0440: Cannot output a namespace node for the default namespace when the element is in no namespace")
 								reject := True
 							end
 						end
@@ -199,17 +212,13 @@ feature -- Events
 		do
 			if not suppress_attributes then
 				if pending_start_tag = -1 then
-					debug ("XSLT stripper")
-						std.error.put_string ("Failing attribute is " + shared_name_pool.display_name_from_name_code (a_name_code))
-						std.error.put_new_line
+					if is_top_level then
+						on_error ("XTDE0420: Cannot write an attribute declaration when the parent is a document node")
+					else
+						on_error ("XTDE0410: Attributes must be created before the element's children")						
 					end
-					on_error ("XTDE????: TODO (code) Cannot write an attribute when there is no open start tag")
 				else
-					debug ("XSLT content output")
-						std.error.put_string ("Notifying attribute " + shared_name_pool.display_name_from_name_code (a_name_code))
-						std.error.put_new_line
-					end
-				
+
 					-- If this is a duplicate attribute, overwrite the original, unless
 					--  the REJECT_DUPLICATES option is set.
 
@@ -221,13 +230,13 @@ feature -- Events
 						a_cursor.after
 					loop
 						if a_cursor.item = a_name_code then
-							if are_duplicates_rejected (properties) then
-								on_error (STRING_.concat ("XTDE????: TODO (code) Duplicate attribute: ", shared_name_pool.display_name_from_name_code (a_name_code)))
-							else
-								pending_attribute_type_codes.replace (a_type_code, a_cursor.index)
-								pending_attribute_values.replace (a_value, a_cursor.index)
-								pending_attribute_properties.replace (properties, a_cursor.index)
+							check
+								duplicate_attributes_suppressed: not are_duplicates_rejected (properties)
+								-- But XQuery can behave differently
 							end
+							pending_attribute_type_codes.replace (a_type_code, a_cursor.index)
+							pending_attribute_values.replace (a_value, a_cursor.index)
+							pending_attribute_properties.replace (properties, a_cursor.index)
 							duplicate_found := True
 							a_cursor.go_after
 						else
@@ -253,15 +262,7 @@ feature -- Events
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
 		do
-			debug ("XSLT content output")
-				std.error.put_string ("Starting content")
-				std.error.put_new_line
-			end
 			if pending_start_tag /= -1 then
-				debug ("XSLT content output")
-					std.error.put_string ("Pending start tag is " + shared_name_pool.display_name_from_name_code (pending_start_tag))
-					std.error.put_new_line
-				end
 				check_proposed_prefix (pending_start_tag, 0)
 				properties := start_element_properties
 				if not is_namespace_declared (properties) then
@@ -314,10 +315,6 @@ feature -- Events
 	end_element is
 			-- Notify the end of an element.
 		do
-			debug ("XSLT content output")
-				std.error.put_string ("Ending element")
-				std.error.put_new_line
-			end
 			if pending_start_tag /= -1 then start_content end
 			next_receiver.end_element
 			previous_atomic := False
@@ -329,10 +326,6 @@ feature -- Events
 			previous_atomic := False
 			if chars.count > 0 then
 				if pending_start_tag /= -1 then start_content end
-				debug ("XSLT content output")
-					std.error.put_string ("Notifying content " + chars + "###")
-					std.error.put_new_line
-				end
 				next_receiver.notify_characters (chars, properties)
 			end
 		end
@@ -356,8 +349,17 @@ feature -- Events
 	end_document is
 			-- Notify the end of the document.
 		do
-			next_receiver.end_document
-			previous_atomic := False
+			is_document_started := False
+			previous_atomic := False			
+		end
+
+	
+	close is
+			-- Notify end of event stream.
+		do
+			next_receiver.close
+			is_open := False
+			previous_atomic := False			
 		end
 
 	append_item (an_item: XM_XPATH_ITEM) is
@@ -379,7 +381,7 @@ feature -- Events
 					an_iterator.forth
 				end
 				
-				-- Now free the document from memory
+				-- Now free the document from memory: TODO: do we need to do this?
 				
 				shared_name_pool.remove_document_from_pool (an_item.as_document.document_number)					
 			elseif an_item.is_error then
@@ -416,6 +418,9 @@ feature {NONE} -- Implementation
 	pending_start_tag: INTEGER
 			-- Name code of pending start tag
 
+	is_element_in_null_namespace: DS_CELL [BOOLEAN]
+			-- Is current element in null namespace?
+
 	suppress_attributes: BOOLEAN
 			-- Should attribute output be suppressed?
 
@@ -442,6 +447,9 @@ feature {NONE} -- Implementation
 
 	last_checked_namecode: INTEGER
 			-- Possibly different name code as a result of `check_proposed_prefix'
+
+	is_top_level: BOOLEAN
+			-- Are we dealing with a document node or not?
 
 	check_proposed_prefix (a_name_code: INTEGER; a_sequence_number: INTEGER) is
 			-- Check that the prefix for an element or attribute is acceptable,

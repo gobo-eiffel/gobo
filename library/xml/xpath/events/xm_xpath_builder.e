@@ -16,11 +16,16 @@ inherit
 
 	XM_XPATH_RECEIVER
 
+	KL_SHARED_STANDARD_FILES
+		export {NONE} all end
+
+	DT_SHARED_SYSTEM_CLOCK
+		export {NONE} all end
 
 feature -- Access
 
-	document: XM_XPATH_DOCUMENT
-			-- Resulting document
+	current_root: XM_XPATH_NODE
+			-- Resulting document node or root element node
 
 feature -- Status report
 
@@ -30,9 +35,17 @@ feature -- Status report
 	last_error: STRING
 			-- Error message
 
+	is_timing: BOOLEAN
+			-- Is timing active?
 
 	is_line_numbering: BOOLEAN
 			-- Is line-numbering turned on?
+
+	show_size is
+			-- Print tree size information.
+		do
+			-- Default does nothing.
+		end
 
 feature -- Status setting
 
@@ -42,6 +55,38 @@ feature -- Status setting
 			is_line_numbering := on_or_off
 		ensure
 			set: is_line_numbering = on_or_off
+		end
+
+	set_timing (on_or_off: BOOLEAN) is
+			-- Turn timing `on_or_off'.
+		do
+			is_timing := on_or_off
+		ensure
+			timing_set: is_timing = on_or_off
+		end
+
+feature -- Events
+
+	open is
+			-- Notify start of event stream.
+		do
+			is_open := True
+			if is_timing then
+				std.error.put_string ("Building tree for " + system_id)
+				std.error.put_new_line
+				start_time := utc_system_clock.time_now
+			end
+		end
+
+	close is
+			-- Notify end of event stream.
+		do
+			is_open := False
+			if is_timing then
+				std.error.put_string ("Tree build for " + system_id + " took " + utc_system_clock.time_now.canonical_duration (start_time).precise_time_out)
+				std.error.put_new_line
+				show_size
+			end
 		end
 
 feature -- Element change
@@ -67,9 +112,13 @@ feature {NONE} -- Implementation
 	locator: XM_XPATH_LOCATOR
 			-- Event locator
 
+	start_time: DT_TIME
+			-- Start of timed period
+
 invariant
 
 	locator_not_void: locator /= Void
+	document_or_element_root: current_root /= Void implies current_root.is_document or else current_root.is_element
 
 end
 

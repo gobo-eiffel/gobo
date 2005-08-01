@@ -172,7 +172,7 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				a_transformer.report_fatal_error (an_iterator.error_value, Current)
 			else
-				a_tree_receiver.end_document
+				a_tree_receiver.close
 				if terminate /= Void then
 					terminate.evaluate_as_string (a_context)
 					a_string_value := terminate.last_evaluated_string

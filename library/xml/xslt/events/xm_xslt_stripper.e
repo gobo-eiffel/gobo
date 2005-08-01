@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_PROXY_RECEIVER
 		redefine
-			start_document, start_element, notify_attribute, end_element, notify_characters
+			open, start_element, notify_attribute, end_element, notify_characters
 		end
 
 	XM_XPATH_STANDARD_NAMESPACES
@@ -142,12 +142,11 @@ feature -- Status setting
 
 feature -- Events
 
-	start_document is
+	open is
 			-- New document
 		do
 			strip_stack.put (Always_preserve)
 			Precursor
-			is_document_started := True
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is

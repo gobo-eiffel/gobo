@@ -15,6 +15,9 @@ class XM_XPATH_TINY_BUILDER
 inherit
 
 	XM_XPATH_BUILDER
+		redefine
+			open, close, show_size
+		end
 
 	XM_XPATH_TYPE
 		export {NONE} all end
@@ -61,6 +64,27 @@ feature -- Events
 			last_error := a_message
 		end
 
+	open is
+			-- Notify start of event stream.
+		do
+			if tree = Void then
+				if defaults_overridden then
+					create tree.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count)
+				else
+					create tree.make_with_defaults
+				end
+				current_depth := 1
+				if is_line_numbering then
+					tree.set_line_numbering
+				end
+			end
+			create previously_at_depth.make (1, 100)
+			Precursor
+		ensure then
+			tree_exists: tree /= Void
+			at_root_level: current_depth = 1
+		end
+	
 	start_document is
 			-- Notify the start of the document
 		do
@@ -71,26 +95,19 @@ feature -- Events
 			-- TODO add timing information
 
 			if system_id.count = 0 then system_id := locator.system_id end
-			if tree = Void then
-				if defaults_overridden then
-					create tree.make (estimated_node_count, estimated_attribute_count, estimated_namespace_count, estimated_character_count)
-				else
-					create tree.make_with_defaults
-				end
-			end
-			current_depth := 1
-			if is_line_numbering then
-				tree.set_line_numbering
-			end
 			create tiny_document.make (tree, node_number + 1)
+			current_root := tiny_document
 			tiny_document.set_system_id (system_id)
 			tree.add_document_node (tiny_document)
 			node_number := tree.last_node_added
-			create previously_at_depth.make (1, 100)
 			previously_at_depth.put(1, 1) -- i.e. depth one is node 1 - the document node
 			previously_at_depth.put (0, 2) 
 			tree.set_next_sibling (-1, 1) -- i.e. node one has next sibling 0 (no next sibling)
 			current_depth := current_depth + 1
+		ensure then
+			at_document_element_level: current_depth = 2
+			document_root_exists: tiny_document /= Void
+			root_is_document: current_root = tiny_document
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
@@ -117,17 +134,19 @@ feature -- Events
 				a_new_type_code := a_type_code
 				-- TODO
 			end
-
-			a_previous_sibling := previously_at_depth.item (current_depth)
-
-			an_owner_node := previously_at_depth.item (current_depth - 1)
-			if a_previous_sibling > 0 then
-				tree.set_next_sibling (node_number, a_previous_sibling)
+			if current_depth = 1 then
+				previously_at_depth.put (node_number, 1)
+				previously_at_depth.put (-1, 2)
+				current_root := tree.retrieve_node (node_number)
+			else
+				a_previous_sibling := previously_at_depth.item (current_depth)
+				an_owner_node := previously_at_depth.item (current_depth - 1)
+				if a_previous_sibling > 0 then
+					tree.set_next_sibling (node_number, a_previous_sibling)
+				end
+				tree.set_next_sibling (an_owner_node, node_number) -- owner pointer in last sibling
+				previously_at_depth.put (node_number, current_depth)
 			end
-
-			tree.set_next_sibling (an_owner_node, node_number) -- owner pointer in last sibling
-			
-			previously_at_depth.put (node_number, current_depth)
 			current_depth := current_depth + 1
 			if current_depth > previously_at_depth.count then
 				INTEGER_ARRAY_.resize (previously_at_depth, 1, previously_at_depth.count)
@@ -254,12 +273,15 @@ feature -- Events
 			-- Parsing finished.
 		do
 			previously_at_depth := Void
-			if is_reporting_sizes then tree.print_sizes end
-			document := tiny_document
-			tree.condense
-			
-			-- TODO add timing information
+			is_document_started := False
+		end
 
+	close is
+			-- Notify end of event stream.
+		do
+			if not is_timing and then is_reporting_sizes then tree.print_sizes end
+			if not defaults_overridden then tree.condense end
+			Precursor
 		end
 
 feature -- Status report
@@ -279,7 +301,21 @@ feature -- Status report
 	is_reporting_sizes: BOOLEAN
 			-- Do we report on sizes actually used?
 
+	show_size is
+			-- Print tree size information.
+		do
+			tree.print_sizes
+		end
+
 feature -- Status setting
+
+	set_reporting_sizes (true_or_false: BOOLEAN) is
+			-- Set if we report on sizes actually used.
+		do
+			is_reporting_sizes := true_or_false
+		ensure
+			set: is_reporting_sizes = true_or_false
+		end
 
 	reset_defaults is
 			-- Use the default tree implementation parameters
@@ -292,24 +328,22 @@ feature -- Status setting
 		end
 
 	set_defaults (a_new_estimated_node_count: INTEGER; a_new_estimated_attribute_count: INTEGER; a_new_estimated_namespace_count: INTEGER; a_new_estimated_character_count: INTEGER) is
-			-- Supply values for the tree implementation parameters
+			-- Supply values for the tree implementation parameters.
+			-- Zeros mean using existing values.
 		require
-			positive_node_count: a_new_estimated_node_count > 0
+			positive_node_count: a_new_estimated_node_count >= 0
 			attribute_count: a_new_estimated_attribute_count >= 0
 			namespace_count: a_new_estimated_namespace_count >= 0
 			character_count: a_new_estimated_character_count >= 0
 		do
+			if a_new_estimated_node_count > 0 then	defaults_overridden := True end
 			estimated_node_count := a_new_estimated_node_count
+			if a_new_estimated_attribute_count > 0 then defaults_overridden := True end
 			estimated_attribute_count := a_new_estimated_attribute_count
+			if a_new_estimated_namespace_count > 0 then defaults_overridden := True	end
 			estimated_namespace_count := a_new_estimated_namespace_count
+			if a_new_estimated_character_count > 0 then defaults_overridden := True end
 			estimated_character_count := a_new_estimated_character_count
-			defaults_overridden := True
-		ensure
-			correct_node_count: estimated_node_count = a_new_estimated_node_count
-			correct_attribute_count: estimated_attribute_count = a_new_estimated_attribute_count
-			correct_namespace_count: estimated_namespace_count = a_new_estimated_namespace_count
-			correct_character_count: estimated_character_count = a_new_estimated_character_count
-			default_parameters_overridden: defaults_overridden = True
 		end
 
 feature {NONE} -- Implementation

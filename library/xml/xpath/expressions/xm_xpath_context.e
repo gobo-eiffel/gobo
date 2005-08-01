@@ -399,6 +399,7 @@ feature 	-- Element change
 		deferred
 		ensure
 			receiver_set: current_receiver = a_receiver
+			receiver_open: current_receiver.is_open
 			temporary_destination: is_temporary_destination
 		end
 	

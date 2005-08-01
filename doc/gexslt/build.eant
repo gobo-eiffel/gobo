@@ -85,7 +85,8 @@
 		<argument name="a_file"/>
 		<argument name="a_next"/>
 
-		<xslt processor="${xslt_processor}" input="${a_file}${input_wrapper}.xml" output="${a_file}.html" stylesheet="${GOBO}/doc/misc/gobo2html2.xsl">
+		<outofdate variable="rebuild" source="${a_file}.xml" target="${a_file}.html"/>
+		<xslt processor="${xslt_processor}" force="${rebuild}" input="${a_file}${input_wrapper}.xml" output="${a_file}.html" stylesheet="${GOBO}/doc/misc/gobo2html2.xsl">
 			<parameter name="previous" value="&quot;'${a_previous}.html'&quot;"/>
 			<parameter name="next" value="&quot;'${a_next}.html'&quot;"/>
 			<parameter name="toc" value="&quot;'index.html'&quot;"/>

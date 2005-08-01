@@ -252,8 +252,8 @@ feature -- Duplication
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 		do
-			-- TODO: review whether or not this needs stat_document and end_document calling
-
+			a_receiver.start_document
+			
 			-- output the children
 
 			from
@@ -264,6 +264,7 @@ feature -- Duplication
 				an_iterator.item.copy_node (a_receiver, which_namespaces, copy_annotations)
 				an_iterator.forth
 			end
+			a_receiver.end_document
 		end
 
 feature {XM_XPATH_NODE} -- Restricted

@@ -14,7 +14,7 @@ class XM_XSLT_SEQUENCE_OUTPUTTER
 
 inherit
 	
-	XM_XSLT_OUTPUTTER	
+	XM_XPATH_SEQUENCE_RECEIVER
 		redefine
 			start_document
 		end
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 		require
 			transformer_not_void: a_transformer /= Void
 		do
-			create output_list.make_default
+			create output_list.make (50)
 			system_id := ""
 			transformer := a_transformer
 		ensure
@@ -76,9 +76,6 @@ feature -- Access
 
 	transformer: XM_XSLT_TRANSFORMER
 			-- Transformer for error reporting
-
-	is_under_construction: BOOLEAN
-			-- Is `sequence' under construction?
 
 	sequence: XM_XPATH_VALUE is
 			-- Built sequence
@@ -107,6 +104,17 @@ feature -- Access
 			if output_list.count > 0 then
 				Result := output_list.item (1)
 			end
+		end
+
+	last_popped_item: XM_XPATH_ITEM
+			-- lasst item of output sequence just popped
+
+feature -- Status report
+
+	is_under_construction: BOOLEAN is
+			-- Is `sequence' under construction?
+		do
+			Result := level /= 0
 		end
 
 feature -- Events
@@ -158,33 +166,24 @@ feature -- Events
 			-- New document
 		do
 			cached_sequence := Void
-			is_under_construction := True
 			is_document_started := True
+			if tree = Void then
+				create_tree
+			end
+			if level = 0 then tree.start_document end
+			level := level + 1
 		end
 
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element.
-		local
-			a_reducer: XM_XSLT_NAMESPACE_REDUCER
-			a_complex_outputter: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
-			--a_node_factory: XM_XPATH_NODE_FACTORY
 		do
 			if in_start_tag then
 				start_content
 			end
 			if tree = Void then
-				-- 26/07/05 trying tiny tree: create a_node_factory
-				create builder.make -- 26/07/05 trying tiny tree (a_node_factory)
-				builder.set_defaults (50, 10, 5, 200)
-				create a_reducer.make (builder)
-				create a_complex_outputter.make (a_reducer)
-				tree := a_complex_outputter
-				tree.set_system_id (system_id)
-				tree.start_document
-				tree.start_element (a_name_code, a_type_code, properties)
-			else
-				tree.start_element (a_name_code, a_type_code, properties)
+				create_tree
 			end
+			tree.start_element (a_name_code, a_type_code, properties)
 			level := level + 1
 			in_start_tag := True
 			previous_atomic := False
@@ -192,42 +191,28 @@ feature -- Events
 
 	end_element is
 			-- Notify the end of an element.
-		local
-			a_document: XM_XPATH_TINY_DOCUMENT
-			an_element: XM_XPATH_ELEMENT
 		do
 			if in_start_tag then
 				start_content
 			end
+			tree.end_element
 			level := level - 1
 			if level = 0 then
-				tree.end_element
-				tree.end_document
-				a_document := builder.tiny_document
-				tree := Void
-				builder := Void
-				if not a_document.is_error then
-					an_element := a_document.document_element
-					if an_element /= Void then
-						append_item (an_element)
-					end
-				end
-
-				-- Now free the document from memory
-
-				shared_name_pool.remove_document_from_pool (a_document.document_number)
-			else
-				tree.end_element
+				append_item (builder.current_root)
 			end
 			previous_atomic := False
-		end
+		end -- TODO: what about freeing document from document pool?
 
 	notify_namespace (a_namespace_code: INTEGER; properties: INTEGER) is
 			-- Notify a namespace.
 		do
-			if tree = Void then
+			if level = 0 then
 				todo ("notify_namespace", true)
 			else
+				check
+					tree_not_void: tree /= Void
+					-- Guarenteed by `start_element'
+				end
 				tree.notify_namespace (a_namespace_code, properties)
 			end
 			previous_atomic := False
@@ -236,9 +221,13 @@ feature -- Events
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
 			-- Notify an attribute.
 		do
-			if tree = Void then
+			if level = 0 then
 				todo ("notify_attribute", true)
 			else
+				check
+					tree_not_void: tree /= Void
+					-- Guarenteed by `start_element'
+				end
 				tree.notify_attribute (a_name_code, a_type_code, a_value, properties)
 			end
 			previous_atomic := False
@@ -259,24 +248,32 @@ feature -- Events
 		do
 			if chars.count /= 0 then
 				if in_start_tag then start_content end
-				if tree = Void then
+				if level = 0 then
 					create an_orphan.make (Text_node, chars)
 					append_item (an_orphan)
 				else
+					check
+						tree_not_void: tree /= Void
+						-- Guarenteed by `start_element' or `start_document'
+					end
 					tree.notify_characters (chars, properties)
 				end
-				previous_atomic := False
 			end
+			previous_atomic := False
 		end
 
 	notify_comment (a_content_string: STRING; properties: INTEGER) is
 			-- Notify a comment.
 		do
 			if in_start_tag then start_content end
-			if tree = Void then
+			if level = 0 then
 					todo ("notify_comment", true)
-				else
-					tree.notify_comment (a_content_string, properties)
+			else
+				check
+					tree_not_void: tree /= Void
+					-- Guarenteed by `start_element' or `start_document'
+				end
+				tree.notify_comment (a_content_string, properties)
 			end
 			previous_atomic := False
 		end
@@ -285,10 +282,14 @@ feature -- Events
 			-- Notify a processing instruction.
 		do
 			if in_start_tag then start_content end
-			if tree = Void then
-					todo ("notify_comment", true)
-				else
-					tree.notify_processing_instruction (a_name, a_data_string, properties)
+			if level = 0 then
+				todo ("notify_comment", true)
+			else
+				check
+					tree_not_void: tree /= Void
+					-- Guarenteed by `start_element' or `start_document'
+				end
+				tree.notify_processing_instruction (a_name, a_data_string, properties)
 			end
 			previous_atomic := False
 		end
@@ -296,24 +297,43 @@ feature -- Events
 	end_document is
 			-- Notify the end of the document.
 		do
+			level := level - 1
+			if level = 0 then
+				tree.end_document
+				append_item (builder.current_root)
+			end
 			previous_atomic := False
-			is_under_construction := False
+		end
+
+	close is
+			-- Notify end of event stream.
+		do
+			is_open := False
+			if tree /= Void then
+				tree.close
+			end
 		end
 
 	append_item (an_item: XM_XPATH_ITEM) is
 			-- Output an item (atomic value or node) to the sequence.
 		do
-
-			-- If an atomic value is written to a tree, and the previous item was also
-			--  an atomic value, then add a single space to separate them
-
-			if previous_atomic and then tree /= Void and then an_item.is_atomic_value then
-				tree.notify_characters (" ", 0)
-			end
-			previous_atomic := an_item.is_atomic_value
-			if tree = Void then
+			if level = 0 then
 				output_list.force_last (an_item)
+				previous_atomic := False
 			elseif an_item.is_atomic_value then
+				check
+					tree_not_void: tree /= Void
+					-- Guarenteed by `start_element' or `start_document'
+				end
+				
+				
+				-- If an atomic value is written to a tree, and the previous item was also
+				--  an atomic value, then add a single space to separate them
+				
+				if previous_atomic then
+					tree.notify_characters (" ", 0)
+				end
+				previous_atomic := True
 				tree.notify_characters (an_item.as_atomic_value.string_value, 0)
 			else
 				check
@@ -321,6 +341,7 @@ feature -- Events
 					-- Items are atomic values or nodes
 				end
 				an_item.as_node.copy_node (tree, All_namespaces, True)
+				previous_atomic := True
 			end
 		end
 
@@ -340,6 +361,19 @@ feature -- Element change
 			-- do nothing
 		end
 
+	pop_last_item is
+			-- Remove last item in `output_list'.
+			-- Removed item (if any) is `last_popped_item'.
+		do
+			if output_list.count = 0 then
+				-- empty sequence
+				last_popped_item := Void
+			else
+				last_popped_item := output_list.last
+				output_list.remove_last
+			end
+		end
+			
 feature {NONE} -- Implementation
 
 	output_list: DS_ARRAYED_LIST [XM_XPATH_ITEM]
@@ -359,6 +393,23 @@ feature {NONE} -- Implementation
 
 	cached_sequence: XM_XPATH_VALUE
 			-- Result returned by `sequence'
+
+	create_tree is
+			-- Create `tree'.
+		require
+			tree_not_created: tree = Void
+		local
+			a_reducer: XM_XSLT_NAMESPACE_REDUCER
+			a_complex_outputter: XM_XSLT_COMPLEX_CONTENT_OUTPUTTER
+		do
+			create builder.make 
+			builder.set_defaults (50, 10, 5, 200)
+			create a_reducer.make (builder)
+			create a_complex_outputter.make (a_reducer)
+			tree := a_complex_outputter
+			tree.set_system_id (system_id)
+			tree.open
+		end
 
 invariant
 

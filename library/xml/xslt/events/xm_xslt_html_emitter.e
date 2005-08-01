@@ -119,7 +119,7 @@ feature -- Events
 			a_string: STRING
 		do
 			if not is_error then
-				if not is_open then
+				if not is_output_open then
 					open_document
 				end
 				a_string := STRING_.concat ("<?", a_name)
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			if outputter = Void then
 				on_error ("Unable to open output stream for encoding " + encoding)
 			else
-				is_open := True
+				is_output_open := True
 
 				media_type := STRING_.cloned_string (output_properties.media_type)
 

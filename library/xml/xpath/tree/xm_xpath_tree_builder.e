@@ -14,6 +14,9 @@ class XM_XPATH_TREE_BUILDER
 inherit
 
 	XM_XPATH_BUILDER
+		redefine
+			open, close
+		end
 
 	XM_XPATH_TYPE
 		export {NONE} all end
@@ -59,24 +62,27 @@ feature -- Events
 			last_error := a_message
 		end
 
+	open is
+			-- Notify start of event stream.
+		do
+			has_error := False
+			last_error := Void
+			if system_id.count = 0 then system_id := locator.system_id end
+			Precursor
+		end
+
 	start_document is
 			-- Notify the start of the document
 		do
-			is_document_started := True
-			has_error := False
-			last_error := Void
-
-			-- TODO add timing information
-
-			if system_id.count = 0 then system_id := locator.system_id end
 			create tree_document.make (system_id)
-			document := tree_document
+			current_root := tree_document
 			current_depth := 1
 			next_node_number := 2
-			current_composite_node := tree_document
 			if is_line_numbering then
 				tree_document.set_line_numbering
 			end
+			current_composite_node := tree_document
+			is_document_started := True
 		end
 
 	set_unparsed_entity (a_name: STRING; a_system_id: STRING; a_public_id: STRING) is
@@ -223,11 +229,18 @@ feature -- Events
 	end_document is
 			-- Parsing finished.
 		do
-			
-			-- TODO compact tree
-			-- TODO add timing information
-
 			current_composite_node := Void
+			is_document_started := False
+		end
+
+	close is
+			-- Notify end of event stream.
+		do
+			Precursor
+
+			-- `Current' will not be reused, so we can free some memory:
+			
+			node_factory := Void
 		end
 
 feature {NONE} -- Implementation
@@ -256,7 +269,7 @@ feature {NONE} -- Implementation
 invariant
 
 	last_error_not_void: has_error implies last_error /= Void
-	node_factory_not_void: node_factory /= Void
+	node_factory_not_void: is_open implies node_factory /= Void
 
 end
 	

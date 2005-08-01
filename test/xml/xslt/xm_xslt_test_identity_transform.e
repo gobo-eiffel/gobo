@@ -22,12 +22,11 @@ inherit
 
 	XM_XPATH_SHARED_NAME_POOL
 
-
 	XM_RESOLVER_FACTORY
 	
-feature
+feature -- Tests
 
-	test_transform is
+	test_identity_transform is
 			-- Transform books.xml with identity.xsl.
 		local
 			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER

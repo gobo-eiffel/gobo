@@ -37,8 +37,8 @@ feature -- Tests
 			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output, another_output: XM_OUTPUT
+			a_uri_source: XM_XSLT_URI_SOURCE
+			an_output: XM_OUTPUT
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor
@@ -67,8 +67,8 @@ feature -- Tests
 			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_output, another_output: XM_OUTPUT
+			a_uri_source: XM_XSLT_URI_SOURCE
+			an_output: XM_OUTPUT
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
 			conformance.set_basic_xslt_processor

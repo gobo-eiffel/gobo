@@ -490,6 +490,66 @@
 	    </para>
 	  </listitem>
 	</varlistentry>
+	<varlistentry>
+	  <term>--report-document-statistics</term>
+	  <listitem>
+	    <para>
+	      Report statistics about the source document (and for each document read by the <xpath>doc()</xpath> 
+	      and <xslt>document()</xslt> functions). This only applies when the tiny-tree option is selected.
+	    </para>
+	    <para>
+	      This option is useful for choosing values for the nodes, attributes, namespaces and characters options.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--nodes=[estimated-node-count]</term>
+	  <listitem>
+	    <para>
+	      The estimated number of nodes (excluding attributes and namespaces) in the source document (and for each document read by the <xpath>doc()</xpath>  
+	      and <xslt>document()</xslt> functions). This only applies when the tiny-tree option is selected.
+	    </para>
+	    <para>
+	      If omitted, this defaults to 4000.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--attributes=[estimated-attribute-count]</term>
+	  <listitem>
+	    <para>
+	      The estimated number of attributes in the source document (and for each document read by the <xpath>doc()</xpath> 
+	      and <xslt>document()</xslt> functions). This only applies when the tiny-tree option is selected.
+	    </para>
+	    <para>
+	      If omitted, this defaults to 100.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--namespaces=[estimated-namespace-count]</term>
+	  <listitem>
+	    <para>
+	      The estimated number of namespaces in the source document (and for each document read by the <xpath>doc()</xpath> 
+	      and <xslt>document()</xslt> functions). This only applies when the tiny-tree option is selected.
+	    </para>
+	    <para>
+	      If omitted, this defaults to 20.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--characters=[estimated-character-count]</term>
+	  <listitem>
+	    <para>
+	      The estimated number of content characters in the source document (and for each document read by the <xpath>doc()</xpath> 
+	      and <xslt>document()</xslt> functions). This only applies when the tiny-tree option is selected.
+	    </para>
+	    <para>
+	      If omitted, this defaults to 4000.
+	    </para>
+	  </listitem>
+	</varlistentry>
       </variablelist>
       </para>
     </section>

@@ -57,6 +57,18 @@ feature {NONE} -- Initialization
 
 feature -- Events
 
+	open is
+			-- Notify start of event stream.
+		do
+			is_open := True
+		end
+
+	close is
+			-- Notify end of event stream.
+		do
+			is_open := False
+		end
+
 	start_document is
 			-- New document
 		do
@@ -303,6 +315,7 @@ feature {NONE} -- Implementation
 			an_event: XM_XSLT_PENDING_EVENT
 		do
 			committed := True
+			base_receiver.open
 			base_receiver.start_document
 			if pending_event_list /= Void then
 				from

@@ -133,6 +133,12 @@ feature -- Status report
 	is_tiny_tree_model: BOOLEAN
 		-- Do we build tiny trees for the source documents?
 
+	is_reporting_document_statistics: BOOLEAN
+			-- Do we report statistics on tiny-tree source documents?
+
+	estimated_nodes, estimated_attributes, estimated_namespaces, estimated_characters: INTEGER
+			-- estimates for tiny-tree parameters
+
 	is_line_numbering: BOOLEAN
 			-- Will diagnostics include line numbers?
 
@@ -419,6 +425,11 @@ feature -- Error handling
 									  "       --timed-trace=local-file-name%N" +
 									  "       --suppress-xpath-tracing%N" +
 									  "       --tiny-tree%N" +
+									  "       --report-document-statistics%N" +
+									  "       --nodes=[n]%N" +
+									  "       --attributes=[n]%N" +
+									  "       --namespaces=[n]%N" +
+									  "       --characters=[n]%N" +
 									  "       --no-xpointer%N" +
 									  "       --html-text-ok%N" +
 									  "       --mode=[{namespace-uri}]local-name%N" +
@@ -472,6 +483,64 @@ feature {NONE} -- Implementation
 				is_line_numbering := False
 			elseif an_option.is_equal ("tiny-tree") then
 				is_tiny_tree_model := True
+			elseif an_option.is_equal ("report-document-statistics") then
+				is_reporting_document_statistics := True
+			elseif an_option.substring_index ("nodes=", 1) = 1 then
+				if an_option.count > 6 then
+					a_number := an_option.substring (7, an_option.count)
+					if a_number.is_integer and then a_number.to_integer > 0 then
+						estimated_nodes := a_number.to_integer
+					else
+						report_general_message ("nodes must specify a positive integer")
+						report_usage_message
+						Exceptions.die (1)
+					end
+				else
+					report_usage_message
+					Exceptions.die (1)
+				end
+			elseif an_option.substring_index ("attributes=", 1) = 1 then
+				if an_option.count > 11 then
+					a_number := an_option.substring (12, an_option.count)
+					if a_number.is_integer and then a_number.to_integer > 0 then
+						estimated_attributes := a_number.to_integer
+					else
+						report_general_message ("attributes must specify a positive integer")
+						report_usage_message
+						Exceptions.die (1)
+					end
+				else
+					report_usage_message
+					Exceptions.die (1)
+				end
+			elseif an_option.substring_index ("namespaces=", 1) = 1 then
+				if an_option.count > 11 then
+					a_number := an_option.substring (12, an_option.count)
+					if a_number.is_integer and then a_number.to_integer > 0 then
+						estimated_namespaces := a_number.to_integer
+					else
+						report_general_message ("namespaces must specify a positive integer")
+						report_usage_message
+						Exceptions.die (1)
+					end
+				else
+					report_usage_message
+					Exceptions.die (1)
+				end
+			elseif an_option.substring_index ("characters=", 1) = 1 then
+				if an_option.count > 11 then
+					a_number := an_option.substring (12, an_option.count)
+					if a_number.is_integer and then a_number.to_integer > 0 then
+						estimated_characters := a_number.to_integer
+					else
+						report_general_message ("characters must specify a positive integer")
+						report_usage_message
+						Exceptions.die (1)
+					end
+				else
+					report_usage_message
+					Exceptions.die (1)
+				end					
 			elseif an_option.substring_index ("output=", 1) = 1 then
 				if an_option.count > 7 then
 					output_destination := an_option.substring (8, an_option.count)
@@ -662,6 +731,10 @@ feature {NONE} -- Implementation
 		do
 			conformance.set_basic_xslt_processor
 			configuration.use_tiny_tree_model (is_tiny_tree_model)
+			configuration.report_tiny_tree_statistics (is_reporting_document_statistics)
+			if is_tiny_tree_model then
+				configuration.set_tiny_tree_estimates (estimated_nodes, estimated_attributes, estimated_namespaces, estimated_characters)
+			end
 			configuration.set_line_numbering (is_line_numbering)
 			if is_tracing then set_trace_handler end
 			if highly_secure then configuration.output_resolver.security_manager.set_high_security (True) end

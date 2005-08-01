@@ -27,7 +27,7 @@ feature -- Events
 	end_document is
 			-- Notify the end of the document
 		do
-			if is_open then
+			if is_output_open then
 				output ("%N")
 			end
 			Precursor
