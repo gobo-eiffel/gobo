@@ -4,6 +4,10 @@
 
 	<description>demonstrates filesystem functionality</description>
 
+	<inherit>
+		<parent location="${GOBO}/example/geant/misc/mktmpdir.eant"/>
+	</inherit>
+
 	<target name="init">
 		<description>
 			Abstracts some OS specific command
@@ -11,34 +15,55 @@
 
 		<set name="cp" value="copy" if="${is_windows}"/>
 		<set name="cp" value="cp" unless="${is_windows}"/>
-		<mkdir directory="${GOBO}/example/geant/tmp"/>
+		<set name="example_name" value="filesystem"/>
+		<set name="tmp_example_dir" value="${GOBO}/example/geant/tmp/${example_name}"/>
 	</target>
 
 	<!-- copy  -->	
 	<target name="copy_file1" depend="init">
 		<description>
-			Copies the Readme from $GOBO to $GOBO/example/geant/filesystem.
-			using mode 'file to file'.
+			Demonstrate file to file copy.
+			- Copy file '1.txt' in directory ${GOBO}/example/geant/tmp/filesystem to
+			  file '2.txt'.
 
 			(Tip: call 'geant' with the '-n' option to just see what the copy would
 			do but do not actually execute the copy)
 		</description>
 
-		<copy file="${GOBO}/Readme.txt" to_file="ttt1.txt"/>
+		<geant target="teardown" arguments="${example_name}"/>
+		<geant target="setup" arguments="${example_name}"/>
+
+		<copy file="1.txt" to_file="1out.txt" dir="${tmp_example_dir}"/>
 	</target>
 
-	<target name="copy_file2">
+	<target name="copy_file2" depend="init">
 		<description>
-			Copies the Readme from $GOBO to $GOBO/example/geant/filesystem
-			using mode 'file to directory'.
+			Copy the file '1.txt' in directory ${GOBO}/example/geant/tmp/filesystem to
+			directory 'output'.
 		</description>
 
-		<copy file="${GOBO}/Readme.txt" to_directory="${GOBO}/example/geant/filesystem"/>
+		<geant target="teardown" arguments="${example_name}"/>
+		<geant target="setup" arguments="${example_name}"/>
+
+		<!-- Use absolute path: -->
+		<copy file="1.txt" to_directory="${tmp_example_dir}/output" dir="${tmp_example_dir}"/>
+
+		<!-- Use relative path: -->
+		<copy file="2.txt" to_directory="output" dir="${tmp_example_dir}"/>
 	</target>
 
-	<target name="copy_file3">
+	<target name="copy_file3" depend="init">
 		<description>
-			Like target 'copy_file2' but using the 'force' attribute.
+			Demonstrate that copy does not execute, when files are up to date.
+			Execute this target twice to see the effect.
+		</description>
+
+		<copy file="1.txt" to_directory="output" dir="${tmp_example_dir}"/>
+	</target>
+
+	<target name="copy_file4" depend="init">
+		<description>
+			Like target 'copy_file3' but using the 'force' attribute.
 
 			Setting the value of attribute 'force' to 'true' means that
 			filestamps are not taken into account so that the files are
@@ -49,10 +74,67 @@
 			does not exist yet or the source file is newer are copied.
 		</description>
 
-		<copy file="${GOBO}/Readme.txt" to_directory="${GOBO}/example/geant/filesystem" force="true"/>
+		<copy file="1.txt" to_directory="output" force="true" dir="${tmp_example_dir}"/>
 	</target>
 
 	<!-- copy filesets -->	
+	<target name="copy_dir_to_dir0" depend="init" dir="${tmp_example_dir}">
+		<description>
+			Copy directory 'input' to directory 'output'
+		</description>
+
+		<geant target="reset_tmpdir"/>
+		<copy to_directory="output">
+			<fileset include="@(input/**/*)"/>
+		</copy>
+	</target>
+
+	<target name="copy_dir_to_dir1" depend="init" dir="${tmp_example_dir}">
+		<description>
+			Copy everything underneath directory 'input' to directory 'output'
+		</description>
+
+		<geant target="reset_tmpdir"/>
+		<copy to_directory="output">
+			<fileset include="@(**/*)" filename_directory="input" dir="input"/>
+		</copy>
+	</target>
+
+	<target name="copy_dir_to_dir2" depend="init" dir="${tmp_example_dir}">
+		<description>
+			Copy directory input/1 to directory output
+		</description>
+
+		<geant target="reset_tmpdir"/>
+		<copy to_directory="output">
+			<fileset include="@(1/**/*)" filename_directory="input" dir="input"/>
+		</copy>
+	</target>
+
+	<target name="copy_dir_to_dir3" depend="init" dir="${tmp_example_dir}">
+		<description>
+			Copy directory input/1 to directory output
+		</description>
+
+		<geant target="reset_tmpdir"/>
+		<copy to_directory="output">
+			<fileset include="@(input/1/**/*)">
+				<map type="glob" from="input/*" to="*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="copy_dir_to_dir4" depend="init" dir="${tmp_example_dir}">
+		<description>
+			Copy directory input/1 to directory output
+		</description>
+
+		<geant target="reset_tmpdir"/>
+		<copy to_directory="../output" dir="input">
+			<fileset include="@(1/**/*)"/>
+		</copy>
+	</target>
+
 	<target name="copy_fs1a">
 		<description>
 			Copy all '*.ge' and '*.?ace' files underneath
@@ -340,5 +422,17 @@
 
 		<delete directory="${GOBO}/example/geant/tmp/"/>
 	</target>
-	
+
+
+<!-- Implementation -->
+
+	<target name="reset_tmpdir" export="NONE" depend="init" dir="${GOBO}">
+		<description>
+			Tear down and setup temporary directory structrure.
+		</description>
+
+		<geant target="teardown" arguments="${example_name}"/>
+		<geant target="setup" arguments="${example_name}"/>
+	</target>
+
 </project>
