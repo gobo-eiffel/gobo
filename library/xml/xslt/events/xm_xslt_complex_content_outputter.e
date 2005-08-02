@@ -51,6 +51,11 @@ feature {NONE} -- Initialization
 			next_receiver := an_underlying_receiver
 			pending_start_tag := -1
 			system_id := an_underlying_receiver.system_id
+			create pending_attributes_name_codes.make (1, Initial_arrays_size)
+			create pending_attributes_type_codes.make (1, Initial_arrays_size)
+			create pending_attributes_values.make (1, Initial_arrays_size)
+			create pending_attributes_properties.make (1, Initial_arrays_size)
+			create pending_namespaces.make (1, 3)
 		ensure
 			next_receiver_set: next_receiver = an_underlying_receiver
 			no_pending_start_tag: pending_start_tag = -1
@@ -114,12 +119,8 @@ feature -- Events
 					std.error.put_string ("Starting element " + shared_name_pool.display_name_from_name_code (a_name_code))
 					std.error.put_new_line
 				end
-				create pending_attribute_name_codes.make_default
-				create pending_attribute_type_codes.make_default
-				create pending_attribute_values.make_default
-				pending_attribute_values.set_equality_tester (string_equality_tester)
-				create pending_attribute_properties.make_default
-				create pending_namespaces.make_default
+				pending_attributes_lists_size := 0
+				pending_namespaces_list_size := 0
 				pending_start_tag := a_name_code
 				is_element_in_null_namespace := Void -- i.e. not yet computed
 				current_simple_type := a_type_code
@@ -131,8 +132,7 @@ feature -- Events
 			-- Notify a namespace.
 		local
 			reject_these_duplicates, reject: BOOLEAN
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			another_namespace_code: INTEGER
+			another_namespace_code, an_index: INTEGER
 			a_uri_code, a_prefix_code: INTEGER -- _16
 		do
 			if not suppress_attributes then
@@ -150,19 +150,16 @@ feature -- Events
 					a_uri_code := uri_code_from_namespace_code (a_namespace_code)
 					a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
 					from
-						a_cursor := pending_namespaces.new_cursor; a_cursor.start
-					variant
-						pending_namespaces.count + 1 - a_cursor.index
+						an_index := 1
 					until
-						a_cursor.after
+						reject or else an_index > pending_namespaces_list_size
 					loop
-						another_namespace_code := a_cursor.item
+						another_namespace_code := pending_namespaces.item (an_index)
 						if a_namespace_code = another_namespace_code then
 
 							-- same prefix and URI: ignore this duplicate
 							
 							reject := True
-							a_cursor.go_after
 						else
 							if a_prefix_code = prefix_code_from_namespace_code (another_namespace_code) then
 
@@ -172,9 +169,8 @@ feature -- Events
 									on_error ("XTDE0430: Cannot create two namespace nodes with the same name")
 								end
 								reject := True
-								a_cursor.go_after
 							else
-								a_cursor.forth
+								an_index := an_index + 1
 							end							
 						end
 					end
@@ -197,7 +193,11 @@ feature -- Events
 						
 						-- If it's not a duplicate namespace, add it to the list for this start tag.
 
-						pending_namespaces.force_last (a_namespace_code)
+						pending_namespaces_list_size := pending_namespaces_list_size + 1
+						if pending_namespaces_list_size > pending_namespaces.count then
+							pending_namespaces.resize (1, 2 * pending_namespaces_list_size)
+						end
+						pending_namespaces.put (a_namespace_code, pending_namespaces_list_size)
 						previous_atomic := False
 					end
 				end
@@ -207,7 +207,7 @@ feature -- Events
 	notify_attribute (a_name_code: INTEGER; a_type_code: INTEGER; a_value: STRING; properties: INTEGER) is
 			-- Notify an attribute.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			an_index, a_new_size: INTEGER
 			duplicate_found: BOOLEAN
 		do
 			if not suppress_attributes then
@@ -223,32 +223,37 @@ feature -- Events
 					--  the REJECT_DUPLICATES option is set.
 
 					from
-						a_cursor := pending_attribute_name_codes.new_cursor; a_cursor.start
-					variant
-						pending_attribute_name_codes.count + 1 - a_cursor.index
+						an_index := 1
 					until
-						a_cursor.after
+						duplicate_found or else an_index > pending_attributes_lists_size
 					loop
-						if a_cursor.item = a_name_code then
+						if pending_attributes_name_codes.item (an_index) = a_name_code then
 							check
 								duplicate_attributes_suppressed: not are_duplicates_rejected (properties)
 								-- But XQuery can behave differently
 							end
-							pending_attribute_type_codes.replace (a_type_code, a_cursor.index)
-							pending_attribute_values.replace (a_value, a_cursor.index)
-							pending_attribute_properties.replace (properties, a_cursor.index)
+							pending_attributes_type_codes.put (a_type_code, an_index)
+							pending_attributes_values.put (a_value, an_index)
+							pending_attributes_properties.put (properties, an_index)
 							duplicate_found := True
-							a_cursor.go_after
 						else
-							a_cursor.forth
+							an_index := an_index + 1
 						end
 					end
 
 					if not duplicate_found then
-						pending_attribute_name_codes.force_last (a_name_code)
-						pending_attribute_type_codes.force_last (a_type_code)
-						pending_attribute_values.force_last (a_value)
-						pending_attribute_properties.force_last (properties)
+						if pending_attributes_lists_size >= pending_attributes_type_codes.upper then
+							a_new_size := 2 * pending_attributes_type_codes.upper
+							pending_attributes_name_codes.resize (1, a_new_size)
+							pending_attributes_type_codes.resize (1, a_new_size)
+							pending_attributes_values.resize (1, a_new_size)
+							pending_attributes_properties.resize (1, a_new_size)
+						end
+						pending_attributes_lists_size := pending_attributes_lists_size + 1
+						pending_attributes_name_codes.put (a_name_code, pending_attributes_lists_size)
+						pending_attributes_type_codes.put (a_type_code, pending_attributes_lists_size)
+						pending_attributes_values.put (a_value, pending_attributes_lists_size)
+						pending_attributes_properties.put (properties, pending_attributes_lists_size)
 						previous_atomic := False
 					end
 				end
@@ -258,9 +263,9 @@ feature -- Events
 	start_content is
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		local
-			properties: INTEGER
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			properties, an_index: INTEGER
 			a_name_code: INTEGER
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
 			if pending_start_tag /= -1 then
 				check_proposed_prefix (pending_start_tag, 0)
@@ -270,44 +275,39 @@ feature -- Events
 				end
 				next_receiver.start_element (last_checked_namecode, current_simple_type, properties)
 				from
-					a_cursor := pending_attribute_name_codes.new_cursor; a_cursor.start
-				variant
-					pending_attribute_name_codes.count + 1 - a_cursor.index
+					an_index := 1
 				until
-					a_cursor.after
+					an_index > pending_attributes_lists_size 
 				loop
-					a_name_code := a_cursor.item
+					a_name_code := pending_attributes_name_codes.item (an_index)
 					if prefix_code_from_namespace_code (a_name_code) /= 0 then -- non-null prefix
-						check_proposed_prefix (a_name_code, a_cursor.index)
-						a_cursor.replace (last_checked_namecode)
+						check_proposed_prefix (a_name_code, an_index)
+						pending_attributes_name_codes.put (last_checked_namecode, an_index)
 					end
-					a_cursor.forth
+					an_index := an_index + 1
 				end
 				from
-					a_cursor := pending_namespaces.new_cursor; a_cursor.start
-				variant
-					pending_namespaces.count + 1 - a_cursor.index
+					an_index := 1
 				until
-					a_cursor.after
+					an_index > pending_namespaces_list_size 
 				loop
-					next_receiver.notify_namespace (a_cursor.item, 0)
-					a_cursor.forth
+					next_receiver.notify_namespace (pending_namespaces.item (an_index), 0)
+					an_index := an_index + 1
 				end
 				from
-					a_cursor := pending_attribute_name_codes.new_cursor; a_cursor.start
-				variant
-					pending_attribute_name_codes.count + 1 - a_cursor.index
+					an_index := 1
 				until
-					a_cursor.after
+					an_index > pending_attributes_lists_size 
 				loop
-					next_receiver.notify_attribute (a_cursor.item,
-															  pending_attribute_type_codes.item (a_cursor.index),
-															  pending_attribute_values.item (a_cursor.index),
-															  pending_attribute_properties.item (a_cursor.index))
-					a_cursor.forth
+					next_receiver.notify_attribute (pending_attributes_name_codes.item (an_index),
+															  pending_attributes_type_codes.item (an_index),
+															  pending_attributes_values.item (an_index),
+															  pending_attributes_properties.item (an_index))
+					an_index := an_index + 1
 				end
 				next_receiver.start_content
 				pending_start_tag := -1
+				pending_attributes_lists_size := 0
 				previous_atomic := False
 			end
 		end
@@ -427,20 +427,29 @@ feature {NONE} -- Implementation
 	start_element_properties: INTEGER
 			-- Properties supplied to `start_element'
 
-	pending_attribute_name_codes: DS_ARRAYED_LIST [INTEGER]
+	pending_attributes_lists_size: INTEGER
+			-- Size of following 4 arrays
+
+	pending_attributes_name_codes: ARRAY [INTEGER]
 			-- Pending attribute name codes
 
-	pending_attribute_type_codes: DS_ARRAYED_LIST [INTEGER]
+	pending_attributes_type_codes: ARRAY [INTEGER]
 			-- Pending attribute type codes
 
-	pending_attribute_values: DS_ARRAYED_LIST [STRING]
+	pending_attributes_values: ARRAY [STRING]
 			-- Pending attribute values
 
-	pending_attribute_properties: DS_ARRAYED_LIST [INTEGER]
+	pending_attributes_properties: ARRAY [INTEGER]
 			-- Pending attribute properties
 
-	pending_namespaces: DS_ARRAYED_LIST [INTEGER]
+	pending_namespaces_list_size: INTEGER
+			-- Size of `pending_namespaces'
+
+	pending_namespaces: ARRAY [INTEGER]
 			-- Pending namespace codes
+
+	Initial_arrays_size: INTEGER is 5
+			-- Initial size for arrays
 
 	current_simple_type: INTEGER
 			-- Simple type of current start tag, or 0
@@ -462,7 +471,7 @@ feature {NONE} -- Implementation
 			valid_name_code: a_name_code > -1
 			positive_sequence_number: a_sequence_number >= 0
 		local
-			a_namespace_code: INTEGER
+			a_namespace_code, an_index: INTEGER
 			a_prefix_code, a_uri_code: INTEGER -- _16
 			a_prefix: STRING
 			finished: BOOLEAN
@@ -476,17 +485,14 @@ feature {NONE} -- Implementation
 			a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
 			a_uri_code := uri_code_from_namespace_code (a_namespace_code)
 			from
-				a_cursor := pending_namespaces.new_cursor; a_cursor.start
-			variant
-				pending_namespaces.count + 1 - a_cursor.index
+				an_index := an_index + 1
 			until
-				a_cursor.after
+				finished or else an_index > pending_namespaces_list_size
 			loop
-				if a_prefix_code = prefix_code_from_namespace_code (a_cursor.item) then
-					if a_uri_code = uri_code_from_namespace_code (a_cursor.item) then
+				if a_prefix_code = prefix_code_from_namespace_code (pending_namespaces.item (an_index)) then
+					if a_uri_code = uri_code_from_namespace_code (pending_namespaces.item (an_index)) then
 						last_checked_namecode := a_name_code
 						finished := True
-						a_cursor.go_after
 					else
 						a_prefix := substituted_prefix (a_namespace_code, a_sequence_number)
 						shared_name_pool.allocate_name_using_uri_code (a_prefix,
@@ -498,10 +504,9 @@ feature {NONE} -- Implementation
 						end
 						notify_namespace (shared_name_pool.namespace_code_from_name_code (last_checked_namecode), 0)
 						finished := True
-						a_cursor.go_after
 					end
 				else
-					a_cursor.forth
+					an_index := an_index + 1
 				end
 			end
 			if not finished then
@@ -533,12 +538,13 @@ feature {NONE} -- Implementation
 invariant
 
 	next_receiver_not_void: next_receiver /= Void
-	attribute_lists: pending_attribute_name_codes /= Void implies
-		pending_attribute_type_codes /= Void and then
-		pending_attribute_values /= Void and then
-		pending_attribute_properties /= Void and then
-		pending_attribute_name_codes.count = pending_attribute_type_codes.count and then
-		pending_attribute_name_codes.count = pending_attribute_values.count and then
-		pending_attribute_name_codes.count = pending_attribute_properties.count
-
+	attribute_lists: pending_attributes_name_codes /= Void and then
+		pending_attributes_type_codes /= Void and then
+		pending_attributes_values /= Void and then
+		pending_attributes_properties /= Void and then
+		pending_attributes_name_codes.count = pending_attributes_type_codes.count and then
+		pending_attributes_name_codes.count = pending_attributes_values.count and then
+		pending_attributes_name_codes.count = pending_attributes_properties.count
+		namespaces_list: pending_namespaces /= Void
+		
 end
