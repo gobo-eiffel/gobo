@@ -20,7 +20,6 @@
 				<cluster name="class"/>
 				<cluster name="cluster"/>
 				<cluster name="constant"/>
-				<cluster name="dynamic"/>
 				<cluster name="expression"/>
 				<cluster name="feature"/>
 				<cluster name="instruction"/>
@@ -29,6 +28,7 @@
 				<cluster name="type"/>
 			</cluster>
 			<cluster name="compilation"/>
+			<cluster name="dynamic"/>
 			<cluster name="error"/>
 			<cluster name="generation"/>
 			<cluster name="parser"/>
