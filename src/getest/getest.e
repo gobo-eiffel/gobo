@@ -116,8 +116,8 @@ feature -- Processing
 					std.output.put_string (" Test Case")
 					if nb > 1 then
 						std.output.put_character ('s')
-						std.output.put_new_line
 					end
+					std.output.put_new_line
 				end
 			end
 		end
