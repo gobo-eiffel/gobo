@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+
+<project name="tmpdir">
+
+	<description>Buildfile to setup and teardown temporary directory for an individual geant example</description>
+
+	<target name="setup" export="NONE" dir="${GOBO}">
+		<description>setup temporary directory structure for example ${a_dirname}</description>
+		<argument name="a_dirname"/>
+		<set name="example_dir" value="${GOBO}/example/geant/tmp/${a_dirname}"/>
+		<mkdir directory="${example_dir}/input/1/2"/>
+		<mkdir directory="${example_dir}/output"/>
+
+		<echo to_file="${example_dir}/1.txt">This is file #1.</echo>
+		<echo to_file="${example_dir}/2.txt">This is file #2.</echo>
+
+		<echo to_file="${example_dir}/input/in1.txt">This is file in1.</echo>
+		<echo to_file="${example_dir}/input/1/in11.txt">This is file in11.</echo>
+		<echo to_file="${example_dir}/input/1/2/in12.txt">This is file in12.</echo>
+
+	</target>
+
+	<target name="teardown" export="NONE" dir="${GOBO}">
+		<description>remove temporary directory structure for example ${a_dirname}</description>
+		<argument name="a_dirname"/>
+		<set name="example_dir" value="${GOBO}/example/geant/tmp/${a_dirname}"/>
+		<delete directory="${example_dir}"/>
+	</target>
+
+</project>
