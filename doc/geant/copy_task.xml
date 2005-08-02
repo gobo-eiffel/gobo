@@ -133,18 +133,146 @@
 	</programlisting>
 	</section>
 
-	<section id="copy_examples">
-		<title>Examples</title>
+	<section id="copy_examples"><title>Examples</title>
+		<para><emphasis role="strong">Copy a single file:</emphasis></para>
 	<programlisting><![CDATA[
   <copy file="readme.txt" to_file="readme1.txt"/>
+]]></programlisting>
 
+		<para><emphasis role="strong">Copy a single file to a directory:</emphasis></para>
+	<programlisting><![CDATA[
   <copy file="readme.txt" to_directory="/tmp"/>
+]]></programlisting>
 
-  <copy to_directory="/tmp">
-    <fileset directory="kernel" include="@(**/*.ge)"/>
+
+		<para><emphasis role="strong">Copy a single file even if this would not be necessary:</emphasis></para>
+		<para>
+			By default the copy task only copies files if the target file is out of date. With the force flag
+			set to true it is always copied.
+		</para>
+	<programlisting><![CDATA[
+  <copy file="readme.txt" to_directory="/tmp" force="true"/>
+]]></programlisting>
+
+		<para><emphasis role="strong">Copy a directory to another directory:</emphasis></para>
+		<para>
+			Let's assume we have the directories 'input' and 'output' under the current directory.
+			If we want to copy the directory 'input' to directory 'output' do it as follows:
+		</para>
+	<programlisting><![CDATA[
+  <copy to_directory="output">
+    <fileset include="@(input/**/*)"/>
   </copy>
-]]>
-	</programlisting>
+]]></programlisting>
+
+		<para><emphasis role="strong">Copy a directory to another directory</emphasis></para>
+		<para>
+			Let's assume we have the directories 'input', 'input/1' and 'output' under the current directory.
+			What we want is to copy the directory '1' in directory 'input' to directory 'output'. There are a couple of ways to
+			achieve this from which three are shown here:
+		</para>
+		<para>
+			Possibility 1 (probably the easiest way):
+		</para>
+
+	<programlisting><![CDATA[
+    <copy to_directory="../output" dir="input">
+      <fileset include="@(1/**/*)"/>
+    </copy>
+]]></programlisting>
+
+		<para>
+			 Possibility 2:
+		</para>
+	<programlisting><![CDATA[
+  <copy to_directory="output">
+    <fileset include="@(1/**/*)" filename_directory="input" dir="input"/>
+  </copy>
+]]></programlisting>
+
+		<para>
+			 Possibility 3:
+		</para>
+  <programlisting><![CDATA[
+  <copy to_directory="output">
+    <fileset include="@(input/1/**/*)">
+      <map type="glob" from="input/*" to="*"/>
+    </fileset>
+  </copy>
+]]></programlisting>
+
+
+		<para><emphasis>Description for possibility 1:</emphasis></para>
+		<para>
+			The 'copy' task is executed from within the directory 'input'. Therefore the attribute 'to_directory'
+			has to be set to '../output'.
+		</para>
+
+		<para><emphasis>Description for possibility 2:</emphasis></para>
+		<para>
+			In a first attempt we might use this approach:
+		</para>
+	<programlisting><![CDATA[
+  <copy to_directory="output">
+    <fileset include="@(input/1/**/*)"/>
+  </copy>
+]]></programlisting>
+		<para>
+			But with this approach we end up with the directory 'output/input/1/...' which is not what we want.
+			We need to get rid of the input in the selected filenames. To achieve this we
+			set the attribute 'dir' of the fileset to the directory 'input' so that for the time the fileset executes
+			it is collecting the appropriate filenames from within the directory 'input':
+		</para>
+	<programlisting><![CDATA[
+  <copy to_directory="output">
+    <fileset include="@(1/**/*)" dir="input"/>
+  </copy>
+]]></programlisting>
+
+		<para>
+			Now the fileset contains the filenames we want. Unfortunately the 'copy' task cannot work with them
+			since it cannot copy files from '1/**' because they are in the directory 'input'. So what we need is that
+			'input' is prepended anyway but only to read the files while copying and not for writing. To achieve
+			this we set the attribute 'filename_directory' to 'input'. The value of this attribute ('input' in
+			this case) will be prepended to the source name while the target name remains as is. For example
+			for a matched filename '1/somedir/readme.txt' the source filename will become 'input/1/somedir/readme.txt'
+			but the target filename will still be '1/somedir/readme.txt'. So our working 'copy' task is:
+		</para>
+	<programlisting><![CDATA[
+  <copy to_directory="output">
+    <fileset include="@(1/**/*)" filename_directory="input" dir="input"/>
+  </copy>
+]]></programlisting>
+
+		<para><emphasis>Description for possibility 3:</emphasis></para>
+		<para>
+			If we start again go back to our first attempt from possibility 2 which produces the undesired 'input' directory:
+		</para>
+	<programlisting><![CDATA[
+  <copy to_directory="output">
+    <fileset include="@(input/1/**/*)"/>
+  </copy>
+]]></programlisting>
+
+		<para>
+			... it is more natural to come to the conclusion that all that needs to be done is removing
+			that 'input/' from the target filenames. The element 'fileset' provides an attribute called
+			'mapped_filename_directory' but that is only for prepending and not for removal. But using
+			a nested map does the trick:
+		</para>
+  <programlisting><![CDATA[
+  <copy to_directory="output">
+    <fileset include="@(input/1/**/*)">
+      <map type="glob" from="input/*" to="*"/>
+    </fileset>
+  </copy>
+]]></programlisting>
 	</section>
+
+		<para>
+			With this approach all leading 'input/' text is removed from our target filenames.
+		</para>
+
+
 
 </chapter>
