@@ -41,7 +41,7 @@ nested element.
 	construct a 'mapped_filename' based on the type of map.
 </para>
 <para>
-	Example: file 'a.ge' matches the filesets criteria. When the fileset
+	Example: Say file 'a.ge' matches the filesets criteria. When the fileset
 	does not contain a nested 'map' element its list will contain one
 	entry ['a.ge', 'a.ge']. However if it contains a nested map element
 	of type 'glob' mapping '*.ge' to '*.e' then the entry will be
