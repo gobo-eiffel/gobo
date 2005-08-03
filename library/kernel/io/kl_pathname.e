@@ -74,6 +74,12 @@ feature -- Access
 	hostname: STRING
 			-- Hostname of pathname if present,
 			-- Void otherwise
+			-- (for example, with UNC we can have: \\hostname\sharename)
+
+	sharename: STRING
+			-- Sharename of pathname if present,
+			-- Void otherwise
+			-- (for example, with UNC we can have: \\hostname\sharename)
 
 feature -- Measurement
 
@@ -104,6 +110,14 @@ feature -- Setting
 			hostname := a_hostname
 		ensure
 			hostname_set: hostname = a_hostname
+		end
+
+	set_sharename (a_sharename: like sharename) is
+			-- Set `sharename' to `a_sharename'.
+		do
+			sharename := a_sharename
+		ensure
+			sharename_set: sharename = a_sharename
 		end
 
 feature -- Element change
@@ -172,8 +186,12 @@ feature -- Element change
 					elseif is_parent (i) then
 						if j = 1 or else is_parent (j - 1) then
 								-- Leading parent directory component.
-							components.put (item (i), j)
-							j := j + 1
+								-- Ignore it in case of non-relative pathname:
+								-- the canonical pathname of 'c:\..' is 'c:\'.
+							if is_relative then
+								components.put (item (i), j)
+								j := j + 1
+							end
 						else
 								-- Consume parent directory: go one
 								-- level up in the directory tree

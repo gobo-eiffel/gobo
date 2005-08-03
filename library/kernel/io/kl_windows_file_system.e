@@ -15,10 +15,30 @@ class KL_WINDOWS_FILE_SYSTEM
 inherit
 
 	KL_FILE_SYSTEM
+		redefine
+			make
+		end
 
 create
 
-	make
+	make, make_backslash_only
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new windows file system object.
+			-- Accept both \ and / directory separators
+			-- as input, and use \ as output.
+		do
+			secondary_directory_separator := '/'
+		end
+
+	make_backslash_only is
+			-- Create a new windows file system object.
+			-- Accept only \ as directory separator.
+		do
+			secondary_directory_separator := '\'
+		end
 
 feature -- File handling
 
@@ -56,18 +76,19 @@ feature -- Pathname handling
 			c: CHARACTER
 		do
 			nb := a_pathname.count
-			if nb >= 4 and then a_pathname.item (1) = directory_separator then
+			if nb >= 4 and then is_directory_separator (a_pathname.item (1)) then
 					-- Maybe of the form \\hostname\foobar
 				if
-					a_pathname.item (2) = directory_separator and
-					a_pathname.item (3) /= directory_separator
+					is_directory_separator (a_pathname.item (2)) and
+					not is_directory_separator (a_pathname.item (3))
 				then
 					from
 						i := 4
 					until
 						i > nb or Result
 					loop
-						if a_pathname.item (i) = directory_separator then
+						c := a_pathname.item (i)
+						if is_directory_separator (c) then
 							Result := True
 						else
 							i := i + 1
@@ -77,23 +98,24 @@ feature -- Pathname handling
 			elseif nb >= 3 then
 					-- Maybe of the form C:\foobar
 				c := a_pathname.item (1)
-				if c /= directory_separator and c /= ':' then
+				if not is_directory_separator (c) and c /= ':' then
 					from
 						i := 2
 					until
 						i > nb or stop or found
 					loop
-						inspect a_pathname.item (i)
-						when directory_separator then
+						c := a_pathname.item (i)
+						if is_directory_separator (c) then
 							stop := True
-						when ':' then
+						elseif c = ':' then
 							found := True
 						else
 							i := i + 1
 						end
 					end
 					if found and i < nb then
-						Result := (a_pathname.item (i + 1) = directory_separator)
+						c := a_pathname.item (i + 1)
+						Result := is_directory_separator (c)
 					end
 				end
 			end
@@ -106,7 +128,7 @@ feature -- Pathname handling
 			-- For pathname conversion use `pathname_from_file_system'.)
 		do
 			if not is_absolute_pathname (a_pathname) then
-				Result := (a_pathname.count = 0 or else a_pathname.item (1) /= directory_separator)
+				Result := (a_pathname.count = 0 or else not is_directory_separator (a_pathname.item (1)))
 			end
 		end
 
@@ -120,35 +142,37 @@ feature -- Pathname handling
 			c: CHARACTER
 		do
 			nb := a_dirname.count
-			if nb >= 4 and then a_dirname.item (1) = directory_separator then
+			if nb >= 4 and then is_directory_separator (a_dirname.item (1)) then
 					-- Maybe of the form \\hostname\rootdir
 					-- Note that \\hostname and \\hostname\\rootdir are not
 					-- valid Windows pathname, but \\hostname\rootdir\ and
 					-- \\hostname\rootdir\\ are.
 				if
-					a_dirname.item (2) = directory_separator and
-					a_dirname.item (3) /= directory_separator
+					is_directory_separator (a_dirname.item (2)) and
+					not is_directory_separator (a_dirname.item (3))
 				then
 					from
 						i := 4
 					until
 						i > nb or found
 					loop
-						if a_dirname.item (i) = directory_separator then
+						c := a_dirname.item (i)
+						if is_directory_separator (c) then
 							found := True
 						else
 							i := i + 1
 						end
 					end
 					if found then
-						if i < nb and then a_dirname.item (i + 1) /= directory_separator then
+						if i < nb and then not is_directory_separator (a_dirname.item (i + 1)) then
 							from
 								found := False
 								i := i + 1
 							until
 								i > nb or found
 							loop
-								if a_dirname.item (i) = directory_separator then
+								c := a_dirname.item (i)
+								if is_directory_separator (c) then
 									found := True
 								else
 									i := i + 1
@@ -162,7 +186,8 @@ feature -- Pathname handling
 								until
 									i > nb or found
 								loop
-									if a_dirname.item (i) /= directory_separator then
+									c := a_dirname.item (i)
+									if not is_directory_separator (c) then
 										found := True
 									else
 										i := i + 1
@@ -180,28 +205,30 @@ feature -- Pathname handling
 					-- Maybe of the form C:\.
 					-- Note that C:\\ is not a valid Windows pathname.
 				c := a_dirname.item (1)
-				if c /= directory_separator and c /= ':' then
+				if not is_directory_separator (c) and c /= ':' then
 					from
 						i := 2
 					until
 						i > nb or stop or found
 					loop
-						inspect a_dirname.item (i)
-						when directory_separator then
+						c := a_dirname.item (i)
+						if is_directory_separator (c) then
 							stop := True
-						when ':' then
+						elseif c = ':' then
 							found := True
 						else
 							i := i + 1
 						end
 					end
 					if found and (i + 1 = nb) then
-						Result := (a_dirname.item (nb) = directory_separator)
+						c := a_dirname.item (nb)
+						Result := is_directory_separator (c)
 					end
 				end
 			elseif nb = 1 then
 					-- Note that \\ is not a valid Windows pathname.
-				Result := (a_dirname.item (1) = directory_separator)
+				c := a_dirname.item (1)
+				Result := is_directory_separator (c)
 			end
 		end
 
@@ -222,7 +249,7 @@ feature -- Pathname handling
 					i := a_pathname.count
 				until
 					i < 1 or else
-					a_pathname.item (i) /= directory_separator
+					not is_directory_separator (a_pathname.item (i))
 				loop
 					i := i - 1
 				end
@@ -230,7 +257,7 @@ feature -- Pathname handling
 				from
 				until
 					i < 1 or else
-					a_pathname.item (i) = directory_separator
+					is_directory_separator (a_pathname.item (i))
 				loop
 					i := i - 1
 				end
@@ -263,14 +290,14 @@ feature -- Pathname handling
 					i := a_pathname.count
 				until
 					i < 1 or else
-					a_pathname.item (i) /= directory_separator
+					not is_directory_separator (a_pathname.item (i))
 				loop
 					i := i - 1
 				end
 				from
 				until
 					i < 1 or else
-					a_pathname.item (i) = directory_separator
+					is_directory_separator (a_pathname.item (i))
 				loop
 					i := i - 1
 				end
@@ -280,7 +307,7 @@ feature -- Pathname handling
 					from
 					until
 						i < 1 or else
-						a_pathname.item (i) /= directory_separator
+						not is_directory_separator (a_pathname.item (i))
 					loop
 						i := i - 1
 					end
@@ -311,7 +338,7 @@ feature -- Pathname handling
 			Result := STRING_.cloned_string (a_dirname)
 			if a_pathname.count > 0 then
 				nb := Result.count
-				if nb > 0 and then Result.item (nb) /= directory_separator then
+				if nb > 0 and then not is_directory_separator (Result.item (nb)) then
 					Result.append_character (directory_separator)
 				end
 				Result := STRING_.appended_string (Result, a_pathname)
@@ -335,7 +362,7 @@ feature -- Pathname handling
 				a_pathname := a_pathnames.item (i)
 				if a_pathname.count > 0 then
 					k := Result.count
-					if k > 0 and then Result.item (k) /= directory_separator then
+					if k > 0 and then not is_directory_separator (Result.item (k)) then
 						Result.append_character (directory_separator)
 					end
 					Result := STRING_.appended_string (Result, a_pathname)
@@ -380,17 +407,26 @@ feature -- Pathname handling
 
 	absolute_parent_directory (a_pathname: STRING): STRING is
 			-- Absolute pathname of parent directory of `a_pathname';
-			-- Return `absolute_root_directory' if `a_pathname'
-			-- is a root directory (i.e. has no parent)
+			-- If `a_pathname' is a root directory (i.e. has no parent)
+			-- then return `a_pathname' itself if it is an absolute pathname,
+			-- or `absolute_root_directory' if it is a relative pathname
 			-- (`a_pathname' should follow the Windows pathname convention.
 			-- For pathname conversion use `pathname_from_file_system'.)
 		local
 			an_absolute_pathname: STRING
 			a_basename: STRING
 			stop: BOOLEAN
+			l_absolute: BOOLEAN
 		do
 			from
-				an_absolute_pathname := absolute_pathname (a_pathname)
+				if is_absolute_pathname (a_pathname) then
+					an_absolute_pathname := a_pathname
+					l_absolute := True
+				elseif is_relative_pathname (a_pathname) then
+					an_absolute_pathname := pathname (cwd, a_pathname)
+				else
+					an_absolute_pathname := STRING_.concat (current_drive, a_pathname)
+				end
 			until
 				stop
 			loop
@@ -403,11 +439,14 @@ feature -- Pathname handling
 					stop := True
 				end
 			end
-			an_absolute_pathname := dirname (an_absolute_pathname)
 			if is_root_directory (an_absolute_pathname) then
-				Result := absolute_root_directory
+				if l_absolute then
+					Result := a_pathname
+				else
+					Result := absolute_root_directory
+				end
 			else
-				Result := an_absolute_pathname
+				Result := dirname (an_absolute_pathname)
 			end
 		end
 
@@ -429,6 +468,7 @@ feature -- Pathname handling
 			j, k: INTEGER
 			str: STRING
 			has_hostname: BOOLEAN
+			has_sharename: BOOLEAN
 			has_drive: BOOLEAN
 		do
 			create Result.make
@@ -436,15 +476,15 @@ feature -- Pathname handling
 			nb := a_pathname.count
 			if
 				nb > 2 and then
-				(a_pathname.item (1) = directory_separator and
-				a_pathname.item (2) = directory_separator)
+				(is_directory_separator (a_pathname.item (1)) and
+				is_directory_separator (a_pathname.item (2)))
 			then
 				has_hostname := True
 				Result.set_relative (False)
 				i := 3
 			elseif
 				nb > 0 and then
-				a_pathname.item (1) = directory_separator
+				is_directory_separator (a_pathname.item (1))
 			then
 				Result.set_relative (False)
 				i := 2
@@ -456,7 +496,7 @@ feature -- Pathname handling
 				from
 				until
 					i > nb or else
-					a_pathname.item (i) /= directory_separator
+					not is_directory_separator (a_pathname.item (i))
 				loop
 					i := i + 1
 				end
@@ -465,7 +505,7 @@ feature -- Pathname handling
 					from
 					until
 						i > nb or else
-						a_pathname.item (i) = directory_separator
+						is_directory_separator (a_pathname.item (i))
 					loop
 						i := i + 1
 					end
@@ -473,10 +513,16 @@ feature -- Pathname handling
 					str := a_pathname.substring (j, k)
 					if STRING_.same_string (str, relative_current_directory) then
 						Result.append_current
+						has_sharename := False
 					elseif STRING_.same_string (str, relative_parent_directory) then
 						Result.append_parent
+						has_sharename := False
 					elseif has_hostname then
 						Result.set_hostname (str)
+						has_sharename := True
+					elseif has_sharename then
+						Result.set_sharename (str)
+						has_sharename := False
 					elseif has_drive then
 						check str_not_empty: str.count > 0 end
 						if str.item (str.count) = ':' then
@@ -502,8 +548,10 @@ feature -- Pathname handling
 			i, nb: INTEGER
 			a_drive: STRING
 			a_hostname: STRING
+			a_sharename: STRING
 		do
 			create Result.make (50)
+			nb:= a_pathname.count
 			a_drive := a_pathname.drive
 			if a_drive /= Void then
 				Result := STRING_.appended_string (Result, a_drive)
@@ -515,11 +563,17 @@ feature -- Pathname handling
 					Result.append_character (directory_separator)
 					Result := STRING_.appended_string (Result, a_hostname)
 					Result.append_character (directory_separator)
+					a_sharename := a_pathname.sharename
+					if a_sharename /= Void then
+						Result := STRING_.appended_string (Result, a_sharename)
+						if nb > 0 then
+							Result.append_character (directory_separator)
+						end
+					end
 				elseif not a_pathname.is_relative then
 					Result := STRING_.appended_string (Result, root_directory)
 				end
 			end
-			nb:= a_pathname.count
 			from i := 1 until i >= nb loop
 				if a_pathname.is_current (i) then
 					Result := STRING_.appended_string (Result, relative_current_directory)
@@ -579,7 +633,7 @@ feature -- Pathname handling
 				c := a_filename.item (i)
 				if c = '.' then
 					found := True
-				elseif c = directory_separator then
+				elseif is_directory_separator (c) then
 					stop := True
 				else
 					i := i - 1
@@ -595,8 +649,19 @@ feature -- Pathname handling
 	exe_extension: STRING is ".exe"
 			-- Executable file extension ('.exe' under Windows)
 
+	is_directory_separator (c: CHARACTER): BOOLEAN is
+			-- Is `c' a directory separator?
+		do
+			Result := (c = directory_separator or c = secondary_directory_separator)
+		ensure
+			definition: Result = (c = directory_separator or c = secondary_directory_separator)
+		end
+
 	directory_separator: CHARACTER is '\'
-			-- Directory separator
+			-- Primary directory separator
+
+	secondary_directory_separator: CHARACTER
+			-- Secondary directory separator
 
 	current_drive: STRING is
 			-- Current drive (include the ':' but not the '\')
@@ -612,7 +677,7 @@ feature -- Pathname handling
 				i := 1
 			until
 				i > nb or else
-				a_dirname.item (i) = directory_separator
+				is_directory_separator (a_dirname.item (i))
 			loop
 				i := i + 1
 			end

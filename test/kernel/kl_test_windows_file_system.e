@@ -1384,13 +1384,15 @@ feature -- Pathname handling
 			assert ("absolute1", a_file_system.is_absolute_pathname ("c:\gobo"))
 			assert ("absolute2", a_file_system.is_absolute_pathname ("d:\"))
 			assert ("absolute3", a_file_system.is_absolute_pathname ("\\foo\bar"))
+			assert ("absolute4", a_file_system.is_absolute_pathname ("c:/foo"))
 			assert ("not_absolute1", not a_file_system.is_absolute_pathname ("foo"))
 			assert ("not_absolute2", not a_file_system.is_absolute_pathname ("foo\bar"))
 			assert ("not_absolute3", not a_file_system.is_absolute_pathname ("\foo"))
 			assert ("not_absolute4", not a_file_system.is_absolute_pathname ("/foo"))
-			assert ("not_absolute5", not a_file_system.is_absolute_pathname ("c:/foo"))
 			assert ("not_absolute6", not a_file_system.is_absolute_pathname (""))
 			assert ("not_absolute7", not a_file_system.is_absolute_pathname ("\"))
+			create a_file_system.make_backslash_only
+			assert ("not_absolute5", not a_file_system.is_absolute_pathname ("c:/foo"))
 		end
 
 	test_is_relative_pathname is
@@ -1403,13 +1405,16 @@ feature -- Pathname handling
 			assert ("relative2", a_file_system.is_relative_pathname ("foo\bar"))
 			assert ("relative3", a_file_system.is_relative_pathname (".\foo"))
 			assert ("relative4", a_file_system.is_relative_pathname ("..\foo"))
-			assert ("relative5", a_file_system.is_relative_pathname ("/foo"))
-			assert ("relative6", a_file_system.is_relative_pathname ("c:/foo"))
 			assert ("relative7", a_file_system.is_relative_pathname (""))
 			assert ("not_relative1", not a_file_system.is_relative_pathname ("\foo"))
 			assert ("not_relative2", not a_file_system.is_relative_pathname ("\"))
 			assert ("not_relative3", not a_file_system.is_relative_pathname ("c:\foo"))
 			assert ("not_relative4", not a_file_system.is_relative_pathname ("\\foo\bar"))
+			assert ("not_relative5", not a_file_system.is_relative_pathname ("/foo"))
+			assert ("not_relative6", not a_file_system.is_relative_pathname ("c:/foo"))
+			create a_file_system.make_backslash_only
+			assert ("relative5", a_file_system.is_relative_pathname ("/foo"))
+			assert ("relative6", a_file_system.is_relative_pathname ("c:/foo"))
 		end
 
 	test_is_root_directory is
@@ -1423,11 +1428,17 @@ feature -- Pathname handling
 			assert ("root3", a_file_system.is_root_directory ("\\foo\bar"))
 			assert ("root4", a_file_system.is_root_directory ("\\foo\bar\"))
 			assert ("root5", a_file_system.is_root_directory ("\\foo\bar\\"))
+			assert ("root6", a_file_system.is_root_directory ("c:/"))
+			assert ("root7", a_file_system.is_root_directory ("/"))
 			assert ("not_root1", not a_file_system.is_root_directory ("foo"))
 			assert ("not_root2", not a_file_system.is_root_directory ("\foo"))
-			assert ("not_root3", not a_file_system.is_root_directory ("/"))
 			assert ("not_root4", not a_file_system.is_root_directory ("c:\foo"))
+			assert ("not_root6", not a_file_system.is_root_directory ("\\foo\bar/gobo"))
+			assert ("not_root7", not a_file_system.is_root_directory ("\\foo\bar\gobo"))
+			create a_file_system.make_backslash_only
+			assert ("not_root3", not a_file_system.is_root_directory ("/"))
 			assert ("not_root5", not a_file_system.is_root_directory ("c:/"))
+			assert ("root8", a_file_system.is_root_directory ("\\foo\bar/gobo"))
 		end
 
 	test_basename is
@@ -1438,7 +1449,7 @@ feature -- Pathname handling
 			create a_file_system.make
 			assert_equal ("basename1", "bar", a_file_system.basename ("foo\bar"))
 			assert_equal ("basename2", "bar", a_file_system.basename ("foo\\bar"))
-			assert_equal ("basename3", "foo/bar", a_file_system.basename ("foo/bar"))
+			assert_equal ("basename3", "bar", a_file_system.basename ("foo/bar"))
 			assert_equal ("basename4", "bar.e", a_file_system.basename ("c:\toto\foo\bar.e"))
 			assert_equal ("basename5", "\", a_file_system.basename ("\"))
 			assert_equal ("basename6", "\", a_file_system.basename ("c:\"))
@@ -1451,6 +1462,8 @@ feature -- Pathname handling
 			assert_equal ("basename13", "\", a_file_system.basename ("\\foo\bar\"))
 			assert_equal ("basename14", "toto", a_file_system.basename ("\\foo\bar\toto"))
 			assert_equal ("basename15", "foo", a_file_system.basename ("c:\foo"))
+			create a_file_system.make_backslash_only
+			assert_equal ("basename16", "foo/bar", a_file_system.basename ("foo/bar"))
 		end
 
 	test_dirname is
@@ -1461,7 +1474,7 @@ feature -- Pathname handling
 			create a_file_system.make
 			assert_equal ("dirname1", "foo", a_file_system.dirname ("foo\bar"))
 			assert_equal ("dirname2", "foo", a_file_system.dirname ("foo\\bar"))
-			assert_equal ("dirname3", ".", a_file_system.dirname ("foo/bar"))
+			assert_equal ("dirname3", "foo", a_file_system.dirname ("foo/bar"))
 			assert_equal ("dirname4", "\toto\foo", a_file_system.dirname ("\toto\foo\bar.e"))
 			assert_equal ("dirname5", "\", a_file_system.dirname ("\"))
 			assert_equal ("dirname6", "c:\", a_file_system.dirname ("c:\"))
@@ -1475,6 +1488,10 @@ feature -- Pathname handling
 			assert_equal ("dirname14", "\\foo\bar\", a_file_system.dirname ("\\foo\bar\"))
 			assert_equal ("dirname15", "\\foo\bar\\", a_file_system.dirname ("\\foo\bar\\"))
 			assert_equal ("dirname15", "\\foo\bar", a_file_system.dirname ("\\foo\bar\toto"))
+			assert_equal ("dirname18", "\\foo\bar", a_file_system.dirname ("\\foo\bar/gobo"))
+			create a_file_system.make_backslash_only
+			assert_equal ("dirname16", ".", a_file_system.dirname ("foo/bar"))
+			assert_equal ("dirname17", "\\foo\bar/gobo", a_file_system.dirname ("\\foo\bar/gobo"))
 		end
 
 	test_pathname is
@@ -1505,6 +1522,11 @@ feature -- Pathname handling
 			assert_equal ("pathname5", "..\foo\gobo", a_file_system.canonical_pathname ("..\foo\bar\..\gobo"))
 			assert_equal ("pathname6", "foo\bar", a_file_system.canonical_pathname ("foo\\bar"))
 			assert_equal ("pathname7", "c:\foo\bar", a_file_system.canonical_pathname ("c:\foo\bar"))
+			assert_equal ("pathname8", "c:\", a_file_system.canonical_pathname ("c:\.."))
+			assert_equal ("pathname9", "\", a_file_system.canonical_pathname ("\.."))
+			assert_equal ("pathname10", "\\foo\bar", a_file_system.canonical_pathname ("\\foo\bar\gobo\.."))
+			assert_equal ("pathname11", "\\foo\bar", a_file_system.canonical_pathname ("\\foo\bar\.."))
+			assert_equal ("pathname12", "..", a_file_system.canonical_pathname (".\.."))
 		end
 
 	test_relative_current_directory is
@@ -1569,6 +1591,29 @@ feature -- Pathname handling
 				a_name := a_file_system.absolute_pathname (a_name)
 				assert_filenames_equal ("parent1", a_name, a_parent)
 				assert_filenames_equal ("cwd1", cwd, a_file_system.cwd)
+					-- For the following tests it is hope that we are not
+					-- on drive G:. The drive G: might not even exist but
+					-- the tests should still succeed.
+				a_name := "G:\foo\bar"
+				a_parent := a_file_system.absolute_parent_directory (a_name)
+				assert_filenames_equal ("parent2", "G:\foo", a_parent)
+				a_name := "G:\foo"
+				a_parent := a_file_system.absolute_parent_directory (a_name)
+				assert_filenames_equal ("parent3", "G:\", a_parent)
+				a_name := "G:\"
+				a_parent := a_file_system.absolute_parent_directory (a_name)
+				assert_same ("root1", a_name, a_parent)
+				assert_filenames_equal ("parent4", "G:\", a_parent)
+					-- Absolute directory names with no drive letter.
+				a_name := "\foo\bar"
+				a_parent := a_file_system.absolute_parent_directory (a_name)
+				assert_filenames_equal ("parent5", STRING_.concat (a_file_system.current_drive, "\foo"), a_parent)
+				a_name := "\foo"
+				a_parent := a_file_system.absolute_parent_directory (a_name)
+				assert_filenames_equal ("parent6", a_file_system.absolute_root_directory, a_parent)
+				a_name := "\"
+				a_parent := a_file_system.absolute_parent_directory (a_name)
+				assert_filenames_equal ("parent7", a_file_system.absolute_root_directory, a_parent)
 			end
 		end
 
@@ -1592,6 +1637,11 @@ feature -- Pathname handling
 				a_name := Execution_environment.interpreted_string ("$GOBO\test\kernel")
 				a_name := a_file_system.absolute_pathname (a_name)
 				assert_filenames_equal ("parent1", a_name, a_parent)
+					-- Possibly non-existing relative directory name.
+				a_name := "foobar"
+				a_parent := a_file_system.absolute_parent_directory (a_name)
+				a_name := Execution_environment.interpreted_string ("$GOBO\test")
+				assert_filenames_equal ("parent2", a_name, a_parent)
 				a_file_system.cd (cwd)
 				assert_filenames_equal ("back", cwd, a_file_system.cwd)
 			end
@@ -1620,6 +1670,31 @@ feature -- Pathname handling
 				a_parent := a_file_system.absolute_parent_directory (a_name)
 				assert_filenames_equal ("parent2", a_file_system.absolute_parent_directory (cwd), a_parent)
 				assert_filenames_equal ("not_moved2", cwd, a_file_system.cwd)
+			end
+		end
+
+	test_absolute_parent_directory4 is
+			-- Test feature `parent_absolute_directory'.
+			-- UNC directory name.
+		local
+			a_file_system: KL_WINDOWS_FILE_SYSTEM
+			a_name, a_parent: STRING
+		do
+			create a_file_system.make
+			if a_file_system.is_current_file_system then
+				a_name := "\\gobosoft.com\shares\foo"
+				a_parent := a_file_system.absolute_parent_directory (a_name)
+				assert_filenames_equal ("parent1", "\\gobosoft.com\shares", a_parent)
+				a_name := "\\gobosoft.com\shares\foo\bar"
+				a_parent := a_file_system.absolute_parent_directory (a_name)
+				assert_filenames_equal ("parent2", "\\gobosoft.com\shares\foo", a_parent)
+				a_name := "\\gobosoft.com\shares"
+				a_parent := a_file_system.absolute_parent_directory (a_name)
+				assert_same ("root1", a_name, a_parent)
+				assert_filenames_equal ("parent3", "\\gobosoft.com\shares", a_parent)
+				a_name := "\\gobosoft.com\shares/foo"
+				a_parent := a_file_system.absolute_parent_directory (a_name)
+				assert_filenames_equal ("parent4", "\\gobosoft.com\shares", a_parent)
 			end
 		end
 
@@ -1660,8 +1735,9 @@ feature -- Pathname handling
 			create a_pathname.make
 			a_pathname.set_relative (False)
 			a_pathname.set_hostname ("gobo")
+			a_pathname.set_sharename ("shares")
 			a_pathname.append_names (<<"foo", "bar">>)
-			assert ("absolute3", a_file_system.string_to_pathname ("\\gobo\foo\bar").same_pathname (a_pathname))
+			assert ("absolute3", a_file_system.string_to_pathname ("\\gobo\shares\foo\bar").same_pathname (a_pathname))
 		end
 
 	test_pathname_to_string is

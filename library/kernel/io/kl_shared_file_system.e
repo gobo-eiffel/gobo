@@ -39,9 +39,19 @@ feature -- File systems
 		end
 
 	windows_file_system: KL_WINDOWS_FILE_SYSTEM is
-			-- Windows-like file system
+			-- Windows-like file system which accepts both
+			-- \ and / as directory separator
 		once
 			create Result.make
+		ensure
+			file_system_not_void: Result /= Void
+		end
+
+	windows_backslash_only_file_system: KL_WINDOWS_FILE_SYSTEM is
+			-- Windows-like file system which accepts only \ as
+			-- directory separator
+		once
+			create Result.make_backslash_only
 		ensure
 			file_system_not_void: Result /= Void
 		end

@@ -5,7 +5,7 @@ indexing
 		"Interface for pathnames"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -109,6 +109,14 @@ feature -- Access
 	hostname: STRING is
 			-- Hostname of pathname if present,
 			-- Void otherwise
+			-- (for example, with UNC we can have: \\hostname\sharename)
+		deferred
+		end
+
+	sharename: STRING is
+			-- Sharename of pathname if present,
+			-- Void otherwise
+			-- (for example, with UNC we can have: \\hostname\sharename)
 		deferred
 		end
 
@@ -151,7 +159,10 @@ feature -- Comparison
 					STRING_.same_string (drive, a_pathname.drive))) and
 					((hostname = Void and a_pathname.hostname = Void) or else
 					((hostname /= Void and a_pathname.hostname /= Void) and then
-					STRING_.same_string (hostname, a_pathname.hostname)))
+					STRING_.same_string (hostname, a_pathname.hostname))) and
+					((sharename = Void and a_pathname.sharename = Void) or else
+					((sharename /= Void and a_pathname.sharename /= Void) and then
+					STRING_.same_string (sharename, a_pathname.sharename)))
 				then
 					Result := True
 					from i := 1 until i > nb loop

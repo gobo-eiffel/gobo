@@ -5,6 +5,28 @@ Version 3.5 - ????
 	* Added attribute 'force' to task <xslt>. Use this attribute to
 	  generate output that already exists and is newer than the input.
 
+	Gobo Eiffel Kernel Library:
+
+	* KL_WINDOWS_FILE_SYSTEM now accepts both \ and / as directory
+	  separator. This is the default. It can still accept only \
+	  as directory separator if you use the `make_backslash_only'
+	  creation procedure.
+	* Change semantics of KI_FILE_SYSTEM.absolute_parent_pathname when
+	  the argument is both a root directory (i.e. has no parent) and an
+	  absolute pathname. In that case return the argument itself instead
+	  of `absolute_root_directory' as before.
+	* Fixed bug in KL_(UNIX|WINDOWS)_FILE_SYSTEM.absolute_parent_pathname.
+	  When the result was a root directory it was erroneously returning
+	  `absolute_root_directory'. So if you were in 'C:\gobo' and asked for
+	  the `absolute_parent_pathname' of 'D:\foo' you were getting 'C:\' 
+	  instead of the expected 'D:\'.
+	* Fixed bug in KL_WINDOWS_FILE_SYSTEM.canonical_pathname which for the
+	  input '\\gobo\foo\..' was returning the invalid pathname '\\gobo\'
+	  instead of '\\gobo\foo'. Likewise for 'c:\..', we were getting
+	  'c:\..' instead of 'c:\'.
+	* Added `sharename' to KI_PATHNAME, so that UNC pathnames can be
+	  split into '\\hostname\sharename'.
+
 Version 3.4 - 10 July 2005
 
 	geant:

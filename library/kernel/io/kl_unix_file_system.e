@@ -250,17 +250,24 @@ feature -- Pathname handling
 
 	absolute_parent_directory (a_pathname: STRING): STRING is
 			-- Absolute pathname of parent directory of `a_pathname';
-			-- Return `absolute_root_directory' if `a_pathname'
-			-- is a root directory (i.e. has no parent)
+			-- If `a_pathname' is a root directory (i.e. has no parent)
+			-- then return `a_pathname' itself if it is an absolute pathname,
+			-- or `absolute_root_directory' if it is a relative pathname
 			-- (`a_pathname' should follow the Unix pathname convention.
 			-- For pathname conversion use `pathname_from_file_system'.)
 		local
 			an_absolute_pathname: STRING
 			a_basename: STRING
 			stop: BOOLEAN
+			l_absolute: BOOLEAN
 		do
 			from
-				an_absolute_pathname := absolute_pathname (a_pathname)
+				if is_absolute_pathname (a_pathname) then
+					an_absolute_pathname := a_pathname
+					l_absolute := True
+				else
+					an_absolute_pathname := pathname (cwd, a_pathname)
+				end
 			until
 				stop
 			loop
@@ -273,11 +280,14 @@ feature -- Pathname handling
 					stop := True
 				end
 			end
-			an_absolute_pathname := dirname (an_absolute_pathname)
 			if is_root_directory (an_absolute_pathname) then
-				Result := absolute_root_directory
+				if l_absolute then
+					Result := a_pathname
+				else
+					Result := absolute_root_directory
+				end
 			else
-				Result := an_absolute_pathname
+				Result := dirname (an_absolute_pathname)
 			end
 		end
 
