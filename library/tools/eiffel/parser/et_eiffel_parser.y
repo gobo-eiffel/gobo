@@ -2686,7 +2686,7 @@ Address_mark: '$' Feature_name
 	;
 
 Writable: Identifier
-		{ $$ := $1 }
+		{ $$ := new_writable ($1) }
 	| E_RESULT
 		{ $$ := $1 }
 	;

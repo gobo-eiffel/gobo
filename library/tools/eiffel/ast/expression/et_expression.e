@@ -85,6 +85,14 @@ feature -- Access
 			definition: Result = Current
 		end
 
+feature -- Status report
+
+	is_current: BOOLEAN is
+			-- Is current expression the 'Current' entity (possibly parenthesized)?
+		do
+			-- Result := False
+		end
+
 feature -- Measurement
 
 	actual_argument_count: INTEGER is 1

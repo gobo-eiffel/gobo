@@ -274,6 +274,10 @@ feature -- Status report
 			Result := (builtin_code /= tokens.builtin_not_builtin)
 		end
 
+	is_current_type_needed: BOOLEAN
+			-- Is current type is needed to execute current feature?
+			-- (This might be needed for optimization purposes.)
+
 	builtin_code: INTEGER
 			-- Built-in code of current feature 
 
@@ -383,6 +387,14 @@ feature -- Status setting
 			inlined_set: is_inlined = b
 		end
 
+	set_current_type_needed (b: BOOLEAN) is
+			-- Set `is_current_type_needed' to `b'.
+		do
+			is_current_type_needed := b
+		ensure
+			current_type_needed_set: is_current_type_needed = b
+		end
+		
 	set_builtin_code (a_code: INTEGER) is
 			-- Set `builtin_code' to `a_code'.
 		do

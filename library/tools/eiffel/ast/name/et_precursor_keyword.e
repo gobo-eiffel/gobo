@@ -18,6 +18,8 @@ inherit
 		rename
 			make_precursor as make,
 			text as name
+		undefine
+			is_current
 		redefine
 			process, is_equal
 		end

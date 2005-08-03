@@ -911,6 +911,7 @@ feature {NONE} -- Feature validity
 			a_type := a_feature.type
 			check_signature_type_validity (a_type)
 			if not has_fatal_error then
+				report_current_type_needed
 				universe.report_result_supplier (a_type, current_class, a_feature)
 			end
 		end
@@ -1566,6 +1567,7 @@ feature {NONE} -- Instruction validity
 			an_instruction_not_void: an_instruction /= Void
 		do
 			has_fatal_error := False
+			report_current_type_needed
 -- TODO:
 		end
 
@@ -1837,7 +1839,7 @@ feature {NONE} -- Instruction validity
 		require
 			an_instruction_not_void: an_instruction /= Void
 		local
-			a_context: ET_NESTED_TYPE_CONTEXT
+			l_creation_context: ET_NESTED_TYPE_CONTEXT
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
 			a_creation_named_type: ET_NAMED_TYPE
@@ -1849,27 +1851,90 @@ feature {NONE} -- Instruction validity
 			an_index: INTEGER
 			a_class_type: ET_CLASS_TYPE
 			a_feature: ET_FEATURE
+			l_target: ET_WRITABLE
 			a_target_type: ET_TYPE
 			a_target_context: ET_NESTED_TYPE_CONTEXT
-			a_creation_type: ET_TYPE
-			a_creation_context: ET_NESTED_TYPE_CONTEXT
+			l_explicit_creation_type: ET_TYPE
+			l_explicit_creation_context: ET_NESTED_TYPE_CONTEXT
 			a_seed: INTEGER
 			a_call: ET_QUALIFIED_CALL
 			a_name: ET_FEATURE_NAME
 			a_position: ET_POSITION
 			had_error: BOOLEAN
+			l_result: ET_RESULT
+			l_type: ET_TYPE
+			l_identifier: ET_IDENTIFIER
+			l_locals: ET_LOCAL_VARIABLE_LIST
+			l_local_seed: INTEGER
 		do
 			has_fatal_error := False
 			actual_context.reset (current_type)
 			formal_context.reset (current_type)
 			a_target_context := formal_context
-			a_creation_context := actual_context
-			a_creation_type := an_instruction.type
-			if a_creation_type /= Void then
-				check_type_validity (a_creation_type)
-				a_position := a_creation_type.position
+			l_target := an_instruction.target
+			l_explicit_creation_context := actual_context
+			l_explicit_creation_type := an_instruction.type
+			if l_explicit_creation_type /= Void then
+				check_type_validity (l_explicit_creation_type)
+				a_position := l_explicit_creation_type.position
+					-- Check whether the creation type, as it appears in the class where
+					-- this creation instruction has been written, depends on the type of
+					-- the 'Current' entity.
+				if not has_fatal_error and then not l_explicit_creation_type.is_base_type then
+						-- The explicit creation type contains formal generic parameters
+						-- or anchored types whose resolved value may vary in various
+						-- descendant classes/types.
+					report_current_type_needed
+				end
 			else
-				a_position := an_instruction.target.position
+				a_position := l_target.position
+					-- Check whether the creation type, as it appears in the class where
+					-- this creation instruction has been written, depends on the type of
+					-- the 'Current' entity.
+				l_result ?= l_target
+				if l_result /= Void then
+						-- Use type of implementation feature because the types of the signature
+						-- of `current_feature' might have been resolved for `current_class'
+						-- (or for its parent class when processing precursors in the context
+						-- of current class).
+					l_type := current_feature.implementation_feature.type
+					if l_type = Void then
+						-- This error will be reported in `check_writable_validity'.
+					elseif not l_type.is_base_type then
+							-- The type of 'Result' contains formal generic parameters
+							-- or anchored types whose resolved value may vary in various
+							-- descendant classes/types.
+						report_current_type_needed
+					end
+				else
+					l_identifier ?= l_target
+					if l_identifier /= Void then
+						if l_identifier.is_local then
+							l_local_seed := l_identifier.seed
+							l_locals := feature_impl.locals
+							if l_locals = Void then
+								-- This error will be reported in `check_writable_validity'.
+							elseif l_local_seed < 1 or l_local_seed > l_locals.count then
+								-- This error will be reported in `check_writable_validity'.
+							else
+									-- Contrary to the types appearing in the signatures, types of
+									-- local variables in the AST are those found in the implementation
+									-- class of `feature_impl', i.e. not resolved yet.
+								l_type := l_locals.local_variable (l_local_seed).type
+								if not l_type.is_base_type then
+										-- The type of the local variable contains formal generic parameters
+										-- or anchored types whose resolved value may vary in various
+										-- descendant classes/types.
+									report_current_type_needed
+								end
+							end
+						else
+								-- This is an attribute. Its type may vary in various
+								-- descendant classes/types.
+							report_current_type_needed
+						end
+					end
+				end
 			end
 			if not has_fatal_error then
 				a_call := an_instruction.creation_call
@@ -1888,16 +1953,16 @@ feature {NONE} -- Instruction validity
 								error_handler.report_giacq_error
 							end
 						else
-							check_writable_validity (an_instruction.target, a_target_context)
+							check_writable_validity (l_target, a_target_context)
 							if not has_fatal_error then
 								a_target_type := tokens.like_current
-								if a_creation_type /= Void then
-									a_creation_context.force_last (a_creation_type)
-									a_context := a_creation_context
+								if l_explicit_creation_type /= Void then
+									l_explicit_creation_context.force_last (l_explicit_creation_type)
+									l_creation_context := l_explicit_creation_context
 								else
-									a_context := a_target_context
+									l_creation_context := a_target_context
 								end
-								a_class := a_context.base_class (universe)
+								a_class := l_creation_context.base_class (universe)
 								a_class.process (universe.interface_checker)
 								if not a_class.interface_checked or else a_class.has_interface_error then
 									set_fatal_error
@@ -1923,21 +1988,21 @@ feature {NONE} -- Instruction validity
 			end
 			if not has_fatal_error then
 				if a_feature = Void then
-					check_writable_validity (an_instruction.target, a_target_context)
+					check_writable_validity (l_target, a_target_context)
 					if not has_fatal_error then
 						a_target_type := tokens.like_current
-						if a_creation_type /= Void then
-							a_creation_type := resolved_formal_parameters (a_creation_type, feature_impl, current_type)
+						if l_explicit_creation_type /= Void then
+							l_explicit_creation_type := resolved_formal_parameters (l_explicit_creation_type, feature_impl, current_type)
 							if not has_fatal_error then
-								a_creation_context.force_last (a_creation_type)
-								a_context := a_creation_context
+								l_explicit_creation_context.force_last (l_explicit_creation_type)
+								l_creation_context := l_explicit_creation_context
 							end
 						else
-							a_context := a_target_context
+							l_creation_context := a_target_context
 						end
 					end
 					if not has_fatal_error then
-						a_class := a_context.base_class (universe)
+						a_class := l_creation_context.base_class (universe)
 						a_class.process (universe.interface_checker)
 						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
@@ -1956,12 +2021,12 @@ feature {NONE} -- Instruction validity
 			if not has_fatal_error then
 				check
 					a_class_not_void: a_class /= Void
-					a_context_not_void: a_context /= Void
+					l_creation_context_not_void: l_creation_context /= Void
 				end
-				if a_creation_type /= Void then
-					if not a_creation_context.conforms_to_type (a_target_type, a_target_context, universe) then
+				if l_explicit_creation_type /= Void then
+					if not l_explicit_creation_context.conforms_to_type (a_target_type, a_target_context, universe) then
 						set_fatal_error
-						a_creation_named_type := a_creation_context.named_type (universe)
+						a_creation_named_type := l_explicit_creation_context.named_type (universe)
 						a_target_named_type := a_target_context.named_type (universe)
 						a_class_impl := feature_impl.implementation_class
 						if current_class = a_class_impl then
@@ -1970,10 +2035,10 @@ feature {NONE} -- Instruction validity
 							error_handler.report_vgcc3b_error (current_class, a_class_impl, an_instruction, a_creation_named_type, a_target_named_type)
 						end
 					else
-						universe.report_create_supplier (a_creation_type, current_class, current_feature)
+						universe.report_create_supplier (l_explicit_creation_type, current_class, current_feature)
 					end
 				end
-				a_creation_named_type := a_context.named_type (universe)
+				a_creation_named_type := l_creation_context.named_type (universe)
 				a_class_type ?= a_creation_named_type
 				if a_class_type /= Void then
 					had_error := has_fatal_error
@@ -2049,9 +2114,9 @@ feature {NONE} -- Instruction validity
 					end
 					had_error := has_fatal_error
 					if a_call /= Void then
-						check_sub_actual_arguments_validity (a_call.arguments, a_context, a_name, a_feature, a_class)
+						check_sub_actual_arguments_validity (a_call.arguments, l_creation_context, a_name, a_feature, a_class)
 					else
-						check_sub_actual_arguments_validity (Void, a_context, a_name, a_feature, a_class)
+						check_sub_actual_arguments_validity (Void, l_creation_context, a_name, a_feature, a_class)
 					end
 					if had_error then
 						set_fatal_error
@@ -2641,53 +2706,52 @@ feature {NONE} -- Instruction validity
 				an_identifier ?= a_writable
 				if an_identifier /= Void then
 					a_seed := an_identifier.seed
-					if a_seed /= 0 then
-						if an_identifier.is_local then
-							a_locals := feature_impl.locals
-							if a_locals = Void then
-									-- Internal error.
-								set_fatal_error
-								error_handler.report_giabk_error
-							elseif a_seed < 1 or a_seed > a_locals.count then
-									-- Internal error.
-								set_fatal_error
-								error_handler.report_giabl_error
-							else
-									-- Contrary to the types appearing in the signatures, types of
-									-- local variables in the AST are those found in the implementation
-									-- class of `feature_impl', and hence need to be resolved in
-									-- `current_type'.
-								a_local := a_locals.local_variable (a_seed)
-								a_type := resolved_formal_parameters (a_local.type, feature_impl, current_type)
-								if not has_fatal_error then
-									a_context.force_last (a_type)
-									report_local_assignment_target (an_identifier, a_local)
-								end
+					if an_identifier.is_local then
+						a_locals := feature_impl.locals
+						if a_locals = Void then
+								-- Internal error.
+							set_fatal_error
+							error_handler.report_giabk_error
+						elseif a_seed < 1 or a_seed > a_locals.count then
+								-- Internal error.
+							set_fatal_error
+							error_handler.report_giabl_error
+						else
+								-- Contrary to the types appearing in the signatures, types of
+								-- local variables in the AST are those found in the implementation
+								-- class of `feature_impl', and hence need to be resolved in
+								-- `current_type'.
+							a_local := a_locals.local_variable (a_seed)
+							a_type := resolved_formal_parameters (a_local.type, feature_impl, current_type)
+							if not has_fatal_error then
+								a_context.force_last (a_type)
+								report_local_assignment_target (an_identifier, a_local)
+							end
+						end
+					elseif a_seed /= 0 then
+						an_attribute := current_class.seeded_feature (a_seed)
+						if an_attribute = Void then
+								-- Internal error: if we got a seed, the
+								-- `an_attribute' should not be void.
+							set_fatal_error
+							error_handler.report_giabm_error
+						elseif not an_attribute.is_attribute then
+							set_fatal_error
+							a_class_impl := feature_impl.implementation_class
+							if current_class = a_class_impl then
+								error_handler.report_vjaw0a_error (current_class, an_identifier, an_attribute)
+							elseif not has_implementation_error (feature_impl) then
+									-- Internal error: this error should have been reported when
+									-- processing the implementation `feature_impl' or in the
+									-- feature flattener when redeclaring attribute `a_feature'
+									-- to a non-attribute in an ancestor of `current_class'.
+								error_handler.report_giabn_error
 							end
 						else
-							an_attribute := current_class.seeded_feature (a_seed)
-							if an_attribute = Void then
-									-- Internal error: if we got a seed, the
-									-- `an_attribute' should not be void.
-								set_fatal_error
-								error_handler.report_giabm_error
-							elseif not an_attribute.is_attribute then
-								set_fatal_error
-								a_class_impl := feature_impl.implementation_class
-								if current_class = a_class_impl then
-									error_handler.report_vjaw0a_error (current_class, an_identifier, an_attribute)
-								elseif not has_implementation_error (feature_impl) then
-										-- Internal error: this error should have been reported when
-										-- processing the implementation `feature_impl' or in the
-										-- feature flattener when redeclaring attribute `a_feature'
-										-- to a non-attribute in an ancestor of `current_class'.
-									error_handler.report_giabn_error
-								end
-							else
-								a_type := an_attribute.type
-								a_context.force_last (a_type)
-								report_attribute_assignment_target (a_writable, an_attribute)
-							end
+							a_type := an_attribute.type
+							a_context.force_last (a_type)
+							report_current_type_needed
+							report_attribute_assignment_target (a_writable, an_attribute)
 						end
 					else
 							-- We need to resolve `an_identifier' in the implementation
@@ -2701,43 +2765,30 @@ feature {NONE} -- Instruction validity
 								error_handler.report_giadr_error
 							end
 						else
-							a_locals := feature_impl.locals
-							if a_locals /= Void then
-								a_seed := a_locals.index_of (an_identifier)
-								if a_seed /= 0 then
-									an_identifier.set_seed (a_seed)
-									an_identifier.set_local (True)
-									a_local := a_locals.local_variable (a_seed)
-									a_local.set_used (True)
-									a_context.force_last (a_local.type)
-									report_local_assignment_target (an_identifier, a_local)
-								end
-							end
-							if a_seed = 0 then
-								current_class.process (universe.interface_checker)
-								if not current_class.interface_checked or else current_class.has_interface_error then
-									set_fatal_error
-								else
-									an_attribute := current_class.named_feature (an_identifier)
-									if an_attribute /= Void then
-										if an_attribute.is_attribute then
-											a_seed := an_attribute.first_seed
-											an_identifier.set_seed (a_seed)
-											a_type := an_attribute.type
-											a_context.force_last (a_type)
-											report_attribute_assignment_target (a_writable, an_attribute)
-										else
-											set_fatal_error
-											error_handler.report_vjaw0a_error (current_class, an_identifier, an_attribute)
-										end
+							current_class.process (universe.interface_checker)
+							if not current_class.interface_checked or else current_class.has_interface_error then
+								set_fatal_error
+							else
+								an_attribute := current_class.named_feature (an_identifier)
+								if an_attribute /= Void then
+									if an_attribute.is_attribute then
+										a_seed := an_attribute.first_seed
+										an_identifier.set_seed (a_seed)
+										a_type := an_attribute.type
+										a_context.force_last (a_type)
+										report_current_type_needed
+										report_attribute_assignment_target (a_writable, an_attribute)
 									else
 										set_fatal_error
-										an_arguments := feature_impl.arguments
-										if an_arguments /= Void and then an_arguments.index_of (an_identifier) /= 0 then
-											error_handler.report_vjaw0c_error (current_class, an_identifier, feature_impl)
-										else
-											error_handler.report_veen0a_error (current_class, an_identifier, feature_impl)
-										end
+										error_handler.report_vjaw0a_error (current_class, an_identifier, an_attribute)
+									end
+								else
+									set_fatal_error
+									an_arguments := feature_impl.arguments
+									if an_arguments /= Void and then an_arguments.index_of (an_identifier) /= 0 then
+										error_handler.report_vjaw0c_error (current_class, an_identifier, feature_impl)
+									else
+										error_handler.report_veen0a_error (current_class, an_identifier, feature_impl)
 									end
 								end
 							end
@@ -2915,6 +2966,12 @@ feature {NONE} -- Expression validity
 			l_type := a_type
 			check_type_validity (l_type)
 			if not has_fatal_error then
+				if not l_type.is_base_type then
+						-- The explicit creation type contains formal generic parameters
+						-- or anchored types whose resolved value may vary in various
+						-- descendant classes/types.
+					report_current_type_needed
+				end
 				if a_name /= Void then
 					l_name := a_name
 					a_seed := l_name.seed
@@ -3095,6 +3152,9 @@ feature {NONE} -- Expression validity
 				create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 				report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
 				a_context.force_last (a_typed_pointer_type)
+					-- Need current type to create a object of type
+					-- 'TYPED_POINTER [<current_type>]'.
+				report_current_type_needed
 			else
 				a_context.force_last (universe.pointer_class)
 				report_pointer_expression (an_expression)
@@ -3219,6 +3279,7 @@ feature {NONE} -- Expression validity
 					-- Use ISE's implementation.
 				check_expression_validity (an_expression.expression, a_context, any_type, feature_impl, current_feature, current_type)
 				if not has_fatal_error then
+-- TODO: does the created TYPED_POINTER depend on the current type?
 					if not a_context.is_empty then
 						create an_actuals.make_with_capacity (1)
 						an_actuals.put_first (a_context.last)
@@ -3319,6 +3380,7 @@ feature {NONE} -- Expression validity
 										create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 										report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
 										a_context.force_last (a_typed_pointer_type)
+-- TODO: does the created TYPED_POINTER depend on the current type?
 									else
 										a_context.force_last (universe.pointer_class)
 										report_pointer_expression (an_expression)
@@ -3357,6 +3419,7 @@ feature {NONE} -- Expression validity
 											create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 											report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
 											a_context.force_last (a_typed_pointer_type)
+-- TODO: does the created TYPED_POINTER depend on the current type?
 										else
 											a_context.force_last (universe.pointer_class)
 											report_pointer_expression (an_expression)
@@ -3388,6 +3451,7 @@ feature {NONE} -- Expression validity
 										create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 										report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
 										a_context.force_last (a_typed_pointer_type)
+-- TODO: does the created TYPED_POINTER depend on the current type?
 									else
 										a_context.force_last (universe.pointer_class)
 										report_pointer_expression (an_expression)
@@ -3467,6 +3531,7 @@ feature {NONE} -- Expression validity
 									create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 									report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
 									a_context.force_last (a_typed_pointer_type)
+-- TODO: does the created TYPED_POINTER depend on the current type?
 								end
 							else
 								a_context.force_last (universe.pointer_class)
@@ -3519,6 +3584,7 @@ feature {NONE} -- Expression validity
 									create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 									report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
 									a_context.force_last (a_typed_pointer_type)
+-- TODO: does the created TYPED_POINTER depend on the current type?
 								end
 							else
 								a_context.force_last (universe.pointer_class)
@@ -3543,6 +3609,7 @@ feature {NONE} -- Expression validity
 									create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 									report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
 									a_context.force_last (a_typed_pointer_type)
+-- TODO: does the created TYPED_POINTER depend on the current type?
 								else
 									a_context.force_last (universe.pointer_class)
 									report_pointer_expression (an_expression)
@@ -3793,6 +3860,11 @@ feature {NONE} -- Expression validity
 			a_name := an_expression.name
 			any_type := universe.any_type
 			a_target := an_expression.left
+			if a_target.is_current then
+					-- If the target is the current object there is a good chance that
+					-- we will need its type to figure out which feature to call.
+				report_current_type_needed
+			end
 			a_seed := a_name.seed
 			if a_seed = 0 then
 					-- We need to resolve `a_name' in the implementation
@@ -4207,6 +4279,8 @@ feature {NONE} -- Expression validity
 			a_generic_class_type: ET_GENERIC_CLASS_TYPE
 			any_type: ET_CLASS_TYPE
 		do
+-- TODO: check that the type of the manifest array does not depend on the
+-- type of current.
 			has_fatal_error := False
 			array_class := universe.array_class
 			an_array_type ?= current_target_type.named_type (universe)
@@ -4295,6 +4369,8 @@ feature {NONE} -- Expression validity
 			a_tuple_parameters: ET_ACTUAL_PARAMETER_LIST
 			any_type: ET_CLASS_TYPE
 		do
+-- TODO: check that the type of the manifest tuple does not depend on the
+-- type of current.
 			has_fatal_error := False
 			a_tuple_type ?= current_target_type.named_type (universe)
 			if a_tuple_type /= Void then
@@ -4350,6 +4426,8 @@ feature {NONE} -- Expression validity
 			a_type_type: ET_GENERIC_CLASS_TYPE
 			an_actuals: ET_ACTUAL_PARAMETER_LIST
 		do
+-- TODO: check that the type of the manifest type does not depend on the
+-- type of current.
 			has_fatal_error := False
 			a_type_class := universe.type_class
 			create an_actuals.make_with_capacity (1)
@@ -4458,6 +4536,9 @@ feature {NONE} -- Expression validity
 			an_actuals: ET_ACTUAL_ARGUMENT_LIST
 		do
 			has_fatal_error := False
+				-- This is an unqualified call, so there is a good chance that we
+				-- will need the type of current to figure out which feature to call.
+			report_current_type_needed
 			a_class_impl := feature_impl.implementation_class
 			if current_feature.first_precursor = Void then
 					-- Immediate features cannot have Precursor.
@@ -4577,6 +4658,11 @@ feature {NONE} -- Expression validity
 		do
 			has_fatal_error := False
 			a_target := a_call.target
+			if a_target.is_current then
+					-- If the target is the current object there is a good chance that
+					-- we will need its type to figure out which feature to call.
+				report_current_type_needed
+			end
 			a_name := a_call.name
 			an_actuals := a_call.arguments
 			any_type := universe.any_type
@@ -5008,6 +5094,7 @@ feature {NONE} -- Expression validity
 							create a_typed_pointer_type.make (Void, a_typed_pointer_class.name, an_actuals, a_typed_pointer_class)
 							report_typed_pointer_expression (an_expression, a_typed_pointer_type, a_context)
 							a_context.force_last (a_typed_pointer_type)
+-- TODO: check that the type of TYPED_POINTER does not depend on the type of current.
 						end
 					else
 						a_context.force_last (universe.pointer_class)
@@ -5059,6 +5146,12 @@ feature {NONE} -- Expression validity
 			a_type := a_call.type
 			check_type_validity (a_type)
 			if not has_fatal_error then
+				if not a_type.is_base_type then
+						-- The type used to figure out which feature to call contains formal
+						-- generic parameters or anchored types whose resolved value may vary
+						-- in various descendant classes/types.
+					report_current_type_needed
+				end
 				a_name := a_call.name
 				a_seed := a_name.seed
 				if a_seed = 0 then
@@ -5197,6 +5290,7 @@ feature {NONE} -- Expression validity
 			already_checked: BOOLEAN
 		do
 			has_fatal_error := False
+-- TODO: does the type of the strip expression depend on the type of current?
 			nb := an_expression.count
 			from i := 1 until i > nb loop
 				a_name := an_expression.feature_name (i)
@@ -5408,6 +5502,9 @@ feature {NONE} -- Expression validity
 			a_builtin: ET_BUILTIN_CONVERT_FEATURE
 		do
 			has_fatal_error := False
+				-- This is an unqualified call, so there is a good chance that we
+				-- will need the type of current to figure out which feature to call.
+			report_current_type_needed
 			a_name := a_call.name
 			an_actuals := a_call.arguments
 			a_seed := a_name.seed
@@ -5839,6 +5936,7 @@ feature {NONE} -- Agent validity
 			had_error: BOOLEAN
 			i, nb: INTEGER
 		do
+-- TODO: do we need to call `report_current_type_needed'.
 			has_fatal_error := False
 			a_name := an_expression.name
 			a_seed := a_name.seed
@@ -5982,6 +6080,7 @@ feature {NONE} -- Agent validity
 			had_error: BOOLEAN
 			i, nb: INTEGER
 		do
+-- TODO: do we need to call `report_current_type_needed'.
 			has_fatal_error := False
 			a_name := an_expression.name
 			any_type := universe.any_type
@@ -6152,6 +6251,7 @@ feature {NONE} -- Agent validity
 			had_error: BOOLEAN
 			i, nb: INTEGER
 		do
+-- TODO: do we need to call `report_current_type_needed'.
 			has_fatal_error := False
 			a_name := an_expression.name
 			a_target_type := a_target.type
@@ -6635,6 +6735,14 @@ feature {NONE} -- Event handling
 		require
 			no_error: not has_fatal_error
 			an_expression_not_void: an_expression /= Void
+		do
+		end
+
+	report_current_type_needed is
+			-- Report that the current type is needed to execute the feature being analyzed.
+			-- This might be needed for optimization purposes.
+		require
+			no_error: not has_fatal_error
 		do
 		end
 

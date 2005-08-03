@@ -27,6 +27,8 @@ inherit
 	ET_KEYWORD
 		rename
 			make_result as make
+		undefine
+			is_current
 		redefine
 			process
 		end

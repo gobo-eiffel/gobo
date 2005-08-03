@@ -5,7 +5,7 @@ indexing
 		"Eiffel parenthesized expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,7 @@ inherit
 
 	ET_EXPRESSION
 		redefine
-			reset, index
+			reset, index, is_current
 		end
 
 	ET_AGENT_TARGET
@@ -50,6 +50,14 @@ feature -- Initialization
 			-- Reset expression as it was when it was first parsed.
 		do
 			expression.reset
+		end
+
+feature -- Status report
+
+	is_current: BOOLEAN is
+			-- Is current expression the 'Current' entity (possibly parenthesized)?
+		do
+			Result := expression.is_current
 		end
 
 feature -- Access

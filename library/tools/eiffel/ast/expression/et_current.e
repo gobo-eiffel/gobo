@@ -5,7 +5,7 @@ indexing
 		"Eiffel current entities"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,11 +17,15 @@ inherit
 	ET_EXPRESSION
 		undefine
 			first_position, last_position
+		redefine
+			is_current
 		end
 
 	ET_KEYWORD
 		rename
 			make_current as make
+		undefine
+			is_current
 		redefine
 			process
 		end
@@ -29,6 +33,11 @@ inherit
 create
 
 	make
+
+feature -- Status report
+
+	is_current: BOOLEAN is True
+			-- Is current expression the 'Current' entity (possibly parenthesized)?
 
 feature -- Processing
 

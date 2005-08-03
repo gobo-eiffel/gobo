@@ -22,6 +22,8 @@ inherit
 	ET_KEYWORD
 		rename
 			make_void as make
+		undefine
+			is_current
 		redefine
 			process
 		end

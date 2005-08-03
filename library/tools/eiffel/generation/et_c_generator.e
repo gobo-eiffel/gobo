@@ -134,6 +134,9 @@ feature {NONE} -- Initialization
 			create once_features.make (10000)
 			create constant_features.make_map (10000)
 			create called_features.make (1000)
+			create polymorphic_equivalent_types1.make (100)
+			create polymorphic_equivalent_types2.make (100)
+			create polymorphic_equivalent_types3.make (100)
 		end
 
 feature -- Access
@@ -3568,6 +3571,15 @@ feature {NONE} -- Polymorphic call generation
 			j, nb2: INTEGER
 			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_switch: BOOLEAN
+			l_equivalent_feature1: ET_DYNAMIC_FEATURE
+			l_equivalent_types1: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_equivalent_feature2: ET_DYNAMIC_FEATURE
+			l_equivalent_types2: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_equivalent_feature3: ET_DYNAMIC_FEATURE
+			l_equivalent_types3: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_other_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			k, nb3: INTEGER
 		do
 			nb := polymorphic_calls.count
 			from i := last_polymorphic_index until i > nb loop
@@ -3578,7 +3590,7 @@ feature {NONE} -- Polymorphic call generation
 				l_base_type := l_target_type_set.static_type.base_type
 				l_dynamic_type := l_target_type_set.first_type
 				l_other_dynamic_types := l_target_type_set.other_types
-				if l_dynamic_type /= Void then
+				if l_dynamic_type /= Void and l_other_dynamic_types /= Void then
 					l_feature := l_dynamic_type.base_class.seeded_feature (l_seed)
 					if l_feature = Void then
 							-- Internal error: there should be a feature with `a_seed'.
@@ -3646,7 +3658,126 @@ feature {NONE} -- Polymorphic call generation
 						current_file.put_character ('{')
 						current_file.put_new_line
 						indent
-						if l_switch then
+						resolve_polymorphic_call (l_target_type_set, l_seed)
+						l_equivalent_feature1 := polymorphic_equivalent_feature1
+						l_equivalent_feature2 := polymorphic_equivalent_feature2
+						l_equivalent_feature3 := polymorphic_equivalent_feature3
+						if l_equivalent_feature1 /= Void and l_equivalent_feature2 = Void then
+								-- Static binding.
+							print_indentation
+							if l_result_type /= Void then
+								current_file.put_string (c_return)
+								current_file.put_character (' ')
+								current_file.put_character ('(')
+								print_query_call (l_dynamic_type, tokens.current_keyword, l_call.name, l_actuals)
+								current_file.put_character (')')
+								current_file.put_character (';')
+								current_file.put_new_line
+							else
+								print_procedure_call (l_dynamic_type, tokens.current_keyword, l_call.name, l_actuals)
+								current_file.put_new_line
+							end
+						elseif l_equivalent_feature1 /= Void and l_other_dynamic_types.count > 10 then
+							l_equivalent_types1 := polymorphic_equivalent_types1
+							l_equivalent_types2 := polymorphic_equivalent_types2
+							l_equivalent_types3 := polymorphic_equivalent_types3
+							print_indentation
+							current_file.put_string (c_int)
+							current_file.put_character (' ')
+							current_file.put_character ('z')
+							current_file.put_character ('1')
+							current_file.put_character (' ')
+							current_file.put_character ('=')
+							current_file.put_character (' ')
+							current_file.put_character ('C')
+							current_file.put_string (c_arrow)
+							current_file.put_string (c_id)
+							current_file.put_character (';')
+							current_file.put_new_line
+							l_types := l_equivalent_types1
+							if l_types.count < l_equivalent_types2.count then
+								l_types := l_equivalent_types2
+							end
+							if l_equivalent_feature3 /= Void and then l_types.count < l_equivalent_types3.count then
+								l_types := l_equivalent_types3
+							end
+							from
+								j := 1
+								l_other_types := l_equivalent_types1
+							until
+								l_other_types = Void
+							loop
+								if l_other_types /= l_types then
+									nb3 := l_other_types.count
+									from k := 1 until k > nb3 loop
+										if j = 1 and k = 1 then
+											print_indentation
+										end
+										current_file.put_string (c_if)
+										current_file.put_character (' ')
+										current_file.put_character ('(')
+										current_file.put_character ('z')
+										current_file.put_character ('1')
+										current_file.put_character ('=')
+										current_file.put_character ('=')
+										current_file.put_integer (l_other_types.item (k).id)
+										current_file.put_character (')')
+										current_file.put_character (' ')
+										current_file.put_character ('{')
+										current_file.put_new_line
+										indent
+										print_indentation
+										if l_result_type /= Void then
+											current_file.put_string (c_return)
+											current_file.put_character (' ')
+											current_file.put_character ('(')
+											print_query_call (l_other_types.item (k), tokens.current_keyword, l_call.name, l_actuals)
+											current_file.put_character (')')
+											current_file.put_character (';')
+											current_file.put_new_line
+										else
+											print_procedure_call (l_other_types.item (k), tokens.current_keyword, l_call.name, l_actuals)
+											current_file.put_new_line
+										end
+										dedent
+										print_indentation
+										current_file.put_character ('}')
+										current_file.put_character (' ')
+										current_file.put_string (c_else)
+										current_file.put_character (' ')
+										k := k + 1
+									end
+								end
+								j := j + 1
+								if j = 2 then
+									l_other_types := l_equivalent_types2
+								elseif j = 3 and l_equivalent_feature3 /= Void then
+									l_other_types := l_equivalent_types3
+								else
+									l_other_types := Void
+								end
+							end
+							current_file.put_character ('{')
+							current_file.put_new_line
+							indent
+							print_indentation
+							if l_result_type /= Void then
+								current_file.put_string (c_return)
+								current_file.put_character (' ')
+								current_file.put_character ('(')
+								print_query_call (l_types.first, tokens.current_keyword, l_call.name, l_actuals)
+								current_file.put_character (')')
+								current_file.put_character (';')
+								current_file.put_new_line
+							else
+								print_procedure_call (l_types.first, tokens.current_keyword, l_call.name, l_actuals)
+								current_file.put_new_line
+							end
+							dedent
+							print_indentation
+							current_file.put_character ('}')
+							current_file.put_new_line
+						elseif l_switch then
 								-- Use switch statement.
 							from
 								j := 1
@@ -3703,7 +3834,6 @@ feature {NONE} -- Polymorphic call generation
 							current_file.put_character ('}')
 							current_file.put_character (';')
 						else
-								-- Use binary search.
 							print_indentation
 							current_file.put_string (c_int)
 							current_file.put_character (' ')
@@ -3717,6 +3847,21 @@ feature {NONE} -- Polymorphic call generation
 							current_file.put_string (c_id)
 							current_file.put_character (';')
 							current_file.put_new_line
+debug
+nb2 := l_other_dynamic_types.count
+if nb2 > 30 then
+--print ((nb2 + 1).out)
+--print (" ")
+--print (l_target_type_set.static_type.base_type.to_text)
+--print (".")
+--print (l_target_type_set.static_type.base_class.seeded_feature (l_seed).name.name)
+--print ("%N")
+current_file.put_line ("printf(%"%%d X%%d %%s.%%s\n%", " + (nb2 + 1).out + ", " +
+	i.out + ", %"" + l_target_type_set.static_type.base_type.to_text + "%", %"" +
+	l_target_type_set.static_type.base_class.seeded_feature (l_seed).name.name + "%");")
+end
+end
+								-- Use binary search.
 							polymorphic_type_ids.force_last (l_dynamic_type.id)
 							polymorphic_types.force_last (l_dynamic_type, l_dynamic_type.id)
 							if l_other_dynamic_types /= Void then
@@ -3747,6 +3892,7 @@ feature {NONE} -- Polymorphic call generation
 						current_file.put_new_line
 					end
 				end
+				wipe_out_polymorphic_equivalent_features
 				i := i + 1
 			end
 			last_polymorphic_index := i
@@ -3879,6 +4025,122 @@ feature {NONE} -- Polymorphic call generation
 		end
 
 	last_polymorphic_index: INTEGER
+
+	resolve_polymorphic_call (a_target_type_set: ET_DYNAMIC_TYPE_SET; a_seed: INTEGER) is
+			-- Try to find similarities between the features with seed `a_seed'
+			-- in the various types of `a_target_type_set' and group them by
+			-- equivalence classes in (`polymorphic_equivalent_featureN',
+			-- `polymorphic_equivalent_typesN') where 1<=N<=3, or leave the
+			-- `polymorphic_equivalent_featuresN' Void if there are more
+			-- than N equivalence classes.
+		require
+			a_target_type_set_not_void: a_target_type_set /= Void
+			not_call_on_void_target: a_target_type_set.first_type /= Void
+			polymorphic_call: a_target_type_set.other_types /= Void
+		local
+			l_type: ET_DYNAMIC_TYPE
+			l_other_types: ET_DYNAMIC_TYPE_LIST
+			l_feature: ET_DYNAMIC_FEATURE
+			l_feature1: ET_DYNAMIC_FEATURE
+			l_feature2: ET_DYNAMIC_FEATURE
+			l_feature3: ET_DYNAMIC_FEATURE
+			l_static_feature: ET_FEATURE
+			l_static_feature1: ET_FEATURE
+			l_static_feature2: ET_FEATURE
+			l_static_feature3: ET_FEATURE
+			i, nb: INTEGER
+			l_new: BOOLEAN
+			l_found: BOOLEAN
+		do
+			l_type := a_target_type_set.first_type
+			l_feature := l_type.seeded_dynamic_feature (a_seed, current_system)
+			if l_feature = Void then
+					-- Internal error: there should be a feature with that seed.
+				set_fatal_error
+-- TODO.
+			else
+				l_found := True
+				l_feature1 := l_feature
+				l_static_feature1 := l_feature1.static_feature.implementation_feature
+				polymorphic_equivalent_types1.force_last (l_type)
+				l_other_types := a_target_type_set.other_types
+				nb := l_other_types.count
+				from i := 1 until i > nb loop
+					l_type := l_other_types.item (i)
+					l_feature := l_type.seeded_dynamic_feature (a_seed, current_system)
+					if l_feature = Void then
+							-- Internal error: there should be a feature with that seed.
+						set_fatal_error
+-- TODO.
+						l_found := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						l_new := True
+						l_static_feature := l_feature.static_feature.implementation_feature
+						if l_feature.is_current_type_needed then
+							-- New equivalence class.
+						elseif not l_feature1.is_current_type_needed and then l_static_feature1 = l_static_feature then
+							polymorphic_equivalent_types1.force_last (l_type)
+							l_new := False
+						elseif l_feature2 /= Void then
+							if not l_feature2.is_current_type_needed and then l_static_feature2 = l_static_feature then
+								polymorphic_equivalent_types2.force_last (l_type)
+									l_new := False
+							elseif l_feature3 /= Void then
+								if not l_feature3.is_current_type_needed and then l_static_feature3 = l_static_feature then
+									polymorphic_equivalent_types3.force_last (l_type)
+									l_new := False
+								end
+							end
+						end
+						if l_new then
+							if l_feature2 = Void then
+								l_feature2 := l_feature
+								l_static_feature2 := l_static_feature
+								polymorphic_equivalent_types2.force_last (l_type)
+							elseif l_feature3 = Void then
+								l_feature3 := l_feature
+								l_static_feature3 := l_static_feature
+								polymorphic_equivalent_types3.force_last (l_type)
+							else
+									-- Too many equivalence classes.
+								l_found := False
+								i := nb + 1
+							end
+						end
+					end
+					i := i + 1
+				end
+				if l_found then
+					polymorphic_equivalent_feature1 := l_feature1
+					polymorphic_equivalent_feature2 := l_feature2
+					polymorphic_equivalent_feature3 := l_feature3
+				else
+					polymorphic_equivalent_types1.wipe_out
+					polymorphic_equivalent_types2.wipe_out
+					polymorphic_equivalent_types3.wipe_out
+				end
+			end
+		end
+
+	wipe_out_polymorphic_equivalent_features is
+			-- Wipe out structures generated by `resolve_polymorphic_call'.
+		do
+			polymorphic_equivalent_feature1 := Void
+			polymorphic_equivalent_feature2 := Void
+			polymorphic_equivalent_feature3 := Void
+			polymorphic_equivalent_types1.wipe_out
+			polymorphic_equivalent_types2.wipe_out
+			polymorphic_equivalent_types3.wipe_out
+		end
+
+	polymorphic_equivalent_feature1: ET_DYNAMIC_FEATURE
+	polymorphic_equivalent_types1: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+	polymorphic_equivalent_feature2: ET_DYNAMIC_FEATURE
+	polymorphic_equivalent_types2: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+	polymorphic_equivalent_feature3: ET_DYNAMIC_FEATURE
+	polymorphic_equivalent_types3: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			-- Equivalence classes for polymorphic calls
 
 feature {NONE} -- Built-in feature generation
 
@@ -7056,5 +7318,11 @@ invariant
 	no_void_once_feature: not once_features.has (Void)
 	constant_features_not_void: constant_features /= Void
 	no_void_constant_feature: not constant_features.has (Void)
+	polymorphic_equivalent_types1_not_void: polymorphic_equivalent_types1 /= Void
+	no_void_polymorphic_equivalent_type1: not polymorphic_equivalent_types1.has (Void)
+	polymorphic_equivalent_types2_not_void: polymorphic_equivalent_types2 /= Void
+	no_void_polymorphic_equivalent_type2: not polymorphic_equivalent_types2.has (Void)
+	polymorphic_equivalent_types3_not_void: polymorphic_equivalent_types3 /= Void
+	no_void_polymorphic_equivalent_type3: not polymorphic_equivalent_types3.has (Void)
 
 end

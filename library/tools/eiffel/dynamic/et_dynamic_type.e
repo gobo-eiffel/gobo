@@ -221,6 +221,44 @@ feature -- Features
 			dynamic_feature_not_void: Result /= Void
 		end
 
+	seeded_dynamic_feature (a_seed: INTEGER; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time feature with seed `a_seed';
+			-- Void if no such feature
+		require
+			a_system_not_void: a_system /= Void
+		local
+			i, nb: INTEGER
+			l_feature: ET_FEATURE
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+		do
+			if features = empty_features then
+				l_feature := base_class.seeded_feature (a_seed)
+				if l_feature /= Void then
+					create features.make_with_capacity (base_class.features.count)
+					Result := new_dynamic_feature (l_feature, a_system)
+					features.put_last (Result)
+				end
+			else
+				nb := features.count
+				from i := 1 until i > nb loop
+					l_dynamic_feature := features.item (i)
+					if l_dynamic_feature.static_feature.has_seed (a_seed) then
+						Result := l_dynamic_feature
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+				if Result = Void then
+					l_feature := base_class.seeded_feature (a_seed)
+					if l_feature /= Void then
+						Result := new_dynamic_feature (l_feature, a_system)
+						features.force_last (Result)
+					end
+				end
+			end
+		end
+
 feature -- Element change
 
 	put_type (a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM) is

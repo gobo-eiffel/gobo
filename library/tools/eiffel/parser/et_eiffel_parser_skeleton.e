@@ -1382,6 +1382,24 @@ feature {NONE} -- AST factory
 			end
 		end
 
+	new_writable (a_name: ET_IDENTIFIER): ET_WRITABLE is
+			-- New writable
+		local
+			a_seed: INTEGER
+		do
+			if a_name /= Void then
+				Result := a_name
+				if last_local_variables /= Void then
+					a_seed := last_local_variables.index_of (a_name)
+					if a_seed /= 0 then
+						a_name.set_seed (a_seed)
+						a_name.set_local (True)
+						last_local_variables.local_variable (a_seed).set_used (True)
+					end
+				end
+			end
+		end
+
 	new_class (a_name: ET_IDENTIFIER): ET_CLASS is
 			-- New Eiffel class
 		require

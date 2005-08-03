@@ -28,7 +28,7 @@ inherit
 
 	ET_KEYWORD
 		undefine
-			process
+			process, is_current
 		end
 
 feature -- Status report

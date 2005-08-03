@@ -44,6 +44,7 @@ inherit
 			report_creation_expression,
 			report_creation_instruction,
 			report_current,
+			report_current_type_needed,
 			report_double_constant,
 			report_equality_expression,
 			report_formal_argument,
@@ -390,6 +391,7 @@ feature {NONE} -- Generation
 			end
 			a_feature.set_dynamic_type_sets (dynamic_type_sets)
 			had_error := has_fatal_error
+			a_feature.set_current_type_needed (False)
 			if a_feature.is_precursor then
 				check_precursor_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
 			else
@@ -921,6 +923,15 @@ feature {NONE} -- Event handling
 				if current_index.item = 0 then
 					current_index.put (an_expression.index)
 				end
+			end
+		end
+
+	report_current_type_needed is
+			-- Report that the current type is needed to execute the feature being analyzed.
+			-- This might be needed for optimization purposes.
+		do
+			if current_type = current_dynamic_type.base_type then
+				current_dynamic_feature.set_current_type_needed (True)
 			end
 		end
 
