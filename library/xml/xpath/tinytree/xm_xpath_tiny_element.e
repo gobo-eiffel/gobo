@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 			tree := a_document
 			node_number := a_node_number
 			node_type := Element_node
-			are_namespaces_accumulated := True
 		ensure
 			document_set: tree = a_document
 			node_number_set: node_number = a_node_number
@@ -148,53 +147,36 @@ feature -- Access
 			a_namespace_node: INTEGER
 			a_node: XM_XPATH_TINY_COMPOSITE_NODE
 		do
-			a_namespace_node := tree.beta_value (node_number)
-			if a_namespace_node > 0 then
-				from
-				until
-					a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number
-				loop
-					a_receiver.notify_namespace (tree.namespace_code_for_node (a_namespace_node), 0)
-					a_namespace_node := a_namespace_node + 1
+			if tree.are_namespaces_used then
+				a_namespace_node := tree.beta_value (node_number)
+				if a_namespace_node > 0 then
+					from
+					until
+						a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number
+					loop
+						a_receiver.notify_namespace (tree.namespace_code_for_node (a_namespace_node), 0)
+						a_namespace_node := a_namespace_node + 1
+					end
 				end
-			end
-
-			-- Now add the namespaces defined on the ancestor nodes.
-			-- We rely on the receiver to eliminate multiple declarations of the same prefix.
-
-			if include_ancestors then
-				a_node := parent
-				if a_node /= Void and then a_node.is_element then
-					a_node.as_element.output_namespace_nodes (a_receiver, true)
+				
+				-- Now add the namespaces defined on the ancestor nodes.
+				-- We rely on the receiver to eliminate multiple declarations of the same prefix.
+				
+				if include_ancestors then
+					a_node := parent
+					if a_node /= Void and then a_node.is_element then
+						a_node.as_element.output_namespace_nodes (a_receiver, true)
+					end
 				end
 			end
 		end
 
 	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
 			-- Namespace codes in scope for `Current'
-		local
-			a_namespace_node: INTEGER
-			a_node: XM_XPATH_TINY_NODE
 		do
-			create Result.make (0)
-			a_namespace_node := tree.beta_value (node_number)
-			if a_namespace_node > 0 then
-				from
-				until
-					a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number
-				loop
-					Result.force_last (tree.namespace_code_for_node (a_namespace_node))
-					a_namespace_node := a_namespace_node + 1
-				end
-			end
-			a_node := parent
-			if a_node /= Void and then a_node.is_tiny_element then
-				a_node.as_tiny_element.accumulate_namespace_codes (Result)
-			end
-
-			-- Now add the xml namespace
-
-			Result.force_last (created_namespace_code (Xml_uri_code, Xml_prefix_index - 1))
+			create Result.make_default
+			accumulate_namespace_codes (node_number, Result)
+			Result.put_last (Xml_namespace_code)
 		end
 
 feature -- Status report
@@ -214,45 +196,6 @@ feature -- Status setting
 			tree.set_name_code_for_node (a_name_code, node_number)
 		ensure then
 			name_code_set: tree.name_code_for_node (node_number) = a_name_code
-		end
-
-feature -- Element change
-
-	ensure_namespace_nodes is
-			-- Ensure `namespace_codes_in_scope' may be called.
-		do
-			-- do nothing
-		end
-
-	accumulate_namespace_codes (a_list: DS_ARRAYED_LIST [INTEGER]) is
-			-- Accumulate further namespaces in scope, avoiding already-declared prefixes.
-		require
-			accumulation_list_not_void: a_list /= Void
-		local
-			a_namespace_node, a_namespace_code: INTEGER
-			a_prefix_code: INTEGER -- _16
-			a_prefix_code_list: DS_ARRAYED_LIST [INTEGER] -- _16
-			a_node: XM_XPATH_TINY_NODE
-		do
-			a_namespace_node := tree.beta_value (node_number)
-			if a_namespace_node > 0 then
-				a_prefix_code_list := prefix_codes_from_namespace_codes (a_list)
-				from
-				until
-					a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number
-				loop
-					a_namespace_code := tree.namespace_code_for_node (a_namespace_node)
-					a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
-					if not is_in_list (a_prefix_code, a_prefix_code_list) then
-						a_list.force_last (a_namespace_code)
-					end
-					a_namespace_node := a_namespace_node + 1
-				end
-			end
-			a_node := parent
-			if a_node.is_tiny_element then
-				a_node.as_tiny_element.accumulate_namespace_codes (a_list)
-			end
 		end
 
 feature -- Duplication
@@ -393,49 +336,67 @@ feature {NONE} -- Implementation
 			a_receiver.start_content
 		end
 
-	prefix_codes_from_namespace_codes (a_list: DS_ARRAYED_LIST [INTEGER]): DS_ARRAYED_LIST [INTEGER] is -- _16
-			-- List of prefix codes from `a_list' of namespace codes
+	accumulate_namespace_codes (a_node_number: INTEGER; a_buffer: DS_ARRAYED_LIST [INTEGER]) is
+			-- Accumulate namespace codes for `a_node_number' into a`_buffer'.
 		require
-			namespace_code_list_not_void: a_list /= Void
+			buffer_exists: a_buffer /= Void
+			valid_node_number: a_node_number > 0 and a_node_number <= tree.last_node_added
 		local
+			a_namespace_node, a_namespace_code, another_node_number: INTEGER
+			a_prefix_code: INTEGER -- _16
+			duplicated: BOOLEAN
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
-			create Result.make (a_list.count)
-			from
-				a_cursor := a_list.new_cursor; a_cursor.start
-			variant
-				a_list.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				Result.put_last (prefix_code_from_namespace_code (a_cursor.item))
-				a_cursor.forth
-			end
-		ensure
-			same_count: Result /= Void and then Result.count = a_list.count
-		end
-	
-	is_in_list (a_prefix_code: INTEGER; a_list: DS_ARRAYED_LIST [INTEGER]): BOOLEAN is
-			-- Is `a_prefix_code' on `a_list'?
-		require
-			list_not_void:  a_list /= Void
-		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-		do
-			from
-				a_cursor := a_list.new_cursor; a_cursor.start
-			variant
-				a_list.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				Result :=  a_prefix_code = a_cursor.item
-				if Result then
-					a_cursor.go_after
-				else
-					a_cursor.forth
+			if tree.are_namespaces_used then
+				from
+					another_node_number := a_node_number
+				until
+					another_node_number = -1 -- = no parent node
+				loop
+					a_namespace_node := tree.beta_value (another_node_number) -- by convention
+					if a_namespace_node > 0 then
+						from
+						until
+							a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= another_node_number
+						loop
+							a_namespace_code := tree.namespace_code_for_node (a_namespace_node)
+							
+							-- See if the prefix has already been declared; if so, this declaration is ignored
+							
+							a_prefix_code := prefix_code_from_namespace_code (a_namespace_code);	duplicated := False
+							from
+								a_cursor := a_buffer.new_cursor; a_cursor.start
+							until
+								duplicated or else a_cursor.after
+							loop
+								if prefix_code_from_namespace_code (a_cursor.item) = a_prefix_code then
+									duplicated := True
+								else
+									a_cursor.forth
+								end
+							end
+							if not duplicated then a_buffer.force_last (a_namespace_code) end
+							a_namespace_node := a_namespace_node + 1
+						end
+					end
+					another_node_number := tree.parent_node_number (another_node_number)
 				end
-			end				
+
+				-- The list of namespaces we have built up includes undeclarations as well as declarations.
+            -- We now remove the undeclarations (which have a URI code of zero).
+
+				from
+					a_cursor := a_buffer.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					if uri_code_from_namespace_code (a_cursor.item) = Default_uri_code then
+						a_cursor.remove
+					else
+						a_cursor.forth
+					end
+				end
+			end
 		end
 
 end

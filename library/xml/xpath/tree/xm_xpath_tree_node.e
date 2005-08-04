@@ -93,21 +93,6 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_tree_namespace: BOOLEAN is
-			-- Is `Current' a namespace?
-		do
-			Result := False
-		end
-
-	as_tree_namespace: XM_XPATH_TREE_NAMESPACE is
-			-- `Current' seen as a namespace
-		require
-			namespace: is_tree_namespace
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)
-		end
-
 	is_tree_attribute: BOOLEAN is
 			-- Is `Current' an attribute?
 		do

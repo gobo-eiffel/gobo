@@ -69,21 +69,6 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_tiny_namespace: BOOLEAN is
-			-- Is `Current' a namespace node?
-		do
-			Result := False
-		end
-
-	as_tiny_namespace: XM_XPATH_TINY_NAMESPACE is
-			-- `Current' seen as a namespace node
-		require
-			tiny_namespace: is_tiny_namespace
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)
-		end
-
 	is_tiny_element: BOOLEAN is
 			-- Is `Current' an element?
 		do

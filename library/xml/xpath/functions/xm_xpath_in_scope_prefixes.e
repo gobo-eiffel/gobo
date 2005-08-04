@@ -73,7 +73,6 @@ feature -- Evaluation
 			elseif an_item.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 			elseif an_item.is_element then
-				an_item.as_element.ensure_namespace_nodes
 				last_iterator := an_item.as_element.prefixes_in_scope
 			else
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("First argument is not an element", Xpath_errors_uri, "FORG0006", Dynamic_error)

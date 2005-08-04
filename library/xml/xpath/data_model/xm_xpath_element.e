@@ -102,7 +102,9 @@ feature -- Access
 		local
 			a_prefix_code: INTEGER
 		do
-			if shared_name_pool.is_code_for_prefix_allocated (an_xml_prefix) then
+			if STRING_.same_string (Xml_prefix, an_xml_prefix) then
+				Result := Xml_uri_code
+			elseif shared_name_pool.is_code_for_prefix_allocated (an_xml_prefix) then
 				a_prefix_code := shared_name_pool.code_for_prefix (an_xml_prefix)
 			else
 				a_prefix_code := -1
@@ -132,8 +134,6 @@ feature -- Access
 
 	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
 			-- List of namespace codes in scope
-		require
-			namespace_nodes_accumulated: are_namespaces_accumulated
 		deferred
 		ensure
 			namespace_codes_in_scope_not_void: Result /= Void
@@ -174,9 +174,6 @@ feature -- Status report
 		do
 			Result := nilled_property
 		end
-	
-	are_namespaces_accumulated: BOOLEAN
-			-- Have namspace codes been accumulated for iteration?
 
 feature -- Status setting
 
@@ -186,15 +183,6 @@ feature -- Status setting
 		require
 			valid_name_code: a_name_code >= -1
 		deferred
-		end
-
-feature -- Element change
-
-	ensure_namespace_nodes is
-			-- Ensure `namespace_codes_in_scope' may be called.
-		deferred
-		ensure
-			namespace_nodes_accumulated: are_namespaces_accumulated
 		end
 
 feature {NONE} -- Access

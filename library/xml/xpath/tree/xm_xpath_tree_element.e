@@ -196,25 +196,22 @@ feature -- Access
 			end
 		end
 
-	accumulated_namespace_nodes: DS_ARRAYED_LIST [XM_XPATH_TREE_NAMESPACE]
-			-- Namespace nodes in scope
+	accumulated_namespace_codes: DS_ARRAYED_LIST [INTEGER]
+			-- Namespace codes in scope
 
 	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
 			-- Namespace codes in scope for `Current'
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NAMESPACE]
+			some_excluded_prefixes: DS_HASH_SET [INTEGER] -- _16
 		do
-			create Result.make (accumulated_namespace_nodes.count)
-			from
-				a_cursor := accumulated_namespace_nodes.new_cursor; a_cursor.start
-			variant
-				accumulated_namespace_nodes.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				Result.put (a_cursor.item.namespace_code, a_cursor.index)
-				a_cursor.forth
+			if accumulated_namespace_codes = Void then
+				create some_excluded_prefixes.make_default
+				create accumulated_namespace_codes.make_default
+				accumulate_namespace_codes (Current, accumulated_namespace_codes, True, some_excluded_prefixes)
 			end
+			Result := accumulated_namespace_codes
+		ensure then
+			namespace_codes_accumulated: accumulated_namespace_codes /= Void
 		end
 
 feature -- Measurement
@@ -237,86 +234,11 @@ feature -- Status setting
 
 feature -- Element change
 
-	ensure_namespace_nodes is
-			-- Ensure `namespace_codes_in_scope' may be called.
-		do
-			create accumulated_namespace_nodes.make_default
-			accumulate_namespace_nodes (Current, accumulated_namespace_nodes, True)
-		end
-
-	accumulate_namespace_nodes (an_owner: XM_XPATH_TREE_ELEMENT; an_accumulation_list: DS_ARRAYED_LIST [XM_XPATH_TREE_NAMESPACE]; add_xml: BOOLEAN) is
-			-- Accumulate namespace nodes in scope.
-		require
-			list_owner_not_void: an_owner /= Void
-			accumulation_list: an_accumulation_list /= Void
-			non_empty_accumulation_list: an_accumulation_list.count > 0 implies an_owner /= Current
-		local
-			a_code_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
-			a_node_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_NAMESPACE]
-			a_namespace_code: INTEGER
-			a_namespace: XM_XPATH_TREE_NAMESPACE
-			a_prefix_code: INTEGER -- _16
-			found: BOOLEAN
-			a_parent: XM_XPATH_COMPOSITE_NODE
-		do
-			from
-				a_code_cursor := namespace_code_list.new_cursor; a_code_cursor.start
-			variant
-				namespace_code_list.count + 1 - a_code_cursor.index
-			until
-				a_code_cursor.after
-			loop
-				a_namespace_code := a_code_cursor.item
-				a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
-				found := False
-
-				-- Don't add a node if the prefix is already in the list
-
-				from
-					a_node_cursor := an_accumulation_list.new_cursor; a_node_cursor.start
-				variant
-					an_accumulation_list.count + 1 - a_node_cursor.index
-				until
-					a_node_cursor.after
-				loop
-					if prefix_code_from_namespace_code (a_node_cursor.item.namespace_code) = a_prefix_code then
-						found := True
-						a_node_cursor.go_after
-					else
-						a_node_cursor.forth
-					end
-				end
-				if not found then
-					create a_namespace.make (an_owner.document, an_owner, a_namespace_code, an_accumulation_list.count + 1)
-					an_accumulation_list.force_last (a_namespace)
-				end
-				a_code_cursor.forth
-			end
-
-			-- Now add the namespaces defined on the ancestor nodes.
-
-			if parent.node_type /= Document_node then
-				a_parent := parent
-				check
-					parent_is_element: a_parent /= Void
-				end
-				a_parent.as_tree_node.as_tree_element.accumulate_namespace_nodes (an_owner, an_accumulation_list, False)
-			end
-
-			if add_xml then
-				a_namespace_code := created_namespace_code (Xml_uri_code, Xml_prefix_index - 1)
-				create a_namespace.make (an_owner.document, an_owner, a_namespace_code, an_accumulation_list.count + 1)
-				an_accumulation_list.force_last (a_namespace)
-			end
-			are_namespaces_accumulated := True
-		ensure
-			namespace_nodes_accumulated: are_namespaces_accumulated
-		end
-
 	add_namespace (a_namespace_code: INTEGER) is
 			-- Add a namespace definition.
 		require
 			valid_namespace_code: shared_name_pool.is_valid_namespace_code (a_namespace_code)
+			namespace_codes_not_accumulated: accumulated_namespace_codes = Void
 		do
 			if not namespace_code_list.extendible (1) then
 				namespace_code_list.resize (2 * namespace_code_list.count)
@@ -409,7 +331,60 @@ feature {XM_XPATH_NODE} -- Restricted
 		do
 			Result := True
 		end
+feature {XM_XPATH_TREE_ELEMENT} -- Local
 
+	accumulate_namespace_codes (an_owner: XM_XPATH_TREE_ELEMENT; an_accumulation_list: DS_ARRAYED_LIST [INTEGER]; add_xml: BOOLEAN; some_excluded_prefixes: DS_HASH_SET [INTEGER]) is
+			-- Accumulate namespace codes in scope.
+		require
+			list_owner_not_void: an_owner /= Void
+			accumulation_list: an_accumulation_list /= Void
+			non_empty_accumulation_list: an_accumulation_list.count > 0 implies an_owner /= Current
+		local
+			a_code_cursor, another_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_namespace_code: INTEGER
+			a_prefix_code, a_uri_code: INTEGER -- _16
+			a_parent: XM_XPATH_COMPOSITE_NODE
+		do
+			from
+				a_code_cursor := namespace_code_list.new_cursor; a_code_cursor.start
+			variant
+				namespace_code_list.count + 1 - a_code_cursor.index
+			until
+				a_code_cursor.after
+			loop
+				a_namespace_code := a_code_cursor.item
+				a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
+				a_uri_code := uri_code_from_namespace_code (a_namespace_code)
+				if a_uri_code = Default_uri_code then
+
+					-- A namespace undeclaration
+
+					some_excluded_prefixes.force (a_prefix_code)
+				else
+					if not some_excluded_prefixes.has (a_prefix_code) then
+						some_excluded_prefixes.force_new (a_prefix_code)
+						an_accumulation_list.force_last (a_namespace_code)
+					end
+				end
+				a_code_cursor.forth
+			end
+
+			-- Now add the namespaces defined on the ancestor nodes.
+
+			if parent.node_type /= Document_node then
+				a_parent := parent
+				check
+					parent_is_element: a_parent /= Void
+				end
+				a_parent.as_tree_node.as_tree_element.accumulate_namespace_codes (an_owner, an_accumulation_list, False, some_excluded_prefixes)
+			end
+
+			if add_xml then
+				a_namespace_code := created_namespace_code (Xml_uri_code, Xml_prefix_index - 1)
+				an_accumulation_list.force_last (a_namespace_code)
+			end
+		end
+	
 feature {XM_XPATH_TREE_ATTRIBUTE, XM_XPATH_TREE_ATTRIBUTE_ENUMERATION, XM_XPATH_TREE_DOCUMENT} -- Restricted
 
 	is_attribute_index_valid (an_attribute_index: INTEGER): BOOLEAN is

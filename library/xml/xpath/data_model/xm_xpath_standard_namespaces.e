@@ -14,7 +14,9 @@ class XM_XPATH_STANDARD_NAMESPACES
 
 inherit
 
-		KL_IMPORTED_STRING_ROUTINES
+	XM_MARKUP_CONSTANTS
+	
+	KL_IMPORTED_STRING_ROUTINES
 
 	-- all INTEGERs should be INTEGER_16
 
@@ -129,6 +131,21 @@ feature -- Access
 			-- The remaining ones aren't
 
 	Xhtml_uri_code: INTEGER is 8
+
+	Null_namespace_code: INTEGER is 0 -- 65536 * (Null_prefix_index - 1) + Default_uri_code
+			-- Code for no namespace;
+			-- This works because it is not possible to define
+			--  a prefix to and empty-string namespace.
+
+	Xml_namespace_code: INTEGER is
+			-- Pre-computed_namespace code for xmlns:xml
+		once
+			Result := (Xml_prefix_index - 1) * 65536 + Xml_uri_code
+		ensure
+			correct_value: Result = 0x00010001
+			-- This works because of the rule that ONLY the prefix xml may
+			--  be allocated to xml namespace.
+		end
 
 			-- The following codes are fingerprints
 

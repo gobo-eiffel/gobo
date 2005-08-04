@@ -126,6 +126,9 @@ feature -- Access
 	last_node_added: INTEGER
 			-- Last node created with `add_node'
 
+	are_namespaces_used: BOOLEAN
+			-- Does any element declare a namespace (other than xmlns:xml)?
+
 	element_annotation (a_node_number: INTEGER): INTEGER is
 			-- Type annotation of `a_node_number'
 		require
@@ -171,6 +174,8 @@ feature -- Access
 			node_number_is_valid: is_node_number_valid (a_node_number)
 		do
 			Result := depth.item (a_node_number)
+		ensure
+			strictly_positive_depth: Result > 0
 		end
 
 	alpha_value (a_node_number: INTEGER): INTEGER is
@@ -219,16 +224,6 @@ feature -- Access
 			index_is_valid: is_attribute_number_valid (an_index)
 		do
 			Result := attribute_codes.item (an_index)
-		end
-
-	retrieve_namespace_node (a_namespace_number: INTEGER): XM_XPATH_TINY_NAMESPACE is
-			-- Build a flyweight namespace node for `a_namespace_number'
-		require
-			namespace_number_is_valid: is_namespace_number_valid (a_namespace_number)
-		do
-			create Result.make (Current, a_namespace_number)
-		ensure
-			namespace_node_not_void: Result /= Void
 		end
 
 	retrieve_node_kind (a_node_number: INTEGER): INTEGER is
@@ -310,6 +305,8 @@ feature -- Access
 		
 	root_node (a_node_number: INTEGER): INTEGER is
 			-- Root node for `a_node_number'
+		require
+			valid_node_number: is_node_number_valid (a_node_number)
 		local
 			an_index, a_root: INTEGER
 		do
@@ -328,6 +325,28 @@ feature -- Access
 			end
 		end
 
+	parent_node_number (a_node_number: INTEGER): INTEGER is
+			-- Node number of parent of `a_node_number'.
+		require
+			valid_node_number: is_node_number_valid (a_node_number)
+		do
+			if depth_of (a_node_number) = 1 then
+				Result := -1 -- Root has no parent
+			else
+
+				-- Follow the next-sibling pointers until we reach a next sibling pointer that points backwards.
+
+				from
+					Result := retrieve_next_sibling (a_node_number)
+				until
+					Result < a_node_number 
+				loop
+					Result := retrieve_next_sibling (Result)
+				end
+			end
+		ensure
+			minus_one_or_valid_node: Result /= -1 implies is_node_number_valid (Result)
+		end
 
 feature -- Status report
 
@@ -655,6 +674,9 @@ feature -- Element change
 			namespace_codes.force (a_namespace_code, number_of_namespaces)
 			if beta_value (a_parent) = 0 then
 				beta.put (number_of_namespaces, a_parent)
+			end
+			if a_namespace_code /= Xml_namespace_code then
+				are_namespaces_used := True
 			end
 		end
 
