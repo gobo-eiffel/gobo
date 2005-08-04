@@ -161,21 +161,21 @@ feature -- Element change
 			if element_name.is_string_value then
 				set_qname_parts (element_name.as_string_value)
 				if not any_compile_errors then
-					if shared_name_pool.is_name_code_allocated (xml_prefix, namespace_uri, local_name) then
-						a_name_code := shared_name_pool.name_code (xml_prefix, namespace_uri, local_name)
+					if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
+						a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
 					else
-						shared_name_pool.allocate_name (xml_prefix, namespace_uri, local_name)
+						shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
 						a_name_code := shared_name_pool.last_name_code
 					end
 				elseif namespace.is_string_value then
 					namespace_uri := namespace.as_string_value.string_value
 					if namespace_uri.count = 0 then
-						xml_prefix := ""
+						qname_prefix := ""
 					end
-					if shared_name_pool.is_name_code_allocated (xml_prefix, namespace_uri, local_name) then
-						a_name_code := shared_name_pool.name_code (xml_prefix, namespace_uri, local_name)
+					if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
+						a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
 					else
-						shared_name_pool.allocate_name (xml_prefix, namespace_uri, local_name)
+						shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
 						a_name_code := shared_name_pool.last_name_code
 					end
 					compile_fixed_element (an_executable, a_name_code)
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 	use_attribute_sets: STRING
 			-- -- Attribute sets to be used
 
-	xml_prefix, namespace_uri, local_name, qname: STRING
+	qname_prefix, namespace_uri, local_name, qname: STRING
 			-- Used for communicating with `compile'
 
 	validation_action: INTEGER
@@ -279,16 +279,16 @@ feature {NONE} -- Implementation
 				qname_parts := a_string_splitter.split (qname)
 				if qname_parts.count = 1 then
 					local_name := qname_parts.item (1)
-					xml_prefix := ""
+					qname_prefix := ""
 				elseif qname_parts.count = 2 then
 					local_name := qname_parts.item (2)
-					xml_prefix := qname_parts.item (1)
+					qname_prefix := qname_parts.item (1)
 				else
 					create an_error.make_from_string (STRING_.concat ("Invalid element name: ", qname), "", "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 				if namespace = Void then
-					namespace_uri := uri_for_prefix (xml_prefix, False)
+					namespace_uri := uri_for_prefix (qname_prefix, False)
 				end
 			end
 		end

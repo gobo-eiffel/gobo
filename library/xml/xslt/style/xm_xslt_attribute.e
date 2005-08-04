@@ -161,10 +161,10 @@ feature -- Element change
 			if attribute_name.is_string_value then
 				set_qname_parts (attribute_name.as_string_value)
 				if not any_compile_errors then
-					if shared_name_pool.is_name_code_allocated (xml_prefix, namespace_uri, local_name) then
-						a_name_code := shared_name_pool.name_code (xml_prefix, namespace_uri, local_name)
+					if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
+						a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
 					else
-						shared_name_pool.allocate_name (xml_prefix, namespace_uri, local_name)
+						shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
 						a_name_code := shared_name_pool.last_name_code
 					end
 					compile_fixed_attribute (an_executable, a_name_code)
@@ -173,14 +173,14 @@ feature -- Element change
 				if namespace.is_string_value then
 					namespace_uri := namespace.as_string_value.string_value
 					if namespace_uri.count = 0 then
-						xml_prefix := ""
-					elseif xml_prefix.count = 0 then
-						choose_arbitrary_xml_prefix
+						qname_prefix := ""
+					elseif qname_prefix.count = 0 then
+						choose_arbitrary_qname_prefix
 					end
-					if shared_name_pool.is_name_code_allocated (xml_prefix, namespace_uri, local_name) then
-						a_name_code := shared_name_pool.name_code (xml_prefix, namespace_uri, local_name)
+					if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
+						a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
 					else
-						shared_name_pool.allocate_name (xml_prefix, namespace_uri, local_name)
+						shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
 						a_name_code := shared_name_pool.last_name_code
 					end
 					compile_fixed_attribute (an_executable, a_name_code)
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 	separator_expression: XM_XPATH_EXPRESSION
 			-- Value of separator attribute
 
-	xml_prefix, namespace_uri, local_name, qname: STRING
+	qname_prefix, namespace_uri, local_name, qname: STRING
 			-- Used for communicating with `compile'
 	
 	prepare_attributes_2 (a_validation_attribute, a_type_attribute: STRING) is
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			namespace_uri := ""
-			xml_prefix := Void
+			qname_prefix := Void
 			local_name := Void
 			qname := a_string_value.string_value
 			STRING_.left_adjust (qname)
@@ -272,28 +272,28 @@ feature {NONE} -- Implementation
 				qname_parts := a_string_splitter.split (qname)
 				if qname_parts.count = 1 then
 					local_name := qname_parts.item (1)
-					xml_prefix := ""
+					qname_prefix := ""
 				elseif qname_parts.count = 2 then
 					local_name := qname_parts.item (2)
-					xml_prefix := qname_parts.item (1)
+					qname_prefix := qname_parts.item (1)
 				else
 					create an_error.make_from_string (STRING_.concat ("Invalid attribute name: ", qname), "", "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
-				if STRING_.same_string (xml_prefix, "xmlns") then
+				if STRING_.same_string (qname_prefix, "xmlns") then
 					if namespace = Void then
 						create an_error.make_from_string (STRING_.concat ("Invalid attribute name: ", qname), "", "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					else
-						xml_prefix := "" -- We ignore it anyway when the namespace attribute is present
+						qname_prefix := "" -- We ignore it anyway when the namespace attribute is present
 					end
 				end
 				if namespace = Void then
-					namespace_uri := uri_for_prefix (xml_prefix, False)
+					namespace_uri := uri_for_prefix (qname_prefix, False)
 				end
 			end
 		ensure
-			parts_set_or_error: not any_compile_errors implies xml_prefix /= Void and then local_name /= Void and then namespace_uri /= Void
+			parts_set_or_error: not any_compile_errors implies qname_prefix /= Void and then local_name /= Void and then namespace_uri /= Void
 		end
 
 	compile_fixed_attribute (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER) is
@@ -308,10 +308,10 @@ feature {NONE} -- Implementation
 			last_generated_expression := a_fixed_attribute
 		end
 
-	choose_arbitrary_xml_prefix is
+	choose_arbitrary_qname_prefix is
 			-- Choose an arbitrary XML prefix.
 		do
-			todo ("choose arbitrary_xml_prefix", False)
+			todo ("choose arbitrary_qname_prefix", False)
 		end
 
 end

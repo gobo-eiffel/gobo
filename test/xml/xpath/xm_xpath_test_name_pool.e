@@ -73,14 +73,14 @@ feature -- Test
 	test_conversions is
 		local
 			name_code, namespace_code, uri_code, prefix_code: INTEGER
-			xml_prefix, namespace_uri, local_name, display_name: STRING
+			an_xml_prefix, namespace_uri, local_name, display_name: STRING
 		do
 			assert ("Prefix code", not shared_name_pool.is_code_for_prefix_allocated("test3"))
 			shared_name_pool.allocate_name ("test3", testing_namespace, "test3")
 			name_code := shared_name_pool.last_name_code
 			assert ("Positive name code", name_code > 0)
-			xml_prefix := shared_name_pool.prefix_from_name_code (name_code)
-			assert ("Prefix", xml_prefix /= Void and then STRING_.same_string (xml_prefix, "test3"))
+			an_xml_prefix := shared_name_pool.prefix_from_name_code (name_code)
+			assert ("Prefix", an_xml_prefix /= Void and then STRING_.same_string (an_xml_prefix, "test3"))
 			prefix_code := shared_name_pool.code_for_prefix ("test3")
 			assert ("Prefix code 2", prefix_code > 0)
 			namespace_code := shared_name_pool.namespace_code ("test3", testing_namespace)
@@ -97,8 +97,8 @@ feature -- Test
 			assert ("Namespace URI 2", namespace_uri /= Void and then STRING_.same_string (namespace_uri, testing_namespace))
 			namespace_uri := shared_name_pool.uri_from_uri_code (uri_code)
 			assert ("Namespace URI 3", STRING_.same_string (namespace_uri, testing_namespace))
-			xml_prefix := shared_name_pool.prefix_from_namespace_code (namespace_code)
-			assert ("Prefix 2",  xml_prefix /= Void and then STRING_.same_string (xml_prefix, "test3"))
+			an_xml_prefix := shared_name_pool.prefix_from_namespace_code (namespace_code)
+			assert ("Prefix 2",  an_xml_prefix /= Void and then STRING_.same_string (an_xml_prefix, "test3"))
 		end
 
 	test_name_code_consistency is

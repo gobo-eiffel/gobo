@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 		once
 			Result := Large_number * Large_negative_number 
 		ensure
-			negitive: Result < 0
+			negative: Result < 0
 			infinity_reached: Result / Large_number = Result
 		end
 

@@ -214,7 +214,7 @@ feature -- Evaluation
 			
 		end
 
-feature {XM_XSLT_ELEMENT_CREATOR} -- Local
+feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 
 	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER) is
 			-- Output namespace nodes for the new element.

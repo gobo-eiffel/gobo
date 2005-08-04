@@ -464,15 +464,15 @@ feature {NONE} -- Implementation
 			-- Check that the prefix for an element or attribute is acceptable,
 			--  allocating a substitute prefix if not.
 			-- The prefix is acceptable unless a namespace declaration has been
-			--  written that assignes this prefix to a different namespace URI.
+			--  written that assigns this prefix to a different namespace URI.
 			-- This routine also checks that the element or attribute namespace
 			-- has been declared, and declares it if not.
 		require
 			valid_name_code: a_name_code > -1
 			positive_sequence_number: a_sequence_number >= 0
 		local
-			a_namespace_code, an_index: INTEGER
-			a_prefix_code, a_uri_code: INTEGER -- _16
+			an_index: INTEGER
+			a_namespace_code, another_namespace_code, a_prefix_code, a_uri_code: INTEGER -- _16
 			a_prefix: STRING
 			finished: BOOLEAN
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
@@ -489,9 +489,9 @@ feature {NONE} -- Implementation
 			until
 				finished or else an_index > pending_namespaces_list_size
 			loop
-				if a_prefix_code = prefix_code_from_namespace_code (pending_namespaces.item (an_index)) then
-					if a_uri_code = uri_code_from_namespace_code (pending_namespaces.item (an_index)) then
-						last_checked_namecode := a_name_code
+				another_namespace_code := pending_namespaces.item (an_index)
+				if a_prefix_code = prefix_code_from_namespace_code (another_namespace_code) then
+					if a_uri_code = uri_code_from_namespace_code (another_namespace_code) then
 						finished := True
 					else
 						a_prefix := substituted_prefix (a_namespace_code, a_sequence_number)

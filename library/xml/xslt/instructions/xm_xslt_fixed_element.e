@@ -123,24 +123,28 @@ feature -- Optimization
 			Precursor
 		end
 
-feature {XM_XSLT_ELEMENT_CREATOR} -- Local
+feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 
 	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER) is
 			-- Output namespace nodes for the new element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
-			from
-				a_cursor := namespace_code_list.new_cursor; a_cursor.start
-			variant
-				namespace_code_list.count + 1 - a_cursor.index
-			until
-				a_cursor.after
-			loop
-				if a_cursor.item >= 0 then -- drop excluded namespaces
-					a_receiver.notify_namespace (a_cursor.item, 0)
+			if namespace_code_list.count > 0 then
+				from
+					a_cursor := namespace_code_list.new_cursor; a_cursor.start
+				variant
+					namespace_code_list.count + 1 - a_cursor.index
+				until
+					a_cursor.after
+				loop
+					if a_cursor.item >= 0 then -- drop excluded namespaces
+						a_receiver.notify_namespace (a_cursor.item, 0)
+						a_cursor.forth
+					else
+						a_cursor.remove
+					end
 				end
-				a_cursor.forth
 			end
 		end
 	

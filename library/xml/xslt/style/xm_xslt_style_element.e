@@ -365,7 +365,6 @@ feature -- Access
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT is
 			-- Namespace context
 		do
-			if accumulated_namespace_nodes = Void then ensure_namespace_nodes end
 			create Result.make (namespace_codes_in_scope)
 		end
 

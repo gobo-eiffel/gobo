@@ -144,8 +144,6 @@ feature -- Element change
 				if should_namespaces_be_omitted (an_element_uri_code) then
 					create namespace_codes.make (0)
 				else
-					create accumulated_namespace_nodes.make_default
-					accumulate_namespace_nodes (Current, accumulated_namespace_nodes, True)
 					namespace_codes := namespace_codes_in_scope
 				end
 				apply_namespace_aliases (an_element_uri_code, a_stylesheet)				

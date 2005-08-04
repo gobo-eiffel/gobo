@@ -46,8 +46,6 @@ feature {NONE} -- Initialization
 			base_receiver := an_underlying_receiver
 			create namespaces_in_scope.make (50)
 			create count_stack.make (50)
-			xml_namespace_code := shared_name_pool.namespace_code ("xml", Xml_uri)
-			null_namespace_code := shared_name_pool.namespace_code ("", Null_uri)
 			system_id := ""
 		ensure
 			base_receiver_set: base_receiver = an_underlying_receiver
@@ -170,12 +168,6 @@ feature -- Events
 		end
 
 feature {NONE} -- Implementation
-
-	xml_namespace_code: INTEGER
-			-- Namespace code for "xml"
-
-	null_namespace_code: INTEGER
-			-- Namespace code for null namespace
 
 	namespaces_in_scope: DS_ARRAYED_LIST [INTEGER]
 			-- Namespace codes in scope

@@ -134,7 +134,7 @@ feature -- Evaluation
 			end
 		end
 
-feature {XM_XSLT_ELEMENT_CREATOR} -- Local
+feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local
 
 	output_namespace_nodes (a_context: XM_XSLT_EVALUATION_CONTEXT; a_receiver: XM_XPATH_RECEIVER) is
 			-- Output namespace nodes for the new element.
@@ -142,10 +142,10 @@ feature {XM_XSLT_ELEMENT_CREATOR} -- Local
 			an_element: XM_XPATH_ELEMENT
 		do
 			if is_copy_namespaces then
-				an_element ?= a_context.context_item
 				check
-					context_item_is_element: an_element /= Void
+					context_item_is_element: a_context.context_item.is_element
 				end
+				an_element := a_context.context_item.as_element
 				an_element.output_namespace_nodes (a_receiver, True)
 			end
 		end
