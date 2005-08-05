@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 
 			-- output namespaces
 
-			if which_namespaces /= No_namespaces then
+			if which_namespaces /= No_namespaces and then tree.are_namespaces_used then
 				if first then
 					output_namespace_nodes (a_receiver, which_namespaces = All_namespaces)
 				else
