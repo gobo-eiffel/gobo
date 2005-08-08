@@ -27,6 +27,8 @@ inherit
 		-- Implements an imaginary xsl:block instruction which simply evaluates
 		--  it's contents. Used for top-level templates, xsl:otherwise, etc.
 
+		-- TODO: check for nested blocks in simplify and check_static_type, and flatten them.
+
 create
 
 	make
@@ -239,12 +241,15 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			a_child: XM_XPATH_EXPRESSION
+--			nested: BOOLEAN
+--			a_block: XM_XSLT_BLOCK
 		do
+			mark_unreplaced
 			from
 				a_cursor := children.new_cursor; a_cursor.start
 			variant
@@ -253,7 +258,41 @@ feature -- Optimization
 				a_cursor.after
 			loop
 				a_child := a_cursor.item
-				a_child.analyze (a_context)
+				a_child.check_static_type (a_context)
+				if a_child.is_error then
+					set_last_error (a_child.error_value)
+				elseif a_child.was_expression_replaced then
+					a_cursor.replace (a_child.replacement_expression)
+				end
+--				a_block ?= a_cursor.item
+--				if a_block /= Void then
+--					nested := True
+--				elseif a_cursor.item.is_empty_sequence then
+--					nested := True
+--				end
+				a_cursor.forth
+			end
+--			if nested then
+--
+--			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			a_child: XM_XPATH_EXPRESSION
+		do
+			mark_unreplaced
+			from
+				a_cursor := children.new_cursor; a_cursor.start
+			variant
+				children.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				a_child := a_cursor.item
+				a_child.optimize (a_context)
 				if a_child.is_error then
 					set_last_error (a_child.error_value)
 				elseif a_child.was_expression_replaced then

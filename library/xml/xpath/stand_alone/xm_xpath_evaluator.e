@@ -189,7 +189,7 @@ feature -- Evaluation
 				internal_error_value := expression_factory.parsed_error_value
 			else
 				an_expression := expression_factory.parsed_expression
-				an_expression.analyze (static_context)
+				an_expression.check_static_type (static_context)
 				if an_expression.is_error then
 					is_error := True
 					internal_error_value := an_expression.error_value
@@ -204,12 +204,29 @@ feature -- Evaluation
 						is_error := True
 						internal_error_value := an_expression.error_value
 					else
-						debug ("XPath evaluator")
-							an_expression.display (1)
+						an_expression.optimize (static_context)
+						if an_expression.is_error then
+							is_error := True
+							internal_error_value := an_expression.error_value
+						else
+							if an_expression.was_expression_replaced then
+								an_expression := an_expression.replacement_expression
+								check
+									not_replaced: not an_expression.was_expression_replaced
+								end
+							end
+							if an_expression.is_error then
+								is_error := True
+								internal_error_value := an_expression.error_value
+							else
+								debug ("XPath evaluator")
+									an_expression.display (1)
+								end
+								create a_slot_manager.make
+								an_expression.allocate_slots (1, a_slot_manager)
+								evaluate_post_analysis (an_expression, a_slot_manager)
+							end
 						end
-						create a_slot_manager.make
-						an_expression.allocate_slots (1, a_slot_manager)
-						evaluate_post_analysis (an_expression, a_slot_manager)
 					end
 				end
 			end
@@ -265,7 +282,7 @@ feature {NONE} -- Implementation
 	evaluate_post_analysis (an_expression: XM_XPATH_EXPRESSION; a_slot_manager: XM_XPATH_SLOT_MANAGER) is
 			-- perform evaluation on `an_expression'.
 		require
-			expression_analyzed_without_error: an_expression /= Void and then not an_expression.is_error
+			expression_checked_and_optimized_without_error: an_expression /= Void and then not an_expression.is_error
 			slot_manager_not_void: a_slot_manager /= Void
 		local
 			a_document_pool: XM_XPATH_DOCUMENT_POOL

@@ -103,12 +103,12 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
 			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
-			base_expression.analyze (a_context)
+			base_expression.check_static_type (a_context)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end
@@ -130,15 +130,54 @@ feature -- Optimization
 				end
 			end
 		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			mark_unreplaced
+			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
+			base_expression.optimize (a_context)
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
+			end
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
+			else
+				
+				-- If  operand value is, pre-evaluate the expression
+				
+				if base_expression.is_value then
+					eagerly_evaluate (Void)
+					set_replacement (last_evaluation)
+					
+					-- if early evaluation fails, suppress the error: the value might not be needed at run-time
+					
+					if is_error then
+						error_value := Void
+					end
+				end
+			end
+		end
 	
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
+		local
+			a_promotion: XM_XPATH_EXPRESSION
 		do
 			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
-			base_expression.promote (an_offer)
-			if base_expression.was_expression_replaced then set_base_expression (base_expression.replacement_expression) end
+			an_offer.accept (Current)
+			a_promotion := an_offer.accepted_expression
+			if a_promotion /= Void then
+				set_replacement (a_promotion)
+			else
+				base_expression.promote (an_offer)
+				if base_expression.was_expression_replaced then
+					set_base_expression (base_expression.replacement_expression)
+					reset_static_properties
+				end
+			end
 		end
-
+	
 feature -- Element change
 
 	set_base_expression (an_operand: XM_XPATH_EXPRESSION) is

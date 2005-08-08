@@ -20,6 +20,9 @@ inherit
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
+	XM_XPATH_NAME_UTILITIES
+		export {NONE} all end
+
 	XM_XPATH_STATIC_PROPERTY
 
 	XM_XPATH_PROMOTION_ACTIONS
@@ -151,14 +154,35 @@ feature -- Access
 		deferred
 		end
 
-	is_system_function: BOOLEAN is
-			-- Is `Current' an XPath system function?
+	is_current_function: BOOLEAN is
+			-- Is `Current' the XSLT "current()" function?
 		do
 			Result := False
 		end
 
 	is_function_package: BOOLEAN is
-			-- Is `Current' an XSLT function call package??
+			-- Is `Current' an XSLT function call package?
+		do
+			Result := False
+		end
+
+	is_function_call: BOOLEAN is
+			-- Is `Current' an XPath function call?
+		do
+			Result := False
+		end
+
+	as_function_call: XM_XPATH_FUNCTION_CALL is
+			-- `Current' seen as an XPath function call
+		require
+			function_call: is_function_call
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_system_function: BOOLEAN is
+			-- Is `Current' an XPath system function?
 		do
 			Result := False
 		end
@@ -700,21 +724,6 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_string_converter_expression: BOOLEAN is
-			-- Is `Current' a string converter expression?
-		do
-			Result := False
-		end
-
-	as_string_converter_expression: XM_XPATH_STRING_CONVERTER_EXPRESSION is
-			-- `Current' seen as a string converter expression
-		require
-			string_converter_expression: is_string_converter_expression
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)
-		end
-
 	is_variable_reference: BOOLEAN is
 			-- Is `Current' a variable reference?
 		do
@@ -1045,7 +1054,7 @@ feature -- Status report
 			-- Last error value
 
 	was_expression_replaced: BOOLEAN
-			-- Did `analyze' create a replacement expression for `Current'?
+			-- Did any routine create a replacement expression for `Current'?
 
 	replacement_expression: XM_XPATH_EXPRESSION
 			-- Replacement for `Current' when `expression_replaced' is `True'
@@ -1072,6 +1081,28 @@ feature -- Status report
 			-- Is `Current' a tail recursive function call?
 		do
 			Result := False
+		end
+
+	calls_function (a_name_code: INTEGER): BOOLEAN is
+			-- Does `Current' include a call to function named by `a_name_code'?
+		local
+			a_fingerprint: INTEGER
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			a_fingerprint := fingerprint_from_name_code (a_name_code)
+			if is_function_call then
+				Result := as_function_call.fingerprint = a_fingerprint
+			end
+			if not Result then
+				from
+					a_cursor := sub_expressions.new_cursor; a_cursor.start
+				until
+					Result or else a_cursor.after
+				loop
+					Result := a_cursor.item.calls_function (a_name_code)
+					a_cursor.forth
+				end
+			end
 		end
 
 	display (a_level: INTEGER) is
@@ -1164,6 +1195,49 @@ feature -- Status setting
 			replacement_set: replacement_expression = an_expression
 		end
 
+	resolve_calls_to_current_function is
+			-- Resolve calls to "current()".
+		local
+			a_let_expression: XM_XPATH_LET_EXPRESSION
+			a_range_variable: XM_XPATH_RANGE_VARIABLE_DECLARATION
+			a_sequence_expression: XM_XPATH_CONTEXT_ITEM_EXPRESSION
+			a_name_code, a_counter: INTEGER
+			a_required_type: XM_XPATH_SEQUENCE_TYPE
+			name_code_created: BOOLEAN
+			a_local_name, a_local_name_prefix: STRING
+			an_offer: XM_XPATH_PROMOTION_OFFER
+		do
+			mark_unreplaced
+			if calls_function (Current_function_type_code) then
+				create a_required_type.make_single_item
+				from
+					a_local_name_prefix := "current_"; a_counter := 0
+				until
+					name_code_created
+				loop
+					a_local_name := STRING_.concat (a_local_name_prefix, a_counter.out)
+					if not shared_name_pool.is_name_code_allocated ("gexslt_system_usage", Gexslt_examples_uri, a_local_name) then
+						shared_name_pool.allocate_name ("gexslt_system_usage", Gexslt_examples_uri, a_local_name)
+						name_code_created := True
+						a_name_code := shared_name_pool.last_name_code
+					else
+						a_counter := a_counter + 1
+					end
+				end
+				create a_range_variable.make ("gexslt_system_usage:current_function", a_name_code, a_required_type)
+				create a_sequence_expression.make
+				create a_let_expression.make (a_range_variable, a_sequence_expression, Current)
+				create an_offer.make (Replace_current, Void, a_let_expression, False, False)
+				promote (an_offer)
+				if was_expression_replaced then
+					a_let_expression.replace_action (replacement_expression)
+				end
+				set_replacement (a_let_expression)
+			end
+		ensure
+			may_be_replaced: True
+		end
+
 feature -- Optimization
 
 	simplify is
@@ -1177,8 +1251,8 @@ feature -- Optimization
 			simplified_expression_not_void: was_expression_replaced implies replacement_expression /= Void
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 			-- This checks statically that the operands of the expression have the correct type.
 			-- If necessary it generates code to do run-time type checking or type conversion.
 			-- A static type error is reported only if execution cannot possibly succeed, that
@@ -1196,6 +1270,20 @@ feature -- Optimization
 			expression_may_be_replaced: was_expression_replaced implies replacement_expression /= Void
 		end
 
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+			-- This routine is called after all references to functions and variables have been resolved
+			--  to the declaration of the function or variable, and after static type-checking.
+		require
+			context_not_void: a_context /= Void
+			no_previous_error: not is_error
+			not_replaced: not was_expression_replaced
+			static_properties_computed: are_static_properties_computed
+		deferred
+		ensure
+			may_be_in_error: True -- due to possible early evaluation.
+		end
+
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 			-- The offer will be accepted if the subexpression is not dependent on
@@ -1209,6 +1297,8 @@ feature -- Optimization
 			not_replaced: not was_expression_replaced
 			static_properties_computed: are_static_properties_computed
 		deferred
+		ensure
+			still_no_error: not is_error
 		end
 
 feature -- Evaluation

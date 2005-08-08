@@ -21,7 +21,7 @@ inherit
 		rename
 			make as make_binary_expression
 		redefine
-			analyze, evaluate_item, calculate_effective_boolean_value, display_operator
+			evaluate_item, calculate_effective_boolean_value, display_operator
 		end
 
 	XM_XPATH_COMPARISON_ROUTINES
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-		item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
 		do
 			Result := type_factory.boolean_type
@@ -59,16 +59,6 @@ feature -- Access
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
 			end
-		end
-
-feature -- Optimization	
-
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
-		do
-			mark_unreplaced
-			is_backwards_compatible_mode := a_context.is_backwards_compatible_mode
-			Precursor (a_context)
 		end
 
 feature -- Evaluation
@@ -95,7 +85,7 @@ feature -- Evaluation
 					create a_comparison_checker
 					a_comparison_checker.check_correct_general_relation (first_operand.last_evaluated_item.as_atomic_value,
 																						  singleton_value_operator (operator), atomic_comparer,
-																						  second_operand.last_evaluated_item.as_atomic_value, is_backwards_compatible_mode)
+																						  second_operand.last_evaluated_item.as_atomic_value, False)
 					if a_comparison_checker.is_comparison_type_error then
 						set_last_error (a_comparison_checker.last_type_error)
 						create last_boolean_value.make (False)
@@ -117,9 +107,6 @@ feature {NONE} -- Implementation
 
 	atomic_comparer: XM_XPATH_ATOMIC_COMPARER
 			-- Comparer for atomic values
-
-	is_backwards_compatible_mode: BOOLEAN
-			-- Are we running in XPath 1.0 backwards-compatible mode?
 
 	display_operator: STRING is
 			-- Format `operator' for display

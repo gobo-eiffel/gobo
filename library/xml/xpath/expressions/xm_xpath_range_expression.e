@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, compute_cardinality, create_iterator, make,
+			check_static_type, optimize, compute_cardinality, create_iterator, make,
 			is_range_expression, as_range_expression
 		end
 
@@ -77,26 +77,22 @@ feature -- Access
 
 feature -- Optimization	
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			a_type_checker: XM_XPATH_TYPE_CHECKER
-			an_integer, another_integer: INTEGER
-			an_integer_range: XM_XPATH_INTEGER_RANGE
-			an_integer_value: XM_XPATH_INTEGER_VALUE
-			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			mark_unreplaced
-			first_operand.analyze (a_context)
+			first_operand.check_static_type (a_context)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.analyze (a_context)
+				second_operand.check_static_type (a_context)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -117,24 +113,49 @@ feature -- Optimization
 							set_last_error (a_type_checker.static_type_check_error)
 						else
 							set_second_operand (a_type_checker.checked_expression)
-							if first_operand.is_integer_value and then second_operand.is_integer_value and then
-								first_operand.as_integer_value.is_platform_integer and then
-								second_operand.as_integer_value.is_platform_integer then
-								an_integer := first_operand.as_integer_value.as_integer
-								another_integer := second_operand.as_integer_value.as_integer
-								if an_integer > another_integer then
-									create an_empty_sequence.make
-									set_replacement (an_empty_sequence)
-								elseif an_integer = another_integer then
-									create an_integer_value.make_from_integer (an_integer)
-									set_replacement (an_integer_value)
-								else
-									create an_integer_range.make (an_integer, another_integer)
-									set_replacement (an_integer_range)
-								end
-							else
-								simplify
-							end
+						end
+					end
+				end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			an_integer, another_integer: INTEGER
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			an_integer_value: XM_XPATH_INTEGER_VALUE
+			an_integer_range: XM_XPATH_INTEGER_RANGE
+		do
+			mark_unreplaced
+			first_operand.optimize (a_context)
+			if first_operand.was_expression_replaced then
+				set_first_operand (first_operand.replacement_expression)
+			end
+			if first_operand.is_error then
+				set_last_error (first_operand.error_value)
+			else
+				second_operand.optimize (a_context)
+				if second_operand.was_expression_replaced then
+					set_second_operand (second_operand.replacement_expression)
+				end
+				if second_operand.is_error then
+					set_last_error (second_operand.error_value)
+				else
+					if first_operand.is_integer_value and then second_operand.is_integer_value and then
+						first_operand.as_integer_value.is_platform_integer and then
+						second_operand.as_integer_value.is_platform_integer then
+						an_integer := first_operand.as_integer_value.as_integer
+						another_integer := second_operand.as_integer_value.as_integer
+						if an_integer > another_integer then
+							create an_empty_sequence.make
+							set_replacement (an_empty_sequence)
+						elseif an_integer = another_integer then
+							create an_integer_value.make_from_integer (an_integer)
+							set_replacement (an_integer_value)
+						else
+							create an_integer_range.make (an_integer, another_integer)
+							set_replacement (an_integer_range)
 						end
 					end
 				end

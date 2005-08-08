@@ -128,14 +128,13 @@ feature -- Optimization
 			end			
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
-			a_promotion_offer: XM_XPATH_PROMOTION_OFFER
-			a_let_expression: XM_XPATH_LET_EXPRESSION
 		do
-			select_expression.analyze (a_context)
+			mark_unreplaced
+			select_expression.check_static_type (a_context)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
@@ -144,7 +143,37 @@ feature -- Optimization
 			if an_empty_sequence /= Void then
 				set_replacement (an_empty_sequence) -- NOP
 			else
-				action.analyze (a_context)
+				action.check_static_type (a_context)
+				if action.was_expression_replaced then
+					action := action.replacement_expression
+					adopt_child_expression (action)
+				end
+				an_empty_sequence ?= action
+				if an_empty_sequence /= Void then
+					set_replacement (an_empty_sequence) -- NOP
+				end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			a_promotion_offer: XM_XPATH_PROMOTION_OFFER
+			a_let_expression: XM_XPATH_LET_EXPRESSION
+			an_expression: XM_XPATH_EXPRESSION
+		do
+			mark_unreplaced
+			select_expression.optimize (a_context)
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
+				adopt_child_expression (select_expression)
+			end
+			an_empty_sequence ?= select_expression
+			if an_empty_sequence /= Void then
+				set_replacement (an_empty_sequence) -- NOP
+			else
+				action.optimize (a_context)
 				if action.was_expression_replaced then
 					action := action.replacement_expression
 					adopt_child_expression (action)
@@ -166,10 +195,17 @@ feature -- Optimization
 					end
 					a_let_expression ?= a_promotion_offer.containing_expression
 					if a_let_expression /= Void then
-						a_let_expression.analyze (a_context)
+						a_let_expression.check_static_type (a_context)
 						if a_let_expression.was_expression_replaced then
-							a_promotion_offer.set_containing_expression (a_let_expression.replacement_expression)
+							an_expression := a_let_expression.replacement_expression
+						else
+							an_expression := a_let_expression
 						end
+						an_expression.optimize (a_context)
+						if an_expression.was_expression_replaced then
+							an_expression := an_expression.replacement_expression
+						end
+						a_promotion_offer.set_containing_expression (an_expression)
 					end
 					if a_promotion_offer.containing_expression /= Current then
 						if a_promotion_offer.containing_expression.was_expression_replaced then

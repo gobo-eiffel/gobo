@@ -213,7 +213,7 @@ feature -- Optimization
 				until
 					is_error or else a_cursor.after
 				loop
-					a_cursor.item.analyze (a_context)
+					a_cursor.item.check_static_type (a_context)
 					if a_cursor.item.was_expression_replaced then
 						a_filter_expression := a_cursor.item.replacement_expression
 					else
@@ -270,7 +270,7 @@ feature -- Optimization
 				
 				if is_positional then
 					an_expression := make_equivalent_expression
-					an_expression.analyze (a_context)
+					an_expression.check_static_type (a_context)
 					if an_expression.was_expression_replaced then
 						set_equivalent_expression (an_expression.replacement_expression)
 					else

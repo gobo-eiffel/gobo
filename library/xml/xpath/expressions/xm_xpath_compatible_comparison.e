@@ -18,8 +18,8 @@ inherit
 		rename
 			make as make_binary_expression
 		redefine
-			display_operator, evaluate_item, analyze, calculate_effective_boolean_value,
-			compute_cardinality
+			display_operator, evaluate_item, check_static_type, optimize,
+			calculate_effective_boolean_value, compute_cardinality
 		end
 
 	XM_XPATH_CARDINALITY
@@ -77,31 +77,51 @@ feature -- Access
 	
 feature -- Optimization	
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			check
 				backwards_compatible_mode: a_context.is_backwards_compatible_mode
 			end
 			mark_unreplaced
-
-			-- Analysis proceeds top-down through the sub-expressions
-
-			first_operand.analyze (a_context)
+			first_operand.check_static_type (a_context)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.analyze (a_context)
+				second_operand.check_static_type (a_context)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
 				if second_operand.is_error then
 					set_last_error (second_operand.error_value)
 				end
-				if not is_error then
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			check
+				backwards_compatible_mode: a_context.is_backwards_compatible_mode
+			end
+			mark_unreplaced
+			first_operand.optimize (a_context)
+			if first_operand.was_expression_replaced then
+				set_first_operand (first_operand.replacement_expression)
+			end
+			if first_operand.is_error then
+				set_last_error (first_operand.error_value)
+			else
+				second_operand.optimize (a_context)
+				if second_operand.was_expression_replaced then
+					set_second_operand (second_operand.replacement_expression)
+				end
+				if second_operand.is_error then
+					set_last_error (second_operand.error_value)
+				else
 					first_operand.set_unsorted (False)
 					if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
 					second_operand.set_unsorted (False)
@@ -114,7 +134,7 @@ feature -- Optimization
 						end
 						set_replacement (last_evaluated_item.as_boolean_value)
 					else
-						operands_not_in_error_so_analyze (a_context)
+						optimize_stage_2 (a_context)
 					end
 				end
 			end
@@ -230,10 +250,10 @@ feature {NONE} -- Implementation
 			-- Singleton version of `operator'
 
 	atomize_first_operand, atomize_second_operand: BOOLEAN
-			-- For communication between `operands_not_in_error_so_analyze' and `calculate_effective_boolean_value'
+			-- For communication between routines
 
 	maybe_first_operand_boolean, maybe_second_operand_boolean: BOOLEAN
-			-- For communication between `operands_not_in_error_so_analyze' and `calculate_effective_boolean_value'
+			-- For communication between routines
 
 	atomic_comparer: XM_XPATH_ATOMIC_COMPARER
 			-- Comparer for atomic values
@@ -262,9 +282,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	operands_not_in_error_so_analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Analyze after operands have been analyzed.
+	optimize_stage_2 (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Optimize after operands have been optimized.
 		require
+			no_previous_error: not is_error
 			context_not_void: a_context /= Void
 			xpath_1_mode: a_context.is_backwards_compatible_mode	
 		local
@@ -295,7 +316,7 @@ feature {NONE} -- Implementation
 					--  or the complications of converting values to numbers
 					
 					create a_general_comparison.make (first_operand, operator, second_operand, atomic_comparer.collator)
-					a_general_comparison.analyze (a_context)
+					a_general_comparison.optimize (a_context)
 					if a_general_comparison.is_error then
 						set_last_error (a_general_comparison.error_value)
 					elseif a_general_comparison.was_expression_replaced then

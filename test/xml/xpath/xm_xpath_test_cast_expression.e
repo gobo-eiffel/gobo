@@ -249,10 +249,10 @@ feature -- Tests
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('xs:b:fred') cast as xs:QName")
-			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end
 
-	test_untyped_atomic_to_qname is
+	test_untyped_atomic_to_qname_2 is
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:QName.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
@@ -264,10 +264,7 @@ feature -- Tests
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('xdt:untypedAtomic') cast as xs:QName")
-			assert ("No valuation error", not an_evaluator.is_error)
-			evaluated_items := an_evaluator.evaluated_items
-			a_qname_value ?= evaluated_items.item (1)
-			assert ("Correct value", a_qname_value /= Void and then STRING_.same_string (a_qname_value.string_value, "xdt:untypedAtomic"))
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end	
 
 feature -- Set up

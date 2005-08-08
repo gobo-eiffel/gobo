@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, simplify, analyze, create_iterator, evaluate_item, compute_cardinality, compute_special_properties
+			item_type, simplify, check_static_type, create_iterator, evaluate_item, compute_cardinality, compute_special_properties
 		end
 
 	XM_XPATH_SHARED_ATOMIZING_FUNCTION
@@ -98,11 +98,11 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			base_expression.analyze (a_context)
+			base_expression.check_static_type (a_context)
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			else

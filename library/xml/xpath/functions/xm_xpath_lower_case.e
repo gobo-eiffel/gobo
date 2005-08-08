@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "lower-case"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := lower_case_function_type_code
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)

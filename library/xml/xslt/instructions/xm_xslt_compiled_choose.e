@@ -165,19 +165,20 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
-			local
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
+		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			an_expression: XM_XPATH_EXPRESSION
 		do
+			mark_unreplaced
 			from
 				a_cursor := conditions.new_cursor; a_cursor.start
 			until
 				a_cursor.after
 			loop
 				an_expression := a_cursor.item
-				an_expression.analyze (a_context)
+				an_expression.check_static_type (a_context)
 				if an_expression.was_expression_replaced then
 					a_cursor.replace (an_expression.replacement_expression)
 				end
@@ -189,7 +190,72 @@ feature -- Optimization
 				a_cursor.after
 			loop
 				an_expression := a_cursor.item
-				an_expression.analyze (a_context)
+				an_expression.check_static_type (a_context)
+				if an_expression.was_expression_replaced then
+					a_cursor.replace (an_expression.replacement_expression)
+				end
+				a_cursor.forth
+			end	
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			an_expression: XM_XPATH_EXPRESSION
+			a_value: XM_XPATH_VALUE
+			a_boolean: BOOLEAN
+			an_index: INTEGER
+		do
+			mark_unreplaced
+			from
+				a_cursor := conditions.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				an_expression := a_cursor.item
+				an_expression.optimize (a_context)
+				if an_expression.was_expression_replaced then
+					an_expression := an_expression.replacement_expression
+					a_cursor.replace (an_expression)
+				end
+				if an_expression.is_value then
+					an_expression.calculate_effective_boolean_value (Void)
+					if not an_expression.is_error then
+						a_boolean := an_expression.last_boolean_value.value
+						an_index := a_cursor.index
+						if a_boolean then
+
+							-- if condition is always true, remove all the subsequent conditions and actions
+
+							
+							if an_index = 1 then
+								set_replacement (actions.item (1))
+							else
+								conditions.keep_first (an_index)
+								actions.keep_first (an_index)
+							end
+						else
+
+							-- if condition is false, skip this test
+
+							a_cursor.remove
+							actions.remove (an_index)
+						end
+					else -- a run-time error will result only if this condition is tested
+						a_cursor.forth
+					end
+				else
+					a_cursor.forth
+				end
+			end
+			from
+				a_cursor := actions.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				an_expression := a_cursor.item
+				an_expression.optimize (a_context)
 				if an_expression.was_expression_replaced then
 					a_cursor.replace (an_expression.replacement_expression)
 				end
@@ -204,29 +270,47 @@ feature -- Optimization
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			an_expression: XM_XPATH_EXPRESSION
 		do
-			from
-				a_cursor := conditions.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				an_expression := a_cursor.item
+
+			-- xsl:when acts as a guard:
+			-- Expressions inside the when mustn't be evaluated if the when is false,
+			--  and conditions after the first mustn't be evaluated if a previous condition is true.
+			-- So we don't pass all promotion offers on
+
+			if an_offer.action = Inline_variable_references	or else an_offer.action = Unordered
+				or else an_offer.action = Replace_current then
+				from
+					a_cursor := conditions.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					an_expression := a_cursor.item
+					an_expression.promote (an_offer)
+					if an_expression.was_expression_replaced then
+						a_cursor.replace (an_expression.replacement_expression)
+					end
+					a_cursor.forth
+				end
+				from
+					a_cursor := actions.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					an_expression := a_cursor.item
+					an_expression.promote (an_offer)
+					if an_expression.was_expression_replaced then
+						a_cursor.replace (an_expression.replacement_expression)
+					end
+					a_cursor.forth
+				end
+			else
+
+				-- in other cases, only the first xsl:when condition is promoted
+
+				an_expression := conditions.item (1)
 				an_expression.promote (an_offer)
 				if an_expression.was_expression_replaced then
-					a_cursor.replace (an_expression.replacement_expression)
+					conditions.replace (an_expression.replacement_expression, 1)
 				end
-				a_cursor.forth
-			end
-			from
-				a_cursor := actions.new_cursor; a_cursor.start
-			until
-				a_cursor.after
-			loop
-				an_expression := a_cursor.item
-				an_expression.promote (an_offer)
-				if an_expression.was_expression_replaced then
-					a_cursor.replace (an_expression.replacement_expression)
-				end
-				a_cursor.forth
 			end
 		end
 

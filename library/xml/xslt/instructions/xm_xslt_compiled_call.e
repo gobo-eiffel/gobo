@@ -104,11 +104,18 @@ feature -- Optimization
 			simplify_with_params (tunnel_parameter_list)
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			analyze_with_params (actual_parameter_list, a_context)
-			analyze_with_params (tunnel_parameter_list, a_context)
+			check_with_params (actual_parameter_list, a_context)
+			check_with_params (tunnel_parameter_list, a_context)
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			optimize_with_params (actual_parameter_list, a_context)
+			optimize_with_params (tunnel_parameter_list, a_context)
 		end
 
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is

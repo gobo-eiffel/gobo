@@ -100,9 +100,10 @@ feature -- Status report
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions		
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 			a_declaration_type, a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
@@ -117,43 +118,69 @@ feature -- Optimization
 				-- sequence expression is established. This is used to establish the type of the variable,
 				-- which in turn is required when type-checking the action part.
 				
-				sequence.analyze (a_context)
+				sequence.check_static_type (a_context)
 				if sequence.was_expression_replaced then
 					set_sequence (sequence.replacement_expression)
 				end
 				if sequence.is_error then
 					set_last_error (sequence.error_value)
 				end
-				
 				if not is_error then
-					
-					-- "some" and "every" have no ordering constraints
-					
-					sequence.set_unsorted (False)
-					if sequence.was_expression_replaced then
-						set_sequence (sequence.replacement_expression)
-					end
-					a_declaration_type := declaration.required_type
-					create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
-					create a_role.make (Variable_role, declaration.variable_name, 1, Xpath_errors_uri, "XPTY0004")
-					create a_type_checker
-					a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
-					if a_type_checker.is_static_type_check_error then
-						set_last_error (a_type_checker.static_type_check_error)
+					if sequence.is_empty_sequence then
+						create a_boolean_value.make (operator /= Some_token)
+						set_replacement (a_boolean_value)
 					else
-						set_sequence (a_type_checker.checked_expression)
-						actual_item_type := sequence.item_type
-						declaration.refine_type_information (actual_item_type, sequence.cardinalities, Void, sequence.dependencies, sequence.special_properties)
-						set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again.
-						action_expression.analyze (a_context)
-						if action_expression.was_expression_replaced then
-							replace_action (action_expression.replacement_expression)
+					
+						-- "some" and "every" have no ordering constraints
+						
+						sequence.set_unsorted (False)
+						if sequence.was_expression_replaced then
+							set_sequence (sequence.replacement_expression)
 						end
-						if action_expression.is_error then
-							set_last_error (action_expression.error_value)
+						a_declaration_type := declaration.required_type
+						create a_sequence_type.make (a_declaration_type.primary_type, Required_cardinality_zero_or_more)
+						create a_role.make (Variable_role, declaration.variable_name, 1, Xpath_errors_uri, "XPTY0004")
+						create a_type_checker
+						a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
+						if a_type_checker.is_static_type_check_error then
+							set_last_error (a_type_checker.static_type_check_error)
+						else
+							set_sequence (a_type_checker.checked_expression)
+							actual_item_type := sequence.item_type
+							declaration.refine_type_information (actual_item_type, sequence.cardinalities, Void, sequence.dependencies, sequence.special_properties)
+							set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again.
+							action_expression.check_static_type (a_context)
+							if action_expression.was_expression_replaced then
+								replace_action (action_expression.replacement_expression)
+							end
+							if action_expression.is_error then
+								set_last_error (action_expression.error_value)
+							end
 						end
-						if not is_error then promote_subexpressions (a_context) end
 					end
+				end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			mark_unreplaced
+			sequence.optimize (a_context)
+			if sequence.was_expression_replaced then
+				set_sequence (sequence.replacement_expression)
+			end
+			if sequence.is_error then
+				set_last_error (sequence.error_value)
+			else
+				action_expression.optimize (a_context)
+				if action_expression.was_expression_replaced then
+					replace_action (action_expression.replacement_expression)
+				end
+				if action_expression.is_error then
+					set_last_error (action_expression.error_value)
+				else
+					promote_subexpressions (a_context)
 				end
 			end
 		end
@@ -257,14 +284,14 @@ feature {NONE} -- Implementation
 			if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end
 			if an_offer.containing_expression.is_let_expression then
 				a_let_expression := an_offer.containing_expression.as_let_expression
-				a_let_expression.analyze (a_context)
+				a_let_expression.optimize (a_context)
 				if a_let_expression.is_error then
 					set_last_error (a_let_expression.error_value)
 				elseif a_let_expression.was_expression_replaced then
 					an_offer.set_containing_expression (a_let_expression.replacement_expression)
 				end
 			end
-			if not is_error and then an_offer.containing_expression /= Current then
+			if an_offer.containing_expression /= Current then
 				set_replacement (an_offer.containing_expression)
 			end
 		end

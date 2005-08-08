@@ -38,8 +38,10 @@ feature {NONE} -- Initialization
 				or else a_requested_action = Focus_independent
 				or else a_requested_action = Inline_variable_references
 				or else a_requested_action = Unordered
+				or else a_requested_action = Replace_current
 			binding:	a_requested_action = Range_independent implies a_binding /= Void
 			containing: a_requested_action /= Unordered implies containing /= Void
+			replace_current: a_requested_action = Replace_current implies containing /= Void and then containing.is_let_expression
 		do
 			may_promote_xslt_functions := True
 			action := a_requested_action
@@ -108,6 +110,8 @@ feature -- Optimization
 			-- Test whether a subexpression qualifies for promotion, and if so, accept the promotion
 		require
 			sub_expression_dependencies_and_cardinalities_computed: a_child_expression /= Void and then a_child_expression.are_dependencies_computed and then a_child_expression.are_cardinalities_computed
+		local
+			a_let_expression: XM_XPATH_LET_EXPRESSION
 		do
 			inspect
 				action
@@ -127,6 +131,20 @@ feature -- Optimization
 				elseif may_promote_document_dependent and not a_child_expression.depends_upon_non_document_focus and then a_child_expression.non_creating then
 					promote (a_child_expression)
 					accepted_expression := promoted_expression
+				else
+					accepted_expression := Void
+				end
+			when Replace_current then
+				if a_child_expression.is_current_function then
+					check
+						a_child_expression.is_computed_expression
+						-- as it contains a call to current()
+						let_expression: containing_expression.is_let_expression
+						-- from invariant
+					end
+					a_let_expression := containing_expression.as_let_expression
+					create {XM_XPATH_VARIABLE_REFERENCE} accepted_expression.make (a_let_expression.declaration)
+					accepted_expression.as_computed_expression.set_parent (a_child_expression.as_computed_expression.container)
 				else
 					accepted_expression := Void
 				end
@@ -231,8 +249,10 @@ invariant
 
 	action: action = Range_independent or else action = Focus_independent
 		or else action = Inline_variable_references or else action = Unordered
+		or else action = Replace_current
 	binding: action = Range_independent implies binding_expression /= Void
 	containing_expression: action /= Unordered implies containing_expression /= Void
-
+	replace_current: action = Replace_current implies containing_expression /= Void and then containing_expression.is_let_expression
+	
 end
 	

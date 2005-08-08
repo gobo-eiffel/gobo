@@ -74,15 +74,16 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			an_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
 			an_atomic_converter: XM_XPATH_ATOMIC_SEQUENCE_CONVERTER
 		do
+			mark_unreplaced
 			type_check (a_context)
 			if select_expression /= Void then
-				select_expression.analyze (a_context)
+				select_expression.check_static_type (a_context)
 				if select_expression.was_expression_replaced then
 					set_select_expression (select_expression.replacement_expression)
 				end
@@ -93,6 +94,18 @@ feature -- Optimization
 				if not is_sub_type (select_expression.item_type, type_factory.string_type) then
 					create an_atomic_converter.make (select_expression, type_factory.string_type)
 					set_select_expression (an_atomic_converter)
+				end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			mark_unreplaced
+			if select_expression /= Void then
+				select_expression.optimize (a_context)
+				if select_expression.was_expression_replaced then
+					set_select_expression (select_expression.replacement_expression)
 				end
 			end
 		end

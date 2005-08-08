@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, analyze, compute_special_properties, promote, create_iterator,
+			simplify, optimize, compute_special_properties, promote, create_iterator,
 			calculate_effective_boolean_value, is_document_sorter, as_document_sorter,
 			item_type
 		end
@@ -83,12 +83,12 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
 			base_expression.mark_unreplaced -- in case it's a path expression replaced by `Current'
-			base_expression.analyze (a_context)
+			base_expression.optimize (a_context)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end

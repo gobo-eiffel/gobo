@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "empty"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Empty_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)

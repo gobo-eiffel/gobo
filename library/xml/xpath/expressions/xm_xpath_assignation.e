@@ -112,7 +112,8 @@ feature -- Optimization
 			else
 				sequence.promote (an_offer)
 				if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
-				if an_offer.action = Inline_variable_references or else an_offer.action = Unordered then
+				if an_offer.action = Inline_variable_references or else an_offer.action = Unordered
+					or else an_offer.action = Replace_current then
 
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					-- them to say we are interested in subexpressions that don't depend on either the

@@ -114,17 +114,29 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			if select_expression /= Void then
-				select_expression.analyze (a_context)
+				if select_expression /= Void then
+				select_expression.check_static_type (a_context)
 				if select_expression.was_expression_replaced then
 					set_selector (select_expression.replacement_expression)
 				end
 				if select_expression.is_error then set_last_error (select_expression.error_value) end
 			end
 			if not is_error then check_against_required_type (a_context) end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			if select_expression /= Void then
+				select_expression.optimize (a_context)
+				if select_expression.was_expression_replaced then
+					set_selector (select_expression.replacement_expression)
+				end
+				if select_expression.is_error then set_last_error (select_expression.error_value) end
+			end
 		end
 
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is

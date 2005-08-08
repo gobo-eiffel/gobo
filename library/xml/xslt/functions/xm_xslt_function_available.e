@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "function-available"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Function_available_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)

@@ -47,9 +47,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	fingerprint: INTEGER
-			-- Fingerprint of function name
-
 	is_tail_recursive: BOOLEAN
 			-- Is `Current' a tail recursive function call?
 

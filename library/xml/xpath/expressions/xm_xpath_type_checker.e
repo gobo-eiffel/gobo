@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 				else
 					an_expression := a_string_function
 				end
-				an_expression.analyze (static_context)
+				an_expression.check_static_type (static_context)
 				if an_expression.was_expression_replaced then								
 					checked_expression := an_expression.replacement_expression
 				else
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 				else
 					an_expression := a_number_function
 				end
-				an_expression.analyze (static_context)
+				an_expression.check_static_type (static_context)
 				if an_expression.was_expression_replaced then								
 					checked_expression := an_expression.replacement_expression
 				else
@@ -405,7 +405,7 @@ feature {NONE} -- Implementation
 						else
 							an_expression := an_expression
 						end
-						an_expression.analyze (static_context)
+						an_expression.check_static_type (static_context)
 						if an_expression.was_expression_replaced then								
 							checked_expression := an_expression.replacement_expression
 						else

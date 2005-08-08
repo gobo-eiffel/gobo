@@ -94,7 +94,7 @@ feature -- Optimization
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_required_type: XM_XPATH_SEQUENCE_TYPE
 		do
-			name.analyze (a_context)
+			name.check_static_type (a_context)
 			if name.was_expression_replaced then
 				name := name.replacement_expression
 			end

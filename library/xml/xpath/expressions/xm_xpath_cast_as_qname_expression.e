@@ -74,60 +74,64 @@ feature -- Status report
 
 feature -- Optimization	
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
-		do
-			mark_unreplaced
-			namespace_context := a_context.namespace_resolver
-		end
-
-feature -- Evaluation
-
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate `Current' as a single item
 		local
 			a_string, an_xml_prefix, a_namespace_uri, a_local_name: STRING
 			a_splitter: ST_SPLITTER
 			qname_parts: DS_LIST [STRING]
 			a_name_code: INTEGER
+			a_qname_value: XM_XPATH_QNAME_VALUE
 		do
-			last_evaluated_item := Void
-			source.evaluate_item (a_context)
-			if not source.last_evaluated_item.is_atomic_value then
-				last_evaluated_item := Void
-			else
-				a_string := source.last_evaluated_item.as_atomic_value.primitive_value.string_value
+			mark_unreplaced
+			if source.is_string_value then
+				a_string := source.as_string_value.string_value
 				create a_splitter.make
 				a_splitter.set_separators (":")
 				qname_parts := a_splitter.split (a_string)
 				if qname_parts.count = 1 then
 					an_xml_prefix := ""
 					a_local_name := qname_parts.item (1)
+					a_namespace_uri := ""
 				elseif qname_parts.count = 2 then
 					an_xml_prefix := qname_parts.item (1)
 					a_local_name := qname_parts.item (2)
+					a_namespace_uri := a_context.uri_for_prefix (an_xml_prefix)
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Argument to cast as xs:QName is not a lexical QName", Xpath_errors_uri, "FORG0001", Dynamic_error)
+					set_last_error_from_string ("Argument to cast as xs:QName is not a lexical QName", Xpath_errors_uri, "FORG0001", Static_error)
 				end
-				if last_evaluated_item = Void then
-					a_namespace_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, True)
-					if a_namespace_uri = Void then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Prefix of argument to cast as xs:QName is not in scope", Xpath_errors_uri, "FONS0003", Dynamic_error)
+				if not is_error then
+					if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_namespace_uri, a_local_name) then
+						shared_name_pool.allocate_name (an_xml_prefix, a_namespace_uri, a_local_name)
+						a_name_code := shared_name_pool.last_name_code
 					else
-						if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_namespace_uri, a_local_name) then
-							shared_name_pool.allocate_name (an_xml_prefix, a_namespace_uri, a_local_name)
-							a_name_code := shared_name_pool.last_name_code
-						else
-							a_name_code := shared_name_pool.name_code (an_xml_prefix, a_namespace_uri, a_local_name)
-						end
-						if a_name_code = -1 then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Resource failure trying to cast to xs:QName", Xpath_errors_uri, "FOER0000", Dynamic_error)
-						else
-							create {XM_XPATH_QNAME_VALUE} last_evaluated_item.make (a_name_code)
-						end
+						a_name_code := shared_name_pool.name_code (an_xml_prefix, a_namespace_uri, a_local_name)
+					end
+					if a_name_code = -1 then
+						set_last_error_from_string ("Resource failure trying to cast to xs:QName", Xpath_errors_uri, "FOER0000", Static_error)
+					else
+						create a_qname_value.make (a_name_code)
+						set_replacement (a_qname_value)
 					end
 				end
+			else
+				set_last_error_from_string ("The argument of a QName constructor must be a string literal", Xpath_errors_uri, "FORG0001", Static_error)
 			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			-- This cannot happen at present - see `check_static_type'.
+			-- For schema-aware version, `Current' might also be used for xs:NOTATION sub-types.
+		end
+
+feature -- Evaluation
+
+	evaluate_item (a_context: XM_XPATH_CONTEXT) is
+			-- Evaluate `Current' as a single item
+		do
+			create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot evaluate a cast to xs:QName at run-time.", Xpath_errors_uri, "FONS0003", Dynamic_error)
 		end
 
 feature {NONE} -- Implementation
@@ -135,8 +139,6 @@ feature {NONE} -- Implementation
 	source: XM_XPATH_EXPRESSION
 			-- Expression to be cast
 
-	namespace_context: XM_XPATH_NAMESPACE_RESOLVER
-	
 	compute_cardinality is
 			-- Compute cardinality.
 		do

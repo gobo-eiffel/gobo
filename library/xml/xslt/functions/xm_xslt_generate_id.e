@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "generate-id"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Generate_id_function_type_code
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)

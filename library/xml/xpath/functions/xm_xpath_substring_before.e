@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		undefine
-			pre_evaluate, analyze
+			pre_evaluate, check_static_type
 		redefine
 			evaluate_item
 		end
@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "substring-before"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := substring_before_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)

@@ -254,12 +254,13 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
-			select_expression.analyze (a_context)
+			mark_unreplaced
+			select_expression.check_static_type (a_context)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
@@ -268,7 +269,7 @@ feature -- Optimization
 			if an_empty_sequence /= Void then
 				set_replacement (an_empty_sequence) -- NOP
 			else
-				action.analyze (a_context)
+				action.check_static_type (a_context)
 				if action.was_expression_replaced then
 					action := action.replacement_expression
 					adopt_child_expression (action)
@@ -278,7 +279,42 @@ feature -- Optimization
 					set_replacement (an_empty_sequence) -- NOP
 				else
 					if key_expression /= Void then
-						key_expression.analyze (a_context)
+						key_expression.check_static_type (a_context)
+						if key_expression.was_expression_replaced then
+							key_expression := key_expression.replacement_expression
+							adopt_child_expression (key_expression)
+						end
+					end
+				end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+		do
+			mark_unreplaced
+			select_expression.optimize (a_context)
+			if select_expression.was_expression_replaced then
+				select_expression := select_expression.replacement_expression
+				adopt_child_expression (select_expression)
+			end
+			an_empty_sequence ?= select_expression
+			if an_empty_sequence /= Void then
+				set_replacement (an_empty_sequence) -- NOP
+			else
+				action.optimize (a_context)
+				if action.was_expression_replaced then
+					action := action.replacement_expression
+					adopt_child_expression (action)
+				end
+				an_empty_sequence ?= action
+				if an_empty_sequence /= Void then
+					set_replacement (an_empty_sequence) -- NOP
+				else
+					if key_expression /= Void then
+						key_expression.optimize (a_context)
 						if key_expression.was_expression_replaced then
 							key_expression := key_expression.replacement_expression
 							adopt_child_expression (key_expression)

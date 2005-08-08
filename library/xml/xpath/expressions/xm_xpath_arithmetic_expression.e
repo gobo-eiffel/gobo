@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, evaluate_item, make, is_arithmetic_expression, as_arithmetic_expression
+			check_static_type, evaluate_item, make, is_arithmetic_expression, as_arithmetic_expression
 		end
 
 	XM_XPATH_ROLE
@@ -73,8 +73,8 @@ feature -- Access
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
@@ -110,7 +110,7 @@ feature -- Optimization
 						an_expression := Current
 					end
 					if an_expression.is_arithmetic_expression then
-						an_expression.as_arithmetic_expression.analyze_arithmetic_expression (a_context)
+						an_expression.as_arithmetic_expression.type_check_arithmetic_expression (a_context)
 					end
 				end
 			end
@@ -216,8 +216,8 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 	Duration_multiplication_action: INTEGER is 6
 			-- Arithmetic action need on operands
 	
-	analyze_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions
+	type_check_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type checking of `Current' and its subexpressions
 		local
 			a_type, another_type: XM_XPATH_ITEM_TYPE
 			an_action: INTEGER

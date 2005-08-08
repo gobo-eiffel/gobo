@@ -134,20 +134,30 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			select_expression.analyze (a_context)
+			select_expression.check_static_type (a_context)
 			if select_expression.was_expression_replaced then
 				set_select_expression (select_expression.replacement_expression)
 			end
 			if select_expression.is_error then
 				set_last_error (select_expression.error_value)
-			else
-				if not select_expression.cardinality_allows_many then
-					set_replacement (select_expression)
-				end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			select_expression.optimize (a_context)
+			if select_expression.was_expression_replaced then
+				set_select_expression (select_expression.replacement_expression)
+			end
+			if select_expression.is_error then
+				set_last_error (select_expression.error_value)
+			elseif not select_expression.cardinality_allows_many then
+				set_replacement (select_expression)
 			end
 		end
 

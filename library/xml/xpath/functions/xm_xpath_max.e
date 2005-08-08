@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "max"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := max_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)

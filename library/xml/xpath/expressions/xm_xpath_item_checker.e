@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, analyze, create_iterator, evaluate_item, item_type,
+			simplify, check_static_type, create_iterator, evaluate_item, item_type,
 			same_expression, is_item_checker, as_item_checker
 		end
 
@@ -110,14 +110,15 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions
+	
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_relation: INTEGER
 			a_message: STRING
 		do
 			mark_unreplaced
-			base_expression.analyze (a_context)
+			base_expression.check_static_type (a_context)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end

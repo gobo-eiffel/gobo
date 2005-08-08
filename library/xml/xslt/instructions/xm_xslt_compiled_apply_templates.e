@@ -152,12 +152,20 @@ feature -- Optimization
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			analyze_with_params (actual_parameters, a_context)
-			analyze_with_params (tunnel_parameters, a_context)
-			select_expression.analyze (a_context)
+			check_with_params (actual_parameters, a_context)
+			check_with_params (tunnel_parameters, a_context)
+			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
+			if select_expression.is_empty_sequence then set_replacement (select_expression.as_empty_sequence) end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			optimize_with_params (actual_parameters, a_context)
+			optimize_with_params (tunnel_parameters, a_context)
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
 			if select_expression.is_empty_sequence then set_replacement (select_expression.as_empty_sequence) end
 		end

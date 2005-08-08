@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		undefine
-			pre_evaluate, analyze
+			pre_evaluate, check_static_type
 		redefine
 			create_iterator
 		end
@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "distinct-values"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Distinct_values_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)

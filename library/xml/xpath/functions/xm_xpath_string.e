@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplify, analyze, evaluate_item, is_string_function, as_string_function
+			simplify, check_static_type, evaluate_item, is_string_function, as_string_function
 		end
 
 create
@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "string"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := string_function_type_code
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)
@@ -77,7 +78,7 @@ feature -- Optimization
 			Precursor
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of an expression and its subexpressions
 		do
 			mark_unreplaced

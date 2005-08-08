@@ -91,16 +91,24 @@ feature -- Optimization
 			if separator_expression.was_expression_replaced then separator_expression := separator_expression.replacement_expression end
 		end
 
-	
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			select_expression.analyze (a_context)
+			select_expression.check_static_type (a_context)
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
-			separator_expression.analyze (a_context)
+			separator_expression.check_static_type (a_context)
 			if separator_expression.was_expression_replaced then separator_expression := separator_expression.replacement_expression end
 			if not select_expression.cardinality_allows_many then is_singleton := True	end
 		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			select_expression.optimize (a_context)
+			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
+			separator_expression.optimize (a_context)
+			if separator_expression.was_expression_replaced then separator_expression := separator_expression.replacement_expression end
+		end	
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.

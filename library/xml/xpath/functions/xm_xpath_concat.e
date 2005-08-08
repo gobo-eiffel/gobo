@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 		do
 			name := "concat"
 			namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Concat_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := Platform.Maximum_integer
 			create arguments.make (3)

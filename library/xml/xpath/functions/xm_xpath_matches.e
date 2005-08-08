@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "matches"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := matches_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)

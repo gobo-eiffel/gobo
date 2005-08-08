@@ -65,8 +65,8 @@ feature -- Optimization
 			end
 		end
 
-	analyze_with_params (some_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of all in  `some_parameters'.
+	check_with_params (some_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type checking of all in  `some_parameters'.
 		require
 			parameter_list_not_void: some_parameters /= Void
 			static_context_not_void: a_context /= Void
@@ -83,7 +83,33 @@ feature -- Optimization
 			loop
 				an_expression := a_cursor.item.select_expression
 				if an_expression /= Void then
-					an_expression.analyze (a_context)
+					an_expression.check_static_type (a_context)
+					if an_expression.was_expression_replaced then an_expression := an_expression.replacement_expression end
+					a_cursor.item.set_selector (an_expression)
+				end
+				a_cursor.forth
+			end
+		end
+
+	optimize_with_params (some_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Optimize all in  `some_parameters'.
+		require
+			parameter_list_not_void: some_parameters /= Void
+			static_context_not_void: a_context /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_COMPILED_WITH_PARAM]
+			an_expression: XM_XPATH_EXPRESSION
+		do
+			from
+				a_cursor := some_parameters.new_cursor;a_cursor.start
+			variant
+				some_parameters.count + 1 - a_cursor.index
+			until
+				a_cursor.after
+			loop
+				an_expression := a_cursor.item.select_expression
+				if an_expression /= Void then
+					an_expression.optimize (a_context)
 					if an_expression.was_expression_replaced then an_expression := an_expression.replacement_expression end
 					a_cursor.item.set_selector (an_expression)
 				end

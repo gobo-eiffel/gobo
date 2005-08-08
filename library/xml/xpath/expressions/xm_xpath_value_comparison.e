@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_binary_expression
 		redefine
-			analyze, evaluate_item, calculate_effective_boolean_value
+			check_static_type, optimize, evaluate_item, calculate_effective_boolean_value
 		end
 
 	XM_XPATH_COMPARISON_ROUTINES
@@ -72,64 +72,104 @@ feature -- Access
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_type, another_type: XM_XPATH_ATOMIC_TYPE
 			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_message: STRING
 			a_primitive_type, another_primitive_type: INTEGER
 			is_first_optional, is_second_optional: BOOLEAN
+			a_message: STRING
 		do
 			mark_unreplaced
 			create a_type_checker
-			first_operand.analyze (a_context)
+			first_operand.check_static_type (a_context)
 			if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
-			if first_operand.is_error then set_last_error (first_operand.error_value) end
-			if not is_error then
-				second_operand.analyze (a_context)
+			if first_operand.is_error then
+				set_last_error (first_operand.error_value)
+			elseif first_operand.is_empty_sequence then
+				set_replacement (first_operand)
+			elseif not is_error then
+				second_operand.check_static_type (a_context)
 				if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
-				if second_operand.is_error then set_last_error (second_operand.error_value)	end
-			end
-			if not is_error then
-				create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_optional)
-				create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
-				a_type_checker.static_type_check (a_context, first_operand, an_atomic_type, False, a_role)
-				if a_type_checker.is_static_type_check_error then
-					set_last_error (a_type_checker.static_type_check_error)
-				else
-					set_first_operand (a_type_checker.checked_expression)
-					create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
-					a_type_checker.static_type_check (a_context, second_operand, an_atomic_type, False, a_role)
+				if second_operand.is_error then
+					set_last_error (second_operand.error_value)
+				elseif second_operand.is_empty_sequence then
+					set_replacement (second_operand)
+				elseif not is_error then
+					create an_atomic_type.make (type_factory.any_atomic_type, Required_cardinality_optional)
+					create a_role.make (Binary_expression_role, token_name (operator), 1, Xpath_errors_uri, "XPTY0004")
+					a_type_checker.static_type_check (a_context, first_operand, an_atomic_type, False, a_role)
 					if a_type_checker.is_static_type_check_error then
 						set_last_error (a_type_checker.static_type_check_error)
 					else
-						set_second_operand (a_type_checker.checked_expression)
-						a_type := first_operand.item_type.atomized_item_type; a_primitive_type := a_type.primitive_type
-						another_type := second_operand.item_type.atomized_item_type; another_primitive_type := another_type.primitive_type
-						if a_primitive_type = Untyped_atomic_type_code then a_primitive_type := String_type_code end
-						if another_primitive_type = Untyped_atomic_type_code then another_primitive_type := String_type_code end
-
-						if not are_types_comparable (a_primitive_type, another_primitive_type) then
-							is_first_optional := first_operand.cardinality_allows_zero
-							is_second_optional := second_operand.cardinality_allows_zero
-							if is_first_optional or else is_second_optional then
-								warn_comparison_failure (a_context, is_first_optional, is_second_optional, a_type, another_type)
-							else
-								a_message := STRING_.appended_string (a_message, another_type.conventional_name)
-								set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
+						set_first_operand (a_type_checker.checked_expression)
+						create another_role.make (Binary_expression_role, token_name (operator), 2, Xpath_errors_uri, "XPTY0004")
+						a_type_checker.static_type_check (a_context, second_operand, an_atomic_type, False, a_role)
+						if a_type_checker.is_static_type_check_error then
+							set_last_error (a_type_checker.static_type_check_error)
+						else
+							set_second_operand (a_type_checker.checked_expression)
+							a_type := first_operand.item_type.atomized_item_type; a_primitive_type := a_type.primitive_type
+							another_type := second_operand.item_type.atomized_item_type; another_primitive_type := another_type.primitive_type
+							if a_primitive_type = Untyped_atomic_type_code then a_primitive_type := String_type_code end
+							if another_primitive_type = Untyped_atomic_type_code then another_primitive_type := String_type_code end
+							if not are_types_comparable (a_primitive_type, another_primitive_type) then
+								is_first_optional := first_operand.cardinality_allows_zero
+								is_second_optional := second_operand.cardinality_allows_zero
+								if is_first_optional or else is_second_optional then
+									warn_comparison_failure (a_context, is_first_optional, is_second_optional, a_type, another_type)
+								else
+									a_message := STRING_.concat ("Cannot compare ", a_type.conventional_name)
+									a_message := STRING_.appended_string (a_message, " with ")
+									a_message := STRING_.appended_string (a_message, another_type.conventional_name)
+									set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
+								end
+							end
+							if not is_error and then not (operator = Fortran_equal_token or else operator = Fortran_not_equal_token) then
+								if not is_ordered (a_primitive_type) then
+									a_message := STRING_.concat ("Type ", a_type.conventional_name)
+									a_message := STRING_.appended_string (a_message, " is not an ordered type")
+									set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
+								end
+								if not is_ordered (another_primitive_type) then
+									a_message := STRING_.concat ("Type ", another_type.conventional_name)
+									a_message := STRING_.appended_string (a_message, " is not an ordered type")
+									set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0004", Type_error)
+								end
 							end
 						end
-						if not is_error then optimize (a_context) end
 					end
+				end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			mark_unreplaced
+			first_operand.optimize (a_context)
+			if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
+			if first_operand.is_error then
+				set_last_error (first_operand.error_value)
+			elseif first_operand.is_empty_sequence then
+				set_replacement (first_operand)
+			elseif not is_error then
+				second_operand.optimize (a_context)
+				if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
+				if second_operand.is_error then
+					set_last_error (second_operand.error_value)
+				else
+					optimize_stage_2 (a_context)
 				end
 			end
 			if not was_expression_replaced and then not is_error then
 				evaluate_now
 			end
 		end
+
 
 feature -- Evaluation
 
@@ -254,7 +294,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize_stage_2 (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform context-dependent optimizations.
 		do
 			optimize_count (a_context)
@@ -316,7 +356,7 @@ feature {NONE} -- Implementation
 						else
 							an_expression := an_identity_comparison
 						end
-						an_expression.analyze (a_context)
+						an_expression.optimize (a_context)
 						if an_expression.was_expression_replaced then
 							an_expression := an_expression.replacement_expression
 						end
@@ -397,7 +437,7 @@ feature {NONE} -- Implementation
 			an_expression: XM_XPATH_EXPRESSION
 		do		
 			create {XM_XPATH_VALUE_COMPARISON} an_expression.make (a_count_function, inverse_operator (operator), first_operand, atomic_comparer.collator)
-			an_expression.analyze (a_context)
+			an_expression.optimize (a_context)
 			if an_expression.was_expression_replaced then
 				set_replacement (an_expression.replacement_expression)
 			else

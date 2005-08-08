@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_COMPUTED_EXPRESSION
 		redefine
-			simplify, promote, sub_expressions
+			simplify, promote, sub_expressions, is_function_call, as_function_call
 		end
 
 feature -- Access
@@ -45,11 +45,26 @@ feature -- Access
 			Name_not_void: Result /= Void and then Result.count > 0
 		end
 
+	fingerprint: INTEGER
+			-- Fingerprint of `name' in `namespace_uri'
+
 	namespace_uri: STRING is
 			-- Namespace uri for `name'
 		deferred
 		ensure
 			Namespace_uri_not_void: Result /= Void
+		end
+
+	is_function_call: BOOLEAN is
+			-- Is `Current' an XPath function call?
+		do
+			Result := True
+		end
+
+	as_function_call: XM_XPATH_FUNCTION_CALL is
+			-- `Current' seen as an XPath function call
+		do
+			Result := Current
 		end
 
 feature -- Status report
@@ -149,12 +164,8 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
-			-- This also calls pre_evaluate to evaluate the function
-			--  if all the arguments are constant;
-			-- Functions that do not require this behavior
-			--  can override the pre_evaluate routine.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			fixed_values: BOOLEAN
 			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -169,7 +180,7 @@ feature -- Optimization
 			until
 				is_error or else arguments_cursor.after
 			loop
-				arguments_cursor.item.analyze (a_context)
+				arguments_cursor.item.check_static_type (a_context)
 				if arguments_cursor.item.is_error then
 					set_last_error (arguments_cursor.item.error_value)
 				else
@@ -183,6 +194,46 @@ feature -- Optimization
 				arguments_cursor.forth
 			end
 			
+			if not is_error then check_arguments (a_context) end
+			
+			-- Now, if any of the arguments has a static type error,
+			--  then `Current' as a whole has too.
+			
+			if not is_error and then fixed_values then
+				pre_evaluate (a_context) -- May or may not be in error
+			end			
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			fixed_values: BOOLEAN
+			arguments_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+		do
+			mark_unreplaced
+			from
+				fixed_values := True -- until we find otherwise
+				arguments_cursor := arguments.new_cursor
+				arguments_cursor.start
+			variant
+				arguments.count + 1 - arguments_cursor.index
+			until
+				is_error or else arguments_cursor.after
+			loop
+				arguments_cursor.item.optimize (a_context)
+				if arguments_cursor.item.is_error then
+					set_last_error (arguments_cursor.item.error_value)
+				else
+					if arguments_cursor.item.was_expression_replaced then
+						arguments_cursor.replace (arguments_cursor.item.replacement_expression)
+						arguments_cursor.item.mark_unreplaced
+						adopt_child_expression (arguments_cursor.item)
+					end
+					if not arguments_cursor.item.is_value then fixed_values := False end
+				end
+				arguments_cursor.forth
+			end
+				
 			if not is_error then check_arguments (a_context) end
 			
 			-- Now, if any of the arguments has a static type error,

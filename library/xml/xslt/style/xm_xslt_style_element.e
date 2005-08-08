@@ -922,12 +922,17 @@ feature -- Status setting
 
 				an_expression.as_computed_expression.set_parent (Current)
 			end
-			an_expression.analyze (static_context)
+			an_expression.check_static_type (static_context)
 			if an_expression.was_expression_replaced then
 				an_analyzed_expression := an_expression.replacement_expression
 				was_replaced := True
 			else
 				an_analyzed_expression := an_expression
+			end
+			an_analyzed_expression.resolve_calls_to_current_function
+			if an_analyzed_expression.was_expression_replaced then
+				an_analyzed_expression := an_analyzed_expression.replacement_expression
+				was_replaced := True
 			end
 			if is_explaining then
 				std.error.put_string ("Attribute '")
@@ -985,6 +990,8 @@ feature -- Status setting
 			if a_pattern.is_error then
 				report_compile_error (a_pattern.error_value)
 			end
+			-- TODO: need to resolve calls to current ()
+			-- probably need the full pattern expression stuff first.
 		end
 
 	check_within_template is
@@ -1472,7 +1479,7 @@ feature -- Element change
 					report_compile_error (expression_factory.parsed_error_value)
 				else
 					an_expression := expression_factory.parsed_expression
-					an_expression.analyze (a_static_context)
+					an_expression.check_static_type (a_static_context)
 					if an_expression.is_error then
 						report_compile_error (an_expression.error_value)
 					else

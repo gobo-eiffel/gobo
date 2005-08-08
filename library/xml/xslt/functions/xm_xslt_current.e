@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			pre_evaluate, evaluate_item, compute_intrinsic_dependencies, compute_special_properties
+			pre_evaluate, evaluate_item, compute_intrinsic_dependencies,
+			compute_special_properties, is_current_function
 		end
 
 create
@@ -29,6 +30,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "current"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Current_function_type_code
 			minimum_argument_count := 0
 			maximum_argument_count := 0
 			create arguments.make (0)
@@ -56,6 +58,12 @@ feature -- Status report
 			-- will never be called
 		end
 
+	is_current_function: BOOLEAN is
+			-- Is `Current' the XSLT "current()" function?
+		do
+			Result := True
+		end
+
 feature -- Status setting
 
 	compute_intrinsic_dependencies is
@@ -77,15 +85,8 @@ feature -- Evaluation
 				evaluation_context: an_evaluation_context /= Void
 				-- as this is an XSLT function
 			end
-
-			-- This relies on current() being statically promoted to the top level
-
-			if an_evaluation_context.is_current_item_available then
-				last_evaluated_item := an_evaluation_context.context_item
-			else
-				create an_error.make_from_string ("Context item is undefined when calling current().", "",  "XTDE1360", Dynamic_error)
-				an_evaluation_context.transformer.report_fatal_error (an_error, Void)
-			end
+			create an_error.make_from_string ("Current().should not be called at runtime, as it should have been promoted", Gexslt_eiffel_type_uri,  "CURRENT_PROMOTION", Dynamic_error)
+			an_evaluation_context.transformer.report_fatal_error (an_error, Void)
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is

@@ -97,7 +97,7 @@ feature -- Element change
 				create {XM_XPATH_INVALID_VALUE} value.make (expression_factory.parsed_error_value)
 			else
 				an_expression := expression_factory.parsed_expression
-				an_expression.analyze (a_static_context)
+				an_expression.check_static_type (a_static_context)
 				if an_expression.is_error then
 					is_error := True
 					create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
@@ -109,9 +109,23 @@ feature -- Element change
 						is_error := True
 						create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
 					else
-						create a_slot_manager.make
-						an_expression.allocate_slots (1, a_slot_manager)
-						evaluate_post_analysis (an_expression, a_resource)
+						an_expression.optimize (a_static_context)
+						if an_expression.is_error then
+							is_error := True
+							create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
+						else
+							if an_expression.was_expression_replaced then
+								an_expression := an_expression.replacement_expression
+							end
+							if an_expression.is_error then
+								is_error := True
+								create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
+							else
+								create a_slot_manager.make
+								an_expression.allocate_slots (1, a_slot_manager)
+								evaluate_post_analysis (an_expression, a_resource)
+							end
+						end
 					end
 				end
 			end
@@ -125,7 +139,7 @@ feature {NONE} -- Implementation
 	evaluate_post_analysis (an_expression: XM_XPATH_EXPRESSION; a_document: XM_XPATH_DOCUMENT) is
 			-- perform evaluation on `an_expression'.
 		require
-			expression_analyzed_without_error: an_expression /= Void and then not an_expression.is_error
+			expression_checked_and_optimized_without_error: an_expression /= Void and then not an_expression.is_error
 			document_not_void: a_document /= Void
 		local
 			a_document_pool: XM_XPATH_DOCUMENT_POOL

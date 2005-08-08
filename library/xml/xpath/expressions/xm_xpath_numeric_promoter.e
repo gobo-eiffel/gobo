@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, same_expression, simplify, analyze, evaluate_item,
+			item_type, same_expression, simplify, check_static_type, optimize, evaluate_item,
 			create_iterator, is_numeric_promoter, as_numeric_promoter
 		end
 
@@ -109,28 +109,34 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			an_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			mark_unreplaced
-			base_expression.analyze (a_context)
+			base_expression.check_static_type (a_context)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
-			else
-				if base_expression.is_value then
-					create_iterator (Void)
-					if last_iterator.is_error then
-						set_last_error (last_iterator.error_value)
-					else
-						create an_extent.make (last_iterator)
-						set_replacement (an_extent)
-					end
-				end
+			end
+
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			an_extent: XM_XPATH_SEQUENCE_EXTENT
+		do
+			mark_unreplaced
+			base_expression.optimize (a_context)
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
+			end
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
 			end
 		end
 

@@ -309,7 +309,9 @@ feature -- Element change
 			if a_body = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_body.make end
 			a_body.simplify
 			if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
-			a_body.analyze (static_context)
+			a_body.check_static_type (static_context)
+			if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
+			a_body.optimize (static_context)
 			if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
 			if result_type /= Void then
 				create a_role.make (Function_result_role, function_name, 1, Xpath_errors_uri, "XPTY0004")

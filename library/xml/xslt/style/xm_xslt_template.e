@@ -246,10 +246,12 @@ feature -- Element change
 				end
 			end
 			if not any_compile_errors then
-				a_content.analyze (static_context)
+				a_content.check_static_type (static_context)
 				if a_content.is_error then
 					report_compile_error (a_content.error_value)
 				else
+					if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
+					a_content.optimize (static_context)
 					if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
 					if configuration.is_tracing then
 						create a_trace_wrapper.make (a_content, an_executable, Current)

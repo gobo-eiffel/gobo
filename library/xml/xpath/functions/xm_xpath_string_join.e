@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			analyze, evaluate_item
+			optimize, evaluate_item
 		end
 
 	XM_XPATH_CARDINALITY
@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "string-join"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := string_join_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := 2
 			create arguments.make (2)
@@ -64,19 +65,17 @@ feature -- Status report
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
 		local
 			an_expression: XM_XPATH_EXPRESSION 
 		do
 			mark_unreplaced
 			Precursor (a_context)
-			if not is_error then
-				if not was_expression_replaced then
-					an_expression := simplified_singleton
-					if an_expression /= Current then
-						set_replacement (an_expression)
-					end
+			if not is_error and then not was_expression_replaced then
+				an_expression := simplified_singleton
+				if an_expression /= Current then
+					set_replacement (an_expression)
 				end
 			end
 		end

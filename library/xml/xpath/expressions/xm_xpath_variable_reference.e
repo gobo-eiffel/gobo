@@ -130,14 +130,29 @@ feature -- Status setting
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions;		
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
+			if constant_value /= Void then
+				binding := Void
+				set_replacement (constant_value)
+			else
 				check
 					static_type_not_void: static_type /= Void
 				end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			mark_unreplaced
+
+			-- Note that `set_static_type' might be called after type-checking, so:
+
 			if constant_value /= Void then
+				binding := Void
 				set_replacement (constant_value)
 			end
 		end

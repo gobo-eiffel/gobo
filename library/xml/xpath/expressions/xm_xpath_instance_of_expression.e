@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			same_expression, analyze, calculate_effective_boolean_value, evaluate_item,
+			same_expression, check_static_type, calculate_effective_boolean_value, evaluate_item,
 			compute_cardinality, item_type, display, is_instance_of_expression,
 			as_instance_of_expression
 		end
@@ -103,13 +103,13 @@ feature -- Status report
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static analysis of `Current' and its subexpressions
 		local
 			an_expression: XM_XPATH_EXPRESSION
 		do
 			mark_unreplaced
-			base_expression.analyze (a_context)
+			base_expression.check_static_type (a_context)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end

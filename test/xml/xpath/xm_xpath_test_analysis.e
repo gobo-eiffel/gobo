@@ -57,11 +57,16 @@ feature -- Test
 				an_expression := expression_factory.parsed_expression
 			end
 			assert ("Parse sucessful", an_expression /= Void)
-			an_expression.analyze (a_context)
+			an_expression.check_static_type (a_context)
 			if an_expression.was_expression_replaced then
 				an_expression := an_expression.replacement_expression
 			end
-			assert ("Analysis sucessfull", not an_expression.is_error)
+			assert ("Type checking sucessfull", not an_expression.is_error)
+			an_expression.optimize (a_context)
+			if an_expression.was_expression_replaced then
+				an_expression := an_expression.replacement_expression
+			end
+			assert ("Optimization sucessfull", not an_expression.is_error)
 			debug ("XPath expression factory")
 				print ("After analysis: %N")
 				an_expression.display (1)

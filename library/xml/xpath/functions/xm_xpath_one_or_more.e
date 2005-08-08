@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "one-or-more"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := one_or_more_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)

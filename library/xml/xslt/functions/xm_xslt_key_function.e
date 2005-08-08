@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 		do
 			key_fingerprint := -1
 			name := "key"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Key_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)

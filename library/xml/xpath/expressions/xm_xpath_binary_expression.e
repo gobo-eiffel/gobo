@@ -150,18 +150,19 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			first_operand.analyze (a_context)
+			first_operand.check_static_type (a_context)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.analyze (a_context)
+				second_operand.check_static_type (a_context)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -178,7 +179,36 @@ feature -- Optimization
 				end
 			end
 		end
-	
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			mark_unreplaced
+			first_operand.optimize (a_context)
+			if first_operand.was_expression_replaced then
+				set_first_operand (first_operand.replacement_expression)
+			end
+			if first_operand.is_error then
+				set_last_error (first_operand.error_value)
+			else
+				second_operand.optimize (a_context)
+				if second_operand.was_expression_replaced then
+					set_second_operand (second_operand.replacement_expression)
+				end
+				if second_operand.is_error then
+					set_last_error (second_operand.error_value)
+				else
+					
+					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
+					
+					if first_operand.is_value and then second_operand.is_value then
+						eagerly_evaluate (Void)
+						set_replacement (last_evaluation)
+					end
+				end
+			end
+		end
+
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
@@ -188,13 +218,11 @@ feature -- Optimization
 			a_promotion := an_offer.accepted_expression
 			if a_promotion /= Void then
 				set_replacement (a_promotion)
-			else
-				if an_offer.action = Unordered then
-					first_operand.promote (an_offer)
-					if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
-					second_operand.promote (an_offer)
-					if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
-				end
+			elseif an_offer.action /= Unordered then
+				first_operand.promote (an_offer)
+				if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
+				second_operand.promote (an_offer)
+				if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
 			end
 		end
 

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			analyze, create_iterator
+			check_static_type, create_iterator
 		end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "subsequence"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := subsequence_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)
@@ -69,8 +70,8 @@ feature -- Status report
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			clone_special_properties (arguments.item (1))
 			Precursor (a_context)

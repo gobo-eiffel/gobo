@@ -18,8 +18,8 @@ inherit
 		rename
 			make as make_binary_expression
 		redefine
-			display_operator, evaluate_item, analyze, calculate_effective_boolean_value,
-			compute_cardinality
+			display_operator, evaluate_item, check_static_type, optimize,
+			calculate_effective_boolean_value, compute_cardinality
 		end
 
 	XM_XPATH_CARDINALITY
@@ -68,23 +68,21 @@ feature -- Access
 	
 feature -- Optimization	
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			mark_unreplaced
-			
-			-- Analysis proceeds top-down through the sub-expressions
-			
-			first_operand.analyze (a_context)
+			first_operand.check_static_type (a_context)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.analyze (a_context)
+				second_operand.check_static_type (a_context)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -92,8 +90,11 @@ feature -- Optimization
 					set_last_error (second_operand.error_value)
 				end
 				if not is_error then
+
+					-- If either operand is statically empty, evaluate as `False'.
+
 					if first_operand.is_empty_sequence
-						and then second_operand.is_empty_sequence then
+						or else second_operand.is_empty_sequence then
 						create a_boolean_value.make (False)
 						set_replacement (a_boolean_value)
 					else
@@ -101,7 +102,45 @@ feature -- Optimization
 						if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
 						second_operand.set_unsorted (False)
 						if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
-						operands_not_in_error_so_analyze (a_context)
+						operands_not_in_error_so_type_check (a_context)
+					end
+				end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			mark_unreplaced
+			first_operand.optimize (a_context)
+			if first_operand.was_expression_replaced then
+				set_first_operand (first_operand.replacement_expression)
+			end
+			if first_operand.is_error then
+				set_last_error (first_operand.error_value)
+			else
+				second_operand.optimize (a_context)
+				if second_operand.was_expression_replaced then
+					set_second_operand (second_operand.replacement_expression)
+				end
+				if second_operand.is_error then
+					set_last_error (second_operand.error_value)
+				else
+					
+					-- If either operand is statically empty, evaluate as `False'.
+					
+					if first_operand.is_empty_sequence
+						or else second_operand.is_empty_sequence then
+						create a_boolean_value.make (False)
+						set_replacement (a_boolean_value)
+					else
+						first_operand.set_unsorted (False)
+						if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
+						second_operand.set_unsorted (False)
+						if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
+						operands_not_in_error_so_optimize (a_context)
 					end
 				end
 			end
@@ -262,7 +301,7 @@ feature {NONE} -- Implementation
 			last_boolean_value_not_void: last_boolean_value /= Void			
 		end
 
-	analyze_two_singletons (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE) is
+	type_check_two_singletons (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE) is
 			-- Use a value comparison if both arguments are singletons
 		require
 			context_not_void: a_context /= Void
@@ -304,7 +343,58 @@ feature {NONE} -- Implementation
 				else
 					an_expression := a_computed_expression
 				end
-				an_expression.analyze (a_context)
+				an_expression.check_static_type (a_context)
+				if an_expression.was_expression_replaced then
+					set_replacement (an_expression.replacement_expression)
+				else
+					set_replacement (an_expression)
+				end
+			end
+		end
+	
+	optimize_two_singletons (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE) is
+			-- Use a value comparison if both arguments are singletons
+		require
+			context_not_void: a_context /= Void
+			first_type_not_void: a_type /= Void
+			second_type_not_void: another_type /= Void
+		local
+			an_expression: XM_XPATH_EXPRESSION
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+		do
+			if a_type = type_factory.untyped_atomic_type then
+				if another_type = type_factory.untyped_atomic_type then
+					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, type_factory.string_type, False)
+					adopt_child_expression (first_operand)
+					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, type_factory.string_type, False)
+					adopt_child_expression (second_operand)
+				elseif is_sub_type (another_type, type_factory.numeric_type) then
+					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (first_operand, type_factory.double_type, False)
+					adopt_child_expression (first_operand)
+				else
+					create {XM_XPATH_CAST_EXPRESSION} first_operand.make (second_operand, another_type, False)
+					adopt_child_expression (first_operand)
+				end
+			elseif another_type = type_factory.untyped_atomic_type then
+				if is_sub_type (a_type, type_factory.numeric_type) then
+					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, type_factory.double_type, False)
+					adopt_child_expression (second_operand)
+				else
+					create {XM_XPATH_CAST_EXPRESSION} second_operand.make (second_operand, a_type, False)
+					adopt_child_expression (second_operand)
+				end	
+			end
+			
+			create {XM_XPATH_VALUE_COMPARISON} a_computed_expression.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
+			a_computed_expression.set_parent (container)
+			a_computed_expression.simplify
+			if not a_computed_expression.is_error then
+				if a_computed_expression.was_expression_replaced then
+					an_expression := a_computed_expression.replacement_expression
+				else
+					an_expression := a_computed_expression
+				end
+				an_expression.optimize (a_context)
 				if an_expression.was_expression_replaced then
 					set_replacement (an_expression.replacement_expression)
 				else
@@ -313,8 +403,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	operands_not_in_error_so_analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Analyze after operands have been analyzed.
+
+	operands_not_in_error_so_type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Type check after operands have been checked.
 		require
 			context_not_void: a_context /= Void
 		local
@@ -353,17 +444,15 @@ feature {NONE} -- Implementation
 					if not is_error then
 						if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one and then
 							a_type /= type_factory.any_atomic_type and then another_type /= type_factory.any_atomic_type then
-							analyze_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type)
+							type_check_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type)
 						elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
-							analyze_singleton_and_empty_sequence (a_context)
+							type_check_singleton_and_empty_sequence (a_context)
 						elseif not first_operand.cardinality_allows_many then
-							analyze_first_operand_single (a_context)
-						elseif first_operand.is_range_expression and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
-							analyze_n_to_m_equals_i (a_context, first_operand.as_range_expression)
+							type_check_first_operand_single (a_context)
 						else
 							if operator /= Equals_token and then operator /= Not_equal_token	and then (is_sub_type (a_type, type_factory.numeric_type)
 																																 or else is_sub_type (another_type, type_factory.numeric_type)) then
-								analyze_inequalities (a_context, a_type, another_type)
+								type_check_inequalities (a_context, a_type, another_type)
 							end
 							if not was_expression_replaced then
 								evaluate_two_constants
@@ -374,15 +463,40 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	analyze_singleton_and_empty_sequence (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Analyze when neither argument allows a sequence of >1
+	operands_not_in_error_so_optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Optimize after operands have been optimized.
+		require
+			context_not_void: a_context /= Void
+		local
+			a_type, another_type: XM_XPATH_ITEM_TYPE
+		do
+			a_type := first_operand.item_type
+			another_type := second_operand.item_type
+			if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one and then
+				a_type /= type_factory.any_atomic_type and then another_type /= type_factory.any_atomic_type then
+				optimize_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type)
+			elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
+				optimize_singleton_and_empty_sequence (a_context)
+			elseif not first_operand.cardinality_allows_many then
+				optimize_first_operand_single (a_context)
+			elseif first_operand.is_range_expression and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
+				optimize_n_to_m_equals_i (a_context, first_operand.as_range_expression)
+			elseif first_operand.is_integer_range and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
+				optimize_n_to_m_equals_i_two (a_context, first_operand.as_integer_range)
+			elseif not was_expression_replaced then
+				evaluate_two_constants
+			end
+		end
+
+	type_check_singleton_and_empty_sequence (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Type check when neither argument allows a sequence of >1
 		require
 			context_not_void: a_context /= Void
 		local
 			a_singleton_comparison: XM_XPATH_SINGLETON_COMPARISON
 		do
 			create a_singleton_comparison.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
-			a_singleton_comparison.analyze (a_context)
+			a_singleton_comparison.check_static_type (a_context)
 			if a_singleton_comparison.was_expression_replaced then
 				set_replacement (a_singleton_comparison.replacement_expression)
 			else
@@ -390,8 +504,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	optimize_singleton_and_empty_sequence (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Optimize when neither argument allows a sequence of >1
+		require
+			context_not_void: a_context /= Void
+		local
+			a_singleton_comparison: XM_XPATH_SINGLETON_COMPARISON
+		do
+			create a_singleton_comparison.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
+			a_singleton_comparison.optimize (a_context)
+			if a_singleton_comparison.was_expression_replaced then
+				set_replacement (a_singleton_comparison.replacement_expression)
+			else
+				set_replacement (a_singleton_comparison)
+			end
+		end
 
-	analyze_first_operand_single (a_context: XM_XPATH_STATIC_CONTEXT) is
+	type_check_first_operand_single (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- If first argument is a singleton, reverse the arguments
 		require
 			context_not_void: a_context /= Void
@@ -399,7 +528,7 @@ feature {NONE} -- Implementation
 			a_general_comparison: XM_XPATH_GENERAL_COMPARISON
 		do	
 			create a_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
-			a_general_comparison.analyze (a_context)
+			a_general_comparison.check_static_type (a_context)
 			if a_general_comparison.was_expression_replaced then
 				set_replacement (a_general_comparison.replacement_expression)
 			else
@@ -407,7 +536,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	analyze_n_to_m_equals_i (a_context: XM_XPATH_STATIC_CONTEXT; a_range_expression: XM_XPATH_RANGE_EXPRESSION) is
+	optimize_first_operand_single (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- If first argument is a singleton, reverse the arguments
+		require
+			context_not_void: a_context /= Void
+		local
+			a_general_comparison: XM_XPATH_GENERAL_COMPARISON
+		do	
+			create a_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
+			a_general_comparison.optimize (a_context)
+			if a_general_comparison.was_expression_replaced then
+				set_replacement (a_general_comparison.replacement_expression)
+			else
+				set_replacement (a_general_comparison)
+			end
+		end
+
+	optimize_n_to_m_equals_i (a_context: XM_XPATH_STATIC_CONTEXT; a_range_expression: XM_XPATH_RANGE_EXPRESSION) is
 			-- Look for (N to M = I)
 		require
 			context_not_void: a_context /= Void
@@ -425,7 +570,26 @@ feature {NONE} -- Implementation
 			set_replacement (an_expression)
 		end
 
-	analyze_inequalities (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ITEM_TYPE) is
+	optimize_n_to_m_equals_i_two (a_context: XM_XPATH_STATIC_CONTEXT; an_integer_range: XM_XPATH_INTEGER_RANGE) is
+			-- Look for (N to M = I)
+		require
+			context_not_void: a_context /= Void
+			range_not_void: an_integer_range /= void
+		local
+			an_expression: XM_XPATH_EXPRESSION
+			an_integer_value, another_integer_value: XM_XPATH_INTEGER_VALUE
+		do
+			if second_operand.is_position_function then
+				create {XM_XPATH_POSITION_RANGE} an_expression.make (an_integer_range.minimum, an_integer_range.maximum)
+			else
+				create an_integer_value.make_from_integer (an_integer_range.minimum)
+				create another_integer_value.make_from_integer (an_integer_range.maximum)
+				create {XM_XPATH_INTEGER_RANGE_TEST} an_expression.make (second_operand, an_integer_value, another_integer_value)
+			end
+			set_replacement (an_expression)
+		end
+
+	type_check_inequalities (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ITEM_TYPE) is
 			-- If the operator is gt, ge, lt, le then replace X < Y by min(X) < max(Y)
 
 			-- This optimization is done only in the case where at least one of the
@@ -466,7 +630,7 @@ feature {NONE} -- Implementation
 			end
 			if not is_error then
 				create a_minimax_comparison.make (first_operand, operator, second_operand)
-				a_minimax_comparison.analyze (a_context)
+				a_minimax_comparison.check_static_type (a_context)
 				if a_minimax_comparison.was_expression_replaced then
 					set_replacement (a_minimax_comparison.replacement_expression)
 				else

@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			simplify, item_type, analyze, same_expression, evaluate_item,
+			simplify, item_type, check_static_type, optimize, same_expression, evaluate_item,
 			calculate_effective_boolean_value, compute_cardinality, compute_special_properties,
 			is_castable_expression, as_castable_expression
 		end
@@ -104,9 +104,9 @@ feature -- Optimization
 				set_replacement (last_boolean_value)
 			end
 		end
-
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
@@ -114,7 +114,7 @@ feature -- Optimization
 			a_cardinality: INTEGER
 		do
 			mark_unreplaced
-			base_expression.analyze (a_context)
+			base_expression.check_static_type (a_context)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end
@@ -134,13 +134,30 @@ feature -- Optimization
 					set_last_error (a_type_checker.static_type_check_error)
 				else
 					set_base_expression (a_type_checker.checked_expression)
-				end
-				if base_expression.is_atomic_value then
-					calculate_effective_boolean_value (Void)
-					set_replacement (last_boolean_value)
+					if base_expression.is_atomic_value then
+						calculate_effective_boolean_value (Void)
+						set_replacement (last_boolean_value)
+					end
 				end
 			end
 		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			mark_unreplaced
+			base_expression.optimize (a_context)
+			if base_expression.was_expression_replaced then
+				set_base_expression (base_expression.replacement_expression)
+			end
+			if base_expression.is_error then
+				set_last_error (base_expression.error_value)
+			elseif base_expression.is_atomic_value then
+				calculate_effective_boolean_value (Void)
+				set_replacement (last_boolean_value)
+			end
+		end
+
 
 feature -- Evaluation
 

@@ -182,58 +182,111 @@ feature -- Optimization
 			-- TODO: simplify count_pattern and from_pattern
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			if select_expression /= Void then
-				select_expression.analyze (a_context)
+				select_expression.check_static_type (a_context)
 				if select_expression.was_expression_replaced then
 					select_expression := select_expression.replacement_expression;	adopt_child_expression (select_expression)
 				end
 			end
 			if value_expression /= Void then
-				value_expression.analyze (a_context)
+				value_expression.check_static_type (a_context)
 				if value_expression.was_expression_replaced then
 					value_expression := value_expression.replacement_expression;	adopt_child_expression (value_expression)
 				end
 			end
 			if format /= Void then
-				format.analyze (a_context)
+				format.check_static_type (a_context)
 				if format.was_expression_replaced then
 					format := format.replacement_expression;	adopt_child_expression (format)
 				end
 			end
 			if grouping_size /= Void then
-				grouping_size.analyze (a_context)
+				grouping_size.check_static_type (a_context)
 				if grouping_size.was_expression_replaced then
 					grouping_size := grouping_size.replacement_expression;	adopt_child_expression (grouping_size)
 				end
 			end
 			if grouping_separator /= Void then
-				grouping_separator.analyze (a_context)
+				grouping_separator.check_static_type (a_context)
 				if grouping_separator.was_expression_replaced then
 					grouping_separator := grouping_separator.replacement_expression;	adopt_child_expression (grouping_separator)
 				end
 			end
 			if letter_value /= Void then
-				letter_value.analyze (a_context)
+				letter_value.check_static_type (a_context)
 				if letter_value.was_expression_replaced then
 					letter_value := letter_value.replacement_expression;	adopt_child_expression (letter_value)
 				end
 			end
 			if ordinal /= Void then
-				ordinal.analyze (a_context)
+				ordinal.check_static_type (a_context)
 				if ordinal.was_expression_replaced then
 					ordinal := ordinal.replacement_expression;	adopt_child_expression (ordinal)
 				end
 			end
 			if language /= Void then
-				language.analyze (a_context)
+				language.check_static_type (a_context)
 				if language.was_expression_replaced then
 					language := language.replacement_expression;	adopt_child_expression (language)
 				end
 			end
-			-- TODO: analyze count_pattern and from_pattern
+			-- TODO: check count_pattern and from_pattern
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			if select_expression /= Void then
+				select_expression.optimize (a_context)
+				if select_expression.was_expression_replaced then
+					select_expression := select_expression.replacement_expression;	adopt_child_expression (select_expression)
+				end
+			end
+			if value_expression /= Void then
+				value_expression.optimize (a_context)
+				if value_expression.was_expression_replaced then
+					value_expression := value_expression.replacement_expression;	adopt_child_expression (value_expression)
+				end
+			end
+			if format /= Void then
+				format.optimize (a_context)
+				if format.was_expression_replaced then
+					format := format.replacement_expression;	adopt_child_expression (format)
+				end
+			end
+			if grouping_size /= Void then
+				grouping_size.optimize (a_context)
+				if grouping_size.was_expression_replaced then
+					grouping_size := grouping_size.replacement_expression;	adopt_child_expression (grouping_size)
+				end
+			end
+			if grouping_separator /= Void then
+				grouping_separator.optimize (a_context)
+				if grouping_separator.was_expression_replaced then
+					grouping_separator := grouping_separator.replacement_expression;	adopt_child_expression (grouping_separator)
+				end
+			end
+			if letter_value /= Void then
+				letter_value.optimize (a_context)
+				if letter_value.was_expression_replaced then
+					letter_value := letter_value.replacement_expression;	adopt_child_expression (letter_value)
+				end
+			end
+			if ordinal /= Void then
+				ordinal.optimize (a_context)
+				if ordinal.was_expression_replaced then
+					ordinal := ordinal.replacement_expression;	adopt_child_expression (ordinal)
+				end
+			end
+			if language /= Void then
+				language.optimize (a_context)
+				if language.was_expression_replaced then
+					language := language.replacement_expression;	adopt_child_expression (language)
+				end
+			end
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is

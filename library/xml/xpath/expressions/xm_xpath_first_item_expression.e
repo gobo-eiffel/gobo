@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			analyze, promote, compute_cardinality, evaluate_item
+			optimize, promote, compute_cardinality, evaluate_item
 		end
 
 create
@@ -39,19 +39,20 @@ feature {NONE} -- Initialization
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			base_expression.analyze (a_context)
+			base_expression.optimize (a_context)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
-			end
-			if not base_expression.cardinality_allows_many then
-				set_replacement (base_expression)
+			else
+				if not base_expression.cardinality_allows_many then
+					set_replacement (base_expression)
+				end
 			end
 		end
 

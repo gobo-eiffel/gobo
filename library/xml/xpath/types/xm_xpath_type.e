@@ -318,6 +318,25 @@ feature -- Status report
 			end
 		end
 
+	is_ordered (a_type: INTEGER): BOOLEAN is
+			-- Is `a_type' ordered according to the XPath (not XML Schema) rules?
+		do
+			inspect
+				a_type
+			when
+				Any_atomic_type_code, Integer_type_code, Double_type_code,
+				Float_type_code, Decimal_type_code, Numeric_type_code,
+				Boolean_type_code, String_type_code, Any_uri_type_code,
+				Date_time_type_code, Date_type_code, Time_type_code
+			 then
+				Result := True
+			when Duration_type_code, Year_month_duration_type_code, Day_time_duration_type_code then
+				Result := True -- TODO: disallow ordering of durations, unless the subtypes are used
+			else
+				Result := False
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	node_test_relationship (a_node_test, another_node_test: XM_XPATH_NODE_TEST): INTEGER is

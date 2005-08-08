@@ -18,7 +18,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		undefine
-			pre_evaluate, analyze
+			pre_evaluate, check_static_type
 		redefine
 			evaluate_item
 		end

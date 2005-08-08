@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_binary
 		redefine
-			compute_cardinality, compute_special_properties, simplify, analyze, create_iterator, calculate_effective_boolean_value
+			compute_cardinality, compute_special_properties, simplify, check_static_type, create_iterator, calculate_effective_boolean_value
 		end
 
 	XM_XPATH_SHARED_GLOBAL_ORDER_COMPARER
@@ -98,22 +98,23 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
 		do
 			mark_unreplaced
-			first_operand.analyze (a_context)
+			first_operand.check_static_type (a_context)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.analyze (a_context)
+				second_operand.check_static_type (a_context)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end

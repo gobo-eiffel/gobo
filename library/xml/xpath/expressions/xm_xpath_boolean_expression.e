@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, calculate_effective_boolean_value, evaluate_item, make,
+			calculate_effective_boolean_value, evaluate_item, make,
 			is_boolean_expression, as_boolean_expression
 		end
 	
@@ -56,33 +56,6 @@ feature -- Access
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
-			end
-		end
-
-feature -- Optimization
-
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
-		local
-			a_boolean_expression: XM_XPATH_BOOLEAN_EXPRESSION
-		do
-			mark_unreplaced
-			Precursor (a_context)
-			if was_expression_replaced then
-				if replacement_expression.is_boolean_expression then
-					a_boolean_expression := replacement_expression.as_boolean_expression
-				end
-			else
-				a_boolean_expression := Current
-			end
-			if a_boolean_expression /= Void and then not a_boolean_expression.is_error then
-				first_operand.set_unsorted (False)
-				if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
-				second_operand.set_unsorted (False)
-				if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
-				if a_boolean_expression /= Current then
-					set_replacement (a_boolean_expression)
-				end
 			end
 		end
 

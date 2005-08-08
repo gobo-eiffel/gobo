@@ -15,7 +15,7 @@ inherit
 
 	XM_XSLT_ELEMENT_CONSTRUCTOR
 		redefine
-			simplify, analyze, sub_expressions, promote_instruction, item_type
+			simplify, check_static_type, sub_expressions, promote_instruction, item_type
 		end
 
 create
@@ -203,14 +203,14 @@ feature -- Optimization
 			Precursor
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_single_string_type: XM_XPATH_SEQUENCE_TYPE
 		do
-			element_name.analyze (a_context)
+			element_name.check_static_type (a_context)
 			if element_name.was_expression_replaced then
 				element_name := element_name.replacement_expression
 			end
@@ -225,7 +225,7 @@ feature -- Optimization
 				adopt_child_expression (element_name)
 			end
 			if namespace /= Void then
-				namespace.analyze (a_context)
+				namespace.check_static_type (a_context)
 				if namespace.was_expression_replaced then
 					namespace := namespace.replacement_expression
 				end

@@ -17,7 +17,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			analyze, create_iterator, evaluate_item, compute_cardinality
+			check_static_type, create_iterator, evaluate_item, compute_cardinality
 		end
 
 create
@@ -25,6 +25,8 @@ create
 	make
 
 feature {NONE} -- Initialization
+
+	-- TODO - possible sigleton atomizer
 
 	make (a_sequence: XM_XPATH_EXPRESSION; a_request: INTEGER; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
 			-- Establish invariant.
@@ -54,11 +56,11 @@ feature -- Access
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			base_expression.analyze (a_context)
+			base_expression.check_static_type (a_context)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end

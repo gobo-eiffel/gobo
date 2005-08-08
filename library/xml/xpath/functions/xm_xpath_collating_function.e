@@ -18,7 +18,7 @@ inherit
 		undefine
 			evaluate_item
 		redefine
-			pre_evaluate, analyze
+			pre_evaluate, check_static_type
 		end
 
 feature -- Access
@@ -94,7 +94,8 @@ feature -- Access
 
 feature -- Optimization
 	
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			Precursor (a_context)
 			default_collation_name := a_context.default_collation_name

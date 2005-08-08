@@ -126,28 +126,26 @@ feature -- Status setting
 	  
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions;
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			an_expression: XM_XPATH_EXPRESSION
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_type: XM_XPATH_ITEM_TYPE
 			a_value: XM_XPATH_VALUE
-			a_reference_count: INTEGER
 		do
 			mark_unreplaced
 			if	declaration = Void then
 				-- do nothing
 			else
-
 				if not simplified then simplify end
 
 				-- The order of events is critical here. First we ensure that the type of the
 				-- sequence expression is established. This is used to establish the type of the variable,
 				-- which in turn is required when type-checking the action part.
 				
-				sequence.analyze (a_context)
+				sequence.check_static_type (a_context)
 				if sequence.is_error then
 					set_last_error (sequence.error_value)
 				else
@@ -164,37 +162,83 @@ feature -- Optimization
 					else
 						set_sequence (a_type_checker.checked_expression)
 					end
+					if not is_error then
+						a_type := sequence.item_type
+						if sequence.is_value then a_value := sequence.as_value end
+						
+						-- Now set the static type of the binding reference, more accurately:
+						
+						declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
+						action_expression.check_static_type (a_context)
+						if action_expression.was_expression_replaced then
+							replace_action (action_expression.replacement_expression)
+						end
+						if action_expression.is_error then
+							set_last_error (action_expression.error_value)
+						end						
+					end
 				end
-			
-				if not is_error then
-					a_type := sequence.item_type
-					if sequence.is_value then a_value := sequence.as_value end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			a_reference_count, a_try_count: INTEGER
+			optimized: BOOLEAN
+		do
+			mark_unreplaced
+			if declaration /= Void then
+				a_reference_count := declaration.reference_count (Current)
+				if a_reference_count = 0 then
 					
-					-- Now set the static type of the binding reference, more accurately:
+					-- variable is not used - no need to evaluate it
 					
-					declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
-					
-					action_expression.analyze (a_context)
+					set_replacement (action_expression)
+					optimized := True
+				elseif a_reference_count = 1 then
+					keep_value := False
+				else
+					keep_value := True
+				end
+				set_declaration_void
+			end
+			if not optimized then
+				from
+					a_try_count := 1; optimized := False
+				until
+					is_error or else optimized or else a_try_count > Maximum_optimization_attempts
+				loop
+					sequence.optimize (a_context)
+					if sequence.was_expression_replaced then
+						set_sequence (sequence.replacement_expression)
+						reset_static_properties
+						a_try_count := a_try_count + 1
+					else
+						optimized := true
+					end
+					if sequence.is_error then
+						set_last_error (sequence.error_value)
+					end
+				end
+				from
+					a_try_count := 1; optimized := False
+				until
+					is_error or else optimized or else a_try_count > Maximum_optimization_attempts
+				loop
+					action_expression.optimize (a_context)
 					if action_expression.was_expression_replaced then
 						replace_action (action_expression.replacement_expression)
+						reset_static_properties
+						a_try_count := a_try_count + 1
+					else
+						optimized := true
 					end
 					if action_expression.is_error then
 						set_last_error (action_expression.error_value)
 					end
-					a_reference_count := declaration.reference_count (Current)
-					if a_reference_count = 0 then
-						
-						-- variable is not used - no need to evaluate it
-						
-						set_replacement (action_expression)
-					elseif a_reference_count = 1 then
-						keep_value := False
-					else
-						keep_value := True
-					end
-					set_declaration_void 
 				end
-			end
+			end			
 		end
 
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
@@ -215,7 +259,8 @@ feature -- Optimization
 				sequence.promote (an_offer)
 				if sequence.was_expression_replaced then set_sequence (sequence.replacement_expression) end
 				
-				if an_offer.action = Inline_variable_references	or else an_offer.action = Unordered then
+				if an_offer.action = Inline_variable_references	or else an_offer.action = Unordered
+					or else an_offer.action = Replace_current then
 
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					--  them to say we are interested in subexpressions that don't depend on either the
@@ -286,7 +331,9 @@ feature {NONE} -- Implementation
 		end
 
 	keep_value: BOOLEAN
-			-- Set by `analyze' if the expression will be read more than once
+			-- Set by `optimize' if the expression will be read more than once
+
+	Maximum_optimization_attempts: INTEGER is 5
 
 invariant
 
@@ -299,7 +346,7 @@ end
 --
 -- The indirect reference to `action_expression' via `action' is there to get round
 --  a problem with the expression replacement mechanism.
--- In order to keep to CQS, the `XM_XPATH_EXPRESSION' routines `simplify', `analyze'
+-- In order to keep to CQS, the `XM_XPATH_EXPRESSION' routines `simplify', `check_static_type', `optimize'
 --  and `promote' set a `replacement_expression' via `set_replacement'. The callers
 --  of these routines are supposed to test `was_expression_replaced', and take appropriate
 --  action.

@@ -78,12 +78,19 @@ feature -- Status report
 
 feature -- Optimization
 
-		analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
+		do
+			check
+				cant_happen: False
+				-- We only get one of these expressions after the operands have been optimized
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			-- TODO
-			todo ("analyze", False)
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

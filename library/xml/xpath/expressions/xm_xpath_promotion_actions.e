@@ -38,4 +38,8 @@ feature -- Access
 			-- Indicates that the containing expression does not require the results
 			--  to be delivered in any particular order. The boolean `must_eliminate_duplicates'
 			--  is set if duplicate items in the result are not allowed.
+
+	Replace_current: INTEGER is 14
+			-- Causes calls to the XSLT current() function to be replaced by reference to a variable.
+
 end

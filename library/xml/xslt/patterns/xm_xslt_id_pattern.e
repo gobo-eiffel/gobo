@@ -78,7 +78,7 @@ feature -- Optimization
 	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Type-check the pattern;
 		do
-			id_expression.analyze (a_context)
+			id_expression.check_static_type (a_context)
 			if id_expression.was_expression_replaced then
 				id_expression := id_expression.replacement_expression
 			end

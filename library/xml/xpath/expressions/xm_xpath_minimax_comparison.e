@@ -20,7 +20,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, evaluate_item, calculate_effective_boolean_value, make
+			optimize, evaluate_item, calculate_effective_boolean_value, make
 		end
 
 create
@@ -50,44 +50,58 @@ feature -- Access
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
 		local
 			a_value: XM_XPATH_VALUE
 			a_range: ARRAY [XM_XPATH_NUMERIC_VALUE]
 		do
 			mark_unreplaced
-			Precursor (a_context)
-			if not is_error and not was_expression_replaced then
-
-				-- If either operand is a statically-known list of values, we only need
-				-- to retain the minimum or maximum value, depending on the operator.
-
-				if first_operand.is_value then
-					a_value := first_operand.as_value
-					a_value.create_iterator (Void)
-					a_range := computed_range (a_value.last_iterator)
-					if a_range = Void then
-						set_replacement (false_value)
-					elseif operator = Less_than_token or else operator = Less_equal_token then
-						set_first_operand (a_range.item (1))
-					else
-						set_first_operand (a_range.item (2))
-					end
+			first_operand.optimize (a_context)
+			if first_operand.was_expression_replaced then
+				set_first_operand (first_operand.replacement_expression)
+			end
+			if first_operand.is_error then
+				set_last_error (first_operand.error_value)
+			else
+				second_operand.optimize (a_context)
+				if second_operand.was_expression_replaced then
+					set_second_operand (second_operand.replacement_expression)
 				end
-				if not was_expression_replaced then
-					if second_operand.is_value  then
-						a_value := second_operand.as_value
+				if second_operand.is_error then
+					set_last_error (second_operand.error_value)
+				end
+				if not is_error and then not was_expression_replaced then
+
+					-- If either operand is a statically-known list of values, we only need
+					-- to retain the minimum or maximum value, depending on the operator.
+					
+					if first_operand.is_value then
+						a_value := first_operand.as_value
 						a_value.create_iterator (Void)
-						a_range :=  computed_range (a_value.last_iterator)
+						a_range := computed_range (a_value.last_iterator)
 						if a_range = Void then
 							set_replacement (false_value)
-						elseif operator = Greater_than_token or else operator = Greater_equal_token then
-							set_second_operand (a_range.item (1))
+						elseif operator = Less_than_token or else operator = Less_equal_token then
+							set_first_operand (a_range.item (1))
 						else
-							set_second_operand (a_range.item (2))
+							set_first_operand (a_range.item (2))
 						end
-					end	
+					end
+					if not was_expression_replaced then
+						if second_operand.is_value  then
+							a_value := second_operand.as_value
+							a_value.create_iterator (Void)
+							a_range :=  computed_range (a_value.last_iterator)
+							if a_range = Void then
+								set_replacement (false_value)
+							elseif operator = Greater_than_token or else operator = Greater_equal_token then
+								set_second_operand (a_range.item (1))
+							else
+								set_second_operand (a_range.item (2))
+							end
+						end
+					end
 				end
 			end
 		end

@@ -205,107 +205,98 @@ feature -- Optimization
 		local
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
-			start.simplify
-			if not start.is_error then
-				if start.was_expression_replaced then
-					set_start (start.replacement_expression)
-				end
-				step.simplify
-				if not step.is_error then
-					if step.was_expression_replaced then
-						set_step (step.replacement_expression)
+			mark_unreplaced
+			if analysis_state < Simplified_state then
+				analysis_state := Simplified_state
+				start.simplify
+				if not start.is_error then
+					if start.was_expression_replaced then
+						set_start (start.replacement_expression)
 					end
-					reset_static_properties
-					if start.is_empty_sequence then
-						
-						-- if the start expression is an empty node-set, then the whole path-expression is empty
-						
-						set_replacement (start.as_empty_sequence)
-					else
-						
-						-- Remove a redundant "." from the path.
-						-- Note: we are careful not to do this unless the other operand is naturally sorted.
-						-- In other cases, ./E (or E/.) is not a no-op, because it forces sorting.
-						
-						if start.is_context_item and then step.is_path_expression and then step.as_path_expression.ordered_nodeset then
-							set_replacement (step.as_path_expression)
-						elseif step.is_context_item and then start.is_path_expression and then start.as_path_expression.ordered_nodeset then
-							set_replacement (start.as_path_expression)
-						else
-								
-							-- the expression /.. is sometimes used to represent the empty node-set
+					step.simplify
+					if not step.is_error then
+						if step.was_expression_replaced then
+							set_step (step.replacement_expression)
+						end
+						reset_static_properties
+						if start.is_empty_sequence then
 							
-							if start.is_root_expression and then step.is_parent_node_expression then
-								create an_empty_sequence.make
-								set_replacement (an_empty_sequence)
+							-- if the start expression is an empty node-set, then the whole path-expression is empty
+							
+							set_replacement (start.as_empty_sequence)
+						else
+							
+							-- Remove a redundant "." from the path.
+							-- Note: we are careful not to do this unless the other operand is naturally sorted.
+							-- In other cases, ./E (or E/.) is not a no-op, because it forces sorting.
+							
+							if start.is_context_item and then step.is_path_expression and then step.as_path_expression.ordered_nodeset then
+								set_replacement (step.as_path_expression)
+							elseif step.is_context_item and then start.is_path_expression and then start.as_path_expression.ordered_nodeset then
+								set_replacement (start.as_path_expression)
+							else
+								
+								-- the expression /.. is sometimes used to represent the empty node-set
+								
+								if start.is_root_expression and then step.is_parent_node_expression then
+									create an_empty_sequence.make
+									set_replacement (an_empty_sequence)
+								end
 							end
 						end
+					else
+						set_last_error (step.error_value)
 					end
 				else
-					set_last_error (step.error_value)
+					set_last_error (start.error_value)
 				end
-			else
-				set_last_error (start.error_value)
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_node_sequence: XM_XPATH_SEQUENCE_TYPE
 			an_atomic_sequence: XM_XPATH_SEQUENCE_TYPE
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_homogeneous_checker: XM_XPATH_HOMOGENEOUS_ITEM_CHECKER
-			an_offer: XM_XPATH_PROMOTION_OFFER
 		do
 			mark_unreplaced
-			create a_type_checker
-			start.analyze (a_context)
-			if start.was_expression_replaced then
-				set_start (start.replacement_expression)
-			end
-			if start.is_error then
-				set_last_error (start.error_value)
-			else
-				step.analyze (a_context)
-				if step.was_expression_replaced then
-					set_step (step.replacement_expression)
+			if analysis_state < Type_checked_state then
+				analysis_state := Type_checked_state
+				create a_type_checker
+				start.check_static_type (a_context)
+				if start.was_expression_replaced then
+					set_start (start.replacement_expression)
 				end
-				if step.is_error then
-					set_last_error (step.error_value)
+				if start.is_error then
+					set_last_error (start.error_value)
 				else
-
-					-- Start must be of type node()*
-					
-					create a_role.make (Binary_expression_role, "/", 1, Xpath_errors_uri, "XPTY0019")
-					create a_node_sequence.make_node_sequence
-					a_type_checker.static_type_check (a_context, start, a_node_sequence, False, a_role)
-					if a_type_checker.is_static_type_check_error then
-						set_last_error (a_type_checker.static_type_check_error)
+					step.check_static_type (a_context)
+					if step.was_expression_replaced then
+						set_step (step.replacement_expression)
+					end
+					if step.is_error then
+						set_last_error (step.error_value)
 					else
-						set_start (a_type_checker.checked_expression)
-						create an_offer.make (Focus_independent, Void, Current, False, start.context_document_nodeset)
-						promote_sub_expressions (a_context, an_offer)
-						if not is_error and then not was_expression_replaced then
+						
+						-- Start must be of type node()*
+						
+						create a_role.make (Binary_expression_role, "/", 1, Xpath_errors_uri, "XPTY0019")
+						create a_node_sequence.make_node_sequence
+						a_type_checker.static_type_check (a_context, start, a_node_sequence, False, a_role)
+						if a_type_checker.is_static_type_check_error then
+							set_last_error (a_type_checker.static_type_check_error)
+						else
+							set_start (a_type_checker.checked_expression)
 							
 							-- We distinguish three cases for the step:
 							--  either it is known statically to deliver nodes only (a 1.0 path expression),
-							--  or it is known statically to deliver atomic values
-							--  only, or we don't yet know.
+							--  or it is known statically to deliver atomic values only, or we don't yet know.
 							
 							if is_node_item_type (step.item_type) then
-								if step.non_creating then
-									
-									-- We don't need the operands to be sorted;
-									--  any sorting that's needed will be done at the top level
-									
-									start.set_unsorted (False)
-									if start.was_expression_replaced then set_start (start.replacement_expression) end
-									step.set_unsorted (False)
-									if step.was_expression_replaced then set_step (step.replacement_expression) end
-									optimize (a_context, an_offer)
-								end
+								simplify_sorting (a_context)							
 							elseif is_atomic_item_type (step.item_type) then
 								create another_role.make (Binary_expression_role, "/", 2, Xpath_errors_uri, "XPTY0018")
 								create an_atomic_sequence.make_atomic_sequence
@@ -326,6 +317,41 @@ feature -- Optimization
 			end
 		end
 
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			an_offer: XM_XPATH_PROMOTION_OFFER
+			a_path: XM_XPATH_PATH_EXPRESSION
+		do
+			mark_unreplaced
+			if analysis_state < Optimized_state then
+				analysis_state := Optimized_state 
+				start.optimize (a_context)
+				if start.was_expression_replaced then
+					set_start (start.replacement_expression)
+				end
+				if start.is_error then
+					set_last_error (start.error_value)
+				else
+					step.optimize (a_context)
+					if step.was_expression_replaced then
+						set_step (step.replacement_expression)
+					end
+					if step.is_error then
+						set_last_error (step.error_value)
+					else
+						
+						--	If any subexpressions within the step are not dependent on the focus,
+						--  and if they cannot create new nodes, then promote them:
+						-- This causes them to be evaluated once, outside the path expression
+						
+						create an_offer.make (Focus_independent, Void, Current, False, start.context_document_nodeset)
+						promote_sub_expressions (a_context, an_offer)
+					end
+				end
+			end
+		end
+
 	promote (an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote this subexpression.
 		local
@@ -339,7 +365,8 @@ feature -- Optimization
 				start.promote (an_offer)
 				if start.was_expression_replaced then set_start (start.replacement_expression) end
 				
-				if an_offer.action = Inline_variable_references then
+				if an_offer.action = Inline_variable_references
+					or else an_offer.action = Replace_current then
 
 					-- Don't pass on other requests. We could pass them on, but only after augmenting
 					--  them to say we are interested in subexpressions that don't depend on either the
@@ -463,6 +490,14 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 feature {XM_XPATH_PATH_EXPRESSION} -- Local
+
+	analysis_state: INTEGER
+			-- State of analysis
+
+	Raw_state: INTEGER is 0
+	Simplified_state: INTEGER is 1
+	Type_checked_state: INTEGER is 2
+	Optimized_state: INTEGER is 3
 
 	start: XM_XPATH_EXPRESSION
 			-- Starting node-set
@@ -744,68 +779,67 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT; an_offer: XM_XPATH_PROMOTION_OFFER) is
-			-- Perform context-dependent optimizations
+
+	simplify_sorting (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Simplify descendant path and sorting.
 		require
 			context_not_void: a_context /= Void
-			offer_not_void: an_offer /= Void
 		local
 			a_path: XM_XPATH_PATH_EXPRESSION
 			an_expression: XM_XPATH_EXPRESSION
 			path_not_void: BOOLEAN
 		do
-			
-			-- Try to simplify descendant expressions such as a//b
-			
-			a_path := simplified_descendant_path
-			path_not_void := a_path /= Void
-			if path_not_void then
+			if step.non_creating then
 				
-				-- Descendant expressions such as a//b were simplified
+				-- We don't need the operands to be sorted;
+				--  any sorting that's needed will be done at the top level
 				
-				a_path.simplify
-				if a_path.was_expression_replaced then
-					an_expression := a_path.replacement_expression
-				else
-					an_expression := a_path
-				end
-				if not an_expression.is_error then
-					check
-						path_expression: a_path.is_path_expression
-					end
-					a_path := an_expression.as_path_expression
-					a_path.analyze (a_context)
-					if a_path.was_expression_replaced then
-						set_replacement (a_path.replacement_expression)
-					else
-						set_replacement (a_path)
-					end
-				end
-			else
+				start.set_unsorted (False)
+				if start.was_expression_replaced then set_start (start.replacement_expression) end
+				step.set_unsorted (False)
+				if step.was_expression_replaced then set_step (step.replacement_expression) end
 				
-				-- Decide whether the result needs to be wrapped in a sorting
-				-- expression to deliver the results in document order
+				-- Try to simplify descendant expressions such as a//b
 				
-				if an_offer.containing_expression.is_path_expression then
-					a_path := an_offer.containing_expression.as_path_expression
+				a_path := simplified_descendant_path
+				path_not_void := a_path /= Void
+				if path_not_void then
+					
+					-- Descendant expressions such as a//b were simplified
+					
+					a_path.simplify
 					if a_path.was_expression_replaced then
 						an_expression := a_path.replacement_expression
 					else
 						an_expression := a_path
 					end
-					if a_path.ordered_nodeset and then a_path /= Current then
-						set_replacement (an_expression)
-					elseif a_path.reverse_document_order then
-						create {XM_XPATH_REVERSER} an_expression.make (an_expression)
-						set_replacement (an_expression)
-					else
-						create {XM_XPATH_DOCUMENT_SORTER} an_expression.make (an_expression)
-						set_replacement (an_expression)
+					if not an_expression.is_error then
+						check
+							path_expression: a_path.is_path_expression
+						end
+						a_path := an_expression.as_path_expression
+						a_path.check_static_type (a_context)
+						if a_path.was_expression_replaced then
+							set_replacement (a_path.replacement_expression)
+						else
+							set_replacement (a_path)
+						end
 					end
-				elseif an_offer.containing_expression.was_expression_replaced then
-					set_replacement (an_offer.containing_expression.replacement_expression)
-				else
-					set_replacement (an_offer.containing_expression)
+					if not is_error and then not was_expression_replaced then
+						
+						-- Decide whether the result needs to be wrapped in a sorting
+						-- expression to deliver the results in document order
+						
+						if a_path.ordered_nodeset and then a_path /= Current then
+							set_replacement (an_expression)
+						elseif a_path.reverse_document_order then
+							create {XM_XPATH_REVERSER} an_expression.make (an_expression)
+							set_replacement (an_expression)
+						else
+							create {XM_XPATH_DOCUMENT_SORTER} an_expression.make (an_expression)
+							set_replacement (an_expression)
+						end
+					end
 				end
 			end
 		end
@@ -815,6 +849,8 @@ feature {NONE} -- Implementation
 			-- This causes them to be evaluated once, outside the path  expression.
 		require
 			promotion_offer_not_void: an_offer /= Void
+		local
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			step.promote (an_offer)
 			if step.was_expression_replaced then
@@ -826,13 +862,21 @@ feature {NONE} -- Implementation
 			if not is_error then
 				reset_static_properties
 				if an_offer.containing_expression /= Current then
-					an_offer.containing_expression.analyze (a_context)
-					if an_offer.containing_expression.is_error then
-						set_last_error (an_offer.containing_expression.error_value)
-					elseif an_offer.containing_expression.was_expression_replaced then
-						set_replacement (an_offer.containing_expression.replacement_expression)
+					analysis_state := Raw_state -- allow re-analysis
+					an_offer.containing_expression.check_static_type (a_context)
+					if an_offer.containing_expression.was_expression_replaced then
+						an_expression := an_offer.containing_expression.replacement_expression
 					else
-						set_replacement (an_offer.containing_expression)
+						an_expression := an_offer.containing_expression
+					end
+					an_expression.optimize (a_context)
+					if an_expression.is_error then
+						set_last_error (an_expression.error_value)
+					else
+						if an_expression.was_expression_replaced then
+							an_expression := an_expression.replacement_expression
+						end
+						if an_expression /= Current then set_replacement (an_expression) end
 					end
 				end
 			end
@@ -842,6 +886,7 @@ invariant
 
 	start_not_void: start /= Void
 	step_not_void: step /= Void
+	analysis_state: analysis_state >= Raw_state and then analysis_state <= Optimized_state
 
 end
 

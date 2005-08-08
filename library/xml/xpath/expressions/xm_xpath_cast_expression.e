@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, analyze, evaluate_item, compute_cardinality, same_expression,
+			item_type, check_static_type, evaluate_item, compute_cardinality, same_expression,
 			compute_special_properties, is_cast_expression, as_cast_expression
 		end
 
@@ -89,8 +89,9 @@ feature -- Comparison
 
 feature -- Optimization	
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
@@ -99,7 +100,7 @@ feature -- Optimization
 			a_qname_cast: XM_XPATH_CAST_AS_QNAME_EXPRESSION
 		do
 			mark_unreplaced
-			base_expression.analyze (a_context)
+			base_expression.check_static_type (a_context)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end
@@ -123,7 +124,7 @@ feature -- Optimization
 
 					elseif is_sub_type (target_type, type_factory.qname_type) then --or else (type_factory.notation_type /= Void and then is_sub_type (target_type, type_factory.notation_type)) then
 						create a_qname_cast.make (an_expression)
-						a_qname_cast.analyze (a_context)
+						a_qname_cast.check_static_type (a_context)
 						if a_qname_cast.is_error then
 							set_last_error (a_qname_cast.error_value)
 						else

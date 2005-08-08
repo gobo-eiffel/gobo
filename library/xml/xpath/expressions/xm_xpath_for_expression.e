@@ -112,49 +112,54 @@ feature -- Status setting
 
 feature -- Optimization
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
-			a_cardinality_set: ARRAY [BOOLEAN] 
+			a_cardinality_set: ARRAY [BOOLEAN]
 		do
-			if declaration /= Void then
-				mark_unreplaced
+			mark_unreplaced
+			sequence.check_static_type (a_context)
+			if sequence.was_expression_replaced then
+				set_sequence (sequence.replacement_expression)
+			end
+			if sequence.is_error then
+				set_replacement (sequence)
+			else
 				
-				-- The order of events is critical here. First we ensure that the type of the
-				--  sequence expression is established. This is used to establish the type of the variable,
-				--  which in turn is required when type-checking the action part.
-				sequence.analyze (a_context)
-				if sequence.was_expression_replaced then
-					set_sequence (sequence.replacement_expression)
-				end
-				if sequence.is_error then
-					set_replacement (sequence)
+			end
+			if declaration /= Void and then not is_error then
+				create a_sequence_type.make (declaration.required_type.primary_type, Required_cardinality_zero_or_more)
+				create a_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XPTY0004")
+				create a_type_checker
+				a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
+				if a_type_checker.is_static_type_check_error then
+					set_last_error (a_type_checker.static_type_check_error)
 				else
-					create a_sequence_type.make (declaration.required_type.primary_type, Required_cardinality_zero_or_more)
-					create a_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XPTY0004")
-					create a_type_checker
-					a_type_checker.static_type_check (a_context, sequence, a_sequence_type, False, a_role)
-					if a_type_checker.is_static_type_check_error then
-						set_last_error (a_type_checker.static_type_check_error)
-					else
-						create a_cardinality_set.make (1, 3)
-						a_cardinality_set.put (True, 2) -- Exactly One
-						set_sequence (a_type_checker.checked_expression)
-						declaration.refine_type_information (sequence.item_type, a_cardinality_set, Void, sequence.dependencies, sequence.special_properties)
-						set_declaration_void
-						action_expression.analyze (a_context)
-						if action.was_expression_replaced then
-							replace_action (action_expression.replacement_expression)
-						end
-						if action_expression.is_error then
-							set_replacement (action_expression)
-						end
+					create a_cardinality_set.make (1, 3)
+					a_cardinality_set.put (True, 2) -- Exactly One
+					set_sequence (a_type_checker.checked_expression)
+					declaration.refine_type_information (sequence.item_type, a_cardinality_set, Void, sequence.dependencies, sequence.special_properties)
+					set_declaration_void
+					action_expression.check_static_type (a_context)
+					if action.was_expression_replaced then
+						replace_action (action_expression.replacement_expression)
+					end
+					if action_expression.is_error then
+						set_replacement (action_expression)
+					elseif action_expression.is_empty_sequence then
+						set_replacement (action_expression)
 					end
 				end
 			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			mark_unreplaced
 		end
 
 feature -- Evaluation

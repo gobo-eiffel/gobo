@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_BINARY_EXPRESSION
 		redefine
-			analyze, evaluate_item, calculate_effective_boolean_value, make
+			check_static_type, evaluate_item, calculate_effective_boolean_value, make
 		end
 
 	XM_XPATH_ROLE
@@ -53,22 +53,22 @@ feature -- Access
 
 feature -- Optimization	
 
-		analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_single_node: XM_XPATH_SEQUENCE_TYPE
 		do
 			mark_unreplaced
-			first_operand.analyze (a_context)
+			first_operand.check_static_type (a_context)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.analyze (a_context)
+				second_operand.check_static_type (a_context)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end

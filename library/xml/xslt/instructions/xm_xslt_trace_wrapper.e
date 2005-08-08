@@ -88,10 +88,17 @@ feature -- Optimization
 			if child.was_expression_replaced then child := child.replacement_expression end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			child.analyze (a_context)
+			child.check_static_type (a_context)
+			if child.was_expression_replaced then child := child.replacement_expression end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			child.optimize (a_context)
 			if child.was_expression_replaced then child := child.replacement_expression end
 		end
 

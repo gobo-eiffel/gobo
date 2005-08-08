@@ -163,18 +163,19 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of `Current' and its subexpressions.
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
 			an_attribute: XM_XPATH_EXPRESSION
 		do
-			content.analyze (a_context)
+			mark_unreplaced
+			content.check_static_type (a_context)
 			if content.was_expression_replaced then
 				content := content.replacement_expression; adopt_child_expression (content)
 			end
 			if href /= Void then
-				href.analyze (a_context)
+				href.check_static_type (a_context)
 				if href.was_expression_replaced then
 					href := href.replacement_expression; adopt_child_expression (href)
 				end
@@ -185,7 +186,38 @@ feature -- Optimization
 				a_cursor.after
 			loop
 				an_attribute := a_cursor.item
-				an_attribute.analyze (a_context)
+				an_attribute.check_static_type (a_context)
+				if an_attribute.was_expression_replaced then
+					an_attribute := an_attribute.replacement_expression; adopt_child_expression (an_attribute)
+					a_cursor.replace (an_attribute)
+				end
+				a_cursor.forth
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		local
+			a_cursor: DS_HASH_TABLE_CURSOR [XM_XPATH_EXPRESSION, INTEGER]
+			an_attribute: XM_XPATH_EXPRESSION
+		do
+			content.optimize (a_context)
+			if content.was_expression_replaced then
+				content := content.replacement_expression; adopt_child_expression (content)
+			end
+			if href /= Void then
+				href.optimize (a_context)
+				if href.was_expression_replaced then
+					href := href.replacement_expression; adopt_child_expression (href)
+				end
+			end
+			from
+				a_cursor := formatting_attributes.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				an_attribute := a_cursor.item
+				an_attribute.optimize (a_context)
 				if an_attribute.was_expression_replaced then
 					an_attribute := an_attribute.replacement_expression; adopt_child_expression (an_attribute)
 					a_cursor.replace (an_attribute)

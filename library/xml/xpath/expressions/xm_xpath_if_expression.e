@@ -159,34 +159,73 @@ feature -- Optimization
 			end
 		end
 
-	analyze (a_context: XM_XPATH_STATIC_CONTEXT) is
-			-- Perform static analysis of an expression and its subexpressions	
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			condition.analyze (a_context)
+			condition.check_static_type (a_context)
 			if condition.was_expression_replaced then
 				set_condition (condition.replacement_expression)
 			end
 			if condition.is_error then
 				set_last_error (condition.error_value)
-			else
-				then_expression.analyze (a_context)
-				if then_expression.was_expression_replaced then
-					set_then_expression (then_expression.replacement_expression)
+			elseif condition.is_boolean_value then
+				-- If the condition after typechecking is reduced to a constant, cut it down to the appropriate branch.
+				if condition.as_boolean_value.value then
+					then_expression.check_static_type (a_context)
+					if then_expression.is_error then
+						set_last_error (then_expression.error_value)
+					elseif then_expression.was_expression_replaced then
+						set_replacement (then_expression.replacement_expression)
+					else
+						set_replacement (then_expression)
+					end
+				else
+					else_expression.check_static_type (a_context)
+					if else_expression.is_error then
+						set_last_error (else_expression.error_value)
+					elseif else_expression.was_expression_replaced then
+						set_replacement (else_expression.replacement_expression)
+					else
+						set_replacement (else_expression)
+					end					
 				end
+			else
+				then_expression.check_static_type (a_context)
+				if then_expression.is_error then
+					set_last_error (then_expression.error_value)
+				elseif then_expression.was_expression_replaced then
+					set_then_expression (then_expression.replacement_expression)
+				else
+					else_expression.check_static_type (a_context)
+					if else_expression.is_error then
+						set_last_error (else_expression.error_value)
+					elseif else_expression.was_expression_replaced then
+						set_else_expression (else_expression.replacement_expression)
+					end
+				end
+			end
+		end
+
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Perform optimization of `Current' and its subexpressions.
+		do
+			mark_unreplaced
+			condition.optimize (a_context)
+			if condition.was_expression_replaced then	set_condition (condition.replacement_expression) end
+			if condition.is_error then
+				set_last_error (condition.error_value)
+			else
+				then_expression.optimize (a_context)
+				if then_expression.was_expression_replaced then set_then_expression (then_expression.replacement_expression) end
 				if then_expression.is_error then
 					set_last_error (then_expression.error_value)
 				else
-					else_expression.analyze (a_context)
-					if else_expression.was_expression_replaced then
-						set_else_expression (else_expression.replacement_expression)
-					end
+					else_expression.optimize (a_context)
+					if else_expression.was_expression_replaced then set_else_expression (else_expression.replacement_expression) end
 					if else_expression.is_error then
 						set_last_error (else_expression.error_value)
 					end
-				end
-				if not is_error then
-					simplify
 				end
 			end
 		end
@@ -203,7 +242,8 @@ feature -- Optimization
 			else
 				condition.promote (an_offer)
 				if condition.was_expression_replaced then set_condition (condition.replacement_expression) end
-				if an_offer.action = Unordered or else an_offer.action = Inline_variable_references then
+				if an_offer.action = Unordered or else an_offer.action = Inline_variable_references
+					or else an_offer.action = Replace_current then
 					then_expression.promote (an_offer)
 					if then_expression.was_expression_replaced then set_then_expression (then_expression.replacement_expression) end
 					else_expression.promote (an_offer)
