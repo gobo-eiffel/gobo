@@ -19,6 +19,11 @@ inherit
 			is_atomic_type, as_atomic_type
 		end
 
+	XM_XPATH_ITEM_TYPE
+		redefine
+			is_atomic_type, as_atomic_type
+		end
+
 	XM_XPATH_TYPE
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
@@ -76,7 +81,7 @@ feature -- Access
 		do
 			if an_item.is_atomic_value then
 				an_atomic_value := an_item.as_atomic_value
-				if fingerprint = an_atomic_value.item_type.fingerprint then
+				if fingerprint = an_atomic_value.item_type.as_atomic_type.fingerprint then
 					Result := True
 				else
 					Result := is_sub_type (an_item.item_type, Current)
@@ -122,7 +127,7 @@ feature -- Comparison
 	is_same_type (other: XM_XPATH_ITEM_TYPE): BOOLEAN is
 			-- Is `other' the same type as `Current'?
 		do
-			Result := other.is_atomic_type and then other.fingerprint = fingerprint
+			Result := other.is_atomic_type and then other.as_atomic_type.fingerprint = fingerprint
 		end
 
 feature -- Status report

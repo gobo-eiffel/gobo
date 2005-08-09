@@ -188,7 +188,13 @@ feature -- Access
 		do
 			Result := Current
 		end
-	
+
+	atomized_value: XM_XPATH_VALUE is
+			-- Typed value as atomic value or (unusually) sequence of atomic values.
+		do
+			create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (text)
+		end
+
 feature -- Comparison
 
 	is_same_node (other: XM_XPATH_NODE): BOOLEAN is

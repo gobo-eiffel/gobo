@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			has_variables_in_patterns := variables_in_patterns
 
 			if value_expression /= Void and then is_sub_type (value_expression.item_type, type_factory.any_atomic_type) then
-				create {XM_XPATH_ATOMIZER_EXPRESSION} value_expression.make (value_expression)
+				create {XM_XPATH_ATOMIZER_EXPRESSION} value_expression.make (value_expression, False)
 			end
 			compute_static_properties
 			initialized := True

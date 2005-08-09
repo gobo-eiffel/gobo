@@ -137,6 +137,12 @@ feature -- Access
 			todo ("new_axis_iterator with node test", False)
 		end
 
+	atomized_value: XM_XPATH_VALUE is
+			-- Typed value as atomic value or (unusually) sequence of atomic values.
+		do
+			create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
+		end
+
 feature -- Comparison
 
 	is_same_node (other: XM_XPATH_NODE): BOOLEAN is

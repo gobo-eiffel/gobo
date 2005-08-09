@@ -185,11 +185,6 @@ feature -- Access
 			Result := False
 		end
 
-	fingerprint: INTEGER is
-			-- Fingerprint, as used by name pool mechanisms
-		deferred
-		end
-
 	matches_item (an_item: XM_XPATH_ITEM): BOOLEAN is
 			-- Does `an_item' conform to `Current'?
 		require
@@ -232,11 +227,6 @@ feature -- Comparison
 		deferred
 		end
 
-feature -- Status report
-
-	is_abstract: BOOLEAN
-			-- Does `Current' represent an abstract type?
-	
 feature -- Conversion
 	
 	conventional_name: STRING is

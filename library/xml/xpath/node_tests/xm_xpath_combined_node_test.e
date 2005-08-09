@@ -82,15 +82,15 @@ feature -- Access
 		local
 			a_type, another_type: XM_XPATH_SCHEMA_TYPE
 		do
-			Result := any_item
+			Result := any_type
 			a_type := node_test_one.content_type
 			another_type := node_test_two.content_type
 			if a_type.is_same_type (another_type) then
 				Result := a_type
 			elseif operator = Intersect_token then
-				if another_type = any_item then
+				if another_type.is_any_type then
 					Result := a_type
-				elseif a_type = any_item then
+				elseif a_type.is_any_type then
 					Result := another_type
 				end
 			end

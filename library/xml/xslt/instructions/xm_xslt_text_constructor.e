@@ -88,7 +88,7 @@ feature -- Optimization
 					set_select_expression (select_expression.replacement_expression)
 				end
 				if not is_sub_type (select_expression.item_type, type_factory.any_atomic_type) then
-					create an_atomizer.make (select_expression)
+					create an_atomizer.make (select_expression, a_context.configuration.are_all_nodes_untyped)
 					set_select_expression (an_atomizer)
 				end
 				if not is_sub_type (select_expression.item_type, type_factory.string_type) then

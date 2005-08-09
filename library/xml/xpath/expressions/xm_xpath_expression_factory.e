@@ -19,6 +19,8 @@ inherit
 
 	XM_XPATH_ERROR_TYPES
 
+	XM_XPATH_CARDINALITY
+
 	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
@@ -229,6 +231,28 @@ feature -- Creation
 			end
 		ensure
 			result_not_void: last_created_closure /= Void
+		end
+
+	created_cardinality_checker (a_sequence: XM_XPATH_EXPRESSION; a_requested_cardinality: INTEGER; a_role: XM_XPATH_ROLE_LOCATOR): XM_XPATH_COMPUTED_EXPRESSION is
+			-- Cardinality checker of singleton atomizer over `a_sequence'
+		require
+			underlying_expression_not_void: a_sequence /= Void
+			role_locator_not_void: a_role /= void
+			valid_cardinality_request: is_valid_required_cardinality (a_requested_cardinality)
+		local
+			a_base: XM_XPATH_EXPRESSION
+		do
+			if a_sequence.is_atomizer_expression and then not is_cardinality_allows_many (a_requested_cardinality) then
+				a_base := a_sequence.as_atomizer_expression.base_expression
+				if a_base.is_computed_expression then
+					a_base.as_computed_expression.set_parent (a_sequence.container)
+				end
+				create {XM_XPATH_SINGLETON_ATOMIZER} Result.make (a_base, a_role, is_cardinality_allows_zero (a_requested_cardinality))
+			else
+				create {XM_XPATH_CARDINALITY_CHECKER} Result.make (a_sequence, a_requested_cardinality, a_role)
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation

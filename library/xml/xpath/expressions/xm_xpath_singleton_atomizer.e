@@ -2,63 +2,50 @@ indexing
 
 	description:
 
-		"Objects that map a sequence by replacing nodes with their typed values. Corresponds to fn:data()"
+	"Objects that map a sequence by replacing a node with it's typed value, whilst checking cardinality"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_ATOMIZER_EXPRESSION
+class XM_XPATH_SINGLETON_ATOMIZER
 
 inherit
 
 	XM_XPATH_UNARY_EXPRESSION
 		redefine
-			item_type, simplify, check_static_type, create_iterator, evaluate_item, compute_cardinality,
-			compute_special_properties, is_atomizer_expression, as_atomizer_expression
+			item_type, simplify, check_static_type, evaluate_item, compute_cardinality, compute_special_properties
 		end
 
-	XM_XPATH_SHARED_ATOMIZING_FUNCTION
-
-	XM_XPATH_NODE_KIND_ROUTINES
-		export {NONE} all end
-
-create
+create {XM_XPATH_EXPRESSION_FACTORY}
 
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_sequence: XM_XPATH_EXPRESSION; untyped: BOOLEAN) is
+	make (a_sequence: XM_XPATH_EXPRESSION; a_role: XM_XPATH_ROLE_LOCATOR; empty: BOOLEAN) is
 			-- Establish invariant
 		require
 			sequence_not_void: a_sequence /= Void
+			role_not_void: a_role /= Void
 		do
 			make_unary (a_sequence)
-			is_always_untyped := untyped
+			role := a_role
+			allows_empty := empty
+			is_always_untyped := True -- not schema-aware
 			compute_static_properties
 			initialized := True
 		ensure
-			is_always_untyped_set: is_always_untyped = untyped
 			base_expression_set: base_expression = a_sequence
+			role_set: role = a_role
+			allows_empty_set: allows_empty = empty
 			static_properties_computed: are_static_properties_computed
 		end
 
 feature -- Access
-
-	is_atomizer_expression: BOOLEAN is
-			-- Is `Current' an atomizer expression?
-		do
-			Result := True
-		end
-
-	as_atomizer_expression: XM_XPATH_ATOMIZER_EXPRESSION is
-			-- `Current' seen as a range expression
-		do
-			Result := Current
-		end
+	
 
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Determine the data type of the expression, if possible
@@ -129,34 +116,6 @@ feature -- Optimization
 			end
 			if base_expression.is_atomic_value then
 				set_replacement (base_expression.as_atomic_value)
-			else
-				if base_expression.is_value then
-					from
-						base_expression.create_iterator (Void)
-						an_iterator := base_expression.last_iterator
-						if an_iterator.is_error then
-							finished := True
-							set_last_error (an_iterator.error_value)
-						else
-							an_iterator.start
-						end
-					until
-						finished or else an_iterator.after
-					loop
-
-						-- If all items in the sequence are atomic (they generally will be, since this is
-						--  done at compile time), then return the sequence.
-
-						if an_iterator.item.is_node then
-							finished := True
-						else
-							an_iterator.forth
-						end
-					end
-					if not finished then
-						set_replacement (base_expression)
-					end
-				end
 			end
 		end
 
@@ -164,7 +123,6 @@ feature -- Optimization
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			is_always_untyped := a_context.configuration.are_all_nodes_untyped
 			base_expression.check_static_type (a_context)
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
@@ -173,7 +131,9 @@ feature -- Optimization
 					set_base_expression (base_expression.replacement_expression)
 				end
 				reset_static_properties
-				if is_sub_type (base_expression.item_type, type_factory.any_atomic_type) then
+				if base_expression.is_empty_sequence and then not allows_empty then
+					set_last_error_from_string (STRING_.concat ("An empty sequence is not allowed as the ", role.message), role.namespace_uri, role.error_code, Type_error)
+				elseif is_sub_type (base_expression.item_type, type_factory.any_atomic_type) then
 					set_replacement (base_expression)
 				end
 			end
@@ -184,43 +144,57 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ATOMIC_VALUE]
-		do
-			base_expression.evaluate_item (a_context)
-			if base_expression.last_evaluated_item = Void then
-				last_evaluated_item := Void
-			elseif base_expression.last_evaluated_item.is_error then
-				last_evaluated_item := base_expression.last_evaluated_item
-			else
-				if base_expression.last_evaluated_item.is_node then
-					an_iterator := base_expression.last_evaluated_item.as_node.typed_value
-					if an_iterator.is_error then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
-					else
-						an_iterator.start
-						if an_iterator.is_error then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
-						else
-							last_evaluated_item := an_iterator.item
-						end
-					end
-				else
-					last_evaluated_item := base_expression.last_evaluated_item
-				end
-			end
-		end
-
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- Iterator over the values of a sequence
-		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_item: XM_XPATH_ITEM
+			items_count: INTEGER
+			a_value: XM_XPATH_VALUE
 		do
 			base_expression.create_iterator (a_context)
 			an_iterator := base_expression.last_iterator
 			if an_iterator.is_error then
-				last_iterator := an_iterator
+				set_last_error (an_iterator.error_value)
 			else
-				last_iterator := shared_atomizing_function.new_atomizing_iterator (an_iterator)
+				from
+					an_iterator.start
+				until
+					is_error or else an_iterator.after 
+				loop
+					an_item := an_iterator.item
+					if an_item.is_atomic_value then
+						items_count := items_count + 1
+						if items_count > 1 then
+							set_last_error_from_string (STRING_.concat ("A sequence of more than one item is not allowed as the ",
+																					  role.message), role.namespace_uri, role.error_code, Type_error)
+						else
+							last_evaluated_item := an_item
+						end
+					else -- Node
+						a_value := an_item.as_node.atomized_value
+						items_count := a_value.count
+						if items_count > 1 then
+							set_last_error_from_string (STRING_.concat ("A sequence of more than one item is not allowed as the ",
+																					  role.message), role.namespace_uri, role.error_code, Type_error)
+						elseif items_count = 1 then
+							last_evaluated_item := a_value.item_at (1)
+						end
+					end
+					if not is_error then
+						an_iterator.forth
+						if an_iterator.is_error then
+							set_last_error (an_iterator.error_value)
+						end
+					end
+				end
+			end
+			if is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (error_value)
+			elseif items_count = 0 then
+				if allows_empty then
+					last_evaluated_item := Void
+				else
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.concat ("An empty sequence is not allowed as the ",
+																																	 role.message), role.namespace_uri, role.error_code, Type_error)
+				end
 			end
 		end
 
@@ -229,7 +203,7 @@ feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted
 	display_operator: STRING is
 			-- Format `operator' for display
 		do
-			Result := "atomize"
+			Result := "atomize singleton"
 		end
 
 	
@@ -237,22 +211,11 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 	compute_cardinality is
 			-- Compute cardinality.
-		local
-			a_type: XM_XPATH_ITEM_TYPE
 		do
-			if is_always_untyped then
-				clone_cardinality (base_expression)
-			elseif base_expression.cardinality_allows_many then
-				set_cardinality_zero_or_more
+			if allows_empty then
+				set_cardinality_optional
 			else
-				a_type := base_expression.item_type
-				if a_type.is_atomic_type then
-					clone_cardinality (base_expression)
-				elseif a_type.is_node_test and then a_type.as_node_test.content_type.is_atomic_type then
-					clone_cardinality (base_expression)
-				else
-					set_cardinality_zero_or_more
-				end
+				set_cardinality_exactly_one
 			end
 		end
 
@@ -263,10 +226,20 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			set_non_creating
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implemeantion
 
 	is_always_untyped: BOOLEAN
-			-- Are all nodes guarenteed untyped?
+			-- Are all nodes always untyped?
+
+	allows_empty: BOOLEAN
+			-- Is an empty sequence allowed?
+
+	role: XM_XPATH_ROLE_LOCATOR
+			-- Role locator
+
+invariant
+
+	role_not_void: initialized implies role /= Void
 
 end
 

@@ -39,17 +39,43 @@ feature {NONE} -- Initialization
 			select_expression_not_void: a_select_expression /= Void
 		local
 			a_string_value: XM_XPATH_STRING_VALUE
+			is_special: BOOLEAN
+			a_string: STRING
+			an_index, a_count, a_code: INTEGER
 		do
 			executable := an_executable
 			select_expression := a_select_expression; adopt_child_expression (select_expression)
+			is_special := True
 			a_string_value ?= select_expression
 			if a_string_value /= Void then
 				instruction_name := "xsl:text"
+				from
+					is_special := False
+					a_string := a_string_value.string_value
+					an_index := 1; a_count := a_string.count
+				until
+					is_special or else an_index > a_count
+				loop
+					a_code := a_string.item_code (an_index)
+					if a_code < 33 or else a_code > 126
+						or else a_code = 60 or else a_code = 62 or else a_code = 38 then
+						-- <, > or &
+						is_special := True
+					end
+					an_index := an_index + 1
+				end
+				if not is_special then
+					receiver_options := No_special_characters
+				end
 			else
 				instruction_name := "xsl:value-of"
 			end
 			if disabled then
-				receiver_options := Disable_escaping
+				if	not is_special then
+					receiver_options := Disable_escaping + No_special_characters
+				else
+					receiver_options := Disable_escaping
+				end
 			end
 			compute_static_properties
 			initialized := True

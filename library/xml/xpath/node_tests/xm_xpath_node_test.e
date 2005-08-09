@@ -27,6 +27,8 @@ inherit
 	XM_XPATH_SHARED_ANY_NODE_TEST
 		export {NONE} all end
 
+	XM_XPATH_SHARED_ANY_TYPE
+	
 feature -- Access
 
 	is_node_test: BOOLEAN is
@@ -101,7 +103,7 @@ feature -- Access
 	content_type: XM_XPATH_SCHEMA_TYPE is
 			-- Content type
 		do
-			Result := any_item
+			Result := any_type
 		end
 
 feature -- Comparison

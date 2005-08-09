@@ -141,6 +141,12 @@ feature -- Access
 			end
 		end
 
+	atomized_value: XM_XPATH_VALUE is
+			-- Typed value as atomic value or (unusually) sequence of atomic values.
+		do
+			todo ("atomized_value", False)
+		end
+			
 	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		do

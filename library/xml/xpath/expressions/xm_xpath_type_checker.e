@@ -20,6 +20,8 @@ inherit
 
 	XM_XPATH_CARDINALITY
 
+	XM_XPATH_SHARED_EXPRESSION_FACTORY
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -127,7 +129,7 @@ feature -- Optimization
 						
 						-- Try a static type check. We only throw it out if the call cannot possibly succeed.
 						
-						if conformance.customized_host_language and then static_context /= Void and then static_context.is_data_type_valid (supplied_item_type.fingerprint) then
+						if conformance.customized_host_language and then static_context /= Void and then static_context.is_data_type_valid (supplied_item_type.as_atomic_type.fingerprint) then
 							report_type_check_error (a_role_locator)
 						else
 							a_relationship := type_relationship (supplied_item_type, required_item_type)
@@ -170,7 +172,7 @@ feature -- Optimization
 									report_type_check_error (a_role_locator)
 								else
 									an_expression := checked_expression
-									create {XM_XPATH_CARDINALITY_CHECKER} a_computed_expression.make (an_expression, a_required_type.cardinality, a_role_locator)
+									a_computed_expression := expression_factory.created_cardinality_checker (an_expression, a_required_type.cardinality, a_role_locator)
 									a_computed_expression.adopt_child_expression (an_expression)
 									checked_expression := a_computed_expression
 								end
@@ -393,7 +395,7 @@ feature {NONE} -- Implementation
 
 				-- Rule 3: numeric promotion decimal -> float -> double
 
-				a_required_item_type_fingerprint := required_item_type.fingerprint
+				a_required_item_type_fingerprint := required_item_type.as_atomic_type.fingerprint
 				if a_required_item_type_fingerprint = Float_type_code or else
 					a_required_item_type_fingerprint = Double_type_code then
 					if type_relationship (supplied_item_type, type_factory.numeric_type) /= Disjoint_types then
@@ -430,7 +432,7 @@ feature {NONE} -- Implementation
 			if not supplied_item_type.is_atomic_type then
 				if supplied_cardinality /= Required_cardinality_empty then
 					an_expression := checked_expression
-					create {XM_XPATH_ATOMIZER_EXPRESSION} a_computed_expression.make (an_expression)
+					create {XM_XPATH_ATOMIZER_EXPRESSION} a_computed_expression.make (an_expression, static_context.configuration.are_all_nodes_untyped)
 					a_computed_expression.adopt_child_expression (an_expression)
 					checked_expression := a_computed_expression
 					supplied_item_type := checked_expression.item_type

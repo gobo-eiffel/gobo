@@ -1318,7 +1318,7 @@ feature -- Creation
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if static_context = Void then
-				create static_context.make (Current)
+				create static_context.make (Current, configuration)
 			end
 			create a_pattern_parser.make
 			a_pattern_parser.parse_sequence_type (a_sequence_type, static_context, line_number)
@@ -1437,7 +1437,7 @@ feature -- Element change
 			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 		do
-			create static_context.make (Current)
+			create static_context.make (Current, configuration)
 			process_attributes
 			from
 				a_child_iterator := new_axis_iterator (Child_axis)
@@ -1473,7 +1473,7 @@ feature -- Element change
 		do
 			a_use_when_attribute := attribute_value_by_expanded_name (an_attribute_name)
 			if a_use_when_attribute /= Void then
-				create a_static_context.make_restricted (Current)
+				create a_static_context.make_restricted (Current, configuration)
 				expression_factory.make_expression (a_use_when_attribute, a_static_context, 1, Eof_token, line_number)
 				if expression_factory.is_parse_error then
 					report_compile_error (expression_factory.parsed_error_value)
@@ -2395,7 +2395,7 @@ feature {NONE} -- Implementation
 				if is_sub_type (an_expression.item_type, type_factory.any_atomic_type) then
 					a_result_expression := an_expression
 				else
-					create an_atomizer.make (an_expression)
+					create an_atomizer.make (an_expression, configuration.are_all_nodes_untyped)
 					a_result_expression := an_atomizer
 				end
 				if a_result_expression.cardinality_allows_many then
@@ -2407,7 +2407,7 @@ feature {NONE} -- Implementation
 					a_result_expression := an_atomic_sequence_converter
 				end
 			else
-				create an_atomizer.make (an_expression)
+				create an_atomizer.make (an_expression, configuration.are_all_nodes_untyped)
 				create an_atomic_sequence_converter.make (an_atomizer, type_factory.string_type)
 				create a_string_join_function.make
 				create arguments.make (2)

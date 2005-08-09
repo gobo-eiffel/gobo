@@ -434,7 +434,14 @@ feature -- Access
 				todo ("typed_value", True)
 			end
 		end
-	
+
+	atomized_value: XM_XPATH_VALUE is
+			-- Typed value as atomic value or (unusually) sequence of atomic values.
+		deferred
+		ensure
+			atomized_value_not_void: Result /= Void
+		end
+			
 	type_name: STRING is
 			-- Type name for diagnostic purposes
 		do

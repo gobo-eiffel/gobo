@@ -22,7 +22,7 @@ inherit
 	XM_XPATH_TYPE
 		export {NONE} all end
 
-	XM_XPATH_SHARED_ANY_ITEM_TYPE
+	XM_XPATH_SHARED_ANY_TYPE
 		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
@@ -305,13 +305,26 @@ feature -- Access
 			when Preceding_sibling_axis then
 				Result := created_preceding_sibling_axis_iterator (a_node_test)
 			when Self_axis then
-				if a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
+				if a_node_test.matches_node (node_type, fingerprint, any_type.fingerprint) then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 				else
 					create {XM_XPATH_EMPTY_ITERATOR} Result.make
 				end
 			when Preceding_or_ancestor_axis then
 				Result := created_preceding_or_ancestor_axis_iterator (a_node_test)
+			end
+		end
+
+	atomized_value: XM_XPATH_VALUE is
+			-- Typed value as atomic value or (unusually) sequence of atomic values.
+		local
+			an_annotation: INTEGER
+		do
+			an_annotation := type_annotation
+			if an_annotation /= type_factory.untyped_atomic_type.fingerprint then
+				todo ("atomized_value", True)
+			else
+				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)
 			end
 		end
 
@@ -451,7 +464,7 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void		
 		do
 			if node_type = Document_node then
-				if a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
+				if a_node_test.matches_node (node_type, fingerprint, any_type.fingerprint) then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 				else
 					create {XM_XPATH_EMPTY_ITERATOR} Result.make
@@ -518,7 +531,7 @@ feature {NONE} -- Implementation
 		do
 			if has_child_nodes then
 				create {XM_XPATH_TREE_DESCENDANT_ENUMERATION} Result.make (Current, a_node_test, True)
-			elseif a_node_test.matches_node (node_type, fingerprint, any_item.fingerprint) then
+			elseif a_node_test.matches_node (node_type, fingerprint, any_type.fingerprint) then
 				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 			else
 				create {XM_XPATH_EMPTY_ITERATOR} Result.make					
@@ -565,7 +578,7 @@ feature {NONE} -- Implementation
 			a_parent_node := parent
 			if a_parent_node = Void then
 				create {XM_XPATH_EMPTY_ITERATOR} Result.make
-			elseif a_node_test.matches_node (a_parent_node.node_type, a_parent_node.fingerprint, any_item.fingerprint) then
+			elseif a_node_test.matches_node (a_parent_node.node_type, a_parent_node.fingerprint, any_type.fingerprint) then
 				create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (a_parent_node)
 			else
 				create {XM_XPATH_EMPTY_ITERATOR} Result.make

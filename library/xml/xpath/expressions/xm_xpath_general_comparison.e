@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 					if not is_error and then not (a_type = type_factory.any_atomic_type or else a_type = type_factory.untyped_atomic_type
 															or else another_type = type_factory.any_atomic_type or else another_type = type_factory.untyped_atomic_type) then
 						if a_type.primitive_type /= another_type.primitive_type and then
-							not are_types_comparable (a_type.fingerprint, another_type.fingerprint) then
+							not are_types_comparable (a_type.primitive_type, another_type.primitive_type) then
 							a_message := STRING_.appended_string ("Cannot compare ", a_type.conventional_name)
 							a_message := STRING_.appended_string (a_message, " with ")
 							a_message := STRING_.appended_string (a_message, another_type.conventional_name)

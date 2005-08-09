@@ -690,7 +690,7 @@ feature -- Element change
 			a_cursor: DS_BILINKED_LIST_CURSOR [XM_XSLT_STYLE_ELEMENT]
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 		do
-			create static_context.make (Current)
+			create static_context.make (Current, configuration)
 			process_attributes
 			from
 				a_cursor := top_level_elements.new_cursor

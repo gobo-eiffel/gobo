@@ -34,6 +34,12 @@ feature -- Status report
 	is_tracing_suppressed: BOOLEAN
 			-- Is output from XPath trace() function suppressed?
 
+	are_all_nodes_untyped: BOOLEAN is
+			-- Are all nodes untyped?
+		do
+			Result := True -- for Basic-level XSLT
+		end
+
 feature -- Status setting
 
 	suppress_trace_output (yes_or_no: BOOLEAN) is

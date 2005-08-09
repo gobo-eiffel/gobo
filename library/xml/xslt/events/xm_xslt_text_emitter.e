@@ -75,7 +75,7 @@ feature -- Events
 					a_mapped_string := character_map_expander.mapped_string (chars)
 					output_escape (normalized_string (a_mapped_string), False)
 				else
-					output_escape (normalized_string (a_mapped_string), False)
+					output_escape (normalized_string (chars), False)
 				end
 			end
 		end

@@ -46,6 +46,9 @@ inherit
 	XM_XPATH_SHARED_NO_NODE_TEST
 		export {NONE} all end
 
+	XM_XPATH_NODE_KIND_ROUTINES
+		export {NONE} all end
+
 	XM_XPATH_SHARED_NAME_POOL
 
 	XM_XPATH_ERROR_TYPES
@@ -54,9 +57,6 @@ inherit
 		export {NONE} all end
 
 	KL_IMPORTED_STRING_ROUTINES
-		export {NONE} all end
-
-	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
 	KL_IMPORTED_ANY_ROUTINES
@@ -644,6 +644,21 @@ feature -- Access
 			-- `Current' seen as a range expression
 		require
 			range_expression: is_range_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_atomizer_expression: BOOLEAN is
+			-- Is `Current' an atomizer expression?
+		do
+			Result := False
+		end
+
+	as_atomizer_expression: XM_XPATH_ATOMIZER_EXPRESSION is
+			-- `Current' seen as a range expression
+		require
+			atomizer_expression: is_atomizer_expression
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
@@ -1625,27 +1640,6 @@ feature {XM_XPATH_EXPRESSION} -- Local
 
 	Supports_process: INTEGER is 4
 			-- `Current natively supports `process'
-
-	string_kinds: INTEGER is
-			-- Node kinds whose typed value is always string
-		once
-			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Namespace_node), INTEGER_.bit_shift_left (1, Comment_node))
-			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Processing_instruction_node))
-		end
-
-	untyped_kinds: INTEGER is
-			-- Node kinds whose typed value is always untypedAtomic
-		once
-			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Document_node), INTEGER_.bit_shift_left (1, Text_node))
-		end
-
-	untyped_if_untyped_kinds: INTEGER is
-			-- Node kinds whose typed value is conditionally untypedAtomic
-		once
-			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Document_node), INTEGER_.bit_shift_left (1, Text_node))
-			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Element_node))
-			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Attribute_node))
-		end
 
 	native_implementations: INTEGER is
 			-- Natively-supported evaluation routines

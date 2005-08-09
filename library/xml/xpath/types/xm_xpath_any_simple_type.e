@@ -14,7 +14,7 @@ class XM_XPATH_ANY_SIMPLE_TYPE
 
 inherit
 
-	XM_XPATH_SCHEMA_TYPE
+	XM_XPATH_SIMPLE_TYPE
 		redefine
 			is_any_simple_type
 		end
@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			local_name := "anySimpleType"
 			namespace_uri := Xml_schema_uri
 			fingerprint := Any_simple_type_code
-			is_abstract := True
 		end
 
 feature -- Access

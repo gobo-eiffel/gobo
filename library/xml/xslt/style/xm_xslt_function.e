@@ -117,7 +117,7 @@ feature -- Access
 
 				-- This is a forwards reference to the function.
 
-				if static_context = Void then create static_context.make (Current) end
+				if static_context = Void then create static_context.make (Current, configuration) end
 				if not attributes_prepared then prepare_attributes end
 				if any_compile_errors then
 					internal_function_fingerprint := -1

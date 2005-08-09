@@ -205,9 +205,9 @@ feature -- Status report
 					if a_second_type.is_node_test then
 						Result := Disjoint_types
 					else
-						a_fingerprint := a_first_type.fingerprint
+						a_fingerprint := a_first_type.as_atomic_type.fingerprint
 						if a_second_type.is_atomic_type and then
-							a_fingerprint = a_second_type.fingerprint then
+							a_fingerprint = a_second_type.as_atomic_type.fingerprint then
 							Result := Same_item_type
 						else
 							Result := -1
@@ -219,7 +219,7 @@ feature -- Status report
 								if not an_item_type.is_atomic_type then
 									finished := True
 								else
-									if a_fingerprint = an_item_type.fingerprint then
+									if a_fingerprint = an_item_type.as_atomic_type.fingerprint then
 										Result := Subsuming_type
 										finished := True
 									else
@@ -230,7 +230,7 @@ feature -- Status report
 							if Result = -1 then
 								from
 									finished := False
-									a_fingerprint := a_second_type.fingerprint
+									a_fingerprint := a_second_type.as_atomic_type.fingerprint
 									an_item_type := a_first_type
 								until
 									finished
@@ -239,7 +239,7 @@ feature -- Status report
 										Result := Disjoint_types
 										finished := True
 									else
-										if a_fingerprint = an_item_type.fingerprint then
+										if a_fingerprint = an_item_type.as_atomic_type.fingerprint then
 											Result := Subsumed_type
 											finished := True
 										else
@@ -490,9 +490,9 @@ feature {NONE} -- Implementation
 		do
 			if a_content_type.is_same_type (another_content_type) then
 				Result := Same_item_type
-			elseif a_content_type = any_item then
+			elseif a_content_type.is_any_type then
 				Result := Subsuming_type
-			elseif another_content_type = any_item then
+			elseif another_content_type.is_any_type then
 				Result := Subsumed_type
 			else
 				from

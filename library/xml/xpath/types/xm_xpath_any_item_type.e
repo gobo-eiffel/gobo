@@ -14,7 +14,7 @@ class XM_XPATH_ANY_ITEM_TYPE
 
 inherit
 
-	XM_XPATH_SCHEMA_TYPE
+	XM_XPATH_ITEM_TYPE
 		redefine
 			is_any_item_type
 		end
@@ -30,8 +30,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant.
 		do
-			local_name := "item"
-			namespace_uri := ""
 		end
 
 feature -- Access

@@ -268,6 +268,8 @@ feature -- Events
 				elseif character_map_expander /= Void then
 					a_mapped_string := character_map_expander.mapped_string (chars)
 					output_escape (normalized_string (a_mapped_string), False)
+				elseif are_no_special_characters (properties) then
+					output (chars) -- TODO: confirm that normalization can have no effect here
 				else
 					debug ("XSLT stripper")
 						std.error.put_string ("Emitting " + normalized_string (chars) + "###")

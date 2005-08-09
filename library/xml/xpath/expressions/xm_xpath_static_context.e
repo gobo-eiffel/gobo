@@ -30,6 +30,9 @@ inherit
 
 feature -- Access
 
+	configuration: XM_XPATH_CONFIGURATION
+			-- System configuration
+
 	host_language: STRING is
 			-- Name of host language
 		deferred
@@ -218,6 +221,7 @@ feature {NONE} -- Implementation
 invariant
 
 	known_collations_not_void: known_collations /= Void
+	configuration_not_void: configuration /= void
 
 end
 	

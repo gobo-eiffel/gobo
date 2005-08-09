@@ -20,7 +20,7 @@ inherit
 			check_static_type, create_iterator, evaluate_item, compute_cardinality
 		end
 
-create
+create {XM_XPATH_EXPRESSION_FACTORY}
 
 	make
 

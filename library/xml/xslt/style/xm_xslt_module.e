@@ -115,7 +115,7 @@ feature -- Element change
 	create_static_context is
 			-- Create `static_context'
 		do
-			create static_context.make (Current)
+			create static_context.make (Current, configuration)
 		ensure
 			static_context_created: static_context /= Void
 		end

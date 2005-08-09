@@ -49,6 +49,7 @@ feature {NONE} -- Initialization
 		local
 			a_code_point_collator: ST_COLLATOR
 		do
+			create configuration.make_configuration
 			create known_collations.make_with_equality_testers (10, Void, string_equality_tester)
 			create variables.make (10)
 			create a_code_point_collator

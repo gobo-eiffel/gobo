@@ -75,10 +75,26 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
+	is_complex_type: BOOLEAN is
+			-- Is `Current' a complex type?
+		do
+			Result := False
+		end
+
+	as_complex_type: XM_XPATH_COMPLEX_TYPE is
+			-- `Current' seen as a complex type
+		require
+			complex_type: is_complex_type
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 invariant
 
 	base_type_may_be_void: True
 	local_name_not_void: local_name /= Void and then local_name.count > 0
 	namespace_uri_not_void: namespace_uri /= Void
+	simple_or_complex: is_simple_type xor is_complex_type
 
 end

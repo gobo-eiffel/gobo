@@ -35,6 +35,8 @@ inherit
 
 	XM_XPATH_CARDINALITY
 
+	XM_XPATH_SHARED_EXPRESSION_FACTORY
+
 	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
@@ -136,7 +138,7 @@ feature {NONE} -- Implementation
 					if not is_error then
 						if data_type.count = 0 then
 							create a_role.make (Instruction_role, "xsl:sort/sort-key", 1, Xpath_errors_uri, "XPTY0004")
-							create {XM_XPATH_CARDINALITY_CHECKER} sort_key.make (sort_key, Required_cardinality_zero_or_more, a_role)
+							sort_key := expression_factory.created_cardinality_checker (sort_key, Required_cardinality_zero_or_more, a_role)
 							create {XM_XPATH_ATOMIC_SORT_COMPARER} a_comparer.make (a_base_collator)
 						else
 							if STRING_.same_string (data_type, "text") then

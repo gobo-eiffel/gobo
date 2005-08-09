@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 						indentation_characters.append_string (indentation_characters)
 					end
 					base_receiver.notify_characters ("%N", 0)
-					base_receiver.notify_characters (indentation_characters.substring (1, a_spaces_count), 0)
+					base_receiver.notify_characters (indentation_characters.substring (1, a_spaces_count), No_special_characters)
 					is_same_line := False
 				end
 			end

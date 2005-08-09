@@ -14,7 +14,7 @@ class XM_XPATH_UNTYPED_TYPE
 
 inherit
 
-	XM_XPATH_SCHEMA_TYPE
+	XM_XPATH_COMPLEX_TYPE
 		redefine
 			is_untyped
 		end
@@ -64,6 +64,18 @@ feature -- Access
 			-- Type of atomic values that will be produced when an item of this type is atomized
 		do
 			Result := type_factory.untyped_atomic_type
+		end
+
+	is_simple_content: BOOLEAN is
+			-- Is content simple?
+		do
+			Result := False
+		end
+
+	simple_content_type: XM_XPATH_SIMPLE_TYPE is
+			-- Simple content type
+		do
+			-- Pre-condition cannot be met
 		end
 
 feature -- Comparison

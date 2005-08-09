@@ -35,31 +35,37 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_style_element: XM_XSLT_STYLE_ELEMENT) is
+	make (a_style_element: XM_XSLT_STYLE_ELEMENT; a_configuration: XM_XPATH_CONFIGURATION) is
 			-- Establish invariant.
 		require
 			style_element_not_void:	a_style_element /= Void
+			configuration_not_void: a_configuration /= Void
 		do
+			configuration := a_configuration
 			style_element := a_style_element
 			known_collations := a_style_element.principal_stylesheet.collation_map
 			default_collation_name := a_style_element.default_collation_name
 			create base_uri.make (style_element.base_uri)
 		ensure
+			configuration_set: configuration = a_configuration
 			style_element_set: style_element = a_style_element
 			not_restricted: not is_restricted
 		end
 
-	make_restricted (a_style_element: XM_XSLT_STYLE_ELEMENT) is
+	make_restricted (a_style_element: XM_XSLT_STYLE_ELEMENT; a_configuration: XM_XPATH_CONFIGURATION) is
 			-- Create a restricted context for [xsl:]use-when processing..
 		require
 			style_element_not_void:	a_style_element /= Void
+			configuration_not_void: a_configuration /= Void
 		do
+			configuration := a_configuration
 			style_element := a_style_element
 			known_collations := a_style_element.principal_stylesheet.collation_map
 			default_collation_name := a_style_element.default_collation_name
 			create base_uri.make (style_element.base_uri)
 			is_restricted := True
 		ensure
+			configuration_set: configuration = a_configuration
 			style_element_set: style_element = a_style_element
 			restricted: is_restricted
 		end
