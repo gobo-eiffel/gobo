@@ -265,13 +265,13 @@ feature -- Types
 									-- Make features 'area', and 'lower' and 'upper' alive at the
 									-- first three positions in the feature list of the ARRAY type.
 								if array_area_feature /= Void then
-									l_dynamic_feature := Result.dynamic_feature (array_area_feature, Current)
+									l_dynamic_feature := Result.dynamic_query (array_area_feature, Current)
 								end
 								if array_lower_feature /= Void then
-									l_dynamic_feature := Result.dynamic_feature (array_lower_feature, Current)
+									l_dynamic_feature := Result.dynamic_query (array_lower_feature, Current)
 								end
 								if array_upper_feature /= Void then
-									l_dynamic_feature := Result.dynamic_feature (array_upper_feature, Current)
+									l_dynamic_feature := Result.dynamic_query (array_upper_feature, Current)
 								end
 							elseif l_base_class = universe.procedure_class then
 								l_any := universe.any_class
@@ -382,13 +382,13 @@ feature -- Types
 						-- Make features 'area', and 'lower' and 'upper' alive at the
 						-- first three positions in the feature list of the ARRAY type.
 					if array_area_feature /= Void then
-						l_dynamic_feature := Result.dynamic_feature (array_area_feature, Current)
+						l_dynamic_feature := Result.dynamic_query (array_area_feature, Current)
 					end
 					if array_lower_feature /= Void then
-						l_dynamic_feature := Result.dynamic_feature (array_lower_feature, Current)
+						l_dynamic_feature := Result.dynamic_query (array_lower_feature, Current)
 					end
 					if array_upper_feature /= Void then
-						l_dynamic_feature := Result.dynamic_feature (array_upper_feature, Current)
+						l_dynamic_feature := Result.dynamic_query (array_upper_feature, Current)
 					end
 				elseif l_base_class = universe.procedure_class then
 					l_any := universe.any_class
@@ -493,7 +493,8 @@ feature -- Compilation
 		local
 			l_class: ET_CLASS
 			l_name: ET_FEATURE_NAME
-			l_feature: ET_FEATURE
+			l_procedure: ET_PROCEDURE
+			l_query: ET_QUERY
 			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: DT_DATE_TIME
 		do
@@ -544,28 +545,39 @@ feature -- Compilation
 					else
 						l_name := universe.root_creation
 						if l_name /= Void then
-							l_feature := l_class.named_feature (l_name)
+							l_procedure := l_class.named_procedure (l_name)
 						elseif universe.default_create_seed /= 0 then
-							l_feature := l_class.seeded_feature (universe.default_create_seed)
+							l_procedure := l_class.seeded_procedure (universe.default_create_seed)
 							l_name := tokens.default_create_feature_name
 						else
 							l_name := tokens.default_create_feature_name
-							l_feature := l_class.named_feature (l_name)
+							l_procedure := l_class.named_procedure (l_name)
 						end
-						if l_feature = Void then
-								-- Error: the root creation procedure is not
-								-- a feature of the root class.
+						if l_procedure = Void then
+							if l_name /= Void then
+								l_query := l_class.named_query (l_name)
+							elseif universe.default_create_seed /= 0 then
+								l_query := l_class.seeded_query (universe.default_create_seed)
+								l_name := tokens.default_create_feature_name
+							else
+								l_name := tokens.default_create_feature_name
+								l_query := l_class.named_query (l_name)
+							end
+							if l_query = Void then
+									-- Error: the root creation procedure is not
+									-- a feature of the root class.
+								set_fatal_error
+								error_handler.report_gvsrc5a_error (l_class, l_name)
+							else
+									-- Internal error: the root creation feature is not a procedure.
+								set_fatal_error
+								error_handler.report_gibbn_error
+							end
+						elseif not l_class.is_creation_directly_exported_to (l_procedure.name, universe.any_class) then
 							set_fatal_error
-							error_handler.report_gvsrc5a_error (l_class, l_name)
-						elseif not l_class.is_creation_directly_exported_to (l_feature.name, universe.any_class) then
-							set_fatal_error
-							error_handler.report_gvsrc6a_error (l_class, l_feature.name)
-						elseif not l_feature.is_procedure then
-								-- Internal error: the root creation feature is not a procedure.
-							set_fatal_error
-							error_handler.report_gibbn_error
+							error_handler.report_gvsrc6a_error (l_class, l_procedure.name)
 						else
-							root_creation_procedure := root_type.dynamic_feature (l_feature, Current)
+							root_creation_procedure := root_type.dynamic_procedure (l_procedure, Current)
 							root_creation_procedure.set_creation (True)
 							root_type.set_alive
 							build_dynamic_type_sets
@@ -581,8 +593,10 @@ feature -- Compilation
 		local
 			l_cursor: DS_HASH_TABLE_CURSOR [ET_CLASS, ET_CLASS_NAME]
 			l_class: ET_CLASS
-			l_features: ET_FEATURE_LIST
-			l_feature: ET_FEATURE
+			l_queries: ET_QUERY_LIST
+			l_query: ET_QUERY
+			l_procedures: ET_PROCEDURE_LIST
+			l_procedure: ET_PROCEDURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
@@ -618,12 +632,20 @@ feature -- Compilation
 				if l_class.implementation_checked and then not l_class.has_implementation_error then
 					if not l_class.is_deferred and not l_class.is_generic then
 						l_dynamic_type := dynamic_type (l_class, l_class)
-						l_features := l_class.features
-						--nb := l_features.count
-						nb := l_class.declared_feature_count
+						l_queries := l_class.queries
+						--nb := l_queries.count
+						nb := l_class.declared_query_count
 						from i := 1 until i > nb loop
-							l_feature := l_features.item (i)
-							l_dynamic_feature := l_dynamic_type.dynamic_feature (l_feature, Current)
+							l_query := l_queries.item (i)
+							l_dynamic_feature := l_dynamic_type.dynamic_query (l_query, Current)
+							i := i + 1
+						end
+						l_procedures := l_class.procedures
+						--nb := l_procedures.count
+						nb := l_class.declared_procedure_count
+						from i := 1 until i > nb loop
+							l_procedure := l_procedures.item (i)
+							l_dynamic_feature := l_dynamic_type.dynamic_procedure (l_procedure, Current)
 							i := i + 1
 						end
 					end
@@ -646,8 +668,9 @@ feature {NONE} -- Compilation
 			l_generic_class_type: ET_GENERIC_CLASS_TYPE
 			l_class: ET_CLASS
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_area_feature: ET_FEATURE
-			l_count_feature: ET_FEATURE
+			l_area_feature: ET_QUERY
+			l_count_feature: ET_QUERY
+			l_procedure: ET_PROCEDURE
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			dynamic_types.wipe_out
@@ -775,15 +798,21 @@ feature {NONE} -- Compilation
 			else
 					-- Make features 'area' and 'count' alive at the first
 					-- two positions in the feature list of the STRING type.
-				l_area_feature := l_class.named_feature (tokens.area_feature_name)
+				l_area_feature := l_class.named_query (tokens.area_feature_name)
 				if l_area_feature = Void then
-					set_fatal_error
-					error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
+					l_procedure := l_class.named_procedure (tokens.area_feature_name)
+					if l_procedure /= Void then
+						set_fatal_error
+						error_handler.report_gvkfe2a_error (l_class, l_area_feature)
+					else
+						set_fatal_error
+						error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
+					end
 				elseif not l_area_feature.is_attribute then
 					set_fatal_error
 					error_handler.report_gvkfe2a_error (l_class, l_area_feature)
 				else
-					l_dynamic_feature := string_type.dynamic_feature (l_area_feature, Current)
+					l_dynamic_feature := string_type.dynamic_query (l_area_feature, Current)
 					l_result_type_set := l_dynamic_feature.result_type_set
 					if l_result_type_set = Void then
 							-- Internal error: an attribute should have a result type.
@@ -794,15 +823,21 @@ feature {NONE} -- Compilation
 						error_handler.report_gvkfe3a_error (l_class, l_area_feature, special_character_type.base_type)
 					end
 				end
-				l_count_feature := l_class.named_feature (tokens.count_feature_name)
+				l_count_feature := l_class.named_query (tokens.count_feature_name)
 				if l_count_feature = Void then
-					set_fatal_error
-					error_handler.report_gvkfe1a_error (l_class, tokens.count_feature_name)
+					l_procedure := l_class.named_procedure (tokens.count_feature_name)
+					if l_procedure /= Void then
+						set_fatal_error
+						error_handler.report_gvkfe2a_error (l_class, l_count_feature)
+					else
+						set_fatal_error
+						error_handler.report_gvkfe1a_error (l_class, tokens.count_feature_name)
+					end
 				elseif not l_count_feature.is_attribute then
 					set_fatal_error
 					error_handler.report_gvkfe2a_error (l_class, l_count_feature)
 				else
-					l_dynamic_feature := string_type.dynamic_feature (l_count_feature, Current)
+					l_dynamic_feature := string_type.dynamic_query (l_count_feature, Current)
 					l_result_type_set := l_dynamic_feature.result_type_set
 					if l_result_type_set = Void then
 							-- Internal error: an attribute should have a result type.
@@ -830,10 +865,16 @@ feature {NONE} -- Compilation
 					set_fatal_error
 				else
 						-- Check features `area', and `lower' and `upper' of class ARRAY.
-					array_area_feature := l_class.named_feature (tokens.area_feature_name)
+					array_area_feature := l_class.named_query (tokens.area_feature_name)
 					if array_area_feature = Void then
-						set_fatal_error
-						error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
+						l_procedure := l_class.named_procedure (tokens.area_feature_name)
+						if l_procedure /= Void then
+							set_fatal_error
+							error_handler.report_gvkfe2a_error (l_class, array_area_feature)
+						else
+							set_fatal_error
+							error_handler.report_gvkfe1a_error (l_class, tokens.area_feature_name)
+						end
 					elseif not array_area_feature.is_attribute then
 						set_fatal_error
 						error_handler.report_gvkfe2a_error (l_class, array_area_feature)
@@ -843,10 +884,16 @@ feature {NONE} -- Compilation
 						error_handler.report_gvkfe3a_error (l_class, array_area_feature, universe.special_class)
 						array_area_feature := Void
 					end
-					array_lower_feature := l_class.named_feature (tokens.lower_feature_name)
+					array_lower_feature := l_class.named_query (tokens.lower_feature_name)
 					if array_lower_feature = Void then
-						set_fatal_error
-						error_handler.report_gvkfe1a_error (l_class, tokens.lower_feature_name)
+						l_procedure := l_class.named_procedure (tokens.lower_feature_name)
+						if l_procedure /= Void then
+							set_fatal_error
+							error_handler.report_gvkfe2a_error (l_class, array_lower_feature)
+						else
+							set_fatal_error
+							error_handler.report_gvkfe1a_error (l_class, tokens.lower_feature_name)
+						end
 					elseif not array_lower_feature.is_attribute then
 						set_fatal_error
 						error_handler.report_gvkfe2a_error (l_class, array_lower_feature)
@@ -856,10 +903,16 @@ feature {NONE} -- Compilation
 						error_handler.report_gvkfe3a_error (l_class, array_lower_feature, universe.integer_class)
 						array_lower_feature := Void
 					end
-					array_upper_feature := l_class.named_feature (tokens.upper_feature_name)
+					array_upper_feature := l_class.named_query (tokens.upper_feature_name)
 					if array_upper_feature = Void then
-						set_fatal_error
-						error_handler.report_gvkfe1a_error (l_class, tokens.upper_feature_name)
+						l_procedure := l_class.named_procedure (tokens.upper_feature_name)
+						if l_procedure /= Void then
+							set_fatal_error
+							error_handler.report_gvkfe2a_error (l_class, array_upper_feature)
+						else
+							set_fatal_error
+							error_handler.report_gvkfe1a_error (l_class, tokens.upper_feature_name)
+						end
 					elseif not array_upper_feature.is_attribute then
 						set_fatal_error
 						error_handler.report_gvkfe2a_error (l_class, array_upper_feature)
@@ -959,9 +1012,9 @@ feature -- Processors
 
 feature {NONE} -- Features
 
-	array_area_feature: ET_FEATURE
-	array_lower_feature: ET_FEATURE
-	array_upper_feature: ET_FEATURE
+	array_area_feature: ET_QUERY
+	array_lower_feature: ET_QUERY
+	array_upper_feature: ET_QUERY
 			-- Expected attributes in class ARRAY
 
 feature {NONE} -- Implementation

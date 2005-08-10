@@ -87,8 +87,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			a_name: STRING
 			an_identifier: ET_IDENTIFIER
-			a_features: ET_FEATURE_LIST
-			a_feature: ET_FEATURE
+			l_queries: ET_QUERY_LIST
+			l_query: ET_QUERY
+			l_procedures: ET_PROCEDURE_LIST
+			l_procedure: ET_PROCEDURE
 			i, nb: INTEGER
 			stop: BOOLEAN
 		do
@@ -100,27 +102,40 @@ feature {ET_AST_NODE} -- Processing
 					if a_name.is_empty then
 						stop := True
 					elseif a_name.is_equal ("all") then
-						a_features := a_class.features
-						nb := a_features.count
+						l_queries := a_class.queries
+						nb := l_queries.count
 						from i := 1 until i > nb loop
-							process_feature (a_features.item (i))
+							process_query (l_queries.item (i))
+							output_file.put_new_line
+							i := i + 1
+						end
+						l_procedures := a_class.procedures
+						nb := l_procedures.count
+						from i := 1 until i > nb loop
+							process_procedure (l_procedures.item (i))
 							output_file.put_new_line
 							i := i + 1
 						end
 						stop := True
 					else
 						create an_identifier.make (a_name)
-						a_feature := a_class.named_feature (an_identifier)
-						if a_feature /= Void then
-							process_feature (a_feature)
+						l_query := a_class.named_query (an_identifier)
+						if l_query /= Void then
+							process_query (l_query)
 							output_file.put_new_line
 						else
-							output_file.put_string ("No feature `")
-							output_file.put_string (a_name)
-							output_file.put_string ("' in class ")
-							output_file.put_string (a_class.name.name)
-							output_file.put_character ('.')
-							output_file.put_new_line
+							l_procedure := a_class.named_procedure (an_identifier)
+							if l_procedure /= Void then
+								process_procedure (l_procedure)
+								output_file.put_new_line
+							else
+								output_file.put_string ("No feature `")
+								output_file.put_string (a_name)
+								output_file.put_string ("' in class ")
+								output_file.put_string (a_class.name.name)
+								output_file.put_character ('.')
+								output_file.put_new_line
+							end
 						end
 					end
 				else
@@ -129,18 +144,17 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_feature (a_feature: ET_FEATURE) is
-			-- Process `a_feature'.
+	process_query (a_query: ET_QUERY) is
+			-- Process `a_query'.
 		require
-			a_feature_not_void: a_feature /= Void
+			a_query_not_void: a_query /= Void
 		local
 			args: ET_FORMAL_ARGUMENT_LIST
 			arg: ET_FORMAL_ARGUMENT
-			a_type: ET_TYPE
 			i, nb: INTEGER
 		do
-			output_file.put_string (a_feature.name.name)
-			args := a_feature.arguments
+			output_file.put_string (a_query.name.name)
+			args := a_query.arguments
 			if args /= Void then
 				output_file.put_string (" (")
 				nb := args.count
@@ -156,10 +170,35 @@ feature {ET_AST_NODE} -- Processing
 				end
 				output_file.put_string (")")
 			end
-			a_type := a_feature.type
-			if a_type /= Void then
-				output_file.put_string (": ")
-				output_file.put_string (a_type.base_type (current_context, universe).to_text)
+			output_file.put_string (": ")
+			output_file.put_string (a_query.type.base_type (current_context, universe).to_text)
+		end
+
+	process_procedure (a_procedure: ET_PROCEDURE) is
+			-- Process `a_procedure'.
+		require
+			a_procedure_not_void: a_procedure /= Void
+		local
+			args: ET_FORMAL_ARGUMENT_LIST
+			arg: ET_FORMAL_ARGUMENT
+			i, nb: INTEGER
+		do
+			output_file.put_string (a_procedure.name.name)
+			args := a_procedure.arguments
+			if args /= Void then
+				output_file.put_string (" (")
+				nb := args.count
+				from i := 1 until i > nb loop
+					arg := args.formal_argument (i)
+					output_file.put_string (arg.name.name)
+					output_file.put_string (": ")
+					output_file.put_string (arg.type.base_type (current_context, universe).to_text)
+					if i /= nb then
+						output_file.put_string ("; ")
+					end
+					i := i + 1
+				end
+				output_file.put_string (")")
 			end
 		end
 

@@ -98,8 +98,9 @@ feature -- Access
 			-- Name of the feature associated with current type
 
 	seed: INTEGER
-			-- Feature ID of one of the seeds of the
-			-- feature associated with current type;
+			-- Feature ID of one of the seeds of the feature associated
+			-- with current type or of the feature containing the argument
+			-- in case of 'like argument';
 			-- 0 if not resolved yet
 
 	index: INTEGER is
@@ -121,8 +122,8 @@ feature -- Access
 			-- or unmatched formal generic parameter.
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -131,9 +132,9 @@ feature -- Access
 				Result := a_universe.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -151,17 +152,9 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.base_class (a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := a_universe.unknown_class
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.base_class (a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -181,8 +174,8 @@ feature -- Access
 			-- is current type.
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -191,9 +184,9 @@ feature -- Access
 				Result := a_universe.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -211,17 +204,9 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.base_type (a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := a_universe.unknown_class
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.base_type (a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -236,8 +221,8 @@ feature -- Access
 			-- type when it appears in `a_context' in `a_universe'
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -246,9 +231,9 @@ feature -- Access
 				Result := a_universe.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -266,17 +251,9 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.base_type_actual (i, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := a_universe.unknown_class
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.base_type_actual (i, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -291,8 +268,8 @@ feature -- Access
 			-- type when it appears in `a_context' in `a_universe'
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -301,9 +278,9 @@ feature -- Access
 				Result := a_universe.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -321,17 +298,9 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.base_type_actual_parameter (i, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := a_universe.unknown_class
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.base_type_actual_parameter (i, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -349,8 +318,8 @@ feature -- Access
 			-- type of its constraint.
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -359,9 +328,9 @@ feature -- Access
 				Result := a_universe.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -379,17 +348,9 @@ feature -- Access
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.named_type (a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := a_universe.unknown_class
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.named_type (a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -439,8 +400,8 @@ feature -- Measurement
 			-- Number of actual generic parameters of the base type of current type
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -449,9 +410,9 @@ feature -- Measurement
 				Result := 0
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -469,17 +430,9 @@ feature -- Measurement
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.base_type_actual_count (a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := 0
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.base_type_actual_count (a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -516,8 +469,8 @@ feature -- Status report
 			-- `a_context' in `a_universe'?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -526,9 +479,9 @@ feature -- Status report
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -546,17 +499,9 @@ feature -- Status report
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.is_type_expanded (a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.is_type_expanded (a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -571,8 +516,8 @@ feature -- Status report
 			-- with index `i' when viewed from `a_context' in `a_universe'?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -581,9 +526,9 @@ feature -- Status report
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -601,17 +546,9 @@ feature -- Status report
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.has_formal_type (i, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.has_formal_type (i, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -626,8 +563,8 @@ feature -- Status report
 			-- when viewed from `a_context' in `a_universe'?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -636,9 +573,9 @@ feature -- Status report
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -656,17 +593,9 @@ feature -- Status report
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.has_formal_types (a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.has_formal_types (a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -680,8 +609,8 @@ feature -- Status report
 			-- Is current type a formal parameter when viewed from `a_context'?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -690,9 +619,9 @@ feature -- Status report
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -710,17 +639,9 @@ feature -- Status report
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.is_formal_type (a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.is_formal_type (a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -735,8 +656,8 @@ feature -- Status report
 			-- when it appears in `a_context' in `a_universe'?
 		local
 			a_base_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -745,9 +666,9 @@ feature -- Status report
 				Result := (a_class = a_universe.unknown_class)
 			elseif is_like_argument then
 				a_base_class := a_context.base_class (a_universe)
-				seeded_feature := a_base_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_base_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -765,17 +686,9 @@ feature -- Status report
 				end
 			else
 				a_base_class := a_context.base_class (a_universe)
-				seeded_feature := a_base_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.base_type_has_class (a_class, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := (a_class = a_universe.unknown_class)
-					end
+				l_query := a_base_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.base_type_has_class (a_class, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -790,8 +703,8 @@ feature -- Status report
 			-- when it appears in `a_context' in `a_universe'?
 		local
 			a_base_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -800,9 +713,9 @@ feature -- Status report
 				Result := (a_class = a_universe.unknown_class)
 			elseif is_like_argument then
 				a_base_class := a_context.base_class (a_universe)
-				seeded_feature := a_base_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_base_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -820,17 +733,9 @@ feature -- Status report
 				end
 			else
 				a_base_class := a_context.base_class (a_universe)
-				seeded_feature := a_base_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.named_type_has_class (a_class, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := (a_class = a_universe.unknown_class)
-					end
+				l_query := a_base_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.named_type_has_class (a_class, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -865,8 +770,8 @@ feature -- Comparison
 			-- appearing in `other_context' have the same named type?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -877,9 +782,9 @@ feature -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_query (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -897,17 +802,9 @@ feature -- Comparison
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.same_named_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.same_named_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -923,8 +820,8 @@ feature -- Comparison
 			-- appearing in `other_context' have the same base type?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -935,9 +832,9 @@ feature -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -955,17 +852,9 @@ feature -- Comparison
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.same_base_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.same_base_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -988,29 +877,49 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- is not considered the same as any other type even
 			-- if they have the same base type.)
 		local
-			a_feature: ET_FEATURE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
+			l_class: ET_CLASS
+			l_other_seed: INTEGER
 		do
 			if other = Current and other_context = a_context then
 				Result := True
 			elseif seed = 0 then
 					-- Anchored type not resolved yet.
-				Result := False
-			else
+				-- Result := False
+			elseif is_like_argument then
 					-- If they are 'like argument' they should
 					-- refer to the same argument.
-				if is_like_argument implies other.index = index then
+				if other.is_like_argument and then other.index = index then
 						-- They should refer to the same feature.
 					if other.seed = seed then
 						Result := True
 					else
-						a_feature := other_context.base_class (a_universe).seeded_feature (other.seed)
-						Result := a_feature /= Void and then a_feature.has_seed (seed)
+						l_class := other_context.base_class (a_universe)
+						l_other_seed := other.seed
+						l_feature := l_class.seeded_feature (l_other_seed)
+						Result := l_feature /= Void and then l_feature.has_seed (seed)
 						if not Result then
-							a_feature := a_context.base_class (a_universe).seeded_feature (seed)
-							Result := a_feature /= Void and then a_feature.has_seed (other.seed)
+							l_class := a_context.base_class (a_universe)
+							l_feature := l_class.seeded_feature (seed)
+							Result := l_feature /= Void and then l_feature.has_seed (l_other_seed)
 						end
 					end
 				end
+			elseif not other.is_like_argument then
+					-- They should refer to the same feature.
+				if other.seed = seed then
+					Result := True
+				else
+					l_query := other_context.base_class (a_universe).seeded_query (other.seed)
+					Result := l_query /= Void and then l_query.has_seed (seed)
+					if not Result then
+						l_query := a_context.base_class (a_universe).seeded_query (seed)
+						Result := l_query /= Void and then l_query.has_seed (other.seed)
+					end
+				end
+			else
+				-- Result := False
 			end
 		end
 
@@ -1020,8 +929,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- appearing in `other_context' have the same named type?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1030,9 +939,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1050,17 +959,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.same_named_bit_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.same_named_bit_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1076,8 +977,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- appearing in `other_context' have the same named type?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1086,9 +987,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1106,17 +1007,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.same_named_class_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.same_named_class_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1133,8 +1026,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- appearing in `other_context' have the same named type?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1143,9 +1036,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1163,17 +1056,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.same_named_formal_parameter_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.same_named_formal_parameter_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1189,8 +1074,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- appearing in `other_context' have the same named type?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1199,9 +1084,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1219,17 +1104,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.same_named_tuple_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.same_named_tuple_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1245,8 +1122,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- appearing in `other_context' have the same base type?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1255,9 +1132,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1275,17 +1152,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.same_base_bit_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.same_base_bit_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1301,8 +1170,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- appearing in `other_context' have the same base type?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1311,9 +1180,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1331,17 +1200,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.same_base_class_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.same_base_class_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1358,8 +1219,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- appearing in `other_context' have the same base type?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1368,9 +1229,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1388,17 +1249,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.same_base_formal_parameter_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.same_base_formal_parameter_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1414,8 +1267,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			-- appearing in `other_context' have the same base type?
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1424,9 +1277,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1444,17 +1297,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.same_base_tuple_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.same_base_tuple_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1475,8 +1320,8 @@ feature -- Conformance
 			-- for conformance.)
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1487,9 +1332,9 @@ feature -- Conformance
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1507,17 +1352,9 @@ feature -- Conformance
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.conforms_to_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.conforms_to_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1538,8 +1375,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- for conformance.)
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1548,9 +1385,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1568,17 +1405,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.conforms_from_bit_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.conforms_from_bit_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1597,8 +1426,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- for conformance.)
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1607,9 +1436,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1627,17 +1456,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.conforms_from_class_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.conforms_from_class_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1657,8 +1478,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- for conformance.)
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1667,9 +1488,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1687,17 +1508,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1716,8 +1529,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 			-- for conformance.)
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1726,9 +1539,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1746,17 +1559,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.conforms_from_tuple_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.conforms_from_tuple_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1777,8 +1582,8 @@ feature -- Conformance of reference version of types (compatilibity with ISE 5.6
 			-- for conformance.)
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1789,9 +1594,9 @@ feature -- Conformance of reference version of types (compatilibity with ISE 5.6
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1809,17 +1614,9 @@ feature -- Conformance of reference version of types (compatilibity with ISE 5.6
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.reference_conforms_to_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.reference_conforms_to_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1840,8 +1637,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 			-- for conformance.)
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1850,9 +1647,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1870,17 +1667,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.reference_conforms_from_bit_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.reference_conforms_from_bit_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1899,8 +1688,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 			-- for conformance.)
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1909,9 +1698,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1929,17 +1718,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.reference_conforms_from_class_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.reference_conforms_from_class_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -1959,8 +1740,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 			-- for conformance.)
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -1969,9 +1750,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -1989,17 +1770,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.reference_conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.reference_conforms_from_formal_parameter_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved
@@ -2018,8 +1791,8 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 			-- for conformance.)
 		local
 			a_class: ET_CLASS
-			seeded_feature: ET_FEATURE
-			a_query_type: ET_TYPE
+			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 		do
@@ -2028,9 +1801,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					args := seeded_feature.arguments
+				l_feature := a_class.seeded_feature (seed)
+				if l_feature /= Void then
+					args := l_feature.arguments
 					an_index := index
 					if args = Void or else an_index > args.count then
 							-- Internal error: an inconsistency has been
@@ -2048,17 +1821,9 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				end
 			else
 				a_class := a_context.base_class (a_universe)
-				seeded_feature := a_class.seeded_feature (seed)
-				if seeded_feature /= Void then
-					a_query_type := seeded_feature.type
-					if a_query_type /= Void then
-						Result := a_query_type.reference_conforms_from_tuple_type (other, other_context, a_context, a_universe)
-					else
-							-- Internal error: an inconsistency has been
-							-- introduced in the AST since we relsolved
-							-- current anchored type.
-						Result := False
-					end
+				l_query := a_class.seeded_query (seed)
+				if l_query /= Void then
+					Result := l_query.type.reference_conforms_from_tuple_type (other, other_context, a_context, a_universe)
 				else
 						-- Internal error: an inconsistency has been
 						-- introduced in the AST since we relsolved

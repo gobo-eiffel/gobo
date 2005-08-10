@@ -5,7 +5,7 @@ indexing
 		"Eiffel implementation checkers for features and invariants"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -185,23 +185,40 @@ feature {NONE} -- Feature validity
 			-- Check validity of immediate and redeclared features
 			-- of `current_class'.
 		local
-			a_features: ET_FEATURE_LIST
-			a_feature: ET_FEATURE
+			l_queries: ET_QUERY_LIST
+			l_query: ET_QUERY
+			l_procedures: ET_PROCEDURE_LIST
+			l_procedure: ET_PROCEDURE
 			i, nb: INTEGER
 		do
-			a_features := current_class.features
+			l_queries := current_class.queries
 			if flat_mode then
-				nb := a_features.count
+				nb := l_queries.count
 			else
-				nb := current_class.declared_feature_count
+				nb := current_class.declared_query_count
 			end
 			from i := 1 until i > nb loop
-				a_feature := a_features.item (i)
-				feature_checker.check_feature_validity (a_feature, current_class)
+				l_query := l_queries.item (i)
+				feature_checker.check_feature_validity (l_query, current_class)
 				if feature_checker.has_fatal_error then
 					set_fatal_error (current_class)
 				end
-				check_assertions_validity (a_feature, a_feature)
+				check_assertions_validity (l_query, l_query)
+				i := i + 1
+			end
+			l_procedures := current_class.procedures
+			if flat_mode then
+				nb := l_procedures.count
+			else
+				nb := current_class.declared_procedure_count
+			end
+			from i := 1 until i > nb loop
+				l_procedure := l_procedures.item (i)
+				feature_checker.check_feature_validity (l_procedure, current_class)
+				if feature_checker.has_fatal_error then
+					set_fatal_error (current_class)
+				end
+				check_assertions_validity (l_procedure, l_procedure)
 				i := i + 1
 			end
 		end

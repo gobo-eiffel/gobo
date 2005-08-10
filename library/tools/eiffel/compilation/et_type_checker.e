@@ -100,7 +100,7 @@ feature -- Validity checking
 			a_creator: ET_CONSTRAINT_CREATOR
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
-			a_creation_feature: ET_FEATURE
+			a_creation_procedure: ET_PROCEDURE
 			l_class_type: ET_CLASS_TYPE
 			a_formal_type: ET_FORMAL_PARAMETER_TYPE
 			an_index: INTEGER
@@ -160,14 +160,14 @@ feature -- Validity checking
 									from j := 1 until j > nb2 loop
 										a_name := a_creator.feature_name (j)
 										a_seed := a_name.seed
-										a_creation_feature := a_base_class.seeded_feature (a_seed)
-										if a_creation_feature = Void then
+										a_creation_procedure := a_base_class.seeded_procedure (a_seed)
+										if a_creation_procedure = Void then
 												-- Internal error: `a_type' is supposed to be a valid type.
 											set_fatal_error
 											error_handler.report_giabj_error
 										elseif a_formal_type /= Void then
 											if not has_formal_type_error then
-												if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_feature) then
+												if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
 													set_fatal_error
 													a_class_impl := a_current_feature.implementation_class
 													if a_current_class = a_class_impl then
@@ -178,8 +178,8 @@ feature -- Validity checking
 												end
 											end
 										elseif
-											not a_creation_feature.is_creation_exported_to (a_type_class, a_base_class, universe) and then
-											(a_base_class.creators /= Void or else not a_creation_feature.has_seed (universe.default_create_seed))
+											not a_creation_procedure.is_creation_exported_to (a_type_class, a_base_class, universe) and then
+											(a_base_class.creators /= Void or else not a_creation_procedure.has_seed (universe.default_create_seed))
 										then
 											set_fatal_error
 											a_class_impl := a_current_feature.implementation_class
@@ -613,7 +613,8 @@ feature {NONE} -- Validity checking
 		require
 			a_type_not_void: a_type /= Void
 		local
-			a_feature: ET_FEATURE
+			a_query: ET_QUERY
+			a_procedure: ET_PROCEDURE
 			a_constant: ET_INTEGER_CONSTANT
 			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			a_class_impl: ET_CLASS
@@ -625,14 +626,14 @@ feature {NONE} -- Validity checking
 				if not a_class_impl.interface_checked or else a_class_impl.has_interface_error then
 					set_fatal_error
 				else
-					a_feature := a_class_impl.named_feature (a_type.name)
-					if a_feature /= Void then
-						a_constant_attribute ?= a_feature
+					a_query := a_class_impl.named_query (a_type.name)
+					if a_query /= Void then
+						a_constant_attribute ?= a_query
 						if a_constant_attribute /= Void then
 							a_constant ?= a_constant_attribute.constant
 						end
 						if a_constant /= Void then
-							a_type.resolve_identifier_type (a_feature.first_seed, a_constant)
+							a_type.resolve_identifier_type (a_query.first_seed, a_constant)
 							check_bit_type_validity (a_type)
 						else
 								-- VTBT error (ETL2 page 210): The identifier
@@ -647,14 +648,28 @@ feature {NONE} -- Validity checking
 							end
 						end
 					else
-							-- VTBT error (ETL2 page 210): The identifier
-							-- in Bit_type must be the final name of a feature.
-						set_fatal_error
-						if current_class = a_class_impl then
-							error_handler.report_vtbt0b_error (current_class, a_type)
-						else
+						a_procedure := a_class_impl.named_procedure (a_type.name)
+						if a_procedure /= Void then
+								-- VTBT error (ETL2 page 210): The identifier
+								-- in Bit_type must be the final name of a
+								-- constant attribute of type INTEGER.
+							set_fatal_error
+							if current_class = a_class_impl then
+								error_handler.report_vtbt0a_error (current_class, a_type)
+							else
 -- TODO.
-							error_handler.report_vtbt0b_error (a_class_impl, a_type)
+								error_handler.report_vtbt0a_error (a_class_impl, a_type)
+							end
+						else
+								-- VTBT error (ETL2 page 210): The identifier
+								-- in Bit_type must be the final name of a feature.
+							set_fatal_error
+							if current_class = a_class_impl then
+								error_handler.report_vtbt0b_error (current_class, a_type)
+							else
+-- TODO.
+								error_handler.report_vtbt0b_error (a_class_impl, a_type)
+							end
 						end
 					end
 				end
@@ -849,7 +864,7 @@ feature {NONE} -- Validity checking
 		local
 			a_name: ET_FEATURE_NAME
 			a_class_impl: ET_CLASS
-			a_feature: ET_FEATURE
+			a_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
 			an_index: INTEGER
 			an_argument_name: ET_IDENTIFIER
@@ -863,10 +878,10 @@ feature {NONE} -- Validity checking
 				if not a_class_impl.interface_checked or else a_class_impl.has_interface_error then
 					set_fatal_error
 				else
-					a_feature := a_class_impl.named_feature (a_name)
-					if a_feature /= Void then
+					a_query := a_class_impl.named_query (a_name)
+					if a_query /= Void then
 							-- This is a 'like feature'.
-						a_type.resolve_like_feature (a_feature.first_seed)
+						a_type.resolve_like_feature (a_query.first_seed)
 						resolved := True
 					else
 							-- This has to be a 'like argument', otherwise

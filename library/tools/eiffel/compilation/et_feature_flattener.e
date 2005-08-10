@@ -43,6 +43,8 @@ feature {NONE} -- Initialization
 		do
 			precursor (a_universe)
 			create named_features.make_map (400)
+			create queries.make (400)
+			create procedures.make (400)
 			named_features.set_key_equality_tester (feature_name_tester)
 			create aliased_features.make_map (50)
 			aliased_features.set_key_equality_tester (alias_name_tester)
@@ -165,16 +167,24 @@ feature {NONE} -- Processing
 			features_flattened: a_class.features_flattened
 		end
 
-feature {NONE} -- Feature adaptation
-
-	feature_adaptation_resolver: ET_FEATURE_ADAPTATION_RESOLVER
-			-- Feature adaptation resolver
+feature -- Features
 
 	named_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_FEATURE_NAME]
 			-- Features indexed by name
 
 	aliased_features: DS_HASH_TABLE [ET_FLATTENED_FEATURE, ET_ALIAS_NAME]
 			-- Features indexed by alias name
+
+	queries: DS_ARRAYED_LIST [ET_QUERY]
+			-- Queries
+
+	procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
+			-- Procedures
+
+feature {NONE} -- Feature adaptation
+
+	feature_adaptation_resolver: ET_FEATURE_ADAPTATION_RESOLVER
+			-- Feature adaptation resolver
 
 	resolve_feature_adaptations is
 			-- Resolve the feature adaptations of the inheritance clause of
@@ -191,122 +201,210 @@ feature {NONE} -- Feature flattening
 	flatten_features is
 			-- Flatten inherited features into `current_class'.
 		local
-			class_features: ET_FEATURE_LIST
 			a_named_feature: ET_FLATTENED_FEATURE
 			a_feature: ET_FEATURE
 			a_deferred_feature: ET_FLATTENED_FEATURE
 			i, nb: INTEGER
 			a_type: ET_TYPE
-			l_declared_feature_count: INTEGER
 			l_alias_name: ET_ALIAS_NAME
+			l_feature_name: ET_FEATURE_NAME
 			l_other_feature: ET_FLATTENED_FEATURE
 			l_parent_feature: ET_PARENT_FEATURE
 			l_other_parent_feature: ET_PARENT_FEATURE
+			l_queries: ET_QUERY_LIST
+			l_procedures: ET_PROCEDURE_LIST
+			l_declared_query_count: INTEGER
+			l_declared_procedure_count: INTEGER
+			l_query: ET_QUERY
+			l_procedure: ET_PROCEDURE
 		do
 			resolve_feature_adaptations
 			if not current_class.has_flattening_error then
 				nb := named_features.count
-				create class_features.make_with_capacity (nb)
 				from named_features.finish until named_features.before loop
 					a_named_feature := named_features.item_for_iteration
 					flatten_feature (a_named_feature)
-					class_features.put_first (a_named_feature.flattened_feature)
+					a_feature := a_named_feature.flattened_feature
+					l_procedure ?= a_feature
+					if l_procedure /= Void then
+						procedures.force_last (l_procedure)
+					else
+						l_query ?= a_feature
+						if l_query /= Void then
+							queries.force_last (l_query)
+						end
+					end
 					named_features.back
 				end
-				l_declared_feature_count := current_class.declared_feature_count
-				if l_declared_feature_count > nb then
-						-- Internal error: the number of features declared in
+				nb := queries.count
+				create l_queries.make_with_capacity (nb)
+				from i := 1 until i > nb loop
+					l_queries.put_first (queries.item (i))
+					i := i + 1
+				end
+				queries.wipe_out
+				l_declared_query_count := current_class.declared_query_count
+				if l_declared_query_count > nb then
+						-- Internal error: the number of queries declared in
 						-- `current_class' should be less than or equal to the
-						-- total number of features in `curren_class'.
+						-- total number of queries in `curren_class'.
 					set_fatal_error (current_class)
 					error_handler.report_giadp_error
-					l_declared_feature_count := nb
+					l_declared_query_count := nb
 				end
-				current_class.set_features (class_features, l_declared_feature_count)
-				nb := l_declared_feature_count
+				current_class.set_queries (l_queries, l_declared_query_count)
+				nb := procedures.count
+				create l_procedures.make_with_capacity (nb)
 				from i := 1 until i > nb loop
-					a_feature := class_features.item (i)
+					l_procedures.put_first (procedures.item (i))
+					i := i + 1
+				end
+				procedures.wipe_out
+				l_declared_procedure_count := current_class.declared_procedure_count
+				if l_declared_procedure_count > nb then
+						-- Internal error: the number of procedures declared in
+						-- `current_class' should be less than or equal to the
+						-- total number of procedures in `curren_class'.
+					set_fatal_error (current_class)
+					error_handler.report_gibcb_error
+					l_declared_procedure_count := nb
+				end
+				current_class.set_procedures (l_procedures, l_declared_procedure_count)
+				nb := l_declared_query_count
+				from i := 1 until i > nb loop
+					l_query := l_queries.item (i)
 						-- Resolve identifier types and check argument
 						-- names in signature of features written in
 						-- `current_class'. Those features inherited
 						-- without being redeclared in `current_class'
 						-- have already had their signature resolved
 						-- when processing the parents of `current_class'.
-					resolve_identifier_signature (a_feature)
-					if a_feature.is_deferred and then a_feature.is_frozen then
+					resolve_identifier_signature (l_query)
+					if l_query.is_deferred and then l_query.is_frozen then
 							-- A feature cannot be both deferred and frozen.
 						set_fatal_error (current_class)
-						error_handler.report_vffd4a_error (current_class, a_feature)
+						error_handler.report_vffd4a_error (current_class, l_query)
 					end
 						-- Check validity of 'infix "..."', 'prefix "..."'
 						-- and 'alias "..."' names.
-					if a_feature.name.is_prefix then
-						if not a_feature.is_prefixable then
+					l_feature_name := l_query.name
+					if l_feature_name.is_prefix then
+						if not l_query.is_prefixable then
 								-- A feature with a Prefix name should be either
 								-- an attribute or a function with no argument.
 							set_fatal_error (current_class)
-							error_handler.report_vffd5a_error (current_class, a_feature)
+							error_handler.report_vffd5a_error (current_class, l_query)
 						end
-					elseif a_feature.name.is_infix then
-						if not a_feature.is_infixable then
+					elseif l_feature_name.is_infix then
+						if not l_query.is_infixable then
 								-- A feature with a Infix name should be 
 								-- a function with exactly one argument.
 							set_fatal_error (current_class)
-							error_handler.report_vffd6a_error (current_class, a_feature)
+							error_handler.report_vffd6a_error (current_class, l_query)
 						end
 					else
-						l_alias_name := a_feature.alias_name
+						l_alias_name := l_query.alias_name
 						if l_alias_name /= Void then
 							if l_alias_name.is_bracket then
-								if not a_feature.is_bracketable then
+								if not l_query.is_bracketable then
 										-- A feature with a Bracket alias should be 
 										-- a function with one or more argument.
 									set_fatal_error (current_class)
-									error_handler.report_vfav2a_error (current_class, a_feature)
+									error_handler.report_vfav2a_error (current_class, l_query)
 								end
-							elseif a_feature.is_prefixable then
+							elseif l_query.is_prefixable then
 								if l_alias_name.is_prefixable then
 									l_alias_name.set_prefix
 								else
 										-- A feature with a binary Operator alias should be 
 										-- a function with exactly one argument.
 									set_fatal_error (current_class)
-									error_handler.report_vfav1a_error (current_class, a_feature)
+									error_handler.report_vfav1a_error (current_class, l_query)
 								end
-							elseif a_feature.is_infixable then
+							elseif l_query.is_infixable then
 								if l_alias_name.is_infixable then
 									l_alias_name.set_infix
 								else
 										-- A feature with a unary Operator alias should be 
 										-- a query with no argument.
 									set_fatal_error (current_class)
-									error_handler.report_vfav1b_error (current_class, a_feature)
+									error_handler.report_vfav1b_error (current_class, l_query)
 								end
 							elseif l_alias_name.is_infix then
 									-- A feature with a binary Operator alias should be 
 									-- a function with exactly one argument.
 								set_fatal_error (current_class)
-								error_handler.report_vfav1a_error (current_class, a_feature)
+								error_handler.report_vfav1a_error (current_class, l_query)
 							else
 								check is_prefix: l_alias_name.is_prefix end
 									-- A feature with a unary Operator alias should be 
 									-- a query with no argument.
 								set_fatal_error (current_class)
-								error_handler.report_vfav1b_error (current_class, a_feature)
+								error_handler.report_vfav1b_error (current_class, l_query)
 							end
 						end
 					end
-					if a_feature.is_once then
-						a_type := a_feature.type
-						if a_type /= Void then
-								-- The type of a once function should not contain
-								-- a formal generic parameter or an anchored type.
-							if a_type.has_anchored_type (current_class, universe) then
+					if l_query.is_once then
+						a_type := l_query.type
+							-- The type of a once function should not contain
+							-- a formal generic parameter or an anchored type.
+						if a_type.has_anchored_type (current_class, universe) then
+							set_fatal_error (current_class)
+							error_handler.report_vffd7a_error (current_class, l_query)
+						elseif a_type.has_formal_types (current_class, universe) then
+							set_fatal_error (current_class)
+							error_handler.report_vffd7b_error (current_class, l_query)
+						end
+					end
+					i := i + 1
+				end
+				nb := l_declared_procedure_count
+				from i := 1 until i > nb loop
+					l_procedure := l_procedures.item (i)
+						-- Resolve identifier types and check argument
+						-- names in signature of features written in
+						-- `current_class'. Those features inherited
+						-- without being redeclared in `current_class'
+						-- have already had their signature resolved
+						-- when processing the parents of `current_class'.
+					resolve_identifier_signature (l_procedure)
+					if l_procedure.is_deferred and then l_procedure.is_frozen then
+							-- A feature cannot be both deferred and frozen.
+						set_fatal_error (current_class)
+						error_handler.report_vffd4a_error (current_class, l_procedure)
+					end
+						-- Check validity of 'infix "..."', 'prefix "..."'
+						-- and 'alias "..."' names.
+					l_feature_name := l_procedure.name
+					if l_feature_name.is_prefix then
+							-- A feature with a Prefix name should be either
+							-- an attribute or a function with no argument.
+						set_fatal_error (current_class)
+						error_handler.report_vffd5a_error (current_class, l_procedure)
+					elseif l_feature_name.is_infix then
+							-- A feature with a Infix name should be 
+							-- a function with exactly one argument.
+						set_fatal_error (current_class)
+						error_handler.report_vffd6a_error (current_class, l_procedure)
+					else
+						l_alias_name := l_procedure.alias_name
+						if l_alias_name /= Void then
+							if l_alias_name.is_bracket then
+									-- A feature with a Bracket alias should be 
+									-- a function with one or more argument.
 								set_fatal_error (current_class)
-								error_handler.report_vffd7a_error (current_class, a_feature)
-							elseif a_type.has_formal_types (current_class, universe) then
+								error_handler.report_vfav2a_error (current_class, l_procedure)
+							elseif l_alias_name.is_infix then
+									-- A feature with a binary Operator alias should be 
+									-- a function with exactly one argument.
 								set_fatal_error (current_class)
-								error_handler.report_vffd7b_error (current_class, a_feature)
+								error_handler.report_vfav1a_error (current_class, l_procedure)
+							else
+								check is_prefix: l_alias_name.is_prefix end
+									-- A feature with a unary Operator alias should be 
+									-- a query with no argument.
+								set_fatal_error (current_class)
+								error_handler.report_vfav1b_error (current_class, l_procedure)
 							end
 						end
 					end
@@ -1425,6 +1523,10 @@ invariant
 	no_void_named_feature: not named_features.has_item (Void)
 	aliased_features_not_void: aliased_features /= Void
 	no_void_aliased_feature: not aliased_features.has_item (Void)
+	queries_not_void: queries /= Void
+	no_void_query_not_void: not queries.has (Void)
+	procedures_not_void: procedures /= Void
+	no_void_procedure_not_void: not procedures.has (Void)
 	clients_list_not_void: clients_list /= Void
 	not_void_clients: not clients_list.has (Void)
 	client_names_not_void: client_names /= Void

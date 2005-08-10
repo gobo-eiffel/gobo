@@ -144,16 +144,16 @@ feature -- Processing
 			testcases_not_void: testcases /= Void
 		local
 			feature_names: DS_LINKED_LIST [STRING]
-			features: ET_FEATURE_LIST
+			l_procedures: ET_PROCEDURE_LIST
 			i, nb: INTEGER
 			an_identifier: ET_IDENTIFIER
 			a_name: STRING
 		do
 			create feature_names.make
-			features := a_class.features
-			nb := features.count
+			l_procedures := a_class.procedures
+			nb := l_procedures.count
 			from i := 1 until i > nb loop
-				an_identifier ?= features.item (i).name
+				an_identifier ?= l_procedures.item (i).name
 				if an_identifier /= Void then
 					a_name := an_identifier.name
 					if feature_regexp.recognizes (a_name) then

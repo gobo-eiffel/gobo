@@ -284,6 +284,8 @@ create
 	make_gvkfe1a,
 	make_gvkfe2a,
 	make_gvkfe3a,
+	make_gvkfe4a,
+	make_gvkfe5a,
 	make_gvtcg5a,
 	make_gvtcg5b,
 	make_gvuaa0a,
@@ -8757,6 +8759,7 @@ feature {NONE} -- Initialization
 			a_cursor: DS_LIST_CURSOR [ET_LIKE_IDENTIFIER]
 			a_like: ET_LIKE_IDENTIFIER
 			a_feature: ET_FEATURE
+			a_query: ET_QUERY
 			a_string: STRING
 		do
 			code := vtat2a_template_code
@@ -8824,9 +8827,9 @@ feature {NONE} -- Initialization
 					a_string.append_string (a_like.name.name)
 				else
 						-- Take care of possible renaming.
-					a_feature := current_class.seeded_feature (a_like.seed)
-					if a_feature /= Void then
-						a_string.append_string (a_feature.name.name)
+					a_query := current_class.seeded_query (a_like.seed)
+					if a_query /= Void then
+						a_string.append_string (a_query.name.name)
 					else
 						a_string.append_string (a_like.name.name)
 					end
@@ -8841,9 +8844,9 @@ feature {NONE} -- Initialization
 					a_string.append_string (a_like.name.name)
 				else
 						-- Take care of possible renaming.
-					a_feature := current_class.seeded_feature (a_like.seed)
-					if a_feature /= Void then
-						a_string.append_string (a_feature.name.name)
+					a_query := current_class.seeded_query (a_like.seed)
+					if a_query /= Void then
+						a_string.append_string (a_query.name.name)
 					else
 						a_string.append_string (a_like.name.name)
 					end
@@ -12030,6 +12033,86 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = feature name
 		end
 
+	make_gvkfe4a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new GVKFE-4 error: feature `a_feature' in kernel
+			-- class `a_class' is not a procedure.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_procedure: not a_feature.is_procedure
+		do
+			code := gvkfe4a_template_code
+			etl_code := gvkfe4_etl_code
+			default_template := gvkfe4a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_class.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
+	make_gvkfe5a (a_class: like current_class; a_feature: ET_FEATURE) is
+			-- Create a new GVKFE-5 error: feature `a_feature' in kernel
+			-- class `a_class' is not a query.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_procedure: not a_feature.is_procedure
+		do
+			code := gvkfe5a_template_code
+			etl_code := gvkfe5_etl_code
+			default_template := gvkfe5a_default_template
+			current_class := a_class
+			class_impl := a_class
+			position := a_class.name.position
+			create parameters.make (1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (a_feature.name.name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = feature name
+		end
+
 	make_gvtcg5a (a_class: like current_class; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
 			-- Create a new GVTCG-5 error: actual generic paramater `an_actual' in
 			-- `a_class' is not a reference type but the corresponding formal parameter
@@ -12578,6 +12661,8 @@ feature {NONE} -- Implementation
 	gvkfe1a_default_template: STRING is "[$1] class $5: feature `$6' is missing in kernel class $5."
 	gvkfe2a_default_template: STRING is "[$1] class $5: feature `$6' in kernel class $5 is not an attribute."
 	gvkfe3a_default_template: STRING is "[$1] class $5: attribute `$6' in kernel class $5 has not the expected type '$7'."
+	gvkfe4a_default_template: STRING is "[$1] class $5: feature `$6' in kernel class $5 is not a procedure."
+	gvkfe5a_default_template: STRING is "[$1] class $5: feature `$6' in kernel class $5 is not a query."
 	gvtcg5a_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' is not a reference type but the corresponding formal parameter is marked as reference."
 	gvtcg5b_default_template: STRING is "[$1] class $5 ($3,$4): actual generic parameter '$6' is not expanded type but the corresponding formal parameter is marked as expanded."
 	gvuaa0a_default_template: STRING is "[$1] class $5 ($3,$4): `$6' is a formal argument of feature `$7' and hence cannot have actual arguments."
@@ -12702,6 +12787,8 @@ feature {NONE} -- Implementation
 	gvkfe1_etl_code: STRING is "GVKFE-1"
 	gvkfe2_etl_code: STRING is "GVKFE-2"
 	gvkfe3_etl_code: STRING is "GVKFE-3"
+	gvkfe4_etl_code: STRING is "GVKFE-4"
+	gvkfe5_etl_code: STRING is "GVKFE-5"
 	gvtcg5_etl_code: STRING is "GVTCG-5"
 	gvuaa_etl_code: STRING is "GVUAA"
 	gvual_etl_code: STRING is "GVUAL"
@@ -12972,6 +13059,8 @@ feature {NONE} -- Implementation
 	gvkfe1a_template_code: STRING is "gvkfe1a"
 	gvkfe2a_template_code: STRING is "gvkfe2a"
 	gvkfe3a_template_code: STRING is "gvkfe3a"
+	gvkfe4a_template_code: STRING is "gvkfe4a"
+	gvkfe5a_template_code: STRING is "gvkfe5a"
 	gvtcg5a_template_code: STRING is "gvtcg5a"
 	gvtcg5b_template_code: STRING is "gvtcg5b"
 	gvuaa0a_template_code: STRING is "gvuaa0a"

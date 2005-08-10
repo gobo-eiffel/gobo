@@ -1305,38 +1305,124 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_features (a_class: ET_CLASS) is
-			-- Process features of `a_class'.
+			-- Process feature clauses of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 		local
 			a_feature_clauses: ET_FEATURE_CLAUSE_LIST
 			a_feature_clause: ET_FEATURE_CLAUSE
-			a_features: ET_FEATURE_LIST
+			l_queries: ET_QUERY_LIST
+			l_query: ET_QUERY
+			l_procedures: ET_PROCEDURE_LIST
+			l_procedure: ET_PROCEDURE
 			i, nb: INTEGER
-			j, nb2: INTEGER
+			j, nb_queries: INTEGER
+			k, nb_procedures: INTEGER
 		do
 			a_feature_clauses := a_class.feature_clauses
 			if a_feature_clauses /= Void then
-				a_features := a_class.features
 				j := 1
-				nb2 := a_features.count
+				l_queries := a_class.queries
+				nb_queries := l_queries.count
+				if nb_queries > 0 then
+					l_query := l_queries.first
+				end
+				k := 1
+				l_procedures := a_class.procedures
+				nb_procedures := l_procedures.count
+				if nb_procedures > 0 then
+					l_procedure := l_procedures.first
+				end
 				nb := a_feature_clauses.count
 				from i := 1 until i > nb loop
 					a_feature_clause := a_feature_clauses.item (i)
 					a_feature_clause.process (Current)
 					from
 					until
-						j > nb2 or else
-						a_features.item (j).feature_clause /= a_feature_clause
+						(l_query = Void or else l_query.feature_clause /= a_feature_clause) and
+						(l_procedure = Void or else l_procedure.feature_clause /= a_feature_clause)
 					loop
-						a_features.item (j).process (Current)
-						from
-						until
-							a_features.item (j).synonym = Void
-						loop
-							j := j + 1
+						if l_query /= Void and then l_query.feature_clause = a_feature_clause then
+							if l_procedure /= Void and then l_procedure.feature_clause = a_feature_clause then
+								if l_query.name.position < l_procedure.name.position then
+									l_query.process (Current)
+									from
+									until
+										l_query = Void or else l_query.synonym = Void
+									loop
+										j := j + 1
+										if j <= nb_queries then
+											l_query := l_queries.item (j)
+										else
+											l_query := Void
+										end
+									end
+									j := j + 1
+									if j <= nb_queries then
+										l_query := l_queries.item (j)
+									else
+										l_query := Void
+									end
+								else
+									l_procedure.process (Current)
+									from
+									until
+										l_procedure = Void or else l_procedure.synonym = Void
+									loop
+										k := k + 1
+										if k <= nb_procedures then
+											l_procedure := l_procedures.item (k)
+										else
+											l_procedure := Void
+										end
+									end
+									k := k + 1
+									if k <= nb_procedures then
+										l_procedure := l_procedures.item (k)
+									else
+										l_procedure := Void
+									end
+								end
+							else
+								l_query.process (Current)
+								from
+								until
+									l_query = Void or else l_query.synonym = Void
+								loop
+									j := j + 1
+									if j <= nb_queries then
+										l_query := l_queries.item (j)
+									else
+										l_query := Void
+									end
+								end
+								j := j + 1
+								if j <= nb_queries then
+									l_query := l_queries.item (j)
+								else
+									l_query := Void
+								end
+							end
+						else
+							l_procedure.process (Current)
+							from
+							until
+								l_procedure = Void or else l_procedure.synonym = Void
+							loop
+								k := k + 1
+								if k <= nb_procedures then
+									l_procedure := l_procedures.item (k)
+								else
+									l_procedure := Void
+								end
+							end
+							k := k + 1
+							if k <= nb_procedures then
+								l_procedure := l_procedures.item (k)
+							else
+								l_procedure := Void
+							end
 						end
-						j := j + 1
 					end
 					i := i + 1
 				end

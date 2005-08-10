@@ -147,7 +147,6 @@ create
 %type <ET_EXPRESSION_ITEM> Expression_comma
 %type <ET_EXTENDED_FEATURE_NAME> Extended_feature_name
 %type <ET_EXTERNAL_ALIAS> External_name_opt
-%type <ET_FEATURE> Feature_declaration Single_feature_declaration
 %type <ET_FEATURE_CLAUSE> Feature_clause Feature_clause_header
 %type <ET_FEATURE_CLAUSE_LIST> Features Features_opt Feature_clause_list
 %type <ET_FEATURE_EXPORT> Export_feature_name_list
@@ -190,6 +189,8 @@ create
 %type <ET_PARENT_LIST> Inheritance_opt Inheritance_end Parent_list Parent_list_end
 %type <ET_POSTCONDITIONS> Postcondition_opt
 %type <ET_PRECONDITIONS> Precondition_opt
+%type <ET_PROCEDURE> Procedure_declaration Single_procedure_declaration
+%type <ET_QUERY> Query_declaration Single_query_declaration
 %type <ET_REAL_CONSTANT> Real_constant Typed_real_constant Untyped_real_constant Signed_real_constant
 %type <ET_RENAME_ITEM> Rename Rename_comma
 %type <ET_RENAME_LIST> Rename_clause Rename_list
@@ -1537,81 +1538,94 @@ Feature_clause_header: E_FEATURE Clients
 		}
 	;
 
-Feature_declaration_list: Feature_declaration
-	| Feature_declaration_list Feature_declaration
+Feature_declaration_list: Query_declaration
+	| Procedure_declaration
+	| Feature_declaration_list Query_declaration
+	| Feature_declaration_list Procedure_declaration
 	;
 
 --------------------------------------------------------------------------------
 
-Feature_declaration: Single_feature_declaration
+Query_declaration: Single_query_declaration
 		{
 			$$ := $1
-			register_feature ($$)
+			register_query ($$)
 		}
-	| E_FROZEN Single_feature_declaration
+	| E_FROZEN Single_query_declaration
 		{
 			$$ := $2
 			$$.set_frozen_keyword ($1)
-			register_feature ($$)
+			register_query ($$)
 		}
-	| Extended_feature_name ',' Feature_declaration
+	| Extended_feature_name ',' Query_declaration
 		{
-			$$ := new_synonym_feature (ast_factory.new_extended_feature_name_comma ($1, $2), $3)
-			register_synonym ($$)
+			$$ := new_query_synonym (ast_factory.new_extended_feature_name_comma ($1, $2), $3)
+			register_query_synonym ($$)
 		}
-	| Extended_feature_name Feature_declaration
+	| Extended_feature_name Query_declaration
 			-- TODO: Syntax error
 		{
-			$$ := new_synonym_feature ($1, $2)
-			register_synonym ($$)
+			$$ := new_query_synonym ($1, $2)
+			register_query_synonym ($$)
 		}
-	| E_FROZEN Extended_feature_name ',' Feature_declaration
+	| E_FROZEN Extended_feature_name ',' Query_declaration
 		{
-			$$ := new_synonym_feature (ast_factory.new_extended_feature_name_comma ($2, $3), $4)
+			$$ := new_query_synonym (ast_factory.new_extended_feature_name_comma ($2, $3), $4)
 			$$.set_frozen_keyword ($1)
-			register_synonym ($$)
+			register_query_synonym ($$)
 		}
-	| E_FROZEN Extended_feature_name Feature_declaration
+	| E_FROZEN Extended_feature_name Query_declaration
 			-- TODO: Syntax error
 		{
-			$$ := new_synonym_feature ($2, $3)
+			$$ := new_query_synonym ($2, $3)
 			$$.set_frozen_keyword ($1)
-			register_synonym ($$)
+			register_query_synonym ($$)
 		}
 	;
 
-Single_feature_declaration: Extended_feature_name ':' Type Assigner_opt Semicolon_opt
+Procedure_declaration: Single_procedure_declaration
+		{
+			$$ := $1
+			register_procedure ($$)
+		}
+	| E_FROZEN Single_procedure_declaration
+		{
+			$$ := $2
+			$$.set_frozen_keyword ($1)
+			register_procedure ($$)
+		}
+	| Extended_feature_name ',' Procedure_declaration
+		{
+			$$ := new_procedure_synonym (ast_factory.new_extended_feature_name_comma ($1, $2), $3)
+			register_procedure_synonym ($$)
+		}
+	| Extended_feature_name Procedure_declaration
+			-- TODO: Syntax error
+		{
+			$$ := new_procedure_synonym ($1, $2)
+			register_procedure_synonym ($$)
+		}
+	| E_FROZEN Extended_feature_name ',' Procedure_declaration
+		{
+			$$ := new_procedure_synonym (ast_factory.new_extended_feature_name_comma ($2, $3), $4)
+			$$.set_frozen_keyword ($1)
+			register_procedure_synonym ($$)
+		}
+	| E_FROZEN Extended_feature_name Procedure_declaration
+			-- TODO: Syntax error
+		{
+			$$ := new_procedure_synonym ($2, $3)
+			$$.set_frozen_keyword ($1)
+			register_procedure_synonym ($$)
+		}
+	;
+
+Single_query_declaration: Extended_feature_name ':' Type Assigner_opt Semicolon_opt
 		{ $$ := ast_factory.new_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt E_IS Manifest_constant Semicolon_opt
 		{ $$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt E_IS E_UNIQUE Semicolon_opt
 		{ $$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
-	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
-		{ $$ := ast_factory.new_do_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
-	Obsolete_opt Precondition_opt Local_declarations_opt
-	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
-		{ $$ := ast_factory.new_do_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
-	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
-		{ $$ := ast_factory.new_once_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
-	Obsolete_opt Precondition_opt Local_declarations_opt
-	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
-		{ $$ := ast_factory.new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
-		{ $$ := ast_factory.new_deferred_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
-	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
-		{ $$ := ast_factory.new_deferred_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
-	External_name_opt Postcondition_opt E_END Semicolon_opt
-		{ $$ := new_external_procedure ($1, Void, $2, $3, $4, $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
-	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
-	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
-	External_name_opt Postcondition_opt E_END Semicolon_opt
-		{ $$ := new_external_procedure ($1, $2, $3, $4, $5, $6, ast_factory.new_external_language ($7, $8), $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
@@ -1638,6 +1652,34 @@ Single_feature_declaration: Extended_feature_name ':' Type Assigner_opt Semicolo
 	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{ $$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, ast_factory.new_external_language ($10, $11), $12, $13, $14, $15, last_clients, last_feature_clause, last_class) }
+	;
+
+Single_procedure_declaration: Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{ $$ := ast_factory.new_do_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
+	Obsolete_opt Precondition_opt Local_declarations_opt
+	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{ $$ := ast_factory.new_do_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
+	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{ $$ := ast_factory.new_once_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
+	Obsolete_opt Precondition_opt Local_declarations_opt
+	Once_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
+		{ $$ := ast_factory.new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
+		{ $$ := ast_factory.new_deferred_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
+	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
+		{ $$ := ast_factory.new_deferred_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name E_IS Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
+	External_name_opt Postcondition_opt E_END Semicolon_opt
+		{ $$ := new_external_procedure ($1, Void, $2, $3, $4, $5, ast_factory.new_external_language ($6, $7), $8, $9, $10, $11, last_clients, last_feature_clause, last_class) }
+	| Extended_feature_name Formal_arguments E_IS Indexing_clause_opt
+	Obsolete_opt Precondition_opt E_EXTERNAL Manifest_string
+	External_name_opt Postcondition_opt E_END Semicolon_opt
+		{ $$ := new_external_procedure ($1, $2, $3, $4, $5, $6, ast_factory.new_external_language ($7, $8), $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
 	;
 
 Semicolon_opt: -- Empty

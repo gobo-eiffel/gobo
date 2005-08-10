@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -38,7 +38,8 @@ feature {NONE} -- Initialization
 		do
 			base_type := a_type
 			base_class := a_class
-			features := empty_features
+			queries := empty_features
+			procedures := empty_features
 			if is_expanded then
 				set_alive
 			end
@@ -140,8 +141,11 @@ feature -- Access
 	base_class: ET_CLASS
 			-- Base class
 
-	features: ET_DYNAMIC_FEATURE_LIST
-			-- Features executed at run-time, if any
+	queries: ET_DYNAMIC_FEATURE_LIST
+			-- Queries executed at run-time, if any
+
+	procedures: ET_DYNAMIC_FEATURE_LIST
+			-- Procedures executed at run-time, if any
 
 	static_type: ET_DYNAMIC_TYPE is
 			-- Type at compilation time
@@ -166,14 +170,14 @@ feature -- Access
 			no_source: Result = Void
 		end
 
-	id: INTEGER
-			-- ID
-
 	hash_code: INTEGER is
 			-- Hash code
 		do
 			Result := base_class.hash_code
 		end
+
+	id: INTEGER
+			-- ID
 
 feature -- Setting
 
@@ -191,21 +195,42 @@ feature -- Features
 			-- Run-time feature associated with `a_feature'
 		require
 			a_feature_not_void: a_feature /= Void
-			valid_feature: base_class.features.has (a_feature)
+--			valid_feature: base_class.queries.has (a_feature) or base_class.procedures.has (a_feature)
+			a_system_not_void: a_system /= Void
+		local
+			l_query: ET_QUERY
+			l_procedure: ET_PROCEDURE
+		do
+			l_query ?= a_feature
+			if l_query /= Void then
+				Result := dynamic_query (l_query, a_system)
+			else
+				l_procedure ?= a_feature
+				if l_procedure /= Void then
+					Result := dynamic_procedure (l_procedure, a_system)
+				end
+			end
+		end
+
+	dynamic_query (a_query: ET_QUERY; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time query associated with `a_query'
+		require
+			a_query_not_void: a_query /= Void
+			valid_query: base_class.queries.has (a_query)
 			a_system_not_void: a_system /= Void
 		local
 			i, nb: INTEGER
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
-			if features = empty_features then
-				create features.make_with_capacity (base_class.features.count)
-				Result := new_dynamic_feature (a_feature, a_system)
-				features.put_last (Result)
+			if queries = empty_features then
+				create queries.make_with_capacity (base_class.queries.count)
+				Result := new_dynamic_query (a_query, a_system)
+				queries.put_last (Result)
 			else
-				nb := features.count
+				nb := queries.count
 				from i := 1 until i > nb loop
-					l_dynamic_feature := features.item (i)
-					if l_dynamic_feature.static_feature = a_feature then
+					l_dynamic_feature := queries.item (i)
+					if l_dynamic_feature.static_feature = a_query then
 						Result := l_dynamic_feature
 						i := nb + 1 -- Jump out of the loop.
 					else
@@ -213,47 +238,119 @@ feature -- Features
 					end
 				end
 				if Result = Void then
-					Result := new_dynamic_feature (a_feature, a_system)
-					features.force_last (Result)
+					Result := new_dynamic_query (a_query, a_system)
+					queries.force_last (Result)
 				end
 			end
 		ensure
-			dynamic_feature_not_void: Result /= Void
+			dynamic_query_not_void: Result /= Void
 		end
 
-	seeded_dynamic_feature (a_seed: INTEGER; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
-			-- Run-time feature with seed `a_seed';
-			-- Void if no such feature
+	dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time procedure associated with `a_procedure'
+		require
+			a_feature_not_void: a_procedure /= Void
+			valid_procedure: base_class.procedures.has (a_procedure)
+			a_system_not_void: a_system /= Void
+		local
+			i, nb: INTEGER
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+		do
+			if procedures = empty_features then
+				create procedures.make_with_capacity (base_class.procedures.count)
+				Result := new_dynamic_procedure (a_procedure, a_system)
+				procedures.put_last (Result)
+			else
+				nb := procedures.count
+				from i := 1 until i > nb loop
+					l_dynamic_feature := procedures.item (i)
+					if l_dynamic_feature.static_feature = a_procedure then
+						Result := l_dynamic_feature
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+				if Result = Void then
+					Result := new_dynamic_procedure (a_procedure, a_system)
+					procedures.force_last (Result)
+				end
+			end
+		ensure
+			dynamic_procedure_not_void: Result /= Void
+		end
+
+	seeded_dynamic_query (a_seed: INTEGER; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time query with seed `a_seed';
+			-- Void if no such query
 		require
 			a_system_not_void: a_system /= Void
 		local
 			i, nb: INTEGER
-			l_feature: ET_FEATURE
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_query: ET_QUERY
+			l_dynamic_query: ET_DYNAMIC_FEATURE
 		do
-			if features = empty_features then
-				l_feature := base_class.seeded_feature (a_seed)
-				if l_feature /= Void then
-					create features.make_with_capacity (base_class.features.count)
-					Result := new_dynamic_feature (l_feature, a_system)
-					features.put_last (Result)
+			if queries = empty_features then
+				l_query := base_class.seeded_query (a_seed)
+				if l_query /= Void then
+					create queries.make_with_capacity (base_class.queries.count)
+					Result := new_dynamic_query (l_query, a_system)
+					queries.put_last (Result)
 				end
 			else
-				nb := features.count
+				nb := queries.count
 				from i := 1 until i > nb loop
-					l_dynamic_feature := features.item (i)
-					if l_dynamic_feature.static_feature.has_seed (a_seed) then
-						Result := l_dynamic_feature
+					l_dynamic_query := queries.item (i)
+					if l_dynamic_query.static_feature.has_seed (a_seed) then
+						Result := l_dynamic_query
 						i := nb + 1 -- Jump out of the loop.
 					else
 						i := i + 1
 					end
 				end
 				if Result = Void then
-					l_feature := base_class.seeded_feature (a_seed)
-					if l_feature /= Void then
-						Result := new_dynamic_feature (l_feature, a_system)
-						features.force_last (Result)
+					l_query := base_class.seeded_query (a_seed)
+					if l_query /= Void then
+						Result := new_dynamic_query (l_query, a_system)
+						queries.force_last (Result)
+					end
+				end
+			end
+		end
+
+	seeded_dynamic_procedure (a_seed: INTEGER; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time procedure with seed `a_seed';
+			-- Void if no such procedure
+		require
+			a_system_not_void: a_system /= Void
+		local
+			i, nb: INTEGER
+			l_procedure: ET_PROCEDURE
+			l_dynamic_procedure: ET_DYNAMIC_FEATURE
+		do
+			if procedures = empty_features then
+				l_procedure := base_class.seeded_procedure (a_seed)
+				if l_procedure /= Void then
+					create procedures.make_with_capacity (base_class.procedures.count)
+					Result := new_dynamic_procedure (l_procedure, a_system)
+					procedures.put_last (Result)
+				end
+			else
+				nb := procedures.count
+				from i := 1 until i > nb loop
+					l_dynamic_procedure := procedures.item (i)
+					if l_dynamic_procedure.static_feature.has_seed (a_seed) then
+						Result := l_dynamic_procedure
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+				if Result = Void then
+					l_procedure := base_class.seeded_procedure (a_seed)
+					if l_procedure /= Void then
+						Result := new_dynamic_procedure (l_procedure, a_system)
+						procedures.force_last (Result)
 					end
 				end
 			end
@@ -320,21 +417,34 @@ feature -- Link
 
 feature {NONE} -- Implementation
 
-	new_dynamic_feature (a_feature: ET_FEATURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
-			-- Run-time feature associated with `a_feature';
+	new_dynamic_query (a_query: ET_QUERY; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time query associated with `a_query';
 			-- Create a new object at each call.
 		require
-			a_feature_not_void: a_feature /= Void
-			valid_feature: base_class.features.has (a_feature)
+			a_query_not_void: a_query /= Void
+			valid_query: base_class.queries.has (a_query)
 			a_system_not_void: a_system /= Void
 		do
-			create Result.make (a_feature, Current, a_system)
+			create Result.make (a_query, Current, a_system)
 		ensure
-			new_dynamic_feature_not_void: Result /= Void
+			new_dynamic_query_not_void: Result /= Void
+		end
+
+	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time procedure associated with `a_procedure';
+			-- Create a new object at each call.
+		require
+			a_procedure_not_void: a_procedure /= Void
+			valid_procedure: base_class.procedures.has (a_procedure)
+			a_system_not_void: a_system /= Void
+		do
+			create Result.make (a_procedure, Current, a_system)
+		ensure
+			new_dynamic_procedure_not_void: Result /= Void
 		end
 
 	empty_features: ET_DYNAMIC_FEATURE_LIST is
-			-- 	Empty feature list
+			-- Empty feature list
 		once
 			create Result.make
 		ensure
@@ -347,6 +457,7 @@ invariant
 	base_type_not_void: base_type /= Void
 	base_type_base_type: base_type.is_base_type
 	base_class_not_void: base_class /= Void
-	features_not_void: features /= Void
+	queries_not_void: queries /= Void
+	procedures_not_void: procedures /= Void
 
 end

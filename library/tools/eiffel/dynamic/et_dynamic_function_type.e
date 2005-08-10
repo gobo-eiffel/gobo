@@ -5,7 +5,7 @@ indexing
 		"Eiffel dynamic FUNCTION types at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ inherit
 		rename
 			make as make_type
 		redefine
-			new_dynamic_feature
+			new_dynamic_query, new_dynamic_procedure
 		end
 
 	ET_SHARED_TOKEN_CONSTANTS
@@ -56,19 +56,16 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	new_dynamic_feature (a_feature: ET_FEATURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
-			-- Run-time feature associated with `a_feature';
+	new_dynamic_query (a_query: ET_QUERY; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time query associated with `a_query';
 			-- Create a new object at each call.
 		local
 			l_name: ET_FEATURE_NAME
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 		do
-			Result := precursor (a_feature, a_system)
-			l_name := a_feature.name
-			if l_name.same_feature_name (tokens.call_feature_name) then
-				Result.set_builtin_code (tokens.builtin_routine_call)
-				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
-			elseif l_name.same_feature_name (tokens.item_feature_name) then
+			Result := precursor (a_query, a_system)
+			l_name := a_query.name
+			if l_name.same_feature_name (tokens.item_feature_name) then
 				Result.set_builtin_code (tokens.builtin_function_item)
 				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 				l_result_type_set := Result.result_type_set
@@ -80,6 +77,20 @@ feature {NONE} -- Implementation
 				if l_result_type_set /= Void and then l_result_type_set.static_type = result_type_set.static_type then
 					Result.set_result_type_set (result_type_set)
 				end
+			end
+		end
+
+	new_dynamic_procedure (a_procedure: ET_PROCEDURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time procedure associated with `a_procedure';
+			-- Create a new object at each call.
+		local
+			l_name: ET_FEATURE_NAME
+		do
+			Result := precursor (a_procedure, a_system)
+			l_name := a_procedure.name
+			if l_name.same_feature_name (tokens.call_feature_name) then
+				Result.set_builtin_code (tokens.builtin_routine_call)
+				a_system.dynamic_type_set_builder.build_agent_call (Current, Result)
 			end
 		end
 

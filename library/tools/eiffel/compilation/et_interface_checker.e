@@ -165,7 +165,8 @@ feature {NONE} -- Constraint creation validity
 			a_creator: ET_CONSTRAINT_CREATOR
 			a_name, other_name: ET_FEATURE_NAME
 			a_base_type: ET_BASE_TYPE
-			a_feature: ET_FEATURE
+			a_procedure: ET_PROCEDURE
+			a_query: ET_QUERY
 			a_class: ET_CLASS
 			i, j, nb: INTEGER
 		do
@@ -200,22 +201,23 @@ feature {NONE} -- Constraint creation validity
 							end
 							j := j + 1
 						end
-						a_feature := a_class.named_feature (a_name)
-						if a_feature /= Void then
-							if a_feature.is_procedure then
-									-- We finally got a valid creation
-									-- procedure. Record its seed.
-								a_name.set_seed (a_feature.first_seed)
-							else
+						a_procedure := a_class.named_procedure (a_name)
+						if a_procedure /= Void then
+								-- We finally got a valid creation
+								-- procedure. Record its seed.
+							a_name.set_seed (a_procedure.first_seed)
+						else
+							a_query := a_class.named_query (a_name)
+							if a_query /= Void then
 									-- This feature is not a procedure.
 								set_fatal_error (current_class)
-								error_handler.report_vtgc0b_error (current_class, a_name, a_feature, a_class)
+								error_handler.report_vtgc0b_error (current_class, a_name, a_query, a_class)
+							else
+									-- This name is not the final name of
+									-- a feature on `current_class'.
+								set_fatal_error (current_class)
+								error_handler.report_vtgc0a_error (current_class, a_name, a_class)
 							end
-						else
-								-- This name is not the final name of
-								-- a feature on `current_class'.
-							set_fatal_error (current_class)
-							error_handler.report_vtgc0a_error (current_class, a_name, a_class)
 						end
 						i := i + 1
 					end

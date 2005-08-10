@@ -78,7 +78,8 @@ feature {NONE} -- Initialization
 			create last_keywords.make (Initial_last_keywords_capacity)
 			create last_symbols.make (Initial_last_symbols_capacity)
 			create assertions.make (Initial_assertions_capacity)
-			create features.make (Initial_features_capacity)
+			create queries.make (Initial_queries_capacity)
+			create procedures.make (Initial_procedures_capacity)
 			create constraints.make (Initial_constraints_capacity)
 			create providers.make (Initial_providers_capacity)
 			make_eiffel_scanner_with_factory ("unknown file", a_universe, a_factory, an_error_handler)
@@ -102,7 +103,8 @@ feature -- Initialization
 			last_symbols.wipe_out
 			providers.wipe_out
 			assertions.wipe_out
-			features.wipe_out
+			queries.wipe_out
+			procedures.wipe_out
 			constraints.wipe_out
 			last_class := Void
 			last_clients := Void
@@ -530,13 +532,13 @@ feature -- AST processing
 
 feature {NONE} -- Basic operations
 
-	register_feature (a_feature: ET_FEATURE) is
-			-- Register `a_feature' in `last_class'.
+	register_query (a_query: ET_QUERY) is
+			-- Register `a_query' in `last_class'.
 		do
-			if a_feature /= Void then
-				universe.register_feature (a_feature)
-				features.force_last (a_feature)
-				features.finish
+			if a_query /= Void then
+				universe.register_feature (a_query)
+				queries.force_last (a_query)
+				queries.finish
 			end
 				-- Reset local variables and formal arguments
 				-- before reading the next feature.
@@ -544,16 +546,43 @@ feature {NONE} -- Basic operations
 			last_formal_arguments := Void
 		end
 
-	register_synonym (a_feature: ET_FEATURE) is
-			-- Register `a_feature' in `last_class'.
+	register_query_synonym (a_query: ET_QUERY) is
+			-- Register `a_query' in `last_class'.
 		do
-			if a_feature /= Void then
-				universe.register_feature (a_feature)
-				if features.before then
-					features.forth
+			if a_query /= Void then
+				universe.register_feature (a_query)
+				if queries.before then
+					queries.forth
 				end
-				features.force_left (a_feature)
-				features.back
+				queries.force_left (a_query)
+				queries.back
+			end
+		end
+
+	register_procedure (a_procedure: ET_PROCEDURE) is
+			-- Register `a_procedure' in `last_class'.
+		do
+			if a_procedure /= Void then
+				universe.register_feature (a_procedure)
+				procedures.force_last (a_procedure)
+				procedures.finish
+			end
+				-- Reset local variables and formal arguments
+				-- before reading the next feature.
+			last_local_variables := Void
+			last_formal_arguments := Void
+		end
+
+	register_procedure_synonym (a_procedure: ET_PROCEDURE) is
+			-- Register `a_procedure' in `last_class'.
+		do
+			if a_procedure /= Void then
+				universe.register_feature (a_procedure)
+				if procedures.before then
+					procedures.forth
+				end
+				procedures.force_left (a_procedure)
+				procedures.back
 			end
 		end
 
@@ -620,20 +649,29 @@ feature {NONE} -- Basic operations
 			-- Set features of `last_class'.
 		local
 			a_class: like last_class
-			class_features: ET_FEATURE_LIST
+			l_queries: ET_QUERY_LIST
+			l_procedures: ET_PROCEDURE_LIST
 			i, nb: INTEGER
 		do
 			a_class := last_class
 			if a_class /= Void then
-				nb := features.count
-				create class_features.make_with_capacity (nb)
+				nb := queries.count
+				create l_queries.make_with_capacity (nb)
 				from i := nb until i < 1 loop
-					class_features.put_first (features.item (i))
+					l_queries.put_first (queries.item (i))
 					i := i - 1
 				end
-				a_class.set_features (class_features, nb)
+				a_class.set_queries (l_queries, nb)
+				nb := procedures.count
+				create l_procedures.make_with_capacity (nb)
+				from i := nb until i < 1 loop
+					l_procedures.put_first (procedures.item (i))
+					i := i - 1
+				end
+				a_class.set_procedures (l_procedures, nb)
 			end
-			features.wipe_out
+			queries.wipe_out
+			procedures.wipe_out
 		end
 
 	set_class_providers is
@@ -662,7 +700,8 @@ feature {NONE} -- Basic operations
 		a_second_indexing: ET_INDEXING_LIST; an_end: ET_KEYWORD) is
 			-- Set various elements to `a_class'.
 		local
-			a_feature: ET_FEATURE
+			l_query: ET_QUERY
+			l_procedure: ET_PROCEDURE
 		do
 			if a_class /= Void then
 				a_class.set_obsolete_message (an_obsolete)
@@ -676,56 +715,106 @@ feature {NONE} -- Basic operations
 					a_class.set_end_keyword (an_end)
 				end
 				if a_class = universe.general_class then
-					a_feature := a_class.named_feature (tokens.default_create_feature_name)
-					if a_feature /= Void then
-						universe.set_default_create_seed (a_feature.first_seed)
+					l_procedure := a_class.named_procedure (tokens.default_create_feature_name)
+					if l_procedure /= Void then
+						universe.set_default_create_seed (l_procedure.first_seed)
 					else
-						set_fatal_error (a_class)
-						error_handler.report_gvkfe1a_error (a_class, tokens.default_create_feature_name)
-						universe.set_default_create_seed (0)
-					end
-					a_feature := a_class.named_feature (tokens.copy_feature_name)
-					if a_feature /= Void then
-						universe.set_copy_seed (a_feature.first_seed)
-					else
-						set_fatal_error (a_class)
-						error_handler.report_gvkfe1a_error (a_class, tokens.copy_feature_name)
-						universe.set_copy_seed (0)
-					end
-					if not universe.use_void_keyword then
-						a_feature := a_class.named_feature (tokens.void_feature_name)
-						if a_feature /= Void then
-							universe.set_void_seed (a_feature.first_seed)
+						l_query := a_class.named_query (tokens.default_create_feature_name)
+						if l_query /= Void then
+							set_fatal_error (a_class)
+							error_handler.report_gvkfe4a_error (a_class, l_query)
+							universe.set_default_create_seed (0)
 						else
 							set_fatal_error (a_class)
-							error_handler.report_gvkfe1a_error (a_class, tokens.void_feature_name)
-							universe.set_void_seed (0)
+							error_handler.report_gvkfe1a_error (a_class, tokens.default_create_feature_name)
+							universe.set_default_create_seed (0)
+						end
+					end
+					l_procedure := a_class.named_procedure (tokens.copy_feature_name)
+					if l_procedure /= Void then
+						universe.set_copy_seed (l_procedure.first_seed)
+					else
+						l_query := a_class.named_query (tokens.copy_feature_name)
+						if l_query /= Void then
+							set_fatal_error (a_class)
+							error_handler.report_gvkfe4a_error (a_class, l_query)
+							universe.set_copy_seed (0)
+						else
+							set_fatal_error (a_class)
+							error_handler.report_gvkfe1a_error (a_class, tokens.copy_feature_name)
+							universe.set_copy_seed (0)
+						end
+					end
+					if not universe.use_void_keyword then
+						l_query := a_class.named_query (tokens.void_feature_name)
+						if l_query /= Void then
+							universe.set_void_seed (l_query.first_seed)
+						else
+							l_procedure := a_class.named_procedure (tokens.void_feature_name)
+							if l_procedure /= Void then
+								set_fatal_error (a_class)
+								error_handler.report_gvkfe5a_error (a_class, l_procedure)
+								universe.set_void_seed (0)
+							else
+								set_fatal_error (a_class)
+								error_handler.report_gvkfe1a_error (a_class, tokens.void_feature_name)
+								universe.set_void_seed (0)
+							end
 						end
 					end
 				elseif a_class = universe.any_class then
-					a_feature := a_class.named_feature (tokens.default_create_feature_name)
-					if a_feature /= Void then
-						universe.set_default_create_seed (a_feature.first_seed)
-					elseif a_parents = Void or else a_parents.is_empty then
-							-- If there is a parent class then the feature can be defined
-							-- in class GENERAL.
-						universe.set_default_create_seed (0)
+					l_procedure := a_class.named_procedure (tokens.default_create_feature_name)
+					if l_procedure /= Void then
+						universe.set_default_create_seed (l_procedure.first_seed)
+					else
+						l_query := a_class.named_query (tokens.default_create_feature_name)
+						if l_query /= Void then
+							set_fatal_error (a_class)
+							error_handler.report_gvkfe4a_error (a_class, l_query)
+							universe.set_default_create_seed (0)
+						elseif a_parents = Void or else a_parents.is_empty then
+								-- If there is a parent class then the feature can be defined
+								-- in class GENERAL.
+							set_fatal_error (a_class)
+							error_handler.report_gvkfe1a_error (a_class, tokens.default_create_feature_name)
+							universe.set_default_create_seed (0)
+						end
 					end
-					a_feature := a_class.named_feature (tokens.copy_feature_name)
-					if a_feature /= Void then
-						universe.set_copy_seed (a_feature.first_seed)
-					elseif a_parents = Void or else a_parents.is_empty then
-							-- If there is a parent class then the feature can be defined
-							-- in class GENERAL.
-						universe.set_copy_seed (0)
+					l_procedure := a_class.named_procedure (tokens.copy_feature_name)
+					if l_procedure /= Void then
+						universe.set_copy_seed (l_procedure.first_seed)
+					else
+						l_query := a_class.named_query (tokens.copy_feature_name)
+						if l_query /= Void then
+							set_fatal_error (a_class)
+							error_handler.report_gvkfe4a_error (a_class, l_query)
+							universe.set_copy_seed (0)
+						elseif a_parents = Void or else a_parents.is_empty then
+								-- If there is a parent class then the feature can be defined
+								-- in class GENERAL.
+							set_fatal_error (a_class)
+							error_handler.report_gvkfe1a_error (a_class, tokens.copy_feature_name)
+							universe.set_copy_seed (0)
+						end
 					end
-					a_feature := a_class.named_feature (tokens.void_feature_name)
-					if a_feature /= Void then
-						universe.set_void_seed (a_feature.first_seed)
-					elseif a_parents = Void or else a_parents.is_empty then
-							-- If there is a parent class then the feature can be defined
-							-- in class GENERAL.
-						universe.set_void_seed (0)
+					if not universe.use_void_keyword then
+						l_query := a_class.named_query (tokens.void_feature_name)
+						if l_query /= Void then
+							universe.set_void_seed (l_query.first_seed)
+						else
+							l_procedure := a_class.named_procedure (tokens.void_feature_name)
+							if l_procedure /= Void then
+								set_fatal_error (a_class)
+								error_handler.report_gvkfe5a_error (a_class, l_procedure)
+								universe.set_void_seed (0)
+							elseif a_parents = Void or else a_parents.is_empty then
+									-- If there is a parent class then the feature can be defined
+									-- in class GENERAL.
+								set_fatal_error (a_class)
+								error_handler.report_gvkfe1a_error (a_class, tokens.void_feature_name)
+								universe.set_void_seed (0)
+							end
+						end
 					end
 				end
 			end
@@ -1447,7 +1536,8 @@ feature {NONE} -- AST factory
 						current_class := Result
 						error_handler.report_compilation_status (Current, current_class)
 						current_class := old_class
-						features.wipe_out
+						queries.wipe_out
+						procedures.wipe_out
 						overriding_class_added := True
 					end
 				elseif not Result.is_override then
@@ -1481,7 +1571,8 @@ feature {NONE} -- AST factory
 					current_class := Result
 					error_handler.report_compilation_status (Current, current_class)
 					current_class := old_class
-					features.wipe_out
+					queries.wipe_out
+					procedures.wipe_out
 				end
 			else
 				Result.set_filename (filename)
@@ -1494,30 +1585,42 @@ feature {NONE} -- AST factory
 				current_class := Result
 				error_handler.report_compilation_status (Current, current_class)
 				current_class := old_class
-				features.wipe_out
+				queries.wipe_out
+				procedures.wipe_out
 			end
 		end
 
-	new_synonym_feature (a_name: ET_EXTENDED_FEATURE_NAME; a_feature: ET_FEATURE): ET_FEATURE is
-			-- New synomym for feature `a_feature'
+	new_query_synonym (a_name: ET_EXTENDED_FEATURE_NAME; a_query: ET_QUERY): ET_QUERY is
+			-- New synomym for feature `a_query'
 		require
 			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
+			a_query_not_void: a_query /= Void
 		local
-			l_external_procedure: ET_EXTERNAL_PROCEDURE
 			l_external_function: ET_EXTERNAL_FUNCTION
 		do
-			Result := a_feature.new_synonym (a_name)
+			Result := a_query.new_synonym (a_name)
 			l_external_function ?= Result
 			if l_external_function /= Void then
 				if l_external_function.is_builtin then
 					set_builtin_function (l_external_function)
 				end
-			else
-				l_external_procedure ?= Result
-				if l_external_procedure /= Void and then l_external_procedure.is_builtin then
-					set_builtin_procedure (l_external_procedure)
-				end
+			end
+		ensure
+			synonym_not_void: Result /= Void
+		end
+
+	new_procedure_synonym (a_name: ET_EXTENDED_FEATURE_NAME; a_procedure: ET_PROCEDURE): ET_PROCEDURE is
+			-- New synomym for feature `a_procedure'
+		require
+			a_name_not_void: a_name /= Void
+			a_procedure_not_void: a_procedure /= Void
+		local
+			l_external_procedure: ET_EXTERNAL_PROCEDURE
+		do
+			Result := a_procedure.new_synonym (a_name)
+			l_external_procedure ?= Result
+			if l_external_procedure /= Void and then l_external_procedure.is_builtin then
+				set_builtin_procedure (l_external_procedure)
 			end
 		ensure
 			synonym_not_void: Result /= Void
@@ -2492,11 +2595,17 @@ feature {NONE} -- Constants
 	Initial_assertions_capacity: INTEGER is 20
 			-- Initial capacity for `assertions'
 
-	features: DS_ARRAYED_LIST [ET_FEATURE]
-			-- List of features currently being parsed
+	queries: DS_ARRAYED_LIST [ET_QUERY]
+			-- List of queries currently being parsed
 
-	Initial_features_capacity: INTEGER is 100
-			-- Initial capacity for `features'
+	Initial_queries_capacity: INTEGER is 100
+			-- Initial capacity for `queries'
+
+	procedures: DS_ARRAYED_LIST [ET_PROCEDURE]
+			-- List of procedures currently being parsed
+
+	Initial_procedures_capacity: INTEGER is 100
+			-- Initial capacity for `procedures'
 
 	constraints: DS_ARRAYED_LIST [ET_CONSTRAINT_TYPE]
 			-- List of generic constraints currently being parsed
@@ -2547,9 +2656,12 @@ invariant
 	last_symbols_not_void: last_symbols /= Void
 	assertions_not_void: assertions /= Void
 	no_void_assertion: not assertions.has (Void)
-	features_not_void: features /= Void
-	no_void_feature: not features.has (Void)
-	-- features_registered: forall f in features, f.is_registered
+	queries_not_void: queries /= Void
+	no_void_query: not queries.has (Void)
+	-- queries_registered: forall f in queries, f.is_registered
+	procedures_not_void: procedures /= Void
+	no_void_procedure: not procedures.has (Void)
+	-- procedures_registered: forall f in procedures, f.is_registered
 	constraints_not_void: constraints /= Void
 	providers_not_void: providers /= Void
 	no_void_provider: not providers.has (Void)

@@ -5,7 +5,7 @@ indexing
 		"Eiffel feature adaptation resolvers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -121,27 +121,45 @@ feature {NONE} -- Feature recording
 			a_features_not_void: a_features /= Void
 			no_void_feature: not a_features.has_item (Void)
 		local
-			a_feature: ET_FEATURE
+			l_query: ET_QUERY
+			l_queries: ET_QUERY_LIST
+			l_procedure: ET_PROCEDURE
+			l_procedures: ET_PROCEDURE_LIST
 			other_feature: ET_FLATTENED_FEATURE
 			a_name: ET_FEATURE_NAME
-			class_features: ET_FEATURE_LIST
-			i, nb: INTEGER
+			i, nb, nb2: INTEGER
 		do
-			class_features := current_class.features
-			nb := current_class.declared_feature_count
-			if a_features.capacity < nb then
-				a_features.resize (nb)
+			l_queries := current_class.queries
+			nb := current_class.declared_query_count
+			nb2 := nb + current_class.declared_procedure_count
+			if a_features.capacity < nb2 then
+				a_features.resize (nb2)
 			end
 			from i := 1 until i > nb loop
-				a_feature := class_features.item (i)
-				a_name := a_feature.name
+				l_query := l_queries.item (i)
+				a_name := l_query.name
 				a_features.search (a_name)
 				if a_features.found then
 					set_fatal_error
 					other_feature := a_features.found_item
-					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, a_feature)
+					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, l_query)
 				else
-					a_features.put_last (a_feature, a_name)
+					a_features.put_last (l_query, a_name)
+				end
+				i := i + 1
+			end
+			l_procedures := current_class.procedures
+			nb := nb2 - nb
+			from i := 1 until i > nb loop
+				l_procedure := l_procedures.item (i)
+				a_name := l_procedure.name
+				a_features.search (a_name)
+				if a_features.found then
+					set_fatal_error
+					other_feature := a_features.found_item
+					error_handler.report_vmfn0a_error (current_class, other_feature.flattened_feature, l_procedure)
+				else
+					a_features.put_last (l_procedure, a_name)
 				end
 				i := i + 1
 			end
@@ -168,8 +186,10 @@ feature {NONE} -- Feature recording
 			nb_redefine: INTEGER
 			nb_undefine: INTEGER
 			nb_select: INTEGER
-			class_features: ET_FEATURE_LIST
-			a_feature: ET_FEATURE
+			l_queries: ET_QUERY_LIST
+			l_query: ET_QUERY
+			l_procedures: ET_PROCEDURE_LIST
+			l_procedure: ET_PROCEDURE
 			a_named_feature: ET_FLATTENED_FEATURE
 			a_redeclared_feature: ET_REDECLARED_FEATURE
 			an_inherited_feature: ET_INHERITED_FEATURE
@@ -202,16 +222,88 @@ feature {NONE} -- Feature recording
 				has_select := nb_select > 0
 			end
 			a_class := a_parent.type.direct_base_class (universe)
-			class_features := a_class.features
-			nb := class_features.count + a_features.count
+			l_queries := a_class.queries
+			nb := l_queries.count + a_class.procedures.count + a_features.count
 			if a_features.capacity < nb then
 				a_features.resize (nb)
 			end
-			nb := class_features.count
+			nb := l_queries.count
 			from i := 1 until i > nb loop
-				a_feature := class_features.item (i)
-				a_parent_feature := new_parent_feature (a_feature, a_parent)
-				a_name := a_feature.name
+				l_query := l_queries.item (i)
+				a_parent_feature := new_parent_feature (l_query, a_parent)
+				a_name := l_query.name
+				if has_rename then
+					rename_table.search (a_name)
+					if rename_table.found then
+						a_rename := rename_table.found_item
+						rename_table.remove_found_item
+						has_rename := not rename_table.is_empty
+						a_parent_feature.set_new_name (a_rename)
+						a_name := a_rename.new_name.feature_name
+					end
+				end
+				if has_export then
+					export_table.search (a_name)
+					if export_table.found then
+						export_table.remove_found_item
+						has_export := not export_table.is_empty
+					end
+				end
+				if has_undefine then
+					undefine_table.search (a_name)
+					if undefine_table.found then
+						a_parent_feature.set_undefine_name (undefine_table.found_key)
+						if not undefine_table.found_item then
+							undefine_table.replace_found_item (True)
+							nb_undefine := nb_undefine - 1
+						end
+					end
+				end
+				if has_redefine then
+					redefine_table.search (a_name)
+					if redefine_table.found then
+						a_parent_feature.set_redefine_name (redefine_table.found_key)
+						if not redefine_table.found_item then
+							redefine_table.replace_found_item (True)
+							nb_redefine := nb_redefine - 1
+						end
+					end
+				end
+				if has_select then
+					select_table.search (a_name)
+					if select_table.found then
+						a_parent_feature.set_select_name (select_table.found_key)
+						if not select_table.found_item then
+							select_table.replace_found_item (True)
+							nb_select := nb_select - 1
+						end
+					end
+				end
+				a_features.search (a_name)
+				if a_features.found then
+					a_named_feature := a_features.found_item
+					if a_named_feature.is_immediate then
+						a_redeclared_feature := new_redeclared_feature (a_named_feature.immediate_feature, a_parent_feature)
+						a_features.replace_found_item (a_redeclared_feature)
+					elseif a_named_feature.is_redeclared then
+						a_redeclared_feature := a_named_feature.redeclared_feature
+						a_redeclared_feature.put_parent_feature (a_parent_feature)
+					elseif a_named_feature.is_inherited then
+						an_inherited_feature := a_named_feature.inherited_feature
+						an_inherited_feature.put_parent_feature (a_parent_feature)
+					end
+				else
+					an_inherited_feature := new_inherited_feature (a_parent_feature)
+					a_features.put_last (an_inherited_feature, a_name)
+				end
+				i := i + 1
+			end
+			l_procedures := a_class.procedures
+			nb := l_procedures.count
+			from i := 1 until i > nb loop
+				l_procedure := l_procedures.item (i)
+				a_parent_feature := new_parent_feature (l_procedure, a_parent)
+				a_name := l_procedure.name
 				if has_rename then
 					rename_table.search (a_name)
 					if rename_table.found then

@@ -5,7 +5,7 @@ indexing
 		"Eiffel lists of features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,14 +22,14 @@ create
 
 feature -- Access
 
-	named_feature (a_name: ET_CALL_NAME): ET_FEATURE is
+	named_feature (a_name: ET_CALL_NAME): like item is
 			-- Feature named `a_name';
 			-- Void if no such feature
 		require
 			a_name_not_void: a_name /= Void
 		local
 			i: INTEGER
-			a_feature: ET_FEATURE
+			a_feature: like item
 			an_id: ET_IDENTIFIER
 			a_hash_code: INTEGER
 			an_alias_name: ET_ALIAS_NAME
@@ -66,12 +66,12 @@ feature -- Access
 			end
 		end
 
-	seeded_feature (a_seed: INTEGER): ET_FEATURE is
+	seeded_feature (a_seed: INTEGER): like item is
 			-- Feature with seed `a_seed';
 			-- Void if no such feature
 		local
 			i, nb: INTEGER
-			a_feature: ET_FEATURE
+			a_feature: like item
 		do
 			nb := count - 1
 			from i := 0 until i > nb loop

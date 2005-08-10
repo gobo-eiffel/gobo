@@ -1737,13 +1737,22 @@ feature -- Ancestors
 
 feature -- Features
 
-	empty_features: ET_FEATURE_LIST is
-			-- Shared empty features
+	empty_queries: ET_QUERY_LIST is
+			-- Shared empty queries
 		once
 			create Result.make_with_capacity (0)
 		ensure
-			features_not_void: Result /= Void
-			features_empty: Result.is_empty
+			queries_not_void: Result /= Void
+			queries_empty: Result.is_empty
+		end
+
+	empty_procedures: ET_PROCEDURE_LIST is
+			-- Shared empty procedures
+		once
+			create Result.make_with_capacity (0)
+		ensure
+			procedures_not_void: Result /= Void
+			procedures_empty: Result.is_empty
 		end
 
 feature -- Clients

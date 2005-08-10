@@ -15,6 +15,7 @@ deferred class ET_POSITION
 inherit
 
 	ANY
+	KL_PART_COMPARABLE
 	KL_IMPORTED_STRING_ROUTINES
 	KL_IMPORTED_INTEGER_ROUTINES
 
@@ -44,6 +45,18 @@ feature -- Status report
 			Result := (line = no_line)
 		ensure
 			definition: Result = (line = no_line)
+		end
+
+feature -- Comparison
+
+	infix "<" (other: ET_POSITION): BOOLEAN is
+			-- Is current position less than `other'?
+		do
+			if line < other.line then
+				Result := True
+			elseif line = other.line then
+				Result := column < other.column
+			end
 		end
 
 feature -- Constants

@@ -24,7 +24,6 @@ inherit
 			report_catcall_error,
 			report_assignment,
 			report_assignment_attempt,
-			report_convert_function,
 			report_creation_expression,
 			report_creation_instruction,
 			report_manifest_array,
@@ -87,7 +86,50 @@ feature -- Generation
 				nb := l_dynamic_types.count
 				from i := 1 until i > nb loop
 					l_type := l_dynamic_types.item (i)
-					l_features := l_type.features
+						-- Process dynamic queries.
+					l_features := l_type.queries
+					nb2 := l_features.count
+					from j := 1 until j > nb2 loop
+						l_feature := l_features.item (j)
+						if not l_feature.is_built then
+							is_built := False
+							build_feature_dynamic_type_sets (l_feature, l_type)
+								-- `build_feature_dynamic_type_sets' may have
+								-- added other features to the list.
+							nb2 := l_features.count
+							l_precursor := l_feature.first_precursor
+							if l_precursor /= Void then
+								if not l_precursor.is_built then
+									is_built := False
+									build_feature_dynamic_type_sets (l_precursor, l_type)
+										-- `build_feature_dynamic_type_sets' may have
+										-- added other features to the list.
+									nb2 := l_features.count
+								end
+								l_other_precursors := l_feature.other_precursors
+								if l_other_precursors /= Void then
+									nb3 := l_other_precursors.count
+									from k := 1 until k > nb3 loop
+										l_precursor := l_other_precursors.item (k)
+										if not l_precursor.is_built then
+											is_built := False
+											build_feature_dynamic_type_sets (l_precursor, l_type)
+												-- `build_feature_dynamic_type_sets' may have
+												-- added other precursors to the list.
+											nb3 := l_other_precursors.count
+												-- `build_feature_dynamic_type_sets' may have
+												-- added other features to the list.
+											nb2 := l_features.count
+										end
+										k := k + 1
+									end
+								end
+							end
+						end
+						j := j + 1
+					end
+						-- Process dynamic procedures.
+					l_features := l_type.procedures
 					nb2 := l_features.count
 					from j := 1 until j > nb2 loop
 						l_feature := l_features.item (j)
@@ -278,63 +320,26 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_convert_function (an_expression: ET_CONVERT_TO_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
-			-- Report that a convert function call expression has been processed.
-		local
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
-			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_target: ET_EXPRESSION
-			l_type: ET_TYPE
-		do
-			if current_type = current_dynamic_type.base_type then
-				l_target := an_expression.expression
-				l_target_type_set := dynamic_type_set (l_target)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type set of the
-						-- target should be known at this stage.
-					set_fatal_error
-					error_handler.report_gibeh_error
-				else
-					create l_dynamic_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_qualified_calls.force_last (l_dynamic_call)
-					l_type := a_feature.type
-					if l_type = Void then
-							-- Internal error: the result type set of a query cannot be void.
-						set_fatal_error
-						error_handler.report_gibei_error
-					else
-						l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
-						l_result_type_set := new_dynamic_type_set (l_dynamic_type)
-						l_dynamic_call.set_result_type_set (l_result_type_set)
-						set_dynamic_type_set (l_result_type_set, an_expression)
-						l_target_type_set.put_target (l_dynamic_call, current_system)
-					end
-				end
-			end
-		end
-
 	report_creation_expression (an_expression: ET_EXPRESSION; a_creation_type: ET_NAMED_TYPE;
-		a_procedure: ET_FEATURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
+		a_procedure: ET_PROCEDURE; an_actuals: ET_ACTUAL_ARGUMENTS) is
 			-- Report that a creation expression has been processed.
 		local
 			i, nb: INTEGER
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_procedure: ET_DYNAMIC_FEATURE
+			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_creation_type := current_system.dynamic_type (a_creation_type, current_type)
-				l_procedure := l_dynamic_creation_type.dynamic_feature (a_procedure, current_system)
-				l_procedure.set_creation (True)
+				l_dynamic_procedure := l_dynamic_creation_type.dynamic_procedure (a_procedure, current_system)
+				l_dynamic_procedure.set_creation (True)
 				l_dynamic_creation_type.set_alive
 				if an_actuals /= Void then
 						-- Dynamic type sets for arguments are stored first
 						-- in `dynamic_type_sets'.
-					l_argument_type_sets := l_procedure.dynamic_type_sets
+					l_argument_type_sets := l_dynamic_procedure.dynamic_type_sets
 					nb := an_actuals.count
 					if nb = 0 then
 						-- Do nothing.
@@ -363,13 +368,13 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_NAMED_TYPE; a_procedure: ET_FEATURE) is
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_NAMED_TYPE; a_procedure: ET_PROCEDURE) is
 			-- Report that a creation instruction has been processed.
 		local
 			i, nb: INTEGER
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_procedure: ET_DYNAMIC_FEATURE
+			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
@@ -377,14 +382,14 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_creation_type := current_system.dynamic_type (a_creation_type, current_type)
-				l_procedure := l_dynamic_creation_type.dynamic_feature (a_procedure, current_system)
-				l_procedure.set_creation (True)
+				l_dynamic_procedure := l_dynamic_creation_type.dynamic_procedure (a_procedure, current_system)
+				l_dynamic_procedure.set_creation (True)
 				l_dynamic_creation_type.set_alive
 				l_actuals := an_instruction.arguments
 				if l_actuals /= Void then
 						-- Dynamic type sets for arguments are stored first
 						-- in `dynamic_type_sets'.
-					l_argument_type_sets := l_procedure.dynamic_type_sets
+					l_argument_type_sets := l_dynamic_procedure.dynamic_type_sets
 					nb := l_actuals.count
 					if nb = 0 then
 						-- Do nothing.
@@ -427,7 +432,7 @@ feature {NONE} -- Event handling
 		local
 			l_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
-			l_features: ET_DYNAMIC_FEATURE_LIST
+			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_area_type_set: ET_DYNAMIC_TYPE_SET
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
@@ -440,12 +445,12 @@ feature {NONE} -- Event handling
 				set_dynamic_type_set (l_type, an_expression)
 					-- Make sure that type SPECIAL[XXX] (used in feature 'area') is marked as alive.
 					-- Feature 'area' should be the first in the list of features.
-				l_features := l_type.features
-				if l_features.is_empty then
+				l_queries := l_type.queries
+				if l_queries.is_empty then
 						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 					set_fatal_error
 				else
-					l_area_type_set := l_features.item (1).result_type_set
+					l_area_type_set := l_queries.item (1).result_type_set
 					if l_area_type_set = Void then
 							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 						set_fatal_error
@@ -527,27 +532,27 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
+	report_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION; a_parent_type: ET_BASE_TYPE; a_query: ET_QUERY) is
 			-- Report that a precursor expression has been processed.
 			-- `a_parent_type' is viewed in the context of `current_type'
-			-- and `a_feature' is the precursor feature.
+			-- and `a_query' is the precursor feature.
 		local
 			i, nb: INTEGER
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_parent_type: ET_DYNAMIC_TYPE
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_query: ET_DYNAMIC_FEATURE
+			l_precursor: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_parent_type := current_system.dynamic_type (a_parent_type, current_type)
-				l_query := current_dynamic_feature.dynamic_precursor (a_feature, l_parent_type, current_system)
+				l_precursor := current_dynamic_feature.dynamic_precursor (a_query, l_parent_type, current_system)
 				l_actuals := an_expression.arguments
 				if l_actuals /= Void then
 						-- Dynamic type sets for arguments are stored first
 						-- in `dynamic_type_sets'.
-					l_argument_type_sets := l_query.dynamic_type_sets
+					l_argument_type_sets := l_precursor.dynamic_type_sets
 					nb := l_actuals.count
 					if nb = 0 then
 						-- Do nothing.
@@ -572,7 +577,7 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
-				l_dynamic_type_set := l_query.result_type_set
+				l_dynamic_type_set := l_precursor.result_type_set
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
@@ -583,27 +588,27 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_precursor_instruction (an_instruction: ET_PRECURSOR; a_parent_type: ET_BASE_TYPE; a_feature: ET_FEATURE) is
+	report_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION; a_parent_type: ET_BASE_TYPE; a_procedure: ET_PROCEDURE) is
 			-- Report that a precursor instruction has been processed.
 			-- `a_parent_type' is viewed in the context of `current_type'
-			-- and `a_feature' is the precursor feature.
+			-- and `a_procedure' is the precursor feature.
 		local
 			i, nb: INTEGER
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_parent_type: ET_DYNAMIC_TYPE
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_procedure: ET_DYNAMIC_FEATURE
+			l_precursor: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_parent_type := current_system.dynamic_type (a_parent_type, current_type)
-				l_procedure := current_dynamic_feature.dynamic_precursor (a_feature, l_parent_type, current_system)
+				l_precursor := current_dynamic_feature.dynamic_precursor (a_procedure, l_parent_type, current_system)
 				l_actuals := an_instruction.arguments
 				if l_actuals /= Void then
 						-- Dynamic type sets for arguments are stored first
 						-- in `dynamic_type_sets'.
-					l_argument_type_sets := l_procedure.dynamic_type_sets
+					l_argument_type_sets := l_precursor.dynamic_type_sets
 					nb := l_actuals.count
 					if nb = 0 then
 						-- Do nothing.
@@ -735,7 +740,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
+	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
 			-- Report that a qualified call expression has been processed.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
@@ -756,23 +761,17 @@ feature {NONE} -- Event handling
 				else
 					create l_dynamic_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
 					dynamic_qualified_calls.force_last (l_dynamic_call)
-					l_type := a_feature.type
-					if l_type = Void then
-							-- Internal error: the result type set of a query cannot be void.
-						set_fatal_error
-						error_handler.report_gibey_error
-					else
-						l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
-						l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
-						l_dynamic_call.set_result_type_set (l_dynamic_type_set)
-						set_dynamic_type_set (l_dynamic_type_set, an_expression)
-						l_target_type_set.put_target (l_dynamic_call, current_system)
-					end
+					l_type := a_query.type
+					l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
+					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+					l_dynamic_call.set_result_type_set (l_dynamic_type_set)
+					set_dynamic_type_set (l_dynamic_type_set, an_expression)
+					l_target_type_set.put_target (l_dynamic_call, current_system)
 				end
 			end
 		end
 
-	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_feature: ET_FEATURE) is
+	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
 			-- Report that a qualified call instruction has been processed.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
@@ -795,27 +794,27 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_feature: ET_FEATURE) is
+	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY) is
 			-- Report that a static call expression has been processed.
 		local
 			i, nb: INTEGER
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_query: ET_DYNAMIC_FEATURE
+			l_dynamic_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_system.dynamic_type (a_type, current_type)
-				l_query := l_dynamic_type.dynamic_feature (a_feature, current_system)
-				l_query.set_static (True)
+				l_dynamic_query := l_dynamic_type.dynamic_query (a_query, current_system)
+				l_dynamic_query.set_static (True)
 				l_dynamic_type.set_static (True)
 				l_actuals := an_expression.arguments
 				if l_actuals /= Void then
 						-- Dynamic type sets for arguments are stored first
 						-- in `dynamic_type_sets'.
-					l_argument_type_sets := l_query.dynamic_type_sets
+					l_argument_type_sets := l_dynamic_query.dynamic_type_sets
 					nb := l_actuals.count
 					if nb = 0 then
 						-- Do nothing.
@@ -840,7 +839,7 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
-				l_dynamic_type_set := l_query.result_type_set
+				l_dynamic_type_set := l_dynamic_query.result_type_set
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
@@ -851,27 +850,27 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_feature: ET_FEATURE) is
+	report_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION; a_type: ET_TYPE; a_procedure: ET_PROCEDURE) is
 			-- Report that a static call instruction has been processed.
 		local
 			i, nb: INTEGER
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_procedure: ET_DYNAMIC_FEATURE
+			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_system.dynamic_type (a_type, current_type)
-				l_procedure := l_dynamic_type.dynamic_feature (a_feature, current_system)
-				l_procedure.set_static (True)
+				l_dynamic_procedure := l_dynamic_type.dynamic_procedure (a_procedure, current_system)
+				l_dynamic_procedure.set_static (True)
 				l_dynamic_type.set_static (True)
 				l_actuals := an_instruction.arguments
 				if l_actuals /= Void then
 						-- Dynamic type sets for arguments are stored first
 						-- in `dynamic_type_sets'.
-					l_argument_type_sets := l_procedure.dynamic_type_sets
+					l_argument_type_sets := l_dynamic_procedure.dynamic_type_sets
 					nb := l_actuals.count
 					if nb = 0 then
 						-- Do nothing.
@@ -903,7 +902,7 @@ feature {NONE} -- Event handling
 			-- Report that a string has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
-			l_features: ET_DYNAMIC_FEATURE_LIST
+			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_area_type_set: ET_DYNAMIC_TYPE_SET
 			l_special_type: ET_DYNAMIC_TYPE
 		do
@@ -922,12 +921,12 @@ feature {NONE} -- Event handling
 					-- Feature 'area' should be the first in the list of features.
 				l_special_type := current_system.special_character_type
 				l_special_type.set_alive
-				l_features := l_type.features
-				if l_features.is_empty then
+				l_queries := l_type.queries
+				if l_queries.is_empty then
 						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 					set_fatal_error
 				else
-					l_area_type_set := l_features.item (1).result_type_set
+					l_area_type_set := l_queries.item (1).result_type_set
 					if l_area_type_set = Void then
 							-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 						set_fatal_error
@@ -1095,12 +1094,12 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_feature: ET_FEATURE) is
+	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY) is
 			-- Report that an unqualified call expression has been processed.
 		local
 			i, nb: INTEGER
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_query: ET_DYNAMIC_FEATURE
+			l_dynamic_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
@@ -1109,13 +1108,13 @@ feature {NONE} -- Event handling
 			l_manifest_tuple: ET_MANIFEST_TUPLE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_query := current_dynamic_type.dynamic_feature (a_feature, current_system)
-				l_query.set_regular (True)
+				l_dynamic_query := current_dynamic_type.dynamic_query (a_query, current_system)
+				l_dynamic_query.set_regular (True)
 				l_actuals := an_expression.arguments
 				if l_actuals /= Void then
 						-- Dynamic type sets for arguments are stored first
 						-- in `dynamic_type_sets'.
-					l_argument_type_sets := l_query.dynamic_type_sets
+					l_argument_type_sets := l_dynamic_query.dynamic_type_sets
 					nb := l_actuals.count
 					if nb = 0 then
 						-- Do nothing.
@@ -1124,7 +1123,7 @@ feature {NONE} -- Event handling
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
 						error_handler.report_gibfg_error
-					elseif l_query.is_builtin_function_item and then current_dynamic_type.is_agent_type then
+					elseif l_dynamic_query.is_builtin_function_item and then current_dynamic_type.is_agent_type then
 							-- This is something of the form:  'item ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.
@@ -1193,7 +1192,7 @@ feature {NONE} -- Event handling
 						end
 					end
 				end
-				l_dynamic_type_set := l_query.result_type_set
+				l_dynamic_type_set := l_dynamic_query.result_type_set
 				if l_dynamic_type_set = Void then
 						-- Internal error: the result type set of a query cannot be void.
 					set_fatal_error
@@ -1204,12 +1203,12 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_feature: ET_FEATURE) is
+	report_unqualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_procedure: ET_PROCEDURE) is
 			-- Report that an unqualified call instruction has been processed.
 		local
 			i, nb: INTEGER
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_procedure: ET_DYNAMIC_FEATURE
+			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 			l_actuals: ET_ACTUAL_ARGUMENTS
 			l_actual: ET_EXPRESSION
@@ -1218,13 +1217,13 @@ feature {NONE} -- Event handling
 			l_manifest_tuple: ET_MANIFEST_TUPLE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_procedure := current_dynamic_type.dynamic_feature (a_feature, current_system)
-				l_procedure.set_regular (True)
+				l_dynamic_procedure := current_dynamic_type.dynamic_procedure (a_procedure, current_system)
+				l_dynamic_procedure.set_regular (True)
 				l_actuals := an_instruction.arguments
 				if l_actuals /= Void then
 						-- Dynamic type sets for arguments are stored first
 						-- in `dynamic_type_sets'.
-					l_argument_type_sets := l_procedure.dynamic_type_sets
+					l_argument_type_sets := l_dynamic_procedure.dynamic_type_sets
 					nb := l_actuals.count
 					if nb = 0 then
 						-- Do nothing.
@@ -1233,7 +1232,7 @@ feature {NONE} -- Event handling
 							-- that there was the same number of actual and formal arguments.
 						set_fatal_error
 						error_handler.report_gibfj_error
-					elseif l_procedure.is_builtin_routine_call and then current_dynamic_type.is_agent_type then
+					elseif l_dynamic_procedure.is_builtin_routine_call and then current_dynamic_type.is_agent_type then
 							-- This is something of the form:  'call ([...])'
 							-- Try to get the open operand type sets directly from the
 							-- argument if it is a manifest tuple.
@@ -1311,8 +1310,7 @@ feature {NONE} -- Built-in features
 			-- Report that built-in feature 'ANY.twin' is being analyzed.
 		local
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			l_copy_feature: ET_FEATURE
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_copy_feature: ET_DYNAMIC_FEATURE
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
@@ -1327,7 +1325,7 @@ feature {NONE} -- Built-in features
 				else
 					current_dynamic_type.put_target (l_result_type_set, current_system)
 						-- Feature `copy' is called internally.
-					l_copy_feature := current_class.seeded_feature (universe.copy_seed)
+					l_copy_feature := current_dynamic_type.seeded_dynamic_procedure (universe.copy_seed, current_system)
 					if l_copy_feature = Void then
 							-- Internal error: all classes should have a feature
 							-- 'copy'. Otherwise we get an error when parsing
@@ -1335,9 +1333,8 @@ feature {NONE} -- Built-in features
 						set_fatal_error
 						error_handler.report_gibgq_error
 					else
-						l_dynamic_feature := current_dynamic_type.dynamic_feature (l_copy_feature, current_system)
-						l_dynamic_feature.set_regular (True)
-						l_dynamic_type_sets := l_dynamic_feature.dynamic_type_sets
+						l_copy_feature.set_regular (True)
+						l_dynamic_type_sets := l_copy_feature.dynamic_type_sets
 						if l_dynamic_type_sets.count >= 1 then
 							l_dynamic_type_set := l_dynamic_type_sets.item (1)
 							current_dynamic_type.put_target (l_dynamic_type_set, current_system)

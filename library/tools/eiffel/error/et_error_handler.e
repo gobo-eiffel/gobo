@@ -5,7 +5,7 @@ indexing
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -6284,6 +6284,46 @@ feature -- Validity errors
 			end
 		end
 
+	report_gvkfe4a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+			-- Report GVKFE-4 error: feature `a_feature' in kernel
+			-- class `a_class' is not a procedure.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_procedure: not a_feature.is_procedure
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkfe4_error (a_class) then
+				create an_error.make_gvkfe4a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_gvkfe5a_error (a_class: ET_CLASS; a_feature: ET_FEATURE) is
+			-- Report GVKFE-5 error: feature `a_feature' in kernel
+			-- class `a_class' is not a query.
+			--
+			-- Not in ETL
+			-- GVKFE: Gobo Validity Kernel FEature
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_procedure: not a_feature.is_procedure
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_gvkfe5_error (a_class) then
+				create an_error.make_gvkfe5a (a_class, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_gvtcg5a_error (a_class: ET_CLASS; an_actual: ET_TYPE; a_formal: ET_FORMAL_PARAMETER) is
 			-- Report GVTCG-5 error: actual generic paramater `an_actual' in
 			-- `a_class' is not a reference type but the corresponding formal parameter
@@ -7530,6 +7570,26 @@ feature -- Validity error status
 
 	reportable_gvkfe3_error (a_class: ET_CLASS): BOOLEAN is
 			-- Can a GVKFE-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkfe4_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKFE-4 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_gvkfe5_error (a_class: ET_CLASS): BOOLEAN is
+			-- Can a GVKFE-5 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -10922,10 +10982,15 @@ feature -- Reporting
 			has_error := True
 		end
 
---Error codes not used:
+-- Error codes not used:
 
-	-- report_gibcb_error
-	-- report_gibca_error
+	-- report_gibar_error
+	-- report_gibeh_error
+	-- report_gibei_error
+	-- report_gibdp_error
+	-- report_gibdr_error
+	-- report_giacn_error
+	-- report_giach_error
 	-- report_gibjq_error
 	-- report_gibjr_error
 	-- report_gibjs_error

@@ -278,6 +278,7 @@ feature {NONE} -- Generation
 			j, nb2: INTEGER
 			k, nb3: INTEGER
 			l_count: INTEGER
+			l_id: INTEGER
 		do
 			l_dynamic_types := current_system.dynamic_types
 			nb := l_dynamic_types.count
@@ -286,7 +287,8 @@ feature {NONE} -- Generation
 				l_count := l_count + 1
 				l_type.set_id (l_count)
 				if l_type.is_alive or l_type.has_static then
-					l_features := l_type.features
+						-- Process dynamic queries.
+					l_features := l_type.queries
 					nb2 := l_features.count
 					from j := 1 until j > nb2 loop
 						l_feature := l_features.item (j)
@@ -303,6 +305,28 @@ feature {NONE} -- Generation
 								end
 							end
 						end
+						j := j + 1
+					end
+						-- Process dynamic procedures.
+					l_id := nb2 + 1
+					l_features := l_type.procedures
+					nb2 := l_features.count
+					from j := 1 until j > nb2 loop
+						l_feature := l_features.item (j)
+						l_feature.set_id (l_id)
+						l_precursor := l_feature.first_precursor
+						if l_precursor /= Void then
+							l_precursor.set_id (1)
+							l_other_precursors := l_feature.other_precursors
+							if l_other_precursors /= Void then
+								nb3 := l_other_precursors.count
+								from k := 2 until k > nb3 loop
+									l_other_precursors.item (k).set_id (k)
+									k := k + 1
+								end
+							end
+						end
+						l_id := l_id + 1
 						j := j + 1
 					end
 				end
@@ -323,7 +347,13 @@ feature {NONE} -- Feature generation
 		do
 			old_type := current_type
 			current_type := a_type
-			l_features := a_type.features
+			l_features := a_type.queries
+			nb := l_features.count
+			from i := 1 until i > nb loop
+				print_feature (l_features.item (i))
+				i := i + 1
+			end
+			l_features := a_type.procedures
 			nb := l_features.count
 			from i := 1 until i > nb loop
 				print_feature (l_features.item (i))
@@ -1490,8 +1520,7 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 			l_call: ET_QUALIFIED_CALL
 			l_seed: INTEGER
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
-			l_feature: ET_FEATURE
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 		do
 				-- Look for the dynamic type of the creation type.
 			l_target := an_instruction.target
@@ -1522,25 +1551,20 @@ print ("ET_C_GENERATOR.print_assigner_instruction%N")
 					l_seed := universe.default_create_seed
 					l_actuals := Void
 				end
-				l_feature := l_dynamic_type.base_class.seeded_feature (l_seed)
-				if l_feature = Void then
-						-- Internal error: there should be a feature with `l_seed'.
+				l_dynamic_procedure := l_dynamic_type.seeded_dynamic_procedure (l_seed, current_system)
+				if l_dynamic_procedure = Void then
+						-- Internal error: there should be a procedure with `l_seed'.
 						-- It has been computed in ET_FEATURE_CHECKER or else an
 						-- error should have already been reported.
 					set_fatal_error
 					error_handler.report_gibcr_error
-				elseif not l_feature.is_procedure then
-						-- Internal error: the creation routine should be a procedure.
-					set_fatal_error
-					error_handler.report_gibcs_error
 				else
 					print_writable (l_target)
 					current_file.put_character (' ')
 					current_file.put_character ('=')
 					current_file.put_character (' ')
 					current_file.put_character ('(')
-					l_dynamic_feature := l_dynamic_type.dynamic_feature (l_feature, current_system)
-					print_creation_expression (l_dynamic_type, l_dynamic_feature, l_actuals)
+					print_creation_expression (l_dynamic_type, l_dynamic_procedure, l_actuals)
 					current_file.put_character (')')
 					current_file.put_character (';')
 				end
@@ -1859,9 +1883,95 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
+		local
+			a_precursor_keyword: ET_PRECURSOR_KEYWORD
+			l_procedure: ET_PROCEDURE
+			a_parent_type, an_ancestor: ET_BASE_TYPE
+			a_class: ET_CLASS
+			an_actuals: ET_ACTUAL_ARGUMENT_LIST
+			l_current_class: ET_CLASS
+			l_class_impl: ET_CLASS
+			l_dynamic_precursor: ET_DYNAMIC_PRECURSOR
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			i, nb: INTEGER
+			l_comma: BOOLEAN
 		do
-			print_precursor_call (an_instruction)
-			current_file.put_character (';')
+			a_parent_type := an_instruction.parent_type
+			if a_parent_type = Void then
+					-- Internal error: the Precursor construct should already
+					-- have been resolved when flattening the features of the
+					-- implementation class of current feature.
+				set_fatal_error
+				error_handler.report_gibcv_error
+			else
+				if a_parent_type.is_generic then
+					l_current_class := current_type.base_class
+					l_class_impl := current_feature.static_feature.implementation_class
+					if l_current_class /= l_class_impl then
+							-- Resolve generic parameters in the context of `current_type'.
+-- TODO: I think that 'ancestor_builder' has already been executed on `l_current_class'
+-- at this stage, and therefore there is no need to check it again here.
+						l_current_class.process (universe.ancestor_builder)
+						if not l_current_class.ancestors_built or else l_current_class.has_ancestors_error then
+							set_fatal_error
+						else
+							an_ancestor := l_current_class.ancestor (a_parent_type, universe)
+							if an_ancestor = Void then
+									-- Internal error: `a_parent_type' is an ancestor
+									-- of `l_class_impl', and hence of `l_current_class'.
+								set_fatal_error
+								error_handler.report_gibcx_error
+							else
+								a_parent_type := an_ancestor
+							end
+						end
+					end
+				end
+				if not has_fatal_error then
+					a_precursor_keyword := an_instruction.precursor_keyword
+					a_class := a_parent_type.direct_base_class (universe)
+					l_procedure := a_class.seeded_procedure (a_precursor_keyword.seed)
+					if l_procedure = Void then
+							-- Internal error: the Precursor construct should
+							-- already have been resolved when flattening the
+							-- features of `a_class_impl'.
+						set_fatal_error
+						error_handler.report_gibcw_error
+					else
+						l_dynamic_type := current_system.dynamic_type (a_parent_type, current_type.base_type)
+						l_dynamic_precursor := current_feature.dynamic_precursor (l_procedure, l_dynamic_type, current_system)
+						if not l_dynamic_precursor.is_generated then
+							l_dynamic_precursor.set_generated (True)
+							called_features.force_last (l_dynamic_precursor)
+						end
+						if l_dynamic_precursor.is_static then
+							print_static_routine_name (l_dynamic_precursor, current_type, current_file)
+							current_file.put_character ('(')
+						else
+							print_routine_name (l_dynamic_precursor, current_type, current_file)
+							current_file.put_character ('(')
+							current_file.put_character ('C')
+							l_comma := True
+						end
+						an_actuals := an_instruction.arguments
+						if an_actuals /= Void then
+							nb := an_actuals.count
+							from i := 1 until i > nb loop
+								if l_comma then
+									current_file.put_character (',')
+									current_file.put_character (' ')
+								else
+									l_comma := True
+								end
+								print_expression (an_actuals.actual_argument (i))
+								i := i + 1
+							end
+						end
+						current_file.put_character (')')
+						current_file.put_character (';')
+					end
+				end
+			end
 		end
 
 	print_procedure_call (a_target_type: ET_DYNAMIC_TYPE; a_target: ET_EXPRESSION;
@@ -1873,21 +1983,19 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			a_target_type_not_void: a_target_type /= Void
 			a_name_not_void: a_name /= Void
 		local
-			a_feature: ET_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			a_seed: INTEGER
 			i, nb: INTEGER
 			l_printed: BOOLEAN
 		do
 			a_seed := a_name.seed
-			a_feature := a_target_type.base_class.seeded_feature (a_seed)
-			if a_feature = Void then
-					-- Internal error: there should be a feature with `a_seed'.
+			l_dynamic_feature := a_target_type.seeded_dynamic_procedure (a_seed, current_system)
+			if l_dynamic_feature = Void then
+					-- Internal error: there should be a procedure with `a_seed'.
 					-- It has been computed in ET_FEATURE_FLATTENER.
 				set_fatal_error
 				error_handler.report_giaec_error
 			else
-				l_dynamic_feature := a_target_type.dynamic_feature (a_feature, current_system)
 				if l_dynamic_feature.is_builtin then
 					l_printed := True
 					inspect l_dynamic_feature.builtin_code
@@ -1936,11 +2044,9 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			a_target: ET_EXPRESSION
 			a_target_type_set: ET_DYNAMIC_TYPE_SET
 			an_actuals: ET_ACTUAL_ARGUMENTS
-			a_feature: ET_FEATURE
 			a_seed: INTEGER
 			i, nb: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_static_type: ET_DYNAMIC_TYPE
 			l_other_dynamic_types: ET_DYNAMIC_TYPE_LIST
 			j, nb2: INTEGER
 			l_local_index: INTEGER
@@ -1962,27 +2068,18 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 				l_other_dynamic_types := a_target_type_set.other_types
 				if l_dynamic_type = Void then
 						-- Call on Void target.
-					l_static_type := a_target_type_set.static_type
-					a_feature := l_static_type.base_class.seeded_feature (a_seed)
-					if a_feature = Void then
-							-- Internal error: there should be a feature with `a_seed'.
-							-- It has been computed in ET_FEATURE_FLATTENER.
-						set_fatal_error
-						error_handler.report_gibja_error
-					else
-						current_file.put_string ("gevoid(")
-						print_expression (a_target)
-						if an_actuals /= Void then
-							nb := an_actuals.count
-							from i := 1 until i > nb loop
-								current_file.put_character (',')
-								print_expression (an_actuals.actual_argument (i))
-								i := i + 1
-							end
+					current_file.put_string ("gevoid(")
+					print_expression (a_target)
+					if an_actuals /= Void then
+						nb := an_actuals.count
+						from i := 1 until i > nb loop
+							current_file.put_character (',')
+							print_expression (an_actuals.actual_argument (i))
+							i := i + 1
 						end
-						current_file.put_character (')')
-						current_file.put_character (';')
 					end
+					current_file.put_character (')')
+					current_file.put_character (';')
 				elseif l_other_dynamic_types = Void then
 						-- Static binding.
 					print_procedure_call (l_dynamic_type, a_target, a_call.name, an_actuals)
@@ -2143,8 +2240,50 @@ print ("ET_C_GENERATOR.print_retry_instruction%N")
 			-- Print `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
+		local
+			a_type: ET_TYPE
+			a_resolved_type: ET_TYPE
+			a_target_type: ET_DYNAMIC_TYPE
+			l_dynamic_procedure: ET_DYNAMIC_FEATURE
+			an_actuals: ET_ACTUAL_ARGUMENT_LIST
+			a_seed: INTEGER
+			i, nb: INTEGER
 		do
-			print_static_call (an_instruction)
+			a_type := an_instruction.type
+			a_resolved_type := resolved_formal_parameters (a_type)
+			if not has_fatal_error then
+				a_target_type := current_system.dynamic_type (a_resolved_type, current_type.base_type)
+				a_seed := an_instruction.name.seed
+				l_dynamic_procedure := a_target_type.seeded_dynamic_procedure (a_seed, current_system)
+				if l_dynamic_procedure = Void then
+						-- Internal error: there should be a procedure with `a_seed'.
+						-- It has been computed in ET_FEATURE_CHECKER or else an
+						-- error should have already been reported.
+					set_fatal_error
+					error_handler.report_gibcu_error
+				else
+					if not l_dynamic_procedure.is_generated then
+						l_dynamic_procedure.set_generated (True)
+						called_features.force_last (l_dynamic_procedure)
+					end
+					print_static_routine_name (l_dynamic_procedure, a_target_type, current_file)
+					current_file.put_character ('(')
+					an_actuals := an_instruction.arguments
+					if an_actuals /= Void then
+						nb := an_actuals.count
+						from i := 1 until i > nb loop
+							if i > 1 then
+								current_file.put_character (',')
+								current_file.put_character (' ')
+							end
+							print_expression (an_actuals.actual_argument (i))
+							i := i + 1
+						end
+					end
+					current_file.put_character (')')
+					current_file.put_character (';')
+				end
+			end
 		end
 
 feature {NONE} -- Expression generation
@@ -2232,8 +2371,7 @@ print ("ET_C_GENERATOR.print_convert_to_expression%N")
 			l_call: ET_QUALIFIED_CALL
 			l_seed: INTEGER
 			l_actuals: ET_ACTUAL_ARGUMENT_LIST
-			l_feature: ET_FEATURE
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 		do
 			l_type := an_expression.type
 			l_resolved_type := resolved_formal_parameters (l_type)
@@ -2247,20 +2385,15 @@ print ("ET_C_GENERATOR.print_convert_to_expression%N")
 					l_seed := universe.default_create_seed
 					l_actuals := Void
 				end
-				l_feature := l_dynamic_type.base_class.seeded_feature (l_seed)
-				if l_feature = Void then
-						-- Internal error: there should be a feature with `l_seed'.
+				l_dynamic_procedure := l_dynamic_type.seeded_dynamic_procedure (l_seed, current_system)
+				if l_dynamic_procedure = Void then
+						-- Internal error: there should be a procedure with `l_seed'.
 						-- It has been computed in ET_FEATURE_CHECKER or else an
 						-- error should have already been reported.
 					set_fatal_error
 					error_handler.report_gibct_error
-				elseif not l_feature.is_procedure then
-						-- Internal error: the creation routine should be a procedure.
-					set_fatal_error
-					error_handler.report_gibcu_error
 				else
-					l_dynamic_feature := l_dynamic_type.dynamic_feature (l_feature, current_system)
-					print_creation_expression (l_dynamic_type, l_dynamic_feature, l_actuals)
+					print_creation_expression (l_dynamic_type, l_dynamic_procedure, l_actuals)
 				end
 			end
 		end
@@ -2645,80 +2778,81 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			print_expression (an_expression.expression)
 		end
 
-	print_precursor_call (a_precursor: ET_PRECURSOR) is
-			-- Print `a_precursor'.
+	print_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
+			-- Print `an_expression'.
 		require
-			a_precursor_not_void: a_precursor /= Void
+			an_expression_not_void: an_expression /= Void
 		local
 			a_precursor_keyword: ET_PRECURSOR_KEYWORD
-			a_feature: ET_FEATURE
+			l_query: ET_QUERY
 			a_parent_type, an_ancestor: ET_BASE_TYPE
 			a_class: ET_CLASS
 			an_actuals: ET_ACTUAL_ARGUMENT_LIST
 			l_current_class: ET_CLASS
 			l_class_impl: ET_CLASS
-			l_dynamic_feature: ET_DYNAMIC_PRECURSOR
+			l_dynamic_precursor: ET_DYNAMIC_PRECURSOR
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			i, nb: INTEGER
 			l_comma: BOOLEAN
 		do
-			a_parent_type := a_precursor.parent_type
+			a_parent_type := an_expression.parent_type
 			if a_parent_type = Void then
 					-- Internal error: the Precursor construct should already
 					-- have been resolved when flattening the features of the
 					-- implementation class of current feature.
 				set_fatal_error
-				error_handler.report_gibcv_error
+				error_handler.report_gibja_error
 			else
-				a_precursor_keyword := a_precursor.precursor_keyword
-				a_class := a_parent_type.direct_base_class (universe)
-				a_feature := a_class.seeded_feature (a_precursor_keyword.seed)
-				if a_feature = Void then
-						-- Internal error: the Precursor construct should
-						-- already have been resolved when flattening the
-						-- features of `a_class_impl'.
-					set_fatal_error
-					error_handler.report_gibcw_error
-				else
-					if a_parent_type.is_generic then
-						l_current_class := current_type.base_class
-						l_class_impl := current_feature.static_feature.implementation_class
-						if l_current_class /= l_class_impl then
-								-- Resolve generic parameters in the
-								-- context of `current_type'.
-							l_current_class.process (universe.ancestor_builder)
-							if not l_current_class.ancestors_built or else l_current_class.has_ancestors_error then
+				if a_parent_type.is_generic then
+					l_current_class := current_type.base_class
+					l_class_impl := current_feature.static_feature.implementation_class
+					if l_current_class /= l_class_impl then
+							-- Resolve generic parameters in the context of `current_type'.
+-- TODO: I think that 'ancestor_builder' has already been executed on `l_current_class'
+-- at this stage, and therefore there is no need to check it again here.
+						l_current_class.process (universe.ancestor_builder)
+						if not l_current_class.ancestors_built or else l_current_class.has_ancestors_error then
+							set_fatal_error
+						else
+							an_ancestor := l_current_class.ancestor (a_parent_type, universe)
+							if an_ancestor = Void then
+									-- Internal error: `a_parent_type' is an ancestor
+									-- of `l_class_impl', and hence of `l_current_class'.
 								set_fatal_error
+								error_handler.report_gibey_error
 							else
-								an_ancestor := l_current_class.ancestor (a_parent_type, universe)
-								if an_ancestor = Void then
-										-- Internal error: `a_parent_type' is an ancestor
-										-- of `l_class_impl', and hence of `l_current_class'.
-									set_fatal_error
-									error_handler.report_gibcx_error
-								else
-									a_parent_type := an_ancestor
-								end
+								a_parent_type := an_ancestor
 							end
 						end
 					end
-					if not has_fatal_error then
+				end
+				if not has_fatal_error then
+					a_precursor_keyword := an_expression.precursor_keyword
+					a_class := a_parent_type.direct_base_class (universe)
+					l_query := a_class.seeded_query (a_precursor_keyword.seed)
+					if l_query = Void then
+							-- Internal error: the Precursor construct should
+							-- already have been resolved when flattening the
+							-- features of `a_class_impl'.
+						set_fatal_error
+						error_handler.report_gibbc_error
+					else
 						l_dynamic_type := current_system.dynamic_type (a_parent_type, current_type.base_type)
-						l_dynamic_feature := current_feature.dynamic_precursor (a_feature, l_dynamic_type, current_system)
-						if not l_dynamic_feature.is_generated then
-							l_dynamic_feature.set_generated (True)
-							called_features.force_last (l_dynamic_feature)
+						l_dynamic_precursor := current_feature.dynamic_precursor (l_query, l_dynamic_type, current_system)
+						if not l_dynamic_precursor.is_generated then
+							l_dynamic_precursor.set_generated (True)
+							called_features.force_last (l_dynamic_precursor)
 						end
-						if l_dynamic_feature.is_static then
-							print_static_routine_name (l_dynamic_feature, current_type, current_file)
+						if l_dynamic_precursor.is_static then
+							print_static_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
 						else
-							print_routine_name (l_dynamic_feature, current_type, current_file)
+							print_routine_name (l_dynamic_precursor, current_type, current_file)
 							current_file.put_character ('(')
 							current_file.put_character ('C')
 							l_comma := True
 						end
-						an_actuals := a_precursor.arguments
+						an_actuals := an_expression.arguments
 						if an_actuals /= Void then
 							nb := an_actuals.count
 							from i := 1 until i > nb loop
@@ -2736,14 +2870,6 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					end
 				end
 			end
-		end
-
-	print_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
-			-- Print `an_expression'.
-		require
-			an_expression_not_void: an_expression /= Void
-		do
-			print_precursor_call (an_expression)
 		end
 
 	print_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
@@ -2764,8 +2890,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			a_target: ET_EXPRESSION
 			a_target_type_set: ET_DYNAMIC_TYPE_SET
 			an_actuals: ET_ACTUAL_ARGUMENTS
-			a_feature: ET_FEATURE
-			l_type: ET_TYPE
+			l_query: ET_QUERY
 			a_seed: INTEGER
 			i, nb: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
@@ -2792,23 +2917,16 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 				if l_dynamic_type = Void then
 						-- Call on Void target.
 					l_static_type := a_target_type_set.static_type
-					a_feature := l_static_type.base_class.seeded_feature (a_seed)
-					if a_feature = Void then
-							-- Internal error: there should be a feature with `a_seed'.
+					l_query := l_static_type.base_class.seeded_query (a_seed)
+					if l_query = Void then
+							-- Internal error: there should be a query with `a_seed'.
 							-- It has been computed in ET_FEATURE_FLATTENER.
 						set_fatal_error
 						error_handler.report_gibco_error
 					else
-						l_type := a_feature.type
-						if l_type = Void then
-								-- Internal error: a query should have a type.
-							set_fatal_error
-							error_handler.report_gibar_error
-						else
-							current_file.put_character ('(')
-							print_type_declaration (current_system.dynamic_type (l_type, l_static_type.base_type), current_file)
-							current_file.put_character (')')
-						end
+						current_file.put_character ('(')
+						print_type_declaration (current_system.dynamic_type (l_query.type, l_static_type.base_type), current_file)
+						current_file.put_character (')')
 						current_file.put_string ("gevoid(")
 						print_expression (a_target)
 						if an_actuals /= Void then
@@ -2827,14 +2945,14 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 				else
 						-- Dynamic binding.
 					l_static_type := a_target_type_set.static_type
-					a_feature := l_static_type.base_class.seeded_feature (a_seed)
-					if a_feature = Void then
-							-- Internal error: there should be a feature with `a_seed'.
+					l_query := l_static_type.base_class.seeded_query (a_seed)
+					if l_query = Void then
+							-- Internal error: there should be a query with `a_seed'.
 							-- It has been computed in ET_FEATURE_FLATTENER.
 						set_fatal_error
 						error_handler.report_gibcp_error
 					else
-						l_constant_attribute ?= a_feature
+						l_constant_attribute ?= l_query
 						if l_constant_attribute /= Void then
 							print_query_call (l_dynamic_type, a_target, a_call.name, an_actuals)
 						elseif l_other_dynamic_types.count /= 1 then
@@ -2917,7 +3035,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			a_target_type_not_void: a_target_type /= Void
 			a_name_not_void: a_name /= Void
 		local
-			l_feature: ET_FEATURE
+			l_query: ET_QUERY
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_attribute: ET_ATTRIBUTE
 			l_constant_attribute: ET_CONSTANT_ATTRIBUTE
@@ -2929,14 +3047,14 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 			l_printed: BOOLEAN
 		do
 			l_seed := a_name.seed
-			l_feature := a_target_type.base_class.seeded_feature (l_seed)
-			if l_feature = Void then
-					-- Internal error: there should be a feature with `l_seed'.
+			l_query := a_target_type.base_class.seeded_query (l_seed)
+			if l_query = Void then
+					-- Internal error: there should be a query with `l_seed'.
 					-- It has been computed in ET_FEATURE_FLATTENER.
 				set_fatal_error
 				error_handler.report_gibdb_error
 			else
-				l_constant_attribute ?= l_feature
+				l_constant_attribute ?= l_query
 				if l_constant_attribute /= Void then
 					l_printed := True
 					l_string_constant ?= l_constant_attribute.constant
@@ -2962,7 +3080,7 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 						l_constant_attribute.constant.process (Current)
 					end
 				else
-					l_unique_attribute ?= l_feature
+					l_unique_attribute ?= l_query
 					if l_unique_attribute /= Void then
 -- TODO: compute the values of the unique features.
 						l_printed := True
@@ -2986,8 +3104,8 @@ print ("ET_C_GENERATOR.print_once_manifest_string%N")
 					end
 				end
 				if not l_printed then
-					l_dynamic_feature := a_target_type.dynamic_feature (l_feature, current_system)
-					l_attribute ?= l_feature
+					l_dynamic_feature := a_target_type.dynamic_query (l_query, current_system)
+					l_attribute ?= l_query
 					if l_attribute /= Void then
 						l_printed := True
 						if a_target /= Void then
@@ -3241,62 +3359,40 @@ print ("ET_C_GENERATOR.print_result_address%N")
 			current_file.put_character (')')
 		end
 
-	print_static_call (a_call: ET_STATIC_FEATURE_CALL) is
-			-- Check validity of `a_call'.
+	print_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
+			-- Print `an_expression'.
 		require
-			a_call_not_void: a_call /= Void
+			an_expression_not_void: an_expression /= Void
 		local
 			a_type: ET_TYPE
 			a_resolved_type: ET_TYPE
 			a_target_type: ET_DYNAMIC_TYPE
-			a_feature: ET_FEATURE
+			a_query: ET_QUERY
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			an_actuals: ET_ACTUAL_ARGUMENT_LIST
 			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
 			a_seed: INTEGER
 			i, nb: INTEGER
 		do
-			a_type := a_call.type
+			a_type := an_expression.type
 			a_resolved_type := resolved_formal_parameters (a_type)
 			if not has_fatal_error then
 				a_target_type := current_system.dynamic_type (a_resolved_type, current_type.base_type)
-				a_seed := a_call.name.seed
-				a_feature := a_target_type.base_class.seeded_feature (a_seed)
-				if a_feature = Void then
-						-- Internal error: there should be a feature with `a_seed'.
+				a_seed := an_expression.name.seed
+				a_query := a_target_type.base_class.seeded_query (a_seed)
+				if a_query = Void then
+						-- Internal error: there should be a query with `a_seed'.
 						-- It has been computed in ET_FEATURE_CHECKER or else an
 						-- error should have already been reported.
 					set_fatal_error
 					error_handler.report_gibdd_error
-				elseif a_feature.is_procedure then
-					l_dynamic_feature := a_target_type.dynamic_feature (a_feature, current_system)
-					if not l_dynamic_feature.is_generated then
-						l_dynamic_feature.set_generated (True)
-						called_features.force_last (l_dynamic_feature)
-					end
-					print_static_routine_name (l_dynamic_feature, a_target_type, current_file)
-					current_file.put_character ('(')
-					an_actuals := a_call.arguments
-					if an_actuals /= Void then
-						nb := an_actuals.count
-						from i := 1 until i > nb loop
-							if i > 1 then
-								current_file.put_character (',')
-								current_file.put_character (' ')
-							end
-							print_expression (an_actuals.actual_argument (i))
-							i := i + 1
-						end
-					end
-					current_file.put_character (')')
-					current_file.put_character (';')
-				elseif a_feature.is_attribute then
+				elseif a_query.is_attribute then
 						-- Internal error: no object available.
 					set_fatal_error
 					error_handler.report_gibdl_error
-				elseif a_feature.is_constant_attribute then
+				elseif a_query.is_constant_attribute then
 -- TODO: make the difference between expanded and reference "constants".
-					a_constant_attribute ?= a_feature
+					a_constant_attribute ?= a_query
 					if a_constant_attribute = Void then
 							-- Internal error.
 						set_fatal_error
@@ -3304,7 +3400,7 @@ print ("ET_C_GENERATOR.print_result_address%N")
 					else
 						a_constant_attribute.constant.process (Current)
 					end
-				elseif a_feature.is_unique_attribute then
+				elseif a_query.is_unique_attribute then
 -- TODO.
 					print_type_cast (current_system.integer_type, current_file)
 					current_file.put_character ('(')
@@ -3312,14 +3408,14 @@ print ("ET_C_GENERATOR.print_result_address%N")
 					current_file.put_integer (unique_count)
 					current_file.put_character (')')
 				else
-					l_dynamic_feature := a_target_type.dynamic_feature (a_feature, current_system)
+					l_dynamic_feature := a_target_type.dynamic_query (a_query, current_system)
 					if not l_dynamic_feature.is_generated then
 						l_dynamic_feature.set_generated (True)
 						called_features.force_last (l_dynamic_feature)
 					end
 					print_static_routine_name (l_dynamic_feature, a_target_type, current_file)
 					current_file.put_character ('(')
-					an_actuals := a_call.arguments
+					an_actuals := an_expression.arguments
 					if an_actuals /= Void then
 						nb := an_actuals.count
 						from i := 1 until i > nb loop
@@ -3334,14 +3430,6 @@ print ("ET_C_GENERATOR.print_result_address%N")
 					current_file.put_character (')')
 				end
 			end
-		end
-
-	print_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
-			-- Print `an_expression'.
-		require
-			an_expression_not_void: an_expression /= Void
-		do
-			print_static_call (an_expression)
 		end
 
 	print_strip_expression (an_expression: ET_STRIP_EXPRESSION) is
@@ -3658,7 +3746,11 @@ feature {NONE} -- Polymorphic call generation
 						current_file.put_character ('{')
 						current_file.put_new_line
 						indent
-						resolve_polymorphic_call (l_target_type_set, l_seed)
+						if l_type /= Void then
+							resolve_polymorphic_query_call (l_target_type_set, l_seed)
+						else
+							resolve_polymorphic_procedure_call (l_target_type_set, l_seed)
+						end
 						l_equivalent_feature1 := polymorphic_equivalent_feature1
 						l_equivalent_feature2 := polymorphic_equivalent_feature2
 						l_equivalent_feature3 := polymorphic_equivalent_feature3
@@ -4026,7 +4118,7 @@ end
 
 	last_polymorphic_index: INTEGER
 
-	resolve_polymorphic_call (a_target_type_set: ET_DYNAMIC_TYPE_SET; a_seed: INTEGER) is
+	resolve_polymorphic_query_call (a_target_type_set: ET_DYNAMIC_TYPE_SET; a_seed: INTEGER) is
 			-- Try to find similarities between the features with seed `a_seed'
 			-- in the various types of `a_target_type_set' and group them by
 			-- equivalence classes in (`polymorphic_equivalent_featureN',
@@ -4053,7 +4145,7 @@ end
 			l_found: BOOLEAN
 		do
 			l_type := a_target_type_set.first_type
-			l_feature := l_type.seeded_dynamic_feature (a_seed, current_system)
+			l_feature := l_type.seeded_dynamic_query (a_seed, current_system)
 			if l_feature = Void then
 					-- Internal error: there should be a feature with that seed.
 				set_fatal_error
@@ -4067,7 +4159,104 @@ end
 				nb := l_other_types.count
 				from i := 1 until i > nb loop
 					l_type := l_other_types.item (i)
-					l_feature := l_type.seeded_dynamic_feature (a_seed, current_system)
+					l_feature := l_type.seeded_dynamic_query (a_seed, current_system)
+					if l_feature = Void then
+							-- Internal error: there should be a feature with that seed.
+						set_fatal_error
+-- TODO.
+						l_found := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						l_new := True
+						l_static_feature := l_feature.static_feature.implementation_feature
+						if l_feature.is_current_type_needed then
+							-- New equivalence class.
+						elseif not l_feature1.is_current_type_needed and then l_static_feature1 = l_static_feature then
+							polymorphic_equivalent_types1.force_last (l_type)
+							l_new := False
+						elseif l_feature2 /= Void then
+							if not l_feature2.is_current_type_needed and then l_static_feature2 = l_static_feature then
+								polymorphic_equivalent_types2.force_last (l_type)
+									l_new := False
+							elseif l_feature3 /= Void then
+								if not l_feature3.is_current_type_needed and then l_static_feature3 = l_static_feature then
+									polymorphic_equivalent_types3.force_last (l_type)
+									l_new := False
+								end
+							end
+						end
+						if l_new then
+							if l_feature2 = Void then
+								l_feature2 := l_feature
+								l_static_feature2 := l_static_feature
+								polymorphic_equivalent_types2.force_last (l_type)
+							elseif l_feature3 = Void then
+								l_feature3 := l_feature
+								l_static_feature3 := l_static_feature
+								polymorphic_equivalent_types3.force_last (l_type)
+							else
+									-- Too many equivalence classes.
+								l_found := False
+								i := nb + 1
+							end
+						end
+					end
+					i := i + 1
+				end
+				if l_found then
+					polymorphic_equivalent_feature1 := l_feature1
+					polymorphic_equivalent_feature2 := l_feature2
+					polymorphic_equivalent_feature3 := l_feature3
+				else
+					polymorphic_equivalent_types1.wipe_out
+					polymorphic_equivalent_types2.wipe_out
+					polymorphic_equivalent_types3.wipe_out
+				end
+			end
+		end
+
+	resolve_polymorphic_procedure_call (a_target_type_set: ET_DYNAMIC_TYPE_SET; a_seed: INTEGER) is
+			-- Try to find similarities between the features with seed `a_seed'
+			-- in the various types of `a_target_type_set' and group them by
+			-- equivalence classes in (`polymorphic_equivalent_featureN',
+			-- `polymorphic_equivalent_typesN') where 1<=N<=3, or leave the
+			-- `polymorphic_equivalent_featuresN' Void if there are more
+			-- than N equivalence classes.
+		require
+			a_target_type_set_not_void: a_target_type_set /= Void
+			not_call_on_void_target: a_target_type_set.first_type /= Void
+			polymorphic_call: a_target_type_set.other_types /= Void
+		local
+			l_type: ET_DYNAMIC_TYPE
+			l_other_types: ET_DYNAMIC_TYPE_LIST
+			l_feature: ET_DYNAMIC_FEATURE
+			l_feature1: ET_DYNAMIC_FEATURE
+			l_feature2: ET_DYNAMIC_FEATURE
+			l_feature3: ET_DYNAMIC_FEATURE
+			l_static_feature: ET_FEATURE
+			l_static_feature1: ET_FEATURE
+			l_static_feature2: ET_FEATURE
+			l_static_feature3: ET_FEATURE
+			i, nb: INTEGER
+			l_new: BOOLEAN
+			l_found: BOOLEAN
+		do
+			l_type := a_target_type_set.first_type
+			l_feature := l_type.seeded_dynamic_procedure (a_seed, current_system)
+			if l_feature = Void then
+					-- Internal error: there should be a feature with that seed.
+				set_fatal_error
+-- TODO.
+			else
+				l_found := True
+				l_feature1 := l_feature
+				l_static_feature1 := l_feature1.static_feature.implementation_feature
+				polymorphic_equivalent_types1.force_last (l_type)
+				l_other_types := a_target_type_set.other_types
+				nb := l_other_types.count
+				from i := 1 until i > nb loop
+					l_type := l_other_types.item (i)
+					l_feature := l_type.seeded_dynamic_procedure (a_seed, current_system)
 					if l_feature = Void then
 							-- Internal error: there should be a feature with that seed.
 						set_fatal_error
@@ -4151,8 +4340,7 @@ feature {NONE} -- Built-in feature generation
 			valid_feature: current_feature.static_feature = a_feature
 		local
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
-			l_copy_feature: ET_FEATURE
-			l_dynamic_copy_feature: ET_DYNAMIC_FEATURE
+			l_copy_feature: ET_DYNAMIC_FEATURE
 		do
 			l_special_type ?= current_type
 			if l_special_type /= Void then
@@ -4310,19 +4498,18 @@ feature {NONE} -- Built-in feature generation
 				current_file.put_character (')')
 				current_file.put_character (';')
 				current_file.put_new_line
-				l_copy_feature := current_type.base_class.seeded_feature (universe.copy_seed)
+				l_copy_feature := current_type.seeded_dynamic_procedure (universe.copy_seed, current_system)
 				if l_copy_feature = Void then
 						-- Internal error: this error should already have been reported during parsing.
 					set_fatal_error
 					error_handler.report_gibic_error
 				else
-					l_dynamic_copy_feature := current_type.dynamic_feature (l_copy_feature, current_system)
-					if not l_dynamic_copy_feature.is_generated then
-						l_dynamic_copy_feature.set_generated (True)
-						called_features.force_last (l_dynamic_copy_feature)
+					if not l_copy_feature.is_generated then
+						l_copy_feature.set_generated (True)
+						called_features.force_last (l_copy_feature)
 					end
 					print_indentation
-					print_routine_name (l_dynamic_copy_feature, current_type, current_file)
+					print_routine_name (l_copy_feature, current_type, current_file)
 					current_file.put_character ('(')
 					current_file.put_character ('R')
 					current_file.put_character (',')
@@ -5652,18 +5839,18 @@ feature {NONE} -- C function generation
 		require
 			an_array_type_not_void: an_array_type /= Void
 		local
-			l_features: ET_DYNAMIC_FEATURE_LIST
+			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_area_type_set: ET_DYNAMIC_TYPE_SET
 			l_special_type: ET_DYNAMIC_SPECIAL_TYPE
 			l_item_type: ET_DYNAMIC_TYPE
 		do
-			l_features := an_array_type.features
-			if l_features.is_empty then
+			l_queries := an_array_type.queries
+			if l_queries.is_empty then
 					-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 				set_fatal_error
 				error_handler.report_gibjn_error
 			else
-				l_area_type_set := l_features.item (1).result_type_set
+				l_area_type_set := l_queries.item (1).result_type_set
 				if l_area_type_set = Void then
 						-- Error in feature 'area', already reported in ET_SYSTEM.compile_kernel.
 					set_fatal_error
@@ -6118,8 +6305,8 @@ feature {NONE} -- Type generation
 			l_item_type_set: ET_DYNAMIC_TYPE_SET
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			i, nb: INTEGER
-			l_features: ET_DYNAMIC_FEATURE_LIST
-			l_feature: ET_DYNAMIC_FEATURE
+			l_queries: ET_DYNAMIC_FEATURE_LIST
+			l_query: ET_DYNAMIC_FEATURE
 			j, nb2: INTEGER
 		do
 				-- Type with type id 'id'.
@@ -6298,22 +6485,22 @@ feature {NONE} -- Type generation
 									j := j + 1
 								end
 							else
-								l_features := l_type.features
-								nb2 := l_features.count
+								l_queries := l_type.queries
+								nb2 := l_queries.count
 								from j := 1 until j > nb2 loop
-									l_feature := l_features.item (j)
-									if l_feature.is_attribute then
+									l_query := l_queries.item (j)
+									if l_query.is_attribute then
 										a_file.put_character ('%T')
-										print_type_declaration (l_feature.result_type_set.static_type, a_file)
+										print_type_declaration (l_query.result_type_set.static_type, a_file)
 										a_file.put_character (' ')
 										a_file.put_character ('a')
-										a_file.put_integer (l_feature.id)
+										a_file.put_integer (l_query.id)
 										a_file.put_character (';')
 										a_file.put_character (' ')
 										a_file.put_character ('/')
 										a_file.put_character ('*')
 										a_file.put_character (' ')
-										a_file.put_string (l_feature.static_feature.name.name)
+										a_file.put_string (l_query.static_feature.name.name)
 										a_file.put_character (' ')
 										a_file.put_character ('*')
 										a_file.put_character ('/')
@@ -6889,16 +7076,19 @@ feature {ET_AST_NODE} -- Processing
 			elseif an_identifier.is_local then
 				print_local_variable (an_identifier)
 			else
-				l_feature := current_type.base_class.seeded_feature (an_identifier.seed)
-				if l_feature = Void then
-						-- Internal error: there should be a feature with this seed.
-						-- It has been computed in ET_FEATURE_FLATTENER.
-					set_fatal_error
-					error_handler.report_giaed_error
-				elseif l_feature.is_procedure then
-					print_procedure_call (current_type, Void, an_identifier, Void)
-				else
+				l_feature := current_type.base_class.seeded_query (an_identifier.seed)
+				if l_feature /= Void then
 					print_query_call (current_type, Void, an_identifier, Void)
+				else
+					l_feature := current_type.base_class.seeded_procedure (an_identifier.seed)
+					if l_feature /= Void then
+						print_procedure_call (current_type, Void, an_identifier, Void)
+					else
+							-- Internal error: there should be a feature with this seed.
+							-- It has been computed in ET_FEATURE_FLATTENER.
+						set_fatal_error
+						error_handler.report_giaed_error
+					end
 				end
 			end
 		end

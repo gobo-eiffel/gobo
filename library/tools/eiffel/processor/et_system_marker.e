@@ -88,7 +88,6 @@ inherit
 			process_static_call_instruction,
 			process_tagged_assertion,
 			process_tuple_type,
-			process_typed_expression,
 			process_underscored_integer_constant,
 			process_underscored_real_constant,
 			process_unique_attribute,
@@ -712,13 +711,20 @@ feature {ET_AST_NODE} -- Processing
 		require
 			a_class_not_void: a_class /= Void
 		local
-			a_features: ET_FEATURE_LIST
+			l_queries: ET_QUERY_LIST
+			l_procedures: ET_PROCEDURE_LIST
 			i, nb: INTEGER
 		do
-			a_features := a_class.features
-			nb := a_class.declared_feature_count
+			l_queries := a_class.queries
+			nb := a_class.declared_query_count
 			from i := 1 until i > nb loop
-				a_features.item (i).process (Current)
+				l_queries.item (i).process (Current)
+				i := i + 1
+			end
+			l_procedures := a_class.procedures
+			nb := a_class.declared_procedure_count
+			from i := 1 until i > nb loop
+				l_procedures.item (i).process (Current)
 				i := i + 1
 			end
 		end

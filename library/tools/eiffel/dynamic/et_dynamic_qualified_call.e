@@ -91,7 +91,6 @@ feature -- Element change
 		local
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 			l_seed: INTEGER
-			l_feature: ET_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_actuals: ET_ARGUMENT_OPERANDS
 			l_actual: ET_ARGUMENT_OPERAND
@@ -104,8 +103,12 @@ feature -- Element change
 			l_manifest_tuple: ET_MANIFEST_TUPLE
 		do
 			l_seed := static_call.name.seed
-			l_feature := a_type.base_class.seeded_feature (l_seed)
-			if l_feature = Void then
+			if result_type_set /= Void then
+				l_dynamic_feature := a_type.seeded_dynamic_query (l_seed, a_system)
+			else
+				l_dynamic_feature := a_type.seeded_dynamic_procedure (l_seed, a_system)
+			end
+			if l_dynamic_feature = Void then
 				if a_type.conforms_to_type (target_type_set.static_type, a_system) then
 						-- Internal error: there should be a feature with seed
 						-- `l_seed' in all descendants of `target_type_set.static_type'.
@@ -116,7 +119,6 @@ feature -- Element change
 					-- The error has already been reported somewhere else.
 				end
 			else
-				l_dynamic_feature := a_type.dynamic_feature (l_feature, a_system)
 				l_dynamic_feature.set_regular (True)
 				l_actuals := static_call.arguments
 				if l_actuals /= Void then
@@ -273,7 +275,6 @@ feature -- Element change
 			a_builder_not_void: a_builder /= Void
 		local
 			l_seed: INTEGER
-			l_feature: ET_FEATURE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 			l_source_argument_type_set: ET_DYNAMIC_TYPE_SET
 			l_target_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
@@ -291,8 +292,12 @@ feature -- Element change
 		do
 			l_system := a_builder.current_system
 			l_seed := static_call.name.seed
-			l_feature := a_type.base_class.seeded_feature (l_seed)
-			if l_feature = Void then
+			if result_type_set /= Void then
+				l_dynamic_feature := a_type.seeded_dynamic_query (l_seed, l_system)
+			else
+				l_dynamic_feature := a_type.seeded_dynamic_procedure (l_seed, l_system)
+			end
+			if l_dynamic_feature = Void then
 				if a_type.conforms_to_type (target_type_set.static_type, l_system) then
 						-- Internal error: there should be a feature with seed
 						-- `l_seed' in all descendants of `target_type_set.static_type'.
@@ -302,7 +307,6 @@ feature -- Element change
 					-- The error has already been reported somewhere else.
 				end
 			else
-				l_dynamic_feature := a_type.dynamic_feature (l_feature, l_system)
 				l_dynamic_feature.set_regular (True)
 				l_actuals := static_call.arguments
 				if l_actuals /= Void then

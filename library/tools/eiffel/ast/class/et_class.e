@@ -5,7 +5,7 @@ indexing
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,8 +52,10 @@ feature {NONE} -- Initialization
 			name := a_name
 			id := an_id
 			ancestors := tokens.empty_ancestors
-			declared_feature_count := 0
-			features := tokens.empty_features
+			declared_query_count := 0
+			queries := tokens.empty_queries
+			declared_procedure_count := 0
+			procedures := tokens.empty_procedures
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
 			eiffel_class := Current
@@ -72,7 +74,10 @@ feature {NONE} -- Initialization
 			name := a_name
 			id := 0
 			ancestors := tokens.empty_ancestors
-			features := tokens.empty_features
+			declared_query_count := 0
+			queries := tokens.empty_queries
+			declared_procedure_count := 0
+			procedures := tokens.empty_procedures
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
 			eiffel_class := Current
@@ -96,9 +101,14 @@ feature -- Initialization
 			reset_features_flattened
 			reset_ancestors_built
 			if is_preparsed then
-				nb := declared_feature_count
+				nb := declared_query_count
 				from i := 1 until i > nb loop
-					features.item (i).reset
+					queries.item (i).reset
+					i := i + 1
+				end
+				nb := declared_procedure_count
+				from i := 1 until i > nb loop
+					procedures.item (i).reset
 					i := i + 1
 				end
 				if parents /= Void then
@@ -508,8 +518,10 @@ feature -- Parsing status
 			invariants := Void
 			obsolete_message := Void
 			parents := Void
-			declared_feature_count := 0
-			features := tokens.empty_features
+			declared_query_count := 0
+			queries := tokens.empty_queries
+			declared_procedure_count := 0
+			procedures := tokens.empty_procedures
 			leading_break := Void
 			providers := Void
 		ensure
@@ -984,7 +996,32 @@ feature -- Features
 		require
 			a_name_not_void: a_name /= Void
 		do
-			Result := features.named_feature (a_name)
+			Result := named_query (a_name)
+			if Result = Void then
+				Result := named_procedure (a_name)
+			end
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
+
+	named_query (a_name: ET_CALL_NAME): ET_QUERY is
+			-- Query named `a_name';
+			-- Void if no such query
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := queries.named_feature (a_name)
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
+
+	named_procedure (a_name: ET_CALL_NAME): ET_PROCEDURE is
+			-- Procedure named `a_name';
+			-- Void if no such procedure
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := procedures.named_feature (a_name)
 		ensure
 			registered: Result /= Void implies Result.is_registered
 		end
@@ -993,32 +1030,76 @@ feature -- Features
 			-- Feature with seed `a_seed';
 			-- Void if no such feature
 		do
-			Result := features.seeded_feature (a_seed)
+			Result := seeded_query (a_seed)
+			if Result = Void then
+				Result := seeded_procedure (a_seed)
+			end
 		ensure
 			registered: Result /= Void implies Result.is_registered
 		end
 
-	features: ET_FEATURE_LIST
-			-- Features
+	seeded_query (a_seed: INTEGER): ET_QUERY is
+			-- Query with seed `a_seed';
+			-- Void if no such query
+		do
+			Result := queries.seeded_feature (a_seed)
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
 
-	declared_feature_count: INTEGER
-			-- Number of features declared in current class
+	seeded_procedure (a_seed: INTEGER): ET_PROCEDURE is
+			-- Procedure with seed `a_seed';
+			-- Void if no such procedure
+		do
+			Result := procedures.seeded_feature (a_seed)
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
+
+	queries: ET_QUERY_LIST
+			-- Queries
+
+	procedures: ET_PROCEDURE_LIST
+			-- Procedures
+
+	declared_query_count: INTEGER
+			-- Number of queries declared in current class
 			-- (i.e. appearing in one of the feature clauses)
 
-	set_features (a_features: like features; a_count: INTEGER) is
-			-- Set `features' to `a_features' and
-			-- `declared_feature_count' to `a_count'.
+	declared_procedure_count: INTEGER
+			-- Number of procedures declared in current class
+			-- (i.e. appearing in one of the feature clauses)
+
+	set_queries (a_queries: like queries; a_count: INTEGER) is
+			-- Set `queries' to `a_queries' and
+			-- `declared_query_count' to `a_count'.
 		require
-			a_features_not_void: a_features /= Void
-			-- a_features_registered: forall f in a_features, f.is_registered
+			a_queries_not_void: a_queries /= Void
+			-- a_features_registered: forall f in a_queries, f.is_registered
 			a_count_large_enough: a_count >= 0
-			a_count_small_enough: a_count <= a_features.count
+			a_count_small_enough: a_count <= a_queries.count
 		do
-			features := a_features
-			declared_feature_count := a_count
+			queries := a_queries
+			declared_query_count := a_count
 		ensure
-			features_set: features = a_features
-			declared_feature_count_set: declared_feature_count = a_count
+			queries_set: queries = a_queries
+			declared_query_count_set: declared_query_count = a_count
+		end
+
+	set_procedures (a_procedures: like procedures; a_count: INTEGER) is
+			-- Set `procedures' to `a_procedures' and
+			-- `declared_procedure_count' to `a_count'.
+		require
+			a_procedures_not_void: a_procedures /= Void
+			-- a_features_registered: forall f in a_procedures, f.is_registered
+			a_count_large_enough: a_count >= 0
+			a_count_small_enough: a_count <= a_procedures.count
+		do
+			procedures := a_procedures
+			declared_procedure_count := a_count
+		ensure
+			procedures_set: procedures = a_procedures
+			declared_procedure_count_set: declared_procedure_count = a_count
 		end
 
 feature -- Feature flattening status
@@ -1290,10 +1371,14 @@ invariant
 	index_nonnegative: index >= 0
 	master_class_not_void: master_class /= Void
 	ancestors_not_void: ancestors /= Void
-	features_not_void: features /= Void
-	-- features_registered: forall f in features, f.is_registered
-	declared_feature_count_large_enough: declared_feature_count >= 0
-	declared_feature_count_small_enough: declared_feature_count <= features.count
+	queries_not_void: queries /= Void
+	-- queries_registered: forall f in queries, f.is_registered
+	declared_query_count_large_enough: declared_query_count >= 0
+	declared_query_count_small_enough: declared_query_count <= queries.count
+	procedures_not_void: procedures /= Void
+	-- procedures_registered: forall f in procedures, f.is_registered
+	declared_procedure_count_large_enough: declared_procedure_count >= 0
+	declared_procedure_count_small_enough: declared_procedure_count <= procedures.count
 	class_keyword_not_void: class_keyword /= Void
 	end_keyword_not_void: end_keyword /= Void
 	named_type: is_named_type

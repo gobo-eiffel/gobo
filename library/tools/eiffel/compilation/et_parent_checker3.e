@@ -112,7 +112,7 @@ feature {NONE} -- Parent validity
 			a_class_type: ET_CLASS_TYPE
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
-			a_creation_feature: ET_FEATURE
+			a_creation_procedure: ET_PROCEDURE
 			a_constraint_class: ET_CLASS
 			a_constraint_base_type: ET_BASE_TYPE
 			a_constraint_error: BOOLEAN
@@ -187,9 +187,9 @@ feature {NONE} -- Parent validity
 											if not a_constraint_class.features_flattened or else a_constraint_class.has_flattening_error then
 												a_constraint_error := True
 											else
-												a_creation_feature := a_constraint_class.named_feature (a_name)
-												if a_creation_feature /= Void and then a_creation_feature.is_procedure then
-													a_seed := a_creation_feature.first_seed
+												a_creation_procedure := a_constraint_class.named_procedure (a_name)
+												if a_creation_procedure /= Void then
+													a_seed := a_creation_procedure.first_seed
 												else
 													a_constraint_error := True
 												end
@@ -198,8 +198,8 @@ feature {NONE} -- Parent validity
 										if a_constraint_error then
 											set_fatal_error
 										else
-											a_creation_feature := an_actual_class.seeded_feature (a_seed)
-											if a_creation_feature = Void then
+											a_creation_procedure := an_actual_class.seeded_procedure (a_seed)
+											if a_creation_procedure = Void then
 													-- Internal error: the conformance of the actual
 													-- parameter to its generic constraint has been
 													-- checked during the second pass.
@@ -207,14 +207,14 @@ feature {NONE} -- Parent validity
 												error_handler.report_giabu_error
 											elseif a_formal_type /= Void then
 												if not has_formal_type_error then
-													if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_feature) then
+													if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
 														set_fatal_error
 														error_handler.report_vtcg4c_error (current_class, a_type.position, i, a_name, a_formal_parameter, a_class)
 													end
 												end
 											elseif
-												not a_creation_feature.is_creation_exported_to (a_class, an_actual_class, universe) and then
-												(an_actual_class.creators /= Void or else not a_creation_feature.has_seed (universe.default_create_seed))
+												not a_creation_procedure.is_creation_exported_to (a_class, an_actual_class, universe) and then
+												(an_actual_class.creators /= Void or else not a_creation_procedure.has_seed (universe.default_create_seed))
 											then
 												set_fatal_error
 												error_handler.report_vtcg4a_error (current_class, a_type.position, i, a_name, an_actual_class, a_class)

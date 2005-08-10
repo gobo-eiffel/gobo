@@ -16,6 +16,8 @@ inherit
 
 	ANY -- Needed for SE 2.1.
 
+	ET_SHARED_TOKEN_CONSTANTS
+
 	KL_IMPORTED_ANY_ROUTINES
 
 feature -- Access
@@ -226,7 +228,21 @@ feature -- Comparison
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		ensure
-			definition: Result = named_type (a_universe).same_syntactical_type (other.named_type (other_context, a_universe), other_context, root_context, a_universe)
+			definition: Result = named_type (a_universe).same_syntactical_type (other.named_type (other_context, a_universe), other_context.root_context, root_context, a_universe)
+		end
+
+	same_named_context (other: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Do current context and `other' context have the same named type?
+		require
+			valid_context: is_valid_context
+			other_not_void: other /= Void
+			other_context_valid: other.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := same_named_type (tokens.like_current, other, a_universe)
+		ensure
+			definition: Result = named_type (a_universe).same_syntactical_type (other.named_type (a_universe), other.root_context, root_context, a_universe)
 		end
 
 	same_base_type (other: ET_TYPE; other_context: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
@@ -241,7 +257,7 @@ feature -- Comparison
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		ensure
-			definition: Result = base_type (a_universe).same_syntactical_type (other.base_type (other_context, a_universe), other_context, root_context, a_universe)
+			definition: Result = base_type (a_universe).same_syntactical_type (other.base_type (other_context, a_universe), other_context.root_context, root_context, a_universe)
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
@@ -366,6 +382,20 @@ feature -- Conformance
 			a_universe_not_void: a_universe /= Void
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
+		end
+
+	conforms_to_context (other: ET_TYPE_CONTEXT; a_universe: ET_UNIVERSE): BOOLEAN is
+			-- Does current context conform to `other' context?
+			-- (Note: 'a_universe.ancestor_builder' is used on the classes
+			-- whose ancestors need to be built in order to check for conformance.)
+		require
+			valid_context: is_valid_context
+			other_not_void: other /= Void
+			other_context_valid: other.is_valid_context
+			a_universe_not_void: a_universe /= Void
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := conforms_to_type (tokens.like_current, other, a_universe)
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance

@@ -95,18 +95,19 @@ feature {NONE} -- Type resolving
 		require
 			a_type_not_void: a_type /= Void
 		local
-			a_feature: ET_FEATURE
-			a_constant: ET_INTEGER_CONSTANT
-			a_constant_attribute: ET_CONSTANT_ATTRIBUTE
+			l_query: ET_QUERY
+			l_procedure: ET_PROCEDURE
+			l_constant: ET_INTEGER_CONSTANT
+			l_constant_attribute: ET_CONSTANT_ATTRIBUTE
 		do
-			a_feature := current_class.named_feature (a_type.name)
-			if a_feature /= Void then
-				a_constant_attribute ?= a_feature.flattened_feature
-				if a_constant_attribute /= Void then
-					a_constant ?= a_constant_attribute.constant
+			l_query := current_class.named_query (a_type.name)
+			if l_query /= Void then
+				l_constant_attribute ?= l_query
+				if l_constant_attribute /= Void then
+					l_constant ?= l_constant_attribute.constant
 				end
-				if a_constant /= Void then
-					a_type.resolve_identifier_type (a_feature.first_seed, a_constant)
+				if l_constant /= Void then
+					a_type.resolve_identifier_type (l_query.first_seed, l_constant)
 					check_bit_type (a_type)
 				else
 						-- VTBT error (ETL2 page 210): The identifier
@@ -116,10 +117,19 @@ feature {NONE} -- Type resolving
 					error_handler.report_vtbt0a_error (current_class, a_type)
 				end
 			else
-					-- VTBT error (ETL2 page 210): The identifier
-					-- in Bit_type must be the final name of a feature.
-				set_fatal_error
-				error_handler.report_vtbt0b_error (current_class, a_type)
+				l_procedure := current_class.named_procedure (a_type.name)
+				if l_procedure /= Void then
+						-- VTBT error (ETL2 page 210): The identifier
+						-- in Bit_type must be the final name of a
+						-- constant attribute of type INTEGER.
+					set_fatal_error
+					error_handler.report_vtbt0a_error (current_class, a_type)
+				else
+						-- VTBT error (ETL2 page 210): The identifier
+						-- in Bit_type must be the final name of a feature.
+					set_fatal_error
+					error_handler.report_vtbt0b_error (current_class, a_type)
+				end
 			end
 		end
 
@@ -128,33 +138,35 @@ feature {NONE} -- Type resolving
 		require
 			a_type_not_void: a_type /= Void
 		local
-			a_name: ET_FEATURE_NAME
-			a_feature: ET_FEATURE
+			l_name: ET_FEATURE_NAME
+			l_query: ET_QUERY
 			args: ET_FORMAL_ARGUMENT_LIST
-			an_index: INTEGER
-			an_argument_name: ET_IDENTIFIER
+			l_index: INTEGER
+			l_argument_name: ET_IDENTIFIER
 			resolved: BOOLEAN
 		do
-			a_name := a_type.name
-			a_feature := current_class.named_feature (a_name)
-			if a_feature /= Void then
+			l_name := a_type.name
+			l_query := current_class.named_query (l_name)
+			if l_query /= Void then
 					-- This is a 'like feature'.
-				a_type.resolve_like_feature (a_feature.first_seed)
+				a_type.resolve_like_feature (l_query.first_seed)
 				resolved := True
-			elseif current_feature /= Void then
-					-- This has to be a 'like argument', otherwise
-					-- this is an error.
-				an_argument_name ?= a_name
-				if an_argument_name /= Void then
-					args := current_feature.arguments
-					if args /= Void then
-						an_index := args.index_of (an_argument_name)
-						if an_index /= 0 then
-							a_type.resolve_like_argument (current_feature.first_seed, an_index, an_argument_name)
-							resolved := True
+			else
+				if current_feature /= Void then
+						-- This has to be a 'like argument', otherwise
+						-- this is an error.
+					l_argument_name ?= l_name
+					if l_argument_name /= Void then
+						args := current_feature.arguments
+						if args /= Void then
+							l_index := args.index_of (l_argument_name)
+							if l_index /= 0 then
+								a_type.resolve_like_argument (current_feature.first_seed, l_index, l_argument_name)
+								resolved := True
+							end
 						end
 					end
-				end
+				end	
 			end
 			if not resolved then
 				set_fatal_error
