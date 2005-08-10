@@ -227,14 +227,7 @@ feature -- Validity checking
 					current_class := a_current_class
 					old_type := current_type
 					current_type := a_current_type
-					internal_call := True
 					a_feature.process (Current)
-					if internal_call then
-							-- Internal error.
-						internal_call := False
-						set_fatal_error
-						error_handler.report_giabr_error
-					end
 					if current_type = a_class_impl then
 						a_feature.set_implementation_checked
 						if has_fatal_error then
@@ -292,14 +285,7 @@ feature -- Validity checking
 			nb := a_compound.count
 			from i := 1 until i > nb loop
 				has_fatal_error := False
-				internal_call := True
 				a_compound.item (i).process (Current)
-				if internal_call then
-						-- Internal error.
-					internal_call := False
-					set_fatal_error
-					error_handler.report_giaaz_error
-				end
 				had_error := had_error or has_fatal_error
 				i := i + 1
 			end
@@ -365,14 +351,7 @@ feature -- Validity checking
 			current_target_type := a_target_type
 			old_context := current_context
 			current_context := a_context
-			internal_call := True
 			an_expression.process (Current)
-			if internal_call then
-					-- Internal error.
-				internal_call := False
-				set_fatal_error
-				error_handler.report_giaaj_error
-			end
 			if not has_fatal_error then
 				universe.report_expression_supplier (a_context, current_class, current_feature)
 			end
@@ -7850,612 +7829,411 @@ feature {ET_AST_NODE} -- Processing
 	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_assigner_instruction_validity (an_instruction)
-			end
+			check_assigner_instruction_validity (an_instruction)
 		end
 
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_assignment_validity (an_instruction)
-			end
+			check_assignment_validity (an_instruction)
 		end
 
 	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_assignment_attempt_validity (an_instruction)
-			end
+			check_assignment_attempt_validity (an_instruction)
 		end
 
 	process_attribute (a_feature: ET_ATTRIBUTE) is
 			-- Process `a_feature'.
 		do
-			if internal_call then
-				internal_call := False
-				check_attribute_validity (a_feature)
-			end
+			check_attribute_validity (a_feature)
 		end
 
 	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_bang_instruction_validity (an_instruction)
-			end
+			check_bang_instruction_validity (an_instruction)
 		end
 
 	process_bit_constant (a_constant: ET_BIT_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			if internal_call then
-				internal_call := False
-				check_bit_constant_validity (a_constant, current_context)
-			end
+			check_bit_constant_validity (a_constant, current_context)
 		end
 
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_bracket_expression_validity (an_expression, current_context)
-			end
+			check_bracket_expression_validity (an_expression, current_context)
 		end
 
 	process_c1_character_constant (a_constant: ET_C1_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			if internal_call then
-				internal_call := False
-				check_c1_character_constant_validity (a_constant, current_context)
-			end
+			check_c1_character_constant_validity (a_constant, current_context)
 		end
 
 	process_c2_character_constant (a_constant: ET_C2_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			if internal_call then
-				internal_call := False
-				check_c2_character_constant_validity (a_constant, current_context)
-			end
+			check_c2_character_constant_validity (a_constant, current_context)
 		end
 
 	process_c3_character_constant (a_constant: ET_C3_CHARACTER_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			if internal_call then
-				internal_call := False
-				check_c3_character_constant_validity (a_constant, current_context)
-			end
+			check_c3_character_constant_validity (a_constant, current_context)
 		end
 
 	process_call_agent (an_expression: ET_CALL_AGENT) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_call_agent_validity (an_expression, current_context)
-			end
+			check_call_agent_validity (an_expression, current_context)
 		end
 
 	process_call_expression (an_expression: ET_CALL_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_call_expression_validity (an_expression, current_context)
-			end
+			check_call_expression_validity (an_expression, current_context)
 		end
 
 	process_call_instruction (an_instruction: ET_CALL_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_call_instruction_validity (an_instruction)
-			end
+			check_call_instruction_validity (an_instruction)
 		end
 
 	process_check_instruction (an_instruction: ET_CHECK_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_check_instruction_validity (an_instruction)
-			end
+			check_check_instruction_validity (an_instruction)
 		end
 
 	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
 			-- Process `a_feature'.
 		do
-			if internal_call then
-				internal_call := False
-				check_constant_attribute_validity (a_feature)
-			end
+			check_constant_attribute_validity (a_feature)
 		end
 
 	process_convert_expression (an_expression: ET_CONVERT_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_convert_expression_validity (an_expression, current_context)
-			end
+			check_convert_expression_validity (an_expression, current_context)
 		end
 
 	process_convert_to_expression (an_expression: ET_CONVERT_TO_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_convert_to_expression_validity (an_expression, current_context)
-			end
+			check_convert_to_expression_validity (an_expression, current_context)
 		end
 
 	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_create_expression_validity (an_expression, current_context)
-			end
+			check_create_expression_validity (an_expression, current_context)
 		end
 
 	process_create_instruction (an_instruction: ET_CREATE_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_create_instruction_validity (an_instruction)
-			end
+			check_create_instruction_validity (an_instruction)
 		end
 
 	process_current (an_expression: ET_CURRENT) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_current_validity (an_expression, current_context)
-			end
+			check_current_validity (an_expression, current_context)
 		end
 
 	process_current_address (an_expression: ET_CURRENT_ADDRESS) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_current_address_validity (an_expression, current_context)
-			end
+			check_current_address_validity (an_expression, current_context)
 		end
 
 	process_debug_instruction (an_instruction: ET_DEBUG_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_debug_instruction_validity (an_instruction)
-			end
+			check_debug_instruction_validity (an_instruction)
 		end
 
 	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION) is
 			-- Process `a_feature'.
 		do
-			if internal_call then
-				internal_call := False
-				check_deferred_function_validity (a_feature)
-			end
+			check_deferred_function_validity (a_feature)
 		end
 
 	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE) is
 			-- Process `a_feature'.
 		do
-			if internal_call then
-				internal_call := False
-				check_deferred_procedure_validity (a_feature)
-			end
+			check_deferred_procedure_validity (a_feature)
 		end
 
 	process_do_function (a_feature: ET_DO_FUNCTION) is
 			-- Process `a_feature'.
 		do
-			if internal_call then
-				internal_call := False
-				check_do_function_validity (a_feature)
-			end
+			check_do_function_validity (a_feature)
 		end
 
 	process_do_procedure (a_feature: ET_DO_PROCEDURE) is
 			-- Process `a_feature'.
 		do
-			if internal_call then
-				internal_call := False
-				check_do_procedure_validity (a_feature)
-			end
+			check_do_procedure_validity (a_feature)
 		end
 
 	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_equality_expression_validity (an_expression, current_context)
-			end
+			check_equality_expression_validity (an_expression, current_context)
 		end
 
 	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_expression_address_validity (an_expression, current_context)
-			end
+			check_expression_address_validity (an_expression, current_context)
 		end
 
 	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is
 			-- Process `a_feature'.
 		do
-			if internal_call then
-				internal_call := False
-				check_external_function_validity (a_feature)
-			end
+			check_external_function_validity (a_feature)
 		end
 
 	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
 			-- Process `a_feature'.
 		do
-			if internal_call then
-				internal_call := False
-				check_external_procedure_validity (a_feature)
-			end
+			check_external_procedure_validity (a_feature)
 		end
 
 	process_false_constant (a_constant: ET_FALSE_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			if internal_call then
-				internal_call := False
-				check_false_constant_validity (a_constant, current_context)
-			end
+			check_false_constant_validity (a_constant, current_context)
 		end
 
 	process_feature_address (an_expression: ET_FEATURE_ADDRESS) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_feature_address_validity (an_expression, current_context)
-			end
+			check_feature_address_validity (an_expression, current_context)
 		end
 
 	process_hexadecimal_integer_constant (a_constant: ET_HEXADECIMAL_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			if internal_call then
-				internal_call := False
-				check_hexadecimal_integer_constant_validity (a_constant, current_context)
-			end
+			check_hexadecimal_integer_constant_validity (a_constant, current_context)
 		end
 
 	process_identifier (an_identifier: ET_IDENTIFIER) is
 			-- Process `an_identifier'.
 		do
-			if internal_call then
-				internal_call := False
-				if an_identifier.is_argument then
-					check_formal_argument_validity (an_identifier, current_context)
-				elseif an_identifier.is_local then
-					check_local_variable_validity (an_identifier, current_context)
-				elseif an_identifier.is_instruction then
-					check_unqualified_call_instruction_validity (an_identifier)
-				else
-					check_unqualified_call_expression_validity (an_identifier, current_context)
-				end
+			if an_identifier.is_argument then
+				check_formal_argument_validity (an_identifier, current_context)
+			elseif an_identifier.is_local then
+				check_local_variable_validity (an_identifier, current_context)
+			elseif an_identifier.is_instruction then
+				check_unqualified_call_instruction_validity (an_identifier)
+			else
+				check_unqualified_call_expression_validity (an_identifier, current_context)
 			end
 		end
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_if_instruction_validity (an_instruction)
-			end
+			check_if_instruction_validity (an_instruction)
 		end
 
 	process_infix_cast_expression (an_expression: ET_INFIX_CAST_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_infix_cast_expression_validity (an_expression, current_context)
-			end
+			check_infix_cast_expression_validity (an_expression, current_context)
 		end
 
 	process_infix_expression (an_expression: ET_INFIX_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_infix_expression_validity (an_expression, current_context)
-			end
+			check_infix_expression_validity (an_expression, current_context)
 		end
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_inspect_instruction_validity (an_instruction)
-			end
+			check_inspect_instruction_validity (an_instruction)
 		end
 
 	process_loop_instruction (an_instruction: ET_LOOP_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_loop_instruction_validity (an_instruction)
-			end
+			check_loop_instruction_validity (an_instruction)
 		end
 
 	process_manifest_array (an_expression: ET_MANIFEST_ARRAY) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_manifest_array_validity (an_expression, current_context)
-			end
+			check_manifest_array_validity (an_expression, current_context)
 		end
 
 	process_manifest_tuple (an_expression: ET_MANIFEST_TUPLE) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_manifest_tuple_validity (an_expression, current_context)
-			end
+			check_manifest_tuple_validity (an_expression, current_context)
 		end
 
 	process_manifest_type (an_expression: ET_MANIFEST_TYPE) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_manifest_type_validity (an_expression, current_context)
-			end
+			check_manifest_type_validity (an_expression, current_context)
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_old_expression_validity (an_expression, current_context)
-			end
+			check_old_expression_validity (an_expression, current_context)
 		end
 
 	process_once_function (a_feature: ET_ONCE_FUNCTION) is
 			-- Process `a_feature'.
 		do
-			if internal_call then
-				internal_call := False
-				check_once_function_validity (a_feature)
-			end
+			check_once_function_validity (a_feature)
 		end
 
 	process_once_manifest_string (an_expression: ET_ONCE_MANIFEST_STRING) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_once_manifest_string_validity (an_expression, current_context)
-			end
+			check_once_manifest_string_validity (an_expression, current_context)
 		end
 
 	process_once_procedure (a_feature: ET_ONCE_PROCEDURE) is
 			-- Process `a_feature'.
 		do
-			if internal_call then
-				internal_call := False
-				check_once_procedure_validity (a_feature)
-			end
+			check_once_procedure_validity (a_feature)
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_parenthesized_expression_validity (an_expression, current_context)
-			end
+			check_parenthesized_expression_validity (an_expression, current_context)
 		end
 
 	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_precursor_expression_validity (an_expression, current_context)
-			end
+			check_precursor_expression_validity (an_expression, current_context)
 		end
 
 	process_precursor_instruction (an_instruction: ET_PRECURSOR_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_precursor_instruction_validity (an_instruction)
-			end
+			check_precursor_instruction_validity (an_instruction)
 		end
 
 	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_prefix_expression_validity (an_expression, current_context)
-			end
+			check_prefix_expression_validity (an_expression, current_context)
 		end
 
 	process_regular_integer_constant (a_constant: ET_REGULAR_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			if internal_call then
-				internal_call := False
-				check_regular_integer_constant_validity (a_constant, current_context)
-			end
+			check_regular_integer_constant_validity (a_constant, current_context)
 		end
 
 	process_regular_manifest_string (a_string: ET_REGULAR_MANIFEST_STRING) is
 			-- Process `a_string'.
 		do
-			if internal_call then
-				internal_call := False
-				check_regular_manifest_string_validity (a_string, current_context)
-			end
+			check_regular_manifest_string_validity (a_string, current_context)
 		end
 
 	process_regular_real_constant (a_constant: ET_REGULAR_REAL_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			if internal_call then
-				internal_call := False
-				check_regular_real_constant_validity (a_constant, current_context)
-			end
+			check_regular_real_constant_validity (a_constant, current_context)
 		end
 
 	process_result (an_expression: ET_RESULT) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_result_validity (an_expression, current_context)
-			end
+			check_result_validity (an_expression, current_context)
 		end
 
 	process_result_address (an_expression: ET_RESULT_ADDRESS) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_result_address_validity (an_expression, current_context)
-			end
+			check_result_address_validity (an_expression, current_context)
 		end
 
 	process_retry_instruction (an_instruction: ET_RETRY_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_retry_instruction_validity (an_instruction)
-			end
+			check_retry_instruction_validity (an_instruction)
 		end
 
 	process_semicolon_symbol (a_symbol: ET_SEMICOLON_SYMBOL) is
 			-- Process `a_symbol'.
 		do
-			if internal_call then
-				internal_call := False
-				has_fatal_error := False
-			end
+			has_fatal_error := False
 		end
 
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING) is
 			-- Process `a_string'.
 		do
-			if internal_call then
-				internal_call := False
-				check_special_manifest_string_validity (a_string, current_context)
-			end
+			check_special_manifest_string_validity (a_string, current_context)
 		end
 
 	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_static_call_expression_validity (an_expression, current_context)
-			end
+			check_static_call_expression_validity (an_expression, current_context)
 		end
 
 	process_static_call_instruction (an_instruction: ET_STATIC_CALL_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				internal_call := False
-				check_static_call_instruction_validity (an_instruction)
-			end
+			check_static_call_instruction_validity (an_instruction)
 		end
 
 	process_strip_expression (an_expression: ET_STRIP_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_strip_expression_validity (an_expression, current_context)
-			end
+			check_strip_expression_validity (an_expression, current_context)
 		end
 
 	process_true_constant (a_constant: ET_TRUE_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			if internal_call then
-				internal_call := False
-				check_true_constant_validity (a_constant, current_context)
-			end
+			check_true_constant_validity (a_constant, current_context)
 		end
 
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			if internal_call then
-				internal_call := False
-				check_underscored_integer_constant_validity (a_constant, current_context)
-			end
+			check_underscored_integer_constant_validity (a_constant, current_context)
 		end
 
 	process_underscored_real_constant (a_constant: ET_UNDERSCORED_REAL_CONSTANT) is
 			-- Process `a_constant'.
 		do
-			if internal_call then
-				internal_call := False
-				check_underscored_real_constant_validity (a_constant, current_context)
-			end
+			check_underscored_real_constant_validity (a_constant, current_context)
 		end
 
 	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is
 			-- Process `a_feature'.
 		do
-			if internal_call then
-				internal_call := False
-				check_unique_attribute_validity (a_feature)
-			end
+			check_unique_attribute_validity (a_feature)
 		end
 
 	process_verbatim_string (a_string: ET_VERBATIM_STRING) is
 			-- Process `a_string'.
 		do
-			if internal_call then
-				internal_call := False
-				check_verbatim_string_validity (a_string, current_context)
-			end
+			check_verbatim_string_validity (a_string, current_context)
 		end
 
 	process_void (an_expression: ET_VOID) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				internal_call := False
-				check_void_validity (an_expression, current_context)
-			end
+			check_void_validity (an_expression, current_context)
 		end
 
 feature {NONE} -- Error handling
@@ -8571,9 +8349,6 @@ feature {NONE} -- Implementation
 
 	assertion_context: ET_NESTED_TYPE_CONTEXT
 			-- Assertion context
-
-	internal_call: BOOLEAN
-			-- Have the process routines been called from here?
 
 	dummy_feature: ET_FEATURE is
 			-- Dummy feature

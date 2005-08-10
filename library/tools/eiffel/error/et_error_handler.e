@@ -10984,6 +10984,10 @@ feature -- Reporting
 
 -- Error codes not used:
 
+	-- report_giabv_error
+	-- report_giaaj_error
+	-- report_giaaz_error
+	-- report_giabr_error
 	-- report_giady_error
 	-- report_giaed_error
 	-- report_gibar_error

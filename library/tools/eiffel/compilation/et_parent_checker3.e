@@ -62,9 +62,7 @@ feature -- Validity checking
 			if a_parents /= Void then
 				nb := a_parents.count
 				from i := 1 until i > nb loop
-					internal_call := True
 					a_parents.parent (i).type.process (Current)
-					internal_call := False
 					i := i + 1
 				end
 				from
@@ -229,9 +227,7 @@ feature {NONE} -- Parent validity
 								-- is possible to create instances of `an_actual'
 								-- through that means. So we need to check recursively
 								-- its validity as a creation type.
-							internal_call := True
 							an_actual.process (Current)
-							internal_call := False
 						else
 								-- We need to check whether `an_actual' is expanded.
 								-- In that case the creation of an instance of that
@@ -239,9 +235,7 @@ feature {NONE} -- Parent validity
 								-- its validity as a creation type.
 							a_class_type ?= an_actual
 							if a_class_type /= Void and then a_class_type.is_expanded then
-								internal_call := True
 								an_actual.process (Current)
-								internal_call := False
 							end
 						end
 						i := i + 1
@@ -261,10 +255,7 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_class_type (a_type: ET_CLASS_TYPE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				check_class_type_validity (a_type)
-			end
+			check_class_type_validity (a_type)
 		end
 
 	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
@@ -290,11 +281,6 @@ feature {NONE} -- Access
 
 	classes_to_be_processed: DS_ARRAYED_LIST [ET_CLASS]
 			-- Classes that need to be processed
-
-feature {NONE} -- Implementation
-
-	internal_call: BOOLEAN
-			-- Have the process routines been called from here?
 
 invariant
 

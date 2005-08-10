@@ -62,9 +62,7 @@ feature -- Validity checking
 			if a_parents /= Void then
 				nb := a_parents.count
 				from i := 1 until i > nb loop
-					internal_call := True
 					a_parents.parent (i).type.process (Current)
-					internal_call := False
 					i := i + 1
 				end
 			end
@@ -105,9 +103,7 @@ feature {NONE} -- Parent validity
 					nb := an_actuals.count
 					from i := 1 until i > nb loop
 						an_actual := an_actuals.type (i)
-						internal_call := True
 						an_actual.process (Current)
-						internal_call := False
 						a_formal := a_formals.formal_parameter (i)
 						a_constraint := a_formal.constraint
 						if a_constraint /= Void then
@@ -155,9 +151,7 @@ feature {NONE} -- Parent validity
 			if a_parameters /= Void then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
-					internal_call := True
 					a_parameters.type (i).process (Current)
-					internal_call := False
 					i := i + 1
 				end
 			end
@@ -174,10 +168,7 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_class_type (a_type: ET_CLASS_TYPE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				check_class_type_validity (a_type)
-			end
+			check_class_type_validity (a_type)
 		end
 
 	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
@@ -189,10 +180,7 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				check_tuple_type_validity (a_type)
-			end
+			check_tuple_type_validity (a_type)
 		end
 
 feature {NONE} -- Error handling
@@ -209,11 +197,6 @@ feature {NONE} -- Access
 
 	current_class: ET_CLASS
 			-- Class being processed
-
-feature {NONE} -- Implementation
-
-	internal_call: BOOLEAN
-			-- Have the process routines been called from here?
 
 invariant
 

@@ -70,9 +70,7 @@ feature -- Validity checking
 			current_feature := a_current_feature
 			old_type := current_type
 			current_type := a_current_type
-			internal_call := True
 			a_type.process (Current)
-			internal_call := False
 			current_type := old_type
 			current_feature := old_feature
 		end
@@ -806,9 +804,7 @@ feature {NONE} -- Validity checking
 									set_fatal_error
 								end
 							end
-							internal_call := True
 							an_actual.process (Current)
-							internal_call := False
 							a_constraint := a_formal.constraint
 							if a_constraint /= Void then
 									-- If we have:
@@ -923,9 +919,7 @@ feature {NONE} -- Validity checking
 			if a_parameters /= Void then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
-					internal_call := True
 					a_parameters.type (i).process (Current)
-					internal_call := False
 					i := i + 1
 				end
 			end
@@ -936,19 +930,13 @@ feature {ET_AST_NODE} -- Type processing
 	process_bit_feature (a_type: ET_BIT_FEATURE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				check_bit_feature_validity (a_type)
-			end
+			check_bit_feature_validity (a_type)
 		end
 
 	process_bit_n (a_type: ET_BIT_N) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				check_bit_n_validity (a_type)
-			end
+			check_bit_n_validity (a_type)
 		end
 
 	process_class (a_type: ET_CLASS) is
@@ -960,10 +948,7 @@ feature {ET_AST_NODE} -- Type processing
 	process_class_type (a_type: ET_CLASS_TYPE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				check_class_type_validity (a_type)
-			end
+			check_class_type_validity (a_type)
 		end
 
 	process_generic_class_type (a_type: ET_GENERIC_CLASS_TYPE) is
@@ -975,28 +960,19 @@ feature {ET_AST_NODE} -- Type processing
 	process_like_current (a_type: ET_LIKE_CURRENT) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				check_like_current_validity (a_type)
-			end
+			check_like_current_validity (a_type)
 		end
 
 	process_like_feature (a_type: ET_LIKE_FEATURE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				check_like_feature_validity (a_type)
-			end
+			check_like_feature_validity (a_type)
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				check_tuple_type_validity (a_type)
-			end
+			check_tuple_type_validity (a_type)
 		end
 
 feature {NONE} -- Error handling
@@ -1026,9 +1002,6 @@ feature {NONE} -- Access
 			-- Feature where the type appears
 
 feature {NONE} -- Implementation
-
-	internal_call: BOOLEAN
-			-- Have the process routines been called from here?
 
 	dummy_feature: ET_FEATURE is
 			-- Dummy feature

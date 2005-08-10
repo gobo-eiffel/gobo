@@ -22,7 +22,6 @@ inherit
 			process_assigner_instruction,
 			process_assignment,
 			process_assignment_attempt,
-			process_attribute,
 			process_bang_instruction,
 			process_bracket_argument_list,
 			process_bracket_expression,
@@ -31,21 +30,16 @@ inherit
 			process_call_instruction,
 			process_check_instruction,
 			process_compound,
-			process_constant_attribute,
 			process_convert_expression,
 			process_create_expression,
 			process_create_instruction,
 			process_debug_instruction,
-			process_deferred_function,
-			process_deferred_procedure,
 			process_do_function,
 			process_do_procedure,
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
 			process_expression_address,
-			process_external_function,
-			process_external_procedure,
 			process_if_instruction,
 			process_infix_expression,
 			process_inspect_instruction,
@@ -63,7 +57,6 @@ inherit
 			process_static_call_expression,
 			process_static_call_instruction,
 			process_tagged_assertion,
-			process_unique_attribute,
 			process_when_part,
 			process_when_part_list
 		end
@@ -107,14 +100,7 @@ feature -- Validity checking
 			current_feature := a_feature
 			old_class := current_class
 			current_class := a_class
-			internal_call := True
 			a_feature.flattened_feature.process (Current)
-			if internal_call then
-					-- Internal error.
-				internal_call := False
-				set_fatal_error
-				error_handler.report_giabv_error
-			end
 			current_class := old_class
 			current_feature := old_feature
 		end
@@ -337,12 +323,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			if internal_call then
-				nb := a_list.count
-				from i := 1 until i > nb loop
-					a_list.actual_argument (i).process (Current)
-					i := i + 1
-				end
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.actual_argument (i).process (Current)
+				i := i + 1
 			end
 		end
 
@@ -351,44 +335,30 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			if internal_call then
-				nb := a_list.count
-				from i := 1 until i > nb loop
-					a_list.actual_argument (i).process (Current)
-					i := i + 1
-				end
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.actual_argument (i).process (Current)
+				i := i + 1
 			end
 		end
 
 	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				an_instruction.target.process (Current)
-				an_instruction.source.process (Current)
-			end
+			an_instruction.target.process (Current)
+			an_instruction.source.process (Current)
 		end
 
 	process_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				an_instruction.source.process (Current)
-			end
+			an_instruction.source.process (Current)
 		end
 
 	process_assignment_attempt (an_instruction: ET_ASSIGNMENT_ATTEMPT) is
 			-- Process `an_instruction'.
 		do
-			if internal_call then
-				an_instruction.source.process (Current)
-			end
-		end
-
-	process_attribute (a_feature: ET_ATTRIBUTE) is
-			-- Process `a_feature'.
-		do
-			internal_call := False
+			an_instruction.source.process (Current)
 		end
 
 	process_bang_instruction (an_instruction: ET_BANG_INSTRUCTION) is
@@ -397,13 +367,11 @@ feature {ET_AST_NODE} -- Processing
 			a_call: ET_QUALIFIED_CALL
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if internal_call then
-				a_call := an_instruction.creation_call
-				if a_call /= Void then
-					an_arguments := a_call.arguments
-					if an_arguments /= Void then
-						process_actual_argument_list (an_arguments)
-					end
+			a_call := an_instruction.creation_call
+			if a_call /= Void then
+				an_arguments := a_call.arguments
+				if an_arguments /= Void then
+					process_actual_argument_list (an_arguments)
 				end
 			end
 		end
@@ -413,12 +381,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			if internal_call then
-				nb := a_list.count
-				from i := 1 until i > nb loop
-					a_list.actual_argument (i).process (Current)
-					i := i + 1
-				end
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.actual_argument (i).process (Current)
+				i := i + 1
 			end
 		end
 
@@ -427,12 +393,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			l_arguments: ET_BRACKET_ARGUMENT_LIST
 		do
-			if internal_call then
-				an_expression.target.process (Current)
-				l_arguments := an_expression.arguments
-				if l_arguments /= Void then
-					l_arguments.process (Current)
-				end
+			an_expression.target.process (Current)
+			l_arguments := an_expression.arguments
+			if l_arguments /= Void then
+				l_arguments.process (Current)
 			end
 		end
 
@@ -442,15 +406,13 @@ feature {ET_AST_NODE} -- Processing
 			a_target: ET_AGENT_TARGET
 			an_arguments: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
-			if internal_call then
-				a_target := an_expression.target
-				if a_target /= Void then
-					a_target.process (Current)
-				end
-				an_arguments ?= an_expression.arguments
-				if an_arguments /= Void then
-					process_agent_argument_operand_list (an_arguments)
-				end
+			a_target := an_expression.target
+			if a_target /= Void then
+				a_target.process (Current)
+			end
+			an_arguments ?= an_expression.arguments
+			if an_arguments /= Void then
+				process_agent_argument_operand_list (an_arguments)
 			end
 		end
 
@@ -460,15 +422,13 @@ feature {ET_AST_NODE} -- Processing
 			a_target: ET_EXPRESSION
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if internal_call then
-				a_target := an_expression.target
-				if a_target /= Void then
-					a_target.process (Current)
-				end
-				an_arguments := an_expression.arguments
-				if an_arguments /= Void then
-					process_actual_argument_list (an_arguments)
-				end
+			a_target := an_expression.target
+			if a_target /= Void then
+				a_target.process (Current)
+			end
+			an_arguments := an_expression.arguments
+			if an_arguments /= Void then
+				process_actual_argument_list (an_arguments)
 			end
 		end
 
@@ -478,15 +438,13 @@ feature {ET_AST_NODE} -- Processing
 			a_target: ET_EXPRESSION
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if internal_call then
-				a_target := an_instruction.target
-				if a_target /= Void then
-					a_target.process (Current)
-				end
-				an_arguments := an_instruction.arguments
-				if an_arguments /= Void then
-					process_actual_argument_list (an_arguments)
-				end
+			a_target := an_instruction.target
+			if a_target /= Void then
+				a_target.process (Current)
+			end
+			an_arguments := an_instruction.arguments
+			if an_arguments /= Void then
+				process_actual_argument_list (an_arguments)
 			end
 		end
 
@@ -495,12 +453,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			if internal_call then
-				nb := an_instruction.count
-				from i := 1 until i > nb loop
-					an_instruction.assertion (i).process (Current)
-					i := i + 1
-				end
+			nb := an_instruction.count
+			from i := 1 until i > nb loop
+				an_instruction.assertion (i).process (Current)
+				i := i + 1
 			end
 		end
 
@@ -509,27 +465,17 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			if internal_call then
-				nb := a_list.count
-				from i := 1 until i > nb loop
-					a_list.item (i).process (Current)
-					i := i + 1
-				end
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
 			end
-		end
-
-	process_constant_attribute (a_feature: ET_CONSTANT_ATTRIBUTE) is
-			-- Process `a_feature'.
-		do
-			internal_call := False
 		end
 
 	process_convert_expression (a_convert_expression: ET_CONVERT_EXPRESSION) is
 			-- Process `a_convert_expression'.
 		do
-			if internal_call then
-				a_convert_expression.expression.process (Current)
-			end
+			a_convert_expression.expression.process (Current)
 		end
 
 	process_create_expression (an_expression: ET_CREATE_EXPRESSION) is
@@ -538,13 +484,11 @@ feature {ET_AST_NODE} -- Processing
 			a_call: ET_QUALIFIED_CALL
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if internal_call then
-				a_call := an_expression.creation_call
-				if a_call /= Void then
-					an_arguments := a_call.arguments
-					if an_arguments /= Void then
-						process_actual_argument_list (an_arguments)
-					end
+			a_call := an_expression.creation_call
+			if a_call /= Void then
+				an_arguments := a_call.arguments
+				if an_arguments /= Void then
+					process_actual_argument_list (an_arguments)
 				end
 			end
 		end
@@ -555,13 +499,11 @@ feature {ET_AST_NODE} -- Processing
 			a_call: ET_QUALIFIED_CALL
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if internal_call then
-				a_call := an_instruction.creation_call
-				if a_call /= Void then
-					an_arguments := a_call.arguments
-					if an_arguments /= Void then
-						process_actual_argument_list (an_arguments)
-					end
+			a_call := an_instruction.creation_call
+			if a_call /= Void then
+				an_arguments := a_call.arguments
+				if an_arguments /= Void then
+					process_actual_argument_list (an_arguments)
 				end
 			end
 		end
@@ -571,24 +513,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			a_compound: ET_COMPOUND
 		do
-			if internal_call then
-				a_compound := an_instruction.compound
-				if a_compound /= Void then
-					process_compound (a_compound)
-				end
+			a_compound := an_instruction.compound
+			if a_compound /= Void then
+				process_compound (a_compound)
 			end
-		end
-
-	process_deferred_function (a_feature: ET_DEFERRED_FUNCTION) is
-			-- Process `a_feature'.
-		do
-			internal_call := False
-		end
-
-	process_deferred_procedure (a_feature: ET_DEFERRED_PROCEDURE) is
-			-- Process `a_feature'.
-		do
-			internal_call := False
 		end
 
 	process_do_function (a_feature: ET_DO_FUNCTION) is
@@ -596,12 +524,9 @@ feature {ET_AST_NODE} -- Processing
 		local
 			a_compound: ET_COMPOUND
 		do
-			if internal_call then
-				a_compound := a_feature.compound
-				if a_compound /= Void then
-					process_compound (a_compound)
-				end
-				internal_call := False
+			a_compound := a_feature.compound
+			if a_compound /= Void then
+				process_compound (a_compound)
 			end
 		end
 
@@ -610,12 +535,9 @@ feature {ET_AST_NODE} -- Processing
 		local
 			a_compound: ET_COMPOUND
 		do
-			if internal_call then
-				a_compound := a_feature.compound
-				if a_compound /= Void then
-					process_compound (a_compound)
-				end
-				internal_call := False
+			a_compound := a_feature.compound
+			if a_compound /= Void then
+				process_compound (a_compound)
 			end
 		end
 
@@ -624,12 +546,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			a_compound: ET_COMPOUND
 		do
-			if internal_call then
-				an_elseif_part.expression.process (Current)
-				a_compound := an_elseif_part.then_compound
-				if a_compound /= Void then
-					process_compound (a_compound)
-				end
+			an_elseif_part.expression.process (Current)
+			a_compound := an_elseif_part.then_compound
+			if a_compound /= Void then
+				process_compound (a_compound)
 			end
 		end
 
@@ -638,42 +558,24 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			if internal_call then
-				nb := a_list.count
-				from i := 1 until i > nb loop
-					a_list.item (i).process (Current)
-					i := i + 1
-				end
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
 			end
 		end
 
 	process_equality_expression (an_expression: ET_EQUALITY_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				an_expression.left.process (Current)
-				an_expression.right.process (Current)
-			end
+			an_expression.left.process (Current)
+			an_expression.right.process (Current)
 		end
 
 	process_expression_address (an_expression: ET_EXPRESSION_ADDRESS) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				an_expression.expression.process (Current)
-			end
-		end
-
-	process_external_function (a_feature: ET_EXTERNAL_FUNCTION) is
-			-- Process `a_feature'.
-		do
-			internal_call := False
-		end
-
-	process_external_procedure (a_feature: ET_EXTERNAL_PROCEDURE) is
-			-- Process `a_feature'.
-		do
-			internal_call := False
+			an_expression.expression.process (Current)
 		end
 
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION) is
@@ -682,30 +584,26 @@ feature {ET_AST_NODE} -- Processing
 			an_elseif_parts: ET_ELSEIF_PART_LIST
 			a_compound: ET_COMPOUND
 		do
-			if internal_call then
-				an_instruction.expression.process (Current)
-				a_compound := an_instruction.then_compound
-				if a_compound /= Void then
-					process_compound (a_compound)
-				end
-				an_elseif_parts := an_instruction.elseif_parts
-				if an_elseif_parts /= Void then
-					process_elseif_part_list (an_elseif_parts)
-				end
-				a_compound := an_instruction.else_compound
-				if a_compound /= Void then
-					process_compound (a_compound)
-				end
+			an_instruction.expression.process (Current)
+			a_compound := an_instruction.then_compound
+			if a_compound /= Void then
+				process_compound (a_compound)
+			end
+			an_elseif_parts := an_instruction.elseif_parts
+			if an_elseif_parts /= Void then
+				process_elseif_part_list (an_elseif_parts)
+			end
+			a_compound := an_instruction.else_compound
+			if a_compound /= Void then
+				process_compound (a_compound)
 			end
 		end
 
 	process_infix_expression (an_expression: ET_INFIX_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				an_expression.left.process (Current)
-				an_expression.right.process (Current)
-			end
+			an_expression.left.process (Current)
+			an_expression.right.process (Current)
 		end
 
 	process_inspect_instruction (an_instruction: ET_INSPECT_INSTRUCTION) is
@@ -714,16 +612,14 @@ feature {ET_AST_NODE} -- Processing
 			a_when_parts: ET_WHEN_PART_LIST
 			an_else_compound: ET_COMPOUND
 		do
-			if internal_call then
-				an_instruction.expression.process (Current)
-				a_when_parts := an_instruction.when_parts
-				if a_when_parts /= Void then
-					process_when_part_list (a_when_parts)
-				end
-				an_else_compound := an_instruction.else_compound
-				if an_else_compound /= Void then
-					process_compound (an_else_compound)
-				end
+			an_instruction.expression.process (Current)
+			a_when_parts := an_instruction.when_parts
+			if a_when_parts /= Void then
+				process_when_part_list (a_when_parts)
+			end
+			an_else_compound := an_instruction.else_compound
+			if an_else_compound /= Void then
+				process_compound (an_else_compound)
 			end
 		end
 
@@ -735,27 +631,25 @@ feature {ET_AST_NODE} -- Processing
 			a_variant_expression: ET_EXPRESSION
 			a_compound: ET_COMPOUND
 		do
-			if internal_call then
-				a_compound := an_instruction.from_compound
-				if a_compound /= Void then
-					process_compound (a_compound)
+			a_compound := an_instruction.from_compound
+			if a_compound /= Void then
+				process_compound (a_compound)
+			end
+			an_invariant_part := an_instruction.invariant_part
+			if an_invariant_part /= Void then
+				process_loop_invariants (an_invariant_part)
+			end
+			a_variant_part := an_instruction.variant_part
+			if a_variant_part /= Void then
+				a_variant_expression := a_variant_part.expression
+				if a_variant_expression /= Void then
+					a_variant_expression.process (Current)
 				end
-				an_invariant_part := an_instruction.invariant_part
-				if an_invariant_part /= Void then
-					process_loop_invariants (an_invariant_part)
-				end
-				a_variant_part := an_instruction.variant_part
-				if a_variant_part /= Void then
-					a_variant_expression := a_variant_part.expression
-					if a_variant_expression /= Void then
-						a_variant_expression.process (Current)
-					end
-				end
-				an_instruction.until_expression.process (Current)
-				a_compound := an_instruction.loop_compound
-				if a_compound /= Void then
-					process_compound (a_compound)
-				end
+			end
+			an_instruction.until_expression.process (Current)
+			a_compound := an_instruction.loop_compound
+			if a_compound /= Void then
+				process_compound (a_compound)
 			end
 		end
 
@@ -764,12 +658,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			if internal_call then
-				nb := a_list.count
-				from i := 1 until i > nb loop
-					a_list.assertion (i).process (Current)
-					i := i + 1
-				end
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.assertion (i).process (Current)
+				i := i + 1
 			end
 		end
 
@@ -778,12 +670,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			if internal_call then
-				nb := an_expression.count
-				from i := 1 until i > nb loop
-					an_expression.expression (i).process (Current)
-					i := i + 1
-				end
+			nb := an_expression.count
+			from i := 1 until i > nb loop
+				an_expression.expression (i).process (Current)
+				i := i + 1
 			end
 		end
 
@@ -792,21 +682,17 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			if internal_call then
-				nb := an_expression.count
-				from i := 1 until i > nb loop
-					an_expression.expression (i).process (Current)
-					i := i + 1
-				end
+			nb := an_expression.count
+			from i := 1 until i > nb loop
+				an_expression.expression (i).process (Current)
+				i := i + 1
 			end
 		end
 
 	process_old_expression (an_expression: ET_OLD_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				an_expression.expression.process (Current)
-			end
+			an_expression.expression.process (Current)
 		end
 
 	process_once_function (a_feature: ET_ONCE_FUNCTION) is
@@ -814,12 +700,9 @@ feature {ET_AST_NODE} -- Processing
 		local
 			a_compound: ET_COMPOUND
 		do
-			if internal_call then
-				a_compound := a_feature.compound
-				if a_compound /= Void then
-					process_compound (a_compound)
-				end
-				internal_call := False
+			a_compound := a_feature.compound
+			if a_compound /= Void then
+				process_compound (a_compound)
 			end
 		end
 
@@ -828,21 +711,16 @@ feature {ET_AST_NODE} -- Processing
 		local
 			a_compound: ET_COMPOUND
 		do
-			if internal_call then
-				a_compound := a_feature.compound
-				if a_compound /= Void then
-					process_compound (a_compound)
-				end
-				internal_call := False
+			a_compound := a_feature.compound
+			if a_compound /= Void then
+				process_compound (a_compound)
 			end
 		end
 
 	process_parenthesized_expression (an_expression: ET_PARENTHESIZED_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				an_expression.expression.process (Current)
-			end
+			an_expression.expression.process (Current)
 		end
 
 	process_precursor_expression (an_expression: ET_PRECURSOR_EXPRESSION) is
@@ -850,12 +728,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if internal_call then
-				check_precursor_validity (an_expression)
-				an_arguments := an_expression.arguments
-				if an_arguments /= Void then
-					process_actual_argument_list (an_arguments)
-				end
+			check_precursor_validity (an_expression)
+			an_arguments := an_expression.arguments
+			if an_arguments /= Void then
+				process_actual_argument_list (an_arguments)
 			end
 		end
 
@@ -864,21 +740,17 @@ feature {ET_AST_NODE} -- Processing
 		local
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if internal_call then
-				check_precursor_validity (an_instruction)
-				an_arguments := an_instruction.arguments
-				if an_arguments /= Void then
-					process_actual_argument_list (an_arguments)
-				end
+			check_precursor_validity (an_instruction)
+			an_arguments := an_instruction.arguments
+			if an_arguments /= Void then
+				process_actual_argument_list (an_arguments)
 			end
 		end
 
 	process_prefix_expression (an_expression: ET_PREFIX_EXPRESSION) is
 			-- Process `an_expression'.
 		do
-			if internal_call then
-				an_expression.expression.process (Current)
-			end
+			an_expression.expression.process (Current)
 		end
 
 	process_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION) is
@@ -886,11 +758,9 @@ feature {ET_AST_NODE} -- Processing
 		local
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if internal_call then
-				an_arguments := an_expression.arguments
-				if an_arguments /= Void then
-					process_actual_argument_list (an_arguments)
-				end
+			an_arguments := an_expression.arguments
+			if an_arguments /= Void then
+				process_actual_argument_list (an_arguments)
 			end
 		end
 
@@ -899,11 +769,9 @@ feature {ET_AST_NODE} -- Processing
 		local
 			an_arguments: ET_ACTUAL_ARGUMENT_LIST
 		do
-			if internal_call then
-				an_arguments := an_instruction.arguments
-				if an_arguments /= Void then
-					process_actual_argument_list (an_arguments)
-				end
+			an_arguments := an_instruction.arguments
+			if an_arguments /= Void then
+				process_actual_argument_list (an_arguments)
 			end
 		end
 
@@ -912,18 +780,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			an_expression: ET_EXPRESSION
 		do
-			if internal_call then
-				an_expression := an_assertion.expression
-				if an_expression /= Void then
-					an_expression.process (Current)
-				end
+			an_expression := an_assertion.expression
+			if an_expression /= Void then
+				an_expression.process (Current)
 			end
-		end
-
-	process_unique_attribute (a_feature: ET_UNIQUE_ATTRIBUTE) is
-			-- Process `a_feature'.
-		do
-			internal_call := False
 		end
 
 	process_when_part (a_when_part: ET_WHEN_PART) is
@@ -931,11 +791,9 @@ feature {ET_AST_NODE} -- Processing
 		local
 			a_compound: ET_COMPOUND
 		do
-			if internal_call then
-				a_compound := a_when_part.then_compound
-				if a_compound /= Void then
-					process_compound (a_compound)
-				end
+			a_compound := a_when_part.then_compound
+			if a_compound /= Void then
+				process_compound (a_compound)
 			end
 		end
 
@@ -944,12 +802,10 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			if internal_call then
-				nb := a_list.count
-				from i := 1 until i > nb loop
-					process_when_part (a_list.item (i))
-					i := i + 1
-				end
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				process_when_part (a_list.item (i))
+				i := i + 1
 			end
 		end
 
@@ -972,9 +828,6 @@ feature {NONE} -- Access
 			-- Class to with `current_feature' belongs
 
 feature {NONE} -- Implementation
-
-	internal_call: BOOLEAN
-			-- Have the process routines been called from here?
 
 	dummy_feature: ET_REDECLARED_FEATURE is
 			-- Dummy feature

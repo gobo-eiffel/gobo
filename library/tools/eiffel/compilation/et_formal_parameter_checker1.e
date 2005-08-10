@@ -121,9 +121,7 @@ feature {NONE} -- Constraint validity
 			a_constraint := a_formal.constraint
 			if a_constraint /= Void then
 				current_formal := a_formal
-				internal_call := True
 				a_constraint.process (Current)
-				internal_call := False
 				current_formal := Void
 			end
 		end
@@ -232,9 +230,7 @@ feature {NONE} -- Constraint validity
 								set_fatal_error
 							end
 						end
-						internal_call := True
 						l_actual.process (Current)
-						internal_call := False
 						i := i + 1
 					end
 				end
@@ -382,9 +378,7 @@ feature {NONE} -- Constraint validity
 			if a_parameters /= Void then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
-					internal_call := True
 					a_parameters.type (i).process (Current)
-					internal_call := False
 					i := i + 1
 				end
 			end
@@ -500,22 +494,16 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_bit_feature (a_type: ET_BIT_FEATURE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				if current_formal /= Void then
-					check_bit_feature_constraint (a_type, current_formal)
-				end
+			if current_formal /= Void then
+				check_bit_feature_constraint (a_type, current_formal)
 			end
 		end
 
 	process_bit_n (a_type: ET_BIT_N) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				if current_formal /= Void then
-					check_bit_n_constraint (a_type, current_formal)
-				end
+			if current_formal /= Void then
+				check_bit_n_constraint (a_type, current_formal)
 			end
 		end
 
@@ -528,22 +516,16 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_class_type (a_type: ET_CLASS_TYPE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				if current_formal /= Void then
-					check_class_type_constraint (a_type, current_formal)
-				end
+			if current_formal /= Void then
+				check_class_type_constraint (a_type, current_formal)
 			end
 		end
 
 	process_formal_parameter_type (a_type: ET_FORMAL_PARAMETER_TYPE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				if current_formal /= Void then
-					check_formal_parameter_type_constraint (a_type, current_formal)
-				end
+			if current_formal /= Void then
+				check_formal_parameter_type_constraint (a_type, current_formal)
 			end
 		end
 
@@ -570,22 +552,16 @@ feature {ET_AST_NODE} -- Type dispatcher
 		require
 			a_type_not_void: a_type /= Void
 		do
-			if internal_call then
-				internal_call := False
-				if current_formal /= Void then
-					check_like_type_constraint (a_type, current_formal)
-				end
+			if current_formal /= Void then
+				check_like_type_constraint (a_type, current_formal)
 			end
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				if current_formal /= Void then
-					check_tuple_type_constraint (a_type, current_formal)
-				end
+			if current_formal /= Void then
+				check_tuple_type_constraint (a_type, current_formal)
 			end
 		end
 
@@ -606,11 +582,6 @@ feature {NONE} -- Access
 
 	current_formal: ET_FORMAL_PARAMETER
 			-- Formal generic parameter being processed
-
-feature {NONE} -- Implementation
-
-	internal_call: BOOLEAN
-			-- Have the process routines been called from here?
 
 invariant
 

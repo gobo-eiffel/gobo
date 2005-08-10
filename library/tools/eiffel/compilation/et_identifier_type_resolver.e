@@ -81,9 +81,7 @@ feature -- Type resolving
 			current_feature := a_feature
 			old_class := current_class
 			current_class := a_class
-			internal_call := True
 			a_type.process (Current)
-			internal_call := False
 			current_class := old_class
 			current_feature := old_feature
 		end
@@ -222,10 +220,7 @@ feature {ET_AST_NODE} -- Type processing
 	process_bit_feature (a_type: ET_BIT_FEATURE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				resolve_bit_feature (a_type)
-			end
+			resolve_bit_feature (a_type)
 		end
 
 	process_class (a_type: ET_CLASS) is
@@ -239,12 +234,9 @@ feature {ET_AST_NODE} -- Type processing
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			if internal_call then
-				internal_call := False
-				a_parameters := a_type.actual_parameters
-				if a_parameters /= Void then
-					resolve_actual_parameters (a_parameters)
-				end
+			a_parameters := a_type.actual_parameters
+			if a_parameters /= Void then
+				resolve_actual_parameters (a_parameters)
 			end
 		end
 
@@ -257,10 +249,7 @@ feature {ET_AST_NODE} -- Type processing
 	process_like_feature (a_type: ET_LIKE_FEATURE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				resolve_like_feature (a_type)
-			end
+			resolve_like_feature (a_type)
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is
@@ -268,19 +257,11 @@ feature {ET_AST_NODE} -- Type processing
 		local
 			a_parameters: ET_ACTUAL_PARAMETER_LIST
 		do
-			if internal_call then
-				internal_call := False
-				a_parameters := a_type.actual_parameters
-				if a_parameters /= Void then
-					resolve_actual_parameters (a_type.actual_parameters)
-				end
+			a_parameters := a_type.actual_parameters
+			if a_parameters /= Void then
+				resolve_actual_parameters (a_type.actual_parameters)
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	internal_call: BOOLEAN
-			-- Have the process routines been called from here?
 
 invariant
 

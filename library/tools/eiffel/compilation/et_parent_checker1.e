@@ -67,9 +67,7 @@ feature -- Validity checking
 				nb := a_parents.count
 				from i := 1 until i > nb loop
 					current_parent := a_parents.parent (i)
-					internal_call := True
 					current_parent.type.process (Current)
-					internal_call := False
 					current_parent := Void
 					i := i + 1
 				end
@@ -182,9 +180,7 @@ feature {NONE} -- Parent validity
 								set_fatal_error
 							end
 						end
-						internal_call := True
 						an_actual.process (Current)
-						internal_call := False
 						i := i + 1
 					end
 				end
@@ -231,9 +227,7 @@ feature {NONE} -- Parent validity
 				if a_parameters /= Void then
 					nb := a_parameters.count
 					from i := 1 until i > nb loop
-						internal_call := True
 						a_parameters.type (i).process (Current)
-						internal_call := False
 						i := i + 1
 					end
 				end
@@ -245,22 +239,16 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_bit_feature (a_type: ET_BIT_FEATURE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				if current_parent /= Void then
-					check_bit_feature_validity (a_type, current_parent)
-				end
+			if current_parent /= Void then
+				check_bit_feature_validity (a_type, current_parent)
 			end
 		end
 
 	process_bit_n (a_type: ET_BIT_N) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				if current_parent /= Void then
-					check_bit_n_validity (a_type, current_parent)
-				end
+			if current_parent /= Void then
+				check_bit_n_validity (a_type, current_parent)
 			end
 		end
 
@@ -273,11 +261,8 @@ feature {ET_AST_NODE} -- Type dispatcher
 	process_class_type (a_type: ET_CLASS_TYPE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				if current_parent /= Void then
-					check_class_type_validity (a_type, current_parent)
-				end
+			if current_parent /= Void then
+				check_class_type_validity (a_type, current_parent)
 			end
 		end
 
@@ -304,22 +289,16 @@ feature {ET_AST_NODE} -- Type dispatcher
 		require
 			a_type_not_void: a_type /= Void
 		do
-			if internal_call then
-				internal_call := False
-				if current_parent /= Void then
-					check_like_type_validity (a_type, current_parent)
-				end
+			if current_parent /= Void then
+				check_like_type_validity (a_type, current_parent)
 			end
 		end
 
 	process_tuple_type (a_type: ET_TUPLE_TYPE) is
 			-- Process `a_type'.
 		do
-			if internal_call then
-				internal_call := False
-				if current_parent /= Void then
-					check_tuple_type_validity (a_type, current_parent)
-				end
+			if current_parent /= Void then
+				check_tuple_type_validity (a_type, current_parent)
 			end
 		end
 
@@ -340,11 +319,6 @@ feature {NONE} -- Access
 
 	current_parent: ET_PARENT
 			-- Parent being processed
-
-feature {NONE} -- Implementation
-
-	internal_call: BOOLEAN
-			-- Have the process routines been called from here?
 
 invariant
 
