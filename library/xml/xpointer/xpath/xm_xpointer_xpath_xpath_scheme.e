@@ -93,21 +93,27 @@ feature -- Element change
 				create {XM_XPATH_INVALID_VALUE} value.make (expression_factory.parsed_error_value)
 			else
 				an_expression := expression_factory.parsed_expression
-				an_expression.analyze (a_static_context)
+				an_expression.check_static_type (a_static_context)
 				if an_expression.is_error then
 					is_error := True
 					create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
 				else
-					if an_expression.was_expression_replaced then
-						an_expression := an_expression.replacement_expression
-					end
+					an_expression.optimize (a_static_context)
 					if an_expression.is_error then
 						is_error := True
 						create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
 					else
-						create a_slot_manager.make
-						an_expression.allocate_slots (1, a_slot_manager)
-						evaluate_post_analysis (an_expression, a_resource)
+						if an_expression.was_expression_replaced then
+							an_expression := an_expression.replacement_expression
+						end
+						if an_expression.is_error then
+							is_error := True
+							create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
+						else
+							create a_slot_manager.make
+							an_expression.allocate_slots (1, a_slot_manager)
+							evaluate_post_analysis (an_expression, a_resource)
+						end
 					end
 				end
 			end
