@@ -73,8 +73,7 @@ inherit
 			name as identifier
 		undefine
 			first_position, last_position,
-			reset, is_equal, is_instruction,
-			as_instruction
+			reset, is_equal
 		end
 
 	ET_FEATURE_CALL_INSTRUCTION
@@ -82,8 +81,7 @@ inherit
 			name as identifier
 		undefine
 			first_position, last_position,
-			reset, is_equal, is_expression,
-			as_expression
+			reset, is_equal
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -216,18 +214,34 @@ feature -- Status report
 	is_identifier: BOOLEAN is True
 			-- Is current feature name an identifier?
 
-	is_local: BOOLEAN
+	is_local: BOOLEAN is
 			-- Is current identifier a local variable name?
+		do
+			Result := (status_code = local_code)
+		end
 
-	is_argument: BOOLEAN
+	is_argument: BOOLEAN is
 			-- Is current identifier a formal argument name?
+		do
+			Result := (status_code = argument_code)
+		end
 
+	is_instruction: BOOLEAN is
+			-- Is current identifier an argumentless unqualified call?
+		do
+			Result := (status_code = instruction_code)
+		end
+		
 feature -- Status setting
 
 	set_local (b: BOOLEAN) is
 			-- Set `is_local' to `b'.
 		do
-			is_local := b
+			if b then
+				status_code := local_code
+			else
+				status_code := no_code
+			end
 		ensure
 			local_set: is_local = b
 		end
@@ -235,9 +249,25 @@ feature -- Status setting
 	set_argument (b: BOOLEAN) is
 			-- Set `is_argument' to `b'.
 		do
-			is_argument := b
+			if b then
+				status_code := argument_code
+			else
+				status_code := no_code
+			end
 		ensure
 			argument_set: is_argument = b
+		end
+
+	set_instruction (b: BOOLEAN) is
+			-- Set `is_instruction' to `b'.
+		do
+			if b then
+				status_code := instruction_code
+			else
+				status_code := no_code
+			end
+		ensure
+			instruction_set: is_instruction = b
 		end
 
 feature -- Comparison
@@ -385,5 +415,12 @@ feature {NONE} -- Implementation
 		ensure
 			new_hash_code_non_negatige: Result >= 0
 		end
+
+	status_code: CHARACTER
+	local_code: CHARACTER is 'l'
+	argument_code: CHARACTER is 'a'
+	instruction_code: CHARACTER is 'i'
+	no_code: CHARACTER is '%U'
+			-- Status codes
 
 end

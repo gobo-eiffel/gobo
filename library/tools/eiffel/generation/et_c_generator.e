@@ -7068,28 +7068,15 @@ feature {ET_AST_NODE} -- Processing
 
 	process_identifier (an_identifier: ET_IDENTIFIER) is
 			-- Process `an_identifier'.
-		local
-			l_feature: ET_FEATURE
 		do
 			if an_identifier.is_argument then
 				print_formal_argument (an_identifier)
 			elseif an_identifier.is_local then
 				print_local_variable (an_identifier)
+			elseif an_identifier.is_instruction then
+				print_procedure_call (current_type, Void, an_identifier, Void)
 			else
-				l_feature := current_type.base_class.seeded_query (an_identifier.seed)
-				if l_feature /= Void then
-					print_query_call (current_type, Void, an_identifier, Void)
-				else
-					l_feature := current_type.base_class.seeded_procedure (an_identifier.seed)
-					if l_feature /= Void then
-						print_procedure_call (current_type, Void, an_identifier, Void)
-					else
-							-- Internal error: there should be a feature with this seed.
-							-- It has been computed in ET_FEATURE_FLATTENER.
-						set_fatal_error
-						error_handler.report_giaed_error
-					end
-				end
+				print_query_call (current_type, Void, an_identifier, Void)
 			end
 		end
 

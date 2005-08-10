@@ -292,7 +292,6 @@ feature -- Validity checking
 			nb := a_compound.count
 			from i := 1 until i > nb loop
 				has_fatal_error := False
-				in_instruction := True
 				internal_call := True
 				a_compound.item (i).process (Current)
 				if internal_call then
@@ -300,12 +299,6 @@ feature -- Validity checking
 					internal_call := False
 					set_fatal_error
 					error_handler.report_giaaz_error
-				end
-				if in_instruction then
-						-- Internal error.
-					in_instruction := False
-					set_fatal_error
-					error_handler.report_giady_error
 				end
 				had_error := had_error or has_fatal_error
 				i := i + 1
@@ -7859,7 +7852,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_assigner_instruction_validity (an_instruction)
 			end
 		end
@@ -7869,7 +7861,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_assignment_validity (an_instruction)
 			end
 		end
@@ -7879,7 +7870,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_assignment_attempt_validity (an_instruction)
 			end
 		end
@@ -7898,7 +7888,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_bang_instruction_validity (an_instruction)
 			end
 		end
@@ -7971,7 +7960,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_call_instruction_validity (an_instruction)
 			end
 		end
@@ -7981,7 +7969,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_check_instruction_validity (an_instruction)
 			end
 		end
@@ -8027,7 +8014,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_create_instruction_validity (an_instruction)
 			end
 		end
@@ -8055,7 +8041,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_debug_instruction_validity (an_instruction)
 			end
 		end
@@ -8164,13 +8149,12 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				if in_instruction then
-					in_instruction := False
-					check_unqualified_call_instruction_validity (an_identifier)
-				elseif an_identifier.is_argument then
+				if an_identifier.is_argument then
 					check_formal_argument_validity (an_identifier, current_context)
 				elseif an_identifier.is_local then
 					check_local_variable_validity (an_identifier, current_context)
+				elseif an_identifier.is_instruction then
+					check_unqualified_call_instruction_validity (an_identifier)
 				else
 					check_unqualified_call_expression_validity (an_identifier, current_context)
 				end
@@ -8182,7 +8166,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_if_instruction_validity (an_instruction)
 			end
 		end
@@ -8210,7 +8193,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_inspect_instruction_validity (an_instruction)
 			end
 		end
@@ -8220,7 +8202,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_loop_instruction_validity (an_instruction)
 			end
 		end
@@ -8311,7 +8292,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_precursor_instruction_validity (an_instruction)
 			end
 		end
@@ -8375,7 +8355,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_retry_instruction_validity (an_instruction)
 			end
 		end
@@ -8385,7 +8364,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				has_fatal_error := False
 			end
 		end
@@ -8413,7 +8391,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if internal_call then
 				internal_call := False
-				in_instruction := False
 				check_static_call_instruction_validity (an_instruction)
 			end
 		end
@@ -8540,9 +8517,6 @@ feature {NONE} -- Access
 
 feature {ET_FEATURE_CHECKER} -- Status report
 
-	in_instruction: BOOLEAN
-			-- Are we processing an instruction?
-
 	in_rescue: BOOLEAN
 			-- Are we processing a rescue clause?
 
@@ -8566,7 +8540,6 @@ feature {ET_FEATURE_CHECKER} -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			in_instruction := other.in_instruction
 			in_rescue := other.in_rescue
 			in_assertion := other.in_assertion
 			in_precondition := other.in_precondition
@@ -8574,7 +8547,6 @@ feature {ET_FEATURE_CHECKER} -- Status report
 			in_invariant := other.in_invariant
 			in_precursor := other.in_precursor
 		ensure
-			in_instruction_set: in_instruction = other.in_instruction
 			in_rescue_set: in_rescue = other.in_rescue
 			in_assertion_set: in_assertion = other.in_assertion
 			in_precondition_set: in_precondition = other.in_precondition

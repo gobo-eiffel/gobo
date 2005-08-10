@@ -15,9 +15,6 @@ class ET_CALL_EXPRESSION
 inherit
 
 	ET_REGULAR_FEATURE_CALL
-		undefine
-			is_expression
-		end
 
 	ET_FEATURE_CALL_EXPRESSION
 		undefine

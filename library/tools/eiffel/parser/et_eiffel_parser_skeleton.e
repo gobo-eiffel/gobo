@@ -1468,6 +1468,7 @@ feature {NONE} -- AST factory
 				Result := ast_factory.new_call_instruction (Void, a_name, args)
 			else
 				Result := a_name
+				a_name.set_instruction (True)
 			end
 		end
 

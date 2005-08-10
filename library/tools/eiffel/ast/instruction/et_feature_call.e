@@ -22,20 +22,6 @@ inherit
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
-feature -- Status report
-
-	is_expression: BOOLEAN is
-			-- Is current call an expression?
-		do
-			-- Result := False
-		end
-
-	is_instruction: BOOLEAN is
-			-- Is current call an instruction?
-		do
-			-- Result := False
-		end
-
 feature -- Access
 
 	target: ET_EXPRESSION is
@@ -46,26 +32,6 @@ feature -- Access
 	arguments: ET_ACTUAL_ARGUMENTS is
 			-- Arguments
 		deferred
-		end
-
-feature -- Conversion
-
-	as_expression: ET_FEATURE_CALL_EXPRESSION is
-			-- `Current' viewed as an expression
-		require
-			is_expression: is_expression
-		deferred
-		ensure
-			definition: ANY_.same_objects (Result, Current)
-		end
-
-	as_instruction: ET_FEATURE_CALL_INSTRUCTION is
-			-- `Current' viewed as an instruction
-		require
-			is_instruction: is_instruction
-		deferred
-		ensure
-			definition: ANY_.same_objects (Result, Current)
 		end
 		
 end

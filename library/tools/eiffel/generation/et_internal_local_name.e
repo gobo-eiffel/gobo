@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Create a new internal local name.
 		do
 			make_with_hash_code (a_name, new_hash_code (a_name))
-			is_local := True
+			set_local (True)
 		end
 
 end
