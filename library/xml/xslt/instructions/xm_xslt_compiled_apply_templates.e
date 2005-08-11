@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Status report
 
-	last_set_tail_call: XM_XSLT_TAIL_CALL is
+	last_set_tail_call: XM_XPATH_TAIL_CALL is
 			-- Last tail call set by `set_last_tail_call'
 		do
 			Result := last_tail_call
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_last_tail_call (a_tail_call: XM_XSLT_TAIL_CALL) is
+	set_last_tail_call (a_tail_call: XM_XPATH_TAIL_CALL) is
 			-- Set residue from `apply_templates'
 		do
 			last_tail_call := a_tail_call
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 
 			if returns_tail_call then
 				a_new_context := a_context.new_context
-				select_expression.lazily_evaluate (a_context, False)
+				select_expression.lazily_evaluate (a_context, 1)
 				create {XM_XSLT_APPLY_TEMPLATES_PACKAGE} last_tail_call.make ( select_expression.last_evaluation,
 																									a_mode, some_parameters,
 																									some_tunnel_parameters,

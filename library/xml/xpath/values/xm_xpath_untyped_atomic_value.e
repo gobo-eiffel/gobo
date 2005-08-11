@@ -16,8 +16,8 @@ inherit
 
 	XM_XPATH_STRING_VALUE
 		redefine
-			display, convert_to_type, item_type, is_comparable, is_string_value, as_string_value, is_untyped_atomic, as_untyped_atomic,
-			same_expression
+			display, convert_to_type, item_type, is_comparable, is_string_value, as_string_value,
+			is_untyped_atomic, as_untyped_atomic, same_expression, same_atomic_value
 		end
 
 	-- N.B. Inheritance from XM_XPATH_STRING_VALUE is an implementation convenience;
@@ -90,7 +90,18 @@ feature -- Comparison
 		ensure
 			three_way_comparison: Result >= -1 and Result <= 1
 		end
-			
+	
+	same_atomic_value (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+			-- Are `Current' and `other' the same value?
+
+		do
+			if other.is_string_value then
+				Result := STRING_.same_string (value, other.as_string_value.string_value)
+			else
+				Result := Precursor (other)
+			end
+		end
+		
 feature -- Status report
 
 	is_comparable (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is

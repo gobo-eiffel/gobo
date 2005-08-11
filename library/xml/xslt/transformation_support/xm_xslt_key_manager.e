@@ -80,7 +80,7 @@ feature -- Access
 			an_item_type: INTEGER
 			a_value: XM_XPATH_ATOMIC_VALUE
 			an_index: XM_XSLT_KEY_INDEX
-			a_key_definition: XM_XSLT_KEY_DEFINITION
+			--a_key_definition: XM_XSLT_KEY_DEFINITION
 			a_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			--a_collator: ST_COLLATOR
 			an_error: XM_XPATH_ERROR_VALUE
@@ -111,8 +111,13 @@ feature -- Access
 				end
 			end
 			if not a_context.transformer.is_error then
-				a_key_definition := key_definitions (a_key_fingerprint).item (1)
-				-- a_collator := a_key_definition.collator TODO - collation keys
+				--  TODO - collation keys
+				--a_key_definition := key_definitions (a_key_fingerprint).item (1)
+				-- a_collator := a_key_definition.collator
+				if an_item_type = Untyped_atomic_type_code then
+					--  TODO - collation keys
+					a_value := a_value.convert_to_type (type_factory.string_type)
+				end
 				if an_index.has (a_key_value) then
 					a_list := an_index.map.item (a_key_value)
 					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} last_key_sequence.make (a_list)

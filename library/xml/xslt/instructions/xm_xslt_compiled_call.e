@@ -130,7 +130,7 @@ feature -- Evaluation
 	process (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
-			a_tail_call: XM_XSLT_TAIL_CALL
+			a_tail_call: XM_XPATH_TAIL_CALL
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 			a_transformer: XM_XSLT_TRANSFORMER
 		do

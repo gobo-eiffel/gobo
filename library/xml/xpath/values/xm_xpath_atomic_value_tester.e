@@ -31,7 +31,7 @@ feature -- Status report
 			elseif u = Void then
 				Result := False
 			else
-				Result := v.same_expression (u)
+				Result := v.same_atomic_value (u)
 			end
 		end
 

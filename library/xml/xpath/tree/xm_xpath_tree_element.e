@@ -340,7 +340,7 @@ feature {XM_XPATH_TREE_ELEMENT} -- Local
 			accumulation_list: an_accumulation_list /= Void
 			non_empty_accumulation_list: an_accumulation_list.count > 0 implies an_owner /= Current
 		local
-			a_code_cursor, another_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+			a_code_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_namespace_code: INTEGER
 			a_prefix_code, a_uri_code: INTEGER -- _16
 			a_parent: XM_XPATH_COMPOSITE_NODE

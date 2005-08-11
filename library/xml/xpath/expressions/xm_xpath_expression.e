@@ -62,6 +62,9 @@ inherit
 	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
+	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
+		export {NONE} all end
+
 feature -- Access
 
 	item_type: XM_XPATH_ITEM_TYPE is
@@ -649,6 +652,21 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
+	is_lazy_expression: BOOLEAN is
+			-- Is `Current' a lazy expression?
+		do
+			Result := False
+		end
+
+	as_lazy_expression: XM_XPATH_LAZY_EXPRESSION is
+			-- `Current' seen as a lazy expression
+		require
+			lazy_expression: is_lazy_expression
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 	is_atomizer_expression: BOOLEAN is
 			-- Is `Current' an atomizer expression?
 		do
@@ -656,7 +674,7 @@ feature -- Access
 		end
 
 	as_atomizer_expression: XM_XPATH_ATOMIZER_EXPRESSION is
-			-- `Current' seen as a range expression
+			-- `Current' seen as an atomizer expression
 		require
 			atomizer_expression: is_atomizer_expression
 		do
@@ -1556,39 +1574,14 @@ feature -- Evaluation
 		deferred
 		end
 
-	lazily_evaluate (a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
+	lazily_evaluate (a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
 			-- Lazily evaluate `Current'.
 			-- This will set a value, which may optionally be an XM_XPATH_CLOSURE,
 			--  which is a wrapper around an iterator over the value of the expression.
-			-- This routine is redefined for values and variable references.
 		require
 			expression_not_in_error: not is_error
 			not_replaced: not was_expression_replaced
-		do
-			check
-				context_not_void: a_context /= Void
-				-- We are not evaluating a value, as XM_XPATH_VALUE redefines this routine
-			end
-			if not cardinality_allows_many then
-
-				-- Singletons are always evaluated eagerly
-				
-				eagerly_evaluate (a_context)
-			elseif depends_upon_position or else depends_upon_last
-				or else depends_upon_current_item or else depends_upon_current_group
-				or else depends_upon_regexp_group then
-				
-				-- We can't save these values in the closure, so we evaluate
-				-- the expression now if they are needed
-				
-				eagerly_evaluate (a_context)
-			else
-				
-				-- Create a Closure, a wrapper for the expression and its context
-				
-				expression_factory.create_closure (Current, a_context, save_values)
-				last_evaluation := expression_factory.last_created_closure
-			end
+		deferred
 		ensure
 			evaluated: last_evaluation /= Void
 		end

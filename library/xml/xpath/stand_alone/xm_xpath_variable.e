@@ -63,6 +63,12 @@ feature -- Access
 			Result := -1
 		end
 
+	slot_number: INTEGER is
+			-- Slot number in local stack frame
+		do
+			-- Pre-condition is never met
+		end
+
 feature -- Status report
 
 		is_global: BOOLEAN is

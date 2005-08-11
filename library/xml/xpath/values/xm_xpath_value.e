@@ -19,7 +19,7 @@ inherit
 
 	XM_XPATH_EXPRESSION
 		redefine
-			lazily_evaluate, is_value, as_value
+			is_value, as_value
 		end
 
 feature {NONE} -- Initialization
@@ -180,7 +180,7 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	lazily_evaluate (a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
+	lazily_evaluate (a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
 			-- Lazily evaluate `Current'.
 		do
 				last_evaluation := Current

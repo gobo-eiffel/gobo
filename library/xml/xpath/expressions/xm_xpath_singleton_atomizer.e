@@ -104,9 +104,6 @@ feature -- Optimization
 
 	simplify is
 			-- Perform context-independent static optimizations
-		local
-			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			finished: BOOLEAN
 		do
 			base_expression.simplify
 			if base_expression.is_error then
@@ -205,7 +202,6 @@ feature {XM_XPATH_UNARY_EXPRESSION} -- Restricted
 		do
 			Result := "atomize singleton"
 		end
-
 	
 feature {XM_XPATH_EXPRESSION} -- Restricted
 

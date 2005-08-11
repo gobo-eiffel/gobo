@@ -129,7 +129,7 @@ feature -- Evaluation
 
 					body.eagerly_evaluate (a_context)
 				else
-					body.lazily_evaluate (a_context, False)
+					body.lazily_evaluate (a_context, 1)
 				end
 				last_called_value := body.last_evaluation
 				if evaluate_tail_calls then

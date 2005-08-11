@@ -27,6 +27,8 @@ inherit
 
 	XM_XPATH_ROLE
 
+	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
+
 feature -- Access
 
 	select_expression: XM_XPATH_EXPRESSION
@@ -173,7 +175,7 @@ feature -- Evaluation
 			context_not_void: a_context /= Void
 			select_expression_not_void: select_expression /= Void
 		do
-			select_expression.lazily_evaluate (a_context, True)
+			select_expression.lazily_evaluate (a_context, Many_references)
 			Result := select_expression.last_evaluation
 		ensure
 			variable_value_not_void: Result /= Void

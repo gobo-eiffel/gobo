@@ -16,6 +16,8 @@ inherit
 
 	XM_XSLT_COMPILED_VARIABLE
 
+	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
+
 create
 
 	make
@@ -39,7 +41,7 @@ feature -- Evaluation
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
-			select_expression.lazily_evaluate (a_context, True)
+			select_expression.lazily_evaluate (a_context, Many_references)
 			a_context.set_local_variable (last_evaluation, slot_number)
 			last_tail_call := Void
 		end

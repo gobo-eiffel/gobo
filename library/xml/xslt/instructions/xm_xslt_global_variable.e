@@ -19,6 +19,8 @@ inherit
 			is_global, select_value, is_global_variable, as_global_variable
 		end
 
+	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
+
 create
 
 	make_global_variable
@@ -120,7 +122,7 @@ feature -- Evaluation
 			if slot_manager.number_of_variables > 0 then
 				a_new_context.open_stack_frame (slot_manager)
 			end
-			select_expression.lazily_evaluate (a_new_context, True)
+			select_expression.lazily_evaluate (a_new_context, Many_references)
 			Result := select_expression.last_evaluation
 		end
 

@@ -46,7 +46,7 @@ create {XM_XPATH_EXPRESSION_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
+	make (an_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant.
 		require
 			valid_expression: an_expression /= Void and then not (an_expression.depends_upon_position or else an_expression.depends_upon_last)
@@ -207,7 +207,7 @@ feature  -- Conversion
 	
 feature {XM_XPATH_CLOSURE} -- Local
 
-	base_expression: XM_XPATH_EXPRESSION
+	base_expression: XM_XPATH_COMPUTED_EXPRESSION
 			-- Underlying expression
 
 	saved_xpath_context: XM_XPATH_CONTEXT
@@ -239,24 +239,30 @@ feature {NONE} -- Implementation
 			an_index, a_depth: INTEGER
 			a_value: XM_XPATH_VALUE
 			a_closure: XM_XPATH_CLOSURE
+			slots_used: DS_ARRAYED_LIST [INTEGER]
+			a_slot_number: INTEGER
 		do
 			
-			--If the value of any local variable is a closure whose depth
-			--  exceeds a certain threshold, we evaluate the closure eagerly to avoid
-			--  creating deeply nested lists of closures, which consume memory unnecessarily.
-
+			-- If the value of any local variable is a closure whose depth
+			--   exceeds a certain threshold, we evaluate the closure eagerly to avoid
+			--   creating deeply nested lists of closures, which consume memory unnecessarily.
+			-- We only copy the local variables if the expression has dependencies on local variables.
+			-- What's more, we only copy those variables that the expression actually depends on.
+	
 			if base_expression.depends_upon_local_variables then
 				a_local_variable_frame := a_context.local_variable_frame
 				if a_local_variable_frame.variables.count > 0 then
+					slots_used := base_expression.slots_used
 					from
 						create a_saved_local_variable_frame.make_fixed_size (a_local_variable_frame.variables.count)
 						an_index := 1
 					variant
 						a_local_variable_frame.variables.count + 1 - an_index
 					until
-						is_error or else an_index > a_local_variable_frame.variables.count
+						is_error or else an_index > slots_used.count
 					loop
-						a_value := a_local_variable_frame.variables.item (an_index)
+						a_slot_number := slots_used.item (an_index)
+						a_value := a_local_variable_frame.variables.item (a_slot_number)
 						if a_value /= Void and then a_value.is_closure then
 							a_closure := a_value.as_closure
 							a_depth := a_closure.depth
@@ -266,17 +272,15 @@ feature {NONE} -- Implementation
 								if a_value.is_error then
 									set_last_error (a_value.error_value)
 								else
-									a_saved_local_variable_frame.set_variable (a_value, an_index)
+
 								end
 							else
 								if a_depth + 1 > depth then
 									depth := a_depth + 1
 								end
-								a_saved_local_variable_frame.set_variable (a_local_variable_frame.variables.item (an_index), an_index)
 							end
-						else
-							a_saved_local_variable_frame.set_variable (a_local_variable_frame.variables.item (an_index), an_index)
 						end
+						a_saved_local_variable_frame.set_variable (a_value, a_slot_number)
 						an_index := an_index + 1
 					end
 					saved_xpath_context.set_stack_frame (a_saved_local_variable_frame)

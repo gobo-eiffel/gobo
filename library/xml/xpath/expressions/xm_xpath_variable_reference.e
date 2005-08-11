@@ -18,7 +18,7 @@ inherit
 		redefine
 			same_expression, promote, create_iterator, evaluate_item, lazily_evaluate,
 			native_implementations, compute_special_properties, compute_intrinsic_dependencies,
-			is_variable_reference, as_variable_reference
+			is_variable_reference, as_variable_reference, accumulate_slots_used
 		end
 
 create
@@ -208,7 +208,7 @@ feature -- Evaluation
 			evaluation: last_evaluated_binding /= Void			
 		end
 
-	lazily_evaluate (a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
+	lazily_evaluate (a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
 			-- Lazily evaluate `Current'.
 		do
 			evaluate_variable (a_context)
@@ -286,6 +286,25 @@ feature {NONE} -- Implementation
 		do
 			Precursor
 			set_non_creating
+		end
+
+	accumulate_slots_used (a_set: DS_HASH_SET [INTEGER]) is
+			-- Add all slot numbers used by `an_expression' to `a_set'.
+		local
+			a_slot_number: INTEGER
+		do
+			check
+				fixed_up: binding /= Void
+				-- How to prove this is always the case?
+			end
+			if not binding.is_global then
+				a_slot_number := binding.slot_number
+				if a_slot_number > 0 then
+					if not a_set.has (a_slot_number) then
+						a_set.force_new (a_slot_number)
+					end
+				end
+			end
 		end
 
 end

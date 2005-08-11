@@ -19,12 +19,14 @@ inherit
 		redefine
 			promote, create_iterator, evaluate_item, compute_special_properties,
 			mark_tail_function_calls, action, is_let_expression, as_let_expression,
-			is_tail_recursive
+			is_tail_recursive, process
 		end
 
 	XM_XPATH_ROLE
 	
 	XM_XPATH_PROMOTION_ACTIONS
+
+	XM_XPATH_TAIL_CALL
 
 create
 
@@ -52,6 +54,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	reference_count: INTEGER
+			-- Estimate of numbe rof references to `Current', set by `optimize'
 		
 	is_let_expression: BOOLEAN is
 			-- Is `Current' a let expression?
@@ -107,7 +112,7 @@ feature -- Status report
 			a_string := STRING_.appended_string (indentation (a_level), "let $")
 			a_string := STRING_.appended_string (a_string, variable_name)
 			std.error.put_string (a_string)
-			std.error.put_new_line
+			std.error.put_string ("[reference count=" + reference_count.out + "]%N")
 			sequence.display (a_level + 1)
 			a_string := STRING_.appended_string (indentation (a_level), "return")
 			std.error.put_string (a_string)
@@ -196,10 +201,6 @@ feature -- Optimization
 					
 					set_replacement (action_expression)
 					optimized := True
-				elseif a_reference_count = 1 then
-					keep_value := False
-				else
-					keep_value := True
 				end
 				set_declaration_void
 			end
@@ -246,6 +247,8 @@ feature -- Optimization
 		local
 			a_promotion: XM_XPATH_EXPRESSION
 			another_offer: XM_XPATH_PROMOTION_OFFER
+			a_saved_binding_list, a_new_binding_list: DS_LIST [XM_XPATH_BINDING]
+			a_cursor: DS_LIST_CURSOR [XM_XPATH_BINDING]
 		do
 			an_offer.accept (Current)
 			a_promotion := an_offer.accepted_expression
@@ -262,13 +265,29 @@ feature -- Optimization
 				if an_offer.action = Inline_variable_references	or else an_offer.action = Unordered
 					or else an_offer.action = Replace_current then
 
-					-- Don't pass on other requests. We could pass them on, but only after augmenting
-					--  them to say we are interested in subexpressions that don't depend on either the
-					--  outer context or the inner context.
-
+					-- Pass the offer to the action expression only if the action isn't depending on the
+               --  variable bound by this let expression
+					
 					action_expression.mark_unreplaced
 					action_expression.promote (an_offer)
 					if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end
+				elseif an_offer.action = Range_independent then
+
+					-- Pass the offer to the action expression only if the action isn't depending on the
+					--  variable bound by this let expression
+
+					a_saved_binding_list := an_offer.binding_list
+					create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} a_new_binding_list.make (a_saved_binding_list.count + 1)
+					from a_cursor := an_offer.binding_list.new_cursor; a_cursor.start until a_cursor.after loop
+						a_new_binding_list.put (a_cursor.item, a_cursor.index); a_cursor.forth
+					end
+					a_new_binding_list.put_last (Current)
+					an_offer.set_binding_list (a_new_binding_list)
+					action.promote (an_offer)
+					if action.was_expression_replaced then
+						replace_action (action.replacement_expression)
+					end
+					an_offer.set_binding_list (a_saved_binding_list)
 				end
 
 				-- If this results in the expression (let $x := $y return Z), replace all references to
@@ -276,7 +295,23 @@ feature -- Optimization
 				-- returning the action part.
 
 				if sequence.is_variable_reference then
-					create another_offer.make (Inline_variable_references, Current, sequence.as_variable_reference, False, False)
+					create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} a_new_binding_list.make (1)
+					a_new_binding_list.put (Current, 1)
+					create another_offer.make (Inline_variable_references, a_new_binding_list, sequence.as_variable_reference, False, False)
+					action_expression.promote (another_offer)
+					if action_expression.was_expression_replaced then
+						set_replacement (action_expression.replacement_expression)
+					else
+						set_replacement (action_expression)
+					end
+				end
+
+				-- Similarly, for (let $x := lazy($y) return Z)
+
+				if sequence.is_lazy_expression and then sequence.as_lazy_expression.base_expression.is_variable_reference then
+					create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} a_new_binding_list.make (1)
+					a_new_binding_list.put (Current, 1)
+					create another_offer.make (Inline_variable_references, a_new_binding_list, sequence.as_lazy_expression.base_expression.as_variable_reference, False, False)
 					action_expression.promote (another_offer)
 					if action_expression.was_expression_replaced then
 						set_replacement (action_expression.replacement_expression)
@@ -292,26 +327,153 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
+		local
+			a_let_expression: XM_XPATH_LET_EXPRESSION
+			a_value: XM_XPATH_VALUE
+			finished: BOOLEAN
 		do
-			sequence.lazily_evaluate (a_context, keep_value)
-			if slot_number = 0 then
-				set_slot_number (a_context.next_available_slot)
+						
+			--  Minimize stack consumption by evaluating nested LET expressions iteratively
+
+			from
+				a_let_expression := current
+			until
+				is_error or else finished
+			loop
+				a_let_expression.sequence.lazily_evaluate (a_context, a_let_expression.reference_count)
+				a_value := a_let_expression.sequence.last_evaluation
+				if a_value.is_error then
+					set_last_error (a_value.error_value)
+				else
+					a_context.set_local_variable (a_value, a_let_expression.slot_number)
+					if a_let_expression.action.is_let_expression then
+						a_let_expression := a_let_expression.action.as_let_expression
+					else
+						finished := True
+					end
+				end
 			end
-			a_context.set_local_variable (sequence.last_evaluation, slot_number)
-			action.evaluate_item (a_context)
-			last_evaluated_item := action.last_evaluated_item
+			if is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (error_value)
+			else
+				a_let_expression.action.evaluate_item (a_context)
+				last_evaluated_item := a_let_expression.action.last_evaluated_item
+			end
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
+		local
+			a_let_expression: XM_XPATH_LET_EXPRESSION
+			a_value: XM_XPATH_VALUE
+			finished: BOOLEAN
 		do
-			sequence.lazily_evaluate (a_context, keep_value)
-			if slot_number = 0 then
-				set_slot_number (a_context.next_available_slot)
+						
+			--  Minimize stack consumption by evaluating nested LET expressions iteratively
+
+			from
+				a_let_expression := current
+			until
+				is_error or else finished
+			loop
+				a_let_expression.sequence.lazily_evaluate (a_context, a_let_expression.reference_count)
+				a_value := a_let_expression.sequence.last_evaluation
+				if a_value.is_error then
+					set_last_error (a_value.error_value)
+				else
+					a_context.set_local_variable (a_value, a_let_expression.slot_number)
+					if a_let_expression.action.is_let_expression then
+						a_let_expression := a_let_expression.action.as_let_expression
+					else
+						finished := True
+					end
+				end
 			end
-			a_context.set_local_variable (sequence.last_evaluation, slot_number)
-			action.create_iterator (a_context)
-			last_iterator := action.last_iterator
+			if is_error then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (error_value)
+			else
+				a_let_expression.action.create_iterator (a_context)
+				last_iterator := a_let_expression.action.last_iterator
+			end
+		end
+
+	process (a_context: XM_XPATH_CONTEXT) is
+			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			a_let_expression: XM_XPATH_LET_EXPRESSION
+			a_value: XM_XPATH_VALUE
+			finished: BOOLEAN
+		do
+						
+			--  Minimize stack consumption by evaluating nested LET expressions iteratively
+
+			from
+				a_let_expression := current
+			until
+				is_error or else finished
+			loop
+				a_let_expression.sequence.lazily_evaluate (a_context, a_let_expression.reference_count)
+				a_value := a_let_expression.sequence.last_evaluation
+				if a_value.is_error then
+					set_last_error (a_value.error_value)
+				else
+					a_context.set_local_variable (a_value, a_let_expression.slot_number)
+					if a_let_expression.action.is_let_expression then
+						a_let_expression := a_let_expression.action.as_let_expression
+					else
+						finished := True
+					end
+				end
+			end
+			if is_error then
+				a_context.report_fatal_error (error_value)
+			else
+				a_let_expression.action.process (a_context)
+			end
+		end
+
+	process_leaving_tail (a_context: XM_XPATH_CONTEXT) is
+			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			a_let_expression: XM_XPATH_LET_EXPRESSION
+			a_value: XM_XPATH_VALUE
+			finished: BOOLEAN
+			a_tail_call: like last_tail_call
+		do
+			
+			--  Minimize stack consumption by evaluating nested LET expressions iteratively
+
+			from
+				a_let_expression := current
+			until
+				is_error or else finished
+			loop
+				a_let_expression.lazily_evaluate (a_context, a_let_expression.reference_count)
+				a_value := a_let_expression.last_evaluation
+				if a_value.is_error then
+					set_last_error (a_value.error_value)
+				else
+					a_context.set_local_variable (a_value, a_let_expression.slot_number)
+					if a_let_expression.action.is_let_expression then
+						a_let_expression := a_let_expression.action.as_let_expression
+					else
+						finished := True
+					end
+				end
+			end
+			if is_error then
+				last_tail_call := Void
+				a_context.report_fatal_error (error_value)
+			else
+				a_tail_call ?= a_let_expression.action
+				if a_tail_call /= Void then
+					a_tail_call.process_leaving_tail (a_context)
+					last_tail_call := a_tail_call.last_tail_call
+				else
+					a_let_expression.action.process (a_context)
+					last_tail_call := Void
+				end
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -329,9 +491,6 @@ feature {NONE} -- Implementation
 		do
 			set_cardinality (action_expression.cardinality)
 		end
-
-	keep_value: BOOLEAN
-			-- Set by `optimize' if the expression will be read more than once
 
 	Maximum_optimization_attempts: INTEGER is 5
 

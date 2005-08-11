@@ -28,6 +28,9 @@ inherit
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
+	KL_IMPORTED_ARRAY_ROUTINES
+		export {NONE} all end
+
 	-- This class is used for generating complex content, that is, the content of an
 	--  element or document node. It enforces the rules on the order of events within
 	--  complex content (attributes and namespaces must come first), and it implements
@@ -195,7 +198,7 @@ feature -- Events
 
 						pending_namespaces_list_size := pending_namespaces_list_size + 1
 						if pending_namespaces_list_size > pending_namespaces.count then
-							pending_namespaces.resize (1, 2 * pending_namespaces_list_size)
+							INTEGER_ARRAY_.resize (pending_namespaces, 1, 2 * pending_namespaces_list_size)
 						end
 						pending_namespaces.put (a_namespace_code, pending_namespaces_list_size)
 						previous_atomic := False
@@ -244,10 +247,10 @@ feature -- Events
 					if not duplicate_found then
 						if pending_attributes_lists_size >= pending_attributes_type_codes.upper then
 							a_new_size := 2 * pending_attributes_type_codes.upper
-							pending_attributes_name_codes.resize (1, a_new_size)
-							pending_attributes_type_codes.resize (1, a_new_size)
-							pending_attributes_values.resize (1, a_new_size)
-							pending_attributes_properties.resize (1, a_new_size)
+							INTEGER_ARRAY_.resize (pending_attributes_name_codes, 1, a_new_size)
+							INTEGER_ARRAY_.resize (pending_attributes_type_codes, 1, a_new_size)
+							STRING_ARRAY_.resize (pending_attributes_values, 1, a_new_size)
+							INTEGER_ARRAY_.resize (pending_attributes_properties, 1, a_new_size)
 						end
 						pending_attributes_lists_size := pending_attributes_lists_size + 1
 						pending_attributes_name_codes.put (a_name_code, pending_attributes_lists_size)
@@ -265,7 +268,6 @@ feature -- Events
 		local
 			properties, an_index: INTEGER
 			a_name_code: INTEGER
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
 			if pending_start_tag /= -1 then
 				check_proposed_prefix (pending_start_tag, 0)
@@ -475,7 +477,6 @@ feature {NONE} -- Implementation
 			a_namespace_code, another_namespace_code, a_prefix_code, a_uri_code: INTEGER -- _16
 			a_prefix: STRING
 			finished: BOOLEAN
-			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 		do
 			last_checked_namecode := a_name_code
 			if not shared_name_pool.is_namespace_code_allocated_for_name_code (a_name_code) then

@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_ATOMIC_VALUE
 		redefine
-			calculate_effective_boolean_value, is_string_value, as_string_value
+			calculate_effective_boolean_value, is_string_value, as_string_value,
+			same_atomic_value
 		end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
@@ -91,6 +92,17 @@ feature -- Comparison
 			-- will be used for comparing strings
 			
 			Result := string_value.three_way_comparison (other.as_string_value.string_value)
+		end
+
+	same_atomic_value (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+			-- Are `Current' and `other' the same value?
+
+		do
+			if other.is_untyped_atomic then
+				Result := STRING_.same_string (value, other.as_untyped_atomic.string_value)
+			else
+				Result := Precursor (other)
+			end
 		end
 
 feature -- Status report

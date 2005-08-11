@@ -18,14 +18,14 @@ inherit
 
 feature -- Status report
 
-	last_set_tail_call: XM_XSLT_TAIL_CALL is
+	last_set_tail_call: XM_XPATH_TAIL_CALL is
 			-- Last tail call set by `set_last_tail_call'
 		deferred
 		end
 
 feature -- Status setting
 
-	set_last_tail_call (a_tail_call: XM_XSLT_TAIL_CALL) is
+	set_last_tail_call (a_tail_call: XM_XPATH_TAIL_CALL) is
 			-- Set residue from `apply_templates'
 		deferred
 		ensure
@@ -45,7 +45,7 @@ feature -- Evaluation
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_node: XM_XPATH_NODE
 			a_node_handler: XM_XSLT_COMPILED_TEMPLATE
-			a_last_tail_call: XM_XSLT_TAIL_CALL
+			a_last_tail_call: XM_XPATH_TAIL_CALL
 		do
 			a_transformer := a_context.transformer
 			a_context.set_current_iterator (an_iterator)
@@ -123,7 +123,7 @@ feature -- Evaluation
 			major_context_not_void: a_context /= Void and then not a_context.is_minor
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
-			a_last_tail_call: XM_XSLT_TAIL_CALL
+			a_last_tail_call: XM_XPATH_TAIL_CALL
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			inspect

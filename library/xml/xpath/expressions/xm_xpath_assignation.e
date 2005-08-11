@@ -44,7 +44,10 @@ feature -- Access
 
 	declaration: XM_XPATH_RANGE_VARIABLE_DECLARATION
 			-- Range variable
-	
+
+	slot_number: INTEGER
+			-- Slot number for range variable
+
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
@@ -104,6 +107,8 @@ feature -- Optimization
 			-- Promote this subexpression.
 		local
 			a_promotion: XM_XPATH_EXPRESSION
+			a_cursor: DS_LIST_CURSOR [XM_XPATH_BINDING]
+			a_saved_binding_list, a_new_binding_list: DS_LIST [XM_XPATH_BINDING]
 		do
 			an_offer.accept (Current)
 			a_promotion := an_offer.accepted_expression
@@ -121,6 +126,23 @@ feature -- Optimization
 					
 					action_expression.promote (an_offer)
 					if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end
+				elseif an_offer.action = Range_independent then
+
+					-- Pass the offer to the action expression only if the action isn't dependent on the
+					--  variable bound by this assignation
+
+					a_saved_binding_list := an_offer.binding_list
+					create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} a_new_binding_list.make (a_saved_binding_list.count + 1)
+					from a_cursor := an_offer.binding_list.new_cursor; a_cursor.start until a_cursor.after loop
+						a_new_binding_list.put (a_cursor.item, a_cursor.index); a_cursor.forth
+					end
+					a_new_binding_list.put_last (Current)
+					an_offer.set_binding_list (a_new_binding_list)
+					action.promote (an_offer)
+					if action.was_expression_replaced then
+						replace_action (action.replacement_expression)
+					end
+					an_offer.set_binding_list (a_saved_binding_list)		
 				end
 			end
 		end
@@ -216,9 +238,6 @@ feature -- Element change
 		end
 
 feature {XM_XPATH_ASSIGNATION} -- Local
-
-	slot_number: INTEGER
-			-- Slot number for range variable
 
 	simplified: BOOLEAN
 			-- Has simplify been run?

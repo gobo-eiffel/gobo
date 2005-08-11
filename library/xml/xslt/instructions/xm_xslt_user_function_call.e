@@ -305,7 +305,6 @@ feature {NONE} -- Implementation
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			an_expression: XM_XPATH_EXPRESSION
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
-			keep_value: BOOLEAN
 		do
 			from
 				a_parameter_count := function.parameter_definitions.count
@@ -349,8 +348,7 @@ feature {NONE} -- Implementation
 							some_actual_arguments.put (an_expression.last_evaluation, a_cursor.index)
 						end						
 					else
-						keep_value := a_reference_count > 1
-						an_expression.lazily_evaluate (a_context, keep_value)
+						an_expression.lazily_evaluate (a_context, a_reference_count)
 						if an_expression.last_evaluation.is_error then
 							last_called_value := an_expression.last_evaluation
 							a_cursor.go_after

@@ -92,6 +92,15 @@ feature -- Comparison
 			three_way_comparison: Result >= -1 and Result <= 1
 		end
 
+
+	same_atomic_value (other: XM_XPATH_ATOMIC_VALUE): BOOLEAN is
+			-- Are `Current' and `other' the same value?
+		require
+			other_not_void: other /= Void
+		do
+			Result := same_expression (other)
+		end
+
 feature -- Status report
 
 	is_convertible_to_item (a_context: XM_XPATH_CONTEXT): BOOLEAN is

@@ -155,8 +155,8 @@ feature -- Creation
 			iterator_created: Result /= Void
 		end
 
-	create_closure (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT; save_values: BOOLEAN) is
-			-- New `XM_XPATH_CLOSURE' (or sometimes, an `XM_XPATH_SEQUENCE_EXTENT').
+	create_closure (an_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
+			-- New `XM_XPATH_CLOSURE' (or sometimes, an `XM_XPATH_SEQUENCE_EXTENT', or others).
 		require
 			expression_not_void: an_expression /= Void
 			context_not_void: a_context /= Void
@@ -176,7 +176,7 @@ feature -- Creation
 				a_tail_expression := an_expression.as_tail_expression
 				if a_tail_expression.base_expression.is_variable_reference then
 					a_variable_reference := a_tail_expression.base_expression.as_variable_reference
-					a_variable_reference.lazily_evaluate (a_context, save_values)
+					a_variable_reference.lazily_evaluate (a_context, a_reference_count)
 					a_value := a_variable_reference.last_evaluation
 					if a_value.is_memo_closure then
 						a_value.create_iterator (Void)
@@ -199,13 +199,11 @@ feature -- Creation
 					elseif a_value.is_sequence_extent then
 						a_sequence_extent := a_value.as_sequence_extent
 						create {XM_XPATH_SEQUENCE_EXTENT} last_created_closure.make_as_view (a_sequence_extent, a_tail_expression.start, a_sequence_extent.count -  a_tail_expression.start + 1)
-					-- commented out on 14/May/2005 - DELETE unconditionally after 21/May/2005: else
-					--	last_created_closure := a_value
 					end
 				end
 			end
 			if last_created_closure = Void then
-				if save_values then
+				if a_reference_count /= 1 then
 					create {XM_XPATH_MEMO_CLOSURE} last_created_closure.make (an_expression, a_context)
 				else
 					create {XM_XPATH_CLOSURE} last_created_closure.make (an_expression, a_context)
@@ -250,6 +248,21 @@ feature -- Creation
 				create {XM_XPATH_SINGLETON_ATOMIZER} Result.make (a_base, a_role, is_cardinality_allows_zero (a_requested_cardinality))
 			else
 				create {XM_XPATH_CARDINALITY_CHECKER} Result.make (a_sequence, a_requested_cardinality, a_role)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	created_lazy_expression (an_expression: XM_XPATH_EXPRESSION): XM_XPATH_EXPRESSION is
+			-- Possible lazy expression
+		require
+			expression_not_void: an_expression /= Void
+		do
+			if an_expression.is_lazy_expression
+				or else an_expression.is_value then
+				Result := an_expression
+			else
+				create {XM_XPATH_LAZY_EXPRESSION} Result.make (an_expression.as_computed_expression)
 			end
 		ensure
 			result_not_void: Result /= Void

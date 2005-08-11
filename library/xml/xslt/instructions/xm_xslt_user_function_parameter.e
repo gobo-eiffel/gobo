@@ -48,6 +48,9 @@ feature -- Access
 	reference_count: INTEGER
 			-- Number of references to `Current'
 
+	slot_number: INTEGER
+			-- Local variable slot number
+
 feature -- Status report
 	
 	is_global: BOOLEAN is
@@ -73,11 +76,6 @@ feature -- Element change
 		do
 			reference_count := variable_reference_count (some_references, Current)
 		end
-
-feature {NONE} -- Implementation
-
-	slot_number: INTEGER
-			-- Local variable slot number
 
 invariant
 

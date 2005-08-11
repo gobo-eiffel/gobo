@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_PROMOTION_ACTIONS
 
+	XM_XPATH_SHARED_EXPRESSION_FACTORY
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -31,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_requested_action: INTEGER; a_binding: XM_XPATH_BINDING; containing: XM_XPATH_EXPRESSION; eliminate: BOOLEAN; dependent: BOOLEAN) is
+	make (a_requested_action: INTEGER; a_binding_list: DS_LIST [XM_XPATH_BINDING]; containing: XM_XPATH_EXPRESSION; eliminate: BOOLEAN; dependent: BOOLEAN) is
 			-- Set defaults.
 		require
 			action: a_requested_action = Range_independent
@@ -39,13 +41,14 @@ feature {NONE} -- Initialization
 				or else a_requested_action = Inline_variable_references
 				or else a_requested_action = Unordered
 				or else a_requested_action = Replace_current
-			binding:	a_requested_action = Range_independent implies a_binding /= Void
+			binding_for_range_variable: action = Range_independent implies a_binding_list /= Void and then a_binding_list.count > 0
+			binding_for_inline_variables: action = Inline_variable_references implies a_binding_list /= Void and then a_binding_list.count = 1
 			containing: a_requested_action /= Unordered implies containing /= Void
 			replace_current: a_requested_action = Replace_current implies containing /= Void and then containing.is_let_expression
 		do
 			may_promote_xslt_functions := True
 			action := a_requested_action
-			binding_expression := a_binding
+			binding_list := a_binding_list
 			containing_expression := containing
 			must_eliminate_duplicates := eliminate
 			may_promote_document_dependent := dependent
@@ -53,7 +56,7 @@ feature {NONE} -- Initialization
 			eliminate_duplicates_set: must_eliminate_duplicates = eliminate
 			may_promote_document_dependent_set: may_promote_document_dependent = dependent
 			action_set: action = a_requested_action
-			binding_set: binding_expression = a_binding
+			binding_set: binding_list = a_binding_list
 			containing_set: containing_expression = containing
 			may_promote_xslt_functions: may_promote_xslt_functions
 		end
@@ -63,8 +66,11 @@ feature -- Access
 	action: INTEGER
 			-- Promotion action
 
-	binding_expression: XM_XPATH_BINDING
-			-- In the case of `Range_independent', identifies the range variable whose dependencies we are looking for
+	binding_list: DS_LIST [XM_XPATH_BINDING]
+			-- In the case of `Range_independent', identifies the range variables
+			--  whose dependencies we are looking for.
+			-- In the cases of `Inline_variable_references' and `Replace_current',
+			--  it is the single binding which we are trying to inline./replace.
 
 	containing_expression: XM_XPATH_EXPRESSION
 			-- In the case `Focus_independent' of identifies the level to which the promotion should occur;
@@ -116,7 +122,7 @@ feature -- Optimization
 			inspect
 				action
 			when Range_independent then
-				if not a_child_expression.non_creating or else depends_upon_variable (a_child_expression, binding_expression) then
+				if not a_child_expression.non_creating or else depends_upon_variable (a_child_expression, binding_list) then
 					accepted_expression := Void
 				else
 					promote (a_child_expression)
@@ -149,7 +155,8 @@ feature -- Optimization
 					accepted_expression := Void
 				end
 			when Inline_variable_references then
-				if a_child_expression.is_variable_reference and then a_child_expression.as_variable_reference.binding = binding_expression then
+				if a_child_expression.is_variable_reference and then
+					a_child_expression.as_variable_reference.binding = binding_list.item (1) then
 					accepted_expression := containing_expression
 				else
 					accepted_expression := Void
@@ -182,6 +189,17 @@ feature -- Element change
 			set: containing_expression = exp
 		end
 
+	set_binding_list (a_list: like binding_list) is
+			-- Set `binding_list'
+		require
+			list_not_empty: a_list /= Void and then a_list.count > 0
+			binding_for_range_variable: action = Range_independent
+		do
+			binding_list := a_list
+		ensure
+			list_set: binding_list = a_list
+		end
+
 feature {NONE} -- Implementation
 
 	promoted_expression: XM_XPATH_EXPRESSION
@@ -198,6 +216,7 @@ feature {NONE} -- Implementation
 			a_variable_name: STRING
 			a_clock: DT_SYSTEM_CLOCK
 			a_let_expression: XM_XPATH_LET_EXPRESSION
+			a_lazy_expression: XM_XPATH_EXPRESSION
 		do
 			create a_type.make (a_child_expression.item_type, a_child_expression.cardinality)
 			create a_clock.make
@@ -210,23 +229,31 @@ feature {NONE} -- Implementation
 			if containing_expression.is_computed_expression then
 				containing_expression.as_computed_expression.copy_location_identifier (promoted_expression)
 			end
-			create a_let_expression.make (a_range_variable, a_child_expression, containing_expression)
+			a_lazy_expression := expression_factory.created_lazy_expression (a_child_expression)
+			create a_let_expression.make (a_range_variable, a_lazy_expression, containing_expression)
 			a_let_expression.adopt_child_expression (containing_expression)
 			set_containing_expression (a_let_expression)
 		end
 
-	depends_upon_variable (a_child_expression: XM_XPATH_EXPRESSION; a_binding: XM_XPATH_BINDING):BOOLEAN is
+	depends_upon_variable (a_child_expression: XM_XPATH_EXPRESSION; a_binding_list: DS_LIST [XM_XPATH_BINDING]):BOOLEAN is
 			-- Does `a_child_expression' depend upon `a_binding'?
 		require
 			child_not_void: a_child_expression /= Void
-			binding_not_void: a_binding /= Void
+			binding_list_not_empty: a_binding_list /= Void and then a_binding_list.count > 0
 		local
 			children: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
-			finished: BOOLEAN
 			an_index: INTEGER
+			a_cursor: DS_LIST_CURSOR [XM_XPATH_BINDING]
 		do
 			if a_child_expression.is_variable_reference then
-				Result := a_child_expression.as_variable_reference.binding = a_binding
+				from
+					a_cursor := a_binding_list.new_cursor; a_cursor.start
+				until
+					Result or else a_cursor.after
+				loop
+					Result := a_child_expression.as_variable_reference.binding = a_cursor.item
+					a_cursor.forth
+				end
 			else
 				from
 					children := a_child_expression.sub_expressions
@@ -234,11 +261,10 @@ feature {NONE} -- Implementation
 				variant
 					children.count + 1 - an_index
 				until
-					finished or else an_index > children.count
+					Result or else an_index > children.count
 				loop
-					if depends_upon_variable (children.item (an_index), a_binding) then
+					if depends_upon_variable (children.item (an_index), a_binding_list) then
 						Result := True
-						finished := True
 					end
 					an_index := an_index + 1
 				end
@@ -250,7 +276,8 @@ invariant
 	action: action = Range_independent or else action = Focus_independent
 		or else action = Inline_variable_references or else action = Unordered
 		or else action = Replace_current
-	binding: action = Range_independent implies binding_expression /= Void
+	binding_for_range_variable: action = Range_independent implies binding_list /= Void and then binding_list.count > 0
+	binding_for_inline_variables: action = Inline_variable_references implies binding_list /= Void and then binding_list.count = 1
 	containing_expression: action /= Unordered implies containing_expression /= Void
 	replace_current: action = Replace_current implies containing_expression /= Void and then containing_expression.is_let_expression
 	

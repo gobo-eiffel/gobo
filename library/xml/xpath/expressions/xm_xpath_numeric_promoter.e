@@ -111,8 +111,6 @@ feature -- Optimization
 
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform static type-checking of `Current' and its subexpressions.
-		local
-			an_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			mark_unreplaced
 			base_expression.check_static_type (a_context)
@@ -127,8 +125,6 @@ feature -- Optimization
 
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Perform optimization of `Current' and its subexpressions.
-		local
-			an_extent: XM_XPATH_SEQUENCE_EXTENT
 		do
 			mark_unreplaced
 			base_expression.optimize (a_context)

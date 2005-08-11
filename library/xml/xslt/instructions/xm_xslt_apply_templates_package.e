@@ -14,7 +14,7 @@ class XM_XSLT_APPLY_TEMPLATES_PACKAGE
 
 inherit
 
-	XM_XSLT_TAIL_CALL
+	XM_XPATH_TAIL_CALL
 
 	XM_XSLT_TEMPLATE_ROUTINES
 
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	last_set_tail_call: XM_XSLT_TAIL_CALL is
+	last_set_tail_call: XM_XPATH_TAIL_CALL is
 			-- Last tail call set by `set_last_tail_call'
 		do
 			Result := last_tail_call
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_last_tail_call (a_tail_call: XM_XSLT_TAIL_CALL) is
+	set_last_tail_call (a_tail_call: XM_XPATH_TAIL_CALL) is
 			-- Set residue from `apply_templates'
 		do
 			last_tail_call := a_tail_call

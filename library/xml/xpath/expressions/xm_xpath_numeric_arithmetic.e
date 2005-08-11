@@ -33,7 +33,7 @@ feature -- Evaluation
 			a_string: STRING
 		do
 			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item.is_atomic_value then
+			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_atomic_value then
 				an_atomic_value := first_operand.last_evaluated_item.as_atomic_value.primitive_value
 				if an_atomic_value.is_untyped_atomic then
 					a_string := an_atomic_value.as_untyped_atomic.string_value
@@ -44,7 +44,7 @@ feature -- Evaluation
 					end
 				end
 				second_operand.evaluate_item (a_context)
-				if second_operand.last_evaluated_item.is_atomic_value then
+				if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_atomic_value then
 					another_atomic_value := second_operand.last_evaluated_item.as_atomic_value.primitive_value
 					if another_atomic_value.is_untyped_atomic then
 						a_string := another_atomic_value.as_untyped_atomic.string_value
@@ -57,7 +57,11 @@ feature -- Evaluation
 					if an_atomic_value.is_numeric_value and then another_atomic_value.is_numeric_value then
 						last_evaluated_item := an_atomic_value.as_numeric_value.arithmetic (operator, another_atomic_value.as_numeric_value)
 					end
+				else
+					last_evaluated_item := Void
 				end
+			else
+				last_evaluated_item := Void
 			end
 		end
 

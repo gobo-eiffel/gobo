@@ -14,7 +14,7 @@ class XM_XSLT_CALL_TEMPLATE_PACKAGE
 
 inherit
 
-	XM_XSLT_TAIL_CALL
+	XM_XPATH_TAIL_CALL
 
 create
 

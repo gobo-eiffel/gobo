@@ -321,7 +321,6 @@ feature -- Optimization
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			an_offer: XM_XPATH_PROMOTION_OFFER
-			a_path: XM_XPATH_PATH_EXPRESSION
 		do
 			mark_unreplaced
 			if analysis_state < Optimized_state then

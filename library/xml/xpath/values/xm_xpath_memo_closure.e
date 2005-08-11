@@ -54,7 +54,7 @@ create {XM_XPATH_EXPRESSION_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (an_expression: XM_XPATH_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
+	make (an_expression: XM_XPATH_COMPUTED_EXPRESSION; a_context: XM_XPATH_CONTEXT) is
 			-- Establish invariant.
 		do
 			state := Unread_state

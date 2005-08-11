@@ -203,7 +203,6 @@ feature -- Optimization
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			an_expression: XM_XPATH_EXPRESSION
-			a_value: XM_XPATH_VALUE
 			a_boolean: BOOLEAN
 			an_index: INTEGER
 		do

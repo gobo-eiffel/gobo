@@ -276,9 +276,12 @@ feature {NONE} -- Implementation
 			-- Extract subexpressions that don't depend on the range variable.
 		local
 			an_offer: XM_XPATH_PROMOTION_OFFER
+			a_binding_list: DS_LIST [XM_XPATH_BINDING]
 			a_let_expression: XM_XPATH_LET_EXPRESSION
 		do
-			create an_offer.make (Range_independent, Current, Current, False, False)
+			create {DS_ARRAYED_LIST [XM_XPATH_BINDING]} a_binding_list.make (1)
+			a_binding_list.put_last (Current)
+			create an_offer.make (Range_independent, a_binding_list, Current, False, False)
 			action_expression.mark_unreplaced
 			action_expression.promote (an_offer)
 			if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end

@@ -44,6 +44,8 @@ inherit
 	XM_XSLT_TEMPLATE_ROUTINES
 		export {NONE} all end
 
+	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
+	
 create
 
 	make
@@ -174,7 +176,7 @@ feature -- Status report
 	last_error: XM_XPATH_ERROR_VALUE
 			-- Last reported fatal error
 
-	last_set_tail_call: XM_XSLT_TAIL_CALL is
+	last_set_tail_call: XM_XPATH_TAIL_CALL is
 			-- Last tail call set by `set_last_tail_call'
 		do
 			Result := last_tail_call
@@ -182,7 +184,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_last_tail_call (a_tail_call: XM_XSLT_TAIL_CALL) is
+	set_last_tail_call (a_tail_call: XM_XPATH_TAIL_CALL) is
 			-- Set residue from `apply_templates'
 		do
 			last_tail_call := a_tail_call
@@ -667,7 +669,7 @@ feature -- Implementation
 	initial_context: XM_XSLT_EVALUATION_CONTEXT
 			-- Initial dynamic context for a transformation
 
-	last_tail_call: XM_XSLT_TAIL_CALL
+	last_tail_call: XM_XPATH_TAIL_CALL
 			-- Residue from `apply_templates'
 
 	temporary_destination_depth: INTEGER
@@ -815,6 +817,7 @@ feature -- Implementation
 			a_fingerprint: INTEGER
 			an_expression_factory: XM_XPATH_EXPRESSION_FACTORY
 			a_value: XM_XPATH_VALUE
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			create an_expression_factory
 			from
@@ -823,8 +826,13 @@ feature -- Implementation
 				a_cursor.after
 			loop
 				a_fingerprint := a_cursor.key
-				an_expression_factory.create_closure (a_cursor.item, a_context, True)
-				a_value := an_expression_factory.last_created_closure
+				a_computed_expression ?= a_cursor.item
+				if a_computed_expression /= Void then
+					an_expression_factory.create_closure (a_computed_expression, a_context, Many_references)
+					a_value := an_expression_factory.last_created_closure
+				else
+					a_value ?= a_cursor.item
+				end
 				parameters.put (a_value, a_fingerprint) -- replaces existing value
 				a_cursor.forth
 			end

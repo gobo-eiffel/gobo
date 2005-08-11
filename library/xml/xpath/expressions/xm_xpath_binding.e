@@ -22,6 +22,13 @@ feature -- Access
 	variable_name: STRING
 			-- name of variable
 
+	slot_number: INTEGER is
+			-- Slot number in local stack frame
+		require
+			local_variable: not is_global
+		deferred
+		end
+			
 feature -- Status report
 
 	last_evaluated_binding: XM_XPATH_VALUE

@@ -178,7 +178,7 @@ feature -- Status report
 		ensure
 			no_schema_types_when_restricted: is_restricted implies True -- TODO for schema-awareness
 		end
-		
+
 feature -- Element change
 	
 	bind_variable (a_fingerprint: INTEGER) is

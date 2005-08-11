@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			evaluate_item
+			evaluate_item, check_arguments
 		end
 
 	XM_XPATH_TOKENS
@@ -155,6 +155,18 @@ feature -- Evaluation
 																													"", "FORG0006", Dynamic_error)
 					end
 				end
+			end
+		end
+
+feature {XM_XPATH_FUNCTION_CALL} -- Local
+
+	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Check arguments during parsing, when all the argument expressions have been read.
+		do
+			Precursor (a_context)
+			arguments.item (1).set_unsorted (True)
+			if arguments.item (1).was_expression_replaced then
+				arguments.replace (arguments.item (1).replacement_expression, 1)
 			end
 		end
 

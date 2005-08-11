@@ -115,7 +115,7 @@ feature -- Access
 		
 feature -- Status report
 
-	last_tail_call: XM_XSLT_TAIL_CALL
+	last_tail_call: XM_XPATH_TAIL_CALL
 			-- Residue from last call to `process_leaving_tail'
 
 	creates_new_nodes: BOOLEAN is

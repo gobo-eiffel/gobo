@@ -200,10 +200,52 @@ feature -- Status setting
 			-- Compute the static properties
 		require
 			not_yet_computed: not are_static_properties_computed
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			an_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
-			if not are_dependencies_computed then compute_dependencies end
-			if not are_cardinalities_computed then compute_cardinality end
-			if not are_special_properties_computed then compute_special_properties end
+			if not are_dependencies_computed then
+				from
+					a_cursor := sub_expressions.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					an_expression ?= a_cursor.item
+					if an_expression /= Void and then not an_expression.are_dependencies_computed then
+						an_expression.compute_dependencies
+					end
+					a_cursor.forth
+				end
+				compute_dependencies
+			end
+			if not are_cardinalities_computed then
+				from
+					a_cursor := sub_expressions.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					an_expression ?= a_cursor.item
+					if an_expression /= Void and then not an_expression.are_cardinalities_computed then
+						an_expression.compute_cardinality
+					end
+					a_cursor.forth
+				end
+				compute_cardinality
+			end
+			if not are_special_properties_computed then
+				from
+					a_cursor := sub_expressions.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					an_expression ?= a_cursor.item
+					if an_expression /= Void and then not an_expression.are_special_properties_computed then
+						an_expression.compute_special_properties
+					end
+					a_cursor.forth
+				end
+				compute_special_properties
+			end
 		ensure
 			computed: are_static_properties_computed
 			dependencies_not_void: dependencies /= Void
@@ -217,7 +259,7 @@ feature -- Status setting
 			-- Determine the intrinsic dependencies of an expression.
 		require
 			not_yet_computed: not are_intrinsic_dependencies_computed
-			all_sub_expressions_computed: sub_expressions_have_intrinsic_dependencies
+-- removed 10/08/05 as it is surely wrong			all_sub_expressions_computed: sub_expressions_have_intrinsic_dependencies
 		do
 			initialize_intrinsic_dependencies
 		ensure
@@ -280,6 +322,51 @@ feature -- Optimization
 		end
 	
 feature -- Evaluation
+
+	lazily_evaluate (a_context: XM_XPATH_CONTEXT; a_reference_count: INTEGER) is
+			-- Lazily evaluate `Current'.
+			-- This will set a value, which may optionally be an XM_XPATH_CLOSURE,
+			--  which is a wrapper around an iterator over the value of the expression.
+		local
+			a_count: INTEGER
+		do
+			check
+				context_not_void: a_context /= Void
+				-- We are not evaluating a value, as XM_XPATH_VALUE redefines this routine
+			end
+			if depends_upon_position or else depends_upon_last
+				or else depends_upon_current_item or else depends_upon_current_group
+				or else depends_upon_regexp_group then
+				
+				-- We can't save these values in the closure, so we evaluate
+				-- the expression now if they are needed
+				
+				eagerly_evaluate (a_context)
+			elseif is_lazy_expression then
+
+				-- A LazyExpression is always evaluated lazily (if at all possible) to
+            --  prevent spurious errors
+
+				if a_reference_count = 1 then
+					a_count := Many_references
+				else
+					a_count := a_reference_count
+				end
+				expression_factory.create_closure (Current, a_context, a_count)
+				last_evaluation := expression_factory.last_created_closure
+			elseif not cardinality_allows_many then
+
+				-- Singletons are always evaluated eagerly
+				
+				eagerly_evaluate (a_context)
+			else
+				
+				-- Create a Closure, a wrapper for the expression and its context
+				
+				expression_factory.create_closure (Current, a_context, a_reference_count)
+				last_evaluation := expression_factory.last_created_closure
+			end
+		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
@@ -475,6 +562,65 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			computed: are_special_properties_computed and then special_properties /= Void
 		end
 
+feature {XM_XPATH_COMPUTED_EXPRESSION} -- Local
+
+	accumulate_slots_used (a_set: DS_HASH_SET [INTEGER]) is
+			-- Add all slot numbers used by `Current' to `a_set'.
+		require
+			set_exists: a_set /= Void
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
+			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+		do
+			from
+				a_cursor := sub_expressions.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				a_computed_expression ?= a_cursor.item
+				if a_computed_expression /= Void then
+					a_computed_expression.accumulate_slots_used (a_set)
+				end
+				a_cursor.forth
+			end
+		ensure
+			no_fewer: a_set.count >= old a_set.count
+		end
+
+
+feature {XM_XPATH_CLOSURE} -- Restricted
+
+	slots_used: DS_ARRAYED_LIST [INTEGER] is
+			-- Slot numbers in use
+		require
+			dependency_on_local_variables: depends_upon_local_variables
+		local
+			a_set: DS_HASH_SET [INTEGER]
+			a_cursor: DS_HASH_SET_CURSOR [INTEGER]
+			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
+			a_sorter: DS_QUICK_SORTER [INTEGER]
+		do
+			if cached_slots_used = Void then
+				create a_set.make_default
+				accumulate_slots_used (a_set)
+				create cached_slots_used.make (a_set.count)
+				from
+					a_cursor := a_set.new_cursor; a_cursor.start
+				until
+					a_cursor.after
+				loop
+					cached_slots_used.put_last (a_cursor.item)
+					a_cursor.forth
+				end
+				create a_comparator.make
+				create a_sorter.make (a_comparator)
+				cached_slots_used.sort (a_sorter)
+			end
+			Result := cached_slots_used
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 	
 	parent: XM_XPATH_EXPRESSION_CONTAINER
@@ -485,6 +631,9 @@ feature {NONE} -- Implementation
 
 	initialized: BOOLEAN
 			-- Has creation procedure completed?
+
+	cached_slots_used: DS_ARRAYED_LIST [INTEGER]
+			-- Cached result of `slots_used'
 
 	line_number_mask: INTEGER is
 			-- Bit mask for extracting line number from `location_identifer'
