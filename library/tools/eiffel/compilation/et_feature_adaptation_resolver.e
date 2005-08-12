@@ -130,8 +130,9 @@ feature {NONE} -- Feature recording
 			i, nb, nb2: INTEGER
 		do
 			l_queries := current_class.queries
-			nb := current_class.declared_query_count
-			nb2 := nb + current_class.declared_procedure_count
+			l_procedures := current_class.procedures
+			nb := l_queries.declared_count
+			nb2 := nb + l_procedures.declared_count
 			if a_features.capacity < nb2 then
 				a_features.resize (nb2)
 			end
@@ -148,7 +149,6 @@ feature {NONE} -- Feature recording
 				end
 				i := i + 1
 			end
-			l_procedures := current_class.procedures
 			nb := nb2 - nb
 			from i := 1 until i > nb loop
 				l_procedure := l_procedures.item (i)

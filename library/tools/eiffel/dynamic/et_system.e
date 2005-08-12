@@ -634,7 +634,7 @@ feature -- Compilation
 						l_dynamic_type := dynamic_type (l_class, l_class)
 						l_queries := l_class.queries
 						--nb := l_queries.count
-						nb := l_class.declared_query_count
+						nb := l_queries.declared_count
 						from i := 1 until i > nb loop
 							l_query := l_queries.item (i)
 							l_dynamic_feature := l_dynamic_type.dynamic_query (l_query, Current)
@@ -642,7 +642,7 @@ feature -- Compilation
 						end
 						l_procedures := l_class.procedures
 						--nb := l_procedures.count
-						nb := l_class.declared_procedure_count
+						nb := l_procedures.declared_count
 						from i := 1 until i > nb loop
 							l_procedure := l_procedures.item (i)
 							l_dynamic_feature := l_dynamic_type.dynamic_procedure (l_procedure, Current)

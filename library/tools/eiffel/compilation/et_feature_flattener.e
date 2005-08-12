@@ -5,7 +5,7 @@ indexing
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2004, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -237,39 +237,49 @@ feature {NONE} -- Feature flattening
 					named_features.back
 				end
 				nb := queries.count
+				l_declared_query_count := current_class.queries.declared_count
+				if l_declared_query_count > nb then
+						-- Internal error: the number of queries declared in
+						-- `current_class' should be less than or equal to the
+						-- total number of queries in `current_class'.
+					set_fatal_error (current_class)
+					error_handler.report_giadp_error
+					l_declared_query_count := nb
+				end
+				if l_declared_query_count < nb then
+						-- Sort inherited queries by decreasing first seed values.
+					query_sorter.subsort (queries, 1, nb - l_declared_query_count)
+				end
 				create l_queries.make_with_capacity (nb)
 				from i := 1 until i > nb loop
 					l_queries.put_first (queries.item (i))
 					i := i + 1
 				end
+				l_queries.set_declared_count (l_declared_query_count)
+				current_class.set_queries (l_queries)
 				queries.wipe_out
-				l_declared_query_count := current_class.declared_query_count
-				if l_declared_query_count > nb then
-						-- Internal error: the number of queries declared in
-						-- `current_class' should be less than or equal to the
-						-- total number of queries in `curren_class'.
-					set_fatal_error (current_class)
-					error_handler.report_giadp_error
-					l_declared_query_count := nb
-				end
-				current_class.set_queries (l_queries, l_declared_query_count)
 				nb := procedures.count
+				l_declared_procedure_count := current_class.procedures.declared_count
+				if l_declared_procedure_count > nb then
+						-- Internal error: the number of procedures declared in
+						-- `current_class' should be less than or equal to the
+						-- total number of procedures in `current_class'.
+					set_fatal_error (current_class)
+					error_handler.report_gibcb_error
+					l_declared_procedure_count := nb
+				end
+				if l_declared_procedure_count < nb then
+						-- Sort inherited procedures by decreasing first seed values.
+					procedure_sorter.subsort (procedures, 1, nb - l_declared_procedure_count)
+				end
 				create l_procedures.make_with_capacity (nb)
 				from i := 1 until i > nb loop
 					l_procedures.put_first (procedures.item (i))
 					i := i + 1
 				end
+				l_procedures.set_declared_count (l_declared_procedure_count)
+				current_class.set_procedures (l_procedures)
 				procedures.wipe_out
-				l_declared_procedure_count := current_class.declared_procedure_count
-				if l_declared_procedure_count > nb then
-						-- Internal error: the number of procedures declared in
-						-- `current_class' should be less than or equal to the
-						-- total number of procedures in `curren_class'.
-					set_fatal_error (current_class)
-					error_handler.report_gibcb_error
-					l_declared_procedure_count := nb
-				end
-				current_class.set_procedures (l_procedures, l_declared_procedure_count)
 				nb := l_declared_query_count
 				from i := 1 until i > nb loop
 					l_query := l_queries.item (i)
@@ -1515,6 +1525,30 @@ feature {NONE} -- Convert validity
 					i := i + 1
 				end
 			end
+		end
+
+feature {NONE} -- Constants
+
+	query_sorter: DS_QUICK_SORTER [ET_QUERY] is
+			-- Query sorter by increasing first seed values
+		local
+			l_comparator: ET_SEEDED_QUERY_COMPARATOR
+		once
+			create l_comparator.make
+			create Result.make (l_comparator)
+		ensure
+			query_sorter_not_void: Result /= Void
+		end
+
+	procedure_sorter: DS_QUICK_SORTER [ET_PROCEDURE] is
+			-- Procedure sorter by increasing first seed values
+		local
+			l_comparator: ET_SEEDED_PROCEDURE_COMPARATOR
+		once
+			create l_comparator.make
+			create Result.make (l_comparator)
+		ensure
+			procedure_sorter_not_void: Result /= Void
 		end
 
 invariant

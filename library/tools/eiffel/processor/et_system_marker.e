@@ -716,13 +716,13 @@ feature {ET_AST_NODE} -- Processing
 			i, nb: INTEGER
 		do
 			l_queries := a_class.queries
-			nb := a_class.declared_query_count
+			nb := l_queries.declared_count
 			from i := 1 until i > nb loop
 				l_queries.item (i).process (Current)
 				i := i + 1
 			end
 			l_procedures := a_class.procedures
-			nb := a_class.declared_procedure_count
+			nb := l_procedures.declared_count
 			from i := 1 until i > nb loop
 				l_procedures.item (i).process (Current)
 				i := i + 1

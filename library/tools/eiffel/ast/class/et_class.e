@@ -52,9 +52,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			id := an_id
 			ancestors := tokens.empty_ancestors
-			declared_query_count := 0
 			queries := tokens.empty_queries
-			declared_procedure_count := 0
 			procedures := tokens.empty_procedures
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
@@ -74,9 +72,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			id := 0
 			ancestors := tokens.empty_ancestors
-			declared_query_count := 0
 			queries := tokens.empty_queries
-			declared_procedure_count := 0
 			procedures := tokens.empty_procedures
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
@@ -93,24 +89,14 @@ feature -- Initialization
 	reset is
 			-- Reset current class as it was when it was first parsed.
 			-- (Do not alter `overridden_class' and `master_class'.)
-		local
-			i, nb: INTEGER
 		do
 			reset_implementation_checked
 			reset_interface_checked
 			reset_features_flattened
 			reset_ancestors_built
 			if is_preparsed then
-				nb := declared_query_count
-				from i := 1 until i > nb loop
-					queries.item (i).reset
-					i := i + 1
-				end
-				nb := declared_procedure_count
-				from i := 1 until i > nb loop
-					procedures.item (i).reset
-					i := i + 1
-				end
+				queries.reset
+				procedures.reset
 				if parents /= Void then
 					parents.reset
 				end
@@ -518,9 +504,7 @@ feature -- Parsing status
 			invariants := Void
 			obsolete_message := Void
 			parents := Void
-			declared_query_count := 0
 			queries := tokens.empty_queries
-			declared_procedure_count := 0
 			procedures := tokens.empty_procedures
 			leading_break := Void
 			providers := Void
@@ -1062,44 +1046,26 @@ feature -- Features
 	procedures: ET_PROCEDURE_LIST
 			-- Procedures
 
-	declared_query_count: INTEGER
-			-- Number of queries declared in current class
-			-- (i.e. appearing in one of the feature clauses)
-
-	declared_procedure_count: INTEGER
-			-- Number of procedures declared in current class
-			-- (i.e. appearing in one of the feature clauses)
-
-	set_queries (a_queries: like queries; a_count: INTEGER) is
+	set_queries (a_queries: like queries) is
 			-- Set `queries' to `a_queries' and
-			-- `declared_query_count' to `a_count'.
 		require
 			a_queries_not_void: a_queries /= Void
 			-- a_features_registered: forall f in a_queries, f.is_registered
-			a_count_large_enough: a_count >= 0
-			a_count_small_enough: a_count <= a_queries.count
 		do
 			queries := a_queries
-			declared_query_count := a_count
 		ensure
 			queries_set: queries = a_queries
-			declared_query_count_set: declared_query_count = a_count
 		end
 
-	set_procedures (a_procedures: like procedures; a_count: INTEGER) is
+	set_procedures (a_procedures: like procedures) is
 			-- Set `procedures' to `a_procedures' and
-			-- `declared_procedure_count' to `a_count'.
 		require
 			a_procedures_not_void: a_procedures /= Void
 			-- a_features_registered: forall f in a_procedures, f.is_registered
-			a_count_large_enough: a_count >= 0
-			a_count_small_enough: a_count <= a_procedures.count
 		do
 			procedures := a_procedures
-			declared_procedure_count := a_count
 		ensure
 			procedures_set: procedures = a_procedures
-			declared_procedure_count_set: declared_procedure_count = a_count
 		end
 
 feature -- Feature flattening status
@@ -1373,12 +1339,8 @@ invariant
 	ancestors_not_void: ancestors /= Void
 	queries_not_void: queries /= Void
 	-- queries_registered: forall f in queries, f.is_registered
-	declared_query_count_large_enough: declared_query_count >= 0
-	declared_query_count_small_enough: declared_query_count <= queries.count
 	procedures_not_void: procedures /= Void
 	-- procedures_registered: forall f in procedures, f.is_registered
-	declared_procedure_count_large_enough: declared_procedure_count >= 0
-	declared_procedure_count_small_enough: declared_procedure_count <= procedures.count
 	class_keyword_not_void: class_keyword /= Void
 	end_keyword_not_void: end_keyword /= Void
 	named_type: is_named_type

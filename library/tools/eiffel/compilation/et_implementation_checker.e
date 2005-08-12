@@ -195,7 +195,7 @@ feature {NONE} -- Feature validity
 			if flat_mode then
 				nb := l_queries.count
 			else
-				nb := current_class.declared_query_count
+				nb := l_queries.declared_count
 			end
 			from i := 1 until i > nb loop
 				l_query := l_queries.item (i)
@@ -210,7 +210,7 @@ feature {NONE} -- Feature validity
 			if flat_mode then
 				nb := l_procedures.count
 			else
-				nb := current_class.declared_procedure_count
+				nb := l_procedures.declared_count
 			end
 			from i := 1 until i > nb loop
 				l_procedure := l_procedures.item (i)

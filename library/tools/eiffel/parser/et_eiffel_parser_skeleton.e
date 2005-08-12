@@ -661,14 +661,16 @@ feature {NONE} -- Basic operations
 					l_queries.put_first (queries.item (i))
 					i := i - 1
 				end
-				a_class.set_queries (l_queries, nb)
+				l_queries.set_declared_count (nb)
+				a_class.set_queries (l_queries)
 				nb := procedures.count
 				create l_procedures.make_with_capacity (nb)
 				from i := nb until i < 1 loop
 					l_procedures.put_first (procedures.item (i))
 					i := i - 1
 				end
-				a_class.set_procedures (l_procedures, nb)
+				l_procedures.set_declared_count (nb)
+				a_class.set_procedures (l_procedures)
 			end
 			queries.wipe_out
 			procedures.wipe_out
