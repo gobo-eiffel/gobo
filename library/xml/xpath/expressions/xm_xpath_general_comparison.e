@@ -267,35 +267,37 @@ feature {NONE} -- Implementation
 			if not an_item.is_atomic_value then
 				create last_boolean_value.make (False)
 				last_boolean_value.set_last_error_from_string ("Atomization failed for second operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
-			end
-			from
-				an_iterator.forth
-			until
-				finished or else an_iterator.is_error or else an_iterator.after
-			loop
-				if not an_iterator.item.is_atomic_value then
-					create last_boolean_value.make (False)
-					last_boolean_value.set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
-					set_last_error (last_boolean_value.error_value)
-					finished := True
-				else
-					create a_comparison_checker
-					a_comparison_checker.check_correct_general_relation (an_iterator.item.as_atomic_value, singleton_operator, atomic_comparer, an_item.as_atomic_value, False)
-					if a_comparison_checker.is_comparison_type_error then
+				set_last_error (last_boolean_value.error_value)
+			else
+				from
+					an_iterator.forth
+				until
+					finished or else an_iterator.is_error or else an_iterator.after
+				loop
+					if not an_iterator.item.is_atomic_value then
 						create last_boolean_value.make (False)
-						last_boolean_value.set_last_error (a_comparison_checker.last_type_error)
-					elseif a_comparison_checker.last_check_result then
-						create last_boolean_value.make (True)
+						last_boolean_value.set_last_error_from_string ("Atomization failed for first operand of general comparison", Xpath_errors_uri, "XPTY0004", Type_error)
+						set_last_error (last_boolean_value.error_value)
 						finished := True
+					else
+						create a_comparison_checker
+						a_comparison_checker.check_correct_general_relation (an_iterator.item.as_atomic_value, singleton_operator, atomic_comparer, an_item.as_atomic_value, False)
+						if a_comparison_checker.is_comparison_type_error then
+							create last_boolean_value.make (False)
+							last_boolean_value.set_last_error (a_comparison_checker.last_type_error)
+						elseif a_comparison_checker.last_check_result then
+							create last_boolean_value.make (True)
+							finished := True
+						end
 					end
+					an_iterator.forth
 				end
-				an_iterator.forth
-			end
-			if an_iterator.is_error then
-				create last_boolean_value.make (False)
-				last_boolean_value.set_last_error (an_iterator.error_value)
-			elseif last_boolean_value = Void then
-				create last_boolean_value.make (False)
+				if an_iterator.is_error then
+					create last_boolean_value.make (False)
+					last_boolean_value.set_last_error (an_iterator.error_value)
+				elseif last_boolean_value = Void then
+					create last_boolean_value.make (False)
+				end
 			end
 		ensure
 			last_boolean_value_not_void: last_boolean_value /= Void			
@@ -443,7 +445,8 @@ feature {NONE} -- Implementation
 					end
 					if not is_error then
 						if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one and then
-							a_type /= type_factory.any_atomic_type and then another_type /= type_factory.any_atomic_type then
+							a_type /= type_factory.any_atomic_type and then another_type /= type_factory.any_atomic_type and then
+							a_type.is_atomic_type and then another_type.is_atomic_type then
 							type_check_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type)
 						elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
 							type_check_singleton_and_empty_sequence (a_context)
@@ -473,7 +476,8 @@ feature {NONE} -- Implementation
 			a_type := first_operand.item_type
 			another_type := second_operand.item_type
 			if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one and then
-				a_type /= type_factory.any_atomic_type and then another_type /= type_factory.any_atomic_type then
+				a_type /= type_factory.any_atomic_type and then another_type /= type_factory.any_atomic_type and then
+				a_type.is_atomic_type and then another_type.is_atomic_type then
 				optimize_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type)
 			elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
 				optimize_singleton_and_empty_sequence (a_context)

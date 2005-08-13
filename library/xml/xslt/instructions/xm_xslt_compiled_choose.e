@@ -234,6 +234,7 @@ feature -- Optimization
 								conditions.keep_first (an_index)
 								actions.keep_first (an_index)
 							end
+							a_cursor.go_after
 						else
 
 							-- if condition is false, skip this test
@@ -444,7 +445,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	conditions: initialized implies conditions /= Void and then conditions.count > 0
+	conditions: initialized implies conditions /= Void
 	actions: initialized implies actions /= Void and then actions.count = conditions.count
 	
 end

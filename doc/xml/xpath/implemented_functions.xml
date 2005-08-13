@@ -65,8 +65,8 @@
 	  </row>
 	  <row>
 	    <entry>fn:trace</entry>
-	    <entry>No</entry>
-	    <entry>No</entry>
+	    <entry>Yes</entry>
+	    <entry>Only by personal use</entry>
 	    <entry>No</entry>
 	  </row>
 
@@ -140,6 +140,12 @@
 	   <entry>fn:round-half-to-even</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
+	   <entry>No</entry>
+	 </row>	
+	 <row>
+	   <entry>fn:codepoint-equal</entry>
+	   <entry>No</entry>
+	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -217,7 +223,7 @@
 	 <row>
 	   <entry>fn:escape-uri</entry>
 	   <entry>Yes</entry>
-	   <entry>Ues</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
@@ -401,6 +407,18 @@
 	   <entry>No</entry>
 	 </row>	
 	 <row>
+	   <entry>fn:prefix-from-QName</entry>
+	   <entry>No</entry>
+	   <entry>No</entry>
+	   <entry>No</entry>
+	 </row>	
+	 <row>
+	   <entry>fn:QName</entry>
+	   <entry>No</entry>
+	   <entry>No</entry>
+	   <entry>No</entry>
+	 </row>	
+	 <row>
 	   <entry>fn:expanded-QName</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
@@ -432,6 +450,12 @@
 	 </row>	
 	 <row>
 	   <entry>fn:resolve-uri</entry>
+	   <entry>No</entry>
+	   <entry>No</entry>
+	   <entry>No</entry>
+	 </row>	
+	 <row>
+	   <entry>fn:nilled</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
@@ -605,6 +629,12 @@
 	   <entry>No</entry>
 	 </row>	
 	 <row>
+	   <entry>fn:doc-available</entry>
+	   <entry>No</entry>
+	   <entry>No</entry>
+	   <entry>No</entry>
+	 </row>	
+	 <row>
 	   <entry>fn:collection</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
@@ -624,19 +654,19 @@
 	 </row>	
 	 <row>
 	   <entry>fn:current-dateTime</entry>
-	   <entry>Yes</entry>
+	   <entry>Wrong type</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:current-date</entry>
-	   <entry>Yes</entry>
+	   <entry>Wrong type</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:current-time</entry>
-	   <entry>Yes</entry>
+	   <entry>Wrong type</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
 	 </row>	

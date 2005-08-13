@@ -76,7 +76,7 @@ feature -- Element change
 			end
 			stylesheet_uri_code := uri_code_for_prefix (a_stylesheet_prefix_attribute)
 			if stylesheet_uri_code = -1 then
-				create an_error.make_from_string (STRING_.concat (a_stylesheet_prefix_attribute, " is not an in-scope prefix."), "", "XTDE0820", Static_error)
+				create an_error.make_from_string (STRING_.concat (a_stylesheet_prefix_attribute, " is not an in-scope prefix."), Xpath_errors_uri, "XTDE0820", Static_error)
 				report_compile_error (an_error)
 			end
 			a_uri := uri_for_prefix (a_result_prefix_attribute, True)

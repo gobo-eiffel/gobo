@@ -67,7 +67,7 @@ feature -- Events
 					else
 						a_message := STRING_.concat ("Output character not available in this encoding (decimal ", a_bad_character.out)
 						a_message := STRING_.appended_string (a_message, ")")
-						create an_error.make_from_string (a_message, "", "XTDE1190",Dynamic_error)
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1190",Dynamic_error)
 						transformer.report_fatal_error (an_error, Void)
 						is_error := True
 					end

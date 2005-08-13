@@ -72,7 +72,8 @@ feature -- Element change
 					end
 					called_template_fingerprint := fingerprint_from_name_code (last_generated_name_code)
 				else
-					create an_error.make_from_string (STRING_.concat ("Name attribute of xsl:call-template must be a QName. Found: ", a_name_attribute), "", "XTDE0290", Static_error)
+					create an_error.make_from_string (STRING_.concat ("Name attribute of xsl:call-template must be a QName. Found: ", a_name_attribute),
+																 Xpath_errors_uri, "XTDE0290", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -127,7 +128,8 @@ feature -- Element change
 							an_actual_parameter_iterator.forth
 						end
 						if not is_parameter_ok then
-							create an_error.make_from_string (STRING_.concat ("No value supplied for required parameter ", a_param.variable_name), "", "XTSE0690", Static_error)
+							create an_error.make_from_string (STRING_.concat ("No value supplied for required parameter ", a_param.variable_name),
+																		 Xpath_errors_uri, "XTSE0690", Static_error)
 							report_compile_error (an_error)
 						end
 					end
@@ -165,7 +167,7 @@ feature -- Element change
 						if not a_with_param.is_tunnel_parameter and then not is_parameter_ok and then not is_backwards_compatible_processing_enabled then
 							a_message := STRING_.concat ("Parameter ", a_with_param.variable_name)
 							a_message := STRING_.appended_string (a_message, " is not declared in the called template")
-							create an_error.make_from_string (a_message, "", "XTSE0680", Static_error)
+							create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0680", Static_error)
 							report_compile_error (an_error)
 
 						end
@@ -245,7 +247,8 @@ feature {NONE} -- Implementation
 				end
 			end
 			if template = Void then
-				create an_error.make_from_string (STRING_.concat ("No template exists named ", called_template_name), "", "XTSE0650", Static_error)
+				create an_error.make_from_string (STRING_.concat ("No template exists named ", called_template_name),
+															 Xpath_errors_uri, "XTSE0650", Static_error)
 				report_compile_error (an_error)
 			end
 		end

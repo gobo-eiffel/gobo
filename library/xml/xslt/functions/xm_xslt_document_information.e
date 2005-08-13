@@ -142,7 +142,8 @@ feature {NONE} -- Implementation
 				in_error := True
 			end
 			if in_error then
-				create fragment_error_value.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type", "", "XTRE1160", Dynamic_error)
+				create fragment_error_value.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type",
+																			 Xpath_errors_uri, "XTRE1160", Dynamic_error)
 				transformer.report_recoverable_error (fragment_error_value, Void)
 				if not transformer.is_error then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (a_document)
@@ -179,7 +180,8 @@ feature {NONE} -- Implementation
 			an_xpointer_processor.evaluate (a_fragment_id, a_document)
 			a_value := an_xpointer_processor.value
 			if a_value.is_error or else a_value.is_empty_sequence then
-				create an_error.make_from_string ("XPointer reported an error", "", "XTRE1160", Dynamic_error)
+				create an_error.make_from_string ("XPointer reported an error",
+															 Xpath_errors_uri, "XTRE1160", Dynamic_error)
 				transformer.report_recoverable_error (an_error, Void)
 				if not transformer.is_error then
 					a_node := a_document
@@ -193,7 +195,8 @@ feature {NONE} -- Implementation
 				if a_sequence_extent.is_node_sequence then
 					Result := a_sequence_extent.node_iterator
 				else
-					create an_error.make_from_string ("XPointer returned something other than a sequence of nodes", "", "XTRE1160", Dynamic_error)
+					create an_error.make_from_string ("XPointer returned something other than a sequence of nodes",
+																 Xpath_errors_uri, "XTRE1160", Dynamic_error)
 					transformer.report_recoverable_error (an_error, Void)
 					if not transformer.is_error then
 						a_node := a_document

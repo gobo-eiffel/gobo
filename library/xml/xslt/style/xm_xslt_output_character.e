@@ -83,7 +83,7 @@ feature -- Element change
 		do
 			a_character_map ?= parent
 			if a_character_map = Void then
-				create an_error.make_from_string ("xsl:output-character may appear only as a direct child of xsl:character-map", "", "XTSE0010", Static_error)
+				create an_error.make_from_string ("xsl:output-character may appear only as a direct child of xsl:character-map", Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			end
 		end

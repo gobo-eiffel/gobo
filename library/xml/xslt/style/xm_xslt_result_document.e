@@ -103,7 +103,7 @@ feature -- Element change
 				if output_fingerprint = -1 then
 					a_message := STRING_.concat ("XTSE1460: xsl:result-document format='", a_format_attribute)
 					a_message := STRING_.appended_string (a_message, "' does not specify a valid QName")
-					create an_error.make_from_string (a_message, "", "XTSE1460", Static_error)
+					create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1460", Static_error)
 					report_compile_error (an_error)
 				end
 			else
@@ -112,21 +112,21 @@ feature -- Element change
 			if a_validation_attribute /= Void then
 				validation_action := validation_code (a_validation_attribute)
 				if validation_action /= Validation_strip then
-					create an_error.make_from_string ("To perform validation, a schema-aware XSLT processor is needed", "", "XTSE1660", Static_error)
+					create an_error.make_from_string ("To perform validation, a schema-aware XSLT processor is needed", Xpath_errors_uri, "XTSE1660", Static_error)
 				report_compile_error (an_error)
 				elseif validation_action = Validation_invalid then
-					create an_error.make_from_string ("Invalid value of validation attribute", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("Invalid value of validation attribute", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
 
 			if a_type_attribute /= Void then
-				create an_error.make_from_string ("The type attribute is available only with a schema-aware XSLT processor", "", "XTSE1660", Static_error)
+				create an_error.make_from_string ("The type attribute is available only with a schema-aware XSLT processor", Xpath_errors_uri, "XTSE1660", Static_error)
 				report_compile_error (an_error)
 			end
 
 			if a_type_attribute /= Void and then a_validation_attribute /= Void then
-				create an_error.make_from_string ("The validation and type attributes are mutually exclusive", "", "XTSE1505", Static_error)
+				create an_error.make_from_string ("The validation and type attributes are mutually exclusive", Xpath_errors_uri, "XTSE1505", Static_error)
 				report_compile_error (an_error)
 			end
 			attributes_prepared := True
@@ -188,7 +188,7 @@ feature -- Element change
 					a_message := STRING_.appended_string (a_message, "', in the output definition named '")
 					a_message := STRING_.appended_string (a_message, shared_name_pool.display_name_from_name_code (output_fingerprint))
 					a_message := STRING_.appended_string (a_message, "'.")
-					create an_error.make_from_string (a_message, "", "XTSE1560", Static_error)
+					create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1560", Static_error)
 					report_compile_error (an_error)
 				else
 					create a_fingerprint_list.make (formatting_attributes.count)
@@ -239,7 +239,7 @@ feature -- Element change
 			else
 				a_message := STRING_.concat ("Output definition named '", shared_name_pool.display_name_from_name_code (output_fingerprint))
 				a_message := STRING_.appended_string (a_message, "' by the format attribute of xsl:result-document has not been defined.")
-				create an_error.make_from_string (a_message, "", "XTSE1460", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1460", Static_error)
 				report_compile_error (an_error)
 			end
 		end

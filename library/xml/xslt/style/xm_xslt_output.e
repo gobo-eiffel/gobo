@@ -129,7 +129,7 @@ feature -- Element change
 			check_top_level (Void)
 			check_empty
 			if output_version /= Void and then not is_nmtoken (output_version) then
-					create an_error.make_from_string ("xsl:output 'version' attribute must be an 'nmtoken'", "", "XTSE0110", Static_error)
+					create an_error.make_from_string ("xsl:output 'version' attribute must be an 'nmtoken'", Xpath_errors_uri, "XTSE0110", Static_error)
 					report_compile_error (an_error)
 			end
 			if method /= Void then
@@ -140,11 +140,11 @@ feature -- Element change
 						STRING_.same_string (method, "text") then
 						-- OK
 					else
-						create an_error.make_from_string ("xsl:output 'method' attribute must be a QName or one of 'xml', 'xhtml', 'html' or 'text'", "", "XTSE1570", Static_error)
+						create an_error.make_from_string ("xsl:output 'method' attribute must be a QName or one of 'xml', 'xhtml', 'html' or 'text'", Xpath_errors_uri, "XTSE1570", Static_error)
 						report_compile_error (an_error)
 					end
 				elseif not is_qname (method) then
-						create an_error.make_from_string ("xsl:output 'method' attribute must be a QName or one of 'xml', 'xhtml', 'html' or 'text'", "", "XTSE1570", Static_error)
+						create an_error.make_from_string ("xsl:output 'method' attribute must be a QName or one of 'xml', 'xhtml', 'html' or 'text'", Xpath_errors_uri, "XTSE1570", Static_error)
 						report_compile_error (an_error)
 				end
 			end
@@ -152,7 +152,7 @@ feature -- Element change
 				if STRING_.same_string (indent, "yes") or else STRING_.same_string (indent, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("indent must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("indent must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -167,7 +167,7 @@ feature -- Element change
 				if STRING_.same_string (omit_xml_declaration, "yes") or else STRING_.same_string (omit_xml_declaration, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("omit_xml_declaration must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("omit_xml_declaration must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -175,7 +175,7 @@ feature -- Element change
 				if STRING_.same_string (standalone, "yes") or else STRING_.same_string (standalone, "no") or else STRING_.same_string (standalone, "omit") then
 					-- OK
 				else
-					create an_error.make_from_string ("standalone must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("standalone must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -189,7 +189,7 @@ feature -- Element change
 				if STRING_.same_string (undeclare_namespaces, "yes") or else STRING_.same_string (undeclare_namespaces, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("undeclare-namespaces must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("undeclare-namespaces must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -197,7 +197,7 @@ feature -- Element change
 				if STRING_.same_string (include_content_type, "yes") or else STRING_.same_string (include_content_type, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("include-content-type must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("include-content-type must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -205,7 +205,7 @@ feature -- Element change
 				if STRING_.same_string (escape_uri_attributes, "yes") or else STRING_.same_string (escape_uri_attributes, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("undeclare-namespaces must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("undeclare-namespaces must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -213,7 +213,7 @@ feature -- Element change
 				if STRING_.same_string (byte_order_mark, "yes") or else STRING_.same_string (byte_order_mark, "no") then
 					-- OK
 				else
-					create an_error.make_from_string ("byte-order-mark must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("byte-order-mark must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end			
@@ -280,14 +280,14 @@ feature -- Element change
 					if qname_parts.count /= 2 then
 						a_message := STRING_.concat ("XTSE1570: ", method)
 						a_message := STRING_.appended_string (a_message, " is not a lexical QName.")
-						create an_error.make_from_string ("include-content-type must be 'yes' or 'no'", "", "XTSE1570", Static_error)
+						create an_error.make_from_string ("include-content-type must be 'yes' or 'no'", Xpath_errors_uri, "XTSE1570", Static_error)
 						report_compile_error (an_error)
 					else
 						an_xml_prefix := qname_parts.item (1)
 						a_uri := uri_for_prefix (an_xml_prefix, False)
 						a_local_name := qname_parts.item (2)
 						if a_uri = Void then
-							create an_error.make_from_string (STRING_.concat (an_xml_prefix, " is not an in-scope namespace prefix."), "", "XTSE1570", Static_error)
+							create an_error.make_from_string (STRING_.concat (an_xml_prefix, " is not an in-scope namespace prefix."), Xpath_errors_uri, "XTSE1570", Static_error)
 							report_compile_error (an_error)
 						else
 							if emitter_factory.is_valid_output_method (a_uri, a_local_name) then
@@ -298,7 +298,7 @@ feature -- Element change
 									a_property_set.set_duplication_error (Method_attribute)
 								end
 							else
-								create an_error.make_from_string (STRING_.concat (method, " is not supported by this XSLT configuration/processor."), "", "XTSE1570", Static_error)
+								create an_error.make_from_string (STRING_.concat (method, " is not supported by this XSLT configuration/processor."), Xpath_errors_uri, "XTSE1570", Static_error)
 								report_compile_error (an_error)
 							end
 						end
@@ -418,7 +418,7 @@ feature -- Element change
 					a_qname := a_cursor.item
 					qname_parts := a_splitter.split (a_qname)
 					if qname_parts.count = 0 or else qname_parts.count > 2 then
-						create an_error.make_from_string (STRING_.concat (a_qname, " is not a lexical QName."), "", "XTSE1590", Static_error)
+						create an_error.make_from_string (STRING_.concat (a_qname, " is not a lexical QName."), Xpath_errors_uri, "XTSE1590", Static_error)
 						report_compile_error (an_error)
 						a_cursor.go_after
 					else
@@ -438,7 +438,7 @@ feature -- Element change
 							a_fingerprint := shared_name_pool.last_name_code
 						end
 						if a_fingerprint = -1 then
-							create an_error.make_from_string (STRING_.concat (a_qname, " is not a lexical QName."), "", "XTSE1590", Static_error)
+							create an_error.make_from_string (STRING_.concat (a_qname, " is not a lexical QName."), Xpath_errors_uri, "XTSE1590", Static_error)
 							report_compile_error (an_error)
 							a_cursor.go_after
 						else
@@ -447,7 +447,7 @@ feature -- Element change
 							if a_character_map = Void then
 								a_message := STRING_.concat ("No character-map named ", a_qname)
 								a_message := STRING_.appended_string (a_message, " has been defined.")
-								create an_error.make_from_string (a_message, "", "XTSE1590", Static_error)
+								create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1590", Static_error)
 								report_compile_error (an_error)
 								a_cursor.go_after
 							else

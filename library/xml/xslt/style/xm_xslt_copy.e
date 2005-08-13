@@ -87,7 +87,7 @@ feature -- Element change
 				elseif STRING_.same_string (a_copy_namespaces_attribute, "yes") then
 					is_copy_namespaces := True
 				else
-					create an_error.make_from_string ("Value of copy-namespaces must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("Value of copy-namespaces must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -99,28 +99,28 @@ feature -- Element change
 				elseif STRING_.same_string (an_inherit_namespaces_attribute, "yes") then
 					is_inherit_namespaces := True
 				else
-					create an_error.make_from_string ("Value of inherit-namespaces must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("Value of inherit-namespaces must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end			
 			if a_validation_attribute /= Void then
 				validation := validation_code (a_validation_attribute)
 				if validation /= Validation_strip then
-					create an_error.make_from_string ("To perform validation, a schema-aware XSLT processor is needed", "", "XTSE1660", Static_error)
+					create an_error.make_from_string ("To perform validation, a schema-aware XSLT processor is needed", Xpath_errors_uri, "XTSE1660", Static_error)
 					report_compile_error (an_error)
 				elseif validation = Validation_invalid then
-					create an_error.make_from_string ("Invalid value of validation attribute", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("Invalid value of validation attribute", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
 
 			if a_type_attribute /= Void then
-				create an_error.make_from_string ("The type attribute is available only with a schema-aware XSLT processor", "", "XTSE1660", Static_error)
+				create an_error.make_from_string ("The type attribute is available only with a schema-aware XSLT processor", Xpath_errors_uri, "XTSE1660", Static_error)
 				report_compile_error (an_error)
 			end
 
 			if a_type_attribute /= Void and then a_validation_attribute /= Void then
-				create an_error.make_from_string ("The validation and type attributes are mutually exclusive", "", "XTSE1505", Static_error)
+				create an_error.make_from_string ("The validation and type attributes are mutually exclusive", Xpath_errors_uri, "XTSE1505", Static_error)
 				report_compile_error (an_error)
 			end
 			attributes_prepared := True

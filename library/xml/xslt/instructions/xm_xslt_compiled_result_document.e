@@ -279,14 +279,16 @@ feature -- Evaluation
 			a_transformer := a_context.transformer
 			a_new_context := a_context.new_minor_context
 			if a_new_context.is_temporary_destination then
-				create an_error.make_from_string ("Attempt to evaluate xsl:document while writing a temporary tree", "", "XTDE1480", Dynamic_error)
+				create an_error.make_from_string ("Attempt to evaluate xsl:document while writing a temporary tree",
+															 Xpath_errors_uri, "XTDE1480", Dynamic_error)
 				a_transformer.report_fatal_error (an_error, Current)
 			else
 				an_output_resolver := a_transformer.output_resolver
 				if href = Void then
 					a_result := a_transformer.principal_result
 					if a_result.is_document_started then
-						create an_error.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", a_transformer.principal_result_uri), "", "XTDE1490", Dynamic_error)
+						create an_error.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", a_transformer.principal_result_uri),
+																	 Xpath_errors_uri, "XTDE1490", Dynamic_error)
 						a_transformer.report_fatal_error (an_error, Current)
 					end
 				else
@@ -299,7 +301,8 @@ feature -- Evaluation
 						create a_uri.make_resolve (a_uri, href.last_evaluated_string.string_value)
 						a_uri_to_use := a_uri.full_reference
 						if an_output_resolver.output_destinations.has (a_uri_to_use) then
-							create an_error.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", a_uri_to_use), "", "XTDE1490", Dynamic_error)
+							create an_error.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", a_uri_to_use),
+																		 Xpath_errors_uri, "XTDE1490", Dynamic_error)
 							a_transformer.report_fatal_error (an_error, Current)
 						else
 							an_output_resolver.resolve (a_uri)

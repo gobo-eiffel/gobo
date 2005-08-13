@@ -135,7 +135,7 @@ feature -- Element change
 					slot_manager := containing_slot_manager
 					if slot_manager = Void then
 						slot_manager := a_slot_manager -- to restore the invariant
-						create an_error.make_from_string ("Local variable must be declared within a template or function", "", "XTSE0010", Static_error)
+						create an_error.make_from_string ("Local variable must be declared within a template or function", Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					else
 						slot_manager.allocate_slot_number (variable_name)

@@ -141,11 +141,13 @@ feature -- Element change
 						-- do nothing
 					elseif a_node.node_type = Text_node then
 						if not is_all_whitespace (a_node.string_value) then
-							create an_error.make_from_string ("No character data allowed within xsl:apply-templates", "", "XTSE0010", Static_error)
+							create an_error.make_from_string ("No character data allowed within xsl:apply-templates",
+																		 Xpath_errors_uri, "XTSE0010", Static_error)
 							report_compile_error (an_error)
 						end
 					else
-						create an_error.make_from_string ("Invalid element within xsl:apply-templates", "", "XTSE0010", Static_error)
+						create an_error.make_from_string ("Invalid element within xsl:apply-templates",
+																	 Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 				end
@@ -159,7 +161,8 @@ feature -- Element change
 				select_expression := select_expression.replacement_expression
 			end
 			create a_type_checker
-			create a_role.make (Instruction_role, "xsl:apply-templates/select", 1, "", "XTTE0520")
+			create a_role.make (Instruction_role, "xsl:apply-templates/select", 1,
+									  Xpath_errors_uri, "XTTE0520")
 			create a_node_sequence.make_node_sequence
 			a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
 			if a_type_checker.is_static_type_check_error	then

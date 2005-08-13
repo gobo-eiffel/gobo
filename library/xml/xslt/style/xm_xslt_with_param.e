@@ -57,7 +57,7 @@ feature -- Element change
 			loop
 				a_with_param ?= a_preceding_iterator.item
 				if a_with_param /= Void and then a_with_param.variable_fingerprint = variable_fingerprint then
-					create an_error.make_from_string ("Duplicate parameter name", "", "XTSE0670", Static_error)
+					create an_error.make_from_string ("Duplicate parameter name", Xpath_errors_uri, "XTSE0670", Static_error)
 					report_compile_error (an_error)
 				end
 			   a_preceding_iterator.forth

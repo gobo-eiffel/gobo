@@ -597,7 +597,7 @@ feature {XM_XPATH_CLOSURE} -- Restricted
 		local
 			a_set: DS_HASH_SET [INTEGER]
 			a_cursor: DS_HASH_SET_CURSOR [INTEGER]
-			a_comparator: DS_COMPARABLE_COMPARATOR [INTEGER]
+			a_comparator: KL_COMPARABLE_COMPARATOR [INTEGER]
 			a_sorter: DS_QUICK_SORTER [INTEGER]
 		do
 			if cached_slots_used = Void then

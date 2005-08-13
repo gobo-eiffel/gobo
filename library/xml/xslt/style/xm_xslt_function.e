@@ -194,7 +194,7 @@ feature -- Element change
 				if STRING_.same_string (an_expanded_name, Name_attribute) then
 					function_name := attribute_value_by_index (a_cursor.index)
 					if function_name.index_of (':', 2) = 0 then
-						create an_error.make_from_string ("Xsl:function name must have a namespace prefix", "", "XTSE0740", Static_error)
+						create an_error.make_from_string ("Xsl:function name must have a namespace prefix", Xpath_errors_uri, "XTSE0740", Static_error)
 						report_compile_error (an_error)
 					else
 						STRING_.left_adjust (function_name)
@@ -214,7 +214,7 @@ feature -- Element change
 					elseif STRING_.same_string (an_override_attribute, "no") then
 						is_overriding := False
 					else
-						create an_error.make_from_string ("Xsl:function override attribute must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+						create an_error.make_from_string ("Xsl:function override attribute must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					end
 				elseif STRING_.same_string (an_expanded_name, Gexslt_memo_function_attribute) then
@@ -229,7 +229,7 @@ feature -- Element change
 					elseif STRING_.same_string (a_memo_function_attribute, "no") then
 						is_memo_function := False
 					else
-						create an_error.make_from_string ("Xsl:function memo-function extension attribute must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+						create an_error.make_from_string ("Xsl:function memo-function extension attribute must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					end
 				else
@@ -277,7 +277,7 @@ feature -- Element change
 					and then a_cursor.item.as_xslt_function.arity = an_arity
 					and then a_cursor.item.as_xslt_function.function_fingerprint = function_fingerprint
 					and then a_cursor.item.as_xslt_function.precedence = precedence then
-					create an_error.make_from_string (STRING_.concat ("Duplicate function declaration for ", function_name), "", "XTSE0770", Static_error)
+					create an_error.make_from_string (STRING_.concat ("Duplicate function declaration for ", function_name), Xpath_errors_uri, "XTSE0770", Static_error)
 					report_compile_error (an_error)
 					a_cursor.go_before
 				else

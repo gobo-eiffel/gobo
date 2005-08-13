@@ -483,10 +483,10 @@ feature -- Element change
 				elseif STRING_.same_string (an_expanded_name, Default_validation_attribute) then
 					default_validation := validation_code (attribute_value_by_index (a_cursor.index))
 					if default_validation = Validation_invalid then
-						create an_error.make_from_string ("Invalid value for default-validation attribute. Permitted values are (strict, lax, preserve, strip)", "", "XTSE0020", Static_error)
+						create an_error.make_from_string ("Invalid value for default-validation attribute. Permitted values are (strict, lax, preserve, strip)", Xpath_errors_uri, "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					elseif conformance.basic_xslt_processor and then default_validation /= Validation_strip then
-						create an_error.make_from_string ("Invalid value for default-validation attribute. Only 'strip' is permitted for a basic XSLT processor)", "", "XTSE1660", Static_error)
+						create an_error.make_from_string ("Invalid value for default-validation attribute. Only 'strip' is permitted for a basic XSLT processor)", Xpath_errors_uri, "XTSE1660", Static_error)
 						report_compile_error (an_error)
 					end
 				elseif STRING_.same_string (an_expanded_name, Gexslt_explain_attribute) then
@@ -632,7 +632,7 @@ feature -- Element change
 					-- In an embedded stylesheet, white space nodes may still be there
 
 					if not is_all_whitespace (a_child.string_value) then
-						create an_error.make_from_string ("No character data is allowed between top-level elements", "", "XTSE0120", Static_error)
+						create an_error.make_from_string ("No character data is allowed between top-level elements", Xpath_errors_uri, "XTSE0120", Static_error)
 						 a_previous_style_element.report_compile_error (an_error)
 					end
 				else
@@ -652,7 +652,7 @@ feature -- Element change
 								a_module.process_attributes
 								if a_module.is_import then
 									if found_non_import then
-										create an_error.make_from_string ("xsl:import elements must come first", "", "XTSE0200", Static_error)
+										create an_error.make_from_string ("xsl:import elements must come first", Xpath_errors_uri, "XTSE0200", Static_error)
 										a_module.report_compile_error (an_error)
 									end
 								else
@@ -721,7 +721,7 @@ feature -- Element change
 			if validation_error /= Void then
 				report_compile_error (validation_error)
 			elseif not parent.is_document then
-				create an_error.make_from_string (STRING_.concat (node_name, " must be the outermost element"), "", "XTSE0010", Static_error)
+				create an_error.make_from_string (STRING_.concat (node_name, " must be the outermost element"), Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			end
 			validated := True
@@ -802,7 +802,7 @@ feature -- Element change
 					if a_property_set.is_duplication_error then
 						a_message := STRING_.concat ("Two xsl:output statements specify conflicting values for attribute '", a_property_set.duplicate_attribute_name)
 						a_message := STRING_.appended_string (a_message, "', in the unnamed output definition.")
-						create an_error.make_from_string (a_message, "", "XTSE1560", Static_error)
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1560", Static_error)
 					else
 						create an_error.make_from_string (a_property_set.error_message, Gexslt_eiffel_type_uri, "OUTPUT+PROPERTY", Static_error)
 					end
@@ -1009,7 +1009,7 @@ feature {NONE} -- Implementation
 						a_message := STRING_.appended_string (a_message, " of ")
 						a_message := STRING_.appended_string (a_message, another_template.system_id)
 						a_message := STRING_.appended_string (a_message, ")")
-						create an_error.make_from_string (a_message, "", "XTSE0660", Static_error)
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0660", Static_error)
 						a_template.report_compile_error (an_error)
 					elseif a_template.precedence < another_template.precedence then
 						a_template.set_redundant_named_template
@@ -1055,7 +1055,7 @@ feature {NONE} -- Implementation
 						a_message := STRING_.appended_string (a_message, " of ")
 						a_message := STRING_.appended_string (a_message, another_variable.system_id)
 						a_message := STRING_.appended_string (a_message, ")")
-						create an_error.make_from_string (a_message, "", "XTSE0630", Static_error)
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0630", Static_error)
 						a_variable_declaration.report_compile_error (an_error)
 					elseif a_variable_declaration.precedence < another_variable.precedence then
 						a_variable_declaration.set_redundant_variable
@@ -1127,7 +1127,7 @@ feature {NONE} -- Implementation
 					loop
 						if a_uri_code = namespace_alias_uri_codes.item (an_index) then
 							if fingerprint_from_name_code (a_namespace_code) /= fingerprint_from_name_code (namespace_alias_namespace_codes.item (an_index)) then
-								create an_error.make_from_string ("Inconsistent namespace aliases", "", "XTSE0810", Static_error)
+								create an_error.make_from_string ("Inconsistent namespace aliases", Xpath_errors_uri, "XTSE0810", Static_error)
 								an_alias.report_compile_error (an_error)								
 							end
 						end

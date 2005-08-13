@@ -63,7 +63,7 @@ feature -- Access
 				create a_uri.make_resolve (a_base_uri, href)
 				a_uri_resolver.resolve_uri (a_uri.full_reference)
 				if a_uri_resolver.has_uri_reference_error then
-					create an_error.make_from_string (a_uri_resolver.last_uri_reference_error, "", "XTSE0165", Static_error)
+					create an_error.make_from_string (a_uri_resolver.last_uri_reference_error, Xpath_errors_uri, "XTSE0165", Static_error)
 					report_compile_error (an_error)
 				else
 					create a_source.make (a_uri_resolver.last_system_id.full_reference)
@@ -72,7 +72,7 @@ feature -- Access
 						create a_node_factory.make (a_configuration.error_listener, a_configuration)
 						a_stylesheet_compiler.load_stylesheet_module (a_source, a_uri_resolver.last_uri_reference_stream, a_uri_resolver.last_system_id)
 						if a_stylesheet_compiler.load_stylesheet_module_failed then
-							create an_error.make_from_string (a_stylesheet_compiler.load_stylesheet_module_error, "", "XTSE0165", Static_error)
+							create an_error.make_from_string (a_stylesheet_compiler.load_stylesheet_module_error, Xpath_errors_uri, "XTSE0165", Static_error)
 							report_compile_error (an_error)
 						else
 							included_document := a_stylesheet_compiler.last_loaded_module
@@ -81,7 +81,7 @@ feature -- Access
 							if Result = Void then
 								a_message := STRING_.concat ("Included document ", href)
 								a_message := STRING_.appended_string (a_message, " is not a stylesheet")
-								create an_error.make_from_string (a_message, "", "XTSE0165", Static_error)
+								create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0165", Static_error)
 								report_compile_error (an_error)
 							else
 								if Result.validation_error /= Void then
@@ -150,7 +150,7 @@ feature -- Element change
 			if href = Void then
 				report_absence ("href")
 			elseif uri_encoding.has_excluded_characters (href) then
-				create an_error.make_from_string ("'href' attribute contains invalid characters", "", "XTSE0165", Static_error)
+				create an_error.make_from_string ("'href' attribute contains invalid characters", Xpath_errors_uri, "XTSE0165", Static_error)
 				report_compile_error (an_error)
 			end
 			attributes_prepared := True

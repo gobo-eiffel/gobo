@@ -170,7 +170,7 @@ feature -- Evaluation
 			a_transformer := a_context.transformer
 			if not a_transformer.is_error then
 				if a_name_code = -1 then
-					create an_error.make_from_string ("Name is not a valid QName", "", "XTDE0830", Dynamic_error)
+					create an_error.make_from_string ("Name is not a valid QName", Xpath_errors_uri, "XTDE0830", Dynamic_error)
 					a_context.transformer.report_fatal_error (an_error, Current)
 				else
 					a_receiver := a_context.current_receiver

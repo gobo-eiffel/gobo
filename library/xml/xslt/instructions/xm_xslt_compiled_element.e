@@ -99,7 +99,8 @@ feature -- Access
 			element_name.evaluate_item (a_context)
 			a_name_value := element_name.last_evaluated_item
 			if a_name_value = Void or else a_name_value.is_error then -- empty sequence
-				create an_error.make_from_string ("xsl:element has no 'name'", "","XTDE0820", Dynamic_error) 
+				create an_error.make_from_string ("xsl:element has no 'name'",
+															 Xpath_errors_uri,"XTDE0820", Dynamic_error) 
 				a_context.transformer.report_fatal_error (an_error, Current)
 				Result := -1
 			else
@@ -111,7 +112,8 @@ feature -- Access
 				a_splitter.set_separators (":")
 				qname_parts := a_splitter.split (a_string_value.string_value)
 				if qname_parts.count = 0 or else qname_parts.count > 2 then
-					create an_error.make_from_string ("'name' attribute of xsl:element does not evaluate to a lexical QName.", "","XTDE0820", Dynamic_error) 
+					create an_error.make_from_string ("'name' attribute of xsl:element does not evaluate to a lexical QName.",
+																 Xpath_errors_uri,"XTDE0820", Dynamic_error) 
 					a_context.transformer.report_recoverable_error (an_error, Current)
 					Result := -1
 				elseif qname_parts.count = 1 then
@@ -126,7 +128,8 @@ feature -- Access
 				if namespace = Void then
 					a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, True)
 					if a_uri = Void then
-						create an_error.make_from_string (STRING_.concat ("'name' attribute of xsl:element has an undeclared prefix: ", an_xml_prefix), "","XTDE0830", Dynamic_error) 
+						create an_error.make_from_string (STRING_.concat ("'name' attribute of xsl:element has an undeclared prefix: ", an_xml_prefix),
+																	 Xpath_errors_uri,"XTDE0830", Dynamic_error) 
 						a_context.transformer.report_recoverable_error (an_error, Current)
 						Result := -1
 						check False end
@@ -214,6 +217,7 @@ feature -- Optimization
 			if element_name.was_expression_replaced then
 				element_name := element_name.replacement_expression
 			end
+			if element_name.is_error then set_last_error (element_name.error_value) end
 			create a_role.make (Instruction_role, "xsl:element/name", 1, Xpath_errors_uri, "XPTY0004")
 			create a_type_checker
 			create a_single_string_type.make_single_string
@@ -250,14 +254,16 @@ feature -- Optimization
 				element_name := element_name.replacement_expression
 				adopt_child_expression (element_name)
 			end
-			if namespace /= Void then
+			if element_name.is_error then set_last_error (element_name.error_value) end
+			if not is_error and then namespace /= Void then
 				namespace.promote (an_offer)
 				if namespace.was_expression_replaced then
 					namespace := namespace.replacement_expression
 					adopt_child_expression (namespace)
 				end
+				if namespace.is_error then set_last_error (namespace.error_value) end
 			end
-			Precursor (an_offer)
+			if not is_error then Precursor (an_offer) end
 		end
 
 feature {XM_XSLT_ELEMENT_CONSTRUCTOR} -- Local

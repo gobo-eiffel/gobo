@@ -131,7 +131,7 @@ feature -- Access
 					end
 				end
 				if Result = Void then
-					create an_error.make_from_string (STRING_.concat ("None of the following are recognized as a collation URI by this implementation: ", local_default_collation_name), "", "XTSE0125", Static_error)
+					create an_error.make_from_string (STRING_.concat ("None of the following are recognized as a collation URI by this implementation: ", local_default_collation_name), Xpath_errors_uri, "XTSE0125", Static_error)
 					report_compile_error (an_error)
 				end
 			else
@@ -740,7 +740,7 @@ feature -- Status setting
 		do
 			a_message := STRING_.appended_string ("Element must have a %"", an_attribute_name)
 			a_message := STRING_.appended_string (a_message, "%" attribute")
-			create an_error.make_from_string (a_message, "", "XTSE0010", Static_error)
+			create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0010", Static_error)
 			report_compile_error (an_error)
 		end
 
@@ -812,7 +812,7 @@ feature -- Status setting
 					STRING_.same_string (an_attribute_uri, Xslt_uri) then
 					a_message := STRING_.appended_string ("Attribute ", shared_name_pool.display_name_from_name_code (a_name_code))
 					a_message := STRING_.appended_string (a_message, " is not allowed on this element")
-					create an_error.make_from_string (a_message, "", "XTSE0090", Static_error)
+					create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0090", Static_error)
 					report_compile_error (an_error)
 
 				end
@@ -860,7 +860,7 @@ feature -- Status setting
 					end
 				end
 				if not finished then
-					create an_error.make_from_string (STRING_.concat (node_name, " must be empty."), "", "XTSE0260", Static_error)
+					create an_error.make_from_string (STRING_.concat (node_name, " must be empty."), Xpath_errors_uri, "XTSE0260", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -1002,7 +1002,7 @@ feature -- Status setting
 		do
 			a_style_element ?= parent
 			if a_style_element = Void or else not a_style_element.may_contain_sequence_constructor then
-				create an_error.make_from_string (STRING_.concat (node_name, " may only be used within a sequence constructor"), "", "XTSE0010", Static_error)
+				create an_error.make_from_string (STRING_.concat (node_name, " may only be used within a sequence constructor"), Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -1028,7 +1028,7 @@ feature -- Status setting
 					if non_sort_found then
 						a_message := STRING_.concat ("Within ", node_name)
 						a_message := STRING_.appended_string (a_message, ", xsl:sort elements must come before all other elements")
-						create an_error.make_from_string (a_message, "", "XTSE0010", Static_error)
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 					sort_found := True
@@ -1045,7 +1045,7 @@ feature -- Status setting
 				an_iterator.forth
 			end
 			if sort_required and then not sort_found then
-				create an_error.make_from_string (STRING_.concat (node_name, " must have at least one xsl:sort child"), "", "XTSE0010", Static_error)
+				create an_error.make_from_string (STRING_.concat (node_name, " must have at least one xsl:sort child"), Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -1076,12 +1076,12 @@ feature -- Status setting
 						elseif may_contain_fallback then
 							a_fallback ?= a_child_iterator.item
 							if a_fallback = Void then
-								create an_error.make_from_string (STRING_.concat (node_name, " may only have xsl:with-param children"), "", "XTSE0010", Static_error)
+								create an_error.make_from_string (STRING_.concat (node_name, " may only have xsl:with-param children"), Xpath_errors_uri, "XTSE0010", Static_error)
 								report_compile_error (an_error)
 								finished := True
 							end
 						else
-							create an_error.make_from_string (STRING_.concat (node_name, " may only have xsl:with-param children"), "", "XTSE0010", Static_error)
+							create an_error.make_from_string (STRING_.concat (node_name, " may only have xsl:with-param children"), Xpath_errors_uri, "XTSE0010", Static_error)
 							report_compile_error (an_error)
 							finished := True
 						end
@@ -1241,7 +1241,7 @@ feature -- Creation
 				if is_reserved_namespace (a_uri) then
 					a_message := STRING_.concat ("Namespace prefix ", an_xml_prefix)
 					a_message := STRING_.appended_string (a_message, " refers to a reserved namespace")
-					create name_code_error_value.make_from_string (a_message, "", "XTSE0080", Static_error)
+					create name_code_error_value.make_from_string (a_message, Xpath_errors_uri, "XTSE0080", Static_error)
 					last_generated_name_code := -1
 				else
 					if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
@@ -1301,7 +1301,7 @@ feature -- Creation
 			if not a_pattern_parser.is_parse_error then
 				last_generated_pattern := a_pattern_parser.last_parsed_pattern.simplified_pattern
 			else
-				create an_error.make_from_string (a_pattern_parser.first_parse_error, "", "XTSE0340", Static_error)
+				create an_error.make_from_string (a_pattern_parser.first_parse_error, Xpath_errors_uri, "XTSE0340", Static_error)
 				report_compile_error (an_error)
 				create {XM_XSLT_NO_NODE_TEST} last_generated_pattern.make
 			end
@@ -1323,7 +1323,7 @@ feature -- Creation
 			create a_pattern_parser.make
 			a_pattern_parser.parse_sequence_type (a_sequence_type, static_context, line_number)
 			if a_pattern_parser.is_parse_error then
-				create an_error.make_from_string (a_pattern_parser.first_parse_error, "", "XTSE0340", Static_error)
+				create an_error.make_from_string (a_pattern_parser.first_parse_error, Xpath_errors_uri, "XTSE0340", Static_error)
 				report_compile_error (an_error)
 				create last_generated_sequence_type.make_any_sequence
 			else
@@ -1538,13 +1538,13 @@ feature -- Element change
 			a_version := attribute_value_by_expanded_name (an_attribute_name)
 			if a_version /= Void then
 				if a_version.index_of ('e', 1) > 0 or else a_version.index_of ('E', 1) > 0 then
-					create an_error.make_from_string ("The version attribute must be a decimal literal", "", "XTSE0110", Static_error)
+					create an_error.make_from_string ("The version attribute must be a decimal literal", Xpath_errors_uri, "XTSE0110", Static_error)
 					set_validation_error (an_error, a_condition)
 					create version.make_from_string ("2.0") -- to satisfy invariant
 				else
 					create version.make_from_string (a_version)
 					if version.is_special then
-						create an_error.make_from_string ("The version attribute must be a decimal literal", "", "XTSE0110", Static_error)
+						create an_error.make_from_string ("The version attribute must be a decimal literal", Xpath_errors_uri, "XTSE0110", Static_error)
 						set_validation_error (an_error, a_condition)
 						create version.make_from_string ("2.0") -- to satisfy invariant
 					end
@@ -1669,7 +1669,7 @@ feature -- Element change
 							if STRING_.same_string (an_exclusion, "#default") then
 								an_exclusion := ""
 							elseif STRING_.same_string (an_exclusion, "#all") then
-								create an_error.make_from_string ("In exclude-result-prefixes, cannot mix #all with other values", "", "XTSE0550", Static_error)
+								create an_error.make_from_string ("In exclude-result-prefixes, cannot mix #all with other values", Xpath_errors_uri, "XTSE0550", Static_error)
 								report_compile_error (an_error)
 								a_cursor.go_after
 							end
@@ -1757,7 +1757,7 @@ feature -- Element change
 						a_message := STRING_.appended_string (a_message, " element must not contain an ")
 						a_message := STRING_.appended_string (a_message, a_style_element.node_name)
 						a_message := STRING_.appended_string (a_message, " element.")
-						create an_error.make_from_string (a_message, "", "XTSE0010", Static_error)
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					else
 						a_style_element.validate_subtree
@@ -2006,7 +2006,7 @@ feature -- Element change
 						another_cursor.forth
 					end
 					if not found then
-						create an_error.make_from_string (STRING_.concat ("No attribute-set exists named ", a_set_name), "", "XTSE0710", Static_error)
+						create an_error.make_from_string (STRING_.concat ("No attribute-set exists named ", a_set_name), Xpath_errors_uri, "XTSE0710", Static_error)
 						report_compile_error (an_error)
 						a_cursor.go_after
 					else

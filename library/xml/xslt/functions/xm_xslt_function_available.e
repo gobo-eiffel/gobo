@@ -93,17 +93,20 @@ feature -- Evaluation
 			if not is_error then
 				arguments.item (1).evaluate_item (a_context)
 				if arguments.item (1).last_evaluated_item.is_error then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName", "", "XTDE1400", Dynamic_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName",
+																												Xpath_errors_uri, "XTDE1400", Dynamic_error)
 				else
 					if not arguments.item (1).last_evaluated_item.is_atomic_value then
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName", "", "XTDE1400", Dynamic_error)
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName",
+																													Xpath_errors_uri, "XTDE1400", Dynamic_error)
 					else
 						a_qname := arguments.item (1).last_evaluated_item.as_atomic_value.string_value
 										create a_splitter.make
 										a_splitter.set_separators (":")
 										qname_parts := a_splitter.split (a_qname)
 						if qname_parts.count = 0 or else qname_parts.count > 2 then
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName", "", "XTDE1400", Dynamic_error)
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName",
+																														Xpath_errors_uri, "XTDE1400", Dynamic_error)
 						else
 							if qname_parts.count = 1 then
 								a_uri := Xpath_standard_functions_uri
@@ -115,7 +118,8 @@ feature -- Evaluation
 								a_local_name := qname_parts.item (2)
 							end
 							if a_uri = Void then
-								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("QName prefix in first argument to 'function-available' has not been declared.", "", "XTDE1400", Dynamic_error)
+								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("QName prefix in first argument to 'function-available' has not been declared.",
+																															Xpath_errors_uri, "XTDE1400", Dynamic_error)
 							else
 								if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
 									shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
@@ -165,7 +169,8 @@ feature -- Evaluation
 				a_splitter.set_separators (":")
 				qname_parts := a_splitter.split (a_qname)
 				if qname_parts.count = 0 or else qname_parts.count > 2 then
-					set_last_error_from_string ("First argument to 'function-available' is not a lexical QName", "", "XTDE1400", Static_error)
+					set_last_error_from_string ("First argument to 'function-available' is not a lexical QName",
+														 Xpath_errors_uri, "XTDE1400", Static_error)
 				else
 					if qname_parts.count = 1 then
 						a_uri := Xpath_standard_functions_uri

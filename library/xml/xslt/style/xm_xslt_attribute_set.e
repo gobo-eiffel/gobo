@@ -125,7 +125,8 @@ feature -- Element change
 			loop
 				an_attribute ?= an_iterator.item
 				if an_attribute = Void then
-					create an_error.make_from_string ("Only xsl:attribute is allowed within xsl:attribute-set", "", "XTSE0010", Static_error)
+					create an_error.make_from_string ("Only xsl:attribute is allowed within xsl:attribute-set",
+																 Xpath_errors_uri, "XTSE0010", Static_error)
 					report_compile_error (an_error)
 				end
 				an_iterator.forth
@@ -163,7 +164,8 @@ feature -- Element change
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if an_origin = Current then
-				create an_error.make_from_string ("The definition of the attribute set is circular", "", "XTDE0640", Static_error)
+				create an_error.make_from_string ("The definition of the attribute set is circular",
+															 Xpath_errors_uri, "XTDE0640", Static_error)
 				report_compile_error (an_error)
 			elseif validated then
 

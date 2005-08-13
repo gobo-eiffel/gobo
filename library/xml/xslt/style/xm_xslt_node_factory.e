@@ -91,7 +91,7 @@ feature -- Creation
 					if a_uri_code = Xslt_uri_code then
 						create {XM_XSLT_ABSENT_EXTENSION_ELEMENT} a_style_element.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 						a_style_element.flag_as_instruction
-						create an_error.make_from_string (STRING_.concat ("Unknown XSLT element: ", a_local_name), "", "XTSE0010", Static_error)
+						create an_error.make_from_string (STRING_.concat ("Unknown XSLT element: ", a_local_name), Xpath_errors_uri, "XTSE0010", Static_error)
 						a_style_element.set_validation_error (an_error, Report_unless_forwards_comptible) -- TODO - only under certain circumstances
 						Result := a_style_element
 						if a_parent /= Void then a_parent.add_child (Result) end
@@ -124,7 +124,7 @@ feature -- Creation
 								create {XM_XSLT_ABSENT_EXTENSION_ELEMENT} a_style_element.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 								a_style_element.flag_as_instruction
 								create an_error.make_from_string (STRING_.concat ("Unknown extension element: ", shared_name_pool.display_name_from_name_code (a_name_code)),
-																			 "", "XTDE14500", Static_error)
+																			 Xpath_errors_uri, "XTDE14500", Static_error)
 								a_style_element.set_validation_error (an_error, Report_if_instantiated)
 								if a_parent /= Void then
 									a_parent.replace_child (a_style_element, a_child_index)

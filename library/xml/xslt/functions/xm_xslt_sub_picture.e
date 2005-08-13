@@ -31,6 +31,9 @@ inherit
 	XM_XPATH_SHARED_DECIMAL_CONTEXTS
 		export {NONE} all end
 
+	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
+
 create
 
 	make
@@ -218,7 +221,8 @@ feature {NONE} -- Implementation
 				a_character := a_picture.item_code (an_index)
 				if a_character = a_per_mille or else a_character = a_percent then
 					if is_percent or else is_per_mille then
-						set_last_error_from_string ("Cannot have more than one percent or per-mille character in a sub-picture", "", "XTDE1310", Dynamic_error)
+						set_last_error_from_string ("Cannot have more than one percent or per-mille character in a sub-picture",
+															 Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					end
 					is_percent := a_character = a_percent
 					is_per_mille := a_character = a_per_mille
@@ -236,11 +240,13 @@ feature {NONE} -- Implementation
 					when 0, 1 then
 						phase := 1; maximum_integral_part_size := maximum_integral_part_size + 1
 					when 2 then
-						set_last_error_from_string  ("Digit sign must not appear after a zero-digit sign in the integer part of a sub-picture", "", "XTDE1310", Dynamic_error)
+						set_last_error_from_string  ("Digit sign must not appear after a zero-digit sign in the integer part of a sub-picture",
+															  Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					when 3, 4 then
 						phase := 4; maximum_fractional_part_size := maximum_fractional_part_size + 1
 					when 5 then
-						set_last_error_from_string  ("Passive character must not appear between active characters in a sub-picture", "", "XTDE1310", Dynamic_error)
+						set_last_error_from_string  ("Passive character must not appear between active characters in a sub-picture",
+															  Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					end
 				elseif a_character = a_zero_digit_sign then
 					is_digit := True
@@ -251,9 +257,11 @@ feature {NONE} -- Implementation
 					when 3 then
 						maximum_fractional_part_size := maximum_fractional_part_size + 1; minimum_fractional_part_size := minimum_fractional_part_size + 1
 					when 4 then
-						set_last_error_from_string  ("Zero digit sign must not appear after a digit sign in the fractional part of a sub-picture", "", "XTDE1310", Dynamic_error)
+						set_last_error_from_string  ("Zero digit sign must not appear after a digit sign in the fractional part of a sub-picture",
+															  Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					when 5 then
-						set_last_error_from_string  ("Passive character must not appear between active characters in a sub-picture", "", "XTDE1310", Dynamic_error)
+						set_last_error_from_string  ("Passive character must not appear between active characters in a sub-picture",
+															  Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					end
 				elseif a_character = a_decimal_separator then
 					inspect
@@ -261,7 +269,8 @@ feature {NONE} -- Implementation
 					when 0, 1, 2 then
 						phase := 3
 					when 3, 4, 5 then
-						set_last_error_from_string  ("There must only be one decimal separator in a sub-picture", "", "XTDE1310", Dynamic_error)
+						set_last_error_from_string  ("There must only be one decimal separator in a sub-picture",
+															  Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					end
 				elseif a_character = a_grouping_separator then
 					inspect
@@ -270,12 +279,14 @@ feature {NONE} -- Implementation
 						integral_part_positions.force_last (maximum_integral_part_size)
 					when 3, 4 then
 						if maximum_fractional_part_size = 0 then
-							set_last_error_from_string  ("Grouping separator cannot be adjacent to decimal separator", "", "XTDE1310", Dynamic_error)
+							set_last_error_from_string  ("Grouping separator cannot be adjacent to decimal separator",
+																  Xpath_errors_uri, "XTDE1310", Dynamic_error)
 						else
 							fractional_part_positions.force_last (maximum_fractional_part_size)
 						end
 					when 5 then
-						set_last_error_from_string  ("Grouping separator found in suffix of sub-picture", "", "XTDE1310", Dynamic_error)
+						set_last_error_from_string  ("Grouping separator found in suffix of sub-picture",
+															  Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					end
 				else -- passive character
 					inspect
@@ -289,7 +300,8 @@ feature {NONE} -- Implementation
 				an_index := an_index + 1
 			end
 			if not is_digit then
-				set_last_error_from_string ("Sub-picture must contain at least one digit sign or zero digit sign?", "", "XTDE1310", Dynamic_error)
+				set_last_error_from_string ("Sub-picture must contain at least one digit sign or zero digit sign?",
+													 Xpath_errors_uri, "XTDE1310", Dynamic_error)
 			end
 		end
 

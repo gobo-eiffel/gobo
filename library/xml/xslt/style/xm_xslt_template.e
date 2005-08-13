@@ -176,7 +176,7 @@ feature -- Element change
 				end
 			end
 			if not any_compile_errors and then a_match_attribute = Void and then a_name_attribute = Void then
-				create an_error.make_from_string ("xsl:template must have a name or match attribute (or both)", "", "XTSE0010", Static_error)
+				create an_error.make_from_string ("xsl:template must have a name or match attribute (or both)", Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			end
 			if an_as_attribute /= Void then
@@ -375,13 +375,13 @@ feature {NONE} -- Implementation
 				mode_name_codes.put_last (Default_mode)
 			else
 				if is_match_attribute_void then
-					create an_error.make_from_string ("The mode attribute must be absent if the match attribute is absent", "", "XTSE0010", Static_error)
+					create an_error.make_from_string ("The mode attribute must be absent if the match attribute is absent", Xpath_errors_uri, "XTSE0010", Static_error)
 					report_compile_error (an_error)
 				else
 					create a_splitter.make
 					mode_tokens := a_splitter.split (a_mode_attribute)
 					if mode_tokens.count = 0 then
-						create an_error.make_from_string ("The mode attribute must not be empty", "", "XTSE0020", Static_error)
+						create an_error.make_from_string ("The mode attribute must not be empty", Xpath_errors_uri, "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					else
 						create mode_name_codes.make (mode_tokens.count)
@@ -398,13 +398,13 @@ feature {NONE} -- Implementation
 								mode_name_codes.put_last (Default_mode)
 							elseif STRING_.same_string (a_mode, "#all") then
 								if mode_tokens.count /= 1 then
-									create an_error.make_from_string ("mode='#all' cannot be combined with other modes", "", "XTSE0550", Static_error)
+									create an_error.make_from_string ("mode='#all' cannot be combined with other modes", Xpath_errors_uri, "XTSE0550", Static_error)
 									report_compile_error (an_error)
 								else
 									mode_name_codes.put_last (All_modes)
 								end
 							elseif not is_qname (a_mode) then
-								create an_error.make_from_string ("Mode names must be QNames or the token '#default' or the token '#all'", "", "XTSE0550", Static_error)
+								create an_error.make_from_string ("Mode names must be QNames or the token '#default' or the token '#all'", Xpath_errors_uri, "XTSE0550", Static_error)
 								report_compile_error (an_error)
 							else
 								generate_name_code (a_mode)
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 					end
 					role_identifier := a_name_attribute
 				else
-					create an_error.make_from_string ("Template 'name' attribute must be a QName", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("Template 'name' attribute must be a QName", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			if a_priority_attribute /= Void then
 				is_priority_specified := True
 				if is_match_attribute_void then
-					create an_error.make_from_string ("The priority attribute must be absent if the match attribute is absent", "", "XTSE0010", Static_error)
+					create an_error.make_from_string ("The priority attribute must be absent if the match attribute is absent", Xpath_errors_uri, "XTSE0010", Static_error)
 					report_compile_error (an_error)
 				else
 					create a_decimal_parser
@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 					else
 						a_message := STRING_.appended_string ("Invalid numeric value for priority (", a_priority_attribute)
 						a_message := STRING_.appended_string (a_message, ")")
-						create an_error.make_from_string (a_message, "", "XTSE0020", Static_error)
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					end
 				end
@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 			loop
 				a_name_code := a_cursor.item
 				if a_set.has (a_name_code) then
-					create an_error.make_from_string ("Mode names must all be distinct", "", "XTSE0550", Static_error)
+					create an_error.make_from_string ("Mode names must all be distinct", Xpath_errors_uri, "XTSE0550", Static_error)
 					report_compile_error (an_error)
 				else
 					a_set.put (a_name_code)

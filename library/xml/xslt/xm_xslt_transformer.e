@@ -45,7 +45,10 @@ inherit
 		export {NONE} all end
 
 	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
-	
+
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+			
 create
 
 	make
@@ -203,7 +206,7 @@ feature -- Status setting
 		require
 			error_not_void: an_error /= Void
 		do
-			if an_error.type = Type_error or else (an_error.type = Dynamic_error and then an_error.namespace_uri.count = 0 and then an_error.code.substring (1, 4).is_equal ("XTDE")) then
+			if an_error.type = Type_error or else (an_error.type = Dynamic_error and then STRING_.same_string (an_error.namespace_uri, Xpath_errors_uri) and then an_error.code.substring (1, 4).is_equal ("XTDE")) then
 
 				-- XSLT recoverable error codes start with XTRE, not XTDE
 
@@ -337,7 +340,7 @@ feature -- Element change
 				initial_template := a_compiled_templates_index.item (a_fingerprint)
 			else
 				initial_template := Void
-				create an_error.make_from_string (STRING_.concat ("Unable to locate a template named ", a_template_name), "", "XT0040", Dynamic_error)
+				create an_error.make_from_string (STRING_.concat ("Unable to locate a template named ", a_template_name), Xpath_errors_uri, "XT0040", Dynamic_error)
 				report_fatal_error (an_error, Void)
 			end
 		end
@@ -500,14 +503,14 @@ feature -- Transformation
 						elseif a_media_type_map.may_use_id then
 							a_start_node := a_document.selected_id (a_fragment_id)
 							if a_start_node = Void then
-								create an_error.make_from_string ("Fragment identifier did not select a node", "", "XT1160", Dynamic_error)
+								create an_error.make_from_string ("Fragment identifier did not select a node", Xpath_errors_uri, "XT1160", Dynamic_error)
 								report_recoverable_error (an_error, Void)
 								if not is_error then
 									a_start_node := a_document
 								end
 							end
 						else
-							create an_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type", "", "XT1160", Dynamic_error)
+							create an_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type", Xpath_errors_uri, "XT1160", Dynamic_error)
 							report_recoverable_error (an_error, Void)
 							if not is_error then
 								a_start_node := a_document
@@ -540,14 +543,15 @@ feature -- Transformation
 							elseif a_media_type_map.may_use_id then
 								a_start_node := a_document.selected_id (a_fragment_id)
 								if a_start_node = Void then
-									create an_error.make_from_string ("Fragment identifier did not select a node", "", "XT1160", Dynamic_error)
+									create an_error.make_from_string ("Fragment identifier did not select a node", Xpath_errors_uri, "XT1160", Dynamic_error)
 									report_recoverable_error (an_error, Void)
 									if not is_error then
 										a_start_node := a_document
 									end
 								end
 							else
-								create an_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type", "", "XT1160", Dynamic_error)
+								create an_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type",
+																			 Xpath_errors_uri, "XT1160", Dynamic_error)
 								report_recoverable_error (an_error, Void)
 								if not is_error then
 									a_start_node := a_document
@@ -866,9 +870,10 @@ feature -- Implementation
 			an_empty_sequence ?= a_value
 			if a_value.is_error or else an_empty_sequence /= Void then
 				if a_value.is_error then
-					create an_error.make_from_string (STRING_.concat("XPointer reported an error: ", a_value.error_value.description) , "", "XT1160", Dynamic_error)
+					create an_error.make_from_string (STRING_.concat("XPointer reported an error: ", a_value.error_value.description) ,
+																 Xpath_errors_uri, "XT1160", Dynamic_error)
 				else
-					create an_error.make_from_string ("XPointer failed to select a node." , "", "XT1160", Dynamic_error)
+					create an_error.make_from_string ("XPointer failed to select a node." , Xpath_errors_uri, "XT1160", Dynamic_error)
 				end
 				report_recoverable_error (an_error, Void)
 				if not is_error then
@@ -889,7 +894,8 @@ feature -- Implementation
 						end
 						Result := a_sequence_extent.item_at (1).as_node
 					else
-						create an_error.make_from_string ("XPointer returned something other than a single node", "", "XT1160", Dynamic_error)
+						create an_error.make_from_string ("XPointer returned something other than a single node",
+																	 Xpath_errors_uri, "XT1160", Dynamic_error)
 						report_recoverable_error (an_error, Void)
 						if not is_error then
 							Result := a_document

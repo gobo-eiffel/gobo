@@ -56,6 +56,10 @@ feature {NONE} -- Initialization
 			create atomic_comparer.make (a_collator)
 			singleton_operator := singleton_value_operator (operator)
 			initialized := True
+			atomize_first_operand  := True
+			atomize_second_operand  := True
+			maybe_first_operand_boolean := True
+			maybe_second_operand_boolean := True
 		ensure
 			static_properties_computed: are_static_properties_computed
 			operator_set: operator = a_token
@@ -291,38 +295,57 @@ feature {NONE} -- Implementation
 		local
 			a_type, another_type: XM_XPATH_ITEM_TYPE
 			maybe_first_operand_numeric, maybe_second_operand_numeric: BOOLEAN
+			is_first_operand_numeric, is_second_operand_numeric: BOOLEAN
 			a_general_comparison: XM_XPATH_GENERAL_COMPARISON
+			a_relationship, another_relationship: INTEGER
+			an_expression: XM_XPATH_EXPRESSION
 		do
 			a_type := first_operand.item_type
 			another_type := second_operand.item_type
-			if not a_type.is_atomic_type then
-				atomize_first_operand  := True
-			else
+			if a_type.is_atomic_type then
 				atomize_first_operand  := False
 			end
-			if not another_type.is_atomic_type then
-				atomize_second_operand  := True
-			else
+			if another_type.is_atomic_type then
 				atomize_second_operand  := False
 			end
-			maybe_first_operand_boolean := type_relationship (a_type, type_factory.boolean_type) /= Disjoint_types
-			maybe_second_operand_boolean := type_relationship (another_type, type_factory.boolean_type) /= Disjoint_types
+			if type_relationship (a_type, type_factory.boolean_type) = Disjoint_types then
+				maybe_first_operand_boolean := False
+			end
+			if type_relationship (another_type, type_factory.boolean_type) = Disjoint_types then
+				maybe_second_operand_boolean := False
+			end
 			if not maybe_first_operand_boolean and then not maybe_second_operand_boolean then
-				maybe_first_operand_numeric := type_relationship (a_type, type_factory.numeric_type) /= Disjoint_types
-				maybe_second_operand_numeric := type_relationship (another_type, type_factory.numeric_type) /= Disjoint_types
-				if not maybe_first_operand_numeric and then not maybe_second_operand_numeric then
+				a_relationship := type_relationship (a_type, type_factory.numeric_type)
+				another_relationship := type_relationship (another_type, type_factory.numeric_type)
+				maybe_first_operand_numeric := a_relationship /= Disjoint_types
+				maybe_second_operand_numeric := another_relationship /= Disjoint_types
+				is_first_operand_numeric := a_relationship = Subsumed_type or else a_relationship = Same_item_type
+				is_second_operand_numeric := another_relationship = Subsumed_type or else another_relationship = Same_item_type
+
+				if (is_first_operand_numeric and then is_second_operand_numeric)
+					or else (not maybe_first_operand_numeric and then not maybe_second_operand_numeric) then
 					
 					-- Use the XPath 2.0 route if we don't have to deal with the possibility of boolean values,
 					--  or the complications of converting values to numbers
 					
 					create a_general_comparison.make (first_operand, operator, second_operand, atomic_comparer.collator)
-					a_general_comparison.optimize (a_context)
+					a_general_comparison.check_static_type (a_context)
 					if a_general_comparison.is_error then
 						set_last_error (a_general_comparison.error_value)
 					elseif a_general_comparison.was_expression_replaced then
-						set_replacement (a_general_comparison.replacement_expression)
+						an_expression := a_general_comparison.replacement_expression
 					else
-						set_replacement (a_general_comparison)
+						an_expression := a_general_comparison
+					end
+					if not is_error then
+						an_expression.optimize (a_context)
+						if an_expression.is_error then
+							set_last_error (an_expression.error_value)
+						elseif an_expression.was_expression_replaced then
+							set_replacement (an_expression.replacement_expression)
+						else
+							set_replacement (an_expression)
+						end
 					end
 				end
 			end

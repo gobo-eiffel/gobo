@@ -16,6 +16,9 @@ inherit
 
 	XM_XSLT_GROUP_ITERATOR
 
+	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
+
 create
 
 	make
@@ -79,7 +82,8 @@ feature -- Cursor movement
 				if not population.after then
 					item := population.item
 					if not item.is_node then
-						create an_error.make_from_string ("Member of group-starting-with population is not a node.", "", "XTTE1120", Dynamic_error)
+						create an_error.make_from_string ("Member of group-starting-with population is not a node.",
+																	 Xpath_errors_uri, "XTTE1120", Dynamic_error)
 						running_context.transformer.report_fatal_error (an_error, locator)
 					end
 				end
@@ -97,7 +101,8 @@ feature -- Cursor movement
 				else
 					next_candidate := population.item
 					if not next_candidate.is_node then
-						create an_error.make_from_string ("Member of group-starting-with population is not a node.", "", "XTTE1120", Dynamic_error)
+						create an_error.make_from_string ("Member of group-starting-with population is not a node.",
+																	 Xpath_errors_uri, "XTTE1120", Dynamic_error)
 						running_context.transformer.report_fatal_error (an_error, locator)
 					else
 						if key_pattern.matches (next_candidate.as_node , running_context) then

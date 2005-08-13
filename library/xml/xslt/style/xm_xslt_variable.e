@@ -81,7 +81,7 @@ feature -- Element change
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if preparation_state > 0 then
-				create an_error.make_from_string ("Circular reference to variable", "", "XTDE0640", Static_error)
+				create an_error.make_from_string ("Circular reference to variable", Xpath_errors_uri, "XTDE0640", Static_error)
 				report_compile_error (an_error)
 			else
 				preparation_state := 1

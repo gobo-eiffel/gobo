@@ -478,7 +478,7 @@ feature {NONE} -- Implementation
 				a_message := STRING_.appended_string (a_message, another_pattern.line_number.out)
 				a_message := STRING_.appended_string (a_message, " of ")
 				a_message := STRING_.appended_string (a_message, another_pattern.system_id)
-				create an_error.make_from_string (a_message, "", "XTRE0540", Dynamic_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTRE0540", Dynamic_error)
 				a_transformer.report_recoverable_error (an_error, Void)
 			end
 		end

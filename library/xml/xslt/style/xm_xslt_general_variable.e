@@ -164,12 +164,12 @@ feature -- Status setting
 			if a_name_attribute = Void then
 				report_absence ("name")
 			elseif not is_qname (a_name_attribute) then
-				create an_error.make_from_string ("Name attribute must be a valid QName", "", "XTSE0020", Static_error)
+				create an_error.make_from_string ("Name attribute must be a valid QName", Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			end
 			if a_select_attribute /= Void then
 				if not allows_value then
-					create an_error.make_from_string ("Function parameters cannot have a default value", "", "XTSE0760", Static_error)
+					create an_error.make_from_string ("Function parameters cannot have a default value", Xpath_errors_uri, "XTSE0760", Static_error)
 					report_compile_error (an_error)
 				else
 					generate_expression (a_select_attribute)
@@ -194,7 +194,7 @@ feature -- Status setting
 			if select_expression /= Void and then has_child_nodes then
 				a_message := STRING_.concat ("An ", node_name)
 				a_message := STRING_.appended_string (a_message, " element with a select attribute must be empty")
-				create an_error.make_from_string (a_message, "", "XTSE0010", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			else
 				if as_type /= Void then check_against_required_type (as_type) end
@@ -221,7 +221,7 @@ feature -- Status setting
 									if as_type.cardinality_allows_zero then
 											create {XM_XPATH_EMPTY_SEQUENCE} select_expression.make
 									else
-										create an_error.make_from_string ("Default value () is not valid for the declared type", "", "XTTE0570", Type_error)
+										create an_error.make_from_string ("Default value () is not valid for the declared type", Xpath_errors_uri, "XTTE0570", Type_error)
 										report_compile_error (an_error)
 									end
 								end
@@ -262,7 +262,7 @@ feature -- Status setting
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
-			create a_role.make (Variable_role, variable_name, 1, "", "XTTE0570")
+			create a_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XTTE0570")
 			if select_expression /= Void then
 				create a_type_checker
 				a_type_checker.static_type_check (static_context, select_expression, a_required_type, False, a_role)
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 						if select_expression.is_error then
 							report_compile_error (select_expression.error_value)
 						else
-							create a_role.make (Variable_role, variable_name, 1, "", "XTTE0570")
+							create a_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XTTE0570")
 							create a_type_checker
 							a_type_checker.static_type_check (static_context, select_expression, as_type, False, a_role)
 							if a_type_checker.is_static_type_check_error	then
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 				elseif STRING_.same_string (a_required_attribute, "no") then
 					is_required_parameter := False
 				else
-					create an_error.make_from_string ("The attribute 'required' must be set to 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("The attribute 'required' must be set to 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 				elseif STRING_.same_string (a_tunnel_attribute, "no") then
 					is_tunnel_parameter := False
 				else
-					create an_error.make_from_string ("The attribute 'tunnel' must be set to 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("The attribute 'tunnel' must be set to 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end

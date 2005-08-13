@@ -27,7 +27,7 @@ inherit
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
 
-		-- TODO: this needs a better name - something likle XM_SLT_XML_TEXT_SOURCE, perhaps.
+		-- TODO: this needs a better name - something likle XM_XSLT_XML_TEXT_SOURCE, perhaps.
 
 create
 

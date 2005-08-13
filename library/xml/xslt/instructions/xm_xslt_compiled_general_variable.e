@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			-- N.B. Sometimes this check gets performed more than once
 
 			if required_type /= Void and then select_expression /= Void then
-				create a_role.make (Variable_role, variable_name, 1, "", "XTTE0570")
+				create a_role.make (Variable_role, variable_name, 1, Xpath_errors_uri, "XTTE0570")
 				create a_type_checker
 				a_type_checker.static_type_check (a_context, select_expression, required_type, False, a_role)
 				if a_type_checker.is_static_type_check_error	then

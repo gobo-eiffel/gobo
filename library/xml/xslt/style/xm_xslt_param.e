@@ -89,7 +89,7 @@ feature -- Element change
 			a_template ?= parent; a_function ?= parent
 			is_local := a_template /= Void or else a_function /= Void
 			if not is_local and then not is_global_variable then
-				create an_error.make_from_string ("xsl:param must be immediately within a template, function or stylesheet", "", "XTSE0010", Static_error)
+				create an_error.make_from_string ("xsl:param must be immediately within a template, function or stylesheet", Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			else
 				if not is_global_variable then
@@ -103,20 +103,20 @@ feature -- Element change
 						a_parameter ?= a_node
 						if a_parameter /= Void then
 							if variable_fingerprint = a_parameter.variable_fingerprint then
-								create an_error.make_from_string ("The name of the parameter is not unique", "", "XTSE0580", Static_error)
+								create an_error.make_from_string ("The name of the parameter is not unique", Xpath_errors_uri, "XTSE0580", Static_error)
 								report_compile_error (an_error)
 							end
 						else
 							a_style_element ?= a_node
 							if a_style_element /= Void then
-								create an_error.make_from_string ("xsl:param must be the first element within a template or function", "", "XTSE0010", Static_error)
+								create an_error.make_from_string ("xsl:param must be the first element within a template or function", Xpath_errors_uri, "XTSE0010", Static_error)
 								report_compile_error (an_error)
 							else
 
 								-- must be a text node - allow it only if all white-space
 
 								if not is_all_whitespace (a_node.string_value) then
-									create an_error.make_from_string ("xsl:param must not be preceded by text", "", "XTSE0010", Static_error)
+									create an_error.make_from_string ("xsl:param must not be preceded by text", Xpath_errors_uri, "XTSE0010", Static_error)
 								report_compile_error (an_error)
 								end
 							end
@@ -129,11 +129,11 @@ feature -- Element change
 
 						-- NB, we do this test before setting the default select attribute
 
-						create an_error.make_from_string ("The select attribute should be omitted when required='yes'", "", "XTSE0010", Static_error)
+						create an_error.make_from_string ("The select attribute should be omitted when required='yes'", Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 					if has_child_nodes then
-						create an_error.make_from_string ("A parameter specifying required='yes' must have empty content", "", "XTSE0010", Static_error)
+						create an_error.make_from_string ("A parameter specifying required='yes' must have empty content", Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 				end

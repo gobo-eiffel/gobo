@@ -41,7 +41,7 @@ feature -- Element change
 			if select_expression /= Void and then has_child_nodes then
 				a_message := STRING_.appended_string ("An ", node_name)
 				a_message := STRING_.appended_string (a_message, " element with a select attribute must be empty")
-				create an_error.make_from_string (a_message, "", "XTSE0010", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			else
 				a_child_iterator := new_axis_iterator (Child_axis)

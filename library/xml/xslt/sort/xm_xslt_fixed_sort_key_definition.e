@@ -152,7 +152,8 @@ feature {NONE} -- Implementation
 								a_context.transformer.report_fatal_error (an_error, Void)
 								is_error := True
 							else
-								create an_error.make_from_string ("data-type on xsl:sort must be 'text' or 'number' or a QName", "", "XTDE0290", Static_error)
+								create an_error.make_from_string ("data-type on xsl:sort must be 'text' or 'number' or a QName",
+																			 Xpath_errors_uri, "XTDE0290", Static_error)
 								a_context.transformer.report_fatal_error (an_error, Void)
 								is_error := True
 							end

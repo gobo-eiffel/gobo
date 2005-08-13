@@ -133,7 +133,7 @@ feature -- Element change
 				end
 				if not any_compile_errors then
 					create a_type_checker
-					create a_role.make (Instruction_role, "xsl:for-each-group/group-adjacent", 1, "", "XTTE1100")
+					create a_role.make (Instruction_role, "xsl:for-each-group/group-adjacent", 1, Xpath_errors_uri, "XTTE1100")
 					create an_atomic_sequence.make_single_atomic
 					a_type_checker.static_type_check (static_context, group_adjacent, an_atomic_sequence, False, a_role)
 					if a_type_checker.is_static_type_check_error	then
@@ -151,7 +151,7 @@ feature -- Element change
 			end
 			if group_starting_with /= Void or else group_ending_with /= Void then
 				create a_type_checker
-				create a_role.make (Instruction_role, "xsl:for-each-group/select", 1, "", "XTTE1120")
+				create a_role.make (Instruction_role, "xsl:for-each-group/select", 1, Xpath_errors_uri, "XTTE1120")
 				create a_node_sequence.make_node_sequence
 				a_type_checker.static_type_check (static_context, select_expression, a_node_sequence, False, a_role)
 				if a_type_checker.is_static_type_check_error	then
@@ -283,11 +283,11 @@ feature {NONE} -- Implementation
 			end
 
 			if count_of_grouping_attributes /= 1 then
-				create an_error.make_from_string ("Exactly one of the attributes group-by, group-adjacent, group-starting-with, and group-ending-with must be specified", "", "XTSE1080", Static_error)
+				create an_error.make_from_string ("Exactly one of the attributes group-by, group-adjacent, group-starting-with, and group-ending-with must be specified", Xpath_errors_uri, "XTSE1080", Static_error)
 				report_compile_error (an_error)
 			end
 			if a_collation_attribute /= Void and then a_group_by_attribute = Void and then a_group_adjacent_attribute = Void then
-				create an_error.make_from_string ("A collation may be specified only if group-by or group-adjacent is specified", "", "XTSE1090", Static_error)
+				create an_error.make_from_string ("A collation may be specified only if group-by or group-adjacent is specified", Xpath_errors_uri, "XTSE1090", Static_error)
 				report_compile_error (an_error)
 			end
 		end

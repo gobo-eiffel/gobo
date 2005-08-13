@@ -53,7 +53,7 @@ feature -- Element change
 				if STRING_.same_string (a_doe_attribute, "yes") then
 					report_compile_warning ("Disable Output Escaping is not supported by this implementation (ignored).%NUse character maps instead if you really need this feature.")
 				elseif not STRING_.same_string (a_doe_attribute, "no") then
-					create an_error.make_from_string ("disable-output-escaping attribute must be either 'yes' or 'no'", "", "XTSE0020", Static_error)
+					create an_error.make_from_string ("disable-output-escaping attribute must be either 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -71,12 +71,12 @@ feature -- Element change
 			if an_iterator.after then
 				create value.make ("")
 			elseif an_iterator.item.node_type = Element_node then
-				create an_error.make_from_string ("xsl:text must not contain any child elements.", "", "XTSE0010", Static_error)
+				create an_error.make_from_string ("xsl:text must not contain any child elements.", Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			elseif an_iterator.item.node_type = Text_node then
 				create value.make (an_iterator.item.string_value)
 			else
-				create an_error.make_from_string ("xsl:text must only contain a single text node.", "", "XTSE0010", Static_error)
+				create an_error.make_from_string ("xsl:text must only contain a single text node.", Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			end
 			Precursor

@@ -1263,7 +1263,9 @@ feature -- Status setting
 				create an_offer.make (Replace_current, Void, a_let_expression, False, False)
 				promote (an_offer)
 				if was_expression_replaced then
-					a_let_expression.replace_action (replacement_expression)
+					a_let_expression.set_action (replacement_expression)
+				else
+					a_let_expression.set_action (Current)
 				end
 				set_replacement (a_let_expression)
 			end

@@ -152,7 +152,7 @@ feature -- Element change
 			if a_key_manager.has_key (key_fingerprint) then
 				a_collation_name := a_key_manager.collation_uri (key_fingerprint)
 				if not STRING_.same_string (a_collation_name, collation_uri) then
-					create an_error.make_from_string (STRING_.concat("inconsistent collation names for key ", key_name), "", "XTSE1220", Static_error)
+					create an_error.make_from_string (STRING_.concat("inconsistent collation names for key ", key_name), Xpath_errors_uri, "XTSE1220", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -174,7 +174,7 @@ feature -- Element change
 			if not principal_stylesheet.is_collator_defined (collation_uri) then
 				a_message := STRING_.concat ("The collation named '", collation_uri)
 				a_message := STRING_.appended_string (a_message, "' has not been defined")
-				create an_error.make_from_string (a_message, "", "XTSE1210", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1210", Static_error)
 				report_compile_error (an_error)
 			else
 				a_collator := principal_stylesheet.find_collator (collation_uri)
@@ -185,7 +185,7 @@ feature -- Element change
 
 					-- This really shouldn't occur
 
-					create an_error.make_from_string ("BUG: Sequence constructor must be present for xsl:key when use attribute is absent.", "", "XTSE1205", Static_error)
+					create an_error.make_from_string ("BUG: Sequence constructor must be present for xsl:key when use attribute is absent.", Xpath_errors_uri, "XTSE1205", Static_error)
 					report_compile_error (an_error)
 				else
 					create {XM_XPATH_ATOMIZER_EXPRESSION} use.make (last_generated_expression, static_context.configuration.are_all_nodes_untyped)

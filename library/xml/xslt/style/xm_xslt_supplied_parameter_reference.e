@@ -86,7 +86,7 @@ feature -- Evaluation
 				a_value.create_iterator (a_context)
 				last_iterator := a_value.last_iterator
 			else
-				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Local parameter value missing", "", "XTTE0570", Type_error)
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Local parameter value missing", Xpath_errors_uri, "XTTE0570", Type_error)
 			end
 		end
 

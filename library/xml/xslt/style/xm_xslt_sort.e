@@ -98,7 +98,7 @@ feature -- Element change
 		do
 			if select_expression /= Void then
 				if has_child_nodes then
-					create an_error.make_from_string ("xsl:sort must be empty when a 'select' attribute is supplied", "", "XTSE0010", Static_error)
+					create an_error.make_from_string ("xsl:sort must be empty when a 'select' attribute is supplied", Xpath_errors_uri, "XTSE0010", Static_error)
 				else
 					a_style_element ?= parent
 					if a_style_element = Void or else
@@ -107,7 +107,7 @@ feature -- Element change
 						 not a_style_element.is_perform_sort and then
 						 not a_style_element.is_apply_templates)
 					 then
-						create an_error.make_from_string ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort", "", "XTSE0010", Static_error)
+						create an_error.make_from_string ("xsl:sort must be child of xsl:apply-templates, xsl:for-each[-group], or xsl:perform-sort", Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 				end

@@ -97,7 +97,7 @@ feature -- Element change
 		do
 			an_xsl_choose ?= parent
 			if an_xsl_choose = Void then
-				create an_error.make_from_string ("xsl:when must be immediately within xsl:choose", "", "XTSE0010", Static_error)
+				create an_error.make_from_string ("xsl:when must be immediately within xsl:choose", Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			else
 				type_check_expression ("test", condition)

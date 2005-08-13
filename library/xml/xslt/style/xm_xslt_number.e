@@ -244,16 +244,16 @@ feature {NONE} -- Implementation
 					report_compile_error (value_expression.error_value)
 				end
 				if a_select_attribute /= Void then
-					create an_error.make_from_string ("The select attribute and value attribute must not both be present", "", "XTSE0010", Static_error)
+					create an_error.make_from_string ("The select attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0010", Static_error)
 					report_compile_error (an_error)
 				elseif a_count_attribute /= Void then
-					create an_error.make_from_string ("The count attribute and value attribute must not both be present", "", "XTSE0010", Static_error)
+					create an_error.make_from_string ("The count attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0010", Static_error)
 					report_compile_error (an_error)
 				elseif a_from_attribute /= Void then
-					create an_error.make_from_string ("The from attribute and value attribute must not both be present", "", "XTSE0010", Static_error)
+					create an_error.make_from_string ("The from attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0010", Static_error)
 					report_compile_error (an_error)
 				elseif a_level_attribute /= Void then
-					create an_error.make_from_string ("The level attribute and value attribute must not both be present", "", "XTSE0010", Static_error)
+					create an_error.make_from_string ("The level attribute and value attribute must not both be present", Xpath_errors_uri, "XTSE0010", Static_error)
 					report_compile_error (an_error)
 				end
 			end
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			elseif STRING_.same_string (a_level_attribute, "any") then
 				level := Any_level				
 			else
-				create an_error.make_from_string ("Invalid value for level attribute", "", "XTSE0020", Static_error)
+				create an_error.make_from_string ("Invalid value for level attribute", Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			end
 			if level = Single_level and then from_pattern = Void and then count_pattern = Void then

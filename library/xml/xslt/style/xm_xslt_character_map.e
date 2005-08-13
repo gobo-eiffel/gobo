@@ -78,7 +78,8 @@ feature -- Element change
 				generate_name_code (a_name_attribute)
 				character_map_fingerprint := last_generated_name_code
 				if character_map_fingerprint = -1 then
-					create an_error.make_from_string ("Name attribute of xsl:character-map is not a lexical QName", "", "XTSE0280", Static_error)
+					create an_error.make_from_string ("Name attribute of xsl:character-map is not a lexical QName",
+																 Xpath_errors_uri, "XTSE0280", Static_error)
 					report_compile_error (an_error)
 				else
 					character_map_fingerprint := shared_name_pool.fingerprint_from_name_code (character_map_fingerprint)
@@ -112,7 +113,8 @@ feature -- Element change
 				loop
 					an_output_character ?= a_child_iterator.item
 					if an_output_character = Void then
-						create an_error.make_from_string ("Only xsl:output-character is allowed within xsl:character-map", "", "XTSE0010", Static_error)
+						create an_error.make_from_string ("Only xsl:output-character is allowed within xsl:character-map",
+																	 Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 					a_child_iterator.forth
@@ -124,7 +126,8 @@ feature -- Element change
 				another_character_map := a_stylesheet.character_map (character_map_fingerprint)
 				if another_character_map /= Current then
 					if precedence = another_character_map.precedence then
-						create an_error.make_from_string ("There are two character-maps with the same name and import precedence", "", "XTSE1580", Static_error)
+						create an_error.make_from_string ("There are two character-maps with the same name and import precedence",
+																	 Xpath_errors_uri, "XTSE1580", Static_error)
 						report_compile_error (an_error)
 					else
 						if precedence < another_character_map.precedence then
@@ -150,7 +153,7 @@ feature -- Element change
 					loop
 						qname_parts := a_splitter.split (a_cursor.item)
 						if qname_parts.count = 0 or else qname_parts.count > 2 then
-							create an_error.make_from_string (STRING_.concat ("Invalid character-map name: ", a_cursor.item), "", "XTSE1590", Static_error)
+							create an_error.make_from_string (STRING_.concat ("Invalid character-map name: ", a_cursor.item), Xpath_errors_uri, "XTSE1590", Static_error)
 							report_compile_error (an_error)
 							a_cursor.go_after
 						else
@@ -170,7 +173,7 @@ feature -- Element change
 								a_name_code := shared_name_pool.last_name_code
 							end
 							if a_name_code = -1 then
-								create an_error.make_from_string (STRING_.concat ("Invalid character-map name: ", a_cursor.item), "", "XTSE1590", Static_error)
+								create an_error.make_from_string (STRING_.concat ("Invalid character-map name: ", a_cursor.item), Xpath_errors_uri, "XTSE1590", Static_error)
 								report_compile_error (an_error)
 								a_cursor.go_after
 							else
@@ -179,7 +182,7 @@ feature -- Element change
 								if another_character_map = Void then
 									a_message := STRING_.concat ("No character map named ", shared_name_pool.display_name_from_name_code (a_name_code))
 									a_message := STRING_.appended_string (a_message, "has been defined.")
-									create an_error.make_from_string (a_message, "", "XTSE1590", Static_error)
+									create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1590", Static_error)
 									report_compile_error (an_error)
 
 									a_cursor.go_after
@@ -280,7 +283,7 @@ feature {XM_XSLT_CHARACTER_MAP} -- Implementation
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if Current = origin then
-				create an_error.make_from_string ("xsl:character-map definition is circular", "", "XTSE1600", Static_error)
+				create an_error.make_from_string ("xsl:character-map definition is circular", Xpath_errors_uri, "XTSE1600", Static_error)
 				report_compile_error (an_error)
 			else
 				if validated then

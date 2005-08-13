@@ -72,7 +72,7 @@ feature -- Element change
 					if STRING_.same_string (a_disable_attribute, "yes") then
 						report_compile_warning ("Disable Output Escaping is not supported by this implementation (ignored).%NUse character maps instead if you really need this feature.")
 					elseif not STRING_.same_string (a_disable_attribute, "no") then
-						create an_error.make_from_string ("disable-output-escaping attribute must be either 'yes' or 'no'", "", "XTSE0020", Static_error)
+						create an_error.make_from_string ("disable-output-escaping attribute must be either 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					end
 				end

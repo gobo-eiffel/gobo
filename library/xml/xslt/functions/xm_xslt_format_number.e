@@ -105,7 +105,8 @@ feature -- Evaluation
 				if decimal_format = Void then
 					if is_fixup_required then
 						create last_evaluated_string.make ("")
-						last_evaluated_string.set_last_error_from_string ("Unknown decimal format name",  "", "XTDE1280", Dynamic_error)
+						last_evaluated_string.set_last_error_from_string ("Unknown decimal format name",
+																						  Xpath_errors_uri, "XTDE1280", Dynamic_error)
 						in_error := True
 					else
 						an_evaluation_context ?= a_context
@@ -120,7 +121,8 @@ feature -- Evaluation
 							arguments.item (3).evaluate_item (a_context)
 							if arguments.item (3).last_evaluated_item.is_error then
 								create last_evaluated_string.make ("")
-								last_evaluated_string.set_last_error_from_string ("Invalid decimal format name", "", "XTDE1280", Dynamic_error)
+								last_evaluated_string.set_last_error_from_string ("Invalid decimal format name",
+																								  Xpath_errors_uri, "XTDE1280", Dynamic_error)
 								in_error := True
 							else
 								a_qname := arguments.item (3).last_evaluated_item.string_value
@@ -131,7 +133,8 @@ feature -- Evaluation
 									a_uri := namespace_resolver.uri_for_defaulted_prefix (some_qname_parts.item (1), False)
 									if a_uri = Void then
 										create last_evaluated_string.make ("")
-										last_evaluated_string.set_last_error_from_string ("Prefix for decimal format name has not been declared", "", "XTDE1280", Dynamic_error)
+										last_evaluated_string.set_last_error_from_string ("Prefix for decimal format name has not been declared",
+																										  Xpath_errors_uri, "XTDE1280", Dynamic_error)
 										in_error := True
 									end
 									a_local_name := some_qname_parts.item (2)
@@ -145,7 +148,8 @@ feature -- Evaluation
 										decimal_format := a_dfm.named_format (a_fingerprint)
 									else
 										create last_evaluated_string.make ("")
-										last_evaluated_string.set_last_error_from_string ("Named decimal format has not been declared", "", "XTDE1280", Dynamic_error)
+										last_evaluated_string.set_last_error_from_string ("Named decimal format has not been declared",
+																										  Xpath_errors_uri, "XTDE1280", Dynamic_error)
 										in_error := True
 									end
 								end
@@ -239,7 +243,8 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 								a_uri := a_context.uri_for_prefix (some_qname_parts.item (1))
 								a_local_name := some_qname_parts.item (2)
 							else
-								set_last_error_from_string ("Prefix of decimal-format-name has not been declared",  "", "XTDE1280", Static_error)
+								set_last_error_from_string ("Prefix of decimal-format-name has not been declared",
+																	 Xpath_errors_uri, "XTDE1280", Static_error)
 							end
 						else
 							a_uri := Null_uri
@@ -248,7 +253,8 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 						a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
 						a_dfm.register_usage (a_fingerprint, Current)
 					else
-						set_last_error_from_string (STRING_.appended_string (a_qname, " is not a lexical QName"), "", "XTDE1280", Static_error)
+						set_last_error_from_string (STRING_.appended_string (a_qname, " is not a lexical QName"),
+															 Xpath_errors_uri, "XTDE1280", Static_error)
 					end
 				else
 					
@@ -301,7 +307,8 @@ feature {NONE} -- Implementation
 		do
 			create sub_pictures.make (1,2)
 			if a_picture.count = 0 then
-				set_last_error_from_string ("format-number() picture is zero-length", "", "XTDE1310", Dynamic_error)
+				set_last_error_from_string ("format-number() picture is zero-length",
+													 Xpath_errors_uri, "XTDE1310", Dynamic_error)
 			else
 				a_separator_index := a_picture.index_of (a_format.pattern_separator.item (1), 1)
 				if a_separator_index = 0 then
@@ -310,11 +317,11 @@ feature {NONE} -- Implementation
 					sub_pictures.put (Void, 2)
 				else
 					if a_separator_index = a_picture.count then
-						set_last_error_from_string ("second subpicture is zero-length", "", "XTDE1310", Dynamic_error)
+						set_last_error_from_string ("second subpicture is zero-length", Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					elseif a_picture.index_of (a_format.pattern_separator.item (1), a_separator_index + 1) > 0 then
-						set_last_error_from_string ("more than one pattern separator", "", "XTDE1310", Dynamic_error)
+						set_last_error_from_string ("more than one pattern separator", Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					elseif a_separator_index = 1 then
-						set_last_error_from_string ("first subpicture is zero-length", "", "XTDE1310", Dynamic_error)
+						set_last_error_from_string ("first subpicture is zero-length", Xpath_errors_uri, "XTDE1310", Dynamic_error)
 					else
 						create a_sub_picture.make (a_picture.substring (1, a_separator_index - 1), a_format)
 						sub_pictures.put (a_sub_picture, 1)

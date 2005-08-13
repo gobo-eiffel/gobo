@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-		make (an_underlying_receiver: XM_XPATH_RECEIVER) is
+	make (an_underlying_receiver: XM_XPATH_RECEIVER) is
 			-- Establish invariant.
 		require
 			underlying_receiver_not_void: an_underlying_receiver /= Void

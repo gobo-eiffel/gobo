@@ -87,7 +87,7 @@ feature -- Element change
 				an_xsl_when ?= a_child_iterator.item
 				if an_xsl_when /= Void then
 					if otherwise /= Void then
-						create an_error.make_from_string ("xsl:otherwise must be immediately within xsl:choose", "", "XTSE0010", Static_error)
+						create an_error.make_from_string ("xsl:otherwise must be immediately within xsl:choose", Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 					number_of_whens := number_of_whens + 1
@@ -95,23 +95,23 @@ feature -- Element change
 					an_otherwise ?= a_child_iterator.item
 					if an_otherwise /= Void then
 						if otherwise /= Void then
-							create an_error.make_from_string ("Only one xsl:otherwise is allowed within an xsl:choose", "", "XTSE0010", Static_error)
+							create an_error.make_from_string ("Only one xsl:otherwise is allowed within an xsl:choose", Xpath_errors_uri, "XTSE0010", Static_error)
 							report_compile_error (an_error)
 						else
 							otherwise := an_otherwise
 						end
 					elseif a_child_iterator.item.node_type = Text_node and then not is_all_whitespace (a_child_iterator.item.string_value) then
-						create an_error.make_from_string ("Text node is not allowed inside xsl:choose", "", "XTSE0010", Static_error)
+						create an_error.make_from_string ("Text node is not allowed inside xsl:choose", Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					else
-						create an_error.make_from_string ("Only xsl:when and xsl:otherwise are allowed within an xsl:choose", "", "XTSE0010", Static_error)
+						create an_error.make_from_string ("Only xsl:when and xsl:otherwise are allowed within an xsl:choose", Xpath_errors_uri, "XTSE0010", Static_error)
 						report_compile_error (an_error)
 					end
 				end
 				a_child_iterator.forth
 			end
 			if number_of_whens = 0 then
-				create an_error.make_from_string ("xsl:choose must contain at least one xsl:when", "", "XTSE0010", Static_error)
+				create an_error.make_from_string ("xsl:choose must contain at least one xsl:when", Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			end
 			validated := True

@@ -64,7 +64,7 @@ feature -- Element change
 		do
 			a_parent ?= parent
 			if not a_parent.may_contain_fallback then
-				create an_error.make_from_string (STRING_.concat ("xsl:fallback is not allowed as a child of ", a_parent.node_name), "", "XTSE0010", Static_error)
+				create an_error.make_from_string (STRING_.concat ("xsl:fallback is not allowed as a child of ", a_parent.node_name), Xpath_errors_uri, "XTSE0010", Static_error)
 				report_compile_error (an_error)
 			end
 			validated := True

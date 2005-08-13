@@ -85,7 +85,8 @@ feature -- Evaluation
 			last_evaluated_binding := a_bindery.global_variable_value (slot_number)
 			if last_evaluated_binding = Void then
 				if not was_supplied and then is_required_parameter then
-					create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("No value supplied for global parameter: ", variable_name), "", "XTDE0050", Dynamic_error)
+					create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("No value supplied for global parameter: ", variable_name),
+																													 Xpath_errors_uri, "XTDE0050", Dynamic_error)
 				else
 					
 					-- This is the first reference to a global parameter; try to evaluate it now.
@@ -93,7 +94,8 @@ feature -- Evaluation
 
 					a_bindery.set_executing (slot_number, True)
 					if a_bindery.is_circularity_error then
-						create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("Circular definition of global parameter: ", variable_name), "", "XTDE0640", Dynamic_error)
+						create {XM_XPATH_INVALID_VALUE} last_evaluated_binding.make_from_string (STRING_.concat ("Circular definition of global parameter: ", variable_name),
+																														 Xpath_errors_uri, "XTDE0640", Dynamic_error)
 					else
 						if was_supplied then
 							select_expression := a_bindery.global_parameter_value (variable_fingerprint)

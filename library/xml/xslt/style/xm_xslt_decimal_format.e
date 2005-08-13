@@ -138,13 +138,13 @@ feature -- Element change
 			elseif is_qname (name) then
 				generate_name_code (name)
 				if last_generated_name_code = -1 then
-					create an_error.make_from_string (STRING_.concat("Invalid QName for xsl:decimal-format: ", name_code_error_value.description), "", "XTDE1280", Static_error)
+					create an_error.make_from_string (STRING_.concat("Invalid QName for xsl:decimal-format: ", name_code_error_value.description), Xpath_errors_uri, "XTDE1280", Static_error)
 					report_compile_error (an_error)
 				else
 					a_fingerprint := last_generated_name_code
 				end
 			else
-				create an_error.make_from_string (STRING_.concat(name, " is not a valid QName"), "", "XTDE1280", Static_error)
+				create an_error.make_from_string (STRING_.concat(name, " is not a valid QName"), Xpath_errors_uri, "XTDE1280", Static_error)
 				report_compile_error (an_error)
 			end
 			create a_decimal_format.make (a_fingerprint)
@@ -179,14 +179,14 @@ feature -- Element change
 				a_decimal_format.set_nan (nan)
 			end						
 			if not a_decimal_format.are_all_distinct then
-				create an_error.make_from_string ("Not all picture characters are distinct.", "", "XTSE1300", Static_error)
+				create an_error.make_from_string ("Not all picture characters are distinct.", Xpath_errors_uri, "XTSE1300", Static_error)
 				report_compile_error (an_error)
 			end
 			a_format_manager := principal_stylesheet.decimal_format_manager
 			if a_fingerprint = -1 then
 				if a_format_manager.is_default_format_set then
 					if a_format_manager.is_different_from_default_format (a_decimal_format) then
-						create an_error.make_from_string ("Cannot define a default xsl:decimal-format twice, unless all attributes are identical", "", "XTSE1290", Static_error)
+						create an_error.make_from_string ("Cannot define a default xsl:decimal-format twice, unless all attributes are identical", Xpath_errors_uri, "XTSE1290", Static_error)
 						report_compile_error (an_error)
 					end
 				else
@@ -197,7 +197,7 @@ feature -- Element change
 					if not a_format_manager.is_duplicate_format (a_decimal_format) then
 						a_message := STRING_.concat ("Cannot define xsl:decimal-format named ", name)
 						a_message := STRING_.appended_string (a_message, " twice, unless all values are identical")
-						create an_error.make_from_string (a_message, "", "XTSE1290", Static_error)
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1290", Static_error)
 						report_compile_error (an_error)
 					end
 				else
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 		do
 			if decimal_separator /= Void and then decimal_separator.count /= 1 then
 				a_message := STRING_.appended_string ("xsl:decimal-format decimal-separator must be s single character. Found ", decimal_separator)
-				create an_error.make_from_string (a_message, "", "XTSE0020", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 		do
 			if grouping_separator /= Void and then grouping_separator.count /= 1 then
 				a_message := STRING_.appended_string ("xsl:decimal-format grouping-separator must be s single character. Found ", grouping_separator)
-				create an_error.make_from_string (a_message, "", "XTSE0020", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 		do
 			if percent /= Void and then percent.count /= 1 then
 				a_message := STRING_.appended_string ("xsl:decimal-format percent must be s single character. Found ", percent)
-				create an_error.make_from_string (a_message, "", "XTSE0020", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 		do
 			if per_mille /= Void and then per_mille.count /= 1 then
 				a_message := STRING_.appended_string ("xsl:decimal-format per-mille must be s single character. Found ", per_mille)
-				create an_error.make_from_string (a_message, "", "XTSE0020", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 		do
 			if zero_digit /= Void and then zero_digit.count /= 1 then
 				a_message := STRING_.appended_string ("xsl:decimal-format zero-digit must be s single character. Found ", zero_digit)
-				create an_error.make_from_string (a_message, "", "XTSE0020", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 		do
 			if digit /= Void and then digit.count /= 1 then
 				a_message := STRING_.appended_string ("xsl:decimal-format digit must be s single character. Found ", digit)
-				create an_error.make_from_string (a_message, "", "XTSE0020", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 		do
 			if pattern_separator /= Void and then pattern_separator.count /= 1 then
 				a_message := STRING_.appended_string ("xsl:decimal-format pattern-separator must be s single character. Found ", pattern_separator)
-				create an_error.make_from_string (a_message, "", "XTSE0020", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 		do
 			if minus_sign /= Void and then minus_sign.count /= 1 then
 				a_message := STRING_.appended_string ("xsl:decimal-format minus-sign must be s single character. Found ", minus_sign)
-				create an_error.make_from_string (a_message, "", "XTSE0020", Static_error)
+				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			end
 		end

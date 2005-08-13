@@ -105,11 +105,11 @@ feature -- Element change
 							elseif STRING_.same_string (an_inherit_namespaces_attribute, "yes") then
 								is_inherit_namespaces := True
 							else
-								create an_error.make_from_string ("Value of xsl:inherit-namespaces must be 'yes' or 'no'", "", "XTSE0020", Static_error)
+								create an_error.make_from_string ("Value of xsl:inherit-namespaces must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
 								report_compile_error (an_error)
 							end
 						else
-							create an_error.make_from_string (STRING_.concat ("Unknown XSL attribute ", shared_name_pool.display_name_from_name_code (a_name_code)), "", "XTSE0090", Static_error)
+							create an_error.make_from_string (STRING_.concat ("Unknown XSL attribute ", shared_name_pool.display_name_from_name_code (a_name_code)), Xpath_errors_uri, "XTSE0090", Static_error)
 							report_compile_error (an_error)
 						end
 					else
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 			-- but this class gets used for unknown elements found at the top level
 
 			if an_element_uri_code = 0 then
-				create an_error.make_from_string ("Top level elements must have a non-null namespace URI", "", "XTSE0130", Static_error)
+				create an_error.make_from_string ("Top level elements must have a non-null namespace URI", Xpath_errors_uri, "XTSE0130", Static_error)
 				report_compile_error (an_error)
 			end
 		end
@@ -412,14 +412,14 @@ feature {NONE} -- Implementation
 			end
 			a_type_attribute := attribute_value (Xslt_type_type_code)
 			if a_type_attribute /= Void then
-				create an_error.make_from_string ("The type attribute is available only with a schema-aware XSLT processor", "", "XTSE1660", Static_error)
+				create an_error.make_from_string ("The type attribute is available only with a schema-aware XSLT processor", Xpath_errors_uri, "XTSE1660", Static_error)
 				report_compile_error (an_error)
 			end
 			a_validation_attribute := attribute_value (Xslt_validation_type_code)
 			if a_validation_attribute /= Void then
 				validation := validation_code (a_validation_attribute)
 				if validation /= Validation_strip then
-					create an_error.make_from_string ("To perform validation, a schema-aware XSLT processor is needed", "", "XTSE1660", Static_error)
+					create an_error.make_from_string ("To perform validation, a schema-aware XSLT processor is needed", Xpath_errors_uri, "XTSE1660", Static_error)
 					report_compile_error (an_error)
 				end
 			else
