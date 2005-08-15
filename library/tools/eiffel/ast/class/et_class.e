@@ -974,20 +974,6 @@ feature -- Feature clauses
 
 feature -- Features
 
-	named_feature (a_name: ET_CALL_NAME): ET_FEATURE is
-			-- Feature named `a_name';
-			-- Void if no such feature
-		require
-			a_name_not_void: a_name /= Void
-		do
-			Result := named_query (a_name)
-			if Result = Void then
-				Result := named_procedure (a_name)
-			end
-		ensure
-			registered: Result /= Void implies Result.is_registered
-		end
-
 	named_query (a_name: ET_CALL_NAME): ET_QUERY is
 			-- Query named `a_name';
 			-- Void if no such query
@@ -1006,18 +992,6 @@ feature -- Features
 			a_name_not_void: a_name /= Void
 		do
 			Result := procedures.named_feature (a_name)
-		ensure
-			registered: Result /= Void implies Result.is_registered
-		end
-
-	seeded_feature (a_seed: INTEGER): ET_FEATURE is
-			-- Feature with seed `a_seed';
-			-- Void if no such feature
-		do
-			Result := seeded_query (a_seed)
-			if Result = Void then
-				Result := seeded_procedure (a_seed)
-			end
 		ensure
 			registered: Result /= Void implies Result.is_registered
 		end

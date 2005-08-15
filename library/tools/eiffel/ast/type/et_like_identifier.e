@@ -19,8 +19,12 @@ inherit
 feature -- Status report
 
 	is_like_argument: BOOLEAN is
-			-- Is this type a 'like argument' (rather than a
-			-- 'like feature' or a 'like *.feature')?
+			-- Is this type a 'like argument' (rather than a 'like feature')?
+		deferred
+		end
+
+	is_procedure: BOOLEAN is
+			-- Is the feature with seed `seed' a procedure?
 		deferred
 		end
 
@@ -34,8 +38,9 @@ feature -- Access
 		end
 
 	seed: INTEGER is
-			-- Feature ID of one of the seeds of the
-			-- feature associated with current type;
+			-- Feature ID of one of the seeds of the feature associated
+			-- with current type or of the feature containing the argument
+			-- in case of 'like argument';
 			-- 0 if not resolved yet
 		deferred
 		ensure

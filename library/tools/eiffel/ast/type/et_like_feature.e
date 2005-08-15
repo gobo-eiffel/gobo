@@ -86,6 +86,7 @@ feature -- Initialization
 				end
 			end
 			name.reset
+			is_procedure := False
 			seed := 0
 		end
 
@@ -102,6 +103,9 @@ feature -- Access
 			-- with current type or of the feature containing the argument
 			-- in case of 'like argument';
 			-- 0 if not resolved yet
+
+	is_procedure: BOOLEAN
+			-- Is the feature with seed `seed' a procedure?
 
 	index: INTEGER is
 			-- Index in the argument list of the
@@ -132,7 +136,11 @@ feature -- Access
 				Result := a_universe.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -184,7 +192,11 @@ feature -- Access
 				Result := a_universe.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -231,7 +243,11 @@ feature -- Access
 				Result := a_universe.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -278,7 +294,11 @@ feature -- Access
 				Result := a_universe.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -328,7 +348,11 @@ feature -- Access
 				Result := a_universe.unknown_class
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -410,7 +434,11 @@ feature -- Measurement
 				Result := 0
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -479,7 +507,11 @@ feature -- Status report
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -526,7 +558,11 @@ feature -- Status report
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -573,7 +609,11 @@ feature -- Status report
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -619,7 +659,11 @@ feature -- Status report
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -666,7 +710,11 @@ feature -- Status report
 				Result := (a_class = a_universe.unknown_class)
 			elseif is_like_argument then
 				a_base_class := a_context.base_class (a_universe)
-				l_feature := a_base_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -713,7 +761,11 @@ feature -- Status report
 				Result := (a_class = a_universe.unknown_class)
 			elseif is_like_argument then
 				a_base_class := a_context.base_class (a_universe)
-				l_feature := a_base_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -832,7 +884,11 @@ feature -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -897,11 +953,19 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 					else
 						l_class := other_context.base_class (a_universe)
 						l_other_seed := other.seed
-						l_feature := l_class.seeded_feature (l_other_seed)
+						if other.is_procedure then
+							l_feature := l_class.seeded_procedure (l_other_seed)
+						else
+							l_feature := l_class.seeded_query (l_other_seed)
+						end
 						Result := l_feature /= Void and then l_feature.has_seed (seed)
 						if not Result then
 							l_class := a_context.base_class (a_universe)
-							l_feature := l_class.seeded_feature (seed)
+							if is_procedure then
+								l_feature := l_class.seeded_procedure (seed)
+							else
+								l_feature := l_class.seeded_query (seed)
+							end
 							Result := l_feature /= Void and then l_feature.has_seed (l_other_seed)
 						end
 					end
@@ -939,7 +1003,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -987,7 +1055,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1036,7 +1108,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1084,7 +1160,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1132,7 +1212,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1180,7 +1264,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1229,7 +1317,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1277,7 +1369,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1332,7 +1428,11 @@ feature -- Conformance
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1385,7 +1485,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1436,7 +1540,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1488,7 +1596,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1539,7 +1651,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1594,7 +1710,11 @@ feature -- Conformance of reference version of types (compatilibity with ISE 5.6
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1647,7 +1767,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1698,7 +1822,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1750,7 +1878,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1801,7 +1933,11 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 				Result := False
 			elseif is_like_argument then
 				a_class := a_context.base_class (a_universe)
-				l_feature := a_class.seeded_feature (seed)
+				if is_procedure then
+					l_feature := a_class.seeded_procedure (seed)
+				else
+					l_feature := a_class.seeded_query (seed)
+				end
 				if l_feature /= Void then
 					args := l_feature.arguments
 					an_index := index
@@ -1835,41 +1971,29 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance of reference version of types 
 
 feature -- Resolving
 
-	resolve_like_feature (a_seed: INTEGER) is
-			-- Resolve current 'like feature' type with `a_seed'.
+	resolve_like_feature (a_query: ET_QUERY) is
+			-- Resolve current 'like feature' type where
+			-- `a_query' if the associated feature.
 		require
-			a_seed_positive: a_seed > 0
-		local
-			an_identifier: ET_IDENTIFIER
-		do
-			seed := a_seed
-			name.set_seed (a_seed)
-			if is_like_argument then
-				an_identifier ?= name
-				if an_identifier /= Void then
-					an_identifier.set_argument (False)
-				end
-			end
-		ensure
-			seed_set: seed = a_seed
+			a_query_not_void: a_query /= Void
 			is_like_feature: not is_like_argument
+		do
+			seed := a_query.first_seed
+			name.set_seed (seed)
+		ensure
+			seed_set: seed = a_query.first_seed
 		end
 
-	resolve_like_argument (a_seed, an_index: INTEGER; an_argument_name: ET_IDENTIFIER) is
-			-- Resolve current 'like argument' type with
-			-- `a_seed' and `an_index'.
+	resolve_like_argument (a_feature: ET_FEATURE) is
+			-- Resolve current 'like argument' type in `a_feature'.
 		require
-			a_seed_positive: a_seed > 0
-			an_index_positive: an_index >= 1
-			valid_argument_name: an_argument_name = name
-		do
-			seed := a_seed
-			name.set_seed (an_index)
-			an_argument_name.set_argument (True)
-		ensure
-			seed_set: seed = a_seed
+			a_feature_not_void: a_feature /= Void
 			is_like_argument: is_like_argument
-			index_set: index = an_index
+		do
+			seed := a_feature.first_seed
+			is_procedure := a_feature.is_procedure
+		ensure
+			seed_set: seed = a_feature.first_seed
 		end
 
 feature -- Output

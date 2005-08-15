@@ -50,6 +50,7 @@ feature -- Initialization
 			l_actuals: ET_AGENT_ARGUMENT_OPERAND_LIST
 		do
 			name.reset
+			is_procedure := False
 			if target /= Void then
 				target.reset
 			end
@@ -140,6 +141,9 @@ feature -- Access
 
 feature -- Status report
 
+	is_procedure: BOOLEAN
+			-- Is the associated feature a procedure?
+
 	use_tilde: BOOLEAN is
 			-- Is the old syntax with '~' used?
 		local
@@ -168,7 +172,17 @@ feature -- Setting
 		ensure
 			argumnts_set: arguments = an_arguments
 		end
-		
+
+feature -- Status setting
+
+	set_procedure (b: BOOLEAN) is	
+			-- Set `is_procedure' to `b'.
+		do
+			is_procedure := b
+		ensure
+			procedure_set: is_procedure = b
+		end
+
 feature -- Processing
 
 	process (a_processor: ET_AST_PROCESSOR) is
