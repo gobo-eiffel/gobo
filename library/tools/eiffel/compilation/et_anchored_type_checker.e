@@ -135,7 +135,11 @@ feature {NONE} -- Type checking
 				if current_anchored_type /= Void then
 					anchored_type_sorter.force_relation (a_type, current_anchored_type)
 				elseif a_type.is_like_argument then
-					a_feature := current_class.seeded_feature (a_seed)
+					if a_type.is_procedure then
+						a_feature := current_class.seeded_procedure (a_seed)
+					else
+						a_feature := current_class.seeded_query (a_seed)
+					end
 					if a_feature /= Void then
 						args := a_feature.arguments
 						an_index := a_type.index

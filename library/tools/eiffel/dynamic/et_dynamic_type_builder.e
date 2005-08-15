@@ -66,9 +66,10 @@ inherit
 			report_pointer_expression,
 			report_precursor_expression,
 			report_precursor_instruction,
-			report_qualified_call_agent,
 			report_qualified_call_expression,
 			report_qualified_call_instruction,
+			report_qualified_procedure_call_agent,
+			report_qualified_query_call_agent,
 			report_result,
 			report_result_assignment_target,
 			report_static_call_expression,
@@ -76,9 +77,10 @@ inherit
 			report_string_constant,
 			report_strip_expression,
 			report_typed_pointer_expression,
-			report_unqualified_call_agent,
 			report_unqualified_call_expression,
 			report_unqualified_call_instruction,
+			report_unqualified_procedure_call_agent,
+			report_unqualified_query_call_agent,
 			report_void_constant
 		end
 
@@ -111,9 +113,8 @@ feature {NONE} -- Initialization
 			current_dynamic_type := dummy_dynamic_type
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make_with_capacity (1000)
-			create dynamic_qualified_calls.make (100000)
-			create dynamic_qualified_agents.make (10000)
-			create dynamic_unqualified_agents.make (10000)
+			create dynamic_qualified_query_calls.make (100000)
+			create dynamic_qualified_procedure_calls.make (100000)
 			create current_index.make (0)
 			create result_index.make (0)
 			create character_index.make (0)
@@ -188,7 +189,6 @@ feature -- Generation
 			k, nb3: INTEGER
 			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
 			l_call: ET_DYNAMIC_QUALIFIED_CALL
-			l_agent: ET_DYNAMIC_QUALIFIED_AGENT
 			l_count: INTEGER
 			old_nb: INTEGER
 		do
@@ -328,10 +328,10 @@ feature -- Generation
 					i := i + 1
 				end
 				old_nb := nb
-					-- Process dynamic qualified calls.
-				nb := dynamic_qualified_calls.count
+					-- Process dynamic qualified query calls.
+				nb := dynamic_qualified_query_calls.count
 				from i := 1 until i > nb loop
-					l_call := dynamic_qualified_calls.item (i)
+					l_call := dynamic_qualified_query_calls.item (i)
 					l_count := l_call.count
 					l_call.propagate_types (Current)
 					if l_call.count /= l_count then
@@ -339,11 +339,10 @@ feature -- Generation
 					end
 					i := i + 1
 				end
-					-- Process dynamic qualified agents.
-				nb := dynamic_qualified_agents.count
+					-- Process dynamic qualified procedure calls.
+				nb := dynamic_qualified_procedure_calls.count
 				from i := 1 until i > nb loop
-					l_agent := dynamic_qualified_agents.item (i)
-					l_call := l_agent.qualified_call
+					l_call := dynamic_qualified_procedure_calls.item (i)
 					l_count := l_call.count
 					l_call.propagate_types (Current)
 					if l_call.count /= l_count then
@@ -353,9 +352,8 @@ feature -- Generation
 				end
 			end
 			check_catcall_validity
-			dynamic_qualified_calls.wipe_out
-			dynamic_qualified_agents.wipe_out
-			dynamic_unqualified_agents.wipe_out
+			dynamic_qualified_query_calls.wipe_out
+			dynamic_qualified_procedure_calls.wipe_out
 		end
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
@@ -371,11 +369,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			l_target_type_set := a_call.target_type_set
 			l_static_call := a_call.static_call
 			l_seed := l_static_call.name.seed
-			if a_call.result_type_set /= Void then
-				l_dynamic_feature := a_type.seeded_dynamic_query (l_seed, current_system)
-			else
-				l_dynamic_feature := a_type.seeded_dynamic_procedure (l_seed, current_system)
-			end
+			l_dynamic_feature := a_call.seeded_dynamic_feature (l_seed, a_type, current_system)
 			if l_dynamic_feature = Void then
 				if a_type.conforms_to_type (l_target_type_set.static_type, current_system) then
 						-- Internal error: there should be a feature with seed
@@ -490,18 +484,17 @@ feature {NONE} -- CAT-calls
 		local
 			i, nb: INTEGER
 			l_call: ET_DYNAMIC_QUALIFIED_CALL
-			l_agent: ET_DYNAMIC_QUALIFIED_AGENT
 		do
-			nb := dynamic_qualified_calls.count
+			nb := dynamic_qualified_query_calls.count
 			from i := 1 until i > nb loop
-				l_call := dynamic_qualified_calls.item (i)
+				l_call := dynamic_qualified_query_calls.item (i)
 				check_catcall_call_validity (l_call)
 				i := i + 1
 			end
-			nb := dynamic_qualified_agents.count
+			nb := dynamic_qualified_procedure_calls.count
 			from i := 1 until i > nb loop
-				l_agent := dynamic_qualified_agents.item (i)
-				check_catcall_call_validity (l_agent.qualified_call)
+				l_call := dynamic_qualified_procedure_calls.item (i)
+				check_catcall_call_validity (l_call)
 				i := i + 1
 			end
 		end
@@ -549,11 +542,7 @@ feature {NONE} -- CAT-calls
 			l_target_type: ET_DYNAMIC_TYPE
 		do
 			l_seed := a_call.static_call.name.seed
-			if a_call.result_type_set /= Void then
-				l_dynamic_feature := a_type.seeded_dynamic_query (l_seed, current_system)
-			else
-				l_dynamic_feature := a_type.seeded_dynamic_procedure (l_seed, current_system)
-			end
+			l_dynamic_feature := a_call.seeded_dynamic_feature (l_seed, a_type, current_system)
 			if l_dynamic_feature = Void then
 					-- Internal error: there should be a feature with seed
 					-- `l_seed' in all descendants of `a_call.target_type_set.static_type'.
@@ -1332,15 +1321,64 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a qualified call (to `a_feature') agent
+	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
+			-- Report that a qualified call expression has been processed.
+		local
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
+			l_target: ET_EXPRESSION
+			l_type: ET_TYPE
+			l_dynamic_type: ET_DYNAMIC_TYPE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_target := an_expression.target
+				l_target_type_set := dynamic_type_set (l_target)
+				if l_target_type_set = Void then
+						-- Internal error: the dynamic type sets of the
+						-- target should be known at this stage.
+					set_fatal_error
+					error_handler.report_gibbb_error
+				else
+					l_type := a_query.type
+					l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
+					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
+					set_dynamic_type_set (l_result_type_set, an_expression)
+					create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
+					dynamic_qualified_query_calls.force_last (l_dynamic_call)
+				end
+			end
+		end
+
+	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
+			-- Report that a qualified call instruction has been processed.
+		local
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
+			l_target: ET_EXPRESSION
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_target := an_instruction.target
+				l_dynamic_type_set := dynamic_type_set (l_target)
+				if l_dynamic_type_set = Void then
+						-- Internal error: the dynamic type sets of the
+						-- target should be known at this stage.
+					set_fatal_error
+					error_handler.report_gibbe_error
+				else
+					create l_dynamic_call.make (an_instruction, l_dynamic_type_set, current_dynamic_feature, current_dynamic_type)
+					dynamic_qualified_procedure_calls.force_last (l_dynamic_call)
+				end
+			end
+		end
+
+	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that a qualified procedure call (to `a_procedure') agent
 			-- of type `a_type' in `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_dynamic_agent: ET_DYNAMIC_QUALIFIED_AGENT
-			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target: ET_AGENT_TARGET
@@ -1384,7 +1422,8 @@ feature {NONE} -- Event handling
 						set_fatal_error
 						error_handler.report_gibaz_error
 					else
-						l_dynamic_feature := l_target_type_set.static_type.dynamic_feature (a_feature, current_system)
+						l_dynamic_feature := l_target_type_set.static_type.dynamic_procedure (a_procedure, current_system)
+						report_agent_qualified_procedure_call (an_expression, l_target_type_set)
 						l_dynamic_feature.set_regular (True)
 							-- Set dynamic type sets of open operands.
 							-- Dynamic type sets for arguments are stored first in `dynamic_type_sets'.
@@ -1426,65 +1465,143 @@ feature {NONE} -- Event handling
 								end
 							end
 						end
-						create l_dynamic_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-						l_dynamic_call.set_result_type_set (l_agent_type.result_type_set)
-						create l_dynamic_agent.make (an_expression, l_agent_type, l_dynamic_call, current_dynamic_feature, current_dynamic_type)
-						dynamic_qualified_agents.force_last (l_dynamic_agent)
+					end
+				end
+			end
+		end
+		
+	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that a qualified query call (to `a_query') agent
+			-- of type `a_type' in `a_context' has been processed.
+		local
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+			l_target_type_set: ET_DYNAMIC_TYPE_SET
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_target: ET_AGENT_TARGET
+			l_target_expression: ET_EXPRESSION
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			l_actual: ET_AGENT_ARGUMENT_OPERAND
+			l_actual_expression: ET_EXPRESSION
+			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_dynamic_type := current_system.dynamic_type (a_type, a_context)
+				l_dynamic_type.set_alive
+				set_dynamic_type_set (l_dynamic_type, an_expression)
+				l_agent_type ?= l_dynamic_type
+				if l_agent_type = Void then
+						-- Internal error: the dynamic type of an agent should be an agent type.
+					set_fatal_error
+					error_handler.report_gibjq_error
+				else
+					l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+					nb2 := l_open_operand_type_sets.count
+					l_target := an_expression.target
+					l_target_expression ?= l_target
+					if l_target_expression /= Void then
+						l_target_type_set := dynamic_type_set (l_target_expression)
+					else
+							-- The agent is of the form:   agent {TYPE}.f
+							-- The dynamic type set of the target is the first of open operand dynamic type sets.
+						j := 1
+						if not l_open_operand_type_sets.is_empty then
+							l_target_type_set := l_open_operand_type_sets.item (1)
+							set_dynamic_type_set (l_target_type_set, l_target)
+						end
+					end
+					l_result_type_set := l_agent_type.result_type_set
+					if l_target_type_set = Void then
+							-- Internal error: the dynamic type sets of the
+							-- target should be known at this stage.
+						set_fatal_error
+						error_handler.report_gibjr_error
+					elseif l_result_type_set = Void then
+							-- Internal error: if the corresponding feature is a query
+							-- then the result type set should not be Void.
+						set_fatal_error
+						error_handler.report_giaaz_error
+					else
+						l_dynamic_feature := l_target_type_set.static_type.dynamic_query (a_query, current_system)
+						report_agent_qualified_query_call (an_expression, l_target_type_set, l_result_type_set)
+						l_dynamic_feature.set_regular (True)
+							-- Set dynamic type sets of open operands.
+							-- Dynamic type sets for arguments are stored first in `dynamic_type_sets'.
+						l_argument_type_sets := l_dynamic_feature.dynamic_type_sets
+						l_actuals := an_expression.arguments
+						if l_actuals /= Void then
+							nb := l_actuals.count
+							if nb = 0 then
+								-- Do nothing.
+							elseif l_argument_type_sets.count < nb then
+									-- Internal error: it has already been checked somewhere else
+									-- that there was the same number of actual and formal arguments.
+								set_fatal_error
+								error_handler.report_gibjs_error
+							else
+								from i := 1 until i > nb loop
+									l_actual := l_actuals.actual_argument (i)
+									l_actual_expression ?= l_actual
+									if l_actual_expression /= Void then
+										-- Do nothing.
+									else
+											-- Open operand.
+										j := j + 1
+										if j > nb2 then
+												-- Internal error: missing open operands.
+											set_fatal_error
+											error_handler.report_gibjt_error
+										else
+											l_dynamic_type_set := l_open_operand_type_sets.item (j)
+											set_dynamic_type_set (l_dynamic_type_set, l_actual)
+										end
+									end
+									i := i + 1
+								end
+								if j < nb2 then
+										-- Internal error: too many open operands.
+									set_fatal_error
+									error_handler.report_gibju_error
+								end
+							end
+						end
 					end
 				end
 			end
 		end
 
-	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
-			-- Report that a qualified call expression has been processed.
+	report_agent_qualified_procedure_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Report the agent `an_expression' makes a qualified procedure call
+			-- on `a_target_type_set'.
+		require
+			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.target /= Void
+			a_target_type_set_not_void: a_target_type_set /= Void
 		local
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
-			l_target: ET_EXPRESSION
-			l_type: ET_TYPE
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 		do
-			if current_type = current_dynamic_type.base_type then
-				l_target := an_expression.target
-				l_target_type_set := dynamic_type_set (l_target)
-				if l_target_type_set = Void then
-						-- Internal error: the dynamic type sets of the
-						-- target should be known at this stage.
-					set_fatal_error
-					error_handler.report_gibbb_error
-				else
-					create l_dynamic_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_qualified_calls.force_last (l_dynamic_call)
-					l_type := a_query.type
-					l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
-					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
-					l_dynamic_call.set_result_type_set (l_dynamic_type_set)
-					set_dynamic_type_set (l_dynamic_type_set, an_expression)
-				end
-			end
+			create l_dynamic_procedure_call.make (an_expression, a_target_type_set, current_dynamic_feature, current_dynamic_type)
+			dynamic_qualified_procedure_calls.force_last (l_dynamic_procedure_call)
 		end
 
-	report_qualified_call_instruction (an_instruction: ET_FEATURE_CALL_INSTRUCTION; a_target_type: ET_TYPE_CONTEXT; a_procedure: ET_PROCEDURE) is
-			-- Report that a qualified call instruction has been processed.
+	report_agent_qualified_query_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Report the agent `an_expression' makes a qualified query call
+			-- on `a_target_type_set' and returns `a_result_type_set'.
+		require
+			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.target /= Void
+			a_target_type_set_not_void: a_target_type_set /= Void
+			a_result_type_set_not_void: a_result_type_set /= Void
 		local
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
-			l_target: ET_EXPRESSION
+			l_dynamic_query_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 		do
-			if current_type = current_dynamic_type.base_type then
-				l_target := an_instruction.target
-				l_dynamic_type_set := dynamic_type_set (l_target)
-				if l_dynamic_type_set = Void then
-						-- Internal error: the dynamic type sets of the
-						-- target should be known at this stage.
-					set_fatal_error
-					error_handler.report_gibbe_error
-				else
-					create l_dynamic_call.make (an_instruction, l_dynamic_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_qualified_calls.force_last (l_dynamic_call)
-				end
-			end
+			create l_dynamic_query_call.make (an_expression, a_target_type_set, a_result_type_set, current_dynamic_feature, current_dynamic_type)
+			dynamic_qualified_query_calls.force_last (l_dynamic_query_call)
 		end
 
 	report_result (an_expression: ET_RESULT) is
@@ -1623,83 +1740,6 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that an unqualified call (to `a_feature') agent
-			-- of type `a_type' in `a_context' has been processed.
-		local
-			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_dynamic_agent: ET_DYNAMIC_UNQUALIFIED_AGENT
-			i, nb: INTEGER
-			j, nb2: INTEGER
-			l_actuals: ET_AGENT_ARGUMENT_OPERANDS
-			l_actual: ET_AGENT_ARGUMENT_OPERAND
-			l_actual_expression: ET_EXPRESSION
-			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-		do
-			if current_type = current_dynamic_type.base_type then
-				l_dynamic_feature := current_dynamic_type.dynamic_feature (a_feature, current_system)
-				l_dynamic_feature.set_regular (True)
-				l_dynamic_type := current_system.dynamic_type (a_type, a_context)
-				l_dynamic_type.set_alive
-				set_dynamic_type_set (l_dynamic_type, an_expression)
-				l_agent_type ?= l_dynamic_type
-				if l_agent_type = Void then
-						-- Internal error: the dynamic type of an agent should be an agent type.
-					set_fatal_error
-					error_handler.report_gibfn_error
-				else
-						-- Set dynamic type sets of open operands.
-					l_open_operand_type_sets := l_agent_type.open_operand_type_sets
-					nb2 := l_open_operand_type_sets.count
-						-- Dynamic type sets for arguments are stored first in `dynamic_type_sets'.
-					l_argument_type_sets := l_dynamic_feature.dynamic_type_sets
-					l_actuals := an_expression.arguments
-					if l_actuals /= Void then
-						nb := l_actuals.count
-						if nb = 0 then
-							-- Do nothing.
-						elseif l_argument_type_sets.count < nb then
-								-- Internal error: it has already been checked somewhere else
-								-- that there was the same number of actual and formal arguments.
-							set_fatal_error
-							error_handler.report_gibgl_error
-						else
-							from i := 1 until i > nb loop
-								l_actual := l_actuals.actual_argument (i)
-								l_actual_expression ?= l_actual
-								if l_actual_expression /= Void then
-									-- Do nothing.
-								else
-										-- Open operand.
-									j := j + 1
-									if j > nb2 then
-											-- Internal error: missing open operands.
-										set_fatal_error
-										error_handler.report_gibhx_error
-									else
-										l_dynamic_type_set := l_open_operand_type_sets.item (j)
-										set_dynamic_type_set (l_dynamic_type_set, l_actual)
-									end
-								end
-								i := i + 1
-							end
-							if j < nb2 then
-									-- Internal error: too many open operands.
-								set_fatal_error
-								error_handler.report_gibhy_error
-							end
-						end
-					end
-					create l_dynamic_agent.make (an_expression, l_agent_type, l_dynamic_feature, current_dynamic_feature, current_dynamic_type)
-					dynamic_unqualified_agents.force_last (l_dynamic_agent)
-				end
-			end
-		end
-
 	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY) is
 			-- Report that an unqualified call expression has been processed.
 		local
@@ -1728,6 +1768,108 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_procedure := current_dynamic_type.dynamic_procedure (a_procedure, current_system)
 				l_dynamic_procedure.set_regular (True)
+			end
+		end
+
+	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that an unqualified procedure call (to `a_procedure') agent
+			-- of type `a_type' in `a_context' has been processed.
+		local
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_dynamic_feature := current_dynamic_type.dynamic_procedure (a_procedure, current_system)
+				report_unqualified_call_agent (an_expression, l_dynamic_feature, a_type, a_context)
+			end
+		end
+
+	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that an unqualified query call (to `a_query') agent
+			-- of type `a_type' in `a_context' has been processed.
+		local
+			l_dynamic_feature: ET_DYNAMIC_FEATURE
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_dynamic_feature := current_dynamic_type.dynamic_query (a_query, current_system)
+				report_unqualified_call_agent (an_expression, l_dynamic_feature, a_type, a_context)
+			end
+		end
+	
+	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_DYNAMIC_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that an unqualified call (to `a_feature') agent
+			-- of type `a_type' in `a_context' has been processed.
+		require
+			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+			unqualified_call_agent: an_expression.target = Void
+			a_feature_not_void: a_feature /= Void
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+		local
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
+			i, nb: INTEGER
+			j, nb2: INTEGER
+			l_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			l_actual: ET_AGENT_ARGUMENT_OPERAND
+			l_actual_expression: ET_EXPRESSION
+			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
+		do
+			a_feature.set_regular (True)
+			l_dynamic_type := current_system.dynamic_type (a_type, a_context)
+			l_dynamic_type.set_alive
+			set_dynamic_type_set (l_dynamic_type, an_expression)
+			l_agent_type ?= l_dynamic_type
+			if l_agent_type = Void then
+					-- Internal error: the dynamic type of an agent should be an agent type.
+				set_fatal_error
+				error_handler.report_gibeh_error
+			else
+					-- Set dynamic type sets of open operands.
+				l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+				nb2 := l_open_operand_type_sets.count
+					-- Dynamic type sets for arguments are stored first in `dynamic_type_sets'.
+				l_argument_type_sets := a_feature.dynamic_type_sets
+				l_actuals := an_expression.arguments
+				if l_actuals /= Void then
+					nb := l_actuals.count
+					if nb = 0 then
+						-- Do nothing.
+					elseif l_argument_type_sets.count < nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibei_error
+					else
+						from i := 1 until i > nb loop
+							l_actual := l_actuals.actual_argument (i)
+							l_actual_expression ?= l_actual
+							if l_actual_expression /= Void then
+								-- Do nothing.
+							else
+									-- Open operand.
+								j := j + 1
+								if j > nb2 then
+										-- Internal error: missing open operands.
+									set_fatal_error
+									error_handler.report_gibdp_error
+								else
+									l_dynamic_type_set := l_open_operand_type_sets.item (j)
+									set_dynamic_type_set (l_dynamic_type_set, l_actual)
+								end
+							end
+							i := i + 1
+						end
+						if j < nb2 then
+								-- Internal error: too many open operands.
+							set_fatal_error
+							error_handler.report_gibdr_error
+						end
+					end
+				end
 			end
 		end
 
@@ -2304,14 +2446,11 @@ feature {NONE} -- Implementation
 	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Dynamic type sets of expressions within current feature
 
-	dynamic_qualified_calls: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_CALL]
-			-- Dynamic qualified calls within current feature
+	dynamic_qualified_query_calls: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_QUERY_CALL]
+			-- Dynamic qualified query calls within current feature
 
-	dynamic_qualified_agents: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_AGENT]
-			-- Dynamic qualified agents within current feature
-
-	dynamic_unqualified_agents: DS_ARRAYED_LIST [ET_DYNAMIC_UNQUALIFIED_AGENT]
-			-- Dynamic unqualified agents within current feature
+	dynamic_qualified_procedure_calls: DS_ARRAYED_LIST [ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL]
+			-- Dynamic qualified procedure calls within current feature
 
 	dummy_dynamic_type: ET_DYNAMIC_TYPE is
 			-- Dummy_dynamic type
@@ -2332,12 +2471,10 @@ feature {NONE} -- Implementation
 invariant
 
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
-	dynamic_qualified_calls_not_void: dynamic_qualified_calls /= Void
-	no_void_dynamic_call: not dynamic_qualified_calls.has (Void)
-	dynamic_qualified_agents_not_void: dynamic_qualified_agents /= Void
-	no_void_dynamic_qualified_agent: not dynamic_qualified_agents.has (Void)
-	dynamic_unqualified_agents_not_void: dynamic_unqualified_agents /= Void
-	no_void_dynamic_unqualified_agent: not dynamic_unqualified_agents.has (Void)
+	dynamic_qualified_query_calls_not_void: dynamic_qualified_query_calls /= Void
+	no_void_dynamic_query_call: not dynamic_qualified_query_calls.has (Void)
+	dynamic_qualified_procedure_calls_not_void: dynamic_qualified_procedure_calls /= Void
+	no_void_dynamic_procedure_call: not dynamic_qualified_procedure_calls.has (Void)
 	current_dynamic_type_not_void: current_dynamic_type /= Void
 	current_dynamic_feature_not_void: current_dynamic_feature /= Void
 	current_index_not_void: current_index /= Void

@@ -22,6 +22,8 @@ inherit
 			build_tuple_put,
 			build_agent_call,
 			report_catcall_error,
+			report_agent_qualified_procedure_call,
+			report_agent_qualified_query_call,
 			report_assignment,
 			report_assignment_attempt,
 			report_creation_expression,
@@ -30,7 +32,6 @@ inherit
 			report_manifest_tuple,
 			report_precursor_expression,
 			report_precursor_instruction,
-			report_qualified_call_agent,
 			report_qualified_call_expression,
 			report_qualified_call_instruction,
 			report_static_call_expression,
@@ -174,9 +175,8 @@ feature -- Generation
 				end
 			end
 			check_catcall_validity
-			dynamic_qualified_calls.wipe_out
-			dynamic_qualified_agents.wipe_out
-			dynamic_unqualified_agents.wipe_out
+			dynamic_qualified_query_calls.wipe_out
+			dynamic_qualified_procedure_calls.wipe_out
 		end
 
 feature {ET_DYNAMIC_TUPLE_TYPE} -- Generation
@@ -279,6 +279,28 @@ feature {NONE} -- CAT-calls
 		end
 
 feature {NONE} -- Event handling
+
+	report_agent_qualified_procedure_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Report the agent `an_expression' makes a qualified procedure call
+			-- on `a_target_type_set'.
+		local
+			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
+		do
+			create l_dynamic_procedure_call.make (an_expression, a_target_type_set, current_dynamic_feature, current_dynamic_type)
+			a_target_type_set.put_target (l_dynamic_procedure_call, current_system)
+			dynamic_qualified_procedure_calls.force_last (l_dynamic_procedure_call)
+		end
+
+	report_agent_qualified_query_call (an_expression: ET_CALL_AGENT; a_target_type_set: ET_DYNAMIC_TYPE_SET; a_result_type_set: ET_DYNAMIC_TYPE_SET) is
+			-- Report the agent `an_expression' makes a qualified query call
+			-- on `a_target_type_set' and returns `a_result_type_set'.
+		local
+			l_dynamic_query_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
+		do
+			create l_dynamic_query_call.make (an_expression, a_target_type_set, a_result_type_set, current_dynamic_feature, current_dynamic_type)
+			a_target_type_set.put_target (l_dynamic_query_call, current_system)
+			dynamic_qualified_query_calls.force_last (l_dynamic_query_call)
+		end
 
 	report_assignment (an_instruction: ET_ASSIGNMENT) is
 			-- Report that an assignment instruction has been processed.
@@ -636,116 +658,12 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_qualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a qualified call (to `a_feature') agent
-			-- of type `a_type' in `a_context' has been processed.
-		local
-			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
-			l_dynamic_agent: ET_DYNAMIC_QUALIFIED_AGENT
-			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_target: ET_AGENT_TARGET
-			l_target_expression: ET_EXPRESSION
-			i, nb: INTEGER
-			j, nb2: INTEGER
-			l_actuals: ET_AGENT_ARGUMENT_OPERANDS
-			l_actual: ET_AGENT_ARGUMENT_OPERAND
-			l_actual_expression: ET_EXPRESSION
-			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-		do
-			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_system.dynamic_type (a_type, a_context)
-				l_dynamic_type.set_alive
-				set_dynamic_type_set (l_dynamic_type, an_expression)
-				l_agent_type ?= l_dynamic_type
-				if l_agent_type = Void then
-						-- Internal error: the dynamic type of an agent should be an agent type.
-					set_fatal_error
-					error_handler.report_gibax_error
-				else
-					l_open_operand_type_sets := l_agent_type.open_operand_type_sets
-					nb2 := l_open_operand_type_sets.count
-					l_target := an_expression.target
-					l_target_expression ?= l_target
-					if l_target_expression /= Void then
-						l_target_type_set := dynamic_type_set (l_target_expression)
-					else
-							-- The agent is of the form:   agent {TYPE}.f
-							-- The dynamic type set of the target is the first of open operand dynamic type sets.
-						j := 1
-						if not l_open_operand_type_sets.is_empty then
-							l_target_type_set := l_open_operand_type_sets.item (1)
-							set_dynamic_type_set (l_target_type_set, l_target)
-						end
-					end
-					if l_target_type_set = Void then
-							-- Internal error: the dynamic type sets of the
-							-- target should be known at this stage.
-						set_fatal_error
-						error_handler.report_gibga_error
-					else
-						l_dynamic_feature := l_target_type_set.static_type.dynamic_feature (a_feature, current_system)
-						l_dynamic_feature.set_regular (True)
-							-- Set dynamic type sets of open operands.
-							-- Dynamic type sets for arguments are stored first in `dynamic_type_sets'.
-						l_argument_type_sets := l_dynamic_feature.dynamic_type_sets
-						l_actuals := an_expression.arguments
-						if l_actuals /= Void then
-							nb := l_actuals.count
-							if nb = 0 then
-								-- Do nothing.
-							elseif l_argument_type_sets.count < nb then
-									-- Internal error: it has already been checked somewhere else
-									-- that there was the same number of actual and formal arguments.
-								set_fatal_error
-								error_handler.report_gibgb_error
-							else
-								from i := 1 until i > nb loop
-									l_actual := l_actuals.actual_argument (i)
-									l_actual_expression ?= l_actual
-									if l_actual_expression /= Void then
-										-- Do nothing.
-									else
-											-- Open operand.
-										j := j + 1
-										if j > nb2 then
-												-- Internal error: missing open operands.
-											set_fatal_error
-											error_handler.report_gibfr_error
-										else
-											l_dynamic_type_set := l_open_operand_type_sets.item (j)
-											set_dynamic_type_set (l_dynamic_type_set, l_actual)
-										end
-									end
-									i := i + 1
-								end
-								if j < nb2 then
-										-- Internal error: too many open operands.
-									set_fatal_error
-									error_handler.report_gibhk_error
-								end
-							end
-						end
-						create l_dynamic_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-						l_dynamic_call.set_result_type_set (l_agent_type.result_type_set)
-						create l_dynamic_agent.make (an_expression, l_agent_type, l_dynamic_call, current_dynamic_feature, current_dynamic_type)
-						dynamic_qualified_agents.force_last (l_dynamic_agent)
-						l_target_type_set.put_target (l_dynamic_call, current_system)
-					end
-				end
-			end
-		end
-
 	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
 			-- Report that a qualified call expression has been processed.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
+			l_result_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_target: ET_EXPRESSION
 			l_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
@@ -759,13 +677,12 @@ feature {NONE} -- Event handling
 					set_fatal_error
 					error_handler.report_gibew_error
 				else
-					create l_dynamic_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_qualified_calls.force_last (l_dynamic_call)
 					l_type := a_query.type
 					l_dynamic_type := current_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
-					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
-					l_dynamic_call.set_result_type_set (l_dynamic_type_set)
-					set_dynamic_type_set (l_dynamic_type_set, an_expression)
+					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
+					set_dynamic_type_set (l_result_type_set, an_expression)
+					create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
+					dynamic_qualified_query_calls.force_last (l_dynamic_call)
 					l_target_type_set.put_target (l_dynamic_call, current_system)
 				end
 			end
@@ -775,7 +692,7 @@ feature {NONE} -- Event handling
 			-- Report that a qualified call instruction has been processed.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
-			l_dynamic_call: ET_DYNAMIC_QUALIFIED_CALL
+			l_dynamic_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 			l_target: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -788,7 +705,7 @@ feature {NONE} -- Event handling
 					error_handler.report_gibez_error
 				else
 					create l_dynamic_call.make (an_instruction, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					dynamic_qualified_calls.force_last (l_dynamic_call)
+					dynamic_qualified_procedure_calls.force_last (l_dynamic_call)
 					l_target_type_set.put_target (l_dynamic_call, current_system)
 				end
 			end
@@ -942,14 +859,12 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_DYNAMIC_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
 			-- Report that an unqualified call (to `a_feature') agent
 			-- of type `a_type' in `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_agent_type: ET_DYNAMIC_ROUTINE_TYPE
-			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_dynamic_agent: ET_DYNAMIC_UNQUALIFIED_AGENT
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
@@ -964,129 +879,124 @@ feature {NONE} -- Event handling
 			l_manifest_tuple: ET_MANIFEST_TUPLE
 			l_no_manifest_tuple: BOOLEAN
 		do
-			if current_type = current_dynamic_type.base_type then
-				l_dynamic_feature := current_dynamic_type.dynamic_feature (a_feature, current_system)
-				l_dynamic_feature.set_regular (True)
-				l_dynamic_type := current_system.dynamic_type (a_type, a_context)
-				l_dynamic_type.set_alive
-				set_dynamic_type_set (l_dynamic_type, an_expression)
-				l_agent_type ?= l_dynamic_type
-				if l_agent_type = Void then
-						-- Internal error: the dynamic type of an agent should be an agent type.
-					set_fatal_error
-					error_handler.report_gibfp_error
-				else
-					l_result_type_set := l_agent_type.result_type_set
-					if l_result_type_set /= Void then
-						l_dynamic_type_set := l_dynamic_feature.result_type_set
-						if l_dynamic_type_set = Void then
-								-- Internal error: a FUNCTION should be an agent on a query.
-							set_fatal_error
-							error_handler.report_gibfq_error
-						else
-							l_dynamic_type_set.put_target (l_result_type_set, current_system)
-						end
+			a_feature.set_regular (True)
+			l_dynamic_type := current_system.dynamic_type (a_type, a_context)
+			l_dynamic_type.set_alive
+			set_dynamic_type_set (l_dynamic_type, an_expression)
+			l_agent_type ?= l_dynamic_type
+			if l_agent_type = Void then
+					-- Internal error: the dynamic type of an agent should be an agent type.
+				set_fatal_error
+				error_handler.report_gibfp_error
+			else
+				l_result_type_set := l_agent_type.result_type_set
+				if l_result_type_set /= Void then
+					l_dynamic_type_set := a_feature.result_type_set
+					if l_dynamic_type_set = Void then
+							-- Internal error: a FUNCTION should be an agent on a query.
+						set_fatal_error
+						error_handler.report_gibfq_error
+					else
+						l_dynamic_type_set.put_target (l_result_type_set, current_system)
 					end
-					create l_dynamic_agent.make (an_expression, l_agent_type, l_dynamic_feature, current_dynamic_feature, current_dynamic_type)
-					dynamic_unqualified_agents.force_last (l_dynamic_agent)
-						-- Dynamic type sets for arguments are stored first
-						-- in `dynamic_type_sets'.
-					l_argument_type_sets := l_dynamic_feature.dynamic_type_sets
-					l_open_operand_type_sets := l_agent_type.open_operand_type_sets
-					nb2 := l_open_operand_type_sets.count
-					l_actuals := an_expression.arguments
-					if l_actuals /= Void then
-						nb := l_actuals.count
-						if nb = 0 then
-							-- Do nothing.
-						elseif l_argument_type_sets.count < nb then
-								-- Internal error: it has already been checked somewhere else
-								-- that there was the same number of actual and formal arguments.
-							set_fatal_error
-							error_handler.report_gibfs_error
-						else
-							if (l_dynamic_feature.is_builtin_routine_call or l_dynamic_feature.is_builtin_function_item) and then current_dynamic_type.is_agent_type then
-									-- This is something of the form:  'agent call ([...])' or 'agent item ([...])'
-									-- Try to get the open operand type sets directly from the
-									-- argument if it is a manifest tuple.
-								l_routine_type ?= current_dynamic_type
-								if l_routine_type = Void then
-										-- Internal error: it has to be an agent type.
-									set_fatal_error
-									error_handler.report_gibhg_error
-								else
-									if nb /= 1 then
-											-- Internal error: 'call' or 'item' should have exactly one argument.
-										set_fatal_error
-										error_handler.report_gibhh_error
-									else
-										l_actual := l_actuals.actual_argument (1)
-										l_manifest_tuple ?= l_actual
-										if l_manifest_tuple /= Void then
-											l_routine_open_operand_type_sets := l_routine_type.open_operand_type_sets
-											nb := l_routine_open_operand_type_sets.count
-											if l_manifest_tuple.count < nb then
-													-- Internal error: the actual argument conforms to the
-													-- formal argument of 'call' or 'item', so there cannot
-													-- be less items in the tuple.
-												set_fatal_error
-												error_handler.report_gibhi_error
-											else
-												from i := 1 until i > nb loop
-													l_dynamic_type_set := dynamic_type_set (l_manifest_tuple.expression (i))
-													if l_dynamic_type_set = Void then
-															-- Internal error: the dynamic type sets of the actual
-															-- arguments should be known at this stage.
-														set_fatal_error
-														error_handler.report_gibhj_error
-													else
-														l_dynamic_type_set.put_target (l_routine_open_operand_type_sets.item (i), current_system)
-													end
-													i := i + 1
-												end
-											end
-										else
-											l_no_manifest_tuple := True
-										end
-									end
-								end
+				end
+					-- Dynamic type sets for arguments are stored first
+					-- in `dynamic_type_sets'.
+				l_argument_type_sets := a_feature.dynamic_type_sets
+				l_open_operand_type_sets := l_agent_type.open_operand_type_sets
+				nb2 := l_open_operand_type_sets.count
+				l_actuals := an_expression.arguments
+				if l_actuals /= Void then
+					nb := l_actuals.count
+					if nb = 0 then
+						-- Do nothing.
+					elseif l_argument_type_sets.count < nb then
+							-- Internal error: it has already been checked somewhere else
+							-- that there was the same number of actual and formal arguments.
+						set_fatal_error
+						error_handler.report_gibfs_error
+					else
+						if (a_feature.is_builtin_routine_call or a_feature.is_builtin_function_item) and then current_dynamic_type.is_agent_type then
+								-- This is something of the form:  'agent call ([...])' or 'agent item ([...])'
+								-- Try to get the open operand type sets directly from the
+								-- argument if it is a manifest tuple.
+							l_routine_type ?= current_dynamic_type
+							if l_routine_type = Void then
+									-- Internal error: it has to be an agent type.
+								set_fatal_error
+								error_handler.report_gibhg_error
 							else
-								l_no_manifest_tuple := True
-							end
-							if l_no_manifest_tuple then
-								from i := 1 until i > nb loop
-									l_actual := l_actuals.actual_argument (i)
-									l_actual_expression ?= l_actual
-									if l_actual_expression /= Void then
-										l_dynamic_type_set := dynamic_type_set (l_actual_expression)
-										if l_dynamic_type_set = Void then
-												-- Internal error: the dynamic type sets of the actual
-												-- arguments should be known at this stage.
+								if nb /= 1 then
+										-- Internal error: 'call' or 'item' should have exactly one argument.
+									set_fatal_error
+									error_handler.report_gibhh_error
+								else
+									l_actual := l_actuals.actual_argument (1)
+									l_manifest_tuple ?= l_actual
+									if l_manifest_tuple /= Void then
+										l_routine_open_operand_type_sets := l_routine_type.open_operand_type_sets
+										nb := l_routine_open_operand_type_sets.count
+										if l_manifest_tuple.count < nb then
+												-- Internal error: the actual argument conforms to the
+												-- formal argument of 'call' or 'item', so there cannot
+												-- be less items in the tuple.
 											set_fatal_error
-											error_handler.report_gibft_error
+											error_handler.report_gibhi_error
 										else
-											l_dynamic_type_set.put_target (l_argument_type_sets.item (i), current_system)
+											from i := 1 until i > nb loop
+												l_dynamic_type_set := dynamic_type_set (l_manifest_tuple.expression (i))
+												if l_dynamic_type_set = Void then
+														-- Internal error: the dynamic type sets of the actual
+														-- arguments should be known at this stage.
+													set_fatal_error
+													error_handler.report_gibhj_error
+												else
+													l_dynamic_type_set.put_target (l_routine_open_operand_type_sets.item (i), current_system)
+												end
+												i := i + 1
+											end
 										end
 									else
-											-- Open operand.
-										j := j + 1
-										if j > nb2 then
-												-- Internal error: missing open operands.
-											set_fatal_error
-											error_handler.report_gibfu_error
-										else
-											l_dynamic_type_set := l_open_operand_type_sets.item (j)
-											set_dynamic_type_set (l_dynamic_type_set, l_actual)
-											l_dynamic_type_set.put_target (l_argument_type_sets.item (i), current_system)
-										end
+										l_no_manifest_tuple := True
 									end
-									i := i + 1
 								end
-								if j < nb2 then
-										-- Internal error: too many open operands.
-									set_fatal_error
-									error_handler.report_gibfv_error
+							end
+						else
+							l_no_manifest_tuple := True
+						end
+						if l_no_manifest_tuple then
+							from i := 1 until i > nb loop
+								l_actual := l_actuals.actual_argument (i)
+								l_actual_expression ?= l_actual
+								if l_actual_expression /= Void then
+									l_dynamic_type_set := dynamic_type_set (l_actual_expression)
+									if l_dynamic_type_set = Void then
+											-- Internal error: the dynamic type sets of the actual
+											-- arguments should be known at this stage.
+										set_fatal_error
+										error_handler.report_gibft_error
+									else
+										l_dynamic_type_set.put_target (l_argument_type_sets.item (i), current_system)
+									end
+								else
+										-- Open operand.
+									j := j + 1
+									if j > nb2 then
+											-- Internal error: missing open operands.
+										set_fatal_error
+										error_handler.report_gibfu_error
+									else
+										l_dynamic_type_set := l_open_operand_type_sets.item (j)
+										set_dynamic_type_set (l_dynamic_type_set, l_actual)
+										l_dynamic_type_set.put_target (l_argument_type_sets.item (i), current_system)
+									end
 								end
+								i := i + 1
+							end
+							if j < nb2 then
+									-- Internal error: too many open operands.
+								set_fatal_error
+								error_handler.report_gibfv_error
 							end
 						end
 					end

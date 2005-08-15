@@ -147,7 +147,7 @@ feature {NONE} -- Type resolving
 			l_query := current_class.named_query (l_name)
 			if l_query /= Void then
 					-- This is a 'like feature'.
-				a_type.resolve_like_feature (l_query.first_seed)
+				a_type.resolve_like_feature (l_query)
 				resolved := True
 			else
 				if current_feature /= Void then
@@ -159,7 +159,9 @@ feature {NONE} -- Type resolving
 						if args /= Void then
 							l_index := args.index_of (l_argument_name)
 							if l_index /= 0 then
-								a_type.resolve_like_argument (current_feature.first_seed, l_index, l_argument_name)
+								l_argument_name.set_seed (l_index)
+								l_argument_name.set_argument (True)
+								a_type.resolve_like_argument (current_feature)
 								resolved := True
 							end
 						end

@@ -8803,7 +8803,11 @@ feature {NONE} -- Initialization
 			a_cursor := a_cycle.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_like := a_cursor.item
-				a_feature := current_class.seeded_feature (a_like.seed)
+				if a_like.is_procedure then
+					a_feature := current_class.seeded_procedure (a_like.seed)
+				else
+					a_feature := current_class.seeded_query (a_like.seed)
+				end
 				if a_feature /= Void and then a_feature.implementation_class = current_class then
 					if a_like.is_like_argument then
 						position := a_like.name.position

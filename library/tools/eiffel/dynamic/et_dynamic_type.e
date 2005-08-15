@@ -191,27 +191,6 @@ feature -- Setting
 
 feature -- Features
 
-	dynamic_feature (a_feature: ET_FEATURE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
-			-- Run-time feature associated with `a_feature'
-		require
-			a_feature_not_void: a_feature /= Void
---			valid_feature: base_class.queries.has (a_feature) or base_class.procedures.has (a_feature)
-			a_system_not_void: a_system /= Void
-		local
-			l_query: ET_QUERY
-			l_procedure: ET_PROCEDURE
-		do
-			l_query ?= a_feature
-			if l_query /= Void then
-				Result := dynamic_query (l_query, a_system)
-			else
-				l_procedure ?= a_feature
-				if l_procedure /= Void then
-					Result := dynamic_procedure (l_procedure, a_system)
-				end
-			end
-		end
-
 	dynamic_query (a_query: ET_QUERY; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
 			-- Run-time query associated with `a_query'
 		require

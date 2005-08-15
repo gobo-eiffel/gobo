@@ -877,7 +877,7 @@ feature {NONE} -- Validity checking
 					a_query := a_class_impl.named_query (a_name)
 					if a_query /= Void then
 							-- This is a 'like feature'.
-						a_type.resolve_like_feature (a_query.first_seed)
+						a_type.resolve_like_feature (a_query)
 						resolved := True
 					else
 							-- This has to be a 'like argument', otherwise
@@ -888,7 +888,9 @@ feature {NONE} -- Validity checking
 							if args /= Void then
 								an_index := args.index_of (an_argument_name)
 								if an_index /= 0 then
-									a_type.resolve_like_argument (current_feature.first_seed, an_index, an_argument_name)
+									an_argument_name.set_seed (an_index)
+									an_argument_name.set_argument (True)
+									a_type.resolve_like_argument (current_feature)
 									resolved := True
 								end
 							end

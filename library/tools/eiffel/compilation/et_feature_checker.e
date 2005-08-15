@@ -6644,27 +6644,24 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
-			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
-			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
-			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			a_class_impl: ET_CLASS
-			a_feature: ET_FEATURE
-			a_type: ET_TYPE
+			l_query: ET_QUERY
+			l_procedure: ET_PROCEDURE
 			a_seed: INTEGER
-			an_open_operands: ET_ACTUAL_PARAMETER_LIST
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_tuple_type: ET_TUPLE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_CLASS
-			had_error: BOOLEAN
-			i, nb: INTEGER
+			l_expected_class: ET_CLASS
 		do
--- TODO: do we need to call `report_current_type_needed'.
 			has_fatal_error := False
+-- TODO: do we need to call `report_current_type_needed'.
+			report_current_type_needed
 			a_name := an_expression.name
 			a_seed := a_name.seed
-			if a_seed = 0 then
+			if a_seed /= 0 then
+				if an_expression.is_procedure then
+					check_unqualified_procedure_call_agent_validity (an_expression, Void, a_context)
+				else
+					check_unqualified_query_call_agent_validity (an_expression, Void, a_context)
+				end
+			else
 					-- We need to resolve `a_name' in the implementation
 					-- class of `feature_impl' first.
 				a_class_impl := feature_impl.implementation_class
@@ -6680,97 +6677,235 @@ feature {NONE} -- Agent validity
 					if not current_class.interface_checked or else current_class.has_interface_error then
 						set_fatal_error
 					else
-						a_feature := current_class.named_feature (a_name)
-						if a_feature /= Void then
-							a_seed := a_feature.first_seed
-							a_name.set_seed (a_seed)
-							an_actuals := an_expression.arguments
-							if an_actuals = Void then
-								a_formal_arguments := a_feature.arguments
-								if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
-									nb := a_formal_arguments.count
-									create an_implicit_actuals.make_with_capacity (nb)
-									from i := 1 until i > nb loop
-										create an_implicit_actual.make (an_expression, i)
-										an_implicit_actuals.put_last (an_implicit_actual)
-										i := i + 1
-									end
-									an_expression.set_arguments (an_implicit_actuals)
+						l_expected_class := current_target_type.base_class (universe)
+						if l_expected_class = universe.function_class then
+							l_query := current_class.named_query (a_name)
+							if l_query /= Void then
+								a_name.set_seed (l_query.first_seed)
+								an_expression.set_procedure (False)
+								check_unqualified_query_call_agent_validity (an_expression, l_query, a_context)
+							else
+								l_procedure := current_class.named_procedure (a_name)
+								if l_procedure /= Void then
+									a_name.set_seed (l_procedure.first_seed)
+									an_expression.set_procedure (True)
+									check_unqualified_procedure_call_agent_validity (an_expression, l_procedure, a_context)
+								else
+									set_fatal_error
+										-- ISE Eiffel 5.4 reports this error as a VEEN,
+										-- but it is in fact a VPCA-1 (ETL3-4.82-00-00 p.581).
+									error_handler.report_vpca1a_error (current_class, a_name)
 								end
 							end
 						else
-							set_fatal_error
-								-- ISE Eiffel 5.4 reports this error as a VEEN,
-								-- but it is in fact a VPCA-1 (ETL3-4.82-00-00 p.581).
-							error_handler.report_vpca1a_error (current_class, a_name)
+							l_procedure := current_class.named_procedure (a_name)
+							if l_procedure /= Void then
+								a_name.set_seed (l_procedure.first_seed)
+								an_expression.set_procedure (True)
+								check_unqualified_procedure_call_agent_validity (an_expression, l_procedure, a_context)
+							else
+								l_query := current_class.named_query (a_name)
+								if l_query /= Void then
+									a_name.set_seed (l_query.first_seed)
+									an_expression.set_procedure (False)
+									check_unqualified_query_call_agent_validity (an_expression, l_query, a_context)
+								else
+									set_fatal_error
+										-- ISE Eiffel 5.4 reports this error as a VEEN,
+										-- but it is in fact a VPCA-1 (ETL3-4.82-00-00 p.581).
+									error_handler.report_vpca1a_error (current_class, a_name)
+								end
+							end
 						end
 					end
 				end
 			end
-			if not has_fatal_error then
-				if a_feature = Void then
-					current_class.process (universe.interface_checker)
-					if not current_class.interface_checked or else current_class.has_interface_error then
-						set_fatal_error
-					else
-						a_feature := current_class.seeded_feature (a_seed)
-						if a_feature = Void then
-								-- Report internal error: if we got a seed, the
-								-- `a_feature' should not be void.
-							set_fatal_error
-							error_handler.report_giacb_error
+		end
+
+	check_unqualified_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of unqualified query call agent.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			unqualified_call_agent: an_expression.target = Void
+			query_call: not an_expression.is_procedure
+			seeded: an_expression.name.seed /= 0
+			a_context_not_void: a_context /= Void
+		local
+			a_name: ET_FEATURE_NAME
+			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
+			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
+			l_query: ET_QUERY
+			a_type: ET_TYPE
+			a_seed: INTEGER
+			an_open_operands: ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_tuple_type: ET_TUPLE_TYPE
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_class: ET_CLASS
+			had_error: BOOLEAN
+			i, nb: INTEGER
+		do
+			has_fatal_error := False
+			a_name := an_expression.name
+			a_seed := a_name.seed
+			l_query := a_query
+			if l_query /= Void then
+				an_actuals := an_expression.arguments
+				if an_actuals = Void then
+					a_formal_arguments := l_query.arguments
+					if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
+						nb := a_formal_arguments.count
+						create an_implicit_actuals.make_with_capacity (nb)
+						from i := 1 until i > nb loop
+							create an_implicit_actual.make (an_expression, i)
+							an_implicit_actuals.put_last (an_implicit_actual)
+							i := i + 1
 						end
+						an_expression.set_arguments (an_implicit_actuals)
 					end
 				end
-				if a_feature /= Void then
-					check_unqualified_vape_validity (a_name, a_feature)
-					if has_fatal_error then
-						had_error := True
-					end
-					a_formal_arguments := a_feature.arguments
-					if a_formal_arguments /= Void then
-						create an_open_operands.make_with_capacity (a_formal_arguments.count)
-					end
-					an_actuals := an_expression.arguments
-					check_agent_arguments_validity (an_actuals, a_context, a_name, a_feature, Void, an_open_operands)
-					if had_error then
+			else
+					-- We still need to find `l_query'.
+				current_class.process (universe.interface_checker)
+				if not current_class.interface_checked or else current_class.has_interface_error then
+					set_fatal_error
+				else
+					l_query := current_class.seeded_query (a_seed)
+					if l_query = Void then
+							-- Report internal error: if we got a seed, the
+							-- `l_query' should not be void.
 						set_fatal_error
+						error_handler.report_giacb_error
 					end
-					if not has_fatal_error then
-						create a_tuple_type.make (an_open_operands)
-						a_type := a_feature.type
-						if a_type = Void then
-								-- This is a procedure.
-							an_agent_class := universe.procedure_class
-							create a_parameters.make_with_capacity (2)
-							a_parameters.put_first (a_tuple_type)
-							a_parameters.put_first (current_type)
-							create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
-						else
+				end
+			end
+			if l_query /= Void then
+				check_unqualified_vape_validity (a_name, l_query)
+				if has_fatal_error then
+					had_error := True
+				end
+				a_formal_arguments := l_query.arguments
+				if a_formal_arguments /= Void then
+					create an_open_operands.make_with_capacity (a_formal_arguments.count)
+				end
+				an_actuals := an_expression.arguments
+				check_agent_arguments_validity (an_actuals, a_context, a_name, l_query, Void, an_open_operands)
+				if had_error then
+					set_fatal_error
+				end
+				if not has_fatal_error then
+					create a_tuple_type.make (an_open_operands)
+					a_type := l_query.type
 -- TODO: like argument
 -- PREDICATE is not supported in ISE Eiffel and it is a user-define class
 -- at AXA Rosenberg.
---							if
---								universe.predicate_class.is_preparsed and then
---								a_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
---							then
---								an_agent_class := universe.predicate_class
---								create a_parameters.make_with_capacity (2)
---								a_parameters.put_first (a_tuple_type)
---								a_parameters.put_first (current_type)
---								create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---							else
-								an_agent_class := universe.function_class
-								create a_parameters.make_with_capacity (3)
-								a_parameters.put_first (a_type)
-								a_parameters.put_first (a_tuple_type)
-								a_parameters.put_first (current_type)
-								create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---							end
+--					if
+--						universe.predicate_class.is_preparsed and then
+--						a_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
+--					then
+--						an_agent_class := universe.predicate_class
+--						create a_parameters.make_with_capacity (2)
+--						a_parameters.put_first (a_tuple_type)
+--						a_parameters.put_first (current_type)
+--						create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+--					else
+						an_agent_class := universe.function_class
+						create a_parameters.make_with_capacity (3)
+						a_parameters.put_first (a_type)
+						a_parameters.put_first (a_tuple_type)
+						a_parameters.put_first (current_type)
+						create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+--					end
+				end
+				report_unqualified_query_call_agent (an_expression, l_query, an_agent_type, a_context)
+				a_context.force_last (an_agent_type)
+			end
+		end
+
+	check_unqualified_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of unqualified procedure call agent.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			unqualified_call_agent: an_expression.target = Void
+			procedure_call: an_expression.is_procedure
+			seeded: an_expression.name.seed /= 0
+			a_context_not_void: a_context /= Void
+		local
+			a_name: ET_FEATURE_NAME
+			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
+			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
+			l_procedure: ET_PROCEDURE
+			a_seed: INTEGER
+			an_open_operands: ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_tuple_type: ET_TUPLE_TYPE
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_class: ET_CLASS
+			had_error: BOOLEAN
+			i, nb: INTEGER
+		do
+			has_fatal_error := False
+			a_name := an_expression.name
+			a_seed := a_name.seed
+			l_procedure := a_procedure
+			if l_procedure /= Void then
+				an_actuals := an_expression.arguments
+				if an_actuals = Void then
+					a_formal_arguments := l_procedure.arguments
+					if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
+						nb := a_formal_arguments.count
+						create an_implicit_actuals.make_with_capacity (nb)
+						from i := 1 until i > nb loop
+							create an_implicit_actual.make (an_expression, i)
+							an_implicit_actuals.put_last (an_implicit_actual)
+							i := i + 1
 						end
-						report_unqualified_call_agent (an_expression, a_feature, an_agent_type, a_context)
-						a_context.force_last (an_agent_type)
+						an_expression.set_arguments (an_implicit_actuals)
 					end
+				end
+			else
+				current_class.process (universe.interface_checker)
+				if not current_class.interface_checked or else current_class.has_interface_error then
+					set_fatal_error
+				else
+					l_procedure := current_class.seeded_procedure (a_seed)
+					if l_procedure = Void then
+							-- Report internal error: if we got a seed, the
+							-- `l_procedure' should not be void.
+						set_fatal_error
+						error_handler.report_gibar_error
+					end
+				end
+			end
+			if l_procedure /= Void then
+				check_unqualified_vape_validity (a_name, l_procedure)
+				if has_fatal_error then
+					had_error := True
+				end
+				a_formal_arguments := l_procedure.arguments
+				if a_formal_arguments /= Void then
+					create an_open_operands.make_with_capacity (a_formal_arguments.count)
+				end
+				an_actuals := an_expression.arguments
+				check_agent_arguments_validity (an_actuals, a_context, a_name, l_procedure, Void, an_open_operands)
+				if had_error then
+					set_fatal_error
+				end
+				if not has_fatal_error then
+					create a_tuple_type.make (an_open_operands)
+					an_agent_class := universe.procedure_class
+					create a_parameters.make_with_capacity (2)
+					a_parameters.put_first (a_tuple_type)
+					a_parameters.put_first (current_type)
+					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+					report_unqualified_procedure_call_agent (an_expression, l_procedure, an_agent_type, a_context)
+					a_context.force_last (an_agent_type)
 				end
 			end
 		end
@@ -6785,31 +6920,27 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
-			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
-			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
-			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
-			a_feature: ET_FEATURE
-			a_type: ET_TYPE
+			l_query: ET_QUERY
+			l_procedure: ET_PROCEDURE
 			a_seed: INTEGER
 			any_type: ET_CLASS_TYPE
-			a_target_type: ET_TYPE
-			an_open_operands: ET_ACTUAL_PARAMETER_LIST
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_tuple_type: ET_TUPLE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_CLASS
-			had_error: BOOLEAN
-			i, nb: INTEGER
+			l_expected_class: ET_CLASS
 		do
--- TODO: do we need to call `report_current_type_needed'.
 			has_fatal_error := False
+-- TODO: do we need to call `report_current_type_needed'.
+			report_current_type_needed
 			a_name := an_expression.name
 			any_type := universe.any_type
 			a_seed := a_name.seed
-			if a_seed = 0 then
+			if a_seed /= 0 then
+				if an_expression.is_procedure then
+					check_qualified_procedure_call_agent_validity (an_expression, a_target, Void, a_context)
+				else
+					check_qualified_query_call_agent_validity (an_expression, a_target, Void, a_context)
+				end
+			else
 					-- We need to resolve `a_name' in the implementation
 					-- class of `feature_impl' first.
 				a_class_impl := feature_impl.implementation_class
@@ -6830,119 +6961,287 @@ feature {NONE} -- Agent validity
 						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
-							a_feature := a_class.named_feature (a_name)
-							if a_feature /= Void then
-								a_seed := a_feature.first_seed
-								a_name.set_seed (a_seed)
-								an_actuals := an_expression.arguments
-								if an_actuals = Void then
-									a_formal_arguments := a_feature.arguments
-									if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
-										nb := a_formal_arguments.count
-										create an_implicit_actuals.make_with_capacity (nb)
-										from i := 1 until i > nb loop
-											create an_implicit_actual.make (an_expression, i)
-											an_implicit_actuals.put_last (an_implicit_actual)
-											i := i + 1
-										end
-										an_expression.set_arguments (an_implicit_actuals)
+							l_expected_class := current_target_type.base_class (universe)
+							if l_expected_class = universe.function_class then
+								l_query := a_class.named_query (a_name)
+								if l_query /= Void then
+									a_name.set_seed (l_query.first_seed)
+									an_expression.set_procedure (False)
+									check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+								else
+									l_procedure := a_class.named_procedure (a_name)
+									if l_procedure /= Void then
+										a_name.set_seed (l_procedure.first_seed)
+										an_expression.set_procedure (True)
+										check_qualified_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+									else
+										set_fatal_error
+											-- ISE Eiffel 5.4 reports this error as a VEEN,
+											-- but it is in fact a VPCA-1 (ETL3-4.82-00-00 p.581).
+										error_handler.report_vpca1b_error (current_class, a_name, a_class)
 									end
 								end
 							else
-								set_fatal_error
-									-- ISE Eiffel 5.4 reports this error as a VEEN,
-									-- but it is in fact a VPCA-1 (ETL3-4.82-00-00 p.581).
-								error_handler.report_vpca1b_error (current_class, a_name, a_class)
+								l_procedure := a_class.named_procedure (a_name)
+								if l_procedure /= Void then
+									a_name.set_seed (l_procedure.first_seed)
+									an_expression.set_procedure (True)
+									check_qualified_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+								else
+									l_query := a_class.named_query (a_name)
+									if l_query /= Void then
+										a_name.set_seed (l_query.first_seed)
+										an_expression.set_procedure (False)
+										check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+									else
+										set_fatal_error
+											-- ISE Eiffel 5.4 reports this error as a VEEN,
+											-- but it is in fact a VPCA-1 (ETL3-4.82-00-00 p.581).
+										error_handler.report_vpca1b_error (current_class, a_name, a_class)
+									end
+								end
 							end
 						end
 					end
 				end
 			end
-			if not has_fatal_error then
-				if a_feature = Void then
+		end
+
+	check_qualified_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of qualified query call agent.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_target_not_void: a_target /= Void
+			valid_target: a_target = an_expression.target
+			a_query_not_void: a_query /= Void
+			query_call: not an_expression.is_procedure
+			seeded: an_expression.name.seed /= 0
+			a_context_not_void: a_context /= Void
+		local
+			a_name: ET_FEATURE_NAME
+			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
+			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
+			a_class_impl: ET_CLASS
+			a_class: ET_CLASS
+			l_query: ET_QUERY
+			a_type: ET_TYPE
+			a_seed: INTEGER
+			any_type: ET_CLASS_TYPE
+			a_target_type: ET_TYPE
+			an_open_operands: ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_tuple_type: ET_TUPLE_TYPE
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_class: ET_CLASS
+			had_error: BOOLEAN
+			i, nb: INTEGER
+		do
+			has_fatal_error := False
+			a_name := an_expression.name
+			any_type := universe.any_type
+			a_seed := a_name.seed
+			l_query := a_query
+			if l_query /= Void then
+				an_actuals := an_expression.arguments
+				if an_actuals = Void then
+					a_formal_arguments := l_query.arguments
+					if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
+						nb := a_formal_arguments.count
+						create an_implicit_actuals.make_with_capacity (nb)
+						from i := 1 until i > nb loop
+							create an_implicit_actual.make (an_expression, i)
+							an_implicit_actuals.put_last (an_implicit_actual)
+							i := i + 1
+						end
+						an_expression.set_arguments (an_implicit_actuals)
+					end
+				end
+			else
 -- TODO: when `a_target' is an identifier, check whether it is either
 -- a local variable, a formal argument or the name of an attribute.
-					check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
-					if not has_fatal_error then
-						a_class := a_context.base_class (universe)
-						a_class.process (universe.interface_checker)
-						if not a_class.interface_checked or else a_class.has_interface_error then
+				check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
+				if not has_fatal_error then
+					a_class := a_context.base_class (universe)
+					a_class.process (universe.interface_checker)
+					if not a_class.interface_checked or else a_class.has_interface_error then
+						set_fatal_error
+					else
+						l_query := a_class.seeded_query (a_seed)
+						if l_query = Void then
+								-- Report internal error: if we got a seed, the
+								-- `l_query' should not be void.
 							set_fatal_error
-						else
-							a_feature := a_class.seeded_feature (a_seed)
-							if a_feature = Void then
-									-- Report internal error: if we got a seed, the
-									-- `a_feature' should not be void.
-								set_fatal_error
-								error_handler.report_giacc_error
-							end
+							error_handler.report_giacc_error
 						end
 					end
 				end
-				if a_feature /= Void then
-					check
-						a_class_not_void: a_class /= Void
+			end
+			if l_query /= Void then
+				check a_class_not_void: a_class /= Void end
+				if not l_query.is_exported_to (current_class, universe) then
+						-- The feature is not exported to `current_class'.
+					set_fatal_error
+					a_class_impl := feature_impl.implementation_class
+					if current_class = a_class_impl then
+						error_handler.report_vpca2a_error (current_class, a_name, l_query, a_class)
+					else
+						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_query, a_class)
 					end
-					if not a_feature.is_exported_to (current_class, universe) then
-							-- The feature is not exported to `current_class'.
-						set_fatal_error
-						a_class_impl := feature_impl.implementation_class
-						if current_class = a_class_impl then
-							error_handler.report_vpca2a_error (current_class, a_name, a_feature, a_class)
-						else
-							error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, a_feature, a_class)
-						end
-					end
-					had_error := has_fatal_error
-					check_qualified_vape_validity (a_name, a_feature, a_class)
-					if has_fatal_error then
-						had_error := True
-					end
-					a_formal_arguments := a_feature.arguments
-					if a_formal_arguments /= Void then
-						create an_open_operands.make_with_capacity (a_formal_arguments.count)
-					end
-					an_actuals := an_expression.arguments
-					check_agent_arguments_validity (an_actuals, a_context, a_name, a_feature, a_class, an_open_operands)
-					if had_error then
-						set_fatal_error
-					end
-					if not has_fatal_error then
-						a_target_type := tokens.like_current
-						create a_tuple_type.make (an_open_operands)
-						a_type := a_feature.type
-						if a_type = Void then
-								-- This is a procedure.
-							an_agent_class := universe.procedure_class
-							create a_parameters.make_with_capacity (2)
-							a_parameters.put_first (a_tuple_type)
-							a_parameters.put_first (a_target_type)
-							create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
-						else
+				end
+				had_error := has_fatal_error
+				check_qualified_vape_validity (a_name, l_query, a_class)
+				if has_fatal_error then
+					had_error := True
+				end
+				a_formal_arguments := l_query.arguments
+				if a_formal_arguments /= Void then
+					create an_open_operands.make_with_capacity (a_formal_arguments.count)
+				end
+				an_actuals := an_expression.arguments
+				check_agent_arguments_validity (an_actuals, a_context, a_name, l_query, a_class, an_open_operands)
+				if had_error then
+					set_fatal_error
+				end
+				if not has_fatal_error then
+					a_target_type := tokens.like_current
+					create a_tuple_type.make (an_open_operands)
+					a_type := l_query.type
 -- TODO: like argument
 -- PREDICATE is not supported in ISE Eiffel and it is a user-define class
 -- at AXA Rosenberg.
---							if
---								universe.predicate_class.is_preparsed and then
---								a_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
---							then
---								an_agent_class := universe.predicate_class
---								create a_parameters.make_with_capacity (2)
---								a_parameters.put_first (a_tuple_type)
---								a_parameters.put_first (a_target_type)
---								create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---							else
-								an_agent_class := universe.function_class
-								create a_parameters.make_with_capacity (3)
-								a_parameters.put_first (a_type)
-								a_parameters.put_first (a_tuple_type)
-								a_parameters.put_first (a_target_type)
-								create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---							end
+--					if
+--						universe.predicate_class.is_preparsed and then
+--						a_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
+--					then
+--						an_agent_class := universe.predicate_class
+--						create a_parameters.make_with_capacity (2)
+--						a_parameters.put_first (a_tuple_type)
+--						a_parameters.put_first (a_target_type)
+--						create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+--					else
+						an_agent_class := universe.function_class
+						create a_parameters.make_with_capacity (3)
+						a_parameters.put_first (a_type)
+						a_parameters.put_first (a_tuple_type)
+						a_parameters.put_first (a_target_type)
+						create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+--					end
+					report_qualified_query_call_agent (an_expression, l_query, an_agent_type, a_context)
+					a_context.force_last (an_agent_type)
+				end
+			end
+		end
+
+	check_qualified_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of qualified procedure call agent.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_target_not_void: a_target /= Void
+			valid_target: a_target = an_expression.target
+			a_procedure_not_void: a_procedure /= Void
+			procedure_call: an_expression.is_procedure
+			seeded: an_expression.name.seed /= 0
+			a_context_not_void: a_context /= Void
+		local
+			a_name: ET_FEATURE_NAME
+			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
+			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
+			a_class_impl: ET_CLASS
+			a_class: ET_CLASS
+			l_procedure: ET_PROCEDURE
+			a_seed: INTEGER
+			any_type: ET_CLASS_TYPE
+			a_target_type: ET_TYPE
+			an_open_operands: ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_tuple_type: ET_TUPLE_TYPE
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_class: ET_CLASS
+			had_error: BOOLEAN
+			i, nb: INTEGER
+		do
+			has_fatal_error := False
+			a_name := an_expression.name
+			any_type := universe.any_type
+			a_seed := a_name.seed
+			l_procedure := a_procedure
+			if l_procedure /= Void then
+				an_actuals := an_expression.arguments
+				if an_actuals = Void then
+					a_formal_arguments := l_procedure.arguments
+					if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
+						nb := a_formal_arguments.count
+						create an_implicit_actuals.make_with_capacity (nb)
+						from i := 1 until i > nb loop
+							create an_implicit_actual.make (an_expression, i)
+							an_implicit_actuals.put_last (an_implicit_actual)
+							i := i + 1
 						end
-						report_qualified_call_agent (an_expression, a_feature, an_agent_type, a_context)
-						a_context.force_last (an_agent_type)
+						an_expression.set_arguments (an_implicit_actuals)
 					end
+				end
+			else
+-- TODO: when `a_target' is an identifier, check whether it is either
+-- a local variable, a formal argument or the name of an attribute.
+				check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
+				if not has_fatal_error then
+					a_class := a_context.base_class (universe)
+					a_class.process (universe.interface_checker)
+					if not a_class.interface_checked or else a_class.has_interface_error then
+						set_fatal_error
+					else
+						l_procedure := a_class.seeded_procedure (a_seed)
+						if l_procedure = Void then
+								-- Report internal error: if we got a seed, the
+								-- `l_procedure' should not be void.
+							set_fatal_error
+							error_handler.report_giacn_error
+						end
+					end
+				end
+			end
+			if l_procedure /= Void then
+				check a_class_not_void: a_class /= Void end
+				if not l_procedure.is_exported_to (current_class, universe) then
+						-- The feature is not exported to `current_class'.
+					set_fatal_error
+					a_class_impl := feature_impl.implementation_class
+					if current_class = a_class_impl then
+						error_handler.report_vpca2a_error (current_class, a_name, l_procedure, a_class)
+					else
+						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_procedure, a_class)
+					end
+				end
+				had_error := has_fatal_error
+				check_qualified_vape_validity (a_name, l_procedure, a_class)
+				if has_fatal_error then
+					had_error := True
+				end
+				a_formal_arguments := l_procedure.arguments
+				if a_formal_arguments /= Void then
+					create an_open_operands.make_with_capacity (a_formal_arguments.count)
+				end
+				an_actuals := an_expression.arguments
+				check_agent_arguments_validity (an_actuals, a_context, a_name, l_procedure, a_class, an_open_operands)
+				if had_error then
+					set_fatal_error
+				end
+				if not has_fatal_error then
+					a_target_type := tokens.like_current
+					create a_tuple_type.make (an_open_operands)
+					an_agent_class := universe.procedure_class
+					create a_parameters.make_with_capacity (2)
+					a_parameters.put_first (a_tuple_type)
+					a_parameters.put_first (a_target_type)
+					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+					report_qualified_procedure_call_agent (an_expression, l_procedure, an_agent_type, a_context)
+					a_context.force_last (an_agent_type)
 				end
 			end
 		end
@@ -6957,32 +7256,29 @@ feature {NONE} -- Agent validity
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
-			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
-			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
-			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			a_class_impl: ET_CLASS
 			a_class: ET_CLASS
-			a_feature: ET_FEATURE
-			a_result_type: ET_TYPE
+			l_query: ET_QUERY
+			l_procedure: ET_PROCEDURE
 			a_seed: INTEGER
 			a_target_type: ET_TYPE
-			an_open_operands: ET_ACTUAL_PARAMETER_LIST
-			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
-			a_tuple_type: ET_TUPLE_TYPE
-			a_parameters: ET_ACTUAL_PARAMETER_LIST
-			an_agent_type: ET_GENERIC_CLASS_TYPE
-			an_agent_class: ET_CLASS
-			had_error: BOOLEAN
-			i, nb: INTEGER
+			l_expected_class: ET_CLASS
 		do
--- TODO: do we need to call `report_current_type_needed'.
 			has_fatal_error := False
+-- TODO: do we need to call `report_current_type_needed'.
+			report_current_type_needed
 			a_name := an_expression.name
 			a_target_type := a_target.type
 			check_type_validity (a_target_type)
 			if not has_fatal_error then
 				a_seed := a_name.seed
-				if a_seed = 0 then
+				if a_seed /= 0 then
+					if an_expression.is_procedure then
+						check_typed_procedure_call_agent_validity (an_expression, a_target, Void, a_context)
+					else
+						check_typed_query_call_agent_validity (an_expression, a_target, Void, a_context)
+					end
+				else
 						-- We need to resolve `a_name' in the implementation
 						-- class of `feature_impl' first.
 					a_class_impl := feature_impl.implementation_class
@@ -7000,121 +7296,289 @@ feature {NONE} -- Agent validity
 						if not a_class.interface_checked or else a_class.has_interface_error then
 							set_fatal_error
 						else
-							a_feature := a_class.named_feature (a_name)
-							if a_feature /= Void then
-								a_seed := a_feature.first_seed
-								a_name.set_seed (a_seed)
-								an_actuals := an_expression.arguments
-								if an_actuals = Void then
-									a_formal_arguments := a_feature.arguments
-									if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
-										nb := a_formal_arguments.count
-										create an_implicit_actuals.make_with_capacity (nb)
-										from i := 1 until i > nb loop
-											create an_implicit_actual.make (an_expression, i)
-											an_implicit_actuals.put_last (an_implicit_actual)
-											i := i + 1
-										end
-										an_expression.set_arguments (an_implicit_actuals)
+							l_expected_class := current_target_type.base_class (universe)
+							if l_expected_class = universe.function_class then
+								l_query := a_class.named_query (a_name)
+								if l_query /= Void then
+									a_name.set_seed (l_query.first_seed)
+									an_expression.set_procedure (False)
+									check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+								else
+									l_procedure := a_class.named_procedure (a_name)
+									if l_procedure /= Void then
+										a_name.set_seed (l_procedure.first_seed)
+										an_expression.set_procedure (True)
+										check_typed_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+									else
+										set_fatal_error
+											-- ISE Eiffel 5.4 reports this error as a VEEN,
+											-- but it is in fact a VPCA-1 (ETL3-4.82-00-00 p.581).
+										error_handler.report_vpca1b_error (current_class, a_name, a_class)
 									end
 								end
 							else
-								set_fatal_error
-									-- ISE Eiffel 5.4 reports this error as a VEEN,
-									-- but it is in fact a VPCA-1 (ETL3-4.82-00-00 p.581).
-								error_handler.report_vpca1b_error (current_class, a_name, a_class)
+								l_procedure := a_class.named_procedure (a_name)
+								if l_procedure /= Void then
+									a_name.set_seed (l_procedure.first_seed)
+									an_expression.set_procedure (True)
+									check_typed_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+								else
+									l_query := a_class.named_query (a_name)
+									if l_query /= Void then
+										a_name.set_seed (l_query.first_seed)
+										an_expression.set_procedure (False)
+										check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+									else
+										set_fatal_error
+											-- ISE Eiffel 5.4 reports this error as a VEEN,
+											-- but it is in fact a VPCA-1 (ETL3-4.82-00-00 p.581).
+										error_handler.report_vpca1b_error (current_class, a_name, a_class)
+									end
+								end
 							end
 						end
 					end
 				end
+			end
+		end
+
+	check_typed_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of typed query call agent.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_target_not_void: a_target /= Void
+			valid_target: a_target = an_expression.target
+			a_query_not_void: a_query /= Void
+			query_call: not an_expression.is_procedure
+			seeded: an_expression.name.seed /= 0
+			a_context_not_void: a_context /= Void
+		local
+			a_name: ET_FEATURE_NAME
+			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
+			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
+			a_class_impl: ET_CLASS
+			a_class: ET_CLASS
+			l_query: ET_QUERY
+			a_result_type: ET_TYPE
+			a_seed: INTEGER
+			a_target_type: ET_TYPE
+			an_open_operands: ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_tuple_type: ET_TUPLE_TYPE
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_class: ET_CLASS
+			had_error: BOOLEAN
+			i, nb: INTEGER
+		do
+			has_fatal_error := False
+			a_name := an_expression.name
+			a_seed := a_name.seed
+			a_target_type := a_target.type
+			l_query := a_query
+			if l_query /= Void then
+				an_actuals := an_expression.arguments
+				if an_actuals = Void then
+					a_formal_arguments := l_query.arguments
+					if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
+						nb := a_formal_arguments.count
+						create an_implicit_actuals.make_with_capacity (nb)
+						from i := 1 until i > nb loop
+							create an_implicit_actual.make (an_expression, i)
+							an_implicit_actuals.put_last (an_implicit_actual)
+							i := i + 1
+						end
+						an_expression.set_arguments (an_implicit_actuals)
+					end
+				end
+			else
+				a_target_type := resolved_formal_parameters (a_target_type, feature_impl, current_type)
 				if not has_fatal_error then
-					if a_feature = Void then
-						a_target_type := resolved_formal_parameters (a_target_type, feature_impl, current_type)
-						if not has_fatal_error then
-							a_context.force_last (a_target_type)
-							a_class := a_context.base_class (universe)
-							a_class.process (universe.interface_checker)
-							if not a_class.interface_checked or else a_class.has_interface_error then
-								set_fatal_error
-							else
-								a_feature := a_class.seeded_feature (a_seed)
-								if a_feature = Void then
-										-- Report internal error: if we got a seed, the
-										-- `a_feature' should not be void.
-									set_fatal_error
-									error_handler.report_giacd_error
-								end
-							end
+					a_context.force_last (a_target_type)
+					a_class := a_context.base_class (universe)
+					a_class.process (universe.interface_checker)
+					if not a_class.interface_checked or else a_class.has_interface_error then
+						set_fatal_error
+					else
+						l_query := a_class.seeded_query (a_seed)
+						if l_query = Void then
+								-- Report internal error: if we got a seed, the
+								-- `l_query' should not be void.
+							set_fatal_error
+							error_handler.report_giacd_error
 						end
 					end
-					if a_feature /= Void then
-						check
-							a_class_not_void: a_class /= Void
-						end
-						if not a_feature.is_exported_to (current_class, universe) then
-								-- The feature is not exported to `current_class'.
-							set_fatal_error
-							a_class_impl := feature_impl.implementation_class
-							if current_class = a_class_impl then
-								error_handler.report_vpca2a_error (current_class, a_name, a_feature, a_class)
-							else
-								error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, a_feature, a_class)
-							end
-						end
-						had_error := has_fatal_error
-						check_qualified_vape_validity (a_name, a_feature, a_class)
-						if has_fatal_error then
-							had_error := True
-						end
-						a_formal_arguments := a_feature.arguments
-						if a_formal_arguments /= Void then
-							create an_open_operands.make_with_capacity (a_formal_arguments.count + 1)
-						else
-							create an_open_operands.make_with_capacity (1)
-						end
-						an_actuals := an_expression.arguments
-						check_agent_arguments_validity (an_actuals, a_context, a_name, a_feature, a_class, an_open_operands)
-						if had_error then
-							set_fatal_error
-						end
-						if not has_fatal_error then
-							a_target_type := tokens.like_current
-							an_open_operands.put_first (a_target_type)
-							create a_tuple_type.make (an_open_operands)
-							a_result_type := a_feature.type
-							if a_result_type = Void then
-									-- This is a procedure.
-								an_agent_class := universe.procedure_class
-								create a_parameters.make_with_capacity (2)
-								a_parameters.put_first (a_tuple_type)
-								a_parameters.put_first (a_target_type)
-								create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
-							else
+				end
+			end
+			if l_query /= Void then
+				check a_class_not_void: a_class /= Void end
+				if not l_query.is_exported_to (current_class, universe) then
+						-- The feature is not exported to `current_class'.
+					set_fatal_error
+					a_class_impl := feature_impl.implementation_class
+					if current_class = a_class_impl then
+						error_handler.report_vpca2a_error (current_class, a_name, l_query, a_class)
+					else
+						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_query, a_class)
+					end
+				end
+				had_error := has_fatal_error
+				check_qualified_vape_validity (a_name, l_query, a_class)
+				if has_fatal_error then
+					had_error := True
+				end
+				a_formal_arguments := l_query.arguments
+				if a_formal_arguments /= Void then
+					create an_open_operands.make_with_capacity (a_formal_arguments.count + 1)
+				else
+					create an_open_operands.make_with_capacity (1)
+				end
+				an_actuals := an_expression.arguments
+				check_agent_arguments_validity (an_actuals, a_context, a_name, l_query, a_class, an_open_operands)
+				if had_error then
+					set_fatal_error
+				end
+				if not has_fatal_error then
+					a_target_type := tokens.like_current
+					an_open_operands.put_first (a_target_type)
+					create a_tuple_type.make (an_open_operands)
+					a_result_type := l_query.type
 -- TODO: like argument
 -- PREDICATE is not supported in ISE Eiffel and it is a user-define class
 -- at AXA Rosenberg.
---								if
---									universe.predicate_class.is_preparsed and then
---									a_result_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
---								then
---									an_agent_class := universe.predicate_class
---									create a_parameters.make_with_capacity (2)
---									a_parameters.put_first (a_tuple_type)
---									a_parameters.put_first (a_target_type)
---									create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---								else
-									an_agent_class := universe.function_class
-									create a_parameters.make_with_capacity (3)
-									a_parameters.put_first (a_result_type)
-									a_parameters.put_first (a_tuple_type)
-									a_parameters.put_first (a_target_type)
-									create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
---								end
-							end
-							report_qualified_call_agent (an_expression, a_feature, an_agent_type, a_context)
-							a_context.force_last (an_agent_type)
+--					if
+--						universe.predicate_class.is_preparsed and then
+--						a_result_type.same_named_type (universe.boolean_class, current_type, current_type, universe)
+--					then
+--						an_agent_class := universe.predicate_class
+--						create a_parameters.make_with_capacity (2)
+--						a_parameters.put_first (a_tuple_type)
+--						a_parameters.put_first (a_target_type)
+--						create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+--					else
+						an_agent_class := universe.function_class
+						create a_parameters.make_with_capacity (3)
+						a_parameters.put_first (a_result_type)
+						a_parameters.put_first (a_tuple_type)
+						a_parameters.put_first (a_target_type)
+						create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+--					end
+					report_qualified_query_call_agent (an_expression, l_query, an_agent_type, a_context)
+					a_context.force_last (an_agent_type)
+				end
+			end
+		end
+
+	check_typed_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT) is
+			-- Check validity of typed procedure call agent.
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			an_expression_not_void: an_expression /= Void
+			a_target_not_void: a_target /= Void
+			valid_target: a_target = an_expression.target
+			a_procedure_not_void: a_procedure /= Void
+			procedure_call: an_expression.is_procedure
+			seeded: an_expression.name.seed /= 0
+			a_context_not_void: a_context /= Void
+		local
+			a_name: ET_FEATURE_NAME
+			an_actuals: ET_AGENT_ARGUMENT_OPERANDS
+			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
+			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
+			a_class_impl: ET_CLASS
+			a_class: ET_CLASS
+			l_procedure: ET_PROCEDURE
+			a_seed: INTEGER
+			a_target_type: ET_TYPE
+			an_open_operands: ET_ACTUAL_PARAMETER_LIST
+			a_formal_arguments: ET_FORMAL_ARGUMENT_LIST
+			a_tuple_type: ET_TUPLE_TYPE
+			a_parameters: ET_ACTUAL_PARAMETER_LIST
+			an_agent_type: ET_GENERIC_CLASS_TYPE
+			an_agent_class: ET_CLASS
+			had_error: BOOLEAN
+			i, nb: INTEGER
+		do
+			has_fatal_error := False
+			a_name := an_expression.name
+			a_seed := a_name.seed
+			a_target_type := a_target.type
+			l_procedure := a_procedure
+			if l_procedure /= Void then
+				an_actuals := an_expression.arguments
+				if an_actuals = Void then
+					a_formal_arguments := l_procedure.arguments
+					if a_formal_arguments /= Void and then not a_formal_arguments.is_empty then
+						nb := a_formal_arguments.count
+						create an_implicit_actuals.make_with_capacity (nb)
+						from i := 1 until i > nb loop
+							create an_implicit_actual.make (an_expression, i)
+							an_implicit_actuals.put_last (an_implicit_actual)
+							i := i + 1
+						end
+						an_expression.set_arguments (an_implicit_actuals)
+					end
+				end
+			else
+				a_target_type := resolved_formal_parameters (a_target_type, feature_impl, current_type)
+				if not has_fatal_error then
+					a_context.force_last (a_target_type)
+					a_class := a_context.base_class (universe)
+					a_class.process (universe.interface_checker)
+					if not a_class.interface_checked or else a_class.has_interface_error then
+						set_fatal_error
+					else
+						l_procedure := a_class.seeded_procedure (a_seed)
+						if l_procedure = Void then
+								-- Report internal error: if we got a seed, the
+								-- `l_procedure' should not be void.
+							set_fatal_error
+							error_handler.report_giach_error
 						end
 					end
+				end
+			end
+			if l_procedure /= Void then
+				check a_class_not_void: a_class /= Void end
+				if not l_procedure.is_exported_to (current_class, universe) then
+						-- The feature is not exported to `current_class'.
+					set_fatal_error
+					a_class_impl := feature_impl.implementation_class
+					if current_class = a_class_impl then
+						error_handler.report_vpca2a_error (current_class, a_name, l_procedure, a_class)
+					else
+						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_procedure, a_class)
+					end
+				end
+				had_error := has_fatal_error
+				check_qualified_vape_validity (a_name, l_procedure, a_class)
+				if has_fatal_error then
+					had_error := True
+				end
+				a_formal_arguments := l_procedure.arguments
+				if a_formal_arguments /= Void then
+					create an_open_operands.make_with_capacity (a_formal_arguments.count + 1)
+				else
+					create an_open_operands.make_with_capacity (1)
+				end
+				an_actuals := an_expression.arguments
+				check_agent_arguments_validity (an_actuals, a_context, a_name, l_procedure, a_class, an_open_operands)
+				if had_error then
+					set_fatal_error
+				end
+				if not has_fatal_error then
+					a_target_type := tokens.like_current
+					an_open_operands.put_first (a_target_type)
+					create a_tuple_type.make (an_open_operands)
+					an_agent_class := universe.procedure_class
+					create a_parameters.make_with_capacity (2)
+					a_parameters.put_first (a_tuple_type)
+					a_parameters.put_first (a_target_type)
+					create an_agent_type.make (Void, an_agent_class.name, a_parameters, an_agent_class)
+					report_qualified_procedure_call_agent (an_expression, l_procedure, an_agent_type, a_context)
+					a_context.force_last (an_agent_type)
 				end
 			end
 		end
@@ -7668,20 +8132,6 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_qualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that a qualified call (to `a_feature') agent
-			-- of type `a_type' in `a_context' has been processed.
-		require
-			no_error: not has_fatal_error
-			an_expression_not_void: an_expression /= Void
-			qualified_call_agent: an_expression.target /= Void
-			a_feature_not_void: a_feature /= Void
-			a_type_not_void: a_type /= Void
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-		do
-		end
-
 	report_qualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_target_type: ET_TYPE_CONTEXT; a_query: ET_QUERY) is
 			-- Report that a qualified call expression has been processed.
 		require
@@ -7701,6 +8151,34 @@ feature {NONE} -- Event handling
 			qualified_call: an_instruction.is_qualified_call
 			a_target_type_not_void: a_target_type /= Void
 			a_procedure_not_void: a_procedure /= Void
+		do
+		end
+
+	report_qualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that a qualified procedure call (to `a_procedure') agent
+			-- of type `a_type' in `a_context' has been processed.
+		require
+			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.target /= Void
+			a_procedure_not_void: a_procedure /= Void
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+		do
+		end
+
+	report_qualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that a qualified query call (to `a_query') agent
+			-- of type `a_type' in `a_context' has been processed.
+		require
+			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+			qualified_call_agent: an_expression.target /= Void
+			a_query_not_void: a_query /= Void
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
 		do
 		end
 
@@ -7782,20 +8260,6 @@ feature {NONE} -- Event handling
 		do
 		end
 
-	report_unqualified_call_agent (an_expression: ET_CALL_AGENT; a_feature: ET_FEATURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that an unqualified call (to `a_feature') agent
-			-- of type `a_type' in `a_context' has been processed.
-		require
-			no_error: not has_fatal_error
-			an_expression_not_void: an_expression /= Void
-			unqualified_call_agent: an_expression.target = Void
-			a_feature_not_void: a_feature /= Void
-			a_type_not_void: a_type /= Void
-			a_context_not_void: a_context /= Void
-			a_context_valid: a_context.is_valid_context
-		do
-		end
-
 	report_unqualified_call_expression (an_expression: ET_FEATURE_CALL_EXPRESSION; a_query: ET_QUERY) is
 			-- Report that an unqualified call expression has been processed.
 		require
@@ -7813,6 +8277,34 @@ feature {NONE} -- Event handling
 			an_instruction_not_void: an_instruction /= Void
 			unqualified_call: not an_instruction.is_qualified_call
 			a_procedure_not_void: a_procedure /= Void
+		do
+		end
+
+	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that an unqualified procedure call (to `a_query') agent
+			-- of type `a_type' in `a_context' has been processed.
+		require
+			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+			unqualified_call_agent: an_expression.target = Void
+			a_procedure_not_void: a_procedure /= Void
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+		do
+		end
+
+	report_unqualified_query_call_agent (an_expression: ET_CALL_AGENT; a_query: ET_QUERY; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
+			-- Report that an unqualified query call (to `a_query') agent
+			-- of type `a_type' in `a_context' has been processed.
+		require
+			no_error: not has_fatal_error
+			an_expression_not_void: an_expression /= Void
+			unqualified_call_agent: an_expression.target = Void
+			a_query_not_void: a_query /= Void
+			a_type_not_void: a_type /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
 		do
 		end
 

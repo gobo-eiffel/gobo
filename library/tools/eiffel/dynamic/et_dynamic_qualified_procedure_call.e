@@ -1,0 +1,55 @@
+indexing
+
+	description:
+
+		"Eiffel qualified procedure calls at run-time"
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2005, Eric Bezault and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
+
+inherit
+
+	ET_DYNAMIC_QUALIFIED_CALL
+
+create
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_call: like static_call; a_target_type_set: like target_type_set;
+		a_current_feature: like current_feature; a_current_type: like current_type) is
+			-- Create a new dynamic procedure call.
+		require
+			a_call_not_void: a_call /= Void
+			a_call_is_qualified: a_call.is_qualified_call
+			a_target_type_set_not_void: a_target_type_set /= Void
+			a_current_feature_not_void: a_current_feature /= Void
+			a_current_type_not_void: a_current_type /= Void
+		do
+			static_call := a_call
+			target_type_set := a_target_type_set
+			current_feature := a_current_feature
+			current_type := a_current_type
+		ensure
+			static_call_set: static_call = a_call
+			target_type_set_set: target_type_set = a_target_type_set
+			current_feature_set: current_feature = a_current_feature
+			current_type_set: current_type = a_current_type
+		end
+
+feature {ET_DYNAMIC_TYPE_SET_BUILDER} -- Access
+
+	seeded_dynamic_feature (a_seed: INTEGER; a_type: ET_DYNAMIC_TYPE; a_system: ET_SYSTEM): ET_DYNAMIC_FEATURE is
+			-- Run-time procedure in `a_type' corresponding to current call with seed `a_seed';
+			-- Void if no such procedure
+		do
+			Result := a_type.seeded_dynamic_procedure (a_seed, a_system)
+		end
+
+end

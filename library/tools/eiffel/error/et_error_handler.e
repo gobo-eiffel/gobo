@@ -10984,26 +10984,25 @@ feature -- Reporting
 
 -- Error codes not used:
 
-	-- report_giabv_error
+	-- report_gibax_error
+	-- report_gibga_error
+	-- report_gibgb_error
+	-- report_gibfr_error
+	-- report_gibhk_error
 	-- report_giaaj_error
-	-- report_giaaz_error
-	-- report_giabr_error
-	-- report_giady_error
-	-- report_giaed_error
-	-- report_gibar_error
-	-- report_gibeh_error
-	-- report_gibei_error
-	-- report_gibdp_error
-	-- report_gibdr_error
-	-- report_giacn_error
-	-- report_giach_error
-	-- report_gibjq_error
-	-- report_gibjr_error
-	-- report_gibjs_error
-	-- report_gibjt_error
+	-- report_gibgi_error
+	-- report_gibgn_error
+	-- report_gibgj_error
+	-- report_gibgk_error
+	-- report_gibgm_error
+	-- report_giabv_error
 	-- report_gibju_error
 	-- report_gibjv_error
 	-- report_gibjw_error
+	-- report_gibhy_error
+	-- report_gibhx_error
+	-- report_gibgl_error
+	-- report_gibfn_error
 	-- report_gibjx_error
 	-- report_gibjy_error
 	-- report_gibjz_error
