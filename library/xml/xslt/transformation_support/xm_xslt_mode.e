@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant.
 		do
-			create rule_dictionary.make (1, Number_of_buckets + Namespace_node + 1)
+			create rule_dictionary.make (1, Number_of_buckets + Document_node + 1)
 		end
 
 	make_with_copy (other: XM_XSLT_MODE) is
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			a_rule, a_new_rule: XM_XSLT_RULE
 			a_rule_dictionary: ARRAY [XM_XSLT_RULE]
 		do
-			create rule_dictionary.make (1, Number_of_buckets + Namespace_node + 1)
+			create rule_dictionary.make (1, Number_of_buckets + Document_node + 1)
 			from
 				a_rule_dictionary := other.rule_dictionary
 				an_index := 1
@@ -439,7 +439,7 @@ feature {NONE} -- Implementation
 				if a_fingerprint = - 1 then
 					Result := Any_node + 1 -- the generic list
 				else
-					Result := Namespace_node + (a_fingerprint \\ Number_of_buckets) + 1
+					Result := Document_node + (a_fingerprint \\ Number_of_buckets) + 1
 				end
 			else
 				Result := a_node_kind + 1

@@ -222,6 +222,7 @@ feature -- Element change
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_trace_wrapper: XM_XSLT_TRACE_INSTRUCTION
+			a_context_item_type: XM_XPATH_ITEM_TYPE
 		do
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
 			if last_generated_expression = Void then
@@ -246,12 +247,18 @@ feature -- Element change
 				end
 			end
 			if not any_compile_errors then
-				a_content.check_static_type (static_context)
+				a_context_item_type := any_item
+				if template_fingerprint = -1 then
+
+					-- Template can't be called by name, so the context item will match the match pattern
+					a_context_item_type := match.node_test
+				end
+				a_content.check_static_type (static_context, a_context_item_type)
 				if a_content.is_error then
 					report_compile_error (a_content.error_value)
 				else
 					if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
-					a_content.optimize (static_context)
+					a_content.optimize (static_context, a_context_item_type)
 					if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
 					if configuration.is_tracing then
 						create a_trace_wrapper.make (a_content, an_executable, Current)

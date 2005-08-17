@@ -922,7 +922,7 @@ feature -- Status setting
 
 				an_expression.as_computed_expression.set_parent (Current)
 			end
-			an_expression.check_static_type (static_context)
+			an_expression.check_static_type (static_context, any_item)
 			if an_expression.was_expression_replaced then
 				an_analyzed_expression := an_expression.replacement_expression
 				was_replaced := True
@@ -986,7 +986,7 @@ feature -- Status setting
 			pattern_not_void: a_pattern /= Void
 			valid_name: a_name /= Void and then a_name.count > 0
 		do
-			a_pattern.type_check (static_context)
+			a_pattern.type_check (static_context, any_node_test)
 			if a_pattern.is_error then
 				report_compile_error (a_pattern.error_value)
 			end
@@ -1479,7 +1479,7 @@ feature -- Element change
 					report_compile_error (expression_factory.parsed_error_value)
 				else
 					an_expression := expression_factory.parsed_expression
-					an_expression.check_static_type (a_static_context)
+					an_expression.check_static_type (a_static_context, any_item)
 					if an_expression.is_error then
 						report_compile_error (an_expression.error_value)
 					else

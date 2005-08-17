@@ -59,11 +59,23 @@ feature -- Access
 
 	name_code: INTEGER
 			-- Name code this node - used in displaying names
-	
+
 	base_uri: STRING is
 			-- Base URI
+		local
+			an_initial_system_id: STRING
+			a_parent: XM_XPATH_COMPOSITE_NODE
 		do
-			Result := system_id
+			an_initial_system_id := system_id
+			a_parent := parent
+			if a_parent = Void then
+				Result := an_initial_system_id
+			elseif
+				STRING_.same_string (a_parent.system_id, an_initial_system_id) then
+				Result := a_parent.base_uri
+			else
+				Result := an_initial_system_id
+			end
 		end
 
 feature -- Status setting

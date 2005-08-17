@@ -210,8 +210,6 @@ feature -- Access
 				Result := shared_name_pool.display_name_from_name_code (name_code)
 			when Element_node then
 				Result := shared_name_pool.display_name_from_name_code (name_code)
-			when Namespace_node then
-				Result := local_part
 			when Processing_instruction_node then
 				Result := local_part
 			else
@@ -559,7 +557,7 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void
 		do
-			if node_type = Document_node or else node_type = Attribute_node or else node_type = Namespace_node then
+			if node_type = Document_node or else node_type = Attribute_node then
 				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create  {XM_XPATH_TREE_FOLLOWING_SIBLING_ENUMERATION} Result.make (Current, a_node_test)
@@ -606,7 +604,7 @@ feature {NONE} -- Implementation
 		require
 			node_test_not_void: a_node_test /= Void
 		do	
-			if node_type = Document_node or else node_type = Attribute_node or else node_type = Namespace_node then
+			if node_type = Document_node or else node_type = Attribute_node then
 				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			else
 				create  {XM_XPATH_TREE_PRECEDING_SIBLING_ENUMERATION} Result.make (Current, a_node_test)

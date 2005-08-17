@@ -125,8 +125,6 @@ feature -- Evaluation
 					a_receiver.notify_processing_instruction (a_node.node_name, a_node.string_value, 0)
 				when Comment_node then
 					a_receiver.notify_comment (a_node.string_value, 0)
-				when Namespace_node then
-					a_node.copy_node (a_receiver, No_namespaces, False)
 				when Document_node then
 					a_document ?= a_node
 					copy_document (a_document, a_new_context, a_transformer, a_receiver)

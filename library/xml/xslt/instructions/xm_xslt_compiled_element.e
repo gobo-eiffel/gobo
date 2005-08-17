@@ -206,14 +206,14 @@ feature -- Optimization
 			Precursor
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_single_string_type: XM_XPATH_SEQUENCE_TYPE
 		do
-			element_name.check_static_type (a_context)
+			element_name.check_static_type (a_context, a_context_item_type)
 			if element_name.was_expression_replaced then
 				element_name := element_name.replacement_expression
 			end
@@ -229,7 +229,7 @@ feature -- Optimization
 				adopt_child_expression (element_name)
 			end
 			if namespace /= Void then
-				namespace.check_static_type (a_context)
+				namespace.check_static_type (a_context, a_context_item_type)
 				if namespace.was_expression_replaced then
 					namespace := namespace.replacement_expression
 				end
@@ -243,7 +243,7 @@ feature -- Optimization
 					adopt_child_expression (namespace)
 				end			
 			end
-			Precursor (a_context)
+			Precursor (a_context, a_context_item_type)
 		end
 
 	promote_instruction (an_offer: XM_XPATH_PROMOTION_OFFER) is

@@ -142,7 +142,7 @@ feature -- Evaluation
 				end
 			when Text_node, Attribute_node then
 				a_context.current_receiver.notify_characters (a_node.string_value, 0)
-			when Comment_node, Processing_instruction_node, Namespace_node then
+			when Comment_node, Processing_instruction_node then
 
 				-- No action
 

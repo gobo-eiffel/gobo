@@ -55,10 +55,22 @@ feature -- Access
 			Result := tree.comment_buffer.substring (start + 1, start + length)
 		end
 
-	base_uri: STRING is
+base_uri: STRING is
 			-- Base URI
+		local
+			an_initial_system_id: STRING
+			a_parent: XM_XPATH_COMPOSITE_NODE
 		do
-			Result := tree.system_id_for_node (node_number)
+			an_initial_system_id := tree.system_id_for_node (node_number)
+			a_parent := parent
+			if a_parent = Void then
+				Result := an_initial_system_id
+			elseif
+				STRING_.same_string (a_parent.system_id, an_initial_system_id) then
+				Result := a_parent.base_uri
+			else
+				Result := an_initial_system_id
+			end
 		end
 
 feature -- Duplication

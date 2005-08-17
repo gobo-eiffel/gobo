@@ -65,7 +65,7 @@ feature -- Optimization
 			end
 		end
 
-	check_with_params (some_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_with_params (some_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type checking of all in  `some_parameters'.
 		require
 			parameter_list_not_void: some_parameters /= Void
@@ -83,7 +83,7 @@ feature -- Optimization
 			loop
 				an_expression := a_cursor.item.select_expression
 				if an_expression /= Void then
-					an_expression.check_static_type (a_context)
+					an_expression.check_static_type (a_context, a_context_item_type)
 					if an_expression.was_expression_replaced then an_expression := an_expression.replacement_expression end
 					a_cursor.item.set_selector (an_expression)
 				end
@@ -91,7 +91,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize_with_params (some_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize_with_params (some_parameters: DS_ARRAYED_LIST [XM_XSLT_COMPILED_WITH_PARAM]; a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimize all in  `some_parameters'.
 		require
 			parameter_list_not_void: some_parameters /= Void
@@ -109,7 +109,7 @@ feature -- Optimization
 			loop
 				an_expression := a_cursor.item.select_expression
 				if an_expression /= Void then
-					an_expression.optimize (a_context)
+					an_expression.optimize (a_context, a_context_item_type)
 					if an_expression.was_expression_replaced then an_expression := an_expression.replacement_expression end
 					a_cursor.item.set_selector (an_expression)
 				end

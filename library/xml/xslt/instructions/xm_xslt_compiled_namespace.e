@@ -20,9 +20,6 @@ inherit
 			compute_dependencies, sub_expressions, simplify
 		end
 
-	XM_XPATH_SHARED_NODE_KIND_TESTS
-		export {NONE} all end
-
 	XM_XPATH_RECEIVER_OPTIONS
 		export {NONE} all end
 
@@ -58,7 +55,12 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, when known
 		do
-			Result := namespace_node_kind_test
+
+			-- The following is hardly conducive to good optimization,
+			--  but since removing namespace nodes from our data model,
+			--  we have little choice:
+
+			Result := any_item
 		end
 
 	
@@ -93,7 +95,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type checking
 		do
 			-- Do nothing.

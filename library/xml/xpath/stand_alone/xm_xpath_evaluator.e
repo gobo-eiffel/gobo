@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
 
+	XM_XPATH_SHARED_ANY_ITEM_TYPE
+
 	XM_STRING_MODE
 
 	XM_XPATH_TOKENS
@@ -189,7 +191,7 @@ feature -- Evaluation
 				internal_error_value := expression_factory.parsed_error_value
 			else
 				an_expression := expression_factory.parsed_expression
-				an_expression.check_static_type (static_context)
+				an_expression.check_static_type (static_context, any_item)
 				if an_expression.is_error then
 					is_error := True
 					internal_error_value := an_expression.error_value
@@ -204,7 +206,10 @@ feature -- Evaluation
 						is_error := True
 						internal_error_value := an_expression.error_value
 					else
-						an_expression.optimize (static_context)
+						debug ("XPath evaluator")
+							an_expression.display (1)
+						end
+						an_expression.optimize (static_context, any_item)
 						if an_expression.is_error then
 							is_error := True
 							internal_error_value := an_expression.error_value

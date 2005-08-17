@@ -125,13 +125,13 @@ feature -- Element change
 						last_generated_expression := last_generated_expression.replacement_expression
 					end
 					if not last_generated_expression.is_error then
-						last_generated_expression.check_static_type (static_context)
+						last_generated_expression.check_static_type (static_context, any_item)
 						if last_generated_expression.was_expression_replaced then
 							last_generated_expression := last_generated_expression.replacement_expression
 						end
 					end
 					if not last_generated_expression.is_error then
-						last_generated_expression.optimize (static_context)
+						last_generated_expression.optimize (static_context, any_item)
 						if last_generated_expression.was_expression_replaced then
 							last_generated_expression := last_generated_expression.replacement_expression
 						end

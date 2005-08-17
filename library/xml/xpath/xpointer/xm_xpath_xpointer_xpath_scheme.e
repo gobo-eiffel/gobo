@@ -16,6 +16,8 @@ inherit
 
 	XM_XPATH_XPOINTER_SCHEME
 
+	XM_XPATH_SHARED_ANY_ITEM_TYPE
+
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
@@ -97,7 +99,7 @@ feature -- Element change
 				create {XM_XPATH_INVALID_VALUE} value.make (expression_factory.parsed_error_value)
 			else
 				an_expression := expression_factory.parsed_expression
-				an_expression.check_static_type (a_static_context)
+				an_expression.check_static_type (a_static_context, any_item)
 				if an_expression.is_error then
 					is_error := True
 					create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
@@ -109,7 +111,7 @@ feature -- Element change
 						is_error := True
 						create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)
 					else
-						an_expression.optimize (a_static_context)
+						an_expression.optimize (a_static_context, any_item)
 						if an_expression.is_error then
 							is_error := True
 							create {XM_XPATH_INVALID_VALUE} value.make (an_expression.error_value)

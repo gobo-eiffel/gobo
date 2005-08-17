@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE master [
+<!ENTITY a SYSTEM "base_uri_a.xml">
+]>
+<master>
+  <element>
+    &a;
+  </element>
+  <element xml:base="urn:base-uri:element2">
+    &a;
+    <nested-element/>
+  </element>
+</master>

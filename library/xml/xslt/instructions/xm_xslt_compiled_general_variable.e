@@ -116,11 +116,11 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 				if select_expression /= Void then
-				select_expression.check_static_type (a_context)
+				select_expression.check_static_type (a_context, a_context_item_type)
 				if select_expression.was_expression_replaced then
 					set_selector (select_expression.replacement_expression)
 				end
@@ -129,11 +129,11 @@ feature -- Optimization
 			if not is_error then check_against_required_type (a_context) end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			if select_expression /= Void then
-				select_expression.optimize (a_context)
+				select_expression.optimize (a_context, a_context_item_type)
 				if select_expression.was_expression_replaced then
 					set_selector (select_expression.replacement_expression)
 				end

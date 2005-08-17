@@ -96,17 +96,17 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			select_expression.check_static_type (a_context)
+			select_expression.check_static_type (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
 			end
 			if terminate /= Void then
-				terminate.check_static_type (a_context)
+				terminate.check_static_type (a_context, a_context_item_type)
 				if terminate.was_expression_replaced then
 					terminate := terminate.replacement_expression
 					adopt_child_expression (terminate)
@@ -114,17 +114,17 @@ feature -- Optimization
 			end
 		end		
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			select_expression.optimize (a_context)
+			select_expression.optimize (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
 			end
 			if terminate /= Void then
-				terminate.optimize (a_context)
+				terminate.optimize (a_context, a_context_item_type)
 				if terminate.was_expression_replaced then
 					terminate := terminate.replacement_expression
 					adopt_child_expression (terminate)

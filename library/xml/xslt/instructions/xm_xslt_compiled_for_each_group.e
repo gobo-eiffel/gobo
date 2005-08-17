@@ -254,13 +254,13 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			mark_unreplaced
-			select_expression.check_static_type (a_context)
+			select_expression.check_static_type (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
@@ -269,7 +269,7 @@ feature -- Optimization
 			if an_empty_sequence /= Void then
 				set_replacement (an_empty_sequence) -- NOP
 			else
-				action.check_static_type (a_context)
+				action.check_static_type (a_context, select_expression.item_type)
 				if action.was_expression_replaced then
 					action := action.replacement_expression
 					adopt_child_expression (action)
@@ -279,7 +279,7 @@ feature -- Optimization
 					set_replacement (an_empty_sequence) -- NOP
 				else
 					if key_expression /= Void then
-						key_expression.check_static_type (a_context)
+						key_expression.check_static_type (a_context, select_expression.item_type)
 						if key_expression.was_expression_replaced then
 							key_expression := key_expression.replacement_expression
 							adopt_child_expression (key_expression)
@@ -289,13 +289,13 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			mark_unreplaced
-			select_expression.optimize (a_context)
+			select_expression.optimize (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
@@ -304,7 +304,7 @@ feature -- Optimization
 			if an_empty_sequence /= Void then
 				set_replacement (an_empty_sequence) -- NOP
 			else
-				action.optimize (a_context)
+				action.optimize (a_context, select_expression.item_type)
 				if action.was_expression_replaced then
 					action := action.replacement_expression
 					adopt_child_expression (action)
@@ -314,7 +314,7 @@ feature -- Optimization
 					set_replacement (an_empty_sequence) -- NOP
 				else
 					if key_expression /= Void then
-						key_expression.optimize (a_context)
+						key_expression.optimize (a_context, select_expression.item_type)
 						if key_expression.was_expression_replaced then
 							key_expression := key_expression.replacement_expression
 							adopt_child_expression (key_expression)

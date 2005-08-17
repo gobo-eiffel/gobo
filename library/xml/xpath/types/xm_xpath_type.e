@@ -51,7 +51,6 @@ feature -- Access
 	Processing_instruction_node: INTEGER is 7
 	Comment_node: INTEGER is 8
 	Document_node: INTEGER is 9
-	Namespace_node: INTEGER is 13
 
 	Any_node: INTEGER is 0
 
@@ -64,6 +63,32 @@ feature -- Access
 	Disjoint_types: INTEGER is 5
 			-- Type realtionships
 
+	node_kind_description (a_node_kind: INTEGER): STRING is
+			-- Node test description
+		require
+			valid_node_type: is_node_type (a_node_kind)
+		do
+			inspect
+				a_node_kind
+			when Document_node then
+				Result := "document-node()"
+			when Element_node then
+				Result := "element()"
+			when Attribute_node then
+				Result := "attribute()"
+			when Comment_node then
+				Result := "comment()"
+			when Text_node then
+				Result := "text()"
+			when Processing_instruction_node then
+				Result := "processing-instruction()"
+			else
+				Result := "Unexpected node kind"
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+				
 	common_super_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is
 			-- Common supertype of two given types
 		require
@@ -110,8 +135,6 @@ feature -- Access
 				Result := "comment"
 			when Attribute_node then
 				Result := "attribute"
-			when Namespace_node then
-				Result := "namespace"
 			when Processing_instruction_node then
 				Result := "processing-instruction"
 			when Any_node then
@@ -148,7 +171,6 @@ feature -- Status report
 				or else a_type = Processing_instruction_node
 				or else a_type = Comment_node
 				or else a_type = Document_node
-				or else a_type = Namespace_node
 				or else a_type = Any_node
 		end
 

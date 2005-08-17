@@ -73,10 +73,10 @@ feature -- Access
 
 feature -- Optimization
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Type-check the pattern;
 		do
-			key_expression.check_static_type (a_context)
+			key_expression.check_static_type (a_context, a_context_item_type)
 			if key_expression.was_expression_replaced then
 				key_expression := key_expression.replacement_expression
 			end

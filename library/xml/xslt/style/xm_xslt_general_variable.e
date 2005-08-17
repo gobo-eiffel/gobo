@@ -372,12 +372,12 @@ feature {NONE} -- Implementation
 				if an_expression.is_error then
 					report_compile_error (an_expression.error_value)
 				else
-					an_expression.check_static_type (static_context)
+					an_expression.check_static_type (static_context, any_node_test)
 					if  not an_expression.is_error and then an_expression.was_expression_replaced then
 						an_expression := an_expression.replacement_expression
 					end
 					if not an_expression.is_error then
-						an_expression.optimize (static_context)
+						an_expression.optimize (static_context, any_node_test)
 					end
 					if  not an_expression.is_error and then an_expression.was_expression_replaced then
 						an_expression := an_expression.replacement_expression

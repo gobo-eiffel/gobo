@@ -89,6 +89,14 @@ feature -- Access
 			local_name_not_void: Result /= Void
 		end
 
+	optional_prefix: STRING is
+			-- Optional prefix of `Current'
+		do
+			Result := shared_name_pool.prefix_from_name_code (name_code)
+		ensure
+			prefix_not_void: Result /= Void
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is

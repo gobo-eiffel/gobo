@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			a_prefix_code: INTEGER --_16
 			decided: BOOLEAN
 		do
-			if a_namespace_code /= xml_namespace_code then
+			if a_namespace_code /= Xml_namespace_code then
 				a_prefix_code := prefix_code_from_namespace_code (a_namespace_code)
 
 				-- First cancel any pending undeclaration of this namespace prefix
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 
 				-- we need it unless it's a redundant xmlns=""
 
-				if not decided then Result := a_namespace_code /= null_namespace_code end
+				if not decided then Result := a_namespace_code /= Null_namespace_code end
 			end
 		end
 

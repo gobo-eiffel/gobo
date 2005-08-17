@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 				root_not_void: starting_node.document_root /= Void and then starting_node.document_root.is_document
 			end
 			root := starting_node.document_root.as_tree_node.as_tree_document
-			if a_starting_node.node_type = Attribute_node or else a_starting_node.node_type = Namespace_node then
+			if a_starting_node.node_type = Attribute_node then
 				next_node := starting_node.parent.next_node_in_document_order (root)
 			else
 				from

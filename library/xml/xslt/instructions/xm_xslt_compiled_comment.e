@@ -63,7 +63,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type checking
 		do
 			-- do nothing

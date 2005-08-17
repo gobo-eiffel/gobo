@@ -91,22 +91,22 @@ feature -- Optimization
 			if separator_expression.was_expression_replaced then separator_expression := separator_expression.replacement_expression end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			select_expression.check_static_type (a_context)
+			select_expression.check_static_type (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
-			separator_expression.check_static_type (a_context)
+			separator_expression.check_static_type (a_context, a_context_item_type)
 			if separator_expression.was_expression_replaced then separator_expression := separator_expression.replacement_expression end
 			if not select_expression.cardinality_allows_many then is_singleton := True	end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			select_expression.optimize (a_context)
+			select_expression.optimize (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression end
-			separator_expression.optimize (a_context)
+			separator_expression.optimize (a_context, a_context_item_type)
 			if separator_expression.was_expression_replaced then separator_expression := separator_expression.replacement_expression end
 		end	
 

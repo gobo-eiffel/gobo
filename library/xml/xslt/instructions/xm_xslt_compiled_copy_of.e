@@ -103,20 +103,20 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			select_expression.check_static_type (a_context)
+			select_expression.check_static_type (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			select_expression.optimize (a_context)
+			select_expression.optimize (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then
 				select_expression := select_expression.replacement_expression
 				adopt_child_expression (select_expression)
@@ -239,8 +239,6 @@ feature {NONE} -- Implementation
 				a_receiver.notify_processing_instruction (a_node.node_name, a_node.string_value, 0)
 			when Comment_node then
 				a_receiver.notify_comment (a_node.string_value, 0)
-			when Namespace_node then
-				a_node.copy_node (a_receiver, No_namespaces, False)
 			when Document_node then
 				a_validator := a_context.transformer.configuration.document_validator (a_receiver, a_node.base_uri, Validation_strip)
 				if not a_validator.is_document_started then a_validator.start_document end

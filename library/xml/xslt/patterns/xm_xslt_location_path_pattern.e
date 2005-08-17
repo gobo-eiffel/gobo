@@ -186,7 +186,7 @@ feature -- Optimization
 			end
 		end
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Type-check the pattern;
 		local
 			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
@@ -197,10 +197,13 @@ feature -- Optimization
 			-- Analyze each component of the pattern
 
 			if parent_pattern /= Void then
-				parent_pattern.type_check (a_context)
+				parent_pattern.type_check (a_context, a_context_item_type)
 				if parent_pattern.is_error then set_error_value (parent_pattern.error_value) end
+
+				-- TODO: Check that this step in the pattern makes sense in the context of the parent step
+	
 			elseif ancestor_pattern /= Void then
-				ancestor_pattern.type_check (a_context)
+				ancestor_pattern.type_check (a_context, a_context_item_type)
 				if ancestor_pattern.is_error then set_error_value (ancestor_pattern.error_value) end
 			end
 
@@ -213,7 +216,7 @@ feature -- Optimization
 				until
 					is_error or else a_cursor.after
 				loop
-					a_cursor.item.check_static_type (a_context)
+					a_cursor.item.check_static_type (a_context, node_test)
 					if a_cursor.item.was_expression_replaced then
 						a_filter_expression := a_cursor.item.replacement_expression
 					else
@@ -270,7 +273,7 @@ feature -- Optimization
 				
 				if is_positional then
 					an_expression := make_equivalent_expression
-					an_expression.check_static_type (a_context)
+					an_expression.check_static_type (a_context, a_context_item_type)
 					if an_expression.was_expression_replaced then
 						set_equivalent_expression (an_expression.replacement_expression)
 					else

@@ -20,6 +20,8 @@ inherit
 		end
 
 	XM_XPATH_SHARED_EXPRESSION_FACTORY
+
+	XM_XPATH_SHARED_ANY_ITEM_TYPE
 	
 	XM_XPATH_TYPE
 
@@ -57,12 +59,12 @@ feature -- Test
 				an_expression := expression_factory.parsed_expression
 			end
 			assert ("Parse sucessful", an_expression /= Void)
-			an_expression.check_static_type (a_context)
+			an_expression.check_static_type (a_context, any_item)
 			if an_expression.was_expression_replaced then
 				an_expression := an_expression.replacement_expression
 			end
 			assert ("Type checking sucessfull", not an_expression.is_error)
-			an_expression.optimize (a_context)
+			an_expression.optimize (a_context, any_item)
 			if an_expression.was_expression_replaced then
 				an_expression := an_expression.replacement_expression
 			end

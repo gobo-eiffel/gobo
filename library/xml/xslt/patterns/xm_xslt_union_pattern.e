@@ -79,16 +79,16 @@ feature -- Analysis
 			create {XM_XSLT_UNION_PATTERN} Result.make (static_context, left_hand_side.simplified_pattern, right_hand_side.simplified_pattern)
 		end
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Type-check the pattern;
 			-- Default implementation does nothing. This is only needed for patterns that contain
 			-- variable references or function calls.
 		do
-			left_hand_side.type_check (a_context)
+			left_hand_side.type_check (a_context, a_context_item_type)
 			if left_hand_side.is_error then
 				set_error_value (left_hand_side.error_value)
 			else
-				right_hand_side.type_check (a_context)
+				right_hand_side.type_check (a_context, a_context_item_type)
 				if right_hand_side.is_error then
 					set_error_value (right_hand_side.error_value)
 				end

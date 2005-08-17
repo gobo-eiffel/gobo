@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 
 				a_node_kind := a_node_test.node_kind
 				if a_principal_node_type = Element_node and then
-					(a_node_kind = Attribute_node or else a_node_kind = Namespace_node) then
+					(a_node_kind = Attribute_node) then
 					a_node_test := xslt_empty_item
 				elseif a_principal_node_type = Attribute_node and then
 					(a_node_kind = Comment_node or else a_node_kind = Text_node

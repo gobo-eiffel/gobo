@@ -87,14 +87,14 @@ feature -- Status setting
 
 feature -- Optimization
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type checking
 		local
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_required_type: XM_XPATH_SEQUENCE_TYPE
 		do
-			name.check_static_type (a_context)
+			name.check_static_type (a_context, a_context_item_type)
 			if name.was_expression_replaced then
 				name := name.replacement_expression
 			end

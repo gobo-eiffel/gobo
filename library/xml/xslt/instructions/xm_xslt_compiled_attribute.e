@@ -138,14 +138,14 @@ feature -- Optimization
 			Precursor
 		end
 
-	type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
+	type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type checking
 		local
 			a_role: XM_XPATH_ROLE_LOCATOR
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			a_single_string_type: XM_XPATH_SEQUENCE_TYPE
 		do
-			attribute_name.check_static_type (a_context)
+			attribute_name.check_static_type (a_context, a_context_item_type)
 			if attribute_name.was_expression_replaced then set_attribute_name (attribute_name.replacement_expression) end
 			if attribute_name.is_error then set_last_error (attribute_name.error_value) end
 			create a_role.make (Instruction_role, "xsl:attribute/name", 1, Xpath_errors_uri, "XPTY0004")
@@ -158,7 +158,7 @@ feature -- Optimization
 				set_attribute_name (a_type_checker.checked_expression)
 			end
 			if namespace /= Void then
-				namespace.check_static_type (a_context)
+				namespace.check_static_type (a_context, a_context_item_type)
 				if namespace.was_expression_replaced then set_namespace (namespace.replacement_expression) end
 				if namespace.is_error then set_last_error (namespace.error_value) end
 				create a_role.make (Instruction_role, "xsl:attribute/namespace", 1, Xpath_errors_uri, "XPTY0004")

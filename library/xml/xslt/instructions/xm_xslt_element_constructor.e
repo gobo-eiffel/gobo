@@ -76,20 +76,20 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			content.check_static_type (a_context)
+			content.check_static_type (a_context, a_context_item_type)
 			if content.was_expression_replaced then
 				content := content.replacement_expression
 				adopt_child_expression (content)
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			content.optimize (a_context)
+			content.optimize (a_context, a_context_item_type)
 			if content.was_expression_replaced then
 				content := content.replacement_expression
 				adopt_child_expression (content)

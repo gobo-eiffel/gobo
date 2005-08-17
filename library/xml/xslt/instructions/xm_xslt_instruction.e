@@ -19,8 +19,10 @@ inherit
 			simplify
 		redefine
 			promote, native_implementations, evaluate_item, create_iterator, compute_special_properties,
-			processed_eager_evaluation, process, system_id_from_module_number
+			processed_eager_evaluation, process, system_id_from_module_number, is_tail_call, as_tail_call
 		end
+
+	XM_XPATH_TAIL_CALL
 
 	XM_XPATH_LOCATOR
 
@@ -115,13 +117,16 @@ feature -- Access
 		
 feature -- Status report
 
-	last_tail_call: XM_XPATH_TAIL_CALL
-			-- Residue from last call to `process_leaving_tail'
-
 	creates_new_nodes: BOOLEAN is
 			-- Can `Current' create new nodes?
 		do
 			Result := False
+		end
+
+	is_tail_call: BOOLEAN is
+			-- Is `Current' an XPath tail call?
+		do
+			Result := True
 		end
 
 feature -- Optimization
@@ -285,6 +290,14 @@ feature -- Element change
 			executable := an_executable
 		ensure
 			set: executable = an_executable
+		end
+
+feature -- Conversion
+
+	as_tail_call: XM_XPATH_TAIL_CALL is
+			-- `Current' seen as an XPath tail call
+		do
+			Result := Current
 		end
 
 feature {XM_XSLT_INSTRUCTION} -- local

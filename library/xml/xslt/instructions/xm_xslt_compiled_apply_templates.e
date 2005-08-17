@@ -152,20 +152,28 @@ feature -- Optimization
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			check_with_params (actual_parameters, a_context)
-			check_with_params (tunnel_parameters, a_context)
+			check_with_params (actual_parameters, a_context, a_context_item_type)
+			check_with_params (tunnel_parameters, a_context, a_context_item_type)
+			select_expression.check_static_type (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
 			if select_expression.is_empty_sequence then set_replacement (select_expression.as_empty_sequence) end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			optimize_with_params (actual_parameters, a_context)
-			optimize_with_params (tunnel_parameters, a_context)
+			optimize_with_params (actual_parameters, a_context, a_context_item_type)
+			optimize_with_params (tunnel_parameters, a_context, a_context_item_type)
+
+			-- More information is avialble, so:
+
+			select_expression.check_static_type (a_context, a_context_item_type)
+			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
+			select_expression.optimize (a_context, a_context_item_type)
+			select_expression.check_static_type (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
 			if select_expression.is_empty_sequence then set_replacement (select_expression.as_empty_sequence) end
 		end

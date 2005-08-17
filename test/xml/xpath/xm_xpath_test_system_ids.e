@@ -151,7 +151,7 @@ feature
 			assert ("Item element line number is 35", item_element.line_number = 35)
 			a_pi ?= item_element.first_child
 			assert ("PI child 1", a_pi /= Void and then STRING_.same_string (a_pi.node_name, "testpi1"))
-			assert ("Base URI for PI 1", STRING_.same_string (a_pi.base_uri, a_base_uri))
+			assert ("Base URI for PI 1", STRING_.same_string (a_pi.base_uri, "http://www.gobosoft.com/xml-tests/AAMilne-book"))
 			assert ("PI1 line number is 36", a_pi.line_number = 36)
 			if is_tiny then
 				tiny_descendants.forth
