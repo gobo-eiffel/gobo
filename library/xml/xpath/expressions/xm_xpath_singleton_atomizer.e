@@ -116,11 +116,11 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			base_expression.check_static_type (a_context)
+			base_expression.check_static_type (a_context, a_context_item_type)
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			else

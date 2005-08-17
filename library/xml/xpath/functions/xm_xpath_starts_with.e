@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "starts-with"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := starts_with_function_type_code
+			fingerprint := Starts_with_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)

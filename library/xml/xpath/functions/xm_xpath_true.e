@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "true"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := true_function_type_code
+			fingerprint := True_function_type_code
 			minimum_argument_count := 0
 			maximum_argument_count := 0
 			create arguments.make (0)

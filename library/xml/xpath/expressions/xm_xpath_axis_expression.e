@@ -22,6 +22,8 @@ inherit
 
 	XM_XPATH_AXIS
 
+	XM_XPATH_SHARED_ANY_TYPE
+
 create
 
 	make
@@ -67,13 +69,17 @@ feature -- Access
 		local
 			principal_axis: INTEGER
 		do
-			principal_axis := axis_principal_node_type (axis)
-			if principal_axis = Attribute_node then
-				create {XM_XPATH_NODE_KIND_TEST} Result.make_attribute_test
-			elseif node_test = Void or else node_test.node_kind = Any_node then
-				Result := any_node_test
+			if known_item_type /= Void then
+				Result := known_item_type
 			else
-				create {XM_XPATH_NODE_KIND_TEST} Result.make (node_test.node_kind)
+				principal_axis := axis_principal_node_type (axis)
+				if principal_axis = Attribute_node then
+					create {XM_XPATH_NODE_KIND_TEST} Result.make_attribute_test
+				elseif node_test = Void or else node_test.node_kind = Any_node then
+					Result := any_node_test
+				else
+					create {XM_XPATH_NODE_KIND_TEST} Result.make (node_test.node_kind)
+				end
 			end
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
@@ -107,16 +113,9 @@ feature -- Status report
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
-			a_string, test_string: STRING
+			a_string: STRING
 		do
-			if node_test = Void then
-				test_string := "node()"
-			else
-				test_string := node_test.original_text
-			end
-			a_string := STRING_.appended_string (indentation (a_level), axis_name (axis))
-			a_string := STRING_.appended_string (a_string, "::")
-			a_string := STRING_.appended_string (a_string, test_string)
+			a_string := STRING_.appended_string (indentation (a_level), axis_description)
 			std.error.put_string (a_string)
 			std.error.put_new_line
 		end
@@ -142,14 +141,26 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
+		local
+			a_message: STRING
 		do
 			mark_unreplaced
-			-- TODO: for schema-aware version only
+			if a_context_item_type = Void then
+				a_message := STRING_.concat ("Axis step ", axis_description)
+				a_message := STRING_.appended_string (a_message, " cannot be used here: the context item is undefined")
+				set_last_error_from_string (a_message, Xpath_errors_uri, "XPDY0002", Dynamic_error)
+			elseif a_context_item_type.is_atomic_type then
+				a_message := STRING_.concat ("Axis step ", axis_description)
+				a_message := STRING_.appended_string (a_message, " cannot be used here: the context item is an atomic value")
+				set_last_error_from_string (a_message, Xpath_errors_uri, "XPTY0020", Type_error)
+			elseif a_context_item_type.is_node_test then
+				check_node_test_static_type (a_context, a_context_item_type.as_node_test)
+			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
@@ -205,5 +216,88 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			if axis = Attribute_axis then
 				set_attribute_ns_nodeset
 			end
-		end	
+		end
+
+feature {NONE} -- Implementation
+
+	known_item_type: XM_XPATH_ITEM_TYPE
+			--  Data type of the expression, when known
+
+	axis_description: STRING is
+			-- Description of `Current'
+		local
+			a_test_string: STRING
+		do
+			if node_test = Void then
+				a_test_string := "node()"
+			else
+				a_test_string := node_test.original_text
+			end
+			Result := STRING_.concat (axis_name (axis), "::")
+			Result := STRING_.appended_string (Result, a_test_string)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	check_node_test_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_node_test: XM_XPATH_NODE_TEST) is
+			-- Check static type when context item is a node test.
+		require
+			context_exists: a_context /= Void
+			node_test_exists: a_node_test /= Void
+		local
+			an_origin, a_kind: INTEGER
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
+			a_message, an_article: STRING
+			a_schema_type: XM_XPATH_SCHEMA_TYPE
+		do
+			an_origin := a_node_test.primitive_type
+			if an_origin /= Any_node and then is_axis_always_empty (axis, an_origin) then
+				create an_empty_sequence.make
+				set_replacement (an_empty_sequence)
+				a_message := STRING_.concat ("The ", axis_name (axis))
+				a_message := STRING_.appended_string (a_message, " axis starting at ")
+				if an_origin = Element_node or else an_origin = Attribute_node then
+					an_article := "an "
+				else
+					an_article := "a "
+				end
+				a_message := STRING_.appended_string (a_message, an_article)
+				a_message := STRING_.appended_string (a_message, node_kind_description (an_origin))
+				a_message := STRING_.appended_string (a_message, " will never select anything")
+				a_context.issue_warning (a_message)
+			elseif node_test /= Void then
+				a_kind := node_test.primitive_type
+				if a_kind /= Any_node and then not axis_contains_node_kind (axis, a_kind) then
+					create an_empty_sequence.make
+					set_replacement (an_empty_sequence)
+					a_message := STRING_.concat ("The ", axis_name (axis))
+					a_message := STRING_.appended_string (a_message, " axis will never select any ")
+					a_message := STRING_.appended_string (a_message, node_kind_description (a_kind))
+					a_message := STRING_.appended_string (a_message, " nodes")
+					a_context.issue_warning (a_message)
+				elseif axis = Self_axis and then a_kind /= Any_node and then an_origin /= Any_node and then a_kind /= an_origin then
+					create an_empty_sequence.make
+					set_replacement (an_empty_sequence)
+					a_message := STRING_.concat ("The self axis will never select any ", node_kind_description (an_origin))
+					a_message := STRING_.appended_string (a_message, " nodes when starting at ")
+					if an_origin = Element_node or else an_origin = Attribute_node then
+						an_article := "an "
+					else
+						an_article := "a "
+					end
+					a_message := STRING_.appended_string (a_message, an_article)
+					a_message := STRING_.appended_string (a_message, " node")
+					a_context.issue_warning (a_message)
+				else
+					a_schema_type := a_node_test.content_type
+					if a_schema_type /= any_type then
+						-- TODO: schema-aware version
+						check
+							schema_aware: False
+						end
+					end
+				end
+			end
+		end
+
 end

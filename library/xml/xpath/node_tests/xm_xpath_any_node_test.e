@@ -58,7 +58,6 @@ feature -- Access
 			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Text_node))
 			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Comment_node))
 			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Processing_instruction_node))
-			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Namespace_node))
 		end
 
 feature -- Status report

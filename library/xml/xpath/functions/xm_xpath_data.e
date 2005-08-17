@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath one-or-more() function"
+		"Objects that implement the XPath data() function"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
@@ -10,13 +10,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_ONE_OR_MORE
+class XM_XPATH_DATA
 
 inherit
 
-	XM_XPATH_SYSTEM_FUNCTION
+	XM_XPATH_COMPILE_TIME_FUNCTION
 		redefine
-			evaluate_item, create_iterator
+			simplify
 		end
 
 create
@@ -28,13 +28,12 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "one-or-more"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := One_or_more_function_type_code
+			name := "data"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Data_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
-			set_argument_error_code ("FORG0004")
 			initialized := True
 		end
 
@@ -43,7 +42,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
-			Result := arguments.item (1).item_type
+			Result := type_factory.any_atomic_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -55,23 +54,29 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			create Result.make_non_empty_sequence
+			create Result.make_any_sequence
 		end
 
-feature -- Evaluation
+feature -- Optimization
 
-	evaluate_item (a_context: XM_XPATH_CONTEXT) is
-			-- Evaluate as a single item
+	simplify is
+			-- Perform context-independent static optimizations
+		local
+			an_atomizer: XM_XPATH_ATOMIZER_EXPRESSION
+			a_configuration: XM_XPATH_CONFIGURATION
 		do
-			arguments.item (1).evaluate_item (a_context)
-			last_evaluated_item := arguments.item (1).last_evaluated_item
-		end
 
-	create_iterator (a_context: XM_XPATH_CONTEXT) is
-			-- An iterator over the values of a sequence
-		do
-			arguments.item (1).create_iterator (a_context)
-			last_iterator := arguments.item (1).last_iterator
+			-- TODO: the following line is not the right approach,
+			--       but it will work fine until a schema-aware version
+
+			create a_configuration.make_configuration
+			create an_atomizer.make (arguments.item (1), a_configuration.are_all_nodes_untyped)
+			an_atomizer.simplify
+			if an_atomizer.was_expression_replaced then
+				set_replacement (an_atomizer.replacement_expression)
+			else
+				set_replacement (an_atomizer)
+			end
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted
@@ -79,8 +84,8 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			set_cardinality_one_or_more
+			set_cardinality_zero_or_more
 		end
-
+		
 end
 	

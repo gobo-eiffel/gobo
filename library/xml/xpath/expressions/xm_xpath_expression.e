@@ -38,7 +38,6 @@ inherit
 		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_ITEM_TYPE
-		export {NONE} all end
 
 	XM_XPATH_SHARED_ANY_NODE_TEST
 		export {NONE} all end
@@ -179,6 +178,21 @@ feature -- Access
 			-- `Current' seen as an XPath function call
 		require
 			function_call: is_function_call
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_tail_call: BOOLEAN is
+			-- Is `Current' an XPath tail call?
+		do
+			Result := False
+		end
+
+	as_tail_call: XM_XPATH_TAIL_CALL is
+			-- `Current' seen as an XPath tail call
+		require
+			tail_call: is_tail_call
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
@@ -1286,7 +1300,7 @@ feature -- Optimization
 			simplified_expression_not_void: was_expression_replaced implies replacement_expression /= Void
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 			-- This checks statically that the operands of the expression have the correct type.
 			-- If necessary it generates code to do run-time type checking or type conversion.
@@ -1297,6 +1311,7 @@ feature -- Optimization
 			--  variables will only be accurately known if they have been explicitly declared.
 		require
 			context_not_void: a_context /= Void
+			context_item_may_not_be_set: True
 			no_previous_error: not is_error
 			not_replaced: not was_expression_replaced
 			static_properties_computed: are_static_properties_computed
@@ -1305,12 +1320,13 @@ feature -- Optimization
 			expression_may_be_replaced: was_expression_replaced implies replacement_expression /= Void
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 			-- This routine is called after all references to functions and variables have been resolved
 			--  to the declaration of the function or variable, and after static type-checking.
 		require
 			context_not_void: a_context /= Void
+			context_item_may_not_be_set: True
 			no_previous_error: not is_error
 			not_replaced: not was_expression_replaced
 			static_properties_computed: are_static_properties_computed

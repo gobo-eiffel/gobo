@@ -143,6 +143,8 @@ feature -- Conversion
 				Result := "one or more"
 			when Required_cardinality_zero_or_more then
 				Result := "zero or more"
+			else
+				Result := "more than one"
 			end
 		ensure
 			description_not_void: Result /= Void

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "local-name"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := local_name_function_type_code
+			fingerprint := Local_name_function_type_code
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)

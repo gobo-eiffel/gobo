@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "string-length"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := string_length_function_type_code
+			fingerprint := String_length_function_type_code
 			minimum_argument_count := 0
 			maximum_argument_count := 1
 			create arguments.make (1)

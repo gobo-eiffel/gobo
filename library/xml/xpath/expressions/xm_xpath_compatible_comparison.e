@@ -81,21 +81,21 @@ feature -- Access
 	
 feature -- Optimization	
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			check
 				backwards_compatible_mode: a_context.is_backwards_compatible_mode
 			end
 			mark_unreplaced
-			first_operand.check_static_type (a_context)
+			first_operand.check_static_type (a_context, a_context_item_type)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.check_static_type (a_context)
+				second_operand.check_static_type (a_context, a_context_item_type)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -105,21 +105,21 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			check
 				backwards_compatible_mode: a_context.is_backwards_compatible_mode
 			end
 			mark_unreplaced
-			first_operand.optimize (a_context)
+			first_operand.optimize (a_context, a_context_item_type)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.optimize (a_context)
+				second_operand.optimize (a_context, a_context_item_type)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -138,7 +138,7 @@ feature -- Optimization
 						end
 						set_replacement (last_evaluated_item.as_boolean_value)
 					else
-						optimize_stage_2 (a_context)
+						optimize_stage_2 (a_context, a_context_item_type)
 					end
 				end
 			end
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize_stage_2 (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize_stage_2 (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimize after operands have been optimized.
 		require
 			no_previous_error: not is_error
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 					--  or the complications of converting values to numbers
 					
 					create a_general_comparison.make (first_operand, operator, second_operand, atomic_comparer.collator)
-					a_general_comparison.check_static_type (a_context)
+					a_general_comparison.check_static_type (a_context, a_context_item_type)
 					if a_general_comparison.is_error then
 						set_last_error (a_general_comparison.error_value)
 					elseif a_general_comparison.was_expression_replaced then
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 						an_expression := a_general_comparison
 					end
 					if not is_error then
-						an_expression.optimize (a_context)
+						an_expression.optimize (a_context, a_context_item_type)
 						if an_expression.is_error then
 							set_last_error (an_expression.error_value)
 						elseif an_expression.was_expression_replaced then

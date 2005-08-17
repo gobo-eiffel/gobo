@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
@@ -100,7 +100,7 @@ feature -- Optimization
 					set_last_error (a_type_checker.static_type_check_error)
 				else
 					set_second_operand (a_type_checker.checked_expression)
-					Precursor (a_context)
+					Precursor (a_context, a_context_item_type)
 
 					-- Now, we may or may not still be an arithmetic expression.
 

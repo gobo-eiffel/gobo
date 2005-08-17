@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "replace"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := replace_function_type_code
+			fingerprint := Replace_function_type_code
 			minimum_argument_count := 3
 			maximum_argument_count := 4
 			create arguments.make (4)

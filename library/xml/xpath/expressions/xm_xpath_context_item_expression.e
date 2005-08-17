@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 	make is
 		do
 			compute_static_properties
+			item_type := any_item
 			initialized := True
 		ensure
 			static_properties_computed: are_static_properties_computed			
@@ -48,15 +49,8 @@ feature -- Access
 			Result := Current
 		end
 
-	item_type: XM_XPATH_ITEM_TYPE is
+	item_type: XM_XPATH_ITEM_TYPE
 			--Determine the data type of the expression, if possible
-		do
-			Result := any_item
-			if Result /= Void then
-				-- Bug in SE 1.0 and 1.1: Make sure that
-				-- that `Result' is not optimized away.
-			end
-		end
 
 feature -- Comparison
 
@@ -88,16 +82,26 @@ feature -- Status setting
 
 feature -- Optimization
 	
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
+			if a_context_item_type = Void then
+				set_last_error_from_string ("The context item is undefined at this point", Xpath_errors_uri, "XPDY0002", Type_error)
+			else
+				item_type := a_context_item_type
+			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
-			mark_unreplaced
+
+			-- In XSLT, we don't catch this error in `check_static_type'
+			--  because it's done one XPath expression,
+			--  at a time. So we repeat the check here.
+
+			check_static_type (a_context, a_context_item_type)
 		end
 
 feature -- Evaluation

@@ -100,7 +100,7 @@ feature -- Status report
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -118,7 +118,7 @@ feature -- Optimization
 				-- sequence expression is established. This is used to establish the type of the variable,
 				-- which in turn is required when type-checking the action part.
 				
-				sequence.check_static_type (a_context)
+				sequence.check_static_type (a_context, a_context_item_type)
 				if sequence.was_expression_replaced then
 					set_sequence (sequence.replacement_expression)
 				end
@@ -149,7 +149,7 @@ feature -- Optimization
 							actual_item_type := sequence.item_type
 							declaration.refine_type_information (actual_item_type, sequence.cardinalities, Void, sequence.dependencies, sequence.special_properties)
 							set_declaration_void -- Now the GC can reclaim it, and analysis cannot be performed again.
-							action_expression.check_static_type (a_context)
+							action_expression.check_static_type (a_context, a_context_item_type)
 							if action_expression.was_expression_replaced then
 								replace_action (action_expression.replacement_expression)
 							end
@@ -162,25 +162,25 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			sequence.optimize (a_context)
+			sequence.optimize (a_context, a_context_item_type)
 			if sequence.was_expression_replaced then
 				set_sequence (sequence.replacement_expression)
 			end
 			if sequence.is_error then
 				set_last_error (sequence.error_value)
 			else
-				action_expression.optimize (a_context)
+				action_expression.optimize (a_context, a_context_item_type)
 				if action_expression.was_expression_replaced then
 					replace_action (action_expression.replacement_expression)
 				end
 				if action_expression.is_error then
 					set_last_error (action_expression.error_value)
 				else
-					promote_subexpressions (a_context)
+					promote_subexpressions (a_context, a_context_item_type)
 				end
 			end
 		end
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			set_non_creating
 		end
 
-	promote_subexpressions (a_context: XM_XPATH_STATIC_CONTEXT) is
+	promote_subexpressions (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Extract subexpressions that don't depend on the range variable.
 		local
 			an_offer: XM_XPATH_PROMOTION_OFFER
@@ -287,11 +287,18 @@ feature {NONE} -- Implementation
 			if action_expression.was_expression_replaced then replace_action (action_expression.replacement_expression) end
 			if an_offer.containing_expression.is_let_expression then
 				a_let_expression := an_offer.containing_expression.as_let_expression
-				a_let_expression.optimize (a_context)
+				a_let_expression.check_static_type (a_context, a_context_item_type)
 				if a_let_expression.is_error then
 					set_last_error (a_let_expression.error_value)
 				elseif a_let_expression.was_expression_replaced then
 					an_offer.set_containing_expression (a_let_expression.replacement_expression)
+				else
+					a_let_expression.optimize (a_context, a_context_item_type)
+					if a_let_expression.is_error then
+						set_last_error (a_let_expression.error_value)
+					elseif a_let_expression.was_expression_replaced then
+						an_offer.set_containing_expression (a_let_expression.replacement_expression)
+					end
 				end
 			end
 			if an_offer.containing_expression /= Current then

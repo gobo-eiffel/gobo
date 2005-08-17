@@ -19,6 +19,9 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
 feature -- Access
 
 	Ancestor_axis: INTEGER is 1
@@ -261,5 +264,100 @@ feature -- Status report
 			end
 		end
 
+	is_axis_always_empty (an_axis, a_node_kind: INTEGER): BOOLEAN is
+			-- Is `an_axis' always empty of nodes of type `a_node_kind'?
+		require
+			valid_axis: is_axis_valid (an_axis)
+			valid_node_type: is_node_type (a_node_kind)
+		do
+			Result := INTEGER_.bit_and (empty_axis_table.item (an_axis), INTEGER_.bit_shift_left (1, a_node_kind)) /= 0
+		end
+
+	axis_contains_node_kind (an_axis, a_node_kind: INTEGER): BOOLEAN is
+			-- Does `an_axis' contain nodes of type `a_node_kind'?
+		require
+			valid_axis: is_axis_valid (an_axis)
+			valid_node_type: is_node_type (a_node_kind)
+		do
+			Result :=  INTEGER_.bit_and (axis_node_kind_table.item (an_axis), INTEGER_.bit_shift_left (1, a_node_kind)) /= 0
+		end
+			
+feature {NONE} -- Implementation
+
+
+	document_kind: INTEGER is
+		once
+			Result := INTEGER_.bit_shift_left (1, Document_node)
+		end
+
+	element_kind: INTEGER is
+		once
+			Result := INTEGER_.bit_shift_left (1, Element_node)
+		end
+
+	attribute_kind: INTEGER is
+		once
+			Result := INTEGER_.bit_shift_left (1, Attribute_node)
+		end
+
+	comment_kind: INTEGER is
+		once
+			Result := INTEGER_.bit_shift_left (1, Comment_node)
+		end
+
+	processing_instruction_kind: INTEGER is
+		once
+			Result := INTEGER_.bit_shift_left (1, Processing_instruction_node)
+		end
+
+	text_kind: INTEGER is
+		once
+			Result := INTEGER_.bit_shift_left (1, Text_node)
+		end
+
+	miscellaneous_kinds: INTEGER is
+			-- Mask for commonly used multiple kinds
+		once
+			Result := INTEGER_.bit_or (comment_kind,
+												INTEGER_.bit_or (processing_instruction_kind, text_kind))
+																																	 
+		end
+
+	empty_axis_table: ARRAY [INTEGER] is
+		-- Table used by `is_axis_always_empty'
+		once
+			create Result.make (Ancestor_axis, Preceding_or_ancestor_axis)
+			Result.put (document_kind, Ancestor_axis)
+			Result.put (0, Ancestor_or_self_axis)
+			Result.put (INTEGER_.bit_or (document_kind, INTEGER_.bit_or (miscellaneous_kinds, attribute_kind)), Attribute_axis)
+			Result.put (INTEGER_.bit_or (miscellaneous_kinds, attribute_kind), Child_axis)
+			Result.put (INTEGER_.bit_or (miscellaneous_kinds, attribute_kind), Descendant_axis)
+			Result.put (0, Descendant_or_self_axis)
+			Result.put (document_kind, Following_axis)
+			Result.put (INTEGER_.bit_or (document_kind, attribute_kind), Following_sibling_axis)
+			Result.put (document_kind, Parent_axis)
+			Result.put (document_kind, Preceding_axis)
+			Result.put (INTEGER_.bit_or (document_kind, attribute_kind), Preceding_sibling_axis)
+			Result.put (0, Self_axis)
+		end
+	
+	axis_node_kind_table: ARRAY [INTEGER] is
+		-- Table uses by `axis_contains_node_kind'
+		once
+			create Result.make (Ancestor_axis, Preceding_or_ancestor_axis)
+			Result.put (INTEGER_.bit_or (document_kind, element_kind), Ancestor_axis)
+			Result.put (INTEGER_.bit_or (document_kind, INTEGER_.bit_or (attribute_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds))), Ancestor_or_self_axis)
+			Result.put (attribute_kind, Attribute_axis)
+			Result.put (INTEGER_.bit_or (miscellaneous_kinds, element_kind), Child_axis)
+			Result.put (INTEGER_.bit_or (miscellaneous_kinds, element_kind), Descendant_axis)
+			Result.put (INTEGER_.bit_or (attribute_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds))), Descendant_or_self_axis)
+			Result.put (INTEGER_.bit_or (miscellaneous_kinds, element_kind), Following_axis)
+			Result.put (INTEGER_.bit_or (miscellaneous_kinds, element_kind), Following_sibling_axis)
+			Result.put (INTEGER_.bit_or (document_kind, element_kind), Parent_axis)
+			Result.put (INTEGER_.bit_or (document_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds)), Preceding_axis)
+			Result.put (INTEGER_.bit_or (element_kind, miscellaneous_kinds), Preceding_sibling_axis)
+			Result.put (INTEGER_.bit_or (attribute_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds))), Self_axis)
+		end
+	
 end
 	

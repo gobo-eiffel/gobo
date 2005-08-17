@@ -253,7 +253,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
@@ -266,14 +266,14 @@ feature -- Optimization
 			if analysis_state < Type_checked_state then
 				analysis_state := Type_checked_state
 				create a_type_checker
-				start.check_static_type (a_context)
+				start.check_static_type (a_context, a_context_item_type)
 				if start.was_expression_replaced then
 					set_start (start.replacement_expression)
 				end
 				if start.is_error then
 					set_last_error (start.error_value)
 				else
-					step.check_static_type (a_context)
+					step.check_static_type (a_context, start.item_type)
 					if step.was_expression_replaced then
 						set_step (step.replacement_expression)
 					end
@@ -296,7 +296,7 @@ feature -- Optimization
 							--  or it is known statically to deliver atomic values only, or we don't yet know.
 							
 							if is_node_item_type (step.item_type) then
-								simplify_sorting (a_context)							
+								simplify_sorting (a_context, a_context_item_type)							
 							elseif is_atomic_item_type (step.item_type) then
 								create another_role.make (Binary_expression_role, "/", 2, Xpath_errors_uri, "XPTY0018")
 								create an_atomic_sequence.make_atomic_sequence
@@ -317,7 +317,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			an_offer: XM_XPATH_PROMOTION_OFFER
@@ -325,14 +325,14 @@ feature -- Optimization
 			mark_unreplaced
 			if analysis_state < Optimized_state then
 				analysis_state := Optimized_state 
-				start.optimize (a_context)
+				start.optimize (a_context, a_context_item_type)
 				if start.was_expression_replaced then
 					set_start (start.replacement_expression)
 				end
 				if start.is_error then
 					set_last_error (start.error_value)
 				else
-					step.optimize (a_context)
+					step.optimize (a_context, a_context_item_type)
 					if step.was_expression_replaced then
 						set_step (step.replacement_expression)
 					end
@@ -345,7 +345,7 @@ feature -- Optimization
 						-- This causes them to be evaluated once, outside the path expression
 						
 						create an_offer.make (Focus_independent, Void, Current, False, start.context_document_nodeset)
-						promote_sub_expressions (a_context, an_offer)
+						promote_sub_expressions (a_context, a_context_item_type, an_offer)
 					end
 				end
 			end
@@ -779,7 +779,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	simplify_sorting (a_context: XM_XPATH_STATIC_CONTEXT) is
+	simplify_sorting (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Simplify descendant path and sorting.
 		require
 			context_not_void: a_context /= Void
@@ -817,7 +817,7 @@ feature {NONE} -- Implementation
 							path_expression: a_path.is_path_expression
 						end
 						a_path := an_expression.as_path_expression
-						a_path.check_static_type (a_context)
+						a_path.check_static_type (a_context, a_context_item_type)
 						if a_path.was_expression_replaced then
 							set_replacement (a_path.replacement_expression)
 						else
@@ -843,7 +843,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	promote_sub_expressions (a_context: XM_XPATH_STATIC_CONTEXT; an_offer: XM_XPATH_PROMOTION_OFFER) is
+	promote_sub_expressions (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE; an_offer: XM_XPATH_PROMOTION_OFFER) is
 			-- Promote any subexpressions within the step are not dependent on the focus.
 			-- This causes them to be evaluated once, outside the path  expression.
 		require
@@ -862,13 +862,13 @@ feature {NONE} -- Implementation
 				reset_static_properties
 				if an_offer.containing_expression /= Current then
 					analysis_state := Raw_state -- allow re-analysis
-					an_offer.containing_expression.check_static_type (a_context)
+					an_offer.containing_expression.check_static_type (a_context, a_context_item_type)
 					if an_offer.containing_expression.was_expression_replaced then
 						an_expression := an_offer.containing_expression.replacement_expression
 					else
 						an_expression := an_offer.containing_expression
 					end
-					an_expression.optimize (a_context)
+					an_expression.optimize (a_context, a_context_item_type)
 					if an_expression.is_error then
 						set_last_error (an_expression.error_value)
 					else

@@ -112,7 +112,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_sequence_type: XM_XPATH_SEQUENCE_TYPE
@@ -121,7 +121,7 @@ feature -- Optimization
 			a_cardinality_set: ARRAY [BOOLEAN]
 		do
 			mark_unreplaced
-			sequence.check_static_type (a_context)
+			sequence.check_static_type (a_context, a_context_item_type)
 			if sequence.was_expression_replaced then
 				set_sequence (sequence.replacement_expression)
 			end
@@ -143,7 +143,7 @@ feature -- Optimization
 					set_sequence (a_type_checker.checked_expression)
 					declaration.refine_type_information (sequence.item_type, a_cardinality_set, Void, sequence.dependencies, sequence.special_properties)
 					set_declaration_void
-					action_expression.check_static_type (a_context)
+					action_expression.check_static_type (a_context, a_context_item_type)
 					if action.was_expression_replaced then
 						replace_action (action_expression.replacement_expression)
 					end
@@ -156,7 +156,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced

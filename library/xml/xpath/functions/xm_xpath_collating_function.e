@@ -94,10 +94,10 @@ feature -- Access
 
 feature -- Optimization
 	
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
-			Precursor (a_context)
+			Precursor (a_context, a_context_item_type)
 			default_collation_name := a_context.default_collation_name
 		ensure then
 			default_collation_name_not_void: default_collation_name /= Void

@@ -159,11 +159,11 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			condition.check_static_type (a_context)
+			condition.check_static_type (a_context, a_context_item_type)
 			if condition.was_expression_replaced then
 				set_condition (condition.replacement_expression)
 			end
@@ -172,7 +172,7 @@ feature -- Optimization
 			elseif condition.is_boolean_value then
 				-- If the condition after typechecking is reduced to a constant, cut it down to the appropriate branch.
 				if condition.as_boolean_value.value then
-					then_expression.check_static_type (a_context)
+					then_expression.check_static_type (a_context, a_context_item_type)
 					if then_expression.is_error then
 						set_last_error (then_expression.error_value)
 					elseif then_expression.was_expression_replaced then
@@ -181,7 +181,7 @@ feature -- Optimization
 						set_replacement (then_expression)
 					end
 				else
-					else_expression.check_static_type (a_context)
+					else_expression.check_static_type (a_context, a_context_item_type)
 					if else_expression.is_error then
 						set_last_error (else_expression.error_value)
 					elseif else_expression.was_expression_replaced then
@@ -191,13 +191,13 @@ feature -- Optimization
 					end					
 				end
 			else
-				then_expression.check_static_type (a_context)
+				then_expression.check_static_type (a_context, a_context_item_type)
 				if then_expression.is_error then
 					set_last_error (then_expression.error_value)
 				elseif then_expression.was_expression_replaced then
 					set_then_expression (then_expression.replacement_expression)
 				else
-					else_expression.check_static_type (a_context)
+					else_expression.check_static_type (a_context, a_context_item_type)
 					if else_expression.is_error then
 						set_last_error (else_expression.error_value)
 					elseif else_expression.was_expression_replaced then
@@ -207,21 +207,21 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			condition.optimize (a_context)
+			condition.optimize (a_context, a_context_item_type)
 			if condition.was_expression_replaced then	set_condition (condition.replacement_expression) end
 			if condition.is_error then
 				set_last_error (condition.error_value)
 			else
-				then_expression.optimize (a_context)
+				then_expression.optimize (a_context, a_context_item_type)
 				if then_expression.was_expression_replaced then set_then_expression (then_expression.replacement_expression) end
 				if then_expression.is_error then
 					set_last_error (then_expression.error_value)
 				else
-					else_expression.optimize (a_context)
+					else_expression.optimize (a_context, a_context_item_type)
 					if else_expression.was_expression_replaced then set_else_expression (else_expression.replacement_expression) end
 					if else_expression.is_error then
 						set_last_error (else_expression.error_value)

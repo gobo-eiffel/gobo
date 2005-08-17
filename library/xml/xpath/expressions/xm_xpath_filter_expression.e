@@ -246,7 +246,7 @@ feature -- Optimization
 		end
 
 	
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			an_expression: XM_XPATH_EXPRESSION
@@ -254,14 +254,14 @@ feature -- Optimization
 			a_min, a_max: INTEGER
 		do
 			mark_unreplaced
-			base_expression.check_static_type (a_context)
+			base_expression.check_static_type (a_context, a_context_item_type)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			else
-				filter.check_static_type (a_context)
+				filter.check_static_type (a_context, base_expression.item_type)
 				if filter.was_expression_replaced then
 					set_filter (filter.replacement_expression)
 				end
@@ -304,7 +304,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			an_expression: XM_XPATH_EXPRESSION
@@ -312,14 +312,14 @@ feature -- Optimization
 			a_min, a_max: INTEGER
 		do
 			mark_unreplaced
-			base_expression.optimize (a_context)
+			base_expression.optimize (a_context, a_context_item_type)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			else
-				filter.optimize (a_context)
+				filter.optimize (a_context, a_context_item_type)
 				if filter.was_expression_replaced then
 					set_filter (filter.replacement_expression)
 				end
@@ -356,10 +356,10 @@ feature -- Optimization
 						end
 					end
 					if not was_expression_replaced then
-						optimize_positional_filter (a_context)
+						optimize_positional_filter (a_context, a_context_item_type)
 					end
 					if not is_error and then not was_expression_replaced then
-						promote_sub_expressions (a_context)
+						promote_sub_expressions (a_context, a_context_item_type)
 					end
 				end
 			end
@@ -609,7 +609,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize_positional_filter (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize_positional_filter (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Determine whether the filter might depend on position.
 		local
 			another_expression, a_third_expression: XM_XPATH_EXPRESSION
@@ -630,7 +630,7 @@ feature {NONE} -- Implementation
 						a_third_expression := force_to_boolean (a_boolean_filter.second_operand, a_context)
 						create a_filter.make (base_expression, another_expression)
 						create another_filter.make (a_filter, a_third_expression)
-						another_filter.optimize (a_context)
+						another_filter.optimize (a_context, a_context_item_type)
 						if another_filter.was_expression_replaced then
 							set_replacement (another_filter.replacement_expression)
 						else
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 						a_third_expression := force_to_boolean (a_boolean_filter.second_operand, a_context)
 						create a_filter.make (base_expression, a_third_expression)
 						create another_filter.make (a_filter, another_expression)
-						another_filter.optimize (a_context)
+						another_filter.optimize (a_context, a_context_item_type)
 						if another_filter.was_expression_replaced then
 							set_replacement (another_filter.replacement_expression)
 						else
@@ -653,7 +653,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	promote_sub_expressions  (a_context: XM_XPATH_STATIC_CONTEXT) is				
+	promote_sub_expressions  (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is				
 			-- This causes them to be evaluated once, outside the path  expression.
 		local
 			an_offer: XM_XPATH_PROMOTION_OFFER
@@ -664,9 +664,9 @@ feature {NONE} -- Implementation
 			if filter.was_expression_replaced then set_filter(filter.replacement_expression) end
 			if an_offer.containing_expression.is_let_expression then
 				a_let_expression := an_offer.containing_expression.as_let_expression
-				a_let_expression.check_static_type (a_context) 
+				a_let_expression.check_static_type (a_context, a_context_item_type) 
 				if not a_let_expression.is_error and then not a_let_expression.was_expression_replaced then 
-					a_let_expression.optimize (a_context)
+					a_let_expression.optimize (a_context, a_context_item_type)
 				end
 				if a_let_expression.is_error then
 					set_last_error (a_let_expression.error_value)

@@ -234,7 +234,7 @@ feature -- Access
 	path: STRING is
 			-- XPath expression for location with document
 		local
-			a_preceding_path, a_test: STRING
+			a_preceding_path: STRING
 		do
 			inspect
 				node_type
@@ -285,15 +285,6 @@ feature -- Access
 					if not STRING_.same_string (a_preceding_path, "/") then
 						Result := STRING_.appended_string (a_preceding_path, Result)
 					end
-				end
-			when Namespace_node then
-				a_test := local_part
-				if a_test.count = 0 then
-					a_test := "*[not(local-name()]"
-				end
-				Result := STRING_.concat ("/namespace::", a_test)
-				if parent /= Void then
-					Result := STRING_.appended_string (parent.path, Result)
 				end
 			end
 		ensure
@@ -466,8 +457,6 @@ feature -- Access
 				Result := "comment()"
 			when Processing_instruction_node then
 				Result := "processing-instruction()"
-			when Namespace_node then
-				Result := "namespace()"
 			end
 		end
 

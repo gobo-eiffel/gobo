@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "lang"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := lang_function_type_code
+			fingerprint := Lang_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)

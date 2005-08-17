@@ -67,8 +67,10 @@ feature -- Element change
 		do
 			if supplied_argument_count = 0 then
 				create a_context_item_expression.make
+				a_context_item_expression.set_parent (Current)
 				copy_location_identifier (a_context_item_expression)
 				arguments.put (a_context_item_expression, 1)
+				reset_static_properties
 			end
 		end
 
@@ -101,6 +103,7 @@ feature -- Element change
 				minimum_argument_count := minimum_argument_count + 1
 				maximum_argument_count := maximum_argument_count + 1
 				augmented_argument_count := 1
+				reset_static_properties
 			end
 		end
 

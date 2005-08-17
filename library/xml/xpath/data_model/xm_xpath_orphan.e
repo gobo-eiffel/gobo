@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 		require
 			valid_node_kind: a_node_type = Element_node or else
 			-- a_node_type = Attribute_node or else
---			a_node_type = Namespace_node or else
 			a_node_type = Text_node -- or else
 --			a_node_type = Comment_node or else
 --			a_node_type = Processing_instruction_node
@@ -89,8 +88,6 @@ feature -- Access
 				Result := "element"
 			when Attribute_node then
 				Result := "attribute"
-			when Namespace_node then
-				Result := "namespace"
 			when Processing_instruction_node then
 				Result := "processing-instruction"
 			when Text_node then
@@ -202,8 +199,6 @@ feature -- Duplication
 --					a_type_annotation := -1
 --				end
 --				a_receiver.notify_attribute (name_code, a_type_annotation, string_value, 0)
---			when Namespace_node then
---				a_receiver.notify_namespace (, 0)
 --			when Processing_instruction_node then
 			when Text_node then
 				a_receiver.notify_characters (string_value, 0)
@@ -221,7 +216,6 @@ invariant
 	valid_node_type: node_type = Text_node or else
 -- node_type = Attribute_node or else
 	node_type = Element_node --or else
---	node_type = Namespace_node or else
 --	node_type = Comment_node or else
 --	node_type = Processing_instruction_node
 	no_parent: parent = Void

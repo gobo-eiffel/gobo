@@ -239,6 +239,8 @@ feature {NONE} -- Implementation
 				supplied_item_type := a_supplied_expression.item_type
 				item_type_ok := is_sub_type (supplied_item_type, required_item_type)
 			end
+		ensure
+			supplied_item_type: not item_type_ok implies supplied_item_type /= Void
 		end
 
 	report_error (a_message: STRING; a_role_locator: XM_XPATH_ROLE_LOCATOR) is
@@ -321,7 +323,7 @@ feature {NONE} -- Implementation
 				else
 					an_expression := a_string_function
 				end
-				an_expression.check_static_type (static_context)
+				an_expression.check_static_type (static_context, any_item)
 				if an_expression.was_expression_replaced then								
 					checked_expression := an_expression.replacement_expression
 				else
@@ -358,7 +360,7 @@ feature {NONE} -- Implementation
 				else
 					an_expression := a_number_function
 				end
-				an_expression.check_static_type (static_context)
+				an_expression.check_static_type (static_context, any_item)
 				if an_expression.was_expression_replaced then								
 					checked_expression := an_expression.replacement_expression
 				else
@@ -407,7 +409,7 @@ feature {NONE} -- Implementation
 						else
 							an_expression := an_expression
 						end
-						an_expression.check_static_type (static_context)
+						an_expression.check_static_type (static_context, any_item)
 						if an_expression.was_expression_replaced then								
 							checked_expression := an_expression.replacement_expression
 						else

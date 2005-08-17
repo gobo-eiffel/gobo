@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "substring"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := substring_function_type_code
+			fingerprint := Substring_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := 3
 			create arguments.make (3)

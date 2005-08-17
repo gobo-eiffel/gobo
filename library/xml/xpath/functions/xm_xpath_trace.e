@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		do
 			name := "trace"
 			namespace_uri := Xpath_standard_functions_uri
-			fingerprint := trace_function_type_code
+			fingerprint := Trace_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := 2
 			create arguments.make (1)

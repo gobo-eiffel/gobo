@@ -164,7 +164,7 @@ feature -- Optimization
 			end
 		end
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			fixed_values: BOOLEAN
@@ -180,7 +180,7 @@ feature -- Optimization
 			until
 				is_error or else arguments_cursor.after
 			loop
-				arguments_cursor.item.check_static_type (a_context)
+				arguments_cursor.item.check_static_type (a_context, a_context_item_type)
 				if arguments_cursor.item.is_error then
 					set_last_error (arguments_cursor.item.error_value)
 				else
@@ -204,7 +204,7 @@ feature -- Optimization
 			end			
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			fixed_values: BOOLEAN
@@ -220,7 +220,7 @@ feature -- Optimization
 			until
 				is_error or else arguments_cursor.after
 			loop
-				arguments_cursor.item.optimize (a_context)
+				arguments_cursor.item.optimize (a_context, a_context_item_type)
 				if arguments_cursor.item.is_error then
 					set_last_error (arguments_cursor.item.error_value)
 				else

@@ -25,7 +25,7 @@ inherit
 create
 
 	make, make_document_test, make_element_test, make_attribute_test, make_text_test,
-	make_processing_instruction_test, make_comment_test, make_namespace_test
+	make_processing_instruction_test, make_comment_test
 
 feature {NONE} -- Initialization
 
@@ -35,23 +35,7 @@ feature {NONE} -- Initialization
 			valid_node_type: is_node_type (a_node_type) and then a_node_type /= Any_node -- Use XM_XPATH_SHARED_ANY_NODE_TEST for that
 		do
 			node_kind := a_node_type
-			inspect
-				node_kind
-			when Document_node then
-				original_text := "/"
-			when Element_node then
-				original_text := "element()"
-			when Attribute_node then
-				original_text := "attribute()"
-			when Comment_node then
-				original_text := "comment()"
-			when Text_node then
-				original_text := "text()"
-			when Namespace_node then
-				original_text := "namespace()"
-			when Processing_instruction_node then
-				original_text := "processing-instruction()"
-			end
+			original_text := node_kind_description (a_node_type)
 		ensure
 			kind_set: node_kind = a_node_type
 		end
@@ -102,14 +86,6 @@ feature {NONE} -- Initialization
 			make (Processing_instruction_node)
 		ensure
 			matches_processing_instructions: node_kind = Processing_instruction_node
-		end
-
-	make_namespace_test is
-			-- Make a test that matches namespace nodes.
-		do
-			make (Namespace_node)
-		ensure
-			matches_namespaces: node_kind = Namespace_node
 		end
 
 feature -- Access

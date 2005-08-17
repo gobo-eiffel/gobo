@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			an_atomic_type: XM_XPATH_SEQUENCE_TYPE
@@ -85,14 +85,14 @@ feature -- Optimization
 		do
 			mark_unreplaced
 			create a_type_checker
-			first_operand.check_static_type (a_context)
+			first_operand.check_static_type (a_context, a_context_item_type)
 			if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			elseif first_operand.is_empty_sequence then
 				set_replacement (first_operand)
 			elseif not is_error then
-				second_operand.check_static_type (a_context)
+				second_operand.check_static_type (a_context, a_context_item_type)
 				if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
 				if second_operand.is_error then
 					set_last_error (second_operand.error_value)
@@ -146,23 +146,23 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			first_operand.optimize (a_context)
+			first_operand.optimize (a_context, a_context_item_type)
 			if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			elseif first_operand.is_empty_sequence then
 				set_replacement (first_operand)
 			elseif not is_error then
-				second_operand.optimize (a_context)
+				second_operand.optimize (a_context, a_context_item_type)
 				if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
 				if second_operand.is_error then
 					set_last_error (second_operand.error_value)
 				else
-					optimize_stage_2 (a_context)
+					optimize_stage_2 (a_context, a_context_item_type)
 				end
 			end
 			if not was_expression_replaced and then not is_error then
@@ -294,16 +294,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize_stage_2 (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize_stage_2 (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform context-dependent optimizations.
 		do
-			optimize_count (a_context)
+			optimize_count (a_context, a_context_item_type)
 			if not was_expression_replaced then
 				
 				-- We haven't managed to optimize anything yet, so:
 				
 				if second_operand.is_count_function and then is_zero (first_operand) then
-					optimize_count_second_operand (a_context, second_operand.as_count_function)
+					optimize_count_second_operand (a_context, second_operand.as_count_function, a_context_item_type)
 				else
 					
 					-- Optimise string-length(x) = 0, >0, !=0 etc.
@@ -325,14 +325,14 @@ feature {NONE} -- Implementation
 
 							-- We haven't managed to optimize anything yet, so:
 
-							optimize_generate_id (a_context)
+							optimize_generate_id (a_context, a_context_item_type)
 						end
 					end
 				end
 			end
 		end
 
-	optimize_generate_id (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize_generate_id (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimize generate-id(X) eq generate-id(Y) as "X is Y".
 			-- This construct is often used in XSLT 1.0 stylesheets.
 			-- Only do this if we know the arguments are singletons, because "is" doesn't
@@ -356,7 +356,11 @@ feature {NONE} -- Implementation
 						else
 							an_expression := an_identity_comparison
 						end
-						an_expression.optimize (a_context)
+						an_expression.check_static_type (a_context, a_context_item_type)
+						if an_expression.was_expression_replaced then
+							an_expression := an_expression.replacement_expression
+						end
+						an_expression.optimize (a_context, a_context_item_type)
 						if an_expression.was_expression_replaced then
 							an_expression := an_expression.replacement_expression
 						end
@@ -366,7 +370,7 @@ feature {NONE} -- Implementation
 			end
 		end									
 
-	optimize_count (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize_count (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimise count(x) eq 0 (or gt 0, ne 0, eq 0, etc).
 		local
 			a_count_function: XM_XPATH_COUNT
@@ -431,13 +435,17 @@ feature {NONE} -- Implementation
 			end
 		end			
 
-	optimize_count_second_operand (a_context: XM_XPATH_STATIC_CONTEXT; a_count_function: XM_XPATH_COUNT) is
+	optimize_count_second_operand (a_context: XM_XPATH_STATIC_CONTEXT; a_count_function: XM_XPATH_COUNT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimise (0 eq count(x)), etc. by inversion
 		local
 			an_expression: XM_XPATH_EXPRESSION
 		do		
 			create {XM_XPATH_VALUE_COMPARISON} an_expression.make (a_count_function, inverse_operator (operator), first_operand, atomic_comparer.collator)
-			an_expression.optimize (a_context)
+			an_expression.check_static_type (a_context, a_context_item_type)
+			if an_expression.was_expression_replaced then
+				an_expression := an_expression.replacement_expression
+			end
+			an_expression.optimize (a_context, a_context_item_type)
 			if an_expression.was_expression_replaced then
 				set_replacement (an_expression.replacement_expression)
 			else

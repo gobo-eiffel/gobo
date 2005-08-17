@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "unordered"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := unordered_function_type_code
+			fingerprint := Unordered_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
@@ -63,11 +63,11 @@ feature -- Access
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			Precursor (a_context)
+			Precursor (a_context, a_context_item_type)
 			if not was_expression_replaced then
 				arguments.item (1).set_unsorted (True)
 				if arguments.item (1).was_expression_replaced then
@@ -78,11 +78,11 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
-			Precursor (a_context)
+			Precursor (a_context, a_context_item_type)
 			if not is_error and then not was_expression_replaced then
 				arguments.item (1).set_unsorted (True)
 				if arguments.item (1).was_expression_replaced then

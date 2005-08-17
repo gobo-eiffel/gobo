@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "min"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := min_function_type_code
+			fingerprint := Min_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 2
 			create arguments.make (2)

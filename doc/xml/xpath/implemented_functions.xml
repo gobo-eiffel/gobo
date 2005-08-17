@@ -61,38 +61,38 @@
 	    <entry>fn:error</entry>
 	    <entry>Yes</entry>
 	    <entry>No</entry>
-	    <entry>No</entry>
+	    <entry>None</entry>
 	  </row>
 	  <row>
 	    <entry>fn:trace</entry>
 	    <entry>Yes</entry>
 	    <entry>Only by personal use</entry>
-	    <entry>No</entry>
+	    <entry>None</entry>
 	  </row>
 
 	  <row>
 	    <entry>fn:node-name</entry>
-	    <entry>No</entry>
-	    <entry>No</entry>
-	    <entry>No</entry>
+	    <entry>Yes</entry>
+	    <entry>Yes</entry>
+	    <entry>None</entry>
 	  </row>
 	 <row>
 	   <entry>fn:string</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:data</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:base-uri</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:document-uri</entry>
@@ -456,9 +456,9 @@
 	 </row>	
 	 <row>
 	   <entry>fn:nilled</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:name</entry>

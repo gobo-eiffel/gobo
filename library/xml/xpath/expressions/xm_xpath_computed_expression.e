@@ -305,6 +305,10 @@ feature -- Status setting
 			are_cardinalities_computed := False
 			are_special_properties_computed := False
 			compute_static_properties
+			if container /= Void and then container.is_computed_expression
+			 and then container.as_computed_expression.are_static_properties_computed then
+			 container.as_computed_expression.reset_static_properties
+			end
 		end
 
 feature -- Optimization
@@ -517,15 +521,19 @@ feature -- Element change
 			if not a_child.is_error then a_child.mark_unreplaced end
 			if a_child.is_computed_expression then
 				a_computed_expression := a_child.as_computed_expression
-				if parent = Void and then a_computed_expression.container /= Current then
-					parent := a_computed_expression.container
+				if a_computed_expression.container /= Current then
+					a_computed_expression.set_parent (Current)
+					if location_identifier = 0 then
+						a_computed_expression.copy_location_identifier (Current)
+					else
+						copy_location_identifier (a_computed_expression)
+					end
+					if are_static_properties_computed then
+						reset_static_properties
+					end
 				end
-				a_computed_expression.set_parent (Current)
-				if location_identifier = 0 then
-					a_computed_expression.copy_location_identifier (Current)
-				else
-					copy_location_identifier (a_computed_expression)
-				end
+			elseif are_static_properties_computed then
+				reset_static_properties
 			end
 		end
 

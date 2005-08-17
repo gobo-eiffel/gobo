@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Optimization	
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_role, another_role: XM_XPATH_ROLE_LOCATOR
@@ -85,14 +85,14 @@ feature -- Optimization
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 		do
 			mark_unreplaced
-			first_operand.check_static_type (a_context)
+			first_operand.check_static_type (a_context, a_context_item_type)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.check_static_type (a_context)
+				second_operand.check_static_type (a_context, a_context_item_type)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -119,7 +119,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			an_integer, another_integer: INTEGER
@@ -128,14 +128,14 @@ feature -- Optimization
 			an_integer_range: XM_XPATH_INTEGER_RANGE
 		do
 			mark_unreplaced
-			first_operand.optimize (a_context)
+			first_operand.optimize (a_context, a_context_item_type)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.optimize (a_context)
+				second_operand.optimize (a_context, a_context_item_type)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end

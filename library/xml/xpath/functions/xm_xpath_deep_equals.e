@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 					Result := are_elements_equal (a_node, another_node, a_comparer)
 				when Attribute_node then
 					Result := are_attributes_equal (a_node, another_node, a_comparer)
-				when Processing_instruction_node, Namespace_node then
+				when Processing_instruction_node then
 					if a_node.fingerprint /= another_node.fingerprint then
 						Result := False
 					else

@@ -763,13 +763,14 @@ feature -- Setting cardinality
 
 	set_cardinality_many is
 			-- Allow only more than one item.
+			-- (Actually treated as one or more for now - only XM_XPATH_INTEGER_RANGE uses it)
 		do
 			if not are_cardinalities_computed then
 				create cardinalities.make (1, Cardinality_flag_count)
 				are_cardinalities_computed := True
 			end
 			cardinalities.put (False, 1)
-			cardinalities.put (False, 2)
+			cardinalities.put (True, 2)
 			cardinalities.put (True, 3)
 		ensure
 			cardinalities_computed: are_cardinalities_computed

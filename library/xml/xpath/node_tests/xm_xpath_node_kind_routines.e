@@ -23,8 +23,7 @@ feature -- Access
 	string_kinds: INTEGER is
 			-- Node kinds whose typed value is always string
 		once
-			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Namespace_node), INTEGER_.bit_shift_left (1, Comment_node))
-			Result := INTEGER_.bit_or (Result, INTEGER_.bit_shift_left (1, Processing_instruction_node))
+			Result := INTEGER_.bit_or (INTEGER_.bit_shift_left (1, Processing_instruction_node), INTEGER_.bit_shift_left (1, Comment_node))
 		end
 
 	untyped_kinds: INTEGER is

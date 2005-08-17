@@ -2,22 +2,25 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath name() function"
+		"Objects that implement the XPath nilled() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_NAME
+class XM_XPATH_NILLED
 
 inherit
 
 	XM_XPATH_SYSTEM_FUNCTION
 		redefine
-			simplify, evaluate_item
+			evaluate_item
 		end
+
+	XM_XPATH_TOKENS
+		export {NONE} all end
 
 create
 
@@ -28,9 +31,10 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "name"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := Name_function_type_code
-			minimum_argument_count := 0
+			name := "nilled"
+			namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Nilled_function_type_code
+			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
@@ -42,7 +46,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
-			Result := type_factory.string_type
+			Result := type_factory.boolean_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -57,29 +61,33 @@ feature -- Status report
 			create Result.make_optional_node
 		end
 
-feature -- Optimization
-
-	simplify is
-			-- Perform context-independent static optimizations.
-		do
-			use_context_item_as_default
-			Precursor
-		end
-
 feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
+		local
+			a_node: XM_XPATH_NODE
 		do
 			arguments.item (1).evaluate_item (a_context)
 			if arguments.item (1).last_evaluated_item = Void then
 				last_evaluated_item := Void
-			elseif not arguments.item (1).last_evaluated_item.is_error then
-				if not arguments.item (1).last_evaluated_item.is_node then
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make ("")
+			elseif arguments.item (1).last_evaluated_item.is_error then
+				last_evaluated_item := arguments.item (1).last_evaluated_item
+			elseif arguments.item (1).last_evaluated_item.is_node then
+				a_node := arguments.item (1).last_evaluated_item.as_node
+				if a_node.node_type = Element_node then
+					check
+						not_schema_aware: conformance.basic_xslt_processor
+						-- Actually, the real critereon is that
+						--  the data model has been built from an infoset,
+						--  not a PSVI
+					end
+					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
 				else
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (arguments.item (1).last_evaluated_item.as_node.node_name)
+					last_evaluated_item := Void
 				end
+			else
+				last_evaluated_item := Void
 			end
 		end
 
@@ -88,7 +96,7 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			set_cardinality_exactly_one
+			set_cardinality_optional
 		end
 
 end

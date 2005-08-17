@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "namespace-uri-for-prefix"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := namespace_uri_for_prefix_function_type_code
+			fingerprint := Namespace_uri_for_prefix_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := 2
 			create arguments.make (1)

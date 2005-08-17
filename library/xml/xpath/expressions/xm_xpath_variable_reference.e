@@ -130,7 +130,7 @@ feature -- Status setting
 
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		do
 			mark_unreplaced
@@ -144,7 +144,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		do
 			mark_unreplaced
@@ -227,7 +227,7 @@ feature -- Element change
 			not_replaced: not was_expression_replaced
 		do
 			static_type := a_type
-			reset_static_properties
+			if are_static_properties_computed then reset_static_properties end
 			constant_value := a_constant_value
 			if	a_dependencies_set /= Void then
 				merge_dependencies (a_dependencies_set)

@@ -111,14 +111,14 @@ feature -- Optimization
 		end
 
 	
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_relation: INTEGER
 			a_message: STRING
 		do
 			mark_unreplaced
-			base_expression.check_static_type (a_context)
+			base_expression.check_static_type (a_context, a_context_item_type)
 			if base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end

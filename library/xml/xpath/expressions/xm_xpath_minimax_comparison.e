@@ -50,21 +50,21 @@ feature -- Access
 
 feature -- Optimization
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			a_value: XM_XPATH_VALUE
 			a_range: ARRAY [XM_XPATH_NUMERIC_VALUE]
 		do
 			mark_unreplaced
-			first_operand.optimize (a_context)
+			first_operand.optimize (a_context, a_context_item_type)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.optimize (a_context)
+				second_operand.optimize (a_context, a_context_item_type)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end

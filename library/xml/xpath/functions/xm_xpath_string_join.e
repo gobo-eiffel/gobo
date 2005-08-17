@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "string-join"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := string_join_function_type_code
+			fingerprint := String_join_function_type_code
 			minimum_argument_count := 2
 			maximum_argument_count := 2
 			create arguments.make (2)
@@ -65,13 +65,13 @@ feature -- Status report
 
 feature -- Optimization
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			an_expression: XM_XPATH_EXPRESSION 
 		do
 			mark_unreplaced
-			Precursor (a_context)
+			Precursor (a_context, a_context_item_type)
 			if not is_error and then not was_expression_replaced then
 				an_expression := simplified_singleton
 				if an_expression /= Current then

@@ -19,7 +19,7 @@ inherit
 		redefine
 			promote, create_iterator, evaluate_item, compute_special_properties,
 			mark_tail_function_calls, action, is_let_expression, as_let_expression,
-			is_tail_recursive, process
+			is_tail_recursive, process, is_tail_call, as_tail_call
 		end
 
 	XM_XPATH_ROLE
@@ -104,6 +104,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_tail_call: BOOLEAN is
+			-- Is `Current' an XPath tail call?
+		do
+			Result := True
+		end
+
 	display (a_level: INTEGER) is
 			-- Diagnostic print of expression structure to `std.error'
 		local
@@ -131,7 +137,7 @@ feature -- Status setting
 	  
 feature -- Optimization
 
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			an_expression: XM_XPATH_EXPRESSION
@@ -150,7 +156,7 @@ feature -- Optimization
 				-- sequence expression is established. This is used to establish the type of the variable,
 				-- which in turn is required when type-checking the action part.
 				
-				sequence.check_static_type (a_context)
+				sequence.check_static_type (a_context, a_context_item_type)
 				if sequence.is_error then
 					set_last_error (sequence.error_value)
 				else
@@ -174,7 +180,7 @@ feature -- Optimization
 						-- Now set the static type of the binding reference, more accurately:
 						
 						declaration.refine_type_information (a_type, sequence.cardinalities, a_value, sequence.dependencies, sequence.special_properties)
-						action_expression.check_static_type (a_context)
+						action_expression.check_static_type (a_context, a_context_item_type)
 						if action_expression.was_expression_replaced then
 							replace_action (action_expression.replacement_expression)
 						end
@@ -186,7 +192,7 @@ feature -- Optimization
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			a_reference_count, a_try_count: INTEGER
@@ -210,7 +216,7 @@ feature -- Optimization
 				until
 					is_error or else optimized or else a_try_count > Maximum_optimization_attempts
 				loop
-					sequence.optimize (a_context)
+					sequence.optimize (a_context, a_context_item_type)
 					if sequence.was_expression_replaced then
 						set_sequence (sequence.replacement_expression)
 						reset_static_properties
@@ -227,7 +233,7 @@ feature -- Optimization
 				until
 					is_error or else optimized or else a_try_count > Maximum_optimization_attempts
 				loop
-					action_expression.optimize (a_context)
+					action_expression.optimize (a_context, a_context_item_type)
 					if action_expression.was_expression_replaced then
 						replace_action (action_expression.replacement_expression)
 						reset_static_properties
@@ -465,15 +471,22 @@ feature -- Evaluation
 				last_tail_call := Void
 				a_context.report_fatal_error (error_value)
 			else
-				a_tail_call ?= a_let_expression.action
-				if a_tail_call /= Void then
-					a_tail_call.process_leaving_tail (a_context)
+				if a_let_expression.action.is_tail_call then
+					a_let_expression.action.as_tail_call.process_leaving_tail (a_context)
 					last_tail_call := a_tail_call.last_tail_call
 				else
 					a_let_expression.action.process (a_context)
 					last_tail_call := Void
 				end
 			end
+		end
+
+feature -- Conversion
+
+	as_tail_call: XM_XPATH_TAIL_CALL is
+			-- `Current' seen as an XPath tail call
+		do
+			Result := Current
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

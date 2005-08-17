@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			name := "zero-or-one"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := zero_or_one_function_type_code
+			fingerprint := Zero_or_one_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)

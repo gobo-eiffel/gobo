@@ -69,20 +69,20 @@ feature -- Access
 feature -- Optimization	
 
 	
-	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT) is
+	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static type-checking of `Current' and its subexpressions.
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			mark_unreplaced
-			first_operand.check_static_type (a_context)
+			first_operand.check_static_type (a_context, a_context_item_type)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.check_static_type (a_context)
+				second_operand.check_static_type (a_context, a_context_item_type)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -102,26 +102,26 @@ feature -- Optimization
 						if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
 						second_operand.set_unsorted (False)
 						if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
-						operands_not_in_error_so_type_check (a_context)
+						operands_not_in_error_so_type_check (a_context, a_context_item_type)
 					end
 				end
 			end
 		end
 
-	optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			mark_unreplaced
-			first_operand.optimize (a_context)
+			first_operand.optimize (a_context, a_context_item_type)
 			if first_operand.was_expression_replaced then
 				set_first_operand (first_operand.replacement_expression)
 			end
 			if first_operand.is_error then
 				set_last_error (first_operand.error_value)
 			else
-				second_operand.optimize (a_context)
+				second_operand.optimize (a_context, a_context_item_type)
 				if second_operand.was_expression_replaced then
 					set_second_operand (second_operand.replacement_expression)
 				end
@@ -140,7 +140,7 @@ feature -- Optimization
 						if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
 						second_operand.set_unsorted (False)
 						if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
-						operands_not_in_error_so_optimize (a_context)
+						operands_not_in_error_so_optimize (a_context, a_context_item_type)
 					end
 				end
 			end
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			last_boolean_value_not_void: last_boolean_value /= Void			
 		end
 
-	type_check_two_singletons (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE) is
+	type_check_two_singletons (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Use a value comparison if both arguments are singletons
 		require
 			context_not_void: a_context /= Void
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 				else
 					an_expression := a_computed_expression
 				end
-				an_expression.check_static_type (a_context)
+				an_expression.check_static_type (a_context, a_context_item_type)
 				if an_expression.was_expression_replaced then
 					set_replacement (an_expression.replacement_expression)
 				else
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	optimize_two_singletons (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE) is
+	optimize_two_singletons (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ATOMIC_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Use a value comparison if both arguments are singletons
 		require
 			context_not_void: a_context /= Void
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 				else
 					an_expression := a_computed_expression
 				end
-				an_expression.optimize (a_context)
+				an_expression.optimize (a_context, a_context_item_type)
 				if an_expression.was_expression_replaced then
 					set_replacement (an_expression.replacement_expression)
 				else
@@ -406,7 +406,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	operands_not_in_error_so_type_check (a_context: XM_XPATH_STATIC_CONTEXT) is
+	operands_not_in_error_so_type_check (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Type check after operands have been checked.
 		require
 			context_not_void: a_context /= Void
@@ -447,15 +447,15 @@ feature {NONE} -- Implementation
 						if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one and then
 							a_type /= type_factory.any_atomic_type and then another_type /= type_factory.any_atomic_type and then
 							a_type.is_atomic_type and then another_type.is_atomic_type then
-							type_check_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type)
+							type_check_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type, a_context_item_type)
 						elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
-							type_check_singleton_and_empty_sequence (a_context)
+							type_check_singleton_and_empty_sequence (a_context, a_context_item_type)
 						elseif not first_operand.cardinality_allows_many then
-							type_check_first_operand_single (a_context)
+							type_check_first_operand_single (a_context, a_context_item_type)
 						else
 							if operator /= Equals_token and then operator /= Not_equal_token	and then (is_sub_type (a_type, type_factory.numeric_type)
 																																 or else is_sub_type (another_type, type_factory.numeric_type)) then
-								type_check_inequalities (a_context, a_type, another_type)
+								type_check_inequalities (a_context, a_type, another_type, a_context_item_type)
 							end
 							if not was_expression_replaced then
 								evaluate_two_constants
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	operands_not_in_error_so_optimize (a_context: XM_XPATH_STATIC_CONTEXT) is
+	operands_not_in_error_so_optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimize after operands have been optimized.
 		require
 			context_not_void: a_context /= Void
@@ -478,11 +478,11 @@ feature {NONE} -- Implementation
 			if first_operand.cardinality_exactly_one and then second_operand.cardinality_exactly_one and then
 				a_type /= type_factory.any_atomic_type and then another_type /= type_factory.any_atomic_type and then
 				a_type.is_atomic_type and then another_type.is_atomic_type then
-				optimize_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type)
+				optimize_two_singletons (a_context, a_type.as_atomic_type, another_type.as_atomic_type, a_context_item_type)
 			elseif not first_operand.cardinality_allows_many and not second_operand.cardinality_allows_many then
-				optimize_singleton_and_empty_sequence (a_context)
+				optimize_singleton_and_empty_sequence (a_context, a_context_item_type)
 			elseif not first_operand.cardinality_allows_many then
-				optimize_first_operand_single (a_context)
+				optimize_first_operand_single (a_context, a_context_item_type)
 			elseif first_operand.is_range_expression and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
 				optimize_n_to_m_equals_i (a_context, first_operand.as_range_expression)
 			elseif first_operand.is_integer_range and then is_sub_type (second_operand.item_type, type_factory.integer_type) and then not second_operand.cardinality_allows_many then
@@ -492,7 +492,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	type_check_singleton_and_empty_sequence (a_context: XM_XPATH_STATIC_CONTEXT) is
+	type_check_singleton_and_empty_sequence (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Type check when neither argument allows a sequence of >1
 		require
 			context_not_void: a_context /= Void
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 			a_singleton_comparison: XM_XPATH_SINGLETON_COMPARISON
 		do
 			create a_singleton_comparison.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
-			a_singleton_comparison.check_static_type (a_context)
+			a_singleton_comparison.check_static_type (a_context, a_context_item_type)
 			if a_singleton_comparison.was_expression_replaced then
 				set_replacement (a_singleton_comparison.replacement_expression)
 			else
@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize_singleton_and_empty_sequence (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize_singleton_and_empty_sequence (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Optimize when neither argument allows a sequence of >1
 		require
 			context_not_void: a_context /= Void
@@ -516,7 +516,7 @@ feature {NONE} -- Implementation
 			a_singleton_comparison: XM_XPATH_SINGLETON_COMPARISON
 		do
 			create a_singleton_comparison.make (first_operand, singleton_operator, second_operand, atomic_comparer.collator)
-			a_singleton_comparison.optimize (a_context)
+			a_singleton_comparison.optimize (a_context, a_context_item_type)
 			if a_singleton_comparison.was_expression_replaced then
 				set_replacement (a_singleton_comparison.replacement_expression)
 			else
@@ -524,7 +524,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	type_check_first_operand_single (a_context: XM_XPATH_STATIC_CONTEXT) is
+	type_check_first_operand_single (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- If first argument is a singleton, reverse the arguments
 		require
 			context_not_void: a_context /= Void
@@ -532,7 +532,7 @@ feature {NONE} -- Implementation
 			a_general_comparison: XM_XPATH_GENERAL_COMPARISON
 		do	
 			create a_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
-			a_general_comparison.check_static_type (a_context)
+			a_general_comparison.check_static_type (a_context, a_context_item_type)
 			if a_general_comparison.was_expression_replaced then
 				set_replacement (a_general_comparison.replacement_expression)
 			else
@@ -540,7 +540,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	optimize_first_operand_single (a_context: XM_XPATH_STATIC_CONTEXT) is
+	optimize_first_operand_single (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- If first argument is a singleton, reverse the arguments
 		require
 			context_not_void: a_context /= Void
@@ -548,7 +548,7 @@ feature {NONE} -- Implementation
 			a_general_comparison: XM_XPATH_GENERAL_COMPARISON
 		do	
 			create a_general_comparison.make (second_operand, inverse_operator (operator), first_operand, atomic_comparer.collator)
-			a_general_comparison.optimize (a_context)
+			a_general_comparison.optimize (a_context, a_context_item_type)
 			if a_general_comparison.was_expression_replaced then
 				set_replacement (a_general_comparison.replacement_expression)
 			else
@@ -593,7 +593,7 @@ feature {NONE} -- Implementation
 			set_replacement (an_expression)
 		end
 
-	type_check_inequalities (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ITEM_TYPE) is
+	type_check_inequalities (a_context: XM_XPATH_STATIC_CONTEXT; a_type, another_type: XM_XPATH_ITEM_TYPE; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- If the operator is gt, ge, lt, le then replace X < Y by min(X) < max(Y)
 
 			-- This optimization is done only in the case where at least one of the
@@ -634,7 +634,7 @@ feature {NONE} -- Implementation
 			end
 			if not is_error then
 				create a_minimax_comparison.make (first_operand, operator, second_operand)
-				a_minimax_comparison.check_static_type (a_context)
+				a_minimax_comparison.check_static_type (a_context, a_context_item_type)
 				if a_minimax_comparison.was_expression_replaced then
 					set_replacement (a_minimax_comparison.replacement_expression)
 				else
