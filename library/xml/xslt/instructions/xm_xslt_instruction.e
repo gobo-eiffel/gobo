@@ -152,16 +152,6 @@ feature -- Optimization
 
 feature -- Evaluation
 
-	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
-			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
-		require
-			evaluation_context_not_void: a_context /= Void
-			no_error: not a_context.transformer.is_error
-		deferred
-		ensure
-			possible_tail_call: last_tail_call = Void or else last_tail_call /= Void
-		end
-
 	process (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
