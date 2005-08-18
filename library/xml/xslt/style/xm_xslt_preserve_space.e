@@ -125,9 +125,8 @@ feature {NONE} -- Implementation
 		local
 			a_pattern: XM_XSLT_PATTERN
 			a_boolean_rule: XM_XSLT_RULE_VALUE
-			an_xml_prefix, a_uri, a_local_name, a_message: STRING
-			a_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_uri, a_message: STRING
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_name_code: INTEGER
 			an_error: XM_XPATH_ERROR_VALUE
 		do
@@ -140,8 +139,7 @@ feature {NONE} -- Implementation
 					create an_error.make_from_string ("No prefix before ':*'", Gexslt_eiffel_type_uri, "STRIPPER", Static_error)
 					report_compile_error (an_error)
 				else
-					an_xml_prefix := a_token.substring (1, a_token.count - 2)
-					a_uri := uri_for_prefix (an_xml_prefix, False)
+					a_uri := uri_for_prefix (a_token.substring (1, a_token.count - 2), False)
 					if static_context = Void then
 						create static_context.make (Current, configuration)
 					end
@@ -153,36 +151,26 @@ feature {NONE} -- Implementation
 					create an_error.make_from_string ("No local name after '*:'", Gexslt_eiffel_type_uri, "STRIPPER", Static_error)
 					report_compile_error (an_error)
 				else
-					a_local_name := a_token.substring (3, a_token.count)
 					if static_context = Void then
 						create static_context.make (Current, configuration)
 					end
-					create {XM_XSLT_LOCAL_NAME_TEST} a_pattern.make (static_context, Element_node, a_local_name, a_token)
+					create {XM_XSLT_LOCAL_NAME_TEST} a_pattern.make (static_context, Element_node, a_token.substring (3, a_token.count), a_token)
 					stripper_rules.add_rule (a_pattern, a_boolean_rule, precedence, minus_one_quarter)
 				end
 			else
-				if is_qname (a_token) then
-					create a_splitter.make
-					a_splitter.set_separators (":")
-					qname_parts := a_splitter.split (a_token)
-					if qname_parts.count = 1 then
-						an_xml_prefix := ""
-						a_local_name := qname_parts.item (1)
-					else
-						an_xml_prefix := qname_parts.item (1)
-						a_local_name := qname_parts.item (2)
-					end
-					a_uri := uri_for_prefix (an_xml_prefix, False)
+				create a_parser.make (a_token)
+				if a_parser.is_valid then
+					a_uri := uri_for_prefix (a_parser.optional_prefix, False)
 					if a_uri = Void then
 						a_message := STRING_.concat ("Element name ", a_token)
 						a_message := STRING_.appended_string (a_message, " is not a valid QName")
 						create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "STRIPPER", Static_error)
 						report_compile_error (an_error)
 					else
-						if not shared_name_pool.is_name_code_allocated ("", a_uri, a_local_name) then
-							shared_name_pool.allocate_name ("", a_uri, a_local_name)
+						if not shared_name_pool.is_name_code_allocated ("", a_uri, a_parser.local_name) then
+							shared_name_pool.allocate_name ("", a_uri, a_parser.local_name)
 						end
-						a_name_code := shared_name_pool.name_code ("", a_uri, a_local_name)
+						a_name_code := shared_name_pool.name_code ("", a_uri, a_parser.local_name)
 						if static_context = Void then
 							create static_context.make (Current, configuration)
 						end

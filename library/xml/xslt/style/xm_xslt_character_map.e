@@ -96,9 +96,10 @@ feature -- Element change
 			a_stylesheet: XM_XSLT_STYLESHEET
 			another_character_map: like Current
 			a_splitter: ST_SPLITTER
-			character_maps, qname_parts: DS_LIST [STRING]
+			character_maps: DS_LIST [STRING]
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_cursor: DS_LIST_CURSOR [STRING]
-			a_uri, a_local_name, an_xml_prefix, a_message: STRING
+			a_uri, a_message: STRING
 			a_name_code: INTEGER
 			another_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_CHARACTER_MAP]
 			an_error: XM_XPATH_ERROR_VALUE
@@ -143,7 +144,6 @@ feature -- Element change
 					create a_splitter.make
 					character_maps := a_splitter.split (used_character_maps)
 					create character_maps_used.make (character_maps.count)
-					a_splitter.set_separators (":")
 					from
 						a_cursor := character_maps.new_cursor; a_cursor.start
 					variant
@@ -151,25 +151,21 @@ feature -- Element change
 					until
 						a_cursor.after
 					loop
-						qname_parts := a_splitter.split (a_cursor.item)
-						if qname_parts.count = 0 or else qname_parts.count > 2 then
+						create a_parser.make (a_cursor.item)
+						if not a_parser.is_valid then
 							create an_error.make_from_string (STRING_.concat ("Invalid character-map name: ", a_cursor.item), Xpath_errors_uri, "XTSE1590", Static_error)
 							report_compile_error (an_error)
 							a_cursor.go_after
 						else
-							if qname_parts.count = 1 then
+							if not a_parser.is_prefix_present then
 								a_uri := ""
-								an_xml_prefix := ""
-								a_local_name := qname_parts.item (1)
 							else
-								an_xml_prefix := qname_parts.item (1)
-								a_uri := uri_for_prefix (an_xml_prefix, False)
-								a_local_name := qname_parts.item (2)
+								a_uri := uri_for_prefix (a_parser.optional_prefix, False)
 							end
-							if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-								a_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+							if shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
+								a_name_code := shared_name_pool.name_code (a_parser.optional_prefix, a_uri, a_parser.local_name)
 							else
-								shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+								shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
 								a_name_code := shared_name_pool.last_name_code
 							end
 							if a_name_code = -1 then

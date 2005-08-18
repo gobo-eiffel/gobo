@@ -68,31 +68,25 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
-			a_qname, a_uri, a_local_name: STRING
-			a_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_uri: STRING
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			check
 				string_value: arguments.item (1).is_string_value
 				-- from static typing, and `pre_evaluate' is only called for fixed values
 			end
-			a_qname := arguments.item (1).as_string_value.string_value 
-			create a_splitter.make
-			a_splitter.set_separators (":")
-			qname_parts := a_splitter.split (a_qname)
-			if qname_parts.count = 0 or else qname_parts.count > 2 then
+			create a_parser.make (arguments.item (1).as_string_value.string_value)
+			if not a_parser.is_valid then
 				set_last_error_from_string ("Argument to 'system-property' is not a QName",
 													 Xpath_errors_uri, "XTDE1390", Static_error)
 			else
-				if qname_parts.count = 1 then
+				if not a_parser.is_prefix_present then
 					a_uri := ""
-					a_local_name := qname_parts.item (1)
 				else
-					a_uri := namespace_context.uri_for_defaulted_prefix (qname_parts.item (1), False)
-					a_local_name := qname_parts.item (2)
+					a_uri := namespace_context.uri_for_defaulted_prefix (a_parser.optional_prefix, False)
 				end
-				create a_string_value.make (system_property (a_uri, a_local_name))
+				create a_string_value.make (system_property (a_uri, a_parser.local_name))
 				set_replacement (a_string_value)
 			end
 		end
@@ -101,31 +95,25 @@ feature -- Evaluation
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Pre-evaluate `Current' at compile time.
 		local
-			a_qname, a_uri, a_local_name: STRING
-			a_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_uri: STRING
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_string_value: XM_XPATH_STRING_VALUE
 		do
 			check
 				string_value: arguments.item (1).is_string_value
 				-- from static typing, and `pre_evaluate' is only called for fixed values
 			end
-			a_qname := arguments.item (1).as_string_value.string_value 
-			create a_splitter.make
-			a_splitter.set_separators (":")
-			qname_parts := a_splitter.split (a_qname)
-			if qname_parts.count = 0 or else qname_parts.count > 2 then
+			create a_parser.make (arguments.item (1).as_string_value.string_value)
+			if not a_parser.is_valid then
 				set_last_error_from_string ("Argument to 'system-property' is not a QName",
 													 Xpath_errors_uri, "XTDE1390", Static_error)
 			else
-				if qname_parts.count = 1 then
+				if not a_parser.is_prefix_present then
 					a_uri := ""
-					a_local_name := qname_parts.item (1)
 				else
-					a_uri := a_context.uri_for_prefix (qname_parts.item (1))
-					a_local_name := qname_parts.item (2)
+					a_uri := a_context.uri_for_prefix (a_parser.optional_prefix)
 				end
-				create a_string_value.make (system_property (a_uri, a_local_name))
+				create a_string_value.make (system_property (a_uri, a_parser.local_name))
 				set_replacement (a_string_value)
 			end
 		end

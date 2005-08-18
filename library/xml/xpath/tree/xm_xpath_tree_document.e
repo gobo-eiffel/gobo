@@ -194,7 +194,7 @@ feature -- Access
 		end
 
 	document_uri: STRING is
-			-- Absoulte URI of the source from which the document was constructed
+			-- Absolute URI of the source from which the document was constructed
 		do
 			Result := system_id_map.system_id (1)
 		end

@@ -96,69 +96,57 @@
 	 </row>	
 	 <row>
 	   <entry>fn:document-uri</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	 </row>	
-	 <row>
-	   <entry>fn:error</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	 </row>	
-	 <row>
-	   <entry>fn:trace</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:abs</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:ceiling</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:floor</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:round</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:round-half-to-even</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:codepoint-equal</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:codepoints-to-string</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:string-to-codepoints</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:compare</entry>
@@ -402,57 +390,51 @@
 	 </row>	
 	 <row>
 	   <entry>fn:resolve-QName</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:prefix-from-QName</entry>
+	   <entry>Awaiting resolution of NCName result</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:QName</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	 </row>	
-	 <row>
-	   <entry>fn:expanded-QName</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:local-name-from-QName</entry>
+	   <entry>Awaiting resolution of NCName result</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:namespace-uri-from-QName</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:namespace-uri-for-prefix</entry>
 	   <entry>Yes</entry>
 	   <entry>Incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:in-scope-prefixes</entry>
 	   <entry>Yes</entry>
 	   <entry>Incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:resolve-uri</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:nilled</entry>

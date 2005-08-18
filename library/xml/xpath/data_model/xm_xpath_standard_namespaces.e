@@ -428,7 +428,8 @@ feature -- Access
 	Unparsed_entity_uri_function_type_code: INTEGER is 1018
 	Unparsed_text_function_type_code: INTEGER is 1019
 
-	
+	Codepoint_equal_function_type_code: INTEGER is 1020
+
 			-- XSLT Attribute names
 
 	As_attribute: STRING is "as"

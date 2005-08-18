@@ -70,9 +70,8 @@ feature -- Evaluation
 		local
 			an_arity, a_fingerprint: INTEGER
 			an_integer_value: XM_XPATH_INTEGER_VALUE
-			a_qname, a_uri, a_local_name, an_xml_prefix: STRING
-			a_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_uri, an_xml_prefix: STRING
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_boolean: BOOLEAN
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
@@ -100,31 +99,26 @@ feature -- Evaluation
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName",
 																													Xpath_errors_uri, "XTDE1400", Dynamic_error)
 					else
-						a_qname := arguments.item (1).last_evaluated_item.as_atomic_value.string_value
-										create a_splitter.make
-										a_splitter.set_separators (":")
-										qname_parts := a_splitter.split (a_qname)
-						if qname_parts.count = 0 or else qname_parts.count > 2 then
+						create a_parser.make (arguments.item (1).last_evaluated_item.as_atomic_value.string_value)
+						if not a_parser.is_valid then
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("First argument to 'function-available' is not a lexical QName",
 																														Xpath_errors_uri, "XTDE1400", Dynamic_error)
 						else
-							if qname_parts.count = 1 then
+							if not a_parser.is_prefix_present then
 								a_uri := Xpath_standard_functions_uri
-								a_local_name := qname_parts.item (1)
 								an_xml_prefix := ""
 							else
-								an_xml_prefix := qname_parts.item (1)
+								an_xml_prefix := a_parser.optional_prefix
 								a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, False)
-								a_local_name := qname_parts.item (2)
 							end
 							if a_uri = Void then
 								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("QName prefix in first argument to 'function-available' has not been declared.",
 																															Xpath_errors_uri, "XTDE1400", Dynamic_error)
 							else
-								if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-									shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+								if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_parser.local_name) then
+									shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_parser.local_name)
 								end
-								a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+								a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
 								a_boolean := a_context.available_functions.is_function_available (a_fingerprint, an_arity, a_context.is_restricted)
 								create a_boolean_value.make (a_boolean)
 								last_evaluated_item := a_boolean_value
@@ -140,9 +134,8 @@ feature -- Evaluation
 			-- Pre-evaluate `Current' at compile time.
 		local
 			an_arity, a_fingerprint: INTEGER
-			a_qname, a_uri, a_local_name, an_xml_prefix: STRING
-			a_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_uri: STRING
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_boolean: BOOLEAN
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
@@ -164,27 +157,20 @@ feature -- Evaluation
 					fixed_string: arguments.item (1).is_string_value
 					-- static typing and `pre_evaluate' is only called for foxed values
 				end
-				a_qname := arguments.item (1).as_string_value.string_value
-				create a_splitter.make
-				a_splitter.set_separators (":")
-				qname_parts := a_splitter.split (a_qname)
-				if qname_parts.count = 0 or else qname_parts.count > 2 then
+				create a_parser.make (arguments.item (1).as_string_value.string_value)
+				if not a_parser.is_valid then
 					set_last_error_from_string ("First argument to 'function-available' is not a lexical QName",
 														 Xpath_errors_uri, "XTDE1400", Static_error)
 				else
-					if qname_parts.count = 1 then
+					if not a_parser.is_prefix_present then
 						a_uri := Xpath_standard_functions_uri
-						a_local_name := qname_parts.item (1)
-						an_xml_prefix := ""
 					else
-						an_xml_prefix := qname_parts.item (1)
-						a_uri := a_context.uri_for_prefix (an_xml_prefix)
-						a_local_name := qname_parts.item (2)
+						a_uri := a_context.uri_for_prefix (a_parser.optional_prefix)
 					end
-					if not shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-						shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+					if not shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
+						shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
 					end
-					a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+					a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
 					a_boolean := a_context.available_functions.is_function_available (a_fingerprint, an_arity, a_context.is_restricted)
 					create a_boolean_value.make (a_boolean)
 					set_replacement (a_boolean_value)

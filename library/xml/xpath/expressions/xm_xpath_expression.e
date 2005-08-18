@@ -455,6 +455,21 @@ feature -- Access
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end
+
+	is_any_uri: BOOLEAN is
+			-- Is `Current' an anyURI value?
+		do
+			Result := False
+		end
+
+	as_any_uri: XM_XPATH_ANY_URI_VALUE is
+			-- `Current' seen as an anyURI value
+		require
+			any_uri_value: is_any_uri
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
 	
 	is_untyped_atomic: BOOLEAN is
 			-- Is `Current' an untyped atomic value?
@@ -530,21 +545,6 @@ feature -- Access
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 		end	
-
-	is_any_uri: BOOLEAN is
-			-- Is `Current' an anyURI value?
-		do
-			Result := False
-		end
-
-	as_any_uri: XM_XPATH_ANY_URI_VALUE is
-			-- `Current' seen as an anyURI value
-		require
-			any_uri_value: is_any_uri
-		do
-		ensure
-			same_object: ANY_.same_objects (Result, Current)
-		end
 
 	is_closure: BOOLEAN is
 			-- Is `Current' a closure?

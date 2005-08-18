@@ -207,8 +207,7 @@ feature -- Access
 		end
 
 	code_for_prefix (an_xml_prefix: STRING): INTEGER is -- should be INTEGER_16
-			-- Prefix code for a given `an_xml_prefix';
-			-- -1 if not found
+			-- Prefix code for a given `an_xml_prefix'
 		require
 			an_xml_prefix_not_void: an_xml_prefix /= Void
 			code_allocated: is_code_for_prefix_allocated (an_xml_prefix)

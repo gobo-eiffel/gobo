@@ -80,20 +80,12 @@ feature -- Access
 	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
 			-- Fingerprint of `a_qname'
 		local
-			a_string_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_uri: STRING			
 		do
-			create a_string_splitter.make
-			a_string_splitter.set_separators (":")
-			qname_parts := a_string_splitter.split (a_qname)
-			if qname_parts.count = 1 then
-				a_uri := uri_for_defaulted_prefix ("", use_default_namespace)
-				Result := shared_name_pool.fingerprint (a_uri, qname_parts.item (1))
-			else
-				a_uri := uri_for_defaulted_prefix (qname_parts.item (1), use_default_namespace)
-				Result := shared_name_pool.fingerprint (a_uri, qname_parts.item (2))
-			end
+			create a_parser.make (a_qname)
+			a_uri := uri_for_defaulted_prefix (a_parser.optional_prefix, use_default_namespace)
+			Result := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
 		end
 
 invariant

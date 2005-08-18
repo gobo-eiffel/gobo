@@ -82,9 +82,8 @@ feature -- Evaluation
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 			a_dfm: XM_XSLT_DECIMAL_FORMAT_MANAGER
 			a_number: XM_XPATH_NUMERIC_VALUE
-			a_qname, a_uri, a_local_name: STRING
-			a_splitter: ST_SPLITTER
-			some_qname_parts: DS_LIST [STRING]
+			a_uri: STRING
+			a_parser: XM_XPATH_QNAME_PARSER
 			in_error: BOOLEAN
 			a_fingerprint: INTEGER
 		do
@@ -125,25 +124,20 @@ feature -- Evaluation
 																								  Xpath_errors_uri, "XTDE1280", Dynamic_error)
 								in_error := True
 							else
-								a_qname := arguments.item (3).last_evaluated_item.string_value
-								create a_splitter.make
-								a_splitter.set_separators (":")
-								some_qname_parts := a_splitter.split (a_qname)
-								if some_qname_parts.count = 2 then
-									a_uri := namespace_resolver.uri_for_defaulted_prefix (some_qname_parts.item (1), False)
+								create a_parser.make (arguments.item (3).last_evaluated_item.string_value)
+								if a_parser.is_prefix_present then
+									a_uri := namespace_resolver.uri_for_defaulted_prefix (a_parser.optional_prefix, False)
 									if a_uri = Void then
 										create last_evaluated_string.make ("")
 										last_evaluated_string.set_last_error_from_string ("Prefix for decimal format name has not been declared",
 																										  Xpath_errors_uri, "XTDE1280", Dynamic_error)
 										in_error := True
 									end
-									a_local_name := some_qname_parts.item (2)
 								else
 									a_uri := Null_uri
-									a_local_name := some_qname_parts.item (1)
 								end
 								if not in_error then
-									a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+									a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
 									if a_dfm.has_named_format (a_fingerprint) then
 										decimal_format := a_dfm.named_format (a_fingerprint)
 									else
@@ -208,12 +202,11 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
 			-- Check arguments during parsing, when all the argument expressions have been read.
 		local
-			a_qname, a_uri, a_local_name: STRING
+			a_uri: STRING
 			a_dfm: XM_XSLT_DECIMAL_FORMAT_MANAGER
 			an_expression_context: XM_XSLT_EXPRESSION_CONTEXT
 			a_fingerprint: INTEGER
-			a_splitter: ST_SPLITTER
-			some_qname_parts: DS_LIST [STRING]
+			a_parser: XM_XPATH_QNAME_PARSER
 		do
 			Precursor (a_context)
 			if arguments.item (2).is_string_value then
@@ -231,29 +224,25 @@ feature {XM_XPATH_FUNCTION_CALL} -- Restricted
 
 					-- common case, decimal format name is supplied as a string literal
 					
-					a_qname := arguments.item (3).as_string_value.string_value
-					if is_qname (a_qname) then
+					create a_parser.make (arguments.item (3).as_string_value.string_value)
+					if a_parser.is_valid then
 						a_dfm := an_expression_context.style_sheet.decimal_format_manager
 						is_fixup_required := True
-						create a_splitter.make
-						a_splitter.set_separators (":")
-						some_qname_parts := a_splitter.split (a_qname)
-						if some_qname_parts.count = 2 then
-							if a_context.is_prefix_declared (some_qname_parts.item (1)) then
-								a_uri := a_context.uri_for_prefix (some_qname_parts.item (1))
-								a_local_name := some_qname_parts.item (2)
+
+						if a_parser.is_prefix_present then
+							if a_context.is_prefix_declared (a_parser.optional_prefix) then
+								a_uri := a_context.uri_for_prefix (a_parser.optional_prefix)
 							else
 								set_last_error_from_string ("Prefix of decimal-format-name has not been declared",
 																	 Xpath_errors_uri, "XTDE1280", Static_error)
 							end
 						else
 							a_uri := Null_uri
-							a_local_name := some_qname_parts.item (1)
 						end
-						a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+						a_fingerprint := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
 						a_dfm.register_usage (a_fingerprint, Current)
 					else
-						set_last_error_from_string (STRING_.appended_string (a_qname, " is not a lexical QName"),
+						set_last_error_from_string (STRING_.appended_string (arguments.item (3).as_string_value.string_value, " is not a lexical QName"),
 															 Xpath_errors_uri, "XTDE1280", Static_error)
 					end
 				else

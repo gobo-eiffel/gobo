@@ -263,8 +263,7 @@ feature {NONE} -- Implementation
 		require
 			string_value_not_void: a_string_value /= Void
 		local
-			a_string_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_parser: XM_XPATH_QNAME_PARSER
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			qname := a_string_value.string_value
@@ -274,15 +273,10 @@ feature {NONE} -- Implementation
 				create an_error.make_from_string ("Element name must not be zero length", Xpath_errors_uri, "XTSE0020", Static_error)
 				report_compile_error (an_error)
 			else
-				create a_string_splitter.make
-				a_string_splitter.set_separators (":")
-				qname_parts := a_string_splitter.split (qname)
-				if qname_parts.count = 1 then
-					local_name := qname_parts.item (1)
-					qname_prefix := ""
-				elseif qname_parts.count = 2 then
-					local_name := qname_parts.item (2)
-					qname_prefix := qname_parts.item (1)
+				create a_parser.make (qname)
+				if a_parser.is_valid then
+					local_name := a_parser.local_name
+					qname_prefix := a_parser.optional_prefix
 				else
 					create an_error.make_from_string (STRING_.concat ("Invalid element name: ", qname), Xpath_errors_uri, "XTSE0020", Static_error)
 					report_compile_error (an_error)

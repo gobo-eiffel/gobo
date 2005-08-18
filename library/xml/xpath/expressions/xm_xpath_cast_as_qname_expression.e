@@ -77,26 +77,24 @@ feature -- Optimization
 	check_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform static analysis of an expression and its subexpressions
 		local
-			a_string, an_xml_prefix, a_namespace_uri, a_local_name: STRING
-			a_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			an_xml_prefix, a_namespace_uri, a_local_name: STRING
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_name_code: INTEGER
 			a_qname_value: XM_XPATH_QNAME_VALUE
 		do
 			mark_unreplaced
 			if source.is_string_value then
-				a_string := source.as_string_value.string_value
-				create a_splitter.make
-				a_splitter.set_separators (":")
-				qname_parts := a_splitter.split (a_string)
-				if qname_parts.count = 1 then
-					an_xml_prefix := ""
-					a_local_name := qname_parts.item (1)
-					a_namespace_uri := ""
-				elseif qname_parts.count = 2 then
-					an_xml_prefix := qname_parts.item (1)
-					a_local_name := qname_parts.item (2)
-					a_namespace_uri := a_context.uri_for_prefix (an_xml_prefix)
+				create a_parser.make (source.as_string_value.string_value)
+				if a_parser.is_valid then
+					if not a_parser.is_prefix_present then
+						an_xml_prefix := ""
+						a_local_name := a_parser.local_name
+						a_namespace_uri := ""
+					else
+						an_xml_prefix := a_parser.optional_prefix
+						a_local_name := a_parser.local_name
+						a_namespace_uri := a_context.uri_for_prefix (an_xml_prefix)
+					end
 				else
 					set_last_error_from_string ("Argument to cast as xs:QName is not a lexical QName", Xpath_errors_uri, "FORG0001", Static_error)
 				end

@@ -135,8 +135,7 @@ feature -- Creation
 		require
 			valid_qname: a_qname /= Void and then is_qname (a_qname)
 		local
-			a_string_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_parser: XM_XPATH_QNAME_PARSER
 			an_xml_prefix, a_uri, a_local_name, a_message: STRING
 			a_uri_code: INTEGER
 		do
@@ -145,19 +144,22 @@ feature -- Creation
 				std.error.put_string (a_qname)
 				std.error.put_new_line
 			end
-			create a_string_splitter.make
-			a_string_splitter.set_separators (":")
-			qname_parts := a_string_splitter.split (a_qname)
-			if qname_parts.count = 1 then
+			create a_parser.make (a_qname)
+			check
+				a_parser.is_valid
+				-- from pre-condition
+			end
+			if not a_parser.is_prefix_present then
 				an_xml_prefix := ""
+				a_local_name := a_parser.local_name
 				if use_default_namespace then
 					a_uri_code := environment.default_element_namespace
 				end
-				if shared_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_qname) then
-					last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, shared_name_pool.uri_from_uri_code (a_uri_code), a_qname)
+				if shared_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name) then
+					last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, shared_name_pool.uri_from_uri_code (a_uri_code), a_local_name)
 				else
-					if not shared_name_pool.is_name_pool_full_using_uri_code (a_uri_code, a_qname) then
-						shared_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_qname)
+					if not shared_name_pool.is_name_pool_full_using_uri_code (a_uri_code, a_local_name) then
+						shared_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
 						last_generated_name_code := shared_name_pool.last_name_code
 					else
 						a_message := STRING_.appended_string ("Name pool has no room to allocate ", a_qname)
@@ -166,11 +168,8 @@ feature -- Creation
 					end
 				end
 			else
-					check
-						two_parts: qname_parts.count = 2
-					end
-				an_xml_prefix := qname_parts.item (1)
-				a_local_name := qname_parts.item (2)
+				an_xml_prefix := a_parser.optional_prefix
+				a_local_name := a_parser.local_name
 				a_uri := environment.uri_for_prefix (an_xml_prefix)
 				if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
 					last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
@@ -236,26 +235,22 @@ feature {NONE} -- Implementation
 		local
 			a_primary_type: XM_XPATH_ITEM_TYPE
 			a_message, a_local_name, a_uri: STRING
-			a_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_fingerprint: INTEGER
 		do
 			a_primary_type := any_item
 			if tokenizer.last_token = Name_token then
 				if is_qname (tokenizer.last_token_value) then
-					create a_splitter.make
-					a_splitter.set_separators (":")
-					qname_parts := a_splitter.split (tokenizer.last_token_value)
+					create a_parser.make (tokenizer.last_token_value)
 						check
-							one_or_two_parts: qname_parts.count = 1 or else qname_parts.count = 2
+							one_or_two_parts: a_parser.is_valid
 							-- because of is_qname
 						end
-					if qname_parts.count = 1 then
+					a_local_name := a_parser.local_name
+					if not a_parser.is_prefix_present then
 						a_uri := ""
-						a_local_name := qname_parts.item (1)
 					else
-						a_uri := environment.uri_for_prefix (qname_parts.item (1))
-						a_local_name := qname_parts.item (2)
+						a_uri := environment.uri_for_prefix (a_parser.optional_prefix)
 					end
 					a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
 					if a_fingerprint /= -1 then
@@ -1840,8 +1835,7 @@ feature {NONE} -- Implementation
 			arguments: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 			an_argument: XM_XPATH_EXPRESSION
 			a_fingerprint: INTEGER
-			a_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_uri, an_xml_prefix, a_local_name: STRING
 		do
 			debug ("XPath Expression Parser")
@@ -1892,16 +1886,12 @@ feature {NONE} -- Implementation
 						if tokenizer.is_lexical_error then
 							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
 						else
-							create a_splitter.make
-							a_splitter.set_separators (":")
-							qname_parts := a_splitter.split (a_function_name)
-							if qname_parts.count = 1 then
+							create a_parser.make (a_function_name)
+							a_local_name := a_parser.local_name
+							an_xml_prefix := a_parser.optional_prefix
+							if not a_parser.is_prefix_present then
 								a_uri := Xpath_standard_functions_uri
-								a_local_name := qname_parts.item (1)
-								an_xml_prefix := ""
 							else
-								an_xml_prefix := qname_parts.item (1)
-								a_local_name := qname_parts.item (2)
 								if environment.is_prefix_declared (an_xml_prefix) then
 									a_uri := environment.uri_for_prefix (an_xml_prefix)
 								else
@@ -2148,53 +2138,42 @@ feature {NONE} -- Implementation
 	create_processing_instruction_node_kind_test (is_empty: BOOLEAN) is
 			-- Create a node kind test that matches the specified processing-instruction node(s).
 		local
-			a_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_name_code: INTEGER
 			a_message, an_original_text, a_local_name: STRING
 		do
 			an_original_text := tokenizer.last_token_value
 			if is_empty then
 				create {XM_XPATH_NODE_KIND_TEST} internal_last_parsed_node_test.make_processing_instruction_test
-			elseif tokenizer.last_token = String_literal_token then
-				create a_splitter.make
-				a_splitter.set_separators (":")
-				qname_parts := a_splitter.split (tokenizer.last_token_value)
-				if qname_parts.count > 1 then
-					report_parse_warning ("No processing instruction name will ever contain a colon")
-					if not shared_name_pool.is_name_code_allocated ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name") then
-						shared_name_pool.allocate_name ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name")
-						a_name_code := shared_name_pool.last_name_code
-					else
-						a_name_code := shared_name_pool.name_code ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name")
+			elseif tokenizer.last_token = String_literal_token or else tokenizer.last_token = Name_token then
+				create a_parser.make (an_original_text)
+				if a_parser.is_valid then
+					if a_parser.is_prefix_present then
+						report_parse_warning ("No processing instruction name will ever contain a colon")
+						if not shared_name_pool.is_name_code_allocated ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name") then
+							shared_name_pool.allocate_name ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name")
+							a_name_code := shared_name_pool.last_name_code
+						else
+							a_name_code := shared_name_pool.name_code ("fake-gexslt-prefix", "http://www.gobosoft.com/gexslt - fake-namespace", "gexslt ___invalid-name")
+						end
 					end
+					a_local_name := a_parser.local_name
 				else
-					if qname_parts.count = 0 then
+					if not a_parser.too_many_colons then
 						a_local_name := ""
 						report_parse_warning ("No processing instruction name will ever be named by the empty string")
 					else
-						a_local_name := qname_parts.item (1)
+						check
+							string_literal: tokenizer.last_token = String_literal_token
+						end
+						a_local_name := an_original_text
 					end
-					if is_ncname (a_local_name) then
-						generate_name_code (a_local_name, False)
-						a_name_code := last_generated_name_code
-					else
-						a_name_code := -1
-					end
-				end
-			elseif tokenizer.last_token = Name_token then
-				create a_splitter.make
-				a_splitter.set_separators (":")
-				qname_parts := a_splitter.split (tokenizer.last_token_value)
-				if qname_parts.count > 1 then
-					report_parse_error ("Processing instruction name must not contain a colon", "XPST0003")
+				end	
+				if is_ncname (a_local_name) then
+					generate_name_code (a_local_name, False)
+					a_name_code := last_generated_name_code
 				else
-					if is_qname (qname_parts.item (1)) then
-						generate_name_code (qname_parts.item (1), False)
-						a_name_code := last_generated_name_code
-					else
-						a_name_code := -1
-					end	
+					a_name_code := -1
 				end
 			end
 			if not is_empty then
@@ -2521,29 +2500,26 @@ feature {NONE} -- Implementation
 			qname_not_void: a_qname /= Void
 			no_previous_error:  not is_parse_error
 		local
-			a_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_uri, a_local_name, a_message: STRING
 			a_uri_code: INTEGER
 			an_item_type: XM_XPATH_ITEM_TYPE
 		do
-		create a_splitter.make
-				a_splitter.set_separators (":")
-				qname_parts := a_splitter.split (tokenizer.last_token_value)
-				if qname_parts.count > 2 then
+			create a_parser.make (tokenizer.last_token_value)
+				if a_parser.too_many_colons then
 					report_parse_error ("A QName may not contain more then one token", "XPST0003")
-				elseif qname_parts.count = 0 then
+				elseif not a_parser.is_valid then
 					report_parse_error ("Expecting a QName, found ''", "XPST0003")
-				elseif qname_parts.count = 1 then
+				elseif not a_parser.is_prefix_present then
 					a_uri_code := environment.default_element_namespace
 					a_uri := shared_name_pool.uri_from_uri_code (a_uri_code)
-					a_local_name := qname_parts.item (1)
+					a_local_name := a_parser.local_name
 				else
-					if environment.is_prefix_declared (qname_parts.item (1)) then
-						a_uri := environment.uri_for_prefix (qname_parts.item (1))
-						a_local_name := qname_parts.item (2)
+					if environment.is_prefix_declared (a_parser.optional_prefix) then
+						a_uri := environment.uri_for_prefix (a_parser.optional_prefix)
+						a_local_name := a_parser.local_name
 					else
-						a_message := STRING_.concat ("Prefix ", qname_parts.item (1))
+						a_message := STRING_.concat ("Prefix ", a_parser.optional_prefix)
 						a_message := STRING_.appended_string (a_message, " is not in scope.")
 						report_parse_error (a_message, "XPST0003")
 					end

@@ -142,27 +142,20 @@ feature -- Access
 	fingerprint (a_qname: STRING; use_default_namespace: BOOLEAN): INTEGER is
 			-- Fingerprint for `a_qname', using this as the context for namespace resolution
 		local
-			a_string_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
-			an_xml_prefix, a_uri, a_local_name: STRING
+			a_parser: XM_XPATH_QNAME_PARSER
+			a_uri: STRING
 		do
-			create a_string_splitter.make
-			a_string_splitter.set_separators (":")
-			qname_parts := a_string_splitter.split (a_qname)
-			if qname_parts.count = 1 then
-				an_xml_prefix := ""
-				a_local_name := qname_parts.item (1)
+			create a_parser.make (a_qname)
+			if not a_parser.is_prefix_present then
 				if use_default_namespace then
-					a_uri := uri_for_prefix (an_xml_prefix)
+					a_uri := uri_for_prefix (a_parser.optional_prefix)
 				else
 					a_uri := ""
 				end
 			else
-				a_local_name := qname_parts.item (2)
-				an_xml_prefix := qname_parts.item (1)
-				a_uri := uri_for_prefix (an_xml_prefix)
+				a_uri := uri_for_prefix (a_parser.optional_prefix)
 			end
-			Result := shared_name_pool.fingerprint (a_uri, a_local_name)
+			Result := shared_name_pool.fingerprint (a_uri, a_parser.local_name)
 		end
 
 	namespace_context: XM_XSLT_NAMESPACE_CONTEXT is

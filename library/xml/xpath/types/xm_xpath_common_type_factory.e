@@ -486,6 +486,7 @@ feature {NONE} -- Implementation
 			bind_fn_name (Boolean_function_type_code, "boolean")
 			bind_fn_name (Ceiling_function_type_code, "ceiling")
 			bind_fn_name (Codepoints_to_string_function_type_code, "codepoints-to-string")
+			bind_fn_name (Codepoint_equal_function_type_code, "codepoint-equal")
 			bind_fn_name (Collection_function_type_code, "collection")
 			bind_fn_name (Compare_function_type_code, "compare")
 			bind_fn_name (Concat_function_type_code, "concat")

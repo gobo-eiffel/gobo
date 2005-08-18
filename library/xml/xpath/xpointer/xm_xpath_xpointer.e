@@ -51,13 +51,10 @@ feature -- Access
 		require
 			qname: a_name /= Void and then is_qname (a_name)
 		local
-			a_splitter: ST_SPLITTER
-			some_qname_parts: DS_LIST [STRING]
+			a_parser: XM_XPATH_QNAME_PARSER
 		do
-			create a_splitter.make
-			a_splitter.set_separators (":")
-			some_qname_parts := a_splitter.split (a_name)
-			Result := some_qname_parts.count = 1 or else some_qname_parts.count = 2 and then namespace_bindings.is_prefix_declared (some_qname_parts.item (1))
+			create a_parser.make (a_name)
+			Result := a_parser.is_valid and then a_parser.is_prefix_present implies namespace_bindings.is_prefix_declared (a_parser.optional_prefix)
 		end
 
 	expanded_name (a_name: STRING): STRING is
@@ -66,18 +63,15 @@ feature -- Access
 			qname: a_name /= Void and then is_qname (a_name)
 			valid_name: is_valid_name (a_name)
 		local
-			a_splitter: ST_SPLITTER
-			some_qname_parts: DS_LIST [STRING]			
+			a_parser: XM_XPATH_QNAME_PARSER
 		do
-			create a_splitter.make
-			a_splitter.set_separators (":")
-			some_qname_parts := a_splitter.split (a_name)
-			if some_qname_parts.count = 2 then
-				Result := STRING_.concat ("{", namespace_bindings.namespace_uri (some_qname_parts.item (1)))
+			create a_parser.make (a_name)
+			if a_parser.is_prefix_present then
+				Result := STRING_.concat ("{", namespace_bindings.namespace_uri (a_parser.optional_prefix))
 				Result := STRING_.appended_string (Result, "}")
-				Result := STRING_.appended_string (Result,some_qname_parts.item (2))
+				Result := STRING_.appended_string (Result, a_parser.local_name)
 			else
-				Result := a_name
+				Result := a_parser.local_name
 			end
 		end
 

@@ -91,9 +91,8 @@ feature -- Access
 		local
 			a_name_value: XM_XPATH_ITEM
 			a_string_value: XM_XPATH_STRING_VALUE
-			a_uri, an_xml_prefix, a_local_name: STRING
-			a_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
+			a_uri, an_xml_prefix: STRING
+			a_parser: XM_XPATH_QNAME_PARSER
 			an_error: XM_XPATH_ERROR_VALUE 
 		do
 			element_name.evaluate_item (a_context)
@@ -104,27 +103,17 @@ feature -- Access
 				a_context.transformer.report_fatal_error (an_error, Current)
 				Result := -1
 			else
-				a_string_value ?= a_name_value
-				check
-					qname: a_string_value /= Void
-				end
-				create a_splitter.make
-				a_splitter.set_separators (":")
-				qname_parts := a_splitter.split (a_string_value.string_value)
-				if qname_parts.count = 0 or else qname_parts.count > 2 then
+				a_string_value := a_name_value.as_string_value
+				create a_parser.make (a_string_value.string_value)
+				if not a_parser.is_valid then
 					create an_error.make_from_string ("'name' attribute of xsl:element does not evaluate to a lexical QName.",
 																 Xpath_errors_uri,"XTDE0820", Dynamic_error) 
 					a_context.transformer.report_recoverable_error (an_error, Current)
 					Result := -1
-				elseif qname_parts.count = 1 then
-					a_local_name := qname_parts.item (1)
-					an_xml_prefix := ""
-				else
-					a_local_name := qname_parts.item (2)
-					an_xml_prefix := qname_parts.item (1)
 				end
 			end
 			if Result /= -1 then
+				an_xml_prefix := a_parser.optional_prefix
 				if namespace = Void then
 					a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, True)
 					if a_uri = Void then
@@ -144,6 +133,8 @@ feature -- Access
 					end
 					if a_uri.count = 0 then
 						an_xml_prefix := ""
+					else
+						an_xml_prefix := a_parser.optional_prefix
 					end
 					if STRING_.same_string (an_xml_prefix, "xmlns") then
 						-- not legal, so:
@@ -151,10 +142,10 @@ feature -- Access
 					end
 				end
 				if Result /= -1 then
-					if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-						Result := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+					if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_parser.local_name) then
+						Result := shared_name_pool.name_code (an_xml_prefix, a_uri, a_parser.local_name)
 					else
-						shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+						shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_parser.local_name)
 						Result := shared_name_pool.last_name_code
 					end
 				end

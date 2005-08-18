@@ -237,9 +237,10 @@ feature -- Element change
 			some_used_character_maps: DS_ARRAYED_LIST [STRING]
 			an_import_precedence, a_fingerprint: INTEGER
 			a_splitter: ST_SPLITTER
-			some_character_maps, qname_parts: DS_LIST [STRING]
+			some_character_maps: DS_LIST [STRING]
 			a_cursor: DS_LIST_CURSOR [STRING]
-			a_qname, a_uri, an_xml_prefix, a_local_name, a_message, an_expanded_name: STRING
+			a_uri, a_message, an_expanded_name: STRING
+			a_parser: XM_XPATH_QNAME_PARSER
 			a_character_map: XM_XSLT_CHARACTER_MAP
 			an_error: XM_XPATH_ERROR_VALUE
 		do
@@ -274,25 +275,21 @@ feature -- Element change
 						a_property_set.set_duplication_error (Method_attribute)
 					end
 				else
-					create a_splitter.make
-					a_splitter.set_separators (":")
-					qname_parts := a_splitter.split (method)
-					if qname_parts.count /= 2 then
+					create a_parser.make (method)
+					if not a_parser.is_valid then
 						a_message := STRING_.concat ("XTSE1570: ", method)
 						a_message := STRING_.appended_string (a_message, " is not a lexical QName.")
 						create an_error.make_from_string ("include-content-type must be 'yes' or 'no'", Xpath_errors_uri, "XTSE1570", Static_error)
 						report_compile_error (an_error)
 					else
-						an_xml_prefix := qname_parts.item (1)
-						a_uri := uri_for_prefix (an_xml_prefix, False)
-						a_local_name := qname_parts.item (2)
+						a_uri := uri_for_prefix (a_parser.optional_prefix, False)
 						if a_uri = Void then
-							create an_error.make_from_string (STRING_.concat (an_xml_prefix, " is not an in-scope namespace prefix."), Xpath_errors_uri, "XTSE1570", Static_error)
+							create an_error.make_from_string (STRING_.concat (a_parser.optional_prefix, " is not an in-scope namespace prefix."), Xpath_errors_uri, "XTSE1570", Static_error)
 							report_compile_error (an_error)
 						else
-							if emitter_factory.is_valid_output_method (a_uri, a_local_name) then
+							if emitter_factory.is_valid_output_method (a_uri, a_parser.local_name) then
 								if a_property_set.is_higher_precedence (an_import_precedence, Method_attribute) then
-									emitter_factory.set_defaults (a_uri, a_local_name, a_property_set, an_import_precedence)
+									emitter_factory.set_defaults (a_uri, a_parser.local_name, a_property_set, an_import_precedence)
 								elseif not a_property_set.is_lower_precedence (an_import_precedence, Method_attribute) and then
 									not STRING_.same_string (method, a_property_set.method) then
 									a_property_set.set_duplication_error (Method_attribute)
@@ -415,37 +412,32 @@ feature -- Element change
 				until
 					a_cursor.after
 				loop
-					a_qname := a_cursor.item
-					qname_parts := a_splitter.split (a_qname)
-					if qname_parts.count = 0 or else qname_parts.count > 2 then
-						create an_error.make_from_string (STRING_.concat (a_qname, " is not a lexical QName."), Xpath_errors_uri, "XTSE1590", Static_error)
+					create a_parser.make (a_cursor.item)
+					if not a_parser.is_valid then
+						create an_error.make_from_string (STRING_.concat (a_cursor.item, " is not a lexical QName."), Xpath_errors_uri, "XTSE1590", Static_error)
 						report_compile_error (an_error)
 						a_cursor.go_after
 					else
-						if qname_parts.count = 1 then
-							an_xml_prefix := ""
+						if not a_parser.is_prefix_present then
 							a_uri := ""
-							a_local_name := qname_parts.item (1)
 						else
-							an_xml_prefix := qname_parts.item (1)
-							a_uri := uri_for_prefix (an_xml_prefix, False)
-							a_local_name := qname_parts.item (2)
+							a_uri := uri_for_prefix (a_parser.optional_prefix, False)
 						end
-						if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-							a_fingerprint := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+						if shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
+							a_fingerprint := shared_name_pool.name_code (a_parser.optional_prefix, a_uri, a_parser.local_name)
 						else
-							shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+							shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
 							a_fingerprint := shared_name_pool.last_name_code
 						end
 						if a_fingerprint = -1 then
-							create an_error.make_from_string (STRING_.concat (a_qname, " is not a lexical QName."), Xpath_errors_uri, "XTSE1590", Static_error)
+							create an_error.make_from_string (STRING_.concat (a_cursor.item, " is not a lexical QName."), Xpath_errors_uri, "XTSE1590", Static_error)
 							report_compile_error (an_error)
 							a_cursor.go_after
 						else
 							a_fingerprint := shared_name_pool.fingerprint_from_name_code (a_fingerprint)
 							a_character_map := a_stylesheet.character_map (a_fingerprint)
 							if a_character_map = Void then
-								a_message := STRING_.concat ("No character-map named ", a_qname)
+								a_message := STRING_.concat ("No character-map named ", a_cursor.item)
 								a_message := STRING_.appended_string (a_message, " has been defined.")
 								create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE1590", Static_error)
 								report_compile_error (an_error)
@@ -453,7 +445,7 @@ feature -- Element change
 							else
 								an_expanded_name := STRING_.concat ("{", a_uri)
 								an_expanded_name := STRING_.appended_string (an_expanded_name, "}")
-								an_expanded_name := STRING_.appended_string (an_expanded_name, a_local_name)
+								an_expanded_name := STRING_.appended_string (an_expanded_name, a_parser.local_name)
 								if not some_used_character_maps.has (an_expanded_name) then
 									some_used_character_maps.force_last (an_expanded_name)
 								end

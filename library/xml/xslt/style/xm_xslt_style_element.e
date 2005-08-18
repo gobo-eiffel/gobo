@@ -1209,22 +1209,18 @@ feature -- Creation
 		require
 			valid_qname: a_qname /= Void and then is_qname (a_qname)
 		local
-			a_string_splitter: ST_SPLITTER
-			qname_parts: DS_LIST [STRING]
-			an_xml_prefix, a_uri, a_local_name, a_message: STRING
+			a_parser: XM_XPATH_QNAME_PARSER
+			a_uri, a_message: STRING
 			a_uri_code: INTEGER			
 		do
 			last_generated_name_code := -1
-			create a_string_splitter.make
-			a_string_splitter.set_separators (":")
-			qname_parts := a_string_splitter.split (a_qname)
-			if qname_parts.count = 1 then
-				an_xml_prefix := ""
-				if shared_name_pool.is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_qname) then
-					last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, shared_name_pool.uri_from_uri_code (a_uri_code), a_qname)
+			create a_parser.make (a_qname)
+			if not a_parser.is_prefix_present then
+				if shared_name_pool.is_name_code_allocated_using_uri_code ("", a_uri_code, a_parser.local_name) then
+					last_generated_name_code := shared_name_pool.name_code ("", shared_name_pool.uri_from_uri_code (a_uri_code), a_parser.local_name)
 				else
-					if not shared_name_pool.is_name_pool_full_using_uri_code (a_uri_code, a_qname) then
-						shared_name_pool.allocate_name_using_uri_code (an_xml_prefix, a_uri_code, a_qname)
+					if not shared_name_pool.is_name_pool_full_using_uri_code (a_uri_code, a_parser.local_name) then
+						shared_name_pool.allocate_name_using_uri_code ("", a_uri_code, a_parser.local_name)
 						last_generated_name_code := shared_name_pool.last_name_code
 					else
 						create name_code_error_value.make_from_string (STRING_.concat ("Name pool has no room to allocate ", a_qname), Gexslt_eiffel_type_uri, "NAME_POOL", Static_error)
@@ -1232,28 +1228,23 @@ feature -- Creation
 					end
 				end
 			else
-				check
-					two_parts: qname_parts.count = 2
-				end
-				an_xml_prefix := qname_parts.item (1)
-				a_local_name := qname_parts.item (2)
-				a_uri := uri_for_prefix (an_xml_prefix, False)
+				a_uri := uri_for_prefix (a_parser.optional_prefix, False)
 				if is_reserved_namespace (a_uri) then
-					a_message := STRING_.concat ("Namespace prefix ", an_xml_prefix)
+					a_message := STRING_.concat ("Namespace prefix ", a_parser.optional_prefix)
 					a_message := STRING_.appended_string (a_message, " refers to a reserved namespace")
 					create name_code_error_value.make_from_string (a_message, Xpath_errors_uri, "XTSE0080", Static_error)
 					last_generated_name_code := -1
 				else
-					if shared_name_pool.is_name_code_allocated (an_xml_prefix, a_uri, a_local_name) then
-						last_generated_name_code := shared_name_pool.name_code (an_xml_prefix, a_uri, a_local_name)
+					if shared_name_pool.is_name_code_allocated (a_parser.optional_prefix, a_uri, a_parser.local_name) then
+						last_generated_name_code := shared_name_pool.name_code (a_parser.optional_prefix, a_uri, a_parser.local_name)
 					else
-						if not shared_name_pool.is_name_pool_full (a_uri, a_local_name) then
-							shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
+						if not shared_name_pool.is_name_pool_full (a_uri, a_parser.local_name) then
+							shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
 							last_generated_name_code := shared_name_pool.last_name_code
 						else
 							a_message := STRING_.concat ("Name pool has no room to allocate {", a_uri)
 							a_message := STRING_.appended_string (a_message, "}")
-							a_message := STRING_.appended_string (a_message, a_local_name)
+							a_message := STRING_.appended_string (a_message, a_parser.local_name)
 							create name_code_error_value.make_from_string (a_message, Gexslt_eiffel_type_uri, "NAME_POOL", Static_error)
 							last_generated_name_code := -1
 						end
