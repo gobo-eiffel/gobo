@@ -65,6 +65,12 @@ feature -- Access
 			Result := system_id
 		end
 
+	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
+		do
+			create {XM_XPATH_EMPTY_ITERATOR} Result.make
+		end
+
 	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		local

@@ -90,6 +90,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Id_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1  or else an_arity = 2
+			elseif a_fingerprint = Idref_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1  or else an_arity = 2
 			elseif a_fingerprint = In_scope_prefixes_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Index_of_function_type_code then
@@ -250,6 +252,8 @@ feature -- Element change
 				create {XM_XPATH_FLOOR} a_function_call.make
 			elseif a_fingerprint = Id_function_type_code then
 				create {XM_XPATH_ID} a_function_call.make
+			elseif a_fingerprint = Idref_function_type_code then
+				create {XM_XPATH_IDREF} a_function_call.make				
 			elseif a_fingerprint = In_scope_prefixes_function_type_code then
 				create {XM_XPATH_IN_SCOPE_PREFIXES} a_function_call.make
 			elseif a_fingerprint = Index_of_function_type_code then

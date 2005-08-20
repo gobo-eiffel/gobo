@@ -34,7 +34,6 @@ feature {NONE} -- Initialization
 		do
 			create attribute_name_codes.make (5)
 			create attribute_type_codes.make (5)
-			create attribute_ids.make (5)
 			create attribute_values.make (5)
 		end
 
@@ -86,10 +85,19 @@ feature -- Access
 		end
 
 	is_id (an_attribute_index: INTEGER): BOOLEAN is
+		-- Is the is-id property set?
 		require
 			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
 		do
-			Result := attribute_ids.item (an_attribute_index)
+			Result := attribute_ids /= Void and then attribute_ids.item (an_attribute_index) = Id_property
+		end
+
+	is_idrefs (an_attribute_index: INTEGER): BOOLEAN is
+			-- Is the is-idrefs property set?
+		require
+			valid_attribute_index: is_attribute_index_valid (an_attribute_index)
+		do
+			Result := attribute_ids /= Void and then attribute_ids.item (an_attribute_index) = Idrefs_property
 		end
 
 	name_code_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER] is
@@ -123,31 +131,73 @@ feature -- Element change
 			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
 			value_not_void: a_value /= Void
 		local
+			a_splitter: ST_SPLITTER
+			an_idref: STRING
+			some_idrefs: DS_LIST [STRING]
+			a_cursor: DS_LIST_CURSOR [STRING]
 			new_size: INTEGER
 			another_type_code: like a_type_code
+			all_idrefs: BOOLEAN
 		do
 			another_type_code := Untyped_atomic_type_code
 			if not attribute_name_codes.extendible (1) then
 				new_size := 2* attribute_name_codes.count
 				attribute_name_codes.resize (new_size)
 				attribute_type_codes.resize (new_size)
-				attribute_ids.resize (new_size)
 				attribute_values.resize (new_size)
+				if attribute_ids /= Void then
+					attribute_ids.resize (new_size)
+				end
 			end
 			attribute_name_codes.put_last (a_name_code)
 			attribute_type_codes.put_last (another_type_code)
 			attribute_values.put_last (a_value)
-			if a_type_code = Id_type_code then
-				-- The attribute is marked as being an ID. But we don't trust it - it
-				-- might come from a non-validating parser. Before adding it to the index, we
-				-- check that it really is an ID, and there is not already an ID with that value
-				if is_ncname (a_value) then
-					attribute_ids.put_last (True)
-				else
-					attribute_ids.put_last (False)
+			if a_type_code = Id_type_code or else a_type_code = Idref_type_code
+				or else a_type_code = Idrefs_type_code then
+				if attribute_ids = Void then
+					create attribute_ids.make (attribute_name_codes.capacity)
 				end
-			else
-				attribute_ids.put_last (False)
+
+				-- The attribute is marked as being an ID/IDREF/IDREFS. But we don't trust it - it
+				--  might come from a non-validating parser. Before adding it to the index, we
+				--  check that it really is an ID/IDREF/IDREFS, and if it is an ID,
+				--  that there is not already an ID with that value (this is checked when
+				--  the id table is built)
+				
+				inspect
+					a_type_code
+				when Id_type_code then
+					if is_ncname (a_value) then
+						attribute_ids.put_last (Id_property)
+					else
+						attribute_ids.put_last (No_dtd_property)
+					end
+				when Idref_type_code then
+					if is_ncname (a_value) then
+						attribute_ids.put_last (Idrefs_property)
+					else
+						attribute_ids.put_last (No_dtd_property)
+					end
+				when Idrefs_type_code then
+					create a_splitter.make
+					some_idrefs := a_splitter.split (a_value)
+					from
+						all_idrefs := some_idrefs.count > 0
+						a_cursor := some_idrefs.new_cursor; a_cursor.start
+					until
+						not all_idrefs or else a_cursor.after
+					loop
+						all_idrefs := is_ncname (a_cursor.item)
+						a_cursor.forth
+					end
+					if all_idrefs then
+						attribute_ids.put_last (Idrefs_property)
+					else
+						attribute_ids.put_last (No_dtd_property)
+					end
+				end
+			elseif attribute_ids /= Void then
+				attribute_ids.put_last (No_dtd_property)
 			end
 		ensure
 			attribute_name_code_added: attribute_name_codes.has (a_name_code)
@@ -156,10 +206,14 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	No_dtd_property: INTEGER is 0
+	Id_property: INTEGER is 1
+	Idrefs_property: INTEGER is 2
+
 	-- The next four lists are quaruples - i.e. item number n in all three lists forms a triple
 
-	attribute_ids: DS_ARRAYED_LIST [BOOLEAN]
-			-- Are these ID attributes?
+	attribute_ids: DS_ARRAYED_LIST [INTEGER]
+			-- Are these ID, IDREF or IDREFS attributes?
 	
 	attribute_name_codes: DS_ARRAYED_LIST [INTEGER]
 			-- Name codes of attributes
@@ -200,7 +254,8 @@ invariant
 	attribute_name_codes_not_void: attribute_name_codes /= Void
 	attribute_type_codes_not_void: attribute_type_codes /= Void
 	attribute_values_not_void: attribute_values /= Void
-	same_length: attribute_name_codes.count = attribute_type_codes.count and attribute_name_codes.count = attribute_values.count and attribute_name_codes.count = attribute_ids.count
+	same_length: attribute_name_codes.count = attribute_type_codes.count and attribute_name_codes.count = attribute_values.count
+	ids: attribute_ids /= Void implies attribute_name_codes.count = attribute_ids.count
 
 end
 	

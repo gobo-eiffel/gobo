@@ -12,8 +12,6 @@ indexing
 
 class XM_XPATH_TREE_ELEMENT
 
-	-- TODO base_uri
-
 inherit
 	
 	XM_XPATH_ELEMENT
@@ -109,6 +107,7 @@ feature -- Access
 	name_code: INTEGER
 			-- Name code of this node - used in displaying names
 
+	
 	attribute_value (a_fingerprint: INTEGER): STRING is
 			-- Value of attribute identified by `a_fingerprint'
 		do
@@ -212,6 +211,14 @@ feature -- Access
 			Result := accumulated_namespace_codes
 		ensure then
 			namespace_codes_accumulated: accumulated_namespace_codes /= Void
+		end
+
+	is_idrefs (an_attribute: INTEGER): BOOLEAN is
+			-- Value of is-idrefs property for `an_attribute'
+		require
+			valid_attribute: an_attribute > 0 and then an_attribute <= number_of_attributes
+		do
+			Result := attribute_collection.is_idrefs (an_attribute)
 		end
 
 feature -- Measurement

@@ -116,11 +116,13 @@ feature -- Access
 				mode_to_use := a_mode
 			end
 			a_rule_value := mode_to_use.imported_rule (a_node, a_minimum_precedence, a_maximum_precedence, a_context)
-			check
-				template_rule: a_rule_value.is_template
-				-- Rule manager is only used with template rules
+			if a_rule_value /= Void then
+				check
+					template_rule: a_rule_value.is_template
+					-- Rule manager is only used with template rules
+				end
+				Result := a_rule_value.as_template
 			end
-			Result := a_rule_value.as_template
 		end
 
 	next_match_handler (a_node: XM_XPATH_NODE; a_mode: XM_XSLT_MODE; a_current_template: XM_XSLT_COMPILED_TEMPLATE; a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_COMPILED_TEMPLATE is
@@ -139,11 +141,13 @@ feature -- Access
 				mode_to_use := a_mode
 			end
 			a_rule_value := mode_to_use.next_matching_rule (a_node, a_current_template, a_context)
-			check
-				template_rule: a_rule_value.is_template
-				-- Rule manager is only used with template rules
+			if a_rule_value /= Void then
+				check
+					template_rule: a_rule_value.is_template
+					-- Rule manager is only used with template rules
+				end
+				Result := a_rule_value.as_template
 			end
-			Result := a_rule_value.as_template			
 		end
 
 feature -- Status report

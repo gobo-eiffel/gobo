@@ -227,6 +227,12 @@ feature -- Access
 			end
 		end
 
+	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
+		do
+			Result := attribute_idref_table.new_iterator (some_idrefs)
+		end
+	
 feature -- Status report
 
 	is_line_numbering: BOOLEAN is
@@ -321,7 +327,23 @@ feature {NONE} -- Implementation
 
 	cached_id_table: like id_table
 			-- Cache for `id_table'
-	
+
+	cached_attribute_idref_table: like attribute_idref_table
+			-- Cache for `attribute_idref_table'
+
+	attribute_idref_table: XM_XPATH_TREE_ATTRIBUTE_IDREF_TABLE is
+			-- Mapping of IDREFs to attributes
+		do
+			if cached_attribute_idref_table = Void then
+				create Result.make (Current)
+				cached_attribute_idref_table := Result
+			else
+				Result := cached_attribute_idref_table
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	id_table: DS_HASH_TABLE [XM_XPATH_TREE_ELEMENT, STRING] is
 			-- Mapping of IDs to elements.
 			-- Implemented as a memo function

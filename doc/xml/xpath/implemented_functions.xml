@@ -74,7 +74,7 @@
 	    <entry>fn:node-name</entry>
 	    <entry>Yes</entry>
 	    <entry>Yes</entry>
-	    <entry>None</entry>
+    <entry>None</entry>
 	  </row>
 	 <row>
 	   <entry>fn:string</entry>
@@ -152,241 +152,241 @@
 	   <entry>fn:compare</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:concat</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:string-join</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:string-length</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:substring</entry>
 	   <entry>Yes</entry>
 	   <entry>Incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:normalize-space</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:normalize-unicode</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:upper-case</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:lower-case</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:translate</entry>
 	   <entry>Yes</entry>
 	   <entry>Incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:escape-uri</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:contains</entry>
 	   <entry>Yes</entry>
 	   <entry>Incidentallly</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:starts-with</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:ends-with</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:substring-before</entry>
 	   <entry>Yes</entry>
 	   <entry>Incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:substring-after</entry>
 	   <entry>Yes</entry>
 	   <entry>Incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
        <row>
 	   <entry>fn:matches</entry>
 	   <entry>Yes (but unicode case stuff not implemented yet)</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:replace (but unicode case stuff not implemented yet)</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:tokenize</entry>
 	   <entry>Yes (but unicode case stuff not implemented yet)</entry>
 	   <entry>Partly</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:true</entry>
 	   <entry>Yes</entry>
 	   <entry>Only incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:false</entry>
 	   <entry>Yes</entry>
 	   <entry>Only incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:not</entry>
 	   <entry>Yes</entry>
 	   <entry>Only incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:years-from-yearMonthDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:months-from-yearMonthDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:days-from-dayTimeDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:hours-from-dayTimeDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:minutes-from-dayTimeDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:seconds-from-dayTimeDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:year-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:month-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:day-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:hours-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:minutes-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:seconds-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:timezone-from-dateTime</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:adjust-dateTime-to-timezone</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:adjust-date-to-timezone</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:adjust-time-to-timezone</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:subtract-dateTimes-yielding-yearMonthDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:subtract-dateTimes-yielding-dayTimeDuration</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:resolve-QName</entry>
@@ -398,7 +398,7 @@
 	   <entry>fn:prefix-from-QName</entry>
 	   <entry>Awaiting resolution of NCName result</entry>
 	   <entry>No</entry>
-	   <entry>None</entry>
+	   <entry>Nonene</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:QName</entry>
@@ -446,223 +446,223 @@
 	   <entry>fn:name</entry>
 	   <entry>Yes</entry>
 	   <entry>Only incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:local-name</entry>
 	   <entry>Yes</entry>
 	   <entry>Incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:namespace-uri</entry>
 	   <entry>Yes</entry>
 	   <entry>Incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:number</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:lang</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:root</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:zero-or-one</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:one-or-more</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:exactly-one</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:boolean</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:index-of</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:empty</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:exists</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:distinct-values</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:insert-before</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:remove</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:reverse</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:subsequence</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:unordered</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:deep-equal</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:count</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:avg</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:max</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:min</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:sum</entry>
 	   <entry>Partially</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:id</entry>
-	   <entry>Partially</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:idref</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:doc</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:doc-available</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:collection</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:position</entry>
 	   <entry>Yes</entry>
 	   <entry>Only incidentally</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:last</entry>
 	   <entry>Yes</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:current-dateTime</entry>
 	   <entry>Wrong type</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:current-date</entry>
 	   <entry>Wrong type</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:current-time</entry>
 	   <entry>Wrong type</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:default-collation</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:implicit-timezone</entry>
 	   <entry>No</entry>
 	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>None</entry>
 	 </row>
 	</tbody>
       </tgroup>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE test [
+<!ELEMENT test ( item+ ) >
+<!ELEMENT item EMPTY >
+<!ATTLIST item xml:base CDATA #IMPLIED >
+<!ATTLIST item id ID #REQUIRED>
+<!ATTLIST item ref IDREF #IMPLIED>
+<!ATTLIST item refs IDREFS #IMPLIED>
+]>
+<test>
+  <item id="A1"/>
+  <item id="A2"/>
+  <item id="A3" ref="A1"/>
+  <item id="A4" ref="A3"/>
+  <item id="A5" ref="A2"/>
+  <item id="A6" refs="A1 A2"/>
+  <item id="A7" refs="A1 A2"/>
+</test>
+

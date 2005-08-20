@@ -487,18 +487,12 @@ feature {NONE} -- Implementation
 					if an_attribute_model.is_id then
 						a_type_code := Id_type_code
 					elseif an_attribute_model.is_id_ref then
-						a_type_code := Idref_type_code
-					elseif an_attribute_model.is_token then
-						a_type_code := Nmtoken_type_code
-					elseif an_attribute_model.is_entity then
-						a_type_code := Entity_type_code
-					elseif an_attribute_model.is_notation then
-						a_type_code := Notation_type_code
+						if an_attribute_model.is_list_type then
+							a_type_code := Idrefs_type_code
+						else
+							a_type_code := Idref_type_code
+						end
 					else
-						
-						-- Ignore CDATA (it basically means "anySimpleType")
-						-- Ignore NMTOKENS, ENTITIES, IDREFS: we can't handle list types yet
-						
 						a_type_code := 0 -- not a valid type code
 					end
 				end

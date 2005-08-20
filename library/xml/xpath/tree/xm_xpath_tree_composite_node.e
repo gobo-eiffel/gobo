@@ -114,6 +114,12 @@ feature -- Access
 			child_iterator_invulnerable: Result /= Void
 		end
 
+	is_idrefs_attribute (an_index: INTEGER): BOOLEAN is
+			-- Is `an_index' the number of an attribute with an is-idrefs property of `True'
+		do
+			-- False for documents
+		end
+	
 feature -- Status report
 
 	has_child_nodes: BOOLEAN is

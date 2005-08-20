@@ -94,6 +94,12 @@ feature -- Access
 			Result := Void
 		end
 
+	is_idrefs: BOOLEAN is
+			-- Value of is-idrefs property
+		do
+			Result := parent_node.as_tree_element.is_idrefs (child_index)
+		end
+
 feature -- Comparison
 
 	is_same_node (other: XM_XPATH_NODE): BOOLEAN is

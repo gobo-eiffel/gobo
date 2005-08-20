@@ -49,8 +49,8 @@ feature -- Status report
 	after: BOOLEAN is
 			-- Are there any more items in the sequence?
 		do
-			if not base_iterator.is_error then
-				Result := base_iterator.after
+			if index > reservoir.count and then not base_iterator.is_error then
+				Result := not base_iterator.before and then base_iterator.after
 			end
 		end
 

@@ -95,6 +95,15 @@ feature -- Access
 		deferred
 		end
 
+	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
+		require
+			idrefs_not_empty: some_idrefs /= Void and then some_idrefs.count > 0
+		deferred
+		ensure
+			sequence_before: Result /= Void and then Result.before
+		end
+
 feature {XM_XPATH_NAME_POOL, XM_XPATH_TINY_FOREST} -- Restricted
 
 	set_document_number (a_number: INTEGER) is

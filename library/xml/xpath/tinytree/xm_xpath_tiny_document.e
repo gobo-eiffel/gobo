@@ -4,7 +4,7 @@ indexing
 
 		"Tiny tree Document nodes"
 
-	library: "Gobo Eiffel XML Library"
+	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2003, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -221,7 +221,26 @@ feature -- Access
 		do
 			Result := Current
 		end
-	
+
+	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
+		do
+			if attribute_idref_table = Void then
+				create {XM_XPATH_EMPTY_ITERATOR} Result.make
+			else
+				Result := attribute_idref_table.new_iterator (some_idrefs)
+			end
+		end
+
+	is_idref_registered (an_attribute_number: INTEGER; an_idref: STRING): BOOLEAN is
+			-- Is `an_attribute_number' registered for `an_idref'?
+		require
+			valid_attribute_number: tree.is_attribute_number_valid (an_attribute_number)
+			idref_not_empty: an_idref /= Void and then not an_idref.is_empty
+		do
+			Result := attribute_idref_table /= Void and then attribute_idref_table.has (an_attribute_number, an_idref)
+		end
+
 feature -- Element change
 
 	set_system_id (a_system_id: STRING) is
@@ -245,6 +264,21 @@ feature -- Element change
 			end
 		end
 
+	register_attribute_idref (an_attribute_number: INTEGER; an_idref: STRING) is
+			-- Register `an_idref' for `an_attribute_number'.
+		require
+			valid_attribute_number: tree.is_attribute_number_valid (an_attribute_number)
+			idref_not_empty: an_idref /= Void and then not an_idref.is_empty
+			not_already_registered: not is_idref_registered (an_attribute_number, an_idref)
+		do
+			if attribute_idref_table = Void then
+				create attribute_idref_table.make (tree)
+			end
+			attribute_idref_table.register (an_attribute_number, an_idref)
+		ensure
+			idref_registered: is_idref_registered (an_attribute_number, an_idref)
+		end
+	
 feature -- Duplication
 
 	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is
@@ -278,14 +312,21 @@ feature {XM_XPATH_NODE} -- Restricted
 feature {NONE} -- Implementation
 
 	id_table: DS_HASH_TABLE [XM_XPATH_TINY_ELEMENT, STRING]
-			-- Mapping of IDs to elements.
+			-- Mapping of IDs to elements.;
+			--  created on demand
 
 	element_list: DS_HASH_TABLE [DS_ARRAYED_LIST [XM_XPATH_TINY_ELEMENT], INTEGER]
-			-- Lists of elements with the same name.
+			-- Lists of elements with the same name;
+			--  created on demand
 
 	entity_table: DS_HASH_TABLE [DS_ARRAYED_LIST [STRING], STRING]
-			-- Maps unparsed entity names to their URI/PUBLIC-ID pairs.
-			
+			-- Mapping of unparsed entity names to their URI/PUBLIC-ID pairs;
+			--  created on demand
+
+	attribute_idref_table: XM_XPATH_TINY_ATTRIBUTE_IDREF_TABLE
+			-- Mapping of IDREFs to attributes;
+			--  created on demand
+
 invariant
 
 	tree_exists: tree /= Void

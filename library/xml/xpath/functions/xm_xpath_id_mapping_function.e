@@ -47,7 +47,10 @@ feature -- Evaluation
 		local
 			a_splitter: ST_SPLITTER
 			some_idrefs: DS_LIST [STRING]
+			a_cursor: DS_LIST_CURSOR [STRING]
 			an_element: XM_XPATH_ELEMENT
+			a_sequence_extent: XM_XPATH_SEQUENCE_EXTENT
+			a_list: DS_ARRAYED_LIST [XM_XPATH_ELEMENT]
 		do
 			create a_splitter.make
 			some_idrefs := a_splitter.split (an_item.string_value)
@@ -55,7 +58,14 @@ feature -- Evaluation
 				an_element := document.selected_id (some_idrefs.item (1))
 				create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_node_iterator.make (an_element)
 			else
-				todo ("map_nodes", True)
+				create a_list.make (some_idrefs.count)
+				from a_cursor := some_idrefs.new_cursor; a_cursor.start until a_cursor.after loop
+					an_element := document.selected_id (a_cursor.item)
+					if an_element /= Void and then not a_list.has (an_element) then a_list.put_last (an_element) end
+					a_cursor.forth
+				end
+				create a_sequence_extent.make_from_list (a_list)
+				last_node_iterator := a_sequence_extent.node_iterator
 			end
 		end
 

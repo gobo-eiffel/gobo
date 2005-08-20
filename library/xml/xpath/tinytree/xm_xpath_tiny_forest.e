@@ -612,6 +612,9 @@ feature -- Element change
 			a_new_size, an_index, another_type_code: INTEGER
 			a_node: XM_XPATH_TINY_NODE
 			an_id: STRING
+			a_splitter: ST_SPLITTER
+			some_idrefs: DS_LIST [STRING]
+			a_cursor: DS_LIST_CURSOR [STRING]
 		do
 			number_of_attributes := number_of_attributes + 1
 			attribute_parents.force (a_parent, number_of_attributes)
@@ -648,20 +651,35 @@ feature -- Element change
 			
 			if alpha.item (a_parent) = 0 then alpha.put (number_of_attributes, a_parent) end
 
-			if a_document /= Void and then a_type_code = Id_type_code then -- TODO: maybe expand this for schema-aware version
-				-- The attribute is marked as being an ID. But we don't trust it - it
-				-- might come from a non-validating parser. Before adding it to the index, we
-				-- check that it really is an ID.
-				-- TODO: sub-types of ID??
-				an_id := STRING_.cloned_string (a_value)
-				STRING_.left_adjust (an_id)
-				STRING_.right_adjust (an_id)
-				if is_ncname (an_id) then
-					a_node := retrieve_node (a_parent)
-					check
-						is_element: a_node.is_tiny_element
-					end
+			if a_document /= Void then
+				if a_type_code = Id_type_code then -- TODO: maybe expand this for schema-aware version
+
+					-- The attribute is marked as being an ID. But we don't trust it - it
+					-- might come from a non-validating parser. Before adding it to the index, we
+					-- check that it really is an ID.
+					-- TODO: sub-types of ID??
+					
+					an_id := STRING_.cloned_string (a_value)
+					STRING_.left_adjust (an_id)
+					STRING_.right_adjust (an_id)
+					if is_ncname (an_id) then
+						a_node := retrieve_node (a_parent)
+						check
+							is_element: a_node.is_tiny_element
+						end
 					a_document.register_id (a_node.as_tiny_element, an_id)
+					end
+				elseif a_type_code = Idref_type_code or else a_type_code = Idrefs_type_code then 
+					create a_splitter.make
+					some_idrefs := a_splitter.split (a_value)
+					from
+						a_cursor := some_idrefs.new_cursor; a_cursor.start
+					until a_cursor.after loop
+						if is_ncname (a_cursor.item) then
+							a_document.register_attribute_idref (number_of_attributes, a_cursor.item)
+						end
+						a_cursor.forth
+					end
 				end
 			end
 		end
