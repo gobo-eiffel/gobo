@@ -64,7 +64,9 @@ feature -- Access
 	sub_expressions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION] is
 			-- Immediate sub-expressions of `Current'
 		do
-			Result := xpath_expressions (actual_parameters)
+			create Result.make_default
+			Result.put (select_expression, 1)
+			Result.append_last (xpath_expressions (actual_parameters))
 			Result.append_last (xpath_expressions (tunnel_parameters))
 			Result.set_equality_tester (expression_tester)
 		end

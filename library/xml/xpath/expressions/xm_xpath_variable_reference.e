@@ -252,6 +252,7 @@ feature -- Element change
 			not_replaced: not was_expression_replaced
 		do
 			binding := a_required_binding
+			if are_static_properties_computed then reset_static_properties end
 		end
 
 feature {NONE} -- Implementation

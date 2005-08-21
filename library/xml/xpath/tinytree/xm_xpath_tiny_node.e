@@ -260,7 +260,7 @@ feature -- Access
 			an_annotation: INTEGER
 		do
 			an_annotation := type_annotation
-			if an_annotation /= type_factory.untyped_atomic_type.fingerprint then
+			if an_annotation /= type_factory.untyped_atomic_type.fingerprint and then an_annotation /= type_factory.untyped_type.fingerprint then
 				todo ("atomized_value", True)
 			else
 				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (string_value)

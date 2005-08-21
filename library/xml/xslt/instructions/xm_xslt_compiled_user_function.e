@@ -17,6 +17,11 @@ inherit
 
 	XM_XSLT_COMPILED_PROCEDURE
 
+	XM_XPATH_EXPRESSION_CONTAINER
+
+	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
+		export {NONE} all end
+
 	XM_XSLT_SHARED_EMPTY_PROPERTIES
 		export {NONE} all end
 
@@ -82,6 +87,35 @@ feature -- Access
 			Result := function_name.hash_code
 		end
 
+	parameter_references (a_binding: XM_XPATH_BINDING): INTEGER is
+			-- Approximate count of references by parameters of `Current' to `a_binding'
+			-- If `a_binding' is a user-function parameter of `Current' then return 1.
+			-- Else return many.
+		local
+			found: BOOLEAN
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_USER_FUNCTION_PARAMETER]
+		do
+			from
+				a_cursor := parameter_definitions.new_cursor; a_cursor.start
+			until
+				found or else a_cursor.after
+			loop
+				if a_cursor.item = a_binding then
+					Result := a_cursor.item.reference_count
+					if Result > 1 then Result := Many_references end
+					found := True
+				end
+				a_cursor.forth
+			end
+			if not found then Result := Many_references end
+		end
+
+	system_id_from_module_number (a_module_number: INTEGER): STRING is
+			-- System identifier
+		do
+			Result := executable.system_id (a_module_number)
+		end
+
 feature -- Status report
 
 	is_memo_function: BOOLEAN
@@ -91,6 +125,12 @@ feature -- Status report
 			-- Is `Current' a compiled user function?
 		do
 			Result := True
+		end
+
+	is_computed_expression: BOOLEAN is
+			-- Is `Current' a computed expression?
+		do
+			Result := False
 		end
 
 	contains_tail_calls: BOOLEAN
@@ -122,7 +162,7 @@ feature -- Evaluation
 			if last_called_value = Void then
 				create a_stack_frame.make (slot_manager, some_actual_arguments)
 				a_context.set_stack_frame (a_stack_frame)
-				if contains_tail_calls then
+				if contains_tail_calls or else is_memo_function then
 
 					-- we cannot risk evaluating to an XM_XPATH_CLOSURE,
 					-- as the tail call will escape, and might reappear anywhere

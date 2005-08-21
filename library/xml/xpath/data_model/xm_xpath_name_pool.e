@@ -524,6 +524,22 @@ feature -- Status report
 			end
 		end
 
+	is_standard_uri_code (a_uri_code: INTEGER): BOOLEAN is
+			-- Does `a_uri_code' represent a standard URI?
+		do
+			Result := a_uri_code > Default_uri_code and then a_uri_code <= Xpath_standard_functions_uri_code
+		end
+
+	is_standard_name (a_uri, a_local_name: STRING): BOOLEAN is
+			-- Does `a_uri' paired with `a_local_name' represent a standard name?
+		require
+			uri_not_void: a_uri /= Void
+			local_name_not_void: a_local_name /= Void
+		do
+			Result := (is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri))
+				and then type_factory.is_built_in_fingerprint (type_factory.standard_fingerprint (a_uri, a_local_name))
+		end
+			
 	is_valid_uri_code (a_uri_code: INTEGER): BOOLEAN is
 			-- Does `a_uri_code' represent a URI in `Current'?
 		do
@@ -646,12 +662,21 @@ feature -- Status report
 			uri_not_void: a_uri /= Void
 			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 		local
-			a_uri_code: INTEGER -- should be INTEGER_16			
+			a_uri_code: INTEGER -- should be INTEGER_16
+			a_fingerprint: INTEGER
 		do
 			if is_code_for_uri_allocated (a_uri) = False then Result := False
 			else
 				a_uri_code := code_for_uri (a_uri)
-				Result := is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
+				if is_standard_uri_code (a_uri_code) then
+					a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
+					if type_factory.is_built_in_fingerprint (a_fingerprint) then
+						Result := True
+					end
+				end
+				if not Result then
+					Result := is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
+				end
 			end
 		end
 
@@ -664,40 +689,43 @@ feature -- Status report
 			a_hash_code, a_depth, a_prefix_index: INTEGER
 			a_name_entry, next_entry: XM_XPATH_NAME_ENTRY
 			finished: BOOLEAN
+			a_uri: STRING
 		do
 			if uris.count < a_uri_code + 1 then Result := False
 			elseif is_code_for_prefix_allocated (an_xml_prefix) = False then Result := False
 			else
 				a_prefix_index := prefix_index(a_uri_code, an_xml_prefix)
 				if a_prefix_index = -1 then Result := False
-				elseif a_uri_code > Default_uri_code and then a_uri_code <= Xpath_standard_functions_uri_code then
-					Result := True -- TODO: This isn't exactly true, but it is probably illegitimate to test for a non-standard local name in a standard namespace
-					-- TODO: it may be illegitimate, but still we should return False.
-					-- TODO: fix awaiting single type factory (necessary since Febraury 2005 working drafts) - new mechanism needed. 
 				else
-					a_depth := 1
-					a_hash_code := a_local_name.hash_code \\ 1024
-					a_name_entry := hash_slots.item (a_hash_code)
-					if a_name_entry = Void then
-						Result := False
-					else
-						from
-						variant
-							1023 - a_depth
-						until
-							finished = True
-						loop
-							if STRING_.same_string (a_name_entry.local_name, a_local_name) and a_name_entry.uri_code = a_uri_code then
-								finished := True
-								Result := True
-								a_depth := a_depth + 1
-							else
-								next_entry := a_name_entry.next
-								a_depth := a_depth + 1
-								if a_depth > 1023 or next_entry = Void then
+					if is_standard_uri_code (a_uri_code) then
+						a_uri := uris.item (a_uri_code + 1)
+						Result := type_factory.is_built_in_fingerprint (type_factory.standard_fingerprint (a_uri, a_local_name))
+					end
+					if not Result then
+						a_depth := 1
+						a_hash_code := a_local_name.hash_code \\ 1024
+						a_name_entry := hash_slots.item (a_hash_code)
+						if a_name_entry = Void then
+							Result := False
+						else
+							from
+							variant
+								1023 - a_depth
+							until
+								finished = True
+							loop
+								if STRING_.same_string (a_name_entry.local_name, a_local_name) and a_name_entry.uri_code = a_uri_code then
 									finished := True
+									Result := True
+									a_depth := a_depth + 1
 								else
-									a_name_entry := next_entry
+									next_entry := a_name_entry.next
+									a_depth := a_depth + 1
+									if a_depth > 1023 or next_entry = Void then
+										finished := True
+									else
+										a_name_entry := next_entry
+									end
 								end
 							end
 						end
@@ -1102,6 +1130,7 @@ feature -- Element change
 			a_uri_code: INTEGER -- should be INTEGER_16
 			a_fingerprint, a_prefix_index: INTEGER
 		do
+			last_name_code := -1
 			if is_reserved_namespace (a_uri) or else STRING_.same_string (a_uri, Gexslt_eiffel_type_uri) then
 				a_fingerprint := type_factory.standard_fingerprint (a_uri, a_local_name)
 				if type_factory.is_built_in_fingerprint (a_fingerprint) then
@@ -1115,14 +1144,9 @@ feature -- Element change
 						prefix_allocated: a_prefix_index >= 0
 					end
 					last_name_code :=  (a_prefix_index * bits_20) + a_fingerprint
-				else
-					-- BUG: standard names are pre-allocated, so we have a problem, as
-					-- we can't fulfill the pre-condition.
-					-- This will happen, for instance if xsl prefix were bound by
-					-- mistake to the gexslt namespace, then xsl:transform will fail
-					-- What to do about this?
 				end
-			else
+			end
+			if last_name_code = -1 then
 				if is_code_for_uri_allocated (a_uri) then
 					a_uri_code := code_for_uri (a_uri)
 				else
@@ -1142,7 +1166,7 @@ feature -- Element change
 			-- Allocate a name from the pool, or a new Name if there is not a matching one there
 		require
 			prefix_not_void: an_xml_prefix /= Void
-			valid_uri_code:  is_valid_uri_code (a_uri_code)
+			valid_uri_code:  is_valid_uri_code (a_uri_code) and then not is_standard_uri_code (a_uri_code)
 			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 			name_not_allocated: not is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
 			name_pool_not_full: not is_name_pool_full_using_uri_code (a_uri_code, a_local_name)

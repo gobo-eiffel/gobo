@@ -74,8 +74,7 @@ feature -- Access
 							-- dodgy - give up attempting to optimize
 							
 							finished := True;	Result := Many_references
-						end
-						if a_computed_expression.is_assignation and then a_computed_expression.as_assignation = a_binding then
+						elseif a_computed_expression.is_assignation and then a_computed_expression.as_assignation = a_binding then
 							finished := True; Result := 1
 						elseif a_computed_expression.is_repeated_sub_expression (a_child) then
 							finished := True;	Result := Many_references
@@ -83,7 +82,7 @@ feature -- Access
 							a_child := a_computed_expression -- must succeed
 							a_container := a_child.container
 							a_depth := a_depth + 1
-							if a_depth = 100 then
+							if a_depth >= 10000 then
 								std.error.put_string ("Probable cycle detected in variable references. BUG.%N")
 								check
 									variable_reference_bug: False
@@ -100,6 +99,8 @@ feature -- Access
 					end
 				end
 				if not finished then Result := Many_references end
+			elseif Result > 1 then
+				Result := Many_references 
 			end
 		end
 

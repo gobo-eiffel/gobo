@@ -170,7 +170,7 @@ feature -- Evaluation
 				last_tail_call.process_leaving_tail (an_evaluation_context)
 			end
 		ensure then
-			no_tail_calls: last_tail_call = Void
+			no_tail_calls: not a_context.is_process_error implies last_tail_call = Void
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
@@ -241,7 +241,7 @@ feature -- Evaluation
 				create a_receiver.make (another_context.transformer)
 				another_context.change_to_sequence_output_destination (a_receiver)
 				process (another_context)
-				a_receiver.close
+				if a_receiver.is_open then a_receiver.close end
 				if not another_context.transformer.is_error then
 					a_receiver.sequence.create_iterator (another_context)
 					last_iterator := a_receiver.sequence.last_iterator

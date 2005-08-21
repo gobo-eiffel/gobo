@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Compile-time references to xsl:param within xsl:function"
+		"Run-time references to xsl:param within xsl:function"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -34,6 +34,11 @@ feature {NONE} -- Initialization
 			required_type := a_required_type
 			slot_number := a_slot_number
 			variable_name := a_variable_name
+
+			-- The following is so that it will be assumed a parameter
+			--  is referenced repeatedly until proved otherwise
+
+			reference_count := Many_references
 		ensure
 			required_type_set: required_type = a_required_type
 			slot_number_set: slot_number = a_slot_number

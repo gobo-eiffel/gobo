@@ -133,8 +133,8 @@ feature -- Evaluation
 			elseif last_called_value.is_function_package then
 				create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (last_called_value.as_atomic_value)
 			else
-				a_value := last_called_value -- because `last_called_value' will bew changed by recursive calls
-				a_value.create_iterator (a_context)
+				a_value := last_called_value -- because `last_called_value' will be changed by recursive calls
+				a_value.create_iterator (Void)
 				last_iterator := a_value.last_iterator
 			end
 		end
@@ -275,12 +275,11 @@ feature {NONE} -- Implementation
 			a_clean_context: XM_XSLT_EVALUATION_CONTEXT
 		do
 			last_called_value := Void
+			last_called_error_value := Void
 			create some_actual_arguments.make (1, arguments.count)
 			process_call_loop (some_actual_arguments, a_context)
-			if last_called_value /= Void then
-				check
-					error: last_called_value.is_error
-				end
+			if last_called_error_value /= Void then
+				last_called_value := last_called_error_value
 			elseif is_tail_recursive then
 				create a_function_call_package.make (function, some_actual_arguments, arguments.count, a_context)
 				last_called_value := a_function_call_package
@@ -292,6 +291,9 @@ feature {NONE} -- Implementation
 		ensure
 			last_called_value: last_called_value /= Void -- but may be in error
 		end
+
+	last_called_error_value: XM_XPATH_VALUE
+			-- Last error from `process_call_loop'
 
 	process_call_loop (some_actual_arguments: ARRAY [XM_XPATH_VALUE]; a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Process body of `call'.
@@ -322,7 +324,7 @@ feature {NONE} -- Implementation
 				a_reference_count := function.parameter_definitions.item (a_cursor.index).reference_count
 				if an_expression.is_value then
 					if an_expression.is_error then
-						last_called_value := an_expression.as_value
+						last_called_error_value := an_expression.as_value
 						a_cursor.go_after
 					else
 						some_actual_arguments.put (an_expression.as_value, a_cursor.index)
@@ -342,7 +344,7 @@ feature {NONE} -- Implementation
 
 						an_expression.eagerly_evaluate (a_context)
 						if an_expression.last_evaluation.is_error then
-							last_called_value := an_expression.last_evaluation
+							last_called_error_value := an_expression.last_evaluation
 							a_cursor.go_after
 						else
 							some_actual_arguments.put (an_expression.last_evaluation, a_cursor.index)
@@ -350,7 +352,7 @@ feature {NONE} -- Implementation
 					else
 						an_expression.lazily_evaluate (a_context, a_reference_count)
 						if an_expression.last_evaluation.is_error then
-							last_called_value := an_expression.last_evaluation
+							last_called_error_value := an_expression.last_evaluation
 							a_cursor.go_after
 						else
 							some_actual_arguments.put (an_expression.last_evaluation, a_cursor.index)

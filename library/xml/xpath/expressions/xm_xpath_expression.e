@@ -1228,12 +1228,18 @@ feature -- Status setting
 			not_replaced: not was_expression_replaced
 			replacement_expression_not_replaced: an_expression /= Void and then not an_expression.was_expression_replaced
 			no_circularity: an_expression /= Current
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
 			debug ("XPath expression replacement")
 				std.error.put_string ("An " + an_expression.generating_type + " is about to be set as a replacement for an " + generating_type + "%N")
 			end
 			if an_expression.is_computed_expression then
 				an_expression.as_computed_expression.copy_location_identifier (Current)
+				from a_cursor := an_expression.sub_expressions.new_cursor; a_cursor.start until a_cursor.after loop
+					if a_cursor.item.is_computed_expression then a_cursor.item.as_computed_expression.set_parent (an_expression.as_computed_expression) end
+					a_cursor.forth
+				end
 			end
 			replacement_expression := an_expression
 			was_expression_replaced := True
