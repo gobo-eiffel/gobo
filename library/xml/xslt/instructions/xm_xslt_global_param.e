@@ -110,7 +110,8 @@ feature -- Evaluation
 								end
 								check_against_required_type (static_context)
 								if is_error then
-									an_evaluation_context.transformer.report_fatal_error (error_value, Current)
+									error_value.set_location (system_id, line_number)
+									an_evaluation_context.transformer.report_fatal_error (error_value)
 								end
 							end
 						end

@@ -61,7 +61,7 @@ feature -- Events
 			end
 		end
 
-	error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
+	error (an_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a recoverable error.
 		local
 			a_msg: STRING
@@ -74,14 +74,14 @@ feature -- Events
 					recovered := False
 					a_msg := "Error: "
 				end
-				set_error_text (STRING_.concat (a_msg, an_error.error_message), a_locator)
+				set_error_text (STRING_.concat (a_msg, an_error.error_message), an_error)
 			end
 		end
 
-	fatal_error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
+	fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a non-recoverable error.
 		do
-			set_error_text (STRING_.concat ("Fatal error: ", an_error.error_message), a_locator)
+			set_error_text (STRING_.concat ("Fatal error: ", an_error.error_message), an_error)
 		end
 
 feature {NONE} -- Implementation

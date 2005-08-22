@@ -131,28 +131,34 @@ feature -- Evaluation
 			a_transformer := a_context.transformer
 			name.evaluate_as_string (a_context)
 			if name.last_evaluated_string.is_error then
-				a_transformer.report_fatal_error (name.last_evaluated_string.error_value, Current)
+					name.last_evaluated_string.error_value.set_location (system_id, line_number)
+				a_transformer.report_fatal_error (name.last_evaluated_string.error_value)
 			else
 				a_prefix := name.last_evaluated_string.string_value
 				if not (a_prefix.count = 0 or else is_ncname (a_prefix)) then
 					create an_error.make_from_string (STRING_.concat ("Namespace prefix is invalid: ", a_prefix), Xpath_errors_uri, "XTDE0920", Dynamic_error)
-					a_transformer.report_fatal_error (an_error, Current)
+					an_error.set_location (system_id, line_number)
+					a_transformer.report_fatal_error (an_error)
 				elseif STRING_.same_string (a_prefix, Xmlns) then
 					create an_error.make_from_string ("Namespace prefix of 'xmlns' is not allowed", Xpath_errors_uri, "XTDE0920", Dynamic_error)
-					a_transformer.report_fatal_error (an_error, Current)
+					an_error.set_location (system_id, line_number)
+					a_transformer.report_fatal_error (an_error)
 				else
 					expand_children (a_context)
 					if not is_error then
 						a_uri := last_string_value
 						if STRING_.same_string (a_prefix, Xml_prefix) and then not STRING_.same_string (a_uri, Xml_prefix_namespace) then
 							create an_error.make_from_string ("Namespace prefix of 'xml' may only be used with 'http://www.w3.org/XML/1998/namespace'", Xpath_errors_uri, "XTDE0925", Dynamic_error)
-							a_transformer.report_fatal_error (an_error, Current)
+							an_error.set_location (system_id, line_number)
+							a_transformer.report_fatal_error (an_error)
 						elseif STRING_.same_string (a_uri, Xml_prefix_namespace) then
 							create an_error.make_from_string ("Namespace prefix of 'xml' must be used with 'http://www.w3.org/XML/1998/namespace'", Xpath_errors_uri, "XTDE0925", Dynamic_error)
-							a_transformer.report_fatal_error (an_error, Current)
+							an_error.set_location (system_id, line_number)
+							a_transformer.report_fatal_error (an_error)
 						elseif a_uri.count = 0 then
 							create an_error.make_from_string ("Namespace prefix is the empty string", Xpath_errors_uri, "XTDE0930", Dynamic_error)
-							a_transformer.report_fatal_error (an_error, Current)
+							an_error.set_location (system_id, line_number)
+							a_transformer.report_fatal_error (an_error)
 						else
 							if shared_name_pool.is_namespace_code_allocated (a_prefix, a_uri) then
 								a_namespace_code := shared_name_pool.namespace_code (a_prefix, a_uri)

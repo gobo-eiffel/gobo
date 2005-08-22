@@ -66,9 +66,9 @@ feature -- Events
 		do
 			if warnings_are_recoverable_errors then
 				create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "WARNING", Dynamic_error)
-				error (an_error, a_locator)
+				error (an_error)
 			elseif warning_threshold >= 0 and then warnings <= warning_threshold then
-				display_location_information (a_locator, False)
+				if a_locator /= Void then display_location_information (a_locator, False) end
 				error_reporter.report_warning_message (STRING_.concat ("Warning: ", a_message))
 				warnings := warnings + 1
 				if warnings > warning_threshold then
@@ -77,13 +77,13 @@ feature -- Events
 			end
 		end
 
-	error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
+	error (an_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a recoverable error.
 		local
 			a_msg: STRING
 		do
 			if recovery_policy /= Recover_silently then
-					display_location_information (a_locator, True)
+					display_location_information (an_error, True)
 			end
 			recovered := True
 			if recovery_policy = Recover_with_warnings then
@@ -102,10 +102,10 @@ feature -- Events
 			end
 		end
 
-	fatal_error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
+	fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a non-recoverable error.
 		do
-			display_location_information (a_locator, True)
+			display_location_information (an_error, True)
 			error_reporter.report_error_message (STRING_.concat ("Fatal error: ", an_error.error_message))
 			fatal_errors := fatal_errors + 1
 		end
@@ -117,20 +117,20 @@ feature {NONE} -- Implementation
 
 	display_location_information (a_locator: XM_XPATH_LOCATOR; is_an_error: BOOLEAN) is
 			-- Display location information.
+		require
+			locator_exists: a_locator /= Void
 		local
 			a_message: STRING
 		do
-			if a_locator /= Void then
-				if a_locator.line_number > 0 then
-					a_message := "At line " + a_locator.line_number.out + " in " + a_locator.system_id + ":"
-				else
-					a_message := "In " + a_locator.system_id + ":"
-				end
-				if is_an_error then
-					error_reporter.report_error_message (a_message)
-				else
-					error_reporter.report_warning_message (a_message)
-				end
+			if a_locator.line_number > 0 then
+				a_message := "At line " + a_locator.line_number.out + " in " + a_locator.system_id + ":"
+			else
+				a_message := "In " + a_locator.system_id + ":"
+			end
+			if is_an_error then
+				error_reporter.report_error_message (a_message)
+			else
+				error_reporter.report_warning_message (a_message)
 			end
 		end
 

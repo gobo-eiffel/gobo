@@ -87,7 +87,6 @@ feature -- Evaluation
 		local
 			some_idrefs: DS_ARRAYED_LIST [STRING]
 			a_node: XM_XPATH_NODE
-			an_item: XM_XPATH_ITEM
 			a_splitter: ST_SPLITTER
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do

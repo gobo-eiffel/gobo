@@ -201,7 +201,7 @@ feature -- Status setting
 			error_listener.warning (a_message, a_locator)
 		end
 
-	report_recoverable_error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
+	report_recoverable_error (an_error: XM_XPATH_ERROR_VALUE) is
 			-- Report a recoverable error.
 		require
 			error_not_void: an_error /= Void
@@ -210,16 +210,16 @@ feature -- Status setting
 
 				-- XSLT recoverable error codes start with XTRE, not XTDE
 
-				report_fatal_error (an_error, a_locator)
+				report_fatal_error (an_error)
 			else
-				error_listener.error (an_error, a_locator)
+				error_listener.error (an_error)
 				if not error_listener.recovered then
 					is_error := True
 				end
 			end
 		end
 
-	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
+	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
 			-- Report a recoverable error.
 		require
 			error_not_void: an_error /= Void
@@ -229,7 +229,7 @@ feature -- Status setting
 				-- We only report the first error;
 				-- Otherwise, an error can get reported twice.
 				
-				error_listener.fatal_error (an_error, a_locator)
+				error_listener.fatal_error (an_error)
 				is_error := True
 				last_error := an_error
 			end
@@ -341,7 +341,7 @@ feature -- Element change
 			else
 				initial_template := Void
 				create an_error.make_from_string (STRING_.concat ("Unable to locate a template named ", a_template_name), Xpath_errors_uri, "XT0040", Dynamic_error)
-				report_fatal_error (an_error, Void)
+				report_fatal_error (an_error)
 			end
 		end
 
@@ -359,7 +359,7 @@ feature -- Element change
 			initial_mode := shared_name_pool.fingerprint_from_expanded_name (a_mode_name)
 			if not rule_manager.is_mode_registered (initial_mode) then
 				create an_error.make_from_string (STRING_.concat (a_mode_name, " is not a mode within the stylesheet"), Gexslt_eiffel_type_uri, "INVALID_INITIAL_MODE", Dynamic_error)
-				report_fatal_error (an_error, Void)
+				report_fatal_error (an_error)
 			end
 		end
 			
@@ -416,7 +416,7 @@ feature -- Element change
 			create an_expression_factory
 			an_expression_factory.make_expression (a_parameter_value, static_context, 1, 0, 1)
 			if an_expression_factory.is_parse_error then
-				report_recoverable_error (an_expression_factory.parsed_error_value, Void)
+				report_recoverable_error (an_expression_factory.parsed_error_value)
 			else
 				xpath_parameters.force (an_expression_factory.parsed_expression, a_fingerprint)
 			end
@@ -459,7 +459,7 @@ feature -- Element change
 			transformer_factory.create_new_transformer (a_uri_source)
 			if transformer_factory.was_error then
 				create an_error.make_from_string (transformer_factory.last_error_message, Gexslt_eiffel_type_uri, "CREATE_TRANSFORMER", Dynamic_error)
-				report_fatal_error (an_error, Void)
+				report_fatal_error (an_error)
 			else
 				a_transformer := transformer_factory.created_transformer
 				create a_transformer_receiver.make (a_transformer, principal_result_uri, a_result)
@@ -504,14 +504,14 @@ feature -- Transformation
 							a_start_node := a_document.selected_id (a_fragment_id)
 							if a_start_node = Void then
 								create an_error.make_from_string ("Fragment identifier did not select a node", Xpath_errors_uri, "XT1160", Dynamic_error)
-								report_recoverable_error (an_error, Void)
+								report_recoverable_error (an_error)
 								if not is_error then
 									a_start_node := a_document
 								end
 							end
 						else
 							create an_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type", Xpath_errors_uri, "XT1160", Dynamic_error)
-							report_recoverable_error (an_error, Void)
+							report_recoverable_error (an_error)
 							if not is_error then
 								a_start_node := a_document
 							end
@@ -526,7 +526,7 @@ feature -- Transformation
 					a_media_type := a_source.media_type
 					if a_builder.has_error then
 						create an_error.make_from_string (a_builder.last_error, Gexslt_eiffel_type_uri, "BUILD_ERROR", Static_error)
-						report_fatal_error (an_error, Void)
+						report_fatal_error (an_error)
 					else
 						a_document := a_builder.current_root.as_document
 						register_document (a_document, a_media_type, a_source.system_id)
@@ -544,7 +544,7 @@ feature -- Transformation
 								a_start_node := a_document.selected_id (a_fragment_id)
 								if a_start_node = Void then
 									create an_error.make_from_string ("Fragment identifier did not select a node", Xpath_errors_uri, "XT1160", Dynamic_error)
-									report_recoverable_error (an_error, Void)
+									report_recoverable_error (an_error)
 									if not is_error then
 										a_start_node := a_document
 									end
@@ -552,7 +552,7 @@ feature -- Transformation
 							else
 								create an_error.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type",
 																			 Xpath_errors_uri, "XT1160", Dynamic_error)
-								report_recoverable_error (an_error, Void)
+								report_recoverable_error (an_error)
 								if not is_error then
 									a_start_node := a_document
 								end
@@ -802,7 +802,7 @@ feature -- Implementation
 				end
 			elseif xpath_parameters /= Void then
 				create an_error.make_from_string ("XPath parameters cannot be specified without a source document", Gexslt_eiffel_type_uri, "PARAMETERS_WITHOUT_SOURCE_DOCUMENT", Dynamic_error)
-				report_fatal_error (an_error, Void)
+				report_fatal_error (an_error)
 			end
 
 			-- If parameters were supplied, set them up
@@ -875,7 +875,7 @@ feature -- Implementation
 				else
 					create an_error.make_from_string ("XPointer failed to select a node." , Xpath_errors_uri, "XT1160", Dynamic_error)
 				end
-				report_recoverable_error (an_error, Void)
+				report_recoverable_error (an_error)
 				if not is_error then
 					Result := a_document
 				end
@@ -896,7 +896,7 @@ feature -- Implementation
 					else
 						create an_error.make_from_string ("XPointer returned something other than a single node",
 																	 Xpath_errors_uri, "XT1160", Dynamic_error)
-						report_recoverable_error (an_error, Void)
+						report_recoverable_error (an_error)
 						if not is_error then
 							Result := a_document
 						end

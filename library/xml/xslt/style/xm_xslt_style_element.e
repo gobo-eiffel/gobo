@@ -749,7 +749,8 @@ feature -- Status setting
 		require
 			validation_message_not_void: an_error /= Void
 		do
-			error_listener.fatal_error (an_error, Current)
+			if not system_id.is_empty and then not an_error.is_location_known then an_error.set_location (system_id, line_number) end
+			error_listener.fatal_error (an_error)
 			principal_stylesheet.set_compile_errors
 		ensure
 			compile_errors: any_compile_errors
@@ -1813,8 +1814,7 @@ feature -- Element change
 						if last_generated_expression = Void then
 							last_generated_expression := a_text
 						else
-							create a_block.make (an_executable, a_text, last_generated_expression)
-							a_block.set_source_location (containing_stylesheet.module_number (a_node.system_id), a_line_number)
+							create a_block.make (an_executable, a_text, last_generated_expression, containing_stylesheet.module_number (a_node.system_id), a_line_number)
 							last_generated_expression := a_block
 						end
 					end
@@ -1923,14 +1923,16 @@ feature -- Element change
 					if a_fallback_expression = Void then
 						a_fallback_expression := an_expression
 					else
-						create a_block.make (an_executable, a_fallback_expression, an_expression)
-						a_block.set_source_location (a_stylesheet.module_number (a_fallback.system_id), a_fallback.line_number)
+						create a_block.make (an_executable, a_fallback_expression, an_expression, a_stylesheet.module_number (a_fallback.system_id), a_fallback.line_number)
 					end
 				end
 				an_iterator.forth
 			end
 			if not found_fallback then
 				create a_deferred_error.make (a_style_element.validation_error, a_style_element.node_name)
+				if not system_id.is_empty and then not a_style_element.validation_error.is_location_known then
+					a_style_element.validation_error.set_location (system_id, line_number)
+				end
 				last_generated_expression := a_deferred_error
 			else
 				last_generated_expression := a_fallback_expression
@@ -2516,8 +2518,7 @@ feature {NONE} -- Implementation
 				if a_tail = Void then
 					last_generated_expression := a_child
 				elseif a_child /= Void then
-					create a_block.make (an_executable, a_child, a_tail)
-					a_block.set_source_location (containing_stylesheet.module_number (system_id), line_number)
+					create a_block.make (an_executable, a_child, a_tail, containing_stylesheet.module_number (system_id), line_number)
 					last_generated_expression := a_block
 				end
 			end

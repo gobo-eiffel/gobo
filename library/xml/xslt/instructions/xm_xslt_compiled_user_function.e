@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 						a_value.create_iterator (Void)
 						an_iterator := a_value.last_iterator
 						if an_iterator.is_error then
-							a_transformer.report_fatal_error (an_iterator.error_value, Void)
+							a_transformer.report_fatal_error (an_iterator.error_value)
 						else
 							an_iterator.start
 						end
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 						an_iterator.forth
 					end
 					if an_iterator.is_error then
-						a_transformer.report_fatal_error (an_iterator.error_value, Void)
+						a_transformer.report_fatal_error (an_iterator.error_value)
 					else
 						last_combined_key.append_character (code_two)
 					end

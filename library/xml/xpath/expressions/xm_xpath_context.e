@@ -274,6 +274,8 @@ feature -- Creation
 
 	new_minor_context: like Current is
 			-- Created minor copy of `Current'
+		require
+			push_processing_available: has_push_processing
 		deferred
 		ensure
 			minor_context: Result /= Void and then Result.is_minor

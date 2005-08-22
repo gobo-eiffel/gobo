@@ -107,6 +107,9 @@ feature -- Evaluation
 						if items > 1 then
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("A sequence of more than one item is not allowed as the ",
 																																						 role_locator.message), role_locator.namespace_uri, role_locator.error_code, Type_error)
+							if not system_id.is_empty then
+								last_evaluated_item.error_value.set_location (system_id, line_number)
+							end
 							finished := True
 						else
 							an_iterator.forth
@@ -118,12 +121,21 @@ feature -- Evaluation
 					if items = 0 and then not is_cardinality_allows_zero (required_cardinality) then
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("An empty sequence is not allowed as the ",
 																																					 role_locator.message), role_locator.namespace_uri, role_locator.error_code, Type_error)
+						if not system_id.is_empty then
+							last_evaluated_item.error_value.set_location (system_id, line_number)
+						end
 					end
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+					if not system_id.is_empty then
+						last_evaluated_item.error_value.set_location (system_id, line_number)
+					end
 				end
 			else
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+				if not system_id.is_empty then
+					last_evaluated_item.error_value.set_location (system_id, line_number)
+				end
 			end
 		end
 

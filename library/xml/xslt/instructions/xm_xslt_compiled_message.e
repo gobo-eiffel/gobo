@@ -189,23 +189,27 @@ feature -- Evaluation
 				end
 			end
 			if an_iterator.is_error then
-				a_transformer.report_fatal_error (an_iterator.error_value, Current)
+				if not an_iterator.error_value.is_location_known then an_iterator.error_value.set_location (system_id, line_number) end
+				a_transformer.report_fatal_error (an_iterator.error_value)
 			else
 				a_tree_receiver.close
 				if terminate /= Void then
 					terminate.evaluate_as_string (a_context)
 					a_string_value := terminate.last_evaluated_string
 					if a_string_value.is_error then
-						a_transformer.report_fatal_error (a_string_value.error_value, Current)
+						if not a_string_value.error_value.is_location_known then a_string_value.error_value.set_location (system_id, line_number) end
+						a_transformer.report_fatal_error (a_string_value.error_value)
 					elseif STRING_.same_string (a_string_value.string_value, "no") then
 						-- do_nothing
 					elseif STRING_.same_string (a_string_value.string_value, "yes") then
 						create an_error.make_from_string ("Execution terminated owing to xsl:message terminate='yes'.", Gexslt_eiffel_type_uri, "TERMINATE_MESSAGE", Dynamic_error)
-						a_transformer.report_fatal_error (an_error, Current)
+						an_error.set_location (system_id, line_number)
+						a_transformer.report_fatal_error (an_error)
 					else
 						create an_error.make_from_string (STRING_.concat ("xsl:message terminate attribute must evaluate to 'yes' or 'no'. Found: ", a_string_value.string_value),
 																	 Gexslt_eiffel_type_uri, "INVALID_TERMINATE", Dynamic_error)
-						a_transformer.report_fatal_error (an_error, Current)
+						an_error.set_location (system_id, line_number)
+						a_transformer.report_fatal_error (an_error)
 					end
 				end
 			end

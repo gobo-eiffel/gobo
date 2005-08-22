@@ -69,7 +69,7 @@ feature -- Evaluation
 			a_uri_reference := an_item.string_value
 			if uri_encoding.has_excluded_characters (a_uri_reference) then
 				create an_error.make_from_string ("Argument to fn:document is not a valid URI", Xpath_errors_uri, "FODC0005", Dynamic_error)
-				transformer.report_recoverable_error (an_error, Void)
+				transformer.report_recoverable_error (an_error)
 				create {XM_XPATH_EMPTY_ITERATOR} last_node_iterator.make
  				if transformer.is_error then
 					last_node_iterator.set_last_error (an_error)
@@ -78,7 +78,7 @@ feature -- Evaluation
 				create a_uri.make_resolve (a_base_uri, a_uri_reference)
 				parse_document (an_item.string_value, a_base_uri, a_context)
 				if last_evaluated_document.is_error then
-					transformer.report_recoverable_error (last_evaluated_document.error_value, Void)
+					transformer.report_recoverable_error (last_evaluated_document.error_value)
 					if not transformer.is_error then
 						create {XM_XPATH_EMPTY_ITERATOR} last_node_iterator.make
 					end
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			if in_error then
 				create fragment_error_value.make_from_string ("Media-type is not recognized, or the fragment identifier does not conform to the rules for the media-type",
 																			 Xpath_errors_uri, "XTRE1160", Dynamic_error)
-				transformer.report_recoverable_error (fragment_error_value, Void)
+				transformer.report_recoverable_error (fragment_error_value)
 				if not transformer.is_error then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (a_document)
 				end
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			if a_value.is_error or else a_value.is_empty_sequence then
 				create an_error.make_from_string ("XPointer reported an error",
 															 Xpath_errors_uri, "XTRE1160", Dynamic_error)
-				transformer.report_recoverable_error (an_error, Void)
+				transformer.report_recoverable_error (an_error)
 				if not transformer.is_error then
 					a_node := a_document
 				end
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 				else
 					create an_error.make_from_string ("XPointer returned something other than a sequence of nodes",
 																 Xpath_errors_uri, "XTRE1160", Dynamic_error)
-					transformer.report_recoverable_error (an_error, Void)
+					transformer.report_recoverable_error (an_error)
 					if not transformer.is_error then
 						a_node := a_document
 					end

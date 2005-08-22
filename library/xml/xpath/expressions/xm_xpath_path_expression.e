@@ -395,7 +395,11 @@ feature -- Evaluation
 			if an_iterator.is_error then
 				last_iterator := an_iterator
 			else
-				another_context := a_context.new_context
+				if a_context.has_push_processing then
+					another_context := a_context.new_minor_context
+				else
+					another_context := a_context.new_context
+				end
 				another_context.set_current_iterator (an_iterator)
 
 				if is_node_item_type (step.item_type) then

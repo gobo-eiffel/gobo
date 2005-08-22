@@ -374,17 +374,20 @@ feature -- Evaluation
 					grouping_size.evaluate_as_string (a_context)
 					if grouping_size.last_evaluated_string.is_error then
 						create an_error.make_from_string ("grouping-size must be numeric", Gexslt_eiffel_type_uri, "GROUPING_SIZE", Dynamic_error)
-						transformer.report_fatal_error (an_error, Current)
+						an_error.set_location (system_id, line_number)
+						transformer.report_fatal_error (an_error)
 					else
 						a_string := grouping_size.last_evaluated_string.string_value
 						if not a_string.is_integer then
 							create an_error.make_from_string ("Context item is not set whilst applying imports.", Gexslt_eiffel_type_uri, "GROUPING_SIZE", Dynamic_error)
-							transformer.report_fatal_error (an_error, Current)
+							an_error.set_location (system_id, line_number)
+							transformer.report_fatal_error (an_error)
 						else
 							a_group_size := a_string.to_integer
 							if a_group_size < 0 then
 								create an_error.make_from_string ("grouping-size must be positive", Gexslt_eiffel_type_uri, "GROUPING_SIZE", Dynamic_error)
-								transformer.report_fatal_error (an_error, Current)
+								an_error.set_location (system_id, line_number)
+								transformer.report_fatal_error (an_error)
 							end
 						end
 					end
@@ -400,7 +403,8 @@ feature -- Evaluation
 					a_group_separator := grouping_separator.last_evaluated_string.string_value
 					if a_group_separator.count > 1 then
 						create an_error.make_from_string ("grouping-separator must evaluate to a single character", Gexslt_eiffel_type_uri, "GROUPING_SEPARATOR", Dynamic_error)
-						transformer.report_fatal_error (an_error, Current)
+						an_error.set_location (system_id, line_number)
+						transformer.report_fatal_error (an_error)
 					end
 				end
 				if ordinal /= Void then
@@ -429,7 +433,8 @@ feature -- Evaluation
 							not (STRING_.same_string (letter_value.last_evaluated_string.string_value, "alphabetic") or else
 								  STRING_.same_string (letter_value.last_evaluated_string.string_value, "traditional")) then
 							create an_error.make_from_string ("letter-value must be %"traditional%" or %"alphabetic%"", Gexslt_eiffel_type_uri, "LETTER_VALUE", Dynamic_error)
-							transformer.report_fatal_error (an_error, Current)
+							an_error.set_location (system_id, line_number)
+							transformer.report_fatal_error (an_error)
 						end
 					end
 				end
@@ -444,7 +449,8 @@ feature -- Evaluation
 					format.evaluate_as_string (a_context)
 					if format.last_evaluated_string.is_error then
 						create an_error.make_from_string ("format must evaluate to a string", Gexslt_eiffel_type_uri, "NUMBER_FORMAT", Dynamic_error)
-						transformer.report_fatal_error (an_error, Current)
+						an_error.set_location (system_id, line_number)
+						transformer.report_fatal_error (an_error)
 					else
 						create a_number_formatter.make (format.last_evaluated_string.string_value)
 					end
@@ -541,7 +547,8 @@ feature {NONE} -- Implementation
 					value_expression.create_iterator (a_context)
 					a_sequence_iterator := value_expression.last_iterator
 					if a_sequence_iterator.is_error then
-						a_context.transformer.report_fatal_error (a_sequence_iterator.error_value, Current)
+						a_sequence_iterator.error_value.set_location (system_id, line_number)
+						a_context.transformer.report_fatal_error (a_sequence_iterator.error_value)
 					else
 						a_sequence_iterator.start
 					end
@@ -561,7 +568,8 @@ feature {NONE} -- Implementation
 								if a_numeric_value.is_nan then
 									create an_error.make_from_string ("Numbers to be formatted must be positive integers",
 																				 Xpath_errors_uri, "XTDE0980", Dynamic_error)
-									transformer.report_fatal_error (an_error, Current)
+									an_error.set_location (system_id, line_number)
+									transformer.report_fatal_error (an_error)
 									finished := True
 								end
 							end
@@ -573,7 +581,8 @@ feature {NONE} -- Implementation
 						if not finished and then an_integer_value.value.is_negative then
 							create an_error.make_from_string ("Numbers to be formatted must be positive integers",
 																		 Xpath_errors_uri, "XTDE0980", Dynamic_error)
-							transformer.report_fatal_error (an_error, Current)
+							an_error.set_location (system_id, line_number)
+							transformer.report_fatal_error (an_error)
 						end
 						if not finished then
 							integer_vector.force_last (an_integer_value)
@@ -582,7 +591,8 @@ feature {NONE} -- Implementation
 					a_sequence_iterator.forth
 				end
 				if a_sequence_iterator.is_error then
-					a_context.transformer.report_fatal_error (a_sequence_iterator.error_value, Current)
+					a_sequence_iterator.error_value.set_location (system_id, line_number)
+					a_context.transformer.report_fatal_error (a_sequence_iterator.error_value)
 				end
 			else
 				if select_expression /= Void then
@@ -594,7 +604,8 @@ feature {NONE} -- Implementation
 					if not a_context.context_item.is_node then
 						create an_error.make_from_string ("Context item for xsl:number must be a node",
 																	 Xpath_errors_uri, "XTTE0990", Type_error)
-						transformer.report_recoverable_error (an_error, Current)
+						an_error.set_location (system_id, line_number)
+						transformer.report_recoverable_error (an_error)
 						if not transformer.is_error then
 							todo ("calculate_value", True) -- return empty sequence
 						end

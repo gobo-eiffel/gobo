@@ -339,7 +339,8 @@ feature -- Evaluation
 				a_cursor.item.calculate_effective_boolean_value (a_context)
 				a_boolean_value := a_cursor.item.last_boolean_value
 				if a_boolean_value.is_error then
-					a_new_context.transformer.report_fatal_error (a_boolean_value.error_value, Current)
+					a_boolean_value.error_value.set_location (system_id, line_number)
+					a_new_context.transformer.report_fatal_error (a_boolean_value.error_value)
 					create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (a_boolean_value.error_value)
 					a_cursor.go_after
 				elseif a_boolean_value.value then
@@ -377,7 +378,8 @@ feature -- Evaluation
 				a_cursor.item.calculate_effective_boolean_value (a_context)
 				a_boolean_value := a_cursor.item.last_boolean_value
 				if a_boolean_value.is_error then
-					a_new_context.transformer.report_fatal_error (a_boolean_value.error_value, Current)
+					a_boolean_value.error_value.set_location (system_id, line_number)
+					a_new_context.transformer.report_fatal_error (a_boolean_value.error_value)
 					last_evaluated_item := a_boolean_value
 					a_cursor.go_after
 				elseif a_boolean_value.value then
@@ -410,7 +412,8 @@ feature -- Evaluation
 				a_cursor.item.calculate_effective_boolean_value (a_context)
 				a_boolean_value := a_cursor.item.last_boolean_value
 				if a_boolean_value.is_error then
-					a_context.transformer.report_fatal_error (a_boolean_value.error_value, Current)
+					a_boolean_value.error_value.set_location (system_id, line_number)
+					a_context.transformer.report_fatal_error (a_boolean_value.error_value)
 					a_cursor.go_after
 				elseif a_boolean_value.value then
 					an_action := actions.item (a_cursor.index)

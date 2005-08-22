@@ -222,7 +222,7 @@ feature -- Element change
 						if a_content = Void then
 							a_content := a_fixed_attribute
 						else
-							create {XM_XSLT_BLOCK} a_content.make (an_executable, a_fixed_attribute, a_content)
+							create {XM_XSLT_BLOCK} a_content.make (an_executable, a_fixed_attribute, a_content, containing_stylesheet.module_number (system_id), line_number)
 						end
 						a_cursor.back
 					end

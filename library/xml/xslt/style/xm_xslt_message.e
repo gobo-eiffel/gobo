@@ -124,7 +124,7 @@ feature -- Element change
 				if select_expression = Void then
 					select_expression := last_generated_expression
 				else
-					create {XM_XSLT_BLOCK} select_expression.make (an_executable, select_expression, last_generated_expression)
+					create {XM_XSLT_BLOCK} select_expression.make (an_executable, select_expression, last_generated_expression, containing_stylesheet.module_number (system_id), line_number)
 				end
 			end
 			if select_expression = Void then

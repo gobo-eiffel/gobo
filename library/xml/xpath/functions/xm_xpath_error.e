@@ -135,6 +135,7 @@ feature -- Evaluation
 				an_error_sequence := expression_factory.last_created_closure
 			end
 			create an_error_value.make (a_description, a_namespace_uri, an_error_code, an_error_sequence, Dynamic_error)
+			an_error_value.set_location (system_id, line_number)
 			create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_error_value)
 		end
 

@@ -80,8 +80,12 @@ feature -- Duplication
 		do
 			new_base := base_iterator.another
 			a_context := context
-			if a_context /= void then
-				a_context := a_context.new_context
+			if a_context /= Void then
+				if a_context.has_push_processing then
+					a_context := a_context.new_minor_context
+				else
+					a_context := a_context.new_context
+				end
 				a_context.set_current_iterator (new_base)
 			end
 			create Result.make (new_base, mapping_function, a_context)

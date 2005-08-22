@@ -353,7 +353,8 @@ feature -- Evaluation
 			create_group_iterator (a_context)
 			a_group_iterator := last_group_iterator
 			if a_group_iterator.is_error then
-				a_transformer.report_fatal_error (a_group_iterator.error_value, Current)
+				a_group_iterator.error_value.set_location (system_id, line_number)
+				a_transformer.report_fatal_error (a_group_iterator.error_value)
 			else
 				a_new_context := a_context.new_context
 				a_new_context.set_current_template (Void)
@@ -376,7 +377,8 @@ feature -- Evaluation
 					end
 					a_group_iterator.forth
 					if a_group_iterator.is_error then
-						a_transformer.report_fatal_error (a_group_iterator.error_value, Current)
+						a_group_iterator.error_value.set_location (system_id, line_number)
+						a_transformer.report_fatal_error (a_group_iterator.error_value)
 					end
 				end
 			end
@@ -401,7 +403,8 @@ feature -- Evaluation
 			a_new_context.set_current_iterator (a_group_iterator)
 			a_new_context.set_current_group_iterator (a_group_iterator)
 			if a_group_iterator.is_error then
-				an_evaluation_context.transformer.report_fatal_error (a_group_iterator.error_value, Current)
+				a_group_iterator.error_value.set_location (system_id, line_number)
+				an_evaluation_context.transformer.report_fatal_error (a_group_iterator.error_value)
 			else
 				create {XM_XPATH_MAPPING_ITERATOR} last_iterator.make (a_group_iterator, Current, a_new_context)
 			end
@@ -485,7 +488,8 @@ feature {NONE} -- Implementation
 			select_expression.create_iterator (a_context)
 			a_population := select_expression.last_iterator
 			if a_population.is_error then
-				a_context.transformer.report_fatal_error (a_population.error_value, Current)
+				a_population.error_value.set_location (system_id, line_number)
+				a_context.transformer.report_fatal_error (a_population.error_value)
 			else
 			
 				-- Obtain am iterator over the groups in order of first appearance

@@ -14,6 +14,8 @@ class XM_XPATH_ERROR_VALUE
 
 inherit
 
+	XM_XPATH_LOCATOR
+	
 	XM_XPATH_STANDARD_NAMESPACES
 		export {NONE} all end
 
@@ -43,6 +45,7 @@ feature {NONE} -- Initialization
 			code := an_error_code
 			type := an_error_type
 			description := a_description
+			initialize_location
 		ensure
 			description_set: description = a_description
 			value_set: value = a_value
@@ -96,6 +99,13 @@ feature {NONE} -- Initialization
 			make ("Unknown error", Xpath_errors_uri, "FOER0000", an_empty_sequence, Dynamic_error)
 		end
 
+	initialize_location is
+			-- Initialize location to unknown.
+		do
+			system_id := ""
+			line_number := 0
+		end
+
 feature -- Access
 
 	namespace_uri, code: STRING
@@ -110,6 +120,12 @@ feature -- Access
 	value: XM_XPATH_VALUE
 			-- Error value
 
+	system_id: STRING
+			-- Current SYSTEM ID
+
+	line_number: INTEGER
+			-- Approximate line number of current event, or 0 if unknown
+		
 	error_message: STRING is
 			-- Textual error message
 		local
@@ -128,7 +144,14 @@ feature -- Access
 			error_message_not_void: Result /= Void
 		end
 
+feature -- Status report
 
+	is_location_known: BOOLEAN is
+			-- is the location of the error known?
+		do
+			Result := not system_id.is_empty
+		end
+	
 feature -- Comparison
 
 	same_error (other: XM_XPATH_ERROR_VALUE): BOOLEAN is
@@ -142,6 +165,22 @@ feature -- Comparison
 			Result := STRING_.same_string (code, other.code) and then type=other.type
 				and then STRING_.same_string (error_message, other.error_message)
 				and then STRING_.same_string (namespace_uri, other.namespace_uri)
+		end
+
+feature -- Element change
+
+	set_location (a_system_id: like system_id; a_line_number: like line_number) is
+			-- Set location information.
+		require
+			location_unknown: not is_location_known
+			system_id_known: not a_system_id.is_empty
+		do
+			system_id := a_system_id
+			if a_line_number > 0 then line_number := a_line_number end
+		ensure
+			location_known: is_location_known
+			system_id_set: system_id = a_system_id
+			line_number_set: a_line_number > 0 implies line_number = a_line_number
 		end
 
 invariant

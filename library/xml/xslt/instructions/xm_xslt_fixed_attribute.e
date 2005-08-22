@@ -116,7 +116,8 @@ feature -- Evaluation
 
 			expand_children (a_context)
 			if is_error then
-				a_context.transformer.report_recoverable_error (error_value, Current)
+				error_value.set_location (system_id, line_number)
+				a_context.transformer.report_recoverable_error (error_value)
 			else
 				if type /= Void then
 					todo ("process_leaving_tail - validation by type", True)

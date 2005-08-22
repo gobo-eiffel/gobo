@@ -132,7 +132,6 @@ feature -- Element change
 			value_not_void: a_value /= Void
 		local
 			a_splitter: ST_SPLITTER
-			an_idref: STRING
 			some_idrefs: DS_LIST [STRING]
 			a_cursor: DS_LIST_CURSOR [STRING]
 			new_size: INTEGER

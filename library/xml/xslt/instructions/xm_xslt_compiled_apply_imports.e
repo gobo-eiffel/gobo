@@ -142,7 +142,8 @@ feature -- Evaluation
 			if a_current_template = Void then
 				create an_error.make_from_string ("Current template rule is null whilst evaluating xsl:apply-imports.",
 															 Xpath_errors_uri, "XTDE0560", Dynamic_error)
-				a_transformer.report_fatal_error (an_error, Current)
+				an_error.set_location (system_id, line_number)
+				a_transformer.report_fatal_error (an_error)
 			else
 				a_minimum_precedence := a_current_template.minimum_import_precedence
 				a_maximum_precedence := a_current_template.precedence - 1
@@ -152,12 +153,14 @@ feature -- Evaluation
 				if a_current_iterator = Void or else a_current_iterator.is_error or else a_current_iterator.off then
 					create an_error.make_from_string ("Context item is not set whilst applying imports.",
 																 Xpath_errors_uri, "XTDE0565", Dynamic_error)
-					a_transformer.report_fatal_error (an_error, Void)
+					an_error.set_location (system_id, line_number)
+					a_transformer.report_fatal_error (an_error)
 				else
 					if not a_current_iterator.item.is_node then
 						create an_error.make_from_string ("Context item is not a node whilst applying imports.",
 																	 Xpath_errors_uri, "XTDE0565", Dynamic_error)
-						a_transformer.report_fatal_error (an_error, Void)
+						an_error.set_location (system_id, line_number)
+						a_transformer.report_fatal_error (an_error)
 					else
 						a_node_handler := a_transformer.rule_manager.imported_template_rule (a_current_iterator.item.as_node, a_mode, a_minimum_precedence, a_maximum_precedence, a_context)
 						if a_node_handler = Void then

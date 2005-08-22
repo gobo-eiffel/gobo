@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 					base_iterator.forth
 				end
 				if base_iterator.is_error then
-					context.transformer.report_fatal_error (base_iterator.error_value, Void)
+					context.transformer.report_fatal_error (base_iterator.error_value)
 				end
 			end
 			count_determined := True

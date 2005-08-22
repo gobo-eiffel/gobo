@@ -86,7 +86,7 @@ feature -- Evaluation
 				-- as this is an XSLT function
 			end
 			create an_error.make_from_string ("Current().should not be called at runtime, as it should have been promoted", Gexslt_eiffel_type_uri,  "CURRENT_PROMOTION", Dynamic_error)
-			an_evaluation_context.transformer.report_fatal_error (an_error, Void)
+			an_evaluation_context.transformer.report_fatal_error (an_error)
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is

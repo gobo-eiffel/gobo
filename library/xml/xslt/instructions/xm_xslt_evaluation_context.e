@@ -501,7 +501,7 @@ feature -- Element change
 			if is_final and then is_temporary_destination then
 				create an_error.make_from_string ("Cannot switch to a final result destination while writing a temporary tree",
 															 Xpath_errors_uri, "XTDE1480", Dynamic_error)
-				transformer.report_fatal_error (an_error, Void)
+				transformer.report_fatal_error (an_error)
 			else
 				if properties = Void then
 					create some_properties.make (0)
@@ -527,7 +527,7 @@ feature -- Element change
 	report_fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
 			-- Report a fatal error.
 		do
-			transformer.report_fatal_error (an_error, Void)
+			transformer.report_fatal_error (an_error)
 		end
 
 feature {NONE} -- Implementation

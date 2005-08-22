@@ -81,7 +81,8 @@ feature -- Evaluation
 			a_transformer := a_context.transformer
 			expand_children (a_context)
 			if last_string_value = Void then
-				a_transformer.report_fatal_error (select_expression.last_evaluated_item.error_value, Current)
+				select_expression.last_evaluated_item.error_value.set_location (system_id, line_number)
+				a_transformer.report_fatal_error (select_expression.last_evaluated_item.error_value)
 			else
 				a_comment := last_string_value
 				from

@@ -281,7 +281,8 @@ feature -- Evaluation
 			if a_new_context.is_temporary_destination then
 				create an_error.make_from_string ("Attempt to evaluate xsl:document while writing a temporary tree",
 															 Xpath_errors_uri, "XTDE1480", Dynamic_error)
-				a_transformer.report_fatal_error (an_error, Current)
+				an_error.set_location (system_id, line_number)
+				a_transformer.report_fatal_error (an_error)
 			else
 				an_output_resolver := a_transformer.output_resolver
 				if href = Void then
@@ -289,12 +290,14 @@ feature -- Evaluation
 					if a_result.is_document_started then
 						create an_error.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", a_transformer.principal_result_uri),
 																	 Xpath_errors_uri, "XTDE1490", Dynamic_error)
-						a_transformer.report_fatal_error (an_error, Current)
+						an_error.set_location (system_id, line_number)
+						a_transformer.report_fatal_error (an_error)
 					end
 				else
 					href.evaluate_as_string (a_context)
 					if href.last_evaluated_string.is_error then
-						a_transformer.report_fatal_error (href.last_evaluated_string.error_value, Current)
+						href.last_evaluated_string.error_value.set_location (system_id, line_number)
+						a_transformer.report_fatal_error (href.last_evaluated_string.error_value)
 					else
 						an_output_resolver := a_transformer.output_resolver
 						create a_uri.make (a_transformer.principal_result_uri)
@@ -303,13 +306,15 @@ feature -- Evaluation
 						if an_output_resolver.output_destinations.has (a_uri_to_use) then
 							create an_error.make_from_string (STRING_.concat ("Attempt to generate two result trees to URI ", a_uri_to_use),
 																		 Xpath_errors_uri, "XTDE1490", Dynamic_error)
-							a_transformer.report_fatal_error (an_error, Current)
+							an_error.set_location (system_id, line_number)
+							a_transformer.report_fatal_error (an_error)
 						else
 							an_output_resolver.resolve (a_uri)
 							a_result := an_output_resolver.last_result
 							if a_result = Void then
 								create an_error.make_from_string (an_output_resolver.error_message, Gexslt_eiffel_type_uri, "OUTPUT_RESOLVER_ERROR", Dynamic_error)
-								a_transformer.report_fatal_error (an_error, Current)
+								an_error.set_location (system_id, line_number)
+								a_transformer.report_fatal_error (an_error)
 							else
 								a_property_set := property_set
 								if formatting_attributes.count > 0 then
@@ -324,7 +329,8 @@ feature -- Evaluation
 										an_expression.evaluate_as_string (a_context)
 										a_value :=  an_expression.last_evaluated_string
 										if a_value.is_error then
-											a_transformer.report_fatal_error (a_value.error_value, Current)
+											a_value.error_value.set_location (system_id, line_number)
+											a_transformer.report_fatal_error (a_value.error_value)
 											a_cursor.go_after
 										else
 											a_property_set.set_property (a_fingerprint, a_value.string_value, namespace_resolver)

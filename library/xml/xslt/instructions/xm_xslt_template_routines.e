@@ -110,7 +110,7 @@ feature -- Evaluation
 				end
 				if not an_iterator.after then an_iterator.forth end
 				if an_iterator.is_error then
-					a_transformer.report_fatal_error (an_iterator.error_value, Void)
+					a_transformer.report_fatal_error (an_iterator.error_value)
 				end
 			end
 			set_last_tail_call (a_last_tail_call)

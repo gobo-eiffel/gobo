@@ -268,7 +268,10 @@ feature {NONE} -- Implementation
 				select_expression.create_iterator (a_context)
 				an_iterator := select_expression.last_iterator
 				if an_iterator.is_error then
-					a_context.transformer.report_fatal_error (an_iterator.error_value, Current)
+					if not an_iterator.error_value.is_location_known then
+						an_iterator.error_value.set_location (system_id, line_number)
+					end
+					a_context.transformer.report_fatal_error (an_iterator.error_value)
 				else
 					-- quick exit if the iterator is empty
 					

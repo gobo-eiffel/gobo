@@ -172,10 +172,13 @@ feature -- Optimization
 
 	reduce is
 			-- Reduce a value to its simplest form.
+		require
+			not_in_error: not is_error
 		do
 			last_reduced_value := Current
 		ensure
 			last_reduced_value_not_void: last_reduced_value /= Void
+			may_be_in_error: True
 		end
 
 feature -- Evaluation

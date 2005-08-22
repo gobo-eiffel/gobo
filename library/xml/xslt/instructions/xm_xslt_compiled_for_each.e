@@ -252,7 +252,8 @@ feature -- Evaluation
 				a_trace_listener := a_transformer.trace_listener
 			end
 			if an_iterator.is_error then
-				a_transformer.report_fatal_error (an_iterator.error_value, Current)
+				an_iterator.error_value.set_location (system_id, line_number)
+				a_transformer.report_fatal_error (an_iterator.error_value)
 			else
 				from
 					an_iterator.start
@@ -268,7 +269,8 @@ feature -- Evaluation
 					end
 					an_iterator.forth
 					if an_iterator.is_error then
-						a_transformer.report_fatal_error (an_iterator.error_value, Current)
+						an_iterator.error_value.set_location (system_id, line_number)
+						a_transformer.report_fatal_error (an_iterator.error_value)
 					end
 				end
 			end

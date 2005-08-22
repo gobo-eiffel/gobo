@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 					a_keys_iterator.forth
 				end
 				if a_keys_iterator.is_error then
-					a_transformer.report_fatal_error (a_keys_iterator.error_value, Void)
+					a_transformer.report_fatal_error (a_keys_iterator.error_value)
 				else
 					population.forth
 				end

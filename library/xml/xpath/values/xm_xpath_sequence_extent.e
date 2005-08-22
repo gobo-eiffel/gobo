@@ -273,6 +273,9 @@ feature -- Optimization
 					-- Values never become non-values
 				end
 				last_reduced_value := replacement_expression.as_value
+				if last_reduced_value.is_error then
+					set_last_error (last_reduced_value.error_value)
+				end
 			else
 				last_reduced_value := Current
 			end

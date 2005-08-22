@@ -99,16 +99,18 @@ feature -- Access
 			a_name_value := element_name.last_evaluated_item
 			if a_name_value = Void or else a_name_value.is_error then -- empty sequence
 				create an_error.make_from_string ("xsl:element has no 'name'",
-															 Xpath_errors_uri,"XTDE0820", Dynamic_error) 
-				a_context.transformer.report_fatal_error (an_error, Current)
+															 Xpath_errors_uri,"XTDE0820", Dynamic_error)
+				an_error.set_location (system_id, line_number)
+				a_context.transformer.report_fatal_error (an_error)
 				Result := -1
 			else
 				a_string_value := a_name_value.as_string_value
 				create a_parser.make (a_string_value.string_value)
 				if not a_parser.is_valid then
 					create an_error.make_from_string ("'name' attribute of xsl:element does not evaluate to a lexical QName.",
-																 Xpath_errors_uri,"XTDE0820", Dynamic_error) 
-					a_context.transformer.report_recoverable_error (an_error, Current)
+																 Xpath_errors_uri,"XTDE0820", Dynamic_error)
+					an_error.set_location (system_id, line_number)
+					a_context.transformer.report_recoverable_error (an_error)
 					Result := -1
 				end
 			end
@@ -118,8 +120,9 @@ feature -- Access
 					a_uri := namespace_context.uri_for_defaulted_prefix (an_xml_prefix, True)
 					if a_uri = Void then
 						create an_error.make_from_string (STRING_.concat ("'name' attribute of xsl:element has an undeclared prefix: ", an_xml_prefix),
-																	 Xpath_errors_uri,"XTDE0830", Dynamic_error) 
-						a_context.transformer.report_recoverable_error (an_error, Current)
+																	 Xpath_errors_uri,"XTDE0830", Dynamic_error)
+						an_error.set_location (system_id, line_number)
+						a_context.transformer.report_recoverable_error (an_error)
 						Result := -1
 						check False end
 					end

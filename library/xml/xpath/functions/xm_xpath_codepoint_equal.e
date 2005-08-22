@@ -69,7 +69,6 @@ feature -- Evaluation
 		local
 			s1, s2: STRING
 			an_item, another_item: XM_XPATH_ITEM
-			a_comparison_result: INTEGER
 		do
 			arguments.item (1).evaluate_item (a_context)
 			an_item := arguments.item (1).last_evaluated_item

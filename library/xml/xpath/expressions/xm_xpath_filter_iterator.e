@@ -37,7 +37,11 @@ feature {NONE} -- Initialization
 		do
 			base_iterator := a_base_iterator
 			filter := a_filter
-			filter_context := a_context.new_context
+			if a_context.has_push_processing then
+				filter_context := a_context.new_minor_context
+			else
+				filter_context := a_context.new_context
+			end
 			filter_context.set_current_iterator (base_iterator)
 		ensure
 			base_iterator_set: base_iterator = a_base_iterator

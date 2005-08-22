@@ -99,7 +99,7 @@ feature -- Access
 				an_index := index (a_document, a_key_fingerprint, an_item_type)
 				if an_index.is_under_construction then
 					create an_error.make_from_string ("Key definition is circular", Xpath_errors_uri, "XTDE0640", Dynamic_error)
-					a_context.transformer.report_fatal_error (an_error, Void)
+					a_context.transformer.report_fatal_error (an_error)
 				end
 			else
 				create an_index.make_under_construction
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 				a_message := STRING_.concat ("Key ", shared_name_pool.display_name_from_name_code (a_key_fingerprint))
 				a_message := STRING_.appended_string (a_message, " has not been defined")
 				create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1260", Dynamic_error)
-				a_context.transformer.report_fatal_error (an_error, Void)
+				a_context.transformer.report_fatal_error (an_error)
 			end
 		ensure
 			error_or_index_built: not a_context.transformer.is_error implies last_built_index /= Void
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 				use.create_iterator (a_context)
 				an_iterator := use.last_iterator
 				if an_iterator.is_error then
-					a_context.transformer.report_fatal_error (an_iterator.error_value, Void)
+					a_context.transformer.report_fatal_error (an_iterator.error_value)
 				else
 					an_iterator.start
 				end
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 				an_iterator.forth
 			end
 			if an_iterator.is_error then
-				a_context.transformer.report_fatal_error (an_iterator.error_value, Void)
+				a_context.transformer.report_fatal_error (an_iterator.error_value)
 			end
 		end
 

@@ -126,7 +126,8 @@ feature -- Evaluation
 			if a_context_document = Void then
 				create an_error.make_from_string ("In the key() function, the context node must be in a tree whose root is a document node",
 															 Xpath_errors_uri, "XTDE1270", Dynamic_error)
-				a_transformer.report_fatal_error (an_error, Void)
+				an_error.set_location (system_id, line_number)
+				a_transformer.report_fatal_error (an_error)
 			else
 				a_fingerprint := key_fingerprint
 				if a_fingerprint = -1 then
@@ -137,7 +138,8 @@ feature -- Evaluation
 						a_message := STRING_.concat ("Key '", a_given_key_name)
 						a_message := STRING_.appended_string (a_message, "' has not been defined")
 						create an_error.make_from_string (a_message, Xpath_errors_uri, "XTDE1260", Dynamic_error)
-						a_transformer.report_fatal_error (an_error, Void)
+						an_error.set_location (system_id, line_number)
+						a_transformer.report_fatal_error (an_error)
 					end
 				end
 				if not a_transformer.is_error then

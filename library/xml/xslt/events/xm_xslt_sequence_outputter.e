@@ -154,7 +154,8 @@ feature -- Events
 					a_code := "SERIALIZATION_ERROR"
 				end
 				create an_error.make_from_string (a_text, a_uri, a_code, Dynamic_error)
-				transformer.report_fatal_error (an_error, Void)
+				if not system_id.is_empty then an_error.set_location (system_id, 0) end
+				transformer.report_fatal_error (an_error)
 			end
 		end
 

@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 					a_message := STRING_.concat ("Language '", language)
 					a_message := STRING_.appended_string (a_message, "' is not supported by this implementation.")
 					create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "UNSUPPORTED_LANGUAGE_FOR_SORT", Static_error)
-					a_context.transformer.report_fatal_error (an_error, Void)
+					a_context.transformer.report_fatal_error (an_error)
 					is_error := True
 				end
 				if not is_error then
@@ -149,12 +149,12 @@ feature {NONE} -- Implementation
 								a_message := STRING_.concat ("QName '", data_type)
 								a_message := STRING_.appended_string (a_message, "' is not supported by this implementation.")
 								create an_error.make_from_string (a_message, Gexslt_eiffel_type_uri, "UNSUPPORTED_DATA_TYPE_FOR_SORT", Static_error)
-								a_context.transformer.report_fatal_error (an_error, Void)
+								a_context.transformer.report_fatal_error (an_error)
 								is_error := True
 							else
 								create an_error.make_from_string ("data-type on xsl:sort must be 'text' or 'number' or a QName",
 																			 Xpath_errors_uri, "XTDE0290", Static_error)
-								a_context.transformer.report_fatal_error (an_error, Void)
+								a_context.transformer.report_fatal_error (an_error)
 								is_error := True
 							end
 						end
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 				todo ("case_order_comparer (ST_COLLATOR support needed)", True)
 			else
 				create an_error.make_from_string ("case-order must be 'lower-first' or 'upper-first'", Gexslt_eiffel_type_uri, "INVALID_CASE_ORDER", Static_error)
-				a_context.transformer.report_fatal_error (an_error, Void)
+				a_context.transformer.report_fatal_error (an_error)
 				is_error := True
 			end
 		ensure
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 				create {XM_XPATH_DESCENDING_COMPARER} Result.make (a_base_comparer)
 			else
 				create an_error.make_from_string ("order must be 'ascending' or 'descending'", Gexslt_eiffel_type_uri, "INVALID_ORDER", Static_error)
-				a_context.transformer.report_fatal_error (an_error, Void)
+				a_context.transformer.report_fatal_error (an_error)
 				is_error := True
 			end
 		ensure

@@ -245,7 +245,8 @@ feature {NONE} -- Implementation
 			end
 			if an_iterator.is_error then
 				an_evaluation_context ?= a_context
-				an_evaluation_context.transformer.report_fatal_error (an_iterator.error_value, Current)
+				an_iterator.error_value.set_location (system_id, line_number)
+				an_evaluation_context.transformer.report_fatal_error (an_iterator.error_value)
 			end
 			if last_evaluated_item = Void then create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_buffer) end
 		ensure

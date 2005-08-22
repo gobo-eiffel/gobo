@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 				group_iterator.forth
 			end
 			if group_iterator.is_error then
-				context.transformer.report_fatal_error (group_iterator.error_value, Void)
+				context.transformer.report_fatal_error (group_iterator.error_value)
 			end
 			count_determined := True
 		end

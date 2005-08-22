@@ -153,6 +153,7 @@ feature -- Optimization
 			create_iterator (Void)
 			if last_iterator.is_error then
 				create {XM_XPATH_INVALID_VALUE} last_reduced_value.make (last_iterator.error_value)
+				set_last_error (last_iterator.error_value)
 			else
 				create a_sequence_extent.make (last_iterator)
 				a_sequence_extent.reduce

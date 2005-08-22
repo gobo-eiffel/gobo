@@ -35,6 +35,8 @@ inherit
 			as_computed_expression
 		end
 
+	XM_XPATH_LOCATOR
+
 	KL_IMPORTED_ARRAY_ROUTINES
 		export {NONE} all end
 
@@ -299,6 +301,7 @@ feature -- Status setting
 			-- Re-compute all static properties.
 		require
 			static_properties_previously_computed: are_static_properties_computed
+			not_replaced: not was_expression_replaced
 		do
 			are_dependencies_computed := False
 			are_intrinsic_dependencies_computed := False
@@ -306,8 +309,9 @@ feature -- Status setting
 			are_special_properties_computed := False
 			compute_static_properties
 			if container /= Void and then container.is_computed_expression
-			 and then container.as_computed_expression.are_static_properties_computed then
-			 container.as_computed_expression.reset_static_properties
+				and then not container.as_computed_expression.was_expression_replaced
+				and then container.as_computed_expression.are_static_properties_computed then
+				container.as_computed_expression.reset_static_properties
 			end
 		end
 
@@ -435,6 +439,8 @@ feature -- Evaluation
 
 	process (a_context: XM_XPATH_CONTEXT) is
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
+		local
+			an_error_value: XM_XPATH_ERROR_VALUE
 		do
 			if is_evaluate_item_supported then
 				evaluate_item (a_context)
@@ -444,7 +450,11 @@ feature -- Evaluation
 			elseif is_iterator_supported then
 				create_iterator (a_context)
 				if last_iterator.is_error then
-					a_context.report_fatal_error (last_iterator.error_value)
+					an_error_value := last_iterator.error_value
+					if not an_error_value.is_location_known and then not system_id.is_empty then
+						an_error_value.set_location (system_id, line_number)
+					end
+					a_context.report_fatal_error (an_error_value)
 				else
 					from
 						last_iterator.start
@@ -455,7 +465,11 @@ feature -- Evaluation
 						last_iterator.forth
 					end
 					if last_iterator.is_error then
-						a_context.report_fatal_error (last_iterator.error_value)
+						an_error_value := last_iterator.error_value
+						if not an_error_value.is_location_known and then not system_id.is_empty then
+							an_error_value.set_location (system_id, line_number)
+						end
+						a_context.report_fatal_error (an_error_value)
 					end
 				end
 			else

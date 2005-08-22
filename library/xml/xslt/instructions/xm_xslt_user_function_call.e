@@ -82,7 +82,7 @@ feature -- Status report
 		do
 			std.error.put_string (indentation (a_level))
 			std.error.put_string ("Call function ")
-			std.error.put_string (name)
+			std.error.put_string (expanded_name)
 			if is_tail_recursive then
 				std.error.put_string (" (tail call) ")
 			end
@@ -207,7 +207,7 @@ feature -- Element change
 			until
 				is_type_error or else an_index > an_argument_count
 			loop
-				create a_role.make (Function_role, name, an_index, Xpath_errors_uri, "XPTY0004")
+				create a_role.make (Function_role, expanded_name, an_index, Xpath_errors_uri, "XPTY0004")
 				create a_type_checker
 				a_type_checker.static_type_check (a_context, arguments.item (an_index), some_required_types.item (an_index), False, a_role)
 				if a_type_checker.is_static_type_check_error then
@@ -262,6 +262,17 @@ feature {NONE} -- Implementation
 			-- Namespace uri for `name'
 		do
 			Result := shared_name_pool.namespace_uri_from_name_code (fingerprint)
+		end
+
+	expanded_name: STRING is
+			-- Expanded name of function
+		do
+			if namespace_uri.is_empty then
+				Result := name
+			else
+				Result := "{" + namespace_uri + "}"
+				Result := STRING_.appended_string (Result, name)
+			end
 		end
 
 	call (a_context: XM_XSLT_EVALUATION_CONTEXT) is

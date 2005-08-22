@@ -44,14 +44,14 @@ feature -- Events
 		deferred
 		end
 
-	error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
+	error (an_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a recoverable error.
 		require
 			error_not_void: an_error /= Void
 		deferred
 		end
 
-	fatal_error (an_error: XM_XPATH_ERROR_VALUE; a_locator: XM_XPATH_LOCATOR) is
+	fatal_error (an_error: XM_XPATH_ERROR_VALUE) is
 			-- Receive notification of a non-recoverable error.
 		require
 			error_not_void: an_error /= Void

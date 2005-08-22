@@ -84,7 +84,8 @@ feature -- Cursor movement
 					if not item.is_node then
 						create an_error.make_from_string ("Member of group-starting-with population is not a node.",
 																	 Xpath_errors_uri, "XTTE1120", Dynamic_error)
-						running_context.transformer.report_fatal_error (an_error, locator)
+						an_error.set_location (locator.system_id, locator.line_number)
+						running_context.transformer.report_fatal_error (an_error)
 					end
 				end
 			else
@@ -103,7 +104,8 @@ feature -- Cursor movement
 					if not next_candidate.is_node then
 						create an_error.make_from_string ("Member of group-starting-with population is not a node.",
 																	 Xpath_errors_uri, "XTTE1120", Dynamic_error)
-						running_context.transformer.report_fatal_error (an_error, locator)
+						an_error.set_location (locator.system_id, locator.line_number)
+						running_context.transformer.report_fatal_error (an_error)
 					else
 						if key_pattern.matches (next_candidate.as_node , running_context) then
 							next_group_reached := True

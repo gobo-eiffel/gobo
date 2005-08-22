@@ -66,6 +66,9 @@ feature -- Access
 		do
 			reduce
 			Result := last_reduced_value.as_atomic_value
+			if last_reduced_value.is_error then
+				set_last_error (last_reduced_value.error_value)
+			end
 		end
 
 	is_function_package: BOOLEAN is
@@ -82,7 +85,9 @@ feature -- Access
 			-- probably, this whole class should be a sequence value instead.
 
 			reduce
-			if last_reduced_value.is_atomic_value then
+			if is_error then
+				Result := ""
+			elseif last_reduced_value.is_atomic_value then
 				Result := last_reduced_value.as_atomic_value.string_value
 			else
 				last_reduced_value.evaluate_as_string (Void)
@@ -125,10 +130,14 @@ feature -- Optimization
 			create_results_iterator (Void)
 			if last_iterator.is_error then
 				create {XM_XPATH_INVALID_VALUE} last_reduced_value.make (last_iterator.error_value)
+				set_last_error (last_reduced_value.error_value)
 			else
 				create a_sequence_extent.make (last_iterator)
 				a_sequence_extent.reduce
 				last_reduced_value := a_sequence_extent.last_reduced_value
+				if last_reduced_value.is_error then
+					set_last_error (last_reduced_value.error_value)
+				end
 			end
 		end
 

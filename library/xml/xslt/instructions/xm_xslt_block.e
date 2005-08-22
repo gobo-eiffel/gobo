@@ -35,17 +35,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_head_expression, a_tail_expression: XM_XPATH_EXPRESSION) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_head_expression, a_tail_expression: XM_XPATH_EXPRESSION; a_module_number, a_line_number: INTEGER) is
 			-- Create a general-purpose block.
 		require
 			executable_not_void: an_executable /= Void
 			head_not_replaced: a_head_expression /= Void and then not a_head_expression.was_expression_replaced
 			tail_not_replaced: a_tail_expression /= Void and then not a_tail_expression.was_expression_replaced
+			strictly_positive_module_number: a_module_number > 0
+			positive_line_number: a_line_number >= 0
 		local
 			a_block, another_block: XM_XSLT_BLOCK
 			a_child_count: INTEGER
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 		do
+			set_source_location (a_module_number, a_line_number)
 			executable := an_executable			
 			a_block ?= a_head_expression -- TODO: as_block
 			another_block ?= a_tail_expression
