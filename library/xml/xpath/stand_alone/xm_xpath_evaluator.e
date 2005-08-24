@@ -185,7 +185,7 @@ feature -- Evaluation
 			an_expression: XM_XPATH_EXPRESSION
 			a_slot_manager: XM_XPATH_SLOT_MANAGER
 		do
-			expression_factory.make_expression (an_expression_text, static_context, 1, Eof_token, 1)
+			expression_factory.make_expression (an_expression_text, static_context, 1, Eof_token, 1, "unknown:")
 			if expression_factory.is_parse_error then
 				is_error := True
 				internal_error_value := expression_factory.parsed_error_value

@@ -50,7 +50,7 @@ feature -- Test
 			create a_base_uri.make ("test:/test-path")
 			create a_function_library.make
 			create a_context.make (False, False, a_base_uri, a_function_library)
-			expression_factory.make_expression (a_string, a_context, 1, Eof_token, 1)
+			expression_factory.make_expression (a_string, a_context, 1, Eof_token, 1, "unknown:")
 			if expression_factory.is_parse_error then
 				-- Shouldn't happen
 				std.error.put_string (expression_factory.parsed_error_value.error_message)
