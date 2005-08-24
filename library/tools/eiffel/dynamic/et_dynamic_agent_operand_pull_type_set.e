@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 		ensure
 			static_type_set: static_type = a_type
 			first_expanded_type: a_type.is_expanded implies first_type = a_type
-			agent_type_set: agent_type = a_type
+			agent_type_set: agent_type = an_agent_type
 		end
 
 feature -- Access
