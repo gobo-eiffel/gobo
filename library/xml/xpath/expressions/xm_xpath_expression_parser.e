@@ -77,6 +77,9 @@ feature -- Status report
 	first_parse_error_code: STRING
 			-- Error code associated with `last_parse_error'
 
+	first_parse_error_line_number: INTEGER
+			-- Line_number associated with `last_parse_error'
+
 	last_parsed_expression: XM_XPATH_EXPRESSION is
 			-- Last expression sucessfully parsed by `parse'
 		require
@@ -2347,6 +2350,7 @@ feature {NONE} -- Implementation
 				s := STRING_.appended_string (s, "»:%N    ")
 				internal_last_parse_error := STRING_.appended_string (s, a_message)
 				first_parse_error_code := a_code
+				first_parse_error_line_number := l
 			end
 		ensure
 			first_parse_error_not_void: first_parse_error /= Void

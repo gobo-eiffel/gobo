@@ -165,6 +165,7 @@ feature -- Evaluation
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
 		do
+			last_tail_call := Void
 			a_transformer := a_context.transformer
 			create some_output_properties.make (-1000000)
 			create an_outputter
@@ -213,7 +214,6 @@ feature -- Evaluation
 					end
 				end
 			end
-			last_tail_call := Void
 		end
 
 

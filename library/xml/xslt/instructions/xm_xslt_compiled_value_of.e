@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; disabled: BOOLEAN) is
+	make (an_executable: XM_XSLT_EXECUTABLE; a_select_expression: XM_XPATH_EXPRESSION; disabled: BOOLEAN; a_module_number, a_line_number: INTEGER) is
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			a_string: STRING
 			an_index, a_count, a_code: INTEGER
 		do
+			set_source_location (a_module_number, a_line_number)
 			executable := an_executable
 			select_expression := a_select_expression; adopt_child_expression (select_expression)
 			is_special := True
@@ -141,13 +142,13 @@ feature -- Evaluation
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
+			last_tail_call := Void
 			expand_children (a_context)
 			if is_error then
 				a_context.current_receiver.on_error (error_value.error_message)
 			else
 				a_context.current_receiver.notify_characters (last_string_value, receiver_options)
 			end
-			last_tail_call := Void
 		end
 
 feature {XM_XSLT_EXPRESSION} -- Restricted

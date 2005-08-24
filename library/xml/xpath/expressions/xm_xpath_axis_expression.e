@@ -192,7 +192,13 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	compute_cardinality is
 			-- Compute cardinality.
 		do
-			set_cardinality_zero_or_more
+			if axis = Self_axis then
+				set_cardinality_optional
+			elseif axis = Attribute_axis and then node_test.is_name_test then
+				set_cardinality_optional
+			else
+				set_cardinality_zero_or_more
+			end
 		end
 
 	compute_special_properties is

@@ -516,7 +516,7 @@ feature -- Access
 	system_id_from_module_number (a_module_number: INTEGER): STRING is
 			-- System identifier
 		do
-			Result := containing_stylesheet.system_id_from_module_number (a_module_number)
+			Result := principal_stylesheet.system_id_from_module_number (a_module_number)
 		end
 		
 feature -- Status_report
@@ -1263,8 +1263,9 @@ feature -- Creation
 			static_context_not_void: static_context /= Void
 		local
 			a_deferred_error: XM_XSLT_DEFERRED_ERROR
+			a_module_number: INTEGER
 		do
-			expression_factory.make_expression (an_expression, static_context, 1, Eof_token, line_number)
+			expression_factory.make_expression (an_expression, static_context, 1, Eof_token, line_number, system_id)
 			if expression_factory.is_parse_error then
 				if not is_forwards_compatible_processing_enabled then
 					report_compile_error (expression_factory.parsed_error_value)
@@ -1274,6 +1275,14 @@ feature -- Creation
 				a_deferred_error.set_parent (Current)
 			else
 				last_generated_expression := expression_factory.parsed_expression
+				if last_generated_expression.is_computed_expression then
+					if principal_stylesheet.is_module_registered (system_id) then
+						a_module_number := principal_stylesheet.module_number (system_id)
+					else
+						a_module_number := 0
+					end
+					last_generated_expression.as_computed_expression.set_source_location (a_module_number, line_number)
+				end
 			end
 		ensure
 			generated_expression: last_generated_expression /= Void
@@ -1466,7 +1475,7 @@ feature -- Element change
 			a_use_when_attribute := attribute_value_by_expanded_name (an_attribute_name)
 			if a_use_when_attribute /= Void then
 				create a_static_context.make_restricted (Current, configuration)
-				expression_factory.make_expression (a_use_when_attribute, a_static_context, 1, Eof_token, line_number)
+				expression_factory.make_expression (a_use_when_attribute, a_static_context, 1, Eof_token, line_number, system_id)
 				if expression_factory.is_parse_error then
 					report_compile_error (expression_factory.parsed_error_value)
 				else
@@ -1807,14 +1816,13 @@ feature -- Element change
 				end
 				if a_node.node_type = Text_node then
 					create a_string_value.make (a_node.string_value)
-					create a_text.make (an_executable, a_string_value, False)
-					a_text.set_source_location (containing_stylesheet.module_number (a_node.system_id), a_line_number)
+					create a_text.make (an_executable, a_string_value, False, principal_stylesheet.module_number (a_node.system_id), a_line_number)
 					if not is_error and then not any_compile_errors then
 						compile_sequence_constructor (an_executable, an_axis_iterator, include_parameters)
 						if last_generated_expression = Void then
 							last_generated_expression := a_text
 						else
-							create a_block.make (an_executable, a_text, last_generated_expression, containing_stylesheet.module_number (a_node.system_id), a_line_number)
+							create a_block.make (an_executable, a_text, last_generated_expression, principal_stylesheet.module_number (a_node.system_id), a_line_number)
 							last_generated_expression := a_block
 						end
 					end
@@ -1871,7 +1879,7 @@ feature -- Element change
 						create a_let_expression.make (a_range_variable, an_expression, last_generated_expression)
 						a_let_expression.set_slot_number (a_local_variable.slot_number)
 						a_variable.fixup_binding (a_let_expression)
-						a_let_expression.set_source_location (containing_stylesheet.module_number (a_variable.system_id), a_variable.line_number)
+						a_let_expression.set_source_location (principal_stylesheet.module_number (a_variable.system_id), a_variable.line_number)
 						-- TODO: tracing
 						last_generated_expression := a_let_expression
 					else
@@ -2501,6 +2509,8 @@ feature {NONE} -- Implementation
 		local
 			a_child, a_tail: XM_XPATH_EXPRESSION
 			a_block: XM_XSLT_BLOCK
+			a_system_id: STRING
+			a_line_number: INTEGER
 		do
 			if a_style_element.validation_error /= Void then
 				fallback_processing (an_executable, a_style_element)
@@ -2508,7 +2518,7 @@ feature {NONE} -- Implementation
 				a_style_element.compile (an_executable)
 				a_child := a_style_element.last_generated_expression
 				if a_child /= Void and then a_child.is_computed_expression then 
-					a_child.as_computed_expression.set_source_location (containing_stylesheet.module_number (a_style_element.system_id), a_style_element.line_number)
+					a_child.as_computed_expression.set_source_location (principal_stylesheet.module_number (a_style_element.system_id), a_style_element.line_number)
 				end
 				if a_child /= Void and then configuration.is_tracing and then (include_parameters or else not a_style_element.is_param) then
 					a_child := new_trace_wrapper (a_child, an_executable, a_style_element)
@@ -2518,7 +2528,14 @@ feature {NONE} -- Implementation
 				if a_tail = Void then
 					last_generated_expression := a_child
 				elseif a_child /= Void then
-					create a_block.make (an_executable, a_child, a_tail, containing_stylesheet.module_number (system_id), line_number)
+					if a_child.is_computed_expression then
+						a_system_id := a_child.as_computed_expression.system_id
+						a_line_number := a_child.as_computed_expression.line_number
+					else
+						a_system_id := a_style_element.system_id
+						a_line_number := a_style_element.line_number
+					end
+					create a_block.make (an_executable, a_child, a_tail, principal_stylesheet.module_number (a_system_id), a_line_number)
 					last_generated_expression := a_block
 				end
 			end

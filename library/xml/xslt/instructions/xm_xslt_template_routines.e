@@ -147,6 +147,7 @@ feature -- Evaluation
 				-- No action
 
 			end
+			set_last_tail_call (Void)
 		end
 
 end

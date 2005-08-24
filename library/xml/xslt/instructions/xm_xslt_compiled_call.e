@@ -159,9 +159,9 @@ feature -- Evaluation
 			some_variables: ARRAY [XM_XPATH_VALUE]
 			an_index: INTEGER
 		do
+			last_tail_call := Void
 			if not use_tail_recursion then
 				process (a_context)
-				last_tail_call := Void
 			else
 
 				-- Handle any parameters.

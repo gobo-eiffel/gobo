@@ -334,6 +334,16 @@ feature -- Conversion
 			value_not_void: Result /= Void
 		end
 
+feature -- Output
+
+	send (a_receiver: XM_XPATH_SEQUENCE_RECEIVER) is
+			-- Send `Current' to `a_receiver'.
+		require
+			receiver_exists: a_receiver /= Void
+		do
+			a_receiver.append_item (Current)
+		end
+
 invariant
 
 	no_error_value_without_error: not is_error implies error_value = Void

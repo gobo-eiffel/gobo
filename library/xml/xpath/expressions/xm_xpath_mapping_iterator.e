@@ -120,6 +120,7 @@ feature {NONE} -- Implementation
 					if results.is_error then
 						finished := True
 						create {XM_XPATH_INVALID_ITEM} item.make (results.error_value)
+						set_last_error (results.error_value)
 					elseif results.before then
 						results.start
 					elseif not results.after then
@@ -141,6 +142,7 @@ feature {NONE} -- Implementation
 					if base_iterator.is_error then
 						finished := True
 						create {XM_XPATH_INVALID_ITEM} item.make (base_iterator.error_value)
+						set_last_error (base_iterator.error_value)
 					elseif base_iterator.before then
 						base_iterator.start
 					elseif not base_iterator.after then
@@ -148,6 +150,7 @@ feature {NONE} -- Implementation
 					end
 					if base_iterator.is_error then
 						create {XM_XPATH_INVALID_ITEM} item.make (base_iterator.error_value)
+						set_last_error (base_iterator.error_value)
 					elseif not base_iterator.after then
 						next_source := base_iterator.item
 
@@ -166,6 +169,7 @@ feature {NONE} -- Implementation
 								if results.is_error then
 									finished := True
 									create {XM_XPATH_INVALID_ITEM} item.make (results.error_value)
+									set_last_error (results.error_value)
 								elseif results.before then
 									results.start
 								elseif not results.after then

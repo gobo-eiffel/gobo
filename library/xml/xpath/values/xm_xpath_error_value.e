@@ -121,7 +121,7 @@ feature -- Access
 			-- Error value
 
 	system_id: STRING
-			-- Current SYSTEM ID
+			-- SYSTEM ID of physical entity where error occurred
 
 	line_number: INTEGER
 			-- Approximate line number of current event, or 0 if unknown

@@ -262,7 +262,7 @@ feature -- Element change
 					if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
 					if configuration.is_tracing then
 						create a_trace_wrapper.make (a_content, an_executable, Current)
-						a_trace_wrapper.set_source_location (containing_stylesheet.module_number (system_id), line_number)
+						a_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
 						-- TODO: sort out - a_trace_wrapper.set_parent (compiled_template)
 						a_content := a_trace_wrapper
 					end

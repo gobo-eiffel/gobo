@@ -276,6 +276,7 @@ feature -- Evaluation
 			an_error: XM_XPATH_ERROR_VALUE
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
+			last_tail_call := Void
 			a_transformer := a_context.transformer
 			a_new_context := a_context.new_minor_context
 			if a_new_context.is_temporary_destination then
@@ -353,7 +354,6 @@ feature -- Evaluation
 				a_receiver.close
 				an_output_resolver.close (a_result)
 			end
-			last_tail_call := Void
 		end
 
 feature {NONE} -- Implementation

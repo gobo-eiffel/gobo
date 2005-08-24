@@ -19,7 +19,7 @@ inherit
 		redefine
 			item_type, primitive_value, is_function_package, reduce,
 			same_expression, is_convertible_to_item, display, as_item,
-			string_value
+			string_value, send
 		end
 
 create
@@ -182,6 +182,43 @@ feature -- Conversion
 			-- pre-condition is not met
 		end
 
+feature -- Output
+
+	send (a_receiver: XM_XPATH_SEQUENCE_RECEIVER) is
+			-- Send `Current' to `a_receiver'.
+		local
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			an_invalid_item: XM_XPATH_INVALID_ITEM
+			a_function_package: like Current
+			finished: BOOLEAN
+		do
+
+			-- We want to avoid recursion, to operate in constant space,
+
+			from a_function_package := Current until finished loop
+				a_function_package.call
+				a_function_package.last_called_value.create_iterator (Void)
+				an_iterator := a_function_package.last_called_value.last_iterator
+				from an_iterator.start until finished or else an_iterator.after loop
+					if an_iterator.is_error then
+						create an_invalid_item.make (an_iterator.error_value); finished := True
+						a_receiver.append_item (an_invalid_item)
+					else
+						if an_iterator.item.is_function_package then
+							a_function_package ?= an_iterator.item
+						else
+							a_function_package := Void
+							a_receiver.append_item (an_iterator.item)
+						end
+					end
+					an_iterator.forth
+					check
+						nothing_after_function_package: a_function_package /= Void implies an_iterator.after
+					end
+				end
+				if a_function_package = Void then finished := True end
+			end
+		end
 
 feature {NONE} -- Implementation
 

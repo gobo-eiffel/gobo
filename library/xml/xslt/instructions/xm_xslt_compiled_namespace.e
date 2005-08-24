@@ -128,6 +128,7 @@ feature -- Evaluation
 			a_namespace_code: INTEGER
 			a_receiver: XM_XPATH_SEQUENCE_RECEIVER
 		do
+			last_tail_call := Void
 			a_transformer := a_context.transformer
 			name.evaluate_as_string (a_context)
 			if name.last_evaluated_string.is_error then
@@ -172,7 +173,6 @@ feature -- Evaluation
 					end
 				end
 			end
-			last_tail_call := Void
 		end
 
 feature {NONE} -- Implementation

@@ -148,7 +148,6 @@ feature -- Evaluation
 			positive_parameter_count: a_parameter_count >= 0
 			major_context_not_void: a_context /= Void and then not a_context.is_minor
 		local
-			an_object_value: XM_XPATH_OBJECT_VALUE
 			a_function_package: XM_XSLT_FUNCTION_CALL_PACKAGE
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_stack_frame: XM_XPATH_STACK_FRAME
@@ -163,30 +162,25 @@ feature -- Evaluation
 				create a_stack_frame.make (slot_manager, some_actual_arguments)
 				a_context.set_stack_frame (a_stack_frame)
 				if contains_tail_calls or else is_memo_function then
-
+					
 					-- we cannot risk evaluating to an XM_XPATH_CLOSURE,
-					-- as the tail call will escape, and might reappear anywhere
-
+					-- as the tail call will escape, and might reappear anywhere.
+					-- Eager evaluation also makes sense for a memo function.
+					
 					body.eagerly_evaluate (a_context)
 				else
 					body.lazily_evaluate (a_context, 1)
 				end
 				last_called_value := body.last_evaluation
-				if evaluate_tail_calls then
-					an_object_value ?= last_called_value
-					if an_object_value /= Void then
-						from
-							a_function_package ?= an_object_value.value
-						until
-							a_function_package = Void
-						loop
-							a_function_package.call
-							last_called_value := a_function_package.last_called_value
-							an_object_value ?= last_called_value
-							if an_object_value /= Void then
-								a_function_package ?= an_object_value.value
-							end
-						end
+				if evaluate_tail_calls and then last_called_value.is_function_package then
+					from
+						a_function_package ?= last_called_value
+					until
+						a_function_package = Void
+					loop
+						a_function_package.call
+						last_called_value := a_function_package.last_called_value
+						a_function_package ?= last_called_value
 					end
 				end
 				if is_memo_function then

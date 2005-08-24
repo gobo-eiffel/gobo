@@ -65,6 +65,7 @@ feature -- Evaluation
 			was_supplied: BOOLEAN
 			an_invalid_item : XM_XPATH_INVALID_ITEM
 		do
+			last_tail_call := Void
 			was_supplied := a_context.is_local_parameter_supplied (variable_fingerprint, is_tunnel_parameter)
 			if was_supplied then
 				a_context.ensure_local_parameter_set (variable_fingerprint, is_tunnel_parameter, slot_number)
@@ -86,7 +87,6 @@ feature -- Evaluation
 					a_context.set_local_variable (select_value (a_context), slot_number)
 				end
 			end
-			last_tail_call := Void
 		end
 
 feature {NONE} -- Implementation

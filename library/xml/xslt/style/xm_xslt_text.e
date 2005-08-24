@@ -85,7 +85,7 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			create {XM_XSLT_COMPILED_VALUE_OF} last_generated_expression.make (an_executable, value, False)
+			create {XM_XSLT_COMPILED_VALUE_OF} last_generated_expression.make (an_executable, value, False, principal_stylesheet.module_number (system_id), line_number)
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted

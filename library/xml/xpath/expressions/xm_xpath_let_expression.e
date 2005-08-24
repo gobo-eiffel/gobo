@@ -444,7 +444,6 @@ feature -- Evaluation
 			a_let_expression: XM_XPATH_LET_EXPRESSION
 			a_value: XM_XPATH_VALUE
 			finished: BOOLEAN
-			a_tail_call: like last_tail_call
 		do
 			
 			--  Minimize stack consumption by evaluating nested LET expressions iteratively
@@ -473,7 +472,7 @@ feature -- Evaluation
 			else
 				if a_let_expression.action.is_tail_call then
 					a_let_expression.action.as_tail_call.process_leaving_tail (a_context)
-					last_tail_call := a_tail_call.last_tail_call
+					last_tail_call := a_let_expression.action.as_tail_call.last_tail_call
 				else
 					a_let_expression.action.process (a_context)
 					last_tail_call := Void

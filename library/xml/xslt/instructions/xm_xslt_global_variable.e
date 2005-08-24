@@ -73,6 +73,7 @@ feature -- Evaluation
 	process_leaving_tail (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Execute `Current', writing results to the current `XM_XPATH_RECEIVER'.
 		do
+			last_tail_call := Void			
 			check
 				not_used: False
 			end

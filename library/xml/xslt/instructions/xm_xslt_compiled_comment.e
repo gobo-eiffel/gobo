@@ -78,6 +78,7 @@ feature -- Evaluation
 			a_comment, a_string: STRING
 			a_comment_marker_index: INTEGER
 		do
+			last_tail_call := Void
 			a_transformer := a_context.transformer
 			expand_children (a_context)
 			if last_string_value = Void then
@@ -103,7 +104,6 @@ feature -- Evaluation
 			if not a_transformer.is_error then
 				a_context.current_receiver.notify_comment (a_comment, 0)
 			end
-			last_tail_call := Void
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

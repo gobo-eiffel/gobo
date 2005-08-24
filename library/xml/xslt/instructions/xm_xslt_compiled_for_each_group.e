@@ -349,6 +349,7 @@ feature -- Evaluation
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 			a_trace_listener: XM_XSLT_TRACE_LISTENER
 		do
+			last_tail_call := Void
 			a_transformer := a_context.transformer
 			create_group_iterator (a_context)
 			a_group_iterator := last_group_iterator
@@ -382,7 +383,6 @@ feature -- Evaluation
 					end
 				end
 			end
-			last_tail_call := Void
 		end
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is

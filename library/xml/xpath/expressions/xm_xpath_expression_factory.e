@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Creation
 
-	make_expression (an_expression: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator, a_line_number: INTEGER) is
+	make_expression (an_expression: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_start, a_terminator, a_line_number: INTEGER; a_system_id: STRING) is
 			-- Parse an expression;
 			-- This performs the basic analysis of the expression against the grammar,
 			--  it binds variable references and function calls to variable definitions and
@@ -63,6 +63,7 @@ feature -- Creation
 			context_not_void: a_context /= Void
 			strictly_positive_start: a_start > 0
 			nearly_positive_line_number: a_line_number >= -1
+			system_id_known: not a_system_id.is_empty
 		local
 			a_parser: XM_XPATH_EXPRESSION_PARSER
 			an_error_type: INTEGER
@@ -103,6 +104,7 @@ feature -- Creation
 				is_parse_error := True
 				an_error_type := Static_error
 				create parsed_error_value.make_from_string (a_parser.first_parse_error, Xpath_errors_uri, a_parser.first_parse_error_code, an_error_type)
+				parsed_error_value.set_location (a_system_id, a_parser.first_parse_error_line_number)
 			end
 		ensure
 			error_or_expression: internal_parsed_expression = Void implies parsed_error_value /= Void

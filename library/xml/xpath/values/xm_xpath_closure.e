@@ -184,6 +184,10 @@ feature -- Evaluation
 			elseif input_iterator.is_error then
 				last_iterator := input_iterator
 			else
+
+				-- This ought not to happen, as a MEMO_CLOSURE should have been selected instead,
+				--  but it does.
+
 				last_iterator := input_iterator.another
 			end
 			check

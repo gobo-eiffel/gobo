@@ -243,6 +243,7 @@ feature -- Evaluation
 			an_inner_context: XM_XSLT_EVALUATION_CONTEXT
 			a_trace_listener: XM_XSLT_TRACE_LISTENER
 		do
+			last_tail_call := Void
 			a_transformer := a_context.transformer
 			select_expression.create_iterator (a_context)
 			an_iterator := select_expression.last_iterator

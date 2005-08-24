@@ -156,6 +156,7 @@ feature -- Evaluation
 			-- Execute `Current' completely, writing results to the current `XM_XPATH_RECEIVER'.
 		local
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
+			a_tail_call: like last_tail_call
 		do
 			an_evaluation_context ?= a_context
 			check
@@ -164,11 +165,14 @@ feature -- Evaluation
 			end
 			process_leaving_tail (an_evaluation_context)
 			from
+				a_tail_call := last_tail_call
 			until
-				last_tail_call = Void or else an_evaluation_context.transformer.is_error
+				a_tail_call = Void or else an_evaluation_context.transformer.is_error
 			loop
-				last_tail_call.process_leaving_tail (an_evaluation_context)
+				a_tail_call.process_leaving_tail (an_evaluation_context)
+				a_tail_call := a_tail_call.last_tail_call
 			end
+			last_tail_call := a_tail_call
 		ensure then
 			no_tail_calls: not a_context.is_process_error implies last_tail_call = Void
 		end

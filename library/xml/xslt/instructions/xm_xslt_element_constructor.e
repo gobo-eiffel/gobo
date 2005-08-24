@@ -166,6 +166,7 @@ feature -- Evaluation
 			a_validator: XM_XPATH_RECEIVER
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			last_tail_call := Void
 			a_name_code := name_code (a_context)
 			a_transformer := a_context.transformer
 			if not a_transformer.is_error then
@@ -204,7 +205,6 @@ feature -- Evaluation
 					end
 				end
 			end
-			last_tail_call := Void
 		end
 
 	skip_element (a_context: XM_XSLT_EVALUATION_CONTEXT) is

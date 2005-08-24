@@ -133,7 +133,7 @@ feature -- Element change
 					create {XM_XPATH_STRING_VALUE} separator_expression.make (" ")
 				end
 			end
-			create a_value_of.make (an_executable, select_expression, False)
+			create a_value_of.make (an_executable, select_expression, False, principal_stylesheet.module_number (system_id), line_number)
 			compile_content (an_executable, a_value_of, separator_expression)
 			last_generated_expression := a_value_of
 		end

@@ -44,6 +44,7 @@ feature -- Evaluation
 			a_current_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			another_context: XM_XSLT_EVALUATION_CONTEXT
 		do
+			last_tail_call := Void
 			a_transformer := a_context.transformer
 			
 			-- handle any parameters
@@ -88,7 +89,6 @@ feature -- Evaluation
 					end
 				end
 			end
-			last_tail_call := Void
 		end
 
 invariant

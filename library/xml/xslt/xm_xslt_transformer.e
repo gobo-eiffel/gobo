@@ -414,7 +414,7 @@ feature -- Element change
 			end
 			a_fingerprint := shared_name_pool.fingerprint_from_expanded_name (a_parameter_name)
 			create an_expression_factory
-			an_expression_factory.make_expression (a_parameter_value, static_context, 1, 0, 1)
+			an_expression_factory.make_expression (a_parameter_value, static_context, 1, 0, 1, executable.system_id (1))
 			if an_expression_factory.is_parse_error then
 				report_recoverable_error (an_expression_factory.parsed_error_value)
 			else
@@ -801,6 +801,9 @@ feature -- Implementation
 					apply_xpath_parameters (new_xpath_context)
 				end
 			elseif xpath_parameters /= Void then
+
+				-- TODO: well, why shouldn't it be OK? No good reason. An empty context item is fine.
+				
 				create an_error.make_from_string ("XPath parameters cannot be specified without a source document", Gexslt_eiffel_type_uri, "PARAMETERS_WITHOUT_SOURCE_DOCUMENT", Dynamic_error)
 				report_fatal_error (an_error)
 			end

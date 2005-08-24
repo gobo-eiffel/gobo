@@ -203,7 +203,7 @@ feature -- Element change
 					if a_body.was_expression_replaced then a_body := a_body.replacement_expression end
 					if configuration.is_tracing then
 						create a_trace_wrapper.make (a_body, an_executable, Current)
-						a_trace_wrapper.set_source_location (containing_stylesheet.module_number (system_id), line_number)
+						a_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
 						a_trace_wrapper.set_parent (Current)
 						a_body := a_trace_wrapper
 					end

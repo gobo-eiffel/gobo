@@ -163,6 +163,7 @@ feature -- Evaluation
 			a_trace_listener: XM_XSLT_TRACE_LISTENER
 			is_tracing: BOOLEAN
 		do
+			last_tail_call := Void
 			a_transformer := a_context.transformer
 			is_tracing := a_transformer.is_tracing
 			if is_tracing then

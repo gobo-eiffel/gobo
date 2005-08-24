@@ -363,9 +363,9 @@ feature -- Evaluation
 			a_number_formatter: XM_XSLT_NUMBER_FORMATTER
 			an_error: XM_XPATH_ERROR_VALUE
 		do
+			last_tail_call := Void
 			transformer := a_context.transformer
 			a_receiver := a_context.current_receiver
-			last_tail_call := Void
 			calculate_value (a_context)
 			if not transformer.is_error then
 				if grouping_size = Void then
@@ -461,7 +461,6 @@ feature -- Evaluation
 			if not transformer.is_error then
 				a_receiver.notify_characters (a_number_formatter.formatted_string (integer_vector, a_group_size, a_group_separator, a_letter, an_ordinal_value, numberer), 0)
 			end
-			last_tail_call := Void
 		end
 
 

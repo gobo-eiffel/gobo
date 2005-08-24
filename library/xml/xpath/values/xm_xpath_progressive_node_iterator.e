@@ -101,7 +101,7 @@ feature -- Evaluation
 		do
 			if base_iterator.is_error then
 				create {XM_XPATH_INVALID_VALUE} last_realized_value.make (base_iterator.error_value)
-			elseif base_iterator.after then
+			elseif not base_iterator.before and then base_iterator.after then
 				create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make_from_list (reservoir)
 			elseif reservoir.is_empty then
 				create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make (base_iterator)

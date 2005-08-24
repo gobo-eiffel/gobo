@@ -325,7 +325,7 @@ feature -- Element change
 			end
 			if configuration.is_tracing then
 				create a_trace_wrapper.make (a_body, an_executable, Current)
-				a_trace_wrapper.set_source_location (containing_stylesheet.module_number (system_id), line_number)
+				a_trace_wrapper.set_source_location (principal_stylesheet.module_number (system_id), line_number)
 				a_body := a_trace_wrapper
 			end
 			allocate_slots (a_body, slot_manager)

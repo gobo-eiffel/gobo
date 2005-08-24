@@ -106,6 +106,7 @@ feature -- Evaluation
 			a_receiver: XM_XPATH_RECEIVER
 			some_receiver_options, an_annotation: INTEGER
 		do
+			last_tail_call := Void
 			a_receiver := a_context.current_receiver
 			some_receiver_options := options
 			an_annotation := type_annotation
@@ -125,7 +126,6 @@ feature -- Evaluation
 					todo ("process_leaving_tail - validation", True)
 				end
 				a_receiver.notify_attribute (name_code, an_annotation, last_string_value, some_receiver_options)
-				last_tail_call := Void
 			end
 		end
 	

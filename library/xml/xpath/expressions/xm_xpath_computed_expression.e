@@ -75,10 +75,13 @@ feature -- Access
 				Result := ""
 			elseif location_identifier /= 0 then
 				a_module_number := INTEGER_.bit_shift_right (location_identifier, module_number_shift)
-				check
-					strictly_positive_module_number: a_module_number > 0
+				if a_module_number > 0 then
+					Result := system_id_from_module_number (a_module_number)
+				elseif container = Void then
+					Result := ""
+				else
+					Result := container.system_id
 				end
-				Result := system_id_from_module_number (a_module_number)
 			elseif container = Void then
 				Result := ""
 			else
@@ -261,7 +264,6 @@ feature -- Status setting
 			-- Determine the intrinsic dependencies of an expression.
 		require
 			not_yet_computed: not are_intrinsic_dependencies_computed
--- removed 10/08/05 as it is surely wrong			all_sub_expressions_computed: sub_expressions_have_intrinsic_dependencies
 		do
 			initialize_intrinsic_dependencies
 		ensure
@@ -445,7 +447,7 @@ feature -- Evaluation
 			if is_evaluate_item_supported then
 				evaluate_item (a_context)
 				if last_evaluated_item /= Void then
-					a_context.current_receiver.append_item (last_evaluated_item)
+					last_evaluated_item.send (a_context.current_receiver)
 				end
 			elseif is_iterator_supported then
 				create_iterator (a_context)
@@ -461,7 +463,7 @@ feature -- Evaluation
 					until
 						last_iterator.is_error or else last_iterator.after
 					loop
-						a_context.current_receiver.append_item (last_iterator.item)
+						last_iterator.item.send (a_context.current_receiver)
 						last_iterator.forth
 					end
 					if last_iterator.is_error then
@@ -490,7 +492,7 @@ feature -- Element change
 	set_source_location (a_module_number, a_line_number: INTEGER) is
 			-- Set source location information.
 		require
-			strictly_positive_module_number: a_module_number > 0
+			positive_module_number: a_module_number >= 0
 			positive_line_number: a_line_number >= 0
 		do
 			location_identifier := INTEGER_.bit_shift_left (a_module_number, module_number_shift) + a_line_number
@@ -531,6 +533,7 @@ feature -- Element change
 			not_self: a_child /= Current
 		local
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
+			a_module_number, a_line_number: INTEGER
 		do
 			if not a_child.is_error then a_child.mark_unreplaced end
 			if a_child.is_computed_expression then
@@ -540,7 +543,29 @@ feature -- Element change
 					if location_identifier = 0 then
 						a_computed_expression.copy_location_identifier (Current)
 					else
-						copy_location_identifier (a_computed_expression)
+
+						-- maybe just the line number is known
+
+						a_module_number := INTEGER_.bit_shift_right (location_identifier, module_number_shift)
+						if a_module_number = 0  then
+							a_line_number := INTEGER_.bit_and (location_identifier, line_number_mask)
+							a_module_number := INTEGER_.bit_shift_right (a_computed_expression.location_identifier, module_number_shift)
+							set_source_location (a_module_number, a_line_number)
+						else
+
+							-- everything known, so copy unknown information to child
+
+							if a_computed_expression.location_identifier = 0 then
+								copy_location_identifier (a_computed_expression)
+							else
+								a_module_number := INTEGER_.bit_shift_right (a_computed_expression.location_identifier, module_number_shift)
+								if a_module_number = 0  then
+									a_line_number := INTEGER_.bit_and (a_computed_expression.location_identifier, line_number_mask)
+									a_module_number := INTEGER_.bit_shift_right (location_identifier, module_number_shift)
+									a_computed_expression.set_source_location (a_module_number, a_line_number)
+								end
+							end
+						end
 					end
 					if are_static_properties_computed then
 						reset_static_properties
@@ -585,6 +610,9 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 		end
 
 feature {XM_XPATH_COMPUTED_EXPRESSION} -- Local
+
+	location_identifier: INTEGER
+			-- Index into SYSTEM ID array
 
 	accumulate_slots_used (a_set: DS_HASH_SET [INTEGER]) is
 			-- Add all slot numbers used by `Current' to `a_set'.
@@ -647,9 +675,6 @@ feature {NONE} -- Implementation
 	
 	parent: XM_XPATH_EXPRESSION_CONTAINER
 			-- Containing parent
-
-	location_identifier: INTEGER
-			-- Index into SYSTEM ID array
 
 	initialized: BOOLEAN
 			-- Has creation procedure completed?
