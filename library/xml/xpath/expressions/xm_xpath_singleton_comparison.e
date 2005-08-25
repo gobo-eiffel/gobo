@@ -69,7 +69,9 @@ feature -- Evaluation
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
 		do
 			first_operand.evaluate_item (a_context)
-			if first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
+			if first_operand.last_evaluated_item = Void then
+				create last_boolean_value.make (False)
+			elseif first_operand.last_evaluated_item /= Void and then first_operand.last_evaluated_item.is_error then
 				create last_boolean_value.make (False)
 				last_boolean_value.set_last_error (first_operand.last_evaluated_item.error_value)
 			elseif not first_operand.last_evaluated_item.is_atomic_value then
@@ -79,7 +81,7 @@ feature -- Evaluation
 				if second_operand.last_evaluated_item.is_error then
 					create last_boolean_value.make (False)
 					last_boolean_value.set_last_error (second_operand.last_evaluated_item.error_value)
-				elseif not second_operand.last_evaluated_item.is_atomic_value then
+				elseif second_operand.last_evaluated_item = Void or else not second_operand.last_evaluated_item.is_atomic_value then
 					create last_boolean_value.make (False)
 				else
 					create a_comparison_checker
