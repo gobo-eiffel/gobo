@@ -344,9 +344,9 @@ feature {NONE} -- Implementation
 						Result := parse_close_bracket (str, Result)
 						if Result <= str.count + 1 then
 							create an_actuals.make_with_capacity (nb)
-							from i := nb until i < 1 loop
+							from i := 1 until i > nb loop
 								an_actuals.put_first (tmp_actuals.item (i))
-								i := i - 1
+								i := i + 1
 							end
 							create {ET_GENERIC_CLASS_TYPE} last_class_type.make (Void, a_class.name, an_actuals, a_class)
 						end
