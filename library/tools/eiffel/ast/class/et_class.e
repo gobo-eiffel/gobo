@@ -1264,12 +1264,6 @@ feature -- Output
 		local
 			a_parameters: like formal_parameters
 		do
-			if class_mark /= Void then
-				if not class_mark.is_deferred then
-					a_string.append_string (class_mark.text)
-					a_string.append_character (' ')
-				end
-			end
 			a_string.append_string (name.name)
 			a_parameters := formal_parameters
 			if a_parameters /= Void and then not a_parameters.is_empty then
