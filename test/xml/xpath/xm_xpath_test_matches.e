@@ -39,7 +39,7 @@ feature -- Tests
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
-			an_evaluator.set_string_mode_ascii
+			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches('abracadabra', 'bra')")
@@ -59,7 +59,7 @@ feature -- Tests
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
-			an_evaluator.set_string_mode_ascii
+			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches('abracadabra', '^a.*a$')")
@@ -79,7 +79,7 @@ feature -- Tests
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
-			an_evaluator.set_string_mode_ascii
+			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches('abracadabra', '^bra')")
@@ -99,7 +99,7 @@ feature -- Tests
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
-			an_evaluator.set_string_mode_unicode
+			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context ("./data/poem.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], 'Kaum.*krähen')")
@@ -119,7 +119,7 @@ feature -- Tests
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
-			an_evaluator.set_string_mode_unicode
+			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context ("./data/poem.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], 'Kaum.*krähen', 's')")
@@ -160,7 +160,7 @@ feature -- Tests
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
-			an_evaluator.set_string_mode_unicode
+			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context ("./data/poem.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], '^Kaum.*gesehen,$')")
@@ -180,7 +180,7 @@ feature -- Tests
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
-			an_evaluator.set_string_mode_unicode
+			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context ("./data/poem.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], 'kiki', 'i')")

@@ -232,6 +232,9 @@ feature {NONE} -- Implementation
 				create {XM_XSLT_OUTPUT_CHARACTER} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)								
 			when Xslt_param_type_code then
 				create {XM_XSLT_PARAM} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
+			when Xslt_perform_sort_type_code then
+				create {XM_XSLT_PERFORM_SORT} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
+				Result.flag_as_instruction
 			when Xslt_preserve_space_type_code, Xslt_strip_space_type_code then
 				create {XM_XSLT_PRESERVE_SPACE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_processing_instruction_type_code then

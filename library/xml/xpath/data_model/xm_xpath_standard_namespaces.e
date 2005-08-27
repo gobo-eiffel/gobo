@@ -117,6 +117,9 @@ feature -- Access
 	Unicode_codepoint_collation_uri: STRING is "http://www.w3.org/2004/10/xpath-functions/collation/codepoint"
 			-- Unicode codepoint collation
 
+	Default_collection_scheme: STRING is "gobo-default-collection"
+			-- URI scheme for default collection
+
 			-- The following codes are 3-bit values for building a fingerprint
 
 	Default_uri_code: INTEGER is 0
@@ -427,8 +430,12 @@ feature -- Access
 	Unparsed_entity_public_id_function_type_code: INTEGER is 1017
 	Unparsed_entity_uri_function_type_code: INTEGER is 1018
 	Unparsed_text_function_type_code: INTEGER is 1019
+	Unparsed_text_available_function_type_code: INTEGER is 1020
 
-	Codepoint_equal_function_type_code: INTEGER is 1020
+			-- Late additions to core functions
+	
+	Codepoint_equal_function_type_code: INTEGER is 1021
+	Doc_available_function_type_code: INTEGER is 1022
 
 			-- XSLT Attribute names
 

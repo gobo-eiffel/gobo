@@ -2,15 +2,15 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath doc() function"
+		"Objects that implement the XPath doc-available() function"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_DOC
+class XM_XPATH_DOC_AVAILABLE
 
 inherit
 
@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "doc"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := Doc_function_type_code
+			name := "doc-available"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Doc_available_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
@@ -47,7 +47,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
-			Result := document_node_kind_test
+			Result := type_factory.boolean_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -68,14 +68,28 @@ feature -- Evaluation
 			-- Evaluate as a single item
 		local
 			a_uri_item: XM_XPATH_ITEM
+			a_namespace_uri, an_error_code: STRING
 		do
 			arguments.item (1).evaluate_item (a_context)
 			a_uri_item := arguments.item (1).last_evaluated_item
-			if a_uri_item = Void or else a_uri_item.is_error then
-				last_evaluated_item := a_uri_item
+			if a_uri_item = Void or else a_uri_item.is_error then -- suppress errors
+				create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
 			else
 				parse_document (a_uri_item.string_value, base_uri, a_context)
-				last_evaluated_item := last_evaluated_document
+				if last_evaluated_document = Void then
+					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False)
+				elseif last_evaluated_document.is_error then
+					a_namespace_uri := last_evaluated_document.error_value.namespace_uri
+					an_error_code :=  last_evaluated_document.error_value.code
+					if STRING_.same_string (a_namespace_uri, Xpath_errors_uri) and then
+						STRING_.same_string (an_error_code, "FODC0005") then
+						last_evaluated_item := last_evaluated_document
+					else
+						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (False) -- suppress all other errors
+					end
+				else
+					create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (last_evaluated_document.is_document)
+				end
 			end
 		end
 

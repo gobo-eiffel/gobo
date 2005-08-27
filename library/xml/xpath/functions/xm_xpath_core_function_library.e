@@ -48,6 +48,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 2
 			elseif a_fingerprint = Codepoints_to_string_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1				
+			elseif a_fingerprint = Collection_function_type_code then
+				Result := an_arity = -1 or else an_arity = 0  or else an_arity = 1
 			elseif a_fingerprint = Compare_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2  or else an_arity = 3
 			elseif a_fingerprint = Concat_function_type_code then
@@ -66,7 +68,11 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Deep_equal_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
+			elseif a_fingerprint = Default_collation_function_type_code then
+				Result := an_arity = -1 or else an_arity = 0
 			elseif a_fingerprint = Doc_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Doc_available_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Document_uri_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
@@ -154,6 +160,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1  or else an_arity = 2
 			elseif a_fingerprint = Starts_with_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2  or else an_arity = 3
+			elseif a_fingerprint = Static_base_uri_function_type_code then
+				Result := an_arity = -1 or else an_arity = 0
 			elseif a_fingerprint = String_length_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
 			elseif a_fingerprint = String_function_type_code then
@@ -210,6 +218,8 @@ feature -- Element change
 				create {XM_XPATH_CODEPOINT_EQUAL} a_function_call.make
 			elseif a_fingerprint = Codepoints_to_string_function_type_code then
 				create {XM_XPATH_CODEPOINTS_TO_STRING} a_function_call.make
+			elseif a_fingerprint = Collection_function_type_code then
+				create {XM_XPATH_COLLECTION} a_function_call.make				
 			elseif a_fingerprint = Compare_function_type_code then
 				create {XM_XPATH_COMPARE} a_function_call.make				
 			elseif a_fingerprint = Concat_function_type_code then
@@ -228,10 +238,14 @@ feature -- Element change
 				create {XM_XPATH_DATA} a_function_call.make
 			elseif a_fingerprint = Deep_equal_function_type_code then
 				create {XM_XPATH_DEEP_EQUALS} a_function_call.make
+			elseif a_fingerprint = Default_collation_function_type_code then
+				create {XM_XPATH_DEFAULT_COLLATION} a_function_call.make				
 			elseif a_fingerprint = Distinct_values_function_type_code then
 				create {XM_XPATH_DISTINCT_VALUES} a_function_call.make
 			elseif a_fingerprint = Doc_function_type_code then
 				create {XM_XPATH_DOC} a_function_call.make
+			elseif a_fingerprint = Doc_available_function_type_code then
+				create {XM_XPATH_DOC_AVAILABLE} a_function_call.make
 			elseif a_fingerprint = Document_uri_function_type_code then
 				create {XM_XPATH_DOCUMENT_URI} a_function_call.make
 			elseif a_fingerprint = Empty_function_type_code then
@@ -314,6 +328,8 @@ feature -- Element change
 				create {XM_XPATH_ROUND} a_function_call.make
 			elseif a_fingerprint = Round_half_to_even_function_type_code then
 				create {XM_XPATH_ROUND_HALF_EVEN} a_function_call.make
+			elseif a_fingerprint = Static_base_uri_function_type_code then
+				create {XM_XPATH_STATIC_BASE_URI} a_function_call.make
 			elseif a_fingerprint = Starts_with_function_type_code then
 				create {XM_XPATH_STARTS_WITH} a_function_call.make								
 			elseif a_fingerprint = String_length_function_type_code then

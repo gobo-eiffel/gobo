@@ -156,7 +156,7 @@ feature -- Access
 		end
 
 	function_results_cache (a_function: XM_XSLT_COMPILED_USER_FUNCTION): DS_HASH_TABLE [XM_XPATH_VALUE, STRING] is
-			-- Value associated with `an_object'
+			-- Value associated with `a_function'
 		require
 			function_not_void: a_function /= Void
 		do
@@ -164,7 +164,22 @@ feature -- Access
 				Result := user_data_table.item (a_function)
 			end
 		end
-	
+
+	cached_unparsed_text (a_uri, an_encoding: STRING): STRING is
+			-- Unparsed text cached by XPath unparsed-text-available(`a_uri', `an_encoding') function
+		require
+			uri_not_empty: a_uri /= Void and then not a_uri.is_empty
+		do
+			if last_unparsed_text_uri /= Void then
+				if STRING_.same_string (a_uri, last_unparsed_text_uri) then
+					if (an_encoding = Void and then last_unparsed_encoding = Void)
+						or else STRING_.same_string (an_encoding, last_unparsed_encoding) then
+						Result := last_unparsed_text
+					end
+				end
+			end
+		end
+
 feature -- Status report
 
 	is_tracing: BOOLEAN is
@@ -427,14 +442,14 @@ feature -- Element change
 		require
 			document_not_void: a_document /= Void
 			uri_not_void: a_uri /= Void
-			document_not_registered: not document_pool.is_mapped (a_uri)
+			document_not_registered: not document_pool.is_document_mapped (a_uri)
 		do
 			document_pool.add (a_document, a_media_type, a_uri)
 			if not shared_name_pool.is_document_allocated (a_document) then
 				shared_name_pool.allocate_document_number (a_document)
 			end
 		ensure
-			document_mapped: document_pool.is_mapped (a_uri)
+			document_mapped: document_pool.is_document_mapped (a_uri)
 			document_allocated: shared_name_pool.is_document_allocated (a_document)
 		end
 
@@ -469,6 +484,33 @@ feature -- Element change
 			error_or_destination_not_void: not is_error implies next_resolved_destination /= Void
 		end
 
+	cache_unparsed_text (a_text, a_uri, an_encoding: STRING) is
+			-- Cache results of XPath unparsed-text-available(`a_uri', `an_encoding') function.
+		require
+			text_exists: a_text /= Void
+			uri_not_empty: a_uri /= Void and then not a_uri.is_empty
+		do
+			last_unparsed_text_uri := a_uri
+			last_unparsed_text := a_text
+			last_unparsed_encoding := an_encoding
+		ensure
+			text_cached: last_unparsed_text = a_uri
+			uri_saved: last_unparsed_text_uri = a_uri
+			encoding_saved: last_unparsed_encoding = an_encoding
+		end
+
+	clear_unparsed_text_cache is
+			-- Clear cached results of XPath unparsed-text-available(`a_uri', `an_encoding') function.
+		do
+			last_unparsed_text_uri := Void
+			last_unparsed_text := Void
+			last_unparsed_encoding := Void
+		ensure
+			text_cleared: last_unparsed_text = Void
+			uri_cleared: last_unparsed_text_uri = Void
+			encoding_cleared: last_unparsed_encoding = Void
+		end
+
 feature -- Transformation
 
 	transform (a_source: XM_XSLT_SOURCE; a_result: XM_XSLT_TRANSFORMATION_RESULT) is
@@ -491,7 +533,7 @@ feature -- Transformation
 			utc_system_clock.set_date_time_to_now (current_date_time)
 			if a_source /= Void then
 				a_source.ignore_media_types
-				if	document_pool.is_mapped (a_source.system_id) then
+				if	document_pool.is_document_mapped (a_source.system_id) then
 					a_document := document_pool.document (a_source.system_id)
 					if a_source.fragment_identifier /= Void then
 						a_media_type := document_pool.media_type (a_source.system_id)
@@ -690,6 +732,9 @@ feature -- Implementation
 
 	next_resolved_destination: XM_XSLT_TRANSFORMATION_RESULT
 			-- Transformation result for next transformation in chain
+
+	last_unparsed_text_uri, last_unparsed_text, last_unparsed_encoding: STRING
+			-- Cached result from XPath unparsed-text-available(`a_uri', `an_encoding') function
 
 	cached_static_context: XM_XSLT_EXPRESSION_CONTEXT
 			-- Cached static context from `executable'

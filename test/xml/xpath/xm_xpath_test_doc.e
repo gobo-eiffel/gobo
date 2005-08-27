@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Test XPath doc() function."
+		"Test XPath collection(), doc() and doc-available functions."
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2001, Colin Adams and others"
@@ -31,6 +31,70 @@ inherit
 
 feature
 
+	test_collection_not_found is
+			-- Test fn:collection("unknown:").
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_mixed
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("collection ('unknown:')")
+			assert ("Error FODC0004", an_evaluator.is_error and then STRING_.same_string (an_evaluator.error_value.code, "FODC0004"))
+		end
+
+	test_collection_on_data_directory is
+			-- Test fn:collection("../data/").
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_mixed
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("collection ('../data/')")
+			assert ("No error", not an_evaluator.is_error)
+			assert ("At least 10 documents", an_evaluator.evaluated_items.count >= 10)
+		end
+
+	test_default_collection is
+			-- Test fn:collection().
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_unicode
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("collection ()")
+			assert ("No error", not an_evaluator.is_error)
+			assert ("At least 2 documents", an_evaluator.evaluated_items.count >= 2)
+		end
+
+	test_doc_available_function is
+			-- Test fn:doc-available()
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_mixed
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("doc-available('books.xsl')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Boolean value", a_boolean_value /= Void)
+			assert ("Result is True", a_boolean_value.value)
+		end
+
 	test_doc_function is
 			-- Test fn:doc()
 		local
@@ -39,7 +103,7 @@ feature
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
 		do
 			create an_evaluator.make (18, False)
-			an_evaluator.set_string_mode_ascii
+			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("doc('books.xsl')/child::*[1]/attribute::version eq '2.0'")
@@ -57,7 +121,7 @@ feature
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
 			create an_evaluator.make (18, False)
-			an_evaluator.set_string_mode_ascii
+			an_evaluator.set_string_mode_mixed
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("doc('boooks.xsl')/child::*[1]/attribute::version eq '2.0'")

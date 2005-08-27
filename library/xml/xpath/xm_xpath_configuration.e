@@ -19,9 +19,15 @@ create
 feature {NONE} -- Initialization
 
 	make_configuration is
-			-- Nothing to do.
+			-- Establish invariant.
 		do
+			create {XM_XPATH_DEFAULT_COLLECTION_RESOLVER} collection_resolver.make
 		end
+
+feature -- Access
+
+	collection_resolver: XM_XPATH_COLLECTION_RESOLVER
+			-- URI resolver for fn:collection()
 
 feature -- Status report
 
@@ -52,6 +58,16 @@ feature -- Status setting
 
 feature -- Element change
 
+	set_collection_resolver (a_collection_resolver: like collection_resolver) is
+			-- Set `collection_resolver'.
+		require
+			collection_resolver_exists: a_collection_resolver /= Void
+		do
+			collection_resolver := a_collection_resolver
+		ensure
+			collection_resolver_set: collection_resolver = a_collection_resolver
+		end
+
 	trace (a_label, a_value: STRING) is
 			-- Create trace entry.
 		require
@@ -61,5 +77,9 @@ feature -- Element change
 		do
 			-- Default is to do nothing - host language should override.
 		end
+
+invariant
+
+	collection_resolver_exists: collection_resolver /= Void
 
 end

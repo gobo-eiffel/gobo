@@ -2,22 +2,22 @@ indexing
 
 	description:
 
-		"xsl:for-each element nodes"
+		"xsl:perform-sort element nodes"
 
 	library: "Gobo Eiffel XSLT Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_FOR_EACH
+class XM_XSLT_PERFORM_SORT
 
 inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, returned_item_type, may_contain_sequence_constructor,
-			is_permitted_child, is_for_each
+			validate, returned_item_type, is_permitted_child,
+			may_contain_sequence_constructor
 		end
 
 create {XM_XSLT_NODE_FACTORY}
@@ -37,7 +37,7 @@ feature -- Status report
 		do
 			Result := a_style_element.is_sort
 		end
-		
+
 feature -- Element change
 
 	prepare_attributes is
@@ -69,23 +69,51 @@ feature -- Element change
 			if a_select_attribute /= Void then
 				generate_expression (a_select_attribute)
 				select_expression := last_generated_expression
-			else
-				report_absence ("select")
 			end
 			attributes_prepared := True
 		end
 
 	validate is
 			-- Check that the stylesheet element is valid.
+		local
+			a_child_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			a_sort: XM_XSLT_SORT
+			a_fallback: XM_XSLT_FALLBACK
+			finished: BOOLEAN
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			check_within_template
-			check_sort_comes_first (False)
-			if select_expression.is_error then
-				report_compile_error (select_expression.error_value)
-			else
+			check_sort_comes_first (True)
+			if select_expression /= Void then
 				type_check_expression ("select", select_expression)
 				if select_expression.was_expression_replaced then
 					select_expression := select_expression.replacement_expression
+				end
+				if has_child_nodes then
+					from
+						a_child_iterator := new_axis_iterator (Child_axis)
+						a_child_iterator.start
+					until
+						finished or else a_child_iterator.after
+					loop
+						a_sort ?= a_child_iterator.item
+						if a_sort = Void then
+
+							-- may be a whitespace text node or xsl:fallback
+
+							if a_child_iterator.item.node_type = Text_node and then is_all_whitespace (a_child_iterator.item.string_value) then
+								-- do nothing
+							else
+								a_fallback ?= a_child_iterator.item
+								if a_fallback = Void then
+									create an_error.make_from_string (STRING_.concat (node_name, " may only have xsl:sort children or insignificant whaitespace"), Xpath_errors_uri, "XTSE1040", Static_error)
+									report_compile_error (an_error)
+									finished := True
+								end
+							end
+						end
+						a_child_iterator.forth
+					end
 				end
 			end
 			validated := True
@@ -100,26 +128,21 @@ feature -- Element change
 		do
 			a_sorted_sequence := select_expression
 			a_sort_key_list := sort_keys
-			if a_sort_key_list.count > 0 then
-				create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
-				a_sorted_sequence.check_static_type (static_context, any_item)
-				if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
-				a_sorted_sequence.optimize (static_context, any_item)
-				if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
-			end
+			create {XM_XSLT_SORT_EXPRESSION} a_sorted_sequence.make (select_expression, a_sort_key_list)
+			a_sorted_sequence.check_static_type (static_context, any_item)
+			if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
+			a_sorted_sequence.optimize (static_context, any_item)
+			if a_sorted_sequence.was_expression_replaced then a_sorted_sequence := a_sorted_sequence.replacement_expression end
 			compile_sequence_constructor (an_executable, new_axis_iterator (Child_axis), True)
 			a_content := last_generated_expression
-			if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end
+			if a_content = Void then create {XM_XPATH_EMPTY_SEQUENCE} a_content.make end 
+			a_content.simplify
 			if a_content.was_expression_replaced then a_content := a_content.replacement_expression end
-			create {XM_XSLT_COMPILED_FOR_EACH} last_generated_expression.make (an_executable, a_sorted_sequence, a_content)
-		end
-
-feature -- Conversion
-	
-	is_for_each: BOOLEAN is
-			-- Is `Current' an xsl:for-each?
-		do
-			Result := True
+			create {XM_XSLT_SORT_EXPRESSION} last_generated_expression.make (a_content, a_sort_key_list)
+			last_generated_expression.check_static_type (static_context, any_item)
+			if last_generated_expression.was_expression_replaced then last_generated_expression := last_generated_expression.replacement_expression end
+			last_generated_expression.optimize (static_context, any_item)
+			if last_generated_expression.was_expression_replaced then last_generated_expression := last_generated_expression.replacement_expression end
 		end
 
 feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
@@ -127,13 +150,16 @@ feature {XM_XSLT_STYLE_ELEMENT} -- Restricted
 	returned_item_type: XM_XPATH_ITEM_TYPE is
 			-- Type of item returned by this instruction
 		do
-			Result := common_child_item_type
+			if select_expression /= Void then
+				Result := select_expression.item_type
+			else
+				Result := common_child_item_type
+			end
 		end
 
 feature {NONE} -- Implementation
 
 	select_expression: XM_XPATH_EXPRESSION
-			-- Select expression
-
+			-- Optional select expression
 
 end

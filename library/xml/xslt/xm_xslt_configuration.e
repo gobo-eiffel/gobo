@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			error_listener_not_void: an_error_listener /= Void
 			encoder_factory_not_void: 	an_encoder_factory /= Void
 		do
+			make_configuration
 			encoder_factory := an_encoder_factory
 			set_string_mode_mixed
 			recovery_policy := Recover_with_warnings

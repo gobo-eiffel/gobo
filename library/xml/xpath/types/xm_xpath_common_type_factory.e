@@ -504,6 +504,7 @@ feature {NONE} -- Implementation
 			bind_fn_name (Default_collation_function_type_code, "default-collation")
 			bind_fn_name (Distinct_values_function_type_code, "distinct-values")
 			bind_fn_name (Doc_function_type_code, "doc")
+			bind_fn_name (Doc_available_function_type_code, "doc-available")
 			bind_fn_name (Document_uri_function_type_code, "document-uri")
 			bind_fn_name (Empty_function_type_code, "empty")
 			bind_fn_name (Ends_with_function_type_code, "ends-with")
@@ -601,6 +602,7 @@ feature {NONE} -- Implementation
 			bind_fn_name (Unparsed_entity_public_id_function_type_code, "unparsed-enitiy-public-id")
 			bind_fn_name (Unparsed_entity_uri_function_type_code, "unparsed-entity-uri")
 			bind_fn_name (Unparsed_text_function_type_code, "unparsed-text")
+			bind_fn_name (Unparsed_text_available_function_type_code, "unparsed-text-available")
 		end
 	
 	bind_xsi_names is

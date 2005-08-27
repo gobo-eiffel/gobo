@@ -89,7 +89,7 @@ feature -- Events
 			-- Notify an unparsed entity URI
 		do
 			if not has_error then
-				-- TODO tree_document.set_unparsed_entity (a_name, a_system_id, a_public_id)
+				tree_document.set_unparsed_entity (a_name, a_system_id, a_public_id)
 			end
 		end
 

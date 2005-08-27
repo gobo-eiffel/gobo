@@ -292,6 +292,26 @@ feature -- Element change
 			document_element_not_void: document_element /= Void
 		end
 
+	set_unparsed_entity (a_name, a_system_id, a_public_id: STRING) is
+			-- Save SYSTEM and PUBLIC ids for `a_name'.
+		require
+			entity_name_exists: a_name /= Void
+		local
+			an_id_list: DS_ARRAYED_LIST [STRING]
+		do
+			if entity_table = Void then
+				create entity_table.make_with_equality_testers (10, Void, string_equality_tester)
+			end
+			if entity_table.has (a_name) then
+				-- Validation error - we will ignore duplicates
+			else
+				create an_id_list.make (2)
+				an_id_list.set_equality_tester (string_equality_tester)
+				an_id_list.put (a_system_id, 1)
+				an_id_list.put (a_public_id, 2)
+			end
+		end
+		
 feature -- Duplication
 
 	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is

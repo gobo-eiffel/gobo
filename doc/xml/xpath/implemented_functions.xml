@@ -612,14 +612,14 @@
 	 </row>	
 	 <row>
 	   <entry>fn:doc-available</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:collection</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
@@ -654,13 +654,19 @@
 	 </row>	
 	 <row>
 	   <entry>fn:default-collation</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:implicit-timezone</entry>
 	   <entry>No</entry>
+	   <entry>No</entry>
+	   <entry>None</entry>
+	 </row>
+	 <row>
+	   <entry>fn:static-base-uri</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>None</entry>
 	 </row>

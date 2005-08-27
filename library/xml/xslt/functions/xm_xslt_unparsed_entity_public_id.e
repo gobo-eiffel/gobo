@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that implement the XSLT unparsed-entity-uri() function"
+		"Objects that implement the XSLT unparsed-entity-public-id() function"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XSLT_UNPARSED_ENTITY_URI
+class XM_XSLT_UNPARSED_ENTITY_PUBLIC_ID
 
 inherit
 
@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Establish invariant
 		do
-			name := "unparsed-entity-uri"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := Unparsed_entity_uri_function_type_code
+			name := "unparsed-entity-public-id"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Unparsed_entity_public_id_function_type_code
 			minimum_argument_count := 1
 			maximum_argument_count := 1
 			create arguments.make (1)
@@ -42,7 +42,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
-			Result := type_factory.any_uri_type
+			Result := type_factory.string_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -68,10 +68,10 @@ feature -- Optimization
 			if was_expression_replaced then
 				a_function ?= replacement_expression
 				if a_function /= Void then
-					a_function.add_context_document_argument (1, "unparsed-entity-uri+")
+					a_function.add_context_document_argument (1, "unparsed-entity-public-id+")
 				end
 			else
-				add_context_document_argument (1, "unparsed-entity-uri+")
+				add_context_document_argument (1, "unparsed-entity-public-id+")
 				merge_dependencies (arguments.item (3).dependencies)
 			end
 		end
@@ -92,14 +92,14 @@ feature -- Evaluation
 				if arguments.item (2).last_evaluated_item.is_error then
 					last_evaluated_item := arguments.item (2).last_evaluated_item
 				elseif arguments.item (2).last_evaluated_item.is_document then
-					an_id := arguments.item (2).last_evaluated_item.as_document.unparsed_entity_system_id (an_entity)
+					an_id := arguments.item (2).last_evaluated_item.as_document.unparsed_entity_public_id (an_entity)
 					if an_id = Void then
 						an_id := ""
 					end
-					create {XM_XPATH_ANY_URI_VALUE} last_evaluated_item.make (an_id)
+					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (an_id)
 				else
 					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Context node is not set or it's root is not a document node.",
-																												Xpath_errors_uri, "XTDE1370", Dynamic_error)
+																												Xpath_errors_uri, "XTDE1380", Dynamic_error)
 				end
 			end
 		end

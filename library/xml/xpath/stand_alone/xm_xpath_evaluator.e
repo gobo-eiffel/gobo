@@ -136,6 +136,7 @@ feature -- Element change
 				a_context_node := context_item.as_node
 				document := a_context_node.document_root
 				create a_base_uri.make (document.base_uri)
+				source_uri := a_base_uri.full_reference
 				create function_library.make
 				create a_core_function_library.make
 				create a_constructor_function_library.make
@@ -145,7 +146,7 @@ feature -- Element change
 			end
 		ensure
 			built: not was_build_error implies static_context /= Void and then document /= Void and then context_item /= Void
-			source_uri_set: source_uri = a_source_uri
+			source_uri_set: source_uri /= Void
 		end
 
 	set_static_context (a_static_context: XM_XPATH_STAND_ALONE_CONTEXT) is

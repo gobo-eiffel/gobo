@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that hold available documents in the dynamic context"
+		"Objects that hold available documents and avaialable collections in the dynamic context"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -17,8 +17,9 @@ inherit
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
-	-- The document pool ensures that the doc() function,
-	--  when called twice with the same URI, returns the same document each time.
+		-- The document pool ensures that the doc() function,
+		--  when called twice with the same URI, returns the same document each time.
+		-- Likewise for collection().
 
 create
 
@@ -30,12 +31,21 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		do
 			create document_name_map.make_with_equality_testers (5, Void, string_equality_tester)
+			create collection_name_map.make_with_equality_testers (5, Void, string_equality_tester)
 			create media_type_name_map.make_with_equality_testers (5, Void, string_equality_tester)
 		end
 
 feature -- Access
 
-	is_mapped (a_uri: STRING): BOOLEAN is
+	is_collection_mapped (a_uri: STRING): BOOLEAN is
+			-- Has `a_uri' been mapped to a collection?
+		require
+			uri_not_void: a_uri /= Void-- and then is_absolute
+		do
+			Result := collection_name_map.has (a_uri)
+		end
+
+	is_document_mapped (a_uri: STRING): BOOLEAN is
 			-- Has `a_uri' been mapped to a document?
 		require
 			uri_not_void: a_uri /= Void -- and then is_absolute
@@ -45,11 +55,22 @@ feature -- Access
 			media_type_mapped: Result = media_type_name_map.has (a_uri)
 		end
 
+	collection (a_uri: STRING): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+			-- Collection corresponding to `a_uri'
+		require
+			uri_not_void: a_uri /= Void  -- and then is_absolute
+			uri_mapped: is_collection_mapped (a_uri)
+		do
+			Result := collection_name_map.item (a_uri).node_iterator
+		ensure
+			collection_before: Result /= Void and then Result.before
+		end
+	
 	document (a_uri: STRING): XM_XPATH_DOCUMENT is
 			-- Document corresponding to `a_uri'
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
-			uri_mapped: is_mapped (a_uri)
+			uri_mapped: is_document_mapped (a_uri)
 		do
 			Result := document_name_map.item (a_uri)
 		ensure
@@ -60,7 +81,7 @@ feature -- Access
 			-- Media type corresponding to `a_uri'
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
-			uri_mapped: is_mapped (a_uri)
+			uri_mapped: is_document_mapped (a_uri)
 		do
 			Result := media_type_name_map.item (a_uri)
 		ensure
@@ -73,13 +94,25 @@ feature -- Element change
 			-- Add `a_document' to `Current'.
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
-			not_mapped: not is_mapped (a_uri)
-			document_not_void: a_document /= Void
+			not_mapped: not is_document_mapped (a_uri)
+			document_exists: a_document /= Void
 		do
 			document_name_map.force (a_document, a_uri)
 			media_type_name_map.force (a_media_type, a_uri)
 		ensure
-			uri_mapped: is_mapped (a_uri)
+			uri_mapped: is_document_mapped (a_uri)
+		end
+
+	add_collection (a_collection: XM_XPATH_SEQUENCE_EXTENT; a_uri: STRING) is
+			-- Add `a_document' to `Current'.
+		require
+			uri_not_void: a_uri /= Void  -- and then is_absolute
+			not_mapped: not is_collection_mapped (a_uri)
+			collection: a_collection /= Void
+		do
+			collection_name_map.force (a_collection, a_uri)
+		ensure
+			uri_mapped: is_collection_mapped (a_uri)
 		end
 
 feature {XM_XPATH_PROXY_RECEIVER} -- Removal
@@ -90,18 +123,21 @@ feature {XM_XPATH_PROXY_RECEIVER} -- Removal
 			--          Hence the export restriction (designed for XM_XSLT_TRANSFORMER_RECEIVER}).		
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
-			mapped: is_mapped (a_uri)
+			mapped: is_document_mapped (a_uri)
 		do
 			document_name_map.remove (a_uri)
 			media_type_name_map.remove (a_uri)
 		ensure
-			uri_not_mapped: not is_mapped (a_uri)
+			uri_not_mapped: not is_document_mapped (a_uri)
 		end
 
 feature {NONE} -- Implementation
 
 	document_name_map: DS_HASH_TABLE [XM_XPATH_DOCUMENT, STRING]
 			-- Map of SYSTEM ids to documents
+
+	collection_name_map: DS_HASH_TABLE [XM_XPATH_SEQUENCE_EXTENT, STRING]
+			-- Map of SYSTEM ids to collections
 
 	media_type_name_map: DS_HASH_TABLE [UT_MEDIA_TYPE, STRING]
 			-- Map of SYSTEM ids to media types

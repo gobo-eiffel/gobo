@@ -65,7 +65,7 @@ feature -- Events
 			Precursor
 			a_document ?= builder.current_root
 			if a_document /= Void then
-				if transformer.document_pool.is_mapped (system_id) then
+				if transformer.document_pool.is_document_mapped (system_id) then
 
 					-- Done to keep the one URI to same document mapping
 					--  in some sort of spurious shape
