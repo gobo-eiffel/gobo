@@ -5,7 +5,7 @@ indexing
 		"Eiffel 'all' export clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class ET_ALL_EXPORT
 inherit
 
 	ET_EXPORT
+		redefine
+			is_all
+		end
 
 create
 
@@ -79,6 +82,9 @@ feature -- Status report
 		do
 			Result := True
 		end
+
+	is_all: BOOLEAN is True
+			-- Is current export clause of the form 'export {CLIENT} all'?
 
 feature -- Setting
 

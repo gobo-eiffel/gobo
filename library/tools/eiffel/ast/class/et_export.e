@@ -5,7 +5,7 @@ indexing
 		"Eiffel export clauses"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,6 +42,14 @@ feature -- Status report
 		require
 			a_name_not_void: a_name /= Void
 		deferred
+		ensure
+			all_definition: is_all implies Result
+		end
+
+	is_all: BOOLEAN is
+			-- Is current export clause of the form 'export {CLIENT} all'?
+		do
+			-- Result := False
 		end
 
 	is_semicolon: BOOLEAN is

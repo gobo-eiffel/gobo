@@ -1826,6 +1826,32 @@ feature -- Parsing
 			eiffel_parser.parse_file (a_file, a_filename, a_time_stamp, a_cluster)
 		end
 
+feature -- Compilation status report
+
+	is_ecma: BOOLEAN
+			-- Should the compilation process use ECMA's semantics?
+
+	is_ise: BOOLEAN
+			-- Should the compilation process use ISE's semantics?
+
+feature -- Compilation setting
+
+	set_ecma (b: BOOLEAN) is
+			-- Set `is_ecma' to `b'.
+		do
+			is_ecma := b
+		ensure
+			ecma_set: is_ecma = b
+		end
+
+	set_ise (b: BOOLEAN) is
+			-- Set `is_ise' to `b'.
+		do
+			is_ise := b
+		ensure
+			ise_set: is_ise = b
+		end
+
 feature -- Compilation
 
 	compile (flat: BOOLEAN) is

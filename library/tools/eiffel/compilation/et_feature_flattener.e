@@ -973,9 +973,12 @@ feature {NONE} -- Clients
 			l_export: ET_EXPORT
 			l_name: ET_FEATURE_NAME
 			l_overridden: BOOLEAN
+			l_ise: BOOLEAN
+			l_has_all: BOOLEAN
 			i, nb: INTEGER
 			j, nb2: INTEGER
 		do
+			l_ise := universe.is_ise
 			from
 				l_parent_feature := a_feature.parent_feature
 			until
@@ -987,13 +990,41 @@ feature {NONE} -- Clients
 				l_exports := l_parent.exports
 				if l_exports /= Void then
 					nb := l_exports.count
-					from i := 1 until i > nb loop
-						l_export := l_exports.item (i)
-						if l_export.has_feature_name (l_name) then
-							clients_list.force_last (l_export.clients (l_name))
-							l_overridden := True
+					if l_ise then
+							-- The ISE semantics follows what is described in ETL2:
+							-- 'export {CLIENT} all' are not taken into account if
+							-- the feature name appears in another export clause.
+						from i := 1 until i > nb loop
+							l_export := l_exports.item (i)
+							if l_export.is_all then
+								l_has_all := True
+							else
+								if l_export.has_feature_name (l_name) then
+									clients_list.force_last (l_export.clients (l_name))
+									l_overridden := True
+								end
+							end
+							i := i + 1
 						end
-						i := i + 1
+						if not l_overridden and l_has_all then
+							from i := 1 until i > nb loop
+								l_export := l_exports.item (i)
+								if l_export.is_all then
+									clients_list.force_last (l_export.clients (l_name))
+									l_overridden := True
+								end
+								i := i + 1
+							end
+						end
+					else
+						from i := 1 until i > nb loop
+							l_export := l_exports.item (i)
+							if l_export.has_feature_name (l_name) then
+								clients_list.force_last (l_export.clients (l_name))
+								l_overridden := True
+							end
+							i := i + 1
+						end
 					end
 				end
 				if not l_overridden then
