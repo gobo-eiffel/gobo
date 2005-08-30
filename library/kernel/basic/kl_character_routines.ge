@@ -16,6 +16,15 @@ inherit
 
 	KL_SHARED_PLATFORM
 
+feature -- Status report
+
+	is_digit (c: CHARACTER): BOOLEAN is
+			-- Is `c' a digit?
+			-- A digit is one of 0123456789
+		do
+			Result := (c >= '0' and c <= '9')
+		end
+
 feature -- Access
 
 	next (c: CHARACTER): CHARACTER is
