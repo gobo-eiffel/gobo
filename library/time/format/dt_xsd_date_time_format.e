@@ -15,9 +15,6 @@ class DT_XSD_DATE_TIME_FORMAT
 inherit
 
 	DT_DATE_TIME_FORMAT
-		redefine
-			zoned_date_time_to_string
-		end
 
 	DT_XSD_DATE_TIME_PARSER
 
@@ -93,13 +90,13 @@ feature {NONE} -- Implementation
 				yy := 1 - a_date.year
 				INTEGER_.append_decimal_integer (yy, Result)
 				from  until  Result.count >= 4 loop
-					Result.prepend_character ('0')
+					Result.insert_character ('0', 1)
 				end
-				Result.prepend_character ('-')
+				Result.insert_character ('-', 1)
 			else
 				INTEGER_.append_decimal_integer (a_date.year, Result)
 				from  until  Result.count >= 4 loop
-					Result.prepend_character ('0')
+					Result.insert_character ('0', 1)
 				end
 			end
 		ensure
@@ -114,7 +111,7 @@ feature {NONE} -- Implementation
 			Result := ""
 			INTEGER_.append_decimal_integer (a_date.month, Result)
 			from until  Result.count = 2 loop
-				Result.prepend_character ('0')
+				Result.insert_character ('0', 1)
 			end
 		ensure
 			two_characters: Result /= Void and then Result.count = 2
@@ -128,7 +125,7 @@ feature {NONE} -- Implementation
 			Result := ""
 			INTEGER_.append_decimal_integer (a_date.day, Result)
 			from until  Result.count = 2 loop
-				Result.prepend_character ('0')
+				Result.insert_character ('0', 1)
 			end
 		ensure
 			two_characters: Result /= Void and then Result.count = 2
@@ -142,7 +139,7 @@ feature {NONE} -- Implementation
 			Result := ""
 			INTEGER_.append_decimal_integer (a_time_part, Result)
 			from until  Result.count = 2 loop
-				Result.prepend_character ('0')
+				Result.insert_character ('0', 1)
 			end
 		ensure
 			two_characters: Result /= Void and then Result.count = 2
