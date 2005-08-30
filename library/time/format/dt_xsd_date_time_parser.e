@@ -19,6 +19,9 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_CHARACTER_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -113,12 +116,12 @@ feature -- Access
 						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
 							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
 							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
-							if is_digit (a_count.item (1)) and then is_digit (a_count.item (2)) then
+							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 								an_hour := a_count.to_integer
 								Result := an_hour >= 0 and then an_hour <= 14
 								if Result then
 									a_count := a_formatted_date.substring (a_formatted_date.count - 1, a_formatted_date.count)
-									if is_digit (a_count.item (1)) and then is_digit (a_count.item (2)) then
+									if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 										a_minute := a_count.to_integer
 										if an_hour = 14 then
 											Result := a_minute = 0
@@ -210,12 +213,12 @@ feature -- Access
 						if a_formatted_date_time.item (a_formatted_date_time.count - 5).is_equal ('+')
 							or else a_formatted_date_time.item (a_formatted_date_time.count - 5).is_equal ('-') then
 							a_count := a_formatted_date_time.substring (a_formatted_date_time.count - 4, a_formatted_date_time.count - 3)
-							if is_digit (a_count.item (1)) and then is_digit (a_count.item (2)) then
+							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 								an_hour := a_count.to_integer
 								Result := an_hour >= 0 and then an_hour <= 14
 								if Result then
 									a_count := a_formatted_date_time.substring (a_formatted_date_time.count - 1, a_formatted_date_time.count)
-									if is_digit (a_count.item (1)) and then is_digit (a_count.item (2)) then
+									if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 										a_minute := a_count.to_integer
 										if an_hour = 14 then
 											Result := a_minute = 0
@@ -267,12 +270,12 @@ feature -- Access
 					Result := some_components.count = 3
 					if Result then
 						Result := False -- until proved `True'
-						if some_components.item (1).count = 2 and then is_digit (some_components.item (1).item (1)) and then is_digit (some_components.item (1).item (2)) then
+						if some_components.item (1).count = 2 and then CHARACTER_.is_digit (some_components.item (1).item (1)) and then CHARACTER_.is_digit (some_components.item (1).item (2)) then
 							an_hour := some_components.item (1).to_integer
 							Result := an_hour >= 0 and then an_hour <= 24
 							if Result then
 								Result := False -- until proved `True'
-								if  some_components.item (2).count = 2 and then is_digit (some_components.item (2).item (1)) and then is_digit (some_components.item (2).item (2)) then
+								if  some_components.item (2).count = 2 and then CHARACTER_.is_digit (some_components.item (2).item (1)) and then CHARACTER_.is_digit (some_components.item (2).item (2)) then
 									a_minute := some_components.item (2).to_integer
 									Result := a_minute >= 0 and then a_minute <= 59
 									if Result then
@@ -280,7 +283,7 @@ feature -- Access
 										a_splitter.set_separators (".")
 										some_seconds := a_splitter.split_greedy (some_components.item (3))
 										if some_seconds.count = 1 or else some_seconds.count = 2 then
-											if some_seconds.item (1).count = 2 and then is_digit (some_seconds.item (1).item (1)) and then is_digit (some_seconds.item (1).item (2)) then
+											if some_seconds.item (1).count = 2 and then CHARACTER_.is_digit (some_seconds.item (1).item (1)) and then CHARACTER_.is_digit (some_seconds.item (1).item (2)) then
 												a_second := some_seconds.item (1).to_integer
 												Result := a_second >= 0 and then a_second <= 59
 												if Result then
@@ -333,12 +336,12 @@ feature -- Access
 						if a_formatted_time.item (a_formatted_time.count - 5).is_equal ('+')
 							or else a_formatted_time.item (a_formatted_time.count - 5).is_equal ('-') then
 							a_count := a_formatted_time.substring (a_formatted_time.count - 4, a_formatted_time.count - 3)
-							if is_digit (a_count.item (1)) and then is_digit (a_count.item (2)) then
+							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 								an_hour := a_count.to_integer
 								Result := an_hour >= 0 and then an_hour <= 14
 								if Result then
 									a_count := a_formatted_time.substring (a_formatted_time.count - 1, a_formatted_time.count)
-									if is_digit (a_count.item (1)) and then is_digit (a_count.item (2)) then
+									if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 										a_minute := a_count.to_integer
 										if an_hour = 14 then
 											Result := a_minute = 0
@@ -582,12 +585,6 @@ feature {NONE} -- Implementation
 			if a_digit > 4 then Result := Result + 1 end -- round up
 		ensure
 			positive_result: Result >= 0
-		end
-
-	is_digit (a_character: CHARACTER): BOOLEAN is
-			-- Is `a_character' a Latin-1 decimal digit?
-		do
-			Result := a_character >= '0' and then a_character <= '9'
 		end
 
 invariant
