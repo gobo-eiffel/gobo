@@ -30,7 +30,7 @@ Version 3.5 - ????
 	Gobo Eiffel Time Library:
 
 	* Added classes to parse and format XML Schema date, time and
-	  dateTime datatypes.
+	  date-time datatypes.
 
 Version 3.4 - 10 July 2005
 
