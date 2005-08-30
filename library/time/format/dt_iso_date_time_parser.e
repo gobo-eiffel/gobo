@@ -22,6 +22,11 @@ inherit
 
 		-- See bottom of file for some notes
 
+	
+		-- N.B. Some of the configuration options herein were intended to support deriving
+	   --      XML Schema dates from the ISO extended format. This attempt has now been abandoned,
+		--      so this class can be simplified accordingly
+	
 feature -- Access
 
 	extra_year_digits: INTEGER

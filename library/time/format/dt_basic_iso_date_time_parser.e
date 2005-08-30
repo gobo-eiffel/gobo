@@ -16,6 +16,10 @@ inherit
 
 	DT_ISO_DATE_TIME_PARSER
 
+		-- TODO: this needs re-working, to comply with the result of the
+		--  discussion in thread: "Date parsing routines, etc. committed"
+		-- Note that the pre-conditions and post-conditions have already been updated
+
 create
 
 	make, make_expanded, make_truncated

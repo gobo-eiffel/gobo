@@ -28,7 +28,7 @@ feature -- Conversion
 			valid_date_string: is_date (Result)
 		end
 
-	zoned_date_to_string (a_date: DT_ZONED_DATE): STRING is
+	zoned_date_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
 			-- Formatted date with time zone
 		require
 			zoned_date_not_void: a_date /= Void
@@ -68,7 +68,7 @@ feature -- Conversion
 			valid_time_string: is_time (Result)
 		end
 
-	zoned_time_to_string (a_time: DT_ZONED_TIME): STRING is
+	zoned_time_to_string (a_time: DT_FIXED_OFFSET_ZONED_TIME): STRING is
 			-- Formatted time with time zone
 		require
 			zoned_time_not_void: a_time /= Void

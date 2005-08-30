@@ -33,8 +33,9 @@ feature -- Access
 			-- Is `a_formatted_date' a valid date?
 		require
 			formatted_date_not_void: a_formatted_date /= Void
-			zoneless: not is_zoned_date (a_formatted_date)
 		deferred
+		ensure
+			zoneless: Result implies not is_zoned_date (a_formatted_date)
 		end
 
 	is_zoned_date (a_formatted_date: STRING): BOOLEAN is
@@ -48,8 +49,9 @@ feature -- Access
 			-- Is `a_formatted_date_time' a valid date-time?
 		require
 			formatted_date_time_not_void: a_formatted_date_time /= Void
-			zoneless: not is_zoned_date_time (a_formatted_date_time)
 		deferred
+		ensure
+			zoneless: Result implies not is_zoned_date_time (a_formatted_date_time)
 		end
 
 	is_zoned_date_time (a_formatted_date_time: STRING): BOOLEAN is
@@ -63,8 +65,9 @@ feature -- Access
 			-- Is `a_formatted_time' a valid time?
 		require
 			formatted_time_not_void: a_formatted_time /= Void
-			zonesless: not is_zoned_time (a_formatted_time)
 		deferred
+		ensure
+			zoneless: Result implies not is_zoned_time (a_formatted_time)
 		end
 
 	is_zoned_time (a_formatted_time: STRING): BOOLEAN is
@@ -81,16 +84,18 @@ feature -- Conversion
 		require
 			formatted_date_not_void: a_formatted_date /= Void
 			valid_date_string: is_date (a_formatted_date)
+			date_string_not_altered_since_call_to_is_date: True
 		deferred
 		ensure
 			date_not_void: Result /= Void
 		end
 
-	string_to_zoned_date (a_formatted_date: STRING): DT_ZONED_DATE is
+	string_to_zoned_date (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
 			-- Parsed date from `a_formatted_date'
 		require
 			formatted_date_not_void: a_formatted_date /= Void
 			valid_zoned_date_string: is_zoned_date (a_formatted_date)
+			date_string_not_altered_since_call_to_is_zoned_date: True
 		deferred
 		ensure
 			zoned_date_not_void: Result /= Void
@@ -101,6 +106,7 @@ feature -- Conversion
 		require
 			formatted_date_time_not_void: a_formatted_date_time /= Void
 			valid_date_time_string: is_date_time (a_formatted_date_time)
+			date_string_not_altered_since_call_to_is_date_time: True
 		deferred
 		ensure
 			date_time_not_void: Result /= Void
@@ -111,6 +117,7 @@ feature -- Conversion
 		require
 			formatted_date_time_not_void: a_formatted_date_time /= Void
 			valid_zoned_date_time_string: is_zoned_date_time (a_formatted_date_time)
+			date_string_not_altered_since_call_to_is_zoned_date_time: True
 		deferred
 		ensure
 			zoned_date_time_not_void: Result /= Void
@@ -121,16 +128,18 @@ feature -- Conversion
 		require
 			formatted_time_not_void: a_formatted_time /= Void
 			valid_time_string: is_time (a_formatted_time)
+			date_string_not_altered_since_call_to_is_time: True
 		deferred
 		ensure
 			time_not_void: Result /= Void
 		end
 
-	string_to_zoned_time (a_formatted_time: STRING): DT_ZONED_TIME is
+	string_to_zoned_time (a_formatted_time: STRING): DT_FIXED_OFFSET_ZONED_TIME is
 			-- Parsed time from `a_formatted_time'
 		require
 			formatted_time_not_void: a_formatted_time /= Void
 			valid_time_string: is_zoned_time (a_formatted_time)
+			date_string_not_altered_since_call_to_is_zoned_time: True
 		deferred
 		ensure
 			zoned_time_not_void: Result /= Void

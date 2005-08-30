@@ -10,7 +10,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class DT_ZONED_TIME
+class DT_FIXED_OFFSET_ZONED_TIME
 
 inherit
 
@@ -83,7 +83,7 @@ feature -- Comparison
 			end
 		end
 
-	same_time (other: DT_ZONED_TIME): BOOLEAN is
+	same_time (other: DT_FIXED_OFFSET_ZONED_TIME): BOOLEAN is
 			-- Is `Current' time equal to `other'?
 		require
 			other_not_void: other /= Void
