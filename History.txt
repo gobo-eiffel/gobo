@@ -27,6 +27,11 @@ Version 3.5 - ????
 	* Added `sharename' to KI_PATHNAME, so that UNC pathnames can be
 	  split into '\\hostname\sharename'.
 
+	Gobo Eiffel Time Library:
+
+	* Added classes to parse and format XML Schema date, time and
+	  dateTime datatypes.
+
 Version 3.4 - 10 July 2005
 
 	geant:
