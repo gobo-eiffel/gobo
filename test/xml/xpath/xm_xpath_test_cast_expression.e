@@ -256,8 +256,6 @@ feature -- Tests
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:QName.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
-			a_qname_value: XM_XPATH_QNAME_VALUE
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -274,11 +272,10 @@ feature -- Set up
 			conformance.set_basic_xslt_processor
 		end
 
-
 feature {NONE} -- Implementation
 
 	diagnose_evaluation_error (an_evaluator: XM_XPATH_EVALUATOR) is
-		-- Print error diagnosis to standard error stream.
+			-- Print error diagnosis to standard error stream.
 		do
 			std.error.put_string (an_evaluator.error_value.error_message)
 			std.error.put_string (", error code is ")

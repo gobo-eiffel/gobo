@@ -37,7 +37,6 @@ feature
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
 			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
 			an_output, another_output: XM_OUTPUT
 			a_test_string: STRING
 			a_result: XM_XSLT_TRANSFORMATION_RESULT
@@ -113,10 +112,7 @@ feature
 			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
 			a_configuration: XM_XSLT_CONFIGURATION
 			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source, another_uri_source: XM_XSLT_URI_SOURCE
-			an_error_listener: XM_XSLT_DEFAULT_ERROR_LISTENER
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			a_uri_source: XM_XSLT_URI_SOURCE
 			a_string_resolver: XM_STRING_URI_RESOLVER
 		do
 			create a_string_resolver.make

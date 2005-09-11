@@ -84,7 +84,6 @@ feature -- Tests
 			-- Test fn:base-uri().
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -117,7 +116,6 @@ feature -- Tests
 			-- Test fn:base-uri(()).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -132,7 +130,6 @@ feature -- Tests
 			-- Test fn:base-uri(()).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
@@ -147,7 +144,6 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -166,7 +162,6 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -185,7 +180,6 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[1]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -204,7 +198,6 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/ITEM[1]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -223,7 +216,6 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/nested-element).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -242,7 +234,6 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[2]/nested-element).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -261,7 +252,6 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction()).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -280,7 +270,6 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction()).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -299,7 +288,6 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[1]/processing-instruction()[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
@@ -318,7 +306,6 @@ feature -- Tests
 			-- Test fn:base-uri(/*[1]/*[1]/processing-instruction()[2]).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
 			a_uri: XM_XPATH_ANY_URI_VALUE
 		do
 			create an_evaluator.make (18, False)
