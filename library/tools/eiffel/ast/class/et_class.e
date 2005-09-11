@@ -449,7 +449,7 @@ feature -- Preparsing status
 		local
 			a_class: ET_CLASS
 		do
-			if not is_override then
+			if not is_in_override_cluster then
 				Result := (overridden_class /= Void)
 			else
 				from
@@ -457,7 +457,7 @@ feature -- Preparsing status
 				until
 					a_class = Void
 				loop
-					if a_class.is_override then
+					if a_class.is_in_override_cluster then
 						Result := True
 						a_class := Void -- Jump out of the loop.
 					else

@@ -119,7 +119,7 @@ feature -- Parsing
 							a_class := universe.eiffel_class (a_classname)
 							if a_class.is_preparsed then
 								if a_cluster.is_override then
-									if a_class.is_override then
+									if a_class.is_in_override_cluster then
 											-- Two classes with the same name in two override clusters.
 										l_other_class := a_class.cloned_class
 										l_other_class.reset_all
@@ -138,7 +138,7 @@ feature -- Parsing
 										a_class.set_overridden_class (l_other_class)
 										l_overriding_added := True
 									end
-								elseif not a_class.is_override then
+								elseif not a_class.is_in_override_cluster then
 										-- Two classes with the same name in two non-override clusters.
 									l_other_class := a_class.cloned_class
 									l_other_class.reset_all
@@ -266,7 +266,7 @@ feature -- Parsing
 								a_class := universe.eiffel_class (a_classname)
 								if a_class.is_preparsed then
 									if a_cluster.is_override then
-										if a_class.is_override then
+										if a_class.is_in_override_cluster then
 												-- Two classes with the same name in two override clusters.
 											l_other_class := a_class.cloned_class
 											l_other_class.reset_all
@@ -285,7 +285,7 @@ feature -- Parsing
 											a_class.set_overridden_class (l_other_class)
 											l_overriding_added := True
 										end
-									elseif not a_class.is_override then
+									elseif not a_class.is_in_override_cluster then
 											-- Two classes with the same name in two non-override clusters.
 										l_other_class := a_class.cloned_class
 										l_other_class.reset_all
@@ -403,7 +403,7 @@ feature -- Parsing
 				a_class := universe.eiffel_class (last_classname)
 				if a_class.is_preparsed then
 					if a_cluster.is_override then
-						if a_class.is_override then
+						if a_class.is_in_override_cluster then
 								-- Two classes with the same name in two override clusters.
 							l_other_class := a_class.cloned_class
 							l_other_class.reset_all
@@ -424,7 +424,7 @@ feature -- Parsing
 							a_class.set_overridden_class (l_other_class)
 							overriding_class_added := True
 						end
-					elseif not a_class.is_override then
+					elseif not a_class.is_in_override_cluster then
 							-- Two classes with the same name in two non-override clusters.
 						l_other_class := a_class.cloned_class
 						l_other_class.reset_all
@@ -730,7 +730,7 @@ feature -- Parsing
 				a_class := universe.eiffel_class (last_classname)
 				if a_class.is_preparsed then
 					if a_cluster.is_override then
-						if a_class.is_override then
+						if a_class.is_in_override_cluster then
 								-- Two classes with the same name in two override clusters.
 							l_other_class := a_class.cloned_class
 							l_other_class.reset_all
@@ -751,7 +751,7 @@ feature -- Parsing
 							a_class.set_overridden_class (l_other_class)
 							overriding_class_added := True
 						end
-					elseif not a_class.is_override then
+					elseif not a_class.is_in_override_cluster then
 							-- Two classes with the same name in two non-override clusters.
 						l_other_class := a_class.cloned_class
 						l_other_class.reset_all

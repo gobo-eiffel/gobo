@@ -1509,7 +1509,7 @@ feature {NONE} -- AST factory
 			end
 			if Result.is_parsed and Result.is_preparsed then
 				if cluster.is_override then
-					if Result.is_override then
+					if Result.is_in_override_cluster then
 							-- Two classes with the same name in two override clusters.
 						l_other_class := Result.cloned_class
 						l_other_class.reset_all
@@ -1543,7 +1543,7 @@ feature {NONE} -- AST factory
 						procedures.wipe_out
 						overriding_class_added := True
 					end
-				elseif not Result.is_override then
+				elseif not Result.is_in_override_cluster then
 						-- Two classes with the same name in two non-override clusters.
 					l_other_class := Result.cloned_class
 					l_other_class.reset_all
