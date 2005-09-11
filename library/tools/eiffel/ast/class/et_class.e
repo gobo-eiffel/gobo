@@ -412,6 +412,14 @@ feature -- Preparsing status
 
 	is_override: BOOLEAN is
 			-- Is current class in an override cluster?
+		obsolete
+			"[050911] Use `is_in_override_cluster' instead."
+		do
+			Result := is_in_override_cluster
+		end
+
+	is_in_override_cluster: BOOLEAN is
+			-- Is current class in an override cluster?
 		do
 			if cluster /= Void then
 				Result := cluster.is_override
@@ -424,6 +432,14 @@ feature -- Preparsing status
 			Result := (master_class /= Current)
 		ensure
 			definition: Result = (master_class /= Current)
+		end
+
+	is_overriding: BOOLEAN is
+			-- Is current class overriding another class?
+		do
+			Result := (overridden_class /= Void and master_class = Current)
+		ensure
+			definition: Result = (overridden_class /= Void and master_class = Current)
 		end
 
 	has_name_clash: BOOLEAN is
