@@ -21,7 +21,7 @@ inherit
 
 create
 
-	make
+	make, make_with_separators
 
 feature {NONE} -- Initialization
 
@@ -31,6 +31,20 @@ feature {NONE} -- Initialization
 			set_separators (Default_separators)
 		ensure
 			default_separators: separators = Default_separators 
+			no_escape_character: not has_escape_character
+		end
+
+	make_with_separators (a_string: STRING) is
+			-- Create a new string splitter with separators specified in `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+			a_string_not_empty: not a_string.is_empty
+			escape_character_not_separator: has_escape_character implies
+				not a_string.has (escape_character)
+		do
+			set_separators (a_string)
+		ensure
+			separators_set: separators = a_string
 			no_escape_character: not has_escape_character
 		end
 
@@ -71,6 +85,8 @@ feature -- Setting
 				separator_codes.put (a_string.item_code (i))
 				i := i + 1
 			end
+		ensure
+			separators_set: separators = a_string
 		end
 
 	set_escape_character (a_character: CHARACTER) is
