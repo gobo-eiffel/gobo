@@ -8,8 +8,16 @@ indexing
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class MA_DECIMAL_PARSER
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create a new decimal parser.
+		do
+		end
 
 feature -- Access
 

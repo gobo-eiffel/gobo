@@ -19,7 +19,7 @@ inherit
 			validate
 		end
 
-	MA_DECIMAL_MATH
+	MA_DECIMAL_CONSTANTS
 	
 	XM_XSLT_SHARED_ANY_NODE_TEST
 

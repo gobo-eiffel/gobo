@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 					create an_error.make_from_string ("The priority attribute must be absent if the match attribute is absent", Xpath_errors_uri, "XTSE0010", Static_error)
 					report_compile_error (an_error)
 				else
-					create a_decimal_parser
+					create a_decimal_parser.make
 					a_decimal_parser.parse (a_priority_attribute)
 					if not a_decimal_parser.error then
 						priority := a_decimal_parser.last_decimal

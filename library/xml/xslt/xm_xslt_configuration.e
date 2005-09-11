@@ -34,7 +34,7 @@ inherit
 	MA_SHARED_DECIMAL_CONTEXT
 		export {NONE} all end
 
-	MA_DECIMAL_CONSTANTS
+	MA_DECIMAL_CONTEXT_CONSTANTS
 		export {NONE} all end
 
 create

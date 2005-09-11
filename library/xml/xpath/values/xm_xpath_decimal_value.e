@@ -186,7 +186,7 @@ feature -- Status report
 		local
 			a_parser: MA_DECIMAL_TEXT_PARSER
 		do
-			create a_parser
+			create a_parser.make
 			a_parser.parse (a_value)
 			Result := not a_parser.error
 		end
@@ -201,8 +201,8 @@ feature -- Status report
 			-- Can value be represented by an `INTEGER'?
 		do
 			Result := value.is_integer and then
-			value <= Maximum_integer_as_decimal and then
-			value >= Minimum_integer_as_decimal
+			value <= decimal.maximum_integer and then
+			value >= decimal.minimum_integer
 		end
 
 	is_double: BOOLEAN is

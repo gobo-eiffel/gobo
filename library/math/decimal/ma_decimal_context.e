@@ -8,6 +8,7 @@ indexing
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
+	revision: "$Revision$"
 
 class MA_DECIMAL_CONTEXT
 
@@ -23,7 +24,7 @@ inherit
 			out, copy, is_equal
 		end
 
-	MA_DECIMAL_CONSTANTS
+	MA_DECIMAL_CONTEXT_CONSTANTS
 		undefine
 			out, copy, is_equal
 		end
@@ -159,6 +160,8 @@ feature -- Access
 
 	default_context: MA_DECIMAL_CONTEXT is
 			-- Default context for general purpose arithmetic
+		obsolete
+			"[050911] Use MA_SHARED_DECIMAL_CONTEXT instead."
 		once
 			create Result.make_default
 		ensure

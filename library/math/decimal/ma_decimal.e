@@ -8,6 +8,7 @@ indexing
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
+	revision: "$Revision$"
 
 class MA_DECIMAL
 
@@ -18,10 +19,9 @@ inherit
 			out, is_equal, copy
 		end
 
-	MA_DECIMAL_CONSTANTS
+	MA_DECIMAL_CONTEXT_CONSTANTS
 		export
-			{NONE} all;
-			{ANY} Maximum_integer_as_decimal, Minimum_integer_as_decimal
+			{NONE} all
 		undefine
 			out, is_equal, copy
 		end
@@ -32,6 +32,11 @@ inherit
 		end
 
 	MA_SHARED_DECIMAL_CONTEXT
+		undefine
+			out, is_equal, copy
+		end
+
+	MA_SHARED_DECIMAL_CONSTANTS
 		undefine
 			out, is_equal, copy
 		end
@@ -177,7 +182,7 @@ feature {NONE} -- Initialization
 	make_from_string_ctx (value_string: STRING; ctx: MA_DECIMAL_CONTEXT) is
 			-- Make a new decimal from `value_string' relative to `ctx'.
 		require
-			value_string_not_void: value_string /= Void --and then value_string.count > 0
+			value_string_not_void: value_string /= Void
 			context_not_void: ctx /= Void
 		local
 			l_parser: like parser
@@ -237,7 +242,7 @@ feature {NONE} -- Initialization
 	make_from_string (value_string: STRING) is
 			-- Make a new decimal from string `value_string' relative to `shared_decimal_context'.
 		require
-			value_string_not_void: value_string /= Void --and then value_string.count > 0
+			value_string_not_void: value_string /= Void
 		do
 			make_from_string_ctx (value_string, shared_decimal_context)
 		end
@@ -677,8 +682,8 @@ feature -- Conversion
 			-- `Current' as an INTEGER
 		require
 			is_integer: is_integer
-			large_enough: Current >= Minimum_integer_as_decimal
-			small_enough: Current <= Maximum_integer_as_decimal
+			large_enough: Current >= decimal.minimum_integer
+			small_enough: Current <= decimal.maximum_integer
 		local
 			ctx: MA_DECIMAL_CONTEXT
 		do
@@ -690,8 +695,8 @@ feature -- Conversion
 			-- `Current' as an INTEGER wrt `ctx'
 		require
 			is_integer: is_integer
-			large_enough: Current >= Minimum_integer_as_decimal
-			small_enough: Current <= Maximum_integer_as_decimal
+			large_enough: Current >= decimal.minimum_integer
+			small_enough: Current <= decimal.maximum_integer
 		local
 			temp: like Current
 			index: INTEGER
@@ -2560,7 +2565,7 @@ feature {NONE} -- Implementation
 	parser: MA_DECIMAL_TEXT_PARSER is
 			-- Decimal text parser
 		once
-			create Result
+			create Result.make
 		ensure
 			parser_not_void: Result /= Void
 		end

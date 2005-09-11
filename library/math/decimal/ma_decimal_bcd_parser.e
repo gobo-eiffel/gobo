@@ -8,12 +8,17 @@ indexing
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
+	revision: "$Revision$"
 
 class MA_DECIMAL_BCD_PARSER
 
 inherit
 
 	MA_DECIMAL_PARSER
+
+create
+
+	make
 
 feature -- Access
 
@@ -51,19 +56,16 @@ feature -- Basic operations
 				c_code := c.code
 				lo := c_code \\ 16
 				hi := c_code // 16
-				-- number_string.append_character (integer_routines.to_character (zero_code + hi))
 				l_coefficient.put (hi, nibble_index)
 				nibble_index := nibble_index - 1
 				last_nibble := hi
 				if index < l_count then
-					-- number_string.append_character (integer_routines.to_character (zero_code + lo))
 					l_coefficient.put (lo, nibble_index)
 					nibble_index := nibble_index - 1
 					last_nibble := lo
 				else
 					inspect lo
 					when 11, 13 then
-						-- number_string.put ('-', 1)
 						last_decimal.set_negative
 					when 10, 12, 14, 15 then
 						-- Do nothing.

@@ -165,8 +165,8 @@ feature -- Status report
 	is_platform_integer: BOOLEAN is
 			-- Can value be represented by an `INTEGER'?
 		do
-			Result := value <= Maximum_integer_as_decimal
-				and then value >= Minimum_integer_as_decimal
+			Result := value <= decimal.maximum_integer
+				and then value >= decimal.minimum_integer
 		end
 
 	is_double: BOOLEAN is

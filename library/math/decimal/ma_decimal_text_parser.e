@@ -19,6 +19,7 @@ indexing
 	copyright: "Copyright (c) 2004, Paul G. Crismer and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
+	revision: "$Revision$"
 
 class MA_DECIMAL_TEXT_PARSER
 
@@ -32,6 +33,10 @@ inherit
 	KL_IMPORTED_CHARACTER_ROUTINES
 
 	KL_IMPORTED_STRING_ROUTINES
+
+create
+
+	make
 
 feature -- Access
 

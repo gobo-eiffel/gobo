@@ -28,7 +28,7 @@ inherit
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 
-	MA_DECIMAL_MATH
+	MA_DECIMAL_CONSTANTS
 	
 create
 
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			std.output.put_line ("--")
 			std.output.put_line ("-- Eiffel implementation - Gobo Eiffel Decimal Arithmetic Library")
 			std.output.put_line ("--")
-			create bcd_parser
+			create bcd_parser.make
 				-- Set default options.
 			tax := True
 			calculate := True
@@ -105,7 +105,7 @@ feature -- Basic operations
 			t_start, t_end: DT_TIME
 			input_file: KL_BINARY_INPUT_FILE
 			output_file: KL_TEXT_OUTPUT_FILE
-			default_context: MA_DECIMAL_CONTEXT
+			l_default_context: MA_DECIMAL_CONTEXT
 		do
 				-- Establish math contexts.
 			create price_context.make_double
@@ -113,13 +113,13 @@ feature -- Basic operations
 			price_context.set_rounding_mode (price_context.Round_half_even)
 			tax_context := price_context.cloned_object
 			tax_context.set_rounding_mode (tax_context.Round_down)
-			create default_context.make_double
-			default_context.set_digits (31)
+			create l_default_context.make_double
+			l_default_context.set_digits (31)
 				-- Create rates.
-			create base_rate.make_from_string_ctx ("0.0013", default_context)
-			create distance_rate.make_from_string_ctx ("0.00894", default_context)
-			create base_tax_rate.make_from_string_ctx ("0.0675", default_context)
-			create distance_tax_rate.make_from_string_ctx ("0.0341", default_context)
+			create base_rate.make_from_string_ctx ("0.0013", l_default_context)
+			create distance_rate.make_from_string_ctx ("0.00894", l_default_context)
+			create base_tax_rate.make_from_string_ctx ("0.0675", l_default_context)
+			create distance_tax_rate.make_from_string_ctx ("0.0341", l_default_context)
 				-- Start measuring.
 			t_start := system_clock.time_now
 				-- Initialization.
@@ -150,7 +150,7 @@ feature -- Basic operations
 						if calculate then
 							long_distance := last_nibble \\ 2 = 1
 								-- 1. Price.
-							set_shared_decimal_context (default_context)
+							set_shared_decimal_context (l_default_context)
 							if long_distance then
 								price := number * distance_rate
 								long_distance_count := long_distance_count + 1

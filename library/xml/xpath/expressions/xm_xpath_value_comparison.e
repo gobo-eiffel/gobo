@@ -27,9 +27,9 @@ inherit
 
 	XM_XPATH_ROLE
 
-	MA_DECIMAL_MATH
-
 	MA_DECIMAL_CONSTANTS
+
+	MA_DECIMAL_CONTEXT_CONSTANTS
 
 	KL_SHARED_PLATFORM
 
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 			if first_operand.is_position_function and then second_operand.is_integer_value then
 				an_integer := second_operand.as_integer_value.value
 				if an_integer.is_negative then an_integer := zero end
-				if an_integer <= Maximum_integer_as_decimal then
+				if an_integer <= maximum_integer then
 					inspect
 						operator
 					when Fortran_equal_token then
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 			elseif second_operand.is_position_function and then first_operand.is_integer_value then
 				an_integer := first_operand.as_integer_value.value
 				if an_integer.is_negative then an_integer := zero end
-				if an_integer <= Maximum_integer_as_decimal then
+				if an_integer <= maximum_integer then
 					inspect
 						operator
 					when Fortran_equal_token then

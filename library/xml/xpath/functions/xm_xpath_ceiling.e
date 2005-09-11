@@ -19,7 +19,7 @@ inherit
 			evaluate_item
 		end
 
-	MA_DECIMAL_MATH
+	MA_DECIMAL_CONSTANTS
 		export {NONE} all end
 
 	XM_XPATH_TOKENS

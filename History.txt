@@ -27,6 +27,22 @@ Version 3.5 - ????
 	* Added `sharename' to KI_PATHNAME, so that UNC pathnames can be
 	  split into '\\hostname\sharename'.
 
+	Gobo Eiffel Math/Decimal Library:
+
+	* Added creation procedure `make' to MA_DECIMAL_TEXT_PARSER and
+	  MA_DECIMAL_BCD_PARSER.
+	* Renamed MA_DECIMAL_CONSTANTS as MA_DECIMAL_CONTEXT_CONSTANTS and
+	  MA_DECIMAL_MATH as MA_DECIMAN_CONSTANTS.
+	* Added class MA_SHARED_DECIMAL_CONSTANTS.
+	* Moved `Maximum_integer_as_decimal' and `Minimum_integer_as_decimal'
+	  from MA_DECIMAL_CONTEXT_CONSTANTS to MA_DECIMAL_CONSTANTS and
+	  renamed them as `maximum_integer' and `minimum_integer'.
+	* Moved `default_context' from MA_DECIMAL_CONTEXT to MA_SHARED_DECIMAL_CONTEXT.
+	* Added a comment in MA_SHARED_DECIMAL_CONTEXT.set_shared_decimal_context
+	  emphasizing the fact that it is best practice to call this routine
+	  once and for all at the beginning of the application to avoid unexpected
+	  behaviors.
+
 	Gobo Eiffel Time Library:
 
 	* Added classes to parse and format XML Schema date, time and

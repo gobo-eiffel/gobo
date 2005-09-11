@@ -22,7 +22,7 @@ inherit
 	XM_XPATH_DEBUGGING_ROUTINES
 		export {NONE} all end
 
-	MA_DECIMAL_MATH
+	MA_DECIMAL_CONSTANTS
 		export {NONE} all end
 
 create

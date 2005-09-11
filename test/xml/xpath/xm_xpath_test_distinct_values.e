@@ -29,7 +29,7 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
-	MA_DECIMAL_MATH
+	MA_DECIMAL_CONSTANTS
 
 feature -- Results
 
