@@ -86,7 +86,7 @@ feature -- Comparison
 
 feature -- Comparison
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Compare `Current' to `other'
 		do
 			Result := STRING_.three_way_comparison (string_value, other.as_object_value.string_value)

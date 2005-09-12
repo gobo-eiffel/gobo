@@ -108,11 +108,11 @@ feature -- Access
 
 feature -- Comparison
 	
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Compare `Current' to `other'
 		do
 			if not other.is_integer_value then
-				Result := Precursor (other)
+				Result := Precursor (other, a_context)
 			else
 				if value.is_equal (other.as_integer_value.value) then
 					Result := 0

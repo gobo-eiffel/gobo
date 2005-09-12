@@ -37,6 +37,9 @@ feature -- Access
 	collator: ST_COLLATOR
 			-- Collator for string comparisons
 
+	dynamic_context: XM_XPATH_CONTEXT
+			-- Dynamic context for use in calendar-values comparisons
+
 feature -- Comparison
 
 	three_way_comparison (an_atomic_value, another_atomic_value: XM_XPATH_ATOMIC_VALUE): INTEGER is
@@ -62,7 +65,7 @@ feature -- Comparison
 				-- Neither operand is xdt:untypedAtomic
 
 				if not an_atomic_value.is_string_value or else not another_atomic_value.is_string_value then
-					Result := an_atomic_value.three_way_comparison (another_atomic_value)
+					Result := an_atomic_value.three_way_comparison (another_atomic_value, dynamic_context)
 				else
 
 					-- Both operands are string, so use the collator to do the comparison
@@ -101,6 +104,18 @@ feature -- Status report
 					end
 				end
 			end
+		end
+
+feature -- Element change
+
+	set_dynamic_context (a_context: XM_XPATH_CONTEXT) is
+			-- Set dynamic context for use in calendar-values comparisons.
+		require
+			context_exists: a_context /= Void
+		do
+			dynamic_context := a_context
+		ensure
+			context_set: dynamic_context = a_context
 		end
 
 invariant

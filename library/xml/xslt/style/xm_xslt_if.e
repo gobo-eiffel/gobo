@@ -107,7 +107,7 @@ feature -- Element change
 			some_actions: DS_ARRAYED_LIST [XM_XPATH_EXPRESSION]
 		do
 			last_generated_expression := Void
-			if condition.is_value then
+			if condition.is_value and then not condition.depends_upon_implicit_timezone then
 
 				-- Condition known statically, so we only need compile the code if true.
             -- This can happen with expressions such as test="function-available('abc')".

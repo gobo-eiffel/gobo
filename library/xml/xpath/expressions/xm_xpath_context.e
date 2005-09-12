@@ -33,9 +33,15 @@ feature {NONE} -- Initialization
 			-- Establish invariant for stand-alone contexts.
 		require
 			context_item_not_void: a_context_item /= Void
+			implicit_timezone_not_void: implicit_timezone /= Void
+		local
+			a_date_time: DT_DATE_TIME
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
-			create internal_date_time.make_from_epoch (0)
-			utc_system_clock.set_date_time_to_now (internal_date_time)
+			create a_date_time.make_from_epoch (0)
+			utc_system_clock.set_date_time_to_now (a_date_time)
+			create a_time_zone.make (implicit_timezone.fixed_offset)
+			create internal_date_time.make (a_date_time, a_time_zone)
 			cached_last := -1
 			if a_context_item.is_node then
 				create {XM_XPATH_SINGLETON_NODE_ITERATOR} current_iterator.make (a_context_item.as_node)
@@ -99,12 +105,19 @@ feature -- Access
 			security_manager_not_void: Result /= Void
 		end
 
-	current_date_time: DT_DATE_TIME is
+	current_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME is
 			-- Current date-time
 		do
 			Result := internal_date_time
 		end
-	
+
+	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE is
+			-- Implicit time zone for comparing unzoned times and dates
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	context_item: XM_XPATH_ITEM is
 			-- The context item (".")
 		do
@@ -414,7 +427,7 @@ feature 	-- Element change
 
 feature {XM_XPATH_CONTEXT} -- Local
 
-		cached_last: INTEGER
+	cached_last: INTEGER
 			-- Used by `last'
 
 feature {NONE} -- Implementation

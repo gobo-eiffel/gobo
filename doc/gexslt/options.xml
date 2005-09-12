@@ -582,7 +582,7 @@
 	      application/xhtml+xml). So if it sees a media type of text/html, it pretends that it is actually
 	      application/xhtml+xml. Using this option means it respects the media type is really text/html.
 	      The result is that this is a media type that the program chooses not to recognize, so you will
-	      get recoverable error XT1160.
+	      get recoverable error XTRE1160.
 	    </para>
 	    <para>
 	      Without this option, it might be argued that &program_name; is non-compliant. Apart from that, 

@@ -646,7 +646,8 @@ feature {NONE} -- Implementation
 	evaluate_two_constants is
 			-- Evaluate the expression now if both arguments are constant
 		do
-			if first_operand.is_value and then second_operand.is_value then
+			if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
+				and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 				evaluate_item (Void)
 				check
 					boolean_value: last_evaluated_item.is_boolean_value

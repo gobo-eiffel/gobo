@@ -172,7 +172,8 @@ feature -- Optimization
 
 					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
 
-					if first_operand.is_value and then second_operand.is_value then
+					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
+						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 						eagerly_evaluate (Void)
 						set_replacement (last_evaluation)
 					end
@@ -201,7 +202,8 @@ feature -- Optimization
 					
 					-- If both operands are known, [[and result is a singleton??]], pre-evaluate the expression
 					
-					if first_operand.is_value and then second_operand.is_value then
+					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
+						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 						eagerly_evaluate (Void)
 						set_replacement (last_evaluation)
 					end

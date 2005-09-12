@@ -282,110 +282,146 @@
 	 </row>	
 	 <row>
 	   <entry>fn:years-from-yearMonthDuration</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:months-from-yearMonthDuration</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:days-from-dayTimeDuration</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:hours-from-dayTimeDuration</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:minutes-from-dayTimeDuration</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:seconds-from-dayTimeDuration</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:year-from-dateTime</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:month-from-dateTime</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:day-from-dateTime</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:hours-from-dateTime</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:minutes-from-dateTime</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:seconds-from-dateTime</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:timezone-from-dateTime</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
+	   <entry>fn:year-from-date</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
+	 </row>	
+	 <row>
+	   <entry>fn:month-from-date</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
+	 </row>	
+	 <row>
+	   <entry>fn:day-from-date</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
+	 </row>	
+	 <row>
+	   <entry>fn:timezone-from-date</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
+	 </row>
+	 <row>
+	   <entry>fn:hours-from-time</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
+	 </row>	
+	 <row>
+	   <entry>fn:minutes-from-time</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
+	 </row>	
+	 <row>
+	   <entry>fn:seconds-from-time</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
+	 </row>	
+	 <row>
+	   <entry>fn:timezone-from-time</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
+	 </row>		
+	 <row>
 	   <entry>fn:adjust-dateTime-to-timezone</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:adjust-date-to-timezone</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:adjust-time-to-timezone</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>None</entry>
-	 </row>	
-	 <row>
-	   <entry>fn:subtract-dateTimes-yielding-yearMonthDuration</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
-	   <entry>None</entry>
-	 </row>	
-	 <row>
-	   <entry>fn:subtract-dateTimes-yielding-dayTimeDuration</entry>
-	   <entry>No</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
@@ -636,19 +672,19 @@
 	 </row>	
 	 <row>
 	   <entry>fn:current-dateTime</entry>
-	   <entry>Wrong type</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:current-date</entry>
-	   <entry>Wrong type</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:current-time</entry>
-	   <entry>Wrong type</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>None</entry>
 	 </row>	
@@ -660,7 +696,7 @@
 	 </row>	
 	 <row>
 	   <entry>fn:implicit-timezone</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>No</entry>
 	   <entry>None</entry>
 	 </row>

@@ -460,13 +460,13 @@ feature {NONE} -- Implementation
 				required_item_type /= type_factory.any_atomic_type then
 				an_expression := checked_expression
 				create {XM_XPATH_UNTYPED_ATOMIC_CONVERTER} checked_expression.make (an_expression, required_item_type)
-				if an_expression.is_value then
+				if an_expression.is_value and then not an_expression.depends_upon_implicit_timezone then
 					checked_expression.create_iterator (Void)
 					an_iterator := checked_expression.last_iterator
 					if an_iterator.is_error then
 						checked_expression.set_last_error (an_iterator.error_value)
 					else
-						create {XM_XPATH_SEQUENCE_EXTENT} checked_expression .make (an_iterator)
+						create {XM_XPATH_SEQUENCE_EXTENT} checked_expression.make (an_iterator)
 						checked_expression.simplify
 					end
 				end

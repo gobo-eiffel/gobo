@@ -44,7 +44,7 @@ feature -- Status report
 
 feature -- Dependencies
 
-	Dependency_flag_count: INTEGER is 9
+	Dependency_flag_count: INTEGER is 10
 			-- Number of dependency flags
 
 	dependencies: ARRAY [BOOLEAN]
@@ -121,6 +121,14 @@ feature -- Dependencies
 			dependencies_computed: are_dependencies_computed
 		do
 			Result := dependencies.item (9)
+		end	
+	
+	depends_upon_implicit_timezone: BOOLEAN is
+		-- Expression depends upon implicit time zone
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			Result := dependencies.item (10)
 		end
 	
 
@@ -468,6 +476,28 @@ feature -- Setting dependencies
 				initialize_intrinsic_dependencies
 			end
 			intrinsic_dependencies.put (True, 9)
+		ensure
+			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
+		end
+
+	set_depends_upon_implicit_timezone is
+			-- Set expression to depend upon implicit time zone.
+		do
+			if not are_dependencies_computed then
+				initialize_dependencies
+			end
+			dependencies.put (True, 10)
+		ensure
+			dependencies_computed: are_dependencies_computed
+		end
+
+	set_intrinsically_depends_upon_implicit_timezone is
+			-- Set expression to depend upon implicit time zone.
+		do
+			if not are_intrinsic_dependencies_computed then
+				initialize_intrinsic_dependencies
+			end
+			intrinsic_dependencies.put (True, 10)
 		ensure
 			intrinsic_dependencies_computed: are_intrinsic_dependencies_computed
 		end

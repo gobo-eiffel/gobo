@@ -130,7 +130,8 @@ feature -- Optimization
 					if first_operand.was_expression_replaced then set_first_operand (first_operand.replacement_expression) end
 					second_operand.set_unsorted (False)
 					if second_operand.was_expression_replaced then set_second_operand (second_operand.replacement_expression) end
-					if first_operand.is_value and then second_operand.is_value then
+					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
+						and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 						evaluate_item (Void)
 						check
 							boolean_value: last_evaluated_item.is_boolean_value

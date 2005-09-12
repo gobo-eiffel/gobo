@@ -14,6 +14,8 @@ class XM_XPATH_TINY_ATTRIBUTE_IDREF_TABLE
 
 inherit
 
+	ANY
+
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 

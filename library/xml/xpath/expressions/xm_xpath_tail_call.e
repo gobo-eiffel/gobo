@@ -12,6 +12,9 @@ indexing
 
 deferred class XM_XPATH_TAIL_CALL
 
+inherit
+
+	ANY
 
 feature -- Status report
 

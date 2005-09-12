@@ -61,28 +61,8 @@ feature -- Evaluation
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
-		local
-			a_result_string: STRING
-			a_date_time: DT_DATE_TIME
-			a_month, a_day: INTEGER
 		do
-			a_date_time := a_context.current_date_time
-			a_result_string := a_date_time.year.out + "-"
-			a_month := a_date_time.month
-			if a_month < 10 then
-				a_result_string.append_character ('0')
-			end
-			a_result_string.append_string (a_month.out)
-			a_result_string.append_character ('-')
-			a_day := a_date_time.day
-			if a_day < 10 then
-				a_result_string.append_character ('0')
-			end
-			a_result_string.append_string (a_day.out)
-			a_result_string.append_character ('T')
-			a_date_time.append_precise_time_to_string (a_result_string)
-			a_result_string.append_character ('Z')
-			create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_result_string)
+			create {XM_XPATH_DATE_TIME_VALUE} last_evaluated_item.make_from_zoned_date_time (a_context.current_date_time)
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is

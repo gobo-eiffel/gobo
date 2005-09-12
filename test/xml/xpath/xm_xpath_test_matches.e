@@ -142,7 +142,7 @@ feature -- Tests
 			an_evaluator.set_string_mode_unicode
 			an_evaluator.build_static_context ("./data/poem.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("matches(/*[1], '^Kaum.*gesehen,$', 'm')")
+			an_evaluator.evaluate ("matches(/*[1], '^Kaum.*gesehen,', 'm')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)

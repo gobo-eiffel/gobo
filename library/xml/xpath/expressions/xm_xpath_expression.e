@@ -441,6 +441,96 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
+	is_date_value: BOOLEAN is
+			-- Is `Current' a date value?
+		do
+			Result := False
+		end
+
+	as_date_value: XM_XPATH_DATE_VALUE is
+			-- `Current' seen as adate value
+		require
+			date_value: is_date_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_time_value: BOOLEAN is
+			-- Is `Current' a time value?
+		do
+			Result := False
+		end
+
+	as_time_value: XM_XPATH_TIME_VALUE is
+			-- `Current' seen as a time value
+		require
+			time_value: is_time_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_date_time_value: BOOLEAN is
+			-- Is `Current' a date_time value?
+		do
+			Result := False
+		end
+
+	as_date_time_value: XM_XPATH_DATE_TIME_VALUE is
+			-- `Current' seen as a dateTime value
+		require
+			date_time_value: is_date_time_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_duration_value: BOOLEAN is
+			-- Is `Current' an xs:duration value?
+		do
+			Result := False
+		end
+
+	as_duration_value: XM_XPATH_DURATION_VALUE is
+			-- `Current' seen as an xs:duration value
+		require
+			duration_value: is_duration_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_seconds_duration: BOOLEAN is
+			-- Is `Current' an xdt:dayTimeDuration value?
+		do
+			Result := False
+		end
+
+	as_seconds_duration: XM_XPATH_SECONDS_DURATION_VALUE is
+			-- `Current' seen as an xdt:dayTimeDuration value
+		require
+			seconds_duration_value: is_seconds_duration
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_months_duration: BOOLEAN is
+			-- Is `Current' an xdt:yearMonthDuration value?
+		do
+			Result := False
+		end
+
+	as_months_duration: XM_XPATH_MONTHS_DURATION_VALUE is
+			-- `Current' seen as an xdt:dayTimeDuration value
+		require
+			months_duration_value: is_months_duration
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 	is_string_value: BOOLEAN is
 			-- Is `Current' a string value?
 		do

@@ -299,6 +299,19 @@ feature -- Status setting
 			computed: are_dependencies_computed and then dependencies /= Void
 		end
 
+	reset_dependencies is
+			-- Re-compute dependencies.
+		require
+			dependencies_previously_computed: are_dependencies_computed
+			not_replaced: not was_expression_replaced
+		do
+			are_dependencies_computed := False
+			compute_dependencies
+		ensure
+			intrinsic_computed: are_intrinsic_dependencies_computed and then intrinsic_dependencies /= Void
+			computed: are_dependencies_computed and then dependencies /= Void
+		end
+
 	reset_static_properties is
 			-- Re-compute all static properties.
 		require

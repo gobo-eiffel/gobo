@@ -92,7 +92,7 @@ feature -- Comparison
 				-- Neither operand is xdt:untypedAtomic
 
 				if not an_atomic_value.is_string_value or else not another_atomic_value.is_string_value then
-					Result := an_atomic_value.three_way_comparison (another_atomic_value)
+					Result := an_atomic_value.three_way_comparison (another_atomic_value, dynamic_context)
 				else
 
 					-- Both operands are string, so use the collator to do the comparison

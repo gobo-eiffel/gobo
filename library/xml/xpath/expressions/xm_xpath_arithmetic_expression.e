@@ -261,7 +261,8 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 				end
 			end
 			if not finished and not is_error then
-				if first_operand.is_value and then second_operand.is_value then
+				if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
+					and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 					eagerly_evaluate (Void)
 					set_replacement (last_evaluation)
 				else

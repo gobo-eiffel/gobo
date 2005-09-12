@@ -60,6 +60,9 @@ feature {NONE} -- Initialization
 		require
 			configuration_not_void: a_configuration /= Void
 			executable_not_void: an_executable /= Void
+		local
+			a_date_time: DT_DATE_TIME
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			configuration := a_configuration
 			output_resolver := a_configuration.output_resolver
@@ -72,7 +75,11 @@ feature {NONE} -- Initialization
 			recovery_policy := Recover_with_warnings
 			create parser_factory
 			create user_data_table.make_default
-			create current_date_time.make_from_epoch (0)
+			create a_date_time.make_from_epoch (0)
+			utc_system_clock.set_date_time_to_now (a_date_time)
+			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
+			create a_time_zone.make (implicit_timezone.fixed_offset)
+			create current_date_time.make (a_date_time, a_time_zone)
 			create transformer_factory.make (configuration)
 		ensure
 			configuration_set: configuration = a_configuration
@@ -90,7 +97,7 @@ feature -- Access
 	transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
 			-- Transformer factory
 
-	current_date_time: DT_DATE_TIME
+	current_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME
 
 	key_manager: XM_XSLT_KEY_MANAGER is
 			-- Key manager
@@ -141,6 +148,9 @@ feature -- Access
 	last_remembered_node: XM_XPATH_NODE
 			-- Last remembered nod
 	
+	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
+			-- Implicit time zone for comparing unzoned times and dates
+
 	remembered_number (a_node: XM_XPATH_NODE): MA_DECIMAL is
 			-- Number of a node if it is the last remembered one
 		require
@@ -529,8 +539,13 @@ feature -- Transformation
 			a_media_type: UT_MEDIA_TYPE
 			a_media_type_map: XM_XSLT_MEDIA_TYPE_MAP
 			a_fragment_id: STRING
+			a_date_time: DT_DATE_TIME
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
-			utc_system_clock.set_date_time_to_now (current_date_time)
+			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
+			create a_time_zone.make (implicit_timezone.fixed_offset)
+			create a_date_time.make_from_epoch (0)
+			create current_date_time.make (a_date_time, a_time_zone)
 			if a_source /= Void then
 				a_source.ignore_media_types
 				if	document_pool.is_document_mapped (a_source.system_id) then
@@ -969,6 +984,7 @@ invariant
 	error_listener_not_void: error_listener /= Void
 	user_data_table_not_void: user_data_table /= Void
 	transformer_factory_not_void: transformer_factory /= Void
+	implicit_timezone_not_void: implicit_timezone /= Void
 
 end
 	

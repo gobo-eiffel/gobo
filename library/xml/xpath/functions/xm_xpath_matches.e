@@ -86,8 +86,7 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			an_input_string, a_pattern_string, a_flags_string, a_key: STRING
-			a_regexp_cache_entry: like regexp_cache_entry
+			an_input_string: STRING
 			an_item: XM_XPATH_ITEM
 		do
 			last_evaluated_item := Void
@@ -102,57 +101,7 @@ feature -- Evaluation
 			end
 			if last_evaluated_item = Void then -- else it's an error
 				if regexp_cache_entry = Void then
-					arguments.item (2).evaluate_item (a_context)
-					an_item := arguments.item (2).last_evaluated_item
-					check
-						pattern_not_empty: an_item /= Void
-						--static typing
-					end
-					if an_item.is_error then
-						last_evaluated_item := an_item
-					else	
-						check
-							atomic_pattern: an_item.is_atomic_value
-							-- Statically typed as a single string
-						end
-						a_pattern_string := an_item.as_atomic_value.string_value
-						if arguments.count = 2 then
-							a_flags_string := ""
-						else
-							arguments.item (3).evaluate_item (a_context)
-							an_item := arguments.item (3).last_evaluated_item
-							check
-								flags_not_empty: an_item /= Void
-								--static typing
-							end
-							if an_item.is_error then
-								last_evaluated_item := an_item
-							else
-								check
-									atomic_pattern: an_item.is_atomic_value
-									-- Statically typed as a single string
-								end
-								a_flags_string := normalized_flags_string (an_item.as_atomic_value.string_value)
-							end
-							if a_flags_string = Void then
-								set_last_error_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error)
-							else
-								a_key := composed_key (a_pattern_string, a_flags_string)
-								a_regexp_cache_entry := shared_regexp_cache.item (a_key)
-								if a_regexp_cache_entry = Void then
-									create a_regexp_cache_entry.make( a_pattern_string, a_flags_string)
-									if not a_regexp_cache_entry.is_error then
-										shared_regexp_cache.put (a_regexp_cache_entry, a_key)
-									end
-								end
-								if not a_regexp_cache_entry.is_error then
-									regexp := a_regexp_cache_entry.regexp
-								else
-									create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Invalid regular expression", Xpath_errors_uri, "FORX0002", Dynamic_error)
-								end
-							end
-						end
-					end
+					compile_regexp (a_context)
 				else
 					regexp := regexp_cache_entry.regexp
 				end
@@ -175,5 +124,67 @@ feature {NONE} -- Implementation
 	regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Regular expression
 
+	compile_regexp (a_context: XM_XPATH_CONTEXT) is
+			-- Compile and execute `regexp' at evaluation time
+		require
+			dynamic_context_exists: a_context /= Void
+		local
+			a_regexp_cache_entry: like regexp_cache_entry
+			a_pattern_string, a_flags_string, a_key: STRING
+			an_item: XM_XPATH_ITEM
+		do
+			arguments.item (2).evaluate_item (a_context)
+			an_item := arguments.item (2).last_evaluated_item
+			check
+				pattern_not_empty: an_item /= Void
+				--static typing
+			end
+			if an_item.is_error then
+				last_evaluated_item := an_item
+			else	
+				check
+					atomic_pattern: an_item.is_atomic_value
+					-- Statically typed as a single string
+				end
+				a_pattern_string := an_item.as_atomic_value.string_value
+				if arguments.count = 2 then
+					a_flags_string := ""
+				else
+					arguments.item (3).evaluate_item (a_context)
+					an_item := arguments.item (3).last_evaluated_item
+					check
+						flags_not_empty: an_item /= Void
+						--static typing
+					end
+					if an_item.is_error then
+						last_evaluated_item := an_item
+					else
+						check
+							atomic_pattern: an_item.is_atomic_value
+							-- Statically typed as a single string
+						end
+						a_flags_string := normalized_flags_string (an_item.as_atomic_value.string_value)
+					end
+				end
+				if a_flags_string = Void then
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Unknown flags in regular expression", Xpath_errors_uri, "FORX0001", Static_error)
+				else
+					a_key := composed_key (a_pattern_string, a_flags_string)
+					a_regexp_cache_entry := shared_regexp_cache.item (a_key)
+					if a_regexp_cache_entry = Void then
+						create a_regexp_cache_entry.make( a_pattern_string, a_flags_string)
+						if not a_regexp_cache_entry.is_error then
+							shared_regexp_cache.put (a_regexp_cache_entry, a_key)
+						end
+					end
+					if not a_regexp_cache_entry.is_error then
+						regexp := a_regexp_cache_entry.regexp
+					else
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Invalid regular expression", Xpath_errors_uri, "FORX0002", Dynamic_error)
+					end
+				end
+			end
+		end
+	
 end
 	

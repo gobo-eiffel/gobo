@@ -83,7 +83,7 @@ feature -- Comparison
 				if double_value = Void then
 					double_value := convert_to_type (type_factory.double_type).as_double_value
 				end
-				Result := double_value.three_way_comparison (other.as_numeric_value)
+				Result := double_value.three_way_comparison (other.as_numeric_value, Void)
 			else
 				Result := a_collator.three_way_comparison (string_value, other.string_value)
 			end

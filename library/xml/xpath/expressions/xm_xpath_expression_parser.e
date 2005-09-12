@@ -669,7 +669,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				
-				if tokenizer.last_token /= Comma_token then finished := True end
+				if not is_parse_error and then tokenizer.last_token /= Comma_token then finished := True end
 			end
 
 			if not is_parse_error then
@@ -1529,6 +1529,8 @@ feature {NONE} -- Implementation
 	parse_abbreviated_forward_step is
 			-- Parse an abbreviated forward step.
 			-- AbbrevForwardStep ::= "@"? NodeTest
+		require
+			no_previous_parse_error: not is_parse_error
 		do
 			next_token ("In parse_abbrev_forward_step: current token is ")
 			if tokenizer.is_lexical_error then
@@ -1640,6 +1642,8 @@ feature {NONE} -- Implementation
 			-- | <"preceding-sibling" "::">
 			-- | <"preceding" "::">
 			-- | <"ancestor-or-self" "::">
+		require
+			no_previous_parse_error: not is_parse_error
 		local
 			a_message: STRING
 			an_axis_number: INTEGER
@@ -1682,6 +1686,8 @@ feature {NONE} -- Implementation
 			--	DecimalLiteral ::= ("." Digits) | (Digits "." [0-9]*)
 			--	DoubleLiteral 	::= (("." Digits) | (Digits ("." [0-9]*)?)) ("e" | "E") ("+" | "-")? Digits
 			--	Digits ::= [0-9]+
+		require
+			no_previous_parse_error: not is_parse_error
 		local
 			a_message: STRING
 			a_value: XM_XPATH_VALUE
@@ -1725,6 +1731,8 @@ feature {NONE} -- Implementation
 	parse_parenthesized_expression is
 			-- Parse a parenthesized expression.
 			-- ParenthesizedExpr ::= "(" Expr? ")"
+		require
+			no_previous_parse_error: not is_parse_error
 		local
 			a_message: STRING		
 			a_sequence: XM_XPATH_EXPRESSION
@@ -1766,6 +1774,8 @@ feature {NONE} -- Implementation
 	parse_variable_reference_step is
 			-- Parse a variable reference basic step.
 			-- VarRef ::= "$" VarName
+		require
+			no_previous_parse_error: not is_parse_error
 		local
 			a_message, a_token_value: STRING
 			a_token_value_fingerprint: INTEGER
@@ -1861,7 +1871,7 @@ feature {NONE} -- Implementation
 							arguments.put_last (an_argument)
 							from
 							until
-								tokenizer.last_token /= Comma_token or else is_parse_error
+								is_parse_error or else tokenizer.last_token /= Comma_token
 							loop
 								next_token ("In parse_function_call loop: current token is ")
 								if tokenizer.is_lexical_error then
@@ -1877,7 +1887,7 @@ feature {NONE} -- Implementation
 									end
 								end
 							end
-							if tokenizer.last_token /= Right_parenthesis_token then
+							if not is_parse_error and then tokenizer.last_token /= Right_parenthesis_token then
 								a_message := "expected %")%", found "
 								a_message := STRING_.appended_string (a_message, display_current_token)
 								report_parse_error (a_message, "XPST0003")
@@ -2106,6 +2116,8 @@ feature {NONE} -- Implementation
 
 	create_document_node_kind_test (is_empty: BOOLEAN) is
 			-- Create a node kind test that matches the specified document node(s).
+		require
+			no_previous_parse_error: not is_parse_error
 		local
 			a_message: STRING
 		do
@@ -2140,6 +2152,8 @@ feature {NONE} -- Implementation
 
 	create_processing_instruction_node_kind_test (is_empty: BOOLEAN) is
 			-- Create a node kind test that matches the specified processing-instruction node(s).
+		require
+			no_previous_parse_error: not is_parse_error
 		local
 			a_parser: XM_XPATH_QNAME_PARSER
 			a_name_code: INTEGER
@@ -2202,6 +2216,8 @@ feature {NONE} -- Implementation
 
 	create_named_node_kind_test (is_empty, is_attribute, is_schema_declaration: BOOLEAN) is
 			-- Create a node kind test that matches the specified element or attribute node(s).
+		require
+			no_previous_parse_error: not is_parse_error
 		local
 			a_name_code: INTEGER
 			a_message, a_node_name: STRING

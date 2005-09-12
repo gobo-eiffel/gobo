@@ -186,10 +186,17 @@ feature -- Optimization
 				else
 					if arguments_cursor.item.was_expression_replaced then
 						arguments_cursor.replace (arguments_cursor.item.replacement_expression)
-						arguments_cursor.item.mark_unreplaced
-						adopt_child_expression (arguments_cursor.item)
+						if arguments_cursor.item.is_error then
+							set_last_error (arguments_cursor.item.error_value)
+						else
+							arguments_cursor.item.mark_unreplaced
+							adopt_child_expression (arguments_cursor.item)
+						end
 					end
-					if not arguments_cursor.item.is_value then fixed_values := False end
+					if not arguments_cursor.item.is_value
+						or else arguments_cursor.item.depends_upon_implicit_timezone then
+						fixed_values := False
+					end
 				end
 				arguments_cursor.forth
 			end
@@ -226,10 +233,17 @@ feature -- Optimization
 				else
 					if arguments_cursor.item.was_expression_replaced then
 						arguments_cursor.replace (arguments_cursor.item.replacement_expression)
-						arguments_cursor.item.mark_unreplaced
-						adopt_child_expression (arguments_cursor.item)
+						if arguments_cursor.item.is_error then
+							set_last_error (arguments_cursor.item.error_value)
+						else
+							arguments_cursor.item.mark_unreplaced
+							adopt_child_expression (arguments_cursor.item)
+						end
 					end
-					if not arguments_cursor.item.is_value then fixed_values := False end
+					if not arguments_cursor.item.is_value
+						or else arguments_cursor.item.depends_upon_implicit_timezone then
+						fixed_values := False
+					end					
 				end
 				arguments_cursor.forth
 			end

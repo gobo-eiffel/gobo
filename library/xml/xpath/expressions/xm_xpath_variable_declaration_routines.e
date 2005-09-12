@@ -14,6 +14,8 @@ class	XM_XPATH_VARIABLE_DECLARATION_ROUTINES
 
 inherit
 
+	ANY
+
 	KL_SHARED_STANDARD_FILES
 		export {NONE} all end
 

@@ -14,6 +14,8 @@ class XM_XPATH_NUMERIC_ROUTINES
 
 inherit
 
+	ANY
+
 	XM_XPATH_SHARED_TYPE_FACTORY
 		export {NONE} all end
 

@@ -128,7 +128,7 @@ feature -- Optimization
 				if condition.was_expression_replaced then
 					set_condition (condition.replacement_expression)
 				end
-				if condition.is_value then
+				if condition.is_value and then not condition.depends_upon_implicit_timezone then
 					condition.calculate_effective_boolean_value (Void)
 					a_boolean_value := condition.last_boolean_value
 					if not a_boolean_value.is_error and then a_boolean_value.value then

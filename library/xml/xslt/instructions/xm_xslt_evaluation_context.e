@@ -60,12 +60,19 @@ feature {NONE} -- Initialization
 			-- Create a restricted context for [xsl:]use-when.
 		require
 			static_context_not_void: a_static_context /= Void
+		local
+			a_date_time: DT_DATE_TIME
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 		do
 			configuration := a_configuration
 			is_restricted := True
 			static_context := a_static_context
 			collation_map := a_collation_map
-			create internal_date_time.make_from_epoch (0)
+			create internal_implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
+			create a_date_time.make_from_epoch (0)
+			utc_system_clock.set_date_time_to_now (a_date_time)
+			create a_time_zone.make (internal_implicit_timezone.fixed_offset)
+			create internal_date_time.make (a_date_time, a_time_zone)
 			create internal_local_variable_frame.make_empty
 			create internal_local_parameters.make_empty
 		ensure
@@ -199,14 +206,24 @@ feature -- Access
 				Result := transformer.document_pool
 			end
 		end
-	
+
+	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE is
+			-- Implicit time zone for comparing unzoned times and dates
+		do
+			if is_restricted then
+				Result := internal_implicit_timezone
+			else
+				Result := transformer.implicit_timezone
+			end
+		end
+
 	security_manager: XM_XPATH_SECURITY_MANAGER is
 			-- Security manager
 		do
 			Result := transformer.configuration.output_resolver.security_manager
 		end
 
-	current_date_time: DT_DATE_TIME is
+	current_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME is
 			-- Current date-time
 		do
 			if not is_restricted then
@@ -564,6 +581,9 @@ feature {NONE} -- Implementation
 
 	internal_tunnel_parameters: XM_XSLT_PARAMETER_SET
 			-- Tunnel parameters
+
+	internal_implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
+			-- Implicit timezone for restricted contexts
 
 invariant
 

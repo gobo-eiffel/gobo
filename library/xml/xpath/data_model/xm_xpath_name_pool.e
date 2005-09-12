@@ -1166,7 +1166,7 @@ feature -- Element change
 			-- Allocate a name from the pool, or a new Name if there is not a matching one there
 		require
 			prefix_not_void: an_xml_prefix /= Void
-			valid_uri_code:  is_valid_uri_code (a_uri_code) and then not is_standard_uri_code (a_uri_code)
+			valid_uri_code:  is_valid_uri_code (a_uri_code)
 			valid_local_name: a_local_name /= Void and then (a_local_name.count > 0 implies is_ncname (a_local_name))
 			name_not_allocated: not is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
 			name_pool_not_full: not is_name_pool_full_using_uri_code (a_uri_code, a_local_name)

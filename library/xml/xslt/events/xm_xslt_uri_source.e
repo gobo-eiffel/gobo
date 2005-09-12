@@ -165,7 +165,7 @@ feature -- Events
 			an_entity_resolver.push_uri (a_uri)
 			a_parser.parse_from_stream (a_stream)
 			a_parser.entity_resolver.resolve_finish
-			a_stream.close
+			if a_stream.is_closable then a_stream.close end
 			media_type := xpointer_filter.media_type
 		end
 

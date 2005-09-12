@@ -213,6 +213,7 @@ feature -- Evaluation
 						if another_atomic_value.is_untyped_atomic then
 							another_atomic_value := another_atomic_value.convert_to_type (type_factory.string_type)
 						end
+						if a_context /= Void then atomic_comparer.set_dynamic_context (a_context) end
 						check_correct_relation (an_atomic_value, operator, atomic_comparer, another_atomic_value)
 						if is_error then
 							create last_boolean_value.make (False)
@@ -258,6 +259,7 @@ feature -- Evaluation
 					if another_atomic_value.is_untyped_atomic then
 						another_atomic_value := another_atomic_value.convert_to_type (type_factory.string_type)
 					end
+					if a_context /= Void then atomic_comparer.set_dynamic_context (a_context) end
 					check_correct_relation (an_atomic_value, operator, atomic_comparer, another_atomic_value)
 					if is_error then
 						create last_boolean_value.make (False)
@@ -558,7 +560,8 @@ feature {NONE} -- Implementation
 		local
 			an_invalid_value: XM_XPATH_INVALID_VALUE
 		do
-			if first_operand.is_value and then second_operand.is_value then
+			if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone
+				and then second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 				evaluate_item (Void)
 				check
 					empty_sequence_not_possible: last_evaluated_item /= Void

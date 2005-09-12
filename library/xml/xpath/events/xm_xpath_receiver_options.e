@@ -14,6 +14,8 @@ class XM_XPATH_RECEIVER_OPTIONS
 
 inherit
 
+	ANY
+
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 

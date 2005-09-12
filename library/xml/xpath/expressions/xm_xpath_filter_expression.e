@@ -219,7 +219,8 @@ feature -- Optimization
 						
 						-- Check whether the filter is a constant true() or false().
 						
-						if filter.is_value and then not filter.is_numeric_value then
+						if filter.is_value and then not filter.depends_upon_implicit_timezone
+							and then not filter.is_numeric_value then
 							filter.calculate_effective_boolean_value (Void)
 							a_boolean_value := filter.last_boolean_value
 							if a_boolean_value.is_error then

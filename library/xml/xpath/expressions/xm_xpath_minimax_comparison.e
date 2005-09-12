@@ -76,10 +76,10 @@ feature -- Optimization
 					-- If either operand is a statically-known list of values, we only need
 					-- to retain the minimum or maximum value, depending on the operator.
 					
-					if first_operand.is_value then
+					if first_operand.is_value and then not first_operand.depends_upon_implicit_timezone then
 						a_value := first_operand.as_value
 						a_value.create_iterator (Void)
-						a_range := computed_range (a_value.last_iterator)
+						a_range := computed_range (a_value.last_iterator, Void)
 						if a_range = Void then
 							set_replacement (false_value)
 						elseif operator = Less_than_token or else operator = Less_equal_token then
@@ -89,10 +89,10 @@ feature -- Optimization
 						end
 					end
 					if not was_expression_replaced then
-						if second_operand.is_value  then
+						if second_operand.is_value and then not second_operand.depends_upon_implicit_timezone then
 							a_value := second_operand.as_value
 							a_value.create_iterator (Void)
-							a_range :=  computed_range (a_value.last_iterator)
+							a_range :=  computed_range (a_value.last_iterator, Void)
 							if a_range = Void then
 								set_replacement (false_value)
 							elseif operator = Greater_than_token or else operator = Greater_equal_token then
@@ -118,7 +118,7 @@ feature -- Evaluation
 				create last_boolean_value.make (False)
 				last_boolean_value.set_last_error (first_operand.last_iterator.error_value)
 			else
-				first_range := computed_range (first_operand.last_iterator)
+				first_range := computed_range (first_operand.last_iterator, a_context)
 				if first_operand.last_iterator.is_error then
 					create last_boolean_value.make (False)
 					last_boolean_value.set_last_error (first_operand.last_iterator.error_value)
@@ -128,7 +128,7 @@ feature -- Evaluation
 						create last_boolean_value.make (False)
 						last_boolean_value.set_last_error (second_operand.last_iterator.error_value)
 					else
-						second_range := computed_range (second_operand.last_iterator)
+						second_range := computed_range (second_operand.last_iterator, a_context)
 						if second_operand.last_iterator.is_error then
 							create last_boolean_value.make (False)
 							last_boolean_value.set_last_error (second_operand.last_iterator.error_value)
@@ -142,13 +142,13 @@ feature -- Evaluation
 								inspect
 									operator
 								when Less_than_token then
-									create last_boolean_value.make (first_range.item (1).three_way_comparison (second_range.item (2)) = -1)
+									create last_boolean_value.make (first_range.item (1).three_way_comparison (second_range.item (2), a_context) = -1)
 								when Less_equal_token then
-									create last_boolean_value.make (first_range.item (1).three_way_comparison (second_range.item (2)) <= 0)
+									create last_boolean_value.make (first_range.item (1).three_way_comparison (second_range.item (2), a_context) <= 0)
 								when Greater_than_token then
-									create last_boolean_value.make (first_range.item (2).three_way_comparison (second_range.item (1)) = 1)
+									create last_boolean_value.make (first_range.item (2).three_way_comparison (second_range.item (1), a_context) = 1)
 								when Greater_equal_token then
-									create last_boolean_value.make (first_range.item (2).three_way_comparison (second_range.item (1)) >= 0)
+									create last_boolean_value.make (first_range.item (2).three_way_comparison (second_range.item (1), a_context) >= 0)
 								end
 							end
 						end
@@ -166,7 +166,7 @@ feature -- Evaluation
 
 feature {NONE} -- Implementation
 
-	computed_range (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]): ARRAY [XM_XPATH_NUMERIC_VALUE] is
+	computed_range (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]; a_context: XM_XPATH_CONTEXT): ARRAY [XM_XPATH_NUMERIC_VALUE] is
 			-- Compute the range of a sequence, ignoring NaNs;
 			-- Not 100% pure - caller checks for iterators going into error status.
 		require
@@ -190,10 +190,10 @@ feature {NONE} -- Implementation
 							Result.put (a_number, 1)
 							Result.put (a_number, 2)
 						else
-							if a_number.three_way_comparison (Result.item (1)) = -1 then
+							if a_number.three_way_comparison (Result.item (1), a_context) = -1 then
 								Result.put (a_number, 1)
 							end
-							if a_number.three_way_comparison (Result.item (2)) = 1 then
+							if a_number.three_way_comparison (Result.item (2), a_context) = 1 then
 								Result.put (a_number, 2)
 							end							
 						end

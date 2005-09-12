@@ -14,6 +14,8 @@ deferred class XM_XPATH_COLLECTION_RESOLVER
 
 inherit
 
+	ANY
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 

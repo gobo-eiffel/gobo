@@ -118,7 +118,7 @@ feature -- Optimization
 
 				-- If  operand value is, pre-evaluate the expression
 
-				if base_expression.is_value then
+				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
 					eagerly_evaluate (Void)
 					set_replacement (last_evaluation)
 
@@ -146,7 +146,7 @@ feature -- Optimization
 				
 				-- If  operand value is, pre-evaluate the expression
 				
-				if base_expression.is_value then
+				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
 					eagerly_evaluate (Void)
 					set_replacement (last_evaluation)
 					

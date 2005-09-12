@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		do
 			create a_string_splitter.make
 			a_string_splitter.set_separators (Prefix_separator)
-			some_qname_parts := a_string_splitter.split (a_qname)
+			some_qname_parts := a_string_splitter.split_greedy (a_qname)
 			if some_qname_parts.count = 1 then
 				optional_prefix := Default_namespace
 				local_name := some_qname_parts.item (1)

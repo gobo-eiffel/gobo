@@ -84,10 +84,11 @@ feature -- Access
 
 feature -- Comparison
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Compare `Current' to `other'
 		require
 			comparable_other: other /= Void and then is_comparable (other)
+			dynamic_context_exists: (depends_upon_implicit_timezone or else other.depends_upon_implicit_timezone) implies a_context /= Void
 		deferred
 		ensure
 			three_way_comparison: Result >= -1 and Result <= 1

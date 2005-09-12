@@ -35,9 +35,10 @@ create
 	make, make_any_sequence, make_single_item, make_optional_item, make_single_atomic, make_optional_atomic, make_optional_integer,
 	make_single_string, make_optional_string, make_single_integer, make_single_double, make_single_node, make_optional_node, make_node_sequence,
 	make_numeric_sequence, make_atomic_sequence, make_string_sequence, make_empty, make_single_number, make_optional_number,
-	make_single_qname, make_optional_qname, make_single_boolean, make_non_empty_sequence, make_integer_sequence
+	make_single_qname, make_optional_qname, make_single_boolean, make_non_empty_sequence, make_integer_sequence,
+	make_optional_date_time, make_optional_day_time_duration, make_optional_year_month_duration, make_optional_date, make_optional_time
 
-feature {NONE} -- Initialization
+feature	{NONE} -- Initialization
 
 	make (a_type: XM_XPATH_ITEM_TYPE; a_cardinality: INTEGER) is
 			-- Create a specific sequence
@@ -216,6 +217,39 @@ feature {NONE} -- Initialization
 		do
 			primary_type := type_factory.string_type
 			set_cardinality_zero_or_more
+		end
+
+	make_optional_date_time is
+			-- Create a sequence that allows zero or one dateTimes
+		do
+			primary_type := type_factory.date_time_type
+			set_cardinality_optional
+		end
+	make_optional_date is
+			-- Create a sequence that allows zero or one dates
+		do
+			primary_type := type_factory.date_type
+			set_cardinality_optional
+		end
+	make_optional_time is
+			-- Create a sequence that allows zero or one times
+		do
+			primary_type := type_factory.time_type
+			set_cardinality_optional
+		end
+
+	make_optional_day_time_duration is
+			-- Create a sequence that allows zero or one dayTimeDurations
+		do
+			primary_type := type_factory.day_time_duration_type
+			set_cardinality_optional
+		end
+
+	make_optional_year_month_duration is
+			-- Create a sequence that allows zero or one dayTimeDurations
+		do
+			primary_type := type_factory.year_month_duration_type
+			set_cardinality_optional
 		end
 
 feature -- Access

@@ -99,7 +99,7 @@ feature -- Optimization
 			elseif base_expression.was_expression_replaced then
 				set_base_expression (base_expression.replacement_expression)
 			end
-			if base_expression.is_value then
+			if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
 				calculate_effective_boolean_value (Void)
 				set_replacement (last_boolean_value)
 			end

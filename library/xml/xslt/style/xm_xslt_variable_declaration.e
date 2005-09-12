@@ -77,7 +77,8 @@ feature -- Element change
 			a_cardinalities_set := Void
 			a_special_properties_set := Void
 			if is_xslt_variable then
-				if select_expression /= Void and then select_expression.is_value then
+				if select_expression /= Void and then select_expression.is_value
+					and then not select_expression.depends_upon_implicit_timezone then
 					a_constant_value := select_expression.as_value
 					
 					-- We can't rely on the constant value, as it hasn't been type-checked yet

@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			a_collator: ST_COLLATOR
 		do
 			create configuration.make_configuration
+			create implicit_timezone.make (system_clock.time_now.canonical_duration (utc_system_clock.time_now))
 			make_dynamic_context (a_context_item)
 			available_documents := a_document_pool
 			available_functions := a_function_library
@@ -78,6 +79,9 @@ feature -- Access
 	security_manager: XM_XPATH_SECURITY_MANAGER
 			-- Security manager
 
+	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
+			-- Implicit time zone for comparing unzoned times and dates
+
 feature -- Status report
 
 	has_push_processing: BOOLEAN
@@ -107,7 +111,17 @@ feature -- Creation
 		end
 
 feature 	-- Element change
-	
+
+	set_implicit_timezone (an_implicit_timezone: like implicit_timezone) is
+			-- Set `implicit_timezone'.
+		require
+			implicit_timezone_exists: an_implicit_timezone /= Void
+		do
+			implicit_timezone := an_implicit_timezone
+		ensure
+			set: implicit_timezone = an_implicit_timezone
+		end
+
 	set_stack_frame (a_local_variable_frame: like local_variable_frame) is
 			-- Set stack frame.
 		do
@@ -163,7 +177,7 @@ feature 	-- Element change
 				an_entity_resolver.push_uri (uri_resolver.last_system_id)
 				a_parser.parse_from_stream (uri_resolver.last_uri_reference_stream)
 				a_parser.entity_resolver.resolve_finish
-				uri_resolver.last_uri_reference_stream.close
+				if uri_resolver.last_uri_reference_stream.is_closable then uri_resolver.last_uri_reference_stream.close end
 				if a_tree_pipe.tree.has_error then
 					set_build_error (a_tree_pipe.tree.last_error)
 				else

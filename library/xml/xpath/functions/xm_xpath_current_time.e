@@ -42,7 +42,7 @@ feature -- Access
 	item_type: XM_XPATH_ITEM_TYPE is
 			-- Data type of the expression, where known
 		do
-			Result := type_factory.date_time_type
+			Result := type_factory.time_type
 			if Result /= Void then
 				-- Bug in SE 1.0 and 1.1: Make sure that
 				-- that `Result' is not optimized away.
@@ -62,14 +62,12 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			a_result_string: STRING
-			a_date_time: DT_DATE_TIME
+			dt: DT_FIXED_OFFSET_ZONED_DATE_TIME
+			zt: DT_FIXED_OFFSET_ZONED_TIME
 		do
-			a_date_time := a_context.current_date_time
-			a_result_string := ""
-			a_date_time.append_precise_time_to_string (a_result_string)
-			a_result_string.append_character ('Z')
-			create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (a_result_string)
+			dt := a_context.current_date_time
+			create zt.make (dt.date_time.time, dt.time_zone)
+			create {XM_XPATH_TIME_VALUE} last_evaluated_item.make_from_zoned_time (zt)
 		end
 
 	pre_evaluate (a_context: XM_XPATH_STATIC_CONTEXT) is

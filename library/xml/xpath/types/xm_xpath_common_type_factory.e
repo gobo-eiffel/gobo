@@ -536,7 +536,7 @@ feature {NONE} -- Implementation
 			bind_fn_name (Minutes_from_time_function_type_code, "minutes-from-time")
 			bind_fn_name (Month_from_date_function_type_code, "month-from-date")
 			bind_fn_name (Month_from_datetime_function_type_code, "month-from-dateTime")
-			bind_fn_name (Month_from_duration_function_type_code, "month-from-duration")
+			bind_fn_name (Months_from_duration_function_type_code, "months-from-duration")
 			bind_fn_name (Name_function_type_code, "name")
 			bind_fn_name (Namespace_uri_function_type_code, "namespace-uri")
 			bind_fn_name (Namespace_uri_for_prefix_function_type_code, "namespace-uri-for-prefix")

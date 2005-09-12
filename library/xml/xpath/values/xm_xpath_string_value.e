@@ -84,7 +84,7 @@ feature -- Comparison
 			end
 		end
 
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Compare `Current' to `other'
 		do
 
@@ -129,6 +129,8 @@ feature -- Status report
 			-- Is `Current' convertible to `a_required_type'?
 		local
 			a_string: STRING
+			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
+			a_duration_parser: XM_XPATH_DURATION_PARSER
 		do
 			if a_required_type = type_factory.boolean_type then
 				a_string := trimmed_white_space (value)
@@ -169,10 +171,25 @@ feature -- Status report
 			elseif a_required_type = type_factory.qname_type then
 				Result := False -- not done directly, as a static context is necessary
 			elseif a_required_type = type_factory.date_type then
-				Result := False				
-				todo ("is-convertible (xs:date)", True)
+				create a_date_time_parser.make
+				Result := a_date_time_parser.is_zoned_date (value)
+					or else a_date_time_parser.is_date (value)
+			elseif a_required_type = type_factory.time_type then
+				create a_date_time_parser.make
+				Result := a_date_time_parser.is_zoned_time (value)
+					or else a_date_time_parser.is_time (value)
+			elseif a_required_type = type_factory.date_time_type then
+				create a_date_time_parser.make
+				Result := a_date_time_parser.is_zoned_date_time (value)
+					or else a_date_time_parser.is_date_time (value)
+			elseif a_required_type = type_factory.day_time_duration_type then
+				create a_duration_parser.make
+				Result := a_duration_parser.is_seconds_duration (value)
+			elseif a_required_type = type_factory.year_month_duration_type then
+				create a_duration_parser.make
+				Result := a_duration_parser.is_months_duration (value)
 			else
-				Result := False -- TODO dtd type, datetimes and times
+				Result := False -- TODO dtd types (? - check what remains)
 				todo ("is-convertible", True)
 			end
 		end
@@ -220,6 +237,16 @@ feature -- Conversion
 			elseif a_required_type = type_factory.untyped_atomic_type or else
 				a_required_type = type_factory.any_simple_type then
 				create {XM_XPATH_UNTYPED_ATOMIC_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.date_type then
+				create {XM_XPATH_DATE_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.time_type then
+				create {XM_XPATH_TIME_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.date_time_type then
+				create {XM_XPATH_DATE_TIME_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.day_time_duration_type then
+				create {XM_XPATH_SECONDS_DURATION_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.year_month_duration_type then
+				create {XM_XPATH_MONTHS_DURATION_VALUE} Result.make (value)
 			else
 				-- TODO
 				todo ("convert-to-type (" + a_required_type.conventional_name + ")",True)				

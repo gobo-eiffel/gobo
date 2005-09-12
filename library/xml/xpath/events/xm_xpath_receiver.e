@@ -14,6 +14,8 @@ deferred class XM_XPATH_RECEIVER
 
 inherit
 
+	ANY
+
 	XM_XPATH_RECEIVER_OPTIONS
 		export {NONE} all end
 

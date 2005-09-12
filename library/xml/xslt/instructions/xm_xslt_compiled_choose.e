@@ -218,7 +218,7 @@ feature -- Optimization
 					an_expression := an_expression.replacement_expression
 					a_cursor.replace (an_expression)
 				end
-				if an_expression.is_value then
+				if an_expression.is_value and then not an_expression.depends_upon_implicit_timezone then
 					an_expression.calculate_effective_boolean_value (Void)
 					if not an_expression.is_error then
 						a_boolean := an_expression.last_boolean_value.value

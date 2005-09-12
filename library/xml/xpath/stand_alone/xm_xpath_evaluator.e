@@ -63,6 +63,9 @@ feature -- Access
 	document: XM_XPATH_DOCUMENT
 			-- Document node against which XPath is evaluated
 
+	implicit_timezone: DT_FIXED_OFFSET_TIME_ZONE
+			-- Implicit time zone for comparing unzoned times and dates
+
 feature -- Status report
 
 	is_line_numbering: BOOLEAN
@@ -172,6 +175,25 @@ feature -- Element change
 			context_item := an_item
 		ensure
 			context_item_set: context_item = an_item
+		end
+
+	set_implicit_timezone (an_implicit_timezone: like implicit_timezone) is
+			-- Set `implicit_timezone'.
+		require
+			implicit_timezone_exists: an_implicit_timezone /= Void
+		do
+			implicit_timezone := an_implicit_timezone
+		ensure
+			set: implicit_timezone = an_implicit_timezone
+		end
+
+	reset_errors is
+			-- Reset to no errors.
+		do
+			internal_error_message := Void
+			is_error := False
+		ensure
+			no_error: not is_error
 		end
 
 feature -- Evaluation
@@ -300,6 +322,7 @@ feature {NONE} -- Implementation
 			-- TODO media_type needs to be retrieved (earlier) from the tree pipe
 			a_document_pool.add (document, media_type, source_uri)
 			create a_context.make (context_item, a_document_pool, function_library)
+			if implicit_timezone /= Void then a_context.set_implicit_timezone (implicit_timezone) end
 			a_context.copy_string_mode (Current)
 			a_context.open_stack_frame (a_slot_manager)
 			an_expression.create_iterator (a_context)

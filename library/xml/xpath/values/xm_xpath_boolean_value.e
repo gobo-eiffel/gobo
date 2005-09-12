@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_ATOMIC_VALUE
 		redefine
-			calculate_effective_boolean_value, is_boolean_value, as_boolean_value
+			calculate_effective_boolean_value, hash_code,
+			is_boolean_value, as_boolean_value
 		end
 
 create
@@ -70,6 +71,12 @@ feature -- Access
 			end
 		end
 
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			if not value then Result := 1 end
+		end
+
 feature -- Comparison
 
 	same_expression (other: XM_XPATH_EXPRESSION): BOOLEAN is
@@ -80,7 +87,7 @@ feature -- Comparison
 			end
 		end
 	
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Compare `Current' to `other'
 		do
 			if value = other.as_boolean_value.value then
@@ -168,4 +175,5 @@ feature -- Conversions
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 			end
 		end
+
 end

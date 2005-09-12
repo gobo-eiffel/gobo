@@ -361,7 +361,7 @@ feature -- Access
 	Minutes_from_time_function_type_code: INTEGER is 951
 	Month_from_date_function_type_code: INTEGER is 952
 	Month_from_datetime_function_type_code: INTEGER is 953
-	Month_from_duration_function_type_code: INTEGER is 954
+	Months_from_duration_function_type_code: INTEGER is 954
 	Name_function_type_code: INTEGER is 955
 	Namespace_uri_function_type_code: INTEGER is 956
 	Namespace_uri_for_prefix_function_type_code: INTEGER is 957

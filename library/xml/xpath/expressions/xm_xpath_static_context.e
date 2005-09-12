@@ -126,6 +126,7 @@ feature -- Access
 		ensure
 				available_functions_not_void: Result /= Void
 		end
+
 	namespace_resolver: XM_XPATH_NAMESPACE_RESOLVER is
 			-- Resolver for lexical QNames
 		deferred

@@ -265,6 +265,91 @@ feature -- Tests
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
 		end	
 
+	test_untyped_atomic_to_date is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:date.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_date_value: XM_XPATH_DATE_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09-08Z') cast as xs:date")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_date_value ?= evaluated_items.item (1)
+			assert ("Date value", a_date_value /= Void)
+		end	
+
+	test_untyped_atomic_to_zoneless_date is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:date.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_date_value: XM_XPATH_DATE_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09-08') cast as xs:date")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_date_value ?= evaluated_items.item (1)
+			assert ("Date value", a_date_value /= Void)
+		end	
+
+	test_untyped_atomic_to_date_unsucessful is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:date, with invalid value.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:date")
+			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
+		end
+
+	test_untyped_atomic_to_zoneless_time is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:time.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_time_value: XM_XPATH_TIME_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('12:05:35.465987') cast as xs:time")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_time_value ?= evaluated_items.item (1)
+			assert ("Time value", a_time_value /= Void)
+		end	
+
+	test_untyped_atomic_to_date_time is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:dateTime.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_date_time_value: XM_XPATH_DATE_TIME_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09-08T12:07:40.5Z') cast as xs:dateTime")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_date_time_value ?= evaluated_items.item (1)
+			assert ("DateTime value", a_date_time_value /= Void)
+		end	
+
 feature -- Set up
 
 	set_up is

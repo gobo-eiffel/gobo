@@ -89,6 +89,7 @@ feature -- Evaluation
 					if another_iterator.is_error then
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (another_iterator.error_value)
 					else
+						a_comparer.set_dynamic_context (a_context)
 						create {XM_XPATH_BOOLEAN_VALUE} last_evaluated_item.make (deep_equals (an_iterator, another_iterator, a_comparer))
 						if is_error then
 							last_evaluated_item.set_last_error (error_value)

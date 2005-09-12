@@ -109,7 +109,6 @@ feature -- Access
 			end
 		end
 
-
 	string_value: STRING is
 			--Value of the item as a string
 		do
@@ -120,7 +119,7 @@ feature -- Access
 
 feature -- Comparison
 	
-	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE): INTEGER is
+	three_way_comparison (other: XM_XPATH_ATOMIC_VALUE; a_context: XM_XPATH_CONTEXT): INTEGER is
 			-- Compare `Current' to `other'
 		local
 			is_a_decimal: BOOLEAN
@@ -142,7 +141,7 @@ feature -- Comparison
 					Result := -1
 				end
 			else
-				Result := Precursor (other)
+				Result := Precursor (other, a_context)
 			end
 		end
 

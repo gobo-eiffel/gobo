@@ -105,6 +105,10 @@ feature {NONE} -- Access
 							a_stream.set_encoding ("utf-8")
 						end
 					end
+				elseif an_encoding /= Void then
+					a_stream.set_encoding (an_encoding)
+				else
+					a_stream.set_encoding ("utf-8")
 				end
 			end
 			if Result = Void then

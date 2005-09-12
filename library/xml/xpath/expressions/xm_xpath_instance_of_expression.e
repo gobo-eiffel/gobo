@@ -116,7 +116,7 @@ feature -- Optimization
 			if base_expression.is_error then
 				set_last_error (base_expression.error_value)
 			else
-				if base_expression.is_value then
+				if base_expression.is_value and then not base_expression.depends_upon_implicit_timezone then
 					evaluate_item (Void)
 					if last_evaluated_item /= Void then
 						set_replacement (last_evaluated_item.as_atomic_value)

@@ -13,7 +13,9 @@ indexing
 class XM_XPATH_DIRECTORY_COLLECTION_ROUTINES
 
 inherit
-	
+
+	ANY
+
 	UT_SHARED_URL_ENCODING
 		export {NONE} all end
 

@@ -71,6 +71,7 @@ feature -- Access
 			a_collator := collator (an_argument_number, a_context, True)
 			if a_collator /= Void then
 				create Result.make (a_collator)
+				Result.set_dynamic_context (a_context)
 			end
 		ensure
 			Maybe_unsupported_collation: True
@@ -87,6 +88,7 @@ feature -- Access
 			a_collator := collator (an_argument_number, a_context, True)
 			if a_collator /= Void then
 				create Result.make (a_collator)
+				Result.set_dynamic_context (a_context)
 			end
 		ensure
 			Maybe_unsupported_collation: True

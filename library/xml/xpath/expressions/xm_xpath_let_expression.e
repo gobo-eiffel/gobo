@@ -175,7 +175,7 @@ feature -- Optimization
 					end
 					if not is_error then
 						a_type := sequence.item_type
-						if sequence.is_value then a_value := sequence.as_value end
+						if sequence.is_value and then not sequence.depends_upon_implicit_timezone then a_value := sequence.as_value end
 						
 						-- Now set the static type of the binding reference, more accurately:
 						
