@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 					a_node_kind_relationship := Overlapping_types
 				end
 
-				Result := non_trivial_node_test_relationship (a_node_test, another_node_test, a_node_kind_relationship)
+				if Result /= Disjoint_types then Result := non_trivial_node_test_relationship (a_node_test, another_node_test, a_node_kind_relationship) end
 			end
 		ensure
 			valid_relationship: Result >= Same_item_type and then Disjoint_types >= Result

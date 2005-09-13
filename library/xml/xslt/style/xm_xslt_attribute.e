@@ -161,31 +161,29 @@ feature -- Element change
 			
 			if attribute_name.is_string_value then
 				set_qname_parts (attribute_name.as_string_value)
-				if not any_compile_errors then
+				if not any_compile_errors and then namespace_uri /= Void then
 					if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
 						a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
 					else
 						shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
 						a_name_code := shared_name_pool.last_name_code
 					end
-					compile_fixed_attribute (an_executable, a_name_code)
+					if namespace = Void then compile_fixed_attribute (an_executable, a_name_code) end
 				end
-			else
-				if namespace.is_string_value then
-					namespace_uri := namespace.as_string_value.string_value
-					if namespace_uri.count = 0 then
-						qname_prefix := ""
-					elseif qname_prefix.count = 0 then
-						choose_arbitrary_qname_prefix
-					end
-					if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
-						a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
-					else
-						shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
-						a_name_code := shared_name_pool.last_name_code
-					end
-					compile_fixed_attribute (an_executable, a_name_code)
+			elseif namespace.is_string_value then
+				namespace_uri := namespace.as_string_value.string_value
+				if namespace_uri.count = 0 then
+					qname_prefix := ""
+				elseif qname_prefix.count = 0 then
+					choose_arbitrary_qname_prefix
 				end
+				if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
+					a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
+				else
+					shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
+					a_name_code := shared_name_pool.last_name_code
+				end
+				compile_fixed_attribute (an_executable, a_name_code)
 			end
 			
 			if last_generated_expression = Void then
@@ -292,7 +290,8 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			parts_set_or_error: not any_compile_errors implies qname_prefix /= Void and then local_name /= Void and then namespace_uri /= Void
+			parts_set_or_error: not any_compile_errors implies qname_prefix /= Void and then local_name /= Void
+			namespace_uri: not any_compile_errors and then namespace = Void implies namespace_uri /= Void
 		end
 
 	compile_fixed_attribute (an_executable: XM_XSLT_EXECUTABLE; a_name_code: INTEGER) is

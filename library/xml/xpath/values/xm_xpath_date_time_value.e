@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			else
 				local_date_time := a_date_time_parser.string_to_date_time (a_lexical_date_time)
 			end
-			if not zoned then set_intrinsically_depends_upon_implicit_timezone end
+			if not zoned then set_depends_upon_implicit_timezone end
 		end
 
 	make_from_date_time (a_date_time: DT_DATE_TIME) is
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		do
 			make_atomic_value
 			local_date_time := a_date_time
-			set_intrinsically_depends_upon_implicit_timezone
+			set_depends_upon_implicit_timezone
 		end
 
 	make_from_zoned_date_time (a_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME) is
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 		do
 			make_atomic_value
 			create local_date_time.make_from_date (a_date)
-			set_intrinsically_depends_upon_implicit_timezone
+			set_depends_upon_implicit_timezone
 		end
 
 	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE) is
@@ -229,7 +229,7 @@ feature -- Comparison
 				zoned_date_time.time_zone.convert_to_utc (dt1)
 				Result := dt1.three_way_comparison (dt2)
 			else -- `other' is zoned
-				create dt2.make_from_date_time (a_date_time.local_date_time.date, a_date_time.local_date_time.time)
+				create dt2.make_from_date_time (a_date_time.zoned_date_time.date_time.date, a_date_time.zoned_date_time.date_time.time)
 				a_date_time.zoned_date_time.time_zone.convert_to_utc (dt2)
 				create dt1.make_from_date_time (local_date_time.date, local_date_time.time)
 				a_context.implicit_timezone.convert_to_utc (dt1)

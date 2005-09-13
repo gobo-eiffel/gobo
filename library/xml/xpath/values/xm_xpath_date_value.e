@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			else
 				local_date := a_date_time_parser.string_to_date (a_lexical_date)
 			end
-			if not zoned then set_intrinsically_depends_upon_implicit_timezone end
+			if not zoned then set_depends_upon_implicit_timezone end
 		end
 
 	make_from_date (a_date: DT_DATE) is
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		do
 			make_atomic_value
 			local_date := a_date
-			set_intrinsically_depends_upon_implicit_timezone
+			set_depends_upon_implicit_timezone
 		end
 
 	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE) is

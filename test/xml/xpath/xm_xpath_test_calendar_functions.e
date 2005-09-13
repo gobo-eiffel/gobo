@@ -792,6 +792,44 @@ feature -- Tests
 			assert ("Local hour is 3", a_dt.zoned_time.time.hour = 3)
 		end
 
+	test_date_time_equalities is
+			-- Test equalities on dateTime values.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			an_integer_value: XM_XPATH_INTEGER_VALUE
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			a_duration: DT_TIME_DURATION
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			create a_duration.make (-5, 0, 0)
+			create a_time_zone.make (a_duration)
+			an_evaluator.set_implicit_timezone (a_time_zone)
+			an_evaluator.evaluate ("xs:dateTime('2002-04-02T12:00:00-01:00') eq xs:dateTime('2002-04-02T17:00:00+04:00')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean true()", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xs:dateTime('2002-04-02T12:00:00') eq xs:dateTime('2002-04-02T23:00:00+06:00')")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean true() 2", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xs:dateTime('2002-04-02T12:00:00') eq xs:dateTime('2002-04-02T17:00:00')")
+			assert ("No evaluation error 3", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean false()", a_boolean_value /= Void and then not a_boolean_value.value)
+			an_evaluator.evaluate ("xs:dateTime('2002-04-02T12:00:00') eq xs:dateTime('2002-04-02T12:00:00')")
+			assert ("No evaluation error 4", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean true() 3", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xs:dateTime('2002-04-02T23:00:00-04:00') eq xs:dateTime('2002-04-03T02:00:00-01:00')")
+			assert ("No evaluation error 5", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean true() 4", a_boolean_value /= Void and then a_boolean_value.value)
+		end
+	
 	set_up is
 		do
 			conformance.set_basic_xslt_processor
