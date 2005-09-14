@@ -60,6 +60,34 @@ feature -- Status report
 			definition: Result = (first_seed = a_seed or (other_seeds /= Void and then other_seeds.has (a_seed)))
 		end
 
+	has_common_seed (other: ET_FLATTENED_FEATURE): BOOLEAN is
+			-- Do current feature and `other' have a least one seed in common?
+		require
+			other_not_void: other /= Void
+		local
+			i, nb: INTEGER
+		do
+			if first_seed /= 0 then
+				if other.has_seed (first_seed) then
+					Result := True
+				elseif other_seeds /= Void then
+					if other_seeds = other.other_seeds then
+						Result := True
+					else
+						nb := other_seeds.count
+						from i := 1 until i > nb loop
+							if other.has_seed (other_seeds.item (i)) then
+								Result := True
+								i := nb + 1
+							else
+								i := i + 1
+							end
+						end
+					end
+				end
+			end
+		end
+		
 feature -- Access
 
 	name: ET_FEATURE_NAME is
