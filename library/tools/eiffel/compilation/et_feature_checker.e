@@ -8281,7 +8281,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_unqualified_procedure_call_agent (an_expression: ET_CALL_AGENT; a_procedure: ET_PROCEDURE; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT) is
-			-- Report that an unqualified procedure call (to `a_query') agent
+			-- Report that an unqualified procedure call (to `a_procedure') agent
 			-- of type `a_type' in `a_context' has been processed.
 		require
 			no_error: not has_fatal_error
