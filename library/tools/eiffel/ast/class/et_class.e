@@ -1012,6 +1012,20 @@ feature -- Features
 			registered: Result /= Void implies Result.is_registered
 		end
 
+	named_feature (a_name: ET_CALL_NAME): ET_FEATURE is
+			-- Feature named `a_name';
+			-- Void if no such feature
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := procedures.named_feature (a_name)
+			if Result = Void then
+				Result := queries.named_feature (a_name)
+			end
+		ensure
+			registered: Result /= Void implies Result.is_registered
+		end
+
 	seeded_query (a_seed: INTEGER): ET_QUERY is
 			-- Query with seed `a_seed';
 			-- Void if no such query
