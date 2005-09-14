@@ -297,7 +297,7 @@ feature -- Status report
 
 	is_immediate: BOOLEAN is True
 			-- Is current feature immediate?
-
+		
 feature -- Implementation checking status
 
 	implementation_checked: BOOLEAN
