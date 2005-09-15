@@ -259,8 +259,7 @@ feature {NONE} -- Implementation
 		local
 			a_day, an_hour: INTEGER
 			a_minute, a_second, a_millisecond: INTEGER
-			total_months, total_hours, total_minutes: INTEGER
-			a_duration: like duration
+			total_hours, total_minutes: INTEGER
 		do
 			a_second := INTEGER_.mod (duration.second_count, 60)
 			a_millisecond := INTEGER_.mod (duration.millisecond_count, 1000)
