@@ -65,8 +65,8 @@ feature -- Test
 			assert_integers_equal ("log10_2", 1, r.truncated_to_integer (r.log10 (10.0)))
 		end
 
-	test_floor is
-			-- Test feature `floor'.
+	test_floor_to_integer is
+			-- Test feature `floor_to_integer'.
 		local
 			r: KL_DOUBLE_ROUTINES
 		do
@@ -76,6 +76,23 @@ feature -- Test
 			assert_integers_equal ("zero", 0, r.floor_to_integer (0.0))
 			assert_integers_equal ("negative", -47, r.floor_to_integer (-46.0001))
 			assert_integers_equal ("negative_exact", -47, r.floor_to_integer (-47.0))
+		end
+
+	test_rounded_to_integer is
+			-- Test feature `rounded_to_integer'.
+		local
+			r: KL_DOUBLE_ROUTINES
+		do
+			create r
+			assert_integers_equal ("positive1", 123, r.rounded_to_integer (123.183))
+			assert_integers_equal ("positive2", 123, r.rounded_to_integer (123.49))
+			assert_integers_equal ("positive3", 124, r.rounded_to_integer (123.5))
+			assert_integers_equal ("positive_exact", 123, r.rounded_to_integer (123.0))
+			assert_integers_equal ("zero", 0, r.rounded_to_integer (0.0))
+			assert_integers_equal ("negative1", -46, r.rounded_to_integer (-46.0001))
+			assert_integers_equal ("negative2", -46, r.rounded_to_integer (-46.49))
+			assert_integers_equal ("negative3", -47, r.rounded_to_integer (-46.5))
+			assert_integers_equal ("negative_exact", -47, r.rounded_to_integer (-47.0))
 		end
 
 end

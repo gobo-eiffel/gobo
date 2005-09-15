@@ -5,7 +5,7 @@ indexing
 		"Routines that ought to be in class DOUBLE"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2003, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2005, Eric Bezault and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -138,12 +138,30 @@ feature -- Conversion
 	truncated_to_integer (d: DOUBLE): INTEGER is
 			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
+		require
+			d_large_enough: d >= Platform.Minimum_integer
+			d_small_enough: d <= Platform.Maximum_integer
 		do
 #ifdef (SE && ! SE_1_0)
 			Result := d.force_to_integer_32
 #else
 			Result := d.truncated_to_integer
 #endif
+		end
+
+	rounded_to_integer (d: DOUBLE): INTEGER is
+			-- Rounded integral value
+		require
+			d_large_enough: (d.abs + 0.5) >= Platform.Minimum_integer
+			d_small_enough: (d.abs + 0.5) < (Platform.Maximum_integer + 1.0)
+		do
+#ifdef ISE
+			Result := d.rounded
+#else
+			Result := d.sign * floor_to_integer (d.abs + 0.5)
+#endif
+		ensure
+			definition: Result = d.sign * floor_to_integer (d.abs + 0.5)
 		end
 
 	floor_to_integer (d: DOUBLE): INTEGER is
