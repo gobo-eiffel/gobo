@@ -11,9 +11,7 @@ indexing
 	revision: "$Revision$"
 
 
-class
-
-	XM_DATA_URI_RESOLVER
+class XM_DATA_URI_RESOLVER
 
 inherit
 
