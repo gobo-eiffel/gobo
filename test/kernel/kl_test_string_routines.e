@@ -1123,7 +1123,6 @@ feature -- Test
 			s_old: STRING
 			s_new: STRING
 			a_uc_string: UC_STRING
-			a_utf8_string: UC_UTF8_STRING
 		do
 			s_old := "-"
 			s_new:= "#"
