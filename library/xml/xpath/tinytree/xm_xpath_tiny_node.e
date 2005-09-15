@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 		do
 			if a_node_test.is_name_test then
 				if node_type = Document_node and then a_node_test.as_name_test.node_kind = Element_node then
-					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_TINY_ELEMENT]} Result.make (as_tiny_document.all_elements (a_node_test.fingerprint))
+					create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} Result.make (as_tiny_document.all_elements (a_node_test.fingerprint))
 				else
 					create {XM_XPATH_EMPTY_ITERATOR} Result.make
 				end

@@ -19,6 +19,9 @@ inherit
 			is_duration_value, as_duration_value, hash_code
 		end
 
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
 create
 
 	make, make_from_duration
@@ -35,9 +38,6 @@ feature {NONE} -- Initialization
 			make_atomic_value
 			create a_parser.make
 			duration := a_parser.string_to_duration (a_duration)
-			is_normal := duration.month < 12 and then duration.hour < 24
-				and then duration.minute < 60 and then duration.second < 60
-				and then duration.millisecond < 1000
 		end
 
 	make_from_duration (a_duration: like duration) is
@@ -47,9 +47,6 @@ feature {NONE} -- Initialization
 		do
 			make_atomic_value
 			duration := a_duration
-			is_normal := duration.month < 12 and then duration.hour < 24
-				and then duration.minute < 60 and then duration.second < 60
-				and then duration.millisecond < 1000
 		end
 
 feature -- Access
@@ -151,11 +148,20 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_normal: BOOLEAN
+	is_normal: BOOLEAN is
 			-- Is `duration' in normal form?
+		do
+			Result := duration.month.abs < 12 and then duration.hour.abs < 24
+				and then duration.month < 0 implies  duration.hour <= 0
+				and then duration.hour < 0 implies duration.month <= 0
+				and then duration.year < 0 implies duration.hour <= 0
+				and then duration.is_time_canonical
+		end
 
 	is_negative: BOOLEAN is
 			-- Is `Current' a negative duration?
+		require
+			in_normal_form: is_normal
 		do
 			Result := duration.year < 0 or else duration.month < 0
 				or else duration.day < 0 or else duration.hour < 0
@@ -240,9 +246,61 @@ feature -- Conversions
 			end
 		end
 
+feature -- Basic operations
+
+	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+			-- Addition of `other' to `Current'
+		require
+			other_duration_exists: other /= Void
+		do
+			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be added", Gexslt_eiffel_type_uri, "DURATION-ADDITION", Dynamic_error)
+		ensure
+			result_may_be_in_error: Result /= Void
+		end
+
+	minus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+			-- Subtraction of `other' from `Current'
+		require
+			other_duration_exists: other /= Void
+		do
+			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be subtracted", Gexslt_eiffel_type_uri, "DURATION-SUBTRACTION", Dynamic_error)
+		ensure
+			result_may_be_in_error: Result /= Void
+		end
+		
+	multiply (a_scalar: DOUBLE): XM_XPATH_ITEM is
+			-- Multiplication of `Current' by `a_scalar'
+		require
+			non_zero_double: a_scalar /= 0 -- and then not a_scalar.is_infinity and then not a_scalar.is_nan
+		do
+			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be subtracted", Gexslt_eiffel_type_uri, "DURATION-SUBTRACTION", Dynamic_error)
+		ensure
+			result_may_be_in_error: Result /= Void
+		end
+		
+	scalar_divide (a_scalar: DOUBLE): XM_XPATH_ITEM is
+			-- Division of `Current' by `a_scalar'
+		require
+			non_zero_double: a_scalar /= 0 -- and then not a_scalar.is_infinity and then not a_scalar.is_nan
+		do
+			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be subtracted", Gexslt_eiffel_type_uri, "DURATION-SUBTRACTION", Dynamic_error)
+		ensure
+			result_may_be_in_error: Result /= Void
+		end
+		
+	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+			-- Division of `other' into `Current'
+		require
+			other_duration_exists: other /= Void
+		do
+			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be divided", Gexslt_eiffel_type_uri, "DURATION-DIVISION", Dynamic_error)
+		ensure
+			result_may_be_in_error: Result /= Void
+		end
+		
 feature {NONE} -- Implementation
 
-	normalized_duration: like Current is
+	normalized_duration: XM_XPATH_DURATION_VALUE is
 			-- Normal form of `duration'
 		local
 			a_year, a_month, a_day, an_hour: INTEGER
@@ -251,23 +309,23 @@ feature {NONE} -- Implementation
 			a_duration: like duration
 		do
 			total_months := duration.year * 12 + duration.month
-			a_year := total_months // 12
-			a_month := total_months \\ 12
-			a_second := duration.second_count \\ 60
-			a_millisecond := duration.millisecond_count \\ 1000
-			total_minutes := duration.second_count // 60
+			a_year := total_months.abs // 12
+			a_month := total_months.abs \\ 12
+			a_second := duration.second_count.abs \\ 60
+			a_millisecond := duration.millisecond_count.abs \\ 1000
+			total_minutes := duration.second_count.abs // 60
 			a_minute := total_minutes \\ 60
 			total_hours := total_minutes // 60
 			an_hour := total_hours \\ 24
 			a_day :=  total_hours // 24
-			if is_negative then
+			if total_months < 0 or else duration.millisecond_count < 0 then
 				create a_duration.make_precise (-a_year, -a_month, -a_day, -an_hour, -a_minute, -a_second, -a_millisecond)
 			else
 				create a_duration.make_precise (a_year, a_month, a_day, an_hour, a_minute, a_second, a_millisecond)
 			end
 			create Result.make_from_duration (a_duration)
 		ensure
-			normal_duration_of_same_sign: Result /= Void and then Result.is_normal and then Result.is_negative = is_negative
+			normal_duration: Result /= Void and then Result.is_normal
 		end
 
 invariant

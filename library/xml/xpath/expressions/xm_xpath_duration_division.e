@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-	"Objects that handle addition and subtraction of XPath durations"
+	"Objects that handle division of XPath durations by durations"
 
 library: "Gobo Eiffel XPath Library"
 copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -10,7 +10,7 @@ license: "Eiffel Forum License v2 (see forum.txt)"
 date: "$Date$"
 revision: "$Revision$"
 
-class XM_XPATH_DURATION_ADDITION
+class XM_XPATH_DURATION_DIVISION
 
 inherit
 	
@@ -45,14 +45,7 @@ feature -- Evaluation
 					last_evaluated_item := second_operand.last_evaluated_item
 				else
 					another_duration := second_operand.last_evaluated_item.as_atomic_value.as_duration_value
-					if operator = Plus_token then
-						last_evaluated_item := a_duration.plus (another_duration)
-					else
-						check
-							minus: operator = Minus_token
-						end
-						last_evaluated_item := a_duration.minus (another_duration)
-					end
+					last_evaluated_item := a_duration.divide (another_duration)
 				end
 			end
 		end

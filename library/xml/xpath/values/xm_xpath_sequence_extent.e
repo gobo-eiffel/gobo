@@ -296,6 +296,8 @@ feature -- Evaluation
 		do
 			if count = 0 then
 				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+			elseif is_node_sequence then
+				last_iterator := node_iterator (False)
 			else
 				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (Current)
 			end
@@ -304,10 +306,14 @@ feature -- Evaluation
 	reverse_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM] is
 			-- An iterator over the values of a sequence in reverse order
 		do
-			create {XM_XPATH_REVERSE_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
+			if is_node_sequence then
+				Result := node_iterator (True)
+			else
+				create {XM_XPATH_REVERSE_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} Result.make (Current)
+			end
 		end
 
-	node_iterator : XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	node_iterator (in_reverse: BOOLEAN): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- An iterator over the nodes of a node-sequence
 		require
 			is_node_sequence
@@ -330,7 +336,11 @@ feature -- Evaluation
 				a_node_list.put_last (a_cursor.item.as_node)
 				a_cursor.forth
 			end
-			create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (a_node_list)
+			if in_reverse then
+				create {XM_XPATH_REVERSE_ARRAY_NODE_LIST_ITERATOR} Result.make (a_node_list)
+			else
+				create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} Result.make (a_node_list)
+			end
 		end
 
 feature {XM_XPATH_SEQUENCE_EXTENT} -- Implementation

@@ -26,8 +26,9 @@ create
 feature {NONE} -- Implementation
 
 	make is
-			-- Nothing to do.
+			-- Establish invariant..
 		do
+			last_parsed_duration := ""
 		end
 
 feature -- Access
@@ -42,7 +43,6 @@ feature -- Access
 			a_pattern := a_duration
 			STRING_.left_adjust (a_pattern)
 			STRING_.right_adjust (a_pattern)
-			last_parsed_duration := Void
 			if not a_pattern.is_empty then
 				if a_pattern.item (1).is_equal ('-') then
 					is_negative := True
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 			duration_exists: a_duration /= Void
 		local
 			a_string: STRING
-			an_index, a_time_designator: INTEGER			
+			an_index: INTEGER			
 		do
 			if a_duration.is_empty then
 				Result := any_designator_found
@@ -448,7 +448,6 @@ feature {NONE} -- Implementation
 			an_index, a_count, a_second, a_millisecond, a_round_digit: INTEGER
 			a_splitter: ST_SPLITTER
 			some_components: DS_LIST [STRING]
-			round_up_needed: BOOLEAN
 		do
 			if a_duration.is_empty then
 				Result := any_designator_found
@@ -489,5 +488,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
+invariant
+
+	last_parsed_duration_exists: last_parsed_duration /= Void
+	
 end
 	

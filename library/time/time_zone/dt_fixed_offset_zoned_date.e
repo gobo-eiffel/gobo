@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 	tmp_date_time: DT_DATE_TIME is
 			-- Temporary date-time used for time zone conversion
 		once
-			create Result.make (1, 1, 1970, 0, 0, 0)
+			create Result.make (1970, 1, 1, 0, 0, 0)
 		ensure
 			tmp_date_time_not_void: Result /= Void
 		end

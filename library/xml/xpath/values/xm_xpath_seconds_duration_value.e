@@ -15,10 +15,14 @@ class XM_XPATH_SECONDS_DURATION_VALUE
 inherit
 
 	XM_XPATH_DURATION_VALUE
+		rename
+			make as make_duration,
+			make_from_duration as make_duration_from_duration
 		redefine
-			make, make_from_duration, is_duration, string_value,
+			is_duration, string_value,
 			is_seconds_duration, as_seconds_duration,
-			same_expression, is_convertible,
+			same_expression, is_convertible, plus, minus,
+			multiply, divide, scalar_divide,
 			display, convert_to_type, item_type
 		end
 
@@ -41,6 +45,8 @@ feature {NONE} -- Initialization
 
 	make_from_duration (a_duration: like duration) is
 			-- Create from duration.
+		require
+			zero_years_and_months: a_duration.year = 0 and then a_duration.month = 0 
 		do
 			make_atomic_value
 			duration := a_duration
@@ -193,8 +199,6 @@ feature -- Conversions
 	
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `a_required_type'
-		local
-			a_duration: like duration
 		do
 			if	a_required_type = any_item or else a_required_type = type_factory.any_atomic_type
 				or else a_required_type = type_factory.day_time_duration_type then
@@ -208,39 +212,70 @@ feature -- Conversions
 			end
 		end
 
+feature -- Basic operations
+
+	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+			-- Addition of `other' to `Current'
+		do
+			if other.is_seconds_duration then
+				create {XM_XPATH_SECONDS_DURATION_VALUE} Result.make_from_duration (duration + other.duration)
+			else
+				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Both operands must be the same type for duration addition", Gexslt_eiffel_type_uri, "MIXED-DURATIONS", Dynamic_error)
+			end
+		end
+
+	minus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+			-- Subtraction of `other' from `Current'
+		do
+			if other.is_seconds_duration then
+				create {XM_XPATH_SECONDS_DURATION_VALUE} Result.make_from_duration (duration - other.duration)
+			else
+				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Both operands must be the same type for duration subtraction", Gexslt_eiffel_type_uri, "MIXED-DURATIONS", Dynamic_error)
+			end
+		end
+		
+	multiply (a_scalar: DOUBLE): XM_XPATH_ITEM is
+			-- Multiplication of `Current' by `a_scalar'
+		do
+			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be subtracted", Gexslt_eiffel_type_uri, "DURATION-SUBTRACTION", Dynamic_error)
+		end
+		
+	scalar_divide (a_scalar: DOUBLE): XM_XPATH_ITEM is
+			-- Division of `Current' by `a_scalar'
+		do
+			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be subtracted", Gexslt_eiffel_type_uri, "DURATION-SUBTRACTION", Dynamic_error)
+		end
+		
+	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+			-- Division of `other' into `Current'
+		do
+			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be divided", Gexslt_eiffel_type_uri, "DURATION-DIVISION", Dynamic_error)
+		end
+		
 feature {NONE} -- Implementation
 
 	normalize is
 			-- Normalize `duration'
 		local
-			 a_day, an_hour, a_minute, a_second, a_millisecond: INTEGER
+			a_day, an_hour: INTEGER
+			a_minute, a_second, a_millisecond: INTEGER
+			total_months, total_hours, total_minutes: INTEGER
+			a_duration: like duration
 		do
-			a_day := duration.day.abs
-			an_hour := duration.hour.abs
-			a_minute := duration.minute.abs
-			a_second := duration.second.abs
-			a_millisecond := duration.millisecond.abs
-			if a_millisecond > 999 then
-				a_second := a_second + a_millisecond // 1000
-				a_millisecond := a_millisecond \\ 1000
-			end
-			if a_second > 59 then
-				a_minute := a_minute + a_second // 60
-				a_second := a_second \\ 60
-			end
-			if a_minute > 59 then
-				an_hour := an_hour + a_minute // 60
-				a_minute := a_minute \\ 60
-			end
-			if an_hour > 23 then
-				a_day := a_day + an_hour // 24
-				an_hour := an_hour \\ 24
-			end
-			if is_negative then
-				create duration.make_precise (0, 0, -a_day, -an_hour, -a_minute, -a_second, -a_millisecond)
-			else
-				create duration.make_precise (0, 0, a_day, an_hour, a_minute, a_second, a_millisecond)
-			end
+			a_second := INTEGER_.mod (duration.second_count, 60)
+			a_millisecond := INTEGER_.mod (duration.millisecond_count, 1000)
+			total_minutes := INTEGER_.div (duration.second_count, 60)
+			a_minute := INTEGER_.mod (total_minutes, 60)
+			total_hours := INTEGER_.div (total_minutes, 60) + duration.day * 24
+			an_hour := INTEGER_.mod (total_hours, 24)
+			a_day := INTEGER_.div (total_hours, 24)
+			create duration.make_precise (0, 0, a_day, an_hour, a_minute, a_second, a_millisecond)
+		ensure
+			normal_duration: is_normal
 		end
+
+invariant
+
+	zero_years_and_months: duration.year = 0 and then duration.month = 0
 
 end

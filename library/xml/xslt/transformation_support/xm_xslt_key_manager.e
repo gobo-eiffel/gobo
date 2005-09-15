@@ -120,7 +120,7 @@ feature -- Access
 				end
 				if an_index.has (a_key_value) then
 					a_list := an_index.map.item (a_key_value)
-					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} last_key_sequence.make (a_list)
+					create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} last_key_sequence.make (a_list)
 				else
 					create {XM_XPATH_EMPTY_ITERATOR} last_key_sequence.make
 				end
@@ -188,8 +188,8 @@ feature -- Element change
 				end
 			else
 				create a_key_list.make (3)
-				key_map.put (a_key_list, a_key_fingerprint)
-				collation_map.put (a_key_definition.collation_uri, a_key_fingerprint)
+				key_map.force (a_key_list, a_key_fingerprint)
+				collation_map.force (a_key_definition.collation_uri, a_key_fingerprint)
 			end
 			if not a_key_list.extendible (1) then
 				a_key_list.resize (2 * a_key_list.count)
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				create a_node_list.make_default
-				a_map.put (a_node_list, a_value)
+				a_map.force (a_node_list, a_value)
 				a_node_list.force_last (a_node)
 			end
 		end
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 				an_index_map := document_map.item (a_document)
 			else
 				create an_index_map.make_with_equality_testers (10, Void, long_equality_tester)
-				document_map.put (an_index_map, a_document)
+				document_map.force (an_index_map, a_document)
 			end
 			create a_long.make (a_key_fingerprint, an_item_type)
 			if an_index_map.has (a_long) then
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 				end
 				an_index_map.replace (an_index, a_long)
 			else
-				an_index_map.put (an_index, a_long)
+				an_index_map.force (an_index, a_long)
 			end
 		ensure
 			index_exists: does_index_exist (a_document, a_key_fingerprint, an_item_type)

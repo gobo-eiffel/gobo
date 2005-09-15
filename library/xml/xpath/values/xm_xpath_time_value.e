@@ -193,7 +193,19 @@ feature -- Comparison
 		do
 			a_time := other.as_time_value
 			if zoned = a_time.zoned then
-				Result := utc_time.three_way_comparison (a_time.utc_time)
+				if zoned then
+					create a_date.make (1972, December, 31)
+					create dt2.make_from_date_time (a_date, a_time.zoned_time.time)
+					a_time.zoned_time.time_zone.convert_to_utc (dt2)
+					create a_date.make (1972, December, 31)
+					create dt1.make_from_date_time (a_date, zoned_time.time)
+					zoned_time.time_zone.convert_to_utc (dt1)
+					Result := dt1.three_way_comparison (dt2)
+				else
+					create dt2.make_from_date_time (a_date, a_time.local_time)
+					create dt1.make_from_date_time (a_date, local_time)
+					Result := dt1.three_way_comparison (dt2)
+				end
  			elseif zoned then
 				create a_date.make (1972, December, 31)
 				create dt2.make_from_date_time (a_date, a_time.local_time)
@@ -204,7 +216,8 @@ feature -- Comparison
 				Result := dt1.three_way_comparison (dt2)
 			else
 				create a_date.make (1972, December, 31)
-				create dt2.make_from_date_time (a_date, a_time.local_time)
+				create dt2.make_from_date_time (a_date, a_time.zoned_time.time)
+				a_time.zoned_time.time_zone.convert_to_utc (dt2)
 				create a_date.make (1972, December, 31)
 				create dt1.make_from_date_time (a_date, local_time)
 				a_context.implicit_timezone.convert_to_utc (dt1)

@@ -163,6 +163,10 @@ feature -- Evaluation
 								create {XM_XPATH_DURATION_MULTIPLICATION} an_expression.make (an_atomic_value, operator, another_atomic_value)
 								an_expression.evaluate_item (a_context)
 								last_evaluated_item := an_expression.last_evaluated_item
+							when Duration_division_action then
+								create {XM_XPATH_DURATION_DIVISION} an_expression.make (an_atomic_value, operator, another_atomic_value)
+								an_expression.evaluate_item (a_context)
+								last_evaluated_item := an_expression.last_evaluated_item
 							when Date_and_duration_action then
 								create {XM_XPATH_DATE_AND_DURATION} an_expression.make (an_atomic_value, operator, another_atomic_value)
 								an_expression.evaluate_item (a_context)
@@ -214,6 +218,7 @@ feature {XM_XPATH_ARITHMETIC_EXPRESSION} -- Local
 	Date_difference_action: INTEGER is 4
 	Duration_addition_action: INTEGER is 5
 	Duration_multiplication_action: INTEGER is 6
+	Duration_division_action: INTEGER is 7
 			-- Arithmetic action need on operands
 	
 	type_check_arithmetic_expression  (a_context: XM_XPATH_STATIC_CONTEXT) is
@@ -288,8 +293,12 @@ feature {NONE} -- Implementation
 				when Modulus_token, Integer_division_token then
 					Result := Unknown_action
 				when Division_token then
-					if (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) and then is_sub_type (t2, type_factory.numeric_type) then
-						Result := Duration_multiplication_action
+					if (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) then
+						if is_sub_type (t2, type_factory.numeric_type) then
+							Result := Duration_multiplication_action
+						elseif (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) then
+							Result := Duration_division_action
+						end
 					else
 						Result := Unknown_action
 					end
@@ -324,7 +333,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			valid_result_action: Unknown_action <= Result and then Result <= Duration_multiplication_action
+			valid_result_action: Unknown_action <= Result and then Result <= Duration_division_action
 		end
 			
 	common_item_type (t1, t2: XM_XPATH_ITEM_TYPE): XM_XPATH_ITEM_TYPE is

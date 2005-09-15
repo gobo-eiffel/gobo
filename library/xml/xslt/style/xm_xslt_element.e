@@ -167,20 +167,22 @@ feature -- Element change
 						shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
 						a_name_code := shared_name_pool.last_name_code
 					end
-					if namespace = Void then compile_fixed_element (an_executable, a_name_code) end
+					if namespace = Void then
+						compile_fixed_element (an_executable, a_name_code)
+					elseif namespace.is_string_value then
+						namespace_uri := namespace.as_string_value.string_value
+						if namespace_uri.count = 0 then
+							qname_prefix := ""
+						end
+						if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
+							a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
+						else
+							shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
+							a_name_code := shared_name_pool.last_name_code
+						end
+						compile_fixed_element (an_executable, a_name_code)
+					end
 				end
-			elseif namespace.is_string_value then
-				namespace_uri := namespace.as_string_value.string_value
-				if namespace_uri.count = 0 then
-					qname_prefix := ""
-				end
-				if shared_name_pool.is_name_code_allocated (qname_prefix, namespace_uri, local_name) then
-					a_name_code := shared_name_pool.name_code (qname_prefix, namespace_uri, local_name)
-				else
-					shared_name_pool.allocate_name (qname_prefix, namespace_uri, local_name)
-					a_name_code := shared_name_pool.last_name_code
-				end
-				compile_fixed_element (an_executable, a_name_code)
 			end
 			
 			if last_generated_expression = Void then

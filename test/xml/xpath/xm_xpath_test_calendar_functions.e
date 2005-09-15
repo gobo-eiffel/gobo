@@ -606,7 +606,6 @@ feature -- Tests
 			-- Test fn:adjust-dateTime-to-timezone.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 			a_duration: DT_TIME_DURATION
 			a_dt: XM_XPATH_DATE_TIME_VALUE
@@ -679,7 +678,6 @@ feature -- Tests
 			-- Test fn:adjust-date-to-timezone.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 			a_duration: DT_TIME_DURATION
 			a_dt: XM_XPATH_DATE_VALUE
@@ -732,7 +730,6 @@ feature -- Tests
 			-- Test fn:adjust-time-to-timezone.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 			a_duration: DT_TIME_DURATION
 			a_dt: XM_XPATH_TIME_VALUE
@@ -796,7 +793,6 @@ feature -- Tests
 			-- Test equalities on dateTime values.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
-			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
 			a_duration: DT_TIME_DURATION
 			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
@@ -829,6 +825,207 @@ feature -- Tests
 			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is boolean true() 4", a_boolean_value /= Void and then a_boolean_value.value)
 		end
+
+	test_date_equalities is
+			-- Test equalities on date values.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			a_duration: DT_TIME_DURATION
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			create a_duration.make (-5, 0, 0)
+			create a_time_zone.make (a_duration)
+			an_evaluator.set_implicit_timezone (a_time_zone)
+			an_evaluator.evaluate ("xs:date('2004-12-25Z') eq xs:date('2004-12-25+07:00')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean false()", a_boolean_value /= Void and then not a_boolean_value.value)
+			an_evaluator.evaluate ("xs:date('2004-12-25-12:00') eq xs:date('2004-12-26+12:00')")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean true()", a_boolean_value /= Void and then a_boolean_value.value)
+		end
+
+	test_date_less_than is
+			-- Test lt on date values.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			a_duration: DT_TIME_DURATION
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			create a_duration.make (-5, 0, 0)
+			create a_time_zone.make (a_duration)
+			an_evaluator.set_implicit_timezone (a_time_zone)
+			an_evaluator.evaluate ("xs:date('2004-12-25-12:00') lt xs:date('2004-12-26+12:00')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean false()", a_boolean_value /= Void and then not a_boolean_value.value)
+			an_evaluator.evaluate ("xs:date('2004-12-25Z') lt xs:date('2004-12-25-05:00')")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean true()", a_boolean_value /= Void and then a_boolean_value.value)
+		end
+	
+	test_date_greater_than is
+			-- Test gt on date values.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			a_duration: DT_TIME_DURATION
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			create a_duration.make (-5, 0, 0)
+			create a_time_zone.make (a_duration)
+			an_evaluator.set_implicit_timezone (a_time_zone)
+			an_evaluator.evaluate ("xs:date('2004-12-25-12:00') gt xs:date('2004-12-26+12:00')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean false()", a_boolean_value /= Void and then not a_boolean_value.value)
+			an_evaluator.evaluate ("xs:date('2004-12-25Z') gt xs:date('2004-12-25+07:00')")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean true()", a_boolean_value /= Void and then a_boolean_value.value)
+		end
+
+	test_time_equalities is
+			-- Test equalities on time values.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			a_duration: DT_TIME_DURATION
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			create a_duration.make (-5, 0, 0)
+			create a_time_zone.make (a_duration)
+			an_evaluator.set_implicit_timezone (a_time_zone)
+			an_evaluator.evaluate ("xs:time('21:30:00+10:30') eq xs:time('06:00:00-05:00')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean true()", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xs:time('08:00:00+09:00') eq xs:time('17:00:00-06:00')")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean false()", a_boolean_value /= Void and then not a_boolean_value.value)
+		end
+
+	test_time_less_than is
+			-- Test lt on time values.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			a_duration: DT_TIME_DURATION
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			create a_duration.make (-5, 0, 0)
+			create a_time_zone.make (a_duration)
+			an_evaluator.set_implicit_timezone (a_time_zone)
+			an_evaluator.evaluate ("xs:time('11:00:00') lt xs:time('17:00:00Z')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean true()", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xs:time('12:00:00') lt xs:time('23:00:00+06:00')")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean false()", a_boolean_value /= Void and then not a_boolean_value.value)
+		end
+
+	test_time_greater_than is
+			-- Test gt on time values.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			a_duration: DT_TIME_DURATION
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			create a_duration.make (-5, 0, 0)
+			create a_time_zone.make (a_duration)
+			an_evaluator.set_implicit_timezone (a_time_zone)
+			an_evaluator.evaluate ("xs:time('08:00:00+09:00') gt xs:time('17:00:00-06:00')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			a_boolean_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is boolean false()", a_boolean_value /= Void and then not a_boolean_value.value)
+		end
+
+	test_duration_arithmetic is
+			-- Test artihmetic on durationd..
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			a_ymd: XM_XPATH_MONTHS_DURATION_VALUE
+			a_dtd: XM_XPATH_SECONDS_DURATION_VALUE
+			a_decimal_value: XM_XPATH_DECIMAL_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:yearMonthDuration('P2Y11M') + xdt:yearMonthDuration('P3Y3M')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			a_ymd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is yearMonthDuration", a_ymd /= Void)
+			assert ("Six years, 2 months", a_ymd.months = 74)
+			an_evaluator.evaluate ("xdt:yearMonthDuration('P2Y11M') - xdt:yearMonthDuration('P3Y3M')")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			a_ymd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is yearMonthDuration 2", a_ymd /= Void)
+			assert ("Negative 4 months", a_ymd.months = -4)
+			an_evaluator.evaluate ("xdt:yearMonthDuration('P2Y11M') * 2.30001")
+			assert ("No evaluation error 3", not an_evaluator.is_error)
+			a_ymd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is yearMonthDuration 3", a_ymd /= Void)
+			assert ("Six years, 9 months", a_ymd.months = 81)
+			an_evaluator.evaluate ("xdt:yearMonthDuration('P60000Y11M') * 1000000000")
+			assert ("Overflow", an_evaluator.is_error and then STRING_.same_string (an_evaluator.error_value.code, "FODT0002"))
+			an_evaluator.reset_errors
+			an_evaluator.evaluate ("xdt:yearMonthDuration('-P60000Y11M') * 1000000000")
+			assert ("Overflow 2", an_evaluator.is_error and then STRING_.same_string (an_evaluator.error_value.code, "FODT0002"))
+			an_evaluator.reset_errors
+			an_evaluator.evaluate ("xdt:yearMonthDuration('P2Y11M') div 1.5")
+			assert ("No evaluation error 4", not an_evaluator.is_error)
+			a_ymd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is yearMonthDuration 3", a_ymd /= Void)
+			assert ("One year, 11 months", a_ymd.months = 23)
+			an_evaluator.evaluate ("xdt:yearMonthDuration('P3Y4M') div xdt:yearMonthDuration('-P1Y4M')")
+			assert ("No evaluation error 5", not an_evaluator.is_error)
+			a_decimal_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is decimal", a_decimal_value /= Void)
+			assert ("Minus 2.5", a_decimal_value.value.is_equal (minus_two_point_five))
+			an_evaluator.evaluate ("xdt:dayTimeDuration('P2DT12H5M') + xdt:dayTimeDuration('P5DT12H')")
+			assert ("No evaluation error 6", not an_evaluator.is_error)
+			a_dtd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dayTimeDuration", a_dtd /= Void)
+			assert ("Eight days, five minutes", a_dtd.duration.day = 8 and then a_dtd.duration.minute = 5)
+			an_evaluator.evaluate ("xdt:dayTimeDuration('P2DT12H') - xdt:dayTimeDuration('P1DT10H30M')")
+			assert ("No evaluation error 7", not an_evaluator.is_error)
+			a_dtd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dayTimeDuration 2", a_dtd /= Void)
+			assert ("One day, 1 hour and 30 minutes", a_dtd.duration.day = 1 and then a_dtd.duration.hour = 1 and then a_dtd.duration.minute = 30)
+		end
 	
 	set_up is
 		do
@@ -853,6 +1050,12 @@ feature -- Results
 			-- 12.5
 		once
 			create Result.make_from_string ("12.5")
+		end
+
+	minus_two_point_five: MA_DECIMAL is
+			-- -2.5
+		once
+			create Result.make_from_string ("-2.5")
 		end
 
 				--print (an_evaluator.error_value.code + " " + an_evaluator.error_value.description)

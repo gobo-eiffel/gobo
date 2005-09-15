@@ -63,7 +63,7 @@ feature -- Access
 			uri_not_void: a_uri /= Void  -- and then is_absolute
 			uri_mapped: is_collection_mapped (a_uri)
 		do
-			Result := collection_name_map.item (a_uri).node_iterator
+			Result := collection_name_map.item (a_uri).node_iterator (False)
 		ensure
 			collection_before: Result /= Void and then Result.before
 		end

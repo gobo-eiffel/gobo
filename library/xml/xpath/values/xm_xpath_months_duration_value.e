@@ -15,12 +15,19 @@ class XM_XPATH_MONTHS_DURATION_VALUE
 inherit
 
 	XM_XPATH_DURATION_VALUE
+		rename
+			make as make_duration,
+			make_from_duration as make_duration_from_duration
 		redefine
-			make, make_from_duration, is_duration, string_value,
+			is_duration, string_value,
 			is_months_duration, as_months_duration,
-			same_expression, is_convertible,
+			same_expression, is_convertible, plus, minus,
+			multiply, scalar_divide, divide,
 			display, convert_to_type, item_type
 		end
+
+	KL_SHARED_PLATFORM
+		export {NONE} all end
 
 create
 
@@ -41,6 +48,8 @@ feature {NONE} -- Initialization
 
 	make_from_duration (a_duration: like duration) is
 			-- Create from duration.
+		require
+			zero_days_and_time: a_duration.day = 0 and then a_duration.millisecond_count = 0
 		do
 			make_atomic_value
 			duration := a_duration
@@ -62,7 +71,6 @@ feature -- Access
 	string_value: STRING is
 			--Value of the item as a string
 		local
-			a_string: STRING
 			total_months, a_year, a_month: INTEGER
 		do
 			total_months := months
@@ -86,7 +94,7 @@ feature -- Access
 	months: INTEGER is
 			-- total number of months
 		do
-			Result := duration.year + duration.month
+			Result := 12 * duration.year + duration.month
 		end
 
 feature -- Comparison
@@ -153,8 +161,6 @@ feature -- Conversions
 	
 	convert_to_type (a_required_type: XM_XPATH_ITEM_TYPE): XM_XPATH_ATOMIC_VALUE is
 			-- Convert `Current' to `a_required_type'
-		local
-			a_duration: like duration
 		do
 			if	a_required_type = any_item or else a_required_type = type_factory.any_atomic_type
 				or else a_required_type = type_factory.year_month_duration_type then
@@ -168,15 +174,81 @@ feature -- Conversions
 			end
 		end
 
+feature -- Basic operations
+
+	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+			-- Addition of `other' to `Current'
+		do
+			if other.is_months_duration then
+				create {XM_XPATH_MONTHS_DURATION_VALUE} Result.make_from_duration (duration + other.duration)
+			else
+				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Both operands must be the same type for duration addition", Gexslt_eiffel_type_uri, "MIXED-DURATIONS", Dynamic_error)
+			end
+		end
+
+	minus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+			-- Subtraction of `other' from `Current'
+		do
+			if other.is_months_duration then
+				create {XM_XPATH_MONTHS_DURATION_VALUE} Result.make_from_duration (duration - other.duration)
+			else
+				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Both operands must be the same type for duration subtraction", Gexslt_eiffel_type_uri, "MIXED-DURATIONS", Dynamic_error)
+			end
+		end
+		
+	multiply (a_scalar: DOUBLE): XM_XPATH_ITEM is
+			-- Multiplication of `Current' by `a_scalar'
+		local
+			a_duration: like duration
+			a_result: INTEGER
+		do
+			a_result := (months * a_scalar).rounded
+			if a_result = Platform.Minimum_integer then
+				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Arithmetic overflow in duration multiplication", Xpath_errors_uri, "FODT0002", Dynamic_error)
+			else
+				create a_duration.make (0, a_result, 0, 0, 0, 0)
+				create {XM_XPATH_MONTHS_DURATION_VALUE} Result.make_from_duration (a_duration)
+			end
+		end
+		
+	scalar_divide (a_scalar: DOUBLE): XM_XPATH_ITEM is
+			-- Division of `Current' by `a_scalar'
+		do
+			Result := multiply (1.0 / a_scalar)
+		end
+		
+	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
+			-- Division of `other' into `Current'
+		local
+			a_decimal, another_decimal: MA_DECIMAL
+		do
+			if other.is_months_duration then
+				if other.as_months_duration.months = 0 then
+					create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Division by zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
+				else
+					create a_decimal.make_from_integer (months)
+					create another_decimal.make_from_integer (other.as_months_duration.months)
+					a_decimal := a_decimal / another_decimal
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (a_decimal)
+				end
+			else
+				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Both operands must be the same type for duration division", Gexslt_eiffel_type_uri, "MIXED-DURATIONS", Dynamic_error)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	normalize is
 			-- Normalize `duration'
 		do
 			if duration.month.abs > 11 then
-				duration.set_year (duration.year + (duration.month // 12))
-				duration.set_month (duration.month \\ 12)
+				duration.set_year (duration.year + (INTEGER_.div (duration.month, 12)))
+				duration.set_month (INTEGER_.mod (duration.month, 12))
 			end
 		end
+
+invariant
+
+	zero_days_and_time: duration.day = 0 and then duration.millisecond_count = 0
 
 end

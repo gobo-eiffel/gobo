@@ -65,7 +65,7 @@ feature -- Evaluation
 					a_cursor.forth
 				end
 				create a_sequence_extent.make_from_list (a_list)
-				last_node_iterator := a_sequence_extent.node_iterator
+				last_node_iterator := a_sequence_extent.node_iterator (False)
 			end
 		end
 

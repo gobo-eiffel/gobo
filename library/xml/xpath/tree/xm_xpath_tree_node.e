@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 					document: is_tree_document
 					-- as `node_type' is `Document_node'
 				end
-				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_TREE_ELEMENT]} Result.make (as_tree_document.all_elements (a_node_test.fingerprint))
+				create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} Result.make (as_tree_document.all_elements (a_node_test.fingerprint))
 			elseif has_child_nodes then
 				create {XM_XPATH_TREE_DESCENDANT_ENUMERATION} Result.make (Current, a_node_test, False)
 			else

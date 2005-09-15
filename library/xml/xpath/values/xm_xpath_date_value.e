@@ -108,7 +108,6 @@ feature -- Access
 			a_zone: DT_FIXED_OFFSET_TIME_ZONE
 			a_zoned_dt: DT_FIXED_OFFSET_ZONED_DATE
 			a_dt: DT_DATE_TIME
-			a_date: DT_DATE
 		do
 			create a_zone.make (an_offset.duration)
 			if not zoned then
@@ -190,7 +189,13 @@ feature -- Comparison
 		do
 			a_date := other.as_date_value
 			if zoned = a_date.zoned then
-				Result := utc_date.three_way_comparison (a_date.utc_date)
+				create a_time.make (0,0,0)
+				create dt1.make_from_date_time (zoned_date.date, a_time)
+				zoned_date.time_zone.convert_to_utc (dt1)
+				create a_time.make (0,0,0)
+				create dt2.make_from_date_time (a_date.zoned_date.date, a_time)
+				a_date.zoned_date.time_zone.convert_to_utc (dt2)
+				Result := dt1.three_way_comparison (dt2)
  			elseif zoned then
 				create a_time.make (0,0,0)
 				create dt2.make_from_date_time (a_date.local_date, a_time)

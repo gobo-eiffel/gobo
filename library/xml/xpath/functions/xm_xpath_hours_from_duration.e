@@ -63,7 +63,6 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			an_item: XM_XPATH_ITEM
 			a_days_value: XM_XPATH_SECONDS_DURATION_VALUE
 		do
 			arguments.item (1).evaluate_item (a_context)

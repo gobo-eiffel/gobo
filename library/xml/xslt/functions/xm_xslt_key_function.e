@@ -98,9 +98,6 @@ feature -- Evaluation
 
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Iterator over the values of a sequence
-			-- N.B. This function is not 100% pure, as it may cause
-			--  an index to be built for a key, but this is only a 
-			--  performance-affecting side effect.
 		local
 			a_transformer: XM_XSLT_TRANSFORMER
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT

@@ -63,7 +63,6 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate as a single item
 		local
-			an_item: XM_XPATH_ITEM
 			a_date_value: XM_XPATH_DATE_VALUE
 			a_dt_duration: DT_DATE_TIME_DURATION
 			a_date_duration: DT_DATE_DURATION

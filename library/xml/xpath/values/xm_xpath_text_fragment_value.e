@@ -86,7 +86,7 @@ feature -- Access
 				create a_node_list.make (2)
 				a_node_list.put (Current, 1)
 				a_node_list.put (child_text_node, 2)
-				create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (a_node_list)
+				create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} Result.make (a_node_list)
 			else
 				create {XM_XPATH_EMPTY_ITERATOR} Result.make
 			end

@@ -221,7 +221,17 @@ feature -- Comparison
 		do
 			a_date_time := other.as_date_time_value
 			if zoned = a_date_time.zoned then
-				Result := utc_date_time.three_way_comparison (a_date_time.utc_date_time)
+				if zoned then
+					create dt2.make_from_date_time (a_date_time.zoned_date_time.date_time.date, a_date_time.zoned_date_time.date_time.time)
+					a_date_time.zoned_date_time.time_zone.convert_to_utc (dt2)
+					create dt1.make_from_date_time (zoned_date_time.date_time.date, zoned_date_time.date_time.time)
+					zoned_date_time.time_zone.convert_to_utc (dt1)
+					Result := dt1.three_way_comparison (dt2)
+				else
+					create dt2.make_from_date_time (a_date_time.local_date_time.date, a_date_time.local_date_time.time)
+					create dt1.make_from_date_time (local_date_time.date, local_date_time.time)
+					Result := dt1.three_way_comparison (dt2)
+				end
  			elseif zoned then
 				create dt2.make_from_date_time (a_date_time.local_date_time.date, a_date_time.local_date_time.time)
 				a_context.implicit_timezone.convert_to_utc (dt2)

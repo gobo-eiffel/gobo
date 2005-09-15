@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 				end
 				a_sequence_extent := a_value.as_sequence_extent
 				if a_sequence_extent.is_node_sequence then
-					Result := a_sequence_extent.node_iterator
+					Result := a_sequence_extent.node_iterator (False)
 				else
 					create an_error.make_from_string ("XPointer returned something other than a sequence of nodes",
 																 Xpath_errors_uri, "XTRE1160", Dynamic_error)

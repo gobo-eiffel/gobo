@@ -70,41 +70,48 @@ feature -- Creation
 		do
 			is_parse_error := False
 			internal_parsed_expression := Void
-			create a_parser.make
-			a_parser.parse (an_expression, a_context, a_start, a_terminator, a_line_number)
-			if not a_parser.is_parse_error then
-				internal_parsed_expression := a_parser.last_parsed_expression
-				check
-					no_error: not internal_parsed_expression.is_error
-				end
-				debug ("XPath expression factory")
-					std.error.put_string ("After parsing:%N%N")
-					internal_parsed_expression.display (1)
-					std.error.put_new_line
-				end
-				internal_parsed_expression.simplify
-				if internal_parsed_expression.is_error then
-					is_parse_error := True
-					parsed_error_value := internal_parsed_expression.error_value
-					internal_parsed_expression := Void
-					debug ("XPath expression factory")
-						std.error.put_string ("Simplification failed!%N")
-					end
-				else
-					if internal_parsed_expression.was_expression_replaced then
-						internal_parsed_expression := internal_parsed_expression.replacement_expression
+			if an_expression.count > 0 then
+				create a_parser.make
+				a_parser.parse (an_expression, a_context, a_start, a_terminator, a_line_number)
+				if not a_parser.is_parse_error then
+					internal_parsed_expression := a_parser.last_parsed_expression
+					check
+						no_error: not internal_parsed_expression.is_error
 					end
 					debug ("XPath expression factory")
-						std.error.put_string ("After simplication:%N%N")
+						std.error.put_string ("After parsing:%N%N")
 						internal_parsed_expression.display (1)
 						std.error.put_new_line
-					end					
+					end
+					internal_parsed_expression.simplify
+					if internal_parsed_expression.is_error then
+						is_parse_error := True
+						parsed_error_value := internal_parsed_expression.error_value
+						internal_parsed_expression := Void
+						debug ("XPath expression factory")
+							std.error.put_string ("Simplification failed!%N")
+						end
+					else
+						if internal_parsed_expression.was_expression_replaced then
+							internal_parsed_expression := internal_parsed_expression.replacement_expression
+						end
+						debug ("XPath expression factory")
+							std.error.put_string ("After simplication:%N%N")
+							internal_parsed_expression.display (1)
+							std.error.put_new_line
+						end					
+					end
+				else
+					is_parse_error := True
+					an_error_type := Static_error
+					create parsed_error_value.make_from_string (a_parser.first_parse_error, Xpath_errors_uri, a_parser.first_parse_error_code, an_error_type)
+					parsed_error_value.set_location (a_system_id, a_parser.first_parse_error_line_number)
 				end
 			else
 				is_parse_error := True
 				an_error_type := Static_error
-				create parsed_error_value.make_from_string (a_parser.first_parse_error, Xpath_errors_uri, a_parser.first_parse_error_code, an_error_type)
-				parsed_error_value.set_location (a_system_id, a_parser.first_parse_error_line_number)
+				create parsed_error_value.make_from_string ("Empty expression text", Xpath_errors_uri, "XPST0003", an_error_type)
+				parsed_error_value.set_location (a_system_id, a_line_number)
 			end
 		ensure
 			error_or_expression: internal_parsed_expression = Void implies parsed_error_value /= Void

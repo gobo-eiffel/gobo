@@ -203,7 +203,7 @@ feature -- Evaluation
 					end
 				when All_read_state then
 					if is_node_sequence then
-						create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} last_iterator.make (node_reservoir)
+						create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} last_iterator.make (node_reservoir)
 					else
 						create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (reservoir)
 					end
