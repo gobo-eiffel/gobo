@@ -87,9 +87,7 @@ feature -- Evaluation
 		local
 			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 			a_sum: XM_XPATH_ATOMIC_VALUE
-			an_item: XM_XPATH_ITEM
-			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			finished: BOOLEAN
+			a_duration_value: XM_XPATH_DURATION_VALUE
 		do
 			last_evaluated_item := Void
 			arguments.item (1).create_iterator (a_context)
@@ -113,45 +111,25 @@ feature -- Evaluation
 						-- static typing
 					end
 					a_sum := an_iterator.item.as_atomic_value
-					-- TODO: for schema-aware processor
 					if a_sum.is_untyped_atomic then
 						a_sum := a_sum.convert_to_type (type_factory.double_type)
+					elseif a_sum.is_duration_value then
+						a_duration_value := a_sum.as_duration_value
+						if not a_duration_value.is_months_duration and then not a_duration_value.is_seconds_duration then
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains a duration value that is neither xdt:yearMonthDuration nor xdt:dayTimeDuration",
+																														Xpath_errors_uri, "FORG0006", Dynamic_error)
+						end
 					end
 					if a_sum.is_numeric_value then
-						a_numeric_value := a_sum.as_numeric_value
-						if not a_numeric_value.is_nan then
-							from
-								an_iterator.forth
-							until
-								finished or else an_iterator.is_error or else an_iterator.after
-							loop
-								an_item := an_iterator.item
-								if an_item.is_untyped_atomic then
-									a_sum := an_item.as_untyped_atomic.convert_to_type (type_factory.double_type)
-								else
-									a_sum := an_item.as_atomic_value.convert_to_type (type_factory.double_type)
-								end
-								if a_sum.is_numeric_value then
-									a_numeric_value := a_numeric_value.arithmetic (Plus_token, a_sum.as_numeric_value)
-								else
-									create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains a mix of numeric and non-numeric values",
-																																"", "FORG0006", Dynamic_error)
-								end
-								an_iterator.forth
-							end
-							if an_iterator.is_error then
-								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
-							end
+						if a_sum.as_numeric_value.is_nan then
+							last_evaluated_item := a_sum
+						else
+							evaluate_numeric_total (a_sum.as_numeric_value, an_iterator)
 						end
-						if last_evaluated_item = Void then
-							if not a_numeric_value.item_type.is_same_type (item_type) then
-								last_evaluated_item := a_numeric_value.convert_to_type (item_type)
-							else
-								last_evaluated_item := a_numeric_value
-							end
-						end
+					elseif a_sum.is_duration_value then
+						evaluate_duration_total (a_sum.as_duration_value, an_iterator)
 					else
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains a value that is not numeric (durations not supported yet)",
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains a value that is neither numeric nor a duration",
 																													"", "FORG0006", Dynamic_error)
 					end
 				end
@@ -176,6 +154,112 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 			-- Compute cardinality.
 		do
 			set_cardinality_exactly_one
+		end
+
+feature {NONE} -- Implementation
+
+	evaluate_numeric_total (a_first_value: XM_XPATH_NUMERIC_VALUE; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+			-- Evaluate total of a sequence of numeric values.
+		require
+			first_value_exists: a_first_value /= Void
+			sequence_on_first_position: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.off and then an_iterator.index = 1
+		local
+			a_sum, a_numeric_value: XM_XPATH_NUMERIC_VALUE
+			an_item: XM_XPATH_ITEM
+			finished: BOOLEAN
+		do			
+			from
+				a_numeric_value := a_first_value; an_iterator.forth
+			until
+				finished or else an_iterator.is_error or else an_iterator.after
+			loop
+				an_item := an_iterator.item
+				if an_item.is_error then
+					last_evaluated_item := an_item; finished := True
+				elseif an_item.is_untyped_atomic then
+					a_sum := an_item.as_untyped_atomic.convert_to_type (type_factory.double_type).as_numeric_value
+				elseif an_item.as_atomic_value.is_convertible (type_factory.double_type) then
+					a_sum := an_item.as_atomic_value.convert_to_type (type_factory.double_type).as_numeric_value
+				else
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains a mix of numeric and non-numeric values",
+																												"", "FORG0006", Dynamic_error); finished := True
+				end
+				if not finished then
+					if a_sum.is_nan then
+						last_evaluated_item := a_sum; finished := True
+					else
+						a_numeric_value := a_numeric_value.arithmetic (Plus_token, a_sum)
+						if a_numeric_value.is_nan then
+							last_evaluated_item := a_sum; finished := True
+						end
+					end
+
+				end
+				an_iterator.forth
+			end
+			if an_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+			elseif last_evaluated_item = Void then
+				if not a_numeric_value.item_type.is_same_type (item_type) then
+					last_evaluated_item := a_numeric_value.convert_to_type (item_type)
+				else
+					last_evaluated_item := a_numeric_value
+				end
+			end
+		end
+
+	evaluate_duration_total (a_first_value: XM_XPATH_DURATION_VALUE; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+			-- Evaluate sum of a sequence of duration values.
+		require
+			first_value_exists: a_first_value /= Void
+			sequence_on_first_position: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.off and then an_iterator.index = 1
+		local
+			a_sum, a_duration_value: XM_XPATH_DURATION_VALUE
+			an_item: XM_XPATH_ITEM
+			is_year_month: BOOLEAN
+		do
+			from
+				is_year_month := a_first_value.is_months_duration
+				last_evaluated_item := Void
+				a_sum := a_first_value
+				an_iterator.forth
+			until
+				an_iterator.is_error or else an_iterator.after or else last_evaluated_item /= Void
+			loop
+				an_item := an_iterator.item
+				if an_item.is_error then
+					last_evaluated_item := an_item
+				else
+					if not an_item.is_atomic_value or else not an_item.as_atomic_value.is_duration_value then
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains mixed duration and non-duration values",
+																													Xpath_errors_uri, "FORG0006", Dynamic_error)
+					else
+						a_duration_value := an_item.as_atomic_value.as_duration_value
+						if a_duration_value.is_months_duration /= is_year_month then
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to sum() contains mixed xdt:yearMonthDuration and xdt:dayTimeDuration values",
+																														Xpath_errors_uri, "FORG0006", Dynamic_error)
+						end
+					end
+					if last_evaluated_item = Void then
+						an_item := a_sum.plus (a_duration_value)
+						if an_item.is_error then
+							last_evaluated_item := an_item
+						else
+							a_sum := an_item.as_atomic_value.as_duration_value
+							check
+								good_duration: a_sum.is_months_duration or else a_sum.is_seconds_duration
+								-- plus will return an error otherwise
+							end							
+						end
+					end
+				end
+				an_iterator.forth
+			end
+			if an_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+			elseif last_evaluated_item = Void then -- no error
+				last_evaluated_item := a_sum
+			end
 		end
 
 end

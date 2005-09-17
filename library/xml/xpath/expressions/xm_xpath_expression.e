@@ -441,6 +441,22 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
+	is_calendar_value: BOOLEAN is
+			-- Is `Current' a calendar value?
+		do
+			Result := False
+		end
+
+	as_calendar_value: XM_XPATH_CALENDAR_VALUE is
+			-- `Current' seen as a calendar value
+		require
+			calendar_value: is_calendar_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+			atomic_value: Result.is_atomic_value
+		end
+	
 	is_date_value: BOOLEAN is
 			-- Is `Current' a date value?
 		do
@@ -448,12 +464,13 @@ feature -- Access
 		end
 
 	as_date_value: XM_XPATH_DATE_VALUE is
-			-- `Current' seen as adate value
+			-- `Current' seen as a date value
 		require
 			date_value: is_date_value
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
+			calendar_value: Result.is_calendar_value
 		end
 
 	is_time_value: BOOLEAN is
@@ -469,6 +486,7 @@ feature -- Access
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
+			calendar_value: Result.is_calendar_value
 		end
 
 	is_date_time_value: BOOLEAN is
@@ -484,6 +502,7 @@ feature -- Access
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
+			calendar_value: Result.is_calendar_value
 		end
 
 	is_duration_value: BOOLEAN is

@@ -13,7 +13,9 @@ indexing
 class	XM_XSLT_TRANSFORMER_RECEIVER
 	
 inherit
-	
+
+	XM_XPATH_TRANSFORMER
+
 	XM_XPATH_PROXY_RECEIVER
 		redefine
 			close
@@ -55,6 +57,12 @@ feature -- Access
 	builder: XM_XPATH_BUILDER
 			-- Document builder
 
+	document_pool: XM_XPATH_DOCUMENT_POOL is
+			-- Document pool
+		do
+			Result := transformer.document_pool
+		end
+
 feature -- Events
 	
 	close is
@@ -65,12 +73,12 @@ feature -- Events
 			Precursor
 			a_document ?= builder.current_root
 			if a_document /= Void then
-				if transformer.document_pool.is_document_mapped (system_id) then
+				if document_pool.is_document_mapped (system_id) then
 
 					-- Done to keep the one URI to same document mapping
 					--  in some sort of spurious shape
 
-					transformer.document_pool.remove (system_id)
+					remove_document (system_id)
 				end
 				transformer.register_document (a_document, transformer.configuration.default_media_type (system_id), system_id)
 				transformer.transform_document (a_document, next_destination)

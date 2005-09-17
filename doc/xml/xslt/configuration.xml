@@ -128,9 +128,8 @@
 	  <term><featurename>use_tiny_tree_model (true_or_false: BOOLEAN)</featurename></term>
 	  <listitem>
 	    <para>
-	      Selects use of the tiny tree model for building in-memory representations of XML source documents (not used for the stylsheet).
+	      Selects use of the tiny tree model for building in-memory representations of XML source documents (not used for the stylesheet).
 	      This is supposed to save memory, at the possible expense of execution time. 
-	      <warning>At present, it seems to leak memory, so avoid it like the plague.</warning>
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -140,15 +139,6 @@
 	    <para>
 	      Sets the number of digits to be used when performing decimal arithmetic with
 	      XPath expressions. The default is 18 digits, and it may not be set lower than this.
-	    </para>
-	  </listitem>
-	</varlistentry>
-    	<varlistentry>
-	  <term><featurename>set_external_function_tracing (on_or_off: BOOLEAN)</featurename></term>
-	  <listitem>
-	    <para>
-	      Sets tracing of binding non-system functions on or off. For debugging purposes only.
-	      Output goes to the standard error stream.
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -173,7 +163,7 @@
 	  <term><featurename>set_recovery_policy (a_recovery_policy: INTEGER)</featurename></term>
 	  <listitem>
 	    <para>
-	      Sets the recovery policy, but this only has effect on impure error listeners.
+	      Sets the recovery policy for error listeners.
 	    </para>
 	  </listitem>
 	</varlistentry>

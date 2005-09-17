@@ -186,20 +186,21 @@ feature -- Access
 			end
 		end
 
-	utc_date_time: DT_DATE_TIME is
-			-- Date_Time adjusted to UTC;
-			-- Ignores implicit time zone.
+	implicitly_zoned_date_time (a_context: XM_XPATH_CONTEXT): DT_DATE_TIME is
+			-- Date_Time adjusted to UTC via implicit time zone
 		do
-			if zoned_date_time = Void then
-				Result := local_date_time
-			elseif cached_utc_date_time /= Void then
+			Result := a_context.implicit_timezone.date_time_to_utc (local_date_time)
+		end
+
+	utc_date_time: DT_DATE_TIME is
+			-- Date_Time adjusted to UTC
+		do
+			if cached_utc_date_time /= Void then
 				Result := cached_utc_date_time
 			else
 				cached_utc_date_time := zoned_date_time.date_time_to_utc
 				Result := cached_utc_date_time
 			end
-		ensure
-			result_not_void: Result /= Void
 		end
 
 feature -- Comparison
@@ -208,8 +209,13 @@ feature -- Comparison
 			-- Are `Current' and `other' the same expression?
 		do
 			if other.is_date_time_value then
-				Result := zoned = other.as_date_time_value.zoned
-					and then utc_date_time.three_way_comparison (other.as_date_time_value.utc_date_time) = 0
+				if zoned then
+					Result := other.as_date_time_value.zoned
+						and then utc_date_time.three_way_comparison (other.as_date_time_value.utc_date_time) = 0
+				else
+					Result := not other.as_date_time_value.zoned
+						and then local_date_time.three_way_comparison (other.as_date_time_value.local_date_time) = 0
+				end
 			end
 		end
 	
@@ -328,6 +334,28 @@ feature -- Conversions
 				else
 					create {XM_XPATH_TIME_VALUE} Result.make_from_time (local_date_time.time)
 				end
+			end
+		end
+
+feature -- Basic operations
+
+	plus (a_duration: XM_XPATH_DURATION_VALUE): like Current is
+			-- Addition of `a_duration' to `Current'
+		local
+			a_date_time: DT_DATE_TIME
+			a_zoned_date_time: like zoned_date_time
+		do
+			if zoned then
+				a_date_time := zoned_date_time.date_time
+			else
+				a_date_time := local_date_time
+			end
+			a_date_time.add_duration (a_duration.duration)
+			if zoned then
+				create a_zoned_date_time.make (a_date_time, zoned_date_time.time_zone)
+				create Result.make_from_zoned_date_time (a_zoned_date_time)
+			else
+				create Result.make_from_date_time (a_date_time)
 			end
 		end
 

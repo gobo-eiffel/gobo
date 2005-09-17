@@ -26,6 +26,9 @@ inherit
 			display, convert_to_type, item_type
 		end
 
+	KL_SHARED_PLATFORM
+		export {NONE} all end
+
 create
 
 	make, make_from_duration
@@ -116,6 +119,12 @@ feature -- Access
 			create Result.make_from_string (a_string)
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	milliseconds: INTEGER is
+			-- Length in milliseconds
+		do
+			Result := duration.millisecond_count + duration.day * 24 * 60 * 60 * 1000
 		end
 
 feature -- Comparison
@@ -236,20 +245,42 @@ feature -- Basic operations
 		
 	multiply (a_scalar: DOUBLE): XM_XPATH_ITEM is
 			-- Multiplication of `Current' by `a_scalar'
+		local
+			a_duration: like duration
+			a_result: INTEGER
 		do
-			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be subtracted", Gexslt_eiffel_type_uri, "DURATION-SUBTRACTION", Dynamic_error)
+			a_result := (milliseconds * a_scalar).rounded
+			if a_result = Platform.Minimum_integer then
+				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Arithmetic overflow in duration multiplication", Xpath_errors_uri, "FODT0002", Dynamic_error)
+			else
+				create a_duration.make_precise (0, 0, 0, 0, 0, 0, a_result)
+				create {XM_XPATH_SECONDS_DURATION_VALUE} Result.make_from_duration (a_duration)
+			end
 		end
 		
 	scalar_divide (a_scalar: DOUBLE): XM_XPATH_ITEM is
 			-- Division of `Current' by `a_scalar'
 		do
-			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be subtracted", Gexslt_eiffel_type_uri, "DURATION-SUBTRACTION", Dynamic_error)
+			Result := multiply (1.0 / a_scalar)
 		end
 		
 	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
 			-- Division of `other' into `Current'
+		local
+			a_decimal, another_decimal: MA_DECIMAL
 		do
-			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be divided", Gexslt_eiffel_type_uri, "DURATION-DIVISION", Dynamic_error)
+			if other.is_seconds_duration then
+				if other.as_seconds_duration.milliseconds = 0 then
+					create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Division by zero", Xpath_errors_uri, "FOAR0001", Dynamic_error)
+				else
+					create a_decimal.make_from_integer (milliseconds)
+					create another_decimal.make_from_integer (other.as_seconds_duration.milliseconds)
+					a_decimal := a_decimal / another_decimal
+					create {XM_XPATH_DECIMAL_VALUE} Result.make (a_decimal)
+				end
+			else
+				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Both operands must be the same type for duration division", Gexslt_eiffel_type_uri, "MIXED-DURATIONS", Dynamic_error)
+			end
 		end
 		
 feature {NONE} -- Implementation

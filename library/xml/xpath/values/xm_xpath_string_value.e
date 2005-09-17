@@ -188,8 +188,11 @@ feature -- Status report
 			elseif a_required_type = type_factory.year_month_duration_type then
 				create a_duration_parser.make
 				Result := a_duration_parser.is_months_duration (value)
+			elseif a_required_type = type_factory.duration_type then
+				create a_duration_parser.make
+				Result := a_duration_parser.is_duration (value)
 			else
-				Result := False -- TODO dtd types (? - check what remains)
+				Result := False -- TODO dtd types (? - check what remains - float, base64, hexBinary, gDatetypes)
 				todo ("is-convertible", True)
 			end
 		end
@@ -247,6 +250,8 @@ feature -- Conversion
 				create {XM_XPATH_SECONDS_DURATION_VALUE} Result.make (value)
 			elseif a_required_type = type_factory.year_month_duration_type then
 				create {XM_XPATH_MONTHS_DURATION_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.duration_type then
+				create {XM_XPATH_DURATION_VALUE} Result.make (value)
 			else
 				-- TODO
 				todo ("convert-to-type (" + a_required_type.conventional_name + ")",True)				

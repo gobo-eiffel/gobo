@@ -117,12 +117,12 @@ feature -- Element change
 			uri_mapped: is_collection_mapped (a_uri)
 		end
 
-feature {XM_XPATH_PROXY_RECEIVER} -- Removal
+feature {XM_XPATH_TRANSFORMER} -- Removal
 
 	remove (a_uri: STRING) is
 			-- Remove `a_document' from `Current'.
 			-- CAUTION: This breaks the guarentee of Unique URI to document mapping.
-			--          Hence the export restriction (designed for XM_XSLT_TRANSFORMER_RECEIVER}).		
+			--          Hence the export restriction
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
 			mapped: is_document_mapped (a_uri)

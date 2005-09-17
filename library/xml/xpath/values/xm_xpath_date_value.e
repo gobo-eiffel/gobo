@@ -153,6 +153,24 @@ feature -- Access
 			end
 		end
 
+	utc_date_time: DT_DATE_TIME is
+			-- Date_Time adjusted to UTC
+		local
+			a_zoned_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME
+		do
+			create a_zoned_date_time.make_from_zoned_date (zoned_date)
+			Result := a_zoned_date_time.date_time_to_utc
+		end
+
+	implicitly_zoned_date_time (a_context: XM_XPATH_CONTEXT): DT_DATE_TIME is
+			-- Date_Time adjusted to UTC via implicit time zone
+		local
+			a_date_time: DT_DATE_TIME
+		do
+			create a_date_time.make_from_date (local_date)
+			Result := a_context.implicit_timezone.date_time_to_utc (a_date_time)
+		end
+	
 	utc_date: DT_DATE is
 			-- Date adjusted to UTC;
 			-- Ignores implicit time zone.
@@ -289,6 +307,30 @@ feature -- Conversions
 				else
 					create {XM_XPATH_DATE_TIME_VALUE} Result.make_from_date (local_date)
 				end
+			end
+		end
+
+feature -- Basic operations
+
+	plus (a_duration: XM_XPATH_DURATION_VALUE): like Current is
+			-- Addition of `a_duration' to `Current'
+		local
+			a_date: DT_DATE
+			a_date_time: DT_DATE_TIME
+			a_zoned_date: like zoned_date
+		do
+			if zoned then
+				a_date := zoned_date.date
+			else
+				a_date := local_date
+			end
+			create a_date_time.make_from_date (a_date)
+			a_date_time.add_duration (a_duration.duration)
+			if zoned then
+				create a_zoned_date.make (a_date_time.date, zoned_date.time_zone)
+				create Result.make_from_zoned_date (a_zoned_date)
+			else
+				create Result.make_from_date (a_date_time.date)
 			end
 		end
 

@@ -613,19 +613,19 @@
 	 <row>
 	   <entry>fn:max</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:min</entry>
 	   <entry>Yes</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:sum</entry>
-	   <entry>Partially</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>

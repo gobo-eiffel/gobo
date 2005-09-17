@@ -202,14 +202,6 @@ feature -- Element change
 			set: is_line_numbering = on_or_off
 		end
 
-	set_external_function_tracing (on_or_off: BOOLEAN) is
-			-- Turn tracing of external functions `on_or_off'.
-		do
-			is_trace_external_functions := on_or_off
-		ensure
-			set: is_trace_external_functions = on_or_off
-		end
-
 	set_trace_listener (a_trace_listener: XM_XSLT_TRACE_LISTENER) is
 			-- Set `trace_listener'.
 		require
@@ -374,16 +366,6 @@ feature {XM_XSLT_TRANSFORMER, XM_XSLT_INSTRUCTION} -- Transformation
 		ensure
 			document_validator_not_void: Result /= Void
 		end
-
-feature {XM_XSLT_STYLESHEET_COMPILER, XM_XSLT_MODULE} -- Compliation
-	
-	are_external_functions_allowed: BOOLEAN
-			-- Are extension functions allowed?
-
-feature {XM_XSLT_EXPRESSION_CONTEXT} -- Debugging
-
-	is_trace_external_functions: BOOLEAN
-			-- Is tracing of external functions turned on?
 	
 feature {NONE} -- Implementation
 

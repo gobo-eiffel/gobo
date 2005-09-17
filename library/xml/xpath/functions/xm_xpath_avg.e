@@ -80,7 +80,7 @@ feature -- Evaluation
 			an_atomic_value: XM_XPATH_ATOMIC_VALUE
 			an_untyped_atomic: XM_XPATH_UNTYPED_ATOMIC_VALUE
 			a_numeric_value: XM_XPATH_NUMERIC_VALUE
-			--  TODO a_duration: XM_XPATH_DURATION_VALUE
+			a_duration_value: XM_XPATH_DURATION_VALUE
 		do
 			arguments.item (1).create_iterator (a_context)
 			an_iterator := arguments.item (1).last_iterator
@@ -108,20 +108,29 @@ feature -- Evaluation
 								a_numeric_value := an_untyped_atomic.convert_to_type (type_factory.double_type).as_numeric_value
 							else
 								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
-																															Xpath_errors_uri, "FORG0007", Dynamic_error)
+																															Xpath_errors_uri, "FORG0006", Dynamic_error)
 							end
-						elseif not an_atomic_value.is_numeric_value then
-							-- TODO - duration values
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
-																														Xpath_errors_uri, "FORG0007", Dynamic_error)
-						else
+						elseif an_atomic_value.is_duration_value then
+							a_duration_value := an_atomic_value.as_duration_value
+							if not a_duration_value.is_months_duration and then not a_duration_value.is_seconds_duration then
+								create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains a duration value that is neither xdt:yearMonthDuration nor xdt:dayTimeDuration",
+																														Xpath_errors_uri, "FORG0006", Dynamic_error)
+							end
+						elseif an_atomic_value.is_numeric_value then
 							a_numeric_value := an_atomic_value.as_numeric_value
+						else
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
+																														Xpath_errors_uri, "FORG0006", Dynamic_error)
 						end
 						if last_evaluated_item = Void then -- no error yet
-							if a_numeric_value.is_nan then
-								last_evaluated_item := a_numeric_value
+							if an_atomic_value.is_numeric_value then
+								if a_numeric_value.is_nan then
+									last_evaluated_item := a_numeric_value
+								else
+									evaluate_numeric_average (a_numeric_value, an_iterator)
+								end
 							else
-								evaluate_numeric_average (a_numeric_value, an_iterator)
+								evaluate_duration_average (a_duration_value, an_iterator)
 							end
 						end
 					end
@@ -154,7 +163,7 @@ feature {NONE} -- Implementation
 	evaluate_numeric_average (a_first_value: XM_XPATH_NUMERIC_VALUE; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Evaluate average of a sequence of numeric values.
 		require
-			first_value_not_void: a_first_value /= Void
+			first_value_exists: a_first_value /= Void
 			sequence_on_first_position: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.off and then an_iterator.index = 1
 		local
 			a_sum, a_numeric_value: XM_XPATH_NUMERIC_VALUE
@@ -181,11 +190,11 @@ feature {NONE} -- Implementation
 							a_numeric_value := an_untyped_atomic.convert_to_type (type_factory.double_type).as_numeric_value
 						else
 							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains a value that is neither numeric, nor a duration",
-																														Xpath_errors_uri, "FORG0007", Dynamic_error)
+																														Xpath_errors_uri, "FORG0006", Dynamic_error)
 						end
 					elseif not an_item.is_numeric_value then
 						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains mixed numeric and non-numeric values",
-																													Xpath_errors_uri, "FORG0007", Dynamic_error)
+																													Xpath_errors_uri, "FORG0006", Dynamic_error)
 					else
 						a_numeric_value := an_item.as_numeric_value
 					end
@@ -208,6 +217,63 @@ feature {NONE} -- Implementation
 			elseif last_evaluated_item = Void then -- no error
 				create an_integer_value.make_from_integer (count)
 				last_evaluated_item := a_sum.arithmetic (Division_token, an_integer_value)
+			end
+		end
+
+	evaluate_duration_average (a_first_value: XM_XPATH_DURATION_VALUE; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
+			-- Evaluate average of a sequence of duration values.
+		require
+			first_value_exists: a_first_value /= Void
+			sequence_on_first_position: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.off and then an_iterator.index = 1
+		local
+			a_sum, a_duration_value: XM_XPATH_DURATION_VALUE
+			count: INTEGER
+			an_item: XM_XPATH_ITEM
+			is_year_month: BOOLEAN
+		do
+			from
+				is_year_month := a_first_value.is_months_duration
+				count := 1
+				last_evaluated_item := Void
+				a_sum := a_first_value
+				an_iterator.forth
+			until
+				an_iterator.is_error or else an_iterator.after or else last_evaluated_item /= Void
+			loop
+				an_item := an_iterator.item
+				if an_item.is_error then
+					last_evaluated_item := an_item
+				else
+					if not an_item.is_atomic_value or else not an_item.as_atomic_value.is_duration_value then
+						create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains mixed duration and non-duration values",
+																													Xpath_errors_uri, "FORG0006", Dynamic_error)
+					else
+						a_duration_value := an_item.as_atomic_value.as_duration_value
+						if a_duration_value.is_months_duration /= is_year_month then
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Input to avg() contains mixed xdt:yearMonthDuration and xdt:dayTimeDuration values",
+																														Xpath_errors_uri, "FORG0006", Dynamic_error)
+						end
+					end
+					if last_evaluated_item = Void then
+						an_item := a_sum.plus (a_duration_value)
+						if an_item.is_error then
+							last_evaluated_item := an_item
+						else
+							a_sum := an_item.as_atomic_value.as_duration_value
+							check
+								good_duration: a_sum.is_months_duration or else a_sum.is_seconds_duration
+								-- plus will return an error otherwise
+							end							
+						end
+					end
+				end
+				count := count + 1
+				an_iterator.forth
+			end
+			if an_iterator.is_error then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make (an_iterator.error_value)
+			elseif last_evaluated_item = Void then -- no error
+				last_evaluated_item := a_sum.multiply (1.0 / count)
 			end
 		end
 

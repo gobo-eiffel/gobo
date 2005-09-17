@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			document_not_void: a_document /= Void
 			context_not_void: a_context /= Void
 			transformer_not_in_error: a_context.transformer /= Void and then not a_context.transformer.is_error
-			empty_map: a_map /= Void and then a_map.count = 0
+			map_not_void: a_map /= Void
 			key_not_void: a_key /= Void
 		local
 			use: XM_XPATH_EXPRESSION

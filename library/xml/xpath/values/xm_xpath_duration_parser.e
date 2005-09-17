@@ -475,6 +475,10 @@ feature {NONE} -- Implementation
 								if a_string.count > 3 then
 									a_round_digit := a_string.substring (4, 4).to_integer
 									a_string := a_string.substring (1, 3)
+								elseif a_string.count < 3 then
+									from  until a_string.count = 3 loop
+										a_string.append_character ('0')
+									end
 								end
 								a_millisecond := a_string.to_integer
 								if a_round_digit > 4 then a_millisecond := a_millisecond + 1 end

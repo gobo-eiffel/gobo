@@ -97,8 +97,9 @@ feature -- Tests
 			assert ("Evaluation error", an_evaluator.is_error) 
 		end
 
-	test_untyped_atomic_to_float is
+	test_untyped_atomic_to_bad_float is
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:float.
+			-- TODO - real float wanted.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -107,7 +108,6 @@ feature -- Tests
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:float")
-			-- xs:float not supported by basic-level processor
 			assert ("Evaluation error", an_evaluator.is_error)
 		end
 
@@ -348,6 +348,60 @@ feature -- Tests
 			evaluated_items := an_evaluator.evaluated_items
 			a_date_time_value ?= evaluated_items.item (1)
 			assert ("DateTime value", a_date_time_value /= Void)
+		end	
+
+	test_untyped_atomic_to_duration is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:duration.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_duration_value: XM_XPATH_DURATION_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('P2Y5MT12H09M08.5674S') cast as xs:duration")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_duration_value ?= evaluated_items.item (1)
+			assert ("Duration value", a_duration_value /= Void)
+		end	
+
+	test_untyped_atomic_to_year_month_duration is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xdt:yearMonthDuration.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_duration_value: XM_XPATH_MONTHS_DURATION_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('P2Y5M') cast as xdt:yearMonthDuration")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_duration_value ?= evaluated_items.item (1)
+			assert ("YearMonthDuration value", a_duration_value /= Void)
+		end	
+
+	test_untyped_atomic_to_day_time_duration is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xdt:dayTimeDuration.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_duration_value: XM_XPATH_SECONDS_DURATION_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('P3DT4H7M') cast as xdt:dayTimeDuration")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_duration_value ?= evaluated_items.item (1)
+			assert ("DayTimeDuration value", a_duration_value /= Void)
 		end	
 
 feature -- Set up

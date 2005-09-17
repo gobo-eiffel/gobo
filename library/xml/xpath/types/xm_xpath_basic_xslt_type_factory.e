@@ -22,62 +22,8 @@ create
 
 feature -- Access
 	
-	duration_type: XM_XPATH_ATOMIC_TYPE is
-			-- xs:duration
-		once
-			Result := Void
-		end
-
-	g_year_month_type: XM_XPATH_ATOMIC_TYPE is
-			-- xs:gYearMonth
-		once
-			Result := Void		
-		end
-
-	g_month_type: XM_XPATH_ATOMIC_TYPE is
-			-- xs:gMonth
-		once
-			Result := Void
-		end
-
-	g_month_day_type: XM_XPATH_ATOMIC_TYPE is
-			-- xs:gMonthDay
-		once
-			Result := Void
-		end
-
-	g_year_type: XM_XPATH_ATOMIC_TYPE is
-			-- xs:gYear
-		once
-			Result := Void
-		end
-
-	g_day_type: XM_XPATH_ATOMIC_TYPE is
-			-- xs:gDay
-		once
-			Result := Void
-		end
-
-	hex_binary_type: XM_XPATH_ATOMIC_TYPE is
-			-- xs:hexBinary
-		once
-			Result := Void
-		end
-
-	base64_binary_type: XM_XPATH_ATOMIC_TYPE is
-			-- xs:base64Binary
-		once
-			Result := Void
-		end
-
 	notation_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:NOTATION
-		once
-			Result := Void
-		end
-
-	float_type: XM_XPATH_ATOMIC_TYPE is
-			-- xs:float
 		once
 			Result := Void
 		end
@@ -152,20 +98,6 @@ feature -- Access
 			-- xs:unsignedByte
 		once
 			Result := Void
-		end
-
-	year_month_duration_type: XM_XPATH_ATOMIC_TYPE is
-			-- xdt:yearMonthDuration
-		once
-			create Result.make (Xpath_defined_datatypes_uri, "yearMonthDuration", any_atomic_type, Year_month_duration_type_code)
-			--type_map.put (Result, Year_month_duration_type_code)
-		end
-
-	day_time_duration_type: XM_XPATH_ATOMIC_TYPE is
-			-- xdt:dayTimeDuration
-		once
-			create Result.make (Xpath_defined_datatypes_uri, "dayTimeDuration", any_atomic_type, Day_time_duration_type_code)
-			--type_map.put (Result, Day_time_duration_type_code)
 		end
 
 	normalized_string_type: XM_XPATH_ATOMIC_TYPE is

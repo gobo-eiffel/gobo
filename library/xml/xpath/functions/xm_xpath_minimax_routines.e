@@ -15,12 +15,15 @@ class XM_XPATH_MINIMAX_ROUTINES
 inherit
 
 	XM_XPATH_COLLATING_FUNCTION
+		redefine
+			check_arguments
+		end
 
 	XM_XPATH_SYSTEM_FUNCTION
 		undefine
 			pre_evaluate, check_static_type
 		redefine
-			evaluate_item
+			evaluate_item, check_arguments
 		end
 
 feature -- Access
@@ -111,6 +114,16 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 	is_max: BOOLEAN
 			-- max() or min()?
 
+feature {XM_XPATH_FUNCTION_CALL} -- Local
+
+	check_arguments (a_context: XM_XPATH_STATIC_CONTEXT) is
+			-- Check arguments during parsing, when all the argument expressions have been read.
+		do
+			-- VE requires the type, although it is actually the same routine:
+			Precursor {XM_XPATH_SYSTEM_FUNCTION} (a_context)
+			arguments.item (1).set_unsorted (False)
+		end
+
 feature {NONE} -- Implementation
 
 	local_comparer: KL_COMPARATOR [XM_XPATH_ITEM]
@@ -134,13 +147,13 @@ feature {NONE} -- Implementation
 				if atomic_value.is_convertible (type_factory.double_type) then
 					atomic_value := atomic_value.convert_to_type (type_factory.double_type)
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot convert xdt:untypedAtomic value to xs:double", Xpath_errors_uri, "FORG0007", Dynamic_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot convert xdt:untypedAtomic value to xs:double", Xpath_errors_uri, "FORG0006", Dynamic_error)
 					already_finished := True
 				end
 			else
 				inspect
 					primitive_type
-				when Integer_type_code, Double_type_code, Decimal_type_code then
+				when Integer_type_code, Double_type_code, Decimal_type_code, Float_type_code then
 					primitive_type := Numeric_type_code
 				else
 				end
@@ -157,9 +170,9 @@ feature {NONE} -- Implementation
 				when Boolean_type_code, String_type_code, Year_month_duration_type_code, Day_time_duration_type_code then
 					-- No problems
 				when Date_time_type_code, Time_type_code, Date_type_code then
-					-- TODO: add implicit time-zone if needed
+					-- The implicit time-zone is available from the dynamic context, if needed, within the XM_XPATH_ATMIC_COMPARER
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.concat ("Invalid base type for fn:min/max(): ", atomic_value.item_type.conventional_name), Xpath_errors_uri, "FORG0007", Dynamic_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.concat ("Invalid base type for fn:min/max(): ", atomic_value.item_type.conventional_name), Xpath_errors_uri, "FORG0006", Dynamic_error)
 					already_finished := True
 				end
 			end
@@ -180,20 +193,20 @@ feature {NONE} -- Implementation
 				if second_atomic_value.is_convertible (type_factory.double_type) then
 					second_atomic_value := second_atomic_value.convert_to_type (type_factory.double_type)
 				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot convert xdt:untypedAtomic value to xs:double", Xpath_errors_uri, "FORG0007", Dynamic_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Cannot convert xdt:untypedAtomic value to xs:double", Xpath_errors_uri, "FORG0006", Dynamic_error)
 					already_finished := True
 				end
 			else
 				inspect
 					second_primitive_type
-				when Integer_type_code, Double_type_code, Decimal_type_code then
+				when Integer_type_code, Double_type_code, Decimal_type_code, Float_type_code then
 					second_primitive_type := Numeric_type_code
 				else
 				end
 			end
 			if not already_finished then
 				if second_primitive_type /= primitive_type then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Not all items have same base type for fn:min/max()", Xpath_errors_uri, "FORG0007", Dynamic_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string ("Not all items have same base type for fn:min/max()", Xpath_errors_uri, "FORG0006", Dynamic_error)
 					already_finished := True
 				else
 					if primitive_type = Numeric_type_code then

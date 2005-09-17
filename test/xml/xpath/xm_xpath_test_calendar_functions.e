@@ -973,7 +973,7 @@ feature -- Tests
 		end
 
 	test_duration_arithmetic is
-			-- Test artihmetic on durationd..
+			-- Test artihmetic on durations.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			a_ymd: XM_XPATH_MONTHS_DURATION_VALUE
@@ -1025,8 +1025,161 @@ feature -- Tests
 			a_dtd ?= an_evaluator.evaluated_items.item (1)
 			assert ("Value is dayTimeDuration 2", a_dtd /= Void)
 			assert ("One day, 1 hour and 30 minutes", a_dtd.duration.day = 1 and then a_dtd.duration.hour = 1 and then a_dtd.duration.minute = 30)
+			an_evaluator.evaluate ("xdt:dayTimeDuration('PT2H10M') * 2.1")
+			assert ("No evaluation error 8", not an_evaluator.is_error)
+			a_dtd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dayTimeDuration 3", a_dtd /= Void)
+			assert ("Four hours and 33 minutes", a_dtd.duration.hour = 4 and then a_dtd.duration.minute = 33)
+			an_evaluator.evaluate ("xdt:dayTimeDuration('P1DT2H30M10.5S') div 1.5")
+			assert ("No evaluation error 9", not an_evaluator.is_error)
+			a_dtd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dayTimeDuration 4", a_dtd /= Void)
+			assert ("Seventeen hours, 40 minutes and 7 seconds", a_dtd.duration.hour = 17 and then a_dtd.duration.minute = 40 and then a_dtd.duration.second = 7)
+			an_evaluator.evaluate ("xdt:dayTimeDuration('P2DT53M11S') div xdt:dayTimeDuration('P1DT10H')")
+			assert ("No evaluation error 10", not an_evaluator.is_error)
+			a_decimal_value ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is decimal 2", a_decimal_value /= Void)
 		end
-	
+
+	test_date_time_arithmetic is
+			-- Test artihmetic on dates and times.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			a_duration: DT_TIME_DURATION
+			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
+			a_dtd: XM_XPATH_SECONDS_DURATION_VALUE
+			a_dt: XM_XPATH_DATE_TIME_VALUE
+			a_date: XM_XPATH_DATE_VALUE
+			a_time: XM_XPATH_TIME_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			create a_duration.make (-5, 0, 0)
+			create a_time_zone.make (a_duration)
+			an_evaluator.set_implicit_timezone (a_time_zone)
+			an_evaluator.evaluate ("xs:dateTime('2000-10-30T06:12:00') - xs:dateTime('1999-11-28T09:00:00Z')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			a_dtd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dayTimeDuration", a_dtd /= Void)
+			assert ("337 day, 2 hours and 12 minutes", a_dtd.duration.day = 337 and a_dtd.duration.hour = 2 and a_dtd.duration.minute = 12)
+			an_evaluator.evaluate ("xs:date('2000-10-30') - xs:date('1999-11-28')")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			a_dtd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dayTimeDuration 2", a_dtd /= Void)
+			assert ("337 days", a_dtd.duration.day = 337)
+			create a_duration.make (5, 0, 0)
+			create a_time_zone.make (a_duration)
+			an_evaluator.set_implicit_timezone (a_time_zone)
+			an_evaluator.evaluate ("xs:date('2000-10-30') - xs:date('1999-11-28Z')")
+			assert ("No evaluation error 3", not an_evaluator.is_error)
+			a_dtd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dayTimeDuration 3", a_dtd /= Void)
+			assert ("336 days and 19 hours", a_dtd.duration.day = 336 and a_dtd.duration.hour = 19)
+			an_evaluator.evaluate ("xs:date('2000-10-15-05:00') - xs:date('2000-10-10+02:00')")
+			assert ("No evaluation error 4", not an_evaluator.is_error)
+			a_dtd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dayTimeDuration 4", a_dtd /= Void)
+			assert ("5 days and 7 hours", a_dtd.duration.day = 5 and a_dtd.duration.hour = 7)
+			create a_duration.make (-5, 0, 0)
+			create a_time_zone.make (a_duration)
+			an_evaluator.set_implicit_timezone (a_time_zone)
+			an_evaluator.evaluate ("xs:time('11:12:00Z') - xs:time('04:00:00')")
+			assert ("No evaluation error 5", not an_evaluator.is_error)
+			a_dtd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dayTimeDuration 5", a_dtd /= Void)
+			assert ("2 hours and 12 minutes", a_dtd.duration.hour = 2 and a_dtd.duration.minute = 12)
+			an_evaluator.evaluate ("xs:time('11:00:00-05:00') - xs:time('21:30:00+05:30')")
+			assert ("No evaluation error 6", not an_evaluator.is_error)
+			a_dtd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dayTimeDuration 6", a_dtd /= Void)
+			assert ("Same time", a_dtd.duration.hour = 0 and a_dtd.duration.minute = 0)
+			an_evaluator.evaluate ("xs:time('17:00:00-06:00') - xs:time('08:00:00+09:00')")
+			assert ("No evaluation error 7", not an_evaluator.is_error)
+			a_dtd ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dayTimeDuration 7", a_dtd /= Void)
+			assert ("One day", a_dtd.duration.hour = 0 and a_dtd.duration.day = 1)
+			an_evaluator.evaluate ("xs:dateTime('2000-10-30T11:12:00') + xdt:yearMonthDuration('P1Y2M')")
+			assert ("No evaluation error 8", not an_evaluator.is_error)
+			a_dt ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dateTime", a_dt /= Void)
+			assert ("2001-12-30T11:12:00", a_dt.date.year = 2001 and then a_dt.date.month = 12 and then a_dt.date.day = 30
+				and then a_dt.time.hour = 11 and then a_dt.time.minute = 12 and then a_dt.time.second = 0)
+			an_evaluator.evaluate ("xs:dateTime('2000-10-30T11:12:00') + xdt:dayTimeDuration('P3DT1H15M')")
+			assert ("No evaluation error 9", not an_evaluator.is_error)
+			a_dt ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dateTime 2", a_dt /= Void)
+			assert ("2000-11-02T12:27:00", a_dt.date.year = 2000 and then a_dt.date.month = 11 and then a_dt.date.day = 2
+				and then a_dt.time.hour = 12 and then a_dt.time.minute = 27 and then a_dt.time.second = 0)
+			an_evaluator.evaluate ("xs:dateTime('2000-10-30T11:12:00') - xdt:yearMonthDuration('P1Y2M')")
+			assert ("No evaluation error 10", not an_evaluator.is_error)
+			a_dt ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dateTime 3", a_dt /= Void)
+			assert ("1999-08-30T11:12:00", a_dt.date.year = 1999 and then a_dt.date.month = 8 and then a_dt.date.day = 30
+				and then a_dt.time.hour = 11 and then a_dt.time.minute = 12 and then a_dt.time.second = 0)			
+			an_evaluator.evaluate ("xs:dateTime('2000-10-30T11:12:00') - xdt:dayTimeDuration('P3DT1H15M')")
+			assert ("No evaluation error 11", not an_evaluator.is_error)
+			a_dt ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is dateTime 4", a_dt /= Void)
+			assert ("2000-10-27T09:57:00", a_dt.date.year = 2000 and then a_dt.date.month = 10 and then a_dt.date.day = 27
+				and then a_dt.time.hour = 9 and then a_dt.time.minute = 57 and then a_dt.time.second = 0)			
+			an_evaluator.evaluate ("xs:date('2000-10-30') + xdt:yearMonthDuration('P1Y2M')")
+			assert ("No evaluation error 12", not an_evaluator.is_error)
+			a_date ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is date", a_date /= Void)
+			assert ("December 30th, 2001", a_date.date.year = 2001 and then a_date.date.month = 12 and then a_date.date.day = 30)
+			an_evaluator.evaluate ("xs:date('2004-10-30Z') + xdt:dayTimeDuration('P2DT2H30M0S')")
+			assert ("No evaluation error 13", not an_evaluator.is_error)
+			a_date ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is date 2", a_date /= Void)
+			assert ("November 1, 2004", a_date.date.year = 2004 and then a_date.date.month = 11 and then a_date.date.day = 1)
+			an_evaluator.evaluate ("xs:date('2000-10-30') - xdt:yearMonthDuration('P1Y2M')")
+			assert ("No evaluation error 14", not an_evaluator.is_error)
+			a_date ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is date 3", a_date /= Void)
+			assert ("August 30, 1999", a_date.date.year = 1999 and then a_date.date.month = 8 and then a_date.date.day = 30)
+			an_evaluator.evaluate ("xs:date('2000-02-29Z') - xdt:yearMonthDuration('P1Y')")
+			assert ("No evaluation error 15", not an_evaluator.is_error)
+			a_date ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is date 4", a_date /= Void)
+			assert ("February 28, 1999 in timezone Z.", a_date.date.year = 1999 and then a_date.date.month = 2 and then a_date.date.day = 28
+				and then a_date.zoned and then a_date.zoned_date.time_zone.fixed_offset.hour = 0)
+			an_evaluator.evaluate ("xs:date('2000-10-31-05:00') - xdt:yearMonthDuration('P1Y1M')")
+			assert ("No evaluation error 16", not an_evaluator.is_error)
+			a_date ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is date 5", a_date /= Void)
+			assert ("September 30, 1999 in timezone -05:00.", a_date.date.year = 1999 and then a_date.date.month = 9 and then a_date.date.day = 30
+				and then a_date.zoned and then a_date.zoned_date.time_zone.fixed_offset.hour = -5)
+			an_evaluator.evaluate ("xs:date('2000-10-30') - xdt:dayTimeDuration('P3DT1H15M')")
+			assert ("No evaluation error 17", not an_evaluator.is_error)
+			a_date ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is date 6", a_date /= Void)
+			assert ("October 26, 2000", a_date.date.year = 2000 and then a_date.date.month = 10 and then a_date.date.day = 26)
+			an_evaluator.evaluate ("xs:time('11:12:00') + xdt:dayTimeDuration('P3DT1H15M')")
+			assert ("No evaluation error 18", not an_evaluator.is_error)
+			a_time ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is time", a_time /= Void)
+			assert ("12:27:00", a_time.time.hour = 12 and then a_time.time.minute = 27 and then a_time.time.second = 0)
+			an_evaluator.evaluate ("xs:time('23:12:00+03:00') + xdt:dayTimeDuration('P1DT3H15M')")
+			assert ("No evaluation error 19", not an_evaluator.is_error)
+			a_time ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is time 2", a_time /= Void)
+			assert ("02:27:00+03:00", a_time.time.hour = 2 and then a_time.time.minute = 27 and then a_time.time.second = 0
+				and then a_time.zoned and then a_time.zoned_time.time_zone.fixed_offset.hour = 3)			
+			an_evaluator.evaluate ("xs:time('11:12:00') - xdt:dayTimeDuration('P3DT1H15M')")
+			assert ("No evaluation error 20", not an_evaluator.is_error)
+			a_time ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is time 3", a_time /= Void)
+			assert ("09:57:00", a_time.time.hour = 9 and then a_time.time.minute = 57 and then a_time.time.second = 0)
+			an_evaluator.evaluate ("xs:time('08:20:00-05:00') - xdt:dayTimeDuration('P23DT10H10M')")
+			assert ("No evaluation error 21", not an_evaluator.is_error)
+			a_time ?= an_evaluator.evaluated_items.item (1)
+			assert ("Value is time 4", a_time /= Void)
+			assert ("22:10:00-05:00", a_time.time.hour = 22 and then a_time.time.minute = 10 and then a_time.time.second = 0
+				and then a_time.zoned and then a_time.zoned_time.time_zone.fixed_offset.hour = -5)			
+		end
+
 	set_up is
 		do
 			conformance.set_basic_xslt_processor
@@ -1058,7 +1211,7 @@ feature -- Results
 			create Result.make_from_string ("-2.5")
 		end
 
-				--print (an_evaluator.error_value.code + " " + an_evaluator.error_value.description)
+	--print (an_evaluator.error_value.code + " " + an_evaluator.error_value.description)
 
 end
 

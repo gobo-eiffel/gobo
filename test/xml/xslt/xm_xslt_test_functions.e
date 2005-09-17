@@ -43,7 +43,6 @@ feature -- Test
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
-			a_configuration.set_external_function_tracing (False) -- True whilst developing
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			create a_stylesheet_compiler.make (a_configuration)
 			create a_uri_source.make ("./data/reverse.xsl")
@@ -74,7 +73,6 @@ feature -- Test
 		do
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
-			a_configuration.set_external_function_tracing (False) -- True whilst developing
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			create a_stylesheet_compiler.make (a_configuration)
 			create a_uri_source.make ("./data/reverse2.xsl")

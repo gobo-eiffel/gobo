@@ -145,6 +145,12 @@ feature -- Access
 			create Result.make (Xml_schema_uri, "decimal", numeric_type, Decimal_type_code)
 		end
 
+	float_type: XM_XPATH_ATOMIC_TYPE is
+			-- xs:float
+		once
+			create Result.make (Xml_schema_uri, "float", numeric_type, Float_type_code)
+		end
+
 	double_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:double
 		once
@@ -168,7 +174,67 @@ feature -- Access
 		once
 			create Result.make
 		end
-		
+
+	duration_type: XM_XPATH_ATOMIC_TYPE is
+			-- xs:duration
+		once
+			create Result.make (Xml_schema_uri, "duration", any_atomic_type, Duration_type_code)
+		end
+
+	year_month_duration_type: XM_XPATH_ATOMIC_TYPE is
+			-- xdt:yearMonthDuration
+		once
+			create Result.make (Xpath_defined_datatypes_uri, "yearMonthDuration", duration_type, Year_month_duration_type_code)
+		end
+
+	day_time_duration_type: XM_XPATH_ATOMIC_TYPE is
+			-- xdt:dayTimeDuration
+		once
+			create Result.make (Xpath_defined_datatypes_uri, "dayTimeDuration", duration_type, Day_time_duration_type_code)
+		end
+
+	g_year_month_type: XM_XPATH_ATOMIC_TYPE is
+			-- xs:gYearMonth
+		once
+			create Result.make (Xml_schema_uri, "gYearMonth", any_atomic_type, G_year_month_type_code)
+		end
+
+	g_month_type: XM_XPATH_ATOMIC_TYPE is
+			-- xs:gMonth
+		once
+			create Result.make (Xml_schema_uri, "gMonth", any_atomic_type, G_month_type_code)
+		end
+
+	g_month_day_type: XM_XPATH_ATOMIC_TYPE is
+			-- xs:gMonthDay
+		once
+			create Result.make (Xml_schema_uri, "gMonthDay", any_atomic_type, G_month_day_type_code)
+		end
+
+	g_year_type: XM_XPATH_ATOMIC_TYPE is
+			-- xs:gYear
+		once
+			create Result.make (Xml_schema_uri, "gYear", any_atomic_type, G_year_type_code)
+		end
+
+	g_day_type: XM_XPATH_ATOMIC_TYPE is
+			-- xs:gDay
+		once
+			create Result.make (Xml_schema_uri, "gDay", any_atomic_type, G_day_type_code)
+		end
+
+	hex_binary_type: XM_XPATH_ATOMIC_TYPE is
+			-- xs:hexBinary
+		once
+			create Result.make (Xml_schema_uri, "hexBinary", any_atomic_type, Hex_binary_type_code)
+		end
+
+	base64_binary_type: XM_XPATH_ATOMIC_TYPE is
+			-- xs:base64Binary
+		once
+			create Result.make (Xml_schema_uri, "base64Binary", any_atomic_type, Base64_binary_type_code)
+		end
+
 	object_type: XM_XPATH_SIMPLE_TYPE is
 			-- Extension functions - gexslt:object
 		do

@@ -315,6 +315,8 @@ feature {NONE} -- Implementation
 						Result := Duration_addition_action
 					elseif t1 = type_factory.day_time_duration_type and then t2 = type_factory.day_time_duration_type then
 						Result := Duration_addition_action
+					elseif t1 = t2 and then operator = Minus_token then
+						Result := Date_difference_action
 					elseif t1 = type_factory.date_type and then (t2 = type_factory.year_month_duration_type or else t2 = type_factory.day_time_duration_type) then
 						Result := Date_and_duration_action
 					elseif t2 = type_factory.date_type and then (t1 = type_factory.year_month_duration_type or else t1 = type_factory.day_time_duration_type) then
