@@ -41,7 +41,9 @@ feature -- Bits
 		deferred
 		ensure
 			large_enough: Result >= 1
-			small_enough: Result <= Boolean_bytes * Byte_bits
+			-- Note: Postcondition commented out to avoid recursive
+			-- call in once-function in KL_PLATFORM:
+			-- small_enough: Result <= Boolean_bytes * Byte_bits
 		end
 
 	Byte_bits: INTEGER is 8
