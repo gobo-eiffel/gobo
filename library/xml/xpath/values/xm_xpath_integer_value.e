@@ -225,6 +225,8 @@ feature -- Conversion
 				Result := Current
 			elseif  a_required_type = type_factory.double_type then
 				create {XM_XPATH_DOUBLE_VALUE} Result.make (as_double)
+			elseif  a_required_type = type_factory.float_type then
+				create {XM_XPATH_FLOAT_VALUE} Result.make (as_double.truncated_to_real)
 			elseif  a_required_type = type_factory.decimal_type then
 				create {XM_XPATH_DECIMAL_VALUE} Result.make (value)
 			elseif  a_required_type = type_factory.string_type then

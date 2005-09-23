@@ -178,37 +178,6 @@ feature
 			assert ("Correct result", STRING_.same_string (an_output.last_output, expected_result_string))
 		end
 
-	test_no_xpointer is
-			-- Test of no xpointer option.
-		local
-			a_stylesheet_compiler: XM_XSLT_STYLESHEET_COMPILER
-			a_configuration: XM_XSLT_CONFIGURATION
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_uri_source: XM_XSLT_URI_SOURCE
-			an_output: XM_OUTPUT
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
-		do
-			conformance.set_basic_xslt_processor
-			create a_configuration.make_with_defaults
-			a_configuration.set_line_numbering (True)
-			a_configuration.use_tiny_tree_model (True)
-			a_configuration.do_not_use_xpointer
-			a_configuration.set_recovery_policy (Do_not_recover)
-			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/document2.xsl")
-			a_stylesheet_compiler.prepare (a_uri_source)
-			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
-			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
-			a_transformer := a_stylesheet_compiler.new_transformer
-			assert ("transformer", a_transformer /= Void)
-			a_transformer.set_initial_template ("initial")
-			create an_output
-			an_output.set_output_to_string
-			create a_result.make (an_output, "string:")
-			a_transformer.transform (Void, a_result)
-			assert ("Error XT1160", a_transformer.is_error)
-		end
-
 	expected_result_string: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Number, the Language of Science</output>"
 			-- Expected result
 

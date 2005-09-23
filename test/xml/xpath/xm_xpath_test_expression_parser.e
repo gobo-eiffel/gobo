@@ -193,7 +193,7 @@ feature -- Test
 			create a_context.make (False, False, a_base_uri, a_function_library)
 			expression_factory.make_expression (a_string, a_context, 1, Eof_token, 1, "unknown:")
 			assert ("Parse failed", expression_factory.is_parse_error)
-			assert ("Error text length", expression_factory.parsed_error_value.error_message.count = 122)
+			assert ("Error text length", expression_factory.parsed_error_value.error_message.count = 118)
 		end
 
 

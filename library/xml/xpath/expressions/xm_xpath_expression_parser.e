@@ -240,6 +240,7 @@ feature {NONE} -- Implementation
 			a_message, a_local_name, a_uri: STRING
 			a_parser: XM_XPATH_QNAME_PARSER
 			a_fingerprint: INTEGER
+			is_empty_sequence: BOOLEAN
 		do
 			a_primary_type := any_item
 			if tokenizer.last_token = Name_token then
@@ -287,6 +288,20 @@ feature {NONE} -- Implementation
 							next_token ("In parse_sequence after item after RPAR: current token is ")
 						end
 					end
+				elseif STRING_.same_string (tokenizer.last_token_value, "empty-sequence") then
+					next_token ("In parse_sequence after empty-sequence: current token is ")
+					if tokenizer.is_lexical_error then
+							report_parse_error (tokenizer.last_lexical_error, "XPST0003")
+					else
+						if tokenizer.last_token /= Right_parenthesis_token then
+							a_message := "expected %"%)%", found "
+							a_message := STRING_.appended_string (a_message, display_current_token)
+							report_parse_error (a_message, "XPST0003")
+						else
+							next_token ("In parse_sequence after empty-sequence after RPAR: current token is ")
+						end
+					end
+					is_empty_sequence := True
 				else
 					
 					-- Covers element(N,T), comment(), text(), etc
@@ -304,7 +319,11 @@ feature {NONE} -- Implementation
 				report_parse_error (a_message, "XPST0003")
 			end
 			if not is_parse_error then
-				set_occurence_flag (a_primary_type)
+				if is_empty_sequence then
+					create internal_last_parsed_sequence.make_empty
+				else
+					set_occurence_flag (a_primary_type)
+				end
 			end
 		ensure
 			expression_not_void_unless_error: not is_parse_error implies internal_last_parsed_sequence /= Void
@@ -1651,7 +1670,7 @@ feature {NONE} -- Implementation
 		do
 			if not is_axis_name_valid (tokenizer.last_token_value) then
 				a_message := STRING_.appended_string ("Unexpected axis name, found ", display_current_token)
-				report_parse_error (a_message, "XPST0003")
+				report_parse_error (a_message, "XPST0010")
 			else
 				an_axis_number := axis_number (tokenizer.last_token_value)
 				a_principal_node_type := axis_principal_node_type (an_axis_number)

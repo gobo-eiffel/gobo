@@ -236,6 +236,13 @@ feature -- Access
 			Result := module_list.item (a_module_number)
 		end
 
+	input_type_annotations: INTEGER
+			-- Value of input-type-annotations attribute coded on `Current' and it's imports/inclusions
+
+	Strip_annotations: INTEGER is 1
+	Preserve_annotations: INTEGER is 2
+			-- Bit-values for `input_type_annotations'
+
 feature -- Status report
 
 	any_compile_errors: BOOLEAN
@@ -456,12 +463,32 @@ feature -- Element change
 			no_smaller: largest_pattern_stack_frame >= old largest_pattern_stack_frame
 		end
 
+	merge_input_type_annotations (an_annotation_setting: INTEGER) is
+			-- Merge `input_type_annotations' with `an_annotation_setting'.
+		require
+			valid_annotation: an_annotation_setting <= Preserve_annotations and then an_annotation_setting >= 0
+		local
+			an_error: XM_XPATH_ERROR_VALUE
+		do
+			if an_annotation_setting /= 0 then
+				if input_type_annotations = 0 then
+					input_type_annotations := an_annotation_setting
+				elseif input_type_annotations = an_annotation_setting then
+					-- nothing to do
+				else
+					create an_error.make_from_string ("One stylesheet module specifies input-type-annotations='strip', another specifies input-type-annotations='preserve'",
+																 Xpath_errors_uri, "XTSE0265", Static_error)
+					report_compile_error (an_error)
+				end
+			end
+		end
+
 	prepare_attributes is
 			-- Set the attribute list for the element.
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			a_name_code: INTEGER
-			an_expanded_name: STRING
+			an_expanded_name, an_input_type_annotations_attribute: STRING
 			an_error: XM_XPATH_ERROR_VALUE
 		do
 			from
@@ -482,13 +509,15 @@ feature -- Element change
 					-- do nothing
 				elseif STRING_.same_string (an_expanded_name, Default_validation_attribute) then
 					default_validation := validation_code (attribute_value_by_index (a_cursor.index))
-					if default_validation = Validation_invalid then
-						create an_error.make_from_string ("Invalid value for default-validation attribute. Permitted values are (strict, lax, preserve, strip)", Xpath_errors_uri, "XTSE0020", Static_error)
+					if default_validation /= Validation_preserve and then  default_validation /= Validation_strip then
+						create an_error.make_from_string ("Invalid value for default-validation attribute. Permitted values are (preserve, strip)", Xpath_errors_uri, "XTSE0020", Static_error)
 						report_compile_error (an_error)
 					elseif conformance.basic_xslt_processor and then default_validation /= Validation_strip then
 						create an_error.make_from_string ("Invalid value for default-validation attribute. Only 'strip' is permitted for a basic XSLT processor)", Xpath_errors_uri, "XTSE1660", Static_error)
 						report_compile_error (an_error)
 					end
+				elseif STRING_.same_string (an_expanded_name, Input_type_annotations_attribute) then
+					an_input_type_annotations_attribute := attribute_value_by_index (a_cursor.index)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_explain_attribute) then
 					is_all_explaining := STRING_.same_string (attribute_value_by_index (a_cursor.index), "all")
 				else
@@ -499,9 +528,23 @@ feature -- Element change
 			if version = Void then
 				report_absence ("version")
 			end
+			if an_input_type_annotations_attribute /= Void then
+				if STRING_.same_string (an_input_type_annotations_attribute, "strip") then
+					input_type_annotations := Strip_annotations
+				elseif STRING_.same_string (an_input_type_annotations_attribute, "preserve") then
+					input_type_annotations := Preserve_annotations
+				elseif STRING_.same_string (an_input_type_annotations_attribute, "unspecified") then
+					-- nothing to do
+				else
+					create an_error.make_from_string ("Invalid value for input-type-annotations attribute. Permitted values are (strip, preserve, unspecified)",
+					Xpath_errors_uri, "XTSE0020", Static_error)
+					report_compile_error (an_error)
+				end
+			end
 			attributes_prepared := True
 		end
 
+	
 	set_stylesheet_compiler (a_stylesheet_compiler: like stylesheet_compiler; a_configuration: XM_XSLT_CONFIGURATION) is
 			-- Set `stylesheet_compiler'.
 		require
@@ -820,7 +863,8 @@ feature -- Element change
 					end
 					executable.set_named_template_table (a_compiled_templates_index)
 				end
-
+				executable.set_strips_input_type_annotations (input_type_annotations = Strip_annotations)
+	
 				-- Build the index of named character maps.
 
 				a_character_map_index := executable.character_map_index
@@ -1200,5 +1244,6 @@ invariant
 	module_list_not_void: module_list /= Void
 	function_library_not_void:  function_library /= Void
 	executable_not_void: executable /= Void
+	valid_input_type_annotations: input_type_annotations <= Preserve_annotations and then input_type_annotations >= 0
 
 end

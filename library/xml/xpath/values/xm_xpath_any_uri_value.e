@@ -26,7 +26,8 @@ inherit
 		export {NONE} all end
 
 		-- Although anyURI is not a sub-type of xs:string, it is convenient
-		-- to implement it as such.
+		-- to implement it as such, especially for the URI promotion rule
+		--  (see XM_XPATH_TYPE_CHECKER for the implementation of that rule)
 
 create
 

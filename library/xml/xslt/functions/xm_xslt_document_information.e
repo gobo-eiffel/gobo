@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			-- Set by `fragment'
 
 	configuration: XM_XSLT_CONFIGURATION
-			-- Configuration, for XPointer options
+			-- Configuration
 
 	fragment (a_uri: UT_URI; a_document: XM_XPATH_DOCUMENT): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Node sequence from fragment of `a_uri'
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			a_media_type := last_evaluated_media_type
 			if a_media_type = Void then a_media_type := configuration.default_media_type (a_uri.full_uri) end
 			a_media_type_map := configuration.media_type_map
-			a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.use_xpointer, configuration.assume_html_is_xhtml)
+			a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.assume_html_is_xhtml)
 			if a_media_type_map.may_use_xpointer then
 				Result := xpointer_fragment (a_fragment_id, a_document)
 				in_error := Result = Void

@@ -99,7 +99,6 @@ feature -- Tests
 
 	test_untyped_atomic_to_bad_float is
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:float.
-			-- TODO - real float wanted.
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 		do
@@ -110,6 +109,24 @@ feature -- Tests
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:float")
 			assert ("Evaluation error", an_evaluator.is_error)
 		end
+
+	test_untyped_atomic_to_float is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:float.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_float_value: XM_XPATH_FLOAT_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic (' 17.5E-12') cast as xs:float")
+			assert ("No valuation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_float_value ?= evaluated_items.item (1)
+			assert ("Correct value", a_float_value /= Void and then a_float_value.value = 17.5E-12)
+		end	
 
 	test_untyped_atomic_to_double_unsucessful is
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:double, with invalid value.
@@ -404,6 +421,199 @@ feature -- Tests
 			assert ("DayTimeDuration value", a_duration_value /= Void)
 		end	
 
+	test_untyped_atomic_to_g_year_month is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:gYearMonth.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_value: XM_XPATH_YEAR_MONTH_VALUE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09') castable as xs:gYearMonth")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09') cast as xs:gYearMonth")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_value ?= evaluated_items.item (1)
+			assert ("gYearMonth value", a_value /= Void)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005--09') castable as xs:gYearMonth")
+			assert ("No evaluation error 3", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
+		end
+
+	test_untyped_atomic_to_g_year is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:gYear.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_value: XM_XPATH_YEAR_VALUE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005') castable as xs:gYear")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005') cast as xs:gYear")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_value ?= evaluated_items.item (1)
+			assert ("gYear value", a_value /= Void)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005--09') castable as xs:gYear")
+			assert ("No evaluation error 3", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
+		end
+
+	test_untyped_atomic_to_g_month is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:gMonth.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_value: XM_XPATH_MONTH_VALUE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('--09') castable as xs:gMonth")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('--09') cast as xs:gMonth")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_value ?= evaluated_items.item (1)
+			assert ("gMonth value", a_value /= Void)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005--09') castable as xs:gMonth")
+			assert ("No evaluation error 3", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
+		end
+
+	test_untyped_atomic_to_g_month_day is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:gMonthDay.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_value: XM_XPATH_MONTH_DAY_VALUE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('--05-09') castable as xs:gMonthDay")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('--05-09') cast as xs:gMonthDay")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_value ?= evaluated_items.item (1)
+			assert ("gMonthDay value", a_value /= Void)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005--09') castable as xs:gMonthDay")
+			assert ("No evaluation error 3", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
+		end
+
+	test_untyped_atomic_to_g_day is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:gDay.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_value: XM_XPATH_DAY_VALUE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('---09') castable as xs:gDay")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('---09') cast as xs:gDay")
+			assert ("No evaluation error 2", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_value ?= evaluated_items.item (1)
+			assert ("gDay value", a_value /= Void)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('2005--09') castable as xs:gDay")
+			assert ("No evaluation error 3", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Not castable", a_boolean_value /= Void and then not a_boolean_value.value)
+		end
+
+	test_untyped_atomic_to_base64 is
+			-- Test creating an xdt:untypedAtomic from a string then casting it to an xs:base64Binary.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_value: XM_XPATH_BASE64_BINARY_VALUE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('" + encoded_string + "') castable as xs:base64Binary")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xdt:untypedAtomic ('" + encoded_string + "') cast as xs:base64Binary")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_value ?= evaluated_items.item (1)
+			assert ("base64Binary value", a_value /= Void)
+		end
+
+	test_base64_to_hex_binary is
+			-- Test casting an xs:base64Binary to an xs:hexBinary.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_value: XM_XPATH_HEX_BINARY_VALUE
+			a_boolean_value: XM_XPATH_BOOLEAN_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("xs:base64Binary ('" + encoded_string + "') castable as xs:hexBinary")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_boolean_value ?= evaluated_items.item (1)
+			assert ("Castable", a_boolean_value /= Void and then a_boolean_value.value)
+			an_evaluator.evaluate ("xs:base64Binary ('" + encoded_string + "') cast as xs:hexBinary")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			a_value ?= evaluated_items.item (1)
+			assert ("hexBinary value", a_value /= Void)
+		end
+	
 feature -- Set up
 
 	set_up is
@@ -422,6 +632,8 @@ feature {NONE} -- Implementation
 			std.error.put_new_line
 		end
 
+	encoded_string: STRING is "R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAwAAAC8IyPqcvt3wCcDkiLc7C0qwyGHhSWpjQu5yqmCYsapyuvUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7"
+			-- base64-encoded image/gif file
 end
 
 			

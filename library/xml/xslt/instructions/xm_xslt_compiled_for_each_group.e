@@ -501,17 +501,11 @@ feature {NONE} -- Implementation
 					a_new_context.set_current_iterator (a_population)
 					create {XM_XSLT_GROUP_BY_ITERATOR} a_group_iterator.make (a_population, key_expression, a_new_context, collator (a_new_context))
 				when Group_adjacent_algorithm then
-					check
-						croup_adjacent_NYI: False
-					end
-					--				create {XM_XSLT_GROUP_ADJACENT_ITERATOR} a_group_iterator.make (a_population, key_expression, a_context, collator)
+					create {XM_XSLT_GROUP_ADJACENT_ITERATOR} a_group_iterator.make (a_population, key_expression, a_context, collator (a_context))
 				when Group_starting_with_algorithm then
 					create {XM_XSLT_GROUP_STARTING_WITH_ITERATOR} a_group_iterator.make (a_population, key_pattern, a_context, Current)
 				when Group_ending_with_algorithm then
-					check
-						group_ending_with_NYI: False
-					end
-					--create {XM_XSLT_GROUP_ENDING_WITH_ITERATOR} a_group_iterator.make (a_population, key_expression.pattern, a_context)
+					create {XM_XSLT_GROUP_ENDING_WITH_ITERATOR} a_group_iterator.make (a_population, key_pattern, a_context, Current)
 				end
 				
 				-- Now iterate over the leading nodes of the groups.

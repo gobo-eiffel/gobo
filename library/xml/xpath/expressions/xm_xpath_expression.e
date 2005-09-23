@@ -381,6 +381,36 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 	
+	is_hex_binary: BOOLEAN is
+			-- Is `Current' a hexBinary value?
+		do
+			Result := False
+		end
+
+	as_hex_binary: XM_XPATH_HEX_BINARY_VALUE is
+			-- `Current' seen as a hexBinary value
+		require
+			hex_binary_value: is_hex_binary
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+	
+	is_base64_binary: BOOLEAN is
+			-- Is `Current' a base64Binary value?
+		do
+			Result := False
+		end
+
+	as_base64_binary: XM_XPATH_BASE64_BINARY_VALUE is
+			-- `Current' seen as a base64Binary value
+		require
+			base64_binary_value: is_base64_binary
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 	is_numeric_value: BOOLEAN is
 			-- Is `Current' a numeric value?
 		do
@@ -503,6 +533,81 @@ feature -- Access
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
 			calendar_value: Result.is_calendar_value
+		end
+
+	is_month_day_value: BOOLEAN is
+			-- Is `Current' a gYearMonth value?
+		do
+			Result := False
+		end
+
+	as_month_day_value: XM_XPATH_MONTH_DAY_VALUE is
+			-- `Current' seen as a gMonthDay value
+		require
+			month_day_value: is_month_day_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_year_month_value: BOOLEAN is
+			-- Is `Current' a gYearMonth value?
+		do
+			Result := False
+		end
+
+	as_year_month_value: XM_XPATH_YEAR_MONTH_VALUE is
+			-- `Current' seen as a gYearMonth value
+		require
+			year_month_value: is_year_month_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_year_value: BOOLEAN is
+			-- Is `Current' a gYear value?
+		do
+			Result := False
+		end
+
+	as_year_value: XM_XPATH_YEAR_VALUE is
+			-- `Current' seen as a gYear value
+		require
+			year_value: is_year_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_month_value: BOOLEAN is
+			-- Is `Current' a gMonth value?
+		do
+			Result := False
+		end
+
+	as_month_value: XM_XPATH_MONTH_VALUE is
+			-- `Current' seen as a gMonth value
+		require
+			month_value: is_month_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_day_value: BOOLEAN is
+			-- Is `Current' a gDay value?
+		do
+			Result := False
+		end
+
+	as_day_value: XM_XPATH_DAY_VALUE is
+			-- `Current' seen as a gDay value
+		require
+			day_value: is_day_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
 		end
 
 	is_duration_value: BOOLEAN is

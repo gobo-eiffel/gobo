@@ -51,6 +51,47 @@ feature -- Access
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
 
+feature -- Status report
+
+	is_element_available (a_uri, a_local_name: STRING): BOOLEAN is
+			-- Is named element available?
+		require
+			local_name_exists: a_local_name /= Void
+		local
+			a_fingerprint: INTEGER
+		do
+			if a_uri /= Void then
+				if STRING_.same_string (a_uri, Xslt_uri) then
+					a_fingerprint := shared_name_pool.fingerprint (a_uri, a_local_name)
+					if a_fingerprint /= -1 then
+						Result := is_xslt_instruction (a_fingerprint)
+					end
+				else
+					-- No others are currently available
+				end
+			end
+		end
+
+	is_xslt_instruction (a_fingerprint: INTEGER): BOOLEAN is
+			-- Does `a_fingerprint' represent an XSLT instruction?
+		do
+			inspect
+				a_fingerprint
+			when Xslt_apply_templates_type_code, Xslt_apply_imports_type_code,
+				Xslt_next_match_type_code, Xslt_for_each_type_code, Xslt_if_type_code,
+				Xslt_choose_type_code, Xslt_variable_type_code, Xslt_call_template_type_code,
+				Xslt_element_type_code, Xslt_attribute_type_code, Xslt_text_type_code,
+				Xslt_value_of_type_code, Xslt_document_type_code, Xslt_processing_instruction_type_code,
+				Xslt_namespace_type_code, Xslt_comment_type_code, Xslt_copy_type_code,
+				Xslt_copy_of_type_code, Xslt_sequence_type_code, Xslt_number_type_code,
+				Xslt_perform_sort_type_code, Xslt_for_each_group_type_code,
+				Xslt_analyze_string_type_code, Xslt_message_type_code, Xslt_fallback_type_code,
+				Xslt_result_document_type_code
+			 then
+				Result := True
+			end
+		end
+
 feature -- Creation
 
 	new_element_node (a_document: XM_XPATH_TREE_DOCUMENT; a_parent: XM_XPATH_TREE_COMPOSITE_NODE; an_attribute_collection: XM_XPATH_ATTRIBUTE_COLLECTION; a_namespace_list:  DS_ARRAYED_LIST [INTEGER];

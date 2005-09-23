@@ -203,7 +203,6 @@ feature -- Conversion
 			-- Convert `Current' to `a_required_type'
 			-- TODO - need to virtualize the pre-condition so that
 			-- only sub-types of Integer_type are valid
-		local
 		do
 			if a_required_type = type_factory.boolean_type  then
 				create {XM_XPATH_BOOLEAN_VALUE} Result.make (value /= 0.0)
@@ -217,6 +216,8 @@ feature -- Conversion
 				Result := Current
 			elseif  a_required_type = type_factory.decimal_type then
 				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_string (value.out)
+			elseif  a_required_type = type_factory.float_type then
+				create {XM_XPATH_FLOAT_VALUE} Result.make (value.truncated_to_real)
 			elseif  a_required_type = type_factory.string_type then
 				create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 			end

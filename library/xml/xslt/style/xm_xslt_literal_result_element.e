@@ -233,6 +233,36 @@ feature -- Element change
 			end
 		end
 
+	constructed_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER): XM_XPATH_TREE_DOCUMENT is
+			-- Simlified stylesheet constructed around `Current'
+		require
+			stylesheet_compiler_exists: a_compiler /= Void
+		local
+			an_xslt_prefix, a_version: STRING
+		do
+			an_xslt_prefix := prefix_for_uri (Xslt_uri)
+			if an_xslt_prefix = Void then
+				if STRING_.same_string (local_part, "transform")
+					or else STRING_.same_string (local_part, "stylesheet") then
+					a_compiler.report_error ("Namespace for stylesheet element should be " + Xslt_uri)
+				else
+					a_compiler.report_error ("The document does not appear to be a stylesheet")
+				end
+			else
+
+				-- Find mandatory xsl:version attribute, and copy it to the new xsl:transform element
+
+				a_version := attribute_value (Xslt_version_type_code)
+				if a_version = Void then
+					a_compiler.report_error ("Simplified stylesheet: xsl:version attribute is missing")
+				else
+					Result := grafted_stylesheet (a_compiler, a_version)
+				end
+			end
+		ensure
+			error_or_result_not_void: not a_compiler.load_stylesheet_module_failed implies Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	-- The next three lists constitute a triple:
@@ -256,7 +286,51 @@ feature {NONE} -- Implementation
 
 	is_inherit_namespaces: BOOLEAN
 		-- Do we inherit namespaces?
-		
+
+	grafted_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER; a_version: STRING): XM_XPATH_TREE_DOCUMENT is
+			-- Simlified stylesheet constructed around `Current'
+		require
+			stylesheet_compiler_exists: a_compiler /= Void
+			version_exists: a_version /= Void
+		local
+			a_builder: XM_XPATH_TREE_BUILDER
+		do
+			create a_builder.make (a_compiler.node_factory)
+			a_builder.set_system_id (system_id)
+			a_builder.open; a_builder.start_document
+			a_builder.start_element (Xslt_transform_type_code, Untyped_type_code, 0)
+			a_builder.notify_namespace (Xslt_uri_code, 0)
+			if not shared_name_pool.is_name_code_allocated (Null_uri, Null_uri, Version_attribute) then
+				shared_name_pool.allocate_name (Null_uri, Null_uri, Version_attribute)
+			end
+			a_builder.notify_attribute (shared_name_pool.name_code (Null_uri, Null_uri, Version_attribute), Untyped_Atomic_Type_Code, a_version, 0)
+			a_builder.start_content
+
+			a_builder.start_element (Xslt_template_type_code, Untyped_type_code, 0)
+			if not shared_name_pool.is_name_code_allocated (Null_uri, Null_uri, Match_attribute) then
+				shared_name_pool.allocate_name (Null_uri, Null_uri, Match_attribute)
+			end
+			a_builder.notify_attribute (shared_name_pool.name_code (Null_uri, Null_uri, Match_attribute), Untyped_Atomic_Type_Code, "/", 0)
+			a_builder.start_content
+
+			a_builder.graft_element (Current)
+
+			a_builder.end_element
+			a_builder.end_element
+			a_builder.end_document; a_builder.close
+			if a_builder.has_error then
+				a_compiler.report_error (a_builder.last_error)
+			else	
+				Result := a_builder.tree_document
+			end
+		ensure
+			error_or_result_not_void: not a_compiler.load_stylesheet_module_failed implies Result /= Void
+		rescue
+			if a_builder.has_error then
+				a_compiler.report_error (a_builder.last_error)
+			end
+		end
+
 	is_attribute_checked_clean (an_expression: XM_XPATH_EXPRESSION): BOOLEAN is
 			-- Is `an_expression' guarenteed free of special characters?
 		require

@@ -42,6 +42,9 @@ feature -- Access
 			a_node_factory: XM_XSLT_NODE_FACTORY
 			a_message, an_error_code: STRING
 			an_error: XM_XPATH_ERROR_VALUE
+			an_outermost_element: XM_XPATH_TREE_ELEMENT
+			an_lre: XM_XSLT_LITERAL_RESULT_ELEMENT
+			a_document: XM_XPATH_TREE_DOCUMENT
 		do
 			check_empty
 			if is_import then
@@ -76,11 +79,23 @@ feature -- Access
 							report_compile_error (an_error)
 						else
 							included_document := a_stylesheet_compiler.last_loaded_module
-							-- TODO: allow "Literal Result Element as Stylesheet" syntax, and validation errors - ?? - isn't this already done? check it!
-							Result ?= included_document.document_element
+
+							-- allow "Literal Result Element as Stylesheet" syntax
+
+							an_outermost_element := included_document.document_element
+							an_lre ?= an_outermost_element
+							if an_lre /= Void then
+								a_document := an_lre.constructed_stylesheet (stylesheet_compiler)
+								if a_document = Void then
+									an_outermost_element := Void
+								else
+									an_outermost_element := a_document.document_element
+								end
+							end
+							Result ?= an_outermost_element
 							if Result = Void then
 								a_message := STRING_.concat ("Included document ", href)
-								a_message := STRING_.appended_string (a_message, " is not a stylesheet")
+								a_message := STRING_.appended_string (a_message, " is not (possibly recursively) a stylesheet")
 								create an_error.make_from_string (a_message, Xpath_errors_uri, "XTSE0165", Static_error)
 								report_compile_error (an_error)
 							else
@@ -94,6 +109,7 @@ feature -- Access
 								Result.set_import_precedence (a_precedence)
 								Result.set_importer (an_importer)
 								Result.splice_includes
+								a_stylesheet.merge_input_type_annotations (Result.input_type_annotations)
 							end
 						end
 					end

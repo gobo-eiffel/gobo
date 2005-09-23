@@ -22,6 +22,9 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_DOUBLE_ROUTINES
+		export {NONE} all end
+
 create
 
 	make, make_from_duration

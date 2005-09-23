@@ -121,6 +121,46 @@ feature -- Tests
 			assert ("Result is 10.5", a_double_value.value = 10.5)
 		end
 
+	test_positive_float_abs is
+			-- Test fn:abs (xs:float(10.5E0)) returns 10.5.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_float_value: XM_XPATH_FLOAT_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("abs (xs:float(10.5E0))")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_float_value ?= evaluated_items.item (1)
+			assert ("Float value", a_float_value /= Void)
+			assert ("Result is 10.5", a_float_value.value = 10.5)
+		end
+
+	test_negative_float_abs is
+			-- Test fn:abs ((xs:float(-10.5)) returns 10.5.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_float_value: XM_XPATH_FLOAT_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("abs (xs:float(-10.5E0))")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_float_value ?= evaluated_items.item (1)
+			assert ("Float value", a_float_value /= Void)
+			assert ("Result is 10.5", a_float_value.value = 10.5)
+		end
+
 	set_up is
 		do
 			conformance.set_basic_xslt_processor

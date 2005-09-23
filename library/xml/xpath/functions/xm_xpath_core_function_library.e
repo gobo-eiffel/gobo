@@ -130,6 +130,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 0
 			elseif a_fingerprint = Local_name_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
+			elseif a_fingerprint = Local_name_from_qname_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Lower_case_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Matches_function_type_code then
@@ -153,7 +155,7 @@ feature -- Access
 			elseif a_fingerprint = Name_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
 			elseif a_fingerprint = Namespace_uri_from_qname_function_type_code then
-				Result := an_arity = -1 or else an_arity = 0 or else an_arity = 1
+				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Nilled_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Node_name_function_type_code then
@@ -172,6 +174,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Position_function_type_code then
 				Result := an_arity = -1 or else an_arity = 0
+			elseif a_fingerprint = Prefix_from_qname_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Qname_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2
 			elseif a_fingerprint = Remove_function_type_code then
@@ -350,6 +354,8 @@ feature -- Element change
 				create {XM_XPATH_LANG} a_function_call.make
 			elseif a_fingerprint = Local_name_function_type_code then
 				create {XM_XPATH_LOCAL_NAME} a_function_call.make
+			elseif a_fingerprint = Local_name_from_qname_function_type_code then
+				create {XM_XPATH_LOCAL_NAME_FROM_QNAME} a_function_call.make
 			elseif a_fingerprint = Lower_case_function_type_code then
 				create {XM_XPATH_LOWER_CASE} a_function_call.make
 			elseif a_fingerprint = Matches_function_type_code then
@@ -391,7 +397,9 @@ feature -- Element change
 			elseif a_fingerprint = One_or_more_function_type_code then
 				create {XM_XPATH_ONE_OR_MORE} a_function_call.make								
 			elseif a_fingerprint = Position_function_type_code then
-				create {XM_XPATH_POSITION} a_function_call.make								
+				create {XM_XPATH_POSITION} a_function_call.make
+			elseif a_fingerprint = Prefix_from_qname_function_type_code then
+				create {XM_XPATH_PREFIX_FROM_QNAME} a_function_call.make				
 			elseif a_fingerprint = Qname_function_type_code then
 				create {XM_XPATH_QNAME} a_function_call.make								
 			elseif a_fingerprint = Replace_function_type_code then

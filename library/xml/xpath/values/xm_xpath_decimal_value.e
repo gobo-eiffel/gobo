@@ -264,6 +264,12 @@ feature -- Conversion
 				else
 					create {XM_XPATH_DOUBLE_VALUE} Result.make (value.to_double)
 				end
+			elseif  a_required_type = type_factory.float_type then
+				if is_nan then
+					create {XM_XPATH_FLOAT_VALUE} Result.make_nan
+				else
+					create {XM_XPATH_FLOAT_VALUE} Result.make (value.to_double.truncated_to_real)
+				end
 			elseif  a_required_type = type_factory.decimal_type then
 				Result := Current
 			elseif  a_required_type = type_factory.string_type then

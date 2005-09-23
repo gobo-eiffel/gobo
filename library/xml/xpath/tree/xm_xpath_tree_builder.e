@@ -145,7 +145,9 @@ feature -- Events
 					has_error := True
 					last_error := an_element.error_value.error_message
 				else
-					tree_document.set_system_id_for_node (next_node_number, locator.system_id)
+					if not locator.system_id.is_empty then
+						tree_document.set_system_id_for_node (next_node_number, locator.system_id)
+					end
 					if is_line_numbering then
 						tree_document.set_line_number_for_node (next_node_number, locator.line_number)
 					end
@@ -241,6 +243,16 @@ feature -- Events
 			-- `Current' will not be reused, so we can free some memory:
 			
 			node_factory := Void
+		end
+
+feature {XM_XPATH_TREE_ELEMENT} -- Element change (actually only used by XM_XSLT_LITERAL_RESULT_ELEMENT)
+
+	graft_element (an_element: XM_XPATH_TREE_ELEMENT) is
+			-- Graft `an_element' into the tree (dangerous).
+		require
+			element_exists: an_element /= Void
+		do
+			current_composite_node.add_child (an_element)
 		end
 
 feature {NONE} -- Implementation

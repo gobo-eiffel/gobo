@@ -167,6 +167,49 @@ feature -- Access
 			end
 		end
 
+	prefix_for_uri (a_uri: STRING): STRING is
+			-- Prefix bound to `a_uri'
+		require
+			uri_exists: a_uri /= Void
+		local
+			a_uri_code: INTEGER
+		do
+			if STRING_.same_string (a_uri, Xml_uri) then
+				Result := Xml_prefix
+			else
+				if not shared_name_pool.is_code_for_uri_allocated (a_uri) then
+					shared_name_pool.allocate_code_for_uri (a_uri)
+				end
+				a_uri_code := shared_name_pool.code_for_uri (a_uri)
+				if a_uri_code < 0 then
+					Result := Void
+				else
+					Result := prefix_for_uri_code (a_uri_code)
+				end
+			end
+		end
+
+	prefix_for_uri_code (a_uri_code: INTEGER): STRING is
+			-- Prefix bound to namespace indicated by `a_uri_code'
+		require
+			valid_uri_code: shared_name_pool.is_valid_uri_code (a_uri_code)
+		local
+			a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+		do
+			from
+				a_cursor := namespace_code_list.new_cursor; a_cursor.start
+			until
+				a_cursor.after
+			loop
+				if uri_code_from_namespace_code (a_cursor.item) = a_uri_code then
+					Result := shared_name_pool.prefix_from_namespace_code (a_cursor.item)
+					a_cursor.go_after
+				else
+					a_cursor.forth
+				end
+			end
+		end
+
 	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
 			-- Output all namespace nodes associated with this element.
 		local

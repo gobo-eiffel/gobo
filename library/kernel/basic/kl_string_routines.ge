@@ -219,14 +219,42 @@ feature -- Status report
 				Result := True
 				from i := 1 until i > nb loop
 					c := a_string.item (i)
-					if (c < '0' or c > '9') and (c < 'a' or c > 'f') and (c < 'A' or c > 'F') then
+					if (c < '0' or c > '9') and then (c < 'a' or c > 'f') and then (c < 'A' or c > 'F') then
 						Result := False
-						i := nb + 1 -- Jump out pf the loop.
+						i := nb + 1 -- Jump out of the loop.
 					else
 						i := i + 1
 					end
 				end
 			end
+		end
+
+	is_base64 (a_string: STRING): BOOLEAN is
+			-- Is a string made up of +,/,=, XML whitespace, digits or A-Z or a-z?
+			-- (Not in ELKS 2001 STRING)
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i, nb: INTEGER
+			c: CHARACTER
+		do
+			nb := a_string.count
+			if nb = 0 then
+				Result := False
+			else
+				Result := True
+				from i := 1 until i > nb loop
+					c := a_string.item (i)
+					if (c < '0' or c > '9') and then (c < 'a' or c > 'z') and then (c < 'A' or c > 'Z')
+						and then c /= '+' and then c /= '/' and then c /= '='
+						and then c  /= ' ' and then c /= '%T' and then c /= '%R' and then c /= '%N' then
+						Result := False
+						i := nb + 1 -- Jump out of the loop.
+					else
+						i := i + 1
+					end
+				end
+			end				  
 		end
 
 feature -- Access

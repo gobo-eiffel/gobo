@@ -75,6 +75,125 @@ feature -- Conversion
 			Result := time_to_string (a_time.time)
 			Result := Result + zone (a_time.time_zone)
 		end
+	
+	year_month_to_string (a_date: DT_DATE): STRING is
+			-- Date formatted as gYearMonth 
+		require
+			date_not_void: a_date /= Void
+		do
+			Result := year_string (a_date)
+			Result.append_character ('-')
+			Result.append_string (month_string (a_date))			
+		ensure
+			date_string_not_void: Result /= Void
+			valid_date_string: is_year_month (Result)
+		end
+	
+	zoned_year_month_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+			-- Date formatted as gYearMonth with time zone
+		require
+			zoned_date_not_void: a_date /= Void
+		do
+			Result := year_month_to_string (a_date.date)
+			Result := Result + zone (a_date.time_zone)
+		ensure
+			zoned_date_string_not_void: Result /= Void
+			valid_date_string: is_zoned_year_month (Result)
+		end
+
+	year_to_string (a_date: DT_DATE): STRING is
+			-- Date formatted as gYear
+		require
+			date_not_void: a_date /= Void
+		do
+			Result := year_string (a_date)
+		ensure
+			date_string_not_void: Result /= Void
+			valid_date_string: is_year (Result)
+		end
+	
+	zoned_year_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+			-- Date formatted as gYear with time zone
+		require
+			zoned_date_not_void: a_date /= Void
+		do
+			Result := year_to_string (a_date.date)
+			Result := Result + zone (a_date.time_zone)
+		ensure
+			zoned_date_string_not_void: Result /= Void
+			valid_date_string: is_zoned_year (Result)
+		end
+		
+	month_day_to_string (a_date: DT_DATE): STRING is
+			-- Date formatted as gMonthDay
+		require
+			date_not_void: a_date /= Void
+		do
+			Result := STRING_.concat ("--", month_string (a_date))
+			Result.append_character ('-')
+			Result.append_string (day_string (a_date))			
+		ensure
+			date_string_not_void: Result /= Void
+			valid_date_string: is_month_day (Result)
+		end
+	
+	zoned_month_day_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+			-- Date formatted as gMonthDay with time zone
+		require
+			zoned_date_not_void: a_date /= Void
+		do
+			Result := month_day_to_string (a_date.date)
+			Result := Result + zone (a_date.time_zone)
+		ensure
+			zoned_date_string_not_void: Result /= Void
+			valid_date_string: is_zoned_month_day (Result)
+		end
+		
+	day_to_string (a_date: DT_DATE): STRING is
+			-- Date formatted as gDay
+		require
+			date_not_void: a_date /= Void
+		do
+			Result := STRING_.concat ("---", day_string (a_date))
+		ensure
+			date_string_not_void: Result /= Void
+			valid_date_string: is_day (Result)
+		end
+	
+	zoned_day_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+			-- Date formatted as gDay with time zone
+		require
+			zoned_date_not_void: a_date /= Void
+		do
+			Result := day_to_string (a_date.date)
+			Result := Result + zone (a_date.time_zone)
+		ensure
+			zoned_date_string_not_void: Result /= Void
+			valid_date_string: is_zoned_day (Result)
+		end
+		
+	month_to_string (a_date: DT_DATE): STRING is
+			-- Date formatted as gMonth
+		require
+			date_not_void: a_date /= Void
+		do
+			Result := STRING_.concat ("--", month_string (a_date))
+		ensure
+			date_string_not_void: Result /= Void
+			valid_date_string: is_month (Result)
+		end
+	
+	zoned_month_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
+			-- Date formatted as gMonth with time zone
+		require
+			zoned_date_not_void: a_date /= Void
+		do
+			Result := month_to_string (a_date.date)
+			Result := Result + zone (a_date.time_zone)
+		ensure
+			zoned_date_string_not_void: Result /= Void
+			valid_date_string: is_zoned_month (Result)
+		end
 
 feature {NONE} -- Implementation
 

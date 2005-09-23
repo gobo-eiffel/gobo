@@ -84,13 +84,13 @@ feature -- Access
 	Xml_schema_instance_uri: STRING is "http://www.w3.org/2001/XMLSchema-instance"
 			-- The XML Schema instance document namespace (xsi)
 
-	Xpath_defined_datatypes_uri: STRING is "http://www.w3.org/2005/04/xpath-datatypes"
+	Xpath_defined_datatypes_uri: STRING is "http://www.w3.org/2005/xpath-datatypes"
 			-- Namespace for additional XPath-defined data types (xdt)
 
-	Xpath_standard_functions_uri: STRING is "http://www.w3.org/2005/04/xpath-functions"
+	Xpath_standard_functions_uri: STRING is "http://www.w3.org/2005/xpath-functions"
 			-- XPath standard functions and operators (fn)
 
-	Xpath_errors_uri: STRING is "http://www.w3.org/2004/07/xqt-errors"
+	Xpath_errors_uri: STRING is "http://www.w3.org/2005/xqt-errors"
 			-- XPath errors
 
 	Microsoft_uri: STRING is "http://www.w3.org/TR/WD-xsl"
@@ -114,7 +114,7 @@ feature -- Access
 	Xmlns_uri: STRING is "http://www.w3.org/2000/xmlns/"
 			-- Xmlns
 
-	Unicode_codepoint_collation_uri: STRING is "http://www.w3.org/2004/10/xpath-functions/collation/codepoint"
+	Unicode_codepoint_collation_uri: STRING is "http://www.w3.org/2005/xpath-functions/collation/codepoint"
 			-- Unicode codepoint collation
 
 	Default_collection_scheme: STRING is "gobo-default-collection"
@@ -436,7 +436,8 @@ feature -- Access
 	
 	Codepoint_equal_function_type_code: INTEGER is 1021
 	Doc_available_function_type_code: INTEGER is 1022
-
+	Prefix_from_qname_function_type_code: INTEGER is 1023
+	
 			-- XSLT Attribute names
 
 	As_attribute: STRING is "as"
@@ -474,6 +475,7 @@ feature -- Access
 	Indent_attribute: STRING is "indent"
 	Infinity_attribute: STRING is "infinity"
 	Inherit_namespaces_attribute: STRING is "inherit-namespaces"
+	Input_type_annotations_attribute: STRING is "input-type-annotations"
 	Lang_attribute: STRING is "lang"
 	Letter_value_attribute: STRING is "letter-value"
 	Level_attribute: STRING is "level"
@@ -498,6 +500,7 @@ feature -- Access
 	Result_prefix_attribute: STRING is "result-prefix"
 	Select_attribute: STRING is "select"
 	Separator_attribute: STRING is "separator"
+	Stable_attribute: STRING is "stable"
 	Standalone_attribute: STRING is "standalone"
 	String_attribute: STRING is "string"
 	Stylesheet_prefix_attribute: STRING is "stylesheet-prefix"

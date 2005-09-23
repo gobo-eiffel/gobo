@@ -422,6 +422,18 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+
+				-- Rule 4: anyURI promotion anyURI -> string
+
+				if a_required_item_type_fingerprint = String_type_code
+				 and then is_sub_type (supplied_item_type, type_factory.any_uri_type) then
+				 supplied_item_type := type_factory.string_type; item_type_ok := True
+
+				 -- We don't generate code to do a run-time type conversion; rather, we rely on
+				 --  operators and functions that accept a string to also accept an xs:anyURI. 
+             -- This relies on XM_XPATH_ANY_URI_VALUE being a descendant of XM_XPATH_STRING_VALUE
+
+				end
 			end
 		end
 

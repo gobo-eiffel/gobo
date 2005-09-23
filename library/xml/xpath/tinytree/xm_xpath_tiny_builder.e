@@ -153,7 +153,9 @@ feature -- Events
 			end
 			previously_at_depth.put (-1, current_depth) -- no previous sibling
 
-			tree.set_system_id_for_node (node_number, locator.system_id)
+			if not locator.system_id.is_empty then
+				tree.set_system_id_for_node (node_number, locator.system_id)
+			end
 			if is_line_numbering then
 				tree.set_line_number_for_node (node_number, locator.line_number)
 			end
@@ -246,7 +248,9 @@ feature -- Events
 			tree.set_next_sibling (previously_at_depth.item (current_depth - 1), node_number) -- owner pointer in last sibling
 			previously_at_depth.put (node_number, current_depth)
 
-			tree.set_system_id_for_node (node_number, locator.system_id)
+			if not locator.system_id.is_empty then
+				tree.set_system_id_for_node (node_number, locator.system_id)
+			end
 			if is_line_numbering then
 				tree.set_line_number_for_node (node_number, locator.line_number)
 			end

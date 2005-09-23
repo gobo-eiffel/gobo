@@ -98,6 +98,7 @@ feature -- Optimization
 			a_type_checker: XM_XPATH_TYPE_CHECKER
 			an_expression: XM_XPATH_EXPRESSION
 			a_qname_cast: XM_XPATH_CAST_AS_QNAME_EXPRESSION
+			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE
 		do
 			mark_unreplaced
 			base_expression.check_static_type (a_context, a_context_item_type)
@@ -133,7 +134,10 @@ feature -- Optimization
 					else
 						if an_expression.is_atomic_value then
 							evaluate_item (Void)
-							if last_evaluated_item.is_atomic_value then
+							if last_evaluated_item = Void then
+								create an_empty_sequence.make
+								set_replacement (an_empty_sequence)
+							elseif last_evaluated_item.is_atomic_value then
 								set_replacement (last_evaluated_item.as_atomic_value)
 							end
 						else
@@ -155,15 +159,16 @@ feature -- Evaluation
 			elseif not base_expression.last_evaluated_item.is_atomic_value then
 				if is_empty_allowed then
 					last_evaluated_item := Void
-				else
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Target typr for cast as does not allow empty sequence",
-																																				 target_type.conventional_name), Xpath_errors_uri, "XPTY0004", Type_error)
 				end
 			elseif base_expression.last_evaluated_item.as_atomic_value.is_convertible (target_type) then
 				last_evaluated_item := base_expression.last_evaluated_item.as_atomic_value.convert_to_type (target_type)
 			else
 				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Could not cast expression to type ",
 																																			 target_type.conventional_name), Xpath_errors_uri, "XPTY0004", Dynamic_error)
+			end
+			if last_evaluated_item = Void and then not is_empty_allowed then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (STRING_.appended_string ("Target type for cast as does not allow empty sequence",
+																																			 target_type.conventional_name), Xpath_errors_uri, "XPTY0004", Type_error)
 			end
 		end
 

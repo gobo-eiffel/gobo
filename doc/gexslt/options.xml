@@ -558,22 +558,6 @@
       <para>The following options affect the mapping of URIs onto media-types, for interpretation of fragment identifies:
       <variablelist>
 	<varlistentry>
-	  <term>--no-xpointer</term>
-	  <listitem>
-	    <para>
-	      Don't use XPointer for XML media types.
-	    </para>
-	    <para>
-	      In the case of application/xhtml+xml, this will result in fragment identifiers
-	      being interpreted as the value of any ID-valued attribute.
-	    </para>
-	    <para>
-	      For other XML media types, this will result in recoverable error XT1160, as RFC 2376
-	      does not assign a meaning to the fragment identifier.
-	    </para>
-	  </listitem>
-	</varlistentry>
-	<varlistentry>
 	  <term>--html-text-ok</term>
 	  <listitem>
 	    <para>

@@ -155,7 +155,7 @@ feature -- Evaluation
 			if not is_error then
 				check
 					fixed_string: arguments.item (1).is_string_value
-					-- static typing and `pre_evaluate' is only called for foxed values
+					-- static typing and `pre_evaluate' is only called for fixed values
 				end
 				create a_parser.make (arguments.item (1).as_string_value.string_value)
 				if not a_parser.is_valid then

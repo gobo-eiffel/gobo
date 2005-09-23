@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Events
 
-	on_error (a_message: STRING) is
+		on_error (a_message: STRING) is
 			-- Event producer detected an error.
 		local
 			an_error: XM_XPATH_ERROR_VALUE
@@ -83,12 +83,9 @@ feature -- Events
 				a_uri := Xpath_errors_uri
 				a_code := a_message.substring (1, an_index - 1)
 				a_text := a_message.substring (an_index + 2, a_message.count)
-			elseif a_message.count > 0 and then STRING_.same_string (a_message.substring (1, 1), "{") then
-				an_index := a_message.index_of ('}', 2)
-				check
-					closing_brace_found: an_index > 1
-				end
-				a_uri := a_message.substring (2, an_index - 1)
+			elseif a_message.count > 0 and then a_message.index_of ('#', 2) > 0 then
+				an_index := a_message.index_of ('#', 2)
+				a_uri := a_message.substring (1, an_index - 1)
 				a_second_index := a_message.index_of (':', an_index + 1)
 				check
 					colon_found: a_second_index > an_index + 1

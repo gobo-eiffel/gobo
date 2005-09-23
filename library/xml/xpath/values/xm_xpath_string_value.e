@@ -153,6 +153,11 @@ feature -- Status report
 				Result := a_string.is_double or else STRING_.same_string (a_string, "INF")
 					or else STRING_.same_string (a_string, "-INF")
 					or else STRING_.same_string (a_string, "NaN")
+			elseif a_required_type = type_factory.float_type then
+				a_string := trimmed_white_space (value)
+				Result := a_string.is_real or else STRING_.same_string (a_string, "INF")
+					or else STRING_.same_string (a_string, "-INF")
+					or else STRING_.same_string (a_string, "NaN")
 			elseif a_required_type = type_factory.integer_type then
 				a_string := trimmed_white_space (value)
 				Result := a_string.is_integer
@@ -182,6 +187,26 @@ feature -- Status report
 				create a_date_time_parser.make
 				Result := a_date_time_parser.is_zoned_date_time (value)
 					or else a_date_time_parser.is_date_time (value)
+			elseif a_required_type = type_factory.g_year_month_type then
+				create a_date_time_parser.make
+				Result := a_date_time_parser.is_zoned_year_month (value)
+					or else a_date_time_parser.is_year_month (value)
+			elseif a_required_type = type_factory.g_year_type then
+				create a_date_time_parser.make
+				Result := a_date_time_parser.is_zoned_year (value)
+					or else a_date_time_parser.is_year (value)
+			elseif a_required_type = type_factory.g_month_type then
+				create a_date_time_parser.make
+				Result := a_date_time_parser.is_zoned_month (value)
+					or else a_date_time_parser.is_month (value)
+			elseif a_required_type = type_factory.g_month_day_type then
+				create a_date_time_parser.make
+				Result := a_date_time_parser.is_zoned_month_day (value)
+					or else a_date_time_parser.is_month_day (value)
+			elseif a_required_type = type_factory.g_day_type then
+				create a_date_time_parser.make
+				Result := a_date_time_parser.is_zoned_day (value)
+					or else a_date_time_parser.is_day (value)
 			elseif a_required_type = type_factory.day_time_duration_type then
 				create a_duration_parser.make
 				Result := a_duration_parser.is_seconds_duration (value)
@@ -191,9 +216,10 @@ feature -- Status report
 			elseif a_required_type = type_factory.duration_type then
 				create a_duration_parser.make
 				Result := a_duration_parser.is_duration (value)
-			else
-				Result := False -- TODO dtd types (? - check what remains - float, base64, hexBinary, gDatetypes)
-				todo ("is-convertible", True)
+			elseif a_required_type = type_factory.hex_binary_type then
+				Result := STRING_.is_hexadecimal (string_value)
+			elseif a_required_type = type_factory.base64_binary_type then
+				Result := STRING_.is_base64 (string_value)
 			end
 		end
 
@@ -227,6 +253,8 @@ feature -- Conversion
 				end
 			elseif a_required_type = type_factory.double_type or else a_required_type = type_factory.numeric_type then
 				create {XM_XPATH_DOUBLE_VALUE} Result.make_from_string (a_value)
+			elseif a_required_type = type_factory.float_type then
+				create {XM_XPATH_FLOAT_VALUE} Result.make_from_string (a_value)
 			elseif a_required_type = type_factory.integer_type then
 				create {XM_XPATH_INTEGER_VALUE} Result.make_from_string (a_value)
 			elseif a_required_type = type_factory.decimal_type then
@@ -246,12 +274,26 @@ feature -- Conversion
 				create {XM_XPATH_TIME_VALUE} Result.make (value)
 			elseif a_required_type = type_factory.date_time_type then
 				create {XM_XPATH_DATE_TIME_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.g_year_month_type then
+				create {XM_XPATH_YEAR_MONTH_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.g_year_type then
+				create {XM_XPATH_YEAR_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.g_month_type then
+				create {XM_XPATH_MONTH_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.g_month_day_type then
+				create {XM_XPATH_MONTH_DAY_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.g_day_type then
+				create {XM_XPATH_DAY_VALUE} Result.make (value)
 			elseif a_required_type = type_factory.day_time_duration_type then
 				create {XM_XPATH_SECONDS_DURATION_VALUE} Result.make (value)
 			elseif a_required_type = type_factory.year_month_duration_type then
 				create {XM_XPATH_MONTHS_DURATION_VALUE} Result.make (value)
 			elseif a_required_type = type_factory.duration_type then
 				create {XM_XPATH_DURATION_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.hex_binary_type then
+				create {XM_XPATH_HEX_BINARY_VALUE} Result.make (value)
+			elseif a_required_type = type_factory.base64_binary_type then
+				create {XM_XPATH_BASE64_BINARY_VALUE} Result.make (value)
 			else
 				-- TODO
 				todo ("convert-to-type (" + a_required_type.conventional_name + ")",True)				

@@ -79,7 +79,10 @@ feature -- Element change
 				elseif STRING_.same_string (an_expanded_name, Collation_attribute) then
 					a_collation_attribute := attribute_value_by_index (a_cursor.index)
 					STRING_.left_adjust (a_collation_attribute)
-					STRING_.right_adjust (a_collation_attribute	)
+					STRING_.right_adjust (a_collation_attribute)
+				elseif STRING_.same_string (an_expanded_name, Stable_attribute) then
+					-- Ignored - default is yes
+					-- TODO: take advantage of stable="no"
 				else
 					check_unknown_attribute (a_name_code)
 				end

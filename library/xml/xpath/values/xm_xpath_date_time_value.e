@@ -286,6 +286,11 @@ feature -- Status report
 				or else a_required_type = type_factory.date_type
 				or else a_required_type = type_factory.time_type
 				or else a_required_type = type_factory.date_time_type
+				or else a_required_type = type_factory.g_year_month_type
+				or else a_required_type = type_factory.g_year_type
+				or else a_required_type = type_factory.g_month_type
+				or else a_required_type = type_factory.g_month_day_type
+				or else a_required_type = type_factory.g_day_type
 				or else a_required_type = type_factory.string_type
 				or else a_required_type = type_factory.untyped_atomic_type then
 				Result := True
@@ -334,6 +339,36 @@ feature -- Conversions
 				else
 					create {XM_XPATH_TIME_VALUE} Result.make_from_time (local_date_time.time)
 				end
+			elseif a_required_type = type_factory.g_year_month_type then
+				if zoned then
+					create {XM_XPATH_YEAR_MONTH_VALUE} Result.make_from_zoned_date (zoned_date_time.zoned_date)
+				else
+					create {XM_XPATH_YEAR_MONTH_VALUE} Result.make_from_date (local_date_time.date)
+				end
+			elseif a_required_type = type_factory.g_year_type then
+				if zoned then
+					create {XM_XPATH_YEAR_VALUE} Result.make_from_zoned_date (zoned_date_time.zoned_date)
+				else
+					create {XM_XPATH_YEAR_VALUE} Result.make_from_date (local_date_time.date)
+				end
+			elseif a_required_type = type_factory.g_month_type then
+				if zoned then
+					create {XM_XPATH_MONTH_VALUE} Result.make_from_zoned_date (zoned_date_time.zoned_date)
+				else
+					create {XM_XPATH_MONTH_VALUE} Result.make_from_date (local_date_time.date)
+				end
+			elseif a_required_type = type_factory.g_month_day_type then
+				if zoned then
+					create {XM_XPATH_MONTH_DAY_VALUE} Result.make_from_zoned_date (zoned_date_time.zoned_date)
+				else
+					create {XM_XPATH_MONTH_DAY_VALUE} Result.make_from_date (local_date_time.date)
+				end
+			elseif a_required_type = type_factory.g_day_type then
+				if zoned then
+					create {XM_XPATH_DAY_VALUE} Result.make_from_zoned_date (zoned_date_time.zoned_date)
+				else
+					create {XM_XPATH_DAY_VALUE} Result.make_from_date (local_date_time.date)
+				end				
 			end
 		end
 

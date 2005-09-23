@@ -430,7 +430,6 @@ feature -- Error handling
 									  "       --attributes=[n]%N" +
 									  "       --namespaces=[n]%N" +
 									  "       --characters=[n]%N" +
-									  "       --no-xpointer%N" +
 									  "       --html-text-ok%N" +
 									  "       --mode=[{namespace-uri}]local-name%N" +
 									  "       --template=[{namespace-uri}]local-name%N" +
@@ -564,8 +563,6 @@ feature {NONE} -- Implementation
 				highly_secure := True
 			elseif an_option.is_equal ("html-text-ok") then
 				configuration.do_not_assume_xhtml
-			elseif an_option.is_equal ("no-xpointer") then
-				configuration.do_not_use_xpointer
 			elseif an_option.is_equal ("treat-warnings-as-errors") then
 				error_listener.treat_warnings_as_recoverable_errors
 			elseif an_option.is_equal ("do-not-recover") then

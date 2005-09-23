@@ -93,8 +93,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_strips_type_annotation: BOOLEAN
+			-- Does `Current' strip type annotation?
+			-- TODO: this is ignored at present  -required for schema-aware version
+
 	is_strips_whitespace: BOOLEAN
-			-- Does this executable strip any whitespace at all?
+			-- Does `Current' strip any whitespace at all?
 
 	is_valid_module_number (a_module_number: INTEGER): BOOLEAN is
 			-- is `a_module_number' a valid module number?
@@ -114,7 +118,15 @@ feature -- Status setting
 		ensure
 			set: is_strips_whitespace = a_status
 		end
-			
+
+	set_strips_input_type_annotations (a_status: BOOLEAN) is
+			-- Set type-annotations stripping status status.
+		do
+			is_strips_type_annotation := a_status
+		ensure
+			set: is_strips_type_annotation = a_status
+		end
+
 feature -- Creation
 
 	new_stripper (a_transformer: XM_XSLT_TRANSFORMER; a_builder: XM_XPATH_BUILDER): XM_XSLT_STRIPPER is

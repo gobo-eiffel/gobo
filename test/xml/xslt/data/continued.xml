@@ -1,0 +1,8 @@
+<doc>
+  <page continued="yes">Some text</page>
+  <page continued="yes">More text</page>    
+  <page>Yet more text</page>
+  <page continued="yes">Some words</page>
+  <page continued="yes">More words</page>    
+  <page>Yet more words</page>        
+</doc>

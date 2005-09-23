@@ -132,8 +132,7 @@ feature -- Access
 			a_message: STRING
 		do
 			if namespace_uri.count > 0 then
-				a_message := STRING_.concat ("{",namespace_uri)
-				a_message := STRING_.appended_string (a_message, "}")
+				a_message := STRING_.concat (namespace_uri, "#")
 				a_message := STRING_.appended_string (a_message, code)
 			else
 				a_message := code

@@ -556,7 +556,7 @@ feature -- Transformation
 						a_media_type := document_pool.media_type (a_source.system_id)
 						if a_media_type = Void then a_media_type := configuration.default_media_type (a_source.system_id) end
 						a_media_type_map := configuration.media_type_map
-						a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.use_xpointer, configuration.assume_html_is_xhtml)
+						a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.assume_html_is_xhtml)
 						if a_media_type_map.may_use_xpointer then
 							a_start_node := fragment_node (a_document, a_source.fragment_identifier)
 						elseif a_media_type_map.may_use_id then
@@ -596,7 +596,7 @@ feature -- Transformation
 							a_media_type := document_pool.media_type (a_source.system_id)
 							if a_media_type = Void then a_media_type := configuration.default_media_type (a_source.system_id) end
 							a_media_type_map := configuration.media_type_map
-							a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.use_xpointer, configuration.assume_html_is_xhtml)
+							a_media_type_map.check_fragment_processing_rules (a_media_type, configuration.assume_html_is_xhtml)
 							if a_media_type_map.may_use_xpointer then
 								a_start_node := fragment_node (a_document, a_fragment_id)
 							elseif a_media_type_map.may_use_id then

@@ -124,6 +124,55 @@ feature -- Tests
 			assert ("Correct namespace", STRING_.same_string (evaluated_items.item (1).as_any_uri.string_value, "http://www.example.com/example"))
 		end
 
+	test_local_name_from_qname is
+			-- Test fn:local-name-from-QName(fn:QName("http://www.example.com/example", "person")).
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.build_static_context ("./data/qnames.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("local-name-from-QName(QName('http://www.example.com/example', 'person'))")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("String value (basic- XSLT support)", evaluated_items.item (1).is_string_value)
+			assert ("Correct name", STRING_.same_string (evaluated_items.item (1).string_value, "person"))
+		end
+
+	test_no_prefix_from_qname is
+			-- Test fn:prefix-from-QName(fn:QName("http://www.example.com/example", "person")).
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.build_static_context ("./data/qnames.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("prefix-from-QName(QName('http://www.example.com/example', 'person'))")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("No evaluated items", evaluated_items /= Void and then evaluated_items.count = 0)
+		end
+
+	test_prefix_from_qname is
+			-- Test fn:prefix-from-QName(fn:QName("http://www.example.com/example", "people:person")).
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.build_static_context ("./data/qnames.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("prefix-from-QName(QName('http://www.example.com/example', 'people:person'))")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			assert ("String value (basic- XSLT support)", evaluated_items.item (1).is_string_value)
+			assert ("Correct name", STRING_.same_string (evaluated_items.item (1).string_value, "people"))
+		end
+
 	set_up is
 		do
 			conformance.set_basic_xslt_processor

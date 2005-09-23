@@ -99,7 +99,7 @@ feature -- Parsers
 
 	parse_sequence_type (a_sequence_type_string: STRING; a_context: XM_XPATH_STATIC_CONTEXT; a_line_number: INTEGER) is
 			-- Parse `a_sequence_type_string';
-			-- SequenceType ::= (ItemType OccurrenceIndicator?) | ("empty" "(" ")")
+			-- SequenceType ::= (ItemType OccurrenceIndicator?) | ("empty-sequence" "(" ")")
 		require
 			sequence_text_not_void: a_sequence_type_string /= Void
 			static_context_not_void: a_context /= Void

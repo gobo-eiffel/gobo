@@ -204,6 +204,21 @@ feature -- Access
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
+	is_float_value: BOOLEAN is
+			-- Is `Current' a float value?
+		do
+			Result := False
+		end
+
+	as_float_value: XM_XPATH_FLOAT_VALUE is
+			-- `Current' seen as a float value
+		require
+			float_value: is_float_value
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 	is_decimal_value: BOOLEAN is
 			-- Is `Current' a decimal value?
 		do
@@ -351,6 +366,7 @@ invariant
 	node_or_atomic_value: not is_error implies is_node xor is_atomic_value
 	integers_are_numeric: is_integer_value implies is_numeric_value
 	doubles_are_numeric: is_double_value implies is_numeric_value
+	floats_are_numeric: is_float_value implies is_numeric_value
 
 end
 	

@@ -36,6 +36,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 0
 			elseif a_fingerprint = Document_function_type_code and then not is_restricted then
 				Result := an_arity = -1 or else an_arity = 1 or else an_arity = 2
+			elseif a_fingerprint = Element_available_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Format_number_function_type_code and then not is_restricted then
 				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
 			elseif a_fingerprint = Function_available_function_type_code then
@@ -75,6 +77,8 @@ feature -- Element change
 				create {XM_XSLT_CURRENT_GROUPING_KEY} a_function_call.make
 			elseif a_fingerprint = Document_function_type_code then
 				create {XM_XSLT_DOCUMENT_FUNCTION} a_function_call.make
+			elseif a_fingerprint = Element_available_function_type_code then
+				create {XM_XSLT_ELEMENT_AVAILABLE} a_function_call.make								
 			elseif a_fingerprint = Format_number_function_type_code then
 				create {XM_XSLT_FORMAT_NUMBER} a_function_call.make
 			elseif a_fingerprint = Function_available_function_type_code then

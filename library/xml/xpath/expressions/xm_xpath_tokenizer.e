@@ -287,7 +287,7 @@ feature --Element change
 							candidate := Element_qname_token
 						elseif STRING_.same_string (current_token_value, "attribute") then
 							candidate := Attribute_qname_token
-						elseif STRING_.same_string (current_token_value, "pi") then
+						elseif STRING_.same_string (current_token_value, "processing-instruction") then
 							candidate := Pi_qname_token
 						end
 						
@@ -295,7 +295,7 @@ feature --Element change
 							
 							-- <'element' QName '{'> constructor
 							-- <'attribute' QName '{'> constructor
-							-- <'pi' QName '{'> constructor
+							-- <'processing-instruction' QName '{'> constructor
 							
 							qname := next_token_value
 							saved_token_value := current_token_value
@@ -693,6 +693,7 @@ feature {NONE} -- Status setting
 						end
 
 						-- maintain line number if there are newlines in the string
+						-- TODO XML 1.1 line ending normaliztions? (prior to entry to tokenizer?)
 
 						if next_token_value.index_of ('%N', 1) > 0 then
 							from
@@ -937,6 +938,12 @@ feature {NONE} -- Implementation
 				end
 			else
 				if STRING_.same_string (a_string, "document-node") then
+					Result := Node_kind_token
+				elseif STRING_.same_string (a_string, "empty-sequence") then
+					Result := Node_kind_token
+				elseif STRING_.same_string (a_string, "schema-element") then
+					Result := Node_kind_token
+				elseif STRING_.same_string (a_string, "schema-attribute") then
 					Result := Node_kind_token
 				elseif STRING_.same_string (a_string, "processing-instruction") then
 					Result := Node_kind_token

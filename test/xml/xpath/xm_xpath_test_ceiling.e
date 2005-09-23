@@ -89,6 +89,26 @@ feature -- Tests
 			assert ("Result is -10", a_decimal_value.value.is_equal (minus_ten))
 		end
 
+	test_positive_float_ceiling is
+			-- Test fn:ceiling (xs:float(10.5E0)) returns 11.0.
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_float_value: XM_XPATH_FLOAT_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("ceiling (xs:float(10.5E0))")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_float_value ?= evaluated_items.item (1)
+			assert ("Float value", a_float_value /= Void)
+			assert ("Result is 11.0", a_float_value.value = 11.0)
+		end
+
 	test_positive_double_ceiling is
 			-- Test fn:ceiling (10.5E0) returns 11.0.
 		local

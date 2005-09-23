@@ -26,6 +26,12 @@ create
 
 	make
 
+		-- URGENT: make this change prior to release og Gobo 3.5
+		-- TODO: add make_1_0 creation procedure to implement current
+		--        year zero behaviour.
+		--       Change make to use projected XML Schema 1.1 behaviour
+		--        (i.e. in line with second edition of ISO 8601)
+
 feature {NONE} -- Initialization
 
 	make is
@@ -375,6 +381,517 @@ feature -- Access
 			time_cached: Result implies last_cached_zoned_time /= Void			
 		end
 
+	is_year_month (a_formatted_date: STRING): BOOLEAN is
+			-- Is `a_formatted_date' a valid gYearMonth?
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+		local
+			a_date: STRING
+			a_splitter: ST_SPLITTER
+			some_components: DS_LIST [STRING]
+			a_year, a_month: INTEGER
+		do
+			if not a_formatted_date.is_empty then
+				if STRING_.same_string (a_formatted_date, last_cached_date_string) then
+					Result := True
+					last_cached_date_string := a_formatted_date
+				elseif a_formatted_date.count < 7 then
+					Result := False
+				else
+					create a_splitter.make
+					a_splitter.set_separators ("-")
+					if a_formatted_date.item (1).is_equal ('-') then
+						a_date := a_formatted_date.substring (2, a_formatted_date.count)
+					else
+						a_date := a_formatted_date
+					end
+					some_components := a_splitter.split_greedy (a_date)
+					Result := some_components.count = 2
+					if Result then
+						a_year := year_ok (some_components.item (1))
+						if a_year = 0 then
+							Result := False
+						else
+							if a_formatted_date.item (1).is_equal ('-') then a_year := 1 - a_year end
+							a_month := month_ok  (some_components.item (2))
+							if a_month < January or else a_month > December then
+								Result := False
+							else
+								create last_cached_date.make (a_year, a_month, 1)
+								last_cached_date_string := a_formatted_date
+							end
+						end
+					end
+				end
+			end
+		ensure
+			zoneless: Result implies not is_zoned_year_month (a_formatted_date)
+			year_month_cached: Result implies last_cached_date /= Void
+		end
+
+	is_zoned_year_month (a_formatted_date: STRING): BOOLEAN is
+			-- Is `a_formatted_date' a valid zoned gYearMonth?
+		local
+			a_count: STRING
+			a_tz: DT_FIXED_OFFSET_TIME_ZONE
+			an_hour, a_minute: INTEGER 
+		do
+			if not a_formatted_date.is_empty then
+				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
+					Result := True
+					last_cached_zoned_date_string := a_formatted_date
+				elseif a_formatted_date.item (a_formatted_date.count).is_equal ('Z') then
+					if a_formatted_date.count >= 8 then
+						Result := is_year_month (a_formatted_date.substring (1, a_formatted_date.count - 1))
+						if Result then
+							last_cached_zoned_date_string := a_formatted_date
+							create a_tz.make_named_hours_minutes ("Z", 0, 0)
+							create last_cached_zoned_date.make (last_cached_date, a_tz)
+						end
+					end
+				elseif a_formatted_date.count >= 13 then
+					if a_formatted_date.item (a_formatted_date.count - 2).is_equal (':') then
+						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
+							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
+							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
+								an_hour := a_count.to_integer
+								Result := an_hour >= 0 and then an_hour <= 14
+								if Result then
+									a_count := a_formatted_date.substring (a_formatted_date.count - 1, a_formatted_date.count)
+									if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
+										a_minute := a_count.to_integer
+										if an_hour = 14 then
+											Result := a_minute = 0
+										else
+											Result := a_minute >= 0 and then a_minute <= 59
+										end
+										if Result then
+											if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+												an_hour := 0 - an_hour
+												a_minute := 0 - a_minute
+											end
+											Result := is_year_month (a_formatted_date.substring (1, a_formatted_date.count - 6))
+											if Result then
+												last_cached_zoned_date_string := a_formatted_date
+												if an_hour = 0 and then a_minute = 0 then
+													create a_tz.make_named_hours_minutes ("Z", 0, 0)
+												else
+													create a_tz.make_hours_minutes (an_hour, a_minute)
+												end
+												create last_cached_zoned_date.make (last_cached_date, a_tz)
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		ensure
+			year_month_cached: Result implies last_cached_zoned_date /= Void			
+		end
+
+	is_year (a_formatted_date: STRING): BOOLEAN is
+			-- Is `a_formatted_date' a valid gYear?
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+		local
+			a_date: STRING
+			a_year: INTEGER
+		do
+			if not a_formatted_date.is_empty then
+				if STRING_.same_string (a_formatted_date, last_cached_date_string) then
+					Result := True
+					last_cached_date_string := a_formatted_date
+				elseif a_formatted_date.count < 4 then
+					Result := False
+				else
+					if a_formatted_date.item (1).is_equal ('-') then
+						a_date := a_formatted_date.substring (2, a_formatted_date.count)
+					else
+						a_date := a_formatted_date
+					end
+					a_year := year_ok (a_date)
+					if a_year = 0 then
+						Result := False
+					else
+						Result := True
+						if a_formatted_date.item (1).is_equal ('-') then a_year := 1 - a_year end
+						create last_cached_date.make (a_year, 1, 1)
+						last_cached_date_string := a_formatted_date
+					end
+				end
+			end
+		ensure
+			zoneless: Result implies not is_zoned_year (a_formatted_date)
+			year_cached: Result implies last_cached_date /= Void
+		end
+
+	is_zoned_year (a_formatted_date: STRING): BOOLEAN is
+			-- Is `a_formatted_date' a valid zoned gYear?
+		local
+			a_count: STRING
+			a_tz: DT_FIXED_OFFSET_TIME_ZONE
+			an_hour, a_minute: INTEGER 
+		do
+			if not a_formatted_date.is_empty then
+				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
+					Result := True
+					last_cached_zoned_date_string := a_formatted_date
+				elseif a_formatted_date.item (a_formatted_date.count).is_equal ('Z') then
+					if a_formatted_date.count >= 5 then
+						Result := is_year (a_formatted_date.substring (1, a_formatted_date.count - 1))
+						if Result then
+							last_cached_zoned_date_string := a_formatted_date
+							create a_tz.make_named_hours_minutes ("Z", 0, 0)
+							create last_cached_zoned_date.make (last_cached_date, a_tz)
+						end
+					end
+				elseif a_formatted_date.count >= 10 then
+					if a_formatted_date.item (a_formatted_date.count - 2).is_equal (':') then
+						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
+							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
+							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
+								an_hour := a_count.to_integer
+								Result := an_hour >= 0 and then an_hour <= 14
+								if Result then
+									a_count := a_formatted_date.substring (a_formatted_date.count - 1, a_formatted_date.count)
+									if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
+										a_minute := a_count.to_integer
+										if an_hour = 14 then
+											Result := a_minute = 0
+										else
+											Result := a_minute >= 0 and then a_minute <= 59
+										end
+										if Result then
+											if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+												an_hour := 0 - an_hour
+												a_minute := 0 - a_minute
+											end
+											Result := is_year (a_formatted_date.substring (1, a_formatted_date.count - 6))
+											if Result then
+												last_cached_zoned_date_string := a_formatted_date
+												if an_hour = 0 and then a_minute = 0 then
+													create a_tz.make_named_hours_minutes ("Z", 0, 0)
+												else
+													create a_tz.make_hours_minutes (an_hour, a_minute)
+												end
+												create last_cached_zoned_date.make (last_cached_date, a_tz)
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		ensure
+			year_cached: Result implies last_cached_zoned_date /= Void			
+		end
+
+	is_month_day (a_formatted_date: STRING): BOOLEAN is
+			-- Is `a_formatted_date' a valid gMonthDay?
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+		local
+			a_splitter: ST_SPLITTER
+			some_components: DS_LIST [STRING]
+			a_month, a_day: INTEGER
+		do
+			if not a_formatted_date.is_empty then
+				if STRING_.same_string (a_formatted_date, last_cached_date_string) then
+					Result := True
+					last_cached_date_string := a_formatted_date
+				elseif a_formatted_date.count = 7 then
+					create a_splitter.make_with_separators ("-")
+					some_components := a_splitter.split_greedy (a_formatted_date)
+					Result := some_components.count = 4
+						and then some_components.item (1).is_empty and then some_components.item (2).is_empty
+					if Result then
+						a_month := month_ok (some_components.item (3))
+						if a_month = 0 then
+							Result := False
+						else
+							a_day := day_ok (some_components.item (4))
+							if a_day = 0 then
+								Result := False
+							else
+								create last_cached_date.make (1, a_month, a_day)
+								last_cached_date_string := a_formatted_date
+							end
+						end
+					end
+				end
+			end
+		ensure
+			zoneless: Result implies not is_zoned_month_day (a_formatted_date)
+			month_day_cached: Result implies last_cached_date /= Void
+		end
+
+	is_zoned_month_day (a_formatted_date: STRING): BOOLEAN is
+			-- Is `a_formatted_date' a valid zoned gMonthDay?
+		local
+			a_count: STRING
+			a_tz: DT_FIXED_OFFSET_TIME_ZONE
+			an_hour, a_minute: INTEGER 
+		do
+			if not a_formatted_date.is_empty then
+				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
+					Result := True
+					last_cached_zoned_date_string := a_formatted_date
+				elseif a_formatted_date.item (a_formatted_date.count).is_equal ('Z') then
+					if a_formatted_date.count = 8 then
+						Result := is_month_day (a_formatted_date.substring (1, a_formatted_date.count - 1))
+						if Result then
+							last_cached_zoned_date_string := a_formatted_date
+							create a_tz.make_named_hours_minutes ("Z", 0, 0)
+							create last_cached_zoned_date.make (last_cached_date, a_tz)
+						end
+					end
+				elseif a_formatted_date.count = 13 then
+					if a_formatted_date.item (a_formatted_date.count - 2).is_equal (':') then
+						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
+							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
+							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
+								an_hour := a_count.to_integer
+								Result := an_hour >= 0 and then an_hour <= 14
+								if Result then
+									a_count := a_formatted_date.substring (a_formatted_date.count - 1, a_formatted_date.count)
+									if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
+										a_minute := a_count.to_integer
+										if an_hour = 14 then
+											Result := a_minute = 0
+										else
+											Result := a_minute >= 0 and then a_minute <= 59
+										end
+										if Result then
+											if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+												an_hour := 0 - an_hour
+												a_minute := 0 - a_minute
+											end
+											Result := is_month_day (a_formatted_date.substring (1, a_formatted_date.count - 6))
+											if Result then
+												last_cached_zoned_date_string := a_formatted_date
+												if an_hour = 0 and then a_minute = 0 then
+													create a_tz.make_named_hours_minutes ("Z", 0, 0)
+												else
+													create a_tz.make_hours_minutes (an_hour, a_minute)
+												end
+												create last_cached_zoned_date.make (last_cached_date, a_tz)
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		ensure
+			month_day_cached: Result implies last_cached_zoned_date /= Void			
+		end
+
+	is_day (a_formatted_date: STRING): BOOLEAN is
+			-- Is `a_formatted_date' a valid gDay?
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+		local
+			a_splitter: ST_SPLITTER
+			some_components: DS_LIST [STRING]
+			a_day: INTEGER
+		do
+			if not a_formatted_date.is_empty then
+				if STRING_.same_string (a_formatted_date, last_cached_date_string) then
+					Result := True
+					last_cached_date_string := a_formatted_date
+				elseif a_formatted_date.count = 5 then
+					create a_splitter.make_with_separators ("-")
+					some_components := a_splitter.split_greedy (a_formatted_date)
+					Result := some_components.count = 4 and then some_components.item (1).is_empty
+						and then some_components.item (2).is_empty and then some_components.item (3).is_empty
+					if Result then
+						a_day := day_ok (some_components.item (4))
+						if a_day = 0 then
+							Result := False
+						else
+							create last_cached_date.make (1, 1, a_day)
+							last_cached_date_string := a_formatted_date
+						end
+					end
+				end
+			end
+		ensure
+			zoneless: Result implies not is_zoned_day (a_formatted_date)
+			day_cached: Result implies last_cached_date /= Void
+		end
+
+	is_zoned_day (a_formatted_date: STRING): BOOLEAN is
+			-- Is `a_formatted_date' a valid zoned gDay?
+		local
+			a_count: STRING
+			a_tz: DT_FIXED_OFFSET_TIME_ZONE
+			an_hour, a_minute: INTEGER 
+		do
+			if not a_formatted_date.is_empty then
+				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
+					Result := True
+					last_cached_zoned_date_string := a_formatted_date
+				elseif a_formatted_date.item (a_formatted_date.count).is_equal ('Z') then
+					if a_formatted_date.count = 6 then
+						Result := is_day (a_formatted_date.substring (1, a_formatted_date.count - 1))
+						if Result then
+							last_cached_zoned_date_string := a_formatted_date
+							create a_tz.make_named_hours_minutes ("Z", 0, 0)
+							create last_cached_zoned_date.make (last_cached_date, a_tz)
+						end
+					end
+				elseif a_formatted_date.count = 11 then
+					if a_formatted_date.item (a_formatted_date.count - 2).is_equal (':') then
+						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
+							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
+							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
+								an_hour := a_count.to_integer
+								Result := an_hour >= 0 and then an_hour <= 14
+								if Result then
+									a_count := a_formatted_date.substring (a_formatted_date.count - 1, a_formatted_date.count)
+									if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
+										a_minute := a_count.to_integer
+										if an_hour = 14 then
+											Result := a_minute = 0
+										else
+											Result := a_minute >= 0 and then a_minute <= 59
+										end
+										if Result then
+											if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+												an_hour := 0 - an_hour
+												a_minute := 0 - a_minute
+											end
+											Result := is_day (a_formatted_date.substring (1, a_formatted_date.count - 6))
+											if Result then
+												last_cached_zoned_date_string := a_formatted_date
+												if an_hour = 0 and then a_minute = 0 then
+													create a_tz.make_named_hours_minutes ("Z", 0, 0)
+												else
+													create a_tz.make_hours_minutes (an_hour, a_minute)
+												end
+												create last_cached_zoned_date.make (last_cached_date, a_tz)
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		ensure
+			day_cached: Result implies last_cached_zoned_date /= Void			
+		end
+	
+	is_month (a_formatted_date: STRING): BOOLEAN is
+			-- Is `a_formatted_date' a valid gMonth?
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+		local
+			a_splitter: ST_SPLITTER
+			some_components: DS_LIST [STRING]
+			a_month: INTEGER
+		do
+			if not a_formatted_date.is_empty then
+				if STRING_.same_string (a_formatted_date, last_cached_date_string) then
+					Result := True
+					last_cached_date_string := a_formatted_date
+				elseif a_formatted_date.count = 4 then
+					create a_splitter.make_with_separators ("-")
+					some_components := a_splitter.split_greedy (a_formatted_date)
+					Result := some_components.count = 3
+						and then some_components.item (1).is_empty and then some_components.item (2).is_empty
+					if Result then
+						a_month := month_ok (some_components.item (3))
+						if a_month = 0 then
+							Result := False
+						else
+							create last_cached_date.make (1, a_month, 1)
+							last_cached_date_string := a_formatted_date
+						end
+					end
+				end
+			end
+		ensure
+			zoneless: Result implies not is_zoned_month (a_formatted_date)
+			month_cached: Result implies last_cached_date /= Void
+		end
+
+	is_zoned_month (a_formatted_date: STRING): BOOLEAN is
+			-- Is `a_formatted_date' a valid zoned gMonth?
+		local
+			a_count: STRING
+			a_tz: DT_FIXED_OFFSET_TIME_ZONE
+			an_hour, a_minute: INTEGER 
+		do
+			if not a_formatted_date.is_empty then
+				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
+					Result := True
+					last_cached_zoned_date_string := a_formatted_date
+				elseif a_formatted_date.item (a_formatted_date.count).is_equal ('Z') then
+					if a_formatted_date.count = 5 then
+						Result := is_month (a_formatted_date.substring (1, a_formatted_date.count - 1))
+						if Result then
+							last_cached_zoned_date_string := a_formatted_date
+							create a_tz.make_named_hours_minutes ("Z", 0, 0)
+							create last_cached_zoned_date.make (last_cached_date, a_tz)
+						end
+					end
+				elseif a_formatted_date.count = 10 then
+					if a_formatted_date.item (a_formatted_date.count - 2).is_equal (':') then
+						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
+							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
+							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
+								an_hour := a_count.to_integer
+								Result := an_hour >= 0 and then an_hour <= 14
+								if Result then
+									a_count := a_formatted_date.substring (a_formatted_date.count - 1, a_formatted_date.count)
+									if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
+										a_minute := a_count.to_integer
+										if an_hour = 14 then
+											Result := a_minute = 0
+										else
+											Result := a_minute >= 0 and then a_minute <= 59
+										end
+										if Result then
+											if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+												an_hour := 0 - an_hour
+												a_minute := 0 - a_minute
+											end
+											Result := is_month (a_formatted_date.substring (1, a_formatted_date.count - 6))
+											if Result then
+												last_cached_zoned_date_string := a_formatted_date
+												if an_hour = 0 and then a_minute = 0 then
+													create a_tz.make_named_hours_minutes ("Z", 0, 0)
+												else
+													create a_tz.make_hours_minutes (an_hour, a_minute)
+												end
+												create last_cached_zoned_date.make (last_cached_date, a_tz)
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		ensure
+			month_cached: Result implies last_cached_zoned_date /= Void			
+		end
+	
 feature -- Conversion
 
 	string_to_date (a_formatted_date: STRING): DT_DATE is
@@ -479,6 +996,244 @@ feature -- Conversion
 			end
 		end
 
+	string_to_year_month (a_formatted_date: STRING): DT_DATE is
+			-- Parsed gYearMonth from `a_formatted_date'
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+			valid_year_month_string: is_year_month (a_formatted_date)
+			date_string_not_altered_since_call_to_is_date: True
+		local
+			valid: BOOLEAN
+		do
+			if a_formatted_date = last_cached_date_string then
+				Result := last_cached_date
+			else
+				valid := is_year_month (a_formatted_date)
+				check
+					valid: valid
+					-- from pre-condition
+				end
+				Result := last_cached_date
+			end
+		ensure
+			year_month_not_void: Result /= Void
+			day_is_one: Result.day = 1
+		end
+
+	string_to_zoned_year_month (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
+			-- Parsed gYearMonth from `a_formatted_date'
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+			valid_zoned_date_string: is_zoned_year_month (a_formatted_date)
+			date_string_not_altered_since_call_to_is_zoned_date: True
+		local
+			valid: BOOLEAN
+		do
+			if a_formatted_date = last_cached_zoned_date_string then
+				Result := last_cached_zoned_date
+			else
+				valid := is_zoned_year_month (a_formatted_date)
+				check
+					valid: valid
+					-- from pre-condition
+				end
+				Result := last_cached_zoned_date
+			end
+		ensure
+			zoned_year_month_not_void: Result /= Void
+		end
+
+	string_to_year (a_formatted_date: STRING): DT_DATE is
+			-- Parsed gYear from `a_formatted_date'
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+			valid_year_string: is_year (a_formatted_date)
+			date_string_not_altered_since_call_to_is_date: True
+		local
+			valid: BOOLEAN
+		do
+			if a_formatted_date = last_cached_date_string then
+				Result := last_cached_date
+			else
+				valid := is_year (a_formatted_date)
+				check
+					valid: valid
+					-- from pre-condition
+				end
+				Result := last_cached_date
+			end
+		ensure
+			year_not_void: Result /= Void
+			month_is_one: Result.month = 1
+			day_is_one: Result.day = 1
+		end
+
+	string_to_zoned_year (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
+			-- Parsed gYear from `a_formatted_date'
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+			valid_zoned_date_string: is_zoned_year (a_formatted_date)
+			date_string_not_altered_since_call_to_is_zoned_date: True
+		local
+			valid: BOOLEAN
+		do
+			if a_formatted_date = last_cached_zoned_date_string then
+				Result := last_cached_zoned_date
+			else
+				valid := is_zoned_year (a_formatted_date)
+				check
+					valid: valid
+					-- from pre-condition
+				end
+				Result := last_cached_zoned_date
+			end
+		ensure
+			zoned_year_not_void: Result /= Void
+		end
+
+	string_to_month_day (a_formatted_date: STRING): DT_DATE is
+			-- Parsed gMonthDay from `a_formatted_date'
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+			valid_month_day_string: is_month_day (a_formatted_date)
+			date_string_not_altered_since_call_to_is_date: True
+		local
+			valid: BOOLEAN
+		do
+			if a_formatted_date = last_cached_date_string then
+				Result := last_cached_date
+			else
+				valid := is_month_day (a_formatted_date)
+				check
+					valid: valid
+					-- from pre-condition
+				end
+				Result := last_cached_date
+			end
+		ensure
+			month_day_not_void: Result /= Void
+			year_is_one: Result.year = 1
+		end
+
+	string_to_zoned_month_day (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
+			-- Parsed gMonthDay from `a_formatted_date'
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+			valid_month_day_string: is_zoned_month_day (a_formatted_date)
+			date_string_not_altered_since_call_to_is_date: True
+		local
+			valid: BOOLEAN
+		do
+			if a_formatted_date = last_cached_zoned_date_string then
+				Result := last_cached_zoned_date
+			else
+				valid := is_zoned_month_day (a_formatted_date)
+				check
+					valid: valid
+					-- from pre-condition
+				end
+				Result := last_cached_zoned_date
+			end
+		ensure
+			zoned_month_day_not_void: Result /= Void
+		end
+
+	string_to_day (a_formatted_date: STRING): DT_DATE is
+			-- Parsed gDay from `a_formatted_date'
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+			valid_day_string: is_day (a_formatted_date)
+			date_string_not_altered_since_call_to_is_date: True
+		local
+			valid: BOOLEAN
+		do
+			if a_formatted_date = last_cached_date_string then
+				Result := last_cached_date
+			else
+				valid := is_day (a_formatted_date)
+				check
+					valid: valid
+					-- from pre-condition
+				end
+				Result := last_cached_date
+			end
+		ensure
+			day_not_void: Result /= Void
+			year_is_one: Result.year = 1
+			month_is_one: Result.month = 1
+		end
+
+	string_to_zoned_day (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
+			-- Parsed gMonthDay from `a_formatted_date'
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+			valid_day_string: is_zoned_day (a_formatted_date)
+			date_string_not_altered_since_call_to_is_date: True
+		local
+			valid: BOOLEAN
+		do
+			if a_formatted_date = last_cached_zoned_date_string then
+				Result := last_cached_zoned_date
+			else
+				valid := is_zoned_day (a_formatted_date)
+				check
+					valid: valid
+					-- from pre-condition
+				end
+				Result := last_cached_zoned_date
+			end
+		ensure
+			zoned_day_not_void: Result /= Void
+		end
+
+	string_to_month (a_formatted_date: STRING): DT_DATE is
+			-- Parsed gMonth from `a_formatted_date'
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+			valid_month_string: is_month (a_formatted_date)
+			date_string_not_altered_since_call_to_is_date: True
+		local
+			valid: BOOLEAN
+		do
+			if a_formatted_date = last_cached_date_string then
+				Result := last_cached_date
+			else
+				valid := is_month (a_formatted_date)
+				check
+					valid: valid
+					-- from pre-condition
+				end
+				Result := last_cached_date
+			end
+		ensure
+			month_not_void: Result /= Void
+			year_is_one: Result.year = 1
+			day_is_one: Result.day = 1
+		end
+
+	string_to_zoned_month (a_formatted_date: STRING): DT_FIXED_OFFSET_ZONED_DATE is
+			-- Parsed gMonthMonth from `a_formatted_date'
+		require
+			formatted_date_not_void: a_formatted_date /= Void
+			valid_month_string: is_zoned_month (a_formatted_date)
+			date_string_not_altered_since_call_to_is_date: True
+		local
+			valid: BOOLEAN
+		do
+			if a_formatted_date = last_cached_zoned_date_string then
+				Result := last_cached_zoned_date
+			else
+				valid := is_zoned_month (a_formatted_date)
+				check
+					valid: valid
+					-- from pre-condition
+				end
+				Result := last_cached_zoned_date
+			end
+		ensure
+			zoned_month_not_void: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	last_cached_date_string: STRING
@@ -521,8 +1276,15 @@ feature {NONE} -- Implementation
 			-- Validated year number, or zero
 		require
 			year_not_empty: a_year /= Void and then not a_year.is_empty
+		local
+			a_count: INTEGER
 		do
-			if a_year.item (1).is_equal ('+') then
+			a_count := a_year.count
+			STRING_.left_adjust (a_year)
+			STRING_.right_adjust (a_year)
+			if a_year.count /= a_count then
+				Result := 0
+			elseif a_year.item (1).is_equal ('+') then
 				Result := 0
 			elseif not a_year.is_integer or else a_year.is_equal ("0000") then
 				Result := 0
@@ -539,8 +1301,15 @@ feature {NONE} -- Implementation
 			-- Validated month number, or zero
 		require
 			month_not_empty: a_month /= Void and then not a_month.is_empty
+		local
+			a_count: INTEGER
 		do
-			if a_month.count /= 2 then
+			a_count := a_month.count
+			STRING_.left_adjust (a_month)
+			STRING_.right_adjust (a_month)
+			if a_month.count /= a_count then
+				Result := 0
+			elseif a_month.count /= 2 then
 				Result := 0
 			elseif a_month.item (1).is_equal ('+') then
 				Result := 0
@@ -555,8 +1324,15 @@ feature {NONE} -- Implementation
 			-- Validated day number, or zero
 		require
 			day_not_empty: a_day /= Void and then not a_day.is_empty
+		local
+			a_count: INTEGER
 		do
-			if a_day.count /= 2 then
+			a_count := a_day.count
+			STRING_.left_adjust (a_day)
+			STRING_.right_adjust (a_day)
+			if a_day.count /= a_count then
+				Result := 0
+			elseif a_day.count /= 2 then
 				Result := 0
 			elseif a_day.item (1).is_equal ('+') then
 				Result := 0

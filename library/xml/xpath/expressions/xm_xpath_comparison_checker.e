@@ -29,9 +29,6 @@ inherit
 
 	XM_XPATH_COMPARISON_ROUTINES
 
-		-- TODO: Value Comparisons no longer use this class, as they have different semantics.
-		-- Check this logic is still correct for General Comparisons
-
 feature -- Comparison
 
 	check_correct_general_relation (an_atomic_value: XM_XPATH_ATOMIC_VALUE; an_operator: INTEGER;

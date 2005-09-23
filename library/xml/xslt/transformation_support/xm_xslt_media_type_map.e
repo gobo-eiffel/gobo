@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Element change
 
-	check_fragment_processing_rules (a_media_type: UT_MEDIA_TYPE; xpointer_in_use, is_xhtml_spoofing: BOOLEAN) is
+	check_fragment_processing_rules (a_media_type: UT_MEDIA_TYPE; is_xhtml_spoofing: BOOLEAN) is
 			-- Check which fragment-identifier processing rules apply to `a_media_type'
 		require
 			media_type_not_void:  a_media_type /= Void
@@ -54,26 +54,16 @@ feature -- Element change
 						a_type := "application"; a_subtype := "xhtml+xml"
 					end
 				elseif a_subtype.is_equal ("xml") or else a_subtype.is_equal ("xml-external-parsed-entity") then
-					if xpointer_in_use then
-						may_use_xpointer := True
-					end
+					may_use_xpointer := True
 				end
 			end
 			if a_type.is_equal ("application") then
 				if a_subtype.is_equal ("xml") or else a_subtype.is_equal ("xml-external-parsed-entity") or else a_subtype.is_equal ("xslt+xml") then
-					if xpointer_in_use then
-						may_use_xpointer := True
-					end
+					may_use_xpointer := True
 				elseif a_subtype.is_equal ("xhtml+xml") then
-					if xpointer_in_use then
-						may_use_xpointer := True
-					else
-						may_use_id := True
-					end
+					may_use_xpointer := True
 				elseif a_subtype.count > 4 and then a_subtype.substring (a_subtype.count - 4, a_subtype.count).is_equal ("+xml") then
-					if xpointer_in_use then
-						may_use_xpointer := True
-					end
+					may_use_xpointer := True
 				end
 			end
 		end

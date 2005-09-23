@@ -108,7 +108,7 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			create Result.make (population, key_expression, key_context.new_context, stored_collator)
+			create Result.make (population.another, key_expression, key_context.new_context, stored_collator)
 		end
 	
 feature {NONE} -- Implementation

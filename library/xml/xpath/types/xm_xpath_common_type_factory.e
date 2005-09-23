@@ -258,30 +258,30 @@ feature {NONE} -- Implementation
 			Result.put (date_time_type, Date_time_type_code)
 			Result.put (date_type, Date_type_code)
 			Result.put (time_type, Time_type_code)
+			Result.put (g_year_month_type, G_year_month_type_code)
+			Result.put (g_month_type, G_month_type_code)
+			Result.put (g_month_day_type, G_month_day_type_code)
+			Result.put (g_year_type, G_year_type_code)
+			Result.put (g_day_type, G_day_type_code)
 			Result.put (any_uri_type, Any_uri_type_code)
 			Result.put (qname_type, Qname_type_code)
 			Result.put (untyped_atomic_type, Untyped_atomic_type_code)
-			Result.put (decimal_type, Decimal_type_code)			
+			Result.put (decimal_type, Decimal_type_code)
+			Result.put (float_type, Float_type_code)
 			Result.put (double_type, Double_type_code)
 			Result.put (integer_type, Integer_type_code)
 			Result.put (any_type, Any_type_code)
 			Result.put (untyped_type, Untyped_type_code)
+			Result.put (duration_type, Duration_type_code)
 			Result.put (year_month_duration_type, Year_month_duration_type_code)
 			Result.put (day_time_duration_type, Day_time_duration_type_code)
+			Result.put (hex_binary_type, Hex_binary_type_code)
+			Result.put (base64_binary_type, Base64_binary_type_code)
 
 			-- Conditionally add optional types
 
 			if object_type /= Void then Result.put (object_type, Object_type_code) end
-			if duration_type /= Void then Result.put (duration_type, Duration_type_code) end
-			if g_year_month_type /= Void then Result.put (duration_type, Duration_type_code) end
-			if g_month_type /= Void then Result.put (g_month_type, G_month_type_code) end
-			if g_month_day_type /= Void then Result.put (g_month_day_type, G_month_day_type_code) end
-			if g_year_type /= Void then Result.put (g_year_type, G_year_type_code) end
-			if g_day_type /= Void then Result.put (g_day_type, G_day_type_code) end
-			if hex_binary_type /= Void then Result.put (hex_binary_type, Hex_binary_type_code) end
-			if base64_binary_type /= Void then Result.put (base64_binary_type, Base64_binary_type_code) end
 			if notation_type /= Void then Result.put (notation_type, Notation_type_code) end
-			if float_type /= Void then Result.put (float_type, Float_type_code) end
 			if non_positive_integer_type /= Void then Result.put (non_positive_integer_type, Non_positive_integer_type_code) end
 			if negative_integer_type /= Void then Result.put (negative_integer_type, Negative_integer_type_code) end
 			if long_type /= Void then Result.put (long_type, Long_type_code) end
@@ -615,6 +615,7 @@ feature {NONE} -- Implementation
 			bind_fn_name (Number_function_type_code, "number")
 			bind_fn_name (One_or_more_function_type_code, "one-or-more")
 			bind_fn_name (Position_function_type_code, "position")
+			bind_fn_name (Prefix_from_qname_function_type_code, "prefix-from-QName")
 			bind_fn_name (Qname_function_type_code, "QName")
 			bind_fn_name (Remove_function_type_code, "remove")
 			bind_fn_name (Replace_function_type_code, "replace")

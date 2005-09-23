@@ -142,7 +142,7 @@ feature -- Access
 			-- xs:duration
 		deferred
 		ensure
-			duration_type_not_necessarily_present: Result /= Void implies is_built_in_fingerprint (Result.fingerprint)
+			duration_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
 		end
 
 	date_time_type: XM_XPATH_ATOMIC_TYPE is
@@ -170,49 +170,49 @@ feature -- Access
 			-- xs:gYearMonth
 		deferred
 		ensure
-			g_year_month_type_not_necessarily_present: Result /= Void implies is_built_in_fingerprint (Result.fingerprint)
+			g_year_month_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
 		end
 
 	g_month_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:gMonth
 		deferred
 		ensure
-			g_month_type_not_necessarily_present: Result /= Void implies is_built_in_fingerprint (Result.fingerprint)
+			g_month_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
 		end
 
 	g_month_day_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:gMonthDay
 		deferred
 		ensure
-			g_month_day_type_not_necessarily_present: Result /= Void implies is_built_in_fingerprint (Result.fingerprint)
+			g_month_day_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
 		end
 
 	g_year_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:gYear
 		deferred
 		ensure
-			g_year_type_not_necessarily_present: Result /= Void implies is_built_in_fingerprint (Result.fingerprint) -- TODO: NOT TRUE!
+			g_year_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
 		end
 
 	g_day_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:gDay
 		deferred
 		ensure
-			g_day_type_not_necessarily_present: Result /= Void implies is_built_in_fingerprint (Result.fingerprint)
+			g_day_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
 		end
 
 	hex_binary_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:hexBinary
 		deferred
 		ensure
-			hex_binary_type_not_necessarily_present: Result /= Void implies is_built_in_fingerprint (Result.fingerprint)
+			hex_binary_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
 		end
 
 	base64_binary_type: XM_XPATH_ATOMIC_TYPE is
 			-- xs:base64Binary
 		deferred
 		ensure
-			base64_binary_type_not_necessarily_present: Result /= Void implies is_built_in_fingerprint (Result.fingerprint)
+			base64_binary_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
 		end
 
 	any_uri_type: XM_XPATH_ATOMIC_TYPE is
@@ -254,7 +254,7 @@ feature -- Access
 			-- xs:float
 		deferred
 		ensure
-			float_type_not_necessarily_present: Result /= Void implies is_built_in_fingerprint (Result.fingerprint)
+			float_type_not_void: Result /= Void and then is_built_in_fingerprint (Result.fingerprint)
 		end
 
 	double_type: XM_XPATH_ATOMIC_TYPE is

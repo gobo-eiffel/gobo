@@ -201,13 +201,19 @@ feature -- Basic operations
 		local
 			a_duration: like duration
 			a_result: INTEGER
+			a_double: DOUBLE
 		do
-			a_result := (months * a_scalar).rounded
-			if a_result = Platform.Minimum_integer then
-				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Arithmetic overflow in duration multiplication", Xpath_errors_uri, "FODT0002", Dynamic_error)
+			a_double := months * a_scalar
+			if a_double.abs + 0.5 < (Platform.Maximum_integer + 1.0) then
+				a_result := DOUBLE_.rounded_to_integer (a_double)
+				if a_result = Platform.Minimum_integer then
+					create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Arithmetic overflow in duration multiplication", Xpath_errors_uri, "FODT0002", Dynamic_error)
+				else
+					create a_duration.make (0, a_result, 0, 0, 0, 0)
+					create {XM_XPATH_MONTHS_DURATION_VALUE} Result.make_from_duration (a_duration)
+				end
 			else
-				create a_duration.make (0, a_result, 0, 0, 0, 0)
-				create {XM_XPATH_MONTHS_DURATION_VALUE} Result.make_from_duration (a_duration)
+				create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Arithmetic overflow in duration multiplication", Xpath_errors_uri, "FODT0002", Dynamic_error)
 			end
 		end
 		

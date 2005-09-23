@@ -69,6 +69,20 @@ feature -- Status report
 	load_stylesheet_module_error: STRING
 			-- Error reported by last call to `load_(principal_)stylesheet_module'
 
+feature -- Status setting
+
+	report_error (a_message: STRING) is
+			-- Report an error.
+		require
+			error_message_exists: a_message /= Void
+		do
+			load_stylesheet_module_failed := True
+			load_stylesheet_module_error := a_message
+		ensure
+			error_raised: load_stylesheet_module_failed
+			message_set: load_stylesheet_module_error = a_message
+		end
+
 feature -- Compilation
 
 	prepare (a_source: XM_XSLT_SOURCE) is
@@ -112,8 +126,7 @@ feature -- Compilation
 			create a_comment_stripper.make (a_stylesheet_stripper)
 			a_source.send_from_stream (a_stream, a_system_id, a_parser, a_comment_stripper, True)
 			if a_tree_builder.has_error then
-				load_stylesheet_module_failed := True
-				load_stylesheet_module_error := a_tree_builder.last_error
+				report_error (a_tree_builder.last_error)
 			else
 				last_loaded_module := a_tree_builder.tree_document
 			end
@@ -148,8 +161,7 @@ feature -- Compilation
 			create a_comment_stripper.make (a_stylesheet_stripper)
 			a_source.send (a_parser, a_comment_stripper, True)
 			if a_tree_builder.has_error then
-				load_stylesheet_module_failed := True
-				load_stylesheet_module_error := a_tree_builder.last_error
+				report_error (a_tree_builder.last_error)
 			else
 				last_loaded_module := a_tree_builder.tree_document
 			end
@@ -175,11 +187,11 @@ feature -- Compilation
 
 			a_top_node ?= a_stylesheet_document.document_element
 			if a_top_node /= Void then
-				todo ("create_style_sheet_executable (literal result stylesheet facility is not yet supported)", True)
+				a_stylesheet_document := a_top_node.constructed_stylesheet (Current)
 			end
 			a_stylesheet ?= a_stylesheet_document.document_element
 			if a_stylesheet = Void then
-				todo ("Top-level element of stylesheet is not xsl:stylesheet or xsl:transform or literal result element", True)
+				report_error ("Top-level element of stylesheet is not xsl:stylesheet or xsl:transform or literal result element")
 			elseif not a_stylesheet.is_error then
 				if a_stylesheet.version.is_equal (one) then
 					error_listener.warning ("XSLT 1.0 stylesheet is being run on an XSLT 2.0 processor.", Void)
@@ -196,8 +208,7 @@ feature -- Compilation
 					a_stylesheet.compile_stylesheet (configuration)
 				end
 				if a_stylesheet.any_compile_errors then
-					load_stylesheet_module_failed := True
-					load_stylesheet_module_error := "There were error compiling the stylesheet"
+					report_error ("There were error compiling the stylesheet")
 				else
 					executable := a_stylesheet.executable
 					check

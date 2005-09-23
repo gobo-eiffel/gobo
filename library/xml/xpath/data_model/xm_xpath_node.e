@@ -96,8 +96,6 @@ feature -- Access
 	document: XM_XPATH_DOCUMENT is
 			-- Document that owns this node
 		deferred
-		ensure
-			document_not_void: Result /= Void
 		end
 
 	sequence_number: XM_XPATH_64BIT_NUMERIC_CODE is
@@ -111,6 +109,8 @@ feature -- Access
 	
 	document_number: INTEGER is
 			-- Uniquely identifies the owning document.
+		require
+			document_exists: document /= Void
 		deferred
 		ensure
 			strictly_positive_result: Result > 0

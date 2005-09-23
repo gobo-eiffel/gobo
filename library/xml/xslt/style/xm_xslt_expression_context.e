@@ -197,6 +197,23 @@ feature -- Status report
 			
 		end
 
+	is_element_available (a_qname: STRING): BOOLEAN is
+			-- Is element name `a_qname' available?
+		require
+			valid_qname: is_qname (a_qname)
+		local
+			a_parser: XM_XPATH_QNAME_PARSER
+			a_uri: STRING
+		do
+			create a_parser.make (a_qname)
+			check
+				valid_parse: a_parser.is_valid
+				-- from pre-condition
+			end
+			a_uri := uri_for_prefix (a_parser.optional_prefix)
+			Result := style_element.stylesheet_compiler.node_factory.is_element_available (a_uri, a_parser.local_name)
+		end
+
 feature -- Element change
 
 	set_last_bound_variable (a_variable: XM_XSLT_VARIABLE_DECLARATION) is
