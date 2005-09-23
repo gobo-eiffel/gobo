@@ -25,6 +25,7 @@ feature
 			assert ("empty", utf16.valid_utf16 (""))
 			assert ("valid_big_endian", utf16.valid_utf16 (Big_endian + "%/0/a%/216/b%/223/c%/0/d"))
 			assert ("valid_little_endian", utf16.valid_utf16 (Little_endian + "a%/0/b%/217/c%/223/d%/0/"))
+			assert ("valid_no_byte_order_marker", utf16.valid_utf16 ("%/0/a%/216/b%/223/c%/0/d"))
 		end
 
 	test_invalid is
