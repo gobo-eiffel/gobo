@@ -21,7 +21,7 @@ feature -- Status report
 	valid_utf16 (a_string: STRING): BOOLEAN is
 			-- Are the bytes in `a_string' a valid UTF-16 encoding?
 			-- 'a_string' has one byte per character.
-			-- TODO: how to default endian-ness when not FEFF?
+			-- Default to big endian when no BOM.
 		require
 			a_string_not_void: a_string /= Void
 			a_string_is_string: ANY_.same_types (a_string, "")
@@ -33,10 +33,10 @@ feature -- Status report
 			if Result and a_string.count > 0 then
 				from
 						-- Loop through most significant bytes, detecting starting point is enough.
-					if is_endian_detection_character_most_first (a_string.item_code (1), a_string.item_code (2)) then
-						i := 1
-					else
+					if is_endian_detection_character_least_first (a_string.item_code (1), a_string.item_code (2)) then
 						i := 2
+					else
+						i := 1
 					end
 					cnt := a_string.count
 				until

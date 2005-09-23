@@ -1760,12 +1760,14 @@ feature -- Element change
 			a_most, a_least: INTEGER
 			a_low_most, a_low_least: INTEGER
 		do
+			i := 1
 			nb := s.count
+			msb_first := True
 			if nb >= 2 then
-				if s.item_code (1) = 254 and s.item_code (2) = 255 then
-					msb_first := True
+				if utf16.is_endian_detection_character_most_first (s.item_code (1), s.item_code (2)) then
+					check msb_first_set: msb_first end
 					i := 3
-				elseif s.item_code (1) = 255 and s.item_code (2) = 254 then
+				elseif utf16.is_endian_detection_character_least_first (s.item_code (1), s.item_code (2)) then
 					msb_first := False
 					i := 3
 				end
