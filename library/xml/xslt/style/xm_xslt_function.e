@@ -333,6 +333,27 @@ feature -- Element change
 			create compiled_function.make (an_executable, a_body, function_name, system_id, line_number, slot_manager, result_type, is_memo_function)
 			set_parameter_definitions (compiled_function)
 			fixup_instruction (compiled_function)
+			if is_explaining then
+				std.error.put_string ("Optimized expression tree for function '")
+				std.error.put_string (function_name)
+				std.error.put_string ("' at line ")
+				std.error.put_string (line_number.out)
+				std.error.put_string (" in ")
+				std.error.put_string (system_id)
+				std.error.put_new_line
+				if not a_body.is_error then
+					std.error.put_string ("Static type: ")
+					std.error.put_string (a_body.item_type.conventional_name)
+					std.error.put_string (a_body.occurence_indicator)
+					std.error.put_new_line
+					std.error.put_string ("Optimized expression tree:%N")
+					a_body.display (10)
+				else
+					std.error.put_string ("Function body is in error%N")
+					std.error.put_string (a_body.error_value.error_message)
+					std.error.put_new_line
+				end
+			end
 		end
 
 feature -- Conversion

@@ -126,26 +126,33 @@ feature -- Evaluation
 			a_last_tail_call: XM_XPATH_TAIL_CALL
 			a_new_context: XM_XSLT_EVALUATION_CONTEXT
 		do
-			inspect
-				a_node.node_type
-			when Document_node, Element_node then
-				from
-					an_iterator := a_node.new_axis_iterator (Child_axis)
-					a_new_context := a_context.new_context
-					apply_templates (an_iterator, a_context.current_mode, some_parameters, some_tunnel_parameters, a_new_context)
-					a_last_tail_call := last_set_tail_call
-				until
-					a_last_tail_call = Void
-				loop
-					a_last_tail_call.process_leaving_tail (a_new_context)
-					a_last_tail_call := a_last_tail_call.last_tail_call
+			if a_context.configuration.default_action_suppressed then
+				-- nothing to do
+			else
+				if a_context.configuration.warns_on_default_action then
+					a_context.transformer.report_warning (STRING_.concat ("Default template invoked for ", a_node.type_name), Void)
 				end
-			when Text_node, Attribute_node then
-				a_context.current_receiver.notify_characters (a_node.string_value, 0)
-			when Comment_node, Processing_instruction_node then
-
-				-- No action
-
+				inspect
+					a_node.node_type
+				when Document_node, Element_node then
+					from
+						an_iterator := a_node.new_axis_iterator (Child_axis)
+						a_new_context := a_context.new_context
+						apply_templates (an_iterator, a_context.current_mode, some_parameters, some_tunnel_parameters, a_new_context)
+						a_last_tail_call := last_set_tail_call
+					until
+						a_last_tail_call = Void
+					loop
+						a_last_tail_call.process_leaving_tail (a_new_context)
+						a_last_tail_call := a_last_tail_call.last_tail_call
+					end
+				when Text_node, Attribute_node then
+					a_context.current_receiver.notify_characters (a_node.string_value, 0)
+				when Comment_node, Processing_instruction_node then
+					
+					-- No action
+					
+				end
 			end
 			set_last_tail_call (Void)
 		end

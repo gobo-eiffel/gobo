@@ -99,7 +99,7 @@ feature -- Access
 				an_idrefs_cursor.forth
 			end
 			create an_empty_iterator.make
-			create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} Result.make (a_list, an_empty_iterator)
+			create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} Result.make (a_list, an_empty_iterator, Void)
 			create a_comparer
 			create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} Result.make (Result, a_comparer)
 		ensure

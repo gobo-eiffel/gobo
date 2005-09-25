@@ -292,7 +292,7 @@ feature -- Element change
 							a_cursor.forth
 						end
 					end
-					if principal_stylesheet.is_all_explaining then
+					if is_explaining or else principal_stylesheet.is_all_explaining then
 						std.error.put_string ("Compiled template ")
 						if template_fingerprint /= -1 then
 							std.error.put_string (" name=")

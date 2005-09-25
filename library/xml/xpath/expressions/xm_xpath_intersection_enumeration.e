@@ -124,7 +124,7 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			todo ("another", False)
+			create Result.make (first_iterator.another, second_iterator.another, comparer)
 		end
 
 feature {NONE} -- Implementation

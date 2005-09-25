@@ -145,6 +145,13 @@ feature -- Access
 	error_listener: XM_XSLT_ERROR_LISTENER
 			-- Error listener
 
+	warns_on_default_action: BOOLEAN
+			-- Are warning messages issued when a default template is invoked?
+
+	default_action_suppressed: BOOLEAN
+			-- Are default templates suppressed?
+			-- (If `True', then non-compliant)
+	
 	default_media_type (a_uri: STRING): UT_MEDIA_TYPE is
 			-- Media-type associated with `a_uri' (only used when resolver returns no information)
 		require
@@ -163,6 +170,24 @@ feature -- Access
 		-- estimates for tiny-tree parameters
 	
 feature -- Element change
+
+	set_warns_on_default_action (a_status: BOOLEAN) is
+			-- Set whether warning messages are issued when a default template is invoked.
+		do
+			warns_on_default_action := a_status
+			if a_status then set_default_action_suppressed (False) end
+		ensure
+			status_set: warns_on_default_action = a_status
+		end
+
+	set_default_action_suppressed (a_status: BOOLEAN) is
+			-- Set whther default templates are suppressed.
+		do
+			default_action_suppressed := a_status
+			if a_status then set_warns_on_default_action (False) end
+		ensure
+			status_set: default_action_suppressed = a_status
+		end
 
 	add_extension_function_library (a_function_library: XM_XPATH_FUNCTION_LIBRARY) is
 			-- Add an extension-function library.
@@ -371,5 +396,6 @@ invariant
 	extension_functions_not_void: extension_functions /= Void
 	final_execution_phase_in_range: final_execution_phase <= Run_to_completion and then final_execution_phase >= Stop_after_principal_source
 	media_type_map_not_void: media_type_map /= Void
+	default_action: not (default_action_suppressed and then warns_on_default_action)
 
 end

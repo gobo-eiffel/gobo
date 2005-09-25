@@ -26,17 +26,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_reservoir: DS_ARRAYED_LIST [XM_XPATH_NODE]; a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]) is
+	make (a_reservoir: DS_ARRAYED_LIST [XM_XPATH_NODE]; a_base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_closure: like closure) is
 			-- Establish invariant.
 		require
 			reservoir_not_void: a_reservoir /= Void
 			base_iterator_not_in_error: a_base_iterator /= Void and then not a_base_iterator.is_error
+			empty_reservoir: a_reservoir.count = 0 implies a_base_iterator.off
 		do
 			reservoir := a_reservoir
 			base_iterator := a_base_iterator
+			closure := a_closure
 		ensure
 			reservoir_set: reservoir = a_reservoir
 			base_iterator_set: base_iterator = a_base_iterator
+			closure_set: closure = a_closure
 		end
 
 feature -- Access
@@ -66,7 +69,11 @@ feature -- Status report
 			-- Are there any more items in the sequence?
 		do
 			if index > reservoir.count and then not base_iterator.is_error then
-				Result := not base_iterator.before and then base_iterator.after
+				if closure /= Void  and then closure.is_all_read then
+					Result := True
+				else
+					Result := not base_iterator.before and then base_iterator.after
+				end
 			end
 		end
 
@@ -77,19 +84,21 @@ feature -- Cursor movement
 		do
 			index := index + 1
 			if index > reservoir.count then
-				if base_iterator.is_error then
-					set_last_error (base_iterator.error_value)
-				else
-					if base_iterator.before then
-						base_iterator.start
-					elseif not base_iterator.after then
-						base_iterator.forth
+				if closure = Void or else not closure.is_all_read then
+					if base_iterator.is_error then
+						set_last_error (base_iterator.error_value)
+					else
+						if base_iterator.before then
+							base_iterator.start
+						elseif not base_iterator.after then
+							base_iterator.forth
+						end
 					end
-				end
-				if base_iterator.is_error then
-					set_last_error (base_iterator.error_value)
-				elseif not base_iterator.after then
-					reservoir.force_last (base_iterator.item)
+					if base_iterator.is_error then
+						set_last_error (base_iterator.error_value)
+					elseif not base_iterator.after then
+						reservoir.force_last (base_iterator.item)
+					end
 				end
 			end
 		end
@@ -103,10 +112,9 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_VALUE} last_realized_value.make (base_iterator.error_value)
 			elseif not base_iterator.before and then base_iterator.after then
 				create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make_from_list (reservoir)
-			elseif reservoir.is_empty then
-				create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make (base_iterator)
 			else
-				create {XM_XPATH_SEQUENCE_EXTENT} last_realized_value.make (another)
+				fill_reservoir
+				realize
 			end
 		end
 
@@ -116,7 +124,7 @@ feature -- Duplication
 			-- Another iterator that iterates over the same items as the original;
 			-- The new iterator will be repositioned at the start of the sequence
 		do
-			create Result.make (reservoir, base_iterator)
+			create Result.make (reservoir, base_iterator, closure)
 		end
 	
 feature {NONE} -- Implementation
@@ -127,10 +135,34 @@ feature {NONE} -- Implementation
 	base_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			-- Source of unread nodes
 
+	closure: XM_XPATH_MEMO_CLOSURE
+			-- Closure over which `Current' iterates
+
+	fill_reservoir is
+			-- Fill `reservoir' from `base_iterator'
+		require
+			not_full: base_iterator.before or else not base_iterator.after
+		do
+			if base_iterator.before then
+				base_iterator.start
+				if not base_iterator.after then reservoir.force_last (base_iterator.item) end
+			end
+			from
+			until
+				base_iterator.after
+			loop
+				base_iterator.forth
+				if not base_iterator.after then reservoir.force_last (base_iterator.item) end
+			end
+			if closure /= Void then closure.mark_as_all_read end
+		ensure
+			filled: base_iterator.after
+		end
+
 invariant
 
-	reservoir_not_void: reservoir /= Void
-	base_iterator_not_void: base_iterator /= Void
+	reservoir_exists: reservoir /= Void
+	base_iterator_exists: base_iterator /= Void
 
 end
 	

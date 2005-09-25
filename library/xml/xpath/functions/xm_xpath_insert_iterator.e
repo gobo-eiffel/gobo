@@ -123,8 +123,7 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			todo ("another", False)
-			-- create Result.make (input, regexp)
+			create Result.make (base_iterator.another, insertion_iterator.another, insert_position)
 		end
 	
 feature {NONE} -- Implementation

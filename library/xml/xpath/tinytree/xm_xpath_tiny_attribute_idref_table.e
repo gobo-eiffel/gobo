@@ -89,7 +89,7 @@ feature -- Access
 				an_attribute_cursor.forth
 			end
 			create an_empty_iterator.make
-			create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} Result.make (an_attribute_list, an_empty_iterator)
+			create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} Result.make (an_attribute_list, an_empty_iterator, Void)
 		ensure
 			iterator_before: Result /= Void and then Result.before
 		end

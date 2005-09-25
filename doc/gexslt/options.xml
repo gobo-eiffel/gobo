@@ -229,6 +229,33 @@
 	    </para>
 	  </listitem>
 	</varlistentry>
+	<varlistentry>
+	  <term>--default-template-warning</term>
+	  <listitem>
+	    <para>
+	      Issues a warning message when a built-in template is invoked.
+	    </para>
+	    <para>
+	      The default-template-warning and suppress-default-action options
+	      are mutually exclusive. If both are selected, one will be arbitrarily ignored.
+	    </para>
+	  </listitem>
+	</varlistentry>
+	<varlistentry>
+	  <term>--suppress-default-action</term>
+	  <listitem>
+	    <para>
+	      Suppresses all invocations of built-in templates.
+	      <warning>
+		Use of this option gives non-compliant behaviour.
+	      </warning>
+	    </para>
+	    <para>
+	      The default-template-warning and suppress-default-action options
+	      are mutually exclusive. If both are selected, one will be arbitrarily ignored.
+	    </para>
+	  </listitem>
+	</varlistentry>
       </variablelist>
       </para>
     </section>

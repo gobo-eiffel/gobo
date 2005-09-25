@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	reference_count: INTEGER
-			-- Estimate of numbe rof references to `Current', set by `optimize'
+			-- Estimate of number of references to `Current', set by `optimize'
 		
 	is_let_expression: BOOLEAN is
 			-- Is `Current' a let expression?
@@ -195,13 +195,13 @@ feature -- Optimization
 	optimize (a_context: XM_XPATH_STATIC_CONTEXT; a_context_item_type: XM_XPATH_ITEM_TYPE) is
 			-- Perform optimization of `Current' and its subexpressions.
 		local
-			a_reference_count, a_try_count: INTEGER
+			a_try_count: INTEGER
 			optimized: BOOLEAN
 		do
 			mark_unreplaced
 			if declaration /= Void then
-				a_reference_count := declaration.reference_count (Current)
-				if a_reference_count = 0 then
+				reference_count := declaration.reference_count (Current)
+				if reference_count = 0 then
 					
 					-- variable is not used - no need to evaluate it
 					

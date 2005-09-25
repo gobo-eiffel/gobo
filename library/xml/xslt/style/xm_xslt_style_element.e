@@ -621,20 +621,8 @@ feature -- Status_report
 			Result := version < decimal_two
 		end
 
-	is_explaining: BOOLEAN is
-			-- Has "gexslt:explain" been coded on this element?
-		local
-			an_explain_value: STRING
-		do
-			an_explain_value := attribute_value_by_expanded_name (Gexslt_explain_attribute)
-			if an_explain_value /= Void and then STRING_.same_string (an_explain_value, "no") then
-				Result := False
-			elseif an_explain_value /= Void and then STRING_.same_string (an_explain_value, "yes") then
-				Result := True
-			elseif an_explain_value /= Void and then STRING_.same_string (an_explain_value, "all") then
-				Result := True
-			end
-		end
+	is_explaining: BOOLEAN
+			-- Has "gexslt:explain" been coded on this or any child element?
 
 	is_top_level: BOOLEAN is
 			-- Is `Current' a top-level element?
@@ -775,11 +763,23 @@ feature -- Status setting
 		local
 			an_error: XM_XPATH_ERROR_VALUE
 			an_attribute_uri, an_element_uri, a_local_name, a_message: STRING
+			an_explain_value: STRING
 		do
-			if not is_forwards_compatible_processing_enabled then
-				an_attribute_uri := shared_name_pool.namespace_uri_from_name_code (a_name_code)
-				an_element_uri := uri	
-				a_local_name := shared_name_pool.local_name_from_name_code (a_name_code)
+			an_attribute_uri := shared_name_pool.namespace_uri_from_name_code (a_name_code)
+			an_element_uri := uri	
+			a_local_name := shared_name_pool.local_name_from_name_code (a_name_code)
+
+			if STRING_.same_string (an_attribute_uri, Gexslt_eiffel_type_uri) and then
+				STRING_.same_string (a_local_name, Gexslt_explain_name) then
+				an_explain_value := attribute_value_by_expanded_name (Gexslt_explain_attribute)
+				if an_explain_value /= Void and then STRING_.same_string (an_explain_value, "no") then
+					is_explaining := False
+				elseif an_explain_value /= Void and then STRING_.same_string (an_explain_value, "yes") then
+					is_explaining := True
+				elseif an_explain_value /= Void and then STRING_.same_string (an_explain_value, "all") then
+					is_explaining := True
+				end
+			elseif not is_forwards_compatible_processing_enabled then
 
 				-- Allow standard on an Extension Instruction or a user-defined Data Element.
 
@@ -935,34 +935,12 @@ feature -- Status setting
 				an_analyzed_expression := an_analyzed_expression.replacement_expression
 				was_replaced := True
 			end
-			if is_explaining then
-				std.error.put_string ("Attribute '")
-				std.error.put_string (a_name)
-				std.error.put_string ("' of element '")
-				std.error.put_string (node_name)
-				std.error.put_string ("' at line ")
-				std.error.put_string (line_number.out)
-				std.error.put_string (" %N")
-				if not an_analyzed_expression.is_error then
-					std.error.put_string ("Static type: ")
-					std.error.put_string (an_analyzed_expression.item_type.conventional_name)
-					std.error.put_string (an_analyzed_expression.occurence_indicator)
-					std.error.put_new_line
-					std.error.put_string ("Optimized expression tree:%N")
-					an_analyzed_expression.display (10)
-				else
-					std.error.put_string ("Expression is in error%N")
-					std.error.put_string (an_analyzed_expression.error_value.error_message)
-					std.error.put_new_line
-				end
-			end
 			if an_analyzed_expression.is_error and then an_analyzed_expression.error_value.type /= Dynamic_error then
 				report_compile_error (an_analyzed_expression.error_value)
 			else
 				if was_replaced and then not an_expression.was_expression_replaced then
 
-					-- in case it was a Let expression, and `is_explaining' is `True':
-					-- in which case, {XM_XPATH_LET_EXPRESSION}.action will have turned off replacement
+					-- in case it was a Let expression, and `action' has turned off replacement
 
 					an_expression.set_replacement (an_analyzed_expression)
 				end
@@ -1449,6 +1427,9 @@ feature -- Element change
 				a_style_element ?= a_child_iterator.item
 				if a_style_element /= Void then
 					a_style_element.process_all_attributes
+					if a_style_element.is_explaining then
+						is_explaining := True
+					end
 				end
 				a_child_iterator.forth
 			end

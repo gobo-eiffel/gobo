@@ -124,16 +124,23 @@ feature -- Access
 						create {XM_XPATH_INVALID_ITEM} Result.make (input_iterator.error_value)
 					elseif input_iterator.before then
 						input_iterator.start
-					else input_iterator.forth
+					else
+						input_iterator.forth
 					end
 					if input_iterator.is_error then
 						create {XM_XPATH_INVALID_ITEM} Result.make (input_iterator.error_value)
 					elseif input_iterator.after then
 						state := All_read_state
 					elseif input_iterator.is_node_iterator then
+						check
+							node_sequence: is_node_sequence
+						end
 						node_reservoir.force_last (input_iterator.as_node_iterator.item)
 						state := Maybe_more_state
 					else
+						check
+							not_node_sequence: not is_node_sequence
+						end
 						reservoir.force_last (input_iterator.item)
 						state := Maybe_more_state
 					end
@@ -189,17 +196,17 @@ feature -- Evaluation
 					if input_iterator.is_error then
 						last_iterator := input_iterator
 					elseif is_node_sequence then
-						create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_iterator.make (node_reservoir, input_iterator.as_node_iterator)
+						create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_iterator.make (node_reservoir, input_iterator.as_node_iterator, Current)
 					else
-						create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (reservoir, input_iterator)
+						create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (reservoir, input_iterator, Current)
 					end
 				when Maybe_more_state then
 					if input_iterator.is_error then
 						last_iterator := input_iterator
 					elseif  is_node_sequence then
-						create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_iterator.make (node_reservoir, input_iterator.as_node_iterator)
+						create {XM_XPATH_PROGRESSIVE_NODE_ITERATOR} last_iterator.make (node_reservoir, input_iterator.as_node_iterator, Current)
 					else
-						create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (reservoir, input_iterator)
+						create {XM_XPATH_PROGRESSIVE_ITERATOR} last_iterator.make (reservoir, input_iterator, Current)
 					end
 				when All_read_state then
 					if is_node_sequence then
@@ -224,7 +231,7 @@ feature -- Evaluation
 			todo ("process", False)
 		end
 	
-feature {XM_XPATH_MEMO_CLOSURE} -- Local
+feature {XM_XPATH_MEMO_CLOSURE, XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR} -- Restricted
 
 	state: INTEGER
 			-- Information on items read
@@ -233,6 +240,8 @@ feature {XM_XPATH_MEMO_CLOSURE} -- Local
 	Maybe_more_state: INTEGER is 2
 	All_read_state: INTEGER is 3
 	Busy_state: INTEGER is 4
+	
+feature {XM_XPATH_MEMO_CLOSURE} -- Local
 
 	is_node_sequence: BOOLEAN
 			-- Do we deliver a node sequence?
@@ -243,6 +252,24 @@ feature {XM_XPATH_MEMO_CLOSURE} -- Local
 	node_reservoir: DS_ARRAYED_LIST [XM_XPATH_NODE]
 			-- List of nodes already read
 
+feature {XM_XPATH_PROGRESSIVE_ITERATOR, XM_XPATH_PROGRESSIVE_NODE_ITERATOR} -- restricted
+
+	is_all_read: BOOLEAN is
+			-- Is `Current' in `All_read_state'?
+		do
+			Result := state = All_read_state
+		end
+
+	mark_as_all_read is
+			-- Set `Current' to `All_read_state'.
+		require
+			maybe_more: state =	Maybe_more_state
+		do
+			state := All_read_state
+		ensure
+			all_read: state = All_read_state
+		end
+			
 invariant
 
 	state: Unread_state <= state and state <= Busy_state
@@ -250,5 +277,7 @@ invariant
 	node_reservoir_not_void: is_node_sequence implies node_reservoir /= Void
 	input_iterator: state /= Unread_state implies input_iterator /= Void
 	node_iterator: is_node_sequence and then input_iterator /= Void implies input_iterator.is_node_iterator
+	empty_reservoir: reservoir /= Void and then reservoir.count = 0 and then input_iterator /= Void implies input_iterator.off
+	empty_node_reservoir: node_reservoir /= Void and then node_reservoir.count = 0 and then input_iterator /= Void implies input_iterator.off
 
 end

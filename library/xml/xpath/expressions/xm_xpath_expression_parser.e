@@ -2429,6 +2429,9 @@ feature {NONE} -- Implementation
 			if tokenizer.last_token = Name_token or else  tokenizer.last_token = Axis_token then
 				s := STRING_.appended_string ("name %"", tokenizer.last_token_value)
 				Result := STRING_.appended_string (s, "%"")
+			elseif tokenizer.last_token = String_literal_token then
+				s := STRING_.appended_string ("'string-lteral': %"", tokenizer.last_token_value)
+				Result := STRING_.appended_string (s, "%"")
 			elseif tokenizer.last_token = Unknown_token then
 				Result := "(unknown token)"
 			elseif tokenizer.last_token = Eof_token then

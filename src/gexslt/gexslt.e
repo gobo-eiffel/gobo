@@ -424,6 +424,8 @@ feature -- Error handling
 									  "       --trace=local-file-name%N" +
 									  "       --timed-trace=local-file-name%N" +
 									  "       --suppress-xpath-tracing%N" +
+									  "       --suppress-default-action%N" +
+									  "       --default-template-warning%N" +
 									  "       --tiny-tree%N" +
 									  "       --report-document-statistics%N" +
 									  "       --nodes=[n]%N" +
@@ -563,6 +565,10 @@ feature {NONE} -- Implementation
 				highly_secure := True
 			elseif an_option.is_equal ("html-text-ok") then
 				configuration.do_not_assume_xhtml
+			elseif an_option.is_equal ("default-template-warning") then
+				configuration.set_warns_on_default_action (True)
+			elseif an_option.is_equal ("suppress-default-action") then
+				configuration.set_default_action_suppressed (True)
 			elseif an_option.is_equal ("treat-warnings-as-errors") then
 				error_listener.treat_warnings_as_recoverable_errors
 			elseif an_option.is_equal ("do-not-recover") then

@@ -38,13 +38,15 @@
 	</option>
 	<option name="profile" value="false"/> 
 
+	<!-- <option name="debug_tag" value="XPath Expression Parser"/> -->
+	<!-- <option name="debug_tag" value="XPath Expression Parser - tokens"/> -->
 	<!-- <option name="debug_tag" value="XSLT content output"/> -->
 	<!-- <option name="debug_tag" value="XPath content emitter"/> -->
 	<!-- <option name="debug_tag" value="XPath name pool - URIs"/>  -->
 	<!-- <option name="debug_tag" value="XPath name pool - namespaces"/> -->
 	<!-- <option name="debug_tag" value="XSLT key manager"/> -->
 	<!-- <option name="debug_tag" value="XSLT key function"/> -->
-	<!-- <option name="debug_tag" value="XPath expression factory"/>-->
+	<!-- <option name="debug_tag" value="XPath expression factory"/> -->
 	<!-- <option name="debug_tag" value="XSLT template rules"/> -->
 	<!-- <option name="debug_tag" value="XSLT pattern parsing"/>-->
 	<!-- <option name="debug_tag" value="XSLT memo function"/>-->

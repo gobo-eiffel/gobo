@@ -582,9 +582,11 @@ feature -- Access
 			Result := "{" + Gexslt_eiffel_type_uri + "}memo-function"
 		end
 
+	Gexslt_explain_name: STRING is "explain"
+
 	Gexslt_explain_attribute: STRING is
 		once
-			Result := "{" + Gexslt_eiffel_type_uri + "}explain"
+			Result := "{" + Gexslt_eiffel_type_uri + "}" + Gexslt_explain_name
 		end
 
 	Gexslt_indent_spaces_name: STRING is "indent-spaces"
