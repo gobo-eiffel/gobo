@@ -62,7 +62,6 @@ feature -- Evaluation
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate `Current' as a single item
 		local
-			an_integer_value: XM_XPATH_INTEGER_VALUE
 			a_uri, an_xml_prefix: STRING
 			a_parser: XM_XPATH_QNAME_PARSER
 			a_boolean: BOOLEAN
