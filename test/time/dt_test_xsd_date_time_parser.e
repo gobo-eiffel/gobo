@@ -67,7 +67,7 @@ feature -- Test
 			assert ("24th March 2000 UTC", a_parser.is_zoned_date ("2000-03-24Z"))
 			d1 := a_parser.string_to_zoned_date ("2000-03-24Z")
 			assert ("Date is 24th March 2000 UTC", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 24
-					  and then STRING_.same_string (d1.time_zone.name, "Z"))
+				and then STRING_.same_string (d1.time_zone.name, "Z"))
 			assert ("24th March 2000 +00:00 is UTC", a_parser.is_zoned_date ("2000-03-24+00:00"))
 			d1 := a_parser.string_to_zoned_date ("2000-03-24+00:00")
 			assert ("Date is 24th March 2000 UTC 2", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 24)
@@ -133,18 +133,18 @@ feature -- Test
 			assert ("01:54 UTC", a_parser.is_zoned_time ("01:54:00Z"))
 			t1 := a_parser.string_to_zoned_time ("01:54:00Z")
 			assert ("Time is 01:54 UTC", t1.time.hour = 1 and then t1.time.minute = 54 and then t1.time.second = 0
-					  and then t1.time.millisecond = 0 and then STRING_.same_string (t1.time_zone.name, "Z"))
+				and then t1.time.millisecond = 0 and then STRING_.same_string (t1.time_zone.name, "Z"))
 			assert ("01:54 +00:00 is UTC", a_parser.is_zoned_time ("01:54:00.00003+00:00"))
 			t1 := a_parser.string_to_zoned_time ("01:54:00.00003+00:00")
 			assert ("Time is 01:54 UTC 2",t1.time.hour = 1 and then t1.time.minute = 54 and then t1.time.second = 0
-					  and then t1.time.millisecond = 0 and then STRING_.same_string (t1.time_zone.name, "Z"))
+				and then t1.time.millisecond = 0 and then STRING_.same_string (t1.time_zone.name, "Z"))
 			a_time_zone ?= t1.time_zone
 			assert ("Time zone is fixed offset", a_time_zone /= Void)
 			assert ("+00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
 			assert ("01:54 -00:00 is UTC", a_parser.is_zoned_time ("01:54:00.00-00:00"))
 			t1 := a_parser.string_to_zoned_time ("01:54:00.00-00:00")
 			assert ("Time is 01:54 UTC 3",t1.time.hour = 1 and then t1.time.minute = 54 and then t1.time.second = 0
-					  and then t1.time.millisecond = 0 and then STRING_.same_string (t1.time_zone.name, "Z"))
+				and then t1.time.millisecond = 0 and then STRING_.same_string (t1.time_zone.name, "Z"))
 			a_time_zone ?= t1.time_zone
 			assert ("Time zone is fixed offset", a_time_zone /= Void)
 			assert ("-00:00 is UTC", a_time_zone.fixed_offset.hour = 0)
@@ -162,10 +162,9 @@ feature -- Test
 			assert ("2002-10-10T17:00:00", a_parser.is_date_time (a_date_time))
 			dt1 := a_parser.string_to_date_time (a_date_time)
 			assert ("Date-time is 2002-10-10T17:00:00", dt1 /= Void and then dt1.date.year = 2002
-					  and then dt1.date.month = 10 and then dt1.date.day = 10
-					  and then dt1.time.hour = 17 and then dt1.time.minute = 0
-					  and then dt1.time.second = 0 and then dt1.time.millisecond = 0
-					  )
+				and then dt1.date.month = 10 and then dt1.date.day = 10
+				and then dt1.time.hour = 17 and then dt1.time.minute = 0
+				and then dt1.time.second = 0 and then dt1.time.millisecond = 0)
 			a_date_time := "2002-10-1017:00:00"
 			assert ("Missing T separator", not a_parser.is_date_time (a_date_time))
 			a_date_time := "+2002-10-1017:00:00"
@@ -186,11 +185,10 @@ feature -- Test
 			assert ("2002-10-10T17:00:00-05:15", a_parser.is_zoned_date_time (a_date_time))
 			dt1 := a_parser.string_to_zoned_date_time (a_date_time)
 			assert ("Date-time is 2002-10-10T17:00:00-05:15", dt1 /= Void and then dt1.date_time.date.year = 2002
-					  and then dt1.date_time.date.month = 10 and then dt1.date_time.date.day = 10
-					  and then dt1.date_time.time.hour = 17 and then dt1.date_time.time.minute = 0
-					  and then dt1.date_time.time.second = 0 and then dt1.date_time.time.millisecond = 0
-					  and then STRING_.same_string (dt1.time_zone.name, "UTC-05:15")
-					  )
+				and then dt1.date_time.date.month = 10 and then dt1.date_time.date.day = 10
+				and then dt1.date_time.time.hour = 17 and then dt1.date_time.time.minute = 0
+				and then dt1.date_time.time.second = 0 and then dt1.date_time.time.millisecond = 0
+				and then STRING_.same_string (dt1.time_zone.name, "UTC-05:15"))
 			a_date_time := "2002-10-1017:00:00-05:15"
 			assert ("Missing T separator", not a_parser.is_zoned_date_time (a_date_time))
 			a_date_time := "+2002-10-1017:00:00Z"
@@ -225,13 +223,21 @@ feature -- Test
 			a_formatter: DT_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make
-			create d1.make (2000, 3, 24); create tz1.make_named_hours_minutes ("Z", 0, 0); create dz1.make (d1, tz1)
+			create d1.make (2000, 3, 24)
+			create tz1.make_named_hours_minutes ("Z", 0, 0)
+			create dz1.make (d1, tz1)
 			assert ("24th March 2000 UTC", STRING_.same_string (a_formatter.zoned_date_to_string (dz1), "2000-03-24Z"))
-			create d1.make (-6, 5, 15); create tz1.make_hours_minutes (-10, -30); create dz1.make (d1, tz1)
+			create d1.make (-6, 5, 15)
+			create tz1.make_hours_minutes (-10, -30)
+			create dz1.make (d1, tz1)
 			assert ("15th May 7 BCE -10:30", STRING_.same_string (a_formatter.zoned_date_to_string (dz1), "-0007-05-15-10:30"))
-			create d1.make (-20999, 12, 31); create tz1.make_hours_minutes (8, 15); create dz1.make (d1, tz1)
+			create d1.make (-20999, 12, 31)
+			create tz1.make_hours_minutes (8, 15)
+			create dz1.make (d1, tz1)
 			assert ("31st December 21000 BCE +8:15", STRING_.same_string (a_formatter.zoned_date_to_string (dz1), "-21000-12-31+08:15"))
-			create d1.make (21000, 1, 1); create tz1.make_hours_minutes (6, 00); create dz1.make (d1, tz1)
+			create d1.make (21000, 1, 1)
+			create tz1.make_hours_minutes (6, 00)
+			create dz1.make (d1, tz1)
 			assert ("1st January 21000 CE +06:00", STRING_.same_string (a_formatter.zoned_date_to_string (dz1), "21000-01-01+06:00"))
 		end
 
@@ -257,11 +263,17 @@ feature -- Test
 			a_formatter: DT_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make
-			create t1.make (7, 15, 34); create tz1.make_named_hours_minutes ("Z", 0, 0); create dz1.make (t1, tz1)
+			create t1.make (7, 15, 34)
+			create tz1.make_named_hours_minutes ("Z", 0, 0)
+			create dz1.make (t1, tz1)
 			assert ("07:15:34 UTC", STRING_.same_string (a_formatter.zoned_time_to_string (dz1), "07:15:34Z"))
-			create t1.make (7, 15, 34); create tz1.make_hours_minutes (5, 30); create dz1.make (t1, tz1)
+			create t1.make (7, 15, 34)
+			create tz1.make_hours_minutes (5, 30)
+			create dz1.make (t1, tz1)
 			assert ("07:15:34 +05:30", STRING_.same_string (a_formatter.zoned_time_to_string (dz1), "07:15:34+05:30"))
-			create t1.make (7, 15, 34); create tz1.make_hours_minutes (-5, -30); create dz1.make (t1, tz1)
+			create t1.make (7, 15, 34)
+			create tz1.make_hours_minutes (-5, -30)
+			create dz1.make (t1, tz1)
 			assert ("07:15:34 -05:30", STRING_.same_string (a_formatter.zoned_time_to_string (dz1), "07:15:34-05:30"))
 		end
 
@@ -291,11 +303,17 @@ feature -- Test
 			a_formatter: DT_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make
-			create dt1.make (2000, 3, 24, 7, 15, 34); create tz1.make_named_hours_minutes ("Z", 0, 0); create dtz1.make (dt1, tz1)
+			create dt1.make (2000, 3, 24, 7, 15, 34)
+			create tz1.make_named_hours_minutes ("Z", 0, 0)
+			create dtz1.make (dt1, tz1)
 			assert ("07:15:34 on 24th March 2000 UTC", STRING_.same_string (a_formatter.zoned_date_time_to_string (dtz1), "2000-03-24T07:15:34Z"))
-			create dt1.make (-6, 5, 15, 7, 15, 34); create tz1.make_hours_minutes (5, 30); create dtz1.make (dt1, tz1)
+			create dt1.make (-6, 5, 15, 7, 15, 34)
+			create tz1.make_hours_minutes (5, 30)
+			create dtz1.make (dt1, tz1)
 			assert ("07:15:34 on 15th May 7 BCE +05:30", STRING_.same_string (a_formatter.zoned_date_time_to_string (dtz1), "-0007-05-15T07:15:34+05:30"))
-			create dt1.make (-20999, 12, 31, 7, 15, 34); create tz1.make_hours_minutes (-5, -30); create dtz1.make (dt1, tz1)
+			create dt1.make (-20999, 12, 31, 7, 15, 34)
+			create tz1.make_hours_minutes (-5, -30)
+			create dtz1.make (dt1, tz1)
 			assert ("07:15:34  on 31st December 21000 BCE -05:30", STRING_.same_string (a_formatter.zoned_date_time_to_string (dtz1), "-21000-12-31T07:15:34-05:30"))
 		end
 
@@ -344,7 +362,7 @@ feature -- Test
 			assert ("March 2000 UTC", a_parser.is_zoned_year_month ("2000-03Z"))
 			d1 := a_parser.string_to_zoned_year_month ("2000-03Z")
 			assert ("Date is March 2000 UTC", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 1
-					  and then STRING_.same_string (d1.time_zone.name, "Z"))
+				and then STRING_.same_string (d1.time_zone.name, "Z"))
 			assert ("March 2000 +00:00 is UTC", a_parser.is_zoned_year_month ("2000-03+00:00"))
 			d1 := a_parser.string_to_zoned_year_month ("2000-03+00:00")
 			assert ("Date is March 2000 UTC 2", d1.date.year = 2000 and then d1.date.month = March and then d1.date.day = 1)
@@ -407,7 +425,7 @@ feature -- Test
 			assert ("2000 UTC", a_parser.is_zoned_year ("2000Z"))
 			d1 := a_parser.string_to_zoned_year ("2000Z")
 			assert ("Date is 2000 UTC", d1.date.year = 2000 and then d1.date.month = 1 and then d1.date.day = 1
-					  and then STRING_.same_string (d1.time_zone.name, "Z"))
+				and then STRING_.same_string (d1.time_zone.name, "Z"))
 			assert ("Year 2000 +00:00 is UTC", a_parser.is_zoned_year ("2000+00:00"))
 			d1 := a_parser.string_to_zoned_year ("2000+00:00")
 			assert ("Date is2000 UTC 2", d1.date.year = 2000 and then d1.date.month = 1 and then d1.date.day = 1)
@@ -454,7 +472,7 @@ feature -- Test
 			assert ("21st March UTC", a_parser.is_zoned_month_day ("--03-21Z"))
 			d1 := a_parser.string_to_zoned_month_day ("--03-21Z")
 			assert ("Day of month is 21st March UTC", d1.date.year = 1 and then d1.date.month = 3 and then d1.date.day = 21
-					  and then STRING_.same_string (d1.time_zone.name, "Z"))
+				and then STRING_.same_string (d1.time_zone.name, "Z"))
 			assert ("21st March +05:00", a_parser.is_zoned_month_day ("--03-21+05:00"))
 			d1 := a_parser.string_to_zoned_month_day ("--03-21+05:00")
 			assert ("day of month is 21st March", d1.date.year = 1 and then d1.date.month = 3 and then d1.date.day = 21)
@@ -486,7 +504,7 @@ feature -- Test
 			assert ("21st UTC", a_parser.is_zoned_day ("---21Z"))
 			d1 := a_parser.string_to_zoned_day ("---21Z")
 			assert ("Day is 21st UTC", d1.date.year = 1 and then d1.date.month = 1 and then d1.date.day = 21
-					  and then STRING_.same_string (d1.time_zone.name, "Z"))
+				and then STRING_.same_string (d1.time_zone.name, "Z"))
 			assert ("21st +05:00", a_parser.is_zoned_day ("---21+05:00"))
 			d1 := a_parser.string_to_zoned_day ("---21+05:00")
 			assert ("Day is 21st", d1.date.year = 1 and then d1.date.month = 1 and then d1.date.day = 21)
@@ -519,7 +537,7 @@ feature -- Test
 			assert ("March UTC", a_parser.is_zoned_month ("--03Z"))
 			d1 := a_parser.string_to_zoned_month ("--03Z")
 			assert ("Month is March UTC", d1.date.year = 1 and then d1.date.month = 3 and then d1.date.day = 1
-					  and then STRING_.same_string (d1.time_zone.name, "Z"))
+				and then STRING_.same_string (d1.time_zone.name, "Z"))
 			assert ("March +05:00", a_parser.is_zoned_month ("--03+05:00"))
 			d1 := a_parser.string_to_zoned_month ("--03+05:00")
 			assert ("Month is March", d1.date.year = 1 and then d1.date.month = 3 and then d1.date.day = 1)
@@ -554,13 +572,21 @@ feature -- Test
 			a_formatter: DT_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make
-			create d1.make (2000, 3, 1); create tz1.make_named_hours_minutes ("Z", 0, 0); create dz1.make (d1, tz1)
+			create d1.make (2000, 3, 1)
+			create tz1.make_named_hours_minutes ("Z", 0, 0)
+			create dz1.make (d1, tz1)
 			assert ("March 2000 UTC", STRING_.same_string (a_formatter.zoned_year_month_to_string (dz1), "2000-03Z"))
-			create d1.make (-6, 5, 1); create tz1.make_hours_minutes (-10, -30); create dz1.make (d1, tz1)
+			create d1.make (-6, 5, 1)
+			create tz1.make_hours_minutes (-10, -30)
+			create dz1.make (d1, tz1)
 			assert ("May 7 BCE -10:30", STRING_.same_string (a_formatter.zoned_year_month_to_string (dz1), "-0007-05-10:30"))
-			create d1.make (-20999, 12, 1); create tz1.make_hours_minutes (8, 15); create dz1.make (d1, tz1)
+			create d1.make (-20999, 12, 1)
+			create tz1.make_hours_minutes (8, 15)
+			create dz1.make (d1, tz1)
 			assert ("December 21000 BCE +8:15", STRING_.same_string (a_formatter.zoned_year_month_to_string (dz1), "-21000-12+08:15"))
-			create d1.make (21000, 1, 1); create tz1.make_hours_minutes (6, 00); create dz1.make (d1, tz1)
+			create d1.make (21000, 1, 1)
+			create tz1.make_hours_minutes (6, 00)
+			create dz1.make (d1, tz1)
 			assert ("January 21000 CE +06:00", STRING_.same_string (a_formatter.zoned_year_month_to_string (dz1), "21000-01+06:00"))
 		end
 
@@ -590,13 +616,21 @@ feature -- Test
 			a_formatter: DT_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make
-			create d1.make (2000, 1, 1); create tz1.make_named_hours_minutes ("Z", 0, 0); create dz1.make (d1, tz1)
+			create d1.make (2000, 1, 1)
+			create tz1.make_named_hours_minutes ("Z", 0, 0)
+			create dz1.make (d1, tz1)
 			assert ("2000 UTC", STRING_.same_string (a_formatter.zoned_year_to_string (dz1), "2000Z"))
-			create d1.make (-6, 1, 1); create tz1.make_hours_minutes (-10, -30); create dz1.make (d1, tz1)
+			create d1.make (-6, 1, 1)
+			create tz1.make_hours_minutes (-10, -30)
+			create dz1.make (d1, tz1)
 			assert ("7 BCE -10:30", STRING_.same_string (a_formatter.zoned_year_to_string (dz1), "-0007-10:30"))
-			create d1.make (-20999, 1, 1); create tz1.make_hours_minutes (8, 15); create dz1.make (d1, tz1)
+			create d1.make (-20999, 1, 1)
+			create tz1.make_hours_minutes (8, 15)
+			create dz1.make (d1, tz1)
 			assert ("21000 BCE +8:15", STRING_.same_string (a_formatter.zoned_year_to_string (dz1), "-21000+08:15"))
-			create d1.make (21000, 1, 1); create tz1.make_hours_minutes (6, 00); create dz1.make (d1, tz1)
+			create d1.make (21000, 1, 1)
+			create tz1.make_hours_minutes (6, 00)
+			create dz1.make (d1, tz1)
 			assert ("21000 CE +06:00", STRING_.same_string (a_formatter.zoned_year_to_string (dz1), "21000+06:00"))
 		end
 
@@ -626,13 +660,21 @@ feature -- Test
 			a_formatter: DT_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make
-			create d1.make (1, 3, 24); create tz1.make_named_hours_minutes ("Z", 0, 0); create dz1.make (d1, tz1)
+			create d1.make (1, 3, 24)
+			create tz1.make_named_hours_minutes ("Z", 0, 0)
+			create dz1.make (d1, tz1)
 			assert ("24th March UTC", STRING_.same_string (a_formatter.zoned_month_day_to_string (dz1), "--03-24Z"))
-			create d1.make (1, 5, 15); create tz1.make_hours_minutes (-10, -30); create dz1.make (d1, tz1)
+			create d1.make (1, 5, 15)
+			create tz1.make_hours_minutes (-10, -30)
+			create dz1.make (d1, tz1)
 			assert ("15th May -10:30", STRING_.same_string (a_formatter.zoned_month_day_to_string (dz1), "--05-15-10:30"))
-			create d1.make (1, 12, 31); create tz1.make_hours_minutes (8, 15); create dz1.make (d1, tz1)
+			create d1.make (1, 12, 31)
+			create tz1.make_hours_minutes (8, 15)
+			create dz1.make (d1, tz1)
 			assert ("31st December +8:15", STRING_.same_string (a_formatter.zoned_month_day_to_string (dz1), "--12-31+08:15"))
-			create d1.make (1, 1, 1); create tz1.make_hours_minutes (6, 00); create dz1.make (d1, tz1)
+			create d1.make (1, 1, 1)
+			create tz1.make_hours_minutes (6, 00)
+			create dz1.make (d1, tz1)
 			assert ("1st January +06:00", STRING_.same_string (a_formatter.zoned_month_day_to_string (dz1), "--01-01+06:00"))
 		end
 
@@ -662,13 +704,21 @@ feature -- Test
 			a_formatter: DT_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make
-			create d1.make (1, 1, 24); create tz1.make_named_hours_minutes ("Z", 0, 0); create dz1.make (d1, tz1)
+			create d1.make (1, 1, 24)
+			create tz1.make_named_hours_minutes ("Z", 0, 0)
+			create dz1.make (d1, tz1)
 			assert ("24th UTC", STRING_.same_string (a_formatter.zoned_day_to_string (dz1), "---24Z"))
-			create d1.make (1, 1, 15); create tz1.make_hours_minutes (-10, -30); create dz1.make (d1, tz1)
+			create d1.make (1, 1, 15)
+			create tz1.make_hours_minutes (-10, -30)
+			create dz1.make (d1, tz1)
 			assert ("15th -10:30", STRING_.same_string (a_formatter.zoned_day_to_string (dz1), "---15-10:30"))
-			create d1.make (1, 1, 31); create tz1.make_hours_minutes (8, 15); create dz1.make (d1, tz1)
+			create d1.make (1, 1, 31)
+			create tz1.make_hours_minutes (8, 15)
+			create dz1.make (d1, tz1)
 			assert ("31st +8:15", STRING_.same_string (a_formatter.zoned_day_to_string (dz1), "---31+08:15"))
-			create d1.make (1, 1, 1); create tz1.make_hours_minutes (6, 00); create dz1.make (d1, tz1)
+			create d1.make (1, 1, 1)
+			create tz1.make_hours_minutes (6, 00)
+			create dz1.make (d1, tz1)
 			assert ("1st +06:00", STRING_.same_string (a_formatter.zoned_day_to_string (dz1), "---01+06:00"))
 		end
 
@@ -698,13 +748,21 @@ feature -- Test
 			a_formatter: DT_XSD_DATE_TIME_FORMAT
 		do
 			create a_formatter.make
-			create d1.make (1, 3, 1); create tz1.make_named_hours_minutes ("Z", 0, 0); create dz1.make (d1, tz1)
+			create d1.make (1, 3, 1)
+			create tz1.make_named_hours_minutes ("Z", 0, 0)
+			create dz1.make (d1, tz1)
 			assert ("March UTC", STRING_.same_string (a_formatter.zoned_month_to_string (dz1), "--03Z"))
-			create d1.make (1, 5, 1); create tz1.make_hours_minutes (-10, -30); create dz1.make (d1, tz1)
+			create d1.make (1, 5, 1)
+			create tz1.make_hours_minutes (-10, -30)
+			create dz1.make (d1, tz1)
 			assert ("May -10:30", STRING_.same_string (a_formatter.zoned_month_to_string (dz1), "--05-10:30"))
-			create d1.make (1, 12, 1); create tz1.make_hours_minutes (8, 15); create dz1.make (d1, tz1)
+			create d1.make (1, 12, 1)
+			create tz1.make_hours_minutes (8, 15)
+			create dz1.make (d1, tz1)
 			assert ("December +8:15", STRING_.same_string (a_formatter.zoned_month_to_string (dz1), "--12+08:15"))
-			create d1.make (1, 1, 1); create tz1.make_hours_minutes (6, 00); create dz1.make (d1, tz1)
+			create d1.make (1, 1, 1)
+			create tz1.make_hours_minutes (6, 00)
+			create dz1.make (d1, tz1)
 			assert ("January +06:00", STRING_.same_string (a_formatter.zoned_month_to_string (dz1), "--01+06:00"))
 		end
 

@@ -384,7 +384,7 @@ feature -- Operation(s)
 			-- Bitwise 'and' between `m' and `n'
 		local
 #ifdef VE
-			i,j: BIT 32
+			i, j: BIT 32
 #endif
 		do
 #ifdef VE
@@ -404,7 +404,7 @@ feature -- Operation(s)
 			-- Bitwise 'or' between `m' and `n'
 		local
 #ifdef VE
-			i,j: BIT 32
+			i, j: BIT 32
 #endif
 		do
 #ifdef VE
@@ -424,7 +424,7 @@ feature -- Operation(s)
 			-- Bitwise 'xor' between `m' and `n'
 		local
 #ifdef VE
-			i,j: BIT 32
+			i, j: BIT 32
 #endif
 		do
 #ifdef VE
