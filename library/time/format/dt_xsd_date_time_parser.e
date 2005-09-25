@@ -2,10 +2,10 @@ indexing
 
 	description:
 
-		"Objects that parse dates and times"
+		"XSD dates and times parsers"
 
 	library: "Gobo Eiffel Time Library"
-	copyright: "Copyright (c) 2004, Colin Adams and others"
+	copyright: "Copyright (c) 2004-2005, Colin Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,16 +26,16 @@ create
 
 	make
 
-		-- URGENT: make this change prior to release og Gobo 3.5
+		-- URGENT: make this change prior to release of Gobo 3.5
 		-- TODO: add make_1_0 creation procedure to implement current
-		--        year zero behaviour.
+		--        year zero behavior.
 		--       Change make to use projected XML Schema 1.1 behaviour
 		--        (i.e. in line with second edition of ISO 8601)
 
 feature {NONE} -- Initialization
 
 	make is
-			-- Establish invariant.
+			-- Create a new XSD date-time parser.
 		do
 			last_cached_date_string := ""
 			last_cached_zoned_date_string := ""
@@ -64,7 +64,7 @@ feature -- Access
 				else
 					create a_splitter.make
 					a_splitter.set_separators ("-")
-					if a_formatted_date.item (1).is_equal ('-') then
+					if a_formatted_date.item (1) = '-' then
 						a_date := a_formatted_date.substring (2, a_formatted_date.count)
 					else
 						a_date := a_formatted_date
@@ -76,12 +76,14 @@ feature -- Access
 						if a_year = 0 then
 							Result := False
 						else
-							if a_formatted_date.item (1).is_equal ('-') then a_year := 1 - a_year end
-							a_month := month_ok  (some_components.item (2))
+							if a_formatted_date.item (1) = '-' then
+								a_year := 1 - a_year
+							end
+							a_month := month_ok (some_components.item (2))
 							if a_month < January or else a_month > December then
 								Result := False
 							else
-								a_day := day_ok  (some_components.item (3))
+								a_day := day_ok (some_components.item (3))
 								if a_day > 0 and then a_day <= days_in_month (a_month, a_year) then
 									create last_cached_date.make (a_year, a_month, a_day)
 									last_cached_date_string := a_formatted_date
@@ -108,7 +110,7 @@ feature -- Access
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
 					Result := True
 					last_cached_zoned_date_string := a_formatted_date
-				elseif a_formatted_date.item (a_formatted_date.count).is_equal ('Z') then
+				elseif a_formatted_date.item (a_formatted_date.count) = 'Z' then
 					if a_formatted_date.count >= 11 then
 						Result := is_date (a_formatted_date.substring (1, a_formatted_date.count - 1))
 						if Result then
@@ -118,9 +120,11 @@ feature -- Access
 						end
 					end
 				elseif a_formatted_date.count >= 16 then
-					if a_formatted_date.item (a_formatted_date.count - 2).is_equal (':') then
-						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
-							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+					if a_formatted_date.item (a_formatted_date.count - 2) = ':' then
+						if
+							a_formatted_date.item (a_formatted_date.count - 5) = '+' or else
+							a_formatted_date.item (a_formatted_date.count - 5) = '-'
+						then
 							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
 							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 								an_hour := a_count.to_integer
@@ -135,9 +139,9 @@ feature -- Access
 											Result := a_minute >= 0 and then a_minute <= 59
 										end
 										if Result then
-											if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
-												an_hour := 0 - an_hour
-												a_minute := 0 - a_minute
+											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
+												an_hour := - an_hour
+												a_minute := - a_minute
 											end
 											Result := is_date (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -158,7 +162,7 @@ feature -- Access
 				end
 			end
 		ensure then
-			date_cached: Result implies last_cached_zoned_date /= Void			
+			date_cached: Result implies last_cached_zoned_date /= Void
 		end
 
 	is_date_time (a_formatted_date_time: STRING): BOOLEAN is
@@ -191,7 +195,7 @@ feature -- Access
 				end
 			end
 		ensure then
-			date_time_cached: Result implies last_cached_date_time /= Void						
+			date_time_cached: Result implies last_cached_date_time /= Void
 		end
 
 	is_zoned_date_time (a_formatted_date_time: STRING): BOOLEAN is
@@ -205,7 +209,7 @@ feature -- Access
 				if STRING_.same_string (a_formatted_date_time, last_cached_zoned_date_time_string) then
 					Result := True
 					last_cached_zoned_date_time_string := a_formatted_date_time
-				elseif a_formatted_date_time.item (a_formatted_date_time.count).is_equal ('Z') then
+				elseif a_formatted_date_time.item (a_formatted_date_time.count) = 'Z' then
 					if a_formatted_date_time.count >= 20 then
 						Result := is_date_time (a_formatted_date_time.substring (1, a_formatted_date_time.count - 1))
 						if Result then
@@ -215,9 +219,11 @@ feature -- Access
 						end
 					end
 				elseif a_formatted_date_time.count >= 25 then
-					if a_formatted_date_time.item (a_formatted_date_time.count - 2).is_equal (':') then
-						if a_formatted_date_time.item (a_formatted_date_time.count - 5).is_equal ('+')
-							or else a_formatted_date_time.item (a_formatted_date_time.count - 5).is_equal ('-') then
+					if a_formatted_date_time.item (a_formatted_date_time.count - 2) = ':' then
+						if
+							a_formatted_date_time.item (a_formatted_date_time.count - 5) = '+' or else
+							a_formatted_date_time.item (a_formatted_date_time.count - 5) = '-'
+						then
 							a_count := a_formatted_date_time.substring (a_formatted_date_time.count - 4, a_formatted_date_time.count - 3)
 							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 								an_hour := a_count.to_integer
@@ -232,9 +238,9 @@ feature -- Access
 											Result := a_minute >= 0 and then a_minute <= 59
 										end
 										if Result then
-											if a_formatted_date_time.item (a_formatted_date_time.count - 5).is_equal ('-') then
-												an_hour := 0 - an_hour
-												a_minute := 0 - a_minute
+											if a_formatted_date_time.item (a_formatted_date_time.count - 5) = '-' then
+												an_hour := - an_hour
+												a_minute := - a_minute
 											end
 											Result := is_date_time (a_formatted_date_time.substring (1, a_formatted_date_time.count - 6))
 											if Result then
@@ -295,11 +301,17 @@ feature -- Access
 												if Result then
 													if some_seconds.count = 2 then
 														Result := some_seconds.item (2).is_integer and then not some_seconds.item (2).item (1).is_equal ('-')
-														if Result then a_millisecond := milliseconds (some_seconds.item (2)) end
-														if Result and then an_hour = 24 then Result := a_minute = 0 and then a_second = 0 and then a_millisecond = 0 end
+														if Result then
+															a_millisecond := milliseconds (some_seconds.item (2))
+														end
+														if Result and then an_hour = 24 then
+															Result := a_minute = 0 and then a_second = 0 and then a_millisecond = 0
+														end
 													end
 													if Result then
-														if an_hour = 24 then an_hour := 0 end
+														if an_hour = 24 then
+															an_hour := 0
+														end
 														create last_cached_time.make_precise (an_hour, a_minute, a_second, a_millisecond)
 														last_cached_time_string := a_formatted_time
 													end
@@ -314,7 +326,7 @@ feature -- Access
 				end
 			end
 		ensure then
-			time_cached: Result implies last_cached_time /= Void			
+			time_cached: Result implies last_cached_time /= Void
 		end
 
 	is_zoned_time (a_formatted_time: STRING): BOOLEAN is
@@ -328,7 +340,7 @@ feature -- Access
 				if STRING_.same_string (a_formatted_time, last_cached_zoned_time_string) then
 					Result := True
 					last_cached_zoned_time_string := a_formatted_time
-				elseif a_formatted_time.item (a_formatted_time.count).is_equal ('Z') then
+				elseif a_formatted_time.item (a_formatted_time.count) = 'Z' then
 					if a_formatted_time.count >= 9 then
 						Result := is_time (a_formatted_time.substring (1, a_formatted_time.count - 1))
 						if Result then
@@ -338,9 +350,11 @@ feature -- Access
 						end
 					end
 				elseif a_formatted_time.count >= 14 then
-					if a_formatted_time.item (a_formatted_time.count - 2).is_equal (':') then
-						if a_formatted_time.item (a_formatted_time.count - 5).is_equal ('+')
-							or else a_formatted_time.item (a_formatted_time.count - 5).is_equal ('-') then
+					if a_formatted_time.item (a_formatted_time.count - 2) = ':' then
+						if
+							a_formatted_time.item (a_formatted_time.count - 5) = '+' or else
+							a_formatted_time.item (a_formatted_time.count - 5) = '-'
+						then
 							a_count := a_formatted_time.substring (a_formatted_time.count - 4, a_formatted_time.count - 3)
 							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 								an_hour := a_count.to_integer
@@ -355,9 +369,9 @@ feature -- Access
 											Result := a_minute >= 0 and then a_minute <= 59
 										end
 										if Result then
-											if a_formatted_time.item (a_formatted_time.count - 5).is_equal ('-') then
-												an_hour := 0 - an_hour
-												a_minute := 0 - a_minute
+											if a_formatted_time.item (a_formatted_time.count - 5) = '-' then
+												an_hour := - an_hour
+												a_minute := - a_minute
 											end
 											Result := is_time (a_formatted_time.substring (1, a_formatted_time.count - 6))
 											if Result then
@@ -374,11 +388,11 @@ feature -- Access
 								end
 							end
 						end
-					end					
+					end
 				end
 			end
 		ensure then
-			time_cached: Result implies last_cached_zoned_time /= Void			
+			time_cached: Result implies last_cached_zoned_time /= Void
 		end
 
 	is_year_month (a_formatted_date: STRING): BOOLEAN is
@@ -400,7 +414,7 @@ feature -- Access
 				else
 					create a_splitter.make
 					a_splitter.set_separators ("-")
-					if a_formatted_date.item (1).is_equal ('-') then
+					if a_formatted_date.item (1) = '-' then
 						a_date := a_formatted_date.substring (2, a_formatted_date.count)
 					else
 						a_date := a_formatted_date
@@ -412,8 +426,10 @@ feature -- Access
 						if a_year = 0 then
 							Result := False
 						else
-							if a_formatted_date.item (1).is_equal ('-') then a_year := 1 - a_year end
-							a_month := month_ok  (some_components.item (2))
+							if a_formatted_date.item (1) = '-' then
+								a_year := 1 - a_year
+							end
+							a_month := month_ok (some_components.item (2))
 							if a_month < January or else a_month > December then
 								Result := False
 							else
@@ -440,7 +456,7 @@ feature -- Access
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
 					Result := True
 					last_cached_zoned_date_string := a_formatted_date
-				elseif a_formatted_date.item (a_formatted_date.count).is_equal ('Z') then
+				elseif a_formatted_date.item (a_formatted_date.count) = 'Z' then
 					if a_formatted_date.count >= 8 then
 						Result := is_year_month (a_formatted_date.substring (1, a_formatted_date.count - 1))
 						if Result then
@@ -450,9 +466,11 @@ feature -- Access
 						end
 					end
 				elseif a_formatted_date.count >= 13 then
-					if a_formatted_date.item (a_formatted_date.count - 2).is_equal (':') then
-						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
-							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+					if a_formatted_date.item (a_formatted_date.count - 2) = ':' then
+						if
+							a_formatted_date.item (a_formatted_date.count - 5) = '+' or else
+							a_formatted_date.item (a_formatted_date.count - 5) = '-'
+						then
 							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
 							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 								an_hour := a_count.to_integer
@@ -467,9 +485,9 @@ feature -- Access
 											Result := a_minute >= 0 and then a_minute <= 59
 										end
 										if Result then
-											if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
-												an_hour := 0 - an_hour
-												a_minute := 0 - a_minute
+											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
+												an_hour := - an_hour
+												a_minute := - a_minute
 											end
 											Result := is_year_month (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -490,7 +508,7 @@ feature -- Access
 				end
 			end
 		ensure
-			year_month_cached: Result implies last_cached_zoned_date /= Void			
+			year_month_cached: Result implies last_cached_zoned_date /= Void
 		end
 
 	is_year (a_formatted_date: STRING): BOOLEAN is
@@ -508,7 +526,7 @@ feature -- Access
 				elseif a_formatted_date.count < 4 then
 					Result := False
 				else
-					if a_formatted_date.item (1).is_equal ('-') then
+					if a_formatted_date.item (1) = '-' then
 						a_date := a_formatted_date.substring (2, a_formatted_date.count)
 					else
 						a_date := a_formatted_date
@@ -518,7 +536,9 @@ feature -- Access
 						Result := False
 					else
 						Result := True
-						if a_formatted_date.item (1).is_equal ('-') then a_year := 1 - a_year end
+						if a_formatted_date.item (1) = '-' then
+							a_year := 1 - a_year
+						end
 						create last_cached_date.make (a_year, 1, 1)
 						last_cached_date_string := a_formatted_date
 					end
@@ -540,7 +560,7 @@ feature -- Access
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
 					Result := True
 					last_cached_zoned_date_string := a_formatted_date
-				elseif a_formatted_date.item (a_formatted_date.count).is_equal ('Z') then
+				elseif a_formatted_date.item (a_formatted_date.count) = 'Z' then
 					if a_formatted_date.count >= 5 then
 						Result := is_year (a_formatted_date.substring (1, a_formatted_date.count - 1))
 						if Result then
@@ -550,9 +570,11 @@ feature -- Access
 						end
 					end
 				elseif a_formatted_date.count >= 10 then
-					if a_formatted_date.item (a_formatted_date.count - 2).is_equal (':') then
-						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
-							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+					if a_formatted_date.item (a_formatted_date.count - 2) = ':' then
+						if
+							a_formatted_date.item (a_formatted_date.count - 5) = '+' or else
+							a_formatted_date.item (a_formatted_date.count - 5) = '-'
+						then
 							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
 							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 								an_hour := a_count.to_integer
@@ -567,9 +589,9 @@ feature -- Access
 											Result := a_minute >= 0 and then a_minute <= 59
 										end
 										if Result then
-											if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
-												an_hour := 0 - an_hour
-												a_minute := 0 - a_minute
+											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
+												an_hour := - an_hour
+												a_minute := - a_minute
 											end
 											Result := is_year (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -590,7 +612,7 @@ feature -- Access
 				end
 			end
 		ensure
-			year_cached: Result implies last_cached_zoned_date /= Void			
+			year_cached: Result implies last_cached_zoned_date /= Void
 		end
 
 	is_month_day (a_formatted_date: STRING): BOOLEAN is
@@ -609,8 +631,7 @@ feature -- Access
 				elseif a_formatted_date.count = 7 then
 					create a_splitter.make_with_separators ("-")
 					some_components := a_splitter.split_greedy (a_formatted_date)
-					Result := some_components.count = 4
-						and then some_components.item (1).is_empty and then some_components.item (2).is_empty
+					Result := some_components.count = 4 and then some_components.item (1).is_empty and then some_components.item (2).is_empty
 					if Result then
 						a_month := month_ok (some_components.item (3))
 						if a_month = 0 then
@@ -643,7 +664,7 @@ feature -- Access
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
 					Result := True
 					last_cached_zoned_date_string := a_formatted_date
-				elseif a_formatted_date.item (a_formatted_date.count).is_equal ('Z') then
+				elseif a_formatted_date.item (a_formatted_date.count) = 'Z' then
 					if a_formatted_date.count = 8 then
 						Result := is_month_day (a_formatted_date.substring (1, a_formatted_date.count - 1))
 						if Result then
@@ -653,9 +674,11 @@ feature -- Access
 						end
 					end
 				elseif a_formatted_date.count = 13 then
-					if a_formatted_date.item (a_formatted_date.count - 2).is_equal (':') then
-						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
-							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+					if a_formatted_date.item (a_formatted_date.count - 2) = ':' then
+						if
+							a_formatted_date.item (a_formatted_date.count - 5) = '+' or else
+							a_formatted_date.item (a_formatted_date.count - 5) = '-'
+						then
 							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
 							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 								an_hour := a_count.to_integer
@@ -670,9 +693,9 @@ feature -- Access
 											Result := a_minute >= 0 and then a_minute <= 59
 										end
 										if Result then
-											if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
-												an_hour := 0 - an_hour
-												a_minute := 0 - a_minute
+											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
+												an_hour := - an_hour
+												a_minute := - a_minute
 											end
 											Result := is_month_day (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -693,7 +716,7 @@ feature -- Access
 				end
 			end
 		ensure
-			month_day_cached: Result implies last_cached_zoned_date /= Void			
+			month_day_cached: Result implies last_cached_zoned_date /= Void
 		end
 
 	is_day (a_formatted_date: STRING): BOOLEAN is
@@ -712,8 +735,8 @@ feature -- Access
 				elseif a_formatted_date.count = 5 then
 					create a_splitter.make_with_separators ("-")
 					some_components := a_splitter.split_greedy (a_formatted_date)
-					Result := some_components.count = 4 and then some_components.item (1).is_empty
-						and then some_components.item (2).is_empty and then some_components.item (3).is_empty
+					Result := some_components.count = 4 and then some_components.item (1).is_empty and then
+						some_components.item (2).is_empty and then some_components.item (3).is_empty
 					if Result then
 						a_day := day_ok (some_components.item (4))
 						if a_day = 0 then
@@ -741,7 +764,7 @@ feature -- Access
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
 					Result := True
 					last_cached_zoned_date_string := a_formatted_date
-				elseif a_formatted_date.item (a_formatted_date.count).is_equal ('Z') then
+				elseif a_formatted_date.item (a_formatted_date.count) = 'Z' then
 					if a_formatted_date.count = 6 then
 						Result := is_day (a_formatted_date.substring (1, a_formatted_date.count - 1))
 						if Result then
@@ -751,9 +774,11 @@ feature -- Access
 						end
 					end
 				elseif a_formatted_date.count = 11 then
-					if a_formatted_date.item (a_formatted_date.count - 2).is_equal (':') then
-						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
-							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+					if a_formatted_date.item (a_formatted_date.count - 2) = ':' then
+						if
+							a_formatted_date.item (a_formatted_date.count - 5) = '+' or else
+							a_formatted_date.item (a_formatted_date.count - 5) = '-'
+						then
 							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
 							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 								an_hour := a_count.to_integer
@@ -768,9 +793,9 @@ feature -- Access
 											Result := a_minute >= 0 and then a_minute <= 59
 										end
 										if Result then
-											if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
-												an_hour := 0 - an_hour
-												a_minute := 0 - a_minute
+											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
+												an_hour := - an_hour
+												a_minute := - a_minute
 											end
 											Result := is_day (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -791,7 +816,7 @@ feature -- Access
 				end
 			end
 		ensure
-			day_cached: Result implies last_cached_zoned_date /= Void			
+			day_cached: Result implies last_cached_zoned_date /= Void
 		end
 	
 	is_month (a_formatted_date: STRING): BOOLEAN is
@@ -810,8 +835,7 @@ feature -- Access
 				elseif a_formatted_date.count = 4 then
 					create a_splitter.make_with_separators ("-")
 					some_components := a_splitter.split_greedy (a_formatted_date)
-					Result := some_components.count = 3
-						and then some_components.item (1).is_empty and then some_components.item (2).is_empty
+					Result := some_components.count = 3 and then some_components.item (1).is_empty and then some_components.item (2).is_empty
 					if Result then
 						a_month := month_ok (some_components.item (3))
 						if a_month = 0 then
@@ -839,7 +863,7 @@ feature -- Access
 				if STRING_.same_string (a_formatted_date, last_cached_zoned_date_string) then
 					Result := True
 					last_cached_zoned_date_string := a_formatted_date
-				elseif a_formatted_date.item (a_formatted_date.count).is_equal ('Z') then
+				elseif a_formatted_date.item (a_formatted_date.count) = 'Z' then
 					if a_formatted_date.count = 5 then
 						Result := is_month (a_formatted_date.substring (1, a_formatted_date.count - 1))
 						if Result then
@@ -849,9 +873,11 @@ feature -- Access
 						end
 					end
 				elseif a_formatted_date.count = 10 then
-					if a_formatted_date.item (a_formatted_date.count - 2).is_equal (':') then
-						if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('+')
-							or else a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
+					if a_formatted_date.item (a_formatted_date.count - 2) = ':' then
+						if
+							a_formatted_date.item (a_formatted_date.count - 5) = '+' or else
+							a_formatted_date.item (a_formatted_date.count - 5) = '-'
+						then
 							a_count := a_formatted_date.substring (a_formatted_date.count - 4, a_formatted_date.count - 3)
 							if CHARACTER_.is_digit (a_count.item (1)) and then CHARACTER_.is_digit (a_count.item (2)) then
 								an_hour := a_count.to_integer
@@ -866,9 +892,9 @@ feature -- Access
 											Result := a_minute >= 0 and then a_minute <= 59
 										end
 										if Result then
-											if a_formatted_date.item (a_formatted_date.count - 5).is_equal ('-') then
-												an_hour := 0 - an_hour
-												a_minute := 0 - a_minute
+											if a_formatted_date.item (a_formatted_date.count - 5) = '-' then
+												an_hour := - an_hour
+												a_minute := - a_minute
 											end
 											Result := is_month (a_formatted_date.substring (1, a_formatted_date.count - 6))
 											if Result then
@@ -889,7 +915,7 @@ feature -- Access
 				end
 			end
 		ensure
-			month_cached: Result implies last_cached_zoned_date /= Void			
+			month_cached: Result implies last_cached_zoned_date /= Void
 		end
 	
 feature -- Conversion
@@ -904,8 +930,8 @@ feature -- Conversion
 			else
 				valid := is_date (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_date
 			end
@@ -921,8 +947,8 @@ feature -- Conversion
 			else
 				valid := is_zoned_date (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_zoned_date
 			end
@@ -931,15 +957,15 @@ feature -- Conversion
 	string_to_date_time (a_formatted_date_time: STRING): DT_DATE_TIME is
 			-- Parsed date-time from `a_formatted_date_time'
 		local
-				valid: BOOLEAN
+			valid: BOOLEAN
 		do
 			if a_formatted_date_time = last_cached_date_time_string then
 				Result := last_cached_date_time
 			else
 				valid := is_date_time (a_formatted_date_time)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_date_time
 			end
@@ -955,11 +981,11 @@ feature -- Conversion
 			else
 				valid := is_zoned_date_time (a_formatted_date_time)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_zoned_date_time
-			end	
+			end
 		end
 
 	string_to_time (a_formatted_time: STRING): DT_TIME is
@@ -972,8 +998,8 @@ feature -- Conversion
 			else
 				valid := is_time (a_formatted_time)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_time
 			end
@@ -989,8 +1015,8 @@ feature -- Conversion
 			else
 				valid := is_zoned_time (a_formatted_time)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_zoned_time
 			end
@@ -1010,8 +1036,8 @@ feature -- Conversion
 			else
 				valid := is_year_month (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_date
 			end
@@ -1034,8 +1060,8 @@ feature -- Conversion
 			else
 				valid := is_zoned_year_month (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_zoned_date
 			end
@@ -1057,8 +1083,8 @@ feature -- Conversion
 			else
 				valid := is_year (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_date
 			end
@@ -1082,8 +1108,8 @@ feature -- Conversion
 			else
 				valid := is_zoned_year (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_zoned_date
 			end
@@ -1105,8 +1131,8 @@ feature -- Conversion
 			else
 				valid := is_month_day (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_date
 			end
@@ -1129,8 +1155,8 @@ feature -- Conversion
 			else
 				valid := is_zoned_month_day (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_zoned_date
 			end
@@ -1152,8 +1178,8 @@ feature -- Conversion
 			else
 				valid := is_day (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_date
 			end
@@ -1177,8 +1203,8 @@ feature -- Conversion
 			else
 				valid := is_zoned_day (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_zoned_date
 			end
@@ -1200,8 +1226,8 @@ feature -- Conversion
 			else
 				valid := is_month (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_date
 			end
@@ -1225,8 +1251,8 @@ feature -- Conversion
 			else
 				valid := is_zoned_month (a_formatted_date)
 				check
+						-- From precondition.
 					valid: valid
-					-- from pre-condition
 				end
 				Result := last_cached_zoned_date
 			end
@@ -1273,9 +1299,11 @@ feature {NONE} -- Implementation
 			-- Last time validated by `is_zoned_date_time'
 
 	year_ok (a_year: STRING): INTEGER is
-			-- Validated year number, or zero
+			-- Validated year number, or zero;
+			-- Note: `a_year' may be altered.
 		require
-			year_not_empty: a_year /= Void and then not a_year.is_empty
+			a_year_not_void: a_year /= Void
+			a_year_not_empty: not a_year.is_empty
 		local
 			a_count: INTEGER
 		do
@@ -1290,7 +1318,7 @@ feature {NONE} -- Implementation
 				Result := 0
 			elseif a_year.count < 4 then
 				Result := 0
-			elseif a_year.count > 4 and then a_year.item (1).is_equal ('0') then
+			elseif a_year.count > 4 and then a_year.item (1) = '0' then
 				Result := 0
 			else
 				Result := a_year.to_integer
@@ -1298,9 +1326,11 @@ feature {NONE} -- Implementation
 		end
 
 	month_ok (a_month: STRING): INTEGER is
-			-- Validated month number, or zero
+			-- Validated month number, or zero;
+			-- Note: `a_month' may be altered.
 		require
-			month_not_empty: a_month /= Void and then not a_month.is_empty
+			a_month_not_void: a_month /= Void
+			a_month_not_empty: not a_month.is_empty
 		local
 			a_count: INTEGER
 		do
@@ -1311,7 +1341,7 @@ feature {NONE} -- Implementation
 				Result := 0
 			elseif a_month.count /= 2 then
 				Result := 0
-			elseif a_month.item (1).is_equal ('+') then
+			elseif a_month.item (1) = '+' then
 				Result := 0
 			elseif not a_month.is_integer then
 				Result := 0
@@ -1321,9 +1351,11 @@ feature {NONE} -- Implementation
 		end
 
 	day_ok (a_day: STRING): INTEGER is
-			-- Validated day number, or zero
+			-- Validated day number, or zero;
+			-- Note: `a_day' may be altered.
 		require
-			day_not_empty: a_day /= Void and then not a_day.is_empty
+			a_day_not_void: a_day /= Void
+			a_day_not_empty: not a_day.is_empty
 		local
 			a_count: INTEGER
 		do
@@ -1334,7 +1366,7 @@ feature {NONE} -- Implementation
 				Result := 0
 			elseif a_day.count /= 2 then
 				Result := 0
-			elseif a_day.item (1).is_equal ('+') then
+			elseif a_day.item (1) = '+' then
 				Result := 0
 			elseif not a_day.is_integer then
 				Result := 0
@@ -1344,23 +1376,32 @@ feature {NONE} -- Implementation
 		end
 
 	milliseconds (some_milliseconds: STRING): INTEGER is
-			-- Number of milliseconds in `some_millseconds'
+			-- Number of milliseconds in `some_millseconds',
+			-- Note: `some_milliseconds' may be altered.
 		require
-			not_negative: not some_milliseconds.item (1).is_equal ('-')
+			some_milliseconds_not_void: some_milliseconds /= Void
+			some_milliseconds_not_empty: not some_milliseconds.is_empty
+			not_negative: some_milliseconds.item (1) /= '-'
 			integral: some_milliseconds.is_integer
 		local
 			a_count: STRING
 			a_digit: INTEGER
 		do
-			if some_milliseconds.count > 3 then a_digit := some_milliseconds.substring (4,4).to_integer end
-			a_count := some_milliseconds; a_count.keep_head (3)
+			if some_milliseconds.count > 3 then
+				a_digit := some_milliseconds.item_code (4) - ('0').code
+			end
+			a_count := some_milliseconds
+			a_count.keep_head (3)
 			from until a_count.count = 3 loop
 				a_count.append_character ('0')
 			end
 			Result := a_count.to_integer
-			if a_digit > 4 then Result := Result + 1 end -- round up
+			if a_digit > 4 then
+					-- Round up.
+				Result := Result + 1
+			end
 		ensure
-			positive_result: Result >= 0
+			milliseconds_not_negative: Result >= 0
 		end
 
 invariant

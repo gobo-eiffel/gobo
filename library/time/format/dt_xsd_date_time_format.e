@@ -75,24 +75,24 @@ feature -- Conversion
 			Result := time_to_string (a_time.time)
 			Result := Result + zone (a_time.time_zone)
 		end
-	
+
 	year_month_to_string (a_date: DT_DATE): STRING is
 			-- Date formatted as gYearMonth 
 		require
-			date_not_void: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := year_string (a_date)
 			Result.append_character ('-')
-			Result.append_string (month_string (a_date))			
+			Result.append_string (month_string (a_date))
 		ensure
 			date_string_not_void: Result /= Void
 			valid_date_string: is_year_month (Result)
 		end
-	
+
 	zoned_year_month_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
 			-- Date formatted as gYearMonth with time zone
 		require
-			zoned_date_not_void: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := year_month_to_string (a_date.date)
 			Result := Result + zone (a_date.time_zone)
@@ -104,18 +104,18 @@ feature -- Conversion
 	year_to_string (a_date: DT_DATE): STRING is
 			-- Date formatted as gYear
 		require
-			date_not_void: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := year_string (a_date)
 		ensure
 			date_string_not_void: Result /= Void
 			valid_date_string: is_year (Result)
 		end
-	
+
 	zoned_year_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
 			-- Date formatted as gYear with time zone
 		require
-			zoned_date_not_void: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := year_to_string (a_date.date)
 			Result := Result + zone (a_date.time_zone)
@@ -123,24 +123,24 @@ feature -- Conversion
 			zoned_date_string_not_void: Result /= Void
 			valid_date_string: is_zoned_year (Result)
 		end
-		
+
 	month_day_to_string (a_date: DT_DATE): STRING is
 			-- Date formatted as gMonthDay
 		require
-			date_not_void: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := STRING_.concat ("--", month_string (a_date))
 			Result.append_character ('-')
-			Result.append_string (day_string (a_date))			
+			Result.append_string (day_string (a_date))
 		ensure
 			date_string_not_void: Result /= Void
 			valid_date_string: is_month_day (Result)
 		end
-	
+
 	zoned_month_day_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
 			-- Date formatted as gMonthDay with time zone
 		require
-			zoned_date_not_void: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := month_day_to_string (a_date.date)
 			Result := Result + zone (a_date.time_zone)
@@ -148,22 +148,22 @@ feature -- Conversion
 			zoned_date_string_not_void: Result /= Void
 			valid_date_string: is_zoned_month_day (Result)
 		end
-		
+
 	day_to_string (a_date: DT_DATE): STRING is
 			-- Date formatted as gDay
 		require
-			date_not_void: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := STRING_.concat ("---", day_string (a_date))
 		ensure
 			date_string_not_void: Result /= Void
 			valid_date_string: is_day (Result)
 		end
-	
+
 	zoned_day_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
 			-- Date formatted as gDay with time zone
 		require
-			zoned_date_not_void: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := day_to_string (a_date.date)
 			Result := Result + zone (a_date.time_zone)
@@ -171,22 +171,22 @@ feature -- Conversion
 			zoned_date_string_not_void: Result /= Void
 			valid_date_string: is_zoned_day (Result)
 		end
-		
+
 	month_to_string (a_date: DT_DATE): STRING is
 			-- Date formatted as gMonth
 		require
-			date_not_void: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := STRING_.concat ("--", month_string (a_date))
 		ensure
 			date_string_not_void: Result /= Void
 			valid_date_string: is_month (Result)
 		end
-	
+
 	zoned_month_to_string (a_date: DT_FIXED_OFFSET_ZONED_DATE): STRING is
 			-- Date formatted as gMonth with time zone
 		require
-			zoned_date_not_void: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := month_to_string (a_date.date)
 			Result := Result + zone (a_date.time_zone)
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 	year_string (a_date: DT_DATE): STRING is
 			-- New string describing year
 		require
-			date_exists: a_date /= Void
+			a_date_not_void: a_date /= Void
 		local
 			yy: INTEGER
 		do
@@ -219,13 +219,14 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			at_least_four_characters: Result /= Void and then Result.count >= 4
+			year_string_not_void: Result /= Void
+			at_least_four_characters: Result.count >= 4
 		end
 
 	month_string (a_date: DT_DATE): STRING is
 			-- New string describing month
 		require
-			date_exists: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := ""
 			INTEGER_.append_decimal_integer (a_date.month, Result)
@@ -233,13 +234,14 @@ feature {NONE} -- Implementation
 				Result.insert_character ('0', 1)
 			end
 		ensure
-			two_characters: Result /= Void and then Result.count = 2
+			month_string_not_void: Result /= Void
+			two_characters: Result.count = 2
 		end
 
 	day_string (a_date: DT_DATE): STRING is
 			-- New string describing day
 		require
-			date_exists: a_date /= Void
+			a_date_not_void: a_date /= Void
 		do
 			Result := ""
 			INTEGER_.append_decimal_integer (a_date.day, Result)
@@ -247,13 +249,14 @@ feature {NONE} -- Implementation
 				Result.insert_character ('0', 1)
 			end
 		ensure
-			two_characters: Result /= Void and then Result.count = 2
+			day_string_not_void: Result /= Void
+			two_characters: Result.count = 2
 		end
 
 	time_part_to_string (a_time_part: INTEGER): STRING is
 			-- New string formatting `a_time_part'
 		require
-			positive_time_part: a_time_part >= 0
+			a_time_part_non_negative: a_time_part >= 0
 		do
 			Result := ""
 			INTEGER_.append_decimal_integer (a_time_part, Result)
@@ -261,13 +264,14 @@ feature {NONE} -- Implementation
 				Result.insert_character ('0', 1)
 			end
 		ensure
-			two_characters: Result /= Void and then Result.count = 2
+			time_part_to_string_not_void: Result /= Void
+			two_characters: Result.count = 2
 		end
 
 	zone (a_time_zone: DT_FIXED_OFFSET_TIME_ZONE): STRING is
 			-- New string describing time zone
 		require
-			time_zone_exists: a_time_zone /= Void
+			a_time_zone_not_void: a_time_zone /= Void
 		local
 			an_offset: DT_TIME_DURATION
 		do
@@ -280,11 +284,12 @@ feature {NONE} -- Implementation
 				else
 					Result := "+"
 				end
-				Result := Result + time_part_to_string (an_offset.hour.abs)
-					+ ":" + time_part_to_string (an_offset.minute.abs)
+				Result := Result + time_part_to_string (an_offset.hour.abs) + ":" +
+					time_part_to_string (an_offset.minute.abs)
 			end
 		ensure
-			result_not_empty: Result /= Void and then not Result.is_empty
+			zone_not_void: Result /= Void
+			zone_not_empty: not Result.is_empty
 		end
 
 	utc_offset: DT_TIME_DURATION is
@@ -292,9 +297,9 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_canonical (0)
 		ensure
-			offset_is_zero: Result /= Void and then Result.hour = 0
-				and then Result.minute = 0 and then Result.second = 0
-				and then Result.millisecond = 0
+			utc_offset_not_void: Result /= Void
+			offset_is_zero: Result.hour = 0 and then Result.minute = 0 and then
+				Result.second = 0 and then Result.millisecond = 0
 		end
 
 end
