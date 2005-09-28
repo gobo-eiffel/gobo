@@ -16,6 +16,24 @@ inherit
 
 	TS_TEST_CASE
 
+feature -- Test
+
+	test_double_curly_brackets is
+			-- Test what happens when using double curly brackets.
+		local
+			a_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			create a_regexp.make
+				-- Compile pattern: match a digit, followed by one or two {, followed by }.
+			a_regexp.compile ("[0-9]{{1,2}}")
+			assert ("is_compiled1", a_regexp.is_compiled)
+			assert ("recognizes1", a_regexp.recognizes ("5{}"))
+			assert ("recognizes2", a_regexp.recognizes ("3{{}"))
+			assert ("not_recognizes1", not a_regexp.recognizes ("7{{{}"))
+			assert ("not_recognizes2", not a_regexp.recognizes ("7"))
+			assert ("not_recognizes3", not a_regexp.recognizes ("17"))
+		end
+
 feature -- Test Input 1
 
 	test_input1_regexp1 is
