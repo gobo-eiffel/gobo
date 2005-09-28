@@ -18,8 +18,8 @@ inherit
 
 feature -- Test
 
-	test_double_curly_brackets is
-			-- Test what happens when using double curly brackets.
+	test_double_curly_braces is
+			-- Test what happens when using double curly braces.
 		local
 			a_regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
