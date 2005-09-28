@@ -59,7 +59,7 @@ feature -- Access
 		end
 
 	string_value: STRING is
-			--Value of the item as a string
+			-- Value of the item as a string
 		do
 			Result := value
 		end

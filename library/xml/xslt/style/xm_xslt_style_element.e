@@ -700,6 +700,126 @@ feature -- Status_report
 			Result := may_contain_sequence_constructor
 		end
 
+	is_apply_templates: BOOLEAN is
+			-- Is `Current' an xsl:apply-templates?
+		do
+			Result := False
+		end
+
+	is_param: BOOLEAN is
+			-- Is `Current' an xsl:param?
+		do
+			Result := False
+		end
+
+	is_stylesheet: BOOLEAN is
+			-- Is `Current' an xsl:stylesheet or xsl:transform?
+		do
+			Result := False
+		end
+
+	is_for_each: BOOLEAN is
+			-- Is `Current' an xsl:for-each?
+		do
+			Result := False
+		end
+
+	is_for_each_group: BOOLEAN is
+			-- Is `Current' an xsl:for-each-group?
+		do
+			Result := False
+		end
+
+	is_perform_sort: BOOLEAN is
+			-- Is `Current' an xsl:perform-sort?
+		do
+			Result := False
+		end
+
+	is_sort: BOOLEAN is
+			-- Is `Current' an xsl:sort?
+		do
+			Result := False
+		end
+
+	is_template: BOOLEAN is
+			-- Is `Current' an xsl:template?
+		do
+			Result := False
+		end
+
+	is_xslt_variable: BOOLEAN is
+			-- Is `Current' an xsl:variable?
+		do
+			Result := False
+		end
+
+	is_character_map: BOOLEAN is
+			-- Is `Current' an xsl:character-map?
+		do
+			Result := False
+		end
+
+	is_attribute_set: BOOLEAN is
+			-- Is `Current' an xsl:attribute-set?
+		do
+			Result := False
+		end
+
+	is_xslt_variable_declaration: BOOLEAN is
+			-- Is `Current' an xsl:variable or xsl:param?
+		do
+			Result := False
+		end
+
+	is_namespace_alias: BOOLEAN is
+			-- Is `Current' an xsl:namespace-alias?
+		do
+			Result := False
+		end
+
+	is_xslt_function: BOOLEAN is
+			-- Is `Current' an xsl:function?
+		do
+			Result := False
+		end
+
+	is_module: BOOLEAN is
+			-- Is `Current' an xsl:include/import?
+		do
+			Result := False
+		end
+
+	is_output: BOOLEAN is
+			-- Is `Current' an xsl:output?
+		do
+			Result := False
+		end
+
+	is_key: BOOLEAN is
+			-- Is `Current' an xsl:key?
+		do
+			Result := False
+		end
+	
+	is_fallback: BOOLEAN is
+			-- Is `Current' an xsl:fallback?
+		do
+			Result := False
+		end
+	
+	is_matching_substring: BOOLEAN is
+			-- Is `Current' an xsl:matching-substring?
+		do
+			Result := False
+		end
+	
+	is_non_matching_substring: BOOLEAN is
+			-- Is `Current' an xsl:non-matching-substring?
+		do
+			Result := False
+		end
+
 feature -- Status setting
 
 	set_validation_error (an_error: XM_XPATH_ERROR_VALUE; a_condition: INTEGER) is
@@ -979,6 +1099,9 @@ feature -- Status setting
 			an_error: XM_XPATH_ERROR_VALUE
 			a_style_element: XM_XSLT_STYLE_ELEMENT
 		do
+
+			-- TODO: review - parents should all check their children, not vice-versa
+
 			a_style_element ?= parent
 			if a_style_element = Void or else not a_style_element.may_contain_sequence_constructor then
 				create an_error.make_from_string (STRING_.concat (node_name, " may only be used within a sequence constructor"), Xpath_errors_uri, "XTSE0010", Static_error)
@@ -1118,12 +1241,18 @@ feature -- Creation
 				a_leading_character > an_avt_expression.count
 			loop
 				a_left_curly_brace := an_avt_expression.index_of ('{', a_leading_character)
-				a_left_double_curly_brace := a_left_curly_brace > 0 and then an_avt_expression.index_of ('{', a_leading_character + a_left_curly_brace) = 1
+				a_left_double_curly_brace := a_left_curly_brace > 0 and then an_avt_expression.index_of ('{', a_left_curly_brace + 1) = a_left_curly_brace + 1
 				a_right_curly_brace := an_avt_expression.index_of ('}', a_leading_character)
-				a_right_double_curly_brace := a_right_curly_brace > 0 and then an_avt_expression.index_of ('}', a_leading_character + a_right_curly_brace) = 1
+				a_right_double_curly_brace := a_right_curly_brace > 0 and then an_avt_expression.index_of ('}', a_right_curly_brace + 1) = a_right_curly_brace + 1
 
 				if a_left_curly_brace = 0 and then a_right_curly_brace = 0 then
 					a_behaviour := Fixed_component
+				elseif a_left_double_curly_brace and then  a_right_double_curly_brace then
+					if a_left_curly_brace < a_right_curly_brace then
+						a_behaviour := Left_double_curly_brace_component
+					else
+						a_behaviour := Right_double_curly_brace_component
+					end
 				elseif a_left_double_curly_brace then
 					a_behaviour := Left_double_curly_brace_component
 				elseif a_right_double_curly_brace then
@@ -1170,8 +1299,8 @@ feature -- Creation
 				create {XM_XPATH_STRING_VALUE} last_generated_expression.make ("")
 			elseif components.count = 1 then
 				last_generated_expression := components.item (1)
---			elseif a_static_context.is_backwards_compatible_mode then
---				last_generated_expression := components.item (1)
+			elseif a_static_context.is_backwards_compatible_mode then
+				last_generated_expression := components.item (1)
 			else
 				create a_concat_function.make
 				a_concat_function.set_arguments (components)
@@ -1221,8 +1350,8 @@ feature -- Creation
 							shared_name_pool.allocate_name (a_parser.optional_prefix, a_uri, a_parser.local_name)
 							last_generated_name_code := shared_name_pool.last_name_code
 						else
-							a_message := STRING_.concat ("Name pool has no room to allocate {", a_uri)
-							a_message := STRING_.appended_string (a_message, "}")
+							a_message := STRING_.concat ("Name pool has no room to allocate ", a_uri)
+							a_message := STRING_.appended_string (a_message, "#")
 							a_message := STRING_.appended_string (a_message, a_parser.local_name)
 							create name_code_error_value.make_from_string (a_message, Gexslt_eiffel_type_uri, "NAME_POOL", Static_error)
 							last_generated_name_code := -1
@@ -2016,54 +2145,6 @@ feature -- Element change
 
 feature -- Conversion
 	
-	is_apply_templates: BOOLEAN is
-			-- Is `Current' an xsl:apply-templates?
-		do
-			Result := False
-		end
-
-	is_param: BOOLEAN is
-			-- Is `Current' an xsl:param?
-		do
-			Result := False
-		end
-
-	is_stylesheet: BOOLEAN is
-			-- Is `Current' an xsl:stylesheet or xsl:transform?
-		do
-			Result := False
-		end
-
-	is_for_each: BOOLEAN is
-			-- Is `Current' an xsl:for-each?
-		do
-			Result := False
-		end
-
-	is_for_each_group: BOOLEAN is
-			-- Is `Current' an xsl:for-each-group?
-		do
-			Result := False
-		end
-
-	is_perform_sort: BOOLEAN is
-			-- Is `Current' an xsl:perform-sort?
-		do
-			Result := False
-		end
-
-	is_sort: BOOLEAN is
-			-- Is `Current' an xsl:sort?
-		do
-			Result := False
-		end
-
-	is_template: BOOLEAN is
-			-- Is `Current' an xsl:template?
-		do
-			Result := False
-		end
-
 	as_template: XM_XSLT_TEMPLATE is
 			-- `Current' seen as an xsl:template
 		require
@@ -2071,12 +2152,6 @@ feature -- Conversion
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end
-
-	is_key: BOOLEAN is
-			-- Is `Current' an xsl:key?
-		do
-			Result := False
 		end
 
 	as_key: XM_XSLT_KEY is
@@ -2088,12 +2163,6 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_output: BOOLEAN is
-			-- Is `Current' an xsl:output?
-		do
-			Result := False
-		end
-
 	as_output: XM_XSLT_OUTPUT is
 			-- `Current' seen as an xsl:output
 		require
@@ -2101,12 +2170,6 @@ feature -- Conversion
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end
-
-	is_module: BOOLEAN is
-			-- Is `Current' an xsl:include/import?
-		do
-			Result := False
 		end
 
 	as_module: XM_XSLT_MODULE is
@@ -2118,12 +2181,6 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_xslt_function: BOOLEAN is
-			-- Is `Current' an xsl:function?
-		do
-			Result := False
-		end
-
 	as_xslt_function: XM_XSLT_FUNCTION is
 			-- `Current' seen as an xsl:function
 		require
@@ -2131,12 +2188,6 @@ feature -- Conversion
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end
-
-	is_namespace_alias: BOOLEAN is
-			-- Is `Current' an xsl:namespace-alias?
-		do
-			Result := False
 		end
 
 	as_namespace_alias: XM_XSLT_NAMESPACE_ALIAS is
@@ -2148,12 +2199,6 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_xslt_variable: BOOLEAN is
-			-- Is `Current' an xsl:variable?
-		do
-			Result := False
-		end
-
 	as_xslt_variable: XM_XSLT_VARIABLE is
 			-- `Current' seen as an xsl:variable
 		require
@@ -2161,12 +2206,6 @@ feature -- Conversion
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)
-		end
-
-	is_xslt_variable_declaration: BOOLEAN is
-			-- Is `Current' an xsl:variable or xsl:param?
-		do
-			Result := False
 		end
 
 	as_xslt_variable_declaration: XM_XSLT_VARIABLE_DECLARATION is
@@ -2178,12 +2217,6 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_attribute_set: BOOLEAN is
-			-- Is `Current' an xsl:attribute-set?
-		do
-			Result := False
-		end
-
 	as_attribute_set: XM_XSLT_ATTRIBUTE_SET is
 			-- `Current' seen as an xsl:attribute-set
 		require
@@ -2193,16 +2226,28 @@ feature -- Conversion
 			same_object: ANY_.same_objects (Result, Current)
 		end
 
-	is_character_map: BOOLEAN is
-			-- Is `Current' an xsl:character-map?
-		do
-			Result := False
-		end
-
 	as_character_map: XM_XSLT_CHARACTER_MAP is
 			-- `Current' seen as an xsl:character-map
 		require
 			character_map: is_character_map
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	as_matching_substring: XM_XSLT_MATCHING_SUBSTRING is
+			-- `Current' seen as an xsl:matching-substring
+		require
+			matching_substring: is_matching_substring
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	as_non_matching_substring: XM_XSLT_NON_MATCHING_SUBSTRING is
+			-- `Current' seen as an xsl:non-matching-substring
+		require
+			non_matching_substring: is_non_matching_substring
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)

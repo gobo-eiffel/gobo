@@ -17,9 +17,16 @@ inherit
 	XM_XPATH_ERROR_TYPES
 
 	XM_XPATH_STANDARD_NAMESPACES
-		export {NONE} all end
+		export
+			{NONE} all
+			{ANY} is_qname
+		end
 
-	XM_UNICODE_CHARACTERS_1_0
+		--	XM_UNICODE_CHARACTERS_1_0
+		-- Commented out on 26/09/2005, as the 1.1 definitions
+		--  are now imported via  XM_XPATH_STANDARD_NAMESPACES.
+		-- This means not 100% compliant with the XPointer recommendation,
+		--  which refers to XML Names 1.0 for the definitions of NCName and QName
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
@@ -67,9 +74,7 @@ feature -- Access
 		do
 			create a_parser.make (a_name)
 			if a_parser.is_prefix_present then
-				Result := STRING_.concat ("{", namespace_bindings.namespace_uri (a_parser.optional_prefix))
-				Result := STRING_.appended_string (Result, "}")
-				Result := STRING_.appended_string (Result, a_parser.local_name)
+				Result := expanded_name_from_components (namespace_bindings.namespace_uri (a_parser.optional_prefix), a_parser.local_name)
 			else
 				Result := a_parser.local_name
 			end

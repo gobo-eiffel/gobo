@@ -181,11 +181,11 @@
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>--mode=[{&lt;namespace-uri&gt;}]&lt;local-name&gt;</term>
+	  <term>--mode=[&lt;namespace-uri&gt;#]&lt;local-name&gt;</term>
 	  <listitem>
 	    <para>
-	      Specifies an initial mode. If the name is not in the
-	      default namespace, then enclose the namespace URI in curly brackets, preceding the local name.
+	      Specifies an initial mode. This is a QName. If the name is qualified by a prefix within the
+	      stylesheet, then prefix the local name with the namespace URI followed by #.
 	    </para>
 	    <para>
 	      If this parameter is omitted (the usual situation), then the default mode is used.
@@ -193,11 +193,11 @@
 	  </listitem>
 	</varlistentry>
 	<varlistentry>
-	  <term>--template=[{&lt;namespace-uri&gt;}]&lt;local-name&gt;</term>
+	  <term>--template=[&lt;namespace-uri&gt;#]&lt;local-name&gt;</term>
 	  <listitem>
 	    <para>
-	      Specifies a named template to be invoked. If the name is not in the
-	      default namespace, then enclose the namespace URI in curly brackets, preceding the local name.
+	      Specifies a named template to be invoked. This is a QName. If the name is qualified by a prefix within the
+	      stylesheet, then prefix the local name with the namespace URI followed by #.
 	    </para>
 	    <para>
 	      If this parameter is omitted (the usual situation), then the initial template is the one

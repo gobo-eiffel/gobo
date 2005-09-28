@@ -118,11 +118,6 @@ feature {XM_XSLT_STYLESHEET_STRIPPER} -- Local
 			Result := strip_stack /= Void
 		end
 
-feature {NONE} -- Implementation
-	
-	bits_20: INTEGER is 1048576 -- 2^20
-			-- For removinging prefix index from name code
-
 invariant
 
 	specials_not_void: specials /= Void

@@ -207,6 +207,9 @@ feature {NONE} -- Implementation
 				Result.flag_as_instruction
 			when Xslt_attribute_set_type_code then
 				create {XM_XSLT_ATTRIBUTE_SET} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)				
+			when Xslt_analyze_string_type_code then
+				create {XM_XSLT_ANALYZE_STRING} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
+				Result.flag_as_instruction
 			when Xslt_call_template_type_code then
 				create {XM_XSLT_CALL_TEMPLATE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction
@@ -251,7 +254,9 @@ feature {NONE} -- Implementation
 			when Xslt_include_type_code then
 				create {XM_XSLT_INCLUDE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)								
 			when Xslt_key_type_code then
-				create {XM_XSLT_KEY} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)				
+				create {XM_XSLT_KEY} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
+			when Xslt_matching_substring_type_code then
+				create {XM_XSLT_MATCHING_SUBSTRING} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 			when Xslt_message_type_code then
 				create {XM_XSLT_MESSAGE} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction
@@ -262,6 +267,8 @@ feature {NONE} -- Implementation
 			when Xslt_next_match_type_code then
 				create {XM_XSLT_NEXT_MATCH} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction
+			when Xslt_non_matching_substring_type_code then
+				create {XM_XSLT_NON_MATCHING_SUBSTRING} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)				
 			when Xslt_number_type_code then
 				create {XM_XSLT_NUMBER} Result.make_style_element (error_listener, a_document, Void, an_attribute_collection, a_namespace_list, a_name_code, a_sequence_number, configuration)
 				Result.flag_as_instruction

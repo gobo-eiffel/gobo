@@ -181,8 +181,8 @@ feature -- Creation
 						shared_name_pool.allocate_name (an_xml_prefix, a_uri, a_local_name)
 						last_generated_name_code := shared_name_pool.last_name_code
 					else
-						a_message := STRING_.appended_string ("Name pool has no room to allocate {", a_uri)
-						a_message := STRING_.appended_string (a_message, "}")
+						a_message := STRING_.appended_string ("Name pool has no room to allocate ", a_uri)
+						a_message := STRING_.appended_string (a_message, "#")
 						a_message := STRING_.appended_string (a_message, a_local_name)
 						report_parse_error (a_message, "FODC0002,")
 						last_generated_name_code := -2
@@ -2349,9 +2349,6 @@ feature {NONE} -- Implementation
 
 	language: STRING is "XPath"
 			-- An XQuery parser will override this
-
-	bits_20: INTEGER is 1048576 
-			-- 0x0fffff
 
 	report_parse_error (a_message, a_code: STRING) is
 			-- Report a parsing error

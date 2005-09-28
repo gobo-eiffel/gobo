@@ -798,17 +798,8 @@ feature -- Implementation
 				if a_method.count = 0 then
 					a_method_uri := ""; a_method_local_name := ""
 				else
-					if a_method.item (1) = '{' then
-						an_index := a_method.index_of ('}', 3)
-						check
-							closing_brace_found: an_index > 0
-							-- stylesheet compilation will have ensured this
-						end
-						a_method_uri := a_method.substring (2, an_index - 1)
-						a_method_local_name := a_method.substring (an_index + 1, a_method.count)
-					else
-						a_method_uri := ""; a_method_local_name := a_method
-					end
+					a_method_uri := namespace_uri_from_expanded_name (a_method)
+					a_method_local_name := local_name_from_expanded_name (a_method)
 				end
 				if some_properties.used_character_maps.count > 0 then
 					a_character_map_index := executable.character_map_index

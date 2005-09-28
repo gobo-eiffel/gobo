@@ -77,9 +77,8 @@ feature -- Status report
 			std.error.put_string (indentation (a_level))
 			std.error.put_string ("function ")
 			if namespace_uri.count > 0 then
-				std.error.put_string ("{")
 				std.error.put_string (namespace_uri)
-				std.error.put_string ("}")
+				std.error.put_string ("#")
 			end
 			std.error.put_string (name)
 			std.error.put_new_line

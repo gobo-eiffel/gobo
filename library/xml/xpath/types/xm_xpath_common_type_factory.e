@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 	type_map: DS_HASH_TABLE [XM_XPATH_SCHEMA_TYPE, INTEGER] is
 			-- Table of built-in types, keyed on fingerprint
 		once
-			create Result.make_map (1024)
+			create Result.make_map (Maximum_built_in_fingerprint)
 
 			-- Add all types required by a Basic-level XSLT processor
 
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 	local_names: DS_HASH_TABLE [STRING, INTEGER] is
 			-- Table of standard local names, keyed on fingerprint
 		once
-			create Result.make_map (1024)
+			create Result.make_map (Maximum_built_in_fingerprint)
 			Result.set_equality_tester (string_equality_tester)
 		end
 
@@ -330,11 +330,9 @@ feature {NONE} -- Implementation
 			namespace_not_void: a_uri /= Void
 			local_name_not_void: a_local_name /= Void
 		do
-			Result := STRING_.appended_string ("{", a_uri)
-			Result := STRING_.appended_string (Result, "}")
-			Result := STRING_.appended_string (Result, a_local_name)
+			Result := expanded_name_from_components (a_uri, a_local_name)
 		ensure
-			correct_length: Result.count = a_uri.count + a_local_name.count + 2
+			correct_length: Result.count = a_uri.count + a_local_name.count + 1
 		end
 
 	bind_xml_name (a_fingerprint: INTEGER; a_local_name: STRING) is
@@ -575,7 +573,8 @@ feature {NONE} -- Implementation
 			bind_fn_name (Empty_function_type_code, "empty")
 			bind_fn_name (Ends_with_function_type_code, "ends-with")
 			bind_fn_name (Error_function_type_code, "error")
-			bind_fn_name (Escape_uri_function_type_code, "escape-uri")
+			bind_fn_name (Encode_for_uri_function_type_code, "encode-for-uri")
+			bind_fn_name (Escape_html_uri_function_type_code, "escape-html-uri")
 			bind_fn_name (Exactly_one_function_type_code, "exactly-one")
 			bind_fn_name (Exists_function_type_code, "exists")
 			bind_fn_name (False_function_type_code, "false")
@@ -589,6 +588,7 @@ feature {NONE} -- Implementation
 			bind_fn_name (In_scope_prefixes_function_type_code, "in-scope-prefixes")
 			bind_fn_name (Index_of_function_type_code, "index-of")
 			bind_fn_name (Insert_before_function_type_code, "insert-before")
+			bind_fn_name (Iri_to_uri_function_type_code, "iri-to-uri")
 			bind_fn_name (Lang_function_type_code, "lang")
 			bind_fn_name (Last_function_type_code, "last")
 			bind_fn_name (Local_name_function_type_code, "local-name")

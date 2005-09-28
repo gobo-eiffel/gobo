@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that implement the XPath escape-uri() function"
+		"Objects that implement the XPath functions encode-for-uri(), iri-to-uri() and escape-html-uri()"
 
 	library: "Gobo Eiffel XPath Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
@@ -24,19 +24,46 @@ inherit
 
 create
 
-	make
+	make_encode_for_uri, make_iri_to_uri, make_escape_html_uri
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Establish invariant
+	make_encode_for_uri is
+			-- Create encode-for-uri funtion.
 		do
-			name := "escape-uri"; namespace_uri := Xpath_standard_functions_uri
-			fingerprint := Escape_uri_function_type_code
+			name := "encode-for-uri"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Encode_for_uri_function_type_code
 			minimum_argument_count := 1
-			maximum_argument_count := 2
-			create arguments.make (2)
+			maximum_argument_count := 1
+			create arguments.make (1)
 			arguments.set_equality_tester (expression_tester)
+			reserved_character_set := unescaped_uri_characters
+			initialized := True
+		end
+
+	make_iri_to_uri is
+			-- Create iri-to-uri funtion.
+		do
+			name := "iri-to-uri"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Iri_to_uri_function_type_code
+			minimum_argument_count := 1
+			maximum_argument_count := 1
+			create arguments.make (1)
+			arguments.set_equality_tester (expression_tester)
+			reserved_character_set := unescaped_iri_characters
+			initialized := True
+		end
+
+	make_escape_html_uri is
+			-- Create escape-html-uri funtion.
+		do
+			name := "escape-html-uri"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Escape_html_uri_function_type_code
+			minimum_argument_count := 1
+			maximum_argument_count := 1
+			create arguments.make (1)
+			arguments.set_equality_tester (expression_tester)
+			reserved_character_set := unescaped_html_characters
 			initialized := True
 		end
 
@@ -57,11 +84,7 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			if argument_number = 1 then
-				create Result.make_optional_string
-			else
-				create Result.make_single_boolean
-			end
+			create Result.make_optional_string
 		end
 
 feature -- Evaluation
@@ -81,22 +104,7 @@ feature -- Evaluation
 				last_evaluated_item := an_item
 			else
 				a_uri_string := an_item.string_value
-				arguments.item (2).evaluate_item (a_context)
-				an_item := arguments.item (2).last_evaluated_item
-				check
-					escape_reserved_not_void: an_item /= Void
-					-- static typing
-				end
-				if an_item.is_error then
-					last_evaluated_item := an_item
-				else
-					check
-						escape_reserved2_not_void: an_item.is_boolean_value
-						-- static typing
-					end
-					escape_reserved := an_item.as_boolean_value.value
-					create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (escaped_uri (a_uri_string, escape_reserved))
-				end
+				create {XM_XPATH_STRING_VALUE} last_evaluated_item.make (escaped_uri (a_uri_string))
 			end
 		end
 
@@ -110,25 +118,21 @@ feature {XM_XPATH_EXPRESSION} -- Restricted
 
 feature {NONE} -- Implementation
 
-	escaped_uri (a_uri_string: STRING; escape_reserved: BOOLEAN): STRING is
+	escaped_uri (a_uri_string: STRING): STRING is
 			-- Escaped version of `a_uri_string'
 		require
 			uri_string_not_void: a_uri_string /= Void
-		local
-			a_character_set: DS_HASH_SET [CHARACTER]
 		do
-			if escape_reserved then
-				a_character_set := unescaped_uri_characters
-			else
-				a_character_set := unescaped_reserved_uri_characters
-			end
-			Result := escape_custom (utf8.to_utf8 (a_uri_string), a_character_set, False)
+			Result := escape_custom (utf8.to_utf8 (a_uri_string), reserved_character_set, False)
 		ensure
 			escaped_uri_not_void: Result /= Void
 		end
 
+	reserved_character_set: DS_HASH_SET [CHARACTER]
+			-- Characters not to be escaped
+
 	unescaped_uri_characters: DS_HASH_SET [CHARACTER] is
-			-- Default character set not to escape
+			-- Characters not to be escaped for fn:encode-for-uri()
 		local
 			a_character_set: STRING
 		once
@@ -136,12 +140,11 @@ feature {NONE} -- Implementation
 			a_character_set := STRING_.appended_string (a_character_set, Rfc_digit_characters)
 			a_character_set := STRING_.appended_string (a_character_set, Rfc_mark_characters)
 			a_character_set := STRING_.appended_string (a_character_set, "#")
-			a_character_set := STRING_.appended_string (a_character_set, "%%")
 			Result := new_character_set (a_character_set)
 		end
 
-	unescaped_reserved_uri_characters: DS_HASH_SET [CHARACTER] is
-			-- Character set not to escape including reserved characters
+	unescaped_iri_characters: DS_HASH_SET [CHARACTER] is
+			-- Characters not to escaped for fn:iri-to-uri()
 		local
 			a_character_set: STRING
 		once
@@ -153,6 +156,18 @@ feature {NONE} -- Implementation
 			a_character_set := STRING_.appended_string (a_character_set, "#")
 			a_character_set := STRING_.appended_string (a_character_set, "%%")
 			Result := new_character_set (a_character_set)
+		end
+
+	unescaped_html_characters: DS_HASH_SET [CHARACTER] is
+			-- Characters to escape for fn:iri-to-uri()
+		local
+			an_index: INTEGER
+		once
+			create Result.make_equal (95)
+			from an_index := 32 until an_index > 126 loop
+				Result.force (INTEGER_.to_character (an_index))
+				an_index := an_index + 1
+			end
 		end
 
 end

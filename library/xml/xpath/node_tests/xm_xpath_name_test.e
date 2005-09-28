@@ -117,9 +117,4 @@ feature -- Matching
 			Result := a_fingerprint = fingerprint or else a_node_type = node_kind 
 		end
 
-feature {NONE} -- Implementation
-
-	bits_20: INTEGER is 1048576
-			-- Bit mask for 20-bit number
-
 end

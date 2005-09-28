@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			digits: digits /= Void and then digits.count = 10
 			picture_not_void: a_picture /= Void
 			group_size_positive: a_group_size >= 0
-			group_separator_one_character: a_group_separator /= Void and then a_group_separator.count = 1
+			group_separator_one_character: a_group_separator /= Void and then a_group_separator.count = 1 or else a_group_separator.count = 0
 		local
 			a_string, another_string: STRING
 			a_reduced_number: MA_DECIMAL
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 				an_index := a_reduced_number.remainder (a_base, shared_decimal_context).to_integer + 1
 				another_string := digits.substring (an_index, an_index)
 				a_string := STRING_.appended_string (another_string, a_string)
-				a_reduced_number := a_reduced_number.divide_integer (a_reduced_number, shared_decimal_context)
+				a_reduced_number := a_reduced_number.divide_integer (a_base, shared_decimal_context)
 			end
 
 			-- Now append leading zeros if specified by `a_picture'-- TODO - generalize to any unicode 0,1 decimal digit

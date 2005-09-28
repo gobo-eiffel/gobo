@@ -40,7 +40,7 @@ feature -- Access
 		require
 			standard_name: is_built_in_fingerprint (a_fingerprint)
 		do
-			Result := a_fingerprint // bits_7
+			Result := a_fingerprint // bits_8
 		ensure
 			result_in_range: Default_uri_code <= Result and then Result <= Xpath_standard_functions_uri_code
 		end
@@ -60,7 +60,7 @@ feature -- Access
 			standard_name: is_built_in_fingerprint (a_fingerprint)
 		do
 			inspect
-				a_fingerprint // bits_7
+				a_fingerprint // bits_8
 			when Default_uri_code then
 				Result := Null_uri
 			when Xml_uri_code then
@@ -479,7 +479,7 @@ feature -- Status report
 	is_built_in_fingerprint (a_fingerprint: INTEGER): BOOLEAN is
 			-- Does `a_fingerprint' represent a built-in type?
 		do
-			Result := 0 < a_fingerprint and then a_fingerprint < 1024
+			Result := Minimum_built_in_fingerprint < a_fingerprint and then a_fingerprint < Maximum_built_in_fingerprint
 		end
 
 	is_primitive_type (a_fingerprint: INTEGER): BOOLEAN is
@@ -499,7 +499,7 @@ feature -- Status report
 		local
 			a_namespace: INTEGER
 		do
-			a_namespace := a_fingerprint // bits_7
+			a_namespace := a_fingerprint // bits_8
 			inspect
 				a_namespace
 			when Default_uri_code then
@@ -523,7 +523,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	bits_7: INTEGER is 128
+	bits_8: INTEGER is 256
 
 end
 	

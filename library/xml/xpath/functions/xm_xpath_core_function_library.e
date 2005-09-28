@@ -92,12 +92,14 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1 or else an_arity = 2
 			elseif a_fingerprint = Empty_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Encode_for_uri_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Ends_with_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
 			elseif a_fingerprint = Error_function_type_code then
 				Result := an_arity < 4
-			elseif a_fingerprint = Escape_uri_function_type_code then
-				Result := an_arity = -1 or else an_arity = 1 or else an_arity = 2
+			elseif a_fingerprint = Escape_html_uri_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Exists_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Exactly_one_function_type_code then
@@ -123,7 +125,9 @@ feature -- Access
 			elseif a_fingerprint = Index_of_function_type_code then
 				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
 			elseif a_fingerprint = Insert_before_function_type_code then
-				Result := an_arity = -1 or else an_arity = 3				
+				Result := an_arity = -1 or else an_arity = 3
+			elseif a_fingerprint = Iri_to_uri_function_type_code then
+				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Lang_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1 or else an_arity = 2
 			elseif a_fingerprint = Last_function_type_code then
@@ -316,12 +320,14 @@ feature -- Element change
 				create {XM_XPATH_DOCUMENT_URI} a_function_call.make
 			elseif a_fingerprint = Empty_function_type_code then
 				create {XM_XPATH_EMPTY} a_function_call.make
+			elseif a_fingerprint = Encode_for_uri_function_type_code then
+				create {XM_XPATH_ESCAPE_URI} a_function_call.make_encode_for_uri				
 			elseif a_fingerprint = Ends_with_function_type_code then
 				create {XM_XPATH_ENDS_WITH} a_function_call.make				
 			elseif a_fingerprint = Error_function_type_code then
 				create {XM_XPATH_ERROR} a_function_call.make				
-			elseif a_fingerprint = Escape_uri_function_type_code then
-				create {XM_XPATH_ESCAPE_URI} a_function_call.make
+			elseif a_fingerprint = Escape_html_uri_function_type_code then
+				create {XM_XPATH_ESCAPE_URI} a_function_call.make_escape_html_uri
 			elseif a_fingerprint = Exists_function_type_code then
 				create {XM_XPATH_EXISTS} a_function_call.make
 			elseif a_fingerprint = Exactly_one_function_type_code then
@@ -348,6 +354,8 @@ feature -- Element change
 				create {XM_XPATH_INDEX_OF} a_function_call.make
 			elseif a_fingerprint = Insert_before_function_type_code then
 				create {XM_XPATH_INSERT_BEFORE} a_function_call.make
+			elseif a_fingerprint = Iri_to_uri_function_type_code then
+				create {XM_XPATH_ESCAPE_URI} a_function_call.make_iri_to_uri				
 			elseif a_fingerprint = Last_function_type_code then
 				create {XM_XPATH_LAST} a_function_call.make
 			elseif a_fingerprint = Lang_function_type_code then

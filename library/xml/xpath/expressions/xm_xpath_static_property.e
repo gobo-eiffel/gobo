@@ -130,7 +130,6 @@ feature -- Dependencies
 		do
 			Result := dependencies.item (10)
 		end
-	
 
 	depends_upon_xslt_context: BOOLEAN is
 			-- Expression depends upon the XSLT context
@@ -414,6 +413,16 @@ feature -- Setting dependencies
 			dependencies_computed: are_dependencies_computed
 		end
 
+	set_regexp_group_independent is
+			-- Set expression to be independent of regexp-group().
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			dependencies.put (False, 7)
+		ensure
+			regexp_group_independent: not depends_upon_regexp_group
+		end
+
 	set_intrinsically_depends_upon_regexp_group is
 			-- Set expression to depend upon regexp-group().
 		do
@@ -525,6 +534,19 @@ feature -- Setting dependencies
 			set_intrinsically_depends_upon_position
 			set_intrinsically_depends_upon_last
 			set_intrinsically_depends_upon_context_document
+		end
+
+	set_focus_independent is
+			-- mark expression as having no dependence on the focus.
+		require
+			dependencies_computed: are_dependencies_computed
+		do
+			set_context_document_independent
+			set_last_independent
+			set_position_independent
+			set_context_item_independent
+		ensure
+			focus_independent: not depends_upon_focus
 		end
 
 feature -- Cardinality

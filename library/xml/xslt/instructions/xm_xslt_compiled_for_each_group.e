@@ -169,12 +169,15 @@ feature -- Status setting
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 		do
 			if not are_intrinsic_dependencies_computed then compute_intrinsic_dependencies end
+			if not select_expression.are_dependencies_computed then select_expression.as_computed_expression.compute_dependencies end
 			set_dependencies (select_expression.dependencies)
+			if not action.are_dependencies_computed then action.as_computed_expression.compute_dependencies end
 			merge_dependencies (action.dependencies)
 			if key_expression /= Void then
 				if not select_expression.depends_upon_current_group and then not  key_expression.depends_upon_current_group then
 					set_current_group_independent
 				end
+				if not key_expression.are_dependencies_computed then key_expression.as_computed_expression.compute_dependencies end
 				merge_dependencies (key_expression.dependencies)
 			else
 				if not select_expression.depends_upon_current_group then -- TODO: and then not  key_pattern.depends_upon_current_group then
@@ -191,6 +194,7 @@ feature -- Status setting
 			loop
 				a_computed_expression ?= a_cursor.item.sort_key
 				if a_computed_expression /= Void then
+					if not a_computed_expression.are_dependencies_computed then a_computed_expression.compute_dependencies end
 					merge_dependencies (a_computed_expression.dependencies)
 				end
 				a_cursor.forth
@@ -337,6 +341,7 @@ feature -- Optimization
 				action := action.replacement_expression
 				adopt_child_expression (action)
 			end
+			reset_static_properties
 		end	
 	
 feature -- Evaluation

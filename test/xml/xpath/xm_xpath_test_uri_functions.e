@@ -57,8 +57,8 @@ feature -- Results
 		
 feature -- Tests
 
-	test_escape_uri_one is
-			-- Test fn:escape-uri ("http://www.example.com/00/Weather/CA/Los%20Angeles#ocean", true()).
+	test_escape_html_uri is
+			-- Test fn:escape-html-uri ("http://www.example.com/00/Weather/CA/Los 20Angeles#ocean").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -68,17 +68,17 @@ feature -- Tests
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("escape-uri ('http://www.example.com/00/Weather/CA/Los%%20Angeles#ocean', true())")
+			an_evaluator.evaluate ("escape-html-uri ('http://www.example.com/00/Weather/CA/Los Angeles#ocean')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_string_value ?= evaluated_items.item (1)
 			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http%%3A%%2F%%2Fwww.example.com%%2F00%%2FWeather%%2FCA%%2FLos%%20Angeles#ocean"))
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http://www.example.com/00/Weather/CA/Los Angeles#ocean"))
 		end
 
-	test_escape_uri_two is
-			-- Test fn:escape-uri ("http://www.example.com/00/Weather/CA/Los%20Angeles#ocean", false()).
+	test_encode_for_uri_one is
+			-- Test fn:encode-for-uri ("http://www.example.com/00/Weather/CA/Los%20Angeles#ocean").
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -88,18 +88,17 @@ feature -- Tests
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("escape-uri ('http://www.example.com/00/Weather/CA/Los%%20Angeles#ocean', false())")
+			an_evaluator.evaluate ("encode-for-uri ('http://www.example.com/00/Weather/CA/Los%%20Angeles#ocean')")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
 			a_string_value ?= evaluated_items.item (1)
 			assert ("String value", a_string_value /= Void)
-			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http://www.example.com/00/Weather/CA/Los%%20Angeles#ocean"))
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http%%3A%%2F%%2Fwww.example.com%%2F00%%2FWeather%%2FCA%%2FLos%%2520Angeles#ocean"))
 		end
 
-	
-	test_escape_uri_three is
-			-- Test fn:escape-uri ("http://www.example.com/~bébé", false()).
+	test_encode_for_uri_two is
+			-- Test fn:concat("http://www.example.com/", encode-for-uri("~bébé")).
 		local
 			an_evaluator: XM_XPATH_EVALUATOR
 			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
@@ -109,7 +108,7 @@ feature -- Tests
 			an_evaluator.set_string_mode_ascii
 			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
-			an_evaluator.evaluate ("escape-uri ('http://www.example.com/~bébé', false())")
+			an_evaluator.evaluate ("concat('http://www.example.com/', encode-for-uri('~bébé'))")
 			assert ("No evaluation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
@@ -118,6 +117,66 @@ feature -- Tests
 			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http://www.example.com/~b%%C3%%A9b%%C3%%A9"))
 		end
 
+	test_encode_for_uri_three is
+			-- Test fn:concat("http://www.example.com/", encode-for-uri("100% organic"))
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_string_value: XM_XPATH_STRING_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("concat('http://www.example.com/', encode-for-uri('100%% organic'))")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_string_value ?= evaluated_items.item (1)
+			assert ("String value", a_string_value /= Void)
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http://www.example.com/100%%25%%20organic"))
+		end
+
+	test_iri_two_uri_one is
+			-- Test fn:iri-to-uri ("http://www.example.com/00/Weather/CA/Los%20Angeles#ocean").
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_string_value: XM_XPATH_STRING_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("iri-to-uri ('http://www.example.com/00/Weather/CA/Los%%20Angeles#ocean')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_string_value ?= evaluated_items.item (1)
+			assert ("String value", a_string_value /= Void)
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http://www.example.com/00/Weather/CA/Los%%20Angeles#ocean"))
+		end
+	
+	test_iri_two_uri_two is
+			-- Test fn:iri-to-uri ("http://www.example.com/~bébé")..
+		local
+			an_evaluator: XM_XPATH_EVALUATOR
+			evaluated_items: DS_LINKED_LIST [XM_XPATH_ITEM]
+			a_string_value: XM_XPATH_STRING_VALUE
+		do
+			create an_evaluator.make (18, False)
+			an_evaluator.set_string_mode_ascii
+			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			assert ("Build successfull", not an_evaluator.was_build_error)
+			an_evaluator.evaluate ("iri-to-uri ('http://www.example.com/~bébé')")
+			assert ("No evaluation error", not an_evaluator.is_error)
+			evaluated_items := an_evaluator.evaluated_items
+			assert ("One evaluated item", evaluated_items /= Void and then evaluated_items.count = 1)
+			a_string_value ?= evaluated_items.item (1)
+			assert ("String value", a_string_value /= Void)
+			assert ("Correct result", STRING_.same_string (a_string_value.string_value, "http://www.example.com/~b%%C3%%A9b%%C3%%A9"))
+		end
+	
 	test_resolve_absolute_uri_against_static_context is
 			-- Test fn:resolve-uri ("http://www.example.com/index.html").
 		local

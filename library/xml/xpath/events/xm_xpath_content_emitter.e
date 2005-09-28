@@ -274,8 +274,8 @@ feature -- Tag
 					shared_name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
 					a_name_code := shared_name_pool.last_name_code
 				else
-					a_message := STRING_.appended_string ("Name pool has no room to allocate {", a_namespace)
-					a_message := STRING_.appended_string (a_message, "}")
+					a_message := STRING_.appended_string ("Name pool has no room to allocate ", a_namespace)
+					a_message := STRING_.appended_string (a_message, "#")
 					a_message := STRING_.appended_string (a_message, a_local_part)
 					on_error (a_message)
 				end
@@ -334,8 +334,8 @@ feature -- Tag
 					shared_name_pool.allocate_name (a_prefix, a_namespace, a_local_part)
 					a_name_code := shared_name_pool.last_name_code
 				else
-					a_message := STRING_.appended_string ("Name pool has no room to allocate {", a_namespace)
-					a_message := STRING_.appended_string (a_message, "}")
+					a_message := STRING_.appended_string ("Name pool has no room to allocate ", a_namespace)
+					a_message := STRING_.appended_string (a_message, "#")
 					a_message := STRING_.appended_string (a_message, a_local_part)
 					on_error (a_message)
 				end

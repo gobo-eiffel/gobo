@@ -47,66 +47,18 @@
     <para>
       &program_name_cased; is intended to conform to a Basic-level XSLT 2.0 Processor. However, no formal
       conformance statement is provided yet. It implements whatever happens to work when you try it.
-      The static typing feature, the XML and Names 1.1 Feature, the backwards-compatible and serialization features are all implemented. Note however that
+      The XML and Names 1.1 Feature, the backwards-compatible and serialization features are all implemented. Note however that
       UTF-16 output is not yet supported, nor is Unicode normalization.
     </para>
     <para>
       The implementation status of the core XPath functions can be found at
       <link linkend="../xml/xpath/implemented_functions">Implemented XPath functions</link>
-    </para>
-    <para>
-      Of the XSLT additions to the core functions, the following are implemented:
-      <itemizedlist>
-	<listitem>
-	  <para>current</para>
-	</listitem>
-	<listitem>
-	  <para>current-group</para>
-	</listitem>
-	<listitem>
-	  <para>document</para>
-	</listitem>
-	<listitem>
-	  <para>function-available</para>
-	</listitem>
-	<listitem>
-	  <para>generate-id</para>
-	</listitem>
-	<listitem>
-	  <para>key</para>
-	</listitem>
-	<listitem>
-	  <para>system-property</para>
-	</listitem>
-      </itemizedlist>
-    </para>
-    <para>
-      Other functions may be recognized, but not fully implemented.
+      In summary, all are implemented except normalize-unicode.
     </para>
     <para>
       In general, if a message beginning with TODO appears on the standard error stream, then you should
       not expect your stylesheet to execute correctly. If however, no errors or TODO messages are reported, then output
       should be correct.
-    </para>
-    <para>
-      The following XSLT elements are not yet implemented:
-      <itemizedlist>
-	<listitem>
-	  <para>analyze-string</para>
-	</listitem>
-	<listitem>
-	  <para>matching-substring</para>
-	</listitem>
-	<listitem>
-	  <para>non-matching-substring</para>
-	</listitem>
-	<listitem>
-	  <para>perform-sort</para>
-	</listitem>
-      </itemizedlist>
-    </para>
-    <para>
-      Others may only be partly implemented.
     </para>
   </section>
 

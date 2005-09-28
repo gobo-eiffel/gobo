@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_STYLE_ELEMENT
 		redefine
-			validate, may_contain_sequence_constructor
+			validate, may_contain_sequence_constructor, is_fallback
 		end
 
 create {XM_XSLT_NODE_FACTORY}
@@ -27,6 +27,12 @@ feature -- Status_report
 
 	may_contain_sequence_constructor: BOOLEAN is
 			-- Is `Current' allowed to contain a sequence constructor?
+		do
+			Result := True
+		end
+
+	is_fallback: BOOLEAN is
+			-- Is `Current' an xsl:fallback?
 		do
 			Result := True
 		end

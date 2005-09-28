@@ -284,9 +284,6 @@ feature {NONE} -- Implementation
 	variables:  DS_HASH_TABLE [XM_XPATH_VARIABLE, INTEGER]
 			-- Variable-bindings
 
-	bits_20: INTEGER is 1048576 
-			-- 0x0fffff
-
 	qname_to_fingerprint (a_qname: STRING): INTEGER is
 		require
 			valid_name: a_qname /= Void and then is_qname (a_qname)

@@ -40,7 +40,7 @@ class XM_XPATH_NAME_POOL
 	--
 	-- The fingerprint of a name consists of the hash slot number (in the bottom 10 bits) concatenated with
 	-- the depth of the entry down the chain of hash synonyms (in the  next 10 bits).
-	-- Fingerprints with depth 0 (i.e., in the range 0-1023) are reserved
+	-- Fingerprints with depth 0 (i.e., in the range 0-2047) are reserved
 	--  for predefined names (names of XSLT elements and attributes, and of built-in types).
 	-- These names are not stored in the name pool, but are accessible as if they were.
 	-- 
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant
 		do
 			create documents.make_default
-			create hash_slots.make (0, 1023)
+			create hash_slots.make (0, Maximum_hash_chain_depth - 1)
 			
 			create prefixes.make (100)
 			prefixes.set_equality_tester (string_equality_tester)
@@ -136,6 +136,9 @@ feature {NONE} -- Initialization
 		end
 	
 feature -- Access
+
+	Maximum_hash_chain_depth: INTEGER is 1024
+			-- Maximum depth for same `hash_code' chains
 
 	namespace_code (an_xml_prefix: STRING; a_uri: STRING): INTEGER is
 			-- Return existing namespace code for a namespace prefix/URI pair
@@ -402,7 +405,7 @@ feature -- Access
 				if a_uri_code = -1 then
 					Result := -1
 				else
-					a_hash_code := a_local_name.hash_code \\ 1024
+					a_hash_code := a_local_name.hash_code \\ Maximum_hash_chain_depth
 					
 					if hash_slots.item (a_hash_code) = Void then
 						Result := -1
@@ -411,7 +414,7 @@ feature -- Access
 						from
 							a_depth := 1
 						variant
-							1023 - a_depth
+							Maximum_hash_chain_depth - 1 - a_depth
 						until
 							finished = True
 						loop
@@ -443,7 +446,7 @@ feature -- Access
 							a_depth := a_depth + 1
 						end
 						if Result /= -1 then
-							Result := ((a_depth - 1) * bits_10) + a_hash_code
+							Result := ((a_depth - 1) * bits_11) + a_hash_code
 						end
 					end
 				end
@@ -703,14 +706,14 @@ feature -- Status report
 					end
 					if not Result then
 						a_depth := 1
-						a_hash_code := a_local_name.hash_code \\ 1024
+						a_hash_code := a_local_name.hash_code \\ Maximum_hash_chain_depth
 						a_name_entry := hash_slots.item (a_hash_code)
 						if a_name_entry = Void then
 							Result := False
 						else
 							from
 							variant
-								1023 - a_depth
+								Maximum_hash_chain_depth - 1 - a_depth
 							until
 								finished = True
 							loop
@@ -721,7 +724,7 @@ feature -- Status report
 								else
 									next_entry := a_name_entry.next
 									a_depth := a_depth + 1
-									if a_depth > 1023 or next_entry = Void then
+									if a_depth >= Maximum_hash_chain_depth or next_entry = Void then
 										finished := True
 									else
 										a_name_entry := next_entry
@@ -783,9 +786,9 @@ feature -- Status report
 				from
 					Result := True
 					a_depth := 1
-					a_hash_code := a_local_name.hash_code \\ 1024
+					a_hash_code := a_local_name.hash_code \\ Maximum_hash_chain_depth
 				variant
-					1023 - a_depth
+					Maximum_hash_chain_depth - 1 - a_depth
 				until
 					finished
 				loop
@@ -795,7 +798,7 @@ feature -- Status report
 					else
 						next_entry := a_name_entry.next
 						a_depth := a_depth + 1
-						if a_depth > 1023 then
+						if a_depth >= Maximum_hash_chain_depth then
 							Result := True
 							finished := True
 						elseif next_entry = Void then
@@ -886,15 +889,15 @@ feature -- Status report
 			from
 				a_hash_code := 0
 			variant
-				1024 - a_hash_code
+				Maximum_hash_chain_depth - a_hash_code
 			until
-				a_hash_code = 1024
+				a_hash_code = Maximum_hash_chain_depth
 			loop
 				an_entry := hash_slots.item (a_hash_code)
 				a_depth := 1
 				from
 				variant
-					1023 - a_depth
+					Maximum_hash_chain_depth - 1 - a_depth
 				until
 					an_entry = Void
 				loop
@@ -1176,9 +1179,9 @@ feature -- Element change
 			finished: BOOLEAN
 		do
 			a_depth := 1
-			a_hash_code := a_local_name.hash_code \\ 1024
+			a_hash_code := a_local_name.hash_code \\ Maximum_hash_chain_depth
 				check
-					valid_hash_code: a_hash_code >= 0 and a_hash_code < 1024
+					valid_hash_code: a_hash_code >= 0 and a_hash_code < Maximum_hash_chain_depth
 				end
 			a_prefix_index := prefix_index (a_uri_code, an_xml_prefix)
 				check
@@ -1206,7 +1209,7 @@ feature -- Element change
 						next_entry := a_name_entry.next
 						a_depth := a_depth + 1
 							check
-								pool_not_full: not (a_depth > 1023)
+								pool_not_full: not (a_depth >= Maximum_hash_chain_depth)
 								-- from pre-condition
 							end
 						if next_entry = Void then
@@ -1219,7 +1222,7 @@ feature -- Element change
 					end
 				end
 			end
-			last_name_code := (a_prefix_index * bits_20) + (a_depth * bits_10) + a_hash_code
+			last_name_code := (a_prefix_index * bits_20) + (a_depth * bits_11) + a_hash_code
 		ensure
 			name_allocated: is_name_code_allocated_using_uri_code (an_xml_prefix, a_uri_code, a_local_name)
 		end
@@ -1431,9 +1434,8 @@ feature -- Conversion
 			a_name_entry: XM_XPATH_NAME_ENTRY
 		do
 			a_fingerprint := fingerprint_from_name_code (a_name_code)
-			if a_fingerprint < 1024 then
-				Result := STRING_.concat ("{", type_factory.standard_uri (a_fingerprint))
-				Result := STRING_.appended_string (Result, "}")
+			if a_fingerprint <= Maximum_built_in_fingerprint then
+				Result := STRING_.concat (type_factory.standard_uri (a_fingerprint), "#")
 				Result := STRING_.appended_string (Result, type_factory.standard_local_name (a_fingerprint))
 			else
 				a_name_entry := name_entry (a_name_code)
@@ -1442,8 +1444,7 @@ feature -- Conversion
 				elseif a_name_entry.uri_code = 0 then
 					Result := a_name_entry.local_name
 				else
-					Result := STRING_.concat ("{", uri_from_uri_code (a_name_entry.uri_code))
-					Result := STRING_.appended_string (Result, "}")
+					Result := STRING_.concat (uri_from_uri_code (a_name_entry.uri_code), "#")
 					Result := STRING_.appended_string (Result, a_name_entry.local_name)
 				end
 			end
@@ -1576,9 +1577,9 @@ feature {NONE} -- Implementation
 			--	(a_name_code |>> 10) & 0x000003ff
 			a_scaled_prefix_index := name_code_to_prefix_index (a_name_code) * bits_20
 
-			Result := (a_name_code - a_scaled_prefix_index) // bits_10
+			Result := (a_name_code - a_scaled_prefix_index) // bits_11
 		ensure
-			positive_result: Result >= 0 and Result < 1024
+			positive_result: Result >= 0 and Result < Maximum_hash_chain_depth
 		end
 
 	name_code_to_hash_code (a_name_code: INTEGER): INTEGER is
@@ -1588,11 +1589,11 @@ feature {NONE} -- Implementation
 		do
 			-- hash_code := a_name_code & 0x000003ff
 			a_scaled_prefix_index := name_code_to_prefix_index (a_name_code) * bits_20
-			a_depth := (a_name_code - a_scaled_prefix_index) // bits_10
+			a_depth := (a_name_code - a_scaled_prefix_index) // bits_11
 			
-			Result := (a_name_code - a_scaled_prefix_index - (a_depth * bits_10))
+			Result := (a_name_code - a_scaled_prefix_index - (a_depth * bits_11))
 		ensure
-			positive_result: Result >= 0 and Result < 1024
+			positive_result: Result >= 0 and Result < Maximum_hash_chain_depth
 		end
 
 	allocate_prefix (a_uri_code: INTEGER; an_xml_prefix: STRING) is
@@ -1639,7 +1640,7 @@ feature
 invariant
 
 	documentsnot_void: documents /= Void
-	fixed_hash_slots: hash_slots /= Void and then hash_slots.count = 1024
+	fixed_hash_slots: hash_slots /= Void and then hash_slots.count = Maximum_hash_chain_depth
 	prefixes_not_void: prefixes /= Void
 	prefixes_used: prefixes_used >= 3
 	uris_not_void: uris /= Void

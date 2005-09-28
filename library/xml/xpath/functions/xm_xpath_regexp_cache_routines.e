@@ -103,7 +103,7 @@ feature -- Access
 				if x_present then Result.append_character ('x') end
 			end
 		ensure
-			normalized: Result /= Void implies 	are_normalized_flags (Result)
+			normalized: Result /= Void implies are_normalized_flags (Result)
 		end
 
 	composed_key (a_pattern, a_flags_string: STRING): STRING is

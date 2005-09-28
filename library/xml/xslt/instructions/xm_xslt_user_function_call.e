@@ -270,8 +270,7 @@ feature {NONE} -- Implementation
 			if namespace_uri.is_empty then
 				Result := name
 			else
-				Result := "{" + namespace_uri + "}"
-				Result := STRING_.appended_string (Result, name)
+				Result := expanded_name_from_components (namespace_uri, name)
 			end
 		end
 

@@ -125,7 +125,8 @@ feature -- Optimization
 											set_replacement (an_expression)
 										elseif an_expression.was_expression_replaced then
 											an_expression := an_expression.replacement_expression											
-										else
+										end
+										if not was_expression_replaced then
 											create {XM_XPATH_APPEND_EXPRESSION} an_append_expression.make (a_third_append_expression, operator, an_expression)
 											set_replacement (an_append_expression)
 										end

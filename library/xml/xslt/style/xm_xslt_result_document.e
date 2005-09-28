@@ -77,9 +77,9 @@ feature -- Element change
 				elseif STRING_.same_string (an_expanded_name, Type_attribute) then
 					a_type_attribute := attribute_value_by_index (a_cursor.index)
 				elseif formatting_attribute_names.has (an_expanded_name) or else
-					(an_expanded_name.substring_index ("{}", 1) = 0
-					 and then an_expanded_name.substring_index (Gexslt_expanded_namespace, 1) /= 1
-					 and then an_expanded_name.substring_index (Xslt_expanded_namespace, 1) /= 1 ) then
+					(an_expanded_name.substring_index ("#", 1) /= 0
+					 and then an_expanded_name.substring_index (Gexslt_eiffel_type_uri, 1) /= 1
+					 and then an_expanded_name.substring_index (Xslt_uri, 1) /= 1 ) then
 
 					-- it's a (plausible) serialization parameter
 

@@ -737,13 +737,8 @@ feature {XM_XSLT_OUTPUT_PROPERTIES} -- Local
 			local_name_not_void: a_local_name /= Void
 			value_not_void: a_value /= Void
 			no_previous_error: not is_error
-		local
-			an_expanded_name: STRING
 		do
-			an_expanded_name := STRING_.concat ("{", a_uri)
-			an_expanded_name := STRING_.appended_string (an_expanded_name, "}")
-			an_expanded_name := STRING_.appended_string (an_expanded_name, a_local_name)
-			extension_attributes.force (a_value, an_expanded_name)
+			extension_attributes.force (a_value, expanded_name_from_components (a_uri, a_local_name))
 		end
 
 feature {XM_XSLT_EXTENSION_EMITTER_FACTORY} -- Restricted

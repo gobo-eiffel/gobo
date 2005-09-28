@@ -45,7 +45,6 @@ feature
 			create a_stylesheet_compiler.make (a_configuration)
 			create a_uri_source.make ("./data/group_by_one.xsl")
 			a_stylesheet_compiler.prepare (a_uri_source)
-			print (a_stylesheet_compiler.load_stylesheet_module_error)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
@@ -76,7 +75,6 @@ feature
 			create a_stylesheet_compiler.make (a_configuration)
 			create a_uri_source.make ("./data/group_starting_with.xsl")
 			a_stylesheet_compiler.prepare (a_uri_source)
-			print (a_stylesheet_compiler.load_stylesheet_module_error)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
@@ -107,7 +105,6 @@ feature
 			create a_stylesheet_compiler.make (a_configuration)
 			create a_uri_source.make ("./data/current_group.xsl")
 			a_stylesheet_compiler.prepare (a_uri_source)
-			print (a_stylesheet_compiler.load_stylesheet_module_error)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
@@ -138,7 +135,6 @@ feature
 			create a_stylesheet_compiler.make (a_configuration)
 			create a_uri_source.make ("./data/group_adjacent.xsl")
 			a_stylesheet_compiler.prepare (a_uri_source)
-			print (a_stylesheet_compiler.load_stylesheet_module_error)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
@@ -169,7 +165,6 @@ feature
 			create a_stylesheet_compiler.make (a_configuration)
 			create a_uri_source.make ("./data/group_ending_with.xsl")
 			a_stylesheet_compiler.prepare (a_uri_source)
-			print (a_stylesheet_compiler.load_stylesheet_module_error)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer

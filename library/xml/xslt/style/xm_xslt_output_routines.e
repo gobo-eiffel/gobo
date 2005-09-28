@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			a_string_splitter: ST_SPLITTER
 			a_cdata_name_list: DS_LIST [STRING]
 			a_cursor: DS_LIST_CURSOR [STRING]
-			a_uri, an_expanded_name: STRING
+			a_uri: STRING
 			a_parser: XM_XPATH_QNAME_PARSER
 		do
 			cdata_validation_error := Void
@@ -66,10 +66,7 @@ feature {NONE} -- Implementation
 																											 a_parser.optional_prefix), Xpath_errors_uri, "XTSE0020", Static_error)
 						a_cursor.go_after
 					else
-						an_expanded_name := STRING_.concat ("{", a_uri)
-						an_expanded_name := STRING_.appended_string (an_expanded_name, "}")
-						an_expanded_name := STRING_.appended_string (an_expanded_name, a_parser.local_name)
-						cdata_section_expanded_names.put_last (an_expanded_name)
+						cdata_section_expanded_names.put_last (expanded_name_from_components (a_uri, a_parser.local_name))
 					end
 				end
 				a_cursor.forth

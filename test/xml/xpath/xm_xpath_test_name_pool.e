@@ -125,7 +125,7 @@ feature -- Test
 			shared_name_pool.allocate_name ("test4", testing_namespace, "test4")
 			fingerprint := shared_name_pool.fingerprint (testing_namespace, "test4")
 			assert ("Fingerprint", fingerprint > 0) -- calculation depends upon {STRING}.hash_code, and so differs between compilers
-			fingerprint2 := shared_name_pool.fingerprint_from_expanded_name ("{http://colina.demon.co.uk/gobo/xml/xpath/tests}test4")
+			fingerprint2 := shared_name_pool.fingerprint_from_expanded_name ("http://colina.demon.co.uk/gobo/xml/xpath/tests#test4")
 			assert ("Fingerprint from expanded name", fingerprint2 = fingerprint)
 		end
 

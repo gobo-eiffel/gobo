@@ -147,7 +147,7 @@ feature -- Evaluation
 						a_last_tail_call := a_last_tail_call.last_tail_call
 					end
 				when Text_node, Attribute_node then
-					a_context.current_receiver.notify_characters (a_node.string_value, 0)
+					a_context.current_receiver.notify_characters (STRING_.cloned_string (a_node.string_value), 0)
 				when Comment_node, Processing_instruction_node then
 					
 					-- No action

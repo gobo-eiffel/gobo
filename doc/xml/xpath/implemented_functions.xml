@@ -209,7 +209,19 @@
 	   <entry>None</entry>
 	 </row>	
 	 <row>
-	   <entry>fn:escape-uri</entry>
+	   <entry>fn:encode-for-uri</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
+	 </row>	
+	 <row>
+	   <entry>fn:iri-to-uri</entry>
+	   <entry>Yes</entry>
+	   <entry>No</entry>
+	   <entry>None</entry>
+	 </row>	
+	 <row>
+	   <entry>fn:escape-html-uri</entry>
 	   <entry>Yes</entry>
 	   <entry>Yes</entry>
 	   <entry>None</entry>
@@ -432,9 +444,9 @@
 	 </row>	
 	 <row>
 	   <entry>fn:prefix-from-QName</entry>
-	   <entry>Awaiting resolution of NCName result</entry>
-	   <entry>No</entry>
-	   <entry>Nonene</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
+	   <entry>None</entry>
 	 </row>	
 	 <row>
 	   <entry>fn:QName</entry>
@@ -444,8 +456,8 @@
 	 </row>	
 	 <row>
 	   <entry>fn:local-name-from-QName</entry>
-	   <entry>Awaiting resolution of NCName result</entry>
-	   <entry>No</entry>
+	   <entry>Yes</entry>
+	   <entry>Yes</entry>
 	   <entry>None</entry>
 	 </row>	
 	 <row>

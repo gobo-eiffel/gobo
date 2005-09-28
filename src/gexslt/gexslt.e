@@ -323,7 +323,7 @@ feature -- Error handling
 			a_message_string: STRING
 		do
 			a_message_string := STRING_.concat ("Bad syntax for string parameter: ", a_string_parameter_option)
-			a_message_string := STRING_.appended_string (a_message_string, ".%NSyntax is [--][{namespace-uri}]local-name=[']value[']%N")
+			a_message_string := STRING_.appended_string (a_message_string, ".%NSyntax is [--][namespace-uri#]local-name=[']value[']%N")
 			create an_error.make (a_message_string)
 			error_handler.report_error (an_error)
 		end
@@ -337,7 +337,7 @@ feature -- Error handling
 			a_message_string: STRING
 		do
 			a_message_string := STRING_.concat ("Bad syntax for XPath parameter: ", a_parameter_option)
-			a_message_string := STRING_.appended_string (a_message_string, ".%NSyntax is [--][{namespace-uri}]local-name=value%N")
+			a_message_string := STRING_.appended_string (a_message_string, ".%NSyntax is [--][namespace-uri#]local-name=value%N")
 			create an_error.make (a_message_string)
 			error_handler.report_error (an_error)
 		end
@@ -351,7 +351,7 @@ feature -- Error handling
 			a_message_string: STRING
 		do
 			a_message_string := STRING_.concat ("Bad syntax for parameter name: ", a_parameter_name)
-			a_message_string := STRING_.appended_string (a_message_string, ".%NSyntax is [{namespace-uri}]local-name%N")
+			a_message_string := STRING_.appended_string (a_message_string, ".%NSyntax is [namespace-uri#]local-name%N")
 			create an_error.make (a_message_string)
 			error_handler.report_error (an_error)
 		end	
@@ -433,10 +433,10 @@ feature -- Error handling
 									  "       --namespaces=[n]%N" +
 									  "       --characters=[n]%N" +
 									  "       --html-text-ok%N" +
-									  "       --mode=[{namespace-uri}]local-name%N" +
-									  "       --template=[{namespace-uri}]local-name%N" +
-									  "       --param=name=string-value%N" +
-									  "       --xpath-param=name=xpath-expression%N" +
+									  "       --mode=[namespace-uri#]local-name%N" +
+									  "       --template=[namespace-uri#]local-name%N" +
+									  "       --param=[namespace-uri#]local-name=string-value%N" +
+									  "       --xpath-param=[namespace-uri#]local-name=xpath-expression%N" +
 									  "       --stop-after-compilation%N" +
 									  "       --stop-after-source-document%N" +
 									  additional_options)

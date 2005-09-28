@@ -20,7 +20,11 @@ inherit
 
 	XM_XPATH_AXIS
 
-	XM_UNICODE_CHARACTERS_1_0
+		--	XM_UNICODE_CHARACTERS_1_0
+		-- Commented out on 26/09/2005, as the 1.1 definitions
+		--  are now imported via  XM_XPATH_STANDARD_NAMESPACES.
+		-- This means not 100% compliant with the XPointer recommendation,
+		--  which refers to XML Names 1.0 for the definitions of NCName and QName
 
 	XM_XPATH_SHARED_NODE_KIND_TESTS
 		export {NONE} all end

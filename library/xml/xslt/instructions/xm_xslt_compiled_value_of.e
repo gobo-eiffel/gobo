@@ -147,7 +147,7 @@ feature -- Evaluation
 			if is_error then
 				a_context.current_receiver.on_error (error_value.error_message)
 			else
-				a_context.current_receiver.notify_characters (last_string_value, receiver_options)
+				a_context.current_receiver.notify_characters (STRING_.cloned_string (last_string_value), receiver_options)
 			end
 		end
 

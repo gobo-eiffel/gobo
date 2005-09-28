@@ -58,13 +58,8 @@ feature -- Element change
 
 	set_defaults (a_method_local_name: STRING; some_properties: XM_XSLT_OUTPUT_PROPERTIES; an_import_precedence: INTEGER) is
 			-- Set defaults for `a_method_local_name'.
-		local
-			an_expanded_name: STRING
 		do
-			an_expanded_name := STRING_.concat ("{", namespace_uri)
-			an_expanded_name := STRING_.appended_string (an_expanded_name, "}")
-			an_expanded_name := STRING_.appended_string (an_expanded_name, a_method_local_name)
-			some_properties.set_method (an_expanded_name, an_import_precedence)
+			some_properties.set_method (expanded_name_from_components (namespace_uri, a_method_local_name), an_import_precedence)
 		end
 
 invariant

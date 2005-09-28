@@ -55,7 +55,7 @@ feature -- Access
 	expanded_name: STRING is 
 			-- Expanded name of implemented scheme
 		do
-			Result := "{" + Gexslt_eiffel_type_uri + "}xpath"
+			Result := expanded_name_from_components (Gexslt_eiffel_type_uri, "xpath")
 		end
 
 	value: XM_XPATH_VALUE

@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	extension_attribute_expanded_name: STRING is "{http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example}internal-subset"
+	extension_attribute_expanded_name: STRING is "http://www.gobosoft.com/eiffel/gobo/gexslt/extension/example#internal-subset"
 			-- Name of extension attribute specifying DTD internal subset to be written
 
 	dtd_internal_subset: STRING

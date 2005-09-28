@@ -443,9 +443,7 @@ feature -- Element change
 								report_compile_error (an_error)
 								a_cursor.go_after
 							else
-								an_expanded_name := STRING_.concat ("{", a_uri)
-								an_expanded_name := STRING_.appended_string (an_expanded_name, "}")
-								an_expanded_name := STRING_.appended_string (an_expanded_name, a_parser.local_name)
+								an_expanded_name := expanded_name_from_components (a_uri, a_parser.local_name)
 								if not some_used_character_maps.has (an_expanded_name) then
 									some_used_character_maps.force_last (an_expanded_name)
 								end
