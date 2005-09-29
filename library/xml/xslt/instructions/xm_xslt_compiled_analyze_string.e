@@ -113,8 +113,6 @@ feature -- Status setting
 	compute_dependencies is
 			-- Compute dependencies on context.
 		local
-			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XSLT_SORT_KEY_DEFINITION]
-			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION
 			a_dep: ARRAY [BOOLEAN]
 			a_dummy: XM_XPATH_STATIC_PROPERTY
 		do

@@ -94,7 +94,6 @@ feature -- Evaluation
 		local
 			an_item: XM_XPATH_ITEM
 			a_uri_string: STRING
-			escape_reserved: BOOLEAN
 		do
 			arguments.item (1).evaluate_item (a_context)
 			an_item := arguments.item (1).last_evaluated_item

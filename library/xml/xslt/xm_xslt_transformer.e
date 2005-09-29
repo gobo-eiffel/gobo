@@ -781,7 +781,6 @@ feature -- Implementation
 			an_emitter: XM_XSLT_EMITTER
 			a_method: STRING
 			a_method_uri, a_method_local_name: STRING
-			an_index: INTEGER
 			a_character_map_index: DS_HASH_TABLE [DS_HASH_TABLE [STRING, INTEGER], INTEGER]
 		do
 			if a_result.is_emitter then
