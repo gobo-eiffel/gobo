@@ -2436,7 +2436,7 @@ feature {NONE} -- Processing
 				last_et_symbol_value := ast_factory.new_right_brace_symbol (Current)
 			when '[' then
 				last_token := Left_bracket_code
-				last_et_symbol_value := ast_factory.new_left_bracket_symbol (Current)
+				last_et_bracket_symbol_value := ast_factory.new_left_bracket_symbol (Current)
 			when ']' then
 				last_token := Right_bracket_code
 				last_et_symbol_value := ast_factory.new_right_bracket_symbol (Current)
