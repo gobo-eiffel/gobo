@@ -6936,9 +6936,9 @@ feature {NONE} -- Agent validity
 			a_seed := a_name.seed
 			if a_seed /= 0 then
 				if an_expression.is_procedure then
-					check_qualified_procedure_call_agent_validity (an_expression, a_target, Void, a_context)
+					check_qualified_procedure_call_agent_validity (an_expression, a_target, Void, Void, a_context)
 				else
-					check_qualified_query_call_agent_validity (an_expression, a_target, Void, a_context)
+					check_qualified_query_call_agent_validity (an_expression, a_target, Void, Void, a_context)
 				end
 			else
 					-- We need to resolve `a_name' in the implementation
@@ -6967,13 +6967,13 @@ feature {NONE} -- Agent validity
 								if l_query /= Void then
 									a_name.set_seed (l_query.first_seed)
 									an_expression.set_procedure (False)
-									check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+									check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_class, a_context)
 								else
 									l_procedure := a_class.named_procedure (a_name)
 									if l_procedure /= Void then
 										a_name.set_seed (l_procedure.first_seed)
 										an_expression.set_procedure (True)
-										check_qualified_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+										check_qualified_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_class, a_context)
 									else
 										set_fatal_error
 											-- ISE Eiffel 5.4 reports this error as a VEEN,
@@ -6986,13 +6986,13 @@ feature {NONE} -- Agent validity
 								if l_procedure /= Void then
 									a_name.set_seed (l_procedure.first_seed)
 									an_expression.set_procedure (True)
-									check_qualified_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+									check_qualified_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_class, a_context)
 								else
 									l_query := a_class.named_query (a_name)
 									if l_query /= Void then
 										a_name.set_seed (l_query.first_seed)
 										an_expression.set_procedure (False)
-										check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+										check_qualified_query_call_agent_validity (an_expression, a_target, l_query, a_class, a_context)
 									else
 										set_fatal_error
 											-- ISE Eiffel 5.4 reports this error as a VEEN,
@@ -7007,16 +7007,16 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_qualified_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_qualified_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_query: ET_QUERY; a_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of qualified query call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
-			a_query_not_void: a_query /= Void
 			query_call: not an_expression.is_procedure
 			seeded: an_expression.name.seed /= 0
+			a_class_not_void: a_query /= Void implies a_class /= Void
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
@@ -7024,7 +7024,7 @@ feature {NONE} -- Agent validity
 			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
 			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			a_class_impl: ET_CLASS
-			a_class: ET_CLASS
+			l_class: ET_CLASS
 			l_query: ET_QUERY
 			a_type: ET_TYPE
 			a_seed: INTEGER
@@ -7044,6 +7044,7 @@ feature {NONE} -- Agent validity
 			any_type := universe.any_type
 			a_seed := a_name.seed
 			l_query := a_query
+			l_class := a_class
 			if l_query /= Void then
 				an_actuals := an_expression.arguments
 				if an_actuals = Void then
@@ -7064,12 +7065,12 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 				check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 				if not has_fatal_error then
-					a_class := a_context.base_class (universe)
-					a_class.process (universe.interface_checker)
-					if not a_class.interface_checked or else a_class.has_interface_error then
+					l_class := a_context.base_class (universe)
+					l_class.process (universe.interface_checker)
+					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					else
-						l_query := a_class.seeded_query (a_seed)
+						l_query := l_class.seeded_query (a_seed)
 						if l_query = Void then
 								-- Report internal error: if we got a seed, the
 								-- `l_query' should not be void.
@@ -7080,19 +7081,19 @@ feature {NONE} -- Agent validity
 				end
 			end
 			if l_query /= Void then
-				check a_class_not_void: a_class /= Void end
+				check l_class_not_void: l_class /= Void end
 				if not l_query.is_exported_to (current_class, universe) then
 						-- The feature is not exported to `current_class'.
 					set_fatal_error
 					a_class_impl := feature_impl.implementation_class
 					if current_class = a_class_impl then
-						error_handler.report_vpca2a_error (current_class, a_name, l_query, a_class)
+						error_handler.report_vpca2a_error (current_class, a_name, l_query, l_class)
 					else
-						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_query, a_class)
+						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_query, l_class)
 					end
 				end
 				had_error := has_fatal_error
-				check_qualified_vape_validity (a_name, l_query, a_class)
+				check_qualified_vape_validity (a_name, l_query, l_class)
 				if has_fatal_error then
 					had_error := True
 				end
@@ -7101,7 +7102,7 @@ feature {NONE} -- Agent validity
 					create an_open_operands.make_with_capacity (a_formal_arguments.count)
 				end
 				an_actuals := an_expression.arguments
-				check_agent_arguments_validity (an_actuals, a_context, a_name, l_query, a_class, an_open_operands)
+				check_agent_arguments_validity (an_actuals, a_context, a_name, l_query, l_class, an_open_operands)
 				if had_error then
 					set_fatal_error
 				end
@@ -7135,16 +7136,16 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_qualified_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_qualified_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_EXPRESSION; a_procedure: ET_PROCEDURE; a_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of qualified procedure call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
-			a_procedure_not_void: a_procedure /= Void
 			procedure_call: an_expression.is_procedure
 			seeded: an_expression.name.seed /= 0
+			a_class_not_void: a_procedure /= Void implies a_class /= Void
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
@@ -7152,7 +7153,7 @@ feature {NONE} -- Agent validity
 			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
 			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			a_class_impl: ET_CLASS
-			a_class: ET_CLASS
+			l_class: ET_CLASS
 			l_procedure: ET_PROCEDURE
 			a_seed: INTEGER
 			any_type: ET_CLASS_TYPE
@@ -7171,6 +7172,7 @@ feature {NONE} -- Agent validity
 			any_type := universe.any_type
 			a_seed := a_name.seed
 			l_procedure := a_procedure
+			l_class := a_class
 			if l_procedure /= Void then
 				an_actuals := an_expression.arguments
 				if an_actuals = Void then
@@ -7191,12 +7193,12 @@ feature {NONE} -- Agent validity
 -- a local variable, a formal argument or the name of an attribute.
 				check_expression_validity (a_target, a_context, any_type, feature_impl, current_feature, current_type)
 				if not has_fatal_error then
-					a_class := a_context.base_class (universe)
-					a_class.process (universe.interface_checker)
-					if not a_class.interface_checked or else a_class.has_interface_error then
+					l_class := a_context.base_class (universe)
+					l_class.process (universe.interface_checker)
+					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					else
-						l_procedure := a_class.seeded_procedure (a_seed)
+						l_procedure := l_class.seeded_procedure (a_seed)
 						if l_procedure = Void then
 								-- Report internal error: if we got a seed, the
 								-- `l_procedure' should not be void.
@@ -7207,19 +7209,19 @@ feature {NONE} -- Agent validity
 				end
 			end
 			if l_procedure /= Void then
-				check a_class_not_void: a_class /= Void end
+				check l_class_not_void: l_class /= Void end
 				if not l_procedure.is_exported_to (current_class, universe) then
 						-- The feature is not exported to `current_class'.
 					set_fatal_error
 					a_class_impl := feature_impl.implementation_class
 					if current_class = a_class_impl then
-						error_handler.report_vpca2a_error (current_class, a_name, l_procedure, a_class)
+						error_handler.report_vpca2a_error (current_class, a_name, l_procedure, l_class)
 					else
-						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_procedure, a_class)
+						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_procedure, l_class)
 					end
 				end
 				had_error := has_fatal_error
-				check_qualified_vape_validity (a_name, l_procedure, a_class)
+				check_qualified_vape_validity (a_name, l_procedure, l_class)
 				if has_fatal_error then
 					had_error := True
 				end
@@ -7228,7 +7230,7 @@ feature {NONE} -- Agent validity
 					create an_open_operands.make_with_capacity (a_formal_arguments.count)
 				end
 				an_actuals := an_expression.arguments
-				check_agent_arguments_validity (an_actuals, a_context, a_name, l_procedure, a_class, an_open_operands)
+				check_agent_arguments_validity (an_actuals, a_context, a_name, l_procedure, l_class, an_open_operands)
 				if had_error then
 					set_fatal_error
 				end
@@ -7274,9 +7276,9 @@ feature {NONE} -- Agent validity
 				a_seed := a_name.seed
 				if a_seed /= 0 then
 					if an_expression.is_procedure then
-						check_typed_procedure_call_agent_validity (an_expression, a_target, Void, a_context)
+						check_typed_procedure_call_agent_validity (an_expression, a_target, Void, Void, a_context)
 					else
-						check_typed_query_call_agent_validity (an_expression, a_target, Void, a_context)
+						check_typed_query_call_agent_validity (an_expression, a_target, Void, Void, a_context)
 					end
 				else
 						-- We need to resolve `a_name' in the implementation
@@ -7302,13 +7304,13 @@ feature {NONE} -- Agent validity
 								if l_query /= Void then
 									a_name.set_seed (l_query.first_seed)
 									an_expression.set_procedure (False)
-									check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+									check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_class, a_context)
 								else
 									l_procedure := a_class.named_procedure (a_name)
 									if l_procedure /= Void then
 										a_name.set_seed (l_procedure.first_seed)
 										an_expression.set_procedure (True)
-										check_typed_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+										check_typed_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_class, a_context)
 									else
 										set_fatal_error
 											-- ISE Eiffel 5.4 reports this error as a VEEN,
@@ -7321,13 +7323,13 @@ feature {NONE} -- Agent validity
 								if l_procedure /= Void then
 									a_name.set_seed (l_procedure.first_seed)
 									an_expression.set_procedure (True)
-									check_typed_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_context)
+									check_typed_procedure_call_agent_validity (an_expression, a_target, l_procedure, a_class, a_context)
 								else
 									l_query := a_class.named_query (a_name)
 									if l_query /= Void then
 										a_name.set_seed (l_query.first_seed)
 										an_expression.set_procedure (False)
-										check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_context)
+										check_typed_query_call_agent_validity (an_expression, a_target, l_query, a_class, a_context)
 									else
 										set_fatal_error
 											-- ISE Eiffel 5.4 reports this error as a VEEN,
@@ -7342,16 +7344,16 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_typed_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_query: ET_QUERY; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_typed_query_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_query: ET_QUERY; a_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of typed query call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
-			a_query_not_void: a_query /= Void
 			query_call: not an_expression.is_procedure
 			seeded: an_expression.name.seed /= 0
+			a_class_not_void: a_query /= Void implies a_class /= Void
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
@@ -7359,7 +7361,7 @@ feature {NONE} -- Agent validity
 			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
 			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			a_class_impl: ET_CLASS
-			a_class: ET_CLASS
+			l_class: ET_CLASS
 			l_query: ET_QUERY
 			a_result_type: ET_TYPE
 			a_seed: INTEGER
@@ -7378,6 +7380,7 @@ feature {NONE} -- Agent validity
 			a_seed := a_name.seed
 			a_target_type := a_target.type
 			l_query := a_query
+			l_class := a_class
 			if l_query /= Void then
 				an_actuals := an_expression.arguments
 				if an_actuals = Void then
@@ -7397,12 +7400,12 @@ feature {NONE} -- Agent validity
 				a_target_type := resolved_formal_parameters (a_target_type, feature_impl, current_type)
 				if not has_fatal_error then
 					a_context.force_last (a_target_type)
-					a_class := a_context.base_class (universe)
-					a_class.process (universe.interface_checker)
-					if not a_class.interface_checked or else a_class.has_interface_error then
+					l_class := a_context.base_class (universe)
+					l_class.process (universe.interface_checker)
+					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					else
-						l_query := a_class.seeded_query (a_seed)
+						l_query := l_class.seeded_query (a_seed)
 						if l_query = Void then
 								-- Report internal error: if we got a seed, the
 								-- `l_query' should not be void.
@@ -7413,19 +7416,19 @@ feature {NONE} -- Agent validity
 				end
 			end
 			if l_query /= Void then
-				check a_class_not_void: a_class /= Void end
+				check l_class_not_void: l_class /= Void end
 				if not l_query.is_exported_to (current_class, universe) then
 						-- The feature is not exported to `current_class'.
 					set_fatal_error
 					a_class_impl := feature_impl.implementation_class
 					if current_class = a_class_impl then
-						error_handler.report_vpca2a_error (current_class, a_name, l_query, a_class)
+						error_handler.report_vpca2a_error (current_class, a_name, l_query, l_class)
 					else
-						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_query, a_class)
+						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_query, l_class)
 					end
 				end
 				had_error := has_fatal_error
-				check_qualified_vape_validity (a_name, l_query, a_class)
+				check_qualified_vape_validity (a_name, l_query, l_class)
 				if has_fatal_error then
 					had_error := True
 				end
@@ -7436,7 +7439,7 @@ feature {NONE} -- Agent validity
 					create an_open_operands.make_with_capacity (1)
 				end
 				an_actuals := an_expression.arguments
-				check_agent_arguments_validity (an_actuals, a_context, a_name, l_query, a_class, an_open_operands)
+				check_agent_arguments_validity (an_actuals, a_context, a_name, l_query, l_class, an_open_operands)
 				if had_error then
 					set_fatal_error
 				end
@@ -7471,16 +7474,16 @@ feature {NONE} -- Agent validity
 			end
 		end
 
-	check_typed_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_procedure: ET_PROCEDURE; a_context: ET_NESTED_TYPE_CONTEXT) is
+	check_typed_procedure_call_agent_validity (an_expression: ET_CALL_AGENT; a_target: ET_AGENT_OPEN_TARGET; a_procedure: ET_PROCEDURE; a_class: ET_CLASS; a_context: ET_NESTED_TYPE_CONTEXT) is
 			-- Check validity of typed procedure call agent.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			an_expression_not_void: an_expression /= Void
 			a_target_not_void: a_target /= Void
 			valid_target: a_target = an_expression.target
-			a_procedure_not_void: a_procedure /= Void
 			procedure_call: an_expression.is_procedure
 			seeded: an_expression.name.seed /= 0
+			a_class_not_void: a_procedure /= Void implies a_class /= Void
 			a_context_not_void: a_context /= Void
 		local
 			a_name: ET_FEATURE_NAME
@@ -7488,7 +7491,7 @@ feature {NONE} -- Agent validity
 			an_implicit_actuals: ET_AGENT_IMPLICIT_OPEN_ARGUMENT_LIST
 			an_implicit_actual: ET_AGENT_IMPLICIT_OPEN_ARGUMENT
 			a_class_impl: ET_CLASS
-			a_class: ET_CLASS
+			l_class: ET_CLASS
 			l_procedure: ET_PROCEDURE
 			a_seed: INTEGER
 			a_target_type: ET_TYPE
@@ -7506,6 +7509,7 @@ feature {NONE} -- Agent validity
 			a_seed := a_name.seed
 			a_target_type := a_target.type
 			l_procedure := a_procedure
+			l_class := a_class
 			if l_procedure /= Void then
 				an_actuals := an_expression.arguments
 				if an_actuals = Void then
@@ -7525,12 +7529,12 @@ feature {NONE} -- Agent validity
 				a_target_type := resolved_formal_parameters (a_target_type, feature_impl, current_type)
 				if not has_fatal_error then
 					a_context.force_last (a_target_type)
-					a_class := a_context.base_class (universe)
-					a_class.process (universe.interface_checker)
-					if not a_class.interface_checked or else a_class.has_interface_error then
+					l_class := a_context.base_class (universe)
+					l_class.process (universe.interface_checker)
+					if not l_class.interface_checked or else l_class.has_interface_error then
 						set_fatal_error
 					else
-						l_procedure := a_class.seeded_procedure (a_seed)
+						l_procedure := l_class.seeded_procedure (a_seed)
 						if l_procedure = Void then
 								-- Report internal error: if we got a seed, the
 								-- `l_procedure' should not be void.
@@ -7541,19 +7545,19 @@ feature {NONE} -- Agent validity
 				end
 			end
 			if l_procedure /= Void then
-				check a_class_not_void: a_class /= Void end
+				check l_class_not_void: l_class /= Void end
 				if not l_procedure.is_exported_to (current_class, universe) then
 						-- The feature is not exported to `current_class'.
 					set_fatal_error
 					a_class_impl := feature_impl.implementation_class
 					if current_class = a_class_impl then
-						error_handler.report_vpca2a_error (current_class, a_name, l_procedure, a_class)
+						error_handler.report_vpca2a_error (current_class, a_name, l_procedure, l_class)
 					else
-						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_procedure, a_class)
+						error_handler.report_vpca2b_error (current_class, a_class_impl, a_name, l_procedure, l_class)
 					end
 				end
 				had_error := has_fatal_error
-				check_qualified_vape_validity (a_name, l_procedure, a_class)
+				check_qualified_vape_validity (a_name, l_procedure, l_class)
 				if has_fatal_error then
 					had_error := True
 				end
@@ -7564,7 +7568,7 @@ feature {NONE} -- Agent validity
 					create an_open_operands.make_with_capacity (1)
 				end
 				an_actuals := an_expression.arguments
-				check_agent_arguments_validity (an_actuals, a_context, a_name, l_procedure, a_class, an_open_operands)
+				check_agent_arguments_validity (an_actuals, a_context, a_name, l_procedure, l_class, an_open_operands)
 				if had_error then
 					set_fatal_error
 				end
