@@ -76,7 +76,7 @@ feature -- Access
 				else
 					create a_splitter.make
 					a_splitter.set_separators ("-")
-					if a_formatted_date.item (1).is_equal ('-') then
+					if a_formatted_date.item (1) = '-' then
 						is_negative := True
 						a_date := a_formatted_date.substring (2, a_formatted_date.count)
 					else
@@ -311,7 +311,7 @@ feature -- Access
 												Result := a_second >= 0 and then a_second <= 59
 												if Result then
 													if some_seconds.count = 2 then
-														Result := some_seconds.item (2).is_integer and then not some_seconds.item (2).item (1).is_equal ('-')
+														Result := some_seconds.item (2).is_integer and then some_seconds.item (2).item (1) /= '-'
 														if Result then
 															a_millisecond := milliseconds (some_seconds.item (2))
 														end
@@ -1317,7 +1317,8 @@ feature {NONE} -- Implementation
 			-- Last time validated by `is_zoned_date_time'
 
 	year_ok (a_year: STRING; is_negative: BOOLEAN): DS_PAIR [BOOLEAN, INTEGER] is
-			-- Validated year number (0 = 1 BCE, -1 = 2 BCE etc.)
+			-- Validated year number (0 = 1 BCE, -1 = 2 BCE etc.);
+			-- Note: `a_year' may be altered.
 		require
 			a_year_not_void: a_year /= Void
 			a_year_not_empty: not a_year.is_empty
@@ -1329,14 +1330,14 @@ feature {NONE} -- Implementation
 			STRING_.right_adjust (a_year)
 			if a_year.count /= a_count then
 				create Result.make (False, 0)
-			elseif a_year.item (1).is_equal ('+') then
+			elseif a_year.item (1) = '+' then
 				create Result.make (False, 0)
 			elseif not a_year.is_integer
 				or else (a_year.is_equal ("0000") and then not is_year_zero_valid) then
 				create Result.make (False, 0)
 			elseif a_year.count < 4 then
 				create Result.make (False, 0)
-			elseif a_year.count > 4 and then a_year.item (1).is_equal ('0') then
+			elseif a_year.count > 4 and then a_year.item (1) = '0' then
 				create Result.make (False, 0)
 			else
 				a_year_number := a_year.to_integer

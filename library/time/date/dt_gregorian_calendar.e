@@ -78,7 +78,8 @@ feature -- Access
 				Result := (yd // Days_in_week) + 1
 			end
 		ensure
-			result_in_range: Result >= 1 and then Result <= 53
+			week_number_large_enough: Result >= 1
+			week_number_small_enough: Result <= 53
 		end
 
 end
