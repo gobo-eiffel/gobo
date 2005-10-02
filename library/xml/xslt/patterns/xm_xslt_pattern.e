@@ -101,6 +101,12 @@ feature -- Status report
 	error_value: XM_XPATH_ERROR_VALUE
 			-- Error value
 
+	is_node_test: BOOLEAN is
+			-- Is `Current' a node test?
+		do
+			Result := False
+		end
+
 feature -- Status setting
 
 	set_system_id (a_system_id: STRING) is

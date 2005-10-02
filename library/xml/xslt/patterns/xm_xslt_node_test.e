@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_PATTERN
 		undefine
-			fingerprint, node_kind
+			fingerprint, node_kind,	is_node_test
 		end
 	
 	XM_XPATH_NODE_TEST

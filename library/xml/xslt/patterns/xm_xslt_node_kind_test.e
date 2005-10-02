@@ -28,12 +28,12 @@ inherit
 
 create
 
-	make
+	make, make_without_location
 
 feature {NONE} -- Initialization
 
 	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER) is
-			-- Establish invariant
+			-- Make with location.
 		require
 			valid_node_type: is_node_type (a_node_type) and then a_node_type /= Any_node
 			static_context_not_void: a_static_context /= Void
@@ -44,6 +44,16 @@ feature {NONE} -- Initialization
 		ensure
 			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
 			line_number_set: line_number = a_static_context.line_number			
+		end
+	
+	make_without_location (a_node_type: INTEGER) is
+			-- Make without location.
+		require
+			valid_node_type: is_node_type (a_node_type) and then a_node_type /= Any_node
+		do
+			make_xpath (a_node_type)
+			system_id := ""
+			line_number := 0
 		end
 	
 feature -- Access

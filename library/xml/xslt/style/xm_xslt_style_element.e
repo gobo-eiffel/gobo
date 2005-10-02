@@ -1050,29 +1050,35 @@ feature -- Status setting
 			else
 				an_analyzed_expression := an_expression
 			end
-			an_analyzed_expression.resolve_calls_to_current_function
-			if an_analyzed_expression.was_expression_replaced then
-				an_analyzed_expression := an_analyzed_expression.replacement_expression
-				was_replaced := True
-			end
-			if an_analyzed_expression.is_error and then an_analyzed_expression.error_value.type /= Dynamic_error then
-				report_compile_error (an_analyzed_expression.error_value)
-			else
-				if was_replaced and then not an_expression.was_expression_replaced then
-
-					-- in case it was a Let expression, and `action' has turned off replacement
-
-					an_expression.set_replacement (an_analyzed_expression)
+			if an_analyzed_expression.is_error then
+				if an_analyzed_expression.error_value.type /= Dynamic_error then
+					report_compile_error (an_analyzed_expression.error_value)
 				end
-				-- TODO: this all needs an executable
-				--if configuration.is_tracing then
-				--	create some_trace_details.make (Xpath_expression_in_xslt, line_numer, system_id)
-				--	some_trace_details.set_trace_property (a_name, Gexslt_expression_name_pseudo_attribute)
-				--	create a_trace_instruction.make (an_analyzed_expression, an_executable, some_trace_details)
-				--	a_trace_expression.set_parent (Current)
-				--	a_trace_expression.set_source_location (containing_stylesheet.module_number (system_id), line_number)
-				--	an_expression.set_replacement (an_analyzed_expression)
-				--end
+			else
+				an_analyzed_expression.resolve_calls_to_current_function
+				if an_analyzed_expression.was_expression_replaced then
+					an_analyzed_expression := an_analyzed_expression.replacement_expression
+					was_replaced := True
+				end
+				if an_analyzed_expression.is_error and then an_analyzed_expression.error_value.type /= Dynamic_error then
+					report_compile_error (an_analyzed_expression.error_value)
+				else
+					if was_replaced and then not an_expression.was_expression_replaced then
+						
+						-- in case it was a Let expression, and `action' has turned off replacement
+						
+						an_expression.set_replacement (an_analyzed_expression)
+					end
+					-- TODO: this all needs an executable
+					--if configuration.is_tracing then
+					--	create some_trace_details.make (Xpath_expression_in_xslt, line_numer, system_id)
+					--	some_trace_details.set_trace_property (a_name, Gexslt_expression_name_pseudo_attribute)
+					--	create a_trace_instruction.make (an_analyzed_expression, an_executable, some_trace_details)
+					--	a_trace_expression.set_parent (Current)
+					--	a_trace_expression.set_source_location (containing_stylesheet.module_number (system_id), line_number)
+					--	an_expression.set_replacement (an_analyzed_expression)
+					--end
+				end
 			end
 		end
 

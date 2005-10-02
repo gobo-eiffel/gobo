@@ -77,6 +77,8 @@ feature -- Access
 			else
 				Result := (yd // Days_in_week) + 1
 			end
+		ensure
+			result_in_range: Result >= 1 and then Result <= 53
 		end
 
 end

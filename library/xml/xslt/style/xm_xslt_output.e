@@ -92,8 +92,8 @@ feature -- Element change
 					escape_uri_attributes := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (escape_uri_attributes); STRING_.right_adjust (escape_uri_attributes)
 				elseif STRING_.same_string (an_expanded_name, Use_character_maps_attribute) then
 					use_character_maps := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (use_character_maps); STRING_.right_adjust (use_character_maps)
-				elseif STRING_.same_string (an_expanded_name, Undeclare_namespaces_attribute) then
-					undeclare_namespaces := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (undeclare_namespaces); STRING_.right_adjust (undeclare_namespaces)
+				elseif STRING_.same_string (an_expanded_name, undeclare_prefixes_attribute) then
+					undeclare_prefixes := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (undeclare_prefixes); STRING_.right_adjust (undeclare_prefixes)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_character_representation_attribute) then
 					character_representation := attribute_value_by_index (a_cursor.index); STRING_.left_adjust (character_representation); STRING_.right_adjust (character_representation)
 				elseif STRING_.same_string (an_expanded_name, Gexslt_indent_spaces_attribute) then
@@ -185,8 +185,8 @@ feature -- Element change
 					report_compile_error (cdata_validation_error)
 				end
 			end
-			if undeclare_namespaces /= Void then
-				if STRING_.same_string (undeclare_namespaces, "yes") or else STRING_.same_string (undeclare_namespaces, "no") then
+			if undeclare_prefixes /= Void then
+				if STRING_.same_string (undeclare_prefixes, "yes") or else STRING_.same_string (undeclare_prefixes, "no") then
 					-- OK
 				else
 					create an_error.make_from_string ("undeclare-namespaces must be 'yes' or 'no'", Xpath_errors_uri, "XTSE0020", Static_error)
@@ -475,13 +475,13 @@ feature -- Element change
 					end
 				end
 			end
-			if undeclare_namespaces /= Void and then not a_property_set.is_error then
-				if a_property_set.is_higher_precedence (an_import_precedence, Undeclare_namespaces_attribute) then
-					a_property_set.set_undeclare_namespaces (STRING_.same_string (undeclare_namespaces, "yes"), an_import_precedence)
-				elseif not a_property_set.is_lower_precedence (an_import_precedence, Undeclare_namespaces_attribute) then
-					if STRING_.same_string (undeclare_namespaces, "yes") and then not a_property_set.undeclare_namespaces or else
-						STRING_.same_string (undeclare_namespaces, "no") and then a_property_set.undeclare_namespaces then
-						a_property_set.set_duplication_error (Undeclare_namespaces_attribute)
+			if undeclare_prefixes /= Void and then not a_property_set.is_error then
+				if a_property_set.is_higher_precedence (an_import_precedence, undeclare_prefixes_attribute) then
+					a_property_set.set_undeclare_prefixes (STRING_.same_string (undeclare_prefixes, "yes"), an_import_precedence)
+				elseif not a_property_set.is_lower_precedence (an_import_precedence, undeclare_prefixes_attribute) then
+					if STRING_.same_string (undeclare_prefixes, "yes") and then not a_property_set.undeclare_prefixes or else
+						STRING_.same_string (undeclare_prefixes, "no") and then a_property_set.undeclare_prefixes then
+						a_property_set.set_duplication_error (undeclare_prefixes_attribute)
 					end
 				end					
 			end
@@ -550,8 +550,8 @@ feature {NONE} -- Implementation
 	use_character_maps: STRING
 			-- use-character-maps value
 
-	undeclare_namespaces: STRING
-			-- undeclare-namespaces value
+	undeclare_prefixes: STRING
+			-- undeclare-prefixes value
 
 	character_representation: STRING
 			-- Extension attribute - character representation

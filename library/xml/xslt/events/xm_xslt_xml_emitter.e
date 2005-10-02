@@ -173,7 +173,7 @@ feature -- Events
 						on_error ("Namespace prefix contains a character (decimal + "
 									 + a_bad_character.out + ") not available in the selected encoding")
 					else
-						if allow_undeclare_namespaces or else a_namespace_uri.count /= 0 then
+						if allow_undeclare_prefixes or else a_namespace_uri.count /= 0 then
 							output (" ")
 							output_attribute (current_element_name_code, STRING_.concat ("xmlns:", a_namespace_prefix), a_namespace_uri, 0)
 						end
@@ -353,8 +353,8 @@ feature {NONE} -- Implementation
 	is_hex_preferred: BOOLEAN
 			-- When writing characters entities, is hexadecimal notation preferred?
 
-	allow_undeclare_namespaces: BOOLEAN
-			-- Are namespace declarations allowed?
+	allow_undeclare_prefixes: BOOLEAN
+			-- Are namespace undeclarations allowed?
 
 	name_lookup_table: ARRAY [STRING]
 			-- Cache for standard QNames, indexed by name code
@@ -691,7 +691,7 @@ feature {NONE} -- Implementation
 				end
 			
 				if STRING_.same_string (output_properties.version, "1.1") then
-					allow_undeclare_namespaces := output_properties.undeclare_namespaces
+					allow_undeclare_prefixes := output_properties.undeclare_prefixes
 				end
 			end
 		ensure

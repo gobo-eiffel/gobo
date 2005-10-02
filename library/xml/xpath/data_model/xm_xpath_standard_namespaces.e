@@ -522,7 +522,7 @@ feature -- Access
 	Test_attribute: STRING is "test"
 	Tunnel_attribute: STRING is "tunnel"
 	Type_attribute: STRING is "type"
-	Undeclare_namespaces_attribute: STRING is "undeclare-namespaces"
+	Undeclare_prefixes_attribute: STRING is "undeclare-prefixes"
 	Use_attribute: STRING is "use"
 	Use_attribute_sets_attribute: STRING is "use-attribute-sets"
 	Use_character_maps_attribute: STRING is "use-character-maps"

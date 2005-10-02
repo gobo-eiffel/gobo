@@ -176,35 +176,35 @@ feature -- Status report
 			elseif a_required_type = type_factory.qname_type then
 				Result := False -- not done directly, as a static context is necessary
 			elseif a_required_type = type_factory.date_type then
-				create a_date_time_parser.make
+				create a_date_time_parser.make_1_1
 				Result := a_date_time_parser.is_zoned_date (value)
 					or else a_date_time_parser.is_date (value)
 			elseif a_required_type = type_factory.time_type then
-				create a_date_time_parser.make
+				create a_date_time_parser.make_1_1
 				Result := a_date_time_parser.is_zoned_time (value)
 					or else a_date_time_parser.is_time (value)
 			elseif a_required_type = type_factory.date_time_type then
-				create a_date_time_parser.make
+				create a_date_time_parser.make_1_1
 				Result := a_date_time_parser.is_zoned_date_time (value)
 					or else a_date_time_parser.is_date_time (value)
 			elseif a_required_type = type_factory.g_year_month_type then
-				create a_date_time_parser.make
+				create a_date_time_parser.make_1_1
 				Result := a_date_time_parser.is_zoned_year_month (value)
 					or else a_date_time_parser.is_year_month (value)
 			elseif a_required_type = type_factory.g_year_type then
-				create a_date_time_parser.make
+				create a_date_time_parser.make_1_1
 				Result := a_date_time_parser.is_zoned_year (value)
 					or else a_date_time_parser.is_year (value)
 			elseif a_required_type = type_factory.g_month_type then
-				create a_date_time_parser.make
+				create a_date_time_parser.make_1_1
 				Result := a_date_time_parser.is_zoned_month (value)
 					or else a_date_time_parser.is_month (value)
 			elseif a_required_type = type_factory.g_month_day_type then
-				create a_date_time_parser.make
+				create a_date_time_parser.make_1_1
 				Result := a_date_time_parser.is_zoned_month_day (value)
 					or else a_date_time_parser.is_month_day (value)
 			elseif a_required_type = type_factory.g_day_type then
-				create a_date_time_parser.make
+				create a_date_time_parser.make_1_1
 				Result := a_date_time_parser.is_zoned_day (value)
 					or else a_date_time_parser.is_day (value)
 			elseif a_required_type = type_factory.day_time_duration_type then

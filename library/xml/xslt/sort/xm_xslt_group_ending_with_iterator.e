@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 	locator: XM_XPATH_LOCATOR
 			-- Location of xsl:for-each-group
 
-	after_pending: like after
+	after_pending: BOOLEAN
 			-- `True' if next call to forth will go `after'
 
 invariant

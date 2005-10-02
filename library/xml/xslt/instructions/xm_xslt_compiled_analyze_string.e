@@ -14,8 +14,8 @@ inherit
 	
 	XM_XSLT_INSTRUCTION
 		redefine
-			sub_expressions, promote_instruction, display,
-			check_static_type, item_type, compute_dependencies
+			sub_expressions, promote_instruction,
+			item_type, compute_dependencies
 		end
 
 	XM_XPATH_REGEXP_CACHE_ROUTINES

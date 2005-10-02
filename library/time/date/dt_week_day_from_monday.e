@@ -90,10 +90,10 @@ feature -- Conversion
 	as_week_day_from_sunday: DT_WEEK_DAY_FROM_SUNDAY is
 			-- Version of `Current' day in a week that starts on Sunday
 		do
-			if is_monday then
-				Result := week_days_from_sunday.monday
+			if is_sunday then
+				Result := week_days_from_sunday.sunday
 			else
-				Result := week_days_from_sunday.week_day_from_code (code - 1)
+				Result := week_days_from_sunday.week_day_from_code (code + 1)
 			end
 		end
 

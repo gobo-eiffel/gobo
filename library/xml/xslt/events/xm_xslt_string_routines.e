@@ -46,9 +46,9 @@ feature -- Status report
 		require
 			positive_character_code: a_character_code > 0
 		do
-			todo ("is_alphanumeric (does not use Unicode categories)", True)
+			--	todo ("is_alphanumeric (does not use Unicode categories)", True)
 
-			-- only ASCII for now
+			-- only ASCII for now - TODO: use Unicode stuff
 
 			if a_character_code < 48 then -- zero
 				Result := False

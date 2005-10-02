@@ -160,11 +160,7 @@ feature -- Access
 		do
 			if a_node.is_same_node (last_remembered_node) then
 				Result := last_remembered_number
-			else
-				create Result.make_zero
 			end
-		ensure
-			positive_result: Result.is_positive
 		end
 
 	function_results_cache (a_function: XM_XSLT_COMPILED_USER_FUNCTION): DS_HASH_TABLE [XM_XPATH_VALUE, STRING] is

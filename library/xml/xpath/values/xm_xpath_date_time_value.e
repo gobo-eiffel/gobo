@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
 		do
 			make_atomic_value
-			create a_date_time_parser.make
+			create a_date_time_parser.make_1_1
 			if a_date_time_parser.is_zoned_date_time (a_lexical_date_time) then
 				zoned := True
 				zoned_date_time := a_date_time_parser.string_to_zoned_date_time (a_lexical_date_time)				
@@ -100,7 +100,7 @@ feature -- Access
 		local
 			a_date_time_parser: DT_XSD_DATE_TIME_FORMAT
 		do
-			create a_date_time_parser.make
+			create a_date_time_parser.make_1_1
 			if zoned then
 				Result := a_date_time_parser.zoned_date_time_to_string (zoned_date_time)
 			else
@@ -268,7 +268,7 @@ feature -- Status report
 		local
 			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
 		do
-			create a_date_time_parser.make
+			create a_date_time_parser.make_1_1
 			Result := a_date_time_parser.is_zoned_date_time (a_lexical_date_time)
 				or else a_date_time_parser.is_date_time (a_lexical_date_time)
 		end

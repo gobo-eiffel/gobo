@@ -159,7 +159,7 @@ feature -- Access
 	include_content_type: BOOLEAN
 			-- Should the html/xhtml methods write a Content-type meta element within the head element?
 
-	undeclare_namespaces: BOOLEAN
+	undeclare_prefixes: BOOLEAN
 			-- Should the xml method (for version 1.1) write namespace undeclarations?
 
 	escape_uri_attributes: BOOLEAN
@@ -524,16 +524,16 @@ feature -- Element change
 			end
 		end
 
-	set_undeclare_namespaces (an_undeclare_namespaces_value: BOOLEAN; an_import_precedence: INTEGER) is
-			-- Set `undeclare_namespaces'.
+	set_undeclare_prefixes (an_undeclare_prefixes_value: BOOLEAN; an_import_precedence: INTEGER) is
+			-- Set `undeclare_prefixes'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, Undeclare_namespaces_attribute)
+			higher_precedence: is_higher_precedence (an_import_precedence, undeclare_prefixes_attribute)
 		do
-			precedence_property_map.force (an_import_precedence, Undeclare_namespaces_attribute)
-			undeclare_namespaces := an_undeclare_namespaces_value
+			precedence_property_map.force (an_import_precedence, undeclare_prefixes_attribute)
+			undeclare_prefixes := an_undeclare_prefixes_value
 		ensure
-			import_precedence_set: precedence_property_map.has (Undeclare_namespaces_attribute) and then precedence_property_map.item (Undeclare_namespaces_attribute) = an_import_precedence
-			undeclare_namespaces_set: undeclare_namespaces = an_undeclare_namespaces_value
+			import_precedence_set: precedence_property_map.has (undeclare_prefixes_attribute) and then precedence_property_map.item (undeclare_prefixes_attribute) = an_import_precedence
+			undeclare_prefixes_set: undeclare_prefixes = an_undeclare_prefixes_value
 		end
 
 	set_character_representation (a_character_representation: STRING; an_import_precedence: INTEGER) is
@@ -895,9 +895,9 @@ feature {NONE} -- Implementation
 				else
 					set_cdata_sections (cdata_section_expanded_names)
 				end
-			elseif STRING_.same_string (a_local_name, Undeclare_namespaces_attribute) then
-				set_yes_no_property (Undeclare_namespaces_attribute, a_value)
-				if not is_error then set_undeclare_namespaces (last_yes_no_value, 1000000) end
+			elseif STRING_.same_string (a_local_name, undeclare_prefixes_attribute) then
+				set_yes_no_property (undeclare_prefixes_attribute, a_value)
+				if not is_error then set_undeclare_prefixes (last_yes_no_value, 1000000) end
 			elseif STRING_.same_string (a_local_name, Include_content_type_attribute) then
 				set_yes_no_property (Include_content_type_attribute, a_value)
 				if not is_error then set_include_content_type (last_yes_no_value, 1000000) end

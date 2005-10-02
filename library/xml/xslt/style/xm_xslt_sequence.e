@@ -105,7 +105,9 @@ feature -- Element change
 	compile (an_executable: XM_XSLT_EXECUTABLE) is
 			-- Compile `Current' to an excutable instruction.
 		do
-			select_expression.as_computed_expression.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+			if select_expression.is_computed_expression then
+				select_expression.as_computed_expression.set_source_location (principal_stylesheet.module_number (system_id), line_number)
+			end
 			last_generated_expression := select_expression
 		end
 

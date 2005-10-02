@@ -38,8 +38,14 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 1 or else an_arity = 2
 			elseif a_fingerprint = Element_available_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Format_date_function_type_code and then not is_restricted then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 5
+			elseif a_fingerprint = Format_datetime_function_type_code and then not is_restricted then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 5
 			elseif a_fingerprint = Format_number_function_type_code and then not is_restricted then
 				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 3
+			elseif a_fingerprint = Format_time_function_type_code and then not is_restricted then
+				Result := an_arity = -1 or else an_arity = 2 or else an_arity = 5			
 			elseif a_fingerprint = Function_available_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1 or else an_arity = 2
 			elseif a_fingerprint = Generate_id_function_type_code and then not is_restricted then
@@ -81,8 +87,14 @@ feature -- Element change
 				create {XM_XSLT_DOCUMENT_FUNCTION} a_function_call.make
 			elseif a_fingerprint = Element_available_function_type_code then
 				create {XM_XSLT_ELEMENT_AVAILABLE} a_function_call.make								
+			elseif a_fingerprint = Format_date_function_type_code then
+				create {XM_XSLT_FORMAT_DATE_TIME} a_function_call.make_date
+			elseif a_fingerprint = Format_datetime_function_type_code then
+				create {XM_XSLT_FORMAT_DATE_TIME} a_function_call.make_date_time
 			elseif a_fingerprint = Format_number_function_type_code then
 				create {XM_XSLT_FORMAT_NUMBER} a_function_call.make
+			elseif a_fingerprint = Format_time_function_type_code then
+				create {XM_XSLT_FORMAT_DATE_TIME} a_function_call.make_time				
 			elseif a_fingerprint = Function_available_function_type_code then
 				create {XM_XSLT_FUNCTION_AVAILABLE} a_function_call.make				
 			elseif a_fingerprint = Generate_id_function_type_code then

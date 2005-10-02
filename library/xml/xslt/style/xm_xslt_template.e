@@ -230,7 +230,7 @@ feature -- Element change
 			else
 				a_content := last_generated_expression
 			end
-			a_content.simplify
+			if not a_content.is_error then a_content.simplify end
 			if a_content.is_error then
 				report_compile_error (a_content.error_value)
 			else

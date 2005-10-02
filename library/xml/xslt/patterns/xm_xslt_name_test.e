@@ -29,11 +29,12 @@ inherit
 
 create
 
-	make, make_same_type
+	make, make_same_type, make_without_location
 
 feature {NONE} -- Initialization
 
 	make (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node_type: INTEGER; a_name_code: INTEGER; an_original_text: STRING) is
+			-- Create from name and type.
 		require
 			static_context_not_void: a_static_context /= Void
 			valid_node_type: is_node_type (a_node_type)
@@ -51,6 +52,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_same_type (a_static_context: XM_XPATH_STATIC_CONTEXT; a_node: XM_XPATH_NODE) is
+			-- Create like `a_node'. 
 		require
 			static_context_not_void: a_static_context /= Void
 			node_not_void: a_node /= Void
@@ -63,6 +65,19 @@ feature {NONE} -- Initialization
 			same_fingerprint: fingerprint = a_node.fingerprint
 			system_id_set: STRING_.same_string (system_id, a_static_context.system_id)
 			line_number_set: line_number = a_static_context.line_number
+		end
+
+	make_without_location (a_node: XM_XPATH_NODE) is
+			-- Create  like `a_node', without location.
+		require
+			node_not_void: a_node /= Void
+		do
+			make_same_type_xpath (a_node)
+			system_id := ""
+			line_number := 0
+		ensure
+			same_type: node_kind = a_node.node_type
+			same_fingerprint: fingerprint = a_node.fingerprint
 		end
 	
 feature -- Access

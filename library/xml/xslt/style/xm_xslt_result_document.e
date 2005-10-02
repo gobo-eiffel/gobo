@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			Result.put (Standalone_attribute)
 			Result.put (Escape_uri_attributes_attribute)
 			Result.put (Include_content_type_attribute)
-			Result.put (Undeclare_namespaces_attribute)
+			Result.put (Undeclare_prefixes_attribute)
 			Result.put (Byte_order_mark_attribute)
 			Result.put (Cdata_section_elements_attribute)
 			Result.put (Gexslt_character_representation_attribute)

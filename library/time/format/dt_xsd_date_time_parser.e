@@ -24,18 +24,12 @@ inherit
 
 create
 
-	make
-
-		-- URGENT: make this change prior to release of Gobo 3.5
-		-- TODO: add make_1_0 creation procedure to implement current
-		--        year zero behavior.
-		--       Change make to use projected XML Schema 1.1 behaviour
-		--        (i.e. in line with second edition of ISO 8601)
+	make_1_0, make_1_1
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create a new XSD date-time parser.
+	make_1_0 is
+			-- Create with XML Schema 1.0 rules.
 		do
 			last_cached_date_string := ""
 			last_cached_zoned_date_string := ""
@@ -43,6 +37,22 @@ feature {NONE} -- Initialization
 			last_cached_zoned_time_string := ""
 			last_cached_date_time_string := ""
 			last_cached_zoned_date_time_string := ""
+		ensure
+			year_xero_is_not_valid: not is_year_zero_valid
+		end
+
+	make_1_1 is
+			-- Create with XML Schema 1.1 rules.
+		do
+			last_cached_date_string := ""
+			last_cached_zoned_date_string := ""
+			last_cached_time_string := ""
+			last_cached_zoned_time_string := ""
+			last_cached_date_time_string := ""
+			last_cached_zoned_date_time_string := ""
+			is_year_zero_valid := True
+		ensure
+			year_xero_is_valid: is_year_zero_valid
 		end
 
 feature -- Access
@@ -54,6 +64,8 @@ feature -- Access
 			a_splitter: ST_SPLITTER
 			some_components: DS_LIST [STRING]
 			a_year, a_month, a_day: INTEGER
+			is_negative: BOOLEAN
+			a_year_result: DS_PAIR [BOOLEAN, INTEGER] 
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_date_string) then
@@ -64,7 +76,8 @@ feature -- Access
 				else
 					create a_splitter.make
 					a_splitter.set_separators ("-")
-					if a_formatted_date.item (1) = '-' then
+					if a_formatted_date.item (1).is_equal ('-') then
+						is_negative := True
 						a_date := a_formatted_date.substring (2, a_formatted_date.count)
 					else
 						a_date := a_formatted_date
@@ -72,14 +85,12 @@ feature -- Access
 					some_components := a_splitter.split_greedy (a_date)
 					Result := some_components.count = 3
 					if Result then
-						a_year := year_ok (some_components.item (1))
-						if a_year = 0 then
+						a_year_result := year_ok (some_components.item (1), is_negative)
+						if not a_year_result.first then
 							Result := False
 						else
-							if a_formatted_date.item (1) = '-' then
-								a_year := 1 - a_year
-							end
-							a_month := month_ok (some_components.item (2))
+							a_year := a_year_result.second
+							a_month := month_ok  (some_components.item (2))
 							if a_month < January or else a_month > December then
 								Result := False
 							else
@@ -404,6 +415,8 @@ feature -- Access
 			a_splitter: ST_SPLITTER
 			some_components: DS_LIST [STRING]
 			a_year, a_month: INTEGER
+			is_negative: BOOLEAN
+			a_year_result: DS_PAIR [BOOLEAN, INTEGER] 
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_date_string) then
@@ -416,20 +429,19 @@ feature -- Access
 					a_splitter.set_separators ("-")
 					if a_formatted_date.item (1) = '-' then
 						a_date := a_formatted_date.substring (2, a_formatted_date.count)
+						is_negative := True
 					else
 						a_date := a_formatted_date
 					end
 					some_components := a_splitter.split_greedy (a_date)
 					Result := some_components.count = 2
 					if Result then
-						a_year := year_ok (some_components.item (1))
-						if a_year = 0 then
+						a_year_result := year_ok (some_components.item (1), is_negative)
+						if not a_year_result.first then
 							Result := False
 						else
-							if a_formatted_date.item (1) = '-' then
-								a_year := 1 - a_year
-							end
-							a_month := month_ok (some_components.item (2))
+							a_year := a_year_result.second
+							a_month := month_ok  (some_components.item (2))
 							if a_month < January or else a_month > December then
 								Result := False
 							else
@@ -518,6 +530,8 @@ feature -- Access
 		local
 			a_date: STRING
 			a_year: INTEGER
+			is_negative: BOOLEAN
+			a_year_result: DS_PAIR [BOOLEAN, INTEGER] 
 		do
 			if not a_formatted_date.is_empty then
 				if STRING_.same_string (a_formatted_date, last_cached_date_string) then
@@ -528,17 +542,16 @@ feature -- Access
 				else
 					if a_formatted_date.item (1) = '-' then
 						a_date := a_formatted_date.substring (2, a_formatted_date.count)
+						is_negative := True
 					else
 						a_date := a_formatted_date
 					end
-					a_year := year_ok (a_date)
-					if a_year = 0 then
+					a_year_result := year_ok (a_date, is_negative)
+					if not a_year_result.first then
 						Result := False
 					else
+						a_year := a_year_result.second
 						Result := True
-						if a_formatted_date.item (1) = '-' then
-							a_year := 1 - a_year
-						end
 						create last_cached_date.make (a_year, 1, 1)
 						last_cached_date_string := a_formatted_date
 					end
@@ -917,7 +930,12 @@ feature -- Access
 		ensure
 			month_cached: Result implies last_cached_zoned_date /= Void
 		end
-	
+
+feature -- Status_report
+
+	is_year_zero_valid: BOOLEAN
+			-- Is "0000" a lexically valid year?
+
 feature -- Conversion
 
 	string_to_date (a_formatted_date: STRING): DT_DATE is
@@ -1298,30 +1316,39 @@ feature {NONE} -- Implementation
 	last_cached_zoned_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME
 			-- Last time validated by `is_zoned_date_time'
 
-	year_ok (a_year: STRING): INTEGER is
-			-- Validated year number, or zero;
-			-- Note: `a_year' may be altered.
+	year_ok (a_year: STRING; is_negative: BOOLEAN): DS_PAIR [BOOLEAN, INTEGER] is
+			-- Validated year number (0 = 1 BCE, -1 = 2 BCE etc.)
 		require
 			a_year_not_void: a_year /= Void
 			a_year_not_empty: not a_year.is_empty
 		local
-			a_count: INTEGER
+			a_count, a_year_number: INTEGER
 		do
 			a_count := a_year.count
 			STRING_.left_adjust (a_year)
 			STRING_.right_adjust (a_year)
 			if a_year.count /= a_count then
-				Result := 0
+				create Result.make (False, 0)
 			elseif a_year.item (1).is_equal ('+') then
-				Result := 0
-			elseif not a_year.is_integer or else a_year.is_equal ("0000") then
-				Result := 0
+				create Result.make (False, 0)
+			elseif not a_year.is_integer
+				or else (a_year.is_equal ("0000") and then not is_year_zero_valid) then
+				create Result.make (False, 0)
 			elseif a_year.count < 4 then
-				Result := 0
-			elseif a_year.count > 4 and then a_year.item (1) = '0' then
-				Result := 0
+				create Result.make (False, 0)
+			elseif a_year.count > 4 and then a_year.item (1).is_equal ('0') then
+				create Result.make (False, 0)
 			else
-				Result := a_year.to_integer
+				a_year_number := a_year.to_integer
+				if is_negative then
+					if is_year_zero_valid then
+						create Result.make (True, 0 - a_year_number)
+					else
+						create Result.make (True, 1 - a_year_number)
+					end
+				else
+					create Result.make (True, a_year_number)
+				end
 			end
 		end
 

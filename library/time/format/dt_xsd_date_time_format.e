@@ -22,7 +22,7 @@ inherit
 
 create
 
-	make
+	make_1_0, make_1_1
 
 feature -- Conversion
 
@@ -206,7 +206,11 @@ feature {NONE} -- Implementation
 		do
 			Result := ""
 			if a_date.year <= 0 then
-				yy := 1 - a_date.year
+				if is_year_zero_valid then
+					yy := 0 - a_date.year
+				else
+					yy := 1 - a_date.year
+				end
 				INTEGER_.append_decimal_integer (yy, Result)
 				from  until  Result.count >= 4 loop
 					Result.insert_character ('0', 1)
