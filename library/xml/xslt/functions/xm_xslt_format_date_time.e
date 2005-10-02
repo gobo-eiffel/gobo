@@ -1397,7 +1397,7 @@ feature {NONE} -- Implementation
 			string_exists: a_string /= Void
 			short_string: a_string.count < minimum_width
 		do
-			Result := STRING_.make_filled ('0', a_string.count - minimum_width)
+			create Result.make_filled ('0', a_string.count - minimum_width)
 			Result := STRING_.appended_string (Result, a_string)
 		ensure
 			minimum_width: Result.count = minimum_width
@@ -1409,7 +1409,7 @@ feature {NONE} -- Implementation
 			string_exists: a_string /= Void
 			short_string: a_string.count < minimum_width
 		do
-			Result := STRING_.make_filled (' ', a_string.count - minimum_width)
+			create Result.make_filled (' ', a_string.count - minimum_width)
 			Result := STRING_.concat (a_string, Result)
 		ensure
 			minimum_width: Result.count = minimum_width
