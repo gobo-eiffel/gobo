@@ -59,10 +59,11 @@ feature -- Access
 		local
 			a_node: XM_XPATH_NODE
 			a_text_node: XM_XPATH_TREE_TEXT
+			a_string: ST_COPY_ON_WRITE_STRING
 		do
+
 			-- Return the concatentation of the string value of all it's
 			-- text-node descendants.
-			-- Actually, more complicated than the above description.
 
 			from
 				a_node := first_child
@@ -70,14 +71,18 @@ feature -- Access
 				a_node = Void or else not a_node.as_tree_node.is_tree_text
 			loop
 				a_text_node := a_node.as_tree_node.as_tree_text
-				if Result = Void then
-					Result := a_text_node.string_value
+				if a_string = Void then
+					create a_string.make (a_text_node.string_value)
 				else
-					Result := STRING_.appended_string (Result, a_text_node.string_value)
+					a_string.append_string (a_text_node.string_value)
 				end
 				a_node := a_text_node.next_node_in_document_order (Current)
 			end
-			if Result = Void then Result := "" end
+			if a_string = Void then
+				Result := ""
+			else
+				Result := a_string.item
+			end
 		end
 
 	first_child: XM_XPATH_NODE is

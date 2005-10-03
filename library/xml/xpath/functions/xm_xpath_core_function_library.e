@@ -72,6 +72,8 @@ feature -- Access
 				Result := an_arity = -1 or else an_arity = 0
 			elseif a_fingerprint = Data_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
+			elseif a_fingerprint = Datetime_function_type_code then
+				Result := an_arity = 2
 			elseif a_fingerprint = Day_from_date_function_type_code then
 				Result := an_arity = -1 or else an_arity = 1
 			elseif a_fingerprint = Day_from_datetime_function_type_code then
@@ -300,6 +302,8 @@ feature -- Element change
 				create {XM_XPATH_CURRENT_TIME} a_function_call.make
 			elseif a_fingerprint = Data_function_type_code then
 				create {XM_XPATH_DATA} a_function_call.make
+			elseif a_fingerprint = Datetime_function_type_code then
+				create {XM_XPATH_DATE_TIME} a_function_call.make
 			elseif a_fingerprint = Day_from_date_function_type_code then
 				create {XM_XPATH_DAY_FROM_DATE} a_function_call.make																
 			elseif a_fingerprint = Day_from_datetime_function_type_code then
