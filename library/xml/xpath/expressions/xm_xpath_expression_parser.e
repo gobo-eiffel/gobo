@@ -1670,7 +1670,10 @@ feature {NONE} -- Implementation
 		do
 			if not is_axis_name_valid (tokenizer.last_token_value) then
 				a_message := STRING_.appended_string ("Unexpected axis name, found ", display_current_token)
-				report_parse_error (a_message, "XPST0010")
+				report_parse_error (a_message, "XPST0003")
+			elseif not environment.is_backwards_compatible_mode
+				and then STRING_.same_string (tokenizer.last_token_value, "namespace") then
+				report_parse_error ("Namespace axis is not supported", "XPST0010")
 			else
 				an_axis_number := axis_number (tokenizer.last_token_value)
 				a_principal_node_type := axis_principal_node_type (an_axis_number)

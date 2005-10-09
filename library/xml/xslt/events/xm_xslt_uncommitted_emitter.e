@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			not_yet_committed: not committed
 		local
 			an_xhtml_emitter: XM_XSLT_XHTML_EMITTER
-			an_html_indenter: XM_XSLT_HTML_INDENTER
+			an_html_indenter: XM_XSLT_XHTML_INDENTER
 			a_cdata_filter: XM_XSLT_CDATA_FILTER
 		do
 			output_properties.set_xhtml_defaults (0)

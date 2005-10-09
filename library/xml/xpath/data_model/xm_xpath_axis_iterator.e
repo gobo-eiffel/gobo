@@ -16,7 +16,8 @@ inherit
 
 	XM_XPATH_SEQUENCE_ITERATOR [G]
 		redefine
-			is_node_iterator, is_invulnerable
+			is_node_iterator, is_invulnerable,
+			is_axis_iterator, as_axis_iterator
 		end
 
 feature -- Access
@@ -31,6 +32,18 @@ feature -- Access
 			-- Does `Current' yield a node_sequence?
 		do
 			Result := True
+		end
+
+	is_axis_iterator: BOOLEAN is
+			-- Is `Current' an axis iterator?
+		do
+			Result := True
+		end
+
+	as_axis_iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+			-- `Current' seen as an axis iterator
+		do
+			Result ?= ANY_.to_any (Current)
 		end
 	
 feature -- Status report

@@ -249,6 +249,12 @@ feature -- Access
 				else
 					create {XM_XPATH_EMPTY_ITERATOR} Result.make
 				end
+			when Namespace_axis then
+				if node_type = Element_node then
+					create {XM_XPATH_NAMESPACE_AXIS_ITERATOR} Result.make (as_tiny_element, a_node_test)
+				else
+					create {XM_XPATH_EMPTY_ITERATOR} Result.make
+				end				
 			when Preceding_or_ancestor_axis then
 				Result := created_preceding_or_ancestor_axis_iterator (a_node_test)
 			end
@@ -492,12 +498,14 @@ feature {NONE} -- Implementation
 			node_test_not_void: a_node_test /= Void
 		local
 			a_parent_node: XM_XPATH_TINY_NODE
+			an_enumeration: XM_XPATH_TINY_PRECEDING_ENUMERATION
 		do
 			if node_type = Document_node then
 				create {XM_XPATH_EMPTY_ITERATOR} Result.make
-			elseif node_type = Attribute_node then
+			elseif node_type = Attribute_node or else node_type = Namespace_node then
 				a_parent_node := parent
-				create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (tree, a_parent_node, a_node_test, True)
+				create  an_enumeration.make (tree, a_parent_node, a_node_test, True)
+				create {XM_XPATH_PREPEND_ITERATOR [XM_XPATH_TINY_NODE]} Result.make (a_parent_node, an_enumeration)
 			else
 				create  {XM_XPATH_TINY_PRECEDING_ENUMERATION} Result.make (tree, Current, a_node_test, True)
 			end	

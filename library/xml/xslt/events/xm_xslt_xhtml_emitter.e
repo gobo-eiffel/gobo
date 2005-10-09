@@ -16,7 +16,7 @@ inherit
 
 	XM_XSLT_XML_EMITTER
 		redefine
-			start_document, start_content, empty_element_tag_closer, output_attribute
+			start_document, empty_element_tag_closer, output_attribute
 		end
 
 	XM_XPATH_TYPE
@@ -36,21 +36,6 @@ feature -- Events
 			make_url_attributes
 		end
 
-	start_content is
-			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
-		do
-
-			-- Add a meta tag after the head tag if there is one. TODO: or replace and existing one
-
-			if not is_error and then STRING_.same_string (element_qname_stack.item, "head") then
-				if output_properties.include_content_type then
-					if is_open_start_tag then close_start_tag ("head", False) end
-					output_ignoring_error ("%N      <meta http-equiv=%"Content-Type%" content=%"" +
-												  output_properties.media_type + "; charset=" + output_properties.encoding + "%"/>%N   ") 
-				end
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	escape_uri_attributes: BOOLEAN
@@ -60,7 +45,7 @@ feature {NONE} -- Implementation
 			-- String to close an empty tag
 		do
 			if is_empty_tag (a_name) then 
-				Result := "/>"
+				Result := " />"
 			else
 				Result := STRING_.concat ("></", a_name)
 				Result := STRING_.appended_string (Result, ">")

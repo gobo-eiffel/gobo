@@ -84,7 +84,7 @@ feature -- Access
 	Default_country:  STRING is "US"
 			-- Implementation-defined defaults
 
-	Ad_Calendar: STRING is "AD"
+	Ad_calendar: STRING is "AD"
 			-- Anno Domini (Christian Era);
 			-- Same as "CE" except for the "E" modifier values
 
@@ -1047,7 +1047,7 @@ feature {NONE} -- Implementation
 			is_traditional := False
 			is_ordinal := False
 			minimum_width := 1
-			maximum_width := Platform.maximum_integer
+			maximum_width := Platform.Maximum_integer
 			primary_modifier := Void
 			if not some_modifiers.is_empty then
 				create a_splitter.make_with_separators (",")
@@ -1055,14 +1055,14 @@ feature {NONE} -- Implementation
 				if some_components.count > 2 then
 					a_message := STRING_.concat ("More than one comma present in '", some_modifiers)
 					a_message := STRING_.appended_string (a_message, "'")
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", dynamic_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
 				elseif some_components.count = 2 then
 					a_modifier := some_components.item (1)
 					set_widths (some_components.item (2))
 				else
 					a_modifier := some_modifiers
 					minimum_width := 1
-					maximum_width := Platform.maximum_integer
+					maximum_width := Platform.Maximum_integer
 				end
 				if last_evaluated_item = Void then
 					STRING_.left_adjust (a_modifier)
@@ -1074,7 +1074,7 @@ feature {NONE} -- Implementation
 						else
 							a_message := STRING_.concat ("Misplaced 't' in '", a_modifier)
 							a_message := STRING_.appended_string (a_message, "'")
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", dynamic_error)
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
 						end
 					end
 					an_index := a_modifier.index_of ('o', 1)
@@ -1084,7 +1084,7 @@ feature {NONE} -- Implementation
 						else
 							a_message := STRING_.concat ("Misplaced 'o' in '", a_modifier)
 							a_message := STRING_.appended_string (a_message, "'")
-							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", dynamic_error)
+							create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
 						end
 					end					
 				end
@@ -1138,13 +1138,13 @@ feature {NONE} -- Implementation
 			if a_width.index_of ('+', 1) > 0 then
 				a_message := STRING_.concat ("Plus sign present in '", a_width)
 				a_message := STRING_.appended_string (a_message, "'")
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", dynamic_error)
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
 			else
 				some_components := a_splitter.split_greedy (a_width)
 				if some_components.count > 2 then
 					a_message := STRING_.concat ("Two many hyphens in '", a_width)
 					a_message := STRING_.appended_string (a_message, "'")
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", dynamic_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_item.make_from_string (a_message, Xpath_errors_uri, "XTDE1340", Dynamic_error)
 				elseif some_components.count = 2 then
 					a_string := some_components.item (1)
 					STRING_.left_adjust (a_string)
@@ -1158,7 +1158,7 @@ feature {NONE} -- Implementation
 					STRING_.left_adjust (a_string)
 					STRING_.right_adjust (a_string)
 					if STRING_.same_string (a_string, "*") then
-						maximum_width := Platform.maximum_integer
+						maximum_width := Platform.Maximum_integer
 					elseif a_string.is_integer then
 						maximum_width := a_string.to_integer
 					end
@@ -1171,7 +1171,7 @@ feature {NONE} -- Implementation
 					elseif a_string.is_integer then
 						minimum_width := a_string.to_integer
 					end
-					maximum_width := Platform.maximum_integer
+					maximum_width := Platform.Maximum_integer
 				end
 			end
 		end
@@ -1356,7 +1356,7 @@ feature {NONE} -- Implementation
 			-- TODO: other calendars and countries, and language
 
 			a_year := a_calendar_value.year
-			if STRING_.same_string (a_calendar, Default_Calendar) then
+			if STRING_.same_string (a_calendar, Default_calendar) then
 				if a_year > 0 then
 					if maximum_width >= 10 then
 						Result := "Common Era"
@@ -1370,7 +1370,7 @@ feature {NONE} -- Implementation
 						Result := "BCE"
 					end
 				end
-			elseif  STRING_.same_string (a_calendar, Ad_Calendar) then
+			elseif  STRING_.same_string (a_calendar, Ad_calendar) then
 							if a_year > 0 then
 					if maximum_width >= 11 then
 						Result := "Anno Domini"

@@ -125,11 +125,11 @@ feature -- Access
 			nearly_positive_result: Result > -2
 		end
 
-	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
-			-- Output all namespace nodes associated with this element.
-		require
-			receiver_not_void: a_receiver /= Void
+	declared_namespaces: DS_ARRAYED_LIST [INTEGER] is
+			-- Codes for namespaces declared on `Current'
 		deferred
+		ensure
+			declared_namespaces_not_void: Result /= Void
 		end
 
 	namespace_codes_in_scope: DS_ARRAYED_LIST [INTEGER] is
@@ -182,6 +182,15 @@ feature -- Status setting
 			-- Needed (indirectly, through `XM_XPATH_TINY_ELEMENT') by `XM_XSLT_STRIPPER'.
 		require
 			valid_name_code: a_name_code >= -1
+		deferred
+		end
+
+feature -- Element change
+
+		output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
+			-- Output all namespace nodes associated with this element.
+		require
+			receiver_not_void: a_receiver /= Void
 		deferred
 		end
 

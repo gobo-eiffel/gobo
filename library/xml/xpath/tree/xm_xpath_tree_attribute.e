@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	string_value: STRING
-			--Value of the item as a string
+			-- Value of the item as a string
 
 	name_code: INTEGER
 			-- Name code this node - used in displaying names
@@ -149,7 +149,6 @@ feature {XM_XPATH_TREE_NODE} -- Restricted
 			end
 		end
 
-	
 feature {XM_XPATH_NODE} -- Restricted
 
 	is_possible_child: BOOLEAN is

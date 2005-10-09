@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			is_empty := True
 			create element_qname_stack.make_default
 			element_qname_stack.set_equality_tester (string_equality_tester)
-			create name_lookup_table.make (0, 1023)
+			create name_lookup_table.make (0, name_lookup_table_size - 1)
 			make_specials
 			system_id := "" -- TODO - set_system_id
 			encoder_factory := transformer.configuration.encoder_factory
@@ -114,6 +114,8 @@ feature -- Events
 		local
 			a_display_name, a_system_id, a_public_id: STRING
 			a_bad_character_code: INTEGER
+			a_message: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if not is_error then
 				if not is_output_open then
@@ -122,17 +124,19 @@ feature -- Events
 				
 				-- Have we've seen this name before?
 
-				if a_name_code < 1024 then
+				if a_name_code < name_lookup_table_size then
 					a_display_name := name_lookup_table.item (a_name_code)
 				end
 				if a_display_name = Void then
 					a_display_name := shared_name_pool.display_name_from_name_code (a_name_code)
-					if a_name_code < 1024 then
+					if a_name_code < name_lookup_table_size then
 						name_lookup_table.put (a_display_name, a_name_code)
 					end
 					a_bad_character_code := bad_character_code (a_display_name)
 					if a_bad_character_code /= 0 then
-						on_error ("Element name contains a character (decimal" + a_bad_character_code.out + ") not available in the selected encoding")
+						a_message := "Element name contains a character (decimal" + a_bad_character_code.out + ") not available in the selected encoding"
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
+						transformer.report_fatal_error (an_error)
 					end
 				end
 				if not is_error then
@@ -159,6 +163,8 @@ feature -- Events
 		local
 			a_namespace_prefix, a_namespace_uri: STRING
 			a_bad_character: INTEGER
+			a_message: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if is_output_open and then not is_error then
 				a_namespace_prefix := shared_name_pool.prefix_from_namespace_code (a_namespace_code)
@@ -170,8 +176,9 @@ feature -- Events
 				else
 					a_bad_character := bad_character_code (a_namespace_prefix)
 					if a_bad_character /= 0 then
-						on_error ("Namespace prefix contains a character (decimal + "
-									 + a_bad_character.out + ") not available in the selected encoding")
+						a_message := "Namespace prefix contains a character (decimal + " + a_bad_character.out + ") not available in the selected encoding"
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
+						transformer.report_fatal_error (an_error)
 					else
 						if allow_undeclare_prefixes or else a_namespace_uri.count /= 0 then
 							output (" ")
@@ -187,22 +194,26 @@ feature -- Events
 		local
 			a_display_name: STRING
 			a_bad_character: INTEGER
+			a_message: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			if is_output_open and then not is_error then
 
 				-- Have we've seen this name before?
 
-				if a_name_code < 1024 then
+				if a_name_code < name_lookup_table_size then
 					a_display_name := name_lookup_table.item (a_name_code)
 				end
 				if a_display_name = Void then
 					a_display_name := shared_name_pool.display_name_from_name_code (a_name_code)
-					if a_name_code < 1024 then
+					if a_name_code < name_lookup_table_size then
 						name_lookup_table.put (a_display_name, a_name_code)
 					end
 					a_bad_character := bad_character_code (a_display_name)
 					if a_bad_character /= 0 then
-						on_error ("Attribute name contains a character (decimal" + a_bad_character.out + ") not available in the selected encoding")
+						a_message := "Attribute name contains a character (decimal + " + a_bad_character.out + ") not available in the selected encoding"
+						create an_error.make_from_string (a_message, Xpath_errors_uri, "SERE0008", Dynamic_error)
+						transformer.report_fatal_error (an_error)
 					end
 				end
 				if not is_error then
@@ -269,7 +280,7 @@ feature -- Events
 					a_mapped_string := character_map_expander.mapped_string (chars)
 					output_escape (normalized_string (a_mapped_string), False)
 				elseif are_no_special_characters (properties) then
-					output (chars) -- TODO: confirm that normalization can have no effect here
+					output (chars)
 				else
 					debug ("XSLT stripper")
 						std.error.put_string ("Emitting " + normalized_string (chars) + "###")
@@ -357,7 +368,10 @@ feature {NONE} -- Implementation
 			-- Are namespace undeclarations allowed?
 
 	name_lookup_table: ARRAY [STRING]
-			-- Cache for standard QNames, indexed by name code
+			-- Cache for frequent QNames, indexed by name code
+
+	name_lookup_table_size: INTEGER
+			-- Size of `name_lookup_table'
 
 	warning_issued: BOOLEAN
 			-- Has a warning for disabled character escaping problems been issued?
@@ -393,14 +407,14 @@ feature {NONE} -- Implementation
 	url_attributes_set: DS_HASH_SET [STRING] is
 			-- Names of attributes that are sometimes URL valued
 		once
-			create Result.make (12)
+			create Result.make (14)
 			Result.set_equality_tester (string_equality_tester)
 		end
 
 	url_combinations_set: DS_HASH_SET [STRING] is
 		-- Names of elements-attribute pairs that are URL valued
 		once
-			create Result.make (27)
+			create Result.make (36)
 			Result.set_equality_tester (string_equality_tester)
 		end
 
@@ -443,8 +457,7 @@ feature {NONE} -- Implementation
 			specials_in_attributes.put (True, 10) -- 'LF'
 			specials_in_attributes.put (True, 9) -- 'TAB'
 			specials_in_attributes.put (True, 34) -- '"'
-		end
-
+		end	
 	write_declaration is
 			-- Write XML declaration
 		require
@@ -583,8 +596,6 @@ feature {NONE} -- Implementation
 					elseif disabled then
 						output (a_character_string.substring (a_beyond_index, a_beyond_index))
 					elseif a_code > 127 then -- non-ASCII
-						--todo ("output_escape (surrogates", True)
-						-- TODO - deal with (high?) surrogate characters ?? - I don't think so
 						output_character_reference (a_code)
 					else -- ASCII character needs escaping
 						if a_code = 60 then
@@ -673,13 +684,25 @@ feature {NONE} -- Implementation
 			document_not_yet_opened: not is_output_open
 		local
 			a_character_representation: STRING
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			encoding := output_properties.encoding.as_upper
 
 			outputter := encoder_factory.outputter (encoding, raw_outputter)
 			if outputter = Void then
-				on_error ("Unable to open output stream for encoding " + encoding)
-			else
+				create an_error.make_from_string (STRING_.concat ("Trying UTF-8 as unable to open output stream in encoding ", encoding),
+															 Xpath_errors_uri, "SESU0007", Dynamic_error)
+				transformer.report_recoverable_error (an_error)
+				if not transformer.is_error then
+					outputter := encoder_factory.outputter (encoding, raw_outputter)
+					if outputter = Void then
+						create an_error.make_from_string ("Failed to recover",
+																	 Xpath_errors_uri, "SESU0007", Dynamic_error)
+						transformer.report_fatal_error (an_error)
+					end
+				end
+			end
+			if not transformer.is_error then
 				is_output_open := True
 				if not is_declaration_written then write_declaration end
 			
@@ -772,6 +795,8 @@ feature {NONE} -- Implementation
 				output (">")
 			end
 			is_open_start_tag := False
+		ensure
+			start_tag_not_open: not is_open_start_tag
 		end
 
 	empty_element_tag_closer (a_name: STRING): STRING is
@@ -797,8 +822,16 @@ feature {NONE} -- Implementation
 			set_url_attribute ("object", "codebase")
 			set_url_attribute ("applet", "codebase")
 			set_url_attribute ("object", "data")
+			set_url_attribute ("object", "datasrc")
+			set_url_attribute ("button", "datasrc")
+			set_url_attribute ("div", "datasrc")
+			set_url_attribute ("input", "datasrc")
+			set_url_attribute ("select", "datasrc")
+			set_url_attribute ("span", "datasrc")
+			set_url_attribute ("table", "datasrc")
+			set_url_attribute ("textarea", "datasrc")
 			set_url_attribute ("a", "href")
-			set_url_attribute ("a", "name")       -- see second note in section B.2.1 of HTML 4 specification
+			-- Not in serialization draft MHK is going to check on this - TODO - reinstate if in Cand. REC: set_url_attribute ("a", "name")       -- see second note in section B.2.1 of HTML 4 specification
 			set_url_attribute ("area", "href")
 			set_url_attribute ("link", "href")
 			set_url_attribute ("base", "href")
@@ -807,6 +840,7 @@ feature {NONE} -- Implementation
 			set_url_attribute ("iframe", "longdesc")
 			set_url_attribute ("head", "profile")
 			set_url_attribute ("script", "src")
+			set_url_attribute ("script", "for")
 			set_url_attribute ("input", "src")
 			set_url_attribute ("frame", "src")
 			set_url_attribute ("iframe", "src")
@@ -814,6 +848,7 @@ feature {NONE} -- Implementation
 			set_url_attribute ("img", "usemap")
 			set_url_attribute ("input", "usemap")
 			set_url_attribute ("object", "usemap")
+			set_url_attribute ("object", "archive")
 		end
 
 	set_url_attribute (an_element, an_attribute: STRING) is
@@ -828,18 +863,16 @@ feature {NONE} -- Implementation
 			url_combinations_set.put ((an_element + "+" + an_attribute).as_lower)
 		end
 
-	unescaped_uri_characters: DS_HASH_SET [CHARACTER] is
-			-- Default character set not to escape
+	unescaped_html_characters: DS_HASH_SET [CHARACTER] is
+			-- Characters to escape for fn:iri-to-uri()
 		local
-			a_character_set: STRING
+			an_index: INTEGER
 		once
-			a_character_set := STRING_.concat (Rfc_lowalpha_characters, Rfc_upalpha_characters)
-			a_character_set := STRING_.appended_string (a_character_set, Rfc_digit_characters)
-			a_character_set := STRING_.appended_string (a_character_set, Rfc_mark_characters)
-			a_character_set := STRING_.appended_string (a_character_set, Rfc_reserved_characters)
-			a_character_set := STRING_.appended_string (a_character_set, Rfc_extra_reserved_characters)
-			a_character_set := STRING_.appended_string (a_character_set, "#")
-			Result := new_character_set (a_character_set)
+			create Result.make_equal (95)
+			from an_index := 32 until an_index > 126 loop
+				Result.force (INTEGER_.to_character (an_index))
+				an_index := an_index + 1
+			end
 		end
 
 	escaped_url (a_url: STRING): STRING is
@@ -850,7 +883,7 @@ feature {NONE} -- Implementation
 
 			-- NULs are added to prevent further escaping
 
-			Result := STRING_.concat ("%U", escape_custom (utf8.to_utf8 (a_url), unescaped_uri_characters, False))
+			Result := STRING_.concat ("%U", escape_custom (utf8.to_utf8 (a_url), unescaped_html_characters, False))
 			Result := STRING_.appended_string (Result, "%U")
 		end
 

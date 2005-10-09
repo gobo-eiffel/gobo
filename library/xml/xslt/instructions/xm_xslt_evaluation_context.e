@@ -526,7 +526,6 @@ feature -- Element change
 				else
 					some_properties := properties
 				end
-				-- set_output_properties TODO
 				a_receiver := transformer.selected_receiver (a_result, some_properties)
 
 				if not transformer.is_error then

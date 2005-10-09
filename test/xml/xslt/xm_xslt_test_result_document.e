@@ -51,10 +51,10 @@ feature -- Test
 			create a_result.make (an_output, "string:/")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Toc", a_configuration.output_resolver.output_destinations.item ("string:/toc.html").stream.last_output.count = 599)
-			assert ("Section 1", a_configuration.output_resolver.output_destinations.item ("string:/section1.html").stream.last_output.count = 426)
-			assert ("Section 2", a_configuration.output_resolver.output_destinations.item ("string:/section2.html").stream.last_output.count = 426)
-			assert ("Section 3", a_configuration.output_resolver.output_destinations.item ("string:/section3.html").stream.last_output.count = 432)
+			assert ("Toc", a_configuration.output_resolver.output_destinations.item ("string:/toc.html").stream.last_output.count = 596)
+			assert ("Section 1", a_configuration.output_resolver.output_destinations.item ("string:/section1.html").stream.last_output.count = 416)
+			assert ("Section 2", a_configuration.output_resolver.output_destinations.item ("string:/section2.html").stream.last_output.count = 416)
+			assert ("Section 3", a_configuration.output_resolver.output_destinations.item ("string:/section3.html").stream.last_output.count = 422)
 		end
 
 	test_implicit_duplicate_destination_error is

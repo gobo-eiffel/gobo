@@ -36,7 +36,9 @@ feature -- Access
 	Preceding_axis: INTEGER is 10
 	Preceding_sibling_axis: INTEGER is 11
 	Self_axis: INTEGER is 12
-	Preceding_or_ancestor_axis: INTEGER is 13
+	Namespace_axis: INTEGER is 13
+			-- Only valid in XPath 1.0 compatibility mode
+	Preceding_or_ancestor_axis: INTEGER is 14
 			-- Used internally by xsl:number implementation
 
 	axis_number (an_axis: STRING): INTEGER is
@@ -68,6 +70,8 @@ feature -- Access
 				Result := Preceding_sibling_axis
 			elseif STRING_.same_string ("self", an_axis) then
 				Result := Self_axis
+			elseif STRING_.same_string ("namespace", an_axis) then
+				Result := Namespace_axis
 			end
 		ensure
 			axis_number_in_range: Ancestor_axis <= Result and then Result < Preceding_or_ancestor_axis -- (can't be used in XPath expression)
@@ -104,6 +108,8 @@ feature -- Access
 				Result := "preceding"
 			when Preceding_sibling_axis then
 				Result := "preceding-sibling"
+			when Namespace_axis then
+				Result := "namespace"
 			end
 		ensure
 			axis_name_not_void: Result /= Void
@@ -158,6 +164,8 @@ feature -- Status report
 			elseif STRING_.same_string ("preceding-sibling", an_axis) then
 				Result := True
 			elseif STRING_.same_string ("self", an_axis) then
+				Result := True
+			elseif STRING_.same_string ("namespace", an_axis) then
 				Result := True
 			else
 				Result := False
@@ -219,7 +227,7 @@ feature -- Status report
 		end
 
 	is_peer_axis (an_axis: INTEGER): BOOLEAN is
-			-- Does `an_axis' have any nodes which are ancestors of others on same axis?
+			-- Does `an_axis' not have any nodes which are ancestors of others on same axis?
 		require
 			valid_axis: is_axis_valid (an_axis)
 		do
@@ -236,6 +244,8 @@ feature -- Status report
 			when Self_axis then
 				Result := True
 			when Parent_axis then
+				Result := True
+			when Namespace_axis then
 				Result := True
 			else
 				Result := False
@@ -258,6 +268,8 @@ feature -- Status report
 			when Descendant_axis then
 				Result := True
 			when Descendant_or_self_axis then
+				Result := True
+			when Namespace_axis then
 				Result := True
 			else
 				Result := False
@@ -315,12 +327,16 @@ feature {NONE} -- Implementation
 			Result := INTEGER_.bit_shift_left (1, Text_node)
 		end
 
+	namespace_kind: INTEGER is
+		once
+			Result := INTEGER_.bit_shift_left (1, Namespace_node)
+		end
+
 	miscellaneous_kinds: INTEGER is
 			-- Mask for commonly used multiple kinds
 		once
 			Result := INTEGER_.bit_or (comment_kind,
-												INTEGER_.bit_or (processing_instruction_kind, text_kind))
-																																	 
+												INTEGER_.bit_or (processing_instruction_kind, text_kind))														 
 		end
 
 	empty_axis_table: ARRAY [INTEGER] is
@@ -329,15 +345,16 @@ feature {NONE} -- Implementation
 			create Result.make (Ancestor_axis, Preceding_or_ancestor_axis)
 			Result.put (document_kind, Ancestor_axis)
 			Result.put (0, Ancestor_or_self_axis)
-			Result.put (INTEGER_.bit_or (document_kind, INTEGER_.bit_or (miscellaneous_kinds, attribute_kind)), Attribute_axis)
-			Result.put (INTEGER_.bit_or (miscellaneous_kinds, attribute_kind), Child_axis)
-			Result.put (INTEGER_.bit_or (miscellaneous_kinds, attribute_kind), Descendant_axis)
+			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (miscellaneous_kinds, attribute_kind))), Attribute_axis)
+			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (miscellaneous_kinds, attribute_kind)), Child_axis)
+			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (miscellaneous_kinds, attribute_kind)), Descendant_axis)
 			Result.put (0, Descendant_or_self_axis)
 			Result.put (document_kind, Following_axis)
-			Result.put (INTEGER_.bit_or (document_kind, attribute_kind), Following_sibling_axis)
+			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (document_kind, attribute_kind)), Following_sibling_axis)
+			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (miscellaneous_kinds, attribute_kind))), Namespace_axis)
 			Result.put (document_kind, Parent_axis)
 			Result.put (document_kind, Preceding_axis)
-			Result.put (INTEGER_.bit_or (document_kind, attribute_kind), Preceding_sibling_axis)
+			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (document_kind, attribute_kind)), Preceding_sibling_axis)
 			Result.put (0, Self_axis)
 		end
 	
@@ -346,17 +363,18 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (Ancestor_axis, Preceding_or_ancestor_axis)
 			Result.put (INTEGER_.bit_or (document_kind, element_kind), Ancestor_axis)
-			Result.put (INTEGER_.bit_or (document_kind, INTEGER_.bit_or (attribute_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds))), Ancestor_or_self_axis)
+			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (attribute_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds)))), Ancestor_or_self_axis)
 			Result.put (attribute_kind, Attribute_axis)
 			Result.put (INTEGER_.bit_or (miscellaneous_kinds, element_kind), Child_axis)
 			Result.put (INTEGER_.bit_or (miscellaneous_kinds, element_kind), Descendant_axis)
-			Result.put (INTEGER_.bit_or (attribute_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds))), Descendant_or_self_axis)
+			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (attribute_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds)))), Descendant_or_self_axis)
 			Result.put (INTEGER_.bit_or (miscellaneous_kinds, element_kind), Following_axis)
 			Result.put (INTEGER_.bit_or (miscellaneous_kinds, element_kind), Following_sibling_axis)
+			Result.put (namespace_kind, Namespace_axis)
 			Result.put (INTEGER_.bit_or (document_kind, element_kind), Parent_axis)
 			Result.put (INTEGER_.bit_or (document_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds)), Preceding_axis)
 			Result.put (INTEGER_.bit_or (element_kind, miscellaneous_kinds), Preceding_sibling_axis)
-			Result.put (INTEGER_.bit_or (attribute_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds))), Self_axis)
+			Result.put (INTEGER_.bit_or (namespace_kind, INTEGER_.bit_or (attribute_kind, INTEGER_.bit_or (document_kind, INTEGER_.bit_or (element_kind, miscellaneous_kinds)))), Self_axis)
 		end
 	
 end

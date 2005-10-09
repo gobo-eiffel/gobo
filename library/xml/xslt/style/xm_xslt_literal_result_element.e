@@ -303,14 +303,14 @@ feature {NONE} -- Implementation
 			if not shared_name_pool.is_name_code_allocated (Null_uri, Null_uri, Version_attribute) then
 				shared_name_pool.allocate_name (Null_uri, Null_uri, Version_attribute)
 			end
-			a_builder.notify_attribute (shared_name_pool.name_code (Null_uri, Null_uri, Version_attribute), Untyped_Atomic_Type_Code, a_version, 0)
+			a_builder.notify_attribute (shared_name_pool.name_code (Null_uri, Null_uri, Version_attribute), Untyped_atomic_type_code, a_version, 0)
 			a_builder.start_content
 
 			a_builder.start_element (Xslt_template_type_code, Untyped_type_code, 0)
 			if not shared_name_pool.is_name_code_allocated (Null_uri, Null_uri, Match_attribute) then
 				shared_name_pool.allocate_name (Null_uri, Null_uri, Match_attribute)
 			end
-			a_builder.notify_attribute (shared_name_pool.name_code (Null_uri, Null_uri, Match_attribute), Untyped_Atomic_Type_Code, "/", 0)
+			a_builder.notify_attribute (shared_name_pool.name_code (Null_uri, Null_uri, Match_attribute), Untyped_atomic_type_code, "/", 0)
 			a_builder.start_content
 
 			a_builder.graft_element (Current)

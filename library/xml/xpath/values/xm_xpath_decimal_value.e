@@ -268,7 +268,7 @@ feature -- Conversion
 				if is_nan then
 					create {XM_XPATH_FLOAT_VALUE} Result.make_nan
 				else
-					create {XM_XPATH_FLOAT_VALUE} Result.make (value.to_double.truncated_to_real)
+					create {XM_XPATH_FLOAT_VALUE} Result.make (value.to_double)
 				end
 			elseif  a_required_type = type_factory.decimal_type then
 				Result := Current

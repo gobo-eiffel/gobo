@@ -51,6 +51,7 @@ feature -- Access
 	Processing_instruction_node: INTEGER is 7
 	Comment_node: INTEGER is 8
 	Document_node: INTEGER is 9
+	Namespace_node: INTEGER is 13
 
 	Any_node: INTEGER is 0
 
@@ -82,6 +83,8 @@ feature -- Access
 				Result := "text()"
 			when Processing_instruction_node then
 				Result := "processing-instruction()"
+			when Namespace_node then
+				Result := "namespace()"
 			else
 				Result := "Unexpected node kind"
 			end
@@ -137,6 +140,8 @@ feature -- Access
 				Result := "attribute"
 			when Processing_instruction_node then
 				Result := "processing-instruction"
+			when Namespace_node then
+				Result := "namespace"
 			when Any_node then
 				Result := "node()"
 			end
@@ -171,6 +176,7 @@ feature -- Status report
 				or else a_type = Processing_instruction_node
 				or else a_type = Comment_node
 				or else a_type = Document_node
+				or else a_type = Namespace_node
 				or else a_type = Any_node
 		end
 

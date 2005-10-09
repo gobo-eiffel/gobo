@@ -76,15 +76,8 @@ feature -- Events
 	start_content is
 			-- Notify the start of the content, that is, the completion of all attributes and namespaces.
 		do
-			close_start_tag ("", False) -- prevent <xxx/> syntax
-
-			-- add a meta tag after the head tag if there is one. TODO: or replace and existing one
-
-			if not is_error and then element_uri_code = Default_uri_code and then STRING_.same_string (element_name, "head") then
-				if output_properties.include_content_type then
-					output_ignoring_error ("%N      <meta http-equiv=%"Content-Type%" content=%"" +
-												  media_type + "; charset=" + encoding + "%">%N   ") 
-				end
+			if is_open_start_tag then
+				close_start_tag ("", False) -- prevent <xxx/> syntax
 			end
 		end
 
@@ -336,12 +329,23 @@ feature {NONE} -- Implementation
 			a_system_id, a_public_id: STRING
 			a_character_representation, a_non_ascii_representation, an_excluded_representation: STRING
 			an_index: INTEGER
+			an_error: XM_XPATH_ERROR_VALUE
 		do
 			encoding := output_properties.encoding.as_upper
 
 			outputter := encoder_factory.outputter (encoding, raw_outputter)
 			if outputter = Void then
-				on_error ("Unable to open output stream for encoding " + encoding)
+				create an_error.make_from_string (STRING_.concat ("Trying UTF-8 as unable to open output stream in encoding ", encoding),
+															 Xpath_errors_uri, "SESU0007", Dynamic_error)
+				transformer.report_recoverable_error (an_error)
+				if not transformer.is_error then
+					outputter := encoder_factory.outputter (encoding, raw_outputter)
+					if outputter = Void then
+						create an_error.make_from_string ("Failed to recover",
+																	 Xpath_errors_uri, "SESU0007", Dynamic_error)
+						transformer.report_fatal_error (an_error)
+					end
+				end
 			else
 				is_output_open := True
 

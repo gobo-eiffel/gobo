@@ -88,9 +88,24 @@ feature -- Access
 		end
 
 	as_array_iterator: XM_XPATH_ARRAY_ITERATOR [G] is
-			-- `Current' seen as a array iterator
+			-- `Current' seen as an array iterator
 		require
 			array_iterator: is_array_iterator
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
+	is_axis_iterator: BOOLEAN is
+			-- Is `Current' an axis iterator?
+		do
+			Result := False
+		end
+
+	as_axis_iterator: XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
+			-- `Current' seen as an axis iterator
+		require
+			axis_iterator: is_axis_iterator
 		do
 		ensure
 			same_object: ANY_.same_objects (Result, Current)

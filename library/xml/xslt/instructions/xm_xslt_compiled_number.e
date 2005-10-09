@@ -812,7 +812,7 @@ feature {NONE} -- Implementation
 
 			if from_pattern = Void then
 				a_filter := count_pattern.node_test
-			elseif from_pattern.node_kind = element_node and then count_pattern.node_kind = Element_Node then
+			elseif from_pattern.node_kind = Element_node and then count_pattern.node_kind = Element_node then
 				a_filter := element_node_kind_test
 			else
 				a_filter := any_node_test

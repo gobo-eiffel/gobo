@@ -12,6 +12,8 @@ indexing
 
 class XM_XPATH_FLOAT_VALUE
 
+	-- TODO: change DOUBLE to REAL_32 when all compilers support it
+
 inherit
 
 	XM_XPATH_NUMERIC_VALUE
@@ -31,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: REAL) is
+	make (a_value: DOUBLE) is
 		do
 			make_atomic_value
 			value := a_value
@@ -59,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: REAL
+	value: DOUBLE
 	
 	hash_code: INTEGER is
 			-- Hash code value
@@ -68,11 +70,8 @@ feature -- Access
 		end
 	
 	as_integer: INTEGER is
-		local
-			a_double: DOUBLE
 		do
-			a_double := value
-			Result := DOUBLE_.truncated_to_integer (a_double)
+			Result := DOUBLE_.truncated_to_integer (value)
 		end
 
 	as_double: DOUBLE is
@@ -152,11 +151,8 @@ feature -- Status report
 
 	is_whole_number: BOOLEAN is
 			-- Is value integral?
-		local
-			a_double: DOUBLE
 		do
-			a_double := value
-			Result := value = DOUBLE_.truncated_to_integer (a_double)
+			Result := value = DOUBLE_.truncated_to_integer (value)
 		end
 
 	is_platform_integer: BOOLEAN is
@@ -209,8 +205,6 @@ feature -- Conversion
 			-- Convert `Current' to `a_required_type'
 			-- TODO - need to virtualize the pre-condition so that
 			-- only sub-types of Integer_type are valid
-		local
-			a_double: DOUBLE
 		do
 			if a_required_type = type_factory.boolean_type  then
 				create {XM_XPATH_BOOLEAN_VALUE} Result.make (value /= 0.0)
@@ -223,8 +217,7 @@ feature -- Conversion
 			elseif  a_required_type = type_factory.float_type then
 				Result := Current
 			elseif  a_required_type = type_factory.double_type then
-				a_double := value
-				create {XM_XPATH_DOUBLE_VALUE} Result.make (a_double)
+				create {XM_XPATH_DOUBLE_VALUE} Result.make (value)
 			elseif  a_required_type = type_factory.decimal_type then
 				create {XM_XPATH_DECIMAL_VALUE} Result.make_from_string (value.out)
 			elseif  a_required_type = type_factory.string_type then
@@ -246,9 +239,9 @@ feature -- Conversion
 			else
 				create a_decimal.make_from_string (value.out)
 				if a_decimal.is_negative then
-					create Result.make (a_decimal.round_to_integer (shared_negative_round_context).to_double.truncated_to_real)
+					create Result.make (a_decimal.round_to_integer (shared_negative_round_context).to_double)
 				else
-					create Result.make (a_decimal.round_to_integer (shared_round_context).to_double.truncated_to_real)
+					create Result.make (a_decimal.round_to_integer (shared_round_context).to_double)
 				end
 			end
 		end
@@ -264,7 +257,7 @@ feature -- Conversion
 				Result := Current
 			else
 				create a_decimal.make_from_string (value.out)
-				create Result.make (a_decimal.rescale (0 - a_scale, shared_half_even_context).to_double.truncated_to_real)
+				create Result.make (a_decimal.rescale (0 - a_scale, shared_half_even_context).to_double)
 			end
 		end
 
@@ -279,7 +272,7 @@ feature -- Conversion
 				Result := Current
 			else
 				create a_decimal.make_from_string (value.out)
-				create Result.make (a_decimal.round_to_integer (shared_floor_context).to_double.truncated_to_real)
+				create Result.make (a_decimal.round_to_integer (shared_floor_context).to_double)
 			end
 		end
 
@@ -294,7 +287,7 @@ feature -- Conversion
 				Result := Current
 			else
 				create a_decimal.make_from_string (value.out)
-				create Result.make (a_decimal.round_to_integer (shared_ceiling_context).to_double.truncated_to_real)
+				create Result.make (a_decimal.round_to_integer (shared_ceiling_context).to_double)
 			end
 
 			
@@ -311,23 +304,23 @@ feature -- Basic operations
 	arithmetic (an_operator: INTEGER; other: XM_XPATH_NUMERIC_VALUE): XM_XPATH_NUMERIC_VALUE is
 			-- Arithmetic calculation
 		local
-			a_float, another_float: REAL
+			a_float, another_float: DOUBLE
 			an_integer, another_integer: INTEGER
 		do
 			inspect
 				an_operator
 			when Plus_token then
-				create {XM_XPATH_FLOAT_VALUE} Result.make (value + other.as_double.truncated_to_real)
+				create {XM_XPATH_FLOAT_VALUE} Result.make (value + other.as_double)
 			when Minus_token then
-				create {XM_XPATH_FLOAT_VALUE} Result.make (value - other.as_double.truncated_to_real)
+				create {XM_XPATH_FLOAT_VALUE} Result.make (value - other.as_double)
 			when Multiply_token then
-				create {XM_XPATH_FLOAT_VALUE} Result.make (value * other.as_double.truncated_to_real)
+				create {XM_XPATH_FLOAT_VALUE} Result.make (value * other.as_double)
 			when Division_token then
-				create {XM_XPATH_FLOAT_VALUE} Result.make (value / other.as_double.truncated_to_real)
+				create {XM_XPATH_FLOAT_VALUE} Result.make (value / other.as_double)
 			when Integer_division_token then
-				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value / other.as_double.truncated_to_real))
+				create {XM_XPATH_INTEGER_VALUE} Result.make_from_integer (DOUBLE_.truncated_to_integer (value / other.as_double))
 			when Modulus_token then
-				a_float := other.as_double.truncated_to_real
+				a_float := other.as_double
 				if is_whole_number and then other.is_whole_number then
 					an_integer := as_integer
 					another_integer := other.as_integer
@@ -375,10 +368,10 @@ feature {NONE} -- Implementation
 	internal_is_nan: BOOLEAN
 			-- Fabricated NaN
 
-	Large_number: REAL is 2.0e35
-	Large_negative_number: REAL is -2.0e35
+	Large_number: DOUBLE is 2.0e300 -- 2.0e35
+	Large_negative_number: DOUBLE is -2.0e300 -- -2.0e35
  
-	plus_infinity: REAL is 
+	plus_infinity: DOUBLE is 
 			-- Overflow on purpose.
 		once
 			Result := Large_number * Large_number 
@@ -387,7 +380,7 @@ feature {NONE} -- Implementation
 			infinity_reached: Result / Large_number = Result
 		end
 
-	minus_infinity: REAL is 
+	minus_infinity: DOUBLE is 
 			-- Overflow on purpose.
 		once
 			Result := Large_number * Large_negative_number 

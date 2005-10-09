@@ -527,12 +527,12 @@ feature -- Element change
 	set_undeclare_prefixes (an_undeclare_prefixes_value: BOOLEAN; an_import_precedence: INTEGER) is
 			-- Set `undeclare_prefixes'.
 		require
-			higher_precedence: is_higher_precedence (an_import_precedence, undeclare_prefixes_attribute)
+			higher_precedence: is_higher_precedence (an_import_precedence, Undeclare_prefixes_attribute)
 		do
-			precedence_property_map.force (an_import_precedence, undeclare_prefixes_attribute)
+			precedence_property_map.force (an_import_precedence, Undeclare_prefixes_attribute)
 			undeclare_prefixes := an_undeclare_prefixes_value
 		ensure
-			import_precedence_set: precedence_property_map.has (undeclare_prefixes_attribute) and then precedence_property_map.item (undeclare_prefixes_attribute) = an_import_precedence
+			import_precedence_set: precedence_property_map.has (Undeclare_prefixes_attribute) and then precedence_property_map.item (Undeclare_prefixes_attribute) = an_import_precedence
 			undeclare_prefixes_set: undeclare_prefixes = an_undeclare_prefixes_value
 		end
 
@@ -895,8 +895,8 @@ feature {NONE} -- Implementation
 				else
 					set_cdata_sections (cdata_section_expanded_names)
 				end
-			elseif STRING_.same_string (a_local_name, undeclare_prefixes_attribute) then
-				set_yes_no_property (undeclare_prefixes_attribute, a_value)
+			elseif STRING_.same_string (a_local_name, Undeclare_prefixes_attribute) then
+				set_yes_no_property (Undeclare_prefixes_attribute, a_value)
 				if not is_error then set_undeclare_prefixes (last_yes_no_value, 1000000) end
 			elseif STRING_.same_string (a_local_name, Include_content_type_attribute) then
 				set_yes_no_property (Include_content_type_attribute, a_value)

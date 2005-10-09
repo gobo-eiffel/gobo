@@ -63,6 +63,21 @@ feature -- Access
 			Result := Current
 		end
 
+	is_namespace: BOOLEAN is
+			-- Is `Current' a namespace?
+		do
+			Result := False
+		end
+	
+	as_namespace: XM_XPATH_NAMESPACE_NODE is
+			-- `Current' seen as a node
+		require
+			namespace: is_namespace
+		do
+		ensure
+			same_object: ANY_.same_objects (Result, Current)
+		end
+
 	is_tiny_node: BOOLEAN is
 			-- Is `Current' a tiny-tree node?
 		do
@@ -157,7 +172,7 @@ feature -- Access
 
 	parent: XM_XPATH_COMPOSITE_NODE is
 			-- Parent of current node;
-			-- `Void' if current node is root, or for orphan nodes or namespaces.
+			-- `Void' if current node is root, or for orphan nodes
 		require
 			not_in_error: not is_error
 		deferred
@@ -234,7 +249,7 @@ feature -- Access
 	path: STRING is
 			-- XPath expression for location with document
 		local
-			a_preceding_path: STRING
+			a_preceding_path, a_test: STRING
 		do
 			inspect
 				node_type
@@ -286,6 +301,16 @@ feature -- Access
 						Result := STRING_.appended_string (a_preceding_path, Result)
 					end
 				end
+			when Namespace_node then
+				a_test := local_part
+				if a_test.count = 0 then
+
+					-- Default namespace: need a node-test that selects unnamed nodes only
+					
+					a_test := "*[not(local-name()]"
+				end
+				Result := STRING_.concat (parent.path, "/namespace::")
+				Result := STRING_.appended_string (Result, a_test)
 			end
 		ensure
 			path_not_void: Result /= Void
@@ -457,6 +482,8 @@ feature -- Access
 				Result := "comment()"
 			when Processing_instruction_node then
 				Result := "processing-instruction()"
+			when Namespace_node then
+				Result := "namespace()"
 			end
 		end
 

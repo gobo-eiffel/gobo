@@ -125,7 +125,7 @@ feature -- Tests
 			assert ("No valuation error", not an_evaluator.is_error)
 			evaluated_items := an_evaluator.evaluated_items
 			a_float_value ?= evaluated_items.item (1)
-			assert ("Correct value", a_float_value /= Void and then a_float_value.value = 17.5E-12)
+			assert ("Correct value", a_float_value /= Void and then a_float_value.value <= 17.5E-12 and then a_float_value.value >= 17.4E-12)
 		end	
 
 	test_untyped_atomic_to_double_unsucessful is

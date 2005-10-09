@@ -55,7 +55,7 @@ feature -- Status report
 	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE is
 			-- Type of argument number `argument_number'
 		do
-			if argument_number = 1then
+			if argument_number = 1 then
 				create Result.make_single_date
 			else
 				create Result.make_single_time

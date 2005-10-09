@@ -43,7 +43,8 @@ feature -- Status report
 	is_bad_character_code (a_code: INTEGER): BOOLEAN is
 			-- Is `a_code' not representable in `encoding'?
 		do
-			-- All characters are valid
+			-- All characters that are passed to this routine
+			--  are valid, as they have already passed an `is_char' test.
 		end
 
 feature -- Element change

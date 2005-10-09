@@ -125,7 +125,7 @@ feature -- Test
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (Void, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", an_output.last_output.count = 399)
+			assert ("Correct result", an_output.last_output.count = 400)
 		end
 
 	test_text_character_map is
@@ -155,7 +155,7 @@ feature -- Test
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (Void, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", an_output.last_output.count = 125)
+			assert ("Correct result", an_output.last_output.count = 93)
 		end
 
 	test_xhtml_character_map_with_cdata is
@@ -185,7 +185,7 @@ feature -- Test
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (Void, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			assert ("Correct result", an_output.last_output.count = 699)
+			assert ("Correct result", an_output.last_output.count = 700)
 		end
 
 	test_qname_method is

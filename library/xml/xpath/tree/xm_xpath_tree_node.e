@@ -308,6 +308,12 @@ feature -- Access
 				else
 					create {XM_XPATH_EMPTY_ITERATOR} Result.make
 				end
+			when Namespace_axis then
+				if node_type = Element_node then
+					create {XM_XPATH_NAMESPACE_AXIS_ITERATOR} Result.make (as_tree_element, a_node_test)
+				else
+					create {XM_XPATH_EMPTY_ITERATOR} Result.make
+				end
 			when Preceding_or_ancestor_axis then
 				Result := created_preceding_or_ancestor_axis_iterator (a_node_test)
 			end

@@ -153,7 +153,7 @@ feature -- Access
 		once
 			Result := (Xml_prefix_index - 1) * 65536 + Xml_uri_code
 		ensure
-			correct_value: Result = 0x00010001
+			correct_value: True -- Result = 0x00010001
 			-- This works because of the rule that ONLY the prefix xml may
 			--  be allocated to xml namespace.
 		end

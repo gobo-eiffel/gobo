@@ -74,9 +74,9 @@ feature -- Events
 					end
 				elseif character_map_expander /= Void then
 					a_mapped_string := character_map_expander.mapped_string (chars)
-					output_escape (normalized_string (a_mapped_string), False)
+					output (normalized_string (a_mapped_string))
 				else
-					output_escape (normalized_string (chars), False)
+					output (normalized_string (chars))
 				end
 			end
 		end

@@ -17,6 +17,9 @@ feature -- Access
 	encoding: STRING
 			-- Name of encoding
 
+	outputter: XM_OUTPUT
+			-- Raw outputter
+
 feature -- Status report
 
 	is_error: BOOLEAN
@@ -67,11 +70,6 @@ feature -- Element change
 			valid_string: is_valid_string (a_character_string)
 		deferred
 		end
-			
-feature {NONE} -- Implementation
-
-	outputter: XM_OUTPUT
-			-- Raw outputter
 
 invariant
 

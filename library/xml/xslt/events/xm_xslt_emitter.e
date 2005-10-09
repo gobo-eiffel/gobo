@@ -129,9 +129,14 @@ feature -- Element change
 			-- Set `output_properties'.
 		require
 			output_properties_not_void: some_output_properties /= Void
+		local
+			an_encoding: STRING
+			an_outputter: XM_OUTPUT
 		do
-			-- TODO: character set
 			output_properties := some_output_properties
+			an_encoding := output_properties.encoding
+			an_outputter := outputter.outputter
+			outputter := transformer.configuration.encoder_factory.outputter (an_encoding, an_outputter)
 		ensure
 			output_properties_set: output_properties = some_output_properties
 		end

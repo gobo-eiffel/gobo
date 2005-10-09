@@ -141,32 +141,18 @@ feature -- Access
 			end
 		end
 
-	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
-			-- Output all namespace nodes associated with this element.
+	declared_namespaces: DS_ARRAYED_LIST [INTEGER] is
+			-- Codes for namespaces declared on `Current'
 		local
-			a_namespace_node: INTEGER
-			a_node: XM_XPATH_TINY_COMPOSITE_NODE
+			a_namespace_code, a_namespace_node: INTEGER
 		do
-			if tree.are_namespaces_used then
-				a_namespace_node := tree.beta_value (node_number)
-				if a_namespace_node > 0 then
-					from
-					until
-						a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number
-					loop
-						a_receiver.notify_namespace (tree.namespace_code_for_node (a_namespace_node), 0)
-						a_namespace_node := a_namespace_node + 1
-					end
-				end
-				
-				-- Now add the namespaces defined on the ancestor nodes.
-				-- We rely on the receiver to eliminate multiple declarations of the same prefix.
-				
-				if include_ancestors then
-					a_node := parent
-					if a_node /= Void and then a_node.is_element then
-						a_node.as_element.output_namespace_nodes (a_receiver, true)
-					end
+			create Result.make_default
+			a_namespace_node := tree.beta_value (node_number)
+			if a_namespace_node > 0 then
+				from  until a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number loop
+					a_namespace_code := tree.namespace_code_for_node (a_namespace_node)
+					Result.force_last (a_namespace_code)
+					a_namespace_node := a_namespace_node + 1	
 				end
 			end
 		end
@@ -198,6 +184,38 @@ feature -- Status setting
 			name_code_set: tree.name_code_for_node (node_number) = a_name_code
 		end
 
+feature -- Element change
+	
+	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
+			-- Output all namespace nodes associated with this element.
+		local
+			a_namespace_node: INTEGER
+			a_node: XM_XPATH_TINY_COMPOSITE_NODE
+		do
+			if tree.are_namespaces_used then
+				a_namespace_node := tree.beta_value (node_number)
+				if a_namespace_node > 0 then
+					from
+					until
+						a_namespace_node > tree.number_of_namespaces or else tree.namespace_parent (a_namespace_node) /= node_number
+					loop
+						a_receiver.notify_namespace (tree.namespace_code_for_node (a_namespace_node), 0)
+						a_namespace_node := a_namespace_node + 1
+					end
+				end
+				
+				-- Now add the namespaces defined on the ancestor nodes.
+				-- We rely on the receiver to eliminate multiple declarations of the same prefix.
+				
+				if include_ancestors then
+					a_node := parent
+					if a_node /= Void and then a_node.is_element then
+						a_node.as_element.output_namespace_nodes (a_receiver, true)
+					end
+				end
+			end
+		end
+	
 feature -- Duplication
 
 	copy_node (a_receiver: XM_XPATH_RECEIVER; which_namespaces: INTEGER; copy_annotations: BOOLEAN) is

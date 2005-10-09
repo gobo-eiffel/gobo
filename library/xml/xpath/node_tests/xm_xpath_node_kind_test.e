@@ -25,7 +25,7 @@ inherit
 create
 
 	make, make_document_test, make_element_test, make_attribute_test, make_text_test,
-	make_processing_instruction_test, make_comment_test
+	make_processing_instruction_test, make_comment_test, make_namespace_test
 
 feature {NONE} -- Initialization
 
@@ -61,7 +61,15 @@ feature {NONE} -- Initialization
 		do
 			make (Attribute_node)
 		ensure
-			matches_attributess: node_kind = Attribute_node
+			matches_attributes: node_kind = Attribute_node
+		end
+
+	make_namespace_test is
+			-- Make a test that matches namespace nodes.
+		do
+			make (Namespace_node)
+		ensure
+			matches_namespaces: node_kind = Namespace_node
 		end
 
 	make_text_test is

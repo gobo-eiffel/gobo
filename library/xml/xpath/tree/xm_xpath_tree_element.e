@@ -209,33 +209,11 @@ feature -- Access
 				end
 			end
 		end
-
-	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
-			-- Output all namespace nodes associated with this element.
-		local
-			a_parent: XM_XPATH_COMPOSITE_NODE
-         a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+	
+	declared_namespaces: DS_ARRAYED_LIST [INTEGER] is
+			-- Codes for namespaces declared on `Current'
 		do
-			from
-				a_cursor := namespace_code_list.new_cursor; a_cursor.start
-			until
-					a_cursor.after
-			loop
-				if a_cursor.item >= 0 then -- drop any excluded namespaces
-					a_receiver.notify_namespace (a_cursor.item, 0)
-				end
-				a_cursor.forth
-			end
-
-			-- Now add the namespaces defined on the ancestor nodes.
-			-- We rely on the receiver to eliminate multiple declarations of the same prefix.
-
-			if include_ancestors then
-				a_parent := parent
-				if a_parent /= Void and then a_parent.is_element then
-					a_parent.as_tree_node.as_tree_element.output_namespace_nodes (a_receiver, true)
-				end
-			end
+			Result := namespace_code_list
 		end
 
 	accumulated_namespace_codes: DS_ARRAYED_LIST [INTEGER]
@@ -283,6 +261,34 @@ feature -- Status setting
 		end
 
 feature -- Element change
+	
+	output_namespace_nodes (a_receiver: XM_XPATH_RECEIVER; include_ancestors: BOOLEAN) is
+			-- Output all namespace nodes associated with this element.
+		local
+			a_parent: XM_XPATH_COMPOSITE_NODE
+         a_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
+		do
+			from
+				a_cursor := namespace_code_list.new_cursor; a_cursor.start
+			until
+					a_cursor.after
+			loop
+				if a_cursor.item >= 0 then -- drop any excluded namespaces
+					a_receiver.notify_namespace (a_cursor.item, 0)
+				end
+				a_cursor.forth
+			end
+
+			-- Now add the namespaces defined on the ancestor nodes.
+			-- We rely on the receiver to eliminate multiple declarations of the same prefix.
+
+			if include_ancestors then
+				a_parent := parent
+				if a_parent /= Void and then a_parent.is_element then
+					a_parent.as_tree_node.as_tree_element.output_namespace_nodes (a_receiver, true)
+				end
+			end
+		end
 
 	add_namespace (a_namespace_code: INTEGER) is
 			-- Add a namespace definition.

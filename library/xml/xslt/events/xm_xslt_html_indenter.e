@@ -17,6 +17,9 @@ inherit
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
 
+	XM_XPATH_STANDARD_NAMESPACES
+		export {NONE} all end
+	
 	XM_XPATH_PROXY_RECEIVER
 		redefine
 			start_element, end_element, notify_characters, notify_comment
@@ -32,14 +35,13 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			transformer_not_void: a_transformer /= Void
-			receiver_is_xml_emitter: a_receiver /= Void and then a_receiver.is_xml_emitter
 			output_properties_not_void: some_output_properties /= Void
 		do
 			base_receiver := a_receiver
-			emitter := a_receiver.as_xml_emitter
 			indent_spaces := some_output_properties.indent_spaces
 			is_after_formatted := True
 			system_id := a_receiver.system_id
+			create property_stack.make (20)
 		end
 
 feature -- Events
@@ -47,11 +49,12 @@ feature -- Events
 	start_element (a_name_code: INTEGER; a_type_code: INTEGER; properties: INTEGER) is
 			-- Notify the start of an element
 		local
-			a_tag: STRING
+			a_property: INTEGER
 		do
-			a_tag := shared_name_pool.display_name_from_name_code (a_name_code)
-			is_inline_tag := is_inline (a_tag)
-			in_formatted_tag := in_formatted_tag or else is_formatted (a_tag)
+			a_property := tag_properties (a_name_code)
+			property_stack.force (a_property)
+			is_inline_tag := is_inline_property (a_property)
+			in_formatted_tag := in_formatted_tag or else is_formatted_property (a_property)
 			if not is_inline_tag and then not in_formatted_tag and then
 				not is_after_inline and then not is_after_formatted then
 				indent
@@ -66,13 +69,13 @@ feature -- Events
 	end_element is
 			-- Notify the end of an element.
 		local
-			a_tag: STRING
+			a_property: INTEGER
 			this_inline, this_formatted: BOOLEAN
 		do
 			level := level - 1
-			a_tag := emitter.element_qname_stack.item
-			this_inline := is_inline (a_tag)
-			this_formatted := is_formatted (a_tag)
+			a_property := property_stack.item
+			this_inline := is_inline_property (a_property)
+			this_formatted := is_formatted_property (a_property)
 			if not this_inline and then not this_formatted and then
 				not is_after_inline and then not same_line and then
 				not is_after_formatted and then not in_formatted_tag then
@@ -83,6 +86,7 @@ feature -- Events
 				is_after_formatted := this_formatted
 				is_after_inline := this_inline
 			end
+			property_stack.remove
 			Precursor
 			in_formatted_tag := in_formatted_tag and then not this_formatted
 			same_line := False
@@ -138,9 +142,6 @@ feature {NONE} -- Implementation
 	indent_spaces: INTEGER
 			-- Number of spaces to use when indenting
 
-	emitter: XM_XSLT_XML_EMITTER
-			-- Base receiver
-
 	same_line, is_inline_tag, in_formatted_tag, is_after_inline, is_after_formatted: BOOLEAN
 			-- Flags that affect the decision to indent
 
@@ -150,6 +151,15 @@ feature {NONE} -- Implementation
 	level: INTEGER
 			-- Element nesting level
 
+	property_stack: DS_ARRAYED_STACK [INTEGER]
+			-- Stack of element properties
+
+	Inline_tag: INTEGER is 1
+			-- Inline property for an element
+
+	Formatted_tag: INTEGER is 2
+			-- Formatted property for an element
+	
 	inline_tags: DS_HASH_SET [STRING] is
 			-- Tags to be treated as an inline elements;
 			-- List of inline tags is from the HTML 4.0 (loose) spec.
@@ -205,14 +215,6 @@ feature {NONE} -- Implementation
 			inline_tags_not_void: Result /= Void
 		end
 
-	is_inline (a_tag_name: STRING): BOOLEAN is
-			-- Is `a_tag_name' to be treated as an inline element?
-		require
-			tag_name_not_void: a_tag_name /= Void
-		do
-			Result := inline_tags.has (a_tag_name.as_lower)
-		end
-
 	formatted_tags: DS_HASH_SET [STRING] is
 			-- Table of preformatted elements
 		once
@@ -222,17 +224,14 @@ feature {NONE} -- Implementation
 			Result.put ("script")
 			Result.put ("style")
 			Result.put ("textarea")
-			Result.put ("xmp")
+
+			-- xmp is obsolete, but still encountered.
+			-- Note that the spec doesn not FORCE you to indent other tags,
+			--  so it is legitimate to include it here
+			
+			Result.put ("xmp") 
 		ensure
 			formatted_tags_not_void: Result /= Void
-		end
-
-	is_formatted (a_tag_name: STRING): BOOLEAN is
-			-- Does `a_tag_name' contain pre-formatted text?
-		require
-			tag_name_not_void: a_tag_name /= Void
-		do
-			Result := formatted_tags.has (a_tag_name.as_lower)
 		end
 
 	indent is
@@ -252,10 +251,45 @@ feature {NONE} -- Implementation
 			same_line := False
 		end
 
+	tag_properties (a_name_code: INTEGER): INTEGER is
+			-- Properties for element named by `a_name_code'
+		require
+			valid_name_code: shared_name_pool.is_valid_name_code (a_name_code)
+		local
+			is_formatted, is_inline: BOOLEAN
+			a_local_name: STRING
+		do
+			if shared_name_pool.namespace_code_from_name_code (a_name_code) = Default_uri_code then
+				a_local_name := shared_name_pool.local_name_from_name_code (a_name_code).as_lower
+				is_inline := inline_tags.has (a_local_name)
+				is_formatted := formatted_tags.has (a_local_name)
+				if is_inline then Result := Result + Inline_tag end
+				if is_formatted then Result := Result + Formatted_tag end
+			end
+		ensure
+			result_in_range: Result >= 0 and then Result <= (Inline_tag + Formatted_tag)
+		end
+
+	is_inline_property (a_property: INTEGER): BOOLEAN is
+			-- Does `a_property' encompass inline-tag?
+		require
+			property_in_range: a_property >= 0 and then a_property <= (Inline_tag + Formatted_tag)
+		do
+			Result := a_property = Inline_tag or else a_property = Inline_tag + Formatted_tag
+		end
+
+	is_formatted_property (a_property: INTEGER): BOOLEAN is
+			-- Does `a_property' encompass formatted-tag?
+		require
+			property_in_range: a_property >= 0 and then a_property <= (Inline_tag + Formatted_tag)
+		do
+			Result := a_property = Formatted_tag or else a_property = Inline_tag + Formatted_tag
+		end
+
 invariant
 
 	strictly_positive_indent_spaces: indent_spaces > 0
-	emitter_is_base_receiver: emitter = base_receiver
+	property_stack_exists: property_stack /= Void
 
 end
 	

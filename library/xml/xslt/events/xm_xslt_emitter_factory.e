@@ -173,8 +173,9 @@ feature {NONE} -- Implementation
 			character_map_index: some_properties.used_character_maps.count > 0 implies a_character_map_index /= Void
 		local
 			an_xhtml_emitter: XM_XSLT_XHTML_EMITTER
-			an_html_indenter: XM_XSLT_HTML_INDENTER
+			an_html_indenter: XM_XSLT_XHTML_INDENTER
 			a_cdata_filter: XM_XSLT_CDATA_FILTER
+			a_meta_inserter: XM_XSLT_META_TAG_INSERTER
 		do
 			create an_xhtml_emitter.make (a_transformer, a_result_stream, some_properties,
 												 character_map_expander (some_properties, a_character_map_index, True))
@@ -182,6 +183,10 @@ feature {NONE} -- Implementation
 			if some_properties.indent then
 				create an_html_indenter.make (a_transformer, an_xhtml_emitter, some_properties)
 				Result := an_html_indenter
+			end
+			if some_properties.include_content_type then
+				create a_meta_inserter.make (Result, some_properties, True)
+				Result := a_meta_inserter
 			end
 			if some_properties.cdata_section_elements.count > 0 then
 				create a_cdata_filter.make (Result, an_xhtml_emitter, some_properties)
@@ -201,6 +206,7 @@ feature {NONE} -- Implementation
 		local
 			an_html_emitter: XM_XSLT_HTML_EMITTER
 			an_html_indenter: XM_XSLT_HTML_INDENTER
+			a_meta_inserter: XM_XSLT_META_TAG_INSERTER
 		do
 			create an_html_emitter.make (a_transformer, a_result_stream, some_properties,
 												 character_map_expander (some_properties, a_character_map_index, True))
@@ -208,6 +214,10 @@ feature {NONE} -- Implementation
 			if some_properties.indent then
 				create an_html_indenter.make (a_transformer, an_html_emitter, some_properties)
 				Result := an_html_indenter
+			end
+			if some_properties.include_content_type then
+				create a_meta_inserter.make (Result, some_properties, False)
+				Result := a_meta_inserter
 			end
 		end
 
