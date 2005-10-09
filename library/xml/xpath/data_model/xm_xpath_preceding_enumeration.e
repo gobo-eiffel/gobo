@@ -16,6 +16,12 @@ inherit
 
 	XM_XPATH_AXIS_ITERATOR [G]
 
+	XM_XPATH_TYPE
+		export {NONE} all end
+
+	XM_XPATH_AXIS
+		export {NONE} all end
+
 	-- This implementation works for all tree models
 
 create
@@ -24,20 +30,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_starting_node: XM_XPATH_NODE; include: BOOLEAN) is
+	make (a_starting_node: G; include: BOOLEAN) is
 			-- Establish invariant.
 		require
 			starting_node_exists: a_starting_node /= Void
 		do
 			include_ancestors := include
 			starting_node := a_starting_node
-			create ancestors.make (starting_node, False)
+			create {XM_XPATH_ANCESTOR_ENUMERATION [G]} ancestors.make (starting_node, False)
 			inspect
-				starting_node.node_tests
+				starting_node.node_type
 			when Element_node, Text_node, Comment_node, Processing_instruction_node then
-				siblings := starting_node.new_axis_iterator (Preceding_sibling_axis)
+				siblings ?= starting_node.new_axis_iterator (Preceding_sibling_axis)
 			else
-				create {XM_XPATH_EMPTY_ITERATOR} siblings.make
+				siblings := Void
 			end
 		ensure
 			include_ancestors_set: include_ancestors = include
@@ -51,7 +57,7 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			item := current_item
+			advance
 		end
 
 feature -- Duplication
@@ -64,7 +70,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	starting_node: XM_XPATH_NODE
+	starting_node: G
 			-- Origin node
 
 	include_ancestors: BOOLEAN
@@ -73,10 +79,10 @@ feature {NONE} -- Implementation
 	ancestors: XM_XPATH_AXIS_ITERATOR [G]
 			-- Ancestors
 	
-	sibling: XM_XPATH_AXIS_ITERATOR [G]
+	siblings: XM_XPATH_AXIS_ITERATOR [G]
 			-- Following siblings
 
-	descndants: XM_XPATH_AXIS_ITERATOR [G]
+	descendants: XM_XPATH_AXIS_ITERATOR [G]
 			-- Descendants
 
 	advance is
@@ -102,7 +108,7 @@ feature {NONE} -- Implementation
 					else
 						a_node := siblings.item
 						if a_node.has_child_nodes then
-							create {XM_XPATH_DESCENDENT_ENUMERATION [G]} descendants.make (a_node, True, False)
+							create {XM_XPATH_DESCENDANT_ENUMERATION [G]} descendants.make (a_node, True, False)
 							advance
 						else
 							descendants := Void
@@ -119,9 +125,9 @@ feature {NONE} -- Implementation
 					else
 						current_item := ancestors.item
 						if current_item.node_type = Document_node then
-							create {XM_XPATH_EMPTY_ITERATOR} siblings.make
+							siblings := Void
 						else
-							siblings := current_item.new_axis_iterator (Preceding_sibling_axis)
+							siblings ?= current_item.new_axis_iterator (Preceding_sibling_axis)
 						end
 						if not include_ancestors then advance end
 					end

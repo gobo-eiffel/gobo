@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_starting_node: XM_XPATH_NODE; self: BOOLEAN) is
+	make (a_starting_node: G; self: BOOLEAN) is
 			-- Establish invariant.
 		require
 			starting_node_exists: a_starting_node /= Void
@@ -42,7 +42,7 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			item := current_item
+			advance
 		end
 
 feature -- Duplication
@@ -55,7 +55,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	starting_node: XM_XPATH_NODE
+	starting_node: G
 			-- Origin node
 	
 	include_self: BOOLEAN
@@ -67,7 +67,8 @@ feature {NONE} -- Implementation
 			if index = 1 and then include_self then
 				current_item := starting_node
 			else
-				current_item := current_item.parent
+				-- BUG in ISE compiler
+				-- current_item ?= current_item.parent
 			end
 		end
 

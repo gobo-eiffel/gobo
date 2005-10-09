@@ -10,11 +10,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_DESCENDENT_ENUMERATION [G -> XM_XPATH_NODE]
+class XM_XPATH_DESCENDANT_ENUMERATION [G -> XM_XPATH_NODE]
 
 inherit
 
 	XM_XPATH_AXIS_ITERATOR [G]
+
+	XM_XPATH_AXIS
+		export {NONE} all end
 
 	-- This implementation works for all tree models
 
@@ -24,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_starting_node: XM_XPATH_NODE; self, forwards: BOOLEAN) is
+	make (a_starting_node: G; self, forwards: BOOLEAN) is
 			-- Establish invariant.
 		require
 			starting_node_exists: a_starting_node /= Void
@@ -45,7 +48,7 @@ feature -- Cursor movement
 			-- Move to next position
 		do
 			index := index + 1
-			item := current_item
+			advance
 		end
 
 feature -- Duplication
@@ -53,12 +56,12 @@ feature -- Duplication
 	another: like Current is
 			-- Another iterator that iterates over the same items as the original
 		do
-			create Result.make (starting_node, include_self)
+			create Result.make (starting_node, include_self, is_forwards)
 		end
 
 feature {NONE} -- Implementation
 
-	starting_node: XM_XPATH_NODE
+	starting_node: G
 			-- Origin node
 	
 	include_self: BOOLEAN
@@ -86,7 +89,9 @@ feature {NONE} -- Implementation
 					descendants := Void
 				else
 					if descendants.before then descendants.start else descendants.forth end
-					current_item := descendants.item; finished_advance := True
+					-- BUG in ISE compiler
+					--current_item ?= descendants.item;
+					finished_advance := True
 				end
 			end
 			if not finished_advance then
@@ -109,19 +114,21 @@ feature {NONE} -- Implementation
 			initial: index = 1
 		local
 			an_extent: XM_XPATH_SEQUENCE_EXTENT
+			an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
 		do
 			if starting_node.has_child_nodes then
-				children := starting_node.new_axis_iterator (Child_axis)
+				children ?= starting_node.new_axis_iterator (Child_axis)
 				if not is_forwards then
 					if children.is_reversible_iterator then
-						children := children.as_reversible_iterator.reverse_iterator
+						children ?= children.as_reversible_iterator.reverse_iterator
 					else
-						create an_extent.make (children)
-						children := an_extent.reverse_iterator
+						an_iterator ?= children
+						create an_extent.make (an_iterator)
+						children ?= an_extent.reverse_iterator
 					end
 				end
 			else
-				create {XM_XPATH_EMPTY_ITERATOR} children.make
+				children := Void; is_at_end := True
 			end
 			if is_forwards and then include_self then
 				current_item := starting_node
@@ -150,10 +157,10 @@ feature {NONE} -- Implementation
 				a_node := children.item
 				if a_node.has_child_nodes then
 					if is_forwards then
-						create {XM_XPATH_DESCENDANT_ENUMERATION} children.make (a_node, False, True)
+						create {XM_XPATH_DESCENDANT_ENUMERATION [G]} children.make (a_node, False, True)
 						current_item := a_node
 					else
-						create {XM_XPATH_DESCENDANT_ENUMERATION} children.make (a_node, True, False)
+						create {XM_XPATH_DESCENDANT_ENUMERATION [G]} children.make (a_node, True, False)
 						advance						
 					end
 				else
