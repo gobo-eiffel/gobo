@@ -10,16 +10,18 @@
 		revision: "$Revision$"
 	</description>
 
-	<cluster name="xml_xslt" location="${GOBO}/library/xml/xslt">
-		<cluster name="patterns"/>
-		<cluster name="xslt_functions" location="functions" relative="true"/>
-		<cluster name="instructions"/>
+	<cluster name="xml_xslt" location="${GOBO}/library/xml/xslt" >
+	  <option name="abstract" value="true"/>
+		<cluster name="pattern"/>
+		<cluster name="xslt_function" location="function" relative="true"/>
+		<cluster name="instruction"/>
 		<cluster name="style"/>
 		<cluster name="tracing"/>
 		<cluster name="number"/>
 		<cluster name="xslt_sort" location="sort" relative="true"/>
-		<cluster name="xslt_events" location="events" relative="true"/>
-		<cluster name="transformation_support"/>
+		<cluster name="xslt_event" location="event" relative="true"/>
+		<cluster name="runtime"/>
+		<cluster name="xslt_core" location="core" relative="true"/>
 	</cluster>
 
 	<mount location="${GOBO}/library/xml/library_core.xace"/>

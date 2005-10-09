@@ -11,19 +11,20 @@
 	</description>
 
 	<cluster name="xml_xpath" location="${GOBO}/library/xml/xpath">
+	  <option name="abstract" value="true"/>
 		<cluster name="data_model"/>
 		<cluster name="tinytree"/>
 		<cluster name="xpath_tree" location="tree" relative="true"/>
-		<cluster name="values"/>
-		<cluster name="expressions"/>
-		<cluster name="events"/>
-		<cluster name="exslt"/>
-		<cluster name="functions"/>
+		<cluster name="value"/>
+		<cluster name="expression"/>
+		<cluster name="xpath_event" location="event" relative="true"/>
+		<cluster name="function"/>
 		<cluster name="sort"/>
 		<cluster name="stand_alone"/>
-		<cluster name="node_tests"/>
-		<cluster name="types"/>
+		<cluster name="node_test"/>
+		<cluster name="type"/>
 		<cluster name="xpath_xpointer" location="xpointer"  relative="true"/>
+		<cluster name="core" />
 	</cluster>
 
 	<mount location="${GOBO}/library/xml/library_core.xace"/>
