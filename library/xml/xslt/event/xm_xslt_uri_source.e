@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"Objects that represent an XML document by it's URI"
+		"Objects that represent a textual XML document by it's URI"
 
 	library: "Gobo Eiffel XSLT Library"
 	copyright: "Copyright (c) 2004, Colin Adams and others"
@@ -26,8 +26,6 @@ inherit
 		
 	UT_SHARED_FILE_URI_ROUTINES
 		export {NONE} all end
-
-		-- TODO: this needs a better name - something likle XM_XSLT_XML_TEXT_SOURCE, perhaps.
 
 create
 

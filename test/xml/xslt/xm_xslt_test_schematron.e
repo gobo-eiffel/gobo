@@ -50,13 +50,13 @@ feature
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("schematron-basic.xsl")
+			create a_uri_source.make ("../../../example/xml/xslt/schematron/schematron-basic.xsl")
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./wai.xml")
+			create another_uri_source.make ("../../../example/xml/xslt/schematron/wai.xml")
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:/transform")
@@ -83,7 +83,7 @@ feature
   			assert ("Stylesheet not void 2", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer 2", a_transformer /= Void)
-			create another_uri_source.make ("./evil_wai.xml")
+			create another_uri_source.make ("../../../example/xml/xslt/schematron/evil_wai.xml")
 			create another_output
 			another_output.set_output_to_string
 			create a_result.make (another_output, "string:/report")
@@ -121,7 +121,7 @@ feature
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("conformance1-5.xsl")
+			create a_uri_source.make ("../../../example/xml/xslt/schematron/conformance1-5.xsl")
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)

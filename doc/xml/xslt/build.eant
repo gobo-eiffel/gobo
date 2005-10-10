@@ -38,6 +38,7 @@
 		<geant target="xslt_and_shift" arguments="transformation_result"/>
 		<geant target="xslt_and_shift" arguments="transformation_source"/>
 		<geant target="xslt_and_shift" arguments="output_extensions"/>
+		<geant target="xslt_and_shift" arguments="examples"/>
 		<geant target="xslt_and_shift" arguments="overview"/>
 	</target>
 

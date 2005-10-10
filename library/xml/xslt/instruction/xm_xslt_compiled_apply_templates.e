@@ -174,8 +174,9 @@ feature -- Optimization
 
 			select_expression.check_static_type (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
-			select_expression.optimize (a_context, a_context_item_type)
 			select_expression.check_static_type (a_context, a_context_item_type)
+			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
+			select_expression.optimize (a_context, a_context_item_type)
 			if select_expression.was_expression_replaced then select_expression := select_expression.replacement_expression; adopt_child_expression (select_expression) end
 			if select_expression.is_empty_sequence then set_replacement (select_expression.as_empty_sequence) end
 		end

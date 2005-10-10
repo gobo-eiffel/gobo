@@ -27,14 +27,44 @@
   </chapterinfo>
   <title>Overview of the XSLT library</title>
   <para>
-    <warning>
-      The XPath and XSLT libraries are still under development. So please be aware that any interfaces
-      mentioned here are liable to change without notice. I <emphasis>shall</emphasis> try to keep
-      this documentation up to date.
-    </warning>
     This chapter gives Eiffel programmers an introduction to the Gobo Eiffel XSLT library, which
     implements the World Wide Web Consortium's 
     <ulink url="http://www.w3.org/TR/xslt20/">XSLT 2.0 tranformation language</ulink>.
+  </para>
+  <para>
+    The library supports a Basic XSLT processor, and is in line with the September 2005 Working Draft.
+    The XSLT working group expects to release a Candidate Recommenation very soon (if you take the above link, 
+    you can see from the title if they have done so or not). When this happens, I shall update the
+    library to comply with any changes.
+  </para>
+  <para>
+    The support is not yet quite complete. The following features have yet to be implemented:
+    <itemizedlist>
+	<listitem>
+	  <para>
+	    Serializer does not yet support UTF-16 as an output encoding, nor does it
+	    support Unicode normalization.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    Regular expressions do not yet support Unicode data (ASCII only). Also Unicode digits are not 
+	    yet supported for xsl:number and format-date/datetime/time functions.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    The functions unparsed-text() and and unparsed-text-available() do not work properly
+	    yet. They will probably work OK for 7-bit ASCII and UTF-8 files.
+	  </para>
+	  <para>
+	    The function normalize-unicode() has not been implemented yet.
+	  </para>
+	</listitem>
+    </itemizedlist>
+  </para>
+  <para>
+    See <link linkend="examples">Examples</link> for examples of how to use the library.
   </para>
   <section>
     <title>Invoking XSLT</title>
@@ -138,6 +168,13 @@
     </para>
     <para>
       <link linkend="../../gexslt/extension/index">Other extensions</link>
+    </para>
+  </section>
+  <section>
+    <title>Compiling programs which use the XSLT library</title>
+    <para>
+      To see which libraries need to be mounted in your system.xace file,
+      take a look at the example progam in $GOBO/example/xml/xslt/schematron.
     </para>
   </section>
 </chapter>

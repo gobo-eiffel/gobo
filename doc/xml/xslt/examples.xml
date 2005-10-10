@@ -1,0 +1,83 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Examples of using the library"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_examples">
+  <chapterinfo>
+    <copyright>
+      <year>2005</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Monday, Octobber 10th, 2005</date>
+  </chapterinfo>
+  <title>Examples of using the library</title>
+  <para>
+    This chapter deals with examples of how to invoke XSLT transformations
+    from within your Eiffel programs. It does not cover writing XSLT programs. For that
+    you should look elsewhere (a good starting point is the <ulink url="http://www.dpawson.co.uk/xsl/xslfaq.html">XSLT FAQ</ulink>).
+  </para>
+  <section>
+    <title>A Schematron validator</title>
+    <para>
+      In $GOBO/examples/xml/xslt/schematron , there is a complete example of using the
+      library. This is a command-line validator using the Schematron language. See the readme.txt
+      file for instructions on compiling and using the program.
+    </para>
+    <para>
+      The creation procedure <featurename>make</featurename> starts by creating a configuration,
+      and then it sets the recovery policy to recover from recoverable errors without writing
+      any error messages. Because the program uses Eiffel <classname>STRING</classname>s for the
+      result of a transformation (and also for the source of a stylesheet), it next goes on
+      to create a <classname>XM_STRING_URI_RESOLVER</classname>, so that the XML parser can
+      locate the <classname>STRING</classname>s involved.
+    </para>
+    <para>
+      After processing the command line arguments, it then performs the first stage - a transformation
+      of a Schematron rules file (a schema) into a stylesheet (which will be used to perform the 
+      actual validation). This is performed by <featurename>transform_schematron_rules</featurename>. This is fairly
+      straightforward. The only thing of particular note is that the resulting <classname>STRING</classname> has
+      to be plugged into the resolver, as the XML parser needs to find it in the next stage of the program
+    </para>
+    <para>
+      At this point, we have the result of <featurename>transform_schematron_rules</featurename> in a
+      <classname>STRING</classname>. Interestingly, the contents of this <classname>STRING</classname> is
+      another XSLT stylesheet. We now go on to use this stylesheet to perform a transformation against the
+      file which is to be validated. This is done in <featurename>create_report</featurename>. The interesting code
+      in this case arises if the user has requested output to a file, rather than standard output. Notice that although
+      the program takes filenames (for the convenience of the user), the <featurename>transform</featurename> feature
+      of <classname>XM_XSLT_TRANSFORMER</classname> takes arguments that require URIs for their creation procedures.
+      This is a requirement of the XSLT specification.
+    </para>
+    <para>
+      The Schematron validator program writes a report to standard output or to a file, if validation fails.
+      If validation is successful, then no output is produced. This situation could be detected by writing the output to a
+      <classname>STRING</classname> instead, and checking if it's <featurename>count</featurename> were zero (successful validation),
+      or not (an error report has been produced). So if you wanted to use the XSLT library to perform Schematron validation
+      from within your own programs, then this is how you would do it.
+    </para>
+  </section>
+  <section>
+    <title>Gexslt</title>
+    <para>
+      The Gobo Eiffel XSLT command line processor comes close to being the ultimate
+      example of how to use the XSLT library, in as much as it allows most options to be used. You can 
+      see the source in $GOBO/src/gexslt/gexslt.e .
+      <!-- TODO: break up the code into smaller routines to make it easier to follow. -->
+    </para>
+  </section>
+</chapter>

@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 		require
 			last_boolean_value_not_set: last_boolean_value = Void
 			atomic_value_not_in_error: an_atomic_value /= Void and then not an_atomic_value.is_error
-			sequence_not_after: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.after
+			sequence_not_after: an_iterator /= Void and then not an_iterator.is_error and then (an_iterator.before or else not an_iterator.after)
 			list_not_void: a_list /= Void
 		local
 			a_comparison_checker: XM_XPATH_COMPARISON_CHECKER
