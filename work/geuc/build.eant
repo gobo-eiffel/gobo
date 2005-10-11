@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="geuc" default="help">
+
+	<description>
+		description: "Eiffel Ant file for 'geuc'"
+		system: "Gobo Eiffel generator for Unicode Classes"
+		copyright: "Copyright (c) 2005, Colin Adams and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+		<parent location="${GOBO}/misc/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
+	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="geuc"/>
+		<set name="system_dir" value="${GOBO}/work/${system}"/>
+	</target>
+
+</project>
