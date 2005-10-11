@@ -95,7 +95,7 @@
 	    <para>
 	      This class provides an additional feature, <featurename>send_from_stream</featurename>, which is used by the library
 	      for <xslt>xsl:import</xslt>, <xslt>xsl:include</xslt> and <xslt>document()</xslt> processing. Your own implementations
-	      should not implement this rotuine, as it will not be called by the library.
+	      should not implement this routine, as it will not be called by the library.
 	    </para>
 	  </listitem>
 	</varlistentry>

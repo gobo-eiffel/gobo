@@ -37,7 +37,7 @@
   </para>
   <para>
     Then you call <featurename>create_new_transformer</featurename>. This takes a <classname>XM_XSLT_SOURCE</classname> as a parameter,
-    so you first have to create one to represent your stylesheet. If you are starting with a <exmlsyntax>URI</exmlsyntax>, then you do this by creating a
+    so you first have to create one to represent your stylesheet. If you are starting with XML text, then you do this by creating an
     <link linkend="transformation_source"><classname>XM_XSLT_URI_SOURCE</classname></link>, 
     passing it the <exmlsyntax>URI</exmlsyntax> of your text file, as an absolute URI.
   </para>

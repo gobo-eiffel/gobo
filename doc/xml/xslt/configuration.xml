@@ -38,7 +38,7 @@
       The first argument is an <classname>XM_URI_EXTERNAL_RESOLVER</classname>, for use by 
       the XML parser to resolve
       <exmlsyntax>PUBLIC</exmlsyntax> and <exmlsyntax>SYSTEM</exmlsyntax> external identifiers.
-      <featurename>make_with_defaults</featurename> uses a <link linkend="../catalogs">catalog resolver</link>, <classname>XM_CATALOG_RESOLVER</classname>,
+      The creation procedure <featurename>make_with_defaults</featurename> uses a <link linkend="../catalogs">catalog resolver</link>, <classname>XM_CATALOG_RESOLVER</classname>,
       to look up the external identifiers in an OASIS ETRC XML catalog.
     </para>
     <para>
@@ -111,7 +111,7 @@
 	  <listitem>
 	    <para>
 	      This sets the <featurename>trace_listener</featurename>. Setting it to a non-<featurename>Void</featurename>
-	      value turns on stylesheet execution tracing. See <link linkend="trace_listener">XM_XSLT_TRACE_LISTENER</link>
+	      value turns on stylesheet execution tracing. See <link linkend="tracing">XM_XSLT_TRACE_LISTENER</link>
 	      for more details.
 	    </para>
 	  </listitem>

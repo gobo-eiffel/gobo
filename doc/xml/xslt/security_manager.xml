@@ -1,0 +1,85 @@
+<?xml version="1.0"?> 
+
+<!--
+	description:
+	
+		"Output URI Resolver"
+
+	library: "Gobo Eiffel XSLT Library"
+	copyright: "Copyright (c) 2004, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+-->
+
+<chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="xslt_security_manager">
+  <chapterinfo>
+    <copyright>
+      <year>2005</year>
+      <holder>Colin Adams and others</holder>
+    </copyright>
+    <author>
+      <firstname>Colin</firstname>
+      <surname>Adams</surname>
+    </author>
+    <email>colin@colina.demon.co.uk</email>
+    <date>Tuesday, October 11th, 2005</date>
+  </chapterinfo>
+  <title>The Security Manager</title>    
+  <para>
+    This interface enables the programmer to configure
+    security needs for the application. Your application needs
+    to consider how a user of the library is authenticated, and how it is going to
+    map user identifiers to authorization domains. Implementing this interface is your
+    way to inform the XSLT library of these decisions.
+  </para>
+  <section>
+    <title>Features</title>
+    <variablelist>
+      <varlistentry>
+	<term><featurename>is_uri_permitted</featurename></term>
+	<listitem>
+	  <para>
+	    This routine (inherited from <classname>XM_XPATH_SECURITY_MANAGER</classname>) is called
+	    by the <xpath>fn:doc(), fn:doc-available() and fn:document()</xpath> functions to check that it is permissible
+	    to read from the URI given as an argument to the function, so as to protect sensitive data
+	    from being seen by unauthorized personnel.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><featurename>is_output_uri_permitted</featurename></term>
+	<listitem>
+	  <para>
+	    This routine is supposed to be called by the <classname>XM_XSLT_OUTPUT_URI_RESOLVER</classname> to decide
+	    if an <xslt>xsl:result-document</xslt> has permission to write to the URI specified as the value of
+	    it's <xslt>href</xslt> attribute. If your implementation withholds permission, then the transformation will be terminated
+	    with the non recoverable error: <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension#OUTPUT_RESOLVER_ERROR</uri>.
+	  </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><featurename>is_highly_secure / set_high_security</featurename></term>
+	<listitem>
+	  <para>
+	    This pair of features enables your security manager to act in a bi-modal fashion. The interpretation
+	    of what high security means is entirely up to you.
+	  </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </section>
+  <section id="xslt_default_security_manager">
+    <title>The default security manager: <classname>XM_XSLT_DEFAULT_SECURITY_MANAGER</classname></title>
+    <para>
+      This is the only concrete security manager provided by the library. If it is not suitable for your needs,
+      then you must write your own, and supply it to the creation routine of your 
+      <classname>XM_XSLT_OUTPUT_URI_RESOLVER</classname>.
+    </para>
+    <para>
+      This implementation unconditionally allows all requests to read from a resource. For requests to write to
+      a resource, it examines the state of the <featurename>is_highly_secure</featurename> attribute. If this
+      is <featurename>True</featurename>, then it only allows writing to URIs of the <uri>stdout</uri> and <uri>string</uri> schemes.
+    </para>
+  </section>
+</chapter>

@@ -86,7 +86,7 @@
 	      This routine is called by the library to warn of problematic conditions which are not defined as errors
 	      by XSLT. It should inform the user (in some unspecified way) about the condition, provided that
 	      <featurename>warning_threshold</featurename> has not been exceeded (but there is no obligation to
-	      maintain a count of warning messages, so a pure error listener may well ignore this threshold).
+	      maintain a count of warning messages, so an error listener could ignore this threshold).
 	    </para>
 	  </listitem>
 	</varlistentry>
@@ -96,13 +96,12 @@
 	    <para>
 	      This routine is called by the library to inform the user (in some unspecified way) about a recoverable
 	      error, provided that <featurename>recoverable_error_threshold</featurename> has not been exceeded (but there is no obligation to
-	      maintain a count of error messages, so a pure error listener may well ignore this threshold)
+	      maintain a count of error messages, so an error listener could ignore this threshold)
 	      and perhaps recover from the error (both actions depend upon the current setting of <featurename>recovery_policy</featurename>).
 	    </para>
 	    <para>
 	      This routine <emphasis>must</emphasis> set <featurename>recovered</featurename> to <featurename>True</featurename>
-	      if it recovers from an error, so that the transformer can take the defined recovery action. (This probably means
-	      that a pure error listener will only implement a policy of<featurename>Do_not_recover</featurename>.)
+	      if it recovers from an error, so that the transformer can take the defined recovery action.
 	    </para>
 	  </listitem>
 	</varlistentry>

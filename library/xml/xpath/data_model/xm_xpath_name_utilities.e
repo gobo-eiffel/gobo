@@ -37,6 +37,9 @@ feature -- Status report
 	
 	is_valid_expanded_name (an_expanded_name: STRING): BOOLEAN is
 			-- Is `an_expanded_name' a valid expanded name?
+			-- Syntax is:
+			--  an optional namespace-URI, followed by '#', followed by:
+			--  an NCName 
 		require
 			expanded_name_not_void: an_expanded_name /= Void
 		local
@@ -46,7 +49,7 @@ feature -- Status report
 			a_hash := an_expanded_name.index_of ('#', 1)
 			if a_hash > 0 then
 				an_index := an_expanded_name.index_of ('#', a_hash + 1)
-				if an_index > 0 then a_hash := an_index end -- (namespace-uri may include a #
+				if an_index > 0 then a_hash := an_index end -- (namespace-uri may iteslef include a #)
 				a_local_part := an_expanded_name.substring (a_hash + 1, an_expanded_name.count)
 				a_namespace_uri := an_expanded_name.substring (1, a_hash - 1)
 				Result := is_ncname (a_local_part)

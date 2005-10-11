@@ -38,8 +38,11 @@
     <para>
       Create an <link linkend="transformation_source"><classname>XM_XSLT_URI_SOURCE</classname></link>, 
       passing it the <exmlsyntax>SYSTEM</exmlsyntax> id of your XML text data, as an absolute URI.
-      (If your data source is not XML text, then you will have to create some other descendant of 
-      <link linkend="transformation_source"><classname>XM_XSLT_SOURCE</classname></link>).
+    </para>
+    <para>
+      If your data source is not XML text, i.e. it is not in a form which an XML parser would recognize, 
+      then you will have to create some other descendant of
+      <link linkend="transformation_source"><classname>XM_XSLT_SOURCE</classname></link>.
     </para>
   </section>
   <section>
@@ -47,7 +50,7 @@
     <para>
       Normally the transformation will start executing in the default mode. If you wish to start
       the transformation in some other mode, then pass the name of that mode 
-      (as an <exmlsyntax>expanded QName</exmlsyntax>, that is, an optional namespace-URI enclosed in curly braces, followed
+      (as an <exmlsyntax>expanded QName</exmlsyntax>, that is, an optional namespace-URI, followed by #, followed
       by a local name with no intervening space) to 
       <featurecall><featurename>set_initial_mode</featurename></featurecall>.
     </para>
@@ -61,7 +64,7 @@
     <para>
       If you do not supply any XML source data, or if you wish to override the normal choice for an initial template,
       then pass the name of that template
-      (as an <exmlsyntax>expanded QName</exmlsyntax>, that is, an optional namespace-URI enclosed in curly braces, followed
+      (as an <exmlsyntax>expanded QName</exmlsyntax>, that is, an optional namespace-URI followed by #, followed
       by a local name with no intervening space) to 
       <featurecall><featurename>set_initial_template</featurename></featurecall>.
     </para>
@@ -88,10 +91,6 @@
       The XPath expression is parsed using the <xslt>xsl:stylesheet/xsl:transform</xslt> element of the principal stylesheet module 
       for a static context (so if your XPath expression contains prefixed <exmlsyntax>QName</exmlsyntax>s, then the namespaces will
       be resolved using the bindings in scope on that element).
-      <warning>
-	Hm. This means the executable stylesheet is not quite so reusable, as functions and variables might be bound. Not really a problem, I think,
-	but better clone the static context before parsing - TODO).
-      </warning>
     </para>
     <para>
       The XPath expression is evaluated using a dynamic context based on the document element of the XML source data file. That means, if you
@@ -100,6 +99,11 @@
       when attempting to execute the transformation). This makes perfect sense, as XPath expressions are navigations around an instance of the
       XPath data model, and so are meaningless without one.
     </para>
+    <para><warning>
+      Not so perfect, as you might want to pass an expression such as (1, 3, 5, 7, 11). This does not reference
+      the context item, so it is not a problem. But if it did, you would simply get a normal "context item not set"
+      error. TODO: - create a dynamic context which does not depend on a source document.
+    </warning></para>
   </section>
   <section>
     <title>Defining the output destination</title>

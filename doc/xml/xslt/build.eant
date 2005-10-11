@@ -30,6 +30,7 @@
 		<set name="current" value="overview"/>
 		<geant target="xslt_and_shift" arguments="configuration"/>
 		<geant target="xslt_and_shift" arguments="output_resolver"/>
+		<geant target="xslt_and_shift" arguments="security_manager"/>
 		<geant target="xslt_and_shift" arguments="transformer"/>
 		<geant target="xslt_and_shift" arguments="transforming"/>
 		<geant target="xslt_and_shift" arguments="results"/>

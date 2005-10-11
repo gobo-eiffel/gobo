@@ -56,7 +56,7 @@
   <section>
     <title>Suspending tracing</title>
     <para>
-      It may be desirable to trace only parts of the execution path. In which case a mecahnism is needed to
+      It may be desirable to trace only parts of the execution path. In which case a mechanism is needed to
       turn tracing on and off. No such mechanism is available right now. One possibility is to use XPath
       extension functions to pause and resume tracing (this is what Saxon does). Another possibility would be to 
       use extension attributes, or extension instructions.

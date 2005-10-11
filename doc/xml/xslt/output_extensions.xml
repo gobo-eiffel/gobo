@@ -30,20 +30,6 @@
     This chapter relates to the <xslt>xsl:output</xslt> and <xslt>xsl:result-document</xslt> elements.
   </para>
   <section>
-    <title>Additional serialization parameters</title>
-    <para>
-      See <link linkend="../../gexslt/extension/index">Extensions</link>
-    </para>
-    <para>
-      You can also add your own serialization parameters in a namespace, for use
-      with a <exmlsyntax>QName</exmlsyntax> output method that you have written. This must be a non-null namespace,
-      and it must <emphasis>not</emphasis> be the XSLT namespace, nor can it be
-      <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension</uri>. Apart from that, you may use any namespace you wish, 
-      but it is strongly recommanded that this be a URI which you control, so as to prevent clashes with other possible
-      extensions. I would suggest using the same namespace as you do for your <exmlsyntax>QName</exmlsyntax> output method.
-    </para>
-  </section>
-  <section>
     <title>Output extensions</title>
     <para>
       The syntax of the <xslt>xsl:output</xslt> and <xslt>xsl:result-document</xslt> elements allows
@@ -142,8 +128,9 @@
 	      </para>
 	      <para>
 		Next the example checks the value of the <xslt>indent</xslt> serialization parameter, and adds an indenter to the front of the chain. If you choose to
-		support indenting for your method(s), then you should do the same. You can either use one of the existing indenters (<classname>XM_XSLT_XML_INDENTER</classname>
-		or <classname>XM_XSLT_HTML_INDENTER</classname>), or write your own (which must be a descendant of <classname>XM_XPATH_PROXY_RECEIVER</classname>).
+		support indenting for your method(s), then you should do the same. You can either use one of the existing indenters (<classname>XM_XSLT_XML_INDENTER</classname>,
+		<classname>XM_XSLT_HTML_INDENTER</classname> or <classname>XM_XSLT_XHTML_INDENTER</classname>), or write your own 
+		(which must be a descendant of <classname>XM_XPATH_PROXY_RECEIVER</classname>).
 	      </para>
 	      <para>
 		Next the example checks whether any <xslt>cdata-section-elements</xslt> have been requested, and if so, adds a <classname>XM_XSLT_CDATA_FILTER</classname>.
@@ -191,5 +178,19 @@
 	</para>
       </listitem>
     </orderedlist>
+  </section>
+  <section>
+    <title>Additional serialization parameters</title>
+    <para>
+      See <link linkend="../../gexslt/extension/index">Extensions</link>
+    </para>
+    <para>
+      You can also add your own serialization parameters in a namespace, for use
+      with a <exmlsyntax>QName-but-not-NCName</exmlsyntax> output method that you have written. This must be a non-null namespace,
+      and it must <emphasis>not</emphasis> be the XSLT namespace, nor can it be
+      <uri>http://www.gobosoft.com/eiffel/gobo/gexslt/extension</uri>. Apart from that, you may use any namespace you wish, 
+      but it is strongly recommanded that this be a URI which you control, so as to prevent clashes with other possible
+      extensions. I would suggest using the same namespace as you do for your <exmlsyntax>QName</exmlsyntax> output method.
+    </para>
   </section>
 </chapter>
