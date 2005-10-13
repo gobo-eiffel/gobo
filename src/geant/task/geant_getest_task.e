@@ -31,9 +31,11 @@ feature {NONE} -- Initialization
 			-- Create a new task with information held in `an_element'.
 		local
 			a_name, a_value: STRING
-			define_elements: DS_LINKED_LIST [XM_ELEMENT]
 			cs: DS_LINKED_LIST_CURSOR [XM_ELEMENT]
 			define_element: GEANT_DEFINE_ELEMENT
+			define_elements: DS_LINKED_LIST [XM_ELEMENT]
+			attribute_element: GEANT_DEFINE_ELEMENT
+			attribute_elements: DS_LINKED_LIST [XM_ELEMENT]
 		do
 			create command.make (a_project)
 			task_make (command, an_xml_element)
@@ -71,6 +73,28 @@ feature {NONE} -- Initialization
 			if has_attribute (Abort_attribute_name) then
 				command.set_abort (boolean_value (Abort_attribute_name))
 			end
+				-- attributes (TODO: generalize this):
+			attribute_elements := elements_by_name (Attribute_element_name)
+			cs := attribute_elements.new_cursor
+			from cs.start until cs.after loop
+				create attribute_element.make (project, cs.item)
+				if
+					attribute_element.is_enabled and then
+					attribute_element.has_name and then
+					attribute_element.has_value
+				then
+					a_name := attribute_element.name
+					a_value := attribute_element.value
+						-- Task specific attributes:
+					if STRING_.same_string (a_name, Class_attribute_name) then
+						command.set_class_regexp (a_value)
+					elseif STRING_.same_string (a_name, Feature_attribute_name) then
+						command.set_feature_regexp (a_value)
+					end
+				end
+				cs.forth
+			end
+
 				-- define:
 			define_elements := elements_by_name (Define_element_name)
 			cs := define_elements.new_cursor
@@ -174,6 +198,15 @@ feature {NONE} -- Constants
 			-- Name of xml attribute for getest 'abort'
 		once
 			Result := "abort"
+		ensure
+			attribute_name_not_void: Result /= Void
+			atribute_name_not_empty: Result.count > 0
+		end
+
+	Attribute_element_name: STRING is
+			-- Name of xml subelement for attributes
+		once
+			Result := "attribute"
 		ensure
 			attribute_name_not_void: Result /= Void
 			atribute_name_not_empty: Result.count > 0
