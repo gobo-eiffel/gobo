@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="xml" default="help">
+<project name="xml_xslt" default="help">
 
 	<description>
-		description: "Eiffel Ant file for Gobo Eiffel XML Library examples"
-		copyright: "Copyright (c) 2002, Eric Bezault and others"
+		description: "Eiffel Ant file for Gobo Eiffel XML Library 'xslt' examples"
+		copyright: "Copyright (c) 2005, Eric Bezault and others"
 		license: "Eiffel Forum License v2 (see forum.txt)"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -19,7 +19,7 @@
 
 	<target name="install" depend="init">
 		<description>
-			Install the Gobo Eiffel XML Library examples.
+			Install the Gobo Eiffel XML Library 'xslt' examples.
 		</description>
 
 		<set name="target" value="install"/>
@@ -57,9 +57,7 @@
 			in all subdirectories.
 		</description>
 
-		<geant file="build.eant" target="${target}" dir="event"/>
-		<geant file="build.eant" target="${target}" dir="tree"/>
-		<geant file="build.eant" target="${target}" dir="xslt"/>
+		<geant file="build.eant" target="${target}" dir="schematron"/>
 	</target>
 
 </project>
