@@ -4,6 +4,25 @@ indexing
 
 		"Schematron validator illustrating use of XSLT library"
 
+	remark:
+
+		"Exit codes %
+		%%
+		%The program uses the following scheme for exit codes: %
+		%%
+		%Code 0: Sucessfull execution: validation may or may not have suceeded %
+		%Code 2: Problem encountered - probably due to bad usage, or bad schematron rules %
+		%Code 3: Problem encountered - probably due to a BUG %
+		%%
+		%A validator that could be invoked from within a program %
+		%would want to further distinguish between sucessful %
+		%validation (code 0), and validation errors (code 1). %
+		%This can only be achived by examining the output from the %
+		%second-stage, so you would probably want to write that output %
+		%to a STRING, rather than stdout. Then if the STRING were %
+		%zero length, set code 0, else set code 1 (and the STRING would %
+		%contain the validation report)."
+
 	library: "Gobo Eiffel XML Library"
 	copyright: "Copyright (c) 2005, Colim Adams and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
@@ -40,25 +59,10 @@ inherit
 
 	XM_XSLT_CONFIGURATION_CONSTANTS
 		export {NONE} all end
-		
-create make
 
-	-- Exit codes
-	--
-	-- The program uses the following scheme for exit codes:
-	--
-	-- Code 0: Sucessfull execution: validation may or may not have suceeded
-	-- Code 2: Problem encountered - probably due to bad usage, or bad schematron rules
-	-- Code 3: Problem encountered - probably due to a BUG
-	--
-	-- A validator that could be invoked from within a program
-	--  would want to further distinguish between sucessful
-	--  validation (code 0), and validation errors (code 1).
-	-- This can only be achived by examining the output from the
-	--  second-stage, so you would probably want to write that output
-	--  to a STRING, rather than stdout. Then if the STRING were
-	--  zero length, set code 0, else set code 1 (and the STRING would
-	--  contain the validation report).
+create
+
+	make
 
 feature {NONE} -- Initialization
 
@@ -68,7 +72,7 @@ feature {NONE} -- Initialization
 			a_string_resolver: XM_STRING_URI_RESOLVER
 		do
 			create configuration.make_with_defaults
-			configuration.set_recovery_policy (Recover_silently)	
+			configuration.set_recovery_policy (Recover_silently)
 			create a_string_resolver.make
 			shared_catalog_manager.bootstrap_resolver.uri_scheme_resolver.register_scheme (a_string_resolver)
 			error_handler := configuration.error_reporter
@@ -156,7 +160,7 @@ feature -- Processing
 				--  by the XML parser.
 				-- This works because "create configuration.make_with_defaults" will
 				--  have set the entity resolver to a catalog resolver.
-				
+
 				shared_catalog_manager.bootstrap_resolver.well_known_system_ids.force (an_output.last_output, Validator_uri)
 			end
 		ensure

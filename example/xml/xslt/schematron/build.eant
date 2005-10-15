@@ -22,7 +22,7 @@
 	<target name="init_system">
 		<set name="system" value="schematron"/>
 		<set name="library" value="xml"/>
-		<set name="system_dir" value="${GOBO}/example/${library}/xslt//${system}"/>
+		<set name="system_dir" value="${GOBO}/example/${library}/xslt/${system}"/>
 	</target>
 
 </project>
