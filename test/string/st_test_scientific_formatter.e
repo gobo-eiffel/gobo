@@ -71,6 +71,8 @@ feature -- Test
 			assert_equal ("test10", "12345678", format ("$1i", << integer_cell (+12345678) >>))
 			assert_equal ("test11", "31", format ("$d", << integer_cell (31) >>))
 			assert_equal ("test12", "-0123", format ("$05i", << integer_cell (-123) >>))
+				-- Minimum integer.
+			assert_equal ("test13", "-2147483648", format ("$d", <<integer_cell (-2147483648)>>))
 		end
 
 	test_unsigned_decimal is

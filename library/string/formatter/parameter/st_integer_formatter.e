@@ -26,6 +26,12 @@ inherit
 			reset_options, make
 		end
 
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
+	KL_SHARED_PLATFORM
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -94,7 +100,11 @@ feature -- Formatting
 				-- Do nothing
 			else
 				STRING_.wipe_out (integer_buffer)
-				append_to_string (a_parameter.abs, integer_buffer)
+				if a_parameter = Platform.Minimum_integer then
+					append_abs_to_string (a_parameter, integer_buffer)
+				else
+					append_to_string (a_parameter.abs, integer_buffer)
+				end
 				if precision > 0 then
 					from
 						i := precision - integer_buffer.count
@@ -154,6 +164,24 @@ feature {NONE} -- Implementation
 				a_string.append_character (lower_digits.item ((n \\ base) + 1))
 			else
 				a_string.append_character (upper_digits.item ((n \\ base) + 1))
+			end
+		end
+
+	append_abs_to_string (n: INTEGER; a_string: STRING) is
+			-- Append absolute value of `n' in base `base' to `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+		local
+			i: INTEGER
+		do
+			i := INTEGER_.div (n, base).abs
+			if i /= 0 then
+				append_to_string (i, a_string)
+			end
+			if is_lowercase then
+				a_string.append_character (lower_digits.item (INTEGER_.mod (n, base).abs + 1))
+			else
+				a_string.append_character (upper_digits.item (INTEGER_.mod (n, base).abs + 1))
 			end
 		end
 
