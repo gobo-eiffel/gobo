@@ -248,8 +248,8 @@ feature {NONE} -- Implementation
 	check_node_test_static_type (a_context: XM_XPATH_STATIC_CONTEXT; a_node_test: XM_XPATH_NODE_TEST) is
 			-- Check static type when context item is a node test.
 		require
-			context_exists: a_context /= Void
-			node_test_exists: a_node_test /= Void
+			context_not_void: a_context /= Void
+			node_test_not_void: a_node_test /= Void
 		local
 			an_origin, a_kind: INTEGER
 			an_empty_sequence: XM_XPATH_EMPTY_SEQUENCE

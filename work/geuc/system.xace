@@ -15,7 +15,7 @@
 		<option name="assertion" value="none"/>
 		<option name="garbage_collector" value="internal"/>
 		<option name="finalize" value="true" unless="${GOBO_EIFFEL}=ve"/>
-		<option name="inlining" value="all"/>
+<!--		<option name="inlining" value="all"/> -->
 	</option>
 	<option if="${DEBUG}">
 		<option name="assertion" value="all" unless="${GOBO_EIFFEL}=ve"/>

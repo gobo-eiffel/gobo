@@ -492,8 +492,8 @@ feature {NONE} -- Implementation
 	calculate_ordinal (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Calculate `ordinal_value'
 		require
-			context_exists: a_context /= Void
-			transformer_exists: transformer /= Void
+			context_not_void: a_context /= Void
+			transformer_not_void: transformer /= Void
 		do
 			if ordinal /= Void then
 				ordinal.evaluate_as_string (a_context)
@@ -509,8 +509,8 @@ feature {NONE} -- Implementation
 	calculate_group_separator (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Calculate `group_separator'
 		require
-			context_exists: a_context /= Void
-			transformer_exists: transformer /= Void
+			context_not_void: a_context /= Void
+			transformer_not_void: transformer /= Void
 		local
 			an_error: XM_XPATH_ERROR_VALUE
 		do
@@ -532,8 +532,8 @@ feature {NONE} -- Implementation
 	calculate_group_size (a_context: XM_XSLT_EVALUATION_CONTEXT) is
 			-- Calculate `group_size'
 		require
-			context_exists: a_context /= Void
-			transformer_exists: transformer /= Void
+			context_not_void: a_context /= Void
+			transformer_not_void: transformer /= Void
 		local
 			a_string: STRING
 			an_error: XM_XPATH_ERROR_VALUE
@@ -682,8 +682,8 @@ feature {NONE} -- Implementation
 			-- This is defined as one plus the number of previous siblings
 			--  of the same node type and name.
 		require
-			source_node_exists: a_node /= Void
-			transformer_exists: transformer /= Void
+			source_node_not_void: a_node /= Void
+			transformer_not_void: transformer /= Void
 		local
 			a_fingerprint: INTEGER
 			a_node_test: XM_XPATH_NODE_TEST
@@ -728,8 +728,8 @@ feature {NONE} -- Implementation
 			-- One plus the number of previous siblings
 			--  of the nearest ancestor-or-self, that match `count_pattern'.
 		require
-			source_node_exists: a_node /= Void
-			transformer_exists: transformer /= Void
+			source_node_not_void: a_node /= Void
+			transformer_not_void: transformer /= Void
 		local
 			known_to_match, finished, already_checked: BOOLEAN
 			a_target: XM_XPATH_NODE
@@ -787,8 +787,8 @@ feature {NONE} -- Implementation
 	any_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): MA_DECIMAL is
 			-- One plus number of previous nodes that match `count_pattern'
 		require
-			source_node_exists: a_node /= Void
-			transformer_exists: transformer /= Void
+			source_node_not_void: a_node /= Void
+			transformer_not_void: transformer /= Void
 		local
 			a_memo: MA_DECIMAL
 			memoize, finished: BOOLEAN
@@ -848,8 +848,8 @@ feature {NONE} -- Implementation
 	multi_level_number (a_node: XM_XPATH_NODE; a_context: XM_XSLT_EVALUATION_CONTEXT): DS_ARRAYED_LIST [XM_XPATH_INTEGER_VALUE] is
 			-- Hirerarchic position of `a_node'
 		require
-			source_node_exists: a_node /= Void
-			transformer_exists: transformer /= Void
+			source_node_not_void: a_node /= Void
+			transformer_not_void: transformer /= Void
 		local
 			a_current_node: XM_XPATH_NODE
 			finished: BOOLEAN

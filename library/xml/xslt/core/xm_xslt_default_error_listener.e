@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 	display_location_information (a_locator: XM_XPATH_LOCATOR; is_an_error: BOOLEAN) is
 			-- Display location information.
 		require
-			locator_exists: a_locator /= Void
+			locator_not_void: a_locator /= Void
 		local
 			a_message: STRING
 		do

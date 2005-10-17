@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 	make (a_tree: XM_XPATH_TINY_FOREST; a_node_number: INTEGER) is
 			-- Establish invariant.
 		require
-			tree_exists: a_tree /= Void
+			tree_not_void: a_tree /= Void
 			strictly_positive_node_number: a_node_number > 0
 		do
 			tree := a_tree
@@ -282,7 +282,7 @@ feature -- Element change
 	set_unparsed_entity (a_name, a_system_id, a_public_id: STRING) is
 			-- Save SYSTEM and PUBLIC ids for `a_name'.
 		require
-			entity_name_exists: a_name /= Void
+			entity_name_not_void: a_name /= Void
 		local
 			an_id_list: DS_ARRAYED_LIST [STRING]
 		do
@@ -349,6 +349,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	tree_exists: tree /= Void
+	tree_not_void: tree /= Void
 
 end

@@ -170,7 +170,7 @@ feature -- Access
 	prefix_for_uri (a_uri: STRING): STRING is
 			-- Prefix bound to `a_uri'
 		require
-			uri_exists: a_uri /= Void
+			uri_not_void: a_uri /= Void
 		local
 			a_uri_code: INTEGER
 		do

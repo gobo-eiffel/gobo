@@ -1434,17 +1434,17 @@ feature {NONE} -- Implementation
 
 invariant
 
-	last_cached_date_string_exists: last_cached_date_string /= Void
-	last_cached_date_exists: not last_cached_date_string.is_empty implies last_cached_date /= Void
-	last_cached_zoned_date_string_exists: last_cached_zoned_date_string /= Void
-	last_cached_zoned_date_exists: not last_cached_zoned_date_string.is_empty implies last_cached_zoned_date /= Void
-	last_cached_time_string_exists: last_cached_time_string /= Void
-	last_cached_time_exists: not last_cached_time_string.is_empty implies last_cached_time /= Void
-	last_cached_zoned_time_string_exists: last_cached_zoned_time_string /= Void
-	last_cached_zoned_time_exists: not last_cached_zoned_time_string.is_empty implies last_cached_zoned_time /= Void
-	last_cached_date_time_string_exists: last_cached_date_time_string /= Void
-	last_cached_date_time_exists: not last_cached_date_time_string.is_empty implies last_cached_date_time /= Void
-	last_cached_zoned_date_time_string_exists: last_cached_zoned_date_time_string /= Void
-	last_cached_zoned_date_time_exists: not last_cached_zoned_date_time_string.is_empty implies last_cached_zoned_date_time /= Void
+	last_cached_date_string_not_void: last_cached_date_string /= Void
+	last_cached_date_not_void: not last_cached_date_string.is_empty implies last_cached_date /= Void
+	last_cached_zoned_date_string_not_void: last_cached_zoned_date_string /= Void
+	last_cached_zoned_date_not_void: not last_cached_zoned_date_string.is_empty implies last_cached_zoned_date /= Void
+	last_cached_time_string_not_void: last_cached_time_string /= Void
+	last_cached_time_not_void: not last_cached_time_string.is_empty implies last_cached_time /= Void
+	last_cached_zoned_time_string_not_void: last_cached_zoned_time_string /= Void
+	last_cached_zoned_time_not_void: not last_cached_zoned_time_string.is_empty implies last_cached_zoned_time /= Void
+	last_cached_date_time_string_not_void: last_cached_date_time_string /= Void
+	last_cached_date_time_not_void: not last_cached_date_time_string.is_empty implies last_cached_date_time /= Void
+	last_cached_zoned_date_time_string_not_void: last_cached_zoned_date_time_string /= Void
+	last_cached_zoned_date_time_not_void: not last_cached_zoned_date_time_string.is_empty implies last_cached_zoned_date_time /= Void
 
 end

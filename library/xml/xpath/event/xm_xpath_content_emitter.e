@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 	notify_attribute (a_name_code: INTEGER; a_prefix: STRING; a_local_part: STRING; a_value: STRING) is
 			-- Notify an attribute
 		require
-			prefix_exists: a_prefix /= Void
+			prefix_not_void: a_prefix /= Void
 			local_part_not_empty: a_local_part /= Void and then not a_local_part.is_empty
 		local
 			an_attribute_table: DS_HASH_TABLE [XM_DTD_ATTRIBUTE_CONTENT, STRING]

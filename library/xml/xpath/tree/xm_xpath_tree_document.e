@@ -295,7 +295,7 @@ feature -- Element change
 	set_unparsed_entity (a_name, a_system_id, a_public_id: STRING) is
 			-- Save SYSTEM and PUBLIC ids for `a_name'.
 		require
-			entity_name_exists: a_name /= Void
+			entity_name_not_void: a_name /= Void
 		local
 			an_id_list: DS_ARRAYED_LIST [STRING]
 		do

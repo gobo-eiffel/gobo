@@ -61,7 +61,7 @@ feature -- Element change
 	set_collection_resolver (a_collection_resolver: like collection_resolver) is
 			-- Set `collection_resolver'.
 		require
-			collection_resolver_exists: a_collection_resolver /= Void
+			collection_resolver_not_void: a_collection_resolver /= Void
 		do
 			collection_resolver := a_collection_resolver
 		ensure
@@ -80,6 +80,6 @@ feature -- Element change
 
 invariant
 
-	collection_resolver_exists: collection_resolver /= Void
+	collection_resolver_not_void: collection_resolver /= Void
 
 end

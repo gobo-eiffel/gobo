@@ -14,7 +14,14 @@ class XM_XSLT_NUMBER_ROUTINES
 
 inherit
 
+	UC_IMPORTED_CHARACTER_CLASS_ROUTINES
+		export {NONE} all end
+
+	UC_IMPORTED_UNICODE_ROUTINES
+		export {NONE} all end
+
 	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
 
 feature -- Access
 
@@ -60,13 +67,33 @@ feature -- Access
 			end
 		end
 
+	decimal_digits_set (a_picture: STRING): STRING is
+			-- Set of decimal digits from 0 to 9
+		require
+			picture_not_empty: a_picture /= Void and then not a_picture.is_empty
+			zeros_plus_one: is_zeros_plus_one (a_picture)
+		local
+			a_zero, a_count: INTEGER
+		do
+			a_zero := a_picture.item_code (a_picture.count) - 1
+			Result := ""
+			from a_count := 0 until a_count > 9 loop
+				Result := STRING_.appended_string (Result, unicode.code_to_string (a_zero))
+				a_zero := a_zero + 1
+				a_count := a_count + 1
+			end
+		ensure
+			decimal_digits_set_not_void: Result /= Void
+			ten_digits: Result.count = 10
+		end
+
 feature {NONE} -- Implementation
 
 	is_one (an_integer: INTEGER): BOOLEAN is
-			-- Is `an_integer' a Unicode codepoint of decimal value 1?
-			-- This will be replaced by a generated Unicode routine
+			-- Is `an_integer' a Unicode code-point of decimal value 1?
 		do
-			Result := an_integer = 49
+			Result := unicode_character_class.is_decimal_digit (an_integer)
+				and then unicode_character_class.decimal_digit_value (an_integer) = 1
 		end
 
 end

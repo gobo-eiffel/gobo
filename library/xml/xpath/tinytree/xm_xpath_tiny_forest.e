@@ -542,7 +542,7 @@ feature -- Element change
 	add_document_node (a_document_node: XM_XPATH_TINY_DOCUMENT) is
 			-- Add `a_document_node' to `Current'.
 		require
-			document_node_exists: a_document_node /= Void
+			document_node_not_void: a_document_node /= Void
 		do
 			root_index := root_index + 1
 			document_list.force_last (a_document_node)
@@ -896,8 +896,8 @@ feature {NONE} -- Implementation
 	copy_integer_array (a_source, a_target: ARRAY [INTEGER]) is
 			-- Copy contents of `a_source' to `a_target'.
 		require
-			source_exists: a_source /= Void
-			target_exists: a_target /= Void
+			source_not_void: a_source /= Void
+			target_not_void: a_target /= Void
 			sufficient_count: a_source.count >= a_target.count
 		local
 			an_index: INTEGER
@@ -915,8 +915,8 @@ feature {NONE} -- Implementation
 	copy_string_array (a_source, a_target: ARRAY [STRING]) is
 			-- Copy contents of `a_source' to `a_target'.
 		require
-			source_exists: a_source /= Void
-			target_exists: a_target /= Void
+			source_not_void: a_source /= Void
+			target_not_void: a_target /= Void
 			sufficient_count: a_source.count >= a_target.count
 		local
 			an_index: INTEGER
@@ -933,14 +933,14 @@ feature {NONE} -- Implementation
 
 invariant
 
-	document_list_exists: document_list /= Void
-	character_buffer_exists: character_buffer /= Void
-	system_id_map_exists: system_id_map /= Void
+	document_list_not_void: document_list /= Void
+	character_buffer_not_void: character_buffer /= Void
+	system_id_map_not_void: system_id_map /= Void
 	node_kinds_exist: node_kinds /= Void
-	depth_exists: depth /= Void
-	next_sibling_exists: next_sibling_indices /= Void
-	alpha_exists: alpha /= Void
-	beta_exists: beta /= Void
+	depth_not_void: depth /= Void
+	next_sibling_not_void: next_sibling_indices /= Void
+	alpha_not_void: alpha /= Void
+	beta_not_void: beta /= Void
 	name_codes_exist: name_codes /= Void
 	attribute_parents_exist: attribute_parents /= Void
 	attribute_codes_exist: attribute_codes /= Void

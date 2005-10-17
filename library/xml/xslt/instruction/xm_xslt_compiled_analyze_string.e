@@ -36,9 +36,9 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			executable_not_void: an_executable /= Void
-			select_expression_exists: a_select_expression /= Void
-			regex_expression_exists: a_regex_expression /= Void
-			flags_expression_exists: a_flags_expression /= Void
+			select_expression_not_void: a_select_expression /= Void
+			regex_expression_not_void: a_regex_expression /= Void
+			flags_expression_not_void: a_flags_expression /= Void
 			at_least_one_block: a_matching_block = Void implies a_non_matching_block /= Void
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 	regexp_iterator (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XSLT_REGEXP_ITERATOR is
 			-- Iterator over substrings in regular expression;
 		require
-			context_exists: a_context /= Void
+			context_not_void: a_context /= Void
 		local
 			an_input, some_flags, a_key: STRING
 			an_error: XM_XPATH_ERROR_VALUE
@@ -372,9 +372,9 @@ feature {NONE} -- Implementation
 
 invariant
 
-	select_expression_exists: select_expression /= Void
-	regex_expression_exists: regex_expression /= Void
-	flags_expression_exists: flags_expression /= Void
+	select_expression_not_void: select_expression /= Void
+	regex_expression_not_void: regex_expression /= Void
+	flags_expression_not_void: flags_expression /= Void
 	at_least_one_block: matching_block = Void implies non_matching_block /= Void
 
 end

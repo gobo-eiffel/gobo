@@ -196,11 +196,11 @@ feature {NONE} -- Implementation
 	format_date_time (a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_picture, a_requested_language, a_requested_calendar, a_country: STRING) is
 			-- Format the result.
 		require
-			calendar_value_exists: a_calendar_value /= Void
-			picture_string_exists: a_picture /= Void
-			requested_language_exists: a_requested_language /= Void
-			requested_calendar_exists: a_requested_calendar /= Void
-			country_exists: a_country /= Void
+			calendar_value_not_void: a_calendar_value /= Void
+			picture_string_not_void: a_picture /= Void
+			requested_language_not_void: a_requested_language /= Void
+			requested_calendar_not_void: a_requested_calendar /= Void
+			country_not_void: a_country /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
 			a_result_string, a_language, a_calendar: STRING
@@ -228,13 +228,13 @@ feature {NONE} -- Implementation
 	parse_picture_string (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE;	a_picture, a_language, a_calendar, a_country: STRING) is
 			-- Parse `a_picture' and format output.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			picture_string_not_empty: a_picture /= Void and then not a_picture.is_empty
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
 			i, a_count, an_open, a_close: INTEGER
@@ -289,13 +289,13 @@ feature {NONE} -- Implementation
 	format_marker (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_marker, a_language, a_calendar, a_country: STRING) is
 			-- Parse `a_marker' and format output by appending to `a_result_string'.
 		require
-			marker_exists: a_marker /= Void
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			marker_not_void: a_marker /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
 			a_matcher: RX_PCRE_REGULAR_EXPRESSION
@@ -323,12 +323,12 @@ feature {NONE} -- Implementation
 	parse_and_format_marker (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_specifier: CHARACTER; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format `a_calendar_value' according to `a_specifier' and `some_modifiers' by appending to `a_result_string'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			valid_specifier: is_valid_specifier (a_specifier)
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 	check_not_date_value (a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_message: STRING) is
 			-- Check `a_calendar_value' is not an xs:date.
 		require
-			calendar_value_exists: a_calendar_value /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			message_not_empty: a_message /= Void and then not a_message.is_empty
 			no_error_yet: last_evaluated_item = Void
 		do
@@ -387,7 +387,7 @@ feature {NONE} -- Implementation
 	check_not_time_value (a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_message: STRING) is
 			-- Check `a_calendar_value' is not an xs:time.
 		require
-			calendar_value_exists: a_calendar_value /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			message_not_empty: a_message /= Void and then not a_message.is_empty
 			no_error_yet: last_evaluated_item = Void
 		do
@@ -424,12 +424,12 @@ feature {NONE} -- Implementation
 	format_year (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format year from `a_calendar_value' and append to `a_result_string'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -461,12 +461,12 @@ feature {NONE} -- Implementation
 	format_month (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format month from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -504,12 +504,12 @@ feature {NONE} -- Implementation
 	format_day_in_month (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-in-month from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -541,12 +541,12 @@ feature {NONE} -- Implementation
 	format_day_in_year (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-in-year from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -578,12 +578,12 @@ feature {NONE} -- Implementation
 	format_day_of_week (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format day-of-week from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -621,12 +621,12 @@ feature {NONE} -- Implementation
 	format_week_in_year (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format week-in-year from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -659,12 +659,12 @@ feature {NONE} -- Implementation
 	format_week_in_month (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format week-in-month from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -696,12 +696,12 @@ feature {NONE} -- Implementation
 	format_hour (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format hour-in-day from `a_calendar_value' using 24-hour clock.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -733,12 +733,12 @@ feature {NONE} -- Implementation
 	format_hour_in_half_day (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format hour-in-half-day from `a_calendar_value' using 12-hour clock.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -770,12 +770,12 @@ feature {NONE} -- Implementation
 	format_am_pm (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format AM/PM marker from `a_calendar_value' using 24-hour clock.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -797,12 +797,12 @@ feature {NONE} -- Implementation
 	format_minute (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format minute-in-hour from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -834,12 +834,12 @@ feature {NONE} -- Implementation
 	format_second (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format second-in-hour from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -871,12 +871,12 @@ feature {NONE} -- Implementation
 	format_millisecond (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format fractional seconds from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -908,12 +908,12 @@ feature {NONE} -- Implementation
 	format_time_zone (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from UTC, or as the conventional name from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -944,12 +944,12 @@ feature {NONE} -- Implementation
 	format_gmt_offset (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from GMT from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -972,11 +972,11 @@ feature {NONE} -- Implementation
 	format_calendar_name (a_result_string: STRING; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format calendar name.
 		require
-			result_string_exists: a_result_string /= Void
+			result_string_not_void: a_result_string /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -1003,12 +1003,12 @@ feature {NONE} -- Implementation
 	format_era (a_result_string: STRING; a_calendar_value: XM_XPATH_CALENDAR_VALUE; some_modifiers, a_language, a_calendar, a_country: STRING) is
 			-- Format time zone as an offset from GMT from `a_calendar_value'.
 		require
-			result_string_exists: a_result_string /= Void
-			calendar_value_exists: a_calendar_value /= Void
+			result_string_not_void: a_result_string /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			modifiers_exist: some_modifiers /= Void
 			no_error_yet: last_evaluated_item = Void
 		local
@@ -1194,7 +1194,7 @@ feature {NONE} -- Implementation
 	pattern_matcher (a_marker: STRING): RX_PCRE_REGULAR_EXPRESSION is
 			-- Pattern matcher for `a_marker'
 		require
-			marker_exists: a_marker /= Void
+			marker_not_void: a_marker /= Void
 		do
 			create Result.make
 			Result.compile ("([YMDdWwFHhmsfZzPCE])\s*(.*)")
@@ -1208,7 +1208,7 @@ feature {NONE} -- Implementation
 	is_language_supported (a_requested_language: STRING): BOOLEAN is
 			-- Is `a_requested_language' supported by implementation?
 		require
-			requested_language_exists: a_requested_language /= Void
+			requested_language_not_void: a_requested_language /= Void
 		do
 
 			-- TODO: change when multiple languages are supported
@@ -1219,7 +1219,7 @@ feature {NONE} -- Implementation
 	language (a_requested_language: STRING): STRING is
 			-- Language to be used for output
 		require
-			requested_language_exists: a_requested_language /= Void
+			requested_language_not_void: a_requested_language /= Void
 			requested_language_not_supported: not is_language_supported (a_requested_language) 
 		do
 			Result := Default_language
@@ -1230,7 +1230,7 @@ feature {NONE} -- Implementation
 	language_prefix (a_requested_language: STRING): STRING is
 			-- Language prefix to be emitted
 		require
-			requested_language_exists: a_requested_language /= Void
+			requested_language_not_void: a_requested_language /= Void
 			requested_language_not_supported: not is_language_supported (a_requested_language) 
 		do
 			Result := "[Language: en]"
@@ -1241,7 +1241,7 @@ feature {NONE} -- Implementation
 	is_calendar_supported (a_requested_calendar: STRING): BOOLEAN is
 			-- Is `a_requested_calendar' supported by implementation?
 		require
-			requested_calendar_exists: a_requested_calendar /= Void
+			requested_calendar_not_void: a_requested_calendar /= Void
 		do
 
 			-- TODO: change when more calendars are supported
@@ -1253,7 +1253,7 @@ feature {NONE} -- Implementation
 	calendar (a_requested_calendar: STRING): STRING is
 			-- Calendar to be used for output
 		require
-			requested_calendar_exists: a_requested_calendar /= Void
+			requested_calendar_not_void: a_requested_calendar /= Void
 			requested_calendar_not_supported: not is_calendar_supported (a_requested_calendar) 
 		do
 			Result := Default_calendar
@@ -1264,9 +1264,9 @@ feature {NONE} -- Implementation
 	calendar_prefix (a_requested_calendar, a_language: STRING): STRING is
 			-- Calendar prefix to be emitted
 		require
-			requested_calendar_exists: a_requested_calendar /= Void
+			requested_calendar_not_void: a_requested_calendar /= Void
 			requested_calendar_not_supported: not is_calendar_supported (a_requested_calendar)
-			language_exists: a_language /= Void
+			language_not_void: a_language /= Void
 			language_is_supported: is_language_supported (a_language) 
 		do
 
@@ -1298,7 +1298,7 @@ feature {NONE} -- Implementation
 		require
 			valid_iso_day_number: a_day >= 1 and then a_day <= 7 -- Monday = 1
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 		do
 
 			-- For now, assuming Sunday =1, Saturday = 7, for all calendars and countries
@@ -1321,7 +1321,7 @@ feature {NONE} -- Implementation
 	correctly_cased_name (a_name: STRING): STRING is
 			-- `a_name' cased according to `primary_modifier'
 		require
-			name_exists: a_name /= Void
+			name_not_void: a_name /= Void
 			is_capitalized: True -- First letter upper-case, others in lower-case
 			valid_name_modifier: is_name_modifier
 		do
@@ -1344,9 +1344,9 @@ feature {NONE} -- Implementation
 	era (a_calendar_value: XM_XPATH_CALENDAR_VALUE; a_language, a_calendar, a_country: STRING): STRING is
 			-- Era
 		require
-			calendar_value_exists: a_calendar_value /= Void
+			calendar_value_not_void: a_calendar_value /= Void
 			calendar_not_empty: a_calendar /= Void and then not a_calendar.is_empty
-			country_exists: a_country /= Void
+			country_not_void: a_country /= Void
 			language_not_empty: a_language /= Void and then not a_language.is_empty
 			language_is_supported: is_language_supported (a_language)
 		local
@@ -1394,7 +1394,7 @@ feature {NONE} -- Implementation
 	prepended_with_zeros (a_string: STRING): STRING is
 			-- Left-padded version of `a_string'
 		require
-			string_exists: a_string /= Void
+			string_not_void: a_string /= Void
 			short_string: a_string.count < minimum_width
 		do
 			create Result.make_filled ('0', a_string.count - minimum_width)
@@ -1406,7 +1406,7 @@ feature {NONE} -- Implementation
 	appended_with_blanks (a_string: STRING): STRING is
 			-- Right-padded version of `a_string'
 		require
-			string_exists: a_string /= Void
+			string_not_void: a_string /= Void
 			short_string: a_string.count < minimum_width
 		do
 			create Result.make_filled (' ', a_string.count - minimum_width)

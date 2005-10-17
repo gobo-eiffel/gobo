@@ -97,7 +97,7 @@ feature -- Element change
 		require
 			uri_not_void: a_uri /= Void  -- and then is_absolute
 			not_mapped: not is_document_mapped (a_uri)
-			document_exists: a_document /= Void
+			document_not_void: a_document /= Void
 		do
 			document_name_map.force (a_document, a_uri)
 			media_type_name_map.force (a_media_type, a_uri)

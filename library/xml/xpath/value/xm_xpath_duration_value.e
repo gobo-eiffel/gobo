@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 	make_from_duration (a_duration: like duration) is
 			-- Create from duration.
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		do
 			make_atomic_value
 			duration := a_duration
@@ -175,7 +175,7 @@ feature -- Status report
 	is_duration (a_duration: STRING): BOOLEAN is
 			-- Is `a_duration' a valid duration?
 		require
-			lexical_duration_exists: a_duration /= Void
+			lexical_duration_not_void: a_duration /= Void
 		local
 			a_parser: XM_XPATH_DURATION_PARSER
 		do
@@ -254,7 +254,7 @@ feature -- Basic operations
 	plus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
 			-- Addition of `other' to `Current'
 		require
-			other_duration_exists: other /= Void
+			other_duration_not_void: other /= Void
 		do
 			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be added", Gexslt_eiffel_type_uri, "DURATION-ADDITION", Dynamic_error)
 		ensure
@@ -264,7 +264,7 @@ feature -- Basic operations
 	minus (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
 			-- Subtraction of `other' from `Current'
 		require
-			other_duration_exists: other /= Void
+			other_duration_not_void: other /= Void
 		do
 			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be subtracted", Gexslt_eiffel_type_uri, "DURATION-SUBTRACTION", Dynamic_error)
 		ensure
@@ -294,7 +294,7 @@ feature -- Basic operations
 	divide (other: XM_XPATH_DURATION_VALUE): XM_XPATH_ITEM is
 			-- Division of `other' into `Current'
 		require
-			other_duration_exists: other /= Void
+			other_duration_not_void: other /= Void
 		do
 			create {XM_XPATH_INVALID_ITEM} Result.make_from_string ("Only descendants of xs:duration may be divided", Gexslt_eiffel_type_uri, "DURATION-DIVISION", Dynamic_error)
 		ensure
@@ -333,6 +333,6 @@ feature {NONE} -- Implementation
 
 invariant
 
-	duration_exists: duration /= Void
+	duration_not_void: duration /= Void
 
 end

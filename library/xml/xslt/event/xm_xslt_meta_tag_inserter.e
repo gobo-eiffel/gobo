@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	make (a_receiver: XM_XPATH_RECEIVER; some_properties: XM_XSLT_OUTPUT_PROPERTIES; xhtml: BOOLEAN) is
 			-- Establish invariant.
 		require
-			receiver_exists: a_receiver /= Void
+			receiver_not_void: a_receiver /= Void
 			output_properties_exist: some_properties /= Void
 		do
 			base_receiver := a_receiver

@@ -111,7 +111,7 @@ feature -- Element change
 	set_dynamic_context (a_context: XM_XPATH_CONTEXT) is
 			-- Set dynamic context for use in calendar-values comparisons.
 		require
-			context_exists: a_context /= Void
+			context_not_void: a_context /= Void
 		do
 			dynamic_context := a_context
 		ensure

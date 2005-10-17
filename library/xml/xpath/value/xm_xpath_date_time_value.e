@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 	make_from_date_time (a_date_time: DT_DATE_TIME) is
 			-- Create from date_time object.
 		require
-			date_time_exists: a_date_time /= Void
+			date_time_not_void: a_date_time /= Void
 		do
 			make_atomic_value
 			local_date_time := a_date_time
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 	make_from_zoned_date_time (a_date_time: DT_FIXED_OFFSET_ZONED_DATE_TIME) is
 			-- Create from date_time object.
 		require
-			date_time_exists: a_date_time /= Void
+			date_time_not_void: a_date_time /= Void
 		do
 			make_atomic_value
 			zoned_date_time := a_date_time
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 	make_from_date (a_date: DT_DATE) is
 			-- Create from date object.
 		require
-			date_exists: a_date /= Void
+			date_not_void: a_date /= Void
 		do
 			make_atomic_value
 			create local_date_time.make_from_date (a_date)
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 	make_from_zoned_date (a_date: DT_FIXED_OFFSET_ZONED_DATE) is
 			-- Create from date_time object.
 		require
-			date_exists: a_date /= Void
+			date_not_void: a_date /= Void
 		do
 			make_atomic_value
 			create zoned_date_time.make_from_zoned_date (a_date)
@@ -123,7 +123,7 @@ feature -- Access
 	to_another_time_zone (an_offset: XM_XPATH_SECONDS_DURATION_VALUE): XM_XPATH_DATE_TIME_VALUE is
 			-- Same dateTime as `Current', but in `a_time_zone'
 		require
-			time_zone_exists: an_offset /= Void
+			time_zone_not_void: an_offset /= Void
 		local
 			a_zone: DT_FIXED_OFFSET_TIME_ZONE
 			a_zoned_dt: DT_FIXED_OFFSET_ZONED_DATE_TIME
@@ -264,7 +264,7 @@ feature -- Status report
 	is_date_time (a_lexical_date_time: STRING): BOOLEAN is
 			-- Is `a_lexical_date_time' a valid xs:dateTime?
 		require
-			lexical_date_time_exists: a_lexical_date_time /= Void
+			lexical_date_time_not_void: a_lexical_date_time /= Void
 		local
 			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
 		do

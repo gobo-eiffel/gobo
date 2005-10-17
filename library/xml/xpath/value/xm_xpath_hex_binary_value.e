@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 	make_and_encode (a_value: like binary_value) is
 			-- Create from decoded octets.
 		require
-			value_exists: a_value /= Void
+			value_not_void: a_value /= Void
 		do
 			make_atomic_value
 			binary_value := a_value

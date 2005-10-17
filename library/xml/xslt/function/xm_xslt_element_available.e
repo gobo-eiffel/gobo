@@ -180,8 +180,8 @@ feature {NONE} -- Implementation
 	is_element_available (a_uri, a_local_name: STRING; a_context: XM_XSLT_EVALUATION_CONTEXT): BOOLEAN is
 			-- Is named instruction element available at run-time?
 		require
-			local_name_exists: a_local_name /= Void
-			context_exists: a_context /= Void
+			local_name_not_void: a_local_name /= Void
+			context_not_void: a_context /= Void
 		local
 			a_config: XM_XSLT_CONFIGURATION
 		do

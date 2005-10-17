@@ -103,7 +103,7 @@ feature -- Comparison
 	infix "<" (other: XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN is
 			-- Is `Current' less than `other'?
 		require
-			other_exists: other /= void
+			other_not_void: other /= Void
 		do
 			if high_word < other.high_word then
 				Result := True
@@ -117,7 +117,7 @@ feature -- Comparison
 	infix ">" (other:  XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN is
 			-- Is `Current' greater than 'other'?
 		require
-			other_exists: other /= void
+			other_not_void: other /= Void
 		do
 			if high_word > other.high_word then
 				Result := True
@@ -131,7 +131,7 @@ feature -- Comparison
 	ie_equal (other:  XM_XPATH_64BIT_NUMERIC_CODE): BOOLEAN is
 			-- Is `other` equal to `Current'?
 		require
-			other_exists: other /= void
+			other_not_void: other /= Void
 		do
 			Result := other.high_word = high_word and then other.low_word = low_word
 		end

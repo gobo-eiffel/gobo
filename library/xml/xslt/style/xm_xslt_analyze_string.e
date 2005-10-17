@@ -305,8 +305,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	select_expression_exists: attributes_prepared and then not any_compile_errors implies select_expression /= Void
-	regex_expression_exists: attributes_prepared and then not any_compile_errors implies regex_expression /= Void
-	flags_expression_exists: attributes_prepared and then not any_compile_errors implies flags_expression /= Void
+	select_expression_not_void: attributes_prepared and then not any_compile_errors implies select_expression /= Void
+	regex_expression_not_void: attributes_prepared and then not any_compile_errors implies regex_expression /= Void
+	flags_expression_not_void: attributes_prepared and then not any_compile_errors implies flags_expression /= Void
 
 end

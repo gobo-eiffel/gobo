@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 	make (a_tree: XM_XPATH_TREE_DOCUMENT) is
 			-- Establish invariant.
 		require
-			tree_exists: a_tree /= Void
+			tree_not_void: a_tree /= Void
 		local
 			an_iterator, another_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
 			an_attribute: XM_XPATH_TREE_ATTRIBUTE
@@ -114,6 +114,6 @@ feature {NONE} -- Implementation
 	
 invariant
 
-	mapping_table_exists: mapping_table /= Void
+	mapping_table_not_void: mapping_table /= Void
 	
 end

@@ -115,7 +115,7 @@ feature 	-- Element change
 	set_implicit_timezone (an_implicit_timezone: like implicit_timezone) is
 			-- Set `implicit_timezone'.
 		require
-			implicit_timezone_exists: an_implicit_timezone /= Void
+			implicit_timezone_not_void: an_implicit_timezone /= Void
 		do
 			implicit_timezone := an_implicit_timezone
 		ensure

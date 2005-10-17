@@ -15,6 +15,9 @@ inherit
 
 	GEUC_CONSTANTS
 
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -24,16 +27,32 @@ feature {NONE} -- Initialization
 	make (a_code_point: INTEGER; a_name: STRING; some_fields: DS_LIST [STRING]) is
 			-- Establish invariant.
 		require
-			code_point_in_range: a_code_point >= 0 and then a_code_point <= Maximum_unicode_code_point
+			code_point_in_range: a_code_point >= 0 and then a_code_point <= maximum_unicode_character_code
 			name_exists: a_name /= Void
 			fifteen_fields: some_fields /= Void and then some_fields.count = Field_count
+		local
+			a_decimal: INTEGER
 		do
 			code_point := a_code_point
 			name := a_name
 			general_category := category (some_fields.item (3))
 			is_valid := general_category /= Other_unassigned_category
-
-			-- TODO: extract other fields of interest, such as decimal digit value
+			if general_category = Decimal_digit_number_category then
+				if not some_fields.item (7).is_integer then
+					is_valid := False
+				else
+					internal_decimal_digit_value := Bad_decimal_value
+					a_decimal := some_fields.item (7).to_integer
+					if a_decimal >= 0 and then a_decimal < 10 then
+						internal_decimal_digit_value := INTEGER_.to_integer_8 (a_decimal)
+						is_valid := True
+					else
+						is_valid := False
+					end
+				end
+			end
+				
+			-- TODO: extract other fields of interest
 
 		ensure
 			code_point_set: code_point = a_code_point
@@ -50,6 +69,16 @@ feature -- Access
 
 	general_category: INTEGER_8
 			-- Coded general category
+
+	decimal_digit_value: INTEGER_8 is
+			-- Value of `Current' as a decimal digit
+		require
+			decimal_digit: general_category = Decimal_digit_number_category
+		do
+			Result := internal_decimal_digit_value
+		ensure
+			value_in_range: Result >= 0 and Result < 10
+		end
 
 	category (a_category: STRING): INTEGER_8 is
 			-- Coded version of `a_category', or `Other_unassigned_category' if unrecognized
@@ -124,9 +153,12 @@ feature -- Status report
 	is_valid: BOOLEAN
 			-- Does `Current' represent a validly parsed line "UnicodeData.txt"?
 
+	internal_decimal_digit_value: INTEGER_8
+			-- Decimal digit value
+
 invariant
 
-	code_point_in_range: code_point >= 0 and then code_point <= Maximum_unicode_code_point
+	code_point_in_range: code_point >= 0 and then code_point <= maximum_unicode_character_code
 	name_exists: name /= Void
 
 end

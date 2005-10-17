@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	make (a_starting_node: G; include: BOOLEAN) is
 			-- Establish invariant.
 		require
-			starting_node_exists: a_starting_node /= Void
+			starting_node_not_void: a_starting_node /= Void
 		do
 			include_ancestors := include
 			starting_node := a_starting_node
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	starting_node_exists: starting_node /= Void
+	starting_node_not_void: starting_node /= Void
 
 end
 	

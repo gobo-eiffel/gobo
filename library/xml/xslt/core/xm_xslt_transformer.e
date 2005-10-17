@@ -495,7 +495,7 @@ feature -- Element change
 	cache_unparsed_text (a_text, a_uri, an_encoding: STRING) is
 			-- Cache results of XPath unparsed-text-available(`a_uri', `an_encoding') function.
 		require
-			text_exists: a_text /= Void
+			text_not_void: a_text /= Void
 			uri_not_empty: a_uri /= Void and then not a_uri.is_empty
 		do
 			last_unparsed_text_uri := a_uri

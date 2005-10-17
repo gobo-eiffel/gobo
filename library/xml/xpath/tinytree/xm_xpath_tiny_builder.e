@@ -81,7 +81,7 @@ feature -- Events
 			create previously_at_depth.make (1, 100)
 			Precursor
 		ensure then
-			tree_exists: tree /= Void
+			tree_not_void: tree /= Void
 			at_root_level: current_depth = 1
 		end
 	
@@ -106,7 +106,7 @@ feature -- Events
 			current_depth := current_depth + 1
 		ensure then
 			at_document_element_level: current_depth = 2
-			document_root_exists: tiny_document /= Void
+			document_root_not_void: tiny_document /= Void
 			root_is_document: current_root = tiny_document
 		end
 

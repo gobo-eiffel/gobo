@@ -21,6 +21,9 @@ inherit
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
+		
+	UT_URL_ENCODING
+		export {NONE} all end
 
 feature -- Access
 
@@ -41,33 +44,30 @@ feature -- Evaluation
 		local
 			a_uri: UT_URI
 			a_document: XM_XPATH_DOCUMENT
-			a_message: STRING
+			a_message, an_iri_reference: STRING
 		do
-			if uri_encoding.has_excluded_characters (a_uri_reference) then
-				create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string ("Argument to fn:doc is not a valid URI", Xpath_errors_uri, "FODC0005", Dynamic_error)
+			an_iri_reference := escaped_uri (a_uri_reference)
+			create a_uri.make_resolve (a_base_uri, an_iri_reference)
+			if a_context.is_restricted then
+				last_evaluated_document := Void
+			elseif not a_context.security_manager.is_uri_permitted (a_uri) then
+				create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (STRING_.concat ("Security manager refused permission to read from ", a_uri.full_uri),
+																												 Gexslt_eiffel_type_uri, "SECURITY", Dynamic_error)
+			elseif a_context.available_documents.is_document_mapped (a_uri.full_uri) then
+				last_evaluated_document := a_context.available_documents.document (a_uri.full_uri)
+				last_evaluated_media_type := a_context.available_documents.media_type (a_uri.full_uri)
 			else
-				create a_uri.make_resolve (a_base_uri, a_uri_reference)
-				if a_context.is_restricted then
-					last_evaluated_document := Void
-				elseif not a_context.security_manager.is_uri_permitted (a_uri) then
-					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (STRING_.concat ("Security manager refused permission to read from ", a_uri.full_uri),
-																													 Gexslt_eiffel_type_uri, "SECURITY", Dynamic_error)
-				elseif a_context.available_documents.is_document_mapped (a_uri.full_uri) then
-					last_evaluated_document := a_context.available_documents.document (a_uri.full_uri)
-					last_evaluated_media_type := a_context.available_documents.media_type (a_uri.full_uri)
+				a_context.build_document (a_uri.full_uri)
+				if a_context.is_build_document_error then
+					a_message := STRING_.concat ("Failed to parse ", a_uri.full_uri)
+					a_message := STRING_.appended_string (a_message, ". ")
+					a_message := STRING_.appended_string (a_message, a_context.last_build_error)
+					create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (a_message, Xpath_errors_uri, "FODC0002", Dynamic_error)
 				else
-					a_context.build_document (a_uri.full_uri)
-					if a_context.is_build_document_error then
-						a_message := STRING_.concat ("Failed to parse ", a_uri.full_uri)
-						a_message := STRING_.appended_string (a_message, ". ")
-						a_message := STRING_.appended_string (a_message, a_context.last_build_error)
-						create {XM_XPATH_INVALID_ITEM} last_evaluated_document.make_from_string (a_message, Xpath_errors_uri, "FODC0002", Dynamic_error)
-					else
-						a_document := a_context.last_parsed_document
-						last_evaluated_media_type := a_context.last_parsed_media_type
-						last_evaluated_document := a_document
-						a_context.available_documents.add (a_document, last_evaluated_media_type, a_uri.full_uri)
-					end
+					a_document := a_context.last_parsed_document
+					last_evaluated_media_type := a_context.last_parsed_media_type
+					last_evaluated_document := a_document
+					a_context.available_documents.add (a_document, last_evaluated_media_type, a_uri.full_uri)
 				end
 			end
 		end
@@ -78,6 +78,31 @@ feature -- Evaluation
 			create Result
 		ensure
 			uri_encoding_not_void: Result /= Void
+		end
+		
+	escaped_uri (a_uri_string: STRING): STRING is
+			-- Escaped version of `a_uri_string'
+		require
+			uri_string_not_void: a_uri_string /= Void
+		do
+			Result := escape_custom (utf8.to_utf8 (a_uri_string), unescaped_iri_characters, False)
+		ensure
+			escaped_uri_not_void: Result /= Void
+		end
+
+	unescaped_iri_characters: DS_HASH_SET [CHARACTER] is
+			-- Characters not to escaped for fn:iri-to-uri()
+		local
+			a_character_set: STRING
+		once
+			a_character_set := STRING_.concat (Rfc_lowalpha_characters, Rfc_upalpha_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_digit_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_mark_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_reserved_characters)
+			a_character_set := STRING_.appended_string (a_character_set, Rfc_extra_reserved_characters)
+			a_character_set := STRING_.appended_string (a_character_set, "#")
+			a_character_set := STRING_.appended_string (a_character_set, "%%")
+			Result := new_character_set (a_character_set)
 		end
 
 end

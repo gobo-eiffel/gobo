@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 	make (a_starting_node: G; self, forwards: BOOLEAN) is
 			-- Establish invariant.
 		require
-			starting_node_exists: a_starting_node /= Void
+			starting_node_not_void: a_starting_node /= Void
 			no_self_if_reverse: not forwards implies not self
 		do
 			starting_node := a_starting_node
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 	advance_child_axis is
 			-- Advance along child axis
 		require
-			child_axis_exists: children /= Void
+			child_axis_not_void: children /= Void
 		local
 			a_node: G
 		do
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	starting_node_exists: starting_node /= Void
+	starting_node_not_void: starting_node /= Void
 	no_self_if_reverse: not is_forwards implies not include_self	
 end
 	

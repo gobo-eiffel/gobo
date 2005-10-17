@@ -48,8 +48,7 @@
 	</listitem>
 	<listitem>
 	  <para>
-	    Regular expressions do not yet support Unicode data (ASCII only). Also Unicode digits are not 
-	    yet supported for xsl:number and format-date/datetime/time functions.
+	    Regular expressions do not yet support Unicode data (ASCII only).
 	  </para>
 	</listitem>
 	<listitem>

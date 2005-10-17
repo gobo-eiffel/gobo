@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 					if a_fingerprint /= -1 then
 						a_primary_type := type_factory.schema_type (a_fingerprint)
 						check
-							primary_type_exists: a_primary_type /= Void
+							primary_type_not_void: a_primary_type /= Void
 						end
 						next_token ("In parse_sequence: current token is ")
 						if tokenizer.is_lexical_error then
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 					if not is_parse_error then
 						a_primary_type := internal_last_parsed_node_test
 						check
-							node_test_primary_type_exists: a_primary_type /= Void
+							node_test_primary_type_not_void: a_primary_type /= Void
 						end
 					end
 				end
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 	set_occurence_flag (a_primary_type: XM_XPATH_ITEM_TYPE) is
 			-- Set occurrence flag
 		require
-			primary_type_exists: a_primary_type /= Void
+			primary_type_not_void: a_primary_type /= Void
 		local
 			an_occurrence_flag: INTEGER
 		do

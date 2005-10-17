@@ -74,7 +74,7 @@ feature -- Status setting
 	report_error (a_message: STRING) is
 			-- Report an error.
 		require
-			error_message_exists: a_message /= Void
+			error_message_not_void: a_message /= Void
 		do
 			load_stylesheet_module_failed := True
 			load_stylesheet_module_error := a_message

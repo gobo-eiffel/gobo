@@ -36,7 +36,7 @@ feature -- Access
 	is_duration (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent an xs:duration?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_pattern: STRING
 		do
@@ -58,7 +58,7 @@ feature -- Access
 	is_months_duration (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent an xdt:yearMonthDuration?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_pattern: STRING
 		do
@@ -80,7 +80,7 @@ feature -- Access
 	is_seconds_duration (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent an xdt:dayTimeDuration?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_pattern: STRING
 		do
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 	is_absolute_duration (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent a positive xs:duration?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
 			an_index: INTEGER
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 	is_absolute_months_duration (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent a positive xdt:yearMonthDuration?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
 			an_index: INTEGER
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 	is_absolute_seconds_duration (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent a positive xdt:dayTimeDuration?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
 			an_index: INTEGER
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 	is_duration_after_year (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent a positive xs:duration following optional Y designator?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
 			an_index, a_time_designator: INTEGER			
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 	is_months_duration_after_year (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent a positive xdt:yearMonthDuration following optional Y designator?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
 			an_index: INTEGER			
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 	is_duration_after_month (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent a positive xs:duration following optional M designator?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
 			an_index: INTEGER			
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 	is_duration_after_day (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent a positive xs:duration following optional D designator?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
 			an_index: INTEGER			
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 	is_duration_after_hour (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent a positive xs:duration following optional H designator?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
 			an_index: INTEGER			
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 	is_duration_after_minute (a_duration: STRING): BOOLEAN is
 			-- Does `a_duration' represent a positive xs:duration following optional M designator?
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		local
 			a_string: STRING
 			an_index, a_count, a_second, a_millisecond, a_round_digit: INTEGER
@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	last_parsed_duration_exists: last_parsed_duration /= Void
+	last_parsed_duration_not_void: last_parsed_duration /= Void
 	
 end
 	

@@ -407,14 +407,14 @@ feature {NONE} -- Implementation
 	url_attributes_set: DS_HASH_SET [STRING] is
 			-- Names of attributes that are sometimes URL valued
 		once
-			create Result.make (14)
+			create Result.make (15)
 			Result.set_equality_tester (string_equality_tester)
 		end
 
 	url_combinations_set: DS_HASH_SET [STRING] is
 		-- Names of elements-attribute pairs that are URL valued
 		once
-			create Result.make (36)
+			create Result.make (37)
 			Result.set_equality_tester (string_equality_tester)
 		end
 
@@ -831,7 +831,7 @@ feature {NONE} -- Implementation
 			set_url_attribute ("table", "datasrc")
 			set_url_attribute ("textarea", "datasrc")
 			set_url_attribute ("a", "href")
-			-- Not in serialization draft MHK is going to check on this - TODO - reinstate if in Cand. REC: set_url_attribute ("a", "name")       -- see second note in section B.2.1 of HTML 4 specification
+			set_url_attribute ("a", "name")
 			set_url_attribute ("area", "href")
 			set_url_attribute ("link", "href")
 			set_url_attribute ("base", "href")

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make (a_node: G; a_base_iterator: XM_XPATH_AXIS_ITERATOR [G]) is
 			-- Establish invariant.
 		require
-			starting_node_exists: a_node /= Void
+			starting_node_not_void: a_node /= Void
 			base_iterator_before: base_iterator /= Void and then base_iterator.before
 		do
 			starting_node := a_node
@@ -101,8 +101,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	starting_node_exists: starting_node /= Void
-	base_iterator_exists: base_iterator /= Void
+	starting_node_not_void: starting_node /= Void
+	base_iterator_not_void: base_iterator /= Void
 
 end
 	

@@ -115,7 +115,7 @@ feature -- Element change
 			a_value_of: XM_XSLT_COMPILED_VALUE_OF
 		do
 			if separator_expression = Void and then select_expression /= Void
-			 and then is_backwards_compatible_processing_enabled then
+				and then is_backwards_compatible_processing_enabled then
 				if not is_sub_type (select_expression.item_type, type_factory.any_atomic_type) then
 					create {XM_XPATH_ATOMIZER_EXPRESSION} select_expression.make (select_expression, static_context.configuration.are_all_nodes_untyped)
 				end

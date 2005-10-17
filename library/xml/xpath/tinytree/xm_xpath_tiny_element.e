@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 	accumulate_namespace_codes (a_node_number: INTEGER; a_buffer: DS_ARRAYED_LIST [INTEGER]) is
 			-- Accumulate namespace codes for `a_node_number' into a`_buffer'.
 		require
-			buffer_exists: a_buffer /= Void
+			buffer_not_void: a_buffer /= Void
 			valid_node_number: a_node_number > 0 and a_node_number <= tree.last_node_added
 		local
 			a_namespace_node, a_namespace_code, another_node_number: INTEGER

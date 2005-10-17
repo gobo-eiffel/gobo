@@ -29,10 +29,10 @@ feature {NONE} -- Implementation
 	resolve_directory (a_uri, a_base_uri: UT_URI; a_context: XM_XPATH_CONTEXT; a_directory: KL_DIRECTORY) is
 			-- Resolve all XML files in `a_directory'.
 		require
-			absolute_uri_exists: a_uri /= Void and then a_uri.is_absolute
-			base_uri_exists: a_uri /= Void and then a_uri.is_absolute
-			dynamic_context_exists: a_context /= Void
-			directory_exists: a_directory /= Void
+			absolute_uri_not_void: a_uri /= Void and then a_uri.is_absolute
+			base_uri_not_void: a_uri /= Void and then a_uri.is_absolute
+			dynamic_context_not_void: a_context /= Void
+			directory_not_void: a_directory /= Void
 		local
 			a_file_name: STRING
 			an_index: INTEGER

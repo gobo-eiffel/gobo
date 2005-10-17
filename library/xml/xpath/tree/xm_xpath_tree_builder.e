@@ -250,7 +250,7 @@ feature {XM_XPATH_TREE_ELEMENT} -- Element change (actually only used by XM_XSLT
 	graft_element (an_element: XM_XPATH_TREE_ELEMENT) is
 			-- Graft `an_element' into the tree (dangerous).
 		require
-			element_exists: an_element /= Void
+			element_not_void: an_element /= Void
 		do
 			current_composite_node.add_child (an_element)
 		end

@@ -59,8 +59,8 @@ feature {NONE} -- Initialization
 	make_restricted (a_static_context: XM_XSLT_EXPRESSION_CONTEXT; a_collation_map: like collation_map; a_configuration: like configuration) is
 			-- Create a restricted context for [xsl:]use-when.
 		require
-			static_context_exists: a_static_context /= Void
-			configuration_exists: a_configuration /= Void
+			static_context_not_void: a_static_context /= Void
+			configuration_not_void: a_configuration /= Void
 		local
 			a_date_time: DT_DATE_TIME
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE
@@ -587,7 +587,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	transformer_conditioanlly_exists: not is_restricted implies transformer /= Void
+	transformer_conditioanlly_not_void: not is_restricted implies transformer /= Void
 	static_context_void: not is_restricted implies static_context = Void
 	static_context_not_void: is_restricted implies static_context /= Void
 	local_variables: is_minor implies internal_local_variable_frame = Void
@@ -599,7 +599,7 @@ invariant
 	mode: is_minor implies internal_current_mode = Void
 	template: is_minor implies internal_current_template = Void
 	regexp: is_minor implies internal_current_regexp_iterator = Void
-	configuration_exists: configuration /= Void
+	configuration_not_void: configuration /= Void
 	
 end
 	

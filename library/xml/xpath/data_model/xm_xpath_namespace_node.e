@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	make (an_element: like element; a_namespace_code: like namespace_code; a_position: like position) is
 			-- Establish invariant.
 		require
-			element_exists: an_element /= Void
+			element_not_void: an_element /= Void
 			strictly_positive_position: a_position > 0
 		local
 			a_prefix: STRING
@@ -262,7 +262,7 @@ feature {XM_XPATH_NODE} -- Local
 
 invariant
 
-	element_exists: element /= Void
+	element_not_void: element /= Void
 	strictly_positive_position: position > 0
 
 end

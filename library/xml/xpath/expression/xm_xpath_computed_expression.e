@@ -630,7 +630,7 @@ feature {XM_XPATH_COMPUTED_EXPRESSION} -- Local
 	accumulate_slots_used (a_set: DS_HASH_SET [INTEGER]) is
 			-- Add all slot numbers used by `Current' to `a_set'.
 		require
-			set_exists: a_set /= Void
+			set_not_void: a_set /= Void
 		local
 			a_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_EXPRESSION]
 			a_computed_expression: XM_XPATH_COMPUTED_EXPRESSION

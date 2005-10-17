@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 	make (an_expression: XM_XPATH_EXPRESSION) is
 			-- Establish invariant.
 		require
-			base_expression_exists: an_expression /= Void
+			base_expression_not_void: an_expression /= Void
 			base_expression_is_computed: an_expression.is_computed_expression
 		do
 			make_unary (an_expression)

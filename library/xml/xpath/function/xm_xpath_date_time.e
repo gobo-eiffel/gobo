@@ -115,9 +115,9 @@ feature {NONE} -- Implementation
 	evaluate_both_zoned (a_date_value: XM_XPATH_DATE_VALUE; a_time_value: XM_XPATH_TIME_VALUE; a_context: XM_XPATH_CONTEXT) is
 			-- Evaluate with both operands zoned.
 		require
-			date_exists: a_date_value /= Void
-			time_exists: a_time_value /= Void
-			context_exists: a_context /= Void
+			date_not_void: a_date_value /= Void
+			time_not_void: a_time_value /= Void
+			context_not_void: a_context /= Void
 		local
 			a_date_time: DT_DATE_TIME
 			a_time_zone: DT_FIXED_OFFSET_TIME_ZONE

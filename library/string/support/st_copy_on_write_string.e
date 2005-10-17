@@ -25,7 +25,7 @@ feature {NONE} -- Inisitalization
 	make (a_string: STRING) is
 			-- Establish invariant.
 		require
-			string_exists: a_string /= Void
+			string_not_void: a_string /= Void
 		do
 			item := a_string
 		ensure
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	item_exists: item /= Void
+	item_not_void: item /= Void
 
 end
 	

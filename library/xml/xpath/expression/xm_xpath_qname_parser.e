@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	make (a_qname: STRING) is
 			-- Establish invariant
 		require
-			qname_exists: a_qname /= Void
+			qname_not_void: a_qname /= Void
 		local
 			a_string_splitter: ST_SPLITTER
 			some_qname_parts: DS_LIST [STRING]
@@ -78,8 +78,8 @@ feature -- Status report
 
 invariant
 
-	prefix_exists:	is_valid implies optional_prefix /= Void
-	local_name_exists: is_valid implies local_name /= Void
+	prefix_not_void:	is_valid implies optional_prefix /= Void
+	local_name_not_void: is_valid implies local_name /= Void
 	invalidity_contraint: too_many_colons implies not is_valid
 
 end

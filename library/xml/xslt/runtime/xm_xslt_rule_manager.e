@@ -287,7 +287,7 @@ feature -- Element change
 	rank_mode (a_mode: XM_XSLT_MODE) is
 			-- Set `priority_rank' for every rule in `a_mode'
 		require
-			mode_exists: a_mode /= Void
+			mode_not_void: a_mode /= Void
 		local
 			an_index: INTEGER
 			a_rule: XM_XSLT_RULE

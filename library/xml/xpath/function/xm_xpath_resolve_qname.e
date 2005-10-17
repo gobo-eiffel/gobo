@@ -135,9 +135,9 @@ feature {NONE} -- Implementation
 	resolve_qname (an_element: XM_XPATH_ELEMENT; a_prefix, a_local_part: STRING; ) is
 			-- Resolve qname in scope of `an_element'.
 		require
-			element_exists: an_element /= Void
-			prefix_exists: a_prefix /= Void
-			local_name_exists: a_local_part /= Void
+			element_not_void: an_element /= Void
+			prefix_not_void: a_prefix /= Void
+			local_name_not_void: a_local_part /= Void
 		local
 			found: BOOLEAN
 			a_name_code, a_namespace_code, a_prefix_code, a_uri_code: INTEGER

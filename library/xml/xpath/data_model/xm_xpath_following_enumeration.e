@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	make (a_starting_node: G) is
 			-- Establish invariant.
 		require
-			starting_node_exists: a_starting_node /= Void
+			starting_node_not_void: a_starting_node /= Void
 		local
 			a_parent: G
 		do
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 				if a_parent = Void then
 					siblings := Void
 				else
-					siblings ?= a_parent.new_axis_iterator (child_axis)
+					siblings ?= a_parent.new_axis_iterator (Child_axis)
 				end
 			else
 				siblings := Void
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	starting_node_exists: starting_node /= Void
+	starting_node_not_void: starting_node /= Void
 
 end
 	

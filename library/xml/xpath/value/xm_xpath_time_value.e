@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 	make_from_time (a_time: DT_TIME) is
 			-- Create from time object.
 		require
-			time_exists: a_time /= Void
+			time_not_void: a_time /= Void
 		do
 			make_atomic_value
 			local_time := a_time
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 	make_from_zoned_time (a_time: DT_FIXED_OFFSET_ZONED_TIME) is
 			-- Create from time object.
 		require
-			time_exists: a_time /= Void
+			time_not_void: a_time /= Void
 		do
 			make_atomic_value
 			zoned_time := a_time
@@ -103,7 +103,7 @@ feature -- Access
 	to_another_time_zone (an_offset: XM_XPATH_SECONDS_DURATION_VALUE): XM_XPATH_TIME_VALUE is
 			-- Same time as `Current', but in `a_time_zone'
 		require
-			time_zone_exists: an_offset /= Void
+			time_zone_not_void: an_offset /= Void
 		local
 			a_zone: DT_FIXED_OFFSET_TIME_ZONE
 			a_zoned_dt: DT_FIXED_OFFSET_ZONED_TIME
@@ -260,7 +260,7 @@ feature -- Status report
 	is_time (a_lexical_time: STRING): BOOLEAN is
 			-- Is `a_lexical_time' a valid time?
 		require
-			lexical_time_exists: a_lexical_time /= Void
+			lexical_time_not_void: a_lexical_time /= Void
 		local
 			a_date_time_parser: DT_XSD_DATE_TIME_PARSER
 		do

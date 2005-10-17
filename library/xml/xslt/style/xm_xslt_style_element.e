@@ -1063,11 +1063,15 @@ feature -- Status setting
 				if an_analyzed_expression.is_error and then an_analyzed_expression.error_value.type /= Dynamic_error then
 					report_compile_error (an_analyzed_expression.error_value)
 				else
-					if was_replaced and then not an_expression.was_expression_replaced then
-						
-						-- in case it was a Let expression, and `action' has turned off replacement
-						
-						an_expression.set_replacement (an_analyzed_expression)
+					if was_replaced then
+						if an_analyzed_expression.was_expression_replaced then
+							an_analyzed_expression := an_analyzed_expression.replacement_expression
+						end
+						if not an_expression.was_expression_replaced
+							or else an_expression.replacement_expression /= an_analyzed_expression then
+							if an_expression.was_expression_replaced then an_expression.mark_unreplaced end
+							an_expression.set_replacement (an_analyzed_expression)
+						end
 					end
 					-- TODO: this all needs an executable
 					--if configuration.is_tracing then

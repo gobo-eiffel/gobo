@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 invariant
 
 	strictly_positive_indent_spaces: indent_spaces > 0
-	property_stack_exists: property_stack /= Void
+	property_stack_not_void: property_stack /= Void
 
 end
 	

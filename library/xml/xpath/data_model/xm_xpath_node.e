@@ -125,7 +125,7 @@ feature -- Access
 	document_number: INTEGER is
 			-- Uniquely identifies the owning document.
 		require
-			document_exists: document /= Void
+			document_not_void: document /= Void
 		deferred
 		ensure
 			strictly_positive_result: Result > 0
@@ -543,7 +543,7 @@ feature -- Comparison
 			-- If current object equal to other, 0;
 			-- if smaller, -1; if greater, 1
 		require
-			other_exists: other /= Void
+			other_not_void: other /= Void
 		do
 			if sequence_number < other.sequence_number then
 				Result := -1

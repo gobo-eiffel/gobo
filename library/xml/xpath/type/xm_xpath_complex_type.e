@@ -44,7 +44,7 @@ feature -- Access
 			simple_content: is_simple_content
 		deferred
 		ensure
-			result_exists: Result /= Void
+			simple_content_type_not_void: Result /= Void
 		end
 
 feature -- Status report

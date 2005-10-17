@@ -236,7 +236,7 @@ feature -- Element change
 	constructed_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER): XM_XPATH_TREE_DOCUMENT is
 			-- Simlified stylesheet constructed around `Current'
 		require
-			stylesheet_compiler_exists: a_compiler /= Void
+			stylesheet_compiler_not_void: a_compiler /= Void
 		local
 			an_xslt_prefix, a_version: STRING
 		do
@@ -290,8 +290,8 @@ feature {NONE} -- Implementation
 	grafted_stylesheet (a_compiler: XM_XSLT_STYLESHEET_COMPILER; a_version: STRING): XM_XPATH_TREE_DOCUMENT is
 			-- Simlified stylesheet constructed around `Current'
 		require
-			stylesheet_compiler_exists: a_compiler /= Void
-			version_exists: a_version /= Void
+			stylesheet_compiler_not_void: a_compiler /= Void
+			version_not_void: a_version /= Void
 		local
 			a_builder: XM_XPATH_TREE_BUILDER
 		do

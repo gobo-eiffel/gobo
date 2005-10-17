@@ -480,6 +480,9 @@ feature {NONE} -- Implementation
 					else
 						create {XM_XPATH_SEQUENCE_EXTENT} checked_expression.make (an_iterator)
 						checked_expression.simplify
+						if checked_expression.was_expression_replaced then
+							checked_expression := checked_expression.replacement_expression
+						end
 					end
 				end
 				if supplied_item_type = type_factory.untyped_atomic_type then

@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 	make (an_element: XM_XPATH_ELEMENT; a_node_test: XM_XPATH_NODE_TEST) is
 			-- Establish invariant.
 		require
-			element_exists: an_element /= Void
-			node_test_exists: a_node_test /= Void
+			element_not_void: an_element /= Void
+			node_test_not_void: a_node_test /= Void
 		local
 			some_undeclared_prefixes: DS_HASH_SET [INTEGER]
 			some_declared_codes: DS_HASH_SET [INTEGER]
@@ -154,8 +154,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	element_exists: element /= Void
-	node_test_exists: node_test /= Void
+	element_not_void: element /= Void
+	node_test_not_void: node_test /= Void
 
 end
 	

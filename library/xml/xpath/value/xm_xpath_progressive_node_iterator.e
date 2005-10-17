@@ -161,8 +161,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	reservoir_exists: reservoir /= Void
-	base_iterator_exists: base_iterator /= Void
+	reservoir_not_void: reservoir /= Void
+	base_iterator_not_void: base_iterator /= Void
 
 end
 	

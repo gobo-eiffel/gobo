@@ -36,7 +36,7 @@ feature -- Access
 			-- Date_Time adjusted to UTC via implicit time zone
 		require
 			not_zoned: not zoned
-			context_exists: a_context /= Void
+			context_not_void: a_context /= Void
 		deferred
 		ensure
 			result_not_void: Result /= Void
@@ -273,7 +273,7 @@ feature -- Basic operations
 	plus (a_duration: XM_XPATH_DURATION_VALUE): like Current is
 			-- Addition of `a_duration' to `Current'
 		require
-			duration_exists: a_duration /= Void
+			duration_not_void: a_duration /= Void
 		deferred
 		ensure
 			result_not_void: Result /= Void
@@ -282,8 +282,8 @@ feature -- Basic operations
 	minus (other: like Current; a_context: XM_XPATH_CONTEXT): XM_XPATH_SECONDS_DURATION_VALUE is
 			-- Subtraction of `other' from `Current'
 		require
-			other_exists: other /= Void
-			context_exists: not zoned or else not other.zoned implies a_context /= Void
+			other_not_void: other /= Void
+			context_not_void: not zoned or else not other.zoned implies a_context /= Void
 		local
 			dt1, dt2: DT_DATE_TIME
 		do

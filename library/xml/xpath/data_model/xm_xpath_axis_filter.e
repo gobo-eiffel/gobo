@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Establish invariant.
 		require
 			base_iterator_before: base_iterator /= Void and then base_iterator.before
-			node_test_exists: a_node_test /= Void
+			node_test_not_void: a_node_test /= Void
 		do
 			base_iterator := a_base_iterator
 			if base_iterator.is_error then
@@ -107,8 +107,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	base_iterator_exists: base_iterator /= Void
-	node_test_exists: node_test /= Void
+	base_iterator_not_void: base_iterator /= Void
+	node_test_not_void: node_test /= Void
 	
 end
 	

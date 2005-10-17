@@ -40,7 +40,7 @@ feature -- Status report
 			no_error: not was_error
 		deferred
 		ensure
-			collection_exists: Result /= Void and then Result.before
+			collection_at_start: Result /= Void and then Result.before
 		end
 
 	last_error: XM_XPATH_ERROR_VALUE is
@@ -57,8 +57,8 @@ feature -- Element change
 	resolve (a_uri: UT_URI; a_context: XM_XPATH_CONTEXT) is
 			-- Resolve `a_uri' to a sequence of nodes.
 		require
-			absolute_uri_exists: a_uri /= Void and then a_uri.is_absolute
-			dynamic_context_exists: a_context /= Void
+			absolute_uri_not_void: a_uri /= Void and then a_uri.is_absolute
+			dynamic_context_not_void: a_context /= Void
 			correct_scheme: a_uri.has_valid_scheme and then STRING_.same_string (scheme, a_uri.scheme)
 		deferred
 		ensure

@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 	compile_regexp (a_context: XM_XPATH_CONTEXT) is
 			-- Compile and execute `regexp' at evaluation time
 		require
-			dynamic_context_exists: a_context /= Void
+			dynamic_context_not_void: a_context /= Void
 		local
 			a_regexp_cache_entry: like regexp_cache_entry
 			a_pattern_string, a_flags_string, a_key: STRING

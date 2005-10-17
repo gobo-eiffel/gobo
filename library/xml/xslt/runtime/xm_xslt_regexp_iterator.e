@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 	make (an_input: STRING; a_regexp: RX_PCRE_REGULAR_EXPRESSION) is
 			-- Establish invariant.
 		require
-			input_exists: an_input /= Void
-			regular_expression_exists: a_regexp /= Void
+			input_not_void: an_input /= Void
+			regular_expression_not_void: a_regexp /= Void
 		do
 			input := an_input
 			regexp := a_regexp
@@ -153,8 +153,8 @@ feature {NONE} -- Implementation
 
 invariant
 
-	input_exists: input /= Void
-	regular_expression_exists: regexp /= Void
+	input_not_void: input /= Void
+	regular_expression_not_void: regexp /= Void
 
 end
 	

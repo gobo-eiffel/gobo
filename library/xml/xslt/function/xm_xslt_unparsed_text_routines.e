@@ -30,7 +30,7 @@ feature {NONE} -- Access
 			-- Unparsed text (or availability thereof) for `a_uri'
 		require
 			absolute_uri: a_uri /= Void and then a_uri.is_absolute and then not a_uri.has_fragment
-			dynamic_context_exists: a_context /= Void
+			dynamic_context_not_void: a_context /= Void
 		local
 			an_evaluation_context: XM_XSLT_EVALUATION_CONTEXT
 			a_transformer: XM_XSLT_TRANSFORMER
@@ -67,7 +67,7 @@ feature {NONE} -- Access
 			-- Resolved unparsed text (or availability thereof) for `a_uri'
 		require
 			absolute_uri: a_uri /= Void and then a_uri.is_absolute and then not a_uri.has_fragment
-			dynamic_context_exists: a_context /= Void
+			dynamic_context_not_void: a_context /= Void
 			recognized_encoding: is_recognized_encoding (an_encoding)
 		local
 			a_resolver:  XM_URI_REFERENCE_RESOLVER
@@ -123,9 +123,9 @@ feature {NONE} -- Access
 	retrieved_text (a_stream: XM_EIFFEL_INPUT_STREAM; a_uri: UT_URI; an_encoding: STRING; a_context: XM_XSLT_EVALUATION_CONTEXT; is_availability_check: BOOLEAN): XM_XPATH_ITEM is
 			-- Resolved unparsed text (or availability thereof) from `a_stream' for `a_uri'
 		require
-			stream_exists: a_stream /= Void
+			stream_not_void: a_stream /= Void
 			absolute_uri: a_uri /= Void and then a_uri.is_absolute and then not a_uri.has_fragment
-			dynamic_context_exists: a_context /= Void
+			dynamic_context_not_void: a_context /= Void
 			recognized_encoding: is_recognized_encoding (an_encoding)
 		local
 			a_text: STRING
@@ -163,7 +163,7 @@ feature {NONE} -- Access
 	is_xml_media_type (a_media_type: UT_MEDIA_TYPE): BOOLEAN is
 			-- Is `a_media_type' an XML media type?
 		require
-			media_type_exists: a_media_type /= Void
+			media_type_not_void: a_media_type /= Void
 		local
 			a_sub_type: STRING
 		do

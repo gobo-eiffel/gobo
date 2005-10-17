@@ -116,7 +116,7 @@ feature -- Evaluation
 							end
 						end
 						check
-							select_expression_exists: select_expression /= Void
+							select_expression_not_void: select_expression /= Void
 							-- either supplied parameter or default value or empty sequence has been assumed
 						end
 						last_evaluated_binding := select_value (an_evaluation_context)

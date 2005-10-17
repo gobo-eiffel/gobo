@@ -56,7 +56,7 @@ feature -- Status report
 	is_element_available (a_uri, a_local_name: STRING): BOOLEAN is
 			-- Is named element available?
 		require
-			local_name_exists: a_local_name /= Void
+			local_name_not_void: a_local_name /= Void
 		local
 			a_fingerprint: INTEGER
 		do

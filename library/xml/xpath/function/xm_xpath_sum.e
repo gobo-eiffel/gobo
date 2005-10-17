@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 	evaluate_numeric_total (a_first_value: XM_XPATH_NUMERIC_VALUE; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Evaluate total of a sequence of numeric values.
 		require
-			first_value_exists: a_first_value /= Void
+			first_value_not_void: a_first_value /= Void
 			sequence_on_first_position: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.off and then an_iterator.index = 1
 		local
 			a_sum, a_numeric_value: XM_XPATH_NUMERIC_VALUE
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 	evaluate_duration_total (a_first_value: XM_XPATH_DURATION_VALUE; an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]) is
 			-- Evaluate sum of a sequence of duration values.
 		require
-			first_value_exists: a_first_value /= Void
+			first_value_not_void: a_first_value /= Void
 			sequence_on_first_position: an_iterator /= Void and then not an_iterator.is_error and then not an_iterator.off and then an_iterator.index = 1
 		local
 			a_sum, a_duration_value: XM_XPATH_DURATION_VALUE

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 	make (a_tree: XM_XPATH_TINY_FOREST) is
 			-- Establish invariant.
 		require
-			tree_exists: a_tree /= Void
+			tree_not_void: a_tree /= Void
 		do
 			tree := a_tree
 			create mapping_table.make_with_equality_testers (10, Void, string_equality_tester)
@@ -125,8 +125,8 @@ feature {NONE} -- Implementation
 	
 invariant
 
-	mapping_table_exists: mapping_table /= Void
-	tree_exists: tree /= Void
+	mapping_table_not_void: mapping_table /= Void
+	tree_not_void: tree /= Void
 
 end
 	
