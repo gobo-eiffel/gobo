@@ -160,6 +160,7 @@ feature -- Events
 						an_index := a_cursor.index
 						base_receiver.notify_attribute (a_cursor.item, attributes.attribute_type_code (an_index),
 																  attributes.attribute_value_by_index (an_index), 0)
+						a_cursor.forth
 					end
 					base_receiver.start_content
 					base_receiver.end_element
