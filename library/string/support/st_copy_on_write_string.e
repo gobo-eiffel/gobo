@@ -2,7 +2,7 @@ indexing
 
 	description:
 
-		"STRINGs with copy-on-write semantics "
+		"STRINGs with copy-on-write semantics"
 
 	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2005, Colin Adams and others"
@@ -23,9 +23,9 @@ create
 feature {NONE} -- Inisitalization
 
 	make (a_string: STRING) is
-			-- Establish invariant.
+			-- Create a string with copy-on-write semantics.
 		require
-			string_not_void: a_string /= Void
+			a_string_not_void: a_string /= Void
 		do
 			item := a_string
 		ensure
@@ -39,7 +39,7 @@ feature -- Access
 			-- String
 
 	safe_item: STRING is
-			-- Version of `item' that is safe for editting
+			-- Version of `item' that is safe for editing
 		do
 			clone_if_unchanged
 			Result := item
@@ -49,7 +49,7 @@ feature -- Access
 		end
 
 feature -- Element change
-	
+
 	put (c: CHARACTER; i: INTEGER) is
 			-- Replace character at index `i' by `c'
 		require

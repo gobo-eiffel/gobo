@@ -2,13 +2,13 @@ indexing
 
 	description:
 
-	"Routines for determining class of Unicode characters"
+		"Routines for determining class of Unicode characters"
 
-library: "Gobo Eiffel Kernel Library"
-copyright: "Copyright (c) 2005, Colin Adams and others"
-license: "Eiffel Forum License v2 (see forum.txt)"
-date: "$Date$"
-revision: "$Revision$"
+	library: "Gobo Eiffel Kernel Library"
+	copyright: "Copyright (c) 2005, Colin Adams and others"
+	license: "Eiffel Forum License v2 (see forum.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class UC_CHARACTER_CLASS_INTERFACE
 
@@ -17,7 +17,7 @@ inherit
 	UC_UNICODE_CONSTANTS
 		export {NONE} all end
 
-		KL_IMPORTED_INTEGER_ROUTINES
+	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
 feature -- Access
@@ -384,10 +384,11 @@ feature {NONE} -- Implementation
 		end
 
 	character_classes: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is
-			-- Character classes for each cod epoint
+			-- Character classes for each code point
 		deferred
 		ensure
 			character_classes_not_void: Result /= Void
+--			no_void_character_class: not Result.has (Void)
 		end
 
 	decimal_values: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is
@@ -395,6 +396,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			decimal_values_not_void: Result /= Void
+--			no_void_decimal_value: not Result.has (Void)
 		end
 
 end
