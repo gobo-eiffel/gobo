@@ -22,6 +22,9 @@ inherit
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_INTEGER_ROUTINES
+		export {NONE} all end
+
 	GEUC_CONSTANTS
 	
 create
@@ -80,39 +83,45 @@ feature -- processing
 		do
 			create a_file.make ("UnicodeData.txt")
 			create a_splitter.make_with_separators (";")
-			from a_file.open_read until a_file.end_of_file loop
-				a_file.read_line
-				if not a_file.end_of_file then
-					some_fields := a_splitter.split_greedy (a_file.last_string)
-					if some_fields.count /= Field_count then
-						report_general_message ("Bad data line in UnicodeData.txt - not enpoug fields - data line is: " + a_file.last_string)
-						Exceptions.die (1)
-					else
-						a_hex_code_point := some_fields.item (1)
-						a_name := some_fields.item (2)
-						if STRING_.is_hexadecimal (a_hex_code_point) then
-							a_code_point := STRING_.hexadecimal_to_integer (a_hex_code_point)
-							if is_range_start (a_name) then
-								initial_code_point := a_code_point
-							elseif is_range_finish (a_name) then
-								if initial_code_point <= 0 or else initial_code_point > a_code_point then
-									report_general_message ("Invalid start range - data line for end of range is: " + a_file.last_string)
-									Exceptions.die (1)
-								else
-									from an_index := initial_code_point until an_index > a_code_point loop
-										process_code_point_class (an_index, a_name.substring (2, a_name.count - 7), some_fields)
-										an_index := an_index + 1
+			a_file.open_read
+			if a_file.is_open_read then
+				from  until a_file.end_of_file loop
+					a_file.read_line
+					if not a_file.end_of_file then
+						some_fields := a_splitter.split_greedy (a_file.last_string)
+						if some_fields.count /= Field_count then
+							report_general_message ("Bad data line in UnicodeData.txt - not enpoug fields - data line is: " + a_file.last_string)
+							Exceptions.die (1)
+						else
+							a_hex_code_point := some_fields.item (1)
+							a_name := some_fields.item (2)
+							if STRING_.is_hexadecimal (a_hex_code_point) then
+								a_code_point := STRING_.hexadecimal_to_integer (a_hex_code_point)
+								if is_range_start (a_name) then
+									initial_code_point := a_code_point
+								elseif is_range_finish (a_name) then
+									if initial_code_point <= 0 or else initial_code_point > a_code_point then
+										report_general_message ("Invalid start range - data line for end of range is: " + a_file.last_string)
+										Exceptions.die (1)
+									else
+										from an_index := initial_code_point until an_index > a_code_point loop
+											process_code_point_class (an_index, a_name.substring (2, a_name.count - 7), some_fields)
+											an_index := an_index + 1
+										end
 									end
+								else
+									process_code_point_class (a_code_point, a_name, some_fields)
 								end
 							else
-								process_code_point_class (a_code_point, a_name, some_fields)
+								report_general_message ("Invalid code point - data line is: " + a_file.last_string)
+								Exceptions.die (1)
 							end
-						else
-							report_general_message ("Invalid code point - data line is: " + a_file.last_string)
-							Exceptions.die (1)
 						end
 					end
 				end
+			else
+				report_general_message ("Unable to open file UnicodeData.txt for reading")
+				Exceptions.die (1)
 			end
 		end
 
@@ -198,7 +207,7 @@ feature -- Code generation
 			file_open_write: an_output_file /= Void and then an_output_file.is_open_write
 		local
 			i, j, k, a_code_point: INTEGER
-			a_category: INTEGER_8
+			a_category: INTEGER
 			a_code_point_datum: GEUC_UNICODE_DATA
 			some_segment_names, some_plane_names: ARRAY [STRING]
 			a_segment: ARRAY [INTEGER_8]
@@ -215,15 +224,15 @@ feature -- Code generation
 						a_code_point := k + 256 * j + 256 * 256 * i
 						a_code_point_datum := code_points.item (a_code_point)
 						if a_code_point_datum = Void then
-							a_category := Other_unassigned_category
+							a_category := Unassigned_other_category
 						else
 							a_category := a_code_point_datum.general_category
-							if a_category /= Other_unassigned_category then
+							if a_category /= Unassigned_other_category then
 								segment_all_absent := False
 								plane_all_absent := False
 							end
 						end
-						a_segment.put (a_category, k)
+						a_segment.put (INTEGER_.to_integer_8 (a_category), k)
 						k := k + 1
 					end
 					if segment_all_absent then
@@ -274,8 +283,8 @@ feature -- Code generation
 		require
 			file_open_write: an_output_file /= Void and then an_output_file.is_open_write
 		local
-			i, j, k, a_code_point: INTEGER
-			a_value, a_category: INTEGER_8
+			i, j, k, a_code_point, a_category: INTEGER
+			a_value: INTEGER_8
 			a_code_point_datum: GEUC_UNICODE_DATA
 			some_segment_names, some_plane_names: ARRAY [STRING]
 			a_segment: ARRAY [INTEGER_8]
@@ -372,6 +381,9 @@ feature -- Code generation
 				an_output_file.put_string (")%N")
 				an_index := an_index + 1
 			end
+			an_output_file.put_string ("%T%Tensure%N")
+			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
 			an_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: an_output_file /= Void and then an_output_file.is_open_write
@@ -400,6 +412,9 @@ feature -- Code generation
 				an_output_file.put_string (")%N")
 				an_index := an_index + 1
 			end
+			an_output_file.put_string ("%T%Tensure%N")
+			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			an_output_file.put_string ("%T%T%Tsub_arrays_not_void: True -- all items are non-Void%N")
 			an_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: an_output_file /= Void and then an_output_file.is_open_write
@@ -424,7 +439,11 @@ feature -- Code generation
 				an_output_file.put_string ("%%/" + a_segment.item (an_index).out + "/")
 				an_index := an_index + 1
 			end
-			an_output_file.put_string ("%")%N%T%Tend%N%N")
+			an_output_file.put_string ("%")%N")
+			an_output_file.put_string ("%T%Tensure%N")
+			an_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
+			an_output_file.put_string ("%T%Tend%N%N")
+
 		ensure
 			file_still_open: an_output_file /= Void and then an_output_file.is_open_write
 		end

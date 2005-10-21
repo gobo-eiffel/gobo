@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			code_point := a_code_point
 			name := a_name
 			general_category := category (some_fields.item (3))
-			is_valid := general_category /= Other_unassigned_category
+			is_valid := general_category /= Unassigned_other_category
 			if general_category = Decimal_digit_number_category then
 				if not some_fields.item (7).is_integer then
 					is_valid := False
@@ -67,7 +67,7 @@ feature -- Access
 	name: STRING
 			-- Name of character
 
-	general_category: INTEGER_8
+	general_category: INTEGER
 			-- Coded general category
 
 	decimal_digit_value: INTEGER_8 is
@@ -80,8 +80,8 @@ feature -- Access
 			value_in_range: Result >= 0 and Result < 10
 		end
 
-	category (a_category: STRING): INTEGER_8 is
-			-- Coded version of `a_category', or `Other_unassigned_category' if unrecognized
+	category (a_category: STRING): INTEGER is
+			-- Coded version of `a_category', or `Unassigned_other_category' if unrecognized
 		require
 			category_exists: a_category /= Void
 		do
@@ -144,7 +144,7 @@ feature -- Access
 			elseif a_category.is_equal ("Co") then
 				Result := Private_other_category			
 			else
-				Result := Other_unassigned_category
+				Result := Unassigned_other_category
 			end
 		end
 
