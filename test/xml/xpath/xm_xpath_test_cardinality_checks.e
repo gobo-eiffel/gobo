@@ -29,7 +29,13 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
-feature -- Tests
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+	
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+		
+feature -- Test
 
 	test_zero_or_one_no_error is
 			-- Test fn:zero-or-one ('a') returns 'a'.
@@ -40,7 +46,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/languages.xml", False, False, False, True)
+			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("zero-or-one ('a')")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -58,7 +64,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/languages.xml", False, False, False, True)
+			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("zero-or-one (('a', 'b'))")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -74,7 +80,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/languages.xml", False, False, False, True)
+			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("exactly-one ('a')")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -92,7 +98,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/languages.xml", False, False, False, True)
+			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("exactly-one (('a', 'b'))")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -108,7 +114,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/languages.xml", False, False, False, True)
+			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("one-or-more ('a')")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -126,7 +132,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/languages.xml", False, False, False, True)
+			an_evaluator.build_static_context (languages_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("one-or-more (())")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -136,6 +142,30 @@ feature -- Tests
 	set_up is
 		do
 			conformance.set_basic_xslt_processor
+		end
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	languages_xml_uri: UT_URI is
+			-- URI of file 'languages.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "languages.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			languages_xml_uri_not_void: Result /= Void
 		end
 
 end

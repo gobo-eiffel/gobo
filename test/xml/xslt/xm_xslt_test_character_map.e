@@ -52,7 +52,7 @@ feature -- Test
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/character_map.xsl")
+			create a_uri_source.make (character_map_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -82,7 +82,7 @@ feature -- Test
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/character_map2.xsl")
+			create a_uri_source.make (character_map2_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -112,7 +112,7 @@ feature -- Test
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/character_map4.xsl")
+			create a_uri_source.make (character_map4_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -142,7 +142,7 @@ feature -- Test
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/character_map5.xsl")
+			create a_uri_source.make (character_map5_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -172,7 +172,7 @@ feature -- Test
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/character_map6.xsl")
+			create a_uri_source.make (character_map6_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -205,7 +205,7 @@ feature -- Test
 			create an_emitter_factory.make
 			emitter_factory.register_extension_emitter_factory (an_emitter_factory)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/qname_output.xsl")
+			create a_uri_source.make (qname_output_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -219,6 +219,85 @@ feature -- Test
 			a_transformer.transform (Void, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			assert ("Correct result", an_output.last_output.count = 272)
+		end
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing schematron data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	character_map_xsl_uri: UT_URI is
+			-- URI of file 'character_map.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "character_map.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			character_map_uri_not_void: Result /= Void
+		end
+		
+	character_map2_xsl_uri: UT_URI is
+			-- URI of file 'character_map2.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "character_map2.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			character_map2_uri_not_void: Result /= Void
+		end
+		
+	character_map4_xsl_uri: UT_URI is
+			-- URI of file 'character_map4.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "character_map4.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			character_map4_uri_not_void: Result /= Void
+		end
+		
+	character_map5_xsl_uri: UT_URI is
+			-- URI of file 'character_map5.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "character_map5.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			character_map5_uri_not_void: Result /= Void
+		end
+		
+	character_map6_xsl_uri: UT_URI is
+			-- URI of file 'character_map6.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "character_map6.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			character_map6_uri_not_void: Result /= Void
+		end
+		
+	qname_output_xsl_uri: UT_URI is
+			-- URI of file 'qname_output.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "qname_output.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			qname_output_uri_not_void: Result /= Void
 		end
 
 end

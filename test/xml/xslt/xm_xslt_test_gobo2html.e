@@ -45,19 +45,19 @@ feature
 			a_configuration.use_tiny_tree_model (False)
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/gobo2html.xsl")
+			create a_uri_source.make (gobo2html_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/structure-index.xml")
+			create another_uri_source.make (structure_index_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			create a_test_file.make ("./data/from-saxon.html")
+			create a_test_file.make (from_saxon_html_filename)
 			assert ("Test file exists", a_test_file /= Void)
 			a_test_file.open_read
 			assert ("Test file readable", a_test_file.is_open_read)
@@ -93,19 +93,19 @@ feature
 			a_configuration.use_tiny_tree_model (False)
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/gobo2xml.xsl")
+			create a_uri_source.make (gobo2xml_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/structure-index.xml")
+			create another_uri_source.make (structure_index_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			create a_test_file.make ("./data/from-saxon.xml")
+			create a_test_file.make (from_saxon_xml_filename)
 			assert ("Test file exists", a_test_file /= Void)
 			a_test_file.open_read
 			assert ("Test file readable", a_test_file.is_open_read)
@@ -141,19 +141,19 @@ feature
 			a_configuration.use_tiny_tree_model (False)
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/gobo2xhtml.xsl")
+			create a_uri_source.make (gobo2xhtml_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/structure-index.xml")
+			create another_uri_source.make (structure_index_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			create a_test_file.make ("./data/structure-index.xhtml")
+			create a_test_file.make (structure_index_xhtml_filename)
 			assert ("Test file exists", a_test_file /= Void)
 			a_test_file.open_read
 			assert ("Test file readable", a_test_file.is_open_read)
@@ -197,6 +197,88 @@ feature {NONE} -- Debug
 			end
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	data_dirname: STRING is
+			-- Name of directory containing schematron data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	gobo2html_xsl_uri: UT_URI is
+			-- URI of file 'gobo2html.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "gobo2html.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			gobo2html_xsl_uri_not_void: Result /= Void
+		end
+
+	structure_index_xml_uri: UT_URI is
+			-- URI of file 'structure-index.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "structure-index.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			structure_index_xml_uri_not_void: Result /= Void
+		end
+
+	from_saxon_html_filename: STRING is
+			-- Filename 'from-saxon.html'
+		once
+			Result := file_system.pathname (data_dirname, "from-saxon.html")
+		ensure
+			from_saxon_html_filename_not_void: Result /= Void
+			from_saxon_html_filename_not_empty: not Result.is_empty
+		end
+		
+	gobo2xml_xsl_uri: UT_URI is
+			-- URI of file 'gobo2xml.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "gobo2xml.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			gobo2xml_xsl_uri_not_void: Result /= Void
+		end
+
+	from_saxon_xml_filename: STRING is
+			-- Filename 'from-saxon.xml'
+		once
+			Result := file_system.pathname (data_dirname, "from-saxon.xml")
+		ensure
+			from_saxon_xml_filename_not_void: Result /= Void
+			from_saxon_xml_filename_not_empty: not Result.is_empty
+		end
+
+	structure_index_xhtml_filename: STRING is
+			-- Filename 'structure-index.xhtml'
+		once
+			Result := file_system.pathname (data_dirname, "structure-index.xhtml")
+		ensure
+			structure_index_xhtml_filename_not_void: Result /= Void
+			structure_index_xhtml_filename_not_empty: not Result.is_empty
+		end
+
+	gobo2xhtml_xsl_uri: UT_URI is
+			-- URI of file 'gobo2xhtml.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "gobo2xhtml.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			gobo2xhtml_xsl_uri_not_void: Result /= Void
 		end
 
 end

@@ -29,7 +29,13 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
-feature -- Tests
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+	
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+
+feature -- Test
 
 	test_empty_sequence is
 			-- Test fn:node-name(()).
@@ -39,7 +45,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("node-name(())")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -54,7 +60,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("node-name('')")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -69,7 +75,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/booklist.xml", False, False, False, True)
+			an_evaluator.build_static_context (booklist_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("node-name(/*[1]/processing-instruction()[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -91,7 +97,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/booklist.xml", False, False, False, True)
+			an_evaluator.build_static_context (booklist_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("node-name(/*[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -113,7 +119,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/booklist.xml", False, False, False, True)
+			an_evaluator.build_static_context (booklist_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("node-name(/BOOKS/ITEM[6]/attribute::*[local-name() eq 'base'])")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -134,7 +140,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("node-name(/*[1]/*[1]/*[1]/text()[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -145,6 +151,41 @@ feature -- Tests
 	set_up is
 		do
 			conformance.set_basic_xslt_processor
+		end
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	books_xml_uri: UT_URI is
+			-- URI of file 'books.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "books.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books_xml_uri_not_void: Result /= Void
+		end
+		
+	booklist_xml_uri: UT_URI is
+			-- URI of file 'booklist.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "booklist.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			booklist_xml_uri_not_void: Result /= Void
 		end
 
 end

@@ -43,7 +43,7 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/document1.xsl")
+			create a_uri_source.make (document1_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -73,7 +73,7 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/document2.xsl")
+			create a_uri_source.make (document2_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -103,7 +103,7 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/document4.xsl")
+			create a_uri_source.make (document4_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -133,7 +133,7 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/document5.xsl")
+			create a_uri_source.make (document5_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -163,7 +163,7 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (False)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/document3.xsl")
+			create a_uri_source.make (document3_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -180,5 +180,73 @@ feature
 
 	expected_result_string: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Number, the Language of Science</output>"
 			-- Expected result
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing schematron data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	document1_xsl_uri: UT_URI is
+			-- URI of file 'document1.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "document1.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			document1_xsl_uri_not_void: Result /= Void
+		end
+
+	document2_xsl_uri: UT_URI is
+			-- URI of file 'document2.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "document2.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			document2_xsl_uri_not_void: Result /= Void
+		end
+
+	document3_xsl_uri: UT_URI is
+			-- URI of file 'document3.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "document3.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			document3_xsl_uri_not_void: Result /= Void
+		end
+
+	document4_xsl_uri: UT_URI is
+			-- URI of file 'document4.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "document4.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			document4_xsl_uri_not_void: Result /= Void
+		end
+
+	document5_xsl_uri: UT_URI is
+			-- URI of file 'document5.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "document5.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			document5_xsl_uri_not_void: Result /= Void
+		end
 
 end

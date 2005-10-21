@@ -39,13 +39,13 @@ feature -- Test
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/xhtml-splitter.xsl")
+			create a_uri_source.make (xhtml_splitter_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/document.xhtml")
+			create another_uri_source.make (document_xhtml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:/")
@@ -70,13 +70,13 @@ feature -- Test
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/xt1490.xsl")
+			create a_uri_source.make (xt1490_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/document.xhtml")
+			create another_uri_source.make (document_xhtml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:/")
@@ -97,18 +97,75 @@ feature -- Test
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/xt1490-2.xsl")
+			create a_uri_source.make (xt1490_2_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/document.xhtml")
+			create another_uri_source.make (document_xhtml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:/")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform not successfull", a_transformer.is_error)
+		end
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing schematron data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	xhtml_splitter_xsl_uri: UT_URI is
+			-- URI of file 'xhtml-splitter.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "xhtml-splitter.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			xhtml_splitter_xsl_uri_not_void: Result /= Void
+		end
+
+	document_xhtml_uri: UT_URI is
+			-- URI of file 'document.xhtml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "document.xhtml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			document_xhtml_uri_not_void: Result /= Void
+		end
+		
+	xt1490_xsl_uri: UT_URI is
+			-- URI of file 'xt1490.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "xt1490.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			xt1490_xsl_uri_not_void: Result /= Void
+		end
+		
+	xt1490_2_xsl_uri: UT_URI is
+			-- URI of file 'xt1490-2.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "xt1490-2.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			xt1490_2_xsl_uri_not_void: Result /= Void
 		end
 
 end

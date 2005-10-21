@@ -29,7 +29,13 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
-feature -- Tests
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+	
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+		
+feature -- Test
 
 	test_untyped_atomic_to_untyped_atomic is
 			-- Test creating an xdt:untypedAtomic from a string then casting it to an xdt:untypedAtomic.
@@ -39,7 +45,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xdt:untypedAtomic")
 --			diagnose_evaluation_error (an_evaluator)
@@ -57,7 +63,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:string")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -74,7 +80,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:anyURI")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -90,7 +96,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:NOTATION")
 			-- xs:NOTATION not supported by basic-level processor
@@ -104,7 +110,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:float")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -119,7 +125,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic (' 17.5E-12') cast as xs:float")
 			assert ("No valuation error", not an_evaluator.is_error)
@@ -135,7 +141,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:double")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
@@ -150,7 +156,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic (' 17.5E-12') cast as xs:double")
 			assert ("No valuation error", not an_evaluator.is_error)
@@ -166,7 +172,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:decimal")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
@@ -182,7 +188,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic (' 256.7198003 ') cast as xs:decimal")
 			assert ("No valuation error", not an_evaluator.is_error)
@@ -199,7 +205,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:integer")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
@@ -215,7 +221,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic (' 56 ') cast as xs:integer")
 			assert ("No valuation error", not an_evaluator.is_error)
@@ -232,7 +238,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:boolean")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
@@ -247,7 +253,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic (' true ') cast as xs:boolean")
 			assert ("No valuation error", not an_evaluator.is_error)
@@ -263,7 +269,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('xs:b:fred') cast as xs:QName")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
@@ -276,7 +282,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('xdt:untypedAtomic') cast as xs:QName")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Static_error and STRING_.same_string (an_evaluator.error_value.code, "FORG0001"))
@@ -291,7 +297,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09-08Z') cast as xs:date")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -309,7 +315,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09-08') cast as xs:date")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -325,7 +331,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('fred') cast as xs:date")
 			assert ("Evaluation error", an_evaluator.is_error and then an_evaluator.error_value.type = Dynamic_error and STRING_.same_string (an_evaluator.error_value.code, "XPTY0004"))
@@ -340,7 +346,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('12:05:35.465987') cast as xs:time")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -358,7 +364,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09-08T12:07:40.5Z') cast as xs:dateTime")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -376,7 +382,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('P2Y5MT12H09M08.5674S') cast as xs:duration")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -394,7 +400,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('P2Y5M') cast as xdt:yearMonthDuration")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -412,7 +418,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('P3DT4H7M') cast as xdt:dayTimeDuration")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -431,7 +437,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('2005-09') castable as xs:gYearMonth")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -460,7 +466,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('2005') castable as xs:gYear")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -489,7 +495,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('--09') castable as xs:gMonth")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -518,7 +524,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('--05-09') castable as xs:gMonthDay")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -547,7 +553,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('---09') castable as xs:gDay")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -576,7 +582,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xdt:untypedAtomic ('" + encoded_string + "') castable as xs:base64Binary")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -600,7 +606,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("xs:base64Binary ('" + encoded_string + "') castable as xs:hexBinary")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -622,6 +628,28 @@ feature -- Set up
 		end
 
 feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	books_xml_uri: UT_URI is
+			-- URI of file 'books.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "books.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books_xml_uri_not_void: Result /= Void
+		end
 
 	diagnose_evaluation_error (an_evaluator: XM_XPATH_EVALUATOR) is
 			-- Print error diagnosis to standard error stream.

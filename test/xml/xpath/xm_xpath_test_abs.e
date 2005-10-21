@@ -29,7 +29,13 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
-feature -- Constants
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+	
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+		
+feature -- Constant
 
 	ten_and_a_half: MA_DECIMAL is
 			-- 10.5 as a decimal
@@ -39,7 +45,7 @@ feature -- Constants
 			ten_and_a_half_not_void: Result /= Void
 		end
 
-feature -- Tests
+feature -- Test
 
 	test_positive_abs is
 			-- Test fn:abs (10.5) returns 10.5.
@@ -50,7 +56,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("abs (10.5)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -70,7 +76,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("abs (-10.5)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -90,7 +96,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("abs (10.5E0)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -110,7 +116,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("abs (-10.5E0)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -130,7 +136,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("abs (xs:float(10.5E0))")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -150,7 +156,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("abs (xs:float(-10.5E0))")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -166,6 +172,30 @@ feature -- Tests
 			conformance.set_basic_xslt_processor
 		end
 
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	books_xml_uri: UT_URI is
+			-- URI of file 'books.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "books.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books_xml_uri_not_void: Result /= Void
+		end
+			
 end
 
 			

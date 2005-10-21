@@ -29,7 +29,13 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
-feature
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+	
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+		
+feature -- Test
 
 	test_against_xml_file is
 			-- Test against an external XML file.
@@ -40,7 +46,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("BOOKLIST//ITEM[child::TITLE = 'When We Were Very Young']/attribute::CAT") -- should evaluate to "F"
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -59,7 +65,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/BOOKLIST/BOOKS/child::ITEM[2]")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -79,7 +85,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("descendant::ITEM[attribute::CAT = 'X']")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -99,7 +105,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("child::BOOKLIST[BOOKS]")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -118,7 +124,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("(1 to 100)[. mod 5 eq 0]")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -137,7 +143,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("(21 to 29)[5]")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -156,7 +162,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("BOOKLIST/BOOKS/ITEM[4]/AUTHOR eq 'Bonner'")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -175,7 +181,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM/AUTHOR = 'Bonner'")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -194,7 +200,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[child::AUTHOR = 'Milne, A. A.'] is //ITEM[child::TITLE = 'When We Were Very Young']")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -213,7 +219,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[child::AUTHOR = 'Milne, A. A.'] << /BOOKLIST/CATEGORIES")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -232,7 +238,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[child::AUTHOR = 'Milne, A. A.'] >> /BOOKLIST/CATEGORIES")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -251,7 +257,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 1 and 2 eq 2")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -269,7 +275,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 2 and 3 idiv 0 = 1")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -284,7 +290,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 1 or 2 eq 3")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -302,7 +308,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 1 or 3 idiv 0 = 1")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -315,7 +321,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("1 eq 1 and 3 idiv 0 = 1")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -329,7 +335,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("for $i in //* return name($i)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -345,7 +351,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("for $i in (10, 20), $j in (1, 2) return ($i + $j)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -361,7 +367,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[AUTHOR = 'Bonner'] union //ITEM[@CAT = 'S']")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -377,7 +383,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[AUTHOR = 'Bonner'] intersect //ITEM[@CAT = 'S']")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -393,7 +399,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM except //ITEM[@CAT = 'S']")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -409,7 +415,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//ITEM[if ( @CAT eq 'S' ) then true() else false() ]")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -426,7 +432,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("every $item in //ITEM satisfies $item/@CAT")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -446,7 +452,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("every $item in //ITEM satisfies $item/@CAT eq 'X'")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -465,7 +471,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("some $item in //ITEM satisfies $item/@CAT eq 'F'")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -484,7 +490,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("some $item in //ITEM satisfies $item/@CAT eq 'G'")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -503,7 +509,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("5 instance of xs:integer")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -526,7 +532,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			create an_integer_value.make_from_integer (7)
 			an_evaluator.static_context.declare_variable ("fred", an_integer_value)
@@ -546,7 +552,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//TITLE/(string(.), 'fred', 2.01, 2.01e3, 7)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -563,7 +569,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("boolean(0)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -582,7 +588,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("boolean(1)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -603,7 +609,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//[position() = ()]")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -618,7 +624,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			create a_string_value.make ("seven")
 			an_evaluator.static_context.declare_variable ("fred", a_string_value)
@@ -634,7 +640,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//TITLE[position() = $fred]")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -648,7 +654,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//TITLE[position(1,2,3)]")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -662,7 +668,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("//TITLE/(string(.), .)")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -676,7 +682,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("/%"fred%"/%"fred%"")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -690,7 +696,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("'fred'[child::title]")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -705,7 +711,7 @@ feature
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/books.xml", False, False, True, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("'fred' eq 'jim' cast as xs:Date")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -717,7 +723,30 @@ feature
 			conformance.set_basic_xslt_processor
 		end
 
+
 feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	books_xml_uri: UT_URI is
+			-- URI of file 'books.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "books.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books_xml_uri_not_void: Result /= Void
+		end
 
 	check_title (a_node: XM_XPATH_NODE; a_title: STRING): BOOLEAN is
 			-- Check `a_node' has a "TITLE" child whose text is `a_title'

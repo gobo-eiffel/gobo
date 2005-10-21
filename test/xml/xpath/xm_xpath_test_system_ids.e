@@ -64,7 +64,7 @@ feature
 			element_test: XM_XPATH_NAME_TEST
 		do
 			conformance.set_basic_xslt_processor
-			system_id := "./data/books2.xml"
+			system_id := books2_xml_uri.full_reference
 			make_parser (system_id, is_tiny)
 			parser.parse_from_system (system_id)
 			if is_tiny then
@@ -203,4 +203,26 @@ feature {NONE} -- Implementation
 	tiny_tree_pipe: XM_XPATH_TINYTREE_CALLBACKS_PIPE
 	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
 
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	books2_xml_uri: UT_URI is
+			-- URI of file 'books2.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "books2.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books2_xml_uri_not_void: Result /= Void
+		end
+		
 end

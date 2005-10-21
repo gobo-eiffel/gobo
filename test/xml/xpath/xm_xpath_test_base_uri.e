@@ -88,7 +88,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, False, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri()")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -105,7 +105,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, False, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("(1,2,3)[base-uri() eq 'fred']")
 			assert ("Evaluation error", an_evaluator.is_error)
@@ -119,7 +119,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, False, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(())")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -133,7 +133,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, True, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(())")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -148,7 +148,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, False, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -166,7 +166,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, True, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -184,7 +184,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, False, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -202,7 +202,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, True, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/ITEM[1])")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -220,7 +220,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, False, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/nested-element)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -238,7 +238,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, True, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[2]/nested-element)")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -256,7 +256,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, False, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction())")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -274,7 +274,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, True, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/ITEM[2]/processing-instruction())")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -292,7 +292,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, False, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/processing-instruction()[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -310,7 +310,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_ascii
-			an_evaluator.build_static_context ("./data/base_uri_master.xml", False, False, True, True)
+			an_evaluator.build_static_context (base_uri_master_xml_uri.full_reference, False, False, True, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("base-uri(/*[1]/*[1]/processing-instruction()[2])")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -325,6 +325,30 @@ feature -- Tests
 			conformance.set_basic_xslt_processor
 		end
 
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	base_uri_master_xml_uri: UT_URI is
+			-- URI of file 'base_uri_master.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "base_uri_master.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			base_uri_master_xml_uri_not_void: Result /= Void
+		end
+			
 end
 
 			

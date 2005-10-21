@@ -22,6 +22,12 @@ inherit
 
 	XM_RESOLVER_FACTORY
 
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+	
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+
 feature -- Test
 
 	test_shorthand_with_xml_id is
@@ -34,7 +40,7 @@ feature -- Test
 			a_sink: XM_PRETTY_PRINT_FILTER
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
-			system_id := "./test_event.xml"
+			system_id := test_event_xml_uri.full_reference
 			a_parser := new_eiffel_parser
 			a_resolver := new_resolver_current_directory
 			a_parser.set_resolver (a_resolver)
@@ -60,7 +66,7 @@ feature -- Test
 			a_sink: XM_PRETTY_PRINT_FILTER
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
-			system_id := "./test_event.xml"
+			system_id := test_event_xml_uri.full_reference
 			a_parser := new_eiffel_parser
 			a_resolver := new_resolver_current_directory
 			a_parser.set_resolver (a_resolver)
@@ -88,7 +94,7 @@ feature -- Test
 			a_sink: XM_PRETTY_PRINT_FILTER
 			a_resolver: XM_URI_EXTERNAL_RESOLVER
 		do
-			system_id := "./test_event.xml"
+			system_id := test_event_xml_uri.full_reference
 			a_parser := new_eiffel_parser
 			a_resolver := new_resolver_current_directory
 			a_parser.set_resolver (a_resolver)
@@ -107,6 +113,30 @@ feature -- Test
 
 	default_media_type: UT_MEDIA_TYPE
 			-- Default media type
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpointer", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	test_event_xml_uri: UT_URI is
+			-- URI of file 'test_event.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "test_event.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			test_event_xml_uri_not_void: Result /= Void
+		end
 
 end
 			

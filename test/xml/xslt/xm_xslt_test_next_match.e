@@ -46,13 +46,13 @@ feature -- Test
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			a_configuration.use_tiny_tree_model (False)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/next_match.xsl")
+			create a_uri_source.make (next_match_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/next_match.xml")
+			create another_uri_source.make (next_match_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -61,4 +61,39 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (an_output.last_output, expected_result))
 		end
 
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing schematron data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	next_match_xsl_uri: UT_URI is
+			-- URI of file 'next_match.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "next_match.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			next_match_xsl_uri_not_void: Result /= Void
+		end
+		
+	next_match_xml_uri: UT_URI is
+			-- URI of file 'next_match.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "next_match.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			next_match_xml_uri_not_void: Result /= Void
+		end
+	
 end

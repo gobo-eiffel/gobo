@@ -24,7 +24,7 @@ inherit
 
 	XM_RESOLVER_FACTORY
 	
-feature
+feature -- Test
 
 	test_stripper is
 			-- Test stripper rules.
@@ -43,19 +43,19 @@ feature
 			a_configuration.use_tiny_tree_model (False)
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/strip.xsl")
+			create a_uri_source.make (strip_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/strip.xml")
+			create another_uri_source.make (strip_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "stdout:")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			create a_test_file.make ("./data/strip.out")
+			create a_test_file.make (strip_out_filename)
 			assert ("Test file exists", a_test_file /= Void)
 			a_test_file.open_read
 			assert ("Test file readable", a_test_file.is_open_read)
@@ -70,6 +70,50 @@ feature
 			end
 			a_test_file.close
 			assert ("Results same as test file", STRING_.same_string (a_test_string, an_output.last_output))
+		end
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing schematron data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	strip_xsl_uri: UT_URI is
+			-- URI of file 'strip.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "strip.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			strip_xsl_uri_not_void: Result /= Void
+		end
+		
+	strip_xml_uri: UT_URI is
+			-- URI of file 'strip.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "strip.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			strip_xml_uri_not_void: Result /= Void
+		end
+		
+	strip_out_filename: STRING is
+			-- Filename 'strip.out'
+		once
+			Result := file_system.pathname (data_dirname, "strip.out")
+		ensure
+			strip_out_filename_not_void: Result /= Void
+			strip_out_filename_not_empty: not Result.is_empty
 		end
 
 end

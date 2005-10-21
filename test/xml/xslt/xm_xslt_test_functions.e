@@ -45,7 +45,7 @@ feature -- Test
 			create a_configuration.make_with_defaults
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/reverse.xsl")
+			create a_uri_source.make (reverse_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -75,7 +75,7 @@ feature -- Test
 			create a_configuration.make_with_defaults
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/reverse2.xsl")
+			create a_uri_source.make (reverse2_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -89,6 +89,41 @@ feature -- Test
 			a_transformer.transform (Void, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			assert ("Correct result", STRING_.same_string (an_output.last_output, Reversed_output_string))
+		end
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing schematron data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	reverse_xsl_uri: UT_URI is
+			-- URI of file 'reverse.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "reverse.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			reverse_xsl_uri_not_void: Result /= Void
+		end
+
+	reverse2_xsl_uri: UT_URI is
+			-- URI of file 'reverse2.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "reverse2.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			reverse2_xsl_uri_not_void: Result /= Void
 		end
 
 end

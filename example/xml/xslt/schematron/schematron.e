@@ -42,6 +42,9 @@ inherit
 	KL_SHARED_FILE_SYSTEM
 		export {NONE} all end
 
+	KL_SHARED_EXECUTION_ENVIRONMENT
+		export {NONE} all end
+
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -140,7 +143,7 @@ feature -- Processing
 			-- This means the example will not work unless it is executed from the same directory
 			--  as the stylesheet.
 
-			create {XM_XSLT_URI_SOURCE} a_stylesheet_source.make ("schematron-basic.xsl")
+			create {XM_XSLT_URI_SOURCE} a_stylesheet_source.make (schematron_basic_uri.full_reference)
 			transformer_factory.create_new_transformer (a_stylesheet_source)
 			if transformer_factory.was_error then
 				report_processing_error ("Could not compile schematron-basic.xsl", transformer_factory.last_error_message)
@@ -276,6 +279,28 @@ feature {NONE} -- Implementation
 			a_message_string := STRING_.appended_string (a_message_string, a_message)
 			create an_error.make (a_message_string)
 			error_handler.report_error (an_error)
+		end
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"example", "xml", "xslt", "schematron", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+	
+	schematron_basic_uri: UT_URI is
+			-- URI of file 'schematron-basic.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "schematron-basic.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			schematron_basic_uri_not_void: Result /= Void
 		end
 
 invariant

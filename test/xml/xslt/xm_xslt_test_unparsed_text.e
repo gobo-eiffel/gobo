@@ -28,6 +28,7 @@ inherit
 
 feature -- Test
 
+	-- TODO: when this function is ready, uncomment and remove relative paths as per other tests
 -- 	test_unparsed_text is
 -- 			-- Test unparsed-text()
 -- 		local

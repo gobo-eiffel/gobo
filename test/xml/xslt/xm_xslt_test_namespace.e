@@ -29,7 +29,7 @@ feature -- Access
 	expected_result: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><p_0:item xmlns:p=%"q.uri%" xmlns:p_0=%"p.uri%"/>"
 			-- Expected result for `test_character_map'
 	
-feature -- Tests
+feature -- Test
 
 	test_xtde0430 is
 			-- Test error XTDE0430
@@ -46,7 +46,7 @@ feature -- Tests
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (False)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/namespace.xsl")
+			create a_uri_source.make (namespace_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -76,7 +76,7 @@ feature -- Tests
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (False)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/namespace2.xsl")
+			create a_uri_source.make (namespace2_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -90,6 +90,41 @@ feature -- Tests
 			a_transformer.transform (Void, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
 			assert ("Correct result", STRING_.same_string (an_output.last_output, expected_result))
+		end
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing schematron data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	namespace_xsl_uri: UT_URI is
+			-- URI of file 'namespace.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "namespace.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			namespace_xsl_uri_not_void: Result /= Void
+		end
+
+	namespace2_xsl_uri: UT_URI is
+			-- URI of file 'namespace2.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "namespace2.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			namespace2_xsl_uri_not_void: Result /= Void
 		end
 
 end

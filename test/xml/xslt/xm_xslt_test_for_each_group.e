@@ -26,7 +26,7 @@ inherit
 
 	XM_RESOLVER_FACTORY
 	
-feature
+feature -- Test
 
 	test_grouping_nodes_based_on_common_values is
 			-- Test group-by, and simplified stylesheet.
@@ -43,13 +43,13 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/group_by_one.xsl")
+			create a_uri_source.make (group_by_one_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/cities.xml")
+			create another_uri_source.make (cities_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -73,13 +73,13 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/group_starting_with.xsl")
+			create a_uri_source.make (group_starting_with_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/xslt_intro.xml")
+			create another_uri_source.make (xslt_intro_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -103,13 +103,13 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/current_group.xsl")
+			create a_uri_source.make (current_group_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/titles.xml")
+			create another_uri_source.make (titles_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -133,13 +133,13 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/group_adjacent.xsl")
+			create a_uri_source.make (group_adjacent_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/mobile.xml")
+			create another_uri_source.make (mobile_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -163,13 +163,13 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/group_ending_with.xsl")
+			create a_uri_source.make (group_ending_with_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/continued.xml")
+			create another_uri_source.make (continued_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -193,5 +193,129 @@ feature
 %%N    while you are in the cinema.</p>"
 
     expected_result_string_five: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><doc><pageset><page>Some text</page><page>More text</page><page>Yet more text</page></pageset><pageset><page>Some words</page><page>More words</page><page>Yet more words</page></pageset></doc>"
+
+	
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing schematron data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	group_by_one_xsl_uri: UT_URI is
+			-- URI of file 'group_by_one.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "group_by_one.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			group_by_one_xsl_uri_not_void: Result /= Void
+		end
+
+	cities_xml_uri: UT_URI is
+			-- URI of file 'cities.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "cities.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			cities_xml_uri_not_void: Result /= Void
+		end
+
+	group_starting_with_xsl_uri: UT_URI is
+			-- URI of file 'group_starting_with.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "group_starting_with.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			group_starting_with_xsl_uri_not_void: Result /= Void
+		end
+
+	xslt_intro_xml_uri: UT_URI is
+			-- URI of file 'xslt_intro.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "xslt_intro.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			xslt_intro_xml_uri_not_void: Result /= Void
+		end
+	
+	current_group_xsl_uri: UT_URI is
+			-- URI of file 'current_group.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "current_group.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			current_group_xsl_uri_not_void: Result /= Void
+		end
+
+	titles_xml_uri: UT_URI is
+			-- URI of file 'titles.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "titles.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			titles_xml_uri_not_void: Result /= Void
+		end
+
+	group_adjacent_xsl_uri: UT_URI is
+			-- URI of file 'group_adjacent.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "group_adjacent.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			group_adjacent_xsl_uri_not_void: Result /= Void
+		end
+
+	mobile_xml_uri: UT_URI is
+			-- URI of file 'mobile.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "mobile.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			mobile_xml_uri_not_void: Result /= Void
+		end
+
+	group_ending_with_xsl_uri: UT_URI is
+			-- URI of file 'group_ending_with.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "group_ending_with.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			group_ending_with_xsl_uri_not_void: Result /= Void
+		end
+
+	continued_xml_uri: UT_URI is
+			-- URI of file 'continued.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "continued.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			continued_xml_uri_not_void: Result /= Void
+		end
 
 end

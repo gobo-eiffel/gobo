@@ -25,7 +25,7 @@ feature -- Access
 	is_valid_code_point (a_code_point: INTEGER): BOOLEAN is
 			-- Is `a_code_point' a valid Unicode code point?
 		do
-			Result := a_code_point >= 0 and then a_code_point <= maximum_unicode_character_code
+			Result := a_code_point >= 0 and a_code_point <= maximum_unicode_character_code
 		end
 
 	is_upper_case (a_code_point: INTEGER): BOOLEAN is
@@ -73,11 +73,16 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			Result := is_upper_case (a_code_point)
-				or else is_lower_case (a_code_point)
-				or else is_title_case (a_code_point)
-				or else is_modifier_letter (a_code_point)
-				or else is_other_letter (a_code_point)
+			inspect
+				character_class (a_code_point)
+			when
+				Uppercase_letter_category, Lowercase_letter_category, Titlecase_letter_category,
+				Modifier_letter_category, Other_letter_category
+			 then
+				Result := True
+			else
+				Result := False
+			end
 		end
 
 	is_nonspacing_mark (a_code_point: INTEGER): BOOLEAN is
@@ -109,9 +114,13 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			Result := is_nonspacing_mark (a_code_point)
-				or else  is_combining_spacing_mark (a_code_point)
-				or else is_enclosing_mark (a_code_point)
+			inspect
+				character_class (a_code_point)
+			when Non_spacing_mark_category, Spacing_combining_mark_category, Enclosing_mark_category then
+				Result := True
+			else
+				Result := False
+			end
 		end
 
 	is_decimal_digit (a_code_point: INTEGER): BOOLEAN is
@@ -143,9 +152,13 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			Result := is_decimal_digit (a_code_point)
-				or else  is_letter_number (a_code_point)
-				or else is_other_number (a_code_point)
+			inspect
+				character_class (a_code_point)
+			when Decimal_digit_number_category, Letter_number_category, Other_number_category then
+				Result := True
+			else
+				Result := False
+			end
 		end
 
 	is_connector_punctuation (a_code_point: INTEGER): BOOLEAN is
@@ -209,13 +222,18 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			Result := is_connector_punctuation (a_code_point)
-				or else  is_dash_punctuation (a_code_point)
-				or else is_other_punctuation (a_code_point)
-				or else is_open_punctuation (a_code_point)
-				or else is_close_punctuation (a_code_point)
-				or else is_initial_quote_punctuation (a_code_point)
-				or else is_final_quote_punctuation (a_code_point)
+			inspect
+				character_class (a_code_point)
+				when
+					Connector_punctuation_category, Dash_punctuation_category,
+					Open_punctuation_category, Close_punctuation_category,
+					Initial_quote_punctuation_category, Final_quote_punctuation_category,
+					Other_punctuation_category
+				 then
+				Result := True
+			else
+				Result := False
+			end
 		end
 
 	is_math_symbol (a_code_point: INTEGER): BOOLEAN is
@@ -255,10 +273,13 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			Result := is_math_symbol (a_code_point)
-				or else  is_currency_symbol (a_code_point)
-				or else  is_modifier_symbol (a_code_point)
-				or else is_other_symbol (a_code_point)
+			inspect
+				character_class (a_code_point)
+			when Math_symbol_category, Currency_symbol_category, Modifier_symbol_category, Other_symbol_category then
+				Result := True
+			else
+				Result := False
+			end
 		end
 
 	is_space_separator (a_code_point: INTEGER): BOOLEAN is
@@ -290,9 +311,13 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			Result := is_space_separator (a_code_point)
-				or else  is_line_separator (a_code_point)
-				or else  is_paragraph_separator (a_code_point)
+			inspect
+				character_class (a_code_point)
+			when Space_separator_category, Line_separator_category, Paragraph_separator_category then
+				Result := True
+			else
+				Result := False
+			end
 		end
 
 	is_control (a_code_point: INTEGER): BOOLEAN is
@@ -335,8 +360,8 @@ feature -- Access
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (256 * 256)
-			a_rem  := a_code_point \\ (256 * 256)
+			i := a_code_point // (65536)
+			a_rem  := a_code_point \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := decimal_values.item (i).item (j).item (k)
@@ -347,20 +372,20 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	character_class (a_code_point: INTEGER): INTEGER_8 is
+	character_class (a_code_point: INTEGER): INTEGER is
 			-- Character class for `a_code_point'
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		local
 			i, j, k, a_rem: INTEGER
 		do
-			i := a_code_point // (256 * 256)
-			a_rem  := a_code_point \\ (256 * 256)
+			i := a_code_point // (65536)
+			a_rem  := a_code_point \\ (65536)
 			j := a_rem // 256
 			k := a_rem \\ 256
 			Result := character_classes.item (i).item (j).item (k)
 		ensure
-			character_class_large_enough: Result >= Other_unassigned_category
+			character_class_large_enough: Result >= Unassigned_other_category
 			character_class_small_enough: Result <= Private_other_category
 		end
 
@@ -373,7 +398,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			create Result.make (0, 255)
-			from i := 0 until i = 255 loop
+			from i := 0 until i > 255 loop
 				Result.put (INTEGER_.to_integer_8 (a_string.item (i + 1).code), i)
 				i := i + 1
 			end
@@ -388,7 +413,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			character_classes_not_void: Result /= Void
---			no_void_character_class: not Result.has (Void)
+			--			no_void_character_class: not Result.has (Void)
 		end
 
 	decimal_values: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is
@@ -396,7 +421,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			decimal_values_not_void: Result /= Void
---			no_void_decimal_value: not Result.has (Void)
+			--			no_void_decimal_value: not Result.has (Void)
 		end
 
 end

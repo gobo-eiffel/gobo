@@ -44,13 +44,13 @@ feature
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			a_configuration.use_tiny_tree_model (False)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/books1.xsl")
+			create a_uri_source.make (books1_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("../xpath/data/books3.xml#S")
+			create another_uri_source.make (books3_xml_uri.full_reference + "#S")
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -74,13 +74,13 @@ feature
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			a_configuration.use_tiny_tree_model (False)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/books1.xsl")
+			create a_uri_source.make (books1_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("../xpath/data/books3.xml#element(/1/1/1/1)")
+			create another_uri_source.make (books3_xml_uri.full_reference + "#element(/1/1/1/1)")
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -105,13 +105,13 @@ feature
 			a_configuration.use_tiny_tree_model (False)
 			a_configuration.set_recovery_policy (Do_not_recover)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/books1.xsl")
+			create a_uri_source.make (books1_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("../xpath/data/books3.xml#xmlns(gexslt=http://www.gobosoft.com/eiffel/gobo/gexslt/extension)gexslt:xpath(/descendant::AUTHOR%%5B1%%5D)")
+			create another_uri_source.make (books3_xml_uri.full_reference + "#xmlns(gexslt=http://www.gobosoft.com/eiffel/gobo/gexslt/extension)gexslt:xpath(/descendant::AUTHOR%%5B1%%5D)")
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -135,13 +135,13 @@ feature
 			a_configuration.set_string_mode_ascii
 			a_configuration.use_tiny_tree_model (False)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/embedded.xml#style1")
+			create a_uri_source.make (embedded_xml_uri.full_reference + "#style1")
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/embedded.xml")
+			create another_uri_source.make (embedded_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -168,7 +168,7 @@ feature
 			a_configuration.set_string_mode_ascii
 			a_configuration.use_tiny_tree_model (False)
 			create a_transformer_factory.make (a_configuration)
-			create a_uri_source.make ("./data/processing_instructions.xml")
+			create a_uri_source.make (processing_instructions_xml_uri.full_reference)
 			create a_chooser.make
 			a_stylesheet_source := a_transformer_factory.associated_stylesheet (a_uri_source.system_id, "print", a_chooser)
 			assert ("Stylesheet found", a_stylesheet_source /= Void)
@@ -202,7 +202,7 @@ feature
 			a_configuration.set_string_mode_ascii
 			a_configuration.use_tiny_tree_model (False)
 			create a_transformer_factory.make (a_configuration)
-			create a_uri_source.make ("./data/processing_instructions.xml")
+			create a_uri_source.make (processing_instructions_xml_uri.full_reference)
 			create a_chooser.make ("Alternate")
 			a_stylesheet_source := a_transformer_factory.associated_stylesheet (a_uri_source.system_id, "screen", a_chooser)
 			assert ("Stylesheet found", a_stylesheet_source /= Void)
@@ -233,7 +233,7 @@ feature
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			a_configuration.use_tiny_tree_model (False)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/example0.xsl")
+			create a_uri_source.make (example0_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -251,5 +251,85 @@ feature
 	expected_output_1: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Number, the Language of Science</output>"
 
 	expected_output_2: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><output>Danzig</output>"
-																																				 
+
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing schematron data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	books1_xsl_uri: UT_URI is
+			-- URI of file 'books1.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "books1.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books1_xsl_uri_not_void: Result /= Void
+		end
+
+	xpath_data_dirname: STRING is
+			-- Name of directory containing XPath data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			xpath_data_dirname_not_void: Result /= Void
+			xpath_data_dirname_not_empty: not Result.is_empty
+		end
+		
+	books3_xml_uri: UT_URI is
+			-- URI of file 'books3.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (xpath_data_dirname, "books3.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books3_xml_uri_not_void: Result /= Void
+		end
+
+	embedded_xml_uri: UT_URI is
+			-- URI of file 'embedded.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "embedded.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			embedded_xml_uri_not_void: Result /= Void
+		end
+
+	processing_instructions_xml_uri: UT_URI is
+			-- URI of file 'processing_instructions.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "processing_instructions.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			processing_instructions_xml_uri_not_void: Result /= Void
+		end
+
+	example0_xsl_uri: UT_URI is
+			-- URI of file 'example0.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "example0.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			example0_xsl_uri_not_void: Result /= Void
+		end
+
 end

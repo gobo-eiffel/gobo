@@ -28,6 +28,9 @@ inherit
 
 	XM_SHARED_CATALOG_MANAGER
 
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+
 feature
 
 	test_schematron_basic is
@@ -50,13 +53,13 @@ feature
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("../../../example/xml/xslt/schematron/schematron-basic.xsl")
+			create a_uri_source.make (schematron_basic_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("../../../example/xml/xslt/schematron/wai.xml")
+			create another_uri_source.make (wai_schema_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:/transform")
@@ -83,13 +86,13 @@ feature
   			assert ("Stylesheet not void 2", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer 2", a_transformer /= Void)
-			create another_uri_source.make ("../../../example/xml/xslt/schematron/evil_wai.xml")
+			create another_uri_source.make (evil_wai_uri.full_reference)
 			create another_output
 			another_output.set_output_to_string
 			create a_result.make (another_output, "string:/report")
 			a_transformer.transform (another_uri_source, a_result)
 			assert ("Transform successfull", not a_transformer.is_error)
-			create a_test_file.make ("./expected_report.txt")
+			create a_test_file.make (expected_report_filename)
 			assert ("Test file exists", a_test_file /= Void)
 			a_test_file.open_read
 			assert ("Test file readable", a_test_file.is_open_read)
@@ -121,7 +124,7 @@ feature
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("../../../example/xml/xslt/schematron/conformance1-5.xsl")
+			create a_uri_source.make (schematron_conformance_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -129,4 +132,81 @@ feature
 			assert ("transformer", a_transformer /= Void)
 		end
 
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+	
+	example_data_dirname: STRING is
+			-- Name of directory containing schematron data files;
+			-- N.B. Uses example directory to avoid duplicating files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"example", "xml", "xslt", "schematron", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			example_data_dirname_not_void: Result /= Void
+			example_data_dirname_not_empty: not Result.is_empty
+		end
+	
+	schematron_basic_uri: UT_URI is
+			-- URI of file 'schematron-basic.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (example_data_dirname, "schematron-basic.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			schematron_basic_uri_not_void: Result /= Void
+		end
+
+	schematron_conformance_uri: UT_URI is
+			-- URI of file 'conformance1-5.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (example_data_dirname, "conformance1-5.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			schematron_conformance_uri_not_void: Result /= Void
+		end
+
+	wai_schema_uri: UT_URI is
+			-- URI of schema for WAI
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (example_data_dirname, "wai.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			wai_schema_uri_not_void: Result /= Void
+		end
+
+	evil_wai_uri: UT_URI is
+			-- URI of file 'evil_wai.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (example_data_dirname, "evil_wai.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			evil_wai_uri_not_void: Result /= Void
+		end
+
+	expected_report_filename: STRING is
+			-- Pathname of file 'expected_report.txt'
+		once
+			Result := file_system.pathname (data_dirname, "expected_report.txt")
+		ensure
+			expected_report_filename_not_void: Result /= Void
+			expected_report_filename_not_empty: not Result.is_empty
+		end
 end

@@ -26,6 +26,12 @@ inherit
 
 	XM_XPATH_TYPE
 
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+	
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+
 feature -- Test
 
 	test_shorthand is
@@ -39,7 +45,7 @@ feature -- Test
 			an_element: XM_XPATH_ELEMENT
 		do
 			conformance.set_basic_xslt_processor
-			system_id := "../xpath/data/books.xml"
+			system_id := books_xml_uri.full_reference
 			make_parser
 			parser.parse_from_system (system_id)
 			assert ("No parsing error", not tree_pipe.tree.has_error)
@@ -70,7 +76,7 @@ feature -- Test
 			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
 		do
 			conformance.set_basic_xslt_processor
-			system_id := "../xpath/data/books.xml"
+			system_id := books_xml_uri.full_reference
 			make_parser
 			parser.parse_from_system (system_id)
 			assert ("No parsing error", not tree_pipe.tree.has_error)
@@ -104,7 +110,7 @@ feature -- Test
 			an_xmlns_scheme: XM_XPATH_XPOINTER_XMLNS_SCHEME
 		do
 			conformance.set_basic_xslt_processor
-			system_id := "../xpath/data/books.xml"
+			system_id := books_xml_uri.full_reference
 			make_parser
 			parser.parse_from_system (system_id)
 			assert ("No parsing error", not tree_pipe.tree.has_error)
@@ -142,6 +148,28 @@ feature {NONE} -- Implementation
 		
 	parser: XM_EIFFEL_PARSER
 	tree_pipe: XM_XPATH_TREE_CALLBACKS_PIPE
-	
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	books_xml_uri: UT_URI is
+			-- URI of file 'books.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "books.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books_xml_uri_not_void: Result /= Void
+		end
+			
 end
 			

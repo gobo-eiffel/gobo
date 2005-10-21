@@ -56,94 +56,94 @@ feature -- Access
 --			definition: Result.code = maximum_ascii_code
 --		end
 
-	Other_unassigned_category: INTEGER_8 is 0
-			-- Other chacaracter (unassigned)
+	Unassigned_other_category: INTEGER is 0
+			-- Unassigned chacaracter
 
-	Uppercase_letter_category: INTEGER_8 is 1
+	Uppercase_letter_category: INTEGER is 1
 			-- Upper case letter
 
-	Lowercase_letter_category: INTEGER_8 is 2
+	Lowercase_letter_category: INTEGER is 2
 			-- Lower case letter
 
-	Titlecase_letter_category: INTEGER_8 is 3
+	Titlecase_letter_category: INTEGER is 3
 			-- Title case letter
 
-	Modifier_letter_category: INTEGER_8 is 4
+	Modifier_letter_category: INTEGER is 4
 			-- Modifier letter
 
-	Other_letter_category: INTEGER_8 is 5
+	Other_letter_category: INTEGER is 5
 			-- Other letter
 
-	Non_spacing_mark_category: INTEGER_8 is 6
+	Non_spacing_mark_category: INTEGER is 6
 			-- Non-spacing mark
 
-	Spacing_combining_mark_category: INTEGER_8 is 7
+	Spacing_combining_mark_category: INTEGER is 7
 			-- Spacing combining mark
 	
-	Enclosing_mark_category: INTEGER_8 is 8
+	Enclosing_mark_category: INTEGER is 8
 			-- Enclosing mark
 
-	Decimal_digit_number_category: INTEGER_8 is 9
+	Decimal_digit_number_category: INTEGER is 9
 			-- Decimal digit number
 
-	Letter_number_category: INTEGER_8 is 10
+	Letter_number_category: INTEGER is 10
 			-- Letter number
 
-	Other_number_category: INTEGER_8 is 11
+	Other_number_category: INTEGER is 11
 			-- Other number
 
-	Connector_punctuation_category: INTEGER_8 is 12
+	Connector_punctuation_category: INTEGER is 12
 			-- Connector punctuation
 
-	Dash_punctuation_category: INTEGER_8 is 13
+	Dash_punctuation_category: INTEGER is 13
 			-- Dash punctuation
 
-	Open_punctuation_category: INTEGER_8 is 14
+	Open_punctuation_category: INTEGER is 14
 			-- Open punctuation
 
-	Close_punctuation_category: INTEGER_8 is 15
+	Close_punctuation_category: INTEGER is 15
 			-- Close punctuation
 
-	Initial_quote_punctuation_category: INTEGER_8 is 16
+	Initial_quote_punctuation_category: INTEGER is 16
 			-- Initial punctuation
 
-	Final_quote_punctuation_category: INTEGER_8 is 17
+	Final_quote_punctuation_category: INTEGER is 17
 			-- Final_quote punctuation
 
-	Other_punctuation_category: INTEGER_8 is 18
+	Other_punctuation_category: INTEGER is 18
 			-- Other punctuation
 
-	Math_symbol_category: INTEGER_8 is 19
+	Math_symbol_category: INTEGER is 19
 			-- Mathematics symbol
 
-	Currency_symbol_category: INTEGER_8 is 20
+	Currency_symbol_category: INTEGER is 20
 			-- Currency symbol
 
-	Modifier_symbol_category: INTEGER_8 is 21
+	Modifier_symbol_category: INTEGER is 21
 			-- Modifier symbol
 
-	Other_symbol_category: INTEGER_8 is 22
+	Other_symbol_category: INTEGER is 22
 			-- Other symbol
 
-	Space_separator_category: INTEGER_8 is 23
+	Space_separator_category: INTEGER is 23
 			-- Space separator
 
-	Line_separator_category: INTEGER_8 is 24
+	Line_separator_category: INTEGER is 24
 			-- Line separator
 
-	Paragraph_separator_category: INTEGER_8 is 25
+	Paragraph_separator_category: INTEGER is 25
 			-- Paragraph separator
 
-	Control_other_category: INTEGER_8 is 26
+	Control_other_category: INTEGER is 26
 			-- Control character
 
-	Format_other_category: INTEGER_8 is 27
+	Format_other_category: INTEGER is 27
 			-- Format character
 
-	Surrogate_other_category: INTEGER_8 is 28
+	Surrogate_other_category: INTEGER is 28
 			-- Surrogate character
 
-	Private_other_category: INTEGER_8 is 29
+	Private_other_category: INTEGER is 29
 			-- Private-use character
 
 end

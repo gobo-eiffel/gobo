@@ -26,7 +26,7 @@ inherit
 
 	XM_RESOLVER_FACTORY
 	
-feature
+feature -- Tests
 
 	test_replacing_characters is
 			-- Test replacing all newline characters in the abstract element by empty br elements.
@@ -43,13 +43,13 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/abstract.xsl")
+			create a_uri_source.make (abstract_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/abstract.xml")
+			create another_uri_source.make (abstract_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -73,13 +73,13 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/cite.xsl")
+			create a_uri_source.make (cite_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/cite.xml")
+			create another_uri_source.make (cite_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -103,13 +103,13 @@ feature
 			a_configuration.set_line_numbering (True)
 			a_configuration.use_tiny_tree_model (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/dates.xsl")
+			create a_uri_source.make (dates_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/dates.xml")
+			create another_uri_source.make (dates_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -126,4 +126,84 @@ feature
 
 	expected_result_string_three: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><doc>%N  <date>2002-03-23</date>%N  <date>2005-04-01</date>%N  <date>2004-07-31</date>%N</doc>"
 			-- Expected result from `test_regex_group_two'
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	abstract_xsl_uri: UT_URI is
+			-- URI of file 'abstract.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "abstract.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			abstract_xsl_uri_not_void: Result /= Void
+		end
+		
+	abstract_xml_uri: UT_URI is
+			-- URI of file 'abstract.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "abstract.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			abstract_xml_uri_not_void: Result /= Void
+		end
+		
+	cite_xsl_uri: UT_URI is
+			-- URI of file 'cite.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "cite.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			cite_xsl_uri_not_void: Result /= Void
+		end
+		
+	cite_xml_uri: UT_URI is
+			-- URI of file 'cite.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "cite.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			cite_xml_uri_not_void: Result /= Void
+		end
+		
+	dates_xsl_uri: UT_URI is
+			-- URI of file 'dates.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "dates.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			dates_xsl_uri_not_void: Result /= Void
+		end
+		
+	dates_xml_uri: UT_URI is
+			-- URI of file 'dates.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "dates.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			dates_xml_uri_not_void: Result /= Void
+		end
+
 end

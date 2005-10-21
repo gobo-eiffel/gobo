@@ -45,7 +45,7 @@ feature -- Test
 			conformance.set_basic_xslt_processor
 			create a_configuration.make_with_defaults
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/use_when.xsl")
+			create a_uri_source.make (use_when_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -61,4 +61,28 @@ feature -- Test
 			assert ("Correct result", STRING_.same_string (an_output.last_output, "OK"))
 		end
 
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	use_when_xsl_uri: UT_URI is
+			-- URI of file 'use_when.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "use_when.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			use_when_xsl_uri_not_void: Result /= Void
+		end
+		
 end

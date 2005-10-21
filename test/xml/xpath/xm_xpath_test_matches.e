@@ -29,7 +29,13 @@ inherit
 
 	KL_SHARED_STANDARD_FILES
 
-feature -- Tests
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+	
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+
+feature -- Test
 
 	test_matches_one is
 			-- Test fn:matches("abracadabra", "bra") returns true.
@@ -40,7 +46,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches('abracadabra', 'bra')")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -60,7 +66,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches('abracadabra', '^a.*a$')")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -80,7 +86,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
-			an_evaluator.build_static_context ("./data/books.xml", False, False, False, True)
+			an_evaluator.build_static_context (books_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches('abracadabra', '^bra')")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -100,7 +106,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
-			an_evaluator.build_static_context ("./data/poem.xml", False, False, False, True)
+			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], 'Kaum.*krähen')")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -120,7 +126,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
-			an_evaluator.build_static_context ("./data/poem.xml", False, False, False, True)
+			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], 'Kaum.*krähen', 's')")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -140,7 +146,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_unicode
-			an_evaluator.build_static_context ("./data/poem.xml", False, False, False, True)
+			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], '^Kaum.*gesehen,', 'm')")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -161,7 +167,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
-			an_evaluator.build_static_context ("./data/poem.xml", False, False, False, True)
+			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], '^Kaum.*gesehen,$')")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -181,7 +187,7 @@ feature -- Tests
 		do
 			create an_evaluator.make (18, False)
 			an_evaluator.set_string_mode_mixed
-			an_evaluator.build_static_context ("./data/poem.xml", False, False, False, True)
+			an_evaluator.build_static_context (poem_xml_uri.full_reference, False, False, False, True)
 			assert ("Build successfull", not an_evaluator.was_build_error)
 			an_evaluator.evaluate ("matches(/*[1], 'kiki', 'i')")
 			assert ("No evaluation error", not an_evaluator.is_error)
@@ -195,6 +201,41 @@ feature -- Tests
 	set_up is
 		do
 			conformance.set_basic_xslt_processor
+		end
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	books_xml_uri: UT_URI is
+			-- URI of file 'books.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "books.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books_xml_uri_not_void: Result /= Void
+		end
+		
+	poem_xml_uri: UT_URI is
+			-- URI of file 'poem.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "poem.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			poem_xml_uri_not_void: Result /= Void
 		end
 
 end

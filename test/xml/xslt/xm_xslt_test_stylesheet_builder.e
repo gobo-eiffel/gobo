@@ -22,7 +22,13 @@ inherit
 
 	XM_XPATH_SHARED_NAME_POOL
 
-feature
+	KL_SHARED_FILE_SYSTEM
+		export {NONE} all end
+
+	UT_SHARED_FILE_URI_ROUTINES
+		export {NONE} all end
+
+feature -- Test
 
 	test_simple is
 			-- Simple tree.
@@ -57,7 +63,7 @@ feature
 			create a_configuration.make_with_defaults
 			a_configuration.set_string_mode_ascii   -- make_with_defaults sets to mixed
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("../xpath/data/books.xsl")
+			create a_uri_source.make (books_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
@@ -272,6 +278,30 @@ feature
 			assert ("hr 3", a_literal_result /= Void and then STRING_.same_string (a_literal_result.node_name, "hr"))
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
+		end
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	books_xsl_uri: UT_URI is
+			-- URI of file 'books.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "books.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books_xsl_uri_not_void: Result /= Void
 		end
 
 end

@@ -26,7 +26,7 @@ inherit
 
 	XM_RESOLVER_FACTORY
 	
-feature -- Tests
+feature -- Test
 
 	test_range_variable_in_global_variable is
 			-- Test use of range variables within the select expression of a global variable.
@@ -42,13 +42,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var15.xsl")
+			create a_uri_source.make (var15_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var25.xml")
+			create another_uri_source.make (var25_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -71,13 +71,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var16.xsl")
+			create a_uri_source.make (var16_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var25.xml")
+			create another_uri_source.make (var25_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -100,13 +100,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var17.xsl")
+			create a_uri_source.make (var17_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var25.xml")
+			create another_uri_source.make (var25_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -129,13 +129,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var20.xsl")
+			create a_uri_source.make (var20_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var20.xml")
+			create another_uri_source.make (var20_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -158,13 +158,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var21.xsl")
+			create a_uri_source.make (var21_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var20.xml")
+			create another_uri_source.make (var20_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -187,13 +187,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var22.xsl")
+			create a_uri_source.make (var22_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var20.xml")
+			create another_uri_source.make (var20_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -216,13 +216,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var23.xsl")
+			create a_uri_source.make (var23_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var20.xml")
+			create another_uri_source.make (var20_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -245,13 +245,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var25.xsl")
+			create a_uri_source.make (var25_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var25.xml")
+			create another_uri_source.make (var25_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -274,13 +274,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var26.xsl")
+			create a_uri_source.make (var26_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var25.xml")
+			create another_uri_source.make (var25_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -303,13 +303,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var27.xsl")
+			create a_uri_source.make (var27_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var25.xml")
+			create another_uri_source.make (var25_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -332,13 +332,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var905err.xsl")
+			create a_uri_source.make (var905err_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var20.xml")
+			create another_uri_source.make (var20_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -360,13 +360,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var906err.xsl")
+			create a_uri_source.make (var906err_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var20.xml")
+			create another_uri_source.make (var20_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -385,7 +385,7 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var901err.xsl")
+			create a_uri_source.make (var901err_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("XTSE0580", a_stylesheet_compiler.load_stylesheet_module_failed)
 		end
@@ -404,13 +404,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var902err.xsl")
+			create a_uri_source.make (var902err_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var25.xml")
+			create another_uri_source.make (var25_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -429,7 +429,7 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var903err.xsl")
+			create a_uri_source.make (var903err_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("XTTE0570", a_stylesheet_compiler.load_stylesheet_module_failed)
 		end
@@ -448,13 +448,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var904err.xsl")
+			create a_uri_source.make (var904err_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var25.xml")
+			create another_uri_source.make (var25_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -476,13 +476,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var907err.xsl")
+			create a_uri_source.make (var907err_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var25.xml")
+			create another_uri_source.make (var25_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -501,7 +501,7 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var908err.xsl")
+			create a_uri_source.make (var908err_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("XTTE0570", a_stylesheet_compiler.load_stylesheet_module_failed)
 		end
@@ -520,13 +520,13 @@ feature -- Tests
 			create a_configuration.make_with_defaults
 			a_configuration.set_line_numbering (True)
 			create a_stylesheet_compiler.make (a_configuration)
-			create a_uri_source.make ("./data/var909err.xsl")
+			create a_uri_source.make (var909err_xsl_uri.full_reference)
 			a_stylesheet_compiler.prepare (a_uri_source)
 			assert ("Stylesheet compiled without errors", not a_stylesheet_compiler.load_stylesheet_module_failed)
 			assert ("Stylesheet not void", a_stylesheet_compiler.last_loaded_module /= Void)
 			a_transformer := a_stylesheet_compiler.new_transformer
 			assert ("transformer", a_transformer /= Void)
-			create another_uri_source.make ("./data/var25.xml")
+			create another_uri_source.make (var25_xml_uri.full_reference)
 			create an_output
 			an_output.set_output_to_string
 			create a_result.make (an_output, "string:")
@@ -559,5 +559,250 @@ feature -- Results
 
 	expected_result_string_eight: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?><out xmlns:xs=%"http://www.w3.org/2001/XMLSchema%" x=%"55%" z=%"22%" is-integer=%"true%"/>"
 			-- Expected result for `test_range_variable_in_global_variable'
+
+
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xslt", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	var15_xsl_uri: UT_URI is
+			-- URI of file 'var15.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var15.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var15_xsl_uri_not_void: Result /= Void
+		end
+				
+	var25_xml_uri: UT_URI is
+			-- URI of file 'var25.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var25.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var25_xml_uri_not_void: Result /= Void
+		end
+
+	var16_xsl_uri: UT_URI is
+			-- URI of file 'var16.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var16.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var16_xsl_uri_not_void: Result /= Void
+		end
+
+	var17_xsl_uri: UT_URI is
+			-- URI of file 'var17.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var17.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var17_xsl_uri_not_void: Result /= Void
+		end
+		
+	var20_xsl_uri: UT_URI is
+			-- URI of file 'var20.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var20.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var20_xsl_uri_not_void: Result /= Void
+		end
+
+	var20_xml_uri: UT_URI is
+			-- URI of file 'var20.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var20.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var20_xml_uri_not_void: Result /= Void
+		end
+
+	var21_xsl_uri: UT_URI is
+			-- URI of file 'var21.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var21.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var21_xsl_uri_not_void: Result /= Void
+		end
+
+	var22_xsl_uri: UT_URI is
+			-- URI of file 'var22.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var22.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var22_xsl_uri_not_void: Result /= Void
+		end
+
+	var23_xsl_uri: UT_URI is
+			-- URI of file 'var23.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var23.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var23_xsl_uri_not_void: Result /= Void
+		end
+
+	var25_xsl_uri: UT_URI is
+			-- URI of file 'var25.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var25.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var25_xsl_uri_not_void: Result /= Void
+		end
+
+	var26_xsl_uri: UT_URI is
+			-- URI of file 'var26.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var26.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var26_xsl_uri_not_void: Result /= Void
+		end
+
+	var27_xsl_uri: UT_URI is
+			-- URI of file 'var27.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var27.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var27_xsl_uri_not_void: Result /= Void
+		end
+
+	var905err_xsl_uri: UT_URI is
+			-- URI of file 'var905err.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var905err.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var905err_xsl_uri_not_void: Result /= Void
+		end
+
+	var906err_xsl_uri: UT_URI is
+			-- URI of file 'var906err.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var906err.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var906err_xsl_uri_not_void: Result /= Void
+		end
+
+	var901err_xsl_uri: UT_URI is
+			-- URI of file 'var901err.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var901err.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var901err_xsl_uri_not_void: Result /= Void
+		end
+
+	var902err_xsl_uri: UT_URI is
+			-- URI of file 'var902err.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var902err.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var902err_xsl_uri_not_void: Result /= Void
+		end
+
+	var903err_xsl_uri: UT_URI is
+			-- URI of file 'var903err.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var903err.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var903err_xsl_uri_not_void: Result /= Void
+		end
+
+	var904err_xsl_uri: UT_URI is
+			-- URI of file 'var904err.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var904err.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var904err_xsl_uri_not_void: Result /= Void
+		end
+
+	var907err_xsl_uri: UT_URI is
+			-- URI of file 'var907err.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var907err.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var907err_xsl_uri_not_void: Result /= Void
+		end
+
+	var908err_xsl_uri: UT_URI is
+			-- URI of file 'var908err.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var908err.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var908err_xsl_uri_not_void: Result /= Void
+		end
+
+	var909err_xsl_uri: UT_URI is
+			-- URI of file 'var909err.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "var909err.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			var909err_xsl_uri_not_void: Result /= Void
+		end
 
 end

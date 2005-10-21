@@ -105,7 +105,7 @@ feature
 			any_pi_test, any_element_test: XM_XPATH_NODE_KIND_TEST
 		do
 			conformance.set_basic_xslt_processor
-			system_id := "./data/books.xml"
+			system_id := books_xml_uri.full_reference
 			make_parser
 			parser.parse_from_system (system_id)
 			assert ("No parsing error", not tree_pipe.tree.has_error)
@@ -296,7 +296,7 @@ feature
 			a_name: STRING
 		do
 			conformance.set_basic_xslt_processor
-			system_id := "./data/books.xsl"
+			system_id := books_xsl_uri.full_reference
 			make_parser
 			parser.parse_from_system (system_id)
 			assert ("No parsing error", not tree_pipe.tree.has_error)
@@ -338,4 +338,39 @@ feature {NONE} -- Implementation
 	parser: XM_EIFFEL_PARSER
 	tree_pipe: XM_XPATH_TINYTREE_CALLBACKS_PIPE
 
+feature {NONE} -- Implementation
+
+	data_dirname: STRING is
+			-- Name of directory containing data files
+		once
+			Result := file_system.nested_pathname ("${GOBO}",
+																<<"test", "xml", "xpath", "data">>)
+			Result := Execution_environment.interpreted_string (Result)
+		ensure
+			data_dirname_not_void: Result /= Void
+			data_dirname_not_empty: not Result.is_empty
+		end
+		
+	books_xml_uri: UT_URI is
+			-- URI of file 'books.xml'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "books.xml")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books_xml_uri_not_void: Result /= Void
+		end
+		
+	books_xsl_uri: UT_URI is
+			-- URI of file 'books.xsl'
+		local
+			a_path: STRING
+		once
+			a_path := file_system.pathname (data_dirname, "books.xsl")
+			Result := File_uri.filename_to_uri (a_path)
+		ensure
+			books_xsl_uri_not_void: Result /= Void
+		end
+		
 end

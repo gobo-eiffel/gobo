@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="application/xslt+xml" href="unknown.xsl"?>
-<!DOCTYPE BOOKLIST SYSTEM "../xpath/data/books.dtd">
+<!DOCTYPE BOOKLIST SYSTEM "../../xpath/data/books.dtd">
 <!-- There is a deliberate clash of ID values in this file -->
 <?PI1 some PI data ?>
 <BOOKLIST>

@@ -25,13 +25,15 @@ To compile the program, type:
 
 To run the program against a set of example rules, type:
 
-    ./schematron evil_wai.xml wai.xml
+    ./schematron data/evil_wai.xml data/wai.xml
+
+(or the equivalent command on windows)
 
 This will produce a very long report of what is wrong with
 evil_wai.xml. If you are actually interested in reading this report,
 then you would do better to type:
 
-    ./schematron --output=report.txt evil_wai.xml wai.xml
+    ./schematron --output=report.txt data/evil_wai.xml data/wai.xml
 
 and then browse report.txt.
 
