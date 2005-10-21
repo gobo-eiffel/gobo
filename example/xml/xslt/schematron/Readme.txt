@@ -35,7 +35,7 @@ then you would do better to type:
 
     ./schematron --output=report.txt data/evil_wai.xml data/wai.xml
 
-and then browse report.txt.
+and then browse report.txt. You can find sample output in data/report.txt
 
 You will notice an error message on stderr:
 
@@ -43,7 +43,7 @@ You will notice an error message on stderr:
 
 This is because the reference implementation of Schematron 1.5 (I
 shall upgrade the files to ISO Schematron when it becomes available) 
-was tested on poorly conforming XSLT processors, and so are buggy.
+was tested on poorly conforming XSLT processors, and so is buggy.
 Just ignore the message.
 
 Actually there are other problems with these stylesheets, which throw
@@ -56,4 +56,4 @@ implements XSLT 2.0, and as such has to issue a (suppressable) warning
 when run against 1.0 stylesheets.
 
 --
-Copyright (c) 2004, Colin Adams and others
+Copyright (c) 2005, Colin Adams and others
