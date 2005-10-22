@@ -78,7 +78,7 @@ feature -- Access
 			when
 				Uppercase_letter_category, Lowercase_letter_category, Titlecase_letter_category,
 				Modifier_letter_category, Other_letter_category
-			 then
+			then
 				Result := True
 			else
 				Result := False
@@ -114,8 +114,7 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			inspect
-				character_class (a_code_point)
+			inspect character_class (a_code_point)
 			when Non_spacing_mark_category, Spacing_combining_mark_category, Enclosing_mark_category then
 				Result := True
 			else
@@ -152,8 +151,7 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			inspect
-				character_class (a_code_point)
+			inspect character_class (a_code_point)
 			when Decimal_digit_number_category, Letter_number_category, Other_number_category then
 				Result := True
 			else
@@ -224,12 +222,12 @@ feature -- Access
 		do
 			inspect
 				character_class (a_code_point)
-				when
-					Connector_punctuation_category, Dash_punctuation_category,
-					Open_punctuation_category, Close_punctuation_category,
-					Initial_quote_punctuation_category, Final_quote_punctuation_category,
-					Other_punctuation_category
-				 then
+			when
+				Connector_punctuation_category, Dash_punctuation_category,
+				Open_punctuation_category, Close_punctuation_category,
+				Initial_quote_punctuation_category, Final_quote_punctuation_category,
+				Other_punctuation_category
+			then
 				Result := True
 			else
 				Result := False
@@ -273,8 +271,7 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			inspect
-				character_class (a_code_point)
+			inspect character_class (a_code_point)
 			when Math_symbol_category, Currency_symbol_category, Modifier_symbol_category, Other_symbol_category then
 				Result := True
 			else
@@ -311,8 +308,7 @@ feature -- Access
 		require
 			valid_code_point: is_valid_code_point (a_code_point)
 		do
-			inspect
-				character_class (a_code_point)
+			inspect character_class (a_code_point)
 			when Space_separator_category, Line_separator_category, Paragraph_separator_category then
 				Result := True
 			else
@@ -413,7 +409,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			character_classes_not_void: Result /= Void
-			--			no_void_character_class: not Result.has (Void)
+			-- no_void_character_class: not Result.has (Void)
 		end
 
 	decimal_values: ARRAY [ARRAY [ARRAY [INTEGER_8]]] is
@@ -421,7 +417,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			decimal_values_not_void: Result /= Void
-			--			no_void_decimal_value: not Result.has (Void)
+			-- no_void_decimal_value: not Result.has (Void)
 		end
 
 end

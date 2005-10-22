@@ -284,14 +284,13 @@ feature {NONE} -- Implementation
 	data_dirname: STRING is
 			-- Name of directory containing data files
 		once
-			Result := file_system.nested_pathname ("${GOBO}",
-																<<"example", "xml", "xslt", "schematron", "data">>)
+			Result := file_system.nested_pathname ("${GOBO}", <<"example", "xml", "xslt", "schematron", "data">>)
 			Result := Execution_environment.interpreted_string (Result)
 		ensure
 			data_dirname_not_void: Result /= Void
 			data_dirname_not_empty: not Result.is_empty
 		end
-	
+
 	schematron_basic_uri: UT_URI is
 			-- URI of file 'schematron-basic.xsl'
 		local
