@@ -35,9 +35,7 @@ feature -- Test
 			schematron_exe: STRING
 		do
 			compile_program
-
-			-- Run example
-
+				-- Run example.
 			schematron_exe := program_exe
 			assert_execute (schematron_exe + " --output=report.txt " +  data_filename + " " + schema_filename  + output_log)
 			assert_integers_equal ("One error message", 69, file_system.file_count (error_log_filename))
@@ -71,7 +69,7 @@ feature {NONE} -- Implementation
 			schema_filename_not_void: Result /= Void
 			schema_filename_not_empty: not Result.is_empty
 		end
-	
+
 	data_filename: STRING is
 			-- Path for 'evil_wai.xml'
 		once
@@ -89,4 +87,5 @@ feature {NONE} -- Implementation
 			report_filename_not_void: Result /= Void
 			report_filename_not_empty: not Result.is_empty
 		end
+
 end
