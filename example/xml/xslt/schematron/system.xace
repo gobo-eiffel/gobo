@@ -28,8 +28,8 @@
 	<option if="${GOBO_EIFFEL}=se">
 		<option name="warning" value="none"/>
 		<option name="case_insensitive" value="false"/>
-			<!-- SE 2.1 and 2.2b1 generate too big C files to be compiled by Visual C -->
-		<option name="split" value="true" unless="${SE_1_0}"/>
+			<!-- SE 1.0, 2.1 and 2.2b1 generate too big C files to be compiled by Visual C -->
+		<option name="split" value="true"/>
 			<!-- SE 2.1 and 2.2b1 crash when compiling gexslt in boost mode with GC -->
 		<option name="garbage_collector" value="none" unless="${SE_1_0}"/>
 	</option>
