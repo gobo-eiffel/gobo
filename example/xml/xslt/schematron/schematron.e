@@ -53,7 +53,7 @@ inherit
 
 	UC_SHARED_STRING_EQUALITY_TESTER
 		export {NONE} all end
-		
+
 	XM_XPATH_SHARED_CONFORMANCE
 		export {NONE} all end
 
@@ -220,6 +220,9 @@ feature -- Processing
 				end
 				create {XM_XSLT_URI_SOURCE} a_source.make (uris.item (2))
 				a_transformer.transform (a_source, a_result)
+			end
+			if a_stream /= Void and then not a_stream.is_closed then
+				a_stream.close
 			end
 		end
 
