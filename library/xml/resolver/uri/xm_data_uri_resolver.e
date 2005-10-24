@@ -38,7 +38,7 @@ feature -- Operation(s)
 			a_string_stream: KL_STRING_INPUT_STREAM
 		do
 			has_error := False
-			if a_uri.is_opaque and then a_uri.scheme.is_equal (scheme) then
+			if a_uri.is_opaque and then STRING_.same_string (a_uri.scheme, scheme) then
 				parse_components (a_uri)
 				if not has_error then
 					create a_string_stream.make (data)
@@ -49,7 +49,7 @@ feature -- Operation(s)
 					end
 				end
 			else
-				if a_uri.scheme.is_equal (scheme) then
+				if STRING_.same_string (a_uri.scheme, scheme) then
 					set_last_error (a_uri.full_reference + " is not an opaque URI")
 				else
 					set_last_error (a_uri.full_reference + " is not a data URI - software is configured wrongly.")

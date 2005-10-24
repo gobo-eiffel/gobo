@@ -82,7 +82,7 @@ feature -- Access
 			a_list, an_idref_list: DS_ARRAYED_LIST [XM_XPATH_TREE_ATTRIBUTE]
 			an_attribute_cursor: DS_ARRAYED_LIST_CURSOR [XM_XPATH_TREE_ATTRIBUTE]
 			an_idrefs_cursor: DS_LIST_CURSOR [STRING]
-			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR
+			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_TREE_NODE]
 			a_comparer: XM_XPATH_LOCAL_ORDER_COMPARER
 		do
 			create a_list.make_default

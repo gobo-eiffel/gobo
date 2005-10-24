@@ -71,7 +71,7 @@ feature -- Evaluation
 			end
 			a_key_manager.generate_keyed_sequence  (key_fingerprint, document, a_key_value, context)
 			if context.transformer.is_error then
-				create {XM_XPATH_EMPTY_ITERATOR} last_node_iterator.make -- error has already been reported 
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make -- error has already been reported 
 			else
 				last_node_iterator := a_key_manager.last_key_sequence
 			end

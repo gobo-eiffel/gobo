@@ -226,7 +226,7 @@ feature -- Access
 			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
 		do
 			if attribute_idref_table = Void then
-				create {XM_XPATH_EMPTY_ITERATOR} Result.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_TINY_NODE]} Result.make
 			else
 				Result := attribute_idref_table.new_iterator (some_idrefs)
 			end

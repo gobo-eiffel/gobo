@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		require
 			starting_node_not_void: a_starting_node /= Void
 		local
-			a_parent: G
+         a_boxed: DS_CELL [G]
 		do
 			starting_node := a_starting_node
 			create {XM_XPATH_ANCESTOR_ENUMERATION [G]} ancestors.make (starting_node, False)
@@ -44,15 +44,14 @@ feature {NONE} -- Initialization
 			when Element_node, Text_node, Comment_node, Processing_instruction_node then
 				siblings ?= starting_node.new_axis_iterator (Following_sibling_axis)
 			when Attribute_node, Namespace_node then
-				-- BUG in ISE compiler
-				--a_parent ?= starting_node.parent
-				if a_parent = Void then
-					siblings := Void
+				a_boxed ?= starting_node.parent
+				if a_boxed = Void then
+					create {XM_XPATH_EMPTY_ITERATOR [G]} siblings.make
 				else
-					siblings ?= a_parent.new_axis_iterator (Child_axis)
+					siblings ?= a_boxed.item.new_axis_iterator (Child_axis)
 				end
 			else
-				siblings := Void
+				create {XM_XPATH_EMPTY_ITERATOR [G]} siblings.make
 			end
 		ensure
 			starting_node_set: starting_node = a_starting_node
@@ -94,6 +93,7 @@ feature {NONE} -- Implementation
 			-- Move to the next position
 		local
 			finished_advance: BOOLEAN
+			l_default: G
 		do
 			if descendants /= Void then
 				if descendants.before then descendants.start else descendants.forth end
@@ -123,11 +123,11 @@ feature {NONE} -- Implementation
 				if not finished_advance then
 					if ancestors.before then ancestors.start else ancestors.forth end
 					if ancestors.after then
-						current_item := Void
+						current_item := l_default
 					else
 						current_item := ancestors.item
 						if current_item.node_type = Document_node then
-							siblings := Void
+							create {XM_XPATH_EMPTY_ITERATOR [G]} siblings.make
 						else
 							siblings ?= current_item.new_axis_iterator (Following_sibling_axis)
 						end

@@ -156,7 +156,7 @@ feature -- Evaluation
 								last_iterator := a_transformer.key_manager.last_key_sequence
 							end
 						else
-							create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 						end
 					else
 						create a_key_context_information.make (a_context_document, an_evaluation_context, a_fingerprint)

@@ -487,7 +487,7 @@ feature -- Access
 			end
 		end
 
-	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		require
 			not_in_error: not is_error
@@ -498,7 +498,7 @@ feature -- Access
 			invulnerable: Result.is_invulnerable
 		end
 
-	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		require
@@ -528,6 +528,15 @@ feature -- Access
 		ensure
 			unique_id_generated: generated_id /= Void
 		end
+
+	boxed: DS_CELL [like Current] is
+        -- Current node boxed in a cell
+    do
+        create Result.make (Current)
+    ensure
+        box_not_void: Result /= Void
+        item_set: Result.item = Current
+    end
 
 feature -- Comparison
 

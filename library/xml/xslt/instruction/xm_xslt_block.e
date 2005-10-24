@@ -334,7 +334,7 @@ feature -- Evaluation
 			-- Iterate over the values of a sequence
 		do
 			if children.count = 0 then
-				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 			elseif children.count = 1 then
 				children.item (1).create_iterator (a_context)
 				last_iterator := children.item (1).last_iterator

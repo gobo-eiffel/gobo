@@ -106,7 +106,7 @@ feature -- Evaluation
 	create_iterator (a_context: XM_XPATH_CONTEXT) is
 			-- Yields an iterator to iterate over the values of a sequence
 		do
-			create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 		end
 
 feature {XM_XPATH_EXPRESSION} -- Restricted

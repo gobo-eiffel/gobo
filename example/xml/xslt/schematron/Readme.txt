@@ -7,11 +7,6 @@ For a description of the Schematron language, see:
 
     http://www.schematron.com/ 
 
-
-The program must be executed from the same directory as the source
-file, as it looks for the schematron stylesheets in the current
-working directory.
-
 As input, you specify an XML file to be validated, and a schematron
 rules file which specifies the validation rules. The latter might
 profitably be named XXXX.sch, but the example schema is not so named.

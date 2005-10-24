@@ -186,13 +186,13 @@ feature -- Access
 			create {XM_XPATH_STRING_VALUE} Result.make (string_value)
 		end
 
-	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		do
 			Result := new_axis_iterator_with_node_test (an_axis_type, any_node_test)
 		end
 
-	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		do
@@ -210,14 +210,14 @@ feature -- Access
 				Attribute_axis, Child_axis, Descendant_axis, Descendant_or_self_axis,
 				Following_sibling_axis, Namespace_axis, Preceding_sibling_axis
 			 then
-				create {XM_XPATH_EMPTY_ITERATOR} Result.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 			when Following_axis then
 				--TODO
 			when Parent_axis then
 				if a_node_test.matches_item (element) then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (element)
 				else
-					create {XM_XPATH_EMPTY_ITERATOR} Result.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 				end
 			when Preceding_axis then
 				--TODO
@@ -225,7 +225,7 @@ feature -- Access
 				if a_node_test.matches_item (Current) then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 				else
-					create {XM_XPATH_EMPTY_ITERATOR} Result.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 				end
 			when Preceding_or_ancestor_axis then
 				--TODO

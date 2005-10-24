@@ -6,7 +6,8 @@ Geuc is a tool for generating routines from the Unicode Character Database
 
 The basic procude for use is:
 
-1) Change directory to $GOBO/work/geuc
+1) Change directory to $GOBO/work/geuc and then remove any existing
+   classes named uc_*.e 
 
 2) Compile the geuc program with:
 

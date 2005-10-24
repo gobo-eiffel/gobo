@@ -63,7 +63,7 @@ feature -- Access
 			an_attribute_list: DS_ARRAYED_LIST [XM_XPATH_TINY_ATTRIBUTE]
 			an_attribute_cursor: DS_ARRAYED_LIST_CURSOR [INTEGER]
 			an_idrefs_cursor: DS_LIST_CURSOR [STRING]
-			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR
+			an_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_TINY_NODE]
 			a_sorter: DS_QUICK_SORTER [INTEGER]
 			a_comparer: KL_COMPARABLE_COMPARATOR [INTEGER]
 		do

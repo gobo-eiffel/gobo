@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			when Element_node, Text_node, Comment_node, Processing_instruction_node then
 				siblings ?= starting_node.new_axis_iterator (Preceding_sibling_axis)
 			else
-				siblings := Void
+				create {XM_XPATH_EMPTY_ITERATOR [G]} siblings.make
 			end
 		ensure
 			include_ancestors_set: include_ancestors = include
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			-- Move to the next position
 		local
 			finished_advance: BOOLEAN
-			a_node: G
+			a_node, l_default: G
 		do
 			if descendants /= Void then
 				if descendants.before then descendants.start else descendants.forth end
@@ -121,11 +121,11 @@ feature {NONE} -- Implementation
 				if not finished_advance then
 					if ancestors.before then ancestors.start else ancestors.forth end
 					if ancestors.after then
-						current_item := Void
+						current_item := l_default
 					else
 						current_item := ancestors.item
 						if current_item.node_type = Document_node then
-							siblings := Void
+							create {XM_XPATH_EMPTY_ITERATOR [G]} siblings.make
 						else
 							siblings ?= current_item.new_axis_iterator (Preceding_sibling_axis)
 						end

@@ -166,7 +166,7 @@ feature -- Evaluation
 			-- Iterator over the values of a sequence
 		do
 			evaluate_item (a_context)
-			create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 		end
 	
 	select_value (a_context: XM_XSLT_EVALUATION_CONTEXT): XM_XPATH_VALUE is

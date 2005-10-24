@@ -14,7 +14,15 @@ class XM_XPATH_ARRAY_NODE_LIST_ITERATOR
 
 inherit
 
+	XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
+		undefine
+			start, after, is_realizable_iterator, as_realizable_iterator,
+			item, is_node_iterator, as_node_iterator
+		end
+
 	XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]
+		undefine
+			is_invulnerable, is_axis_iterator, as_axis_iterator
 		redefine
 			is_node_iterator, as_node_iterator
 		end
@@ -36,5 +44,15 @@ feature -- Access
 		do
 			Result ?= ANY_.to_any (Current)
 		end
-	
+
+feature {NONE} -- Implementation
+
+	advance is
+			-- Move to the next position
+		do
+
+			-- not used
+
+		end
+
 end

@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 		do
 			entries := a_directory.filenames
 			if entries = Void then
-				create {XM_XPATH_EMPTY_ITERATOR} last_collection.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_collection.make
 			else
 				create a_list.make (entries.count)
 				from an_index := entries.lower until an_index > entries.upper loop

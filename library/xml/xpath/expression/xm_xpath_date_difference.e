@@ -48,7 +48,13 @@ feature -- Evaluation
 					check
 						minus: operator = Minus_token
 					end
-					last_evaluated_item := a_calendar_value.minus (another_calendar_value, a_context)
+					if a_calendar_value.is_date_value then
+						last_evaluated_item := a_calendar_value.as_date_value.minus (another_calendar_value.as_date_value, a_context)
+					elseif a_calendar_value.is_date_time_value then
+						last_evaluated_item := a_calendar_value.as_date_time_value.minus (another_calendar_value.as_date_time_value, a_context)
+					elseif a_calendar_value.is_time_value then
+						last_evaluated_item := a_calendar_value.as_time_value.minus (another_calendar_value.as_time_value, a_context)
+					end
 				end
 			end
 		end

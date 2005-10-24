@@ -63,12 +63,19 @@ feature {NONE} -- Implementation
 
 	advance is
 			-- Move to the next position
+		local
+         a_boxed: DS_CELL [G]
+         a_void_item: G
 		do
 			if index = 1 and then include_self then
 				current_item := starting_node
 			else
-				-- BUG in ISE compiler
-				-- current_item ?= current_item.parent
+				a_boxed ?= current_item.parent.boxed
+				if a_boxed /= Void then
+					current_item := a_boxed.item
+				else
+					current_item := a_void_item
+				end
 			end
 		end
 

@@ -62,16 +62,18 @@ feature -- Cursor movement
 			
 	forth is
 			-- Move to next position
+		local
+			l_default: G
 		do
 			index := index + 1
 			if index > 2 then
 				base_iterator.forth
 			end
 			if base_iterator.is_error then
-				current_item := Void
+				current_item := l_default
 				set_last_error (base_iterator.error_value)
 			elseif base_iterator.after then
-				current_item := Void
+				current_item := l_default
 			else
 				current_item := base_iterator.item
 			end

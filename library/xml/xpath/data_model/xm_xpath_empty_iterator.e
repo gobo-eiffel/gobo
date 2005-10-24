@@ -10,21 +10,33 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class XM_XPATH_EMPTY_ITERATOR
+class XM_XPATH_EMPTY_ITERATOR [G -> XM_XPATH_NODE]
 	
 inherit
 
-	XM_XPATH_REVERSIBLE_ITERATOR [XM_XPATH_NODE]
+
+	XM_XPATH_AXIS_ITERATOR [G]
 		undefine
-			is_last_position_finder, as_last_position_finder
+			is_last_position_finder, as_last_position_finder,
+			is_reversible_iterator, as_reversible_iterator
+		redefine
+			is_node_iterator, as_node_iterator, is_empty_iterator, as_empty_iterator,
+			is_invulnerable, after, item
+		end
+
+	XM_XPATH_REVERSIBLE_ITERATOR [G]
+		undefine
+			is_last_position_finder, as_last_position_finder,
+			is_axis_iterator, as_axis_iterator
 		redefine
 			is_node_iterator, as_node_iterator, is_empty_iterator, as_empty_iterator,
 			is_invulnerable
 		end
 
-	XM_XPATH_LAST_POSITION_FINDER [XM_XPATH_NODE]
+	XM_XPATH_LAST_POSITION_FINDER [G]
 		undefine
-			is_reversible_iterator, as_reversible_iterator
+			is_reversible_iterator, as_reversible_iterator,
+			is_axis_iterator, as_axis_iterator
 		redefine
 			is_node_iterator, as_node_iterator, is_empty_iterator, as_empty_iterator,
 			is_invulnerable
@@ -43,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: XM_XPATH_NODE is
+	item: G is
 			-- Value or node at the current position
 		do
 		end
@@ -67,10 +79,10 @@ feature -- Status report
 			Result := True
 		end
 
-	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR is
+	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE] is
 			-- `Current' seen as an empty iterator
 		do
-			Result := Current
+			Result ?= ANY_.to_any (Current)
 		end
 
 	is_node_iterator: BOOLEAN is
@@ -82,7 +94,7 @@ feature -- Status report
 	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- `Current' seen as a node iterator
 		do
-			Result := Current
+			Result ?= ANY_.to_any (Current)
 		end
 
 	is_invulnerable: BOOLEAN is
@@ -111,6 +123,16 @@ feature -- Duplication
 			-- Another iterator that iterates over the same items as the original
 		do
 			Result := Current
+		end
+
+feature {NONE} -- Implementation
+
+	advance is
+			-- Move to the next position
+		do
+
+			-- not used
+
 		end
 
 end

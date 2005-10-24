@@ -177,7 +177,7 @@ feature -- Evaluation
 				if not first_operand.ordered_nodeset and then an_iterator.is_node_iterator then
 					create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} a_node_iterator.make (an_iterator.as_node_iterator, global_order_comparer)
 				end
-				if a_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR} a_node_iterator.make end
+				if a_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} a_node_iterator.make end
 				second_operand.create_iterator (a_context)
 				another_iterator := second_operand.last_iterator
 				if another_iterator.is_error then
@@ -187,7 +187,7 @@ feature -- Evaluation
 					if not second_operand.ordered_nodeset and then another_iterator.is_node_iterator then
 						create {XM_XPATH_DOCUMENT_ORDER_ITERATOR} another_node_iterator.make (another_iterator.as_node_iterator, global_order_comparer)
 					end
-					if another_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR} another_node_iterator.make end
+					if another_node_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} another_node_iterator.make end
 					inspect
 						operator
 					when Union_token then

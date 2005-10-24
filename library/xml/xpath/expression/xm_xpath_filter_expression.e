@@ -586,13 +586,13 @@ feature {NONE} -- Implementation
 					
 						-- Index is less than one, no items will be selected
 					
-						create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 					end
 				else
 					
 					-- A non-integer value will never be equal to position()
 					
-					create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 				end
 			else
 				
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 				elseif a_boolean_value.value then
 					last_iterator := a_base_iterator
 				else
-					create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 				end
 			end
 		end
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation
 			if start_expression.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (start_expression.error_value)
 			elseif a_start_value /= Void and then a_start_value.is_empty_sequence then
-				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 			else
 				if filter.is_value then
 					a_filter_value := filter.as_value
@@ -728,12 +728,12 @@ feature {NONE} -- Implementation
 										if a_position = 1 then
 											create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (a_start_value.as_singleton_node.node)
 										else
-											create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+											create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 										end
 									elseif a_position > 0 and then a_position <= a_start_value.count then
 										create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} last_iterator.make (a_start_value.item_at (a_position))
 									else
-										create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+										create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 									end
 								end	
 							else
@@ -743,7 +743,7 @@ feature {NONE} -- Implementation
 
 							-- a non-integer value will never be equal to position()
 
-							create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 						end
 					elseif a_filter_value.is_singleton_node then
 						base_expression.create_iterator (a_context)
@@ -757,7 +757,7 @@ feature {NONE} -- Implementation
 							base_expression.create_iterator (a_context)
 							last_iterator := base_expression.last_iterator
 						else
-							create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 						end
 					end
 				end

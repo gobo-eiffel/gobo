@@ -70,7 +70,7 @@ feature -- Evaluation
 			if uri_encoding.has_excluded_characters (a_uri_reference) then
 				create an_error.make_from_string ("Argument to fn:document is not a valid URI", Xpath_errors_uri, "FODC0005", Dynamic_error)
 				transformer.report_recoverable_error (an_error)
-				create {XM_XPATH_EMPTY_ITERATOR} last_node_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
  				if transformer.is_error then
 					last_node_iterator.set_last_error (an_error)
 				end
@@ -80,7 +80,7 @@ feature -- Evaluation
 				if last_evaluated_document.is_error then
 					transformer.report_recoverable_error (last_evaluated_document.error_value)
 					if not transformer.is_error then
-						create {XM_XPATH_EMPTY_ITERATOR} last_node_iterator.make
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
 					end
 				else
 					check
@@ -91,7 +91,7 @@ feature -- Evaluation
 					if a_uri.has_fragment then
 						last_node_iterator := fragment (a_uri, a_document)
 						if last_node_iterator = Void then
-							create {XM_XPATH_EMPTY_ITERATOR} last_node_iterator.make
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
 							last_node_iterator.set_last_error (fragment_error_value)
 						end
 					else

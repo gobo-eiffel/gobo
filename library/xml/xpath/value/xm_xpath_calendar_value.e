@@ -284,6 +284,10 @@ feature -- Basic operations
 		require
 			other_not_void: other /= Void
 			context_not_void: not zoned or else not other.zoned implies a_context /= Void
+			valid_other: (is_date_value and other.is_date_value) or
+				(is_date_time_value and other.is_date_time_value) or
+				(is_time_value and other.is_time_value)
+			
 		local
 			dt1, dt2: DT_DATE_TIME
 		do

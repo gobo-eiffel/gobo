@@ -174,19 +174,19 @@ feature -- Evaluation
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (first_operand.last_evaluated_item.error_value)
 			else
 				if not first_operand.last_evaluated_item.is_integer_value then
-					create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 				else
 					second_operand.evaluate_item (a_context)
 					if second_operand.last_evaluated_item /= Void and then second_operand.last_evaluated_item.is_error then
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (second_operand.last_evaluated_item.error_value)
 					else
 						if not second_operand.last_evaluated_item.is_integer_value then
-							create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+							create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 						else
 							an_integer_value := first_operand.last_evaluated_item.as_integer_value
 							another_integer_value := second_operand.last_evaluated_item.as_integer_value
 							if an_integer_value.value > another_integer_value.value then
-								create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+								create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 							elseif an_integer_value.is_platform_integer and then another_integer_value.is_platform_integer then
 								create {XM_XPATH_RANGE_ITERATOR} last_iterator.make (an_integer_value.as_integer, another_integer_value.as_integer)
 							else

@@ -53,6 +53,8 @@ feature -- Cursor movement
 
 	start is
 			-- Move to first position
+		local
+			l_default: G
 		do
 			index := 1
 			from
@@ -61,7 +63,7 @@ feature -- Cursor movement
 				base_iterator.forth
 			end
 			if base_iterator.after then
-				current_item := Void
+				current_item := l_default
 			else
 				current_item := base_iterator.item
 			end
@@ -69,6 +71,8 @@ feature -- Cursor movement
 			
 	forth is
 			-- Move to next position
+		local
+			l_default: G
 		do
 			index := index + 1
 			from
@@ -77,7 +81,7 @@ feature -- Cursor movement
 				base_iterator.forth
 			end
 			if base_iterator.after then
-				current_item := Void
+				current_item := l_default
 			else
 				current_item := base_iterator.item
 			end

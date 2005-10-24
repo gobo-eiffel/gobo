@@ -18,6 +18,9 @@ inherit
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
+	KL_IMPORTED_STRING_ROUTINES
+		export {NONE} all end
+
 create
 
 	make
@@ -27,11 +30,12 @@ feature {NONE} -- Initialization
 	make (a_code_point: INTEGER; a_name: STRING; some_fields: DS_LIST [STRING]) is
 			-- Establish invariant.
 		require
-			code_point_in_range: a_code_point >= 0 and then a_code_point <= maximum_unicode_character_code
+			code_point_in_range: a_code_point >= 0 and a_code_point <= maximum_unicode_character_code
 			name_exists: a_name /= Void
 			fifteen_fields: some_fields /= Void and then some_fields.count = Field_count
 		local
 			a_decimal: INTEGER
+			a_hex_code_point: STRING
 		do
 			code_point := a_code_point
 			name := a_name
@@ -51,7 +55,46 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
-				
+			if some_fields.item (13).is_empty then
+				upper_code := -1
+			else
+				a_hex_code_point := some_fields.item (13)
+				if STRING_.is_hexadecimal (a_hex_code_point) then
+					upper_code := STRING_.hexadecimal_to_integer (a_hex_code_point)
+					if upper_code < 0 or upper_code > maximum_unicode_character_code then
+						is_valid := False
+					end
+				else
+					is_valid := False
+				end
+			end
+			if some_fields.item (15).is_empty then
+				title_code := -1
+			else
+				a_hex_code_point := some_fields.item (15)
+				if STRING_.is_hexadecimal (a_hex_code_point) then
+					title_code := STRING_.hexadecimal_to_integer (a_hex_code_point)
+					if title_code < 0 or title_code > maximum_unicode_character_code then
+						is_valid := False
+					end
+				else
+					is_valid := False
+				end
+			end
+			if some_fields.item (14).is_empty then
+				lower_code := -1
+			else
+				a_hex_code_point := some_fields.item (14)
+				if STRING_.is_hexadecimal (a_hex_code_point) then
+					lower_code := STRING_.hexadecimal_to_integer (a_hex_code_point)
+					if lower_code < 0 or lower_code > maximum_unicode_character_code then
+						is_valid := False
+					end
+				else
+					is_valid := False
+				end
+			end
+
 			-- TODO: extract other fields of interest
 
 		ensure
@@ -69,6 +112,15 @@ feature -- Access
 
 	general_category: INTEGER
 			-- Coded general category
+
+	upper_code: INTEGER
+			-- Code point of upper cased equivalent character, or -1
+
+	lower_code: INTEGER
+			-- Code point of lower cased equivalent character, or -1
+
+	title_code: INTEGER
+			-- Code point of title cased equivalent character, or -1
 
 	decimal_digit_value: INTEGER_8 is
 			-- Value of `Current' as a decimal digit

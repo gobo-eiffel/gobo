@@ -439,7 +439,7 @@ feature -- Evaluation
 				a_singleton_iterator := step.last_iterator.as_singleton_iterator
 				a_singleton_iterator.start
 				if a_singleton_iterator.after then
-					create {XM_XPATH_EMPTY_ITERATOR} last_node_iterator.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_node_iterator.make
 				else
 					check
 						single_node: a_singleton_iterator.item.is_node

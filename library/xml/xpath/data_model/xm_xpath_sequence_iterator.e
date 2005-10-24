@@ -117,7 +117,7 @@ feature -- Access
 			Result := False
 		end
 
-	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR is
+	as_empty_iterator: XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE] is
 			-- `Current' seen as an empty iterator
 		require
 			empty_iterator: is_empty_iterator

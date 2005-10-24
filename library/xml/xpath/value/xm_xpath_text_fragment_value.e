@@ -68,10 +68,10 @@ feature -- Access
 	idrefs_nodes (some_idrefs: DS_LIST [STRING]): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
 			-- Sequence of nodes in document order with an IDREF in `some_idrefs'
 		do
-			create {XM_XPATH_EMPTY_ITERATOR} Result.make
+			create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 		end
 
-	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator (an_axis_type: INTEGER): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node
 		local
 			a_node_list: DS_ARRAYED_LIST [XM_XPATH_NODE]
@@ -88,11 +88,11 @@ feature -- Access
 				a_node_list.put (child_text_node, 2)
 				create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} Result.make (a_node_list)
 			else
-				create {XM_XPATH_EMPTY_ITERATOR} Result.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 			end
 		end
 
-	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE] is
+	new_axis_iterator_with_node_test (an_axis_type: INTEGER; a_node_test: XM_XPATH_NODE_TEST): XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE] is
 			-- An enumeration over the nodes reachable by `an_axis_type' from this node;
 			-- Only nodes that match the pattern specified by `a_node_test' will be selected.
 		local
@@ -108,7 +108,7 @@ feature -- Access
 				if a_node_test.matches_item (a_node) then
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (child_text_node)
 				else
-					create {XM_XPATH_EMPTY_ITERATOR} Result.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 				end
 			when Descendant_or_self_axis then
 				a_node := child_text_node
@@ -116,12 +116,12 @@ feature -- Access
 					create a_node_list.make (2)
 					a_node_list.put (Current, 1)
 					a_node_list.put (child_text_node, 2)
-					create {XM_XPATH_ARRAY_LIST_ITERATOR [XM_XPATH_NODE]} Result.make (a_node_list)
+					create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} Result.make (a_node_list)
 				else
 					create {XM_XPATH_SINGLETON_NODE_ITERATOR} Result.make (Current)
 				end
 			else
-				create {XM_XPATH_EMPTY_ITERATOR} Result.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} Result.make
 			end	
 		end
 	

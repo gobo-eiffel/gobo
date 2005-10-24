@@ -80,7 +80,7 @@ feature -- Evaluation
 			end
 			a_group_iterator := an_evaluation_context.current_group_iterator
 			if a_group_iterator = Void then
-				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 			else
 				last_iterator := a_group_iterator.current_group_iterator
 			end

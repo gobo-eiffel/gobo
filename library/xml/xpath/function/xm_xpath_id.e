@@ -105,7 +105,7 @@ feature -- Evaluation
 					arguments.item (1).evaluate_item (a_context)
 					an_item := arguments.item (1).last_evaluated_item
 					if an_item = Void then
-						create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 					elseif an_item.is_error then
 						create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 					elseif an_item.is_atomic_value then
@@ -115,7 +115,7 @@ feature -- Evaluation
 						if an_idref_list.count = 1 then
 							a_node := a_node.as_document.selected_id (an_idref_list.item(1))
 							if a_node = Void then
-								create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+								create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 							else
 								create {XM_XPATH_SINGLETON_NODE_ITERATOR} last_iterator.make (a_node)
 							end
@@ -123,7 +123,7 @@ feature -- Evaluation
 							is_singleton := False
 						end
 					else
-						create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 					end
 				end
 				if not is_singleton then

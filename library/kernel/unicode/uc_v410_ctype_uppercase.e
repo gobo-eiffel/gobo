@@ -14,7 +14,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class UC_CTYPE_UPPERCASE
+class UC_V410_CTYPE_UPPERCASE
 
 inherit
 

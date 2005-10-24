@@ -92,7 +92,7 @@ feature -- Evaluation
 			last_iterator := Void
 			arguments.item (1).evaluate_item (a_context)
 			if arguments.item (1).last_evaluated_item = Void then
-				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 			elseif arguments.item (1).last_evaluated_item.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (arguments.item (1).last_evaluated_item.error_value)
 			else

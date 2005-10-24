@@ -351,7 +351,7 @@ feature -- Evaluation
 					a_cursor.forth
 				end
 			end
-			if last_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make end
+			if last_iterator = Void then create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make end
 		end
 
 	evaluate_item (a_context: XM_XPATH_CONTEXT) is

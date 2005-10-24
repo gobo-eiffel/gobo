@@ -14,7 +14,19 @@ class XM_XPATH_SINGLETON_NODE_ITERATOR
 
 inherit
 
+	XM_XPATH_AXIS_ITERATOR [XM_XPATH_NODE]
+		undefine
+			is_singleton_iterator, as_singleton_iterator,
+			after, item, is_node_iterator, as_node_iterator
+		end
+
 	XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_NODE]
+		undefine
+			is_last_position_finder, as_last_position_finder,
+			is_realizable_iterator, as_realizable_iterator,
+			is_reversible_iterator, as_reversible_iterator,
+			is_invulnerable,
+			is_axis_iterator, as_axis_iterator
 		redefine
 			is_node_iterator, as_node_iterator
 		end
@@ -36,5 +48,15 @@ feature -- Access
 		do
 			Result ?= ANY_.to_any (Current)
 		end
-	
+
+feature {NONE} -- Implementation
+
+	advance is
+			-- Move to the next position
+		do
+
+			-- not used
+
+		end	
+
 end

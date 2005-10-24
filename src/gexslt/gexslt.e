@@ -123,6 +123,9 @@ feature -- Execution
 				Exceptions.die (1)
 			end
 			process_uris
+			if configuration.final_execution_phase > Stop_after_compilation then
+				perform_transformation
+			end
 		end
 
 feature -- Status report
@@ -447,6 +450,9 @@ feature -- Error handling
 	additional_options: STRING is
 			-- Additional supported options
 		do
+
+			-- This is intended for use by descendants
+
 			Result := ""
 		ensure
 			result_not_void: Result /= Void
@@ -700,10 +706,6 @@ feature {NONE} -- Implementation
 		do
 			if a_file_or_uri.index_of ('\', 1) > 0 then
 				is_file := True
-			--else
-			--	if a_file_or_uri.index_of (':', 1) = 2 then
-			--		is_file := True
-			--	end
 			end
 			if is_file then
 				process_file (a_file_or_uri)
@@ -711,6 +713,9 @@ feature {NONE} -- Implementation
 				process_uri (a_file_or_uri)
 			end
 		end
+
+	transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
+			-- Transformer factory
 
 	process_uris is
 			-- Read `uris' and perform transform(s).
@@ -720,16 +725,6 @@ feature {NONE} -- Implementation
 		local
 			a_source: XM_XSLT_URI_SOURCE
 			a_stylesheet_source: XM_XSLT_SOURCE
-			a_destination: XM_OUTPUT
-			a_transformer_factory: XM_XSLT_TRANSFORMER_FACTORY
-			a_transformer: XM_XSLT_TRANSFORMER
-			a_result: XM_XSLT_TRANSFORMATION_RESULT
-			a_stream: KL_TEXT_OUTPUT_FILE
-			a_uri: UT_URI
-			a_cwd: STRING
-			a_pathname: KI_PATHNAME
-			a_drive, a_string: STRING
-			a_destination_system_id: STRING
 			a_chooser: XM_XSLT_PI_CHOOSER
 		do
 			conformance.set_basic_xslt_processor
@@ -748,7 +743,7 @@ feature {NONE} -- Implementation
 				register_network_protocols
 			end
 			register_non_network_protocols
-			create a_transformer_factory.make (configuration)
+			create transformer_factory.make (configuration)
 			if use_processing_instruction then
 				create a_source.make (uris.item (1))
 				if medium = Void then
@@ -767,7 +762,7 @@ feature {NONE} -- Implementation
 				else
 					create {XM_XSLT_PI_CHOOSER_BY_NAME} a_chooser.make (title)
 				end
-				a_stylesheet_source := a_transformer_factory.associated_stylesheet (a_source.system_id, medium, a_chooser)
+				a_stylesheet_source := transformer_factory.associated_stylesheet (a_source.system_id, medium, a_chooser)
 				if a_stylesheet_source = Void then
 					report_processing_error ("Unable to compile stylesheet",  "Xml-stylesheet processing instuction(s) did not lead to a stylesheet being compiled sucessfully..")
 					Exceptions.die (2)
@@ -775,60 +770,83 @@ feature {NONE} -- Implementation
 			else
 				create {XM_XSLT_URI_SOURCE} a_stylesheet_source.make (uris.item (1))
 			end
-			a_transformer_factory.create_new_transformer (a_stylesheet_source)
-			if a_transformer_factory.was_error then
-				report_processing_error ("Could not compile stylesheet", a_transformer_factory.last_error_message)
+			transformer_factory.create_new_transformer (a_stylesheet_source)
+			if transformer_factory.was_error then
+				report_processing_error ("Could not compile stylesheet", transformer_factory.last_error_message)
 				Exceptions.die (2)
-			elseif configuration.final_execution_phase > Stop_after_compilation then
-				a_transformer := a_transformer_factory.created_transformer
-				process_parameters (a_transformer)
-				if uris.count = 2 then
-					create a_source.make (uris.item (2))
-				end
-				if initial_template_name /= Void then
-					a_transformer.set_initial_template (initial_template_name)
-				end
-				if initial_mode_name /= Void then
-					a_transformer.set_initial_mode (initial_mode_name)
-				end
-				create a_destination -- To standard output
-				if output_destination /= Void then
-					create a_stream.make (output_destination)
-					a_stream.open_write
-					a_destination.set_output_stream (a_stream)
-					a_cwd := file_system.current_working_directory
-					if file_system /= unix_file_system then
-						a_pathname := file_system.string_to_pathname (a_cwd)
-						a_cwd := unix_file_system.pathname_to_string (a_pathname)
-						a_drive := a_pathname.drive
-						if a_drive /= Void then
-							a_cwd := STRING_.concat (a_drive, a_cwd)
-							a_cwd := STRING_.concat ("/", a_cwd)
-						end
-					end
-					a_string := STRING_.concat ("file://", a_cwd)
-					create a_uri.make (STRING_.concat (a_string, "/"))
-					create a_uri.make_resolve (a_uri, output_destination)
-					a_destination_system_id := a_uri.full_reference
-				else
-					a_destination_system_id := "stdout:"
-				end
-				create a_result.make (a_destination, a_destination_system_id)
-				if not a_transformer.is_error then
-					a_transformer.transform (a_source, a_result)
-				end
-				if a_stream /= Void then
-					a_stream.close
-				end
-				if trace_file /= Void then
-					trace_file.close
-				end				
-				if a_transformer.is_error then
-					Exceptions.die (3) -- the error listener has already reported the error.message
-				end
 			end
+		ensure
+			transformer_factory_not_void: transformer_factory /= Void
+			no_error: not transformer_factory.was_error
 		end
 
+	perform_transformation is
+			-- Preform transformation.
+		require
+			transformer_factory_not_void: transformer_factory /= Void
+			no_error: not transformer_factory.was_error
+			transformer_created: transformer_factory.created_transformer /= Void
+		local
+			a_transformer: XM_XSLT_TRANSFORMER
+			a_source: XM_XSLT_URI_SOURCE
+			a_destination: XM_OUTPUT
+			a_destination_system_id: STRING
+			a_result: XM_XSLT_TRANSFORMATION_RESULT
+			a_stream: KL_TEXT_OUTPUT_FILE
+			a_uri: UT_URI
+			a_cwd: STRING
+			a_pathname: KI_PATHNAME
+			a_drive, a_string: STRING
+
+		do
+			a_transformer := transformer_factory.created_transformer
+			process_parameters (a_transformer)
+			if uris.count = 2 then
+				create a_source.make (uris.item (2))
+			end
+			if initial_template_name /= Void then
+				a_transformer.set_initial_template (initial_template_name)
+			end
+			if initial_mode_name /= Void then
+				a_transformer.set_initial_mode (initial_mode_name)
+			end
+			create a_destination -- To standard output
+			if output_destination /= Void then
+				create a_stream.make (output_destination)
+				a_stream.open_write
+				a_destination.set_output_stream (a_stream)
+				a_cwd := file_system.current_working_directory
+				if file_system /= unix_file_system then
+					a_pathname := file_system.string_to_pathname (a_cwd)
+					a_cwd := unix_file_system.pathname_to_string (a_pathname)
+					a_drive := a_pathname.drive
+					if a_drive /= Void then
+						a_cwd := STRING_.concat (a_drive, a_cwd)
+						a_cwd := STRING_.concat ("/", a_cwd)
+					end
+				end
+				a_string := STRING_.concat ("file://", a_cwd)
+				create a_uri.make (STRING_.concat (a_string, "/"))
+				create a_uri.make_resolve (a_uri, output_destination)
+				a_destination_system_id := a_uri.full_reference
+			else
+				a_destination_system_id := "stdout:"
+			end
+			create a_result.make (a_destination, a_destination_system_id)
+			if not a_transformer.is_error then
+				a_transformer.transform (a_source, a_result)
+			end
+			if a_stream /= Void then
+				a_stream.close
+			end
+			if trace_file /= Void then
+				trace_file.close
+			end				
+			if a_transformer.is_error then
+				Exceptions.die (3) -- the error listener has already reported the error.message
+			end
+		end
+	
 	process_parameters (a_transformer: XM_XSLT_TRANSFORMER) is
 			-- Set any parameters onto the transformer.
 		require

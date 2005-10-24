@@ -442,7 +442,7 @@ feature -- Evaluation
 				end
 			evaluate_item (a_context)
 			if last_evaluated_item = Void then
-				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 			elseif last_evaluated_item.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (last_evaluated_item.error_value)
 			elseif last_evaluated_item.is_node then

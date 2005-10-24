@@ -85,13 +85,13 @@ feature -- Evaluation
 			arguments.item (1).evaluate_item (a_context)
 			an_item := arguments.item (1).last_evaluated_item
 			if an_item = Void then
-				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 			elseif an_item.is_error then
 				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (an_item.error_value)
 			else
 				a_string := an_item.string_value
 				if a_string.is_empty then
-					create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 				else
 					from
 						create an_array.make (1, a_string.count); an_index := 1; a_count := a_string.count

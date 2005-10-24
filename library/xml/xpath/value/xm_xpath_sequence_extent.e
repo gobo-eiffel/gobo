@@ -295,7 +295,7 @@ feature -- Evaluation
 			-- An iterator over the values of a sequence
 		do
 			if count = 0 then
-				create {XM_XPATH_EMPTY_ITERATOR} last_iterator.make
+				create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_iterator.make
 			elseif is_node_sequence then
 				last_iterator := node_iterator (False)
 			else

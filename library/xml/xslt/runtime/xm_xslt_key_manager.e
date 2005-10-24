@@ -122,7 +122,7 @@ feature -- Access
 					a_list := an_index.map.item (a_key_value)
 					create {XM_XPATH_ARRAY_NODE_LIST_ITERATOR} last_key_sequence.make (a_list)
 				else
-					create {XM_XPATH_EMPTY_ITERATOR} last_key_sequence.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} last_key_sequence.make
 				end
 			end
 		ensure

@@ -16,13 +16,7 @@ inherit
 
 	ANY -- Export features from ANY.
 
-	UC_UNICODE_CONSTANTS
-
-	UC_CTYPE_UPPERCASE
-		export {NONE} all end
-
-	UC_CTYPE_LOWERCASE
-		export {NONE} all end
+	UC_CTYPE
 		
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
@@ -31,16 +25,6 @@ inherit
 		export {NONE} all end
 
 feature -- Status report
-
-	valid_code (a_code: INTEGER): BOOLEAN is
-			-- Is `a_code' a valid unicode?
-		do
-			Result := (a_code >= minimum_unicode_character_code and
-				a_code <= maximum_unicode_character_code)
-		ensure
-			definition: Result = (a_code >= minimum_unicode_character_code and
-				a_code <= maximum_unicode_character_code)
-		end
 
 	valid_ascii_code (a_code: INTEGER): BOOLEAN is
 			-- Is `a_code' a valid ASCII code?
@@ -99,34 +83,6 @@ feature -- Status report
 			string_not_void: Result /= Void
 			count_set: Result.count = 1
 			code_set: Result.item_code (1) = a_code
-		end
-
-feature -- Access
-
-	lower_code (a_code: INTEGER): INTEGER is
-			-- Code of lowercase character of character with code `a_code'
-		require
-			valid_code: valid_code (a_code)
-		do
- 			Result := lowercase.item (a_code // 256 + 1).item (a_code \\ 256 + 1)
-			if Result = -1 then
-				Result := a_code
-			end
-		ensure
-			valid_lower_code: valid_code (Result)
-		end
-
-	upper_code (a_code: INTEGER): INTEGER is
-			-- Code of uppercase character of character with code `a_code'
-		require
-			valid_code: valid_code (a_code)
-		do
- 			Result := uppercase.item (a_code // 256 + 1).item (a_code \\ 256 + 1)
-			if Result = -1 then
-				Result := a_code
-			end
-		ensure
-			valid_lower_code: valid_code (Result)
 		end
 
 end

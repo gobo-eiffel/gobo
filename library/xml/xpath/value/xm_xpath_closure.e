@@ -73,14 +73,14 @@ feature {NONE} -- Initialization
 					if an_iterator.is_error then
 						-- do nothing
 					elseif an_iterator.after then
-						create {XM_XPATH_EMPTY_ITERATOR} an_iterator.make
+						create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} an_iterator.make
 					elseif an_iterator.is_node_iterator then
 						create {XM_XPATH_SINGLETON_NODE_ITERATOR} an_iterator.make (an_iterator.item.as_node)
 					else
 						create {XM_XPATH_SINGLETON_ITERATOR [XM_XPATH_ITEM]} an_iterator.make (an_iterator.item)
 					end
 				elseif an_iterator.after then
-					create {XM_XPATH_EMPTY_ITERATOR} an_iterator.make
+					create {XM_XPATH_EMPTY_ITERATOR [XM_XPATH_NODE]} an_iterator.make
 				else
 					if an_iterator.is_node_iterator then
 						create {XM_XPATH_SINGLETON_NODE_ITERATOR} an_iterator.make (an_iterator.item.as_node)

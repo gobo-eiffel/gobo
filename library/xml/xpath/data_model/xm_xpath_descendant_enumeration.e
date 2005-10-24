@@ -83,14 +83,20 @@ feature {NONE} -- Implementation
 			-- Move to the next position
 		local
 			finished_advance: BOOLEAN
+         a_boxed: DS_CELL [G]
+         a_void_item: G
 		do
 			if descendants /= Void then
 				if descendants.after then
 					descendants := Void
 				else
 					if descendants.before then descendants.start else descendants.forth end
-					-- BUG in ISE compiler
-					--current_item ?= descendants.item;
+					a_boxed ?= descendants.item
+					if a_boxed /= Void then
+						current_item := a_boxed.item
+					else
+						current_item := a_void_item
+					end
 					finished_advance := True
 				end
 			end
@@ -101,7 +107,7 @@ feature {NONE} -- Implementation
 					
 					-- we're just finishing a backwards scan
 					
-					current_item := Void
+					current_item := a_void_item
 				else
 					initial_advance
 				end
@@ -128,7 +134,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				children := Void; is_at_end := True
+				create {XM_XPATH_EMPTY_ITERATOR [G]} children.make; is_at_end := True
 			end
 			if is_forwards and then include_self then
 				current_item := starting_node
@@ -142,12 +148,12 @@ feature {NONE} -- Implementation
 		require
 			child_axis_not_void: children /= Void
 		local
-			a_node: G
+			a_node, l_default: G
 		do
 			if children.before then children.start else children.forth end
 			if children.after then
 				if is_forwards or else not include_self then
-					current_item := Void
+					current_item := l_default
 				else
 					is_at_end := True
 					children := Void
