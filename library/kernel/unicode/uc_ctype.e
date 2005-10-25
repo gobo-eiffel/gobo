@@ -95,5 +95,5 @@ feature -- Access
 		ensure
 			valid_title_code: valid_code (Result)
 		end
-	
+
 end

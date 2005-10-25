@@ -17,7 +17,7 @@ inherit
 	ANY -- Export features from ANY.
 
 	UC_CTYPE
-		
+
 	KL_IMPORTED_INTEGER_ROUTINES
 		export {NONE} all end
 
